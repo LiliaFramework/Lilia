@@ -8,7 +8,7 @@ local function sendLogsInChunks(client, categorizedLogs)
     for i = 1, numChunks do
         local startPos = (i - 1) * chunkSize + 1
         local chunk = string.sub(compressedData, startPos, startPos + chunkSize - 1)
-        net.Start("send_logs_chunk")
+        net.Start("send_logs")
         net.WriteUInt(i, 16)
         net.WriteUInt(numChunks, 16)
         net.WriteUInt(#chunk, 16)
