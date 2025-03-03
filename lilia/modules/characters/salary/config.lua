@@ -1,4 +1,8 @@
-﻿lia.config.add("SalaryInterval", "Salary Interval", 300, nil, {
+﻿lia.config.add("SalaryInterval", "Salary Interval", 300, function()
+    for _, client in player.Iterator() do
+        hook.Run("CreateSalaryTimer", client)
+    end
+end, {
     desc = "Interval in seconds between salary payouts.",
     category = "Salary",
     type = "Float",
