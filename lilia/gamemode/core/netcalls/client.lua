@@ -10,10 +10,28 @@
     lia.notices.notifyLocalized(message, unpack(args))
 end)
 
+net.Receive("setWaypoint", function()
+    local name = net.ReadString()
+    local pos = net.ReadVector()
+    LocalPlayer():setWaypoint(name, pos)
+end)
+
+net.Receive("setWaypointWithLogo", function()
+    local name = net.ReadString()
+    local pos = net.ReadVector()
+    local logo = net.ReadString()
+    LocalPlayer():setWaypointWithLogo(name, pos, logo)
+end)
+
 net.Receive("liaNotify", function()
     local message = net.ReadString()
     local notifType = net.ReadUInt(3)
     lia.notices.notify(message, notifType)
+end)
+
+net.Receive("sendURL", function()
+    local url = net.ReadString()
+    gui.OpenURL(url)
 end)
 
 net.Receive("ServerChatAddText", function()

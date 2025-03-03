@@ -152,6 +152,38 @@ function playerMeta:getEyeEnt(distance)
     return e:GetPos():Distance(self:GetPos()) <= distance and e or nil
 end
 
+function playerMeta:notify(message, notifType)
+    lia.notices.notify(message, notifType, self)
+end
+
+function playerMeta:notifyLocalized(message, ...)
+    lia.notices.notifyLocalized(message, self, ...)
+end
+
+function playerMeta:notifyError(message)
+    self:notify(message, 1)
+end
+
+function playerMeta:notifyCriticalError(message)
+    self:notify(message, 2)
+end
+
+function playerMeta:notifyWarning(message)
+    self:notify(message, 3)
+end
+
+function playerMeta:notifySuccess(message)
+    self:notify(message, 4)
+end
+
+function playerMeta:notifyInfo(message)
+    self:notify(message, 5)
+end
+
+function playerMeta:notifyHint(message)
+    self:notify(message, 6)
+end
+
 if SERVER then
     function playerMeta:loadLiliaData(callback)
         local name = self:steamName()
@@ -197,6 +229,25 @@ if SERVER then
         self.liaData = self.liaData or {}
         self.liaData[key] = value
         if not noNetworking then netstream.Start(self, "liaData", key, value) end
+    end
+
+    function playerMeta:setWaypoint(name, vector)
+        net.Start("setWaypoint")
+        net.WriteString(name)
+        net.WriteVector(vector)
+        net.Send(self)
+    end
+
+    function playerMeta:setWeighPoint(name, vector)
+        self:setWaypoint(name, vector)
+    end
+
+    function playerMeta:setWaypointWithLogo(name, vector, logo)
+        net.Start("setWaypointWithLogo")
+        net.WriteString(name)
+        net.WriteVector(vector)
+        net.WriteString(logo)
+        net.Send(self)
     end
 
     function playerMeta:chatNotify(message)
@@ -639,36 +690,4 @@ else
         lia.localData = lia.localData or {}
         return lia.localData
     end
-end
-
-function playerMeta:notify(message, notifType)
-    lia.notices.notify(message, notifType, self)
-end
-
-function playerMeta:notifyLocalized(message, ...)
-    lia.notices.notifyLocalized(message, self, ...)
-end
-
-function playerMeta:notifyError(message)
-    self:notify(message, 1)
-end
-
-function playerMeta:notifyCriticalError(message)
-    self:notify(message, 2)
-end
-
-function playerMeta:notifyWarning(message)
-    self:notify(message, 3)
-end
-
-function playerMeta:notifySuccess(message)
-    self:notify(message, 4)
-end
-
-function playerMeta:notifyInfo(message)
-    self:notify(message, 5)
-end
-
-function playerMeta:notifyHint(message)
-    self:notify(message, 6)
 end
