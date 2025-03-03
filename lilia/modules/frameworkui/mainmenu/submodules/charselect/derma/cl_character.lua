@@ -10,16 +10,17 @@ local function animateButton(button, _, _, text)
     local animDuration = 0.3
     local startTime = nil
     button.Paint = function(self, w, h)
+        local r, g, b = lia.config.get("Color")
         surface.SetDrawColor(0, 0, 0, 255)
         surface.DrawOutlinedRect(0, 0, w, h, 2)
         surface.SetDrawColor(0, 0, 0, 150)
         surface.DrawRect(1, 1, w - 2, h - 2)
-        draw.SimpleText(text, "DermaLarge", w / 2, h / 2, WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(text, "liaBigFont", w / 2, h / 2, WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         if self:IsHovered() then
             if not startTime then startTime = CurTime() end
             local timeElapsed = CurTime() - startTime
             animWidth = math.min(w, (timeElapsed / animDuration) * w) / 2
-            surface.SetDrawColor(76, 146, 172, 255)
+            surface.SetDrawColor(r, g, b, 255)
             surface.DrawLine(w / 2 - animWidth, h - 1, w / 2 + animWidth, h - 1)
         else
             startTime = nil
@@ -32,7 +33,7 @@ function PANEL:createStartButton()
     local screenWidth, screenHeight = ScrW(), ScrH()
     local btnWidth = screenWidth * 0.2
     local btnHeight = screenHeight * 0.04
-    local buttonSpacing = screenHeight * 0.01
+    local buttonSpacing = screenHeight * 0.015
     local logoWidth = screenWidth * 0.13
     local logoHeight = screenWidth * 0.13
     local logoPath = lia.config.get("CenterLogo")
@@ -103,22 +104,26 @@ function PANEL:createStartButton()
     end
 
     if logoPath and logoPath ~= "" then
+        local scaleFactor = 0.95
+        local newLogoWidth = logoWidth * scaleFactor
+        local newLogoHeight = logoHeight * scaleFactor
+        local additionalOffset = 35
         if string.sub(logoPath, 1, 8) == "https://" then
             http.Fetch(logoPath, function(body)
                 local fileName = "temp_logo.png"
                 file.Write(fileName, body)
                 self.logo = self:Add("DImage")
                 self.logo:SetImage("data/" .. fileName)
-                self.logo:SetSize(logoWidth, logoHeight)
+                self.logo:SetSize(newLogoWidth, newLogoHeight)
                 self.logo:CenterHorizontal()
-                self.logo:SetPos(screenWidth / 2 - logoWidth / 2, startY - logoHeight - buttonSpacing)
+                self.logo:SetPos(screenWidth / 2 - newLogoWidth / 2, startY - newLogoHeight - buttonSpacing - additionalOffset)
             end, function(err) print("Failed to fetch logo: ", err) end)
         else
             self.logo = self:Add("DImage")
             self.logo:SetImage(logoPath)
-            self.logo:SetSize(logoWidth, logoHeight)
+            self.logo:SetSize(newLogoWidth, newLogoHeight)
             self.logo:CenterHorizontal()
-            self.logo:SetPos(screenWidth / 2 - logoWidth / 2, startY - logoHeight - buttonSpacing)
+            self.logo:SetPos(screenWidth / 2 - newLogoWidth / 2, startY - newLogoHeight - buttonSpacing - additionalOffset)
         end
     end
 end
