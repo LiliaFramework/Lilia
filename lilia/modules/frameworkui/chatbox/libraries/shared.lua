@@ -297,12 +297,11 @@ lia.chat.register("mefarfar", {
 lia.chat.register("help", {
     onCanSay = function() return true end,
     onCanHear = function(speaker, listener)
-        if listener:isStaff() or listener == speaker then
+        if listener:isStaffOnDuty() or listener == speaker or listener:hasPrivilege("Staff Permissions - Always Have Access to Help Chat") then
             return true
         else
             return false
         end
     end,
     onChatAdd = function(speaker, text) chat.AddText(Color(200, 50, 50), "[HELP] " .. speaker:GetName(), color_white, ": " .. text) end,
-    prefix = {"/report"}
 })
