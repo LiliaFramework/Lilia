@@ -36,7 +36,7 @@ local extraItems = {
 	}
 }
 
-local function GiveWeapon(ply, ent, args)
+local function GiveWeapon(client, ent, args)
 	if not args or not args[1] or not isstring(args[1]) then return end
 	local className = args[1]
 	local swep = list.Get("Weapon")[className]
@@ -47,9 +47,9 @@ local function GiveWeapon(ply, ent, args)
 	end
 
 	if swep == nil then return end
-	if IsValid(ply) then
-		if (not swep.Spawnable and not ply:IsAdmin()) or (swep.AdminOnly and not ply:IsAdmin()) then return end
-		if not hook.Run("PlayerGiveSWEP", ply, className, swep) then return end
+	if IsValid(client) then
+		if (not swep.Spawnable and not client:IsAdmin()) or (swep.AdminOnly and not client:IsAdmin()) then return end
+		if not hook.Run("PlayerGiveSWEP", client, className, swep) then return end
 	end
 
 	ent:Give(className)
@@ -74,8 +74,8 @@ properties.Add("rb655_npc_weapon", {
 	MenuLabel = "Change Weapon (Popup)",
 	MenuIcon = "icon16/gun.png",
 	Order = 650,
-	Filter = function(self, ent, ply)
-		if not IsValid(ent) or not gamemode.Call("CanProperty", ply, "rb655_npc_weapon", ent) then return false end
+	Filter = function(self, ent, client)
+		if not IsValid(ent) or not gamemode.Call("CanProperty", client, "rb655_npc_weapon", ent) then return false end
 		if ent:IsNPC() and not table.HasValue(nowep, ent:GetClass()) then return true end
 		return false
 	end,
@@ -147,11 +147,11 @@ properties.Add("rb655_npc_weapon", {
 		WarningText2:SetFont("DermaLarge")
 		WarningText2:SetText("This is entirely dependent on the Addon the weapon and the NPC are from. This mod cannot change that.")
 	end,
-	Receive = function(self, length, ply)
+	Receive = function(self, length, client)
 		local ent = net.ReadEntity()
 		if not IsValid(ent) then return end
 		if not ent:IsNPC() or table.HasValue(nowep, ent:GetClass()) then return end
 		local wep = net.ReadString()
-		GiveWeapon(ply, ent, {wep})
+		GiveWeapon(client, ent, {wep})
 	end
 })

@@ -22,11 +22,11 @@ local function canDrawAmmo(wpn)
 end
 
 local function drawAmmo(wpn)
-    local ply = LocalPlayer()
+    local client = LocalPlayer()
     if not IsValid(wpn) then return end
     local clip = wpn:Clip1()
-    local count = ply:GetAmmoCount(wpn:GetPrimaryAmmoType())
-    local sec = ply:GetAmmoCount(wpn:GetSecondaryAmmoType())
+    local count = client:GetAmmoCount(wpn:GetPrimaryAmmoType())
+    local sec = client:GetAmmoCount(wpn:GetSecondaryAmmoType())
     local x, y = ScrW() - 80, ScrH() - 80
     if sec > 0 then
         lia.util.drawBlurAt(x, y, 64, 64)
@@ -49,20 +49,20 @@ local function drawAmmo(wpn)
 end
 
 local function canDrawCrosshair()
-    local ply = LocalPlayer()
-    local rag = Entity(ply:getLocalVar("ragdoll", 0))
-    local wpn = ply:GetActiveWeapon()
-    if not ply:getChar() then return false end
+    local client = LocalPlayer()
+    local rag = Entity(client:getLocalVar("ragdoll", 0))
+    local wpn = client:GetActiveWeapon()
+    if not client:getChar() then return false end
     if IsValid(wpn) then
         local cl = wpn:GetClass()
         if cl == "gmod_tool" or string.find(cl, "lia_") or string.find(cl, "detector_") then return true end
-        if not NoDrawCrosshairWeapon[cl] and lia.config.get("CrosshairEnabled", true) and ply:Alive() and ply:getChar() and not IsValid(rag) and wpn and not (g_ContextMenu:IsVisible() or (IsValid(lia.gui.character) and lia.gui.character:IsVisible())) then return true end
+        if not NoDrawCrosshairWeapon[cl] and lia.config.get("CrosshairEnabled", true) and client:Alive() and client:getChar() and not IsValid(rag) and wpn and not (g_ContextMenu:IsVisible() or (IsValid(lia.gui.character) and lia.gui.character:IsVisible())) then return true end
     end
 end
 
 local function drawCrosshair()
-    local ply = LocalPlayer()
-    local t = util.QuickTrace(ply:GetShootPos(), ply:GetAimVector() * 15000, ply)
+    local client = LocalPlayer()
+    local t = util.QuickTrace(client:GetShootPos(), client:GetAimVector() * 15000, client)
     if t.HitPos then
         local p = t.HitPos:ToScreen()
         local s = 3
@@ -126,10 +126,10 @@ local function DrawVignette()
 end
 
 local function DrawBlur()
-    local ply = LocalPlayer()
-    blurGoal = ply:getLocalVar("blur", 0) + (hook.Run("AdjustBlurAmount", blurGoal) or 0)
+    local client = LocalPlayer()
+    blurGoal = client:getLocalVar("blur", 0) + (hook.Run("AdjustBlurAmount", blurGoal) or 0)
     if blurValue ~= blurGoal then blurValue = mathApproach(blurValue, blurGoal, FrameTime() * 20) end
-    if blurValue > 0 and not ply:ShouldDrawLocalPlayer() then lia.util.drawBlurAt(0, 0, ScrW(), ScrH(), blurValue) end
+    if blurValue > 0 and not client:ShouldDrawLocalPlayer() then lia.util.drawBlurAt(0, 0, ScrW(), ScrH(), blurValue) end
 end
 
 local function ShouldDrawBlur()
@@ -137,15 +137,15 @@ local function ShouldDrawBlur()
 end
 
 local function RenderEntities()
-    local ply = LocalPlayer()
-    if ply.getChar and ply:getChar() then
+    local client = LocalPlayer()
+    if client.getChar and client:getChar() then
         local ft = FrameTime()
         local rt = RealTime()
         if nextUpdate < rt then
             nextUpdate = rt + 0.5
-            lastTrace.start = ply:GetShootPos()
-            lastTrace.endpos = lastTrace.start + ply:GetAimVector() * 160
-            lastTrace.filter = ply
+            lastTrace.start = client:GetShootPos()
+            lastTrace.endpos = lastTrace.start + client:GetAimVector() * 160
+            lastTrace.filter = client
             lastTrace.mins = Vector(-4, -4, -4)
             lastTrace.maxs = Vector(4, 4, 4)
             lastTrace.mask = MASK_SHOT_HULL
@@ -265,9 +265,9 @@ function MODULE:DrawEntityInfo(e, a, pos)
 end
 
 function MODULE:HUDPaint()
-    local ply = LocalPlayer()
-    if ply:Alive() and ply:getChar() then
-        local wpn = ply:GetActiveWeapon()
+    local client = LocalPlayer()
+    if client:Alive() and client:getChar() then
+        local wpn = client:GetActiveWeapon()
         if canDrawAmmo(wpn) then drawAmmo(wpn) end
         if canDrawCrosshair() then drawCrosshair() end
         if lia.option.get("fpsDraw", false) then DrawFPS() end
@@ -309,22 +309,22 @@ function MODULE:TooltipLayout(var)
 end
 
 lia.bar.add(function()
-    local ply = LocalPlayer()
-    return ply:Health() / ply:GetMaxHealth()
+    local client = LocalPlayer()
+    return client:Health() / client:GetMaxHealth()
 end, Color(200, 50, 40), nil, "health")
 
 lia.bar.add(function()
-    local ply = LocalPlayer()
-    return math.min(ply:Armor() / 100, 1)
+    local client = LocalPlayer()
+    return math.min(client:Armor() / 100, 1)
 end, Color(30, 70, 180), nil, "armor")
 
 timer.Create("liaVignetteChecker", 1, 0, function()
-    local ply = LocalPlayer()
-    if IsValid(ply) then
+    local client = LocalPlayer()
+    if IsValid(client) then
         local d = {}
-        d.start = ply:GetPos()
+        d.start = client:GetPos()
         d.endpos = d.start + Vector(0, 0, 768)
-        d.filter = ply
+        d.filter = client
         local tr = util.TraceLine(d)
         if tr and tr.Hit then
             vignetteAlphaGoal = 80
