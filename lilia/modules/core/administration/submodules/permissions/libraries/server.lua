@@ -120,6 +120,10 @@ function GM:PlayerSpawnedVehicle(client, entity)
     entity:SetCreator(client)
 end
 
+function MODULE:CanPlayerUseChar(client)
+    if GetGlobalBool("characterSwapLock", false) and not client:hasPrivilege("Staff Permissions - Can Bypass Character Lock") then return false, "Currently the server is in an event and you're unable to change characters." end
+end
+
 concommand.Add("kickbots", function()
     for _, bot in player.Iterator() do
         if bot:IsBot() then bot:Kick("All bots kicked") end

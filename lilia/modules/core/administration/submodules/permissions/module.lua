@@ -5,6 +5,11 @@ MODULE.version = "Stock"
 MODULE.desc = "Implements CAMI Based Permissions."
 MODULE.CAMIPrivileges = {
     {
+        Name = "Staff Permissions - Can Bypass Character Lock",
+        MinAccess = "superadmin",
+        Description = "Allows access to bypassing character lock."
+    },
+    {
         Name = "Staff Permissions - Can Grab World Props",
         MinAccess = "superadmin",
         Description = "Allows access to grabbing world props."

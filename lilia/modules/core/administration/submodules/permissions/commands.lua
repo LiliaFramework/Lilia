@@ -57,6 +57,70 @@ lia.command.add("roll", {
     end
 })
 
+lia.command.add("forcefallover", {
+    adminOnly = true,
+    privilege = "Force Fallover",
+    syntax = "[player target] [number time]",
+    onRun = function(client, arguments)
+        local target = lia.command.findPlayer(client, arguments[1])
+        if not target then return end
+        if target:getNetVar("FallOverCooldown", false) then
+            target:notifyLocalized("cmdCooldown")
+            return
+        elseif target:IsFrozen() then
+            target:notifyLocalized("cmdFrozen")
+            return
+        elseif not target:Alive() then
+            target:notifyLocalized("cmdDead")
+            return
+        elseif target:hasValidVehicle() then
+            target:notifyLocalized("cmdVehicle")
+            return
+        elseif target:isNoClipping() then
+            target:notifyLocalized("cmdNoclip")
+            return
+        end
+
+        local time = tonumber(arguments[2])
+        if not time or time < 1 then
+            time = 5
+        else
+            time = math.Clamp(time, 1, 60)
+        end
+
+        target:setNetVar("FallOverCooldown", true)
+        if not target:hasRagdoll() then
+            target:setRagdolled(true, time)
+            timer.Simple(10, function() if IsValid(target) then target:setNetVar("FallOverCooldown", false) end end)
+        end
+    end
+})
+
+lia.command.add("forcegetup", {
+    adminOnly = true,
+    privilege = "Force GetUp",
+    syntax = "[player target]",
+    onRun = function(client, arguments)
+        local target = lia.command.findPlayer(client, arguments[1])
+        if not target then return end
+        if not target:hasRagdoll() then
+            target:notifyLocalized("noRagdoll")
+            return
+        end
+
+        local entity = target:getRagdoll()
+        if IsValid(entity) and entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then
+            entity.liaWakingUp = true
+            target:setAction("gettingUp", 5, function()
+                if IsValid(entity) then
+                    hook.Run("OnCharGetup", target, entity)
+                    entity:Remove()
+                end
+            end)
+        end
+    end
+})
+
 lia.command.add("chardesc", {
     adminOnly = false,
     syntax = "[string desc]",
@@ -87,7 +151,8 @@ lia.command.add("chargetup", {
                 end
             end)
         end
-    end
+    end,
+    alias = {"getup",}
 })
 
 lia.command.add("givemoney", {
@@ -204,6 +269,21 @@ lia.command.add("dropmoney", {
         client:setNetVar("DropMoneyCooldown", true)
         client:setNetVar("DropMoneyCooldownEnd", CurTime() + 5)
         timer.Simple(5, function() if IsValid(client) then client:setNetVar("DropMoneyCooldown", false) end end)
+    end
+})
+
+lia.command.add("togglelockcharacters", {
+    superAdminOnly = true,
+    syntax = "[boolean lock]",
+    privilege = "Toggle Character Lock",
+    onRun = function(client, arguments)
+        local newVal = not GetGlobalBool("characterSwapLock", false)
+        SetGlobalBool("characterSwapLock", newVal)
+        if not newVal then
+            return "Now the players will be able to change character"
+        else
+            return "Now the players won't be able to change character until the server is restarted or until you re-enable it"
+        end
     end
 })
 
@@ -477,8 +557,8 @@ lia.command.add("charkick", {
         if IsValid(target) then
             local character = target:getChar()
             if character then
-                for _, ply in player.Iterator() do
-                    ply:notifyLocalized("charKick", client:Name(), target:Name())
+                for _, targets in player.Iterator() do
+                    targets:notifyLocalized("charKick", client:Name(), target:Name())
                 end
 
                 character:kick()
