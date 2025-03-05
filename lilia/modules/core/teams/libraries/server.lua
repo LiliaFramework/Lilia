@@ -17,6 +17,14 @@ function MODULE:CanPlayerJoinClass(client, class)
     return true
 end
 
+function MODULE:OnCharCreated(client, character)
+    local faction = lia.faction.get(character:getFaction())
+    local items = faction.items or {}
+    for _, item in pairs(items) do
+        character:getInv():add(item, 1)
+    end
+end
+
 function MODULE:PlayerLoadedChar(client, character)
     local data = character:getData("pclass")
     local class = data and lia.class.list[data]
