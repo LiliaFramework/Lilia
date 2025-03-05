@@ -28,7 +28,7 @@ local privileges = CAMI.GetPrivileges and CAMI.GetPrivileges() or {}
 function CAMI.RegisterUsergroup(usergroup, source)
     if source then usergroup.CAMI_Source = tostring(source) end
     usergroups[usergroup.Name] = usergroup
-    hook.Call("CAMI.OnUsergroupRegistered", nil, usergroup, source)
+    hook.Run("CAMI.OnUsergroupRegistered", usergroup, source)
     return usergroup
 end
 
@@ -36,7 +36,7 @@ function CAMI.UnregisterUsergroup(usergroupName, source)
     if not usergroups[usergroupName] then return false end
     local usergroup = usergroups[usergroupName]
     usergroups[usergroupName] = nil
-    hook.Call("CAMI.OnUsergroupUnregistered", nil, usergroup, source)
+    hook.Run("CAMI.OnUsergroupUnregistered", usergroup, source)
     return true
 end
 
@@ -67,7 +67,7 @@ end
 
 function CAMI.RegisterPrivilege(privilege)
     privileges[privilege.Name] = privilege
-    hook.Call("CAMI.OnPrivilegeRegistered", nil, privilege)
+    hook.Run("CAMI.OnPrivilegeRegistered", privilege)
     return privilege
 end
 
@@ -75,7 +75,7 @@ function CAMI.UnregisterPrivilege(privilegeName)
     if not privileges[privilegeName] then return false end
     local privilege = privileges[privilegeName]
     privileges[privilegeName] = nil
-    hook.Call("CAMI.OnPrivilegeUnregistered", nil, privilege)
+    hook.Run("CAMI.OnPrivilegeUnregistered", privilege)
     return true
 end
 
@@ -103,7 +103,9 @@ local defaultAccessHandler = {
 function CAMI.PlayerHasAccess(actorPly, privilegeName, callback, targetPly, extraInfoTbl)
     local hasAccess, reason = nil, nil
     local callback_ = callback or function(hA, r) hasAccess, reason = hA, r end
-    hook.Call("CAMI.PlayerHasAccess", defaultAccessHandler, actorPly, privilegeName, callback_, targetPly, extraInfoTbl)
+    if not IsValid(actorPly) then return end
+    if actorPly:IsBot() then return true end
+    hook.Run("CAMI.PlayerHasAccess", defaultAccessHandler, actorPly, privilegeName, callback_, targetPly, extraInfoTbl)
     if callback ~= nil then return end
     if hasAccess == nil then
         local priv = privileges[privilegeName]
@@ -163,13 +165,13 @@ function CAMI.GetPlayersWithAccess(privilegeName, callback, targetPly, extraInfo
 end
 
 function CAMI.SteamIDHasAccess(actorSteam, privilegeName, callback, targetSteam, extraInfoTbl)
-    hook.Call("CAMI.SteamIDHasAccess", defaultAccessHandler, actorSteam, privilegeName, callback, targetSteam, extraInfoTbl)
+    hook.Run("CAMI.SteamIDHasAccess", defaultAccessHandler, actorSteam, privilegeName, callback, targetSteam, extraInfoTbl)
 end
 
 function CAMI.SignalUserGroupChanged(client, old, new, source)
-    hook.Call("CAMI.PlayerUsergroupChanged", nil, client, old, new, source)
+    hook.Run("CAMI.PlayerUsergroupChanged", client, old, new, source)
 end
 
 function CAMI.SignalSteamIDUserGroupChanged(steamId, old, new, source)
-    hook.Call("CAMI.SteamIDUsergroupChanged", nil, steamId, old, new, source)
+    hook.Run("CAMI.SteamIDUsergroupChanged", steamId, old, new, source)
 end
