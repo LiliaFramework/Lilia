@@ -50,6 +50,46 @@ local DefaultFunctions = {
         end,
         onCanRun = function(item) return IsValid(item.entity) end
     },
+    giveForward = {
+        name = "Give Forward",
+        tip = "Directly give the item to the person in front of you",
+        icon = "icon16/arrow_up.png",
+        onRun = function(item)
+            local function canTransferItemsFromInventoryUsingGiveForward(inventory, action, context)
+                if action == "transfer" then return true end
+            end
+
+            local client = item.player
+            local inv = client:getChar():getInv()
+            local target = client:GetEyeTraceNoCursor().Entity
+            if not (target and target:IsValid() and target:IsPlayer() and target:Alive() and client:GetPos():DistToSqr(target:GetPos()) < 6500) then
+                target = nil
+                return false
+            end
+
+            local targetInv = target:getChar():getInv()
+            if not target or not targetInv then return false end
+            inv:addAccessRule(canTransferItemsFromInventoryUsingGiveForward)
+            targetInv:addAccessRule(canTransferItemsFromInventoryUsingGiveForward)
+            client:setAction("Giving " .. item.name .. " to " .. target:Name(), lia.config.get("ItemGiveSpeed", 6))
+            target:setAction(client:Name() .. " is giving you a " .. item.name, lia.config.get("ItemGiveSpeed", 6))
+            client:doStaredAction(target, function()
+                local res = hook.Run("HandleItemTransferRequest", client, item:getID(), nil, nil, targetInv:getID())
+                if not res then return end
+                res:next(function()
+                    if not IsValid(client) then return end
+                    if istable(res) and isstring(res.error) then return client:notifyLocalized(res.error) end
+                    client:EmitSound("physics/cardboard/cardboard_box_impact_soft2.wav", 50)
+                end)
+            end, lia.config.get("ItemGiveSpeed", 6), function() client:setAction() end, 100)
+            return false
+        end,
+        onCanRun = function(item)
+            local client = item.player
+            local target = client:GetEyeTraceNoCursor().Entity
+            return item.entity == nil and lia.config.get("ItemGiveEnabled") and not IsValid(item.entity) and not item.noDrop and target and IsValid(target) and target:IsPlayer() and target:Alive() and client:GetPos():DistToSqr(target:GetPos()) < 6500
+        end
+    }
 }
 
 lia.meta.item.width = 1
