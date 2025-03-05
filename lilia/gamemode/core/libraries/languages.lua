@@ -49,8 +49,8 @@ table.sort(langs)
 lia.config.add("Language", "Language", "English", nil, {
     desc = "Determines the language setting for the game.",
     category = "Server",
-    noNetworking = false,
-    schemaOnly = false,
+    
+    
     type = "Table",
     options = langs
 })

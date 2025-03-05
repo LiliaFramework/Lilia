@@ -20,6 +20,12 @@ lia.config.add("CharacterSwitchCooldownTimer", "Character switch cooldown timer"
     max = 120
 })
 
+lia.config.add("ExplosionRagdoll", "Explosion Ragdoll on Hit", true, nil, {
+    desc = "Determines whether being hit by an explosion results in ragdolling",
+    category = "Quality of Life",
+    type = "Boolean"
+})
+
 lia.config.add("CarRagdoll", "Car Ragdoll on Hit", true, nil, {
     desc = "Determines whether being hit by a car results in ragdolling",
     category = "Quality of Life",
@@ -76,7 +82,7 @@ lia.config.add("ToolInterval", "Tool Gun Usage Cooldown", 0, nil, {
     max = 60
 })
 
-lia.config.add("DisableLuaRun", "Disable Lua Run Hooks", true, nil, {
+lia.config.add("DisableLuaRun", "Disable Lua Run Hooks", false, nil, {
     desc = "Whether or not Lilia should prevent lua_run hooks on maps",
     category = "Protection",
     type = "Boolean"
@@ -84,9 +90,7 @@ lia.config.add("DisableLuaRun", "Disable Lua Run Hooks", true, nil, {
 
 lia.config.add("EquipDelay", "Equip Delay", 1, nil, {
     desc = "Time delay between equipping items.",
-    category = "Protection",
-    noNetworking = false,
-    schemaOnly = false,
+    category = "Items",
     type = "Float",
     min = 0,
     max = 10
@@ -94,9 +98,7 @@ lia.config.add("EquipDelay", "Equip Delay", 1, nil, {
 
 lia.config.add("UnequipDelay", "Unequip Delay", 1, nil, {
     desc = "Time delay between unequipping items.",
-    category = "Protection",
-    noNetworking = false,
-    schemaOnly = false,
+    category = "Items",
     type = "Float",
     min = 0,
     max = 10
@@ -104,9 +106,7 @@ lia.config.add("UnequipDelay", "Unequip Delay", 1, nil, {
 
 lia.config.add("DropDelay", "Drop Delay", 1, nil, {
     desc = "Time delay between dropping items.",
-    category = "Protection",
-    noNetworking = false,
-    schemaOnly = false,
+    category = "Items",
     type = "Float",
     min = 0,
     max = 10
@@ -114,12 +114,24 @@ lia.config.add("DropDelay", "Drop Delay", 1, nil, {
 
 lia.config.add("TakeDelay", "Take Delay", 0, nil, {
     desc = "Time delay between taking items.",
-    category = "Protection",
-    noNetworking = false,
-    schemaOnly = false,
+    category = "Items",
     type = "Float",
     min = 0,
     max = 10
+})
+
+lia.config.add("ItemGiveSpeed", "Item Give Speed", 6, nil, {
+    desc = "How fast transferring items between players via giveForward is.",
+    category = "Items",
+    type = "Int",
+    min = 1,
+    max = 60
+})
+
+lia.config.add("ItemGiveEnabled", "Is Item Giving Enabled", true, nil, {
+    desc = "Determines if item giving via giveForward is enabled.",
+    category = "Items",
+    type = "Boolean"
 })
 
 MODULE.BlockedCollideEntities = {
