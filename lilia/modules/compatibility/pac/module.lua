@@ -12,3 +12,11 @@ MODULE.CAMIPrivileges = {
         Description = "Allows access to PAC3.",
     }
 }
+
+lia.config.add("BlockPackURLoad", "Block Pack URL Load", true, nil, {
+    desc = "Determines whether loading PAC3 packs from a URL should be blocked.",
+    category = "PAC3",
+    noNetworking = false,
+    schemaOnly = false,
+    type = "Boolean"
+})

@@ -8,6 +8,7 @@ end
 function MODULE:InitializedModules()
     if CLIENT then hook.Remove("HUDPaint", "pac_in_editor") end
     timer.Simple(1, function() self:setupPACDataFromItems() end)
+    if lia.config.get("BlockPackURLoad") then concommand.Remove("pac_load_url") end
 end
 
 function MODULE:isAllowedToUsePAC(client)
