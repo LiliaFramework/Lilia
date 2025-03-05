@@ -24,8 +24,16 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
         return
     end
 
+    if dmgInfo:IsExplosionDamage() and lia.config.get("ExplosionRagdoll", true) then
+        dmgInfo:ScaleDamage(0.5)
+        local dmgPos = dmgInfo:GetDamagePosition()
+        local direction = (entity:GetPos() - dmgPos):GetNormalized()
+        entity:SetVelocity(direction * 60 * dmgInfo:GetDamage())
+        timer.Simple(0.05, function() if IsValid(entity) and not entity:hasRagdoll() then entity:setRagdolled(true, 3) end end)
+    end
+
     if notSameEntity then
-        if attackerIsHuman and attacker:getNetVar("IsActing", false) then return true end
+        if entity:GetMoveType() == MOVETYPE_NOCLIP then return end
         if lia.config.get("OnDamageCharacterSwitchCooldownTimer", 15) > 0 then
             local applyCooldown = lia.config.get("SwitchCooldownOnAllEntities", false) or attackerIsHuman
             if applyCooldown then entity.LastDamaged = CurTime() end
@@ -36,6 +44,10 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
             if not entity:hasRagdoll() then entity:setRagdolled(true, 5) end
         end
     end
+end
+
+function MODULE:PlayerShouldTaunt()
+    return false
 end
 
 function MODULE:PlayerAuthed(client, steamid)

@@ -24,6 +24,11 @@ MODULE.CAMIPrivileges = {
         MinAccess = "admin",
         Description = "Allows access to Event Chat."
     },
+    {
+        Name = "Staff Permissions - Always Have Access to Help Chat",
+        MinAccess = "superadmin",
+        Description = "Allows access to Help Chat."
+    },
 }
 
 if CLIENT then
