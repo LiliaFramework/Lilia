@@ -29,7 +29,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
         local dmgPos = dmgInfo:GetDamagePosition()
         local direction = (entity:GetPos() - dmgPos):GetNormalized()
         entity:SetVelocity(direction * 60 * dmgInfo:GetDamage())
-        timer.Simple(0.05, function() if IsValid(entity) and not entity:hasRagdoll() then entity:setRagdolled(true, 3) end end)
+        timer.Simple(0.05, function() if IsValid(entity) and not entity:hasRagdoll() and entity:Health() - dmgInfo:GetDamage() > 0 then entity:setRagdolled(true, 3) end end)
     end
 
     if notSameEntity then
@@ -41,7 +41,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
 
         if lia.config.get("CarRagdoll", true) and IsValid(inflictor) and inflictor:isSimfphysCar() and not (entity:GetVehicle() or (LVS and entity:lvsGetVehicle())) then
             dmgInfo:ScaleDamage(0)
-            if not entity:hasRagdoll() then entity:setRagdolled(true, 5) end
+            if not entity:hasRagdoll() and entity:Health() - dmgInfo:GetDamage() > 0 then entity:setRagdolled(true, 5) end
         end
     end
 end

@@ -40,7 +40,8 @@ function playerMeta:isNoClipping()
 end
 
 function playerMeta:hasRagdoll()
-    return IsValid(self.liaRagdoll)
+    local valid = IsValid(self.liaRagdoll)
+    return valid
 end
 
 function playerMeta:removeRagdoll()
@@ -434,6 +435,7 @@ if SERVER then
         entity:Spawn()
         entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
         entity:Activate()
+        if isDead then self.liaRagdoll = entity end
         hook.Run("OnCreatePlayerRagdoll", self, entity, isDead)
         local velocity = self:GetVelocity()
         for i = 0, entity:GetPhysicsObjectCount() - 1 do

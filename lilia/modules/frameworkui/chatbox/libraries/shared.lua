@@ -152,7 +152,7 @@ lia.chat.register("adminchat", {
         return false
     end,
     onCanSay = function(speaker)
-        if speaker:hasPrivilege("Staff Permissions - Admin Chat") then
+        if not speaker:hasPrivilege("Staff Permissions - Admin Chat") then
             speaker:notifyWarning("You aren't an admin. Use '@messagehere' to create a ticket.")
             return false
         end

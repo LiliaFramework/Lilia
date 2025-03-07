@@ -357,7 +357,6 @@ end
 function GM:PlayerDeath(client)
     local character = client:getChar()
     if not character then return end
-    client:removeRagdoll()
     local inventory = character:getInv()
     if inventory then
         local items = inventory:getItems()

@@ -11,6 +11,7 @@ function MODULE:HUDPaint()
     local timePassed = os.time() - lastDeathTime
     local timeLeft = clmp(respawnTime - timePassed, 0, respawnTime)
     local ft = FrameTime()
+    if hook.Run("ShouldRespawnScreenAppear") == false then return end
     if client:getChar() then
         if client:Alive() then
             if aprg ~= 0 then
