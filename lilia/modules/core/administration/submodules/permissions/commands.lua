@@ -1485,9 +1485,28 @@ lia.command.add("forcesay", {
     end
 })
 
+lia.command.add("getmodel", {
+    syntax = "",
+    onRun = function(client, arguments)
+        local entity = client:getTracedEntity()
+        if not IsValid(entity) then
+            client:notify("No valid entity found in front of you.")
+            return
+        end
+
+        local model = entity:GetModel() or "No model found."
+        client:ChatPrint("The model is: " .. model)
+    end
+})
+
 lia.command.add("pm", {
     syntax = "[string charname] <string message>",
     onRun = function(client, arguments)
+        if not lia.config.get("AllowPMs") then
+            client:notifyLocalized("pmsDisabled")
+            return
+        end
+
         local targetName = arguments[1]
         local message = table.concat(arguments, " ", 2)
         local target = lia.command.findPlayer(client, targetName)

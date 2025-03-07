@@ -183,6 +183,12 @@ lia.config.add("MaxCharacters", "Max Characters", 5, nil, {
     max = 10
 })
 
+lia.config.add("AllowPMs", "Allow Private Messages", true, nil, {
+    desc = "Determines whether private messages are allowed.",
+    category = "Chat",
+    type = "Boolean"
+})
+
 lia.config.add("MinDescLen", "Minimum Description Length", 16, nil, {
     desc = "Minimum length required for a character's description.",
     category = "Character",

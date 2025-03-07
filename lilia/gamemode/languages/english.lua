@@ -313,6 +313,7 @@ LANGUAGE = {
     playtimeTargetError = "Could not retrieve playtime for the specified target.",
     adminStickGetPlayTimeName = "Get Play Time",
     adminStickCategoryModeration = "Moderation Tools",
+    pmsDisabled = "Private Messages are Disabled",
     adminStickSubCategoryMisc = "Miscellaneous",
     fixpac_success = "PAC has been successfully restarted. You might need to run this command twice!",
     pacdisable_message = "PAC has been disabled to boost performance. If you would like to re-enable it, type /pacenable in chat.",
