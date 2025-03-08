@@ -75,7 +75,7 @@ hook.Add("CreateMenuButtons", "AttributeMenuButtons", function(tabs)
             local containerWidth = panel:GetWide() * 0.5
             local containerHeight = panel:GetTall()
             container:SetSize(containerWidth, containerHeight)
-            container:SetPos(panel:GetWide()*0.3, 303)
+            container:SetPos(panel:GetWide() * 0.3, 303)
             container.Paint = function() end
             local scrollPanel = vgui.Create("DScrollPanel", container)
             scrollPanel:Dock(FILL)

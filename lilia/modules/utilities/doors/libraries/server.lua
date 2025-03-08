@@ -204,7 +204,7 @@ end
 
 function MODULE:KeyUnlock(client, door, time)
     if not IsValid(door) or not IsValid(client) then return end
-    if hook.Run("CanPlayerUnlock",  client, door) == false then return end
+    if hook.Run("CanPlayerUnlock", client, door) == false then return end
     local distance = client:GetPos():Distance(door:GetPos())
     local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
     if isProperEntity and door:isLocked() and distance <= 256 and (door:checkDoorAccess(client) or door:GetCreator() == client or client:isStaffOnDuty()) then

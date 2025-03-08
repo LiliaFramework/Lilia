@@ -1,71 +1,71 @@
-local function rb655_property_filter(filtor, ent, client)
-	if isstring(filtor) and filtor ~= ent:GetClass() then return false end
-	if istable(filtor) and not table.HasValue(filtor, ent:GetClass()) then return false end
-	if isfunction(filtor) and not filtor(ent, client) then return false end
-	return true
+﻿local function rb655_property_filter(filtor, ent, client)
+    if isstring(filtor) and filtor ~= ent:GetClass() then return false end
+    if istable(filtor) and not table.HasValue(filtor, ent:GetClass()) then return false end
+    if isfunction(filtor) and not filtor(ent, client) then return false end
+    return true
 end
 
 function AddEntFunctionProperty(name, label, pos, filtor, func, icon)
-	properties.Add(name, {
-		MenuLabel = label,
-		MenuIcon = icon,
-		Order = pos,
-		Filter = function(self, ent, client)
-			if not IsValid(ent) or not gamemode.Call("CanProperty", client, name, ent) then return false end
-			if not rb655_property_filter(filtor, ent, client) then return false end
-			return true
-		end,
-		Action = function(self, ent)
-			self:MsgStart()
-			net.WriteEntity(ent)
-			self:MsgEnd()
-		end,
-		Receive = function(self, length, client)
-			local ent = net.ReadEntity()
-			if not IsValid(client) or not IsValid(ent) or not self:Filter(ent, client) then return false end
-			func(ent, client)
-		end
-	})
+    properties.Add(name, {
+        MenuLabel = label,
+        MenuIcon = icon,
+        Order = pos,
+        Filter = function(self, ent, client)
+            if not IsValid(ent) or not gamemode.Call("CanProperty", client, name, ent) then return false end
+            if not rb655_property_filter(filtor, ent, client) then return false end
+            return true
+        end,
+        Action = function(self, ent)
+            self:MsgStart()
+            net.WriteEntity(ent)
+            self:MsgEnd()
+        end,
+        Receive = function(self, length, client)
+            local ent = net.ReadEntity()
+            if not IsValid(client) or not IsValid(ent) or not self:Filter(ent, client) then return false end
+            func(ent, client)
+        end
+    })
 end
 
 function AddEntFireProperty(name, label, pos, filtor, input, icon)
-	AddEntFunctionProperty(name, label, pos, filtor, function(e) e:Fire(unpack(string.Explode(" ", input))) end, icon)
+    AddEntFunctionProperty(name, label, pos, filtor, function(e) e:Fire(unpack(string.Explode(" ", input))) end, icon)
 end
 
 if SERVER then
-	local SyncFuncs = {}
-	SyncFuncs.prop_door_rotating = function(ent)
-		ent:setNetVar("Locked", ent:GetInternalVariable("m_bLocked"))
-		local state = ent:GetInternalVariable("m_eDoorState")
-		ent:setNetVar("Closed", state == 0 or state == 3)
-	end
+    local SyncFuncs = {}
+    SyncFuncs.prop_door_rotating = function(ent)
+        ent:setNetVar("Locked", ent:GetInternalVariable("m_bLocked"))
+        local state = ent:GetInternalVariable("m_eDoorState")
+        ent:setNetVar("Closed", state == 0 or state == 3)
+    end
 
-	SyncFuncs.func_door = function(ent) ent:setNetVar("Locked", ent:GetInternalVariable("m_bLocked")) end
-	SyncFuncs.func_door_rotating = function(ent) ent:setNetVar("Locked", ent:GetInternalVariable("m_bLocked")) end
-	SyncFuncs.prop_vehicle_jeep = function(ent)
-		ent:setNetVar("Locked", ent:GetInternalVariable("VehicleLocked"))
-		ent:setNetVar("HasDriver", IsValid(ent:GetDriver()))
-		ent:setNetVar("m_bRadarEnabled", ent:GetInternalVariable("m_bRadarEnabled"))
-	end
+    SyncFuncs.func_door = function(ent) ent:setNetVar("Locked", ent:GetInternalVariable("m_bLocked")) end
+    SyncFuncs.func_door_rotating = function(ent) ent:setNetVar("Locked", ent:GetInternalVariable("m_bLocked")) end
+    SyncFuncs.prop_vehicle_jeep = function(ent)
+        ent:setNetVar("Locked", ent:GetInternalVariable("VehicleLocked"))
+        ent:setNetVar("HasDriver", IsValid(ent:GetDriver()))
+        ent:setNetVar("m_bRadarEnabled", ent:GetInternalVariable("m_bRadarEnabled"))
+    end
 
-	SyncFuncs.prop_vehicle_airboat = function(ent)
-		ent:setNetVar("Locked", ent:GetInternalVariable("VehicleLocked"))
-		ent:setNetVar("HasDriver", IsValid(ent:GetDriver()))
-	end
+    SyncFuncs.prop_vehicle_airboat = function(ent)
+        ent:setNetVar("Locked", ent:GetInternalVariable("VehicleLocked"))
+        ent:setNetVar("HasDriver", IsValid(ent:GetDriver()))
+    end
 
-	SyncFuncs.func_tracktrain = function(ent)
-		ent:setNetVar("m_dir", ent:GetInternalVariable("m_dir"))
-		ent:setNetVar("m_moving", ent:GetInternalVariable("speed") ~= 0)
-	end
+    SyncFuncs.func_tracktrain = function(ent)
+        ent:setNetVar("m_dir", ent:GetInternalVariable("m_dir"))
+        ent:setNetVar("m_moving", ent:GetInternalVariable("speed") ~= 0)
+    end
 
-	local nextSync = 0
-	hook.Add("Tick", "rb655_propperties_sync", function()
-		if nextSync > CurTime() then return end
-		nextSync = CurTime() + 1
-		for id, ent in ents.Iterator() do
-			if SyncFuncs[ent:GetClass()] then SyncFuncs[ent:GetClass()](ent) end
-		end
-	end)
+    local nextSync = 0
+    hook.Add("Tick", "rb655_propperties_sync", function()
+        if nextSync > CurTime() then return end
+        nextSync = CurTime() + 1
+        for id, ent in ents.Iterator() do
+            if SyncFuncs[ent:GetClass()] then SyncFuncs[ent:GetClass()](ent) end
+        end
+    end)
 end
 
 local ExplodeIcon = "icon16/bomb.png"
@@ -73,114 +73,114 @@ local EnableIcon = "icon16/tick.png"
 local DisableIcon = "icon16/cross.png"
 local ToggleIcon = "icon16/arrow_switch.png"
 AddEntFireProperty("rb655_door_open", "Open", 655, function(ent, client)
-	if not ent:getNetVar("Closed") and ent:GetClass() == "prop_door_rotating" then return false end
-	return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door"}, ent, client)
+    if not ent:getNetVar("Closed") and ent:GetClass() == "prop_door_rotating" then return false end
+    return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door"}, ent, client)
 end, "Open", "icon16/door_open.png")
 
 AddEntFireProperty("rb655_door_close", "Close", 656, function(ent, client)
-	if ent:getNetVar("Closed") and ent:GetClass() == "prop_door_rotating" then return false end
-	return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door"}, ent, client)
+    if ent:getNetVar("Closed") and ent:GetClass() == "prop_door_rotating" then return false end
+    return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door"}, ent, client)
 end, "Close", "icon16/door.png")
 
 AddEntFireProperty("rb655_door_lock", "Lock", 657, function(ent, client)
-	if ent:getNetVar("Locked") and ent:GetClass() ~= "prop_vehicle_prisoner_pod" then return false end
-	return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door", "prop_vehicle_jeep", "prop_vehicle_airboat", "prop_vehicle_prisoner_pod"}, ent, client)
+    if ent:getNetVar("Locked") and ent:GetClass() ~= "prop_vehicle_prisoner_pod" then return false end
+    return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door", "prop_vehicle_jeep", "prop_vehicle_airboat", "prop_vehicle_prisoner_pod"}, ent, client)
 end, "Lock", "icon16/lock.png")
 
 AddEntFireProperty("rb655_door_unlock", "Unlock", 658, function(ent, client)
-	if not ent:getNetVar("Locked") and ent:GetClass() ~= "prop_vehicle_prisoner_pod" then return false end
-	return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door", "prop_vehicle_jeep", "prop_vehicle_airboat", "prop_vehicle_prisoner_pod"}, ent, client)
+    if not ent:getNetVar("Locked") and ent:GetClass() ~= "prop_vehicle_prisoner_pod" then return false end
+    return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door", "prop_vehicle_jeep", "prop_vehicle_airboat", "prop_vehicle_prisoner_pod"}, ent, client)
 end, "Unlock", "icon16/lock_open.png")
 
 AddEntFireProperty("rb655_func_movelinear_open", "Start", 655, "func_movelinear", "Open", "icon16/arrow_right.png")
 AddEntFireProperty("rb655_func_movelinear_close", "Return", 656, "func_movelinear", "Close", "icon16/arrow_left.png")
 AddEntFireProperty("rb655_func_tracktrain_StartForward", "Start Forward", 655, function(ent, client)
-	if ent:getNetVar("m_dir") == 1 then return false end
-	return rb655_property_filter("func_tracktrain", ent, client)
+    if ent:getNetVar("m_dir") == 1 then return false end
+    return rb655_property_filter("func_tracktrain", ent, client)
 end, "StartForward", "icon16/arrow_right.png")
 
 AddEntFireProperty("rb655_func_tracktrain_StartBackward", "Start Backward", 656, function(ent, client)
-	if ent:getNetVar("m_dir") == -1 then return false end
-	return rb655_property_filter("func_tracktrain", ent, client)
+    if ent:getNetVar("m_dir") == -1 then return false end
+    return rb655_property_filter("func_tracktrain", ent, client)
 end, "StartBackward", "icon16/arrow_left.png")
 
 AddEntFireProperty("rb655_func_tracktrain_Stop", "Stop", 658, function(ent, client)
-	if not ent:getNetVar("m_moving") then return false end
-	return rb655_property_filter("func_tracktrain", ent, client)
+    if not ent:getNetVar("m_moving") then return false end
+    return rb655_property_filter("func_tracktrain", ent, client)
 end, "Stop", "icon16/shape_square.png")
 
 AddEntFireProperty("rb655_func_tracktrain_Resume", "Resume", 659, function(ent, client)
-	if ent:getNetVar("m_moving") then return false end
-	return rb655_property_filter("func_tracktrain", ent, client)
+    if ent:getNetVar("m_moving") then return false end
+    return rb655_property_filter("func_tracktrain", ent, client)
 end, "Resume", "icon16/resultset_next.png")
 
 AddEntFireProperty("rb655_breakable_break", "Break", 655, function(ent, client)
-	if ent:Health() < 1 then return false end
-	return rb655_property_filter({"func_breakable", "func_physbox", "prop_physics", "func_pushable"}, ent, client)
+    if ent:Health() < 1 then return false end
+    return rb655_property_filter({"func_breakable", "func_physbox", "prop_physics", "func_pushable"}, ent, client)
 end, "Break", ExplodeIcon)
 
 local dissolve_id = 0
 local dissolver
 function rb655_dissolve(ent)
-	local phys = ent:GetPhysicsObject()
-	if IsValid(phys) then phys:EnableGravity(false) end
-	if not IsValid(dissolver) then
-		dissolver = ents.Create("env_entity_dissolver")
-		dissolver:SetPos(ent:GetPos())
-		dissolver:Spawn()
-		dissolver:Activate()
-		dissolver:SetKeyValue("magnitude", 100)
-		dissolver:SetKeyValue("dissolvetype", 0)
-	end
+    local phys = ent:GetPhysicsObject()
+    if IsValid(phys) then phys:EnableGravity(false) end
+    if not IsValid(dissolver) then
+        dissolver = ents.Create("env_entity_dissolver")
+        dissolver:SetPos(ent:GetPos())
+        dissolver:Spawn()
+        dissolver:Activate()
+        dissolver:SetKeyValue("magnitude", 100)
+        dissolver:SetKeyValue("dissolvetype", 0)
+    end
 
-	ent:SetName("rb655_dissolve" .. dissolve_id)
-	dissolver:Fire("Dissolve", "rb655_dissolve" .. dissolve_id)
-	dissolve_id = dissolve_id + 1
-	timer.Create("rb655_ep_cleanupDissolver", 60, 1, function() if IsValid(dissolver) then dissolver:Remove() end end)
+    ent:SetName("rb655_dissolve" .. dissolve_id)
+    dissolver:Fire("Dissolve", "rb655_dissolve" .. dissolve_id)
+    dissolve_id = dissolve_id + 1
+    timer.Create("rb655_ep_cleanupDissolver", 60, 1, function() if IsValid(dissolver) then dissolver:Remove() end end)
 end
 
 AddEntFunctionProperty("rb655_dissolve", "Disintegrate", 657, function(ent, client)
-	if ent:GetModel() and ent:GetModel():StartWith("*") then return false end
-	if ent:IsPlayer() then return false end
-	return true
+    if ent:GetModel() and ent:GetModel():StartWith("*") then return false end
+    if ent:IsPlayer() then return false end
+    return true
 end, function(ent) rb655_dissolve(ent) end, "icon16/wand.png")
 
 AddEntFireProperty("rb655_turret_toggle", "Toggle", 655, {"npc_combine_camera", "npc_turret_ceiling", "npc_turret_floor"}, "Toggle", ToggleIcon)
 AddEntFireProperty("rb655_self_destruct", "Self Destruct", 656, {"npc_turret_floor", "npc_helicopter"}, "SelfDestruct", ExplodeIcon)
 AddEntFunctionProperty("rb655_turret_ammo_remove", "Deplete Ammo", 657, function(ent)
-	if bit.band(ent:GetSpawnFlags(), 256) == 256 then return false end
-	if ent:GetClass() == "npc_turret_floor" or ent:GetClass() == "npc_turret_ceiling" then return true end
-	return false
+    if bit.band(ent:GetSpawnFlags(), 256) == 256 then return false end
+    if ent:GetClass() == "npc_turret_floor" or ent:GetClass() == "npc_turret_ceiling" then return true end
+    return false
 end, function(ent)
-	ent:SetKeyValue("spawnflags", bit.bor(ent:GetSpawnFlags(), 256))
-	ent:Activate()
+    ent:SetKeyValue("spawnflags", bit.bor(ent:GetSpawnFlags(), 256))
+    ent:Activate()
 end, "icon16/delete.png")
 
 AddEntFunctionProperty("rb655_turret_ammo_restore", "Restore Ammo", 658, function(ent)
-	if bit.band(ent:GetSpawnFlags(), 256) == 0 then return false end
-	if ent:GetClass() == "npc_turret_floor" or ent:GetClass() == "npc_turret_ceiling" then return true end
-	return false
+    if bit.band(ent:GetSpawnFlags(), 256) == 0 then return false end
+    if ent:GetClass() == "npc_turret_floor" or ent:GetClass() == "npc_turret_ceiling" then return true end
+    return false
 end, function(ent)
-	ent:SetKeyValue("spawnflags", bit.bxor(ent:GetSpawnFlags(), 256))
-	ent:Activate()
+    ent:SetKeyValue("spawnflags", bit.bxor(ent:GetSpawnFlags(), 256))
+    ent:Activate()
 end, "icon16/add.png")
 
 AddEntFunctionProperty("rb655_turret_make_friendly", "Make Friendly", 659, function(ent)
-	if bit.band(ent:GetSpawnFlags(), 512) == 512 then return false end
-	if ent:GetClass() == "npc_turret_floor" then return true end
-	return false
+    if bit.band(ent:GetSpawnFlags(), 512) == 512 then return false end
+    if ent:GetClass() == "npc_turret_floor" then return true end
+    return false
 end, function(ent)
-	ent:SetKeyValue("spawnflags", bit.bor(ent:GetSpawnFlags(), SF_FLOOR_TURRET_CITIZEN))
-	ent:Activate()
+    ent:SetKeyValue("spawnflags", bit.bor(ent:GetSpawnFlags(), SF_FLOOR_TURRET_CITIZEN))
+    ent:Activate()
 end, "icon16/user_green.png")
 
 AddEntFunctionProperty("rb655_turret_make_hostile", "Make Hostile", 660, function(ent)
-	if bit.band(ent:GetSpawnFlags(), 512) == 0 then return false end
-	if ent:GetClass() == "npc_turret_floor" then return true end
-	return false
+    if bit.band(ent:GetSpawnFlags(), 512) == 0 then return false end
+    if ent:GetClass() == "npc_turret_floor" then return true end
+    return false
 end, function(ent)
-	ent:SetKeyValue("spawnflags", bit.bxor(ent:GetSpawnFlags(), SF_FLOOR_TURRET_CITIZEN))
-	ent:Activate()
+    ent:SetKeyValue("spawnflags", bit.bxor(ent:GetSpawnFlags(), SF_FLOOR_TURRET_CITIZEN))
+    ent:Activate()
 end, "icon16/user_red.png")
 
 AddEntFireProperty("rb655_suitcharger_recharge", "Recharge", 655, "item_suitcharger", "Recharge", "icon16/arrow_refresh.png")
@@ -203,14 +203,14 @@ AddEntFireProperty("rb655_gunship_OmniscientOff", "Disable Omniscient", 656, "np
 AddEntFireProperty("rb655_gunship_BlindfireOn", "Enable Blindfire", 657, "npc_combinegunship", "BlindfireOn", EnableIcon)
 AddEntFireProperty("rb655_gunship_BlindfireOff", "Disable Blindfire", 658, "npc_combinegunship", "BlindfireOff", DisableIcon)
 AddEntFireProperty("rb655_alyx_HolsterWeapon", "Holster Weapon", 655, function(ent)
-	if not ent:IsNPC() or ent:GetClass() ~= "npc_alyx" or not IsValid(ent:GetActiveWeapon()) then return false end
-	return true
+    if not ent:IsNPC() or ent:GetClass() ~= "npc_alyx" or not IsValid(ent:GetActiveWeapon()) then return false end
+    return true
 end, "HolsterWeapon", "icon16/gun.png")
 
 AddEntFireProperty("rb655_alyx_UnholsterWeapon", "Unholster Weapon", 656, "npc_alyx", "UnholsterWeapon", "icon16/gun.png")
 AddEntFireProperty("rb655_alyx_HolsterAndDestroyWeapon", "Holster And Destroy Weapon", 657, function(ent)
-	if not ent:IsNPC() or ent:GetClass() ~= "npc_alyx" or not IsValid(ent:GetActiveWeapon()) then return false end
-	return true
+    if not ent:IsNPC() or ent:GetClass() ~= "npc_alyx" or not IsValid(ent:GetActiveWeapon()) then return false end
+    return true
 end, "HolsterAndDestroyWeapon", "icon16/gun.png")
 
 AddEntFireProperty("rb655_antlion_burrow", "Burrow", 655, {"npc_antlion", "npc_antlion_worker"}, "BurrowAway", "icon16/arrow_down.png")
@@ -249,96 +249,96 @@ AddEntFireProperty("rb655_patrol_off", "Stop Patrolling", 661, {"npc_citizen", "
 AddEntFireProperty("rb655_strider_aggressive_e", "Make More Aggressive", 658, "npc_strider", "EnableAggressiveBehavior", EnableIcon)
 AddEntFireProperty("rb655_strider_aggressive_d", "Make Less Aggressive", 659, "npc_strider", "DisableAggressiveBehavior", DisableIcon)
 AddEntFunctionProperty("rb655_healthcharger_recharge", "Recharge", 655, "item_healthcharger", function(ent)
-	local n = ents.Create("item_healthcharger")
-	n:SetPos(ent:GetPos())
-	n:SetAngles(ent:GetAngles())
-	n:Spawn()
-	n:Activate()
-	n:EmitSound("items/suitchargeok1.wav")
-	undo.ReplaceEntity(ent, n)
-	cleanup.ReplaceEntity(ent, n)
-	ent:Remove()
+    local n = ents.Create("item_healthcharger")
+    n:SetPos(ent:GetPos())
+    n:SetAngles(ent:GetAngles())
+    n:Spawn()
+    n:Activate()
+    n:EmitSound("items/suitchargeok1.wav")
+    undo.ReplaceEntity(ent, n)
+    cleanup.ReplaceEntity(ent, n)
+    ent:Remove()
 end, "icon16/arrow_refresh.png")
 
 AddEntFunctionProperty("rb655_vehicle_exit", "Kick Driver", 655, function(ent)
-	if ent:IsVehicle() and ent:getNetVar("HasDriver") then return true end
-	return false
+    if ent:IsVehicle() and ent:getNetVar("HasDriver") then return true end
+    return false
 end, function(ent)
-	if not IsValid(ent:GetDriver()) or not ent:GetDriver().ExitVehicle then return end
-	ent:GetDriver():ExitVehicle()
+    if not IsValid(ent:GetDriver()) or not ent:GetDriver().ExitVehicle then return end
+    ent:GetDriver():ExitVehicle()
 end, "icon16/car.png")
 
 AddEntFireProperty("rb655_vehicle_radar", "Enable Radar", 655, function(ent)
-	if not ent:IsVehicle() or ent:GetClass() ~= "prop_vehicle_jeep" then return false end
-	if ent:LookupAttachment("controlpanel0_ll") == 0 then return false end
-	if ent:LookupAttachment("controlpanel0_ur") == 0 then return false end
-	if ent:getNetVar("m_bRadarEnabled", false) then return false end
-	return true
+    if not ent:IsVehicle() or ent:GetClass() ~= "prop_vehicle_jeep" then return false end
+    if ent:LookupAttachment("controlpanel0_ll") == 0 then return false end
+    if ent:LookupAttachment("controlpanel0_ur") == 0 then return false end
+    if ent:getNetVar("m_bRadarEnabled", false) then return false end
+    return true
 end, "EnableRadar", "icon16/application_add.png")
 
 AddEntFireProperty("rb655_vehicle_radar_off", "Disable Radar", 655, function(ent)
-	if not ent:IsVehicle() or ent:GetClass() ~= "prop_vehicle_jeep" then return false end
-	if not ent:getNetVar("m_bRadarEnabled", false) then return false end
-	return true
+    if not ent:IsVehicle() or ent:GetClass() ~= "prop_vehicle_jeep" then return false end
+    if not ent:getNetVar("m_bRadarEnabled", false) then return false end
+    return true
 end, "DisableRadar", "icon16/application_delete.png")
 
 AddEntFunctionProperty("rb655_vehicle_enter", "Enter Vehicle", 656, function(ent)
-	if ent:IsVehicle() and not ent:getNetVar("HasDriver") then return true end
-	return false
+    if ent:IsVehicle() and not ent:getNetVar("HasDriver") then return true end
+    return false
 end, function(ent, client)
-	client:ExitVehicle()
-	client:EnterVehicle(ent)
+    client:ExitVehicle()
+    client:EnterVehicle(ent)
 end, "icon16/car.png")
 
 AddEntFunctionProperty("rb655_vehicle_add_gun", "Mount Gun", 657, function(ent)
-	if not ent:IsVehicle() then return false end
-	if ent:getNetVar("EnableGun", false) then return false end
-	if ent:GetBodygroup(1) == 1 then return false end
-	if ent:LookupSequence("aim_all") > 0 then return true end
-	if ent:LookupSequence("weapon_yaw") > 0 and ent:LookupSequence("weapon_pitch") > 0 then return true end
-	return false
+    if not ent:IsVehicle() then return false end
+    if ent:getNetVar("EnableGun", false) then return false end
+    if ent:GetBodygroup(1) == 1 then return false end
+    if ent:LookupSequence("aim_all") > 0 then return true end
+    if ent:LookupSequence("weapon_yaw") > 0 and ent:LookupSequence("weapon_pitch") > 0 then return true end
+    return false
 end, function(ent)
-	ent:SetKeyValue("EnableGun", "1")
-	ent:Activate()
-	ent:SetBodygroup(1, 1)
-	ent:setNetVar("EnableGun", true)
+    ent:SetKeyValue("EnableGun", "1")
+    ent:Activate()
+    ent:SetBodygroup(1, 1)
+    ent:setNetVar("EnableGun", true)
 end, "icon16/gun.png")
 
 AddEntFunctionProperty("rb655_baloon_break", "Pop", 655, "gmod_balloon", function(ent, client)
-	local dmginfo = DamageInfo()
-	dmginfo:SetAttacker(client)
-	ent:OnTakeDamage(dmginfo)
+    local dmginfo = DamageInfo()
+    dmginfo:SetAttacker(client)
+    ent:OnTakeDamage(dmginfo)
 end, ExplodeIcon)
 
 AddEntFunctionProperty("rb655_dynamite_activate", "Explode", 655, "gmod_dynamite", function(ent, client) ent:Explode(0, client) end, ExplodeIcon)
 AddEntFunctionProperty("rb655_emitter_on", "Start Emitting", 655, function(ent)
-	if ent:GetClass() == "gmod_emitter" and not ent:GetOn() then return true end
-	return false
+    if ent:GetClass() == "gmod_emitter" and not ent:GetOn() then return true end
+    return false
 end, function(ent, client) ent:SetOn(true) end, EnableIcon)
 
 AddEntFunctionProperty("rb655_emitter_off", "Stop Emitting", 656, function(ent)
-	if ent:GetClass() == "gmod_emitter" and ent:GetOn() then return true end
-	return false
+    if ent:GetClass() == "gmod_emitter" and ent:GetOn() then return true end
+    return false
 end, function(ent, client) ent:SetOn(false) end, DisableIcon)
 
 AddEntFunctionProperty("rb655_lamp_on", "Enable", 655, function(ent)
-	if ent:GetClass() == "gmod_lamp" and not ent:GetOn() then return true end
-	return false
+    if ent:GetClass() == "gmod_lamp" and not ent:GetOn() then return true end
+    return false
 end, function(ent, client) ent:Switch(true) end, EnableIcon)
 
 AddEntFunctionProperty("rb655_lamp_off", "Disable", 656, function(ent)
-	if ent:GetClass() == "gmod_lamp" and ent:GetOn() then return true end
-	return false
+    if ent:GetClass() == "gmod_lamp" and ent:GetOn() then return true end
+    return false
 end, function(ent, client) ent:Switch(false) end, DisableIcon)
 
 AddEntFunctionProperty("rb655_light_on", "Enable", 655, function(ent)
-	if ent:GetClass() == "gmod_light" and not ent:GetOn() then return true end
-	return false
+    if ent:GetClass() == "gmod_light" and not ent:GetOn() then return true end
+    return false
 end, function(ent, client) ent:SetOn(true) end, EnableIcon)
 
 AddEntFunctionProperty("rb655_light_off", "Disable", 656, function(ent)
-	if ent:GetClass() == "gmod_light" and ent:GetOn() then return true end
-	return false
+    if ent:GetClass() == "gmod_light" and ent:GetOn() then return true end
+    return false
 end, function(ent, client) ent:SetOn(false) end, DisableIcon)
 
 AddEntFireProperty("rb655_func_rotating_forward", "Start Forward", 655, "func_rotating", "StartForward", "icon16/arrow_right.png")
