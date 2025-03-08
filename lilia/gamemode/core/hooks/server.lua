@@ -3,28 +3,6 @@ function GM:InitializedModules()
     local bootstrapEndTime = SysTime()
     local timeTaken = bootstrapEndTime - BootingTime
     LiliaBootstrap("Bootstrapper", string.format("Lilia loaded in %.2f seconds.", timeTaken), Color(0, 255, 0))
-    local typeMap = {
-        string = function(data) return data.field .. " VARCHAR(" .. (data.length or 255) .. ")" end,
-        integer = function(data) return data.field .. " INT" end,
-        float = function(data) return data.field .. " FLOAT" end,
-        boolean = function(data) return data.field .. " TINYINT(1)" end,
-        datetime = function(data) return data.field .. " DATETIME" end,
-        text = function(data) return data.field .. " TEXT" end
-    }
-
-    for _, data in pairs(lia.char.vars) do
-        if data.fieldType and typeMap[data.fieldType] then
-            local fieldDefinition = typeMap[data.fieldType](data)
-            if data.default ~= nil then fieldDefinition = fieldDefinition .. " DEFAULT '" .. tostring(data.default) .. "'" end
-            lia.db.query("SELECT " .. data.field .. " FROM lia_characters", function(result)
-                if not result then
-                    local success = lia.db.query("ALTER TABLE lia_characters ADD COLUMN " .. fieldDefinition)
-                    LiliaInformation(success and "Adding column " .. data.field .. " to the database!" or "Failed to add column " .. data.field .. " due to a query error.")
-                end
-            end)
-        end
-    end
-
     local addons = engine.GetAddons()
     local autoDownload = lia.config.get("AutoDownloadWorkshop", false)
     for _, addon in ipairs(addons) do
