@@ -37,8 +37,6 @@ lia.config.add("StaminaBreathingThreshold", "Stamina Breathing Threshold", 50, n
 lia.config.add("MaxAttributePoints", "Max Attribute Points", 30, nil, {
     desc = "Maximum number of points that can be allocated across an attribute.",
     category = "Attributes",
-    
-    
     isGlobal = true,
     type = "Int",
     min = 1,
@@ -48,8 +46,6 @@ lia.config.add("MaxAttributePoints", "Max Attribute Points", 30, nil, {
 lia.config.add("MaxStartingAttributes", "Max Starting Attributes", 30, nil, {
     desc = "Maximum value of each attribute at character creation.",
     category = "Attributes",
-    
-    
     isGlobal = true,
     type = "Int",
     min = 1,
@@ -59,8 +55,6 @@ lia.config.add("MaxStartingAttributes", "Max Starting Attributes", 30, nil, {
 lia.config.add("StartingAttributePoints", "Starting Attribute Points", 30, nil, {
     desc = "Total number of points available for starting attribute allocation.",
     category = "Attributes",
-    
-    
     isGlobal = true,
     type = "Int",
     min = 1,
@@ -70,8 +64,6 @@ lia.config.add("StartingAttributePoints", "Starting Attribute Points", 30, nil, 
 lia.config.add("PunchStamina", "Punch Stamina", 10, nil, {
     desc = "Stamina usage for punches.",
     category = "Attributes",
-    
-    
     isGlobal = true,
     type = "Int",
     min = 0,

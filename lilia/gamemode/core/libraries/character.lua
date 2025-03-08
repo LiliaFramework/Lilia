@@ -97,7 +97,7 @@ function lia.char.registerVar(key, data)
         local fieldDefinition = typeMap[data.fieldType](data)
         if data.default ~= nil then fieldDefinition = fieldDefinition .. " DEFAULT '" .. tostring(data.default) .. "'" end
         if not lia.db then return end
-        lia.db.query("SELECT " .. data.field .. " FROM lia_characters LIMIT 1", function(exists) if not exists then lia.db.query("ALTER TABLE lia_characters ADD COLUMN " .. fieldDefinition, function(result) LiliaInformation("Added column " .. data.field .. " to the database!") end) end end)
+        lia.db.query("SELECT " .. data.field .. " FROM lia_characters LIMIT 1", function(exists) if not exists then lia.db.query("ALTER TABLE lia_characters ADD COLUMN " .. fieldDefinition, function() LiliaInformation("Added column " .. data.field .. " to the database!") end) end end)
     end
 
     characterMeta.vars[key] = data.default

@@ -55,18 +55,14 @@ local DefaultFunctions = {
         tip = "Directly give the item to the person in front of you",
         icon = "icon16/arrow_up.png",
         onRun = function(item)
-            local function canTransferItemsFromInventoryUsingGiveForward(inventory, action, context)
+            local function canTransferItemsFromInventoryUsingGiveForward(_, action, _)
                 if action == "transfer" then return true end
             end
 
             local client = item.player
             local inv = client:getChar():getInv()
             local target = client:GetEyeTraceNoCursor().Entity
-            if not (target and target:IsValid() and target:IsPlayer() and target:Alive() and client:GetPos():DistToSqr(target:GetPos()) < 6500) then
-                target = nil
-                return false
-            end
-
+            if not (target and target:IsValid() and target:IsPlayer() and target:Alive() and client:GetPos():DistToSqr(target:GetPos()) < 6500) then return false end
             local targetInv = target:getChar():getInv()
             if not target or not targetInv then return false end
             inv:addAccessRule(canTransferItemsFromInventoryUsingGiveForward)

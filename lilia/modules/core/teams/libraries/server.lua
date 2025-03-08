@@ -17,7 +17,7 @@ function MODULE:CanPlayerJoinClass(client, class)
     return true
 end
 
-function MODULE:OnCharCreated(client, character)
+function MODULE:OnCharCreated(_, character)
     local faction = lia.faction.get(character:getFaction())
     local items = faction.items or {}
     for _, item in pairs(items) do

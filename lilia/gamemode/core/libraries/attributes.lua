@@ -38,7 +38,7 @@ local function CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, 
     entryContainer:Dock(TOP)
     entryContainer:SetTall(30)
     entryContainer:DockMargin(8, dockMargin, 8, dockMargin)
-    entryContainer.Paint = function(self, w, h)
+    entryContainer.Paint = function(_, w, h)
         surface.SetDrawColor(shadowColor)
         surface.DrawRect(0, 0, w, h)
     end
@@ -52,7 +52,7 @@ local function CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, 
     label:SetContentAlignment(5)
     local bar = vgui.Create("DPanel", entryContainer)
     bar:Dock(FILL)
-    bar.Paint = function(self, w, h)
+    bar.Paint = function(_, w, h)
         local currentValue = tonumber(valueFunc()) or 0
         local minValue = tonumber(minVal) or 0
         local maxValue = tonumber(maxVal) or 100

@@ -50,14 +50,14 @@ function PANEL:GenerateSections()
     table.sort(orderedSections, function(a, b) return a.priority < b.priority end)
     local leftCount, rightCount = 0, 0
     for _, section in ipairs(orderedSections) do
-        local column = nil
         if section.location == 1 then
-            column = self.leftColumn
+            self:CreateSection(self.leftColumn, section.name, section.color)
             leftCount = leftCount + 1
         elseif section.location == 2 then
-            column = self.rightColumn
+            self:CreateSection(self.rightColumn, section.name, section.color)
             rightCount = rightCount + 1
         else
+            local column
             if leftCount <= rightCount then
                 column = self.leftColumn
                 leftCount = leftCount + 1
@@ -65,9 +65,10 @@ function PANEL:GenerateSections()
                 column = self.rightColumn
                 rightCount = rightCount + 1
             end
+
+            self:CreateSection(column, section.name, section.color)
         end
 
-        self:CreateSection(column, section.name, section.color)
         local fields = isfunction(section.fields) and section.fields() or section.fields
         for _, field in ipairs(fields) do
             if field.type == "text" then

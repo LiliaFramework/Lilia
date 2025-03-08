@@ -276,7 +276,7 @@ lia.command.add("togglelockcharacters", {
     superAdminOnly = true,
     syntax = "[boolean lock]",
     privilege = "Toggle Character Lock",
-    onRun = function(client, arguments)
+    onRun = function()
         local newVal = not GetGlobalBool("characterSwapLock", false)
         SetGlobalBool("characterSwapLock", newVal)
         if not newVal then
@@ -1517,7 +1517,7 @@ lia.command.add("forcesay", {
 
 lia.command.add("getmodel", {
     syntax = "",
-    onRun = function(client, arguments)
+    onRun = function(client)
         local entity = client:getTracedEntity()
         if not IsValid(entity) then
             client:notify("No valid entity found in front of you.")
