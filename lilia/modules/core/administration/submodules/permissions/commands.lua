@@ -481,26 +481,43 @@ lia.command.add("cleannpcs", {
 })
 
 lia.command.add("charunban", {
-    syntax = "[string name]",
+    syntax = "[string name or number id]",
     superAdminOnly = true,
     privilege = "Manage Characters",
     onRun = function(client, arguments)
         if (client.liaNextSearch or 0) >= CurTime() then return L("searchingChar", client) end
-        local name = table.concat(arguments, " ")
-        for _, v in pairs(lia.char.loaded) do
-            if lia.util.stringMatches(v:getName(), name) then
-                if v:getData("banned") then
-                    v:setData("banned", nil)
-                    v:setData("permakilled", nil)
-                    return lia.notices.notifyLocalized("charUnBan", nil, client:Name(), v:getName())
-                else
-                    return L("charNotBanned")
+        local queryArg = table.concat(arguments, " ")
+        local charFound
+        local id = tonumber(queryArg)
+        if id then
+            for _, v in pairs(lia.char.loaded) do
+                if v:getID() == id then
+                    charFound = v
+                    break
+                end
+            end
+        else
+            for _, v in pairs(lia.char.loaded) do
+                if lia.util.stringMatches(v:getName(), queryArg) then
+                    charFound = v
+                    break
                 end
             end
         end
 
+        if charFound then
+            if charFound:getData("banned") then
+                charFound:setData("banned", nil)
+                charFound:setData("permakilled", nil)
+                return lia.notices.notifyLocalized("charUnBan", nil, client:Name(), charFound:getName())
+            else
+                return L("charNotBanned")
+            end
+        end
+
         client.liaNextSearch = CurTime() + 15
-        lia.db.query("SELECT _id, _name, _data FROM lia_characters WHERE _name LIKE \"%" .. lia.db.escape(name) .. "%\" LIMIT 1", function(data)
+        local sqlCondition = id and ("_id = " .. id) or ("_name LIKE \"%" .. lia.db.escape(queryArg) .. "%\"")
+        lia.db.query("SELECT _id, _name, _data FROM lia_characters WHERE " .. sqlCondition .. " LIMIT 1", function(data)
             if data and data[1] then
                 local charID = tonumber(data[1]._id)
                 local charData = util.JSONToTable(data[1]._data or "[]")
@@ -597,8 +614,8 @@ lia.command.add("freezeallprops", {
 })
 
 lia.command.add("charban", {
+    syntax = "[string name or number id]",
     superAdminOnly = true,
-    syntax = "[string name]",
     privilege = "Manage Characters",
     AdminStick = {
         Name = L("adminStickBanCharacterName"),
@@ -607,7 +624,20 @@ lia.command.add("charban", {
         Icon = "icon16/user_red.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local queryArg = table.concat(arguments, " ")
+        local target
+        local id = tonumber(queryArg)
+        if id then
+            for _, ply in ipairs(player.GetAll()) do
+                if IsValid(ply) and ply:getChar() and ply:getChar():getID() == id then
+                    target = ply
+                    break
+                end
+            end
+        else
+            target = lia.command.findPlayer(client, arguments[1])
+        end
+
         if IsValid(target) then
             local character = target:getChar()
             if character then
