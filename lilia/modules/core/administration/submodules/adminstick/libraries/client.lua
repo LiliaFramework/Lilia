@@ -19,14 +19,9 @@ local function GetOrCreateSubMenu(parentMenu, name, submenusTable)
 end
 
 local function GetIdentifier(target)
-    if not IsValid(target) then return "" end
-    if target:IsBot() then
-        return target:Name()
-    elseif target:IsPlayer() then
-        return target:SteamID()
-    else
-        return ""
-    end
+    if not IsValid(target) or not target:IsPlayer() then return "" end
+    if target:IsBot() then return target:Name() end
+    return target:SteamID()
 end
 
 local function HandleExtraFields(commandKey, commandData, target, commandName)
