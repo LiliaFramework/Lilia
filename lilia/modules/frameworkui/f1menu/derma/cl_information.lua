@@ -83,6 +83,7 @@ function PANEL:GenerateSections()
 end
 
 function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, dockMarginBot, valueFunc)
+    if not IsValid(parent) then return end
     local isDesc = string.lower(name) == "desc"
     local textFont = "liaSmallFont"
     local textFontSize = 20
@@ -122,6 +123,7 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, do
 end
 
 function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, minFunc, maxFunc, dockMargin, valueFunc)
+    if not IsValid(parent) then return end
     local textFont = "liaSmallFont"
     local textColor = color_white
     local shadowColor = Color(30, 30, 30, 150)
