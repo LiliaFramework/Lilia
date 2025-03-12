@@ -151,6 +151,7 @@ local function handleDatabaseWipe(commandName)
             MsgC(Color(255, 0, 0), "[Lilia] DATABASE WIPE IN PROGRESS.\n")
             hook.Run("OnWipeTables")
             lia.db.wipeTables(lia.db.loadTables)
+            game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n")
         end
     end)
 end

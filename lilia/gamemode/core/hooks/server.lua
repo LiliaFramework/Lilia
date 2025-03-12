@@ -1,22 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-function GM:InitializedModules()
-    local bootstrapEndTime = SysTime()
-    local timeTaken = bootstrapEndTime - BootingTime
-    LiliaBootstrap("Bootstrapper", string.format("Lilia loaded in %.2f seconds.", timeTaken), Color(0, 255, 0))
-    local addons = engine.GetAddons()
-    local autoDownload = lia.config.get("AutoDownloadWorkshop", false)
-    for _, addon in ipairs(addons) do
-        if addon.wsid and addon.mounted then
-            if autoDownload then
-                resource.AddWorkshop(addon.wsid)
-                print("[Workshop] Added Workshop addon: " .. addon.title .. " (WSID: " .. addon.wsid .. ")")
-            end
-
-            if addon.wsid == "1907060869" then print("WARNING: 'Srlion's Hook Library' (WSID: 1907060869) is known to cause issues and is not necessary for addons like SAM.") end
-        end
-    end
-end
-
 function GM:CharPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
@@ -545,6 +527,66 @@ function GM:LoadData()
                     end
                 end)
             end
+        end
+    end
+end
+
+function GM:InitializedModules()
+    local bootstrapEndTime = SysTime()
+    local timeTaken = bootstrapEndTime - BootingTime
+    LiliaBootstrap("Bootstrapper", string.format("Lilia loaded in %.2f seconds.", timeTaken), Color(0, 255, 0))
+    local typeMap = {
+        string = function(d) return d.field .. " VARCHAR(" .. (d.length or 255) .. ")" end,
+        integer = function(d) return d.field .. " INT" end,
+        float = function(d) return d.field .. " FLOAT" end,
+        boolean = function(d) return d.field .. " TINYINT(1)" end,
+        datetime = function(d) return d.field .. " DATETIME" end,
+        text = function(d) return d.field .. " TEXT" end
+    }
+
+    local dbModule = string.lower(lia.db.module or "")
+    local getColumnsQuery = (dbModule == "sqlite") and "PRAGMA table_info(lia_characters)" or "DESCRIBE lia_characters"
+    lia.db.query(getColumnsQuery, function(results)
+        local existingColumns = {}
+        if results then
+            if dbModule == "sqlite" then
+                for _, row in ipairs(results) do
+                    existingColumns[row.name] = true
+                end
+            else
+                for _, row in ipairs(results) do
+                    existingColumns[row.Field] = true
+                end
+            end
+        else
+            LiliaError("[Database] Failed to retrieve existing columns!")
+        end
+
+        for key, data in pairs(lia.char.vars) do
+            if data.field and not existingColumns[data.field] and data.fieldType then
+                local fieldType = data.fieldType
+                if typeMap[fieldType] then
+                    local fieldDefinition = typeMap[fieldType](data)
+                    if data.default ~= nil then fieldDefinition = fieldDefinition .. " DEFAULT '" .. tostring(data.default) .. "'" end
+                    local queryStr = "ALTER TABLE lia_characters ADD COLUMN " .. fieldDefinition
+                    lia.db.query(queryStr, function(results, lastID) LiliaInformation("[Database] Added column " .. data.field .. " to lia_characters table.") end)
+                else
+                    LiliaError("[Database] Unknown fieldType " .. tostring(fieldType) .. " for column " .. data.field)
+                end
+            end
+        end
+    end)
+
+    local addons = engine.GetAddons()
+    local autoDownload = lia.config.get("AutoDownloadWorkshop", false)
+    for _, addon in ipairs(addons) do
+        if addon.wsid and addon.mounted then
+            if autoDownload then
+                resource.AddWorkshop(addon.wsid)
+                LiliaInformation("[Workshop] Added Workshop addon: " .. addon.title .. " (WSID: " .. addon.wsid .. ")")
+            end
+
+            if addon.wsid == "1907060869" then LiliaError("WARNING: 'Srlion's Hook Library' (WSID: 1907060869) is known to cause issues and is not necessary for addons like SAM.") end
         end
     end
 end
