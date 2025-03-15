@@ -50,14 +50,14 @@ function PANEL:GenerateSections()
     table.sort(orderedSections, function(a, b) return a.priority < b.priority end)
     local leftCount, rightCount = 0, 0
     for _, section in ipairs(orderedSections) do
+        local column = nil
         if section.location == 1 then
-            self:CreateSection(self.leftColumn, section.name, section.color)
+            column = self.leftColumn
             leftCount = leftCount + 1
         elseif section.location == 2 then
-            self:CreateSection(self.rightColumn, section.name, section.color)
+            column = self.rightColumn
             rightCount = rightCount + 1
         else
-            local column
             if leftCount <= rightCount then
                 column = self.leftColumn
                 leftCount = leftCount + 1
@@ -65,10 +65,9 @@ function PANEL:GenerateSections()
                 column = self.rightColumn
                 rightCount = rightCount + 1
             end
-
-            self:CreateSection(column, section.name, section.color)
         end
 
+        self:CreateSection(column, section.name, section.color)
         local fields = isfunction(section.fields) and section.fields() or section.fields
         for _, field in ipairs(fields) do
             if field.type == "text" then
@@ -83,7 +82,6 @@ function PANEL:GenerateSections()
 end
 
 function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, dockMarginBot, valueFunc)
-    if not IsValid(parent) then return end
     local isDesc = string.lower(name) == "desc"
     local textFont = "liaSmallFont"
     local textFontSize = 20
@@ -123,7 +121,6 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, do
 end
 
 function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, minFunc, maxFunc, dockMargin, valueFunc)
-    if not IsValid(parent) then return end
     local textFont = "liaSmallFont"
     local textColor = color_white
     local shadowColor = Color(30, 30, 30, 150)

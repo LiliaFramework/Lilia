@@ -46,17 +46,15 @@ lia.config.add("TimeUntilDroppedSWEPRemoved", "Time Until Dropped SWEP Removed",
     max = 300
 })
 
-lia.config.add("ActExploitTimer", "Act Exploit Timer", 0, nil, {
-    desc = "Specifies the duration (in seconds) a player remains unable to deal damage after using an 'act' command",
-    category = "Protection",
-    type = "Float",
-    min = 0,
-    max = 60
-})
-
 lia.config.add("AltsDisabled", "Disable Alts", false, nil, {
     desc = "Whether or not alting is permitted",
     category = "Protection",
+    type = "Boolean"
+})
+
+lia.config.add("ActsActive", "Enable Acts", false, nil, {
+    desc = "Determines whether acts are active",
+    category = "Actions",
     type = "Boolean"
 })
 

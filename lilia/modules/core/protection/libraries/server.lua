@@ -47,8 +47,8 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
     end
 end
 
-function MODULE:PlayerShouldTaunt()
-    return false
+function MODULE:PlayerShouldAct()
+    return lia.config.get("ActsActive", false)
 end
 
 function MODULE:PlayerAuthed(client, steamid)
@@ -113,7 +113,7 @@ end
 function MODULE:OnEntityCreated(entity)
     local class = entity:GetClass():lower():Trim()
     entity:SetCustomCollisionCheck(true)
-    if class == "lua_run" and not lia.config.get("DisableLuaRun", true) then
+    if class == "lua_run" and not lia.config.get("DisableLuaRun", false) then
         print("[Notify] lua_run entity detected and will be removed.")
         function entity:AcceptInput()
             return true
