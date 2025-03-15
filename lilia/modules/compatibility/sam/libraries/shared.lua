@@ -23,6 +23,7 @@ function sam.player.send_message(client, msg, tbl)
 end
 
 hook.Add("SAM.CanRunCommand", "Check4Staff", function(client, _, _, cmd)
+    if type(client) ~= "Player" then return true end
     if lia.config.get("SAMEnforceStaff", false) then
         if cmd.permission and not client:HasPermission(cmd.permission) then
             client:notifyLocalized("staffPermissionDenied")
