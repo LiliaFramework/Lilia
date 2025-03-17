@@ -308,5 +308,5 @@ end
 lia.util.loadEntities = lia.includeEntities
 lia.includeEntities("lilia/gamemode/entities")
 for _, files in ipairs(FilesToLoad) do
-    lia.include(file.path, file.realm)
+    lia.include(files.path, files.realm)
 end
