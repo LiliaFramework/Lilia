@@ -23,16 +23,15 @@ function vectorMeta:RotateAroundAxis(axis, degrees)
     )
 end
 
+local right = Vector(0, -1, 0)
 function vectorMeta:Right(vUp)
     if self[1] == 0 and self[2] == 0 then
         return right
     end
 
-    if (vUp == nil) then
-        vUp = vector_up
-    end
+    if vUp == nil then vUp = vector_up end
 
-    local vRet = self:Cross(self, vUp)
+    local vRet = self:Cross(vUp)
     vRet:Normalize()
 
     return vRet
@@ -42,7 +41,7 @@ function vectorMeta:Up(vUp)
     if self[1] == 0 and self[2] == 0 then return Vector(-self[3], 0, 0) end
     if vUp == nil then vUp = vector_up end
 
-    local vRet = self:Cross(self, vUp)
+    local vRet = self:Cross(vUp)
     vRet = self:Cross(vRet, self)
     vRet:Normalize()
 
