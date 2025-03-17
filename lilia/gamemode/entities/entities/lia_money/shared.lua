@@ -4,9 +4,6 @@ ENT.Category = "Lilia"
 ENT.Spawnable = false
 ENT.DrawEntityInfo = true
 ENT.isMoney = true
-function ENT:setAmount(amount)
-    self:setNetVar("amount", amount)
-end
 
 function ENT:getAmount()
     return self:getNetVar("amount", 0)
