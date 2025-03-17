@@ -28,3 +28,7 @@ function ENT:Use(activator)
         self:Remove()
     end
 end
+
+function ENT:setAmount(amount)
+    self:setNetVar("amount", amount)
+end
