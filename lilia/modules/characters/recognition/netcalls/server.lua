@@ -27,7 +27,7 @@ netstream.Hook("rgn", function(client, level, name)
         end
     end
 
-    if #targets > 0 then
+    if targets[1] ~= nil then
         local i = 0
         for _, v in ipairs(targets) do
             if v:getChar():recognize(client:getChar(), name) then i = i + 1 end
