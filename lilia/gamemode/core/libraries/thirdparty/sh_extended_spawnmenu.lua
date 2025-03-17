@@ -71,7 +71,7 @@ local function OnSndNodeSelected(self, node, name, path, pathid, icon, ViewPanel
     local offset = 0
     local limit = 512
     if node.offset then offset = node.offset or 0 end
-    for k, v in pairs(files) do
+    for k, v in ipairs(files) do
         if k > limit + offset then
             if not node.Done then
                 offset = offset + limit
@@ -246,7 +246,7 @@ local function OnMatNodeSelected(self, node, name, path, pathid, icon, ViewPanel
     local offset = 0
     local limit = 512
     if node.offset then offset = node.offset or 0 end
-    for k, v in pairs(mat_files) do
+    for k, v in ipairs(mat_files) do
         if k > limit + offset then
             if not node.Done then
                 offset = offset + limit

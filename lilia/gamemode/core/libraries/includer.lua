@@ -197,12 +197,12 @@ function lia.includeDir(directory, fromLua, recursive, realm)
                 return
             end
 
-            for _, v in pairs(files) do
+            for _, v in ipairs(files) do
                 local fullPath = folder .. "/" .. v
                 lia.include(fullPath, realm)
             end
 
-            for _, v in pairs(folders) do
+            for _, v in ipairs(folders) do
                 local subFolder = baseFolder .. "/" .. v
                 AddRecursive(folder .. "/" .. v, subFolder)
             end
@@ -307,6 +307,6 @@ end
 
 lia.util.loadEntities = lia.includeEntities
 lia.includeEntities("lilia/gamemode/entities")
-for _, file in ipairs(FilesToLoad) do
+for _, files in ipairs(FilesToLoad) do
     lia.include(file.path, file.realm)
 end

@@ -2,7 +2,7 @@
 language.Add("spawnmenu.category.downloads", "Downloads")
 local function AddRecursive(pnl, folder)
     local files, folders = file.Find(folder .. "*", "MOD")
-    for k, v in pairs(files or {}) do
+    for k, v in ipairs(files or {}) do
         if not string.EndsWith(v, ".mdl") then continue end
         local cp = spawnmenu.GetContentType("model")
         if cp then
@@ -15,7 +15,7 @@ local function AddRecursive(pnl, folder)
         end
     end
 
-    for k, v in pairs(folders or {}) do
+    for k, v in ipairs(folders or {}) do
         AddRecursive(pnl, folder .. v .. "/")
     end
 end
@@ -23,11 +23,11 @@ end
 local function CountRecursive(folder)
     local files, folders = file.Find(folder .. "*", "MOD")
     local val = 0
-    for k, v in pairs(files or {}) do
+    for k, v in ipairs(files or {}) do
         if string.EndsWith(v, ".mdl") then val = val + 1 end
     end
 
-    for k, v in pairs(folders or {}) do
+    for k, v in ipairs(folders or {}) do
         val = val + CountRecursive(folder .. v .. "/")
     end
     return val
@@ -39,7 +39,7 @@ hook.Add("PopulateContent", "LegacyAddonProps", function(pnlContent, tree, node)
     ViewPanel:SetVisible(false)
     local addons = {}
     local _files, folders = file.Find("addons/*", "MOD")
-    for _, f in pairs(folders) do
+    for _, f in ipairs(folders) do
         if not file.IsDir("addons/" .. f .. "/models/", "MOD") then continue end
         local count = CountRecursive("addons/" .. f .. "/models/")
         if count == 0 then continue end
@@ -69,7 +69,7 @@ hook.Add("PopulateContent", "LegacyAddonProps", function(pnlContent, tree, node)
         local path = selectedNode:GetFolder()
         if not string.EndsWith(path, "/") and string.len(path) > 1 then path = path .. "/" end
         local path_mdl = string.sub(path, string.find(path, "/models/") + 1)
-        for k, v in pairs(file.Find(path .. "/*.mdl", selectedNode:GetPathID())) do
+        for k, v in ipairs(file.Find(path .. "/*.mdl", selectedNode:GetPathID())) do
             local cp = spawnmenu.GetContentType("model")
             if cp then
                 cp(ViewPanel, {
@@ -123,12 +123,12 @@ surface.CreateFont("AddonInfo_Small", {
 
 local function GetWorkshopLeftovers()
     local subscriptions = {}
-    for id, t in pairs(engine.GetAddons()) do
+    for id, t in ipairs(engine.GetAddons()) do
         subscriptions[tonumber(t.wsid)] = true
     end
 
     local t = {}
-    for id, fileh in pairs(file.Find("addons/*.gma", "MOD")) do
+    for id, fileh in ipairs(file.Find("addons/*.gma", "MOD")) do
         local a = string.StripExtension(fileh)
         a = string.Explode("_", a)
         a = tonumber(a[#a])
@@ -159,20 +159,20 @@ end
 
 function PANEL:Compute()
     self.WorkshopSize = 0
-    for id, fle in pairs(file.Find("addons/*.gma", "MOD")) do
+    for id, fle in ipairs(file.Find("addons/*.gma", "MOD")) do
         self.WorkshopSize = self.WorkshopSize + (file.Size("addons/" .. fle, "MOD") or 0)
     end
 
     self.WorkshopWaste = 0
     self.WorkshopWasteFiles = {}
-    for id, fle in pairs(GetWorkshopLeftovers()) do
+    for id, fle in ipairs(GetWorkshopLeftovers()) do
         self.WorkshopWaste = self.WorkshopWaste + (file.Size("addons/" .. fle, "MOD") or 0)
         table.insert(self.WorkshopWasteFiles, {"addons/" .. fle, file.Size("addons/" .. fle, "MOD") or 0})
     end
 
     local _files, folders = file.Find("addons/*", "MOD")
     self.LegacyAddons = {}
-    for k, v in pairs(folders or {}) do
+    for k, v in ipairs(folders or {}) do
         self.LegacyAddons["addons/" .. v .. "/"] = "Installed"
         if file.IsDir("addons/" .. v .. "/models/", "MOD") then self.LegacyAddons["addons/" .. v .. "/"] = "Installed (Has Models)" end
         local _fi, fo = file.Find("addons/" .. v .. "/*", "MOD")
@@ -185,7 +185,7 @@ function PANEL:Compute()
     self.LuaCacheFiles = #luaFiles
     local wsFiles = file.Find("cache/workshop/*", "MOD")
     self.WSCacheSize = 0
-    for id, fle in pairs(wsFiles) do
+    for id, fle in ipairs(wsFiles) do
         self.WSCacheSize = self.WSCacheSize + (file.Size("cache/workshop/" .. fle, "MOD") or 0)
     end
 
@@ -288,13 +288,13 @@ end
 vgui.Register("rb655_addonInfo", PANEL, "Panel")
 hook.Add("PopulatePropMenu", "rb655_LoadLegacySpawnlists", function()
     local sid = 0
-    for id, spawnlist in pairs(file.Find("settings/spawnlist/*.txt", "MOD")) do
+    for id, spawnlist in ipairs(file.Find("settings/spawnlist/*.txt", "MOD")) do
         local content = file.Read("settings/spawnlist/" .. spawnlist, "MOD")
         if not content then continue end
         content = util.KeyValuesToTable(content)
         if not content.entries or content.contents then continue end
         local contents = {}
-        for eid, entry in pairs(content.entries) do
+        for eid, entry in ipairs(content.entries) do
             if type(entry) == "table" then entry = entry.model end
             table.insert(contents, {
                 type = "model",
