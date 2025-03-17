@@ -586,7 +586,7 @@ function GM:LiliaTablesLoaded()
     lia.db.query("ALTER TABLE IF EXISTS lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
 end
 
-concommand.Add("database_list", function(ply, cmd, args)
+concommand.Add("database_list", function(ply)
     if IsValid(ply) then return end
     local query = (lia.db.module == "sqlite") and "PRAGMA table_info(lia_characters)" or "DESCRIBE lia_characters"
     lia.db.query(query, function(results)

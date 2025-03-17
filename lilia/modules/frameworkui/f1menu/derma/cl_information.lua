@@ -50,7 +50,7 @@ function PANEL:GenerateSections()
     table.sort(orderedSections, function(a, b) return a.priority < b.priority end)
     local leftCount, rightCount = 0, 0
     for _, section in ipairs(orderedSections) do
-        local column = nil
+        local column
         if section.location == 1 then
             column = self.leftColumn
             leftCount = leftCount + 1

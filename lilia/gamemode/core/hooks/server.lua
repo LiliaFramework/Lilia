@@ -562,14 +562,14 @@ function GM:InitializedModules()
             LiliaError("[Database] Failed to retrieve existing columns!")
         end
 
-        for key, data in pairs(lia.char.vars) do
+        for _, data in pairs(lia.char.vars) do
             if data.field and not existingColumns[data.field] and data.fieldType then
                 local fieldType = data.fieldType
                 if typeMap[fieldType] then
                     local fieldDefinition = typeMap[fieldType](data)
                     if data.default ~= nil then fieldDefinition = fieldDefinition .. " DEFAULT '" .. tostring(data.default) .. "'" end
                     local queryStr = "ALTER TABLE lia_characters ADD COLUMN " .. fieldDefinition
-                    lia.db.query(queryStr, function(results, lastID) LiliaInformation("[Database] Added column " .. data.field .. " to lia_characters table.") end)
+                    lia.db.query(queryStr, function() LiliaInformation("[Database] Added column " .. data.field .. " to lia_characters table.") end)
                 else
                     LiliaError("[Database] Unknown fieldType " .. tostring(fieldType) .. " for column " .. data.field)
                 end
