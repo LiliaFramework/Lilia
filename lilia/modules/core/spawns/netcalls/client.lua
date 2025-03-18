@@ -1,6 +1,0 @@
-﻿net.Receive("death_client", function()
-    local date = lia.time.GetFormattedDate("", true, true, true, true, true)
-    local charid = net.ReadString()
-    local steamid = net.ReadString()
-    chat.AddText(Color(255, 0, 0), "[" .. string.upper(L("death")) .. "]: ", Color(255, 255, 255), date, " - ", L("killedBy"), " ", Color(255, 215, 0), L("characterID"), ": ", Color(255, 255, 255), charid, " (", Color(0, 255, 0), steamid, Color(255, 255, 255), ")")
-end)
