@@ -1,13 +1,14 @@
 ﻿local PANEL = {}
 local StaffCount = 0
 local StaffOnDutyCount = 0
-local paintFunctions = {}
-paintFunctions[0] = function(_, w, h)
-    surface.SetDrawColor(0, 0, 0, 50)
-    surface.DrawRect(0, 0, w, h)
-end
+local paintFunctions = {
+    [0] = function(_, w, h)
+        surface.SetDrawColor(0, 0, 0, 50)
+        surface.DrawRect(0, 0, w, h)
+    end,
+    [1] = function() end
+}
 
-paintFunctions[1] = function() end
 local function wrapText(text, font, maxWidth)
     surface.SetFont(font)
     local words = string.Explode(" ", text)
@@ -77,7 +78,7 @@ function PANEL:Init()
 
         local header = list:Add("DPanel")
         header:Dock(TOP)
-        header:SetTall(ScrH() * 0.08)
+        header:SetTall((fac.logo and fac.logo ~= "") and ScrH() * 0.08 or 56)
         header:SetPaintBackground(false)
         local factionContainer = header:Add("DPanel")
         factionContainer:Dock(FILL)
