@@ -2,7 +2,6 @@
 local ScrW, ScrH = ScrW, ScrH
 local RealTime, FrameTime = RealTime, FrameTime
 local mathApproach = math.Approach
-local tableSort = table.sort
 local IsValid = IsValid
 local toScreen = FindMetaTable("Vector").ToScreen
 local paintedEntitiesCache, lastTrace, charInfo, lastEntity = {}, {}, {}, nil
@@ -10,10 +9,11 @@ local blurGoal, blurValue, nextUpdate = 0, 0, 0
 local vignetteAlphaGoal, vignetteAlphaDelta = 0, 0
 local NoDrawCrosshairWeapon = {"weapon_crowbar", "weapon_stunstick", "weapon_bugbait"}
 local healthPercent = {
-    [0.75] = {"Minor injuries", Color(0, 255, 0)},
-    [0.50] = {"Moderate injuries", Color(255, 255, 0)},
-    [0.25] = {"Severe injuries", Color(255, 140, 0)},
-    [0.10] = {"Critical condition", Color(255, 0, 0)}
+    [0.2] = {"Critical Condition", Color(192, 57, 43)},
+    [0.4] = {"Serious Injury", Color(231, 76, 60)},
+    [0.6] = {"Moderate Injury", Color(255, 152, 0)},
+    [0.8] = {"Minor Injury", Color(255, 193, 7)},
+    [1.0] = {"Healthy", Color(46, 204, 113)}
 }
 
 local hasVignetteMaterial = lia.util.getMaterial("lilia/gui/vignette.png") ~= "___error"
@@ -199,15 +199,15 @@ function MODULE:GetInjuredText(c)
     local h = c:Health()
     local mh = c:GetMaxHealth() or 100
     local p = h / mh
-    local r
-    local thresholds = {0.10, 0.25, 0.50, 0.75}
-    tableSort(thresholds, function(a, b) return a > b end)
-    for _, thr in ipairs(thresholds) do
-        if p <= thr then
-            r = healthPercent[thr]
+    local r = nil
+    for threshold, data in pairs(healthPercent) do
+        if p <= threshold then
+            r = data
             break
         end
     end
+
+    if not r then r = healthPercent[1.0] end
     return r
 end
 
