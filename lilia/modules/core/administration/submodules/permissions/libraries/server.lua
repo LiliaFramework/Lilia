@@ -53,8 +53,56 @@ function GM:CanTool(client, _, tool)
 
     local privilege = "Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
     if DisallowedTools[tool] and not client:IsSuperAdmin() then return false end
-    if client:IsSuperAdmin() or (client:isStaffOnDuty() or client:getChar():hasFlags("t")) and client:hasPrivilege(privilege) then return true end
-    return false
+    if not (client:IsSuperAdmin() or ((client:isStaffOnDuty() or client:getChar():hasFlags("t")) and client:hasPrivilege(privilege))) then return false end
+    local weapon = client:GetActiveWeapon()
+    local toolobj = IsValid(weapon) and weapon:GetToolObject() or nil
+    local entity = client:getTracedEntity()
+    if IsValid(entity) then
+        local entClass = entity:GetClass()
+        if tool == "remover" then
+            if self.RemoverBlockedEntities and self.RemoverBlockedEntities[entClass] then
+                return client:hasPrivilege("Staff Permissions - Can Remove Blocked Entities")
+            elseif entity:IsWorld() then
+                return client:hasPrivilege("Staff Permissions - Can Remove World Entities")
+            end
+            return true
+        end
+
+        if (tool == "permaall" or tool == "permaprops" or tool == "blacklistandremove") and (string.StartWith(entClass, "lia_") or (self.CanNotPermaProp and self.CanNotPermaProp[entClass]) or entity:isLiliaPersistent() or entity:CreatedByMap()) then return false end
+        if (tool == "adv_duplicator" or tool == "advdupe2" or tool == "duplicator" or tool == "blacklistandremove") and ((self.DuplicatorBlackList and self.DuplicatorBlackList[entClass]) or entity.NoDuplicate) then return false end
+        if tool == "weld" and entClass == "sent_ball" then return false end
+    end
+
+    if tool == "duplicator" and client.CurrentDupe and not self:CheckDuplicationScale(client, client.CurrentDupe.Entities) then return false end
+    if tool == "advdupe2" and client.AdvDupe2 and not self:CheckDuplicationScale(client, client.AdvDupe2.Entities) then return false end
+    if tool == "adv_duplicator" and toolobj and toolobj.Entities and not self:CheckDuplicationScale(client, toolobj.Entities) then return false end
+    return true
+end
+
+function MODULE:CanTool(client, _, tool)
+    local weapon = client:GetActiveWeapon()
+    local toolobj = IsValid(weapon) and weapon:GetToolObject() or nil
+    local entity = client:getTracedEntity()
+    if IsValid(entity) then
+        local entClass = entity:GetClass()
+        if tool == "remover" then
+            if self.RemoverBlockedEntities[entClass] then
+                return client:hasPrivilege("Staff Permissions - Can Remove Blocked Entities")
+            elseif entity:IsWorld() then
+                return client:hasPrivilege("Staff Permissions - Can Remove World Entities")
+            end
+            return true
+        end
+
+        if (tool == "permaall" or tool == "permaprops" or tool == "blacklistandremove") and (string.StartWith(entClass, "lia_") or self.CanNotPermaProp[entClass] or entity:isLiliaPersistent() or entity:CreatedByMap()) then return false end
+        if (tool == "adv_duplicator" or tool == "advdupe2" or tool == "duplicator" or tool == "blacklistandremove") and (self.DuplicatorBlackList[entClass] or entity.NoDuplicate) then return false end
+        if tool == "weld" and entClass == "sent_ball" then return false end
+    end
+
+    if tool == "duplicator" and client.CurrentDupe and not self:CheckDuplicationScale(client, client.CurrentDupe.Entities) then return false end
+    if tool == "advdupe2" and client.AdvDupe2 and not self:CheckDuplicationScale(client, client.AdvDupe2.Entities) then return false end
+    if tool == "adv_duplicator" and toolobj and toolobj.Entities and not self:CheckDuplicationScale(client, toolobj.Entities) then return false end
+    return true
 end
 
 function GM:CanProperty(client, property, entity)

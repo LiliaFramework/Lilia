@@ -1,4 +1,9 @@
-﻿if CLIENT then
+﻿MODULE.RemoverBlockedEntities = {
+    ["lia_bodygroupcloset"] = true,
+    ["lia_vendor"] = true,
+}
+
+if CLIENT then
     lia.option.add("espActive", "ESP Active", "Enable ESP to highlight entities", false, nil, {
         category = "ESP"
     })

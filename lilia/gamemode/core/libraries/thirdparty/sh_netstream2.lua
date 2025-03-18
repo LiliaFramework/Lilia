@@ -1,6 +1,5 @@
 ﻿local type, error, pcall, pairs, _player = type, error, pcall, pairs, player
 if not pon then include("sh_pon.lua") end
-AddCSLuaFile()
 netstream = netstream or {}
 netstream.stored = netstream.stored or {}
 function netstream.Split(data)

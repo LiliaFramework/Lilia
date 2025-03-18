@@ -61,8 +61,3 @@ net.Receive("TicketSystemClose", function()
 
     if timer.Exists("ticketsystem-" .. requester:SteamID64()) then timer.Remove("ticketsystem-" .. requester:SteamID64()) end
 end)
-
-net.Receive("TicketClientNotify", function()
-    local text = net.ReadString()
-    chat.AddText(Color(70, 0, 130), "You", Color(151, 211, 255), " to admins: ", Color(0, 255, 0), text)
-end)

@@ -204,30 +204,6 @@ function MODULE:PlayerSpawnedNPC(_, entity)
     if not lia.config.get("NPCsDropWeapons", false) then entity:SetKeyValue("spawnflags", "8192") end
 end
 
-function MODULE:CanTool(client, _, tool)
-    local weapon = client:GetActiveWeapon()
-    local toolobj = IsValid(weapon) and weapon:GetToolObject() or nil
-    local entity = client:getTracedEntity()
-    if IsValid(entity) then
-        local entClass = entity:GetClass()
-        if tool == "remover" then
-            if self.RemoverBlockedEntities[entClass] then
-                return client:hasPrivilege("Staff Permissions - Can Remove Blocked Entities")
-            elseif entity:IsWorld() then
-                return client:hasPrivilege("Staff Permissions - Can Remove World Entities")
-            end
-        end
-
-        if (tool == "permaall" or tool == "permaprops" or tool == "blacklistandremove") and (string.StartsWith(entClass, "lia_") or self.CanNotPermaProp[entClass] or entity:isLiliaPersistent() or entity:CreatedByMap()) then return false end
-        if (tool == "adv_duplicator" or tool == "advdupe2" or tool == "duplicator" or tool == "blacklistandremove") and (self.DuplicatorBlackList[entClass] or entity.NoDuplicate) then return false end
-        if tool == "weld" and entClass == "sent_ball" then return false end
-    end
-
-    if tool == "duplicator" and client.CurrentDupe and not self:CheckDuplicationScale(client, client.CurrentDupe.Entities) then return false end
-    if tool == "advdupe2" and client.AdvDupe2 and not self:CheckDuplicationScale(client, client.AdvDupe2.Entities) then return false end
-    if tool == "adv_duplicator" and toolobj and toolobj.Entities and not self:CheckDuplicationScale(client, toolobj.Entities) then return false end
-end
-
 function MODULE:CanProperty(client, property, entity)
     local restrictedProperties = {
         persist = true,

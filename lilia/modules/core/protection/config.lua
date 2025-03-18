@@ -142,11 +142,6 @@ MODULE.CanNotPermaProp = {
     ["lia_bodygrouper"] = true,
 }
 
-MODULE.RemoverBlockedEntities = {
-    ["lia_bodygroupcloset"] = true,
-    ["lia_vendor"] = true,
-}
-
 MODULE.RestrictedEnts = {
     ["func_button"] = true,
     ["class C_BaseEntity"] = true,
