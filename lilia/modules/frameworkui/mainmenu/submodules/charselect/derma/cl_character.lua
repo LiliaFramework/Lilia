@@ -33,7 +33,7 @@ function PANEL:createStartButton()
     local screenWidth, screenHeight = ScrW(), ScrH()
     local btnWidth = screenWidth * 0.2
     local btnHeight = screenHeight * 0.04
-    local buttonSpacing = screenHeight * 0.015
+    local buttonSpacing = screenHeight * 0.01
     local logoWidth = screenWidth * 0.13
     local logoHeight = screenWidth * 0.13
     local logoPath = lia.config.get("CenterLogo")
@@ -86,6 +86,14 @@ function PANEL:createStartButton()
             RunConsoleCommand("disconnect")
         end
     })
+
+    if LocalPlayer():getChar() then
+        table.insert(buttonConfigs, {
+            id = "return",
+            text = "RETURN",
+            doClick = function() self:fadeOut() end
+        })
+    end
 
     local numButtons = #buttonConfigs
     local totalHeight = numButtons * btnHeight + (numButtons - 1) * buttonSpacing
