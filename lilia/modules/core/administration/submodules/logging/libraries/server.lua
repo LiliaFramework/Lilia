@@ -1,4 +1,23 @@
-﻿function MODULE:ReadLogFiles(category)
+﻿local MODULE = MODULE
+function MODULE:SendLogsInChunks(client, categorizedLogs)
+    local jsonData = util.TableToJSON(categorizedLogs)
+    local compressedData = util.Compress(jsonData)
+    local totalLen = #compressedData
+    local chunkSize = 60000
+    local numChunks = math.ceil(totalLen / chunkSize)
+    for i = 1, numChunks do
+        local startPos = (i - 1) * chunkSize + 1
+        local chunk = string.sub(compressedData, startPos, startPos + chunkSize - 1)
+        net.Start("send_logs")
+        net.WriteUInt(i, 16)
+        net.WriteUInt(numChunks, 16)
+        net.WriteUInt(#chunk, 16)
+        net.WriteData(chunk, #chunk)
+        net.Send(client)
+    end
+end
+
+function MODULE:ReadLogFiles(category)
     local maxDays = lia.config.get("LogRetentionDays", 7)
     local maxLines = lia.config.get("MaxLogLines", 1000)
     local logs = {}
@@ -36,6 +55,20 @@
     end
     return logs
 end
+
+net.Receive("send_logs_request", function(len, client)
+    local categorizedLogs = {}
+    for _, logData in pairs(lia.log.types) do
+        local category = logData.category or "Uncategorized"
+        if not categorizedLogs[category] then categorizedLogs[category] = {} end
+        local logs = MODULE:ReadLogFiles(category)
+        for _, log in ipairs(logs) do
+            table.insert(categorizedLogs[category], log)
+        end
+    end
+
+    MODULE:SendLogsInChunks(client, categorizedLogs)
+end)
 
 function MODULE:OnServerLog(_, logType, logString)
     for _, admin in pairs(lia.util.getAdmins()) do
@@ -138,3 +171,4 @@ function MODULE:CanTool(client, _, tool)
 end
 
 util.AddNetworkString("send_logs")
+util.AddNetworkString("send_logs_request")

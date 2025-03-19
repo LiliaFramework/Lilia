@@ -25,7 +25,7 @@ net.Receive("send_logs", function()
         gui.EnableScreenClicker(true)
         local logFrame = vgui.Create("DFrame")
         logFrame:SetTitle("Server Logs")
-        logFrame:SetSize(1600, 700)
+        logFrame:SetSize(ScrW(), ScrH())
         logFrame:Center()
         logFrame:MakePopup()
         logFrame.OnClose = function() gui.EnableScreenClicker(false) end
@@ -35,17 +35,17 @@ net.Receive("send_logs", function()
         logTree.Paint = function() end
         local logList = vgui.Create("DListView", logFrame)
         logList:SetPos(420, 70)
-        logList:SetSize(1170, 520)
+        logList:SetSize(ScrW() - 440, ScrH() - 100)
         logList:AddColumn("Timestamp"):SetFixedWidth(150)
         logList:AddColumn("Message")
         local searchBox = vgui.Create("DTextEntry", logFrame)
         searchBox:SetPos(420, 30)
-        searchBox:SetSize(1170, 30)
+        searchBox:SetSize(ScrW() - 440, 30)
         searchBox:SetPlaceholderText("Search logs in the selected category...")
         searchBox:SetTextColor(Color(255, 255, 255))
         local copyButton = vgui.Create("DButton", logFrame)
         copyButton:SetText("Copy Selected Row")
-        copyButton:SetPos(10, 600)
+        copyButton:SetPos(10, ScrH() - 90)
         copyButton:SetSize(400, 40)
         local treeNodes = {}
         local currentCategoryLogs = {}
@@ -121,3 +121,13 @@ net.Receive("send_logs", function()
         receivedChunks = {}
     end
 end)
+
+function MODULE:CreateMenuButtons(tabs)
+    if LocalPlayer():hasPrivilege("Staff Permissions - Can See Logs") then
+        tabs["Logs"] = function(panel)
+            net.Start("send_logs_request")
+            net.SendToServer()
+            if IsValid(lia.gui.menu) then lia.gui.menu:Remove() end
+        end
+    end
+end
