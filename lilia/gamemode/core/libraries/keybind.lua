@@ -187,6 +187,8 @@ hook.Add("CreateMenuButtons", "KeybindMenuButtons", function(tabs)
         container:SetSize(panel:GetWide() * 0.5, panel:GetTall() * 0.5)
         container:CenterHorizontal()
         container:Center()
+        container:Dock(FILL)
+        container:DockMargin(0, 30, 0, 0)
         local allowEdit = lia.config.get("AllowKeybindEditing", true)
         local resetAllBtn
         if allowEdit then
@@ -200,6 +202,7 @@ hook.Add("CreateMenuButtons", "KeybindMenuButtons", function(tabs)
         scroll:Dock(FILL)
         local function populateRows()
             scroll:Clear()
+            if not istable(lia.keybind.stored) then return end
             local taken = {}
             for a, data in pairs(lia.keybind.stored) do
                 if istable(data) and data.value then taken[data.value] = a end
@@ -215,17 +218,19 @@ hook.Add("CreateMenuButtons", "KeybindMenuButtons", function(tabs)
                 local row = scroll:Add("DPanel")
                 row:Dock(TOP)
                 row:DockMargin(4, 4, 4, 4)
-                row:SetTall(30)
+                row:SetTall(50)
                 local lbl = row:Add("DLabel")
                 lbl:Dock(LEFT)
-                lbl:SetWide(120)
+                lbl:SetWide(300)
                 lbl:SetText(action)
+                lbl:SetFont("liaBigFont")
                 local currentKey = lia.keybind.get(action, KEY_NONE)
                 if allowEdit then
                     local combo = row:Add("DComboBox")
-                    combo:Dock(LEFT)
-                    combo:SetWide(120)
+                    combo:Dock(RIGHT)
+                    combo:SetWide(200)
                     combo:SetValue(input.GetKeyName(currentKey) or "NONE")
+                    combo:SetFont("liaMediumFont")
                     local choices = {}
                     for name, code in pairs(KeybindKeys) do
                         if not taken[code] or code == currentKey then
@@ -260,29 +265,11 @@ hook.Add("CreateMenuButtons", "KeybindMenuButtons", function(tabs)
                         lia.keybind.save()
                         currentKey = newKeyCode
                     end
-
-                    local resetBtn = row:Add("DButton")
-                    resetBtn:Dock(RIGHT)
-                    resetBtn:SetWide(60)
-                    resetBtn:SetText("Reset")
-                    resetBtn.DoClick = function()
-                        local data = lia.keybind.stored[action]
-                        if not data then return end
-                        local defKey = data.default
-                        if data.value == defKey then return end
-                        if lia.keybind.stored[data.value] then lia.keybind.stored[data.value] = nil end
-                        data.value = defKey
-                        lia.keybind.stored[defKey] = action
-                        taken[currentKey] = nil
-                        taken[defKey] = action
-                        combo:SetValue(input.GetKeyName(defKey) or "NONE")
-                        currentKey = defKey
-                        lia.keybind.save()
-                    end
                 else
                     local textLabel = row:Add("DLabel")
                     textLabel:Dock(LEFT)
-                    textLabel:SetWide(120)
+                    textLabel:SetWide(300)
+                    textLabel:SetFont("liaBigFont")
                     textLabel:SetText(input.GetKeyName(currentKey) or "NONE")
                 end
             end
