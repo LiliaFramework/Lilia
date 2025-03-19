@@ -242,7 +242,7 @@ hook.Add("CreateMenuButtons", "CommandsMenuButtons", function(tabs)
             if hasAccess then
                 local commandPanel = vgui.Create("DPanel", iconLayout)
                 commandPanel:SetSize(panel:GetWide(), 60)
-                commandPanel.Paint = function(self, w, h)
+                commandPanel.Paint = function(_, w, h)
                     local statusColor = Color(255, 255, 255)
                     draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
                     draw.SimpleText("/" .. cmdName, "liaMediumFont", 20, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
