@@ -56,7 +56,7 @@ function MODULE:ReadLogFiles(category)
     return logs
 end
 
-net.Receive("send_logs_request", function(len, client)
+net.Receive("send_logs_request", function(_, client)
     local categorizedLogs = {}
     for _, logData in pairs(lia.log.types) do
         local category = logData.category or "Uncategorized"

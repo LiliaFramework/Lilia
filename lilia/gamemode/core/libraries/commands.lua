@@ -226,9 +226,9 @@ hook.Add("CreateMenuButtons", "CommandsMenuButtons", function(tabs)
         iconLayout:SetSpaceY(5)
         iconLayout:SetSpaceX(5)
         iconLayout.PerformLayout = function(self)
-            local x, y = 0, 0
+            local y = 0
             local parentWidth = self:GetWide()
-            for k, child in ipairs(self:GetChildren()) do
+            for _, child in ipairs(self:GetChildren()) do
                 child:SetPos((parentWidth - child:GetWide()) / 2, y)
                 y = y + child:GetTall() + self:GetSpaceY()
             end

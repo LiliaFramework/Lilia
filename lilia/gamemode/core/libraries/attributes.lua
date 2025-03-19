@@ -47,9 +47,9 @@ hook.Add("CreateMenuButtons", "AttributeMenuButtons", function(tabs)
         iconLayout:SetSpaceY(5)
         iconLayout:SetSpaceX(5)
         iconLayout.PerformLayout = function(self)
-            local x, y = 0, 0
+            local y = 0
             local parentWidth = self:GetWide()
-            for k, child in ipairs(self:GetChildren()) do
+            for _, child in ipairs(self:GetChildren()) do
                 child:SetPos((parentWidth - child:GetWide()) / 2, y)
                 y = y + child:GetTall() + self:GetSpaceY()
             end
@@ -60,11 +60,11 @@ hook.Add("CreateMenuButtons", "AttributeMenuButtons", function(tabs)
         for id, attr in pairs(lia.attribs.list) do
             local item = vgui.Create("DPanel", iconLayout)
             item:SetSize(panel:GetWide(), 100)
-            item.Paint = function(btn, w, h)
+            item.Paint = function(_, w, h)
                 draw.RoundedBox(4, 0, 0, w, h - 10, Color(40, 40, 40, 200))
                 draw.SimpleText(attr.name, "liaMediumFont", 20, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
                 draw.SimpleText(attr.desc or "", "liaSmallFont", 20, 35, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-                local value = LocalPlayer():getChar():getAttrib(attr.id)
+                local value = LocalPlayer():getChar():getAttrib(id)
                 local max = attr.max or 100
                 local fraction = value / max
                 local progressBar = vgui.Create("DProgressBar", item)

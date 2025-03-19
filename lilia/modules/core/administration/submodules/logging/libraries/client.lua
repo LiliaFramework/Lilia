@@ -124,7 +124,7 @@ end)
 
 function MODULE:CreateMenuButtons(tabs)
     if LocalPlayer():hasPrivilege("Staff Permissions - Can See Logs") then
-        tabs["Logs"] = function(panel)
+        tabs["Logs"] = function()
             net.Start("send_logs_request")
             net.SendToServer()
             if IsValid(lia.gui.menu) then lia.gui.menu:Remove() end
