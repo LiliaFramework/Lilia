@@ -113,7 +113,6 @@ local function AddBrowseContentSnd(node, name, icon, path, pathid)
     sounds.OnNodeSelected = function(self, node_sel) OnSndNodeSelected(self, node_sel, name, path, pathid, icon, ViewPanel, pnlContent) end
 end
 
-language.Add("spawnmenu.category.browsesounds", "Browse Sounds")
 local function RefreshAddonSounds(browseAddonSounds)
     for _, addon in SortedPairsByMemberValue(engine.GetAddons(), "title") do
         if not addon.downloaded then continue end
@@ -138,7 +137,7 @@ hook.Add("PopulateContent", "SpawnmenuLoadSomeSounds", function(pnlContent, tree
         if not IsValid(tree) or not IsValid(pnlContent) then return end
         local ViewPanel = vgui.Create("ContentContainer", pnlContent)
         ViewPanel:SetVisible(false)
-        local browseSounds = tree:AddNode("#spawnmenu.category.browsesounds", "icon16/sound.png")
+        local browseSounds = tree:AddNode("Browse Sounds", "icon16/sound.png")
         browseSounds.ViewPanel = ViewPanel
         browseSounds.pnlContent = pnlContent
         browseAddonSounds = browseSounds:AddNode("#spawnmenu.category.addons", "icon16/folder_database.png")
@@ -152,14 +151,14 @@ hook.Add("PopulateContent", "SpawnmenuLoadSomeSounds", function(pnlContent, tree
             table.insert(addon_sounds, addon)
         end
 
-        local browseLegacySounds = browseSounds:AddNode("#spawnmenu.category.addonslegacy", "icon16/folder_database.png")
+        local browseLegacySounds = browseSounds:AddNode("Addons - Legacy", "icon16/folder_database.png")
         browseLegacySounds.ViewPanel = ViewPanel
         browseLegacySounds.pnlContent = pnlContent
         for _, addon in SortedPairsByValue(addon_sounds) do
             AddBrowseContentSnd(browseLegacySounds, addon, "icon16/bricks.png", "addons/" .. addon .. "/", "MOD")
         end
 
-        AddBrowseContentSnd(browseSounds, "#spawnmenu.category.downloads", "icon16/folder_database.png", "download/", "MOD")
+        AddBrowseContentSnd(browseSounds, "Downloads", "icon16/folder_database.png", "download/", "MOD")
         browseGameSounds = browseSounds:AddNode("#spawnmenu.category.games", "icon16/folder_database.png")
         browseGameSounds.ViewPanel = ViewPanel
         browseGameSounds.pnlContent = pnlContent
@@ -294,7 +293,6 @@ local function AddBrowseContentMaterial(node, name, icon, path, pathid)
     materials.OnNodeSelected = function(self, node_sel) OnMatNodeSelected(self, node_sel, name, path, pathid, icon, ViewPanel, pnlContent) end
 end
 
-language.Add("spawnmenu.category.browsematerials", "Browse Materials")
 local function RefreshAddonMaterials(node)
     for _, addon in SortedPairsByMemberValue(engine.GetAddons(), "title") do
         if not addon.downloaded then continue end
@@ -319,10 +317,10 @@ hook.Add("PopulateContent", "SpawnmenuLoadSomeMaterials", function(pnlContent, t
         if not IsValid(tree) or not IsValid(pnlContent) then return end
         local ViewPanel = vgui.Create("ContentContainer", pnlContent)
         ViewPanel:SetVisible(false)
-        local browseMaterials = tree:AddNode("#spawnmenu.category.browsematerials", "icon16/picture_empty.png")
+        local browseMaterials = tree:AddNode("Browse Materials", "icon16/picture_empty.png")
         browseMaterials.ViewPanel = ViewPanel
         browseMaterials.pnlContent = pnlContent
-        browseAddonMaterials = browseMaterials:AddNode("#spawnmenu.category.addons", "icon16/folder_database.png")
+        browseAddonMaterials = browseMaterials:AddNode("Addons", "icon16/folder_database.png")
         browseAddonMaterials.ViewPanel = ViewPanel
         browseAddonMaterials.pnlContent = pnlContent
         RefreshAddonMaterials(browseAddonMaterials)
@@ -333,14 +331,14 @@ hook.Add("PopulateContent", "SpawnmenuLoadSomeMaterials", function(pnlContent, t
             table.insert(addon_mats, addon)
         end
 
-        local browseLegacyMaterials = browseMaterials:AddNode("#spawnmenu.category.addonslegacy", "icon16/folder_database.png")
+        local browseLegacyMaterials = browseMaterials:AddNode("Addons - Legacy", "icon16/folder_database.png")
         browseLegacyMaterials.ViewPanel = ViewPanel
         browseLegacyMaterials.pnlContent = pnlContent
         for _, addon in SortedPairsByValue(addon_mats) do
             AddBrowseContentMaterial(browseLegacyMaterials, addon, "icon16/bricks.png", "addons/" .. addon .. "/", "MOD")
         end
 
-        AddBrowseContentMaterial(browseMaterials, "#spawnmenu.category.downloads", "icon16/folder_database.png", "download/", "MOD")
+        AddBrowseContentMaterial(browseMaterials, "Downloads", "icon16/folder_database.png", "download/", "MOD")
         browseGameMaterials = browseMaterials:AddNode("#spawnmenu.category.games", "icon16/folder_database.png")
         browseGameMaterials.ViewPanel = ViewPanel
         browseGameMaterials.pnlContent = pnlContent
