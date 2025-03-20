@@ -51,6 +51,20 @@ function GM:CanTool(client, _, tool)
         stacker = true,
     }
 
+    local function CheckDuplicationScale(client, entities)
+        entities = entities or {}
+        for _, v in pairs(entities) do
+            if v.ModelScale and v.ModelScale > 10 then
+                client:notifyWarning("A model within this duplication exceeds the size limit!")
+                print("[Server Warning] Potential server crash using dupes attempt by player: " .. client:Name() .. " (" .. client:SteamID() .. ")")
+                return false
+            end
+
+            v.ModelScale = 1
+        end
+        return true
+    end
+
     local privilege = "Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
     if DisallowedTools[tool] and not client:IsSuperAdmin() then return false end
     if not (client:IsSuperAdmin() or ((client:isStaffOnDuty() or client:getChar():hasFlags("t")) and client:hasPrivilege(privilege))) then return false end
@@ -73,35 +87,9 @@ function GM:CanTool(client, _, tool)
         if tool == "weld" and entClass == "sent_ball" then return false end
     end
 
-    if tool == "duplicator" and client.CurrentDupe and not self:CheckDuplicationScale(client, client.CurrentDupe.Entities) then return false end
-    if tool == "advdupe2" and client.AdvDupe2 and not self:CheckDuplicationScale(client, client.AdvDupe2.Entities) then return false end
-    if tool == "adv_duplicator" and toolobj and toolobj.Entities and not self:CheckDuplicationScale(client, toolobj.Entities) then return false end
-    return true
-end
-
-function MODULE:CanTool(client, _, tool)
-    local weapon = client:GetActiveWeapon()
-    local toolobj = IsValid(weapon) and weapon:GetToolObject() or nil
-    local entity = client:getTracedEntity()
-    if IsValid(entity) then
-        local entClass = entity:GetClass()
-        if tool == "remover" then
-            if self.RemoverBlockedEntities[entClass] then
-                return client:hasPrivilege("Staff Permissions - Can Remove Blocked Entities")
-            elseif entity:IsWorld() then
-                return client:hasPrivilege("Staff Permissions - Can Remove World Entities")
-            end
-            return true
-        end
-
-        if (tool == "permaall" or tool == "permaprops" or tool == "blacklistandremove") and (string.StartWith(entClass, "lia_") or self.CanNotPermaProp[entClass] or entity:isLiliaPersistent() or entity:CreatedByMap()) then return false end
-        if (tool == "adv_duplicator" or tool == "advdupe2" or tool == "duplicator" or tool == "blacklistandremove") and (self.DuplicatorBlackList[entClass] or entity.NoDuplicate) then return false end
-        if tool == "weld" and entClass == "sent_ball" then return false end
-    end
-
-    if tool == "duplicator" and client.CurrentDupe and not self:CheckDuplicationScale(client, client.CurrentDupe.Entities) then return false end
-    if tool == "advdupe2" and client.AdvDupe2 and not self:CheckDuplicationScale(client, client.AdvDupe2.Entities) then return false end
-    if tool == "adv_duplicator" and toolobj and toolobj.Entities and not self:CheckDuplicationScale(client, toolobj.Entities) then return false end
+    if tool == "duplicator" and client.CurrentDupe and not CheckDuplicationScale(client, client.CurrentDupe.Entities) then return false end
+    if tool == "advdupe2" and client.AdvDupe2 and not CheckDuplicationScale(client, client.AdvDupe2.Entities) then return false end
+    if tool == "adv_duplicator" and toolobj and toolobj.Entities and not CheckDuplicationScale(client, toolobj.Entities) then return false end
     return true
 end
 
@@ -168,7 +156,7 @@ function GM:PlayerSpawnedVehicle(client, entity)
     entity:SetCreator(client)
 end
 
-function MODULE:CanPlayerUseChar(client)
+function GM:CanPlayerUseChar(client)
     if GetGlobalBool("characterSwapLock", false) and not client:hasPrivilege("Staff Permissions - Can Bypass Character Lock") then return false, "Currently the server is in an event and you're unable to change characters." end
 end
 

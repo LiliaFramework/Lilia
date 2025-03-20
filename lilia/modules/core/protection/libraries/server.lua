@@ -261,20 +261,6 @@ function MODULE:PlayerSpawnVehicle(client, _, name)
     if not client:hasPrivilege("Spawn Permissions - No Car Spawn Delay") then client.NextVehicleSpawn = SysTime() + lia.config.get("PlayerSpawnVehicleDelay", 30) end
 end
 
-function MODULE:CheckDuplicationScale(client, entities)
-    entities = entities or {}
-    for _, v in pairs(entities) do
-        if v.ModelScale and v.ModelScale > 10 then
-            client:notifyWarning("A model within this duplication exceeds the size limit!")
-            print("[Server Warning] Potential server crash using dupes attempt by player: " .. client:Name() .. " (" .. client:SteamID() .. ")")
-            return false
-        end
-
-        v.ModelScale = 1
-    end
-    return true
-end
-
 function MODULE:PlayerNoClip(client, state)
     if not client:isStaffOnDuty() and client:hasPrivilege("Staff Permissions - No Clip Outside Staff Character") or client:isStaffOnDuty() then
         if state then
