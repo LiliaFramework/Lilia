@@ -231,7 +231,7 @@ function GM:PlayerSay(client, message)
     return ""
 end
 
-function GM:CanPlayerHoldObject(client, entity)
+function GM:CanPlayerHoldObject(_, entity)
     if lia.allowedHoldableClasses[entity:GetClass()] then return true end
 end
 
@@ -558,7 +558,7 @@ function GM:InitializedModules()
     }
 
     local dbModule = lia.db.module or "sqlite"
-    local getColumnsQuery = ""
+    local getColumnsQuery
     if dbModule == "sqlite" then
         getColumnsQuery = "SELECT sql FROM sqlite_master WHERE type='table' AND name='lia_characters'"
     else
