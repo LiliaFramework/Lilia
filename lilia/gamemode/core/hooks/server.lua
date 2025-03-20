@@ -1,4 +1,13 @@
 ﻿local GM = GM or GAMEMODE
+lia.allowedHoldableClasses = {
+    ["lia_item"] = true,
+    ["lia_money"] = true,
+    ["prop_physics"] = true,
+    ["prop_physics_override"] = true,
+    ["prop_physics_multiplayer"] = true,
+    ["prop_ragdoll"] = true
+}
+
 function GM:CharPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
@@ -220,6 +229,10 @@ function GM:PlayerSay(client, message)
 
     hook.Run("PostPlayerSay", client, message, chatType, anonymous)
     return ""
+end
+
+function GM:CanPlayerHoldObject(client, entity)
+    if lia.allowedHoldableClasses[entity:GetClass()] then return true end
 end
 
 function GM:EntityTakeDamage(entity, dmgInfo)
@@ -544,34 +557,44 @@ function GM:InitializedModules()
         text = function(d) return d.field .. " TEXT" end
     }
 
-    local dbModule = string.lower(lia.db.module or "")
-    local getColumnsQuery = (dbModule == "sqlite") and "PRAGMA table_info(lia_characters)" or "DESCRIBE lia_characters"
+    local dbModule = lia.db.module or "sqlite"
+    local getColumnsQuery = ""
+    if dbModule == "sqlite" then
+        getColumnsQuery = "SELECT sql FROM sqlite_master WHERE type='table' AND name='lia_characters'"
+    else
+        getColumnsQuery = "DESCRIBE lia_characters"
+    end
+
     lia.db.query(getColumnsQuery, function(results)
         local existingColumns = {}
         if results then
             if dbModule == "sqlite" then
-                for _, row in ipairs(results) do
-                    existingColumns[row.name] = true
+                local createSQL = results[1].sql
+                local columnsSection = createSQL:match("%((.+)%)")
+                if columnsSection then
+                    for columnDef in string.gmatch(columnsSection, "([^,]+)") do
+                        local columnName = columnDef:match("^%s*`?(%w+)`?%s+")
+                        if columnName then existingColumns[columnName] = true end
+                    end
                 end
             else
                 for _, row in ipairs(results) do
                     existingColumns[row.Field] = true
                 end
             end
-        else
-            LiliaError("[Database] Failed to retrieve existing columns!")
         end
 
         for _, data in pairs(lia.char.vars) do
-            if data.field and not existingColumns[data.field] and data.fieldType then
+            if data.field then
                 local fieldType = data.fieldType
-                if typeMap[fieldType] then
-                    local fieldDefinition = typeMap[fieldType](data)
-                    if data.default ~= nil then fieldDefinition = fieldDefinition .. " DEFAULT '" .. tostring(data.default) .. "'" end
-                    local queryStr = "ALTER TABLE lia_characters ADD COLUMN " .. fieldDefinition
-                    lia.db.query(queryStr, function() LiliaInformation("[Database] Added column " .. data.field .. " to lia_characters table.") end)
-                else
-                    LiliaError("[Database] Unknown fieldType " .. tostring(fieldType) .. " for column " .. data.field)
+                if data.fieldType and not existingColumns[data.field] and typeMap[fieldType] then
+                    local columnDefinition = typeMap[fieldType](data)
+                    if data.default ~= nil then columnDefinition = columnDefinition .. " DEFAULT '" .. tostring(data.default) .. "'" end
+                    local queryStr = "ALTER TABLE lia_characters ADD COLUMN " .. data.field .. " " .. columnDefinition
+                    lia.db.query(queryStr, function()
+                        LiliaInformation("[Database] Added column " .. data.field .. " to lia_characters table.")
+                        print("[Database] Successfully added column: " .. data.field)
+                    end)
                 end
             end
         end
