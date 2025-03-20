@@ -477,106 +477,112 @@ local function AddCommandToMenu(AdminMenu, commandData, commandKey, target, comm
     commandOption:SetImage(iconPath)
 end
 
+local function hasAdminStickTargetClass(targetClassName)
+    for _, cmd in pairs(lia.command.list) do
+        if istable(cmd.AdminStick) and cmd.AdminStick.TargetClass == targetClassName then return true end
+    end
+    return false
+end
+
 function MODULE:OpenAdminStickUI(target)
+    if not IsValid(target) or (not target:isDoor() and not target:IsPlayer()) or not hasAdminStickTargetClass(target:GetClass()) then return end
     AdminStickIsOpen = true
     local AdminMenu = DermaMenu()
     AdminMenu:Center()
     AdminMenu:MakePopup()
     local submenus = {}
-    if IsValid(target) then
-        if target:IsPlayer() then
-            local playerOptions = {
-                {
-                    name = "CharID: " .. (target:getChar() and target:getChar():getID() or "N/A") .. " (copy)",
-                    cmd = function()
-                        if target:getChar() then
-                            local msg = L("copiedCharID", target:getChar():getID())
-                            LocalPlayer():ChatPrint(msg)
-                            SetClipboardText(target:getChar():getID())
-                        end
+    if target:IsPlayer() then
+        local playerOptions = {
+            {
+                name = "CharID: " .. (target:getChar() and target:getChar():getID() or "N/A") .. " (copy)",
+                cmd = function()
+                    if target:getChar() then
+                        local msg = L("copiedCharID", target:getChar():getID())
+                        LocalPlayer():ChatPrint(msg)
+                        SetClipboardText(target:getChar():getID())
+                    end
 
-                        AdminStickIsOpen = false
-                    end,
-                    icon = "icon16/page_copy.png"
-                },
-                {
-                    name = "Name: " .. target:Name() .. " (copy)",
-                    cmd = function()
-                        local msg = L("copiedToClipboard", target:Name(), "Name")
-                        LocalPlayer():ChatPrint(msg)
-                        SetClipboardText(target:Name())
-                        AdminStickIsOpen = false
-                    end,
-                    icon = "icon16/page_copy.png"
-                },
-                {
-                    name = "SteamID: " .. target:SteamID() .. " (copy)",
-                    cmd = function()
-                        local msg = L("copiedToClipboard", target:Name(), "SteamID")
-                        LocalPlayer():ChatPrint(msg)
-                        SetClipboardText(target:SteamID())
-                        AdminStickIsOpen = false
-                    end,
-                    icon = "icon16/page_copy.png"
-                },
-                {
-                    name = "SteamID64: " .. target:SteamID64() .. " (copy)",
-                    cmd = function()
-                        local msg = L("copiedToClipboard", target:Name(), "SteamID64")
-                        LocalPlayer():ChatPrint(msg)
-                        SetClipboardText(target:SteamID64())
-                        AdminStickIsOpen = false
-                    end,
-                    icon = "icon16/page_copy.png"
-                }
+                    AdminStickIsOpen = false
+                end,
+                icon = "icon16/page_copy.png"
+            },
+            {
+                name = "Name: " .. target:Name() .. " (copy)",
+                cmd = function()
+                    local msg = L("copiedToClipboard", target:Name(), "Name")
+                    LocalPlayer():ChatPrint(msg)
+                    SetClipboardText(target:Name())
+                    AdminStickIsOpen = false
+                end,
+                icon = "icon16/page_copy.png"
+            },
+            {
+                name = "SteamID: " .. target:SteamID() .. " (copy)",
+                cmd = function()
+                    local msg = L("copiedToClipboard", target:Name(), "SteamID")
+                    LocalPlayer():ChatPrint(msg)
+                    SetClipboardText(target:SteamID())
+                    AdminStickIsOpen = false
+                end,
+                icon = "icon16/page_copy.png"
+            },
+            {
+                name = "SteamID64: " .. target:SteamID64() .. " (copy)",
+                cmd = function()
+                    local msg = L("copiedToClipboard", target:Name(), "SteamID64")
+                    LocalPlayer():ChatPrint(msg)
+                    SetClipboardText(target:SteamID64())
+                    AdminStickIsOpen = false
+                end,
+                icon = "icon16/page_copy.png"
             }
+        }
 
-            table.sort(playerOptions, function(a, b) return a.name < b.name end)
-            local playerInfoMenu = GetOrCreateSubMenu(AdminMenu, "Player Informations", submenus)
-            for _, option in ipairs(playerOptions) do
-                playerInfoMenu:AddOption(L(option.name), option.cmd):SetIcon(option.icon)
-            end
-
-            IncludeAdminMenu(target, AdminMenu, submenus)
-            IncludeCharacterManagement(target, AdminMenu, submenus)
-            IncludeFlagManagement(target, AdminMenu, submenus)
+        table.sort(playerOptions, function(a, b) return a.name < b.name end)
+        local playerInfoMenu = GetOrCreateSubMenu(AdminMenu, "Player Informations", submenus)
+        for _, option in ipairs(playerOptions) do
+            playerInfoMenu:AddOption(L(option.name), option.cmd):SetIcon(option.icon)
         end
 
-        local targetClassName = target:GetClass()
-        local commands = {}
-        for k, v in pairs(lia.command.list) do
-            if v.AdminStick and istable(v.AdminStick) then
-                local commandTargetClass = v.AdminStick.TargetClass
-                if commandTargetClass then
-                    if commandTargetClass == "Door" and target:isDoor() then
-                        table.insert(commands, {
-                            name = v.AdminStick.Name or k,
-                            data = v,
-                            key = k
-                        })
-                    elseif commandTargetClass == targetClassName then
-                        table.insert(commands, {
-                            name = v.AdminStick.Name or k,
-                            data = v,
-                            key = k
-                        })
-                    end
-                else
-                    if target:IsPlayer() then
-                        table.insert(commands, {
-                            name = v.AdminStick.Name or k,
-                            data = v,
-                            key = k
-                        })
-                    end
+        IncludeAdminMenu(target, AdminMenu, submenus)
+        IncludeCharacterManagement(target, AdminMenu, submenus)
+        IncludeFlagManagement(target, AdminMenu, submenus)
+    end
+
+    local targetClassName = target:GetClass()
+    local commands = {}
+    for k, v in pairs(lia.command.list) do
+        if v.AdminStick and istable(v.AdminStick) then
+            local commandTargetClass = v.AdminStick.TargetClass
+            if commandTargetClass then
+                if commandTargetClass == "Door" and target:isDoor() then
+                    table.insert(commands, {
+                        name = v.AdminStick.Name or k,
+                        data = v,
+                        key = k
+                    })
+                elseif commandTargetClass == targetClassName then
+                    table.insert(commands, {
+                        name = v.AdminStick.Name or k,
+                        data = v,
+                        key = k
+                    })
+                end
+            else
+                if target:IsPlayer() then
+                    table.insert(commands, {
+                        name = v.AdminStick.Name or k,
+                        data = v,
+                        key = k
+                    })
                 end
             end
         end
+    end
 
-        table.sort(commands, function(a, b) return a.name < b.name end)
-        for _, cmd in ipairs(commands) do
-            AddCommandToMenu(AdminMenu, cmd.data, cmd.key, target, cmd.name, submenus)
-        end
+    table.sort(commands, function(a, b) return a.name < b.name end)
+    for _, cmd in ipairs(commands) do
+        AddCommandToMenu(AdminMenu, cmd.data, cmd.key, target, cmd.name, submenus)
     end
 
     hook.Run("PopulateAdminStick", AdminMenu, target)

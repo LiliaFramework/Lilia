@@ -11,6 +11,16 @@ function GM:InitializedConfig()
     hook.Run("LoadLiliaFonts", lia.config.get("Font"), lia.config.get("GenericFont"))
 end
 
+function GM:CreateMove(cmd)
+    local client = LocalPlayer()
+    if IsValid(client) and client:getLocalVar("bIsHoldingObject", false) and cmd:KeyDown(IN_ATTACK2) then
+        cmd:ClearMovement()
+        local angle = RenderAngles()
+        angle.z = 0
+        cmd:SetViewAngles(angle)
+    end
+end
+
 function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
     if bind:find("jump") and client:hasRagdoll() then
