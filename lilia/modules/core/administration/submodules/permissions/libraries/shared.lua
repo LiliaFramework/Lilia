@@ -24,7 +24,7 @@
     for _, wep in ipairs(weapons.GetList()) do
         if wep.ClassName == "gmod_tool" and wep.Tool then
             for tool in pairs(wep.Tool) do
-                local privilege = "Staff Permissions - Access Tool  " .. tool:gsub("^%l", string.upper)
+                local privilege = "Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
                 if not CAMI.GetPrivilege(privilege) then
                     CAMI.RegisterPrivilege({
                         Name = privilege,
