@@ -110,19 +110,19 @@ lia.config.add("MoneyLimit", "Money Limit", 0, nil, {
     max = 1000000
 })
 
-lia.config.add("CurrencySymbol", "Currency Symbol", "$", nil, {
+lia.config.add("CurrencySymbol", "Currency Symbol", "", function(newVal) lia.currency.symbol = newVal end, {
     desc = "Specifies the currency symbol used in the game.",
     category = "Money",
     type = "Generic"
 })
 
-lia.config.add("CurrencySingularName", "Currency Singular Name", "Dollar", nil, {
+lia.config.add("CurrencySingularName", "Currency Singular Name", "Dollar", function(newVal) lia.currency.singular = newVal end, {
     desc = "Singular name of the in-game currency.",
     category = "Money",
     type = "Generic"
 })
 
-lia.config.add("CurrencyPluralName", "Currency Plural Name", "Dollars", nil, {
+lia.config.add("CurrencyPluralName", "Currency Plural Name", "Dollars", function(newVal) lia.currency.plural = newVal end, {
     desc = "Plural name of the in-game currency.",
     category = "Money",
     type = "Generic"
