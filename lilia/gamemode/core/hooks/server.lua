@@ -604,5 +604,5 @@ function GM:InitializedModules()
         end
     end
 
-    DatabaseQuery()
+    timer.Simple(5, function() DatabaseQuery() end)
 end
