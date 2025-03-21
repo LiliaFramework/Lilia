@@ -45,11 +45,17 @@ if SERVER then
     function characterMeta:joinClass(class, isForced)
         if not class then
             self:kickClass()
-            return
+            return false
+        end
+
+        local client = self:getPlayer()
+        local classData = lia.class.list[class]
+        if not classData or classData.faction ~= client:Team() then
+            self:KickClass()
+            return false
         end
 
         local oldClass = self:getClass()
-        local client = self:getPlayer()
         local hadOldClass = oldClass and oldClass ~= -1
         if isForced or lia.class.canBe(client, class) then
             self:setClass(class)
@@ -68,16 +74,19 @@ if SERVER then
     function characterMeta:kickClass()
         local client = self:getPlayer()
         if not client then return end
-        local goClass
+        local validDefaultClass
         for k, v in pairs(lia.class.list) do
             if v.faction == client:Team() and v.isDefault then
-                goClass = k
+                validDefaultClass = k
                 break
             end
         end
 
-        if not goClass then return end
-        self:joinClass(goClass)
-        hook.Run("OnPlayerJoinClass", client, goClass)
+        if validDefaultClass then
+            self:joinClass(validDefaultClass)
+            hook.Run("OnPlayerJoinClass", client, validDefaultClass)
+        else
+            self:setClass(nil)
+        end
     end
 end

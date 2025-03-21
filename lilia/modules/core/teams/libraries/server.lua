@@ -12,6 +12,17 @@
     netstream.Start(nil, "classUpdate", client)
 end
 
+function MODULE:OnTransferred(client)
+    local char = client:getChar()
+    if char then
+        local currentClass = char:getClass()
+        if currentClass then
+            local classData = lia.class.list[currentClass]
+            if not classData or classData.faction ~= client:Team() then char:kickClass() end
+        end
+    end
+end
+
 function MODULE:CanPlayerJoinClass(client, class)
     if lia.class.hasWhitelist(class) and not client:hasClassWhitelist(class) then return false end
     return true
