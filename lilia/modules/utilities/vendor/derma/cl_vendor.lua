@@ -57,7 +57,7 @@ function PANEL:Init()
     self.left.Paint = function()
         local name = liaVendorEnt:getNetVar("name", "Jane Doe")
         local scale = liaVendorEnt:getNetVar("scale", 0.5)
-        local money = liaVendorEnt:getMoney() ~= nil and liaVendorEnt:getMoney() or "∞"
+        local money = liaVendorEnt:getMoney() ~= nil and lia.currency.get(liaVendorEnt:getMoney()) or "∞"
         local itemCount = table.Count(self.items[self.vendor])
         local panelHeight = SS(215)
         surface.SetDrawColor(Color(30, 30, 30, 190))
