@@ -1,34 +1,9 @@
 ﻿local PANEL = {}
-local WHITE = Color(255, 255, 255, 150)
 local CharHover = {"buttons/button15.wav", 35, 250}
 local CharClick = {"buttons/button14.wav", 35, 255}
 local CharWarning = {"friends/friend_join.wav", 40, 255}
 PANEL.ANIM_SPEED = 0.1
 PANEL.FADE_SPEED = 0.5
-local function animateButton(button, _, _, text)
-    local animWidth = 0
-    local animDuration = 0.3
-    local startTime = nil
-    button.Paint = function(self, w, h)
-        local r, g, b = lia.config.get("Color")
-        surface.SetDrawColor(0, 0, 0, 255)
-        surface.DrawOutlinedRect(0, 0, w, h, 2)
-        surface.SetDrawColor(0, 0, 0, 150)
-        surface.DrawRect(1, 1, w - 2, h - 2)
-        draw.SimpleText(text, "liaBigFont", w / 2, h / 2, WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        if self:IsHovered() then
-            if not startTime then startTime = CurTime() end
-            local timeElapsed = CurTime() - startTime
-            animWidth = math.min(w, (timeElapsed / animDuration) * w) / 2
-            surface.SetDrawColor(r, g, b, 255)
-            surface.DrawLine(w / 2 - animWidth, h - 1, w / 2 + animWidth, h - 1)
-        else
-            startTime = nil
-            animWidth = 0
-        end
-    end
-end
-
 function PANEL:createStartButton()
     local screenWidth, screenHeight = ScrW(), ScrH()
     local btnWidth = screenWidth * 0.2
@@ -100,12 +75,11 @@ function PANEL:createStartButton()
     local startY = screenHeight / 2 - totalHeight / 2
     self.buttons = {}
     for i, config in ipairs(buttonConfigs) do
-        local btn = self:Add("DButton")
+        local btn = self:Add("liaMediumButton")
         btn:SetSize(btnWidth, btnHeight)
         local posY = startY + (i - 1) * (btnHeight + buttonSpacing)
         btn:SetPos(screenWidth / 2 - btnWidth / 2, posY)
-        btn:SetText("")
-        animateButton(btn, btnWidth, btnHeight, config.text)
+        btn:SetText(config.text)
         btn.DoClick = config.doClick
         btn.OnCursorEntered = function() surface.PlaySound("ui/hover.wav") end
         self.buttons[config.id] = btn
