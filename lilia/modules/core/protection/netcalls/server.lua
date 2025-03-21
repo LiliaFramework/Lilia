@@ -14,14 +14,26 @@ for _, v in pairs(KnownExploits) do
     end)
 end
 
+local function NotifyAdmin(notification)
+    for _, client in player.Iterator() do
+        if IsValid(client) and client:hasPrivilege("Staff Permissions - Can See Alting Notifications") then client:ChatPrint(notification) end
+    end
+end
+
+local function ApplyPunishment(client, infraction, kick, ban, time)
+    local bantime = time or 0
+    if kick then client:Kick("Kicked for " .. infraction .. ".") end
+    if ban then client:Ban(bantime, "Banned for " .. infraction .. ".") end
+end
+
 net.Receive(MODULE.AltCheckSeed, function(_, client)
     local sentSteamID = net.ReadString()
     if not sentSteamID or sentSteamID == "" then
-        MODULE:NotifyAdmin("The SteamID of player " .. client:Name() .. " (" .. client:SteamID() .. ") wasn't received properly. This can signify tampering with net messages.")
+        NotifyAdmin("The SteamID of player " .. client:Name() .. " (" .. client:SteamID() .. ") wasn't received properly. This can signify tampering with net messages.")
         return
     end
 
-    if client:SteamID() ~= sentSteamID then MODULE:NotifyAdmin("The SteamID of player " .. client:Name() .. " (" .. client:SteamID() .. ") is different than the saved one (" .. sentSteamID .. ")") end
+    if client:SteamID() ~= sentSteamID then NotifyAdmin("The SteamID of player " .. client:Name() .. " (" .. client:SteamID() .. ") is different than the saved one (" .. sentSteamID .. ")") end
 end)
 
-net.Receive(MODULE.HackingCheckSeed, function(_, client) MODULE:ApplyPunishment(client, "Hacking", true, true, 0) end)
+net.Receive(MODULE.HackingCheckSeed, function(_, client) ApplyPunishment(client, "Hacking", true, true, 0) end)

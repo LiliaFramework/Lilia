@@ -51,6 +51,18 @@ function MODULE:PlayerShouldAct()
     return lia.config.get("ActsActive", false)
 end
 
+local function NotifyAdmin(notification)
+    for _, client in player.Iterator() do
+        if IsValid(client) and client:hasPrivilege("Staff Permissions - Can See Alting Notifications") then client:ChatPrint(notification) end
+    end
+end
+
+local function ApplyPunishment(client, infraction, kick, ban, time)
+    local bantime = time or 0
+    if kick then client:Kick("Kicked for " .. infraction .. ".") end
+    if ban then client:Ban(bantime, "Banned for " .. infraction .. ".") end
+end
+
 function MODULE:PlayerAuthed(client, steamid)
     local KnownCheaters = {
         ["76561198095382821"] = true,
@@ -68,16 +80,16 @@ function MODULE:PlayerAuthed(client, steamid)
     local steamID = client:SteamID()
     if KnownCheaters[steamID64] or KnownCheaters[ownerSteamID64] then
         client:Ban("You are banned from this server for using third-party cheats.\nIf you believe this is a mistake, please appeal by contacting the owner with this message.")
-        self:NotifyAdmin(string.format("%s (%s) was banned for cheating or using an alt of a cheater.", steamName, steamID))
+        NotifyAdmin(string.format("%s (%s) was banned for cheating or using an alt of a cheater.", steamName, steamID))
         return
     end
 
     if lia.config.get("AltsDisabled", false) and ownerSteamID64 ~= steamID64 then
         client:Kick("Sorry! We do not allow family-shared accounts on this server!")
-        self:NotifyAdmin(string.format("%s (%s) was kicked for family sharing.", steamName, steamID))
+        NotifyAdmin(string.format("%s (%s) was kicked for family sharing.", steamName, steamID))
     elseif WhitelistCore and WhitelistCore.BlacklistedSteamID64[ownerSteamID64] then
         client:Ban("You are using an account whose family share is blacklisted from this server!")
-        self:NotifyAdmin(string.format("%s (%s) was banned for using a family-shared account that is blacklisted.", steamName, steamID))
+        NotifyAdmin(string.format("%s (%s) was banned for using a family-shared account that is blacklisted.", steamName, steamID))
     end
 end
 
@@ -85,7 +97,7 @@ function MODULE:PlayerSay(client, message)
     local hasIPAddress = string.match(message, "%d+%.%d+%.%d+%.%d+(:%d*)?")
     local hasBadWords = string.find(string.upper(message), string.upper("clone")) and string.find(string.upper(message), string.upper("nutscript"))
     if hasIPAddress then
-        self:ApplyPunishment(client, "Typing IP addresses in chat", true, false)
+        ApplyPunishment(client, "Typing IP addresses in chat", true, false)
         return ""
     elseif hasBadWords then
         return ""
@@ -164,24 +176,12 @@ function MODULE:PlayerEnteredVehicle(_, entity)
     if entity:GetClass() == "prop_vehicle_prisoner_pod" then entity:RemoveEFlags(EFL_NO_THINK_FUNCTION) end
 end
 
-function MODULE:NotifyAdmin(notification)
-    for _, client in player.Iterator() do
-        if IsValid(client) and client:hasPrivilege("Staff Permissions - Can See Alting Notifications") then client:ChatPrint(notification) end
-    end
-end
-
 function MODULE:OnPhysgunPickup(_, entity)
     if (entity:isProp() or entity:isItem()) and entity:GetCollisionGroup() == COLLISION_GROUP_NONE then entity:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR) end
 end
 
 function MODULE:PhysgunDrop(_, entity)
     if entity:isProp() and entity:isItem() then timer.Simple(5, function() if IsValid(entity) and entity:GetCollisionGroup() == COLLISION_GROUP_PASSABLE_DOOR then entity:SetCollisionGroup(COLLISION_GROUP_NONE) end end) end
-end
-
-function MODULE:ApplyPunishment(client, infraction, kick, ban, time)
-    local bantime = time or 0
-    if kick then client:Kick("Kicked for " .. infraction .. ".") end
-    if ban then client:Ban(bantime, "Banned for " .. infraction .. ".") end
 end
 
 function MODULE:PlayerSpawnProp(client, model)
