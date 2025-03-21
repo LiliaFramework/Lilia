@@ -73,7 +73,7 @@ function PANEL:Init()
         draw.DrawText(L("vendorSellScale"), "liaSmallFont", w * 0.1, h * 0.07, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
         draw.DrawText(math.ceil(scale * 100) .. "%", "liaSmallFont", w * 0.2, h * 0.07, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
         draw.DrawText(L("vendorItemCount"), "liaSmallFont", w * 0.1, h * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText(itemCount .. " " .. (tonumber(itemCount) > 1 and "Items" or "Item"), "liaSmallFont", w * 0.2, h * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        draw.DrawText((tonumber(itemCount) == 0 and "No items") or (tonumber(itemCount) == 1 and "1 Item") or (itemCount .. " Items"), "liaSmallFont", w * 0.2, h * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
     end
 
     self.right = vgui.Create("DFrame", self)
@@ -95,18 +95,20 @@ function PANEL:Init()
         draw.DrawText(L("faction"), "liaSmallFont", w * 0.085, h * 0.05, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
         draw.DrawText(factionName, "liaSmallFont", w * 0.201, h * 0.05, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
         local charClass = client:getChar():getClass()
+        local itemCount = client:getChar():getInv():getItemCount()
+        local itemText = (tonumber(itemCount) == 0 and "No Items") or (tonumber(itemCount) == 1 and "1 Item") or (itemCount .. " Items")
         if lia.class.list[charClass] then
             draw.DrawText(L("class"), "liaSmallFont", w * 0.085, h * 0.07, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
             draw.DrawText(lia.class.list[charClass].name, "liaSmallFont", w * 0.2, h * 0.07, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
             draw.DrawText(L("vendorMoney"), "liaSmallFont", w * 0.085, h * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
             draw.DrawText(lia.currency.get(client:getChar():getMoney()), "liaSmallFont", w * 0.2, h * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
             draw.DrawText(L("vendorItemCount"), "liaSmallFont", w * 0.085, h * 0.11, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-            draw.DrawText(client:getChar():getInv():getItemCount() .. " " .. (tonumber(client:getChar():getInv():getItemCount()) > 1 and "Items" or "Item"), "liaSmallFont", w * 0.2, h * 0.11, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+            draw.DrawText(itemText, "liaSmallFont", w * 0.2, h * 0.11, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
         else
             draw.DrawText(L("vendorMoney"), "liaSmallFont", w * 0.085, h * 0.07, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
             draw.DrawText(lia.currency.get(client:getChar():getMoney()), "liaSmallFont", w * 0.2, h * 0.07, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
             draw.DrawText(L("vendorItemCount"), "liaSmallFont", w * 0.085, h * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-            draw.DrawText(client:getChar():getInv():getItemCount() .. " " .. (tonumber(client:getChar():getInv():getItemCount()) > 1 and "Items" or "Item"), "liaSmallFont", w * 0.2, h * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+            draw.DrawText(itemText, "liaSmallFont", w * 0.2, h * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
         end
     end
 

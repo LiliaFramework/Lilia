@@ -13,27 +13,13 @@ function PANEL:Init()
         return lbl
     end
 
-    local function subLabel(text)
-        local subLbl = self:Add("DLabel")
-        subLbl:SetFont("liaSmallFont")
-        subLbl:SetText(text)
-        subLbl:SizeToContents()
-        subLbl:Dock(TOP)
-        subLbl:DockMargin(0, 0, 0, 4)
-        subLbl:SetTextColor(Color(150, 150, 150))
-        return subLbl
-    end
-
     self.nameLabel = label("Name")
-    subLabel("Enter your full name.")
     self.name = self:addTextEntry("name")
     self.name:SetTall(32)
     self.descLabel = label("Description")
-    subLabel("Enter your character description.")
     self.desc = self:addTextEntry("desc")
     self.desc:SetTall(32)
     self.modelLabel = label("Model")
-    subLabel("Please select a model.")
     local faction = lia.faction.indices[self:getContext("faction")]
     if not faction then return end
     local function paintIcon(icon, w, h)
