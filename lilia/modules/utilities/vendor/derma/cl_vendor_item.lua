@@ -16,24 +16,10 @@ function PANEL:Init()
     self.background = self:Add("DPanel")
     self.background:Dock(FILL)
     self.background:DockMargin(0, 0, 0, 10)
-    self.background.Paint = function(_, w, h)
-        draw.RoundedBox(8, 4, 4, w - 8, h - 8, Color(0, 0, 0, 100))
-        draw.RoundedBox(8, 0, 0, w, h, Color(45, 45, 45, 255))
-        surface.SetDrawColor(60, 60, 60, 255)
-        draw.NoTexture()
-        surface.DrawOutlinedRect(0, 0, w, h)
-    end
-
     self.iconFrame = self.background:Add("DPanel")
     self.iconFrame:SetSize(96, 96)
     self.iconFrame:Dock(LEFT)
     self.iconFrame:DockMargin(10, 10, 10, 10)
-    self.iconFrame.Paint = function(_, w, h)
-        draw.RoundedBox(4, 0, 0, w, h, Color(35, 35, 35, 255))
-        surface.SetDrawColor(100, 100, 100, 200)
-        surface.DrawOutlinedRect(0, 0, w, h)
-    end
-
     self.icon = self.iconFrame:Add("liaItemIcon")
     self.icon:SetSize(96, 96)
     self.icon:Dock(FILL)
@@ -61,25 +47,12 @@ function PANEL:Init()
     self.spacer = self.textContainer:Add("DPanel")
     self.spacer:Dock(FILL)
     self.spacer:SetPaintBackground(false)
-    self.action = self.textContainer:Add("DButton")
+    self.action = self.textContainer:Add("liaSmallButton")
     self.action:SetHeight(40)
     self.action:Dock(BOTTOM)
     self.action:DockMargin(0, 10, 0, 0)
     self.action:SetFont("VendorItemDescFont")
     self.action:SetTextColor(color_white)
-    self.action.Paint = function(btn, w, h)
-        if btn:IsDown() then
-            draw.RoundedBox(4, 0, 0, w, h, Color(70, 70, 70, 230))
-        elseif btn:IsHovered() then
-            draw.RoundedBox(4, 0, 0, w, h, Color(85, 85, 85, 230))
-        else
-            draw.RoundedBox(4, 0, 0, w, h, Color(65, 65, 65, 230))
-        end
-
-        surface.SetDrawColor(0, 0, 0, 150)
-        surface.DrawOutlinedRect(0, 0, w, h)
-    end
-
     self.isSelling = false
     self.suffix = ""
 end

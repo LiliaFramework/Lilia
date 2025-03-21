@@ -17,10 +17,6 @@ function PANEL:Init()
     self.buttons:Dock(TOP)
     self.buttons:SetPaintBackground(false)
     self.buttons:SetTall(36)
-    self.categoryList = self:Add("DHorizontalScroller")
-    self.categoryList:SetSize(w, 60)
-    self.categoryList:SetPos(0, 0)
-    self.categoryList:SetOverlap(5)
     self.vendor = self:Add("VendorTrader")
     self.vendor:SetSize(math.max(w * 0.25, 220), h - self.vendor.y)
     self.vendor:SetPos(w * 0.5 - self.vendor:GetWide() - 32, 64 + 44)
@@ -51,7 +47,7 @@ function PANEL:Init()
     self.vendorText:SizeToContents()
     self.vendorText:SetPos(self.vendor.x + self.vendor:GetWide() / 2 - self.vendorText:GetWide() / 2, self.vendor.y - self.vendorText:GetTall() - 10)
     self:initializeItems()
-    self:createCategoryList()
+    self:createCategoryDropdown()
     self.left = vgui.Create("DFrame", self)
     self.left:SetPos(w * 0.015, h * 0.35)
     self.left:SetSize(w * 0.212, h * 0.24)
@@ -116,48 +112,90 @@ function PANEL:Init()
 
     local btnWidth = w * 0.15
     local btnHeight = h * 0.05
-    local btnGap = 5
     if client:CanEditVendor() then
         local buttonY = self.right:GetY() + self.right:GetTall() - btnHeight - (w * 0.02)
-        self.editor = self:Add("DButton")
+        self.editor = self:Add("liaSmallButton")
         self.editor:SetSize(btnWidth, btnHeight)
         self.editor:SetPos(self.left:GetWide() - btnWidth - (w * 0.02), buttonY)
         self.editor:SetText(L("vendorEditorButton"))
         self.editor:SetFont("liaMediumFont")
         self.editor:SetTextColor(Color(255, 255, 255, 210))
         self.editor.DoClick = function() vgui.Create("VendorEditor"):SetZPos(99) end
-        self.editor.Paint = function(btn, width, height) self:PaintButton(btn, width, height) end
     end
 
-    self.leaveButton = self.right:Add("DButton")
+    self.leaveButton = self.right:Add("liaSmallButton")
     self.leaveButton:SetSize(btnWidth, btnHeight)
     self.leaveButton:SetPos(self.right:GetWide() - btnWidth - (w * 0.02), self.right:GetTall() - btnHeight - (w * 0.02))
     self.leaveButton:SetText(L("leave"))
     self.leaveButton:SetFont("liaMediumFont")
     self.leaveButton:SetTextColor(Color(255, 255, 255, 210))
     self.leaveButton.DoClick = function() lia.gui.vendor:Remove() end
-    self.leaveButton.Paint = function(btn, width, height) self:PaintButton(btn, width, height) end
-    if self.categoryList:GetCanvas():ChildCount() > 0 then
-        self.categoryToggle = self.right:Add("DButton")
-        self.categoryToggle:SetSize(btnWidth, btnHeight)
-        self.categoryToggle:SetPos(self.leaveButton.x, self.leaveButton.y - btnHeight - btnGap)
-        self.categoryToggle:SetText(L("vendorHideCategories"))
-        self.categoryToggle:SetFont("liaMediumFont")
-        self.categoryToggle:SetTextColor(Color(255, 255, 255, 210))
-        self.categoryToggle.DoClick = function(button)
-            if self.categoryList:IsVisible() then
-                self.categoryList:SetVisible(false)
-                button:SetText(L("vendorShowCategories"))
-            else
-                self.categoryList:SetVisible(true)
-                button:SetText(L("vendorHideCategories"))
-            end
-        end
+    self:DrawPortraits()
+end
 
-        self.categoryToggle.Paint = function(btn, width, height) self:PaintButton(btn, width, height) end
+local function PaintButton(self, w, h)
+    local r, g, b = lia.config.get("Color")
+    if self.Base then
+        surface.SetDrawColor(0, 0, 0, 255)
+        surface.DrawOutlinedRect(0, 0, w, h, 2)
+        surface.SetDrawColor(0, 0, 0, 150)
+        surface.DrawRect(1, 1, w - 2, h - 2)
     end
 
-    self:DrawPortraits()
+    draw.SimpleText(self:GetText(), self:GetFont(), w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    if self:IsHovered() or self:IsSelected() then
+        self.startTime = self.startTime or CurTime()
+        local elapsed = CurTime() - self.startTime
+        local anim = math.min(w, elapsed / 0.3 * w) / 2
+        surface.SetDrawColor(r, g, b)
+        surface.DrawLine(w / 2 - anim, h - 1, w / 2 + anim, h - 1)
+    else
+        self.startTime = nil
+    end
+    return true
+end
+
+function PANEL:createCategoryDropdown()
+    local categories = self:GetItemCategoryList()
+    if table.IsEmpty(categories) then return end
+    local w, h = ScrW(), ScrH()
+    self.categoryDropdown = self:Add("liaSmallButton")
+    self.categoryDropdown:SetSize(w * 0.15, h * 0.035)
+    self.categoryDropdown:SetPos(w * 0.82, 110)
+    self.categoryDropdown:SetText(L("vendorShowAll"))
+    local sorted = {}
+    for cat in pairs(categories) do
+        table.insert(sorted, cat)
+    end
+
+    table.sort(sorted)
+    local list
+    self.categoryDropdown.DoClick = function()
+        if IsValid(list) then
+            list:Remove()
+            list = nil
+            return
+        end
+
+        list = vgui.Create("DScrollPanel", self)
+        list:SetSize(self.categoryDropdown:GetWide(), #sorted * 24)
+        list:SetPos(self.categoryDropdown.x, self.categoryDropdown.y + self.categoryDropdown:GetTall() + 2)
+        for i, cat in ipairs(sorted) do
+            local btn = list:Add("liaSmallButton")
+            btn:SetSize(list:GetWide(), 22)
+            btn:SetPos(0, (i - 1) * 24)
+            btn:SetText(cat)
+            btn.DoClick = function()
+                self.currentCategory = cat
+                self.categoryDropdown:SetText(cat)
+                self:filterItemsByCategory()
+                if IsValid(list) then
+                    list:Remove()
+                    list = nil
+                end
+            end
+        end
+    end
 end
 
 function PANEL:DrawPortraits()
@@ -290,13 +328,11 @@ function PANEL:onVendorPropEdited(vendor, key)
         self.vendorModel:SetModel(vendor:GetModel())
     elseif key == "scale" then
         for _, panel in pairs(self.items[self.vendor]) do
-            if not IsValid(panel) then continue end
-            panel:updateLabel()
+            if IsValid(panel) then panel:updateLabel() end
         end
 
         for _, panel in pairs(self.items[self.me]) do
-            if not IsValid(panel) then continue end
-            panel:updateLabel()
+            if IsValid(panel) then panel:updateLabel() end
         end
     end
 end
@@ -326,68 +362,6 @@ function PANEL:GetItemCategoryList()
     return categories
 end
 
-function PANEL:createCategoryList()
-    local categories = self:GetItemCategoryList()
-    if table.IsEmpty(categories) then return end
-    local sortedCategories = {}
-    for category, _ in pairs(categories) do
-        table.insert(sortedCategories, category)
-    end
-
-    table.sort(sortedCategories)
-    local buttonWidth = 250
-    local buttonHeight = 40
-    local gap = 5
-    local totalButtons = #sortedCategories + 1
-    local totalWidth = (buttonWidth + gap) * totalButtons - gap
-    local allButton = vgui.Create("DButton")
-    allButton:SetSize(buttonWidth, buttonHeight)
-    allButton:SetText(L("vendorShowAll"))
-    allButton:SetFont("liaBigFont")
-    allButton:SetTextColor(Color(255, 255, 255))
-    allButton.Paint = function(panel, w, h) self:PaintButton(panel, w, h) end
-    allButton.DoClick = function()
-        self.currentCategory = nil
-        self:filterItemsByCategory()
-    end
-
-    self.categoryList:AddPanel(allButton)
-    for _, category in ipairs(sortedCategories) do
-        local categoryButton = vgui.Create("DButton")
-        categoryButton:SetSize(buttonWidth, buttonHeight)
-        categoryButton:SetText(string.FirstToUpper(category))
-        categoryButton:SetFont("liaBigFont")
-        categoryButton:SetTextColor(Color(255, 255, 255))
-        categoryButton.Paint = function(panel, w, h) self:PaintButton(panel, w, h) end
-        categoryButton.DoClick = function()
-            self.currentCategory = category
-            self:filterItemsByCategory()
-        end
-
-        self.categoryList:AddPanel(categoryButton)
-    end
-
-    self.categoryList.PerformLayout = function(scroller)
-        local canvas = scroller:GetCanvas()
-        canvas:SetWide(totalWidth)
-        canvas:SetPos((scroller:GetWide() - totalWidth) / 2, 0)
-    end
-end
-
-function PANEL:PaintButton(btn, width, height)
-    if btn:IsDown() then
-        surface.SetDrawColor(Color(40, 40, 40, 240))
-    elseif btn:IsHovered() then
-        surface.SetDrawColor(Color(30, 30, 30, 150))
-    else
-        surface.SetDrawColor(Color(30, 30, 30, 160))
-    end
-
-    surface.DrawRect(0, 0, width, height)
-    surface.SetDrawColor(Color(0, 0, 0, 235))
-    surface.DrawOutlinedRect(0, 0, width, height)
-end
-
 function PANEL:filterItemsByCategory()
     for itemType, panel in pairs(self.items[self.vendor]) do
         if IsValid(panel) then
@@ -405,7 +379,7 @@ function PANEL:filterItemsByCategory()
 
     for itemType in SortedPairs(liaVendorEnt.items) do
         local item = lia.item.list[itemType]
-        if item and (self.currentCategory == nil or item.category == self.currentCategory) then
+        if item and (self.currentCategory == nil) or (item.category == self.currentCategory) then
             local mode = liaVendorEnt:getTradeMode(itemType)
             if mode ~= VENDOR_BUYONLY then self:updateItem(itemType, self.vendor) end
             if mode ~= VENDOR_SELLONLY then
@@ -436,10 +410,7 @@ function PANEL:InventoryItemRemoved(item)
 end
 
 function PANEL:Paint(w, h)
-    surface.SetDrawColor(40, 40, 40, 220)
-    surface.DrawRect(0, 0, w, h)
-    surface.SetDrawColor(255, 255, 255, 50)
-    surface.DrawOutlinedRect(0, 0, w, h)
+    lia.util.drawBlur(self, 15)
 end
 
 function PANEL:OnRemove()
