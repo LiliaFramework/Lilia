@@ -64,7 +64,7 @@ local function HandleExtraFields(commandKey, commandData, target, commandName)
         yPos = yPos + 40
     end
 
-    local submitBtn = vgui.Create("DButton" , frame)
+    local submitBtn = vgui.Create("DButton", frame)
     submitBtn:SetText(L("submit"))
     submitBtn:SetPos(100, frame:GetTall() - 70)
     submitBtn:SetSize(150, 50)
@@ -97,7 +97,7 @@ local function HandleExtraFields(commandKey, commandData, target, commandName)
         AdminStickIsOpen = false
     end
 
-    local cancelBtn = vgui.Create("DButton" , frame)
+    local cancelBtn = vgui.Create("DButton", frame)
     cancelBtn:SetText(L("cancel"))
     cancelBtn:SetPos(250, frame:GetTall() - 70)
     cancelBtn:SetSize(150, 50)
@@ -125,7 +125,7 @@ local function OpenPlayerModelUI(target)
     local edit = vgui.Create("DTextEntry", frame)
     edit:Dock(BOTTOM)
     edit:SetText(target:GetModel())
-    local button = vgui.Create("DButton" , frame)
+    local button = vgui.Create("DButton", frame)
     button:SetText(L("Change"))
     button:Dock(TOP)
     function button:DoClick()
@@ -184,7 +184,7 @@ local function OpenReasonUI(target, cmd)
         timeedit = time
     end
 
-    local button = vgui.Create("DButton" , frame)
+    local button = vgui.Create("DButton", frame)
     button:Dock(BOTTOM)
     button:SetText(L("Change"))
     function button:DoClick()
