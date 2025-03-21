@@ -544,62 +544,53 @@ function GM:LoadData()
     end
 end
 
+local function DatabaseQuery()
+    if not DatabaseQueryRan then
+        local typeMap = {
+            string = function(d) return ("%s VARCHAR(%d)"):format(d.field, d.length or 255) end,
+            integer = function(d) return ("%s INT"):format(d.field) end,
+            float = function(d) return ("%s FLOAT"):format(d.field) end,
+            boolean = function(d) return ("%s TINYINT(1)"):format(d.field) end,
+            datetime = function(d) return ("%s DATETIME"):format(d.field) end,
+            text = function(d) return ("%s TEXT"):format(d.field) end
+        }
+
+        local dbModule = lia.db.module or "sqlite"
+        local getColumnsQuery = dbModule == "sqlite" and "SELECT sql FROM sqlite_master WHERE type='table' AND name='lia_characters'" or "DESCRIBE lia_characters"
+        lia.db.query(getColumnsQuery, function(results)
+            local existing = {}
+            if results and #results > 0 then
+                if dbModule == "sqlite" then
+                    local createSQL = results[1].sql or ""
+                    for def in createSQL:match("%((.+)%)"):gmatch("([^,]+)") do
+                        local col = def:match("^%s*`?(%w+)`?")
+                        if col then existing[col] = true end
+                    end
+                else
+                    for _, row in ipairs(results) do
+                        existing[row.Field] = true
+                    end
+                end
+            end
+
+            for _, v in pairs(lia.char.vars) do
+                if v.field and not existing[v.field] and typeMap[v.fieldType] then
+                    local colDef = typeMap[v.fieldType](v)
+                    if v.default ~= nil then colDef = colDef .. " DEFAULT '" .. tostring(v.default) .. "'" end
+                    local alter = ("ALTER TABLE lia_characters ADD COLUMN %s"):format(colDef)
+                    lia.db.query(alter, function() LiliaInformation(("[Database] Added missing column `%s`."):format(v.field)) end)
+                end
+            end
+        end)
+
+        DatabaseQueryRan = true
+    end
+end
+
 function GM:InitializedModules()
     local bootstrapEndTime = SysTime()
     local timeTaken = bootstrapEndTime - BootingTime
     LiliaBootstrap("Bootstrapper", string.format("Lilia loaded in %.2f seconds.", timeTaken), Color(0, 255, 0))
-    local typeMap = {
-        string = function(d) return d.field .. " VARCHAR(" .. (d.length or 255) .. ")" end,
-        integer = function(d) return d.field .. " INT" end,
-        float = function(d) return d.field .. " FLOAT" end,
-        boolean = function(d) return d.field .. " TINYINT(1)" end,
-        datetime = function(d) return d.field .. " DATETIME" end,
-        text = function(d) return d.field .. " TEXT" end
-    }
-
-    local dbModule = lia.db.module or "sqlite"
-    local getColumnsQuery
-    if dbModule == "sqlite" then
-        getColumnsQuery = "SELECT sql FROM sqlite_master WHERE type='table' AND name='lia_characters'"
-    else
-        getColumnsQuery = "DESCRIBE lia_characters"
-    end
-
-    lia.db.query(getColumnsQuery, function(results)
-        local existingColumns = {}
-        if results then
-            if dbModule == "sqlite" then
-                local createSQL = results[1].sql
-                local columnsSection = createSQL:match("%((.+)%)")
-                if columnsSection then
-                    for columnDef in string.gmatch(columnsSection, "([^,]+)") do
-                        local columnName = columnDef:match("^%s*`?(%w+)`?%s+")
-                        if columnName then existingColumns[columnName] = true end
-                    end
-                end
-            else
-                for _, row in ipairs(results) do
-                    existingColumns[row.Field] = true
-                end
-            end
-        end
-
-        for _, data in pairs(lia.char.vars) do
-            if data.field then
-                local fieldType = data.fieldType
-                if data.fieldType and not existingColumns[data.field] and typeMap[fieldType] then
-                    local columnDefinition = typeMap[fieldType](data)
-                    if data.default ~= nil then columnDefinition = columnDefinition .. " DEFAULT '" .. tostring(data.default) .. "'" end
-                    local queryStr = "ALTER TABLE lia_characters ADD COLUMN " .. data.field .. " " .. columnDefinition
-                    lia.db.query(queryStr, function()
-                        LiliaInformation("[Database] Added column " .. data.field .. " to lia_characters table.")
-                        print("[Database] Successfully added column: " .. data.field)
-                    end)
-                end
-            end
-        end
-    end)
-
     local addons = engine.GetAddons()
     local autoDownload = lia.config.get("AutoDownloadWorkshop", false)
     for _, addon in ipairs(addons) do
@@ -612,4 +603,6 @@ function GM:InitializedModules()
             if addon.wsid == "1907060869" then LiliaError("WARNING: 'Srlion's Hook Library' (WSID: 1907060869) is known to cause issues and is not necessary for addons like SAM.") end
         end
     end
+
+    DatabaseQuery()
 end
