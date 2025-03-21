@@ -46,50 +46,48 @@ lia.flag.add("t", "Toolgun", function(client, isGiven)
     end
 end)
 
-hook.Add("CreateMenuButtons", "FlagsMenuButtons", function(tabs)
+hook.Add("BuildInformationMenu", "BuildInformationMenuFlags", function(pages)
     local client = LocalPlayer()
-    tabs["Flags"] = function(panel)
-        local char = client:getChar()
-        if not char then
-            print("No character found!")
-            return
-        end
-
-        local scroll = vgui.Create("DScrollPanel", panel)
-        scroll:Dock(FILL)
-        local iconLayout = vgui.Create("DIconLayout", scroll)
-        iconLayout:Dock(FILL)
-        iconLayout:DockMargin(0, 50, 0, 0)
-        iconLayout:SetSpaceY(5)
-        iconLayout:SetSpaceX(5)
-        iconLayout.PerformLayout = function(self)
-            local y = 0
-            local parentWidth = self:GetWide()
-            for _, child in ipairs(self:GetChildren()) do
-                child:SetPos((parentWidth - child:GetWide()) / 2, y)
-                y = y + child:GetTall() + self:GetSpaceY()
+    table.insert(pages, {
+        name = "Flags",
+        drawFunc = function(panel)
+            local char = client:getChar()
+            if not char then
+                panel:Add("DLabel"):SetText("No character found!"):Dock(TOP)
+                return
             end
 
-            self:SetTall(y)
-        end
+            local scroll = vgui.Create("DScrollPanel", panel)
+            scroll:Dock(FILL)
+            local iconLayout = vgui.Create("DIconLayout", scroll)
+            iconLayout:Dock(FILL)
+            iconLayout:SetSpaceY(5)
+            iconLayout:SetSpaceX(5)
+            iconLayout.PerformLayout = function(self)
+                local y = 0
+                local parentWidth = self:GetWide()
+                for _, child in ipairs(self:GetChildren()) do
+                    child:SetPos((parentWidth - child:GetWide()) / 2, y)
+                    y = y + child:GetTall() + self:GetSpaceY()
+                end
 
-        for flagName, flagData in SortedPairs(lia.flag.list, function(a, b) return tostring(a) < tostring(b) end) do
-            if isnumber(flagName) then continue end
-            local flagPanel = vgui.Create("DPanel", iconLayout)
-            flagPanel:SetSize(panel:GetWide(), 60)
-            flagPanel.Paint = function(_, w, h)
-                local char = client:getChar()
-                if not char then return end
-                local hasFlag = char:hasFlags(flagName)
-                local status = hasFlag and "✓" or "✗"
-                local statusColor = hasFlag and Color(0, 255, 0) or Color(255, 0, 0)
-                draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
-                draw.SimpleText(flagName, "liaMediumFont", 20, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-                draw.SimpleText(status, "liaBigFont", w - 20, 5, statusColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
-                if flagData.desc then draw.SimpleText(flagData.desc, "liaSmallFont", 20, 30, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP) end
+                self:SetTall(y)
+            end
+
+            for flagName, flagData in SortedPairs(lia.flag.list) do
+                if isnumber(flagName) then continue end
+                local flagPanel = vgui.Create("DPanel", iconLayout)
+                flagPanel:SetSize(panel:GetWide(), 60)
+                flagPanel.Paint = function(_, w, h)
+                    local hasFlag = char:hasFlags(flagName)
+                    local status = hasFlag and "✓" or "✗"
+                    local statusColor = hasFlag and Color(0, 255, 0) or Color(255, 0, 0)
+                    draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
+                    draw.SimpleText(flagName, "liaMediumFont", 20, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                    draw.SimpleText(status, "liaBigFont", w - 20, 5, statusColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+                    if flagData.desc then draw.SimpleText(flagData.desc, "liaSmallFont", 20, 30, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP) end
+                end
             end
         end
-
-        panel:InvalidateLayout(true)
-    end
+    })
 end)

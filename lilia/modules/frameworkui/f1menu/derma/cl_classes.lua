@@ -213,20 +213,6 @@ function PANEL:addJoinButton(detailsPanel, classData, canBe)
     button:DockMargin(10, 10, 10, 10)
     button.text_color = MenuColors.text
     button:SetDisabled(isCurrentClass or not canBe)
-    button.Paint = function(btn, w, h)
-        local hovered = btn:IsHovered()
-        if hovered and not btn:GetDisabled() then
-            local underlineWidth = w * 0.4
-            local underlineX = (w - underlineWidth) * 0.5
-            local underlineY = h - 4
-            surface.SetDrawColor(255, 255, 255, 80)
-            surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
-        end
-
-        surface.SetDrawColor(MenuColors.border)
-        surface.DrawOutlinedRect(0, 0, w, h)
-    end
-
     button.DoClick = function()
         if canBe and not isCurrentClass then
             lia.command.send("beclass", classData.index)

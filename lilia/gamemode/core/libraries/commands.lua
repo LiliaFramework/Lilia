@@ -209,49 +209,48 @@ else
     end
 end
 
-hook.Add("CreateMenuButtons", "CommandsMenuButtons", function(tabs)
+hook.Add("BuildInformationMenu", "BuildInformationMenuCommands", function(pages)
     local client = LocalPlayer()
-    tabs["Commands"] = function(panel)
-        local char = client:getChar()
-        if not char then
-            print("No character found!")
-            return
-        end
-
-        local scroll = vgui.Create("DScrollPanel", panel)
-        scroll:Dock(FILL)
-        local iconLayout = vgui.Create("DIconLayout", scroll)
-        iconLayout:Dock(FILL)
-        iconLayout:DockMargin(0, 50, 0, 0)
-        iconLayout:SetSpaceY(5)
-        iconLayout:SetSpaceX(5)
-        iconLayout.PerformLayout = function(self)
-            local y = 0
-            local parentWidth = self:GetWide()
-            for _, child in ipairs(self:GetChildren()) do
-                child:SetPos((parentWidth - child:GetWide()) / 2, y)
-                y = y + child:GetTall() + self:GetSpaceY()
+    table.insert(pages, {
+        name = "Commands",
+        drawFunc = function(panel)
+            local char = client:getChar()
+            if not char then
+                panel:Add("DLabel"):SetText("No character found!"):Dock(TOP)
+                return
             end
 
-            self:SetTall(y)
-        end
+            local scroll = vgui.Create("DScrollPanel", panel)
+            scroll:Dock(FILL)
+            local iconLayout = vgui.Create("DIconLayout", scroll)
+            iconLayout:Dock(FILL)
+            iconLayout:SetSpaceY(5)
+            iconLayout:SetSpaceX(5)
+            iconLayout.PerformLayout = function(self)
+                local y = 0
+                local parentWidth = self:GetWide()
+                for _, child in ipairs(self:GetChildren()) do
+                    child:SetPos((parentWidth - child:GetWide()) / 2, y)
+                    y = y + child:GetTall() + self:GetSpaceY()
+                end
 
-        for cmdName, cmdData in SortedPairs(lia.command.list, function(a, b) return tostring(a) < tostring(b) end) do
-            if isnumber(cmdName) then continue end
-            local hasAccess, privilege = lia.command.hasAccess(LocalPlayer(), cmdName, cmdData)
-            if hasAccess then
-                local commandPanel = vgui.Create("DPanel", iconLayout)
-                commandPanel:SetSize(panel:GetWide(), 60)
-                commandPanel.Paint = function(_, w, h)
-                    local statusColor = Color(255, 255, 255)
-                    draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
-                    draw.SimpleText("/" .. cmdName, "liaMediumFont", 20, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-                    draw.SimpleText(cmdData.syntax or "", "liaSmallFont", 20, 30, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-                    draw.SimpleText(privilege or "None", "liaSmallFont", w - 20, 30, statusColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+                self:SetTall(y)
+            end
+
+            for cmdName, cmdData in SortedPairs(lia.command.list) do
+                if isnumber(cmdName) then continue end
+                local hasAccess, privilege = lia.command.hasAccess(client, cmdName, cmdData)
+                if hasAccess then
+                    local commandPanel = vgui.Create("DPanel", iconLayout)
+                    commandPanel:SetSize(panel:GetWide(), 60)
+                    commandPanel.Paint = function(_, w, h)
+                        draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
+                        draw.SimpleText("/" .. cmdName, "liaMediumFont", 20, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                        draw.SimpleText(cmdData.syntax or "", "liaSmallFont", 20, 30, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                        draw.SimpleText(privilege or "None", "liaSmallFont", w - 20, 30, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+                    end
                 end
             end
         end
-
-        panel:InvalidateLayout(true)
-    end
+    })
 end)

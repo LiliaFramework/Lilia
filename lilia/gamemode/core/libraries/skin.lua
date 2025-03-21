@@ -29,6 +29,15 @@ function SKIN:PaintFrame(panel)
     surface.DrawRect(0, 0, panel:GetWide(), panel:GetTall())
 end
 
+function SKIN:PaintTooltip(panel, w, h)
+    surface.SetDrawColor(45, 45, 45, 240)
+    surface.DrawRect(0, 0, w, h)
+    surface.SetDrawColor(0, 0, 0, 180)
+    surface.DrawOutlinedRect(0, 0, w, h)
+    surface.SetDrawColor(100, 100, 100, 25)
+    surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
+end
+
 function SKIN:DrawGenericBackground(x, y, w, h)
     surface.SetDrawColor(45, 45, 45, 240)
     surface.DrawRect(x, y, w, h)

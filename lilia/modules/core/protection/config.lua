@@ -162,5 +162,9 @@ MODULE.DuplicatorBlackList = {
     ["lia_money"] = true,
 }
 
-MODULE.BlackListedProps = {}
+MODULE.BlackListedProps = {
+    ["models/props_c17/FurnitureCupboard001a.mdl"] = true,
+    ["models/props_c17/FurnitureDresser001a.mdl"] = true,
+}
+
 MODULE.RestrictedVehicles = {}

@@ -185,7 +185,11 @@ function MODULE:ApplyPunishment(client, infraction, kick, ban, time)
 end
 
 function MODULE:PlayerSpawnProp(client, model)
-    if self.BlackListedProps[model] and not client:hasPrivilege("Spawn Permissions - Can Spawn Blacklisted Props") then return false end
+    if self.BlackListedProps[model] and not client:hasPrivilege("Spawn Permissions - Can Spawn Blacklisted Props") then
+        client:notify("Blacklisted Prop!")
+        return false
+    end
+
     local weapon = client:GetActiveWeapon()
     if IsValid(weapon) and weapon:GetClass() == "gmod_tool" then
         local toolobj = weapon:GetToolObject()

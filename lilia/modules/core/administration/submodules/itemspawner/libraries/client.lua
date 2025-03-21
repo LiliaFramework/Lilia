@@ -73,7 +73,7 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
                     end
                 end
 
-                local give = vgui.Create("DButton", popup)
+                local give = vgui.Create("liaSmallButton" , popup)
                 give:Dock(BOTTOM)
                 give:SetText("Spawn item")
                 function give:DoClick()

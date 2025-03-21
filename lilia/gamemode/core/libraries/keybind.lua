@@ -1,4 +1,4 @@
-﻿lia.keybind = lia.keybind or {}
+lia.keybind = lia.keybind or {}
 lia.keybind.stored = lia.keybind.stored or {}
 local KeybindKeys = {
     ["first"] = KEY_FIRST,
@@ -181,10 +181,11 @@ hook.Add("PlayerButtonUp", "liaKeybindRelease", function(p, b)
     if action and lia.keybind.stored[action] and lia.keybind.stored[action].release then lia.keybind.stored[action].release(p) end
 end)
 
-hook.Add("CreateMenuButtons", "KeybindMenuButtons", function(tabs)
-    tabs["keybinds"] = function(panel)
-        local container = panel:Add("DPanel")
-        container:SetSize(panel:GetWide() * 0.5, panel:GetTall() * 0.5)
+hook.Add("PopulateConfigurationTabs", "PopulateKeybinds", function(pages)
+    local function buildKeybinds(parent)
+        parent:Clear()
+        local container = parent:Add("DPanel")
+        container:SetSize(parent:GetWide() * 0.5, parent:GetTall() * 0.5)
         container:CenterHorizontal()
         container:Center()
         container:Dock(FILL)
@@ -204,17 +205,18 @@ hook.Add("CreateMenuButtons", "KeybindMenuButtons", function(tabs)
             scroll:Clear()
             if not istable(lia.keybind.stored) then return end
             local taken = {}
-            for a, data in pairs(lia.keybind.stored) do
-                if istable(data) and data.value then taken[data.value] = a end
+            for actionName, data in pairs(lia.keybind.stored) do
+                if istable(data) and data.value then taken[data.value] = actionName end
             end
 
             local sortedActions = {}
-            for a, data in pairs(lia.keybind.stored) do
-                if istable(data) then table.insert(sortedActions, a) end
+            for actionName, data in pairs(lia.keybind.stored) do
+                if istable(data) then table.insert(sortedActions, actionName) end
             end
 
             table.sort(sortedActions, function(a, b) return tostring(a) < tostring(b) end)
             for _, action in ipairs(sortedActions) do
+                local data = lia.keybind.stored[action]
                 local row = scroll:Add("DPanel")
                 row:Dock(TOP)
                 row:DockMargin(4, 4, 4, 4)
@@ -256,10 +258,9 @@ hook.Add("CreateMenuButtons", "KeybindMenuButtons", function(tabs)
                             end
                         end
 
-                        if lia.keybind.stored[currentKey] then lia.keybind.stored[currentKey] = nil end
-                        local oldData = lia.keybind.stored[action]
-                        if oldData then lia.keybind.stored[newKeyCode] = action end
                         taken[currentKey] = nil
+                        if lia.keybind.stored[currentKey] then lia.keybind.stored[currentKey] = nil end
+                        if data then lia.keybind.stored[newKeyCode] = action end
                         taken[newKeyCode] = action
                         lia.keybind.stored[action].value = newKeyCode
                         lia.keybind.save()
@@ -276,13 +277,13 @@ hook.Add("CreateMenuButtons", "KeybindMenuButtons", function(tabs)
         end
 
         populateRows()
-        if allowEdit then
+        if allowEdit and IsValid(resetAllBtn) then
             resetAllBtn.DoClick = function()
-                for a, data in pairs(lia.keybind.stored) do
+                for actionName, data in pairs(lia.keybind.stored) do
                     if istable(data) and data.default then
                         if lia.keybind.stored[data.value] then lia.keybind.stored[data.value] = nil end
                         data.value = data.default
-                        lia.keybind.stored[data.default] = a
+                        lia.keybind.stored[data.default] = actionName
                     end
                 end
 
@@ -291,4 +292,12 @@ hook.Add("CreateMenuButtons", "KeybindMenuButtons", function(tabs)
             end
         end
     end
+
+    table.insert(pages, {
+        name = "Keybinds",
+        drawFunc = function(parent)
+            parent:Clear()
+            buildKeybinds(parent)
+        end
+    })
 end)

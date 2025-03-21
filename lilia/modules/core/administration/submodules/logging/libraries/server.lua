@@ -60,14 +60,14 @@ net.Receive("send_logs_request", function(_, client)
     local categorizedLogs = {}
     for _, logData in pairs(lia.log.types) do
         local category = logData.category or "Uncategorized"
-        if not categorizedLogs[category] then categorizedLogs[category] = {} end
-        local logs = MODULE:ReadLogFiles(category)
+        categorizedLogs[category] = categorizedLogs[category] or {}
+        local logs = MODULE:ReadLogFiles(category) or {}
         for _, log in ipairs(logs) do
             table.insert(categorizedLogs[category], log)
         end
     end
 
-    MODULE:SendLogsInChunks(client, categorizedLogs)
+    net.WriteBigTable("send_logs", client, categorizedLogs)
 end)
 
 function MODULE:OnServerLog(_, logType, logString)

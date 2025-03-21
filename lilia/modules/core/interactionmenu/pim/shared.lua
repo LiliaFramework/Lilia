@@ -34,13 +34,13 @@ MODULE:AddOption("Give Money", {
             frame:Close()
         end
 
-        frame.ok = frame:Add("DButton")
+        frame.ok = frame:Add("DButton" )
         frame.ok:SetSize(150, 30)
         frame.ok:CenterHorizontal()
         frame.ok:CenterVertical(0.7)
         frame.ok:SetText("Give Money")
         frame.ok:SetTextColor(color_white)
-        frame.ok:SetFont("WB_Small")
+        frame.ok:SetFont("liaSmallFont")
         frame.ok.DoClick = frame.te.OnEnter
         function frame.ok:Paint(w, h)
             draw.RoundedBox(0, 0, 0, w, h, Color(206, 80, 80))

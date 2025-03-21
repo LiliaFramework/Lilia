@@ -338,9 +338,9 @@ else
         notice:CenterHorizontal()
         notice.notifType = notifType or 7
         if manualDismiss then notice.start = nil end
-        notice.opt1 = notice:Add("DButton")
+        notice.opt1 = notice:Add("DButton" )
         notice.opt1:SetAlpha(0)
-        notice.opt2 = notice:Add("DButton")
+        notice.opt2 = notice:Add("DButton" )
         notice.opt2:SetAlpha(0)
         notice.oh = notice:GetTall()
         OrganizeNotices(false)
