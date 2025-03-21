@@ -92,7 +92,7 @@ local function drawWatermark()
     end
 
     if ver ~= "" then
-        surface.SetFont("WB_XLarge")
+        surface.SetFont("liaHugeFont")
         local _, ty = surface.GetTextSize(ver)
         surface.SetTextColor(255, 255, 255, 80)
         surface.SetTextPos(15 + w, ScrH() - h / 2 - ty / 2)
