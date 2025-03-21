@@ -108,10 +108,10 @@ local function DrawFPS()
     MODULE.barH = mathApproach(MODULE.barH, f / maxF * 100, 0.5)
     if f > maxF then MODULE.maxFPS = f end
     if f < minF then MODULE.minFPS = f end
-    draw.SimpleText(f .. " FPS", "FPSFont", ScrW() - 10, ScrH() / 2 + 20, Color(255, 255, 255), TEXT_ALIGN_RIGHT, 1)
+    draw.SimpleText(f .. " FPS", "liaMediumFont", ScrW() - 10, ScrH() / 2 + 20, Color(255, 255, 255), TEXT_ALIGN_RIGHT, 1)
     draw.RoundedBox(0, ScrW() - 30, ScrH() / 2 - MODULE.barH, 20, MODULE.barH, Color(255, 255, 255))
-    draw.SimpleText("Max : " .. (MODULE.maxFPS or maxF), "FPSFont", ScrW() - 10, ScrH() / 2 + 40, Color(150, 255, 150), TEXT_ALIGN_RIGHT, 1)
-    draw.SimpleText("Min : " .. (MODULE.minFPS or minF), "FPSFont", ScrW() - 10, ScrH() / 2 + 55, Color(255, 150, 150), TEXT_ALIGN_RIGHT, 1)
+    draw.SimpleText("Max : " .. (MODULE.maxFPS or maxF), "liaMediumFont", ScrW() - 10, ScrH() / 2 + 40, Color(150, 255, 150), TEXT_ALIGN_RIGHT, 1)
+    draw.SimpleText("Min : " .. (MODULE.minFPS or minF), "liaMediumFont", ScrW() - 10, ScrH() / 2 + 55, Color(255, 150, 150), TEXT_ALIGN_RIGHT, 1)
 end
 
 local function DrawVignette()
