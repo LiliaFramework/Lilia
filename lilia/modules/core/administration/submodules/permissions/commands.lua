@@ -782,7 +782,7 @@ lia.command.add("charsetspeed", {
     syntax = "[string name] <number speed>",
     AdminStick = {
         Name = L("adminStickSetCharSpeedName"),
-        Category = L("adminStickCategoryPlayerInfos"),
+        Category = L("adminStickCategoryCharManagement"),
         SubCategory = L("adminStickSubCategorySetInfos"),
         Icon = "icon16/lightning.png",
         ExtraFields = {
@@ -806,7 +806,7 @@ lia.command.add("charsetmodel", {
     privilege = "Manage Character Informations",
     AdminStick = {
         Name = L("adminStickSetCharModelName"),
-        Category = L("adminStickCategoryPlayerInfos"),
+        Category = L("adminStickCategoryCharManagement"),
         SubCategory = L("adminStickSubCategorySetInfos"),
         Icon = "icon16/user_gray.png",
         ExtraFields = {
@@ -887,7 +887,7 @@ lia.command.add("charsetdesc", {
     privilege = "Manage Character Informations",
     AdminStick = {
         Name = L("adminStickSetCharDescName"),
-        Category = L("adminStickCategoryPlayerInfos"),
+        Category = L("adminStickCategoryCharManagement"),
         SubCategory = L("adminStickSubCategorySetInfos"),
         Icon = "icon16/user_comment.png",
         ExtraFields = {
@@ -919,7 +919,7 @@ lia.command.add("charsetname", {
     privilege = "Manage Character Informations",
     AdminStick = {
         Name = L("adminStickSetCharNameName"),
-        Category = L("adminStickCategoryPlayerInfos"),
+        Category = L("adminStickCategoryCharManagement"),
         SubCategory = L("adminStickSubCategorySetInfos"),
         Icon = "icon16/user_edit.png",
         ExtraFields = {
@@ -946,7 +946,7 @@ lia.command.add("charsetscale", {
     privilege = "Manage Character Stats",
     AdminStick = {
         Name = L("adminStickSetCharScaleName"),
-        Category = L("adminStickCategoryPlayerInfos"),
+        Category = L("adminStickCategoryCharManagement"),
         SubCategory = L("adminStickSubCategorySetInfos"),
         Icon = "icon16/arrow_out.png",
         ExtraFields = {
@@ -971,7 +971,7 @@ lia.command.add("charsetjump", {
     privilege = "Manage Character Stats",
     AdminStick = {
         Name = L("adminStickSetCharJumpName"),
-        Category = L("adminStickCategoryPlayerInfos"),
+        Category = L("adminStickCategoryCharManagement"),
         SubCategory = L("adminStickSubCategorySetInfos"),
         Icon = "icon16/arrow_up.png",
         ExtraFields = {
@@ -1023,7 +1023,7 @@ lia.command.add("charsetskin", {
     privilege = "Manage Character Stats",
     AdminStick = {
         Name = L("adminStickChangeName"),
-        Category = L("adminStickCategoryPlayerInfos"),
+        Category = L("adminStickCategoryCharManagement"),
         SubCategory = L("adminStickSubCategorySetInfos"),
         Icon = "icon16/user_gray.png",
         ExtraFields = {
@@ -1560,7 +1560,7 @@ lia.command.add("chargetmodel", {
     privilege = "Get Character Info",
     AdminStick = {
         Name = L("adminStickGetCharModelName"),
-        Category = L("adminStickCategoryPlayerInfos"),
+        Category = L("adminStickCategoryCharManagement"),
         SubCategory = L("adminStickSubCategoryGetInfos"),
         Icon = "icon16/user_gray.png"
     },
@@ -1591,7 +1591,7 @@ lia.command.add("checkflags", {
     syntax = "[string charname]",
     AdminStick = {
         Name = L("adminStickGetCharFlagsName"),
-        Category = L("adminStickCategoryPlayerInfos"),
+        Category = L("adminStickCategoryCharManagement"),
         SubCategory = L("adminStickSubCategoryGetInfos"),
         Icon = "icon16/flag_yellow.png"
     },
@@ -1616,7 +1616,7 @@ lia.command.add("chargetname", {
     privilege = "Get Character Info",
     AdminStick = {
         Name = L("adminStickGetCharNameName"),
-        Category = L("adminStickCategoryPlayerInfos"),
+        Category = L("adminStickCategoryCharManagement"),
         SubCategory = L("adminStickSubCategoryGetInfos"),
         Icon = "icon16/user.png"
     },
@@ -1636,7 +1636,7 @@ lia.command.add("chargethealth", {
     privilege = "Get Character Info",
     AdminStick = {
         Name = L("adminStickGetCharHealthName"),
-        Category = L("adminStickCategoryPlayerInfos"),
+        Category = L("adminStickCategoryCharManagement"),
         SubCategory = L("adminStickSubCategoryGetInfos"),
         Icon = "icon16/heart.png"
     },
@@ -1656,7 +1656,7 @@ lia.command.add("chargetmoney", {
     privilege = "Get Character Info",
     AdminStick = {
         Name = L("adminStickGetCharMoneyName"),
-        Category = L("adminStickCategoryPlayerInfos"),
+        Category = L("adminStickCategoryCharManagement"),
         SubCategory = L("adminStickSubCategoryGetInfos"),
         Icon = "icon16/money.png"
     },
@@ -1677,7 +1677,7 @@ lia.command.add("chargetinventory", {
     privilege = "Get Character Info",
     AdminStick = {
         Name = L("adminStickGetCharInventoryName"),
-        Category = L("adminStickCategoryPlayerInfos"),
+        Category = L("adminStickCategoryCharManagement"),
         SubCategory = L("adminStickSubCategoryGetInfos"),
         Icon = "icon16/box.png"
     },
