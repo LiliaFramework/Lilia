@@ -6,6 +6,7 @@ MODULE.ToolGunSounds = {
     ["weapons/airboat/airboat_gun_lastshot1.wav"] = true,
     ["weapons/airboat/airboat_gun_lastshot2.wav"] = true
 }
+
 function MODULE:EntityEmitSound(tab)
     if IsValid(tab.Entity) and tab.Entity:IsPlayer() then
         local wep = tab.Entity:GetActiveWeapon()

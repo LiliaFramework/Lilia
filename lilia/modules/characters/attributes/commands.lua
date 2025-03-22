@@ -22,15 +22,18 @@
         local target = lia.command.findPlayer(client, arguments[1])
         local attribName = arguments[2]
         local attribNumber = tonumber(arguments[3])
-        if IsValid(target) then
-            local character = target:getChar()
-            if character then
-                for k, v in pairs(lia.attribs.list) do
-                    if lia.util.stringMatches(L(v.name), attribName) or lia.util.stringMatches(k, attribName) then
-                        character:setAttrib(k, math.abs(attribNumber))
-                        client:notifyLocalized("attribSet", target:Name(), L(v.name), math.abs(attribNumber))
-                        return
-                    end
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
+            return
+        end
+
+        local character = target:getChar()
+        if character then
+            for k, v in pairs(lia.attribs.list) do
+                if lia.util.stringMatches(L(v.name), attribName) or lia.util.stringMatches(k, attribName) then
+                    character:setAttrib(k, math.abs(attribNumber))
+                    client:notifyLocalized("attribSet", target:Name(), L(v.name), math.abs(attribNumber))
+                    return
                 end
             end
         end
@@ -49,7 +52,11 @@ lia.command.add("checkattributes", {
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if not IsValid(target) then return client:notifyError(L("targetNotFound")) end
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
+            return
+        end
+
         local attributesData = {}
         for attrKey, attrData in SortedPairsByMemberValue(lia.attribs.list, "name") do
             local currentValue = target:getChar():getAttrib(attrKey, 0) or 0
@@ -118,15 +125,18 @@ lia.command.add("charaddattrib", {
         local attribName = arguments[2]
         local attribNumber = tonumber(arguments[3])
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then
-            local character = target:getChar()
-            if character then
-                for k, v in pairs(lia.attribs.list) do
-                    if lia.util.stringMatches(L(v.name), attribName) or lia.util.stringMatches(k, attribName) then
-                        character:updateAttrib(k, math.abs(attribNumber))
-                        client:notifyLocalized("attribUpdate", target:Name(), L(v.name), math.abs(attribNumber))
-                        return
-                    end
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
+            return
+        end
+
+        local character = target:getChar()
+        if character then
+            for k, v in pairs(lia.attribs.list) do
+                if lia.util.stringMatches(L(v.name), attribName) or lia.util.stringMatches(k, attribName) then
+                    character:updateAttrib(k, math.abs(attribNumber))
+                    client:notifyLocalized("attribUpdate", target:Name(), L(v.name), math.abs(attribNumber))
+                    return
                 end
             end
         end

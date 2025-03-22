@@ -141,21 +141,25 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, 
     label:SetTextColor(textColor)
     label:SetText(labelText)
     label:SetContentAlignment(5)
-    local bar = entryContainer:Add("DPanel")
-    bar:Dock(FILL)
-    bar.Paint = function(_, w, h)
-        local currentMin = isfunction(minFunc) and minFunc() or minFunc
-        local currentMax = isfunction(maxFunc) and maxFunc() or maxFunc
-        local currentValue = isfunction(valueFunc) and valueFunc() or valueFunc
-        local percentage = math.Clamp((tonumber(currentValue) - tonumber(currentMin)) / (tonumber(currentMax) - tonumber(currentMin)), 0, 1)
-        local filledWidth = percentage * w
-        local filledColor = Color(45, 45, 45, 255)
-        surface.SetDrawColor(filledColor)
-        surface.DrawRect(0, 0, filledWidth, h)
-        draw.SimpleText(currentValue .. "/" .. currentMax, textFont, w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
+    self[name] = entryContainer:Add("DProgressBar")
+    self[name]:Dock(FILL)
+    self[name]:SetText("")
+    self[name]:SetBarColor(Color(45, 45, 45, 255))
+    local min = isfunction(minFunc) and minFunc() or minFunc
+    local max = isfunction(maxFunc) and maxFunc() or maxFunc
+    local current = isfunction(valueFunc) and valueFunc() or valueFunc
+    local fraction = math.Clamp((current - min) / (max - min), 0, 1)
+    self[name]:SetFraction(fraction)
+    hook.Add("Think", self, function()
+        local newCurrent = isfunction(valueFunc) and valueFunc() or valueFunc
+        local newFraction = math.Clamp((newCurrent - min) / (max - min), 0, 1)
+        self[name]:SetFraction(newFraction)
+    end)
 
-    self[name] = bar
+    local gradMat = Material("vgui/gradient-d")
+    surface.SetMaterial(gradMat)
+    surface.SetDrawColor(200, 200, 200, 20)
+    surface.DrawTexturedRect(4, 4, self[name]:GetWide(), self[name]:GetTall())
 end
 
 function PANEL:AddSpacer(parent, height)

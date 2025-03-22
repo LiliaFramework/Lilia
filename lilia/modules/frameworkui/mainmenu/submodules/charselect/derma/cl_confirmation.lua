@@ -32,7 +32,7 @@ function PANEL:Init()
     surface.SetFont("liaCharSmallButtonFont")
     local confirmWidth = surface.GetTextSize(confirmText) + SPACING
     local cancelWidth = surface.GetTextSize(cancelText) + SPACING
-    self.confirm = self.content:Add("DButton")
+    self.confirm = self.content:Add("DButton" )
     self.confirm:SetFont("liaCharSmallButtonFont")
     self.confirm:SetText(confirmText)
     self.confirm:SetPaintBackground(false)
@@ -50,7 +50,7 @@ function PANEL:Init()
         self:Remove()
     end
 
-    self.cancel = self.content:Add("DButton")
+    self.cancel = self.content:Add("DButton" )
     self.cancel:SetFont("liaCharSmallButtonFont")
     self.cancel:SetText(cancelText)
     self.cancel:SetPaintBackground(false)

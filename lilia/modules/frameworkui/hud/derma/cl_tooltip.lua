@@ -7,7 +7,7 @@ function PANEL:Init()
 end
 
 function PANEL:UpdateColours()
-    return self:SetTextStyleColor(color_black)
+    return self:SetTextStyleColor(Color(255, 255, 255))
 end
 
 function PANEL:SetContents(panel, bDelete)

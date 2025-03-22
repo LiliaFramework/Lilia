@@ -30,62 +30,51 @@ if SERVER then
     end
 end
 
-local function CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, minVal, maxVal, dockMargin, valueFunc)
-    local textFont = "liaSmallFont"
-    local textColor = Color(255, 255, 255)
-    local shadowColor = Color(30, 30, 30, 150)
-    local entryContainer = vgui.Create("DPanel", parent)
-    entryContainer:Dock(TOP)
-    entryContainer:SetTall(30)
-    entryContainer:DockMargin(8, dockMargin, 8, dockMargin)
-    entryContainer.Paint = function(_, w, h)
-        surface.SetDrawColor(shadowColor)
-        surface.DrawRect(0, 0, w, h)
-    end
-
-    local label = vgui.Create("DLabel", entryContainer)
-    label:SetFont(textFont)
-    label:SetWide(100)
-    label:Dock(LEFT)
-    label:SetTextColor(textColor)
-    label:SetText(labelText or name)
-    label:SetContentAlignment(5)
-    local bar = vgui.Create("DPanel", entryContainer)
-    bar:Dock(FILL)
-    bar.Paint = function(_, w, h)
-        local currentValue = tonumber(valueFunc()) or 0
-        local minValue = tonumber(minVal) or 0
-        local maxValue = tonumber(maxVal) or 100
-        local ratio = 0
-        if maxValue - minValue > 0 then ratio = (currentValue - minValue) / (maxValue - minValue) end
-        ratio = math.Clamp(ratio, 0, 1)
-        local fillWidth = ratio * w
-        surface.SetDrawColor(45, 45, 45, 255)
-        surface.DrawRect(0, 0, fillWidth, h)
-        draw.SimpleText(currentValue .. " / " .. maxValue, textFont, w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
-    return bar
-end
-
 hook.Add("CreateMenuButtons", "AttributeMenuButtons", function(tabs)
-    if hook.Run("CanPlayerViewAttributes") ~= false then
-        tabs["Attributes"] = function(panel)
-            panel:Clear()
-            local container = vgui.Create("DPanel", panel)
-            local containerWidth = panel:GetWide() * 0.5
-            local containerHeight = panel:GetTall()
-            container:SetSize(containerWidth, containerHeight)
-            container:SetPos(panel:GetWide() * 0.3, 303)
-            container.Paint = function() end
-            local scrollPanel = vgui.Create("DScrollPanel", container)
-            scrollPanel:Dock(FILL)
-            scrollPanel:DockMargin(8, 8, 8, 8)
-            for _, attr in pairs(lia.attribs.list) do
-                CreateFillableBarWithBackgroundAndLabel(scrollPanel, attr.name, attr.label or attr.name, attr.min or 0, attr.max or 100, 5, function()
-                    if isfunction(attr.value) then return attr.value() end
-                    return attr.value or 0
-                end)
+    local client = LocalPlayer()
+    tabs["Attributes"] = function(panel)
+        local char = client:getChar()
+        if not char then
+            print("No character found!")
+            return
+        end
+
+        local scroll = vgui.Create("DScrollPanel", panel)
+        scroll:Dock(FILL)
+        local iconLayout = vgui.Create("DIconLayout", scroll)
+        iconLayout:Dock(FILL)
+        iconLayout:DockMargin(0, 50, 0, 0)
+        iconLayout:SetSpaceY(5)
+        iconLayout:SetSpaceX(5)
+        iconLayout.PerformLayout = function(self)
+            local y = 0
+            local parentWidth = self:GetWide()
+            for _, child in ipairs(self:GetChildren()) do
+                child:SetPos((parentWidth - child:GetWide()) / 2, y)
+                y = y + child:GetTall() + self:GetSpaceY()
+            end
+
+            self:SetTall(y)
+        end
+
+        for id, attr in pairs(lia.attribs.list) do
+            local item = vgui.Create("DPanel", iconLayout)
+            item:SetSize(panel:GetWide(), 100)
+            item.Paint = function(_, w, h)
+                draw.RoundedBox(4, 0, 0, w, h - 10, Color(40, 40, 40, 200))
+                draw.SimpleText(attr.name, "liaMediumFont", 20, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                draw.SimpleText(attr.desc or "", "liaSmallFont", 20, 35, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                local value = LocalPlayer():getChar():getAttrib(id)
+                local max = attr.max or 100
+                local fraction = value / max
+                local progressBar = vgui.Create("DProgressBar", item)
+                progressBar:SetPos(20, h - 40)
+                progressBar:SetSize(w - 40, 25)
+                progressBar:SetFraction(fraction)
+                progressBar:SetText(string.format("%d / %d", value, max))
             end
         end
+
+        panel:InvalidateLayout(true)
     end
 end)

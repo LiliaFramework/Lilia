@@ -2,7 +2,7 @@
 function PANEL:addTab(name, callback, uniqueID)
     local MenuColors = lia.color.ReturnMainAdjustedColors()
     name = L(name)
-    local tab = self.tabs:Add("DButton")
+    local tab = self.tabs:Add("liaSmallButton")
     tab:SetText(name)
     tab:SetTextColor(MenuColors.text)
     tab:SetFont("liaMediumFont")
@@ -12,28 +12,17 @@ function PANEL:addTab(name, callback, uniqueID)
     tab:Dock(TOP)
     tab:DockMargin(0, 0, 10, 10)
     tab.text_color = MenuColors.text
-    tab.Paint = function(me, w, h)
-        local hovered = me:IsHovered()
-        if hovered then
-            local underlineWidth = w * 0.4
-            local underlineX = (w - underlineWidth) * 0.5
-            local underlineY = h - 4
-            surface.SetDrawColor(255, 255, 255, 80)
-            surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
-        end
-
-        if self.activeTab == me then
-            surface.SetDrawColor(color_white)
-            surface.DrawOutlinedRect(0, 0, w, h)
-        end
-    end
-
     tab.DoClick = function(this)
         if IsValid(lia.gui.info) then lia.gui.info:Remove() end
-        self.panel:Clear()
-        self.panel:AlphaTo(255, 0.5, 0.1)
+        for _, other in pairs(self.tabList) do
+            other:SetSelected(false)
+        end
+
+        this:SetSelected(true)
         self.activeTab = this
         lastMenuTab = uniqueID
+        self.panel:Clear()
+        self.panel:AlphaTo(255, 0.3, 0)
         if callback then callback(self.panel, this) end
     end
 
@@ -42,7 +31,11 @@ function PANEL:addTab(name, callback, uniqueID)
 end
 
 function PANEL:setActiveTab(key)
-    if IsValid(self.tabList[key]) then self.tabList[key]:DoClick() end
+    local localized = L(key)
+    if IsValid(self.tabList[localized]) then
+        self.tabList[localized]:DoClick()
+        self.tabList[localized]:SetSelected(true)
+    end
 end
 
 function PANEL:remove()

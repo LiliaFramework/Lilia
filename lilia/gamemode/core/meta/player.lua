@@ -621,8 +621,8 @@ else
             local howclose = math.Round(dist / 40)
             if spos.visible then
                 render.SuppressEngineLighting(true)
-                surface.SetFont("WB_Large")
-                draw.DrawText(name .. "\n" .. howclose .. " Meters\n", "WB_Large", spos.x, spos.y, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+                surface.SetFont("liaBigFont")
+                draw.DrawText(name .. "\n" .. howclose .. " Meters\n", "liaBigFont", spos.x, spos.y, Color(255, 255, 255), TEXT_ALIGN_CENTER)
                 render.SuppressEngineLighting(false)
             end
 
@@ -666,7 +666,7 @@ else
                     surface.DrawTexturedRect(spos.x - logoSize / 2, spos.y - logoSize / 2 - 40, logoSize, logoSize)
                 end
 
-                draw.DrawText(name .. "\n" .. howClose .. " Meters", "WB_Large", spos.x, spos.y - 10, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+                draw.DrawText(name .. "\n" .. howClose .. " Meters", "liaBigFont", spos.x, spos.y - 10, Color(255, 255, 255), TEXT_ALIGN_CENTER)
             end
 
             if howClose <= 3 then RunConsoleCommand("waypoint_withlogo_stop_" .. waypointID) end

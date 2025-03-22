@@ -209,36 +209,48 @@ else
     end
 end
 
-hook.Add("CreateMenuButtons", "CommandsMenuButtons", function(tabs)
-    local function createListPanel(parent, columns)
-        local panel = parent:Add("DPanel")
-        panel:SetSize(parent:GetWide(), parent:GetTall())
-        panel:Dock(FILL)
-        local list = panel:Add("DListView")
-        list:Dock(FILL)
-        list:SetMultiSelect(false)
-        for _, colName in ipairs(columns) do
-            list:AddColumn(colName)
-        end
+hook.Add("BuildInformationMenu", "BuildInformationMenuCommands", function(pages)
+    local client = LocalPlayer()
+    table.insert(pages, {
+        name = "Commands",
+        drawFunc = function(panel)
+            local char = client:getChar()
+            if not char then
+                panel:Add("DLabel"):SetText("No character found!"):Dock(TOP)
+                return
+            end
 
-        local function addRow(data)
-            list:AddLine(unpack(data))
-        end
-        return panel, addRow
-    end
+            local scroll = vgui.Create("DScrollPanel", panel)
+            scroll:Dock(FILL)
+            local iconLayout = vgui.Create("DIconLayout", scroll)
+            iconLayout:Dock(FILL)
+            iconLayout:SetSpaceY(5)
+            iconLayout:SetSpaceX(5)
+            iconLayout.PerformLayout = function(self)
+                local y = 0
+                local parentWidth = self:GetWide()
+                for _, child in ipairs(self:GetChildren()) do
+                    child:SetPos((parentWidth - child:GetWide()) / 2, y)
+                    y = y + child:GetTall() + self:GetSpaceY()
+                end
 
-    tabs["Commands"] = function(panel)
-        local f = vgui.Create("DFrame", panel)
-        f:SetSize(ScrW() * 0.6, ScrH() * 0.7)
-        f:Center()
-        f:SetTitle("Commands")
-        f:MakePopup()
-        local panelList, addRow = createListPanel(f, {"Command", "Syntax", "Privilege"})
-        f:Add(panelList)
-        for cmdName, cmdData in SortedPairs(lia.command.list, function(a, b) return tostring(a) < tostring(b) end) do
-            if isnumber(cmdName) then continue end
-            local hasAccess, privilege = lia.command.hasAccess(LocalPlayer(), cmdName, cmdData)
-            if hasAccess then addRow({"/" .. cmdName, cmdData.syntax or "", privilege or "None"}) end
+                self:SetTall(y)
+            end
+
+            for cmdName, cmdData in SortedPairs(lia.command.list) do
+                if isnumber(cmdName) then continue end
+                local hasAccess, privilege = lia.command.hasAccess(client, cmdName, cmdData)
+                if hasAccess then
+                    local commandPanel = vgui.Create("DPanel", iconLayout)
+                    commandPanel:SetSize(panel:GetWide(), 60)
+                    commandPanel.Paint = function(_, w, h)
+                        draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
+                        draw.SimpleText("/" .. cmdName, "liaMediumFont", 20, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                        draw.SimpleText(cmdData.syntax or "", "liaSmallFont", 20, 30, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                        draw.SimpleText(privilege or "None", "liaSmallFont", w - 20, 30, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+                    end
+                end
+            end
         end
-    end
+    })
 end)

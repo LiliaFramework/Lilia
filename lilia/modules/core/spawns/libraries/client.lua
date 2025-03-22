@@ -7,6 +7,8 @@ local hideRespawnKey = false
 function MODULE:HUDPaint()
     local client = LocalPlayer()
     local respawnTime = lia.config.get("SpawnTime", 5)
+    local spawnTimeOverride = hook.Run("OverrideSpawnTime", client, respawnTime)
+    if spawnTimeOverride then respawnTime = spawnTimeOverride end
     local lastDeathTime = client:getNetVar("lastDeathTime", os.time())
     local timePassed = os.time() - lastDeathTime
     local timeLeft = clmp(respawnTime - timePassed, 0, respawnTime)
@@ -27,7 +29,7 @@ function MODULE:HUDPaint()
         end
     end
 
-    if IsValid(lia.char.gui) and lia.gui.char:IsVisible() or not client:getChar() then return end
+    if (IsValid(lia.char.gui) and lia.gui.char:IsVisible()) or not client:getChar() then return end
     if aprg > 0.01 then
         surface.SetDrawColor(0, 0, 0, ceil(aprg ^ 0.5 * 255))
         surface.DrawRect(-1, -1, w + 2, h + 2)

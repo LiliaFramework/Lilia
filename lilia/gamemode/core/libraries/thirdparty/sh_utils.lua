@@ -203,4 +203,39 @@ if SERVER then
         net.WriteTable(args)
         net.Send(client)
     end
+
+    function net.WriteBigTable(msgName, client, tbl)
+        local jsonData = util.TableToJSON(tbl)
+        local compressed = util.Compress(jsonData)
+        local chunkSize = 60000
+        local total = math.ceil(#compressed / chunkSize)
+        for i = 1, total do
+            local startPos = (i - 1) * chunkSize + 1
+            local chunk = string.sub(compressed, startPos, startPos + chunkSize - 1)
+            net.Start(msgName)
+            net.WriteUInt(i, 16)
+            net.WriteUInt(total, 16)
+            net.WriteUInt(#chunk, 16)
+            net.WriteData(chunk, #chunk)
+            net.Send(client)
+        end
+    end
+else
+    function CreateBigTableReceiver(msgName, callback)
+        local received = {}
+        net.Receive(msgName, function()
+            local idx = net.ReadUInt(16)
+            local total = net.ReadUInt(16)
+            local len = net.ReadUInt(16)
+            received[idx] = net.ReadData(len)
+            for i = 1, total do
+                if not received[i] then return end
+            end
+
+            local full = table.concat(received)
+            received = {}
+            local ok, tbl = pcall(util.JSONToTable, util.Decompress(full))
+            if ok and tbl then callback(tbl) end
+        end)
+    end
 end

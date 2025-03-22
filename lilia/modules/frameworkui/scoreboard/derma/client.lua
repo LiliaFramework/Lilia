@@ -1,13 +1,14 @@
 ﻿local PANEL = {}
 local StaffCount = 0
 local StaffOnDutyCount = 0
-local paintFunctions = {}
-paintFunctions[0] = function(_, w, h)
-    surface.SetDrawColor(0, 0, 0, 50)
-    surface.DrawRect(0, 0, w, h)
-end
+local paintFunctions = {
+    [0] = function(_, w, h)
+        surface.SetDrawColor(0, 0, 0, 50)
+        surface.DrawRect(0, 0, w, h)
+    end,
+    [1] = function() end
+}
 
-paintFunctions[1] = function() end
 local function wrapText(text, font, maxWidth)
     surface.SetFont(font)
     local words = string.Explode(" ", text)
@@ -77,7 +78,7 @@ function PANEL:Init()
 
         local header = list:Add("DPanel")
         header:Dock(TOP)
-        header:SetTall(ScrH() * 0.08)
+        header:SetTall((fac.logo and fac.logo ~= "") and ScrH() * 0.08 or 56)
         header:SetPaintBackground(false)
         local factionContainer = header:Add("DPanel")
         factionContainer:Dock(FILL)
@@ -187,10 +188,11 @@ function PANEL:addPlayer(client, parent)
         RegisterDermaMenuForClose(menu)
     end
 
-    local tooltipText = L("sbPing", client:Ping())
-    if lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and lp:isStaffOnDuty()) then tooltipText = tooltipText .. "\n" .. L("sbOptions", client:steamName()) end
-    slot.model:SetTooltip(tooltipText)
-    slot.model.OnCursorEntered = function(btn) btn:SetTooltip(tooltipText) end
+    local tooltipText = L("sbOptions", client:steamName())
+    local canSee = lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or (lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and lp:isStaffOnDuty())
+    local displayTooltip = canSee and tooltipText or ""
+    slot.model:SetTooltip(displayTooltip)
+    slot.model.OnCursorEntered = function(btn) btn:SetTooltip(displayTooltip) end
     timer.Simple(0, function()
         if not IsValid(slot) then return end
         local entity = slot.model.Entity
@@ -230,6 +232,33 @@ function PANEL:addPlayer(client, parent)
             surface.SetMaterial(Material(class.logo))
             surface.DrawTexturedRect(0, offsetY, logoSize, logoSize)
         end
+    else
+        slot.ping = slot:Add("DLabel")
+        slot.ping:SetSize(48, 64)
+        slot.ping:SetText("0")
+        slot.ping:SetFont("liaGenericFont")
+        slot.ping:SetContentAlignment(6)
+        slot.ping:SetTextColor(color_white)
+        slot.ping:SetTextInset(16, 0)
+        slot.ping:SetExpensiveShadow(1, color_black)
+        slot.ping.Think = function(this)
+            if IsValid(client) then
+                local ping = tostring(client:Ping())
+                if this:GetText() ~= ping then
+                    this:SetText(ping)
+                    this:SizeToContentsX()
+                end
+
+                local width = slot:GetWide()
+                this:SetPos(width - this:GetWide(), 0)
+            end
+        end
+
+        slot.ping:SetFont("liaGenericFont")
+        slot.ping:SetContentAlignment(6)
+        slot.ping:SetTextColor(color_white)
+        slot.ping:SetTextInset(16, 0)
+        slot.ping:SetExpensiveShadow(1, color_black)
     end
 
     function slot:PerformLayout()

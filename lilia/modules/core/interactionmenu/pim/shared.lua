@@ -3,7 +3,7 @@ MODULE:AddOption("Give Money", {
     serverRun = false,
     shouldShow = function(client, target) return IsValid(target) and target:IsPlayer() and client:getChar():getMoney() > 0 end,
     onRun = function(client, target)
-        local frame = vgui.Create("WolfFrame")
+        local frame = vgui.Create("DFrame")
         frame:SetSize(600, 250)
         frame:Center()
         frame:MakePopup()
@@ -34,13 +34,13 @@ MODULE:AddOption("Give Money", {
             frame:Close()
         end
 
-        frame.ok = frame:Add("DButton")
+        frame.ok = frame:Add("DButton" )
         frame.ok:SetSize(150, 30)
         frame.ok:CenterHorizontal()
         frame.ok:CenterVertical(0.7)
         frame.ok:SetText("Give Money")
         frame.ok:SetTextColor(color_white)
-        frame.ok:SetFont("WB_Small")
+        frame.ok:SetFont("liaSmallFont")
         frame.ok.DoClick = frame.te.OnEnter
         function frame.ok:Paint(w, h)
             draw.RoundedBox(0, 0, 0, w, h, Color(206, 80, 80))

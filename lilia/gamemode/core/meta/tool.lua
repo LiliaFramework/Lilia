@@ -88,12 +88,10 @@ end
 
 function ToolGunMeta:Deploy()
     self:ReleaseGhostEntity()
-    return
 end
 
 function ToolGunMeta:Holster()
     self:ReleaseGhostEntity()
-    return
 end
 
 function ToolGunMeta:Think()

@@ -5,32 +5,35 @@
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local name = table.concat(arguments, " ", 2)
-        if IsValid(target) and target:getChar() then
-            local faction = lia.faction.teams[name]
-            if not faction then
-                for _, v in pairs(lia.faction.indices) do
-                    if lia.util.stringMatches(L(v.name), name) then
-                        faction = v
-                        break
-                    end
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
+            return
+        end
+
+        local faction = lia.faction.teams[name]
+        if not faction then
+            for _, v in pairs(lia.faction.indices) do
+                if lia.util.stringMatches(L(v.name), name) then
+                    faction = v
+                    break
                 end
             end
+        end
 
-            if faction then
-                if hook.Run("CanCharBeTransfered", target:getChar(), faction, target:Team()) == false then return end
-                target:getChar().vars.faction = faction.uniqueID
-                target:getChar():setFaction(faction.index)
-                target:getChar():kickClass()
-                local defaultClass = lia.faction.getDefaultClass(faction.index)
-                if defaultClass then target:getChar():joinClass(defaultClass.index) end
-                hook.Run("OnTransferred", target)
-                if faction.OnTransferred then faction:OnTransferred(target) end
-                client:notify(L("transferSuccess", target:Name(), L(faction.name, client)))
-                hook.Run("PlayerLoadout", target)
-                if client ~= target then target:notify(L("transferNotification", L(faction.name, target), client:Name())) end
-            else
-                return L("invalidFaction")
-            end
+        if faction then
+            if hook.Run("CanCharBeTransfered", target:getChar(), faction, target:Team()) == false then return end
+            target:getChar().vars.faction = faction.uniqueID
+            target:getChar():setFaction(faction.index)
+            target:getChar():kickClass()
+            local defaultClass = lia.faction.getDefaultClass(faction.index)
+            if defaultClass then target:getChar():joinClass(defaultClass.index) end
+            hook.Run("OnTransferred", target)
+            if faction.OnTransferred then faction:OnTransferred(target) end
+            client:notify(L("transferSuccess", target:Name(), L(faction.name, client)))
+            hook.Run("PlayerLoadout", target)
+            if client ~= target then target:notify(L("transferNotification", L(faction.name, target), client:Name())) end
+        else
+            return L("invalidFaction")
         end
     end,
     alias = {"charsetfaction"}
@@ -42,12 +45,15 @@ lia.command.add("plywhitelist", {
     syntax = "[string name] [string faction]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then
-            local faction = lia.command.findFaction(client, table.concat(arguments, " ", 2))
-            if faction and target:setWhitelisted(faction.index, true) then
-                for _, v in player.Iterator() do
-                    v:notifyLocalized("whitelist", client:Name(), target:Name(), L(faction.name, v))
-                end
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
+            return
+        end
+
+        local faction = lia.command.findFaction(client, table.concat(arguments, " ", 2))
+        if faction and target:setWhitelisted(faction.index, true) then
+            for _, v in player.Iterator() do
+                v:notifyLocalized("whitelist", client:Name(), target:Name(), L(faction.name, v))
             end
         end
     end,
@@ -60,12 +66,15 @@ lia.command.add("plyunwhitelist", {
     syntax = "[string name] [string faction]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then
-            local faction = lia.command.findFaction(client, table.concat(arguments, " ", 2))
-            if faction and target:setWhitelisted(faction.index, false) then
-                for _, v in player.Iterator() do
-                    v:notifyLocalized("unwhitelist", client:Name(), target:Name(), L(faction.name, v))
-                end
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
+            return
+        end
+
+        local faction = lia.command.findFaction(client, table.concat(arguments, " ", 2))
+        if faction and target:setWhitelisted(faction.index, false) then
+            for _, v in player.Iterator() do
+                v:notifyLocalized("unwhitelist", client:Name(), target:Name(), L(faction.name, v))
             end
         end
     end,
@@ -115,33 +124,36 @@ lia.command.add("setclass", {
     syntax = "[string charname] [string class]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if target and target:getChar() then
-            local character = target:getChar()
-            local classFound
-            local className = arguments[2]
-            if lia.class.list[className] then
-                classFound = lia.class.list[className]
-            else
-                for _, v in ipairs(lia.class.list) do
-                    if lia.util.stringMatches(L(v.name), className) or lia.util.stringMatches(v.uniqueID, className) then
-                        classFound = v
-                        break
-                    end
-                end
-            end
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
+            return
+        end
 
-            if classFound then
-                if classFound.faction == target:Team() then
-                    character:joinClass(classFound.index, true)
-                    target:notifyLocalized("classSet", L(classFound.name), client:GetName())
-                    if client ~= target then client:notifyLocalized("classSetOther", target:GetName(), L(classFound.name)) end
-                    hook.Run("PlayerLoadout", target)
-                else
-                    client:notifyLocalized("classFactionMismatch")
+        local character = target:getChar()
+        local classFound
+        local className = arguments[2]
+        if lia.class.list[className] then
+            classFound = lia.class.list[className]
+        else
+            for _, v in ipairs(lia.class.list) do
+                if lia.util.stringMatches(L(v.name), className) or lia.util.stringMatches(v.uniqueID, className) then
+                    classFound = v
+                    break
                 end
-            else
-                client:notifyLocalized("invalidClass")
             end
+        end
+
+        if classFound then
+            if classFound.faction == target:Team() then
+                character:joinClass(classFound.index, true)
+                target:notifyLocalized("classSet", L(classFound.name), client:GetName())
+                if client ~= target then client:notifyLocalized("classSetOther", target:GetName(), L(classFound.name)) end
+                hook.Run("PlayerLoadout", target)
+            else
+                client:notifyLocalized("classFactionMismatch")
+            end
+        else
+            client:notifyLocalized("invalidClass")
         end
     end,
 })
@@ -152,8 +164,8 @@ lia.command.add("classwhitelist", {
     syntax = "[string name] [string class]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if not IsValid(target) or not target:getChar() then
-            client:notifyLocalized("illegalAccess")
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
             return
         end
 
@@ -191,8 +203,8 @@ lia.command.add("classunwhitelist", {
     syntax = "[string name] [string class]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if not IsValid(target) or not target:getChar() then
-            client:notifyLocalized("illegalAccess")
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
             return
         end
 

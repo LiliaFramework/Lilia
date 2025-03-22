@@ -6,11 +6,9 @@ function PANEL:Init()
     self.sidebar:Dock(LEFT)
     self.sidebar:SetWide(200)
     self.sidebar:DockMargin(20, 20, 0, 20)
-    self.sidebar.Paint = function() end
     self.mainContent = self:Add("DScrollPanel")
     self.mainContent:Dock(FILL)
     self.mainContent:DockMargin(10, 10, 10, 10)
-    self.mainContent.Paint = function() end
     self.tabList = {}
     self.activeTab = nil
     self:loadClasses()
@@ -74,13 +72,6 @@ function PANEL:populateClassDetails(classData, canBe)
     detailsPanel:SetTall(800)
     detailsPanel:Dock(TOP)
     detailsPanel:DockMargin(10, 10, 10, 10)
-    detailsPanel.Paint = function(_, w, h)
-        surface.SetDrawColor(0, 0, 0, 100)
-        surface.DrawRect(0, 0, w, h)
-        surface.SetDrawColor(120, 120, 120, 255)
-        surface.DrawOutlinedRect(0, 0, w, h)
-    end
-
     if classData.logo then
         local logo = detailsPanel:Add("DImage")
         logo:SetImage(classData.logo)
@@ -99,7 +90,9 @@ function PANEL:createModelPanel(parent, classData)
     local modelPanel = parent:Add("liaModelPanel")
     modelPanel:SetSize(300, 600)
     modelPanel:SetFOV(35)
-    modelPanel:SetModel(classData.model or client:GetModel())
+    local modelToUse = classData.model
+    if istable(modelToUse) then modelToUse = modelToUse[math.random(1, #modelToUse)] end
+    modelPanel:SetModel(modelToUse or client:GetModel())
     modelPanel:SetPos(150, 10)
     modelPanel.rotationAngle = 45
     modelPanel.Entity:SetSkin(classData.skin or 0)
@@ -207,7 +200,8 @@ function PANEL:addJoinButton(detailsPanel, classData, canBe)
     elseif canBe then
         button:SetText("Join Class")
     else
-        button:SetText("Requirements not met")
+        local reason = "You do not meet the class requirements or this class isn't default."
+        button:SetText(reason)
     end
 
     button:SetTall(40)
@@ -219,20 +213,6 @@ function PANEL:addJoinButton(detailsPanel, classData, canBe)
     button:DockMargin(10, 10, 10, 10)
     button.text_color = MenuColors.text
     button:SetDisabled(isCurrentClass or not canBe)
-    button.Paint = function(btn, w, h)
-        local hovered = btn:IsHovered()
-        if hovered and not btn:GetDisabled() then
-            local underlineWidth = w * 0.4
-            local underlineX = (w - underlineWidth) * 0.5
-            local underlineY = h - 4
-            surface.SetDrawColor(255, 255, 255, 80)
-            surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
-        end
-
-        surface.SetDrawColor(MenuColors.border)
-        surface.DrawOutlinedRect(0, 0, w, h)
-    end
-
     button.DoClick = function()
         if canBe and not isCurrentClass then
             lia.command.send("beclass", classData.index)

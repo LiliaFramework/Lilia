@@ -96,6 +96,10 @@ FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/meta/tool.lua",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/core/libraries/item.lua",
         realm = "shared"
     },
@@ -279,19 +283,14 @@ function lia.includeEntities(path)
 
     local function RegisterTool(tool, className)
         local gmodTool = weapons.GetStored("gmod_tool")
-        className = stripRealmPrefix(className)
-        if gmodTool then
-            gmodTool.Tool[className] = tool
-        else
-            ErrorNoHalt(string.format("Attempted to register tool '%s' with invalid gmod_tool weapon", className))
-        end
+        if gmodTool then gmodTool.Tool[className] = tool end
     end
 
     HandleEntityInclusion("entities", "ENT", scripted_ents.Register, {
         Type = "anim",
         Base = "base_gmodentity",
         Spawnable = true
-    })
+    }, false, nil, function(ent) if SERVER and ent.Holdable then lia.allowedHoldableClasses[ent.ClassName] = true end end)
 
     HandleEntityInclusion("weapons", "SWEP", weapons.Register, {
         Primary = {},
@@ -300,8 +299,7 @@ function lia.includeEntities(path)
     })
 
     HandleEntityInclusion("tools", "TOOL", RegisterTool, {}, false, function(className)
-        className = stripRealmPrefix(className)
-        TOOL = setmetatable({}, TOOL)
+        TOOL = lia.meta.tool:Create()
         TOOL.Mode = className
         TOOL:CreateConVars()
     end)
@@ -311,6 +309,7 @@ end
 
 lia.util.loadEntities = lia.includeEntities
 lia.includeEntities("lilia/gamemode/entities")
+lia.includeEntities(engine.ActiveGamemode() .. "/gamemode/entities")
 for _, files in ipairs(FilesToLoad) do
     lia.include(files.path, files.realm)
 end

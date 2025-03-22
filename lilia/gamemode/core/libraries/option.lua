@@ -78,7 +78,7 @@ function lia.option.load()
     hook.Run("InitializedOptions")
 end
 
-hook.Add("CreateMenuButtons", "OptionsMenuButtons", function(tabs)
+hook.Add("PopulateConfigurationTabs", "PopulateOptions", function(pages)
     local OptionFormatting = {
         Int = function(key, name, config, parent)
             local container = vgui.Create("DPanel", parent)
@@ -267,35 +267,53 @@ hook.Add("CreateMenuButtons", "OptionsMenuButtons", function(tabs)
             button:Dock(FILL)
             button:DockMargin(10, 0, 10, 0)
             button:SetText("")
+            button:SetCursor("hand")
             button.Paint = function(_, w, h)
-                surface.SetDrawColor(lia.option.get(key, config.value))
-                surface.DrawRect(w - 925, h / 2 - 27, 500, 54)
+                local colorValue = lia.option.get(key, config.value)
+                surface.SetDrawColor(colorValue)
+                surface.DrawRect(10, h / 2 - 15, w - 20, 30)
+                draw.RoundedBox(2, 10, h / 2 - 15, w - 20, 30, Color(255, 255, 255, 50))
             end
 
-            button.DoClick = function(this)
-                local pickerFrame = this:Add("DFrame")
-                pickerFrame:SetSize(ScrW() * 0.15, ScrH() * 0.2)
-                pickerFrame:SetPos(gui.MouseX(), gui.MouseY())
-                pickerFrame:MakePopup()
+            button.DoClick = function()
                 if IsValid(button.picker) then button.picker:Remove() end
-                button.picker = pickerFrame
-                local Mixer = pickerFrame:Add("DColorMixer")
-                Mixer:Dock(FILL)
-                Mixer:SetPalette(true)
-                Mixer:SetAlphaBar(true)
-                Mixer:SetWangs(true)
-                Mixer:SetColor(lia.option.get(key, config.value))
-                pickerFrame.curColor = lia.option.get(key, config.value)
+                local pickerFrame = vgui.Create("DFrame")
+                pickerFrame:SetSize(300, 400)
+                pickerFrame:SetTitle("Choose Color")
+                pickerFrame:Center()
+                pickerFrame:MakePopup()
+                local colorMixer = pickerFrame:Add("DColorMixer")
+                colorMixer:Dock(FILL)
+                colorMixer:SetPalette(true)
+                colorMixer:SetAlphaBar(true)
+                colorMixer:SetWangs(true)
+                colorMixer:SetColor(lia.option.get(key, config.value))
                 local confirm = pickerFrame:Add("DButton")
                 confirm:Dock(BOTTOM)
+                confirm:SetTall(40)
                 confirm:SetText("Apply")
                 confirm:SetTextColor(color_white)
+                confirm:SetFont("ConfigFontLarge")
+                confirm:DockMargin(10, 10, 10, 10)
+                confirm.Paint = function(self, w, h)
+                    surface.SetDrawColor(Color(0, 150, 0))
+                    surface.DrawRect(0, 0, w, h)
+                    if self:IsHovered() then
+                        surface.SetDrawColor(Color(0, 180, 0))
+                        surface.DrawRect(0, 0, w, h)
+                    end
+
+                    surface.SetDrawColor(Color(255, 255, 255))
+                    surface.DrawOutlinedRect(0, 0, w, h)
+                end
+
                 confirm.DoClick = function()
                     timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, pickerFrame.curColor) end)
                     pickerFrame:Remove()
                 end
 
-                Mixer.ValueChanged = function(_, value) pickerFrame.curColor = value end
+                colorMixer.ValueChanged = function(_, value) pickerFrame.curColor = value end
+                button.picker = pickerFrame
             end
             return container
         end,
@@ -366,115 +384,69 @@ hook.Add("CreateMenuButtons", "OptionsMenuButtons", function(tabs)
         end
     }
 
-    tabs["Settings"] = function(panel)
-        panel.sidebar = panel:Add("DScrollPanel")
-        panel.sidebar:Dock(LEFT)
-        panel.sidebar:SetWide(250)
-        panel.sidebar:DockMargin(20, 20, 10, 20)
-        panel.scroll = panel:Add("DScrollPanel")
-        panel.scroll:Dock(FILL)
-        panel.scroll:DockMargin(10, 10, 10, 10)
-        panel.scroll.Paint = function() end
-        panel.categories = {}
-        panel.activeTab = nil
-        local function createCategoryButton(text)
-            local categoryLabel = vgui.Create("DButton")
-            categoryLabel:SetText(text)
-            categoryLabel:SetTall(40)
-            categoryLabel:SetFont("liaMediumFont")
-            categoryLabel:SetTextColor(color_white)
-            categoryLabel.Paint = function(btn, w, h)
-                if btn:IsHovered() then
-                    local underlineWidth = w * 0.4
-                    local underlineX = (w - underlineWidth) * 0.5
-                    local underlineY = h - 4
-                    surface.SetDrawColor(255, 255, 255, 80)
-                    surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
-                end
-
-                if panel.activeTab == btn then
-                    surface.SetDrawColor(color_white)
-                    surface.DrawOutlinedRect(0, 0, w, h)
-                end
-            end
-
-            categoryLabel.DoClick = function(button)
-                for _, cat in pairs(panel.categories) do
-                    for _, btn in ipairs(cat.buttons) do
-                        btn:SetVisible(false)
-                    end
-                end
-
-                for _, btn in ipairs(panel.categories[text].buttons) do
-                    btn:SetVisible(true)
-                end
-
-                panel.activeTab = button
-            end
-            return categoryLabel
+    local function buildOptions(parent)
+        local scroll = vgui.Create("DScrollPanel", parent)
+        scroll:Dock(FILL)
+        local categories = {}
+        local orderedKeys = {}
+        for key, _ in pairs(lia.option.stored) do
+            table.insert(orderedKeys, key)
         end
 
-        local function addCategory(text)
-            if panel.categories[text] then return panel.categories[text].label end
-            local categoryLabel = createCategoryButton(text)
-            panel.categories[text] = {
-                label = categoryLabel,
-                buttons = {}
-            }
-            return categoryLabel
+        table.sort(orderedKeys, function(a, b) return lia.option.stored[a].name < lia.option.stored[b].name end)
+        for _, key in ipairs(orderedKeys) do
+            local option = lia.option.stored[key]
+            local elementType = option.type or "Generic"
+            local catName = option.data and option.data.category or "Miscellaneous"
+            categories[catName] = categories[catName] or {}
+            table.insert(categories[catName], {
+                key = key,
+                name = option.name,
+                config = option,
+                elemType = elementType
+            })
         end
 
-        local function addElement(elementType, key, name, option, category)
-            category = category or "Miscellaneous"
-            local cat = panel.categories[category]
-            if not cat then
-                cat = {
-                    label = addCategory(category),
-                    buttons = {}
-                }
-
-                panel.categories[category] = cat
-            end
-
-            local panelElement = OptionFormatting[elementType](key, name, option, panel.scroll)
-            panelElement:SetParent(panel.scroll)
-            panelElement:Dock(TOP)
-            panelElement:DockMargin(20, 10, 20, 10)
-            panelElement:SetVisible(false)
-            panelElement.Paint = function(_, w, h)
-                draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
-                surface.SetDrawColor(255, 255, 255)
+        for catName, configItems in SortedPairs(categories) do
+            local catPanel = vgui.Create("DCollapsibleCategory", scroll)
+            catPanel:Dock(TOP)
+            catPanel:SetLabel(catName)
+            catPanel:SetExpanded(true)
+            catPanel:DockMargin(0, 0, 0, 10)
+            catPanel.Header:SetContentAlignment(5)
+            catPanel.Header:SetTall(30)
+            catPanel.Header:SetFont("liaMediumFont")
+            catPanel.Header:SetTextColor(Color(255, 255, 255))
+            catPanel.Header.Paint = function(_, w, h)
+                draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 200))
+                surface.SetDrawColor(255, 255, 255, 80)
                 surface.DrawOutlinedRect(0, 0, w, h)
             end
 
-            table.insert(cat.buttons, panelElement)
-        end
-
-        for key, option in pairs(lia.option.stored) do
-            local elementType = option.type
-            addElement(elementType, key, option.name, option, option.data and option.data.category)
-        end
-
-        local sortedCategories = {}
-        for _, cat in pairs(panel.categories) do
-            table.insert(sortedCategories, cat)
-        end
-
-        table.sort(sortedCategories, function(a, b) return a.label:GetText() < b.label:GetText() end)
-        panel.sidebar:Clear()
-        for _, cat in ipairs(sortedCategories) do
-            cat.label:SetParent(panel.sidebar)
-            cat.label:Dock(TOP)
-            cat.label:DockMargin(0, 10, 0, 10)
-            panel.sidebar:AddItem(cat.label)
-        end
-
-        if sortedCategories[1] then
-            for _, btn in ipairs(sortedCategories[1].buttons) do
-                btn:SetVisible(true)
+            catPanel.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40, 60)) end
+            local bodyPanel = vgui.Create("DPanel", catPanel)
+            bodyPanel:SetTall(#configItems * 240)
+            bodyPanel.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 50)) end
+            catPanel:SetContents(bodyPanel)
+            for _, itemData in ipairs(configItems) do
+                local panelConstructor = OptionFormatting[itemData.elemType] or OptionFormatting.Generic
+                local panelElement = panelConstructor(itemData.key, itemData.name, itemData.config, bodyPanel)
+                panelElement:Dock(TOP)
+                panelElement:DockMargin(10, 10, 10, 0)
+                panelElement.Paint = function(_, w, h)
+                    draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
+                    surface.SetDrawColor(255, 255, 255)
+                    surface.DrawOutlinedRect(0, 0, w, h)
+                end
             end
         end
-
-        panel.scroll:InvalidateLayout(true)
     end
+
+    table.insert(pages, {
+        name = "Options",
+        drawFunc = function(parent)
+            parent:Clear()
+            buildOptions(parent)
+        end
+    })
 end)

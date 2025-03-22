@@ -1,6 +1,4 @@
-﻿language.Add("spawnmenu.category.addonslegacy", "Addons - Legacy")
-language.Add("spawnmenu.category.downloads", "Downloads")
-local function AddRecursive(pnl, folder)
+﻿local function AddRecursive(pnl, folder)
     local files, folders = file.Find(folder .. "*", "MOD")
     for k, v in ipairs(files or {}) do
         if not string.EndsWith(v, ".mdl") then continue end
@@ -50,7 +48,7 @@ hook.Add("PopulateContent", "LegacyAddonProps", function(pnlContent, tree, node)
         })
     end
 
-    local LegacyAddons = node:AddNode("#spawnmenu.category.addonslegacy", "icon16/folder_database.png")
+    local LegacyAddons = node:AddNode("Addons - Legacy", "icon16/folder_database.png")
     for _, f in SortedPairsByMemberValue(addons, "name") do
         local models = LegacyAddons:AddNode(f.name .. " (" .. f.count .. ")", "icon16/bricks.png")
         models.DoClick = function()
@@ -62,7 +60,7 @@ hook.Add("PopulateContent", "LegacyAddonProps", function(pnlContent, tree, node)
 
     local fi, fo = file.Find("download/models", "MOD")
     if not fi and not fo then return end
-    local Downloads = node:AddFolder("#spawnmenu.category.downloads", "download/models", "MOD", false, false, "*.*")
+    local Downloads = node:AddFolder("Downloads", "download/models", "MOD", false, false, "*.*")
     Downloads:SetIcon("icon16/folder_database.png")
     Downloads.OnNodeSelected = function(self, selectedNode)
         ViewPanel:Clear(true)

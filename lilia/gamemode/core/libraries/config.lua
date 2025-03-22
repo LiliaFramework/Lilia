@@ -110,19 +110,19 @@ lia.config.add("MoneyLimit", "Money Limit", 0, nil, {
     max = 1000000
 })
 
-lia.config.add("CurrencySymbol", "Currency Symbol", "$", nil, {
+lia.config.add("CurrencySymbol", "Currency Symbol", "", function(newVal) lia.currency.symbol = newVal end, {
     desc = "Specifies the currency symbol used in the game.",
     category = "Money",
     type = "Generic"
 })
 
-lia.config.add("CurrencySingularName", "Currency Singular Name", "Dollar", nil, {
+lia.config.add("CurrencySingularName", "Currency Singular Name", "Dollar", function(newVal) lia.currency.singular = newVal end, {
     desc = "Singular name of the in-game currency.",
     category = "Money",
     type = "Generic"
 })
 
-lia.config.add("CurrencyPluralName", "Currency Plural Name", "Dollars", nil, {
+lia.config.add("CurrencyPluralName", "Currency Plural Name", "Dollars", function(newVal) lia.currency.plural = newVal end, {
     desc = "Plural name of the in-game currency.",
     category = "Money",
     type = "Generic"
@@ -144,7 +144,11 @@ lia.config.add("invH", "Inventory Height", 4, nil, {
     max = 20
 })
 
-lia.config.add("WalkSpeed", "Walk Speed", 130, nil, {
+lia.config.add("WalkSpeed", "Walk Speed", 130, function(key, newValue)
+    for _, client in player.Iterator() do
+        client:SetWalkSpeed(newValue)
+    end
+end, {
     desc = "Controls how fast characters walk.",
     category = "Character",
     type = "Int",
@@ -152,7 +156,11 @@ lia.config.add("WalkSpeed", "Walk Speed", 130, nil, {
     max = 300
 })
 
-lia.config.add("RunSpeed", "Run Speed", 235, nil, {
+lia.config.add("RunSpeed", "Run Speed", 235, function(key, newValue)
+    for _, client in player.Iterator() do
+        client:SetRunSpeed(newValue)
+    end
+end, {
     desc = "Controls how fast characters run.",
     category = "Character",
     type = "Int",
@@ -325,7 +333,8 @@ lia.config.add("AllowKeybindEditing", "Allow Keybind Editing", true, nil, {
     type = "Boolean"
 })
 
-hook.Add("CreateMenuButtons", "ConfigMenuButtons", function(tabs)
+hook.Add("PopulateConfigurationTabs", "PopulateConfig", function(pages)
+    local client = LocalPlayer()
     local ConfigFormatting = {
         Int = function(key, name, config, parent)
             local container = vgui.Create("DPanel", parent)
@@ -636,111 +645,70 @@ hook.Add("CreateMenuButtons", "ConfigMenuButtons", function(tabs)
         end
     }
 
-    if LocalPlayer():hasPrivilege("Staff Permissions - Access Configuration Menu") then
-        tabs["Configuration"] = function(panel)
-            panel.sidebar = panel:Add("DScrollPanel")
-            panel.sidebar:Dock(LEFT)
-            panel.sidebar:SetWide(250)
-            panel.sidebar:DockMargin(20, 20, 10, 20)
-            panel.scroll = panel:Add("DScrollPanel")
-            panel.scroll:Dock(FILL)
-            panel.scroll:DockMargin(10, 10, 10, 10)
-            panel.scroll.Paint = function() end
-            panel.categories = {}
-            panel.activeTab = nil
-            local function addCategory(text)
-                if panel.categories[text] then return panel.categories[text].label end
-                local categoryLabel = panel.sidebar:Add("DButton")
-                categoryLabel:SetText(text)
-                categoryLabel:SetTall(40)
-                categoryLabel:Dock(TOP)
-                categoryLabel:DockMargin(0, 10, 0, 10)
-                categoryLabel:SetFont("liaMediumFont")
-                categoryLabel:SetTextColor(color_white)
-                categoryLabel.Paint = function(btn, w, h)
-                    if btn:IsHovered() then
-                        local underlineWidth = w * 0.4
-                        local underlineX = (w - underlineWidth) * 0.5
-                        local underlineY = h - 4
-                        surface.SetDrawColor(255, 255, 255, 80)
-                        surface.DrawRect(underlineX, underlineY, underlineWidth, 2)
-                    end
+    local function buildConfiguration(parent)
+        local scroll = vgui.Create("DScrollPanel", parent)
+        scroll:Dock(FILL)
+        local categories = {}
+        local orderedKeys = {}
+        for key, _ in pairs(lia.config.stored) do
+            table.insert(orderedKeys, key)
+        end
 
-                    if panel.activeTab == btn then
-                        surface.SetDrawColor(color_white)
-                        surface.DrawOutlinedRect(0, 0, w, h)
-                    end
-                end
+        table.sort(orderedKeys, function(a, b) return lia.config.stored[a].name < lia.config.stored[b].name end)
+        for _, key in ipairs(orderedKeys) do
+            local option = lia.config.stored[key]
+            local elemType = option.data and option.data.type or "Generic"
+            local catName = option.category or "Miscellaneous"
+            categories[catName] = categories[catName] or {}
+            table.insert(categories[catName], {
+                key = key,
+                name = option.name,
+                config = option,
+                elemType = elemType
+            })
+        end
 
-                categoryLabel.DoClick = function(button)
-                    for _, cat in pairs(panel.categories) do
-                        for _, btn in ipairs(cat.buttons) do
-                            btn:SetVisible(false)
-                        end
-                    end
-
-                    for _, btn in ipairs(panel.categories[text].buttons) do
-                        btn:SetVisible(true)
-                    end
-
-                    panel.activeTab = button
-                end
-
-                panel.categories[text] = {
-                    label = categoryLabel,
-                    buttons = {}
-                }
-                return categoryLabel
+        for catName, configItems in SortedPairs(categories) do
+            local catPanel = vgui.Create("DCollapsibleCategory", scroll)
+            catPanel:Dock(TOP)
+            catPanel:SetLabel(catName)
+            catPanel:SetExpanded(true)
+            catPanel:DockMargin(0, 0, 0, 10)
+            catPanel.Header:SetContentAlignment(5)
+            catPanel.Header:SetTall(30)
+            catPanel.Header:SetFont("liaMediumFont")
+            catPanel.Header:SetTextColor(Color(255, 255, 255))
+            catPanel.Header.Paint = function(_, w, h)
+                draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 200))
+                surface.SetDrawColor(255, 255, 255, 80)
+                surface.DrawOutlinedRect(0, 0, w, h)
             end
 
-            local function addElement(elementType, key, name, config, category)
-                category = category or "Miscellaneous"
-                local cat = panel.categories[category]
-                if not cat then
-                    cat = {
-                        label = addCategory(category),
-                        buttons = {}
-                    }
-
-                    panel.categories[category] = cat
-                end
-
-                local panelElement = ConfigFormatting[elementType](key, name, config, panel.scroll)
-                panelElement:SetParent(panel.scroll)
+            catPanel.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40, 60)) end
+            local bodyPanel = vgui.Create("DPanel", catPanel)
+            bodyPanel:SetTall(#configItems * 240)
+            bodyPanel.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 50)) end
+            catPanel:SetContents(bodyPanel)
+            for _, itemData in ipairs(configItems) do
+                local panelElement = ConfigFormatting[itemData.elemType](itemData.key, itemData.name, itemData.config, bodyPanel)
                 panelElement:Dock(TOP)
-                panelElement:DockMargin(20, 10, 20, 10)
-                panelElement:SetVisible(false)
+                panelElement:DockMargin(10, 10, 10, 0)
                 panelElement.Paint = function(_, w, h)
                     draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
                     surface.SetDrawColor(255, 255, 255)
                     surface.DrawOutlinedRect(0, 0, w, h)
                 end
-
-                table.insert(cat.buttons, panelElement)
             end
-
-            local orderedKeys = {}
-            for key, _ in pairs(lia.config.stored) do
-                table.insert(orderedKeys, key)
-            end
-
-            table.sort(orderedKeys, function(a, b) return lia.config.stored[a].name < lia.config.stored[b].name end)
-            for _, key in ipairs(orderedKeys) do
-                local option = lia.config.stored[key]
-                local elementType = option.data and option.data.type or "Generic"
-                addElement(elementType, key, option.name, option, option.category)
-            end
-
-            local firstCategory = next(panel.categories)
-            if firstCategory then
-                for _, btn in ipairs(panel.categories[firstCategory].buttons) do
-                    btn:SetVisible(true)
-                end
-
-                panel.activeTab = panel.categories[firstCategory].label
-            end
-
-            panel.scroll:InvalidateLayout(true)
         end
+    end
+
+    if client:hasPrivilege("Staff Permissions - Access Configuration Menu") then
+        table.insert(pages, {
+            name = "Configuration",
+            drawFunc = function(parent)
+                parent:Clear()
+                buildConfiguration(parent)
+            end
+        })
     end
 end)

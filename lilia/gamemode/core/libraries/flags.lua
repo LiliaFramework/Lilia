@@ -46,36 +46,48 @@ lia.flag.add("t", "Toolgun", function(client, isGiven)
     end
 end)
 
-hook.Add("CreateMenuButtons", "FlagsMenuButtons", function(tabs)
-    local function createListPanel(parent, columns)
-        local panel = parent:Add("DPanel")
-        panel:SetSize(parent:GetWide(), parent:GetTall())
-        panel:Dock(FILL)
-        local list = panel:Add("DListView")
-        list:Dock(FILL)
-        list:SetMultiSelect(false)
-        for _, colName in ipairs(columns) do
-            list:AddColumn(colName)
-        end
+hook.Add("BuildInformationMenu", "BuildInformationMenuFlags", function(pages)
+    local client = LocalPlayer()
+    table.insert(pages, {
+        name = "Flags",
+        drawFunc = function(panel)
+            local char = client:getChar()
+            if not char then
+                panel:Add("DLabel"):SetText("No character found!"):Dock(TOP)
+                return
+            end
 
-        local function addRow(data)
-            list:AddLine(unpack(data))
-        end
-        return panel, addRow
-    end
+            local scroll = vgui.Create("DScrollPanel", panel)
+            scroll:Dock(FILL)
+            local iconLayout = vgui.Create("DIconLayout", scroll)
+            iconLayout:Dock(FILL)
+            iconLayout:SetSpaceY(5)
+            iconLayout:SetSpaceX(5)
+            iconLayout.PerformLayout = function(self)
+                local y = 0
+                local parentWidth = self:GetWide()
+                for _, child in ipairs(self:GetChildren()) do
+                    child:SetPos((parentWidth - child:GetWide()) / 2, y)
+                    y = y + child:GetTall() + self:GetSpaceY()
+                end
 
-    tabs["Flags"] = function(panel)
-        local f = vgui.Create("DFrame", panel)
-        f:SetSize(ScrW() * 0.6, ScrH() * 0.7)
-        f:Center()
-        f:SetTitle("Flags")
-        f:MakePopup()
-        local panelList, addRow = createListPanel(f, {"Status", "Flag", "Description"})
-        f:Add(panelList)
-        for flagName, flagData in SortedPairs(lia.flag.list, function(a, b) return tostring(a) < tostring(b) end) do
-            if isnumber(flagName) then continue end
-            local hasFlag = LocalPlayer():getChar():hasFlags(flagName) and "✓" or "✗"
-            addRow({hasFlag, flagName, flagData.desc or ""})
+                self:SetTall(y)
+            end
+
+            for flagName, flagData in SortedPairs(lia.flag.list) do
+                if isnumber(flagName) then continue end
+                local flagPanel = vgui.Create("DPanel", iconLayout)
+                flagPanel:SetSize(panel:GetWide(), 60)
+                flagPanel.Paint = function(_, w, h)
+                    local hasFlag = char:hasFlags(flagName)
+                    local status = hasFlag and "✓" or "✗"
+                    local statusColor = hasFlag and Color(0, 255, 0) or Color(255, 0, 0)
+                    draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
+                    draw.SimpleText(flagName, "liaMediumFont", 20, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                    draw.SimpleText(status, "liaBigFont", w - 20, 5, statusColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+                    if flagData.desc then draw.SimpleText(flagData.desc, "liaSmallFont", 20, 30, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP) end
+                end
+            end
         end
-    end
+    })
 end)
