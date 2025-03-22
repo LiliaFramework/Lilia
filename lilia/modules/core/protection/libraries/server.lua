@@ -61,8 +61,8 @@ local function ApplyPunishment(client, infraction, kick, ban, time)
     local bantime = time or 0
     if kick then
         if sam then
-            sam.player.kick(client, "Kicked for " .. infraction)
-        elseif ULib and ULib.kick then
+            sam.player.kick_id(client:SteamID(), "Kicked for " .. infraction)
+        elseif ULib then
             ULib.kick(client, "Kicked for " .. infraction)
         else
             client:Kick("Kicked for " .. infraction)
@@ -71,12 +71,12 @@ local function ApplyPunishment(client, infraction, kick, ban, time)
 
     if ban then
         if sam then
-            sam.player.ban(client, bantime, "Banned for " .. infraction)
-        elseif ULib and ULib.ban then
+            sam.player.ban_id(client:SteamID(), bantime, "Banned for " .. infraction)
+        elseif ULib then
             ULib.ban(client, bantime, "Banned for " .. infraction)
-        elseif client.Ban then
-            client:Ban(bantime, "Banned for " .. infraction .. ".")
+            ULib.kick(client, "Kicked for " .. infraction)
         else
+            client:Ban(bantime, "Banned for " .. infraction .. ".")
             client:Kick("Banned for " .. infraction .. ".")
         end
     end
