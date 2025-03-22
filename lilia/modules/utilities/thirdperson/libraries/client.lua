@@ -104,13 +104,7 @@ end
 function MODULE:PrePlayerDraw(drawnClient)
     local client = LocalPlayer()
     if drawnClient == client then return end
-    local clientPos = client:GetShootPos()
-    local onlinePlayers = player.GetAll()
-    local MaxViewDistance = lia.config.get("MaxViewDistance", 5000)
-    local drawnClientPos = drawnClient:GetShootPos()
-    local distance = clientPos:Distance(drawnClientPos)
-    local isStaff = client:isStaffOnDuty()
-    if isStaff then
+    if not lia.config.get("WallPeek") or client:InVehicle() then
         if drawnClient.IsHidden then
             drawnClient:DrawShadow(true)
             drawnClient.IsHidden = false
@@ -118,68 +112,62 @@ function MODULE:PrePlayerDraw(drawnClient)
         return
     end
 
-    if distance > MaxViewDistance then
-        if not drawnClient.IsHidden then
-            drawnClient:DrawShadow(false)
-            drawnClient.IsHidden = true
-        end
-        return true
-    end
-
-    local toDrawnClient = (drawnClientPos - clientPos):GetNormalized()
-    local clientForward = client:EyeAngles():Forward()
-    local angleDifference = math.deg(math.acos(clientForward:Dot(toDrawnClient)))
-    if angleDifference > (180 / 2) then
-        if not drawnClient.IsHidden then
-            drawnClient:DrawShadow(false)
-            drawnClient.IsHidden = true
-        end
-        return true
-    end
-
-    if not drawnClient:IsDormant() and not client:isNoClipping() and client:CanOverrideView() and not client:hasValidVehicle() then
-        local bBoneHit = false
-        for i = 0, drawnClient:GetBoneCount() - 1 do
-            local bonePos = drawnClient:GetBonePosition(i)
-            local traceLine = util.TraceLine({
-                start = clientPos,
-                endpos = bonePos,
-                filter = onlinePlayers,
-                mask = MASK_SHOT_HULL
-            })
-
-            local entity = traceLine.Entity
-            if traceLine.HitPos == bonePos then
-                bBoneHit = true
-                break
-            elseif NotSolidMatTypes[traceLine.MatType] or NotSolidTextures[traceLine.HitTexture] or (IsValid(entity) and (entity:GetClass() == "prop_dynamic" or entity:GetClass() == "prop_physics") and NotSolidModels[entity:GetModel()]) then
-                local traceLine2 = util.TraceLine({
-                    start = bonePos,
-                    endpos = clientPos,
-                    filter = onlinePlayers,
-                    mask = MASK_SHOT_HULL
-                })
-
-                if traceLine.Entity == traceLine2.Entity then
-                    bBoneHit = true
-                    break
-                end
-            end
-        end
-
-        if not bBoneHit then
-            if not drawnClient.IsHidden then
-                drawnClient:DrawShadow(false)
-                drawnClient.IsHidden = true
-            end
-            return true
-        elseif drawnClient.IsHidden then
+    local clientPos = client:GetShootPos()
+    local drawnPos = drawnClient:GetShootPos()
+    local maxDist = lia.config.get("MaxViewDistance", 5000)
+    local dist = clientPos:Distance(drawnPos)
+    if client:isStaffOnDuty() then
+        if drawnClient.IsHidden then
             drawnClient:DrawShadow(true)
             drawnClient.IsHidden = false
         end
-    elseif drawnClient.IsHidden then
-        drawnClient:DrawShadow(true)
-        drawnClient.IsHidden = false
+        return
+    end
+
+    if dist > maxDist then
+        if not drawnClient.IsHidden then
+            drawnClient:DrawShadow(false)
+            drawnClient.IsHidden = true
+        end
+        return true
+    end
+
+    local dir = (drawnPos - clientPos):GetNormalized()
+    if math.deg(math.acos(client:EyeAngles():Forward():Dot(dir))) > 90 then
+        if not drawnClient.IsHidden then
+            drawnClient:DrawShadow(false)
+            drawnClient.IsHidden = true
+        end
+        return true
+    end
+
+    local visible = false
+    for i = 0, drawnClient:GetBoneCount() - 1 do
+        local bonePos = drawnClient:GetBonePosition(i)
+        local trace = util.TraceLine({
+            start = clientPos,
+            endpos = bonePos,
+            filter = player.GetAll(),
+            mask = MASK_SHOT_HULL
+        })
+
+        if trace.HitPos == bonePos then
+            visible = true
+            break
+        end
+    end
+
+    if visible then
+        if drawnClient.IsHidden then
+            drawnClient:DrawShadow(true)
+            drawnClient.IsHidden = false
+        end
+    else
+        if not drawnClient.IsHidden then
+            drawnClient:DrawShadow(false)
+            drawnClient.IsHidden = true
+        end
+        return true
     end
 end
 

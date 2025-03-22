@@ -10,6 +10,12 @@ lia.config.add("MaxThirdPersonDistance", "Maximum Third-Person Distance", 100, n
     type = "Int"
 })
 
+lia.config.add("WallPeek", "Wall Peek", true, nil, {
+    desc = "Limits third‑person wall peeking by hiding players outside view or obstructed.",
+    category = "Rendering",
+    type = "Boolean"
+})
+
 lia.config.add("MaxThirdPersonHorizontal", "Maximum Third-Person Horizontal Offset", 30, nil, {
     desc = "The maximum allowable horizontal offset for third-person view.",
     category = "Third Person",
