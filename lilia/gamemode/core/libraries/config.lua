@@ -144,7 +144,11 @@ lia.config.add("invH", "Inventory Height", 4, nil, {
     max = 20
 })
 
-lia.config.add("WalkSpeed", "Walk Speed", 130, nil, {
+lia.config.add("WalkSpeed", "Walk Speed", 130, function(key, newValue)
+    for _, client in player.Iterator() do
+        client:SetWalkSpeed(newValue)
+    end
+end, {
     desc = "Controls how fast characters walk.",
     category = "Character",
     type = "Int",
@@ -152,7 +156,11 @@ lia.config.add("WalkSpeed", "Walk Speed", 130, nil, {
     max = 300
 })
 
-lia.config.add("RunSpeed", "Run Speed", 235, nil, {
+lia.config.add("RunSpeed", "Run Speed", 235, function(key, newValue)
+    for _, client in player.Iterator() do
+        client:SetRunSpeed(newValue)
+    end
+end, {
     desc = "Controls how fast characters run.",
     category = "Character",
     type = "Int",
