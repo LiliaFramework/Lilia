@@ -28,7 +28,7 @@
                     end
                 end
 
-                client:ChatPrint("No staff character found.")
+                client:ChatPrint("No staff character found. Make sure to create a character in the staff faction.")
             end)
         end
     end
@@ -60,8 +60,8 @@ lia.command.add("sendtositroom", {
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if not IsValid(target) then
-            client:notifyWarning("Player not found.")
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
             return
         end
 

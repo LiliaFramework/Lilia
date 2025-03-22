@@ -16,7 +16,11 @@
         local reason = table.concat(arguments, " ", 2)
         if not targetName or not reason then return "Usage: warn <player> <reason>" end
         local target = lia.command.findPlayer(client, arguments[1])
-        if not IsValid(target) then return "Player not found." end
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
+            return
+        end
+
         local warning = {
             timestamp = os.date("%Y-%m-%d %H:%M:%S"),
             reason = reason,
@@ -45,6 +49,11 @@ lia.command.add("viewwarns", {
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
         local warns = target:getLiliaData("warns") or {}
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
+            return
+        end
+
         if table.Count(warns) == 0 then
             client:notify(target:Nick() .. " has no warnings.")
             return

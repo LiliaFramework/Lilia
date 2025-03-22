@@ -12,12 +12,13 @@ lia.command.add("banooc", {
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if target then
-            MODULE.OOCBans[target:SteamID()] = true
-            client:notify(target:Name() .. " has been banned from OOC.")
-        else
-            client:notifyWarning("Invalid target.")
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
+            return
         end
+
+        MODULE.OOCBans[target:SteamID()] = true
+        client:notify(target:Name() .. " has been banned from OOC.")
     end
 })
 
@@ -33,12 +34,13 @@ lia.command.add("unbanooc", {
     },
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if target then
-            MODULE.OOCBans[target:SteamID()] = nil
-            client:notify(target:Name() .. " has been unbanned from OOC.")
-        else
-            client:notifyWarning("Invalid target.")
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
+            return
         end
+
+        MODULE.OOCBans[target:SteamID()] = nil
+        client:notify(target:Name() .. " has been unbanned from OOC.")
     end
 })
 

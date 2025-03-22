@@ -92,36 +92,36 @@ lia.command.add("returnitems", {
         Icon = "icon16/arrow_refresh.png"
     },
     onRun = function(client, arguments)
-        local targetPlayer = lia.command.findPlayer(client, arguments[1])
-        if not targetPlayer or not IsValid(targetPlayer) then
-            client:notifyWarning("Target player not found.")
+        local target = lia.command.findPlayer(client, arguments[1])
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
             return
         end
 
         if lia.config.get("LoseItemsonDeathHuman", false) or lia.config.get("LoseItemsonDeathNPC", false) then
-            if IsValid(targetPlayer) then
-                if not targetPlayer.LostItems then
+            if IsValid(target) then
+                if not target.LostItems then
                     client:notifyWarning("The target hasn't died recently or they have already had their items returned!")
                     return
                 end
 
-                if table.IsEmpty(targetPlayer.LostItems) then
+                if table.IsEmpty(target.LostItems) then
                     client:notifyWarning("Cannot return any items; the player hasn't lost any!")
                     return
                 end
 
-                local character = targetPlayer:getChar()
+                local character = target:getChar()
                 if not character then return end
                 local inv = character:getInv()
                 if not inv then return end
                 local returnedItems = {}
-                for _, item in pairs(targetPlayer.LostItems) do
+                for _, item in pairs(target.LostItems) do
                     inv:add(item)
                     table.insert(returnedItems, item.uniqueID)
                 end
 
-                targetPlayer.LostItems = nil
-                targetPlayer:notify("Your items have been returned.")
+                target.LostItems = nil
+                target:notify("Your items have been returned.")
                 client:notify("Returned the items.")
             end
         else

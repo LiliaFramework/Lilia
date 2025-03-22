@@ -16,8 +16,8 @@
         end
 
         local target = lia.command.findPlayer(client, targetName)
-        if not IsValid(target) then
-            client:ChatPrint("Player not found.")
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
             return
         end
 

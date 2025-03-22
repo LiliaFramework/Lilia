@@ -8,7 +8,12 @@ lia.command.add("restockvendor", {
     },
     onRun = function(client)
         local target = client:getTracedEntity()
-        if IsValid(target) and target:GetClass() == "lia_vendor" then
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
+            return
+        end
+
+        if target:GetClass() == "lia_vendor" then
             for id, itemData in pairs(target.items) do
                 if itemData[2] and itemData[4] then target.items[id][2] = itemData[4] end
             end
@@ -83,7 +88,12 @@ lia.command.add("restockvendormoney", {
         local target = client:getTracedEntity()
         local amount = tonumber(arguments[1])
         if not amount or amount < 0 then return client:notifyLocalized("vendorInvalidAmount") end
-        if IsValid(target) and target:GetClass() == "lia_vendor" then
+        if not target or not IsValid(target) then
+            client:notifyLocalized("noTarget")
+            return
+        end
+
+        if target:GetClass() == "lia_vendor" then
             if target.money ~= nil then
                 target.money = amount
                 client:notifyLocalized("vendorMoneyRestocked", lia.currency.get(amount))
