@@ -628,7 +628,7 @@ lia.command.add("charban", {
         local target
         local id = tonumber(queryArg)
         if id then
-            for _, ply in ipairs(player.GetAll()) do
+            for _, ply in player.Iterator() do
                 if IsValid(ply) and ply:getChar() and ply:getChar():getID() == id then
                     target = ply
                     break

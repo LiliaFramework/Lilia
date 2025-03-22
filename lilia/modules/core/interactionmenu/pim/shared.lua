@@ -3,7 +3,7 @@ MODULE:AddOption("Give Money", {
     serverRun = false,
     shouldShow = function(client, target) return IsValid(target) and target:IsPlayer() and client:getChar():getMoney() > 0 end,
     onRun = function(client, target)
-        local frame = vgui.Create("WolfFrame")
+        local frame = vgui.Create("DFrame")
         frame:SetSize(600, 250)
         frame:Center()
         frame:MakePopup()
