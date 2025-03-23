@@ -52,6 +52,7 @@ function PANEL:Init()
     self:SetAlpha(0)
     self:AlphaTo(255, 0.25, 0)
     self:SetPopupStayAtBack(true)
+
     self.sidebar = self:Add("DPanel")
     self.sidebar:SetSize(200, ScrH())
     self.sidebar:Dock(RIGHT)
@@ -121,6 +122,11 @@ function PANEL:Update()
 end
 
 function PANEL:Think()
+    if ( gui.IsGameUIVisible() or gui.IsConsoleVisible() ) then
+        self:remove()
+        return
+    end
+
     local key = input.IsKeyDown(KEY_F1)
     if key and (self.noAnchor or CurTime() + 0.4) < CurTime() and self.anchorMode then
         self.anchorMode = false
