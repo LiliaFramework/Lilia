@@ -16,6 +16,7 @@ function vectorMeta:RotateAroundAxis(axis, degrees)
     return Vector(cosTheta * self.x + sinTheta * (axis.y * self.z - axis.z * self.y), cosTheta * self.y + sinTheta * (axis.z * self.x - axis.x * self.z), cosTheta * self.z + sinTheta * (axis.x * self.y - axis.y * self.x))
 end
 
+local right = Vector(0, -1, 0)
 function vectorMeta:Right(vUp)
     if self[1] == 0 and self[2] == 0 then return right end
     if vUp == nil then vUp = vector_up end

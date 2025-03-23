@@ -54,7 +54,7 @@ function GM:CharLoaded(id)
     if character then
         local client = character:getPlayer()
         if IsValid(client) then
-            local uniqueID = "liaSaveChar" .. client:SteamID()
+            local uniqueID = "liaSaveChar" .. client:SteamID64()
             timer.Create(uniqueID, lia.config.get("CharacterDataSaveInterval"), 0, function()
                 if IsValid(client) and client:getChar() then
                     client:getChar():save()
@@ -180,7 +180,7 @@ function GM:CanPlayerTakeItem(client, item)
         return false
     elseif IsValid(item.entity) then
         local character = client:getChar()
-        if item.entity.SteamID64 == client:SteamID() and item.entity.liaCharID ~= character:getID() then
+        if item.entity.SteamID64 == client:SteamID64() and item.entity.liaCharID ~= character:getID() then
             client:notifyLocalized("playerCharBelonging")
             return false
         end

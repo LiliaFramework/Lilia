@@ -1,5 +1,5 @@
 ﻿function MODULE:PostPlayerLoadout(client)
-    local uniqueID = "StamCheck" .. client:SteamID()
+    local uniqueID = "StamCheck" .. client:SteamID64()
     local character = client:getChar()
     if character and character:getInv() then
         lia.attribs.setup(client)
@@ -55,11 +55,11 @@ function MODULE:PlayerStaminaLost(client)
     if client.isBreathing then return end
     client:EmitSound("player/breathe1.wav", 35, 100)
     client.isBreathing = true
-    timer.Create("liaStamBreathCheck" .. client:SteamID(), 1, 0, function()
+    timer.Create("liaStamBreathCheck" .. client:SteamID64(), 1, 0, function()
         if client:getLocalVar("stamina", 0) < lia.config.get("StaminaBreathingThreshold", 50) then return end
         client:StopSound("player/breathe1.wav")
         client.isBreathing = nil
-        timer.Remove("liaStamBreathCheck" .. client:SteamID())
+        timer.Remove("liaStamBreathCheck" .. client:SteamID64())
     end)
 end
 

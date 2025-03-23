@@ -17,7 +17,7 @@ lia.command.add("banooc", {
             return
         end
 
-        MODULE.OOCBans[target:SteamID()] = true
+        MODULE.OOCBans[target:SteamID64()] = true
         client:notify(target:Name() .. " has been banned from OOC.")
     end
 })
@@ -39,7 +39,7 @@ lia.command.add("unbanooc", {
             return
         end
 
-        MODULE.OOCBans[target:SteamID()] = nil
+        MODULE.OOCBans[target:SteamID64()] = nil
         client:notify(target:Name() .. " has been unbanned from OOC.")
     end
 })
