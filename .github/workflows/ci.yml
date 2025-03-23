@@ -70,9 +70,9 @@ jobs:
           sudo mv glualint_folder/glualint /usr/local/bin
           rm -rf glualint.zip glualint_folder
 
-      - name: Run GLuaLint for Pretty Printing
+      - name: Run GLuaLint Pretty Print
         working-directory: lilia
-        run: glualint --pretty-print .
+        run: glualint --config glualint.json --pretty-print-files .
 
       - name: Configure Git
         run: |

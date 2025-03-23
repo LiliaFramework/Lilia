@@ -7,16 +7,16 @@ ITEM.width = 1
 ITEM.height = 1
 ITEM.DropOnDeath = true
 ITEM.functions.Use = {
-    name = "Use Grenade",
-    icon = "icon16/tick.png",
-    onRun = function(item)
-        local client = item.player
-        if client:hasRagdoll() then
-            client:notifyLocalized("noRagdollAction")
-            return false
-        end
+	name = "Use Grenade",
+	icon = "icon16/tick.png",
+	onRun = function( item )
+		local client = item.player
+		if client:hasRagdoll() then
+			client:notifyLocalized( "noRagdollAction" )
+			return false
+		end
 
-        client:Give(item.grenadeClass, true)
-        return true
-    end,
+		client:Give( item.grenadeClass, true )
+		return true
+	end,
 }
