@@ -135,28 +135,6 @@ function PANEL:Init()
     self:DrawPortraits()
 end
 
-local function PaintButton(self, w, h)
-    local r, g, b = lia.config.get("Color")
-    if self.Base then
-        surface.SetDrawColor(0, 0, 0, 255)
-        surface.DrawOutlinedRect(0, 0, w, h, 2)
-        surface.SetDrawColor(0, 0, 0, 150)
-        surface.DrawRect(1, 1, w - 2, h - 2)
-    end
-
-    draw.SimpleText(self:GetText(), self:GetFont(), w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    if self:IsHovered() or self:IsSelected() then
-        self.startTime = self.startTime or CurTime()
-        local elapsed = CurTime() - self.startTime
-        local anim = math.min(w, elapsed / 0.3 * w) / 2
-        surface.SetDrawColor(r, g, b)
-        surface.DrawLine(w / 2 - anim, h - 1, w / 2 + anim, h - 1)
-    else
-        self.startTime = nil
-    end
-    return true
-end
-
 function PANEL:createCategoryDropdown()
     local categories = self:GetItemCategoryList()
     if table.IsEmpty(categories) then return end
@@ -411,7 +389,7 @@ function PANEL:InventoryItemRemoved(item)
     self:InventoryItemAdded(item)
 end
 
-function PANEL:Paint(w, h)
+function PANEL:Paint()
     lia.util.drawBlur(self, 15)
 end
 
