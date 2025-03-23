@@ -68,6 +68,11 @@ function PANEL:setActive( state )
 			this:Remove()
 			self.tabs:SetVisible( false )
 			self.active = false
+			if IsValid( self.commandList ) then
+				self.commandList:Remove()
+				self.commandList = nil
+			end
+
 			if IsValid( self.entry ) then self.entry:Remove() end
 			lia.gui.chat = nil
 			if text:find( "%S" ) then
@@ -109,6 +114,11 @@ function PANEL:setActive( state )
 					commandButton:Dock( TOP )
 					commandButton:DockMargin( 0, 0, 0, 2 )
 					commandButton:SetTall( 20 )
+					commandButton.Paint = function( _, w, h )
+						surface.SetDrawColor( ColorAlpha(color_black, 200) )
+						surface.DrawRect( 0, 0, w, h )
+					end
+
 					commandButton.DoClick = function()
 						self.text:SetText( "/" .. commandName .. " " )
 						self.text:RequestFocus()
@@ -137,15 +147,41 @@ function PANEL:setActive( state )
 				if #children > 0 then
 					self.commandIndex = ( self.commandIndex or 0 ) + 1
 					if self.commandIndex > #children then self.commandIndex = 1 end
+
+					for i, child in ipairs(children) do
+						child.commandIndex = i
+						if not child.PaintConfigured then
+							child.Paint = function( this, w, h )
+								local isSelected = this.commandIndex == self.commandIndex
+								surface.SetDrawColor(isSelected and ColorAlpha( lia.config.get( "Color" ), 255 ) or ColorAlpha( color_black, 200 ))
+						       	surface.DrawRect( 0, 0, w, h )
+						       	if IsValid( this.text ) then
+						         	this.text:SetTextColor( isSelected and ColorAlpha( lia.config.get( "Color" ), 255 ) or ColorAlpha( color_white, 200 ) )
+						       	end
+							end
+							child.PaintConfigured = true
+						end
+					end
+
 					local selectedCommand = children[ self.commandIndex ]
 					if IsValid( selectedCommand ) then
 						self.text:SetText( selectedCommand:GetText():match( "^/[^ ]+" ) )
 						self.text:SetCaretPos( #self.text:GetText() )
+						self.text:RequestFocus()
 					end
 				end
 				return true
 			end
 			return DTextEntry.OnKeyCodeTyped( this, key )
+		end
+
+		self.text.OnLoseFocus = function( this )
+			if IsValid( self.commandList ) then
+				self.commandList:Remove()
+				self.commandList = nil
+			end
+
+			this:RequestFocus()
 		end
 
 		hook.Run( "StartChat" )
