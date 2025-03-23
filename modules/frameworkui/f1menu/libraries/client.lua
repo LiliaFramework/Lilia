@@ -7,7 +7,7 @@ end
 
 function MODULE:AddSection(sectionName, color, priority, location)
     hook.Run("F1OnAddSection", sectionName, color, priority, location)
-    self.CharacterInformations[sectionName] = {
+    self.CharacterInformation[sectionName] = {
         fields = {},
         color = color or Color(255, 255, 255),
         priority = priority or 999,
@@ -17,7 +17,7 @@ end
 
 function MODULE:AddTextField(sectionName, fieldName, labelText, valueFunc)
     hook.Run("F1OnAddTextField", sectionName, fieldName, labelText, valueFunc)
-    local section = self.CharacterInformations[sectionName]
+    local section = self.CharacterInformation[sectionName]
     if section then
         table.insert(section.fields, {
             type = "text",
@@ -30,7 +30,7 @@ end
 
 function MODULE:AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
     hook.Run("F1OnAddBarField", sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
-    local section = self.CharacterInformations[sectionName]
+    local section = self.CharacterInformation[sectionName]
     if section then
         table.insert(section.fields, {
             type = "bar",
@@ -62,7 +62,7 @@ function MODULE:CreateMenuButtons(tabs)
         panel.info:AlphaTo(255, 0.5)
     end
 
-    tabs["Informations"] = function(panel)
+    tabs["Information"] = function(panel)
         panel.sidebar = panel:Add("DScrollPanel")
         panel.sidebar:Dock(LEFT)
         panel.sidebar:SetWide(200)

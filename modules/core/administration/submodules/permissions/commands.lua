@@ -750,7 +750,7 @@ lia.command.add("charsetspeed", {
 lia.command.add("charsetmodel", {
     adminOnly = true,
     syntax = "[string name] <string model>",
-    privilege = "Manage Character Informations",
+    privilege = "Manage Character Information",
     AdminStick = {
         Name = L("adminStickSetCharModelName"),
         Category = L("adminStickCategoryCharManagement"),
@@ -835,7 +835,7 @@ lia.command.add("chargiveitem", {
 lia.command.add("charsetdesc", {
     adminOnly = true,
     syntax = "[string name] [string desc]",
-    privilege = "Manage Character Informations",
+    privilege = "Manage Character Information",
     AdminStick = {
         Name = L("adminStickSetCharDescName"),
         Category = L("adminStickCategoryCharManagement"),
@@ -867,7 +867,7 @@ lia.command.add("charsetdesc", {
 lia.command.add("charsetname", {
     adminOnly = true,
     syntax = "[string name] [string newName]",
-    privilege = "Manage Character Informations",
+    privilege = "Manage Character Information",
     AdminStick = {
         Name = L("adminStickSetCharNameName"),
         Category = L("adminStickCategoryCharManagement"),
