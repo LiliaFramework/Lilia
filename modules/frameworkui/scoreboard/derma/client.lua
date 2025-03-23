@@ -342,22 +342,21 @@ end
 
 local borderColorSolid = Color(0, 0, 0, 200)
 local borderColorBlur = Color(0, 0, 0, 150)
+
+local backgroundColorFallback = Color(50, 50, 50, 255)
+local backgroundColorFallbackNonSolid = Color(30, 30, 30, 100)
 function PANEL:Paint(w, h)
-    local backgroundColor = lia.config.get("UseSolidBackground", false) and (lia.config.get("ScoreboardBackgroundColor", Color(255, 100, 100, 255)) or Color(50, 50, 50, 255)) or Color(30, 30, 30, 100)
+    local backgroundColor = lia.config.get("UseSolidBackground", false) and (lia.config.get("ScoreboardBackgroundColor", Color(255, 100, 100, 255)) or backgroundColorFallback) or backgroundColorFallbackNonSolid
     local borderColor = lia.config.get("UseSolidBackground", false) and borderColorSolid or borderColorBlur
 
-    if lia.config.get("UseSolidBackground", false) then
-        surface.SetDrawColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
-        surface.DrawRect(0, 0, w, h)
-        surface.SetDrawColor(borderColor.r, borderColor.g, borderColor.b, borderColor.a)
-        surface.DrawOutlinedRect(0, 0, w, h)
-    else
+    if !lia.config.get("UseSolidBackground", false) then
         lia.util.drawBlur(self, 10)
-        surface.SetDrawColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
-        surface.DrawRect(0, 0, w, h)
-        surface.SetDrawColor(borderColor.r, borderColor.g, borderColor.b, borderColor.a)
-        surface.DrawOutlinedRect(0, 0, w, h)
     end
+
+    surface.SetDrawColor(backgroundColor)
+    surface.DrawRect(0, 0, w, h)
+    surface.SetDrawColor(borderColor.r, borderColor.g, borderColor.b, borderColor.a)
+    surface.DrawOutlinedRect(0, 0, w, h)
 end
 
 vgui.Register("liaScoreboard", PANEL, "EditablePanel")
