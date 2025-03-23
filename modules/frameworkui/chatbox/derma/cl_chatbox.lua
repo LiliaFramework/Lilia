@@ -12,6 +12,8 @@ function PANEL:Init()
 	self.tabs:SetTall( 28 )
 	self.tabs:DockPadding( 4, 4, 4, 4 )
 	self.tabs:SetVisible( false )
+	self.commandIndex = 0
+	self.commands = lia.command.list
 	self.tabs.Paint = function( _, w, h )
 		surface.SetDrawColor( 0, 0, 0, 100 )
 		surface.DrawRect( 0, 0, w, h )
@@ -22,40 +24,6 @@ function PANEL:Init()
 	self.scroll:SetPos( 4, 31 )
 	self.scroll:SetSize( w - 8, h - 66 )
 	self.scroll:GetVBar():SetWide( 0 )
-	self.scroll.PaintOver = function( this, w, h )
-		local entry = self.text
-		if self.active and IsValid( entry ) then
-			local text = entry:GetText()
-			if text:sub( 1, 1 ) == "/" then
-				local arguments = self.arguments or {}
-				local command = string.PatternSafe( arguments[ 1 ] or "" ):lower()
-				lia.util.drawBlur( this )
-				surface.SetDrawColor( 0, 0, 0, 200 )
-				surface.DrawRect( 0, 0, w, h )
-				local i = 0
-				local color = lia.config.get( "Color" )
-				for k, v in SortedPairs( lia.command.list ) do
-					local canUse, _ = lia.command.hasAccess( LocalPlayer(), k )
-					local k2 = "/" .. k
-					if k2:lower():match( command ) and canUse then
-						local x = lia.util.drawText( ( v.realCommand and "/" .. v.realCommand or k2 ) .. "  ", 4, i * 20, color )
-						if k == command and v.syntax then
-							local i2 = 0
-							for argument in v.syntax:gmatch( "([%[<][%w_]+[%s][%w_]+[%]>])" ) do
-								i2 = i2 + 1
-								local color = Color( 200, 200, 200, 100 )
-								if i2 == #arguments - 1 then color = color_white end
-								x = x + lia.util.drawText( argument .. "  ", x, i * 20, color )
-							end
-						end
-
-						i = i + 1
-					end
-				end
-			end
-		end
-	end
-
 	self.lastY = 0
 	self.list = {}
 	self.filtered = {}
@@ -100,7 +68,8 @@ function PANEL:setActive( state )
 			this:Remove()
 			self.tabs:SetVisible( false )
 			self.active = false
-			self.entry:Remove()
+			if IsValid( self.entry ) then self.entry:Remove() end
+			lia.gui.chat = nil
 			if text:find( "%S" ) then
 				if not ( lia.chat.lastLine or "" ):find( text, 1, true ) then
 					lia.chat.history[ #lia.chat.history + 1 ] = text
@@ -123,12 +92,64 @@ function PANEL:setActive( state )
 		self.text.OnTextChanged = function( this )
 			local text = this:GetText()
 			hook.Run( "ChatTextChanged", text )
-			if text:sub( 1, 1 ) == "/" then self.arguments = lia.command.extractArgs( text:sub( 2 ) ) end
+
+			if ( text:sub( 1, 1 ) == "/" ) then
+				if ( IsValid( self.commandList ) ) then
+					self.commandList:Remove()
+					self.commandList = nil
+				end
+
+				self.commandList = self:Add( "DScrollPanel" )
+				self.commandList:SetPos( 4, 31 )
+				self.commandList:SetSize( self:GetWide() - 8, self:GetTall() - 66 )
+				self.commandList:GetVBar():SetWide( 8 )
+				for commandName, commandData in SortedPairs( self.commands ) do
+					if not tobool( commandName:find( text:sub( 2 ) ) ) then continue end
+					local commandButton = self.commandList:Add( "DButton" )
+					commandButton:SetText( "/" .. commandName .. " - " .. ( commandData.description or "No description" ) )
+					commandButton:Dock( TOP )
+					commandButton:DockMargin( 0, 0, 0, 2 )
+					commandButton:SetTall( 20 )
+					commandButton.DoClick = function()
+						self.text:SetText( "/" .. commandName .. " " )
+						self.text:RequestFocus()
+						self.commandList:Remove()
+						self.commandList = nil
+					end
+				end
+
+				self.arguments = lia.command.extractArgs( text:sub( 2 ) )
+			else
+				if IsValid( self.commandList ) then
+					self.commandList:Remove()
+					self.commandList = nil
+				end
+
+				self.commandIndex = 0
+			end
 		end
 
 		self.entry:MakePopup()
 		self.text:RequestFocus()
 		self.tabs:SetVisible( true )
+		self.text.OnKeyCodeTyped = function( this, key )
+			if this:GetText():sub( 1, 1 ) == "/" and key == KEY_TAB and IsValid( self.commandList ) then
+				local children = self.commandList:GetCanvas():GetChildren()
+				if #children > 0 then
+					self.commandIndex = ( self.commandIndex or 0 ) + 1
+					if self.commandIndex > #children then self.commandIndex = 1 end
+					local selectedCommand = children[ self.commandIndex ]
+					if IsValid( selectedCommand ) then
+						self.text:SetText( selectedCommand:GetText():match( "^/[^ ]+" ) )
+						self.text:SetCaretPos( #self.text:GetText() )
+					end
+				end
+				return true
+			end
+
+			return DTextEntry.OnKeyCodeTyped( this, key )
+		end
+
 		hook.Run( "StartChat" )
 	end
 end

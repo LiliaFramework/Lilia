@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:addTab( name, callback, uniqueID )
 	local MenuColors = lia.color.ReturnMainAdjustedColors()
 	name = L( name )
@@ -121,6 +121,11 @@ function PANEL:Update()
 end
 
 function PANEL:Think()
+	if gui.IsGameUIVisible() or gui.IsConsoleVisible() then
+		self:remove()
+		return
+	end
+
 	local key = input.IsKeyDown( KEY_F1 )
 	if key and ( self.noAnchor or CurTime() + 0.4 ) < CurTime() and self.anchorMode then
 		self.anchorMode = false
