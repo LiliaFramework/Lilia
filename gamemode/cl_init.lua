@@ -8,8 +8,10 @@ lia = lia or {
 
 local files = { "lilia/gamemode/core/libraries/config.lua", "lilia/gamemode/shared.lua", "lilia/gamemode/core/libraries/includer.lua" }
 local function BootstrapLilia()
-	for _, file in ipairs( files ) do
-		if file.Exists( file, "LUA" ) then include( file ) end
+	for _, filePath in ipairs( files ) do
+		if file.Exists( filePath, "LUA" ) then
+			include( filePath )
+		end
 	end
 end
 
