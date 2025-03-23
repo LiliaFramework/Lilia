@@ -1,15 +1,15 @@
 ﻿function MODULE:TicketSystemClaim(admin, requester)
     local caseclaims = lia.data.get("caseclaims", {}, true)
-    caseclaims[admin:SteamID()] = caseclaims[admin:SteamID()] or {
+    caseclaims[admin:SteamID64()] = caseclaims[admin:SteamID64()] or {
         name = admin:Nick(),
         claims = 0,
         lastclaim = os.time(),
         claimedFor = {}
     }
 
-    caseclaims[admin:SteamID()].claims = caseclaims[admin:SteamID()].claims + 1
-    caseclaims[admin:SteamID()].lastclaim = os.time()
-    caseclaims[admin:SteamID()].claimedFor[requester:SteamID()] = requester:Nick()
+    caseclaims[admin:SteamID64()].claims = caseclaims[admin:SteamID64()].claims + 1
+    caseclaims[admin:SteamID64()].lastclaim = os.time()
+    caseclaims[admin:SteamID64()].claimedFor[requester:SteamID64()] = requester:Nick()
     lia.data.set("caseclaims", caseclaims, true)
 end
 

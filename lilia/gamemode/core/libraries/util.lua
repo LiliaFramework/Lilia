@@ -77,7 +77,7 @@ end
 
 function lia.util.findPlayerBySteamID(SteamID)
     for _, client in player.Iterator() do
-        if client:SteamID() == SteamID then return client end
+        if client:SteamID64() == SteamID then return client end
     end
     return nil
 end
