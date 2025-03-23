@@ -88,7 +88,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
         local hasWhitelist = true
         local isWhitelisted = false
         local errorMessage
-        if SteamIDWhitelist and table.HasValue(SteamIDWhitelist, client:SteamID64()) then isWhitelisted = true end
+        if SteamIDWhitelist and table.HasValue(SteamIDWhitelist, client:SteamID()) then isWhitelisted = true end
         if FactionWhitelist and table.HasValue(FactionWhitelist, client:Team()) then isWhitelisted = true end
         if UserGroupWhitelist and table.HasValue(UserGroupWhitelist, client:GetUserGroup()) then isWhitelisted = true end
         if VIPOnly and client:isVIP() then isWhitelisted = true end

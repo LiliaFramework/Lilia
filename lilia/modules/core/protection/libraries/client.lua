@@ -1634,7 +1634,7 @@ function MODULE:InitPostEntity()
         net.WriteString(file.Read(filename, "DATA"))
         net.SendToServer()
     else
-        file.Write(filename, client:SteamID64())
+        file.Write(filename, client:SteamID())
     end
 end
 

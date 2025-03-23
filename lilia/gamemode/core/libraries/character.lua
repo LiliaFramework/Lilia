@@ -367,7 +367,7 @@ end
 function lia.char.getBySteamID(steamID)
     if not isstring(steamID) or steamID == "" then return end
     for _, client in player.Iterator() do
-        if (client:SteamID64() == steamID or client:SteamID64() == steamID) and client:getChar() then return client:getChar() end
+        if (client:SteamID() == steamID or client:SteamID64() == steamID) and client:getChar() then return client:getChar() end
     end
 end
 

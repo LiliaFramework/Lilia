@@ -209,7 +209,7 @@ lia.chat.register("ooc", {
             return false
         end
 
-        if MODULE.OOCBans[speaker:SteamID64()] then
+        if MODULE.OOCBans[speaker:SteamID()] then
             speaker:notifyWarning("You have been banned from using OOC!")
             return false
         end

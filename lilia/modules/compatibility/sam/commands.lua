@@ -12,7 +12,7 @@ lia.command.add("playtime", {
     adminOnly = false,
     privilege = "View Own Playtime",
     onRun = function(client)
-        local steamID = client:SteamID64()
+        local steamID = client:SteamID()
         local query = "SELECT play_time FROM sam_players WHERE steamid = " .. SQLStr(steamID) .. ";"
         local result = sql.QueryRow(query)
         if result then
@@ -50,7 +50,7 @@ lia.command.add("plygetplaytime", {
             return
         end
 
-        local steamID = target:SteamID64()
+        local steamID = target:SteamID()
         local query = "SELECT play_time FROM sam_players WHERE steamid = " .. SQLStr(steamID) .. ";"
         local result = sql.QueryRow(query)
         if result then

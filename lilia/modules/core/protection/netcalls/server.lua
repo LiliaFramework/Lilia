@@ -9,7 +9,7 @@ for _, v in pairs(KnownExploits) do
         if client.nextExploitNotify > CurTime() then return end
         client.nextExploitNotify = CurTime() + 2
         for _, p in player.Iterator() do
-            if p:isStaffOnDuty() then p:notify(client:Name() .. " (" .. client:SteamID64() .. ") may be attempting to run exploits! Used " .. tostring(v)) end
+            if p:isStaffOnDuty() then p:notify(client:Name() .. " (" .. client:SteamID() .. ") may be attempting to run exploits! Used " .. tostring(v)) end
         end
     end)
 end
@@ -29,11 +29,11 @@ end
 net.Receive(MODULE.AltCheckSeed, function(_, client)
     local sentSteamID = net.ReadString()
     if not sentSteamID or sentSteamID == "" then
-        NotifyAdmin("The SteamID of player " .. client:Name() .. " (" .. client:SteamID64() .. ") wasn't received properly. This can signify tampering with net messages.")
+        NotifyAdmin("The SteamID of player " .. client:Name() .. " (" .. client:SteamID() .. ") wasn't received properly. This can signify tampering with net messages.")
         return
     end
 
-    if client:SteamID64() ~= sentSteamID then NotifyAdmin("The SteamID of player " .. client:Name() .. " (" .. client:SteamID64() .. ") is different than the saved one (" .. sentSteamID .. ")") end
+    if client:SteamID() ~= sentSteamID then NotifyAdmin("The SteamID of player " .. client:Name() .. " (" .. client:SteamID() .. ") is different than the saved one (" .. sentSteamID .. ")") end
 end)
 
 net.Receive(MODULE.HackingCheckSeed, function(_, client) ApplyPunishment(client, "Hacking", true, true, 0) end)

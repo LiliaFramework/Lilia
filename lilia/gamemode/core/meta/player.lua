@@ -529,7 +529,7 @@ if SERVER then
             self:SetNotSolid(true)
             self:SetMoveType(MOVETYPE_NONE)
             if time then
-                local uniqueID = "liaUnRagdoll" .. self:SteamID64()
+                local uniqueID = "liaUnRagdoll" .. self:SteamID()
                 timer.Create(uniqueID, 0.33, 0, function()
                     if IsValid(entity) and IsValid(self) then
                         local velocity = entity:GetVelocity()

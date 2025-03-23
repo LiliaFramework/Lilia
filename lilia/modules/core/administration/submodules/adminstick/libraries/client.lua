@@ -21,7 +21,7 @@ end
 local function GetIdentifier(target)
     if not IsValid(target) or not target:IsPlayer() then return "" end
     if target:IsBot() then return target:Name() end
-    return target:SteamID64()
+    return target:SteamID()
 end
 
 local function HandleExtraFields(commandKey, commandData, target, commandName)
@@ -517,11 +517,11 @@ function MODULE:OpenAdminStickUI(target)
                 icon = "icon16/page_copy.png"
             },
             {
-                name = "SteamID: " .. target:SteamID64() .. " (copy)",
+                name = "SteamID: " .. target:SteamID() .. " (copy)",
                 cmd = function()
                     local msg = L("copiedToClipboard", target:Name(), "SteamID")
                     LocalPlayer():ChatPrint(msg)
-                    SetClipboardText(target:SteamID64())
+                    SetClipboardText(target:SteamID())
                     AdminStickIsOpen = false
                 end,
                 icon = "icon16/page_copy.png"

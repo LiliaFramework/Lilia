@@ -21,7 +21,7 @@
             return
         end
 
-        local steamID = target:SteamID64()
+        local steamID = target:SteamID()
         local caseclaims = lia.data.get("caseclaims", {}, true)
         local claim = caseclaims[steamID]
         if not claim then
