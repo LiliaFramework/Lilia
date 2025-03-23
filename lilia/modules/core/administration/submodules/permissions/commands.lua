@@ -168,41 +168,6 @@ lia.command.add("chargetup", {
     alias = {"getup",}
 })
 
-lia.command.add("givemoney", {
-    adminOnly = false,
-    syntax = "[string name] <number amount>",
-    privilege = "Give Money",
-    onRun = function(client, arguments)
-        local amount = tonumber(arguments[2])
-        if not amount or amount <= 0 then
-            client:notifyLocalized("invalidAmount")
-            return
-        end
-
-        local target = lia.command.findPlayer(client, arguments[1])
-        if not target or not IsValid(target) then
-            client:notifyLocalized("noTarget")
-            return
-        end
-
-        if not client:getChar():hasMoney(amount) then
-            client:notifyLocalized("noMoney")
-            return
-        end
-
-        target:getChar():giveMoney(math.floor(amount))
-        client:getChar():takeMoney(math.floor(amount))
-        local character = client:getChar()
-        local id = target:getChar():getID()
-        local tCharacter = target:getChar()
-        local charID = character:getID()
-        target:notifyLocalized("givenMoneyTarget", lia.currency.get(math.floor(amount)), hook.Run("isCharRecognized", tCharacter, charID) and client:Name() or L("someoneUnrecognized"))
-        client:notifyLocalized("givenMoneyClient", lia.currency.get(math.floor(amount)), hook.Run("isCharRecognized", character, id) and target:Name() or L("someoneUnrecognized"))
-        client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_GMOD_GESTURE_ITEM_PLACE, true)
-        lia.log.add(client, "moneyGiven", target:Name(), amount)
-    end
-})
-
 lia.command.add("fallover", {
     adminOnly = false,
     syntax = "[number time]",
@@ -236,53 +201,6 @@ lia.command.add("fallover", {
             client:setRagdolled(true, time)
             timer.Simple(10, function() if IsValid(client) then client:setNetVar("FallOverCooldown", false) end end)
         end
-    end
-})
-
-lia.command.add("dropmoney", {
-    adminOnly = false,
-    syntax = "[number amount]",
-    onRun = function(client, arguments)
-        if client:getNetVar("DropMoneyCooldown", false) then
-            local remainingTime = math.ceil(client:getNetVar("DropMoneyCooldownEnd", 0) - CurTime())
-            client:notifyLocalized("moneyCooldown", remainingTime)
-            return
-        end
-
-        local amount = tonumber(arguments[1])
-        if not amount or amount < 1 then
-            client:notifyLocalized("invalidArg")
-            return
-        end
-
-        amount = math.Round(amount)
-        if not client:getChar():hasMoney(amount) then
-            client:notifyLocalized("lackFunds")
-            return
-        end
-
-        local moneyCount = 0
-        for _, v in ipairs(ents.FindByClass("lia_item")) do
-            if v.client == client and v:isMoney() then moneyCount = moneyCount + 1 end
-        end
-
-        if moneyCount >= 3 then
-            for _, admin in ipairs(lia.util.getAdmins()) do
-                admin:ChatPrint(L("exploitDropWarning", client:Nick()))
-            end
-
-            client:notifyLocalized("noMoreThan3Money")
-            return
-        end
-
-        client:getChar():takeMoney(amount)
-        local moneyEnt = lia.currency.spawn(client:getItemDropPos(), amount)
-        moneyEnt.client = client
-        moneyEnt.charID = client:getChar():getID()
-        moneyEnt.isMoney = true
-        client:setNetVar("DropMoneyCooldown", true)
-        client:setNetVar("DropMoneyCooldownEnd", CurTime() + 5)
-        timer.Simple(5, function() if IsValid(client) then client:setNetVar("DropMoneyCooldown", false) end end)
     end
 })
 
