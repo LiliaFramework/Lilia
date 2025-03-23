@@ -142,6 +142,7 @@ function PANEL:setActive( state )
 					if IsValid( selectedCommand ) then
 						self.text:SetText( selectedCommand:GetText():match( "^/[^ ]+" ) )
 						self.text:SetCaretPos( #self.text:GetText() )
+						self.text:RequestFocus()
 					end
 				end
 				return true
