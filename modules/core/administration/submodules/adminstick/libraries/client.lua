@@ -2,7 +2,7 @@
 AdminStickIsOpen = false
 local subMenuIcons = {
     ["Moderation Tools"] = "icon16/wrench.png",
-    ["Player Informations"] = "icon16/information.png",
+    ["Player Information"] = "icon16/information.png",
     ["Character Management"] = "icon16/user_gray.png",
     ["Flags Management"] = "icon16/flag_blue.png",
     ["Give Flags"] = "icon16/flag_blue.png",
@@ -396,7 +396,7 @@ local function IncludeCharacterManagement(target, AdminMenu, submenus)
         end
     end
 
-    if LocalPlayer():hasPrivilege("Commands - Manage Character Informations") then
+    if LocalPlayer():hasPrivilege("Commands - Manage Character Information") then
         local changeModelOption = {
             name = "Change Playermodel",
             cmd = "",
@@ -539,7 +539,7 @@ function MODULE:OpenAdminStickUI(target)
         }
 
         table.sort(playerOptions, function(a, b) return a.name < b.name end)
-        local playerInfoMenu = GetOrCreateSubMenu(AdminMenu, "Player Informations", submenus)
+        local playerInfoMenu = GetOrCreateSubMenu(AdminMenu, "Player Information", submenus)
         for _, option in ipairs(playerOptions) do
             playerInfoMenu:AddOption(L(option.name), option.cmd):SetIcon(option.icon)
         end

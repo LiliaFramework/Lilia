@@ -9,26 +9,6 @@ local paintFunctions = {
     [1] = function() end
 }
 
-local function wrapText(text, font, maxWidth)
-    surface.SetFont(font)
-    local words = string.Explode(" ", text)
-    local lines = {}
-    local currentLine = ""
-    for _, word in ipairs(words) do
-        local testLine = (currentLine == "" and word) or (currentLine .. " " .. word)
-        local textW = select(1, surface.GetTextSize(testLine))
-        if textW <= maxWidth then
-            currentLine = testLine
-        else
-            if currentLine ~= "" then table.insert(lines, currentLine) end
-            currentLine = word
-        end
-    end
-
-    if currentLine ~= "" then table.insert(lines, currentLine) end
-    return lines
-end
-
 function PANEL:Init()
     if IsValid(lia.gui.score) then lia.gui.score:Remove() end
     lia.gui.score = self
@@ -302,7 +282,7 @@ function PANEL:addPlayer(client, parent)
         end
 
         local availWidth = self.desc:GetWide()
-        local wrapped = wrapText(descStr, "liaSmallFont", availWidth)
+        local wrapped = lia.util.wrapText(descStr, availWidth, "liaSmallFont")
         local finalText = table.concat(wrapped, "\n")
         local model = client:GetModel()
         local skin = client:GetSkin()
@@ -360,21 +340,23 @@ function PANEL:OnRemove()
     CloseDermaMenus()
 end
 
+local borderColorSolid = Color(0, 0, 0, 200)
+local borderColorBlur = Color(0, 0, 0, 150)
+
+local backgroundColorFallback = Color(50, 50, 50, 255)
+local backgroundColorFallbackNonSolid = Color(30, 30, 30, 100)
 function PANEL:Paint(w, h)
-    local backgroundColor = lia.config.get("UseSolidBackground", false) and (lia.config.get("ScoreboardBackgroundColor", Color(255, 100, 100, 255)) or Color(50, 50, 50, 255)) or Color(30, 30, 30, 100)
-    local borderColor = Color(0, 0, 0, lia.config.get("UseSolidBackground", false) and 200 or 150)
-    if lia.config.get("UseSolidBackground", false) then
-        surface.SetDrawColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
-        surface.DrawRect(0, 0, w, h)
-        surface.SetDrawColor(borderColor.r, borderColor.g, borderColor.b, borderColor.a)
-        surface.DrawOutlinedRect(0, 0, w, h)
-    else
+    local backgroundColor = lia.config.get("UseSolidBackground", false) and (lia.config.get("ScoreboardBackgroundColor", Color(255, 100, 100, 255)) or backgroundColorFallback) or backgroundColorFallbackNonSolid
+    local borderColor = lia.config.get("UseSolidBackground", false) and borderColorSolid or borderColorBlur
+
+    if !lia.config.get("UseSolidBackground", false) then
         lia.util.drawBlur(self, 10)
-        surface.SetDrawColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
-        surface.DrawRect(0, 0, w, h)
-        surface.SetDrawColor(borderColor.r, borderColor.g, borderColor.b, borderColor.a)
-        surface.DrawOutlinedRect(0, 0, w, h)
     end
+
+    surface.SetDrawColor(backgroundColor)
+    surface.DrawRect(0, 0, w, h)
+    surface.SetDrawColor(borderColor.r, borderColor.g, borderColor.b, borderColor.a)
+    surface.DrawOutlinedRect(0, 0, w, h)
 end
 
 vgui.Register("liaScoreboard", PANEL, "EditablePanel")
