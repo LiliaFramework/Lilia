@@ -115,8 +115,8 @@ function PANEL:setActive( state )
 					commandButton:Dock( TOP )
 					commandButton:DockMargin( 0, 0, 0, 2 )
 					commandButton:SetTall( 20 )
-					commandButton.Paint = function( this, w, h )
-						surface.SetDrawColor( Color( 0, 0, 0, 200 ) )
+					commandButton.Paint = function( _, w, h )
+						surface.SetDrawColor( ColorAlpha(color_black, 200) )
 						surface.DrawRect( 0, 0, w, h )
 					end
 
@@ -150,12 +150,17 @@ function PANEL:setActive( state )
 					if self.commandIndex > #children then self.commandIndex = 1 end
 
 					for i, child in ipairs(children) do
-						child.Paint = function( this, w, h )
-							surface.SetDrawColor(i == self.commandIndex and ColorAlpha( lia.config.get( "Color" ), 255 ) or ColorAlpha( color_black, 200 ))
-							surface.DrawRect( 0, 0, w, h )
-							if IsValid( this.text ) then
-								this.text:SetTextColor( i == self.commandIndex and ColorAlpha( lia.config.get( "Color" ), 255 ) or ColorAlpha( color_white, 200 ) )
+						child.commandIndex = i
+						if not child.PaintConfigured then
+							child.Paint = function( this, w, h )
+								local isSelected = this.commandIndex == self.commandIndex
+								surface.SetDrawColor(isSelected and ColorAlpha( lia.config.get( "Color" ), 255 ) or ColorAlpha( color_black, 200 ))
+						       	surface.DrawRect( 0, 0, w, h )
+						       	if IsValid( this.text ) then
+						         	this.text:SetTextColor( isSelected and ColorAlpha( lia.config.get( "Color" ), 255 ) or ColorAlpha( color_white, 200 ) )
+						       	end
 							end
+							child.PaintConfigured = true
 						end
 					end
 
