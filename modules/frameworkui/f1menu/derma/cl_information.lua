@@ -1,6 +1,6 @@
 ﻿local PANEL = {}
 local MODULE = MODULE
-MODULE.CharacterInformations = {}
+MODULE.CharacterInformation = {}
 function PANEL:Init()
     if IsValid(lia.gui.info) then lia.gui.info:Remove() end
     lia.gui.info = self
@@ -37,7 +37,7 @@ end
 
 function PANEL:GenerateSections()
     local orderedSections = {}
-    for sectionName, data in pairs(MODULE.CharacterInformations) do
+    for sectionName, data in pairs(MODULE.CharacterInformation) do
         table.insert(orderedSections, {
             name = sectionName,
             color = data.color,
@@ -192,7 +192,7 @@ function PANEL:Refresh()
 end
 
 function PANEL:setup()
-    for _, fields in pairs(MODULE.CharacterInformations) do
+    for _, fields in pairs(MODULE.CharacterInformation) do
         if isfunction(fields.fields) then fields.fields = fields.fields() end
         for _, field in ipairs(fields.fields) do
             if field.type == "text" and self[field.name] then
