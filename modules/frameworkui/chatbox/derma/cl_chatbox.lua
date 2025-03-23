@@ -92,9 +92,8 @@ function PANEL:setActive( state )
 		self.text.OnTextChanged = function( this )
 			local text = this:GetText()
 			hook.Run( "ChatTextChanged", text )
-
-			if ( text:sub( 1, 1 ) == "/" ) then
-				if ( IsValid( self.commandList ) ) then
+			if text:sub( 1, 1 ) == "/" then
+				if IsValid( self.commandList ) then
 					self.commandList:Remove()
 					self.commandList = nil
 				end
@@ -146,7 +145,6 @@ function PANEL:setActive( state )
 				end
 				return true
 			end
-
 			return DTextEntry.OnKeyCodeTyped( this, key )
 		end
 

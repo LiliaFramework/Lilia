@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:addTab( name, callback, uniqueID )
 	local MenuColors = lia.color.ReturnMainAdjustedColors()
 	name = L( name )
