@@ -91,9 +91,11 @@ function OpenLogsUI(panel, categorizedLogs)
 end
 
 hook.Add("CreateMenuButtons", "ConfigMenuButtons", function(tabs)
-    tabs["Logs"] = function(panel)
-        receivedPanel = panel
-        net.Start("send_logs_request")
-        net.SendToServer()
+    if LocalPlayer():hasPrivilege("Staff Permissions - Can See Logs") then
+        tabs["Logs"] = function(panel)
+            receivedPanel = panel
+            net.Start("send_logs_request")
+            net.SendToServer()
+        end
     end
 end)
