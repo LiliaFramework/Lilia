@@ -1,5 +1,11 @@
 ﻿function MODULE:TicketSystemClaim(admin, requester)
     local caseclaims = lia.data.get("caseclaims", {}, true)
+
+    if caseclaims[admin:SteamID()] then
+        caseclaims[admin:SteamID64()] = caseclaims[admin:SteamID()]
+        caseclaims[admin:SteamID()] = nil
+    end
+
     caseclaims[admin:SteamID64()] = caseclaims[admin:SteamID64()] or {
         name = admin:Nick(),
         claims = 0,
