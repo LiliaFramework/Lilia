@@ -60,6 +60,10 @@ function LiliaBootstrap(section, message)
     LiliaLog("bootstrap", message, section)
 end
 
+function dprint(...)
+    print("[DEBUG]", ...)
+end
+
 local function RemoveHintTimers()
     local hintTimers = {"HintSystem_OpeningMenu", "HintSystem_Annoy1", "HintSystem_Annoy2"}
     for _, timerName in ipairs(hintTimers) do
