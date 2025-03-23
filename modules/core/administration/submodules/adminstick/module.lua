@@ -4,9 +4,9 @@ MODULE.discord = "@liliaplayer"
 MODULE.version = "Stock"
 MODULE.desc = "Adds a module that facilitates Adminstration"
 MODULE.CAMIPrivileges = {
-    {
-        Name = "Staff Permissions - Use Admin Stick",
-        MinAccess = "superadmin",
-        Description = "Allows access to using Admin Stick."
-    },
+	{
+		Name = "Staff Permissions - Use Admin Stick",
+		MinAccess = "superadmin",
+		Description = "Allows access to using Admin Stick."
+	},
 }
