@@ -89,10 +89,10 @@ function MODULE:TicketFrame(requester, message, claimed)
     end
 
     local isLocalPlayer = requester == LocalPlayer()
-    createButton("goto", mat_lightning, 20 * 1, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "goto", sam and requester:SteamID() or requester:SteamID()) end, isLocalPlayer)
-    createButton("return", mat_arrow, 20 * 2, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "return", sam and requester:SteamID() or requester:SteamID()) end, isLocalPlayer)
-    createButton("freeze", mat_link, 20 * 3, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "freeze", sam and requester:SteamID() or requester:SteamID()) end, isLocalPlayer)
-    createButton("bring", mat_arrow, 20 * 4, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "bring", sam and requester:SteamID() or requester:SteamID()) end, isLocalPlayer)
+    createButton("goto", mat_lightning, 20 * 1, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "goto", sam and requester:SteamID64() or requester:SteamID64()) end, isLocalPlayer)
+    createButton("return", mat_arrow, 20 * 2, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "return", sam and requester:SteamID64() or requester:SteamID64()) end, isLocalPlayer)
+    createButton("freeze", mat_link, 20 * 3, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "freeze", sam and requester:SteamID64() or requester:SteamID64()) end, isLocalPlayer)
+    createButton("bring", mat_arrow, 20 * 4, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "bring", sam and requester:SteamID64() or requester:SteamID64()) end, isLocalPlayer)
     local shouldClose = false
     local claimButton
     claimButton = createButton("Claim case", mat_case, 20 * 5, function()

@@ -9,7 +9,7 @@ function SWEP:SecondaryAttack()
     local target = self:GetTarget()
     if IsValid(target) and target:IsPlayer() and target ~= LocalPlayer() then
         local cmd = target:IsFrozen() and (sam and "sam unfreeze" or ulx and "ulx unfreeze") or sam and "sam freeze" or ulx and "ulx freeze"
-        LocalPlayer():ConCommand(cmd .. " " .. target:SteamID())
+        LocalPlayer():ConCommand(cmd .. " " .. target:SteamID64())
     else
         LocalPlayer():notifyWarning("You cannot freeze this!")
     end
@@ -30,7 +30,7 @@ function SWEP:DrawHUD()
         if not target:IsPlayer() and target:IsVehicle() and IsValid(target:GetDriver()) then target = target:GetDriver() end
         if target:IsPlayer() then
             crossColor = Color(0, 255, 0)
-            information = {IsValid(LocalPlayer().AdminStickTarget) and "Player (Selected with Reload)" or "Player", "Nickname: " .. target:Nick(), "Steam Name: " .. (target.SteamName and target:SteamName() or target:Name()), "Steam ID: " .. target:SteamID(), "Health: " .. target:Health(), "Armor: " .. target:Armor(), "Usergroup: " .. target:GetUserGroup()}
+            information = {IsValid(LocalPlayer().AdminStickTarget) and "Player (Selected with Reload)" or "Player", "Nickname: " .. target:Nick(), "Steam Name: " .. (target.SteamName and target:SteamName() or target:Name()), "Steam ID: " .. target:SteamID64(), "Health: " .. target:Health(), "Armor: " .. target:Armor(), "Usergroup: " .. target:GetUserGroup()}
             if target:getChar() then
                 local char = target:getChar()
                 local faction = lia.faction.indices[target:Team()]

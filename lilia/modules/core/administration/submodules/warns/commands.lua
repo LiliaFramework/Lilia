@@ -24,7 +24,7 @@
         local warning = {
             timestamp = os.date("%Y-%m-%d %H:%M:%S"),
             reason = reason,
-            admin = client:Nick() .. " (" .. client:SteamID() .. ")"
+            admin = client:Nick() .. " (" .. client:SteamID64() .. ")"
         }
 
         local warns = target:getLiliaData("warns") or {}

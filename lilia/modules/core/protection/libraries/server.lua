@@ -61,7 +61,7 @@ local function ApplyPunishment(client, infraction, kick, ban, time)
     local bantime = time or 0
     if kick then
         if sam then
-            sam.player.kick_id(client:SteamID(), "Kicked for " .. infraction)
+            sam.player.kick_id(client:SteamID64(), "Kicked for " .. infraction)
         elseif ULib then
             ULib.kick(client, "Kicked for " .. infraction)
         else
@@ -71,7 +71,7 @@ local function ApplyPunishment(client, infraction, kick, ban, time)
 
     if ban then
         if sam then
-            sam.player.ban_id(client:SteamID(), bantime, "Banned for " .. infraction)
+            sam.player.ban_id(client:SteamID64(), bantime, "Banned for " .. infraction)
         elseif ULib then
             ULib.ban(client, bantime, "Banned for " .. infraction)
             ULib.kick(client, "Kicked for " .. infraction)
@@ -96,7 +96,7 @@ function MODULE:PlayerAuthed(client, steamid)
     local steamID64 = util.SteamIDTo64(steamid)
     local ownerSteamID64 = client:OwnerSteamID64()
     local steamName = client:SteamName()
-    local steamID = client:SteamID()
+    local steamID = client:SteamID64()
     if KnownCheaters[steamID64] or KnownCheaters[ownerSteamID64] then
         ApplyPunishment(client, "using third-party cheats", false, true, 0)
         NotifyAdmin(string.format("%s (%s) was banned for cheating or using an alt of a cheater.", steamName, steamID))
