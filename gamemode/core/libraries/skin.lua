@@ -29,7 +29,7 @@ function SKIN:PaintFrame(panel)
     surface.DrawRect(0, 0, panel:GetWide(), panel:GetTall())
 end
 
-function SKIN:PaintTooltip(panel, w, h)
+function SKIN:PaintTooltip(_, w, h)
     surface.SetDrawColor(45, 45, 45, 240)
     surface.DrawRect(0, 0, w, h)
     surface.SetDrawColor(0, 0, 0, 180)
