@@ -72,7 +72,7 @@ lia.config.add( "PunchStamina", "Punch Stamina", 10, nil, {
 
 lia.config.add( "MaxHoldWeight", "Maximum Hold Weight", 100, nil, {
 	desc = "The maximum weight that a player can carry in their hands.",
-	category = "Interaction",
+	category = "General",
 	type = "Int",
 	min = 1,
 	max = 500
@@ -80,7 +80,7 @@ lia.config.add( "MaxHoldWeight", "Maximum Hold Weight", 100, nil, {
 
 lia.config.add( "ThrowForce", "Throw Force", 100, nil, {
 	desc = "How hard a player can throw the item that they're holding.",
-	category = "Interaction",
+	category = "General",
 	type = "Int",
 	min = 1,
 	max = 500
@@ -88,6 +88,6 @@ lia.config.add( "ThrowForce", "Throw Force", 100, nil, {
 
 lia.config.add( "AllowPush", "Allow Push", true, nil, {
 	desc = "Whether or not pushing with hands is allowed",
-	category = "Interaction",
+	category = "General",
 	type = "Boolean"
 } )
