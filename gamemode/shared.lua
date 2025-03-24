@@ -5,59 +5,68 @@ GM.Website = "https://discord.gg/esCRH5ckbQ"
 local modulesLoaded = false
 local function LiliaLog( messageType, message, section, color )
 	local colors = {
-		bootstrap = {
+		Bootstrap = {
 			prefix = Color( 83, 143, 239 ),
 			section = Color( 0, 255, 0 ),
 			message = Color( 255, 255, 255 )
 		},
-		error = {
+		Error = {
 			prefix = Color( 83, 143, 239 ),
 			message = Color( 255, 0, 0 )
 		},
-		deprecated = {
+		Deprecated = {
 			prefix = Color( 83, 143, 239 ),
 			message = Color( 255, 255, 0 )
 		},
-		information = {
+		Information = {
 			prefix = Color( 83, 143, 239 ),
 			message = Color( 83, 143, 239 )
 		},
-		event = {
+		Event = {
 			prefix = Color( 83, 143, 239 ),
 			message = Color( 255, 165, 0 )
 		},
-		print = {
+		Print = {
 			prefix = Color( 83, 143, 239 ),
 			message = Color( 255, 255, 255 )
+		},
+		Updater = {
+			prefix = Color( 83, 143, 239 ),
+			message = Color( 0, 255, 255 )
 		}
 	}
 
-	local logType = colors[ messageType ] or colors.print
+	local logType = colors[ messageType ] or colors.Print
 	MsgC( logType.prefix, "[Lilia] " )
-	if messageType == "bootstrap" and section then MsgC( colors.bootstrap.section, "[" .. section .. "] " ) end
+	if messageType then MsgC( logType.prefix, "[" .. messageType .. "] " ) end
+	if section then MsgC( colors.Bootstrap.section, "[" .. section .. "] " ) end
 	MsgC( color or logType.message, message .. "\n" )
 end
 
 function LiliaError( message )
-	LiliaLog( "error", message )
+	LiliaLog( "Error", message )
 end
 
 function LiliaDeprecated( methodName, callback )
 	local message = string.format( "%s is deprecated. Please use the new methods for optimization purposes.", methodName )
-	LiliaLog( "deprecated", message )
+	LiliaLog( "Deprecated", message )
 	if callback and isfunction( callback ) then callback() end
 end
 
+function LiliaUpdater( message )
+	LiliaLog( "Updater", message )
+end
+
 function LiliaInformation( message )
-	LiliaLog( "information", message )
+	LiliaLog( "Information", message )
 end
 
 function LiliaEvent( section, message )
-	LiliaLog( "event", message, section )
+	LiliaLog( "Event", message, section )
 end
 
 function LiliaBootstrap( section, message )
-	LiliaLog( "bootstrap", message, section )
+	LiliaLog( "Bootstrap", message, section )
 end
 
 function dprint( ... )

@@ -1,7 +1,8 @@
 ﻿lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
 function lia.command.add( command, data )
-	data.syntax = data.syntax or "[None]"
+	data.syntax = data.syntax or ""
+	data.desc = data.desc or ""
 	local superAdminOnly = data.superAdminOnly
 	local adminOnly = data.adminOnly
 	if not data.onRun then
@@ -241,13 +242,31 @@ hook.Add( "BuildInformationMenu", "BuildInformationMenuCommands", function( page
 				if isnumber( cmdName ) then continue end
 				local hasAccess, privilege = lia.command.hasAccess( client, cmdName, cmdData )
 				if hasAccess then
+					local hasDesc = cmdData.desc and cmdData.desc ~= ""
+					local panelHeight = hasDesc and 80 or 40
 					local commandPanel = vgui.Create( "DPanel", iconLayout )
-					commandPanel:SetSize( panel:GetWide(), 60 )
+					commandPanel:SetSize( panel:GetWide(), panelHeight )
 					commandPanel.Paint = function( _, w, h )
 						draw.RoundedBox( 4, 0, 0, w, h, Color( 40, 40, 40, 200 ) )
-						draw.SimpleText( "/" .. cmdName, "liaMediumFont", 20, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-						draw.SimpleText( cmdData.syntax or "", "liaSmallFont", 20, 30, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-						draw.SimpleText( privilege or "None", "liaSmallFont", w - 20, 30, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+						local baseX = 20
+						local commandText = "/" .. cmdName
+						local syntax = cmdData.syntax or ""
+						if syntax ~= "" then
+							if syntax:sub( 1, 1 ) == "" and syntax:sub( -1 ) == "" then
+								commandText = commandText .. " " .. syntax
+							else
+								commandText = commandText .. " " .. syntax .. ""
+							end
+						end
+
+						if hasDesc then
+							draw.SimpleText( commandText, "liaMediumFont", baseX, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+							draw.SimpleText( cmdData.desc, "liaSmallFont", baseX, 45, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+							draw.SimpleText( privilege or "None", "liaSmallFont", w - 20, 45, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
+						else
+							draw.SimpleText( commandText, "liaMediumFont", baseX, h / 2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
+							draw.SimpleText( privilege or "None", "liaSmallFont", w - 20, h / 2, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER )
+						end
 					end
 				end
 			end

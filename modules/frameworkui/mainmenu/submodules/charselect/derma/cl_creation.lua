@@ -182,19 +182,6 @@ function PANEL:previousStep()
 	self:onStepChanged( curStep, prevStep )
 end
 
-function PANEL:reset()
-	self.context = {}
-	local curStep = self.steps[ self.curStep ]
-	if IsValid( curStep ) then
-		curStep:SetVisible( false )
-		curStep:onHide()
-	end
-
-	self.curStep = 0
-	if #self.steps == 0 then return self:showError( "No character creation steps have been set up" ) end
-	self:nextStep()
-end
-
 function PANEL:getPreviousStep()
 	local step = self.curStep - 1
 	while IsValid( self.steps[ step ] ) do
@@ -288,12 +275,6 @@ function PANEL:Init()
 	self.next:Dock( RIGHT )
 	self.next:SizeToContents()
 	self.next.DoClick = function() self:nextStep() end
-	self.cancel = self.buttons:Add( "liaCharacterTabButton" )
-	self.cancel:SetText( L( "cancel" ):upper() )
-	self.cancel:SizeToContentsX()
-	self.cancel.DoClick = function() self:reset() end
-	self.cancel.x = ( ScrW() - self.cancel:GetWide() ) * 0.5 - 64
-	self.cancel.y = ( self.buttons:GetTall() - self.cancel:GetTall() ) * 0.5
 	self.steps = {}
 	self.curStep = 0
 	self.context = {}

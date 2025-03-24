@@ -83,7 +83,7 @@ if SERVER then
 	end
 
 	function lia.config.send( client )
-		netstream.Start( client, "cfgUpdate", lia.config.getChangedValues() )
+		netstream.Start( client, "cfgList", lia.config.getChangedValues() )
 	end
 
 	function lia.config.save()
@@ -281,7 +281,7 @@ lia.config.add( "MaxChatLength", "Max Chat Length", 256, nil, {
 
 lia.config.add( "SchemaYear", "Schema Year", 2025, nil, {
 	desc = "Year of the gamemode's schema.",
-	category = "Server",
+	category = "General",
 	type = "Int",
 	min = 0,
 	max = 999999
@@ -289,13 +289,13 @@ lia.config.add( "SchemaYear", "Schema Year", 2025, nil, {
 
 lia.config.add( "AmericanDates", "American Dates", true, nil, {
 	desc = "Determines whether to use the American date format.",
-	category = "Server",
+	category = "General",
 	type = "Boolean"
 } )
 
 lia.config.add( "AmericanTimeStamp", "American Timestamp", true, nil, {
 	desc = "Determines whether to use the American timestamp format.",
-	category = "Server",
+	category = "General",
 	type = "Boolean"
 } )
 
@@ -317,7 +317,7 @@ lia.config.add( "Color", "Theme Color", {
 
 lia.config.add( "AutoDownloadWorkshop", "Auto Download Workshop Content", true, nil, {
 	desc = "Determines whether Workshop content is automatically downloaded by the server and clients.",
-	category = "Server",
+	category = "General",
 	type = "Boolean"
 } )
 
@@ -329,7 +329,7 @@ lia.config.add( "CharMenuBGInputDisabled", "Character Menu BG Input Disabled", t
 
 lia.config.add( "AllowKeybindEditing", "Allow Keybind Editing", true, nil, {
 	desc = "Whether keybind editing is allowed",
-	category = "Server",
+	category = "General",
 	type = "Boolean"
 } )
 

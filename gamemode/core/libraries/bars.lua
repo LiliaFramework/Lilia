@@ -5,23 +5,21 @@ lia.bar.actionText = ""
 lia.bar.actionStart = 0
 lia.bar.actionEnd = 0
 function lia.bar.get( identifier )
-	for i = 1, #lia.bar.list do
-		local bar = lia.bar.list[ i ]
-		if bar and bar.identifier == identifier then return bar end
+	for _, bar in ipairs( lia.bar.list ) do
+		if bar.identifier == identifier then return bar end
 	end
 end
 
 function lia.bar.add( getValue, color, priority, identifier )
 	if identifier then
-		local oldBar = lia.bar.get( identifier )
-		if oldBar then table.remove( lia.bar.list, oldBar.priority ) end
+		local old = lia.bar.get( identifier )
+		if old then table.remove( lia.bar.list, old.priority ) end
 	end
 
-	priority = priority or table.Count( lia.bar.list ) + 1
-	local info = lia.bar.list[ priority ]
+	priority = priority or #lia.bar.list + 1
 	lia.bar.list[ priority ] = {
 		getValue = getValue,
-		color = color or info.color or Color( math.random( 150, 255 ), math.random( 150, 255 ), math.random( 150, 255 ) ),
+		color = color or Color( math.random( 150, 255 ), math.random( 150, 255 ), math.random( 150, 255 ) ),
 		priority = priority,
 		lifeTime = 0,
 		identifier = identifier
@@ -30,31 +28,29 @@ function lia.bar.add( getValue, color, priority, identifier )
 end
 
 function lia.bar.remove( identifier )
-	local bar
-	for _, v in ipairs( lia.bar.list ) do
-		if v.identifier == identifier then
-			bar = v
+	for i, bar in ipairs( lia.bar.list ) do
+		if bar.identifier == identifier then
+			table.remove( lia.bar.list, i )
 			break
 		end
 	end
-
-	if bar then table.remove( lia.bar.list, bar.priority ) end
 end
 
-function lia.bar.draw( x, y, w, h, value, color )
-	lia.util.drawBlurAt( x, y, w, h )
-	surface.SetDrawColor( 255, 255, 255, 15 )
-	surface.DrawRect( x, y, w, h )
-	surface.DrawOutlinedRect( x, y, w, h )
-	x, y, w, h = x + 2, y + 2, ( w - 4 ) * math.min( value, 1 ), h - 4
-	surface.SetDrawColor( color.r, color.g, color.b, 250 )
-	surface.DrawRect( x, y, w, h )
-	surface.SetDrawColor( 255, 255, 255, 8 )
-	surface.SetMaterial( lia.util.getMaterial( "vgui/gradient-u" ) )
-	surface.DrawTexturedRect( x, y, w, h )
+function lia.bar.drawBar( x, y, w, h, pos, neg, max, color )
+	if pos > max then pos = max end
+	max = max - 1
+	pos = math.max( ( w - 2 ) / max * pos, 0 )
+	neg = math.max( ( w - 2 ) / max * neg, 0 )
+	surface.SetDrawColor( 0, 0, 0, 150 )
+	surface.DrawRect( x, y, w + 6, h )
+	surface.SetDrawColor( 0, 0, 0, 200 )
+	surface.DrawOutlinedRect( x, y, w + 6, h )
+	surface.SetDrawColor( color.r, color.g, color.b )
+	surface.DrawRect( x + 3, y + 3, pos, h - 6 )
+	surface.SetDrawColor( 255, 100, 100 )
+	surface.DrawRect( x + 4 + w - neg, y + 3, neg, h - 6 )
 end
 
-local mathApproach = math.Approach
 function lia.bar.drawAction()
 	local start, finish = lia.bar.actionStart, lia.bar.actionEnd
 	local curTime = CurTime()
@@ -83,24 +79,33 @@ end
 
 function lia.bar.drawAll()
 	lia.bar.drawAction()
-	if hook.Run( "ShouldHideBars" ) then return end
-	local w, h = ScrW() * 0.35, 10
-	local x, y = 4, 4
-	local deltas = lia.bar.delta
-	local frameTime = FrameTime()
-	local curTime = CurTime()
-	local updateValue = frameTime * 0.6
-	for i = 1, #lia.bar.list do
-		local bar = lia.bar.list[ i ]
-		if bar then
-			local realValue = bar.getValue()
-			local value = mathApproach( deltas[ i ] or 0, realValue, updateValue )
-			deltas[ i ] = value
-			if deltas[ i ] ~= realValue then bar.lifeTime = curTime + 5 end
-			if bar.lifeTime >= curTime or bar.visible or hook.Run( "ShouldBarDraw", bar ) then
-				lia.bar.draw( x, y, w, h, value, bar.color, bar )
-				y = y + h + 2
-			end
+	if hook.Run( "ShouldHideBars" ) == true then return end
+	local position = lia.option.get( "BarPositions", "Bottom Left" )
+	local scrW, scrH = ScrW(), ScrH()
+	local w, h = scrW * 0.35, 14
+	local x, y
+	if position == "Top Left" then
+		x, y = 4, 4
+	elseif position == "Top Right" then
+		x, y = scrW - w - 4, 4
+	elseif position == "Bottom Left" then
+		x, y = 4, scrH - h - 4
+	elseif position == "Bottom Right" then
+		x, y = scrW - w - 4, scrH - h - 4
+	else
+		x, y = 4, 4
+	end
+
+	local deltas, update, now = lia.bar.delta, FrameTime() * 0.6, CurTime()
+	table.sort( lia.bar.list, function( a, b ) return a.priority > b.priority end )
+	for i, bar in ipairs( lia.bar.list ) do
+		local target = bar.getValue()
+		local value = math.Approach( deltas[ i ] or 0, target, update )
+		deltas[ i ] = value
+		if value ~= target then bar.lifeTime = now + 5 end
+		if bar.lifeTime >= now or bar.visible or hook.Run( "ShouldBarDraw", bar ) then
+			lia.bar.drawBar( x, y, w, h, value, 0, 2, bar.color )
+			y = y - ( h + 2 )
 		end
 	end
 end

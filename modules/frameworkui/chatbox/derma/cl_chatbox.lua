@@ -68,6 +68,11 @@ function PANEL:setActive( state )
 			this:Remove()
 			self.tabs:SetVisible( false )
 			self.active = false
+			if IsValid( self.commandList ) then
+				self.commandList:Remove()
+				self.commandList = nil
+			end
+
 			if IsValid( self.entry ) then self.entry:Remove() end
 			lia.gui.chat = nil
 			if text:find( "%S" ) then
@@ -105,12 +110,19 @@ function PANEL:setActive( state )
 				for commandName, commandData in SortedPairs( self.commands ) do
 					if not tobool( commandName:find( text:sub( 2 ) ) ) then continue end
 					local commandButton = self.commandList:Add( "DButton" )
-					commandButton:SetText( "/" .. commandName .. " - " .. ( commandData.description or "No description" ) )
+					commandButton:SetText( "/" .. commandName .. " - " .. ( commandData.desc or "No description" ) )
 					commandButton:Dock( TOP )
 					commandButton:DockMargin( 0, 0, 0, 2 )
 					commandButton:SetTall( 20 )
+					commandButton.Paint = function( _, w, h )
+						surface.SetDrawColor( ColorAlpha( color_black, 200 ) )
+						surface.DrawRect( 0, 0, w, h )
+					end
+
 					commandButton.DoClick = function()
-						self.text:SetText( "/" .. commandName .. " " )
+						local commandData = self.commands[ commandName ]
+						local syntaxPreview = commandData and commandData.syntax or ""
+						self.text:SetText( "/" .. commandName .. " " .. syntaxPreview )
 						self.text:RequestFocus()
 						self.commandList:Remove()
 						self.commandList = nil
@@ -132,20 +144,55 @@ function PANEL:setActive( state )
 		self.text:RequestFocus()
 		self.tabs:SetVisible( true )
 		self.text.OnKeyCodeTyped = function( this, key )
+			if key == KEY_ESCAPE then
+				if IsValid( self.commandList ) then
+					self.commandList:Remove()
+					self.commandList = nil
+					return true
+				end
+			end
+
 			if this:GetText():sub( 1, 1 ) == "/" and key == KEY_TAB and IsValid( self.commandList ) then
 				local children = self.commandList:GetCanvas():GetChildren()
 				if #children > 0 then
 					self.commandIndex = ( self.commandIndex or 0 ) + 1
 					if self.commandIndex > #children then self.commandIndex = 1 end
+					for i, child in ipairs( children ) do
+						child.commandIndex = i
+						if not child.PaintConfigured then
+							child.Paint = function( this, w, h )
+								local isSelected = this.commandIndex == self.commandIndex
+								surface.SetDrawColor( isSelected and ColorAlpha( lia.config.get( "Color" ), 255 ) or ColorAlpha( color_black, 200 ) )
+								surface.DrawRect( 0, 0, w, h )
+								if IsValid( this.text ) then this.text:SetTextColor( isSelected and ColorAlpha( lia.config.get( "Color" ), 255 ) or ColorAlpha( color_white, 200 ) ) end
+							end
+
+							child.PaintConfigured = true
+						end
+					end
+
 					local selectedCommand = children[ self.commandIndex ]
 					if IsValid( selectedCommand ) then
-						self.text:SetText( selectedCommand:GetText():match( "^/[^ ]+" ) )
+						local commandName = selectedCommand:GetText():match( "^/([^ ]+)" )
+						local commandData = self.commands[ commandName ]
+						local syntaxPreview = commandData and commandData.syntax or ""
+						self.text:SetText( "/" .. commandName .. " " .. syntaxPreview )
 						self.text:SetCaretPos( #self.text:GetText() )
+						self.text:RequestFocus()
 					end
 				end
 				return true
 			end
 			return DTextEntry.OnKeyCodeTyped( this, key )
+		end
+
+		self.text.OnLoseFocus = function( this )
+			if IsValid( self.commandList ) then
+				self.commandList:Remove()
+				self.commandList = nil
+			end
+
+			this:RequestFocus()
 		end
 
 		hook.Run( "StartChat" )
@@ -293,6 +340,11 @@ function PANEL:Think()
 		self.tabs:SetVisible( false )
 		self.active = false
 		if IsValid( self.entry ) then self.entry:Remove() end
+	end
+
+	if self.active and IsValid( self.text ) and not self.text:HasFocus() and IsValid( self.commandList ) then
+		self.commandList:Remove()
+		self.commandList = nil
 	end
 end
 

@@ -54,7 +54,7 @@ lia.config.add( "AltsDisabled", "Disable Alts", false, nil, {
 
 lia.config.add( "ActsActive", "Enable Acts", false, nil, {
 	desc = "Determines whether acts are active",
-	category = "Actions",
+	category = "Protection",
 	type = "Boolean"
 } )
 

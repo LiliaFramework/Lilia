@@ -105,7 +105,7 @@ end
 function MODULE:PrePlayerDraw( drawnClient )
 	local client = LocalPlayer()
 	if drawnClient == client then return end
-	if client:isStaffOnDuty() or not lia.config.get( "WallPeek" ) or client:InVehicle() or client:hasValidVehicle() or client:isNoClipping() or not client:CanOverrideView() then
+	if client:isStaffOnDuty() or not lia.config.get( "WallPeek", false ) or client:InVehicle() or client:hasValidVehicle() or client:isNoClipping() or not client:CanOverrideView() then
 		drawnClient:DrawShadow( true )
 		drawnClient.IsHidden = false
 		return

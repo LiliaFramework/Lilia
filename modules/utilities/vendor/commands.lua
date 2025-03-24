@@ -1,7 +1,7 @@
-﻿local MODULE = MODULE
-lia.command.add( "restockvendor", {
+﻿lia.command.add( "restockvendor", {
 	privilege = "Manage Vendors",
 	superAdminOnly = true,
+	desc = "Restocks all items for the vendor you are looking at to their default quantities.",
 	AdminStick = {
 		Name = "Restock Selected Vendor",
 		TargetClass = "lia_vendor"
@@ -9,7 +9,7 @@ lia.command.add( "restockvendor", {
 	onRun = function( client )
 		local target = client:getTracedEntity()
 		if not target or not IsValid( target ) then
-			client:notifyLocalized( "noTarget" )
+			client:notifyLocalized( "targetNotFound" )
 			return
 		end
 
@@ -29,6 +29,7 @@ lia.command.add( "restockvendor", {
 lia.command.add( "restockallvendors", {
 	privilege = "Manage Vendors",
 	superAdminOnly = true,
+	desc = "Restocks all items on every vendor on the map to their default quantities.",
 	onRun = function( client )
 		local count = 0
 		for _, vendor in ipairs( ents.FindByClass( "lia_vendor" ) ) do
@@ -48,12 +49,13 @@ lia.command.add( "restockallvendors", {
 lia.command.add( "resetallvendormoney", {
 	privilege = "Manage Vendors",
 	superAdminOnly = true,
+	desc = "Sets every vendor’s money to the specified amount.",
 	syntax = "[number amount]",
 	AdminStick = {
 		Name = "Reset Money for All Vendors",
 		TargetClass = "lia_vendor",
 		ExtraFields = {
-			[ "Amount" ] = "text",
+			[ "Amount" ] = "text"
 		}
 	},
 	onRun = function( client, arguments )
@@ -76,12 +78,13 @@ lia.command.add( "resetallvendormoney", {
 lia.command.add( "restockvendormoney", {
 	privilege = "Manage Vendors",
 	superAdminOnly = true,
+	desc = "Sets the money of the vendor you’re looking at to the specified amount.",
 	syntax = "[number amount]",
 	AdminStick = {
 		Name = "Restock Money for Selected Vendor",
 		TargetClass = "lia_vendor",
 		ExtraFields = {
-			[ "Amount" ] = "text",
+			[ "Amount" ] = "text"
 		}
 	},
 	onRun = function( client, arguments )
@@ -89,7 +92,7 @@ lia.command.add( "restockvendormoney", {
 		local amount = tonumber( arguments[ 1 ] )
 		if not amount or amount < 0 then return client:notifyLocalized( "vendorInvalidAmount" ) end
 		if not target or not IsValid( target ) then
-			client:notifyLocalized( "noTarget" )
+			client:notifyLocalized( "targetNotFound" )
 			return
 		end
 
@@ -110,6 +113,7 @@ lia.command.add( "restockvendormoney", {
 lia.command.add( "savevendors", {
 	privilege = "Manage Vendors",
 	superAdminOnly = true,
+	desc = "Saves current vendor data to disk.",
 	onRun = function( client )
 		MODULE:SaveData()
 		client:notifyLocalized( "vendorDataSaved" )

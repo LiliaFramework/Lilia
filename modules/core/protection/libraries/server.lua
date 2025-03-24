@@ -40,9 +40,13 @@ function MODULE:EntityTakeDamage( entity, dmgInfo )
 			if applyCooldown then entity.LastDamaged = CurTime() end
 		end
 
-		if lia.config.get( "CarRagdoll", true ) and IsValid( inflictor ) and inflictor:isSimfphysCar() and not ( entity:GetVehicle() or LVS and entity:lvsGetVehicle() ) then
-			dmgInfo:ScaleDamage( 0 )
-			if not entity:hasRagdoll() and entity:Health() - dmgInfo:GetDamage() > 0 then entity:setRagdolled( true, 5 ) end
+		if lia.config.get( "CarRagdoll", true ) and IsValid( inflictor ) and inflictor:isSimfphysCar() then
+			local veh = entity:GetVehicle()
+			local inSimCar = IsValid( veh ) and veh:isSimfphysCar()
+			if not inSimCar then
+				dmgInfo:ScaleDamage( 0 )
+				if not entity:hasRagdoll() and entity:Health() - dmgInfo:GetDamage() > 0 then entity:setRagdolled( true, 5 ) end
+			end
 		end
 	end
 end
@@ -175,18 +179,16 @@ function MODULE:OnPlayerHitGround( client )
 end
 
 function MODULE:ShouldCollide( ent1, ent2 )
-	local class1, class2 = ent1:GetClass(), ent2:GetClass()
-	local blockedEntities = {
-		[ "lia_money" ] = true,
-		[ "lia_item" ] = true,
-		[ "prop_physics" ] = true,
-		[ "func_tanktrain" ] = true,
+	local blocked = {
+		lia_money = true,
+		lia_item = true,
+		prop_physics = true,
+		func_tanktrain = true,
 	}
 
-	local isBlockedEntity1 = blockedEntities[ class1 ]
-	local isBlockedEntity2 = blockedEntities[ class2 ]
-	local isPlayerColliding = ent1:IsPlayer() or ent2:IsPlayer()
-	if isPlayerColliding and isBlockedEntity1 and isBlockedEntity2 then return false end
+	local c1, c2 = ent1:GetClass(), ent2:GetClass()
+	local b1, b2 = blocked[ c1 ], blocked[ c2 ]
+	if b1 and b2 then return false end
 	return true
 end
 

@@ -1,7 +1,8 @@
 ﻿lia.command.add( "plyviewclaims", {
 	adminOnly = true,
-	syntax = "[string charname]",
 	privilege = "View Claims",
+	desc = "Displays detailed claim information for the specified player.",
+	syntax = "[string charname]",
 	AdminStick = {
 		Name = "View Ticket Claims",
 		Category = "Moderation Tools",
@@ -17,7 +18,7 @@
 
 		local target = lia.command.findPlayer( client, targetName )
 		if not target or not IsValid( target ) then
-			client:notifyLocalized( "noTarget" )
+			client:notifyLocalized( "targetNotFound" )
 			return
 		end
 
@@ -44,9 +45,9 @@
 } )
 
 lia.command.add( "viewallclaims", {
-	privilege = "View Claims",
-	description = "View the claims for all admins.",
 	adminOnly = true,
+	privilege = "View Claims",
+	desc = "Displays a summary table of claim data for all admins.",
 	onRun = function( client )
 		local caseclaims = lia.data.get( "caseclaims", {}, true )
 		if not next( caseclaims ) then
@@ -56,15 +57,15 @@ lia.command.add( "viewallclaims", {
 
 		local claimsData = {}
 		for steamID, claim in pairs( caseclaims ) do
-			local claimedFor = ""
+			local claimedFor = "None"
 			if next( claim.claimedFor ) then
-				for sid, name in pairs( claim.claimedFor ) do
-					claimedFor = claimedFor .. string.format( "%s (%s), ", name, sid )
-				end
-
-				claimedFor = string.sub( claimedFor, 1, -3 )
-			else
-				claimedFor = "None"
+				claimedFor = table.concat( ( function()
+					local t = {}
+					for sid, name in pairs( claim.claimedFor ) do
+						table.insert( t, string.format( "%s (%s)", name, sid ) )
+					end
+					return t
+				end )(), ", " )
 			end
 
 			table.insert( claimsData, {
@@ -80,36 +81,36 @@ lia.command.add( "viewallclaims", {
 		lia.util.CreateTableUI( client, "Admin Claims", {
 			{
 				name = "SteamID",
-				field = "steamID",
+				field = "steamID"
 			},
 			{
 				name = "Admin Name",
-				field = "name",
+				field = "name"
 			},
 			{
 				name = "Total Claims",
-				field = "claims",
+				field = "claims"
 			},
 			{
 				name = "Last Claim Date",
-				field = "lastclaim",
+				field = "lastclaim"
 			},
 			{
 				name = "Time Since Last Claim",
-				field = "timeSinceLastClaim",
+				field = "timeSinceLastClaim"
 			},
 			{
 				name = "Claimed For",
-				field = "claimedFor",
+				field = "claimedFor"
 			}
 		}, claimsData )
 	end
 } )
 
 lia.command.add( "viewclaims", {
-	privilege = "View Claims",
-	description = "View the claims for all admins.",
 	adminOnly = true,
+	privilege = "View Claims",
+	desc = "Prints detailed claim information for every admin to chat.",
 	onRun = function( client )
 		local caseclaims = lia.data.get( "caseclaims", {}, true )
 		if not next( caseclaims ) then
@@ -119,13 +120,12 @@ lia.command.add( "viewclaims", {
 
 		client:ChatPrint( "=== Admin Claims ===" )
 		for steamID, claim in pairs( caseclaims ) do
-			local claimedForList = ""
+			local claimedForList = "None"
 			if next( claim.claimedFor ) then
+				claimedForList = ""
 				for sid, name in pairs( claim.claimedFor ) do
 					claimedForList = claimedForList .. string.format( "- %s (%s)\n", name, sid )
 				end
-			else
-				claimedForList = "None"
 			end
 
 			local message = string.format( "SteamID: %s\nAdmin Name: %s\nTotal Claims: %d\nLast Claim Date: %s\nTime Since Last Claim: %s\nClaimed For:\n%s\n-------------------------", steamID, claim.name, claim.claims, os.date( "%Y-%m-%d %H:%M:%S", claim.lastclaim ), lia.time.TimeSince( claim.lastclaim ), claimedForList )

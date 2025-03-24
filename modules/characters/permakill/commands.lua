@@ -1,6 +1,7 @@
 ﻿lia.command.add( "pktoggle", {
 	adminOnly = true,
 	privilege = "Toggle Permakill",
+	desc = "Toggles a character’s permanent kill flag (marks or unmarks them for permanent death).",
 	syntax = "[string charname]",
 	AdminStick = {
 		Name = "Toggle Character Killing (Ban)",
@@ -11,7 +12,7 @@
 	onRun = function( client, arguments )
 		local target = lia.command.findPlayer( client, arguments[ 1 ] )
 		if not target or not IsValid( target ) then
-			client:notifyLocalized( "noTarget" )
+			client:notifyLocalized( "targetNotFound" )
 			return
 		end
 

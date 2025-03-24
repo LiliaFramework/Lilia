@@ -10,7 +10,7 @@
 	pim = "shared",
 }
 
-FilesToLoad = {
+local FilesToLoad = {
 	{
 		path = "lilia/gamemode/core/libraries/languages.lua",
 		realm = "shared"

@@ -1,7 +1,7 @@
-﻿local MODULE = MODULE
-lia.command.add( "storagelock", {
+﻿lia.command.add( "storagelock", {
 	privilege = "Lock Storage",
 	adminOnly = true,
+	desc = "Locks or unlocks the storage entity you are looking at using a password. If no password is provided, it removes any existing lock.",
 	syntax = "[string password]",
 	onRun = function( client, arguments )
 		local entity = client:getTracedEntity()
@@ -26,17 +26,18 @@ lia.command.add( "storagelock", {
 
 lia.command.add( "trunk", {
 	adminOnly = false,
+	desc = "Opens the trunk of a vehicle you are looking at if you are within range and the vehicle is suitable.",
+	syntax = nil,
 	onRun = function( client )
 		local entity = client:getTracedEntity()
 		local maxDistance = 110
 		local openTime = 0.7
-		local clientPos = client:GetPos():Distance( entity:GetPos() )
 		if not hook.Run( "isSuitableForTrunk", entity ) then
 			client:notifyLocalized( "notLookingAtVehicle" )
 			return
 		end
 
-		if clientPos > maxDistance then
+		if client:GetPos():Distance( entity:GetPos() ) > maxDistance then
 			client:notifyLocalized( "tooFarToOpenTrunk" )
 			return
 		end
@@ -56,5 +57,5 @@ lia.command.add( "trunk", {
 			net.Send( client )
 			entity:EmitSound( "items/ammocrate_open.wav" )
 		end )
-	end,
+	end
 } )

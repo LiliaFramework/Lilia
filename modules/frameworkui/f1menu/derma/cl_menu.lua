@@ -111,8 +111,10 @@ function PANEL:Init()
 end
 
 function PANEL:OnKeyCodePressed( key )
+	local invkey = lia.keybind.get( "Open Inventory", KEY_I )
 	self.noAnchor = CurTime() + 0.5
 	if key == KEY_F1 then self:remove() end
+	if key == invkey then self:remove() end
 end
 
 function PANEL:Update()

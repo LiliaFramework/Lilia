@@ -1,6 +1,7 @@
 ﻿lia.command.add( "cleardecals", {
 	adminOnly = true,
 	privilege = "Clear Decals",
+	desc = "Clears all decals (blood, bullet holes, etc.) for every player.",
 	onRun = function()
 		for _, v in player.Iterator() do
 			v:ConCommand( "r_cleardecals" )
@@ -11,6 +12,7 @@
 lia.command.add( "playtime", {
 	adminOnly = false,
 	privilege = "View Own Playtime",
+	desc = "Displays your total playtime on the server.",
 	onRun = function( client )
 		local steamID = client:SteamID64()
 		local query = "SELECT play_time FROM sam_players WHERE steamid = " .. SQLStr( steamID ) .. ";"
@@ -29,8 +31,9 @@ lia.command.add( "playtime", {
 
 lia.command.add( "plygetplaytime", {
 	adminOnly = true,
-	syntax = "[string charname]",
 	privilege = "View Playtime",
+	desc = "Shows the total playtime of the specified character.",
+	syntax = "[string charname]",
 	AdminStick = {
 		Name = L( "adminStickGetPlayTimeName" ),
 		Category = L( "Moderation Tools" ),
@@ -46,7 +49,7 @@ lia.command.add( "plygetplaytime", {
 
 		local target = lia.command.findPlayer( client, targetName )
 		if not target or not IsValid( target ) then
-			client:notifyLocalized( "noTarget" )
+			client:notifyLocalized( "targetNotFound" )
 			return
 		end
 

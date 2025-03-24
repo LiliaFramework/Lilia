@@ -1,5 +1,6 @@
 ﻿local MODULE = MODULE
 lia.command.add( "doorsell", {
+	desc = "Sell a door you own and receive a refund based on the door's price.",
 	adminOnly = false,
 	AdminStick = {
 		Name = "Sell Door",
@@ -26,6 +27,7 @@ lia.command.add( "doorsell", {
 } )
 
 lia.command.add( "admindoorsell", {
+	desc = "Admin command to sell a door on behalf of its owner and refund the owner.",
 	adminOnly = true,
 	privilege = "Manage Doors",
 	AdminStick = {
@@ -55,6 +57,7 @@ lia.command.add( "admindoorsell", {
 } )
 
 lia.command.add( "doortogglelock", {
+	desc = "Toggle a door's lock state between locked and unlocked.",
 	adminOnly = true,
 	privilege = "Manage Doors",
 	AdminStick = {
@@ -93,6 +96,7 @@ lia.command.add( "doortogglelock", {
 } )
 
 lia.command.add( "doorbuy", {
+	desc = "Purchase a door if it is available and you can afford it.",
 	adminOnly = false,
 	AdminStick = {
 		Name = "Buy Door",
@@ -129,8 +133,8 @@ lia.command.add( "doorbuy", {
 } )
 
 lia.command.add( "doortoggleownable", {
+	desc = "Toggle whether a door can be owned by players.",
 	adminOnly = true,
-	syntax = "[string name]",
 	privilege = "Manage Doors",
 	AdminStick = {
 		Name = "Toggle Door Ownable",
@@ -153,6 +157,7 @@ lia.command.add( "doortoggleownable", {
 } )
 
 lia.command.add( "doorresetdata", {
+	desc = "Reset door data to default settings.",
 	adminOnly = true,
 	privilege = "Manage Doors",
 	AdminStick = {
@@ -191,6 +196,7 @@ lia.command.add( "doorresetdata", {
 } )
 
 lia.command.add( "doortoggleenabled", {
+	desc = "Toggle door enabled state (active/inactive).",
 	adminOnly = true,
 	privilege = "Manage Doors",
 	AdminStick = {
@@ -214,6 +220,7 @@ lia.command.add( "doortoggleenabled", {
 } )
 
 lia.command.add( "doortogglehidden", {
+	desc = "Toggle the hidden state of a door.",
 	adminOnly = true,
 	privilege = "Manage Doors",
 	AdminStick = {
@@ -241,8 +248,9 @@ lia.command.add( "doortogglehidden", {
 } )
 
 lia.command.add( "doorsetprice", {
-	adminOnly = true,
+	desc = "Set the price for a door.",
 	syntax = "[number price]",
+	adminOnly = true,
 	privilege = "Manage Doors",
 	AdminStick = {
 		Name = "Set Door Price",
@@ -268,8 +276,9 @@ lia.command.add( "doorsetprice", {
 } )
 
 lia.command.add( "doorsettitle", {
-	adminOnly = true,
+	desc = "Set the title for a door.",
 	syntax = "[string title]",
+	adminOnly = true,
 	privilege = "Manage Doors",
 	AdminStick = {
 		Name = "Set Door Title",
@@ -300,6 +309,7 @@ lia.command.add( "doorsettitle", {
 } )
 
 lia.command.add( "doorsetparent", {
+	desc = "Designate the targeted door as a parent door for grouping child doors.",
 	adminOnly = true,
 	privilege = "Manage Doors",
 	AdminStick = {
@@ -319,6 +329,7 @@ lia.command.add( "doorsetparent", {
 } )
 
 lia.command.add( "doorsetchild", {
+	desc = "Set the targeted door as a child of the designated parent door.",
 	adminOnly = true,
 	privilege = "Manage Doors",
 	AdminStick = {
@@ -348,6 +359,7 @@ lia.command.add( "doorsetchild", {
 } )
 
 lia.command.add( "doorremovechild", {
+	desc = "Remove a door from its parent or remove all child associations if it's a parent.",
 	adminOnly = true,
 	privilege = "Manage Doors",
 	AdminStick = {
@@ -382,6 +394,7 @@ lia.command.add( "doorremovechild", {
 } )
 
 lia.command.add( "savedoors", {
+	desc = "Save door data persistently.",
 	adminOnly = true,
 	privilege = "Manage Doors",
 	AdminStick = {
@@ -396,6 +409,7 @@ lia.command.add( "savedoors", {
 } )
 
 lia.command.add( "doorinfo", {
+	desc = "Display information about the targeted door.",
 	adminOnly = true,
 	privilege = "Manage Doors",
 	AdminStick = {
@@ -422,8 +436,9 @@ lia.command.add( "doorinfo", {
 } )
 
 lia.command.add( "dooraddfaction", {
-	adminOnly = true,
+	desc = "Add a faction restriction to a door, allowing only specific factions to access it.",
 	syntax = "[string faction]",
+	adminOnly = true,
 	privilege = "Manage Doors",
 	onRun = function( client, arguments )
 		local door = client:getTracedEntity()
@@ -471,8 +486,9 @@ lia.command.add( "dooraddfaction", {
 } )
 
 lia.command.add( "doorremovefaction", {
-	adminOnly = true,
+	desc = "Remove a faction restriction from a door, or clear all restrictions.",
 	syntax = "[string faction]",
+	adminOnly = true,
 	privilege = "Manage Doors",
 	onRun = function( client, arguments )
 		local door = client:getTracedEntity()
@@ -520,8 +536,9 @@ lia.command.add( "doorremovefaction", {
 } )
 
 lia.command.add( "doorsetclass", {
-	adminOnly = true,
+	desc = "Set a class (job) restriction for a door.",
 	syntax = "[string class]",
+	adminOnly = true,
 	privilege = "Manage Doors",
 	onRun = function( client, arguments )
 		local door = client:getTracedEntity()
@@ -563,6 +580,7 @@ lia.command.add( "doorsetclass", {
 } )
 
 lia.command.add( "togglealldoors", {
+	desc = "Toggle the enabled state for all doors in the map.",
 	adminOnly = true,
 	privilege = "Manage Doors",
 	onRun = function( client )

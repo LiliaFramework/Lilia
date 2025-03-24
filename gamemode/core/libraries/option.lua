@@ -11,6 +11,7 @@ function lia.option.add( key, name, desc, default, callback, data )
 		data.max = data.max or optionType == "Int" and math.floor( default * 2 ) or default * 2
 	end
 
+	if data.type then optionType = data.type end
 	local oldOption = lia.option.stored[ key ]
 	local savedValue = oldOption and oldOption.value or default
 	lia.option.stored[ key ] = {
@@ -319,7 +320,7 @@ hook.Add( "PopulateConfigurationTabs", "PopulateOptions", function( pages )
 		end,
 		Table = function( key, name, config, parent )
 			local container = vgui.Create( "DPanel", parent )
-			container:SetTall( 300 )
+			container:SetTall( 220 )
 			container:Dock( TOP )
 			container:DockMargin( 0, 60, 0, 10 )
 			container.Paint = function( _, w, h ) draw.RoundedBox( 0, 0, 0, w, h, Color( 0, 0, 0, 200 ) ) end
@@ -342,44 +343,25 @@ hook.Add( "PopulateConfigurationTabs", "PopulateOptions", function( pages )
 			description:SetContentAlignment( 5 )
 			description:SetTextColor( Color( 200, 200, 200 ) )
 			description:DockMargin( 0, 10, 0, 0 )
-			local listView = panel:Add( "DListView" )
-			listView:Dock( FILL )
-			listView:SetMultiSelect( false )
-			listView:AddColumn( "Items" )
-			for _, item in ipairs( lia.option.get( key, config.value ) or {} ) do
-				listView:AddLine( tostring( item ) )
+			local comboBox = panel:Add( "DComboBox" )
+			comboBox:Dock( TOP )
+			comboBox:SetTall( 60 )
+			comboBox:DockMargin( 300, 10, 300, 0 )
+			comboBox:SetFont( "ConfigFontLarge" )
+			comboBox:SetTextColor( Color( 255, 255, 255 ) )
+			local options = config.data and config.data.options or {}
+			local currentValue = lia.option.get( key, config.value )
+			comboBox:SetValue( tostring( currentValue ) )
+			comboBox.Paint = function( self, w, h )
+				draw.RoundedBox( 0, 0, 0, w, h, Color( 50, 50, 50, 200 ) )
+				self:DrawTextEntryText( Color( 255, 255, 255 ), Color( 255, 255, 255 ), Color( 255, 255, 255 ) )
 			end
 
-			local addButton = panel:Add( "DButton" )
-			addButton:Dock( BOTTOM )
-			addButton:SetTall( 30 )
-			addButton:SetText( "Add Item" )
-			addButton.DoClick = function()
-				Derma_StringRequest( "Add Item", "Enter new item:", "", function( text )
-					if text and text ~= "" then
-						local current = lia.option.get( key, config.value ) or {}
-						table.insert( current, text )
-						lia.option.set( key, current )
-						listView:AddLine( text )
-					end
-				end )
+			for _, option in ipairs( options ) do
+				comboBox:AddChoice( option, option, option == currentValue )
 			end
 
-			local removeButton = panel:Add( "DButton" )
-			removeButton:Dock( BOTTOM )
-			removeButton:SetTall( 30 )
-			removeButton:SetText( "Remove Selected" )
-			removeButton.DoClick = function()
-				local selected = listView:GetSelected()
-				if #selected > 0 then
-					local line = selected[ 1 ]
-					local index = listView:Line( line ):GetID()
-					local current = lia.option.get( key, config.value ) or {}
-					table.remove( current, index )
-					lia.option.set( key, current )
-					listView:RemoveLine( index )
-				end
-			end
+			comboBox.OnSelect = function( _, _, value ) lia.option.set( key, value ) end
 			return container
 		end
 	}
@@ -450,3 +432,9 @@ hook.Add( "PopulateConfigurationTabs", "PopulateOptions", function( pages )
 		end
 	} )
 end )
+
+lia.option.add( "BarPositions", "Bar Positions", "Determines the position of the Lilia bars.", "Bottom Left", nil, {
+	category = "General",
+	type = "Table",
+	options = { "Top Right", "Top Left", "Bottom Right", "Bottom Left" }
+} )

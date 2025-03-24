@@ -1,5 +1,6 @@
 ﻿lia.command.add( "fixpac", {
-	adminonly = false,
+	adminOnly = false,
+	desc = "Clears PAC caches and restarts PAC to fix any outfit issues.",
 	onRun = function( client )
 		timer.Simple( 0, function() if IsValid( client ) then client:ConCommand( "pac_clear_parts" ) end end )
 		timer.Simple( 0.5, function()
@@ -15,7 +16,8 @@
 } )
 
 lia.command.add( "pacenable", {
-	adminonly = false,
+	adminOnly = false,
+	desc = "Enables PAC (Player Appearance Customizer).",
 	onRun = function( client )
 		client:ConCommand( "pac_enable 1" )
 		client:notifyLocalized( "pacenable_success" )
@@ -23,7 +25,8 @@ lia.command.add( "pacenable", {
 } )
 
 lia.command.add( "pacdisable", {
-	adminonly = false,
+	adminOnly = false,
+	desc = "Disables PAC (Player Appearance Customizer).",
 	onRun = function( client )
 		client:ConCommand( "pac_enable 0" )
 		client:notifyLocalized( "pacdisable_message" )

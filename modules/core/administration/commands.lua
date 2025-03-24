@@ -1,4 +1,5 @@
 ﻿lia.command.add( "adminmode", {
+	desc = "Toggles between your current character and your staff character if you have one.",
 	onRun = function( client )
 		if not IsValid( client ) then return end
 		local steamID = client:SteamID64()
@@ -17,8 +18,7 @@
 			lia.db.query( string.format( "SELECT * FROM lia_characters WHERE _steamID = \"%s\"", lia.db.escape( steamID ) ), function( data )
 				for _, row in ipairs( data ) do
 					local id = tonumber( row._id )
-					local faction = row._faction
-					if faction == "staff" then
+					if row._faction == "staff" then
 						client:setNetVar( "OldCharID", client:getChar():getID() )
 						net.Start( "AdminModeSwapCharacter" )
 						net.WriteInt( id, 32 )
@@ -28,7 +28,7 @@
 					end
 				end
 
-				client:ChatPrint( "No staff character found. Make sure to create a character in the staff faction." )
+				client:ChatPrint( "No staff character found. Create one in the staff faction." )
 			end )
 		end
 	end
@@ -37,6 +37,7 @@
 lia.command.add( "setsitroom", {
 	superAdminOnly = true,
 	privilege = "Manage SitRooms",
+	desc = "Sets your current location as the sitroom spawn point for this map.",
 	onRun = function( client )
 		local pos = client:GetPos()
 		local mapName = game.GetMap()
@@ -50,8 +51,9 @@ lia.command.add( "setsitroom", {
 
 lia.command.add( "sendtositroom", {
 	adminOnly = true,
-	syntax = "[string charname]",
 	privilege = "Manage SitRooms",
+	desc = "Teleports the specified player to the sitroom location for this map.",
+	syntax = "[string charname]",
 	AdminStick = {
 		Name = L( "sendToSitRoom" ),
 		Category = L( "Moderation Tools" ),
@@ -61,7 +63,7 @@ lia.command.add( "sendtositroom", {
 	onRun = function( client, arguments )
 		local target = lia.command.findPlayer( client, arguments[ 1 ] )
 		if not target or not IsValid( target ) then
-			client:notifyLocalized( "noTarget" )
+			client:notifyLocalized( "targetNotFound" )
 			return
 		end
 
