@@ -79,8 +79,8 @@ end
 
 function lia.bar.drawAll()
 	lia.bar.drawAction()
-	if hook.Run( "ShouldHideBars" ) then return end
-	local position = lia.option.get( "BarPositons", "Bottom Left" )
+	if hook.Run( "ShouldHideBars" ) == true then return end
+	local position = lia.option.get( "BarPositions", "Bottom Left" )
 	local scrW, scrH = ScrW(), ScrH()
 	local w, h = scrW * 0.35, 14
 	local x, y = 0, 0
@@ -92,6 +92,8 @@ function lia.bar.drawAll()
 		x, y = 4, scrH - h - 4
 	elseif position == "Bottom Right" then
 		x, y = scrW - w - 4, scrH - h - 4
+	else
+		x, y = 4, 4
 	end
 
 	local deltas, update, now = lia.bar.delta, FrameTime() * 0.6, CurTime()
