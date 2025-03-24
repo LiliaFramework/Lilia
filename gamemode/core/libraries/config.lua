@@ -83,7 +83,7 @@ if SERVER then
 	end
 
 	function lia.config.send( client )
-		netstream.Start( client, "cfgUpdate", lia.config.getChangedValues() )
+		netstream.Start( client, "cfgList", lia.config.getChangedValues() )
 	end
 
 	function lia.config.save()

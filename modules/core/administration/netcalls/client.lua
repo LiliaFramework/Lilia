@@ -1,4 +1,4 @@
-﻿netstream.Hook( "cfgList", function( data )
+netstream.Hook( "cfgList", function( data )
 	for k, v in pairs( data ) do
 		if lia.config.stored[ k ] then lia.config.stored[ k ].value = v end
 	end
@@ -6,15 +6,19 @@
 	hook.Run( "InitializedConfig", data )
 end )
 
-netstream.Hook( "cfgUpdate", function( key, value )
+netstream.Hook( "cfgSet", function( key, value )
 	local config = lia.config.stored[ key ]
-	if not config then return end
-	if config.callback then config.callback( config.value, value ) end
-	config.value = value
-	local properties = lia.gui.properties
-	if IsValid( properties ) then
-		local row = properties:GetCategory( L( config.data.category or "misc" ) ):GetRow( key )
-		if IsValid( row ) then row:SetValue( value ) end
+	if config then
+		if config.callback then config.callback( config.value, value ) end
+		config.value = value
+		local properties = lia.gui.properties
+		if IsValid( properties ) then
+			local row = properties:GetCategory( L( config.data and config.data.category or "misc" ) ):GetRow( key )
+			if IsValid( row ) then
+				if istable( value ) and value.r and value.g and value.b then value = Vector( value.r / 255, value.g / 255, value.b / 255 ) end
+				row:SetValue( value )
+			end
+		end
 	end
 end )
 
