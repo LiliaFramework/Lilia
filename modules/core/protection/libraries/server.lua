@@ -40,9 +40,13 @@ function MODULE:EntityTakeDamage( entity, dmgInfo )
 			if applyCooldown then entity.LastDamaged = CurTime() end
 		end
 
-		if lia.config.get( "CarRagdoll", true ) and IsValid( inflictor ) and inflictor:isSimfphysCar() and not ( entity:GetVehicle() or LVS and entity:lvsGetVehicle() ) then
-			dmgInfo:ScaleDamage( 0 )
-			if not entity:hasRagdoll() and entity:Health() - dmgInfo:GetDamage() > 0 then entity:setRagdolled( true, 5 ) end
+		if lia.config.get( "CarRagdoll", true ) and IsValid( inflictor ) and inflictor:isSimfphysCar() then
+			local veh = entity:GetVehicle()
+			local inSimCar = IsValid( veh ) and veh:isSimfphysCar()
+			if not inSimCar then
+				dmgInfo:ScaleDamage( 0 )
+				if not entity:hasRagdoll() and entity:Health() - dmgInfo:GetDamage() > 0 then entity:setRagdolled( true, 5 ) end
+			end
 		end
 	end
 end
