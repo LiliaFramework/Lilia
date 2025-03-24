@@ -169,8 +169,10 @@ function MODULE:OpenLocalPIM()
 end
 
 lia.keybind.add( KEY_TAB, "Interaction Menu", function()
+	if not IsFirstTimePredicted() then return end
+
 	local client = LocalPlayer()
 	if client:getChar() and MODULE:CheckPossibilities() then MODULE:OpenPIM() end
 end )
 
-lia.keybind.add( KEY_G, "Personal Actions", function() MODULE:OpenLocalPIM() end )
+lia.keybind.add( KEY_G, "Personal Actions", function() if not IsFirstTimePredicted() then return end MODULE:OpenLocalPIM() end )
