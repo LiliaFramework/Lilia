@@ -3,6 +3,7 @@ MODULE.OOCBans = MODULE.OOCBans or {}
 lia.command.add( "banooc", {
 	adminOnly = true,
 	privilege = "Ban OOC",
+	desc = "Bans the specified player from using out‑of‑character chat.",
 	syntax = "[string charname]",
 	AdminStick = {
 		Name = "Ban OOC",
@@ -13,7 +14,7 @@ lia.command.add( "banooc", {
 	onRun = function( client, arguments )
 		local target = lia.command.findPlayer( client, arguments[ 1 ] )
 		if not target or not IsValid( target ) then
-			client:notifyLocalized( "noTarget" )
+			client:notifyLocalized( "targetNotFound" )
 			return
 		end
 
@@ -25,6 +26,7 @@ lia.command.add( "banooc", {
 lia.command.add( "unbanooc", {
 	adminOnly = true,
 	privilege = "Unban OOC",
+	desc = "Unbans the specified player from out‑of‑character chat.",
 	syntax = "[string charname]",
 	AdminStick = {
 		Name = "Unban OOC",
@@ -35,7 +37,7 @@ lia.command.add( "unbanooc", {
 	onRun = function( client, arguments )
 		local target = lia.command.findPlayer( client, arguments[ 1 ] )
 		if not target or not IsValid( target ) then
-			client:notifyLocalized( "noTarget" )
+			client:notifyLocalized( "targetNotFound" )
 			return
 		end
 
@@ -47,30 +49,28 @@ lia.command.add( "unbanooc", {
 lia.command.add( "blockooc", {
 	superAdminOnly = true,
 	privilege = "Block OOC",
-	syntax = "[string charname]",
+	desc = "Toggles a global block on all out‑of‑character chat.",
 	onRun = function( client )
-		if GetGlobalBool( "oocblocked", false ) then
-			SetGlobalBool( "oocblocked", false )
-			client:notify( "Unlocked OOC!" )
-		else
-			SetGlobalBool( "oocblocked", true )
-			client:notify( "Blocked OOC!" )
-		end
+		local blocked = GetGlobalBool( "oocblocked", false )
+		SetGlobalBool( "oocblocked", not blocked )
+		client:notify( blocked and "Unlocked OOC!" or "Blocked OOC!" )
 	end
 } )
 
 lia.command.add( "refreshfonts", {
 	superAdminOnly = true,
 	privilege = "Refresh Fonts",
+	desc = "Refreshes client fonts.",
 	onRun = function( client ) client:ConCommand( "refreshfonts" ) end
 } )
 
 lia.command.add( "clearchat", {
 	adminOnly = true,
 	privilege = "Clear Chat",
+	desc = "Clears chat for all players.",
 	onRun = function()
-		for _, client in player.Iterator() do
-			client:ConCommand( "fixchatplz" )
+		for _, ply in player.Iterator() do
+			ply:ConCommand( "fixchatplz" )
 		end
 	end
 } )

@@ -110,12 +110,12 @@ function PANEL:setActive( state )
 				for commandName, commandData in SortedPairs( self.commands ) do
 					if not tobool( commandName:find( text:sub( 2 ) ) ) then continue end
 					local commandButton = self.commandList:Add( "DButton" )
-					commandButton:SetText( "/" .. commandName .. " - " .. ( commandData.description or "No description" ) )
+					commandButton:SetText( "/" .. commandName .. " - " .. ( commandData.desc or "No description" ) )
 					commandButton:Dock( TOP )
 					commandButton:DockMargin( 0, 0, 0, 2 )
 					commandButton:SetTall( 20 )
 					commandButton.Paint = function( _, w, h )
-						surface.SetDrawColor( ColorAlpha(color_black, 200) )
+						surface.SetDrawColor( ColorAlpha( color_black, 200 ) )
 						surface.DrawRect( 0, 0, w, h )
 					end
 
@@ -147,18 +147,16 @@ function PANEL:setActive( state )
 				if #children > 0 then
 					self.commandIndex = ( self.commandIndex or 0 ) + 1
 					if self.commandIndex > #children then self.commandIndex = 1 end
-
-					for i, child in ipairs(children) do
+					for i, child in ipairs( children ) do
 						child.commandIndex = i
 						if not child.PaintConfigured then
 							child.Paint = function( this, w, h )
 								local isSelected = this.commandIndex == self.commandIndex
-								surface.SetDrawColor(isSelected and ColorAlpha( lia.config.get( "Color" ), 255 ) or ColorAlpha( color_black, 200 ))
-						       	surface.DrawRect( 0, 0, w, h )
-						       	if IsValid( this.text ) then
-						         	this.text:SetTextColor( isSelected and ColorAlpha( lia.config.get( "Color" ), 255 ) or ColorAlpha( color_white, 200 ) )
-						       	end
+								surface.SetDrawColor( isSelected and ColorAlpha( lia.config.get( "Color" ), 255 ) or ColorAlpha( color_black, 200 ) )
+								surface.DrawRect( 0, 0, w, h )
+								if IsValid( this.text ) then this.text:SetTextColor( isSelected and ColorAlpha( lia.config.get( "Color" ), 255 ) or ColorAlpha( color_white, 200 ) ) end
 							end
+
 							child.PaintConfigured = true
 						end
 					end

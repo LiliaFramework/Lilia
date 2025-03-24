@@ -24,10 +24,6 @@ end
 function playerMeta:getCurrentVehicle()
 	local vehicle = self:GetVehicle()
 	if vehicle and IsValid( vehicle ) then return vehicle end
-	if LVS then
-		vehicle = self:lvsGetVehicle()
-		if vehicle and IsValid( vehicle ) then return vehicle end
-	end
 	return nil
 end
 

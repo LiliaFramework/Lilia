@@ -1,14 +1,12 @@
 ﻿lia.chat = lia.chat or {}
 lia.chat.classes = lia.char.classes or {}
-local DUMMY_COMMAND = {
-	onRun = function() end
-}
-
 function lia.chat.timestamp( ooc )
 	return lia.option.ChatShowTime and ( ooc and " " or "" ) .. "(" .. lia.time.GetFormattedDate( nil, false, false, false, false, true ) .. ")" .. ( ooc and "" or " " ) or ""
 end
 
 function lia.chat.register( chatType, data )
+	data.syntax = data.syntax or ""
+	data.desc = data.desc or ""
 	if not data.onCanHear then
 		if isfunction( data.radius ) then
 			data.onCanHear = function( speaker, listener ) return ( speaker:GetPos() - listener:GetPos() ):LengthSqr() <= data.radius() ^ 2 end
@@ -23,35 +21,36 @@ function lia.chat.register( chatType, data )
 		data.onCanHear = function( speaker, listener ) return ( speaker:GetPos() - listener:GetPos() ):LengthSqr() <= range end
 	end
 
-	if not data.onCanSay then
-		data.onCanSay = function( speaker )
-			if not data.deadCanChat and not speaker:Alive() then
-				speaker:notifyLocalized( "noPerm" )
-				return false
-			end
-			return true
+	data.onCanSay = data.onCanSay or function( speaker )
+		if not data.deadCanChat and not speaker:Alive() then
+			speaker:notifyLocalized( "noPerm" )
+			return false
 		end
+		return true
 	end
 
 	data.color = data.color or Color( 242, 230, 160 )
-	if not data.onChatAdd then
-		data.format = data.format or "%s: \"%s\""
-		data.onChatAdd = function( speaker, text, anonymous )
-			local color = data.color
-			local name = anonymous and L( "someone" ) or hook.Run( "GetDisplayedName", speaker, chatType ) or IsValid( speaker ) and speaker:Name() or "Console"
-			if data.onGetColor then color = data.onGetColor( speaker, text ) end
-			local timestamp = lia.chat.timestamp( false )
-			chat.AddText( timestamp, color, string.format( data.format, name, text ) )
-		end
+	data.format = data.format or "%s: \"%s\""
+	data.onChatAdd = data.onChatAdd or function( speaker, text, anonymous )
+		local name = anonymous and L( "someone" ) or hook.Run( "GetDisplayedName", speaker, chatType ) or IsValid( speaker ) and speaker:Name() or "Console"
+		chat.AddText( lia.chat.timestamp( false ), data.color, string.format( data.format, name, text ) )
 	end
 
 	if CLIENT and data.prefix then
-		if istable( data.prefix ) then
-			for _, v in ipairs( data.prefix ) do
-				if v:sub( 1, 1 ) == "/" then lia.command.add( v:sub( 2 ), DUMMY_COMMAND ) end
-			end
-		else
-			lia.command.add( chatType, DUMMY_COMMAND )
+		local rawPrefixes = istable( data.prefix ) and data.prefix or { data.prefix }
+		local aliases = {}
+		for _, prefix in ipairs( rawPrefixes ) do
+			local cmd = prefix:gsub( "^/", "" ):lower()
+			if cmd ~= "" then table.insert( aliases, cmd ) end
+		end
+
+		if #aliases > 0 then
+			lia.command.add( chatType, {
+				syntax = data.syntax,
+				desc = data.desc,
+				alias = aliases,
+				onRun = function( _, args ) lia.chat.parse( LocalPlayer(), table.concat( args, " " ) ) end
+			} )
 		end
 	end
 

@@ -1,6 +1,6 @@
 ﻿NAME = "English"
 LANGUAGE = {
-	mustProvideString = "Must Provide String",
+	mustProvideString = "Must Provide a String",
 	use = "Use",
 	modules = "Modules",
 	faction = "Faction",

@@ -1,7 +1,8 @@
 ﻿lia.command.add( "warn", {
 	adminOnly = true,
 	privilege = "Issue Warnings",
-	syntax = "<string target> <string reason>",
+	desc = "Issues a warning to the specified player with a given reason.",
+	syntax = "[string target] [string reason]",
 	AdminStick = {
 		Name = "Warn Player",
 		Category = "Moderation Tools",
@@ -14,10 +15,10 @@
 	onRun = function( client, arguments )
 		local targetName = arguments[ 1 ]
 		local reason = table.concat( arguments, " ", 2 )
-		if not targetName or not reason then return "Usage: warn <player> <reason>" end
-		local target = lia.command.findPlayer( client, arguments[ 1 ] )
+		if not targetName or reason == "" then return "Usage: warn [player] [reason]" end
+		local target = lia.command.findPlayer( client, targetName )
 		if not target or not IsValid( target ) then
-			client:notifyLocalized( "noTarget" )
+			client:notifyLocalized( "targetNotFound" )
 			return
 		end
 
@@ -39,7 +40,8 @@
 lia.command.add( "viewwarns", {
 	adminOnly = true,
 	privilege = "View Player Warnings",
-	syntax = "<string target>",
+	desc = "Displays all warnings issued to the specified player.",
+	syntax = "[string target]",
 	AdminStick = {
 		Name = "View Player Warnings",
 		Category = "Moderation Tools",
@@ -48,12 +50,12 @@ lia.command.add( "viewwarns", {
 	},
 	onRun = function( client, arguments )
 		local target = lia.command.findPlayer( client, arguments[ 1 ] )
-		local warns = target:getLiliaData( "warns" ) or {}
 		if not target or not IsValid( target ) then
-			client:notifyLocalized( "noTarget" )
+			client:notifyLocalized( "targetNotFound" )
 			return
 		end
 
+		local warns = target:getLiliaData( "warns" ) or {}
 		if table.Count( warns ) == 0 then
 			client:notify( target:Nick() .. " has no warnings." )
 			return
@@ -65,7 +67,7 @@ lia.command.add( "viewwarns", {
 				index = index,
 				timestamp = warn.timestamp or "N/A",
 				reason = warn.reason or "N/A",
-				admin = warn.admin or "N/A",
+				admin = warn.admin or "N/A"
 			} )
 		end
 
@@ -85,7 +87,7 @@ lia.command.add( "viewwarns", {
 			{
 				name = "Admin",
 				field = "admin"
-			},
+			}
 		}, warningList, {
 			{
 				name = "Remove Warning",

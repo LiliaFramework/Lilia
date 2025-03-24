@@ -1,6 +1,7 @@
 ﻿lia.command.add( "charvoicetoggle", {
 	adminOnly = true,
 	privilege = "Toggle Voice Ban Character",
+	desc = "Toggles voice chat ban for the specified character.",
 	syntax = "[string name]",
 	AdminStick = {
 		Name = L( "toggleVoice" ),
@@ -11,7 +12,7 @@
 	onRun = function( client, arguments )
 		local target = lia.command.findPlayer( client, arguments[ 1 ] )
 		if not target or not IsValid( target ) then
-			client:notifyLocalized( "noTarget" )
+			client:notifyLocalized( "targetNotFound" )
 			return
 		end
 

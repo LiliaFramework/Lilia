@@ -1,5 +1,6 @@
 ﻿lia.command.add( "charsetattrib", {
 	superAdminOnly = true,
+	desc = "Sets a specific attribute on a target character to an exact value.",
 	syntax = "[string charname] [string attribname] [number level]",
 	privilege = "Manage Attributes",
 	AdminStick = {
@@ -15,7 +16,7 @@
 				end
 				return attributes, "combo"
 			end,
-			[ "value" ] = "text",
+			[ "value" ] = "text"
 		}
 	},
 	onRun = function( client, arguments )
@@ -23,7 +24,7 @@
 		local attribName = arguments[ 2 ]
 		local attribNumber = tonumber( arguments[ 3 ] )
 		if not target or not IsValid( target ) then
-			client:notifyLocalized( "noTarget" )
+			client:notifyLocalized( "targetNotFound" )
 			return
 		end
 
@@ -42,6 +43,7 @@
 
 lia.command.add( "checkattributes", {
 	adminOnly = true,
+	desc = "Displays all attributes (current, max, and progress %) for a target character in a table UI.",
 	syntax = "[string charname]",
 	privilege = "Manage Attributes",
 	AdminStick = {
@@ -53,7 +55,7 @@ lia.command.add( "checkattributes", {
 	onRun = function( client, arguments )
 		local target = lia.command.findPlayer( client, arguments[ 1 ] )
 		if not target or not IsValid( target ) then
-			client:notifyLocalized( "noTarget" )
+			client:notifyLocalized( "targetNotFound" )
 			return
 		end
 
@@ -98,11 +100,14 @@ lia.command.add( "checkattributes", {
 				net = "ChangeAttribute"
 			}
 		}, client:getChar():getID() )
-	end,
+	end
 } )
 
 lia.command.add( "charaddattrib", {
 	superAdminOnly = true,
+	desc = "Adds (increments) a specified amount to a target character’s attribute.",
+	syntax = "[string charname] [string attribname] [number level]",
+	privilege = "Manage Attributes",
 	AdminStick = {
 		Name = L( "addAttributes" ),
 		Category = L( "characterManagement" ),
@@ -116,17 +121,15 @@ lia.command.add( "charaddattrib", {
 				end
 				return attributes, "combo"
 			end,
-			[ "value" ] = "text",
+			[ "value" ] = "text"
 		}
 	},
-	syntax = "[string charname] [string attribname] [number level]",
-	privilege = "Manage Attributes",
 	onRun = function( client, arguments )
+		local target = lia.command.findPlayer( client, arguments[ 1 ] )
 		local attribName = arguments[ 2 ]
 		local attribNumber = tonumber( arguments[ 3 ] )
-		local target = lia.command.findPlayer( client, arguments[ 1 ] )
 		if not target or not IsValid( target ) then
-			client:notifyLocalized( "noTarget" )
+			client:notifyLocalized( "targetNotFound" )
 			return
 		end
 
