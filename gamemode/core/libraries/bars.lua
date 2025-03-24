@@ -36,7 +36,7 @@ function lia.bar.remove( identifier )
 	end
 end
 
-function lia.bar.drawBar( x, y, w, h, pos, neg, max, right, color )
+function lia.bar.drawBar( x, y, w, h, pos, neg, max, color )
 	if pos > max then pos = max end
 	max = max - 1
 	pos = math.max( ( w - 2 ) / max * pos, 0 )
@@ -83,7 +83,7 @@ function lia.bar.drawAll()
 	local position = lia.option.get( "BarPositions", "Bottom Left" )
 	local scrW, scrH = ScrW(), ScrH()
 	local w, h = scrW * 0.35, 14
-	local x, y = 0, 0
+	local x, y
 	if position == "Top Left" then
 		x, y = 4, 4
 	elseif position == "Top Right" then
@@ -104,7 +104,7 @@ function lia.bar.drawAll()
 		deltas[ i ] = value
 		if value ~= target then bar.lifeTime = now + 5 end
 		if bar.lifeTime >= now or bar.visible or hook.Run( "ShouldBarDraw", bar ) then
-			lia.bar.drawBar( x, y, w, h, value, 0, 2, false, bar.color )
+			lia.bar.drawBar( x, y, w, h, value, 0, 2, bar.color )
 			y = y - ( h + 2 )
 		end
 	end
