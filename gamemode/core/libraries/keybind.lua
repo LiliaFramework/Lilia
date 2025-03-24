@@ -113,8 +113,6 @@ local KeybindKeys = {
 }
 
 function lia.keybind.add( k, d, cb, rcb )
-	if not IsFirstTimePredicted() then return end
-
 	local c = isstring( k ) and KeybindKeys[ string.lower( k ) ] or k
 	if not c then return end
 	lia.keybind.stored[ d ] = lia.keybind.stored[ d ] or {}
