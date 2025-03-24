@@ -51,6 +51,32 @@ function lia.bar.drawBar( x, y, w, h, pos, neg, max, right, color )
 	surface.DrawRect( x + 4 + w - neg, y + 3, neg, h - 6 )
 end
 
+function lia.bar.drawAction()
+	local start, finish = lia.bar.actionStart, lia.bar.actionEnd
+	local curTime = CurTime()
+	local scrW, scrH = ScrW(), ScrH()
+	if finish > curTime then
+		local fraction = 1 - math.TimeFraction( start, finish, curTime )
+		local alpha = fraction * 255
+		if alpha > 0 then
+			local w, h = scrW * 0.35, 28
+			local x, y = scrW * 0.5 - w * 0.5, scrH * 0.725 - h * 0.5
+			lia.util.drawBlurAt( x, y, w, h )
+			surface.SetDrawColor( 35, 35, 35, 100 )
+			surface.DrawRect( x, y, w, h )
+			surface.SetDrawColor( 0, 0, 0, 120 )
+			surface.DrawOutlinedRect( x, y, w, h )
+			surface.SetDrawColor( lia.config.get( "Color" ) )
+			surface.DrawRect( x + 4, y + 4, w * fraction - 8, h - 8 )
+			surface.SetDrawColor( 200, 200, 200, 20 )
+			surface.SetMaterial( lia.util.getMaterial( "vgui/gradient-d" ) )
+			surface.DrawTexturedRect( x + 4, y + 4, w * fraction - 8, h - 8 )
+			draw.SimpleText( lia.bar.actionText, "liaMediumFont", x + 2, y - 22, Color( 20, 20, 20 ) )
+			draw.SimpleText( lia.bar.actionText, "liaMediumFont", x, y - 24, Color( 240, 240, 240 ) )
+		end
+	end
+end
+
 local mathApproach = math.Approach
 function lia.bar.drawAll()
 	lia.bar.drawAction()
