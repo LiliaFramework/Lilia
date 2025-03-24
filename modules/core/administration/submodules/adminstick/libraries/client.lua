@@ -517,7 +517,7 @@ function MODULE:OpenAdminStickUI( target )
 				icon = "icon16/page_copy.png"
 			},
 			{
-				name = "SteamID: " .. target:SteamID64() .. " (copy)",
+				name = "SteamID: " .. target:SteamID() .. " (copy)",
 				cmd = function()
 					local msg = L( "copiedToClipboard", target:Name(), "SteamID" )
 					LocalPlayer():ChatPrint( msg )
