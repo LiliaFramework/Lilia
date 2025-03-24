@@ -120,7 +120,9 @@ function PANEL:setActive( state )
 					end
 
 					commandButton.DoClick = function()
-						self.text:SetText( "/" .. commandName .. " " )
+						local commandData = self.commands[ commandName ]
+						local syntaxPreview = commandData and commandData.syntax or ""
+						self.text:SetText( "/" .. commandName .. " " .. syntaxPreview )
 						self.text:RequestFocus()
 						self.commandList:Remove()
 						self.commandList = nil
@@ -142,6 +144,14 @@ function PANEL:setActive( state )
 		self.text:RequestFocus()
 		self.tabs:SetVisible( true )
 		self.text.OnKeyCodeTyped = function( this, key )
+			if key == KEY_ESCAPE then
+				if IsValid( self.commandList ) then
+					self.commandList:Remove()
+					self.commandList = nil
+					return true
+				end
+			end
+
 			if this:GetText():sub( 1, 1 ) == "/" and key == KEY_TAB and IsValid( self.commandList ) then
 				local children = self.commandList:GetCanvas():GetChildren()
 				if #children > 0 then
@@ -163,7 +173,10 @@ function PANEL:setActive( state )
 
 					local selectedCommand = children[ self.commandIndex ]
 					if IsValid( selectedCommand ) then
-						self.text:SetText( selectedCommand:GetText():match( "^/[^ ]+" ) )
+						local commandName = selectedCommand:GetText():match( "^/([^ ]+)" )
+						local commandData = self.commands[ commandName ]
+						local syntaxPreview = commandData and commandData.syntax or ""
+						self.text:SetText( "/" .. commandName .. " " .. syntaxPreview )
 						self.text:SetCaretPos( #self.text:GetText() )
 						self.text:RequestFocus()
 					end
@@ -327,6 +340,11 @@ function PANEL:Think()
 		self.tabs:SetVisible( false )
 		self.active = false
 		if IsValid( self.entry ) then self.entry:Remove() end
+	end
+
+	if self.active and IsValid( self.text ) and not self.text:HasFocus() and IsValid( self.commandList ) then
+		self.commandList:Remove()
+		self.commandList = nil
 	end
 end
 
