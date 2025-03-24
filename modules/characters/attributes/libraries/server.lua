@@ -29,7 +29,7 @@ function MODULE:KeyRelease( client, key )
 		if IsValid( wep ) and wep.IsHands and wep.ReadyToPickup then wep:Pickup() end
 	end
 
-	if lia.config.get( "StaminaSlowdown", true ) and key == IN_JUMP and not client:isNoClipping() and client:getChar() then
+	if lia.config.get( "StaminaSlowdown", true ) and key == IN_JUMP and not client:isNoClipping() and client:getChar() and not client:InVehicle() and client:Alive() then
 		client:consumeStamina( 15 )
 		local stm = client:getLocalVar( "stamina", 0 )
 		if stm == 0 then
