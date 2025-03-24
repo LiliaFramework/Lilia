@@ -24,6 +24,13 @@ function lia.option.add( key, name, desc, default, callback, data )
 	}
 end
 
+lia.option.add( "BarPositions", "BarPositions", "Bottom Left", nil, {
+	desc = "Determines the position of the Lilia bars.",
+	category = "General",
+	type = "Table",
+	options = { "Top Right", "Top Left", "Bottom Right", "Bottom Left" }
+} )
+
 function lia.option.set( key, value )
 	local option = lia.option.stored[ key ]
 	if option then

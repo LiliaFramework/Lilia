@@ -77,17 +77,25 @@ function lia.bar.drawAction()
 	end
 end
 
-local mathApproach = math.Approach
 function lia.bar.drawAll()
 	lia.bar.drawAction()
 	if hook.Run( "ShouldHideBars" ) then return end
+	local position = lia.option.get( "BarPositons", "Bottom Left" )
+	local scrW, scrH = ScrW(), ScrH()
+	local w, h = scrW * 0.35, 14
+	local x, y = 0, 0
+	if position == "Top Left" then
+		x, y = 4, 4
+	elseif position == "Top Right" then
+		x, y = scrW - w - 4, 4
+	elseif position == "Bottom Left" then
+		x, y = 4, scrH - h - 4
+	elseif position == "Bottom Right" then
+		x, y = scrW - w - 4, scrH - h - 4
+	end
+
+	local deltas, update, now = lia.bar.delta, FrameTime() * 0.6, CurTime()
 	table.sort( lia.bar.list, function( a, b ) return a.priority > b.priority end )
-	local w, h = ScrW() * 0.35, 14
-	local x = 4
-	local y = ScrH() - h
-	local deltas = lia.bar.delta
-	local update = FrameTime() * 0.6
-	local now = CurTime()
 	for i, bar in ipairs( lia.bar.list ) do
 		local target = bar.getValue()
 		local value = math.Approach( deltas[ i ] or 0, target, update )
