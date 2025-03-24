@@ -604,58 +604,6 @@ lia.command.add( "charban", {
 	end
 } )
 
-lia.command.add( "findallflags", {
-	adminOnly = true,
-	privilege = "Get Character Info",
-	onRun = function( client )
-		local onDutyStaffList = {}
-		for _, target in player.Iterator() do
-			if target:isStaffOnDuty() then
-				local char = target:getChar()
-				table.insert( onDutyStaffList, {
-					name = target:Nick(),
-					class = char and lia.class.list[ char:getClass() ] and lia.class.list[ char:getClass() ].name or "N/A",
-					faction = char and char:getFaction() or "N/A",
-					characterID = char and char:getID() or "N/A",
-					usergroup = target:GetUserGroup(),
-					flags = table.concat( char:getFlags(), ", " )
-				} )
-			end
-		end
-
-		if #onDutyStaffList > 0 then
-			lia.util.CreateTableUI( client, L( "uiOnDutyStaffFlags" ), {
-				{
-					name = L( "name" ),
-					field = "name"
-				},
-				{
-					name = L( "class" ),
-					field = "class"
-				},
-				{
-					name = L( "faction" ),
-					field = "faction"
-				},
-				{
-					name = L( "characterID" ),
-					field = "characterID"
-				},
-				{
-					name = L( "usergroup" ),
-					field = "usergroup"
-				},
-				{
-					name = L( "flags" ),
-					field = "flags"
-				}
-			}, onDutyStaffList )
-		else
-			client:notifyLocalized( "noOnDutyStaff" )
-		end
-	end
-} )
-
 lia.command.add( "checkmoney", {
 	adminOnly = true,
 	privilege = "Get Character Info",
@@ -1044,44 +992,6 @@ lia.command.add( "charaddmoney", {
 		client:notifyLocalized( "addMoney", target:Name(), lia.currency.get( amount ), lia.currency.get( currentMoney + amount ) )
 	end,
 	alias = { "chargivemoney" }
-} )
-
-lia.command.add( "flaglist", {
-	adminOnly = true,
-	privilege = "Manage Flags",
-	onRun = function( client, arguments )
-		local target = lia.command.findPlayer( client, arguments[ 1 ] )
-		local flags = {}
-		if IsValid( target ) and target:getChar() then
-			for flag, data in pairs( lia.flag.list ) do
-				if target:getChar():hasFlags( flag ) then
-					table.insert( flags, {
-						flag = flag,
-						desc = data.desc
-					} )
-				end
-			end
-		else
-			for flag, data in pairs( lia.flag.list ) do
-				table.insert( flags, {
-					flag = flag,
-					desc = data.desc
-				} )
-			end
-		end
-
-		lia.util.CreateTableUI( client, L( "uiFlagList" ), {
-			{
-				name = L( "flag" ),
-				field = "flag"
-			},
-			{
-				name = L( "desc" ),
-				field = "desc"
-			}
-		}, flags )
-	end,
-	alias = { "flags" }
 } )
 
 lia.command.add( "itemlist", {
