@@ -175,18 +175,16 @@ function MODULE:OnPlayerHitGround( client )
 end
 
 function MODULE:ShouldCollide( ent1, ent2 )
-	local class1, class2 = ent1:GetClass(), ent2:GetClass()
-	local blockedEntities = {
-		[ "lia_money" ] = true,
-		[ "lia_item" ] = true,
-		[ "prop_physics" ] = true,
-		[ "func_tanktrain" ] = true,
+	local blocked = {
+		lia_money = true,
+		lia_item = true,
+		prop_physics = true,
+		func_tanktrain = true,
 	}
 
-	local isBlockedEntity1 = blockedEntities[ class1 ]
-	local isBlockedEntity2 = blockedEntities[ class2 ]
-	local isPlayerColliding = ent1:IsPlayer() or ent2:IsPlayer()
-	if isPlayerColliding and isBlockedEntity1 and isBlockedEntity2 then return false end
+	local c1, c2 = ent1:GetClass(), ent2:GetClass()
+	local b1, b2 = blocked[ c1 ], blocked[ c2 ]
+	if b1 and b2 then return false end
 	return true
 end
 
