@@ -1,27 +1,38 @@
 ﻿function MODULE:EntityTakeDamage( seat, dmgInfo )
-	if lia.config.get( "DamageInCars", false ) and seat:isSimfphysCar() and seat.GetDriver then
-		local client = seat:GetDriver()
-		if IsValid( client ) then
-			local hitPos = dmgInfo:GetDamagePosition()
-			local clientPos = client:GetPos()
-			local thresholdDistance = 53
-			if hitPos:Distance( clientPos ) <= thresholdDistance then
-				local newHealth = client:Health() - dmgInfo:GetDamage() * 0.3
-				if newHealth > 0 then
-					client:SetHealth( newHealth )
-				else
-					client:Kill()
-				end
-			end
-		end
+	if not lia.config.get( "DamageInCars", true ) then return end
+	if not seat:isSimfphysCar() then return end
+	if seat.GetDriver == nil then return end
+	local client = seat:GetDriver()
+	if not IsValid( client ) then return end
+	if dmgInfo:GetDamagePosition():Distance( client:GetPos() ) > 300 then return end
+	local damageAmount = dmgInfo:GetDamage() * 0.3
+	local newHealth = client:Health() - damageAmount
+	if newHealth > 0 then
+		client:SetHealth( newHealth )
+	else
+		client:Kill()
 	end
 end
 
-function MODULE:isSuitableForTrunk( vehicle )
-	if IsValid( vehicle ) and vehicle:isSimfphysCar() then return true end
-end
+function MODULE:simfphysUse( entity, client )
+	if entity.IsBeingEntered then
+		client:notify( "Someone is entering this car!" )
+		return true
+	end
 
-function MODULE:CheckValidSit( client )
-	local vehicle = client:getTracedEntity()
-	if vehicle:isSimfphysCar() then return false end
+	local delay = lia.config.get( "TimeToEnterVehicle", 5 )
+	if entity:isSimfphysCar() and delay > 0 then
+		entity.IsBeingEntered = true
+		client:setAction( "Entering Vehicle...", delay )
+		client:doStaredAction( entity, function()
+			if IsValid( entity ) then
+				entity.IsBeingEntered = false
+				entity:SetPassenger( client )
+			end
+		end, delay, function()
+			if IsValid( entity ) then entity.IsBeingEntered = false end
+			if IsValid( client ) then client:stopAction() end
+		end )
+	end
+	return true
 end
