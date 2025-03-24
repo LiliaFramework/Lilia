@@ -141,4 +141,14 @@ function PANEL:paintTextEntry( w, h )
 	self:DrawTextEntryText( color_white, HIGHLIGHT, HIGHLIGHT )
 end
 
+function PANEL:onDisplay()
+	local nameText, descText, modelIndex = self.name:GetValue(), self.desc:GetValue(), self:getContext( "model" )
+	self:Clear()
+	self:Init()
+	self.name:SetValue( nameText )
+	self.desc:SetValue( descText )
+	self:setContext( "model", modelIndex )
+	self:onModelSelected( self.models:GetChildren()[ modelIndex ], true )
+end
+
 vgui.Register( "liaCharacterBiography", PANEL, "liaCharacterCreateStep" )
