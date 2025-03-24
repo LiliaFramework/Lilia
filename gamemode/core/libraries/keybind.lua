@@ -173,11 +173,13 @@ end
 
 hook.Add( "PlayerButtonDown", "liaKeybindPress", function( p, b )
 	local action = lia.keybind.stored[ b ]
+	if not IsFirstTimePredicted() then return end
 	if action and lia.keybind.stored[ action ] and lia.keybind.stored[ action ].callback then lia.keybind.stored[ action ].callback( p ) end
 end )
 
 hook.Add( "PlayerButtonUp", "liaKeybindRelease", function( p, b )
 	local action = lia.keybind.stored[ b ]
+	if not IsFirstTimePredicted() then return end
 	if action and lia.keybind.stored[ action ] and lia.keybind.stored[ action ].release then lia.keybind.stored[ action ].release( p ) end
 end )
 

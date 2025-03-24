@@ -133,8 +133,6 @@ function MODULE:CanDisplayCharInfo( name )
 end
 
 lia.keybind.add( KEY_I, "Open Inventory", function()
-	if not IsFirstTimePredicted() then return end
-	
 	local f1Menu = vgui.Create( "liaMenu" )
 	f1Menu:setActiveTab( "inv" )
 end )
