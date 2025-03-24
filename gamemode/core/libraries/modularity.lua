@@ -19,6 +19,56 @@ local function loadWorkshopContent( Workshop )
 	end
 end
 
+function checkVersion( moduleID, isPublic )
+	local CheckerURL = {
+		public = "https://raw.githubusercontent.com/LiliaFramework/Modules/main/modules.json",
+		private = ""
+	}
+
+	local moduleURL = isPublic and CheckerURL.public or CheckerURL.private
+	if moduleURL == "" then
+		LiliaUpdater( "Detected Public Plugin, can't evaluate update status as no version exists." )
+		return
+	end
+
+	http.Fetch( moduleURL, function( body, _, _, code )
+		if code ~= 200 then
+			LiliaUpdater( "Error fetching module list (HTTP " .. code .. ")" )
+			return
+		end
+
+		local modules = util.JSONToTable( body )
+		if not modules then
+			LiliaUpdater( "Error parsing module data" )
+			return
+		end
+
+		local module = nil
+		for _, m in ipairs( modules ) do
+			if m.uniqueID == moduleID then
+				module = m
+				break
+			end
+		end
+
+		if not module then
+			LiliaUpdater( "Module with uniqueID '" .. moduleID .. "' not found" )
+			return
+		end
+
+		if not module.version then
+			LiliaUpdater( "Detected Public Plugin, can't evaluate update status as no version exists." )
+			return
+		end
+
+		if module.version ~= EXPECTED_VALUE then
+			LiliaUpdater( "Module '" .. module.name .. "' has a version mismatch. " .. ( isPublic and "Please update to version " .. module.version .. " at " .. module.source ) or "Request an update from the developer." )
+		else
+			LiliaUpdater( "Module " .. module.name .. " is up-to-date." )
+		end
+	end, function( err ) LiliaUpdater( "HTTP.Fetch error: " .. err ) end )
+end
+
 local function loadPermissions( Privileges )
 	if not Privileges or not istable( Privileges ) then return end
 	for _, privilegeData in ipairs( Privileges ) do
@@ -142,10 +192,10 @@ function lia.module.load( uniqueID, path, isSingleFile, variable, firstLoad )
 		lia.module.list[ uniqueID ] = MODULE
 		if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then _G[ MODULE.identifier ] = lia.module.list[ uniqueID ] end
 		lia.module.OnFinishLoad( path, firstLoad )
+		if MODULE.ModuleLoaded then MODULE:ModuleLoaded() end
+		if MODULE.Public ~= nil then checkVersion( MODULE.uniqueID, MODULE.Public ) end
 		_G[ variable ] = oldModule
 	end
-
-	if MODULE.ModuleLoaded then MODULE:ModuleLoaded() end
 end
 
 function lia.module.OnFinishLoad( path, firstLoad )
