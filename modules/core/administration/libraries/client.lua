@@ -169,4 +169,4 @@ function MODULE:LoadFonts( font )
 	} )
 end
 
-lia.keybind.add( KEY_NONE, "Admin Mode", function() lia.command.send( "adminmode" ) end )
+lia.keybind.add( KEY_NONE, "Admin Mode", function() if not IsFirstTimePredicted() then return end lia.command.send( "adminmode" ) end )
