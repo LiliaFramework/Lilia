@@ -31,7 +31,7 @@ local DefaultFunctions = {
                 client.itemTakeTransaction = nil
                 if IsValid(entity) then
                     entity.liaIsSafe = true
-                    entity:Remove()
+                    SafeRemoveEntity(entity)
                 end
 
                 if not IsValid(client) then return end

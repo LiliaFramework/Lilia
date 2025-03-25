@@ -184,8 +184,8 @@ function SWEP:DropObject(bThrow)
     if not IsValid(self.heldEntity) or self.heldEntity.ixHeldOwner ~= self:GetOwner() then return end
     self.lastPlayerAngles = nil
     self:GetOwner():SetLocalVar("bIsHoldingObject", false)
-    self.constraint:Remove()
-    self.holdEntity:Remove()
+    SafeRemoveEntity(self.constraint)
+    SafeRemoveEntity(self.holdEntity)
     self.heldEntity:StopMotionController()
     self.heldEntity:SetCollisionGroup(self.heldEntity.ixCollisionGroup or COLLISION_GROUP_NONE)
     local physics = self:GetHeldPhysicsObject()

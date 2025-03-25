@@ -360,7 +360,7 @@ function GM:PlayerDisconnected(client)
     client:removeRagdoll()
     lia.char.cleanUpForPlayer(client)
     for _, entity in ents.Iterator() do
-        if entity:GetCreator() == client and not string.StartsWith(entity:GetClass(), "lia_") then entity:Remove() end
+        if entity:GetCreator() == client and not string.StartsWith(entity:GetClass(), "lia_") then SafeRemoveEntity(entity) end
     end
 end
 

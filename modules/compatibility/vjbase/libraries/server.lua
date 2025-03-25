@@ -25,7 +25,7 @@ function MODULE:Think()
 end
 
 function MODULE:OnEntityCreated(entity)
-    if entity:GetClass() == "obj_vj_spawner_base" then entity:Remove() end
+    if entity:GetClass() == "obj_vj_spawner_base" then SafeRemoveEntity(entity) end
 end
 
 timer.Simple(10, function()

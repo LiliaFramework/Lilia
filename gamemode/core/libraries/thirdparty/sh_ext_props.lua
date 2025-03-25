@@ -136,7 +136,8 @@ function rb655_dissolve(ent)
     ent:SetName("rb655_dissolve" .. dissolve_id)
     dissolver:Fire("Dissolve", "rb655_dissolve" .. dissolve_id)
     dissolve_id = dissolve_id + 1
-    timer.Create("rb655_ep_cleanupDissolver", 60, 1, function() if IsValid(dissolver) then dissolver:Remove() end end)
+
+    SafeRemoveEntityDelayed(dissolver, 60)
 end
 
 AddEntFunctionProperty("rb655_dissolve", "Disintegrate", 657, function(ent, client)
@@ -257,7 +258,7 @@ AddEntFunctionProperty("rb655_healthcharger_recharge", "Recharge", 655, "item_he
     n:EmitSound("items/suitchargeok1.wav")
     undo.ReplaceEntity(ent, n)
     cleanup.ReplaceEntity(ent, n)
-    ent:Remove()
+    SafeRemoveEntity(ent)
 end, "icon16/arrow_refresh.png")
 
 AddEntFunctionProperty("rb655_vehicle_exit", "Kick Driver", 655, function(ent)

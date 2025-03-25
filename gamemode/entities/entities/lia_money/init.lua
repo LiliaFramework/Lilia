@@ -25,7 +25,7 @@ function ENT:Use(activator)
     if hook.Run("CanPickupMoney", activator, self) ~= false then
         activator:getChar():giveMoney(self:getAmount())
         hook.Run("OnPickupMoney", activator, self)
-        self:Remove()
+        SafeRemoveEntity(self)
     end
 end
 

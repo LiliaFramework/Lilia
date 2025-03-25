@@ -144,7 +144,7 @@ if SERVER then
 
     function ITEM:remove()
         local d = deferred.new()
-        if IsValid(self.entity) then self.entity:Remove() end
+        if IsValid(self.entity) then SafeRemoveEntity(self.entity) end
         self:removeFromInventory():next(function()
             d:resolve()
             return self:delete()
@@ -175,7 +175,7 @@ if SERVER then
         if instance then
             if IsValid(instance.entity) then
                 instance.entity.liaIsSafe = true
-                instance.entity:Remove()
+                SafeRemoveEntity(instance.entity)
             end
 
             local client
@@ -329,7 +329,7 @@ if SERVER then
         hook.Run("OnPlayerInteractItem", client, action, self, result, data)
         if result ~= false and not deferred.isPromise(result) then
             if IsValid(entity) then
-                entity:Remove()
+                SafeRemoveEntity(entity)
             else
                 self:remove()
             end

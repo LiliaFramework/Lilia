@@ -36,15 +36,14 @@ function playerMeta:isNoClipping()
 end
 
 function playerMeta:hasRagdoll()
-    local valid = IsValid(self.liaRagdoll)
-    return valid
+    return IsValid(self.liaRagdoll)
 end
 
 function playerMeta:removeRagdoll()
     if not self:hasRagdoll() then return end
     local ragdoll = self:getRagdoll()
     ragdoll.liaIgnoreDelete = true
-    ragdoll:Remove()
+    SafeRemoveEntity(ragdoll)
     self:setLocalVar("blur", nil)
 end
 
@@ -459,7 +458,7 @@ if SERVER then
         local hasRagdoll = self:hasRagdoll()
         local ragdoll = self:getRagdoll()
         if state then
-            if hasRagdoll then ragdoll:Remove() end
+            if hasRagdoll then SafeRemoveEntity(ragdoll) end
             local entity = self:createRagdoll()
             entity:setNetVar("player", self)
             entity:CallOnRemove("fixer", function()
@@ -543,7 +542,7 @@ if SERVER then
                         end
 
                         time = time - 0.33
-                        if time <= 0 then entity:Remove() end
+                        if time <= 0 then SafeRemoveEntity(entity) end
                     else
                         timer.Remove(uniqueID)
                     end
@@ -556,7 +555,7 @@ if SERVER then
                 entity:SetCustomCollisionCheck(false)
             end
         elseif hasRagdoll then
-            self.liaRagdoll:Remove()
+            SafeRemoveEntity(self.liaRagdoll)
             hook.Run("OnCharFallover", self, nil, false)
         end
     end

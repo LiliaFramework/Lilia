@@ -40,10 +40,10 @@ function MODULE:PlayerSpawnedProp(client, model, entity)
         end
     end, function(err)
         ErrorNoHalt("Unable to create storage entity for " .. client:Name() .. "\n" .. err .. "\n")
-        if IsValid(storage) then storage:Remove() end
+        if IsValid(storage) then SafeRemoveEntity(storage) end
     end)
 
-    entity:Remove()
+    SafeRemoveEntity(entity)
 end
 
 function MODULE:CanPlayerSpawnStorage(client, _, info)
@@ -99,7 +99,7 @@ function MODULE:LoadData()
                 storage:setInventory(inventory)
                 hook.Run("StorageRestored", storage, inventory)
             elseif IsValid(storage) then
-                timer.Simple(1, function() if IsValid(storage) then storage:Remove() end end)
+                SafeRemoveEntityDelayed(storage, 1)
             end
         end)
 

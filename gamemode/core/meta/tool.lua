@@ -110,7 +110,7 @@ end
 
 function ToolGunMeta:ReleaseGhostEntity()
     if IsValid(self.GhostEntity) then
-        self.GhostEntity:Remove()
+        SafeRemoveEntity(self.GhostEntity)
         self.GhostEntity = nil
     end
 end

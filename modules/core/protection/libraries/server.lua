@@ -158,10 +158,10 @@ function MODULE:OnEntityCreated(entity)
             return true
         end
 
-        timer.Simple(0, function() entity:Remove() end)
+        timer.Simple(0, function() SafeRemoveEntity(entity) end)
     elseif class == "point_servercommand" then
         print("[Notify] point_servercommand entity detected and will be removed.")
-        timer.Simple(0, function() entity:Remove() end)
+        timer.Simple(0, function() SafeRemoveEntity(entity) end)
     elseif class == "prop_vehicle_prisoner_pod" then
         entity:AddEFlags(EFL_NO_THINK_FUNCTION)
     end
@@ -170,7 +170,8 @@ end
 function MODULE:OnPlayerDropWeapon(_, _, entity)
     local physObject = entity:GetPhysicsObject()
     if physObject then physObject:EnableMotion() end
-    timer.Simple(lia.config.get("TimeUntilDroppedSWEPRemoved", 15), function() if entity and IsValid(entity) then entity:Remove() end end)
+
+    SafeRemoveEntityDelayed(entity, lia.config.get("TimeUntilDroppedSWEPRemoved", 15))
 end
 
 function MODULE:OnPlayerHitGround(client)

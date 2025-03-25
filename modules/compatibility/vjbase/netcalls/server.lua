@@ -12,5 +12,5 @@ for _, netName in ipairs(ExploitableNets) do
 end
 
 function MODULE:OnEntityCreated(ent)
-    if ent:GetClass() == "obj_vj_spawner_base" then ent:Remove() end
+    if ent:GetClass() == "obj_vj_spawner_base" then SafeRemoveEntity(ent) end
 end

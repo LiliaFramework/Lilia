@@ -25,13 +25,13 @@ function ENT:OnTakeDamage(dmginfo)
     self:setHealth(self.health - damage)
     if self.health <= 0 and not self.breaking then
         self.breaking = true
-        self:Remove()
+        SafeRemoveEntity(self)
     end
 end
 
 function ENT:setItem(itemID)
     local itemTable = lia.item.instances[itemID]
-    if not itemTable then return self:Remove() end
+    if not itemTable then return SafeRemoveEntity(self) end
     itemTable:sync()
     local model = hook.Run("getItemDropModel", itemTable, self) or itemTable:getModel() or itemTable.model
     self:SetModel(model)

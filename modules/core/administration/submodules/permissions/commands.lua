@@ -134,7 +134,7 @@ lia.command.add("forcegetup", {
             target:setAction("gettingUp", 5, function()
                 if IsValid(entity) then
                     hook.Run("OnCharGetup", target, entity)
-                    entity:Remove()
+                    SafeRemoveEntity(entity)
                 end
             end)
         end
@@ -169,7 +169,7 @@ lia.command.add("chargetup", {
             client:setAction("gettingUp", 5, function()
                 if IsValid(entity) then
                     hook.Run("OnCharGetup", client, entity)
-                    entity:Remove()
+                    SafeRemoveEntity(entity)
                 end
             end)
         end
@@ -399,7 +399,7 @@ lia.command.add("cleanitems", {
         local count = 0
         for _, v in ipairs(ents.FindByClass("lia_item")) do
             count = count + 1
-            v:Remove()
+            SafeRemoveEntity(v)
         end
 
         client:notifyLocalized("cleaningFinished", "Items", count)
@@ -415,7 +415,7 @@ lia.command.add("cleanprops", {
         for _, entity in ents.Iterator() do
             if IsValid(entity) and entity:isProp() then
                 count = count + 1
-                entity:Remove()
+                SafeRemoveEntity(entity)
             end
         end
 
@@ -432,7 +432,7 @@ lia.command.add("cleannpcs", {
         for _, entity in ents.Iterator() do
             if IsValid(entity) and entity:IsNPC() then
                 count = count + 1
-                entity:Remove()
+                SafeRemoveEntity(entity)
             end
         end
 
