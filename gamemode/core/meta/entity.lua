@@ -40,10 +40,17 @@ function entityMeta:getEntItemDropPos(offset)
 	return trResult.HitPos + trResult.HitNormal * 5, trResult.HitNormal:Angle()
 end
 
-function entityMeta:isNearEntity(radius)
-	for _, v in ipairs(ents.FindInSphere(self:GetPos(), radius or 96)) do
-		if v:GetClass() == self:GetClass() then return true end
+function entityMeta:isNearEntity(radius, otherEntity)
+	if radius == nil then radius = 96 end
+
+	for _, v in ipairs(ents.FindInSphere(self:GetPos(), radius)) do
+		if v == self then continue end
+
+		if IsValid(otherEntity) and v == otherEntity or v:GetClass() == self:GetClass() then
+			return true
+		end
 	end
+
 	return false
 end
 
