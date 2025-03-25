@@ -1,5 +1,7 @@
 name: CI
-on: [push, pull_request]
+
+on:
+  push:
 
 permissions:
   actions: write
@@ -53,47 +55,9 @@ jobs:
             --no-max-string-line-length --no-max-comment-line-length \
             --no-max-cyclomatic-complexity
 
-  formatter:
-    runs-on: ubuntu-latest
-    needs: linter
-    steps:
-      - uses: actions/checkout@v3
-        name: Checkout Lilia Repository
-        with:
-          path: lilia
-
-      - name: Download and Install GLuaLint
-        run: |
-          curl -L -o glualint.zip https://github.com/FPtje/GLuaFixer/releases/download/1.29.0/glualint-1.29.0-x86_64-linux.zip
-          unzip glualint.zip -d glualint_folder
-          chmod +x glualint_folder/glualint
-          sudo mv glualint_folder/glualint /usr/local/bin
-          rm -rf glualint.zip glualint_folder
-
-      - name: Run GLuaLint Pretty Print
-        working-directory: lilia
-        run: glualint --config glualint.json --pretty-print-files .
-
-      - name: Configure Git
-        run: |
-          git config --global user.email "githubactions@github.com"
-          git config --global user.name "GitHub Actions"
-
-      - name: Commit and Push Changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-        working-directory: lilia
-        run: |
-          if [ -n "$(git status --porcelain)" ]; then
-            git add .
-            git commit -m "Pretty Printed"
-            git push https://${{ secrets.LiliaGitSecret }}@github.com/${{ github.repository }}.git HEAD:main
-          else
-            echo "No changes to commit"
-          fi
-
   release:
-    needs: formatter
+    needs: linter
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
