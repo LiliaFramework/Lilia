@@ -59,13 +59,16 @@ if SERVER then
 
 	function entityMeta:setNetVar(key, value, receiver)
 		if checkBadType(key, value) then return end
+
 		lia.net[self] = lia.net[self] or {}
 		if lia.net[self][key] ~= value then lia.net[self][key] = value end
+
 		self:sendNetVar(key, receiver)
 	end
 
 	function entityMeta:getNetVar(key, default)
 		if lia.net[self] and lia.net[self][key] ~= nil then return lia.net[self][key] end
+
 		return default
 	end
 
@@ -74,6 +77,7 @@ else
 	function entityMeta:getNetVar(key, default)
 		local index = self:EntIndex()
 		if lia.net[index] and lia.net[index][key] ~= nil then return lia.net[index][key] end
+
 		return default
 	end
 
