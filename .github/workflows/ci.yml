@@ -91,7 +91,6 @@ jobs:
           else
             echo "No changes to commit"
           fi
-
   release:
     needs: formatter
     runs-on: ubuntu-latest
