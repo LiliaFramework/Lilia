@@ -194,16 +194,19 @@ if SERVER then
     function characterMeta:kick()
         local client = self:getPlayer()
         client:KillSilent()
-        local steamID = client:SteamID64()
-        local id = self:getID()
-        local isCurrentChar = self and self:getID() == id
-        if self and self.steamID == steamID then
-            netstream.Start(client, "charKick", id, isCurrentChar)
-            if isCurrentChar then
+
+        local curChar, steamID = client:getChar(), client:SteamID64()
+        local isCurChar = curChar and curChar:getID() == self:getID() or false
+
+        if self.steamID == steamID then
+            netstream.Start(client, "charKick", id, isCurChar)
+            if isCurChar then
                 client:setNetVar("char", nil)
                 client:Spawn()
             end
         end
+
+        hook.Run("OnCharKick", self, client)
     end
 
     function characterMeta:ban(time)
