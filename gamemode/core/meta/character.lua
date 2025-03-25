@@ -233,27 +233,7 @@ if SERVER then
         local client = self:getPlayer()
         if not IsValid(client) then return false end
 
-        local currentMoney = self:getMoney()
-        local maxMoneyLimit = lia.config.get("MoneyLimit") or 0
-        local totalMoney = currentMoney + amount
-
-        if maxMoneyLimit > 0 and isnumber(maxMoneyLimit) and totalMoney > maxMoneyLimit then
-            local excessMoney = totalMoney - maxMoneyLimit
-            self:setMoney(maxMoneyLimit)
-            client:notifyLocalized("moneyLimit", lia.currency.get(maxMoneyLimit), lia.currency.plural, lia.currency.get(excessMoney), lia.currency.plural)
-            local money = lia.currency.spawn(client:getItemDropPos(), excessMoney)
-            if IsValid(money) then
-                money.client = client
-                money.charID = self:getID()
-            end
-
-            lia.log.add(client, "money", maxMoneyLimit - currentMoney)
-        else
-            self:setMoney(totalMoney)
-            lia.log.add(client, "money", amount)
-        end
-
-        return true
+        return client:addMoney(amount)
     end
 
     function characterMeta:takeMoney(amount)
