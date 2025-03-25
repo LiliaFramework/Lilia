@@ -112,8 +112,8 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ github.ref_name || github.sha }}
-          release_name: Release ${{ github.ref_name || github.sha }}
+          tag_name: release
+          release_name: Lilia
           draft: false
           prerelease: false
         env:
