@@ -236,6 +236,10 @@ function GM:CanPlayerHoldObject(_, entity)
 end
 
 function GM:EntityTakeDamage(entity, dmgInfo)
+    if entity:IsPlayer() and entity:isStaffOnDuty() and lia.config.get("StaffHasGodMode", true) then
+        return true
+    end
+
     if IsValid(entity.liaPlayer) then
         if dmgInfo:IsDamageType(DMG_CRUSH) then
             if (entity.liaFallGrace or 0) < CurTime() then

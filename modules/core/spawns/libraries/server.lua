@@ -96,16 +96,6 @@ function MODULE:RemovedDropOnDeathItems(client)
 end
 
 function MODULE:PlayerSpawn(client)
-    if client:getChar() and client:isStaffOnDuty() then
-        if lia.config.get("StaffHasGodMode", true) then
-            client:GodEnable()
-        else
-            client:GodDisable()
-        end
-    else
-        client:GodDisable()
-    end
-
     client:setNetVar("IsDeadRestricted", false)
     client:SetDSP(0, false)
 end
