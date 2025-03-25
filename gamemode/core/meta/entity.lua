@@ -12,14 +12,15 @@ function entityMeta:isMoney()
     return self:GetClass() == "lia_money"
 end
 
+local validClasses = {
+	[ "lvs_base" ] = true,
+	[ "gmod_sent_vehicle_fphysics_base" ] = true,
+	[ "gmod_sent_vehicle_fphysics_wheel" ] = true,
+	[ "prop_vehicle_prisoner_pod" ] = true,
+}
+
 function entityMeta:isSimfphysCar()
-    local validClasses = {
-        ["lvs_base"] = true,
-        ["gmod_sent_vehicle_fphysics_base"] = true,
-        ["gmod_sent_vehicle_fphysics_wheel"] = true,
-        ["prop_vehicle_prisoner_pod"] = true,
-    }
-    return IsValid(self) and validClasses[self:GetClass()] or self.IsSimfphyscar or self.LVS or validClasses[self.Base]
+    return validClasses[ self:GetClass() ] or self.IsSimfphyscar or self.LVS or validClasses[ self.Base ]
 end
 
 function entityMeta:isLiliaPersistent()
@@ -27,7 +28,6 @@ function entityMeta:isLiliaPersistent()
 end
 
 function entityMeta:getEntItemDropPos()
-    if not IsValid(self) then return false end
     local offset = Vector(-50, 0, 0)
     return self:GetPos() + offset
 end
@@ -40,8 +40,7 @@ function entityMeta:isNearEntity(radius)
 end
 
 function entityMeta:GetCreator()
-    local creator = self:getNetVar("creator")
-    if IsValid(creator) then return creator end
+    return self:getNetVar("creator", nil)
 end
 
 if SERVER then
