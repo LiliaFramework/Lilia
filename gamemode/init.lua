@@ -8,17 +8,19 @@ lia = lia or {
     notices = {}
 }
 
+local filesAdd = { "lilia/gamemode/core/libraries/config.lua", "lilia/gamemode/core/libraries/includer.lua", "lilia/gamemode/core/libraries/data.lua", "lilia/gamemode/shared.lua" }
+
 local function AddLiliaFiles()
-    local files = {"lilia/gamemode/core/libraries/config.lua", "lilia/gamemode/core/libraries/includer.lua", "lilia/gamemode/core/libraries/data.lua", "lilia/gamemode/shared.lua"}
-    for _, file in ipairs(files) do
-        AddCSLuaFile(file)
+    for _, fileName in ipairs(filesAdd) do
+        AddCSLuaFile(fileName)
     end
 end
 
+local filesInclude = { "lilia/gamemode/core/libraries/config.lua", "lilia/gamemode/shared.lua", "lilia/gamemode/core/libraries/database.lua", "lilia/gamemode/core/libraries/includer.lua", "lilia/gamemode/core/libraries/data.lua" }
+
 local function IncludeLiliaFiles()
-    local files = {"lilia/gamemode/core/libraries/config.lua", "lilia/gamemode/shared.lua", "lilia/gamemode/core/libraries/database.lua", "lilia/gamemode/core/libraries/includer.lua", "lilia/gamemode/core/libraries/data.lua",}
-    for _, file in ipairs(files) do
-        include(file)
+    for _, fileName in ipairs(filesInclude) do
+        include(fileName)
     end
 end
 
