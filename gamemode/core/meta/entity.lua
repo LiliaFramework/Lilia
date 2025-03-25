@@ -27,13 +27,17 @@ function entityMeta:isLiliaPersistent()
 	return self.IsLeonNPC or self.IsPersistent
 end
 
-function entityMeta:getEntItemDropPos()
-	local trace = util.TraceLine({
+function entityMeta:getEntItemDropPos(offset)
+	if offset == nil then offset = 64 end
 
+	local trResult = util.TraceLine({
+		start = self:EyePos(),
+		endpos = self:EyePos() + self:GetAimVector() * offset,
+		mask = MASK_SHOT,
+		filter = {self}
 	})
 
-	local offset = Vector(-50, 0, 0)
-	return self:GetPos() + offset
+	return trResult.HitPos + trResult.HitNormal * 5, trResult.HitNormal:Angle()
 end
 
 function entityMeta:isNearEntity(radius)
