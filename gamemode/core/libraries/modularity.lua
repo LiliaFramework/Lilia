@@ -19,7 +19,8 @@ local function loadWorkshopContent(Workshop)
     end
 end
 
-function checkVersion(moduleID, isPublic)
+local function checkVersion(module, isPublic)
+    local moduleID = module.uniqueID
     local CheckerURL = {
         public = "https://raw.githubusercontent.com/LiliaFramework/Modules/main/modules.json",
         private = ""
@@ -61,7 +62,7 @@ function checkVersion(moduleID, isPublic)
             return
         end
 
-        if module.version ~= EXPECTED_VALUE then
+        if module.version ~= module.version then
             LiliaUpdater("Module '" .. module.name .. "' has a version mismatch. " .. (isPublic and "Please update to version " .. module.version .. " at " .. module.source) or "Request an update from the developer.")
         else
             LiliaUpdater("Module " .. module.name .. " is up-to-date.")
@@ -193,7 +194,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, firstLoad)
         if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then _G[MODULE.identifier] = lia.module.list[uniqueID] end
         lia.module.OnFinishLoad(path, firstLoad)
         if MODULE.ModuleLoaded then MODULE:ModuleLoaded() end
-        if MODULE.Public ~= nil then checkVersion(MODULE.uniqueID, MODULE.Public) end
+        if MODULE.Public ~= nil then checkVersion(MODULE, MODULE.Public) end
         _G[variable] = oldModule
     end
 end
