@@ -28,6 +28,10 @@ function entityMeta:isLiliaPersistent()
 end
 
 function entityMeta:getEntItemDropPos()
+	local trace = util.TraceLine({
+
+	})
+
 	local offset = Vector(-50, 0, 0)
 	return self:GetPos() + offset
 end
