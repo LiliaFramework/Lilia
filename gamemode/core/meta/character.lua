@@ -212,9 +212,11 @@ if SERVER then
     function characterMeta:ban(time)
         time = tonumber(time)
         if time then time = os.time() + math.max(math.ceil(time), 60) end
+
         self:setData("banned", time or true)
         self:save()
         self:kick()
+
         hook.Run("OnCharPermakilled", self, time or nil)
     end
 
@@ -230,9 +232,11 @@ if SERVER then
     function characterMeta:giveMoney(amount)
         local client = self:getPlayer()
         if not IsValid(client) then return false end
+
         local currentMoney = self:getMoney()
         local maxMoneyLimit = lia.config.get("MoneyLimit") or 0
         local totalMoney = currentMoney + amount
+
         if maxMoneyLimit > 0 and isnumber(maxMoneyLimit) and totalMoney > maxMoneyLimit then
             local excessMoney = totalMoney - maxMoneyLimit
             self:setMoney(maxMoneyLimit)
@@ -248,13 +252,15 @@ if SERVER then
             self:setMoney(totalMoney)
             lia.log.add(client, "money", amount)
         end
+
         return true
     end
 
     function characterMeta:takeMoney(amount)
         amount = math.abs(amount)
-        self:giveMoney(-amount, true)
+        self:giveMoney(-amount)
         lia.log.add(self:getPlayer(), "money", -amount)
+
         return true
     end
 end
