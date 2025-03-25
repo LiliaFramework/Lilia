@@ -24,7 +24,6 @@
     "lint_spaceBetweenParens": false,
     "lint_spaceBetweenBrackets": false,
     "lint_spaceBetweenBraces": false,
-    "lint_maxLineLength": 100,
     "lint_ignoreFiles": [],
     "prettyprint_indentation": "    ",
     "prettyprint_spaceAfterComma": true,
