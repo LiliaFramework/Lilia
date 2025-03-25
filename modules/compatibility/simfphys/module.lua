@@ -5,9 +5,9 @@ MODULE.version = "1.0"
 MODULE.desc = "Adds Simfphys Compatibility"
 MODULE.enabled = simfphys ~= nil
 MODULE.CAMIPrivileges = {
-	{
-		Name = "Staff Permissions - Can Edit Simfphys Cars",
-		MinAccess = "superadmin",
-		Description = "Allows access to Editting Simfphys Cars.",
-	}
+    {
+        Name = "Staff Permissions - Can Edit Simfphys Cars",
+        MinAccess = "superadmin",
+        Description = "Allows access to Editting Simfphys Cars.",
+    }
 }

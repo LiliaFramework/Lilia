@@ -1,7 +1,7 @@
 ﻿local PANEL = {}
 function PANEL:Init()
-	self.items = self:Add( "DScrollPanel" )
-	self.items:Dock( FILL )
+    self.items = self:Add("DScrollPanel")
+    self.items:Dock(FILL)
 end
 
-vgui.Register( "VendorTrader", PANEL, "DPanel" )
+vgui.Register("VendorTrader", PANEL, "DPanel")
