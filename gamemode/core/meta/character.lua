@@ -64,24 +64,25 @@ function characterMeta:hasFlags(flags)
     for i = 1, #flags do
         if self:getFlags():find(flags:sub(i, i), 1, true) then return true end
     end
+
     return hook.Run("CharHasFlags", self, flags) or false
 end
 
-function characterMeta:getItemWeapon()
+function characterMeta:getItemWeapon(requireEquip)
+    if requireEquip == nil then requireEquip = true end
+
     local client = self:getPlayer()
     local inv = self:getInv()
     local items = inv:getItems()
     local weapon = client:GetActiveWeapon()
     if not IsValid(weapon) then return false end
     for _, v in pairs(items) do
-        if v.class then
-            if v.class == weapon:GetClass() and v:getData("equip", false) then
-                return weapon, v
-            else
-                return false
-            end
+        if v.class and v.class == weapon:GetClass() and ( requireEquip and v:getData("equip", false) ) then
+            return true
         end
     end
+
+    return false
 end
 
 if SERVER then
