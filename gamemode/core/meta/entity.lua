@@ -41,6 +41,7 @@ function entityMeta:getEntItemDropPos(offset)
 end
 
 function entityMeta:isNearEntity(radius, otherEntity)
+	if otherEntity == self then return true end
 	if radius == nil then radius = 96 end
 
 	for _, v in ipairs(ents.FindInSphere(self:GetPos(), radius)) do
