@@ -255,16 +255,7 @@ function GM:EntityTakeDamage(entity, dmgInfo)
 end
 
 function GM:KeyPress(client, key)
-    if key == IN_USE then
-        local trace = util.TraceLine({
-            start = client:GetShootPos(),
-            endpos = client:GetShootPos() + client:GetAimVector() * 96,
-            filter = client
-        })
-
-        local entity = trace.Entity
-        if IsValid(entity) and (entity:isDoor() or entity:IsPlayer()) then hook.Run("PlayerUse", client, entity) end
-    elseif key == IN_JUMP then
+    if key == IN_JUMP then
         local traceStart = client:GetShootPos() + Vector(0, 0, 15)
         local traceEndHi = traceStart + client:GetAimVector() * 30
         local traceEndLo = traceStart + client:GetAimVector() * 30
@@ -285,10 +276,6 @@ function GM:KeyPress(client, key)
             client:SetVelocity(Vector(0, 0, 50 + dist * 3))
         end
     end
-end
-
-function GM:EntityNetworkedVarChanged(entity, varName, _, newVal)
-    if varName == "Model" and entity.SetModel then hook.Run("PlayerModelChanged", entity, newVal) end
 end
 
 function GM:InitializedSchema()
