@@ -13,14 +13,14 @@ function entityMeta:isMoney()
 end
 
 local validClasses = {
-	[ "lvs_base" ] = true,
-	[ "gmod_sent_vehicle_fphysics_base" ] = true,
-	[ "gmod_sent_vehicle_fphysics_wheel" ] = true,
-	[ "prop_vehicle_prisoner_pod" ] = true,
+    ["lvs_base"] = true,
+    ["gmod_sent_vehicle_fphysics_base"] = true,
+    ["gmod_sent_vehicle_fphysics_wheel"] = true,
+    ["prop_vehicle_prisoner_pod"] = true,
 }
 
 function entityMeta:isSimfphysCar()
-    return validClasses[ self:GetClass() ] or self.IsSimfphyscar or self.LVS or validClasses[ self.Base ]
+    return validClasses[self:GetClass()] or self.IsSimfphyscar or self.LVS or validClasses[self.Base]
 end
 
 function entityMeta:isLiliaPersistent()
