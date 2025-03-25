@@ -77,6 +77,9 @@ local function drawCrosshair()
 end
 
 local function canDrawWatermark()
+    local hookResult = hook.Run("ShouldDrawWatermark")
+    if hookResult ~= nil then return hookResult end
+
     return lia.config.get("WatermarkEnabled", false) and isstring(lia.config.get("GamemodeVersion", "")) and lia.config.get("GamemodeVersion", "") ~= "" and isstring(lia.config.get("WatermarkLogo", "")) and lia.config.get("WatermarkLogo", "") ~= ""
 end
 
@@ -85,7 +88,7 @@ local function drawWatermark()
     local logoPath = lia.config.get("WatermarkLogo", "")
     local ver = tostring(lia.config.get("GamemodeVersion", ""))
     if logoPath ~= "" then
-        local logo = Material(logoPath, "smooth")
+        local logo = lia.util.getMaterial(logoPath, "smooth")
         surface.SetMaterial(logo)
         surface.SetDrawColor(255, 255, 255, 80)
         surface.DrawTexturedRect(5, ScrH() - h - 5, w, h)
@@ -133,6 +136,9 @@ local function DrawBlur()
 end
 
 local function ShouldDrawBlur()
+    local hookResult = hook.Run("ShouldDrawBlur")
+    if hookResult ~= nil then return hookResult end
+
     return LocalPlayer():Alive()
 end
 
