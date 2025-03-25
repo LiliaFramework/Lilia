@@ -1,5 +1,7 @@
 name: CI
-on: [push, pull_request]
+
+on:
+  push:
 
 permissions:
   actions: write
@@ -55,6 +57,7 @@ jobs:
 
   release:
     needs: linter
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
