@@ -100,6 +100,7 @@ function ITEM:postHook(name, func)
 end
 
 function ITEM:onRegistered()
+    util.PrecacheModel(self.model)
 end
 
 function ITEM:print(detail)
