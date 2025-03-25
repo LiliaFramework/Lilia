@@ -526,26 +526,26 @@ if SERVER then
             if time then
                 local uniqueID = "liaUnRagdoll" .. self:SteamID64()
                 timer.Create(uniqueID, 0.33, 0, function()
-                    if IsValid(entity) and IsValid(self) then
-                        local velocity = entity:GetVelocity()
-                        entity.liaLastVelocity = velocity
-                        self:SetPos(entity:GetPos())
-                        if velocity:Length2D() >= 8 then
-                            if not entity.liaPausing then
-                                self:stopAction()
-                                entity.liaPausing = true
-                            end
-                            return
-                        elseif entity.liaPausing then
-                            self:setAction(getUpMessage, time)
-                            entity.liaPausing = false
-                        end
-
-                        time = time - 0.33
-                        if time <= 0 then SafeRemoveEntity(entity) end
-                    else
+                    if not IsValid(entity) or not IsValid(self) then
                         timer.Remove(uniqueID)
+                        return
                     end
+
+                    local velocity = entity:GetVelocity()
+                    entity.liaLastVelocity = velocity
+                    self:SetPos(entity:GetPos())
+                    if velocity:Length2D() >= 8 and not entity.liaPausing then
+                        self:stopAction()
+                        entity.liaPausing = true
+
+                        return
+                    elseif entity.liaPausing then
+                        self:setAction(getUpMessage, time)
+                        entity.liaPausing = false
+                    end
+
+                    time = time - 0.33
+                    if time <= 0 then SafeRemoveEntity(entity) end
                 end)
             end
 
