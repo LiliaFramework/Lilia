@@ -91,3 +91,37 @@ jobs:
           else
             echo "No changes to commit"
           fi
+
+  release:
+    needs: formatter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Lilia Repository
+        uses: actions/checkout@v3
+        with:
+          path: lilia
+
+      - name: Zip repository
+        working-directory: lilia
+        run: zip -r ../lilia-rootofrepository.zip .
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref_name || github.sha }}
+          release_name: Release ${{ github.ref_name || github.sha }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: lilia-rootofrepository.zip
+          asset_name: lilia-rootofrepository.zip
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
