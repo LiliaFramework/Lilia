@@ -208,7 +208,7 @@ function MODULE:BuildInformationMenu( pages )
 								if IsValid( lia.gui.menu ) then lia.gui.menu:remove() end
 								local entPos = ent:GetPos()
 								local yaw = client:EyeAngles().yaw
-								hook.Add( "CalcView", "EntityViewCalcView", function( ply, pos, ang, fov )
+								hook.Add( "CalcView", "EntityViewCalcView", function()
 									return {
 										origin = entPos + Angle( 0, yaw, 0 ):Forward() * 100 + Vector( 0, 0, 50 ),
 										angles = Angle( 0, yaw, 0 ),
