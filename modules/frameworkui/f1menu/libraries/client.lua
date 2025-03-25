@@ -307,12 +307,12 @@ function MODULE:BuildInformationMenu( pages )
 							local itemPanel = vgui.Create( "DPanel", body )
 							itemPanel:Dock( TOP )
 							itemPanel:DockMargin( 10, 5, 10, 5 )
-							itemPanel:SetTall( 40 + #details * 16 + 8 )
+							itemPanel:SetTall( 40 + #details * 24 + 8 )
 							itemPanel.Paint = function( _, w, h )
 								draw.RoundedBox( 4, 0, 0, w, h, Color( 40, 40, 40, 200 ) )
 								draw.SimpleText( "Class: " .. ( classData.name or "Unnamed" ), "liaMediumFont", 10, 12, color_white )
 								for i, line in ipairs( details ) do
-									draw.SimpleText( line, "liaSmallFont", 10, 40 + ( i - 1 ) * 16, color_white )
+									draw.SimpleText( line, "liaSmallFont", 10, 40 + ( i - 1 ) * 24, color_white )
 								end
 							end
 						end
