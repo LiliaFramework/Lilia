@@ -1,1 +1,1 @@
-﻿hook.Remove( "HUDPaint", "simfphys_HUD" )
+﻿hook.Remove("HUDPaint", "simfphys_HUD")
