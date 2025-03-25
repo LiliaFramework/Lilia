@@ -292,7 +292,8 @@ end
 
 function GM:PostPlayerLoadout(client)
     local character = client:getChar()
-    if not (IsValid(client) or character) then return end
+    if not character then return end
+
     client:Give("lia_hands")
     client:SetupHands()
 end
