@@ -75,113 +75,113 @@ function GM:OnCharVarChanged(character, varName, oldVar, newVar)
     end
 end
 
-local function registerFunctions(scope)
-    local GamemodeFunctions = {
-        server = {
-            {
-                name = "PlayerSpray",
-                returnValue = true
-            },
-            {
-                name = "PlayerDeathSound",
-                returnValue = true
-            },
-            {
-                name = "CanPlayerSuicide",
-                returnValue = false
-            },
-            {
-                name = "AllowPlayerPickup",
-                returnValue = false
-            },
-            {
-                name = "CharacterLoaded",
-                args = {"id"},
-                replacement = "CharLoaded"
-            },
-            {
-                name = "PreCharacterDelete",
-                args = {"id"},
-                replacement = "PreCharDelete"
-            },
-            {
-                name = "OnCharacterDelete",
-                args = {"client", "id"},
-                replacement = "OnCharDelete"
-            },
-            {
-                name = "onCharCreated",
-                args = {"client", "character", "data"},
-                replacement = "OnCharCreated"
-            },
-            {
-                name = "onTransferred",
-                args = {"client"},
-                replacement = "OnTransferred"
-            },
-            {
-                name = "CharacterPreSave",
-                args = {"character"},
-                replacement = "CharPreSave"
-            }
+local GamemodeFunctions = {
+    server = {
+        {
+            name = "PlayerSpray",
+            returnValue = true
         },
-        client = {
-            {
-                name = "HUDDrawTargetID",
-                returnValue = false
-            },
-            {
-                name = "HUDDrawPickupHistory",
-                returnValue = false
-            },
-            {
-                name = "HUDAmmoPickedUp",
-                returnValue = false
-            },
-            {
-                name = "DrawDeathNotice",
-                returnValue = false
-            },
-            {
-                name = "CanDisplayCharacterInfo",
-                args = {"client", "id"},
-                replacement = "CanDisplayCharInfo"
-            },
-            {
-                name = "KickedFromCharacter",
-                args = {"id", "isCurrentChar"},
-                replacement = "KickedFromChar"
-            },
-            {
-                name = "CharacterListLoaded",
-                args = {"newCharList"},
-                replacement = "CharListLoaded"
-            },
-            {
-                name = "CharacterListUpdated",
-                args = {"oldCharList", "newCharList"},
-                replacement = "CharListUpdated"
-            }
+        {
+            name = "PlayerDeathSound",
+            returnValue = true
         },
-        shared = {
-            {
-                name = "CharacterMaxStamina",
-                args = {"character"},
-                replacement = "CharMaxStamina"
-            },
-            {
-                name = "GetMaxPlayerCharacter",
-                args = {"client"},
-                replacement = "GetMaxPlayerChar"
-            },
-            {
-                name = "CanPlayerCreateCharacter",
-                args = {"client"},
-                replacement = "CanPlayerCreateChar"
-            }
+        {
+            name = "CanPlayerSuicide",
+            returnValue = false
+        },
+        {
+            name = "AllowPlayerPickup",
+            returnValue = false
+        },
+        {
+            name = "CharacterLoaded",
+            args = {"id"},
+            replacement = "CharLoaded"
+        },
+        {
+            name = "PreCharacterDelete",
+            args = {"id"},
+            replacement = "PreCharDelete"
+        },
+        {
+            name = "OnCharacterDelete",
+            args = {"client", "id"},
+            replacement = "OnCharDelete"
+        },
+        {
+            name = "onCharCreated",
+            args = {"client", "character", "data"},
+            replacement = "OnCharCreated"
+        },
+        {
+            name = "onTransferred",
+            args = {"client"},
+            replacement = "OnTransferred"
+        },
+        {
+            name = "CharacterPreSave",
+            args = {"character"},
+            replacement = "CharPreSave"
+        }
+    },
+    client = {
+        {
+            name = "HUDDrawTargetID",
+            returnValue = false
+        },
+        {
+            name = "HUDDrawPickupHistory",
+            returnValue = false
+        },
+        {
+            name = "HUDAmmoPickedUp",
+            returnValue = false
+        },
+        {
+            name = "DrawDeathNotice",
+            returnValue = false
+        },
+        {
+            name = "CanDisplayCharacterInfo",
+            args = {"client", "id"},
+            replacement = "CanDisplayCharInfo"
+        },
+        {
+            name = "KickedFromCharacter",
+            args = {"id", "isCurrentChar"},
+            replacement = "KickedFromChar"
+        },
+        {
+            name = "CharacterListLoaded",
+            args = {"newCharList"},
+            replacement = "CharListLoaded"
+        },
+        {
+            name = "CharacterListUpdated",
+            args = {"oldCharList", "newCharList"},
+            replacement = "CharListUpdated"
+        }
+    },
+    shared = {
+        {
+            name = "CharacterMaxStamina",
+            args = {"character"},
+            replacement = "CharMaxStamina"
+        },
+        {
+            name = "GetMaxPlayerCharacter",
+            args = {"client"},
+            replacement = "GetMaxPlayerChar"
+        },
+        {
+            name = "CanPlayerCreateCharacter",
+            args = {"client"},
+            replacement = "CanPlayerCreateChar"
         }
     }
+}
 
+local function registerFunctions(scope)
     for _, funcData in ipairs(GamemodeFunctions[scope]) do
         if funcData.returnValue ~= nil then
             GM[funcData.name] = function() return funcData.returnValue end
