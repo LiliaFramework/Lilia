@@ -91,6 +91,7 @@ jobs:
           else
             echo "No changes to commit"
           fi
+
   release:
     needs: formatter
     runs-on: ubuntu-latest
@@ -99,6 +100,36 @@ jobs:
         name: Checkout Lilia Repository
         with:
           path: lilia
+
+      - name: Remove existing release & tag (if any)
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const tag = 'release';
+            try {
+              const rel = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag
+              });
+              await github.rest.repos.deleteRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: rel.data.id
+              });
+              await github.rest.git.deleteRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `tags/${tag}`
+              });
+              core.info(`Deleted existing release & tag "${tag}"`);
+            } catch (error) {
+              if (error.status === 404) {
+                core.info('No existing release/tag to delete');
+              } else {
+                throw error;
+              }
+            }
 
       - name: Prepare and Zip
         run: |
