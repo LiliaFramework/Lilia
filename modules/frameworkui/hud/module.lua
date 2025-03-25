@@ -1,7 +1,7 @@
 ﻿MODULE.name = "HUD"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
-MODULE.version = "Stock"
+MODULE.version = "1.0"
 MODULE.desc = "Implements Lilia HUD Elements."
 if CLIENT then
 	lia.option.add( "fpsDraw", "FPS Draw", "Enable FPS display on the HUD", false, nil, {

@@ -3,7 +3,7 @@ MODULE.HackingCheckSeed = MODULE.HackingCheckSeed or string.generateRandom()
 MODULE.name = "Protection"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
-MODULE.version = "Stock"
+MODULE.version = "1.0"
 MODULE.desc = "Implements Lilia Protection Modules."
 MODULE.CAMIPrivileges = {
 	{

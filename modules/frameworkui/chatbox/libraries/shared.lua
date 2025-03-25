@@ -163,7 +163,7 @@ lia.chat.register( "looc", {
 		if speaker:EyePos():Distance( listener:EyePos() ) <= lia.config.get( "ChatRange", 280 ) then return true end
 		return false
 	end,
-	prefix = { ".//", "[[", "/looc" },
+	prefix = { "looc" },
 	noSpaceAfter = true,
 	filter = "ooc"
 } )

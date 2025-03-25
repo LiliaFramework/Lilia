@@ -2,7 +2,7 @@
 MODULE.name = "PAC3"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
-MODULE.version = "Stock"
+MODULE.version = "1.0"
 MODULE.desc = "Adds PAC Compatibility"
 MODULE.enabled = pac ~= nil
 MODULE.CAMIPrivileges = {
