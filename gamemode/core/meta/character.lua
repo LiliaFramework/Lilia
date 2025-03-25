@@ -18,16 +18,15 @@ end
 function characterMeta:getPlayer()
     if IsValid(self.player) then
         return self.player
-    elseif self.steamID then
-        local steamID = self.steamID
-        for _, v in player.Iterator() do
-            if v:SteamID64() == steamID then
+    end
+
+    for _, v in player.Iterator() do
+        if self.steamID then
+            if v:SteamID64() == self.steamID then
                 self.player = v
                 return v
             end
-        end
-    else
-        for _, v in player.Iterator() do
+        else
             local character = v:getChar()
             if character and character:getID() == self:getID() then
                 self.player = v
