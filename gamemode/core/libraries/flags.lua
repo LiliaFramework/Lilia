@@ -59,33 +59,22 @@ hook.Add( "BuildInformationMenu", "BuildInformationMenuFlags", function( pages )
 
 			local scroll = vgui.Create( "DScrollPanel", panel )
 			scroll:Dock( FILL )
-			local iconLayout = vgui.Create( "DIconLayout", scroll )
-			iconLayout:Dock( FILL )
-			iconLayout:SetSpaceY( 5 )
-			iconLayout:SetSpaceX( 5 )
-			iconLayout.PerformLayout = function( self )
-				local y = 0
-				local parentWidth = self:GetWide()
-				for _, child in ipairs( self:GetChildren() ) do
-					child:SetPos( ( parentWidth - child:GetWide() ) / 2, y )
-					y = y + child:GetTall() + self:GetSpaceY()
-				end
-
-				self:SetTall( y )
-			end
-
 			for flagName, flagData in SortedPairs( lia.flag.list ) do
 				if isnumber( flagName ) then continue end
-				local flagPanel = vgui.Create( "DPanel", iconLayout )
-				flagPanel:SetSize( panel:GetWide(), 60 )
+				local hasDesc = flagData.desc and flagData.desc ~= ""
+				local height = hasDesc and 80 or 40
+				local flagPanel = vgui.Create( "DPanel", scroll )
+				flagPanel:Dock( TOP )
+				flagPanel:DockMargin( 10, 5, 10, 0 )
+				flagPanel:SetTall( height )
 				flagPanel.Paint = function( _, w, h )
 					local hasFlag = char:hasFlags( flagName )
 					local status = hasFlag and "✓" or "✗"
 					local statusColor = hasFlag and Color( 0, 255, 0 ) or Color( 255, 0, 0 )
 					draw.RoundedBox( 4, 0, 0, w, h, Color( 40, 40, 40, 200 ) )
-					draw.SimpleText( flagName, "liaMediumFont", 20, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-					draw.SimpleText( status, "liaBigFont", w - 20, 5, statusColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP )
-					if flagData.desc then draw.SimpleText( flagData.desc, "liaSmallFont", 20, 30, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP ) end
+					draw.SimpleText( "Flag '" .. flagName .. "'", "liaMediumFont", 20, 10, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+					draw.SimpleText( status, "liaHugeFont", w - 20, h / 2, statusColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER )
+					if hasDesc then draw.SimpleText( flagData.desc, "liaSmallFont", 20, 45, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP ) end
 				end
 			end
 		end
