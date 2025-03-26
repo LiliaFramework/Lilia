@@ -1,4 +1,10 @@
 ﻿local PANEL = {}
+local controls = {"Panel", "g_SpawnMenu", "CreationMenu", "ToolMenu", "DHorizontalDivider", "DImageButton", "ContentSidebar", "ContentContainer", "ContentSearch", "DTree", "DTree_Node", "SpawnmenuContentPanel", "SpawnmenuNPCSidebarToolbox", "DCategoryList", "SpawnmenuContentHeader"}
+local function PaintPanel(w, h)
+    surface.SetDrawColor(45, 45, 45, 200)
+    surface.DrawRect(0, 0, w, h)
+end
+
 function PANEL:Init()
     self:SetDrawOnTop(true)
     self.DeleteContentsOnClose = false
@@ -81,3 +87,22 @@ function PANEL:Close()
 end
 
 derma.DefineControl("DTooltip", "", PANEL, "DLabel")
+for _, name in ipairs(controls) do
+    local ctrl = vgui.GetControlTable(name)
+    if ctrl then
+        function ctrl:Paint(w, h)
+            PaintPanel(w, h)
+        end
+    end
+end
+
+local node = vgui.GetControlTable("DTree_Node")
+if node then
+    function node:Paint(w, h)
+        PaintPanel(w, h)
+    end
+
+    function node:ApplySchemeSettings()
+        if IsValid(self.Label) then self.Label:SetTextColor(Color(255, 255, 255, 255)) end
+    end
+end
