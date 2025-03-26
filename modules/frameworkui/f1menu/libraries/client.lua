@@ -103,7 +103,12 @@ function MODULE:BuildInformationMenu(pages)
                         local icon = vgui.Create("liaSpawnIcon", itemPanel)
                         icon:Dock(LEFT)
                         icon:SetWide(64)
-                        icon:SetModel(data.model or "models/error.mdl", data.skin or 0)
+                        if IsValid(icon.Entity) then
+                            icon:SetModel(data.model or "models/error.mdl", data.skin or 0)
+                        else
+                            timer.Simple(0, function() if IsValid(icon) then icon:SetModel(data.model or "models/error.mdl", data.skin or 0) end end)
+                        end
+
                         itemPanel.Paint = function(_, w, h)
                             draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
                             draw.SimpleText(data.name, "liaMediumFont", 80, 10, color_white, TEXT_ALIGN_LEFT)
