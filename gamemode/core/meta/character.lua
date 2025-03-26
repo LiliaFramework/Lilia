@@ -188,7 +188,7 @@ if SERVER then
         local client = self:getPlayer()
         local classData = lia.class.list[class]
         if not classData or classData.faction ~= client:Team() then
-            self:KickClass()
+            self:kickClass()
             return false
         end
 
