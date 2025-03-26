@@ -16,10 +16,7 @@ function characterMeta:getID()
 end
 
 function characterMeta:getPlayer()
-    if IsValid(self.player) then
-        return self.player
-    end
-
+    if IsValid(self.player) then return self.player end
     for _, v in player.Iterator() do
         if self.steamID then
             if v:SteamID64() == self.steamID then
@@ -64,28 +61,217 @@ function characterMeta:hasFlags(flags)
     for i = 1, #flags do
         if self:getFlags():find(flags:sub(i, i), 1, true) then return true end
     end
-
     return hook.Run("CharHasFlags", self, flags) or false
 end
 
 function characterMeta:getItemWeapon(requireEquip)
     if requireEquip == nil then requireEquip = true end
-
     local client = self:getPlayer()
     local inv = self:getInv()
     local items = inv:getItems()
     local weapon = client:GetActiveWeapon()
     if not IsValid(weapon) then return false end
     for _, v in pairs(items) do
-        if v.class and v.class == weapon:GetClass() and ( requireEquip and v:getData("equip", false) ) then
-            return true
-        end
+        if v.class and v.class == weapon:GetClass() and requireEquip and v:getData("equip", false) then return true end
     end
-
     return false
 end
 
+function characterMeta:getMaxStamina()
+    local maxStamina = hook.Run("CharMaxStamina", self) or lia.config.get("DefaultStamina", 100)
+    return maxStamina
+end
+
+function characterMeta:getStamina()
+    local stamina = self:getPlayer():getLocalVar("stamina", 100) or lia.config.get("DefaultStamina", 100)
+    return stamina
+end
+
+function characterMeta:hasClassWhitelist(class)
+    local wl = self:getData("whitelist", {})
+    return wl[class] ~= nil
+end
+
+function characterMeta:isFaction(faction)
+    return self:getChar():getFaction() == faction
+end
+
+function characterMeta:isClass(class)
+    return self:getChar():getClass() == class
+end
+
+function characterMeta:getAttrib(key, default)
+    local att = self:getAttribs()[key] or default or 0
+    local boosts = self:getBoosts()[key]
+    if boosts then
+        for _, v in pairs(boosts) do
+            att = att + v
+        end
+    end
+    return att
+end
+
+function characterMeta:getBoost(attribID)
+    local boosts = self:getBoosts()
+    return boosts[attribID]
+end
+
+function characterMeta:getBoosts()
+    return self:getVar("boosts", {})
+end
+
+function characterMeta:doesRecognize(id)
+    if not isnumber(id) and id.getID then id = id:getID() end
+    return hook.Run("isCharRecognized", self, id) ~= false
+end
+
+function characterMeta:doesFakeRecognize(id)
+    if not isnumber(id) and id.getID then id = id:getID() end
+    return hook.Run("isCharFakeRecognized", self, id) ~= false
+end
+
 if SERVER then
+    function characterMeta:recognize(character, name)
+        local id
+        if isnumber(character) then
+            id = character
+        elseif character and character.getID then
+            id = character:getID()
+        end
+
+        local recognized = self:getData("rgn", "")
+        local nameList = self:getRecognizedAs()
+        if name ~= nil then
+            nameList[id] = name
+            self:setRecognizedAs(nameList)
+        else
+            self:setData("rgn", recognized .. "," .. id .. ",")
+        end
+        return true
+    end
+
+    function characterMeta:WhitelistAllClasses()
+        for class, _ in pairs(lia.class.list) do
+            if not lia.class.hasWhitelist(class) then self:classWhitelist(class) end
+        end
+    end
+
+    function characterMeta:WhitelistAllFactions()
+        for faction, _ in pairs(lia.faction.indices) do
+            self:setWhitelisted(faction, true)
+        end
+    end
+
+    function characterMeta:WhitelistEverything()
+        self:WhitelistAllFactions()
+        self:WhitelistAllClasses()
+    end
+
+    function characterMeta:classWhitelist(class)
+        local wl = self:getData("whitelist", {})
+        wl[class] = true
+        self:setData("whitelist", wl)
+    end
+
+    function characterMeta:classUnWhitelist(class)
+        local wl = self:getData("whitelist", {})
+        wl[class] = false
+        self:setData("whitelist", wl)
+    end
+
+    function characterMeta:joinClass(class, isForced)
+        if not class then
+            self:kickClass()
+            return false
+        end
+
+        local client = self:getPlayer()
+        local classData = lia.class.list[class]
+        if not classData or classData.faction ~= client:Team() then
+            self:KickClass()
+            return false
+        end
+
+        local oldClass = self:getClass()
+        local hadOldClass = oldClass and oldClass ~= -1
+        if isForced or lia.class.canBe(client, class) then
+            self:setClass(class)
+            if lia.config.get("PermaClass", true) then self:setData("pclass", class) end
+            if hadOldClass then
+                hook.Run("OnPlayerSwitchClass", client, class, oldClass)
+            else
+                hook.Run("OnPlayerJoinClass", client, class, oldClass)
+            end
+            return true
+        else
+            return false
+        end
+    end
+
+    function characterMeta:kickClass()
+        local client = self:getPlayer()
+        if not client then return end
+        local validDefaultClass
+        for k, v in pairs(lia.class.list) do
+            if v.faction == client:Team() and v.isDefault then
+                validDefaultClass = k
+                break
+            end
+        end
+
+        if validDefaultClass then
+            self:joinClass(validDefaultClass)
+            hook.Run("OnPlayerJoinClass", client, validDefaultClass)
+        else
+            self:setClass(nil)
+        end
+    end
+
+    function characterMeta:updateAttrib(key, value)
+        local client = self:getPlayer()
+        local attribute = lia.attribs.list[key]
+        if not attribute then return end
+        local attrib = self:getAttribs()
+        local currentLevel = attrib[key] or 0
+        local maxLevel = hook.Run("GetAttributeMax", client, key) or math.huge
+        attrib[key] = math.min(currentLevel + value, maxLevel)
+        if IsValid(client) then
+            netstream.Start(client, "attrib", self:getID(), key, attrib[key])
+            if attribute.setup then attribute.setup(attrib[key]) end
+        end
+    end
+
+    function characterMeta:setAttrib(key, value)
+        local client = self:getPlayer()
+        local attribute = lia.attribs.list[key]
+        if attribute then
+            local attrib = self:getAttribs()
+            attrib[key] = value
+            if IsValid(client) then
+                netstream.Start(client, "attrib", self:getID(), key, attrib[key])
+                if attribute.setup then attribute.setup(attrib[key]) end
+            end
+        end
+
+        hook.Run("OnCharAttribUpdated", client, self, key, value)
+    end
+
+    function characterMeta:addBoost(boostID, attribID, boostAmount)
+        local boosts = self:getVar("boosts", {})
+        boosts[attribID] = boosts[attribID] or {}
+        boosts[attribID][boostID] = boostAmount
+        hook.Run("OnCharAttribBoosted", self:getPlayer(), self, attribID, boostID, boostAmount)
+        return self:setVar("boosts", boosts, nil, self:getPlayer())
+    end
+
+    function characterMeta:removeBoost(boostID, attribID)
+        local boosts = self:getVar("boosts", {})
+        boosts[attribID] = boosts[attribID] or {}
+        boosts[attribID][boostID] = nil
+        hook.Run("OnCharAttribBoosted", self:getPlayer(), self, attribID, boostID, true)
+        return self:setVar("boosts", boosts, nil, self:getPlayer())
+    end
+
     function characterMeta:setFlags(flags)
         self:setData("f", flags)
     end
@@ -194,10 +380,8 @@ if SERVER then
     function characterMeta:kick()
         local client = self:getPlayer()
         client:KillSilent()
-
         local curChar, steamID = client:getChar(), client:SteamID64()
         local isCurChar = curChar and curChar:getID() == self:getID() or false
-
         if self.steamID == steamID then
             netstream.Start(client, "charKick", id, isCurChar)
             if isCurChar then
@@ -212,11 +396,9 @@ if SERVER then
     function characterMeta:ban(time)
         time = tonumber(time)
         if time then time = os.time() + math.max(math.ceil(time), 60) end
-
         self:setData("banned", time or true)
         self:save()
         self:kick()
-
         hook.Run("OnCharPermakilled", self, time or nil)
     end
 
@@ -232,7 +414,6 @@ if SERVER then
     function characterMeta:giveMoney(amount)
         local client = self:getPlayer()
         if not IsValid(client) then return false end
-
         return client:addMoney(amount)
     end
 
@@ -240,7 +421,6 @@ if SERVER then
         amount = math.abs(amount)
         self:giveMoney(-amount)
         lia.log.add(self:getPlayer(), "money", -amount)
-
         return true
     end
 end
