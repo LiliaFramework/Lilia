@@ -779,6 +779,7 @@ lia.command.add("chargiveitem", {
             client:notifyLocalized("mustSpecifyItem")
             return
         end
+
         local target = lia.command.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
@@ -1252,7 +1253,7 @@ lia.command.add("chargethealth", {
             return
         end
 
-        client:ChatPrint("Character Health: " .. target:Health())
+        client:ChatPrint("Character Health: " .. target:Health() .. "/" .. target:GetMaxHealth())
     end
 })
 
