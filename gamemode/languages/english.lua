@@ -12,6 +12,7 @@ LANGUAGE = {
     flag = "Flag",
     search = "Search...",
     disable = "Disable",
+    alreadyHaveGrenade = "You already have this type of grenade.",
     generatedWeapon = "Generated weapon: %s",
     invalidFaction = "The specified faction is not valid.",
     submit = "Submit",

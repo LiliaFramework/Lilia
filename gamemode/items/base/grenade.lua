@@ -16,6 +16,11 @@ ITEM.functions.Use = {
             return false
         end
 
+        if client:HasWeapon(item.grenadeClass) then
+            client:notifyLocalized("alreadyHaveGrenade")
+            return false
+        end
+
         client:Give(item.grenadeClass)
         return true
     end,
