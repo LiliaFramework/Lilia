@@ -180,7 +180,198 @@ function playerMeta:notifyHint(message)
     self:notify(message, 6)
 end
 
+function playerMeta:isFaction(faction)
+    local character = self:getChar()
+    if not character then return end
+    local pFaction = self:getChar():getFaction()
+    return pFaction and pFaction == faction
+end
+
+function playerMeta:isClass(class)
+    local character = self:getChar()
+    if not character then return end
+    local pClass = character:getClass()
+    return pClass and pClass == class
+end
+
+function playerMeta:hasWhitelist(faction)
+    local data = lia.faction.indices[faction]
+    if data then
+        if data.isDefault then return true end
+        if not data.uniqueID then return false end
+        local liaData = self:getLiliaData("whitelists", {})
+        return liaData[SCHEMA.folder] and liaData[SCHEMA.folder][data.uniqueID] or false
+    end
+    return false
+end
+
+function playerMeta:getClass()
+    local character = self:getChar()
+    if character then return character:getClass() end
+end
+
+function playerMeta:hasClassWhitelist(class)
+    local char = self:getChar()
+    if not char then return false end
+    local wl = char:getData("whitelist", {})
+    return wl[class] ~= nil
+end
+
+function playerMeta:getClassData()
+    local character = self:getChar()
+    if character then
+        local class = character:getClass()
+        if class then
+            local classData = lia.class.list[class]
+            return classData
+        end
+    end
+end
+
+function playerMeta:CanEditVendor()
+    if self:hasPrivilege("Staff Permissions - Can Edit Vendors") then return true end
+    return false
+end
+
+function playerMeta:hasSkillLevel(skill, level)
+    local currentLevel = self:getChar():getAttrib(skill, 0)
+    return currentLevel >= level
+end
+
+function playerMeta:meetsRequiredSkills(requiredSkillLevels)
+    if not requiredSkillLevels then return true end
+    for skill, level in pairs(requiredSkillLevels) do
+        if not self:hasSkillLevel(skill, level) then return false end
+    end
+    return true
+end
+
+function playerMeta:getDarkRPVar(var)
+    if var ~= "money" then return end
+    local char = self:getChar()
+    return char:getMoney()
+end
+
+function playerMeta:getMoney()
+    local character = self:getChar()
+    return character and character:getMoney() or 0
+end
+
+function playerMeta:canAfford(amount)
+    local character = self:getChar()
+    return character and character:hasMoney(amount)
+end
+
+function playerMeta:isUser()
+    return self:IsUserGroup("user")
+end
+
+function playerMeta:isStaff()
+    return self:hasPrivilege("UserGroups - Staff Group")
+end
+
+function playerMeta:isVIP()
+    return self:hasPrivilege("UserGroups - VIP Group")
+end
+
+function playerMeta:isStaffOnDuty()
+    return self:Team() == FACTION_STAFF
+end
+
 if SERVER then
+    function playerMeta:restoreStamina(amount)
+        local current = self:getLocalVar("stamina", 0)
+        local maxStamina = self:getChar():getMaxStamina()
+        local value = math.Clamp(current + amount, 0, maxStamina)
+        self:setLocalVar("stamina", value)
+        if value >= maxStamina * 0.5 and self:getNetVar("brth", false) then
+            self:setNetVar("brth", nil)
+            hook.Run("PlayerStaminaGained", self)
+        end
+    end
+
+    function playerMeta:consumeStamina(amount)
+        local current = self:getLocalVar("stamina", 0)
+        local value = math.Clamp(current - amount, 0, self:getChar():getMaxStamina())
+        self:setLocalVar("stamina", value)
+        if value == 0 and not self:getNetVar("brth", false) then
+            self:setNetVar("brth", true)
+            hook.Run("PlayerStaminaLost", self)
+        end
+    end
+
+    function playerMeta:addMoney(amount)
+        local character = self:getChar()
+        if not character then return false end
+        local currentMoney = character:getMoney()
+        local maxMoneyLimit = lia.config.get("MoneyLimit") or 0
+        local totalMoney = currentMoney + amount
+        if maxMoneyLimit > 0 and isnumber(maxMoneyLimit) and totalMoney > maxMoneyLimit then
+            local excessMoney = totalMoney - maxMoneyLimit
+            character:setMoney(maxMoneyLimit)
+            self:notifyLocalized("moneyLimit", lia.currency.get(maxMoneyLimit), lia.currency.plural, lia.currency.get(excessMoney), lia.currency.plural)
+            local money = lia.currency.spawn(self:getItemDropPos(), excessMoney)
+            if IsValid(money) then
+                money.client = self
+                money.charID = character:getID()
+            end
+
+            lia.log.add(self, "money", maxMoneyLimit - currentMoney)
+        else
+            character:setMoney(totalMoney)
+            lia.log.add(self, "money", amount)
+        end
+        return true
+    end
+
+    function playerMeta:takeMoney(amount)
+        local character = self:getChar()
+        if character then character:giveMoney(-amount) end
+    end
+
+    function playerMeta:WhitelistAllClasses()
+        for class, _ in pairs(lia.class.list) do
+            if lia.class.hasWhitelist(class) then self:classWhitelist(class) end
+        end
+    end
+
+    function playerMeta:WhitelistAllFactions()
+        for faction, _ in pairs(lia.faction.indices) do
+            self:setWhitelisted(faction, true)
+        end
+    end
+
+    function playerMeta:WhitelistEverything()
+        self:WhitelistAllFactions()
+        self:WhitelistAllClasses()
+    end
+
+    function playerMeta:classWhitelist(class)
+        local wl = self:getChar():getData("whitelist", {})
+        wl[class] = true
+        self:getChar():setData("whitelist", wl)
+    end
+
+    function playerMeta:classUnWhitelist(class)
+        local wl = self:getChar():getData("whitelist", {})
+        wl[class] = false
+        self:getChar():setData("whitelist", wl)
+    end
+
+    function playerMeta:setWhitelisted(faction, whitelisted)
+        if not whitelisted then whitelisted = nil end
+        local data = lia.faction.indices[faction]
+        if data then
+            local whitelists = self:getLiliaData("whitelists", {})
+            whitelists[SCHEMA.folder] = whitelists[SCHEMA.folder] or {}
+            whitelists[SCHEMA.folder][data.uniqueID] = whitelisted and true or nil
+            self:setLiliaData("whitelists", whitelists)
+            self:saveLiliaData()
+            return true
+        end
+        return false
+    end
+
     function playerMeta:loadLiliaData(callback)
         local name = self:steamName()
         local steamID64 = self:SteamID64()
@@ -537,7 +728,6 @@ if SERVER then
                     if velocity:Length2D() >= 8 and not entity.liaPausing then
                         self:stopAction()
                         entity.liaPausing = true
-
                         return
                     elseif entity.liaPausing then
                         self:setAction(getUpMessage, time)
