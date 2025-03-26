@@ -50,7 +50,7 @@ end
 function MODULE:CanPlayerAccessVendor(client, vendor)
     local character = client:getChar()
     local flag = vendor:getNetVar("flag")
-    if client:CanEditVendor() then return true end
+    if client:CanEditVendor(vendor) then return true end
     if vendor:isClassAllowed(character:getClass()) then return true end
     if vendor:isFactionAllowed(client:Team()) then return true end
     if flag and string.len(flag) == 1 and client:getChar():hasFlags(flag) then return true end
@@ -191,7 +191,7 @@ function MODULE:PlayerAccessVendor(client, vendor)
     net.Start("VendorOpen")
     net.WriteEntity(vendor)
     net.Send(client)
-    if client:CanEditVendor() then
+    if client:CanEditVendor(vendor) then
         for factionID in pairs(vendor.factions) do
             net.Start("VendorAllowFaction")
             net.WriteUInt(factionID, 8)

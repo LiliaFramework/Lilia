@@ -114,7 +114,7 @@ function PANEL:Init()
 
     local btnWidth = w * 0.15
     local btnHeight = h * 0.05
-    if client:CanEditVendor() then
+    if client:CanEditVendor(self.vendor) then
         local buttonY = self.right:GetY() + self.right:GetTall() - btnHeight - w * 0.02
         self.editor = self:Add("liaSmallButton")
         self.editor:SetSize(btnWidth, btnHeight)

@@ -18,10 +18,19 @@ end
 
 function lia.util.findPlayer(identifier, allowPatterns)
     if string.match(identifier, "STEAM_(%d+):(%d+):(%d+)") then return player.GetBySteamID(identifier) end
+
+    local id64Res = player.GetBySteamID64(identifier)
+    if IsValid(id64Res) then return id64Res end
+
     if not allowPatterns then identifier = string.PatternSafe(identifier) end
+
     for _, v in player.Iterator() do
-        if lia.util.stringMatches(v:Name(), identifier) then return v end
+        if lia.util.stringMatches(v:Name(), identifier) then 
+            return v 
+        end
     end
+
+    return nil
 end
 
 function lia.util.findPlayerItems(client)
