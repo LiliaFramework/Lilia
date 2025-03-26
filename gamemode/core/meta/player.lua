@@ -122,19 +122,22 @@ function playerMeta:getItems()
     end
 end
 
-function playerMeta:getTracedEntity()
+function playerMeta:getTracedEntity(distance)
+    if distance == nil then distance = 96 end
+
     local data = {}
     data.start = self:GetShootPos()
-    data.endpos = data.start + self:GetAimVector() * 96
+    data.endpos = data.start + self:GetAimVector() * distance
     data.filter = self
     local targetEntity = util.TraceLine(data).Entity
     return targetEntity
 end
 
-function playerMeta:getTrace()
+function playerMeta:getTrace(distance)
+    if distance == nil then distance = 200 end
     local data = {}
     data.start = self:GetShootPos()
-    data.endpos = data.start + self:GetAimVector() * 200
+    data.endpos = data.start + self:GetAimVector() * distance
     data.filter = {self, self}
     data.mins = -Vector(4, 4, 4)
     data.maxs = Vector(4, 4, 4)
@@ -180,9 +183,11 @@ function playerMeta:notifyHint(message)
     self:notify(message, 6)
 end
 
-function playerMeta:CanEditVendor()
-    if self:hasPrivilege("Staff Permissions - Can Edit Vendors") then return true end
-    return false
+function playerMeta:CanEditVendor(vendor)
+    local hookResult = hook.Run("CanPerformVendorEdit", self, vendor)
+    if hookResult ~= nil then return hookResult end
+    
+    return self:hasPrivilege("Staff Permissions - Can Edit Vendors")
 end
 
 function playerMeta:isUser()

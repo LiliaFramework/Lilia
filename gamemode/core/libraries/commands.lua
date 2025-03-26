@@ -136,14 +136,12 @@ if SERVER then
             local target = lia.util.findPlayer(name) or NULL
             if IsValid(target) then
                 return target
-            else
-                client:notifyLocalized("plyNoExist")
-                return nil
             end
         else
             client:notifyLocalized("mustProvideString")
-            return nil
         end
+
+        return nil
     end
 
     function lia.command.findFaction(client, name)

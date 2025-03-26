@@ -1,6 +1,8 @@
-﻿function MODULE:VendorOpened()
-    vgui.Create("Vendor")
-    hook.Run("OnOpenVendorMenu", self)
+﻿function MODULE:VendorOpened(vendor)
+    local vendorUI = vgui.Create("Vendor")
+    vendorUI.vendor = vendor
+
+    hook.Run("OnOpenVendorMenu", self, vendor)
 end
 
 function MODULE:VendorExited()
