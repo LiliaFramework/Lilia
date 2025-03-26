@@ -25,6 +25,7 @@ local function GetIdentifier(target)
 end
 
 local function HandleExtraFields(commandKey, commandData, target, commandName)
+    local client = LocalPlayer()
     local frame = vgui.Create("DFrame")
     frame:SetTitle(L(commandName))
     frame:SetSize(500, 150 + table.Count(commandData.AdminStick.ExtraFields) * 40 + 100)
@@ -92,7 +93,7 @@ local function HandleExtraFields(commandKey, commandData, target, commandName)
             commandStr = commandStr .. " " .. arg
         end
 
-        LocalPlayer():ConCommand("say " .. commandStr)
+        client:ConCommand("say " .. commandStr)
         frame:Close()
         AdminStickIsOpen = false
     end
@@ -108,6 +109,7 @@ local function HandleExtraFields(commandKey, commandData, target, commandName)
 end
 
 local function OpenPlayerModelUI(target)
+    local client = LocalPlayer()
     AdminStickIsOpen = true
     local frame = vgui.Create("DFrame")
     frame:SetTitle(L("changePlayerModel"))
@@ -223,7 +225,8 @@ local function HandleModerationOption(option, target)
 end
 
 local function IncludeAdminMenu(target, AdminMenu, submenus)
-    if LocalPlayer():GetUserGroup() == "user" then return end
+    local client = LocalPlayer()
+    if client:GetUserGroup() == "user" then return end
     local moderationMenu = GetOrCreateSubMenu(AdminMenu, "Moderation Tools", submenus)
     local teleportationOptions = {
         {
@@ -332,7 +335,7 @@ local function IncludeAdminMenu(target, AdminMenu, submenus)
 
     for _, option in ipairs(teleportationOptions) do
         moderationMenu:AddOption(L(option.name), function()
-            LocalPlayer():ChatPrint(option.cmd)
+            client:ChatPrint(option.cmd)
             RunConsoleCommand("say", option.cmd)
             AdminStickIsOpen = false
         end):SetIcon(option.icon)
@@ -340,8 +343,9 @@ local function IncludeAdminMenu(target, AdminMenu, submenus)
 end
 
 local function IncludeCharacterManagement(target, AdminMenu, submenus)
-    local factionMenuAllowed = LocalPlayer():hasPrivilege("Commands - Manage Transfers")
-    local classMenuAllowed = LocalPlayer():hasPrivilege("Commands - Manage Classes")
+    local client = LocalPlayer()
+    local factionMenuAllowed = client:hasPrivilege("Commands - Manage Transfers")
+    local classMenuAllowed = client:hasPrivilege("Commands - Manage Classes")
     local characterMenu = GetOrCreateSubMenu(AdminMenu, "Character Management", submenus)
     local factionOptions = {}
     local char = target:getChar()
@@ -368,7 +372,7 @@ local function IncludeCharacterManagement(target, AdminMenu, submenus)
                 local factionMenu = GetOrCreateSubMenu(characterMenu, "Set Faction (" .. currentFactionName .. ")", submenus)
                 for _, option in ipairs(factionOptions) do
                     factionMenu:AddOption(L(option.name), function()
-                        LocalPlayer():ConCommand(option.cmd)
+                        client:ConCommand(option.cmd)
                         AdminStickIsOpen = false
                     end):SetIcon("icon16/group.png")
                 end
@@ -388,7 +392,7 @@ local function IncludeCharacterManagement(target, AdminMenu, submenus)
                 local classMenu = GetOrCreateSubMenu(characterMenu, "Set Class", submenus)
                 for _, option in ipairs(classOptions) do
                     classMenu:AddOption(L(option.name), function()
-                        LocalPlayer():ConCommand(option.cmd)
+                        client:ConCommand(option.cmd)
                         AdminStickIsOpen = false
                     end):SetIcon("icon16/user.png")
                 end
@@ -396,7 +400,7 @@ local function IncludeCharacterManagement(target, AdminMenu, submenus)
         end
     end
 
-    if LocalPlayer():hasPrivilege("Commands - Manage Character Information") then
+    if client:hasPrivilege("Commands - Manage Character Information") then
         local changeModelOption = {
             name = "Change Playermodel",
             cmd = "",
@@ -411,7 +415,8 @@ local function IncludeCharacterManagement(target, AdminMenu, submenus)
 end
 
 local function IncludeFlagManagement(target, AdminMenu, submenus)
-    if not LocalPlayer():hasPrivilege("Commands - Manage Flags") then return end
+    local client = LocalPlayer()
+    if not client:hasPrivilege("Commands - Manage Flags") then return end
     local flagsMenu = GetOrCreateSubMenu(AdminMenu, "Flags Management", submenus)
     local giveFlagsSubMenu = GetOrCreateSubMenu(flagsMenu, "Give Flags", submenus)
     local takeFlagsSubMenu = GetOrCreateSubMenu(flagsMenu, "Take Flags", submenus)
@@ -438,21 +443,22 @@ local function IncludeFlagManagement(target, AdminMenu, submenus)
     table.sort(takeFlags, function(a, b) return a.name < b.name end)
     for _, flag in ipairs(giveFlags) do
         giveFlagsSubMenu:AddOption(L(flag.name), function()
-            LocalPlayer():ConCommand(flag.cmd)
+            client:ConCommand(flag.cmd)
             AdminStickIsOpen = false
         end):SetIcon(flag.icon)
     end
 
     for _, flag in ipairs(takeFlags) do
         takeFlagsSubMenu:AddOption(L(flag.name), function()
-            LocalPlayer():ConCommand(flag.cmd)
+            client:ConCommand(flag.cmd)
             AdminStickIsOpen = false
         end):SetIcon(flag.icon)
     end
 end
 
 local function AddCommandToMenu(AdminMenu, commandData, commandKey, target, commandName, submenus)
-    local canUse, _ = lia.command.hasAccess(LocalPlayer(), commandKey, commandData)
+    local client = LocalPlayer()
+    local canUse, _ = lia.command.hasAccess(client, commandKey, commandData)
     if not canUse then return end
     local category = commandData.AdminStick.Category
     local subCategory = commandData.AdminStick.SubCategory
@@ -467,7 +473,7 @@ local function AddCommandToMenu(AdminMenu, commandData, commandKey, target, comm
             local identifier = GetIdentifier(target)
             if identifier ~= "" then
                 local cmd = "/" .. commandKey .. " " .. identifier
-                LocalPlayer():ConCommand("say " .. cmd)
+                client:ConCommand("say " .. cmd)
             end
 
             AdminStickIsOpen = false
@@ -485,6 +491,7 @@ local function hasAdminStickTargetClass(targetClassName)
 end
 
 function MODULE:OpenAdminStickUI(target)
+    local client = LocalPlayer()
     if not IsValid(target) or not target:isDoor() and not target:IsPlayer() and not hasAdminStickTargetClass(target:GetClass()) then return end
     AdminStickIsOpen = true
     local AdminMenu = DermaMenu()
@@ -498,7 +505,7 @@ function MODULE:OpenAdminStickUI(target)
                 cmd = function()
                     if target:getChar() then
                         local msg = L("copiedCharID", target:getChar():getID())
-                        LocalPlayer():ChatPrint(msg)
+                        client:ChatPrint(msg)
                         SetClipboardText(target:getChar():getID())
                     end
 
@@ -510,7 +517,7 @@ function MODULE:OpenAdminStickUI(target)
                 name = "Name: " .. target:Name() .. " (copy)",
                 cmd = function()
                     local msg = L("copiedToClipboard", target:Name(), "Name")
-                    LocalPlayer():ChatPrint(msg)
+                    client:ChatPrint(msg)
                     SetClipboardText(target:Name())
                     AdminStickIsOpen = false
                 end,
@@ -520,7 +527,7 @@ function MODULE:OpenAdminStickUI(target)
                 name = "SteamID: " .. target:SteamID() .. " (copy)",
                 cmd = function()
                     local msg = L("copiedToClipboard", target:Name(), "SteamID")
-                    LocalPlayer():ChatPrint(msg)
+                    client:ChatPrint(msg)
                     SetClipboardText(target:SteamID64())
                     AdminStickIsOpen = false
                 end,
@@ -530,7 +537,7 @@ function MODULE:OpenAdminStickUI(target)
                 name = "SteamID64: " .. target:SteamID64() .. " (copy)",
                 cmd = function()
                     local msg = L("copiedToClipboard", target:Name(), "SteamID64")
-                    LocalPlayer():ChatPrint(msg)
+                    client:ChatPrint(msg)
                     SetClipboardText(target:SteamID64())
                     AdminStickIsOpen = false
                 end,
@@ -586,7 +593,8 @@ function MODULE:OpenAdminStickUI(target)
     end
 
     hook.Run("PopulateAdminStick", AdminMenu, target)
-    function AdminMenu:OnClose()
+    function AdminMenu:OnRemove()
+        client.AdminStickTarget = nil
         AdminStickIsOpen = false
     end
 
