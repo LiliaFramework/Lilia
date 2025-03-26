@@ -245,16 +245,14 @@ netstream.Hook("nLcl", function(key, value)
     lia.net[LocalPlayer():EntIndex()][key] = value
 end)
 
-netstream.Hook("actBar", function(start, finish, text)
+netstream.Hook("actBar", function(text, time)
     if not text then
-        lia.bar.actionStart = 0
-        lia.bar.actionEnd = 0
-    else
-        if text:sub(1, 1) == "@" then text = L(text:sub(2)) end
-        lia.bar.actionStart = start
-        lia.bar.actionEnd = finish
-        lia.bar.actionText = text:upper()
+        hook.Remove("HUDPaint", "liaDrawAction")
+        return
     end
+
+    local display = text:sub(1, 1) == "@" and L(text:sub(2)) or text
+    lia.bar.drawAction(display, time)
 end)
 
 net.Receive("OpenInvMenu", function()

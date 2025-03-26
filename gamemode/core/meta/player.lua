@@ -481,23 +481,44 @@ if SERVER then
         self.liaRagdoll = entity
     end
 
-    function playerMeta:setAction(text, time, callback, startTime, finishTime)
+    function playerMeta:setAction(text, time, callback)
         if time and time <= 0 then
             if callback then callback(self) end
             return
         end
 
         time = time or 5
-        startTime = startTime or CurTime()
-        finishTime = finishTime or startTime + time
         if text == false then
             timer.Remove("liaAct" .. self:SteamID64())
             netstream.Start(self, "actBar")
             return
         end
 
-        netstream.Start(self, "actBar", startTime, finishTime, text)
+        netstream.Start(self, "actBar", text, time)
         if callback then timer.Create("liaAct" .. self:SteamID64(), time, 1, function() if IsValid(self) then callback(self) end end) end
+    end
+
+    function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
+        local uniqueID = "liaStare" .. self:SteamID64()
+        local data = {}
+        data.filter = self
+        timer.Create(uniqueID, 0.1, time / 0.1, function()
+            if IsValid(self) and IsValid(entity) then
+                data.start = self:GetShootPos()
+                data.endpos = data.start + self:GetAimVector() * (distance or 96)
+                local targetEntity = self:getTracedEntity()
+                if IsValid(targetEntity) and targetEntity:GetClass() == "prop_ragdoll" and IsValid(targetEntity:getNetVar("player")) then targetEntity = targetEntity:getNetVar("player") end
+                if targetEntity ~= entity then
+                    timer.Remove(uniqueID)
+                    if onCancel then onCancel() end
+                elseif callback and timer.RepsLeft(uniqueID) == 0 then
+                    callback()
+                end
+            else
+                timer.Remove(uniqueID)
+                if onCancel then onCancel() end
+            end
+        end)
     end
 
     function playerMeta:stopAction()
@@ -582,29 +603,6 @@ if SERVER then
     function playerMeta:getPlayTime()
         local diff = os.time(lia.time.toNumber(self.lastJoin)) - os.time(lia.time.toNumber(self.firstJoin))
         return diff + RealTime() - (self.liaJoinTime or RealTime())
-    end
-
-    function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
-        local uniqueID = "liaStare" .. self:SteamID64()
-        local data = {}
-        data.filter = self
-        timer.Create(uniqueID, 0.1, time / 0.1, function()
-            if IsValid(self) and IsValid(entity) then
-                data.start = self:GetShootPos()
-                data.endpos = data.start + self:GetAimVector() * (distance or 96)
-                local targetEntity = util.TraceLine(data).Entity
-                if IsValid(targetEntity) and targetEntity:GetClass() == "prop_ragdoll" and IsValid(targetEntity:getNetVar("player")) then targetEntity = targetEntity:getNetVar("player") end
-                if targetEntity ~= entity then
-                    timer.Remove(uniqueID)
-                    if onCancel then onCancel() end
-                elseif callback and timer.RepsLeft(uniqueID) == 0 then
-                    callback()
-                end
-            else
-                timer.Remove(uniqueID)
-                if onCancel then onCancel() end
-            end
-        end)
     end
 
     function playerMeta:getPlayTime()
