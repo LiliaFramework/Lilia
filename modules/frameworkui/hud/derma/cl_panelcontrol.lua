@@ -1,6 +1,7 @@
 ﻿local PANEL = {}
 local controls = {"Panel", "g_SpawnMenu", "CreationMenu", "ToolMenu", "DHorizontalDivider", "DImageButton", "ContentSidebar", "ContentContainer", "ContentSearch", "DTree", "DTree_Node", "SpawnmenuContentPanel", "SpawnmenuNPCSidebarToolbox", "DCategoryList", "SpawnmenuContentHeader"}
-local function PaintPanel(w, h)
+local function PaintPanel(panel, w, h)
+    lia.util.drawBlur(panel, 5)
     surface.SetDrawColor(45, 45, 45, 200)
     surface.DrawRect(0, 0, w, h)
 end
@@ -91,7 +92,7 @@ for _, name in ipairs(controls) do
     local ctrl = vgui.GetControlTable(name)
     if ctrl then
         function ctrl:Paint(w, h)
-            PaintPanel(w, h)
+            PaintPanel(self, w, h)
         end
     end
 end
@@ -99,7 +100,7 @@ end
 local node = vgui.GetControlTable("DTree_Node")
 if node then
     function node:Paint(w, h)
-        PaintPanel(w, h)
+        PaintPanel(self, w, h)
     end
 
     function node:ApplySchemeSettings()
