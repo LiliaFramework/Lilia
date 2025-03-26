@@ -21,7 +21,13 @@ local function getWeaponFromIndex(i, weapons)
     return weapons[i] or NULL
 end
 
+local function shouldDrawWepSelect(client)
+    client = client or LocalPlayer()
+    return hook.Run("ShouldDrawWepSelect", client) ~= false
+end
+
 function MODULE:HUDPaint()
+    if not shouldDrawWepSelect() then return end
     local frameTime = FrameTime()
     local fraction = alphaDelta
     if fraction <= 0.01 and alpha == 0 then
@@ -39,10 +45,12 @@ function MODULE:HUDPaint()
     local radius = 240 * alphaDelta
     deltaIndex = Lerp(frameTime * 12, deltaIndex, index)
     local currentIndex = deltaIndex
+    local activeColor = lia.config.get("Color")
     for realIndex, weapon in ipairs(weapons) do
         local theta = (realIndex - currentIndex) * 0.1
         local isActive = realIndex == index
-        local col = ColorAlpha(isActive and lia.config.get("Color") or color_white, (255 - math.abs(theta * 3) * 255) * fraction)
+        local colAlpha = (255 - math.abs(theta * 3) * 255) * fraction
+        local col = ColorAlpha(isActive and activeColor or color_white, colAlpha)
         local lastY = 0
         if self.markup and (realIndex == 1 or realIndex < index) then
             local _, h = self.markup:Size()
@@ -71,6 +79,7 @@ function MODULE:HUDPaint()
 end
 
 function MODULE:onIndexChanged()
+    if not shouldDrawWepSelect() then return end
     alpha = 1
     fadeTime = CurTime() + 5
     local client = LocalPlayer()
@@ -80,11 +89,9 @@ function MODULE:onIndexChanged()
     infoAlpha = 0
     if IsValid(weapon) then
         local textParts = {}
+        local activeColor = lia.config.get("Color") -- Cache color here, too
         for _, key in ipairs({"Author", "Contact", "Purpose", "Instructions"}) do
-            if weapon[key] and weapon[key]:find("%S") then
-                local color = lia.config.get("Color")
-                table.insert(textParts, string.format("<font=liaItemBoldFont><color=%d,%d,%d>%s</font></color>\n%s\n", color.r, color.g, color.b, L(key), weapon[key]))
-            end
+            if weapon[key] and weapon[key]:find("%S") then table.insert(textParts, string.format("<font=liaItemBoldFont><color=%d,%d,%d>%s</font></color>\n%s\n", activeColor.r, activeColor.g, activeColor.b, L(key), weapon[key])) end
         end
 
         if #textParts > 0 then
@@ -100,6 +107,7 @@ function MODULE:onIndexChanged()
 end
 
 function MODULE:PlayerBindPress(client, bind, pressed)
+    if not shouldDrawWepSelect(client) then return end
     if not pressed then return end
     if client:InVehicle() then return end
     local weapon = client:GetActiveWeapon()
@@ -148,11 +156,13 @@ end
 
 local meta = FindMetaTable("Player")
 function meta:SelectWeapon(class)
+    if not shouldDrawWepSelect(self) then return end
     if not self:HasWeapon(class) then return end
     self.doWeaponSwitch = self:GetWeapon(class)
 end
 
 function MODULE:StartCommand(client, cmd)
+    if not shouldDrawWepSelect(client) then return end
     if not IsValid(client.doWeaponSwitch) then return end
     cmd:SelectWeapon(client.doWeaponSwitch)
     if client:GetActiveWeapon() == client.doWeaponSwitch then client.doWeaponSwitch = nil end
