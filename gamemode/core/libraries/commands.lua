@@ -104,37 +104,46 @@ end
 
 if SERVER then
     function lia.command.findPlayer(client, name)
-        if not isstring(name) then
-            client:notifyLocalized("mustProvideString")
-            return nil
-        end
-
-        if string.find(name, "^STEAM_%d+:%d+:%d+$") then
-            local ply = player.GetBySteamID(name)
-            if IsValid(ply) then return ply end
-        elseif string.match(name, "^%d+$") and #name >= 17 then
-            local sid = util.SteamIDFrom64(name)
-            if sid then
-                local ply = player.GetBySteamID(sid)
-                if IsValid(ply) then return ply end
+        if isstring(name) then
+            if string.find(name, "^STEAM_%d+:%d+:%d+$") then
+                local player = player.GetBySteamID(name)
+                if IsValid(player) then
+                    return player
+                else
+                    client:notifyLocalized("plyNoExist")
+                    return nil
+                end
+            elseif string.match(name, "^%d+$") and #name >= 17 then
+                local sid = util.SteamIDFrom64(name)
+                if sid then
+                    local ply = player.GetBySteamID(sid)
+                    if IsValid(ply) then return ply end
+                end
             end
-        elseif name == "^" then
-            return client
-        elseif name == "@" then
-            local trace = client:getTracedEntity()
-            if IsValid(trace) and trace:IsPlayer() then
-                return trace
+
+            if name == "^" then
+                return client
+            elseif name == "@" then
+                local trace = client:getTracedEntity()
+                if IsValid(trace) and trace:IsPlayer() then
+                    return trace
+                else
+                    client:notifyLocalized("lookToUseAt")
+                    return nil
+                end
+            end
+
+            local target = lia.util.findPlayer(name) or NULL
+            if IsValid(target) then
+                return target
             else
-                client:notifyLocalized("lookToUseAt")
+                client:notifyLocalized("plyNoExist")
                 return nil
             end
         else
-            local target = lia.util.findPlayer(name) or NULL
-            if IsValid(target) then return target end
+            client:notifyLocalized("mustProvideString")
+            return nil
         end
-
-        client:notifyLocalized("plyNoExist")
-        return nil
     end
 
     function lia.command.findFaction(client, name)

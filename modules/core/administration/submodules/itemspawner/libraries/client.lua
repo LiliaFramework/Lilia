@@ -39,8 +39,7 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
         local matName = string.Replace(modelStr, ".mdl", "")
         icon.Image:SetMaterial(Material("spawnicons/" .. matName .. ".png"))
         icon:SetColor(Color(205, 92, 92, 255))
-        local desc = textWrap(itemData.desc or "", "DermaDefault", 560)
-        icon:SetTooltip(desc)
+        icon:SetTooltip(textWrap(itemData.desc or "", "DermaDefault", 560))
         icon.DoClick = function()
             net.Start("lia_spawnItem")
             net.WriteString(data.id)
@@ -65,18 +64,16 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
                 dropdown:Dock(TOP)
                 for _, v in pairs(lia.char.loaded) do
                     if v and v:getPlayer() then
-                        local player = v:getPlayer()
-                        local chosen = v == LocalPlayer():getChar()
-                        local name = player:GetName() or "Unknown"
-                        local steamName = player:steamName() or "Unknown"
-                        dropdown:AddChoice(name .. "  [" .. steamName .. "]", name, chosen)
+                        local charID = v:getID() or ""
+                        local steamName = v:getName() or "Unknown"
+                        dropdown:AddChoice(string.format("[%d]  [%s]", charID, steamName), charID)
                     end
                 end
 
                 local give = vgui.Create("liaSmallButton", popup)
                 give:Dock(BOTTOM)
                 give:SetText("Spawn item")
-                function give:DoClick()
+                give.DoClick = function()
                     local _, target = dropdown:GetSelected()
                     net.Start("lia_spawnItem")
                     net.WriteString(data.id)
@@ -88,10 +85,8 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
             menu:Open()
         end
 
-        if IsValid(container) then container:Add(icon) end
+        container:Add(icon)
         return icon
-    else
-        return nil
     end
 end)
 

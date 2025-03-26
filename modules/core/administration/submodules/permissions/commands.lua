@@ -779,7 +779,6 @@ lia.command.add("chargiveitem", {
             client:notifyLocalized("mustSpecifyItem")
             return
         end
-
         local target = lia.command.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")

@@ -28,9 +28,9 @@ end
 local function SpawnItem(client, itemName, target)
     if not IsValid(client) or not itemName then return end
     if client:hasPrivilege("Staff Permissions - Can Use Item Spawner") then
-        if target and target ~= "" then
-            client:ConCommand("say /chargiveitem " .. target .. " " .. itemName)
-            lia.log.add(client, "chargiveItem", itemName, target, "Chargive item command executed")
+        if IsValid(target) then
+            client:ConCommand("say /chargiveitem " .. target:SteamID() .. " " .. itemName)
+            lia.log.add(client, "chargiveItem", itemName, target:Nick(), "Chargive item command executed")
             return
         end
 
@@ -59,8 +59,9 @@ end
 
 net.Receive("lia_spawnItem", function(_, client)
     local itemID = net.ReadString()
-    local target = net.ReadString()
-    SpawnItem(client, itemID, target ~= "" and target or nil)
+    local targetID = net.ReadString()
+    local target = lia.char.getByID(targetID)
+    SpawnItem(client, itemID, target)
 end)
 
 util.AddNetworkString("lia_spawnItem")

@@ -16,7 +16,7 @@ ITEM.functions.Use = {
             return false
         end
 
-        client:Give(item.grenadeClass, true)
+        client:Give(item.grenadeClass)
         return true
     end,
 }
