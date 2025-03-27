@@ -127,7 +127,7 @@ end
    Function: lia.command.extractArgs
 
    Description:
-      Splits the provided text into arguments, respecting quotes. 
+      Splits the provided text into arguments, respecting quotes.
       Quoted sections are treated as single arguments.
 
    Parameters:

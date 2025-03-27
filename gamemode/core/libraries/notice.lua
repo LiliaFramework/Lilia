@@ -122,7 +122,7 @@ end
     Function: lia.notices.notify
 
     Description:
-       Sends a simple notification. On server this broadcasts (or sends to a specific player) via net; 
+       Sends a simple notification. On server this broadcasts (or sends to a specific player) via net;
        on client it displays via Garry’s Mod’s DisplayNotice + MsgN.
 
     Parameters:
