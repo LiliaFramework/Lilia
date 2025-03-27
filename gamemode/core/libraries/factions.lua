@@ -199,7 +199,6 @@ end
 
    Description:
       Checks if the specified faction is a member of a given category.
-      
    Parameters:
       faction (string) - The faction unique identifier.
       categoryFactions (table) - A table containing faction identifiers that define the category.

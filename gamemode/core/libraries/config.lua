@@ -195,7 +195,7 @@ function lia.config.load()
 end
 
 if SERVER then
---[[
+    --[[
        Function: lia.config.getChangedValues
 
        Description:
@@ -221,7 +221,7 @@ if SERVER then
         return data
     end
 
---[[
+    --[[
        Function: lia.config.send
 
        Description:
@@ -243,7 +243,7 @@ if SERVER then
         netstream.Start(client, "cfgList", lia.config.getChangedValues())
     end
 
---[[
+    --[[
        Function: lia.config.save
 
        Description:

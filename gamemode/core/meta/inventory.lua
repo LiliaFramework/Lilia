@@ -273,7 +273,6 @@ if SERVER then
 
     local ITEM_TABLE = "items"
     local ITEM_FIELDS = {"_itemID", "_uniqueID", "_data", "_x", "_y", "_quantity"}
-
     function Inventory:loadItems()
         return lia.db.select(ITEM_FIELDS, ITEM_TABLE, "_invID = " .. self.id):next(function(res)
             local items = {}

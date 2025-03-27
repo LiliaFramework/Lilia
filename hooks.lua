@@ -1,4 +1,4 @@
---[[
+﻿--[[
    Hook: ShouldHideBars
 
    Description:
@@ -534,7 +534,7 @@
          return string.gsub(text, "badword", "****")
       end)
 ]]
---[[ 
+--[[
    Hook: CreateInventoryPanel
 
    Description:
@@ -547,7 +547,7 @@
    Returns:
       Panel — the newly created inventory UI panel
 ]]
---[[ 
+--[[
    Hook: CanPlayerViewInventory
 
    Description:
@@ -556,7 +556,7 @@
    Returns:
       boolean|nil — return false to block inventory viewing; anything else allows it
 ]]
---[[ 
+--[[
    Hook: PostDrawInventory
 
    Description:

@@ -109,7 +109,6 @@ local function HandleExtraFields(commandKey, commandData, target, commandName)
 end
 
 local function OpenPlayerModelUI(target)
-    local client = LocalPlayer()
     AdminStickIsOpen = true
     local frame = vgui.Create("DFrame")
     frame:SetTitle(L("changePlayerModel"))

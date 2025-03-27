@@ -85,7 +85,7 @@ end
    Function: lia.command.hasAccess
 
    Description:
-      Checks if the specified player has access to a given command based on 
+      Checks if the specified player has access to a given command based on
       privilege checks, superadmin/admin requirements, and any additional hooks.
 
    Parameters:

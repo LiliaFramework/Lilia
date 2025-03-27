@@ -4,7 +4,7 @@ lia.attribs.list = lia.attribs.list or {}
    lia.attribs.loadFromDir(directory)
 
    Description:
-      Loads all Lua attribute files (*.lua) from the specified directory 
+      Loads all Lua attribute files (*.lua) from the specified directory
       and adds them to lia.attribs.list.
 
    Parameters:

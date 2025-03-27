@@ -136,7 +136,6 @@ function rb655_dissolve(ent)
     ent:SetName("rb655_dissolve" .. dissolve_id)
     dissolver:Fire("Dissolve", "rb655_dissolve" .. dissolve_id)
     dissolve_id = dissolve_id + 1
-
     SafeRemoveEntityDelayed(dissolver, 60)
 end
 

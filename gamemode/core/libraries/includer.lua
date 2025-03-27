@@ -168,21 +168,21 @@ end
 
 --[[
     Function: lia.include
- 
+
     Description:
        Includes a Lua file based on its realm. It determines the realm from the file name or provided state,
        and handles server/client inclusion logic.
- 
+
     Parameters:
        fileName (string) - The path to the Lua file.
        state (string) - The realm state ("server", "client", "shared", etc.).
- 
+
     Returns:
        The result of the include, if applicable.
- 
+
     Realm:
        Depends on the file realm.
- 
+
     Example Usage:
        lia.include("lilia/gamemode/core/libraries/util.lua", "shared")
  ]]
@@ -207,24 +207,24 @@ end
 lia.util.include = lia.include
 --[[
     Function: lia.includeDir
- 
+
     Description:
        Includes all Lua files in a specified directory.
        If recursive is true, it recursively includes files from subdirectories.
        It determines the base directory based on the active schema or gamemode.
- 
+
     Parameters:
        directory (string) - The directory path to include.
        fromLua (boolean) - Whether to use the raw Lua directory path.
        recursive (boolean) - Whether to include files recursively.
        realm (string) - The realm state to use ("client", "server", "shared").
- 
+
     Returns:
        nil
- 
+
     Realm:
        Depends on file inclusion.
- 
+
     Example Usage:
        lia.includeDir("lilia/gamemode/core/libraries/thirdparty", true, true)
  ]]
@@ -269,22 +269,22 @@ lia.includeDir("lilia/gamemode/core/libraries/thirdparty", true, true)
 lia.util.includeDir = lia.includeDir
 --[[
     Function: lia.includeEntities
- 
+
     Description:
        Includes entity files from the specified directory.
        It checks for standard entity files ("init.lua", "shared.lua", "cl_init.lua"),
        handles the inclusion and registration of entities, weapons, tools, and effects,
        and supports recursive inclusion within entity folders.
- 
+
     Parameters:
        path (string) - The directory path containing entity files.
  
     Returns:
        nil
- 
+
     Realm:
        Client/Server (depending on the file names)
- 
+
     Example Usage:
        lia.includeEntities("lilia/entities")
  ]]

@@ -1,4 +1,4 @@
-lia.bar.add(function()
+﻿lia.bar.add(function()
     local client = LocalPlayer()
     return client:Health() / client:GetMaxHealth()
 end, Color(200, 50, 40), 1, "health")
