@@ -278,7 +278,7 @@ lia.util.includeDir = lia.includeDir
 
     Parameters:
        path (string) - The directory path containing entity files.
- 
+
     Returns:
        nil
 

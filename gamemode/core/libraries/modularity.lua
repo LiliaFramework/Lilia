@@ -123,7 +123,7 @@ end
    Function: lia.module.load
 
    Description:
-      Loads a module from a specified path. If the module is a single file, it includes it directly; 
+      Loads a module from a specified path. If the module is a single file, it includes it directly;
       if it is a directory, it loads the core file (or its extended version), applies permissions, workshop content, dependencies, extras, and submodules.
       It also registers the module in the module list if applicable.
 

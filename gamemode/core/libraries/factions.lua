@@ -376,7 +376,7 @@ end
 
    Description:
       Retrieves models from a specified category for a given faction.
-      
+
    Parameters:
       teamName (string) - The unique identifier of the faction.
       category (string) - The model category to retrieve.

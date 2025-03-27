@@ -120,19 +120,19 @@ end
 
 --[[
     Function: lia.notices.notify
- 
+
     Description:
        Sends a simple notification. On server this broadcasts (or sends to a specific player) via net; 
        on client it displays via Garry’s Mod’s DisplayNotice + MsgN.
- 
+
     Parameters:
        message (string) — text to show
        notifType? (number) — numeric type (defaults to 5) — only used client‑side
        recipient? (Player|nil) — target player (server only)
- 
+
     Returns:
        nil
- 
+
     Realm:
        Shared
  ]]
@@ -164,18 +164,18 @@ end
 
 --[[
     Function: lia.notices.notifyLocalized
- 
+
     Description:
        Same as lia.notices.notify but first localizes the message key with format arguments.
- 
+
     Parameters:
        message (string) — localization key
        recipient? (Player|nil) — target player (server only)
        ... — format arguments
- 
+
     Returns:
        nil
- 
+
     Realm:
        Shared
  ]]

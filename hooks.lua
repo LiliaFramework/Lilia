@@ -541,8 +541,8 @@
       Called to create the inventory UI panel for a given inventory.
 
    Parameters:
-      inventory (table) — the inventory instance to display  
-      parent (Panel) — the parent VGUI element  
+      inventory (table) — the inventory instance to display
+      parent (Panel) — the parent VGUI element
 
    Returns:
       Panel — the newly created inventory UI panel
