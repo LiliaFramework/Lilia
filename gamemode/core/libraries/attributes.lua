@@ -1,6 +1,6 @@
 ﻿lia.attribs = lia.attribs or {}
 lia.attribs.list = lia.attribs.list or {}
---[[ 
+--[[
    lia.attribs.loadFromDir(directory)
 
    Description:
@@ -42,7 +42,7 @@ function lia.attribs.loadFromDir(directory)
 end
 
 if SERVER then
-    --[[ 
+    --[[
    Function: lia.attribs.setup
 
    Description:

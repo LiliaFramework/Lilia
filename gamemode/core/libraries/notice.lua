@@ -118,7 +118,7 @@ function OrganizeNotices()
     end
 end
 
---[[ 
+--[[
     Function: lia.notices.notify
  
     Description:
@@ -162,7 +162,7 @@ function lia.notices.notify(message, notifType, recipient)
     end
 end
 
---[[ 
+--[[
     Function: lia.notices.notifyLocalized
  
     Description:

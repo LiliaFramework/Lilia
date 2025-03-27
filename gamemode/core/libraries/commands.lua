@@ -1,6 +1,6 @@
 ﻿lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
---[[ 
+--[[
    Function: lia.command.add
 
    Description:
@@ -81,7 +81,7 @@ function lia.command.add(command, data)
     end
 end
 
---[[ 
+--[[
    Function: lia.command.hasAccess
 
    Description:
@@ -123,7 +123,7 @@ function lia.command.hasAccess(client, command, data)
     return hasAccess, privilege
 end
 
---[[ 
+--[[
    Function: lia.command.extractArgs
 
    Description:
@@ -173,7 +173,7 @@ function lia.command.extractArgs(text)
 end
 
 if SERVER then
-    --[[ 
+    --[[
       lia.command.run
 
       Description:
@@ -213,7 +213,7 @@ if SERVER then
         end
     end
 
-    --[[ 
+    --[[
       Function: lia.command.parse
 
       Description:
@@ -262,7 +262,7 @@ if SERVER then
         return false
     end
 else
-    --[[ 
+    --[[
       Function: lia.command.send
 
       Description:

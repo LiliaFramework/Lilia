@@ -2,7 +2,7 @@
 lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
 if SERVER then
-    --[[ 
+    --[[
       Function: lia.data.set
 
       Description:
@@ -35,7 +35,7 @@ if SERVER then
         return path
     end
 
-    --[[ 
+    --[[
       Function: lia.data.delete
 
       Description:
@@ -75,7 +75,7 @@ if SERVER then
     end)
 end
 
---[[ 
+--[[
    Function: lia.data.get
 
    Description:

@@ -119,7 +119,7 @@ local function loadSubmodules(path, firstLoad)
     if #files > 0 or #folders > 0 then lia.module.loadFromDir(path .. "/submodules", "module", firstLoad) end
 end
 
---[[ 
+--[[
    Function: lia.module.load
 
    Description:
@@ -216,7 +216,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, firstLoad)
     end
 end
 
---[[ 
+--[[
    Function: lia.module.initialize
 
    Description:
@@ -244,7 +244,7 @@ function lia.module.initialize(firstLoad)
     hook.Run("InitializedModules")
 end
 
---[[ 
+--[[
    Function: lia.module.loadFromDir
 
    Description:
@@ -272,7 +272,7 @@ function lia.module.loadFromDir(directory, group, firstLoad)
     end
 end
 
---[[ 
+--[[
    Function: lia.module.get
 
    Description:

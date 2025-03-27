@@ -1,5 +1,5 @@
 ﻿lia.color = lia.color or {}
---[[ 
+--[[
    Function: lia.color.Adjust
 
    Description:
@@ -30,7 +30,7 @@ function lia.color.Adjust(color, rOffset, gOffset, bOffset, aOffset)
     return Color(r, g, b, a)
 end
 
---[[ 
+--[[
    Function: lia.color.ColorToHex
 
    Description:
@@ -53,7 +53,7 @@ function lia.color.ColorToHex(color)
     return "0x" .. bit.tohex(color.r, 2) .. bit.tohex(color.g, 2) .. bit.tohex(color.b, 2)
 end
 
---[[ 
+--[[
    Function: lia.color.Lighten
 
    Description:
@@ -79,7 +79,7 @@ function lia.color.Lighten(color, amount)
     return HSLToColor(hue, saturation, lightness)
 end
 
---[[ 
+--[[
    Function: lia.color.Rainbow
 
    Description:
@@ -102,7 +102,7 @@ function lia.color.Rainbow(frequency)
     return HSVToColor(CurTime() * frequency % 360, 1, 1)
 end
 
---[[ 
+--[[
    Function: lia.color.ColorCycle
 
    Description:
@@ -143,7 +143,7 @@ function lia.color.ColorCycle(col1, col2, freq)
     return Color(rgb.r + math.abs(math.sin(time * freq) * difference.r), rgb.g + math.abs(math.sin(time * freq + 2) * difference.g), rgb.b + math.abs(math.sin(time * freq + 4) * difference.b))
 end
 
---[[ 
+--[[
    Function: lia.color.toText
 
    Description:
@@ -167,7 +167,7 @@ function lia.color.toText(color)
     return (color.r or 255) .. "," .. (color.g or 255) .. "," .. (color.b or 255) .. "," .. (color.a or 255)
 end
 
---[[ 
+--[[
    Function: lia.color.Darken
 
    Description:
@@ -193,7 +193,7 @@ function lia.color.Darken(color, amount)
     return HSLToColor(hue, saturation, lightness)
 end
 
---[[ 
+--[[
    Function: lia.color.Blend
 
    Description:
@@ -292,7 +292,7 @@ do
     end
 end
 
---[[ 
+--[[
    Function: lia.color.rgb
 
    Description:
@@ -317,7 +317,7 @@ function lia.color.rgb(r, g, b)
     return Color(r / 255, g / 255, b / 255)
 end
 
---[[ 
+--[[
    Function: lia.color.LerpColor
 
    Description:
@@ -343,7 +343,7 @@ function lia.color.LerpColor(frac, from, to)
     return col
 end
 
---[[ 
+--[[
    Function: lia.color.ReturnMainAdjustedColors
 
    Description:
@@ -380,7 +380,7 @@ do
         return (val - min) / delta
     end
 
-    --[[ 
+    --[[
        Function: lia.color.LerpHSV
 
        Description:

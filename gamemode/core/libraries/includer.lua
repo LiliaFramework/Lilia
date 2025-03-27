@@ -166,7 +166,7 @@ local function stripRealmPrefix(name)
     return (prefix == "sh_" or prefix == "sv_" or prefix == "cl_") and name:sub(4) or name
 end
 
---[[ 
+--[[
     Function: lia.include
  
     Description:
@@ -205,7 +205,7 @@ function lia.include(fileName, state)
 end
 
 lia.util.include = lia.include
---[[ 
+--[[
     Function: lia.includeDir
  
     Description:
@@ -267,7 +267,7 @@ end
 
 lia.includeDir("lilia/gamemode/core/libraries/thirdparty", true, true)
 lia.util.includeDir = lia.includeDir
---[[ 
+--[[
     Function: lia.includeEntities
  
     Description:

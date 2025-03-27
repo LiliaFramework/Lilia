@@ -1,6 +1,6 @@
 ﻿lia.flag = lia.flag or {}
 lia.flag.list = lia.flag.list or {}
---[[ 
+--[[
    Function: lia.flag.add
 
    Description:
@@ -30,7 +30,7 @@ function lia.flag.add(flag, desc, callback)
 end
 
 if SERVER then
-    --[[ 
+    --[[
       Function: lia.flag.onSpawn
 
       Description:

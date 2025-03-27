@@ -1,7 +1,7 @@
 ﻿lia.lang = lia.lang or {}
 lia.lang.names = lia.lang.names or {}
 lia.lang.stored = lia.lang.stored or {}
---[[ 
+--[[
    Function: lia.lang.loadFromDir
 
    Description:
@@ -47,7 +47,7 @@ function lia.lang.loadFromDir(directory)
     end
 end
 
---[[ 
+--[[
    Function: lia.lang.AddTable
 
    Description:

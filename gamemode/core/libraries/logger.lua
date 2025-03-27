@@ -1,7 +1,7 @@
 ﻿lia.log = lia.log or {}
 lia.log.types = lia.log.types or {}
 if SERVER then
-   --[[ 
+   --[[
       Function: lia.log.loadTables
 
       Description:
@@ -23,7 +23,7 @@ if SERVER then
       file.CreateDir("lilia/logs/" .. engine.ActiveGamemode())
    end
 
-   --[[ 
+   --[[
       Function: lia.log.addType
 
       Description:
@@ -48,7 +48,7 @@ if SERVER then
       }
    end
 
-   --[[ 
+   --[[
       Function: lia.log.getString
 
       Description:
@@ -78,7 +78,7 @@ if SERVER then
       end
    end
 
-   --[[ 
+   --[[
       Function: lia.log.add
 
       Description:
@@ -108,7 +108,7 @@ if SERVER then
       file.Append(logFilePath, "[" .. os.date("%Y-%m-%d %H:%M:%S") .. "]\t" .. logString .. "\r\n")
    end
 
-   --[[ 
+   --[[
       Function: lia.log.send
 
       Description:

@@ -112,7 +112,7 @@ local KeybindKeys = {
     ["last"] = KEY_LAST
 }
 
---[[ 
+--[[
    Function: lia.keybind.add
 
    Description:
@@ -147,7 +147,7 @@ function lia.keybind.add(k, d, cb, rcb)
     lia.keybind.stored[c] = d
 end
 
---[[ 
+--[[
    Function: lia.keybind.get
 
    Description:
@@ -174,7 +174,7 @@ function lia.keybind.get(a, df)
     return df
 end
 
---[[ 
+--[[
    Function: lia.keybind.save
 
    Description:
@@ -212,7 +212,7 @@ function lia.keybind.save()
     if j then file.Write(s, j) end
 end
 
---[[ 
+--[[
    Function: lia.keybind.load
 
    Description:

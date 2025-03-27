@@ -1,6 +1,6 @@
 ﻿lia.chat = lia.chat or {}
 lia.chat.classes = lia.char.classes or {}
---[[ 
+--[[
    Function: lia.chat.timestamp
 
    Description:
@@ -23,7 +23,7 @@ function lia.chat.timestamp(ooc)
     return lia.option.ChatShowTime and (ooc and " " or "") .. "(" .. lia.time.GetFormattedDate(nil, false, false, false, false, true) .. ")" .. (ooc and "" or " ") or ""
 end
 
---[[ 
+--[[
    Function: lia.chat.register
 
    Description:
@@ -98,7 +98,7 @@ function lia.chat.register(chatType, data)
     lia.chat.classes[chatType] = data
 end
 
---[[ 
+--[[
    Function: lia.chat.parse
 
    Description:
@@ -153,7 +153,7 @@ function lia.chat.parse(client, message, noSend)
 end
 
 if SERVER then
-    --[[ 
+    --[[
        Function: lia.chat.send
 
        Description:

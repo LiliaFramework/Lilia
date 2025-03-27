@@ -1,6 +1,6 @@
 ﻿lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
---[[ 
+--[[
    Function: lia.config.add
 
    Description:
@@ -44,7 +44,7 @@ function lia.config.add(key, name, value, callback, data)
     }
 end
 
---[[ 
+--[[
    Function: lia.config.setDefault
 
    Description:
@@ -68,7 +68,7 @@ function lia.config.setDefault(key, value)
     if config then config.default = value end
 end
 
---[[ 
+--[[
    Function: lia.config.forceSet
 
    Description:
@@ -94,7 +94,7 @@ function lia.config.forceSet(key, value, noSave)
     if not noSave then lia.config.save() end
 end
 
---[[ 
+--[[
    Function: lia.config.set
 
    Description:
@@ -126,7 +126,7 @@ function lia.config.set(key, value)
     end
 end
 
---[[ 
+--[[
    Function: lia.config.get
 
    Description:
@@ -158,7 +158,7 @@ function lia.config.get(key, default)
     return default
 end
 
---[[ 
+--[[
    Function: lia.config.load
 
    Description:
@@ -195,7 +195,7 @@ function lia.config.load()
 end
 
 if SERVER then
---[[ 
+--[[
        Function: lia.config.getChangedValues
 
        Description:
@@ -221,7 +221,7 @@ if SERVER then
         return data
     end
 
---[[ 
+--[[
        Function: lia.config.send
 
        Description:
@@ -243,7 +243,7 @@ if SERVER then
         netstream.Start(client, "cfgList", lia.config.getChangedValues())
     end
 
---[[ 
+--[[
        Function: lia.config.save
 
        Description:

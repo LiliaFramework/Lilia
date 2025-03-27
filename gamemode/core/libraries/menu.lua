@@ -1,6 +1,6 @@
 ﻿lia.menu = lia.menu or {}
 lia.menu.list = lia.menu.list or {}
---[[ 
+--[[
    Function: lia.menu.add
 
    Description:
@@ -43,7 +43,7 @@ function lia.menu.add(options, position, onRemove)
 end
 
 local mathApproach = math.Approach
---[[ 
+--[[
    Function: lia.menu.drawAll
 
    Description:
@@ -122,7 +122,7 @@ function lia.menu.drawAll()
     end
 end
 
---[[ 
+--[[
    Function: lia.menu.getActiveMenu
 
    Description:
@@ -178,7 +178,7 @@ function lia.menu.getActiveMenu()
     end
 end
 
---[[ 
+--[[
    Function: lia.menu.onButtonPressed
 
    Description:

@@ -7,7 +7,7 @@ local function findIndexByIdentifier(identifier)
     end
 end
 
---[[ 
+--[[
    Function: lia.bar.get
 
    Description:
@@ -31,7 +31,7 @@ function lia.bar.get(identifier)
     end
 end
 
---[[ 
+--[[
    Function: lia.bar.add
 
    Description:
@@ -72,7 +72,7 @@ function lia.bar.add(getValue, color, priority, identifier)
     return priority
 end
 
---[[ 
+--[[
    Function: lia.bar.remove
 
    Description:
@@ -95,7 +95,7 @@ function lia.bar.remove(identifier)
     if idx then table.remove(lia.bar.list, idx) end
 end
 
---[[ 
+--[[
    Function: lia.bar.drawBar
 
    Description:
@@ -129,7 +129,7 @@ function lia.bar.drawBar(x, y, w, h, pos, max, color)
     surface.DrawRect(x + 3, y + 3, fill, h - 6)
 end
 
---[[ 
+--[[
    Function: lia.bar.drawAction
 
    Description:
@@ -179,7 +179,7 @@ function lia.bar.drawAction(text, time)
     end)
 end
 
---[[ 
+--[[
    Function: lia.bar.drawAll
 
    Description:

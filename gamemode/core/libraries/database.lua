@@ -217,7 +217,7 @@ modules.mysqloo = {
 
 lia.db.escape = lia.db.escape or modules.sqlite.escape
 lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueue + 1] = {...} end
---[[ 
+--[[
    Function: lia.db.connect
 
    Description:
@@ -262,7 +262,7 @@ function lia.db.connect(callback, reconnect)
     end
 end
 
---[[ 
+--[[
    Function: lia.db.wipeTables
 
    Description:
@@ -332,7 +332,7 @@ function lia.db.wipeTables(callback)
     end
 end
 
---[[ 
+--[[
    Function: lia.db.loadTables
 
    Description:
@@ -484,7 +484,7 @@ function lia.db.loadTables()
     hook.Run("OnLoadTables")
 end
 
---[[ 
+--[[
    Function: lia.db.waitForTablesToLoad
 
    Description:
@@ -518,7 +518,7 @@ function lia.db.waitForTablesToLoad()
     return d
 end
 
---[[ 
+--[[
    Function: lia.db.convertDataType
 
    Description:
@@ -577,7 +577,7 @@ local function genUpdateList(value)
     return table.concat(changes, ", ")
 end
 
---[[ 
+--[[
    Function: lia.db.insertTable
 
    Description:
@@ -605,7 +605,7 @@ function lia.db.insertTable(value, callback, dbTable)
     lia.db.query(query, callback)
 end
 
---[[ 
+--[[
    Function: lia.db.updateTable
 
    Description:
@@ -634,7 +634,7 @@ function lia.db.updateTable(value, callback, dbTable, condition)
     lia.db.query(query, callback)
 end
 
---[[ 
+--[[
    Function: lia.db.select
 
    Description:
@@ -675,7 +675,7 @@ function lia.db.select(fields, dbTable, condition, limit)
     return d
 end
 
---[[ 
+--[[
    Function: lia.db.upsert
 
    Description:
@@ -716,7 +716,7 @@ function lia.db.upsert(value, dbTable)
     return d
 end
 
---[[ 
+--[[
    Function: lia.db.delete
 
    Description:

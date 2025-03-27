@@ -1,4 +1,4 @@
---[[ 
+--[[
    Hook: ShouldHideBars
 
    Description:
@@ -19,7 +19,7 @@
          return LocalPlayer():InVehicle()
       end)
 ]]
---[[ 
+--[[
    Hook: ShouldBarDraw
 
    Description:
@@ -41,7 +41,7 @@
          return bar.name ~= "stamina" -- Hide stamina bar, show others
       end)
 ]]
---[[ 
+--[[
    Hook: InitializedOptions
 
    Description:
@@ -62,7 +62,7 @@
          print("Options have been loaded and are ready to use.")
       end)
 ]]
---[[ 
+--[[
    Hook: InitializedConfig
 
    Description:
@@ -83,7 +83,7 @@
          print("All configs have been initialized and are ready.")
       end)
 ]]
---[[ 
+--[[
    Hook: InitializedModules
 
    Description:
@@ -105,7 +105,7 @@
          print("All modules have been successfully initialized!")
       end)
 ]]
---[[ 
+--[[
    Hook: InitializedSchema
 
    Description:
@@ -127,7 +127,7 @@
          print("Schema initialization complete!")
       end)
 ]]
---[[ 
+--[[
    Hook: DoModuleIncludes
 
    Description:
@@ -151,7 +151,7 @@
          print("Running extra includes for module:", MODULE.name)
       end)
 ]]
---[[ 
+--[[
    Hook: OnServerLog
 
    Description:
@@ -176,7 +176,7 @@
          print("Server Log:", logType, logString, "Category:", category)
       end)
 ]]
---[[ 
+--[[
    Hook: OnLocalizationLoaded
 
    Description:
@@ -198,7 +198,7 @@
          print("Localization data has been loaded!")
       end)
 ]]
---[[ 
+--[[
    Hook: InitializedKeybinds
 
    Description:
@@ -220,7 +220,7 @@
          print("Keybinds initialized successfully!")
       end)
 ]]
---[[ 
+--[[
    Hook: EasyIconsLoaded
 
    Description:
@@ -241,7 +241,7 @@
          print("Easy icons loaded successfully!")
       end)
 ]]
---[[ 
+--[[
    Hook: OnMySQLOOConnected
 
    Description:
@@ -263,7 +263,7 @@
          print("MySQLOO is connected!")
       end)
 ]]
---[[ 
+--[[
    Hook: LiliaTablesLoaded
 
    Description:
@@ -285,7 +285,7 @@
          print("Database tables loaded!")
       end)
 ]]
---[[ 
+--[[
    Hook: OnLoadTables
 
    Description:
@@ -306,7 +306,7 @@
          print("Database tables load complete!")
       end)
 ]]
---[[ 
+--[[
    Hook: RegisterPreparedStatements
 
    Description:
@@ -328,7 +328,7 @@
          print("Prepared statements registered!")
       end)
 ]]
---[[ 
+--[[
    Hook: LoadData
 
    Description:
@@ -350,7 +350,7 @@
          print("Data loaded!")
       end)
 ]]
---[[ 
+--[[
    Hook: PostLoadData
 
    Description:
@@ -371,7 +371,7 @@
          print("Post-load processing complete!")
       end)
 ]]
---[[ 
+--[[
    Hook: SaveData
 
    Description:
@@ -392,7 +392,7 @@
          print("Data saved!")
       end)
 ]]
---[[ 
+--[[
    Hook: PersistenceSave
 
    Description:
@@ -413,7 +413,7 @@
          print("Supplementary data saved!")
       end)
 ]]
---[[ 
+--[[
    Hook: ShouldDataBeSaved
 
    Description:
@@ -434,7 +434,7 @@
          return true -- or false to cancel data saving
       end)
 ]]
---[[ 
+--[[
    Hook: CanPlayerUseCommand
 
    Description:
@@ -459,7 +459,7 @@
          end
       end)
 ]]
---[[ 
+--[[
    Hook: CanPlayerJoinClass
 
    Description:
@@ -534,7 +534,7 @@
          return string.gsub(text, "badword", "****")
       end)
 ]]
---[[  
+--[[ 
    Hook: CreateInventoryPanel
 
    Description:
@@ -547,7 +547,7 @@
    Returns:
       Panel — the newly created inventory UI panel
 ]]
---[[  
+--[[ 
    Hook: CanPlayerViewInventory
 
    Description:
@@ -556,7 +556,7 @@
    Returns:
       boolean|nil — return false to block inventory viewing; anything else allows it
 ]]
---[[  
+--[[ 
    Hook: PostDrawInventory
 
    Description:
@@ -748,7 +748,7 @@
    Realm:
       Shared
 ]]
---[[ 
+--[[
    Hook: InitializedItems
 
    Description:

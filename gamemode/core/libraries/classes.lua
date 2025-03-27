@@ -1,6 +1,6 @@
 ﻿lia.class = lia.class or {}
 lia.class.list = lia.class.list or {}
---[[ 
+--[[
    Function: lia.class.loadFromDir
 
    Description:
@@ -58,7 +58,7 @@ function lia.class.loadFromDir(directory)
    end
 end
 
---[[ 
+--[[
    Function: lia.class.canBe
 
    Description:
@@ -91,7 +91,7 @@ function lia.class.canBe(client, class)
    return info.isDefault
 end
 
---[[ 
+--[[
    Function: lia.class.get
 
    Description:
@@ -113,7 +113,7 @@ function lia.class.get(identifier)
    return lia.class.list[identifier]
 end
 
---[[ 
+--[[
    Function: lia.class.getPlayers
 
    Description:
@@ -140,7 +140,7 @@ function lia.class.getPlayers(class)
    return players
 end
 
---[[ 
+--[[
    Function: lia.class.getPlayerCount
 
    Description:
@@ -167,7 +167,7 @@ function lia.class.getPlayerCount(class)
    return count
 end
 
---[[ 
+--[[
    Function: lia.class.retrieveClass
 
    Description:
@@ -193,7 +193,7 @@ function lia.class.retrieveClass(class)
    return nil
 end
 
---[[ 
+--[[
    Function: lia.class.hasWhitelist
 
    Description:

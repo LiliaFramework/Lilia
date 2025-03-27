@@ -24,7 +24,7 @@ local function checkType(typeID, struct, expected, prefix)
     end
 end
 
---[[ 
+--[[
    Function: lia.inventory.newType
 
    Description:
@@ -45,7 +45,7 @@ function lia.inventory.newType(typeID, invTypeStruct)
     lia.inventory.types[typeID] = invTypeStruct
 end
 
---[[ 
+--[[
    Function: lia.inventory.new
 
    Description:
@@ -72,7 +72,7 @@ if SERVER then
     local DATA_FIELDS = {"_key", "_value"}
     local DATA_TABLE = "invdata"
     local ITEMS_TABLE = "items"
-    --[[ 
+    --[[
       Function: lia.inventory.loadByID
 
       Description:
@@ -104,7 +104,7 @@ if SERVER then
         return lia.inventory.loadFromDefaultStorage(id, noCache)
     end
 
-    --[[ 
+    --[[
       Function: lia.inventory.loadFromDefaultStorage
 
       Description:
@@ -146,7 +146,7 @@ if SERVER then
         end)
     end
 
-    --[[ 
+    --[[
       Function: lia.inventory.instance
 
       Description:
@@ -173,7 +173,7 @@ if SERVER then
         end)
     end
 
-    --[[ 
+    --[[
       Function: lia.inventory.loadAllFromCharID
 
       Description:
@@ -190,7 +190,7 @@ if SERVER then
         return lia.db.select({"_invID"}, INV_TABLE, "_charID = " .. charID):next(function(res) return deferred.map(res.results or {}, function(result) return lia.inventory.loadByID(tonumber(result._invID)) end) end)
     end
 
-    --[[ 
+    --[[
       Function: lia.inventory.deleteByID
 
       Description:
@@ -210,7 +210,7 @@ if SERVER then
         if instance then instance:destroy() end
     end
 
-    --[[ 
+    --[[
       Function: lia.inventory.cleanUpForCharacter
 
       Description:
@@ -228,7 +228,7 @@ if SERVER then
         end
     end
 else
-    --[[ 
+    --[[
       Function: lia.inventory.show
 
       Description:

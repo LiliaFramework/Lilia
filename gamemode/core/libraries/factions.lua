@@ -2,7 +2,7 @@
 lia.faction.indices = lia.faction.indices or {}
 lia.faction.teams = lia.faction.teams or {}
 local DefaultModels = {"models/player/barney.mdl", "models/player/alyx.mdl", "models/player/breen.mdl", "models/player/p2_chell.mdl"}
---[[ 
+--[[
    Function: lia.faction.loadFromDir
 
    Description:
@@ -70,7 +70,7 @@ function lia.faction.loadFromDir(directory)
     end
 end
 
---[[ 
+--[[
    Function: lia.faction.get
 
    Description:
@@ -92,7 +92,7 @@ function lia.faction.get(identifier)
     return lia.faction.indices[identifier] or lia.faction.teams[identifier]
 end
 
---[[ 
+--[[
    Function: lia.faction.getIndex
 
    Description:
@@ -114,7 +114,7 @@ function lia.faction.getIndex(uniqueID)
     return lia.faction.teams[uniqueID] and lia.faction.teams[uniqueID].index
 end
 
---[[ 
+--[[
    Function: lia.faction.getClasses
 
    Description:
@@ -140,7 +140,7 @@ function lia.faction.getClasses(faction)
     return classes
 end
 
---[[ 
+--[[
    Function: lia.faction.getPlayers
 
    Description:
@@ -167,7 +167,7 @@ function lia.faction.getPlayers(faction)
     return players
 end
 
---[[ 
+--[[
    Function: lia.faction.getPlayerCount
 
    Description:
@@ -194,7 +194,7 @@ function lia.faction.getPlayerCount(faction)
     return count
 end
 
---[[ 
+--[[
    Function: lia.faction.isFactionCategory
 
    Description:
@@ -218,7 +218,7 @@ function lia.faction.isFactionCategory(faction, categoryFactions)
     return false
 end
 
---[[ 
+--[[
    Function: lia.faction.jobGenerate
 
    Description:
@@ -307,7 +307,7 @@ local function formatModelDataEntry(name, faction, modelIndex, modelData, catego
     end
 end
 
---[[ 
+--[[
    Function: lia.faction.formatModelData
 
    Description:
@@ -342,7 +342,7 @@ function lia.faction.formatModelData()
     end
 end
 
---[[ 
+--[[
    Function: lia.faction.getCategories
 
    Description:
@@ -372,7 +372,7 @@ function lia.faction.getCategories(teamName)
     return categories
 end
 
---[[ 
+--[[
    Function: lia.faction.getModelsFromCategory
 
    Description:
@@ -402,7 +402,7 @@ function lia.faction.getModelsFromCategory(teamName, category)
     return models
 end
 
---[[ 
+--[[
    Function: lia.faction.getDefaultClass
 
    Description:
@@ -433,7 +433,7 @@ function lia.faction.getDefaultClass(id)
 end
 
 if CLIENT then
-    --[[ 
+    --[[
       Function: lia.faction.hasWhitelist
 
       Description:
