@@ -10,7 +10,7 @@ end
 function MODULE:PostPlayerLoadout(client)
     if not IsValid(client) then return end
     local character = client:getChar()
-    if not character or not self.spawns or next(self.spawns) == nil then return end
+    if not character or not self.spawns or table.Count(self.spawns) == 0 then return end
     local factionInfo
     for _, v in ipairs(lia.faction.indices) do
         if v.index == client:Team() then
