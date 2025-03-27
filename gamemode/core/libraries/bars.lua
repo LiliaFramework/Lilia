@@ -8,23 +8,22 @@ local function findIndexByIdentifier(identifier)
 end
 
 --[[
-    Function: lia.attribs.setup
+    Function: lia.bar.get
 
     Description:
-        Initializes all attributes for a player's character.
-        If an attribute has an OnSetup function, it will be called.
+        Returns the bar object matching the given identifier.
 
     Parameters:
-        client (Player) - The player whose character's attributes are being set up.
+        identifier (string) - The unique identifier of the bar.
 
     Returns:
-        nil
+        table|nil - The bar object if found, or nil otherwise.
 
     Realm:
-        Shared
+        Client
 
     Example Usage:
-        lia.attribs.setup(client)
+        local myBar = lia.bar.get("health")
 ]]
 function lia.bar.get(identifier)
     for _, bar in ipairs(lia.bar.list) do
@@ -33,23 +32,28 @@ function lia.bar.get(identifier)
 end
 
 --[[
-    Function: lia.attribs.setup
+    Function: lia.bar.add
 
     Description:
-        Initializes all attributes for a player's character.
-        If an attribute has an OnSetup function, it will be called.
+        Adds a new bar (or replaces an existing one) to the bar list.
 
     Parameters:
-        client (Player) - The player whose character's attributes are being set up.
+        getValue (function) — Function returning a normalized progress (0 to 1).
+        color (Color) — The fill color of the bar (auto‑generated if nil).
+        priority (number) — The draw order priority (lower renders first).
+        identifier (string|nil) — Unique identifier of the bar.
 
     Returns:
-        nil
+        number — The assigned priority.
 
     Realm:
         Shared
 
     Example Usage:
-        lia.attribs.setup(client)
+        lia.bar.add(function()
+            local client = LocalPlayer()
+            return client:Health() / client:GetMaxHealth()
+        end, Color(200, 50, 40), 1, "health")
 ]]
 function lia.bar.add(getValue, color, priority, identifier)
     if identifier then
@@ -69,23 +73,22 @@ function lia.bar.add(getValue, color, priority, identifier)
 end
 
 --[[
-    Function: lia.attribs.setup
+    Function: lia.bar.remove
 
     Description:
-        Initializes all attributes for a player's character.
-        If an attribute has an OnSetup function, it will be called.
+        Removes the bar corresponding to the given identifier.
 
     Parameters:
-        client (Player) - The player whose character's attributes are being set up.
+        identifier (string) - The unique identifier of the bar to remove.
 
     Returns:
         nil
 
     Realm:
-        Shared
+        Client
 
     Example Usage:
-        lia.attribs.setup(client)
+        lia.bar.remove("health")
 ]]
 function lia.bar.remove(identifier)
     local idx = findIndexByIdentifier(identifier)
@@ -93,25 +96,28 @@ function lia.bar.remove(identifier)
 end
 
 --[[
-    Function: lia.attribs.setup
+    Function: lia.bar.drawBar
 
     Description:
-        Initializes all attributes for a player's character.
-        If an attribute has an OnSetup function, it will be called.
+        Draws a single horizontal progress bar on the HUD.
 
     Parameters:
-        client (Player) - The player whose character's attributes are being set up.
+        x, y (number) - The screen coordinates for the bar.
+        w, h (number) - The width and height of the bar.
+        pos (number) - The current progress value.
+        max (number) - The maximum value for the progress.
+        color (Color) - The color used to fill the bar.
 
     Returns:
         nil
 
     Realm:
-        Shared
+        Client
 
     Example Usage:
-        lia.attribs.setup(client)
+        lia.bar.drawBar(10, 10, 200, 20, 0.5, 0, 1, Color(0,255,0))
 ]]
-function lia.bar.drawBar(x, y, w, h, pos, neg, max, color)
+function lia.bar.drawBar(x, y, w, h, pos, max, color)
     pos = math.min(pos, max)
     local usable = math.max(w - 2, 0)
     local fill = usable * pos / max
@@ -127,12 +133,13 @@ end
     Function: lia.bar.drawAction
 
     Description:
-        Draws the action bar on the HUD if an action is currently in progress.
-        The bar displays a progress fill and text based on the remaining time.
-        Uses blur and styled drawing to render a clean visual effect.
+        Draws an action bar on the HUD when an action is in progress.
+        The bar shows a progress fill and a label based on the remaining time,
+        using a blur effect for a clean visual presentation.
 
     Parameters:
-        None
+        text (string) - The label text to display above the bar.
+        time (number) - The duration of the action in seconds.
 
     Returns:
         nil
@@ -140,8 +147,8 @@ end
     Realm:
         Client
 
-    Internal:
-        true
+    Example Usage:
+        lia.bar.drawAction("Reloading", 3)
 ]]
 function lia.bar.drawAction(text, time)
     local now = CurTime()
@@ -176,10 +183,10 @@ end
     Function: lia.bar.drawAll
 
     Description:
-        Called from the HUDPaintBackground hook to draw all active bars on the player's HUD.
-        This includes action bars and status bars. Bars are sorted by priority and
-        smoothly animated toward their target values. Positions are configurable.
-        Rendering is skipped if the "ShouldHideBars" hook returns true.
+        Called from the HUDPaintBackground hook to draw all active bars on the HUD.
+        Bars are sorted by priority and smoothly animated toward their target values.
+        Bars will be drawn if they are set to always be visible, are within their lifetime,
+        or if they pass a custom visibility hook.
 
     Parameters:
         None
@@ -191,49 +198,28 @@ end
         Client
 
     Internal:
-        true
+        Yes
 ]]
 function lia.bar.drawAll()
     if hook.Run("ShouldHideBars") then return end
     table.sort(lia.bar.list, function(a, b) return a.priority < b.priority end)
     local w, h = ScrW() * 0.35, 14
-    local x = 4
-    local y = ScrH() - h
+    local x, y = 4, 4
     local deltas = lia.bar.delta
     local update = FrameTime() * 0.6
     local now = CurTime()
+    local always = lia.option.get("BarsAlwaysVisible")
     for i, bar in ipairs(lia.bar.list) do
         local target = bar.getValue()
         deltas[i] = deltas[i] or target
         deltas[i] = math.Approach(deltas[i], target, update)
         local value = deltas[i]
         if value ~= target then bar.lifeTime = now + 5 end
-        if bar.lifeTime >= now or bar.visible or hook.Run("ShouldBarDraw", bar) then
-            lia.bar.drawBar(x, y, w, h, value, 0, 1, bar.color)
-            y = y - (h + 2)
+        if always or bar.lifeTime >= now or bar.visible or hook.Run("ShouldBarDraw", bar) then
+            lia.bar.drawBar(x, y, w, h, value, 1, bar.color)
+            y = y + h + 2
         end
     end
 end
-
-lia.option.add("BarPositions", "Bar Positions", "Determines the position of the Lilia bars.", "Bottom Left", nil, {
-    category = "General",
-    type = "Table",
-    options = {"Top Right", "Top Left", "Bottom Right", "Bottom Left"}
-})
-
-lia.bar.add(function()
-    local client = LocalPlayer()
-    return client:getLocalVar("stamina", 0) / 100
-end, Color(200, 200, 40), 2, "stamina")
-
-lia.bar.add(function()
-    local client = LocalPlayer()
-    return client:Health() / client:GetMaxHealth()
-end, Color(200, 50, 40), 1, "health")
-
-lia.bar.add(function()
-    local client = LocalPlayer()
-    return client:Armor() / client:GetMaxArmor()
-end, Color(30, 70, 180), 3, "armor")
 
 hook.Add("HUDPaintBackground", "liaDrawBars", lia.bar.drawAll)
