@@ -71,7 +71,7 @@ function PANEL:onCharacterSelected(character)
     end, function(err)
         self.choosing = false
         lia.gui.character:setFadeToBlack(false)
-        lia.util.notifyLocalized(err)
+        lia.notices.notifyLocalized(err)
     end)
 end
 
