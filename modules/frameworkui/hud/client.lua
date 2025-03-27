@@ -242,21 +242,6 @@ function MODULE:TooltipLayout(var)
     if var.isItemTooltip then return true end
 end
 
-lia.bar.add(function()
-    local client = LocalPlayer()
-    return client:getLocalVar("stamina", 0) / 100
-end, Color(200, 200, 40), 2, "stamina")
-
-lia.bar.add(function()
-    local client = LocalPlayer()
-    return client:Health() / client:GetMaxHealth()
-end, Color(200, 50, 40), 1, "health")
-
-lia.bar.add(function()
-    local client = LocalPlayer()
-    return client:Armor() / client:GetMaxArmor()
-end, Color(30, 70, 180), 3, "armor")
-
 timer.Create("liaVignetteChecker", 1, 0, function()
     local client = LocalPlayer()
     if IsValid(client) then
