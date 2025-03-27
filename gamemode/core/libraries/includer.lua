@@ -308,8 +308,8 @@ function lia.includeEntities(path)
 end
 
 lia.util.loadEntities = lia.includeEntities
-lia.includeEntities("lilia/gamemode/entities")
-lia.includeEntities(engine.ActiveGamemode() .. "/gamemode/entities")
+lia.includeEntities("lilia/entities")
+lia.includeEntities(engine.ActiveGamemode() .. "/entities")
 for _, files in ipairs(FilesToLoad) do
     lia.include(files.path, files.realm)
 end
