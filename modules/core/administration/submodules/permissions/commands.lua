@@ -22,7 +22,7 @@ lia.command.add("playsound", {
     desc = "Play the specified sound on a specific player.",
     syntax = "[string player] [string sound]",
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         local sound = arguments[2]
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
@@ -73,7 +73,7 @@ lia.command.add("forcefallover", {
     desc = "Force another player to fall over (go into ragdoll).",
     syntax = "[player target] [number time]",
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -117,7 +117,7 @@ lia.command.add("forcegetup", {
     desc = "Force another player to get up from ragdoll.",
     syntax = "[player target]",
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -242,7 +242,7 @@ lia.command.add("checkinventory", {
         Icon = "icon16/box.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -270,7 +270,7 @@ lia.command.add("flaggive", {
     desc = "Give one or more flags to a character.",
     syntax = "[string playerName] [string flags]",
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -309,7 +309,7 @@ lia.command.add("flaggiveall", {
         Icon = "icon16/flag_blue.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -336,7 +336,7 @@ lia.command.add("flagtakeall", {
         Icon = "icon16/flag_green.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -362,7 +362,7 @@ lia.command.add("flagtake", {
     desc = "Take one or more flags away from a character.",
     syntax = "[string playerName] [string flags]",
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -511,7 +511,7 @@ lia.command.add("clearinv", {
         Icon = "icon16/bin.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -534,7 +534,7 @@ lia.command.add("charkick", {
         Icon = "icon16/user_delete.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -559,7 +559,7 @@ lia.command.add("freezeallprops", {
     desc = "Freeze all props owned by a specific player.",
     syntax = "[string playerName]",
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -604,7 +604,7 @@ lia.command.add("charban", {
                 end
             end
         else
-            target = lia.command.findPlayer(client, arguments[1])
+            target = lia.util.findPlayer(client, arguments[1])
         end
 
         if not target or not IsValid(target) then
@@ -642,7 +642,7 @@ lia.command.add("checkmoney", {
         Icon = "icon16/money.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -659,7 +659,7 @@ lia.command.add("listbodygroups", {
     desc = "List the available bodygroups for a target player.",
     syntax = "[string playerName]",
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -713,7 +713,7 @@ lia.command.add("charsetspeed", {
         }
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -739,7 +739,7 @@ lia.command.add("charsetmodel", {
         }
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -780,7 +780,7 @@ lia.command.add("chargiveitem", {
             return
         end
 
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -826,7 +826,7 @@ lia.command.add("charsetdesc", {
         }
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -859,7 +859,7 @@ lia.command.add("charsetname", {
         }
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -887,7 +887,7 @@ lia.command.add("charsetscale", {
         }
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         local scale = tonumber(arguments[2]) or 1
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
@@ -914,7 +914,7 @@ lia.command.add("charsetjump", {
         }
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         local power = tonumber(arguments[2]) or 200
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
@@ -935,7 +935,7 @@ lia.command.add("charsetbodygroup", {
         local name = arguments[1]
         local bodyGroup = arguments[2]
         local value = tonumber(arguments[3])
-        local target = lia.command.findPlayer(client, name)
+        local target = lia.util.findPlayer(client, name)
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -972,7 +972,7 @@ lia.command.add("charsetskin", {
     onRun = function(client, arguments)
         local name = arguments[1]
         local skin = tonumber(arguments[2])
-        local target = lia.command.findPlayer(client, name)
+        local target = lia.util.findPlayer(client, name)
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -990,7 +990,7 @@ lia.command.add("charsetmoney", {
     desc = "Set a player's money to a specific amount.",
     syntax = "[string playerName] [number amount]",
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         local amount = tonumber(arguments[2])
         if not amount or amount < 0 then
             client:notifyLocalized("invalidArg")
@@ -1013,7 +1013,7 @@ lia.command.add("charaddmoney", {
     desc = "Add a certain amount of money to a player's balance.",
     syntax = "[string playerName] [number amount]",
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         local amount = tonumber(arguments[2])
         if not amount then
             client:notifyLocalized("invalidArg")
@@ -1096,7 +1096,7 @@ lia.command.add("forcesay", {
         }
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         local message = table.concat(arguments, " ", 2)
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
@@ -1137,7 +1137,7 @@ lia.command.add("pm", {
 
         local targetName = arguments[1]
         local message = table.concat(arguments, " ", 2)
-        local target = lia.command.findPlayer(client, targetName)
+        local target = lia.util.findPlayer(client, targetName)
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -1164,7 +1164,7 @@ lia.command.add("chargetmodel", {
         Icon = "icon16/user_gray.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -1198,7 +1198,7 @@ lia.command.add("checkflags", {
         Icon = "icon16/flag_yellow.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -1225,7 +1225,7 @@ lia.command.add("chargetname", {
         Icon = "icon16/user.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -1247,7 +1247,7 @@ lia.command.add("chargethealth", {
         Icon = "icon16/heart.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -1269,7 +1269,7 @@ lia.command.add("chargetmoney", {
         Icon = "icon16/money.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -1292,7 +1292,7 @@ lia.command.add("chargetinventory", {
         Icon = "icon16/box.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return

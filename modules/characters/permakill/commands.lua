@@ -10,7 +10,7 @@
         Icon = "icon16/user_delete.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return

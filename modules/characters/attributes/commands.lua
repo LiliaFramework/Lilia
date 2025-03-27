@@ -20,7 +20,7 @@
         }
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         local attribName = arguments[2]
         local attribNumber = tonumber(arguments[3])
         if not target or not IsValid(target) then
@@ -53,7 +53,7 @@ lia.command.add("checkattributes", {
         Icon = "icon16/zoom.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -125,7 +125,7 @@ lia.command.add("charaddattrib", {
         }
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         local attribName = arguments[2]
         local attribNumber = tonumber(arguments[3])
         if not target or not IsValid(target) then

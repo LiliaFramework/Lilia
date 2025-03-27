@@ -5,14 +5,14 @@
     syntax = "[string name] [string faction]",
     alias = {"charsetfaction"},
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         local factionName = table.concat(arguments, " ", 2)
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
         end
 
-        local faction = lia.faction.teams[factionName] or lia.command.findFaction(client, factionName)
+        local faction = lia.faction.teams[factionName] or lia.util.findFaction(client, factionName)
         if faction then
             if hook.Run("CanCharBeTransfered", target:getChar(), faction, target:Team()) == false then return end
             target:getChar().vars.faction = faction.uniqueID
@@ -38,13 +38,13 @@ lia.command.add("plywhitelist", {
     syntax = "[string name] [string faction]",
     alias = {"factionwhitelist"},
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
         end
 
-        local faction = lia.command.findFaction(client, table.concat(arguments, " ", 2))
+        local faction = lia.util.findFaction(client, table.concat(arguments, " ", 2))
         if faction and target:setWhitelisted(faction.index, true) then
             for _, v in player.Iterator() do
                 v:notifyLocalized("whitelist", client:Name(), target:Name(), L(faction.name, v))
@@ -60,13 +60,13 @@ lia.command.add("plyunwhitelist", {
     syntax = "[string name] [string faction]",
     alias = {"factionunwhitelist"},
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
         end
 
-        local faction = lia.command.findFaction(client, table.concat(arguments, " ", 2))
+        local faction = lia.util.findFaction(client, table.concat(arguments, " ", 2))
         if faction and target:setWhitelisted(faction.index, false) then
             for _, v in player.Iterator() do
                 v:notifyLocalized("unwhitelist", client:Name(), target:Name(), L(faction.name, v))
@@ -107,7 +107,7 @@ lia.command.add("setclass", {
     desc = "Sets the specified player's class, bypassing requirements.",
     syntax = "[string charname] [string class]",
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -137,7 +137,7 @@ lia.command.add("classwhitelist", {
     desc = "Grants the specified player whitelist access to a class.",
     syntax = "[string name] [string class]",
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         local classID = lia.class.retrieveClass(table.concat(arguments, " ", 2))
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
@@ -166,7 +166,7 @@ lia.command.add("classunwhitelist", {
     desc = "Revokes the specified player's whitelist access to a class.",
     syntax = "[string name] [string class]",
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         local classID = lia.class.retrieveClass(table.concat(arguments, " ", 2))
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")

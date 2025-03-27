@@ -16,7 +16,7 @@
         local targetName = arguments[1]
         local reason = table.concat(arguments, " ", 2)
         if not targetName or reason == "" then return "Usage: warn [player] [reason]" end
-        local target = lia.command.findPlayer(client, targetName)
+        local target = lia.util.findPlayer(client, targetName)
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -49,7 +49,7 @@ lia.command.add("viewwarns", {
         Icon = "icon16/eye.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return

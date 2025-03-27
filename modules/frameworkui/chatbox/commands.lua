@@ -12,7 +12,7 @@ lia.command.add("banooc", {
         Icon = "icon16/sound_mute.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
@@ -35,7 +35,7 @@ lia.command.add("unbanooc", {
         Icon = "icon16/sound.png"
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return

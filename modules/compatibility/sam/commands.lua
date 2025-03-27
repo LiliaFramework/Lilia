@@ -47,7 +47,7 @@ lia.command.add("plygetplaytime", {
             return
         end
 
-        local target = lia.command.findPlayer(client, targetName)
+        local target = lia.util.findPlayer(client, targetName)
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
