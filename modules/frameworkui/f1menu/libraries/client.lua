@@ -349,7 +349,7 @@ function MODULE:BuildInformationMenu(pages)
                     modulePanel.Paint = function(_, w, h)
                         draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
                         draw.SimpleText(moduleData.name, "liaMediumFont", 20, 10, color_white)
-                        draw.SimpleText(moduleData.version or 1.0, "liaSmallFont", w - 20, 45, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+                        draw.SimpleText(moduleData.version and tostring(moduleData.version) or "1.0", "liaSmallFont", w - 20, 45, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
                         if hasDesc then draw.SimpleText(moduleData.desc, "liaSmallFont", 20, 45, color_white) end
                     end
                 end
