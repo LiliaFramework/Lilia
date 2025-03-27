@@ -1,4 +1,27 @@
 ﻿lia.time = {}
+--[[
+   Function: lia.time.GetFormattedDate
+
+   Description:
+      Returns a formatted date string based on current system time and provided flags.
+
+   Parameters:
+      StartingMessage (string) — The message to prepend (optional).
+      includeWeekDay (boolean) — Whether to include the weekday name.
+      includeDay (boolean) — Whether to include the day of the month.
+      includeMonth (boolean) — Whether to include the month.
+      includeYear (boolean) — Whether to include the year.
+      includeTime (boolean) — Whether to include the time.
+
+   Returns:
+      (string) The formatted date string.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      lia.time.GetFormattedDate("Today is", true, true, true, true, true)
+]]
 function lia.time.GetFormattedDate(StartingMessage, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
     local currentTime = os.date("*t")
     if StartingMessage then
@@ -44,6 +67,29 @@ function lia.time.GetFormattedDate(StartingMessage, includeWeekDay, includeDay, 
     return output
 end
 
+--[[
+   Function: lia.time.GetFormattedDateInGame
+
+   Description:
+      Returns a formatted date string for in-game usage, applying schema year if configured.
+
+   Parameters:
+      StartingMessage (string) — The message to prepend (optional).
+      includeWeekDay (boolean) — Whether to include the weekday name.
+      includeDay (boolean) — Whether to include the day of the month.
+      includeMonth (boolean) — Whether to include the month.
+      includeYear (boolean) — Whether to include the year (or schema year if set).
+      includeTime (boolean) — Whether to include the time.
+
+   Returns:
+      (string) The formatted date string.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      lia.time.GetFormattedDateInGame("In-game date:", true, true, true, true, true)
+]]
 function lia.time.GetFormattedDateInGame(StartingMessage, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
     local currentTime = os.date("*t")
     if StartingMessage then
@@ -89,6 +135,30 @@ function lia.time.GetFormattedDateInGame(StartingMessage, includeWeekDay, includ
     return output
 end
 
+--[[
+   Function: lia.time.GetPreFormattedDate
+
+   Description:
+      Returns a formatted date string from a given time string, using system or configured date format.
+
+   Parameters:
+      StartingMessage (string) — The message to prepend (optional).
+      timeToFormat (string) — The time string to format.
+      includeWeekDay (boolean) — Whether to include the weekday name.
+      includeDay (boolean) — Whether to include the day of the month.
+      includeMonth (boolean) — Whether to include the month.
+      includeYear (boolean) — Whether to include the year.
+      includeTime (boolean) — Whether to include the time.
+
+   Returns:
+      (string) The formatted date string.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      lia.time.GetPreFormattedDate("Date is:", "2025-03-27 14:30:00", true, true, true, true, true)
+]]
 function lia.time.GetPreFormattedDate(StartingMessage, timeToFormat, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
     local currentTime = tostring(timeToFormat)
     if StartingMessage then
@@ -134,6 +204,30 @@ function lia.time.GetPreFormattedDate(StartingMessage, timeToFormat, includeWeek
     return output
 end
 
+--[[
+   Function: lia.time.GetPreFormattedDateInGame
+
+   Description:
+      Returns a formatted date string for in-game usage from a given time string, applying schema year if configured.
+
+   Parameters:
+      StartingMessage (string) — The message to prepend (optional).
+      timeToFormat (string) — The time string to format.
+      includeWeekDay (boolean) — Whether to include the weekday name.
+      includeDay (boolean) — Whether to include the day of the month.
+      includeMonth (boolean) — Whether to include the month.
+      includeYear (boolean) — Whether to include the year (or schema year if set).
+      includeTime (boolean) — Whether to include the time.
+
+   Returns:
+      (string) The formatted date string.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      lia.time.GetPreFormattedDateInGame("In-game date is:", "2025-03-27 14:30:00", true, true, true, true, true)
+]]
 function lia.time.GetPreFormattedDateInGame(StartingMessage, timeToFormat, includeWeekDay, includeDay, includeMonth, includeYear, includeTime)
     local currentTime = tostring(timeToFormat)
     if StartingMessage then
@@ -179,6 +273,26 @@ function lia.time.GetPreFormattedDateInGame(StartingMessage, timeToFormat, inclu
     return output
 end
 
+--[[
+   Function: lia.time.toNumber
+
+   Description:
+      Converts a string timestamp (YYYY-MM-DD HH:MM:SS) to a table with numeric fields:
+      year, month, day, hour, min, sec. Defaults to current time if not provided.
+
+   Parameters:
+      str (string) — The time string to convert (optional).
+
+   Returns:
+      (table) A table with numeric year, month, day, hour, min, sec.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local t = lia.time.toNumber("2025-03-27 14:30:00")
+      print(t.year, t.month, t.day, t.hour, t.min, t.sec)
+]]
 function lia.time.toNumber(str)
     str = str or os.date("%Y-%m-%d %H:%M:%S", os.time())
     return {
@@ -191,6 +305,24 @@ function lia.time.toNumber(str)
     }
 end
 
+--[[
+   Function: lia.time.TimeSince
+
+   Description:
+      Returns a human-readable string indicating how long ago a given time occurred (e.g., "5 minutes ago").
+
+   Parameters:
+      strTime (string or number) — The time in string or timestamp form.
+
+   Returns:
+      (string) The time since the given date/time in a readable format.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      print(lia.time.TimeSince("2025-03-27"))
+]]
 function lia.time.TimeSince(strTime)
     local timestamp
     if isnumber(strTime) then
@@ -222,6 +354,24 @@ function lia.time.TimeSince(strTime)
     end
 end
 
+--[[
+   Function: lia.time.TimeUntil
+
+   Description:
+      Returns the time remaining until a specified future date/time, in a readable format.
+
+   Parameters:
+      strTime (string) — The time string in the format "HH:MM:SS - DD/MM/YYYY".
+
+   Returns:
+      (string) A human-readable duration until the specified time, or an error message if invalid.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      print(lia.time.TimeUntil("14:30:00 - 28/03/2025"))
+]]
 function lia.time.TimeUntil(strTime)
     local pattern = "(%d+):(%d+):(%d+)%s*%-%s*(%d+)/(%d+)/(%d+)"
     local hour, minute, second, day, month, year = strTime:match(pattern)
@@ -253,12 +403,49 @@ function lia.time.TimeUntil(strTime)
     return string.format("%d years, %d months, %d days, %d hours, %d minutes, %d seconds", years, months, days, hours, minutes, seconds)
 end
 
+--[[
+   Function: lia.time.CurrentLocalTime
+
+   Description:
+      Returns the current local system time as a formatted string "HH:MM:SS - DD/MM/YYYY".
+
+   Parameters:
+      None
+
+   Returns:
+      (string) The formatted current local time.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      print(lia.time.CurrentLocalTime())
+]]
 function lia.time.CurrentLocalTime()
     local now = os.time()
     local t = os.date("*t", now)
     return string.format("%02d:%02d:%02d - %02d/%02d/%04d", t.hour, t.min, t.sec, t.day, t.month, t.year)
 end
 
+--[[
+   Function: lia.time.SecondsToDHMS
+
+   Description:
+      Converts a total number of seconds into days, hours, minutes, and seconds.
+
+   Parameters:
+      seconds (number) — The total number of seconds.
+
+   Returns:
+      (number, number, number, number) days, hours, minutes, and seconds.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local d, h, m, s = lia.time.SecondsToDHMS(98765)
+      print(d, "days,", h, "hours,", m, "minutes,", s, "seconds")
+]]
 function lia.time.SecondsToDHMS(seconds)
     local days = math.floor(seconds / 86400)
     seconds = seconds % 86400
@@ -269,30 +456,72 @@ function lia.time.SecondsToDHMS(seconds)
     return days, hours, minutes, secs
 end
 
+--[[
+   Function: lia.time.HMSToSeconds
+
+   Description:
+      Converts hours, minutes, and seconds to total seconds.
+
+   Parameters:
+      hour (number) — The hour component.
+      minute (number) — The minute component.
+      second (number) — The second component.
+
+   Returns:
+      (number) The total number of seconds.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local totalSeconds = lia.time.HMSToSeconds(2, 30, 15)
+      print(totalSeconds) -- 9015
+]]
 function lia.time.HMSToSeconds(hour, minute, second)
     return hour * 3600 + minute * 60 + second
 end
 
+--[[
+   Function: lia.time.FormatTimestamp
+
+   Description:
+      Formats an epoch timestamp into "HH:MM:SS - DD/MM/YYYY".
+
+   Parameters:
+      timestamp (number) — The epoch timestamp to format.
+
+   Returns:
+      (string) A formatted date/time string.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      print(lia.time.FormatTimestamp(os.time()))
+]]
 function lia.time.FormatTimestamp(timestamp)
     local t = os.date("*t", timestamp)
     return string.format("%02d:%02d:%02d - %02d/%02d/%04d", t.hour, t.min, t.sec, t.day, t.month, t.year)
 end
+--[[
+   Function: lia.time.DaysBetween
 
-function lia.time.ParseTime(strTime)
-    local pattern = "(%d+):(%d+):(%d+)%s*%-%s*(%d+)/(%d+)/(%d+)"
-    local hour, minute, second, d, m, y = strTime:match(pattern)
-    if not (hour and minute and second and d and m and y) then return nil end
-    hour, minute, second, d, m, y = tonumber(hour), tonumber(minute), tonumber(second), tonumber(d), tonumber(m), tonumber(y)
-    if hour < 0 or hour > 23 then return nil end
-    if minute < 0 or minute > 59 then return nil end
-    if second < 0 or second > 59 then return nil end
-    if m < 1 or m > 12 then return nil end
-    local maxDay = lia.time.DaysInMonth(m, y)
-    if not maxDay or d < 1 or d > maxDay then return nil end
-    if y < 1970 then return nil end
-    return y, m, d, hour, minute, second
-end
+   Description:
+      Calculates the number of days between two date/time strings, each in "HH:MM:SS - DD/MM/YYYY" format.
 
+   Parameters:
+      strTime1 (string) — The first date/time string.
+      strTime2 (string) — The second date/time string.
+
+   Returns:
+      (number or string) The number of days between the two dates, or "Invalid dates" on error.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      print(lia.time.DaysBetween("00:00:00 - 01/01/2025", "00:00:00 - 10/01/2025"))
+]]
 function lia.time.DaysBetween(strTime1, strTime2)
     local y1, mo1, d1 = lia.time.ParseTime(strTime1)
     local y2, mo2, d2 = lia.time.ParseTime(strTime2)
@@ -319,6 +548,24 @@ function lia.time.DaysBetween(strTime1, strTime2)
     return math.floor(diff / 86400)
 end
 
+--[[
+   Function: lia.time.WeekdayName
+
+   Description:
+      Returns the weekday name for a given date/time string in "HH:MM:SS - DD/MM/YYYY" format.
+
+   Parameters:
+      strTime (string) — The date/time string.
+
+   Returns:
+      (string) The weekday name, or "Invalid date" on error.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      print(lia.time.WeekdayName("14:30:00 - 27/03/2025"))
+]]
 function lia.time.WeekdayName(strTime)
     local y, mo, d, h, mi, s = lia.time.ParseTime(strTime)
     if not y then return "Invalid date" end
@@ -333,6 +580,24 @@ function lia.time.WeekdayName(strTime)
     return os.date("%A", t)
 end
 
+--[[
+   Function: lia.time.TimeDifference
+
+   Description:
+      Calculates the difference in days between a specified target date/time (in "HH:MM:SS - DD/MM/YYYY" format) and the current date/time.
+
+   Parameters:
+      strTime (string) — The target date/time string.
+
+   Returns:
+      (number) The day difference as an integer, or nil if invalid.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      print(lia.time.TimeDifference("14:30:00 - 30/03/2025"))
+]]
 function lia.time.TimeDifference(strTime)
     local pattern = "(%d+):(%d+):(%d+)%s*-%s*(%d+)/(%d+)/(%d+)"
     local hour, minute, second, day, month, year = strTime:match(pattern)

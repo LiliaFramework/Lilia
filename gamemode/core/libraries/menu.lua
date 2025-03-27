@@ -1,5 +1,24 @@
 ﻿lia.menu = lia.menu or {}
 lia.menu.list = lia.menu.list or {}
+--[[ 
+   Function: lia.menu.add
+
+   Description:
+      Adds a new menu to the client's menu list.
+      Calculates the menu width based on the provided options, determines the on-screen position (or converts an entity's position to a local position),
+      and inserts the menu data into lia.menu.list.
+
+   Parameters:
+      options (table) - A table of menu options.
+      position (vector or entity) - The position where the menu should appear, or an entity from which to derive the position.
+      onRemove (function) - An optional callback to be executed when the menu is removed.
+
+   Returns:
+      nil
+
+   Realm:
+      Client
+]]
 function lia.menu.add(options, position, onRemove)
     local client = LocalPlayer()
     local width = 0
@@ -24,6 +43,23 @@ function lia.menu.add(options, position, onRemove)
 end
 
 local mathApproach = math.Approach
+--[[ 
+   Function: lia.menu.drawAll
+
+   Description:
+      Draws all active menus in lia.menu.list on the client's screen.
+      It handles fading in/out effects, updates positions (especially for menus attached to entities),
+      and renders both the background and the options with highlights for the option under the mouse cursor.
+
+   Parameters:
+      None
+
+   Returns:
+      nil
+
+   Realm:
+      Client
+]]
 function lia.menu.drawAll()
     local client = LocalPlayer()
     local frameTime = FrameTime() * 30
@@ -86,6 +122,23 @@ function lia.menu.drawAll()
     end
 end
 
+--[[ 
+   Function: lia.menu.getActiveMenu
+
+   Description:
+      Determines the active menu based on the client's mouse position.
+      Iterates through the menus in lia.menu.list and returns the index and the selected option of the menu
+      if the mouse is hovering over it.
+
+   Parameters:
+      None
+
+   Returns:
+      number, any - The index of the active menu and the corresponding menu option; returns nil if no menu is active.
+
+   Realm:
+      Client
+]]
 function lia.menu.getActiveMenu()
     local client = LocalPlayer()
     local mX, mY = ScrW() * 0.5, ScrH() * 0.5
@@ -125,6 +178,23 @@ function lia.menu.getActiveMenu()
     end
 end
 
+--[[ 
+   Function: lia.menu.onButtonPressed
+
+   Description:
+      Handles the action when a menu button is pressed.
+      Removes the specified menu from lia.menu.list and executes an optional callback function.
+
+   Parameters:
+      menu (number) - The index of the menu to be removed.
+      callback (function) - An optional function to execute after removal.
+
+   Returns:
+      boolean - Returns true if the callback was executed, false otherwise.
+
+   Realm:
+      Client
+]]
 function lia.menu.onButtonPressed(menu, callback)
     table.remove(lia.menu.list, menu)
     if callback then

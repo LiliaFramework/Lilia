@@ -217,6 +217,29 @@ modules.mysqloo = {
 
 lia.db.escape = lia.db.escape or modules.sqlite.escape
 lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueue + 1] = {...} end
+--[[ 
+   Function: lia.db.connect
+
+   Description:
+      Establishes a connection to the configured database module. If the database
+      is not already connected or if reconnect is true, it will initiate a new connection
+      or re-establish one.
+
+   Parameters:
+      callback (function) - The function to call when the database connection is established.
+      reconnect (boolean) - Whether to reconnect using an existing database object or not.
+
+   Returns:
+      nil
+
+   Realm:
+      Shared
+
+   Example Usage:
+      lia.db.connect(function()
+         print("Database connected")
+      end)
+]]
 function lia.db.connect(callback, reconnect)
     local dbModule = modules[lia.db.module]
     if dbModule then
@@ -239,6 +262,27 @@ function lia.db.connect(callback, reconnect)
     end
 end
 
+--[[ 
+   Function: lia.db.wipeTables
+
+   Description:
+      Wipes all Lilia data tables from the database, dropping the specified
+      tables. This action is irreversible and will remove all stored data.
+
+   Parameters:
+      callback (function) - The function to call when the wipe operation is completed.
+
+   Returns:
+      nil
+
+   Realm:
+      Shared
+
+   Example Usage:
+      lia.db.wipeTables(function()
+         print("All data has been wiped.")
+      end)
+]]
 function lia.db.wipeTables(callback)
     local function realCallback()
         if lia.db.module == "mysqloo" then
@@ -288,6 +332,25 @@ function lia.db.wipeTables(callback)
     end
 end
 
+--[[ 
+   Function: lia.db.loadTables
+
+   Description:
+      Creates the required database tables if they do not already exist for
+      storing Lilia data. This ensures the schema is properly set up.
+
+   Parameters:
+      None
+
+   Returns:
+      nil
+
+   Realm:
+      Shared
+
+   Example Usage:
+      lia.db.loadTables()
+]]
 function lia.db.loadTables()
     local function done()
         lia.db.tablesLoaded = true
@@ -421,6 +484,27 @@ function lia.db.loadTables()
     hook.Run("OnLoadTables")
 end
 
+--[[ 
+   Function: lia.db.waitForTablesToLoad
+
+   Description:
+      Returns a deferred object that resolves once the database tables are fully loaded.
+      This allows asynchronous code to wait for table creation before proceeding.
+
+   Parameters:
+      None
+
+   Returns:
+      deferred - A deferred object that resolves when the tables are loaded.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      lia.db.waitForTablesToLoad():next(function()
+         print("Tables are loaded.")
+      end)
+]]
 function lia.db.waitForTablesToLoad()
     TABLE_WAIT_ID = TABLE_WAIT_ID or 0
     local d = deferred.new()
@@ -434,6 +518,27 @@ function lia.db.waitForTablesToLoad()
     return d
 end
 
+--[[ 
+   Function: lia.db.convertDataType
+
+   Description:
+      Converts a Lua value into a string suitable for database insertion,
+      handling strings, tables, and NULL values. Escaping is optionally applied
+      unless noEscape is set.
+
+   Parameters:
+      value (any) - The value to be converted.
+      noEscape (boolean) - If true, the returned string is not escaped.
+
+   Returns:
+      string - The converted data type as a string.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local data = lia.db.convertDataType({foo = "bar"})
+]]
 function lia.db.convertDataType(value, noEscape)
     if isstring(value) then
         if noEscape then
@@ -472,16 +577,88 @@ local function genUpdateList(value)
     return table.concat(changes, ", ")
 end
 
+--[[ 
+   Function: lia.db.insertTable
+
+   Description:
+      Inserts a new row into the specified database table with the given key-value pairs.
+      The callback is invoked after the insert query is complete.
+
+   Parameters:
+      value (table) - Key-value pairs representing the columns and values to insert.
+      callback (function) - The function to call when the insert operation is complete.
+      dbTable (string) - The name of the table (without the 'lia_' prefix).
+
+   Returns:
+      nil
+
+   Realm:
+      Shared
+
+   Example Usage:
+      lia.db.insertTable({_name = "John", _desc = "A character"}, function()
+         print("Row inserted!")
+      end, "characters")
+]]
 function lia.db.insertTable(value, callback, dbTable)
     local query = "INSERT INTO " .. genInsertValues(value, dbTable)
     lia.db.query(query, callback)
 end
 
+--[[ 
+   Function: lia.db.updateTable
+
+   Description:
+      Updates one or more rows in the specified database table according to the
+      provided condition. The callback is invoked once the update query finishes.
+
+   Parameters:
+      value (table) - Key-value pairs representing columns to update and their new values.
+      callback (function) - The function to call after the update query is complete.
+      dbTable (string) - The name of the table (without the 'lia_' prefix).
+      condition (string) - The SQL condition to determine which rows to update.
+
+   Returns:
+      nil
+
+   Realm:
+      Shared
+
+   Example Usage:
+      lia.db.updateTable({_desc = "Updated character description"}, function()
+         print("Character updated!")
+      end, "characters", "_id = 1")
+]]
 function lia.db.updateTable(value, callback, dbTable, condition)
     local query = "UPDATE " .. "lia_" .. (dbTable or "characters") .. " SET " .. genUpdateList(value) .. (condition and " WHERE " .. condition or "")
     lia.db.query(query, callback)
 end
 
+--[[ 
+   Function: lia.db.select
+
+   Description:
+      Retrieves rows from the specified database table, optionally filtered by
+      a condition and limited to a specified number of results. Returns a deferred
+      object that resolves with the query results.
+
+   Parameters:
+      fields (table|string) - The columns to select, either as a table or a comma-separated string.
+      dbTable (string) - The name of the table (without the 'lia_' prefix).
+      condition (string) - The SQL condition to filter results.
+      limit (number) - Maximum number of rows to return.
+
+   Returns:
+      deferred - A deferred object that resolves to a table of results and last insert ID.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      lia.db.select({"_id", "_name"}, "characters", "_faction = 'Rebels'", 10):next(function(data)
+         PrintTable(data.results)
+      end)
+]]
 function lia.db.select(fields, dbTable, condition, limit)
     local d = deferred.new()
     local from = istable(fields) and table.concat(fields, ", ") or tostring(fields)
@@ -498,6 +675,29 @@ function lia.db.select(fields, dbTable, condition, limit)
     return d
 end
 
+--[[ 
+   Function: lia.db.upsert
+
+   Description:
+      Inserts or updates a row in the specified database table. If a row with
+      the same unique key exists, it updates it; otherwise, it inserts a new row.
+      Returns a deferred object that resolves when the operation completes.
+
+   Parameters:
+      value (table) - Key-value pairs representing the columns and values.
+      dbTable (string) - The name of the table (without the 'lia_' prefix).
+
+   Returns:
+      deferred - A deferred object that resolves to a table of results and last insert ID.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      lia.db.upsert({_steamID = '12345', _name = 'Alice'}, 'players'):next(function(data)
+         print("Upsert completed!")
+      end)
+]]
 function lia.db.upsert(value, dbTable)
     local query
     if lia.db.object then
@@ -516,6 +716,28 @@ function lia.db.upsert(value, dbTable)
     return d
 end
 
+--[[ 
+   Function: lia.db.delete
+
+   Description:
+      Deletes rows from the specified database table that match the provided condition.
+      If no condition is specified, all rows are deleted. Returns a deferred object.
+
+   Parameters:
+      dbTable (string) - The name of the table (without the 'lia_' prefix).
+      condition (string) - The SQL condition that determines which rows to delete.
+
+   Returns:
+      deferred - A deferred object that resolves to the results of the deletion.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      lia.db.delete("characters", "_id = 1"):next(function(data)
+         print("Character deleted!")
+      end)
+]]
 function lia.db.delete(dbTable, condition)
     local query
     dbTable = "lia_" .. (dbTable or "character")

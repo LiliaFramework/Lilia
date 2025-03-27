@@ -1,5 +1,30 @@
 ﻿lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
+--[[ 
+   Function: lia.command.add
+
+   Description:
+      Registers a new command with the specified name and configuration data.
+      This includes callback functions, privilege requirements, aliases, etc.
+
+   Parameters:
+      command (string) - The name of the command to register.
+      data (table) - A table containing configuration for the command (onRun, adminOnly, etc.).
+
+   Returns:
+      nil
+
+   Realm:
+      Shared
+
+   Example Usage:
+      lia.command.add("mycommand", {
+         onRun = function(client, arguments)
+            -- Do something here
+         end,
+         adminOnly = true
+      })
+]]
 function lia.command.add(command, data)
     data.syntax = data.syntax or ""
     data.desc = data.desc or ""
@@ -56,6 +81,31 @@ function lia.command.add(command, data)
     end
 end
 
+--[[ 
+   Function: lia.command.hasAccess
+
+   Description:
+      Checks if the specified player has access to a given command based on 
+      privilege checks, superadmin/admin requirements, and any additional hooks.
+
+   Parameters:
+      client (Player) - The player attempting to use the command.
+      command (string) - The command name.
+      data (table) - The command's data table (optional if already stored).
+
+   Returns:
+      (boolean) - Whether the player has access.
+      (string) - The privilege name used for checking.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local canUse, privilege = lia.command.hasAccess(client, "mycommand")
+      if canUse then
+         print("Player has access to command:", privilege)
+      end
+]]
 function lia.command.hasAccess(client, command, data)
     if not data then data = lia.command.list[command] end
     local privilege = data.privilege
@@ -73,6 +123,26 @@ function lia.command.hasAccess(client, command, data)
     return hasAccess, privilege
 end
 
+--[[ 
+   Function: lia.command.extractArgs
+
+   Description:
+      Splits the provided text into arguments, respecting quotes. 
+      Quoted sections are treated as single arguments.
+
+   Parameters:
+      text (string) - The raw input text to parse.
+
+   Returns:
+      table - A list of arguments extracted from the text.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local args = lia.command.extractArgs('/mycommand "quoted arg" anotherArg')
+      -- args = {"quoted arg", "anotherArg"}
+]]
 function lia.command.extractArgs(text)
     local skip = 0
     local arguments = {}
@@ -103,6 +173,27 @@ function lia.command.extractArgs(text)
 end
 
 if SERVER then
+    --[[ 
+      lia.command.run
+
+      Description:
+         Executes a command by its name, passing the provided arguments.
+         If the command returns a string, it notifies the client (if valid).
+
+      Parameters:
+         client (Player) - The player or console running the command.
+         command (string) - The name of the command to run.
+         arguments (table) - A list of arguments for the command.
+
+      Returns:
+         nil
+
+      Realm:
+         Server
+
+      Example Usage:
+         lia.command.run(player, "mycommand", {"arg1", "arg2"})
+   ]]
     function lia.command.run(client, command, arguments)
         command = lia.command.list[command:lower()]
         if command then
@@ -122,6 +213,28 @@ if SERVER then
         end
     end
 
+    --[[ 
+      Function: lia.command.parse
+
+      Description:
+         Attempts to parse the input text as a command, optionally using realCommand
+         and arguments if provided. If parsed successfully, the command is executed.
+
+      Parameters:
+         client (Player) - The player or console issuing the command.
+         text (string) - The raw text that may contain the command name and arguments.
+         realCommand (string) - If provided, use this as the command name instead of parsing text.
+         arguments (table) - If provided, use these as the command arguments instead of parsing text.
+
+      Returns:
+         boolean - True if the text was parsed as a valid command, false otherwise.
+
+      Realm:
+         Server
+
+      Example Usage:
+         lia.command.parse(player, "/mycommand arg1 arg2")
+   ]]
     function lia.command.parse(client, text, realCommand, arguments)
         if realCommand or text:utf8sub(1, 1) == "/" then
             local match = realCommand or text:lower():match("/" .. "([_%w]+)")
@@ -149,6 +262,26 @@ if SERVER then
         return false
     end
 else
+    --[[ 
+      Function: lia.command.send
+
+      Description:
+         Sends a command (and optional arguments) from the client to the server using netstream.
+         The server will then execute the command.
+
+      Parameters:
+         command (string) - The name of the command to send.
+         ... (vararg) - Any additional arguments to pass to the command.
+
+      Returns:
+         nil
+
+      Realm:
+         Client
+
+      Example Usage:
+         lia.command.send("mycommand", "arg1", "arg2")
+   ]]
     function lia.command.send(command, ...)
         netstream.Start("cmd", command, {...})
     end
@@ -217,3 +350,5 @@ hook.Add("BuildInformationMenu", "BuildInformationMenuCommands", function(pages)
         end
     })
 end)
+
+lia.command.findPlayer = lia.util.findPlayer

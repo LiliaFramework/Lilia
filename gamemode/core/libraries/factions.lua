@@ -2,6 +2,26 @@
 lia.faction.indices = lia.faction.indices or {}
 lia.faction.teams = lia.faction.teams or {}
 local DefaultModels = {"models/player/barney.mdl", "models/player/alyx.mdl", "models/player/breen.mdl", "models/player/p2_chell.mdl"}
+--[[ 
+   Function: lia.faction.loadFromDir
+
+   Description:
+      Loads all Lua faction files (*.lua) from the specified directory,
+      includes them as shared files, and registers the factions.
+      Each faction file should define a FACTION table with properties such as name, desc, color, etc.
+
+   Parameters:
+      directory (string) - The path to the directory containing faction files.
+
+   Returns:
+      nil
+
+   Realm:
+      Shared
+
+   Example Usage:
+      lia.faction.loadFromDir("path/to/factions")
+]]
 function lia.faction.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local niceName
@@ -50,14 +70,68 @@ function lia.faction.loadFromDir(directory)
     end
 end
 
+--[[ 
+   Function: lia.faction.get
+
+   Description:
+      Retrieves a faction by its index or unique identifier.
+
+   Parameters:
+      identifier (number or string) - The faction's index or unique identifier.
+
+   Returns:
+      table|nil - The faction table if found; nil otherwise.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local faction = lia.faction.get("citizen")
+]]
 function lia.faction.get(identifier)
     return lia.faction.indices[identifier] or lia.faction.teams[identifier]
 end
 
+--[[ 
+   Function: lia.faction.getIndex
+
+   Description:
+      Retrieves the index of a faction by its unique identifier.
+
+   Parameters:
+      uniqueID (string) - The unique identifier of the faction.
+
+   Returns:
+      number|nil - The faction index if found; nil otherwise.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local index = lia.faction.getIndex("citizen")
+]]
 function lia.faction.getIndex(uniqueID)
     return lia.faction.teams[uniqueID] and lia.faction.teams[uniqueID].index
 end
 
+--[[ 
+   Function: lia.faction.getClasses
+
+   Description:
+      Retrieves a list of classes associated with the specified faction.
+
+   Parameters:
+      faction (string) - The faction unique identifier.
+
+   Returns:
+      table - A table containing class tables that belong to the faction.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local classes = lia.faction.getClasses("citizen")
+]]
 function lia.faction.getClasses(faction)
     local classes = {}
     for _, class in pairs(lia.class.list) do
@@ -66,6 +140,24 @@ function lia.faction.getClasses(faction)
     return classes
 end
 
+--[[ 
+   Function: lia.faction.getPlayers
+
+   Description:
+      Retrieves all player entities whose characters belong to the specified faction.
+
+   Parameters:
+      faction (string) - The faction unique identifier.
+
+   Returns:
+      table - A table of player entities in the faction.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local players = lia.faction.getPlayers("citizen")
+]]
 function lia.faction.getPlayers(faction)
     local players = {}
     for _, v in player.Iterator() do
@@ -75,6 +167,24 @@ function lia.faction.getPlayers(faction)
     return players
 end
 
+--[[ 
+   Function: lia.faction.getPlayerCount
+
+   Description:
+      Counts the number of players whose characters belong to the specified faction.
+
+   Parameters:
+      faction (string) - The faction unique identifier.
+
+   Returns:
+      number - The number of players in the faction.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local count = lia.faction.getPlayerCount("citizen")
+]]
 function lia.faction.getPlayerCount(faction)
     local count = 0
     for _, v in player.Iterator() do
@@ -84,11 +194,54 @@ function lia.faction.getPlayerCount(faction)
     return count
 end
 
+--[[ 
+   Function: lia.faction.isFactionCategory
+
+   Description:
+      Checks if the specified faction is a member of a given category.
+      
+   Parameters:
+      faction (string) - The faction unique identifier.
+      categoryFactions (table) - A table containing faction identifiers that define the category.
+
+   Returns:
+      boolean - True if the faction is in the category; false otherwise.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local isMember = lia.faction.isFactionCategory("citizen", {"citizen", "veteran"})
+]]
 function lia.faction.isFactionCategory(faction, categoryFactions)
     if table.HasValue(categoryFactions, faction) then return true end
     return false
 end
 
+--[[ 
+   Function: lia.faction.jobGenerate
+
+   Description:
+      Generates a new faction (job) based on provided parameters.
+      Creates a faction table with index, name, description, color, models, and registers it with the team system.
+      Pre-caches the faction models.
+
+   Parameters:
+      index (number) - The team index for the faction.
+      name (string) - The faction name.
+      color (Color) - The faction color.
+      default (boolean) - Whether the faction is default.
+      models (table) - A table of model paths or model data for the faction.
+
+   Returns:
+      table - The newly generated faction table.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local faction = lia.faction.jobGenerate(2, "Police", Color(0, 0, 255), false, {"models/player/police.mdl"})
+]]
 function lia.faction.jobGenerate(index, name, color, default, models)
     local FACTION = {}
     FACTION.index = index
@@ -97,7 +250,7 @@ function lia.faction.jobGenerate(index, name, color, default, models)
     FACTION.desc = ""
     FACTION.color = color
     FACTION.models = models or DefaultModels
-    FACTION.uniqueID = name
+    FACTION.uniqueID = FACTION.uniqueID or name
     for _, v in pairs(FACTION.models) do
         if isstring(v) then
             util.PrecacheModel(v)
@@ -154,6 +307,25 @@ local function formatModelDataEntry(name, faction, modelIndex, modelData, catego
     end
 end
 
+--[[ 
+   Function: lia.faction.formatModelData
+
+   Description:
+      Processes and formats model data for all registered factions.
+      Iterates through each faction's model data and applies formatting to ensure proper grouping.
+
+   Parameters:
+      None
+
+   Returns:
+      nil
+
+   Realm:
+      Shared
+
+   Example Usage:
+      lia.faction.formatModelData()
+]]
 function lia.faction.formatModelData()
     for name, faction in pairs(lia.faction.teams) do
         if faction.models then
@@ -170,6 +342,25 @@ function lia.faction.formatModelData()
     end
 end
 
+--[[ 
+   Function: lia.faction.getCategories
+
+   Description:
+      Retrieves a list of model categories for a given faction.
+      Categories are determined by keys in the faction's models table that are strings.
+
+   Parameters:
+      teamName (string) - The unique identifier of the faction.
+
+   Returns:
+      table - A list of category names.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local categories = lia.faction.getCategories("citizen")
+]]
 function lia.faction.getCategories(teamName)
     local categories = {}
     local faction = lia.faction.teams[teamName]
@@ -181,6 +372,25 @@ function lia.faction.getCategories(teamName)
     return categories
 end
 
+--[[ 
+   Function: lia.faction.getModelsFromCategory
+
+   Description:
+      Retrieves models from a specified category for a given faction.
+      
+   Parameters:
+      teamName (string) - The unique identifier of the faction.
+      category (string) - The model category to retrieve.
+
+   Returns:
+      table - A table of models in the specified category.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local models = lia.faction.getModelsFromCategory("citizen", "special")
+]]
 function lia.faction.getModelsFromCategory(teamName, category)
     local models = {}
     local faction = lia.faction.teams[teamName]
@@ -192,6 +402,25 @@ function lia.faction.getModelsFromCategory(teamName, category)
     return models
 end
 
+--[[ 
+   Function: lia.faction.getDefaultClass
+
+   Description:
+      Retrieves the default class for a specified faction.
+      Searches through the class list for the first class that is marked as default for the faction.
+
+   Parameters:
+      id (string) - The unique identifier of the faction.
+
+   Returns:
+      table|nil - The default class table if found; nil otherwise.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local defaultClass = lia.faction.getDefaultClass("citizen")
+]]
 function lia.faction.getDefaultClass(id)
     local defaultClass = nil
     for _, class in ipairs(lia.class.list) do
@@ -204,6 +433,25 @@ function lia.faction.getDefaultClass(id)
 end
 
 if CLIENT then
+    --[[ 
+      Function: lia.faction.hasWhitelist
+
+      Description:
+         Determines if the local player has whitelist access for a given faction.
+         Checks the local whitelist data against the faction's uniqueID.
+
+      Parameters:
+         faction (string) - The unique identifier of the faction.
+
+      Returns:
+         boolean - True if the player is whitelisted; false otherwise.
+
+      Realm:
+         Client
+
+      Example Usage:
+         local whitelisted = lia.faction.hasWhitelist("citizen")
+   ]]
     function lia.faction.hasWhitelist(faction)
         local data = lia.faction.indices[faction]
         if data then

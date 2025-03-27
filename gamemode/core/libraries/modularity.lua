@@ -1,5 +1,4 @@
 ﻿lia.module = lia.module or {}
-lia.module.EnabledList = {}
 lia.module.list = lia.module.list or {}
 local ModuleFolders = {"config", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim"}
 local ModuleFiles = {"pim.lua", "client.lua", "server.lua", "config.lua", "commands.lua"}
@@ -120,6 +119,24 @@ local function loadSubmodules(path, firstLoad)
     if #files > 0 or #folders > 0 then lia.module.loadFromDir(path .. "/submodules", "module", firstLoad) end
 end
 
+--[[ 
+   Function: lia.module.load
+
+   Description:
+      Loads a module from a specified path. If the module is a single file, it includes it directly; 
+      if it is a directory, it loads the core file (or its extended version), applies permissions, workshop content, dependencies, extras, and submodules.
+      It also registers the module in the module list if applicable.
+
+   Parameters:
+      uniqueID - The unique identifier of the module.
+      path - The file system path where the module is located.
+      isSingleFile - Boolean indicating if the module is a single file.
+      variable - A global variable name used to temporarily store the module.
+      firstLoad - Boolean indicating if this is the first load of the module.
+
+   Returns:
+      nil
+]]
 function lia.module.load(uniqueID, path, isSingleFile, variable, firstLoad)
     local lowerVariable = variable:lower()
     local normalPath = path .. "/" .. lowerVariable .. ".lua"
@@ -192,17 +209,26 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, firstLoad)
     else
         lia.module.list[uniqueID] = MODULE
         if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then _G[MODULE.identifier] = lia.module.list[uniqueID] end
-        lia.module.OnFinishLoad(path, firstLoad)
+        loadSubmodules(path, firstLoad)
         if MODULE.ModuleLoaded then MODULE:ModuleLoaded() end
         if MODULE.Public ~= nil then checkVersion(MODULE, MODULE.Public) end
         _G[variable] = oldModule
     end
 end
 
-function lia.module.OnFinishLoad(path, firstLoad)
-    loadSubmodules(path, firstLoad)
-end
+--[[ 
+   Function: lia.module.initialize
 
+   Description:
+      Initializes the module system by loading the schema and various module directories,
+      then running the appropriate hooks after modules have been loaded.
+
+   Parameters:
+      firstLoad - Boolean indicating if this is the first time loading modules.
+
+   Returns:
+      nil
+]]
 function lia.module.initialize(firstLoad)
     local schema = engine.ActiveGamemode()
     lia.module.load("schema", schema .. "/schema", false, "schema", firstLoad)
@@ -218,6 +244,21 @@ function lia.module.initialize(firstLoad)
     hook.Run("InitializedModules")
 end
 
+--[[ 
+   Function: lia.module.loadFromDir
+
+   Description:
+      Loads modules from a specified directory. It iterates over all folders and files in the directory,
+      loading each as a module based on whether it is a folder (multi-file module) or a single file.
+
+   Parameters:
+      directory - The directory path from which to load modules.
+      group - A string representing the module group (e.g., "schema" or "module").
+      firstLoad - Boolean indicating if this is the first load.
+
+   Returns:
+      nil
+]]
 function lia.module.loadFromDir(directory, group, firstLoad)
     local locationVar = group == "schema" and "SCHEMA" or "MODULE"
     local files, folders = file.Find(directory .. "/*", "LUA")
@@ -231,6 +272,18 @@ function lia.module.loadFromDir(directory, group, firstLoad)
     end
 end
 
+--[[ 
+   Function: lia.module.get
+
+   Description:
+      Retrieves a module table by its identifier.
+
+   Parameters:
+      identifier - The unique identifier of the module to retrieve.
+
+   Returns:
+      The module table if found, or nil if the module is not registered.
+]]
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end

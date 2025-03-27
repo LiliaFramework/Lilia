@@ -18,6 +18,24 @@ if SERVER and #lia.char.names < 1 then
     end)
 end
 
+--[[
+   Function: lia.char.new
+
+   Description:
+      Creates a new character object from the given data.
+
+   Parameters:
+      data (table) — The table containing character variables.
+      id (number|nil) — The unique ID to assign to the character (nil if creating new).
+      client (Player|nil) — The player associated with the character.
+      steamID (string|nil) — The SteamID64 associated with the character (if no player).
+
+   Returns:
+      table — The newly created character object.
+
+   Realm:
+      Shared
+]]
 function lia.char.new(data, id, client, steamID)
     local character = setmetatable({
         vars = {}
@@ -39,11 +57,44 @@ function lia.char.new(data, id, client, steamID)
     return character
 end
 
+--[[
+   Function: lia.char.hookVar
+
+   Description:
+      Hooks a function to a specific character variable, called upon variable changes or relevant events.
+
+   Parameters:
+      varName (string) — The name of the character variable to hook.
+      hookName (string) — The unique identifier for this hook.
+      func (function) — The function to be called when the variable changes or relevant events occur.
+
+   Returns:
+      nil
+
+   Realm:
+      Shared
+]]
 function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
     lia.char.varHooks[varName][hookName] = func
 end
 
+--[[
+   Function: lia.char.registerVar
+
+   Description:
+      Registers a new character variable with the given key and options.
+
+   Parameters:
+      key (string) — The unique key for the character variable.
+      data (table) — A table containing configuration and behaviors for the variable.
+
+   Returns:
+      nil
+
+   Realm:
+      Shared
+]]
 function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
     data.index = data.index or table.Count(lia.char.vars)
@@ -338,6 +389,22 @@ lia.char.registerVar("RecognizedAs", {
     noDisplay = true
 })
 
+--[[
+   Function: lia.char.getCharData
+
+   Description:
+      Retrieves a character's data table or a specific key from the data table.
+
+   Parameters:
+      charID (number) — The unique ID of the character.
+      key (string|nil) — The specific key to retrieve from the character's data table (optional).
+
+   Returns:
+      table|any|false — The character's data table, the value for the specified key, or false if not found.
+
+   Realm:
+      Shared
+]]
 function lia.char.getCharData(charID, key)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end
@@ -348,6 +415,22 @@ function lia.char.getCharData(charID, key)
     return data
 end
 
+--[[
+   Function: lia.char.getCharDataRaw
+
+   Description:
+      Retrieves a row from the 'lia_characters' SQL table or a specific column value from that row.
+
+   Parameters:
+      charID (number) — The unique ID of the character.
+      key (string|nil) — The specific column name to retrieve (optional).
+
+   Returns:
+      table|string|false — The raw database row, the value for the specified column, or false if not found.
+
+   Realm:
+      Shared
+]]
 function lia.char.getCharDataRaw(charID, key)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end
@@ -357,6 +440,21 @@ function lia.char.getCharDataRaw(charID, key)
     return findData[1]
 end
 
+--[[
+   Function: lia.char.getByID
+
+   Description:
+      Retrieves a character object by its unique ID.
+
+   Parameters:
+      ID (number) — The unique ID of the character.
+
+   Returns:
+      table|nil — The character object if found, otherwise nil.
+
+   Realm:
+      Shared
+]]
 function lia.char.getByID(ID)
     ID = tonumber(ID)
     for client, character in pairs(lia.char.getAll()) do
@@ -364,6 +462,21 @@ function lia.char.getByID(ID)
     end
 end
 
+--[[
+   Function: lia.char.getBySteamID
+
+   Description:
+      Retrieves a player's active character by their SteamID or SteamID64.
+
+   Parameters:
+      steamID (string) — The SteamID or SteamID64 of the player.
+
+   Returns:
+      table|nil — The character object if found, otherwise nil.
+
+   Realm:
+      Shared
+]]
 function lia.char.getBySteamID(steamID)
     if not isstring(steamID) or steamID == "" then return end
     for _, client in player.Iterator() do
@@ -371,6 +484,18 @@ function lia.char.getBySteamID(steamID)
     end
 end
 
+--[[
+   Function: lia.char.getAll
+
+   Description:
+      Retrieves a table of all players mapped to their active character objects.
+
+   Returns:
+      table — A table mapping each player to their active character object.
+
+   Realm:
+      Shared
+]]
 function lia.char.getAll()
     local charTable = {}
     for _, client in player.Iterator() do
@@ -379,6 +504,21 @@ function lia.char.getAll()
     return charTable
 end
 
+--[[
+   Function: lia.char.GetTeamColor
+
+   Description:
+      Returns the team color associated with the player's active character or fallback to team color.
+
+   Parameters:
+      client (Player) — The player whose color is requested.
+
+   Returns:
+      Color — The color associated with the player's faction or team.
+
+   Realm:
+      Shared
+]]
 function lia.char.GetTeamColor(client)
     local char = client:getChar()
     if not char then return team.GetColor(client:Team()) end
@@ -390,6 +530,22 @@ function lia.char.GetTeamColor(client)
 end
 
 if SERVER then
+    --[[
+       Function: lia.char.create
+
+       Description:
+          Creates and saves a new character in the database, then loads it into memory.
+
+       Parameters:
+          data (table) — A table containing character data to be saved.
+          callback (function|nil) — A function to be called when the character creation is complete.
+
+       Returns:
+          nil
+
+       Realm:
+          Server
+    ]]
     function lia.char.create(data, callback)
         local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
         data.money = data.money or lia.config.get("DefaultMoney")
@@ -424,6 +580,24 @@ if SERVER then
         end)
     end
 
+    --[[
+       Function: lia.char.restore
+
+       Description:
+          Loads one or more characters from the database associated with the specified player
+          (and optional character ID).
+
+       Parameters:
+          client (Player) — The player to load characters for.
+          callback (function|nil) — A function to be called when characters are loaded.
+          id (number|nil) — An optional character ID to restore a specific character.
+
+       Returns:
+          nil
+
+       Realm:
+          Server
+    ]]
     function lia.char.restore(client, callback, id)
         local steamID64 = client:SteamID64()
         local fields = {"_id"}
@@ -495,6 +669,21 @@ if SERVER then
         end)
     end
 
+    --[[
+       Function: lia.char.cleanUpForPlayer
+
+       Description:
+          Cleans up character data and inventories for the specified player, typically upon disconnect or removal.
+
+       Parameters:
+          client (Player) — The player whose character data should be cleaned up.
+
+       Returns:
+          nil
+
+       Realm:
+          Server
+    ]]
     function lia.char.cleanUpForPlayer(client)
         for _, charID in pairs(client.liaCharList or {}) do
             local character = lia.char.loaded[charID]
@@ -514,6 +703,22 @@ if SERVER then
         end
     end
 
+    --[[
+       Function: lia.char.delete
+
+       Description:
+          Deletes a character from the database and cleans up any associated inventories and data.
+
+       Parameters:
+          id (number) — The ID of the character to delete.
+          client (Player|nil) — Optional player reference to remove if they are currently using the character.
+
+       Returns:
+          nil
+
+       Realm:
+          Server
+    ]]
     function lia.char.delete(id, client)
         assert(isnumber(id), "id must be a number")
         if IsValid(client) then
@@ -547,6 +752,23 @@ if SERVER then
         hook.Run("OnCharDelete", client, id)
     end
 
+    --[[
+       Function: lia.char.setCharData
+
+       Description:
+          Sets a value in the character's data table and updates the database accordingly.
+
+       Parameters:
+          charID (number) — The character's unique ID.
+          key (string) — The data key to set.
+          val (any) — The value to assign to the key.
+
+       Returns:
+          boolean — True if successful, false otherwise.
+
+       Realm:
+          Server
+    ]]
     function lia.char.setCharData(charID, key, val)
         local charIDsafe = tonumber(charID)
         if not charIDsafe then return end
@@ -563,6 +785,22 @@ if SERVER then
         return true
     end
 
+    --[[
+       Function: lia.char.setCharName
+
+       Description:
+          Updates a character's name in the database and loaded character data.
+
+       Parameters:
+          charID (number) — The character's unique ID.
+          name (string) — The new name for the character.
+
+       Returns:
+          boolean — True if successful, false otherwise.
+
+       Realm:
+          Server
+    ]]
     function lia.char.setCharName(charID, name)
         local charIDsafe = tonumber(charID)
         if not name or not charID then return end
@@ -576,6 +814,23 @@ if SERVER then
         return true
     end
 
+    --[[
+       Function: lia.char.setCharModel
+
+       Description:
+          Updates a character's model (and optional bodygroups) in the database and loaded character data.
+
+       Parameters:
+          charID (number) — The character's unique ID.
+          model (string) — The new model path.
+          bg (table|nil) — A table of bodygroup data (id, value) pairs.
+
+       Returns:
+          boolean — True if successful, false otherwise.
+
+       Realm:
+          Server
+    ]]
     function lia.char.setCharModel(charID, model, bg)
         local charIDsafe = tonumber(charID)
         if not model or not charID then return end

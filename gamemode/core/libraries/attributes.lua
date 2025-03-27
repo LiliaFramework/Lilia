@@ -1,26 +1,26 @@
 ﻿lia.attribs = lia.attribs or {}
 lia.attribs.list = lia.attribs.list or {}
 --[[ 
-    lia.attribs.loadFromDir(directory)
+   lia.attribs.loadFromDir(directory)
 
-    Description:
-        Loads all Lua attribute files (*.lua) from the specified directory 
-        and adds them to lia.attribs.list.
+   Description:
+      Loads all Lua attribute files (*.lua) from the specified directory 
+      and adds them to lia.attribs.list.
 
-    Parameters:
-        directory (string) - The path to the directory containing attribute files.
+   Parameters:
+      directory (string) - The path to the directory containing attribute files.
 
-    Returns:
-        nil
+   Returns:
+      nil
 
-    Realm:
-        Shared
+   Realm:
+      Shared
 
-    Internal Function:
-        true
+   Internal Function:
+      true
 
-    Example Usage:
-        lia.attribs.loadFromDir("path/to/attributes")
+   Example Usage:
+      lia.attribs.loadFromDir("path/to/attributes")
 ]]
 function lia.attribs.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
@@ -43,26 +43,26 @@ end
 
 if SERVER then
     --[[ 
-    Function: lia.attribs.setup
+   Function: lia.attribs.setup
 
-    Description:
-        Initializes all attributes for a player's character.
-        If an attribute has an OnSetup function, it will be called.
+   Description:
+      Initializes all attributes for a player's character.
+      If an attribute has an OnSetup function, it will be called.
 
-    Parameters:
-        client (Player) - The player whose character's attributes are being set up.
+   Parameters:
+      client (Player) - The player whose character's attributes are being set up.
 
-    Returns:
-        nil
+   Returns:
+      nil
 
-    Realm:
-        Shared
+   Realm:
+      Shared
 
-    Internal Function:
-        true
+   Internal Function:
+      true
 
-    Example Usage:
-        lia.attribs.setup(client)
+   Example Usage:
+      lia.attribs.setup(client)
 ]]
     function lia.attribs.setup(client)
         local character = client:getChar()

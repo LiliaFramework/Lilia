@@ -118,26 +118,70 @@ function OrganizeNotices()
     end
 end
 
-if SERVER then
-    function lia.notices.notifyAll(msg)
-        for _, v in player.Iterator() do
-            v:notify(msg)
+--[[ 
+    Function: lia.notices.notify
+ 
+    Description:
+       Sends a simple notification. On server this broadcasts (or sends to a specific player) via net; 
+       on client it displays via Garry’s Mod’s DisplayNotice + MsgN.
+ 
+    Parameters:
+       message (string) — text to show
+       notifType? (number) — numeric type (defaults to 5) — only used client‑side
+       recipient? (Player|nil) — target player (server only)
+ 
+    Returns:
+       nil
+ 
+    Realm:
+       Shared
+ ]]
+function lia.notices.notify(message, notifType, recipient)
+    if SERVER then
+        local args = {}
+        if recipient ~= nil and not istable(recipient) and type(recipient) ~= "Player" then
+            table.insert(args, 1, recipient)
+            recipient = nil
         end
-    end
 
-    function lia.notices.notify(message, notifType, recipient)
         net.Start("liaNotify")
         net.WriteString(message)
-        net.WriteUInt(notifType and isnumber(notifType) and notifType or 5, 3)
-        if recipient == nil then
-            net.Broadcast()
-        else
-            net.Send(recipient)
+        net.WriteUInt(#args, 8)
+        for _, v in ipairs(args) do
+            net.WriteString(tostring(v))
         end
-    end
 
-    function lia.notices.notifyLocalized(message, recipient, ...)
-        local args = {...}
+        if recipient then
+            net.Send(recipient)
+        else
+            net.Broadcast()
+        end
+    else
+        DisplayNotice(message, notifType or 5, false)
+        MsgN(message)
+    end
+end
+
+--[[ 
+    Function: lia.notices.notifyLocalized
+ 
+    Description:
+       Same as lia.notices.notify but first localizes the message key with format arguments.
+ 
+    Parameters:
+       message (string) — localization key
+       recipient? (Player|nil) — target player (server only)
+       ... — format arguments
+ 
+    Returns:
+       nil
+ 
+    Realm:
+       Shared
+ ]]
+function lia.notices.notifyLocalized(message, recipient, ...)
+    local args = {...}
+    if SERVER then
         if recipient ~= nil and not istable(recipient) and type(recipient) ~= "Player" then
             table.insert(args, 1, recipient)
             recipient = nil
@@ -146,34 +190,22 @@ if SERVER then
         net.Start("liaNotifyL")
         net.WriteString(message)
         net.WriteUInt(#args, 8)
-        for i = 1, #args do
-            net.WriteString(tostring(args[i]))
+        for _, v in ipairs(args) do
+            net.WriteString(tostring(v))
         end
 
-        if recipient == nil then
-            net.Broadcast()
-        else
+        if recipient then
             net.Send(recipient)
+        else
+            net.Broadcast()
         end
-    end
-
-    lia.util.notifyAll = lia.notices.notifyAll
-    lia.util.notify = lia.notices.notify
-    lia.util.notifyLocalized = lia.notices.notifyLocalized
-else
-    function lia.notices.notify(message, notifType)
-        DisplayNotice(message, notifType, false)
-        MsgN(message)
-    end
-
-    function lia.notices.notifyLocalized(message, ...)
+    else
         lia.notices.notify(L(message, ...))
     end
+end
 
+if CLIENT then
     function notification.AddLegacy(text)
         lia.notices.notify(tostring(text))
     end
-
-    lia.util.notify = lia.notices.notify
-    lia.util.notifyLocalized = lia.notices.notifyLocalized
 end
