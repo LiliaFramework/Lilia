@@ -432,9 +432,3 @@ hook.Add("PopulateConfigurationTabs", "PopulateOptions", function(pages)
         end
     })
 end)
-
-lia.option.add("BarPositions", "Bar Positions", "Determines the position of the Lilia bars.", "Bottom Left", nil, {
-    category = "General",
-    type = "Table",
-    options = {"Top Right", "Top Left", "Bottom Right", "Bottom Left"}
-})

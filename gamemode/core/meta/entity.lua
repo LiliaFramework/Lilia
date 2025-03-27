@@ -67,7 +67,7 @@ function entityMeta:isDoorLocked()
 end
 
 function entityMeta:getEntItemDropPos(offset)
-	if offset == nil then offset = 64 end
+	if not offset then offset = 64 end
 	local trResult = util.TraceLine({
 		start = self:EyePos(),
 		endpos = self:EyePos() + self:GetAimVector() * offset,
@@ -79,7 +79,7 @@ end
 
 function entityMeta:isNearEntity(radius, otherEntity)
 	if otherEntity == self then return true end
-	if radius == nil then radius = 96 end
+	if not radius then radius = 96 end
 	for _, v in ipairs(ents.FindInSphere(self:GetPos(), radius)) do
 		if v == self then continue end
 		if IsValid(otherEntity) and v == otherEntity or v:GetClass() == self:GetClass() then return true end

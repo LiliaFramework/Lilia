@@ -123,8 +123,7 @@ function playerMeta:getItems()
 end
 
 function playerMeta:getTracedEntity(distance)
-    if distance == nil then distance = 96 end
-
+    if not distance then distance = 96 end
     local data = {}
     data.start = self:GetShootPos()
     data.endpos = data.start + self:GetAimVector() * distance
@@ -134,7 +133,7 @@ function playerMeta:getTracedEntity(distance)
 end
 
 function playerMeta:getTrace(distance)
-    if distance == nil then distance = 200 end
+    if not distance then distance = 200 end
     local data = {}
     data.start = self:GetShootPos()
     data.endpos = data.start + self:GetAimVector() * distance
@@ -186,7 +185,6 @@ end
 function playerMeta:CanEditVendor(vendor)
     local hookResult = hook.Run("CanPerformVendorEdit", self, vendor)
     if hookResult ~= nil then return hookResult end
-    
     return self:hasPrivilege("Staff Permissions - Can Edit Vendors")
 end
 
@@ -470,11 +468,7 @@ if SERVER then
 
     function playerMeta:getLiliaData(key, default)
         local data = self.liaData and self.liaData[key]
-        if data == nil then
-            return default
-        else
-            return data
-        end
+        return data and default or data
     end
 
     function playerMeta:getAllLiliaData()

@@ -236,10 +236,7 @@ function GM:CanPlayerHoldObject(_, entity)
 end
 
 function GM:EntityTakeDamage(entity, dmgInfo)
-    if entity:IsPlayer() and entity:isStaffOnDuty() and lia.config.get("StaffHasGodMode", true) then
-        return true
-    end
-
+    if entity:IsPlayer() and entity:isStaffOnDuty() and lia.config.get("StaffHasGodMode", true) then return true end
     if IsValid(entity.liaPlayer) then
         if dmgInfo:IsDamageType(DMG_CRUSH) then
             if (entity.liaFallGrace or 0) < CurTime() then
@@ -293,7 +290,6 @@ end
 function GM:PostPlayerLoadout(client)
     local character = client:getChar()
     if not character then return end
-
     client:Give("lia_hands")
     client:SetupHands()
 end
@@ -445,7 +441,14 @@ function GM:PlayerDeathThink()
     return false
 end
 
+local function makeKey(ent)
+    local pos = ent.pos or ent:GetPos()
+    local tol = 1
+    return string.format("%s_%.0f_%.0f_%.0f", ent.class or ent:GetClass(), pos.x / tol, pos.y / tol, pos.z / tol)
+end
+
 function GM:SaveData()
+    local seen = {}
     local data = {
         entities = {},
         items = {}
@@ -453,12 +456,16 @@ function GM:SaveData()
 
     for _, ent in ents.Iterator() do
         if ent:isLiliaPersistent() then
-            data.entities[#data.entities + 1] = {
-                pos = ent:GetPos(),
-                class = ent:GetClass(),
-                model = ent:GetModel(),
-                angles = ent:GetAngles(),
-            }
+            local key = makeKey(ent)
+            if not seen[key] then
+                seen[key] = true
+                data.entities[#data.entities + 1] = {
+                    pos = ent:GetPos(),
+                    class = ent:GetClass(),
+                    model = ent:GetModel(),
+                    angles = ent:GetAngles(),
+                }
+            end
         end
     end
 
@@ -468,6 +475,27 @@ function GM:SaveData()
 
     lia.data.set("persistance", data.entities, true)
     lia.data.set("itemsave", data.items, true)
+end
+
+function GM:OnEntityCreated(ent)
+    if not IsValid(ent) or not ent:isLiliaPersistent() then return end
+    local saved = lia.data.get("persistance", {}, true) or {}
+    local seen = {}
+    for _, e in ipairs(saved) do
+        seen[makeKey(e)] = true
+    end
+
+    local key = makeKey(ent)
+    if not seen[key] then
+        saved[#saved + 1] = {
+            pos = ent:GetPos(),
+            class = ent:GetClass(),
+            model = ent:GetModel(),
+            angles = ent:GetAngles(),
+        }
+
+        lia.data.set("persistance", saved, true)
+    end
 end
 
 function GM:LoadData()
