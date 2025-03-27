@@ -513,19 +513,16 @@ function GM:LoadLiliaFonts(font, genericFont)
 end
 
 function GM:HUDPaintBackground()
-    lia.bar.drawAll()
     lia.menu.drawAll()
     self.BaseClass.PaintWorldTips(self.BaseClass)
 end
 
 function GM:OnContextMenuOpen()
     self.BaseClass:OnContextMenuOpen()
-    lia.bar.drawAction()
 end
 
 function GM:OnContextMenuClose()
     self.BaseClass:OnContextMenuClose()
-    lia.bar.drawAction()
     if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
 end
 

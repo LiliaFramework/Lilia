@@ -1,111 +1,239 @@
 ﻿lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
 lia.bar.list = {}
-lia.bar.actionText = ""
-lia.bar.actionStart = 0
-lia.bar.actionEnd = 0
+local function findIndexByIdentifier(identifier)
+    for idx, bar in ipairs(lia.bar.list) do
+        if bar.identifier == identifier then return idx end
+    end
+end
+
+--[[
+    Function: lia.attribs.setup
+
+    Description:
+        Initializes all attributes for a player's character.
+        If an attribute has an OnSetup function, it will be called.
+
+    Parameters:
+        client (Player) - The player whose character's attributes are being set up.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        lia.attribs.setup(client)
+]]
 function lia.bar.get(identifier)
     for _, bar in ipairs(lia.bar.list) do
         if bar.identifier == identifier then return bar end
     end
 end
 
+--[[
+    Function: lia.attribs.setup
+
+    Description:
+        Initializes all attributes for a player's character.
+        If an attribute has an OnSetup function, it will be called.
+
+    Parameters:
+        client (Player) - The player whose character's attributes are being set up.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        lia.attribs.setup(client)
+]]
 function lia.bar.add(getValue, color, priority, identifier)
     if identifier then
-        local old = lia.bar.get(identifier)
-        if old then table.remove(lia.bar.list, old.priority) end
+        local existingIdx = findIndexByIdentifier(identifier)
+        if existingIdx then table.remove(lia.bar.list, existingIdx) end
     end
 
     priority = priority or #lia.bar.list + 1
-    lia.bar.list[priority] = {
+    table.insert(lia.bar.list, {
         getValue = getValue,
         color = color or Color(math.random(150, 255), math.random(150, 255), math.random(150, 255)),
         priority = priority,
         lifeTime = 0,
         identifier = identifier
-    }
+    })
     return priority
 end
 
+--[[
+    Function: lia.attribs.setup
+
+    Description:
+        Initializes all attributes for a player's character.
+        If an attribute has an OnSetup function, it will be called.
+
+    Parameters:
+        client (Player) - The player whose character's attributes are being set up.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        lia.attribs.setup(client)
+]]
 function lia.bar.remove(identifier)
-    for i, bar in ipairs(lia.bar.list) do
-        if bar.identifier == identifier then
-            table.remove(lia.bar.list, i)
-            break
-        end
-    end
+    local idx = findIndexByIdentifier(identifier)
+    if idx then table.remove(lia.bar.list, idx) end
 end
 
+--[[
+    Function: lia.attribs.setup
+
+    Description:
+        Initializes all attributes for a player's character.
+        If an attribute has an OnSetup function, it will be called.
+
+    Parameters:
+        client (Player) - The player whose character's attributes are being set up.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        lia.attribs.setup(client)
+]]
 function lia.bar.drawBar(x, y, w, h, pos, neg, max, color)
-    if pos > max then pos = max end
-    max = max - 1
-    pos = math.max((w - 2) / max * pos, 0)
-    neg = math.max((w - 2) / max * neg, 0)
+    pos = math.min(pos, max)
+    local usable = math.max(w - 2, 0)
+    local fill = usable * pos / max
     surface.SetDrawColor(0, 0, 0, 150)
     surface.DrawRect(x, y, w + 6, h)
     surface.SetDrawColor(0, 0, 0, 200)
     surface.DrawOutlinedRect(x, y, w + 6, h)
     surface.SetDrawColor(color.r, color.g, color.b)
-    surface.DrawRect(x + 3, y + 3, pos, h - 6)
-    surface.SetDrawColor(255, 100, 100)
-    surface.DrawRect(x + 4 + w - neg, y + 3, neg, h - 6)
+    surface.DrawRect(x + 3, y + 3, fill, h - 6)
 end
 
-function lia.bar.drawAction()
-    local start, finish = lia.bar.actionStart, lia.bar.actionEnd
-    local curTime = CurTime()
-    local scrW, scrH = ScrW(), ScrH()
-    if finish > curTime then
-        local fraction = 1 - math.TimeFraction(start, finish, curTime)
-        local alpha = fraction * 255
-        if alpha > 0 then
-            local w, h = scrW * 0.35, 28
-            local x, y = scrW * 0.5 - w * 0.5, scrH * 0.725 - h * 0.5
-            lia.util.drawBlurAt(x, y, w, h)
-            surface.SetDrawColor(35, 35, 35, 100)
-            surface.DrawRect(x, y, w, h)
-            surface.SetDrawColor(0, 0, 0, 120)
-            surface.DrawOutlinedRect(x, y, w, h)
-            surface.SetDrawColor(lia.config.get("Color"))
-            surface.DrawRect(x + 4, y + 4, w * fraction - 8, h - 8)
-            surface.SetDrawColor(200, 200, 200, 20)
-            surface.SetMaterial(lia.util.getMaterial("vgui/gradient-d"))
-            surface.DrawTexturedRect(x + 4, y + 4, w * fraction - 8, h - 8)
-            draw.SimpleText(lia.bar.actionText, "liaMediumFont", x + 2, y - 22, Color(20, 20, 20))
-            draw.SimpleText(lia.bar.actionText, "liaMediumFont", x, y - 24, Color(240, 240, 240))
+--[[ 
+    Function: lia.bar.drawAction
+
+    Description:
+        Draws the action bar on the HUD if an action is currently in progress.
+        The bar displays a progress fill and text based on the remaining time.
+        Uses blur and styled drawing to render a clean visual effect.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+
+    Internal:
+        true
+]]
+function lia.bar.drawAction(text, time)
+    local now = CurTime()
+    local endTime = now + time
+    hook.Remove("HUDPaint", "liaDrawAction")
+    hook.Add("HUDPaint", "liaDrawAction", function()
+        local cur = CurTime()
+        if endTime <= cur then
+            hook.Remove("HUDPaint", "liaDrawAction")
+            return
         end
-    end
+
+        local frac = 1 - math.TimeFraction(now, endTime, cur)
+        local w, h = ScrW() * 0.35, 28
+        local x, y = ScrW() * 0.5 - w / 2, ScrH() * 0.725 - h / 2
+        lia.util.drawBlurAt(x, y, w, h)
+        surface.SetDrawColor(35, 35, 35, 100)
+        surface.DrawRect(x, y, w, h)
+        surface.SetDrawColor(0, 0, 0, 120)
+        surface.DrawOutlinedRect(x, y, w, h)
+        surface.SetDrawColor(lia.config.get("Color"))
+        surface.DrawRect(x + 4, y + 4, w * frac - 8, h - 8)
+        surface.SetDrawColor(200, 200, 200, 20)
+        surface.SetMaterial(lia.util.getMaterial("vgui/gradient-d"))
+        surface.DrawTexturedRect(x + 4, y + 4, w * frac - 8, h - 8)
+        draw.SimpleText(text, "liaMediumFont", x + 2, y - 22, Color(20, 20, 20))
+        draw.SimpleText(text, "liaMediumFont", x, y - 24, Color(240, 240, 240))
+    end)
 end
 
-function lia.bar.drawAll()
-    lia.bar.drawAction()
-    if hook.Run("ShouldHideBars") == true then return end
-    local position = lia.option.get("BarPositions", "Bottom Left")
-    local scrW, scrH = ScrW(), ScrH()
-    local w, h = scrW * 0.35, 14
-    local x, y
-    if position == "Top Left" then
-        x, y = 4, 4
-    elseif position == "Top Right" then
-        x, y = scrW - w - 4, 4
-    elseif position == "Bottom Left" then
-        x, y = 4, scrH - h - 4
-    elseif position == "Bottom Right" then
-        x, y = scrW - w - 4, scrH - h - 4
-    else
-        x, y = 4, 4
-    end
+--[[ 
+    Function: lia.bar.drawAll
 
-    local deltas, update, now = lia.bar.delta, FrameTime() * 0.6, CurTime()
-    table.sort(lia.bar.list, function(a, b) return a.priority > b.priority end)
+    Description:
+        Called from the HUDPaintBackground hook to draw all active bars on the player's HUD.
+        This includes action bars and status bars. Bars are sorted by priority and
+        smoothly animated toward their target values. Positions are configurable.
+        Rendering is skipped if the "ShouldHideBars" hook returns true.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+
+    Internal:
+        true
+]]
+function lia.bar.drawAll()
+    if hook.Run("ShouldHideBars") then return end
+    table.sort(lia.bar.list, function(a, b) return a.priority < b.priority end)
+    local w, h = ScrW() * 0.35, 14
+    local x = 4
+    local y = ScrH() - h
+    local deltas = lia.bar.delta
+    local update = FrameTime() * 0.6
+    local now = CurTime()
     for i, bar in ipairs(lia.bar.list) do
         local target = bar.getValue()
-        local value = math.Approach(deltas[i] or 0, target, update)
-        deltas[i] = value
+        deltas[i] = deltas[i] or target
+        deltas[i] = math.Approach(deltas[i], target, update)
+        local value = deltas[i]
         if value ~= target then bar.lifeTime = now + 5 end
         if bar.lifeTime >= now or bar.visible or hook.Run("ShouldBarDraw", bar) then
-            lia.bar.drawBar(x, y, w, h, value, 0, 2, bar.color)
+            lia.bar.drawBar(x, y, w, h, value, 0, 1, bar.color)
             y = y - (h + 2)
         end
     end
 end
+
+lia.option.add("BarPositions", "Bar Positions", "Determines the position of the Lilia bars.", "Bottom Left", nil, {
+    category = "General",
+    type = "Table",
+    options = {"Top Right", "Top Left", "Bottom Right", "Bottom Left"}
+})
+
+lia.bar.add(function()
+    local client = LocalPlayer()
+    return client:getLocalVar("stamina", 0) / 100
+end, Color(200, 200, 40), 2, "stamina")
+
+lia.bar.add(function()
+    local client = LocalPlayer()
+    return client:Health() / client:GetMaxHealth()
+end, Color(200, 50, 40), 1, "health")
+
+lia.bar.add(function()
+    local client = LocalPlayer()
+    return client:Armor() / client:GetMaxArmor()
+end, Color(30, 70, 180), 3, "armor")
+
+hook.Add("HUDPaintBackground", "liaDrawBars", lia.bar.drawAll)
