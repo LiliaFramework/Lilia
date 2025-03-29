@@ -53,17 +53,10 @@ lia.command.add("plygetplaytime", {
             return
         end
 
-        local steamID = target:SteamID64()
-        local query = "SELECT play_time FROM sam_players WHERE steamid = " .. SQLStr(steamID) .. ";"
-        local result = sql.QueryRow(query)
-        if result then
-            local playTimeInSeconds = tonumber(result.play_time) or 0
-            local hours = math.floor(playTimeInSeconds / 3600)
-            local minutes = math.floor((playTimeInSeconds % 3600) / 60)
-            local seconds = playTimeInSeconds % 60
-            client:ChatPrint(L("playtimeFor", target:Nick(), hours, minutes, seconds))
-        else
-            client:notifyLocalized("playtimeTargetError")
-        end
+        local playTimeInSeconds = target:sam_get_play_time()
+        local hours = math.floor(playTimeInSeconds / 3600)
+        local minutes = math.floor((playTimeInSeconds % 3600) / 60)
+        local seconds = playTimeInSeconds % 60
+        client:ChatPrint(L("playtimeFor", target:Nick(), hours, minutes, seconds))
     end
 })

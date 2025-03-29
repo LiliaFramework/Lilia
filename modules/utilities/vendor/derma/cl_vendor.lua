@@ -58,7 +58,8 @@ function PANEL:Init()
         local name = liaVendorEnt:getNetVar("name", "Jane Doe")
         local scale = liaVendorEnt:getNetVar("scale", 0.5)
         local money = liaVendorEnt:getMoney() ~= nil and lia.currency.get(liaVendorEnt:getMoney()) or "∞"
-        local itemCount = table.Count(self.items[self.vendor])
+        local itemList = self.items[self.vendor] or {}
+        local itemCount = table.Count(itemList)
         local panelHeight = SS(215)
         surface.SetDrawColor(Color(30, 30, 30, 190))
         surface.DrawRect(0, 0, w, panelHeight)
@@ -73,7 +74,7 @@ function PANEL:Init()
         draw.DrawText(L("vendorSellScale"), "liaSmallFont", w * 0.1, h * 0.07, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
         draw.DrawText(math.ceil(scale * 100) .. "%", "liaSmallFont", w * 0.2, h * 0.07, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
         draw.DrawText(L("vendorItemCount"), "liaSmallFont", w * 0.1, h * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_LEFT)
-        draw.DrawText(tonumber(itemCount) == 0 and "No items" or tonumber(itemCount) == 1 and "1 Item" or itemCount .. " Items", "liaSmallFont", w * 0.2, h * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
+        draw.DrawText(tonumber(itemCount) and "No items" or tonumber(itemCount) == 1 and "1 Item" or itemCount .. " Items", "liaSmallFont", w * 0.2, h * 0.09, Color(255, 255, 255, 210), TEXT_ALIGN_RIGHT)
     end
 
     self.right = vgui.Create("DFrame", self)

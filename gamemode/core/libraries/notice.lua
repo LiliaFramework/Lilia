@@ -118,70 +118,55 @@ function OrganizeNotices()
     end
 end
 
---[[
+if SERVER then
+    --[[
     Function: lia.notices.notify
 
     Description:
-       Sends a simple notification. On server this broadcasts (or sends to a specific player) via net;
-       on client it displays via Garry’s Mod’s DisplayNotice + MsgN.
+       Sends a simple notification. On the server, this broadcasts (or sends to a specific player) via net.
+       On the client, it displays the notification using Garry's Mod DisplayNotice and MsgN.
 
     Parameters:
-       message (string) — text to show
-       notifType? (number) — numeric type (defaults to 5) — only used client‑side
-       recipient? (Player|nil) — target player (server only)
+       message (string) — The text to display.
+       notifType? (number) — Numeric type (defaults to 5); only used client-side.
+       recipient? (Player|nil) — Target player (server only).
 
     Returns:
        nil
 
     Realm:
-       Shared
- ]]
-function lia.notices.notify(message, notifType, recipient)
-    if SERVER then
-        local args = {}
-        if recipient ~= nil and not istable(recipient) and type(recipient) ~= "Player" then
-            table.insert(args, 1, recipient)
-            recipient = nil
-        end
-
+       Server
+    ]]
+    function lia.notices.notify(message, notifType, recipient)
         net.Start("liaNotify")
         net.WriteString(message)
-        net.WriteUInt(#args, 8)
-        for _, v in ipairs(args) do
-            net.WriteString(tostring(v))
-        end
-
-        if recipient then
-            net.Send(recipient)
-        else
+        net.WriteUInt(notifType and isnumber(notifType) and notifType or 5, 3)
+        if recipient == nil then
             net.Broadcast()
+        else
+            net.Send(recipient)
         end
-    else
-        DisplayNotice(message, notifType or 5, false)
-        MsgN(message)
     end
-end
 
---[[
+    --[[
     Function: lia.notices.notifyLocalized
 
     Description:
-       Same as lia.notices.notify but first localizes the message key with format arguments.
+       Same as lia.notices.notify, but first localizes the message key using the provided format arguments.
 
     Parameters:
-       message (string) — localization key
-       recipient? (Player|nil) — target player (server only)
-       ... — format arguments
+       message (string) — Localization key.
+       recipient? (Player|nil) — Target player (server only).
+       ... — Additional format arguments.
 
     Returns:
        nil
 
     Realm:
-       Shared
- ]]
-function lia.notices.notifyLocalized(message, recipient, ...)
-    local args = {...}
-    if SERVER then
+       Server
+    ]]
+    function lia.notices.notifyLocalized(message, recipient, ...)
+        local args = {...}
         if recipient ~= nil and not istable(recipient) and type(recipient) ~= "Player" then
             table.insert(args, 1, recipient)
             recipient = nil
@@ -190,21 +175,58 @@ function lia.notices.notifyLocalized(message, recipient, ...)
         net.Start("liaNotifyL")
         net.WriteString(message)
         net.WriteUInt(#args, 8)
-        for _, v in ipairs(args) do
-            net.WriteString(tostring(v))
+        for i = 1, #args do
+            net.WriteString(tostring(args[i]))
         end
 
-        if recipient then
-            net.Send(recipient)
-        else
+        if recipient == nil then
             net.Broadcast()
+        else
+            net.Send(recipient)
         end
-    else
+    end
+else
+    --[[
+    Function: lia.notices.notify
+
+    Description:
+       Sends a simple notification. On the client, it displays the notification using Garry's Mod DisplayNotice and MsgN.
+
+    Parameters:
+       message (string) — The text to display.
+       notifType? (number) — Numeric type (defaults to 5); only used client-side.
+
+    Returns:
+       nil
+
+    Realm:
+       Client
+    ]]
+    function lia.notices.notify(message, notifType)
+        DisplayNotice(message, notifType, false)
+        MsgN(message)
+    end
+
+    --[[
+    Function: lia.notices.notifyLocalized
+
+    Description:
+       Same as lia.notices.notify, but first localizes the message key using the provided format arguments.
+
+    Parameters:
+       message (string) — Localization key.
+       ... — Additional format arguments.
+
+    Returns:
+       nil
+
+    Realm:
+       Client
+    ]]
+    function lia.notices.notifyLocalized(message, ...)
         lia.notices.notify(L(message, ...))
     end
-end
 
-if CLIENT then
     function notification.AddLegacy(text)
         lia.notices.notify(tostring(text))
     end
