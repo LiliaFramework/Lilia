@@ -7,24 +7,40 @@ end
 
 function MODULE:AddSection(sectionName, color, priority, location)
     hook.Run("F1OnAddSection", sectionName, color, priority, location)
-    self.CharacterInformation[sectionName] = {
-        fields = {},
-        color = color or Color(255, 255, 255),
-        priority = priority or 999,
-        location = location or 1
-    }
+    if not self.CharacterInformation[sectionName] then
+        self.CharacterInformation[sectionName] = {
+            fields = {},
+            color = color or Color(255, 255, 255),
+            priority = priority or 999,
+            location = location or 1
+        }
+    else
+        self.CharacterInformation[sectionName].color = color or self.CharacterInformation[sectionName].color
+        self.CharacterInformation[sectionName].priority = priority or self.CharacterInformation[sectionName].priority
+        self.CharacterInformation[sectionName].location = location or self.CharacterInformation[sectionName].location
+    end
 end
 
 function MODULE:AddTextField(sectionName, fieldName, labelText, valueFunc)
     hook.Run("F1OnAddTextField", sectionName, fieldName, labelText, valueFunc)
     local section = self.CharacterInformation[sectionName]
     if section then
-        table.insert(section.fields, {
-            type = "text",
-            name = fieldName,
-            label = labelText,
-            value = valueFunc or function() return "" end
-        })
+        local exists = false
+        for _, field in ipairs(section.fields) do
+            if field.name == fieldName then
+                exists = true
+                break
+            end
+        end
+
+        if not exists then
+            table.insert(section.fields, {
+                type = "text",
+                name = fieldName,
+                label = labelText,
+                value = valueFunc or function() return "" end
+            })
+        end
     end
 end
 
@@ -32,14 +48,24 @@ function MODULE:AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc,
     hook.Run("F1OnAddBarField", sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
     local section = self.CharacterInformation[sectionName]
     if section then
-        table.insert(section.fields, {
-            type = "bar",
-            name = fieldName,
-            label = labelText,
-            min = minFunc or function() return 0 end,
-            max = maxFunc or function() return 100 end,
-            value = valueFunc or function() return 0 end
-        })
+        local exists = false
+        for _, field in ipairs(section.fields) do
+            if field.name == fieldName then
+                exists = true
+                break
+            end
+        end
+
+        if not exists then
+            table.insert(section.fields, {
+                type = "bar",
+                name = fieldName,
+                label = labelText,
+                min = minFunc or function() return 0 end,
+                max = maxFunc or function() return 100 end,
+                value = valueFunc or function() return 0 end
+            })
+        end
     end
 end
 

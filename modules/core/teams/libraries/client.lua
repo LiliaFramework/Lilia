@@ -1,9 +1,6 @@
 ﻿function MODULE:LoadCharInformation()
     local client = LocalPlayer()
     local character = client:getChar()
-    local class = character:getClass()
-    if not character:getClass() then return end
-    local classTable = lia.class.list[class]
-    hook.Run("AddTextField", L("generalInfo"), "faction", L("faction"), function() return team.GetName(LocalPlayer():Team()) end)
-    if classTable.name then hook.Run("AddTextField", L("generalInfo"), "class", L("class"), function() return classTable.name end) end
+    hook.Run("AddTextField", "General Info", "faction", "Faction", function() return team.GetName(LocalPlayer():Team()) end)
+    if character:getClass() and lia.class.list[character:getClass()] and lia.class.list[character:getClass()].name then hook.Run("AddTextField", "General Info", "class", "Class", function() return lia.class.list[character:getClass()].name end) end
 end
