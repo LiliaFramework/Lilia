@@ -440,32 +440,6 @@ if SERVER then
         net.Send(self)
     end
 
-    function playerMeta:chatNotify(message)
-        net.Start("chatNotify")
-        net.WriteString(message)
-        net.Send(self)
-    end
-
-    function playerMeta:chatNotifyLocalized(message, ...)
-        local localizedMessage = L(message, self, ...)
-        net.Start("chatNotify")
-        net.WriteString(localizedMessage)
-        net.Send(self)
-    end
-
-    function playerMeta:chatError(message)
-        net.Start("chatError")
-        net.WriteString(message)
-        net.Send(self)
-    end
-
-    function playerMeta:chatErrorLocalized(message, ...)
-        local localizedMessage = L(message, self, ...)
-        net.Start("chatError")
-        net.WriteString(localizedMessage)
-        net.Send(self)
-    end
-
     function playerMeta:getLiliaData(key, default)
         local data = self.liaData and self.liaData[key]
         return data and default or data
@@ -489,11 +463,15 @@ if SERVER then
         time = time or 5
         if text == false then
             timer.Remove("liaAct" .. self:SteamID64())
-            netstream.Start(self, "actBar")
+            net.Start("actBar")
+            net.Send(self)
             return
         end
 
-        netstream.Start(self, "actBar", text, time)
+        net.Start("actBar")
+        net.WriteString(text)
+        net.WriteFloat(time)
+        net.Send(self)
         if callback then timer.Create("liaAct" .. self:SteamID64(), time, 1, function() if IsValid(self) then callback(self) end end) end
     end
 
@@ -522,32 +500,7 @@ if SERVER then
 
     function playerMeta:stopAction()
         timer.Remove("liaAct" .. self:SteamID64())
-        netstream.Start(self, "actBar")
-    end
-
-    function playerMeta:playSound(sound, volume, pitch, shouldEmit)
-        volume = volume or 75
-        pitch = pitch or 100
-        if shouldEmit then
-            self:EmitSound(sound, volume, pitch)
-        else
-            net.Start("PlaySound")
-            net.WriteString(sound)
-            net.WriteUInt(volume, 8)
-            net.WriteUInt(pitch, 8)
-            net.Send(self)
-        end
-    end
-
-    function playerMeta:openUI(panel)
-        net.Start("OpenVGUI")
-        net.WriteString(panel)
-        net.Send(self)
-    end
-
-    function playerMeta:openPage(url)
-        net.Start("OpenPage")
-        net.WriteString(url)
+        net.Start("actBar")
         net.Send(self)
     end
 
@@ -602,11 +555,6 @@ if SERVER then
     function playerMeta:getPlayTime()
         local diff = os.time(lia.time.toNumber(self.lastJoin)) - os.time(lia.time.toNumber(self.firstJoin))
         return diff + RealTime() - (self.liaJoinTime or RealTime())
-    end
-
-    function playerMeta:getPlayTime()
-        local diff = os.time(lia.time.toNumber(lia.lastJoin)) - os.time(lia.time.toNumber(lia.firstJoin))
-        return diff + RealTime() - (lia.joinTime or 0)
     end
 
     function playerMeta:createRagdoll(freeze, isDead)
@@ -767,25 +715,7 @@ if SERVER then
         lia.net[self][key] = value
         netstream.Start(self, "nLcl", key, value)
     end
-
-    playerMeta.SetLocalVar = playerMeta.setLocalVar
 else
-    function playerMeta:chatNotify(message)
-        chat.AddText(Color(0, 200, 255), "[NOTIFICATION]: ", Color(255, 255, 255), message)
-    end
-
-    function playerMeta:chatError(message)
-        chat.AddText(Color(255, 0, 0), "[ERROR]: ", Color(255, 255, 255), message)
-    end
-
-    function playerMeta:chatNotifyLocalized(message, ...)
-        local client = LocalPlayer()
-        if self == client then
-            message = L(message, ...)
-            chat.AddText(Color(255, 215, 0), message)
-        end
-    end
-
     function playerMeta:getPlayTime()
         local diff = os.time(lia.time.toNumber(lia.lastJoin)) - os.time(lia.time.toNumber(lia.firstJoin))
         return diff + RealTime() - (lia.joinTime or 0)

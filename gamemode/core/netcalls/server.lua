@@ -1,5 +1,4 @@
-﻿local networkStrings = {"setWaypoint", "setWaypointWithLogo", "sendURL", "ServerChatAddText", "transferMoneyFromP2P", "liaCharacterInvList", "liaItemDelete", "liaItemInstance", "liaInventoryInit", "liaInventoryData", "liaInventoryDelete", "liaInventoryAdd", "liaInventoryRemove", "liaNotify", "liaNotifyL", "OpenInvMenu", "liaTransferItem", "chatNotify", "chatError", "OpenVGUI", "OpenPage", "PlaySound", "CreateTableUI", "BinaryQuestionRequest", "DropdownRequest", "StringRequest", "OptionsRequest"}
-net.Receive("StringRequest", function(_, client)
+﻿net.Receive("StringRequest", function(_, client)
     local id = net.ReadUInt(32)
     local value = net.ReadString()
     if client.liaStrReqs and client.liaStrReqs[id] then
@@ -68,20 +67,18 @@ netstream.Hook("invAct", function(client, action, item, _, data)
     item:interact(action, client, entity, data)
 end)
 
-netstream.Hook("cmd", function(client, command, arguments)
+net.Receive("cmd", function(_, client)
     if (client.liaNextCmd or 0) < CurTime() then
+        local command = net.ReadString()
+        local arguments = net.ReadTable()
         local arguments2 = {}
         for _, v in ipairs(arguments) do
-            if isstring(v) or isnumber(v) then arguments2[#arguments2 + 1] = tostring(v) end
+            if isstring(v) or isnumber(v) then table.insert(arguments2, tostring(v)) end
         end
 
         lia.command.parse(client, nil, command, arguments2)
         client.liaNextCmd = CurTime() + 0.2
     end
 end)
-
-for _, netString in ipairs(networkStrings) do
-    util.AddNetworkString(netString)
-end
 
 netstream.Hook("liaCharFetchNames", function(client) netstream.Start(client, "liaCharFetchNames", lia.char.names) end)

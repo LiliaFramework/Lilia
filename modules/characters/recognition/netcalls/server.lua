@@ -1,4 +1,4 @@
-﻿net.Receive("rgnDirect", function(len, client)
+﻿net.Receive("rgnDirect", function(_, client)
     local target = net.ReadEntity()
     local name = net.ReadString()
     if target:GetPos():DistToSqr(client:GetPos()) > 100000 then return end
@@ -13,7 +13,7 @@
     end
 end)
 
-net.Receive("rgn", function(len, client)
+net.Receive("rgn", function(_, client)
     local level = net.ReadInt(32)
     local name = net.ReadString()
     local targets = {}

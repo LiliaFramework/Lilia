@@ -29,11 +29,6 @@ net.Receive("liaNotify", function()
     lia.notices.notify(message, notifType)
 end)
 
-net.Receive("sendURL", function()
-    local url = net.ReadString()
-    gui.OpenURL(url)
-end)
-
 net.Receive("ServerChatAddText", function()
     local args = net.ReadTable()
     chat.AddText(unpack(args))
@@ -245,12 +240,15 @@ netstream.Hook("nLcl", function(key, value)
     lia.net[LocalPlayer():EntIndex()][key] = value
 end)
 
-netstream.Hook("actBar", function(text, time)
-    if not text then
+net.Receive("actBar", function()
+    local hasData = net.ReadBool()
+    if not hasData then
         hook.Remove("HUDPaint", "liaDrawAction")
         return
     end
 
+    local text = net.ReadString()
+    local time = net.ReadFloat()
     local display = text:sub(1, 1) == "@" and L(text:sub(2)) or text
     lia.bar.drawAction(display, time)
 end)
@@ -278,21 +276,6 @@ net.Receive("CreateTableUI", function()
     local jsonData = util.Decompress(compressedData)
     local data = util.JSONToTable(jsonData)
     lia.util.CreateTableUI(data.title, data.columns, data.data, data.options, data.characterID)
-end)
-
-net.Receive("OpenVGUI", function()
-    local panel = net.ReadString()
-    LocalPlayer():openUI(panel)
-end)
-
-net.Receive("chatNotify", function()
-    local message = net.ReadString()
-    chat.AddText(Color(0, 200, 255), "[NOTIFICATION]: ", Color(255, 255, 255), message)
-end)
-
-net.Receive("chatError", function()
-    local message = net.ReadString()
-    chat.AddText(Color(255, 0, 0), "[ERROR]: ", Color(255, 255, 255), message)
 end)
 
 net.Receive("OptionsRequest", function()
@@ -488,7 +471,6 @@ net.Receive("BinaryQuestionRequest", function()
     end)
 end)
 
-net.Receive("OpenPage", function() gui.OpenURL(net.ReadString()) end)
 netstream.Hook("charInfo", function(data, id, client) lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client) end)
 netstream.Hook("charKick", function(id, isCurrentChar) hook.Run("KickedFromChar", id, isCurrentChar) end)
 netstream.Hook("gVar", function(key, value) lia.net.globals[key] = value end)
