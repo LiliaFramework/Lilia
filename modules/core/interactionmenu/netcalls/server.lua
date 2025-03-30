@@ -13,13 +13,15 @@ net.Receive("TransferMoneyFromP2P", function(_, sender)
     target:notifySuccess("You received " .. lia.currency.symbol .. amount .. " from " .. senderName)
 end)
 
-netstream.Hook("PIMRunOption", function(client, name)
+net.Receive("PIMRunOption", function(_, ply)
+    local name = net.ReadString()
     local opt = MODULE.Options[name]
-    local tracedEntity = client:getTracedEntity()
-    if opt and opt.runServer and IsValid(tracedEntity) then opt.onRun(client, tracedEntity) end
+    local tracedEntity = ply:getTracedEntity()
+    if opt and opt.runServer and IsValid(tracedEntity) then opt.onRun(ply, tracedEntity) end
 end)
 
-netstream.Hook("PIMRunLocalOption", function(client, name)
+net.Receive("PIMRunLocalOption", function(_, ply)
+    local name = net.ReadString()
     local opt = MODULE.SelfOptions[name]
-    if opt and opt.runServer then opt.onRun(client) end
+    if opt and opt.runServer then opt.onRun(ply) end
 end)

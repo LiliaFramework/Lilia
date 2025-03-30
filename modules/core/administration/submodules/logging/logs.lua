@@ -99,10 +99,6 @@
         func = function(client, item) return L("itemUnequipLog", client:SteamID64(), client:Name(), item, client:getChar():getID()) end,
         category = L("itemCategory")
     },
-    ["invalidNet"] = {
-        func = function(client) return L("invalidNetLog", client:SteamID64(), client:Name(), client:getChar():getID()) end,
-        category = L("protection")
-    },
     ["toolgunUse"] = {
         func = function(client, tool) return L("toolgunUseLog", client:SteamID64(), client:Name(), tool, client:getChar():getID()) end,
         category = L("toolgun")

@@ -8,4 +8,4 @@ function MODULE:PlayerSpawn(client)
     if IsValid(client) and client:IsPlayer() then client:ConCommand("spawnmenu_reload") end
 end
 
-util.AddNetworkString("AdminModeSwapCharacter")
+

@@ -64,4 +64,4 @@ net.Receive("lia_spawnItem", function(_, client)
     SpawnItem(client, itemID, target)
 end)
 
-util.AddNetworkString("lia_spawnItem")
+

@@ -137,4 +137,4 @@ net.Receive("ChangeAttribute", function(_, client)
     end
 end)
 
-util.AddNetworkString("ChangeAttribute")
+

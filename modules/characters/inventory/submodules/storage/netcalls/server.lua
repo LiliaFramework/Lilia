@@ -1,5 +1,4 @@
-﻿local storageNetworkStrings = {"liaStorageOpen", "liaStorageExit", "liaStorageUnlock", "liaStorageTransfer"}
-net.Receive("liaStorageExit", function(_, client)
+﻿net.Receive("liaStorageExit", function(_, client)
     local storage = client.liaStorageEntity
     if IsValid(storage) then storage.receivers[client] = nil end
     client.liaStorageEntity = nil
@@ -76,7 +75,3 @@ net.Receive("liaStorageTransfer", function(_, client)
         if IsValid(client) then client:notifyLocalized("itemOnGround") end
     end)
 end)
-
-for _, netString in ipairs(storageNetworkStrings) do
-    util.AddNetworkString(netString)
-end

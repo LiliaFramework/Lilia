@@ -1,8 +1,8 @@
 ﻿function MODULE:PlayerDeath(client)
-    netstream.Start(client, "removeF1")
+    net.Start("removeF1")
+    net.Send(client)
 end
 
-util.AddNetworkString("lia_teleport_entity")
 net.Receive("lia_teleport_entity", function(_, ply)
     local ent = net.ReadEntity()
     if not IsValid(ent) then return end

@@ -9,7 +9,9 @@
     end
 
     if info2 and info2.OnLeave then info2:OnLeave(client) end
-    netstream.Start(nil, "classUpdate", client)
+    net.Start("classUpdate")
+    net.WriteEntity(client)
+    net.Broadcast()
 end
 
 function MODULE:OnTransferred(client)

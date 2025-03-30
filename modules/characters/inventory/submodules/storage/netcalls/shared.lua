@@ -1,10 +1,13 @@
 ﻿local MODULE = MODULE
-netstream.Hook("trunkInitStorage", function(entity)
-    if istable(entity) then
-        for vehicle, _ in pairs(entity) do
+net.Receive("trunkInitStorage", function()
+    local isTable = net.ReadBool()
+    if isTable then
+        local vehicles = net.ReadTable()
+        for _, vehicle in pairs(vehicles) do
             MODULE:InitializeStorage(vehicle)
         end
     else
+        local entity = net.ReadEntity()
         MODULE:InitializeStorage(entity)
     end
 end)

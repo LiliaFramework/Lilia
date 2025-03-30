@@ -714,7 +714,6 @@ LANGUAGE = {
     itemInteractionLog = "Player [%s] '%s' %s item '%s'. (CharID: %s)",
     itemEquipLog = "Player [%s] '%s' equipped item '%s'. (CharID: %s)",
     itemUnequipLog = "Player [%s] '%s' unequipped item '%s'. (CharID: %s)",
-    invalidNetLog = "Player [%s] '%s' triggered an invalid net message. (CharID: %s)",
     toolgunUseLog = "Player [%s] '%s' used toolgun: '%s'. (CharID: %s)",
     playerConnectedLog = "Player connected: [%s] '%s'.",
     playerDisconnectedLog = "Player disconnected: [%s] '%s'.",

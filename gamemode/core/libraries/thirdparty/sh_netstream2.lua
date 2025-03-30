@@ -24,7 +24,6 @@ function netstream.Hook(name, Callback)
 end
 
 if SERVER then
-    util.AddNetworkString("NetStreamDS")
     function netstream.Start(player, name, ...)
         local recipients = {}
         local bShouldSend = false

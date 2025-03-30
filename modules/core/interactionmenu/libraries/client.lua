@@ -73,7 +73,11 @@ function MODULE:OpenPIM()
             function p:DoClick()
                 frame:AlphaTo(0, 0.05, 0, function() if frame and IsValid(frame) then frame:Close() end end)
                 opt.onRun(client, traceEnt)
-                if opt.runServer then netstream.Start("PIMRunOption", name) end
+                if opt.runServer then
+                    net.Start("PIMRunOption")
+                    net.WriteString(name)
+                    net.SendToServer()
+                end
             end
         end
     end
@@ -156,7 +160,11 @@ function MODULE:OpenLocalPIM()
             function p:DoClick()
                 frame:AlphaTo(0, 0.05, 0, function() if frame and IsValid(frame) then frame:Close() end end)
                 opt.onRun(client)
-                if opt.runServer then netstream.Start("PIMRunLocalOption", name) end
+                if opt.runServer then
+                    net.Start("PIMRunLocalOption")
+                    net.WriteString(name)
+                    net.SendToServer()
+                end
             end
         end
     end

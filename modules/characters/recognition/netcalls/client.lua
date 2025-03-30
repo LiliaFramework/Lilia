@@ -1,10 +1,10 @@
 ﻿local MODULE = MODULE
-netstream.Hook("rgnDone", function()
+net.Receive("rgnDone", function()
     local client = LocalPlayer()
     hook.Run("OnCharRecognized", client, client:getChar():getID())
 end)
 
-netstream.Hook("rgnMenu", function()
+net.Receive("rgnMenu", function()
     local menu = DermaMenu()
     menu:AddOption(L("recogMenuOptionWhisper"), function() MODULE:CharRecognize(2) end)
     menu:AddOption(L("recogMenuOptionTalk"), function() MODULE:CharRecognize(3) end)

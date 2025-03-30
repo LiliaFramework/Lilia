@@ -1,5 +1,4 @@
-﻿local NetworkStrings = {"ViewClaims", "TicketSystem", "TicketSystemClaim", "TicketSystemClose", "TicketClientNotify"}
-net.Receive("ViewClaims", function(_, client)
+﻿net.Receive("ViewClaims", function(_, client)
     local sid = net.ReadString()
     local caseclaims = lia.data.get("caseclaims", {}, true)
     net.Start("ViewClaims")
@@ -49,7 +48,3 @@ net.Receive("TicketSystemClose", function(_, client)
 
     requester.CaseClaimed = nil
 end)
-
-for _, netString in ipairs(NetworkStrings) do
-    util.AddNetworkString(netString)
-end

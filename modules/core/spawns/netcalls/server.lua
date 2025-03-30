@@ -1,4 +1,4 @@
-﻿util.AddNetworkString("request_respawn")
+﻿
 net.Receive("request_respawn", function(_, client)
     if not IsValid(client) or not client:getChar() then return end
     local respawnTime = lia.config.get("SpawnTime", 5)

@@ -129,12 +129,21 @@ end
 
 function MODULE:OnEntityCreated(entity)
     if not self:isSuitableForTrunk(entity) then return end
-    if entity:isSimfphysCar() then netstream.Start(nil, "trunkInitStorage", entity) end
+    if entity:isSimfphysCar() then
+        net.Start("trunkInitStorage")
+        net.WriteBool(false)
+        net.WriteEntity(entity)
+        net.Broadcast()
+    end
+
     self:InitializeStorage(entity)
 end
 
 function MODULE:PlayerInitialSpawn(client)
-    netstream.Start(client, "trunkInitStorage", self.Vehicles)
+    net.Start("trunkInitStorage")
+    net.WriteBool(true)
+    net.WriteTable(self.Vehicles)
+    net.Send(client)
 end
 
 function MODULE:StorageInventorySet(_, inventory, isCar)

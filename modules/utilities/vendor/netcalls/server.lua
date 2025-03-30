@@ -1,5 +1,4 @@
-﻿local vendorNetworkStrings = {"VendorAllowClass", "VendorAllowFaction", "VendorExit", "VendorEdit", "VendorMode", "VendorMoney", "VendorOpen", "VendorPrice", "VendorStock", "VendorMaxStock", "VendorSync", "VendorTrade"}
-local MODULE = MODULE
+﻿local MODULE = MODULE
 local EDITOR = include(MODULE.path .. "/libs/sv_vendor.lua")
 net.Receive("VendorExit", function(_, client)
     local vendor = client.liaVendor
@@ -31,7 +30,3 @@ net.Receive("VendorTrade", function(_, client)
     if not hook.Run("CanPlayerAccessVendor", client, entity) then return end
     hook.Run("VendorTradeEvent", client, entity, uniqueID, isSellingToVendor)
 end)
-
-for _, netString in ipairs(vendorNetworkStrings) do
-    util.AddNetworkString(netString)
-end

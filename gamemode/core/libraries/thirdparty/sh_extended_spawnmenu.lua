@@ -1,5 +1,5 @@
 ﻿if SERVER then
-    util.AddNetworkString("rb655_playsound")
+    
     concommand.Add("rb655_playsound_all", function(client, cmd, args)
         if not client:IsSuperAdmin() or not args[1] or string.Trim(args[1]) == "" then return end
         net.Start("rb655_playsound")

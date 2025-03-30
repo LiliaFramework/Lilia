@@ -31,10 +31,7 @@ local FilesToLoad = {
         path = "lilia/gamemode/core/libraries/notice.lua",
         realm = "shared"
     },
-    {
-        path = "lilia/gamemode/core/libraries/darkrp.lua",
-        realm = "shared"
-    },
+  
     {
         path = "lilia/gamemode/core/meta/character.lua",
         realm = "shared"
@@ -141,6 +138,10 @@ local FilesToLoad = {
     },
     {
         path = "lilia/gamemode/core/meta/player.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/core/libraries/darkrp.lua",
         realm = "shared"
     },
     {

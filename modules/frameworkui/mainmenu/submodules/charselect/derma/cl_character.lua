@@ -166,8 +166,6 @@ function PANEL:createTitle()
 end
 
 function PANEL:loadBackground()
-    local mapScene = lia.module.list.mapscene
-    if not mapScene or table.Count(mapScene.scenes) == 0 then self.blank = true end
     local url = lia.config.get("BackgroundURL")
     if url and url:find("%S") then
         self.background = self:Add("DHTML")

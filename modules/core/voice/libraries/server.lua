@@ -17,7 +17,7 @@ function MODULE:PostPlayerLoadout(client)
     client:setNetVar("VoiceType", "Talking")
 end
 
-util.AddNetworkString("ChangeSpeakMode")
+
 net.Receive("ChangeSpeakMode", function(_, client)
     local mode = net.ReadString()
     if MODULE.TalkRanges[mode] then client:setNetVar("VoiceType", mode) end

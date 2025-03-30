@@ -70,12 +70,6 @@ net.Receive("send_logs_request", function(_, client)
     net.WriteBigTable("send_logs", client, categorizedLogs)
 end)
 
-function MODULE:OnServerLog(_, logType, logString)
-    for _, admin in pairs(lia.util.getAdmins()) do
-        if hook.Run("CanPlayerSeeLog", admin, logType) ~= false then lia.log.send(admin, logString) end
-    end
-end
-
 function MODULE:CanPlayerSeeLog(client)
     return lia.config.get("AdminConsoleNetworkLogs", true) and client:hasPrivilege("Staff Permissions - Can See Logs")
 end
@@ -169,6 +163,3 @@ end
 function MODULE:CanTool(client, _, tool)
     lia.log.add(client, "toolgunUse", tool)
 end
-
-util.AddNetworkString("send_logs")
-util.AddNetworkString("send_logs_request")

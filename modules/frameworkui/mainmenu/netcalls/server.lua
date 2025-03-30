@@ -1,5 +1,4 @@
-﻿local liaNetworkStrings = {"liaCharChoose", "liaCharCreate", "liaCharDelete", "liaCharList", "liaCharMenu"}
-net.Receive("liaCharChoose", function(_, client)
+﻿net.Receive("liaCharChoose", function(_, client)
     local function response(message)
         net.Start("liaCharChoose")
         net.WriteString(L(message or "", client))
@@ -96,7 +95,3 @@ net.Receive("liaCharDelete", function(_, client)
         timer.Simple(.5, function() MainMenu:syncCharList(client) end)
     end
 end)
-
-for _, netString in ipairs(liaNetworkStrings) do
-    util.AddNetworkString(netString)
-end
