@@ -32,6 +32,10 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/libraries/darkrp.lua",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/core/meta/character.lua",
         realm = "shared"
     },
