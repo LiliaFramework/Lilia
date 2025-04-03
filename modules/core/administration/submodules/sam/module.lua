@@ -4,7 +4,6 @@ MODULE.discord = "@liliaplayer"
 MODULE.version = "1.0"
 MODULE.desc = "Adds SAM Compatibility"
 MODULE.enabled = sam ~= nil
-MODULE.Public = true
 MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can See SAM Notifications Outside Staff Character",
