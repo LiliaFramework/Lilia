@@ -111,8 +111,8 @@ local function RegisterWeapons()
         if not className or className:find("_base") or RegisterWeaponsBlackList[className] then continue end
         local override = WeaponOverrides and WeaponOverrides[className] or {}
         local holdType = wep.HoldType or "normal"
-        local baseType = "base_weapons"
-        if holdType == "grenade" then baseType = "base_grenade" end
+        local isGrenade = holdType == "grenade"
+        local baseType = isGrenade and "base_grenade" or "base_weapons"
         local ITEM = lia.item.register(className, baseType, nil, nil, true)
         ITEM.name = override.name or wep.PrintName or className
         ITEM.desc = override.desc or "A Weapon"
@@ -126,7 +126,7 @@ local function RegisterWeapons()
         ITEM.width = override.width or sizeMapping.width
         ITEM.height = override.height or sizeMapping.height
         ITEM.weaponCategory = override.weaponCategory or holdTypeToWeaponCategory[holdType] or "primary"
-        ITEM.category = override.category or L("weapons")
+        ITEM.category = isGrenade and "grenade" or "weapons"
     end
 end
 
