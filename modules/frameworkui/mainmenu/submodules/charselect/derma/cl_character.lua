@@ -53,7 +53,7 @@ function PANEL:createCharacterInfoPanel()
     local scroll = vgui.Create("DScrollPanel", self.infoFrame)
     scroll:Dock(FILL)
     local padding = 10
-    for k, text in ipairs(info) do
+    for _, text in ipairs(info) do
         local label = scroll:Add("DLabel")
         label:Dock(TOP)
         label:DockMargin(padding, padding, padding, 0)
