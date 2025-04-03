@@ -1,7 +1,7 @@
 <h1 align="center">Lilia - Framework </h1>
 
 <p align="center">
-  <img src="https://i.imgur.com/yY3wT30.png" alt="Lilia Icon">
+  <img src="https://i.imgur.com/xddGdsS.png" alt="Lilia Icon" width="512" height="512">
 </p>
 
 Welcome to Lilia, an advanced roleplay gamemode framework for Garry's Mod. Inspired by [Lillia](https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lillia_19.jpg), a character from League of Legends, Lilia aims to fulfill your dreams of creating immersive roleplay servers. With a focus on stability, rich features, and open-source flexibility, Lilia provides a platform for users to bring their visions to life easily and effectively.
