@@ -266,7 +266,7 @@ function MODULE:BuildInformationMenu(pages)
                             btnTeleport:SetWide(60)
                             btnTeleport:SetText("Teleport")
                             btnTeleport.DoClick = function()
-                                net.Start("lia_teleport_entity")
+                                net.Start("liaTeleportToEntity")
                                 net.WriteEntity(ent)
                                 net.SendToServer()
                             end

@@ -3,7 +3,7 @@
     net.Send(client)
 end
 
-net.Receive("lia_teleport_entity", function(_, ply)
+net.Receive("liaTeleportToEntity", function(_, ply)
     local ent = net.ReadEntity()
     if not IsValid(ent) then return end
     if not ply:hasPrivilege("Staff Permission — Teleport to Entity (Entity Tab)") then return end
