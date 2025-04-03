@@ -57,13 +57,6 @@ lia.command.add("blockooc", {
     end
 })
 
-lia.command.add("refreshfonts", {
-    superAdminOnly = true,
-    privilege = "Refresh Fonts",
-    desc = "Refreshes client fonts.",
-    onRun = function(client) client:ConCommand("refreshfonts") end
-})
-
 lia.command.add("clearchat", {
     adminOnly = true,
     privilege = "Clear Chat",

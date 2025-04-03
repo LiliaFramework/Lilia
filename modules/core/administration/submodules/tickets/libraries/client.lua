@@ -141,11 +141,3 @@ function MODULE:TicketFrame(requester, message, claimed)
     table.insert(TicketFrames, frm)
     timer.Create("ticketsystem-" .. requester:SteamID64(), 60, 1, function() if IsValid(frm) then frm:Remove() end end)
 end
-
-function MODULE:LoadFonts(font)
-    surface.CreateFont("ticketsystem", {
-        font = font,
-        size = 15,
-        weight = 400
-    })
-end

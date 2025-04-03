@@ -147,7 +147,7 @@ function MODULE:BuildInformationMenu(pages)
     end
 
     local entitiesByCreator = {}
-    for _, ent in ipairs(ents.GetAll()) do
+    for _, ent in player.Iterator() do
         if IsValid(ent) and ent.GetCreator and IsValid(ent:GetCreator()) then
             local owner = ent:GetCreator():Nick()
             entitiesByCreator[owner] = entitiesByCreator[owner] or {}

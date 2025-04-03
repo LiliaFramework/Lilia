@@ -1,4 +1,6 @@
-﻿local SKIN = {}
+﻿local surface = surface
+local Color = Color
+local SKIN = {}
 SKIN.fontFrame = "BudgetLabel"
 SKIN.fontTab = "liaSmallFont"
 SKIN.fontButton = "liaSmallFont"
@@ -48,18 +50,15 @@ function SKIN:DrawGenericBackground(x, y, w, h)
 end
 
 function SKIN:PaintPanel(panel)
-    if not panel.m_bBackground then return end
-    if panel.GetPaintBackground and not panel:GetPaintBackground() then return end
+    if not panel.m_bBackground or panel.GetPaintBackground and not panel:GetPaintBackground() then return end
     local w, h = panel:GetWide(), panel:GetTall()
     surface.SetDrawColor(0, 0, 0, 100)
     surface.DrawRect(0, 0, w, h)
     surface.DrawOutlinedRect(0, 0, w, h)
 end
 
-function SKIN:PaintButton(panel)
-    if not panel.m_bBackground then return end
-    if panel.GetPaintBackground and not panel:GetPaintBackground() then return end
-    local w, h = panel:GetWide(), panel:GetTall()
+local function DrawButton(panel, w, h)
+    if not panel.m_bBackground or panel.GetPaintBackground and not panel:GetPaintBackground() then return end
     local alpha = 50
     if panel:GetDisabled() then
         alpha = 10
@@ -75,22 +74,13 @@ function SKIN:PaintButton(panel)
     surface.DrawRect(2, 2, w - 4, h - 4)
 end
 
-function SKIN:PaintComboBox(panel, w, h)
-    if not panel.m_bBackground then return end
-    if panel.GetPaintBackground and not panel:GetPaintBackground() then return end
-    local alpha = 50
-    if panel:GetDisabled() then
-        alpha = 10
-    elseif panel.Depressed then
-        alpha = 180
-    elseif panel.Hovered then
-        alpha = 75
-    end
+function SKIN:PaintButton(panel)
+    local w, h = panel:GetWide(), panel:GetTall()
+    DrawButton(panel, w, h)
+end
 
-    surface.SetDrawColor(20, 20, 20, alpha)
-    surface.DrawRect(0, 0, w, h)
-    surface.SetDrawColor(100, 100, 100, alpha)
-    surface.DrawRect(2, 2, w - 4, h - 4)
+function SKIN:PaintComboBox(panel, w, h)
+    DrawButton(panel, w, h)
 end
 
 function SKIN:PaintTextEntry(panel, w, h)

@@ -70,8 +70,3 @@ concommand.Add("fixchatplz", function()
         MODULE:createChat()
     end
 end)
-
-concommand.Add("refreshfonts", function()
-    hook.Run("LoadFonts", lia.config.get("Font"))
-    LocalPlayer():ChatPrint("Fonts have been refreshed!")
-end)

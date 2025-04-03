@@ -16,6 +16,10 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/libraries/fonts.lua",
+        realm = "client"
+    },
+    {
         path = "lilia/gamemode/core/libraries/keybind.lua",
         realm = "client"
     },
@@ -31,7 +35,6 @@ local FilesToLoad = {
         path = "lilia/gamemode/core/libraries/notice.lua",
         realm = "shared"
     },
-  
     {
         path = "lilia/gamemode/core/meta/character.lua",
         realm = "shared"
