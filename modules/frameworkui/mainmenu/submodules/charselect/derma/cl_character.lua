@@ -71,8 +71,6 @@ function PANEL:createStartButton()
     local btnWidth = sw * 0.2
     local btnHeight = sh * 0.04
     local btnSpacing = sh * 0.01
-    local logoW = sw * 0.13
-    local logoH = sw * 0.13
     local logoPath = lia.config.get("CenterLogo")
     local discordURL = lia.config.get("DiscordURL")
     local workshopURL = lia.config.get("Workshop")
