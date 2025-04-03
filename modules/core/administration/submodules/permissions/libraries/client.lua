@@ -46,11 +46,6 @@ function MODULE:HUDPaint()
     end
 end
 
-function MODULE:SpawnMenuOpen()
-    local client = LocalPlayer()
-    if lia.config.get("SpawnMenuLimit", false) then return client:getChar():hasFlags("pet") or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Props") end
-end
-
 concommand.Add("dev_GetCameraOrigin", function(client)
     if client:isStaff() then
         LiliaInformation("origin = (" .. math.ceil(client:GetPos().x) .. ", " .. math.ceil(client:GetPos().y) .. ", " .. math.ceil(client:GetPos().z) .. ")")

@@ -583,3 +583,15 @@ function GM:PlayerEndVoice(client)
         VoicePanels[client].fadeAnim:Start(2)
     end
 end
+
+local function SetGlobalSkin(skinName)
+    for _, v in pairs(debug.getregistry()) do
+        if ispanel(v) and v.GetSkin and v.SetSkin then v:SetSkin(skinName) end
+    end
+end
+
+function GM:SpawnMenuOpen()
+    local client = LocalPlayer()
+    if lia.config.get("SpawnMenuLimit", false) then return client:getChar():hasFlags("pet") or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Props") end
+    SetGlobalSkin("lilia_spawnmenu")
+end
