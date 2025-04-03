@@ -39,9 +39,11 @@ function PANEL:createCharacterInfoPanel()
     local info = {}
     table.insert(info, "Name: " .. (character:getName() or ""))
     table.insert(info, "Faction: " .. (team.GetName(client:Team()) or ""))
+    if character:getClass() and lia.class.list[character:getClass()] and lia.class.list[character:getClass()].name then table.insert(info, "Class: " .. lia.class.list[character:getClass()].name) end
     table.insert(info, "Money: " .. lia.currency.get(character:getMoney()))
     table.insert(info, "Description:")
     table.insert(info, character:getDesc() or "")
+    hook.Run("LoadMainMenuInformation", info)
     self.infoFrame = self:Add("DFrame")
     self.infoFrame:SetSize(ScrW() * 0.25, ScrH() * 0.45)
     self.infoFrame:SetPos(ScrW() - ScrW() * 0.25 - 50, ScrH() * 0.25)
