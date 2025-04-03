@@ -172,9 +172,6 @@ function PANEL:createStartButton()
     end
 
     if logoPath and logoPath ~= "" then
-        local scaleFactor = 0.95
-        local newLogoW = logoW * scaleFactor
-        local newLogoH = logoH * scaleFactor
         local function setLogo(logo)
             logo:SetZPos(9999)
             self:UpdateLogoPosition()
@@ -263,9 +260,9 @@ function PANEL:loadBackground()
 
         local tr = util.TraceLine(traceData)
         if not tr.Hit then
-            hook.Add("PrePlayerDraw", "liaCharacter_StopDrawLocalPlayer", function(ply) if ply == client then return true end end)
+            hook.Add("PrePlayerDraw", "liaCharacter_StopDrawLocalPlayer", function(client) if client == client then return true end end)
             self:spawnClientModelEntity()
-            hook.Add("CalcView", "liaCharacterMenuCalcViewApproach", function(ply, pos, angles, fov, nearZ, farZ)
+            hook.Add("CalcView", "liaCharacterMenuCalcViewApproach", function(_, _, _, fov, _, _)
                 if not IsValid(lia.gui.character) or not IsValid(lia.gui.character.modelEntity) then return end
                 local ent = lia.gui.character.modelEntity
                 local center = ent:GetPos() + Vector(0, 0, 60)
@@ -315,15 +312,15 @@ end
 
 function PANEL:spawnClientModelEntity()
     if IsValid(self.modelEntity) then self.modelEntity:Remove() end
-    local ply = LocalPlayer()
-    local modelPath = ply:GetModel()
+    local client = LocalPlayer()
+    local modelPath = client:GetModel()
     self.modelEntity = ClientsideModel(modelPath, RENDER_GROUP_OPAQUE_ENTITY)
     if not IsValid(self.modelEntity) then return end
     self.modelEntity:SetNoDraw(false)
-    self.modelEntity:SetSkin(ply:GetSkin() or 0)
+    self.modelEntity:SetSkin(client:GetSkin() or 0)
     local numBG = self.modelEntity:GetNumBodyGroups()
     for i = 0, numBG - 1 do
-        self.modelEntity:SetBodygroup(i, ply:GetBodygroup(i))
+        self.modelEntity:SetBodygroup(i, client:GetBodygroup(i))
     end
 
     for k, v in ipairs(self.modelEntity:GetSequenceList()) do
@@ -409,7 +406,6 @@ function PANEL:fadeOut()
 end
 
 function PANEL:Init()
-    local client = LocalPlayer()
     if IsValid(lia.gui.loading) then lia.gui.loading:Remove() end
     if IsValid(lia.gui.character) then lia.gui.character:Remove() end
     lia.gui.character = self

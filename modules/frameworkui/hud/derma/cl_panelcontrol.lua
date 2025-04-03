@@ -174,7 +174,7 @@ local tblCategory = vgui.RegisterTable({
         self.Container = self:Add("Panel")
         self.Container:Dock(TOP)
         self.Container:DockMargin(16, 0, 0, 0)
-        self.Container.Paint = function(pnl, w, h)
+        self.Container.Paint = function(_, w, h)
             surface.SetDrawColor(Color(52, 54, 59, 255))
             surface.DrawRect(0, 0, w, h)
         end
