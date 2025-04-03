@@ -626,3 +626,5 @@ function GM:InitializedModules()
 
     timer.Simple(5, function() DatabaseQuery() end)
 end
+
+util.AddNetworkString("liaCharList")
