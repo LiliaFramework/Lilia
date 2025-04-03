@@ -627,4 +627,7 @@ function GM:InitializedModules()
     timer.Simple(5, function() DatabaseQuery() end)
 end
 
-util.AddNetworkString("liaCharList")
+local networkStrings = {"liaCharChoose", "liaCharacterInvList", "liaCharCreate", "liaCharList", "liaCharDelete",}
+for _, netString in ipairs(networkStrings) do
+    util.AddNetworkString(netString)
+end
