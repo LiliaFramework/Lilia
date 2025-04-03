@@ -4,13 +4,73 @@ local CharClick = {"buttons/button14.wav", 35, 255}
 local CharWarning = {"friends/friend_join.wav", 40, 255}
 PANEL.ANIM_SPEED = 0.1
 PANEL.FADE_SPEED = 0.5
+function PANEL:UpdateLogoPosition()
+    local sw, sh = ScrW(), ScrH()
+    local btnSpacing = sh * 0.01
+    local logoW = sw * 0.13
+    local logoH = sw * 0.13
+    local scaleFactor = 0.95
+    local newLogoW = logoW * scaleFactor
+    local newLogoH = logoH * scaleFactor
+    local leftMost = math.huge
+    local rightMost = -math.huge
+    local topY = math.huge
+    for _, btn in pairs(self.buttons) do
+        if IsValid(btn) then
+            local x, y = btn:GetPos()
+            local btnW = btn:GetWide()
+            leftMost = math.min(leftMost, x)
+            rightMost = math.max(rightMost, x + btnW)
+            topY = math.min(topY, y)
+        end
+    end
+
+    if topY == math.huge then topY = sh / 2 end
+    local groupCenter = (leftMost + rightMost) / 2
+    local logoX = groupCenter - newLogoW / 2
+    local logoY = topY - newLogoH - btnSpacing
+    self.logo:SetPos(logoX, logoY)
+    self.logo:SetSize(newLogoW, newLogoH)
+end
+
+function PANEL:createCharacterInfoPanel()
+    local client = LocalPlayer()
+    local character = client:getChar()
+    local info = {}
+    table.insert(info, "Name: " .. (character:getName() or ""))
+    table.insert(info, "Faction: " .. (team.GetName(client:Team()) or ""))
+    table.insert(info, "Money: " .. lia.currency.get(character:getMoney()))
+    table.insert(info, "Description:")
+    table.insert(info, character:getDesc() or "")
+    self.infoFrame = self:Add("DFrame")
+    self.infoFrame:SetSize(ScrW() * 0.25, ScrH() * 0.45)
+    self.infoFrame:SetPos(ScrW() - ScrW() * 0.25 - 50, ScrH() * 0.25)
+    self.infoFrame:SetTitle("")
+    self.infoFrame:SetDraggable(false)
+    self.infoFrame:ShowCloseButton(false)
+    local scroll = vgui.Create("DScrollPanel", self.infoFrame)
+    scroll:Dock(FILL)
+    local padding = 10
+    for k, text in ipairs(info) do
+        local label = scroll:Add("DLabel")
+        label:Dock(TOP)
+        label:DockMargin(padding, padding, padding, 0)
+        label:SetFont("liaMediumFont")
+        label:SetWrap(true)
+        label:SetAutoStretchVertical(true)
+        label:SetText(text)
+        label:SizeToContentsY()
+    end
+end
+
 function PANEL:createStartButton()
-    local screenWidth, screenHeight = ScrW(), ScrH()
-    local btnWidth = screenWidth * 0.2
-    local btnHeight = screenHeight * 0.04
-    local buttonSpacing = screenHeight * 0.01
-    local logoWidth = screenWidth * 0.13
-    local logoHeight = screenWidth * 0.13
+    local client = LocalPlayer()
+    local sw, sh = ScrW(), ScrH()
+    local btnWidth = sw * 0.2
+    local btnHeight = sh * 0.04
+    local btnSpacing = sh * 0.01
+    local logoW = sw * 0.13
+    local logoH = sw * 0.13
     local logoPath = lia.config.get("CenterLogo")
     local discordURL = lia.config.get("DiscordURL")
     local workshopURL = lia.config.get("Workshop")
@@ -62,7 +122,7 @@ function PANEL:createStartButton()
         end
     })
 
-    if LocalPlayer():getChar() then
+    if client:getChar() then
         table.insert(buttonConfigs, {
             id = "return",
             text = "RETURN",
@@ -71,41 +131,66 @@ function PANEL:createStartButton()
     end
 
     local numButtons = #buttonConfigs
-    local totalHeight = numButtons * btnHeight + (numButtons - 1) * buttonSpacing
-    local startY = screenHeight / 2 - totalHeight / 2
+    local totalHeight = numButtons * btnHeight + (numButtons - 1) * btnSpacing
+    local startY = sh / 2 - totalHeight / 2
     self.buttons = {}
-    for i, config in ipairs(buttonConfigs) do
-        local btn = self:Add("liaMediumButton")
-        btn:SetSize(btnWidth, btnHeight)
-        local posY = startY + (i - 1) * (btnHeight + buttonSpacing)
-        btn:SetPos(screenWidth / 2 - btnWidth / 2, posY)
-        btn:SetText(config.text)
-        btn.DoClick = config.doClick
-        btn.OnCursorEntered = function() surface.PlaySound("ui/hover.wav") end
-        self.buttons[config.id] = btn
+    local function createButtons(xOffset)
+        for i, config in ipairs(buttonConfigs) do
+            local btn = self:Add("liaMediumButton")
+            btn:SetSize(btnWidth, btnHeight)
+            local posY = startY + (i - 1) * (btnHeight + btnSpacing)
+            btn:SetPos(xOffset, posY)
+            btn:SetText(config.text)
+            btn.DoClick = config.doClick
+            btn.OnCursorEntered = function() surface.PlaySound("ui/hover.wav") end
+            local oldSetPos = btn.SetPos
+            btn.SetPos = function(b, x, y)
+                oldSetPos(b, x, y)
+                if IsValid(self) then self:UpdateLogoPosition() end
+            end
+
+            self.buttons[config.id] = btn
+        end
+    end
+
+    if client:getChar() then
+        local trace = {}
+        trace.start = client:EyePos()
+        trace.endpos = trace.start + client:GetAimVector() * 100
+        trace.filter = {client}
+        local tr = util.TraceLine(trace)
+        if tr.Hit then
+            createButtons(sw / 2 - btnWidth / 2)
+        else
+            createButtons(sw * 0.1)
+            self:createCharacterInfoPanel()
+        end
+    else
+        createButtons(sw / 2 - btnWidth / 2)
     end
 
     if logoPath and logoPath ~= "" then
         local scaleFactor = 0.95
-        local newLogoWidth = logoWidth * scaleFactor
-        local newLogoHeight = logoHeight * scaleFactor
-        local additionalOffset = 35
+        local newLogoW = logoW * scaleFactor
+        local newLogoH = logoH * scaleFactor
+        local function setLogo(logo)
+            logo:SetZPos(9999)
+            self:UpdateLogoPosition()
+            timer.Simple(0, function() if IsValid(logo) then logo:MoveToFront() end end)
+        end
+
         if string.sub(logoPath, 1, 8) == "https://" then
             http.Fetch(logoPath, function(body)
                 local fileName = "temp_logo.png"
                 file.Write(fileName, body)
                 self.logo = self:Add("DImage")
                 self.logo:SetImage("data/" .. fileName)
-                self.logo:SetSize(newLogoWidth, newLogoHeight)
-                self.logo:CenterHorizontal()
-                self.logo:SetPos(screenWidth / 2 - newLogoWidth / 2, startY - newLogoHeight - buttonSpacing - additionalOffset)
-            end, function(err) print("Failed to fetch logo: ", err) end)
+                setLogo(self.logo)
+            end)
         else
             self.logo = self:Add("DImage")
             self.logo:SetImage(logoPath)
-            self.logo:SetSize(newLogoWidth, newLogoHeight)
-            self.logo:CenterHorizontal()
-            self.logo:SetPos(screenWidth / 2 - newLogoWidth / 2, startY - newLogoHeight - buttonSpacing - additionalOffset)
+            setLogo(self.logo)
         end
     end
 end
@@ -141,10 +226,10 @@ end
 function PANEL:fadeMusic()
     if lia.menuSound then
         local fraction = 1
-        local start, finish = RealTime(), RealTime() + 10
+        local startTime, finishTime = RealTime(), RealTime() + 10
         timer.Create("liaMusicFader", 0.1, 0, function()
             if lia.menuSound then
-                fraction = 1 - math.TimeFraction(start, finish, RealTime())
+                fraction = 1 - math.TimeFraction(startTime, finishTime, RealTime())
                 lia.menuSound:SetVolume(fraction * 0.5)
                 if fraction <= 0 then
                     lia.menuSound:Stop()
@@ -159,13 +244,45 @@ function PANEL:fadeMusic()
 end
 
 function PANEL:createTitle()
-    if self.tabs then
-        local topMargin = 32
-        self.tabs:DockMargin(64, topMargin, 64, 0)
-    end
+    if self.tabs then self.tabs:DockMargin(64, 32, 64, 0) end
 end
 
 function PANEL:loadBackground()
+    local client = LocalPlayer()
+    if client:getChar() then
+        local camDist = 100
+        local center = client:EyePos() + Vector(0, 0, 40)
+        local forward = client:EyeAngles():Forward()
+        local traceData = {
+            start = center,
+            endpos = center + forward * camDist,
+            filter = {client}
+        }
+
+        local tr = util.TraceLine(traceData)
+        if not tr.Hit then
+            hook.Add("PrePlayerDraw", "liaCharacter_StopDrawLocalPlayer", function(ply) if ply == client then return true end end)
+            self:spawnClientModelEntity()
+            hook.Add("CalcView", "liaCharacterMenuCalcViewApproach", function(ply, pos, angles, fov, nearZ, farZ)
+                if not IsValid(lia.gui.character) or not IsValid(lia.gui.character.modelEntity) then return end
+                local ent = lia.gui.character.modelEntity
+                local center = ent:GetPos() + Vector(0, 0, 60)
+                local targetCamDistance = 30
+                local desiredCamPos = center + ent:GetForward() * targetCamDistance
+                lia.gui.character.currentCamPos = lia.gui.character.currentCamPos or desiredCamPos
+                lia.gui.character.currentCamPos = LerpVector(FrameTime() * 5, lia.gui.character.currentCamPos, desiredCamPos)
+                local view = {
+                    origin = lia.gui.character.currentCamPos,
+                    angles = (center - lia.gui.character.currentCamPos):Angle(),
+                    fov = fov,
+                    drawviewer = true
+                }
+                return view
+            end)
+            return
+        end
+    end
+
     local url = lia.config.get("BackgroundURL")
     if url and url:find("%S") then
         self.background = self:Add("DHTML")
@@ -194,6 +311,35 @@ function PANEL:loadBackground()
     end
 end
 
+function PANEL:spawnClientModelEntity()
+    if IsValid(self.modelEntity) then self.modelEntity:Remove() end
+    local ply = LocalPlayer()
+    local modelPath = ply:GetModel()
+    self.modelEntity = ClientsideModel(modelPath, RENDER_GROUP_OPAQUE_ENTITY)
+    if not IsValid(self.modelEntity) then return end
+    self.modelEntity:SetNoDraw(false)
+    self.modelEntity:SetSkin(ply:GetSkin() or 0)
+    local numBG = self.modelEntity:GetNumBodyGroups()
+    for i = 0, numBG - 1 do
+        self.modelEntity:SetBodygroup(i, ply:GetBodygroup(i))
+    end
+
+    for k, v in ipairs(self.modelEntity:GetSequenceList()) do
+        if v:lower():find("idle") and v ~= "idlenoise" then
+            self.modelEntity:ResetSequence(k)
+            self.modelEntity:SetCycle(0)
+            break
+        end
+    end
+
+    hook.Add("PostDrawOpaqueRenderables", self, function()
+        if IsValid(self.modelEntity) then
+            self.modelEntity:FrameAdvance(RealFrameTime())
+            self.modelEntity:DrawModel()
+        end
+    end)
+end
+
 function PANEL:paintBackground(w, h)
     if IsValid(self.background) then return end
     if self.blank then
@@ -210,25 +356,26 @@ function PANEL:addTab(name, callback, justClick)
         return
     end
 
-    button.DoClick = function(button) button:setSelected(true) end
+    button.DoClick = function(btn) btn:setSelected(true) end
     if isfunction(callback) then button:onSelected(function() callback(self) end) end
     return button
 end
 
 function PANEL:createTabs()
+    local client = LocalPlayer()
     local load, create
     if lia.characters and #lia.characters > 0 then load = self:addTab("load character", self.createCharacterSelection) end
-    if hook.Run("CanPlayerCreateChar", LocalPlayer()) ~= false then create = self:addTab("new character", self.createCharacterCreation) end
+    if hook.Run("CanPlayerCreateChar", client) ~= false then create = self:addTab("new character", self.createCharacterCreation) end
     if IsValid(load) then
         load:setSelected()
     elseif IsValid(create) then
         create:setSelected()
     end
 
-    if LocalPlayer():getChar() then
-        self:addTab("return", function() if IsValid(self) and LocalPlayer():getChar() then self:fadeOut() end end, true)
+    if client:getChar() then
+        self:addTab("return", function() if IsValid(self) and client:getChar() then self:fadeOut() end end, true)
     else
-        self:addTab("leave", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() LocalPlayer():ConCommand("disconnect") end) end, true)
+        self:addTab("leave", function() vgui.Create("liaCharacterConfirm"):setTitle(L("disconnect"):upper() .. "?"):setMessage(L("You will disconnect from the server."):upper()):onConfirm(function() client:ConCommand("disconnect") end) end, true)
     end
 
     local totalWidth = -32
@@ -260,6 +407,7 @@ function PANEL:fadeOut()
 end
 
 function PANEL:Init()
+    local client = LocalPlayer()
     if IsValid(lia.gui.loading) then lia.gui.loading:Remove() end
     if IsValid(lia.gui.character) then lia.gui.character:Remove() end
     lia.gui.character = self
@@ -317,8 +465,11 @@ function PANEL:setFadeToBlack(fade)
 end
 
 function PANEL:Paint(w, h)
-    lia.util.drawBlur(self)
-    self:paintBackground(w, h)
+    local client = LocalPlayer()
+    if not client:getChar() then
+        lia.util.drawBlur(self)
+        self:paintBackground(w, h)
+    end
 end
 
 function PANEL:hoverSound()
@@ -334,6 +485,21 @@ end
 function PANEL:warningSound()
     local client = LocalPlayer()
     client:EmitSound(unpack(CharWarning))
+end
+
+function PANEL:OnRemove()
+    hook.Remove("PrePlayerDraw", "liaCharacter_StopDrawLocalPlayer")
+    hook.Remove("CalcView", "liaCharacterMenuCalcView")
+    hook.Remove("PostDrawOpaqueRenderables", self)
+    if IsValid(self.modelEntity) then self.modelEntity:Remove() end
+end
+
+function PANEL:Think()
+    if IsValid(self.logo) then
+        self.logo:SetZPos(9999)
+        self.logo:MoveToFront()
+        self:UpdateLogoPosition()
+    end
 end
 
 vgui.Register("liaCharacter", PANEL, "EditablePanel")
