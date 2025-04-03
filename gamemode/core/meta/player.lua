@@ -564,6 +564,11 @@ if SERVER then
         entity:SetModel(self:GetModel())
         entity:SetSkin(self:GetSkin())
         entity:Spawn()
+        local numBodyGroups = entity:GetNumBodyGroups() or 0
+        for i = 0, numBodyGroups - 1 do
+            entity:SetBodygroup(i, self:GetBodygroup(i))
+        end
+
         entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
         entity:Activate()
         if isDead then self.liaRagdoll = entity end
