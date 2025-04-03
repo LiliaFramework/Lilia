@@ -625,6 +625,42 @@ function GM:InitializedModules()
     end
 
     timer.Simple(5, function() DatabaseQuery() end)
+    if not lia.module.versionChecks or #lia.module.versionChecks == 0 then return end
+    local CheckerURL = "https://raw.githubusercontent.com/LiliaFramework/Modules/main/modules.json"
+    http.Fetch(CheckerURL, function(body, _, _, code)
+        if code ~= 200 then
+            LiliaUpdater("Error fetching module list (HTTP " .. code .. ")")
+            return
+        end
+
+        local remoteModules = util.JSONToTable(body)
+        if not remoteModules then
+            LiliaUpdater("Error parsing module data")
+            return
+        end
+
+        for _, localInfo in ipairs(lia.module.versionChecks) do
+            local remoteModule = nil
+            for _, m in ipairs(remoteModules) do
+                if m.uniqueID == localInfo.uniqueID then
+                    remoteModule = m
+                    break
+                end
+            end
+
+            if not remoteModule then
+                LiliaUpdater("Module with uniqueID '" .. localInfo.uniqueID .. "' not found")
+            elseif not remoteModule.version then
+                LiliaUpdater("Module '" .. localInfo.name .. "' has no remote version info")
+            elseif remoteModule.version ~= localInfo.localVersion then
+                LiliaUpdater("Module '" .. localInfo.name .. "' has a version mismatch. Please update to version " .. remoteModule.version .. " at " .. remoteModule.source)
+            else
+                LiliaUpdater("Module " .. localInfo.name .. " is up-to-date.")
+            end
+        end
+
+        lia.module.versionChecks = {}
+    end, function(err) LiliaUpdater("HTTP.Fetch error: " .. err) end)
 end
 
 local networkStrings = {"liaCharChoose", "liaCharacterInvList", "liaCharCreate", "liaCharList", "liaCharDelete",}
