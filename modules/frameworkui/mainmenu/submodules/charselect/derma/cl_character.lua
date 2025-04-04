@@ -238,36 +238,24 @@ end
 function PANEL:loadBackground()
     local client = LocalPlayer()
     if client:getChar() then
-        local camDist = 100
-        local center = client:EyePos() + Vector(0, 0, 40)
-        local forward = client:EyeAngles():Forward()
-        local traceData = {
-            start = center,
-            endpos = center + forward * camDist,
-            filter = {client}
-        }
-
-        local tr = util.TraceLine(traceData)
-        if not tr.Hit then
-            hook.Add("PrePlayerDraw", "liaCharacter_StopDrawPlayers", function() return true end)
-            self:spawnClientModelEntity()
-            hook.Add("CalcView", "liaCharacterMenuCalcView", function(_, _, _, fov, _, _)
-                if not IsValid(lia.gui.character) or not IsValid(lia.gui.character.modelEntity) then return end
-                local ent = lia.gui.character.modelEntity
-                local center = ent:GetPos() + Vector(0, 0, 60)
-                local targetCamDistance = 30
-                local desiredCamPos = center + ent:GetForward() * targetCamDistance
-                lia.gui.character.currentCamPos = lia.gui.character.currentCamPos or desiredCamPos
-                lia.gui.character.currentCamPos = LerpVector(FrameTime() * 5, lia.gui.character.currentCamPos, desiredCamPos)
-                return {
-                    origin = lia.gui.character.currentCamPos,
-                    angles = (center - lia.gui.character.currentCamPos):Angle(),
-                    fov = fov,
-                    drawviewer = true
-                }
-            end)
-            return
-        end
+        hook.Add("PrePlayerDraw", "liaCharacter_StopDrawPlayers", function() return true end)
+        self:spawnClientModelEntity()
+        hook.Add("CalcView", "liaCharacterMenuCalcView", function(_, _, _, fov, _, _)
+            if not IsValid(lia.gui.character) or not IsValid(lia.gui.character.modelEntity) then return end
+            local ent = lia.gui.character.modelEntity
+            local center = ent:GetPos() + Vector(0, 0, 60)
+            local targetCamDistance = 30
+            local desiredCamPos = center + ent:GetForward() * targetCamDistance
+            lia.gui.character.currentCamPos = lia.gui.character.currentCamPos or desiredCamPos
+            lia.gui.character.currentCamPos = LerpVector(FrameTime() * 5, lia.gui.character.currentCamPos, desiredCamPos)
+            return {
+                origin = lia.gui.character.currentCamPos,
+                angles = (center - lia.gui.character.currentCamPos):Angle(),
+                fov = fov,
+                drawviewer = true
+            }
+        end)
+        return
     end
 
     local url = lia.config.get("BackgroundURL")
