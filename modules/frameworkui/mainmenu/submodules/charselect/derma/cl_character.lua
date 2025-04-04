@@ -154,17 +154,8 @@ function PANEL:createStartButton()
     end
 
     if client:getChar() then
-        local trace = {}
-        trace.start = client:EyePos()
-        trace.endpos = trace.start + client:GetAimVector() * 100
-        trace.filter = {client}
-        local tr = util.TraceLine(trace)
-        if tr.Hit then
-            createButtons(sw / 2 - btnWidth / 2)
-        else
-            createButtons(sw * 0.1)
-            self:createCharacterInfoPanel()
-        end
+        createButtons(sw * 0.1)
+        self:createCharacterInfoPanel()
     else
         createButtons(sw / 2 - btnWidth / 2)
     end
@@ -498,7 +489,7 @@ function PANEL:warningSound()
 end
 
 function PANEL:OnRemove()
-    hook.Remove("PrePlayerDraw", "liaCharacter_StopDrawLocalPlayer")
+    hook.Remove("PrePlayerDraw", "liaCharacter_StopDrawPlayers")
     hook.Remove("CalcView", "liaCharacterMenuCalcView")
     hook.Remove("PostDrawOpaqueRenderables", self)
     hook.Remove("PreDrawPhysgunBeam", "DisablePhysgunBeam")
