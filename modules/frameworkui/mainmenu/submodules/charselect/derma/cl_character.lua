@@ -258,9 +258,9 @@ function PANEL:loadBackground()
 
         local tr = util.TraceLine(traceData)
         if not tr.Hit then
-            hook.Add("PrePlayerDraw", "liaCharacter_StopDrawLocalPlayer", function(client) if client == client then return true end end)
+            hook.Add("PrePlayerDraw", "liaCharacter_StopDrawPlayers", function() return true end)
             self:spawnClientModelEntity()
-            hook.Add("CalcView", "liaCharacterMenuCalcViewApproach", function(_, _, _, fov, _, _)
+            hook.Add("CalcView", "liaCharacterMenuCalcView", function(_, _, _, fov, _, _)
                 if not IsValid(lia.gui.character) or not IsValid(lia.gui.character.modelEntity) then return end
                 local ent = lia.gui.character.modelEntity
                 local center = ent:GetPos() + Vector(0, 0, 60)
@@ -268,13 +268,12 @@ function PANEL:loadBackground()
                 local desiredCamPos = center + ent:GetForward() * targetCamDistance
                 lia.gui.character.currentCamPos = lia.gui.character.currentCamPos or desiredCamPos
                 lia.gui.character.currentCamPos = LerpVector(FrameTime() * 5, lia.gui.character.currentCamPos, desiredCamPos)
-                local view = {
+                return {
                     origin = lia.gui.character.currentCamPos,
                     angles = (center - lia.gui.character.currentCamPos):Angle(),
                     fov = fov,
                     drawviewer = true
                 }
-                return view
             end)
             return
         end
@@ -319,6 +318,12 @@ function PANEL:spawnClientModelEntity()
     local numBG = self.modelEntity:GetNumBodyGroups()
     for i = 0, numBG - 1 do
         self.modelEntity:SetBodygroup(i, client:GetBodygroup(i))
+    end
+
+    local pos, ang = hook.Run("GetMainMenuPosition")
+    if pos and ang then
+        self.modelEntity:SetPos(pos)
+        self.modelEntity:SetAngles(ang)
     end
 
     for k, v in ipairs(self.modelEntity:GetSequenceList()) do
@@ -407,6 +412,15 @@ function PANEL:Init()
     if IsValid(lia.gui.loading) then lia.gui.loading:Remove() end
     if IsValid(lia.gui.character) then lia.gui.character:Remove() end
     lia.gui.character = self
+    if not render.oldDrawBeam then
+        render.oldDrawBeam = render.DrawBeam
+        render.DrawBeam = function(startPos, endPos, width, textureStart, textureEnd, color)
+            if IsValid(lia.gui.character) then return end
+            return render.oldDrawBeam(startPos, endPos, width, textureStart, textureEnd, color)
+        end
+    end
+
+    hook.Add("PreDrawPhysgunBeam", "DisablePhysgunBeam", function(weapon, effect, entity, attachment) if IsValid(lia.gui.character) then return true end end)
     self.color = ColorAlpha(color_white, 150)
     self.colorSelected = color_white
     self.colorHovered = ColorAlpha(color_white, 50)
@@ -487,6 +501,12 @@ function PANEL:OnRemove()
     hook.Remove("PrePlayerDraw", "liaCharacter_StopDrawLocalPlayer")
     hook.Remove("CalcView", "liaCharacterMenuCalcView")
     hook.Remove("PostDrawOpaqueRenderables", self)
+    hook.Remove("PreDrawPhysgunBeam", "DisablePhysgunBeam")
+    if render.oldDrawBeam then
+        render.DrawBeam = render.oldDrawBeam
+        render.oldDrawBeam = nil
+    end
+
     if IsValid(self.modelEntity) then self.modelEntity:Remove() end
 end
 
