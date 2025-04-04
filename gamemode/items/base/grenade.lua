@@ -2,7 +2,7 @@
 ITEM.desc = "Base item for grenades."
 ITEM.category = "Grenades"
 ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
-ITEM.grenadeClass = "weapon_frag"
+ITEM.class = "weapon_frag"
 ITEM.width = 1
 ITEM.height = 1
 ITEM.DropOnDeath = true
@@ -16,12 +16,12 @@ ITEM.functions.Use = {
             return false
         end
 
-        if client:HasWeapon(item.grenadeClass) then
+        if client:HasWeapon(item.class) then
             client:notifyLocalized("alreadyHaveGrenade")
             return false
         end
 
-        client:Give(item.grenadeClass)
+        client:Give(item.class)
         return true
     end,
 }
