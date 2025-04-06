@@ -82,7 +82,7 @@ function PANEL:GenerateSections()
 end
 
 function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, dockMarginBot, valueFunc)
-    local isDesc = string.lower(name) == "desc"
+    local isDesc = string.lower(name or "") == "desc"
     local textFont = "liaSmallFont"
     local textFontSize = 20
     local textColor = color_white
@@ -90,7 +90,7 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, do
     local entryContainer = parent:Add("DPanel")
     entryContainer:Dock(TOP)
     entryContainer:SetTall(textFontSize + 5)
-    entryContainer:DockMargin(8, 0, 8, dockMarginBot)
+    entryContainer:DockMargin(8, 0, 8, dockMarginBot or 0)
     entryContainer.Paint = function(_, w, h)
         surface.SetDrawColor(shadowColor)
         surface.DrawRect(0, 0, w, h)
@@ -101,7 +101,7 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, do
     label:SetWide(85)
     label:SetTall(25)
     label:SetTextColor(textColor)
-    label:SetText(labelText)
+    label:SetText(labelText or "")
     label:Dock(LEFT)
     label:DockMargin(0, 0, 15, 0)
     label:SetContentAlignment(6)
@@ -111,11 +111,15 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, do
     self[name]:Dock(FILL)
     self[name]:SetTextColor(textColor)
     self[name]:SetEditable(isDesc)
-    if valueFunc then self[name]:SetText(valueFunc()) end
+    if isfunction(valueFunc) then
+        local val = valueFunc()
+        if isstring(val) then self[name]:SetText(isstring(val) and val or "") end
+    end
+
     self[name].OnEnter = function(entry)
         if isDesc then
             local text = entry:GetText()
-            lia.command.send("chardesc", text)
+            if isstring(text) then lia.command.send("chardesc", text) end
         end
     end
 end
@@ -127,7 +131,7 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, 
     local entryContainer = parent:Add("DPanel")
     entryContainer:Dock(TOP)
     entryContainer:SetTall(30)
-    entryContainer:DockMargin(8, dockMargin, 8, dockMargin)
+    entryContainer:DockMargin(8, dockMargin or 0, 8, dockMargin or 0)
     entryContainer.Paint = function(_, w, h)
         surface.SetDrawColor(shadowColor)
         surface.DrawRect(0, 0, w, h)
@@ -139,27 +143,31 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, 
     label:SetTall(10)
     label:Dock(LEFT)
     label:SetTextColor(textColor)
-    label:SetText(labelText)
+    label:SetText(labelText or "")
     label:SetContentAlignment(5)
     self[name] = entryContainer:Add("DProgressBar")
     self[name]:Dock(FILL)
     self[name]:SetText("")
     self[name]:SetBarColor(Color(45, 45, 45, 255))
-    local min = isfunction(minFunc) and minFunc() or minFunc
-    local max = isfunction(maxFunc) and maxFunc() or maxFunc
-    local current = isfunction(valueFunc) and valueFunc() or valueFunc
-    local fraction = math.Clamp((current - min) / (max - min), 0, 1)
+    local min = isfunction(minFunc) and minFunc() or tonumber(minFunc) or 0
+    local max = isfunction(maxFunc) and maxFunc() or tonumber(maxFunc) or 1
+    local current = isfunction(valueFunc) and valueFunc() or tonumber(valueFunc) or 0
+    local fraction = max - min ~= 0 and math.Clamp((current - min) / (max - min), 0, 1) or 0
     self[name]:SetFraction(fraction)
     hook.Add("Think", self, function()
-        local newCurrent = isfunction(valueFunc) and valueFunc() or valueFunc
-        local newFraction = math.Clamp((newCurrent - min) / (max - min), 0, 1)
+        if not IsValid(self[name]) then return end
+        local newCurrent = isfunction(valueFunc) and valueFunc() or tonumber(valueFunc) or 0
+        local newFraction = max - min ~= 0 and math.Clamp((newCurrent - min) / (max - min), 0, 1) or 0
         self[name]:SetFraction(newFraction)
     end)
 
     local gradMat = Material("vgui/gradient-d")
-    surface.SetMaterial(gradMat)
-    surface.SetDrawColor(200, 200, 200, 20)
-    surface.DrawTexturedRect(4, 4, self[name]:GetWide(), self[name]:GetTall())
+    hook.Add("PostRenderVGUI", self[name], function()
+        if not IsValid(self[name]) then return end
+        surface.SetMaterial(gradMat)
+        surface.SetDrawColor(200, 200, 200, 20)
+        surface.DrawTexturedRect(4, 4, self[name]:GetWide(), self[name]:GetTall())
+    end)
 end
 
 function PANEL:AddSpacer(parent, height)

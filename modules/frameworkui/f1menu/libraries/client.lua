@@ -3,6 +3,8 @@
     hook.Run("AddTextField", "General Info", "name", "Name", function() return LocalPlayer():getChar():getName() end)
     hook.Run("AddTextField", "General Info", "desc", "Description", function() return LocalPlayer():getChar():getDesc() end)
     hook.Run("AddTextField", "General Info", "money", "Money", function() return LocalPlayer():getMoney() end)
+    hook.Run("AddBarField", "General Info", "health", "Health", function() return 0 end, function() return LocalPlayer():GetMaxHealth() end, function() return LocalPlayer():Health() end)
+    if LocalPlayer():Armor() > 0 then hook.Run("AddBarField", "General Info", "armor", "Armor", function() return 0 end, function() return LocalPlayer():GetMaxArmor() end, function() return LocalPlayer():Armor() end) end
 end
 
 function MODULE:AddSection(sectionName, color, priority, location)
