@@ -59,12 +59,14 @@ end
 function MODULE:CreateMove(cmd)
     local client = LocalPlayer()
     if client:CanOverrideView() and not client:isNoClipping() and client:GetViewEntity() == client then
-        fm = cmd:GetForwardMove()
-        sm = cmd:GetSideMove()
-        diff = (client:EyeAngles() - (client.camAng or Angle(0, 0, 0)))[2] or 0
-        diff = diff / 90
-        cmd:SetForwardMove(fm + sm * diff)
-        cmd:SetSideMove(sm + fm * diff)
+        local fm = cmd:GetForwardMove()
+        local sm = cmd:GetSideMove()
+        local diffAngle = client:EyeAngles().y - (client.camAng and client.camAng.y or 0)
+        local theta = math.rad(-diffAngle)
+        local newFm = fm * math.cos(theta) - sm * math.sin(theta)
+        local newSm = fm * math.sin(theta) + sm * math.cos(theta)
+        cmd:SetForwardMove(newFm)
+        cmd:SetSideMove(newSm)
         return false
     end
 end
