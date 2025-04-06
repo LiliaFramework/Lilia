@@ -58,13 +58,13 @@ function PANEL:Init()
 
         local header = list:Add("DPanel")
         header:Dock(TOP)
-        header:SetTall(fac.logo and fac.logo ~= "" and ScrH() * 0.08 or 56)
+        header:SetTall(56)
         header:SetPaintBackground(false)
         local factionContainer = header:Add("DPanel")
         factionContainer:Dock(FILL)
         factionContainer:SetPaintBackground(false)
         local icon_material = fac.logo
-        local iconWidth = ScrH() * 0.08
+        local iconWidth = ScrH() * 0.05
         local icon
         local factionName = factionContainer:Add("DLabel")
         factionName:Dock(FILL)
@@ -153,7 +153,7 @@ function PANEL:addPlayer(client, parent)
     local modelSize = rowHeight * 0.9
     slot.Paint = function() end
     slot.model = vgui.Create("liaSpawnIcon", slot)
-    slot.model:SetPos(4, (rowHeight - modelSize) * 0.5)
+    slot.model:SetPos(5, (rowHeight - modelSize) * 0.5)
     slot.model:SetSize(modelSize, modelSize)
     slot.model:SetModel(client:GetModel(), client:GetSkin())
     slot.model.DoClick = function()
