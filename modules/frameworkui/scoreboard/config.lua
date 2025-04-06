@@ -14,14 +14,6 @@ lia.config.add("sbHeight", "Scoreboard Height", 0.65, nil, {
     max = 1.0
 })
 
-lia.config.add("maxDescChars", "Maximum Description Characters", 255, nil, {
-    desc = "Maximum number of characters for player description before it gets truncated with (...)",
-    category = "Scoreboard",
-    type = "Int",
-    min = 50,
-    max = 1000
-})
-
 lia.config.add("ShowStaff", "Show Staff in Scoreboard", true, nil, {
     desc = "Should Staff Show In Scoreboard",
     category = "Scoreboard",

@@ -9,6 +9,35 @@ local paintFunctions = {
     [1] = function() end
 }
 
+local function wrapTextNoBreak(text, maxWidth, font)
+    surface.SetFont(font)
+    local words = {}
+    for word in text:gmatch("%S+") do
+        table.insert(words, word)
+    end
+
+    local lines = {}
+    local currentLine = ""
+    for i, word in ipairs(words) do
+        local testLine = currentLine == "" and word or currentLine .. " " .. word
+        local w, _ = surface.GetTextSize(testLine)
+        if w > maxWidth then
+            if currentLine == "" then
+                table.insert(lines, word)
+                currentLine = ""
+            else
+                table.insert(lines, currentLine)
+                currentLine = word
+            end
+        else
+            currentLine = testLine
+        end
+    end
+
+    if currentLine ~= "" then table.insert(lines, currentLine) end
+    return lines
+end
+
 function PANEL:Init()
     if IsValid(lia.gui.score) then lia.gui.score:Remove() end
     lia.gui.score = self
@@ -74,18 +103,39 @@ function PANEL:Init()
         factionName:SetText(L(fac.name))
         factionName:DockMargin(0, 0, icon_material and icon_material ~= "" and iconWidth or 0, 0)
         factionName:SetContentAlignment(5)
+        if icon_material and icon_material ~= "" then
+            icon = factionContainer:Add("DImage")
+            icon:Dock(LEFT)
+            icon:DockMargin(5, 5, 5, 5)
+            icon:SetWide(iconWidth)
+            icon:SetMaterial(Material(icon_material))
+        end
+
+        local classLogo = factionContainer:Add("DImage")
+        classLogo:Dock(RIGHT)
+        classLogo:DockMargin(5, 5, 5, 5)
+        classLogo:SetWide(iconWidth)
+        classLogo:SetMaterial(nil)
+        header.Think = function()
+            local players = lia.faction.getPlayers(k)
+            for _, client in ipairs(players) do
+                if client:getChar() then
+                    local cl = lia.class.list[client:getChar():getClass()]
+                    if cl and cl.logo and not hook.Run("ShouldAllowScoreboardOverride", client, "classlogo") then
+                        classLogo:SetMaterial(Material(cl.logo))
+                        return
+                    end
+                end
+            end
+
+            classLogo:SetMaterial(nil)
+        end
+
         header.Paint = function(_, w, h)
             surface.SetDrawColor(r, g, b, 30)
             surface.DrawRect(0, 0, w, h)
             surface.SetDrawColor(r, g, b, 140)
             surface.DrawOutlinedRect(0, 0, w, h)
-        end
-
-        if icon_material and icon_material ~= "" then
-            icon = factionContainer:Add("DImage")
-            icon:Dock(LEFT)
-            icon:SetWide(iconWidth)
-            icon:SetMaterial(Material(icon_material))
         end
 
         self.teams[k] = list
@@ -200,51 +250,29 @@ function PANEL:addPlayer(client, parent)
     slot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
     slot.desc:SetFont("liaSmallFont")
     local class = lia.class.list[client:getChar():getClass()]
-    if class and class.logo and not hook.Run("ShouldAllowScoreboardOverride", client, "classlogo") then
-        local logoSize = rowHeight * 0.9
-        slot.logo = vgui.Create("DPanel", slot)
-        slot.logo:Dock(RIGHT)
-        slot.logo:SetWide(logoSize)
-        slot.logo:DockMargin(4, 0, 4, 0)
-        slot.logo.Paint = function(_, _, h)
-            local offsetY = (h - logoSize) * 0.5
-            surface.SetDrawColor(255, 255, 255, 255)
-            surface.SetMaterial(Material(class.logo))
-            surface.DrawTexturedRect(0, offsetY, logoSize, logoSize)
-        end
-    else
-        slot.ping = slot:Add("DLabel")
-        slot.ping:SetSize(48, 64)
-        slot.ping:SetText("0")
-        slot.ping:SetFont("liaGenericFont")
-        slot.ping:SetContentAlignment(6)
-        slot.ping:SetTextColor(color_white)
-        slot.ping:SetTextInset(16, 0)
-        slot.ping:SetExpensiveShadow(1, color_black)
-        slot.ping.Think = function(this)
-            if IsValid(client) then
-                local ping = tostring(client:Ping())
-                if this:GetText() ~= ping then
-                    this:SetText(ping)
-                    this:SizeToContentsX()
-                end
-
-                local width = slot:GetWide()
-                this:SetPos(width - this:GetWide(), 0)
+    slot.ping = slot:Add("DLabel")
+    slot.ping:SetSize(48, 64)
+    slot.ping:SetText("0")
+    slot.ping:SetFont("liaGenericFont")
+    slot.ping:SetContentAlignment(6)
+    slot.ping:SetTextColor(color_white)
+    slot.ping:SetTextInset(16, 0)
+    slot.ping:SetExpensiveShadow(1, color_black)
+    slot.ping.Think = function(this)
+        if IsValid(client) then
+            local ping = tostring(client:Ping())
+            if this:GetText() ~= ping then
+                this:SetText(ping)
+                this:SizeToContentsX()
             end
-        end
 
-        slot.ping:SetFont("liaGenericFont")
-        slot.ping:SetContentAlignment(6)
-        slot.ping:SetTextColor(color_white)
-        slot.ping:SetTextInset(16, 0)
-        slot.ping:SetExpensiveShadow(1, color_black)
+            local width = slot:GetWide()
+            this:SetPos(width - this:GetWide(), 0)
+        end
     end
 
     function slot:PerformLayout()
-        local logoWidth = 0
-        if IsValid(self.logo) then logoWidth = self.logo:GetWide() + 4 end
-        local availableWidth = self:GetWide() - (modelSize + 10) - logoWidth - 10
+        local availableWidth = self:GetWide() - (modelSize + 10) - 10
         self.name:SetPos(modelSize + 10, 2)
         self.name:SetWide(availableWidth)
         self.desc:SetPos(modelSize + 10, 24)
@@ -273,16 +301,19 @@ function PANEL:addPlayer(client, parent)
         local nameStr = (overrideName or client:Name()):gsub("#", "\226\128\139#")
         local overrideDesc = hook.Run("ShouldAllowScoreboardOverride", client, "desc") and hook.Run("GetDisplayedDescription", client, false) or client:getChar():getDesc()
         local descStr = (overrideDesc or ""):gsub("#", "\226\128\139#")
-        local maxChars = lia.config.get("maxDescChars", 255)
-        if string.len(descStr) > maxChars then
-            local subStr = string.sub(descStr, 1, maxChars)
-            local lastSpace = subStr:match(".*()%s+")
-            if lastSpace then subStr = subStr:sub(1, lastSpace - 1) end
-            descStr = subStr .. " (...)"
+        local availWidth = self.desc:GetWide()
+        local wrapped = wrapTextNoBreak(descStr, availWidth, "liaSmallFont")
+        surface.SetFont("liaSmallFont")
+        local _, lineHeight = surface.GetTextSize("W")
+        local availHeight = self:GetTall() - 24
+        local maxLines = math.floor(availHeight / lineHeight)
+        if #wrapped > maxLines then
+            wrapped[maxLines] = wrapped[maxLines] .. " (...)"
+            for i = maxLines + 1, #wrapped do
+                wrapped[i] = nil
+            end
         end
 
-        local availWidth = self.desc:GetWide()
-        local wrapped = lia.util.wrapText(descStr, availWidth, "liaSmallFont")
         local finalText = table.concat(wrapped, "\n")
         local model = client:GetModel()
         local skin = client:GetSkin()
@@ -294,6 +325,7 @@ function PANEL:addPlayer(client, parent)
 
         if self.lastDesc ~= finalText then
             self.desc:SetText(finalText)
+            self.desc:SizeToContentsY()
             self.lastDesc = finalText
         end
 
