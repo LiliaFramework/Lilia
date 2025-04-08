@@ -1,9 +1,9 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 local MAT_GLASS2 = 45
-local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng, diff, fm, sm
+local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng
 local playerMeta = FindMetaTable("Player")
 crouchFactor = 0
-local ImportantBones = {"ValveBiped.Bip01_Head1", "ValveBiped.Bip01_Neck1", "ValveBiped.Bip01_Spine4", "ValveBiped.Bip01_Spine2", "ValveBiped.Bip01_Pelvis", "ValveBiped.Bip01_L_Clavicle", "ValveBiped.Bip01_R_Clavicle", "ValveBiped.Bip01_L_UpperArm", "ValveBiped.Bip01_R_UpperArm", "ValveBiped.Bip01_L_Forearm", "ValveBiped.Bip01_R_Forearm", "ValveBiped.Bip01_L_Hand", "ValveBiped.Bip01_R_Hand", "ValveBiped.Bip01_L_Thigh", "ValveBiped.Bip01_R_Thigh", "ValveBiped.Bip01_L_Calf", "ValveBiped.Bip01_R_Calf", "ValveBiped.Bip01_L_Foot", "ValveBiped.Bip01_R_Foot",}
+local ImportantBones = {"ValveBiped.Bip01_Head1", "ValveBiped.Bip01_Neck1", "ValveBiped.Bip01_Spine4", "ValveBiped.Bip01_Spine2", "ValveBiped.Bip01_Pelvis", "ValveBiped.Bip01_L_Clavicle", "ValveBiped.Bip01_R_Clavicle", "ValveBiped.Bip01_L_UpperArm", "ValveBiped.Bip01_R_UpperArm", "ValveBiped.Bip01_L_Forearm", "ValveBiped.Bip01_R_Forearm", "ValveBiped.Bip01_L_Hand", "ValveBiped.Bip01_R_Hand", "ValveBiped.Bip01_L_Thigh", "ValveBiped.Bip01_R_Thigh", "ValveBiped.Bip01_L_Calf", "ValveBiped.Bip01_R_Calf", "ValveBiped.Bip01_L_Foot", "ValveBiped.Bip01_R_Foot"}
 local NotSolidTextures = {
     ["TOOLS/TOOLSNODRAW"] = true,
     ["METAL/METALBAR001C"] = true,
@@ -172,6 +172,5 @@ end
 concommand.Add("tp_toggle", function()
     local currentState = lia.option.get("thirdPersonEnabled", false)
     lia.option.set("thirdPersonEnabled", not currentState)
-    print(L("thirdpersonToggle") .. " - " .. tostring(not currentState))
     hook.Run("thirdPersonToggled", not currentState)
 end)
