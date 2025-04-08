@@ -399,7 +399,7 @@ function PANEL:Init()
         end
     end
 
-    hook.Add("PreDrawPhysgunBeam", "DisablePhysgunBeam", function(weapon, effect, entity, attachment) if IsValid(lia.gui.character) then return true end end)
+    hook.Add("PreDrawPhysgunBeam", "DisablePhysgunBeam", function() if IsValid(lia.gui.character) then return true end end)
     self.color = ColorAlpha(color_white, 150)
     self.colorSelected = color_white
     self.colorHovered = ColorAlpha(color_white, 50)

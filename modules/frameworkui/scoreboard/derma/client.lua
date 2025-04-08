@@ -18,7 +18,7 @@ local function wrapTextNoBreak(text, maxWidth, font)
 
     local lines = {}
     local currentLine = ""
-    for i, word in ipairs(words) do
+    for _, word in ipairs(words) do
         local testLine = currentLine == "" and word or currentLine .. " " .. word
         local w, _ = surface.GetTextSize(testLine)
         if w > maxWidth then
@@ -249,7 +249,6 @@ function PANEL:addPlayer(client, parent)
     slot.desc:SetTextColor(color_white)
     slot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
     slot.desc:SetFont("liaSmallFont")
-    local class = lia.class.list[client:getChar():getClass()]
     slot.ping = slot:Add("DLabel")
     slot.ping:SetSize(48, 64)
     slot.ping:SetText("0")
