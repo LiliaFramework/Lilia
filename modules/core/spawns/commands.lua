@@ -1,4 +1,5 @@
-﻿lia.command.add("spawnadd", {
+﻿local MODULE = MODULE
+lia.command.add("spawnadd", {
     privilege = "Manage Spawns",
     adminOnly = true,
     desc = "Adds a spawn point at your current position for the specified faction.",
