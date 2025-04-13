@@ -173,6 +173,10 @@ local GamemodeFunctions = {
             replacement = "GetMaxPlayerChar"
         },
         {
+            name = "LoadFonts",
+            replacement = "PostLoadFonts"
+        },
+        {
             name = "CanPlayerCreateCharacter",
             args = {"client"},
             replacement = "CanPlayerCreateChar"
