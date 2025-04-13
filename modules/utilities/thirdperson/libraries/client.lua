@@ -11,25 +11,25 @@ local NotSolidTextures = {
     ["METAL/METALGATE004A"] = true,
     ["METAL/METALGRATE011A"] = true,
     ["METAL/METALGRATE016A"] = true,
-    ["METAL/METALCOMBINEGRATE001A"] = true,
+    ["METAL/METALCOMBINEGRATE001A"] = true
 }
 
 local NotSolidModels = {
     ["models/props_wasteland/exterior_fence002c.mdl"] = true,
     ["models/props_wasteland/exterior_fence002b.mdl"] = true,
     ["models/props_wasteland/exterior_fence003a.mdl"] = true,
-    ["models/props_wasteland/exterior_fence001b.mdl"] = true,
+    ["models/props_wasteland/exterior_fence001b.mdl"] = true
 }
 
 local NotSolidMatTypes = {
     [MAT_GLASS] = true,
-    [MAT_GLASS2] = true,
+    [MAT_GLASS2] = true
 }
 
 function MODULE:CalcView(client)
     ft = FrameTime()
     if client:CanOverrideView() and client:GetViewEntity() == client then
-        if client:OnGround() and client:KeyDown(IN_DUCK) or client:Crouching() then
+        if client:OnGround() and (client:KeyDown(IN_DUCK) or client:Crouching()) then
             crouchFactor = Lerp(ft * 5, crouchFactor, 1)
         else
             crouchFactor = Lerp(ft * 5, crouchFactor, 0)
@@ -41,8 +41,8 @@ function MODULE:CalcView(client)
         curAng = client.camAng or Angle(0, 0, 0)
         view = {}
         traceData = {}
-        traceData.start = client:GetPos() + client:GetViewOffset() + curAng:Up() * math.Clamp(lia.option.get("thirdPersonHeight", 10.0), 0, heightMax) + curAng:Right() * math.Clamp(lia.option.get("thirdPersonHorizontal", 10.0), -horizontalMax, horizontalMax) - client:GetViewOffsetDucked() * 0.5 * crouchFactor
-        traceData.endpos = traceData.start - curAng:Forward() * math.Clamp(lia.option.get("thirdPersonDistance", 100.0), 0, distanceMax)
+        traceData.start = client:GetPos() + client:GetViewOffset() + curAng:Up() * math.Clamp(lia.option.get("thirdPersonHeight", 10), 0, heightMax) + curAng:Right() * math.Clamp(lia.option.get("thirdPersonHorizontal", 10), -horizontalMax, horizontalMax) - client:GetViewOffsetDucked() * 0.5 * crouchFactor
+        traceData.endpos = traceData.start - curAng:Forward() * math.Clamp(lia.option.get("thirdPersonDistance", 100), 0, distanceMax)
         traceData.filter = client
         view.origin = util.TraceLine(traceData).HitPos
         aimOrigin = view.origin
@@ -51,7 +51,18 @@ function MODULE:CalcView(client)
         traceData2.start = aimOrigin
         traceData2.endpos = aimOrigin + curAng:Forward() * 65535
         traceData2.filter = client
-        if lia.option.get("thirdPersonClassicMode", false) or client.isWepRaised and client:isWepRaised() or client:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and client:GetVelocity():Length() >= 10 then client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle()) end
+        local tr = util.TraceLine(traceData2)
+        local shouldAutoFace = lia.option.get("thirdPersonClassicMode", false) or client.isWepRaised and client:isWepRaised() or client:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and client:GetVelocity():Length() >= 10
+        if shouldAutoFace then
+            local eyeAng
+            if tr.Hit and tr.HitPos:Distance(client:GetShootPos()) > 32 and tr.Fraction > 0.02 then
+                eyeAng = (tr.HitPos - client:GetShootPos()):Angle()
+            else
+                eyeAng = curAng + client:GetViewPunchAngles()
+            end
+
+            client:SetEyeAngles(eyeAng)
+        end
         return view
     end
 end
@@ -96,8 +107,8 @@ end
 
 function MODULE:EntityEmitSound(data)
     local steps = {".stepleft", ".stepright"}
-    local ThirdPersonIsEnabled = lia.option.get("thirdPersonEnabled", false)
-    if ThirdPersonIsEnabled then
+    local thirdPersonIsEnabled = lia.option.get("thirdPersonEnabled", false)
+    if thirdPersonIsEnabled then
         if not IsValid(data.Entity) and not data.Entity:IsPlayer() then return end
         local sName = data.OriginalSoundName
         if sName:find(steps[1]) or sName:find(steps[2]) then return false end
@@ -138,7 +149,7 @@ function MODULE:PrePlayerDraw(drawnClient)
                 start = clientPos,
                 endpos = bonePos,
                 filter = filter,
-                mask = MASK_SHOT_HULL,
+                mask = MASK_SHOT_HULL
             })
 
             local ent = trace.Entity
