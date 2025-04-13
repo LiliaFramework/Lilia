@@ -149,7 +149,7 @@ function MODULE:BuildInformationMenu(pages)
     end
 
     local entitiesByCreator = {}
-    for _, ent in player.Iterator() do
+    for _, ent in ents.Iterator() do
         if IsValid(ent) and ent.GetCreator and IsValid(ent:GetCreator()) then
             local owner = ent:GetCreator():Nick()
             entitiesByCreator[owner] = entitiesByCreator[owner] or {}
@@ -158,7 +158,7 @@ function MODULE:BuildInformationMenu(pages)
     end
 
     local lastModelFrame
-    if client:hasPrivilege("Staff Permission — Access Entity List") and next(entitiesByCreator) then
+    if client:hasPrivilege("Staff Permission — Access Entity List") and not table.IsEmpty(entitiesByCreator) then
         table.insert(pages, {
             name = "Entities",
             drawFunc = function(panel)
@@ -239,6 +239,8 @@ function MODULE:BuildInformationMenu(pages)
                             btnView:SetText("View")
                             btnView.DoClick = function()
                                 if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
+                                local originalThirdPerson = lia.option.get("thirdPersonEnabled", false)
+                                lia.option.set("thirdPersonEnabled", false)
                                 local entPos = ent:GetPos()
                                 local yaw = client:EyeAngles().yaw
                                 hook.Add("CalcView", "EntityViewCalcView", function()
@@ -257,6 +259,7 @@ function MODULE:BuildInformationMenu(pages)
                                         hook.Remove("CalcView", "EntityViewCalcView")
                                         hook.Remove("HUDPaint", "EntityViewHUD")
                                         hook.Remove("Think", "EntityViewRotate")
+                                        lia.option.set("thirdPersonEnabled", originalThirdPerson)
                                     end
                                 end)
                             end
