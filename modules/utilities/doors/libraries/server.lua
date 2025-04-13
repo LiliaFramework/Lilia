@@ -83,7 +83,7 @@ function MODULE:SaveData()
         if door.liaChildren then doorData.children = door.liaChildren end
         if door.liaClassID then doorData.class = door.liaClassID end
         if door.liaFactionID then doorData.faction = door.liaFactionID end
-        if next(doorData) then data[id] = doorData end
+        if not table.IsEmpty(doorData) then data[id] = doorData end
     end
 
     self:setData(data)
