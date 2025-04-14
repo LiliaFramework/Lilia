@@ -640,7 +640,7 @@ function GM:InitializedModules()
         end
 
         for _, localInfo in ipairs(lia.module.versionChecks) do
-            local remoteModule = nil
+            local remoteModule
             for _, m in ipairs(remoteModules) do
                 if m.uniqueID == localInfo.uniqueID then
                     remoteModule = m
@@ -653,9 +653,7 @@ function GM:InitializedModules()
             elseif not remoteModule.version then
                 LiliaUpdater("Module '" .. localInfo.name .. "' has no remote version info")
             elseif remoteModule.version ~= localInfo.localVersion then
-                LiliaUpdater("Module '" .. localInfo.name .. "' has a version mismatch. Please update to version " .. remoteModule.version .. " at " .. remoteModule.source)
-            else
-                LiliaUpdater("Module " .. localInfo.name .. " is up-to-date.")
+                LiliaUpdater("Module '" .. localInfo.name .. "' is outdated. Update to version " .. remoteModule.version .. " at " .. remoteModule.source)
             end
         end
 
