@@ -3,6 +3,11 @@
     lia_vendor = true,
 }
 
+function MODULE:PrePlayerDraw(client)
+    if not IsValid(client) then return end
+    if client:isNoClipping() then return true end
+end
+
 function MODULE:HUDPaint()
     if not lia.option.get("espActive") then return end
     local client = LocalPlayer()
