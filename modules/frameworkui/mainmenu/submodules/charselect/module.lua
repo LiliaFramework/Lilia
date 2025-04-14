@@ -14,6 +14,12 @@ if CLIENT then
 
     function MODULE:CreateMenuButtons(tabs)
         tabs["characters"] = function()
+            local client = LocalPlayer()
+            if client:IsInThirdPerson() then
+                lia.option.set("thirdPersonEnabled", false)
+                hook.Run("thirdPersonToggled", false)
+            end
+
             if IsValid(lia.gui.menu) then lia.gui.menu:Remove() end
             vgui.Create("liaCharacter")
         end

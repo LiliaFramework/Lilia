@@ -79,7 +79,6 @@ hook.Add("CreateMenuButtons", "AttributeMenuButtons", function(tabs)
     tabs["Attributes"] = function(panel)
         local char = client:getChar()
         if not char then
-            print("No character found!")
             return
         end
 

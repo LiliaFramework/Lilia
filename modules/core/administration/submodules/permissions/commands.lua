@@ -185,30 +185,38 @@ lia.command.add("fallover", {
         if client:getNetVar("FallOverCooldown", false) then
             client:notifyLocalized("cmdCooldown")
             return
-        elseif client:IsFrozen() then
+        end
+
+        if client:IsFrozen() then
             client:notifyLocalized("cmdFrozen")
             return
-        elseif not client:Alive() then
+        end
+
+        if not client:Alive() then
             client:notifyLocalized("cmdDead")
             return
-        elseif client:hasValidVehicle() then
+        end
+
+        if client:hasValidVehicle() then
             client:notifyLocalized("cmdVehicle")
             return
-        elseif client:isNoClipping() then
+        end
+
+        if client:isNoClipping() then
             client:notifyLocalized("cmdNoclip")
             return
         end
 
-        local time = tonumber(arguments[1])
-        if not time or time < 1 then
-            time = 5
+        local t = tonumber(arguments[1])
+        if not t or t < 1 then
+            t = 5
         else
-            time = math.Clamp(time, 1, 60)
+            t = math.Clamp(t, 1, 60)
         end
 
         client:setNetVar("FallOverCooldown", true)
         if not client:hasRagdoll() then
-            client:setRagdolled(true, time)
+            client:setRagdolled(true, t)
             timer.Simple(10, function() if IsValid(client) then client:setNetVar("FallOverCooldown", false) end end)
         end
     end

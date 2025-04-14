@@ -8,15 +8,6 @@ function lia.font.register(fontName, fontData)
     lia.font.stored[fontName] = fontData
 end
 
-concommand.Add("lia_debug_fonts", function()
-    for k, v in pairs(lia.font.stored) do
-        lia.print("[\"" .. k .. "\"]")
-        for key, value in pairs(v) do
-            MsgC("[\"" .. key .. "\"]", ": " .. tostring(value) .. "\n")
-        end
-    end
-end)
-
 lia.font.register("ConfigFont", {
     font = lia.config.get("Font"),
     size = 26,
