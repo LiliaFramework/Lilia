@@ -16,6 +16,11 @@ if SERVER then
         net.Send(client)
     end
 else
+    function MODULE:ResetCharacterPanel()
+        if IsValid(lia.gui.character) then lia.gui.character:Remove() end
+        vgui.Create("liaCharacter")
+    end
+
     function MODULE:chooseCharacter(id)
         assert(isnumber(id), "id must be a number")
         local d = deferred.new()
