@@ -103,9 +103,6 @@ end
 function GM:PlayerNoClip(client, state)
     if client:isStaffOnDuty() or client:hasPrivilege("Staff Permissions - No Clip Outside Staff Character") and not client:isStaffOnDuty() then
         if state then
-            client:SetNoDraw(true)
-            client:SetNotSolid(true)
-            client:DrawWorldModel(false)
             client:DrawShadow(false)
             client:SetNoTarget(true)
             client.liaObsData = {client:GetPos(), client:EyeAngles()}
@@ -124,9 +121,6 @@ function GM:PlayerNoClip(client, state)
                 client.liaObsData = nil
             end
 
-            client:SetNoDraw(false)
-            client:SetNotSolid(false)
-            client:DrawWorldModel(true)
             client:DrawShadow(true)
             client:SetNoTarget(false)
             hook.Run("OnPlayerObserve", client, state)
