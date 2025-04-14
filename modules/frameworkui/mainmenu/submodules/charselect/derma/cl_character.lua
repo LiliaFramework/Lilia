@@ -162,6 +162,11 @@ end
 
 function PANEL:createStartButton()
     local client = LocalPlayer()
+    if not IsValid(client) then
+        timer.Simple(0.1, function() if IsValid(self) then self:createStartButton() end end)
+        return
+    end
+
     local clientChar = client.getChar and client:getChar() or nil
     local sw, sh = ScrW(), ScrH()
     local btnWidth = sw * 0.2
@@ -171,7 +176,7 @@ function PANEL:createStartButton()
     local discordURL = lia.config.get("DiscordURL")
     local workshopURL = lia.config.get("Workshop")
     local buttonsData = {}
-    if hook.Run("CanPlayerCreateChar", client) ~= false then
+    if IsValid(client) and hook.Run("CanPlayerCreateChar", client) ~= false then
         table.insert(buttonsData, {
             id = "create",
             text = "CREATE CHARACTER",
