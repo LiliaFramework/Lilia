@@ -100,7 +100,7 @@ function ITEM:postHook(name, func)
 end
 
 function ITEM:onRegistered()
-    util.PrecacheModel(self.model)
+    if self.model and isstring(self.model) then util.PrecacheModel(self.model) end
 end
 
 function ITEM:print(detail)
