@@ -461,14 +461,16 @@ if SERVER then
         end
 
         time = time or 5
-        if text == false then
+        if not text then
             timer.Remove("liaAct" .. self:SteamID64())
             net.Start("actBar")
+            net.WriteBool(false)
             net.Send(self)
             return
         end
 
         net.Start("actBar")
+        net.WriteBool(true)
         net.WriteString(text)
         net.WriteFloat(time)
         net.Send(self)
@@ -619,8 +621,8 @@ if SERVER then
                         for _, v in ipairs(entity.liaWeapons) do
                             self:Give(v, true)
                             if entity.liaAmmo then
-                                for k2, v2 in ipairs(entity.liaAmmo) do
-                                    if v == v2[1] then self:SetAmmo(v2[2], tostring(k2)) end
+                                for _, data in ipairs(entity.liaAmmo) do
+                                    if v == data[1] then self:SetAmmo(data[2], tostring(data[1])) end
                                 end
                             end
                         end
@@ -630,8 +632,8 @@ if SERVER then
                         entity:DropToFloor()
                         self:SetPos(entity:GetPos() + Vector(0, 0, 16))
                         local positions = lia.util.findEmptySpace(self, {entity, self})
-                        for _, v in ipairs(positions) do
-                            self:SetPos(v)
+                        for _, pos in ipairs(positions) do
+                            self:SetPos(pos)
                             if not self:isStuck() then return end
                         end
                     end
@@ -647,15 +649,15 @@ if SERVER then
             if time and time > 0 then
                 entity.liaStart = CurTime()
                 entity.liaFinish = entity.liaStart + time
-                self:setAction(getUpMessage, nil, nil, entity.liaStart, entity.liaFinish)
+                self:setAction(getUpMessage, time)
             end
 
-            for _, v in ipairs(self:GetWeapons()) do
-                entity.liaWeapons[#entity.liaWeapons + 1] = v:GetClass()
-                local clip = v:Clip1()
-                local reserve = self:GetAmmoCount(v:GetPrimaryAmmoType())
+            for _, w in ipairs(self:GetWeapons()) do
+                entity.liaWeapons[#entity.liaWeapons + 1] = w:GetClass()
+                local clip = w:Clip1()
+                local reserve = self:GetAmmoCount(w:GetPrimaryAmmoType())
                 local ammo = clip + reserve
-                entity.liaAmmo[v:GetPrimaryAmmoType()] = {v:GetClass(), ammo}
+                entity.liaAmmo[w:GetPrimaryAmmoType()] = {w:GetClass(), ammo}
             end
 
             self:GodDisable()
@@ -675,15 +677,6 @@ if SERVER then
                     local velocity = entity:GetVelocity()
                     entity.liaLastVelocity = velocity
                     self:SetPos(entity:GetPos())
-                    if velocity:Length2D() >= 8 and not entity.liaPausing then
-                        self:stopAction()
-                        entity.liaPausing = true
-                        return
-                    elseif entity.liaPausing then
-                        self:setAction(getUpMessage, time)
-                        entity.liaPausing = false
-                    end
-
                     time = time - 0.33
                     if time <= 0 then SafeRemoveEntity(entity) end
                 end)
