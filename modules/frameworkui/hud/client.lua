@@ -242,22 +242,6 @@ function MODULE:TooltipLayout(var)
     if var.isItemTooltip then return true end
 end
 
-timer.Create("liaVignetteChecker", 1, 0, function()
-    local client = LocalPlayer()
-    if IsValid(client) then
-        local d = {}
-        d.start = client:GetPos()
-        d.endpos = d.start + Vector(0, 0, 768)
-        d.filter = client
-        local tr = util.TraceLine(d)
-        if tr and tr.Hit then
-            vignetteAlphaGoal = 80
-        else
-            vignetteAlphaGoal = 0
-        end
-    end
-end)
-
 lia.option.add("BarsAlwaysVisible", "Bars Always Visible", "Make all bars always visible", false, nil, {
     category = "General"
 })

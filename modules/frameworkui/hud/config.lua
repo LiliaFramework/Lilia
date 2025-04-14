@@ -1,10 +1,4 @@
-﻿lia.config.add("Vignette", "Enable Vignette Effect", true, nil, {
-    desc = "Enables the vignette effect",
-    category = "Visuals",
-    type = "Boolean"
-})
-
-lia.config.add("CrosshairEnabled", "Enable Crosshair", false, nil, {
+﻿lia.config.add("CrosshairEnabled", "Enable Crosshair", false, nil, {
     desc = "Enables the crosshair",
     category = "Visuals",
     type = "Boolean"
