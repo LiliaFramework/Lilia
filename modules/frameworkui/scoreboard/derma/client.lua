@@ -1,6 +1,6 @@
 ﻿local PANEL = {}
-local StaffCount = 0
-local StaffOnDutyCount = 0
+local staffCount = 0
+local staffOnDutyCount = 0
 local paintFunctions = {
     [0] = function(_, w, h)
         surface.SetDrawColor(0, 0, 0, 50)
@@ -20,7 +20,7 @@ local function wrapTextNoBreak(text, maxWidth, font)
     local currentLine = ""
     for _, word in ipairs(words) do
         local testLine = currentLine == "" and word or currentLine .. " " .. word
-        local w, _ = surface.GetTextSize(testLine)
+        local w = select(1, surface.GetTextSize(testLine))
         if w > maxWidth then
             if currentLine == "" then
                 table.insert(lines, word)
@@ -92,7 +92,7 @@ function PANEL:Init()
         local factionContainer = header:Add("DPanel")
         factionContainer:Dock(FILL)
         factionContainer:SetPaintBackground(false)
-        local icon_material = fac.logo
+        local iconMat = fac.logo
         local iconWidth = ScrH() * 0.05
         local icon
         local factionName = factionContainer:Add("DLabel")
@@ -101,34 +101,14 @@ function PANEL:Init()
         factionName:SetTextColor(color_white)
         factionName:SetExpensiveShadow(1, color_black)
         factionName:SetText(L(fac.name))
-        factionName:DockMargin(0, 0, icon_material and icon_material ~= "" and iconWidth or 0, 0)
+        factionName:DockMargin(0, 0, iconMat and iconMat ~= "" and iconWidth or 0, 0)
         factionName:SetContentAlignment(5)
-        if icon_material and icon_material ~= "" then
+        if iconMat and iconMat ~= "" then
             icon = factionContainer:Add("DImage")
             icon:Dock(LEFT)
             icon:DockMargin(5, 5, 5, 5)
             icon:SetWide(iconWidth)
-            icon:SetMaterial(Material(icon_material))
-        end
-
-        local classLogo = factionContainer:Add("DImage")
-        classLogo:Dock(RIGHT)
-        classLogo:DockMargin(5, 5, 5, 5)
-        classLogo:SetWide(iconWidth)
-        classLogo:SetMaterial(nil)
-        header.Think = function()
-            local players = lia.faction.getPlayers(k)
-            for _, client in ipairs(players) do
-                if client:getChar() then
-                    local cl = lia.class.list[client:getChar():getClass()]
-                    if cl and cl.logo and not hook.Run("ShouldAllowScoreboardOverride", client, "classlogo") then
-                        classLogo:SetMaterial(Material(cl.logo))
-                        return
-                    end
-                end
-            end
-
-            classLogo:SetMaterial(nil)
+            icon:SetMaterial(Material(iconMat))
         end
 
         header.Paint = function(_, w, h)
@@ -156,25 +136,25 @@ function PANEL:Init()
 end
 
 function PANEL:UpdateStaff()
-    StaffCount = 0
-    StaffOnDutyCount = 0
-    for _, target in player.Iterator() do
-        if target:isStaff() then StaffCount = StaffCount + 1 end
-        if target:isStaffOnDuty() then StaffOnDutyCount = StaffOnDutyCount + 1 end
+    staffCount = 0
+    staffOnDutyCount = 0
+    for _, client in player.Iterator() do
+        if client:isStaff() then staffCount = staffCount + 1 end
+        if client:isStaffOnDuty() then staffOnDutyCount = staffOnDutyCount + 1 end
     end
 
-    self.staff1:SetText(L("playersOnline", player.GetCount()) .. " | " .. L("staffOnDuty", StaffOnDutyCount) .. " | " .. L("staffOnline", StaffCount))
+    self.staff1:SetText(L("playersOnline", player.GetCount()) .. " | " .. L("staffOnDuty", staffOnDutyCount) .. " | " .. L("staffOnline", staffCount))
 end
 
 function PANEL:Think()
     local lp = LocalPlayer()
     if (self.nextUpdate or 0) < CurTime() then
-        for k, v in ipairs(self.teams) do
+        for k, teamPanel in ipairs(self.teams) do
             local amount = lia.faction.getPlayerCount(k)
             if k == FACTION_STAFF then
-                v:SetVisible(not lia.config.get("ShowStaff", true) and lp:isStaffOnDuty() or amount > 0)
+                teamPanel:SetVisible(not lia.config.get("ShowStaff", true) and lp:isStaffOnDuty() or amount > 0)
             else
-                v:SetVisible(amount > 0)
+                teamPanel:SetVisible(amount > 0)
             end
 
             self.layout:InvalidateLayout()
@@ -208,10 +188,10 @@ function PANEL:addPlayer(client, parent)
     slot.model:SetModel(client:GetModel(), client:GetSkin())
     slot.model.DoClick = function()
         local menu = DermaMenu()
-        local options = {}
-        hook.Run("ShowPlayerOptions", client, options)
-        for _, option in ipairs(options) do
-            menu:AddOption(L(option.name), option.func):SetImage(option.image)
+        local opts = {}
+        hook.Run("ShowPlayerOptions", client, opts)
+        for _, opt in ipairs(opts) do
+            menu:AddOption(L(opt.name), opt.func):SetImage(opt.image)
         end
 
         menu:Open()
@@ -219,20 +199,19 @@ function PANEL:addPlayer(client, parent)
     end
 
     local tooltipText = L("sbOptions", client:steamName())
-    local canSee = lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and lp:isStaffOnDuty()
-    local displayTooltip = canSee and tooltipText or ""
+    local displayTooltip = (lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or lp:hasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and lp:isStaffOnDuty()) and tooltipText or ""
     slot.model:SetTooltip(displayTooltip)
     slot.model.OnCursorEntered = function(btn) btn:SetTooltip(displayTooltip) end
     timer.Simple(0, function()
         if not IsValid(slot) then return end
-        local entity = slot.model.Entity
-        if IsValid(entity) then
+        local ent = slot.model.Entity
+        if IsValid(ent) then
             for _, bg in ipairs(client:GetBodyGroups()) do
-                entity:SetBodygroup(bg.id, client:GetBodygroup(bg.id))
+                ent:SetBodygroup(bg.id, client:GetBodygroup(bg.id))
             end
 
-            for matIndex, _ in ipairs(client:GetMaterials()) do
-                entity:SetSubMaterial(matIndex - 1, client:GetSubMaterial(matIndex - 1))
+            for i = 1, #client:GetMaterials() do
+                ent:SetSubMaterial(i - 1, client:GetSubMaterial(i - 1))
             end
         end
     end)
@@ -256,26 +235,48 @@ function PANEL:addPlayer(client, parent)
     slot.ping:SetContentAlignment(6)
     slot.ping:SetTextColor(color_white)
     slot.ping:SetTextInset(16, 0)
-    slot.ping:SetExpensiveShadow(1, color_black)
-    slot.ping.Think = function(this)
+    slot.ping.Think = function(p)
         if IsValid(client) then
-            local ping = tostring(client:Ping())
-            if this:GetText() ~= ping then
-                this:SetText(ping)
-                this:SizeToContentsX()
+            local pingStr = tostring(client:Ping())
+            if p:GetText() ~= pingStr then
+                p:SetText(pingStr)
+                p:SizeToContentsX()
             end
 
-            local width = slot:GetWide()
-            this:SetPos(width - this:GetWide(), 0)
+            local sw = slot:GetWide()
+            p:SetPos(sw - p:GetWide(), 0)
+        end
+    end
+
+    slot.classLogo = vgui.Create("DImage", slot)
+    local logoSize = rowHeight * 0.65
+    local logoOffset = 10
+    slot.classLogo:SetSize(logoSize, logoSize)
+    slot.classLogo:SetMaterial(nil)
+    slot.classLogo.Think = function()
+        if IsValid(client) then
+            local sw = slot:GetWide()
+            local pw = slot.ping:GetWide()
+            slot.classLogo:SetPos(sw - pw - logoSize - logoOffset, (slot:GetTall() - logoSize) * 0.5)
+        end
+    end
+
+    slot.classLogo.Paint = function(self, w, h)
+        local mat = self:GetMaterial()
+        if mat then
+            surface.SetMaterial(mat)
+            surface.SetDrawColor(255, 255, 255, 255)
+            surface.DrawTexturedRect(0, 0, w, h)
         end
     end
 
     function slot:PerformLayout()
-        local availableWidth = self:GetWide() - (modelSize + 10) - 10
+        local pingWidth = self.ping:GetWide()
+        local availWidth = self:GetWide() - (modelSize + 10) - (logoSize + logoOffset) - pingWidth - 10
         self.name:SetPos(modelSize + 10, 2)
-        self.name:SetWide(availableWidth)
+        self.name:SetWide(availWidth)
         self.desc:SetPos(modelSize + 10, 24)
-        self.desc:SetWide(availableWidth)
+        self.desc:SetWide(availWidth)
     end
 
     function slot:update()
@@ -303,9 +304,9 @@ function PANEL:addPlayer(client, parent)
         local availWidth = self.desc:GetWide()
         local wrapped = wrapTextNoBreak(descStr, availWidth, "liaSmallFont")
         surface.SetFont("liaSmallFont")
-        local _, lineHeight = surface.GetTextSize("W")
+        local _, lh = surface.GetTextSize("W")
         local availHeight = self:GetTall() - 24
-        local maxLines = math.floor(availHeight / lineHeight)
+        local maxLines = math.floor(availHeight / lh)
         if #wrapped > maxLines then
             wrapped[maxLines] = wrapped[maxLines] .. " (...)"
             for i = maxLines + 1, #wrapped do
@@ -314,7 +315,7 @@ function PANEL:addPlayer(client, parent)
         end
 
         local finalText = table.concat(wrapped, "\n")
-        local model = client:GetModel()
+        local mdl = client:GetModel()
         local skin = client:GetSkin()
         self.model:setHidden(hook.Run("ShouldAllowScoreboardOverride", client, "model"))
         if self.lastName ~= nameStr then
@@ -328,17 +329,28 @@ function PANEL:addPlayer(client, parent)
             self.lastDesc = finalText
         end
 
-        if self.lastModel ~= model or self.lastSkin ~= skin then
-            self.model:SetModel(model, skin)
-            self.lastModel = model
+        if self.lastModel ~= mdl or self.lastSkin ~= skin then
+            self.model:SetModel(mdl, skin)
+            self.lastModel = mdl
             self.lastSkin = skin
         end
 
-        local entity = self.model.Entity
+        local char = client:getChar()
+        local classData = char and lia.class.list[char:getClass()]
+        if classData and classData.logo and not hook.Run("ShouldAllowScoreboardOverride", client, "classlogo") then
+            if self.lastClassLogo ~= classData.logo then
+                self.classLogo:SetMaterial(Material(classData.logo))
+                self.lastClassLogo = classData.logo
+            end
+        else
+            self.classLogo:SetMaterial(nil)
+        end
+
+        local ent = self.model.Entity
         timer.Simple(0, function()
-            if IsValid(entity) and IsValid(client) then
+            if IsValid(ent) and IsValid(client) then
                 for _, bg in ipairs(client:GetBodyGroups()) do
-                    entity:SetBodygroup(bg.id, client:GetBodygroup(bg.id))
+                    ent:SetBodygroup(bg.id, client:GetBodygroup(bg.id))
                 end
             end
         end)
@@ -376,12 +388,12 @@ local borderColorBlur = Color(0, 0, 0, 150)
 local backgroundColorFallback = Color(50, 50, 50, 255)
 local backgroundColorFallbackNonSolid = Color(30, 30, 30, 100)
 function PANEL:Paint(w, h)
-    local backgroundColor = lia.config.get("UseSolidBackground", false) and (lia.config.get("ScoreboardBackgroundColor", Color(255, 100, 100, 255)) or backgroundColorFallback) or backgroundColorFallbackNonSolid
-    local borderColor = lia.config.get("UseSolidBackground", false) and borderColorSolid or borderColorBlur
+    local bgColor = lia.config.get("UseSolidBackground", false) and (lia.config.get("ScoreboardBackgroundColor", Color(255, 100, 100, 255)) or backgroundColorFallback) or backgroundColorFallbackNonSolid
+    local bColor = lia.config.get("UseSolidBackground", false) and borderColorSolid or borderColorBlur
     if not lia.config.get("UseSolidBackground", false) then lia.util.drawBlur(self, 10) end
-    surface.SetDrawColor(backgroundColor)
+    surface.SetDrawColor(bgColor)
     surface.DrawRect(0, 0, w, h)
-    surface.SetDrawColor(borderColor.r, borderColor.g, borderColor.b, borderColor.a)
+    surface.SetDrawColor(bColor.r, bColor.g, bColor.b, bColor.a)
     surface.DrawOutlinedRect(0, 0, w, h)
 end
 

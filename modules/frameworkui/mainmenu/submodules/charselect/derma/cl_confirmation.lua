@@ -3,7 +3,7 @@ function PANEL:Init()
     if IsValid(lia.gui.charConfirm) then lia.gui.charConfirm:Remove() end
     lia.gui.charConfirm = self
     self:SetAlpha(0)
-    self:AlphaTo(255, lia.gui.character.ANIM_SPEED * 2)
+    self:AlphaTo(255, 0.5 * 2)
     self:SetSize(ScrW(), ScrH())
     self:MakePopup()
     self.content = self:Add("DPanel")
@@ -67,7 +67,7 @@ function PANEL:Init()
         self:Remove()
     end
 
-    timer.Simple(lia.gui.character.ANIM_SPEED * 0.5, function() lia.gui.character:warningSound() end)
+    timer.Simple(0.5 * 0.5, function() lia.gui.character:warningSound() end)
 end
 
 function PANEL:OnMousePressed()

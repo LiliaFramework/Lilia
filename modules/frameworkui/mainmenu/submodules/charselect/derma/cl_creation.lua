@@ -81,7 +81,7 @@ function PANEL:onFinish()
 
     MainMenu:createCharacter(self.context):next(function()
         onResponse()
-        if IsValid(lia.gui.character) then lia.gui.character:showContent() end
+        hook.Run("ResetCharacterPanel")
     end, onFail)
 
     timer.Create("liaFailedToCreate", 60, 1, function()
@@ -110,7 +110,7 @@ function PANEL:showError(message, ...)
     end
 
     self.error:SetAlpha(0)
-    self.error:AlphaTo(255, lia.gui.character.ANIM_SPEED)
+    self.error:AlphaTo(255, 0.5)
     lia.gui.character:warningSound()
 end
 
@@ -196,34 +196,33 @@ function PANEL:getPreviousStep()
 end
 
 function PANEL:onStepChanged(oldStep, newStep)
-    local ANIM_SPEED = lia.gui.character.ANIM_SPEED
     local shouldFinish = self.curStep == #self.steps
     local nextStepText = L(shouldFinish and "finish" or "next"):upper()
     local shouldSwitchNextText = nextStepText ~= self.next:GetText()
     if IsValid(self:getPreviousStep()) then
-        self.prev:AlphaTo(255, ANIM_SPEED)
+        self.prev:AlphaTo(255, 0.5)
     else
-        self.prev:AlphaTo(0, ANIM_SPEED)
+        self.prev:AlphaTo(0, 0.5)
     end
 
-    if shouldSwitchNextText then self.next:AlphaTo(0, ANIM_SPEED) end
+    if shouldSwitchNextText then self.next:AlphaTo(0, 0.5) end
     local function showNewStep()
         newStep:SetAlpha(0)
         newStep:SetVisible(true)
         newStep:onDisplay()
         newStep:InvalidateChildren(true)
-        newStep:AlphaTo(255, ANIM_SPEED)
+        newStep:AlphaTo(255, 0.5)
         if shouldSwitchNextText then
             self.next:SetAlpha(0)
             self.next:SetText(nextStepText)
             self.next:SizeToContentsX()
         end
 
-        self.next:AlphaTo(255, ANIM_SPEED)
+        self.next:AlphaTo(255, 0.5)
     end
 
     if IsValid(oldStep) then
-        oldStep:AlphaTo(0, ANIM_SPEED, 0, function()
+        oldStep:AlphaTo(0, 0.5, 0, function()
             self:showError()
             oldStep:SetVisible(false)
             oldStep:onHide()

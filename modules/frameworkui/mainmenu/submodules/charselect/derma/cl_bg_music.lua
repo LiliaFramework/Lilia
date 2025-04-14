@@ -11,13 +11,27 @@ function PANEL:Init()
     local source = lia.config.get("Music", "")
     if not source:find("%S") then return end
     if source:find("http") then
-        sound.PlayURL(source, "noplay", function(music)
-            if music then
-                music:SetVolume(lia.config.get("MusicVolume", 0.25))
-                lia.menuMusic = music
-                lia.menuMusic:Play()
-            end
-        end)
+        if source:find("^https://") then
+            http.Fetch(source, function(body)
+                local path = "lia_temp_music.mp3"
+                file.Write(path, body)
+                sound.PlayFile("DATA/" .. path, "noplay", function(music)
+                    if music then
+                        music:SetVolume(lia.config.get("MusicVolume", 0.25))
+                        lia.menuMusic = music
+                        lia.menuMusic:Play()
+                    end
+                end)
+            end)
+        else
+            sound.PlayURL(source, "noplay", function(music)
+                if music then
+                    music:SetVolume(lia.config.get("MusicVolume", 0.25))
+                    lia.menuMusic = music
+                    lia.menuMusic:Play()
+                end
+            end)
+        end
     else
         sound.PlayFile("sound/" .. source, "noplay", function(music)
             if music then
