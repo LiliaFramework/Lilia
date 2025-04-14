@@ -91,7 +91,7 @@ function MODULE:BuildInformationMenu(pages)
         end
     end
 
-    local function startSpectateView(ent, class, originalThirdPerson)
+    local function startSpectateView(ent, originalThirdPerson)
         local yaw = client:EyeAngles().yaw
         local camZOffset = 50
         hook.Add("CalcView", "EntityViewCalcView", function()
@@ -188,7 +188,7 @@ function MODULE:BuildInformationMenu(pages)
                         modelPanel:SetLookAt((mn + mx) * 0.5)
                         local originalThirdPerson = lia.option.get("thirdPersonEnabled", false)
                         lia.option.set("thirdPersonEnabled", false)
-                        startSpectateView(ent, class, originalThirdPerson)
+                        startSpectateView(ent,  originalThirdPerson)
                     end
 
                     local btnContainer = vgui.Create("DPanel", entPanel)
@@ -203,7 +203,7 @@ function MODULE:BuildInformationMenu(pages)
                             if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
                             local originalThirdPerson = lia.option.get("thirdPersonEnabled", false)
                             lia.option.set("thirdPersonEnabled", false)
-                            startSpectateView(ent, class, originalThirdPerson)
+                            startSpectateView(ent,  originalThirdPerson)
                         end
                     end
 
