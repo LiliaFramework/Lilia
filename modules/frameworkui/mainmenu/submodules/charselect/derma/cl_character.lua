@@ -1,7 +1,9 @@
 ﻿local PANEL = {}
 function PANEL:Init()
+    local client = LocalPlayer()
+    local clientChar = client.getChar and client:getChar() or nil
     self.disableClientModel = false
-    self.noBlur = not LocalPlayer():getChar()
+    self.noBlur = not clientChar
     self.isLoadMode = false
     if IsValid(lia.gui.loading) then lia.gui.loading:Remove() end
     if IsValid(lia.gui.character) then lia.gui.character:Remove() end
@@ -31,11 +33,10 @@ function PANEL:Init()
     self.music = self:Add("liaCharBGMusic")
     self:createTitle()
     self:loadBackground()
-    local client = LocalPlayer()
-    if client:getChar() and lia.characters and #lia.characters > 0 then
+    if clientChar and lia.characters and #lia.characters > 0 then
         for _, charID in ipairs(lia.characters) do
             local charObj = type(charID) == "number" and lia.char.loaded[charID] or charID
-            if charObj and charObj.getID and charObj:getID() == client:getChar():getID() then
+            if charObj and charObj.getID and clientChar and charObj:getID() == clientChar:getID() then
                 self.currentIndex = _
                 break
             end
@@ -125,7 +126,7 @@ function PANEL:spawnClientModelEntity()
         self.modelEntity:SetBodygroup(i, client:GetBodygroup(i))
     end
 
-    local char = client:getChar()
+    local char = client.getChar and client:getChar() or nil
     local pos, ang
     if char then pos, ang = hook.Run("GetMainMenuPosition", char) end
     if not pos or not ang then
@@ -161,6 +162,7 @@ end
 
 function PANEL:createStartButton()
     local client = LocalPlayer()
+    local clientChar = client.getChar and client:getChar() or nil
     local sw, sh = ScrW(), ScrH()
     local btnWidth = sw * 0.2
     local btnHeight = sh * 0.04
@@ -186,7 +188,7 @@ function PANEL:createStartButton()
         })
     end
 
-    if #lia.characters > 0 then
+    if lia.characters and #lia.characters > 0 then
         table.insert(buttonsData, {
             id = "load",
             text = "LOAD CHARACTER",
@@ -234,7 +236,7 @@ function PANEL:createStartButton()
         end
     })
 
-    if client:getChar() then
+    if clientChar then
         table.insert(buttonsData, {
             id = "return",
             text = "RETURN",
@@ -391,7 +393,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     table.insert(info, "Faction: " .. (team.GetName(character:getFaction()) or ""))
     if character:getClass() and lia.class.list[character:getClass()] and lia.class.list[character:getClass()].name then table.insert(info, "Class: " .. lia.class.list[character:getClass()].name) end
     table.insert(info, "Money: " .. lia.currency.get(character:getMoney()))
-    hook.Run("LoadMainMenuInformation", info)
+    hook.Run("LoadMainMenuInformation", info, character)
     table.insert(info, "Description:")
     table.insert(info, character:getDesc() or "")
     self.infoFrame = self:Add("DFrame")
@@ -433,7 +435,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         vgui.Create("liaCharacterConfirm"):setMessage(L("charDeletionCannotUndoned")):onConfirm(function() MainMenu:deleteCharacter(character:getID()) end)
     end
 
-    local currentChar = LocalPlayer():getChar()
+    local currentChar = LocalPlayer().getChar and LocalPlayer():getChar() or nil
     local buttonText = "Select Character"
     if currentChar and character:getID() == currentChar:getID() then buttonText = "You are already using this character" end
     if character:getData("banned") then buttonText = "This character is banned" end
@@ -466,7 +468,7 @@ function PANEL:updateModelEntity(character)
         self.modelEntity:SetBodygroup(i, character.getBodygroup and character:getBodygroup(i) or LocalPlayer():GetBodygroup(i))
     end
 
-    local char = LocalPlayer():getChar()
+    local char = LocalPlayer().getChar and LocalPlayer():getChar() or nil
     if character ~= char then char = character end
     local pos, ang = hook.Run("GetMainMenuPosition", char)
     if not pos or not ang then
