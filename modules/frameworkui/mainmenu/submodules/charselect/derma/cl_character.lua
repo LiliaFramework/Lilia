@@ -52,7 +52,6 @@ function PANEL:createTitle()
 end
 
 function PANEL:loadBackground()
-    local client = LocalPlayer()
     if self.isLoadMode then
         hook.Add("PrePlayerDraw", "liaCharacter_StopDrawPlayers", function() return true end)
         if not IsValid(self.modelEntity) then self:spawnClientModelEntity() end
@@ -666,12 +665,3 @@ function PANEL:Think()
 end
 
 vgui.Register("liaCharacter", PANEL, "EditablePanel")
-hook.Add("GetMainMenuPosition", "CustomMainMenuPosition", function(character)
-    if not character then return end
-    local faction = character:getFaction()
-    if faction == FACTION_CITIZEN then
-        return Vector(-411.913177, 584.583191, 64.031250), Angle(6.93, -84.804398, 0)
-    elseif faction == FACTION_POLICE then
-        return Vector(251.204712, 753.475891, 64.031250), Angle(5.788399, -97.438202, 0)
-    end
-end)
