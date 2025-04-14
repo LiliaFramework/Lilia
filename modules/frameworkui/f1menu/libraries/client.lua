@@ -91,6 +91,144 @@ function MODULE:BuildInformationMenu(pages)
         end
     end
 
+    local function startSpectateView(ent, class, originalThirdPerson)
+        local yaw = client:EyeAngles().yaw
+        local camZOffset = 50
+        hook.Add("CalcView", "EntityViewCalcView", function()
+            return {
+                origin = ent:GetPos() + Angle(0, yaw, 0):Forward() * 100 + Vector(0, 0, camZOffset),
+                angles = Angle(0, yaw, 0),
+                fov = 60
+            }
+        end)
+
+        hook.Add("HUDPaint", "EntityViewHUD", function() draw.SimpleText("Press A/D to rotate | W/S to move camera vertically | Press SPACE to exit", "liaMediumFont", ScrW() / 2, ScrH() - 50, color_white, TEXT_ALIGN_CENTER) end)
+        hook.Add("Think", "EntityViewRotate", function()
+            if input.IsKeyDown(KEY_A) then yaw = yaw - FrameTime() * 100 end
+            if input.IsKeyDown(KEY_D) then yaw = yaw + FrameTime() * 100 end
+            if input.IsKeyDown(KEY_W) then camZOffset = camZOffset + FrameTime() * 100 end
+            if input.IsKeyDown(KEY_S) then camZOffset = camZOffset - FrameTime() * 100 end
+            if input.IsKeyDown(KEY_SPACE) then
+                hook.Remove("CalcView", "EntityViewCalcView")
+                hook.Remove("HUDPaint", "EntityViewHUD")
+                hook.Remove("Think", "EntityViewRotate")
+                hook.Remove("CreateMove", "EntitySpectateCreateMove")
+                lia.option.set("thirdPersonEnabled", originalThirdPerson)
+            end
+        end)
+
+        hook.Add("CreateMove", "EntitySpectateCreateMove", function(cmd)
+            cmd:SetForwardMove(0)
+            cmd:SetSideMove(0)
+            cmd:SetUpMove(0)
+        end)
+    end
+
+    table.insert(pages, {
+        name = "Entities",
+        drawFunc = function(panel)
+            local scroll = vgui.Create("DScrollPanel", panel)
+            scroll:Dock(FILL)
+            for owner, entsList in SortedPairs(entitiesByCreator) do
+                local header = vgui.Create("DCollapsibleCategory", scroll)
+                header:Dock(TOP)
+                header:SetLabel(owner)
+                header:SetExpanded(true)
+                header:DockMargin(0, 0, 0, 0)
+                header.Paint = function() end
+                header.Header:SetFont("liaMediumFont")
+                header.Header:SetTextColor(Color(255, 255, 255))
+                header.Header:SetContentAlignment(5)
+                header.Header:SetTall(30)
+                header.Header.Paint = function(_, w, h)
+                    draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
+                    surface.SetDrawColor(255, 255, 255)
+                    surface.DrawOutlinedRect(0, 0, w, h)
+                end
+
+                local body = vgui.Create("DPanel", header)
+                body.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+                header:SetContents(body)
+                for _, ent in ipairs(entsList) do
+                    local class = ent:GetClass()
+                    local entPanel = vgui.Create("DPanel", body)
+                    entPanel:Dock(TOP)
+                    entPanel:DockMargin(10, 15, 10, 10)
+                    entPanel:SetTall(100)
+                    entPanel.Paint = function(_, w, h)
+                        draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
+                        draw.SimpleText(class, "liaMediumFont", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    end
+
+                    local icon = vgui.Create("liaSpawnIcon", entPanel)
+                    icon:Dock(LEFT)
+                    icon:SetWide(64)
+                    icon:SetModel(ent:GetModel() or "models/error.mdl", ent:GetSkin() or 0)
+                    icon.DoClick = function()
+                        if IsValid(lastModelFrame) then lastModelFrame:Close() end
+                        lastModelFrame = vgui.Create("DFrame")
+                        lastModelFrame:SetTitle(class)
+                        lastModelFrame:SetSize(800, 800)
+                        lastModelFrame:Center()
+                        lastModelFrame:MakePopup()
+                        local info = vgui.Create("DLabel", lastModelFrame)
+                        info:SetText("Press A/D to rotate | W/S to move camera vertically | Press SPACE to exit")
+                        info:SetFont("liaMediumFont")
+                        info:SizeToContents()
+                        info:Dock(TOP)
+                        info:DockMargin(0, 10, 0, 0)
+                        info:SetContentAlignment(5)
+                        local modelPanel = vgui.Create("DModelPanel", lastModelFrame)
+                        modelPanel:Dock(FILL)
+                        modelPanel:SetModel(ent:GetModel() or "models/error.mdl", ent:GetSkin() or 0)
+                        modelPanel:SetFOV(45)
+                        local mn, mx = modelPanel.Entity:GetRenderBounds()
+                        local size = math.max(math.abs(mn.x) + math.abs(mx.x), math.abs(mn.y) + math.abs(mx.y), math.abs(mn.z) + math.abs(mx.z))
+                        modelPanel:SetCamPos(Vector(size, size, size))
+                        modelPanel:SetLookAt((mn + mx) * 0.5)
+                        local originalThirdPerson = lia.option.get("thirdPersonEnabled", false)
+                        lia.option.set("thirdPersonEnabled", false)
+                        startSpectateView(ent, class, originalThirdPerson)
+                    end
+
+                    local btnContainer = vgui.Create("DPanel", entPanel)
+                    btnContainer:Dock(RIGHT)
+                    btnContainer:SetWide(180)
+                    if client:hasPrivilege("Staff Permission — View Entity (Entity Tab)") then
+                        local btnView = vgui.Create("DButton", btnContainer)
+                        btnView:Dock(LEFT)
+                        btnView:SetWide(60)
+                        btnView:SetText("View")
+                        btnView.DoClick = function()
+                            if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
+                            local originalThirdPerson = lia.option.get("thirdPersonEnabled", false)
+                            lia.option.set("thirdPersonEnabled", false)
+                            startSpectateView(ent, class, originalThirdPerson)
+                        end
+                    end
+
+                    if client:hasPrivilege("Staff Permission — Teleport to Entity (Entity Tab)") then
+                        local btnTeleport = vgui.Create("DButton", btnContainer)
+                        btnTeleport:Dock(LEFT)
+                        btnTeleport:SetWide(60)
+                        btnTeleport:SetText("Teleport")
+                        btnTeleport.DoClick = function()
+                            net.Start("liaTeleportToEntity")
+                            net.WriteEntity(ent)
+                            net.SendToServer()
+                        end
+                    end
+
+                    local btnWaypoint = vgui.Create("DButton", btnContainer)
+                    btnWaypoint:Dock(RIGHT)
+                    btnWaypoint:SetWide(60)
+                    btnWaypoint:SetText("Waypoint")
+                    btnWaypoint.DoClick = function() client:setWaypoint(class, ent:GetPos()) end
+                end
+            end
+        end
+    })
+
     if client:hasPrivilege("Staff Permission — Access Faction List") then
         table.insert(pages, {
             name = "Factions & Classes",
