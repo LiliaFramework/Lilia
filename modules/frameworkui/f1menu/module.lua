@@ -15,11 +15,6 @@ MODULE.CAMIPrivileges = {
         Description = "Allows teleporting to any entity."
     },
     {
-        Name = "Staff Permission — View Item List",
-        MinAccess = "admin",
-        Description = "Allows viewing detailed information on items."
-    },
-    {
         Name = "Staff Permission — Teleport to Entity (Entity Tab)",
         MinAccess = "admin",
         Description = "Allows teleporting to entities from the Entity tab."

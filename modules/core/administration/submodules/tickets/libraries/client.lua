@@ -3,7 +3,6 @@ local ypos = ypos or 20
 local xpos = xpos or 20
 local ypos = ypos or 20
 function MODULE:TicketFrame(requester, message, claimed)
-    if not TicketFrames then TicketFrames = {} end
     local mat_lightning = Material("icon16/lightning_go.png")
     local mat_arrow = Material("icon16/arrow_left.png")
     local mat_link = Material("icon16/link.png")
