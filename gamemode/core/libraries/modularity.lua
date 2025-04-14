@@ -205,8 +205,9 @@ end
    Function: lia.module.loadFromDir
 
    Description:
-      Loads modules from a specified directory. It iterates over all folders and files in the directory,
-      loading each as a module based on whether it is a folder (multi-file module) or a single file.
+      Loads modules from a specified directory. It iterates over all subfolders and .lua files in the directory.
+      Each subfolder is treated as a multi-file module, and each .lua file as a single-file module.
+      Non-Lua files are ignored.
 
    Parameters:
       directory - The directory path from which to load modules.
@@ -224,8 +225,10 @@ function lia.module.loadFromDir(directory, group, firstLoad)
     end
 
     for _, fileName in ipairs(files) do
-        local uniqueID = string.StripExtension(fileName)
-        lia.module.load(uniqueID, directory .. "/" .. fileName, true, locationVar, firstLoad)
+        if fileName:sub(-4) == ".lua" then
+            local uniqueID = string.StripExtension(fileName)
+            lia.module.load(uniqueID, directory .. "/" .. fileName, true, locationVar, firstLoad)
+        end
     end
 end
 
