@@ -570,4 +570,4 @@ lia.font.register("liaCharSmallButtonFont", {
     additive = true
 })
 
-hook.Run("PostLoadFonts")
+hook.Run("PostLoadFonts", lia.config.get("Font"), lia.config.get("GenericFont"))

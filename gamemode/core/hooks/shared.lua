@@ -174,6 +174,7 @@ local GamemodeFunctions = {
         },
         {
             name = "LoadFonts",
+            args = {"..."},
             replacement = "PostLoadFonts"
         },
         {
@@ -185,13 +186,13 @@ local GamemodeFunctions = {
 }
 
 local function registerFunctions(scope)
-    for _, funcData in ipairs(GamemodeFunctions[scope]) do
-        if funcData.returnValue ~= nil then
-            GM[funcData.name] = function() return funcData.returnValue end
-        elseif funcData.replacement then
-            GM[funcData.name] = function(...)
+    for _, f in ipairs(GamemodeFunctions[scope]) do
+        if f.returnValue ~= nil then
+            GM[f.name] = function() return f.returnValue end
+        elseif f.replacement then
+            GM[f.name] = function(...)
                 local args = {...}
-                LiliaDeprecated(funcData.name, function() hook.Run(funcData.replacement, unpack(args)) end)
+                LiliaDeprecated(f.name, function() hook.Run(f.replacement, unpack(args)) end)
             end
         end
     end
