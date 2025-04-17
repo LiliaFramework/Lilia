@@ -55,19 +55,18 @@ end
 function PANEL:loadBackground()
     if self.isLoadMode then
         hook.Add("PrePlayerDraw", "liaCharacter_StopDrawPlayers", function() return true end)
-        if not IsValid(self.modelEntity) then self:spawnClientModelEntity() end
+        self:updateSelectedCharacter()
         if not IsValid(self.leftArrow) then self:createArrows() end
         hook.Add("CalcView", "liaCharacterMenuCalcView", function(_, _, _, fov)
-            if not IsValid(lia.gui.character) or not IsValid(lia.gui.character.modelEntity) then return end
-            local ent = lia.gui.character.modelEntity
+            local ent = self.modelEntity
+            if not IsValid(ent) then return end
             local center = ent:GetPos() + Vector(0, 0, 60)
-            local targetCamDistance = 70
-            local desiredCamPos = center + ent:GetForward() * targetCamDistance
-            lia.gui.character.currentCamPos = lia.gui.character.currentCamPos or desiredCamPos
-            lia.gui.character.currentCamPos = LerpVector(FrameTime() * 5, lia.gui.character.currentCamPos, desiredCamPos)
+            local desiredCamPos = center + ent:GetForward() * 70
+            self.currentCamPos = self.currentCamPos or desiredCamPos
+            self.currentCamPos = LerpVector(FrameTime() * 5, self.currentCamPos, desiredCamPos)
             return {
-                origin = lia.gui.character.currentCamPos,
-                angles = (center - lia.gui.character.currentCamPos):Angle(),
+                origin = self.currentCamPos,
+                angles = (center - self.currentCamPos):Angle(),
                 fov = fov,
                 drawviewer = true
             }
