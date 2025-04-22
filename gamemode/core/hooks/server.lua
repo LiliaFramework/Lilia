@@ -661,7 +661,7 @@ function GM:InitializedModules()
     end, function(err) LiliaUpdater("HTTP.Fetch error: " .. err) end)
 end
 
-local networkStrings = {"liaCharChoose", "liaCharacterInvList", "liaCharCreate", "liaCharList", "liaCharDelete",}
+local networkStrings = {"NetStreamDS", "CurTime-Sync", "liaCharChoose", "liaCharacterInvList", "liaCharCreate", "liaCharList", "liaCharDelete",}
 for _, netString in ipairs(networkStrings) do
     util.AddNetworkString(netString)
 end

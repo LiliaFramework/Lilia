@@ -285,8 +285,8 @@ end
           print("Got inventory with ID 5")
       end
 ]]
-function lia.item.getInv(id)
-   return lia.item.inventories[id] or lia.inventory.instances[id] or nil
+function lia.item.getInv(invID)
+   return lia.inventory.instances[invID]
 end
 
 --[[

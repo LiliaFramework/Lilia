@@ -113,9 +113,7 @@ end
 
 function MODULE:CreateDefaultInventory(character)
     local charID = character:getID()
-    if lia.inventory.types["grid"] then
-        return lia.inventory.instance("grid", {
-            char = charID
-        })
-    end
+    return lia.inventory.instance("grid", {
+        char = charID
+    })
 end

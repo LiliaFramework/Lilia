@@ -112,53 +112,6 @@ function PANEL:loadBackground()
     end
 end
 
-function PANEL:spawnClientModelEntity()
-    if IsValid(self.modelEntity) then self.modelEntity:Remove() end
-    local client = LocalPlayer()
-    local modelPath = client:GetModel()
-    self.modelEntity = ClientsideModel(modelPath, RENDER_GROUP_OPAQUE_ENTITY)
-    if not IsValid(self.modelEntity) then return end
-    self.modelEntity:SetNoDraw(false)
-    self.modelEntity:SetSkin(client:GetSkin() or 0)
-    local numBG = self.modelEntity:GetNumBodyGroups()
-    for i = 0, numBG - 1 do
-        self.modelEntity:SetBodygroup(i, client:GetBodygroup(i))
-    end
-
-    local char = client.getChar and client:getChar() or nil
-    local pos, ang
-    if char then pos, ang = hook.Run("GetMainMenuPosition", char) end
-    if not pos or not ang then
-        local spawns = ents.FindByClass("info_player_start")
-        if #spawns > 0 then
-            pos = spawns[1]:GetPos()
-            ang = spawns[1]:GetAngles()
-        else
-            pos = Vector(0, 0, 0)
-            ang = Angle(0, 0, 0)
-        end
-    end
-
-    ang.pitch = 0
-    ang.roll = 0
-    self.modelEntity:SetPos(pos)
-    self.modelEntity:SetAngles(ang)
-    for _, seq in ipairs(self.modelEntity:GetSequenceList()) do
-        if seq:lower():find("idle") and seq ~= "idlenoise" then
-            self.modelEntity:ResetSequence(seq)
-            self.modelEntity:SetCycle(0)
-            break
-        end
-    end
-
-    hook.Add("PostDrawOpaqueRenderables", self, function()
-        if IsValid(self.modelEntity) then
-            self.modelEntity:FrameAdvance(RealFrameTime())
-            self.modelEntity:DrawModel()
-        end
-    end)
-end
-
 function PANEL:createStartButton()
     local client = LocalPlayer()
     if not IsValid(client) then
@@ -463,31 +416,29 @@ function PANEL:updateModelEntity(character)
     if IsValid(self.modelEntity) then self.modelEntity:Remove() end
     if not character then return end
     local modelPath = character.getModel and character:getModel() or LocalPlayer():GetModel()
-    self.modelEntity = ClientsideModel(modelPath, RENDER_GROUP_OPAQUE_ENTITY)
+    self.modelEntity = ClientsideModel(modelPath, RENDERGROUP_OPAQUE)
     if not IsValid(self.modelEntity) then return end
     self.modelEntity:SetNoDraw(false)
-    self.modelEntity:SetSkin(character.getSkin and character:getSkin() or LocalPlayer():GetSkin() or 0)
+    local skin = character:getData("skin", 0)
+    self.modelEntity:SetSkin(skin)
     local numBG = self.modelEntity:GetNumBodyGroups()
+    local groups = character:getData("groups", {})
     for i = 0, numBG - 1 do
-        self.modelEntity:SetBodygroup(i, character.getBodygroup and character:getBodygroup(i) or LocalPlayer():GetBodygroup(i))
+        local value = groups[i]
+        if value ~= nil then self.modelEntity:SetBodygroup(i, value) end
     end
 
-    local char = LocalPlayer().getChar and LocalPlayer():getChar() or nil
-    if character ~= char then char = character end
-    local pos, ang = hook.Run("GetMainMenuPosition", char)
+    local pos, ang = hook.Run("GetMainMenuPosition", character)
     if not pos or not ang then
         local spawns = ents.FindByClass("info_player_start")
         if #spawns > 0 then
-            pos = spawns[1]:GetPos()
-            ang = spawns[1]:GetAngles()
+            pos, ang = spawns[1]:GetPos(), spawns[1]:GetAngles()
         else
-            pos = Vector(0, 0, 0)
-            ang = Angle(0, 0, 0)
+            pos, ang = Vector(), Angle()
         end
     end
 
-    ang.pitch = 0
-    ang.roll = 0
+    ang.pitch, ang.roll = 0, 0
     self.modelEntity:SetPos(pos)
     self.modelEntity:SetAngles(ang)
     for _, seq in ipairs(self.modelEntity:GetSequenceList()) do
@@ -498,6 +449,7 @@ function PANEL:updateModelEntity(character)
         end
     end
 
+    hook.Run("ModifyCharacterModel", self.modelEntity, character)
     hook.Add("PostDrawOpaqueRenderables", self, function()
         if IsValid(self.modelEntity) then
             self.modelEntity:FrameAdvance(RealFrameTime())

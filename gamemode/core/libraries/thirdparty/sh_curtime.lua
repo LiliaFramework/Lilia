@@ -15,7 +15,6 @@ if SyncType == "NW2" then
     end
 elseif SyncType == "net" then
     if SERVER then
-        util.AddNetworkString("CurTime-Sync")
         timer.Create("CurTime-Sync", SyncDelay, -1, function()
             net.Start("CurTime-Sync", true)
             net.WriteFloat(CurTime())

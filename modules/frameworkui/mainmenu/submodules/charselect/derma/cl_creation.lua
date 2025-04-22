@@ -3,59 +3,62 @@ function PANEL:configureSteps()
     self:addStep(vgui.Create("liaCharacterFaction"))
     self:addStep(vgui.Create("liaCharacterBiography"))
     hook.Run("ConfigureCharacterCreationSteps", self)
-    local stepKeys = table.GetKeys(self.steps)
-    table.sort(stepKeys, function(a, b) return a < b end)
-    local stepsCopy = table.Copy(self.steps)
+    local keys = table.GetKeys(self.steps)
+    table.sort(keys, function(a, b) return a < b end)
+    local copy = table.Copy(self.steps)
     self.steps = {}
-    for newKey, oldKey in pairs(stepKeys) do
-        self.steps[newKey] = stepsCopy[oldKey]
+    for newKey, oldKey in pairs(keys) do
+        self.steps[newKey] = copy[oldKey]
     end
 end
 
 function PANEL:updateModel()
     local faction = lia.faction.indices[self.context.faction]
-    assert(faction, "invalid faction when updating model")
-    local modelInfo = faction.models[self.context.model or 1]
-    assert(modelInfo, "faction " .. faction.name .. " has no models!")
-    local model, skin, groups
-    if istable(modelInfo) then
-        model, skin, groups = unpack(modelInfo)
+    if not faction then return end
+    local info = faction.models[self.context.model or 1]
+    local mdl, skin, groups
+    if istable(info) then
+        mdl, skin, groups = unpack(info)
     else
-        model, skin, groups = modelInfo, 0, {}
+        mdl, skin, groups = info, 0, {}
     end
 
-    self.model:SetModel(model)
+    self.model:SetModel(mdl)
+    self.model:fitFOV()
     local entity = self.model:GetEntity()
     if not IsValid(entity) then return end
+    entity:SetupBones()
     entity:SetSkin(skin)
     if istable(groups) then
-        for group, value in pairs(groups) do
-            entity:SetBodygroup(group, value)
+        for id, val in pairs(groups) do
+            entity:SetBodygroup(id, val)
         end
-    elseif isstring(groups) then
+    else
         entity:SetBodyGroups(groups)
     end
 
     if self.context.skin then entity:SetSkin(self.context.skin) end
-    if self.context.groups then
-        for group, value in pairs(self.context.groups or {}) do
-            entity:SetBodygroup(group, value)
+    if istable(self.context.groups) then
+        for id, val in pairs(self.context.groups) do
+            entity:SetBodygroup(id, val)
         end
     end
+
+    hook.Run("ModifyCharacterModel", entity)
 end
 
 function PANEL:canCreateCharacter()
-    local validFactions = {}
-    for _, v in pairs(lia.faction.teams) do
-        if lia.faction.hasWhitelist(v.index) then validFactions[#validFactions + 1] = v.index end
+    local valid = {}
+    for _, team in pairs(lia.faction.teams) do
+        if lia.faction.hasWhitelist(team.index) then valid[#valid + 1] = team.index end
     end
 
-    if #validFactions == 0 then return false, "You are unable to join any factions" end
-    self.validFactions = validFactions
+    if #valid == 0 then return false, "You are unable to join any factions" end
+    self.validFactions = valid
     local maxChars = hook.Run("GetMaxPlayerChar", LocalPlayer()) or lia.config.get("MaxCharacters", 5)
     if lia.characters and #lia.characters >= maxChars then return false, "You have reached the maximum number of characters" end
-    local canCreate, reason = hook.Run("ShouldMenuButtonShow", "create")
-    if canCreate == false then return false, reason end
+    local ok, reason = hook.Run("ShouldMenuButtonShow", "create")
+    if ok == false then return false, reason end
     return true
 end
 
@@ -65,7 +68,7 @@ function PANEL:onFinish()
     self.buttons:SetVisible(false)
     self:showMessage("creating")
     self.creating = true
-    local function onResponse()
+    local function finishResponse()
         timer.Remove("liaFailedToCreate")
         if not IsValid(self) then return end
         self.creating = false
@@ -74,30 +77,30 @@ function PANEL:onFinish()
         self:showMessage()
     end
 
-    local function onFail(err)
-        onResponse()
+    local function failResponse(err)
+        finishResponse()
         self:showError(err)
     end
 
     MainMenu:createCharacter(self.context):next(function()
-        onResponse()
+        finishResponse()
         hook.Run("ResetCharacterPanel")
-    end, onFail)
+    end, failResponse)
 
     timer.Create("liaFailedToCreate", 60, 1, function()
         if not IsValid(self) or not self.creating then return end
-        onFail("unknownError")
+        failResponse("unknownError")
     end)
 end
 
-function PANEL:showError(message, ...)
+function PANEL:showError(msg, ...)
     if IsValid(self.error) then self.error:Remove() end
-    if not message or message == "" then return end
-    message = L(message, ...)
+    if not msg or msg == "" then return end
+    msg = L(msg, ...)
     assert(IsValid(self.content), "no step is available")
     self.error = self.content:Add("DLabel")
     self.error:SetFont("liaCharSubTitleFont")
-    self.error:SetText(message)
+    self.error:SetText(msg)
     self.error:SetTextColor(color_white)
     self.error:Dock(TOP)
     self.error:SetTall(32)
@@ -114,20 +117,20 @@ function PANEL:showError(message, ...)
     lia.gui.character:warningSound()
 end
 
-function PANEL:showMessage(message, ...)
-    if not message or message == "" then
+function PANEL:showMessage(msg, ...)
+    if not msg or msg == "" then
         if IsValid(self.message) then self.message:Remove() end
         return
     end
 
-    message = L(message, ...):upper()
-    if IsValid(self.message) then self.message:SetText(message) end
+    msg = L(msg, ...):upper()
+    if IsValid(self.message) then self.message:SetText(msg) end
     self.message = self:Add("DLabel")
     self.message:SetFont("liaCharButtonFont")
     self.message:SetTextColor(lia.gui.character.color)
     self.message:Dock(FILL)
     self.message:SetContentAlignment(5)
-    self.message:SetText(message)
+    self.message:SetText(msg)
 end
 
 function PANEL:addStep(step, priority)
@@ -143,78 +146,71 @@ function PANEL:addStep(step, priority)
 end
 
 function PANEL:nextStep()
-    local lastStep = self.curStep
-    local curStep = self.steps[lastStep]
-    if IsValid(curStep) then
-        local res = {curStep:validate()}
-        if res[1] == false then return self:showError(unpack(res, 2)) end
+    local last = self.curStep
+    local cur = self.steps[last]
+    if IsValid(cur) then
+        local ok, err = cur:validate()
+        if ok == false then return self:showError(err) end
     end
 
     self:showError()
     self.curStep = self.curStep + 1
-    local nextStep = self.steps[self.curStep]
-    while IsValid(nextStep) and nextStep:shouldSkip() do
+    local next = self.steps[self.curStep]
+    while IsValid(next) and next:shouldSkip() do
         self.curStep = self.curStep + 1
-        nextStep:onSkip()
-        nextStep = self.steps[self.curStep]
+        next:onSkip()
+        next = self.steps[self.curStep]
     end
 
-    if not IsValid(nextStep) then
-        self.curStep = lastStep
+    if not IsValid(next) then
+        self.curStep = last
         return self:onFinish()
     end
 
-    self:onStepChanged(curStep, nextStep)
+    self:onStepChanged(cur, next)
 end
 
 function PANEL:previousStep()
-    local curStep = self.steps[self.curStep]
-    local newStep = self.curStep - 1
-    local prevStep = self.steps[newStep]
-    while IsValid(prevStep) and prevStep:shouldSkip() do
-        prevStep:onSkip()
-        newStep = newStep - 1
-        prevStep = self.steps[newStep]
+    local cur = self.curStep - 1
+    local prev = self.steps[cur]
+    while IsValid(prev) and prev:shouldSkip() do
+        prev:onSkip()
+        cur = cur - 1
+        prev = self.steps[cur]
     end
 
-    if not IsValid(prevStep) then return end
-    self.curStep = newStep
-    self:onStepChanged(curStep, prevStep)
+    if not IsValid(prev) then return end
+    self.curStep = cur
+    self:onStepChanged(self.steps[self.curStep + 1], prev)
 end
 
 function PANEL:getPreviousStep()
-    local step = self.curStep - 1
-    while IsValid(self.steps[step]) do
-        if not self.steps[step]:shouldSkip() then
-            hasPrevStep = true
-            break
-        end
-
-        step = step - 1
+    local idx = self.curStep - 1
+    while IsValid(self.steps[idx]) do
+        if not self.steps[idx]:shouldSkip() then return self.steps[idx] end
+        idx = idx - 1
     end
-    return self.steps[step]
 end
 
 function PANEL:onStepChanged(oldStep, newStep)
-    local shouldFinish = self.curStep == #self.steps
-    local nextStepText = L(shouldFinish and "finish" or "next"):upper()
-    local shouldSwitchNextText = nextStepText ~= self.next:GetText()
+    local finish = self.curStep == #self.steps
+    local text = L(finish and "finish" or "next"):upper()
     if IsValid(self:getPreviousStep()) then
         self.prev:AlphaTo(255, 0.5)
     else
         self.prev:AlphaTo(0, 0.5)
     end
 
-    if shouldSwitchNextText then self.next:AlphaTo(0, 0.5) end
-    local function showNewStep()
+    if text ~= self.next:GetText() then self.next:AlphaTo(0, 0.5) end
+    local function showStep()
         newStep:SetAlpha(0)
         newStep:SetVisible(true)
         newStep:onDisplay()
         newStep:InvalidateChildren(true)
         newStep:AlphaTo(255, 0.5)
-        if shouldSwitchNextText then
+        if text ~= self.next:GetText() then
             self.next:SetAlpha(0)
-            self.next:SetText(nextStepText)
+            self.next:SetText(text)
             self.next:SizeToContentsX()
         end
 
@@ -226,39 +222,34 @@ function PANEL:onStepChanged(oldStep, newStep)
             self:showError()
             oldStep:SetVisible(false)
             oldStep:onHide()
-            showNewStep()
+            showStep()
         end)
     else
-        showNewStep()
+        showStep()
     end
 end
 
 function PANEL:Init()
     self:Dock(FILL)
-    local canCreate, reason = self:canCreateCharacter()
-    if not canCreate then return self:showMessage(reason) end
+    local can, reason = self:canCreateCharacter()
+    if not can then return self:showMessage(reason) end
     lia.gui.charCreate = self
-    local sideMargin = 0
+    local margin = 0
     if ScrW() > 1280 then
-        sideMargin = ScrW() * 0.15
+        margin = ScrW() * 0.15
     elseif ScrW() > 720 then
-        sideMargin = ScrW() * 0.075
+        margin = ScrW() * 0.075
     end
 
     self.content = self:Add("DPanel")
     self.content:Dock(FILL)
-    self.content:DockMargin(sideMargin, 64, sideMargin, 0)
+    self.content:DockMargin(margin, 64, margin, 0)
     self.content:SetPaintBackground(false)
     self.model = self.content:Add("liaModelPanel")
     self.model:SetWide(ScrW() * 0.25)
     self.model:Dock(LEFT)
     self.model:SetModel("models/error.mdl")
-    self.model.oldSetModel = self.model.SetModel
-    self.model.SetModel = function(model, ...)
-        model:oldSetModel(...)
-        model:fitFOV()
-    end
-
+    self.model:fitFOV()
     self.buttons = self:Add("DPanel")
     self.buttons:Dock(BOTTOM)
     self.buttons:SetTall(48)
@@ -280,6 +271,7 @@ function PANEL:Init()
     self:configureSteps()
     if #self.steps == 0 then return self:showError("No character creation steps have been set up") end
     self:nextStep()
+    timer.Simple(0.5, function() hook.Run("ModifyCharacterModel", self.model:GetEntity()) end)
 end
 
 vgui.Register("liaCharacterCreation", PANEL, "EditablePanel")

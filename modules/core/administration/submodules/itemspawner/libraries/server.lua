@@ -57,7 +57,7 @@ local function SpawnItem(client, itemName, target)
     end
 end
 
-net.Receive("lia_spawnItem", function(_, client)
+net.Receive("liaSpawnItem", function(_, client)
     local itemID = net.ReadString()
     local targetID = net.ReadString()
     local target = lia.char.getByID(targetID)
