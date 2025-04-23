@@ -30,7 +30,7 @@
 end
 
 hook.Add("OnReloaded", "liaSalaryOnReloaded", function()
-    for _, client in pairs(player.GetAll()) do
+    for _, client in player.Iterator() do
         CreateSalaryTimer(client)
     end
 end)

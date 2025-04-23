@@ -283,10 +283,7 @@ else
          lia.command.send("mycommand", "arg1", "arg2")
    ]]
     function lia.command.send(command, ...)
-        net.Start("cmd")
-        net.WriteString(command)
-        net.WriteTable({...})
-        net.SendToServer()
+        netstream.Start("cmd", command, {...})
     end
 end
 
