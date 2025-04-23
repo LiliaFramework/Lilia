@@ -7,7 +7,7 @@
     end
 end)
 
-net.Receive("DropdownRequest", function(_, client)
+net.Receive("RequestDropdown", function(_, client)
     local selectedOption = net.ReadString()
     if client.dropdownCallback then
         client.dropdownCallback(selectedOption)

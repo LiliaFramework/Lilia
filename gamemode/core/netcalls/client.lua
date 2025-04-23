@@ -340,7 +340,7 @@ net.Receive("OptionsRequest", function()
     end
 end)
 
-net.Receive("DropdownRequest", function()
+net.Receive("RequestDropdown", function()
     local title = L(net.ReadString())
     local subTitle = L(net.ReadString())
     local options = net.ReadTable()
@@ -358,7 +358,7 @@ net.Receive("DropdownRequest", function()
     end
 
     dropdown.OnSelect = function(_, _, value)
-        net.Start("DropdownRequest")
+        net.Start("RequestDropdown")
         net.WriteString(value)
         net.SendToServer()
         frame:Close()

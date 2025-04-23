@@ -507,7 +507,7 @@ if SERVER then
     end
 
     function playerMeta:requestDropdown(title, subTitle, options, callback)
-        net.Start("DropdownRequest")
+        net.Start("RequestDropdown")
         net.WriteString(title)
         net.WriteString(subTitle)
         net.WriteTable(options)
