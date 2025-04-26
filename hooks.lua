@@ -1,794 +1,683 @@
 ﻿--[[
-   Hook: ShouldHideBars
+    ShouldHideBars()
 
-   Description:
-      Determines whether the player's HUD bars (action/status) should be hidden.
-      If this hook returns true, lia.bar.drawAll will skip rendering all bars.
+    Description:
+        Determines whether the player's HUD bars (action/status) should be hidden.
+        If this hook returns true, lia.bar.drawAll will skip rendering all bars.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      boolean - Return true to hide bars, false or nil to show them.
+    Realm:
+        Client
 
-   Realm:
-      Client
-
-   Example Usage:
-      hook.Add("ShouldHideBars", "MyCustomCondition", function()
-         return LocalPlayer():InVehicle()
-      end)
+    Returns:
+        boolean – Return true to hide bars, false or nil to show them.
 ]]
 --[[
-   Hook: ShouldBarDraw
+    ShouldBarDraw(bar)
 
-   Description:
-      Determines whether a specific HUD bar should be drawn.
-      Called for each bar individually during lia.bar.drawAll.
-      If this hook returns false, the bar will not be rendered.
+    Description:
+        Determines whether a specific HUD bar should be drawn.
+        Called for each bar individually during lia.bar.drawAll.
+        If this hook returns false, the bar will not be rendered.
 
-   Parameters:
-      bar (table) - The bar data table. Contains fields such as .priority, .color, .getValue, etc.
+    Parameters:
+        bar (table) – The bar data table. Contains fields such as .priority, .color, .getValue, etc.
 
-   Returns:
-      boolean - Return false to skip drawing this bar. Return true or nil to allow drawing.
+    Realm:
+        Client
 
-   Realm:
-      Client
-
-   Example Usage:
-      hook.Add("ShouldBarDraw", "HideSpecificBar", function(bar)
-         return bar.name ~= "stamina" -- Hide stamina bar, show others
-      end)
+    Returns:
+        boolean – Return false to skip drawing this bar. Return true or nil to allow drawing.
 ]]
 --[[
-   Hook: InitializedOptions
+    InitializedOptions()
 
-   Description:
-      Called after the lia.option.load function has finished loading and applying saved option values.
-      Use this hook to perform any setup or updates that rely on options being initialized.
+    Description:
+        Called after the lia.option.load function has finished loading and applying saved option values.
+        Use this hook to perform any setup or updates that rely on options being initialized.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      nil
+    Realm:
+        Client
 
-   Realm:
-      Client
-
-   Example Usage:
-      hook.Add("InitializedOptions", "SetupStuffAfterOptions", function()
-         print("Options have been loaded and are ready to use.")
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: InitializedConfig
+    InitializedConfig()
 
-   Description:
-      Called after the config system finishes loading stored configuration values.
-      Useful for executing logic that depends on finalized config state.
+    Description:
+        Called after the config system finishes loading stored configuration values.
+        Useful for executing logic that depends on finalized config state.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("InitializedConfig", "ApplyConfigAfterLoad", function()
-         print("All configs have been initialized and are ready.")
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: InitializedModules
+    InitializedModules()
 
-   Description:
-      Called after all modules have been loaded and initialized.
-      Use this hook to perform any final setup or adjustments that require all modules to be available.
-      This is useful for inter-module interactions or post-initialization configuration.
+    Description:
+        Called after all modules have been loaded and initialized.
+        Use this hook to perform any final setup or adjustments that require all modules to be available.
+        Useful for inter-module interactions or post-initialization configuration.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("InitializedModules", "ModulesReady", function()
-         print("All modules have been successfully initialized!")
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: InitializedSchema
+    InitializedSchema()
 
-   Description:
-      Invoked after the schema (core game mode) has been loaded.
-      Use this hook to execute any logic or initialization that depends on the schema being fully set up.
-      This is typically one of the first hooks called during module initialization.
+    Description:
+        Invoked after the schema (core game mode) has been loaded.
+        Use this hook to execute any logic or initialization that depends on the schema being fully set up.
+        This is typically one of the first hooks called during module initialization.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("InitializedSchema", "PostSchemaInit", function()
-         print("Schema initialization complete!")
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: DoModuleIncludes
+    DoModuleIncludes(path, MODULE)
 
-   Description:
-      Called during the module loading process to allow custom file includes or additional initialization.
-      This hook is executed after extras like languages, factions, classes, entities, and items have been loaded.
-      Use this hook to include extra files or perform custom setup for a module.
+    Description:
+        Called during the module loading process to allow custom file includes or additional initialization.
+        This hook is executed after extras like languages, factions, classes, entities, and items have been loaded.
+        Use this hook to include extra files or perform custom setup for a module.
 
-   Parameters:
-      path (string) - The file system path of the module being processed.
-      MODULE (table) - The module table containing all loaded data and functions.
+    Parameters:
+        path (string) – The file system path of the module being processed.
+        MODULE (table) – The module table containing all loaded data and functions.
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("DoModuleIncludes", "CustomIncludes", function(path, MODULE)
-         -- Add custom includes or perform additional setup for the module
-         print("Running extra includes for module:", MODULE.name)
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: OnServerLog
+    OnServerLog(client, logType, logString, category)
 
-   Description:
-      Called when a server log event is generated. This hook is triggered during the logging process (typically within lia.log.add)
-      after a log string has been produced. It allows other modules or systems to process, display, or modify the log event before
-      it is saved or further handled.
+    Description:
+        Called when a server log event is generated. Triggered during the logging process (typically within lia.log.add)
+        after a log string has been produced. Allows other modules or systems to process, display, or modify the log event
+        before it is saved or further handled.
 
-   Parameters:
-      client (Player) - The player associated with the log event.
-      logType (string) - The identifier for the type of log event.
-      logString (string) - The formatted log message.
-      category (string) - The category for the log event, used to organize log files.
+    Parameters:
+        client (Player) – The player associated with the log event.
+        logType (string) – The identifier for the type of log event.
+        logString (string) – The formatted log message.
+        category (string) – The category for the log event, used to organize log files.
 
-   Returns:
-      nil
+    Realm:
+        Server
 
-   Realm:
-      Server
-
-   Example Usage:
-      hook.Add("OnServerLog", "CustomLogHandler", function(client, logType, logString, category)
-         print("Server Log:", logType, logString, "Category:", category)
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: OnLocalizationLoaded
+    OnLocalizationLoaded()
 
-   Description:
-      Triggered after all language files have been loaded and processed by the localization system.
-      This hook signals that the language data is fully available and that any further initialization
-      or updates depending on localization can now be safely performed.
+    Description:
+        Triggered after all language files have been loaded and processed by the localization system.
+        This hook signals that the language data is fully available and that any further initialization
+        or updates depending on localization can now be safely performed.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("OnLocalizationLoaded", "MyLocalizationInit", function()
-         print("Localization data has been loaded!")
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: InitializedKeybinds
+    InitializedKeybinds()
 
-   Description:
-      Triggered once the keybind system has finished loading and initializing keybind configurations.
-      This hook indicates that keybind settings are now available and ready for use or further modifications,
-      allowing other modules or systems to perform additional setup or adjustments related to keybinds.
+    Description:
+        Triggered once the keybind system has finished loading and initializing keybind configurations.
+        This hook indicates that keybind settings are now available and ready for use or further modifications,
+        allowing other modules or systems to perform additional setup or adjustments related to keybinds.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("InitializedKeybinds", "MyKeybindInitialization", function()
-         print("Keybinds initialized successfully!")
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: EasyIconsLoaded
+    EasyIconsLoaded()
 
-   Description:
-      Triggered once the easy icons have been loaded and processed.
-      This hook indicates that icon data is now available for use by other systems that require icon fonts.
+    Description:
+        Triggered once the easy icons have been loaded and processed.
+        This hook indicates that icon data is now available for use by other systems that require icon fonts.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("EasyIconsLoaded", "MyIconsInit", function()
-         print("Easy icons loaded successfully!")
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: OnMySQLOOConnected
+    OnMySQLOOConnected()
 
-   Description:
-      Called when MySQLOO successfully connects to the database.
-      This hook is triggered after all connection pools are connected and is used
-      to perform post-connection setup such as registering prepared statements.
+    Description:
+        Called when MySQLOO successfully connects to the database.
+        This hook is triggered after all connection pools are connected and is used
+        to perform post-connection setup such as registering prepared statements.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("OnMySQLOOConnected", "MySQLOOHandler", function()
-         print("MySQLOO is connected!")
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: LiliaTablesLoaded
+    LiliaTablesLoaded()
 
-   Description:
-      Triggered after the database tables have been loaded or updated.
-      This hook indicates that the database schema is now ready for use and
-      allows further initialization routines to run.
+    Description:
+        Triggered after the database tables have been loaded or updated.
+        This hook indicates that the database schema is now ready for use and
+        allows further initialization routines to run.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("LiliaTablesLoaded", "TablesHandler", function()
-         print("Database tables loaded!")
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: OnLoadTables
+    OnLoadTables()
 
-   Description:
-      Called immediately after the database tables have been loaded.
-      Use this hook to perform additional setup actions that depend on the database schema.
+    Description:
+        Called immediately after the database tables have been loaded.
+        Use this hook to perform additional setup actions that depend on the database schema.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("OnLoadTables", "LoadTablesHandler", function()
-         print("Database tables load complete!")
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: RegisterPreparedStatements
+    RegisterPreparedStatements()
 
-   Description:
-      Triggered to register prepared SQL statements for database operations.
-      This hook is typically called after a successful database connection to prepare
-      commonly used queries for improved performance.
+    Description:
+        Triggered to register prepared SQL statements for database operations.
+        This hook is typically called after a successful database connection to prepare
+        commonly used queries for improved performance.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("RegisterPreparedStatements", "PrepStatementsHandler", function()
-         print("Prepared statements registered!")
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: LoadData
+    LoadData()
 
-   Description:
-      Triggered to load persistent data from storage.
-      This hook is typically called during initialization or when the map changes
-      to restore saved data.
+    Description:
+        Triggered to load persistent data from storage.
+        This hook is typically called during initialization or when the map changes
+        to restore saved data.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("LoadData", "LoadDataHandler", function()
-         print("Data loaded!")
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: PostLoadData
+    PostLoadData()
 
-   Description:
-      Triggered immediately after data is loaded.
-      Use this hook for any post-loading initialization that requires the loaded data.
+    Description:
+        Triggered immediately after data is loaded.
+        Use this hook for any post-loading initialization that requires the loaded data.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("PostLoadData", "PostLoadDataHandler", function()
-         print("Post-load processing complete!")
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: SaveData
+    SaveData()
 
-   Description:
-      Triggered to save persistent data to storage.
-      This hook is commonly called during shutdown or at regular intervals to ensure data persistence.
+    Description:
+        Triggered to save persistent data to storage.
+        This hook is commonly called during shutdown or at regular intervals to ensure data persistence.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("SaveData", "SaveDataHandler", function()
-         print("Data saved!")
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: PersistenceSave
+    PersistenceSave()
 
-   Description:
-      Triggered to perform additional persistence operations.
-      This hook can be used to save supplementary data that may not be covered by the standard SaveData hook.
+    Description:
+        Triggered to perform additional persistence operations.
+        This hook can be used to save supplementary data that may not be covered by the standard SaveData hook.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("PersistenceSave", "PersistenceSaveHandler", function()
-         print("Supplementary data saved!")
-      end)
+    Returns:
+        None
 ]]
 --[[
-   Hook: ShouldDataBeSaved
+    ShouldDataBeSaved()
 
-   Description:
-      Triggered to determine whether data should be saved.
-      Handlers of this hook can return false to prevent data from being saved.
+    Description:
+        Triggered to determine whether data should be saved.
+        Handlers of this hook can return false to prevent data from being saved.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      boolean - Return false to cancel data saving; otherwise, true (or no return) to proceed.
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("ShouldDataBeSaved", "ShouldDataBeSavedHandler", function()
-         return true -- or false to cancel data saving
-      end)
+    Returns:
+        boolean – Return false to cancel data saving; otherwise, true or nil to proceed.
 ]]
 --[[
-   Hook: CanPlayerUseCommand
+    CanPlayerUseCommand(client, command)
 
-   Description:
-      This hook is triggered to determine if a player has permission to execute a specific command.
-      It is invoked within the command access check function. If any callback returns false,
-      the command is considered not accessible to the player.
+    Description:
+        Triggered to determine if a player has permission to execute a specific command.
+        Invoked within the command access check function. If any callback returns false,
+        the command is considered not accessible to the player.
 
-   Parameters:
-      client (Player) - The player attempting to execute the command.
-      command (string) - The command being executed.
+    Parameters:
+        client (Player) – The player attempting to execute the command.
+        command (string) – The command being executed.
 
-   Returns:
-      boolean - Return false to deny access, or true/nil to allow access.
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("CanPlayerUseCommand", "CheckAdminCommands", function(client, command)
-         if command == "restrictedCommand" then
-            return false
-         end
-      end)
+    Returns:
+        boolean – Return false to deny access, or true or nil to allow access.
 ]]
 --[[
-   Hook: CanPlayerJoinClass
+    CanPlayerJoinClass(client, class, info)
 
-   Description:
-      Triggered during the class join process to allow custom logic.
-      If any callback returns false, the player is prevented from joining the specified class.
+    Description:
+        Triggered during the class join process to allow custom logic.
+        If any callback returns false, the player is prevented from joining the specified class.
 
-   Parameters:
-      client (Player) - The player attempting to join the class.
-      class (string) - The identifier of the class being joined.
-      info (table) - The table containing metadata about the class (e.g., name, description, attributes).
+    Parameters:
+        client (Player) – The player attempting to join the class.
+        class (string) – The identifier of the class being joined.
+        info (table) – The table containing metadata about the class (e.g., name, description, attributes).
 
-   Returns:
-      boolean - Return false to block the class change; return true or nil to allow it.
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("CanPlayerJoinClass", "PreventBannedClass", function(client, class, info)
-         if client:IsBannedFromClass(class) then
-            return false
-         end
-      end)
+    Returns:
+        boolean – Return false to block the class change; return true or nil to allow it.
 ]]
 --[[
-   Hook: GetDisplayedName
+    GetDisplayedName(speaker, chatType)
 
-   Description:
-      Called when the chatbox needs to determine what name to display for a speaker.
-      Allows overriding the default player name or providing a custom label.
+    Description:
+        Called when the chatbox needs to determine what name to display for a speaker.
+        Allows overriding the default player name or providing a custom label.
 
-   Parameters:
-      speaker (Player or Entity) - The entity sending the chat message.
-      chatType (string)         - The type/category of chat (e.g., "say", "yell", "pm").
+    Parameters:
+        speaker (Player or Entity) – The entity sending the chat message.
+        chatType (string) – The type/category of chat (e.g., "say", "yell", "pm").
 
-   Returns:
-      string - A custom display name. Returning nil falls back to speaker:Name() or “Console”.
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("GetDisplayedName", "UseSteamName", function(speaker, chatType)
-         if IsValid(speaker) then
-            return speaker:SteamName()
-         end
-      end)
+    Returns:
+        string – A custom display name. Returning nil falls back to speaker:Name() or “Console”.
 ]]
 --[[
-   Hook: PlayerMessageSend
+    PlayerMessageSend(sender, chatType, text, anonymous, receivers)
 
-   Description:
-      Fired just before a chat message is broadcast (server) or echoed locally (client).
-      Allows modifying or blocking the outgoing message text.
+    Description:
+        Fired just before a chat message is broadcast (server) or echoed locally (client).
+        Allows modifying or blocking the outgoing message text.
 
-   Parameters:
-      sender (Player or Entity) - The entity sending the message.
-      chatType (string)         - The chat category (e.g., "say", "yell").
-      text (string)             - The original message content.
-      anonymous (boolean)       - True if the sender should be hidden.
-      receivers (table<Player>) - (Server only) List of recipients.
+    Parameters:
+        sender (Player or Entity) – The entity sending the message.
+        chatType (string) – The chat category (e.g., "say", "yell").
+        text (string) – The original message content.
+        anonymous (boolean) – True if the sender should be hidden.
+        receivers (table<Player>) – (Server only) List of recipients.
 
-   Returns:
-      string or nil - Return a modified message string to replace the original.
-                      Return false to block sending. Return nil to leave unchanged.
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Example Usage:
-      hook.Add("PlayerMessageSend", "FilterSwearWords", function(sender, chatType, text)
-         return string.gsub(text, "badword", "****")
-      end)
+    Returns:
+        string or boolean – Return a modified message string to replace the original, false to block sending, or nil to leave unchanged.
 ]]
 --[[
-   Hook: CreateInventoryPanel
+    CreateInventoryPanel(inventory, parent)
 
-   Description:
-      Called to create the inventory UI panel for a given inventory.
+    Description:
+        Called to create the inventory UI panel for a given inventory.
 
-   Parameters:
-      inventory (table) — the inventory instance to display
-      parent (Panel) — the parent VGUI element
+    Parameters:
+        inventory (table) – The inventory instance to display.
+        parent (Panel) – The parent VGUI element.
 
-   Returns:
-      Panel — the newly created inventory UI panel
+    Realm:
+        Client
+
+    Returns:
+        Panel – The newly created inventory UI panel.
 ]]
 --[[
-   Hook: CanPlayerViewInventory
+    CanPlayerViewInventory()
 
-   Description:
-      Determines whether the local player is allowed to view their inventory.
+    Description:
+        Determines whether the local player is allowed to view their inventory.
 
-   Returns:
-      boolean|nil — return false to block inventory viewing; anything else allows it
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Returns:
+        boolean or nil – Return false to block inventory viewing; anything else allows it.
 ]]
 --[[
-   Hook: PostDrawInventory
+    PostDrawInventory(mainPanel)
 
-   Description:
-      Called after the inventory panel is rendered each frame, for drawing custom overlays or effects.
+    Description:
+        Called after the inventory panel is rendered each frame, for drawing custom overlays or effects.
 
-   Parameters:
-      mainPanel (Panel) — the inventory UI panel that was drawn
+    Parameters:
+        mainPanel (Panel) – The inventory UI panel that was drawn.
 
-   Returns:
-      nil
+    Realm:
+        Client
+
+    Returns:
+        None
 ]]
 --[[
-   Hook: OnCharVarChanged
+    OnCharVarChanged(self, key, oldVar, value)
 
-   Description:
-      Called whenever a character variable changes. Provides the old and new values.
+    Description:
+        Called whenever a character variable changes. Provides the old and new values.
 
-   Parameters:
-      self (table) — The character object whose variable changed.
-      key (string) — The name of the variable that changed.
-      oldVar (any) — The previous value of the variable.
-      value (any) — The new value of the variable.
+    Parameters:
+        self (table) – The character object whose variable changed.
+        key (string) – The name of the variable that changed.
+        oldVar (any) – The previous value of the variable.
+        value (any) – The new value of the variable.
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
+    Returns:
+        None
 ]]
 --[[
-   Hook: GetDefaultCharName
+    GetDefaultCharName(client, faction, data)
 
-   Description:
-      Called to retrieve a default name for a newly created or adjusted character. If a string and an override are returned,
-      the character's name will be set to that string.
+    Description:
+        Called to retrieve a default name for a newly created or adjusted character.
+        If a string and an override are returned, the character's name will be set to that string.
 
-   Parameters:
-      client (Player) - The player creating or adjusting the character.
-      faction (any) - The faction of the character (number/index or string).
-      data (table) - Additional data relevant to the character creation process.
+    Parameters:
+        client (Player) – The player creating or adjusting the character.
+        faction (any) – The faction of the character (number/index or string).
+        data (table) – Additional data relevant to the character creation process.
 
-   Returns:
-      name (string|nil) - The default name to set, if any.
-      override (boolean|nil) - Whether to forcibly use the returned name.
+    Realm:
+        Shared
 
-   Realm:
-      Shared
+    Returns:
+        string or nil, boolean or nil – name and override flag. Name to set if returned, override determines forced use.
 ]]
 --[[
-   Hook: GetDefaultCharDesc
+    GetDefaultCharDesc(client, faction)
 
-   Description:
-      Called to retrieve a default description for a newly created or adjusted character. If a string and an override are returned,
-      the character's description will be set to that string.
+    Description:
+        Called to retrieve a default description for a newly created or adjusted character.
+        If a string and an override are returned, the character's description will be set to that string.
 
-   Parameters:
-      client (Player) - The player creating or adjusting the character.
-      faction (any) - The faction of the character (number/index or string).
+    Parameters:
+        client (Player) – The player creating or adjusting the character.
+        faction (any) – The faction of the character (number/index or string).
 
-   Returns:
-      desc (string|nil) - The default description to set, if any.
-      override (boolean|nil) - Whether to forcibly use the returned description.
+    Realm:
+        Shared
 
-   Realm:
-      Shared
+    Returns:
+        string or nil, boolean or nil – desc and override flag. Description to set if returned, override determines forced use.
 ]]
 --[[
-   Hook: PlayerModelChanged
+    PlayerModelChanged(client, newModel)
 
-   Description:
-      Called when a character's model is changed, allowing for custom logic like updating UI or applying extra changes.
+    Description:
+        Called when a character's model is changed, allowing for custom logic like updating UI or applying extra changes.
 
-   Parameters:
-      client (Player) - The player whose model changed.
-      newModel (string) - The new model path.
+    Parameters:
+        client (Player) – The player whose model changed.
+        newModel (string) – The new model path.
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
+    Returns:
+        None
 ]]
 --[[
-   Hook: GetAttributeStartingMax
+    GetAttributeStartingMax(client, attribKey)
 
-   Description:
-      Called when determining the maximum starting value for a particular attribute during character creation.
+    Description:
+        Called when determining the maximum starting value for a particular attribute during character creation.
 
-   Parameters:
-      client (Player) - The player creating or adjusting the character.
-      attribKey (string) - The attribute key to check for a maximum.
+    Parameters:
+        client (Player) – The player creating or adjusting the character.
+        attribKey (string) – The attribute key to check for a maximum.
 
-   Returns:
-      number|nil - The maximum allowed attribute value. Return nil to ignore.
+    Realm:
+        Shared
 
-   Realm:
-      Shared
+    Returns:
+        number or nil – The maximum allowed attribute value. Return nil to ignore.
 ]]
 --[[
-   Hook: GetMaxStartingAttributePoints
+    GetMaxStartingAttributePoints(client, currentTotal)
 
-   Description:
-      Called when validating total attribute points during character creation.
+    Description:
+        Called when validating total attribute points during character creation.
 
-   Parameters:
-      client (Player) - The player creating or adjusting the character.
-      currentTotal (number) - The current total of assigned attribute points.
+    Parameters:
+        client (Player) – The player creating or adjusting the character.
+        currentTotal (number) – The current total of assigned attribute points.
 
-   Returns:
-      number|nil - The maximum total attribute points allowed. Return nil to ignore.
+    Realm:
+        Shared
 
-   Realm:
-      Shared
+    Returns:
+        number or nil – The maximum total attribute points allowed. Return nil to ignore.
 ]]
 --[[
-   Hook: CharRestored
+    CharRestored(character)
 
-   Description:
-      Fired after a character is successfully loaded from the database. Useful for post-load operations or modifications.
+    Description:
+        Fired after a character is successfully loaded from the database. Useful for post-load operations or modifications.
 
-   Parameters:
-      character (table) - The character object that was restored.
+    Parameters:
+        character (table) – The character object that was restored.
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
+    Returns:
+        None
 ]]
 --[[
-   Hook: CreateDefaultInventory
+    CreateDefaultInventory(character)
 
-   Description:
-      Called when a newly created or restored character needs a default inventory setup.
-      Should return a promise object resolving to an inventory, or nil if handling is deferred.
+    Description:
+        Called when a newly created or restored character needs a default inventory setup.
+        Should return a promise object resolving to an inventory, or nil if handling is deferred.
 
-   Parameters:
-      character (table) - The character object that needs a default inventory.
+    Parameters:
+        character (table) – The character object that needs a default inventory.
 
-   Returns:
-      promise|nil - A promise resolving to the default inventory, or nil if not handled.
+    Realm:
+        Shared
 
-   Realm:
-      Shared
+    Returns:
+        promise or nil – A promise resolving to the default inventory, or nil if not handled.
 ]]
 --[[
-   Hook: CharCleanUp
+    CharCleanUp(character)
 
-   Description:
-      Called when a character is removed or cleaned up from memory. Allows for custom cleanup operations.
+    Description:
+        Called when a character is removed or cleaned up from memory. Allows for custom cleanup operations.
 
-   Parameters:
-      character (table) - The character object being cleaned up.
+    Parameters:
+        character (table) – The character object being cleaned up.
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
+    Returns:
+        None
 ]]
 --[[
-   Hook: PreCharDelete
+    PreCharDelete(id)
 
-   Description:
-      Called before a character is fully deleted. Useful for final checks or additional removal logic.
+    Description:
+        Called before a character is fully deleted. Useful for final checks or additional removal logic.
 
-   Parameters:
-      id (number) - The unique ID of the character about to be deleted.
+    Parameters:
+        id (number) – The unique ID of the character about to be deleted.
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
+    Returns:
+        None
 ]]
 --[[
-   Hook: OnCharDelete
+    OnCharDelete(client, id)
 
-   Description:
-      Called after a character has been deleted from the database and cleaned up.
+    Description:
+        Called after a character has been deleted from the database and cleaned up.
 
-   Parameters:
-      client (Player|nil) - The player associated with the deleted character, or nil if not valid.
-      id (number) - The unique ID of the character that was deleted.
+    Parameters:
+        client (Player or nil) – The player associated with the deleted character, or nil if not valid.
+        id (number) – The unique ID of the character that was deleted.
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
+    Returns:
+        None
 ]]
 --[[
-   Hook: InitializedItems
+    InitializedItems()
 
-   Description:
-      Fired once all items have been loaded and registered. Useful for performing any setup
-      or initialization logic that depends on the complete item list.
+    Description:
+        Fired once all items have been loaded and registered. Useful for performing any setup or initialization logic that depends on the complete item list.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Realm:
-      Shared
+    Realm:
+        Shared
+
+    Returns:
+        None
 ]]
 --[[
-   Hook: OnItemRegistered
+    OnItemRegistered(ITEM)
 
-   Description:
-      Fired immediately after a single item definition has been registered into the system.
+    Description:
+        Fired immediately after a single item definition has been registered into the system.
 
-   Parameters:
-      ITEM (table) — The item table that was just registered.
+    Parameters:
+        ITEM (table) – The item table that was just registered.
 
-   Realm:
-      Shared
+    Realm:
+        Shared
+
+    Returns:
+        None
 ]]
 --[[
-   Hook: HandleItemTransferRequest
+    HandleItemTransferRequest(client, itemID, fromInvID, fromSlotX, fromSlotY, toInvID)
 
-   Description:
-      Fired when an item transfer is requested (e.g., via giving or moving items between inventories).
-      Handlers should return a deferred that resolves when the transfer is allowed/completed, or return
-      false to cancel the transfer.
+    Description:
+        Fired when an item transfer is requested (e.g., via giving or moving items between inventories).
+        Handlers should return a deferred that resolves when the transfer is allowed/completed, or return false to cancel the transfer.
 
-   Parameters:
-      client (Player) — The player initiating the transfer.
-      itemID (number) — The ID of the item being transferred.
-      fromInvID (number|nil) — The ID of the source inventory, if any.
-      fromSlotX (number|nil) — The X coordinate in a grid inventory, if applicable.
-      fromSlotY (number|nil) — The Y coordinate in a grid inventory, if applicable.
-      toInvID (number) — The ID of the destination inventory.
+    Parameters:
+        client (Player) – The player initiating the transfer.
+        itemID (number) – The ID of the item being transferred.
+        fromInvID (number or nil) – The ID of the source inventory, if any.
+        fromSlotX (number or nil) – The X coordinate in a grid inventory, if applicable.
+        fromSlotY (number or nil) – The Y coordinate in a grid inventory, if applicable.
+        toInvID (number) – The ID of the destination inventory.
 
-   Realm:
-      Shared
+    Realm:
+        Shared
+
+    Returns:
+        promise or boolean – A deferred resolving when allowed, or false to cancel the transfer.
 ]]
