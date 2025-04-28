@@ -43,11 +43,11 @@ local function LiliaLog(messageType, message, section, color)
     MsgC(color or logType.message, message .. "\n")
 end
 
-function LiliaError(message)
+function lia.error(message)
     LiliaLog("Error", message)
 end
 
-function LiliaDeprecated(methodName, callback)
+function lia.deprecated(methodName, callback)
     local message = string.format("%s is deprecated. Please use the new methods for optimization purposes.", methodName)
     LiliaLog("Deprecated", message)
     if callback and isfunction(callback) then callback() end
@@ -57,20 +57,12 @@ function LiliaUpdater(message)
     LiliaLog("Updater", message)
 end
 
-function LiliaInformation(message)
+function lia.information(message)
     LiliaLog("Information", message)
 end
 
-function LiliaEvent(section, message)
-    LiliaLog("Event", message, section)
-end
-
-function LiliaBootstrap(section, message)
+function lia.bootstrap(section, message)
     LiliaLog("Bootstrap", message, section)
-end
-
-function dprint(...)
-    print("[DEBUG]", ...)
 end
 
 local function RemoveHintTimers()
@@ -81,9 +73,9 @@ local function RemoveHintTimers()
 end
 
 function GM:Initialize()
-    if engine.ActiveGamemode() == "lilia" then LiliaError("No schema loaded. Please place the schema in your gamemodes folder, then set it as your gamemode.") end
+    if engine.ActiveGamemode() == "lilia" then lia.error("No schema loaded. Please place the schema in your gamemodes folder, then set it as your gamemode.") end
     if SERVER then
-        LiliaBootstrap("Bootstrapper", "Starting boot sequence...")
+        lia.bootstrap("Bootstrapper", "Starting boot sequence...")
     else
         hook.Run("l", "Arial", "Segoe UI")
     end
@@ -105,7 +97,7 @@ function GM:OnReloaded()
 
     lia.config.load()
     lia.faction.formatModelData()
-    if SERVER then LiliaBootstrap("Bootstrapper", "Starting reload sequence...") end
+    if SERVER then lia.bootstrap("Bootstrapper", "Starting reload sequence...") end
     if CLIENT then
         lia.option.load()
         lia.keybind.load()

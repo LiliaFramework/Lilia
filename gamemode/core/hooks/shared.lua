@@ -192,7 +192,7 @@ local function registerFunctions(scope)
         elseif f.replacement then
             GM[f.name] = function(...)
                 local args = {...}
-                LiliaDeprecated(f.name, function() hook.Run(f.replacement, unpack(args)) end)
+                lia.deprecated(f.name, function() hook.Run(f.replacement, unpack(args)) end)
             end
         end
     end

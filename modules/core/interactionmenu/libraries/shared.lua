@@ -4,12 +4,12 @@ MODULE.SelfOptions = MODULE.SelfOptions or {}
 local MaxInteractionDistance = 250 * 250
 function AddInteraction(name, data)
     MODULE.Options[name] = data
-    LiliaBootstrap("Player Interaction Menu", "Added P2P Action: " .. name)
+    lia.bootstrap("Player Interaction Menu", "Added P2P Action: " .. name)
 end
 
 function AddAction(name, data)
     MODULE.SelfOptions[name] = data
-    LiliaBootstrap("Action Menu", "Added Personal Action: " .. name)
+    lia.bootstrap("Action Menu", "Added Personal Action: " .. name)
 end
 
 function MODULE:CheckPossibilities()

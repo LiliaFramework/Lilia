@@ -17,7 +17,7 @@
     end
 
     self:setData(data)
-    LiliaInformation("Vendors saved: " .. table.Count(data))
+    lia.information("Vendors saved: " .. table.Count(data))
 end
 
 function MODULE:LoadData()

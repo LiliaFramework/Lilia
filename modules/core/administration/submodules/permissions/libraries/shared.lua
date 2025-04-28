@@ -41,7 +41,7 @@ concommand.Add("list_entities", function(client)
     local entityCount = {}
     local totalEntities = 0
     if not IsValid(client) then
-        LiliaInformation("Entities on the server:")
+        lia.information("Entities on the server:")
         for _, entity in ents.Iterator() do
             local className = entity:GetClass() or "Unknown"
             entityCount[className] = (entityCount[className] or 0) + 1
@@ -49,10 +49,10 @@ concommand.Add("list_entities", function(client)
         end
 
         for className, count in pairs(entityCount) do
-            LiliaInformation(string.format("Class: %s | Count: %d", className, count))
+            lia.information(string.format("Class: %s | Count: %d", className, count))
         end
 
-        LiliaInformation("Total entities on the server: " .. totalEntities)
+        lia.information("Total entities on the server: " .. totalEntities)
     end
 end)
 
