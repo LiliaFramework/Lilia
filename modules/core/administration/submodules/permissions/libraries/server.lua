@@ -100,36 +100,17 @@ function GM:PlayerSpawnVehicle(client, _, name)
     return canSpawn
 end
 
-function GM:PlayerNoClip(client, state)
-    if client:isStaffOnDuty() or client:hasPrivilege("Staff Permissions - No Clip Outside Staff Character") and not client:isStaffOnDuty() then
-        if state then
-            client:DrawShadow(false)
-            client:SetNoTarget(true)
-            client.liaObsData = {client:GetPos(), client:EyeAngles()}
-            hook.Run("OnPlayerObserve", client, state)
-        else
-            if client.liaObsData then
-                if client:GetInfoNum("lia_obstpback", 0) > 0 then
-                    local position, angles = client.liaObsData[1], client.liaObsData[2]
-                    timer.Simple(0, function()
-                        client:SetPos(position)
-                        client:SetEyeAngles(angles)
-                        client:SetVelocity(Vector(0, 0, 0))
-                    end)
-                end
-
-                client.liaObsData = nil
-            end
-
-            client:DrawShadow(true)
-            client:SetNoTarget(false)
-            hook.Run("OnPlayerObserve", client, state)
-        end
-        return true
+function GM:PlayerNoClip(ply, enabled)
+    if not (ply:isStaffOnDuty() or ply:hasPrivilege("Staff Permissions - No Clip Outside Staff Character")) then
+        ply:notify("You do not have permission to noclip.")
+        return false
     end
 
-    client:notify("You do not have permission to noclip.")
-    return false
+    ply:DrawShadow(not enabled)
+    ply:SetNoTarget(enabled)
+    ply:AddFlags(FL_NOTARGET)
+    hook.Run("OnPlayerObserve", ply, enabled)
+    return true
 end
 
 function GM:PlayerSpawnEffect(client)
