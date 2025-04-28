@@ -1,6 +1,4 @@
-﻿MODULE.AltCheckSeed = MODULE.AltCheckSeed or string.generateRandom()
-MODULE.HackingCheckSeed = MODULE.HackingCheckSeed or string.generateRandom()
-MODULE.name = "Protection"
+﻿MODULE.name = "Protection"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
 MODULE.version = "1.0"

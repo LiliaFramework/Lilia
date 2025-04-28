@@ -83,6 +83,27 @@ else
         net.WriteUInt(id, 32)
         net.SendToServer()
     end
+
+    function MODULE:LiliaLoaded()
+        vgui.Create("liaCharacter")
+    end
+
+    function MODULE:KickedFromChar(_, isCurrentChar)
+        if isCurrentChar then vgui.Create("liaCharacter") end
+    end
+
+    function MODULE:CreateMenuButtons(tabs)
+        tabs["characters"] = function()
+            local client = LocalPlayer()
+            if client:IsInThirdPerson() then
+                lia.option.set("thirdPersonEnabled", false)
+                hook.Run("thirdPersonToggled", false)
+            end
+
+            if IsValid(lia.gui.menu) then lia.gui.menu:Remove() end
+            vgui.Create("liaCharacter")
+        end
+    end
 end
 
 function MODULE:CanPlayerCreateChar(client)

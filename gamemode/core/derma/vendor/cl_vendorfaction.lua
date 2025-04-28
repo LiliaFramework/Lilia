@@ -1,5 +1,5 @@
 ﻿local PANEL = {}
-local EDITOR = include("lilia/modules/vendor/libs/cl_vendor.lua")
+local EDITOR = include("lilia/modules/utilities/vendor/libs/cl_vendor.lua")
 local function onFactionStateChanged(checkBox, state)
     EDITOR.faction(checkBox.factionID, state)
 end

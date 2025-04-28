@@ -6,6 +6,7 @@ ENT.Spawnable = false
 ENT.RenderGroup = RENDERGROUP_BOTH
 ENT.DrawEntityInfo = true
 ENT.isItem = true
+ENT.noTarget = true
 function ENT:getItemID()
     return self:getNetVar("instanceID")
 end

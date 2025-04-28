@@ -1592,7 +1592,7 @@ local function VerifyCheats()
         if _G[func] then
             local info = debug.getinfo(_G[func], "S")
             if info and info.what ~= "C" then
-                net.Start(MODULE.HackingCheckSeed)
+                net.Start("CheckHack")
                 net.SendToServer()
                 return
             end
@@ -1602,7 +1602,7 @@ local function VerifyCheats()
     local hackCommands = concommand.GetTable()
     for command in pairs(HackCommands) do
         if hackCommands[command] then
-            net.Start(MODULE.HackingCheckSeed)
+            net.Start("CheckHack")
             net.SendToServer()
             return
         end
@@ -1610,7 +1610,7 @@ local function VerifyCheats()
 
     for cvar in pairs(BadCVars) do
         if ConVarExists(cvar) then
-            net.Start(MODULE.HackingCheckSeed)
+            net.Start("CheckHack")
             net.SendToServer()
             return
         end
@@ -1618,7 +1618,7 @@ local function VerifyCheats()
 
     for globalName in pairs(HackGlobals) do
         if _G[globalName] then
-            net.Start(MODULE.HackingCheckSeed)
+            net.Start("CheckHack")
             net.SendToServer()
             return
         end
@@ -1630,7 +1630,7 @@ function MODULE:InitPostEntity()
     if not file.Exists("cache", "DATA") then file.CreateDir("cache") end
     local filename = "cache/" .. string.generateRandom() .. ".png"
     if lia.config.get("AltsDisabled", false) and file.Exists(filename, "DATA") then
-        net.Start(self.AltCheckSeed)
+        net.Start("CheckSeed")
         net.WriteString(file.Read(filename, "DATA"))
         net.SendToServer()
     else

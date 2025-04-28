@@ -1,5 +1,5 @@
 ﻿local PANEL = {}
-local EDITOR = include("lilia/modules/vendor/libs/cl_vendor.lua")
+local EDITOR = include("lilia/modules/utilities/vendor/libs/cl_vendor.lua")
 local COLS_MODE = 2
 local COLS_PRICE = 3
 local COLS_STOCK = 4

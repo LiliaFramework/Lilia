@@ -1,4 +1,4 @@
-﻿local RealmIdentifiers = {
+﻿local RealmIDs = {
     client = "client",
     server = "server",
     shared = "shared",
@@ -194,25 +194,24 @@ end
     Example Usage:
        lia.include("lilia/gamemode/core/libraries/util.lua", "shared")
  ]]
-function lia.include(fileName, state)
-    if not fileName then error("[Lilia] No file name specified for inclusion.") end
-    local matchResult = string.match(fileName, "/([^/]+)%.lua$")
-    local fileRealm = matchResult and RealmIdentifiers[matchResult] or "NULL"
-    if (state == "server" or fileRealm == "server" or fileName:find("sv_")) and SERVER then
-        return include(fileName)
-    elseif state == "shared" or fileRealm == "shared" or fileName:find("sh_") then
-        if SERVER then AddCSLuaFile(fileName) end
-        return include(fileName)
-    elseif state == "client" or fileRealm == "client" or fileName:find("cl_") then
+function lia.include(path, realm)
+    if not path then error("[Lilia] missing file path") end
+    local base = path:match("/([^/]+)%.lua$")
+    local resolved = realm or RealmIDs[base] or path:find("sv_") and "server" or path:find("sh_") and "shared" or path:find("cl_") and "client" or "shared"
+    if resolved == "server" then
+        if SERVER then include(path) end
+    elseif resolved == "client" then
         if SERVER then
-            AddCSLuaFile(fileName)
+            AddCSLuaFile(path)
         else
-            return include(fileName)
+            include(path)
         end
+    else
+        if SERVER then AddCSLuaFile(path) end
+        include(path)
     end
 end
 
-lia.util.include = lia.include
 --[[
     Function: lia.includeDir
 
@@ -236,45 +235,25 @@ lia.util.include = lia.include
     Example Usage:
        lia.includeDir("lilia/gamemode/core/libraries/thirdparty", true, true)
  ]]
-function lia.includeDir(directory, fromLua, recursive, realm)
-    local baseDir = "lilia"
-    if SCHEMA and SCHEMA.folder and SCHEMA.loading then
-        baseDir = SCHEMA.folder .. "/schema/"
-    else
-        baseDir = baseDir .. "/gamemode/"
-    end
-
-    if recursive then
-        local function AddRecursive(folder, baseFolder)
-            local files, folders = file.Find(folder .. "/*", "LUA")
-            if not files then
-                MsgN("Warning! This folder is empty!")
-                return
-            end
-
-            for _, v in ipairs(files) do
-                local fullPath = folder .. "/" .. v
-                lia.include(fullPath, realm)
-            end
-
-            for _, v in ipairs(folders) do
-                local subFolder = baseFolder .. "/" .. v
-                AddRecursive(folder .. "/" .. v, subFolder)
-            end
+function lia.includeDir(dir, raw, deep, realm)
+    local root = raw and dir or (SCHEMA and SCHEMA.folder and SCHEMA.loading and SCHEMA.folder .. "/schema" or "lilia/gamemode") .. "/" .. dir
+    local function loadDir(folder)
+        print("[Lilia] Loading folder: " .. folder)
+        for _, fileName in ipairs(file.Find(folder .. "/*.lua", "LUA")) do
+            lia.include(folder .. "/" .. fileName, realm)
         end
 
-        local initialFolder = (fromLua and "" or baseDir) .. directory
-        AddRecursive(initialFolder, initialFolder)
-    else
-        for _, v in ipairs(file.Find((fromLua and "" or baseDir) .. directory .. "/*.lua", "LUA")) do
-            local fullPath = directory .. "/" .. v
-            lia.include(fullPath, realm)
+        if deep then
+            for _, subFolder in ipairs(select(2, file.Find(folder .. "/*", "LUA"))) do
+                loadDir(folder .. "/" .. subFolder)
+            end
         end
     end
+
+    loadDir(root)
 end
 
 lia.includeDir("lilia/gamemode/core/libraries/thirdparty", true, true)
-lia.util.includeDir = lia.includeDir
 --[[
     Function: lia.includeEntities
 
@@ -381,3 +360,5 @@ lia.includeEntities(engine.ActiveGamemode() .. "/gamemode/entities")
 for _, files in ipairs(FilesToLoad) do
     lia.include(files.path, files.realm)
 end
+
+lia.includeDir("lilia/gamemode/core/derma", true, true, "client")

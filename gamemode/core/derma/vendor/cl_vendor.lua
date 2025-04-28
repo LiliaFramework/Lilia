@@ -1,28 +1,6 @@
-﻿lia.config.add("VendorNameColor", "Vendor Name Color", {
-    r = 255,
-    g = 120,
-    b = 30
-}, nil, {
-    desc = "Color for vendor and player header text",
-    category = "Visuals",
-    type = "Color"
-})
-
-surface.CreateFont("liaVendorHeader", {
-    font = "Roboto",
-    size = 42,
-    weight = 500
-})
-
-surface.CreateFont("liaVendorItem", {
-    font = "Roboto",
-    size = 24,
-    weight = 600
-})
-
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
-    local ply = LocalPlayer()
+    local p = LocalPlayer()
     local sw, sh = ScrW(), ScrH()
     if IsValid(lia.gui.vendor) then
         lia.gui.vendor.noSendExit = true
@@ -33,99 +11,236 @@ function PANEL:Init()
     self:SetSize(sw, sh)
     self:MakePopup()
     self:SetAlpha(0)
-    self:AlphaTo(255, .2, 0)
+    self:AlphaTo(255, 0.2, 0)
     self.buttons = self:Add("DPanel")
-    self.buttons:Dock(TOP)
     self.buttons:DockMargin(0, 32, 0, 0)
+    self.buttons:Dock(TOP)
     self.buttons:SetTall(36)
     self.buttons:SetPaintBackground(false)
-    local vpw, vph = math.max(sw * .35, 350), sh - 64
     self.vendorPanel = self:Add("VendorTrader")
-    self.vendorPanel:SetSize(vpw, vph)
-    self.vendorPanel:SetPos(sw * .25 - vpw * .5, 64)
+    self.vendorPanel:SetSize(math.max(sw * 0.25, 220), sh - self.vendorPanel.y)
+    self.vendorPanel:SetPos(sw * 0.5 - self.vendorPanel:GetWide() - 32, 64 + 44)
+    self.vendorPanel:SetTall(sh - self.vendorPanel.y)
     self.mePanel = self:Add("VendorTrader")
-    self.mePanel:SetSize(vpw, vph)
-    self.mePanel:SetPos(sw * .75 - vpw * .5, 64)
+    self.mePanel:SetSize(self.vendorPanel:GetSize())
+    self.mePanel:SetPos(sw * 0.5 + 32, self.vendorPanel.y)
     self:listenForChanges()
-    self:liaListenForInventoryChanges(ply:getChar():getInv())
+    self:liaListenForInventoryChanges(p:getChar():getInv())
     self.items = {
         vendor = {},
         me = {}
     }
 
-    local vendName = liaVendorEnt:getNetVar("name", "Vendor")
-    local vendMoney = liaVendorEnt:getMoney() and lia.currency.get(liaVendorEnt:getMoney()) or "∞"
-    self.vendorHeader = self:Add("DLabel")
-    self.vendorHeader:SetFont("liaVendorHeader")
-    self.vendorHeader:SetText(vendName .. " (" .. vendMoney .. ")")
-    local cfg = lia.config.get("VendorNameColor")
-    self.vendorHeader:SetTextColor(Color(cfg.r, cfg.g, cfg.b))
-    self.vendorHeader:SetContentAlignment(5)
-    self.vendorHeader:SizeToContents()
-    self.vendorHeader:SetPos(self.vendorPanel.x + (self.vendorPanel:GetWide() - self.vendorHeader:GetWide()) * .5, self.vendorPanel.y - self.vendorHeader:GetTall() - 8)
-    local myCash = ply:getChar():getMoney()
-    self.meHeader = self:Add("DLabel")
-    self.meHeader:SetFont("liaVendorHeader")
-    self.meHeader:SetText("You (" .. lia.currency.get(myCash) .. ")")
-    self.meHeader:SetTextColor(Color(cfg.r, cfg.g, cfg.b))
-    self.meHeader:SetContentAlignment(5)
-    self.meHeader:SizeToContents()
-    self.meHeader:SetPos(self.mePanel.x + (self.mePanel:GetWide() - self.meHeader:GetWide()) * .5, self.mePanel.y - self.meHeader:GetTall() - 8)
+    self.currentCategory = nil
+    self.meLabel = self:Add("DLabel")
+    self.meLabel:SetText(L("vendorYourItems"))
+    self.meLabel:SetFont("liaBigFont")
+    self.meLabel:SetTextColor(color_white)
+    self.meLabel:SetContentAlignment(5)
+    self.meLabel:SizeToContents()
+    self.meLabel:SetPos(self.mePanel.x + self.mePanel:GetWide() * 0.5 - self.meLabel:GetWide() * 0.5, self.mePanel.y - self.meLabel:GetTall() - 10)
+    self.vendorLabel = self:Add("DLabel")
+    self.vendorLabel:SetText(L("vendorItems"))
+    self.vendorLabel:SetFont("liaBigFont")
+    self.vendorLabel:SetTextColor(color_white)
+    self.vendorLabel:SetContentAlignment(5)
+    self.vendorLabel:SizeToContents()
+    self.vendorLabel:SetPos(self.vendorPanel.x + self.vendorPanel:GetWide() * 0.5 - self.vendorLabel:GetWide() * 0.5, self.vendorPanel.y - self.vendorLabel:GetTall() - 10)
     self:populateItems()
     self:createCategoryDropdown()
+    self.left = self:Add("DFrame")
+    self.left:SetPos(sw * 0.015, sh * 0.35)
+    self.left:SetSize(sw * 0.212, sh * 0.24)
+    self.left:SetTitle("")
+    self.left:ShowCloseButton(false)
+    self.left:SetDraggable(false)
+    self.left.Paint = function()
+        if not IsValid(liaVendorEnt) then return end
+        local n = liaVendorEnt:getNetVar("name", "Jane Doe")
+        local sc = liaVendorEnt:getNetVar("scale", 0.5)
+        local m = liaVendorEnt:getMoney() ~= nil and lia.currency.get(liaVendorEnt:getMoney()) or "∞"
+        local t = self.items.vendor or {}
+        local c = table.Count(t)
+        surface.SetDrawColor(30, 30, 30, 190)
+        surface.DrawRect(0, 0, sw, SS(215))
+        surface.DrawOutlinedRect(0, 0, sw, SS(215))
+        surface.SetDrawColor(0, 0, 14, 150)
+        surface.DrawRect(0, 0, sw * 0.26, sh * 0.033)
+        surface.DrawOutlinedRect(0, 0, sw * 0.26, sh * 0.033)
+        draw.DrawText(n, "liaMediumFont", sw * 0.005, sh * 0.003, color_white, TEXT_ALIGN_LEFT)
+        draw.DrawText(L("vendorMoney"), "liaSmallFont", sw * 0.1, sh * 0.05, color_white, TEXT_ALIGN_LEFT)
+        draw.DrawText(m, "liaSmallFont", sw * 0.2, sh * 0.05, color_white, TEXT_ALIGN_RIGHT)
+        draw.DrawText(L("vendorSellScale"), "liaSmallFont", sw * 0.1, sh * 0.07, color_white, TEXT_ALIGN_LEFT)
+        draw.DrawText(math.ceil(sc * 100) .. "%", "liaSmallFont", sw * 0.2, sh * 0.07, color_white, TEXT_ALIGN_RIGHT)
+        draw.DrawText(L("vendorItemCount"), "liaSmallFont", sw * 0.1, sh * 0.09, color_white, TEXT_ALIGN_LEFT)
+        local txt = c == 0 and "No Items" or c == 1 and "1 Item" or c .. " Items"
+        draw.DrawText(txt, "liaSmallFont", sw * 0.2, sh * 0.09, color_white, TEXT_ALIGN_RIGHT)
+    end
+
+    self.right = self:Add("DFrame")
+    self.right:SetPos(sw * 0.78, sh * 0.35)
+    self.right:SetSize(sw * 0.212, sh * 0.61)
+    self.right:SetTitle("")
+    self.right:ShowCloseButton(false)
+    self.right:SetDraggable(false)
+    self.right.Paint = function()
+        surface.SetDrawColor(30, 30, 30, 190)
+        surface.DrawRect(0, 0, sw, SS(215))
+        surface.DrawOutlinedRect(0, 0, sw, SS(215))
+        surface.SetDrawColor(0, 0, 14, 150)
+        surface.DrawRect(0, 0, sw * 0.26, sh * 0.033)
+        surface.DrawOutlinedRect(0, 0, sw * 0.26, sh * 0.033)
+        local c = p:getChar()
+        if not c then return end
+        draw.DrawText(c:getName(), "liaMediumFont", sw * 0.005, sh * 0.003, color_white, TEXT_ALIGN_LEFT)
+        local f = team.GetName(p:Team())
+        if #f > 25 then f = f:sub(1, 25) .. "..." end
+        draw.DrawText(L("faction"), "liaSmallFont", sw * 0.085, sh * 0.05, color_white, TEXT_ALIGN_LEFT)
+        draw.DrawText(f, "liaSmallFont", sw * 0.201, sh * 0.05, color_white, TEXT_ALIGN_RIGHT)
+        local cl = c:getClass()
+        local invC = c:getInv():getItemCount()
+        local disp = invC == 0 and "No Items" or invC == 1 and "1 Item" or invC .. " Items"
+        if lia.class.list[cl] then
+            draw.DrawText(L("class"), "liaSmallFont", sw * 0.085, sh * 0.07, color_white, TEXT_ALIGN_LEFT)
+            draw.DrawText(lia.class.list[cl].name, "liaSmallFont", sw * 0.2, sh * 0.07, color_white, TEXT_ALIGN_RIGHT)
+            draw.DrawText(L("vendorMoney"), "liaSmallFont", sw * 0.085, sh * 0.09, color_white, TEXT_ALIGN_LEFT)
+            draw.DrawText(lia.currency.get(c:getMoney()), "liaSmallFont", sw * 0.2, sh * 0.09, color_white, TEXT_ALIGN_RIGHT)
+            draw.DrawText(L("vendorItemCount"), "liaSmallFont", sw * 0.085, sh * 0.11, color_white, TEXT_ALIGN_LEFT)
+            draw.DrawText(disp, "liaSmallFont", sw * 0.2, sh * 0.11, color_white, TEXT_ALIGN_RIGHT)
+        else
+            draw.DrawText(L("vendorMoney"), "liaSmallFont", sw * 0.085, sh * 0.07, color_white, TEXT_ALIGN_LEFT)
+            draw.DrawText(lia.currency.get(c:getMoney()), "liaSmallFont", sw * 0.2, sh * 0.07, color_white, TEXT_ALIGN_RIGHT)
+            draw.DrawText(L("vendorItemCount"), "liaSmallFont", sw * 0.085, sh * 0.09, color_white, TEXT_ALIGN_LEFT)
+            draw.DrawText(disp, "liaSmallFont", sw * 0.2, sh * 0.09, color_white, TEXT_ALIGN_RIGHT)
+        end
+    end
+
+    local bw, bh = sw * 0.15, sh * 0.05
+    if p:CanEditVendor(self.vendorPanel) then
+        local by = self.right:GetY() + self.right:GetTall() - bh - sw * 0.02
+        self.editor = self:Add("liaSmallButton")
+        self.editor:SetSize(bw, bh)
+        self.editor:SetPos(self.left:GetWide() - bw - sw * 0.02, by)
+        self.editor:SetText(L("vendorEditorButton"))
+        self.editor:SetFont("liaMediumFont")
+        self.editor:SetTextColor(color_white)
+        self.editor.DoClick = function() vgui.Create("VendorEditor"):SetZPos(99) end
+    end
+
+    self.leaveBtn = self.right:Add("liaSmallButton")
+    self.leaveBtn:SetSize(bw, bh)
+    self.leaveBtn:SetPos(self.right:GetWide() - bw - sw * 0.02, self.right:GetTall() - bh - sw * 0.02)
+    self.leaveBtn:SetText(L("leave"))
+    self.leaveBtn:SetFont("liaMediumFont")
+    self.leaveBtn:SetTextColor(color_white)
+    self.leaveBtn.DoClick = function() self:Remove() end
+    self:DrawModels()
 end
 
 function PANEL:createCategoryDropdown()
-    local cats = self:GetItemCategoryList()
-    if table.Count(cats) < 1 then return end
+    local c = self:GetItemCategoryList()
+    if table.Count(c) < 1 then return end
     local sw, sh = ScrW(), ScrH()
-    local vpw = self.vendorPanel:GetWide()
-    local gap = sw * .5 - vpw
-    local dw = math.min(sw * .2, gap * .9)
-    local dh = sh * .04
-    local dx = sw * .5 - dw * .5
-    local dy = self.vendorPanel.y - dh - 8
     self.categoryDropdown = self:Add("liaSmallButton")
-    self.categoryDropdown:SetSize(dw, dh)
-    self.categoryDropdown:SetPos(dx, dy)
+    self.categoryDropdown:SetSize(sw * 0.15, sh * 0.035)
+    self.categoryDropdown:SetPos(sw * 0.82, 110)
     self.categoryDropdown:SetText(L("vendorShowAll"))
     local sorted = {}
-    for cat in pairs(cats) do
-        sorted[#sorted + 1] = cat
+    for k in pairs(c) do
+        table.insert(sorted, k)
     end
 
     table.sort(sorted, function(a, b) return a:lower() < b:lower() end)
-    local menu
+    local menuList
     self.categoryDropdown.DoClick = function()
-        if IsValid(menu) then
-            menu:Remove()
-            menu = nil
+        if IsValid(menuList) then
+            menuList:Remove()
+            menuList = nil
             return
         end
 
-        menu = vgui.Create("DScrollPanel", self)
-        menu:SetSize(self.categoryDropdown:GetWide(), #sorted * 24)
-        menu:SetPos(self.categoryDropdown.x, self.categoryDropdown.y + self.categoryDropdown:GetTall() + 2)
+        menuList = vgui.Create("DScrollPanel", self)
+        menuList:SetSize(self.categoryDropdown:GetWide(), #sorted * 24)
+        menuList:SetPos(self.categoryDropdown.x, self.categoryDropdown.y + self.categoryDropdown:GetTall() + 2)
         for i, cat in ipairs(sorted) do
-            local cap = cat:gsub("^%l", string.upper)
-            local btn = menu:Add("liaSmallButton")
-            btn:SetSize(menu:GetWide(), 22)
+            local capital = cat:gsub("^%l", string.upper)
+            local btn = menuList:Add("liaSmallButton")
+            btn:SetSize(menuList:GetWide(), 22)
             btn:SetPos(0, (i - 1) * 24)
-            btn:SetText(cap)
+            btn:SetText(capital)
             btn.DoClick = function()
-                local all = L("vendorShowAll")
-                if cat == all then
+                local vsa = L("vendorShowAll")
+                if cat == vsa then
                     self.currentCategory = nil
-                    self.categoryDropdown:SetText(all)
+                    self.categoryDropdown:SetText(vsa)
                 else
                     self.currentCategory = cat
-                    self.categoryDropdown:SetText(cap)
+                    self.categoryDropdown:SetText(capital)
                 end
 
                 self:applyCategoryFilter()
-                if IsValid(menu) then
-                    menu:Remove()
-                    menu = nil
+                if IsValid(menuList) then
+                    menuList:Remove()
+                    menuList = nil
+                end
+            end
+        end
+    end
+end
+
+function PANEL:DrawModels()
+    local p = LocalPlayer()
+    self.vendorModel = self:Add("DModelPanel")
+    self.vendorModel:SetSize(SS(160, true), SS(170))
+    self.vendorModel:SetPos(self:GetWide() * 0.25 - SS(350, true) - SS(100), ScrH() * 0.36 + SS(25))
+    local modelPath = liaVendorEnt and liaVendorEnt.GetModel and liaVendorEnt:GetModel() or ""
+    if util.IsValidModel(modelPath) then
+        self.vendorModel:SetModel(modelPath)
+    else
+        self.vendorModel:SetModel("")
+    end
+
+    self.vendorModel:SetFOV(20)
+    self.vendorModel:SetAlpha(0)
+    self.vendorModel:AlphaTo(255, 0.2)
+    self.vendorModel.LayoutEntity = function()
+        local e = self.vendorModel.Entity
+        if e then
+            local b = e:LookupBone("ValveBiped.Bip01_Head1")
+            if b and b >= 0 then self.vendorModel:SetLookAt(e:GetBonePosition(b)) end
+            e:SetAngles(Angle(0, 45, 0))
+            for _, seq in ipairs(e:GetSequenceList()) do
+                if seq:lower():find("idle") and seq ~= "idlenoise" then
+                    e:ResetSequence(seq)
+                    break
+                end
+            end
+        end
+    end
+
+    self.playerModel = self:Add("DModelPanel")
+    self.playerModel:SetSize(SS(160, true), SS(170))
+    self.playerModel:SetPos(self:GetWide() * 0.75 + SS(110) - SS(50), ScrH() * 0.36 + SS(25))
+    local pm = p:GetModel()
+    if util.IsValidModel(pm) then
+        self.playerModel:SetModel(pm)
+    else
+        self.playerModel:SetModel("")
+    end
+
+    self.playerModel:SetFOV(20)
+    self.playerModel:SetAlpha(0)
+    self.playerModel:AlphaTo(255, 0.2)
+    self.playerModel.LayoutEntity = function()
+        local e = self.playerModel.Entity
+        if e then
+            local b = e:LookupBone("ValveBiped.Bip01_Head1")
+            if b and b >= 0 then self.playerModel:SetLookAt(e:GetBonePosition(b)) end
+            e:SetAngles(Angle(0, 45, 0))
+            for _, seq in ipairs(e:GetSequenceList()) do
+                if seq:lower():find("idle") and seq ~= "idlenoise" then
+                    e:ResetSequence(seq)
+                    break
                 end
             end
         end
@@ -148,116 +263,137 @@ end
 
 function PANEL:populateItems()
     if not IsValid(liaVendorEnt) then return end
-    local data = liaVendorEnt.items
-    if not istable(data) then data = liaVendorEnt:getNetVar("items", {}) end
-    for uid in SortedPairs(data) do
-        local item = lia.item.list[uid]
-        if item then
-            local mode = liaVendorEnt:getTradeMode(uid)
-            if mode then
-                if mode ~= VENDOR_BUYONLY then self:updateItem(uid, "vendor") end
-                if mode ~= VENDOR_SELLONLY then
-                    local pnl = self:updateItem(uid, "me")
-                    if pnl then pnl:setIsSelling(true) end
+    local d = liaVendorEnt.items
+    if not (d and istable(d)) then d = liaVendorEnt:getNetVar("items", {}) end
+    for uid in SortedPairs(d) do
+        local it = lia.item.list[uid]
+        if it then
+            local m = liaVendorEnt:getTradeMode(uid)
+            if m then
+                if m ~= VENDOR_BUYONLY then self:updateItem(uid, "vendor") end
+                if m ~= VENDOR_SELLONLY then
+                    local p = self:updateItem(uid, "me")
+                    if p then p:setIsSelling(true) end
                 end
             end
         end
     end
 end
 
-function PANEL:shouldShow(uid, which)
+function PANEL:shouldShow(uid, w)
     if not IsValid(liaVendorEnt) then return false end
-    local mode = liaVendorEnt:getTradeMode(uid)
-    if not mode then return false end
-    if which == "me" and mode == VENDOR_SELLONLY then return false end
-    if which == "vendor" and mode == VENDOR_BUYONLY then return false end
+    local m = liaVendorEnt:getTradeMode(uid)
+    if not m then return false end
+    if w == "me" and m == VENDOR_SELLONLY then return false end
+    if w == "vendor" and m == VENDOR_BUYONLY then return false end
     return true
 end
 
-function PANEL:updateItem(uid, which, qty)
-    local c = self.items[which]
-    if not c or not self:shouldShow(uid, which) then
-        if c and IsValid(c[uid]) then c[uid]:Remove() end
+function PANEL:updateItem(uid, w, qty)
+    local container = self.items[w]
+    if not container then return end
+    if not self:shouldShow(uid, w) then
+        if IsValid(container[uid]) then container[uid]:Remove() end
         return
     end
 
-    local parent = which == "me" and self.mePanel or self.vendorPanel
-    if not IsValid(parent.items) then
-        parent.items = vgui.Create("DPanel", parent)
-        parent.items:Dock(FILL)
-        parent.items:SetPaintBackground(false)
+    local parentPanel = w == "me" and self.mePanel or self.vendorPanel
+    if not IsValid(parentPanel.items) then
+        parentPanel.items = vgui.Create("DPanel", parentPanel)
+        parentPanel.items:Dock(FILL)
+        parentPanel.items:SetPaintBackground(false)
     end
 
-    local pnl = c[uid]
-    if not IsValid(pnl) then
-        pnl = vgui.Create("VendorItem", parent.items)
-        pnl:setItemType(uid)
-        pnl:setIsSelling(which == "me")
-        c[uid] = pnl
+    local p = container[uid]
+    if not IsValid(p) then
+        p = vgui.Create("VendorItem", parentPanel.items)
+        p:setItemType(uid)
+        p:setIsSelling(w == "me")
+        container[uid] = p
     end
 
-    if not isnumber(qty) then qty = which == "me" and LocalPlayer():getChar():getInv():getItemCount(uid) or liaVendorEnt:getStock(uid) end
-    pnl:setQuantity(qty)
-    return pnl
+    if not isnumber(qty) then
+        local lp = LocalPlayer()
+        qty = w == "me" and lp:getChar():getInv():getItemCount(uid) or liaVendorEnt:getStock(uid)
+    end
+
+    p:setQuantity(qty)
+    return p
 end
 
 function PANEL:GetItemCategoryList()
     if not IsValid(liaVendorEnt) then return {} end
-    local data = liaVendorEnt.items
-    if not istable(data) then data = liaVendorEnt:getNetVar("items", {}) end
-    local out = {
-        [L("vendorShowAll")] = true
-    }
-
-    for uid in pairs(data) do
-        local item = lia.item.list[uid]
-        if item then
-            local cat = item.category or "Misc"
-            out[cat:sub(1, 1):upper() .. cat:sub(2)] = true
+    local d = liaVendorEnt.items
+    if not (d and istable(d)) then d = liaVendorEnt:getNetVar("items", {}) end
+    local o = {}
+    o[L("vendorShowAll")] = true
+    for uid in pairs(d) do
+        local it = lia.item.list[uid]
+        if it then
+            local cat = it.category or "Misc"
+            local first = cat:sub(1, 1):upper()
+            local rest = cat:sub(2)
+            o[first .. rest] = true
         end
     end
-    return out
+    return o
 end
 
 function PANEL:applyCategoryFilter()
-    for _, v in pairs(self.items.vendor) do
-        if IsValid(v) then v:Remove() end
+    if not IsValid(liaVendorEnt) then return end
+    for _, pnl in pairs(self.items.vendor) do
+        if IsValid(pnl) then pnl:Remove() end
     end
 
-    for _, v in pairs(self.items.me) do
-        if IsValid(v) then v:Remove() end
+    for _, pnl in pairs(self.items.me) do
+        if IsValid(pnl) then pnl:Remove() end
     end
 
-    self.items = {
-        vendor = {},
-        me = {}
-    }
-
-    local data = liaVendorEnt.items
-    if not istable(data) then data = liaVendorEnt:getNetVar("items", {}) end
-    local all = not self.currentCategory or self.currentCategory == L("vendorShowAll")
-    for uid in SortedPairs(data) do
-        local item = lia.item.list[uid]
-        if all or item and (item.category or "Misc"):sub(1, 1):upper() .. (item.category or "Misc"):sub(2) == self.currentCategory then
-            local mode = liaVendorEnt:getTradeMode(uid)
-            if mode and mode ~= VENDOR_BUYONLY then self:updateItem(uid, "vendor") end
-            if mode and mode ~= VENDOR_SELLONLY then
-                local pnl = self:updateItem(uid, "me")
-                if pnl then pnl:setIsSelling(true) end
+    self.items.vendor = {}
+    self.items.me = {}
+    local d = liaVendorEnt.items
+    if not (d and istable(d)) then d = liaVendorEnt:getNetVar("items", {}) end
+    if not self.currentCategory or self.currentCategory == L("vendorShowAll") then
+        for uid in SortedPairs(d) do
+            local m = liaVendorEnt:getTradeMode(uid)
+            if m and m ~= VENDOR_BUYONLY then self:updateItem(uid, "vendor") end
+            if m and m ~= VENDOR_SELLONLY then
+                local p = self:updateItem(uid, "me")
+                if p then p:setIsSelling(true) end
+            end
+        end
+    else
+        for uid in SortedPairs(d) do
+            local it = lia.item.list[uid]
+            if it then
+                local cat = it.category or "Misc"
+                cat = cat:sub(1, 1):upper() .. cat:sub(2)
+                if cat == self.currentCategory then
+                    local m = liaVendorEnt:getTradeMode(uid)
+                    if m and m ~= VENDOR_BUYONLY then self:updateItem(uid, "vendor") end
+                    if m and m ~= VENDOR_SELLONLY then
+                        local p = self:updateItem(uid, "me")
+                        if p then p:setIsSelling(true) end
+                    end
+                end
             end
         end
     end
 
-    self.vendorPanel.items:InvalidateLayout()
-    self.mePanel.items:InvalidateLayout()
+    if IsValid(self.vendorPanel.items) then self.vendorPanel.items:InvalidateLayout() end
+    if IsValid(self.mePanel.items) then self.mePanel.items:InvalidateLayout() end
 end
 
-function PANEL:onVendorPropEdited(_, key)
+function PANEL:onVendorPropEdited(_, k)
     if not IsValid(liaVendorEnt) then return end
-    if key == "model" then
+    if k == "model" then
         local m = liaVendorEnt:GetModel() or ""
-        self.vendorModel:SetModel(util.IsValidModel(m) and m or "")
-    elseif key == "scale" then
+        if util.IsValidModel(m) then
+            self.vendorModel:SetModel(m)
+        else
+            self.vendorModel:SetModel("")
+        end
+    elseif k == "scale" then
         for _, v in pairs(self.items.vendor) do
             if IsValid(v) then v:updateLabel() end
         end
@@ -272,8 +408,9 @@ end
 
 function PANEL:onVendorPriceUpdated(_, uid)
     if not IsValid(liaVendorEnt) then return end
-    local v, m = self.items.vendor[uid], self.items.me[uid]
+    local v = self.items.vendor[uid]
     if IsValid(v) then v:updateLabel() end
+    local m = self.items.me[uid]
     if IsValid(m) then m:updateLabel() end
     self:applyCategoryFilter()
 end
@@ -299,14 +436,14 @@ function PANEL:listenForChanges()
     hook.Add("VendorEdited", self, self.onVendorPropEdited)
 end
 
-function PANEL:InventoryItemAdded(item)
-    if not item or not item.uniqueID then return end
-    self:updateItem(item.uniqueID, "me")
+function PANEL:InventoryItemAdded(it)
+    if not it or not it.uniqueID then return end
+    self:updateItem(it.uniqueID, "me")
 end
 
-function PANEL:InventoryItemRemoved(item)
-    if not item or not item.uniqueID then return end
-    self:updateItem(item.uniqueID, "me")
+function PANEL:InventoryItemRemoved(it)
+    if not it or not it.uniqueID then return end
+    self:InventoryItemAdded(it)
 end
 
 function PANEL:Paint()
@@ -326,105 +463,107 @@ function PANEL:OnRemove()
 end
 
 function PANEL:OnKeyCodePressed()
-    if input.LookupBinding("+use", true) then self:Remove() end
+    local b = input.LookupBinding("+use", true)
+    if b then self:Remove() end
 end
 
 vgui.Register("Vendor", PANEL, "EditablePanel")
-local PANEL = {}
-function PANEL:Init()
-    self.items = self:Add("DScrollPanel")
-    self.items:Dock(FILL)
-    self.items:SetPaintBackground(false)
-end
+local RarityColors = {
+    ["Common"] = Color(255, 255, 255),
+    ["Uncommon"] = Color(30, 255, 0),
+    ["Rare"] = Color(0, 112, 221),
+    ["Epic"] = Color(163, 53, 238),
+    ["Legendary"] = Color(255, 128, 0),
+}
 
-vgui.Register("VendorTrader", PANEL, "DPanel")
-local clickSound = {"buttons/button15.wav", 30, 250}
+local VendorClick = {"buttons/button15.wav", 30, 250}
 local PANEL = {}
 function PANEL:Init()
-    self:SetTall(80)
+    self:SetSize(600, 200)
     self:Dock(TOP)
     self:SetPaintBackground(false)
     self:SetCursor("hand")
     self.background = self:Add("DPanel")
     self.background:Dock(FILL)
-    self.background:DockMargin(0, 0, 0, 8)
+    self.background:DockMargin(0, 0, 0, 10)
     self.iconFrame = self.background:Add("DPanel")
-    self.iconFrame:SetWide(80)
+    self.iconFrame:SetSize(96, 96)
     self.iconFrame:Dock(LEFT)
-    self.iconFrame:DockMargin(16, 8, 16, 8)
-    self.icon = self.iconFrame:Add("liaSpawnIcon")
-    self.icon:SetSize(80, 80)
+    self.iconFrame:DockMargin(10, 10, 10, 10)
+    self.icon = self.iconFrame:Add("liaItemIcon")
+    self.icon:SetSize(96, 96)
     self.icon:Dock(FILL)
     self.icon.Paint = function() end
-    self.nameLabel = self.background:Add("DLabel")
-    self.nameLabel:SetFont("liaVendorItem")
-    self.nameLabel:Dock(FILL)
-    self.nameLabel:SetContentAlignment(4)
-    self.nameLabel:SetExpensiveShadow(1, color_black)
-    self.action = self.background:Add("liaSmallButton")
-    self.action:SetWide(160)
-    self.action:Dock(RIGHT)
-    self.action:DockMargin(0, 12, 12, 12)
-    self.action:SetFont("liaVendorItem")
+    self.textContainer = self.background:Add("DPanel")
+    self.textContainer:Dock(FILL)
+    self.textContainer:DockMargin(0, 10, 10, 10)
+    self.textContainer:SetPaintBackground(false)
+    self.name = self.textContainer:Add("DLabel")
+    self.name:SetFont("VendorItemNameFont")
+    self.name:SetExpensiveShadow(1, color_black)
+    self.name:Dock(TOP)
+    self.name:DockMargin(0, 0, 0, 8)
+    self.name:SetContentAlignment(5)
+    self.name:SetText("")
+    self.description = self.textContainer:Add("DLabel")
+    self.description:SetFont("VendorItemDescFont")
+    self.description:SetTextColor(Color(200, 200, 200))
+    self.description:Dock(TOP)
+    self.description:DockMargin(0, 12, 0, 0)
+    self.description:SetWrap(true)
+    self.description:SetContentAlignment(1)
+    self.description:SetAutoStretchVertical(true)
+    self.description:SetText("")
+    self.spacer = self.textContainer:Add("DPanel")
+    self.spacer:Dock(FILL)
+    self.spacer:SetPaintBackground(false)
+    self.action = self.textContainer:Add("liaSmallButton")
+    self.action:SetHeight(40)
+    self.action:Dock(BOTTOM)
+    self.action:DockMargin(0, 10, 0, 0)
+    self.action:SetFont("VendorItemDescFont")
     self.action:SetTextColor(color_white)
     self.isSelling = false
-    self.prefix = ""
+    self.suffix = ""
 end
 
 local function clickEffects()
-    LocalPlayer():EmitSound(unpack(clickSound))
+    local client = LocalPlayer()
+    client:EmitSound(unpack(VendorClick))
 end
 
 function PANEL:sellItemToVendor()
-    if not self.item then return end
-    lia.gui.vendor:sellItemToVendor(self.item.uniqueID)
-    clickEffects()
+    local item = self.item
+    if not item then return end
+    if IsValid(lia.gui.vendor) then
+        lia.gui.vendor:sellItemToVendor(item.uniqueID)
+        clickEffects()
+    end
 end
 
 function PANEL:buyItemFromVendor()
-    if not self.item then return end
-    lia.gui.vendor:buyItemFromVendor(self.item.uniqueID)
-    clickEffects()
-end
-
-function PANEL:setQuantity(q)
-    if not self.item then return end
-    if q and q <= 0 then
-        self:Remove()
-        return
+    local item = self.item
+    if not item then return end
+    if IsValid(lia.gui.vendor) then
+        lia.gui.vendor:buyItemFromVendor(item.uniqueID)
+        clickEffects()
     end
-
-    self.prefix = q and q .. "x " or ""
-    self:updateLabel()
-end
-
-function PANEL:setItemType(uid)
-    local item = lia.item.list[uid]
-    assert(item)
-    self.item = item
-    self.icon:SetModel(item.model, item.skin or 0)
-    self:updateLabel()
-    self:updateAction()
-end
-
-function PANEL:setIsSelling(b)
-    self.isSelling = b
-    self:updateLabel()
-    self:updateAction()
-end
-
-function PANEL:updateLabel()
-    if not self.item then return end
-    self.nameLabel:SetText(self.prefix .. string.upper(self.item:getName()))
-    self:updateAction()
 end
 
 function PANEL:updateAction()
     if not self.action or not self.item then return end
     local price = liaVendorEnt:getPrice(self.item.uniqueID, self.isSelling)
-    local suffix = price == 0 and L("vendorFree") or price > 1 and price .. " " .. lia.currency.plural or price .. " " .. lia.currency.singular
-    local text = self.isSelling and L("vendorSellAction", suffix) or L("vendorBuyAction", suffix)
-    self.action:SetText(text)
+    local priceSuffix
+    if price == 0 then
+        priceSuffix = L("vendorFree")
+    elseif price > 1 then
+        priceSuffix = string.format("%s %s", price, lia.currency.plural)
+    else
+        priceSuffix = string.format("%s %s", price, lia.currency.singular)
+    end
+
+    local actionText = self.isSelling and L("vendorSellAction", priceSuffix) or L("vendorBuyAction", priceSuffix)
+    self.action:SetText(actionText)
     self.action.DoClick = function()
         if self.isSelling then
             self:sellItemToVendor()
@@ -434,4 +573,64 @@ function PANEL:updateAction()
     end
 end
 
+function PANEL:setQuantity(quantity)
+    if not self.item then return end
+    if quantity then
+        if quantity <= 0 then
+            self:Remove()
+            return
+        end
+
+        self.suffix = tostring(quantity) .. "x "
+    else
+        self.suffix = ""
+    end
+
+    self:updateLabel()
+end
+
+function PANEL:setItemType(itemType)
+    local item = lia.item.list[itemType]
+    assert(item, tostring(itemType) .. " is not a valid item")
+    self.item = item
+    self.icon:SetModel(item.model, item.skin or 0)
+    self:updateLabel()
+    self:updateAction()
+    local rarity = item.rarity or "Common"
+    local nameColor = RarityColors[rarity] or color_white
+    self.name:SetTextColor(nameColor)
+end
+
+function PANEL:setIsSelling(isSelling)
+    self.isSelling = isSelling
+    self:updateLabel()
+    self:updateAction()
+end
+
+function PANEL:updateLabel()
+    if not self.item then return end
+    local nameText = (self.suffix ~= "" and self.suffix or "") .. self.item:getName()
+    self.name:SetText(nameText)
+    self.description:SetText(self.item:getDesc() or L("vendorNoDescription"))
+    local price = liaVendorEnt:getPrice(self.item.uniqueID, self.isSelling)
+    local priceSuffix
+    if price == 0 then
+        priceSuffix = L("vendorFree")
+    elseif price > 1 then
+        priceSuffix = string.format("%s %s", price, lia.currency.plural)
+    else
+        priceSuffix = string.format("%s %s", price, lia.currency.singular)
+    end
+
+    local actionText = self.isSelling and L("vendorSellAction", priceSuffix) or L("vendorBuyAction", priceSuffix)
+    self.action:SetText(actionText)
+end
+
 vgui.Register("VendorItem", PANEL, "DPanel")
+local PANEL = {}
+function PANEL:Init()
+    self.items = self:Add("DScrollPanel")
+    self.items:Dock(FILL)
+end
+
+vgui.Register("VendorTrader", PANEL, "DPanel")

@@ -1,23 +1,23 @@
 ﻿local MODULE = MODULE
-PIM:AddLocalOption(L("recognizeInWhisperRange"), {
+AddAction(L("recognizeInWhisperRange"), {
     shouldShow = function(client) return client:getChar() and client:Alive() end,
     onRun = function() MODULE:CharRecognize(2) end,
     runServer = false
 })
 
-PIM:AddLocalOption(L("recognizeInTalkRange"), {
+AddAction(L("recognizeInTalkRange"), {
     shouldShow = function(client) return client:getChar() and client:Alive() end,
     onRun = function() MODULE:CharRecognize(3) end,
     runServer = false
 })
 
-PIM:AddLocalOption(L("recognizeInYellRange"), {
+AddAction(L("recognizeInYellRange"), {
     shouldShow = function(client) return client:getChar() and client:Alive() end,
     onRun = function() MODULE:CharRecognize(4) end,
     runServer = false
 })
 
-PIM:AddOption(L("recognizeOption"), {
+AddInteraction(L("recognizeOption"), {
     runServer = false,
     shouldShow = function(client, target)
         local ourChar = client:getChar()
@@ -27,7 +27,7 @@ PIM:AddOption(L("recognizeOption"), {
     onRun = function(_, target) if CLIENT then netstream.Start("rgnDirect", target) end end
 })
 
-PIM:AddOption(L("recognizeWithFakeNameOption"), {
+AddInteraction(L("recognizeWithFakeNameOption"), {
     runServer = false,
     shouldShow = function(client, target)
         local ourChar = client:getChar()

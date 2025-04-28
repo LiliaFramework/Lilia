@@ -1,6 +1,6 @@
 ﻿local PANEL = {}
-F1Menu.CharacterInformation = {}
 function PANEL:Init()
+    F1Menu.CharacterInformation = {}
     if IsValid(lia.gui.info) then lia.gui.info:Remove() end
     lia.gui.info = self
     local panelWidth = ScrW()
