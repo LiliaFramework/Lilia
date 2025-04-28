@@ -36,30 +36,28 @@ lia.config.add("MaxViewDistance", "Maximum View Distance", 5000, nil, {
     max = 5000,
 })
 
-if CLIENT then
-    lia.option.add("thirdPersonEnabled", "Third Person Enabled", "Toggle third-person view.", false, function(_, newValue) hook.Run("thirdPersonToggled", newValue) end, {
-        category = "Third Person",
-    })
+lia.option.add("thirdPersonEnabled", "Third Person Enabled", "Toggle third-person view.", false, function(_, newValue) hook.Run("thirdPersonToggled", newValue) end, {
+    category = "Third Person",
+})
 
-    lia.option.add("thirdPersonClassicMode", "Third Person Classic Mode", "Enable classic third-person view mode.", false, nil, {
-        category = "Third Person",
-    })
+lia.option.add("thirdPersonClassicMode", "Third Person Classic Mode", "Enable classic third-person view mode.", false, nil, {
+    category = "Third Person",
+})
 
-    lia.option.add("thirdPersonHeight", "Third Person Height", "Adjust the vertical height of the third-person camera.", 10, nil, {
-        category = "Third Person",
-        min = 0,
-        max = lia.config.get("MaxThirdPersonHeight", 30),
-    })
+lia.option.add("thirdPersonHeight", "Third Person Height", "Adjust the vertical height of the third-person camera.", 10, nil, {
+    category = "Third Person",
+    min = 0,
+    max = lia.config.get("MaxThirdPersonHeight", 30),
+})
 
-    lia.option.add("thirdPersonHorizontal", "Third Person Horizontal", "Adjust the horizontal offset of the third-person camera.", 10, nil, {
-        category = "Third Person",
-        min = 0,
-        max = lia.config.get("MaxThirdPersonHorizontal", 30),
-    })
+lia.option.add("thirdPersonHorizontal", "Third Person Horizontal", "Adjust the horizontal offset of the third-person camera.", 10, nil, {
+    category = "Third Person",
+    min = 0,
+    max = lia.config.get("MaxThirdPersonHorizontal", 30),
+})
 
-    lia.option.add("thirdPersonDistance", "Third Person Distance", "Adjust the camera distance in third-person view.", 50, nil, {
-        category = "Third Person",
-        min = 0,
-        max = lia.config.get("MaxThirdPersonDistance", 100),
-    })
-end
+lia.option.add("thirdPersonDistance", "Third Person Distance", "Adjust the camera distance in third-person view.", 50, nil, {
+    category = "Third Person",
+    min = 0,
+    max = lia.config.get("MaxThirdPersonDistance", 100),
+})
