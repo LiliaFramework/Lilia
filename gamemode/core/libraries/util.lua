@@ -1,5 +1,5 @@
 ﻿--[[
-   Function: lia.util.FindPlayersInBox
+   lia.util.FindPlayersInBox
 
    Description:
       Finds and returns a table of players within a given axis-aligned bounding box.
@@ -30,7 +30,7 @@ function lia.util.FindPlayersInBox(mins, maxs)
 end
 
 --[[
-   Function: lia.util.FindPlayersInSphere
+   lia.util.FindPlayersInSphere
 
    Description:
       Finds and returns a table of players within a given spherical radius from an origin.
@@ -61,7 +61,7 @@ function lia.util.FindPlayersInSphere(origin, radius)
 end
 
 --[[
-   Function: lia.util.findPlayer
+   lia.util.findPlayer
 
    Description:
       Attempts to find a player by identifier. The identifier can be STEAMID, SteamID64, "^" (self), "@" (looking at target), or partial name.
@@ -128,7 +128,7 @@ function lia.util.findPlayer(client, identifier)
 end
 
 --[[
-   Function: lia.util.findPlayerItems
+   lia.util.findPlayerItems
 
    Description:
       Finds all item entities in the world created by the specified player.
@@ -157,7 +157,7 @@ function lia.util.findPlayerItems(client)
 end
 
 --[[
-   Function: lia.util.findPlayerItemsByClass
+   lia.util.findPlayerItemsByClass
 
    Description:
       Finds all item entities in the world created by the specified player with a specific class ID.
@@ -187,7 +187,7 @@ function lia.util.findPlayerItemsByClass(client, class)
 end
 
 --[[
-   Function: lia.util.findPlayerEntities
+   lia.util.findPlayerEntities
 
    Description:
       Finds all entities in the world created by or associated with the specified player. An optional class filter can be applied.
@@ -217,7 +217,7 @@ function lia.util.findPlayerEntities(client, class)
 end
 
 --[[
-   Function: lia.util.stringMatches
+   lia.util.stringMatches
 
    Description:
       Checks if string a matches string b (case-insensitive, partial matches).
@@ -249,7 +249,7 @@ function lia.util.stringMatches(a, b)
 end
 
 --[[
-   Function: lia.util.getAdmins
+   lia.util.getAdmins
 
    Description:
       Returns all players considered staff or admins, as determined by client:isStaff().
@@ -276,7 +276,7 @@ function lia.util.getAdmins()
 end
 
 --[[
-   Function: lia.util.findPlayerBySteamID64
+   lia.util.findPlayerBySteamID64
 
    Description:
       Finds a player currently on the server by their SteamID64.
@@ -304,7 +304,7 @@ function lia.util.findPlayerBySteamID64(SteamID64)
 end
 
 --[[
-   Function: lia.util.findPlayerBySteamID
+   lia.util.findPlayerBySteamID
 
    Description:
       Finds a player currently on the server by their SteamID.
@@ -332,7 +332,7 @@ function lia.util.findPlayerBySteamID(SteamID)
 end
 
 --[[
-   Function: lia.util.canFit
+   lia.util.canFit
 
    Description:
       Checks if a hull (defined by mins and maxs) can fit at the given position without intersecting obstacles.
@@ -369,7 +369,7 @@ function lia.util.canFit(pos, mins, maxs, filter)
 end
 
 --[[
-   Function: lia.util.playerInRadius
+   lia.util.playerInRadius
 
    Description:
       Finds and returns a table of players within a given radius from a position.
@@ -400,7 +400,7 @@ function lia.util.playerInRadius(pos, dist)
 end
 
 --[[
-   Function: lia.util.formatStringNamed
+   lia.util.formatStringNamed
 
    Description:
       Formats a string with named or indexed placeholders. If a table is passed, uses named keys. Otherwise uses ordered arguments.
@@ -439,7 +439,7 @@ function lia.util.formatStringNamed(format, ...)
 end
 
 --[[
-   Function: lia.util.getMaterial
+   lia.util.getMaterial
 
    Description:
       Retrieves a cached Material for the specified path and parameters, to avoid repeated creation.
@@ -466,7 +466,7 @@ function lia.util.getMaterial(materialPath, materialParameters)
 end
 
 --[[
-   Function: lia.util.findFaction
+   lia.util.findFaction
 
    Description:
       Finds a faction by name or uniqueID. If an exact identifier is found in lia.faction.teams, returns that. Otherwise checks for partial match.
@@ -499,7 +499,7 @@ end
 
 if SERVER then
    --[[
-       Function: lia.util.CreateTableUI
+       lia.util.CreateTableUI
 
        Description:
           Sends a net message to the client to create a table UI with given data.
@@ -539,7 +539,7 @@ if SERVER then
    end
 
    --[[
-       Function: lia.util.findEmptySpace
+       lia.util.findEmptySpace
 
        Description:
           Finds potential empty space positions around an entity using a grid-based approach.
@@ -593,8 +593,9 @@ if SERVER then
       return output
    end
 else
+   local ScrW, ScrH = ScrW(), ScrH()
    --[[
-       Function: lia.util.ShadowText
+       lia.util.ShadowText
 
        Description:
           Draws text with a shadow offset.
@@ -633,7 +634,7 @@ else
    end
 
    --[[
-       Function: lia.util.DrawTextOutlined
+       lia.util.DrawTextOutlined
 
        Description:
           Draws text with an outlined border.
@@ -669,7 +670,7 @@ else
    end
 
    --[[
-       Function: lia.util.DrawTip
+       lia.util.DrawTip
 
        Description:
           Draws a tooltip-like shape with text in the center.
@@ -734,7 +735,7 @@ else
    end
 
    --[[
-       Function: lia.util.drawText
+       lia.util.drawText
 
        Description:
           Draws text with a subtle shadow effect.
@@ -771,7 +772,7 @@ else
    end
 
    --[[
-       Function: lia.util.drawTexture
+       lia.util.drawTexture
 
        Description:
           Draws a textured rectangle with the specified material.
@@ -800,7 +801,7 @@ else
    end
 
    --[[
-       Function: lia.util.skinFunc
+       lia.util.skinFunc
 
        Description:
           Calls a skin function by name, passing the panel and any extra arguments.
@@ -828,7 +829,7 @@ else
    end
 
    --[[
-       Function: lia.util.wrapText
+       lia.util.wrapText
 
        Description:
           Wraps text to a maximum width, returning a table of lines and the maximum line width found.
@@ -880,7 +881,7 @@ else
    end
 
    --[[
-       Function: lia.util.drawBlur
+       lia.util.drawBlur
 
        Description:
           Draws a blur effect over the specified panel.
@@ -908,12 +909,12 @@ else
          lia.util.getMaterial("pp/blurscreen"):SetFloat("$blur", i * amount)
          lia.util.getMaterial("pp/blurscreen"):Recompute()
          render.UpdateScreenEffectTexture()
-         surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
+         surface.DrawTexturedRect(x * -1, y * -1, ScrW, ScrH)
       end
    end
 
    --[[
-       Function: lia.util.drawBlurAt
+       lia.util.drawBlurAt
 
        Description:
           Draws a blur effect at a specified rectangle on the screen.
@@ -939,9 +940,8 @@ else
       amount = amount or 5
       surface.SetMaterial(lia.util.getMaterial("pp/blurscreen"))
       surface.SetDrawColor(255, 255, 255)
-      local scrW, scrH = ScrW(), ScrH()
-      local x2, y2 = x / scrW, y / scrH
-      local w2, h2 = (x + w) / scrW, (y + h) / scrH
+      local x2, y2 = x / ScrW, y / ScrH
+      local w2, h2 = (x + w) / ScrW, (y + h) / ScrH
       for i = -(passes or 0.2), 1, 0.2 do
          lia.util.getMaterial("pp/blurscreen"):SetFloat("$blur", i * amount)
          lia.util.getMaterial("pp/blurscreen"):Recompute()
@@ -951,7 +951,23 @@ else
    end
 
    --[[
-       Function: lia.util.CreateTableUI
+    lia.util.is64Bits
+
+    Description:
+        Checks if the current game branch is running in 64-bit mode.
+
+    Returns:
+        boolean — true if the branch is "x86-64", false otherwise.
+
+    Realm:
+        Client
+    ]]
+   function lia.util.is64Bits()
+      return BRANCH == "x86-64"
+   end
+
+   --[[
+       lia.util.CreateTableUI
 
        Description:
           Creates and displays a table UI with given columns and data on the client side.
@@ -973,8 +989,7 @@ else
           lia.util.CreateTableUI("My Table", {{name="ID", field="id"}, {name="Name", field="name"}}, myData, myOptions, 1)
     ]]
    function lia.util.CreateTableUI(title, columns, data, options, charID)
-      local screenW, screenH = ScrW(), ScrH()
-      local frameWidth, frameHeight = screenW * 0.8, screenH * 0.8
+      local frameWidth, frameHeight = ScrH * 0.8, ScrH * 0.8
       local frame = vgui.Create("DFrame")
       frame:SetTitle(title or "Table List")
       frame:SetSize(frameWidth, frameHeight)

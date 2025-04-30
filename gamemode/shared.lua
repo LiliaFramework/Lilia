@@ -43,6 +43,15 @@ local function LiliaLog(messageType, message, section, color)
     MsgC(color or logType.message, message .. "\n")
 end
 
+lia.allowedHoldableClasses = {
+    ["lia_item"] = true,
+    ["lia_money"] = true,
+    ["prop_physics"] = true,
+    ["prop_physics_override"] = true,
+    ["prop_physics_multiplayer"] = true,
+    ["prop_ragdoll"] = true
+}
+
 function lia.error(message)
     LiliaLog("Error", message)
 end
@@ -53,7 +62,7 @@ function lia.deprecated(methodName, callback)
     if callback and isfunction(callback) then callback() end
 end
 
-function LiliaUpdater(message)
+function lia.updater(message)
     LiliaLog("Updater", message)
 end
 
