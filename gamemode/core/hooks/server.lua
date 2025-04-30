@@ -1,13 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-lia.allowedHoldableClasses = {
-    ["lia_item"] = true,
-    ["lia_money"] = true,
-    ["prop_physics"] = true,
-    ["prop_physics_override"] = true,
-    ["prop_physics_multiplayer"] = true,
-    ["prop_ragdoll"] = true
-}
-
 function GM:CharPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
@@ -47,6 +38,18 @@ function GM:PlayerLoadedChar(client, character)
 
         character:setData("ammo", nil)
     end)
+end
+
+function GM:PlayerDeath(client)
+    local character = client:getChar()
+    if not character then return end
+    local inventory = character:getInv()
+    if inventory then
+        local items = inventory:getItems()
+        for _, v in pairs(items) do
+            if v.isWeapon and v:getData("equip") then v:setData("ammo", nil) end
+        end
+    end
 end
 
 function GM:CharLoaded(id)
@@ -315,18 +318,6 @@ function GM:DoPlayerDeath(client, attacker)
     client:SetDSP(31)
 end
 
-function GM:PlayerDeath(client)
-    local character = client:getChar()
-    if not character then return end
-    local inventory = character:getInv()
-    if inventory then
-        local items = inventory:getItems()
-        for _, v in pairs(items) do
-            if v.isWeapon and v:getData("equip") then v:setData("ammo", nil) end
-        end
-    end
-end
-
 function GM:PlayerSpawn(client)
     client:SetNoDraw(false)
     client:UnLock()
@@ -518,7 +509,7 @@ function GM:LoadData()
                 createdEnt:Activate()
             end
         else
-            LiliaError(string.format("Entity creation aborted: An entity of class '%s' is already nearby at position (%.2f, %.2f, %.2f).", ent.class, ent.pos.x, ent.pos.y, ent.pos.z))
+            lia.error(string.format("Entity creation aborted: An entity of class '%s' is already nearby at position (%.2f, %.2f, %.2f).", ent.class, ent.pos.x, ent.pos.y, ent.pos.z))
         end
     end
 
@@ -535,7 +526,7 @@ function GM:LoadData()
             local range = "(" .. table.concat(idRange, ", ") .. ")"
             if hook.Run("ShouldDeleteSavedItems") == true then
                 lia.db.query("DELETE FROM lia_items WHERE _itemID IN " .. range)
-                LiliaInformation("Server Deleted Server Items (does not include Logical Items)")
+                lia.information("Server Deleted Server Items (does not include Logical Items)")
             else
                 lia.db.query("SELECT _itemID, _uniqueID, _data FROM lia_items WHERE _itemID IN " .. range, function(data)
                     if data then
@@ -610,17 +601,17 @@ end
 function GM:InitializedModules()
     local bootstrapEndTime = SysTime()
     local timeTaken = bootstrapEndTime - BootingTime
-    LiliaBootstrap("Bootstrapper", string.format("Lilia loaded in %.2f seconds.", timeTaken), Color(0, 255, 0))
+    lia.bootstrap("Bootstrapper", string.format("Lilia loaded in %.2f seconds.", timeTaken), Color(0, 255, 0))
     local addons = engine.GetAddons()
     local autoDownload = lia.config.get("AutoDownloadWorkshop", false)
     for _, addon in ipairs(addons) do
         if addon.wsid and addon.mounted then
             if autoDownload then
                 resource.AddWorkshop(addon.wsid)
-                LiliaInformation("[Workshop] Added Workshop addon: " .. addon.title .. " (WSID: " .. addon.wsid .. ")")
+                lia.information("[Workshop] Added Workshop addon: " .. addon.title .. " (WSID: " .. addon.wsid .. ")")
             end
 
-            if addon.wsid == "1907060869" then LiliaError("WARNING: 'Srlion's Hook Library' (WSID: 1907060869) is known to cause issues and is not necessary for addons like SAM.") end
+            if addon.wsid == "1907060869" then lia.error("WARNING: 'Srlion's Hook Library' (WSID: 1907060869) is known to cause issues and is not necessary for addons like SAM.") end
         end
     end
 
@@ -629,13 +620,13 @@ function GM:InitializedModules()
     local CheckerURL = "https://raw.githubusercontent.com/LiliaFramework/Modules/main/modules.json"
     http.Fetch(CheckerURL, function(body, _, _, code)
         if code ~= 200 then
-            LiliaUpdater("Error fetching module list (HTTP " .. code .. ")")
+            lia.updater("Error fetching module list (HTTP " .. code .. ")")
             return
         end
 
         local remoteModules = util.JSONToTable(body)
         if not remoteModules then
-            LiliaUpdater("Error parsing module data")
+            lia.updater("Error parsing module data")
             return
         end
 
@@ -649,19 +640,31 @@ function GM:InitializedModules()
             end
 
             if not remoteModule then
-                LiliaUpdater("Module with uniqueID '" .. localInfo.uniqueID .. "' not found")
+                lia.updater("Module with uniqueID '" .. localInfo.uniqueID .. "' not found")
             elseif not remoteModule.version then
-                LiliaUpdater("Module '" .. localInfo.name .. "' has no remote version info")
+                lia.updater("Module '" .. localInfo.name .. "' has no remote version info")
             elseif remoteModule.version ~= localInfo.localVersion then
-                LiliaUpdater("Module '" .. localInfo.name .. "' is outdated. Update to version " .. remoteModule.version .. " at " .. remoteModule.source)
+                lia.updater("Module '" .. localInfo.name .. "' is outdated. Update to version " .. remoteModule.version .. " at " .. remoteModule.source)
             end
         end
 
         lia.module.versionChecks = {}
-    end, function(err) LiliaUpdater("HTTP.Fetch error: " .. err) end)
+    end, function(err) lia.updater("HTTP.Fetch error: " .. err) end)
 end
 
-local networkStrings = {"NetStreamDS", "CurTime-Sync", "liaCharChoose", "liaCharacterInvList", "liaCharCreate", "liaCharList", "liaCharDelete",}
+function ClientAddText(client, ...)
+    if not client or not IsValid(client) then
+        lia.error("Invalid client provided to chat.AddText")
+        return
+    end
+
+    local args = {...}
+    net.Start("ServerChatAddText")
+    net.WriteTable(args)
+    net.Send(client)
+end
+
+local networkStrings = {"NetStreamDS", "liaCharChoose", "liaCharacterInvList", "liaCharCreate", "liaCharList", "liaCharDelete",}
 for _, netString in ipairs(networkStrings) do
     util.AddNetworkString(netString)
 end
