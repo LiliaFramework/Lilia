@@ -9,7 +9,7 @@ local IsValid = IsValid
 local tonumber = tonumber
 local FrameTime = FrameTime
 local Lerp = Lerp
-local ScrW, ScrH = ScrW, ScrH
+local ScrW, ScrH = ScrW(), ScrH()
 local CurTime = CurTime
 local ipairs = ipairs
 local LocalPlayer = LocalPlayer
@@ -37,10 +37,10 @@ function MODULE:HUDPaint()
         alphaDelta = Lerp(frameTime * 10, alphaDelta, alpha)
     end
 
-    local shiftX = ScrW() * 0.02
+    local shiftX = ScrW * 0.02
     local client = LocalPlayer()
     local weapons = client:GetWeapons()
-    local x, y = ScrW() * 0.05, ScrH() * 0.5
+    local x, y = ScrW * 0.05, ScrH * 0.5
     local spacing = pi * 0.85
     local radius = 240 * alphaDelta
     deltaIndex = Lerp(frameTime * 12, deltaIndex, index)
@@ -96,7 +96,7 @@ function MODULE:onIndexChanged()
 
         if #textParts > 0 then
             local text = table.concat(textParts)
-            self.markup = markup.Parse("<font=liaItemDescFont>" .. text, ScrW() * 0.3)
+            self.markup = markup.Parse("<font=liaItemDescFont>" .. text, ScrW * 0.3)
         end
 
         local source, pitch = hook.Run("WeaponCycleSound")

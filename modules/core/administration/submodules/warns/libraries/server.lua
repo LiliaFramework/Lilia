@@ -9,7 +9,7 @@ net.Receive("RequestRemoveWarning", function(_, client)
         return
     end
 
-    local targetClient = lia.char.getByID(charID)
+    local targetClient = lia.char.getBySteamID(charID)
     if not IsValid(targetClient) then
         client:notifyWarning("Player not found.")
         return

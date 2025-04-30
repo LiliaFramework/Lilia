@@ -12,7 +12,7 @@ function AddAction(name, data)
     lia.bootstrap("Action Menu", "Added Personal Action: " .. name)
 end
 
-function MODULE:CheckPossibilities()
+function MODULE:CheckInteractionPossibilities()
     local client = LocalPlayer()
     for _, v in pairs(self.Options) do
         if not client:getTracedEntity():IsPlayer() then return end

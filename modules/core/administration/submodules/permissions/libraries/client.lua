@@ -1,4 +1,5 @@
-﻿local ESP_DrawnEntities = {
+﻿local ScrW, ScrH = ScrW(), ScrH()
+local ESP_DrawnEntities = {
     lia_bodygrouper = true,
     lia_vendor = true,
 }
@@ -14,8 +15,7 @@ function MODULE:HUDPaint()
     if not client:getChar() or not client:IsValid() or not client:IsPlayer() then return end
     if not client:isNoClipping() and not client:hasValidVehicle() then return end
     if not (client:hasPrivilege("Staff Permissions - No Clip ESP Outside Staff Character") or client:isStaffOnDuty()) then return end
-    local sx, sy = ScrW(), ScrH()
-    local marginx, marginy = sx * 0.1, sy * 0.1
+    local marginx, marginy = ScrW * 0.1, ScrH * 0.1
     local maxDistanceSq = 4096
     for _, ent in ents.Iterator() do
         if not IsValid(ent) or ent == client then continue end
@@ -44,7 +44,7 @@ function MODULE:HUDPaint()
         local size = math.max(20, 48 * factor)
         local alpha = math.Clamp(255 * factor, 120, 255)
         local colorToUse = ColorAlpha(lia.config.get("esp" .. entityType .. "Color") or Color(255, 255, 255), alpha)
-        local x, y = math.Clamp(scrPos.x, marginx, sx - marginx), math.Clamp(scrPos.y, marginy, sy - marginy)
+        local x, y = math.Clamp(scrPos.x, marginx, ScrW - marginx), math.Clamp(scrPos.y, marginy, ScrH - marginy)
         surface.SetDrawColor(colorToUse.r, colorToUse.g, colorToUse.b, colorToUse.a)
         surface.DrawRect(x - size / 2, y - size / 2, size, size)
         draw.SimpleTextOutlined(label, "liaMediumFont", x, y - size, ColorAlpha(colorToUse, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 200))

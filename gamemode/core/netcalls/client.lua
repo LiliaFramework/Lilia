@@ -1,4 +1,5 @@
-﻿net.Receive("liaNotifyL", function()
+﻿local ScrW = ScrW()
+net.Receive("liaNotifyL", function()
     local message = net.ReadString()
     local length = net.ReadUInt(8)
     if length == 0 then return lia.notices.notifyLocalized(message) end
@@ -389,7 +390,7 @@ net.Receive("BinaryQuestionRequest", function()
     table.insert(lia.notices, notice)
     notice.isQuery = true
     notice.text:SetText(question)
-    notice:SetPos(ScrW() / 2 - notice:GetWide() / 2, 4)
+    notice:SetPos(ScrW / 2 - notice:GetWide() / 2, 4)
     notice:SetTall(36 * 2.3)
     notice:CalcWidth(120)
     if manualDismiss then notice.start = nil end
@@ -463,7 +464,7 @@ net.Receive("BinaryQuestionRequest", function()
         notice.lastKey = CurTime()
         notice.respondToKeys = true
         function notice:Think()
-            self:SetPos(ScrW() / 2 - self:GetWide() / 2, 4)
+            self:SetPos(ScrW / 2 - self:GetWide() / 2, 4)
             if not self.respondToKeys then return end
             if self.opt1 and IsValid(self.opt1) then self.opt1:keyThink() end
             if self.opt2 and IsValid(self.opt2) then self.opt2:keyThink() end

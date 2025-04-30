@@ -1,4 +1,5 @@
 ﻿local MODULE = MODULE
+local ScrW, ScrH = ScrW(), ScrH()
 function SWEP:PrimaryAttack()
     local target = self:GetTarget()
     local client = LocalPlayer()
@@ -28,7 +29,7 @@ end
 
 function SWEP:DrawHUD()
     local client = LocalPlayer()
-    local x, y = ScrW() / 2, ScrH() / 2
+    local x, y = ScrW / 2, ScrH / 2
     local target = IsValid(client.AdminStickTarget) and client.AdminStickTarget or client:GetEyeTrace().Entity
     local crossColor = Color(0, 255, 0)
     local information = {}

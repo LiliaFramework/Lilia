@@ -95,7 +95,7 @@ net.Receive("ChangeAttribute", function(_, client)
         return
     end
 
-    local targetClient = lia.char.getByID(charID)
+    local targetClient = lia.char.getBySteamID(charID)
     if not IsValid(targetClient) then
         client:notifyError(L("characterNotFound"))
         return

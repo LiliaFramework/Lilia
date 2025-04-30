@@ -1,4 +1,5 @@
-﻿local predictedStamina = 100
+﻿local ScrW, ScrH = ScrW(), ScrH()
+local predictedStamina = 100
 local stmBlurAmount = 0
 local stmBlurAlpha = 0
 function MODULE:ConfigureCharacterCreationSteps(panel)
@@ -28,7 +29,7 @@ function MODULE:HUDPaintBackground()
     if Stamina <= lia.config.get("StaminaBlurThreshold", 25) then
         stmBlurAlpha = Lerp(RealFrameTime() / 2, stmBlurAlpha, 255)
         stmBlurAmount = Lerp(RealFrameTime() / 2, stmBlurAmount, 5)
-        lia.util.drawBlurAt(0, 0, ScrW(), ScrH(), stmBlurAmount, 0.2, stmBlurAlpha)
+        lia.util.drawBlurAt(0, 0, ScrW, ScrH, stmBlurAmount, 0.2, stmBlurAlpha)
     end
 end
 

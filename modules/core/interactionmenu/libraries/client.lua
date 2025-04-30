@@ -1,21 +1,22 @@
 ﻿local MODULE = MODULE
-SELF_PIM_FRAME = nil
-PIM_Frame = nil
+local ScrH = ScrH()
+ActionInteractionMenu = nil
+InteractionMenu = nil
 function MODULE:OpenPIM()
-    if IsValid(SELF_PIM_FRAME) then
-        SELF_PIM_FRAME:Close()
-        SELF_PIM_FRAME = nil
+    if IsValid(ActionInteractionMenu) then
+        ActionInteractionMenu:Close()
+        ActionInteractionMenu = nil
     end
 
-    if IsValid(PIM_Frame) then
-        PIM_Frame:Close()
-        PIM_Frame = nil
+    if IsValid(InteractionMenu) then
+        InteractionMenu:Close()
+        InteractionMenu = nil
     end
 
     local client = LocalPlayer()
     local frame = vgui.Create("DFrame")
     frame:SetSize(300, 120)
-    frame:SetPos(0, ScrH() / 2 - frame:GetTall() / 2)
+    frame:SetPos(0, ScrH / 2 - frame:GetTall() / 2)
     frame:CenterHorizontal(0.7)
     frame:MakePopup()
     frame:SetTitle("")
@@ -86,24 +87,24 @@ function MODULE:OpenPIM()
     frame.scroll:SetTall(jh)
     frame:SetTall(jh + 45)
     frame:CenterVertical()
-    PIM_Frame = frame
+    InteractionMenu = frame
 end
 
 function MODULE:OpenLocalPIM()
-    if IsValid(PIM_Frame) then
-        PIM_Frame:Close()
-        PIM_Frame = nil
+    if IsValid(InteractionMenu) then
+        InteractionMenu:Close()
+        InteractionMenu = nil
     end
 
-    if IsValid(SELF_PIM_FRAME) then
-        SELF_PIM_FRAME:Close()
-        SELF_PIM_FRAME = nil
+    if IsValid(ActionInteractionMenu) then
+        ActionInteractionMenu:Close()
+        ActionInteractionMenu = nil
     end
 
     local client = LocalPlayer()
     local frame = vgui.Create("DFrame")
     frame:SetSize(300, 120)
-    frame:SetPos(0, ScrH() / 2 - frame:GetTall() / 2)
+    frame:SetPos(0, ScrH / 2 - frame:GetTall() / 2)
     frame:CenterHorizontal(0.7)
     frame:MakePopup()
     frame:SetTitle("")
@@ -173,12 +174,12 @@ function MODULE:OpenLocalPIM()
     frame.scroll:SetTall(jh)
     frame:SetTall(jh + 45)
     frame:CenterVertical()
-    SELF_PIM_FRAME = frame
+    ActionInteractionMenu = frame
 end
 
 lia.keybind.add(KEY_TAB, "Interaction Menu", function()
     local client = LocalPlayer()
-    if client:getChar() and MODULE:CheckPossibilities() then MODULE:OpenPIM() end
+    if client:getChar() and hook.Run("CheckInteractionPossibilities") then MODULE:OpenPIM() end
 end)
 
 lia.keybind.add(KEY_G, "Personal Actions", function() MODULE:OpenLocalPIM() end)

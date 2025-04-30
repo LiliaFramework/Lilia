@@ -51,15 +51,16 @@ function MODULE:PlayerLoadedChar(client, character)
 end
 
 function MODULE:PlayerDeath(client, _, attacker)
-    local character = client:getChar()
-    if not character then return end
+    local char = client:getChar()
+    if not char then return end
     if attacker:IsPlayer() then
         if lia.config.get("LoseItemsonDeathHuman", false) then self:RemovedDropOnDeathItems(client) end
         if lia.config.get("DeathPopupEnabled", true) then
-            local date = lia.time.GetFormattedDate("", true, true, true, true, true)
-            local charid = tostring(attacker:getChar():getID())
-            local steamid = tostring(attacker:SteamID64())
-            ClientAddText(client, Color(255, 0, 0), "[" .. string.upper(L("death")) .. "]: ", Color(255, 255, 255), date, " - ", L("killedBy"), " ", Color(255, 215, 0), L("characterID"), ": ", Color(255, 255, 255), charid, " (", Color(0, 255, 0), steamid, Color(255, 255, 255), ")")
+            local dateStr = lia.time.GetDate()
+            local attackerChar = attacker:getChar()
+            local charId = attackerChar and tostring(attackerChar:getID()) or "N/A"
+            local steamId = tostring(attacker:SteamID64())
+            ClientAddText(client, Color(255, 0, 0), "[" .. string.upper(L("death")) .. "]: ", Color(255, 255, 255), dateStr, " - ", L("killedBy"), " ", Color(255, 215, 0), L("characterID"), ": ", Color(255, 255, 255), charId, " (", Color(0, 255, 0), steamId, Color(255, 255, 255), ")")
         end
     end
 
@@ -67,9 +68,9 @@ function MODULE:PlayerDeath(client, _, attacker)
     client:setNetVar("lastDeathTime", os.time())
     timer.Simple(lia.config.get("SpawnTime"), function() if IsValid(client) then client:setNetVar("IsDeadRestricted", false) end end)
     client:SetDSP(30, false)
-    character:setData("pos", nil)
-    if not attacker:IsPlayer() and lia.config.get("LoseItemsonDeathNPC", false) or lia.config.get("LoseItemsonDeathWorld", false) and attacker:IsWorld() then self:RemovedDropOnDeathItems(client) end
-    character:setData("deathPos", client:GetPos())
+    char:setData("pos", nil)
+    if not attacker:IsPlayer() and lia.config.get("LoseItemsonDeathNPC", false) or attacker:IsWorld() and lia.config.get("LoseItemsonDeathWorld", false) then self:RemovedDropOnDeathItems(client) end
+    char:setData("deathPos", client:GetPos())
 end
 
 function MODULE:RemovedDropOnDeathItems(client)
