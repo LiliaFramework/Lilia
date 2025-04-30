@@ -67,13 +67,11 @@ netstream.Hook("invAct", function(client, action, item, _, data)
     item:interact(action, client, entity, data)
 end)
 
-net.Receive("cmd", function(_, client)
+netstream.Hook("cmd", function(client, command, arguments)
     if (client.liaNextCmd or 0) < CurTime() then
-        local command = net.ReadString()
-        local arguments = net.ReadTable()
         local arguments2 = {}
         for _, v in ipairs(arguments) do
-            if isstring(v) or isnumber(v) then table.insert(arguments2, tostring(v)) end
+            if isstring(v) or isnumber(v) then arguments2[#arguments2 + 1] = tostring(v) end
         end
 
         lia.command.parse(client, nil, command, arguments2)
