@@ -1,41 +1,31 @@
 ﻿lia.attribs = lia.attribs or {}
 lia.attribs.list = lia.attribs.list or {}
 --[[
-   lia.attribs.loadFromDir(directory)
+    lia.attribs.loadFromDir(directory)
 
-   Description:
-      Loads all Lua attribute files (*.lua) from the specified directory
-      and adds them to lia.attribs.list.
+    Description:
+        Loads attribute definitions from all Lua files in the given directory.
+        Files beginning with "sh_" are treated as shared and loaded on both client and server.
+        Each file must return an ATTRIBUTE table, which is then stored in lia.attribs.list
+        under a key derived from the filename (without the "sh_" prefix or ".lua" extension).
 
-   Parameters:
-      directory (string) - The path to the directory containing attribute files.
+    Parameters:
+        directory (string) – Path to the folder containing attribute Lua files.
 
-   Returns:
-      nil
+    Realm:
+        Shared
 
-   Realm:
-      Shared
-
-   Internal Function:
-      true
-
-   Example Usage:
-      lia.attribs.loadFromDir("path/to/attributes")
+    Returns:
+        None
 ]]
 function lia.attribs.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
-        local niceName
-        if v:sub(1, 3) == "sh_" then
-            niceName = v:sub(4, -5):lower()
-        else
-            niceName = v:sub(1, -5)
-        end
-
+        local niceName = v:sub(1, 3) == "sh_" and v:sub(4, -5):lower() or v:sub(1, -5)
         ATTRIBUTE = lia.attribs.list[niceName] or {}
         if MODULE then ATTRIBUTE.module = MODULE.uniqueID end
         lia.include(directory .. "/" .. v, "shared")
         ATTRIBUTE.name = ATTRIBUTE.name or "Unknown"
-        ATTRIBUTE.desc = ATTRIBUTE.desc or "No description availalble."
+        ATTRIBUTE.desc = ATTRIBUTE.desc or "No description available."
         lia.attribs.list[niceName] = ATTRIBUTE
         ATTRIBUTE = nil
     end
@@ -43,45 +33,34 @@ end
 
 if SERVER then
     --[[
-   Function: lia.attribs.setup
+        lia.attribs.setup(client)
 
-   Description:
-      Initializes all attributes for a player's character.
-      If an attribute has an OnSetup function, it will be called.
+        Description:
+            Initializes attributes for a given client’s character.
+            Iterates over all entries in lia.attribs.list, retrieves the character’s
+            attribute value, and calls the attribute’s OnSetup callback if it exists.
 
-   Parameters:
-      client (Player) - The player whose character's attributes are being set up.
+        Parameters:
+            client (Player) – The player whose character attributes should be set up.
 
-   Returns:
-      nil
+        Realm:
+            Server
 
-   Realm:
-      Shared
-
-   Internal Function:
-      true
-
-   Example Usage:
-      lia.attribs.setup(client)
-]]
+        Returns:
+            None
+    ]]
     function lia.attribs.setup(client)
         local character = client:getChar()
-        if character then
-            for k, v in pairs(lia.attribs.list) do
-                if v.OnSetup then v:OnSetup(client, character:getAttrib(k, 0)) end
-            end
+        if not character then return end
+        for attribID, attribData in pairs(lia.attribs.list) do
+            local value = character:getAttrib(attribID, 0)
+            if attribData.OnSetup then attribData:OnSetup(client, value) end
         end
     end
 end
 
 hook.Add("CreateMenuButtons", "AttributeMenuButtons", function(tabs)
-    local client = LocalPlayer()
     tabs["Attributes"] = function(panel)
-        local char = client:getChar()
-        if not char then
-            return
-        end
-
         local scroll = vgui.Create("DScrollPanel", panel)
         scroll:Dock(FILL)
         local iconLayout = vgui.Create("DIconLayout", scroll)
