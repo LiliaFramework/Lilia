@@ -1,4 +1,5 @@
-﻿lia.bar = lia.bar or {}
+﻿local ScrW, ScrH = ScrW(), ScrH()
+lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
 lia.bar.list = {}
 local function findIndexByIdentifier(identifier)
@@ -8,22 +9,19 @@ local function findIndexByIdentifier(identifier)
 end
 
 --[[
-   Function: lia.bar.get
+    lia.bar.get(identifier)
 
-   Description:
-      Returns the bar object matching the given identifier.
+    Description:
+        Retrieves a bar object from the list by its unique identifier.
 
-   Parameters:
-      identifier (string) - The unique identifier of the bar.
+    Parameters:
+        identifier (string) – The unique identifier of the bar to retrieve.
 
-   Returns:
-      table|nil - The bar object if found, or nil otherwise.
+    Realm:
+        Client
 
-   Realm:
-      Client
-
-   Example Usage:
-      local myBar = lia.bar.get("health")
+    Returns:
+        table or nil – The bar table if found, or nil if not found.
 ]]
 function lia.bar.get(identifier)
     for _, bar in ipairs(lia.bar.list) do
@@ -32,28 +30,24 @@ function lia.bar.get(identifier)
 end
 
 --[[
-   Function: lia.bar.add
+    lia.bar.add(getValue, color, priority, identifier)
 
-   Description:
-      Adds a new bar (or replaces an existing one) to the bar list.
+    Description:
+        Adds a new bar or replaces an existing one in the bar list.
+        If the identifier matches an existing bar, the old bar is removed first.
+        Bars are drawn in order of ascending priority.
 
-   Parameters:
-      getValue (function) — Function returning a normalized progress (0 to 1).
-      color (Color) — The fill color of the bar (auto‑generated if nil).
-      priority (number) — The draw order priority (lower renders first).
-      identifier (string|nil) — Unique identifier of the bar.
+    Parameters:
+        getValue (function) – A callback that returns the current value of the bar.
+        color (Color) – The fill color for the bar. Defaults to a random pastel color.
+        priority (number) – Determines drawing order; lower values draw first. Defaults to end of list.
+        identifier (string) – Optional unique identifier for the bar.
 
-   Returns:
-      number — The assigned priority.
+    Realm:
+        Client
 
-   Realm:
-      Shared
-
-   Example Usage:
-      lia.bar.add(function()
-         local client = LocalPlayer()
-         return client:Health() / client:GetMaxHealth()
-      end, Color(200, 50, 40), 1, "health")
+    Returns:
+        number – The priority assigned to the added bar.
 ]]
 function lia.bar.add(getValue, color, priority, identifier)
     if identifier then
@@ -73,22 +67,19 @@ function lia.bar.add(getValue, color, priority, identifier)
 end
 
 --[[
-   Function: lia.bar.remove
+    lia.bar.remove(identifier)
 
-   Description:
-      Removes the bar corresponding to the given identifier.
+    Description:
+        Removes a bar from the list based on its unique identifier.
 
-   Parameters:
-      identifier (string) - The unique identifier of the bar to remove.
+    Parameters:
+        identifier (string) – The unique identifier of the bar to remove.
 
-   Returns:
-      nil
+    Realm:
+        Client
 
-   Realm:
-      Client
-
-   Example Usage:
-      lia.bar.remove("health")
+    Returns:
+        None
 ]]
 function lia.bar.remove(identifier)
     local idx = findIndexByIdentifier(identifier)
@@ -96,26 +87,26 @@ function lia.bar.remove(identifier)
 end
 
 --[[
-   Function: lia.bar.drawBar
+    lia.bar.drawBar(x, y, w, h, pos, max, color)
 
-   Description:
-      Draws a single horizontal progress bar on the HUD.
+    Description:
+        Draws a single horizontal bar at the specified screen coordinates,
+        filling it proportionally based on pos and max.
 
-   Parameters:
-      x, y (number) - The screen coordinates for the bar.
-      w, h (number) - The width and height of the bar.
-      pos (number) - The current progress value.
-      max (number) - The maximum value for the progress.
-      color (Color) - The color used to fill the bar.
+    Parameters:
+        x (number) – The x-coordinate of the bar's top-left corner.
+        y (number) – The y-coordinate of the bar's top-left corner.
+        w (number) – The total width of the bar (including padding).
+        h (number) – The total height of the bar.
+        pos (number) – The current value to display (will be clamped to max).
+        max (number) – The maximum possible value for the bar.
+        color (Color) – The color to fill the bar.
 
-   Returns:
-      nil
+    Realm:
+        Client
 
-   Realm:
-      Client
-
-   Example Usage:
-      lia.bar.drawBar(10, 10, 200, 20, 0.5, 1, Color(0,255,0))
+    Returns:
+        None
 ]]
 function lia.bar.drawBar(x, y, w, h, pos, max, color)
     pos = math.min(pos, max)
@@ -130,25 +121,21 @@ function lia.bar.drawBar(x, y, w, h, pos, max, color)
 end
 
 --[[
-   Function: lia.bar.drawAction
+    lia.bar.drawAction(text, time)
 
-   Description:
-      Draws an action bar on the HUD when an action is in progress.
-      The bar shows a progress fill and a label based on the remaining time,
-      using a blur effect for a clean visual presentation.
+    Description:
+        Displays a temporary action progress bar with accompanying text
+        for the specified duration on the HUD.
 
-   Parameters:
-      text (string) - The label text to display above the bar.
-      time (number) - The duration of the action in seconds.
+    Parameters:
+        text (string) – The text to display above the progress bar.
+        time (number) – Duration in seconds for which the bar is displayed.
 
-   Returns:
-      nil
+    Realm:
+        Client
 
-   Realm:
-      Client
-
-   Example Usage:
-      lia.bar.drawAction("Reloading", 3)
+    Returns:
+        None
 ]]
 function lia.bar.drawAction(text, time)
     local now = CurTime()
@@ -162,8 +149,8 @@ function lia.bar.drawAction(text, time)
         end
 
         local frac = 1 - math.TimeFraction(now, endTime, cur)
-        local w, h = ScrW() * 0.35, 28
-        local x, y = ScrW() * 0.5 - w / 2, ScrH() * 0.725 - h / 2
+        local w, h = ScrW * 0.35, 28
+        local x, y = ScrW * 0.5 - w / 2, ScrH * 0.725 - h / 2
         lia.util.drawBlurAt(x, y, w, h)
         surface.SetDrawColor(35, 35, 35, 100)
         surface.DrawRect(x, y, w, h)
@@ -180,30 +167,25 @@ function lia.bar.drawAction(text, time)
 end
 
 --[[
-   Function: lia.bar.drawAll
+    lia.bar.drawAll()
 
-   Description:
-      Called from the HUDPaintBackground hook to draw all active bars on the HUD.
-      Bars are sorted by priority and smoothly animated toward their target values.
-      Bars will be drawn if they are set to always be visible, are within their lifetime,
-      or if they pass a custom visibility hook.
+    Description:
+        Iterates through all registered bars, applies smoothing to their values,
+        and draws them on the HUD according to their priority and visibility rules.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      nil
+    Realm:
+        Client
 
-   Realm:
-      Client
-
-   Internal:
-      Yes
+    Returns:
+        None
 ]]
 function lia.bar.drawAll()
     if hook.Run("ShouldHideBars") then return end
     table.sort(lia.bar.list, function(a, b) return a.priority < b.priority end)
-    local w, h = ScrW() * 0.35, 14
+    local w, h = ScrW * 0.35, 14
     local x, y = 4, 4
     local deltas = lia.bar.delta
     local update = FrameTime() * 0.6
@@ -221,5 +203,15 @@ function lia.bar.drawAll()
         end
     end
 end
+
+lia.bar.add(function()
+    local client = LocalPlayer()
+    return client:Health() / client:GetMaxHealth()
+end, Color(200, 50, 40), 1, "health")
+
+lia.bar.add(function()
+    local client = LocalPlayer()
+    return client:Armor() / client:GetMaxArmor()
+end, Color(30, 70, 180), 3, "armor")
 
 hook.Add("HUDPaintBackground", "liaDrawBars", lia.bar.drawAll)
