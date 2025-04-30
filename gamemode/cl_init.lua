@@ -13,12 +13,7 @@ local function BootstrapLilia()
     end
 end
 
-function is64Bits()
-    return BRANCH == "x86-64"
-end
-
 local oldLocalPlayer = LocalPlayer
-
 function LocalPlayer()
     lia.localClient = IsValid(lia.localClient) and lia.localClient or oldLocalPlayer()
     return lia.localClient
