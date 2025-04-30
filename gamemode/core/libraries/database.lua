@@ -758,7 +758,7 @@ function lia.db.delete(dbTable, condition)
 end
 
 function GM:RegisterPreparedStatements()
-    LiliaBootstrap("Database", "ADDED 5 PREPARED STATEMENTS.")
+    lia.bootstrap("Database", "ADDED 5 PREPARED STATEMENTS.")
     lia.db.prepare("itemData", "UPDATE lia_items SET _data = ? WHERE _itemID = ?", {MYSQLOO_STRING, MYSQLOO_INTEGER})
     lia.db.prepare("itemx", "UPDATE lia_items SET _x = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
     lia.db.prepare("itemy", "UPDATE lia_items SET _y = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
@@ -794,7 +794,7 @@ function GM:SetupDatabase()
 end
 
 function GM:DatabaseConnected()
-    LiliaBootstrap("Database", "Lilia has connected to the database. We are using " .. lia.db.module .. "!", Color(0, 255, 0))
+    lia.bootstrap("Database", "Lilia has connected to the database. We are using " .. lia.db.module .. "!", Color(0, 255, 0))
 end
 
 function GM:OnMySQLOOConnected()

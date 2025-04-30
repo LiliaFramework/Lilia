@@ -3,7 +3,7 @@ lia.faction.indices = lia.faction.indices or {}
 lia.faction.teams = lia.faction.teams or {}
 local DefaultModels = {"models/player/barney.mdl", "models/player/alyx.mdl", "models/player/breen.mdl", "models/player/p2_chell.mdl"}
 --[[
-   Function: lia.faction.loadFromDir
+   lia.faction.loadFromDir
 
    Description:
       Loads all Lua faction files (*.lua) from the specified directory,
@@ -71,7 +71,7 @@ function lia.faction.loadFromDir(directory)
 end
 
 --[[
-   Function: lia.faction.get
+   lia.faction.get
 
    Description:
       Retrieves a faction by its index or unique identifier.
@@ -93,7 +93,7 @@ function lia.faction.get(identifier)
 end
 
 --[[
-   Function: lia.faction.getIndex
+   lia.faction.getIndex
 
    Description:
       Retrieves the index of a faction by its unique identifier.
@@ -115,7 +115,7 @@ function lia.faction.getIndex(uniqueID)
 end
 
 --[[
-   Function: lia.faction.getClasses
+   lia.faction.getClasses
 
    Description:
       Retrieves a list of classes associated with the specified faction.
@@ -141,7 +141,7 @@ function lia.faction.getClasses(faction)
 end
 
 --[[
-   Function: lia.faction.getPlayers
+   lia.faction.getPlayers
 
    Description:
       Retrieves all player entities whose characters belong to the specified faction.
@@ -168,7 +168,7 @@ function lia.faction.getPlayers(faction)
 end
 
 --[[
-   Function: lia.faction.getPlayerCount
+   lia.faction.getPlayerCount
 
    Description:
       Counts the number of players whose characters belong to the specified faction.
@@ -195,7 +195,7 @@ function lia.faction.getPlayerCount(faction)
 end
 
 --[[
-   Function: lia.faction.isFactionCategory
+   lia.faction.isFactionCategory
 
    Description:
       Checks if the specified faction is a member of a given category.
@@ -218,7 +218,7 @@ function lia.faction.isFactionCategory(faction, categoryFactions)
 end
 
 --[[
-   Function: lia.faction.jobGenerate
+   lia.faction.jobGenerate
 
    Description:
       Generates a new faction (job) based on provided parameters.
@@ -307,7 +307,7 @@ local function formatModelDataEntry(name, faction, modelIndex, modelData, catego
 end
 
 --[[
-   Function: lia.faction.formatModelData
+   lia.faction.formatModelData
 
    Description:
       Processes and formats model data for all registered factions.
@@ -342,7 +342,7 @@ function lia.faction.formatModelData()
 end
 
 --[[
-   Function: lia.faction.getCategories
+   lia.faction.getCategories
 
    Description:
       Retrieves a list of model categories for a given faction.
@@ -372,7 +372,7 @@ function lia.faction.getCategories(teamName)
 end
 
 --[[
-   Function: lia.faction.getModelsFromCategory
+   lia.faction.getModelsFromCategory
 
    Description:
       Retrieves models from a specified category for a given faction.
@@ -402,7 +402,7 @@ function lia.faction.getModelsFromCategory(teamName, category)
 end
 
 --[[
-   Function: lia.faction.getDefaultClass
+   lia.faction.getDefaultClass
 
    Description:
       Retrieves the default class for a specified faction.
@@ -433,7 +433,7 @@ end
 
 if CLIENT then
     --[[
-      Function: lia.faction.hasWhitelist
+      lia.faction.hasWhitelist
 
       Description:
          Determines if the local player has whitelist access for a given faction.

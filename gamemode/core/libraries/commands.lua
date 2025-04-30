@@ -1,7 +1,7 @@
 ﻿lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
 --[[
-   Function: lia.command.add
+   lia.command.add
 
    Description:
       Registers a new command with the specified name and configuration data.
@@ -82,7 +82,7 @@ function lia.command.add(command, data)
 end
 
 --[[
-   Function: lia.command.hasAccess
+   lia.command.hasAccess
 
    Description:
       Checks if the specified player has access to a given command based on
@@ -124,7 +124,7 @@ function lia.command.hasAccess(client, command, data)
 end
 
 --[[
-   Function: lia.command.extractArgs
+   lia.command.extractArgs
 
    Description:
       Splits the provided text into arguments, respecting quotes.
@@ -214,7 +214,7 @@ if SERVER then
     end
 
     --[[
-      Function: lia.command.parse
+      lia.command.parse
 
       Description:
          Attempts to parse the input text as a command, optionally using realCommand
@@ -236,12 +236,12 @@ if SERVER then
          lia.command.parse(player, "/mycommand arg1 arg2")
    ]]
     function lia.command.parse(client, text, realCommand, arguments)
-        if realCommand or text:utf8sub(1, 1) == "/" then
+        if realCommand or utf8.sub(text, 1, 1) == "/" then
             local match = realCommand or text:lower():match("/" .. "([_%w]+)")
             if not match then
                 local post = string.Explode(" ", text)
                 local len = string.len(post[1])
-                match = post[1]:utf8sub(2, len)
+                match = utf8.sub(post[1], 2, len)
             end
 
             match = match:lower()
@@ -254,7 +254,7 @@ if SERVER then
                 if IsValid(client) then
                     client:notifyLocalized("cmdNoExist")
                 else
-                    LiliaInformation("Sorry, that command does not exist.")
+                    lia.information("Sorry, that command does not exist.")
                 end
             end
             return true
@@ -263,7 +263,7 @@ if SERVER then
     end
 else
     --[[
-      Function: lia.command.send
+      lia.command.send
 
       Description:
          Sends a command (and optional arguments) from the client to the server using netstream.

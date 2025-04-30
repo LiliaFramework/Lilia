@@ -3,7 +3,7 @@ lia.currency.symbol = lia.config.get("CurrencySymbol") or ""
 lia.currency.singular = lia.config.get("CurrencySingularName") or "dollar"
 lia.currency.plural = lia.config.get("CurrencyPluralName") or "dollars"
 --[[
-    Function: lia.currency.get
+    lia.currency.get
 
     Description:
         Formats a numeric amount into a currency string using the defined symbol,
@@ -28,7 +28,7 @@ end
 
 if SERVER then
     --[[
-        Function: lia.currency.spawn
+        lia.currency.spawn
 
         Description:
             Spawns a currency entity at the specified position with a given amount and optional angle.
@@ -50,9 +50,9 @@ if SERVER then
     ]]
     function lia.currency.spawn(pos, amount, angle)
         if not pos then
-            LiliaInformation("[Lilia] Can't create currency entity: Invalid Position")
+            lia.information("[Lilia] Can't create currency entity: Invalid Position")
         elseif not amount or amount < 0 then
-            LiliaInformation("[Lilia] Can't create currency entity: Invalid Amount of money")
+            lia.information("[Lilia] Can't create currency entity: Invalid Amount of money")
         else
             local money = ents.Create("lia_money")
             money:SetPos(pos)

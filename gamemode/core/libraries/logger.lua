@@ -2,7 +2,7 @@
 lia.log.types = lia.log.types or {}
 if SERVER then
    --[[
-      Function: lia.log.loadTables
+      lia.log.loadTables
 
       Description:
          Creates the logs directory for the current active gamemode under "lilia/logs".
@@ -24,7 +24,7 @@ if SERVER then
    end
 
    --[[
-      Function: lia.log.addType
+      lia.log.addType
 
       Description:
          Registers a new log type by associating a log generating function and a category with the log type identifier.
@@ -49,7 +49,7 @@ if SERVER then
    end
 
    --[[
-      Function: lia.log.getString
+      lia.log.getString
 
       Description:
          Retrieves the log string and its associated category for a given client and log type.
@@ -79,7 +79,7 @@ if SERVER then
    end
 
    --[[
-      Function: lia.log.add
+      lia.log.add
 
       Description:
          Generates a log string using the registered log type function, triggers the "OnServerLog" hook,

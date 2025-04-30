@@ -34,21 +34,21 @@ if SERVER then
         client:notify(message)
     end
 else
-    function lia.darkrp.textWrap(text, fontName, maxLineWidth)
-        local function wrapCharacters(text, remainingWidth, maxWidth)
-            local accumulatedWidth = 0
-            text = text:gsub(".", function(char)
-                accumulatedWidth = accumulatedWidth + surface.GetTextSize(char)
-                if accumulatedWidth >= remainingWidth then
-                    accumulatedWidth = surface.GetTextSize(char)
-                    remainingWidth = maxWidth
-                    return "\n" .. char
-                end
-                return char
-            end)
-            return text, accumulatedWidth
-        end
+    local function wrapCharacters(text, remainingWidth, maxWidth)
+        local accumulatedWidth = 0
+        text = text:gsub(".", function(char)
+            accumulatedWidth = accumulatedWidth + surface.GetTextSize(char)
+            if accumulatedWidth >= remainingWidth then
+                accumulatedWidth = surface.GetTextSize(char)
+                remainingWidth = maxWidth
+                return "\n" .. char
+            end
+            return char
+        end)
+        return text, accumulatedWidth
+    end
 
+    function lia.darkrp.textWrap(text, fontName, maxLineWidth)
         local accumulatedWidth = 0
         surface.SetFont(fontName)
         local spaceWidth = surface.GetTextSize(' ')
@@ -95,7 +95,7 @@ function lia.darkrp.createEntity(name, data)
     ITEM.category = data.category or "Entities"
     ITEM.entityid = data.ent or ""
     ITEM.price = data.price or 0
-    LiliaInformation("Generated DarkRP entity as item " .. name)
+    lia.information("Generated DarkRP entity as item " .. name)
 end
 
 function lia.darkrp.createCategory()

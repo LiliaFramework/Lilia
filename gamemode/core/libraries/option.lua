@@ -1,27 +1,24 @@
 ﻿lia.option = lia.option or {}
 lia.option.stored = lia.option.stored or {}
 --[[
-   Function: lia.option.add
+       lia.option.add
 
-   Description:
-      Adds a configuration option to the lia.option system.
+       Description:
+          Adds a configuration option to the lia.option system.
 
-   Parameters:
-      key (string) — The unique key for the option.
-      name (string) — The display name of the option.
-      desc (string) — A brief description of the option's purpose.
-      default (any) — The default value for this option.
-      callback (function) — A function to call when the option’s value changes (optional).
-      data (table) — Additional data describing the option (e.g., min, max, type).
+       Parameters:
+          key (string) — The unique key for the option.
+          name (string) — The display name of the option.
+          desc (string) — A brief description of the option's purpose.
+          default (any) — The default value for this option.
+          callback (function) — A function to call when the option’s value changes (optional).
+          data (table) — Additional data describing the option (e.g., min, max, type, category, visible, shouldNetwork).
 
-   Returns:
-      nil
+       Returns:
+          nil
 
-   Realm:
-      Client
-
-   Example Usage:
-      lia.option.add("myOption", "My Option", "Description here", 10, function(oldVal, newVal) print(oldVal, newVal) end, {min=0, max=20})
+       Realm:
+          Shared
 ]]
 function lia.option.add(key, name, desc, default, callback, data)
     assert(isstring(key), "Expected option key to be a string, got " .. type(key))
@@ -35,140 +32,127 @@ function lia.option.add(key, name, desc, default, callback, data)
     end
 
     if data.type then optionType = data.type end
-    local oldOption = lia.option.stored[key]
-    local savedValue = oldOption and oldOption.value or default
+    local old = lia.option.stored[key]
+    local value = old and old.value or default
     lia.option.stored[key] = {
         name = name,
         desc = desc,
         data = data,
-        value = savedValue,
+        value = value,
         default = default,
         callback = callback,
         type = optionType,
+        visible = data.visible,
+        shouldNetwork = data.shouldNetwork
     }
 end
 
 --[[
-   Function: lia.option.set
+       lia.option.set
 
-   Description:
-      Sets the value of a specified option and saves the options to disk.
+       Description:
+          Sets the value of a specified option, saves locally, and optionally networks to the server.
 
-   Parameters:
-      key (string) — The unique key identifying the option.
-      value (any) — The new value to assign to this option.
+       Parameters:
+          key (string) — The unique key identifying the option.
+          value (any) — The new value to assign to this option.
 
-   Returns:
-      nil
+       Returns:
+          nil
 
-   Realm:
-      Client
-
-   Example Usage:
-      lia.option.set("myOption", 15)
+       Realm:
+          Client
 ]]
 function lia.option.set(key, value)
-    local option = lia.option.stored[key]
-    if option then
-        local oldValue = option.value
-        option.value = value
-        if option.callback then option.callback(oldValue, value) end
-        lia.option.save()
-    end
+    local opt = lia.option.stored[key]
+    if not opt then return end
+    local old = opt.value
+    opt.value = value
+    if opt.callback then opt.callback(old, value) end
+    lia.option.save()
+    if opt.shouldNetwork and SERVER then hook.Run("liaOptionReceived", ply, key, value) end
 end
 
 --[[
-   Function: lia.option.get
+       lia.option.get
 
-   Description:
-      Retrieves the value of a specified option, or returns a default if it doesn't exist.
+       Description:
+          Retrieves the value of a specified option, or returns a default if it doesn't exist.
 
-   Parameters:
-      key (string) — The unique key identifying the option.
-      default (any) — The value to return if the option is not found.
+       Parameters:
+          key (string) — The unique key identifying the option.
+          default (any) — The value to return if the option is not found.
 
-   Returns:
-      (any) The current value of the option or the provided default.
+       Returns:
+          (any) The current value of the option or the provided default.
 
-   Realm:
-      Client
-
-   Example Usage:
-      local myVal = lia.option.get("myOption", 10)
+       Realm:
+          Client
 ]]
 function lia.option.get(key, default)
-    local option = lia.option.stored[key]
-    if option then
-        if option.value ~= nil then
-            return option.value
-        elseif option.default ~= nil then
-            return option.default
-        end
+    local opt = lia.option.stored[key]
+    if opt then
+        if opt.value ~= nil then return opt.value end
+        if opt.default ~= nil then return opt.default end
     end
     return default
 end
 
 --[[
-   Function: lia.option.save
+       lia.option.save
 
-   Description:
-      Saves all current option values to a file, named based on the server IP, within the active gamemode folder.
+       Description:
+          Saves all current option values to a file, named based on the server IP, within the active gamemode folder.
 
-   Parameters:
-      None
+       Parameters:
+          None
 
-   Returns:
-      nil
+       Returns:
+          nil
 
-   Realm:
-      Client
-
-   Internal Function:
-      true
+       Realm:
+          Client
 ]]
 function lia.option.save()
-    local dirPath = "lilia/options/" .. engine.ActiveGamemode()
-    file.CreateDir(dirPath)
-    local ipWithoutPort = string.Explode(":", game.GetIPAddress())[1]
-    local formattedIP = ipWithoutPort:gsub("%.", "_")
-    local saveLocation = dirPath .. "/" .. formattedIP .. ".txt"
-    local data = {}
+    local dir = "lilia/options/" .. engine.ActiveGamemode()
+    file.CreateDir(dir)
+    local ip = string.Explode(":", game.GetIPAddress())[1]
+    local name = ip:gsub("%.", "_")
+    local path = dir .. "/" .. name .. ".txt"
+    local out = {}
     for k, v in pairs(lia.option.stored) do
-        if v and v.value ~= nil then data[k] = v.value end
+        if v.value ~= nil then out[k] = v.value end
     end
 
-    local jsonData = util.TableToJSON(data, true)
-    if jsonData then file.Write(saveLocation, jsonData) end
+    local json = util.TableToJSON(out, true)
+    if json then file.Write(path, json) end
 end
 
 --[[
-   Function: lia.option.load
+       lia.option.load
 
-   Description:
-      Loads saved option values from disk based on server IP and applies them to lia.option.stored.
+       Description:
+          Loads saved option values from disk based on server IP and applies them to lia.option.stored.
 
-   Parameters:
-      None
+       Parameters:
+          None
 
-   Returns:
-      nil
+       Returns:
+          nil
 
-   Realm:
-      Client
-
-   Internal Function:
-      true
+       Realm:
+          Client
 ]]
 function lia.option.load()
-    local dirPath = "lilia/options/" .. engine.ActiveGamemode()
-    file.CreateDir(dirPath)
-    local ipWithoutPort = string.Explode(":", game.GetIPAddress())[1]
-    local formattedIP = ipWithoutPort:gsub("%.", "_")
-    local loadLocation = dirPath .. "/" .. formattedIP .. ".txt"
-    local data = file.Read(loadLocation, "DATA")
+    local dir = "lilia/options/" .. engine.ActiveGamemode()
+    file.CreateDir(dir)
+    local ip = string.Explode(":", game.GetIPAddress())[1]
+    local name = ip:gsub("%.", "_")
+    local path = dir .. "/" .. name .. ".txt"
+    local data = file.Read(path, "DATA")
     if data then
-        local savedOptions = util.JSONToTable(data)
-        for k, v in pairs(savedOptions) do
+        local saved = util.JSONToTable(data)
+        for k, v in pairs(saved) do
             if lia.option.stored[k] then lia.option.stored[k].value = v end
         end
     end
@@ -178,222 +162,216 @@ end
 
 hook.Add("PopulateConfigurationTabs", "PopulateOptions", function(pages)
     local OptionFormatting = {
-        Int = function(key, name, config, parent)
-            local container = vgui.Create("DPanel", parent)
-            container:SetTall(220)
-            container:Dock(TOP)
-            container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
-            local panel = container:Add("DPanel")
-            panel:Dock(FILL)
-            panel.Paint = nil
-            local label = panel:Add("DLabel")
-            label:Dock(TOP)
-            label:SetTall(45)
-            label:SetText(name)
-            label:SetFont("ConfigFontLarge")
-            label:SetContentAlignment(5)
-            label:SetTextColor(Color(255, 255, 255))
-            label:DockMargin(0, 20, 0, 0)
-            local description = panel:Add("DLabel")
-            description:Dock(TOP)
-            description:SetTall(35)
-            description:SetText(config.desc or "")
-            description:SetFont("DescriptionFontLarge")
-            description:SetContentAlignment(5)
-            description:SetTextColor(Color(200, 200, 200))
-            description:DockMargin(0, 10, 0, 0)
-            local slider = panel:Add("DNumSlider")
+        Int = function(key, name, cfg, parent)
+            local c = vgui.Create("DPanel", parent)
+            c:SetTall(220)
+            c:Dock(TOP)
+            c:DockMargin(0, 60, 0, 10)
+            c.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+            local p = c:Add("DPanel")
+            p:Dock(FILL)
+            p.Paint = nil
+            local lbl = p:Add("DLabel")
+            lbl:Dock(TOP)
+            lbl:SetTall(45)
+            lbl:SetText(name)
+            lbl:SetFont("ConfigFontLarge")
+            lbl:SetContentAlignment(5)
+            lbl:SetTextColor(Color(255, 255, 255))
+            lbl:DockMargin(0, 20, 0, 0)
+            local desc = p:Add("DLabel")
+            desc:Dock(TOP)
+            desc:SetTall(35)
+            desc:SetText(cfg.desc or "")
+            desc:SetFont("DescriptionFontLarge")
+            desc:SetContentAlignment(5)
+            desc:SetTextColor(Color(200, 200, 200))
+            desc:DockMargin(0, 10, 0, 0)
+            local slider = p:Add("DNumSlider")
             slider:Dock(FILL)
             slider:DockMargin(10, 0, 10, 0)
-            slider:SetMin(lia.config.get(key .. "_min", config.data and config.data.min or 0))
-            slider:SetMax(lia.config.get(key .. "_max", config.data and config.data.max or 1))
+            slider:SetMin(lia.config.get(key .. "_min", cfg.data and cfg.data.min or 0))
+            slider:SetMax(lia.config.get(key .. "_max", cfg.data and cfg.data.max or 1))
             slider:SetDecimals(0)
-            slider:SetValue(lia.option.get(key, config.value))
+            slider:SetValue(lia.option.get(key, cfg.value))
             slider.PerformLayout = function()
                 slider.Label:SetWide(100)
                 slider.TextArea:SetWide(50)
             end
 
-            slider.OnValueChanged = function(_, newValue) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, math.floor(newValue)) end) end
-            return container
+            slider.OnValueChanged = function(_, v) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, math.floor(v)) end) end
+            return c
         end,
-        Float = function(key, name, config, parent)
-            local container = vgui.Create("DPanel", parent)
-            container:SetTall(220)
-            container:Dock(TOP)
-            container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
-            local panel = container:Add("DPanel")
-            panel:Dock(FILL)
-            panel.Paint = nil
-            local label = panel:Add("DLabel")
-            label:Dock(TOP)
-            label:SetTall(45)
-            label:SetText(name)
-            label:SetFont("ConfigFontLarge")
-            label:SetContentAlignment(5)
-            label:SetTextColor(Color(255, 255, 255))
-            label:DockMargin(0, 20, 0, 0)
-            local description = panel:Add("DLabel")
-            description:Dock(TOP)
-            description:SetTall(35)
-            description:SetText(config.desc or "")
-            description:SetFont("DescriptionFontLarge")
-            description:SetContentAlignment(5)
-            description:SetTextColor(Color(200, 200, 200))
-            description:DockMargin(0, 10, 0, 0)
-            local slider = panel:Add("DNumSlider")
+        Float = function(key, name, cfg, parent)
+            local c = vgui.Create("DPanel", parent)
+            c:SetTall(220)
+            c:Dock(TOP)
+            c:DockMargin(0, 60, 0, 10)
+            c.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+            local p = c:Add("DPanel")
+            p:Dock(FILL)
+            p.Paint = nil
+            local lbl = p:Add("DLabel")
+            lbl:Dock(TOP)
+            lbl:SetTall(45)
+            lbl:SetText(name)
+            lbl:SetFont("ConfigFontLarge")
+            lbl:SetContentAlignment(5)
+            lbl:SetTextColor(Color(255, 255, 255))
+            lbl:DockMargin(0, 20, 0, 0)
+            local desc = p:Add("DLabel")
+            desc:Dock(TOP)
+            desc:SetTall(35)
+            desc:SetText(cfg.desc or "")
+            desc:SetFont("DescriptionFontLarge")
+            desc:SetContentAlignment(5)
+            desc:SetTextColor(Color(200, 200, 200))
+            desc:DockMargin(0, 10, 0, 0)
+            local slider = p:Add("DNumSlider")
             slider:Dock(FILL)
             slider:DockMargin(10, 0, 10, 0)
-            slider:SetMin(lia.config.get(key .. "_min", config.data and config.data.min or 0))
-            slider:SetMax(lia.config.get(key .. "_max", config.data and config.data.max or 1))
+            slider:SetMin(lia.config.get(key .. "_min", cfg.data and cfg.data.min or 0))
+            slider:SetMax(lia.config.get(key .. "_max", cfg.data and cfg.data.max or 1))
             slider:SetDecimals(2)
-            slider:SetValue(lia.option.get(key, config.value))
+            slider:SetValue(lia.option.get(key, cfg.value))
             slider.PerformLayout = function()
                 slider.Label:SetWide(100)
                 slider.TextArea:SetWide(50)
             end
 
-            slider.OnValueChanged = function(_, newValue) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, math.Round(newValue, 2)) end) end
-            return container
+            slider.OnValueChanged = function(_, v) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, math.Round(v, 2)) end) end
+            return c
         end,
-        Generic = function(key, name, config, parent)
-            local container = vgui.Create("DPanel", parent)
-            container:SetTall(220)
-            container:Dock(TOP)
-            container:DockMargin(0, 60, 0, 10)
-            container.Paint = function() end
-            local panel = container:Add("DPanel")
-            panel:Dock(FILL)
-            panel.Paint = nil
-            local label = panel:Add("DLabel")
-            label:Dock(TOP)
-            label:SetTall(45)
-            label:SetText(name)
-            label:SetFont("ConfigFontLarge")
-            label:SetContentAlignment(5)
-            label:SetTextColor(Color(255, 255, 255))
-            label:DockMargin(0, 20, 0, 0)
-            local description = panel:Add("DLabel")
-            description:Dock(TOP)
-            description:SetTall(35)
-            description:SetText(config.desc or "")
-            description:SetFont("DescriptionFontLarge")
-            description:SetContentAlignment(5)
-            description:SetTextColor(Color(200, 200, 200))
-            description:DockMargin(0, 10, 0, 0)
-            local entry = panel:Add("DTextEntry")
+        Generic = function(key, name, cfg, parent)
+            local c = vgui.Create("DPanel", parent)
+            c:SetTall(220)
+            c:Dock(TOP)
+            c:DockMargin(0, 60, 0, 10)
+            c.Paint = function() end
+            local p = c:Add("DPanel")
+            p:Dock(FILL)
+            p.Paint = nil
+            local lbl = p:Add("DLabel")
+            lbl:Dock(TOP)
+            lbl:SetTall(45)
+            lbl:SetText(name)
+            lbl:SetFont("ConfigFontLarge")
+            lbl:SetContentAlignment(5)
+            lbl:SetTextColor(Color(255, 255, 255))
+            lbl:DockMargin(0, 20, 0, 0)
+            local desc = p:Add("DLabel")
+            desc:Dock(TOP)
+            desc:SetTall(35)
+            desc:SetText(cfg.desc or "")
+            desc:SetFont("DescriptionFontLarge")
+            desc:SetContentAlignment(5)
+            desc:SetTextColor(Color(200, 200, 200))
+            desc:DockMargin(0, 10, 0, 0)
+            local entry = p:Add("DTextEntry")
             entry:Dock(TOP)
             entry:SetTall(60)
             entry:DockMargin(300, 10, 300, 0)
-            entry:SetText(tostring(lia.option.get(key, config.value)))
+            entry:SetText(tostring(lia.option.get(key, cfg.value)))
             entry:SetFont("ConfigFontLarge")
             entry:SetTextColor(Color(255, 255, 255))
-            entry.OnEnter = function(btn)
-                local newValue = btn:GetText()
-                lia.option.set(key, newValue)
-            end
-            return container
+            entry.OnEnter = function(btn) lia.option.set(key, btn:GetText()) end
+            return c
         end,
-        Boolean = function(key, name, config, parent)
-            local container = vgui.Create("DPanel", parent)
-            container:SetTall(220)
-            container:Dock(TOP)
-            container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
-            local panel = container:Add("DPanel")
-            panel:Dock(FILL)
-            panel.Paint = nil
-            local label = panel:Add("DLabel")
-            label:Dock(TOP)
-            label:SetTall(45)
-            label:SetText(name)
-            label:SetFont("ConfigFontLarge")
-            label:SetContentAlignment(5)
-            label:SetTextColor(Color(255, 255, 255))
-            label:DockMargin(0, 20, 0, 0)
-            local description = panel:Add("DLabel")
-            description:Dock(TOP)
-            description:SetTall(35)
-            description:SetText(config.desc or "")
-            description:SetFont("DescriptionFontLarge")
-            description:SetContentAlignment(5)
-            description:SetTextColor(Color(200, 200, 200))
-            description:DockMargin(0, 10, 0, 0)
-            local button = panel:Add("DButton")
-            button:Dock(TOP)
-            button:SetTall(100)
-            button:DockMargin(100, 10, 100, 0)
-            button:SetText("")
-            button.Paint = function(_, w, h)
-                local check = getIcon("0xe880", true)
-                local uncheck = getIcon("0xf096", true)
-                local icon = lia.option.get(key, config.value) and check or uncheck
-                lia.util.drawText(icon, w / 2, h / 2 - 10, color_white, 1, 1, "liaIconsHugeNew")
+        Boolean = function(key, name, cfg, parent)
+            local c = vgui.Create("DPanel", parent)
+            c:SetTall(220)
+            c:Dock(TOP)
+            c:DockMargin(0, 60, 0, 10)
+            c.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+            local p = c:Add("DPanel")
+            p:Dock(FILL)
+            p.Paint = nil
+            local lbl = p:Add("DLabel")
+            lbl:Dock(TOP)
+            lbl:SetTall(45)
+            lbl:SetText(name)
+            lbl:SetFont("ConfigFontLarge")
+            lbl:SetContentAlignment(5)
+            lbl:SetTextColor(Color(255, 255, 255))
+            lbl:DockMargin(0, 20, 0, 0)
+            local desc = p:Add("DLabel")
+            desc:Dock(TOP)
+            desc:SetTall(35)
+            desc:SetText(cfg.desc or "")
+            desc:SetFont("DescriptionFontLarge")
+            desc:SetContentAlignment(5)
+            desc:SetTextColor(Color(200, 200, 200))
+            desc:DockMargin(0, 10, 0, 0)
+            local btn = p:Add("DButton")
+            btn:Dock(TOP)
+            btn:SetTall(100)
+            btn:DockMargin(100, 10, 100, 0)
+            btn:SetText("")
+            btn.Paint = function(_, w, h)
+                local ic = lia.option.get(key, cfg.value) and getIcon("0xe880", true) or getIcon("0xf096", true)
+                lia.util.drawText(ic, w / 2, h / 2 - 10, color_white, 1, 1, "liaIconsHugeNew")
             end
 
-            button.DoClick = function() lia.option.set(key, not lia.option.get(key, config.value)) end
-            return container
+            btn.DoClick = function() lia.option.set(key, not lia.option.get(key, cfg.value)) end
+            return c
         end,
-        Color = function(key, name, config, parent)
-            local container = vgui.Create("DPanel", parent)
-            container:SetTall(220)
-            container:Dock(TOP)
-            container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
-            local panel = container:Add("DPanel")
-            panel:Dock(FILL)
-            panel.Paint = nil
-            local label = panel:Add("DLabel")
-            label:Dock(TOP)
-            label:SetTall(45)
-            label:SetText(name)
-            label:SetFont("ConfigFontLarge")
-            label:SetContentAlignment(5)
-            label:SetTextColor(Color(255, 255, 255))
-            label:DockMargin(0, 20, 0, 0)
-            local description = panel:Add("DLabel")
-            description:Dock(TOP)
-            description:SetTall(35)
-            description:SetText(config.desc or "")
-            description:SetFont("DescriptionFontLarge")
-            description:SetContentAlignment(5)
-            description:SetTextColor(Color(200, 200, 200))
-            description:DockMargin(0, 10, 0, 0)
-            local button = panel:Add("DButton")
-            button:Dock(FILL)
-            button:DockMargin(10, 0, 10, 0)
-            button:SetText("")
-            button:SetCursor("hand")
-            button.Paint = function(_, w, h)
-                local colorValue = lia.option.get(key, config.value)
-                surface.SetDrawColor(colorValue)
+        Color = function(key, name, cfg, parent)
+            local c = vgui.Create("DPanel", parent)
+            c:SetTall(220)
+            c:Dock(TOP)
+            c:DockMargin(0, 60, 0, 10)
+            c.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+            local p = c:Add("DPanel")
+            p:Dock(FILL)
+            p.Paint = nil
+            local lbl = p:Add("DLabel")
+            lbl:Dock(TOP)
+            lbl:SetTall(45)
+            lbl:SetText(name)
+            lbl:SetFont("ConfigFontLarge")
+            lbl:SetContentAlignment(5)
+            lbl:SetTextColor(Color(255, 255, 255))
+            lbl:DockMargin(0, 20, 0, 0)
+            local desc = p:Add("DLabel")
+            desc:Dock(TOP)
+            desc:SetTall(35)
+            desc:SetText(cfg.desc or "")
+            desc:SetFont("DescriptionFontLarge")
+            desc:SetContentAlignment(5)
+            desc:SetTextColor(Color(200, 200, 200))
+            desc:DockMargin(0, 10, 0, 0)
+            local btn = p:Add("DButton")
+            btn:Dock(FILL)
+            btn:DockMargin(10, 0, 10, 0)
+            btn:SetText("")
+            btn:SetCursor("hand")
+            btn.Paint = function(_, w, h)
+                local col = lia.option.get(key, cfg.value)
+                surface.SetDrawColor(col)
                 surface.DrawRect(10, h / 2 - 15, w - 20, 30)
                 draw.RoundedBox(2, 10, h / 2 - 15, w - 20, 30, Color(255, 255, 255, 50))
             end
 
-            button.DoClick = function()
-                if IsValid(button.picker) then button.picker:Remove() end
-                local pickerFrame = vgui.Create("DFrame")
-                pickerFrame:SetSize(300, 400)
-                pickerFrame:SetTitle("Choose Color")
-                pickerFrame:Center()
-                pickerFrame:MakePopup()
-                local colorMixer = pickerFrame:Add("DColorMixer")
-                colorMixer:Dock(FILL)
-                colorMixer:SetPalette(true)
-                colorMixer:SetAlphaBar(true)
-                colorMixer:SetWangs(true)
-                colorMixer:SetColor(lia.option.get(key, config.value))
-                local confirm = pickerFrame:Add("DButton")
-                confirm:Dock(BOTTOM)
-                confirm:SetTall(40)
-                confirm:SetText("Apply")
-                confirm:SetTextColor(color_white)
-                confirm:SetFont("ConfigFontLarge")
-                confirm:DockMargin(10, 10, 10, 10)
-                confirm.Paint = function(self, w, h)
+            btn.DoClick = function()
+                if IsValid(btn.picker) then btn.picker:Remove() end
+                local frm = vgui.Create("DFrame")
+                frm:SetSize(300, 400)
+                frm:Center()
+                frm:MakePopup()
+                local mixer = frm:Add("DColorMixer")
+                mixer:Dock(FILL)
+                mixer:SetPalette(true)
+                mixer:SetAlphaBar(true)
+                mixer:SetWangs(true)
+                mixer:SetColor(lia.option.get(key, cfg.value))
+                local apply = frm:Add("DButton")
+                apply:Dock(BOTTOM)
+                apply:SetTall(40)
+                apply:SetText("Apply")
+                apply:SetTextColor(color_white)
+                apply:SetFont("ConfigFontLarge")
+                apply:DockMargin(10, 10, 10, 10)
+                apply.Paint = function(self, w, h)
                     surface.SetDrawColor(Color(0, 150, 0))
                     surface.DrawRect(0, 0, w, h)
                     if self:IsHovered() then
@@ -405,61 +383,61 @@ hook.Add("PopulateConfigurationTabs", "PopulateOptions", function(pages)
                     surface.DrawOutlinedRect(0, 0, w, h)
                 end
 
-                confirm.DoClick = function()
-                    timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, pickerFrame.curColor) end)
-                    pickerFrame:Remove()
+                apply.DoClick = function()
+                    timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, frm.curColor) end)
+                    frm:Remove()
                 end
 
-                colorMixer.ValueChanged = function(_, value) pickerFrame.curColor = value end
-                button.picker = pickerFrame
+                mixer.ValueChanged = function(_, v) frm.curColor = v end
+                btn.picker = frm
             end
-            return container
+            return c
         end,
-        Table = function(key, name, config, parent)
-            local container = vgui.Create("DPanel", parent)
-            container:SetTall(220)
-            container:Dock(TOP)
-            container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
-            local panel = container:Add("DPanel")
-            panel:Dock(FILL)
-            panel.Paint = nil
-            local label = panel:Add("DLabel")
-            label:Dock(TOP)
-            label:SetTall(45)
-            label:SetText(name)
-            label:SetFont("ConfigFontLarge")
-            label:SetContentAlignment(5)
-            label:SetTextColor(Color(255, 255, 255))
-            label:DockMargin(0, 20, 0, 0)
-            local description = panel:Add("DLabel")
-            description:Dock(TOP)
-            description:SetTall(35)
-            description:SetText(config.desc or "")
-            description:SetFont("DescriptionFontLarge")
-            description:SetContentAlignment(5)
-            description:SetTextColor(Color(200, 200, 200))
-            description:DockMargin(0, 10, 0, 0)
-            local comboBox = panel:Add("DComboBox")
-            comboBox:Dock(TOP)
-            comboBox:SetTall(60)
-            comboBox:DockMargin(300, 10, 300, 0)
-            comboBox:SetFont("ConfigFontLarge")
-            comboBox:SetTextColor(Color(255, 255, 255))
-            local options = config.data and config.data.options or {}
-            local currentValue = lia.option.get(key, config.value)
-            comboBox:SetValue(tostring(currentValue))
-            comboBox.Paint = function(self, w, h)
+        Table = function(key, name, cfg, parent)
+            local c = vgui.Create("DPanel", parent)
+            c:SetTall(220)
+            c:Dock(TOP)
+            c:DockMargin(0, 60, 0, 10)
+            c.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+            local p = c:Add("DPanel")
+            p:Dock(FILL)
+            p.Paint = nil
+            local lbl = p:Add("DLabel")
+            lbl:Dock(TOP)
+            lbl:SetTall(45)
+            lbl:SetText(name)
+            lbl:SetFont("ConfigFontLarge")
+            lbl:SetContentAlignment(5)
+            lbl:SetTextColor(Color(255, 255, 255))
+            lbl:DockMargin(0, 20, 0, 0)
+            local desc = p:Add("DLabel")
+            desc:Dock(TOP)
+            desc:SetTall(35)
+            desc:SetText(cfg.desc or "")
+            desc:SetFont("DescriptionFontLarge")
+            desc:SetContentAlignment(5)
+            desc:SetTextColor(Color(200, 200, 200))
+            desc:DockMargin(0, 10, 0, 0)
+            local combo = p:Add("DComboBox")
+            combo:Dock(TOP)
+            combo:SetTall(60)
+            combo:DockMargin(300, 10, 300, 0)
+            combo:SetFont("ConfigFontLarge")
+            combo:SetTextColor(Color(255, 255, 255))
+            local opts = cfg.data and cfg.data.options or {}
+            local cur = lia.option.get(key, cfg.value)
+            combo:SetValue(tostring(cur))
+            combo.Paint = function(self, w, h)
                 draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, 200))
                 self:DrawTextEntryText(Color(255, 255, 255), Color(255, 255, 255), Color(255, 255, 255))
             end
 
-            for _, option in ipairs(options) do
-                comboBox:AddChoice(option, option, option == currentValue)
+            for _, opt in ipairs(opts) do
+                combo:AddChoice(opt, opt, opt == cur)
             end
 
-            comboBox.OnSelect = function(_, _, value) lia.option.set(key, value) end
-            return container
+            combo.OnSelect = function(_, _, v) lia.option.set(key, v) end
+            return c
         end
     }
 
@@ -467,52 +445,52 @@ hook.Add("PopulateConfigurationTabs", "PopulateOptions", function(pages)
         local scroll = vgui.Create("DScrollPanel", parent)
         scroll:Dock(FILL)
         local categories = {}
-        local orderedKeys = {}
-        for key, _ in pairs(lia.option.stored) do
-            table.insert(orderedKeys, key)
+        local keys = {}
+        for k in pairs(lia.option.stored) do
+            keys[#keys + 1] = k
         end
 
-        table.sort(orderedKeys, function(a, b) return lia.option.stored[a].name < lia.option.stored[b].name end)
-        for _, key in ipairs(orderedKeys) do
-            local option = lia.option.stored[key]
-            local elementType = option.type or "Generic"
-            local catName = option.data and option.data.category or "Miscellaneous"
-            categories[catName] = categories[catName] or {}
-            table.insert(categories[catName], {
-                key = key,
-                name = option.name,
-                config = option,
-                elemType = elementType
-            })
+        table.sort(keys, function(a, b) return lia.option.stored[a].name < lia.option.stored[b].name end)
+        for _, key in ipairs(keys) do
+            local opt = lia.option.stored[key]
+            if not opt.visible or type(opt.visible) == "function" and opt.visible() then
+                local catName = opt.data and opt.data.category or "Miscellaneous"
+                categories[catName] = categories[catName] or {}
+                categories[catName][#categories[catName] + 1] = {
+                    key = key,
+                    name = opt.name,
+                    config = opt,
+                    elemType = opt.type or "Generic"
+                }
+            end
         end
 
-        for catName, configItems in SortedPairs(categories) do
-            local catPanel = vgui.Create("DCollapsibleCategory", scroll)
-            catPanel:Dock(TOP)
-            catPanel:SetLabel(catName)
-            catPanel:SetExpanded(true)
-            catPanel:DockMargin(0, 0, 0, 10)
-            catPanel.Header:SetContentAlignment(5)
-            catPanel.Header:SetTall(30)
-            catPanel.Header:SetFont("liaMediumFont")
-            catPanel.Header:SetTextColor(Color(255, 255, 255))
-            catPanel.Header.Paint = function(_, w, h)
+        for catName, items in SortedPairs(categories) do
+            local cat = vgui.Create("DCollapsibleCategory", scroll)
+            cat:Dock(TOP)
+            cat:SetLabel(catName)
+            cat:SetExpanded(true)
+            cat:DockMargin(0, 0, 0, 10)
+            cat.Header:SetContentAlignment(5)
+            cat.Header:SetTall(30)
+            cat.Header:SetFont("liaMediumFont")
+            cat.Header:SetTextColor(Color(255, 255, 255))
+            cat.Header.Paint = function(_, w, h)
                 draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 200))
                 surface.SetDrawColor(255, 255, 255, 80)
                 surface.DrawOutlinedRect(0, 0, w, h)
             end
 
-            catPanel.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40, 60)) end
-            local bodyPanel = vgui.Create("DPanel", catPanel)
-            bodyPanel:SetTall(#configItems * 240)
-            bodyPanel.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 50)) end
-            catPanel:SetContents(bodyPanel)
-            for _, itemData in ipairs(configItems) do
-                local panelConstructor = OptionFormatting[itemData.elemType] or OptionFormatting.Generic
-                local panelElement = panelConstructor(itemData.key, itemData.name, itemData.config, bodyPanel)
-                panelElement:Dock(TOP)
-                panelElement:DockMargin(10, 10, 10, 0)
-                panelElement.Paint = function(_, w, h)
+            cat.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40, 60)) end
+            local body = vgui.Create("DPanel", cat)
+            body:SetTall(#items * 240)
+            body.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 50)) end
+            cat:SetContents(body)
+            for _, v in ipairs(items) do
+                local panel = OptionFormatting[v.elemType](v.key, v.name, v.config, body)
+                panel:Dock(TOP)
+                panel:DockMargin(10, 10, 10, 0)
+                panel.Paint = function(_, w, h)
                     draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
                     surface.SetDrawColor(255, 255, 255)
                     surface.DrawOutlinedRect(0, 0, w, h)
@@ -521,11 +499,22 @@ hook.Add("PopulateConfigurationTabs", "PopulateOptions", function(pages)
         end
     end
 
-    table.insert(pages, {
+    pages[#pages + 1] = {
         name = "Options",
         drawFunc = function(parent)
             parent:Clear()
             buildOptions(parent)
         end
-    })
+    }
 end)
+
+lia.option.add("BarsAlwaysVisible", "Bars Always Visible", "Make all bars always visible", false, nil, {
+    category = "General"
+})
+
+lia.option.add("descriptionWidth", "Description Width", "Adjust the description width on the HUD", 0.5, nil, {
+    category = "HUD",
+    min = 0.1,
+    max = 1,
+    decimals = 2
+})

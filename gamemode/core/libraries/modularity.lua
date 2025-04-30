@@ -9,7 +9,7 @@ local function loadWorkshopContent(Workshop)
                 if isstring(workshopID) and workshopID:match("^%d+$") then
                     resource.AddWorkshop(workshopID)
                 else
-                    LiliaInformation("Invalid Workshop ID: " .. tostring(workshopID))
+                    lia.information("Invalid Workshop ID: " .. tostring(workshopID))
                 end
             end
         else

@@ -1,7 +1,7 @@
 ﻿lia.flag = lia.flag or {}
 lia.flag.list = lia.flag.list or {}
 --[[
-   Function: lia.flag.add
+   lia.flag.add
 
    Description:
       Registers a new flag by adding it to the flag list.
@@ -31,7 +31,7 @@ end
 
 if SERVER then
     --[[
-      Function: lia.flag.onSpawn
+      lia.flag.onSpawn
 
       Description:
          Called when a player spawns. This function checks the player's character flags and triggers

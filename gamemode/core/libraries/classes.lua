@@ -1,7 +1,7 @@
 ﻿lia.class = lia.class or {}
 lia.class.list = lia.class.list or {}
 --[[
-   Function: lia.class.loadFromDir
+   lia.class.loadFromDir
 
    Description:
       Loads class definitions from Lua files located in the specified directory.
@@ -59,7 +59,7 @@ function lia.class.loadFromDir(directory)
 end
 
 --[[
-   Function: lia.class.canBe
+   lia.class.canBe
 
    Description:
       Determines whether the specified client is allowed to join the given class.
@@ -92,7 +92,7 @@ function lia.class.canBe(client, class)
 end
 
 --[[
-   Function: lia.class.get
+   lia.class.get
 
    Description:
       Retrieves the class information table from the class list using the provided identifier.
@@ -114,7 +114,7 @@ function lia.class.get(identifier)
 end
 
 --[[
-   Function: lia.class.getPlayers
+   lia.class.getPlayers
 
    Description:
       Returns a list of players whose characters belong to the specified class.
@@ -141,7 +141,7 @@ function lia.class.getPlayers(class)
 end
 
 --[[
-   Function: lia.class.getPlayerCount
+   lia.class.getPlayerCount
 
    Description:
       Counts the number of players whose characters belong to the specified class.
@@ -168,7 +168,7 @@ function lia.class.getPlayerCount(class)
 end
 
 --[[
-   Function: lia.class.retrieveClass
+   lia.class.retrieveClass
 
    Description:
       Searches through the class list to find a class that matches the provided search string.
@@ -194,7 +194,7 @@ function lia.class.retrieveClass(class)
 end
 
 --[[
-   Function: lia.class.hasWhitelist
+   lia.class.hasWhitelist
 
    Description:
       Checks if the specified class requires a whitelist for access.

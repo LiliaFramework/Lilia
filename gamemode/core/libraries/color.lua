@@ -1,415 +1,238 @@
-﻿lia.color = lia.color or {}
+﻿lia = lia or {}
+lia.color = lia.color or {}
+lia.color.stored = lia.color.stored or {}
+local clamp = math.Clamp
+local configGet = lia.config.get
+local unpack = unpack
 --[[
-   Function: lia.color.Adjust
+   lia.color.register
 
    Description:
-      Adjusts the provided color by adding offsets to its red, green, blue, and alpha channels.
-      The resulting values are clamped between 0 and 255 to ensure valid color components.
+      Registers a named color for later lookup in the color storage.
 
    Parameters:
-      color  (Color)  - The original color.
-      rOffset (number) - Offset for the red channel.
-      gOffset (number) - Offset for the green channel.
-      bOffset (number) - Offset for the blue channel.
-      aOffset (number) - Offset for the alpha channel (optional, defaults to 0 if not provided).
+      name  (string)  - The key to assign to the color (case-insensitive).
+      color (Color)   - A Color object (or table with r, g, b, a fields).
 
    Returns:
-      Color - A new color with the adjusted values.
+      None
 
    Realm:
       Shared
 
    Example Usage:
-      local newColor = lia.color.Adjust(Color(100, 150, 200, 255), 10, -10, 5, 0)
+      local red = Color(255, 0, 0, 255)
+      lia.color.register("alert", red)
+]]
+function lia.color.register(name, color)
+   lia.color.stored[name:lower()] = color
+end
+
+--[[
+   lia.color.Adjust
+
+   Description:
+      Creates a new Color by applying channel offsets to an existing color,
+      clamping each channel between 0 and 255.
+
+   Parameters:
+      color   (Color)  - The base color to adjust.
+      rOffset (number) - Amount to add to the red channel.
+      gOffset (number) - Amount to add to the green channel.
+      bOffset (number) - Amount to add to the blue channel.
+      aOffset (number) - Amount to add to the alpha channel (optional; defaults to 0).
+
+   Returns:
+      Color - A new Color object with adjusted channels.
+
+   Realm:
+      Shared
+
+   Example Usage:
+      local base   = Color(100, 150, 200, 255)
+      local lighter = lia.color.Adjust(base, 20, 20, 20, 0)
 ]]
 function lia.color.Adjust(color, rOffset, gOffset, bOffset, aOffset)
-    local r = math.Clamp(color.r + rOffset, 0, 255)
-    local g = math.Clamp(color.g + gOffset, 0, 255)
-    local b = math.Clamp(color.b + bOffset, 0, 255)
-    local a = math.Clamp(color.a + (aOffset or 0), 0, 255)
-    return Color(r, g, b, a)
+   return Color(clamp(color.r + rOffset, 0, 255), clamp(color.g + gOffset, 0, 255), clamp(color.b + bOffset, 0, 255), clamp((color.a or 255) + (aOffset or 0), 0, 255))
 end
 
 --[[
-   Function: lia.color.ColorToHex
+   lia.color.ReturnMainAdjustedColors
 
    Description:
-      Converts a Color value to its hexadecimal string representation.
-      The output format is "0xRRGGBB", where RR, GG, and BB represent the red, green, and blue channels.
-
-   Parameters:
-      color (Color) - The color to convert.
-
-   Returns:
-      string - The hexadecimal string representation of the color.
-
-   Realm:
-      Shared
-
-   Example Usage:
-      local hex = lia.color.ColorToHex(Color(255, 0, 0))
-]]
-function lia.color.ColorToHex(color)
-    return "0x" .. bit.tohex(color.r, 2) .. bit.tohex(color.g, 2) .. bit.tohex(color.b, 2)
-end
-
---[[
-   Function: lia.color.Lighten
-
-   Description:
-      Lightens the given color by increasing its lightness component in the HSL color space.
-      The function converts the color to HSL, increases the lightness, and then converts it back to a Color.
-
-   Parameters:
-      color  (Color)  - The original color.
-      amount (number) - The amount to lighten the color (added to the normalized lightness).
-
-   Returns:
-      Color - A new, lightened color.
-
-   Realm:
-      Shared
-
-   Example Usage:
-      local lighterColor = lia.color.Lighten(Color(100, 100, 100, 255), 0.1)
-]]
-function lia.color.Lighten(color, amount)
-    local hue, saturation, lightness = ColorToHSL(color)
-    lightness = math.Clamp(lightness / 255 + amount, 0, 1)
-    return HSLToColor(hue, saturation, lightness)
-end
-
---[[
-   Function: lia.color.Rainbow
-
-   Description:
-      Generates a rainbow color based on the current time and a frequency parameter.
-      It uses the HSV color model to create a smoothly cycling color effect.
-
-   Parameters:
-      frequency (number) - The frequency at which the color cycles.
-
-   Returns:
-      Color - A color from the rainbow spectrum.
-
-   Realm:
-      Shared
-
-   Example Usage:
-      local rainbowColor = lia.color.Rainbow(1)
-]]
-function lia.color.Rainbow(frequency)
-    return HSVToColor(CurTime() * frequency % 360, 1, 1)
-end
-
---[[
-   Function: lia.color.ColorCycle
-
-   Description:
-      Creates a cyclic blend between two colors over time using a sine-based interpolation.
-      The function gradually shifts between col1 and col2 based on the sine of the current time.
-
-   Parameters:
-      col1 (Color) - The first color.
-      col2 (Color) - The second color.
-      freq (number) - The frequency of the color cycle (default is 1).
-
-   Returns:
-      Color - A new color that cycles between col1 and col2.
-
-   Realm:
-      Shared
-
-   Example Usage:
-      local cyclingColor = lia.color.ColorCycle(Color(255, 0, 0), Color(0, 0, 255), 1)
-]]
-function lia.color.ColorCycle(col1, col2, freq)
-    freq = freq or 1
-    local difference = Color(col1.r - col2.r, col1.g - col2.g, col1.b - col2.b)
-    local time = CurTime()
-    local rgb = {
-        r = 0,
-        g = 0,
-        b = 0
-    }
-
-    for k, _ in pairs(rgb) do
-        if col1[k] > col2[k] then
-            rgb[k] = col2[k]
-        else
-            rgb[k] = col1[k]
-        end
-    end
-    return Color(rgb.r + math.abs(math.sin(time * freq) * difference.r), rgb.g + math.abs(math.sin(time * freq + 2) * difference.g), rgb.b + math.abs(math.sin(time * freq + 4) * difference.b))
-end
-
---[[
-   Function: lia.color.toText
-
-   Description:
-      Converts a Color value into a comma-separated string representing its RGBA components.
-      If the provided value is not a valid Color, the function returns nil.
-
-   Parameters:
-      color (Color) - The color to convert.
-
-   Returns:
-      string - A string in the format "r,g,b,a".
-
-   Realm:
-      Shared
-
-   Example Usage:
-      local colorString = lia.color.toText(Color(255, 255, 255, 255))
-]]
-function lia.color.toText(color)
-    if not IsColor(color) then return end
-    return (color.r or 255) .. "," .. (color.g or 255) .. "," .. (color.b or 255) .. "," .. (color.a or 255)
-end
-
---[[
-   Function: lia.color.Darken
-
-   Description:
-      Darkens the given color by decreasing its lightness component in the HSL color space.
-      The function converts the color to HSL, decreases the lightness, and then converts it back to a Color.
-
-   Parameters:
-      color  (Color)  - The original color.
-      amount (number) - The amount to darken the color (subtracted from the normalized lightness).
-
-   Returns:
-      Color - A new, darkened color.
-
-   Realm:
-      Shared
-
-   Example Usage:
-      local darkerColor = lia.color.Darken(Color(200, 200, 200, 255), 0.1)
-]]
-function lia.color.Darken(color, amount)
-    local hue, saturation, lightness = ColorToHSL(color)
-    lightness = math.Clamp(lightness / 255 - amount, 0, 1)
-    return HSLToColor(hue, saturation, lightness)
-end
-
---[[
-   Function: lia.color.Blend
-
-   Description:
-      Blends two colors together based on the provided ratio.
-      A ratio of 0 returns color1, while a ratio of 1 returns color2.
-
-   Parameters:
-      color1 (Color) - The first color.
-      color2 (Color) - The second color.
-      ratio  (number) - The blend ratio (between 0 and 1).
-
-   Returns:
-      Color - The blended color.
-
-   Realm:
-      Shared
-
-   Example Usage:
-      local blendedColor = lia.color.Blend(Color(255, 0, 0), Color(0, 0, 255), 0.5)
-]]
-function lia.color.Blend(color1, color2, ratio)
-    ratio = math.Clamp(ratio, 0, 1)
-    local r = Lerp(ratio, color1.r, color2.r)
-    local g = Lerp(ratio, color1.g, color2.g)
-    local b = Lerp(ratio, color1.b, color2.b)
-    return Color(r, g, b)
-end
-
-do
-    local colors = {
-        black = Color(0, 0, 0),
-        white = Color(255, 255, 255),
-        gray = Color(128, 128, 128),
-        dark_gray = Color(64, 64, 64),
-        light_gray = Color(192, 192, 192),
-        red = Color(255, 0, 0),
-        dark_red = Color(139, 0, 0),
-        light_red = Color(255, 99, 71),
-        green = Color(0, 255, 0),
-        dark_green = Color(0, 100, 0),
-        light_green = Color(144, 238, 144),
-        blue = Color(0, 0, 255),
-        dark_blue = Color(0, 0, 139),
-        light_blue = Color(173, 216, 230),
-        cyan = Color(0, 255, 255),
-        dark_cyan = Color(0, 139, 139),
-        magenta = Color(255, 0, 255),
-        dark_magenta = Color(139, 0, 139),
-        yellow = Color(255, 255, 0),
-        dark_yellow = Color(139, 139, 0),
-        orange = Color(255, 165, 0),
-        dark_orange = Color(255, 140, 0),
-        purple = Color(128, 0, 128),
-        dark_purple = Color(75, 0, 130),
-        pink = Color(255, 192, 203),
-        dark_pink = Color(199, 21, 133),
-        brown = Color(165, 42, 42),
-        dark_brown = Color(139, 69, 19),
-        maroon = Color(128, 0, 0),
-        dark_maroon = Color(139, 28, 98),
-        navy = Color(0, 0, 128),
-        dark_navy = Color(0, 0, 139),
-        olive = Color(128, 128, 0),
-        dark_olive = Color(85, 107, 47),
-        teal = Color(0, 128, 128),
-        dark_teal = Color(0, 128, 128),
-        peach = Color(255, 218, 185),
-        dark_peach = Color(255, 218, 185),
-        lavender = Color(230, 230, 250),
-        dark_lavender = Color(148, 0, 211),
-        aqua = Color(0, 255, 255),
-        dark_aqua = Color(0, 206, 209),
-        beige = Color(245, 245, 220),
-        dark_beige = Color(139, 131, 120)
-    }
-
-    local old_color = _OLD_COLOR_FN_ or Color
-    _OLD_COLOR_FN_ = old_color
-    function Color(r, g, b, a)
-        if isstring(r) then
-            if colors[r:lower()] then
-                return ColorAlpha(colors[r:lower()], g or 255)
-            elseif isstring(g) and isstring(b) then
-                return old_color(r, g, b, a or 255)
-            else
-                return color_white
-            end
-        else
-            return old_color(r, g, b, a)
-        end
-    end
-
-    function lia.color.register(name, color, force)
-        if not force and colors[name] then return end
-        colors[name] = color
-    end
-end
-
---[[
-   Function: lia.color.rgb
-
-   Description:
-      Creates a Color from given red, green, and blue values.
-      The input values (0-255) are normalized to create a Color.
-
-   Parameters:
-      r (number) - The red component (0-255).
-      g (number) - The green component (0-255).
-      b (number) - The blue component (0-255).
-
-   Returns:
-      Color - A new Color with normalized RGB values.
-
-   Realm:
-      Shared
-
-   Example Usage:
-      local col = lia.color.rgb(255, 128, 64)
-]]
-function lia.color.rgb(r, g, b)
-    return Color(r / 255, g / 255, b / 255)
-end
-
---[[
-   Function: lia.color.LerpColor
-
-   Description:
-      Linearly interpolates between two colors based on the provided fraction.
-      The interpolation is applied to each RGBA component separately.
-
-   Parameters:
-      frac (number)  - The interpolation factor (0 to 1).
-      from (Color)   - The starting color.
-      to (Color)     - The target color.
-
-   Returns:
-      Color - The interpolated color.
-
-   Realm:
-      Shared
-
-   Example Usage:
-      local resultColor = lia.color.LerpColor(0.5, Color(255, 0, 0, 255), Color(0, 0, 255, 255))
-]]
-function lia.color.LerpColor(frac, from, to)
-    local col = Color(Lerp(frac, from.r, to.r), Lerp(frac, from.g, to.g), Lerp(frac, from.b, to.b), Lerp(frac, from.a, to.a))
-    return col
-end
-
---[[
-   Function: lia.color.ReturnMainAdjustedColors
-
-   Description:
-      Returns a table of main UI colors adjusted based on configuration settings.
-      The table includes colors for background, sidebar, accent, text, hover, border, and highlight.
+      Retrieves the base UI color from configuration and returns a table of
+      standardized interface colors with predefined adjustments.
 
    Parameters:
       None
 
    Returns:
-      table - A table containing the adjusted main colors.
+      table - A mapping of UI element keys to Color objects:
+         background, sidebar, accent, text, hover, border, highlight
 
    Realm:
       Shared
 
    Example Usage:
-      local colors = lia.color.ReturnMainAdjustedColors()
+      local uiColors = lia.color.ReturnMainAdjustedColors()
+      panel:SetBackgroundColor(uiColors.background)
 ]]
 function lia.color.ReturnMainAdjustedColors()
-    return {
-        background = lia.color.Adjust(lia.config.get("Color"), -20, -10, -50, 255),
-        sidebar = lia.color.Adjust(lia.config.get("Color"), -30, -15, -60, 200),
-        accent = lia.config.get("Color"),
-        text = Color(245, 245, 220, 255),
-        hover = lia.color.Adjust(lia.config.get("Color"), -40, -25, -70, 220),
-        border = Color(255, 255, 255),
-        highlight = Color(255, 255, 255, 30),
-    }
+   local base = configGet("Color")
+   return {
+      background = lia.color.Adjust(base, -20, -10, -50, 0),
+      sidebar = lia.color.Adjust(base, -30, -15, -60, -55),
+      accent = base,
+      text = Color(245, 245, 220, 255),
+      hover = lia.color.Adjust(base, -40, -25, -70, -35),
+      border = Color(255, 255, 255, 255),
+      highlight = Color(255, 255, 255, 30)
+   }
 end
 
-do
-    local function normalize(min, max, val)
-        local delta = max - min
-        return (val - min) / delta
-    end
-
-    --[[
-       Function: lia.color.LerpHSV
-
-       Description:
-          Interpolates between two colors in the HSV color space based on the current value within a specified range.
-          The function linearly interpolates between the HSV values of the start and end colors.
-
-       Parameters:
-          start_color  (Color)  - The starting color (defaults to green if nil).
-          end_color    (Color)  - The ending color (defaults to red if nil).
-          maxValue     (number) - The maximum value of the range.
-          currentValue (number) - The current value within the range.
-          minValue     (number, optional) - The minimum value of the range (defaults to 0 if not provided).
-
-       Returns:
-          Color - The interpolated color converted back from HSV to a Color.
-
-       Realm:
-          Shared
-
-       Example Usage:
-          local interpColor = lia.color.LerpHSV(Color("green"), Color("red"), 100, 50)
-    ]]
-    function lia.color.LerpHSV(start_color, end_color, maxValue, currentValue, minValue)
-        start_color = start_color or Color("green")
-        end_color = end_color or Color("red")
-        minValue = minValue or 0
-        local hsv_start = ColorToHSV(end_color)
-        local hsv_end = ColorToHSV(start_color)
-        local linear = Lerp(normalize(minValue, maxValue, currentValue), hsv_start, hsv_end)
-        return HSVToColor(linear, 1, 1)
-    end
+lia.color.register("black", {0, 0, 0})
+lia.color.register("white", {255, 255, 255})
+lia.color.register("gray", {128, 128, 128})
+lia.color.register("dark_gray", {64, 64, 64})
+lia.color.register("light_gray", {192, 192, 192})
+lia.color.register("red", {255, 0, 0})
+lia.color.register("dark_red", {139, 0, 0})
+lia.color.register("light_red", {255, 99, 71})
+lia.color.register("green", {0, 255, 0})
+lia.color.register("dark_green", {0, 100, 0})
+lia.color.register("light_green", {144, 238, 144})
+lia.color.register("blue", {0, 0, 255})
+lia.color.register("dark_blue", {0, 0, 139})
+lia.color.register("light_blue", {173, 216, 230})
+lia.color.register("cyan", {0, 255, 255})
+lia.color.register("dark_cyan", {0, 139, 139})
+lia.color.register("magenta", {255, 0, 255})
+lia.color.register("dark_magenta", {139, 0, 139})
+lia.color.register("yellow", {255, 255, 0})
+lia.color.register("dark_yellow", {139, 139, 0})
+lia.color.register("orange", {255, 165, 0})
+lia.color.register("dark_orange", {255, 140, 0})
+lia.color.register("purple", {128, 0, 128})
+lia.color.register("dark_purple", {75, 0, 130})
+lia.color.register("pink", {255, 192, 203})
+lia.color.register("dark_pink", {199, 21, 133})
+lia.color.register("brown", {165, 42, 42})
+lia.color.register("dark_brown", {139, 69, 19})
+lia.color.register("maroon", {128, 0, 0})
+lia.color.register("dark_maroon", {139, 28, 98})
+lia.color.register("navy", {0, 0, 128})
+lia.color.register("dark_navy", {0, 0, 139})
+lia.color.register("olive", {128, 128, 0})
+lia.color.register("dark_olive", {85, 107, 47})
+lia.color.register("teal", {0, 128, 128})
+lia.color.register("dark_teal", {0, 105, 105})
+lia.color.register("peach", {255, 218, 185})
+lia.color.register("dark_peach", {255, 218, 185})
+lia.color.register("lavender", {230, 230, 250})
+lia.color.register("dark_lavender", {148, 0, 211})
+lia.color.register("aqua", {0, 255, 255})
+lia.color.register("dark_aqua", {0, 206, 209})
+lia.color.register("beige", {245, 245, 220})
+lia.color.register("dark_beige", {139, 131, 120})
+lia.color.register("aquamarine", {127, 255, 212})
+lia.color.register("bisque", {255, 228, 196})
+lia.color.register("blanched_almond", {255, 235, 205})
+lia.color.register("blue_violet", {138, 43, 226})
+lia.color.register("burlywood", {222, 184, 135})
+lia.color.register("cadet_blue", {95, 158, 160})
+lia.color.register("chartreuse", {127, 255, 0})
+lia.color.register("chocolate", {210, 105, 30})
+lia.color.register("coral", {255, 127, 80})
+lia.color.register("cornflower_blue", {100, 149, 237})
+lia.color.register("cornsilk", {255, 248, 220})
+lia.color.register("crimson", {220, 20, 60})
+lia.color.register("dark_goldenrod", {184, 134, 11})
+lia.color.register("dark_khaki", {189, 183, 107})
+lia.color.register("dark_orchid", {153, 50, 204})
+lia.color.register("dark_salmon", {233, 150, 122})
+lia.color.register("deep_pink", {255, 20, 147})
+lia.color.register("deep_sky_blue", {0, 191, 255})
+lia.color.register("dodger_blue", {30, 144, 255})
+lia.color.register("fire_brick", {178, 34, 34})
+lia.color.register("forest_green", {34, 139, 34})
+lia.color.register("gainsboro", {220, 220, 220})
+lia.color.register("ghost_white", {248, 248, 255})
+lia.color.register("gold", {255, 215, 0})
+lia.color.register("goldenrod", {218, 165, 32})
+lia.color.register("green_yellow", {173, 255, 47})
+lia.color.register("hot_pink", {255, 105, 180})
+lia.color.register("indian_red", {205, 92, 92})
+lia.color.register("indigo", {75, 0, 130})
+lia.color.register("ivory", {255, 255, 240})
+lia.color.register("khaki", {240, 230, 140})
+lia.color.register("lavender_blush", {255, 240, 245})
+lia.color.register("lawn_green", {124, 252, 0})
+lia.color.register("lemon_chiffon", {255, 250, 205})
+lia.color.register("light_coral", {240, 128, 128})
+lia.color.register("light_goldenrod_yellow", {250, 250, 210})
+lia.color.register("light_pink", {255, 182, 193})
+lia.color.register("light_sea_green", {32, 178, 170})
+lia.color.register("light_sky_blue", {135, 206, 250})
+lia.color.register("light_slate_gray", {119, 136, 153})
+lia.color.register("light_steel_blue", {176, 196, 222})
+lia.color.register("lime", {0, 255, 0})
+lia.color.register("lime_green", {50, 205, 50})
+lia.color.register("linen", {250, 240, 230})
+lia.color.register("medium_aquamarine", {102, 205, 170})
+lia.color.register("medium_blue", {0, 0, 205})
+lia.color.register("medium_orchid", {186, 85, 211})
+lia.color.register("medium_purple", {147, 112, 219})
+lia.color.register("medium_sea_green", {60, 179, 113})
+lia.color.register("medium_slate_blue", {123, 104, 238})
+lia.color.register("medium_spring_green", {0, 250, 154})
+lia.color.register("medium_turquoise", {72, 209, 204})
+lia.color.register("medium_violet_red", {199, 21, 133})
+lia.color.register("midnight_blue", {25, 25, 112})
+lia.color.register("mint_cream", {245, 255, 250})
+lia.color.register("misty_rose", {255, 228, 225})
+lia.color.register("moccasin", {255, 228, 181})
+lia.color.register("navajo_white", {255, 222, 173})
+lia.color.register("old_lace", {253, 245, 230})
+lia.color.register("olive_drab", {107, 142, 35})
+lia.color.register("orange_red", {255, 69, 0})
+lia.color.register("orchid", {218, 112, 214})
+lia.color.register("pale_goldenrod", {238, 232, 170})
+lia.color.register("pale_green", {152, 251, 152})
+lia.color.register("pale_turquoise", {175, 238, 238})
+lia.color.register("pale_violet_red", {219, 112, 147})
+lia.color.register("papaya_whip", {255, 239, 213})
+lia.color.register("peach_puff", {255, 218, 185})
+lia.color.register("peru", {205, 133, 63})
+lia.color.register("plum", {221, 160, 221})
+lia.color.register("powder_blue", {176, 224, 230})
+lia.color.register("rosy_brown", {188, 143, 143})
+lia.color.register("royal_blue", {65, 105, 225})
+lia.color.register("saddle_brown", {139, 69, 19})
+lia.color.register("salmon", {250, 128, 114})
+lia.color.register("sandy_brown", {244, 164, 96})
+lia.color.register("sea_green", {46, 139, 87})
+lia.color.register("sea_shell", {255, 245, 238})
+lia.color.register("sienna", {160, 82, 45})
+lia.color.register("sky_blue", {135, 206, 235})
+lia.color.register("slate_blue", {106, 90, 205})
+lia.color.register("slate_gray", {112, 128, 144})
+lia.color.register("snow", {255, 250, 250})
+lia.color.register("spring_green", {0, 255, 127})
+lia.color.register("steel_blue", {70, 130, 180})
+lia.color.register("tan", {210, 180, 140})
+lia.color.register("thistle", {216, 191, 216})
+lia.color.register("tomato", {255, 99, 71})
+lia.color.register("turquoise", {64, 224, 208})
+lia.color.register("violet", {238, 130, 238})
+lia.color.register("wheat", {245, 222, 179})
+lia.color.register("white_smoke", {245, 245, 245})
+lia.color.register("yellow_green", {154, 205, 50})
+local oldColor = Color
+function Color(r, g, b, a)
+   if isstring(r) then
+      local c = lia.color.stored[r:lower()]
+      if c then return oldColor(unpack(c), g or 255) end
+      return oldColor(255, 255, 255, 255)
+   end
+   return oldColor(r, g, b, a)
 end

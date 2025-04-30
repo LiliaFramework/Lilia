@@ -91,7 +91,7 @@ local DefaultFunctions = {
 lia.meta.item.width = 1
 lia.meta.item.height = 1
 --[[
-   Function: lia.item.get
+   lia.item.get
 
    Description:
       Retrieves an item definition by its identifier, checking both lia.item.base and lia.item.list.
@@ -113,7 +113,7 @@ function lia.item.get(identifier)
 end
 
 --[[
-   Function: lia.item.getItemByID
+   lia.item.getItemByID
 
    Description:
       Retrieves an item instance by its numeric item ID. Also determines whether it's in an inventory
@@ -153,7 +153,7 @@ function lia.item.getItemByID(itemID)
 end
 
 --[[
-   Function: lia.item.getInstancedItemByID
+   lia.item.getInstancedItemByID
 
    Description:
       Retrieves the item instance table itself by its numeric ID without additional location info.
@@ -181,7 +181,7 @@ function lia.item.getInstancedItemByID(itemID)
 end
 
 --[[
-   Function: lia.item.getItemDataByID
+   lia.item.getItemDataByID
 
    Description:
       Retrieves the 'data' table of an item instance by its numeric item ID.
@@ -209,7 +209,7 @@ function lia.item.getItemDataByID(itemID)
 end
 
 --[[
-   Function: lia.item.load
+   lia.item.load
 
    Description:
       Processes the item file path to generate a uniqueID, and calls lia.item.register
@@ -240,7 +240,7 @@ function lia.item.load(path, baseID, isBaseItem)
 end
 
 --[[
-   Function: lia.item.isItem
+   lia.item.isItem
 
    Description:
       Checks if the given object is recognized as an item (via isItem flag).
@@ -265,7 +265,7 @@ function lia.item.isItem(object)
 end
 
 --[[
-   Function: lia.item.getInv
+   lia.item.getInv
 
    Description:
       Retrieves an inventory table by its ID from lia.item.inventories.
@@ -290,7 +290,7 @@ function lia.item.getInv(invID)
 end
 
 --[[
-   Function: lia.item.register
+   lia.item.register
 
    Description:
       Registers a new item or base item with a unique ID. This sets up the meta table
@@ -367,7 +367,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
 end
 
 --[[
-   Function: lia.item.loadFromDir
+   lia.item.loadFromDir
 
    Description:
       Loads item Lua files from a specified directory. Base items are loaded first,
@@ -408,7 +408,7 @@ function lia.item.loadFromDir(directory)
 end
 
 --[[
-   Function: lia.item.new
+   lia.item.new
 
    Description:
       Creates an item instance (not in the database) from a registered item definition.
@@ -451,7 +451,7 @@ function lia.item.new(uniqueID, id)
 end
 
 --[[
-   Function: lia.item.registerInv
+   lia.item.registerInv
 
    Description:
       Registers an inventory type with a given width and height. The inventory type
@@ -487,7 +487,7 @@ function lia.item.registerInv(invType, w, h)
 end
 
 --[[
-   Function: lia.item.newInv
+   lia.item.newInv
 
    Description:
       Asynchronously creates a new inventory (with a specific invType) and associates it
@@ -528,7 +528,7 @@ function lia.item.newInv(owner, invType, callback)
 end
 
 --[[
-   Function: lia.item.createInv
+   lia.item.createInv
 
    Description:
       Creates a new GridInv instance with a specified width, height, and ID,
@@ -565,7 +565,7 @@ end
 
 if SERVER then
    --[[
-       Function: lia.item.setItemDataByID
+       lia.item.setItemDataByID
 
        Description:
           Sets a specific key-value in the data table of an item instance by its numeric ID.
@@ -601,7 +601,7 @@ if SERVER then
    end
 
    --[[
-       Function: lia.item.instance
+       lia.item.instance
 
        Description:
           Asynchronously creates a new item in the database, optionally assigned to an inventory.
@@ -681,7 +681,7 @@ if SERVER then
    end
 
    --[[
-       Function: lia.item.deleteByID
+       lia.item.deleteByID
 
        Description:
           Deletes an item from the system (database and memory) by its numeric ID.
@@ -707,7 +707,7 @@ if SERVER then
    end
 
    --[[
-       Function: lia.item.loadItemByID
+       lia.item.loadItemByID
 
        Description:
           Loads items from the database by a given ID or set of IDs, creating the corresponding
@@ -759,7 +759,7 @@ if SERVER then
    end
 
    --[[
-       Function: lia.item.spawn
+       lia.item.spawn
 
        Description:
           Creates a new item instance (not in an inventory) and spawns a corresponding
@@ -803,7 +803,7 @@ if SERVER then
    end
 
    --[[
-       Function: lia.item.restoreInv
+       lia.item.restoreInv
 
        Description:
           Restores an existing inventory by loading it through lia.inventory.loadByID,

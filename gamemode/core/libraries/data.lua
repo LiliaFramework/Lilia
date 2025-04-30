@@ -3,7 +3,7 @@ lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
 if SERVER then
     --[[
-      Function: lia.data.set
+      lia.data.set
 
       Description:
          Saves the provided value under the specified key to persistent storage.
@@ -36,7 +36,7 @@ if SERVER then
     end
 
     --[[
-      Function: lia.data.delete
+      lia.data.delete
 
       Description:
          Deletes the stored data file corresponding to the specified key.
@@ -76,7 +76,7 @@ if SERVER then
 end
 
 --[[
-   Function: lia.data.get
+   lia.data.get
 
    Description:
       Retrieves the stored data for the specified key.
