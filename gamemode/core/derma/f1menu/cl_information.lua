@@ -1,78 +1,80 @@
-﻿local PANEL = {}
+﻿local ScrW, ScrH = ScrW(), ScrH() * 0.8
+local PANEL = {}
 function PANEL:Init()
-    F1Menu.CharacterInformation = {}
     if IsValid(lia.gui.info) then lia.gui.info:Remove() end
     lia.gui.info = self
-    local panelWidth = ScrW()
-    local panelHeight = ScrH() * 0.8
-    self:SetSize(panelWidth, panelHeight)
+    self:SetSize(ScrW, ScrH)
     self:SetPos(50, 50)
     self.Paint = function() end
-    self.info = vgui.Create("DFrame", self)
-    self.info:SetTitle("")
-    self.info:SetSize(panelWidth, panelHeight)
-    self.info:ShowCloseButton(false)
-    self.info:SetDraggable(false)
-    self.info.Paint = function() end
-    self.infoBox = self.info:Add("DPanel")
-    self.infoBox:Dock(FILL)
-    self.infoBox.Paint = function() end
-    self.leftColumn = self.infoBox:Add("DPanel")
-    self.leftColumn:Dock(LEFT)
-    self.leftColumn:SetWide(panelWidth * 0.5)
-    self.leftColumn.Paint = function() end
-    local spacerColumn = self.infoBox:Add("DPanel")
-    spacerColumn:Dock(LEFT)
-    spacerColumn:SetWide(10)
-    spacerColumn.Paint = function() end
-    self.rightColumn = self.infoBox:Add("DPanel")
-    self.rightColumn:Dock(LEFT)
-    self.rightColumn:SetWide(panelWidth * 0.3)
-    self.rightColumn:DockMargin(100, 0, 8, 0)
-    self.rightColumn.Paint = function() end
+    local frame = vgui.Create("DFrame", self)
+    frame:SetTitle("")
+    frame:SetSize(ScrW, ScrH)
+    frame:ShowCloseButton(false)
+    frame:SetDraggable(false)
+    frame.Paint = function() end
+    self.info = frame
+    local container = frame:Add("DPanel")
+    container:Dock(FILL)
+    container.Paint = function() end
+    self.infoBox = container
+    local left = container:Add("DPanel")
+    left:Dock(LEFT)
+    left:SetWide(ScrW * 0.5)
+    left.Paint = function() end
+    local spacer = container:Add("DPanel")
+    spacer:Dock(LEFT)
+    spacer:SetWide(10)
+    spacer.Paint = function() end
+    local right = container:Add("DPanel")
+    right:Dock(LEFT)
+    right:SetWide(ScrW * 0.3)
+    right:DockMargin(100, 0, 8, 0)
+    right.Paint = function() end
+    self.leftColumn = left
+    self.rightColumn = right
     hook.Run("LoadCharInformation")
     self:GenerateSections()
+    timer.Create("liaCharInfo_UpdateValues", 1, 0, function()
+        if IsValid(self) then
+            self:setup()
+        else
+            timer.Remove("liaCharInfo_UpdateValues")
+        end
+    end)
 end
 
 function PANEL:GenerateSections()
-    local orderedSections = {}
-    for sectionName, data in pairs(F1Menu.CharacterInformation) do
-        table.insert(orderedSections, {
-            name = sectionName,
-            color = data.color,
-            fields = data.fields,
-            priority = data.priority,
-            location = data.location
-        })
+    local info = lia.module.list["f1menu"].CharacterInformation
+    local sections = {}
+    for name, data in pairs(info) do
+        sections[#sections + 1] = {
+            name = name,
+            data = data
+        }
     end
 
-    table.sort(orderedSections, function(a, b) return a.priority < b.priority end)
-    local leftCount, rightCount = 0, 0
-    for _, section in ipairs(orderedSections) do
+    table.sort(sections, function(a, b) return a.data.priority < b.data.priority end)
+    local lc, rc = 0, 0
+    for _, sec in ipairs(sections) do
+        local data, loc = sec.data, sec.data.location
         local column
-        if section.location == 1 then
-            column = self.leftColumn
-            leftCount = leftCount + 1
-        elseif section.location == 2 then
-            column = self.rightColumn
-            rightCount = rightCount + 1
+        if loc == 1 then
+            column, lc = self.leftColumn, lc + 1
+        elseif loc == 2 then
+            column, rc = self.rightColumn, rc + 1
+        elseif lc <= rc then
+            column, lc = self.leftColumn, lc + 1
         else
-            if leftCount <= rightCount then
-                column = self.leftColumn
-                leftCount = leftCount + 1
-            else
-                column = self.rightColumn
-                rightCount = rightCount + 1
-            end
+            column, rc = self.rightColumn, rc + 1
         end
 
-        self:CreateSection(column, section.name, section.color)
-        local fields = isfunction(section.fields) and section.fields() or section.fields
-        for _, field in ipairs(fields) do
-            if field.type == "text" then
-                self:CreateTextEntryWithBackgroundAndLabel(column, field.name, field.label, 5, field.value)
-            elseif field.type == "bar" then
-                self:CreateFillableBarWithBackgroundAndLabel(column, field.name, field.label, field.min, field.max, 5, field.value)
+        self:CreateSection(column, sec.name, data.color)
+        local fields = type(data.fields) == "function" and data.fields() or data.fields
+        for _, f in ipairs(fields) do
+            if f.type == "text" then
+                self:CreateTextEntryWithBackgroundAndLabel(column, f.name, f.label, 5, f.value)
+            elseif f.type == "bar" then
+                self:CreateFillableBarWithBackgroundAndLabel(column, f.name, f.label, f.min, f.max, 5, f.value)
             end
 
             self:AddSpacer(column, 5)
@@ -80,115 +82,110 @@ function PANEL:GenerateSections()
     end
 end
 
-function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, dockMarginBot, valueFunc)
-    local isDesc = string.lower(name or "") == "desc"
-    local textFont = "liaSmallFont"
-    local textFontSize = 20
-    local textColor = color_white
-    local shadowColor = Color(30, 30, 30, 150)
-    local entryContainer = parent:Add("DPanel")
-    entryContainer:Dock(TOP)
-    entryContainer:SetTall(textFontSize + 5)
-    entryContainer:DockMargin(8, 0, 8, dockMarginBot or 0)
-    entryContainer.Paint = function(_, w, h)
-        surface.SetDrawColor(shadowColor)
+function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, marginBot, valueFunc)
+    local entry = parent:Add("DPanel")
+    entry:Dock(TOP)
+    entry:DockMargin(8, 0, 8, marginBot or 0)
+    entry:SetTall(25)
+    entry.Paint = function(_, w, h)
+        surface.SetDrawColor(30, 30, 30, 150)
         surface.DrawRect(0, 0, w, h)
     end
 
-    local label = entryContainer:Add("DLabel")
-    label:SetFont(textFont)
-    label:SetWide(85)
-    label:SetTall(25)
-    label:SetTextColor(textColor)
-    label:SetText(labelText or "")
-    label:Dock(LEFT)
-    label:DockMargin(0, 0, 15, 0)
-    label:SetContentAlignment(6)
-    self[name] = entryContainer:Add("DTextEntry")
-    self[name]:SetFont(textFont)
-    self[name]:SetTall(textFontSize)
-    self[name]:Dock(FILL)
-    self[name]:SetTextColor(textColor)
-    self[name]:SetEditable(isDesc)
+    local lbl = entry:Add("DLabel")
+    lbl:Dock(LEFT)
+    lbl:SetWide(85)
+    lbl:SetTall(25)
+    lbl:SetFont("liaSmallFont")
+    lbl:SetTextColor(color_white)
+    lbl:SetText(labelText or "")
+    lbl:SetContentAlignment(6)
+    local txt = entry:Add("DTextEntry")
+    txt:Dock(FILL)
+    txt:SetFont("liaSmallFont")
+    txt:SetTall(20)
+    txt:SetTextColor(color_white)
+    local isDesc = (name or ""):lower() == "desc"
+    txt:SetEditable(isDesc)
     if isfunction(valueFunc) then
-        local val = valueFunc()
-        if isstring(val) then self[name]:SetText(isstring(val) and val or "") end
+        local v = valueFunc()
+        if isstring(v) then txt:SetText(v) end
     end
 
-    self[name].OnEnter = function(entry)
+    txt.OnLoseFocus = function(selfEntry)
         if isDesc then
-            local text = entry:GetText()
-            if isstring(text) then lia.command.send("chardesc", text) end
+            local t = selfEntry:GetValue()
+            if isstring(t) then
+                LocalPlayer():ChatPrint("Xdddd " .. t)
+                lia.command.send("chardesc", t)
+            end
         end
     end
+
+    self[name] = txt
 end
 
-function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, minFunc, maxFunc, dockMargin, valueFunc)
-    local textFont = "liaSmallFont"
-    local textColor = color_white
-    local shadowColor = Color(30, 30, 30, 150)
-    local entryContainer = parent:Add("DPanel")
-    entryContainer:Dock(TOP)
-    entryContainer:SetTall(30)
-    entryContainer:DockMargin(8, dockMargin or 0, 8, dockMargin or 0)
-    entryContainer.Paint = function(_, w, h)
-        surface.SetDrawColor(shadowColor)
+function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, minFunc, maxFunc, margin, valueFunc)
+    local entry = parent:Add("DPanel")
+    entry:Dock(TOP)
+    entry:DockMargin(8, margin or 0, 8, margin or 0)
+    entry:SetTall(30)
+    entry.Paint = function(_, w, h)
+        surface.SetDrawColor(30, 30, 30, 150)
         surface.DrawRect(0, 0, w, h)
     end
 
-    local label = entryContainer:Add("DLabel")
-    label:SetFont(textFont)
-    label:SetWide(100)
-    label:SetTall(10)
-    label:Dock(LEFT)
-    label:SetTextColor(textColor)
-    label:SetText(labelText or "")
-    label:SetContentAlignment(5)
-    self[name] = entryContainer:Add("DProgressBar")
-    self[name]:Dock(FILL)
-    self[name]:SetText("")
-    self[name]:SetBarColor(Color(45, 45, 45, 255))
-    local min = isfunction(minFunc) and minFunc() or tonumber(minFunc) or 0
-    local max = isfunction(maxFunc) and maxFunc() or tonumber(maxFunc) or 1
-    local current = isfunction(valueFunc) and valueFunc() or tonumber(valueFunc) or 0
-    local fraction = max - min ~= 0 and math.Clamp((current - min) / (max - min), 0, 1) or 0
-    self[name]:SetFraction(fraction)
+    local lbl = entry:Add("DLabel")
+    lbl:Dock(LEFT)
+    lbl:SetWide(100)
+    lbl:SetTall(10)
+    lbl:SetFont("liaSmallFont")
+    lbl:SetTextColor(color_white)
+    lbl:SetText(labelText or "")
+    lbl:SetContentAlignment(5)
+    local bar = entry:Add("DProgressBar")
+    bar:Dock(FILL)
+    bar:SetText("")
+    bar:SetBarColor(Color(45, 45, 45, 255))
+    local minVal = type(minFunc) == "function" and minFunc() or tonumber(minFunc) or 0
+    local maxVal = type(maxFunc) == "function" and maxFunc() or tonumber(maxFunc) or 1
+    local curVal = type(valueFunc) == "function" and valueFunc() or tonumber(valueFunc) or 0
+    local frac = maxVal - minVal ~= 0 and math.Clamp((curVal - minVal) / (maxVal - minVal), 0, 1) or 0
+    bar:SetFraction(frac)
     hook.Add("Think", self, function()
-        if not IsValid(self[name]) then return end
-        local newCurrent = isfunction(valueFunc) and valueFunc() or tonumber(valueFunc) or 0
-        local newFraction = max - min ~= 0 and math.Clamp((newCurrent - min) / (max - min), 0, 1) or 0
-        self[name]:SetFraction(newFraction)
+        if not IsValid(bar) then return end
+        local cv = type(valueFunc) == "function" and valueFunc() or tonumber(valueFunc) or 0
+        bar:SetFraction(maxVal - minVal ~= 0 and math.Clamp((cv - minVal) / (maxVal - minVal), 0, 1) or 0)
     end)
 
     local gradMat = Material("vgui/gradient-d")
-    hook.Add("PostRenderVGUI", self[name], function()
-        if not IsValid(self[name]) then return end
+    hook.Add("PostRenderVGUI", bar, function()
+        if not IsValid(bar) then return end
         surface.SetMaterial(gradMat)
         surface.SetDrawColor(200, 200, 200, 20)
-        surface.DrawTexturedRect(4, 4, self[name]:GetWide(), self[name]:GetTall())
+        surface.DrawTexturedRect(4, 4, bar:GetWide(), bar:GetTall())
     end)
+
+    self[name] = bar
 end
 
 function PANEL:AddSpacer(parent, height)
-    local spacer = parent:Add("DPanel")
-    spacer:Dock(TOP)
-    spacer:SetTall(height)
-    spacer:DockMargin(8, 0, 8, 0)
-    spacer.Paint = function() end
+    local sp = parent:Add("DPanel")
+    sp:Dock(TOP)
+    sp:SetTall(height)
+    sp:DockMargin(8, 0, 8, 0)
+    sp.Paint = function() end
 end
 
 function PANEL:CreateSection(parent, title, color)
-    local textFont = "liaSmallFont"
-    local textFontSize = 20
-    local textColor = color_white
-    local sectionPanel = parent:Add("DPanel")
-    sectionPanel:Dock(TOP)
-    sectionPanel:SetTall(textFontSize + 10)
-    sectionPanel:DockMargin(8, 10, 8, 10)
-    sectionPanel.Paint = function(_, w, h)
+    local sec = parent:Add("DPanel")
+    sec:Dock(TOP)
+    sec:DockMargin(8, 10, 8, 10)
+    sec:SetTall(30)
+    sec.Paint = function(_, w, h)
         surface.SetDrawColor(color)
         surface.DrawRect(0, 0, w, h)
-        draw.SimpleText(title, textFont, w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(title, "liaSmallFont", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 end
 
@@ -199,14 +196,12 @@ function PANEL:Refresh()
 end
 
 function PANEL:setup()
-    for _, fields in pairs(F1Menu.CharacterInformation) do
-        if isfunction(fields.fields) then fields.fields = fields.fields() end
-        for _, field in ipairs(fields.fields) do
-            if field.type == "text" and self[field.name] then
-                self[field.name]:SetText(field.value())
-            elseif field.type == "bar" and self[field.name] then
-                self[field.name]:SetText(field.value())
-            end
+    local info = lia.module.list["f1menu"].CharacterInformation
+    for _, data in pairs(info) do
+        local fields = type(data.fields) == "function" and data.fields() or data.fields
+        for _, f in ipairs(fields) do
+            local ctrl = self[f.name]
+            if ctrl and f.type == "text" and f.name:lower() ~= "desc" then ctrl:SetText(f.value()) end
         end
     end
 end

@@ -2,7 +2,7 @@
 lia.lang.names = lia.lang.names or {}
 lia.lang.stored = lia.lang.stored or {}
 --[[
-   Function: lia.lang.loadFromDir
+   lia.lang.loadFromDir
 
    Description:
       Loads all Lua language files (*.lua) from the specified directory,
@@ -48,7 +48,7 @@ function lia.lang.loadFromDir(directory)
 end
 
 --[[
-   Function: lia.lang.AddTable
+   lia.lang.AddTable
 
    Description:
       Adds or merges a table of language key-value pairs into the stored language table
