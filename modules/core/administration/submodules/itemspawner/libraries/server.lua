@@ -1,67 +1,61 @@
-﻿local function fixupProp(client, ent, _, mins, maxs)
-    local entPos = ent:GetPos()
-    local endposD = ent:LocalToWorld(mins)
-    local tr_down = util.TraceLine({
-        start = entPos,
-        endpos = endposD,
+﻿local function fixupProp(client, ent, mins, maxs)
+    local pos = ent:GetPos()
+    local down, up = ent:LocalToWorld(mins), ent:LocalToWorld(maxs)
+    local trD = util.TraceLine({
+        start = pos,
+        endpos = down,
         filter = {ent, client}
     })
 
-    local endposU = ent:LocalToWorld(maxs)
-    local tr_up = util.TraceLine({
-        start = entPos,
-        endpos = endposU,
+    local trU = util.TraceLine({
+        start = pos,
+        endpos = up,
         filter = {ent, client}
     })
 
-    if tr_up.Hit and tr_down.Hit then return end
-    if tr_down.Hit then ent:SetPos(entPos + tr_down.HitPos - endposD) end
-    if tr_up.Hit then ent:SetPos(entPos + tr_up.HitPos - endposU) end
+    if trD.Hit and trU.Hit then return end
+    if trD.Hit then ent:SetPos(pos + trD.HitPos - down) end
+    if trU.Hit then ent:SetPos(pos + trU.HitPos - up) end
 end
 
-local function TryFixPropPosition(client, ent, hitpos)
-    fixupProp(client, ent, hitpos, Vector(ent:OBBMins().x, 0, 0), Vector(ent:OBBMaxs().x, 0, 0))
-    fixupProp(client, ent, hitpos, Vector(0, ent:OBBMins().y, 0), Vector(0, ent:OBBMaxs().y, 0))
-    fixupProp(client, ent, hitpos, Vector(0, 0, ent:OBBMins().z), Vector(0, 0, ent:OBBMaxs().z))
+local function tryFixPropPosition(client, ent)
+    local m, M = ent:OBBMins(), ent:OBBMaxs()
+    fixupProp(client, ent, Vector(m.x, 0, 0), Vector(M.x, 0, 0))
+    fixupProp(client, ent, Vector(0, m.y, 0), Vector(0, M.y, 0))
+    fixupProp(client, ent, Vector(0, 0, m.z), Vector(0, 0, M.z))
 end
 
-local function SpawnItem(client, itemName, target)
-    if not IsValid(client) or not itemName then return end
-    if client:hasPrivilege("Staff Permissions - Can Use Item Spawner") then
-        if IsValid(target) then
-            client:ConCommand("say /chargiveitem " .. target:SteamID() .. " " .. itemName)
-            lia.log.add(client, "chargiveItem", itemName, target:Nick(), "Chargive item command executed")
-            return
-        end
+net.Receive("SpawnMenuSpawnItem", function(_, client)
+    local id = net.ReadString()
+    if not IsValid(client) or not id or not client:hasPrivilege("Staff Permissions - Can Use Item Spawner") then return end
+    local startPos, dir = client:EyePos(), client:GetAimVector()
+    local tr = util.TraceLine({
+        start = startPos,
+        endpos = startPos + dir * 4096,
+        filter = client
+    })
 
-        local vStart = client:EyePos()
-        local vForward = client:GetAimVector()
-        local tr = util.TraceLine({
-            start = vStart,
-            endpos = vStart + vForward * 4096,
-            filter = client
-        })
-
-        if not tr.Hit then return end
-        lia.item.spawn(itemName, tr.HitPos, function(_, ent)
-            if IsValid(ent) then
-                TryFixPropPosition(client, ent, tr.HitPos)
-                undo.Create("item")
-                undo.SetPlayer(client)
-                undo.AddEntity(ent)
-                local displayName = lia.item.list and lia.item.list[itemName] and lia.item.list[itemName].name or itemName
-                undo.Finish("Item (" .. displayName .. ")")
-                lia.log.add(client, "spawnItem", displayName, "Item spawned using item spawner")
-            end
-        end, angle_zero, {})
-    end
-end
-
-net.Receive("liaSpawnItem", function(_, client)
-    local itemID = net.ReadString()
-    local targetID = net.ReadString()
-    local target = lia.char.getByID(targetID)
-    SpawnItem(client, itemID, target)
+    if not tr.Hit then return end
+    lia.item.spawn(id, tr.HitPos, function(_, ent)
+        if not IsValid(ent) then return end
+        tryFixPropPosition(client, ent)
+        undo.Create("item")
+        undo.SetPlayer(client)
+        undo.AddEntity(ent)
+        local name = lia.item.list[id] and lia.item.list[id].name or id
+        undo.Finish("Item (" .. name .. ")")
+        lia.log.add(client, "spawnItem", name, "SpawnMenuSpawnItem")
+    end, angle_zero, {})
 end)
 
-
+net.Receive("SpawnMenuGiveItem", function(_, client)
+    local id, targetID = net.ReadString(), net.ReadString()
+    if not IsValid(client) then return end
+    if not id then return end
+    if not client:hasPrivilege("Staff Permissions - Can Use Item Spawner") then return end
+    local targetChar = lia.char.getBySteamID(targetID)
+    local target = targetChar:getPlayer()
+    if not targetChar then return end
+    targetChar:getInv():add(id)
+    lia.log.add(client, "chargiveItem", id, target:Nick(), "SpawnMenuGiveItem")
+end)
