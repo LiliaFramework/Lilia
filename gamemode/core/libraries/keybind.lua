@@ -113,7 +113,7 @@ local KeybindKeys = {
 }
 
 --[[
-   Function: lia.keybind.add
+   lia.keybind.add
 
    Description:
       Registers a new keybind for a given action.
@@ -148,7 +148,7 @@ function lia.keybind.add(k, d, cb, rcb)
 end
 
 --[[
-   Function: lia.keybind.get
+   lia.keybind.get
 
    Description:
       Retrieves the current key code for a specified keybind action.
@@ -175,7 +175,7 @@ function lia.keybind.get(a, df)
 end
 
 --[[
-   Function: lia.keybind.save
+   lia.keybind.save
 
    Description:
       Saves the current keybind settings to a file.
@@ -213,7 +213,7 @@ function lia.keybind.save()
 end
 
 --[[
-   Function: lia.keybind.load
+   lia.keybind.load
 
    Description:
       Loads keybind settings from a file.
@@ -396,3 +396,17 @@ hook.Add("PopulateConfigurationTabs", "PopulateKeybinds", function(pages)
         end
     })
 end)
+
+lia.keybind.add(KEY_I, "Open Inventory", function()
+    local f1Menu = vgui.Create("liaMenu")
+    f1Menu:setActiveTab("inv")
+end)
+
+lia.keybind.add(KEY_T, "Quick Take Item", function()
+    local client = LocalPlayer()
+    if not client:getChar() or vgui.CursorVisible() then return end
+    local ent = client:getTracedEntity()
+    if IsValid(ent) and ent:isItem() then netstream.Start("invAct", "take", ent) end
+end)
+
+lia.keybind.add(KEY_NONE, "Admin Mode", function() lia.command.send("adminmode") end)

@@ -25,6 +25,11 @@ MODULE.CAMIPrivileges = {
         Description = "Allows access to picking up entities with Physgun."
     },
     {
+        Name = "Staff Permissions - Can Access Item Informations",
+        MinAccess = "superadmin",
+        Description = "Allows access to knowing special item informations."
+    },
+    {
         Name = "Staff Permissions - Physgun Pickup on Restricted Entities",
         MinAccess = "superadmin",
         Description = "Allows access to picking up restricted entities with Physgun."

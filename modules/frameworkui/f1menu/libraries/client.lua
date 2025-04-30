@@ -341,8 +341,3 @@ function MODULE:CanDisplayCharInfo(name)
     if name == "class" and not class then return false end
     return true
 end
-
-lia.keybind.add(KEY_I, "Open Inventory", function()
-    local f1Menu = vgui.Create("liaMenu")
-    f1Menu:setActiveTab("inv")
-end)

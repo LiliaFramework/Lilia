@@ -118,5 +118,3 @@
         end
     end
 end
-
-lia.keybind.add(KEY_NONE, "Admin Mode", function() lia.command.send("adminmode") end)
