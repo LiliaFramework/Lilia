@@ -11,7 +11,7 @@ MODULE.CAMIPrivileges = {
     },
 }
 
-lia.config.add("vendorDefaultMoney", "Default Vendor wMoney", 500, nil, {
+lia.config.add("vendorDefaultMoney", "Default Vendor Money", 500, nil, {
     desc = "Sets the default amount of money a vendor starts with",
     category = "Vendors",
     type = "Int",
