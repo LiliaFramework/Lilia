@@ -1,5 +1,4 @@
 ﻿local MODULE = MODULE
-local ScrW, ScrH = ScrW(), ScrH()
 local color_white = Color(255, 255, 255)
 local color_transparent = Color(0, 0, 0, 0)
 VoicePanels = {}
@@ -67,8 +66,8 @@ function MODULE:InitPostEntity()
 
     g_VoicePanelList = vgui.Create("DPanel")
     g_VoicePanelList:ParentToHUD()
-    g_VoicePanelList:SetSize(270, ScrH - 200)
-    g_VoicePanelList:SetPos(ScrW - 320, 100)
+    g_VoicePanelList:SetSize(270, ScrH() - 200)
+    g_VoicePanelList:SetPos(ScrW() - 320, 100)
     g_VoicePanelList:SetPaintBackground(false)
 end
 
@@ -80,8 +79,8 @@ function MODULE:OnReloaded()
 
     g_VoicePanelList = vgui.Create("DPanel")
     g_VoicePanelList:ParentToHUD()
-    g_VoicePanelList:SetSize(270, ScrH - 200)
-    g_VoicePanelList:SetPos(ScrW - 320, 100)
+    g_VoicePanelList:SetSize(270, ScrH() - 200)
+    g_VoicePanelList:SetPos(ScrW() - 320, 100)
     g_VoicePanelList:SetPaintBackground(false)
 end
 

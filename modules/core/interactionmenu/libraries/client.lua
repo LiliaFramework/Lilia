@@ -1,5 +1,5 @@
 ﻿local MODULE = MODULE
-local ScrH = ScrH()
+
 ActionInteractionMenu = nil
 InteractionMenu = nil
 function MODULE:OpenPIM()
@@ -16,7 +16,7 @@ function MODULE:OpenPIM()
     local client = LocalPlayer()
     local frame = vgui.Create("DFrame")
     frame:SetSize(300, 120)
-    frame:SetPos(0, ScrH / 2 - frame:GetTall() / 2)
+    frame:SetPos(0, ScrH() / 2 - frame:GetTall() / 2)
     frame:CenterHorizontal(0.7)
     frame:MakePopup()
     frame:SetTitle("")
@@ -104,7 +104,7 @@ function MODULE:OpenLocalPIM()
     local client = LocalPlayer()
     local frame = vgui.Create("DFrame")
     frame:SetSize(300, 120)
-    frame:SetPos(0, ScrH / 2 - frame:GetTall() / 2)
+    frame:SetPos(0, ScrH() / 2 - frame:GetTall() / 2)
     frame:CenterHorizontal(0.7)
     frame:MakePopup()
     frame:SetTitle("")

@@ -1,5 +1,4 @@
 ﻿MODULE.CharacterInformation = {}
-local ScrW, ScrH = ScrW(), ScrH()
 function MODULE:LoadCharInformation()
     hook.Run("AddSection", "General Info", Color(0, 0, 0), 1, 1)
     hook.Run("AddTextField", "General Info", "name", "Name", function() return LocalPlayer():getChar():getName() end)
@@ -82,7 +81,7 @@ function MODULE:PlayerBindPress(client, bind, pressed)
     end
 end
 
-function MODULE:BuildInformationMenu(pages)
+function MODULE:CreateInformationButtons(pages)
     local client = LocalPlayer()
     local entitiesByCreator = {}
     for _, ent in ents.Iterator() do
@@ -104,7 +103,7 @@ function MODULE:BuildInformationMenu(pages)
             }
         end)
 
-        hook.Add("HUDPaint", "EntityViewHUD", function() draw.SimpleText("Press A/D to rotate | W/S to move camera vertically | Press SPACE to exit", "liaMediumFont", ScrW / 2, ScrH - 50, color_white, TEXT_ALIGN_CENTER) end)
+        hook.Add("HUDPaint", "EntityViewHUD", function() draw.SimpleText("Press A/D to rotate | W/S to move camera vertically | Press SPACE to exit", "liaMediumFont", ScrW() / 2, ScrH() - 50, color_white, TEXT_ALIGN_CENTER) end)
         hook.Add("Think", "EntityViewRotate", function()
             if input.IsKeyDown(KEY_A) then yaw = yaw - FrameTime() * 100 end
             if input.IsKeyDown(KEY_D) then yaw = yaw + FrameTime() * 100 end
@@ -198,7 +197,7 @@ function MODULE:BuildInformationMenu(pages)
                         btnContainer:Dock(RIGHT)
                         btnContainer:SetWide(180)
                         if client:hasPrivilege("Staff Permission — View Entity (Entity Tab)") then
-                            local btnView = vgui.Create("DButton", btnContainer)
+                            local btnView = vgui.Create("liaSmallButton", btnContainer)
                             btnView:Dock(LEFT)
                             btnView:SetWide(60)
                             btnView:SetText("View")
@@ -211,7 +210,7 @@ function MODULE:BuildInformationMenu(pages)
                         end
 
                         if client:hasPrivilege("Staff Permission — Teleport to Entity (Entity Tab)") then
-                            local btnTeleport = vgui.Create("DButton", btnContainer)
+                            local btnTeleport = vgui.Create("liaSmallButton", btnContainer)
                             btnTeleport:Dock(LEFT)
                             btnTeleport:SetWide(60)
                             btnTeleport:SetText("Teleport")
@@ -222,7 +221,7 @@ function MODULE:BuildInformationMenu(pages)
                             end
                         end
 
-                        local btnWaypoint = vgui.Create("DButton", btnContainer)
+                        local btnWaypoint = vgui.Create("liaSmallButton", btnContainer)
                         btnWaypoint:Dock(RIGHT)
                         btnWaypoint:SetWide(60)
                         btnWaypoint:SetText("Waypoint")
@@ -280,8 +279,9 @@ function MODULE:CreateMenuButtons(tabs)
         panel.mainContent = panel:Add("DPanel")
         panel.mainContent:Dock(FILL)
         panel.mainContent:DockMargin(10, 10, 10, 10)
+        panel.mainContent.Paint = function() end
         local pages = {}
-        hook.Run("BuildInformationMenu", pages)
+        hook.Run("CreateInformationButtons", pages)
         if not pages then return end
         local currentSelected = nil
         for _, pageInfo in ipairs(pages) do
@@ -309,7 +309,7 @@ function MODULE:CreateMenuButtons(tabs)
         panel.mainContent:Dock(FILL)
         panel.mainContent:DockMargin(10, 10, 10, 10)
         local pages = {}
-        hook.Run("PopulateConfigurationTabs", pages)
+        hook.Run("PopulateConfigurationButtons", pages)
         if not pages then return end
         local currentSelected = nil
         for _, pageInfo in ipairs(pages) do
