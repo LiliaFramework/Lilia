@@ -407,8 +407,6 @@ function GM:PlayerInitialSpawn(client)
         end
 
         hook.Run("PlayerLiliaDataLoaded", client)
-        net.Start("WorkshopDownloader_Start")
-        net.Send(client)
     end)
 
     hook.Run("PostPlayerInitialSpawn", client)
