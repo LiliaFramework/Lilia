@@ -17,35 +17,35 @@ function MODULE:ReadLogFiles(category)
     local maxDays = lia.config.get("LogRetentionDays", 7)
     local maxLines = lia.config.get("MaxLogLines", 1000)
     local logs = {}
-    local filenameCategory = string.lower(string.gsub(category, "%s+", "_"))
-    local logFilePath = "lilia/logs/" .. engine.ActiveGamemode() .. "/" .. filenameCategory .. ".txt"
-    if file.Exists(logFilePath, "DATA") then
-        local logFileContent = file.Read(logFilePath, "DATA")
-        local lines = {}
-        local cutoffDate = os.time() - maxDays * 86400
-        for line in logFileContent:gmatch("[^\r\n]+") do
-            table.insert(lines, line)
-        end
+    local fnameCat = string.lower(category:gsub("%s+", "_"))
+    local path = "lilia/logs/" .. engine.ActiveGamemode() .. "/" .. fnameCat .. ".txt"
+    if not file.Exists(path, "DATA") then return logs end
+    local content = file.Read(path, "DATA")
+    local lines = {}
+    local cutoff = os.time() - maxDays * 86400
+    for line in content:gmatch("[^\r\n]+") do
+        lines[#lines + 1] = line
+    end
 
-        local startIndex = math.max(#lines - maxLines + 1, 1)
-        for i = startIndex, #lines do
-            local timestamp, message = lines[i]:match("^%[([^%]]+)%]%s*(.+)")
-            if timestamp and message then
-                local logTime = os.time({
-                    year = tonumber(timestamp:sub(1, 4)),
-                    month = tonumber(timestamp:sub(6, 7)),
-                    day = tonumber(timestamp:sub(9, 10)),
-                    hour = tonumber(timestamp:sub(12, 13)),
-                    min = tonumber(timestamp:sub(15, 16)),
-                    sec = tonumber(timestamp:sub(18, 19))
-                })
+    local startIdx = math.max(#lines - maxLines + 1, 1)
+    for i = startIdx, #lines do
+        local ts, msg = lines[i]:match("^%[([^%]]+)%]%s*(.+)")
+        if ts and msg then
+            local y, m, d, H, M, S = ts:sub(1, 4), ts:sub(6, 7), ts:sub(9, 10), ts:sub(12, 13), ts:sub(15, 16), ts:sub(18, 19)
+            local logTime = os.time{
+                year = tonumber(y),
+                month = tonumber(m),
+                day = tonumber(d),
+                hour = tonumber(H),
+                min = tonumber(M),
+                sec = tonumber(S)
+            }
 
-                if logTime and logTime >= cutoffDate then
-                    table.insert(logs, {
-                        timestamp = timestamp,
-                        message = message
-                    })
-                end
+            if logTime >= cutoff then
+                logs[#logs + 1] = {
+                    timestamp = ts,
+                    message = msg
+                }
             end
         end
     end
@@ -56,11 +56,10 @@ net.Receive("send_logs_request", function(_, client)
     if not MODULE:CanPlayerSeeLog(client) then return end
     local logsByCategory = {}
     for _, logType in pairs(lia.log.types) do
-        local category = logType.category or "Uncategorized"
-        logsByCategory[category] = logsByCategory[category] or {}
-        local entries = MODULE:ReadLogFiles(category)
-        for _, entry in ipairs(entries) do
-            logsByCategory[category][#logsByCategory[category] + 1] = entry
+        local cat = logType.category or "Uncategorized"
+        logsByCategory[cat] = logsByCategory[cat] or {}
+        for _, entry in ipairs(MODULE:ReadLogFiles(cat)) do
+            logsByCategory[cat][#logsByCategory[cat] + 1] = entry
         end
     end
 

@@ -1,6 +1,6 @@
 ﻿local receivedChunks = {}
-local receivedPanel = nil
-net.Receive("send_logs", function()
+local receivedPanel
+net.Receive("send_logs", function(len)
     local chunkIndex = net.ReadUInt(16)
     local numChunks = net.ReadUInt(16)
     local chunkLen = net.ReadUInt(16)
@@ -91,7 +91,7 @@ function OpenLogsUI(panel, categorizedLogs)
     end
 end
 
-hook.Add("CreateMenuButtons", "ConfigMenuButtons", function(tabs)
+function MODULE:CreateMenuButtons(tabs)
     if LocalPlayer():hasPrivilege("Staff Permissions - Can See Logs") then
         tabs["Logs"] = function(panel)
             receivedPanel = panel
@@ -99,4 +99,4 @@ hook.Add("CreateMenuButtons", "ConfigMenuButtons", function(tabs)
             net.SendToServer()
         end
     end
-end)
+end
