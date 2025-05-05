@@ -1,5 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-local string = string
 function GM:Move(client, moveData)
     local character = client:getChar()
     if not character then return end
@@ -33,25 +32,6 @@ function GM:Move(client, moveData)
     end
 end
 
-function GM:LiliaLoaded()
-    local namecache = {}
-    for _, module in pairs(lia.module.list) do
-        local authorID = tonumber(module.author) and tostring(module.author) or string.match(module.author, "STEAM_") and util.SteamIDTo64(module.author) or "Unknown"
-        if authorID then
-            if namecache[authorID] ~= nil then
-                module.author = namecache[authorID]
-            else
-                steamworks.RequestPlayerInfo(authorID, function(newName)
-                    namecache[authorID] = newName
-                    module.author = newName or module.author
-                end)
-            end
-        end
-    end
-
-    lia.module.namecache = namecache
-end
-
 function GM:InitPostEntity()
     if SERVER then
         lia.faction.formatModelData()
@@ -72,6 +52,13 @@ function GM:OnCharVarChanged(character, varName, oldVar, newVar)
             v(character, oldVar, newVar)
         end
     end
+end
+
+function GM:CreateDefaultInventory(character)
+    local charID = character:getID()
+    return lia.inventory.instance("grid", {
+        char = charID
+    })
 end
 
 local GamemodeFunctions = {

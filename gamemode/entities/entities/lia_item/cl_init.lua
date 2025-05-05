@@ -1,31 +1,30 @@
 ﻿local vectorMeta = FindMetaTable("Vector")
 local toScreen = vectorMeta.ToScreen
-local ScrW = ScrW()
 function ENT:computeDescMarkup(description)
     if self.desc ~= description then
         self.desc = description
-        self.markup = lia.markup.parse("<font=liaItemDescFont>" .. description .. "</font>", ScrW * 0.5)
+        self.markup = lia.markup.parse("<font=liaItemDescFont>" .. description .. "</font>", ScrW() * 0.5)
     end
     return self.markup
 end
 
 function ENT:onDrawEntityInfo(alpha)
-    local itemTable = self:getItemTable()
-    if not itemTable then return end
-    local oldEntity = itemTable.entity
-    itemTable.entity = self
-    local oldData = itemTable.data
-    itemTable.data = self:getNetVar("data") or oldData
-    local position = toScreen(self:LocalToWorld(self:OBBCenter()))
-    local x, y = position.x, position.y
-    local description = itemTable:getDesc()
-    self:computeDescMarkup(description)
-    lia.util.drawText(L(itemTable.getName and itemTable:getName() or itemTable.name), x, y, ColorAlpha(lia.config.get("Color"), alpha), 1, 1, nil, alpha * 0.65)
-    y = y + 12
+    if IsValid(lia.gui.itemPanel) then return end
+    if LocalPlayer():GetPos():DistToSqr(self:GetPos()) > 200 * 200 then return end
+    local item = self:getItemTable()
+    if not item then return end
+    local oldEntity, oldData = item.entity, item.data
+    item.entity, item.data = self, self:getNetVar("data") or oldData
+    local pos = toScreen(self:LocalToWorld(self:OBBCenter()))
+    local x, y = pos.x, pos.y
+    local name = L(item.getName and item:getName() or item.name)
+    lia.util.drawText(name, x, y, ColorAlpha(lia.config.get("Color"), alpha), 1, 1, "liaHugeText", alpha)
+    y = y + draw.GetFontHeight("liaHugeText") + 8
+    local desc = item:getDesc()
+    self:computeDescMarkup("<font=liaBigText>" .. desc .. "</font>")
     if self.markup then self.markup:draw(x, y, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, alpha) end
-    hook.Run("DrawItemDescription", self, x, y, ColorAlpha(color_white, alpha), alpha * 0.65)
-    itemTable.data = oldData
-    itemTable.entity = oldEntity
+    hook.Run("DrawItemDescription", self, x, y, ColorAlpha(color_white, alpha), alpha)
+    item.data, item.entity = oldData, oldEntity
 end
 
 function ENT:DrawTranslucent()

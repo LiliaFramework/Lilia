@@ -4,7 +4,6 @@ local mathApproach = math.Approach
 local IsValid = IsValid
 local toScreen = FindMetaTable("Vector").ToScreen
 local paintedEntitiesCache = {}
-local ScrW, ScrH = ScrW(), ScrH()
 local lastTrace = {
     mins = Vector(-4, -4, -4),
     maxs = Vector(4, 4, 4),
@@ -73,7 +72,7 @@ local function drawAmmo(wpn)
     local clip = wpn:Clip1()
     local count = client:GetAmmoCount(wpn:GetPrimaryAmmoType())
     local sec = client:GetAmmoCount(wpn:GetSecondaryAmmoType())
-    local x, y = ScrW - 80, ScrH - 80
+    local x, y = ScrW() - 80, ScrH() - 80
     if sec > 0 then
         lia.util.drawBlurAt(x, y, 64, 64)
         surface.SetDrawColor(255, 255, 255, 5)
@@ -217,7 +216,7 @@ function GM:DrawEntityInfo(e, a, pos)
     if name ~= e.liaNameCache then
         e.liaNameCache = name
         if #name > 250 then name = name:sub(1, 250) .. "..." end
-        e.liaNameLines = lia.util.wrapText(name, ScrW * width, "liaSmallFont")
+        e.liaNameLines = lia.util.wrapText(name, ScrW() * width, "liaSmallFont")
     end
 
     for i = 1, #e.liaNameLines do
@@ -228,7 +227,7 @@ function GM:DrawEntityInfo(e, a, pos)
     if desc ~= e.liaDescCache then
         e.liaDescCache = desc
         if #desc > 250 then desc = desc:sub(1, 250) .. "..." end
-        e.liaDescLines = lia.util.wrapText(desc, ScrW * width, "liaSmallFont")
+        e.liaDescLines = lia.util.wrapText(desc, ScrW() * width, "liaSmallFont")
     end
 
     for i = 1, #e.liaDescLines do
@@ -254,9 +253,9 @@ end
 
 function GM:TooltipInitialize(var, panel)
     if panel.liaToolTip or panel.itemID then
-        var.markupObject = lia.markup.parse(var:GetText(), ScrW * 0.15)
+        var.markupObject = lia.markup.parse(var:GetText(), ScrW() * 0.15)
         var:SetText("")
-        var:SetWide(math.max(ScrW * 0.15, 200) + 12)
+        var:SetWide(math.max(ScrW() * 0.15, 200) + 12)
         var:SetHeight(var.markupObject:getHeight() + 12)
         var:SetAlpha(0)
         var:AlphaTo(255, 0.2, 0)
@@ -357,7 +356,7 @@ function GM:HUDPaintBackground()
     lia.menu.drawAll()
     RenderEntities()
     self.BaseClass.PaintWorldTips(self.BaseClass)
-    if not lia.util.is64Bits() then draw.SimpleText("We recommend the use of the x86-64 Garry's Mod Branch for this server, consider swapping as soon as possible.", "liaSmallFont", ScrW * 0.5, ScrH() * 0.97, Color(255, 255, 255, 10), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+    if not lia.util.is64Bits() then draw.SimpleText("We recommend the use of the x86-64 Garry's Mod Branch for this server, consider swapping as soon as possible.", "liaSmallFont", ScrW() * 0.5, ScrH() * 0.97, Color(255, 255, 255, 10), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
 end
 
 function GM:OnContextMenuOpen()

@@ -1,8 +1,7 @@
 ﻿local PANEL = {}
-local ScrW, ScrH = ScrW(), ScrH()
 function PANEL:Init()
     lia.gui.menu = self
-    self:SetSize(ScrW, ScrH)
+    self:SetSize(ScrW(), ScrH())
     self:SetAlpha(0)
     self:AlphaTo(255, 0.25, 0)
     self:SetPopupStayAtBack(true)

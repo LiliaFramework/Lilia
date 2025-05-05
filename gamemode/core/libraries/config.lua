@@ -291,6 +291,12 @@ lia.config.add("CurrencySymbol", "Currency Symbol", "", function(newVal) lia.cur
     type = "Generic"
 })
 
+lia.config.add("PKWorld", "PK World Deaths Count", false, nil, {
+    desc = "When marked for Perma Kill, does world deaths count as perma killing?",
+    category = "Character",
+    type = "Boolean"
+})
+
 lia.config.add("CurrencySingularName", "Currency Singular Name", "Dollar", function(newVal) lia.currency.singular = newVal end, {
     desc = "Singular name of the in-game currency.",
     category = "Money",
@@ -490,12 +496,6 @@ lia.config.add("Color", "Theme Color", {
     type = "Color"
 })
 
-lia.config.add("AutoDownloadWorkshop", "Auto Download Workshop Content", true, nil, {
-    desc = "Determines whether Workshop content is automatically downloaded by the server and clients.",
-    category = "General",
-    type = "Boolean"
-})
-
 lia.config.add("CharMenuBGInputDisabled", "Character Menu BG Input Disabled", true, nil, {
     desc = "Whether background input is disabled durinag character menu use",
     category = "Main Menu",
@@ -526,7 +526,7 @@ lia.config.add("AmmoDrawEnabled", "Enable Ammo Display", true, nil, {
     type = "Boolean"
 })
 
-hook.Add("PopulateConfigurationTabs", "PopulateConfig", function(pages)
+hook.Add("PopulateConfigurationButtons", "PopulateConfig", function(pages)
     local client = LocalPlayer()
     local ConfigFormatting = {
         Int = function(key, name, config, parent)

@@ -25,7 +25,7 @@ local function checkType(typeID, struct, expected, prefix)
 end
 
 --[[
-   lia.inventory.newType
+   Function: lia.inventory.newType
 
    Description:
       Registers a new inventory type.
@@ -46,7 +46,7 @@ function lia.inventory.newType(typeID, invTypeStruct)
 end
 
 --[[
-   lia.inventory.new
+   Function: lia.inventory.new
 
    Description:
       Instantiates a new inventory instance.
@@ -73,7 +73,7 @@ if SERVER then
     local DATA_TABLE = "invdata"
     local ITEMS_TABLE = "items"
     --[[
-      lia.inventory.loadByID
+      Function: lia.inventory.loadByID
 
       Description:
          Loads an inventory by ID (cached or via custom loader).
@@ -105,7 +105,7 @@ if SERVER then
     end
 
     --[[
-      lia.inventory.loadFromDefaultStorage
+      Function: lia.inventory.loadFromDefaultStorage
 
       Description:
          Default database loader.
@@ -141,13 +141,13 @@ if SERVER then
             instance:onLoaded()
             return instance:loadItems():next(function() return instance end)
         end, function(err)
-            lia.information("Failed to load inventory " .. tostring(id))
-            lia.information(err)
+            LiliaInformation("Failed to load inventory " .. tostring(id))
+            LiliaInformation(err)
         end)
     end
 
     --[[
-      lia.inventory.instance
+      Function: lia.inventory.instance
 
       Description:
          Creates & persists a new inventory instance.
@@ -174,7 +174,7 @@ if SERVER then
     end
 
     --[[
-      lia.inventory.loadAllFromCharID
+      Function: lia.inventory.loadAllFromCharID
 
       Description:
          Loads all inventories for a character.
@@ -191,7 +191,7 @@ if SERVER then
     end
 
     --[[
-      lia.inventory.deleteByID
+      Function: lia.inventory.deleteByID
 
       Description:
          Deletes an inventory and its data.
@@ -211,7 +211,7 @@ if SERVER then
     end
 
     --[[
-      lia.inventory.cleanUpForCharacter
+      Function: lia.inventory.cleanUpForCharacter
 
       Description:
          Destroys all inventories for a character.
@@ -229,7 +229,7 @@ if SERVER then
     end
 else
     --[[
-      lia.inventory.show
+      Function: lia.inventory.show
 
       Description:
          Displays inventory UI client‑side.

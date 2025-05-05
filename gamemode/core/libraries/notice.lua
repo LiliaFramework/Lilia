@@ -66,7 +66,6 @@
         end
     end
 else
-    local ScrW = ScrW()
     local NotifTypes = {
         [1] = {
             col = Color(200, 60, 60),
@@ -114,7 +113,7 @@ else
                 notice:MoveTo(x, y, 0.15)
             else
                 local rightIndex = i - leftCount
-                local x = ScrW - notice:GetWide() - 10
+                local x = ScrW() - notice:GetWide() - 10
                 local y = baseY + (rightIndex - 1) * (notice.oh + 5)
                 notice:MoveTo(x, y, 0.15)
             end
@@ -133,7 +132,7 @@ else
         if manualDismiss then notice.start = nil end
         notice.oh = notice:GetTall()
         notice:SetTall(0)
-        local targetX = ScrW / 2 - notice:GetWide() / 2
+        local targetX = ScrW() / 2 - notice:GetWide() / 2
         local targetY = 4
         notice:SetPos(targetX, targetY)
         notice:SizeTo(notice:GetWide(), 36 * 1.8, 0.2, 0, -1, function() notice.text:SetPos(0, 0) end)

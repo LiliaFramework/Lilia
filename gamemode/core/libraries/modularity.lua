@@ -2,22 +2,6 @@
 lia.module.list = lia.module.list or {}
 local ModuleFolders = {"config", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim"}
 local ModuleFiles = {"pim.lua", "client.lua", "server.lua", "config.lua", "commands.lua"}
-local function loadWorkshopContent(Workshop)
-    if SERVER and Workshop then
-        if istable(Workshop) then
-            for _, workshopID in ipairs(Workshop) do
-                if isstring(workshopID) and workshopID:match("^%d+$") then
-                    resource.AddWorkshop(workshopID)
-                else
-                    lia.information("Invalid Workshop ID: " .. tostring(workshopID))
-                end
-            end
-        else
-            resource.AddWorkshop(Workshop)
-        end
-    end
-end
-
 local function loadPermissions(Privileges)
     if not Privileges or not istable(Privileges) then return end
     for _, privilegeData in ipairs(Privileges) do
@@ -63,9 +47,9 @@ local function loadExtras(path)
     hook.Run("DoModuleIncludes", path, MODULE)
 end
 
-local function loadSubmodules(path, firstLoad)
+local function loadSubmodules(path)
     local files, folders = file.Find(path .. "/submodules/*", "LUA")
-    if #files > 0 or #folders > 0 then lia.module.loadFromDir(path .. "/submodules", "module", firstLoad) end
+    if #files > 0 or #folders > 0 then lia.module.loadFromDir(path .. "/submodules", "module") end
 end
 
 --[[
@@ -81,12 +65,11 @@ end
       path - The file system path where the module is located.
       isSingleFile - Boolean indicating if the module is a single file.
       variable - A global variable name used to temporarily store the module.
-      firstLoad - Boolean indicating if this is the first load of the module.
 
    Returns:
       nil
 ]]
-function lia.module.load(uniqueID, path, isSingleFile, variable, firstLoad)
+function lia.module.load(uniqueID, path, isSingleFile, variable)
     local lowerVariable = variable:lower()
     local normalPath = path .. "/" .. lowerVariable .. ".lua"
     local extendedPath = path .. "/sh_" .. lowerVariable .. ".lua"
@@ -131,7 +114,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, firstLoad)
 
     if uniqueID ~= "schema" and MODULE.identifier and MODULE.identifier ~= "" then _G[MODULE.identifier] = {} end
     loadPermissions(MODULE.CAMIPrivileges)
-    loadWorkshopContent(MODULE.WorkshopContent)
     if not isSingleFile then
         loadDependencies(MODULE.Dependencies)
         loadExtras(path)
@@ -158,11 +140,21 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, firstLoad)
     else
         lia.module.list[uniqueID] = MODULE
         if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then _G[MODULE.identifier] = lia.module.list[uniqueID] end
-        loadSubmodules(path, firstLoad)
+        loadSubmodules(path)
         if MODULE.ModuleLoaded then MODULE:ModuleLoaded() end
         if MODULE.Public then
             lia.module.versionChecks = lia.module.versionChecks or {}
             table.insert(lia.module.versionChecks, {
+                uniqueID = MODULE.uniqueID,
+                name = MODULE.name,
+                localVersion = MODULE.version,
+                source = MODULE.source
+            })
+        end
+
+        if MODULE.Private then
+            lia.module.privateVersionChecks = lia.module.privateVersionChecks or {}
+            table.insert(lia.module.privateVersionChecks, {
                 uniqueID = MODULE.uniqueID,
                 name = MODULE.name,
                 localVersion = MODULE.version,
@@ -182,22 +174,22 @@ end
       then running the appropriate hooks after modules have been loaded.
 
    Parameters:
-      firstLoad - Boolean indicating if this is the first time loading modules.
+      None
 
    Returns:
       nil
 ]]
-function lia.module.initialize(firstLoad)
+function lia.module.initialize()
     local schema = engine.ActiveGamemode()
-    lia.module.load("schema", schema .. "/schema", false, "schema", firstLoad)
+    lia.module.load("schema", schema .. "/schema", false, "schema")
     hook.Run("InitializedSchema")
-    lia.module.loadFromDir("lilia/modules/core", "module", firstLoad)
-    lia.module.loadFromDir("lilia/modules/frameworkui", "module", firstLoad)
-    lia.module.loadFromDir("lilia/modules/characters", "module", firstLoad)
-    lia.module.loadFromDir("lilia/modules/utilities", "module", firstLoad)
-    lia.module.loadFromDir(schema .. "/preload", "module", firstLoad)
-    lia.module.loadFromDir(schema .. "/modules", "module", firstLoad)
-    lia.module.loadFromDir(schema .. "/overrides", "module", firstLoad)
+    lia.module.loadFromDir("lilia/modules/core", "module")
+    lia.module.loadFromDir("lilia/modules/frameworkui", "module")
+    lia.module.loadFromDir("lilia/modules/characters", "module")
+    lia.module.loadFromDir("lilia/modules/utilities", "module")
+    lia.module.loadFromDir(schema .. "/preload", "module")
+    lia.module.loadFromDir(schema .. "/modules", "module")
+    lia.module.loadFromDir(schema .. "/overrides", "module")
     hook.Run("InitializedModules")
 end
 
@@ -212,22 +204,21 @@ end
    Parameters:
       directory - The directory path from which to load modules.
       group - A string representing the module group (e.g., "schema" or "module").
-      firstLoad - Boolean indicating if this is the first load.
 
    Returns:
       nil
 ]]
-function lia.module.loadFromDir(directory, group, firstLoad)
+function lia.module.loadFromDir(directory, group)
     local locationVar = group == "schema" and "SCHEMA" or "MODULE"
     local files, folders = file.Find(directory .. "/*", "LUA")
     for _, folderName in ipairs(folders) do
-        lia.module.load(folderName, directory .. "/" .. folderName, false, locationVar, firstLoad)
+        lia.module.load(folderName, directory .. "/" .. folderName, false, locationVar)
     end
 
     for _, fileName in ipairs(files) do
         if fileName:sub(-4) == ".lua" then
             local uniqueID = string.StripExtension(fileName)
-            lia.module.load(uniqueID, directory .. "/" .. fileName, true, locationVar, firstLoad)
+            lia.module.load(uniqueID, directory .. "/" .. fileName, true, locationVar)
         end
     end
 end

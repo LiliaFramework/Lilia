@@ -5,6 +5,7 @@ ENT.Spawnable = false
 ENT.DrawEntityInfo = true
 ENT.isMoney = true
 ENT.noTarget = true
+ENT.Holdable = true
 function ENT:getAmount()
     return self:getNetVar("amount", 0)
 end

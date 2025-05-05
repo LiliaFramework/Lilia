@@ -1,4 +1,4 @@
-﻿local ScrW, ScrH = ScrW(), ScrH()
+﻿
 local function getGameList()
     local games = engine.GetGames()
     table.insert(games, {
@@ -490,7 +490,7 @@ end)
 
 concommand.Add("extsm_addoninfo", function()
     local frame = vgui.Create("DFrame")
-    frame:SetSize(ScrW - 100, ScrH - 100)
+    frame:SetSize(ScrW() - 100, ScrH() - 100)
     frame:Center()
     frame:MakePopup()
     local scroll = frame:Add("DScrollPanel")

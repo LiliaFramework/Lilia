@@ -20,56 +20,32 @@ end
 
 function PANEL:loadClasses()
     local client = LocalPlayer()
-    local classList = lia.class.list
-    local canBeFunc = lia.class.canBe
-    local sidebar = self.sidebar
-    sidebar:Clear()
-    self.tabList = {}
     local sorted = {}
-    for _, classData in pairs(classList) do
+    for _, classData in pairs(lia.class.list) do
         if classData.faction == client:Team() then sorted[#sorted + 1] = classData end
     end
 
     table.sort(sorted, function(a, b) return a.name < b.name end)
+    self.sidebar:Clear()
+    self.tabList = {}
     for _, classData in ipairs(sorted) do
-        local canBe = canBeFunc(client, classData.index)
+        local canBe = lia.class.canBe(client, classData.index)
         local btn = self:createClassButton(classData, canBe)
-        self.tabList[classData.name] = btn
+        self.tabList[#self.tabList + 1] = btn
     end
 end
 
 function PANEL:createClassButton(classData, canBe)
-    local sidebar = self.sidebar
-    local menuColors = lia.color.ReturnMainAdjustedColors()
-    local textColor = menuColors.text
-    local fontName = "liaMediumFont"
-    local shadowClr = Color(0, 0, 0, 100)
-    local btn = sidebar:Add("DButton")
+    local btn = self.sidebar:Add("liaSmallButton")
     btn:SetText(classData.name)
-    btn:SetTextColor(textColor)
-    btn:SetFont(fontName)
-    btn:SetExpensiveShadow(1, shadowClr)
-    btn:SetContentAlignment(5)
     btn:SetTall(50)
     btn:Dock(TOP)
     btn:DockMargin(0, 0, 10, 20)
-    btn.text_color = textColor
-    btn.Paint = function(b, w, h)
-        if b:IsHovered() then
-            local underlineWidth = w * 0.4
-            local underlineX = (w - underlineWidth) * 0.5
-            surface.SetDrawColor(255, 255, 255, 80)
-            surface.DrawRect(underlineX, h - 4, underlineWidth, 2)
-        end
-
-        if self.activeTab == b then
-            surface.SetDrawColor(255, 255, 255)
-            surface.DrawOutlinedRect(0, 0, w, h)
-        end
-    end
-
     btn.DoClick = function()
-        self.activeTab = btn
+        for _, b in ipairs(self.tabList) do
+            b:SetSelected(b == btn)
+        end
+
         self:populateClassDetails(classData, canBe)
     end
     return btn
@@ -85,8 +61,8 @@ function PANEL:populateClassDetails(classData, canBe)
     if classData.logo then
         local logo = panel:Add("DImage")
         logo:SetImage(classData.logo)
-        logo:SetSize(128, 128)
-        logo:SetPos(panel:GetWide() - logo:GetWide() - 10, 10)
+        logo:SetScaledSize(128, 128)
+        logo:SetScaledPos(panel:GetWide() - logo:GetWide() - 10, 10)
         logo.Think = function() logo:SetPos(panel:GetWide() - logo:GetWide() - 10, 10) end
     end
 
@@ -100,7 +76,7 @@ function PANEL:createModelPanel(parent, classData)
     local fov, sizeX, sizeY = 35, 300, 600
     local modelList = classData.model
     local panel = parent:Add("liaModelPanel")
-    panel:SetSize(sizeX, sizeY)
+    panel:SetScaledSize(sizeX, sizeY)
     panel:SetFOV(fov)
     local model = modelList
     if istable(modelList) then model = modelList[math.random(#modelList)] end
@@ -185,7 +161,7 @@ end
 function PANEL:addJoinButton(detailsPanel, classData, canBe)
     local client = LocalPlayer()
     local isCurrent = client:getChar() and client:getChar():getClass() == classData.index
-    local btn = detailsPanel:Add("DButton")
+    local btn = detailsPanel:Add("liaSmallButton")
     local text = isCurrent and "You are already in this class" or canBe and "Join Class" or "You do not meet the class requirements or this class isn't default."
     btn:SetText(text)
     btn:SetTall(40)

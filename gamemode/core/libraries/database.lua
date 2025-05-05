@@ -757,6 +757,36 @@ function lia.db.delete(dbTable, condition)
     return d
 end
 
+function lia.db.GetCharacterTable(callback)
+    local query = lia.db.module == "sqlite" and "PRAGMA table_info(lia_characters)" or "DESCRIBE lia_characters"
+    lia.db.query(query, function(results)
+        if not results or #results == 0 then return callback({}) end
+        local columns = {}
+        if lia.db.module == "sqlite" then
+            for _, row in ipairs(results) do
+                table.insert(columns, row.name)
+            end
+        else
+            for _, row in ipairs(results) do
+                table.insert(columns, row.Field)
+            end
+        end
+
+        callback(columns)
+    end)
+end
+
+concommand.Add("database_list", function(ply)
+    if IsValid(ply) then return end
+    lia.db.GetCharacterTable(function(columns)
+        if #columns == 0 then
+            print("No columns found in lia_characters.")
+        else
+            print("Columns in lia_characters: " .. table.concat(columns, ", "))
+        end
+    end)
+end)
+
 function GM:RegisterPreparedStatements()
     lia.bootstrap("Database", "ADDED 5 PREPARED STATEMENTS.")
     lia.db.prepare("itemData", "UPDATE lia_items SET _data = ? WHERE _itemID = ?", {MYSQLOO_STRING, MYSQLOO_INTEGER})
@@ -801,40 +831,3 @@ function GM:OnMySQLOOConnected()
     hook.Run("RegisterPreparedStatements")
     MYSQLOO_PREPARED = true
 end
-
-function GM:LiliaTablesLoaded()
-    local ignore = function() end
-    lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore)
-    lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
-    lia.db.query("ALTER TABLE IF EXISTS lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
-end
-
-function lia.db.GetCharacterTable(callback)
-    local query = lia.db.module == "sqlite" and "PRAGMA table_info(lia_characters)" or "DESCRIBE lia_characters"
-    lia.db.query(query, function(results)
-        if not results or #results == 0 then return callback({}) end
-        local columns = {}
-        if lia.db.module == "sqlite" then
-            for _, row in ipairs(results) do
-                table.insert(columns, row.name)
-            end
-        else
-            for _, row in ipairs(results) do
-                table.insert(columns, row.Field)
-            end
-        end
-
-        callback(columns)
-    end)
-end
-
-concommand.Add("database_list", function(ply)
-    if IsValid(ply) then return end
-    lia.db.GetCharacterTable(function(columns)
-        if #columns == 0 then
-            print("No columns found in lia_characters.")
-        else
-            print("Columns in lia_characters: " .. table.concat(columns, ", "))
-        end
-    end)
-end)

@@ -276,7 +276,7 @@ hook.Add("PlayerButtonUp", "liaKeybindRelease", function(p, b)
     if action and lia.keybind.stored[action] and lia.keybind.stored[action].release then lia.keybind.stored[action].release(p) end
 end)
 
-hook.Add("PopulateConfigurationTabs", "PopulateKeybinds", function(pages)
+hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
     local function buildKeybinds(parent)
         parent:Clear()
         local container = parent:Add("DPanel")

@@ -1,4 +1,4 @@
-﻿local ScrW, ScrH = ScrW(), ScrH()
+﻿
 lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
 lia.bar.list = {}
@@ -149,8 +149,8 @@ function lia.bar.drawAction(text, time)
         end
 
         local frac = 1 - math.TimeFraction(now, endTime, cur)
-        local w, h = ScrW * 0.35, 28
-        local x, y = ScrW * 0.5 - w / 2, ScrH * 0.725 - h / 2
+        local w, h = ScrW() * 0.35, 28
+        local x, y = ScrW() * 0.5 - w / 2, ScrH() * 0.725 - h / 2
         lia.util.drawBlurAt(x, y, w, h)
         surface.SetDrawColor(35, 35, 35, 100)
         surface.DrawRect(x, y, w, h)
@@ -185,7 +185,7 @@ end
 function lia.bar.drawAll()
     if hook.Run("ShouldHideBars") then return end
     table.sort(lia.bar.list, function(a, b) return a.priority < b.priority end)
-    local w, h = ScrW * 0.35, 14
+    local w, h = ScrW() * 0.35, 14
     local x, y = 4, 4
     local deltas = lia.bar.delta
     local update = FrameTime() * 0.6

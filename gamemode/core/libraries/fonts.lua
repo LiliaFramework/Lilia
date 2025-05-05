@@ -1,7 +1,5 @@
-lia.font = lia.font or {
-    stored = {}
-}
-
+lia.font = lia.font or {}
+lia.font.stored = lia.font.stored or {}
 if CLIENT then
     function lia.font.register(fontName, fontData)
         if not (isstring(fontName) and istable(fontData)) then return lia.error("[Font] Invalid font name or data provided.") end
@@ -10,11 +8,7 @@ if CLIENT then
 
     local oldCreateFont = surface.CreateFont
     surface.CreateFont = function(name, data)
-        if isstring(name) and istable(data) then
-            if lia.font.stored[name] then lia.error("[Font] Duplicate font registration: " .. name) end
-            lia.font.stored[name] = data
-        end
-
+        if isstring(name) and istable(data) then lia.font.stored[name] = data end
         oldCreateFont(name, data)
     end
 
@@ -230,6 +224,37 @@ if CLIENT then
         weight = 500
     })
 
+    lia.font.register("liaSubTitleFont", {
+        font = lia.config.get("Font"),
+        size = ScreenScaleH(18) * math.min(ScrW() / 1920, ScrH() / 1080),
+        extended = true,
+        weight = 500
+    })
+
+    lia.font.register("liaBigTitle", {
+        font = lia.config.get("Font"),
+        size = 30,
+        weight = 800
+    })
+
+    lia.font.register("liaBigText", {
+        font = lia.config.get("Font"),
+        size = 26,
+        weight = 600
+    })
+
+    lia.font.register("liaHugeText", {
+        font = lia.config.get("Font"),
+        size = 48,
+        weight = 600
+    })
+
+    lia.font.register("liaBigBtn", {
+        font = lia.config.get("Font"),
+        size = 28,
+        weight = 900
+    })
+
     lia.font.register("liaMenuButtonFont", {
         font = lia.config.get("Font"),
         size = ScreenScaleH(14),
@@ -300,6 +325,20 @@ if CLIENT then
         weight = 1000
     })
 
+    lia.font.register("liaSmallFont", {
+        font = lia.config.get("GenericFont"),
+        size = math.max(ScreenScaleH(6), 17) * math.min(ScrW() / 1920, ScrH() / 1080),
+        extended = true,
+        weight = 500
+    })
+
+    lia.font.register("liaMiniFont", {
+        font = lia.config.get("GenericFont"),
+        size = math.max(ScreenScaleH(5), 14) * math.min(ScrW() / 1920, ScrH() / 1080),
+        extended = true,
+        weight = 400
+    })
+
     lia.font.register("liaMediumLightFont", {
         font = lia.config.get("GenericFont"),
         size = 25 * math.min(ScrW() / 1920, ScrH() / 1080),
@@ -341,20 +380,6 @@ if CLIENT then
         size = math.max(ScreenScaleH(7), 17) * math.min(ScrW() / 1920, ScrH() / 1080),
         extended = true,
         weight = 800
-    })
-
-    lia.font.register("liaMiniFont", {
-        font = lia.config.get("GenericFont"),
-        size = math.max(ScreenScaleH(5), 14) * math.min(ScrW() / 1920, ScrH() / 1080),
-        extended = true,
-        weight = 400
-    })
-
-    lia.font.register("liaSmallFont", {
-        font = lia.config.get("GenericFont"),
-        size = math.max(ScreenScaleH(6), 17) * math.min(ScrW() / 1920, ScrH() / 1080),
-        extended = true,
-        weight = 500
     })
 
     lia.font.register("liaItemDescFont", {
@@ -544,25 +569,30 @@ if CLIENT then
         size = math.floor(22 * cs + 10),
         additive = true
     })
-end
 
-local fontOptions = {}
-for name in SortedPairs(lia.font.stored) do
-    fontOptions[#fontOptions + 1] = name
+    function lia.font.getAvailableFonts()
+        local list = {}
+        for name in pairs(lia.font.stored) do
+            list[#list + 1] = name
+        end
+
+        table.sort(list)
+        return list
+    end
 end
 
 lia.config.add("Font", "Font", "Arial", nil, {
     desc = "Specifies the core font used for UI elements.",
     category = "Visuals",
     type = "Table",
-    options = CLIENT and fontOptions or {"Arial"}
+    options = CLIENT and lia.font.getAvailableFonts() or {"Arial"}
 })
 
 lia.config.add("GenericFont", "Generic Font", "Segoe UI", nil, {
     desc = "Specifies the secondary font used for UI elements.",
     category = "Visuals",
     type = "Table",
-    options = CLIENT and fontOptions or {"Arial"}
+    options = CLIENT and lia.font.getAvailableFonts() or {"Arial"}
 })
 
 hook.Run("PostLoadFonts", lia.config.get("Font"), lia.config.get("GenericFont"))

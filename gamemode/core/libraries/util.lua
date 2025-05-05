@@ -593,7 +593,6 @@ if SERVER then
       return output
    end
 else
-   local ScrW, ScrH = ScrW(), ScrH()
    --[[
        lia.util.ShadowText
 
@@ -909,7 +908,7 @@ else
          lia.util.getMaterial("pp/blurscreen"):SetFloat("$blur", i * amount)
          lia.util.getMaterial("pp/blurscreen"):Recompute()
          render.UpdateScreenEffectTexture()
-         surface.DrawTexturedRect(x * -1, y * -1, ScrW, ScrH)
+         surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
       end
    end
 
@@ -940,8 +939,8 @@ else
       amount = amount or 5
       surface.SetMaterial(lia.util.getMaterial("pp/blurscreen"))
       surface.SetDrawColor(255, 255, 255)
-      local x2, y2 = x / ScrW, y / ScrH
-      local w2, h2 = (x + w) / ScrW, (y + h) / ScrH
+      local x2, y2 = x / ScrW(), y / ScrH()
+      local w2, h2 = (x + w) / ScrW(), (y + h) / ScrH()
       for i = -(passes or 0.2), 1, 0.2 do
          lia.util.getMaterial("pp/blurscreen"):SetFloat("$blur", i * amount)
          lia.util.getMaterial("pp/blurscreen"):Recompute()
@@ -989,7 +988,7 @@ else
           lia.util.CreateTableUI("My Table", {{name="ID", field="id"}, {name="Name", field="name"}}, myData, myOptions, 1)
     ]]
    function lia.util.CreateTableUI(title, columns, data, options, charID)
-      local frameWidth, frameHeight = ScrH * 0.8, ScrH * 0.8
+      local frameWidth, frameHeight = ScrH() * 0.8, ScrH() * 0.8
       local frame = vgui.Create("DFrame")
       frame:SetTitle(title or "Table List")
       frame:SetSize(frameWidth, frameHeight)

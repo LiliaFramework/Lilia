@@ -40,16 +40,33 @@ function GM:PlayerLoadedChar(client, character)
     end)
 end
 
-function GM:PlayerDeath(client)
+function GM:LiliaTablesLoaded()
+    local ignore = function() end
+    lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore)
+    lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
+    lia.db.query("ALTER TABLE IF EXISTS lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
+end
+
+function GM:PlayerDeath(client, inflictor, attacker)
     local character = client:getChar()
     if not character then return end
     local inventory = character:getInv()
     if inventory then
-        local items = inventory:getItems()
-        for _, v in pairs(items) do
-            if v.isWeapon and v:getData("equip") then v:setData("ammo", nil) end
+        for _, item in pairs(inventory:getItems()) do
+            if item.isWeapon and item:getData("equip") then item:setData("ammo", nil) end
         end
     end
+
+    local pkWorld = lia.config.get("PKWorld", false)
+    local playerKill = IsValid(attacker) and attacker:IsPlayer() and attacker ~= client
+    local selfKill = attacker == client
+    local worldKill = not IsValid(attacker) or attacker:GetClass() == "worldspawn"
+    if (playerKill or pkWorld and selfKill or pkWorld and worldKill) and hook.Run("PlayerShouldPermaKill", client, inflictor, attacker) then character:ban() end
+end
+
+function GM:PlayerShouldPermaKill(client)
+    local character = client:getChar()
+    return character:getData("markedForDeath", false)
 end
 
 function GM:CharLoaded(id)
@@ -234,8 +251,15 @@ function GM:PlayerSay(client, message)
     return ""
 end
 
+local allowedHoldableClasses = {
+    ["prop_physics"] = true,
+    ["prop_physics_override"] = true,
+    ["prop_physics_multiplayer"] = true,
+    ["prop_ragdoll"] = true
+}
+
 function GM:CanPlayerHoldObject(_, entity)
-    if lia.allowedHoldableClasses[entity:GetClass()] then return true end
+    return allowedHoldableClasses[entity:GetClass()] or entity.Holdable
 end
 
 function GM:EntityTakeDamage(entity, dmgInfo)
@@ -328,6 +352,28 @@ function GM:PlayerSpawn(client)
     hook.Run("PlayerLoadout", client)
 end
 
+function GM:PreCleanupMap()
+    lia.shuttingDown = true
+    hook.Run("SaveData")
+    hook.Run("PersistenceSave")
+end
+
+function GM:PostCleanupMap()
+    lia.shuttingDown = false
+    hook.Run("LoadData")
+    hook.Run("PostLoadData")
+end
+
+function GM:ShutDown()
+    if hook.Run("ShouldDataBeSaved") == false then return end
+    lia.shuttingDown = true
+    hook.Run("SaveData")
+    for _, v in player.Iterator() do
+        v:saveLiliaData()
+        if v:getChar() then v:getChar():save() end
+    end
+end
+
 function GM:PlayerDisconnected(client)
     client:saveLiliaData()
     local character = client:getChar()
@@ -361,6 +407,8 @@ function GM:PlayerInitialSpawn(client)
         end
 
         hook.Run("PlayerLiliaDataLoaded", client)
+        net.Start("WorkshopDownloader_Start")
+        net.Send(client)
     end)
 
     hook.Run("PostPlayerInitialSpawn", client)
@@ -599,56 +647,64 @@ local function DatabaseQuery()
 end
 
 function GM:InitializedModules()
-    local bootstrapEndTime = SysTime()
-    local timeTaken = bootstrapEndTime - BootingTime
-    lia.bootstrap("Bootstrapper", string.format("Lilia loaded in %.2f seconds.", timeTaken), Color(0, 255, 0))
-    local addons = engine.GetAddons()
-    local autoDownload = lia.config.get("AutoDownloadWorkshop", false)
-    for _, addon in ipairs(addons) do
-        if addon.wsid and addon.mounted then
-            if autoDownload then
-                resource.AddWorkshop(addon.wsid)
-                lia.information("[Workshop] Added Workshop addon: " .. addon.title .. " (WSID: " .. addon.wsid .. ")")
-            end
-
-            if addon.wsid == "1907060869" then lia.error("WARNING: 'Srlion's Hook Library' (WSID: 1907060869) is known to cause issues and is not necessary for addons like SAM.") end
-        end
-    end
-
     timer.Simple(5, function() DatabaseQuery() end)
-    if not lia.module.versionChecks or #lia.module.versionChecks == 0 then return end
-    local CheckerURL = "https://raw.githubusercontent.com/LiliaFramework/Modules/main/modules.json"
-    http.Fetch(CheckerURL, function(body, _, _, code)
+    if not lia.module.versionChecks and not lia.module.privateVersionChecks then return end
+    local publicURL = "https://raw.githubusercontent.com/LiliaFramework/Modules/main/modules.json"
+    local privateURL = "https://raw.githubusercontent.com/bleonheart/bleonheart.github.io/main/modules.json"
+    http.Fetch(publicURL, function(body, _, _, code)
         if code ~= 200 then
             lia.updater("Error fetching module list (HTTP " .. code .. ")")
             return
         end
 
-        local remoteModules = util.JSONToTable(body)
-        if not remoteModules then
+        local remote = util.JSONToTable(body)
+        if not remote then
             lia.updater("Error parsing module data")
             return
         end
 
-        for _, localInfo in ipairs(lia.module.versionChecks) do
-            local remoteModule
-            for _, m in ipairs(remoteModules) do
-                if m.uniqueID == localInfo.uniqueID then
-                    remoteModule = m
+        for _, info in ipairs(lia.module.versionChecks or {}) do
+            local match
+            for _, m in ipairs(remote) do
+                if m.uniqueID == info.uniqueID then
+                    match = m
                     break
                 end
             end
 
-            if not remoteModule then
-                lia.updater("Module with uniqueID '" .. localInfo.uniqueID .. "' not found")
-            elseif not remoteModule.version then
-                lia.updater("Module '" .. localInfo.name .. "' has no remote version info")
-            elseif remoteModule.version ~= localInfo.localVersion then
-                lia.updater("Module '" .. localInfo.name .. "' is outdated. Update to version " .. remoteModule.version .. " at " .. remoteModule.source)
+            if not match then
+                lia.updater("Module with uniqueID '" .. info.uniqueID .. "' not found")
+            elseif not match.version then
+                lia.updater("Module '" .. info.name .. "' has no remote version info")
+            elseif match.version ~= info.localVersion then
+                lia.updater("Module '" .. info.name .. "' is outdated. Update to version " .. match.version .. " at " .. match.source)
             end
         end
 
-        lia.module.versionChecks = {}
+        http.Fetch(privateURL, function(body2, _, _, code2)
+            if code2 ~= 200 then
+                lia.updater("Error fetching private module list (HTTP " .. code2 .. ")")
+                return
+            end
+
+            local remote2 = util.JSONToTable(body2)
+            if not remote2 then
+                lia.updater("Error parsing private module data")
+                return
+            end
+
+            for _, info in ipairs(lia.module.privateVersionChecks or {}) do
+                local match2
+                for _, m2 in ipairs(remote2) do
+                    if m2.uniqueID == info.uniqueID then
+                        match2 = m2
+                        break
+                    end
+                end
+
+                if match2 and match2.version and match2.version ~= info.localVersion then lia.updater("Module '" .. info.name .. "' is outdated, please report back to the author to get an updated copy.") end
+            end
+        end, function(err2) lia.updater("HTTP.Fetch error: " .. err2) end)
     end, function(err) lia.updater("HTTP.Fetch error: " .. err) end)
 end
 
