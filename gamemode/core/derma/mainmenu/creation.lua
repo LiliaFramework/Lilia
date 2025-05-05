@@ -192,6 +192,13 @@ function PANEL:onStepChanged(oldStep, newStep)
         self.prev:AlphaTo(0, 0.5)
     end
 
+    local function sizeButton(btn, txt)
+        btn:SetText(txt)
+        surface.SetFont(btn:GetFont())
+        local w = select(1, surface.GetTextSize(txt))
+        btn:SetWide(w + 40)
+    end
+
     if text ~= self.next:GetText() then self.next:AlphaTo(0, 0.5) end
     local function show()
         newStep:SetVisible(true)
@@ -201,8 +208,7 @@ function PANEL:onStepChanged(oldStep, newStep)
         newStep:AlphaTo(255, 0.5)
         if text ~= self.next:GetText() then
             self.next:SetAlpha(0)
-            self.next:SetText(text)
-            self.next:SizeToContentsX()
+            sizeButton(self.next, text)
         end
 
         self.next:AlphaTo(255, 0.5)
