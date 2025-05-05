@@ -473,6 +473,7 @@ end
 ]]
 function lia.item.registerInv(invType, w, h)
    local GridInv = FindMetaTable("GridInv")
+   assert(GridInv, "GridInv not found")
    local inventory = GridInv:extend("GridInv" .. invType)
    inventory.invType = invType
    function inventory:getWidth()
