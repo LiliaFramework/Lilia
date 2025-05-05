@@ -4,8 +4,3 @@ ITEM.ammo = "rpg_round"
 ITEM.ammoAmount = 1
 ITEM.width = 2
 ITEM.desc = "A Package of %s Rockets"
-ITEM.iconCam = {
-	ang	= Angle(-0.70499622821808, 268.25439453125, 0),
-	fov	= 12.085652091515,
-	pos	= Vector(7, 200, -2)
-}
