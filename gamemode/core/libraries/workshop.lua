@@ -128,7 +128,7 @@ end, {
 
 hook.Add("CreateInformationButtons", "WorkshopAddonsInformation", function(pages)
     table.insert(pages, {
-        name = "Workshop Addons",
+        name = "Addons",
         drawFunc = function(panel)
             if not lia.config.get("AutoDownloadWorkshop") then return end
             local collectionId = lia.config.get("CollectionID")
