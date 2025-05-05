@@ -110,10 +110,3 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
         return originalAddRes
     end):catch(fail)
 end
-
-function MODULE:CreateDefaultInventory(character)
-    local charID = character:getID()
-    return lia.inventory.instance("grid", {
-        char = charID
-    })
-end

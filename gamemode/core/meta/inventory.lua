@@ -364,3 +364,120 @@ else
         return lia.inventory.show(self, parent)
     end
 end
+            self:setData("char", owner)
+        end
+
+        self.owner = owner
+    end
+
+    function GridInv:add(itemTypeOrItem, xOrQuantity, yOrData, noReplicate)
+        local x, y, data
+        local isStackCommand = isstring(itemTypeOrItem) and isnumber(xOrQuantity)
+        if istable(yOrData) then
+            local quantity = tonumber(xOrQuantity) or 1
+            data = yOrData
+            if quantity > 1 then
+                local items = {}
+                for i = 1, quantity do
+                    items[i] = self:add(itemTypeOrItem, 1, data, noReplicate)
+                end
+                return deferred.all(items)
+            end
+        else
+            x = tonumber(xOrQuantity)
+            y = tonumber(yOrData)
+        end
+
+        local d = deferred.new()
+        local item, justAddDirectly
+        if lia.item.isItem(itemTypeOrItem) then
+            item = itemTypeOrItem
+            justAddDirectly = true
+        else
+            item = lia.item.list[itemTypeOrItem]
+        end
+
+        if not item then return d:reject("invalid item type") end
+        local targetInventory = self
+        local fits = targetInventory:canAdd(itemTypeOrItem)
+        if not fits then return d:reject("No space available for the item.") end
+        if not x or not y then
+            x, y = self:findFreePosition(item)
+            if not x or not y then
+                for _, bagItem in pairs(self:getItems(true)) do
+                    if bagItem.isBag then
+                        local bagInventory = bagItem:getInv()
+                        x, y = bagInventory:findFreePosition(item)
+                        if x and y then
+                            targetInventory = bagInventory
+                            break
+                        end
+                    end
+                end
+            end
+        end
+
+        if isStackCommand and item.isStackable ~= true then isStackCommand = false end
+        local targetAssignments = {}
+        local remainingQuantity = xOrQuantity
+        if isStackCommand then
+            local items = targetInventory:getItemsOfType(itemTypeOrItem)
+            if items then
+                for _, targetItem in pairs(items) do
+                    if remainingQuantity == 0 then break end
+                    local freeSpace = targetItem.maxQuantity - targetItem:getQuantity()
+                    if freeSpace > 0 then
+                        local filler = freeSpace - remainingQuantity
+                        if filler > 0 then
+                            targetAssignments[targetItem] = remainingQuantity
+                            remainingQuantity = 0
+                        else
+                            targetAssignments[targetItem] = freeSpace
+                            remainingQuantity = math.abs(filler)
+                        end
+                    end
+                end
+            end
+        end
+
+        if isStackCommand and remainingQuantity == 0 then
+            local resultItems = {}
+            for targetItem, assignedQuantity in pairs(targetAssignments) do
+                targetItem:addQuantity(assignedQuantity)
+                table.insert(resultItems, targetItem)
+            end
+            return d:resolve(resultItems)
+        end
+
+        local context = {
+            item = item,
+            x = x,
+            y = y
+        }
+
+        local canAccess, reason = targetInventory:canAccess("add", context)
+        if not canAccess then
+            if istable(reason) then
+                return d:resolve({
+                    error = reason
+                })
+            else
+                return d:reject(tostring(reason or "noAccess"))
+            end
+        end
+
+        if not isStackCommand and justAddDirectly then
+            item:setData("x", x)
+            item:setData("y", y)
+            targetInventory:addItem(item, noReplicate)
+            return d:resolve(item)
+        end
+
+        targetInventory.occupied = targetInventory.occupied or {}
+        for x2 = 0, (item.width or 1) - 1 do
+            for y2 = 0, (item.height or 1) - 1 do
+                targetInventory.occupied[x + x2 .. y + y2] = true
+            end
+        end
+
+        data = table.Merge({

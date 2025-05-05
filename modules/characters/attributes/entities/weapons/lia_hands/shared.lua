@@ -3,7 +3,7 @@ SWEP.Slot = 0
 SWEP.SlotPos = 1
 SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = true
-SWEP.Author = "liliaplayer"
+SWEP.Author = "Samael"
 SWEP.Instructions = [[Primary Fire: Throw/Punch
 Secondary Fire: Knock/Pickup
 Secondary Fire + Mouse: Rotate Object
