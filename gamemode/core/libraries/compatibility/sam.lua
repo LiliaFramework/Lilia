@@ -9,6 +9,7 @@ hook.Add("InitializedModules", "SAM_InitializedModules", function()
 
         if lia.command.list[commandInfo.name] then continue end
         lia.command.add(commandInfo.name, {
+            desc = commandInfo.help,
             adminOnly = commandInfo.default_rank == "admin",
             superAdminOnly = commandInfo.default_rank == "superadmin",
             syntax = customSyntax,
