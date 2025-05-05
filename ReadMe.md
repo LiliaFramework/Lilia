@@ -18,9 +18,6 @@ Welcome to Lilia, an advanced roleplay gamemode framework for Garry's Mod. Inspi
 
 Explore our detailed [wiki](https://liliaframework.github.io) for comprehensive instructions on using and customizing Lilia for your roleplay server. We welcome contributions via pull requests to the wiki.
 
-## Code Style
-We use CFC's Glua style guidelines: https://github.com/CFC-Servers/cfc_glua_style_guidelines
-
 ## Acknowledgements
 
 Lilia is a fork of NutScript, originally developed by [Chessnut](https://github.com/brianhang) and [rebel1324](https://github.com/rebel1324).
