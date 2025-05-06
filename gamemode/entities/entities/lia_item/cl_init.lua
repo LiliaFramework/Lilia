@@ -13,18 +13,20 @@ function ENT:onDrawEntityInfo(alpha)
     if LocalPlayer():GetPos():DistToSqr(self:GetPos()) > 200 * 200 then return end
     local item = self:getItemTable()
     if not item then return end
-    local oldEntity, oldData = item.entity, item.data
-    item.entity, item.data = self, self:getNetVar("data") or oldData
+    local oldE, oldD = item.entity, item.data
+    item.entity, item.data = self, self:getNetVar("data") or oldD
     local pos = toScreen(self:LocalToWorld(self:OBBCenter()))
     local x, y = pos.x, pos.y
     local name = L(item.getName and item:getName() or item.name)
-    lia.util.drawText(name, x, y, ColorAlpha(lia.config.get("Color"), alpha), 1, 1, "liaHugeText", alpha)
-    y = y + draw.GetFontHeight("liaHugeText") + 8
+    surface.SetFont("liaHugeText")
+    local tw, th = surface.GetTextSize(name)
+    draw.SimpleText(name, "liaHugeText", x, y, ColorAlpha(lia.config.get("Color"), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    y = y + th + 80
     local desc = item:getDesc()
-    self:computeDescMarkup("<font=liaBigText>" .. desc .. "</font>")
-    if self.markup then self.markup:draw(x, y, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, alpha) end
+    self:computeDescMarkup("<font=liaMediumFont>" .. desc .. "</font>", tw)
+    if self.markup then self.markup:draw(x - tw / 2, y, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, alpha) end
     hook.Run("DrawItemDescription", self, x, y, ColorAlpha(color_white, alpha), alpha)
-    item.data, item.entity = oldData, oldEntity
+    item.data, item.entity = oldD, oldE
 end
 
 function ENT:DrawTranslucent()

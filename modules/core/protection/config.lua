@@ -86,7 +86,7 @@ lia.config.add("DisableLuaRun", "Disable Lua Run Hooks", false, nil, {
     type = "Boolean"
 })
 
-lia.config.add("EquipDelay", "Equip Delay", 1, nil, {
+lia.config.add("EquipDelay", "Equip Delay", 0, nil, {
     desc = "Time delay between equipping items.",
     category = "Items",
     type = "Float",
@@ -94,7 +94,7 @@ lia.config.add("EquipDelay", "Equip Delay", 1, nil, {
     max = 10
 })
 
-lia.config.add("UnequipDelay", "Unequip Delay", 1, nil, {
+lia.config.add("UnequipDelay", "Unequip Delay", 0, nil, {
     desc = "Time delay between unequipping items.",
     category = "Items",
     type = "Float",
@@ -102,7 +102,7 @@ lia.config.add("UnequipDelay", "Unequip Delay", 1, nil, {
     max = 10
 })
 
-lia.config.add("DropDelay", "Drop Delay", 1, nil, {
+lia.config.add("DropDelay", "Drop Delay", 0, nil, {
     desc = "Time delay between dropping items.",
     category = "Items",
     type = "Float",

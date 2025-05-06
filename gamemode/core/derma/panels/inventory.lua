@@ -56,7 +56,7 @@ end
 
 function PANEL:Init()
     self:Droppable("inv")
-    self:SetSize(48, 48)
+    self:SetSize(64, 64)
 end
 
 function PANEL:PaintOver(w, h)
@@ -199,15 +199,15 @@ end
 vgui.Register("liaGridInventory", PANEL, "liaInventory")
 local PANEL = {}
 function PANEL:Init()
-    self.MODULE = 64
+    self.size = 64
 end
 
-function PANEL:setIconSize(MODULE)
-    self.MODULE = MODULE
+function PANEL:setIconSize(size)
+    self.size = size
 end
 
 function PANEL:setItem(item)
-    self.Icon:SetSize(self.MODULE * (item.width or 1), self.MODULE * (item.height or 1))
+    self.Icon:SetSize(self.size * (item.width or 1), self.size * (item.height or 1))
     self.Icon:InvalidateLayout(true)
     self:setItemType(item:getID())
     self:centerIcon()
@@ -266,7 +266,7 @@ function PANEL:setInventory(inventory)
 end
 
 function PANEL:setGridSize(width, height, iconSize)
-    self.MODULE = iconSize or 64
+    self.size = iconSize or 64
     self.gridW = width
     self.gridH = height
 end
@@ -296,11 +296,11 @@ function PANEL:onItemReleased(itemIcon)
     local item = itemIcon.itemTable
     if not item then return end
     local x, y = self:LocalCursorPos()
-    local MODULE = self.MODULE + 2
-    local itemW = (item.width or 1) * MODULE - 2
-    local itemH = (item.height or 1) * MODULE - 2
-    x = math.Round((x - itemW * 0.5) / MODULE) + 1
-    y = math.Round((y - itemH * 0.5) / MODULE) + 1
+    local size = self.size + 2
+    local itemW = (item.width or 1) * size - 2
+    local itemH = (item.height or 1) * size - 2
+    x = math.Round((x - itemW * 0.5) / size) + 1
+    y = math.Round((y - itemH * 0.5) / size) + 1
     self.inventory:requestTransfer(item:getID(), self.inventory:getID(), x, y)
     hook.Run("OnRequestItemTransfer", self, item:getID(), self.inventory:getID(), x, y)
 end
@@ -323,11 +323,11 @@ function PANEL:addItem(item)
     local x, y = item:getData("x"), item:getData("y")
     if not x or not y then return end
     if IsValid(self.icons[id]) then self.icons[id]:Remove() end
-    local MODULE = self.MODULE + 2
+    local size = self.size + 2
     local icon = self:Add("liaGridInvItem")
     icon:setItem(item)
-    icon:SetPos((x - 1) * MODULE, (y - 1) * MODULE)
-    icon:SetSize((item.width or 1) * MODULE - 2, (item.height or 1) * MODULE - 2)
+    icon:SetPos((x - 1) * size, (y - 1) * size)
+    icon:SetSize((item.width or 1) * size - 2, (item.height or 1) * size - 2)
     icon:InvalidateLayout(true)
     icon.OnMousePressed = function(icon, keyCode) self:onItemPressed(icon, keyCode) end
     icon.OnMouseReleased = function(icon, keyCode)
@@ -346,12 +346,12 @@ function PANEL:drawHeldItemRectangle()
     local heldItem = lia.item.held
     if not IsValid(heldItem) or not heldItem.itemTable then return end
     local item = heldItem.itemTable
-    local MODULE = self.MODULE + 2
-    local itemW = (item.width or 1) * MODULE - 2
-    local itemH = (item.height or 1) * MODULE - 2
+    local size = self.size + 2
+    local itemW = (item.width or 1) * size - 2
+    local itemH = (item.height or 1) * size - 2
     local x, y = self:LocalCursorPos()
-    x = math.Round((x - itemW * 0.5) / MODULE)
-    y = math.Round((y - itemH * 0.5) / MODULE)
+    x = math.Round((x - itemW * 0.5) / size)
+    y = math.Round((y - itemH * 0.5) / size)
     local trimX, trimY
     local maxOffsetY = (item.height or 1) - 1
     local maxOffsetX = (item.width or 1) - 1
@@ -374,7 +374,7 @@ function PANEL:drawHeldItemRectangle()
 
     if drawTarget then
         surface.SetDrawColor(Color(241, 196, 15, 25))
-        surface.DrawRect(drawTarget.x * MODULE, drawTarget.y * MODULE, drawTarget.w * MODULE - 2, drawTarget.h * MODULE - 2)
+        surface.DrawRect(drawTarget.x * size, drawTarget.y * size, drawTarget.w * size - 2, drawTarget.h * size - 2)
     else
         for offsetY = 0, maxOffsetY do
             trimY = 0
@@ -385,7 +385,7 @@ function PANEL:drawHeldItemRectangle()
                 local realX, realY = x + offsetX, y + offsetY
                 if realX >= self.gridW or realY >= self.gridH or realX < 0 or realY < 0 then continue end
                 surface.SetDrawColor(self.occupied[y + offsetY][x + offsetX] and Color(231, 76, 60, 25) or Color(46, 204, 113, 25))
-                surface.DrawRect((x + offsetX) * MODULE, (y + offsetY) * MODULE, MODULE - trimX, MODULE - trimY)
+                surface.DrawRect((x + offsetX) * size, (y + offsetY) * size, size - trimX, size - trimY)
             end
         end
     end
@@ -417,10 +417,10 @@ end
 
 function PANEL:Paint()
     surface.SetDrawColor(0, 0, 0, 100)
-    local MODULE = self.MODULE
+    local size = self.size
     for y = 0, self.gridH - 1 do
         for x = 0, self.gridW - 1 do
-            surface.DrawRect(x * (MODULE + 2), y * (MODULE + 2), MODULE, MODULE)
+            surface.DrawRect(x * (size + 2), y * (size + 2), size, size)
         end
     end
 
@@ -436,3 +436,42 @@ function PANEL:OnCursorExited()
 end
 
 vgui.Register("liaGridInventoryPanel", PANEL, "DPanel")
+local margin = 10
+hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
+    if hook.Run("CanPlayerViewInventory") == false then return end
+    tabs["inv"] = function(panel)
+        local inventory = LocalPlayer():getChar():getInv()
+        if not inventory then return end
+        local mainPanel = inventory:show(panel)
+        local sortPanels = {}
+        local totalSize = {
+            x = 0,
+            y = 0,
+            p = 0
+        }
+
+        table.insert(sortPanels, mainPanel)
+        totalSize.x = totalSize.x + mainPanel:GetWide() + margin
+        totalSize.y = math.max(totalSize.y, mainPanel:GetTall())
+        for id, item in pairs(inventory:getItems()) do
+            if item.isBag and hook.Run("CanOpenBagPanel", item) ~= false then
+                local inventory = item:getInv()
+                local childPanels = inventory:show(mainPanel)
+                lia.gui["inv" .. inventory:getID()] = childPanels
+                table.insert(sortPanels, childPanels)
+                totalSize.x = totalSize.x + childPanels:GetWide() + margin
+                totalSize.y = math.max(totalSize.y, childPanels:GetTall())
+            end
+        end
+
+        local px, py, pw, ph = mainPanel:GetBounds()
+        local x, y = px + pw / 2 - totalSize.x / 2, py + ph / 2
+        for _, panel in pairs(sortPanels) do
+            panel:ShowCloseButton(false)
+            panel:SetPos(x, y - panel:GetTall() / 2)
+            x = x + panel:GetWide() + margin
+        end
+
+        hook.Add("PostRenderVGUI", mainPanel, function() hook.Run("PostDrawInventory", mainPanel) end)
+    end
+end)

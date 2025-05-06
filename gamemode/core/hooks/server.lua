@@ -718,7 +718,7 @@ function ClientAddText(client, ...)
     net.Send(client)
 end
 
-local networkStrings = {"NetStreamDS", "liaCharChoose", "liaCharacterInvList", "liaCharCreate", "liaCharList", "liaCharDelete",}
+local networkStrings = {"liaItemDelete", "liaItemInstance", "liaTransferItem", "liaInventoryAdd", "liaInventoryRemove", "liaInventoryData", "liaInventoryInit", "liaInventoryDelete", "NetStreamDS", "liaCharChoose", "liaCharacterInvList", "liaCharCreate", "liaCharList", "liaCharDelete",}
 for _, netString in ipairs(networkStrings) do
     util.AddNetworkString(netString)
 end
