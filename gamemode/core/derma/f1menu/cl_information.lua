@@ -67,7 +67,7 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, ma
     lbl:SetFont("liaSmallFont")
     lbl:SetText(labelText or "")
     lbl:SizeToContents()
-    local lw, lh = lbl:GetSize()
+    local lw, _ = lbl:GetSize()
     lbl:SetWide(lw + 20)
     lbl:DockMargin(0, 0, 10, 0)
     lbl:SetContentAlignment(5)

@@ -79,7 +79,7 @@ function PANEL:openInspect()
     local view = vgui.Create("EditablePanel", frame)
     view:Dock(TOP)
     view:SetTall(fh * 0.5)
-    view.Paint = function(p, w, h)
+    view.Paint = function(_, w, h)
         surface.SetDrawColor(color_black)
         surface.DrawOutlinedRect(0, 0, w, h, 2)
     end

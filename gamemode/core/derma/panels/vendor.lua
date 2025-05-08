@@ -1,4 +1,5 @@
-﻿local EDITOR = include("lilia/modules/utilities/vendor/libs/cl_vendor.lua")
+﻿local sw, sh = ScrW(), ScrH()
+local EDITOR = include("lilia/modules/utilities/vendor/libs/cl_vendor.lua")
 local COLS_MODE = 2
 local COLS_PRICE = 3
 local COLS_STOCK = 4
@@ -14,7 +15,6 @@ local VendorClick = {"buttons/button15.wav", 30, 250}
 local PANEL = {}
 function PANEL:Init()
     local ply = LocalPlayer()
-    local sw, sh = ScrW(), ScrH()
     if IsValid(lia.gui.vendor) then
         lia.gui.vendor.noSendExit = true
         lia.gui.vendor:Remove()
@@ -158,7 +158,6 @@ end
 function PANEL:createCategoryDropdown()
     local c = self:GetItemCategoryList()
     if table.Count(c) < 1 then return end
-    local sw, sh = ScrW(), ScrH()
     local btn = self:Add("liaSmallButton")
     btn:SetSize(sw * 0.15, sh * 0.035)
     btn:SetPos(sw * 0.82, 110)
@@ -207,7 +206,6 @@ function PANEL:createCategoryDropdown()
 end
 
 function PANEL:DrawModels()
-    local sw, sh = ScrW(), ScrH()
     self.vendorModel = self:Add("DModelPanel")
     self.vendorModel:SetSize(ScreenScale(160), ScreenScaleH(170))
     self.vendorModel:SetPos(self:GetWide() * 0.25 - ScreenScale(350) - ScreenScale(100), sh * 0.36 + ScreenScaleH(25))

@@ -453,7 +453,7 @@ hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
         table.insert(sortPanels, mainPanel)
         totalSize.x = totalSize.x + mainPanel:GetWide() + margin
         totalSize.y = math.max(totalSize.y, mainPanel:GetTall())
-        for id, item in pairs(inventory:getItems()) do
+        for _, item in pairs(inventory:getItems()) do
             if item.isBag and hook.Run("CanOpenBagPanel", item) ~= false then
                 local inventory = item:getInv()
                 local childPanels = inventory:show(mainPanel)

@@ -1,13 +1,13 @@
-local function PaintPanel(self, w, h)
+local function PaintPanel(_, w, h)
     surface.SetDrawColor(0, 0, 0, 255)
     surface.DrawOutlinedRect(0, 0, w, h, 2)
     surface.SetDrawColor(0, 0, 0, 150)
     surface.DrawRect(1, 1, w - 2, h - 2)
 end
 
-local function PaintFrame(self, w, h)
-    if not self.LaidOut then
-        local btn = self.btnClose
+local function PaintFrame(pnl, w, h)
+    if not pnl.LaidOut then
+        local btn = pnl.btnClose
         if btn and btn:IsValid() then
             btn:SetPos(w - 16, 4)
             btn:SetSize(24, 24)
@@ -17,10 +17,10 @@ local function PaintFrame(self, w, h)
             btn:PerformLayout()
         end
 
-        self.LaidOut = true
+        pnl.LaidOut = true
     end
 
-    lia.util.drawBlur(self, 10)
+    lia.util.drawBlur(pnl, 10)
     surface.SetDrawColor(45, 45, 45, 200)
     surface.DrawRect(0, 0, w, h)
 end

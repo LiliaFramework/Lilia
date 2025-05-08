@@ -1,6 +1,6 @@
 ﻿local receivedChunks = {}
 local receivedPanel
-net.Receive("send_logs", function(len)
+net.Receive("send_logs", function()
     local chunkIndex = net.ReadUInt(16)
     local numChunks = net.ReadUInt(16)
     local chunkLen = net.ReadUInt(16)

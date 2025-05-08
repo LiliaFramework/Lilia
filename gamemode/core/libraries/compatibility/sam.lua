@@ -13,7 +13,7 @@ hook.Add("InitializedModules", "SAM_InitializedModules", function()
             adminOnly = commandInfo.default_rank == "admin",
             superAdminOnly = commandInfo.default_rank == "superadmin",
             syntax = customSyntax,
-            onRun = function(client, arguments) RunConsoleCommand("sam", commandInfo.name, unpack(arguments)) end
+            onRun = function(_, arguments) RunConsoleCommand("sam", commandInfo.name, unpack(arguments)) end
         })
     end
 end)
