@@ -35,6 +35,11 @@ jobs:
       - uses: leafo/gh-actions-luarocks@v4.0.0
         name: Set Up Luarocks
 
+      - name: Install Luacheck dependencies
+        run: |
+          luarocks install luafilesystem
+          luarocks install argparse
+
       - uses: actions/checkout@v3
         name: Pull GluaCheck
         with:
@@ -43,7 +48,7 @@ jobs:
 
       - name: Build GluaCheck
         working-directory: luacheck
-        run: luarocks make
+        run: luarocks make --deps-mode=install
 
       - name: Run Luacheck Linting
         working-directory: lilia
@@ -65,7 +70,7 @@ jobs:
         with:
           path: lilia
 
-      - name: Remove existing release & tag (if any)
+      - name: Remove existing release & tag
         uses: actions/github-script@v6
         with:
           script: |
@@ -86,13 +91,8 @@ jobs:
                 repo: context.repo.repo,
                 ref: `tags/${tag}`
               });
-              core.info(`Deleted existing release & tag "${tag}"`);
-            } catch (error) {
-              if (error.status === 404) {
-                core.info('No existing release/tag to delete');
-              } else {
-                throw error;
-              }
+            } catch (e) {
+              if (e.status !== 404) throw e;
             }
 
       - name: Prepare and Zip
@@ -102,8 +102,7 @@ jobs:
           cd packaged
           zip -r ../lilia.zip lilia
 
-      - name: Create GitHub Release
-        id: create_release
+      - id: create_release
         uses: actions/create-release@v1
         with:
           tag_name: release
