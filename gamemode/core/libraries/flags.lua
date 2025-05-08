@@ -61,14 +61,14 @@ if SERVER then
     end
 end
 
-lia.flag.add("C", "Spawn vehicles.")
-lia.flag.add("z", "Spawn SWEPS.")
-lia.flag.add("E", "Spawn SENTs.")
-lia.flag.add("L", "Spawn Effects.")
-lia.flag.add("r", "Spawn ragdolls.")
-lia.flag.add("e", "Spawn props.")
-lia.flag.add("n", "Spawn NPCs.")
-lia.flag.add("p", "Physgun.", function(client, isGiven)
+lia.flag.add("C", L("flagSpawnVehicles"))
+lia.flag.add("z", L("flagSpawnSweps"))
+lia.flag.add("E", L("flagSpawnSents"))
+lia.flag.add("L", L("flagSpawnEffects"))
+lia.flag.add("r", L("flagSpawnRagdolls"))
+lia.flag.add("e", L("flagSpawnProps"))
+lia.flag.add("n", L("flagSpawnNpcs"))
+lia.flag.add("p", L("flagPhysgun"), function(client, isGiven)
     if isGiven then
         client:Give("weapon_physgun")
         client:SelectWeapon("weapon_physgun")
@@ -77,7 +77,7 @@ lia.flag.add("p", "Physgun.", function(client, isGiven)
     end
 end)
 
-lia.flag.add("t", "Toolgun", function(client, isGiven)
+lia.flag.add("t", L("flagToolgun"), function(client, isGiven)
     if isGiven then
         client:Give("gmod_tool")
         client:SelectWeapon("gmod_tool")
@@ -89,14 +89,9 @@ end)
 hook.Add("CreateInformationButtons", "CreateInformationMenuFlags", function(pages)
     local client = LocalPlayer()
     table.insert(pages, {
-        name = "Flags",
+        name = L("flags"),
         drawFunc = function(panel)
             local char = client:getChar()
-            if not char then
-                panel:Add("DLabel"):SetText("No character found!"):Dock(TOP)
-                return
-            end
-
             local scroll = vgui.Create("DScrollPanel", panel)
             scroll:Dock(FILL)
             for flagName, flagData in SortedPairs(lia.flag.list) do

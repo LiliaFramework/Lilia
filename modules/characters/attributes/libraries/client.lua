@@ -33,7 +33,7 @@ function MODULE:LoadCharInformation()
     if not IsValid(client) then return end
     local char = client:getChar()
     if not char then return end
-    hook.Run("AddSection", "Attributes", Color(0, 0, 0), 2, 1)
+    hook.Run("AddSection", L("attributes"), Color(0, 0, 0), 2, 1)
     local attrs = {}
     for id, attr in pairs(lia.attribs.list) do
         attrs[#attrs + 1] = {
@@ -47,7 +47,7 @@ function MODULE:LoadCharInformation()
         local id, attr = entry.id, entry.attr
         local minVal = attr.min or 0
         local maxVal = attr.max or 100
-        hook.Run("AddBarField", "Attributes", id, attr.name, function() return minVal end, function() return maxVal end, function() return char:getAttrib(id) end)
+        hook.Run("AddBarField", L("attributes"), id, attr.name, function() return minVal end, function() return maxVal end, function() return char:getAttrib(id) end)
     end
 end
 

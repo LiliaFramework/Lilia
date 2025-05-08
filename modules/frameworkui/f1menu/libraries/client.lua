@@ -1,9 +1,9 @@
 ﻿MODULE.CharacterInformation = {}
 function MODULE:LoadCharInformation()
-    hook.Run("AddSection", "General Info", Color(0, 0, 0), 1, 1)
-    hook.Run("AddTextField", "General Info", "name", "Name", function() return LocalPlayer():getChar():getName() end)
-    hook.Run("AddTextField", "General Info", "desc", "Description", function() return LocalPlayer():getChar():getDesc() end)
-    hook.Run("AddTextField", "General Info", "money", "Money", function() return LocalPlayer():getMoney() end)
+    hook.Run("AddSection", L("generalInfo"), Color(0, 0, 0), 1, 1)
+    hook.Run("AddTextField", L("generalInfo"), "name", L("nameField"), function() return LocalPlayer():getChar():getName() end)
+    hook.Run("AddTextField", L("generalInfo"), "desc", L("descField"), function() return LocalPlayer():getChar():getDesc() end)
+    hook.Run("AddTextField", L("generalInfo"), "money", L("moneyField"), function() return LocalPlayer():getMoney() end)
 end
 
 function MODULE:AddSection(sectionName, color, priority, location)
@@ -103,7 +103,7 @@ function MODULE:CreateInformationButtons(pages)
             }
         end)
 
-        hook.Add("HUDPaint", "EntityViewHUD", function() draw.SimpleText("Press A/D to rotate | W/S to move camera vertically | Press SPACE to exit", "liaMediumFont", ScrW() / 2, ScrH() - 50, color_white, TEXT_ALIGN_CENTER) end)
+        hook.Add("HUDPaint", "EntityViewHUD", function() draw.SimpleText(L("pressInstructions"), "liaMediumFont", ScrW() / 2, ScrH() - 50, color_white, TEXT_ALIGN_CENTER) end)
         hook.Add("Think", "EntityViewRotate", function()
             if input.IsKeyDown(KEY_A) then yaw = yaw - FrameTime() * 100 end
             if input.IsKeyDown(KEY_D) then yaw = yaw + FrameTime() * 100 end
@@ -200,7 +200,7 @@ function MODULE:CreateInformationButtons(pages)
                             local btnView = vgui.Create("liaSmallButton", btnContainer)
                             btnView:Dock(LEFT)
                             btnView:SetWide(60)
-                            btnView:SetText("View")
+                            btnView:SetText(L("viewButton"))
                             btnView.DoClick = function()
                                 if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
                                 local originalThirdPerson = lia.option.get("thirdPersonEnabled", false)
@@ -213,7 +213,7 @@ function MODULE:CreateInformationButtons(pages)
                             local btnTeleport = vgui.Create("liaSmallButton", btnContainer)
                             btnTeleport:Dock(LEFT)
                             btnTeleport:SetWide(60)
-                            btnTeleport:SetText("Teleport")
+                            btnTeleport:SetText(L("teleportButton"))
                             btnTeleport.DoClick = function()
                                 net.Start("liaTeleportToEntity")
                                 net.WriteEntity(ent)
@@ -224,7 +224,7 @@ function MODULE:CreateInformationButtons(pages)
                         local btnWaypoint = vgui.Create("liaSmallButton", btnContainer)
                         btnWaypoint:Dock(RIGHT)
                         btnWaypoint:SetWide(60)
-                        btnWaypoint:SetText("Waypoint")
+                        btnWaypoint:SetText(L("waypointButton"))
                         btnWaypoint.DoClick = function() client:setWaypoint(class, ent:GetPos()) end
                     end
                 end
@@ -236,12 +236,6 @@ function MODULE:CreateInformationButtons(pages)
         table.insert(pages, {
             name = "Modules",
             drawFunc = function(panel)
-                local char = client:getChar()
-                if not char then
-                    panel:Add("DLabel"):SetText("No character found!"):Dock(TOP)
-                    return
-                end
-
                 local scroll = vgui.Create("DScrollPanel", panel)
                 scroll:Dock(FILL)
                 for _, moduleData in SortedPairs(lia.module.list) do
@@ -264,14 +258,14 @@ function MODULE:CreateInformationButtons(pages)
 end
 
 function MODULE:CreateMenuButtons(tabs)
-    tabs["Status"] = function(panel)
+    tabs[L("statusTab")] = function(panel)
         panel.info = vgui.Create("liaCharInfo", panel)
         panel.info:setup()
         panel.info:SetAlpha(0)
         panel.info:AlphaTo(255, 0.5)
     end
 
-    tabs["Information"] = function(panel)
+    tabs[L("informationTab")] = function(panel)
         panel.sidebar = panel:Add("DScrollPanel")
         panel.sidebar:Dock(LEFT)
         panel.sidebar:SetWide(200)
@@ -300,7 +294,7 @@ function MODULE:CreateMenuButtons(tabs)
         end
     end
 
-    tabs["Settings"] = function(panel)
+    tabs[L("settingsTab")] = function(panel)
         panel.sidebar = panel:Add("DScrollPanel")
         panel.sidebar:Dock(LEFT)
         panel.sidebar:SetWide(200)

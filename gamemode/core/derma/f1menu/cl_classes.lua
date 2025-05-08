@@ -1,96 +1,82 @@
 ﻿local PANEL = {}
 function PANEL:Init()
     lia.gui.classes = self
-    local parent = self:GetParent()
-    local w, h = parent:GetSize()
+    local w, h = self:GetParent():GetSize()
     self:SetSize(w, h)
-    local sidebar = self:Add("DScrollPanel")
-    sidebar:Dock(LEFT)
-    sidebar:SetWide(200)
-    sidebar:DockMargin(20, 20, 0, 20)
-    self.sidebar = sidebar
-    local mainContent = self:Add("DScrollPanel")
-    mainContent:Dock(FILL)
-    mainContent:DockMargin(10, 10, 10, 10)
-    self.mainContent = mainContent
+    self.sidebar = self:Add("DScrollPanel")
+    self.sidebar:Dock(LEFT)
+    self.sidebar:SetWide(200)
+    self.sidebar:DockMargin(20, 20, 0, 20)
+    self.mainContent = self:Add("DScrollPanel")
+    self.mainContent:Dock(FILL)
+    self.mainContent:DockMargin(10, 10, 10, 10)
     self.tabList = {}
-    self.activeTab = nil
     self:loadClasses()
 end
 
 function PANEL:loadClasses()
     local client = LocalPlayer()
-    local sorted = {}
-    for _, classData in pairs(lia.class.list) do
-        if classData.faction == client:Team() then sorted[#sorted + 1] = classData end
+    local list = {}
+    for _, cl in pairs(lia.class.list) do
+        if cl.faction == client:Team() then list[#list + 1] = cl end
     end
 
-    table.sort(sorted, function(a, b) return a.name < b.name end)
+    table.sort(list, function(a, b) return a.name < b.name end)
     self.sidebar:Clear()
     self.tabList = {}
-    for _, classData in ipairs(sorted) do
-        local canBe = lia.class.canBe(client, classData.index)
-        local btn = self:createClassButton(classData, canBe)
+    for _, cl in ipairs(list) do
+        local canBe = lia.class.canBe(LocalPlayer(), cl.index)
+        local btn = self.sidebar:Add("liaSmallButton")
+        btn:SetText(cl.name or L("unnamed"))
+        btn:SetTall(50)
+        btn:Dock(TOP)
+        btn:DockMargin(0, 0, 10, 20)
+        btn.DoClick = function()
+            for _, b in ipairs(self.tabList) do
+                b:SetSelected(b == btn)
+            end
+
+            self:populateClassDetails(cl, canBe)
+        end
+
         self.tabList[#self.tabList + 1] = btn
     end
 end
 
-function PANEL:createClassButton(classData, canBe)
-    local btn = self.sidebar:Add("liaSmallButton")
-    btn:SetText(classData.name)
-    btn:SetTall(50)
-    btn:Dock(TOP)
-    btn:DockMargin(0, 0, 10, 20)
-    btn.DoClick = function()
-        for _, b in ipairs(self.tabList) do
-            b:SetSelected(b == btn)
-        end
-
-        self:populateClassDetails(classData, canBe)
-    end
-    return btn
-end
-
-function PANEL:populateClassDetails(classData, canBe)
-    local mainContent = self.mainContent
-    mainContent:Clear()
-    local panel = mainContent:Add("DPanel")
-    panel:Dock(TOP)
-    panel:DockMargin(10, 10, 10, 10)
-    panel:SetTall(800)
-    if classData.logo then
-        local logo = panel:Add("DImage")
-        logo:SetImage(classData.logo)
-        logo:SetScaledSize(128, 128)
-        logo:SetScaledPos(panel:GetWide() - logo:GetWide() - 10, 10)
-        logo.Think = function() logo:SetPos(panel:GetWide() - logo:GetWide() - 10, 10) end
+function PANEL:populateClassDetails(cl, canBe)
+    self.mainContent:Clear()
+    local container = self.mainContent:Add("DPanel")
+    container:Dock(TOP)
+    container:DockMargin(10, 10, 10, 10)
+    container:SetTall(800)
+    if cl.logo then
+        local img = container:Add("DImage")
+        img:SetImage(cl.logo)
+        img:SetScaledSize(128, 128)
+        img.Think = function() img:SetPos(container:GetWide() - img:GetWide() - 10, 10) end
     end
 
-    self:createModelPanel(panel, classData)
-    self:addClassDetails(panel, classData)
-    self:addJoinButton(panel, classData, canBe)
+    self:createModelPanel(container, cl)
+    self:addClassDetails(container, cl)
+    self:addJoinButton(container, cl, canBe)
 end
 
-function PANEL:createModelPanel(parent, classData)
-    local client = LocalPlayer()
-    local fov, sizeX, sizeY = 35, 300, 600
-    local modelList = classData.model
+function PANEL:createModelPanel(parent, cl)
+    local sizeX, sizeY = 300, 600
     local panel = parent:Add("liaModelPanel")
     panel:SetScaledSize(sizeX, sizeY)
-    panel:SetFOV(fov)
-    local model = modelList
-    if istable(modelList) then model = modelList[math.random(#modelList)] end
-    panel:SetModel(model or client:GetModel())
-    panel:SetPos(150, 10)
+    panel:SetFOV(35)
+    local model = istable(cl.model) and cl.model[math.random(#cl.model)] or cl.model or LocalPlayer():GetModel()
+    panel:SetModel(model)
     panel.rotationAngle = 45
     local ent = panel.Entity
-    ent:SetSkin(classData.skin or 0)
-    for _, bg in ipairs(classData.bodyGroups or {}) do
+    ent:SetSkin(cl.skin or 0)
+    for _, bg in ipairs(cl.bodyGroups or {}) do
         ent:SetBodygroup(bg.id, bg.value or 0)
     end
 
-    for idx, subM in ipairs(classData.subMaterials or {}) do
-        ent:SetSubMaterial(idx - 1, subM)
+    for i, mat in ipairs(cl.subMaterials or {}) do
+        ent:SetSubMaterial(i - 1, mat)
     end
 
     panel.Think = function()
@@ -107,76 +93,69 @@ function PANEL:createModelPanel(parent, classData)
     end
 end
 
-function PANEL:addClassDetails(detailsPanel, classData)
+function PANEL:addClassDetails(parent, cl)
     local client = LocalPlayer()
-    local config = lia.config
-    local maxHealth, maxArmor, jumpPower = client:GetMaxHealth(), client:GetMaxArmor(), client:GetJumpPower()
-    local runSpeed, walkSpeed = config.get("RunSpeed"), config.get("WalkSpeed")
-    local function addDetail(text)
-        local label = detailsPanel:Add("DLabel")
-        label:SetFont("liaMediumFont")
-        label:SetText(text)
-        label:SetTextColor(color_white)
-        label:SetWrap(true)
-        label:Dock(TOP)
-        label:SetAutoStretchVertical(true)
-        label:DockMargin(10, 5, 10, 0)
+    local maxH, maxA, maxJ = client:GetMaxHealth(), client:GetMaxArmor(), client:GetJumpPower()
+    local run, walk = lia.config.get("RunSpeed"), lia.config.get("WalkSpeed")
+    local function add(text)
+        local lbl = parent:Add("DLabel")
+        lbl:SetFont("liaMediumFont")
+        lbl:SetText(text)
+        lbl:SetTextColor(color_white)
+        lbl:SetWrap(true)
+        lbl:Dock(TOP)
+        lbl:DockMargin(10, 5, 10, 0)
     end
 
-    addDetail("Name: " .. (classData.name or "Unnamed"))
-    addDetail("Description: " .. (classData.desc or "No description available."))
-    addDetail("Faction: " .. (team.GetName(classData.faction) or "None"))
-    addDetail("Is Default: " .. (classData.isDefault and "Yes" or "No"))
-    addDetail("Base Health: " .. tostring(classData.health or maxHealth))
-    addDetail("Base Armor: " .. tostring(classData.armor or maxArmor))
-    local weapons = classData.weapons or {}
-    local weaponsText = #weapons > 0 and table.concat(weapons, ", ") or "None"
-    addDetail(L("weapons") .. ": " .. weaponsText)
-    addDetail("Model Scale: " .. tostring(classData.scale or 1))
-    local rs = classData.runSpeedMultiplier and math.Round(runSpeed * (classData.runSpeed or 1)) or classData.runSpeed or runSpeed
-    addDetail("Run Speed: " .. tostring(rs))
-    local ws = classData.walkSpeedMultiplier and math.Round(walkSpeed * (classData.walkSpeed or 1)) or classData.walkSpeed or walkSpeed
-    addDetail("Walk Speed: " .. tostring(ws))
-    local jp = classData.jumpPowerMultiplier and math.Round(jumpPower * (classData.jumpPower or 1)) or classData.jumpPower or jumpPower
-    addDetail("Jump Power: " .. tostring(jp))
+    add(L("name") .. ": " .. (cl.name or L("unnamed")))
+    add(L("desc") .. ": " .. (cl.desc or L("noDesc")))
+    add(L("faction") .. ": " .. (team.GetName(cl.faction) or L("none")))
+    add(L("isDefaultLabel") .. ": " .. (cl.isDefault and L("yes") or L("no")))
+    add(L("baseHealth") .. ": " .. tostring(cl.health or maxH))
+    add(L("baseArmor") .. ": " .. tostring(cl.armor or maxA))
+    local weps = cl.weapons or {}
+    add(L("weapons") .. ": " .. (#weps > 0 and table.concat(weps, ", ") or L("none")))
+    add(L("modelScale") .. ": " .. tostring(cl.scale or 1))
+    local rs = cl.runSpeedMultiplier and math.Round(run * cl.runSpeed) or cl.runSpeed or run
+    add(L("runSpeed") .. ": " .. tostring(rs))
+    local ws = cl.walkSpeedMultiplier and math.Round(walk * cl.walkSpeed) or cl.walkSpeed or walk
+    add(L("walkSpeed") .. ": " .. tostring(ws))
+    local jp = cl.jumpPowerMultiplier and math.Round(maxJ * cl.jumpPower) or cl.jumpPower or maxJ
+    add(L("jumpPower") .. ": " .. tostring(jp))
     local bloodMap = {
-        [-1] = "No blood",
-        [0] = "Red blood",
-        [1] = "Yellow blood",
-        [2] = "Green-red blood",
-        [3] = "Sparks",
-        [4] = "Antlion yellow blood",
-        [5] = "Zombie green-red blood",
-        [6] = "Antlion worker bright green blood"
+        [-1] = L("bloodNo"),
+        [0] = L("bloodRed"),
+        [1] = L("bloodYellow"),
+        [2] = L("bloodGreenRed"),
+        [3] = L("bloodSparks"),
+        [4] = L("bloodAntlion"),
+        [5] = L("bloodZombie"),
+        [6] = L("bloodAntlionBright")
     }
 
-    addDetail("Blood Color: " .. (bloodMap[classData.bloodcolor] or "Red blood"))
-    local req = classData.requirements
-    if req then
-        local reqText = istable(req) and table.concat(req, ", ") or tostring(req)
-        addDetail("Requirements: " .. reqText)
+    add(L("bloodColor") .. ": " .. (bloodMap[cl.bloodcolor] or L("bloodRed")))
+    if cl.requirements then
+        local req = istable(cl.requirements) and table.concat(cl.requirements, ", ") or tostring(cl.requirements)
+        add(L("requirements") .. ": " .. req)
     end
 end
 
-function PANEL:addJoinButton(detailsPanel, classData, canBe)
-    local client = LocalPlayer()
-    local isCurrent = client:getChar() and client:getChar():getClass() == classData.index
-    local btn = detailsPanel:Add("liaSmallButton")
-    local text = isCurrent and "You are already in this class" or canBe and "Join Class" or "You do not meet the class requirements or this class isn't default."
-    btn:SetText(text)
+function PANEL:addJoinButton(parent, cl, canBe)
+    local isCurrent = LocalPlayer():getChar() and LocalPlayer():getChar():getClass() == cl.index
+    local btn = parent:Add("liaSmallButton")
+    btn:SetText(isCurrent and L("alreadyInClass") or canBe and L("joinClass") or L("classRequirementsNotMet"))
     btn:SetTall(40)
-    local menuColors = lia.color.ReturnMainAdjustedColors()
-    btn:SetTextColor(menuColors.text)
+    local col = lia.color.ReturnMainAdjustedColors().text
+    btn:SetTextColor(col)
     btn:SetFont("liaMediumFont")
     btn:SetExpensiveShadow(1, Color(0, 0, 0, 100))
     btn:SetContentAlignment(5)
     btn:Dock(BOTTOM)
     btn:DockMargin(10, 10, 10, 10)
-    btn.text_color = menuColors.text
     btn:SetDisabled(isCurrent or not canBe)
     btn.DoClick = function()
         if canBe and not isCurrent then
-            lia.command.send("beclass", classData.index)
+            lia.command.send("beclass", cl.index)
             timer.Simple(0.1, function()
                 if IsValid(self) then
                     self:loadClasses()

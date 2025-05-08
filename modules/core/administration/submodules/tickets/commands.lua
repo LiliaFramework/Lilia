@@ -1,18 +1,18 @@
 ﻿lia.command.add("plyviewclaims", {
     adminOnly = true,
     privilege = "View Claims",
-    desc = "Displays detailed claim information for the specified player.",
+    desc = L("plyViewClaimsDesc"),
     syntax = "[string charname]",
     AdminStick = {
-        Name = "View Ticket Claims",
-        Category = "Moderation Tools",
-        SubCategory = "Miscellaneous",
+        Name = L("viewTicketClaims"),
+        Category = L("moderationTools"),
+        SubCategory = L("miscellaneous"),
         Icon = "icon16/page_white_text.png"
     },
     onRun = function(client, arguments)
         local targetName = arguments[1]
         if not targetName then
-            client:ChatPrint("You must specify a player name.")
+            client:ChatPrint(L("mustSpecifyPlayer"))
             return
         end
 
@@ -26,7 +26,7 @@
         local caseclaims = lia.data.get("caseclaims", {}, true)
         local claim = caseclaims[steamID]
         if not claim then
-            client:ChatPrint("No claims found for the specified player.")
+            client:ChatPrint(L("noClaimsFound"))
             return
         end
 
@@ -39,7 +39,7 @@
             claimedForList = "None"
         end
 
-        local message = string.format("=== Claims for %s ===\nSteamID: %s\nAdmin Name: %s\nTotal Claims: %d\nLast Claim Date: %s\nTime Since Last Claim: %s\nClaimed For:\n%s", target:Nick(), steamID, claim.name, claim.claims, os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim), lia.time.TimeSince(claim.lastclaim), claimedForList)
+        local message = string.format("=== Claims for %s ===\n%s: %s\n%s: %s\n%s: %d\n%s: %s\n%s: %s\n%s:\n%s", target:Nick(), L("steamID"), steamID, L("adminName"), claim.name, L("totalClaims"), claim.claims, L("lastClaimDate"), os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim), L("timeSinceLastClaim"), lia.time.TimeSince(claim.lastclaim), L("claimedFor"), claimedForList)
         client:ChatPrint(message)
     end
 })
@@ -47,11 +47,11 @@
 lia.command.add("viewallclaims", {
     adminOnly = true,
     privilege = "View Claims",
-    desc = "Displays a summary table of claim data for all admins.",
+    desc = L("viewAllClaimsDesc"),
     onRun = function(client)
         local caseclaims = lia.data.get("caseclaims", {}, true)
         if not next(caseclaims) then
-            client:ChatPrint("No claims have been recorded yet.")
+            client:ChatPrint(L("noClaimsRecorded"))
             return
         end
 
@@ -80,27 +80,27 @@ lia.command.add("viewallclaims", {
 
         lia.util.CreateTableUI(client, "Admin Claims", {
             {
-                name = "SteamID",
+                name = L("steamID"),
                 field = "steamID"
             },
             {
-                name = "Admin Name",
+                name = L("adminName"),
                 field = "name"
             },
             {
-                name = "Total Claims",
+                name = L("totalClaims"),
                 field = "claims"
             },
             {
-                name = "Last Claim Date",
+                name = L("lastClaimDate"),
                 field = "lastclaim"
             },
             {
-                name = "Time Since Last Claim",
+                name = L("timeSinceLastClaim"),
                 field = "timeSinceLastClaim"
             },
             {
-                name = "Claimed For",
+                name = L("claimedFor"),
                 field = "claimedFor"
             }
         }, claimsData)
@@ -110,15 +110,15 @@ lia.command.add("viewallclaims", {
 lia.command.add("viewclaims", {
     adminOnly = true,
     privilege = "View Claims",
-    desc = "Prints detailed claim information for every admin to chat.",
+    desc = L("viewClaimsDesc"),
     onRun = function(client)
         local caseclaims = lia.data.get("caseclaims", {}, true)
         if not next(caseclaims) then
-            client:ChatPrint("No claims data available.")
+            client:ChatPrint(L("noClaimsData"))
             return
         end
 
-        client:ChatPrint("=== Admin Claims ===")
+        client:ChatPrint(L("adminClaimsHeader"))
         for steamID, claim in pairs(caseclaims) do
             local claimedForList = "None"
             if next(claim.claimedFor) then
@@ -128,7 +128,7 @@ lia.command.add("viewclaims", {
                 end
             end
 
-            local message = string.format("SteamID: %s\nAdmin Name: %s\nTotal Claims: %d\nLast Claim Date: %s\nTime Since Last Claim: %s\nClaimed For:\n%s\n-------------------------", steamID, claim.name, claim.claims, os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim), lia.time.TimeSince(claim.lastclaim), claimedForList)
+            local message = string.format("%s: %s\n%s: %s\n%s: %d\n%s: %s\n%s: %s\n%s:\n%s\n-------------------------", L("steamID"), steamID, L("adminName"), claim.name, L("totalClaims"), claim.claims, L("lastClaimDate"), os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim), L("timeSinceLastClaim"), lia.time.TimeSince(claim.lastclaim), L("claimedFor"), claimedForList)
             client:ChatPrint(message)
         end
     end

@@ -1,6 +1,5 @@
-﻿local MODULE = MODULE
-lia.command.add("doorsell", {
-    desc = "Sell a door you own and receive a refund based on the door's price.",
+﻿lia.command.add("doorsell", {
+    desc = L("doorsellDesc"),
     adminOnly = false,
     AdminStick = {
         Name = "Sell Door",
@@ -27,7 +26,7 @@ lia.command.add("doorsell", {
 })
 
 lia.command.add("admindoorsell", {
-    desc = "Admin command to sell a door on behalf of its owner and refund the owner.",
+    desc = L("admindoorsellDesc"),
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -57,7 +56,7 @@ lia.command.add("admindoorsell", {
 })
 
 lia.command.add("doortogglelock", {
-    desc = "Toggle a door's lock state between locked and unlocked.",
+    desc = L("doortogglelockDesc"),
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -96,7 +95,7 @@ lia.command.add("doortogglelock", {
 })
 
 lia.command.add("doorbuy", {
-    desc = "Purchase a door if it is available and you can afford it.",
+    desc = L("doorbuyDesc"),
     adminOnly = false,
     AdminStick = {
         Name = "Buy Door",
@@ -133,7 +132,7 @@ lia.command.add("doorbuy", {
 })
 
 lia.command.add("doortoggleownable", {
-    desc = "Toggle whether a door can be owned by players.",
+    desc = L("doortoggleownableDesc"),
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -157,7 +156,7 @@ lia.command.add("doortoggleownable", {
 })
 
 lia.command.add("doorresetdata", {
-    desc = "Reset door data to default settings.",
+    desc = L("doorresetdataDesc"),
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -196,7 +195,7 @@ lia.command.add("doorresetdata", {
 })
 
 lia.command.add("doortoggleenabled", {
-    desc = "Toggle door enabled state (active/inactive).",
+    desc = L("doortoggleenabledDesc"),
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -220,7 +219,7 @@ lia.command.add("doortoggleenabled", {
 })
 
 lia.command.add("doortogglehidden", {
-    desc = "Toggle the hidden state of a door.",
+    desc = L("doortogglehiddenDesc"),
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -248,7 +247,7 @@ lia.command.add("doortogglehidden", {
 })
 
 lia.command.add("doorsetprice", {
-    desc = "Set the price for a door.",
+    desc = L("doorsetpriceDesc"),
     syntax = "[number price]",
     adminOnly = true,
     privilege = "Manage Doors",
@@ -267,7 +266,7 @@ lia.command.add("doorsetprice", {
             door:setNetVar("price", price)
             MODULE:callOnDoorChildren(door, function(child) child:setNetVar("price", price) end)
             lia.log.add(client, "doorSetPrice", door, price)
-            client:notifyLocalized("doorPrice", lia.currency.get(price))
+            client:notifyLocalized("priceLabel", lia.currency.get(price))
             MODULE:SaveData()
         else
             client:notifyLocalized("doorNotValid")
@@ -276,7 +275,7 @@ lia.command.add("doorsetprice", {
 })
 
 lia.command.add("doorsettitle", {
-    desc = "Set the title for a door.",
+    desc = L("doorsettitleDesc"),
     syntax = "[string title]",
     adminOnly = true,
     privilege = "Manage Doors",
@@ -309,7 +308,7 @@ lia.command.add("doorsettitle", {
 })
 
 lia.command.add("doorsetparent", {
-    desc = "Designate the targeted door as a parent door for grouping child doors.",
+    desc = L("doorsetparentDesc"),
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -329,14 +328,13 @@ lia.command.add("doorsetparent", {
 })
 
 lia.command.add("doorsetchild", {
-    desc = "Set the targeted door as a child of the designated parent door.",
+    desc = L("doorsetchildDesc"),
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
         Name = "Set Door Child",
         TargetClass = "Door"
     },
-    ExtraFields = {},
     onRun = function(client)
         local door = client:getTracedEntity()
         if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
@@ -359,7 +357,7 @@ lia.command.add("doorsetchild", {
 })
 
 lia.command.add("doorremovechild", {
-    desc = "Remove a door from its parent or remove all child associations if it's a parent.",
+    desc = L("doorremovechildDesc"),
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -394,7 +392,7 @@ lia.command.add("doorremovechild", {
 })
 
 lia.command.add("savedoors", {
-    desc = "Save door data persistently.",
+    desc = L("savedoorsDesc"),
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -409,7 +407,7 @@ lia.command.add("savedoors", {
 })
 
 lia.command.add("doorinfo", {
-    desc = "Display information about the targeted door.",
+    desc = L("doorinfoDesc"),
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -436,7 +434,7 @@ lia.command.add("doorinfo", {
 })
 
 lia.command.add("dooraddfaction", {
-    desc = "Add a faction restriction to a door, allowing only specific factions to access it.",
+    desc = L("dooraddfactionDesc"),
     syntax = "[string faction]",
     adminOnly = true,
     privilege = "Manage Doors",
@@ -486,7 +484,7 @@ lia.command.add("dooraddfaction", {
 })
 
 lia.command.add("doorremovefaction", {
-    desc = "Remove a faction restriction from a door, or clear all restrictions.",
+    desc = L("doorremovefactionDesc"),
     syntax = "[string faction]",
     adminOnly = true,
     privilege = "Manage Doors",
@@ -536,7 +534,7 @@ lia.command.add("doorremovefaction", {
 })
 
 lia.command.add("doorsetclass", {
-    desc = "Set a class (job) restriction for a door.",
+    desc = L("doorsetclassDesc"),
     syntax = "[string class]",
     adminOnly = true,
     privilege = "Manage Doors",
@@ -580,7 +578,7 @@ lia.command.add("doorsetclass", {
 })
 
 lia.command.add("togglealldoors", {
-    desc = "Toggle the enabled state for all doors in the map.",
+    desc = L("togglealldoorsDesc"),
     adminOnly = true,
     privilege = "Manage Doors",
     onRun = function(client)

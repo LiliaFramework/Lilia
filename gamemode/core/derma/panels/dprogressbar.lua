@@ -2,7 +2,7 @@
 function PANEL:Init()
     self.StartTime = CurTime()
     self.EndTime = self.StartTime + 5
-    self.Text = "Action in progress"
+    self.Text = L("actionInProgress")
     self.BarColor = lia.config.get("Color")
     self.Fraction = 0
     self.GradientMat = Material("vgui/gradient-d")

@@ -31,9 +31,7 @@ MODULE.CAMIPrivileges = {
     },
 }
 
-if CLIENT then
-    lia.option.add("ChatShowTime", "Show Chat Timestamp", "Should chat show timestamp", false, nil, {
-        category = "Chat",
-        type = "Boolean"
-    })
-end
+lia.option.add("ChatShowTime", "Show Chat Timestamp", "Should chat show timestamp", false, nil, {
+    category = "Chat",
+    type = "Boolean"
+})

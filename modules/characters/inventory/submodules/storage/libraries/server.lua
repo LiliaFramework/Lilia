@@ -110,12 +110,12 @@ function MODULE:LoadData()
     self.loadedData = true
 end
 
-function MODULE:CanPlayerInteractItem(_, action, itemObject)
-    local PROHIBITED_ACTIONS = {
-        ["Equip"] = true,
-        ["EquipUn"] = true,
-    }
+local PROHIBITED_ACTIONS = {
+    ["Equip"] = true,
+    ["EquipUn"] = true,
+}
 
+function MODULE:CanPlayerInteractItem(_, action, itemObject)
     local inventory = lia.inventory.instances[itemObject.invID]
     if inventory and inventory.isStorage and PROHIBITED_ACTIONS[action] then return false, "forbiddenActionStorage" end
 end

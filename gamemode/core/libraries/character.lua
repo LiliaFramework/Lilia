@@ -562,7 +562,7 @@ if SERVER then
             _createTime = timeStamp,
             _lastJoinTime = timeStamp,
             _steamID = data.steamID,
-            _faction = data.faction or "Unknown",
+            _faction = data.faction or L("unknown"),
             _money = data.money,
             recognized_as = "",
             _data = data.data

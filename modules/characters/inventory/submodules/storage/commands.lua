@@ -1,7 +1,7 @@
 ﻿lia.command.add("storagelock", {
     privilege = "Lock Storage",
     adminOnly = true,
-    desc = "Locks or unlocks the storage entity you are looking at using a password. If no password is provided, it removes any existing lock.",
+    desc = L("storagelockDesc"),
     syntax = "[string password]",
     onRun = function(client, arguments)
         local entity = client:getTracedEntity()
@@ -26,7 +26,7 @@
 
 lia.command.add("trunk", {
     adminOnly = false,
-    desc = "Opens the trunk of a vehicle you are looking at if you are within range and the vehicle is suitable.",
+    desc = L("trunkOpenDesc"),
     syntax = nil,
     onRun = function(client)
         local entity = client:getTracedEntity()

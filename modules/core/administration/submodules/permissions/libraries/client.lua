@@ -28,10 +28,10 @@ function MODULE:HUDPaint()
             label = "Item: " .. (itemTable and itemTable.name or "Invalid")
         elseif ent.isProp and ent:isProp() and lia.option.get("espProps") then
             entityType = "Props"
-            label = "Prop Model: " .. (ent:GetModel() or "Unknown")
+            label = "Prop Model: " .. (ent:GetModel() or L("unknown"))
         elseif ESP_DrawnEntities[ent:GetClass()] and lia.option.get("espEntities") then
             entityType = "Entities"
-            label = "Entity Class: " .. (ent:GetClass() or "Unknown")
+            label = "Entity Class: " .. (ent:GetClass() or L("unknown"))
         end
 
         if not entityType then continue end

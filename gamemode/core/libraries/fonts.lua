@@ -406,21 +406,21 @@ if CLIENT then
     })
 
     lia.font.register("liaIconsSmall", {
-        font = "fontello",
+        font = "nsicons",
         size = 22,
         extended = true,
         weight = 500
     })
 
     lia.font.register("liaIconsMedium", {
-        font = "fontello",
+        font = "nsicons",
         extended = true,
         size = 28,
         weight = 500
     })
 
     lia.font.register("liaIconsBig", {
-        font = "fontello",
+        font = "nsicons",
         extended = true,
         size = 48,
         weight = 500

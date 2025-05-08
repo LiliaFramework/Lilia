@@ -17,8 +17,6 @@ local approach = math.Approach
 local LerpVector = LerpVector
 local FrameTime = FrameTime
 local RealTime = RealTime
-
-
 local LocalPlayer = LocalPlayer
 local IsValid = IsValid
 local isEntity = isentity

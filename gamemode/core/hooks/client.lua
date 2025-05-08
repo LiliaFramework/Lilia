@@ -31,27 +31,27 @@ local nextUpdate = 0
 local healthPercent = {
     {
         threshold = 0.2,
-        text = "Critical Condition",
+        text = L("criticalCondition"),
         color = Color(192, 57, 43)
     },
     {
         threshold = 0.4,
-        text = "Serious Injury",
+        text = L("seriousInjury"),
         color = Color(231, 76, 60)
     },
     {
         threshold = 0.6,
-        text = "Moderate Injury",
+        text = L("moderateInjury"),
         color = Color(255, 152, 0)
     },
     {
         threshold = 0.8,
-        text = "Minor Injury",
+        text = L("minorInjury"),
         color = Color(255, 193, 7)
     },
     {
         threshold = 1.0,
-        text = "Healthy",
+        text = L("healthyStatus"),
         color = Color(46, 204, 113)
     }
 }
@@ -356,7 +356,7 @@ function GM:HUDPaintBackground()
     lia.menu.drawAll()
     RenderEntities()
     self.BaseClass.PaintWorldTips(self.BaseClass)
-    if not lia.util.is64Bits() then draw.SimpleText("We recommend the use of the x86-64 Garry's Mod Branch for this server, consider swapping as soon as possible.", "liaSmallFont", ScrW() * 0.5, ScrH() * 0.97, Color(255, 255, 255, 10), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+    if not lia.util.is64Bits() then draw.SimpleText(L("switchTo64Bit"), "liaSmallFont", ScrW() * 0.5, ScrH() * 0.97, Color(255, 255, 255, 10), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
 end
 
 function GM:OnContextMenuOpen()

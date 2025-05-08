@@ -290,14 +290,8 @@ end
 hook.Add("CreateInformationButtons", "CreateInformationMenuCommands", function(pages)
     local client = LocalPlayer()
     table.insert(pages, {
-        name = "Commands",
+        name = "commandsTab",
         drawFunc = function(panel)
-            local char = client:getChar()
-            if not char then
-                panel:Add("DLabel"):SetText("No character found!"):Dock(TOP)
-                return
-            end
-
             local scroll = vgui.Create("DScrollPanel", panel)
             scroll:Dock(FILL)
             local iconLayout = vgui.Create("DIconLayout", scroll)
@@ -339,10 +333,10 @@ hook.Add("CreateInformationButtons", "CreateInformationMenuCommands", function(p
                         if hasDesc then
                             draw.SimpleText(commandText, "liaMediumFont", baseX, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
                             draw.SimpleText(cmdData.desc, "liaSmallFont", baseX, 45, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-                            draw.SimpleText(privilege or "None", "liaSmallFont", w - 20, 45, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+                            draw.SimpleText(privilege or L("none"), "liaSmallFont", w - 20, 45, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
                         else
                             draw.SimpleText(commandText, "liaMediumFont", baseX, h / 2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                            draw.SimpleText(privilege or "None", "liaSmallFont", w - 20, h / 2, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+                            draw.SimpleText(privilege or L("none"), "liaSmallFont", w - 20, h / 2, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
                         end
                     end
                 end

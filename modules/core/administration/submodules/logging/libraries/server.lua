@@ -90,7 +90,7 @@ function MODULE:OnPlayerInteractItem(client, action, item)
     if not item then return end
     local name = item.name
     if action == "use" then
-        lia.log.add(client, "itemUse", name)
+        lia.log.add(client, "use", name)
     elseif action == "drop" then
         lia.log.add(client, "itemDrop", name)
     elseif action == "take" then

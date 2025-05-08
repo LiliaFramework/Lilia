@@ -9,5 +9,9 @@ net.Receive("liaTeleportToEntity", function(_, ply)
     if not ply:hasPrivilege("Staff Permission — Teleport to Entity (Entity Tab)") then return end
     local pos = ent:GetPos() + Vector(0, 0, 50)
     ply:SetPos(pos)
-    ply:ChatPrint("Teleported to entity: " .. ent:GetClass())
+    ply:notifyLocalized(L("teleportedToEntity", ent:GetClass()))
 end)
+
+function MODULE:ShowHelp()
+    return false
+end

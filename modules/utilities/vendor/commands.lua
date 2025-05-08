@@ -1,9 +1,9 @@
 ﻿lia.command.add("restockvendor", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
-    desc = "Restocks all items for the vendor you are looking at to their default quantities.",
+    desc = L("restockVendorDesc"),
     AdminStick = {
-        Name = "Restock Selected Vendor",
+        Name = L("restockVendorStickName"),
         TargetClass = "lia_vendor"
     },
     onRun = function(client)
@@ -21,7 +21,7 @@
             client:notifyLocalized("vendorRestocked")
             lia.log.add(client, "restockvendor", target)
         else
-            client:notifyLocalized("vendorNotLookingAtValidVendor")
+            client:notifyLocalized("NotLookingAtValidVendor")
         end
     end
 })
@@ -29,7 +29,7 @@
 lia.command.add("restockallvendors", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
-    desc = "Restocks all items on every vendor on the map to their default quantities.",
+    desc = L("restockAllVendorsDesc"),
     onRun = function(client)
         local count = 0
         for _, vendor in ipairs(ents.FindByClass("lia_vendor")) do
@@ -49,13 +49,13 @@ lia.command.add("restockallvendors", {
 lia.command.add("resetallvendormoney", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
-    desc = "Sets every vendor’s money to the specified amount.",
+    desc = L("resetAllVendorMoneyDesc"),
     syntax = "[number amount]",
     AdminStick = {
-        Name = "Reset Money for All Vendors",
+        Name = L("resetAllVendorMoneyStickName"),
         TargetClass = "lia_vendor",
         ExtraFields = {
-            ["Amount"] = "text"
+            [L("resetAllVendorMoneyAmount")] = "text"
         }
     },
     onRun = function(client, arguments)
@@ -78,13 +78,13 @@ lia.command.add("resetallvendormoney", {
 lia.command.add("restockvendormoney", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
-    desc = "Sets the money of the vendor you’re looking at to the specified amount.",
+    desc = L("restockVendorMoneyDesc"),
     syntax = "[number amount]",
     AdminStick = {
-        Name = "Restock Money for Selected Vendor",
+        Name = L("restockVendorMoneyStickName"),
         TargetClass = "lia_vendor",
         ExtraFields = {
-            ["Amount"] = "text"
+            [L("restockVendorMoneyAmount")] = "text"
         }
     },
     onRun = function(client, arguments)
@@ -105,7 +105,7 @@ lia.command.add("restockvendormoney", {
                 client:notifyLocalized("vendorNoMoneyVariable")
             end
         else
-            client:notifyLocalized("vendorNotLookingAtValidVendor")
+            client:notifyLocalized("NotLookingAtValidVendor")
         end
     end
 })
@@ -113,7 +113,7 @@ lia.command.add("restockvendormoney", {
 lia.command.add("savevendors", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
-    desc = "Saves current vendor data to disk.",
+    desc = L("saveVendorsDesc"),
     onRun = function(client)
         MODULE:SaveData()
         client:notifyLocalized("vendorDataSaved")

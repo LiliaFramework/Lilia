@@ -500,7 +500,7 @@ hook.Add("PopulateConfigurationButtons", "PopulateOptions", function(pages)
     end
 
     pages[#pages + 1] = {
-        name = "Options",
+        name = "options",
         drawFunc = function(parent)
             parent:Clear()
             buildOptions(parent)

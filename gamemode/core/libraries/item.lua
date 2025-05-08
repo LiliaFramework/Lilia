@@ -51,8 +51,7 @@ local DefaultFunctions = {
       onCanRun = function(item) return IsValid(item.entity) end
    },
    giveForward = {
-      name = "Give Forward",
-      tip = "Directly give the item to the person in front of you",
+      tip = "giveForwardTip",
       icon = "icon16/arrow_up.png",
       onRun = function(item)
          local function canTransferItemsFromInventoryUsingGiveForward(_, action, _)

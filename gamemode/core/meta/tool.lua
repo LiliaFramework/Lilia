@@ -10,7 +10,7 @@ function ToolGunMeta:Create()
     object.ServerConVar = {}
     object.Objects = {}
     object.Stage = 0
-    object.Message = "start"
+    object.Message = L("start")
     object.LastMessage = 0
     object.AllowedCVar = 0
     return object

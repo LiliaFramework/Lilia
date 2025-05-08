@@ -2,7 +2,7 @@
     local bagItemID = inventory:getData("item")
     if not bagItemID then return end
     local bagItem = lia.item.instances[bagItemID]
-    if not bagItem then return false, "Invalid bag item" end
+    if not bagItem then return false, L("invalidBagItem") end
     local parentInv = lia.inventory.instances[bagItem.invID]
     if parentInv == inventory then return end
     local contextWithBagInv = {}
@@ -11,7 +11,7 @@
     end
 
     contextWithBagInv.bagInv = inventory
-    return parentInv and parentInv:canAccess(action, contextWithBagInv) or false, "noAccess"
+    return parentInv and parentInv:canAccess(action, contextWithBagInv) or false, L("noAccess")
 end
 
 local function CanNotTransferBagIntoBag(_, action, context)

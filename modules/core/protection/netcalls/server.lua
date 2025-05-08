@@ -5,7 +5,7 @@ for _, v in pairs(KnownExploits) do
         if client.nextExploitNotify > CurTime() then return end
         client.nextExploitNotify = CurTime() + 2
         for _, p in player.Iterator() do
-            if p:isStaffOnDuty() then p:notify(client:Name() .. " (" .. client:SteamID64() .. ") may be attempting to run exploits! Used " .. tostring(v)) end
+            if p:isStaffOnDuty() then p:notifyLocalized("exploitAttempt", client:Name(), client:SteamID64(), tostring(v)) end
         end
     end)
 end
@@ -18,18 +18,18 @@ end
 
 local function ApplyPunishment(client, infraction, kick, ban, time)
     local bantime = time or 0
-    if kick then client:Kick("Kicked for " .. infraction .. ".") end
-    if ban then client:Ban(bantime, "Banned for " .. infraction .. ".") end
+    if kick then client:Kick(L("kickedForInfractionPeriod", infraction)) end
+    if ban then client:Ban(bantime, L("bannedForInfractionPeriod", infraction)) end
 end
 
 net.Receive("CheckSeed", function(_, client)
     local sentSteamID = net.ReadString()
     if not sentSteamID or sentSteamID == "" then
-        NotifyAdmin("The SteamID of player " .. client:Name() .. " (" .. client:SteamID64() .. ") wasn't received properly. This can signify tampering with net messages.")
+        NotifyAdmin(L("steamIDMissing", client:Name(), client:SteamID64()))
         return
     end
 
-    if client:SteamID64() ~= sentSteamID then NotifyAdmin("The SteamID of player " .. client:Name() .. " (" .. client:SteamID64() .. ") is different than the saved one (" .. sentSteamID .. ")") end
+    if client:SteamID64() ~= sentSteamID then NotifyAdmin(L("steamIDMismatch", client:Name(), client:SteamID64(), sentSteamID)) end
 end)
 
 net.Receive("CheckHack", function(_, client) ApplyPunishment(client, "Hacking", true, true, 0) end)

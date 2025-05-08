@@ -12,14 +12,8 @@ local map = {
 for name, funcs in pairs(map) do
     local base = panel[name]
     if #funcs == 2 then
-        panel[name] = function(self, a, b, ...)
-            print("valldx:", name, a, b)
-            return base(self, funcs[1](a), funcs[2](b), ...)
-        end
+        panel[name] = function(self, a, b, ...) return base(self, funcs[1](a), funcs[2](b), ...) end
     else
-        panel[name] = function(self, a, ...)
-            print("valldx:", name, a)
-            return base(self, funcs[1](a), ...)
-        end
+        panel[name] = function(self, a, ...) return base(self, funcs[1](a), ...) end
     end
 end

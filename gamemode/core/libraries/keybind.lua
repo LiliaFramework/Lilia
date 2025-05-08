@@ -290,7 +290,7 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
         if allowEdit then
             resetAllBtn = container:Add("DButton")
             resetAllBtn:Dock(TOP)
-            resetAllBtn:SetText("Reset All Keybinds")
+            resetAllBtn:SetText(L("resetAllKeybinds"))
             resetAllBtn:SetTall(30)
         end
 
@@ -389,7 +389,7 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
     end
 
     table.insert(pages, {
-        name = "Keybinds",
+        name = L("keybinds"),
         drawFunc = function(parent)
             parent:Clear()
             buildKeybinds(parent)

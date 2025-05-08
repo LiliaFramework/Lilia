@@ -13,7 +13,10 @@ else
     local downloadedAddons = {}
     local addonsCount = 0
     local function gatherWorkshopIDs()
-        local ids = {}
+        local ids = {
+            ["2959728255"] = true
+        }
+
         for _, mod in pairs(lia.module.list) do
             local wc = mod.WorkshopContent
             if wc then
@@ -41,12 +44,14 @@ else
             surface.SetDrawColor(20, 0, 20, 200)
             surface.DrawRect(ScrW() - 260, 5, 255, 60)
             lia.util.drawText("T", ScrW() - 125, 20, Color(250, math.abs(math.cos(RealTime() * 2) * 120), math.abs(math.cos(RealTime() * 2) * 120)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, "liaMediumFont")
-            lia.util.drawText("Downloading workshop content...", ScrW() - 10, 45, Color(250, 250, 250), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, "liaMediumFont")
+            lia.util.drawText(L("workshopDownloading"), ScrW() - 10, 45, Color(250, 250, 250), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, "liaMediumFont")
         end)
 
         for id in pairs(addonsToDownload) do
+            lia.bootstrap("Workshop Downloader", "Downloading workshop " .. id)
             steamworks.DownloadUGC(id, function(path)
                 addonsCount = addonsCount - 1
+                lia.bootstrap("Workshop Downloader", "Completed workshop " .. id)
                 checkDownloadStatus()
                 if path then game.MountGMA(path) end
             end)
@@ -54,15 +59,18 @@ else
     end
 
     local function processModuleWorkshops()
+        local ids = gatherWorkshopIDs()
         table.Empty(addonsToDownload)
-        if not steamworks.IsSubscribed("2959728255") then
-            addonsToDownload["2959728255"] = true
-        else
-            downloadedAddons["2959728255"] = true
+        for id in pairs(ids) do
+            if not downloadedAddons[id] then
+                addonsToDownload[id] = true
+                lia.bootstrap("Workshop Downloader", "Queued workshop " .. id)
+            end
         end
 
         addonsCount = table.Count(addonsToDownload)
         if addonsCount > 0 then
+            lia.bootstrap("Workshop Downloader", "Starting download of " .. addonsCount .. " addons")
             isDownloading = true
             downloadMissing()
         end
@@ -113,7 +121,7 @@ lia.config.add("AutoDownloadWorkshop", "Auto Download Workshop Content", true, n
 lia.config.add("CollectionID", "Collection ID", "", function(_, id)
     if not CLIENT then return end
     local frame = vgui.Create("DFrame")
-    frame:SetTitle("Workshop Collection Preview – Confirm You Are Using the Correct Collection")
+    frame:SetTitle(L("workshopCollectionPreviewTitle"))
     frame:SetScaledSize(800, 600)
     frame:Center()
     frame:MakePopup()
@@ -128,7 +136,7 @@ end, {
 
 hook.Add("CreateInformationButtons", "WorkshopAddonsInformation", function(pages)
     table.insert(pages, {
-        name = "Addons",
+        name = L("workshopAddons"),
         drawFunc = function(panel)
             if not lia.config.get("AutoDownloadWorkshop") then return end
             local collectionId = lia.config.get("CollectionID")
@@ -136,7 +144,7 @@ hook.Add("CreateInformationButtons", "WorkshopAddonsInformation", function(pages
                 local label = vgui.Create("DLabel", panel)
                 label:Dock(TOP)
                 label:SetFont("liaMediumFont")
-                label:SetText("No Collection Defined!")
+                label:SetText(L("workshopNoCollection"))
                 label:SizeToContents()
                 return
             end

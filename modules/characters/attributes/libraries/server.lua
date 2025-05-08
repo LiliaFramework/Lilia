@@ -136,5 +136,3 @@ net.Receive("ChangeAttribute", function(_, client)
         client:notifyError(L("invalidMode"))
     end
 end)
-
-

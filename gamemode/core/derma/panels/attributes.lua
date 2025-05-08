@@ -122,7 +122,7 @@ end
 vgui.Register("liaAttribBar", PANEL, "DPanel")
 local PANEL = {}
 function PANEL:Init()
-    self.title = self:addLabel("attributes")
+    self.title = self:addLabel(L("attributes"))
     self.title:SetTextColor(color_white)
     self.leftLabel = self:addLabel(L("pointsLeft"))
     self.leftLabel:SetFont("liaCharSubTitleFont")

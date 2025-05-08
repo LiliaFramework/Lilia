@@ -24,13 +24,3 @@ function MODULE:GetDefaultCharDesc(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.GetDefaultDesc then info:GetDefaultDesc(client) end
 end
-
-function MODULE:DrawCharInfo(client, _, info)
-    if not lia.config.get("ClassDisplay", true) then return end
-    local charClass = client:getClassData()
-    if charClass then
-        local classColor = charClass.color or Color(255, 255, 255)
-        local className = L(charClass.name) or L("undefinedClass")
-        info[#info + 1] = {className, classColor}
-    end
-end

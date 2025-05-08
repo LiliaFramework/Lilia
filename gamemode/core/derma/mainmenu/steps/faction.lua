@@ -1,6 +1,6 @@
 ﻿local PANEL = {}
 function PANEL:Init()
-    self.title = self:addLabel("Select a faction")
+    self.title = self:addLabel(L("selectFaction"))
     self.faction = self:Add("DComboBox")
     self.faction:SetFont("liaCharButtonFont")
     self.faction:Dock(TOP)
@@ -14,7 +14,7 @@ function PANEL:Init()
 
     self.faction:SetTextColor(color_white)
     self.faction.OnSelect = function(_, _, _, id) self:onFactionSelected(lia.faction.teams[id]) end
-    self.desc = self:addLabel("desc")
+    self.desc = self:addLabel(L("factionDescription"))
     self.desc:DockMargin(0, 8, 0, 0)
     self.desc:SetFont("liaCharSubTitleFont")
     self.desc:SetWrap(true)

@@ -3,12 +3,12 @@ MODULE.OOCBans = MODULE.OOCBans or {}
 lia.command.add("banooc", {
     adminOnly = true,
     privilege = "Ban OOC",
-    desc = "Bans the specified player from using out‑of‑character chat.",
+    desc = L("banOOCCommandDesc"),
     syntax = "[string charname]",
     AdminStick = {
-        Name = "Ban OOC",
-        Category = "Moderation Tools",
-        SubCategory = "OOC",
+        Name = L("banOOCCommandName"),
+        Category = L("moderationTools"),
+        SubCategory = L("oocCategory"),
         Icon = "icon16/sound_mute.png"
     },
     onRun = function(client, arguments)
@@ -19,19 +19,19 @@ lia.command.add("banooc", {
         end
 
         MODULE.OOCBans[target:SteamID64()] = true
-        client:notify(target:Name() .. " has been banned from OOC.")
+        client:notify(target:Name() .. " " .. L("hasBeenBannedFromOOC"))
     end
 })
 
 lia.command.add("unbanooc", {
     adminOnly = true,
     privilege = "Unban OOC",
-    desc = "Unbans the specified player from out‑of‑character chat.",
+    desc = L("unbanOOCCommandDesc"),
     syntax = "[string charname]",
     AdminStick = {
-        Name = "Unban OOC",
-        Category = "Moderation Tools",
-        SubCategory = "OOC",
+        Name = L("unbanOOCCommandName"),
+        Category = L("moderationTools"),
+        SubCategory = L("oocCategory"),
         Icon = "icon16/sound.png"
     },
     onRun = function(client, arguments)
@@ -42,25 +42,25 @@ lia.command.add("unbanooc", {
         end
 
         MODULE.OOCBans[target:SteamID64()] = nil
-        client:notify(target:Name() .. " has been unbanned from OOC.")
+        client:notify(target:Name() .. " " .. L("hasBeenUnbannedFromOOC"))
     end
 })
 
 lia.command.add("blockooc", {
     superAdminOnly = true,
     privilege = "Block OOC",
-    desc = "Toggles a global block on all out‑of‑character chat.",
+    desc = L("blockOOCCommandDesc"),
     onRun = function(client)
         local blocked = GetGlobalBool("oocblocked", false)
         SetGlobalBool("oocblocked", not blocked)
-        client:notify(blocked and "Unlocked OOC!" or "Blocked OOC!")
+        client:notify(blocked and L("unlockedOOC") or L("blockedOOC"))
     end
 })
 
 lia.command.add("clearchat", {
     adminOnly = true,
     privilege = "Clear Chat",
-    desc = "Clears chat for all players.",
+    desc = L("clearChatCommandDesc"),
     onRun = function()
         for _, ply in player.Iterator() do
             ply:ConCommand("fixchatplz")

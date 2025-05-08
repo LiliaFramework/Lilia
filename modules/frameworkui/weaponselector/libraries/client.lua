@@ -9,7 +9,6 @@ local IsValid = IsValid
 local tonumber = tonumber
 local FrameTime = FrameTime
 local Lerp = Lerp
-
 local CurTime = CurTime
 local ipairs = ipairs
 local LocalPlayer = LocalPlayer

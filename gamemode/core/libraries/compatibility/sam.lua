@@ -107,7 +107,7 @@ end
 lia.command.add("cleardecals", {
     adminOnly = true,
     privilege = "Clear Decals",
-    desc = "Clears all decals (blood, bullet holes, etc.) for every player.",
+    desc = L("cleardecalsDesc"),
     onRun = function()
         for _, v in player.Iterator() do
             v:ConCommand("r_cleardecals")
@@ -118,17 +118,16 @@ lia.command.add("cleardecals", {
 lia.command.add("playtime", {
     adminOnly = false,
     privilege = "View Own Playtime",
-    desc = "Displays your total playtime on the server.",
+    desc = L("playtimeDesc"),
     onRun = function(client)
         local steamID = client:SteamID64()
-        local query = "SELECT play_time FROM sam_players WHERE steamid = " .. SQLStr(steamID) .. ";"
-        local result = sql.QueryRow(query)
+        local result = sql.QueryRow("SELECT play_time FROM sam_players WHERE steamid = " .. SQLStr(steamID) .. ";")
         if result then
-            local playTimeInSeconds = tonumber(result.play_time) or 0
-            local hours = math.floor(playTimeInSeconds / 3600)
-            local minutes = math.floor((playTimeInSeconds % 3600) / 60)
-            local seconds = playTimeInSeconds % 60
-            client:ChatPrint(L("playtimeYour", hours, minutes, seconds))
+            local secs = tonumber(result.play_time) or 0
+            local h = math.floor(secs / 3600)
+            local m = math.floor((secs % 3600) / 60)
+            local s = secs % 60
+            client:ChatPrint(L("playtimeYour", h, m, s))
         else
             client:ChatPrint(L("playtimeError"))
         end
@@ -138,32 +137,31 @@ lia.command.add("playtime", {
 lia.command.add("plygetplaytime", {
     adminOnly = true,
     privilege = "View Playtime",
-    desc = "Shows the total playtime of the specified character.",
     syntax = "[string charname]",
     AdminStick = {
         Name = L("adminStickGetPlayTimeName"),
-        Category = L("Moderation Tools"),
-        SubCategory = L("misc"),
+        Category = L("displayStaffCommandsDesc"),
+        SubCategory = L("misc"), 
         Icon = "icon16/time.png"
     },
-    onRun = function(client, arguments)
-        local targetName = arguments[1]
-        if not targetName then
+    desc = L("plygetplaytimeDesc"),
+    onRun = function(client, args)
+        if not args[1] then
             client:notifyLocalized("specifyPlayer")
             return
         end
 
-        local target = lia.util.findPlayer(client, targetName)
-        if not target or not IsValid(target) then
+        local target = lia.util.findPlayer(client, args[1])
+        if not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
         end
 
-        local playTimeInSeconds = target:sam_get_play_time()
-        local hours = math.floor(playTimeInSeconds / 3600)
-        local minutes = math.floor((playTimeInSeconds % 3600) / 60)
-        local seconds = playTimeInSeconds % 60
-        client:ChatPrint(L("playtimeFor", target:Nick(), hours, minutes, seconds))
+        local secs = target:sam_get_play_time()
+        local h = math.floor(secs / 3600)
+        local m = math.floor((secs % 3600) / 60)
+        local s = secs % 60
+        client:ChatPrint(L("playtimeFor", target:Nick(), h, m, s))
     end
 })
 

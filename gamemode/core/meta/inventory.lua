@@ -609,7 +609,7 @@ if SERVER then
                     error = reason
                 })
             else
-                return d:reject(tostring(reason or "noAccess"))
+                return d:reject(tostring(reason or L("noAccess")))
             end
         end
 

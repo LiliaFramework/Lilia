@@ -111,7 +111,7 @@ function PANEL:setActive(state)
                 for commandName, commandData in SortedPairs(self.commands) do
                     if not tobool(commandName:find(text:sub(2))) then continue end
                     local commandButton = self.commandList:Add("DButton")
-                    commandButton:SetText("/" .. commandName .. " - " .. (commandData.desc or "No description"))
+                    commandButton:SetText("/" .. commandName .. " - " .. (commandData.desc or L("noDesc")))
                     commandButton:Dock(TOP)
                     commandButton:DockMargin(0, 0, 0, 2)
                     commandButton:SetTall(20)

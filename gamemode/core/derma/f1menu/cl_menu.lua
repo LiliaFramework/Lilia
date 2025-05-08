@@ -60,7 +60,7 @@ function PANEL:Init()
     end
 
     self:MakePopup()
-    self:setActiveTab("Status")
+    self:setActiveTab(L("status"))
 end
 
 function PANEL:addTab(name, callback, uniqueID)

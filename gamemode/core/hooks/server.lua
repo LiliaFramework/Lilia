@@ -104,7 +104,7 @@ end
 function GM:CanItemBeTransfered(item, curInv, inventory)
     if item.isBag and curInv ~= inventory and item.getInv and item:getInv() and table.Count(item:getInv():getItems()) > 0 then
         local character = lia.char.loaded[curInv.client]
-        character:getPlayer():notifyError("You can't transfer a backpack that has items inside of it.")
+        character:getPlayer():notifyError(L("forbiddenActionStorage"))
         return false
     end
 
@@ -116,8 +116,8 @@ end
 
 function GM:CanPlayerInteractItem(client, action, item)
     action = string.lower(action)
-    if not client:Alive() then return false, "You can't use items while dead" end
-    if client:getLocalVar("ragdoll", false) then return false, "You can't use items while ragdolled." end
+    if not client:Alive() then return false, L("forbiddenActionStorage") end
+    if client:getLocalVar("ragdoll", false) then return false, L("forbiddenActionStorage") end
     if action == "drop" then
         if hook.Run("CanPlayerDropItem", client, item) ~= false then
             if not client.dropDelay then
@@ -125,7 +125,7 @@ function GM:CanPlayerInteractItem(client, action, item)
                 timer.Create("DropDelay." .. client:SteamID64(), lia.config.get("DropDelay"), 1, function() if IsValid(client) then client.dropDelay = nil end end)
                 return true
             else
-                client:notifyWarning("You need to wait before dropping something again!")
+                client:notifyWarning(L("waitDrop"))
                 return false
             end
         else
@@ -140,7 +140,7 @@ function GM:CanPlayerInteractItem(client, action, item)
                 timer.Create("TakeDelay." .. client:SteamID64(), lia.config.get("TakeDelay"), 1, function() if IsValid(client) then client.takeDelay = nil end end)
                 return true
             else
-                client:notifyWarning("You need to wait before picking something up again!")
+                client:notifyWarning(L("waitPickup"))
                 return false
             end
         else
@@ -155,7 +155,7 @@ function GM:CanPlayerInteractItem(client, action, item)
                 timer.Create("EquipDelay." .. client:SteamID64(), lia.config.get("EquipDelay"), 1, function() if IsValid(client) then client.equipDelay = nil end end)
                 return true
             else
-                client:notifyWarning("You need to wait before equipping something again!")
+                client:notifyWarning(L("waitEquip"))
                 return false
             end
         else
@@ -170,7 +170,7 @@ function GM:CanPlayerInteractItem(client, action, item)
                 timer.Create("UnequipDelay." .. client:SteamID64(), lia.config.get("UnequipDelay"), 1, function() if IsValid(client) then client.unequipDelay = nil end end)
                 return true
             else
-                client:notifyWarning("You need to wait before unequipping something again!")
+                client:notifyWarning(L("waitUnequip"))
                 return false
             end
         else
@@ -182,7 +182,7 @@ end
 function GM:CanPlayerEquipItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.equipDelay ~= nil then
-        client:notifyWarning("You need to wait before equipping something again!")
+        client:notifyWarning(L("waitEquip"))
         return false
     elseif inventory and (inventory.isBag or inventory.isExternalInventory) then
         client:notifyLocalized("forbiddenActionStorage")
@@ -193,7 +193,7 @@ end
 function GM:CanPlayerTakeItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.takeDelay ~= nil then
-        client:notifyWarning("You need to wait before picking something up again!")
+        client:notifyWarning(L("waitPickup"))
         return false
     elseif inventory and (inventory.isBag or inventory.isExternalInventory) then
         client:notifyLocalized("forbiddenActionStorage")
@@ -210,7 +210,7 @@ end
 function GM:CanPlayerDropItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.dropDelay ~= nil then
-        client:notifyWarning("You need to wait before dropping something again!")
+        client:notifyWarning(L("waitDrop"))
         return false
     elseif item.isBag and item:getInv() then
         local items = item:getInv():getItems()
@@ -226,16 +226,16 @@ function GM:CanPlayerDropItem(client, item)
     end
 end
 
-function GM:PlayerSay(client, message)
-    local logTypeMap = {
-        ooc = "chatOOC",
-        looc = "chatLOOC"
-    }
+local logTypeMap = {
+    ooc = "chatOOC",
+    looc = "chatLOOC"
+}
 
+function GM:PlayerSay(client, message)
     local chatType, message, anonymous = lia.chat.parse(client, message, true)
     if chatType == "ic" and lia.command.parse(client, message) then return "" end
     if utf8.len(message) > lia.config.get("MaxChatLength") then
-        client:notifyWarning("Your message is too long and has not been sent.")
+        client:notifyWarning(L("tooLongMessage"))
         return ""
     end
 

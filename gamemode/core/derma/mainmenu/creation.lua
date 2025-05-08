@@ -41,10 +41,10 @@ function PANEL:canCreateCharacter()
         if lia.faction.hasWhitelist(team.index) then valid[#valid + 1] = team.index end
     end
 
-    if #valid == 0 then return false, "You are unable to join any factions" end
+    if #valid == 0 then return false, L("unableToJoinFactions") end
     self.validFactions = valid
     local maxChars = hook.Run("GetMaxPlayerChar", LocalPlayer()) or lia.config.get("MaxCharacters", 5)
-    if lia.characters and #lia.characters >= maxChars then return false, "You have reached the maximum number of characters" end
+    if lia.characters and #lia.characters >= maxChars then return false, L("maxCharactersReached") end
     local ok, reason = hook.Run("ShouldMenuButtonShow", "create")
     if ok == false then return false, reason end
     return true
@@ -78,7 +78,7 @@ function PANEL:onFinish()
 
     timer.Create("liaFailedToCreate", 60, 1, function()
         if not IsValid(self) or not self.creating then return end
-        fail("unknownError")
+        fail(L("unknownError"))
     end)
 end
 
@@ -267,7 +267,7 @@ function PANEL:Init()
     self.curStep = 0
     self.context = {}
     self:configureSteps()
-    if #self.steps == 0 then return self:showError("No character creation steps have been set up") end
+    if #self.steps == 0 then return self:showError("noCharacterSteps") end
     self:nextStep()
     timer.Simple(0.5, function() hook.Run("ModifyCharacterModel", self.model:GetEntity()) end)
 end

@@ -190,7 +190,7 @@ function PANEL:createStartButton()
     if clientChar then
         table.insert(buttonsData, {
             id = "return",
-            text = L("returnLabel"),
+            text = L("return"),
             doClick = function() self:Remove() end
         })
     end
@@ -204,9 +204,9 @@ function PANEL:createStartButton()
         btn:SetText(string.upper(data.text))
         btn.DoClick = data.doClick
         btn.OnCursorEntered = function() surface.PlaySound("ui/hover.wav") end
-        local old = btn.SetPos
+        local oldSetPos = btn.SetPos
         btn.SetPos = function(b, nx, ny)
-            old(b, nx, ny)
+            oldSetPos(b, nx, ny)
             if IsValid(self) then self:UpdateLogoPosition() end
         end
 
@@ -241,12 +241,10 @@ function PANEL:addTab(name, callback, justClick, height)
     local btn = self.tabs:Add("liaMediumButton")
     local label = L(name .. "Label"):upper()
     btn:SetText(label)
-    local font = btn:GetFont()
-    surface.SetFont(font)
+    surface.SetFont(btn:GetFont())
     local textW, textH = surface.GetTextSize(label)
-    local paddingX, paddingY = 20, 10
-    btn:SetWide(textW + paddingX * 2)
-    btn:SetTall(height or textH + paddingY * 2)
+    btn:SetWide(textW + 40)
+    btn:SetTall(height or textH + 20)
     if justClick then
         if isfunction(callback) then btn.DoClick = function() callback(self) end end
         return btn
@@ -338,31 +336,31 @@ function PANEL:updateSelectedCharacter()
     if not chars or #chars == 0 then return end
     self.currentIndex = self.currentIndex or 1
     local sel = chars[self.currentIndex] or chars[1]
-    local char = lia.char.loaded[sel]
+    local character = lia.char.loaded[sel]
     if IsValid(self.infoFrame) then self.infoFrame:Remove() end
-    self:createSelectedCharacterInfoPanel(char)
-    self:updateModelEntity(char)
+    self:createSelectedCharacterInfoPanel(character)
+    self:updateModelEntity(character)
 end
 
 function PANEL:createSelectedCharacterInfoPanel(character)
     if not character then return end
-    local info = {L("nameLabel") .. ": " .. (character:getName() or ""), L("descriptionLabel") .. ":", character:getDesc() or "", L("factionLabel") .. ": " .. (team.GetName(character:getFaction()) or "")}
+    local info = {L("name") .. ": " .. (character:getName() or ""), L("desc") .. ":", character:getDesc() or "", L("faction") .. ": " .. (team.GetName(character:getFaction()) or "")}
     if character:getClass() then
         local cls = lia.class.list[character:getClass()]
-        if cls and cls.name then table.insert(info, L("classLabel") .. ": " .. cls.name) end
+        if cls and cls.name then table.insert(info, L("class") .. ": " .. cls.name) end
     end
 
     table.insert(info, L("moneyLabel") .. ": " .. lia.currency.get(character:getMoney()))
     hook.Run("LoadMainMenuInformation", info, character)
     self.infoFrame = self:Add("SemiTransparentDFrame")
     self.infoFrame:SetSize(ScrW() * 0.25, ScrH() * 0.45)
-    self.infoFrame:SetPos(ScrW() - ScrW() * 0.25 - 50, ScrH() * 0.25)
+    self.infoFrame:SetPos(ScrW() * 0.75 - 50, ScrH() * 0.25)
     self.infoFrame:SetTitle("")
     self.infoFrame:SetDraggable(false)
     self.infoFrame:ShowCloseButton(false)
     local scroll = vgui.Create("DScrollPanel", self.infoFrame)
     scroll:Dock(FILL)
-    for _, v in ipairs(info) do
+    for _, text in ipairs(info) do
         local lbl = scroll:Add("DLabel")
         lbl:Dock(TOP)
         lbl:DockMargin(10, 10, 10, 0)
@@ -370,7 +368,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         lbl:SetWrap(true)
         lbl:SetAutoStretchVertical(true)
         lbl:SetTextColor(Color(255, 255, 255))
-        lbl:SetText(v)
+        lbl:SetText(text)
         lbl:SizeToContentsY()
     end
 
@@ -385,7 +383,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     local topY = padding / 2
     local bottomY = frameH - btnH - padding
     local selectBtn = vgui.Create("liaSmallButton", btnCon)
-    selectBtn:SetSize(btnW, btnH + 0)
+    selectBtn:SetSize(btnW, btnH)
     selectBtn:SetPos(xPos, topY)
     local clientChar = LocalPlayer().getChar and LocalPlayer():getChar()
     local selectText = L("selectCharacter")
@@ -435,7 +433,8 @@ function PANEL:updateModelEntity(character)
     local pos, ang = hook.Run("GetMainMenuPosition", character)
     if not pos or not ang then
         local spawns = ents.FindByClass("info_player_start")
-        pos, ang = #spawns > 0 and spawns[1]:GetPos() or Vector(), #spawns > 0 and spawns[1]:GetAngles() or Angle()
+        pos = #spawns > 0 and spawns[1]:GetPos() or Vector()
+        ang = #spawns > 0 and spawns[1]:GetAngles() or Angle()
     end
 
     ang.pitch, ang.roll = 0, 0

@@ -127,7 +127,7 @@ local function OpenPlayerModelUI(target)
     edit:Dock(BOTTOM)
     edit:SetText(target:GetModel())
     local button = vgui.Create("DButton", frame)
-    button:SetText(L("Change"))
+    button:SetText(L("change"))
     button:Dock(TOP)
     function button:DoClick()
         local txt = edit:GetValue()
@@ -187,7 +187,7 @@ local function OpenReasonUI(target, cmd)
 
     local button = vgui.Create("DButton", frame)
     button:Dock(BOTTOM)
-    button:SetText(L("Change"))
+    button:SetText(L("change"))
     function button:DoClick()
         local txt = edit:GetValue()
         local identifier = GetIdentifier(target)
@@ -350,7 +350,7 @@ local function IncludeCharacterManagement(target, AdminMenu, submenus)
     local char = target:getChar()
     if char and factionMenuAllowed then
         local currentFactionID = char:getFaction()
-        local currentFactionName = "Unknown"
+        local currentFactionName = L("unknown")
         if currentFactionID then
             for _, fac in pairs(lia.faction.teams) do
                 if fac.index == currentFactionID then

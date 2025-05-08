@@ -1,5 +1,4 @@
-﻿
-local function getGameList()
+﻿local function getGameList()
     local games = engine.GetGames()
     table.insert(games, {
         title = "All",
@@ -89,7 +88,7 @@ registerContentType("sound", function(icon) icon:SetMaterial("icon16/sound.png")
             icn:Remove()
             hook.Run("SpawnlistContentChanged", icn)
         end
-    },
+    }
 })
 
 registerContentType("material", function(icon, path)
@@ -127,7 +126,7 @@ end, {
             icn:Remove()
             hook.Run("SpawnlistContentChanged", icn)
         end
-    },
+    }
 })
 
 local function onFileNodeSelected(self, _, title)
@@ -146,7 +145,7 @@ local function onFileNodeSelected(self, _, title)
         local page = (self.Parent or self):AddNode((self.Text or self:GetText()) .. " (" .. newOff .. " - " .. newOff + limit .. ")")
         page.ViewPanel, page.pnlContent, page.Parent, page.Text = view, pnl, self.Parent, self.Text or self:GetText()
         page.offset, page.BasePath, page.PathID, page.Extensions, page.SpawnType = newOff, path, pathID, self.Extensions, self.SpawnType
-        page.OnNodeSelected = function(_, sel) onFileNodeSelected(page, sel, title) end
+        page.OnNodeSelected = function() onFileNodeSelected(page) end
     end
 
     for i = offset + 1, math.min(#files, offset + limit) do
@@ -174,7 +173,7 @@ local function addBrowseContent(node, title, icon, folder, pathID, exts, spawnTy
     n:SetIcon(icon)
     n.ViewPanel, n.pnlContent = view, pnl
     n.BasePath, n.PathID, n.Extensions, n.SpawnType = folder, pathID, exts, spawnType
-    n.OnNodeSelected = function(_, sel) onFileNodeSelected(n, sel, title) end
+    n.OnNodeSelected = onFileNodeSelected
 end
 
 hook.Add("PopulateContent", "ExtendedSpawnmenuSounds", function(pnlContent, tree)
@@ -419,15 +418,16 @@ end)
 local function addRecursive(pnl, folder)
     local files, folders = file.Find(folder .. "*", "MOD")
     for _, v in ipairs(files) do
-        if not v:match("%.mdl$") then continue end
-        local func = spawnmenu.GetContentType("model")
-        if func then
-            local m = folder .. v
-            m = m:match("models/.*") or m
-            m = m:gsub("models/models/", "models/")
-            func(pnl, {
-                model = m
-            })
+        if v:match("%.mdl$") then
+            local func = spawnmenu.GetContentType("model")
+            if func then
+                local m = folder .. v
+                m = m:match("models/.*") or m
+                m = m:gsub("models/models/", "models/")
+                func(pnl, {
+                    model = m
+                })
+            end
         end
     end
 
@@ -449,20 +449,21 @@ local function countRecursive(folder)
     return cnt
 end
 
-hook.Add("PopulateContent", "LegacyAddonProps", function(pnlContent, tree, node)
+hook.Add("PopulateContent", "LegacyAddonProps", function(pnlContent, _, node)
     if not IsValid(node) or not IsValid(pnlContent) then return end
     local view = vgui.Create("ContentContainer", pnlContent)
     view:SetVisible(false)
     local legacy = node:AddNode("Addons - Legacy", "icon16/folder_database.png")
     for _, a in ipairs(file.Find("addons/*", "MOD")) do
-        if not file.IsDir("addons/" .. a .. "/models/", "MOD") then continue end
-        local c = countRecursive("addons/" .. a .. "/models/")
-        if c > 0 then
-            local child = legacy:AddNode(a .. " (" .. c .. ")", "icon16/bricks.png")
-            child.DoClick = function()
-                view:Clear(true)
-                addRecursive(view, "addons/" .. a .. "/models/")
-                pnlContent:SwitchPanel(view)
+        if file.IsDir("addons/" .. a .. "/models/", "MOD") then
+            local c = countRecursive("addons/" .. a .. "/models/")
+            if c > 0 then
+                local child = legacy:AddNode(a .. " (" .. c .. ")", "icon16/bricks.png")
+                child.DoClick = function()
+                    view:Clear(true)
+                    addRecursive(view, "addons/" .. a .. "/models/")
+                    pnlContent:SwitchPanel(view)
+                end
             end
         end
     end
@@ -585,113 +586,116 @@ local function GetSize(bytes)
     return math.floor(mb / 1000 * 10) / 10 .. " GB"
 end
 
-function PANEL:Paint(w, h)
+function PANEL:Paint()
     if not self.computed then self:Compute() end
     local wdt = self:GetParent():GetWide()
     local y = 0
-    local tw, th = DrawText("Cache Sizes", "AddonInfo_Header", 0, y, color_white)
+    local _, th = DrawText("Cache Sizes", "AddonInfo_Header", 0, y, color_white)
     y = y + th
-    local off, maxW = 0, 0
-    tw, th = DrawText("~" .. GetSize(self.luaCacheSize) .. " (" .. self.luaCacheFiles .. " files)", "AddonInfo_Small", 0, y + off, Color(220, 220, 220))
-    off = off + th
+    local offset, maxW = 0, 0
+    local tw, h1 = DrawText("~" .. GetSize(self.luaCacheSize) .. " (" .. self.luaCacheFiles .. " files)", "AddonInfo_Small", 0, y + offset, Color(220, 220, 220))
+    offset = offset + h1
     maxW = math.max(maxW, tw)
-    tw, th = DrawText("~" .. GetSize(self.wsCacheSize) .. " (" .. self.wsCacheFiles .. " files)", "AddonInfo_Small", 0, y + off, Color(220, 220, 220))
-    off = off + th
-    maxW = math.max(maxW, tw)
-    maxW = maxW + 25
-    tw, th = DrawText("Server Lua cache", "AddonInfo_Small", maxW, y, color_white)
-    y = y + th
-    tw, th = DrawText("Workshop download cache", "AddonInfo_Small", maxW, y, color_white)
-    y = y + th + ScreenScaleH(8)
-    tw, th = DrawText("Workshop Subscriptions", "AddonInfo_Header", 0, y, color_white)
-    y = y + th
-    tw, th = DrawText("Used Size:  ", "AddonInfo_Text", 0, y, color_white)
-    local lblW = tw
-    y = y + th
-    tw, th = DrawText("Wasted Space:  ", "AddonInfo_Text", 0, y, color_white)
-    lblW = math.max(lblW, tw)
-    y = y + th
-    tw, th = DrawText("Total Size:  ", "AddonInfo_Text", 0, y, color_white)
-    lblW = math.max(lblW, tw)
-    y = y + th * 2
-    tw, th = DrawText(GetSize(self.workshopSize - self.workshopWaste), "AddonInfo_Text", lblW, y, Color(220, 220, 220))
-    y = y + th
-    tw, th = DrawText(GetSize(self.workshopWaste), "AddonInfo_Text", lblW, y, Color(220, 220, 220))
-    y = y + th
-    tw, th = DrawText(GetSize(self.workshopSize), "AddonInfo_Text", lblW, y, Color(220, 220, 220))
-    y = y + th * 2
-    tw, th = DrawText("Files that aren't used: ( Safe to delete )", "AddonInfo_Text", 0, y, color_white)
-    y = y + th
+    local tw2, h2 = DrawText("~" .. GetSize(self.wsCacheSize) .. " (" .. self.wsCacheFiles .. " files)", "AddonInfo_Small", 0, y + offset, Color(220, 220, 220))
+    offset = offset + h2
+    maxW = math.max(maxW, tw2) + 25
+    local _, th2 = DrawText("Server Lua cache", "AddonInfo_Small", maxW, y, color_white)
+    y = y + th2
+    local _, th3 = DrawText("Workshop download cache", "AddonInfo_Small", maxW, y)
+    y = y + th3 + ScreenScaleH(8)
+    local _, th4 = DrawText("Workshop Subscriptions", "AddonInfo_Header", 0, y, color_white)
+    y = y + th4
+    local tw3, th5 = DrawText("Used Size:  ", "AddonInfo_Text", 0, y, color_white)
+    local lblW = tw3
+    y = y + th5
+    local tw4, th6 = DrawText("Wasted Space:  ", "AddonInfo_Text", 0, y, color_white)
+    lblW = math.max(lblW, tw4)
+    y = y + th6
+    local tw5, th7 = DrawText("Total Size:  ", "AddonInfo_Text", 0, y, color_white)
+    lblW = math.max(lblW, tw5)
+    y = y + th7 * 2
+    local _, th8 = DrawText(GetSize(self.workshopSize - self.workshopWaste), "AddonInfo_Text", lblW, y, Color(220, 220, 220))
+    y = y + th8
+    local _, th9 = DrawText(GetSize(self.workshopWaste), "AddonInfo_Text", lblW, y, Color(220, 220, 220))
+    y = y + th9
+    local _, th10 = DrawText(GetSize(self.workshopSize), "AddonInfo_Text", lblW, y, Color(220, 220, 220))
+    y = y + th10 * 2
+    local _, th11 = DrawText("Files that aren't used: ( Safe to delete )", "AddonInfo_Text", 0, y, color_white)
+    y = y + th11
     local offY, maxW2 = 0, 0
     for _, e in ipairs(self.workshopWasteFiles) do
-        tw, th = DrawText(GetSize(e[2]) .. "    ", "AddonInfo_Small", 0, y + offY, Color(220, 220, 220))
-        offY = offY + th
-        maxW2 = math.max(maxW2, tw)
+        local tw6, th12 = DrawText(GetSize(e[2]) .. "    ", "AddonInfo_Small", 0, y + offY, Color(220, 220, 220))
+        offY = offY + th12
+        maxW2 = math.max(maxW2, tw6)
     end
 
     for _, e in ipairs(self.workshopWasteFiles) do
-        tw, th = DrawText(e[1], "AddonInfo_Small", maxW2, y, color_white)
-        y = y + th
+        local _, th13 = DrawText(e[1], "AddonInfo_Small", maxW2, y, color_white)
+        y = y + th13
     end
 
-    y = y + th + ScreenScaleH(8)
-    tw, th = DrawText("Legacy Addons", "AddonInfo_Header", 0, y, color_white)
-    y = y + th + ScreenScaleH(8)
-    tw, th = DrawText("Legacy Addons with models:", "AddonInfo_Text", 0, y, color_white)
-    y = y + th
+    y = y + th13 + ScreenScaleH(8)
+    local _, th14 = DrawText("Legacy Addons", "AddonInfo_Header", 0, y, color_white)
+    y = y + th14 + ScreenScaleH(8)
+    local _, th15 = DrawText("Legacy Addons with models:", "AddonInfo_Text", 0, y, color_white)
+    y = y + th15
     if next(self.legacyAddons) then
         local nameW, startY = 0, y
-        for p, _ in pairs(self.legacyAddons) do
-            tw, th = DrawText(p, "AddonInfo_Small", 0, y, color_white)
-            nameW = math.max(nameW, tw)
-            y = y + th
+        for p in pairs(self.legacyAddons) do
+            local tw7, th16 = DrawText(p, "AddonInfo_Small", 0, y, color_white)
+            nameW = math.max(nameW, tw7)
+            y = y + th16
         end
 
         nameW = nameW + 25
         y = startY
         for p, st in pairs(self.legacyAddons) do
-            tw, th = DrawText(st, "AddonInfo_Small", nameW, y, Color(220, 220, 220))
-            y = y + th
+            local _, th17 = DrawText(st, "AddonInfo_Small", nameW, y, Color(220, 220, 220))
+            y = y + th17
         end
     else
-        tw, th = DrawText("None.", "AddonInfo_Small", 0, y, color_white)
-        y = y + th
+        local _, th18 = DrawText("None.", "AddonInfo_Small", 0, y, color_white)
+        y = y + th18
     end
 
     if not system.IsWindows() then
-        y = y + th
-        for _, line in ipairs{"OSX AND LINUX USERS BEWARE:", "MAKE SURE ALL FILE AND FOLDER NAMES", "IN ALL ADDONS ARE LOWERCASE ONLY", "INCLUDING ALL SUB FOLDERS"} do
-            tw, th = DrawText(line, "AddonInfo_Text", 0, y, color_white)
-            y = y + th
-        end
+        local _, th19 = DrawText("OSX AND LINUX USERS BEWARE:", "AddonInfo_Text", 0, y, color_white)
+        y = y + th19
+        local _, th20 = DrawText("MAKE SURE ALL FILE AND FOLDER NAMES", "AddonInfo_Text", 0, y, color_white)
+        y = y + th20
+        local _, th21 = DrawText("IN ALL ADDONS ARE LOWERCASE ONLY", "AddonInfo_Text", 0, y, color_white)
+        y = y + th21
+        local _, th22 = DrawText("INCLUDING ALL SUB FOLDERS", "AddonInfo_Text", 0, y, color_white)
+        y = y + th22
     end
 
     self:SetSize(wdt, y)
 end
 
 vgui.Register("rb655_addonInfo", PANEL, "Panel")
-hook.Add("PopulatePropMenu", "rb655_LoadLegacySpawnlists", function(pnl, tree, node)
+hook.Add("PopulatePropMenu", "rb655_LoadLegacySpawnlists", function(pnl, _, node)
     if not IsValid(node) or not IsValid(pnl) then return end
     local view = vgui.Create("ContentContainer", pnl)
     view:SetVisible(false)
     local sid = 0
     for _, fn in ipairs(file.Find("settings/spawnlist/*.txt", "MOD")) do
         local content = util.KeyValuesToTable(file.Read("settings/spawnlist/" .. fn, "MOD") or "")
-        if not content or not content.entries or content.contents then continue end
-        local items = {}
-        for _, e in ipairs(content.entries) do
-            local mdl = type(e) == "table" and e.model or e
-            table.insert(items, {
-                type = "model",
-                model = mdl
-            })
+        if content and content.entries and not content.contents then
+            local items = {}
+            for _, e in ipairs(content.entries) do
+                local mdl = type(e) == "table" and e.model or e
+                table.insert(items, {
+                    type = "model",
+                    model = mdl
+                })
+            end
+
+            local info = content.information or {
+                name = fn
+            }
+
+            spawnmenu.AddPropCategory("settings/spawnlist/" .. fn, info.name, items, "icon16/page.png", sid + 1, sid)
+            sid = sid + 1
         end
-
-        local info = content.information or {
-            name = fn
-        }
-
-        spawnmenu.AddPropCategory("settings/spawnlist/" .. fn, info.name, items, "icon16/page.png", sid + 1, sid)
-        sid = sid + 1
     end
 end)

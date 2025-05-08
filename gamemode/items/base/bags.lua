@@ -17,7 +17,7 @@ if CLIENT then
 end
 
 ITEM.functions.Equip = {
-    name = "equip",
+    name = L("equip"),
     icon = "icon16/tick.png",
     onRun = function(item)
         local client = item.player
@@ -37,7 +37,7 @@ ITEM.functions.Equip = {
 }
 
 ITEM.functions.Unequip = {
-    name = "unequip",
+    name = L("unequip"),
     icon = "icon16/cross.png",
     onRun = function(item)
         local client = item.player
@@ -49,7 +49,7 @@ ITEM.functions.Unequip = {
 }
 
 ITEM.functions.View = {
-    name = "view",
+    name = L("view"),
     icon = "icon16/briefcase.png",
     onClick = function(item)
         local inventory = item:getInv()

@@ -22,28 +22,28 @@ function lia.time.TimeSince(strTime)
         timestamp = strTime
     elseif isstring(strTime) then
         local year, month, day = lia.time.ParseTime(strTime)
-        if not (year and month and day) then return "Invalid date" end
-        timestamp = os.time({
+        if not (year and month and day) then return L("invalidDate") end
+        timestamp = os.time{
             year = year,
             month = month,
             day = day,
             hour = 0,
             min = 0,
             sec = 0
-        })
+        }
     else
-        return "Invalid input"
+        return L("invalidInput")
     end
 
     local diff = os.time() - timestamp
     if diff < 60 then
-        return diff .. " seconds ago"
+        return L("secondsAgo", diff)
     elseif diff < 3600 then
-        return math.floor(diff / 60) .. " minutes ago"
+        return L("minutesAgo", math.floor(diff / 60))
     elseif diff < 86400 then
-        return math.floor(diff / 3600) .. " hours ago"
+        return L("hoursAgo", math.floor(diff / 3600))
     else
-        return math.floor(diff / 86400) .. " days ago"
+        return L("daysAgo", math.floor(diff / 86400))
     end
 end
 
@@ -97,15 +97,17 @@ end
 function lia.time.GetDate()
     local ct = os.date("*t")
     local american = lia.config.get("AmericanTimeStamps", false)
-    local days = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}
-    local months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
+    local weekdayKeys = {"weekdaySunday", "weekdayMonday", "weekdayTuesday", "weekdayWednesday", "weekdayThursday", "weekdayFriday", "weekdaySaturday"}
+    local monthKeys = {"monthJanuary", "monthFebruary", "monthMarch", "monthApril", "monthMay", "monthJune", "monthJuly", "monthAugust", "monthSeptember", "monthOctober", "monthNovember", "monthDecember"}
+    local dayName = L(weekdayKeys[ct.wday])
+    local monthName = L(monthKeys[ct.month])
     if american then
         local suffix = ct.hour < 12 and "am" or "pm"
         local hour12 = ct.hour % 12
         if hour12 == 0 then hour12 = 12 end
-        return string.format("%s, %s %02d, %04d, %02d:%02d:%02d%s", days[ct.wday], months[ct.month], ct.day, ct.year, hour12, ct.min, ct.sec, suffix)
+        return string.format("%s, %s %02d, %04d, %02d:%02d:%02d%s", dayName, monthName, ct.day, ct.year, hour12, ct.min, ct.sec, suffix)
     end
-    return string.format("%s, %02d %s %04d, %02d:%02d:%02d", days[ct.wday], ct.day, months[ct.month], ct.year, ct.hour, ct.min, ct.sec)
+    return string.format("%s, %02d %s %04d, %02d:%02d:%02d", dayName, ct.day, monthName, ct.year, ct.hour, ct.min, ct.sec)
 end
 
 --[[

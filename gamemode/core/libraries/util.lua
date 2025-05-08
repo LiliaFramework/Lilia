@@ -1029,7 +1029,7 @@ else
          if not IsValid(line) or not line.rowData then return end
          local rowData = line.rowData
          local menu = DermaMenu()
-         menu:AddOption("Copy Row", function()
+         menu:AddOption(L("copyRow"), function()
             local rowString = ""
             for key, value in pairs(rowData) do
                value = tostring(value or "N/A")

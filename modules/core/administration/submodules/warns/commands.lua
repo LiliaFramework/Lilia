@@ -1,21 +1,21 @@
 ﻿lia.command.add("warn", {
     adminOnly = true,
     privilege = "Issue Warnings",
-    desc = "Issues a warning to the specified player with a given reason.",
+    desc = L("warnDesc"),
     syntax = "[string target] [string reason]",
     AdminStick = {
-        Name = "Warn Player",
-        Category = "Moderation Tools",
-        SubCategory = "Warnings",
+        Name = L("warnPlayer"),
+        Category = L("moderationTools"),
+        SubCategory = L("warnings"),
         Icon = "icon16/error.png",
         ExtraFields = {
-            ["Warning"] = "text"
+            [L("warningField")] = "text"
         }
     },
     onRun = function(client, arguments)
         local targetName = arguments[1]
         local reason = table.concat(arguments, " ", 2)
-        if not targetName or reason == "" then return "Usage: warn [player] [reason]" end
+        if not targetName or reason == "" then return L("warnUsage") end
         local target = lia.util.findPlayer(client, targetName)
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
@@ -31,8 +31,8 @@
         local warns = target:getLiliaData("warns") or {}
         table.insert(warns, warning)
         target:setLiliaData("warns", warns)
-        target:notify("You have been warned by " .. warning.admin .. " for: " .. reason)
-        client:notify("Warning issued to " .. target:Nick())
+        target:notify(L("playerWarned", warning.admin, reason))
+        client:notify(L("warningIssued", target:Nick()))
         lia.log.add(client, "warningIssued", target, reason)
     end
 })
@@ -40,12 +40,12 @@
 lia.command.add("viewwarns", {
     adminOnly = true,
     privilege = "View Player Warnings",
-    desc = "Displays all warnings issued to the specified player.",
+    desc = L("viewWarnsDesc"),
     syntax = "[string target]",
     AdminStick = {
-        Name = "View Player Warnings",
-        Category = "Moderation Tools",
-        SubCategory = "Warnings",
+        Name = L("viewPlayerWarnings"),
+        Category = L("moderationTools"),
+        SubCategory = L("warnings"),
         Icon = "icon16/eye.png"
     },
     onRun = function(client, arguments)
@@ -57,7 +57,7 @@ lia.command.add("viewwarns", {
 
         local warns = target:getLiliaData("warns") or {}
         if table.Count(warns) == 0 then
-            client:notify(target:Nick() .. " has no warnings.")
+            client:notify(L("noWarnings", target:Nick()))
             return
         end
 
@@ -71,26 +71,26 @@ lia.command.add("viewwarns", {
             })
         end
 
-        lia.util.CreateTableUI(client, target:Nick() .. "'s Warnings", {
+        lia.util.CreateTableUI(client, target:Nick() .. "'s " .. L("warnings"), {
             {
-                name = "ID",
+                name = L("idField"),
                 field = "index"
             },
             {
-                name = "Timestamp",
+                name = L("timestampField"),
                 field = "timestamp"
             },
             {
-                name = "Reason",
+                name = L("reasonField"),
                 field = "reason"
             },
             {
-                name = "Admin",
+                name = L("adminField"),
                 field = "admin"
             }
         }, warningList, {
             {
-                name = "Remove Warning",
+                name = L("removeWarning"),
                 net = "RequestRemoveWarning"
             }
         }, target:getChar():getID())

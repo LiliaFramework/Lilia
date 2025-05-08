@@ -576,7 +576,7 @@ function PANEL:updateLabel()
     if not self.item then return end
     local nameText = (self.suffix ~= "" and self.suffix or "") .. self.item:getName()
     self.name:SetText(nameText)
-    self.description:SetText(self.item:getDesc() or L("vendorNoDescription"))
+    self.description:SetText(self.item:getDesc() or L("noDesc"))
     local price = liaVendorEnt:getPrice(self.item.uniqueID, self.isSelling)
     local priceSuffix
     if price == 0 then
@@ -687,10 +687,10 @@ function PANEL:Init()
     self.items = self:Add("DListView")
     self.items:Dock(FILL)
     self.items:DockMargin(0, 4, 0, 0)
-    self.items:AddColumn(L("vendorName")).Header:SetTextColor(color_white)
+    self.items:AddColumn(L("name")).Header:SetTextColor(color_white)
     self.items:AddColumn(L("vendorMode")).Header:SetTextColor(color_white)
-    self.items:AddColumn(L("vendorPrice")).Header:SetTextColor(color_white)
-    self.items:AddColumn(L("vendorStock")).Header:SetTextColor(color_white)
+    self.items:AddColumn(L("price")).Header:SetTextColor(color_white)
+    self.items:AddColumn(L("stock")).Header:SetTextColor(color_white)
     self.items:AddColumn(L("vendorCategory")).Header:SetTextColor(color_white)
     self.items:SetMultiSelect(false)
     self.items.OnRowRightClick = function(_, _, line) self:OnRowRightClick(line) end
@@ -708,7 +708,7 @@ function PANEL:Init()
 end
 
 function PANEL:getModeText(mode)
-    return mode and L(VENDOR_TEXT[mode]) or L("vendorNone")
+    return mode and L(VENDOR_TEXT[mode]) or L("none")
 end
 
 function PANEL:OnRemove()
@@ -796,9 +796,9 @@ function PANEL:OnRowRightClick(line)
     local mode, panel = menu:AddSubMenu(L("mode"))
     panel:SetImage("icon16/key.png")
     mode:AddOption(L("none"), function() EDITOR.mode(uniqueID, nil) end):SetImage("icon16/cog_error.png")
-    mode:AddOption(L("vendorBoth"), function() EDITOR.mode(uniqueID, VENDOR_SELLANDBUY) end):SetImage("icon16/cog.png")
-    mode:AddOption(L("vendorBuy"), function() EDITOR.mode(uniqueID, VENDOR_BUYONLY) end):SetImage("icon16/cog_delete.png")
-    mode:AddOption(L("vendorSell"), function() EDITOR.mode(uniqueID, VENDOR_SELLONLY) end):SetImage("icon16/cog_add.png")
+    mode:AddOption(L("buyOnlynSell"), function() EDITOR.mode(uniqueID, VENDOR_SELLANDBUY) end):SetImage("icon16/cog.png")
+    mode:AddOption(L("buyOnly"), function() EDITOR.mode(uniqueID, VENDOR_BUYONLY) end):SetImage("icon16/cog_delete.png")
+    mode:AddOption(L("sellOnly"), function() EDITOR.mode(uniqueID, VENDOR_SELLONLY) end):SetImage("icon16/cog_add.png")
     menu:AddOption(L("price"), function()
         Derma_StringRequest(itemTable:getName(), L("vendorPriceReq"), entity:getPrice(uniqueID), function(text)
             text = tonumber(text)
@@ -836,7 +836,7 @@ function PANEL:ReloadItemList(filter)
         if filter and not itemName:lower():find(filter:lower(), 1, true) then continue end
         local mode = entity.items[k] and entity.items[k][VENDOR_MODE]
         local current, max = entity:getStock(k)
-        local category = v.category or L("None")
+        local category = v.category or L("none")
         local panel = self.items:AddLine(itemName, self:getModeText(mode), entity:getPrice(k), max and current .. "/" .. max or "-", category)
         panel.item = k
         self.lines[k] = panel

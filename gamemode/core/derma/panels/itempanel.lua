@@ -64,7 +64,7 @@ function PANEL:openInspect()
     local fw, fh = ScrW() * 0.45, ScrH() * 0.8
     frame:SetSize(fw, fh)
     frame:Center()
-    frame:SetTitle(L"Inspect")
+    frame:SetTitle(L("inspect"))
     frame:SetDraggable(false)
     frame:ShowCloseButton(true)
     frame:MakePopup()
@@ -75,7 +75,7 @@ function PANEL:openInspect()
     hint:SetContentAlignment(5)
     hint:SetFont("liaBigText")
     hint:SetTextColor(color_white)
-    hint:SetText("Drag to Pan   •   A / D to Rotate   •   Scroll to Zoom")
+    hint:SetText(L("itemInspectHint"))
     local view = vgui.Create("EditablePanel", frame)
     view:Dock(TOP)
     view:SetTall(fh * 0.5)
@@ -131,7 +131,7 @@ function PANEL:openInspect()
 
     local scroll = vgui.Create("DScrollPanel", frame)
     scroll:Dock(FILL)
-    drawLine(scroll, L"Name", self.item:getName() or "")
+    drawLine(scroll, L("name"), self.item:getName() or "")
     local extra = {}
     hook.Run("DisplayItemRelevantInfo", extra, LocalPlayer(), self.item)
     for _, info in ipairs(extra) do
@@ -143,14 +143,14 @@ function PANEL:openInspect()
 
     if LocalPlayer():Team() == FACTION_STAFF or LocalPlayer():hasPrivilege("Staff Permissions - Can Access Item Informations") then
         local cr = self.ent:GetCreator()
-        if IsValid(cr) then drawLine(scroll, "Spawner", cr:Name() .. " - " .. cr:SteamID()) end
+        if IsValid(cr) then drawLine(scroll, L("spawner"), cr:Name() .. " - " .. cr:SteamID()) end
     end
 
     local take = vgui.Create("liaMediumButton", frame)
     take:Dock(BOTTOM)
     take:SetTall(48)
     take:SetFont("liaBigBtn")
-    take:SetText(L"Take")
+    take:SetText(L("take"))
     take.DoClick = function()
         if IsValid(self.ent) then netstream.Start("invAct", "take", self.ent) end
         if IsValid(overlay) then overlay:Remove() end
@@ -170,12 +170,12 @@ function PANEL:buildButtons()
         end)
     end
 
-    self:addBtn(L"Inspect", function()
+    self:addBtn(L("inspect"), function()
         self:openInspect()
         self:Remove()
     end)
 
-    self:addBtn(L"Exit", function() self:Remove() end)
+    self:addBtn(L("exit"), function() self:Remove() end)
     local h = 0
     for _, c in ipairs(self.btnArea:GetChildren()) do
         h = h + c:GetTall() + 8

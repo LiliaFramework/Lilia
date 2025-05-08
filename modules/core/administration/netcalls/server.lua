@@ -14,7 +14,7 @@
             value = value2
         end
 
-        lia.notices.notifyLocalized("cfgSet", nil, client:Name(), name, tostring(value))
+        client:notifyLocalized("cfgSet", client:Name(), name, tostring(value))
         lia.log.add(client, "configChange", name, tostring(oldValue), tostring(value))
     end
 end)

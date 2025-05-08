@@ -1,6 +1,6 @@
 ﻿lia.command.add("charsetattrib", {
     superAdminOnly = true,
-    desc = "Sets a specific attribute on a target character to an exact value.",
+    desc = L("setAttributes"),
     syntax = "[string charname] [string attribname] [number level]",
     privilege = "Manage Attributes",
     AdminStick = {
@@ -43,7 +43,7 @@
 
 lia.command.add("checkattributes", {
     adminOnly = true,
-    desc = "Displays all attributes (current, max, and progress %) for a target character in a table UI.",
+    desc = L("checkAttributes"),
     syntax = "[string charname]",
     privilege = "Manage Attributes",
     AdminStick = {
@@ -105,7 +105,7 @@ lia.command.add("checkattributes", {
 
 lia.command.add("charaddattrib", {
     superAdminOnly = true,
-    desc = "Adds (increments) a specified amount to a target character’s attribute.",
+    desc = L("addAttributes"),
     syntax = "[string charname] [string attribname] [number level]",
     privilege = "Manage Attributes",
     AdminStick = {

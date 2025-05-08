@@ -81,9 +81,9 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         folder = path,
         module = oldModule,
         uniqueID = uniqueID,
-        name = "Unknown",
-        desc = "Description not available",
-        author = "Anonymous",
+        name = L("unknown"),
+        desc = L("noDesc"),
+        author = L("anonymous"),
         identifier = "",
         enabled = true,
         IsValid = function() return true end

@@ -12,7 +12,7 @@
         category = L("characterCategory")
     },
     ["charDelete"] = {
-        func = function(client, id) return L("charDeleteLog", IsValid(client) and client:SteamID64() or "CONSOLE", IsValid(client) and client:Name() or "CONSOLE", id, IsValid(client) and client:getChar():getID() or "Unknown") end,
+        func = function(client, id) return L("charDeleteLog", IsValid(client) and client:SteamID64() or "CONSOLE", IsValid(client) and client:Name() or "CONSOLE", id, IsValid(client) and client:getChar():getID() or L("unknown")) end,
         category = L("characterCategory")
     },
     ["playerHurt"] = {
@@ -79,7 +79,7 @@
         func = function(client, item) return L("itemTakeLog", client:SteamID64(), client:Name(), item, client:getChar():getID()) end,
         category = L("itemCategory")
     },
-    ["itemUse"] = {
+    ["use"] = {
         func = function(client, item) return L("itemUseLog", client:SteamID64(), client:Name(), item, client:getChar():getID()) end,
         category = L("itemCategory")
     },
@@ -193,35 +193,35 @@
     },
     ["vendorAccess"] = {
         func = function(client, vendor)
-            local vendorName = vendor:getNetVar("name") or "Unknown"
+            local vendorName = vendor:getNetVar("name") or L("unknown")
             return L("vendorLogAccess", client:SteamID64(), client:Name(), vendorName, client:getChar():getID())
         end,
         category = L("vendors")
     },
     ["vendorExit"] = {
         func = function(client, vendor)
-            local vendorName = vendor:getNetVar("name") or "Unknown"
+            local vendorName = vendor:getNetVar("name") or L("unknown")
             return L("vendorLogExit", client:SteamID64(), client:Name(), vendorName, client:getChar():getID())
         end,
         category = L("vendors")
     },
     ["vendorSell"] = {
         func = function(client, item, vendor)
-            local vendorName = vendor:getNetVar("name") or "Unknown"
+            local vendorName = vendor:getNetVar("name") or L("unknown")
             return L("vendorLogSell", client:SteamID64(), client:Name(), item, vendorName, client:getChar():getID())
         end,
         category = L("vendors")
     },
     ["vendorEdit"] = {
         func = function(client, vendor, key)
-            local vendorName = vendor:getNetVar("name") or "Unknown"
+            local vendorName = vendor:getNetVar("name") or L("unknown")
             return L("vendorLogEdit", client:SteamID64(), client:Name(), vendorName, key, client:getChar():getID())
         end,
         category = L("vendors")
     },
     ["vendorBuy"] = {
         func = function(client, item, vendor, isFailed)
-            local vendorName = vendor:getNetVar("name") or "Unknown"
+            local vendorName = vendor:getNetVar("name") or L("unknown")
             if isFailed then
                 return L("vendorLogBuyFail", client:SteamID64(), client:Name(), item, vendorName, client:getChar():getID())
             else

@@ -1,10 +1,11 @@
-﻿function MODULE:isRecognizedChatType(chatType)
-    local ChatIsRecognized = {
-        ic = true,
-        y = true,
-        w = true,
-        me = true,
-    }
+﻿local ChatIsRecognized = {
+    ic = true,
+    y = true,
+    w = true,
+    me = true,
+}
+
+function MODULE:isRecognizedChatType(chatType)
     return ChatIsRecognized[chatType] or false
 end
 

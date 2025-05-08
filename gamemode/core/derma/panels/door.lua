@@ -7,27 +7,27 @@ function PANEL:Init()
     self.access = self:Add("DListView")
     self.access:Dock(FILL)
     local headerColor = Color(25, 25, 25)
-    self.access:AddColumn(L("doorName")).Header:SetTextColor(headerColor)
+    self.access:AddColumn(L("name")).Header:SetTextColor(headerColor)
     self.access:AddColumn(L("doorAccess")).Header:SetTextColor(headerColor)
     self.access.OnClickLine = function(_, line)
         if not IsValid(line.player) then return end
         local menu = DermaMenu()
-        local playerEntity = line.player
+        local ply = line.player
         local accessData = self.accessData
-        local doorEntity = self.door
-        menu:AddOption(L("doorTenant"), function() if accessData and accessData[playerEntity] ~= DOOR_TENANT then netstream.Start("doorPerm", doorEntity, playerEntity, DOOR_TENANT) end end):SetImage("icon16/user_add.png")
-        menu:AddOption(L("doorGuest"), function() if accessData and accessData[playerEntity] ~= DOOR_GUEST then netstream.Start("doorPerm", doorEntity, playerEntity, DOOR_GUEST) end end):SetImage("icon16/user_green.png")
-        menu:AddOption(L("doorNone"), function() if accessData and accessData[playerEntity] ~= DOOR_NONE then netstream.Start("doorPerm", doorEntity, playerEntity, DOOR_NONE) end end):SetImage("icon16/user_red.png")
+        local door = self.door
+        menu:AddOption(L("tenant"), function() if accessData[ply] ~= DOOR_TENANT then netstream.Start("doorPerm", door, ply, DOOR_TENANT) end end):SetImage("icon16/user_add.png")
+        menu:AddOption(L("guest"), function() if accessData[ply] ~= DOOR_GUEST then netstream.Start("doorPerm", door, ply, DOOR_GUEST) end end):SetImage("icon16/user_green.png")
+        menu:AddOption(L("none"), function() if accessData[ply] ~= DOOR_NONE then netstream.Start("doorPerm", door, ply, DOOR_NONE) end end):SetImage("icon16/user_red.png")
         menu:Open()
     end
 end
 
-function PANEL:setDoor(doorEntity, accessData, fallbackDoor)
-    doorEntity.liaPanel = self
+function PANEL:setDoor(door, accessData, fallback)
+    door.liaPanel = self
     self.accessData = accessData
-    self.door = doorEntity
+    self.door = door
     local client = LocalPlayer()
-    for _, ply in player.Iterator() do
+    for _, ply in ipairs(player.GetAll()) do
         if ply ~= client and ply:getChar() then
             local label = L(ACCESS_LABELS[accessData[ply] or 0])
             local line = self.access:AddLine(ply:Name():gsub("#", "\226\128\139#"), label)
@@ -36,38 +36,38 @@ function PANEL:setDoor(doorEntity, accessData, fallbackDoor)
     end
 
     if self:CheckAccess(DOOR_OWNER) then
-        local sellBtn = self:Add("DButton")
-        sellBtn:Dock(BOTTOM)
-        sellBtn:DockMargin(0, 5, 0, 0)
-        sellBtn:SetText(L("doorSell"))
-        sellBtn:SetTextColor(color_white)
-        sellBtn.DoClick = function()
+        local btn = self:Add("DButton")
+        btn:Dock(BOTTOM)
+        btn:DockMargin(0, 5, 0, 0)
+        btn:SetText(L("doorSell"))
+        btn:SetTextColor(color_white)
+        btn.DoClick = function()
             self:Remove()
             lia.command.send("doorsell")
         end
 
-        self.sell = sellBtn
+        self.sell = btn
     end
 
     if self:CheckAccess(DOOR_TENANT) then
-        local textEntry = self:Add("DTextEntry")
-        textEntry:Dock(TOP)
-        textEntry:DockMargin(0, 0, 0, 5)
-        textEntry.Think = function()
-            if not textEntry:IsEditing() then
-                local entity = IsValid(fallbackDoor) and fallbackDoor or doorEntity
-                textEntry:SetText(entity:getNetVar("title", L("doorTitleOwned")))
+        local entry = self:Add("DTextEntry")
+        entry:Dock(TOP)
+        entry:DockMargin(0, 0, 0, 5)
+        entry.Think = function()
+            if not entry:IsEditing() then
+                local ent = IsValid(fallback) and fallback or door
+                entry:SetText(ent:getNetVar("title", L("doorTitleOwned")))
             end
         end
 
-        textEntry.OnEnter = function() lia.command.send("doorsettitle", textEntry:GetText()) end
-        self.name = textEntry
+        entry.OnEnter = function() lia.command.send("doorsettitle", entry:GetText()) end
+        self.name = entry
     end
 end
 
-function PANEL:CheckAccess(minAccess)
+function PANEL:CheckAccess(minimum)
     if not self.accessData then return false end
-    return (self.accessData[LocalPlayer()] or 0) >= (minAccess or DOOR_GUEST)
+    return (self.accessData[LocalPlayer()] or 0) >= (minimum or DOOR_GUEST)
 end
 
 function PANEL:Think()

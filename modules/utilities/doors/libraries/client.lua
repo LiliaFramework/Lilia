@@ -17,7 +17,7 @@
         lia.util.drawText(name, x, y, ColorAlpha(color_white, alpha), 1, 1)
         y = y + 20
         if ownable then
-            lia.util.drawText(L("doorPrice", lia.currency.get(price)), x, y, ColorAlpha(color_white, alpha), 1, 1)
+            lia.util.drawText(L("priceLabel", lia.currency.get(price)), x, y, ColorAlpha(color_white, alpha), 1, 1)
             y = y + 20
         end
 
@@ -44,7 +44,7 @@
         end
 
         if class and classData then
-            lia.util.drawText(L("doorClasses"), x, y, ColorAlpha(color_white, alpha), 1, 1)
+            lia.util.drawText(L("classes"), x, y, ColorAlpha(color_white, alpha), 1, 1)
             y = y + 20
             lia.util.drawText(classData.name, x, y, classData.color or color_white, 1, 1)
             y = y + 20

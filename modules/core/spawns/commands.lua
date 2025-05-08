@@ -2,7 +2,7 @@
 lia.command.add("spawnadd", {
     privilege = "Manage Spawns",
     adminOnly = true,
-    desc = "Adds a spawn point at your current position for the specified faction.",
+    desc = L("spawnAddDesc"),
     syntax = "[string faction]",
     onRun = function(client, arguments)
         local factionName = arguments[1]
@@ -31,7 +31,7 @@ lia.command.add("spawnadd", {
 lia.command.add("spawnremoveinradius", {
     privilege = "Manage Spawns",
     adminOnly = true,
-    desc = "Removes all spawn points within the given radius of your position (default 120).",
+    desc = L("spawnRemoveInRadiusDesc"),
     syntax = "[number radius]",
     onRun = function(client, arguments)
         local position = client:GetPos()
@@ -54,7 +54,7 @@ lia.command.add("spawnremoveinradius", {
 lia.command.add("spawnremovebyname", {
     privilege = "Manage Spawns",
     adminOnly = true,
-    desc = "Removes all spawn points for the specified faction.",
+    desc = L("spawnRemoveByNameDesc"),
     syntax = "[string faction]",
     onRun = function(_, arguments)
         local factionName = arguments[1]
@@ -86,12 +86,12 @@ lia.command.add("spawnremovebyname", {
 lia.command.add("returnitems", {
     superAdminOnly = true,
     privilege = "Return Items",
-    desc = "Returns items lost on death to the specified player, if any.",
+    desc = L("returnItemsDesc"),
     syntax = "[string name]",
     AdminStick = {
-        Name = "Return Items",
-        Category = "Character Management",
-        SubCategory = "Items",
+        Name = L("returnItemsName"),
+        Category = L("returnItemsCategory"),
+        SubCategory = L("returnItemsSubCategory"),
         Icon = "icon16/arrow_refresh.png"
     },
     onRun = function(client, arguments)
@@ -103,7 +103,7 @@ lia.command.add("returnitems", {
 
         if lia.config.get("LoseItemsonDeathHuman", false) or lia.config.get("LoseItemsonDeathNPC", false) then
             if not target.LostItems or table.IsEmpty(target.LostItems) then
-                client:notifyWarning("The target hasn't lost any items or they've already been returned.")
+                client:notifyWarning(L("returnItemsTargetNoItems"))
                 return
             end
 
@@ -116,10 +116,10 @@ lia.command.add("returnitems", {
             end
 
             target.LostItems = nil
-            target:notify("Your items have been returned.")
-            client:notify("Returned the items.")
+            target:notify(L("returnItemsReturnedToPlayer"))
+            client:notify(L("returnItemsAdminConfirmed"))
         else
-            client:notifyWarning("Item loss on death is not enabled!")
+            client:notifyWarning(L("returnItemsNotEnabled"))
         end
     end
 })

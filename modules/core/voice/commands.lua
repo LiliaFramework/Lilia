@@ -1,7 +1,7 @@
 ﻿lia.command.add("charvoicetoggle", {
     adminOnly = true,
     privilege = "Toggle Voice Ban Character",
-    desc = "Toggles voice chat ban for the specified character.",
+    desc = L("charVoiceToggleDesc"),
     syntax = "[string name]",
     AdminStick = {
         Name = L("toggleVoice"),

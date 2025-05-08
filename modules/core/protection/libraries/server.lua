@@ -3,9 +3,9 @@ function MODULE:CanPlayerSwitchChar(client, character)
     if not client:isStaffOnDuty() then
         local damageCooldown = lia.config.get("OnDamageCharacterSwitchCooldownTimer", 15)
         local switchCooldown = lia.config.get("CharacterSwitchCooldownTimer", 5)
-        if damageCooldown > 0 and client.LastDamaged and client.LastDamaged > CurTime() - damageCooldown then return false, "You took damage too recently to switch characters!" end
+        if damageCooldown > 0 and client.LastDamaged and client.LastDamaged > CurTime() - damageCooldown then return false, L("tookDamageSwitchCooldown") end
         local loginTime = character:getData("loginTime", 0)
-        if switchCooldown > 0 and loginTime + switchCooldown > os.time() then return false, "You are on cooldown!" end
+        if switchCooldown > 0 and loginTime + switchCooldown > os.time() then return false, L("switchCooldown") end
     end
     return true
 end
@@ -65,23 +65,23 @@ local function ApplyPunishment(client, infraction, kick, ban, time)
     local bantime = time or 0
     if kick then
         if sam then
-            sam.player.kick_id(client:SteamID64(), "Kicked for " .. infraction)
+            sam.player.kick_id(client:SteamID64(), L("kickedForInfraction") .. infraction)
         elseif ULib then
-            ULib.kick(client, "Kicked for " .. infraction)
+            ULib.kick(client, L("kickedForInfraction") .. infraction)
         else
-            client:Kick("Kicked for " .. infraction)
+            client:Kick(L("kickedForInfraction") .. infraction)
         end
     end
 
     if ban then
         if sam then
-            sam.player.ban_id(client:SteamID64(), bantime, "Banned for " .. infraction)
+            sam.player.ban_id(client:SteamID64(), bantime, L("bannedForInfraction") .. infraction)
         elseif ULib then
-            ULib.ban(client, bantime, "Banned for " .. infraction)
-            ULib.kick(client, "Kicked for " .. infraction)
+            ULib.ban(client, bantime, L("bannedForInfraction") .. infraction)
+            ULib.kick(client, L("kickedForInfraction") .. infraction)
         else
-            client:Ban(bantime, "Banned for " .. infraction .. ".")
-            client:Kick("Banned for " .. infraction .. ".")
+            client:Ban(bantime, L("bannedForInfractionPeriod") .. infraction .. ".")
+            client:Kick(L("bannedForInfractionPeriod") .. infraction .. ".")
         end
     end
 end
@@ -103,16 +103,16 @@ function MODULE:PlayerAuthed(client, steamid)
     local steamID = client:SteamID64()
     if KnownCheaters[steamID64] or KnownCheaters[ownerSteamID64] then
         ApplyPunishment(client, "using third-party cheats", false, true, 0)
-        NotifyAdmin(string.format("%s (%s) was banned for cheating or using an alt of a cheater.", steamName, steamID))
+        NotifyAdmin(L("bannedCheaterNotify", steamName, steamID))
         return
     end
 
     if lia.config.get("AltsDisabled", false) and ownerSteamID64 ~= steamID64 then
         ApplyPunishment(client, "family sharing (alts are disabled)", true, false)
-        NotifyAdmin(string.format("%s (%s) was kicked for family sharing.", steamName, steamID))
+        NotifyAdmin(L("kickedAltNotify", steamName, steamID))
     elseif WhitelistCore and WhitelistCore.BlacklistedSteamID64[ownerSteamID64] then
         ApplyPunishment(client, "using a family-shared account that is blacklisted", false, true, 0)
-        NotifyAdmin(string.format("%s (%s) was banned for using a family-shared account that is blacklisted.", steamName, steamID))
+        NotifyAdmin(L("bannedAltNotify", steamName, steamID))
     end
 end
 
@@ -120,7 +120,7 @@ function MODULE:PlayerSay(client, message)
     local hasIPAddress = string.match(message, "%d+%.%d+%.%d+%.%d+(:%d*)?")
     local hasBadWords = string.find(string.upper(message), string.upper("clone")) and string.find(string.upper(message), string.upper("nutscript"))
     if hasIPAddress then
-        ApplyPunishment(client, "Typing IP addresses in chat", true, false)
+        ApplyPunishment(client, L("ipInChat"), true, false)
         return ""
     elseif hasBadWords then
         return ""
@@ -149,7 +149,7 @@ function MODULE:OnEntityCreated(entity)
     local class = entity:GetClass():lower():Trim()
     entity:SetCustomCollisionCheck(true)
     if class == "lua_run" and not lia.config.get("DisableLuaRun", false) then
-        print("[Notify] lua_run entity detected and will be removed.")
+        print(L("notifyLuaRun"))
         function entity:AcceptInput()
             return true
         end
@@ -160,7 +160,7 @@ function MODULE:OnEntityCreated(entity)
 
         timer.Simple(0, function() SafeRemoveEntity(entity) end)
     elseif class == "point_servercommand" then
-        print("[Notify] point_servercommand entity detected and will be removed.")
+        print(L("notifyPointServer"))
         timer.Simple(0, function() SafeRemoveEntity(entity) end)
     elseif class == "prop_vehicle_prisoner_pod" then
         entity:AddEFlags(EFL_NO_THINK_FUNCTION)
