@@ -115,7 +115,7 @@ net.Receive("ChangeAttribute", function(_, client)
 
         targetChar:setAttrib(attribKey, attribValue)
         client:notifyLocalized("attribSet", targetChar:getPlayer():Name(), L(lia.attribs.list[attribKey].name), attribValue)
-        targetChar:getPlayer():notifySuccess(L("yourAttributeSet"):format(L(lia.attribs.list[attribKey].name), attribValue, client:Nick()))
+        targetChar:getPlayer():notifySuccess(L("yourAttributeSet", lia.attribs.list[attribKey].name, attribValue, client:Nick()))
     elseif mode == "Add" then
         if attribValue <= 0 then
             client:notifyError(L("attribPositive"))
@@ -131,7 +131,7 @@ net.Receive("ChangeAttribute", function(_, client)
 
         targetChar:updateAttrib(attribKey, newValue)
         client:notifyLocalized("attribUpdate", targetChar:getPlayer():Name(), L(lia.attribs.list[attribKey].name), attribValue)
-        targetChar:getPlayer():notifySuccess(L("yourAttributeIncreased"):format(L(lia.attribs.list[attribKey].name), attribValue, client:Nick()))
+        targetChar:getPlayer():notifySuccess(L("yourAttributeIncreased", lia.attribs.list[attribKey].name, attribValue, client:Nick()))
     else
         client:notifyError(L("invalidMode"))
     end

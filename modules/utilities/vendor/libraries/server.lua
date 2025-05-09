@@ -66,8 +66,8 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     local flag = item.flag
     if not vendor.items[itemType] then return false, L("vendorDoesNotHaveItem") end
     local state = vendor:getTradeMode(itemType)
-    if isSellingToVendor and state == VENDOR_SELLONLY then return false, L("vendorSellOnly") end
-    if not isSellingToVendor and state == VENDOR_BUYONLY then return false, L("vendorBuyOnly") end
+    if isSellingToVendor and state == VENDOR_SELLONLY then return false, L("sellOnly") end
+    if not isSellingToVendor and state == VENDOR_BUYONLY then return false, L("buyOnly") end
     if isSellingToVendor then
         if not client:getChar():getInv():hasItem(itemType) then return false, L("vendorPlayerDoesNotHaveItem") end
     else
@@ -155,7 +155,7 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
 
             local canTransferItem, itemTransferReason = hook.Run("CanItemBeTransfered", item, inventory, VENDOR_INVENTORY_MEASURE, client)
             if canTransferItem == false then
-                client:notifyLocalized(itemTransferReason or L("vendorError"))
+                client:notifyLocalized(itemTransferReason or "vendorError")
                 client.vendorTransaction = nil
                 return
             end

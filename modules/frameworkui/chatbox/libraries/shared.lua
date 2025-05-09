@@ -269,17 +269,6 @@ lia.chat.register("ooc", {
     filter = "ooc"
 })
 
-lia.chat.register("s", {
-    syntax = "[string text]",
-    desc = L("sDesc"),
-    onChatAdd = function(speaker, text, anonymous)
-        local speako = anonymous and "Someone" or hook.Run("GetDisplayedName", speaker, "ic") or IsValid(speaker) and speaker:Name() or "Console"
-        chat.AddText(Color(200, 20, 20), speako .. " screams \"" .. text .. "\"")
-    end,
-    onCanHear = lia.config.get("ChatRange", 280) * 4,
-    prefix = {"/s", "/scream"}
-})
-
 lia.chat.register("me's", {
     syntax = "[string action]",
     desc = L("mesDesc"),

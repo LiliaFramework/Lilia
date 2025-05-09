@@ -257,7 +257,7 @@ end
 
 function PANEL:createTabs()
     self.tabs:Clear()
-    self:addTab("return", function() self:backToMainMenu() end, true)
+    self:addTab(L("return"), function() self:backToMainMenu() end, true)
 end
 
 function PANEL:backToMainMenu()

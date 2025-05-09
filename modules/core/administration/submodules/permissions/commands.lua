@@ -65,7 +65,7 @@ lia.command.add("playsound", {
         end
 
         if not sound or sound == "" then
-            client:notifyLocalized("NoSound")
+            client:notifyLocalized("noSound")
             return
         end
 
@@ -489,7 +489,7 @@ lia.command.add("charunban", {
     desc = L("charUnbanDesc"),
     syntax = "[string name or number id]",
     onRun = function(client, arguments)
-        if (client.liaNextSearch or 0) >= CurTime() then return L("searchingChar", client) end
+        if (client.liaNextSearch or 0) >= CurTime() then return L("searchingChar") end
         local queryArg = table.concat(arguments, " ")
         local charFound
         local id = tonumber(queryArg)
@@ -720,7 +720,7 @@ lia.command.add("listbodygroups", {
         end
 
         if #bodygroups > 0 then
-            local title = L("uiBodygroupsFor")
+            local title = L("uiBodygroupsFor", target:Nick())
             lia.util.CreateTableUI(client, title, {
                 {
                     name = L("groupID"),

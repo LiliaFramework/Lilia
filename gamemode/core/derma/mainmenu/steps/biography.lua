@@ -102,7 +102,7 @@ end
 function PANEL:validate()
     for _, info in ipairs({{self.nameEntry, "name"}, {self.descEntry, "desc"}}) do
         local val = string.Trim(info[1]:GetValue() or "")
-        if val == "" then return false, L("requiredFieldError"):format(L(info[2])) end
+        if val == "" then return false, L("requiredFieldError", info[2]) end
     end
     return true
 end

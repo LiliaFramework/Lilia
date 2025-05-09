@@ -80,8 +80,8 @@ local function ApplyPunishment(client, infraction, kick, ban, time)
             ULib.ban(client, bantime, L("bannedForInfraction") .. infraction)
             ULib.kick(client, L("kickedForInfraction") .. infraction)
         else
-            client:Ban(bantime, L("bannedForInfractionPeriod") .. infraction .. ".")
-            client:Kick(L("bannedForInfractionPeriod") .. infraction .. ".")
+            client:Ban(bantime, L("bannedForInfractionPeriod", infraction))
+            client:Kick(L("bannedForInfractionPeriod", infraction))
         end
     end
 end

@@ -6,7 +6,7 @@ lia.command.add("spawnadd", {
     syntax = "[string faction]",
     onRun = function(client, arguments)
         local factionName = arguments[1]
-        if not factionName then return L("invalidArg", 1) end
+        if not factionName then return L("invalidArg") end
         local factionInfo = lia.faction.indices[factionName:lower()]
         if not factionInfo then
             for _, v in ipairs(lia.faction.indices) do

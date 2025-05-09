@@ -120,7 +120,7 @@
         category = L("doors")
     },
     ["doorSaveData"] = {
-        func = function(client) return L("doorLogSaveData", client:SteamID64(), client:Name()) end,
+        func = function(client) return L("doorLogSaveData", client:Nick(), client:SteamID64(), client:Name()) end,
         category = L("doors")
     },
     ["doorToggleOwnable"] = {
