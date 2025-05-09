@@ -441,9 +441,7 @@ hook.Add("PopulateConfigurationButtons", "PopulateOptions", function(pages)
         end
     }
 
-    local function buildOptions(parent)
-        local scroll = vgui.Create("DScrollPanel", parent)
-        scroll:Dock(FILL)
+    local function buildOptions(parent, filter)
         local categories = {}
         local keys = {}
         for k in pairs(lia.option.stored) do
@@ -454,19 +452,24 @@ hook.Add("PopulateConfigurationButtons", "PopulateOptions", function(pages)
         for _, key in ipairs(keys) do
             local opt = lia.option.stored[key]
             if not opt.visible or type(opt.visible) == "function" and opt.visible() then
-                local catName = opt.data and opt.data.category or "Miscellaneous"
-                categories[catName] = categories[catName] or {}
-                categories[catName][#categories[catName] + 1] = {
-                    key = key,
-                    name = opt.name,
-                    config = opt,
-                    elemType = opt.type or "Generic"
-                }
+                local name = opt.name
+                local desc = opt.desc or ""
+                local ln, ld = name:lower(), desc:lower()
+                if filter == "" or ln:find(filter, 1, true) or ld:find(filter, 1, true) then
+                    local catName = opt.data and opt.data.category or "Miscellaneous"
+                    categories[catName] = categories[catName] or {}
+                    categories[catName][#categories[catName] + 1] = {
+                        key = key,
+                        name = name,
+                        config = opt,
+                        elemType = opt.type or "Generic"
+                    }
+                end
             end
         end
 
         for catName, items in SortedPairs(categories) do
-            local cat = vgui.Create("DCollapsibleCategory", scroll)
+            local cat = vgui.Create("DCollapsibleCategory", parent)
             cat:Dock(TOP)
             cat:SetLabel(catName)
             cat:SetExpanded(true)
@@ -503,14 +506,23 @@ hook.Add("PopulateConfigurationButtons", "PopulateOptions", function(pages)
         name = L("options"),
         drawFunc = function(parent)
             parent:Clear()
-            buildOptions(parent)
+            local searchEntry = vgui.Create("DTextEntry", parent)
+            searchEntry:Dock(TOP)
+            searchEntry:SetTall(30)
+            searchEntry:DockMargin(5, 5, 5, 5)
+            searchEntry:SetPlaceholderText(L("searchOptions"))
+            local scroll = vgui.Create("DScrollPanel", parent)
+            scroll:Dock(FILL)
+            local function refresh()
+                scroll:Clear()
+                buildOptions(scroll, searchEntry:GetValue():lower())
+            end
+
+            searchEntry.OnTextChanged = function() refresh() end
+            refresh()
         end
     }
 end)
-
-lia.option.add("BarsAlwaysVisible", "Bars Always Visible", "Make all bars always visible", false, nil, {
-    category = "General"
-})
 
 lia.option.add("descriptionWidth", "Description Width", "Adjust the description width on the HUD", 0.5, nil, {
     category = "HUD",

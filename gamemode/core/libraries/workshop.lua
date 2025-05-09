@@ -149,12 +149,18 @@ hook.Add("CreateInformationButtons", "WorkshopAddonsInformation", function(pages
                 return
             end
 
+            local search = vgui.Create("DTextEntry", panel)
+            search:Dock(TOP)
+            search:DockMargin(0, 0, 0, 5)
+            search:SetTall(30)
+            search:SetPlaceholderText(L("searchAddons"))
             local scroll = vgui.Create("DScrollPanel", panel)
             scroll:Dock(FILL)
             scroll:DockPadding(0, 10, 0, 0)
             local canvas = scroll:GetCanvas()
             local previewSize = 200
-            http.Fetch(string.format("https://steamcommunity.com/workshop/filedetails/?id=%s", collectionId), function(body)
+            local items = {}
+            http.Fetch("https://steamcommunity.com/workshop/filedetails/?id=" .. collectionId, function(body)
                 local ids = {}
                 for id in body:gmatch("sharedfile_(%d+)") do
                     ids[id] = true
@@ -166,6 +172,7 @@ hook.Add("CreateInformationButtons", "WorkshopAddonsInformation", function(pages
                         local item = vgui.Create("DPanel", canvas)
                         item:Dock(TOP)
                         item:DockMargin(0, 0, 0, 10)
+                        item.infoText = (info.title or ""):lower() .. " " .. (info.description or ""):lower()
                         local html = vgui.Create("DHTML", item)
                         html:SetSize(previewSize, previewSize)
                         html:SetMouseInputEnabled(false)
@@ -192,9 +199,20 @@ hook.Add("CreateInformationButtons", "WorkshopAddonsInformation", function(pages
                             local totalH = math.max(previewSize + pad * 2, title:GetTall() + 5 + hDesc + pad)
                             self:SetTall(totalH)
                         end
+
+                        items[#items + 1] = item
                     end)
                 end
             end)
+
+            search.OnTextChanged = function(self)
+                local q = self:GetValue():lower()
+                for _, item in ipairs(items) do
+                    item:SetVisible(q == "" or item.infoText:find(q, 1, true))
+                end
+
+                canvas:InvalidateLayout()
+            end
         end
     })
 end)

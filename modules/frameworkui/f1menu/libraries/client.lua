@@ -93,8 +93,7 @@ function MODULE:CreateInformationButtons(pages)
     end
 
     local function startSpectateView(ent, originalThirdPerson)
-        local yaw = client:EyeAngles().yaw
-        local camZOffset = 50
+        local yaw, camZOffset = client:EyeAngles().yaw, 50
         hook.Add("CalcView", "EntityViewCalcView", function()
             return {
                 origin = ent:GetPos() + Angle(0, yaw, 0):Forward() * 100 + Vector(0, 0, camZOffset),
@@ -127,17 +126,24 @@ function MODULE:CreateInformationButtons(pages)
 
     if not table.IsEmpty(entitiesByCreator) then
         table.insert(pages, {
-            name = "Entities",
+            name = L("entities"),
             drawFunc = function(panel)
+                local searchEntry = vgui.Create("DTextEntry", panel)
+                searchEntry:Dock(TOP)
+                searchEntry:DockMargin(0, 0, 0, 5)
+                searchEntry:SetTall(30)
+                searchEntry:SetPlaceholderText(L("searchEntities"))
                 local scroll = vgui.Create("DScrollPanel", panel)
                 scroll:Dock(FILL)
+                scroll:DockPadding(0, 0, 0, 10)
+                local canvas = scroll:GetCanvas()
+                local entries = {}
                 for owner, entsList in SortedPairs(entitiesByCreator) do
-                    local header = vgui.Create("DCollapsibleCategory", scroll)
+                    local header = vgui.Create("DCollapsibleCategory", canvas)
                     header:Dock(TOP)
                     header:SetLabel(owner)
                     header:SetExpanded(true)
                     header:DockMargin(0, 0, 0, 0)
-                    header.Paint = function() end
                     header.Header:SetFont("liaMediumFont")
                     header.Header:SetTextColor(Color(255, 255, 255))
                     header.Header:SetContentAlignment(5)
@@ -151,18 +157,20 @@ function MODULE:CreateInformationButtons(pages)
                     local body = vgui.Create("DPanel", header)
                     body.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
                     header:SetContents(body)
+                    entries[header] = {}
                     for _, ent in ipairs(entsList) do
                         local class = ent:GetClass()
-                        local entPanel = vgui.Create("DPanel", body)
-                        entPanel:Dock(TOP)
-                        entPanel:DockMargin(10, 15, 10, 10)
-                        entPanel:SetTall(100)
-                        entPanel.Paint = function(_, w, h)
+                        local panelEnt = vgui.Create("DPanel", body)
+                        panelEnt:Dock(TOP)
+                        panelEnt:DockMargin(10, 15, 10, 10)
+                        panelEnt:SetTall(100)
+                        panelEnt.infoText = class:lower()
+                        panelEnt.Paint = function(_, w, h)
                             draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
                             draw.SimpleText(class, "liaMediumFont", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
                         end
 
-                        local icon = vgui.Create("liaSpawnIcon", entPanel)
+                        local icon = vgui.Create("liaSpawnIcon", panelEnt)
                         icon:Dock(LEFT)
                         icon:SetWide(64)
                         icon:SetModel(ent:GetModel() or "models/error.mdl", ent:GetSkin() or 0)
@@ -188,31 +196,36 @@ function MODULE:CreateInformationButtons(pages)
                             local size = math.max(math.abs(mn.x) + math.abs(mx.x), math.abs(mn.y) + math.abs(mx.y), math.abs(mn.z) + math.abs(mx.z))
                             modelPanel:SetCamPos(Vector(size, size, size))
                             modelPanel:SetLookAt((mn + mx) * 0.5)
-                            local originalThirdPerson = lia.option.get("thirdPersonEnabled", false)
+                            local orig = lia.option.get("thirdPersonEnabled", false)
                             lia.option.set("thirdPersonEnabled", false)
-                            startSpectateView(ent, originalThirdPerson)
+                            startSpectateView(ent, orig)
                         end
 
-                        local btnContainer = vgui.Create("DPanel", entPanel)
+                        local btnContainer = vgui.Create("DPanel", panelEnt)
                         btnContainer:Dock(RIGHT)
-                        btnContainer:SetWide(180)
+                        btnContainer:SetWide(380)
+                        local btnW, btnH = 120, 40
                         if client:hasPrivilege("Staff Permission — View Entity (Entity Tab)") then
                             local btnView = vgui.Create("liaSmallButton", btnContainer)
                             btnView:Dock(LEFT)
-                            btnView:SetWide(60)
+                            btnView:DockMargin(5, 0, 5, 0)
+                            btnView:SetWide(btnW)
+                            btnView:SetTall(btnH)
                             btnView:SetText(L("viewButton"))
                             btnView.DoClick = function()
                                 if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
-                                local originalThirdPerson = lia.option.get("thirdPersonEnabled", false)
+                                local orig = lia.option.get("thirdPersonEnabled", false)
                                 lia.option.set("thirdPersonEnabled", false)
-                                startSpectateView(ent, originalThirdPerson)
+                                startSpectateView(ent, orig)
                             end
                         end
 
                         if client:hasPrivilege("Staff Permission — Teleport to Entity (Entity Tab)") then
                             local btnTeleport = vgui.Create("liaSmallButton", btnContainer)
                             btnTeleport:Dock(LEFT)
-                            btnTeleport:SetWide(60)
+                            btnTeleport:DockMargin(5, 0, 5, 0)
+                            btnTeleport:SetWide(btnW)
+                            btnTeleport:SetTall(btnH)
                             btnTeleport:SetText(L("teleportButton"))
                             btnTeleport.DoClick = function()
                                 net.Start("liaTeleportToEntity")
@@ -223,10 +236,29 @@ function MODULE:CreateInformationButtons(pages)
 
                         local btnWaypoint = vgui.Create("liaSmallButton", btnContainer)
                         btnWaypoint:Dock(RIGHT)
-                        btnWaypoint:SetWide(60)
+                        btnWaypoint:DockMargin(5, 0, 5, 0)
+                        btnWaypoint:SetWide(btnW)
+                        btnWaypoint:SetTall(btnH)
                         btnWaypoint:SetText(L("waypointButton"))
                         btnWaypoint.DoClick = function() client:setWaypoint(class, ent:GetPos()) end
+                        entries[header][#entries[header] + 1] = panelEnt
                     end
+                end
+
+                searchEntry.OnTextChanged = function(entry)
+                    local q = entry:GetValue():lower()
+                    for header, panels in pairs(entries) do
+                        local anyVisible = false
+                        for _, panelEnt in ipairs(panels) do
+                            local ok = q == "" or panelEnt.infoText:find(q, 1, true)
+                            panelEnt:SetVisible(ok)
+                            if ok then anyVisible = true end
+                        end
+
+                        header:SetVisible(anyVisible)
+                    end
+
+                    canvas:InvalidateLayout()
                 end
             end
         })
@@ -234,23 +266,43 @@ function MODULE:CreateInformationButtons(pages)
 
     if client:hasPrivilege("Staff Permission — Access Module List") then
         table.insert(pages, {
-            name = "Modules",
+            name = L("modules"),
             drawFunc = function(panel)
+                local moduleSearch = vgui.Create("DTextEntry", panel)
+                moduleSearch:Dock(TOP)
+                moduleSearch:DockMargin(10, 5, 10, 5)
+                moduleSearch:SetTall(30)
+                moduleSearch:SetPlaceholderText(L("searchModules"))
                 local scroll = vgui.Create("DScrollPanel", panel)
                 scroll:Dock(FILL)
+                scroll:DockPadding(0, 0, 0, 10)
+                local canvas = scroll:GetCanvas()
+                local panels = {}
                 for _, moduleData in SortedPairs(lia.module.list) do
                     local hasDesc = moduleData.desc and moduleData.desc ~= ""
                     local height = hasDesc and 80 or 40
-                    local modulePanel = vgui.Create("DPanel", scroll)
+                    local modulePanel = vgui.Create("DPanel", canvas)
                     modulePanel:Dock(TOP)
                     modulePanel:DockMargin(10, 5, 10, 0)
                     modulePanel:SetTall(height)
+                    modulePanel.infoText = moduleData.name:lower() .. " " .. (moduleData.desc or ""):lower()
                     modulePanel.Paint = function(_, w, h)
                         draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
                         draw.SimpleText(moduleData.name, "liaMediumFont", 20, 10, color_white)
-                        draw.SimpleText(moduleData.version and tostring(moduleData.version) or "1.0", "liaSmallFont", w - 20, 45, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+                        draw.SimpleText(tostring(moduleData.version or 1.0), "liaSmallFont", w - 20, 45, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
                         if hasDesc then draw.SimpleText(moduleData.desc, "liaSmallFont", 20, 45, color_white) end
                     end
+
+                    panels[#panels + 1] = modulePanel
+                end
+
+                moduleSearch.OnTextChanged = function(entry)
+                    local q = entry:GetValue():lower()
+                    for _, modulePanel in ipairs(panels) do
+                        modulePanel:SetVisible(q == "" or modulePanel.infoText:find(q, 1, true))
+                    end
+
+                    canvas:InvalidateLayout()
                 end
             end
         })

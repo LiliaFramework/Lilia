@@ -527,7 +527,6 @@ lia.config.add("AmmoDrawEnabled", "Enable Ammo Display", true, nil, {
 })
 
 hook.Add("PopulateConfigurationButtons", "PopulateConfig", function(pages)
-    local client = LocalPlayer()
     local ConfigFormatting = {
         Int = function(key, name, config, parent)
             local container = vgui.Create("DPanel", parent)
@@ -567,9 +566,9 @@ hook.Add("PopulateConfigurationButtons", "PopulateConfig", function(pages)
                 slider.TextArea:SetWide(50)
             end
 
-            slider.OnValueChanged = function(_, newValue)
-                local timerName = "ConfigChange_" .. key .. "_" .. os.time()
-                timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, math.floor(newValue)) end)
+            slider.OnValueChanged = function(_, v)
+                local t = "ConfigChange_" .. key .. "_" .. os.time()
+                timer.Create(t, 0.5, 1, function() netstream.Start("cfgSet", key, name, math.floor(v)) end)
             end
             return container
         end,
@@ -611,9 +610,9 @@ hook.Add("PopulateConfigurationButtons", "PopulateConfig", function(pages)
                 slider.TextArea:SetWide(50)
             end
 
-            slider.OnValueChanged = function(_, newValue)
-                local timerName = "ConfigChange_" .. key .. "_" .. os.time()
-                timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, tonumber(newValue)) end)
+            slider.OnValueChanged = function(_, v)
+                local t = "ConfigChange_" .. key .. "_" .. os.time()
+                timer.Create(t, 0.5, 1, function() netstream.Start("cfgSet", key, name, tonumber(v)) end)
             end
             return container
         end,
@@ -655,9 +654,8 @@ hook.Add("PopulateConfigurationButtons", "PopulateConfig", function(pages)
             end
 
             entry.OnEnter = function()
-                local newValue = entry:GetText()
-                local timerName = "ConfigChange_" .. key .. "_" .. os.time()
-                timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, newValue) end)
+                local t = "ConfigChange_" .. key .. "_" .. os.time()
+                timer.Create(t, 0.5, 1, function() netstream.Start("cfgSet", key, name, entry:GetText()) end)
             end
             return container
         end,
@@ -691,19 +689,15 @@ hook.Add("PopulateConfigurationButtons", "PopulateConfig", function(pages)
             button:SetTall(100)
             button:DockMargin(100, 10, 100, 0)
             button:SetText("")
-            button:SetCursor("hand")
             button.Paint = function(_, w, h)
-                local isChecked = lia.config.get(key, config.value)
-                local check = getIcon("0xe880", true)
-                local uncheck = getIcon("0xf096", true)
-                local icon = isChecked and check or uncheck
-                lia.util.drawText(icon, w / 2, h / 2 - 10, color_white, 1, 1, "liaIconsHugeNew")
+                local v = lia.config.get(key, config.value)
+                local ic = v and getIcon("0xe880", true) or getIcon("0xf096", true)
+                lia.util.drawText(ic, w / 2, h / 2 - 10, color_white, 1, 1, "liaIconsHugeNew")
             end
 
             button.DoClick = function()
-                local newValue = not lia.config.get(key, config.value)
-                local timerName = "ConfigChange_" .. key .. "_" .. os.time()
-                timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, newValue) end)
+                local t = "ConfigChange_" .. key .. "_" .. os.time()
+                timer.Create(t, 0.5, 1, function() netstream.Start("cfgSet", key, name, not lia.config.get(key, config.value)) end)
             end
             return container
         end,
@@ -736,38 +730,34 @@ hook.Add("PopulateConfigurationButtons", "PopulateConfig", function(pages)
             button:Dock(FILL)
             button:DockMargin(10, 0, 10, 0)
             button:SetText("")
-            button:SetCursor("hand")
             button.Paint = function(_, w, h)
-                local colorValue = lia.config.get(key, config.value)
-                surface.SetDrawColor(colorValue)
+                local c = lia.config.get(key, config.value)
+                surface.SetDrawColor(c)
                 surface.DrawRect(10, h / 2 - 15, w - 20, 30)
                 draw.RoundedBox(2, 10, h / 2 - 15, w - 20, 30, Color(255, 255, 255, 50))
             end
 
             button.DoClick = function()
                 if IsValid(button.picker) then button.picker:Remove() end
-                local pickerFrame = vgui.Create("DFrame")
-                pickerFrame:SetSize(300, 400)
-                pickerFrame:SetTitle("Choose Color")
-                pickerFrame:Center()
-                pickerFrame:MakePopup()
-                local colorMixer = pickerFrame:Add("DColorMixer")
-                colorMixer:Dock(FILL)
-                colorMixer:SetPalette(true)
-                colorMixer:SetAlphaBar(true)
-                colorMixer:SetWangs(true)
-                colorMixer:SetColor(lia.config.get(key, config.value))
-                local confirm = pickerFrame:Add("DButton")
-                confirm:Dock(BOTTOM)
-                confirm:SetTall(40)
-                confirm:SetText("Apply")
-                confirm:SetTextColor(color_white)
-                confirm:SetFont("ConfigFontLarge")
-                confirm:DockMargin(10, 10, 10, 10)
-                confirm.Paint = function(self, w, h)
+                local f = vgui.Create("DFrame")
+                f:SetSize(300, 400)
+                f:Center()
+                f:MakePopup()
+                local m = f:Add("DColorMixer")
+                m:Dock(FILL)
+                m:SetPalette(true)
+                m:SetAlphaBar(true)
+                m:SetWangs(true)
+                m:SetColor(lia.config.get(key, config.value))
+                local apply = f:Add("DButton")
+                apply:Dock(BOTTOM)
+                apply:SetTall(40)
+                apply:SetText("Apply")
+                apply:SetFont("ConfigFontLarge")
+                apply.Paint = function(_, w, h)
                     surface.SetDrawColor(Color(0, 150, 0))
                     surface.DrawRect(0, 0, w, h)
-                    if self:IsHovered() then
+                    if apply:IsHovered() then
                         surface.SetDrawColor(Color(0, 180, 0))
                         surface.DrawRect(0, 0, w, h)
                     end
@@ -776,15 +766,13 @@ hook.Add("PopulateConfigurationButtons", "PopulateConfig", function(pages)
                     surface.DrawOutlinedRect(0, 0, w, h)
                 end
 
-                confirm.DoClick = function()
-                    local newColor = colorMixer:GetColor()
-                    local timerName = "ConfigChange_" .. key .. "_" .. os.time()
-                    timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, newColor) end)
-                    pickerFrame:Remove()
+                apply.DoClick = function()
+                    local t = "ConfigChange_" .. key .. "_" .. os.time()
+                    timer.Create(t, 0.5, 1, function() netstream.Start("cfgSet", key, name, m:GetColor()) end)
+                    f:Remove()
                 end
 
-                colorMixer.ValueChanged = function(_, value) pickerFrame.curColor = value end
-                button.picker = pickerFrame
+                button.picker = f
             end
             return container
         end,
@@ -813,95 +801,105 @@ hook.Add("PopulateConfigurationButtons", "PopulateConfig", function(pages)
             description:SetContentAlignment(5)
             description:SetTextColor(Color(200, 200, 200))
             description:DockMargin(0, 10, 0, 0)
-            local comboBox = panel:Add("DComboBox")
-            comboBox:Dock(TOP)
-            comboBox:SetTall(60)
-            comboBox:DockMargin(300, 10, 300, 0)
-            comboBox:SetValue(tostring(lia.config.get(key, config.value)))
-            comboBox:SetFont("ConfigFontLarge")
-            comboBox:SetTextColor(Color(255, 255, 255))
-            comboBox.Paint = function(self, w, h)
+            local combo = panel:Add("DComboBox")
+            combo:Dock(TOP)
+            combo:SetTall(60)
+            combo:DockMargin(300, 10, 300, 0)
+            combo:SetValue(tostring(lia.config.get(key, config.value)))
+            combo:SetFont("ConfigFontLarge")
+            combo.Paint = function(self, w, h)
                 draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, 200))
                 self:DrawTextEntryText(Color(255, 255, 255), Color(255, 255, 255), Color(255, 255, 255))
             end
 
-            local options = lia.config.get(key .. "_options", config.data and config.data.options or {})
-            for _, option in ipairs(options) do
-                comboBox:AddChoice(option)
+            local opts = config.data and config.data.options or {}
+            for _, o in ipairs(opts) do
+                combo:AddChoice(o)
             end
 
-            comboBox.OnSelect = function(_, _, value)
-                local timerName = "ConfigChange_" .. key .. "_" .. os.time()
-                timer.Create(timerName, 0.5, 1, function() netstream.Start("cfgSet", key, name, value) end)
+            combo.OnSelect = function(_, _, v)
+                local t = "ConfigChange_" .. key .. "_" .. os.time()
+                timer.Create(t, 0.5, 1, function() netstream.Start("cfgSet", key, name, v) end)
             end
             return container
         end
     }
 
     local function buildConfiguration(parent)
+        parent:Clear()
+        local search = vgui.Create("DTextEntry", parent)
+        search:Dock(TOP)
+        search:SetTall(30)
+        search:DockMargin(5, 5, 5, 5)
+        search:SetPlaceholderText("Search configurations...")
         local scroll = vgui.Create("DScrollPanel", parent)
         scroll:Dock(FILL)
-        local categories = {}
-        local orderedKeys = {}
-        for key, _ in pairs(lia.config.stored) do
-            table.insert(orderedKeys, key)
-        end
-
-        table.sort(orderedKeys, function(a, b) return lia.config.stored[a].name < lia.config.stored[b].name end)
-        for _, key in ipairs(orderedKeys) do
-            local option = lia.config.stored[key]
-            local elemType = option.data and option.data.type or "Generic"
-            local catName = option.category or "Miscellaneous"
-            categories[catName] = categories[catName] or {}
-            table.insert(categories[catName], {
-                key = key,
-                name = option.name,
-                config = option,
-                elemType = elemType
-            })
-        end
-
-        for catName, configItems in SortedPairs(categories) do
-            local catPanel = vgui.Create("DCollapsibleCategory", scroll)
-            catPanel:Dock(TOP)
-            catPanel:SetLabel(catName)
-            catPanel:SetExpanded(true)
-            catPanel:DockMargin(0, 0, 0, 10)
-            catPanel.Header:SetContentAlignment(5)
-            catPanel.Header:SetTall(30)
-            catPanel.Header:SetFont("liaMediumFont")
-            catPanel.Header:SetTextColor(Color(255, 255, 255))
-            catPanel.Header.Paint = function(_, w, h)
-                draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 200))
-                surface.SetDrawColor(255, 255, 255, 80)
-                surface.DrawOutlinedRect(0, 0, w, h)
+        local function populate(filter)
+            scroll:Clear()
+            local categories = {}
+            local keys = {}
+            for k in pairs(lia.config.stored) do
+                keys[#keys + 1] = k
             end
 
-            catPanel.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40, 60)) end
-            local bodyPanel = vgui.Create("DPanel", catPanel)
-            bodyPanel:SetTall(#configItems * 240)
-            bodyPanel.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 50)) end
-            catPanel:SetContents(bodyPanel)
-            for _, itemData in ipairs(configItems) do
-                local panelElement = ConfigFormatting[itemData.elemType](itemData.key, itemData.name, itemData.config, bodyPanel)
-                panelElement:Dock(TOP)
-                panelElement:DockMargin(10, 10, 10, 0)
-                panelElement.Paint = function(_, w, h)
-                    draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
-                    surface.SetDrawColor(255, 255, 255)
+            table.sort(keys, function(a, b) return lia.config.stored[a].name < lia.config.stored[b].name end)
+            for _, k in ipairs(keys) do
+                local opt = lia.config.stored[k]
+                local n = opt.name or ""
+                local d = opt.desc or ""
+                local ln, ld = n:lower(), d:lower()
+                if filter == "" or ln:find(filter, 1, true) or ld:find(filter, 1, true) then
+                    local cat = opt.category or "Miscellaneous"
+                    categories[cat] = categories[cat] or {}
+                    table.insert(categories[cat], {
+                        key = k,
+                        name = n,
+                        config = opt,
+                        elemType = opt.data and opt.data.type or "Generic"
+                    })
+                end
+            end
+
+            for catName, items in SortedPairs(categories) do
+                local cat = vgui.Create("DCollapsibleCategory", scroll)
+                cat:Dock(TOP)
+                cat:SetLabel(catName)
+                cat:SetExpanded(true)
+                cat:DockMargin(0, 0, 0, 10)
+                cat.Header:SetContentAlignment(5)
+                cat.Header:SetTall(30)
+                cat.Header:SetFont("liaMediumFont")
+                cat.Header:SetTextColor(Color(255, 255, 255))
+                cat.Header.Paint = function(_, w, h)
+                    draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 200))
+                    surface.SetDrawColor(255, 255, 255, 80)
                     surface.DrawOutlinedRect(0, 0, w, h)
+                end
+
+                cat.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40, 60)) end
+                local body = vgui.Create("DPanel", cat)
+                body:SetTall(#items * 240)
+                body.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 50)) end
+                cat:SetContents(body)
+                for _, it in ipairs(items) do
+                    local el = ConfigFormatting[it.elemType](it.key, it.name, it.config, body)
+                    el:Dock(TOP)
+                    el:DockMargin(10, 10, 10, 0)
+                    el.Paint = function(_, w, h)
+                        draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
+                        surface.SetDrawColor(255, 255, 255)
+                        surface.DrawOutlinedRect(0, 0, w, h)
+                    end
                 end
             end
         end
+
+        search.OnTextChanged = function() populate(search:GetValue():lower()) end
+        populate("")
     end
 
-    if client:hasPrivilege("Staff Permissions - Access Configuration Menu") then
-        table.insert(pages, {
-            name = "Configuration",
-            drawFunc = function(parent)
-                parent:Clear()
-                buildConfiguration(parent)
-            end
-        })
-    end
+    table.insert(pages, {
+        name = "Configuration",
+        drawFunc = function(parent) buildConfiguration(parent) end
+    })
 end)

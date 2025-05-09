@@ -290,8 +290,12 @@ end
 hook.Add("CreateInformationButtons", "CreateInformationMenuCommands", function(pages)
     local client = LocalPlayer()
     table.insert(pages, {
-        name = "commands",
+        name = L("commands"),
         drawFunc = function(panel)
+            local searchEntry = vgui.Create("DTextEntry", panel)
+            searchEntry:Dock(TOP)
+            searchEntry:SetTall(30)
+            searchEntry:SetPlaceholderText(L("searchCommands"))
             local scroll = vgui.Create("DScrollPanel", panel)
             scroll:Dock(FILL)
             local iconLayout = vgui.Create("DIconLayout", scroll)
@@ -300,47 +304,51 @@ hook.Add("CreateInformationButtons", "CreateInformationMenuCommands", function(p
             iconLayout:SetSpaceX(5)
             iconLayout.PerformLayout = function(self)
                 local y = 0
-                local parentWidth = self:GetWide()
+                local w = self:GetWide()
                 for _, child in ipairs(self:GetChildren()) do
-                    child:SetPos((parentWidth - child:GetWide()) / 2, y)
+                    child:SetPos((w - child:GetWide()) / 2, y)
                     y = y + child:GetTall() + self:GetSpaceY()
                 end
 
                 self:SetTall(y)
             end
 
-            for cmdName, cmdData in SortedPairs(lia.command.list) do
-                if isnumber(cmdName) then continue end
-                local hasAccess, privilege = lia.command.hasAccess(client, cmdName, cmdData)
-                if hasAccess then
+            local function refresh()
+                iconLayout:Clear()
+                local filter = searchEntry:GetValue():lower()
+                for cmdName, cmdData in SortedPairs(lia.command.list) do
+                    if isnumber(cmdName) then continue end
+                    local nameLower = cmdName:lower()
+                    local descLower = (cmdData.desc or ""):lower()
+                    if filter ~= "" and not (nameLower:find(filter) or descLower:find(filter)) then continue end
+                    local hasAccess, privilege = lia.command.hasAccess(client, cmdName, cmdData)
+                    if not hasAccess then continue end
                     local hasDesc = cmdData.desc and cmdData.desc ~= ""
-                    local panelHeight = hasDesc and 80 or 40
+                    local height = hasDesc and 80 or 40
                     local commandPanel = vgui.Create("DPanel", iconLayout)
-                    commandPanel:SetSize(panel:GetWide(), panelHeight)
+                    commandPanel:SetSize(panel:GetWide(), height)
                     commandPanel.Paint = function(_, w, h)
                         draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
                         local baseX = 20
-                        local commandText = "/" .. cmdName
+                        local text = "/" .. cmdName
                         local syntax = cmdData.syntax or ""
-                        if syntax ~= "" then
-                            if syntax:sub(1, 1) == "" and syntax:sub(-1) == "" then
-                                commandText = commandText .. " " .. syntax
-                            else
-                                commandText = commandText .. " " .. syntax .. ""
-                            end
-                        end
-
+                        if syntax ~= "" then text = text .. " " .. syntax end
                         if hasDesc then
-                            draw.SimpleText(commandText, "liaMediumFont", baseX, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                            draw.SimpleText(text, "liaMediumFont", baseX, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
                             draw.SimpleText(cmdData.desc, "liaSmallFont", baseX, 45, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
                             draw.SimpleText(privilege or L("none"), "liaSmallFont", w - 20, 45, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
                         else
-                            draw.SimpleText(commandText, "liaMediumFont", baseX, h / 2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                            draw.SimpleText(text, "liaMediumFont", baseX, h / 2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                             draw.SimpleText(privilege or L("none"), "liaSmallFont", w - 20, h / 2, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
                         end
                     end
                 end
+
+                iconLayout:InvalidateLayout(true)
             end
+
+            searchEntry.OnTextChanged  = function() refresh() end
+            refresh()
         end
     })
 end)

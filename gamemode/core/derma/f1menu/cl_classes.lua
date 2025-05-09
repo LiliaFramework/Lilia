@@ -26,7 +26,7 @@ function PANEL:loadClasses()
     self.tabList = {}
     for _, cl in ipairs(list) do
         local canBe = lia.class.canBe(LocalPlayer(), cl.index)
-        local btn = self.sidebar:Add("liaSmallButton")
+        local btn = self.sidebar:Add("liaMediumButton")
         btn:SetText(cl.name or L("unnamed"))
         btn:SetTall(50)
         btn:Dock(TOP)
@@ -142,7 +142,7 @@ end
 
 function PANEL:addJoinButton(parent, cl, canBe)
     local isCurrent = LocalPlayer():getChar() and LocalPlayer():getChar():getClass() == cl.index
-    local btn = parent:Add("liaSmallButton")
+    local btn = parent:Add("liaMediumButton")
     btn:SetText(isCurrent and L("alreadyInClass") or canBe and L("joinClass") or L("classRequirementsNotMet"))
     btn:SetTall(40)
     local col = lia.color.ReturnMainAdjustedColors().text

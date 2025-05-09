@@ -280,33 +280,20 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
     local function buildKeybinds(parent)
         parent:Clear()
         local container = parent:Add("DPanel")
-        container:SetSize(parent:GetWide() * 0.5, parent:GetTall() * 0.5)
-        container:CenterHorizontal()
-        container:Center()
         container:Dock(FILL)
-        container:DockMargin(0, 30, 0, 0)
         local allowEdit = lia.config.get("AllowKeybindEditing", true)
-        local resetAllBtn
-        if allowEdit then
-            resetAllBtn = container:Add("DButton")
-            resetAllBtn:Dock(TOP)
-            resetAllBtn:SetText(L("resetAllKeybinds"))
-            resetAllBtn:SetTall(30)
-        end
-
-        local scroll = container:Add("DScrollPanel")
-        scroll:Dock(FILL)
-        local function populateRows()
+        local searchEntry, scroll
+        local function populateRows(filter)
             scroll:Clear()
             if not istable(lia.keybind.stored) then return end
             local taken = {}
-            for actionName, data in pairs(lia.keybind.stored) do
-                if istable(data) and data.value then taken[data.value] = actionName end
+            for action, data in pairs(lia.keybind.stored) do
+                if istable(data) and data.value then taken[data.value] = action end
             end
 
             local sortedActions = {}
-            for actionName, data in pairs(lia.keybind.stored) do
-                if istable(data) then table.insert(sortedActions, actionName) end
+            for action, data in pairs(lia.keybind.stored) do
+                if istable(data) and (filter == "" or tostring(action):lower():find(filter, 1, true)) then sortedActions[#sortedActions + 1] = action end
             end
 
             table.sort(sortedActions, function(a, b) return tostring(a) < tostring(b) end)
@@ -319,23 +306,22 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
                 local lbl = row:Add("DLabel")
                 lbl:Dock(LEFT)
                 lbl:SetWide(300)
-                lbl:SetText(action)
                 lbl:SetFont("liaBigFont")
+                lbl:SetText(action)
                 local currentKey = lia.keybind.get(action, KEY_NONE)
                 if allowEdit then
                     local combo = row:Add("DComboBox")
                     combo:Dock(RIGHT)
                     combo:SetWide(200)
-                    combo:SetValue(input.GetKeyName(currentKey) or "NONE")
                     combo:SetFont("liaMediumFont")
+                    combo:SetValue(input.GetKeyName(currentKey) or "NONE")
                     local choices = {}
                     for name, code in pairs(KeybindKeys) do
                         if not taken[code] or code == currentKey then
-                            local disp = input.GetKeyName(code) or name
-                            table.insert(choices, {
-                                txt = disp,
+                            choices[#choices + 1] = {
+                                txt = input.GetKeyName(code) or name,
                                 keycode = code
-                            })
+                            }
                         end
                     end
 
@@ -344,10 +330,10 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
                         combo:AddChoice(c.txt, c.keycode)
                     end
 
-                    combo.OnSelect = function(_, _, _, newKeyCode)
-                        if not newKeyCode then return end
+                    combo.OnSelect = function(_, _, _, newKey)
+                        if not newKey then return end
                         for tk, tv in pairs(taken) do
-                            if tk == newKeyCode and tv ~= action then
+                            if tk == newKey and tv ~= action then
                                 combo:SetValue(input.GetKeyName(currentKey) or "NONE")
                                 return
                             end
@@ -355,11 +341,11 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
 
                         taken[currentKey] = nil
                         if lia.keybind.stored[currentKey] then lia.keybind.stored[currentKey] = nil end
-                        if data then lia.keybind.stored[newKeyCode] = action end
-                        taken[newKeyCode] = action
-                        lia.keybind.stored[action].value = newKeyCode
+                        data.value = newKey
+                        lia.keybind.stored[newKey] = action
+                        taken[newKey] = action
                         lia.keybind.save()
-                        currentKey = newKeyCode
+                        currentKey = newKey
                     end
                 else
                     local textLabel = row:Add("DLabel")
@@ -371,30 +357,39 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
             end
         end
 
-        populateRows()
-        if allowEdit and IsValid(resetAllBtn) then
+        if allowEdit then
+            local resetAllBtn = container:Add("DButton")
+            resetAllBtn:Dock(TOP)
+            resetAllBtn:SetTall(30)
+            resetAllBtn:SetText(L("resetAllKeybinds"))
             resetAllBtn.DoClick = function()
-                for actionName, data in pairs(lia.keybind.stored) do
+                for action, data in pairs(lia.keybind.stored) do
                     if istable(data) and data.default then
                         if lia.keybind.stored[data.value] then lia.keybind.stored[data.value] = nil end
                         data.value = data.default
-                        lia.keybind.stored[data.default] = actionName
+                        lia.keybind.stored[data.default] = action
                     end
                 end
 
                 lia.keybind.save()
-                populateRows()
+                populateRows(searchEntry:GetValue():lower())
             end
         end
+
+        searchEntry = container:Add("DTextEntry")
+        searchEntry:Dock(TOP)
+        searchEntry:SetTall(30)
+        searchEntry:SetPlaceholderText("Search keybinds...")
+        searchEntry.OnTextChanged = function() populateRows(searchEntry:GetValue():lower()) end
+        scroll = container:Add("DScrollPanel")
+        scroll:Dock(FILL)
+        populateRows("")
     end
 
-    table.insert(pages, {
+    pages[#pages + 1] = {
         name = L("keybinds"),
-        drawFunc = function(parent)
-            parent:Clear()
-            buildKeybinds(parent)
-        end
-    })
+        drawFunc = buildKeybinds
+    }
 end)
 
 lia.keybind.add(KEY_I, "Open Inventory", function()

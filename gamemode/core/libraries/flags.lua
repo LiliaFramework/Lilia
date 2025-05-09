@@ -91,27 +91,41 @@ hook.Add("CreateInformationButtons", "CreateInformationMenuFlags", function(page
     table.insert(pages, {
         name = L("flags"),
         drawFunc = function(panel)
-            local char = client:getChar()
+            local searchEntry = vgui.Create("DTextEntry", panel)
+            searchEntry:Dock(TOP)
+            searchEntry:SetTall(30)
+            searchEntry:SetPlaceholderText(L("searchFlags"))
             local scroll = vgui.Create("DScrollPanel", panel)
             scroll:Dock(FILL)
-            for flagName, flagData in SortedPairs(lia.flag.list) do
-                if isnumber(flagName) then continue end
-                local hasDesc = flagData.desc and flagData.desc ~= ""
-                local height = hasDesc and 80 or 40
-                local flagPanel = vgui.Create("DPanel", scroll)
-                flagPanel:Dock(TOP)
-                flagPanel:DockMargin(10, 5, 10, 0)
-                flagPanel:SetTall(height)
-                flagPanel.Paint = function(_, w, h)
-                    local hasFlag = char:hasFlags(flagName)
-                    local status = hasFlag and "✓" or "✗"
-                    local statusColor = hasFlag and Color(0, 255, 0) or Color(255, 0, 0)
-                    draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
-                    draw.SimpleText("Flag '" .. flagName .. "'", "liaMediumFont", 20, 10, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-                    draw.SimpleText(status, "liaHugeFont", w - 20, h / 2, statusColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
-                    if hasDesc then draw.SimpleText(flagData.desc, "liaSmallFont", 20, 45, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP) end
+            local canvas = scroll:GetCanvas()
+            local function refresh()
+                canvas:Clear()
+                local filter = searchEntry:GetValue():lower()
+                for flagName, flagData in SortedPairs(lia.flag.list) do
+                    if isnumber(flagName) then continue end
+                    local nameLower = flagName:lower()
+                    local descLower = (flagData.desc or ""):lower()
+                    if filter ~= "" and not (nameLower:find(filter, 1, true) or descLower:find(filter, 1, true)) then continue end
+                    local hasDesc = flagData.desc and flagData.desc ~= ""
+                    local height = hasDesc and 80 or 40
+                    local flagPanel = vgui.Create("DPanel", canvas)
+                    flagPanel:Dock(TOP)
+                    flagPanel:DockMargin(10, 5, 10, 0)
+                    flagPanel:SetTall(height)
+                    flagPanel.Paint = function(_, w, h)
+                        local hasFlag = client:getChar():hasFlags(flagName)
+                        local status = hasFlag and "✓" or "✗"
+                        local statusColor = hasFlag and Color(0, 255, 0) or Color(255, 0, 0)
+                        draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
+                        draw.SimpleText("Flag '" .. flagName .. "'", "liaMediumFont", 20, 10, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                        draw.SimpleText(status, "liaHugeFont", w - 20, h / 2, statusColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+                        if hasDesc then draw.SimpleText(flagData.desc, "liaSmallFont", 20, 45, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP) end
+                    end
                 end
             end
+
+            searchEntry.OnTextChanged = refresh
+            refresh()
         end
     })
 end)
