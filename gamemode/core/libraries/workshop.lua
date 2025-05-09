@@ -178,7 +178,7 @@ hook.Add("CreateInformationButtons", "WorkshopAddonsInformation", function(pages
                         desc:SetFont("liaMediumFont")
                         desc:SetWrap(true)
                         desc:SetText(info.description or "")
-                        function item:PerformLayout(w, h)
+                        function item:PerformLayout()
                             local pad = 10
                             html:SetPos(pad, pad)
                             title:SizeToContents()

@@ -129,7 +129,7 @@ end, {
     }
 })
 
-local function onFileNodeSelected(self, _, title)
+local function onFileNodeSelected(self, _, _)
     local view, pnl = self.ViewPanel, self.pnlContent
     view:Clear(true)
     local path, pathID = self.BasePath, self.PathID
@@ -592,13 +592,11 @@ function PANEL:Paint()
     local y = 0
     local _, th = DrawText("Cache Sizes", "AddonInfo_Header", 0, y, color_white)
     y = y + th
-    local offset, maxW = 0, 0
-    local tw, h1 = DrawText("~" .. GetSize(self.luaCacheSize) .. " (" .. self.luaCacheFiles .. " files)", "AddonInfo_Small", 0, y + offset, Color(220, 220, 220))
-    offset = offset + h1
-    maxW = math.max(maxW, tw)
-    local tw2, h2 = DrawText("~" .. GetSize(self.wsCacheSize) .. " (" .. self.wsCacheFiles .. " files)", "AddonInfo_Small", 0, y + offset, Color(220, 220, 220))
-    offset = offset + h2
-    maxW = math.max(maxW, tw2) + 25
+    local tw1, h1 = DrawText("~" .. GetSize(self.luaCacheSize) .. " (" .. self.luaCacheFiles .. " files)", "AddonInfo_Small", 0, y, Color(220, 220, 220))
+    y = y + h1
+    local tw2, h2 = DrawText("~" .. GetSize(self.wsCacheSize) .. " (" .. self.wsCacheFiles .. " files)", "AddonInfo_Small", 0, y, Color(220, 220, 220))
+    y = y + h2
+    local maxW = math.max(tw1, tw2) + 25
     local _, th2 = DrawText("Server Lua cache", "AddonInfo_Small", maxW, y, color_white)
     y = y + th2
     local _, th3 = DrawText("Workshop download cache", "AddonInfo_Small", maxW, y)
@@ -622,19 +620,20 @@ function PANEL:Paint()
     y = y + th10 * 2
     local _, th11 = DrawText("Files that aren't used: ( Safe to delete )", "AddonInfo_Text", 0, y, color_white)
     y = y + th11
-    local offY, maxW2 = 0, 0
+    local maxW2 = 0
     for _, e in ipairs(self.workshopWasteFiles) do
-        local tw6, th12 = DrawText(GetSize(e[2]) .. "    ", "AddonInfo_Small", 0, y + offY, Color(220, 220, 220))
-        offY = offY + th12
+        local tw6, th12 = DrawText(GetSize(e[2]) .. "    ", "AddonInfo_Small", 0, y, Color(220, 220, 220))
         maxW2 = math.max(maxW2, tw6)
+        y = y + th12
     end
 
+    y = y - #self.workshopWasteFiles * th12
     for _, e in ipairs(self.workshopWasteFiles) do
         local _, th13 = DrawText(e[1], "AddonInfo_Small", maxW2, y, color_white)
         y = y + th13
     end
 
-    y = y + th13 + ScreenScaleH(8)
+    y = y + ScreenScaleH(8)
     local _, th14 = DrawText("Legacy Addons", "AddonInfo_Header", 0, y, color_white)
     y = y + th14 + ScreenScaleH(8)
     local _, th15 = DrawText("Legacy Addons with models:", "AddonInfo_Text", 0, y, color_white)

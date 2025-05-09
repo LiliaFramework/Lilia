@@ -141,7 +141,7 @@ lia.command.add("plygetplaytime", {
     AdminStick = {
         Name = L("adminStickGetPlayTimeName"),
         Category = L("displayStaffCommandsDesc"),
-        SubCategory = L("misc"), 
+        SubCategory = L("misc"),
         Icon = "icon16/time.png"
     },
     desc = L("plygetplaytimeDesc"),
