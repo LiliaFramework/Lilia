@@ -500,14 +500,14 @@ hook.Add("PopulateConfigurationButtons", "PopulateOptions", function(pages)
     end
 
     pages[#pages + 1] = {
-        name = "options",
+        name = L("options"),
         drawFunc = function(parent)
             parent:Clear()
             buildOptions(parent)
         end
     }
 end)
-
+Add a search option on top 
 lia.option.add("BarsAlwaysVisible", "Bars Always Visible", "Make all bars always visible", false, nil, {
     category = "General"
 })

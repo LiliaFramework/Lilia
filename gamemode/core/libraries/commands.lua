@@ -290,7 +290,7 @@ end
 hook.Add("CreateInformationButtons", "CreateInformationMenuCommands", function(pages)
     local client = LocalPlayer()
     table.insert(pages, {
-        name = "commandsTab",
+        name = "commands",
         drawFunc = function(panel)
             local scroll = vgui.Create("DScrollPanel", panel)
             scroll:Dock(FILL)

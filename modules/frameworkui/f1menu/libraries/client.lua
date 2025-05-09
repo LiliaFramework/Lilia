@@ -258,14 +258,14 @@ function MODULE:CreateInformationButtons(pages)
 end
 
 function MODULE:CreateMenuButtons(tabs)
-    tabs[L("statusTab")] = function(panel)
+    tabs[L("status")] = function(panel)
         panel.info = vgui.Create("liaCharInfo", panel)
         panel.info:setup()
         panel.info:SetAlpha(0)
         panel.info:AlphaTo(255, 0.5)
     end
 
-    tabs[L("informationTab")] = function(panel)
+    tabs[L("information")] = function(panel)
         panel.sidebar = panel:Add("DScrollPanel")
         panel.sidebar:Dock(LEFT)
         panel.sidebar:SetWide(200)
@@ -294,7 +294,7 @@ function MODULE:CreateMenuButtons(tabs)
         end
     end
 
-    tabs[L("settingsTab")] = function(panel)
+    tabs[L("settings")] = function(panel)
         panel.sidebar = panel:Add("DScrollPanel")
         panel.sidebar:Dock(LEFT)
         panel.sidebar:SetWide(200)
