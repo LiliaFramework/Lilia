@@ -648,7 +648,7 @@ function PANEL:Paint()
 
         nameW = nameW + 25
         y = startY
-        for p, st in pairs(self.legacyAddons) do
+        for _, st in pairs(self.legacyAddons) do
             local _, th17 = DrawText(st, "AddonInfo_Small", nameW, y, Color(220, 220, 220))
             y = y + th17
         end
