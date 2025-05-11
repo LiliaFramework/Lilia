@@ -56,7 +56,6 @@ local function utf8len(s)
     end
     return len
 end
-print("Hi")
 
 if not string.utf8bytes then string.utf8bytes = utf8charbytes end
 if not string.utf8len then string.utf8len = utf8len end
