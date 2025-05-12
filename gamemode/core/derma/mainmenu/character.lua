@@ -239,7 +239,7 @@ end
 
 function PANEL:addTab(name, callback, justClick, height)
     local btn = self.tabs:Add("liaMediumButton")
-    local label = L(name .. "Label"):upper()
+    local label = L(name):upper()
     btn:SetText(label)
     surface.SetFont(btn:GetFont())
     local textW, textH = surface.GetTextSize(label)
