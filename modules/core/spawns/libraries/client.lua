@@ -34,14 +34,14 @@ function MODULE:HUDPaint()
         surface.SetDrawColor(0, 0, 0, ceil(aprg ^ 0.5 * 255))
         surface.DrawRect(-1, -1, ScrW() + 2, ScrH() + 2)
         local text = L("youHaveDied")
-        surface.SetFont("liaDynFontMedium")
+        surface.SetFont("liaHugeFont")
         local textW, textH = surface.GetTextSize(text)
-        lia.util.drawText(text, ScrW() / 2 - textW / 2, ScrH() / 2 - textH / 2, ColorAlpha(color_white, aprg2 * 255), 0, 0, "liaDynFontMedium", aprg2 * 255)
+        lia.util.drawText(text, ScrW() / 2 - textW / 2, ScrH() / 2 - textH / 2, ColorAlpha(color_white, aprg2 * 255), 0, 0, "liaHugeFont", aprg2 * 255)
         if not hideRespawnKey then
             local displayText = timeLeft > 0 and L("respawnIn", timeLeft) or L("respawnKey", input.GetKeyName(KEY_SPACE))
-            surface.SetFont("liaBigFont")
+            surface.SetFont("liaHugeFont")
             local displayW, _ = surface.GetTextSize(displayText)
-            lia.util.drawText(displayText, ScrW() / 2 - displayW / 2, ScrH() - 50, Color(255, 255, 255), 0, 1, "liaBigFont")
+            lia.util.drawText(displayText, ScrW() / 2 - displayW / 2, ScrH() - 50, Color(255, 255, 255), 0, 1, "liaHugeFont")
         end
 
         if timeLeft <= 0 and input.IsKeyDown(KEY_SPACE) then
