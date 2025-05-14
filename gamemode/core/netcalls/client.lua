@@ -379,6 +379,65 @@ net.Receive("StringRequest", function()
     end)
 end)
 
+local function OrganizeNotices()
+    local baseY = 10
+    local list = {}
+    for _, n in ipairs(lia.notices) do
+        if IsValid(n) then list[#list + 1] = n end
+    end
+
+    while #list > 6 do
+        local old = table.remove(list, 1)
+        if IsValid(old) then old:Remove() end
+    end
+
+    local leftCount = #list > 3 and #list - 3 or 0
+    for i, n in ipairs(list) do
+        local h = n:GetTall()
+        local x, y
+        if i <= leftCount then
+            x = 10
+            y = baseY + (i - 1) * (h + 5)
+        else
+            local idx = i - leftCount
+            x = ScrW() - n:GetWide() - 10
+            y = baseY + (idx - 1) * (h + 5)
+        end
+
+        n:MoveTo(x, y, 0.15)
+    end
+end
+
+local function RemoveNotices(notice)
+    if not IsValid(notice) then return end
+    for i, v in ipairs(lia.notices) do
+        if v == notice then
+            notice:SizeTo(notice:GetWide(), 0, 0.2, 0, -1, function() if IsValid(notice) then notice:Remove() end end)
+            table.remove(lia.notices, i)
+            timer.Simple(0.25, OrganizeNotices)
+            break
+        end
+    end
+end
+
+local function CreateNoticePanel(length, notimer)
+    if not notimer then notimer = false end
+    local notice = vgui.Create("noticePanel")
+    notice.start = CurTime() + 0.25
+    notice.endTime = CurTime() + length
+    notice.oh = notice:GetTall()
+    function notice:Paint(w, h)
+        draw.RoundedBox(4, 0, 0, w, h, Color(35, 35, 35, 200))
+        if self.start then
+            local progress = math.TimeFraction(self.start, self.endTime, CurTime()) * w
+            draw.RoundedBox(4, 0, 0, progress, h, lia.config.get("Color"))
+        end
+    end
+
+    if not notimer then timer.Simple(length, function() RemoveNotices(notice) end) end
+    return notice
+end
+
 net.Receive("BinaryQuestionRequest", function()
     local question = L(net.ReadString())
     local option1 = L(net.ReadString(), "Yes")
