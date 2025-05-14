@@ -1,5 +1,12 @@
 ﻿local TimeFraction, CurTime = math.TimeFraction, CurTime
 local surfaceSetDrawColor, surfaceDrawRect, surfaceDrawOutlinedRect = surface.SetDrawColor, surface.DrawRect, surface.DrawOutlinedRect
+local function PaintPanel(_, w, h)
+    surfaceSetDrawColor(0, 0, 0, 255)
+    surfaceDrawOutlinedRect(0, 0, w, h, 2)
+    surfaceSetDrawColor(0, 0, 0, 150)
+    surfaceDrawRect(1, 1, w - 2, h - 2)
+end
+
 local PANEL = {}
 function PANEL:Init()
     self:SetSize(256, 36)
@@ -12,15 +19,14 @@ end
 
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 3, 2)
-    surfaceSetDrawColor(230, 230, 230, 10)
-    surfaceDrawRect(0, 0, w, h)
+    PaintPanel(self, w, h)
     if self.start then
         local w2 = TimeFraction(self.start, self.endTime, CurTime()) * w
         surfaceSetDrawColor(lia.config.get("Color"))
         surfaceDrawRect(w2, 0, w - w2, h)
     end
 
-    surfaceSetDrawColor(0, 0, 0, 25)
+    surfaceSetDrawColor(lia.config.get("Color"))
     surfaceDrawOutlinedRect(0, 0, w, h)
 end
 
@@ -49,15 +55,14 @@ end
 
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 10)
-    surfaceSetDrawColor(230, 230, 230, 10)
-    surfaceDrawRect(0, 0, w, h)
+    PaintPanel(self, w, h)
     if self.start then
         local w2 = TimeFraction(self.start, self.endTime, CurTime()) * w
         surfaceSetDrawColor(lia.config.get("Color"))
         surfaceDrawRect(w2, 0, w - w2, h)
     end
 
-    surfaceSetDrawColor(0, 0, 0, 45)
+    surfaceSetDrawColor(lia.config.get("Color"))
     surfaceDrawOutlinedRect(0, 0, w, h)
 end
 
