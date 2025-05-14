@@ -1,9 +1,9 @@
 ﻿MODULE.CharacterInformation = {}
 function MODULE:LoadCharInformation()
     hook.Run("AddSection", L("generalInfo"), Color(0, 0, 0), 1, 1)
-    hook.Run("AddTextField", L("generalInfo"), "name", L("nameField"), function() return LocalPlayer():getChar():getName() end)
-    hook.Run("AddTextField", L("generalInfo"), "desc", L("descField"), function() return LocalPlayer():getChar():getDesc() end)
-    hook.Run("AddTextField", L("generalInfo"), "money", L("moneyField"), function() return LocalPlayer():getMoney() end)
+    hook.Run("AddTextField", L("generalInfo"), "name", L("name"), function() return LocalPlayer():getChar():getName() end)
+    hook.Run("AddTextField", L("generalInfo"), "desc", L("desc"), function() return LocalPlayer():getChar():getDesc() end)
+    hook.Run("AddTextField", L("generalInfo"), "money", L("money"), function() return LocalPlayer():getMoney() end)
 end
 
 function MODULE:AddSection(sectionName, color, priority, location)

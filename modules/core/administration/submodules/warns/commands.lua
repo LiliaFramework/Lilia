@@ -9,7 +9,7 @@
         SubCategory = L("warnings"),
         Icon = "icon16/error.png",
         ExtraFields = {
-            [L("warningField")] = "text"
+            [L("warning")] = "text"
         }
     },
     onRun = function(client, arguments)
@@ -73,19 +73,19 @@ lia.command.add("viewwarns", {
 
         lia.util.CreateTableUI(client, target:Nick() .. "'s " .. L("warnings"), {
             {
-                name = L("idField"),
+                name = L("id"),
                 field = "index"
             },
             {
-                name = L("timestampField"),
+                name = L("timestamp"),
                 field = "timestamp"
             },
             {
-                name = L("reasonField"),
+                name = L("reason"),
                 field = "reason"
             },
             {
-                name = L("adminField"),
+                name = L("admin"),
                 field = "admin"
             }
         }, warningList, {
