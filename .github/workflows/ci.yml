@@ -127,7 +127,10 @@ jobs:
           curl -sL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/main/files/liliastack.py -o files/liliastack.py
           sed -i "s|, default=.*)|)|" files/liliastack.py
           mkdir -p docs
+          ls
           python files/liliastack.py -s lilia -o docs/liliastackcode.lua
+          cd docs
+          ls
           git config user.email "githubactions@github.com"
           git config user.name "GitHub Actions"
           if [ -n "$(git status --porcelain)" ]; then
