@@ -62,7 +62,7 @@ function MODULE:HUDPaint()
             if index == 1 then lastY = 0 end
         end
 
-        surface.SetFont("liaSubTitleFont")
+        surface.SetFont("liaBigFont")
         local name = hook.Run("GetWeaponName", weapon) or weapon:GetPrintName():upper()
         local _, ty = surface.GetTextSize(name)
         local scale = math.max(1 - math.abs(theta * 2), 0)
@@ -70,7 +70,7 @@ function MODULE:HUDPaint()
         matrix:Translate(Vector(shiftX + x + math.cos(theta * spacing + pi) * radius + radius, y + lastY + math.sin(theta * spacing + pi) * radius - ty / 2, 1))
         matrix:Scale(Vector(scale, scale, 1))
         cam.PushModelMatrix(matrix)
-        lia.util.drawText(name, 2, ty / 2, col, 0, 1, "liaSubTitleFont")
+        lia.util.drawText(name, 2, ty / 2, col, 0, 1, "liaBigFont")
         cam.PopModelMatrix()
     end
 
