@@ -149,7 +149,6 @@ jobs:
           path: site
       - name: Deploy docs
         run: |
-          rm -rf site/*
           ls
           cd site
           ls
