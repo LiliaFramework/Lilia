@@ -1,36 +1,29 @@
 name: CI
 on:
   push:
+    branches:
+      - main
+
 permissions:
-  actions: write
-  checks: write
   contents: write
-  deployments: write
-  id-token: write
-  issues: write
-  discussions: write
-  packages: write
   pages: write
-  pull-requests: write
-  repository-projects: write
-  security-events: write
-  statuses: write
+  id-token: write
 
 jobs:
   linter:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        name: Checkout Lilia Repository
+        name: Checkout Lilia
         with:
           path: lilia
-      - uses: leafo/gh-actions-lua@v8.0.0
+      - uses: leafo/gh-actions-lua@v8
         name: Set Up Lua
         with:
           luaVersion: "5.2"
-      - uses: leafo/gh-actions-luarocks@v4.0.0
+      - uses: leafo/gh-actions-luarocks@v4
         name: Set Up Luarocks
-      - name: Install Luacheck dependencies
+      - name: Install Dependencies
         run: |
           luarocks install luafilesystem
           luarocks install argparse
@@ -42,14 +35,16 @@ jobs:
       - name: Build GluaCheck
         working-directory: luacheck
         run: luarocks make
-      - name: Run Luacheck Linting
+      - name: Run Luacheck
         working-directory: lilia
         run: |
           luacheck . \
             --no-redefined \
             --no-global --no-self \
-            --no-max-line-length --no-max-code-line-length \
-            --no-max-string-line-length --no-max-comment-line-length \
+            --no-max-line-length \
+            --no-max-code-line-length \
+            --no-max-string-line-length \
+            --no-max-comment-line-length \
             --no-max-cyclomatic-complexity
 
   release:
@@ -58,10 +53,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        name: Checkout Lilia Repository
         with:
           path: lilia
-      - name: Remove existing release & tag
+      - name: Remove Release & Tag
         uses: actions/github-script@v6
         with:
           script: |
@@ -85,14 +79,13 @@ jobs:
             } catch (error) {
               if (error.status !== 404) throw error;
             }
-      - name: Prepare and Zip
+      - name: Package
         run: |
           mkdir packaged
           cp -R lilia packaged/lilia
           cd packaged
           zip -r ../lilia.zip lilia
-      - name: Create GitHub Release
-        id: create_release
+      - id: create_release
         uses: actions/create-release@v1
         with:
           tag_name: release
@@ -101,8 +94,7 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload release asset
-        uses: actions/upload-release-asset@v1
+      - uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: lilia.zip
@@ -115,27 +107,23 @@ jobs:
     needs: release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           path: code
-      - name: Checkout pages repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           repository: LiliaFramework/LiliaFramework.github.io
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAGES_PAT }}
           path: site
-      - name: Deploy docs
-        run: |
+          persist-credentials: false
+      - run: |
           rm -rf site/*
           cp -R code/docs/. site/
-      - name: Commit and push
-        working-directory: site
-        run: |
-          git config user.email "githubactions@github.com"
-          git config user.name "GitHub Actions"
-          if [ -n "$(git status --porcelain)" ]; then
-            git add .
-            git commit -m "Update docs"
-            git push origin HEAD
+      - run: |
+          git -C site config user.email "githubactions@github.com"
+          git -C site config user.name "GitHub Actions"
+          if [ -n "$(git -C site status --porcelain)" ]; then
+            git -C site add .
+            git -C site commit -m "Update docs"
+            git -C site push origin HEAD
           fi
