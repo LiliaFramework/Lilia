@@ -26,30 +26,24 @@ jobs:
         name: Checkout Lilia Repository
         with:
           path: lilia
-
       - uses: leafo/gh-actions-lua@v8.0.0
         name: Set Up Lua
         with:
           luaVersion: "5.2"
-
       - uses: leafo/gh-actions-luarocks@v4.0.0
         name: Set Up Luarocks
-
       - name: Install Luacheck dependencies
         run: |
           luarocks install luafilesystem
           luarocks install argparse
-
       - uses: actions/checkout@v3
         name: Pull GluaCheck
         with:
           repository: LiliaFramework/GluaCheck
           path: luacheck
-
       - name: Build GluaCheck
         working-directory: luacheck
         run: luarocks make
-
       - name: Run Luacheck Linting
         working-directory: lilia
         run: |
@@ -69,7 +63,6 @@ jobs:
         name: Checkout Lilia Repository
         with:
           path: lilia
-
       - name: Remove existing release & tag (if any)
         uses: actions/github-script@v6
         with:
@@ -99,14 +92,12 @@ jobs:
                 throw error;
               }
             }
-
       - name: Prepare and Zip
         run: |
           mkdir packaged
           cp -R lilia packaged/lilia
           cd packaged
           zip -r ../lilia.zip lilia
-
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
@@ -117,7 +108,6 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
         with:
@@ -127,3 +117,38 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-and-sync:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: code
+      - uses: actions/checkout@v3
+        with:
+          repository: LiliaFramework/LiliaFramework.github.io
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: website
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Patch liliastack.py for CI
+        run: |
+          sed -i "s|source_dir = .*|source_dir = 'lilia'|" code/files/liliastack.py
+          sed -i "s|output_file = .*|output_file = os.path.join(source_dir, 'liliastacked.lua')|" code/files/liliastack.py
+      - name: Run stacker
+        run: python code/files/liliastack.py
+      - run: cp code/lilia/liliastacked.lua website/
+      - name: Commit & push site updates
+        run: |
+          cd website
+          git config user.email "githubactions@github.com"
+          git config user.name "GitHub Actions"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add liliastacked.lua
+            git commit -m "Update stacked Lua"
+            git push
+          fi
+      - name: Clean up workspace
+        run: rm -f code/*.zip
