@@ -507,24 +507,6 @@ hook.Add("PopulateToolMenu", "LegacyAddonPropsInfoThing", function()
     end)
 end)
 
-surface.CreateFont("AddonInfo_Header", {
-    font = "Helvetica",
-    size = ScreenScaleH(24),
-    weight = 1000
-})
-
-surface.CreateFont("AddonInfo_Text", {
-    font = "Helvetica",
-    size = ScreenScaleH(9),
-    weight = 1000
-})
-
-surface.CreateFont("AddonInfo_Small", {
-    font = "Helvetica",
-    size = ScreenScaleH(8),
-    weight = 1000
-})
-
 local PANEL = {}
 function PANEL:Init()
     self.computed = false
