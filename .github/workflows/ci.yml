@@ -139,7 +139,7 @@ jobs:
           rm -f *.zip
 
   deploy-pages:
-    needs: build-and-sync
+    needs: release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main repo
