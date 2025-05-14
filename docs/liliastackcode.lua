@@ -4031,7 +4031,6 @@ end
 local PANEL = {}
 local staffCount = 0
 local staffOnDutyCount = 0
-
 local paintFunctions = {
     [0] = function(_, w, h)
         surface.SetDrawColor(0, 0, 0, 50)
@@ -4102,7 +4101,7 @@ function PANEL:Init()
         local r, g, b = factionColor.r, factionColor.g, factionColor.b
         local list = self.layout:Add("DListLayout")
         list:Dock(TOP)
-        list:SetTall(ScrH()* 0.08)
+        list:SetTall(ScrH() * 0.08)
         list.Think = function(this)
             for _, client in ipairs(lia.faction.getPlayers(k)) do
                 if hook.Run("ShouldShowPlayerOnScoreboard", client) == false then continue end
@@ -4124,7 +4123,7 @@ function PANEL:Init()
         factionContainer:Dock(FILL)
         factionContainer:SetPaintBackground(false)
         local iconMat = fac.logo
-        local iconWidth = ScrH()* 0.05
+        local iconWidth = ScrH() * 0.05
         local icon
         local factionName = factionContainer:Add("DLabel")
         factionName:Dock(FILL)
@@ -4206,7 +4205,7 @@ function PANEL:addPlayer(client, parent)
     if not client:getChar() or not IsValid(parent) then return end
     local slot = parent:Add("DPanel")
     slot:Dock(TOP)
-    slot:SetTall(ScrH()* 0.07)
+    slot:SetTall(ScrH() * 0.07)
     slot:DockMargin(0, 0, 0, 0)
     slot.character = client:getChar()
     client.liaScoreSlot = slot
@@ -4417,13 +4416,26 @@ end
 local borderColorSolid = Color(0, 0, 0, 200)
 local borderColorBlur = Color(0, 0, 0, 150)
 local backgroundColorFallback = Color(50, 50, 50, 255)
-local backgroundColorFallbackNonSolid = Color(30, 30, 30, 100)
+local surfaceSetDrawColor, surfaceDrawRect, surfaceDrawOutlinedRect = surface.SetDrawColor, surface.DrawRect, surface.DrawOutlinedRect
+local function PaintPanel(x, y, w, h)
+    surfaceSetDrawColor(0, 0, 0, 255)
+    surfaceDrawOutlinedRect(x, y, w, h)
+    surfaceSetDrawColor(0, 0, 0, 150)
+    surfaceDrawRect(x + 1, y + 1, w - 2, h - 2)
+end
+
 function PANEL:Paint(w, h)
-    local bgColor = lia.config.get("UseSolidBackground", false) and (lia.config.get("ScoreboardBackgroundColor", Color(255, 100, 100, 255)) or backgroundColorFallback) or backgroundColorFallbackNonSolid
-    local bColor = lia.config.get("UseSolidBackground", false) and borderColorSolid or borderColorBlur
-    if not lia.config.get("UseSolidBackground", false) then lia.util.drawBlur(self, 10) end
-    surface.SetDrawColor(bgColor)
-    surface.DrawRect(0, 0, w, h)
+    local useSolid = lia.config.get("UseSolidBackground", false)
+    if useSolid then
+        local bg = lia.config.get("ScoreboardBackgroundColor", backgroundColorFallback)
+        surface.SetDrawColor(bg)
+        surface.DrawRect(0, 0, w, h)
+    else
+        lia.util.drawBlur(self, 10)
+        PaintPanel(0, 0, w, h)
+    end
+
+    local bColor = useSolid and borderColorSolid or borderColorBlur
     surface.SetDrawColor(bColor.r, bColor.g, bColor.b, bColor.a)
     surface.DrawOutlinedRect(0, 0, w, h)
 end
