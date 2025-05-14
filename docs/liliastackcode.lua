@@ -26726,15 +26726,14 @@ LANGUAGE = {
     warnPlayer = "Warn Player",
     viewPlayerWarnings = "View Player Warnings",
     warnings = "Warnings",
-    warningField = "Warning",
+    warning = "Warning",
     warnUsage = "Usage: warn [player] [reason]",
     playerWarned = "You have been warned by %s for: %s",
     warningIssued = "Warning issued to %s",
     noWarnings = "%s has no warnings.",
-    idField = "ID",
-    timestampField = "Timestamp",
-    reasonField = "Reason",
-    adminField = "Admin",
+    id = "ID",
+    timestamp = "Timestamp",
+    admin = "Admin",
     noSound = "You must specify a sound path or name.",
     removeWarning = "Remove Warning",
     spawnAddDesc = "Adds a spawn point at your current position for the specified faction.",
@@ -26823,7 +26822,7 @@ LANGUAGE = {
     SetNewMapTitle = "Set new map",
     SetNewMapPrompt = "Input the link to set a new map",
     generalinfo = "General Info",
-    reputationField = "Reputation",
+    reputation = "Reputation",
     issued = "issued",
     expired = "expired",
     warrantCommandDesc = "Toggles a wanted warrant on the specified player.",
@@ -27121,11 +27120,6 @@ LANGUAGE = {
     unlockedOOC = "Unlocked OOC!",
     blockedOOC = "Blocked OOC!",
     clearChatCommandDesc = "Clears chat for all players.",
-    nameField = "Name",
-    descField = "Description",
-    factionField = "Faction",
-    classField = "Class",
-    moneyField = "Money",
     entitiesTab = "Entities",
     teleportedToEntity = "Teleported to entity: %s",
     alreadyUsingChar = "You are already using this character!",
@@ -27148,6 +27142,16 @@ LANGUAGE = {
     cinematicMenuDesc = "Opens the cinematic menu for camera controls.",
     invalidCommand = "This command is invalid.",
     invalidply = "This player is invalid.",
+    crafting = "Crafting",
+    craftingtable = "Crafting Table",
+    req_moremat = "You need more materials to craft %s.",
+    req_blueprint = "You need a blueprint of %s to craft %s.",
+    req_morespace = "You need more space to get result.",
+    donecrafting = "You have crafted %s.",
+    icat_material = "Materials",
+    craft_menu_tip1 = "You can craft items by clicking the icons in the list.",
+    craft_menu_tip2 = "The icon with book means that item needs a blueprint to be crafted.",
+    crft_text = "Crafting %s\n%s\n\nRequirements:\n",
     ["Moderation Tools"] = "Moderation Tools",
     ["Player Information"] = "Player Information",
     ["Character Management"] = "Character Management",
@@ -34370,7 +34374,7 @@ lia.command.add("warn", {
         SubCategory = L("warnings"),
         Icon = "icon16/error.png",
         ExtraFields = {
-            [L("warningField")] = "text"
+            [L("warning")] = "text"
         }
     },
     onRun = function(client, arguments)
@@ -34434,19 +34438,19 @@ lia.command.add("viewwarns", {
 
         lia.util.CreateTableUI(client, target:Nick() .. "'s " .. L("warnings"), {
             {
-                name = L("idField"),
+                name = L("id"),
                 field = "index"
             },
             {
-                name = L("timestampField"),
+                name = L("timestamp"),
                 field = "timestamp"
             },
             {
-                name = L("reasonField"),
+                name = L("reason"),
                 field = "reason"
             },
             {
-                name = L("adminField"),
+                name = L("admin"),
                 field = "admin"
             }
         }, warningList, {
@@ -37555,10 +37559,10 @@ function MODULE:LoadCharInformation()
     if not IsValid(client) then return end
     local character = client:getChar()
     if not character then return end
-    hook.Run("AddTextField", L("generalInfo"), "faction", L("factionField"), function() return team.GetName(client:Team()) end)
+    hook.Run("AddTextField", L("generalInfo"), "faction", L("faction"), function() return team.GetName(client:Team()) end)
     local classID = character:getClass()
     local classData = lia.class.list[classID]
-    if classID and classData and classData.name then hook.Run("AddTextField", L("generalInfo"), "class", L("classField"), function() return classData.name end) end
+    if classID and classData and classData.name then hook.Run("AddTextField", L("generalInfo"), "class", L("class"), function() return classData.name end) end
 end
 
 function MODULE:DrawCharInfo(client, _, info)
@@ -38734,9 +38738,9 @@ end)
 MODULE.CharacterInformation = {}
 function MODULE:LoadCharInformation()
     hook.Run("AddSection", L("generalInfo"), Color(0, 0, 0), 1, 1)
-    hook.Run("AddTextField", L("generalInfo"), "name", L("nameField"), function() return LocalPlayer():getChar():getName() end)
-    hook.Run("AddTextField", L("generalInfo"), "desc", L("descField"), function() return LocalPlayer():getChar():getDesc() end)
-    hook.Run("AddTextField", L("generalInfo"), "money", L("moneyField"), function() return LocalPlayer():getMoney() end)
+    hook.Run("AddTextField", L("generalInfo"), "name", L("name"), function() return LocalPlayer():getChar():getName() end)
+    hook.Run("AddTextField", L("generalInfo"), "desc", L("desc"), function() return LocalPlayer():getChar():getDesc() end)
+    hook.Run("AddTextField", L("generalInfo"), "money", L("money"), function() return LocalPlayer():getMoney() end)
 end
 
 function MODULE:AddSection(sectionName, color, priority, location)
