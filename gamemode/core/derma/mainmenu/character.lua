@@ -350,7 +350,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         if cls and cls.name then table.insert(info, L("class") .. ": " .. cls.name) end
     end
 
-    table.insert(info, L("moneyLabel") .. ": " .. lia.currency.get(character:getMoney()))
+    table.insert(info, L("money") .. ": " .. lia.currency.get(character:getMoney()))
     hook.Run("LoadMainMenuInformation", info, character)
     self.infoFrame = self:Add("SemiTransparentDFrame")
     self.infoFrame:SetSize(ScrW() * 0.25, ScrH() * 0.45)
