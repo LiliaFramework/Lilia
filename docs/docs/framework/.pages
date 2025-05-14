@@ -1,0 +1,5 @@
+arrange:
+  - definitions
+  - hooks
+  - meta
+  - libraries

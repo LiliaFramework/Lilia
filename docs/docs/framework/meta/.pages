@@ -1,0 +1,6 @@
+arrange:
+  - character_meta.md
+  - entity_meta.md
+  - inventory_meta.md
+  - item_meta.md
+  - player_meta.md

@@ -1,0 +1,46 @@
+site_name: Lilia Documentation
+site_url: 'https://liliaframework.github.io/'
+theme:
+  name: material
+  logo: assets/logo_small.png
+  favicon: assets/favicon.ico
+  features:
+    - navigation.footer
+  font:
+    text: Noto Sans
+    code: Roboto Mono
+  palette:
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Dark mode
+      primary: teal
+      accent: lavender
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Light mode
+      primary: teal
+      accent: lavender
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - attr_list
+  - md_in_html
+  - pymdownx.blocks.caption
+  - admonition
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+extra:
+  social:
+    - icon: simple/github
+      link: 'https://github.com/LiliaFramework/Lilia'
+plugins:
+  - search
+  - awesome-pages
