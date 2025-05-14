@@ -1,4 +1,4 @@
-﻿
+﻿local surfaceSetDrawColor, surfaceDrawRect, surfaceDrawOutlinedRect = surface.SetDrawColor, surface.DrawRect, surface.DrawOutlinedRect
 lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
 lia.bar.list = {}
@@ -108,16 +108,20 @@ end
     Returns:
         None
 ]]
+local function PaintPanel(x, y, w, h)
+    surfaceSetDrawColor(0, 0, 0, 255)
+    surfaceDrawOutlinedRect(x, y, w, h)
+    surfaceSetDrawColor(0, 0, 0, 150)
+    surfaceDrawRect(x + 1, y + 1, w - 2, h - 2)
+end
+
 function lia.bar.drawBar(x, y, w, h, pos, max, color)
     pos = math.min(pos, max)
-    local usable = math.max(w - 2, 0)
+    local usable = math.max(w - 6, 0)
     local fill = usable * pos / max
-    surface.SetDrawColor(0, 0, 0, 150)
-    surface.DrawRect(x, y, w + 6, h)
-    surface.SetDrawColor(0, 0, 0, 200)
-    surface.DrawOutlinedRect(x, y, w + 6, h)
-    surface.SetDrawColor(color.r, color.g, color.b)
-    surface.DrawRect(x + 3, y + 3, fill, h - 6)
+    PaintPanel(x, y, w + 6, h)
+    surfaceSetDrawColor(color.r, color.g, color.b)
+    surfaceDrawRect(x + 3, y + 3, fill, h - 6)
 end
 
 --[[
@@ -137,28 +141,24 @@ end
     Returns:
         None
 ]]
-function lia.bar.drawAction(text, time)
-    local now = CurTime()
-    local endTime = now + time
+function lia.bar.drawAction(text, duration)
+    local startTime, endTime = CurTime(), CurTime() + duration
     hook.Remove("HUDPaint", "liaDrawAction")
     hook.Add("HUDPaint", "liaDrawAction", function()
-        local cur = CurTime()
-        if endTime <= cur then
+        local curTime = CurTime()
+        if curTime >= endTime then
             hook.Remove("HUDPaint", "liaDrawAction")
             return
         end
 
-        local frac = 1 - math.TimeFraction(now, endTime, cur)
+        local frac = 1 - math.TimeFraction(startTime, endTime, curTime)
         local w, h = ScrW() * 0.35, 28
-        local x, y = ScrW() * 0.5 - w / 2, ScrH() * 0.725 - h / 2
+        local x, y = ScrW() * 0.5 - w * 0.5, ScrH() * 0.725 - h * 0.5
         lia.util.drawBlurAt(x, y, w, h)
-        surface.SetDrawColor(35, 35, 35, 100)
-        surface.DrawRect(x, y, w, h)
-        surface.SetDrawColor(0, 0, 0, 120)
-        surface.DrawOutlinedRect(x, y, w, h)
-        surface.SetDrawColor(lia.config.get("Color"))
-        surface.DrawRect(x + 4, y + 4, w * frac - 8, h - 8)
-        surface.SetDrawColor(200, 200, 200, 20)
+        PaintPanel(x, y, w, h)
+        surfaceSetDrawColor(lia.config.get("Color"))
+        surfaceDrawRect(x + 4, y + 4, w * frac - 8, h - 8)
+        surfaceSetDrawColor(200, 200, 200, 20)
         surface.SetMaterial(lia.util.getMaterial("vgui/gradient-d"))
         surface.DrawTexturedRect(x + 4, y + 4, w * frac - 8, h - 8)
         draw.SimpleText(text, "liaMediumFont", x + 2, y - 22, Color(20, 20, 20))
