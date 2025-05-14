@@ -123,12 +123,12 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-      - run: mkdir -p code/files
-      - run: curl -sL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/main/files/liliastack.py -o code/files/liliastack.py
-      - run: sed -i "s|, default=.*)|)|" code/files/liliastack.py
-      - run: mkdir -p code/docs
-      - run: python code/files/liliastack.py -s code/lilia -o code/docs/liliastackcode.lua
       - run: |
+          mkdir -p code/files
+          curl -sL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/main/files/liliastack.py -o code/files/liliastack.py
+          sed -i "s|, default=.*)|)|" code/files/liliastack.py
+          mkdir -p code/docs
+          python code/files/liliastack.py -s code/lilia -o code/docs/liliastackcode.lua
           cd code
           git config user.email "githubactions@github.com"
           git config user.name "GitHub Actions"
@@ -137,4 +137,4 @@ jobs:
             git commit -m "Update liliastackcode.lua"
             git push
           fi
-      - run: rm -f code/*.zip
+          rm -f code/*.zip
