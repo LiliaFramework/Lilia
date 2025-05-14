@@ -895,7 +895,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         if cls and cls.name then table.insert(info, L("class") .. ": " .. cls.name) end
     end
 
-    table.insert(info, L("moneyLabel") .. ": " .. lia.currency.get(character:getMoney()))
+    table.insert(info, L("money") .. ": " .. lia.currency.get(character:getMoney()))
     hook.Run("LoadMainMenuInformation", info, character)
     self.infoFrame = self:Add("SemiTransparentDFrame")
     self.infoFrame:SetSize(ScrW() * 0.25, ScrH() * 0.45)
@@ -4601,7 +4601,7 @@ function PANEL:Init()
         surface.DrawRect(0, 0, sw * 0.26, sh * 0.033)
         surface.DrawOutlinedRect(0, 0, sw * 0.26, sh * 0.033)
         draw.DrawText(name, "liaMediumFont", sw * 0.005, sh * 0.003, color_white, TEXT_ALIGN_LEFT)
-        draw.DrawText(L("vendorMoney"), "liaSmallFont", sw * 0.1, sh * 0.05, color_white, TEXT_ALIGN_LEFT)
+        draw.DrawText(L("money"), "liaSmallFont", sw * 0.1, sh * 0.05, color_white, TEXT_ALIGN_LEFT)
         draw.DrawText(money, "liaSmallFont", sw * 0.2, sh * 0.05, color_white, TEXT_ALIGN_RIGHT)
         draw.DrawText(L("vendorSellScale"), "liaSmallFont", sw * 0.1, sh * 0.07, color_white, TEXT_ALIGN_LEFT)
         draw.DrawText(math.ceil(scale * 100) .. "%", "liaSmallFont", sw * 0.2, sh * 0.07, color_white, TEXT_ALIGN_RIGHT)
@@ -4636,12 +4636,12 @@ function PANEL:Init()
         if lia.class.list[class] then
             draw.DrawText(L("class"), "liaSmallFont", sw * 0.085, sh * 0.07, color_white, TEXT_ALIGN_LEFT)
             draw.DrawText(lia.class.list[class].name, "liaSmallFont", sw * 0.2, sh * 0.07, color_white, TEXT_ALIGN_RIGHT)
-            draw.DrawText(L("vendorMoney"), "liaSmallFont", sw * 0.085, sh * 0.09, color_white, TEXT_ALIGN_LEFT)
+            draw.DrawText(L("money"), "liaSmallFont", sw * 0.085, sh * 0.09, color_white, TEXT_ALIGN_LEFT)
             draw.DrawText(lia.currency.get(char:getMoney()), "liaSmallFont", sw * 0.2, sh * 0.09, color_white, TEXT_ALIGN_RIGHT)
             draw.DrawText(L("vendorItemCount"), "liaSmallFont", sw * 0.085, sh * 0.11, color_white, TEXT_ALIGN_LEFT)
             draw.DrawText(disp, "liaSmallFont", sw * 0.2, sh * 0.11, color_white, TEXT_ALIGN_RIGHT)
         else
-            draw.DrawText(L("vendorMoney"), "liaSmallFont", sw * 0.085, sh * 0.07, color_white, TEXT_ALIGN_LEFT)
+            draw.DrawText(L("money"), "liaSmallFont", sw * 0.085, sh * 0.07, color_white, TEXT_ALIGN_LEFT)
             draw.DrawText(lia.currency.get(char:getMoney()), "liaSmallFont", sw * 0.2, sh * 0.07, color_white, TEXT_ALIGN_RIGHT)
             draw.DrawText(L("vendorItemCount"), "liaSmallFont", sw * 0.085, sh * 0.09, color_white, TEXT_ALIGN_LEFT)
             draw.DrawText(disp, "liaSmallFont", sw * 0.2, sh * 0.09, color_white, TEXT_ALIGN_RIGHT)
@@ -5203,10 +5203,10 @@ function PANEL:Init()
     self.items:Dock(FILL)
     self.items:DockMargin(0, 4, 0, 0)
     self.items:AddColumn(L("name")).Header:SetTextColor(color_white)
-    self.items:AddColumn(L("vendorMode")).Header:SetTextColor(color_white)
+    self.items:AddColumn(L("mode")).Header:SetTextColor(color_white)
     self.items:AddColumn(L("price")).Header:SetTextColor(color_white)
     self.items:AddColumn(L("stock")).Header:SetTextColor(color_white)
-    self.items:AddColumn(L("vendorCategory")).Header:SetTextColor(color_white)
+    self.items:AddColumn(L("category")).Header:SetTextColor(color_white)
     self.items:SetMultiSelect(false)
     self.items.OnRowRightClick = function(_, _, line) self:OnRowRightClick(line) end
     self.searchBar = self:Add("DTextEntry")
@@ -25882,7 +25882,6 @@ LANGUAGE = {
     baseHealth = "Base Health",
     vendorYourItems = "Your Items",
     vendorItems = "Vendor Items",
-    vendorMoney = "Money",
     vendorSellScale = "Sell Scale",
     vendorItemCount = "Item Count",
     vendorEditorButton = "Edit Vendor",
@@ -25894,8 +25893,6 @@ LANGUAGE = {
     vendorEditorWelcomeMessage = "Welcome Message",
     vendorUseMoney = "Use Money",
     vendorFaction = "Faction Access",
-    vendorMode = "Mode",
-    vendorCategory = "Category",
     mode = "Trade Mode",
     moneyTaken = "You picked up %s.",
     forbiddenActionStorage = "You can't perform this action from storage.",
@@ -25932,7 +25929,6 @@ LANGUAGE = {
     selectModel = "Select a model",
     factionDescription = "desc",
     noDesc = "No Description",
-    modelLabel = "Model",
     requiredFieldError = "The field '%s' is required and cannot be empty.",
     baseArmor = "Base Armor",
     weapons = "Weapons",
@@ -25963,7 +25959,6 @@ LANGUAGE = {
     selectCharacter = "Select Character",
     alreadyUsingCharacter = "You are already using this character",
     bannedCharacter = "This character is banned",
-    moneyLabel = "Money",
     alreadyHaveGrenade = "You already have this type of grenade.",
     generatedWeapon = "Generated weapon: %s",
     invalidFaction = "The specified faction is not valid.",
@@ -26264,7 +26259,6 @@ LANGUAGE = {
     tableListDefaultTitle = "Table List",
     copyRow = "Copy Row",
     keybinds = "Keybinds",
-    itemUse = "Use",
     itemUseOnTarget = "Use on Target",
     invalidTargetNeedLiving = "You must be looking at a valid, living player to use this.",
     ammoLoadAll = "Load All",
@@ -26345,7 +26339,6 @@ LANGUAGE = {
     DisplayStaffCommandsDesc = "Controls whether notifications and commands for staff are displayed.",
     AdminOnlyNotification = "Admin Only Notifications",
     AdminOnlyNotificationDesc = "Restricts certain notifications to admins with specific permissions or those on duty.",
-    StaffCategory = "Staff",
     ProtectionCategory = "Protection",
     playerNotFound = "Player not found.",
     playtimeTargetError = "Could not retrieve playtime for the specified target.",
@@ -26432,7 +26425,6 @@ LANGUAGE = {
     currency_singular_name_desc = "Singular name of the in-game currency.",
     currency_plural_name = "Currency Plural Name",
     currency_plural_name_desc = "Plural name of the in-game currency.",
-    money_category = "Money",
     inventory_width = "Inventory Width",
     inventory_width_desc = "Defines the width of the default inventory.",
     inventory_height = "Inventory Height",
@@ -27029,9 +27021,7 @@ LANGUAGE = {
     characterCategory = "Character",
     damage = "Damage",
     spawn = "Spawn",
-    chatCategory = "Chat",
-    moneyCategory = "Money",
-    itemCategory = "Item",
+    items = "Items",
     protection = "Protection",
     toolgun = "Toolgun",
     swep = "SWEP",
@@ -31504,55 +31494,55 @@ lia.log.types = {
     },
     ["chat"] = {
         func = function(client, chatType, message) return L("chatLog", client:SteamID64(), chatType, client:Name(), message, client:getChar():getID()) end,
-        category = L("chatCategory")
+        category = L("chat")
     },
     ["chatOOC"] = {
         func = function(client, msg) return L("chatOOCLog", client:SteamID64(), client:Name(), msg, client:getChar():getID()) end,
-        category = L("chatCategory")
+        category = L("chat")
     },
     ["chatLOOC"] = {
         func = function(client, msg) return L("chatLOOCLog", client:SteamID64(), client:Name(), msg, client:getChar():getID()) end,
-        category = L("chatCategory")
+        category = L("chat")
     },
     ["command"] = {
         func = function(client, text) return L("commandLog", client:SteamID64(), client:Name(), text, client:getChar():getID()) end,
-        category = L("chatCategory")
+        category = L("chat")
     },
     ["money"] = {
         func = function(client, amount) return L("moneyLog", client:SteamID64(), client:Name(), amount, client:getChar():getID()) end,
-        category = L("moneyCategory")
+        category = L("money")
     },
     ["moneyGiven"] = {
         func = function(client, name, amount) return L("moneyGivenLog", client:SteamID64(), client:Name(), name, lia.currency.get(amount), client:getChar():getID()) end,
-        category = L("moneyCategory")
+        category = L("money")
     },
     ["moneyPickedUp"] = {
         func = function(client, amount) return L("moneyPickedUpLog", client:SteamID64(), client:Name(), lia.currency.get(amount), amount > 1 and lia.currency.plural or lia.currency.singular, client:getChar():getID()) end,
-        category = L("moneyCategory")
+        category = L("money")
     },
     ["itemTake"] = {
         func = function(client, item) return L("itemTakeLog", client:SteamID64(), client:Name(), item, client:getChar():getID()) end,
-        category = L("itemCategory")
+        category = L("items")
     },
     ["use"] = {
         func = function(client, item) return L("itemUseLog", client:SteamID64(), client:Name(), item, client:getChar():getID()) end,
-        category = L("itemCategory")
+        category = L("items")
     },
     ["itemDrop"] = {
         func = function(client, item) return L("itemDropLog", client:SteamID64(), client:Name(), item, client:getChar():getID()) end,
-        category = L("itemCategory")
+        category = L("items")
     },
     ["itemInteraction"] = {
         func = function(client, action, item) return L("itemInteractionLog", client:SteamID64(), client:Name(), action, item.name, client:getChar():getID()) end,
-        category = L("itemCategory")
+        category = L("items")
     },
     ["itemEquip"] = {
         func = function(client, item) return L("itemEquipLog", client:SteamID64(), client:Name(), item, client:getChar():getID()) end,
-        category = L("itemCategory")
+        category = L("items")
     },
     ["itemUnequip"] = {
         func = function(client, item) return L("itemUnequipLog", client:SteamID64(), client:Name(), item, client:getChar():getID()) end,
-        category = L("itemCategory")
+        category = L("items")
     },
     ["toolgunUse"] = {
         func = function(client, tool) return L("toolgunUseLog", client:SteamID64(), client:Name(), tool, client:getChar():getID()) end,
