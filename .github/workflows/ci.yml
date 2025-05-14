@@ -142,16 +142,20 @@ jobs:
     needs: build-and-sync
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout main repo
+        uses: actions/checkout@v3
+        with:
+          path: code
+      - name: Checkout pages repo
+        uses: actions/checkout@v3
         with:
           repository: LiliaFramework/LiliaFramework.github.io
           token: ${{ secrets.GITHUB_TOKEN }}
           path: site
       - name: Deploy docs
-        working-directory: site
         run: |
-          rm -rf *
-          cp -R ../code/docs/* .
+          rm -rf site/*
+          cp -R code/docs/* site/
       - name: Commit and push
         working-directory: site
         run: |
