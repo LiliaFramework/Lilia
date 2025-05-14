@@ -151,6 +151,8 @@ jobs:
         run: |
           rm -rf site/*
           ls
+          cd site
+          ls
           cp -R code/docs/* site/
       - name: Commit and push
         working-directory: site
