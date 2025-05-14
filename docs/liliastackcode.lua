@@ -1,3 +1,6 @@
+-- ./docs/liliastackcode.lua
+
+
 -- ./gamemode/cl_init.lua
 DeriveGamemode("sandbox")
 include("shared.lua")
@@ -3830,6 +3833,13 @@ vgui.Register("FacingModelPanel", PANEL, "DModelPanel")
 -- ./gamemode/core/derma/panels/notice.lua
 local TimeFraction, CurTime = math.TimeFraction, CurTime
 local surfaceSetDrawColor, surfaceDrawRect, surfaceDrawOutlinedRect = surface.SetDrawColor, surface.DrawRect, surface.DrawOutlinedRect
+local function PaintPanel(_, w, h)
+    surfaceSetDrawColor(0, 0, 0, 255)
+    surfaceDrawOutlinedRect(0, 0, w, h, 2)
+    surfaceSetDrawColor(0, 0, 0, 150)
+    surfaceDrawRect(1, 1, w - 2, h - 2)
+end
+
 local PANEL = {}
 function PANEL:Init()
     self:SetSize(256, 36)
@@ -3842,15 +3852,14 @@ end
 
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 3, 2)
-    surfaceSetDrawColor(230, 230, 230, 10)
-    surfaceDrawRect(0, 0, w, h)
+    PaintPanel(self, w, h)
     if self.start then
         local w2 = TimeFraction(self.start, self.endTime, CurTime()) * w
         surfaceSetDrawColor(lia.config.get("Color"))
         surfaceDrawRect(w2, 0, w - w2, h)
     end
 
-    surfaceSetDrawColor(0, 0, 0, 25)
+    surfaceSetDrawColor(lia.config.get("Color"))
     surfaceDrawOutlinedRect(0, 0, w, h)
 end
 
@@ -3879,15 +3888,14 @@ end
 
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 10)
-    surfaceSetDrawColor(230, 230, 230, 10)
-    surfaceDrawRect(0, 0, w, h)
+    PaintPanel(self, w, h)
     if self.start then
         local w2 = TimeFraction(self.start, self.endTime, CurTime()) * w
         surfaceSetDrawColor(lia.config.get("Color"))
         surfaceDrawRect(w2, 0, w - w2, h)
     end
 
-    surfaceSetDrawColor(0, 0, 0, 45)
+    surfaceSetDrawColor(lia.config.get("Color"))
     surfaceDrawOutlinedRect(0, 0, w, h)
 end
 
@@ -12376,24 +12384,6 @@ hook.Add("PopulateToolMenu", "LegacyAddonPropsInfoThing", function()
     end)
 end)
 
-surface.CreateFont("AddonInfo_Header", {
-    font = "Helvetica",
-    size = ScreenScaleH(24),
-    weight = 1000
-})
-
-surface.CreateFont("AddonInfo_Text", {
-    font = "Helvetica",
-    size = ScreenScaleH(9),
-    weight = 1000
-})
-
-surface.CreateFont("AddonInfo_Small", {
-    font = "Helvetica",
-    size = ScreenScaleH(8),
-    weight = 1000
-})
-
 local PANEL = {}
 function PANEL:Init()
     self.computed = false
@@ -13180,6 +13170,24 @@ if CLIENT then
         if isstring(name) and istable(data) then lia.font.stored[name] = data end
         oldCreateFont(name, data)
     end
+
+    lia.font.register("AddonInfo_Header", {
+        font = "Helvetica",
+        size = ScreenScaleH(24),
+        weight = 1000
+    })
+
+    lia.font.register("AddonInfo_Text", {
+        font = "Helvetica",
+        size = ScreenScaleH(9),
+        weight = 1000
+    })
+
+    lia.font.register("AddonInfo_Small", {
+        font = "Helvetica",
+        size = ScreenScaleH(8),
+        weight = 1000
+    })
 
     lia.font.register("ConfigFont", {
         font = lia.config.get("Font"),
@@ -37160,14 +37168,14 @@ function MODULE:HUDPaint()
         surface.SetDrawColor(0, 0, 0, ceil(aprg ^ 0.5 * 255))
         surface.DrawRect(-1, -1, ScrW() + 2, ScrH() + 2)
         local text = L("youHaveDied")
-        surface.SetFont("liaDynFontMedium")
+        surface.SetFont("liaHugeFont")
         local textW, textH = surface.GetTextSize(text)
-        lia.util.drawText(text, ScrW() / 2 - textW / 2, ScrH() / 2 - textH / 2, ColorAlpha(color_white, aprg2 * 255), 0, 0, "liaDynFontMedium", aprg2 * 255)
+        lia.util.drawText(text, ScrW() / 2 - textW / 2, ScrH() / 2 - textH / 2, ColorAlpha(color_white, aprg2 * 255), 0, 0, "liaHugeFont", aprg2 * 255)
         if not hideRespawnKey then
             local displayText = timeLeft > 0 and L("respawnIn", timeLeft) or L("respawnKey", input.GetKeyName(KEY_SPACE))
-            surface.SetFont("liaBigFont")
+            surface.SetFont("liaHugeFont")
             local displayW, _ = surface.GetTextSize(displayText)
-            lia.util.drawText(displayText, ScrW() / 2 - displayW / 2, ScrH() - 50, Color(255, 255, 255), 0, 1, "liaBigFont")
+            lia.util.drawText(displayText, ScrW() / 2 - displayW / 2, ScrH() - 50, Color(255, 255, 255), 0, 1, "liaHugeFont")
         end
 
         if timeLeft <= 0 and input.IsKeyDown(KEY_SPACE) then
@@ -39635,7 +39643,7 @@ function MODULE:HUDPaint()
             if index == 1 then lastY = 0 end
         end
 
-        surface.SetFont("liaSubTitleFont")
+        surface.SetFont("liaBigFont")
         local name = hook.Run("GetWeaponName", weapon) or weapon:GetPrintName():upper()
         local _, ty = surface.GetTextSize(name)
         local scale = math.max(1 - math.abs(theta * 2), 0)
@@ -39643,7 +39651,7 @@ function MODULE:HUDPaint()
         matrix:Translate(Vector(shiftX + x + math.cos(theta * spacing + pi) * radius + radius, y + lastY + math.sin(theta * spacing + pi) * radius - ty / 2, 1))
         matrix:Scale(Vector(scale, scale, 1))
         cam.PushModelMatrix(matrix)
-        lia.util.drawText(name, 2, ty / 2, col, 0, 1, "liaSubTitleFont")
+        lia.util.drawText(name, 2, ty / 2, col, 0, 1, "liaBigFont")
         cam.PopModelMatrix()
     end
 
