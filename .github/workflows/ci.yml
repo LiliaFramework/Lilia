@@ -148,11 +148,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           path: site
       - name: Deploy docs
+        working-directory: site
         run: |
-          ls
-          cd site
-          ls
-          cp -R code/docs/* site/
+          rm -rf *
+          cp -R ../code/docs/* .
       - name: Commit and push
         working-directory: site
         run: |
