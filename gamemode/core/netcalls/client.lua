@@ -25,8 +25,7 @@ end)
 
 net.Receive("liaNotify", function()
     local message = net.ReadString()
-    local notifType = net.ReadUInt(3)
-    lia.notices.notify(message, notifType)
+    lia.notices.notify(message)
 end)
 
 net.Receive("ServerChatAddText", function()

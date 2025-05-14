@@ -410,7 +410,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     deleteBtn:SetText(L("deleteCharacter"))
     deleteBtn.DoClick = function()
         if hook.Run("CanDeleteChar", character:getID()) == false then
-            LocalPlayer():notifyWarning(L("cannotDeleteChar"))
+            LocalPlayer():notifyLocalized("cannotDeleteChar")
             return
         end
 

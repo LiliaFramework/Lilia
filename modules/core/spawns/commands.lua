@@ -103,7 +103,7 @@ lia.command.add("returnitems", {
 
         if lia.config.get("LoseItemsonDeathHuman", false) or lia.config.get("LoseItemsonDeathNPC", false) then
             if not target.LostItems or table.IsEmpty(target.LostItems) then
-                client:notifyWarning(L("returnItemsTargetNoItems"))
+                client:notifyLocalized("returnItemsTargetNoItems")
                 return
             end
 
@@ -116,10 +116,10 @@ lia.command.add("returnitems", {
             end
 
             target.LostItems = nil
-            target:notify(L("returnItemsReturnedToPlayer"))
-            client:notify(L("returnItemsAdminConfirmed"))
+            target:notifyLocalized("returnItemsReturnedToPlayer")
+            client:notifyLocalized("returnItemsAdminConfirmed")
         else
-            client:notifyWarning(L("returnItemsNotEnabled"))
+            client:notifyLocalized("returnItemsNotEnabled")
         end
     end
 })

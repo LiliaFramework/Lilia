@@ -17,7 +17,7 @@
         end
 
         if target == client then
-            client:notify(L("cannotMuteSelf"))
+            client:notifyLocalized("cannotMuteSelf")
             return false
         end
 
@@ -26,14 +26,14 @@
             local isBanned = char:getData("VoiceBan", false)
             char:setData("VoiceBan", not isBanned)
             if isBanned then
-                client:notify(L("voiceUnmuted", target:Name()))
-                target:notify(L("voiceUnmutedByAdmin"))
+                client:notifyLocalized("voiceUnmuted", target:Name())
+                target:notifyLocalized("voiceUnmutedByAdmin")
             else
-                client:notify(L("voiceMuted", target:Name()))
-                target:notify(L("voiceMutedByAdmin"))
+                client:notifyLocalized("voiceMuted", target:Name())
+                target:notifyLocalized("voiceMutedByAdmin")
             end
         else
-            client:notify(L("noValidCharacter"))
+            client:notifyLocalized("noValidCharacter")
         end
     end
 })

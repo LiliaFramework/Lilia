@@ -195,9 +195,9 @@ if SERVER then
          lia.command.run(player, "mycommand", {"arg1", "arg2"})
    ]]
     function lia.command.run(client, command, arguments)
-        command = lia.command.list[command:lower()]
-        if command then
-            local results = {command.onRun(client, arguments or {})}
+        local commandTbl = lia.command.list[command:lower()]
+        if commandTbl then
+            local results = {commandTbl.onRun(client, arguments or {})}
             local result = results[1]
             if isstring(result) then
                 if IsValid(client) then
@@ -347,7 +347,7 @@ hook.Add("CreateInformationButtons", "CreateInformationMenuCommands", function(p
                 iconLayout:InvalidateLayout(true)
             end
 
-            searchEntry.OnTextChanged  = function() refresh() end
+            searchEntry.OnTextChanged = function() refresh() end
             refresh()
         end
     })

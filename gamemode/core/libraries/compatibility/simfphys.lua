@@ -20,7 +20,7 @@
 
     hook.Add("simfphysUse", "SIMFPHYS_simfphysUse", function(entity, client)
         if entity.IsBeingEntered then
-            client:notify(L("carOccupiedNotice"))
+            client:notifyLocalized("carOccupiedNotice")
             return true
         end
 

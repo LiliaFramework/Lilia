@@ -44,7 +44,7 @@ lia.command.add("setsitroom", {
         local sitrooms = lia.data.get("sitrooms", {}, true, true)
         sitrooms[mapName] = pos
         lia.data.set("sitrooms", sitrooms, true, true)
-        client:notify(L("sitroomSet"))
+        client:notifyLocalized("sitroomSet")
         lia.log.add(client, "sitRoomSet", string.format("Map: %s | Position: %s", mapName, tostring(pos)), "Set the sitroom location for the current map")
     end
 })
@@ -72,11 +72,11 @@ lia.command.add("sendtositroom", {
         local pos = sitrooms[mapName]
         if pos then
             target:SetPos(pos)
-            client:notify(L("sitroomTeleport", target:Nick()))
-            target:notify(L("sitroomArrive"))
+            client:notifyLocalized("sitroomTeleport", target:Nick())
+            target:notifyLocalized("sitroomArrive")
             lia.log.add(client, "sendToSitRoom", string.format("Map: %s | Target: %s | Position: %s", mapName, target:Nick(), tostring(pos)), "Teleported player to the sitroom for the current map")
         else
-            client:notifyWarning(L("sitroomNotSet"))
+            client:notifyLocalized("sitroomNotSet")
         end
     end
 })

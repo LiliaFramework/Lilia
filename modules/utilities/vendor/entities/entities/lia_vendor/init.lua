@@ -67,7 +67,7 @@ function ENT:takeStock(itemType, value)
 end
 
 function ENT:setMaxStock(itemType, value)
-    if value == 0 or not isnumber(value) then value = nil end
+    if value == 0 or not isnumber(value) then value = 0 end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_MAXSTOCK] = value
     net.Start("VendorMaxStock")

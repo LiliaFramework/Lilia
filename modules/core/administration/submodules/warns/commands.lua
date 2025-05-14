@@ -31,8 +31,8 @@
         local warns = target:getLiliaData("warns") or {}
         table.insert(warns, warning)
         target:setLiliaData("warns", warns)
-        target:notify(L("playerWarned", warning.admin, reason))
-        client:notify(L("warningIssued", target:Nick()))
+        target:notifyLocalized("playerWarned", warning.admin, reason)
+        client:notifyLocalized("warningIssued", target:Nick())
         lia.log.add(client, "warningIssued", target, reason)
     end
 })
@@ -57,7 +57,7 @@ lia.command.add("viewwarns", {
 
         local warns = target:getLiliaData("warns") or {}
         if table.Count(warns) == 0 then
-            client:notify(L("noWarnings", target:Nick()))
+            client:notifyLocalized("noWarnings", target:Nick())
             return
         end
 
