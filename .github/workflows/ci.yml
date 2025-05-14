@@ -137,3 +137,25 @@ jobs:
             git push
           fi
           rm -f *.zip
+
+  deploy-pages:
+    needs: build-and-sync
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: LiliaFramework/LiliaFramework.github.io
+          path: site
+          token: ${{ secrets.GH_PAGES_TOKEN }}
+      - run: |
+          rm -rf site/*
+          cp -R code/docs/* site/
+      - working-directory: site
+        run: |
+          git config user.email "githubactions@github.com"
+          git config user.name "GitHub Actions"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add .
+            git commit -m "Update docs"
+            git push
+          fi
