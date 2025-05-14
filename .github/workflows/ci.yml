@@ -1,8 +1,6 @@
 name: CI
-
 on:
   push:
-
 permissions:
   actions: write
   checks: write
@@ -17,7 +15,6 @@ permissions:
   repository-projects: write
   security-events: write
   statuses: write
-
 jobs:
   linter:
     runs-on: ubuntu-latest
@@ -123,13 +120,14 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-      - run: |
-          mkdir -p code/files
-          curl -sL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/main/files/liliastack.py -o code/files/liliastack.py
-          sed -i "s|, default=.*)|)|" code/files/liliastack.py
-          mkdir -p code/docs
-          python code/files/liliastack.py -s code/lilia -o code/docs/liliastackcode.lua
-          cd code
+      - name: Sync liliastackcode
+        working-directory: code
+        run: |
+          mkdir -p files
+          curl -sL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/main/files/liliastack.py -o files/liliastack.py
+          sed -i "s|, default=.*)|)|" files/liliastack.py
+          mkdir -p docs
+          python files/liliastack.py -s lilia -o docs/liliastackcode.lua
           git config user.email "githubactions@github.com"
           git config user.name "GitHub Actions"
           if [ -n "$(git status --porcelain)" ]; then
@@ -137,4 +135,4 @@ jobs:
             git commit -m "Update liliastackcode.lua"
             git push
           fi
-          rm -f code/*.zip
+          rm -f *.zip
