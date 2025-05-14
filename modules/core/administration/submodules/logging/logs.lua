@@ -49,55 +49,55 @@
     },
     ["chat"] = {
         func = function(client, chatType, message) return L("chatLog", client:SteamID64(), chatType, client:Name(), message, client:getChar():getID()) end,
-        category = L("chatCategory")
+        category = L("chat")
     },
     ["chatOOC"] = {
         func = function(client, msg) return L("chatOOCLog", client:SteamID64(), client:Name(), msg, client:getChar():getID()) end,
-        category = L("chatCategory")
+        category = L("chat")
     },
     ["chatLOOC"] = {
         func = function(client, msg) return L("chatLOOCLog", client:SteamID64(), client:Name(), msg, client:getChar():getID()) end,
-        category = L("chatCategory")
+        category = L("chat")
     },
     ["command"] = {
         func = function(client, text) return L("commandLog", client:SteamID64(), client:Name(), text, client:getChar():getID()) end,
-        category = L("chatCategory")
+        category = L("chat")
     },
     ["money"] = {
         func = function(client, amount) return L("moneyLog", client:SteamID64(), client:Name(), amount, client:getChar():getID()) end,
-        category = L("moneyCategory")
+        category = L("money")
     },
     ["moneyGiven"] = {
         func = function(client, name, amount) return L("moneyGivenLog", client:SteamID64(), client:Name(), name, lia.currency.get(amount), client:getChar():getID()) end,
-        category = L("moneyCategory")
+        category = L("money")
     },
     ["moneyPickedUp"] = {
         func = function(client, amount) return L("moneyPickedUpLog", client:SteamID64(), client:Name(), lia.currency.get(amount), amount > 1 and lia.currency.plural or lia.currency.singular, client:getChar():getID()) end,
-        category = L("moneyCategory")
+        category = L("money")
     },
     ["itemTake"] = {
         func = function(client, item) return L("itemTakeLog", client:SteamID64(), client:Name(), item, client:getChar():getID()) end,
-        category = L("itemCategory")
+        category = L("items")
     },
     ["use"] = {
         func = function(client, item) return L("itemUseLog", client:SteamID64(), client:Name(), item, client:getChar():getID()) end,
-        category = L("itemCategory")
+        category = L("items")
     },
     ["itemDrop"] = {
         func = function(client, item) return L("itemDropLog", client:SteamID64(), client:Name(), item, client:getChar():getID()) end,
-        category = L("itemCategory")
+        category = L("items")
     },
     ["itemInteraction"] = {
         func = function(client, action, item) return L("itemInteractionLog", client:SteamID64(), client:Name(), action, item.name, client:getChar():getID()) end,
-        category = L("itemCategory")
+        category = L("items")
     },
     ["itemEquip"] = {
         func = function(client, item) return L("itemEquipLog", client:SteamID64(), client:Name(), item, client:getChar():getID()) end,
-        category = L("itemCategory")
+        category = L("items")
     },
     ["itemUnequip"] = {
         func = function(client, item) return L("itemUnequipLog", client:SteamID64(), client:Name(), item, client:getChar():getID()) end,
-        category = L("itemCategory")
+        category = L("items")
     },
     ["toolgunUse"] = {
         func = function(client, tool) return L("toolgunUseLog", client:SteamID64(), client:Name(), tool, client:getChar():getID()) end,
