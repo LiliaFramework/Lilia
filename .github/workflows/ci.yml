@@ -150,6 +150,7 @@ jobs:
       - name: Deploy docs
         run: |
           rm -rf site/*
+          ls
           cp -R code/docs/* site/
       - name: Commit and push
         working-directory: site
