@@ -12,6 +12,24 @@ if CLIENT then
         oldCreateFont(name, data)
     end
 
+    lia.font.register("AddonInfo_Header", {
+        font = "Helvetica",
+        size = ScreenScaleH(24),
+        weight = 1000
+    })
+
+    lia.font.register("AddonInfo_Text", {
+        font = "Helvetica",
+        size = ScreenScaleH(9),
+        weight = 1000
+    })
+
+    lia.font.register("AddonInfo_Small", {
+        font = "Helvetica",
+        size = ScreenScaleH(8),
+        weight = 1000
+    })
+
     lia.font.register("ConfigFont", {
         font = lia.config.get("Font"),
         size = 26,
