@@ -111,33 +111,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build-and-sync:
-    needs: release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          path: code
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-      - name: Sync liliastackcode
-        working-directory: code
-        run: |
-          mkdir -p files
-          curl -sL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/main/files/liliastack.py -o files/liliastack.py
-          sed -i "s|, default=.*)|)|" files/liliastack.py
-          mkdir -p docs
-          python files/liliastack.py -s . -o docs/liliastackcode.lua
-          git config user.email "githubactions@github.com"
-          git config user.name "GitHub Actions"
-          if [ -n "$(git status --porcelain)" ]; then
-            git add docs/liliastackcode.lua
-            git commit -m "Update liliastackcode.lua"
-            git push
-          fi
-          rm -f *.zip
-
   deploy-pages:
     needs: release
     runs-on: ubuntu-latest
@@ -150,7 +123,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: LiliaFramework/LiliaFramework.github.io
-          token: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           path: site
       - name: Deploy docs
         run: |
