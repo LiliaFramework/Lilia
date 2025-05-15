@@ -646,7 +646,7 @@ end
 
 function GM:InitializedModules()
     timer.Simple(5, function() DatabaseQuery() end)
-    if not lia.module.versionChecks and not lia.module.privateVersionChecks then return end
+    if not UpdateCheck and not lia.module.versionChecks and not lia.module.privateVersionChecks then return end
     local publicURL = "https://raw.githubusercontent.com/LiliaFramework/Modules/main/modules.json"
     local privateURL = "https://raw.githubusercontent.com/bleonheart/bleonheart.github.io/main/modules.json"
     http.Fetch(publicURL, function(body, _, _, code)
@@ -704,6 +704,8 @@ function GM:InitializedModules()
             end
         end, function(err2) lia.updater("HTTP.Fetch error: " .. err2) end)
     end, function(err) lia.updater("HTTP.Fetch error: " .. err) end)
+
+    UpdateCheck = true
 end
 
 function ClientAddText(client, ...)
