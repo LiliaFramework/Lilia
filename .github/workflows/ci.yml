@@ -129,7 +129,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
 
   deploy-pages:
-    needs: release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main repo
