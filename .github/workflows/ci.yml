@@ -1,5 +1,8 @@
 name: CI
 
+on:
+  push:
+
 permissions:
   actions: write
   checks: write
