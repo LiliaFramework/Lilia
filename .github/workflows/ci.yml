@@ -126,11 +126,14 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-            deploy-pages:
+  deploy-pages:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main repo
         uses: actions/checkout@v3
+        with:
+          path: code
+
       - name: Checkout pages repo
         uses: actions/checkout@v3
         with:
