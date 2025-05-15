@@ -51,7 +51,7 @@ jobs:
             --no-max-cyclomatic-complexity
 
   release:
-      : linter
+    needs: linter
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
@@ -117,7 +117,7 @@ jobs:
           path: site
           token: ${{ secrets.LiliaGitSecret }}
       - run: |
-          cp -R lilia/docs/. site
+          cp -R lilia/docs/. site/
       - run: |
           cd site
           git config user.email "githubactions@github.com"
