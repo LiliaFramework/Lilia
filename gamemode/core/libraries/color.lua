@@ -25,7 +25,7 @@ local unpack = unpack
       lia.color.register("alert", red)
 ]]
 function lia.color.register(name, color)
-   lia.color.stored[name:lower()] = color
+    lia.color.stored[name:lower()] = color
 end
 
 --[[
@@ -53,7 +53,7 @@ end
       local lighter = lia.color.Adjust(base, 20, 20, 20, 0)
 ]]
 function lia.color.Adjust(color, rOffset, gOffset, bOffset, aOffset)
-   return Color(clamp(color.r + rOffset, 0, 255), clamp(color.g + gOffset, 0, 255), clamp(color.b + bOffset, 0, 255), clamp((color.a or 255) + (aOffset or 0), 0, 255))
+    return Color(clamp(color.r + rOffset, 0, 255), clamp(color.g + gOffset, 0, 255), clamp(color.b + bOffset, 0, 255), clamp((color.a or 255) + (aOffset or 0), 0, 255))
 end
 
 --[[
@@ -78,16 +78,16 @@ end
       panel:SetBackgroundColor(uiColors.background)
 ]]
 function lia.color.ReturnMainAdjustedColors()
-   local base = configGet("Color")
-   return {
-      background = lia.color.Adjust(base, -20, -10, -50, 0),
-      sidebar = lia.color.Adjust(base, -30, -15, -60, -55),
-      accent = base,
-      text = Color(245, 245, 220, 255),
-      hover = lia.color.Adjust(base, -40, -25, -70, -35),
-      border = Color(255, 255, 255, 255),
-      highlight = Color(255, 255, 255, 30)
-   }
+    local base = configGet("Color")
+    return {
+        background = lia.color.Adjust(base, -20, -10, -50, 0),
+        sidebar = lia.color.Adjust(base, -30, -15, -60, -55),
+        accent = base,
+        text = Color(245, 245, 220, 255),
+        hover = lia.color.Adjust(base, -40, -25, -70, -35),
+        border = Color(255, 255, 255, 255),
+        highlight = Color(255, 255, 255, 30)
+    }
 end
 
 lia.color.register("black", {0, 0, 0})
@@ -229,10 +229,10 @@ lia.color.register("white_smoke", {245, 245, 245})
 lia.color.register("yellow_green", {154, 205, 50})
 local oldColor = Color
 function Color(r, g, b, a)
-   if isstring(r) then
-      local c = lia.color.stored[r:lower()]
-      if c then return oldColor(unpack(c), g or 255) end
-      return oldColor(255, 255, 255, 255)
-   end
-   return oldColor(r, g, b, a)
+    if isstring(r) then
+        local c = lia.color.stored[r:lower()]
+        if c then return oldColor(unpack(c), g or 255) end
+        return oldColor(255, 255, 255, 255)
+    end
+    return oldColor(r, g, b, a)
 end

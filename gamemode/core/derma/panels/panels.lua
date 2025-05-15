@@ -1,4 +1,4 @@
-local cacheKeys, cache, len = {}, {}, 0
+﻿local cacheKeys, cache, len = {}, {}, 0
 local function PaintPanel(_, w, h)
     surface.SetDrawColor(0, 0, 0, 255)
     surface.DrawOutlinedRect(0, 0, w, h, 2)

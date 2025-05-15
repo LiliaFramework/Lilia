@@ -1,4 +1,4 @@
-local ScreenScale, ScreenScaleH = ScreenScale(), ScreenScaleH()
+﻿local ScreenScale, ScreenScaleH = ScreenScale(), ScreenScaleH()
 local panel = FindMetaTable("Panel")
 local map = {
     SetPos = {ScreenScale, ScreenScaleH},

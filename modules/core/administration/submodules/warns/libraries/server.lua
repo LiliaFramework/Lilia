@@ -1,5 +1,4 @@
-﻿
-net.Receive("RequestRemoveWarning", function(_, client)
+﻿net.Receive("RequestRemoveWarning", function(_, client)
     if not client:hasPrivilege("Staff Permissions - Can Remove Warnrs") then return end
     local charID = net.ReadInt(32)
     local rowData = net.ReadTable()

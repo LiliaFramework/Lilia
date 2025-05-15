@@ -1,4 +1,4 @@
-if SERVER then
+﻿if SERVER then
     util.AddNetworkString("WorkshopDownloader_Start")
     hook.Add("PlayerInitialSpawn", "WorkshopDownloader_PlayerInitialSpawn", function(ply)
         timer.Simple(10, function()

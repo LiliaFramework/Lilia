@@ -1,4 +1,4 @@
-mysql = mysql or {
+﻿mysql = mysql or {
     module = "sqlite"
 }
 

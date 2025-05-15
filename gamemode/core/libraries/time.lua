@@ -1,4 +1,4 @@
-lia.time = lia.time or {}
+﻿lia.time = lia.time or {}
 --[[
     lia.time.TimeSince
     Description:

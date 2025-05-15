@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 local MAT_GLASS2 = 45
 local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng
 local playerMeta = FindMetaTable("Player")

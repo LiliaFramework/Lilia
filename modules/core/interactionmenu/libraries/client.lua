@@ -1,5 +1,4 @@
 ﻿local MODULE = MODULE
-
 ActionInteractionMenu = nil
 InteractionMenu = nil
 function MODULE:OpenPIM()

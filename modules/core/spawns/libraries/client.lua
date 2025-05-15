@@ -1,6 +1,5 @@
 ﻿local ceil = math.ceil
 local clmp = math.Clamp
-
 local aprg, aprg2 = 0, 0
 local respawnRequested = false
 local hideRespawnKey = false

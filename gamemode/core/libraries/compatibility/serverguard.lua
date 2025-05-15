@@ -1,1 +1,1 @@
-serverguard.plugin:Toggle("restrictions", false)
+﻿serverguard.plugin:Toggle("restrictions", false)

@@ -1,5 +1,4 @@
-﻿
-local min, clamp = math.min, math.Clamp
+﻿local min, clamp = math.min, math.Clamp
 local inputGetCursorPos, hookRun, isValid = input.GetCursorPos, hook.Run, IsValid
 local timerSimple = timer.Simple
 local surfaceSetDrawColor, surfaceDrawRect = surface.SetDrawColor, surface.DrawRect

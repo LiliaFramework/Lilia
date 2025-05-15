@@ -1,4 +1,4 @@
-if SERVER then
+﻿if SERVER then
     timer.Create("CurTime-Sync", 30, -1, function()
         net.Start("CurTime-Sync", true)
         net.WriteFloat(CurTime())
