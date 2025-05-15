@@ -62,7 +62,6 @@ jobs:
 
   release:
     needs: linter
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -133,9 +132,6 @@ jobs:
     steps:
       - name: Checkout main repo
         uses: actions/checkout@v3
-        with:
-          path: code
-
       - name: Checkout pages repo
         uses: actions/checkout@v3
         with:
