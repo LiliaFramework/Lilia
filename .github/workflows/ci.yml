@@ -127,4 +127,3 @@ jobs:
             git commit -m "Update docs"
             git push origin HEAD
           fi
-          
