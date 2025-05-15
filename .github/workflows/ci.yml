@@ -145,12 +145,10 @@ jobs:
 
       - name: Deploy docs
         run: |
-          ls
-          rm -rf site/*
-          cp -R docs/. site/
+          rm -rf ./*
+          cp -R code/docs/. .
 
       - name: Commit and push
-        working-directory: site
         run: |
           git config user.email "githubactions@github.com"
           git config user.name "GitHub Actions"
