@@ -146,7 +146,7 @@ jobs:
       - name: Deploy docs
         run: |
           rm -rf ./*
-          cp -R code/docs/. .
+          cp -R docs/. .
 
       - name: Commit and push
         run: |
