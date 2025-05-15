@@ -116,7 +116,7 @@ jobs:
           draft: false
           prerelease: false
         env:
-          LiliaGitSecret: ${{ secrets.LiliaGitSecret }}
+          GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
 
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
@@ -126,7 +126,7 @@ jobs:
           asset_name: lilia.zip
           asset_content_type: application/zip
         env:
-          LiliaGitSecret: ${{ secrets.LiliaGitSecret }}
+          GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
 
   deploy-pages:
     needs: release
