@@ -27,7 +27,7 @@ function PANEL:setDoor(door, accessData, fallback)
     self.accessData = accessData
     self.door = door
     local client = LocalPlayer()
-    for _, ply in ipairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         if ply ~= client and ply:getChar() then
             local label = L(ACCESS_LABELS[accessData[ply] or 0])
             local line = self.access:AddLine(ply:Name():gsub("#", "\226\128\139#"), label)
