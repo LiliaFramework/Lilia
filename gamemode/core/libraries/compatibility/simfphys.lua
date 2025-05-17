@@ -44,7 +44,11 @@ else
     hook.Remove("HUDPaint", "simfphys_HUD")
 end
 
-hook.Add("simfphysPhysicsCollide", "SIMFPHYS_simfphysPhysicsCollide", function() return true end)
+hook.Add("CheckValidSit", "SIMFPHYS_CheckValidSit", function(client)
+    local vehicle = client:getTracedEntity()
+    if IsValid(vehicle) and vehicle:isSimfphysCar() then return false end
+end)
+
 lia.config.add("DamageInCars", "Take Damage in Cars", true, nil, {
     desc = "Whether or not you take damage while in cars",
     category = "Simfphys",
@@ -71,9 +75,6 @@ CAMI.RegisterPrivilege({
     Description = "Allows access to Editting Simfphys Cars"
 })
 
-hook.Add("CanProperty", "SIMFPHYS_HOOKID", function(client, property, ent) if property == "editentity" and ent:isSimfphysCar() then return client:hasPrivilege("Staff Permissions - Can Edit Simfphys Cars") end end)
-hook.Add("IsSuitableForTrunk", "SIMFPHYS_HOOKID", function(vehicle) if IsValid(vehicle) and vehicle:isSimfphysCar() then return true end end)
-hook.Add("CheckValidSit", "SIMFPHYS_HOOKID", function(client)
-    local vehicle = client:getTracedEntity()
-    if IsValid(vehicle) and vehicle:isSimfphysCar() then return false end
-end)
+hook.Add("simfphysPhysicsCollide", "SIMFPHYS_simfphysPhysicsCollide", function() return true end)
+hook.Add("IsSuitableForTrunk", "SIMFPHYS_IsSuitableForTrunk", function(vehicle) if IsValid(vehicle) and vehicle:isSimfphysCar() then return true end end)
+hook.Add("CanProperty", "SIMFPHYS_CanProperty", function(client, property, ent) if property == "editentity" and ent:isSimfphysCar() then return client:hasPrivilege("Staff Permissions - Can Edit Simfphys Cars") end end)
