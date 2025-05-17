@@ -37,12 +37,12 @@ if SERVER then
         self:setNetVar("parts", {})
     end
 
-    hook.Add("PostPlayerInitialSpawn", "PAC_HOOKID", function(client) timer.Simple(1, function() client:syncParts() end) end)
-    hook.Add("PlayerLoadout", "PAC_HOOKID", function(client) client:resetParts() end)
-    hook.Add("ModuleLoaded", "PAC_HOOKID", function() game.ConsoleCommand("sv_pac_webcontent_limit 35840\n") end)
+    hook.Add("PostPlayerInitialSpawn", "PAC_PostPlayerInitialSpawn", function(client) timer.Simple(1, function() client:syncParts() end) end)
+    hook.Add("PlayerLoadout", "PAC_PlayerLoadout", function(client) client:resetParts() end)
+    hook.Add("ModuleLoaded", "PAC_ModuleLoaded", function() game.ConsoleCommand("sv_pac_webcontent_limit 35840\n") end)
 else
     local partData = {}
-    hook.Add("AdjustPACPartData", "PAC_HOOKID", function(wearer, id, data)
+    hook.Add("AdjustPACPartData", "PAC_AdjustPACPartData", function(wearer, id, data)
         local item = lia.item.list[id]
         if item and isfunction(item.pacAdjust) then
             local result = item:pacAdjust(data, wearer)
@@ -50,13 +50,13 @@ else
         end
     end)
 
-    hook.Add("getAdjustedPartData", "PAC_HOOKID", function(wearer, id)
+    hook.Add("getAdjustedPartData", "PAC_getAdjustedPartData", function(wearer, id)
         if not partData[id] then return end
         local data = table.Copy(partData[id])
         return hook.Run("AdjustPACPartData", wearer, id, data) or data
     end)
 
-    hook.Add("attachPart", "PAC_HOOKID", function(client, id)
+    hook.Add("attachPart", "PAC_attachPart", function(client, id)
         if not pac then return end
         local part = hook.Run("getAdjustedPartData", client, id)
         if not part then return end
@@ -66,7 +66,7 @@ else
         client.liaPACParts[id] = part
     end)
 
-    hook.Add("removePart", "PAC_HOOKID", function(client, id)
+    hook.Add("removePart", "PAC_removePart", function(client, id)
         if not client.RemovePACPart or not client.liaPACParts then return end
         local part = client.liaPACParts[id]
         if part then
@@ -75,7 +75,7 @@ else
         end
     end)
 
-    hook.Add("DrawPlayerRagdoll", "PAC_HOOKID", function(entity)
+    hook.Add("DrawPlayerRagdoll", "PAC_DrawPlayerRagdoll", function(entity)
         local client = entity.objCache
         if IsValid(client) and not entity.overridePAC3 then
             if client.pac_outfits then
@@ -93,7 +93,7 @@ else
         end
     end)
 
-    hook.Add("OnEntityCreated", "PAC_HOOKID", function(entity)
+    hook.Add("OnEntityCreated", "PAC_OnEntityCreated", function(entity)
         local class = entity:GetClass()
         timer.Simple(0, function()
             if class == "prop_ragdoll" and entity:getNetVar("player") then
@@ -117,7 +117,7 @@ else
         end)
     end)
 
-    hook.Add("OnPlayerObserve", "PAC_HOOKID", function(client, state)
+    hook.Add("OnPlayerObserve", "PAC_OnPlayerObserve", function(client, state)
         local curParts = client:getParts()
         if curParts then client:resetParts() end
         if not state then
@@ -129,7 +129,7 @@ else
         end
     end)
 
-    hook.Add("PAC3RegisterEvents", "PAC_HOOKID", function()
+    hook.Add("PAC3RegisterEvents", "PAC_PAC3RegisterEvents", function()
         local events = {
             {
                 name = "weapon_raised",
@@ -153,8 +153,8 @@ else
         end
     end)
 
-    hook.Add("TryViewModel", "PAC_HOOKID", function(entity) return entity == pac.LocalPlayer:GetViewModel() and pac.LocalPlayer or entity end)
-    hook.Add("InitializedModules", "PAC_HOOKID", function()
+    hook.Add("TryViewModel", "PAC_TryViewModel", function(entity) return entity == pac.LocalPlayer:GetViewModel() and pac.LocalPlayer or entity end)
+    hook.Add("InitializedModules", "PAC_InitializedModules", function()
         hook.Remove("HUDPaint", "pac_in_editor")
         timer.Simple(1, function() hook.Run("setupPACDataFromItems") end)
         if lia.config.get("BlockPackURLoad") then concommand.Remove("pac_load_url") end
