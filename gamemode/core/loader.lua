@@ -147,7 +147,7 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/libraries/darkrp.lua",
+        path = "lilia/gamemode/core/libraries/compatibility/darkrp.lua",
         realm = "shared"
     },
     {
@@ -178,27 +178,27 @@ local FilesToLoad = {
 
 local ConditionalFiles = {
     {
-        path = "lilia/core/libraries/compatibility/pac.lua",
+        path = "lilia/gamemode/core/libraries/compatibility/pac.lua",
         global = "pac"
     },
     {
-        path = "lilia/core/libraries/compatibility/simfphys.lua",
+        path = "lilia/gamemode/core/libraries/compatibility/simfphys.lua",
         global = "simfphys"
     },
     {
-        path = "lilia/core/libraries/compatibility/sitanywhere.lua",
+        path = "lilia/gamemode/core/libraries/compatibility/sitanywhere.lua",
         global = "SitAnywhere"
     },
     {
-        path = "lilia/core/libraries/compatibility/vcmod.lua",
+        path = "lilia/gamemode/core/libraries/compatibility/vcmod.lua",
         global = "VCMod"
     },
     {
-        path = "lilia/core/libraries/compatibility/vjbase.lua",
+        path = "lilia/gamemode/core/libraries/compatibility/vjbase.lua",
         global = "VJ"
     },
     {
-        path = "lilia/core/libraries/compatibility/prone.lua",
+        path = "lilia/gamemode/core/libraries/compatibility/prone.lua",
         global = "prone"
     },
     {
@@ -206,8 +206,12 @@ local ConditionalFiles = {
         global = "sam"
     },
     {
-        path = "lilia/core/libraries/compatibility/serverguard.lua",
+        path = "lilia/gamemode/core/libraries/compatibility/serverguard.lua",
         global = "serverguard"
+    },
+    {
+        path = "lilia/gamemode/core/libraries/compatibility/tfa.lua",
+        global = "TFA"
     },
 }
 
