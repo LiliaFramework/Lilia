@@ -3,7 +3,6 @@ MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.version = "1.0"
 MODULE.desc = "Adds a Main Menu that allows to access several characters options."
-MODULE.identifier = "MainMenu"
 if SERVER then
     function MODULE:syncCharList(client)
         if not client.liaCharList then return end
