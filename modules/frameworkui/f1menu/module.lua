@@ -1,5 +1,5 @@
 ﻿MODULE.name = "F1 Menu"
-MODULE.author = "76561198312513285"
+MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.version = "1.0"
 MODULE.desc = "Adds a F1 Menu that allows to access several characters sub-menus."

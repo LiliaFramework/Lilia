@@ -1,5 +1,5 @@
 ﻿MODULE.name = "Vendors"
-MODULE.author = "76561198312513285"
+MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.version = "1.0"
 MODULE.desc = "Adds NPC vendors that can sell things."
