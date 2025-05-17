@@ -588,6 +588,276 @@ if CLIENT then
         additive = true
     })
 
+    lia.font.register("LatoSmall", {
+        font = "Lato",
+        extended = true,
+        size = 16
+    })
+
+    lia.font.register("LatoMedium", {
+        font = "Lato",
+        extended = true,
+        size = 32
+    })
+
+    lia.font.register("LatoBig", {
+        font = "Lato",
+        extended = true,
+        size = 64
+    })
+
+    lia.font.register("MerriweatherSmall", {
+        font = "Merriweather",
+        extended = true,
+        size = 16
+    })
+
+    lia.font.register("MerriweatherMedium", {
+        font = "Merriweather",
+        extended = true,
+        size = 32
+    })
+
+    lia.font.register("MerriweatherBig", {
+        font = "Merriweather",
+        extended = true,
+        size = 64
+    })
+
+    lia.font.register("NotoSansSmall", {
+        font = "Noto Sans",
+        extended = true,
+        size = 16
+    })
+
+    lia.font.register("NotoSansMedium", {
+        font = "Noto Sans",
+        extended = true,
+        size = 32
+    })
+
+    lia.font.register("NotoSansBig", {
+        font = "Noto Sans",
+        extended = true,
+        size = 64
+    })
+
+    lia.font.register("OpenSansSmall", {
+        font = "Open Sans",
+        extended = true,
+        size = 16
+    })
+
+    lia.font.register("OpenSansMedium", {
+        font = "Open Sans",
+        extended = true,
+        size = 32
+    })
+
+    lia.font.register("OpenSansBig", {
+        font = "Open Sans",
+        extended = true,
+        size = 64
+    })
+
+    lia.font.register("OswaldSmall", {
+        font = "Oswald",
+        extended = true,
+        size = 16
+    })
+
+    lia.font.register("OswaldMedium", {
+        font = "Oswald",
+        extended = true,
+        size = 32
+    })
+
+    lia.font.register("OswaldBig", {
+        font = "Oswald",
+        extended = true,
+        size = 64
+    })
+
+    lia.font.register("PoppinsSmall", {
+        font = "Poppins",
+        extended = true,
+        size = 16
+    })
+
+    lia.font.register("PoppinsMedium", {
+        font = "Poppins",
+        extended = true,
+        size = 32
+    })
+
+    lia.font.register("PoppinsBig", {
+        font = "Poppins",
+        extended = true,
+        size = 64
+    })
+
+    lia.font.register("PTSansSmall", {
+        font = "PT Sans",
+        extended = true,
+        size = 16
+    })
+
+    lia.font.register("PTSansMedium", {
+        font = "PT Sans",
+        extended = true,
+        size = 32
+    })
+
+    lia.font.register("PTSansBig", {
+        font = "PT Sans",
+        extended = true,
+        size = 64
+    })
+
+    lia.font.register("RalewaySmall", {
+        font = "Raleway",
+        extended = true,
+        size = 16
+    })
+
+    lia.font.register("RalewayMedium", {
+        font = "Raleway",
+        extended = true,
+        size = 32
+    })
+
+    lia.font.register("RalewayBig", {
+        font = "Raleway",
+        extended = true,
+        size = 64
+    })
+
+    lia.font.register("RobotoSmall", {
+        font = "Roboto",
+        extended = true,
+        size = 16
+    })
+
+    lia.font.register("RobotoMedium", {
+        font = "Roboto",
+        extended = true,
+        size = 32
+    })
+
+    lia.font.register("RobotoBig", {
+        font = "Roboto",
+        extended = true,
+        size = 64
+    })
+
+    lia.font.register("RobotoCondensedSmall", {
+        font = "Roboto Condensed",
+        extended = true,
+        size = 16
+    })
+
+    lia.font.register("RobotoCondensedMedium", {
+        font = "Roboto Condensed",
+        extended = true,
+        size = 32
+    })
+
+    lia.font.register("RobotoCondensedBig", {
+        font = "Roboto Condensed",
+        extended = true,
+        size = 64
+    })
+
+    lia.font.register("RobotoMonoSmall", {
+        font = "Roboto Mono",
+        extended = true,
+        size = 16
+    })
+
+    lia.font.register("RobotoMonoMedium", {
+        font = "Roboto Mono",
+        extended = true,
+        size = 32
+    })
+
+    lia.font.register("RobotoMonoBig", {
+        font = "Roboto Mono",
+        extended = true,
+        size = 64
+    })
+
+    lia.font.register("RobotoSlabSmall", {
+        font = "Roboto Slab",
+        extended = true,
+        size = 16
+    })
+
+    lia.font.register("RobotoSlabMedium", {
+        font = "Roboto Slab",
+        extended = true,
+        size = 32
+    })
+
+    lia.font.register("RobotoSlabBig", {
+        font = "Roboto Slab",
+        extended = true,
+        size = 64
+    })
+
+    lia.font.register("Slabo27pxSmall", {
+        font = "Slabo 27px",
+        extended = true,
+        size = 16
+    })
+
+    lia.font.register("Slabo27pxMedium", {
+        font = "Slabo 27px",
+        extended = true,
+        size = 32
+    })
+
+    lia.font.register("Slabo27pxBig", {
+        font = "Slabo 27px",
+        extended = true,
+        size = 64
+    })
+
+    lia.font.register("SourceSansProSmall", {
+        font = "Source Sans Pro",
+        extended = true,
+        size = 16
+    })
+
+    lia.font.register("SourceSansProMedium", {
+        font = "Source Sans Pro",
+        extended = true,
+        size = 32
+    })
+
+    lia.font.register("SourceSansProBig", {
+        font = "Source Sans Pro",
+        extended = true,
+        size = 64
+    })
+
+    lia.font.register("UbuntuSmall", {
+        font = "Ubuntu",
+        extended = true,
+        size = 16
+    })
+
+    lia.font.register("UbuntuMedium", {
+        font = "Ubuntu",
+        extended = true,
+        size = 32
+    })
+
+    lia.font.register("UbuntuBig", {
+        font = "Ubuntu",
+        extended = true,
+        size = 64
+    })
+
     function lia.font.getAvailableFonts()
         local list = {}
         for name in pairs(lia.font.stored) do
@@ -601,14 +871,14 @@ end
 
 lia.config.add("Font", "Font", "Arial", nil, {
     desc = "Specifies the core font used for UI elements.",
-    category = "Visuals",
+    category = "Fonts",
     type = "Table",
     options = CLIENT and lia.font.getAvailableFonts() or {"Arial"}
 })
 
 lia.config.add("GenericFont", "Generic Font", "Segoe UI", nil, {
     desc = "Specifies the secondary font used for UI elements.",
-    category = "Visuals",
+    category = "Fonts",
     type = "Table",
     options = CLIENT and lia.font.getAvailableFonts() or {"Arial"}
 })
