@@ -4,7 +4,7 @@
 
 ```lua
 MODULE.name = "A Module"
-MODULE.author = "76561198312513285"
+MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.version = "Stock"
 MODULE.desc = "This is an Example Module."
@@ -36,7 +36,7 @@ MODULE.Dependencies = {
 | **Variable**                      | **Purpose**                                                            | **Type**                         | **Example**                                                                                  |
 |----------------------------------|------------------------------------------------------------------------|----------------------------------|----------------------------------------------------------------------------------------------|
 | `MODULE.name`                     | Identifies the module by name.                                         | `String`                         | `MODULE.name = "A Module"`<br>*Names the module “A Module.”*                                 |
-| `MODULE.author`                   | Specifies the module’s author (e.g., STEAMID64 or a name).             | `String`                         | `MODULE.author = "76561198312513285"`<br>*Sets the author’s SteamID64.*                      |
+| `MODULE.author`                   | Specifies the module’s author (e.g., STEAMID64 or a name).             | `String`                         | `MODULE.author = "Samael"`<br>*Sets the author’s SteamID64.*                      |
 | `MODULE.discord` *(Optional)*     | Provides the Discord handle of the author or support channel.          | `String`                         | `MODULE.discord = "@liliaplayer"`<br>*Displays the author’s Discord tag.*                    |
 | `MODULE.version` *(Optional)*     | Tracks the module’s version or release state.                          | `String`                         | `MODULE.version = "Stock"`<br>*Marks the module’s version as “Stock.”*                       |
 | `MODULE.desc`                     | Describes the module’s functionality or purpose.                       | `String`                         | `MODULE.desc = "This is an Example Module."`<br>*Gives a short overview of the module.*      |
@@ -74,7 +74,7 @@ MODULE.Dependencies = {
 
 - **Example:**
   ```lua
-  MODULE.author = "76561198312513285"
+  MODULE.author = "Samael"
   ```
   *Sets the author’s SteamID64.*
 

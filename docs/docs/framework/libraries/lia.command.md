@@ -30,7 +30,7 @@ lia.command.add("Slap", {
     adminOnly = true,
     privilege = "Can Slap",
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if target then
             target:TakeDamage(10, client, client)
             client:notify("You slapped " .. target:Nick())
@@ -101,7 +101,7 @@ PrintTable(args)
 
 ---
 
-### **lia.command.findPlayer**
+### **lia.util.findPlayer**
 
 **Description:**  
 Attempts to find a player by an identifier. If unsuccessful, a notice is displayed to the specified player. The search criteria are derived from `lia.util.findPlayer`.
@@ -120,7 +120,7 @@ Attempts to find a player by an identifier. If unsuccessful, a notice is display
 
 **Usage Example:**
 ```lua
-local target = lia.command.findPlayer(adminPlayer, "PlayerName")
+local target = lia.util.findPlayer(adminPlayer, "PlayerName")
 if target then
     print("Found player:", target:Nick())
 end

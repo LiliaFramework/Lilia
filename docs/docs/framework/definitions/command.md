@@ -19,7 +19,7 @@ lia.command.add("charsetskin", {
     onRun = function(client, arguments)
         local name = arguments[1]
         local skin = tonumber(arguments[2])
-        local target = lia.command.findPlayer(client, name)
+        local target = lia.util.findPlayer(client, name)
         if IsValid(target) and target:getChar() then
             target:getChar():setData("skin", skin)
             target:SetSkin(skin or 0)
@@ -149,7 +149,7 @@ lia.command.add("charsetskin", {
   onRun = function(client, arguments)
       local name = arguments[1]
       local skin = tonumber(arguments[2])
-      local target = lia.command.findPlayer(client, name)
+      local target = lia.util.findPlayer(client, name)
       if IsValid(target) and target:getChar() then
           target:getChar():setData("skin", skin)
           target:SetSkin(skin or 0)
