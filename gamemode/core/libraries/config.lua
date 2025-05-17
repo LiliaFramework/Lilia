@@ -440,18 +440,6 @@ lia.config.add("CarEntryDelayEnabled", "Car Entry Delay Enabled", true, nil, {
     type = "Boolean"
 })
 
-lia.config.add("Font", "Font", "Arial", nil, {
-    desc = "Specifies the core font used for UI elements.",
-    category = "Visuals",
-    type = "Generic"
-})
-
-lia.config.add("GenericFont", "Generic Font", "Segoe UI", nil, {
-    desc = "Specifies the secondary font used for UI elements.",
-    category = "Visuals",
-    type = "Generic"
-})
-
 lia.config.add("MaxChatLength", "Max Chat Length", 256, nil, {
     desc = "Sets the maximum length of chat messages.",
     category = "Visuals",

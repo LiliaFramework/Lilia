@@ -77,7 +77,7 @@ end
       Shared
 
    Alias:
-      lia.command.findPlayer
+      lia.util.findPlayer
 
    Example Usage:
       local foundPly = lia.util.findPlayer(someAdmin, "Bob")
