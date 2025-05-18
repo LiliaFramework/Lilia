@@ -869,18 +869,18 @@ if CLIENT then
     end
 end
 
-lia.config.add("Font", "Font", "Arial", nil, {
+lia.config.add("Font", "Font", "PoppinsMedium", nil, {
     desc = "Specifies the core font used for UI elements.",
     category = "Fonts",
     type = "Table",
-    options = CLIENT and lia.font.getAvailableFonts() or {"Arial"}
+    options = CLIENT and lia.font.getAvailableFonts() or {"PoppinsMedium"}
 })
 
 lia.config.add("GenericFont", "Generic Font", "Segoe UI", nil, {
     desc = "Specifies the secondary font used for UI elements.",
     category = "Fonts",
     type = "Table",
-    options = CLIENT and lia.font.getAvailableFonts() or {"Arial"}
+    options = CLIENT and lia.font.getAvailableFonts() or {"PoppinsMedium"}
 })
 
 hook.Run("PostLoadFonts", lia.config.get("Font"), lia.config.get("GenericFont"))
