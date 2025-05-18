@@ -867,16 +867,36 @@ if CLIENT then
         table.sort(list)
         return list
     end
+
+    function lia.font.refresh()
+        local storedFonts = lia.font.stored
+        lia.font.stored = {}
+        for name, data in pairs(storedFonts) do
+            surface.CreateFont(name, data)
+        end
+
+        hook.Run("PostLoadFonts", lia.config.get("Font"), lia.config.get("GenericFont"))
+    end
+
+    hook.Add("OnScreenSizeChanged", "lia.font.RefreshFonts", lia.font.refresh)
+    hook.Add("RefreshFonts", "LiliaRefreshFonts", lia.font.refresh)
 end
 
-lia.config.add("Font", "Font", "PoppinsMedium", nil, {
+lia.config.add("Font", "Font", "PoppinsMedium", function()
+    if not CLIENT then return end
+    hook.Run("RefreshFonts")
+end, {
     desc = "Specifies the core font used for UI elements.",
     category = "Fonts",
     type = "Table",
     options = CLIENT and lia.font.getAvailableFonts() or {"PoppinsMedium"}
 })
 
-lia.config.add("GenericFont", "Generic Font", "Segoe UI", nil, {
+lia.config.add("GenericFont", "Generic Font", "PoppinsMedium", function()
+    if not CLIENT then return end
+    LocalPlayer():ChatPrint("ih")
+    hook.Run("RefreshFonts")
+end, {
     desc = "Specifies the secondary font used for UI elements.",
     category = "Fonts",
     type = "Table",
