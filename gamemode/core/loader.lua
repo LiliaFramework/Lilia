@@ -28,7 +28,7 @@ local FilesToLoad = {
     },
     {
         path = "lilia/gamemode/core/libraries/fonts.lua",
-        realm = "client"
+        realm = "shared"
     },
     {
         path = "lilia/gamemode/core/libraries/keybind.lua",
