@@ -1,7 +1,4 @@
-﻿function MODULE:CanPlayerUseConfig(client)
-    return client:hasPrivilege("Staff Permissions - Access Configuration Menu")
-end
-
-function MODULE:CanPlayerModifyConfig(client)
+﻿function MODULE:CanPlayerModifyConfig(client)
+    print(client, tostring(client:hasPrivilege("Staff Permissions - Access Edit Configuration Menu")))
     return client:hasPrivilege("Staff Permissions - Access Edit Configuration Menu")
 end
