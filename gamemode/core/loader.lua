@@ -209,10 +209,6 @@ local ConditionalFiles = {
         path = "lilia/gamemode/core/libraries/compatibility/serverguard.lua",
         global = "serverguard"
     },
-    {
-        path = "lilia/gamemode/core/libraries/compatibility/tfa.lua",
-        global = "TFA"
-    },
 }
 
 --[[
