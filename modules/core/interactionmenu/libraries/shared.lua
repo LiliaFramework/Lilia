@@ -30,7 +30,7 @@ function MODULE:CheckDistance(client, entity)
     return entity:GetPos():DistToSqr(client:GetPos()) < MaxInteractionDistance
 end
 
-AddAction("Give Money", {
+AddInteraction("Give Money", {
     serverRun = false,
     shouldShow = function(client, target) return IsValid(target) and target:IsPlayer() and client:getChar():getMoney() > 0 end,
     onRun = function(client, target)
