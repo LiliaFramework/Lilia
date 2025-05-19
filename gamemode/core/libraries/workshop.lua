@@ -8,10 +8,49 @@
         end)
     end)
 else
+    local downloadPanel
+    local totalAddons = 0
+    local remainingAddons = 0
+    local addonsQueue = {}
     local isDownloading = false
-    local addonsToDownload = {}
-    local downloadedAddons = {}
-    local addonsCount = 0
+    local function paintPanel(self, w, h)
+        surface.SetDrawColor(0, 0, 0, 255)
+        surface.DrawOutlinedRect(0, 0, w, h, 2)
+        surface.SetDrawColor(0, 0, 0, 150)
+        surface.DrawRect(1, 1, w - 2, h - 2)
+    end
+
+    local function createPanel()
+        if downloadPanel and downloadPanel:IsValid() then return end
+        surface.SetFont("DermaLarge")
+        local title = "Downloading Workshop Addons"
+        local textW, textH = surface.GetTextSize(title)
+        local pad, barH = 10, 20
+        local w = math.max(textW, 200) + pad * 2
+        local h = textH + barH + pad * 3
+        downloadPanel = vgui.Create("DPanel")
+        downloadPanel:SetSize(w, h)
+        downloadPanel:SetPos((ScrW() - w) / 2, ScrH() * 0.1)
+        downloadPanel.Paint = paintPanel
+        local lbl = vgui.Create("DLabel", downloadPanel)
+        lbl:SetFont("DermaLarge")
+        lbl:SetText(title)
+        lbl:SizeToContents()
+        lbl:SetPos(pad, pad)
+        downloadPanel.progressBar = vgui.Create("DProgressBar", downloadPanel)
+        downloadPanel.progressBar:SetPos(pad, pad + textH + pad)
+        downloadPanel.progressBar:SetSize(w - pad * 2, barH)
+        downloadPanel.progressBar:SetFraction(0)
+    end
+
+    local function updatePanel()
+        if not (downloadPanel and downloadPanel:IsValid()) then return end
+        local done = totalAddons - remainingAddons
+        local frac = totalAddons > 0 and done / totalAddons or 0
+        downloadPanel.progressBar:SetFraction(frac)
+        downloadPanel.progressBar:SetText(string.format("%d/%d", done, totalAddons))
+    end
+
     local function gatherWorkshopIDs()
         local ids = {
             ["2959728255"] = true
@@ -32,147 +71,89 @@ else
         return ids
     end
 
-    local function checkDownloadStatus()
-        if addonsCount <= 0 then
-            isDownloading = false
-            hook.Remove("PostDrawHUD", "WorkshopStatus")
-        end
-    end
-
-    local function downloadMissing()
-        hook.Add("PostDrawHUD", "WorkshopStatus", function()
-            surface.SetDrawColor(20, 0, 20, 200)
-            surface.DrawRect(ScrW() - 260, 5, 255, 60)
-            lia.util.drawText("T", ScrW() - 125, 20, Color(250, math.abs(math.cos(RealTime() * 2) * 120), math.abs(math.cos(RealTime() * 2) * 120)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, "liaMediumFont")
-            lia.util.drawText(L("workshopDownloading"), ScrW() - 10, 45, Color(250, 250, 250), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, "liaMediumFont")
-        end)
-
-        for id in pairs(addonsToDownload) do
+    local function startDownload()
+        totalAddons = table.Count(addonsQueue)
+        remainingAddons = totalAddons
+        if totalAddons == 0 then return end
+        isDownloading = true
+        createPanel()
+        updatePanel()
+        for id in pairs(addonsQueue) do
             lia.bootstrap("Workshop Downloader", "Downloading workshop " .. id)
             steamworks.DownloadUGC(id, function(path)
-                addonsCount = addonsCount - 1
+                remainingAddons = remainingAddons - 1
                 lia.bootstrap("Workshop Downloader", "Completed workshop " .. id)
-                checkDownloadStatus()
                 if path then game.MountGMA(path) end
+                updatePanel()
+                if remainingAddons <= 0 then
+                    isDownloading = false
+                    if downloadPanel and downloadPanel:IsValid() then downloadPanel:Remove() end
+                    downloadPanel = nil
+                end
             end)
         end
     end
 
     local function processModuleWorkshops()
-        local ids = gatherWorkshopIDs()
-        table.Empty(addonsToDownload)
-        for id in pairs(ids) do
-            if not downloadedAddons[id] then
-                addonsToDownload[id] = true
-                lia.bootstrap("Workshop Downloader", "Queued workshop " .. id)
-            end
+        table.Empty(addonsQueue)
+        for id in pairs(gatherWorkshopIDs()) do
+            addonsQueue[id] = true
         end
 
-        addonsCount = table.Count(addonsToDownload)
-        if addonsCount > 0 then
-            lia.bootstrap("Workshop Downloader", "Starting download of " .. addonsCount .. " addons")
-            isDownloading = true
-            downloadMissing()
-        end
+        startDownload()
     end
 
     local function processCollectionWorkshops()
         if not lia.config.get("AutoDownloadWorkshop") then return end
-        local collectionID = lia.config.get("CollectionID")
-        if not collectionID or not isstring(collectionID) then return end
-        http.Fetch(("https://steamcommunity.com/workshop/filedetails/?id=%s"):format(collectionID), function(body)
+        local colID = lia.config.get("CollectionID")
+        if not isstring(colID) or colID == "" then return end
+        http.Fetch("https://steamcommunity.com/workshop/filedetails/?id=" .. colID, function(body)
             for id in body:gmatch("sharedfile_(%d+)") do
-                if not addonsToDownload[id] and not downloadedAddons[id] then
-                    if not steamworks.IsSubscribed(id) then
-                        addonsToDownload[id] = true
-                    else
-                        downloadedAddons[id] = true
-                    end
-                end
+                if not addonsQueue[id] then addonsQueue[id] = true end
             end
 
-            addonsCount = table.Count(addonsToDownload)
-            if addonsCount > 0 then
-                isDownloading = true
-                downloadMissing()
-            end
+            startDownload()
         end)
     end
 
     net.Receive("WorkshopDownloader_Start", function()
         processModuleWorkshops()
-        if lia.config.get("AutoDownloadWorkshop") then processCollectionWorkshops() end
+        processCollectionWorkshops()
     end)
 
-    timer.Create("WorkshopAutoUpdater", 300, 0, function()
-        if not isDownloading then
-            processModuleWorkshops()
-            if lia.config.get("AutoDownloadWorkshop") then processCollectionWorkshops() end
-        end
+    concommand.Add("workshop_force_redownload", function()
+        isDownloading = false
+        table.Empty(addonsQueue)
+        processModuleWorkshops()
+        processCollectionWorkshops()
+        lia.bootstrap("Workshop Downloader", "Forced redownload initiated")
     end)
-end
 
-lia.config.add("AutoDownloadWorkshop", "Auto Download Workshop Content", true, nil, {
-    desc = "Automatically download both collection and module-defined WorkshopContent.",
-    category = "Workshop",
-    type = "Boolean"
-})
-
-lia.config.add("CollectionID", "Collection ID", "", function(_, id)
-    if not CLIENT then return end
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle(L("workshopCollectionPreviewTitle"))
-    frame:SetScaledSize(800, 600)
-    frame:Center()
-    frame:MakePopup()
-    local browser = frame:Add("DHTML")
-    browser:Dock(FILL)
-    browser:OpenURL(("https://steamcommunity.com/workshop/filedetails/?id=%d"):format(id))
-end, {
-    desc = "Steam Workshop collection used for auto-downloading.",
-    category = "Workshop",
-    type = "Generic"
-})
-
-hook.Add("CreateInformationButtons", "WorkshopAddonsInformation", function(pages)
-    table.insert(pages, {
-        name = L("workshopAddons"),
-        drawFunc = function(panel)
-            if not lia.config.get("AutoDownloadWorkshop") then return end
-            local collectionId = lia.config.get("CollectionID")
-            if not isstring(collectionId) or collectionId == "" then
-                local label = vgui.Create("DLabel", panel)
-                label:Dock(TOP)
-                label:SetFont("liaMediumFont")
-                label:SetText(L("workshopNoCollection"))
-                label:SizeToContents()
-                return
-            end
-
-            local search = vgui.Create("DTextEntry", panel)
-            search:Dock(TOP)
-            search:DockMargin(0, 0, 0, 5)
-            search:SetTall(30)
-            search:SetPlaceholderText(L("searchAddons"))
-            local scroll = vgui.Create("DScrollPanel", panel)
-            scroll:Dock(FILL)
-            scroll:DockPadding(0, 10, 0, 0)
-            local canvas = scroll:GetCanvas()
-            local previewSize = 200
-            local items = {}
-            http.Fetch("https://steamcommunity.com/workshop/filedetails/?id=" .. collectionId, function(body)
-                local ids = {}
-                for id in body:gmatch("sharedfile_(%d+)") do
-                    ids[id] = true
-                end
-
-                for id in pairs(ids) do
+    hook.Add("CreateInformationButtons", "WorkshopAddonsInformation", function(pages)
+        table.insert(pages, {
+            name = L("workshopAddons"),
+            drawFunc = function(panel)
+                if not lia.config.get("AutoDownloadWorkshop") then return end
+                local ids = gatherWorkshopIDs()
+                local colID = lia.config.get("CollectionID")
+                local search = vgui.Create("DTextEntry", panel)
+                search:Dock(TOP)
+                search:DockMargin(0, 0, 0, 5)
+                search:SetTall(30)
+                search:SetPlaceholderText(L("searchAddons"))
+                local sc = vgui.Create("DScrollPanel", panel)
+                sc:Dock(FILL)
+                sc:DockPadding(0, 10, 0, 0)
+                local canvas = sc:GetCanvas()
+                local previewSize = 200
+                local items = {}
+                local function createItem(id)
                     steamworks.FileInfo(id, function(info)
                         if not info then return end
                         local item = vgui.Create("DPanel", canvas)
                         item:Dock(TOP)
                         item:DockMargin(0, 0, 0, 10)
-                        item.infoText = (info.title or ""):lower() .. " " .. (info.description or ""):lower()
+                        item.titleText = (info.title or ""):lower()
                         local html = vgui.Create("DHTML", item)
                         html:SetSize(previewSize, previewSize)
                         html:SetMouseInputEnabled(false)
@@ -190,29 +171,68 @@ hook.Add("CreateInformationButtons", "WorkshopAddonsInformation", function(pages
                             html:SetPos(pad, pad)
                             title:SizeToContents()
                             title:SetPos(pad + previewSize + pad, pad)
-                            local xOff = pad + previewSize + pad
-                            local wrapW = self:GetWide() - xOff - pad
-                            desc:SetPos(xOff, pad + title:GetTall() + 5)
-                            desc:SetWide(wrapW)
-                            local _, hDesc = desc:GetContentSize()
-                            desc:SetTall(hDesc)
-                            local totalH = math.max(previewSize + pad * 2, title:GetTall() + 5 + hDesc + pad)
-                            self:SetTall(totalH)
+                            desc:SetPos(pad + previewSize + pad, pad + title:GetTall() + 5)
+                            desc:SetWide(self:GetWide() - pad - previewSize - pad)
+                            local _, h = desc:GetContentSize()
+                            desc:SetTall(h)
+                            self:SetTall(math.max(previewSize + pad * 2, title:GetTall() + 5 + h + pad))
                         end
-
-                        items[#items + 1] = item
                     end)
                 end
-            end)
 
-            search.OnTextChanged = function(self)
-                local q = self:GetValue():lower()
-                for _, item in ipairs(items) do
-                    item:SetVisible(q == "" or item.infoText:find(q, 1, true))
+                for id in pairs(ids) do
+                    items[id] = true
+                    createItem(id)
                 end
 
-                canvas:InvalidateLayout()
+                if isstring(colID) and colID ~= "" then
+                    http.Fetch("https://steamcommunity.com/workshop/filedetails/?id=" .. colID, function(body)
+                        for id in body:gmatch("sharedfile_(%d+)") do
+                            if not items[id] then
+                                items[id] = true
+                                createItem(id)
+                            end
+                        end
+                    end)
+                elseif table.Count(ids) == 0 then
+                    local lbl = vgui.Create("DLabel", panel)
+                    lbl:Dock(TOP)
+                    lbl:SetFont("liaMediumFont")
+                    lbl:SetText(L("workshopNoCollection"))
+                    lbl:SizeToContents()
+                end
+
+                search.OnTextChanged = function(self)
+                    local q = self:GetValue():lower()
+                    for _, item in ipairs(canvas:GetChildren()) do
+                        if item.titleText then item:SetVisible(q == "" or item.titleText:find(q, 1, true)) end
+                    end
+
+                    canvas:InvalidateLayout()
+                end
             end
-        end
-    })
-end)
+        })
+    end)
+end
+
+lia.config.add("AutoDownloadWorkshop", "Auto Download Workshop Content", true, nil, {
+    desc = "Automatically download both collection and module-defined WorkshopContent.",
+    category = "Workshop",
+    type = "Boolean"
+})
+
+lia.config.add("CollectionID", "Collection ID", "", function(_, colID)
+    if not CLIENT then return end
+    local frame = vgui.Create("DFrame")
+    frame:SetTitle(L("workshopCollectionPreviewTitle"))
+    frame:SetSize(800, 600)
+    frame:Center()
+    frame:MakePopup()
+    local browser = vgui.Create("DHTML", frame)
+    browser:Dock(FILL)
+    browser:OpenURL("https://steamcommunity.com/workshop/filedetails/?id=" .. colID)
+end, {
+    desc = "Steam Workshop collection used for auto-downloading.",
+    category = "Workshop",
+    type = "Generic"
+})
