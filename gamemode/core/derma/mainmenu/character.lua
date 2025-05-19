@@ -120,7 +120,9 @@ function PANEL:createStartButton()
 
     local clientChar = client.getChar and client:getChar()
     local w, h, s = ScrW() * 0.2, ScrH() * 0.04, ScrH() * 0.01
-    local logoPath, discordURL, workshopURL = lia.config.get("CenterLogo"), lia.config.get("DiscordURL"), lia.config.get("Workshop")
+    local logoPath = lia.config.get("CenterLogo")
+    local discordURL = lia.config.get("DiscordURL")
+    local workshopURL = lia.config.get("Workshop")
     local buttonsData = {}
     if hook.Run("CanPlayerCreateChar", client) ~= false then
         table.insert(buttonsData, {
@@ -240,10 +242,10 @@ end
 function PANEL:addTab(name, callback, justClick, height)
     local btn = self.tabs:Add("liaMediumButton")
     local label = L(name):upper()
-    btn:SetText(label)
     surface.SetFont(btn:GetFont())
     local textW, textH = surface.GetTextSize(label)
     btn:SetWide(textW + 40)
+    btn:SetText(label)
     btn:SetTall(height or textH + 20)
     if justClick then
         if isfunction(callback) then btn.DoClick = function() callback(self) end end
@@ -273,6 +275,13 @@ function PANEL:backToMainMenu()
         self.rightArrow = nil
     end
 
+    if IsValid(self.selectBtn) then self.selectBtn:Remove() end
+    if IsValid(self.deleteBtn) then self.deleteBtn:Remove() end
+    for _, btn in pairs(self.buttons) do
+        if IsValid(btn) then btn:Remove() end
+    end
+
+    self.buttons = {}
     self.isLoadMode = false
     self.disableClientModel = false
     self.content:Clear()
@@ -290,7 +299,7 @@ function PANEL:createCharacterSelection()
         end
     end
 
-    for _, b in pairs(self.buttons or {}) do
+    for _, b in pairs(self.buttons) do
         if IsValid(b) then b:Remove() end
     end
 
@@ -319,7 +328,7 @@ function PANEL:createCharacterCreation()
         end
     end
 
-    for _, b in pairs(self.buttons or {}) do
+    for _, b in pairs(self.buttons) do
         if IsValid(b) then b:Remove() end
     end
 
@@ -332,18 +341,31 @@ end
 
 function PANEL:updateSelectedCharacter()
     if not self.isLoadMode then return end
-    local chars = lia.characters
-    if not chars or #chars == 0 then return end
+    local chars = lia.characters or {}
+    if #chars == 0 then return end
     self.currentIndex = self.currentIndex or 1
     local sel = chars[self.currentIndex] or chars[1]
     local character = lia.char.loaded[sel]
     if IsValid(self.infoFrame) then self.infoFrame:Remove() end
+    if IsValid(self.selectBtn) then self.selectBtn:Remove() end
+    if IsValid(self.deleteBtn) then self.deleteBtn:Remove() end
     self:createSelectedCharacterInfoPanel(character)
     self:updateModelEntity(character)
 end
 
 function PANEL:createSelectedCharacterInfoPanel(character)
     if not character then return end
+    local chars = lia.characters or {}
+    local total = #chars
+    local index = 1
+    for i, cID in ipairs(chars) do
+        local cObj = type(cID) == "number" and lia.char.loaded[cID] or cID
+        if cObj and cObj.getID and cObj:getID() == character:getID() then
+            index = i
+            break
+        end
+    end
+
     local info = {L("name") .. ": " .. (character:getName() or ""), L("desc") .. ":", character:getDesc() or "", L("faction") .. ": " .. (team.GetName(character:getFaction()) or "")}
     if character:getClass() then
         local cls = lia.class.list[character:getClass()]
@@ -360,31 +382,80 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     self.infoFrame:ShowCloseButton(false)
     local scroll = vgui.Create("DScrollPanel", self.infoFrame)
     scroll:Dock(FILL)
-    for _, text in ipairs(info) do
-        local lbl = scroll:Add("DLabel")
-        lbl:Dock(TOP)
-        lbl:DockMargin(10, 10, 10, 0)
-        lbl:SetFont("liaMediumFont")
-        lbl:SetWrap(true)
-        lbl:SetAutoStretchVertical(true)
-        lbl:SetTextColor(Color(255, 255, 255))
-        lbl:SetText(text)
-        lbl:SizeToContentsY()
+    for i, text in ipairs(info) do
+        if i == 1 then
+            local line = scroll:Add("DPanel")
+            line:Dock(TOP)
+            line:DockMargin(10, 3, 10, 0)
+            line:SetHeight(20)
+            line.Paint = function() end
+            local nameLabel = line:Add("DLabel")
+            nameLabel:Dock(LEFT)
+            nameLabel:SetFont("liaSmallFont")
+            nameLabel:SetTextColor(Color(255, 255, 255))
+            nameLabel:SetText(text)
+            nameLabel:SizeToContents()
+            nameLabel.Paint = function() end
+            local countLabel = line:Add("DLabel")
+            countLabel:Dock(RIGHT)
+            countLabel:SetFont("liaSmallFont")
+            countLabel:SetTextColor(Color(255, 255, 255))
+            countLabel:SetText(index .. "/" .. total)
+            countLabel:SizeToContents()
+            countLabel.Paint = function() end
+        else
+            local lbl = scroll:Add("DLabel")
+            lbl:Dock(TOP)
+            lbl:DockMargin(10, 5, 10, 10)
+            lbl:SetFont("liaSmallFont")
+            lbl:SetWrap(true)
+            lbl:SetAutoStretchVertical(true)
+            lbl:SetTextColor(Color(255, 255, 255))
+            lbl:SetText(text)
+            lbl:SizeToContentsY()
+        end
     end
 
-    local btnCon = self.infoFrame:Add("DPanel")
-    btnCon:Dock(BOTTOM)
-    btnCon:SetTall(100)
-    btnCon:SetPaintBackground(false)
-    local frameW, frameH = self.infoFrame:GetWide(), btnCon:GetTall()
-    local btnW, btnH = frameW * 0.75, 40
-    local padding = 10
-    local xPos = (frameW - btnW) / 2
-    local topY = padding / 2
-    local bottomY = frameH - btnH - padding
-    local selectBtn = vgui.Create("liaSmallButton", btnCon)
-    selectBtn:SetSize(btnW, btnH)
-    selectBtn:SetPos(xPos, topY)
+    local spacer = scroll:Add("DPanel")
+    spacer:Dock(TOP)
+    spacer:SetTall(5)
+    spacer.Paint = function() end
+    local attrs = {}
+    for id, attr in pairs(lia.attribs.list) do
+        attrs[#attrs + 1] = {
+            id = id,
+            attr = attr
+        }
+    end
+
+    table.sort(attrs, function(a, b) return a.attr.name < b.attr.name end)
+    for _, entry in ipairs(attrs) do
+        local minValue = entry.attr.min or 0
+        local maxValue = entry.attr.max or 100
+        local currentValue = character:getAttrib(entry.id) or minValue
+        local label = scroll:Add("DLabel")
+        label:Dock(TOP)
+        label:DockMargin(10, 3, 10, 5)
+        label:SetFont("liaSmallFont")
+        label:SetTextColor(Color(255, 255, 255))
+        label:SetText(entry.attr.name)
+        label:SetContentAlignment(5)
+        label:SizeToContentsY()
+        local progressBar = scroll:Add("DProgressBar")
+        progressBar:Dock(TOP)
+        progressBar:DockMargin(10, 0, 10, 10)
+        progressBar:SetBarColor(entry.attr.color or lia.config.get("Color"))
+        progressBar:SetFraction(math.Clamp(currentValue / maxValue, 0, 1))
+        progressBar:SetText(currentValue .. "/" .. maxValue)
+        progressBar.Font = "liaSmallFont"
+        progressBar:SetTall(20)
+    end
+
+    local fx, fy = self.infoFrame:GetPos()
+    local fw, fh = self.infoFrame:GetWide(), self.infoFrame:GetTall()
+    local bw, bh = fw * 0.85, 40
+    local pad = 10
+    local cx = fx + (fw - bw) * 0.5
     local clientChar = LocalPlayer().getChar and LocalPlayer():getChar()
     local selectText = L("selectCharacter")
     if clientChar and character:getID() == clientChar:getID() then
@@ -393,28 +464,31 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         selectText = L("bannedCharacter")
     end
 
-    selectBtn:SetText(selectText)
+    self.selectBtn = self:Add("liaSmallButton")
+    self.selectBtn:SetSize(bw, bh)
+    self.selectBtn:SetPos(cx, fy + fh + pad)
+    self.selectBtn:SetText(selectText)
     if clientChar and character:getID() == clientChar:getID() or character:getData("banned") then
-        selectBtn:SetEnabled(false)
-        selectBtn:SetTextColor(Color(255, 255, 255))
+        self.selectBtn:SetEnabled(false)
+        self.selectBtn:SetTextColor(Color(255, 255, 255))
     end
 
-    selectBtn.DoClick = function()
+    self.selectBtn.DoClick = function()
         lia.module.list["mainmenu"]:chooseCharacter(character:getID())
         self:Remove()
     end
 
-    local deleteBtn = vgui.Create("liaSmallButton", btnCon)
-    deleteBtn:SetSize(btnW, btnH)
-    deleteBtn:SetPos(xPos, bottomY)
-    deleteBtn:SetText(L("deleteCharacter"))
-    deleteBtn.DoClick = function()
+    self.deleteBtn = self:Add("liaSmallButton")
+    self.deleteBtn:SetSize(bw, bh)
+    self.deleteBtn:SetPos(cx, fy + fh + pad + bh + pad)
+    self.deleteBtn:SetText(L("deleteCharacter"))
+    self.deleteBtn.DoClick = function()
         if hook.Run("CanDeleteChar", character:getID()) == false then
             LocalPlayer():notifyLocalized("cannotDeleteChar")
             return
         end
 
-        vgui.Create("liaCharacterConfirm"):setMessage(L("charDeletionCannotUndone")):onConfirm(function() lia.module.list["mainmenu"]:deleteCharacter(character:getID()) end)
+        vgui.Create("liaCharacterConfirm", self):setMessage(L("charDeletionAreYouSure") .. "\n" .. L("charDeletionCannotUndone")):onConfirm(function() lia.module.list["mainmenu"]:deleteCharacter(character:getID()) end)
     end
 end
 
@@ -489,12 +563,14 @@ function PANEL:UpdateLogoPosition()
     for _, v in pairs(self.buttons) do
         if IsValid(v) then
             local x, y = v:GetPos()
-            left, right, top = math.min(left, x), math.max(right, x + v:GetWide()), math.min(top, y)
+            left = math.min(left, x)
+            right = math.max(right, x + v:GetWide())
+            top = math.min(top, y)
         end
     end
 
-    top = top == math.huge and ScrH() / 2 or top
-    local center = (left + right) / 2
+    top = top == math.huge and ScrH() * 0.5 or top
+    local center = (left + right) * 0.5
     self.logo:SetPos(center - logoW * 0.5, top - logoH - pad)
     self.logo:SetSize(logoW, logoH)
 end
@@ -516,7 +592,7 @@ function PANEL:showContent(disableBg)
         self.logo = nil
     end
 
-    for _, b in pairs(self.buttons or {}) do
+    for _, b in pairs(self.buttons) do
         if IsValid(b) then b:Remove() end
     end
 

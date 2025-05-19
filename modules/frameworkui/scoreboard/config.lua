@@ -14,26 +14,20 @@ lia.config.add("sbHeight", "Scoreboard Height", 0.65, nil, {
     max = 1.0
 })
 
-lia.config.add("ShowStaff", "Show Staff in Scoreboard", true, nil, {
-    desc = "Should Staff Show In Scoreboard",
-    category = "Scoreboard",
-    type = "Boolean"
-})
-
-lia.config.add("DisplayServerName", "Display Server Name in Scoreboard", false, nil, {
-    desc = "Should Server Name Show In Scoreboard",
-    category = "Scoreboard",
-    type = "Boolean"
-})
-
-lia.config.add("DisplayMemberCount", "Display Member Count", true, nil, {
-    desc = "Should Faction Member Count Be Displayed",
+lia.config.add("ClassHeaders", "Class Headers", true, nil, {
+    desc = "Should class headers exist?",
     category = "Scoreboard",
     type = "Boolean"
 })
 
 lia.config.add("UseSolidBackground", "Use Solid Background in Scoreboard", false, nil, {
     desc = "Use a solid background for the scoreboard",
+    category = "Scoreboard",
+    type = "Boolean"
+})
+
+lia.config.add("ClassLogo", "Should Class Logo Appear in the Player Bar", false, nil, {
+    desc = "Toggle display of class logo next to player entries",
     category = "Scoreboard",
     type = "Boolean"
 })

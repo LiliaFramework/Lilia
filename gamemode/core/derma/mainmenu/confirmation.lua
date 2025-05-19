@@ -2,86 +2,78 @@
 function PANEL:Init()
     if IsValid(lia.gui.charConfirm) then lia.gui.charConfirm:Remove() end
     lia.gui.charConfirm = self
-    local w, h = 400, 140
-    self:SetSize(w, h)
-    self:Center()
+    self.pad, self.btnH = 10, 25
+    self:SetSize(400, 200)
+    self:MakePopup()
     self:SetTitle("")
     self:ShowCloseButton(false)
-    self:MakePopup()
-    self.Paint = function(_, fw, fh)
-        lia.util.drawBlur(_)
-        surface.SetDrawColor(0, 0, 0, 200)
-        surface.DrawRect(0, 0, fw, fh)
+    self.titleLabel = self:Add("DLabel")
+    self.titleLabel:SetFont("liaSmallFont")
+    self.titleLabel:SetTextColor(color_white)
+    self.titleLabel:SetText(L("areYouSure"):upper())
+    self.titleLabel:SetContentAlignment(5)
+    self.messageLabel = self:Add("DLabel")
+    self.messageLabel:SetFont("liaMiniFont")
+    self.messageLabel:SetTextColor(color_white)
+    self.messageLabel:SetWrap(true)
+    self.messageLabel:SetContentAlignment(5)
+    self.confirmButton = self:Add("liaSmallButton")
+    self.confirmButton:SetFont("liaSmallFont")
+    self.confirmButton:SetText(L("yes"):upper())
+    self.confirmButton:SetPaintBackground(false)
+    self.confirmButton:SetContentAlignment(5)
+    function self.confirmButton:OnCursorEntered()
+        self.BaseClass.OnCursorEntered(self)
+        if lia.gui.character and isfunction(lia.gui.character.hoverSound) then lia.gui.character:hoverSound() end
     end
 
-    self.title = self:Add("DLabel")
-    self.title:SetFont("liaBigFont")
-    self.title:SetText(L("areYouSure"):upper())
-    self.title:SetTextColor(color_white)
-    self.title:SizeToContents()
-    self.title:CenterHorizontal()
-    self.title:SetY(10)
-    self.message = self:Add("DLabel")
-    self.message:SetFont("liaSmallFont")
-    self.message:SetTextColor(color_white)
-    self.message:SetSize(w - 20, 20)
-    self.message:SetPos(10, 40)
-    self.message:SetContentAlignment(5)
-    local confirmText, cancelText = L("yes"):upper(), L("no"):upper()
-    local cw = surface.GetTextSize(confirmText)
-    local aw = surface.GetTextSize(cancelText)
-    local padding = 40
-    local btnW = math.max(cw, aw) + padding
-    local btnH = 30
-    local spacing = 20
-    local startX = (w - (btnW * 2 + spacing)) * 0.5
-    local btnY = h - btnH - 15
-    self.confirm = self:Add("liaSmallButton")
-    self.confirm:SetText(confirmText)
-    self.confirm:SetPaintBackground(false)
-    self.confirm:SetSize(btnW, btnH)
-    self.confirm:SetPos(startX, btnY)
-    self.confirm:SetContentAlignment(5)
-    self.confirm.OnCursorEntered = function(btn)
-        btn.BaseClass.OnCursorEntered(btn)
-        lia.gui.character:hoverSound()
-    end
-
-    self.confirm.DoClick = function()
-        lia.gui.character:clickSound()
+    self.confirmButton.DoClick = function()
+        if lia.gui.character and isfunction(lia.gui.character.clickSound) then lia.gui.character:clickSound() end
         if isfunction(self.onConfirmCallback) then self.onConfirmCallback() end
         self:Remove()
     end
 
-    self.cancel = self:Add("liaSmallButton")
-    self.cancel:SetText(cancelText)
-    self.cancel:SetPaintBackground(false)
-    self.cancel:SetSize(btnW, btnH)
-    self.cancel:SetPos(startX + btnW + spacing, btnY)
-    self.cancel:SetContentAlignment(5)
-    self.cancel.OnCursorEntered = function(btn)
-        btn.BaseClass.OnCursorEntered(btn)
-        lia.gui.character:hoverSound()
+    self.cancelButton = self:Add("liaSmallButton")
+    self.cancelButton:SetFont("liaSmallFont")
+    self.cancelButton:SetText(L("no"):upper())
+    self.cancelButton:SetPaintBackground(false)
+    self.cancelButton:SetContentAlignment(5)
+    function self.cancelButton:OnCursorEntered()
+        self.BaseClass.OnCursorEntered(self)
+        if lia.gui.character and isfunction(lia.gui.character.hoverSound) then lia.gui.character:hoverSound() end
     end
 
-    self.cancel.DoClick = function()
-        lia.gui.character:clickSound()
+    self.cancelButton.DoClick = function()
+        if lia.gui.character and isfunction(lia.gui.character.clickSound) then lia.gui.character:clickSound() end
         if isfunction(self.onCancelCallback) then self.onCancelCallback() end
         self:Remove()
     end
 
-    timer.Simple(0.25, function() lia.gui.character:warningSound() end)
+    timer.Simple(0.25, function() if lia.gui.character and isfunction(lia.gui.character.warningSound) then lia.gui.character:warningSound() end end)
+    self:Center()
 end
 
-function PANEL:setTitle(t)
-    self.title:SetText(t)
-    self.title:SizeToContentsX()
-    self.title:CenterHorizontal()
-    return self
+function PANEL:PerformLayout(w, h)
+    DFrame.PerformLayout(self, w, h)
+    local pad, btnH = self.pad, self.btnH
+    self.titleLabel:SizeToContents()
+    self.titleLabel:SetPos((w - self.titleLabel:GetWide()) * 0.5, pad * 2)
+    local titleBottom = pad * 2 + self.titleLabel:GetTall()
+    local availH = h - titleBottom - pad * 2 - btnH
+    self.messageLabel:SetSize(w - pad * 2, availH)
+    self.messageLabel:InvalidateLayout(true)
+    self.messageLabel:SizeToContentsY()
+    self.messageLabel:SetPos((w - self.messageLabel:GetWide()) * 0.5, titleBottom + (availH - self.messageLabel:GetTall()) * 0.5)
+    local btnW = (w - pad * 3) * 0.5
+    self.confirmButton:SetSize(btnW, btnH)
+    self.confirmButton:SetPos(pad, h - pad - btnH)
+    self.cancelButton:SetSize(btnW, btnH)
+    self.cancelButton:SetPos(pad * 2 + btnW, h - pad - btnH)
 end
 
-function PANEL:setMessage(m)
-    self.message:SetText(m:upper())
+function PANEL:setMessage(text)
+    self.messageLabel:SetText(text:upper())
+    self:InvalidateLayout()
     return self
 end
 
