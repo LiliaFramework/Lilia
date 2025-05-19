@@ -2,7 +2,7 @@
 function PANEL:Init()
     if IsValid(lia.gui.info) then lia.gui.info:Remove() end
     lia.gui.info = self
-    self:SetSize(ScrW()*0.75, ScrH() * 0.8)
+    self:SetSize(ScrW() * 0.85, ScrH() * 0.8)
     self:SetPos(50, 50)
     self.Paint = function() end
     local scroll = vgui.Create("DScrollPanel", self)
