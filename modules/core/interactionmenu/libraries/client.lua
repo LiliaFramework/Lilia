@@ -55,7 +55,7 @@ function MODULE:OpenPIM()
     local visibleOptionsCount = 0
     local traceEnt = client:getTracedEntity()
     for name, opt in pairs(self.Options) do
-        if opt.shouldShow(client, traceEnt) and traceEnt:IsPlayer() and self:CheckDistance(client, traceEnt) then
+        if IsValid(traceEnt) and traceEnt:IsPlayer() and opt.shouldShow(client, traceEnt) and self:CheckDistance(client, traceEnt) then
             visibleOptionsCount = visibleOptionsCount + 1
             local p = frame.list:Add("DButton")
             p:SetText(name)

@@ -78,7 +78,7 @@ net.Receive("liaCharCreate", function(_, client)
         if IsValid(client) then
             lia.char.loaded[id]:sync(client)
             table.insert(client.liaCharList, id)
-            MainMenu:syncCharList(client)
+            lia.module.list["mainmenu"]:syncCharList(client)
             hook.Run("OnCharCreated", client, lia.char.loaded[id], originalData)
             response(id)
         end
@@ -92,6 +92,6 @@ net.Receive("liaCharDelete", function(_, client)
     if character and character.steamID == steamID then
         hook.Run("CharDeleted", client, character)
         character:delete()
-        timer.Simple(.5, function() MainMenu:syncCharList(client) end)
+        timer.Simple(.5, function() lia.module.list["mainmenu"]:syncCharList(client) end)
     end
 end)

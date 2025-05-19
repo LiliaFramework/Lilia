@@ -1,6 +1,6 @@
 ﻿local MODULE = MODULE
-MODULE.Options = MODULE.Options or {}
-MODULE.SelfOptions = MODULE.SelfOptions or {}
+MODULE.Options = {}
+MODULE.SelfOptions = {}
 local MaxInteractionDistance = 250 * 250
 function AddInteraction(name, data)
     MODULE.Options[name] = data
