@@ -2,30 +2,67 @@
 local function ScrapPage()
     local d = deferred.new()
     http.Fetch('https://liliaframework.github.io/liaIcons', function(resp)
-        local headpos = select(2, resp:find('<div class="row">'))
-        local body = resp:sub(headpos)
-        local scrapped = {}
-        for str in body:gmatch('(icon-%S+);</i>') do
-            local whitespaced = str:gsub('">', ' ')
-            local nulled = whitespaced:gsub('&#', '0')
-            local splitted = nulled:Split(' ')
-            scrapped[splitted[1]] = splitted[2]
+        local _, pos = resp:find('<div class="row">')
+        local body = resp:sub(pos)
+        local icons = {}
+        for entry in body:gmatch('(icon-%S+);</i>') do
+            entry = entry:gsub('">', ' '):gsub('&#', '0')
+            local parts = entry:Split(' ')
+            icons[parts[1]] = parts[2]
         end
 
-        d:resolve(scrapped)
+        d:resolve(icons)
     end)
     return d
 end
 
-ScrapPage():next(function(scrapped)
-    ICON_FONT = scrapped
-    hook.Run("EasyIconsLoaded")
+ScrapPage():next(function(icons)
+    ICON_FONT = icons
+    hook.Run('EasyIconsLoaded')
 end)
 
-function getIcon(sIcon, bIsCode)
-    local iconValue = tonumber(bIsCode and sIcon or ICON_FONT[sIcon])
-    if iconValue then
-        local char = utf8.char(iconValue)
-        return char
-    end
+function getIcon(id, raw)
+    local code = raw and id or ICON_FONT[id]
+    if not code then return '' end
+    return utf8.char(tonumber(code))
 end
+
+concommand.Add("test_icons", function()
+    if not ICON_FONT then
+        chat.AddText(Color(255, 100, 100), "test_icons: ICON_FONT not loaded")
+        return
+    end
+
+    local frame = vgui.Create("DFrame")
+    frame:SetTitle("Icon Tester")
+    frame:SetSize(500, 250)
+    frame:Center()
+    frame:MakePopup()
+    local list = vgui.Create("DListView", frame)
+    list:SetPos(10, 30)
+    list:SetSize(220, 200)
+    list:AddColumn("Icon Name")
+    for name in pairs(ICON_FONT) do
+        list:AddLine(name)
+    end
+
+    local entry = vgui.Create("DTextEntry", frame)
+    entry:SetPos(240, 30)
+    entry:SetSize(250, 20)
+    entry:SetPlaceholderText("Or enter raw code")
+    local label = vgui.Create("DLabel", frame)
+    label:SetPos(240, 60)
+    label:SetFont("liaIconsMediumNew")
+    label:SetText("")
+    label:SizeToContents()
+    list.OnRowSelected = function(_, _, row)
+        local name = row:GetColumnText(1)
+        label:SetText(getIcon(name, false))
+        label:SizeToContents()
+    end
+
+    entry.OnEnter = function(self)
+        label:SetText(getIcon(self:GetValue(), true))
+        label:SizeToContents()
+    end
+end, nil, "Opens a UI to test icons")
