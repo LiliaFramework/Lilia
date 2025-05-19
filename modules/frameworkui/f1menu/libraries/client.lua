@@ -128,11 +128,27 @@ function MODULE:CreateInformationButtons(pages)
         table.insert(pages, {
             name = L("entities"),
             drawFunc = function(panel)
+                local entityCount = 0
+                for _, list in pairs(entitiesByCreator) do
+                    entityCount = entityCount + #list
+                end
+
                 local searchEntry = vgui.Create("DTextEntry", panel)
                 searchEntry:Dock(TOP)
                 searchEntry:DockMargin(0, 0, 0, 5)
                 searchEntry:SetTall(30)
                 searchEntry:SetPlaceholderText(L("searchEntities"))
+                local infoPanel = vgui.Create("DPanel", panel)
+                infoPanel:Dock(TOP)
+                infoPanel:DockMargin(10, 0, 10, 5)
+                infoPanel:SetTall(30)
+                infoPanel.Paint = function(_, w, h) draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 30, 200)) end
+                local infoLabel = vgui.Create("DLabel", infoPanel)
+                infoLabel:Dock(FILL)
+                infoLabel:SetFont("liaSmallFont")
+                infoLabel:SetTextColor(color_white)
+                infoLabel:SetContentAlignment(5)
+                infoLabel:SetText("Total Player Entities: " .. entityCount)
                 local scroll = vgui.Create("DScrollPanel", panel)
                 scroll:Dock(FILL)
                 scroll:DockPadding(0, 0, 0, 10)
@@ -141,17 +157,18 @@ function MODULE:CreateInformationButtons(pages)
                 for owner, entsList in SortedPairs(entitiesByCreator) do
                     local header = vgui.Create("DCollapsibleCategory", canvas)
                     header:Dock(TOP)
-                    header:SetLabel(owner)
+                    header:SetLabel(owner .. " - " .. #entsList .. " Entities")
                     header:SetExpanded(true)
-                    header:DockMargin(0, 0, 0, 0)
                     header.Header:SetFont("liaMediumFont")
                     header.Header:SetTextColor(Color(255, 255, 255))
                     header.Header:SetContentAlignment(5)
                     header.Header:SetTall(30)
+                    header.Paint = function() end
                     header.Header.Paint = function(_, w, h)
-                        draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
-                        surface.SetDrawColor(255, 255, 255)
-                        surface.DrawOutlinedRect(0, 0, w, h)
+                        surface.SetDrawColor(0, 0, 0, 255)
+                        surface.DrawOutlinedRect(0, 0, w, h, 2)
+                        surface.SetDrawColor(0, 0, 0, 150)
+                        surface.DrawRect(1, 1, w - 2, h - 2)
                     end
 
                     local body = vgui.Create("DPanel", header)
@@ -204,6 +221,7 @@ function MODULE:CreateInformationButtons(pages)
                         local btnContainer = vgui.Create("DPanel", panelEnt)
                         btnContainer:Dock(RIGHT)
                         btnContainer:SetWide(380)
+                        btnContainer.Paint = function() end
                         local btnW, btnH = 120, 40
                         if client:hasPrivilege("Staff Permission — View Entity (Entity Tab)") then
                             local btnView = vgui.Create("liaSmallButton", btnContainer)
@@ -259,6 +277,7 @@ function MODULE:CreateInformationButtons(pages)
                     end
 
                     canvas:InvalidateLayout()
+                    canvas:SizeToChildren(false, true)
                 end
             end
         })
@@ -268,11 +287,27 @@ function MODULE:CreateInformationButtons(pages)
         table.insert(pages, {
             name = L("modules"),
             drawFunc = function(panel)
-                local moduleSearch = vgui.Create("DTextEntry", panel)
-                moduleSearch:Dock(TOP)
-                moduleSearch:DockMargin(10, 5, 10, 5)
-                moduleSearch:SetTall(30)
-                moduleSearch:SetPlaceholderText(L("searchModules"))
+                local modulesCount = 0
+                for _ in pairs(lia.module.list) do
+                    modulesCount = modulesCount + 1
+                end
+
+                local searchEntry = vgui.Create("DTextEntry", panel)
+                searchEntry:Dock(TOP)
+                searchEntry:DockMargin(10, 0, 10, 5)
+                searchEntry:SetTall(30)
+                searchEntry:SetPlaceholderText(L("searchModules"))
+                local infoPanel = vgui.Create("DPanel", panel)
+                infoPanel:Dock(TOP)
+                infoPanel:DockMargin(10, 0, 10, 5)
+                infoPanel:SetTall(30)
+                infoPanel.Paint = function(_, w, h) draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 30, 200)) end
+                local infoLabel = vgui.Create("DLabel", infoPanel)
+                infoLabel:Dock(FILL)
+                infoLabel:SetFont("liaSmallFont")
+                infoLabel:SetTextColor(color_white)
+                infoLabel:SetContentAlignment(5)
+                infoLabel:SetText("Modules Count: " .. modulesCount)
                 local scroll = vgui.Create("DScrollPanel", panel)
                 scroll:Dock(FILL)
                 scroll:DockPadding(0, 0, 0, 10)
@@ -296,13 +331,14 @@ function MODULE:CreateInformationButtons(pages)
                     panels[#panels + 1] = modulePanel
                 end
 
-                moduleSearch.OnTextChanged = function(entry)
+                searchEntry.OnTextChanged = function(entry)
                     local q = entry:GetValue():lower()
                     for _, modulePanel in ipairs(panels) do
                         modulePanel:SetVisible(q == "" or modulePanel.infoText:find(q, 1, true))
                     end
 
                     canvas:InvalidateLayout()
+                    canvas:SizeToChildren(false, true)
                 end
             end
         })

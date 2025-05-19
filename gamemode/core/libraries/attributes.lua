@@ -24,7 +24,7 @@ function lia.attribs.loadFromDir(directory)
         ATTRIBUTE = lia.attribs.list[niceName] or {}
         if MODULE then ATTRIBUTE.module = MODULE.uniqueID end
         lia.include(directory .. "/" .. v, "shared")
-        ATTRIBUTE.name = ATTRIBUTE.name or l("unknown")
+        ATTRIBUTE.name = ATTRIBUTE.name or L("unknown")
         ATTRIBUTE.desc = ATTRIBUTE.desc or L("noDesc")
         lia.attribs.list[niceName] = ATTRIBUTE
         ATTRIBUTE = nil

@@ -135,12 +135,27 @@ else
             drawFunc = function(panel)
                 if not lia.config.get("AutoDownloadWorkshop") then return end
                 local ids = gatherWorkshopIDs()
-                local colID = lia.config.get("CollectionID")
                 local search = vgui.Create("DTextEntry", panel)
                 search:Dock(TOP)
                 search:DockMargin(0, 0, 0, 5)
                 search:SetTall(30)
                 search:SetPlaceholderText(L("searchAddons"))
+                local count = 0
+                for _ in pairs(ids) do
+                    count = count + 1
+                end
+
+                local infoPanel = vgui.Create("DPanel", panel)
+                infoPanel:Dock(TOP)
+                infoPanel:DockMargin(10, 0, 10, 5)
+                infoPanel:SetTall(30)
+                infoPanel.Paint = function(_, w, h) draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 30, 200)) end
+                local infoLabel = vgui.Create("DLabel", infoPanel)
+                infoLabel:Dock(FILL)
+                infoLabel:SetFont("liaSmallFont")
+                infoLabel:SetTextColor(color_white)
+                infoLabel:SetContentAlignment(5)
+                infoLabel:SetText("Total Auto Downloaded Addons: " .. count)
                 local sc = vgui.Create("DScrollPanel", panel)
                 sc:Dock(FILL)
                 sc:DockPadding(0, 10, 0, 0)
@@ -185,6 +200,7 @@ else
                     createItem(id)
                 end
 
+                local colID = lia.config.get("CollectionID")
                 if isstring(colID) and colID ~= "" then
                     http.Fetch("https://steamcommunity.com/workshop/filedetails/?id=" .. colID, function(body)
                         for id in body:gmatch("sharedfile_(%d+)") do

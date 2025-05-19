@@ -118,10 +118,13 @@ hook.Add("CreateInformationButtons", "CreateInformationMenuFlags", function(page
                         local statusColor = hasFlag and Color(0, 255, 0) or Color(255, 0, 0)
                         draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
                         draw.SimpleText("Flag '" .. flagName .. "'", "liaMediumFont", 20, 10, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-                        draw.SimpleText(status, "liaHugeFont", w - 20, h / 2, statusColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+                        draw.SimpleText(status, "liaHugeFont", w - 20, h * 0.5, statusColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
                         if hasDesc then draw.SimpleText(flagData.desc, "liaSmallFont", 20, 45, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP) end
                     end
                 end
+
+                canvas:InvalidateLayout(true)
+                canvas:SizeToChildren(false, true)
             end
 
             searchEntry.OnTextChanged = refresh

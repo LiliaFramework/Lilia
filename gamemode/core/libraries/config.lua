@@ -858,10 +858,12 @@ hook.Add("PopulateConfigurationButtons", "PopulateConfig", function(pages)
                 cat.Header:SetTall(30)
                 cat.Header:SetFont("liaMediumFont")
                 cat.Header:SetTextColor(Color(255, 255, 255))
+                cat.Paint = function() end
                 cat.Header.Paint = function(_, w, h)
-                    draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 200))
-                    surface.SetDrawColor(255, 255, 255, 80)
-                    surface.DrawOutlinedRect(0, 0, w, h)
+                    surface.SetDrawColor(0, 0, 0, 255)
+                    surface.DrawOutlinedRect(0, 0, w, h, 2)
+                    surface.SetDrawColor(0, 0, 0, 150)
+                    surface.DrawRect(1, 1, w - 2, h - 2)
                 end
 
                 cat.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40, 60)) end
