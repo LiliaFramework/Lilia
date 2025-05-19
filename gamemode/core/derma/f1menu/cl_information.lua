@@ -2,23 +2,15 @@
 function PANEL:Init()
     if IsValid(lia.gui.info) then lia.gui.info:Remove() end
     lia.gui.info = self
-    self:SetSize(ScrW(), ScrH() * 0.8)
+    self:SetSize(ScrW()*0.75, ScrH() * 0.8)
     self:SetPos(50, 50)
     self.Paint = function() end
-    local frame = vgui.Create("DFrame", self)
-    frame:SetTitle("")
-    frame:SetSize(ScrW() * 0.85, ScrH())
-    frame:ShowCloseButton(false)
-    frame:SetDraggable(false)
-    frame.Paint = function() end
-    self.info = frame
-    local scroll = vgui.Create("DScrollPanel", frame)
+    local scroll = vgui.Create("DScrollPanel", self)
     scroll:Dock(FILL)
-    scroll.Paint = function() end
-    local content = scroll:GetCanvas()
-    content:DockPadding(8, 10, 8, 10)
-    content.Paint = function() end
-    self.content = content
+    local canvas = scroll:GetCanvas()
+    canvas:DockPadding(8, 10, 8, 10)
+    canvas.Paint = function() end
+    self.content = canvas
     hook.Run("LoadCharInformation")
     self:GenerateSections()
     timer.Create("liaCharInfo_UpdateValues", 1, 0, function()
