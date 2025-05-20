@@ -328,8 +328,8 @@ hook.Add("CreateInformationButtons", "CreateInformationMenuCommands", function(p
                     local height = hasDesc and 80 or 40
                     local commandPanel = vgui.Create("DPanel", iconLayout)
                     commandPanel:SetSize(panel:GetWide(), height)
-                    commandPanel.Paint = function(_, w, h)
-                        draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 200))
+                    commandPanel.Paint = function(panel, w, h)
+                        derma.SkinHook("Paint", "Panel", panel, w, h)
                         local baseX = 20
                         local text = "/" .. cmdName
                         if cmdData.syntax and cmdData.syntax ~= "" then text = text .. " " .. cmdData.syntax end

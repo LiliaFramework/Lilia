@@ -38,7 +38,7 @@ function PANEL:Init()
     self.tabList = {}
     for _, key in ipairs(keys) do
         local cb = btnDefs[key]
-        if type(cb) == "string" then
+        if isstring(cb) then
             local body = cb
             if body:sub(1, 4) == "http" then
                 cb = function(p)

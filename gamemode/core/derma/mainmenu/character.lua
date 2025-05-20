@@ -35,7 +35,7 @@ function PANEL:Init()
     self:loadBackground()
     if clientChar and lia.characters and #lia.characters > 0 then
         for i, charID in ipairs(lia.characters) do
-            local charObj = type(charID) == "number" and lia.char.loaded[charID] or charID
+            local charObj = isnumber(charID) and lia.char.loaded[charID] or charID
             if charObj and charObj.getID and charObj:getID() == clientChar:getID() then
                 self.currentIndex = i
                 break
@@ -359,7 +359,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     local total = #chars
     local index = 1
     for i, cID in ipairs(chars) do
-        local cObj = type(cID) == "number" and lia.char.loaded[cID] or cID
+        local cObj = isnumber(cID) and lia.char.loaded[cID] or cID
         if cObj and cObj.getID and cObj:getID() == character:getID() then
             index = i
             break

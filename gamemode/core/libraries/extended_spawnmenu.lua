@@ -664,7 +664,7 @@ hook.Add("PopulatePropMenu", "rb655_LoadLegacySpawnlists", function(pnl, _, node
         if content and content.entries and not content.contents then
             local items = {}
             for _, e in ipairs(content.entries) do
-                local mdl = type(e) == "table" and e.model or e
+                local mdl = istable(e) and e.model or e
                 table.insert(items, {
                     type = "model",
                     model = mdl
