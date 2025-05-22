@@ -38,7 +38,7 @@ function MODULE:HUDPaint()
         lia.util.drawText(text, ScrW() / 2 - textW / 2, ScrH() / 2 - textH / 2, ColorAlpha(color_white, aprg2 * 255), 0, 0, "liaHugeFont", aprg2 * 255)
         if not hideRespawnKey then
             local displayText = timeLeft > 0 and L("respawnIn", timeLeft) or L("respawnKey", input.GetKeyName(KEY_SPACE))
-            surface.SetFont("liaBigHFont")
+            surface.SetFont("liaBigFont")
             local displayW, _ = surface.GetTextSize(displayText)
             lia.util.drawText(displayText, ScrW() / 2 - displayW / 2, ScrH() - 50, Color(255, 255, 255), 0, 1, "liaHugeFont")
         end
