@@ -12,8 +12,7 @@ else
     local totalAddons = 0
     local remainingAddons = 0
     local addonsQueue = {}
-    local isDownloading = false
-    local function paintPanel(self, w, h)
+    local function paintPanel(_, w, h)
         surface.SetDrawColor(0, 0, 0, 255)
         surface.DrawOutlinedRect(0, 0, w, h, 2)
         surface.SetDrawColor(0, 0, 0, 150)
@@ -75,7 +74,6 @@ else
         totalAddons = table.Count(addonsQueue)
         remainingAddons = totalAddons
         if totalAddons == 0 then return end
-        isDownloading = true
         createPanel()
         updatePanel()
         for id in pairs(addonsQueue) do
@@ -86,7 +84,6 @@ else
                 if path then game.MountGMA(path) end
                 updatePanel()
                 if remainingAddons <= 0 then
-                    isDownloading = false
                     if downloadPanel and downloadPanel:IsValid() then downloadPanel:Remove() end
                     downloadPanel = nil
                 end
@@ -122,7 +119,6 @@ else
     end)
 
     concommand.Add("workshop_force_redownload", function()
-        isDownloading = false
         table.Empty(addonsQueue)
         processModuleWorkshops()
         processCollectionWorkshops()
