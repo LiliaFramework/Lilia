@@ -472,6 +472,6 @@ hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
             x = x + panel:GetWide() + margin
         end
 
-        hook.Add("PostRenderVGUI", mainPanel, function() hook.Run("PostDrawInventory", mainPanel) end)
+        hook.Add("PostRenderVGUI", mainPanel, function() hook.Run("PostDrawInventory", mainPanel, panel) end)
     end
 end)

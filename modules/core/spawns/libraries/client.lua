@@ -35,9 +35,9 @@ function MODULE:HUDPaint()
         local dt = left > 0 and L("respawnIn", left) or L("respawnKey", input.GetKeyName(KEY_SPACE))
         surface.SetFont("liaMediumFont")
         local dw = select(1, surface.GetTextSize(dt))
-        local dx, dy = (ScrW() - dw) / 2, ScrH() - 50
-        lia.util.drawText(dt, dx + 1, dy + 1, Color(0, 0, 0, 255), 0, 1, "liaHugeFont")
-        lia.util.drawText(dt, dx, dy, Color(255, 255, 255, 255), 0, 1, "liaHugeFont")
+        local dx, dy = (ScrW() - dw) / 2, y + h + 10
+        lia.util.drawText(dt, dx + 1, dy + 1, Color(0, 0, 0, 255), 0, 0, "liaMediumFont")
+        lia.util.drawText(dt, dx, dy, Color(255, 255, 255, 255), 0, 0, "liaMediumFont")
     end
 
     if left <= 0 and input.IsKeyDown(KEY_SPACE) then
