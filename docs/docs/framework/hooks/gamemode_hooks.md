@@ -385,7 +385,7 @@ Called after all data has been loaded.
 **Example:**
 ```lua
 hook.Add("PostLoadData", "InitializePlayerStats", function()
-    for _, ply in ipairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         local stats = lia.data.get("player_" .. ply:getChar():getID(), {kills = 0, deaths = 0})
         ply:setKills(stats.kills)
         ply:setDeaths(stats.deaths)
@@ -405,7 +405,7 @@ Saves all relevant data to disk, triggered during map cleanup and shutdown.
 **Example:**
 ```lua
 hook.Add("SaveData", "PersistPlayerData", function()
-    for _, ply in ipairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         local char = ply:getChar()
         if char then
             lia.data.set("player_" .. char:getID(), char:getData(), false, false)
@@ -503,7 +503,7 @@ Called to save persistent data (like map entities), often during map cleanup or 
 **Usage Example:**
 ```lua
 hook.Add("PersistenceSave", "SaveMapEntities", function()
-    for _, ent in ipairs(ents.GetAll()) do
+    for _, ent in ents.Iterator() do
         if ent:isPersistent() then
             lia.data.set("entity_" .. ent:EntIndex(), ent:getData(), true)
             print("Saved entity data for:", ent:GetClass())
@@ -665,7 +665,7 @@ Called whenever a new log message is added. Allows for custom logic or modificat
 ```lua
 hook.Add("OnServerLog", "AlertAdminsOnHighSeverity", function(client, logType, logString, category, color)
     if category == "error" then
-        for _, admin in ipairs(player.GetAll()) do
+    for _, admin in player.Iterator() do
             if admin:isAdmin() then
                 lia.notifications.send(admin, "Error Log: " .. logString, color)
             end

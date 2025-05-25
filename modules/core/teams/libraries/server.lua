@@ -146,6 +146,33 @@ function MODULE:CanCharBeTransfered(character, faction)
     end
 end
 
+function MODULE:OnEntityCreated(entity)
+    if entity:IsNPC() then
+        for _, client in player.Iterator() do
+            local character = client:getChar()
+            if not character then return end
+            local faction = lia.faction.indices[character:getFaction()]
+            if faction and faction.NPCRelations then entity:AddEntityRelationship(client, faction.NPCRelations[entity:GetClass()] or D_HT, 0) end
+        end
+    end
+end
+
+function MODULE:PlayerSpawn(client)
+    local character = client:getChar()
+    if not character then return end
+    local faction = lia.faction.indices[character:getFaction()]
+    local relations = faction.NPCRelations
+    if relations then
+        for _, entity in ents.Iterator() do
+            if entity:IsNPC() and relations[entity:GetClass()] then entity:AddEntityRelationship(client, relations[entity:GetClass()], 0) end
+        end
+    else
+        for _, entity in ents.Iterator() do
+            if entity:IsNPC() then entity:AddEntityRelationship(client, D_HT, 0) end
+        end
+    end
+end
+
 function MODULE:ClassOnLoadout(client)
     local character = client:getChar()
     local class = lia.class.list[character:getClass()]
