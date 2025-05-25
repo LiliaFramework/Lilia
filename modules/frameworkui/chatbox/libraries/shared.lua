@@ -95,6 +95,18 @@ lia.chat.register("me", {
     deadCanChat = true
 })
 
+lia.chat.register("globalme", {
+    syntax = "[string action]",
+    desc = L("globalMeDesc"),
+    format = "**%s %s",
+    onGetColor = lia.chat.classes.ic.onGetColor,
+    onCanHear = function() return true end,
+    prefix = {"/globalme"},
+    font = "liaChatFontItalics",
+    filter = "actions",
+    deadCanChat = true
+})
+
 lia.chat.register("it", {
     syntax = "[string text]",
     desc = L("itDesc"),

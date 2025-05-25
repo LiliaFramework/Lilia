@@ -19,7 +19,7 @@ end
 
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 3, 2)
-    PaintPanel(self, w, h)
+    derma.SkinHook("Paint", "Panel", self, w, h)
     if self.start then
         local w2 = TimeFraction(self.start, self.endTime, CurTime()) * w
         surfaceSetDrawColor(lia.config.get("Color"))
@@ -55,7 +55,7 @@ end
 
 function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 10)
-    PaintPanel(self, w, h)
+    derma.SkinHook("Paint", "Panel", self, w, h)
     if self.start then
         local w2 = TimeFraction(self.start, self.endTime, CurTime()) * w
         surfaceSetDrawColor(lia.config.get("Color"))

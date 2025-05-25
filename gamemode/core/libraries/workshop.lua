@@ -12,13 +12,6 @@ else
     local totalAddons = 0
     local remainingAddons = 0
     local addonsQueue = {}
-    local function paintPanel(_, w, h)
-        surface.SetDrawColor(0, 0, 0, 255)
-        surface.DrawOutlinedRect(0, 0, w, h, 2)
-        surface.SetDrawColor(0, 0, 0, 150)
-        surface.DrawRect(1, 1, w - 2, h - 2)
-    end
-
     local function createPanel()
         if downloadPanel and downloadPanel:IsValid() then return end
         surface.SetFont("DermaLarge")
@@ -30,7 +23,7 @@ else
         downloadPanel = vgui.Create("DPanel")
         downloadPanel:SetSize(w, h)
         downloadPanel:SetPos((ScrW() - w) / 2, ScrH() * 0.1)
-        downloadPanel.Paint = paintPanel
+        derma.SkinHook("Paint", "Panel", downloadPanel, w, h)
         local lbl = vgui.Create("DLabel", downloadPanel)
         lbl:SetFont("DermaLarge")
         lbl:SetText(title)

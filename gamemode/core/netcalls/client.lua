@@ -529,6 +529,13 @@ net.Receive("BinaryQuestionRequest", function()
     end)
 end)
 
+net.Receive("AnimationStatus", function()
+    local ply = net.ReadEntity()
+    local active = net.ReadBool()
+    local boneData = net.ReadTable()
+    if IsValid(ply) then ply:NetworkAnimation(active, boneData) end
+end)
+
 netstream.Hook("charInfo", function(data, id, client) lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client) end)
 netstream.Hook("charKick", function(id, isCurrentChar) hook.Run("KickedFromChar", id, isCurrentChar) end)
 netstream.Hook("gVar", function(key, value) lia.net.globals[key] = value end)

@@ -430,6 +430,14 @@ if SERVER then
         self.liaRagdoll = entity
     end
 
+    function playerMeta:NetworkAnimation(active, boneData)
+        net.Start("AnimationStatus")
+        net.WriteEntity(self)
+        net.WriteBool(active)
+        net.WriteTable(boneData)
+        net.Broadcast()
+    end
+
     function playerMeta:setAction(text, time, callback)
         if time and time <= 0 then
             if callback then callback(self) end
@@ -777,5 +785,13 @@ else
     function playerMeta:getAllLiliaData()
         lia.localData = lia.localData or {}
         return lia.localData
+    end
+
+    local playerMeta = FindMetaTable("Player")
+    function playerMeta:NetworkAnimation(active, boneData)
+        for name, ang in pairs(boneData) do
+            local i = self:LookupBone(name)
+            if i then self:ManipulateBoneAngles(i, active and ang or Angle(0, 0, 0)) end
+        end
     end
 end

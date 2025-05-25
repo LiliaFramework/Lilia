@@ -24,6 +24,7 @@ LANGUAGE = {
     coinflipDesc = "Flips a coin and displays the result.",
     icDesc = "Says something in-character.",
     meDesc = "Performs an emote action.",
+    globalMeDesc = "Performs an globally seen emote action.",
     itDesc = "Displays an in-character descriptive message.",
     wDesc = "Whispers a message.",
     yDesc = "Yells a message.",

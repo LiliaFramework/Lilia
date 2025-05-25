@@ -22,33 +22,6 @@ function PANEL:Init()
     end)
 end
 
-function PANEL:GenerateSections()
-    local info = lia.module.list["f1menu"].CharacterInformation
-    local sections = {}
-    for name, data in pairs(info) do
-        sections[#sections + 1] = {
-            name = name,
-            data = data
-        }
-    end
-
-    table.sort(sections, function(a, b) return a.data.priority < b.data.priority end)
-    for _, sec in ipairs(sections) do
-        local data = sec.data
-        self:CreateSection(self.content, sec.name, data.color)
-        local fields = isfunction(data.fields) and data.fields() or data.fields
-        for _, f in ipairs(fields) do
-            if f.type == "text" then
-                self:CreateTextEntryWithBackgroundAndLabel(self.content, f.name, f.label, 5, f.value)
-            elseif f.type == "bar" then
-                self:CreateFillableBarWithBackgroundAndLabel(self.content, f.name, f.label, f.min, f.max, 5, f.value)
-            end
-
-            self:AddSpacer(self.content, 5)
-        end
-    end
-end
-
 function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, marginBot, valueFunc)
     local entry = parent:Add("DPanel")
     entry:Dock(TOP)
@@ -127,16 +100,51 @@ function PANEL:AddSpacer(parent, height)
     sp.Paint = function() end
 end
 
-function PANEL:CreateSection(parent, title, color)
-    local sec = parent:Add("DPanel")
-    sec:Dock(TOP)
-    sec:DockMargin(0, 10, 0, 10)
-    sec:SetTall(30)
-    sec.Paint = function(_, w, h)
-        surface.SetDrawColor(color)
-        surface.DrawRect(0, 0, w, h)
+function PANEL:GenerateSections()
+    local info = lia.module.list["f1menu"].CharacterInformation
+    local secs = {}
+    for name, data in pairs(info) do
+        secs[#secs + 1] = {
+            name = name,
+            data = data
+        }
+    end
+
+    table.sort(secs, function(a, b) return a.data.priority < b.data.priority end)
+    for _, sec in ipairs(secs) do
+        local container = self:CreateSection(self.content, sec.name)
+        local fields = isfunction(sec.data.fields) and sec.data.fields() or sec.data.fields
+        for _, f in ipairs(fields) do
+            if f.type == "text" then
+                self:CreateTextEntryWithBackgroundAndLabel(container, f.name, f.label, 5, f.value)
+            elseif f.type == "bar" then
+                self:CreateFillableBarWithBackgroundAndLabel(container, f.name, f.label, f.min, f.max, 5, f.value)
+            end
+
+            self:AddSpacer(container, 5)
+        end
+    end
+end
+
+function PANEL:CreateSection(parent, title)
+    local cat = parent:Add("DCollapsibleCategory")
+    cat:Dock(TOP)
+    cat:DockMargin(0, 10, 0, 10)
+    cat:SetLabel("")
+    cat:SetExpanded(true)
+    cat.Header:SetTall(30)
+    cat.Paint = function(p, w, h)end
+    cat.Header.Paint = function(p, w, h)
+        derma.SkinHook("Paint", "Panel", p, w, h)
         draw.SimpleText(title, "liaSmallFont", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
+
+    local contents = vgui.Create("DPanel", cat)
+    contents:Dock(FILL)
+    contents:DockPadding(8, 10, 8, 10)
+    contents.Paint = function() end
+    cat:SetContents(contents)
+    return contents
 end
 
 function PANEL:Refresh()

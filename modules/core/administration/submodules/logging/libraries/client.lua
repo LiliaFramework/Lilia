@@ -40,22 +40,22 @@ function OpenLogsUI(panel, categorizedLogs)
     list:SetMultiSelect(false)
     list:AddColumn("Timestamp"):SetFixedWidth(150)
     list:AddColumn("Message")
-    local copy = contentPanel:Add("liaMediumButton")
-    copy:Dock(BOTTOM)
-    copy:SetText("Copy Selected Row")
-    copy:SetTall(40)
+    local copyButton = contentPanel:Add("liaMediumButton")
+    copyButton:Dock(BOTTOM)
+    copyButton:SetText("Copy Selected Row")
+    copyButton:SetTall(40)
     local currentLogs = {}
-    local currentSelected = nil
+    local selectedButton
     for category, logs in pairs(categorizedLogs) do
         local btn = sidebar:Add("liaMediumButton")
         btn:Dock(TOP)
-        btn:SetText(category)
         btn:DockMargin(0, 0, 0, 10)
         btn:SetTall(40)
+        btn:SetText(category)
         btn.DoClick = function()
-            if IsValid(currentSelected) then currentSelected:SetSelected(false) end
+            if IsValid(selectedButton) then selectedButton:SetSelected(false) end
             btn:SetSelected(true)
-            currentSelected = btn
+            selectedButton = btn
             list:Clear()
             currentLogs = logs
             for _, log in ipairs(logs) do
@@ -65,14 +65,14 @@ function OpenLogsUI(panel, categorizedLogs)
     end
 
     search.OnChange = function()
-        local q = string.lower(search:GetValue())
+        local query = string.lower(search:GetValue())
         list:Clear()
         for _, log in ipairs(currentLogs) do
-            if q == "" or string.find(string.lower(log.message), q, 1, true) then list:AddLine(log.timestamp, log.message) end
+            if query == "" or string.find(string.lower(log.message), query, 1, true) then list:AddLine(log.timestamp, log.message) end
         end
     end
 
-    copy.DoClick = function()
+    copyButton.DoClick = function()
         local sel = list:GetSelectedLine()
         if sel then
             local line = list:GetLine(sel)

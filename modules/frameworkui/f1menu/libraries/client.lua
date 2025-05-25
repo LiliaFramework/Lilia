@@ -348,6 +348,7 @@ end
 function MODULE:CreateMenuButtons(tabs)
     tabs[L("status")] = function(panel)
         panel.info = vgui.Create("liaCharInfo", panel)
+        panel.info:Dock(FILL)
         panel.info:setup()
         panel.info:SetAlpha(0)
         panel.info:AlphaTo(255, 0.5)

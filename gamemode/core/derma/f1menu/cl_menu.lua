@@ -8,30 +8,74 @@ function PANEL:Init()
     self.noAnchor = CurTime() + 0.4
     self.anchorMode = true
     self.invKey = lia.keybind.get("Open Inventory", KEY_I)
-    local sidebar = self:Add("DPanel")
-    sidebar:Dock(RIGHT)
-    sidebar:SetWide(200)
-    sidebar.Paint = function() end
-    self.sidebar = sidebar
-    local scroll = sidebar:Add("DScrollPanel")
-    scroll:Dock(FILL)
-    scroll:SetPadding(30)
-    scroll:DockMargin(0, 20, 0, 0)
-    scroll:SetPaintBackground(false)
-    self.scroll = scroll
-    local tabs = scroll:Add("DListLayout")
-    tabs:Dock(FILL)
-    self.tabs = tabs
+    local btnW, btnH, spacing = 150, 50, 20
+    local topBar = self:Add("DPanel")
+    topBar:Dock(TOP)
+    topBar:SetTall(70)
+    topBar:DockPadding(30, 20, 30, 0)
+    topBar.Paint = function() end
+    local leftArrow = topBar:Add("liaSmallButton")
+    leftArrow:Dock(LEFT)
+    leftArrow:DockMargin(0, 0, spacing, 0)
+    leftArrow:SetWide(40)
+    leftArrow:SetText("<")
+    leftArrow:SetFont("liaMediumFont")
+    leftArrow:SetTextColor(color_white)
+    leftArrow:SetExpensiveShadow(1, Color(0, 0, 0, 100))
+    local rightArrow = topBar:Add("liaSmallButton")
+    rightArrow:Dock(RIGHT)
+    rightArrow:DockMargin(spacing, 0, 0, 0)
+    rightArrow:SetWide(40)
+    rightArrow:SetText(">")
+    rightArrow:SetFont("liaMediumFont")
+    rightArrow:SetTextColor(color_white)
+    rightArrow:SetExpensiveShadow(1, Color(0, 0, 0, 100))
+    local tabsContainer = topBar:Add("Panel")
+    tabsContainer:Dock(FILL)
+    function tabsContainer:PerformLayout(w, h)
+        local btns = self:GetChildren()
+        local totalW = #btns * btnW + (#btns - 1) * spacing
+        local overflow = totalW - w
+        if overflow > 0 then
+            leftArrow:SetVisible(true)
+            rightArrow:SetVisible(true)
+            self.tabOffset = math.Clamp(self.tabOffset or 0, -overflow, 0)
+        else
+            leftArrow:SetVisible(false)
+            rightArrow:SetVisible(false)
+            self.tabOffset = 0
+        end
+
+        local center = (#btns + 1) / 2
+        for i, btn in ipairs(btns) do
+            btn:SetSize(btnW, btnH)
+            btn:SetPos(w * 0.5 - btnW * 0.5 + (i - center) * (btnW + spacing) + self.tabOffset, (h - btnH) * 0.5)
+        end
+    end
+
+    leftArrow.DoClick = function()
+        tabsContainer.tabOffset = (tabsContainer.tabOffset or 0) + btnW + spacing
+        tabsContainer:InvalidateLayout()
+    end
+
+    rightArrow.DoClick = function()
+        tabsContainer.tabOffset = (tabsContainer.tabOffset or 0) - (btnW + spacing)
+        tabsContainer:InvalidateLayout()
+    end
+
+    self.tabs = tabsContainer
     local panel = self:Add("EditablePanel")
     panel:Dock(FILL)
+    local mX, mY = ScrW() * 0.05, ScrH() * 0.05
+    panel:DockMargin(mX, mY, mX, mY)
     panel:SetAlpha(0)
     panel.Paint = function() end
     self.panel = panel
     local btnDefs = {}
     hook.Run("CreateMenuButtons", btnDefs)
     local keys = {}
-    for key in pairs(btnDefs) do
-        keys[#keys + 1] = key
+    for k in pairs(btnDefs) do
+        keys[#keys + 1] = k
     end
 
     table.sort(keys, function(a, b) return #L(a) < #L(b) end)
@@ -40,23 +84,18 @@ function PANEL:Init()
         local cb = btnDefs[key]
         if isstring(cb) then
             local body = cb
-            if body:sub(1, 4) == "http" then
-                cb = function(p)
-                    local html = p:Add("DHTML")
-                    html:Dock(FILL)
-                    html:OpenURL(body)
-                end
-            else
-                cb = function(p)
-                    local html = p:Add("DHTML")
-                    html:Dock(FILL)
-                    html:SetHTML(body)
-                end
+            cb = body:sub(1, 4) == "http" and function(p)
+                local html = p:Add("DHTML")
+                html:Dock(FILL)
+                html:OpenURL(body)
+            end or function(p)
+                local html = p:Add("DHTML")
+                html:Dock(FILL)
+                html:SetHTML(body)
             end
         end
 
-        local tab = self:addTab(key, cb, key)
-        self.tabList[key] = tab
+        self.tabList[key] = self:addTab(key, cb, key)
     end
 
     self:MakePopup()
@@ -65,17 +104,12 @@ end
 
 function PANEL:addTab(name, callback, uniqueID)
     local colors = lia.color.ReturnMainAdjustedColors()
-    local text = L(name)
     local tab = self.tabs:Add("liaSmallButton")
-    tab:SetText(text)
+    tab:SetText(L(name))
     tab:SetFont("liaMediumFont")
     tab:SetTextColor(colors.text)
     tab:SetExpensiveShadow(1, Color(0, 0, 0, 100))
     tab:SetContentAlignment(5)
-    tab:Dock(TOP)
-    tab:SetTall(50)
-    tab:DockMargin(0, 0, 10, 10)
-    tab.text_color = colors.text
     tab.DoClick = function()
         if IsValid(lia.gui.info) then lia.gui.info:Remove() end
         for _, t in pairs(self.tabList) do
@@ -87,7 +121,10 @@ function PANEL:addTab(name, callback, uniqueID)
         lastMenuTab = uniqueID
         self.panel:Clear()
         self.panel:AlphaTo(255, 0.3, 0)
-        if callback then callback(self.panel) end
+        if callback then
+            callback(self.panel)
+            self.panel:InvalidateLayout(true)
+        end
     end
     return tab
 end
@@ -133,7 +170,7 @@ function PANEL:Think()
 end
 
 function PANEL:Paint()
-    lia.util.drawBlur(self)
+    lia.util.drawBlur(self, 50)
 end
 
 vgui.Register("liaMenu", PANEL, "EditablePanel")
