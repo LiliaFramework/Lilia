@@ -47,7 +47,7 @@ Called after a character has been restored from the database. Useful for post-re
 hook.Add("CharRestored", "AwardWelcomePackage", function(character)
     local welcomePackage = {"welcome_pack", "starter_weapon", "basic_armor"}
     for _, itemID in ipairs(welcomePackage) do
-        character:getInventory():addItem(itemID)
+        character:getInv():addItem(itemID)
     end
     print("Welcome package awarded to:", character:getName())
 end)
@@ -543,7 +543,7 @@ Used during character cleanup routines for additional steps when removing or tra
 **Example:**
 ```lua
 hook.Add("CharCleanUp", "RemoveTemporaryItems", function(character)
-    local inventory = character:getInventory()
+    local inventory = character:getInv()
     for _, item in ipairs(inventory:getItems()) do
         if item:isTemporary() then
             inventory:removeItem(item.id)
@@ -1322,9 +1322,9 @@ Triggered when the client sends a request to transfer an item from one inventory
 **Example:**
 ```lua
 hook.Add("HandleItemTransferRequest", "ValidateItemTransfer", function(client, itemID, x, y, invID)
-    local item = client:getInventory():getItemByID(itemID)
+    local item = client:getInv():getItemByID(itemID)
     if item and item:isTransferable() then
-        client:getInventory():moveItem(itemID, invID, x, y)
+        client:getInv():moveItem(itemID, invID, x, y)
         print(client:Name() .. " transferred item ID " .. itemID .. " to inventory " .. invID)
     else
         client:ChatPrint("You cannot transfer this item.")
@@ -1468,9 +1468,9 @@ Called when the system attempts to combine one item with another in an inventory
 hook.Add("ItemCombine", "CombineHealthAndHerb", function(client, item, targetItem)
     if item.uniqueID == "health_potion" and targetItem.uniqueID == "herb" then
         local newItem = lia.item.create("super_health_potion")
-        client:getInventory():addItem(newItem)
-        client:getInventory():removeItem(item.id)
-        client:getInventory():removeItem(targetItem.id)
+        client:getInv():addItem(newItem)
+        client:getInv():removeItem(item.id)
+        client:getInv():removeItem(targetItem.id)
         print(client:Name() .. " combined Health Potion with Herb to create Super Health Potion.")
         return true
     end
@@ -4575,7 +4575,7 @@ Called after a new character has been successfully created. Allows for additiona
 **Example:**
 ```lua
 hook.Add("OnCharCreated", "SetupInitialInventory", function(client, character, originalData)
-    local inventory = character:getInventory()
+    local inventory = character:getInv()
     inventory:addItem("starter_pack")
     inventory:addItem("basic_weapon")
     print("Initial inventory setup for new character:", character:getName())

@@ -271,7 +271,7 @@ The panel displaying the inventory.
 **Usage Example:**
 ```lua
 -- Show the player's backpack inventory
-local backpack = player:getChar():getInventory("backpack")
+local backpack = player:getChar():getInv("backpack")
 if backpack then
     lia.inventory.show(backpack, someParentPanel)
 end
