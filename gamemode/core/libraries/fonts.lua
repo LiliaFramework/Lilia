@@ -894,7 +894,6 @@ end, {
 
 lia.config.add("GenericFont", "Generic Font", "PoppinsMedium", function()
     if not CLIENT then return end
-    LocalPlayer():ChatPrint("ih")
     hook.Run("RefreshFonts")
 end, {
     desc = "Specifies the secondary font used for UI elements.",
