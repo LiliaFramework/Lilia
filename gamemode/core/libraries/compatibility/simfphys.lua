@@ -61,8 +61,8 @@ lia.config.add("CarEntryDelayEnabled", "Take Damage in Cars", true, nil, {
     type = "Boolean"
 })
 
-lia.config.add("TimeToEnterVehicle", "Inventory Height", 4, nil, {
-    desc = "Defines the height of the default inventory.",
+lia.config.add("TimeToEnterVehicle", "Time To Enter Vehicle", 4, nil, {
+    desc = "Defines the time to enter vehicle.",
     category = "Simfphys",
     type = "Int",
     min = 1,
