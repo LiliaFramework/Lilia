@@ -1,4 +1,5 @@
 ﻿local PANEL = {}
+local InvSlotMat = Material("invslotfree.png", "smooth noclamp")
 local renderedIcons = renderedIcons or {}
 function renderNewIcon(panel, itemTable)
     if itemTable.iconCam and not renderedIcons[string.lower(itemTable.model)] or itemTable.forceRender then
@@ -176,6 +177,10 @@ function PANEL:Init()
     self.content = self:Add("liaGridInventoryPanel")
     self.content:Dock(FILL)
     self.content:setGridSize(1, 1)
+    self:SetTitle("")
+end
+
+function PANEL:Paint()
 end
 
 function PANEL:setInventory(inventory)
@@ -221,9 +226,6 @@ function PANEL:centerIcon(w, h)
 end
 
 function PANEL:PaintBehind(w, h)
-    surface.SetDrawColor(0, 0, 0, 150)
-    surface.DrawRect(0, 0, w, h)
-    surface.DrawOutlinedRect(0, 0, w, h)
 end
 
 function PANEL:PerformLayout(w, h)
@@ -343,52 +345,19 @@ function PANEL:addItem(item)
 end
 
 function PANEL:drawHeldItemRectangle()
-    local heldItem = lia.item.held
-    if not IsValid(heldItem) or not heldItem.itemTable then return end
-    local item = heldItem.itemTable
+    local held = lia.item.held
+    if not IsValid(held) or not held.itemTable then return end
+    local item = held.itemTable
     local size = self.size + 2
-    local itemW = (item.width or 1) * size - 2
-    local itemH = (item.height or 1) * size - 2
-    local x, y = self:LocalCursorPos()
-    x = math.Round((x - itemW * 0.5) / size)
-    y = math.Round((y - itemH * 0.5) / size)
-    local trimX, trimY
-    local maxOffsetY = (item.height or 1) - 1
-    local maxOffsetX = (item.width or 1) - 1
-    local drawTarget = nil
-    for itemID, invItem in pairs(self.inventory.items) do
-        if item:getID() == itemID then continue end
-        local targetX, targetY = invItem:getData("x") - 1, invItem:getData("y") - 1
-        local targetW, targetH = invItem.width - 1, invItem.height - 1
-        if x + item.width - 1 >= targetX and x <= targetX + targetW and y + item.height - 1 >= targetY and y <= targetY + targetH and (invItem.onCombine or item.onCombineTo) then
-            drawTarget = {
-                x = targetX,
-                y = targetY,
-                w = invItem.width,
-                h = invItem.height
-            }
-
-            break
-        end
-    end
-
-    if drawTarget then
-        surface.SetDrawColor(Color(241, 196, 15, 25))
-        surface.DrawRect(drawTarget.x * size, drawTarget.y * size, drawTarget.w * size - 2, drawTarget.h * size - 2)
-    else
-        for offsetY = 0, maxOffsetY do
-            trimY = 0
-            for offsetX = 0, maxOffsetX do
-                trimX = 0
-                if offsetY == maxOffsetY then trimY = 2 end
-                if offsetX == maxOffsetX then trimX = 2 end
-                local realX, realY = x + offsetX, y + offsetY
-                if realX >= self.gridW or realY >= self.gridH or realX < 0 or realY < 0 then continue end
-                surface.SetDrawColor(self.occupied[y + offsetY][x + offsetX] and Color(231, 76, 60, 25) or Color(46, 204, 113, 25))
-                surface.DrawRect((x + offsetX) * size, (y + offsetY) * size, size - trimX, size - trimY)
-            end
-        end
-    end
+    local w = (item.width or 1) * size - 2
+    local h = (item.height or 1) * size - 2
+    local mx, my = self:LocalCursorPos()
+    local x = math.Round((mx - w * 0.5) / size)
+    local y = math.Round((my - h * 0.5) / size)
+    if x < 0 or y < 0 or x + (item.width or 1) > self.gridW or y + (item.height or 1) > self.gridH then return end
+    surface.SetDrawColor(255, 255, 255)
+    surface.SetMaterial(InvSlotMat)
+    surface.DrawTexturedRect(x * size, y * size, w, h)
 end
 
 function PANEL:Center()
@@ -416,11 +385,12 @@ function PANEL:computeHeldPanel()
 end
 
 function PANEL:Paint()
-    surface.SetDrawColor(0, 0, 0, 100)
     local size = self.size
     for y = 0, self.gridH - 1 do
         for x = 0, self.gridW - 1 do
-            surface.DrawRect(x * (size + 2), y * (size + 2), size, size)
+            surface.SetDrawColor(255, 255, 255)
+            surface.SetMaterial(InvSlotMat)
+            surface.DrawTexturedRect(x * (size + 2), y * (size + 2), size, size)
         end
     end
 
@@ -436,42 +406,36 @@ function PANEL:OnCursorExited()
 end
 
 vgui.Register("liaGridInventoryPanel", PANEL, "DPanel")
-local margin = 10
 hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
     if hook.Run("CanPlayerViewInventory") == false then return end
-    tabs["inv"] = function(panel)
-        local inventory = LocalPlayer():getChar():getInv()
-        if not inventory then return end
-        local mainPanel = inventory:show(panel)
-        local sortPanels = {}
-        local totalSize = {
-            x = 0,
-            y = 0,
-            p = 0
-        }
-
-        table.insert(sortPanels, mainPanel)
-        totalSize.x = totalSize.x + mainPanel:GetWide() + margin
-        totalSize.y = math.max(totalSize.y, mainPanel:GetTall())
-        for _, item in pairs(inventory:getItems()) do
+    tabs["inv"] = function(parent)
+        local inv = LocalPlayer():getChar():getInv()
+        if not inv then return end
+        local panels = {}
+        local totalW, totalH = 0, 0
+        local main = inv:show(parent)
+        table.insert(panels, main)
+        totalW = totalW + main:GetWide() + 10
+        totalH = math.max(totalH, main:GetTall())
+        for _, item in pairs(inv:getItems()) do
             if item.isBag and hook.Run("CanOpenBagPanel", item) ~= false then
-                local inventory = item:getInv()
-                local childPanels = inventory:show(mainPanel)
-                lia.gui["inv" .. inventory:getID()] = childPanels
-                table.insert(sortPanels, childPanels)
-                totalSize.x = totalSize.x + childPanels:GetWide() + margin
-                totalSize.y = math.max(totalSize.y, childPanels:GetTall())
+                local bagInv = item:getInv()
+                local bagPanel = bagInv:show(parent)
+                lia.gui["inv" .. bagInv:getID()] = bagPanel
+                table.insert(panels, bagPanel)
+                totalW = totalW + bagPanel:GetWide() + 10
+                totalH = math.max(totalH, bagPanel:GetTall())
             end
         end
 
-        local px, py, pw, ph = mainPanel:GetBounds()
-        local x, y = px + pw / 2 - totalSize.x / 2, py + ph / 2
-        for _, panel in pairs(sortPanels) do
-            panel:ShowCloseButton(false)
-            panel:SetPos(x, y - panel:GetTall() / 2)
-            x = x + panel:GetWide() + margin
+        local startX = ScrW() * 0.5 - (totalW - 10) * 0.5
+        local topY = ScrH() * 0.5 - totalH * 0.5
+        for _, p in ipairs(panels) do
+            p:ShowCloseButton(false)
+            p:SetPos(startX, topY + (totalH - p:GetTall()) * 0.5)
+            startX = startX + p:GetWide() + 10
         end
 
-        hook.Add("PostRenderVGUI", mainPanel, function() hook.Run("PostDrawInventory", mainPanel, panel) end)
+        hook.Add("PostRenderVGUI", main, function() hook.Run("PostDrawInventory", main, parent) end)
     end
 end)
