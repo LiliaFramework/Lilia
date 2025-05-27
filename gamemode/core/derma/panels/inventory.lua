@@ -221,7 +221,7 @@ function PANEL:centerIcon(w, h)
     self.Icon:SetPos((w - iconW) * 0.5, (h - iconH) * 0.5)
 end
 
-function PANEL:PaintBehind(w, h)
+function PANEL:PaintBehind()
 end
 
 function PANEL:PerformLayout(w, h)
