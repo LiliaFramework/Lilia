@@ -137,7 +137,6 @@ PANEL = {}
 function PANEL:Init()
     self:MakePopup()
     self:Center()
-    self:ShowCloseButton(false)
     self:SetDraggable(true)
     self:SetTitle(L("inv"))
 end
@@ -178,9 +177,6 @@ function PANEL:Init()
     self.content:Dock(FILL)
     self.content:setGridSize(1, 1)
     self:SetTitle("")
-end
-
-function PANEL:Paint()
 end
 
 function PANEL:setInventory(inventory)
@@ -408,34 +404,39 @@ end
 vgui.Register("liaGridInventoryPanel", PANEL, "DPanel")
 hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
     if hook.Run("CanPlayerViewInventory") == false then return end
-    tabs["inv"] = function(parent)
-        local inv = LocalPlayer():getChar():getInv()
-        if not inv then return end
-        local panels = {}
-        local totalW, totalH = 0, 0
-        local main = inv:show(parent)
-        table.insert(panels, main)
-        totalW = totalW + main:GetWide() + 10
-        totalH = math.max(totalH, main:GetTall())
-        for _, item in pairs(inv:getItems()) do
+    tabs["inv"] = function(panel)
+        local inventory = LocalPlayer():getChar():getInv()
+        if not inventory then return end
+        local mainPanel = inventory:show(panel)
+        local sortPanels = {}
+        local totalSize = {
+            x = 0,
+            y = 0,
+            p = 0
+        }
+
+        table.insert(sortPanels, mainPanel)
+        totalSize.x = totalSize.x + mainPanel:GetWide() + margin
+        totalSize.y = math.max(totalSize.y, mainPanel:GetTall())
+        for _, item in pairs(inventory:getItems()) do
             if item.isBag and hook.Run("CanOpenBagPanel", item) ~= false then
-                local bagInv = item:getInv()
-                local bagPanel = bagInv:show(parent)
-                lia.gui["inv" .. bagInv:getID()] = bagPanel
-                table.insert(panels, bagPanel)
-                totalW = totalW + bagPanel:GetWide() + 10
-                totalH = math.max(totalH, bagPanel:GetTall())
+                local inventory = item:getInv()
+                local childPanels = inventory:show(mainPanel)
+                lia.gui["inv" .. inventory:getID()] = childPanels
+                table.insert(sortPanels, childPanels)
+                totalSize.x = totalSize.x + childPanels:GetWide() + margin
+                totalSize.y = math.max(totalSize.y, childPanels:GetTall())
             end
         end
 
-        local startX = ScrW() * 0.5 - (totalW - 10) * 0.5
-        local topY = ScrH() * 0.5 - totalH * 0.5
-        for _, p in ipairs(panels) do
-            p:ShowCloseButton(false)
-            p:SetPos(startX, topY + (totalH - p:GetTall()) * 0.5)
-            startX = startX + p:GetWide() + 10
+        local px, py, pw, ph = mainPanel:GetBounds()
+        local x, y = px + pw / 2 - totalSize.x / 2, py + ph / 2
+        for _, panel in pairs(sortPanels) do
+            panel:ShowCloseButton(false)
+            panel:SetPos(x, y - panel:GetTall() / 2)
+            x = x + panel:GetWide() + margin
         end
 
-        hook.Add("PostRenderVGUI", main, function() hook.Run("PostDrawInventory", main, parent) end)
+        hook.Add("PostRenderVGUI", mainPanel, function() hook.Run("PostDrawInventory", mainPanel, panel) end)
     end
 end)

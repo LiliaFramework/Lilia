@@ -92,7 +92,7 @@ function OpenLogsUI(panel, categorizedLogs)
 end
 
 function MODULE:CreateMenuButtons(tabs)
-    if LocalPlayer():hasPrivilege("Staff Permissions - Can See Logs") then
+    if IsValid(LocalPlayer()) and LocalPlayer():hasPrivilege("Staff Permissions - Can See Logs") then
         tabs["Logs"] = function(panel)
             receivedPanel = panel
             net.Start("send_logs_request")
