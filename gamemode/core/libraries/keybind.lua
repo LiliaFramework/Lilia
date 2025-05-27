@@ -304,8 +304,7 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
                 row:DockMargin(4, 4, 4, 4)
                 row:SetTall(50)
                 local lbl = row:Add("DLabel")
-                lbl:Dock(LEFT)
-                lbl:SetWide(300)
+                lbl:Dock(FILL)
                 lbl:SetFont("liaBigFont")
                 lbl:SetText(action)
                 local currentKey = lia.keybind.get(action, KEY_NONE)
@@ -340,7 +339,6 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
                         end
 
                         taken[currentKey] = nil
-                        if lia.keybind.stored[currentKey] then lia.keybind.stored[currentKey] = nil end
                         data.value = newKey
                         lia.keybind.stored[newKey] = action
                         taken[newKey] = action
@@ -349,8 +347,7 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
                     end
                 else
                     local textLabel = row:Add("DLabel")
-                    textLabel:Dock(LEFT)
-                    textLabel:SetWide(300)
+                    textLabel:Dock(FILL)
                     textLabel:SetFont("liaBigFont")
                     textLabel:SetText(input.GetKeyName(currentKey) or "NONE")
                 end
@@ -365,7 +362,6 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
             resetAllBtn.DoClick = function()
                 for action, data in pairs(lia.keybind.stored) do
                     if istable(data) and data.default then
-                        if lia.keybind.stored[data.value] then lia.keybind.stored[data.value] = nil end
                         data.value = data.default
                         lia.keybind.stored[data.default] = action
                     end
