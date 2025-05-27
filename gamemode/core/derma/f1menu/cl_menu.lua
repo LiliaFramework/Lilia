@@ -99,7 +99,7 @@ function PANEL:Init()
     end
 
     self:MakePopup()
-    self:setActiveTab(L("status"))
+    self:setActiveTab(lia.config.get("DefaultMenuTab"))
 end
 
 function PANEL:addTab(name, callback, uniqueID)
