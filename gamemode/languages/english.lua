@@ -210,7 +210,6 @@ LANGUAGE = {
     playtimeError = "Could not retrieve your playtime.",
     playtimeFor = "%s's playtime is %s hours, %s minutes, and %s seconds.",
     specifyPlayer = "Please specify a player.",
-    targetNotFound = "Target player could not be found.",
     adminStickGetPlayTimeName = "Get Player Playtime",
     staffPermissionDenied = "You do not have permission to use this command.",
     staffRestrictedCommand = "You must be on duty or have bypass permissions to use this command.",

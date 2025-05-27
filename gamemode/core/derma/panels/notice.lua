@@ -1,12 +1,5 @@
 ﻿local TimeFraction, CurTime = math.TimeFraction, CurTime
 local surfaceSetDrawColor, surfaceDrawRect, surfaceDrawOutlinedRect = surface.SetDrawColor, surface.DrawRect, surface.DrawOutlinedRect
-local function PaintPanel(_, w, h)
-    surfaceSetDrawColor(0, 0, 0, 255)
-    surfaceDrawOutlinedRect(0, 0, w, h, 2)
-    surfaceSetDrawColor(0, 0, 0, 150)
-    surfaceDrawRect(1, 1, w - 2, h - 2)
-end
-
 local PANEL = {}
 function PANEL:Init()
     self:SetSize(256, 36)
