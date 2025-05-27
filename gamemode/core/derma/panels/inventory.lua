@@ -402,6 +402,7 @@ function PANEL:OnCursorExited()
 end
 
 vgui.Register("liaGridInventoryPanel", PANEL, "DPanel")
+local margin = 10
 hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
     if hook.Run("CanPlayerViewInventory") == false then return end
     tabs["inv"] = function(panel)
