@@ -3,6 +3,7 @@ local fade, shadowFade = 0, 0
 local respawnReq, hideKey = false, false
 function MODULE:HUDPaint()
     local ply, ft = LocalPlayer(), FrameTime()
+    if not ply:getChar() then return end
     local baseTime = lia.config.get("SpawnTime", 5)
     baseTime = hook.Run("OverrideSpawnTime", ply, baseTime) or baseTime
     local lastDeath = ply:getNetVar("lastDeathTime", os.time())
