@@ -15,44 +15,8 @@ function renderNewIcon(panel, itemTable)
     end
 end
 
-local function drawIcon(mat, _, x, y)
-    surface.SetDrawColor(color_white)
-    surface.SetMaterial(mat)
-    surface.DrawTexturedRect(0, 0, x, y)
-end
-
-function PANEL:setItemType(itemTypeOrID)
-    local item = lia.item.list[itemTypeOrID]
-    if isnumber(itemTypeOrID) then
-        item = lia.item.instances[itemTypeOrID]
-        self.itemID = itemTypeOrID
-    else
-        self.itemType = itemTypeOrID
-    end
-
-    assert(item, "invalid item type or ID " .. tostring(item))
-    self.liaToolTip = true
-    self.itemTable = item
-    self:SetModel(item:getModel(), item:getSkin())
-    self:updateTooltip()
-    if item.icon then
-        self.Icon:SetVisible(false)
-        self.ExtraPaint = function(self, w, h) drawIcon(item.icon, self, w, h) end
-    else
-        renderNewIcon(self, item)
-    end
-end
-
-function PANEL:updateTooltip()
-    self:SetTooltip("<font=liaItemBoldFont>" .. self.itemTable:getName() .. "</font>\n" .. "<font=liaItemDescFont>" .. self.itemTable:getDesc())
-end
-
 function PANEL:getItem()
     return self.itemTable
-end
-
-function PANEL:ItemDataChanged()
-    self:updateTooltip()
 end
 
 function PANEL:Init()
@@ -214,6 +178,42 @@ function PANEL:setItem(item)
     self:centerIcon()
 end
 
+local function drawIcon(mat, _, x, y)
+    surface.SetDrawColor(color_white)
+    surface.SetMaterial(mat)
+    surface.DrawTexturedRect(0, 0, x, y)
+end
+
+function PANEL:setItemType(itemTypeOrID)
+    local item = lia.item.list[itemTypeOrID]
+    if isnumber(itemTypeOrID) then
+        item = lia.item.instances[itemTypeOrID]
+        self.itemID = itemTypeOrID
+    else
+        self.itemType = itemTypeOrID
+    end
+
+    assert(item, "invalid item type or ID " .. tostring(item))
+    self.liaToolTip = true
+    self.itemTable = item
+    self:SetModel(item:getModel(), item:getSkin())
+    self:updateTooltip()
+    if item.icon then
+        self.Icon:SetVisible(false)
+        self.ExtraPaint = function(self, w, h) drawIcon(item.icon, self, w, h) end
+    else
+        renderNewIcon(self, item)
+    end
+end
+
+function PANEL:updateTooltip()
+    self:SetTooltip("<font=liaItemBoldFont>" .. self.itemTable:getName() .. "</font>\n" .. "<font=liaItemDescFont>" .. self.itemTable:getDesc())
+end
+
+function PANEL:ItemDataChanged()
+    self:updateTooltip()
+end
+
 function PANEL:centerIcon(w, h)
     w = w or self:GetWide()
     h = h or self:GetTall()
@@ -239,19 +239,26 @@ end
 
 function PANEL:computeOccupied()
     if not self.inventory then return end
-    for y = 0, self.gridH do
-        self.occupied[y] = {}
-        for x = 0, self.gridW do
-            self.occupied[y][x] = false
+    self.occupied = {}
+    for y = 0, self.gridH - 1 do
+        local row = {}
+        for x = 0, self.gridW - 1 do
+            row[x] = false
         end
+
+        self.occupied[y] = row
     end
 
     for _, item in pairs(self.inventory:getItems(true)) do
-        local x, y = item:getData("x"), item:getData("y")
-        if not x then continue end
-        for offsetX = 0, (item.width or 1) - 1 do
-            for offsetY = 0, (item.height or 1) - 1 do
-                self.occupied[y + offsetY - 1][x + offsetX - 1] = true
+        local ix, iy = item:getData("x"), item:getData("y")
+        if ix and iy then
+            for offsetX = 0, (item.width or 1) - 1 do
+                for offsetY = 0, (item.height or 1) - 1 do
+                    local gx = ix + offsetX - 1
+                    local gy = iy + offsetY - 1
+                    if not self.occupied[gy] then self.occupied[gy] = {} end
+                    self.occupied[gy][gx] = true
+                end
             end
         end
     end
