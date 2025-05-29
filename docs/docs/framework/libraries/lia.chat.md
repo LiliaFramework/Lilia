@@ -51,7 +51,7 @@ Registers a new chat type with the information provided. Chat classes should usu
 lia.chat.register("me", {
     format = "**%s %s",
     onGetColor = lia.chat.classes.ic.onGetColor,
-    onCanHear = ChatboxCore.ChatRange,
+    onCanHear = lia.config.get("ChatRange", 280),
     prefix = {"/me", "/action"},
     deadCanChat = true
 })
