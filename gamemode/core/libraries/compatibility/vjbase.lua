@@ -11,7 +11,7 @@ local console_settings = {
     vj_npc_fadegibstime = "5",
     vj_npc_knowenemylocation = "1",
     vj_npc_dropweapon = "0",
-    vj_npc_plypickupdropwep = "0"
+    vj_npc_plypickupdropwep = "0",
 }
 
 local function handle_exploitable_net(client, name)
@@ -26,10 +26,17 @@ for _, name in ipairs(exploitable_nets) do
     net.Receive(name, function(_, client) handle_exploitable_net(client, name) end)
 end
 
+function optimizeVJ()
+    local count = #player.GetAll()
+    RunConsoleCommand("vj_npc_processtime", 1 + count / 40)
+end
+
 timer.Create("vjbase_console_commands", 180, 0, function()
     for cmd, val in pairs(console_settings) do
         RunConsoleCommand(cmd, val)
     end
+
+    optimizeVJ()
 end)
 
 hook.Add("OnEntityCreated", "vjbase_entity_handler", function(ent)
