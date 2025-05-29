@@ -36,7 +36,6 @@ function lia.faction.loadFromDir(directory)
             isDefault = true
         }
 
-        if MODULE then FACTION.module = MODULE.uniqueID end
         lia.include(directory .. "/" .. v, "shared")
         if not FACTION.name then
             FACTION.name = L("unknown")
