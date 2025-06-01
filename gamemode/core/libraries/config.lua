@@ -365,7 +365,7 @@ end, {
     max = 300
 })
 
-lia.config.add("RunSpeed", "Run Speed", 235, function(_, newValue)
+lia.config.add("RunSpeed", "Run Speed", 275, function(_, newValue)
     for _, client in player.Iterator() do
         client:SetRunSpeed(newValue)
     end
