@@ -5,29 +5,31 @@
     syntax = "[string name] [string faction]",
     alias = {"charsetfaction"},
     onRun = function(client, arguments)
-        local target = lia.util.findPlayer(client, arguments[1])
-        local factionName = table.concat(arguments, " ", 2)
-        if not target or not IsValid(target) then
+        local targetPlayer = lia.util.findPlayer(client, arguments[1])
+        if not targetPlayer or not IsValid(targetPlayer) then
             client:notifyLocalized("targetNotFound")
             return
         end
 
+        local factionName = table.concat(arguments, " ", 2)
         local faction = lia.faction.teams[factionName] or lia.util.findFaction(client, factionName)
-        if faction then
-            if hook.Run("CanCharBeTransfered", target:getChar(), faction, target:Team()) == false then return end
-            target:getChar().vars.faction = faction.uniqueID
-            target:getChar():setFaction(faction.index)
-            target:getChar():kickClass()
-            local defaultClass = lia.faction.getDefaultClass(faction.index)
-            if defaultClass then target:getChar():joinClass(defaultClass.index) end
-            hook.Run("OnTransferred", target)
-            if faction.OnTransferred then faction:OnTransferred(target) end
-            client:notify(L("transferSuccess", target:Name(), L(faction.name, client)))
-            hook.Run("PlayerLoadout", target)
-            if client ~= target then target:notify(L("transferNotification", L(faction.name, target), client:Name())) end
-        else
-            return L("invalidFaction")
+        if not faction then
+            client:notifyLocalized("invalidFaction")
+            return
         end
+
+        local targetChar = targetPlayer:getChar()
+        if hook.Run("CanCharBeTransfered", targetChar, faction, targetPlayer:Team()) == false then return end
+        targetChar.vars.faction = faction.uniqueID
+        targetChar:setFaction(faction.index)
+        targetChar:kickClass()
+        local defaultClass = lia.faction.getDefaultClass(faction.index)
+        if defaultClass then targetChar:joinClass(defaultClass.index) end
+        hook.Run("OnTransferred", targetPlayer)
+        if faction.OnTransferred then faction:OnTransferred(targetPlayer) end
+        hook.Run("PlayerLoadout", targetPlayer)
+        client:notifyLocalized("transferSuccess", targetPlayer:Name(), L(faction.name, client))
+        if client ~= targetPlayer then targetPlayer:notifyLocalized("transferNotification", L(faction.name, targetPlayer), client:Name()) end
     end
 })
 
