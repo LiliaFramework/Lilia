@@ -30,7 +30,7 @@
         local currentStamina = client:getLocalVar("stamina", 0)
         local isHoldingSprint = client:KeyDown(IN_SPEED)
         local endBonus = character:getAttrib("end", 0) or 0
-        local offset = 0
+        local offset
         if isHoldingSprint and currentStamina > 0 then
             client:SetRunSpeed(lia.config.get("RunSpeed") + (character:getAttrib("stamina", 0) or 0))
             offset = -2 + endBonus / 60
