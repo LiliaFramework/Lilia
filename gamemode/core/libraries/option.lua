@@ -468,7 +468,14 @@ hook.Add("PopulateConfigurationButtons", "PopulateOptions", function(pages)
             end
         end
 
-        for catName, items in SortedPairs(categories) do
+        local catNames = {}
+        for name in pairs(categories) do
+            catNames[#catNames + 1] = name
+        end
+
+        table.sort(catNames)
+        for _, catName in ipairs(catNames) do
+            local items = categories[catName]
             local cat = vgui.Create("DCollapsibleCategory", parent)
             cat:Dock(TOP)
             cat:SetLabel(catName)

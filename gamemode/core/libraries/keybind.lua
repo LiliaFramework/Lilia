@@ -296,7 +296,12 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
                 if istable(data) and (filter == "" or tostring(action):lower():find(filter, 1, true)) then sortedActions[#sortedActions + 1] = action end
             end
 
-            table.sort(sortedActions, function(a, b) return tostring(a) < tostring(b) end)
+            table.sort(sortedActions, function(a, b)
+                local la, lb = #tostring(a), #tostring(b)
+                if la == lb then return tostring(a) < tostring(b) end
+                return la < lb
+            end)
+
             for _, action in ipairs(sortedActions) do
                 local data = lia.keybind.stored[action]
                 local row = scroll:Add("DPanel")

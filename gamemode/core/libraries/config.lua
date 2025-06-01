@@ -828,8 +828,7 @@ hook.Add("PopulateConfigurationButtons", "PopulateConfig", function(pages)
                 self:DrawTextEntryText(Color(255, 255, 255), Color(255, 255, 255), Color(255, 255, 255))
             end
 
-            local opts = config.data and config.data.options or {}
-            for _, o in ipairs(opts) do
+            for _, o in ipairs(config.data and config.data.options or {}) do
                 combo:AddChoice(o)
             end
 
@@ -867,19 +866,26 @@ hook.Add("PopulateConfigurationButtons", "PopulateConfig", function(pages)
                 if filter == "" or ln:find(filter, 1, true) or ld:find(filter, 1, true) then
                     local cat = opt.category or "Miscellaneous"
                     categories[cat] = categories[cat] or {}
-                    table.insert(categories[cat], {
+                    categories[cat][#categories[cat] + 1] = {
                         key = k,
                         name = n,
                         config = opt,
                         elemType = opt.data and opt.data.type or "Generic"
-                    })
+                    }
                 end
             end
 
-            for catName, items in SortedPairs(categories) do
+            local categoryNames = {}
+            for name in pairs(categories) do
+                categoryNames[#categoryNames + 1] = name
+            end
+
+            table.sort(categoryNames)
+            for _, categoryName in ipairs(categoryNames) do
+                local items = categories[categoryName]
                 local cat = vgui.Create("DCollapsibleCategory", scroll)
                 cat:Dock(TOP)
-                cat:SetLabel(catName)
+                cat:SetLabel(categoryName)
                 cat:SetExpanded(true)
                 cat:DockMargin(0, 0, 0, 10)
                 cat.Header:SetContentAlignment(5)
@@ -916,8 +922,8 @@ hook.Add("PopulateConfigurationButtons", "PopulateConfig", function(pages)
         populate("")
     end
 
-    table.insert(pages, {
+    pages[#pages + 1] = {
         name = "Configuration",
         drawFunc = function(parent) buildConfiguration(parent) end
-    })
+    }
 end)
