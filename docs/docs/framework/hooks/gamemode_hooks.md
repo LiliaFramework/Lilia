@@ -3327,7 +3327,7 @@ end)
 ```
     
 ---
-### **CharMaxStamina**
+### **getCharMaxStamina**
 **Description:**  
 Determines the maximum stamina for a character.
     
@@ -3342,7 +3342,7 @@ Determines the maximum stamina for a character.
     
 **Example:**
 ```lua
-hook.Add("CharMaxStamina", "SetMaxStaminaBasedOnClass", function(character)
+hook.Add("getCharMaxStamina", "SetMaxStaminaBasedOnClass", function(character)
     local class = character:getClass()
     if class == CLASS_WARRIOR then
         return 150
