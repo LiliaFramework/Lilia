@@ -1,26 +1,100 @@
 ﻿function MODULE:PostPlayerLoadout(client)
-    local uniqueID = "StamCheck" .. client:SteamID64()
     local character = client:getChar()
-    if character and character:getInv() then
-        lia.attribs.setup(client)
-        for _, item in pairs(character:getInv():getItems()) do
+    if not character then return end
+    lia.attribs.setup(client)
+    local inv = character:getInv()
+    if inv then
+        for _, item in pairs(inv:getItems()) do
             item:call("onLoadout", client)
             if item:getData("equip") and istable(item.attribBoosts) then
-                for attribute, boost in pairs(item.attribBoosts) do
-                    character:addBoost(item.uniqueID, attribute, boost)
+                for attr, boost in pairs(item.attribBoosts) do
+                    character:addBoost(item.uniqueID, attr, boost)
                 end
             end
         end
     end
 
-    timer.Create(uniqueID, 0.25, 0, function()
+    client:setLocalVar("stamina", character:getMaxStamina())
+    timer.Create("StamCheck" .. client:SteamID64(), 0.25, 0, function()
         if not IsValid(client) then
-            timer.Remove(uniqueID)
+            timer.Remove("StamCheck" .. client:SteamID64())
             return
         end
 
-        self:CalcStaminaChange(client)
+        if client:isNoClipping() or not character then
+            client:SetRunSpeed(lia.config.get("WalkSpeed"))
+            return
+        end
+
+        local maxStamina = character:getMaxStamina()
+        local currentStamina = client:getLocalVar("stamina", 0)
+        local isHoldingSprint = client:KeyDown(IN_SPEED)
+        local endBonus = character:getAttrib("end", 0) or 0
+        local offset = 0
+        if isHoldingSprint and currentStamina > 0 then
+            client:SetRunSpeed(lia.config.get("RunSpeed") + (character:getAttrib("stamina", 0) or 0))
+            offset = -2 + endBonus / 60
+        else
+            client:SetRunSpeed(lia.config.get("WalkSpeed"))
+            if currentStamina >= maxStamina then
+                offset = 0
+            elseif currentStamina > 0.5 then
+                offset = 1 * lia.config.get("StaminaRegenMultiplier", 1)
+            else
+                offset = 1.75 * lia.config.get("StaminaRegenMultiplier", 1)
+            end
+
+            if client:Crouching() then offset = offset + 1 end
+        end
+
+        local newStamina = math.Clamp(currentStamina + offset, 0, maxStamina)
+        local slowThreshold = maxStamina * 0.15
+        local breathThreshold = maxStamina * 0.25
+        local brth = client:getNetVar("brth", false)
+        if newStamina <= breathThreshold and not brth then
+            client:setNetVar("brth", true)
+            client:EmitSound("player/breathe1.wav", 35, 100)
+        elseif newStamina > breathThreshold and brth then
+            client:StopSound("player/breathe1.wav")
+            client:setNetVar("brth", nil)
+        end
+
+        if newStamina <= 0 and not client:getNetVar("slow", false) then
+            client:setNetVar("slow", true)
+        elseif client:getNetVar("slow", false) and newStamina > slowThreshold then
+            client:setNetVar("slow", nil)
+        end
+
+        if newStamina ~= currentStamina then client:setLocalVar("stamina", newStamina) end
     end)
+end
+
+function MODULE:SetupMove(client, cMoveData)
+    local character = client:getChar()
+    if not character then return end
+    local maxStamina = character:getMaxStamina()
+    local stamina = client:getLocalVar("stamina", maxStamina)
+    local walkSpeed = lia.config.get("WalkSpeed")
+    local runSpeed = lia.config.get("RunSpeed") + (character:getAttrib("stamina", 0) or 0)
+    local slowState = client:getNetVar("slow", false)
+    local slowThreshold = maxStamina * 0.15
+    if slowState then
+        cMoveData:SetMaxClientSpeed(walkSpeed * 0.5)
+        return
+    end
+
+    if stamina <= 0 then
+        client:setNetVar("slow", true)
+        cMoveData:SetMaxClientSpeed(walkSpeed * 0.5)
+    elseif stamina <= slowThreshold then
+        cMoveData:SetMaxClientSpeed(walkSpeed)
+    elseif client:WaterLevel() > 1 then
+        cMoveData:SetMaxClientSpeed(runSpeed * 0.775)
+    end
+end
+
+function MODULE:PlayerDisconnected(client)
+    timer.Remove("StamCheck" .. client:SteamID64())
 end
 
 function MODULE:KeyRelease(client, key)
@@ -29,8 +103,9 @@ function MODULE:KeyRelease(client, key)
         if IsValid(wep) and wep.IsHands and wep.ReadyToPickup then wep:Pickup() end
     end
 
-    if lia.config.get("StaminaSlowdown", true) and key == IN_JUMP and not client:isNoClipping() and client:getChar() and not client:InVehicle() and client:Alive() then
-        client:consumeStamina(15)
+    if key == IN_JUMP and not client:isNoClipping() and client:getChar() and not client:InVehicle() and client:Alive() then
+        local cost = lia.config.get("JumpStaminaCost")
+        client:consumeStamina(cost)
         local stm = client:getLocalVar("stamina", 0)
         if stm == 0 then
             client:setNetVar("brth", true)
@@ -39,28 +114,58 @@ function MODULE:KeyRelease(client, key)
     end
 end
 
+function MODULE:SetupMove(client, cMoveData)
+    local character = client:getChar()
+    if not character then return end
+    local maxStamina = character:getMaxStamina()
+    local stamina = client:getLocalVar("stamina", maxStamina)
+    local walkSpeed = lia.config.get("WalkSpeed")
+    local runSpeed = lia.config.get("RunSpeed") + (character:getAttrib("stamina", 0) or 0)
+    local slowState = client:getNetVar("slow", false)
+    local slowThreshold = maxStamina * 0.15
+    if slowState then
+        cMoveData:SetMaxClientSpeed(walkSpeed * 0.5)
+        return
+    end
+
+    if stamina <= 0 then
+        client:setNetVar("slow", true)
+        cMoveData:SetMaxClientSpeed(walkSpeed * 0.5)
+    elseif stamina <= slowThreshold then
+        cMoveData:SetMaxClientSpeed(walkSpeed)
+    elseif client:WaterLevel() > 1 then
+        cMoveData:SetMaxClientSpeed(runSpeed * 0.775)
+    end
+end
+
+function MODULE:PlayerStaminaLost(client)
+    if client:getNetVar("brth", false) then return end
+    client:setNetVar("brth", true)
+    client:EmitSound("player/breathe1.wav", 35, 100)
+    local breathThreshold = lia.config.get("StaminaBreathingThreshold", 50)
+    timer.Create("liaStamBreathCheck" .. client:SteamID64(), 1, 0, function()
+        if not IsValid(client) then
+            timer.Remove("liaStamBreathCheck" .. client:SteamID64())
+            return
+        end
+
+        local currentStamina = client:getLocalVar("stamina", 0)
+        if currentStamina <= breathThreshold then
+            client:EmitSound("player/breathe1.wav", 35, 100)
+            return
+        end
+
+        client:StopSound("player/breathe1.wav")
+        client:setNetVar("brth", nil)
+        timer.Remove("liaStamBreathCheck" .. client:SteamID64())
+    end)
+end
+
 function MODULE:KeyPress(client, key)
     if key == IN_ATTACK2 and IsValid(client.Grabbed) then
         client:DropObject(client.Grabbed)
         client.Grabbed = NULL
     end
-end
-
-function MODULE:PlayerLoadedChar(client, character)
-    local maxstm = character:getMaxStamina()
-    timer.Simple(0.25, function() client:setLocalVar("stamina", maxstm) end)
-end
-
-function MODULE:PlayerStaminaLost(client)
-    if client.isBreathing then return end
-    client:EmitSound("player/breathe1.wav", 35, 100)
-    client.isBreathing = true
-    timer.Create("liaStamBreathCheck" .. client:SteamID64(), 1, 0, function()
-        if client:getLocalVar("stamina", 0) < lia.config.get("StaminaBreathingThreshold", 50) then return end
-        client:StopSound("player/breathe1.wav")
-        client.isBreathing = nil
-        timer.Remove("liaStamBreathCheck" .. client:SteamID64())
-    end)
 end
 
 function MODULE:OnCharAttribBoosted(client, character, attribID)

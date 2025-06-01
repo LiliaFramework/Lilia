@@ -1,18 +1,20 @@
-﻿local predictedStamina = 100
-local stmBlurAmount = 0
+﻿local stmBlurAmount = 0
 local stmBlurAlpha = 0
 function MODULE:ConfigureCharacterCreationSteps(panel)
     panel:addStep(vgui.Create("liaCharacterAttribs"), 98)
 end
 
-function MODULE:Think()
-    local client = LocalPlayer()
-    if not client:getChar() then return end
-    local character = client:getChar()
-    local maxStamina = character:getMaxStamina()
-    local offset = self:CalcStaminaChange(client)
-    offset = math.Remap(FrameTime(), 0, 0.25, 0, offset)
-    if offset ~= 0 then predictedStamina = math.Clamp(predictedStamina + offset, 0, maxStamina) end
+function MODULE:PlayerBindPress(client, bind, pressed)
+    if not pressed then return end
+    local char = client:getChar()
+    if not char then return end
+    local stamina = client:getLocalVar("stamina", 0)
+    local jumpThreshold = lia.config.get("JumpStaminaThreshold")
+    if bind == "+jump" and stamina < jumpThreshold then return true end
+    if bind == "+speed" and stamina <= 5 then
+        client:ConCommand("-speed")
+        return true
+    end
 end
 
 function MODULE:HUDPaintBackground()
@@ -20,11 +22,17 @@ function MODULE:HUDPaintBackground()
     if not lia.config.get("StaminaBlur", false) or not client:getChar() then return end
     local character = client:getChar()
     local maxStamina = character:getMaxStamina()
-    local Stamina = client:getLocalVar("stamina", maxStamina)
-    if Stamina <= lia.config.get("StaminaBlurThreshold", 25) then
-        stmBlurAlpha = Lerp(RealFrameTime() / 2, stmBlurAlpha, 255)
-        stmBlurAmount = Lerp(RealFrameTime() / 2, stmBlurAmount, 5)
+    local stamina = client:getLocalVar("stamina", maxStamina)
+    if stamina < maxStamina * 0.25 then
+        local ratio = (maxStamina * 0.25 - stamina) / (maxStamina * 0.25)
+        local targetAlpha = ratio * 255
+        local targetAmount = ratio * 5
+        stmBlurAlpha = Lerp(RealFrameTime() / 2, stmBlurAlpha, targetAlpha)
+        stmBlurAmount = Lerp(RealFrameTime() / 2, stmBlurAmount, targetAmount)
         lia.util.drawBlurAt(0, 0, ScrW(), ScrH(), stmBlurAmount, 0.2, stmBlurAlpha)
+    else
+        stmBlurAlpha = Lerp(RealFrameTime() / 2, stmBlurAlpha, 0)
+        stmBlurAmount = Lerp(RealFrameTime() / 2, stmBlurAmount, 0)
     end
 end
 

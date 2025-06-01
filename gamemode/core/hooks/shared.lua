@@ -152,7 +152,7 @@ local GamemodeFunctions = {
         {
             name = "CharacterMaxStamina",
             args = {"character"},
-            replacement = "CharMaxStamina"
+            replacement = "getCharMaxStamina"
         },
         {
             name = "GetMaxPlayerCharacter",

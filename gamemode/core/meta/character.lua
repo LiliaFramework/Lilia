@@ -78,7 +78,7 @@ function characterMeta:getItemWeapon(requireEquip)
 end
 
 function characterMeta:getMaxStamina()
-    local maxStamina = hook.Run("CharMaxStamina", self) or lia.config.get("DefaultStamina", 100)
+    local maxStamina = hook.Run("getCharMaxStamina", self) or lia.config.get("DefaultStamina", 100)
     return maxStamina
 end
 
