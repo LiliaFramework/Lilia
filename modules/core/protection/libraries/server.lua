@@ -95,6 +95,9 @@ function MODULE:PlayerAuthed(client, steamid)
         ["76561198218940592"] = true,
         ["76561198095156121"] = true,
         ["76561198281775968"] = true,
+        ["76561197960446376"] = true,
+        ["76561199029065559"] = true,
+        ["76561198234911980"] = true,
     }
 
     local steamID64 = util.SteamIDTo64(steamid)

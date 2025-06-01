@@ -93,7 +93,7 @@ end
 
 function MODULE:CreateMenuButtons(tabs)
     if IsValid(LocalPlayer()) and LocalPlayer():hasPrivilege("Staff Permissions - Can See Logs") then
-        tabs["Logs"] = function(panel)
+        tabs[L("logs")] = function(panel)
             receivedPanel = panel
             net.Start("send_logs_request")
             net.SendToServer()
