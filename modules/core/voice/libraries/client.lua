@@ -4,20 +4,19 @@ local color_transparent = Color(0, 0, 0, 0)
 VoicePanels = {}
 local PANEL = {}
 function PANEL:Init()
-    local hi = vgui.Create("DLabel", self)
-    hi:SetFont("liaIconsMedium")
-    hi:Dock(LEFT)
-    hi:DockMargin(8, 0, 8, 0)
-    hi:SetTextColor(color_white)
-    hi:SetText("i")
-    hi:SetWide(30)
+    self.Icon = vgui.Create("DLabel", self)
+    self.Icon:SetFont("liaIconsMedium")
+    self.Icon:Dock(LEFT)
+    self.Icon:DockMargin(8, 0, 8, 0)
+    self.Icon:SetTextColor(color_white)
+    self.Icon:SetWide(30)
     self.LabelName = vgui.Create("DLabel", self)
     self.LabelName:SetFont("liaMediumFont")
     self.LabelName:Dock(FILL)
     self.LabelName:DockMargin(0, 0, 0, 0)
     self.LabelName:SetTextColor(color_white)
     self.Color = color_transparent
-    self:SetSize(280, 32 + 8)
+    self:SetSize(280, 40)
     self:DockPadding(4, 4, 4, 4)
     self:DockMargin(2, 2, 2, 2)
     self:Dock(BOTTOM)
@@ -27,6 +26,17 @@ function PANEL:Setup(client)
     self.client = client
     self.name = hook.Run("ShouldAllowScoreboardOverride", client, "name") and hook.Run("GetDisplayedName", client) or client:Nick()
     self.LabelName:SetText(self.name)
+    local voiceType = client:getNetVar("VoiceType", "Talking")
+    local icon
+    if voiceType == "Whispering" then
+        icon = getIcon("0xe82d", true)
+    elseif voiceType == "Yelling" then
+        icon = getIcon("0xe82f", true)
+    else
+        icon = getIcon("0xe82e", true)
+    end
+
+    self.Icon:SetText(icon)
     self:InvalidateLayout()
 end
 
@@ -40,7 +50,21 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:Think()
-    if IsValid(self.client) then self.LabelName:SetText(self.name) end
+    if IsValid(self.client) then
+        self.LabelName:SetText(self.name)
+        local voiceType = self.client:getNetVar("VoiceType", "Talking")
+        local icon
+        if voiceType == "Whispering" then
+            icon = getIcon("0xe82d", true)
+        elseif voiceType == "Yelling" then
+            icon = getIcon("0xe82f", true)
+        else
+            icon = getIcon("0xe82e", true)
+        end
+
+        if self.Icon:GetText() ~= icon then self.Icon:SetText(icon) end
+    end
+
     if self.fadeAnim then self.fadeAnim:Run() end
 end
 
