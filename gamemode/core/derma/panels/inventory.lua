@@ -1,13 +1,13 @@
 ﻿local PANEL = {}
 local InvSlotMat = Material("invslotfree.png", "smooth noclamp")
-local renderedIcons = renderedIcons or {}
-function renderNewIcon(panel, itemTable)
-    if itemTable.iconCam and not renderedIcons[string.lower(itemTable.model)] or itemTable.forceRender then
+local renderedIcons = {}
+local function renderNewIcon(panel, itemTable)
+    if itemTable.iconCam and (not renderedIcons[string.lower(itemTable.model)] or itemTable.forceRender) then
         local iconCam = itemTable.iconCam
         iconCam = {
             cam_pos = iconCam.pos,
             cam_ang = iconCam.ang,
-            cam_fov = iconCam.fov,
+            cam_fov = iconCam.fov
         }
 
         renderedIcons[string.lower(itemTable.model)] = true
@@ -24,16 +24,6 @@ function PANEL:Init()
     self:SetSize(64, 64)
 end
 
-function PANEL:PaintOver(w, h)
-    local itemTable = lia.item.instances[self.itemID]
-    if itemTable and itemTable.paintOver then
-        w, h = self:GetSize()
-        itemTable.paintOver(self, itemTable, w, h)
-    end
-
-    hook.Run("ItemPaintOver", self, itemTable, w, h)
-end
-
 function PANEL:PaintBehind(w, h)
     surface.SetDrawColor(0, 0, 0, 85)
     surface.DrawRect(2, 2, w - 4, h - 4)
@@ -47,7 +37,17 @@ function PANEL:Paint(w, h)
     self:ExtraPaint(w, h)
 end
 
-local buildActionFunc = function(action, actionIndex, itemTable, invID, sub)
+function PANEL:PaintOver(w, h)
+    local itemTable = lia.item.instances[self.itemID]
+    if itemTable and itemTable.paintOver then
+        w, h = self:GetSize()
+        itemTable.paintOver(self, itemTable, w, h)
+    end
+
+    hook.Run("ItemPaintOver", self, itemTable, w, h)
+end
+
+local function buildActionFunc(action, actionIndex, itemTable, invID, sub)
     return function()
         itemTable.player = LocalPlayer()
         local send = true
@@ -71,8 +71,7 @@ function PANEL:openActionMenu()
     assert(itemTable, "attempt to open action menu for invalid item")
     itemTable.player = LocalPlayer()
     local menu = DermaMenu()
-    local override = hook.Run("OnCreateItemInteractionMenu", self, menu, itemTable)
-    if override then
+    if hook.Run("OnCreateItemInteractionMenu", self, menu, itemTable) then
         if IsValid(menu) then menu:Remove() end
         return
     end
@@ -82,8 +81,8 @@ function PANEL:openActionMenu()
         if v.isMulti then
             local subMenu, subMenuOption = menu:AddSubMenu(L(v.name or k), buildActionFunc(v, k, itemTable, self.invID))
             subMenuOption:SetImage(v.icon or "icon16/brick.png")
-            if not v.multiOptions then return end
             local options = isfunction(v.multiOptions) and v.multiOptions(itemTable, LocalPlayer()) or v.multiOptions
+            if not options then return end
             for _, sub in pairs(options) do
                 subMenu:AddOption(L(sub.name or "subOption"), buildActionFunc(v, k, itemTable, self.invID, sub)):SetImage(sub.icon or "icon16/brick.png")
             end
@@ -145,11 +144,19 @@ end
 
 function PANEL:setInventory(inventory)
     self.gridW, self.gridH = inventory:getSize()
-    self:SetSize(self.gridW * (64 + 2) + 4 * 2, self.gridH * (64 + 2) + 22 + 4 * 2)
+    local iconSize = self.content.size or 64
+    local sidePadding = 5
+    local topPadding = 30
+    local bottomPadding = 5
+    local titleHeight = self.GetTitleBarHeight and self:GetTitleBarHeight() or 22
+    local contentHeight = self.gridH * (iconSize + 2)
+    local totalWidth = self.gridW * (iconSize + 2) + sidePadding * 2
+    local totalHeight = contentHeight + topPadding + bottomPadding + titleHeight
+    self:SetSize(totalWidth, totalHeight)
     self:InvalidateLayout(true)
+    self:DockPadding(sidePadding, topPadding, sidePadding, bottomPadding)
     self.content:setGridSize(self.gridW, self.gridH)
     self.content:setInventory(inventory)
-    self.content.InventoryDeleted = function(_, deletedInventory) if deletedInventory == inventory then self:InventoryDeleted() end end
 end
 
 function PANEL:InventoryDeleted()
@@ -162,7 +169,7 @@ function PANEL:Center()
 end
 
 vgui.Register("liaGridInventory", PANEL, "liaInventory")
-local PANEL = {}
+PANEL = {}
 function PANEL:Init()
     self.size = 64
 end
@@ -207,7 +214,7 @@ function PANEL:setItemType(itemTypeOrID)
 end
 
 function PANEL:updateTooltip()
-    self:SetTooltip("<font=liaItemBoldFont>" .. self.itemTable:getName() .. "</font>\n" .. "<font=liaItemDescFont>" .. self.itemTable:getDesc())
+    self:SetTooltip("<font=liaItemBoldFont>" .. self.itemTable:getName() .. "</font>\n<font=liaItemDescFont>" .. self.itemTable:getDesc())
 end
 
 function PANEL:ItemDataChanged()
@@ -221,15 +228,15 @@ function PANEL:centerIcon(w, h)
     self.Icon:SetPos((w - iconW) * 0.5, (h - iconH) * 0.5)
 end
 
-function PANEL:PaintBehind()
-end
-
 function PANEL:PerformLayout(w, h)
     self:centerIcon(w, h)
 end
 
+function PANEL:PaintBehind()
+end
+
 vgui.Register("liaGridInvItem", PANEL, "liaItemIcon")
-local PANEL = {}
+PANEL = {}
 function PANEL:Init()
     self:SetPaintBackground(false)
     self.icons = {}
@@ -334,8 +341,8 @@ function PANEL:addItem(item)
     icon:SetPos((x - 1) * size, (y - 1) * size)
     icon:SetSize((item.width or 1) * size - 2, (item.height or 1) * size - 2)
     icon:InvalidateLayout(true)
-    icon.OnMousePressed = function(icon, keyCode) self:onItemPressed(icon, keyCode) end
-    icon.OnMouseReleased = function(icon, keyCode)
+    icon.OnMousePressed = function(_, keyCode) self:onItemPressed(icon, keyCode) end
+    icon.OnMouseReleased = function(_, keyCode)
         local heldPanel = lia.item.heldPanel
         if IsValid(heldPanel) then heldPanel:onItemReleased(icon, keyCode) end
         icon:DragMouseRelease(keyCode)
@@ -363,23 +370,6 @@ function PANEL:drawHeldItemRectangle()
     surface.DrawTexturedRect(x * size, y * size, w, h)
 end
 
-function PANEL:Center()
-    local centerX, centerY = ScrW() * 0.5, ScrH() * 0.5
-    self:SetPos(centerX - self:GetWide() * 0.5, centerY - self:GetTall() * 0.5)
-end
-
-function PANEL:InventoryItemAdded()
-    self:populateItems()
-end
-
-function PANEL:InventoryItemRemoved()
-    self:populateItems()
-end
-
-function PANEL:InventoryItemDataChanged()
-    self:populateItems()
-end
-
 function PANEL:computeHeldPanel()
     if not lia.item.held or lia.item.held == self then return end
     local cursorX, cursorY = self:LocalCursorPos()
@@ -401,6 +391,18 @@ function PANEL:Paint()
     self:computeHeldPanel()
 end
 
+function PANEL:InventoryItemAdded()
+    self:populateItems()
+end
+
+function PANEL:InventoryItemRemoved()
+    self:populateItems()
+end
+
+function PANEL:InventoryItemDataChanged()
+    self:populateItems()
+end
+
 function PANEL:OnCursorMoved()
 end
 
@@ -412,39 +414,36 @@ vgui.Register("liaGridInventoryPanel", PANEL, "DPanel")
 local margin = 10
 hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
     if hook.Run("CanPlayerViewInventory") == false then return end
-    tabs["inv"] = function(panel)
+    tabs[L("inv")] = function(parentPanel)
         local inventory = LocalPlayer():getChar():getInv()
         if not inventory then return end
-        local mainPanel = inventory:show(panel)
-        local sortPanels = {}
-        local totalSize = {
-            x = 0,
-            y = 0,
-            p = 0
-        }
-
-        table.insert(sortPanels, mainPanel)
-        totalSize.x = totalSize.x + mainPanel:GetWide() + margin
-        totalSize.y = math.max(totalSize.y, mainPanel:GetTall())
+        local mainPanel = inventory:show(parentPanel)
+        local panels = {}
+        local totalWidth = 0
+        local maxHeight = 0
+        table.insert(panels, mainPanel)
+        totalWidth = totalWidth + mainPanel:GetWide() + margin
+        maxHeight = math.max(maxHeight, mainPanel:GetTall())
         for _, item in pairs(inventory:getItems()) do
             if item.isBag and hook.Run("CanOpenBagPanel", item) ~= false then
-                local inventory = item:getInv()
-                local childPanels = inventory:show(mainPanel)
-                lia.gui["inv" .. inventory:getID()] = childPanels
-                table.insert(sortPanels, childPanels)
-                totalSize.x = totalSize.x + childPanels:GetWide() + margin
-                totalSize.y = math.max(totalSize.y, childPanels:GetTall())
+                local bagInv = item:getInv()
+                local bagPanel = bagInv:show(mainPanel)
+                lia.gui["inv" .. bagInv:getID()] = bagPanel
+                table.insert(panels, bagPanel)
+                totalWidth = totalWidth + bagPanel:GetWide() + margin
+                maxHeight = math.max(maxHeight, bagPanel:GetTall())
             end
         end
 
         local px, py, pw, ph = mainPanel:GetBounds()
-        local x, y = px + pw / 2 - totalSize.x / 2, py + ph / 2
-        for _, panel in pairs(sortPanels) do
+        local xPos = px + pw / 2 - totalWidth / 2
+        local yPos = py + ph / 2
+        for _, panel in pairs(panels) do
             panel:ShowCloseButton(false)
-            panel:SetPos(x, y - panel:GetTall() / 2)
-            x = x + panel:GetWide() + margin
+            panel:SetPos(xPos, yPos - panel:GetTall() / 2)
+            xPos = xPos + panel:GetWide() + margin
         end
 
-        hook.Add("PostRenderVGUI", mainPanel, function() hook.Run("PostDrawInventory", mainPanel, panel) end)
+        hook.Add("PostRenderVGUI", mainPanel, function() hook.Run("PostDrawInventory", mainPanel, parentPanel) end)
     end
 end)
