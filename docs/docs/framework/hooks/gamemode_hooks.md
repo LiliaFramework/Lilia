@@ -1163,8 +1163,8 @@ Called when Lilia has finished loading all its data for a player (e.g., characte
 **Example:**
 ```lua
 hook.Add("PlayerLiliaDataLoaded", "InitializePlayerStats", function(client)
-    client:setHealth(client:getChar():getHealth())
-    client:setArmor(client:getChar():getArmor())
+    client:SetHealth(client:getChar():getHealth())
+    client:SetArmor(client:getChar():getArmor())
     print("Player data loaded for:", client:Name())
 end)
 ```
@@ -4292,8 +4292,8 @@ Called when a player's character is loaded.
 **Example:**
 ```lua
 hook.Add("PlayerLoadedChar", "InitializeNewCharacter", function(client, character, currentChar)
-    client:setHealth(character:getHealth())
-    client:setArmor(character:getArmor())
+    client:SetHealth(character:getHealth())
+    client:SetArmor(character:getArmor())
     print("Loaded character:", character:getName(), "for player:", client:Name())
 end)
 ```

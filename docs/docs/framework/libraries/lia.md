@@ -41,9 +41,6 @@ lia.include("lilia/gamemode/core/hooks/server.lua", "server")
 lia.include("lilia/gamemode/core/libraries/menu.lua", "client")
 ```
 
-**Legacy Alias:**  
-`lia.util.include` can be used interchangeably with `lia.include`.
-
 ---
 
 ### **lia.includeDir**

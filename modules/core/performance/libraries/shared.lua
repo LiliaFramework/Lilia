@@ -46,6 +46,3 @@ function MODULE:OnReloaded()
     RemoveHooks(SERVER)
     ExecuteCommands(SERVER)
 end
-
-function widgets.PlayerTick()
-end

@@ -54,12 +54,6 @@ function GM:OnCharVarChanged(character, varName, oldVar, newVar)
     end
 end
 
-function GM:CreateDefaultInventory(character)
-    local charID = character:getID()
-    return lia.inventory.instance("grid", {
-        char = charID
-    })
-end
 
 local GamemodeFunctions = {
     server = {

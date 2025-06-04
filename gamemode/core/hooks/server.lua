@@ -457,11 +457,21 @@ function GM:PlayerLoadout(client)
     client:SelectWeapon("lia_hands")
 end
 
+function GM:CreateDefaultInventory(character)
+    local invType = hook.Run("GetDefaultInventoryType", character)
+    local charID = character:getID()
+    return lia.inventory.instance(invType, {
+        char = charID
+    })
+end
+
 function GM:SetupBotPlayer(client)
     local botID = os.time()
     local index = math.random(1, table.Count(lia.faction.indices))
     local faction = lia.faction.indices[index]
-    local inventory = lia.inventory.new("grid")
+    local invType = hook.Run("GetDefaultInventoryType")
+    if not invType then return end
+    local inventory = lia.inventory.new(invType)
     local character = lia.char.new({
         name = client:Name(),
         faction = faction and faction.uniqueID or "unknown",
@@ -660,67 +670,72 @@ local function DatabaseQuery()
 end
 
 function GM:InitializedModules()
-    timer.Simple(5, function() DatabaseQuery() end)
-    if not UpdateCheck and not lia.module.versionChecks and not lia.module.privateVersionChecks then return end
     local publicURL = "https://raw.githubusercontent.com/LiliaFramework/Modules/main/modules.json"
     local privateURL = "https://raw.githubusercontent.com/bleonheart/bleonheart.github.io/main/modules.json"
-    http.Fetch(publicURL, function(body, _, _, code)
-        if code ~= 200 then
-            lia.updater("Error fetching module list (HTTP " .. code .. ")")
-            return
-        end
-
-        local remote = util.JSONToTable(body)
-        if not remote then
-            lia.updater("Error parsing module data")
-            return
-        end
-
-        for _, info in ipairs(lia.module.versionChecks or {}) do
-            local match
-            for _, m in ipairs(remote) do
-                if m.uniqueID == info.uniqueID then
-                    match = m
-                    break
+    timer.Simple(5, function() DatabaseQuery() end)
+    if not self.UpdateCheckDone then
+        if lia.module.versionChecks then
+            http.Fetch(publicURL, function(body, _, _, code)
+                if code ~= 200 then
+                    lia.updater("Error fetching module list (HTTP " .. code .. ")")
+                    return
                 end
-            end
 
-            if not match then
-                lia.updater("Module with uniqueID '" .. info.uniqueID .. "' not found")
-            elseif not match.version then
-                lia.updater("Module '" .. info.name .. "' has no remote version info")
-            elseif match.version ~= info.localVersion then
-                lia.updater("Module '" .. info.name .. "' is outdated. Update to version " .. match.version .. " at " .. match.source)
-            end
-        end
+                local remote = util.JSONToTable(body)
+                if not remote then
+                    lia.updater("Error parsing module data")
+                    return
+                end
 
-        http.Fetch(privateURL, function(body2, _, _, code2)
-            if code2 ~= 200 then
-                lia.updater("Error fetching private module list (HTTP " .. code2 .. ")")
-                return
-            end
+                for _, info in ipairs(lia.module.versionChecks or {}) do
+                    local match
+                    for _, m in ipairs(remote) do
+                        if m.uniqueID == info.uniqueID then
+                            match = m
+                            break
+                        end
+                    end
 
-            local remote2 = util.JSONToTable(body2)
-            if not remote2 then
-                lia.updater("Error parsing private module data")
-                return
-            end
-
-            for _, info in ipairs(lia.module.privateVersionChecks or {}) do
-                local match2
-                for _, m2 in ipairs(remote2) do
-                    if m2.uniqueID == info.uniqueID then
-                        match2 = m2
-                        break
+                    if not match then
+                        lia.updater("Module with uniqueID '" .. info.uniqueID .. "' not found")
+                    elseif not match.version then
+                        lia.updater("Module '" .. info.name .. "' has no remote version info")
+                    elseif match.version ~= info.localVersion then
+                        lia.updater("Module '" .. info.name .. "' is outdated. Update to version " .. match.version .. " at " .. match.source)
                     end
                 end
+            end, function(err) lia.updater("HTTP.Fetch error: " .. err) end)
+        end
 
-                if match2 and match2.version and match2.version ~= info.localVersion then lia.updater("Module '" .. info.name .. "' is outdated, please report back to the author to get an updated copy.") end
-            end
-        end, function(err2) lia.updater("HTTP.Fetch error: " .. err2) end)
-    end, function(err) lia.updater("HTTP.Fetch error: " .. err) end)
+        if lia.module.privateVersionChecks then
+            http.Fetch(privateURL, function(body2, _, _, code2)
+                if code2 ~= 200 then
+                    lia.updater("Error fetching private module list (HTTP " .. code2 .. ")")
+                    return
+                end
 
-    UpdateCheck = true
+                local remote2 = util.JSONToTable(body2)
+                if not remote2 then
+                    lia.updater("Error parsing private module data")
+                    return
+                end
+
+                for _, info in ipairs(lia.module.privateVersionChecks or {}) do
+                    local match2
+                    for _, m2 in ipairs(remote2) do
+                        if m2.uniqueID == info.uniqueID then
+                            match2 = m2
+                            break
+                        end
+                    end
+
+                    if match2 and match2.version and match2.version ~= info.localVersion then lia.updater("Module '" .. info.name .. "' is outdated, please report back to the author to get an updated copy.") end
+                end
+            end, function(err2) lia.updater("HTTP.Fetch error: " .. err2) end)
+        end
+
+        self.UpdateCheckDone = true
+    end
 end
 
 function ClientAddText(client, ...)

@@ -16,13 +16,9 @@
     hook.Run("OnItemSpawned", self)
 end
 
-function ENT:setHealth(amount)
-    self.health = amount
-end
-
 function ENT:OnTakeDamage(dmginfo)
     local damage = dmginfo:GetDamage()
-    self:setHealth(self.health - damage)
+    self.health = self.health - damage
     if self.health <= 0 and not self.breaking then
         self.breaking = true
         SafeRemoveEntity(self)
