@@ -257,6 +257,47 @@ function playerMeta:meetsRequiredSkills(requiredSkillLevels)
     return true
 end
 
+function playerMeta:forceSequence(sequenceName, callback, time, noFreeze)
+    hook.Run("OnPlayerEnterSequence", self, sequenceName, callback, time, noFreeze)
+    if not sequenceName then
+        net.Start("seqSet")
+        net.WriteEntity(self)
+        net.WriteBool(false)
+        net.Broadcast()
+        return
+    end
+
+    local seqId = self:LookupSequence(sequenceName)
+    if seqId and seqId > 0 then
+        time = time or self:SequenceDuration(seqId)
+        self.liaSeqCallback = callback
+        self.liaForceSeq = seqId
+        if not noFreeze then self:SetMoveType(MOVETYPE_NONE) end
+        if time > 0 then timer.Create("liaSeq" .. self:EntIndex(), time, 1, function() if IsValid(self) then self:leaveSequence() end end) end
+        net.Start("seqSet")
+        net.WriteEntity(self)
+        net.WriteBool(true)
+        net.WriteInt(seqId, 16)
+        net.Broadcast()
+        return time
+    end
+    return false
+end
+
+function playerMeta:leaveSequence()
+    hook.Run("OnPlayerLeaveSequence", self)
+    net.Start("seqSet")
+    net.WriteEntity(self)
+    net.WriteBool(false)
+    net.Broadcast()
+    self:SetMoveType(MOVETYPE_WALK)
+    self.liaForceSeq = nil
+    if self.liaSeqCallback then
+        self:liaSeqCallback()
+        self.liaSeqCallback = nil
+    end
+end
+
 if SERVER then
     function playerMeta:restoreStamina(amount)
         local current = self:getLocalVar("stamina", 0)

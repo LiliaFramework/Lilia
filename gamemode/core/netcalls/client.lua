@@ -49,6 +49,21 @@ net.Receive("liaInventoryData", function()
     hook.Run("InventoryDataChanged", instance, key, oldValue, value)
 end)
 
+net.Receive("seqSet", function()
+    local entity = net.ReadEntity()
+    if not IsValid(entity) then return end
+    local hasSequence = net.ReadBool()
+    if not hasSequence then
+        entity.liaForceSeq = nil
+        return
+    end
+
+    local seqId = net.ReadInt(16)
+    entity:SetCycle(0)
+    entity:SetPlaybackRate(1)
+    entity.liaForceSeq = seqId
+end)
+
 net.Receive("liaInventoryInit", function()
     local id = net.ReadType()
     local typeID = net.ReadString()
