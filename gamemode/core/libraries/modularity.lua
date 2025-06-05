@@ -70,12 +70,10 @@ end
       nil
 ]]
 function lia.module.load(uniqueID, path, isSingleFile, variable)
+    variable = variable or "MODULE"
     local lowerVariable = variable:lower()
-    local normalPath = path .. "/" .. lowerVariable .. ".lua"
-    local extendedPath = path .. "/sh_" .. lowerVariable .. ".lua"
-    local ModuleCore = file.Exists(normalPath, "LUA")
-    local ExtendedCore = file.Exists(extendedPath, "LUA")
-    if not isSingleFile and not ModuleCore and not ExtendedCore then return end
+    local ModuleCore = path .. "/" .. lowerVariable .. ".lua"
+    if not isSingleFile and not ModuleCore then return end
     local oldModule = MODULE
     MODULE = {
         folder = path,
@@ -103,7 +101,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     if isSingleFile then
         lia.include(path, "shared")
     else
-        lia.include(ModuleCore and normalPath or extendedPath, "shared")
+        lia.include(ModuleCore, "shared")
     end
 
     local isEnabled = isfunction(MODULE.enabled) and MODULE.enabled() or MODULE.enabled
