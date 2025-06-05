@@ -156,7 +156,7 @@ Registers the inventory with a specified type ID.
 **Example**
 
 ```lua
-inventory:register("grid")
+inventory:register("GridInv")
 -- This sets the inventory's type to 'grid'
 ```
 
