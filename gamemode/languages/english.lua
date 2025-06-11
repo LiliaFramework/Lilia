@@ -28,6 +28,7 @@ LANGUAGE = {
     itDesc = "Displays an in-character descriptive message.",
     wDesc = "Whispers a message.",
     yDesc = "Yells a message.",
+    manageSitroomsDesc = "Manage sitrooms on the current map: view existing sitrooms, teleport to them, rename them, or reposition them.",
     loocDesc = "Out-of-character chat with a cooldown.",
     adminchatDesc = "Sends a message to admin chat.",
     rollDesc = "Rolls a dice and displays the result.",

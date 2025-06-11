@@ -34,92 +34,40 @@
     end
 })
 
-lia.command.add("setsitroom", {
+lia.command.add("managesitrooms", {
+    superAdminOnly = true,
+    privilege = "Manage SitRooms",
+    desc = L("manageSitroomsDesc"),
+    onRun = function(client)
+        if not client:hasPrivilege("Manage SitRooms") then return end
+        local mapName = game.GetMap()
+        local sitrooms = lia.data.get("sitrooms", {}, true, true)
+        local rooms = sitrooms[mapName] or {}
+        net.Start("managesitrooms")
+        net.WriteTable(rooms)
+        net.Send(client)
+    end
+})
+
+lia.command.add("addsitroom", {
     superAdminOnly = true,
     privilege = "Manage SitRooms",
     desc = L("setSitroomDesc"),
     onRun = function(client)
-        local pos = client:GetPos()
-        local mapName = game.GetMap()
-        local sitrooms = lia.data.get("sitrooms", {}, true, true)
-        sitrooms[mapName] = pos
-        lia.data.set("sitrooms", sitrooms, true, true)
-        client:notifyLocalized("sitroomSet")
-        lia.log.add(client, "sitRoomSet", string.format("Map: %s | Position: %s", mapName, tostring(pos)), "Set the sitroom location for the current map")
-    end
-})
+        client:requestString("Enter Name", "Please enter sitroom name:", function(name)
+            if name == "" then
+                client:notifyLocalized("invalidName")
+                return
+            end
 
-lia.command.add("updateinvsize", {
-    adminOnly = true,
-    privilege = "Set Inventory Size",
-    desc = L("updateInventorySizeDesc"),
-    syntax = "[string playerName]",
-    onRun = function(client, arguments)
-        local target = lia.util.findPlayer(client, arguments[1])
-        if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
-            return
-        end
-
-        local char = target:getChar()
-        if not char then
-            client:notifyLocalized("noCharacterLoaded")
-            return
-        end
-
-        local inv = char:getInv()
-        if not inv then
-            client:notifyLocalized("noInventory")
-            return
-        end
-
-        local dw, dh = hook.Run("GetDefaultInventorySize", target)
-        dw = dw or lia.config.get("invW")
-        dh = dh or lia.config.get("invH")
-        local w, h = inv:getSize()
-        if w == dw and h == dh then
-            client:notifyLocalized("inventoryAlreadySize", target:Name(), dw, dh)
-            return
-        end
-
-        inv:setSize(dw, dh)
-        inv:sync(target)
-        client:notifyLocalized("updatedInventorySize", target:Name(), dw, dh)
-    end
-})
-
-lia.command.add("setinventorysize", {
-    adminOnly = true,
-    privilege = "Set Inventory Size",
-    desc = L("setInventorySizeDesc"),
-    syntax = "[string playerName] [number width] [number height]",
-    onRun = function(client, args)
-        local target = lia.util.findPlayer(client, args[1])
-        if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
-            return
-        end
-
-        local w, h = tonumber(args[2]), tonumber(args[3])
-        if not w or not h then
-            client:notifyLocalized("invalidWidthHeight")
-            return
-        end
-
-        local minW, maxW, minH, maxH = 1, 10, 1, 10
-        if w < minW or w > maxW or h < minH or h > maxH then
-            client:notifyLocalized("widthHeightOutOfRange", minW, maxW, minH, maxH)
-            return
-        end
-
-        local char = target:getChar()
-        local inv = char and char:getInv()
-        if inv then
-            inv:setSize(w, h)
-            inv:sync(target)
-        end
-
-        client:notifyLocalized("setInventorySizeNotify", target:Name(), w, h)
+            local mapName = game.GetMap()
+            local sitrooms = lia.data.get("sitrooms", {}, true, true)
+            sitrooms[mapName] = sitrooms[mapName] or {}
+            sitrooms[mapName][name] = client:GetPos()
+            lia.data.set("sitrooms", sitrooms, true, true)
+            client:notifyLocalized("sitroomSet")
+            lia.log.add(client, "sitRoomSet", string.format("Map: %s | Name: %s | Position: %s", mapName, name, tostring(client:GetPos())), "Set the sitroom location")
+        end)
     end
 })
 
@@ -143,14 +91,28 @@ lia.command.add("sendtositroom", {
 
         local mapName = game.GetMap()
         local sitrooms = lia.data.get("sitrooms", {}, true, true)
-        local pos = sitrooms[mapName]
-        if pos then
+        local rooms = sitrooms[mapName] or {}
+        local names = {}
+        for name in pairs(rooms) do
+            names[#names + 1] = name
+        end
+
+        if #names == 0 then
+            client:notifyLocalized("sitroomNotSet")
+            return
+        end
+
+        client:requestDropdown("Choose Sitroom", "Select a sitroom:", names, function(selection)
+            local pos = rooms[selection]
+            if not pos then
+                client:notifyLocalized("sitroomNotSet")
+                return
+            end
+
             target:SetPos(pos)
             client:notifyLocalized("sitroomTeleport", target:Nick())
             target:notifyLocalized("sitroomArrive")
-            lia.log.add(client, "sendToSitRoom", string.format("Map: %s | Target: %s | Position: %s", mapName, target:Nick(), tostring(pos)), "Teleported player to the sitroom for the current map")
-        else
-            client:notifyLocalized("sitroomNotSet")
-        end
+            lia.log.add(client, "sendToSitRoom", string.format("Map: %s | Name: %s | Target: %s | Position: %s", mapName, selection, target:Nick(), tostring(pos)), "Teleported player to the named sitroom")
+        end)
     end
 })

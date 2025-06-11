@@ -1,5 +1,6 @@
-﻿local sw, sh = ScrW(), ScrH()
-local EDITOR = include("lilia/modules/utilities/vendor/libs/cl_vendor.lua")
+﻿local MODULE = MODULE
+local sw, sh = ScrW(), ScrH()
+local EDITOR = include(MODULE.folder .. "/libs/cl_vendor.lua")
 local COLS_MODE = 2
 local COLS_PRICE = 3
 local COLS_STOCK = 4

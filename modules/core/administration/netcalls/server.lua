@@ -18,3 +18,35 @@
         lia.log.add(client, "configChange", name, tostring(oldValue), tostring(value))
     end
 end)
+
+net.Receive("lia_managesitrooms_action", function(_, client)
+    if not client:hasPrivilege("Manage SitRooms") then return end
+    local action = net.ReadUInt(2)
+    local name = net.ReadString()
+    local mapName = game.GetMap()
+    local sitrooms = lia.data.get("sitrooms", {}, true, true)
+    sitrooms[mapName] = sitrooms[mapName] or {}
+    local rooms = sitrooms[mapName]
+    if action == 1 then
+        local pos = rooms[name]
+        if pos then
+            client:SetPos(pos)
+            client:notifyLocalized("sitroomTeleport", name)
+            lia.log.add(client, "sendToSitRoom", string.format("Map: %s | Name: %s | Position: %s", mapName, name, tostring(pos)), "Teleported to sitroom")
+        end
+    elseif action == 2 then
+        local newName = net.ReadString()
+        if newName ~= "" and not rooms[newName] then
+            rooms[newName] = rooms[name]
+            rooms[name] = nil
+            lia.data.set("sitrooms", sitrooms, true, true)
+            client:notifyLocalized("sitroomRenamed")
+            lia.log.add(client, "sitRoomRenamed", string.format("Map: %s | Old: %s | New: %s", mapName, name, newName), "Renamed sitroom")
+        end
+    elseif action == 3 then
+        rooms[name] = client:GetPos()
+        lia.data.set("sitrooms", sitrooms, true, true)
+        client:notifyLocalized("sitroomRepositioned")
+        lia.log.add(client, "sitRoomRepositioned", string.format("Map: %s | Name: %s | New Position: %s", mapName, name, tostring(rooms[name])), "Repositioned sitroom")
+    end
+end)
