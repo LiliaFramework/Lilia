@@ -16,14 +16,15 @@ local function loadPermissions(Privileges)
     end
 end
 
-local function loadDependencies(Dependencies)
-    if not Dependencies then return end
-    if istable(Dependencies) then
-        for _, dep in ipairs(Dependencies) do
-            lia.include(dep.File, dep.Realm)
+local function loadDependencies(dependencies)
+    if not istable(dependencies) then return end
+    for _, dep in ipairs(dependencies) do
+        local realm = dep.Realm
+        if dep.File then
+            lia.include(MODULE.folder .. "/" .. dep.File, realm)
+        elseif dep.Folder then
+            lia.includeDir(MODULE.folder .. "/" .. dep.Folder, true, true, realm)
         end
-    else
-        lia.include(Dependencies)
     end
 end
 
@@ -71,9 +72,8 @@ end
 ]]
 function lia.module.load(uniqueID, path, isSingleFile, variable)
     variable = variable or "MODULE"
-    local lowerVariable = variable:lower()
-    local ModuleCore = path .. "/" .. lowerVariable .. ".lua"
-    if not isSingleFile and not ModuleCore then return end
+    local lowerVar = variable:lower()
+    local coreFile = path .. "/" .. lowerVar .. ".lua"
     local oldModule = MODULE
     MODULE = {
         folder = path,
@@ -101,16 +101,18 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     if isSingleFile then
         lia.include(path, "shared")
     else
-        lia.include(ModuleCore, "shared")
+        lia.include(coreFile, "shared")
     end
 
-    local isEnabled = isfunction(MODULE.enabled) and MODULE.enabled() or MODULE.enabled
-    if uniqueID ~= "schema" and not isEnabled then
-        MODULE = oldModule
-        return
+    if uniqueID ~= "schema" then
+        local isEnabled = isfunction(MODULE.enabled) and MODULE.enabled() or MODULE.enabled
+        if not isEnabled then
+            MODULE = oldModule
+            return
+        end
     end
 
-    if uniqueID ~= "schema" and MODULE.identifier and MODULE.identifier ~= "" then _G[MODULE.identifier] = {} end
+    if uniqueID ~= "schema" and MODULE.identifier ~= "" then _G[MODULE.identifier] = {} end
     loadPermissions(MODULE.CAMIPrivileges)
     if not isSingleFile then
         loadDependencies(MODULE.Dependencies)
@@ -118,17 +120,17 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     end
 
     MODULE.loading = false
-    local uniqueID2 = uniqueID == "schema" and MODULE.name or uniqueID
+    local idKey = uniqueID == "schema" and MODULE.name or uniqueID
     function MODULE:setData(value, global, ignoreMap)
-        lia.data.set(uniqueID2, value, global, ignoreMap)
+        lia.data.set(idKey, value, global, ignoreMap)
     end
 
     function MODULE:getData(default, global, ignoreMap, refresh)
-        return lia.data.get(uniqueID2, default, global, ignoreMap, refresh) or {}
+        return lia.data.get(idKey, default, global, ignoreMap, refresh) or {}
     end
 
-    for k, v in pairs(MODULE) do
-        if isfunction(v) then hook.Add(k, MODULE, v) end
+    for key, func in pairs(MODULE) do
+        if isfunction(func) then hook.Add(key, MODULE, func) end
     end
 
     if uniqueID == "schema" then
@@ -137,7 +139,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         end
     else
         lia.module.list[uniqueID] = MODULE
-        if MODULE.identifier and MODULE.identifier ~= "" and uniqueID ~= "schema" then _G[MODULE.identifier] = lia.module.list[uniqueID] end
         loadSubmodules(path)
         if MODULE.ModuleLoaded then MODULE:ModuleLoaded() end
         if MODULE.Public then
@@ -160,6 +161,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
             })
         end
 
+        if MODULE.identifier ~= "" then _G[MODULE.identifier] = lia.module.list[uniqueID] end
         _G[variable] = oldModule
     end
 end
@@ -189,6 +191,13 @@ function lia.module.initialize()
     lia.module.loadFromDir(schema .. "/modules", "module")
     lia.module.loadFromDir(schema .. "/overrides", "module")
     hook.Run("InitializedModules")
+    for id, mod in pairs(lia.module.list) do
+        local ok = isfunction(mod.enabled) and mod.enabled() or mod.enabled
+        if id ~= "schema" and not ok then
+            lia.module.list[id] = nil
+            if mod.identifier and _G[mod.identifier] then _G[mod.identifier] = nil end
+        end
+    end
 end
 
 --[[
