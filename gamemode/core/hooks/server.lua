@@ -38,21 +38,6 @@ function GM:PlayerLoadedChar(client, character)
 
         character:setData("ammo", nil)
     end)
-
-    local inv = character:getInv()
-    if inv then
-        local w, h = inv:getSize()
-        local baseW, baseH = lia.config.get("invW"), lia.config.get("invH")
-        if w ~= baseW or h ~= baseH then return w, h end
-        local dw, dh = hook.Run("GetDefaultInventorySize", client)
-        dw = dw or baseW
-        dh = dh or baseH
-        w, h = inv:getSize()
-        if w ~= dw or h ~= dh then
-            inv:setSize(dw, dh)
-            inv:sync(client)
-        end
-    end
 end
 
 function GM:LiliaTablesLoaded()
