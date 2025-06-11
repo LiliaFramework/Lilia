@@ -112,8 +112,8 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     return true, nil, isWhitelisted
 end
 
-if not VENDOR_INVENTORY_MEASURE then
-    VENDOR_INVENTORY_MEASURE = lia.inventory.types["grid"]:new()
+if not VENDOR_INVENTORY_MEASURE and lia.inventory.types["GridInv"] then
+    VENDOR_INVENTORY_MEASURE = lia.inventory.types["GridInv"]:new()
     VENDOR_INVENTORY_MEASURE.data = {
         w = 8,
         h = 8
