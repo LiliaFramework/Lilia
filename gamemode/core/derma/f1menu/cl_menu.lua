@@ -8,12 +8,37 @@ function PANEL:Init()
     self.noAnchor = CurTime() + 0.4
     self.anchorMode = true
     self.invKey = lia.keybind.get("Open Inventory", KEY_I)
-    local btnW, btnH, spacing = 150, 50, 20
+    local btnW, btnH, spacing = 150, 40, 20
     local topBar = self:Add("DPanel")
     topBar:Dock(TOP)
     topBar:SetTall(70)
-    topBar:DockPadding(30, 20, 30, 0)
-    topBar.Paint = function() end
+    topBar:DockPadding(30, 10, 30, 10)
+    local iconMat = Material("lilia.png", "smooth")
+    local schemaIconMat = Material(SCHEMA.icon, "smooth")
+    topBar.Paint = function(self, w, h)
+        lia.util.drawBlur(self)
+        surface.SetDrawColor(34, 34, 34, 220)
+        surface.DrawRect(0, 0, w, h)
+        local col = lia.config.get("Color")
+        surface.SetDrawColor(col.r, col.g, col.b, col.a or 255)
+        surface.DrawRect(0, h - 4, w, 4)
+        local iconSize = h * 0.5
+        surface.SetMaterial(schemaIconMat)
+        surface.SetDrawColor(255, 255, 255, 255)
+        surface.DrawTexturedRect(30, h * 0.5 - iconSize * 0.5, iconSize, iconSize)
+        surface.SetFont("liaMediumFont")
+        surface.SetTextColor(255, 255, 255, 255)
+        local txt = SCHEMA.name
+        local _, th = surface.GetTextSize(txt)
+        local textX = 30 + iconSize + 10
+        surface.SetTextPos(textX, h * 0.5 - th * 0.5)
+        surface.DrawText(txt)
+        surface.SetMaterial(iconMat)
+        surface.SetDrawColor(255, 255, 255, 255)
+        local farSize = h - 10
+        surface.DrawTexturedRect(w - farSize - 20, 5, farSize, farSize)
+    end
+
     local leftArrow = topBar:Add("liaSmallButton")
     leftArrow:Dock(LEFT)
     leftArrow:DockMargin(0, 0, spacing, 0)
