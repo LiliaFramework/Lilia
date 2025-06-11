@@ -54,6 +54,9 @@ function GM:OnCharVarChanged(character, varName, oldVar, newVar)
     end
 end
 
+function MODULE:GetDefaultInventoryType()
+    return lia.module.list["weightinv"] and "WeightInv" or "GridInv"
+end
 
 local GamemodeFunctions = {
     server = {

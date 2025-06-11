@@ -1,4 +1,25 @@
 local PANEL = {}
+
+local function renderNewIcon(panel, itemTable)
+    if itemTable.iconCam and (not renderedIcons[string.lower(itemTable.model)] or itemTable.forceRender) then
+        local iconCam = itemTable.iconCam
+        iconCam = {
+            cam_pos = iconCam.pos,
+            cam_ang = iconCam.ang,
+            cam_fov = iconCam.fov
+        }
+
+        renderedIcons[string.lower(itemTable.model)] = true
+        panel.Icon:RebuildSpawnIconEx(iconCam)
+    end
+end
+
+local function drawIcon(mat, _, x, y)
+    surface.SetDrawColor(color_white)
+    surface.SetMaterial(mat)
+    surface.DrawTexturedRect(0, 0, x, y)
+end
+
 function PANEL:getItem()
     return self.itemTable
 end
@@ -77,6 +98,36 @@ function PANEL:openActionMenu()
 
     menu:Open()
     itemTable.player = nil
+end
+
+function PANEL:setItemType(itemTypeOrID)
+    local item = lia.item.list[itemTypeOrID]
+    if isnumber(itemTypeOrID) then
+        item = lia.item.instances[itemTypeOrID]
+        self.itemID = itemTypeOrID
+    else
+        self.itemType = itemTypeOrID
+    end
+
+    assert(item, "invalid item type or ID " .. tostring(item))
+    self.liaToolTip = true
+    self.itemTable = item
+    self:SetModel(item:getModel(), item:getSkin())
+    self:updateTooltip()
+    if item.icon then
+        self.Icon:SetVisible(false)
+        self.ExtraPaint = function(self, w, h) drawIcon(item.icon, self, w, h) end
+    else
+        renderNewIcon(self, item)
+    end
+end
+
+function PANEL:updateTooltip()
+    self:SetTooltip("<font=liaItemBoldFont>" .. self.itemTable:getName() .. "</font>\n" .. "<font=liaItemDescFont>" .. self.itemTable:getDesc())
+end
+
+function PANEL:ItemDataChanged()
+    self:updateTooltip()
 end
 
 vgui.Register("liaItemIcon", PANEL, "SpawnIcon")
