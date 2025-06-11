@@ -13,7 +13,7 @@ MODULE.CAMIPrivileges = {
 
 MODULE.Dependencies = {
     {
-        File = MODULE.path .. "/logs.lua",
+        File = "logs.lua",
         Realm = "server",
     },
 }
