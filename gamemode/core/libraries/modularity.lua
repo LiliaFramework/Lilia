@@ -74,10 +74,10 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     variable = variable or "MODULE"
     local lowerVar = variable:lower()
     local coreFile = path .. "/" .. lowerVar .. ".lua"
-    local oldModule = MODULE
+    local prevModule = _G[variable]
     MODULE = {
         folder = path,
-        module = oldModule,
+        module = prevModule,
         uniqueID = uniqueID,
         name = L("unknown"),
         desc = L("noDesc"),
@@ -105,9 +105,11 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     end
 
     if uniqueID ~= "schema" then
-        local isEnabled = isfunction(MODULE.enabled) and MODULE.enabled() or MODULE.enabled
-        if not isEnabled then
-            MODULE = oldModule
+        local ok = isfunction(MODULE.enabled) and MODULE.enabled() or MODULE.enabled
+        if not ok then
+            lia.module.list[uniqueID] = nil
+            if MODULE.identifier ~= "" then _G[MODULE.identifier] = nil end
+            _G[variable] = prevModule
             return
         end
     end
@@ -121,16 +123,16 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
 
     MODULE.loading = false
     local idKey = uniqueID == "schema" and MODULE.name or uniqueID
-    function MODULE:setData(value, global, ignoreMap)
-        lia.data.set(idKey, value, global, ignoreMap)
+    function MODULE:setData(v, g, m)
+        lia.data.set(idKey, v, g, m)
     end
 
-    function MODULE:getData(default, global, ignoreMap, refresh)
-        return lia.data.get(idKey, default, global, ignoreMap, refresh) or {}
+    function MODULE:getData(d, g, m, r)
+        return lia.data.get(idKey, d, g, m, r) or {}
     end
 
-    for key, func in pairs(MODULE) do
-        if isfunction(func) then hook.Add(key, MODULE, func) end
+    for k, f in pairs(MODULE) do
+        if isfunction(f) then hook.Add(k, MODULE, f) end
     end
 
     if uniqueID == "schema" then
@@ -162,7 +164,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         end
 
         if MODULE.identifier ~= "" then _G[MODULE.identifier] = lia.module.list[uniqueID] end
-        _G[variable] = oldModule
+        _G[variable] = prevModule
     end
 end
 
@@ -180,22 +182,25 @@ end
       nil
 ]]
 function lia.module.initialize()
-    local schema = engine.ActiveGamemode()
-    lia.module.load("schema", schema .. "/schema", false, "schema")
+    lia.module.list = {}
+    local schemaPath = engine.ActiveGamemode()
+    lia.module.load("schema", schemaPath .. "/schema", false, "schema")
     hook.Run("InitializedSchema")
     lia.module.loadFromDir("lilia/modules/core", "module")
     lia.module.loadFromDir("lilia/modules/frameworkui", "module")
     lia.module.loadFromDir("lilia/modules/characters", "module")
     lia.module.loadFromDir("lilia/modules/utilities", "module")
-    lia.module.loadFromDir(schema .. "/preload", "module")
-    lia.module.loadFromDir(schema .. "/modules", "module")
-    lia.module.loadFromDir(schema .. "/overrides", "module")
+    lia.module.loadFromDir(schemaPath .. "/preload", "module")
+    lia.module.loadFromDir(schemaPath .. "/modules", "module")
+    lia.module.loadFromDir(schemaPath .. "/overrides", "module")
     hook.Run("InitializedModules")
     for id, mod in pairs(lia.module.list) do
-        local ok = isfunction(mod.enabled) and mod.enabled() or mod.enabled
-        if id ~= "schema" and not ok then
-            lia.module.list[id] = nil
-            if mod.identifier and _G[mod.identifier] then _G[mod.identifier] = nil end
+        if id ~= "schema" then
+            local ok = isfunction(mod.enabled) and mod.enabled() or mod.enabled
+            if not ok then
+                lia.module.list[id] = nil
+                if mod.identifier ~= "" then _G[mod.identifier] = nil end
+            end
         end
     end
 end

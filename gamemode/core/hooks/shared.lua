@@ -54,7 +54,7 @@ function GM:OnCharVarChanged(character, varName, oldVar, newVar)
     end
 end
 
-function MODULE:GetDefaultInventoryType()
+function GM:GetDefaultInventoryType()
     return lia.module.list["weightinv"] and "WeightInv" or "GridInv"
 end
 
