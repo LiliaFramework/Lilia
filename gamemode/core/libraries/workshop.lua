@@ -1,5 +1,4 @@
 ﻿if SERVER then
-    util.AddNetworkString("WorkshopDownloader_Start")
     hook.Add("PlayerInitialSpawn", "WorkshopDownloader_PlayerInitialSpawn", function(ply)
         timer.Simple(10, function()
             if not IsValid(ply) then return end
