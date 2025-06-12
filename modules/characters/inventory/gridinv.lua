@@ -336,4 +336,3 @@ else
 end
 
 GridInv:register("GridInv")
-print("Using Grid Inventory!")
