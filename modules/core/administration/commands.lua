@@ -54,7 +54,7 @@ lia.command.add("addsitroom", {
     privilege = "Manage SitRooms",
     desc = L("setSitroomDesc"),
     onRun = function(client)
-        client:requestString("Enter Name", "Please enter sitroom name:", function(name)
+        client:requestString(L("enterNamePrompt"), L("enterSitroomPrompt"), function(name)
             if name == "" then
                 client:notifyLocalized("invalidName")
                 return
@@ -102,7 +102,7 @@ lia.command.add("sendtositroom", {
             return
         end
 
-        client:requestDropdown("Choose Sitroom", "Select a sitroom:", names, function(selection)
+        client:requestDropdown(L("chooseSitroomTitle"), L("selectSitroomPrompt"), names, function(selection)
             local pos = rooms[selection]
             if not pos then
                 client:notifyLocalized("sitroomNotSet")
@@ -114,5 +114,35 @@ lia.command.add("sendtositroom", {
             target:notifyLocalized("sitroomArrive")
             lia.log.add(client, "sendToSitRoom", string.format("Map: %s | Name: %s | Target: %s | Position: %s", mapName, selection, target:Nick(), tostring(pos)), "Teleported player to the named sitroom")
         end)
+    end
+})
+
+lia.command.add("returnsitroom", {
+    adminOnly = true,
+    privilege = "Manage SitRooms",
+    desc = L("returnFromSitroomDesc"),
+    syntax = "[string charname]",
+    AdminStick = {
+        Name = L("returnFromSitroom"),
+        Category = L("Moderation Tools"),
+        SubCategory = L("misc"),
+        Icon = "icon16/arrow_up.png"
+    },
+    onRun = function(client, arguments)
+        local target = lia.util.findPlayer(client, arguments[1]) or client
+        if not IsValid(target) then
+            client:notifyLocalized("targetNotFound")
+            return
+        end
+
+        local prev = target:GetNWVector("previousSitroomPos")
+        if not prev then
+            client:notifyLocalized("noPreviousSitroomPos")
+            return
+        end
+
+        target:SetPos(prev)
+        client:notifyLocalized("sitroomReturnSuccess", target:Nick())
+        if target ~= client then target:notifyLocalized("sitroomReturned") end
     end
 })
