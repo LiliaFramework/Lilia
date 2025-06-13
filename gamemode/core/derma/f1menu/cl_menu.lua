@@ -21,18 +21,18 @@ function PANEL:Init()
         surface.SetDrawColor(34, 34, 34, 220)
         surface.DrawRect(0, 0, w, h)
         local col = lia.config.get("Color")
-        surface.SetDrawColor(col.r, col.g, col.b, col.a or 255)
+        surface.SetDrawColor(col.r, col.g, col.b, 255)
         surface.DrawRect(0, h - 4, w, 4)
         if schemaIconMat and schemaName then
             local iconSize = h * 0.5
             surface.SetMaterial(schemaIconMat)
             surface.SetDrawColor(255, 255, 255, 255)
-            surface.DrawTexturedRect(30, h * 0.5 - iconSize * 0.5, iconSize, iconSize)
+            surface.DrawTexturedRect(30, (h - iconSize) * 0.5, iconSize, iconSize)
             surface.SetFont("liaMediumFont")
             surface.SetTextColor(255, 255, 255, 255)
             local txt = schemaName
             local _, th = surface.GetTextSize(txt)
-            surface.SetTextPos(30 + iconSize + 10, h * 0.5 - th * 0.5)
+            surface.SetTextPos(30 + iconSize + 10, (h - th) * 0.5)
             surface.DrawText(txt)
         end
 
@@ -40,7 +40,8 @@ function PANEL:Init()
         surface.SetDrawColor(255, 255, 255, 255)
         local baseSize = h - 10
         local iconSize = baseSize * 0.9
-        surface.DrawTexturedRect(w - iconSize - 20, 5, iconSize, iconSize)
+        local iconY = (h - iconSize) * 0.5
+        surface.DrawTexturedRect(w - iconSize - 20, iconY, iconSize, iconSize)
     end
 
     local leftArrow = topBar:Add("liaSmallButton")
