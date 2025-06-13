@@ -282,11 +282,11 @@ local function DrawTreeBG(w, h)
     surface.DrawRect(1, 1, w - 2, h - 2)
 end
 
-function SKIN:PaintTree(p, w, h)
+function SKIN:PaintTree(_, w, h)
     DrawTreeBG(w, h)
 end
 
-function SKIN:PaintTreeNode(p, w, h)
+function SKIN:PaintTreeNode(p, _, h)
     if not p.m_bDrawLines then return end
     surface.SetDrawColor(self.Colours.Tree and self.Colours.Tree.Lines or Color(100, 100, 100))
     if p.m_bLastChild then
