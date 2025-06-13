@@ -14,7 +14,8 @@ function PANEL:Init()
     topBar:SetTall(70)
     topBar:DockPadding(30, 10, 30, 10)
     local iconMat = Material("lilia.png", "smooth")
-    local schemaIconMat = Material(SCHEMA.icon, "smooth")
+    local schemaIconMat = SCHEMA and SCHEMA.icon and Material(SCHEMA.icon, "smooth") or nil
+    local schemaName = SCHEMA and SCHEMA.name or nil
     topBar.Paint = function(self, w, h)
         lia.util.drawBlur(self)
         surface.SetDrawColor(34, 34, 34, 220)
@@ -22,21 +23,24 @@ function PANEL:Init()
         local col = lia.config.get("Color")
         surface.SetDrawColor(col.r, col.g, col.b, col.a or 255)
         surface.DrawRect(0, h - 4, w, 4)
-        local iconSize = h * 0.5
-        surface.SetMaterial(schemaIconMat)
-        surface.SetDrawColor(255, 255, 255, 255)
-        surface.DrawTexturedRect(30, h * 0.5 - iconSize * 0.5, iconSize, iconSize)
-        surface.SetFont("liaMediumFont")
-        surface.SetTextColor(255, 255, 255, 255)
-        local txt = SCHEMA.name
-        local _, th = surface.GetTextSize(txt)
-        local textX = 30 + iconSize + 10
-        surface.SetTextPos(textX, h * 0.5 - th * 0.5)
-        surface.DrawText(txt)
+        if schemaIconMat and schemaName then
+            local iconSize = h * 0.5
+            surface.SetMaterial(schemaIconMat)
+            surface.SetDrawColor(255, 255, 255, 255)
+            surface.DrawTexturedRect(30, h * 0.5 - iconSize * 0.5, iconSize, iconSize)
+            surface.SetFont("liaMediumFont")
+            surface.SetTextColor(255, 255, 255, 255)
+            local txt = schemaName
+            local _, th = surface.GetTextSize(txt)
+            surface.SetTextPos(30 + iconSize + 10, h * 0.5 - th * 0.5)
+            surface.DrawText(txt)
+        end
+
         surface.SetMaterial(iconMat)
         surface.SetDrawColor(255, 255, 255, 255)
-        local farSize = h - 10
-        surface.DrawTexturedRect(w - farSize - 20, 5, farSize, farSize)
+        local baseSize = h - 10
+        local iconSize = baseSize * 0.9
+        surface.DrawTexturedRect(w - iconSize - 20, 5, iconSize, iconSize)
     end
 
     local leftArrow = topBar:Add("liaSmallButton")
@@ -109,14 +113,18 @@ function PANEL:Init()
         local cb = btnDefs[key]
         if isstring(cb) then
             local body = cb
-            cb = body:sub(1, 4) == "http" and function(p)
-                local html = p:Add("DHTML")
-                html:Dock(FILL)
-                html:OpenURL(body)
-            end or function(p)
-                local html = p:Add("DHTML")
-                html:Dock(FILL)
-                html:SetHTML(body)
+            if body:sub(1, 4) == "http" then
+                cb = function(p)
+                    local html = p:Add("DHTML")
+                    html:Dock(FILL)
+                    html:OpenURL(body)
+                end
+            else
+                cb = function(p)
+                    local html = p:Add("DHTML")
+                    html:Dock(FILL)
+                    html:SetHTML(body)
+                end
             end
         end
 
