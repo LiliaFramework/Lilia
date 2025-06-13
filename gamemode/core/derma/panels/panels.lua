@@ -103,22 +103,21 @@ function Derma_Install_Convar_Functions(PANEL)
         Derma_SetCvar_Safe(cvar, strNewValue)
     end
 
-    function PANEL:ConVarStringThink()
-        local cvar = self.m_strConVar
-        if not cvar or string.len(cvar) < 2 then return end
-        local strValue = GetConVarString(cvar)
-        if self.m_strConVarValue == strValue then return end
-        self.m_strConVarValue = strValue
-        self:SetValue(strValue)
+    function PANEL:SetConVar(name, isNumber)
+        self.m_conVar = GetConVar(name)
+        if not self.m_conVar then return end
+        self.m_isNumber = isNumber
+        self.m_prevValue = isNumber and self.m_conVar:GetFloat() or self.m_conVar:GetString()
+        self:SetValue(self.m_prevValue)
     end
 
-    function PANEL:ConVarNumberThink()
-        local cvar = self.m_strConVar
-        if not cvar or string.len(cvar) < 2 then return end
-        local numValue = GetConVarNumber(cvar)
-        if numValue ~= numValue then return end
-        if self.m_strConVarValue == numValue then return end
-        self.m_strConVarValue = numValue
-        self:SetValue(numValue)
+    function PANEL:Think()
+        local cvar = self.m_conVar
+        if not cvar then return end
+        local current = self.m_isNumber and cvar:GetFloat() or cvar:GetString()
+        if current ~= self.m_prevValue then
+            self.m_prevValue = current
+            self:SetValue(current)
+        end
     end
 end

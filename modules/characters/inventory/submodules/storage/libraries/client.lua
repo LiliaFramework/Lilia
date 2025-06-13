@@ -1,5 +1,4 @@
-﻿local MODULE = MODULE
-function MODULE:exitStorage()
+﻿function MODULE:exitStorage()
     net.Start("liaStorageExit")
     net.SendToServer()
 end
@@ -16,7 +15,7 @@ function MODULE:StorageOpen(storage, isCar)
     local client = LocalPlayer()
     if isCar then
         local localInv = client:getChar() and client:getChar():getInv()
-        if not localInv then return MODULE:exitStorage() end
+        if not localInv then return self:exitStorage() end
         local localInvPanel = localInv:show()
         local storageInvPanel = storage:show()
         storageInvPanel:SetTitle(L("carTrunk"))
@@ -33,7 +32,7 @@ function MODULE:StorageOpen(storage, isCar)
         local function exitStorageOnRemove(panel)
             if firstToRemove then
                 firstToRemove = false
-                MODULE:exitStorage()
+                self:exitStorage()
                 local otherPanel = panel == localInvPanel and storageInvPanel or localInvPanel
                 if IsValid(otherPanel) then otherPanel:Remove() end
             end
@@ -48,7 +47,7 @@ function MODULE:StorageOpen(storage, isCar)
         if not IsValid(storage) then return end
         local localInv = client:getChar() and client:getChar():getInv()
         local storageInv = storage:getInv()
-        if not localInv or not storageInv then return MODULE:exitStorage() end
+        if not localInv or not storageInv then return self:exitStorage() end
         local localInvPanel = localInv:show()
         local storageInvPanel = storageInv:show()
         storageInvPanel:SetTitle(L(storage:getStorageInfo().name))
@@ -65,7 +64,7 @@ function MODULE:StorageOpen(storage, isCar)
         local function exitStorageOnRemove(panel)
             if firstToRemove then
                 firstToRemove = false
-                MODULE:exitStorage()
+                self:exitStorage()
                 local otherPanel = panel == localInvPanel and storageInvPanel or localInvPanel
                 if IsValid(otherPanel) then otherPanel:Remove() end
             end

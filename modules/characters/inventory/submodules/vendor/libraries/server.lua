@@ -112,18 +112,18 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     return true, nil, isWhitelisted
 end
 
-if not VENDOR_INVENTORY_MEASURE and lia.inventory.types["GridInv"] then
-    VENDOR_INVENTORY_MEASURE = lia.inventory.types["GridInv"]:new()
-    VENDOR_INVENTORY_MEASURE.data = {
-        w = 8,
-        h = 8
-    }
-
-    VENDOR_INVENTORY_MEASURE.virtual = true
-    VENDOR_INVENTORY_MEASURE:onInstanced()
-end
-
 function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
+    if not VENDOR_INVENTORY_MEASURE and lia.inventory.types["GridInv"] then
+        VENDOR_INVENTORY_MEASURE = lia.inventory.types["GridInv"]:new()
+        VENDOR_INVENTORY_MEASURE.data = {
+            w = 8,
+            h = 8
+        }
+
+        VENDOR_INVENTORY_MEASURE.virtual = true
+        VENDOR_INVENTORY_MEASURE:onInstanced()
+    end
+
     local canAccess, reason = hook.Run("CanPlayerTradeWithVendor", client, vendor, itemType, isSellingToVendor)
     if canAccess == false then
         if isstring(reason) then client:notifyLocalized(reason) end

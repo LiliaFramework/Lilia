@@ -36,29 +36,29 @@ end
 
 vgui.Register("liaInventory", PANEL, "DFrame")
 PANEL = {}
+local function headerHeight(f)
+    return IsValid(f.btnClose) and f.btnClose:GetTall() + 4 or 24
+end
+
 function PANEL:Init()
     self:MakePopup()
     self.content = self:Add("liaGridInventoryPanel")
     self.content:Dock(FILL)
-    self.content:setGridSize(1, 1)
     self:SetTitle("")
 end
 
-function PANEL:setInventory(inventory)
-    self.gridW, self.gridH = inventory:getSize()
-    local iconSize = self.content.size or 64
-    local sidePadding = 5
-    local topPadding = 30
-    local bottomPadding = 5
-    local titleHeight = self.GetTitleBarHeight and self:GetTitleBarHeight() or 22
-    local contentHeight = self.gridH * (iconSize + 2)
-    local totalWidth = self.gridW * (iconSize + 2) + sidePadding * 2
-    local totalHeight = contentHeight + topPadding + bottomPadding + titleHeight
-    self:SetSize(totalWidth, totalHeight)
-    self:InvalidateLayout(true)
-    self:DockPadding(sidePadding, topPadding, sidePadding, bottomPadding)
-    self.content:setGridSize(self.gridW, self.gridH)
-    self.content:setInventory(inventory)
+function PANEL:setInventory(inv)
+    self.gridW, self.gridH = inv:getSize()
+    local size = self.content.size or 64
+    local gap = 2
+    local pad = 4
+    local head = headerHeight(self)
+    local w = self.gridW * size + (self.gridW - 1) * gap + pad * 2
+    local h = self.gridH * size + (self.gridH - 1) * gap + pad * 2 + head
+    self:SetSize(w, h)
+    self:DockPadding(pad, head + pad, pad, pad)
+    self.content:setGridSize(self.gridW, self.gridH, size)
+    self.content:setInventory(inv)
 end
 
 function PANEL:InventoryDeleted()
@@ -66,8 +66,7 @@ function PANEL:InventoryDeleted()
 end
 
 function PANEL:Center()
-    local centerX, centerY = ScrW() * 0.5, ScrH() * 0.5
-    self:SetPos(centerX - self:GetWide() * 0.5, centerY - self:GetTall() * 0.5)
+    self:SetPos(ScrW() * 0.5 - self:GetWide() * 0.5, ScrH() * 0.5 - self:GetTall() * 0.5)
 end
 
 vgui.Register("liaGridInventory", PANEL, "liaInventory")
