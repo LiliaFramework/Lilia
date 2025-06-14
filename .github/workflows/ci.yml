@@ -151,6 +151,8 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: lilia
+          fetch-depth: 0
+          persist-credentials: true
       - uses: actions/checkout@v3
         with:
           repository: LiliaFramework/LiliaFramework.github.io
@@ -166,9 +168,10 @@ jobs:
             git commit -m "Update docs"
             git push origin HEAD
           fi
-      - run: rm -f lilia/docs/version.json
       - run: |
           cd lilia
+          git pull --rebase origin main
+          rm -f docs/version.json
           git config user.email "githubactions@github.com"
           git config user.name "GitHub Actions"
           git add docs/version.json
