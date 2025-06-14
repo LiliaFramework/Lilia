@@ -29,7 +29,7 @@ jobs:
           path: lilia
       - uses: leafo/gh-actions-lua@v8.0.0
         with:
-          luaVersion: "5.2"
+          luaVersion: '5.2'
       - uses: leafo/gh-actions-luarocks@v4.0.0
       - run: |
           luarocks install luafilesystem
@@ -150,11 +150,11 @@ jobs:
           cd lilia
           VALID_COUNT=0
           for COMMIT in $(git rev-list --reverse HEAD); do
-              AUTHOR=$(git show -s --format='%ae' $COMMIT)
-              PARENTS=$(git rev-list --parents -n 1 $COMMIT | wc -w)
-              if [[ "$AUTHOR" != "github-actions@github.com" && "$PARENTS" -lt 3 ]]; then
-                  VALID_COUNT=$((VALID_COUNT + 1))
-              fi
+            AUTHOR=$(git show -s --format='%ae' $COMMIT)
+            PARENTS=$(git rev-list --parents -n 1 $COMMIT | wc -w)
+            if [[ "$AUTHOR" != "github-actions@github.com" && "$PARENTS" -lt 3 ]]; then
+              VALID_COUNT=$((VALID_COUNT + 1))
+            fi
           done
           MAJOR=$((VALID_COUNT / 1000))
           MINOR=$(((VALID_COUNT % 1000) / 100))
@@ -168,8 +168,7 @@ jobs:
             "branch": "main"
           }
           EOF
-      - run: |
-          cp lilia/docs/version.json site/version.json
+      - run: cp lilia/docs/version.json site/version.json
       - run: |
           cd site
           git config user.name "github-actions"
