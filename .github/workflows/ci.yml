@@ -144,7 +144,7 @@ jobs:
           if git diff --cached --quiet; then
             exit 0
           fi
-          git commit -m "[skip ci] [ci version bump] Update version.json"
+          git commit -m "Update version.json"
           git push
 
   deploy-pages:
