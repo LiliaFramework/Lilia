@@ -160,22 +160,18 @@ jobs:
           token: ${{ secrets.LiliaGitSecret }}
       - run: cp -R lilia/docs/. site/
       - run: |
+          cd lilia
+          git pull --rebase origin main
+          rm -f docs/version.json
+          git add docs/version.json
+          git commit --amend --no-edit
+          git push --force-with-lease origin HEAD:main
+      - run: |
           cd site
           git config user.email "githubactions@github.com"
           git config user.name "GitHub Actions"
           if [ -n "$(git status --porcelain)" ]; then
             git add .
             git commit -m "Update docs"
-            git push origin HEAD
-          fi
-      - run: |
-          cd lilia
-          git pull --rebase origin main
-          rm -f docs/version.json
-          git config user.email "githubactions@github.com"
-          git config user.name "GitHub Actions"
-          git add docs/version.json
-          if [ -n "$(git diff --cached --name-only)" ]; then
-            git commit -m "Remove version.json"
             git push origin HEAD
           fi
