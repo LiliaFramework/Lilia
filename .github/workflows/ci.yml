@@ -19,6 +19,7 @@ permissions:
   repository-projects: write
   security-events: write
   statuses: write
+
 jobs:
   linter:
     runs-on: ubuntu-latest
@@ -48,6 +49,7 @@ jobs:
             --no-max-line-length --no-max-code-line-length \
             --no-max-string-line-length --no-max-comment-line-length \
             --no-max-cyclomatic-complexity
+
   release:
     needs: linter
     if: github.ref == 'refs/heads/main'
@@ -101,6 +103,7 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
+
   deploy-pages:
     needs: release
     runs-on: ubuntu-latest
@@ -116,32 +119,33 @@ jobs:
           path: site
           token: ${{ secrets.LiliaGitSecret }}
       - run: |
+          cd lilia
           VALID_COUNT=0
           for COMMIT in $(git rev-list --reverse HEAD); do
               AUTHOR=$(git show -s --format='%ae' $COMMIT)
               PARENTS=$(git rev-list --parents -n 1 $COMMIT | wc -w)
-              if [[ "$AUTHOR" != "githubactions@github.com" && "$PARENTS" -lt 3 ]]; then
+              if [[ "$AUTHOR" != "github-actions@github.com" && "$PARENTS" -lt 3 ]]; then
                   VALID_COUNT=$((VALID_COUNT + 1))
               fi
           done
           MAJOR=$((VALID_COUNT / 1000))
           MINOR=$(((VALID_COUNT % 1000) / 100))
           PATCH=$((VALID_COUNT % 100))
-          mkdir -p lilia/docs
-          cat > lilia/docs/version.json <<EOF
+          mkdir -p docs
+          cat > docs/version.json <<EOF
           {
-            "version":"$MAJOR.$MINOR.$PATCH",
-            "commitCount":$VALID_COUNT,
-            "commitHash":"$(git rev-parse --short HEAD)",
-            "branch":"main"
+            "version": "$MAJOR.$MINOR.$PATCH",
+            "commitCount": $VALID_COUNT,
+            "commitHash": "$(git rev-parse --short HEAD)",
+            "branch": "main"
           }
           EOF
       - run: |
-          cp lilia/docs/version.json site/
+          cp lilia/docs/version.json site/version.json
       - run: |
           cd site
           git config user.name "github-actions"
-          git config user.email "githubactions@github.com"
+          git config user.email "github-actions@github.com"
           if ! git diff --quiet; then
             git add version.json
             git commit -m "Update version.json"
