@@ -81,7 +81,6 @@ else
 end
 
 local function CanReadNotifications(client)
-    if not lia.config.get("DisplayStaffCommands") then return false end
     if not lia.config.get("AdminOnlyNotification") then return true end
     return client:hasPrivilege("Staff Permissions - Can See SAM Notifications") or client:isStaffOnDuty()
 end
@@ -175,12 +174,6 @@ CAMI.RegisterPrivilege({
     Name = "Staff Permissions - Can Bypass Staff Faction SAM Command whitelist",
     MinAccess = "superadmin",
     Description = "Allows staff to bypass the SAM command whitelist for the Staff Faction."
-})
-
-lia.config.add("DisplayStaffCommands", "Display Staff Commands", true, nil, {
-    desc = "Controls whether notifications and commands for staff are displayed.",
-    category = "Staff",
-    type = "Boolean"
 })
 
 lia.config.add("AdminOnlyNotification", "Admin Only Notifications", true, nil, {
