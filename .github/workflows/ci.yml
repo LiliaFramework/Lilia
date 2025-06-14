@@ -172,6 +172,6 @@ jobs:
           git config user.name "GitHub Actions"
           if [ -n "$(git status --porcelain)" ]; then
             git add .
-            git commit -m "Update docs"
+            git commit -m "Updated gamemode sucessfully!"
             git push origin HEAD
           fi
