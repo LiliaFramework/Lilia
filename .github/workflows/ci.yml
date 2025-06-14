@@ -1,12 +1,10 @@
 name: CI
-
 on:
   push:
     branches:
       - main
     tags-ignore:
       - 'release'
-
 permissions:
   actions: write
   checks: write
@@ -21,7 +19,6 @@ permissions:
   repository-projects: write
   security-events: write
   statuses: write
-
 jobs:
   linter:
     runs-on: ubuntu-latest
@@ -51,7 +48,6 @@ jobs:
             --no-max-line-length --no-max-code-line-length \
             --no-max-string-line-length --no-max-comment-line-length \
             --no-max-cyclomatic-complexity
-
   release:
     needs: linter
     if: github.ref == 'refs/heads/main'
@@ -105,47 +101,8 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
-  update-version:
-    needs: release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: true
-      - run: |
-          VALID_COUNT=0
-          for COMMIT in $(git rev-list --reverse HEAD); do
-              AUTHOR=$(git show -s --format='%ae' $COMMIT)
-              PARENTS=$(git rev-list --parents -n 1 $COMMIT | wc -w)
-              if [[ "$AUTHOR" != "githubactions@github.com" && "$PARENTS" -lt 3 ]]; then
-                  VALID_COUNT=$((VALID_COUNT + 1))
-              fi
-          done
-          MAJOR=$((VALID_COUNT / 1000))
-          MINOR=$(((VALID_COUNT % 1000) / 100))
-          PATCH=$((VALID_COUNT % 100))
-          VERSION="$MAJOR.$MINOR.$PATCH"
-          echo "{" > docs/version.json
-          echo "  \"version\": \"$VERSION\"," >> docs/version.json
-          echo "  \"commitCount\": $VALID_COUNT," >> docs/version.json
-          echo "  \"commitHash\": \"$(git rev-parse --short HEAD)\"," >> docs/version.json
-          echo "  \"branch\": \"main\"" >> docs/version.json
-          echo "}" >> docs/version.json
-      - run: |
-          git config user.name "github-actions"
-          git config user.email "githubactions@github.com"
-      - run: |
-          git add -f docs/version.json
-          if git diff --cached --quiet; then
-            exit 0
-          fi
-          git commit -m "Update version.json"
-          git push
-
   deploy-pages:
-    needs: update-version
+    needs: release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -158,20 +115,35 @@ jobs:
           repository: LiliaFramework/LiliaFramework.github.io
           path: site
           token: ${{ secrets.LiliaGitSecret }}
-      - run: cp -R lilia/docs/. site/
       - run: |
-          cd lilia
-          git pull --rebase origin main
-          rm -f docs/version.json
-          git add docs/version.json
-          git commit --amend --no-edit
-          git push --force-with-lease origin HEAD:main
+          VALID_COUNT=0
+          for COMMIT in $(git rev-list --reverse HEAD); do
+              AUTHOR=$(git show -s --format='%ae' $COMMIT)
+              PARENTS=$(git rev-list --parents -n 1 $COMMIT | wc -w)
+              if [[ "$AUTHOR" != "githubactions@github.com" && "$PARENTS" -lt 3 ]]; then
+                  VALID_COUNT=$((VALID_COUNT + 1))
+              fi
+          done
+          MAJOR=$((VALID_COUNT / 1000))
+          MINOR=$(((VALID_COUNT % 1000) / 100))
+          PATCH=$((VALID_COUNT % 100))
+          mkdir -p lilia/docs
+          cat > lilia/docs/version.json <<EOF
+          {
+            "version":"$MAJOR.$MINOR.$PATCH",
+            "commitCount":$VALID_COUNT,
+            "commitHash":"$(git rev-parse --short HEAD)",
+            "branch":"main"
+          }
+          EOF
+      - run: |
+          cp lilia/docs/version.json site/
       - run: |
           cd site
+          git config user.name "github-actions"
           git config user.email "githubactions@github.com"
-          git config user.name "GitHub Actions"
-          if [ -n "$(git status --porcelain)" ]; then
-            git add .
-            git commit -m "Updated gamemode sucessfully!"
+          if ! git diff --quiet; then
+            git add version.json
+            git commit -m "Update version.json"
             git push origin HEAD
           fi
