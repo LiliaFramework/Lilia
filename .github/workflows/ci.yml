@@ -58,45 +58,56 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: lilia
-
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-
       - run: |
           python3 - << 'EOF'
-          import os
+          import os, sys
           p = os.path.join('lilia', 'gamemode', 'shared.lua')
           lines = open(p).read().splitlines(True)
           with open(p, 'w') as f:
+              count = 0
               for l in lines:
                   f.write(l)
                   if l.strip() == 'GM.Name = "Lilia"':
                       f.write('GM.version = VERSION ID\n')
+                      count += 1
+          if count != 1:
+              print(f'inserted {count} version lines', file=sys.stderr)
+              sys.exit(1)
           EOF
-
+      - run: |
+          cd lilia
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add gamemode/shared.lua
+          git diff-index --quiet HEAD || git commit -m "ci: bump GM.version"
+          git push origin HEAD:main
+        env:
+          GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
       - uses: actions/github-script@v6
         with:
           script: |
-            const tag = 'release';
+            const tag = 'release'
             try {
               const rel = await github.rest.repos.getReleaseByTag({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 tag
-              });
+              })
               await github.rest.repos.deleteRelease({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 release_id: rel.data.id
-              });
+              })
               await github.rest.git.deleteRef({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 ref: `tags/${tag}`
-              });
+              })
             } catch (error) {
-              if (error.status !== 404) throw error;
+              if (error.status !== 404) throw error
             }
       - run: |
           mkdir packaged
