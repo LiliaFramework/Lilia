@@ -106,7 +106,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
 
-    update-version:
+  update-version:
     needs: release
     runs-on: ubuntu-latest
     steps:
@@ -129,7 +129,8 @@ jobs:
           MINOR=$(((VALID_COUNT % 1000) / 100))
           PATCH=$((VALID_COUNT % 100))
           VERSION="$MAJOR.$MINOR.$PATCH"
-          cat <<EOF > version.json
+          mkdir -p docs
+          cat <<EOF > docs/version.json
           {
             "version": "$VERSION",
             "commitCount": $VALID_COUNT,
@@ -143,7 +144,7 @@ jobs:
           git config user.email "githubactions@github.com"
       - name: Commit and push version file
         run: |
-          git add -f version.json
+          git add -f docs/version.json
           if git diff --cached --quiet; then
             exit 0
           fi
