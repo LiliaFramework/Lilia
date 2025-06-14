@@ -58,6 +58,21 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: lilia
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - run: |
+          import os
+          p = os.path.join('lilia', 'root', 'gamemode', 'shared.lua')
+          lines = open(p).read().splitlines(True)
+          with open(p, 'w') as f:
+              for l in lines:
+                  f.write(l)
+                  if l.strip() == 'GM.Name = "Lilia"':
+                      f.write('GM.version = VERSION ID\n')
+
       - uses: actions/github-script@v6
         with:
           script: |
