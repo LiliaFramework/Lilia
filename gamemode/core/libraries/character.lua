@@ -810,7 +810,6 @@ if SERVER then
         if not name or not charID then return end
         local setQ = "UPDATE lia_characters SET _name=" .. sql.SQLStr(name) .. " WHERE _id=" .. charIDsafe
         if not sql.Query(setQ) then
-            print("lia.char.setCharName SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end
 
@@ -840,7 +839,6 @@ if SERVER then
         if not model or not charID then return end
         local setQ = "UPDATE lia_characters SET _model=" .. sql.SQLStr(model) .. " WHERE _id=" .. charIDsafe
         if not sql.Query(setQ) then
-            print("lia.char.setCharModel SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
             return false
         end
 

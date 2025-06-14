@@ -108,7 +108,6 @@ local tblRow = vgui.RegisterTable({
         if vgui.GetControlTable(name) then
             self.Inner = self.Container:Add(name)
         else
-            print("DProperties: Failed to create panel (" .. name .. ")")
             self.Inner = self.Container:Add("DProperty_Generic")
         end
 
