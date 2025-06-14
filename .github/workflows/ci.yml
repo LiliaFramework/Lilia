@@ -172,3 +172,13 @@ jobs:
           fi
       - name: Remove version.json from site
         run: rm -f site/version.json
+      - name: Commit and push docs without version.json
+        run: |
+          cd site
+          git config user.email "githubactions@github.com"
+          git config user.name "GitHub Actions"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add .
+            git commit -m "Update docs"
+            git push origin HEAD
+          fi
