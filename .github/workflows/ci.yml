@@ -106,7 +106,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
 
-  update-version:
+    update-version:
     needs: release
     runs-on: ubuntu-latest
     steps:
@@ -119,21 +119,24 @@ jobs:
         run: |
           VALID_COUNT=0
           for COMMIT in $(git rev-list --reverse HEAD); do
-              AUTHOR=$(git show -s --format='%ae' $COMMIT)
-              PARENTS=$(git rev-list --parents -n 1 $COMMIT | wc -w)
-              if [[ "$AUTHOR" != "githubactions@github.com" && "$PARENTS" -lt 3 ]]; then
-                  VALID_COUNT=$((VALID_COUNT + 1))
-              fi
+            AUTHOR=$(git show -s --format='%ae' "$COMMIT")
+            PARENTS=$(git rev-list --parents -n 1 "$COMMIT" | wc -w)
+            if [[ "$AUTHOR" != "githubactions@github.com" && "$PARENTS" -lt 3 ]]; then
+              VALID_COUNT=$((VALID_COUNT + 1))
+            fi
           done
           MAJOR=$((VALID_COUNT / 1000))
           MINOR=$(((VALID_COUNT % 1000) / 100))
           PATCH=$((VALID_COUNT % 100))
           VERSION="$MAJOR.$MINOR.$PATCH"
-          echo "{" > version.json
-          echo "  \"version\": \"$VERSION\"," >> version.json
-          echo "  \"commitCount\": $VALID_COUNT," >> version.json
-          echo "  \"commitHash\": \"$(git rev-parse --short HEAD)\"," >> version.json
-          echo "  \"branch\": \"main\"" >> version.json
+          cat <<EOF > version.json
+          {
+            "version": "$VERSION",
+            "commitCount": $VALID_COUNT,
+            "commitHash": "$(git rev-parse --short HEAD)",
+            "branch": "main"
+          }
+          EOF
       - name: Configure Git
         run: |
           git config user.name "github-actions"
