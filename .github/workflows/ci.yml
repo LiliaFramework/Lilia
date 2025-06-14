@@ -114,7 +114,6 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: true
-
       - run: |
           VALID_COUNT=0
           for COMMIT in $(git rev-list --reverse HEAD); do
@@ -134,11 +133,9 @@ jobs:
           echo "  \"commitHash\": \"$(git rev-parse --short HEAD)\"," >> docs/version.json
           echo "  \"branch\": \"main\"" >> docs/version.json
           echo "}" >> docs/version.json
-
       - run: |
           git config user.name "github-actions"
           git config user.email "githubactions@github.com"
-
       - run: |
           git add -f docs/version.json
           if git diff --cached --quiet; then
@@ -159,8 +156,7 @@ jobs:
           repository: LiliaFramework/LiliaFramework.github.io
           path: site
           token: ${{ secrets.LiliaGitSecret }}
-      - run: |
-          cp -R lilia/docs/. site/
+      - run: cp -R lilia/docs/. site/
       - run: |
           cd site
           git config user.email "githubactions@github.com"
@@ -170,15 +166,13 @@ jobs:
             git commit -m "Update docs"
             git push origin HEAD
           fi
-      - name: Remove version.json from site
-        run: rm -f site/version.json
-      - name: Commit and push docs without version.json
-        run: |
-          cd site
+      - run: rm -f lilia/docs/version.json
+      - run: |
+          cd lilia
           git config user.email "githubactions@github.com"
           git config user.name "GitHub Actions"
-          if [ -n "$(git status --porcelain)" ]; then
-            git add .
-            git commit -m "Update docs"
+          git add docs/version.json
+          if [ -n "$(git diff --cached --name-only)" ]; then
+            git commit -m "Remove version.json"
             git push origin HEAD
           fi
