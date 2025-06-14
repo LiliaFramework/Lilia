@@ -170,3 +170,5 @@ jobs:
             git commit -m "Update docs"
             git push origin HEAD
           fi
+      - name: Remove version.json from site
+        run: rm -f site/version.json
