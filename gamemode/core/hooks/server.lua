@@ -657,7 +657,8 @@ end
 function GM:InitializedModules()
     local publicURL = "https://raw.githubusercontent.com/LiliaFramework/Modules/main/modules.json"
     local privateURL = "https://raw.githubusercontent.com/bleonheart/bleonheart.github.io/main/modules.json"
-    timer.Simple(5, function() DatabaseQuery() end)
+    local versionURL = "https://raw.githubusercontent.com/LiliaFramework/LiliaFramework.github.io/main/version.json"
+    timer.Simple(5, DatabaseQuery)
     if not self.UpdateCheckDone then
         if lia.module.versionChecks then
             http.Fetch(publicURL, function(body, _, _, code)
@@ -718,6 +719,28 @@ function GM:InitializedModules()
                 end
             end, function(err2) lia.updater("HTTP.Fetch error: " .. err2) end)
         end
+
+        http.Fetch(versionURL, function(body, _, _, code)
+            if code ~= 200 then
+                lia.updater("Error fetching framework version (HTTP " .. code .. ")")
+                return
+            end
+
+            local remote = util.JSONToTable(body)
+            if not remote or not remote.version then
+                lia.updater("Error parsing framework version data")
+                return
+            end
+
+            local localJson = file.Read("version.json", "GAME")
+            local localData = util.JSONToTable(localJson)
+            if not localData or not localData.version then
+                lia.updater("Error reading local framework version")
+                return
+            end
+
+            if remote.version ~= localData.version then lia.updater("Framework is outdated. Update to version " .. remote.version .. " at " .. versionURL) end
+        end, function(err) lia.updater("HTTP.Fetch error: " .. err) end)
 
         self.UpdateCheckDone = true
     end
