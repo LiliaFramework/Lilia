@@ -64,6 +64,7 @@ jobs:
           python-version: '3.x'
 
       - run: |
+          python3 - << 'EOF'
           import os
           p = os.path.join('lilia', 'root', 'gamemode', 'shared.lua')
           lines = open(p).read().splitlines(True)
@@ -72,6 +73,7 @@ jobs:
                   f.write(l)
                   if l.strip() == 'GM.Name = "Lilia"':
                       f.write('GM.version = VERSION ID\n')
+          EOF
 
       - uses: actions/github-script@v6
         with:
