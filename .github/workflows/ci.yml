@@ -131,3 +131,44 @@ jobs:
             git commit -m "Update docs"
             git push origin HEAD
           fi
+  update-version:
+    needs:
+      - release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Generate version JSON
+        run: |
+          VALID_COUNT=0
+          for COMMIT in $(git rev-list --reverse HEAD); do
+              AUTHOR=$(git show -s --format='%ae' $COMMIT)
+              PARENTS=$(git rev-list --parents -n 1 $COMMIT | wc -w)
+              if [[ "$AUTHOR" != "github-actions@github.com" && "$PARENTS" -lt 3 ]]; then
+                  VALID_COUNT=$((VALID_COUNT + 1))
+              fi
+          done
+          MAJOR=$((VALID_COUNT / 1000))
+          MINOR=$(((VALID_COUNT % 1000) / 100))
+          PATCH=$((VALID_COUNT % 100))
+          VERSION="$MAJOR.$MINOR.$PATCH"
+          echo "{" > version.json
+          echo "  \"version\": \"$VERSION\"," >> version.json
+          echo "  \"commitCount\": $VALID_COUNT," >> version.json
+          echo "  \"commitHash\": \"$(git rev-parse --short HEAD)\"," >> version.json
+          echo "  \"branch\": \"main\"" >> version.json
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+      - name: Commit and push version file
+        run: |
+          git add -f version.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Update version.json"
+          git push
