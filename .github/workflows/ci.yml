@@ -54,38 +54,45 @@ jobs:
     needs: linter
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ secrets.VERSION }}
     steps:
       - uses: actions/checkout@v3
         with:
           path: lilia
+
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
+
       - run: |
           python3 - << 'EOF'
-          import os, sys
+          import os, sys, re
+          version = os.environ['VERSION']
           p = os.path.join('lilia', 'gamemode', 'shared.lua')
           lines = open(p).read().splitlines(True)
+          pattern = re.compile(r'^\s*GM\.Name\s*=\s*["\']Lilia["\']')
+          count = 0
           with open(p, 'w') as f:
-              count = 0
-              for l in lines:
-                  f.write(l)
-                  if l.strip() == 'GM.Name = "Lilia"':
-                      f.write('GM.version = VERSION ID\n')
+              for line in lines:
+                  f.write(line)
+                  if pattern.match(line):
+                      f.write(f'GM.version = "{version}"\n')
                       count += 1
           if count != 1:
-              print(f'inserted {count} version lines', file=sys.stderr)
               sys.exit(1)
           EOF
+
       - run: |
           cd lilia
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add gamemode/shared.lua
-          git diff-index --quiet HEAD || git commit -m "ci: bump GM.version"
+          git diff-index --quiet HEAD || git commit -m "ci: bump GM.version to $VERSION"
           git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
+
       - uses: actions/github-script@v6
         with:
           script: |
@@ -109,11 +116,13 @@ jobs:
             } catch (error) {
               if (error.status !== 404) throw error
             }
+
       - run: |
           mkdir packaged
           cp -R lilia packaged/lilia
           cd packaged
           zip -r ../lilia.zip lilia
+
       - id: create_release
         uses: actions/create-release@v1
         with:
@@ -123,6 +132,7 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
+
       - uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
