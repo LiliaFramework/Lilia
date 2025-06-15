@@ -64,22 +64,21 @@ jobs:
           python-version: '3.x'
       - run: |
           python3 - << 'PY'
-            import os, sys
-
-            p = os.path.join("lilia", "gamemode", "shared.lua")
-
-            with open(p, "r", encoding="utf-8-sig") as f:
-                lines = f.readlines()
-
-            for idx, line in enumerate(lines):
-                if "GM.Name" in line and "=" in line:
-                    lines.insert(idx + 1, 'GM.version = "XXXX"\n')
-                    break
-            else:
-                sys.exit("GM.Name not found")
-
-            with open(p, "w", encoding="utf-8") as f:
-                f.writelines(lines)
+          import os, re, sys, io
+          file_path = os.path.join('lilia', 'gamemode', 'shared.lua')
+          with io.open(file_path, encoding='utf-8-sig') as f:
+              lines = f.readlines()
+          out, inserted = [], False
+          pattern = re.compile(r'\ufeff?\s*GM\.Name\s*=')
+          for line in lines:
+              out.append(line)
+              if not inserted and pattern.match(line):
+                  out.append('GM.version = "XXXX"\n')
+                  inserted = True
+          if not inserted:
+              sys.exit('GM.Name not found')
+          with io.open(file_path, 'w', encoding='utf-8') as f:
+              f.writelines(out)
           PY
       - run: |
           cd lilia
