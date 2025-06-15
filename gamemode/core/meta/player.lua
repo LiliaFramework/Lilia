@@ -462,6 +462,7 @@ if SERVER then
         return data and default or data
     end
 
+    playerMeta.getData = playerMeta.getLiliaData
     function playerMeta:getAllLiliaData()
         self.liaData = self.liaData or {}
         return self.liaData
@@ -823,6 +824,7 @@ else
         end
     end
 
+    playerMeta.getData = playerMeta.getLiliaData
     function playerMeta:getAllLiliaData()
         lia.localData = lia.localData or {}
         return lia.localData
