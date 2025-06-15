@@ -42,6 +42,7 @@ jobs:
               VALID_COUNT=$((VALID_COUNT+1))
             fi
           done
+
           if (( VALID_COUNT < 100 )); then
             MAJOR=0
             MINOR=0
@@ -55,8 +56,8 @@ jobs:
             MINOR=$(((VALID_COUNT%1000)/100))
             PATCH=$((VALID_COUNT%100))
           fi
-          PATCH_PADDED=$(printf "%02d" $PATCH)
-          VERSION="$MAJOR.$MINOR.$PATCH_PADDED"
+
+          VERSION="$MAJOR.$MINOR.$PATCH"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "valid_count=$VALID_COUNT" >> "$GITHUB_OUTPUT"
 
