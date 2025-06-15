@@ -238,7 +238,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: lilia
-          fetch-depth: 0
           persist-credentials: true
 
       - uses: actions/checkout@v3
