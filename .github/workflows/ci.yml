@@ -108,10 +108,10 @@ jobs:
           path: site
           token: ${{ secrets.LiliaGitSecret }}
 
-      - name: Generate parallax-version.json
+      - name: Generate version.json
         run: |
           cd lilia
-          cat > parallax-version.json <<EOF
+          cat > version.json <<EOF
           {
             "version": "${VERSION}",
             "commitCount": ${VALID_COUNT},
@@ -120,16 +120,16 @@ jobs:
           }
           EOF
 
-      - name: Commit parallax-version.json
+      - name: Commit version.json
         run: |
           cd lilia
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add -f parallax-version.json
+          git add -f version.json
           if git diff --cached --quiet; then
             echo no changes
           else
-            git commit -m "[skip ci] [ci version bump] Update parallax-version.json"
+            git commit -m "[skip ci] [ci version bump] Update version.json"
             git push origin HEAD:main
           fi
         env:
