@@ -33,7 +33,6 @@ jobs:
         with:
           path: lilia
           fetch-depth: 0
-
       - id: calc_version
         run: |
           cd lilia
@@ -81,7 +80,9 @@ jobs:
           luacheck . --no-redefined --no-global --no-self --no-max-line-length --no-max-code-line-length --no-max-string-line-length --no-max-comment-line-length --no-max-cyclomatic-complexity
 
   release:
-    needs: [compute-version, linter]
+    needs:
+      - compute-version
+      - linter
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
@@ -96,19 +97,14 @@ jobs:
           repository: LiliaFramework/LiliaFramework.github.io
           path: site
           token: ${{ secrets.LiliaGitSecret }}
-
       - name: Generate version.json
         run: |
           cd lilia
           cat > version.json <<EOF
           {
-            "version": "${VERSION}",
-            "commitCount": ${VALID_COUNT},
-            "commitHash": "$(git rev-parse --short HEAD)",
-            "branch": "main"
+            "version": "${VERSION}"
           }
           EOF
-
       - name: Commit version.json
         run: |
           cd lilia
@@ -123,7 +119,6 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
       - name: Update GM.version in shared.lua
         run: |
           python3 - << 'PY'
@@ -149,7 +144,6 @@ jobs:
           with io.open(path,"w",encoding="utf-8") as f:
               f.writelines(out)
           PY
-
       - name: Commit version bump in shared.lua
         run: |
           cd lilia
@@ -160,7 +154,6 @@ jobs:
           git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
       - uses: actions/github-script@v6
         with:
           script: |
@@ -172,14 +165,12 @@ jobs:
             } catch (error) {
               if(error.status!==404) throw error
             }
-
       - name: Package and zip
         run: |
           mkdir -p packaged
           cp -R lilia packaged/lilia
           cd packaged
           zip -r ../lilia.zip lilia
-
       - id: create_release
         uses: actions/create-release@v1
         with:
@@ -189,7 +180,6 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
       - uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -200,7 +190,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
 
   deploy-pages:
-    needs: [release, compute-version]
+    needs:
+      - release
+      - compute-version
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.compute-version.outputs.version }}
@@ -215,18 +207,13 @@ jobs:
           repository: LiliaFramework/LiliaFramework.github.io
           path: site
           token: ${{ secrets.LiliaGitSecret }}
-
       - name: Generate version.json
         run: |
           cat > site/version.json <<EOF
           {
-            "version": "${VERSION}",
-            "commitCount": ${VALID_COUNT},
-            "commitHash": "$(git -C lilia rev-parse --short HEAD)",
-            "branch": "main"
+            "version": "${VERSION}"
           }
           EOF
-
       - name: Publish site version
         run: |
           cd site
