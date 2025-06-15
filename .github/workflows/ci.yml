@@ -37,9 +37,7 @@ jobs:
       - id: calc_version
         run: |
           cd lilia
-          VALID_COUNT=$(git log --no-merges --pretty=format:'%ae' \
-                        | grep -v '^github-actions@github.com$' \
-                        | wc -l)
+          VALID_COUNT=$(git log --no-merges --pretty=format:'%ae' | grep -v '^github-actions@github.com$' | wc -l)
           if (( VALID_COUNT < 100 )); then
             MAJOR=0
             MINOR=0
@@ -80,9 +78,7 @@ jobs:
           luarocks make
       - run: |
           cd lilia
-          luacheck . --no-redefined --no-global --no-self --no-max-line-length \
-            --no-max-code-line-length --no-max-string-line-length \
-            --no-max-comment-line-length --no-max-cyclomatic-complexity
+          luacheck . --no-redefined --no-global --no-self --no-max-line-length --no-max-code-line-length --no-max-string-line-length --no-max-comment-line-length --no-max-cyclomatic-complexity
 
   release:
     needs: [compute-version, linter]
@@ -100,6 +96,7 @@ jobs:
           repository: LiliaFramework/LiliaFramework.github.io
           path: site
           token: ${{ secrets.LiliaGitSecret }}
+
       - name: Generate version.json
         run: |
           cd lilia
@@ -111,6 +108,7 @@ jobs:
             "branch": "main"
           }
           EOF
+
       - name: Commit version.json
         run: |
           cd lilia
@@ -125,27 +123,33 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
+
       - name: Update GM.version in shared.lua
         run: |
           python3 - << 'PY'
           import os,re,io,sys
           version=os.environ["VERSION"]
           path="lilia/gamemode/shared.lua"
-          with io.open(path, encoding="utf-8-sig") as f:
+          with io.open(path,encoding="utf-8-sig") as f:
               lines=f.readlines()
           name_pat=re.compile(r"\s*GM\.Name\s*=")
-          ver_pat=re.compile(r"\s*GM\.version\s*=.*")
-          out=[]; replaced=False
+          out=[]
+          inserted=False
           for line in lines:
-              if ver_pat.match(line):
-                  out.append(f'GM.version = "{version}"\n'); replaced=True
+              if name_pat.match(line) and not inserted:
+                  out.append(line)
+                  out.append(f'GM.version = "{version}"\n')
+                  inserted=True
+              elif re.match(r"\s*GM\.version\s*=", line):
+                  continue
               else:
                   out.append(line)
-                  if not replaced and name_pat.match(line):
-                      out.append(f'GM.version = "{version}"\n'); replaced=True
-          if not replaced: sys.exit("GM.Name not found")
-          with io.open(path,"w",encoding="utf-8") as f: f.writelines(out)
+          if not inserted:
+              sys.exit("GM.Name not found")
+          with io.open(path,"w",encoding="utf-8") as f:
+              f.writelines(out)
           PY
+
       - name: Commit version bump in shared.lua
         run: |
           cd lilia
@@ -156,35 +160,26 @@ jobs:
           git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
+
       - uses: actions/github-script@v6
         with:
           script: |
             const tag="release"
             try {
-              const rel=await github.rest.repos.getReleaseByTag({
-                owner:context.repo.owner,
-                repo:context.repo.repo,
-                tag
-              })
-              await github.rest.repos.deleteRelease({
-                owner:context.repo.owner,
-                repo:context.repo.repo,
-                release_id:rel.data.id
-              })
-              await github.rest.git.deleteRef({
-                owner:context.repo.owner,
-                repo:context.repo.repo,
-                ref:`tags/${tag}`
-              })
+              const rel=await github.rest.repos.getReleaseByTag({ owner:context.repo.owner, repo:context.repo.repo, tag })
+              await github.rest.repos.deleteRelease({ owner:context.repo.owner, repo:context.repo.repo, release_id:rel.data.id })
+              await github.rest.git.deleteRef({ owner:context.repo.owner, repo:context.repo.repo, ref:`tags/${tag}` })
             } catch (error) {
               if(error.status!==404) throw error
             }
+
       - name: Package and zip
         run: |
           mkdir -p packaged
           cp -R lilia packaged/lilia
           cd packaged
           zip -r ../lilia.zip lilia
+
       - id: create_release
         uses: actions/create-release@v1
         with:
@@ -194,6 +189,7 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
+
       - uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -219,6 +215,7 @@ jobs:
           repository: LiliaFramework/LiliaFramework.github.io
           path: site
           token: ${{ secrets.LiliaGitSecret }}
+
       - name: Generate version.json
         run: |
           cat > site/version.json <<EOF
@@ -229,6 +226,7 @@ jobs:
             "branch": "main"
           }
           EOF
+
       - name: Publish site version
         run: |
           cd site
