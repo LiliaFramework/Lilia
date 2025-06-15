@@ -37,7 +37,7 @@ jobs:
           for COMMIT in $(git rev-list --reverse HEAD); do
             AUTHOR=$(git show -s --format='%ae' "$COMMIT")
             PARENTS=$(git rev-list --parents -n 1 "$COMMIT" | wc -w)
-            if [[ "$AUTHOR" != "github-actions@github.com" && "$AUTHOR" != "github-actions[bot]@users.noreply.github.com" && "$PARENTS" -lt 3 ]]; then
+            if [[ "$AUTHOR" != "github-actions@github.com" && "$PARENTS" -lt 3 ]]; then
               VALID_COUNT=$((VALID_COUNT+1))
             fi
           done
@@ -57,7 +57,7 @@ jobs:
         with:
           luaVersion: '5.2'
       - uses: leafo/gh-actions-luarocks@v4.0.0
-      - run: >
+      - run: |
           luarocks install luafilesystem &&
           luarocks install argparse
       - uses: actions/checkout@v3
@@ -86,21 +86,26 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: lilia
-      - uses: actions/setup-python@v4
+
+      - name: Checkout site repo
+        uses: actions/checkout@v3
         with:
-          python-version: '3.x'
+          repository: LiliaFramework/LiliaFramework.github.io
+          path: site
+          token: ${{ secrets.LiliaGitSecret }}
+
       - name: Update GM.version in shared.lua
         run: |
           python3 - << 'PY'
-          import os, re, io, sys
-          version = os.environ['VERSION']
+          import json, re, io, sys
+          with open('site/version.json', encoding='utf-8') as f:
+              version = json.load(f)['version']
           path = 'lilia/gamemode/shared.lua'
           with io.open(path, encoding='utf-8-sig') as f:
               lines = f.readlines()
           name_pattern = re.compile(r'\s*GM\.Name\s*=')
           version_pattern = re.compile(r'\s*GM\.version\s*=.*')
-          out = []
-          replaced = False
+          out, replaced = [], False
           for line in lines:
               if version_pattern.match(line):
                   out.append(f'GM.version = "{version}"\n')
@@ -115,16 +120,18 @@ jobs:
           with io.open(path, 'w', encoding='utf-8') as f:
               f.writelines(out)
           PY
+
       - name: Commit version bump
         run: |
           cd lilia
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add gamemode/shared.lua
           git diff-index --quiet HEAD || git commit -m "ci: bump GM.version to $VERSION"
           git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
+
       - uses: actions/github-script@v6
         with:
           script: |
@@ -148,12 +155,14 @@ jobs:
             } catch (error) {
               if (error.status !== 404) throw error
             }
+
       - name: Package and zip
         run: |
           mkdir -p packaged
           cp -R lilia packaged/lilia
           cd packaged
           zip -r ../lilia.zip lilia
+
       - id: create_release
         uses: actions/create-release@v1
         with:
@@ -163,6 +172,7 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
+
       - uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
