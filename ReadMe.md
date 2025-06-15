@@ -19,6 +19,10 @@ Join our vibrant community on [Discord](https://discord.gg/esCRH5ckbQ) to connec
 
 Explore our detailed [wiki](https://liliaframework.github.io) for comprehensive instructions on using and customizing Lilia for your roleplay server. Pull requests to improve the wiki are welcome—just edit files under the `docs/` folder in the main repo.
 
+## 🎓 Learning & Adaptation
+
+Lilia is designed to **incentivize learning**—all of the source code is freely available so you can **study**, **modify**, and **adapt** it to fit your own needs. Feel free to explore how features are implemented, experiment with the architecture, and use Lilia as a learning tool to deepen your Garry’s Mod development skills. While using or distributing modified versions of Lilia is encouraged for educational purposes, **commercial resale is ethically discouraged**, though not strictly forbidden. Our goal is to foster a collaborative, knowledge-sharing community rather than a profit-driven marketplace.
+
 ## 🤝 Contributing
 
 We welcome contributions to both the framework and its documentation. Don’t hesitate to commit your changes 😎
