@@ -32,19 +32,14 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: lilia
+          fetch-depth: 0
 
       - id: calc_version
         run: |
           cd lilia
-          VALID_COUNT=0
-          for COMMIT in $(git rev-list --reverse HEAD); do
-            AUTHOR=$(git show -s --format='%ae' "$COMMIT")
-            PARENTS=$(git rev-list --parents -n 1 "$COMMIT" | wc -w)
-            if [[ "$AUTHOR" != "github-actions@github.com" && "$PARENTS" -lt 3 ]]; then
-              VALID_COUNT=$((VALID_COUNT+1))
-            fi
-          done
-
+          VALID_COUNT=$(git log --no-merges --pretty=format:'%ae' \
+                        | grep -v '^github-actions@github.com$' \
+                        | wc -l)
           if (( VALID_COUNT < 100 )); then
             MAJOR=0
             MINOR=0
@@ -58,11 +53,8 @@ jobs:
             MINOR=$(((VALID_COUNT%1000)/100))
             PATCH=$((VALID_COUNT%100))
           fi
-
-          # zero-pad PATCH to two digits
-          PATCH_PADDED=$(printf "%02d" $PATCH)
+          printf -v PATCH_PADDED "%02d" $PATCH
           VERSION="$MAJOR.$MINOR.$PATCH_PADDED"
-
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "valid_count=$VALID_COUNT" >> "$GITHUB_OUTPUT"
 
@@ -88,12 +80,9 @@ jobs:
           luarocks make
       - run: |
           cd lilia
-          luacheck . \
-            --no-redefined \
-            --no-global --no-self \
-            --no-max-line-length --no-max-code-line-length \
-            --no-max-string-line-length --no-max-comment-line-length \
-            --no-max-cyclomatic-complexity
+          luacheck . --no-redefined --no-global --no-self --no-max-line-length \
+            --no-max-code-line-length --no-max-string-line-length \
+            --no-max-comment-line-length --no-max-cyclomatic-complexity
 
   release:
     needs: [compute-version, linter]
@@ -106,13 +95,11 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: lilia
-
       - uses: actions/checkout@v3
         with:
           repository: LiliaFramework/LiliaFramework.github.io
           path: site
           token: ${{ secrets.LiliaGitSecret }}
-
       - name: Generate version.json
         run: |
           cd lilia
@@ -124,7 +111,6 @@ jobs:
             "branch": "main"
           }
           EOF
-
       - name: Commit version.json
         run: |
           cd lilia
@@ -139,34 +125,27 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
       - name: Update GM.version in shared.lua
         run: |
           python3 - << 'PY'
-          import os, re, io, sys
-          version = os.environ["VERSION"]
-          path = "lilia/gamemode/shared.lua"
+          import os,re,io,sys
+          version=os.environ["VERSION"]
+          path="lilia/gamemode/shared.lua"
           with io.open(path, encoding="utf-8-sig") as f:
-              lines = f.readlines()
-          name_pat = re.compile(r"\s*GM\.Name\s*=")
-          ver_pat = re.compile(r"\s*GM\.version\s*=.*")
-          out = []
-          replaced = False
+              lines=f.readlines()
+          name_pat=re.compile(r"\s*GM\.Name\s*=")
+          ver_pat=re.compile(r"\s*GM\.version\s*=.*")
+          out=[]; replaced=False
           for line in lines:
               if ver_pat.match(line):
-                  out.append(f'GM.version = "{version}"\n')
-                  replaced = True
+                  out.append(f'GM.version = "{version}"\n'); replaced=True
               else:
                   out.append(line)
                   if not replaced and name_pat.match(line):
-                      out.append(f'GM.version = "{version}"\n')
-                      replaced = True
-          if not replaced:
-              sys.exit("GM.Name not found")
-          with io.open(path, "w", encoding="utf-8") as f:
-              f.writelines(out)
+                      out.append(f'GM.version = "{version}"\n'); replaced=True
+          if not replaced: sys.exit("GM.Name not found")
+          with io.open(path,"w",encoding="utf-8") as f: f.writelines(out)
           PY
-
       - name: Commit version bump in shared.lua
         run: |
           cd lilia
@@ -177,38 +156,35 @@ jobs:
           git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
       - uses: actions/github-script@v6
         with:
           script: |
-            const tag = "release"
+            const tag="release"
             try {
-              const rel = await github.rest.repos.getReleaseByTag({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
+              const rel=await github.rest.repos.getReleaseByTag({
+                owner:context.repo.owner,
+                repo:context.repo.repo,
                 tag
               })
               await github.rest.repos.deleteRelease({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                release_id: rel.data.id
+                owner:context.repo.owner,
+                repo:context.repo.repo,
+                release_id:rel.data.id
               })
               await github.rest.git.deleteRef({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                ref: `tags/${tag}`
+                owner:context.repo.owner,
+                repo:context.repo.repo,
+                ref:`tags/${tag}`
               })
             } catch (error) {
-              if (error.status !== 404) throw error
+              if(error.status!==404) throw error
             }
-
       - name: Package and zip
         run: |
           mkdir -p packaged
           cp -R lilia packaged/lilia
           cd packaged
           zip -r ../lilia.zip lilia
-
       - id: create_release
         uses: actions/create-release@v1
         with:
@@ -218,7 +194,6 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
       - uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -239,13 +214,11 @@ jobs:
         with:
           path: lilia
           persist-credentials: true
-
       - uses: actions/checkout@v3
         with:
           repository: LiliaFramework/LiliaFramework.github.io
           path: site
           token: ${{ secrets.LiliaGitSecret }}
-
       - name: Generate version.json
         run: |
           cat > site/version.json <<EOF
@@ -256,7 +229,6 @@ jobs:
             "branch": "main"
           }
           EOF
-
       - name: Publish site version
         run: |
           cd site
