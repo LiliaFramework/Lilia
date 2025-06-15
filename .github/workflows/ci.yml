@@ -63,22 +63,22 @@ jobs:
         with:
           python-version: '3.x'
       - run: |
-          python3 - << 'PY'
-          import os, re, sys
-          p = os.path.join('lilia', 'gamemode', 'shared.lua')
-          with open(p, encoding='utf-8') as f:
+          import os, sys
+
+          p = os.path.join("lilia", "gamemode", "shared.lua")
+
+          with open(p, "r", encoding="utf-8-sig") as f:
               lines = f.readlines()
-          out, inserted = [], False
-          for line in lines:
-              out.append(line)
-              if not inserted and re.match(r'\s*GM\.Name\s*=', line):
-                  out.append('GM.version = "XXXX"\n')
-                  inserted = True
-          if not inserted:
-              sys.exit('GM.Name not found')
-          with open(p, 'w', encoding='utf-8') as f:
-              f.writelines(out)
-          PY
+
+          for idx, line in enumerate(lines):
+              if "GM.Name" in line and "=" in line:
+                  lines.insert(idx + 1, 'GM.version = "XXXX"\n')
+                  break
+          else:
+              sys.exit("GM.Name not found")
+
+          with open(p, "w", encoding="utf-8") as f:
+              f.writelines(lines)
       - run: |
           cd lilia
           git config user.name "github-actions[bot]"
