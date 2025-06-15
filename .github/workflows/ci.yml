@@ -22,6 +22,33 @@ permissions:
   statuses: write
 
 jobs:
+  compute-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.calc.outputs.version }}
+      valid_count: ${{ steps.calc.outputs.valid_count }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: lilia
+      - name: calc
+        id: calc
+        run: |
+          cd lilia
+          VALID_COUNT=0
+          for COMMIT in $(git rev-list --reverse HEAD); do
+            AUTHOR=$(git show -s --format='%ae' $COMMIT)
+            PARENTS=$(git rev-list --parents -n 1 $COMMIT | wc -w)
+            if [[ "$AUTHOR" != "github-actions@github.com" && $PARENTS -lt 3 ]]; then
+              VALID_COUNT=$((VALID_COUNT + 1))
+            fi
+          done
+          MAJOR=$((VALID_COUNT / 1000))
+          MINOR=$(((VALID_COUNT % 1000) / 100))
+          PATCH=$((VALID_COUNT % 100))
+          echo "version=$MAJOR.$MINOR.$PATCH" >> $GITHUB_OUTPUT
+          echo "valid_count=$VALID_COUNT" >> $GITHUB_OUTPUT
+
   linter:
     runs-on: ubuntu-latest
     steps:
@@ -52,38 +79,20 @@ jobs:
             --no-max-cyclomatic-complexity
 
   release:
-    needs: linter
+    needs:
+      - linter
+      - compute-version
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.compute_version.outputs.version }}
+    env:
+      VERSION: ${{ needs.compute-version.outputs.version }}
     steps:
       - uses: actions/checkout@v3
         with:
           path: lilia
-
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-
-      - name: Compute semantic version
-        id: compute_version
-        run: |
-          cd lilia
-          VALID_COUNT=0
-          for C in $(git rev-list --reverse HEAD); do
-            A=$(git show -s --format='%ae' $C)
-            P=$(git rev-list --parents -n 1 $C | wc -w)
-            if [[ "$A" != "github-actions@github.com" && "$P" -lt 3 ]]; then
-              VALID_COUNT=$((VALID_COUNT + 1))
-            fi
-          done
-          MAJOR=$((VALID_COUNT / 1000))
-          MINOR=$(((VALID_COUNT % 1000) / 100))
-          PATCH=$((VALID_COUNT % 100))
-          VERSION="$MAJOR.$MINOR.$PATCH"
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-
       - name: Inject version into shared.lua
         run: |
           python3 - << 'PY'
@@ -104,18 +113,16 @@ jobs:
           with io.open(path, 'w', encoding='utf-8') as f:
               f.writelines(out)
           PY
-
       - name: Commit version bump
         run: |
           cd lilia
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add gamemode/shared.lua
-          git diff-index --quiet HEAD || git commit -m "ci: bump GM.version to ${{ needs.release.outputs.version }}"
+          git diff-index --quiet HEAD || git commit -m "ci: bump GM.version to $VERSION"
           git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
       - uses: actions/github-script@v6
         with:
           script: |
@@ -139,14 +146,12 @@ jobs:
             } catch (error) {
               if (error.status !== 404) throw error
             }
-
       - name: Package and zip
         run: |
           mkdir packaged
           cp -R lilia packaged/lilia
           cd packaged
           zip -r ../lilia.zip lilia
-
       - id: create_release
         uses: actions/create-release@v1
         with:
@@ -156,7 +161,6 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
       - uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -167,46 +171,36 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
 
   deploy-pages:
-    needs: release
+    needs:
+      - release
+      - compute-version
     runs-on: ubuntu-latest
     env:
-      VERSION: ${{ needs.release.outputs.version }}
+      VERSION: ${{ needs.compute-version.outputs.version }}
+      VALID_COUNT: ${{ needs.compute-version.outputs.valid_count }}
     steps:
       - uses: actions/checkout@v3
         with:
           path: lilia
           fetch-depth: 0
           persist-credentials: true
-
       - uses: actions/checkout@v3
         with:
           repository: LiliaFramework/LiliaFramework.github.io
           path: site
           token: ${{ secrets.LiliaGitSecret }}
-
-      - name: Compute docs version.json
+      - name: Create version.json
         run: |
-          cd lilia
-          VALID_COUNT=0
-          for C in $(git rev-list --reverse HEAD); do
-            A=$(git show -s --format='%ae' $C)
-            P=$(git rev-list --parents -n 1 $C | wc -w)
-            if [[ "$A" != "github-actions@github.com" && "$A" != "github-actions[bot]@users.noreply.github.com" && "$P" -lt 3 ]]; then
-              VALID_COUNT=$((VALID_COUNT + 1))
-            fi
-          done
-          mkdir -p docs
-          cat > docs/version.json <<EOF
+          mkdir -p lilia/docs
+          cat > lilia/docs/version.json <<EOF
           {
-            "version": "$VERSION",
-            "commitCount": $VALID_COUNT,
-            "commitHash": "$(git rev-parse --short HEAD)",
+            "version": "${VERSION}",
+            "commitCount": ${VALID_COUNT},
+            "commitHash": "$(git -C lilia rev-parse --short HEAD)",
             "branch": "main"
           }
           EOF
-
       - run: cp lilia/docs/version.json site/version.json
-
       - name: Publish site version
         run: |
           cd site
