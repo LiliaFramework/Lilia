@@ -740,7 +740,7 @@ function GM:InitializedModules()
                 return
             end
 
-            if remote.version ~= localData.version then lia.updater("Framework is outdated. Update to version " .. remote.version .. " at " .. versionURL) end
+            if remote.version ~= localData.version then lia.updater("Framework is outdated. Update it with the latest release found at https://github.com/LiliaFramework/Lilia/releases/tag/release") end
         end, function(err) lia.updater("HTTP.Fetch error: " .. err) end)
 
         self.UpdateCheckDone = true
