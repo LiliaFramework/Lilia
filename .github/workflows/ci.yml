@@ -55,6 +55,8 @@ jobs:
     needs: linter
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.compute_version.outputs.version }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -69,17 +71,18 @@ jobs:
         run: |
           cd lilia
           VALID_COUNT=0
-          for COMMIT in $(git rev-list --reverse HEAD); do
-            AUTHOR=$(git show -s --format='%ae' $COMMIT)
-            PARENTS=$(git rev-list --parents -n 1 $COMMIT | wc -w)
-            if [[ "$AUTHOR" != "github-actions@github.com" && "$PARENTS" -lt 3 ]]; then
+          for C in $(git rev-list --reverse HEAD); do
+            A=$(git show -s --format='%ae' $C)
+            P=$(git rev-list --parents -n 1 $C | wc -w)
+            if [[ "$A" != "github-actions@github.com" && "$P" -lt 3 ]]; then
               VALID_COUNT=$((VALID_COUNT + 1))
             fi
           done
           MAJOR=$((VALID_COUNT / 1000))
           MINOR=$(((VALID_COUNT % 1000) / 100))
           PATCH=$((VALID_COUNT % 100))
-          echo "VERSION=$MAJOR.$MINOR.$PATCH" >> $GITHUB_ENV
+          VERSION="$MAJOR.$MINOR.$PATCH"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Inject version into shared.lua
         run: |
@@ -108,7 +111,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add gamemode/shared.lua
-          git diff-index --quiet HEAD || git commit -m "ci: bump GM.version to $VERSION"
+          git diff-index --quiet HEAD || git commit -m "ci: bump GM.version to ${{ needs.release.outputs.version }}"
           git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
@@ -166,6 +169,8 @@ jobs:
   deploy-pages:
     needs: release
     runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.release.outputs.version }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -183,20 +188,17 @@ jobs:
         run: |
           cd lilia
           VALID_COUNT=0
-          for COMMIT in $(git rev-list --reverse HEAD); do
-            AUTHOR=$(git show -s --format='%ae' $COMMIT)
-            PARENTS=$(git rev-list --parents -n 1 $COMMIT | wc -w)
-            if [[ "$AUTHOR" != "github-actions@github.com" && "$PARENTS" -lt 3 ]]; then
+          for C in $(git rev-list --reverse HEAD); do
+            A=$(git show -s --format='%ae' $C)
+            P=$(git rev-list --parents -n 1 $C | wc -w)
+            if [[ "$A" != "github-actions@github.com" && "$A" != "github-actions[bot]@users.noreply.github.com" && "$P" -lt 3 ]]; then
               VALID_COUNT=$((VALID_COUNT + 1))
             fi
           done
-          MAJOR=$((VALID_COUNT / 1000))
-          MINOR=$(((VALID_COUNT % 1000) / 100))
-          PATCH=$((VALID_COUNT % 100))
           mkdir -p docs
           cat > docs/version.json <<EOF
           {
-            "version": "$MAJOR.$MINOR.$PATCH",
+            "version": "$VERSION",
             "commitCount": $VALID_COUNT,
             "commitHash": "$(git rev-parse --short HEAD)",
             "branch": "main"
