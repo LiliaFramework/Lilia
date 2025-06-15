@@ -188,6 +188,14 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
+      - name: Delete version.json from original repo
+        run: |
+          cd lilia
+          git rm version.json
+          git commit -m "[skip ci] Remove version.json"
+          git push origin HEAD:main
+        env:
+          GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
 
   deploy-pages:
     needs:
