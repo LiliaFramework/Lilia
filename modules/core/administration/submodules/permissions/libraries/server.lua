@@ -49,6 +49,10 @@ function GM:CanProperty(client, property, entity)
     return false
 end
 
+function GM:DrawPhysgunBeam(client)
+    if client:isNoClipping() then return false end
+end
+
 function GM:PhysgunPickup(client, entity)
     local entityClass = entity:GetClass()
     if (client:hasPrivilege("Staff Permissions - Physgun Pickup") or client:isStaffOnDuty()) and MODULE.RestrictedEnts and MODULE.RestrictedEnts[entityClass] then
