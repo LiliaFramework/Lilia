@@ -223,7 +223,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
 
   deploy-pages:
-    needs: release
+    needs: [release, compute-version]
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.compute-version.outputs.version }}
