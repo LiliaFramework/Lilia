@@ -22,8 +22,8 @@ function MODULE:CheckInteractionPossibilities()
 end
 
 function MODULE:InitializedModules()
-    hook.Run("AddPIMOption", self.Options)
-    hook.Run("AddLocalPIMOption", self.SelfOptions)
+    hook.Run("AddOption", self.Options)
+    hook.Run("AddLocalOption", self.SelfOptions)
 end
 
 function MODULE:CheckDistance(client, entity)
