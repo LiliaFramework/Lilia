@@ -655,7 +655,7 @@ local function DatabaseQuery()
 end
 
 function GM:InitializedModules()
-    local publicURL = "https://raw.githubusercontent.com/LiliaFramework/Modules/main/modules.json"
+    local publicURL = "https://raw.githubusercontent.com/LiliaFramework/Modules/refs/heads/gh-pages/modules.json"
     local privateURL = "https://raw.githubusercontent.com/bleonheart/bleonheart.github.io/main/modules.json"
     local versionURL = "https://raw.githubusercontent.com/LiliaFramework/LiliaFramework.github.io/main/version.json"
     timer.Simple(5, DatabaseQuery)
