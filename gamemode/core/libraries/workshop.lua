@@ -58,6 +58,14 @@ else
         return ids
     end
 
+    local function isWorkshopMounted(id)
+        local addons = engine.GetAddons() or {}
+        for _, a in pairs(addons) do
+            if tostring(a.wsid or a.workshopid) == tostring(id) and a.mounted then return true end
+        end
+        return false
+    end
+
     local function startDownload()
         for id in pairs(addonsQueue) do
             if isWorkshopMounted(id) then addonsQueue[id] = nil end

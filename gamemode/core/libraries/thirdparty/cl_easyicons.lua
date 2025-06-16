@@ -16,11 +16,6 @@ local function ScrapPage()
     return d
 end
 
-ScrapPage():next(function(icons)
-    ICON_FONT = icons
-    hook.Run('EasyIconsLoaded')
-end)
-
 function getIcon(id, raw)
     local code = raw and id or ICON_FONT[id]
     if not code then return '' end
@@ -66,3 +61,10 @@ concommand.Add("test_icons", function()
         label:SizeToContents()
     end
 end, nil, "Opens a UI to test icons")
+
+hook.Add("InitializedModules", "EasyIconsInitializedModules", function()
+    ScrapPage():next(function(icons)
+        ICON_FONT = icons
+        hook.Run('EasyIconsLoaded')
+    end)
+end)
