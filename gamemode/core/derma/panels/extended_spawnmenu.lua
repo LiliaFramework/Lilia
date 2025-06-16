@@ -27,7 +27,7 @@ local materialWarningShown
 local function isMaterialUsable(path)
     if string.GetExtensionFromFilename(path) then return false end
     local shader = Material(path):GetShader()
-    for _, s in ipairs{"LightmappedGeneric", "WorldVertexTransition", "Spritecard", "Water", "Cable", "Refract"} do
+    for _, s in ipairs({"LightmappedGeneric", "WorldVertexTransition", "Spritecard", "Water", "Cable", "Refract"}) do
         if shader:find(s) then return false end
     end
     return true
@@ -129,7 +129,7 @@ end, {
     }
 })
 
-local function onFileNodeSelected(self, _, _)
+local function onFileNodeSelected(self)
     local view, pnl = self.ViewPanel, self.pnlContent
     view:Clear(true)
     local path, pathID = self.BasePath, self.PathID
@@ -176,7 +176,7 @@ local function addBrowseContent(node, title, icon, folder, pathID, exts, spawnTy
     n.OnNodeSelected = onFileNodeSelected
 end
 
-hook.Add("PopulateContent", "ExtendedSpawnmenuSounds", function(pnlContent, tree)
+hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlContent, tree)
     timer.Simple(0.5, function()
         if not IsValid(tree) or not IsValid(pnlContent) then return end
         local view = vgui.Create("ContentContainer", pnlContent)
@@ -204,7 +204,7 @@ hook.Add("PopulateContent", "ExtendedSpawnmenuSounds", function(pnlContent, tree
     end)
 end)
 
-hook.Add("PopulateContent", "ExtendedSpawnmenuMaterials", function(pnlContent, tree)
+hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlContent, tree)
     timer.Simple(0.5, function()
         if not IsValid(tree) or not IsValid(pnlContent) then return end
         local view = vgui.Create("ContentContainer", pnlContent)
@@ -232,7 +232,7 @@ hook.Add("PopulateContent", "ExtendedSpawnmenuMaterials", function(pnlContent, t
     end)
 end)
 
-hook.Add("PopulateContent", "rb655_extended_spawnmenu_entities", function(pnlContent, tree)
+hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlContent, tree)
     local node = tree:AddNode("#spawnmenu.category.entities", "icon16/bricks.png")
     node.PropPanel = vgui.Create("ContentContainer", pnlContent)
     node.PropPanel:SetVisible(false)
@@ -267,7 +267,7 @@ hook.Add("PopulateContent", "rb655_extended_spawnmenu_entities", function(pnlCon
     end
 end)
 
-hook.Add("PopulateContent", "rb655_extended_spawnmenu_post_processing", function(pnlContent, tree)
+hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlContent, tree)
     local node = tree:AddNode("#spawnmenu.category.postprocess", "icon16/picture.png")
     node.PropPanel = vgui.Create("ContentContainer", pnlContent)
     node.PropPanel:SetVisible(false)
@@ -306,7 +306,7 @@ hook.Add("PopulateContent", "rb655_extended_spawnmenu_post_processing", function
     end
 end)
 
-hook.Add("PopulateContent", "rb655_extended_spawnmenu_npcs", function(pnlContent, tree)
+hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlContent, tree)
     local node = tree:AddNode("#spawnmenu.category.npcs", "icon16/monkey.png")
     node.PropPanel = vgui.Create("ContentContainer", pnlContent)
     node.PropPanel:SetVisible(false)
@@ -342,7 +342,7 @@ hook.Add("PopulateContent", "rb655_extended_spawnmenu_npcs", function(pnlContent
     end
 end)
 
-hook.Add("PopulateContent", "rb655_extended_spawnmenu_vehicles", function(pnlContent, tree)
+hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlContent, tree)
     local node = tree:AddNode("#spawnmenu.category.vehicles", "icon16/car.png")
     node.PropPanel = vgui.Create("ContentContainer", pnlContent)
     node.PropPanel:SetVisible(false)
@@ -378,7 +378,7 @@ hook.Add("PopulateContent", "rb655_extended_spawnmenu_vehicles", function(pnlCon
     end
 end)
 
-hook.Add("PopulateContent", "rb655_extended_spawnmenu_weapons", function(pnlContent, tree)
+hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlContent, tree)
     local node = tree:AddNode("#spawnmenu.category.weapons", "icon16/gun.png")
     node.PropPanel = vgui.Create("ContentContainer", pnlContent)
     node.PropPanel:SetVisible(false)
@@ -449,7 +449,7 @@ local function countRecursive(folder)
     return cnt
 end
 
-hook.Add("PopulateContent", "LegacyAddonProps", function(pnlContent, _, node)
+hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlContent, _, node)
     if not IsValid(node) or not IsValid(pnlContent) then return end
     local view = vgui.Create("ContentContainer", pnlContent)
     view:SetVisible(false)
@@ -499,8 +499,8 @@ concommand.Add("extsm_addoninfo", function()
     scroll:Add("rb655_addonInfo")
 end)
 
-hook.Add("AddToolMenuCategories", "LegacyAddonPropsInfoCategory", function() spawnmenu.AddToolCategory("Utilities", "Robotboy655", "#Robotboy655") end)
-hook.Add("PopulateToolMenu", "LegacyAddonPropsInfoThing", function()
+hook.Add("AddToolMenuCategories", "liaExtendedSpawnMenuAddToolMenuCategories", function() spawnmenu.AddToolCategory("Utilities", "Robotboy655", "#Robotboy655") end)
+hook.Add("PopulateToolMenu", "liaExtendedSpawnMenuPopulateToolMenu", function()
     spawnmenu.AddToolMenuOption("Utilities", "Robotboy655", "LegacyInfoPanel", "Addon Information", "", "", function(panel)
         panel:ClearControls()
         panel:Button("Open addon data window", "extsm_addoninfo")
@@ -654,7 +654,7 @@ function PANEL:Paint()
 end
 
 vgui.Register("rb655_addonInfo", PANEL, "Panel")
-hook.Add("PopulatePropMenu", "rb655_LoadLegacySpawnlists", function(pnl, _, node)
+hook.Add("PopulatePropMenu", "liaExtendedSpawnMenuPopulatePropMenu", function(pnl, _, node)
     if not IsValid(node) or not IsValid(pnl) then return end
     local view = vgui.Create("ContentContainer", pnl)
     view:SetVisible(false)

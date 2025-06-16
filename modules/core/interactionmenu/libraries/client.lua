@@ -51,6 +51,7 @@ local function openMenu(options, isInteraction, titleText, closeKey, netMsg)
     frame:SetAlpha(0)
     frame:AlphaTo(255, 0.05)
     frame.Think = function(self) if not input.IsKeyDown(closeKey) then self:Close() end end
+    frame.Paint = function(self, w, h) draw.RoundedBox(8, 0, 0, w, h, Color(30, 30, 30, 200)) end
     timer.Remove("InteractionMenu_Frame_Timer")
     timer.Create("InteractionMenu_Frame_Timer", 30, 1, function() if IsValid(frame) then frame:Close() end end)
     local title = frame:Add("DLabel")
@@ -63,16 +64,26 @@ local function openMenu(options, isInteraction, titleText, closeKey, netMsg)
     local scroll = frame:Add("DScrollPanel")
     scroll:SetPos(0, titleH + titleY + gap)
     scroll:SetSize(frameW, frameH - titleH - titleY - gap)
+    scroll.Paint = function(self, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 150)) end
     local layout = scroll:Add("DIconLayout")
     layout:Dock(FILL)
     layout:SetSpaceY(12)
     for i, item in ipairs(visible) do
-        local btn = layout:Add("liaSmallButton")
+        local btn = layout:Add("DButton")
         btn:Dock(TOP)
         btn:SetTall(25)
         btn:DockMargin(10, 0, 10, i == #visible and 20 or 12)
         btn:SetText(item.name)
         btn:SetFont("liaSmallFont")
+        btn:SetTextColor(color_white)
+        btn.Paint = function(self, w, h)
+            if self:IsHovered() then
+                draw.RoundedBox(4, 0, 0, w, h, Color(50, 50, 50, 200))
+            else
+                draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 150))
+            end
+        end
+
         btn.DoClick = function()
             frame:AlphaTo(0, 0.05, 0, function() if IsValid(frame) then frame:Close() end end)
             if isInteraction then

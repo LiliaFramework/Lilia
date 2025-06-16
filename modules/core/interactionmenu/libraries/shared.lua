@@ -3,12 +3,10 @@ MODULE.Actions = {}
 MODULE.Interactions = {}
 function AddInteraction(name, data)
     MODULE.Interactions[name] = data
-    lia.bootstrap("Player Interaction Menu", "Added P2P Action: " .. name)
 end
 
 function AddAction(name, data)
     MODULE.Actions[name] = data
-    lia.bootstrap("Action Menu", "Added Personal Action: " .. name)
 end
 
 AddInteraction("Give Money", {

@@ -233,7 +233,7 @@ function MODULE:OnPhysgunFreeze(_, physObj, entity, client)
     return true
 end
 
-function MODULE:PlayerSpawn(client)
+function MODULE:PlayerInitialSpawn(client)
     if not client:getChar() then return end
     net.Start("VerifyCheats")
     net.Send(client)

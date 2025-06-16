@@ -151,6 +151,10 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/libraries/salary.lua",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/core/libraries/menu.lua",
         realm = "client"
     },
@@ -165,14 +169,6 @@ local FilesToLoad = {
     {
         path = "lilia/gamemode/core/netcalls/server.lua",
         realm = "server"
-    },
-    {
-        path = "lilia/gamemode/core/libraries/easyicons.lua",
-        realm = "client"
-    },
-    {
-        path = "lilia/gamemode/core/libraries/extended_spawnmenu.lua",
-        realm = "client"
     },
 }
 
