@@ -498,6 +498,12 @@ lia.config.add("AmmoDrawEnabled", "Enable Ammo Display", true, nil, {
     type = "Boolean"
 })
 
+lia.config.add("IsVoiceEnabled", "Voice Chat Enabled", true, function(_, newValue) hook.Run("VoiceToggled", newValue) end, {
+    desc = "Whether or not voice chat is enabled",
+    category = "General",
+    type = "Boolean"
+})
+
 hook.Add("PopulateConfigurationButtons", "PopulateConfig", function(pages)
     local ConfigFormatting = {
         Int = function(key, name, config, parent)

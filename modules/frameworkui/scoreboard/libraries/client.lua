@@ -6,7 +6,9 @@ end
 
 function MODULE:ScoreboardShow()
     local client = LocalPlayer()
-    if client:getChar() and hook.Run("CheckInteractionPossibilities") ~= true then
+    if not client:getChar() then return true end
+    local pimEnabled = lia.module.list.interactionmenu:checkInteractionPossibilities()
+    if not pimEnabled then
         vgui.Create("liaScoreboard")
         gui.EnableScreenClicker(true)
         return true

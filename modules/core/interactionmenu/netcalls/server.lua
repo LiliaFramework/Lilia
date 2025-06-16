@@ -15,13 +15,13 @@ end)
 
 net.Receive("RunOption", function(_, ply)
     local name = net.ReadString()
-    local opt = MODULE.Options[name]
+    local opt = MODULE.Interactions[name]
     local tracedEntity = ply:getTracedEntity()
     if opt and opt.runServer and IsValid(tracedEntity) then opt.onRun(ply, tracedEntity) end
 end)
 
 net.Receive("RunLocalOption", function(_, ply)
     local name = net.ReadString()
-    local opt = MODULE.SelfOptions[name]
+    local opt = MODULE.Actions[name]
     if opt and opt.runServer then opt.onRun(ply) end
 end)

@@ -1,24 +1,24 @@
 ﻿if SERVER then
     hook.Add("PlayerInitialSpawn", "WorkshopDownloader_PlayerInitialSpawn", function(ply)
+        print("[WorkshopDownloader] PlayerInitialSpawn for " .. ply:Nick() .. " (" .. ply:SteamID() .. ")")
         timer.Simple(10, function()
             if not IsValid(ply) then return end
+            print("[WorkshopDownloader] Sending WorkshopDownloader_Start to " .. ply:Nick())
             net.Start("WorkshopDownloader_Start")
             net.Send(ply)
         end)
     end)
 else
-    local downloadPanel
-    local totalAddons = 0
-    local remainingAddons = 0
-    local addonsQueue = {}
+    local downloadPanel, totalAddons, remainingAddons = nil, 0, 0
+    local addonsQueue, processedAddons = {}, {}
     local function createPanel()
         if downloadPanel and downloadPanel:IsValid() then return end
+        print("[WorkshopDownloader] Creating download panel")
         surface.SetFont("DermaLarge")
         local title = "Downloading Workshop Addons"
         local textW, textH = surface.GetTextSize(title)
         local pad, barH = 10, 20
-        local w = math.max(textW, 200) + pad * 2
-        local h = textH + barH + pad * 3
+        local w, h = math.max(textW, 200) + pad * 2, textH + barH + pad * 3
         downloadPanel = vgui.Create("DPanel")
         downloadPanel:SetSize(w, h)
         downloadPanel:SetPos((ScrW() - w) / 2, ScrH() * 0.1)
@@ -37,12 +37,13 @@ else
     local function updatePanel()
         if not (downloadPanel and downloadPanel:IsValid()) then return end
         local done = totalAddons - remainingAddons
-        local frac = totalAddons > 0 and done / totalAddons or 0
-        downloadPanel.progressBar:SetFraction(frac)
-        downloadPanel.progressBar:SetText(string.format("%d/%d", done, totalAddons))
+        print("[WorkshopDownloader] Progress: " .. done .. "/" .. totalAddons)
+        downloadPanel.progressBar:SetFraction(totalAddons > 0 and done / totalAddons or 0)
+        downloadPanel.progressBar:SetText(done .. "/" .. totalAddons)
     end
 
     local function gatherWorkshopIDs()
+        print("[WorkshopDownloader] Gathering workshop IDs from modules")
         local ids = {
             ["2959728255"] = true
         }
@@ -52,38 +53,69 @@ else
             if wc then
                 if isstring(wc) then
                     ids[wc] = true
-                elseif istable(wc) then
-                    for _, v in ipairs(wc) do
-                        ids[tostring(v)] = true
+                else
+                    for _, id in ipairs(wc) do
+                        ids[tostring(id)] = true
                     end
                 end
             end
         end
+
+        local count = 0
+        for _ in pairs(ids) do
+            count = count + 1
+        end
+
+        print("[WorkshopDownloader] Found " .. count .. " workshop IDs")
         return ids
     end
 
     local function startDownload()
         totalAddons = table.Count(addonsQueue)
         remainingAddons = totalAddons
+        print("[WorkshopDownloader] Starting download of " .. totalAddons .. " addons")
         if totalAddons == 0 then return end
         createPanel()
         updatePanel()
         for id in pairs(addonsQueue) do
-            lia.bootstrap("Workshop Downloader", "Downloading workshop " .. id)
-            steamworks.DownloadUGC(id, function(path)
+            if processedAddons[id] then
+                print("[WorkshopDownloader] Skipping already processed addon: " .. id)
+                lia.bootstrap("Workshop Downloader", "Skipping addon " .. id)
                 remainingAddons = remainingAddons - 1
-                lia.bootstrap("Workshop Downloader", "Completed workshop " .. id)
-                if path then game.MountGMA(path) end
-                updatePanel()
                 if remainingAddons <= 0 then
+                    print("[WorkshopDownloader] All addons processed, removing panel")
                     if downloadPanel and downloadPanel:IsValid() then downloadPanel:Remove() end
                     downloadPanel = nil
+                else
+                    updatePanel()
                 end
-            end)
+            else
+                processedAddons[id] = true
+                print("[WorkshopDownloader] Downloading workshop " .. id)
+                lia.bootstrap("Workshop Downloader", "Downloading workshop " .. id)
+                steamworks.DownloadUGC(id, function(path)
+                    if path then
+                        print("[WorkshopDownloader] Mounted addon from path: " .. path)
+                        game.MountGMA(path)
+                    else
+                        print("[WorkshopDownloader] Failed to download addon: " .. id)
+                    end
+
+                    remainingAddons = remainingAddons - 1
+                    lia.bootstrap("Workshop Downloader", "Completed workshop " .. id)
+                    updatePanel()
+                    if remainingAddons <= 0 then
+                        print("[WorkshopDownloader] All downloads complete, removing panel")
+                        if downloadPanel and downloadPanel:IsValid() then downloadPanel:Remove() end
+                        downloadPanel = nil
+                    end
+                end)
+            end
         end
     end
 
     local function processModuleWorkshops()
+        print("[WorkshopDownloader] Processing module workshop content")
         table.Empty(addonsQueue)
         for id in pairs(gatherWorkshopIDs()) do
             addonsQueue[id] = true
@@ -93,31 +125,46 @@ else
     end
 
     local function processCollectionWorkshops()
-        if not lia.config.get("AutoDownloadWorkshop") then return end
+        print("[WorkshopDownloader] Processing collection workshops")
+        if not lia.config.get("AutoDownloadWorkshop") then
+            print("[WorkshopDownloader] AutoDownloadWorkshop disabled, skipping collection")
+            return
+        end
+
         local colID = lia.config.get("CollectionID")
-        if not isstring(colID) or colID == "" then return end
+        if not isstring(colID) or colID == "" then
+            print("[WorkshopDownloader] No valid CollectionID, skipping collection")
+            return
+        end
+
+        print("[WorkshopDownloader] Fetching collection ID: " .. colID)
         http.Fetch("https://steamcommunity.com/workshop/filedetails/?id=" .. colID, function(body)
             for id in body:gmatch("sharedfile_(%d+)") do
                 if not addonsQueue[id] then addonsQueue[id] = true end
             end
 
+            print("[WorkshopDownloader] Starting download from collection")
             startDownload()
-        end)
+        end, function(err) print("[WorkshopDownloader] Failed to fetch collection: " .. err) end)
     end
 
     net.Receive("WorkshopDownloader_Start", function()
+        print("[WorkshopDownloader] Received WorkshopDownloader_Start net message")
         processModuleWorkshops()
         processCollectionWorkshops()
     end)
 
     concommand.Add("workshop_force_redownload", function()
+        print("[WorkshopDownloader] Forced redownload command executed")
         table.Empty(addonsQueue)
+        table.Empty(processedAddons)
         processModuleWorkshops()
         processCollectionWorkshops()
         lia.bootstrap("Workshop Downloader", "Forced redownload initiated")
     end)
 
     hook.Add("CreateInformationButtons", "WorkshopAddonsInformation", function(pages)
+        print("[WorkshopDownloader] Adding workshop addons information button")
         table.insert(pages, {
             name = L("workshopAddons"),
             drawFunc = function(panel)
@@ -150,8 +197,8 @@ else
                 local canvas = sc:GetCanvas()
                 local previewSize = 200
                 local items = {}
-                local function createItem(id)
-                    steamworks.FileInfo(id, function(info)
+                local function createItem(itemId)
+                    steamworks.FileInfo(itemId, function(info)
                         if not info then return end
                         local item = vgui.Create("DPanel", canvas)
                         item:Dock(TOP)
@@ -164,7 +211,7 @@ else
                         html:OpenURL(info.previewurl)
                         local title = vgui.Create("DLabel", item)
                         title:SetFont("liaBigFont")
-                        title:SetText(info.title or "ID: " .. id)
+                        title:SetText(info.title or "ID: " .. itemId)
                         local desc = vgui.Create("DLabel", item)
                         desc:SetFont("liaMediumFont")
                         desc:SetWrap(true)
@@ -188,13 +235,14 @@ else
                     createItem(id)
                 end
 
-                local colID = lia.config.get("CollectionID")
-                if isstring(colID) and colID ~= "" then
-                    http.Fetch("https://steamcommunity.com/workshop/filedetails/?id=" .. colID, function(body)
-                        for id in body:gmatch("sharedfile_(%d+)") do
-                            if not items[id] then
-                                items[id] = true
-                                createItem(id)
+                local collectionId = lia.config.get("CollectionID")
+                if isstring(collectionId) and collectionId ~= "" then
+                    print("[WorkshopDownloader] Loading additional items from collection in info panel")
+                    http.Fetch("https://steamcommunity.com/workshop/filedetails/?id=" .. collectionId, function(body)
+                        for itemId in body:gmatch("sharedfile_(%d+)") do
+                            if not items[itemId] then
+                                items[itemId] = true
+                                createItem(itemId)
                             end
                         end
                     end)

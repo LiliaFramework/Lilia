@@ -11,7 +11,7 @@ function MODULE:MouthMoveAnimation()
 end
 
 function MODULE:InitPostEntity()
-    if not lia.util.is64Bits() then
+    if BRANCH ~= "x86-64" then
         timer.Simple(0, function()
             local pnl = Derma_Query(L("upgradeNotice"), L("upgradeTitle"), L("ok"), function()
                 local f = vgui.Create("DFrame")

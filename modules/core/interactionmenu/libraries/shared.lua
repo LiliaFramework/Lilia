@@ -1,33 +1,14 @@
 ﻿local MODULE = MODULE
-MODULE.Options = {}
-MODULE.SelfOptions = {}
-local MaxInteractionDistance = 250 * 250
+MODULE.Actions = {}
+MODULE.Interactions = {}
 function AddInteraction(name, data)
-    MODULE.Options[name] = data
+    MODULE.Interactions[name] = data
     lia.bootstrap("Player Interaction Menu", "Added P2P Action: " .. name)
 end
 
 function AddAction(name, data)
-    MODULE.SelfOptions[name] = data
+    MODULE.Actions[name] = data
     lia.bootstrap("Action Menu", "Added Personal Action: " .. name)
-end
-
-function MODULE:CheckInteractionPossibilities()
-    local client = LocalPlayer()
-    for _, v in pairs(self.Options) do
-        if not client:getTracedEntity():IsPlayer() then return end
-        if v.shouldShow(client, client:getTracedEntity()) then return true end
-    end
-    return false
-end
-
-function MODULE:InitializedModules()
-    hook.Run("AddOption", self.Options)
-    hook.Run("AddLocalOption", self.SelfOptions)
-end
-
-function MODULE:CheckDistance(client, entity)
-    return entity:GetPos():DistToSqr(client:GetPos()) < MaxInteractionDistance
 end
 
 AddInteraction("Give Money", {
@@ -74,4 +55,31 @@ AddInteraction("Give Money", {
         frame.ok:SetFont("liaSmallFont")
         frame.ok.DoClick = frame.te.OnEnter
     end
+})
+
+AddAction(L("changeToWhisper"), {
+    shouldShow = function(client) return client:getChar() and client:Alive() end,
+    onRun = function(client)
+        if CLIENT then return end
+        client:setNetVar("VoiceType", "Whispering")
+    end,
+    runServer = true
+})
+
+AddAction(L("changeToTalk"), {
+    shouldShow = function(client) return client:getChar() and client:Alive() end,
+    onRun = function(client)
+        if CLIENT then return end
+        client:setNetVar("VoiceType", "Talking")
+    end,
+    runServer = true
+})
+
+AddAction(L("changeToYell"), {
+    shouldShow = function(client) return client:getChar() and client:Alive() end,
+    onRun = function(client)
+        if CLIENT then return end
+        client:setNetVar("VoiceType", "Yelling")
+    end,
+    runServer = true
 })

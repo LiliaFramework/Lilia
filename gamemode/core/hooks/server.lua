@@ -320,6 +320,7 @@ function GM:PostPlayerLoadout(client)
     if not character then return end
     client:Give("lia_hands")
     client:SetupHands()
+    client:setNetVar("VoiceType", "Talking")
 end
 
 function GM:ShouldSpawnClientRagdoll(client)
@@ -655,96 +656,99 @@ local function DatabaseQuery()
     end
 end
 
+local publicURL = "https://raw.githubusercontent.com/LiliaFramework/Modules/refs/heads/gh-pages/modules.json"
+local privateURL = "https://raw.githubusercontent.com/bleonheart/bleonheart.github.io/main/modules.json"
+local versionURL = "https://raw.githubusercontent.com/LiliaFramework/LiliaFramework.github.io/main/version.json"
+local function checkPublicModules()
+    http.Fetch(publicURL, function(body, _, _, code)
+        if code ~= 200 then
+            lia.updater("Error fetching module list (HTTP " .. code .. ")")
+            return
+        end
+
+        local remote = util.JSONToTable(body)
+        if not remote then
+            lia.updater("Error parsing module data")
+            return
+        end
+
+        for _, info in ipairs(lia.module.versionChecks) do
+            local match
+            for _, m in ipairs(remote) do
+                if m.uniqueID == info.uniqueID then
+                    match = m
+                    break
+                end
+            end
+
+            if not match then
+                lia.updater("Module with uniqueID '" .. info.uniqueID .. "' not found")
+            elseif not match.version then
+                lia.updater("Module '" .. info.name .. "' has no remote version info")
+            elseif match.version ~= info.localVersion then
+                lia.updater("Module '" .. info.name .. "' is outdated. Update to version " .. match.version .. " at " .. match.source)
+            end
+        end
+    end, function(err) lia.updater("HTTP.Fetch error: " .. err) end)
+end
+
+local function checkPrivateModules()
+    http.Fetch(privateURL, function(body, _, _, code)
+        if code ~= 200 then
+            lia.updater("Error fetching private module list (HTTP " .. code .. ")")
+            return
+        end
+
+        local remote = util.JSONToTable(body)
+        if not remote then
+            lia.updater("Error parsing private module data")
+            return
+        end
+
+        for _, info in ipairs(lia.module.privateVersionChecks) do
+            local match
+            for _, m in ipairs(remote) do
+                if m.uniqueID == info.uniqueID then
+                    match = m
+                    break
+                end
+            end
+
+            if match and match.version and match.version ~= info.localVersion then lia.updater("Module '" .. info.name .. "' is outdated, please report back to the author to get an updated copy.") end
+        end
+    end, function(err) lia.updater("HTTP.Fetch error: " .. err) end)
+end
+
+local function checkFrameworkVersion()
+    http.Fetch(versionURL, function(body, _, _, code)
+        if code ~= 200 then
+            lia.updater("Error fetching framework version (HTTP " .. code .. ")")
+            return
+        end
+
+        local remote = util.JSONToTable(body)
+        if not remote or not remote.version then
+            lia.updater("Error parsing framework version data")
+            return
+        end
+
+        local localVersion = GM.version
+        if not localVersion then
+            lia.updater("Error reading local framework version")
+            return
+        end
+
+        if remote.version ~= localVersion then lia.updater("Framework is outdated. Update it with the latest release found at https://github.com/LiliaFramework/Lilia/releases/tag/release") end
+    end, function(err) lia.updater("HTTP.Fetch error: " .. err) end)
+end
+
 function GM:InitializedModules()
-    local publicURL = "https://raw.githubusercontent.com/LiliaFramework/Modules/refs/heads/gh-pages/modules.json"
-    local privateURL = "https://raw.githubusercontent.com/bleonheart/bleonheart.github.io/main/modules.json"
-    local versionURL = "https://raw.githubusercontent.com/LiliaFramework/LiliaFramework.github.io/main/version.json"
     timer.Simple(5, DatabaseQuery)
-    if not self.UpdateCheckDone then
-        if lia.module.versionChecks then
-            http.Fetch(publicURL, function(body, _, _, code)
-                if code ~= 200 then
-                    lia.updater("Error fetching module list (HTTP " .. code .. ")")
-                    return
-                end
-
-                local remote = util.JSONToTable(body)
-                if not remote then
-                    lia.updater("Error parsing module data")
-                    return
-                end
-
-                for _, info in ipairs(lia.module.versionChecks or {}) do
-                    local match
-                    for _, m in ipairs(remote) do
-                        if m.uniqueID == info.uniqueID then
-                            match = m
-                            break
-                        end
-                    end
-
-                    if not match then
-                        lia.updater("Module with uniqueID '" .. info.uniqueID .. "' not found")
-                    elseif not match.version then
-                        lia.updater("Module '" .. info.name .. "' has no remote version info")
-                    elseif match.version ~= info.localVersion then
-                        lia.updater("Module '" .. info.name .. "' is outdated. Update to version " .. match.version .. " at " .. match.source)
-                    end
-                end
-            end, function(err) lia.updater("HTTP.Fetch error: " .. err) end)
-        end
-
-        if lia.module.privateVersionChecks then
-            http.Fetch(privateURL, function(body2, _, _, code2)
-                if code2 ~= 200 then
-                    lia.updater("Error fetching private module list (HTTP " .. code2 .. ")")
-                    return
-                end
-
-                local remote2 = util.JSONToTable(body2)
-                if not remote2 then
-                    lia.updater("Error parsing private module data")
-                    return
-                end
-
-                for _, info in ipairs(lia.module.privateVersionChecks or {}) do
-                    local match2
-                    for _, m2 in ipairs(remote2) do
-                        if m2.uniqueID == info.uniqueID then
-                            match2 = m2
-                            break
-                        end
-                    end
-
-                    if match2 and match2.version and match2.version ~= info.localVersion then lia.updater("Module '" .. info.name .. "' is outdated, please report back to the author to get an updated copy.") end
-                end
-            end, function(err2) lia.updater("HTTP.Fetch error: " .. err2) end)
-        end
-
-        http.Fetch(versionURL, function(body, _, _, code)
-            if code ~= 200 then
-                lia.updater("Error fetching framework version (HTTP " .. code .. ")")
-                return
-            end
-
-            local remote = util.JSONToTable(body)
-            if not remote or not remote.version then
-                lia.updater("Error parsing framework version data")
-                return
-            end
-
-            local localJson = file.Read("version.json", "GAME")
-            local localData = util.JSONToTable(localJson)
-            if not localData or not localData.version then
-                lia.updater("Error reading local framework version")
-                return
-            end
-
-            if remote.version ~= localData.version then lia.updater("Framework is outdated. Update it with the latest release found at https://github.com/LiliaFramework/Lilia/releases/tag/release") end
-        end, function(err) lia.updater("HTTP.Fetch error: " .. err) end)
-
-        self.UpdateCheckDone = true
-    end
+    if self.UpdateCheckDone then return end
+    if lia.module.versionChecks then checkPublicModules() end
+    if lia.module.privateVersionChecks then checkPrivateModules() end
+    checkFrameworkVersion()
+    self.UpdateCheckDone = true
 end
 
 function ClientAddText(client, ...)
@@ -757,6 +761,25 @@ function ClientAddText(client, ...)
     net.Start("ServerChatAddText")
     net.WriteTable(args)
     net.Send(client)
+end
+
+local TalkRanges = {
+    ["Whispering"] = 120,
+    ["Talking"] = 300,
+    ["Yelling"] = 600,
+}
+
+function GM:PlayerCanHearPlayersVoice(listener, speaker)
+    if not IsValid(listener) and IsValid(speaker) or listener == speaker then return false, false end
+    if speaker:getNetVar("IsDeadRestricted", false) then return false, false end
+    local char = speaker:getChar()
+    if not (char and not char:getData("VoiceBan", false)) then return false, false end
+    if not lia.config.get("IsVoiceEnabled", true) then return false, false end
+    local voiceType = speaker:getNetVar("VoiceType", "Talking")
+    local range = TalkRanges[voiceType] or TalkRanges["Talking"]
+    local distanceSqr = listener:GetPos():DistToSqr(speaker:GetPos())
+    local canHear = distanceSqr <= range * range
+    return canHear, canHear
 end
 
 local networkStrings = {"msg", "ServerChatAddText", "liaCharacterInvList", "liaNotify", "liaNotifyL", "CreateTableUI", "WorkshopDownloader_Start", "liaPACSync", "liaPACPartAdd", "liaPACPartRemove", "liaPACPartReset", "sam_blind", "CurTime-Sync", "NetStreamDS", "liaInventoryAdd", "liaInventoryRemove", "liaInventoryData", "liaInventoryInit", "liaInventoryDelete", "liaItemDelete", "liaItemInstance", "seqSet", "setWaypoint", "setWaypointWithLogo", "AnimationStatus", "actBar", "RequestDropdown", "OptionsRequest", "StringRequest", "BinaryQuestionRequest", "liaTransferItem", "liaStorageOpen", "liaStorageUnlock", "liaStorageExit", "liaStorageTransfer", "trunkInitStorage", "VendorTrade", "VendorExit", "VendorMoney", "VendorStock", "VendorMaxStock", "VendorAllowFaction", "VendorAllowClass", "VendorEdit", "VendorMode", "VendorPrice", "VendorSync", "VendorOpen", "rgnMenu", "rgnDone", "AdminModeSwapCharacter", "managesitrooms", "liaCharChoose", "lia_managesitrooms_action", "SpawnMenuSpawnItem", "SpawnMenuGiveItem", "send_logs_request", "send_logs", "OpenInvMenu", "TicketSystemClaim", "TicketSystemClose", "TicketSystem", "ViewClaims", "RunOption", "RunLocalOption", "TransferMoneyFromP2P", "CheckHack", "CheckSeed", "VerifyCheats", "request_respawn", "classUpdate", "ChangeSpeakMode", "liaTeleportToEntity", "removeF1", "liaCharList", "liaCharCreate", "liaCharDelete",}
