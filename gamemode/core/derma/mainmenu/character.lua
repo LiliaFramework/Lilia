@@ -205,7 +205,6 @@ function PANEL:createStartButton()
         btn:SetPos(x, y)
         btn:SetText(string.upper(data.text))
         btn.DoClick = data.doClick
-        btn.OnCursorEntered = function() surface.PlaySound("ui/hover.wav") end
         local oldSetPos = btn.SetPos
         btn.SetPos = function(b, nx, ny)
             oldSetPos(b, nx, ny)
@@ -539,7 +538,6 @@ function PANEL:createArrows()
         btn:SetPos(ScrW() * 0.5 + xOffset, ScrH() * 0.5 - size * 0.5)
         btn:SetFont("liaHugeFont")
         btn:SetText(sign)
-        btn.OnCursorEntered = function() surface.PlaySound("ui/hover.wav") end
         btn.DoClick = function()
             if not self.isLoadMode or not lia.characters or #lia.characters == 0 then return end
             self.currentIndex = self.currentIndex + (sign == "<" and -1 or 1)
