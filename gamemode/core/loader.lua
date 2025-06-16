@@ -466,10 +466,15 @@ else
     timer.Remove("HintSystem_Annoy2")
 end
 
+local hasInitializedModules = false
 function GM:Initialize()
     if engine.ActiveGamemode() == "lilia" then lia.error("No schema loaded. Please place the schema in your gamemodes folder, then set it as your gamemode.") end
     lia.config.load()
-    lia.module.initialize()
+    if not hasInitializedModules then
+        lia.module.initialize()
+        hasInitializedModules = true
+    end
+
     if CLIENT then
         lia.option.load()
         lia.keybind.load()
@@ -477,7 +482,11 @@ function GM:Initialize()
 end
 
 function GM:OnReloaded()
-    lia.module.initialize()
+    if not hasInitializedModules then
+        lia.module.initialize()
+        hasInitializedModules = true
+    end
+
     lia.config.load()
     lia.faction.formatModelData()
     if CLIENT then
