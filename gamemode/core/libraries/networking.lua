@@ -26,14 +26,14 @@ if SERVER then
         return value ~= nil and value or default
     end
 
-    hook.Add("EntityRemoved", "nCleanUp", function(entity) entity:clearNetVars() end)
-    hook.Add("PlayerInitialSpawn", "nSync", function(client) client:syncVars() end)
-    hook.Add("CharDeleted", "liaCharRemoveName", function(client, character)
+    hook.Add("EntityRemoved", "liaNetworkingCleanup", function(entity) entity:clearNetVars() end)
+    hook.Add("PlayerInitialSpawn", "liaNetworkingSync", function(client) client:syncVars() end)
+    hook.Add("CharDeleted", "liaNetworkingCharDeleted", function(client, character)
         lia.char.names[character:getID()] = nil
         netstream.Start(client, "liaCharFetchNames", lia.char.names)
     end)
 
-    hook.Add("OnCharCreated", "liaCharAddName", function(client, character, data)
+    hook.Add("OnCharCreated", "liaNetworkingCharCreated", function(client, character, data)
         lia.char.names[character:getID()] = data.name
         netstream.Start(client, "liaCharFetchNames", lia.char.names)
     end)

@@ -67,7 +67,6 @@ function PANEL:FadeOut(anim, delta)
 end
 
 vgui.Register("VoicePanel", PANEL, "DPanel")
-
 local function CreateVoicePanelList()
     if IsValid(g_VoicePanelList) then g_VoicePanelList:Remove() end
     for _, pnl in pairs(VoicePanels) do
@@ -87,5 +86,5 @@ timer.Create("VoiceClean", 1, 0, function()
     end
 end)
 
-hook.Add("InitPostEntity", "VoicePanelListInit", CreateVoicePanelList)
-hook.Add("OnReloaded", "VoicePanelListReload", CreateVoicePanelList)
+hook.Add("InitPostEntity", "liaVoiceInitPostEntity", CreateVoicePanelList)
+hook.Add("OnReloaded", "liaVoiceOnReloaded", CreateVoicePanelList)

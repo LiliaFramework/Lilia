@@ -16,7 +16,7 @@ function PANEL:Init()
         end
     end
 
-    hook.Add("PreDrawPhysgunBeam", "DisablePhysgunBeam", function() return IsValid(lia.gui.character) end)
+    hook.Add("PreDrawPhysgunBeam", "liaMainMenuPreDrawPhysgunBeam", function() return IsValid(lia.gui.character) end)
     self:Dock(FILL)
     self:MakePopup()
     self:SetAlpha(0)
@@ -54,10 +54,10 @@ end
 
 function PANEL:loadBackground()
     if self.isLoadMode then
-        hook.Add("PrePlayerDraw", "liaCharacter_StopDrawPlayers", function() return true end)
+        hook.Add("PrePlayerDraw", "liaMainMenuPrePlayerDraw", function() return true end)
         self:updateSelectedCharacter()
         if not IsValid(self.leftArrow) and #lia.characters > 1 then self:createArrows() end
-        hook.Add("CalcView", "liaCharacterMenuCalcView", function(_, _, _, fov)
+        hook.Add("CalcView", "liaMainMenuCalcView", function(_, _, _, fov)
             local ent = self.modelEntity
             if not IsValid(ent) then return end
             local center = ent:GetPos() + Vector(0, 0, 60)
@@ -522,7 +522,7 @@ function PANEL:updateModelEntity(character)
     end
 
     hook.Run("ModifyCharacterModel", self.modelEntity, character)
-    hook.Add("PostDrawOpaqueRenderables", self, function()
+    hook.Add("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables", function()
         if IsValid(self.modelEntity) then
             self.modelEntity:FrameAdvance(RealFrameTime())
             self.modelEntity:DrawModel()
@@ -606,9 +606,9 @@ function PANEL:showContent(disableBg)
 end
 
 function PANEL:removeClientModelModifications()
-    hook.Remove("PrePlayerDraw", "liaCharacter_StopDrawPlayers")
-    if not self.isLoadMode then hook.Remove("CalcView", "liaCharacterMenuCalcView") end
-    hook.Remove("PostDrawOpaqueRenderables", self)
+    hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
+    if not self.isLoadMode then hook.Remove("CalcView", "liaMainMenuCalcView") end
+    hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")
 end
 
 function PANEL:setFadeToBlack(fade)
@@ -665,10 +665,10 @@ function PANEL:warningSound()
 end
 
 function PANEL:OnRemove()
-    hook.Remove("PrePlayerDraw", "liaCharacter_StopDrawPlayers")
-    hook.Remove("CalcView", "liaCharacterMenuCalcView")
-    hook.Remove("PostDrawOpaqueRenderables", self)
-    hook.Remove("PreDrawPhysgunBeam", "DisablePhysgunBeam")
+    hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
+    hook.Remove("CalcView", "liaMainMenuCalcView")
+    hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")
+    hook.Remove("PreDrawPhysgunBeam", "liaMainMenuPreDrawPhysgunBeam")
     if render.oldDrawBeam then
         render.DrawBeam = render.oldDrawBeam
         render.oldDrawBeam = nil

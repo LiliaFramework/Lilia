@@ -87,7 +87,7 @@ lia.flag.add("t", L("flagToolgun"), function(client, isGiven)
     end
 end)
 
-hook.Add("CreateInformationButtons", "CreateInformationMenuFlags", function(pages)
+hook.Add("CreateInformationButtons", "liaInformationFlags", function(pages)
     local client = LocalPlayer()
     table.insert(pages, {
         name = L("flags"),

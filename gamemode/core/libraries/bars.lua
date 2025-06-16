@@ -143,11 +143,11 @@ end
 ]]
 function lia.bar.drawAction(text, duration)
     local startTime, endTime = CurTime(), CurTime() + duration
-    hook.Remove("HUDPaint", "liaDrawAction")
-    hook.Add("HUDPaint", "liaDrawAction", function()
+    hook.Remove("HUDPaint", "liaBarDrawAction")
+    hook.Add("HUDPaint", "liaBarDrawAction", function()
         local curTime = CurTime()
         if curTime >= endTime then
-            hook.Remove("HUDPaint", "liaDrawAction")
+            hook.Remove("HUDPaint", "liaBarDrawAction")
             return
         end
 
@@ -214,4 +214,4 @@ lia.bar.add(function()
     return client:Armor() / client:GetMaxArmor()
 end, Color(30, 70, 180), 3, "armor")
 
-hook.Add("HUDPaintBackground", "liaDrawBars", lia.bar.drawAll)
+hook.Add("HUDPaintBackground", "liaBarDraw", lia.bar.drawAll)

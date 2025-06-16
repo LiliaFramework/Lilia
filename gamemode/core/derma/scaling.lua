@@ -14,8 +14,8 @@ local function updateScale()
 end
 
 updateScale()
-hook.Add("OnScreenSizeChanged", "CachedScreenScale_Update", updateScale)
-hook.Add("OnReloaded", "CachedScreenScale_Update_Reload", updateScale)
+hook.Add("OnScreenSizeChanged", "liaScalingUpdate", updateScale)
+hook.Add("OnReloaded", "liaScalingReload", updateScale)
 function ScreenScale(v)
     cache.width[v] = cache.width[v] or v * scaleW
     return cache.width[v]

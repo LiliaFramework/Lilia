@@ -160,7 +160,7 @@ function lia.option.load()
     hook.Run("InitializedOptions")
 end
 
-hook.Add("PopulateConfigurationButtons", "PopulateOptions", function(pages)
+hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
     local OptionFormatting = {
         Int = function(key, name, cfg, parent)
             local c = vgui.Create("DPanel", parent)

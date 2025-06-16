@@ -287,7 +287,7 @@ else
     end
 end
 
-hook.Add("CreateInformationButtons", "CreateInformationMenuCommands", function(pages)
+hook.Add("CreateInformationButtons", "liaInformationCommands", function(pages)
     local client = LocalPlayer()
     table.insert(pages, {
         name = L("commands"),

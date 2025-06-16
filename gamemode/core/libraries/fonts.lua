@@ -878,8 +878,8 @@ if CLIENT then
         hook.Run("PostLoadFonts", lia.config.get("Font"), lia.config.get("GenericFont"))
     end
 
-    hook.Add("OnScreenSizeChanged", "lia.font.RefreshFonts", lia.font.refresh)
-    hook.Add("RefreshFonts", "LiliaRefreshFonts", lia.font.refresh)
+    hook.Add("OnScreenSizeChanged", "liaFontsRefreshFonts", lia.font.refresh)
+    hook.Add("RefreshFonts", "liaFontsRefresh", lia.font.refresh)
 end
 
 lia.config.add("Font", "Font", "PoppinsMedium", function()
