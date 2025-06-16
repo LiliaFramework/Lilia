@@ -356,7 +356,7 @@ function GM:HUDPaintBackground()
     lia.menu.drawAll()
     RenderEntities()
     self.BaseClass.PaintWorldTips(self.BaseClass)
-    if not lia.util.is64Bits() then draw.SimpleText(L("switchTo64Bit"), "liaSmallFont", ScrW() * 0.5, ScrH() * 0.97, Color(255, 255, 255, 10), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+    if BRANCH ~= "x86-64" then draw.SimpleText(L("switchTo64Bit"), "liaSmallFont", ScrW() * 0.5, ScrH() * 0.97, Color(255, 255, 255, 10), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
 end
 
 function GM:OnContextMenuOpen()
@@ -387,31 +387,41 @@ function GM:HUDShouldDraw(element)
 end
 
 function GM:PlayerStartVoice(client)
-    if not IsValid(g_VoicePanelList) then return end
-    if lia.config.get("IsVoiceEnabled", true) == false then return end
+    if not IsValid(g_VoicePanelList) or not lia.config.get("IsVoiceEnabled", true) then return end
     if client:getNetVar("IsDeadRestricted", false) then return false end
     hook.Run("PlayerEndVoice", client)
-    if IsValid(VoicePanels[client]) then
-        if VoicePanels[client].fadeAnim then
-            VoicePanels[client].fadeAnim:Stop()
-            VoicePanels[client].fadeAnim = nil
+    local pnl = VoicePanels[client]
+    if IsValid(pnl) then
+        if pnl.fadeAnim then
+            pnl.fadeAnim:Stop()
+            pnl.fadeAnim = nil
         end
 
-        VoicePanels[client]:SetAlpha(255)
+        pnl:SetAlpha(255)
         return
     end
 
     if not IsValid(client) then return end
-    local pnl = g_VoicePanelList:Add("VoicePanel")
+    pnl = g_VoicePanelList:Add("VoicePanel")
     pnl:Setup(client)
     VoicePanels[client] = pnl
 end
 
 function GM:PlayerEndVoice(client)
-    if IsValid(VoicePanels[client]) then
-        if VoicePanels[client].fadeAnim then return end
-        VoicePanels[client].fadeAnim = Derma_Anim("FadeOut", VoicePanels[client], VoicePanels[client].FadeOut)
-        VoicePanels[client].fadeAnim:Start(2)
+    local pnl = VoicePanels[client]
+    if IsValid(pnl) and not pnl.fadeAnim then
+        pnl.fadeAnim = Derma_Anim("FadeOut", pnl, pnl.FadeOut)
+        pnl.fadeAnim:Start(2)
+    end
+end
+
+function GM:VoiceToggled(enabled)
+    if not IsValid(g_VoicePanelList) then return end
+    if not enabled then
+        for client, pnl in pairs(VoicePanels) do
+            if IsValid(pnl) then pnl:Remove() end
+            VoicePanels[client] = nil
+        end
     end
 end
 

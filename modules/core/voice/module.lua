@@ -1,5 +1,0 @@
-﻿MODULE.name = "3D Voice"
-MODULE.author = "Samael"
-MODULE.discord = "@liliaplayer"
-MODULE.version = "1.0"
-MODULE.desc = "Adds a Voice Tone Based Voice Module"
