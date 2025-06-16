@@ -14,7 +14,7 @@ local RealmIDs = {
     schema = "shared",
     permissions = "shared",
     commands = "shared",
-    pim = "shared",
+    pim = "shared"
 }
 
 local FilesToLoad = {
@@ -147,7 +147,7 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/libraries/compatibility/darkrp.lua",
+        path = "lilia/gamemode/core/libraries/darkrp.lua",
         realm = "shared"
     },
     {
@@ -174,37 +174,37 @@ local FilesToLoad = {
 
 local ConditionalFiles = {
     {
-        path = "lilia/gamemode/core/libraries/compatibility/pac.lua",
+        path = "lilia/gamemode/core/libraries/pac.lua",
         global = "pac"
     },
     {
-        path = "lilia/gamemode/core/libraries/compatibility/simfphys.lua",
+        path = "lilia/gamemode/core/libraries/simfphys.lua",
         global = "simfphys"
     },
     {
-        path = "lilia/gamemode/core/libraries/compatibility/sitanywhere.lua",
+        path = "lilia/gamemode/core/libraries/sitanywhere.lua",
         global = "SitAnywhere"
     },
     {
-        path = "lilia/gamemode/core/libraries/compatibility/vcmod.lua",
+        path = "lilia/gamemode/core/libraries/vcmod.lua",
         global = "VCMod"
     },
     {
-        path = "lilia/gamemode/core/libraries/compatibility/vjbase.lua",
+        path = "lilia/gamemode/core/libraries/vjbase.lua",
         global = "VJ"
     },
     {
-        path = "lilia/gamemode/core/libraries/compatibility/prone.lua",
+        path = "lilia/gamemode/core/libraries/prone.lua",
         global = "prone"
     },
     {
-        path = "lilia/gamemode/core/libraries/compatibility/sam.lua",
+        path = "lilia/gamemode/core/libraries/sam.lua",
         global = "sam"
     },
     {
-        path = "lilia/gamemode/core/libraries/compatibility/serverguard.lua",
+        path = "lilia/gamemode/core/libraries/serverguard.lua",
         global = "serverguard"
-    },
+    }
 }
 
 --[[
@@ -266,7 +266,7 @@ end
        Depends on file inclusion.
 
     Example Usage:
-       lia.includeDir("lilia/gamemode/core/libraries/thirdparty", true, true)
+       lia.includeDir("lilia/gamemode/core/libraries/shared/thirdparty", true, true)
  ]]
 function lia.includeDir(dir, raw, deep, realm)
     local root = raw and dir or (SCHEMA and SCHEMA.folder and SCHEMA.loading and SCHEMA.folder .. "/schema" or "lilia/gamemode") .. "/" .. dir
@@ -487,7 +487,7 @@ function GM:OnReloaded()
 end
 
 for _, data in ipairs(ConditionalFiles) do
-    if _G[data.global] ~= nil then
+    if _G[data.global] then
         local name = data.global:sub(1, 1):upper() .. data.global:sub(2)
         lia.bootstrap("Compatibility", "Compatibility system for " .. name .. " initialized.")
         lia.include(data.path, "shared")
