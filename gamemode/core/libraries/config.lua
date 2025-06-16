@@ -524,6 +524,28 @@ lia.config.add("SalaryThreshold", "Salary Threshold", 0, nil, {
     max = 100000
 })
 
+lia.config.add("AutoDownloadWorkshop", "Auto Download Workshop Content", true, nil, {
+    desc = "Automatically download both collection and module-defined WorkshopContent.",
+    category = "Workshop",
+    type = "Boolean"
+})
+
+lia.config.add("CollectionID", "Collection ID", "", function(_, colID)
+    if not CLIENT then return end
+    local frame = vgui.Create("DFrame")
+    frame:SetTitle(L("workshopCollectionPreviewTitle"))
+    frame:SetSize(800, 600)
+    frame:Center()
+    frame:MakePopup()
+    local browser = vgui.Create("DHTML", frame)
+    browser:Dock(FILL)
+    browser:OpenURL("https://steamcommunity.com/workshop/filedetails/?id=" .. colID)
+end, {
+    desc = "Steam Workshop collection used for auto-downloading.",
+    category = "Workshop",
+    type = "Generic"
+})
+
 hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
     local ConfigFormatting = {
         Int = function(key, name, config, parent)
