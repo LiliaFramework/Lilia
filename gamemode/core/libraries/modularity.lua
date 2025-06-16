@@ -104,14 +104,20 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         lia.include(coreFile, "shared")
     end
 
-    if uniqueID ~= "schema" then
-        local ok = isfunction(MODULE.enabled) and MODULE.enabled() or MODULE.enabled
-        if not ok then
-            lia.module.list[uniqueID] = nil
-            if MODULE.identifier ~= "" then _G[MODULE.identifier] = nil end
-            _G[variable] = prevModule
-            return
-        end
+    local val = MODULE.enabled
+    local enabled
+    if isfunction(val) then
+        enabled = val()
+    else
+        enabled = val
+    end
+
+    if uniqueID ~= "schema" and enabled == false then
+        lia.bootstrap("Module", "Disabled module '" .. MODULE.name .. "'")
+        lia.module.list[uniqueID] = nil
+        if MODULE.identifier ~= "" then _G[MODULE.identifier] = nil end
+        _G[variable] = prevModule
+        return
     end
 
     if uniqueID ~= "schema" and MODULE.identifier ~= "" then _G[MODULE.identifier] = {} end
@@ -164,6 +170,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         end
 
         if MODULE.identifier ~= "" then _G[MODULE.identifier] = lia.module.list[uniqueID] end
+        if string.StartWith(path, engine.ActiveGamemode() .. "/modules") then lia.bootstrap("Module", "Finished Loading Module '" .. MODULE.name .. "'") end
         _G[variable] = prevModule
     end
 end
@@ -182,7 +189,6 @@ end
       nil
 ]]
 function lia.module.initialize()
-    lia.module.list = {}
     local schemaPath = engine.ActiveGamemode()
     lia.module.load("schema", schemaPath .. "/schema", false, "schema")
     hook.Run("InitializedSchema")
