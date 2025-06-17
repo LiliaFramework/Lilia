@@ -33,17 +33,19 @@ local function loadExtras(path)
     lia.faction.loadFromDir(path .. "/factions")
     lia.class.loadFromDir(path .. "/classes")
     lia.attribs.loadFromDir(path .. "/attributes")
-    for _, fileName in ipairs(ModuleFiles) do
-        local filePath = path .. "/" .. fileName
-        if file.Exists(filePath, "LUA") then lia.include(filePath) end
+    for _, f in ipairs(ModuleFiles) do
+        local p = path .. "/" .. f
+        if file.Exists(p, "LUA") then lia.include(p) end
     end
 
-    for _, folder in ipairs(ModuleFolders) do
-        local subPath = path .. "/" .. folder
-        if file.Exists(subPath, "LUA") then lia.includeDir(subPath, true, true) end
+    for _, d in ipairs(ModuleFolders) do
+        local s = path .. "/" .. d
+        if file.Exists(s, "LUA") then lia.includeDir(s, true, true) end
     end
 
     lia.includeEntities(path .. "/entities")
+    if file.Exists(path .. "/weapons", "LUA") then lia.includeDir(path .. "/weapons", true, true) end
+    if file.Exists(path .. "/effects", "LUA") then lia.includeDir(path .. "/effects", true, true) end
     lia.item.loadFromDir(path .. "/items")
     hook.Run("DoModuleIncludes", path, MODULE)
 end
@@ -101,18 +103,18 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     if isSingleFile then
         lia.include(path, "shared")
     else
+        if not file.Exists(coreFile, "LUA") then
+            lia.bootstrap("Module", "Skipping module '" .. uniqueID .. "' - missing " .. lowerVar .. ".lua")
+            _G[variable] = prevModule
+            return
+        end
+
         lia.include(coreFile, "shared")
     end
 
     local val = MODULE.enabled
-    local enabled
-    if isfunction(val) then
-        enabled = val()
-    else
-        enabled = val
-    end
-
-    if uniqueID ~= "schema" and enabled == false then
+    local enabled = isfunction(val) and val() or val
+    if uniqueID ~= "schema" and not enabled then
         lia.bootstrap("Module", "Disabled module '" .. MODULE.name .. "'")
         lia.module.list[uniqueID] = nil
         if MODULE.identifier ~= "" then _G[MODULE.identifier] = nil end
