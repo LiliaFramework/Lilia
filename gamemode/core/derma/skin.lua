@@ -158,24 +158,6 @@ function SKIN:PaintScrollBarGrip(_, w, h)
     surface.DrawRect(0, 0, w, h)
 end
 
-function SKIN:PaintButtonUp(_, w, h)
-    surface.SetDrawColor(lia.config.get("Color", Color(255, 255, 255)))
-    surface.DrawRect(0, 0, w, h)
-    surface.SetTextColor(255, 255, 255, 255)
-    surface.SetFont("marlett")
-    surface.SetTextPos(1, 1)
-    surface.DrawText("5")
-end
-
-function SKIN:PaintButtonDown(_, w, h)
-    surface.SetDrawColor(lia.config.get("Color", Color(255, 255, 255)))
-    surface.DrawRect(0, 0, w, h)
-    surface.SetTextColor(255, 255, 255, 255)
-    surface.SetFont("marlett")
-    surface.SetTextPos(1, 0)
-    surface.DrawText("6")
-end
-
 function SKIN:PaintVScrollBar(_, w, h)
     surface.SetDrawColor(20, 20, 20, 200)
     surface.DrawRect(0, 0, w, h)
