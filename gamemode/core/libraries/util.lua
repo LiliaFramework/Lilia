@@ -1024,7 +1024,7 @@ else
             SetClipboardText(rowString)
          end)
 
-         for _, option in ipairs(istable(options) or {}) do
+         for _, option in ipairs(istable(options) and options or {}) do
             menu:AddOption(option.name, function()
                if not option.net then return end
                if option.ExtraFields then
