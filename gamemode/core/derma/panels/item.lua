@@ -1,7 +1,5 @@
 local PANEL = {}
-
 local renderedIcons = {}
-
 local function renderNewIcon(panel, itemTable)
     if itemTable.iconCam and (not renderedIcons[string.lower(itemTable.model)] or itemTable.forceRender) then
         local iconCam = itemTable.iconCam
@@ -59,7 +57,7 @@ local function buildActionFunc(action, actionIndex, itemTable, invID, sub)
         itemTable.player = LocalPlayer()
         local send = true
         if action.onClick then send = action.onClick(itemTable, sub and sub.data) end
-        local snd = action.sound or SOUND_INVENTORY_INTERACT -- TODO: Define this?
+        local snd = action.sound
         if snd then
             if istable(snd) then
                 LocalPlayer():EmitSound(unpack(snd))

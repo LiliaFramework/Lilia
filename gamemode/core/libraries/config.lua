@@ -1,7 +1,7 @@
-﻿lia.config = lia.config or {}
+lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
 --[[
-   Function: lia.config.add
+    lia.config.add(key, name, value, callback, data)
 
    Description:
       Registers a new config option with the given key, display name, default value, and optional callback/data.
@@ -13,14 +13,11 @@ lia.config.stored = lia.config.stored or {}
       callback (function) — A function called when the value changes (optional).
       data (table) — Additional data for this config option, including config type, category, description, etc.
 
-   Returns:
-      nil
+    Returns:
+        nil
 
-   Realm:
-      Shared
-
-   Example Usage:
-      lia.config.add("myConfigKey", "My Config", true, function(oldVal, newVal) print(oldVal, newVal) end, {desc="Enable or disable something"})
+    Realm:
+        Shared
 ]]
 function lia.config.add(key, name, value, callback, data)
     assert(isstring(key), "Expected config key to be string, got " .. type(key))
@@ -45,7 +42,7 @@ function lia.config.add(key, name, value, callback, data)
 end
 
 --[[
-   Function: lia.config.setDefault
+    lia.config.setDefault(key, value)
 
    Description:
       Overrides the default value of an existing config.
@@ -54,14 +51,11 @@ end
       key (string) — The key identifying the config.
       value (any) — The new default value.
 
-   Returns:
-      nil
+    Returns:
+        nil
 
-   Realm:
-      Shared
-
-   Example Usage:
-      lia.config.setDefault("myConfigKey", false)
+    Realm:
+        Shared
 ]]
 function lia.config.setDefault(key, value)
     local config = lia.config.stored[key]
@@ -69,7 +63,7 @@ function lia.config.setDefault(key, value)
 end
 
 --[[
-   Function: lia.config.forceSet
+    lia.config.forceSet(key, value, noSave)
 
    Description:
       Forces a config value without triggering networking or callback if 'noSave' is true, then optionally saves.
@@ -79,14 +73,11 @@ end
       value (any) — The new value to set.
       noSave (boolean) — If true, does not save to disk.
 
-   Returns:
-      nil
+    Returns:
+        nil
 
-   Realm:
-      Shared
-
-   Example Usage:
-      lia.config.forceSet("myConfigKey", 42)
+    Realm:
+        Shared
 ]]
 function lia.config.forceSet(key, value, noSave)
     local config = lia.config.stored[key]
@@ -95,7 +86,7 @@ function lia.config.forceSet(key, value, noSave)
 end
 
 --[[
-   Function: lia.config.set
+    lia.config.set(key, value)
 
    Description:
       Sets a config value, runs callback, and handles networking (if on server). Also saves the config.
@@ -104,14 +95,11 @@ end
       key (string) — The key identifying the config.
       value (any) — The new value to set.
 
-   Returns:
-      nil
+    Returns:
+        nil
 
-   Realm:
-      Shared
-
-   Example Usage:
-      lia.config.set("myConfigKey", 100)
+    Realm:
+        Shared
 ]]
 function lia.config.set(key, value)
     local config = lia.config.stored[key]
@@ -127,7 +115,7 @@ function lia.config.set(key, value)
 end
 
 --[[
-   Function: lia.config.get
+    lia.config.get(key, default)
 
    Description:
       Retrieves the current value of a config, or returns a default if neither value nor default is set.
@@ -136,14 +124,11 @@ end
       key (string) — The key identifying the config.
       default (any) — Fallback value if the config is not found.
 
-   Returns:
-      (any) The config's value or the provided default.
+    Returns:
+        (any) The config's value or the provided default.
 
-   Realm:
-      Shared
-
-   Example Usage:
-      local val = lia.config.get("myConfigKey", false)
+    Realm:
+        Shared
 ]]
 function lia.config.get(key, default)
     local config = lia.config.stored[key]
@@ -159,7 +144,7 @@ function lia.config.get(key, default)
 end
 
 --[[
-   Function: lia.config.load
+    lia.config.load()
 
    Description:
       Loads the config data from storage (server-side) and updates the stored config values.
@@ -168,17 +153,14 @@ end
    Parameters:
       None
 
-   Returns:
-      nil
+    Returns:
+        nil
 
-   Realm:
-      Shared
+    Realm:
+        Shared
 
-   Internal Function:
-      true
-
-   Example Usage:
-      lia.config.load()
+    Internal Function:
+        true
 ]]
 function lia.config.load()
     if SERVER then
@@ -196,7 +178,7 @@ end
 
 if SERVER then
     --[[
-       Function: lia.config.getChangedValues
+        lia.config.getChangedValues()
 
        Description:
           Returns a table of all config entries where the current value differs from the default.
@@ -204,14 +186,11 @@ if SERVER then
        Parameters:
           None
 
-       Returns:
-          (table) Key-value pairs of changed config entries.
+        Returns:
+            (table) Key-value pairs of changed config entries.
 
-       Realm:
-          Server
-
-       Example Usage:
-          local changed = lia.config.getChangedValues()
+        Realm:
+            Server
 ]]
     function lia.config.getChangedValues()
         local data = {}
@@ -222,7 +201,7 @@ if SERVER then
     end
 
     --[[
-       Function: lia.config.send
+        lia.config.send(client)
 
        Description:
           Sends current changed config values to a specified client.
@@ -230,21 +209,18 @@ if SERVER then
        Parameters:
           client (player) — The player to receive the config data.
 
-       Returns:
-          nil
+        Returns:
+            nil
 
-       Realm:
-          Server
-
-       Example Usage:
-          lia.config.send(player)
+        Realm:
+            Server
 ]]
     function lia.config.send(client)
         netstream.Start(client, "cfgList", lia.config.getChangedValues())
     end
 
     --[[
-       Function: lia.config.save
+        lia.config.save()
 
        Description:
           Saves all changed config values to persistent storage.
@@ -252,14 +228,11 @@ if SERVER then
        Parameters:
           None
 
-       Returns:
-          nil
+        Returns:
+            nil
 
-       Realm:
-          Server
-
-       Example Usage:
-          lia.config.save()
+        Realm:
+            Server
 ]]
     function lia.config.save()
         local data = {}

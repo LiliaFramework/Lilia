@@ -1,4 +1,21 @@
-﻿local function CreateSalaryTimer(client)
+--[[
+    CreateSalaryTimer(client)
+
+    Description:
+        Starts or resets a recurring salary timer for the given player. The
+        timer checks hooks for custom pay amounts and limits before awarding
+        money to the player's character.
+
+    Parameters:
+        client (Player) – Player whose salary timer should run.
+
+    Realm:
+        Server
+
+    Returns:
+        None
+]]
+local function CreateSalaryTimer(client)
     if not (IsValid(client) and client:getChar()) then return end
     local char = client:getChar()
     local timerID = "liaSalary" .. client:SteamID64()
@@ -29,6 +46,20 @@
     end)
 end
 
+--[[
+    Hooks:
+        OnReloaded
+        PlayerLoadedChar
+        OnTransferred
+        OnPlayerSwitchClass
+        OnPlayerJoinClass
+        PlayerDisconnected
+        CreateSalaryTimer
+
+    Description:
+        These hooks ensure salary timers are created when appropriate and
+        cleaned up when players leave.
+]]
 hook.Add("OnReloaded", "liaSalaryOnReloaded", function()
     for _, client in player.Iterator() do
         CreateSalaryTimer(client)

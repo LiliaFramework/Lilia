@@ -1,28 +1,27 @@
 ﻿lia.workshop = lia.workshop or {}
 if SERVER then
-    local ws = lia.workshop
-    ws.ids = ws.ids or {}
-    ws.known = ws.known or {}
-    ws.cache = ws.cache or {}
+    lia.workshop.ids = lia.workshop.ids or {}
+    lia.workshop.known = lia.workshop.known or {}
+    lia.workshop.cache = lia.workshop.cache or {}
     local _add = resource.AddWorkshop
     function resource.AddWorkshop(id)
         id = tostring(id)
-        if not ws.ids[id] then lia.bootstrap("Workshop Downloader", "Added workshop " .. id .. " to download list") end
+        if not lia.workshop.ids[id] then lia.bootstrap("Workshop Downloader", "Added workshop " .. id .. " to download list") end
         lia.bootstrap("Workshop Downloader", "Downloading workshop " .. id)
-        ws.ids[id] = true
+        lia.workshop.ids[id] = true
         _add(id)
     end
 
     local function addKnown(id)
         id = tostring(id)
-        if not ws.known[id] then
-            ws.known[id] = true
+        if not lia.workshop.known[id] then
+            lia.workshop.known[id] = true
             lia.bootstrap("Workshop Downloader", "Added workshop " .. id .. " to download list")
         end
     end
 
-    function ws.gather()
-        local ids = table.Copy(ws.ids)
+    function lia.workshop.gather()
+        local ids = table.Copy(lia.workshop.ids)
         for _, addon in pairs(engine.GetAddons() or {}) do
             if addon.mounted and addon.wsid then ids[tostring(addon.wsid)] = true end
         end
@@ -46,19 +45,18 @@ if SERVER then
         return ids
     end
 
-    hook.Add("InitializedModules", "liaWorkshopInitializedModules", function() ws.cache = ws.gather() end)
-    function ws.send(ply)
+    hook.Add("InitializedModules", "liaWorkshopInitializedModules", function() lia.workshop.cache = lia.workshop.gather() end)
+    function lia.workshop.send(ply)
         net.Start("WorkshopDownloader_Start")
-        net.WriteTable(ws.cache)
+        net.WriteTable(lia.workshop.cache)
         net.Send(ply)
     end
 
     hook.Add("PlayerInitialSpawn", "liaWorkshopInit", function(ply)
         if not lia.config.get("AutoDownloadWorkshop", true) then return end
-        timer.Simple(10, function() if IsValid(ply) then ws.send(ply) end end)
+        timer.Simple(10, function() if IsValid(ply) then lia.workshop.send(ply) end end)
     end)
 else
-    local ws = lia.workshop
     local queue, panel, total, remain = {}, nil, 0, 0
     local function gather()
         local ids = {
@@ -82,7 +80,7 @@ else
             end
         end
 
-        for id in pairs(ws.ids or {}) do
+        for id in pairs(lia.workshop.ids or {}) do
             ids[id] = true
         end
         return ids
