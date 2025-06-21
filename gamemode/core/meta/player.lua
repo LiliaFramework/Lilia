@@ -833,7 +833,6 @@ else
         return lia.localData
     end
 
-    local playerMeta = FindMetaTable("Player")
     function playerMeta:NetworkAnimation(active, boneData)
         for name, ang in pairs(boneData) do
             local i = self:LookupBone(name)
