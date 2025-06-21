@@ -132,17 +132,6 @@ jobs:
           git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-      - uses: actions/github-script@v6
-        with:
-          script: |
-            const tag="release"
-            try {
-              const rel=await github.rest.repos.getReleaseByTag({ owner:context.repo.owner, repo:context.repo.repo, tag })
-              await github.rest.repos.deleteRelease({ owner:context.repo.owner, repo:context.repo.repo, release_id:rel.data.id })
-              await github.rest.git.deleteRef({ owner:context.repo.owner, repo:context.repo.repo, ref:`tags/${tag}` })
-            } catch (error) {
-              if(error.status!==404) throw error
-            }
       - name: Package and zip
         run: |
           mkdir -p packaged
@@ -152,8 +141,8 @@ jobs:
       - id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: release
-          release_name: Lilia
+          tag_name: v${{ env.VERSION }}
+          release_name: Lilia v${{ env.VERSION }}
           draft: false
           prerelease: false
         env:
