@@ -1,9 +1,9 @@
-﻿file.CreateDir("lilia")
+file.CreateDir("lilia")
 lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
 if SERVER then
-    --[[
-      lia.data.set
+--[[
+    lia.data.set(key, value, global, ignoreMap)
 
       Description:
          Saves the provided value under the specified key to persistent storage.
@@ -16,14 +16,11 @@ if SERVER then
          global (boolean) - If true, uses a global path; otherwise, includes folder and map.
          ignoreMap (boolean) - If true, ignores the map directory.
 
-      Returns:
-         string - The path where the data was saved.
+    Returns:
+        string - The path where the data was saved.
 
-      Realm:
-         Shared
-
-      Example Usage:
-         lia.data.set("exampleKey", {data = "exampleValue"}, false, false)
+    Realm:
+        Shared
    ]]
     function lia.data.set(key, value, global, ignoreMap)
         local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
@@ -36,7 +33,7 @@ if SERVER then
     end
 
     --[[
-      lia.data.delete
+    lia.data.delete(key, global, ignoreMap)
 
       Description:
          Deletes the stored data file corresponding to the specified key.
@@ -47,14 +44,11 @@ if SERVER then
          global (boolean) - If true, uses a global path; otherwise, includes folder and map.
          ignoreMap (boolean) - If true, ignores the map directory.
 
-      Returns:
-         boolean - True if the file was deleted, false otherwise.
+    Returns:
+        boolean - True if the file was deleted, false otherwise.
 
-      Realm:
-         Shared
-
-      Example Usage:
-         lia.data.delete("exampleKey", false, false)
+    Realm:
+        Shared
    ]]
     function lia.data.delete(key, global, ignoreMap)
         local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
@@ -76,7 +70,7 @@ if SERVER then
 end
 
 --[[
-   lia.data.get
+    lia.data.get(key, default, global, ignoreMap, refresh)
 
    Description:
       Retrieves the stored data for the specified key.
@@ -90,14 +84,11 @@ end
       ignoreMap (boolean) - If true, ignores the map directory.
       refresh (boolean) - If true, forces reading from file instead of cache.
 
-   Returns:
-      any - The stored value, or the default if not found.
+    Returns:
+        any - The stored value, or the default if not found.
 
-   Realm:
-      Shared
-
-   Example Usage:
-      lia.data.get("exampleKey", {})
+    Realm:
+        Shared
 ]]
 function lia.data.get(key, default, global, ignoreMap, refresh)
     if not refresh then

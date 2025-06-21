@@ -1,44 +1,39 @@
-﻿lia.chat = lia.chat or {}
+lia.chat = lia.chat or {}
 lia.chat.classes = lia.char.classes or {}
 --[[
-    lia.char.new(data, id, client, steamID)
+    lia.chat.timestamp(ooc)
 
     Description:
-        Creates a new character instance with default variables and metatable.
+        Returns a formatted timestamp if chat timestamps are enabled.
 
     Parameters:
-        data (table) – Table of character variables.
-        id (number) – Character ID.
-        client (Player) – Player entity.
-        steamID (string) – SteamID64 string if client is not valid.
+        ooc (boolean) – True for out-of-character messages.
+
+    Returns:
+        string – Formatted time string or an empty string.
 
     Realm:
         Shared
-
-    Returns:
-        character (table) – New character object.
 ]]
 function lia.chat.timestamp(ooc)
     return lia.option.ChatShowTime and (ooc and " " or "") .. "(" .. lia.time.GetHour() .. ")" .. (ooc and "" or " ") or ""
 end
 
 --[[
-    lia.char.new(data, id, client, steamID)
+    lia.chat.register(chatType, data)
 
     Description:
-        Creates a new character instance with default variables and metatable.
+        Registers a new chat class and sets up command aliases.
 
     Parameters:
-        data (table) – Table of character variables.
-        id (number) – Character ID.
-        client (Player) – Player entity.
-        steamID (string) – SteamID64 string if client is not valid.
+        chatType (string) – Identifier for the chat class.
+        data (table) – Table of chat class properties.
+
+    Returns:
+        nil
 
     Realm:
         Shared
-
-    Returns:
-        character (table) – New character object.
 ]]
 function lia.chat.register(chatType, data)
     data.syntax = data.syntax or ""
@@ -93,24 +88,22 @@ function lia.chat.register(chatType, data)
     data.filter = data.filter or "ic"
     lia.chat.classes[chatType] = data
 end
-
 --[[
-    lia.char.new(data, id, client, steamID)
+    lia.chat.parse(client, message, noSend)
 
     Description:
-        Creates a new character instance with default variables and metatable.
+        Parses chat text for the proper chat type and optionally sends it.
 
     Parameters:
-        data (table) – Table of character variables.
-        id (number) – Character ID.
-        client (Player) – Player entity.
-        steamID (string) – SteamID64 string if client is not valid.
+        client (Player) – Player sending the message.
+        message (string) – The chat text.
+        noSend (boolean) – Suppress sending when true.
+
+    Returns:
+        chatType (string), text (string), anonymous (boolean)
 
     Realm:
         Shared
-
-    Returns:
-        character (table) – New character object.
 ]]
 function lia.chat.parse(client, message, noSend)
     local anonymous = false
@@ -145,24 +138,24 @@ function lia.chat.parse(client, message, noSend)
     return chatType, message, anonymous
 end
 
-if SERVER then
-    --[[
-    lia.char.new(data, id, client, steamID)
+--[[
+    lia.chat.send(speaker, chatType, text, anonymous, receivers)
 
     Description:
-        Creates a new character instance with default variables and metatable.
+        Broadcasts a chat message to all eligible receivers.
 
     Parameters:
-        data (table) – Table of character variables.
-        id (number) – Character ID.
-        client (Player) – Player entity.
-        steamID (string) – SteamID64 string if client is not valid.
-
-    Realm:
-        Shared
+        speaker (Player) – The message sender.
+        chatType (string) – Chat class identifier.
+        text (string) – Message text.
+        anonymous (boolean) – Whether the sender is anonymous.
+        receivers (table) – Optional list of target players.
 
     Returns:
-        character (table) – New character object.
+        nil
+
+    Realm:
+        Server
 ]]
     function lia.chat.send(speaker, chatType, text, anonymous, receivers)
         local class = lia.chat.classes[chatType]

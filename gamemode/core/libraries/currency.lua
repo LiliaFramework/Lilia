@@ -1,4 +1,4 @@
-﻿lia.currency = lia.currency or {}
+lia.currency = lia.currency or {}
 lia.currency.symbol = lia.config.get("CurrencySymbol") or ""
 lia.currency.singular = lia.config.get("CurrencySingularName") or "dollar"
 lia.currency.plural = lia.config.get("CurrencyPluralName") or "dollars"
@@ -11,10 +11,10 @@ lia.currency.plural = lia.config.get("CurrencyPluralName") or "dollars"
         form; otherwise, it returns the plural form.
 
     Parameters:
-        amount (number) - The amount to format.
+        amount (number) – The amount to format.
 
     Returns:
-        string - The formatted currency string.
+        string – The formatted currency string.
 
     Realm:
         Shared
@@ -35,12 +35,12 @@ if SERVER then
             Validates the position and ensures the amount is a non-negative number.
 
         Parameters:
-            pos (Vector) - The spawn position for the currency entity.
-            amount (number) - The monetary value for the entity.
-            angle (Angle, optional) - The orientation for the entity (defaults to Angle(0, 0, 0)).
+            pos (Vector) – The spawn position for the currency entity.
+            amount (number) – The monetary value for the entity.
+            angle (Angle, optional) – The orientation for the entity (defaults to Angle(0, 0, 0)).
 
         Returns:
-            Entity - The spawned currency entity if successful; nil otherwise.
+            Entity – The spawned currency entity if successful; nil otherwise.
 
         Realm:
             Server

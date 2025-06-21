@@ -1,81 +1,66 @@
-﻿lia = lia or {}
+lia = lia or {}
 lia.color = lia.color or {}
 lia.color.stored = lia.color.stored or {}
 local clamp = math.Clamp
 local configGet = lia.config.get
 local unpack = unpack
 --[[
-   lia.color.register
+    lia.color.register(name, color)
 
-   Description:
-      Registers a named color for later lookup in the color storage.
+    Description:
+        Registers a named color for later lookup.
 
-   Parameters:
-      name  (string)  - The key to assign to the color (case-insensitive).
-      color (Color)   - A Color object (or table with r, g, b, a fields).
+    Parameters:
+        name (string) – Key used to reference the color.
+        color (Color) – Color object or table.
 
-   Returns:
-      None
+    Returns:
+        nil
 
-   Realm:
-      Shared
-
-   Example Usage:
-      local red = Color(255, 0, 0, 255)
-      lia.color.register("alert", red)
+    Realm:
+        Shared
 ]]
 function lia.color.register(name, color)
     lia.color.stored[name:lower()] = color
 end
 
 --[[
-   lia.color.Adjust
+    lia.color.Adjust(color, rOffset, gOffset, bOffset, aOffset)
 
-   Description:
-      Creates a new Color by applying channel offsets to an existing color,
-      clamping each channel between 0 and 255.
+    Description:
+        Creates a new color by applying offsets to each channel.
 
-   Parameters:
-      color   (Color)  - The base color to adjust.
-      rOffset (number) - Amount to add to the red channel.
-      gOffset (number) - Amount to add to the green channel.
-      bOffset (number) - Amount to add to the blue channel.
-      aOffset (number) - Amount to add to the alpha channel (optional; defaults to 0).
+    Parameters:
+        color (Color) – Base color.
+        rOffset (number) – Red channel delta.
+        gOffset (number) – Green channel delta.
+        bOffset (number) – Blue channel delta.
+        aOffset (number) – Alpha channel delta (optional).
 
-   Returns:
-      Color - A new Color object with adjusted channels.
+    Returns:
+        Color – Adjusted color.
 
-   Realm:
-      Shared
-
-   Example Usage:
-      local base   = Color(100, 150, 200, 255)
-      local lighter = lia.color.Adjust(base, 20, 20, 20, 0)
+    Realm:
+        Shared
 ]]
 function lia.color.Adjust(color, rOffset, gOffset, bOffset, aOffset)
     return Color(clamp(color.r + rOffset, 0, 255), clamp(color.g + gOffset, 0, 255), clamp(color.b + bOffset, 0, 255), clamp((color.a or 255) + (aOffset or 0), 0, 255))
 end
 
 --[[
-   lia.color.ReturnMainAdjustedColors
+    lia.color.ReturnMainAdjustedColors()
 
-   Description:
-      Retrieves the base UI color from configuration and returns a table of
-      standardized interface colors with predefined adjustments.
+    Description:
+        Returns a table of commonly used UI colors derived from the base config color.
 
-   Parameters:
-      None
+    Parameters:
+        None
 
-   Returns:
-      table - A mapping of UI element keys to Color objects:
-         background, sidebar, accent, text, hover, border, highlight
+    Returns:
+        table – Mapping of UI color keys to Color objects.
 
-   Realm:
-      Shared
-
-   Example Usage:
-      local uiColors = lia.color.ReturnMainAdjustedColors()
-      panel:SetBackgroundColor(uiColors.background)
+    Realm:
+        Shared
 ]]
 function lia.color.ReturnMainAdjustedColors()
     local base = configGet("Color")
@@ -236,3 +221,4 @@ function Color(r, g, b, a)
     end
     return oldColor(r, g, b, a)
 end
+

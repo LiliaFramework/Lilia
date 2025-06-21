@@ -1,24 +1,19 @@
-﻿lia.class = lia.class or {}
+lia.class = lia.class or {}
 lia.class.list = lia.class.list or {}
 --[[
-   lia.class.loadFromDir
+    lia.class.loadFromDir(directory)
 
-   Description:
-      Loads class definitions from Lua files located in the specified directory.
-      For each valid Lua file, the function includes the file and adds a class table
-      to the class list. It also validates that each class has a valid faction.
+    Description:
+        Loads all class definitions from the given directory and stores them in lia.class.list.
 
-   Parameters:
-      directory (string) - The directory path containing the class Lua files.
+    Parameters:
+        directory (string) – Folder path containing class Lua files.
 
-   Returns:
-      nil
+    Returns:
+        nil
 
-   Realm:
-      Shared
-
-   Example Usage:
-      lia.class.loadFromDir("classes")
+    Realm:
+        Shared
 ]]
 function lia.class.loadFromDir(directory)
    for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
@@ -58,26 +53,20 @@ function lia.class.loadFromDir(directory)
 end
 
 --[[
-   lia.class.canBe
+    lia.class.canBe(client, class)
 
-   Description:
-      Determines whether the specified client is allowed to join the given class.
-      It checks team alignment, if the client already belongs to the class, class capacity,
-      and any additional custom conditions via hooks and OnCanBe callback.
+    Description:
+        Determines if the given client may become the specified class.
 
-   Parameters:
-      client (Player) - The player attempting to join the class.
-      class (string/number) - The identifier of the class to check.
+    Parameters:
+        client (Player) – Player attempting to join.
+        class (string|number) – Class identifier.
 
-   Returns:
-      boolean, string (optional) - Returns false with an error message if access is denied,
-      or the default status (info.isDefault) of the class if allowed.
+    Returns:
+        boolean – False with a message if denied; default status when allowed.
 
-   Realm:
-      Shared
-
-   Example Usage:
-      local allowed, reason = lia.class.canBe(client, "warrior")
+    Realm:
+        Shared
 ]]
 function lia.class.canBe(client, class)
    local info = lia.class.list[class]
@@ -98,37 +87,39 @@ end
 
    Parameters:
       identifier (string/number) - The unique identifier for the class.
+--[[
+    lia.class.get(identifier)
 
-   Returns:
-      table/nil - The class table if found, or nil if it does not exist.
+    Description:
+        Retrieves the class table associated with the given identifier.
 
-   Realm:
-      Shared
+    Parameters:
+        identifier (string|number) – Unique identifier for the class.
 
-   Example Usage:
-      local classInfo = lia.class.get("mage")
+    Returns:
+        table|nil – Class table if found.
+
+    Realm:
+        Shared
 ]]
 function lia.class.get(identifier)
    return lia.class.list[identifier]
 end
 
 --[[
-   lia.class.getPlayers
+    lia.class.getPlayers(class)
 
-   Description:
-      Returns a list of players whose characters belong to the specified class.
+    Description:
+        Returns a table of players whose characters belong to the given class.
 
-   Parameters:
-      class (string/number) - The identifier of the class to filter players by.
+    Parameters:
+        class (string|number) – Class identifier.
 
-   Returns:
-      table - A table containing player objects in the specified class.
+    Returns:
+        table – List of player objects.
 
-   Realm:
-      Shared
-
-   Example Usage:
-      local playersInClass = lia.class.getPlayers("archer")
+    Realm:
+        Shared
 ]]
 function lia.class.getPlayers(class)
    local players = {}
@@ -140,22 +131,19 @@ function lia.class.getPlayers(class)
 end
 
 --[[
-   lia.class.getPlayerCount
+    lia.class.getPlayerCount(class)
 
-   Description:
-      Counts the number of players whose characters belong to the specified class.
+    Description:
+        Counts how many players belong to the given class.
 
-   Parameters:
-      class (string/number) - The identifier of the class to count players in.
+    Parameters:
+        class (string|number) – Class identifier.
 
-   Returns:
-      number - The total count of players in the class.
+    Returns:
+        number – Player count.
 
-   Realm:
-      Shared
-
-   Example Usage:
-      local count = lia.class.getPlayerCount("healer")
+    Realm:
+        Shared
 ]]
 function lia.class.getPlayerCount(class)
    local count = 0
@@ -169,21 +157,20 @@ end
 --[[
    lia.class.retrieveClass
 
-   Description:
-      Searches through the class list to find a class that matches the provided search string.
-      The function checks both the uniqueID and the name of each class for a match.
+--[[
+    lia.class.retrieveClass(class)
 
-   Parameters:
-      class (string) - The search string to match against class uniqueID or name.
+    Description:
+        Searches the class list for a class whose ID or name matches the given text.
 
-   Returns:
-      string/nil - The key (identifier) of the matching class, or nil if no match is found.
+    Parameters:
+        class (string) – Search text.
 
-   Realm:
-      Shared
+    Returns:
+        string|nil – Matching class identifier or nil.
 
-   Example Usage:
-      local classKey = lia.class.retrieveClass("warrior")
+    Realm:
+        Shared
 ]]
 function lia.class.retrieveClass(class)
    for key, classTable in pairs(lia.class.list) do
@@ -193,23 +180,20 @@ function lia.class.retrieveClass(class)
 end
 
 --[[
-   lia.class.hasWhitelist
+--[[
+    lia.class.hasWhitelist(class)
 
-   Description:
-      Checks if the specified class requires a whitelist for access.
-      Default classes do not require a whitelist.
+    Description:
+        Returns whether the specified class requires a whitelist.
 
-   Parameters:
-      class (string/number) - The identifier of the class to check.
+    Parameters:
+        class (string|number) – Class identifier.
 
-   Returns:
-      boolean - True if the class is whitelisted, false otherwise.
+    Returns:
+        boolean – True if the class is whitelisted.
 
-   Realm:
-      Shared
-
-   Example Usage:
-      local isWhitelisted = lia.class.hasWhitelist("rogue")
+    Realm:
+        Shared
 ]]
 function lia.class.hasWhitelist(class)
    local info = lia.class.list[class]

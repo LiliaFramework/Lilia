@@ -1,29 +1,20 @@
-﻿lia.command = lia.command or {}
+lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
 --[[
-   lia.command.add
+    lia.command.add(command, data)
 
-   Description:
-      Registers a new command with the specified name and configuration data.
-      This includes callback functions, privilege requirements, aliases, etc.
+    Description:
+        Registers a new command with its associated data.
 
-   Parameters:
-      command (string) - The name of the command to register.
-      data (table) - A table containing configuration for the command (onRun, adminOnly, etc.).
+    Parameters:
+        command (string) – Command name.
+        data (table) – Table containing command properties.
 
-   Returns:
-      nil
+    Returns:
+        nil
 
-   Realm:
-      Shared
-
-   Example Usage:
-      lia.command.add("mycommand", {
-         onRun = function(client, arguments)
-            -- Do something here
-         end,
-         adminOnly = true
-      })
+    Realm:
+        Shared
 ]]
 function lia.command.add(command, data)
     data.syntax = data.syntax or ""
@@ -82,29 +73,22 @@ function lia.command.add(command, data)
 end
 
 --[[
-   lia.command.hasAccess
+    lia.command.hasAccess(client, command, data)
 
-   Description:
-      Checks if the specified player has access to a given command based on
-      privilege checks, superadmin/admin requirements, and any additional hooks.
+    Description:
+        Determines if a player may run the specified command.
 
-   Parameters:
-      client (Player) - The player attempting to use the command.
-      command (string) - The command name.
-      data (table) - The command's data table (optional if already stored).
+    Parameters:
+        client (Player) – Command caller.
+        command (string) – Command name.
+        data (table) – Command data table.
 
-   Returns:
-      (boolean) - Whether the player has access.
-      (string) - The privilege name used for checking.
+    Returns:
+        boolean – Whether access is granted.
+        string – Privilege checked.
 
-   Realm:
-      Shared
-
-   Example Usage:
-      local canUse, privilege = lia.command.hasAccess(client, "mycommand")
-      if canUse then
-         print("Player has access to command:", privilege)
-      end
+    Realm:
+        Shared
 ]]
 function lia.command.hasAccess(client, command, data)
     if not data then data = lia.command.list[command] end
@@ -354,3 +338,4 @@ hook.Add("CreateInformationButtons", "liaInformationCommands", function(pages)
 end)
 
 lia.command.findPlayer = lia.util.findPlayer
+
