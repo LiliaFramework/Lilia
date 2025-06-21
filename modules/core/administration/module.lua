@@ -20,5 +20,3 @@ MODULE.CAMIPrivileges = {
         Description = "Allows access to Access Configuration Menu.",
     },
 }
-
-hook.Remove("PlayerSay", "ULXMeCheck")
