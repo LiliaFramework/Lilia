@@ -129,14 +129,14 @@ function PANEL:Init()
             end
         end
 
-        self.tabList[key] = self:addTab(key, cb, key)
+        self.tabList[key] = self:addTab(key, cb)
     end
 
     self:MakePopup()
     self:setActiveTab(lia.config.get("DefaultMenuTab"))
 end
 
-function PANEL:addTab(name, callback, uniqueID)
+function PANEL:addTab(name, callback)
     local colors = lia.color.ReturnMainAdjustedColors()
     local tab = self.tabs:Add("liaSmallButton")
     tab:SetText(L(name))
@@ -152,7 +152,6 @@ function PANEL:addTab(name, callback, uniqueID)
 
         tab:SetSelected(true)
         self.activeTab = tab
-        lastMenuTab = uniqueID
         self.panel:Clear()
         self.panel:AlphaTo(255, 0.3, 0)
         if callback then

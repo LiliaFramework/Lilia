@@ -82,7 +82,7 @@ end
 function PANEL:doChange()
     if self.value == 0 and self.pressing == -1 or self.value == self.max and self.pressing == 1 then return end
     self.nextPress = CurTime() + 0.2
-    if self:onChanged(self.pressing) ~= false then self.value = math.Clamp(self.value + self.pressing, 0, self.max) end
+    if self:onChanged() ~= false then self.value = math.Clamp(self.value + self.pressing, 0, self.max) end
 end
 
 function PANEL:onChanged()
