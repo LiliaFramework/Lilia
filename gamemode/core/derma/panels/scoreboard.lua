@@ -235,6 +235,11 @@ function PANEL:addPlayer(ply, parent)
     slot.model:SetPos(margin, (height - iconSize) * 0.5)
     slot.model:SetSize(iconSize, iconSize)
     slot.model:SetModel(ply:GetModel(), ply:GetSkin())
+    local ent = slot.model.Entity
+    for i = 0, ply:GetNumBodyGroups() - 1 do
+        ent:SetBodygroup(i, ply:GetBodygroup(i))
+    end
+
     slot.model:setHidden(hook.Run("ShouldAllowScoreboardOverride", ply, "model"))
     slot.model.DoClick = function()
         local menu, opts = DermaMenu(), {}
@@ -339,6 +344,11 @@ function PANEL:addPlayer(ply, parent)
         local mdl, sk = ply:GetModel(), ply:GetSkin()
         if self.lastModel ~= mdl or self.lastSkin ~= sk then
             self.model:SetModel(mdl, sk)
+            local ent = self.model.Entity
+            for i = 0, ply:GetNumBodyGroups() - 1 do
+                ent:SetBodygroup(i, ply:GetBodygroup(i))
+            end
+
             self.lastModel, self.lastSkin = mdl, sk
         end
 
