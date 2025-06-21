@@ -1883,3 +1883,1266 @@
                 surface.CreateFont("Logo", {size = 32, font = "Tahoma"})
             end)
 ]]
+--[[
+        AddBarField(...)
+
+        Description:
+            Called when the F1 menu builds status bars so new fields can be added.
+
+        Realm:
+            Client
+        Example:
+            -- Adds a custom thirst bar next to stamina.
+            hook.Add("AddBarField", "AddThirstBar", function(section, id, label, min, max, value)
+                lia.bar.add(value, Color(0, 150, 255), nil, id)
+            end)
+]]
+
+--[[
+        AddSection(...)
+
+        Description:
+            Fired when building the F1 menu so modules can insert additional sections.
+
+        Realm:
+            Client
+        Example:
+            -- Add a custom "Settings" tab.
+            hook.Add("AddSection", "AddSettingsSection", function(name, color, priority)
+                if name == "settings" then
+                    color = Color(0, 128, 255)
+                    priority = 5
+                end
+            end)
+]]
+
+--[[
+        CanItemBeTransfered(...)
+
+        Description:
+            Determines whether an item may move between inventories.
+
+        Realm:
+            Server
+        Example:
+            -- Prevent quest items from being dropped.
+            hook.Add("CanItemBeTransfered", "BlockQuestItemDrop", function(item, newInv, oldInv)
+                if item.isQuest then return false, "Quest items cannot be moved" end
+            end)
+]]
+
+--[[
+        CanOpenBagPanel(...)
+
+        Description:
+            Called right before a bag inventory UI opens. Return false to block opening.
+
+        Realm:
+            Client
+        Example:
+            -- Disallow bag use while fighting.
+            hook.Add("CanOpenBagPanel", "BlockBagInCombat", function(item)
+                if LocalPlayer():getNetVar("inCombat") then return false end
+            end)
+]]
+
+--[[
+        CanOutfitChangeModel(...)
+
+        Description:
+            Checks if an outfit is allowed to change the player model.
+
+        Realm:
+            Shared
+        Example:
+            -- Restrict model swaps for certain factions.
+            hook.Add("CanOutfitChangeModel", "RestrictModelSwap", function(item)
+                if item.factionRestricted then return false end
+            end)
+]]
+
+--[[
+        CanPerformVendorEdit(...)
+
+        Description:
+            Determines if a player can modify a vendor's settings.
+
+        Realm:
+            Shared
+        Example:
+            -- Allow only admins to edit vendors.
+            hook.Add("CanPerformVendorEdit", "AdminVendorEdit", function(client)
+                return client:IsAdmin()
+            end)
+]]
+
+--[[
+        CanPickupMoney(...)
+
+        Description:
+            Called when a player attempts to pick up a money entity.
+
+        Realm:
+            Shared
+        Example:
+            -- Prevent money pickup while handcuffed.
+            hook.Add("CanPickupMoney", "BlockWhileCuffed", function(client)
+                if client:isHandcuffed() then return false end
+            end)
+]]
+
+--[[
+        CanPlayerAccessDoor(...)
+
+        Description:
+            Determines if a player can open or lock a door entity.
+
+        Realm:
+            Shared
+        Example:
+            -- Only police can unlock jail cells.
+            hook.Add("CanPlayerAccessDoor", "PoliceDoors", function(client, door, access)
+                if door.isJail and not client:isPolice() then return false end
+            end)
+]]
+
+--[[
+        CanPlayerAccessVendor(...)
+
+        Description:
+            Checks if a player is permitted to open a vendor menu.
+
+        Realm:
+            Server
+        Example:
+            -- Block access unless the vendor allows the player's faction.
+            hook.Add("CanPlayerAccessVendor", "CheckVendorFaction", function(client, vendor)
+                if not vendor:isFactionAllowed(client:Team()) then return false end
+            end)
+]]
+
+--[[
+        CanPlayerHoldObject(...)
+
+        Description:
+            Determines if the player can pick up an entity with the hands swep.
+
+        Realm:
+            Shared
+        Example:
+            -- Prevent grabbing heavy physics objects.
+            hook.Add("CanPlayerHoldObject", "WeightLimit", function(client, ent)
+                if ent:GetMass() > 50 then return false end
+            end)
+]]
+
+--[[
+        CanPlayerInteractItem(...)
+
+        Description:
+            Called when a player tries to use or drop an item.
+
+        Realm:
+            Shared
+        Example:
+            -- Block medkit use inside safe zones.
+            hook.Add("CanPlayerInteractItem", "SafeZoneBlock", function(client, action, item)
+                if action == "use" and item.uniqueID == "medkit" and client:isInSafeZone() then
+                    return false
+                end
+            end)
+]]
+
+--[[
+        CanPlayerKnock(...)
+
+        Description:
+            Called when a player attempts to knock on a door.
+
+        Realm:
+            Shared
+        Example:
+            -- Prevent knocking while disguised.
+            hook.Add("CanPlayerKnock", "BlockDisguisedKnock", function(client, door)
+                if client:getNetVar("disguised") then return false end
+            end)
+]]
+
+--[[
+        CanPlayerSpawnStorage(...)
+
+        Description:
+            Checks if the player is allowed to spawn a storage container.
+
+        Realm:
+            Server
+        Example:
+            -- Limit players to one storage crate.
+            hook.Add("CanPlayerSpawnStorage", "LimitStorage", function(client, ent, data)
+                if client.storageSpawned then return false end
+            end)
+]]
+
+--[[
+        CanPlayerThrowPunch(...)
+
+        Description:
+            Called when the fists weapon tries to punch.
+
+        Realm:
+            Shared
+        Example:
+            -- Prevent punching while restrained.
+            hook.Add("CanPlayerThrowPunch", "NoPunchWhenTied", function(client)
+                if client:IsFlagSet(FL_KNOCKED) then return false end
+            end)
+]]
+
+--[[
+        CanPlayerTradeWithVendor(...)
+
+        Description:
+            Checks whether a vendor trade is allowed.
+
+        Realm:
+            Server
+        Example:
+            -- Block selling stolen goods.
+            hook.Add("CanPlayerTradeWithVendor", "DisallowStolenItems", function(client, vendor, itemType, selling)
+                if lia.stolen[itemType] then return false, "Stolen items" end
+            end)
+]]
+
+--[[
+        CanPlayerViewInventory(...)
+
+        Description:
+            Called before any inventory menu is shown.
+
+        Realm:
+            Client
+        Example:
+            -- Prevent opening inventory while in a cutscene.
+            hook.Add("CanPlayerViewInventory", "BlockDuringCutscene", function()
+                return not LocalPlayer():getNetVar("cutscene")
+            end)
+]]
+
+--[[
+        CanSaveData(...)
+
+        Description:
+            Called before persistent storage saves.
+
+        Realm:
+            Server
+        Example:
+            -- Disable saving during special events.
+            hook.Add("CanSaveData", "NoEventSaves", function(entity, inv)
+                if lia.eventActive then return false end
+            end)
+]]
+
+--[[
+        CharHasFlags(...)
+
+        Description:
+            Allows custom checks for a character's permission flags.
+
+        Realm:
+            Shared
+        Example:
+            -- Grant extra access if the character is VIP.
+            hook.Add("CharHasFlags", "VIPExtraFlags", function(char, flags)
+                if char:isVIP() and flags == "v" then return true end
+            end)
+]]
+
+--[[
+        CharPostSave(...)
+
+        Description:
+            Runs after a character's data has been saved to the database.
+
+        Realm:
+            Shared
+        Example:
+            -- Log every time characters save data.
+            hook.Add("CharPostSave", "LogCharSaves", function(char)
+                print(char:getName() .. " saved")
+            end)
+]]
+
+--[[
+        DatabaseConnected(...)
+
+        Description:
+            Fired after the database has been successfully connected.
+
+        Realm:
+            Shared
+        Example:
+            -- Prepare custom tables once the DB connects.
+            hook.Add("DatabaseConnected", "CreateCustomTables", function()
+                lia.db.query("CREATE TABLE IF NOT EXISTS extras(id INT)")
+            end)
+]]
+
+--[[
+        DrawItemDescription(...)
+
+        Description:
+            Called when an item entity draws its description text.
+
+        Realm:
+            Client
+        Example:
+            -- Display remaining uses next to item name.
+            hook.Add("DrawItemDescription", "AddUseCount", function(item, x, y, color, alpha)
+                draw.SimpleText("Uses: " .. item:getData("uses", 0), "DermaDefault", x, y + 20, color)
+            end)
+]]
+
+--[[
+        GetAttributeMax(...)
+
+        Description:
+            Returns the maximum value allowed for an attribute.
+
+        Realm:
+            Shared
+        Example:
+            -- Increase stamina cap for VIP players.
+            hook.Add("GetAttributeMax", "VIPStamina", function(client, attrib)
+                if attrib == "stm" and client:isVIP() then return 150 end
+            end)
+]]
+
+--[[
+        GetDefaultInventorySize(...)
+
+        Description:
+            Returns the default width and height for new inventories.
+
+        Realm:
+            Server
+        Example:
+            -- Expand default bags for premium players.
+            hook.Add("GetDefaultInventorySize", "PremiumBags", function(client)
+                if client:isVIP() then return 6, 6 end
+            end)
+]]
+
+--[[
+        GetMoneyModel(...)
+
+        Description:
+            Allows overriding the entity model used for dropped money.
+
+        Realm:
+            Shared
+        Example:
+            -- Use a golden model for large sums.
+            hook.Add("GetMoneyModel", "GoldMoneyModel", function(amount)
+                if amount > 5000 then return "models/props_lab/box01a.mdl" end
+            end)
+]]
+
+        GetPlayerPunchDamage(...)
+
+        Description:
+            Lets addons modify how much damage the fists weapon deals.
+
+        Realm:
+            Shared
+        Example:
+            -- Scale punch damage by strength attribute.
+            hook.Add("GetPlayerPunchDamage", "StrengthPunch", function(client, dmg, context)
+                return dmg * (1 + client:getChar():getAttrib("str", 0) / 100)
+            end)
+]]
+
+        InterceptClickItemIcon(...)
+
+        Description:
+            Allows overriding default clicks on inventory icons.
+
+        Realm:
+            Client
+        Example:
+            -- Shift-click to quickly move items.
+            hook.Add("InterceptClickItemIcon", "ShiftQuickMove", function(panel, icon, key)
+                if key == KEY_LSHIFT then return true end
+            end)
+]]
+
+        ItemCombine(...)
+
+        Description:
+            Called when attempting to combine one item with another.
+
+        Realm:
+            Server
+        Example:
+            -- Combine two ammo boxes into one stack.
+            hook.Add("ItemCombine", "StackAmmo", function(client, base, other)
+                if base.uniqueID == "ammo" and other.uniqueID == "ammo" then
+                    base:setData("amount", base:getData("amount",0) + other:getData("amount",0))
+                    return true
+                end
+            end)
+]]
+
+--[[
+        ItemDraggedOutOfInventory(...)
+
+        Description:
+            Called when an item icon is dragged completely out of an inventory.
+
+        Realm:
+            Server
+        Example:
+            -- Drop the item into the world when removed.
+            hook.Add("ItemDraggedOutOfInventory", "DropOnDragOut", function(invPanel, item)
+                item:spawn(invPanel:LocalToWorld(item:getPosition()))
+            end)
+]]
+
+--[[
+        ItemFunctionCalled(...)
+
+        Description:
+            Triggered whenever an item function is executed by a player.
+
+        Realm:
+            Shared
+        Example:
+            -- Log item function usage for analytics.
+            hook.Add("ItemFunctionCalled", "TrackItemUse", function(item, action, client, entity, result)
+                lia.log.add(client, "item_use", item.uniqueID, action)
+            end)
+]]
+--[[
+        ItemTransfered(...)
+
+        Description:
+            Runs after an item successfully moves between inventories.
+
+        Realm:
+            Server
+        Example:
+            -- Notify the player about the transfer result.
+            hook.Add("ItemTransfered", "NotifyTransfer", function(context)
+                context.client:notify("Item moved!")
+            end)
+]]
+
+--[[
+        OnCharAttribBoosted(...)
+
+        Description:
+            Fired when an attribute boost is added or removed.
+
+        Realm:
+            Shared
+        Example:
+            -- Notify the player when they gain a temporary bonus.
+            hook.Add("OnCharAttribBoosted", "BoostNotice", function(client, char, key, id, amount)
+                if amount ~= true then client:notify("Boosted " .. key .. " by " .. amount) end
+            end)
+]]
+--[[
+        OnCharAttribUpdated(...)
+
+        Description:
+            Fired when a character attribute value is changed.
+
+        Realm:
+            Shared
+        Example:
+            -- Sync the new attribute to the HUD.
+            hook.Add("OnCharAttribUpdated", "UpdateHUDAttrib", function(client, char, key, value)
+                if client == LocalPlayer() then MyHUD:SetStat(key, value) end
+            end)
+]]
+--[[
+        OnCharFallover(...)
+
+        Description:
+            Called when a character ragdolls or is forced to fall over.
+
+        Realm:
+            Server
+        Example:
+            -- Apply a stun effect when knocked down.
+            hook.Add("OnCharFallover", "ApplyStun", function(client, _, forced)
+                if forced then client:setAction("stunned", 3) end
+            end)
+]]
+--[[
+        OnCharKick(...)
+
+        Description:
+            Called when a character is kicked from the server.
+
+        Realm:
+            Shared
+        Example:
+            -- Record the kick reason.
+            hook.Add("OnCharKick", "LogKickReason", function(char, client)
+                print(char:getName(), "was kicked")
+            end)
+]]
+--[[
+        OnCharPermakilled(...)
+
+        Description:
+            Called when a character is permanently killed.
+
+        Realm:
+            Shared
+        Example:
+            -- Announce permadeath in chat.
+            hook.Add('OnCharPermakilled', 'AnnouncePK', function(char, time)
+                PrintMessage(HUD_PRINTTALK, char:getName() .. ' has met their end!')
+            end)
+]]
+--[[
+        OnCharRecognized(...)
+
+        Description:
+            Called clientside when your character recognizes another.
+
+        Realm:
+            Client
+        Example:
+            -- Play a sound whenever someone becomes recognized.
+            hook.Add('OnCharRecognized', 'PlayRecognizeSound', function(client)
+                surface.PlaySound('buttons/button17.wav')
+            end)
+]]
+--[[
+        OnCharTradeVendor(...)
+
+        Description:
+            Called after a character buys from or sells to a vendor.
+
+        Realm:
+            Server
+        Example:
+            -- Log vendor transactions to the console.
+            hook.Add('OnCharTradeVendor', 'LogVendorTrade', function(client, vendor, item, selling)
+                print(client:Nick(), selling and 'sold' or 'bought', item and item:getName() or 'unknown')
+            end)
+]]
+
+--[[
+        OnCreatePlayerRagdoll(...)
+
+        Description:
+            Called when a ragdoll entity is created for a player.
+
+        Realm:
+            Shared
+        Example:
+            -- Tint death ragdolls red.
+            hook.Add('OnCreatePlayerRagdoll', 'RedRagdoll', function(client, ent, dead)
+                if dead then ent:SetColor(Color(255,0,0)) end
+            end)
+]]
+--[[
+        OnCreateStoragePanel(...)
+
+        Description:
+            Called when both the player's inventory and storage panels are created.
+
+        Realm:
+            Client
+        Example:
+            -- Add a custom tab to storage windows.
+            hook.Add('OnCreateStoragePanel', 'AddSortTab', function(localPanel, storagePanel, storage)
+                storagePanel:AddTab('Sort', function() return vgui.Create('liaStorageSort') end)
+            end)
+]]
+
+--[[
+        OnItemAdded(...)
+
+        Description:
+            Called when a new item instance is placed into an inventory.
+
+        Realm:
+            Shared
+        Example:
+            -- Update the HUD when we pick up ammo.
+            hook.Add('OnItemAdded', 'UpdateAmmoHUD', function(ply, item)
+                if item.category == 'ammo' then MyHUD:AddAmmo(item) end
+            end)
+]]
+
+--[[
+        OnItemCreated(...)
+
+        Description:
+            Called when a new item instance table is initialized.
+
+        Realm:
+            Shared
+        Example:
+            -- Set custom data on freshly made items.
+            hook.Add('OnItemCreated', 'InitCustomData', function(item)
+                item:setData('born', os.time())
+            end)
+]]
+--[[
+        OnItemSpawned(...)
+
+        Description:
+            Called when an item entity has been spawned in the world.
+
+        Realm:
+            Shared
+        Example:
+            -- Play a sound when rare items appear.
+            hook.Add('OnItemSpawned', 'RareSpawnSound', function(itemEnt)
+                if itemEnt.rare then itemEnt:EmitSound('items/ammo_pickup.wav') end
+            end)
+]]
+--[[
+        OnOpenVendorMenu(...)
+
+        Description:
+            Called when the vendor dialog panel is opened.
+
+        Realm:
+            Client
+        Example:
+            -- Automatically switch to the buy tab.
+            hook.Add('OnOpenVendorMenu', 'DefaultBuyTab', function(panel, vendor)
+                panel:openTab('Buy')
+            end)
+]]
+--[[
+        OnPickupMoney(...)
+
+        Description:
+            Called after a player picks up a money entity.
+
+        Realm:
+            Shared
+        Example:
+            -- Reward an achievement for looting money.
+            hook.Add('OnPickupMoney', 'MoneyAchievement', function(client, ent)
+                client:addProgress('rich', ent:getAmount())
+            end)
+]]
+
+--[[
+        OnPlayerEnterSequence(...)
+
+        Description:
+            Fired when a scripted animation sequence begins.
+
+        Realm:
+            Shared
+        Example:
+            -- Freeze the player during the sequence.
+            hook.Add('OnPlayerEnterSequence', 'FreezeDuringSeq', function(client, seq, callback, time, noFreeze)
+                if not noFreeze then client:Freeze(true) end
+            end)
+]]
+
+--[[
+        OnPlayerInteractItem(...)
+
+        Description:
+            Runs after a player has interacted with an item.
+
+        Realm:
+            Shared
+        Example:
+            -- Send analytics for item usage.
+            hook.Add('OnPlayerInteractItem', 'Analytics', function(client, action, item, result, data)
+                lia.analytics.log(client, action, item.uniqueID)
+            end)
+]]
+--[[
+        OnPlayerJoinClass(...)
+
+        Description:
+            Called when a player changes to a new class.
+
+        Realm:
+            Shared
+        Example:
+            -- Give class specific weapons.
+            hook.Add('OnPlayerJoinClass', 'ClassWeapons', function(client, class, oldClass)
+                for _, wep in ipairs(class.weapons or {}) do client:Give(wep) end
+            end)
+]]
+--[[
+        OnPlayerLeaveSequence(...)
+
+        Description:
+            Fired when a scripted animation sequence ends for a player.
+
+        Realm:
+            Shared
+        Example:
+            -- Unfreeze the player after the sequence.
+            hook.Add('OnPlayerLeaveSequence', 'UnfreezeAfterSeq', function(client)
+                client:Freeze(false)
+            end)
+]]
+--[[
+        OnPlayerLostStackItem(...)
+
+        Description:
+            Called if a stackable item is removed unexpectedly.
+
+        Realm:
+            Shared
+        Example:
+            -- Warn players when their ammo stack disappears.
+            hook.Add('OnPlayerLostStackItem', 'WarnLostAmmo', function(item)
+                if item.category == 'ammo' then print('Ammo stack lost!') end
+            end)
+]]
+--[[
+        OnPlayerSwitchClass(...)
+
+        Description:
+            Occurs right before a player's class changes.
+
+        Realm:
+            Shared
+        Example:
+            -- Prevent switching while in combat.
+            hook.Add('OnPlayerSwitchClass', 'NoCombatSwap', function(client, class, oldClass)
+                if client:getNetVar('inCombat') then return false end
+            end)
+]]
+--[[
+        OnRequestItemTransfer(...)
+
+        Description:
+            Called when the UI asks to move an item between inventories.
+
+        Realm:
+            Client
+        Example:
+            -- Validate transfers before sending to the server.
+            hook.Add('OnRequestItemTransfer', 'ValidateTransfer', function(panel, itemID, invID, x, y)
+                return itemID ~= 0 -- block invalid ids
+            end)
+]]
+--[[
+        PersistenceLoad(...)
+
+        Description:
+            Called when map persistence data is loaded.
+
+        Realm:
+            Server
+        Example:
+            -- Verify entities when the map reloads.
+            hook.Add('PersistenceLoad', 'CheckPersistent', function(name)
+                print('Loading persistence file', name)
+            end)
+]]
+--[[
+        PlayerAccessVendor(...)
+
+        Description:
+            Occurs when a player successfully opens a vendor.
+
+        Realm:
+            Shared
+        Example:
+            -- Track how often players browse vendors.
+            hook.Add('PlayerAccessVendor', 'VendorAnalytics', function(client, vendor)
+                lia.log.add(client, 'vendor_open', vendor:GetClass())
+            end)
+]]
+--[[
+        PlayerStaminaGained(...)
+
+        Description:
+            Called when a player regenerates stamina points.
+
+        Realm:
+            Shared
+        Example:
+            -- Update a stamina HUD element.
+            hook.Add('PlayerStaminaGained', 'HUDUpdateGain', function(client)
+                MyHUD:UpdateStamina(client:getLocalVar('stamina'))
+            end)
+]]
+--[[
+        PlayerStaminaLost(...)
+
+        Description:
+            Called when a player's stamina decreases.
+
+        Realm:
+            Shared
+        Example:
+            -- Flash the stamina bar when exhausted.
+            hook.Add('PlayerStaminaLost', 'FlashStamina', function(client)
+                if client:getLocalVar('stamina', 0) <= 0 then MyHUD:Flash() end
+            end)
+]]
+--[[
+        PlayerThrowPunch(...)
+
+        Description:
+            Fires when a player lands a punch with the fists weapon.
+
+        Realm:
+            Shared
+        Example:
+            -- Play a custom sound on punch.
+            hook.Add('PlayerThrowPunch', 'PunchSound', function(client, trace)
+                client:EmitSound('npc/vort/claw_swing1.wav')
+            end)
+]]
+--[[
+        PostDrawInventory(...)
+
+        Description:
+            Called each frame after the inventory panel draws.
+
+        Realm:
+            Client
+        Example:
+            -- Draw a watermark over the inventory.
+            hook.Add('PostDrawInventory', 'InventoryWatermark', function(panel)
+                draw.SimpleText('MY SERVER', 'DermaLarge', panel:GetWide()-100, 8, color_white)
+            end)
+]]
+--[[
+        PrePlayerInteractItem(...)
+
+        Description:
+            Called just before a player interacts with an item.
+
+        Realm:
+            Shared
+        Example:
+            -- Deny using keys on locked chests.
+            hook.Add('PrePlayerInteractItem', 'BlockChestKeys', function(client, action, item)
+                if action == 'use' and item.uniqueID == 'key' and client.lockedChest then return false end
+            end)
+]]
+--[[
+        SetupBagInventoryAccessRules(...)
+
+        Description:
+            Allows modules to define who can access a bag inventory.
+
+        Realm:
+            Shared
+        Example:
+            -- Only the bag owner may open it.
+            hook.Add('SetupBagInventoryAccessRules', 'OwnerOnlyBags', function(inv)
+                inv:allowAccess('transfer', inv:getOwner())
+            end)
+]]
+--[[
+        SetupDatabase(...)
+
+        Description:
+            Runs before the gamemode initializes its database connection.
+
+        Realm:
+            Server
+        Example:
+            -- Register additional tables.
+            hook.Add('SetupDatabase', 'AddExtraTables', function()
+                lia.db.query('CREATE TABLE IF NOT EXISTS mytable(id INT)')
+            end)
+]]
+--[[
+        StorageCanTransferItem(...)
+
+        Description:
+            Determines if an item can move in or out of a storage entity.
+
+        Realm:
+            Server
+        Example:
+            -- Prevent weapons from being stored in car trunks.
+            hook.Add('StorageCanTransferItem', 'NoWeaponsInCars', function(client, storage, item)
+                if storage.isCar and item.category == 'weapons' then return false end
+            end)
+]]
+--[[
+        StorageEntityRemoved(...)
+
+        Description:
+            Fired when a storage entity is removed from the world.
+
+        Realm:
+            Shared
+        Example:
+            -- Drop items when a crate is destroyed.
+            hook.Add('StorageEntityRemoved', 'DropContents', function(entity, inv)
+                inv:dropItems(entity:GetPos())
+            end)
+]]
+--[[
+        StorageInventorySet(...)
+
+        Description:
+            Called when a storage entity is assigned an inventory.
+
+        Realm:
+            Shared
+        Example:
+            -- Send a notification when storage is initialized.
+            hook.Add('StorageInventorySet', 'NotifyStorage', function(entity, inv, isCar)
+                if isCar then print('Trunk inventory ready') end
+            end)
+]]
+--[[
+        StorageOpen(...)
+
+        Description:
+            Called clientside when a storage menu is opened.
+
+        Realm:
+            Client
+        Example:
+            -- Display storage name in the chat.
+            hook.Add('StorageOpen', 'AnnounceStorage', function(entity, isCar)
+                chat.AddText('Opened storage:', entity:GetClass())
+            end)
+]]
+--[[
+        StorageRestored(...)
+
+        Description:
+            Called when a storage's contents are loaded from disk.
+
+        Realm:
+            Server
+        Example:
+            -- Log how many items were restored.
+            hook.Add('StorageRestored', 'PrintRestore', function(storage, inv)
+                print('Storage restored with', #inv:getItems(), 'items')
+            end)
+]]
+--[[
+        StorageUnlockPrompt(...)
+
+        Description:
+            Called clientside when you must enter a storage password.
+
+        Realm:
+            Client
+        Example:
+            -- Auto-fill a remembered password.
+            hook.Add('StorageUnlockPrompt', 'AutoFill', function(entity)
+                return '1234' -- automatically send this string
+            end)
+]]
+--[[
+        VendorClassUpdated(vendor, id, allowed)
+
+        Description:
+            Called when a vendor's allowed classes are updated.
+
+        Realm:
+            Client
+        Example:
+            -- React to class access changes.
+            hook.Add("VendorClassUpdated", "LogVendorClassChange", function(vendor, id, allowed)
+                print("Vendor class", id, "now", allowed and "allowed" or "blocked")
+            end)
+]]
+
+--[[
+        VendorEdited(vendor, key)
+
+        Description:
+            Called after a delay when a vendor's data is edited.
+
+        Realm:
+            Client
+        Example:
+            -- Log which key changed.
+            hook.Add("VendorEdited", "PrintVendorEdit", function(vendor, key)
+                print("Vendor", vendor:GetClass(), "edited key", key)
+            end)
+]]
+
+--[[
+        VendorExited()
+
+        Description:
+            Called when a player exits from interacting with a vendor.
+
+        Realm:
+            Client
+        Example:
+            -- Notify the player when they leave a vendor.
+            hook.Add("VendorExited", "PrintVendorExit", function()
+                print("Stopped interacting with vendor")
+            end)
+]]
+
+--[[
+        VendorFactionUpdated(vendor, id, allowed)
+
+        Description:
+            Called when a vendor's allowed factions are updated.
+
+        Realm:
+            Client
+        Example:
+            -- Print updated faction permissions.
+            hook.Add("VendorFactionUpdated", "LogVendorFactionUpdate", function(vendor, id, allowed)
+                print("Vendor faction", id, "now", allowed and "allowed" or "blocked")
+            end)
+]]
+
+--[[
+        VendorItemMaxStockUpdated(vendor, itemType, value)
+
+        Description:
+            Called when a vendor's item max stock value changes.
+
+        Realm:
+            Client
+        Example:
+            -- Log stock limit changes.
+            hook.Add("VendorItemMaxStockUpdated", "LogVendorStockLimits", function(vendor, itemType, value)
+                print("Vendor stock limit for", itemType, "set to", value)
+            end)
+]]
+
+--[[
+        VendorItemModeUpdated(vendor, itemType, value)
+
+        Description:
+            Called when a vendor's item mode is changed.
+
+        Realm:
+            Client
+        Example:
+            -- Print the new mode value.
+            hook.Add("VendorItemModeUpdated", "PrintVendorMode", function(vendor, itemType, value)
+                print("Vendor mode for", itemType, "changed to", value)
+            end)
+]]
+
+--[[
+        VendorItemPriceUpdated(vendor, itemType, value)
+
+        Description:
+            Called when a vendor's item price is changed.
+
+        Realm:
+            Client
+        Example:
+            -- Print the new item price.
+            hook.Add("VendorItemPriceUpdated", "LogVendorItemPrice", function(vendor, itemType, value)
+                print("Vendor price for", itemType, "is now", value)
+            end)
+]]
+
+--[[
+        VendorItemStockUpdated(vendor, itemType, value)
+
+        Description:
+            Called when a vendor's item stock value changes.
+
+        Realm:
+            Client
+        Example:
+            -- Log remaining stock for the item.
+            hook.Add("VendorItemStockUpdated", "LogVendorItemStock", function(vendor, itemType, value)
+                print("Vendor stock for", itemType, "is now", value)
+            end)
+]]
+
+--[[
+        VendorMoneyUpdated(vendor, money, oldMoney)
+
+        Description:
+            Called when a vendor's available money changes.
+
+        Realm:
+            Client
+        Example:
+            -- Print the vendor's new money amount.
+            hook.Add("VendorMoneyUpdated", "LogVendorMoney", function(vendor, money, oldMoney)
+                print("Vendor money changed from", oldMoney, "to", money)
+            end)
+]]
+
+--[[
+        VendorOpened(vendor)
+
+        Description:
+            Called when a vendor menu is opened on the client.
+
+        Realm:
+            Client
+        Example:
+            -- Print which vendor was opened.
+            hook.Add("VendorOpened", "PrintVendorOpened", function(vendor)
+                print("Opened vendor", vendor:GetClass())
+            end)
+]]
+
+--[[
+        VendorSynchronized(vendor)
+
+        Description:
+            Called when vendor synchronization data is received.
+
+        Realm:
+            Client
+        Example:
+            -- Print a message when vendor data syncs.
+            hook.Add("VendorSynchronized", "LogVendorSync", function(vendor)
+                print("Vendor", vendor:GetClass(), "synchronized")
+            end)
+]]
+
+--[[
+        VendorTradeEvent(client, entity, uniqueID, isSellingToVendor)
+
+        Description:
+            Called when a player attempts to trade with a vendor.
+
+        Realm:
+            Server
+        Example:
+            -- Log all vendor trades to the console.
+            hook.Add("VendorTradeEvent", "LogVendorTrades", function(client, entity, uniqueID, isSellingToVendor)
+                local action = isSellingToVendor and "sold" or "bought"
+                print(client:Name() .. " " .. action .. " " .. uniqueID .. " with " .. entity:GetClass())
+            end)
+]]
+
+--[[
+        getItemDropModel(itemTable, entity)
+
+        Description:
+            Returns an alternate model path for a dropped item.
+
+        Realm:
+            Server
+
+        Returns:
+            string|nil – Alternate model path or nil for default.
+        Example:
+            -- Replace drop model for weapons.
+            hook.Add("getItemDropModel", "CustomDropModelForWeapons", function(itemTable, entity)
+                if itemTable.category == "Weapon" then
+                    return "models/weapons/w_rif_ak47.mdl"
+                end
+            end)
+]]
+
+--[[
+        getPriceOverride(vendor, uniqueID, price, isSellingToVendor)
+
+        Description:
+            Allows modules to override a vendor item's price dynamically.
+
+        Realm:
+            Shared
+
+        Returns:
+            integer|nil – New price or nil for default.
+        Example:
+            -- Increase price for rare items when buying from the vendor.
+            hook.Add("getPriceOverride", "DynamicPricing", function(vendor, uniqueID, price, isSellingToVendor)
+                if uniqueID == "rare_item" then
+                    if isSellingToVendor then
+                        return math.floor(price * 0.75)
+                    else
+                        return math.floor(price * 1.25)
+                    end
+                end
+            end)
+]]
+
+--[[
+        isCharFakeRecognized(character, id)
+
+        Description:
+            Checks if a character is fake recognized rather than truly known.
+
+        Realm:
+            Shared
+
+        Returns:
+            boolean
+        Example:
+            -- Flag suspicious characters as fake.
+            hook.Add("isCharFakeRecognized", "DetectFakeCharacters", function(character, id)
+                if character:isSuspicious() then
+                    return true
+                end
+            end)
+]]
+
+--[[
+        isCharRecognized(character, id)
+
+        Description:
+            Determines whether one character recognizes another.
+
+        Realm:
+            Shared
+
+        Returns:
+            boolean
+        Example:
+            -- Only recognize characters from the same faction.
+            hook.Add("isCharRecognized", "ValidateCharacterRecognition", function(character, id)
+                return character:getFaction() == lia.char.loaded[id]:getFaction()
+            end)
+]]
+
+--[[
+        isRecognizedChatType(chatType)
+
+        Description:
+            Determines if a chat type counts toward recognition.
+
+        Realm:
+            Shared
+
+        Returns:
+            boolean
+        Example:
+            -- Mark admin chat as recognized to reveal player names.
+            hook.Add("isRecognizedChatType", "ValidateRecognitionChat", function(chatType)
+                local recognized = {"admin", "system", "recognition"}
+                return table.HasValue(recognized, chatType)
+            end)
+]]
+
+--[[
+        isSuitableForTrunk(entity)
+
+        Description:
+            Determines whether an entity can be used as trunk storage.
+
+        Realm:
+            Shared
+
+        Returns:
+            boolean
+        Example:
+            -- Only vehicles are valid trunk containers.
+            hook.Add("isSuitableForTrunk", "AllowOnlyCars", function(entity)
+                return entity:IsVehicle()
+            end)
+]]
+
