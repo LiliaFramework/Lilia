@@ -7,7 +7,6 @@ lia.char.vars = lia.char.vars or {}
 characterMeta.__index = characterMeta
 characterMeta.id = characterMeta.id or 0
 characterMeta.vars = characterMeta.vars or {}
-debug.getregistry().Character = lia.meta.character
 if SERVER and #lia.char.names < 1 then
     lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
         if data and #data > 0 then
