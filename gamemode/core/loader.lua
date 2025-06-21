@@ -202,6 +202,10 @@ local ConditionalFiles = {
         global = "sam"
     },
     {
+        path = "lilia/gamemode/core/libraries/ulx.lua",
+        global = "ulx"
+    },
+    {
         path = "lilia/gamemode/core/libraries/serverguard.lua",
         global = "serverguard"
     }
@@ -283,6 +287,65 @@ function lia.includeDir(dir, raw, deep, realm)
     end
 
     loadDir(root)
+end
+
+--[[
+    Function: lia.includeGroupedDir
+
+    Description:
+       Recursively includes all Lua files in a specified directory.
+       Files are grouped by their base name (the part after the realm prefix)
+       and for each group loaded in this order:
+         1) shared (sh_*)
+         2) server (sv_*)
+         3) client (cl_*)
+       After all file groups are processed, subdirectories are traversed (if recursive).
+
+    Parameters:
+       directory (string) — Directory path to include, relative to the gamemode or schema.
+       raw (boolean)     — If true, use `directory` as a raw path; otherwise prepend the active schema or gamemode base path.
+       recursive (boolean) — If true, recurse into subdirectories after loading files.
+       realm (string)    — Optional realm override passed through to `lia.include` for each file.
+
+    Returns:
+       nil
+
+    Example Usage:
+       lia.includeGroupedDir("lilia/gamemode/core/libraries/thirdparty", true, true, "shared")
+]]
+function lia.includeGroupedDir(dir, raw, recursive, realm)
+    local base = raw and dir or (SCHEMA and SCHEMA.folder and SCHEMA.loading and SCHEMA.folder .. "/schema" or "lilia/gamemode") .. "/" .. dir
+    local function loadDir(folder)
+        local files, folders = file.Find(folder .. "/*.lua", "LUA")
+        local groups, order = {}, {}
+        for _, fname in ipairs(files) do
+            local prefix, name = fname:match("^(sh|sv|cl)_(.+)%.lua$")
+            if prefix then
+                if not groups[name] then
+                    groups[name] = {}
+                    table.insert(order, name)
+                end
+
+                groups[name][prefix] = fname
+            end
+        end
+
+        for _, name in ipairs(order) do
+            local g = groups[name]
+            if g.sh then lia.include(folder .. "/" .. g.sh, realm) end
+            if g.sv then lia.include(folder .. "/" .. g.sv, realm) end
+            if g.cl then lia.include(folder .. "/" .. g.cl, realm) end
+        end
+
+        if recursive then
+            table.sort(folders)
+            for _, sub in ipairs(folders) do
+                loadDir(folder .. "/" .. sub)
+            end
+        end
+    end
+
+    loadDir(base)
 end
 
 lia.includeDir("lilia/gamemode/core/libraries/thirdparty", true, true)
@@ -482,12 +545,8 @@ function GM:Initialize()
 end
 
 function GM:OnReloaded()
-    if not hasInitializedModules then
-        lia.module.initialize()
-        hasInitializedModules = true
-    end
-
     lia.config.load()
+    lia.module.refreshChanged()
     lia.faction.formatModelData()
     if CLIENT then
         lia.option.load()
