@@ -1,5 +1,6 @@
 ﻿lia.module = lia.module or {}
 lia.module.list = lia.module.list or {}
+lia.module.fileTimes = lia.module.fileTimes or {}
 local ModuleFolders = {"config", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim"}
 local ModuleFiles = {"pim.lua", "client.lua", "server.lua", "config.lua", "commands.lua"}
 local function loadPermissions(Privileges)
@@ -54,7 +55,7 @@ local function loadSubmodules(path)
 end
 
 --[[
-   Function: lia.module.load
+   lia.module.load
 
    Description:
       Loads a module from a specified path. If the module is a single file, it includes it directly;
@@ -111,13 +112,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     end
 
     local val = MODULE.enabled
-    local enabled
-    if isfunction(val) then
-        enabled = val()
-    else
-        enabled = val
-    end
-
+    local enabled = isfunction(val) and val() or val
     if uniqueID ~= "schema" and enabled == false then
         lia.bootstrap("Module", "Disabled module '" .. MODULE.name .. "'")
         lia.module.list[uniqueID] = nil
@@ -175,14 +170,15 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
             })
         end
 
-        if MODULE.identifier ~= "" then _G[MODULE.identifier] = lia.module.list[uniqueID] end
+        local watchedFile = isSingleFile and path or coreFile
+        lia.module.fileTimes[uniqueID] = file.Time(watchedFile, "LUA") or 0
         if string.StartWith(path, engine.ActiveGamemode() .. "/modules") then lia.bootstrap("Module", "Finished Loading Module '" .. MODULE.name .. "'") end
         _G[variable] = prevModule
     end
 end
 
 --[[
-   Function: lia.module.initialize
+   lia.module.initialize
 
    Description:
       Initializes the module system by loading the schema and various module directories,
@@ -218,7 +214,7 @@ function lia.module.initialize()
 end
 
 --[[
-   Function: lia.module.loadFromDir
+   lia.module.loadFromDir
 
    Description:
       Loads modules from a specified directory. It iterates over all subfolders and .lua files in the directory.
@@ -248,7 +244,34 @@ function lia.module.loadFromDir(directory, group)
 end
 
 --[[
-   Function: lia.module.get
+   lia.module.refreshChanged
+
+   Description:
+      Checks each registered module’s source file timestamp and reloads any module whose file has been modified since the last check.
+
+   Parameters:
+      None
+
+   Returns:
+      None
+]]
+function lia.module.refreshChanged()
+    for id, mod in pairs(lia.module.list) do
+        local single = mod.folder:sub(-4) == ".lua"
+        local watch = single and mod.folder or file.Exists(mod.folder .. "/module.lua", "LUA") and mod.folder .. "/module.lua" or mod.folder .. "/" .. id .. ".lua"
+        local t = file.Time(watch, "LUA") or 0
+        if t ~= lia.module.fileTimes[id] then
+            lia.module.load(id, mod.folder, single, id == "schema" and "SCHEMA" or "MODULE")
+            local m = lia.module.list[id]
+            if id ~= "schema" and m then lia.bootstrap("Module", "Reloaded Module '" .. m.name .. "'") end
+        end
+
+        lia.module.fileTimes[id] = t
+    end
+end
+
+--[[
+   lia.module.get
 
    Description:
       Retrieves a module table by its identifier.
