@@ -1,4 +1,4 @@
-﻿local surfaceSetDrawColor, surfaceDrawRect, surfaceDrawOutlinedRect = surface.SetDrawColor, surface.DrawRect, surface.DrawOutlinedRect
+local surfaceSetDrawColor, surfaceDrawRect, surfaceDrawOutlinedRect = surface.SetDrawColor, surface.DrawRect, surface.DrawOutlinedRect
 lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
 lia.bar.list = {}
@@ -124,8 +124,7 @@ function lia.bar.drawBar(x, y, w, h, pos, max, color)
     surfaceDrawRect(x + 3, y + 3, fill, h - 6)
 end
 
---[[
-    lia.bar.drawAction(text, time)
+    lia.bar.drawAction(text, duration)
 
     Description:
         Displays a temporary action progress bar with accompanying text
@@ -133,7 +132,7 @@ end
 
     Parameters:
         text (string) – The text to display above the progress bar.
-        time (number) – Duration in seconds for which the bar is displayed.
+        duration (number) – Duration in seconds for which the bar is displayed.
 
     Realm:
         Client

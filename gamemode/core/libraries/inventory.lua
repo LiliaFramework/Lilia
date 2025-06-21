@@ -1,4 +1,4 @@
-﻿lia.inventory = lia.inventory or {}
+lia.inventory = lia.inventory or {}
 lia.inventory.types = lia.inventory.types or {}
 lia.inventory.instances = lia.inventory.instances or {}
 local function serverOnly(value)
@@ -25,7 +25,7 @@ local function checkType(typeID, struct, expected, prefix)
 end
 
 --[[
-   Function: lia.inventory.newType
+    lia.inventory.newType(typeID, invTypeStruct)
 
    Description:
       Registers a new inventory type.
@@ -34,8 +34,8 @@ end
       typeID (string) — unique identifier
       invTypeStruct (table) — definition matching InvTypeStructType
 
-   Returns:
-      nil
+    Returns:
+        nil
 ]]
 function lia.inventory.newType(typeID, invTypeStruct)
     assert(not lia.inventory.types[typeID], "duplicate inventory type " .. typeID)
@@ -46,7 +46,7 @@ function lia.inventory.newType(typeID, invTypeStruct)
 end
 
 --[[
-   Function: lia.inventory.new
+    lia.inventory.new(typeID)
 
    Description:
       Instantiates a new inventory instance.
@@ -54,8 +54,8 @@ end
    Parameters:
       typeID (string)
 
-   Returns:
-      table
+    Returns:
+        table
 ]]
 function lia.inventory.new(typeID)
     local class = lia.inventory.types[typeID]
@@ -73,7 +73,7 @@ if SERVER then
     local DATA_TABLE = "invdata"
     local ITEMS_TABLE = "items"
     --[[
-      Function: lia.inventory.loadByID
+      lia.inventory.loadByID(id, noCache)
 
       Description:
          Loads an inventory by ID (cached or via custom loader).
@@ -82,7 +82,7 @@ if SERVER then
          id (number), noCache? (boolean)
 
       Returns:
-         deferred
+          deferred
    ]]
     function lia.inventory.loadByID(id, noCache)
         local instance = lia.inventory.instances[id]
@@ -105,7 +105,7 @@ if SERVER then
     end
 
     --[[
-      Function: lia.inventory.loadFromDefaultStorage
+      lia.inventory.loadFromDefaultStorage(id, noCache)
 
       Description:
          Default database loader.
@@ -114,7 +114,7 @@ if SERVER then
          id (number), noCache? (boolean)
 
       Returns:
-         deferred
+          deferred
    ]]
     function lia.inventory.loadFromDefaultStorage(id, noCache)
         return deferred.all({lia.db.select(INV_FIELDS, INV_TABLE, "_invID = " .. id, 1), lia.db.select(DATA_FIELDS, DATA_TABLE, "_invID = " .. id)}):next(function(res)
@@ -147,7 +147,7 @@ if SERVER then
     end
 
     --[[
-      Function: lia.inventory.instance
+      lia.inventory.instance(typeID, initialData)
 
       Description:
          Creates & persists a new inventory instance.
@@ -156,7 +156,7 @@ if SERVER then
          typeID (string), initialData? (table)
 
       Returns:
-         deferred
+          deferred
    ]]
     function lia.inventory.instance(typeID, initialData)
         local invType = lia.inventory.types[typeID]
@@ -174,7 +174,7 @@ if SERVER then
     end
 
     --[[
-      Function: lia.inventory.loadAllFromCharID
+      lia.inventory.loadAllFromCharID(charID)
 
       Description:
          Loads all inventories for a character.
@@ -183,7 +183,7 @@ if SERVER then
          charID (number)
 
       Returns:
-         deferred
+          deferred
    ]]
     function lia.inventory.loadAllFromCharID(charID)
         assert(isnumber(charID), "charID must be a number")
@@ -191,7 +191,7 @@ if SERVER then
     end
 
     --[[
-      Function: lia.inventory.deleteByID
+      lia.inventory.deleteByID(id)
 
       Description:
          Deletes an inventory and its data.
@@ -200,7 +200,7 @@ if SERVER then
          id (number)
 
       Returns:
-         nil
+          nil
    ]]
     function lia.inventory.deleteByID(id)
         lia.db.delete(DATA_TABLE, "_invID = " .. id)
@@ -211,7 +211,7 @@ if SERVER then
     end
 
     --[[
-      Function: lia.inventory.cleanUpForCharacter
+      lia.inventory.cleanUpForCharacter(character)
 
       Description:
          Destroys all inventories for a character.
@@ -220,7 +220,7 @@ if SERVER then
          character
 
       Returns:
-         nil
+          nil
    ]]
     function lia.inventory.cleanUpForCharacter(character)
         for _, inventory in pairs(character:getInv(true)) do
@@ -229,7 +229,7 @@ if SERVER then
     end
 else
     --[[
-      Function: lia.inventory.show
+      lia.inventory.show(inventory, parent)
 
       Description:
          Displays inventory UI client‑side.
@@ -238,7 +238,7 @@ else
          inventory, parent
 
       Returns:
-         Panel
+          Panel
    ]]
     function lia.inventory.show(inventory, parent)
         local globalName = "inv" .. inventory.id

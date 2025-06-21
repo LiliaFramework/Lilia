@@ -4,10 +4,11 @@ lia.attribs.list = lia.attribs.list or {}
     lia.attribs.loadFromDir(directory)
 
     Description:
-        Loads attribute definitions from the given folder. Files prefixed with
-        "sh_" are treated as shared and are loaded on both client and server.
-        The ATTRIBUTE table returned from each file is stored in lia.attribs.list
-        using the file name, without the prefix or extension, as the key.
+        Loads attribute definitions from the given folder. Files prefixed
+        with "sh_" are treated as shared and loaded on both client and
+        server. The ATTRIBUTE table returned from each file is stored in
+        lia.attribs.list using the filename, without prefix or extension,
+        as the key.
 
     Parameters:
         directory (string) – Path to the folder containing attribute Lua files.
@@ -35,10 +36,9 @@ if SERVER then
         lia.attribs.setup(client)
 
         Description:
-            Initializes attribute data for a client's character. Each attribute
-            defined in lia.attribs.list is read from the character and, if the
-            attribute specifies an OnSetup callback, that callback is executed
-            with the current value.
+            Initializes attribute data for a client's character. Each attribute in
+            lia.attribs.list is read from the character and, if the attribute has
+            an OnSetup callback, it is executed with the current value.
 
         Parameters:
             client (Player) – The player whose character attributes should be set up.
