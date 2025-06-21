@@ -1,4 +1,4 @@
-﻿hook.Add("InitializedModules", "SAM_InitializedModules", function()
+hook.Add("InitializedModules", "SAM_InitializedModules", function()
     for _, commandInfo in ipairs(sam.command.get_commands()) do
         local customSyntax = ""
         for _, argInfo in ipairs(commandInfo.args) do
@@ -18,6 +18,25 @@
     end
 end)
 
+--[[
+    hook.Add("SAM.CanRunCommand")
+
+    Description:
+        Prevents players without the proper staff permissions from
+        running SAM commands.
+
+    Parameters:
+        client (Player) – The player executing the command.
+        _ (any) – Unused.
+        _ (any) – Unused.
+        cmd (table) – SAM command table with permission info.
+
+    Realm:
+        Server
+
+    Returns:
+        allowed (boolean) – True if the player is permitted to run the command.
+]]
 hook.Add("SAM.CanRunCommand", "Check4Staff", function(client, _, _, cmd)
     if type(client) ~= "Player" then return true end
     if lia.config.get("SAMEnforceStaff", false) then
@@ -36,6 +55,22 @@ hook.Add("SAM.CanRunCommand", "Check4Staff", function(client, _, _, cmd)
 end)
 
 if SERVER then
+    --[[
+        sam.command.new("blind")
+
+        Description:
+            Temporarily blinds the specified target players.
+
+        Parameters:
+            client (Player) – Command executor.
+            targets (table) – Players to blind.
+
+        Realm:
+            Server
+
+        Returns:
+            None
+    ]]
     sam.command.new("blind"):SetPermission("blind", "superadmin"):AddArg("player"):Help("Blinds the Players"):OnExecute(function(client, targets)
         for i = 1, #targets do
             local target = targets[i]
@@ -52,6 +87,22 @@ if SERVER then
         end
     end):End()
 
+    --[[
+        sam.command.new("unblind")
+
+        Description:
+            Removes the blind effect from the specified target players.
+
+        Parameters:
+            client (Player) – Command executor.
+            targets (table) – Players to unblind.
+
+        Realm:
+            Server
+
+        Returns:
+            None
+    ]]
     sam.command.new("unblind"):SetPermission("blind", "superadmin"):AddArg("player"):Help("Unblinds the Players"):OnExecute(function(client, targets)
         for i = 1, #targets do
             local target = targets[i]
@@ -70,6 +121,16 @@ if SERVER then
 
     hook.Add("InitializedModules", "SAM_InitializedModules", function() hook.Remove("PlayerSay", "SAM.Chat.Asay") end)
 else
+    --[[
+        net.Receive("sam_blind")
+
+        Description:
+            Displays or removes a fullscreen black overlay when a player
+            is blinded by the SAM command.
+
+        Realm:
+            Client
+    ]]
     net.Receive("sam_blind", function()
         local enabled = net.ReadBool()
         if enabled then
@@ -85,6 +146,23 @@ local function CanReadNotifications(client)
     return client:hasPrivilege("Staff Permissions - Can See SAM Notifications") or client:isStaffOnDuty()
 end
 
+--[[
+    sam.player.send_message(client, msg, tbl)
+
+    Description:
+        Sends a formatted SAM chat message to the given player or the console.
+
+    Parameters:
+        client (Player|nil) – Target player or nil to print in the server console.
+        msg (string) – Message template.
+        tbl (table|nil) – Formatting arguments.
+
+    Realm:
+        Shared
+
+    Returns:
+        None
+]]
 function sam.player.send_message(client, msg, tbl)
     if SERVER then
         if sam.isconsole(client) then
@@ -103,6 +181,15 @@ function sam.player.send_message(client, msg, tbl)
     end
 end
 
+--[[
+    cleardecals command
+
+    Description:
+        Clears all decals from every connected player's screen.
+
+    Realm:
+        Server
+]]
 lia.command.add("cleardecals", {
     adminOnly = true,
     privilege = "Clear Decals",
@@ -114,6 +201,15 @@ lia.command.add("cleardecals", {
     end
 })
 
+--[[
+    playtime command
+
+    Description:
+        Prints the calling player's accumulated playtime.
+
+    Realm:
+        Server
+]]
 lia.command.add("playtime", {
     adminOnly = false,
     privilege = "View Own Playtime",
@@ -133,6 +229,15 @@ lia.command.add("playtime", {
     end
 })
 
+--[[
+    plygetplaytime command
+
+    Description:
+        Displays the playtime of another player specified by name.
+
+    Realm:
+        Server
+]]
 lia.command.add("plygetplaytime", {
     adminOnly = true,
     privilege = "View Playtime",

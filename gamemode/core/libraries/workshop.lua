@@ -1,9 +1,25 @@
-﻿lia.workshop = lia.workshop or {}
+lia.workshop = lia.workshop or {}
 if SERVER then
     lia.workshop.ids = lia.workshop.ids or {}
     lia.workshop.known = lia.workshop.known or {}
     lia.workshop.cache = lia.workshop.cache or {}
     local _add = resource.AddWorkshop
+    --[[
+        resource.AddWorkshop(id)
+
+        Description:
+            Overrides the default workshop adder to keep track of
+            requested addons and notify players when downloads occur.
+
+        Parameters:
+            id (string|number) – Workshop addon ID.
+
+        Realm:
+            Server
+
+        Returns:
+            None
+    ]]
     function resource.AddWorkshop(id)
         id = tostring(id)
         if not lia.workshop.ids[id] then lia.bootstrap("Workshop Downloader", "Added workshop " .. id .. " to download list") end
@@ -20,6 +36,18 @@ if SERVER then
         end
     end
 
+    --[[
+        lia.workshop.gather()
+
+        Description:
+            Collects workshop IDs from installed addons and registered modules.
+
+        Realm:
+            Server
+
+        Returns:
+            ids (table) – Table of workshop IDs to download.
+    ]]
     function lia.workshop.gather()
         local ids = table.Copy(lia.workshop.ids)
         for _, addon in pairs(engine.GetAddons() or {}) do
@@ -46,12 +74,41 @@ if SERVER then
     end
 
     hook.Add("InitializedModules", "liaWorkshopInitializedModules", function() lia.workshop.cache = lia.workshop.gather() end)
+
+    --[[
+        lia.workshop.send(ply)
+
+        Description:
+            Sends the collected workshop IDs to a connecting player.
+
+        Parameters:
+            ply (Player) – Player to send the download list to.
+
+        Realm:
+            Server
+
+        Returns:
+            None
+    ]]
     function lia.workshop.send(ply)
         net.Start("WorkshopDownloader_Start")
         net.WriteTable(lia.workshop.cache)
         net.Send(ply)
     end
 
+    --[[
+        hook.Add("PlayerInitialSpawn")
+
+        Description:
+            Sends the workshop download list shortly after a player connects
+            if automatic downloads are enabled.
+
+        Parameters:
+            ply (Player) – Player that joined the server.
+
+        Realm:
+            Server
+    ]]
     hook.Add("PlayerInitialSpawn", "liaWorkshopInit", function(ply)
         if not lia.config.get("AutoDownloadWorkshop", true) then return end
         timer.Simple(10, function() if IsValid(ply) then lia.workshop.send(ply) end end)
@@ -163,11 +220,30 @@ else
         end
     end
 
+    --[[
+        net.Receive("WorkshopDownloader_Start")
+
+        Description:
+            Receives a list of workshop addon IDs and begins downloading
+            them on the client.
+
+        Realm:
+            Client
+    ]]
     net.Receive("WorkshopDownloader_Start", function()
         refresh(net.ReadTable())
         start()
     end)
 
+    --[[
+        workshop_force_redownload console command
+
+        Description:
+            Forces all workshop addons to be downloaded again.
+
+        Realm:
+            Client
+    ]]
     concommand.Add("workshop_force_redownload", function()
         table.Empty(queue)
         refresh()
@@ -179,6 +255,19 @@ else
         lia.bootstrap("Workshop Downloader", "Forced redownload initiated")
     end)
 
+    --[[
+        hook.Add("CreateInformationButtons")
+
+        Description:
+            Adds a page to the information menu listing all automatically
+            downloaded workshop addons.
+
+        Parameters:
+            pages (table) – Table of existing menu pages.
+
+        Realm:
+            Client
+    ]]
     hook.Add("CreateInformationButtons", "liaWorkshopInfo", function(pages)
         if not lia.config.get("AutoDownloadWorkshop", true) then return end
         table.insert(pages, {
