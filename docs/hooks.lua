@@ -824,3 +824,1062 @@
             end)
 ]]
 
+--[[
+        PlayerLoadout(client)
+
+        Description:
+            Runs when a player spawns and equips items.
+            Allows modification of the default loadout.
+
+        Parameters:
+            client (Player) – Player being loaded out.
+
+        Realm:
+            Server
+        Example:
+            -- Gives players a crowbar on spawn.
+            hook.Add("PlayerLoadout", "GiveCrowbar", function(ply)
+                ply:Give("weapon_crowbar")
+            end)
+]]
+
+--[[
+        PlayerShouldPermaKill(client, inflictor, attacker)
+
+        Description:
+            Determines if a player's death should permanently kill their character.
+            Return true to mark the character for deletion.
+
+        Parameters:
+            client (Player) – Player that died.
+            inflictor (Entity) – Damage inflictor.
+            attacker (Entity) – Damage attacker.
+
+        Realm:
+            Server
+        Example:
+            -- Prevent permanent death from fall damage.
+            hook.Add("PlayerShouldPermaKill", "NoFallPK", function(ply, inflictor)
+                if inflictor == game.GetWorld() then return false end
+            end)
+]]
+
+--[[
+        CanPlayerDropItem(client, item)
+
+        Description:
+            Checks if a player may drop an item.
+            Return false to block dropping.
+
+        Parameters:
+            client (Player) – Player attempting to drop.
+            item (table) – Item being dropped.
+
+        Realm:
+            Server
+        Example:
+            -- Disallow dropping locked items.
+            hook.Add("CanPlayerDropItem", "NoLockedDrop", function(ply, item)
+                if item.locked then return false end
+            end)
+]]
+
+--[[
+        CanPlayerTakeItem(client, item)
+
+        Description:
+            Determines if a player can pick up an item.
+            Return false to prevent taking.
+
+        Parameters:
+            client (Player) – Player attempting pickup.
+            item (table) – Item in question.
+
+        Realm:
+            Server
+        Example:
+            -- Block taking admin items.
+            hook.Add("CanPlayerTakeItem", "NoAdminPickup", function(ply, item)
+                if item.adminOnly then return false end
+            end)
+]]
+
+--[[
+        CanPlayerEquipItem(client, item)
+
+        Description:
+            Queries if a player can equip an item.
+            Returning false stops the equip action.
+
+        Parameters:
+            client (Player) – Player equipping.
+            item (table) – Item to equip.
+
+        Realm:
+            Server
+        Example:
+            -- Allow equipping only if level requirement met.
+            hook.Add("CanPlayerEquipItem", "CheckLevel", function(ply, item)
+                if item.minLevel and ply:getChar():getAttrib("level", 0) < item.minLevel then
+                    return false
+                end
+            end)
+]]
+
+--[[
+        CanPlayerUnequipItem(client, item)
+
+        Description:
+            Called before an item is unequipped.
+            Return false to keep the item equipped.
+
+        Parameters:
+            client (Player) – Player unequipping.
+            item (table) – Item being unequipped.
+
+        Realm:
+            Server
+        Example:
+            -- Prevent unequipping cursed gear.
+            hook.Add("CanPlayerUnequipItem", "Cursed", function(ply, item)
+                if item.cursed then return false end
+            end)
+]]
+
+--[[
+        PostPlayerSay(client, message, chatType, anonymous)
+
+        Description:
+            Runs after chat messages are processed.
+            Allows reacting to player chat.
+
+        Parameters:
+            client (Player) – Speaking player.
+            message (string) – Chat text.
+            chatType (string) – Chat channel.
+            anonymous (boolean) – Whether the message was anonymous.
+
+        Realm:
+            Server
+        Example:
+            -- Log all OOC chat.
+            hook.Add("PostPlayerSay", "LogOOC", function(ply, msg, chatType)
+                if chatType == "ooc" then print("[OOC]", ply:Nick(), msg) end
+            end)
+]]
+
+--[[
+        ShouldSpawnClientRagdoll(client)
+
+        Description:
+            Decides if a corpse ragdoll should spawn for a player.
+            Return false to skip ragdoll creation.
+
+        Parameters:
+            client (Player) – Player that died.
+
+        Realm:
+            Server
+        Example:
+            -- Disable ragdolls for bots.
+            hook.Add("ShouldSpawnClientRagdoll", "NoBotRagdoll", function(ply)
+                if ply:IsBot() then return false end
+            end)
+]]
+
+--[[
+        SaveData()
+
+        Description:
+            Called when the framework saves persistent data.
+            Modules can store custom information here.
+
+        Realm:
+            Server
+        Example:
+            -- Save a timestamp to file.
+            hook.Add("SaveData", "RecordTime", function()
+                file.Write("lastsave.txt", os.time())
+            end)
+]]
+
+--[[
+        PersistenceSave()
+
+        Description:
+            Fires when map persistence should be written to disk.
+            Allows adding extra persistent entities.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("PersistenceSave", "Notice", function()
+                print("Saving persistent entities")
+            end)
+]]
+
+--[[
+        LoadData()
+
+        Description:
+            Triggered when stored data should be loaded.
+            Modules can restore custom information here.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("LoadData", "LoadExtras", function()
+                print("Loading custom data")
+            end)
+]]
+
+--[[
+        PostLoadData()
+
+        Description:
+            Called after all persistent data has loaded.
+            Useful for post-processing.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("PostLoadData", "Ready", function()
+                print("Data fully loaded")
+            end)
+]]
+
+--[[
+        ShouldDataBeSaved()
+
+        Description:
+            Queries if data saving should occur during shutdown.
+            Return false to cancel saving.
+
+        Realm:
+            Server
+        Example:
+            -- Skip saving during quick restarts.
+            hook.Add("ShouldDataBeSaved", "NoSave", function()
+                return game.IsDedicated() and os.getenv("NOSAVE")
+            end)
+]]
+
+--[[
+        OnCharDisconnect(client, character)
+
+        Description:
+            Called when a player's character disconnects.
+            Provides a last chance to handle data.
+
+        Parameters:
+            client (Player) – Disconnecting player.
+            character (Character) – Their character.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("OnCharDisconnect", "Goodbye", function(ply, char)
+                print(char:getName(), "has left")
+            end)
+]]
+
+--[[
+        SetupBotPlayer(client)
+
+        Description:
+            Initializes a bot's character when it first joins.
+            Allows custom bot setup.
+
+        Parameters:
+            client (Player) – Bot player.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("SetupBotPlayer", "WelcomeBot", function(bot)
+                bot:ChatPrint("Beep boop!")
+            end)
+]]
+
+--[[
+        PlayerLiliaDataLoaded(client)
+
+        Description:
+            Fired after a player's personal data has loaded.
+            Useful for syncing additional info.
+
+        Parameters:
+            client (Player) – Player that loaded data.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("PlayerLiliaDataLoaded", "SendWelcome", function(ply)
+                ply:ChatPrint("Data loaded")
+            end)
+]]
+
+--[[
+        PostPlayerInitialSpawn(client)
+
+        Description:
+            Runs after the player entity has spawned and data is ready.
+            Allows post-initialization logic.
+
+        Parameters:
+            client (Player) – Newly spawned player.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("PostPlayerInitialSpawn", "Greet", function(ply)
+                print("Hello", ply:Nick())
+            end)
+]]
+
+--[[
+        FactionOnLoadout(client)
+
+        Description:
+            Gives factions a chance to modify player loadouts.
+            Runs before weapons are equipped.
+
+        Parameters:
+            client (Player) – Player being equipped.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("FactionOnLoadout", "GiveRadio", function(ply)
+                if ply:getChar():getFaction() == "police" then
+                    ply:Give("weapon_radio")
+                end
+            end)
+]]
+
+--[[
+        ClassOnLoadout(client)
+
+        Description:
+            Allows classes to modify the player's starting gear.
+            Executed prior to PostPlayerLoadout.
+
+        Parameters:
+            client (Player) – Player being equipped.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("ClassOnLoadout", "MedicItems", function(ply)
+                if ply:getChar():getClass() == "medic" then
+                    ply:Give("medkit")
+                end
+            end)
+]]
+
+--[[
+        PostPlayerLoadout(client)
+
+        Description:
+            Called after the player has been equipped.
+            Last chance to modify the loadout.
+
+        Parameters:
+            client (Player) – Player loaded out.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("PostPlayerLoadout", "SetColor", function(ply)
+                ply:SetPlayerColor(Vector(0,1,0))
+            end)
+]]
+
+--[[
+        FactionPostLoadout(client)
+
+        Description:
+            Runs after faction loadout logic completes.
+            Allows post-loadout tweaks.
+
+        Parameters:
+            client (Player) – Player affected.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("FactionPostLoadout", "Shout", function(ply)
+                if ply:getChar():getFaction() == "soldier" then
+                    ply:EmitSound("npc/combine_soldier/gear6.wav")
+                end
+            end)
+]]
+
+--[[
+        ClassPostLoadout(client)
+
+        Description:
+            Runs after class loadout logic completes.
+            Allows post-loadout tweaks for classes.
+
+        Parameters:
+            client (Player) – Player affected.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("ClassPostLoadout", "Pose", function(ply)
+                ply:ConCommand("act muscle")
+            end)
+]]
+
+--[[
+        GetDefaultInventoryType(character)
+
+        Description:
+            Returns the inventory type used for new characters.
+            Modules can override to provide custom types.
+
+        Parameters:
+            character (Character) – Character being created.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("GetDefaultInventoryType", "UseGrid", function()
+                return "GridInv"
+            end)
+]]
+
+--[[
+        ShouldDeleteSavedItems()
+
+        Description:
+            Decides whether saved persistent items should be deleted on load.
+            Return true to wipe them from the database.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("ShouldDeleteSavedItems", "ClearDrops", function()
+                return false
+            end)
+]]
+
+--[[
+        OnSavedItemLoaded(items)
+
+        Description:
+            Called after map items have been loaded from storage.
+            Provides the table of created items.
+
+        Parameters:
+            items (table) – Loaded item entities.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("OnSavedItemLoaded", "PrintCount", function(items)
+                print("Loaded", #items, "items")
+            end)
+]]
+
+--[[
+        ShouldDrawEntityInfo(entity)
+
+        Description:
+            Determines if world-space info should be rendered for an entity.
+            Return false to hide the tooltip.
+
+        Parameters:
+            entity (Entity) – Entity being considered.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("ShouldDrawEntityInfo", "HideNPCs", function(ent)
+                if ent:IsNPC() then return false end
+            end)
+]]
+
+--[[
+        DrawEntityInfo(entity, alpha, position)
+
+        Description:
+            Allows custom drawing of entity information in the world.
+            Drawn every frame while visible.
+
+        Parameters:
+            entity (Entity) – Entity to draw info for.
+            alpha (number) – Current alpha value.
+            position (table) – Screen position table.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("DrawEntityInfo", "LabelProps", function(ent, a, pos)
+                draw.SimpleText(ent:GetClass(), "DermaDefault", pos.x, pos.y, Color(255,255,255,a))
+            end)
+]]
+
+--[[
+        GetInjuredText(client)
+
+        Description:
+            Provides the health status text and color for a player.
+            Return a table with text and color values.
+
+        Parameters:
+            client (Player) – Player to check.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("GetInjuredText", "SimpleHealth", function(ply)
+                if ply:Health() <= 20 then return {"Critical", Color(255,0,0)} end
+            end)
+]]
+
+--[[
+        ShouldDrawPlayerInfo(player)
+
+        Description:
+            Determines if character info should draw above a player.
+            Return false to suppress drawing.
+
+        Parameters:
+            player (Player) – Player being rendered.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("ShouldDrawPlayerInfo", "HideLocal", function(ply)
+                if ply == LocalPlayer() then return false end
+            end)
+]]
+
+--[[
+        DrawCharInfo(player, character, info)
+
+        Description:
+            Allows modules to add lines to the character info display.
+            Called when building the info table.
+
+        Parameters:
+            player (Player) – Player being displayed.
+            character (Character) – Their character data.
+            info (table) – Table to add lines to.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("DrawCharInfo", "JobTitle", function(ply, char, info)
+                info[#info + 1] = {"Job: " .. (char:getClass() or "None")}
+            end)
+]]
+
+--[[
+        ItemShowEntityMenu(entity)
+
+        Description:
+            Opens the context menu for a world item when used.
+            Allows replacing the default menu.
+
+        Parameters:
+            entity (Entity) – Item entity clicked.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("ItemShowEntityMenu", "QuickTake", function(ent)
+                print("Opening menu for", ent)
+            end)
+]]
+
+--[[
+        PreLiliaLoaded()
+
+        Description:
+            Fired just before the client finishes loading the framework.
+            Useful for setup tasks.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("PreLiliaLoaded", "Prep", function()
+                print("About to finish loading")
+            end)
+]]
+
+--[[
+        LiliaLoaded()
+
+        Description:
+            Indicates the client finished initializing the framework.
+            Modules can start creating panels here.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("LiliaLoaded", "Ready", function()
+                print("Lilia client ready")
+            end)
+]]
+
+--[[
+        InventoryDataChanged(inventory, key, oldValue, value)
+
+        Description:
+            Notifies when inventory metadata changes.
+            Provides old and new values.
+
+        Parameters:
+            inventory (table) – Inventory affected.
+            key (string) – Data key.
+            oldValue (any) – Previous value.
+            value (any) – New value.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("InventoryDataChanged", "TrackWeight", function(inv, k, old, new)
+                if k == "weight" then print("Weight changed to", new) end
+            end)
+]]
+
+--[[
+        ItemInitialized(item)
+
+        Description:
+            Called when a new item instance is created clientside.
+            Allows additional setup for the item.
+
+        Parameters:
+            item (table) – Item created.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("ItemInitialized", "PrintID", function(item)
+                print("Created item", item.uniqueID)
+            end)
+]]
+
+--[[
+        InventoryInitialized(inventory)
+
+        Description:
+            Fired when an inventory instance finishes loading.
+            Modules may modify it here.
+
+        Parameters:
+            inventory (table) – Inventory initialized.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("InventoryInitialized", "AnnounceInv", function(inv)
+                print("Inventory", inv:getID(), "ready")
+            end)
+]]
+
+--[[
+        InventoryItemAdded(inventory, item)
+
+        Description:
+            Invoked when an item is placed into an inventory.
+            Lets code react to the addition.
+
+        Parameters:
+            inventory (table) – Inventory receiving the item.
+            item (table) – Item added.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("InventoryItemAdded", "NotifyAdd", function(inv, item)
+                print("Added", item.name)
+            end)
+]]
+
+--[[
+        InventoryItemRemoved(inventory, item)
+
+        Description:
+            Called when an item is removed from an inventory.
+            Runs after the item table is updated.
+
+        Parameters:
+            inventory (table) – Inventory modified.
+            item (table) – Item removed.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("InventoryItemRemoved", "NotifyRemove", function(inv, item)
+                print("Removed", item.name)
+            end)
+]]
+
+--[[
+        InventoryDeleted(inventory)
+
+        Description:
+            Signals that an inventory was deleted clientside.
+            Allows cleanup of references.
+
+        Parameters:
+            inventory (table) – Deleted inventory.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("InventoryDeleted", "Clear", function(inv)
+                print("Inventory", inv:getID(), "deleted")
+            end)
+]]
+
+--[[
+        ItemDeleted(item)
+
+        Description:
+            Fired when an item is removed entirely.
+            Modules should clear any cached data.
+
+        Parameters:
+            item (table) – Item that was deleted.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("ItemDeleted", "Log", function(item)
+                print("Item", item.uniqueID, "gone")
+            end)
+]]
+
+--[[
+        OnCharVarChanged(character, key, oldValue, value)
+
+        Description:
+            Runs when a networked character variable changes.
+            Gives both old and new values.
+
+        Parameters:
+            character (Character) – Affected character.
+            key (string) – Variable name.
+            oldValue (any) – Previous value.
+            value (any) – New value.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("OnCharVarChanged", "WatchMoney", function(char, k, old, new)
+                if k == "money" then print("Money changed", new) end
+            end)
+]]
+
+--[[
+        OnCharLocalVarChanged(character, key, oldVar, value)
+
+        Description:
+            Similar to OnCharVarChanged but for local-only variables.
+            Called after the table updates.
+
+        Parameters:
+            character (Character) – Affected character.
+            key (string) – Variable name.
+            oldVar (any) – Old value.
+            value (any) – New value.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("OnCharLocalVarChanged", "WatchFlags", function(char, k, old, new)
+                if k == "flags" then print("Flags changed") end
+            end)
+]]
+
+--[[
+        ItemDataChanged(item, key, oldValue, value)
+
+        Description:
+            Called when item data values change clientside.
+            Provides both the old and new values.
+
+        Parameters:
+            item (table) – Item modified.
+            key (string) – Key that changed.
+            oldValue (any) – Previous value.
+            value (any) – New value.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("ItemDataChanged", "TrackDurability", function(item, key)
+                if key == "durability" then print("New durability", item.data[key]) end
+            end)
+]]
+
+--[[
+        ItemQuantityChanged(item, oldQuantity, quantity)
+
+        Description:
+            Runs when an item's quantity value updates.
+            Allows reacting to stack changes.
+
+        Parameters:
+            item (table) – Item affected.
+            oldQuantity (number) – Previous quantity.
+            quantity (number) – New quantity.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("ItemQuantityChanged", "CountStacks", function(item, old, new)
+                print("Quantity now", new)
+            end)
+]]
+
+--[[
+        KickedFromChar(id, isCurrentChar)
+
+        Description:
+            Indicates that a character was forcefully removed.
+            isCurrentChar denotes if it was the active one.
+
+        Parameters:
+            id (number) – Character identifier.
+            isCurrentChar (boolean) – Was this the active character?
+
+        Realm:
+            Client
+        Example:
+            hook.Add("KickedFromChar", "Notify", function(id, current)
+                print("Kicked from", id, current and "(current)" or "")
+            end)
+]]
+
+--[[
+        HandleItemTransferRequest(client, itemID, x, y, inventoryID)
+
+        Description:
+            Server receives a request to move an item.
+            Modules can validate or modify the transfer.
+
+        Parameters:
+            client (Player) – Requesting player.
+            itemID (number) – Item identifier.
+            x (number) – X position.
+            y (number) – Y position.
+            inventoryID (number|string) – Target inventory ID.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("HandleItemTransferRequest", "LogMove", function(ply, itemID, x, y)
+                print(ply, "moved item", itemID, "to", x, y)
+            end)
+]]
+
+--[[
+        CharLoaded(id)
+
+        Description:
+            Fired when a character object is fully loaded.
+            Receives the character ID.
+
+        Parameters:
+            id (number) – Character identifier.
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("CharLoaded", "Notify", function(id)
+                print("Character", id, "loaded")
+            end)
+]]
+
+--[[
+        PreCharDelete(id)
+
+        Description:
+            Called before a character is removed.
+            Return false to cancel deletion.
+
+        Parameters:
+            id (number) – Character identifier.
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("PreCharDelete", "Protect", function(id)
+                if id == 1 then return false end
+            end)
+]]
+
+--[[
+        OnCharDelete(client, id)
+
+        Description:
+            Fired when a character is deleted.
+            Provides the owning player if available.
+
+        Parameters:
+            client (Player) – Player who deleted.
+            id (number) – Character identifier.
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("OnCharDelete", "Announce", function(ply, id)
+                print(ply, "deleted char", id)
+            end)
+]]
+
+--[[
+        OnCharCreated(client, character, data)
+
+        Description:
+            Invoked after a new character is created.
+            Supplies the character table and creation data.
+
+        Parameters:
+            client (Player) – Owner player.
+            character (table) – New character object.
+            data (table) – Raw creation info.
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("OnCharCreated", "Welcome", function(ply, char)
+                print("Created", char:getName())
+            end)
+]]
+
+--[[
+        OnTransferred(client)
+
+        Description:
+            Runs when a player transfers to another server.
+            Useful for cleanup.
+
+        Parameters:
+            client (Player) – Transferring player.
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("OnTransferred", "Goodbye", function(ply)
+                print(ply, "left the server")
+            end)
+]]
+
+--[[
+        CharPreSave(character)
+
+        Description:
+            Executed before a character is saved to disk.
+            Allows writing custom data.
+
+        Parameters:
+            character (Character) – Character being saved.
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("CharPreSave", "Record", function(char)
+                char:setData("lastSave", os.time())
+            end)
+]]
+
+--[[
+        CanDisplayCharInfo(client, id)
+
+        Description:
+            Replacement for deprecated CanDisplayCharacterInfo.
+            Determines if a character can be shown.
+
+        Parameters:
+            client (Player) – Local player.
+            id (number) – Character ID.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("CanDisplayCharInfo", "AllowAll", function()
+                return true
+            end)
+]]
+
+--[[
+        CharListLoaded(newCharList)
+
+        Description:
+            Called when the character selection list finishes loading.
+            Provides the loaded list table.
+
+        Parameters:
+            newCharList (table) – Table of characters.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("CharListLoaded", "CountChars", function(list)
+                print("Loaded", #list, "characters")
+            end)
+]]
+
+--[[
+        CharListUpdated(oldCharList, newCharList)
+
+        Description:
+            Fires when the character list is refreshed.
+            Gives both old and new tables.
+
+        Parameters:
+            oldCharList (table) – Previous list.
+            newCharList (table) – Updated list.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("CharListUpdated", "Diff", function(old, new)
+                print("Characters updated")
+            end)
+]]
+
+--[[
+        getCharMaxStamina(character)
+
+        Description:
+            Returns the maximum stamina for a character.
+            Override to change stamina capacity.
+
+        Parameters:
+            character (Character) – Character queried.
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("getCharMaxStamina", "Double", function(char)
+                return 200
+            end)
+]]
+
+--[[
+        PostLoadFonts(...)
+
+        Description:
+            Runs after all font files have loaded.
+            Allows registering additional fonts.
+
+        Parameters:
+            ... – Extra arguments passed through.
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("PostLoadFonts", "LogoFont", function()
+                surface.CreateFont("Logo", {size = 32, font = "Tahoma"})
+            end)
+]]
