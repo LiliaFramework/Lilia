@@ -161,7 +161,7 @@ function MODULE:PlayerSpawn(client)
     local character = client:getChar()
     if not character then return end
     local faction = lia.faction.indices[character:getFaction()]
-    local relations = faction.NPCRelations
+    local relations = faction and faction.NPCRelations
     if relations then
         for _, entity in ents.Iterator() do
             if entity:IsNPC() and relations[entity:GetClass()] then entity:AddEntityRelationship(client, relations[entity:GetClass()], 0) end
