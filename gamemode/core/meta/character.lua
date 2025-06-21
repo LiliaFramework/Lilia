@@ -93,11 +93,11 @@ function characterMeta:hasClassWhitelist(class)
 end
 
 function characterMeta:isFaction(faction)
-    return self:getChar():getFaction() == faction
+    return self:getFaction() == faction
 end
 
 function characterMeta:isClass(class)
-    return self:getChar():getClass() == class
+    return self:getClass() == class
 end
 
 function characterMeta:getAttrib(key, default)
