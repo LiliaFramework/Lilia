@@ -306,7 +306,7 @@ end
 
 function GM:InitializedSchema()
     local persistString = GetConVar("sbox_persist"):GetString()
-    if persistString == "" or string.StartWith(persistString, "lia_") then
+    if persistString == "" or string.StartsWith(persistString, "lia_") then
         local newValue = "lia_" .. SCHEMA.folder
         game.ConsoleCommand("sbox_persist " .. newValue .. "\n")
     end
@@ -342,7 +342,7 @@ function GM:DoPlayerDeath(client, attacker)
         end
     end
 
-    client:SetDSP(31)
+    client:SetDSP(31, false)
 end
 
 function GM:PlayerSpawn(client)
@@ -350,7 +350,7 @@ function GM:PlayerSpawn(client)
     client:UnLock()
     client:SetNotSolid(false)
     client:stopAction()
-    client:SetDSP(1)
+    client:SetDSP(1, false)
     client:removeRagdoll()
     hook.Run("PlayerLoadout", client)
 end

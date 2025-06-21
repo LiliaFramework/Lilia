@@ -1035,7 +1035,7 @@ else
                   inputPanel:MakePopup()
                   local form = vgui.Create("DForm", inputPanel)
                   form:Dock(FILL)
-                  form:SetName("")
+                  form:SetLabel("")
                   form.Paint = function() end
                   local inputs = {}
                   for fName, fType in pairs(option.ExtraFields) do

@@ -172,7 +172,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
 
         local watchedFile = isSingleFile and path or coreFile
         lia.module.fileTimes[uniqueID] = file.Time(watchedFile, "LUA") or 0
-        if string.StartWith(path, engine.ActiveGamemode() .. "/modules") then lia.bootstrap("Module", "Finished Loading Module '" .. MODULE.name .. "'") end
+        if string.StartsWith(path, engine.ActiveGamemode() .. "/modules") then lia.bootstrap("Module", "Finished Loading Module '" .. MODULE.name .. "'") end
         _G[variable] = prevModule
     end
 end

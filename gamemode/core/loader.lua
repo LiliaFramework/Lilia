@@ -431,7 +431,7 @@ function lia.includeEntities(path)
                 create(v)
             end
 
-            IncludeFiles(path2, clientOnly)
+            IncludeFiles(path2)
             if clientOnly then
                 if CLIENT then register(_G[variable], v) end
             else

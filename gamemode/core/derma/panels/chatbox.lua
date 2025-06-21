@@ -145,12 +145,10 @@ function PANEL:setActive(state)
         self.text:RequestFocus()
         self.tabs:SetVisible(true)
         self.text.OnKeyCodeTyped = function(this, key)
-            if key == KEY_ESCAPE then
-                if IsValid(self.commandList) then
+            if key == KEY_ESCAPE and IsValid(self.commandList) then
                     self.commandList:Remove()
                     self.commandList = nil
                     return true
-                end
             end
 
             if this:GetText():sub(1, 1) == "/" and key == KEY_TAB and IsValid(self.commandList) then
