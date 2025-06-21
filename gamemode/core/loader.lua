@@ -557,7 +557,7 @@ end
 for _, data in ipairs(ConditionalFiles) do
     if _G[data.global] then
         local name = data.global:sub(1, 1):upper() .. data.global:sub(2)
-        lia.bootstrap("Compatibility", "Compatibility system for " .. name .. " initialized.")
+        lia.bootstrap("Compatibility", "Compatibility system for " .. string.upper(name) .. " initialized.")
         lia.include(data.path, "shared")
     end
 end
