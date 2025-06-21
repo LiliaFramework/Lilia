@@ -71,14 +71,14 @@ end
    Returns:
       nil
 ]]
-function lia.module.load(uniqueID, path, isSingleFile, variable)
+function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
     variable = variable or "MODULE"
     local lowerVar = variable:lower()
     local coreFile = path .. "/" .. lowerVar .. ".lua"
-    local prevModule = _G[variable]
+    local prev = _G[variable]
     MODULE = {
         folder = path,
-        module = prevModule,
+        module = prev,
         uniqueID = uniqueID,
         name = L("unknown"),
         desc = L("noDesc"),
@@ -104,20 +104,19 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
     else
         if not file.Exists(coreFile, "LUA") then
             lia.bootstrap("Module", "Skipping module '" .. uniqueID .. "' - missing " .. lowerVar .. ".lua")
-            _G[variable] = prevModule
+            _G[variable] = prev
             return
         end
 
         lia.include(coreFile, "shared")
     end
 
-    local val = MODULE.enabled
-    local enabled = isfunction(val) and val() or val
-    if uniqueID ~= "schema" and enabled == false then
+    local enabled = isfunction(MODULE.enabled) and MODULE.enabled() or MODULE.enabled
+    if uniqueID ~= "schema" and not enabled then
         lia.bootstrap("Module", "Disabled module '" .. MODULE.name .. "'")
         lia.module.list[uniqueID] = nil
         if MODULE.identifier ~= "" then _G[MODULE.identifier] = nil end
-        _G[variable] = prevModule
+        _G[variable] = prev
         return
     end
 
@@ -148,7 +147,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
         end
     else
         lia.module.list[uniqueID] = MODULE
-        loadSubmodules(path)
+        if not skipSubmodules then loadSubmodules(path) end
         if MODULE.ModuleLoaded then MODULE:ModuleLoaded() end
         if MODULE.Public then
             lia.module.versionChecks = lia.module.versionChecks or {}
@@ -170,10 +169,10 @@ function lia.module.load(uniqueID, path, isSingleFile, variable)
             })
         end
 
-        local watchedFile = isSingleFile and path or coreFile
-        lia.module.fileTimes[uniqueID] = file.Time(watchedFile, "LUA") or 0
+        local watch = isSingleFile and path or coreFile
+        lia.module.fileTimes[uniqueID] = file.Time(watch, "LUA") or 0
         if string.StartsWith(path, engine.ActiveGamemode() .. "/modules") then lia.bootstrap("Module", "Finished Loading Module '" .. MODULE.name .. "'") end
-        _G[variable] = prevModule
+        _G[variable] = prev
     end
 end
 
@@ -261,7 +260,8 @@ function lia.module.refreshChanged()
         local watch = single and mod.folder or file.Exists(mod.folder .. "/module.lua", "LUA") and mod.folder .. "/module.lua" or mod.folder .. "/" .. id .. ".lua"
         local t = file.Time(watch, "LUA") or 0
         if t ~= lia.module.fileTimes[id] then
-            lia.module.load(id, mod.folder, single, id == "schema" and "SCHEMA" or "MODULE")
+            local var = id == "schema" and "SCHEMA" or "MODULE"
+            lia.module.load(id, mod.folder, single, var, true)
             local m = lia.module.list[id]
             if id ~= "schema" and m then lia.bootstrap("Module", "Reloaded Module '" .. m.name .. "'") end
         end
