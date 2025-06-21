@@ -26,84 +26,81 @@ local FUNC = getmetatable(function() end)
 local oldType = type
 local oldID = TypeID
 local getmt = getmetatable
-local typeMeta = {
-    [getmt("")] = "string",
-    [getmt(0)] = "number",
-    [getmt(false)] = "boolean",
-    [FUNC] = "function",
-    [THREAD] = "thread",
-    [VECTOR] = "Vector",
-    [ANGLE] = "Angle",
-    [VMATRIX] = "VMatrix",
-    [PLAYER] = "Player",
-    [ENTITY] = "Entity",
-    [WEAPON] = "Weapon",
-    [NPC] = "NPC",
-    [COLOR] = "table",
-    [PHYS] = "PhysObj",
-    [VEHICLE] = "Vehicle",
-    [IMATERIAL] = "IMaterial",
-    [DINFO] = "CTakeDamageInfo",
-    [EDATA] = "CEffectData",
-    [MDATA] = "CMoveData",
-    [CMD] = "CUserCmd",
-    [CONVAR] = "ConVar"
-}
+local typeMeta = {}
+local function map(mt, name)
+    if mt then typeMeta[mt] = name end
+end
 
+map(VECTOR, "Vector")
+map(ANGLE, "Angle")
+map(VMATRIX, "VMatrix")
+map(PLAYER, "Player")
+map(ENTITY, "Entity")
+map(WEAPON, "Weapon")
+map(NPC, "NPC")
+map(COLOR, "table")
+map(PHYS, "PhysObj")
+map(VEHICLE, "Vehicle")
+map(IMATERIAL, "IMaterial")
+map(DINFO, "CTakeDamageInfo")
+map(EDATA, "CEffectData")
+map(MDATA, "CMoveData")
+map(CMD, "CUserCmd")
+map(CONVAR, "ConVar")
+map(FUNC, "function")
+map(THREAD, "thread")
 if CLIENT then
-    typeMeta[PANEL] = "Panel"
-    typeMeta[CSENT] = "CSEnt"
-    typeMeta[IMESH] = "IMesh"
+    map(PANEL, "Panel")
+    map(CSENT, "CSEnt")
+    map(IMESH, "IMesh")
 end
 
 function type(obj)
     if obj == nil then return "nil" end
-    return typeMeta[getmt(obj)] or oldType(obj)
+    local mt = typeMeta[getmt(obj)]
+    if mt then return mt end
+    return oldType(obj)
 end
 
+local TYPE_NIL = TYPE_NIL
 if jit.status() then
-    local TYPE_NIL = TYPE_NIL
-    local oldTypeID = oldID
-    local typeIDs = {
-        [getmt("")] = TYPE_STRING,
-        [getmt(0)] = TYPE_NUMBER,
-        [getmt(false)] = TYPE_BOOL,
-        [FUNC] = TYPE_FUNCTION,
-        [THREAD] = TYPE_THREAD,
-        [VECTOR] = TYPE_VECTOR,
-        [ANGLE] = TYPE_ANGLE,
-        [VMATRIX] = TYPE_MATRIX,
-        [PLAYER] = TYPE_ENTITY,
-        [ENTITY] = TYPE_ENTITY,
-        [WEAPON] = TYPE_ENTITY,
-        [NPC] = TYPE_ENTITY,
-        [COLOR] = TYPE_COLOR,
-        [PHYS] = TYPE_PHYSOBJ,
-        [VEHICLE] = TYPE_ENTITY,
-        [IMATERIAL] = TYPE_MATERIAL,
-        [DINFO] = TYPE_DAMAGEINFO,
-        [EDATA] = TYPE_EFFECTDATA,
-        [MDATA] = TYPE_MOVEDATA,
-        [CMD] = TYPE_USERCMD,
-        [CONVAR] = TYPE_CONVAR
-    }
+    local typeIDs = {}
+    local function mapID(mt, id)
+        if mt then typeIDs[mt] = id end
+    end
 
+    mapID(VECTOR, TYPE_VECTOR)
+    mapID(ANGLE, TYPE_ANGLE)
+    mapID(VMATRIX, TYPE_MATRIX)
+    mapID(PLAYER, TYPE_ENTITY)
+    mapID(ENTITY, TYPE_ENTITY)
+    mapID(WEAPON, TYPE_ENTITY)
+    mapID(NPC, TYPE_ENTITY)
+    mapID(COLOR, TYPE_COLOR)
+    mapID(PHYS, TYPE_PHYSOBJ)
+    mapID(VEHICLE, TYPE_ENTITY)
+    mapID(IMATERIAL, TYPE_MATERIAL)
+    mapID(DINFO, TYPE_DAMAGEINFO)
+    mapID(EDATA, TYPE_EFFECTDATA)
+    mapID(MDATA, TYPE_MOVEDATA)
+    mapID(CMD, TYPE_USERCMD)
+    mapID(CONVAR, TYPE_CONVAR)
     if CLIENT then
-        typeIDs[PANEL] = TYPE_PANEL
-        typeIDs[CSENT] = TYPE_ENTITY
-        typeIDs[IMESH] = TYPE_IMESH
+        mapID(PANEL, TYPE_PANEL)
+        mapID(CSENT, TYPE_ENTITY)
+        mapID(IMESH, TYPE_IMESH)
     end
 
     function TypeID(obj)
         if obj == nil then return TYPE_NIL end
-        return typeIDs[getmt(obj)] or oldTypeID(obj)
+        local mt = typeIDs[getmt(obj)]
+        if mt then return mt end
+        return oldID(obj)
     end
 else
-    local TYPE_NIL = TYPE_NIL
-    local oldTypeID = oldID
     function TypeID(obj)
         if obj == nil then return TYPE_NIL end
-        return oldTypeID(obj)
+        return oldID(obj)
     end
 end
 
@@ -120,9 +117,12 @@ function table.Remove(tbl, idx)
 end
 
 do
-    local sub, len = string.sub, string.len
+    local sub = string.sub
+    local len = string.len
     function string.SplitString(sep, str)
-        local res, i, last = {}, 1, 1
+        local res = {}
+        local i = 1
+        local last = 1
         while i <= len(str) do
             if sub(str, i, i) == sep then
                 res[#res + 1] = sub(str, last, i - 1)
@@ -139,7 +139,8 @@ do
 end
 
 do
-    local trace, data = {}, {
+    local trace = {}
+    local data = {
         output = trace,
         filter = {}
     }
@@ -147,7 +148,8 @@ do
     function util.BlastDamageSqr(inf, atk, pos, r, dmg)
         if dmg == 0 then return end
         local _, players = player.Iterator()
-        local sqr, info = r * r, DamageInfo()
+        local sqr = r * r
+        local info = DamageInfo()
         info:SetAttacker(atk)
         info:SetInflictor(inf)
         info:SetDamageType(DMG_BLAST)
@@ -270,7 +272,8 @@ do
 end
 
 do
-    local FrameNumber, TraceLine = FrameNumber, util.TraceLine
+    local FrameNumber = FrameNumber
+    local TraceLine = util.TraceLine
     local START, ENDV, DIR = Vector(), Vector(), Vector()
     local tr = {
         output = {},
@@ -321,7 +324,8 @@ end
 
 MAX_PLAYER_BITS = math.ceil(math.log(1 + game.MaxPlayers()) / math.log(2))
 do
-    local hexToNum, numToHex = {}, {}
+    local hexToNum = {}
+    local numToHex = {}
     for i = 0, 255 do
         local hex = string.format("%02x", i)
         hexToNum[hex] = i
