@@ -524,7 +524,7 @@ function PANEL:updateModelEntity(character)
     hook.Run("ModifyCharacterModel", self.modelEntity, character)
     hook.Add("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables", function()
         if IsValid(self.modelEntity) then
-            self.modelEntity:FrameAdvance(RealFrameTime())
+            self.modelEntity:FrameAdvance()
             self.modelEntity:DrawModel()
         end
     end)
