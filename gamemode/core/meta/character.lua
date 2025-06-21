@@ -2,7 +2,6 @@
 characterMeta.__index = characterMeta
 characterMeta.id = characterMeta.id or 0
 characterMeta.vars = characterMeta.vars or {}
-debug.getregistry().Character = lia.meta.character
 function characterMeta:tostring()
     return "character[" .. (self.id or 0) .. "]"
 end
