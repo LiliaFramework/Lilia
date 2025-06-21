@@ -395,7 +395,7 @@ function lia.item.loadFromDir(directory)
     for _, v in ipairs(folders) do
         if v == "base" then continue end
         for _, v2 in ipairs(file.Find(directory .. "/" .. v .. "/*.lua", "LUA")) do
-            lia.item.load(directory .. "/" .. v .. "/" .. v2, "base_" .. v, nil, false)
+            lia.item.load(directory .. "/" .. v .. "/" .. v2, "base_" .. v, nil)
         end
     end
 
@@ -796,8 +796,8 @@ if SERVER then
         end
 
         lia.item.instance(0, uniqueID, data or {}, 1, 1, function(item)
-            local entity = item:spawn(position, angles)
-            if callback then callback(item, entity) end
+            item:spawn(position, angles)
+            if callback then callback(item) end
         end)
         return d
     end
