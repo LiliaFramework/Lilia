@@ -86,6 +86,13 @@ function lia.bar.remove(identifier)
     if idx then table.remove(lia.bar.list, idx) end
 end
 
+local function PaintPanel(x, y, w, h)
+    surfaceSetDrawColor(0, 0, 0, 255)
+    surfaceDrawOutlinedRect(x, y, w, h)
+    surfaceSetDrawColor(0, 0, 0, 150)
+    surfaceDrawRect(x + 1, y + 1, w - 2, h - 2)
+end
+
 --[[
     lia.bar.drawBar(x, y, w, h, pos, max, color)
 
@@ -108,13 +115,6 @@ end
     Returns:
         None
 ]]
-local function PaintPanel(x, y, w, h)
-    surfaceSetDrawColor(0, 0, 0, 255)
-    surfaceDrawOutlinedRect(x, y, w, h)
-    surfaceSetDrawColor(0, 0, 0, 150)
-    surfaceDrawRect(x + 1, y + 1, w - 2, h - 2)
-end
-
 function lia.bar.drawBar(x, y, w, h, pos, max, color)
     pos = math.min(pos, max)
     local usable = math.max(w - 6, 0)
@@ -124,6 +124,7 @@ function lia.bar.drawBar(x, y, w, h, pos, max, color)
     surfaceDrawRect(x + 3, y + 3, fill, h - 6)
 end
 
+--[[
     lia.bar.drawAction(text, duration)
 
     Description:

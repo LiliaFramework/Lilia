@@ -88,6 +88,7 @@ function lia.chat.register(chatType, data)
     data.filter = data.filter or "ic"
     lia.chat.classes[chatType] = data
 end
+
 --[[
     lia.chat.parse(client, message, noSend)
 
@@ -157,6 +158,7 @@ end
     Realm:
         Server
 ]]
+if SERVER then
     function lia.chat.send(speaker, chatType, text, anonymous, receivers)
         local class = lia.chat.classes[chatType]
         if class and class.onCanSay(speaker, text) ~= false then

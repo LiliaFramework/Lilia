@@ -1,4 +1,3 @@
-lia = lia or {}
 lia.color = lia.color or {}
 lia.color.stored = lia.color.stored or {}
 local clamp = math.Clamp
@@ -221,4 +220,3 @@ function Color(r, g, b, a)
     end
     return oldColor(r, g, b, a)
 end
-
