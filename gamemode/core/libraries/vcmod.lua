@@ -1,25 +1,3 @@
---[[
-    VC_canAfford(client, amount)
-
-    Description:
-        Determines if the client has enough money for a VCMod transaction
-        using their character's money total.
-
-    Parameters:
-        client (Player) – Player attempting the purchase.
-        amount (number) – Money required.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – True when the character has sufficient funds.
-]]
-hook.Add("VC_canAfford", "VCMOD_VC_canAfford", function(client, amount)
-    if client:getChar():hasMoney(amount) then return true end
-    return false
-end)
-
 if SERVER then
     --[[
         VC_canAddMoney(client, amount)
@@ -67,3 +45,25 @@ if SERVER then
         return false
     end)
 end
+
+--[[
+    VC_canAfford(client, amount)
+
+    Description:
+        Determines if the client has enough money for a VCMod transaction
+        using their character's money total.
+
+    Parameters:
+        client (Player) – Player attempting the purchase.
+        amount (number) – Money required.
+
+    Realm:
+        Shared
+
+    Returns:
+        boolean – True when the character has sufficient funds.
+]]
+hook.Add("VC_canAfford", "VCMOD_VC_canAfford", function(client, amount)
+    if client:getChar():hasMoney(amount) then return true end
+    return false
+end)
