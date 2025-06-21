@@ -3987,3 +3987,846 @@
                 print("Third-person mode toggled to:", state)
             end)
 ]]
+
+--[[
+        AddTextField(sectionName, fieldName, labelText, valueFunc)
+
+        Description:
+            Called when a text field is added to an F1 menu information section.
+            Allows modules to modify or monitor the field being inserted.
+
+        Parameters:
+            sectionName (string)
+            fieldName (string)
+            labelText (string)
+            valueFunc (function)
+
+        Realm:
+            Client
+        Example:
+            -- Change the money field label.
+            hook.Add("AddTextField", "RenameMoneyField", function(section, name, label, value)
+                if name == "money" then
+                    return section, name, "Credits", value
+                end
+            end)
+]]
+
+--[[
+        F1OnAddTextField(sectionName, fieldName, labelText, valueFunc)
+
+        Description:
+            Fired after AddTextField so other modules can react to new fields.
+
+        Parameters:
+            sectionName (string)
+            fieldName (string)
+            labelText (string)
+            valueFunc (function)
+
+        Realm:
+            Client
+        Example:
+            -- Log newly added fields.
+            hook.Add("F1OnAddTextField", "LogFields", function(section, name)
+                print("Added field", name, "to section", section)
+            end)
+]]
+
+--[[
+        F1OnAddBarField(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
+
+        Description:
+            Triggered after AddBarField inserts a status bar into the F1 menu.
+
+        Parameters:
+            sectionName (string)
+            fieldName (string)
+            labelText (string)
+            minFunc (function)
+            maxFunc (function)
+            valueFunc (function)
+
+        Realm:
+            Client
+        Example:
+            hook.Add("F1OnAddBarField", "TrackBars", function(section, name)
+                print("Added bar", name)
+            end)
+]]
+
+--[[
+        CreateInformationButtons(pages)
+
+        Description:
+            Called while building the F1 information menu to populate navigation buttons.
+
+        Parameters:
+            pages (table)
+
+        Realm:
+            Client
+        Example:
+            hook.Add("CreateInformationButtons", "AddHelpPage", function(pages)
+                table.insert(pages, {name = "Help", drawFunc = function(parent) end})
+            end)
+]]
+
+--[[
+        PopulateConfigurationButtons(pages)
+
+        Description:
+            Invoked when the settings tab is constructed allowing new configuration pages.
+
+        Parameters:
+            pages (table)
+
+        Realm:
+            Client
+        Example:
+            hook.Add("PopulateConfigurationButtons", "AddControlsPage", function(pages)
+                table.insert(pages, {name = "Controls", drawFunc = function(p) end})
+            end)
+]]
+
+--[[
+        InitializedKeybinds()
+
+        Description:
+            Called after keybinds have been loaded from disk.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("InitializedKeybinds", "NotifyKeybinds", function()
+                chat.AddText("Keybinds loaded")
+            end)
+]]
+
+--[[
+        getOOCDelay(client)
+
+        Description:
+            Allows modification of the cooldown delay between OOC messages.
+
+        Parameters:
+            client (Player)
+
+        Realm:
+            Server
+        Returns:
+            number|nil – Custom cooldown in seconds.
+        Example:
+            hook.Add("getOOCDelay", "VIPOOC", function(ply)
+                if ply:IsVIP() then return 5 end
+            end)
+]]
+
+--[[
+        OnChatReceived(client, chatType, text, anonymous)
+
+        Description:
+            Runs on the client when chat text is received before display.
+            Returning modified text will replace the message.
+
+        Parameters:
+            client (Player)
+            chatType (string)
+            text (string)
+            anonymous (boolean)
+
+        Realm:
+            Client
+        Returns:
+            string|nil – Replacement text.
+        Example:
+            hook.Add("OnChatReceived", "CensorChat", function(ply, type, msg)
+                return msg:gsub("badword", "****")
+            end)
+]]
+
+--[[
+        getAdjustedPartData(wearer, id)
+
+        Description:
+            Requests PAC3 part data after adjustments have been applied.
+
+        Parameters:
+            wearer (Entity)
+            id (string)
+
+        Realm:
+            Client
+        Returns:
+            table|nil – Adjusted part data.
+        Example:
+            hook.Add("getAdjustedPartData", "DebugParts", function(ply, partID)
+                print("Requesting part", partID)
+            end)
+]]
+
+--[[
+        AdjustPACPartData(wearer, id, data)
+
+        Description:
+            Allows modules to modify PAC3 part data before it is attached.
+
+        Parameters:
+            wearer (Entity)
+            id (string)
+            data (table)
+
+        Realm:
+            Client
+        Returns:
+            table|nil – Modified data table.
+        Example:
+            hook.Add("AdjustPACPartData", "ColorParts", function(ply, partID, d)
+                d.Color = Vector(1,0,0)
+                return d
+            end)
+]]
+
+--[[
+        attachPart(client, id)
+
+        Description:
+            Called when a PAC3 part should be attached to a player.
+
+        Parameters:
+            client (Player)
+            id (string)
+
+        Realm:
+            Client
+        Example:
+            hook.Add("attachPart", "AnnouncePart", function(ply, partID)
+                print(ply, "received part", partID)
+            end)
+]]
+
+--[[
+        removePart(client, id)
+
+        Description:
+            Triggered when a PAC3 part is removed from a player.
+
+        Parameters:
+            client (Player)
+            id (string)
+
+        Realm:
+            Client
+        Example:
+            hook.Add("removePart", "LogPartRemoval", function(ply, partID)
+                print(partID, "removed from", ply)
+            end)
+]]
+
+--[[
+        OnPAC3PartTransfered(part)
+
+        Description:
+            Fired when a PAC3 outfit part transfers ownership to a ragdoll.
+
+        Parameters:
+            part (Entity)
+
+        Realm:
+            Client
+        Example:
+            hook.Add("OnPAC3PartTransfered", "TrackTransfers", function(p)
+                print("Part transferred", p)
+            end)
+]]
+
+--[[
+        DrawPlayerRagdoll(entity)
+
+        Description:
+            Allows custom rendering of a player's ragdoll created by PAC3.
+
+        Parameters:
+            entity (Entity)
+
+        Realm:
+            Client
+        Example:
+            hook.Add("DrawPlayerRagdoll", "TintRagdoll", function(ent)
+                render.SetColorModulation(1,0,0)
+            end)
+]]
+
+--[[
+        setupPACDataFromItems()
+
+        Description:
+            Initializes PAC3 outfits from equipped items after modules load.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("setupPACDataFromItems", "InitPAC", function()
+                print("Equipped PAC data loaded")
+            end)
+]]
+
+--[[
+        TryViewModel(entity)
+
+        Description:
+            Allows PAC3 to swap the view model entity for event checks.
+
+        Parameters:
+            entity (Entity)
+
+        Realm:
+            Client
+        Returns:
+            Entity – Replacement entity.
+        Example:
+            hook.Add("TryViewModel", "UsePlayerViewModel", function(ent)
+                return ent == LocalPlayer():GetViewModel() and LocalPlayer() or ent
+            end)
+]]
+
+--[[
+        WeaponCycleSound()
+
+        Description:
+            Lets modules provide a custom sound when cycling weapons in the selector.
+
+        Realm:
+            Client
+        Returns:
+            string|nil – Sound path.
+            number|nil – Playback pitch.
+        Example:
+            hook.Add("WeaponCycleSound", "SilentCycle", function()
+                return "buttons/button15.wav", 100
+            end)
+]]
+
+--[[
+        WeaponSelectSound()
+
+        Description:
+            Similar to WeaponCycleSound but used when confirming a weapon choice.
+
+        Realm:
+            Client
+        Returns:
+            string|nil – Sound path.
+            number|nil – Playback pitch.
+        Example:
+            hook.Add("WeaponSelectSound", "CustomSelectSound", function()
+                return "buttons/button24.wav", 90
+            end)
+]]
+
+--[[
+        ShouldDrawWepSelect(client)
+
+        Description:
+            Determines if the weapon selection UI should be visible.
+
+        Parameters:
+            client (Player)
+
+        Realm:
+            Client
+        Returns:
+            boolean
+        Example:
+            hook.Add("ShouldDrawWepSelect", "HideInVehicles", function(ply)
+                return not ply:InVehicle()
+            end)
+]]
+
+--[[
+        CanPlayerChooseWeapon(weapon)
+
+        Description:
+            Checks whether the active weapon can be selected via the weapon wheel.
+
+        Parameters:
+            weapon (Weapon)
+
+        Realm:
+            Client
+        Returns:
+            boolean|nil – false to block selection.
+        Example:
+            hook.Add("CanPlayerChooseWeapon", "BlockPhysgun", function(wep)
+                if IsValid(wep) and wep:GetClass() == "weapon_physgun" then
+                    return false
+                end
+            end)
+]]
+
+--[[
+        OverrideSpawnTime(client, baseTime)
+
+        Description:
+            Allows modules to modify the respawn delay after death.
+
+        Parameters:
+            client (Player)
+            baseTime (number)
+
+        Realm:
+            Client
+        Returns:
+            number|nil – New respawn time.
+        Example:
+            hook.Add("OverrideSpawnTime", "ShortRespawns", function(ply, time)
+                if ply:IsAdmin() then return 2 end
+            end)
+]]
+
+--[[
+        ShouldRespawnScreenAppear()
+
+        Description:
+            Lets modules suppress the respawn HUD from showing.
+
+        Realm:
+            Client
+        Returns:
+            boolean|nil – false to hide.
+        Example:
+            hook.Add("ShouldRespawnScreenAppear", "NoRespawnHUD", function()
+                return false
+            end)
+]]
+
+--[[
+        VoiceToggled(enabled)
+
+        Description:
+            Fired when voice chat is enabled or disabled via config.
+
+        Parameters:
+            enabled (boolean)
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("VoiceToggled", "AnnounceVoice", function(state)
+                print("Voice chat set to", state)
+            end)
+]]
+
+--[[
+        RefreshFonts()
+
+        Description:
+            Requests recreation of all registered UI fonts.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("RefreshFonts", "ReloadFonts", function()
+                print("Fonts refreshed")
+            end)
+]]
+
+--[[
+        AdjustCreationData(client, data, newData, originalData)
+
+        Description:
+            Allows modification of character creation data before the character is saved.
+
+        Parameters:
+            client (Player)
+            data (table)
+            newData (table)
+            originalData (table)
+
+        Realm:
+            Server
+        Example:
+            hook.Add("AdjustCreationData", "EnforceName", function(ply, data, newData)
+                if data.name == "" then newData.name = "Unnamed" end
+            end)
+]]
+
+--[[
+        CanCharBeTransfered(character, newFaction, oldFaction)
+
+        Description:
+            Determines if a character may switch factions.
+
+        Parameters:
+            character (table)
+            newFaction (table)
+            oldFaction (number)
+
+        Realm:
+            Server
+        Returns:
+            bool|nil – false to block.
+        Example:
+            hook.Add("CanCharBeTransfered", "BlockRestrictedFactions", function(char, faction)
+                if faction.isRestricted then return false end
+            end)
+]]
+
+--[[
+        CanPlayerUseChar(client, character)
+
+        Description:
+            Called when a player attempts to load one of their characters.
+
+        Parameters:
+            client (Player)
+            character (table)
+
+        Realm:
+            Server
+        Returns:
+            bool|nil – false to deny.
+        Example:
+            hook.Add("CanPlayerUseChar", "CheckBans", function(ply, char)
+                if char:isBanned() then return false, "Character banned" end
+            end)
+]]
+
+--[[
+        CanPlayerSwitchChar(client, currentChar, newChar)
+
+        Description:
+            Checks if a player can switch from their current character to another.
+
+        Parameters:
+            client (Player)
+            currentChar (table)
+            newChar (table)
+
+        Realm:
+            Server
+        Returns:
+            bool|nil – false to block the switch.
+        Example:
+            hook.Add("CanPlayerSwitchChar", "NoSwitchInCombat", function(ply)
+                if ply:isInCombat() then return false end
+            end)
+]]
+
+--[[
+        CanPlayerLock(client, door)
+
+        Description:
+            Determines whether the player may lock the given door or vehicle.
+
+        Parameters:
+            client (Player)
+            door (Entity)
+
+        Realm:
+            Server
+        Returns:
+            bool|nil – false to disallow.
+        Example:
+            hook.Add("CanPlayerLock", "AdminsAlwaysLock", function(ply)
+                if ply:IsAdmin() then return true end
+            end)
+]]
+
+--[[
+        CanPlayerUnlock(client, door)
+
+        Description:
+            Determines whether the player may unlock the given door or vehicle.
+
+        Parameters:
+            client (Player)
+            door (Entity)
+
+        Realm:
+            Server
+        Returns:
+            bool|nil – false to disallow.
+        Example:
+            hook.Add("CanPlayerUnlock", "AdminsAlwaysUnlock", function(ply)
+                if ply:IsAdmin() then return true end
+            end)
+]]
+
+--[[
+        CanPlayerModifyConfig(client, key)
+
+        Description:
+            Called when a player attempts to change a configuration value.
+
+        Parameters:
+            client (Player)
+            key (string)
+
+        Realm:
+            Server
+        Returns:
+            bool|nil – false to deny modification.
+        Example:
+            hook.Add("CanPlayerModifyConfig", "RestrictConfig", function(ply, k)
+                return ply:IsSuperAdmin()
+            end)
+]]
+
+--[[
+        CharDeleted(client, character)
+
+        Description:
+            Fired after a character is permanently removed.
+
+        Parameters:
+            client (Player)
+            character (table)
+
+        Realm:
+            Server
+        Example:
+            hook.Add("CharDeleted", "LogDeletion", function(ply, char)
+                print(ply:Name(), "deleted character", char:getName())
+            end)
+]]
+
+--[[
+        CheckFactionLimitReached(faction, character, client)
+
+        Description:
+            Allows custom logic for determining if a faction has reached its player limit.
+
+        Parameters:
+            faction (table)
+            character (table)
+            client (Player)
+
+        Realm:
+            Shared
+        Returns:
+            boolean
+        Example:
+            hook.Add("CheckFactionLimitReached", "IgnoreVIP", function(faction, char, ply)
+                if ply:IsVIP() then return false end
+            end)
+]]
+
+--[[
+        F1OnAddSection(sectionName, color, priority, location)
+
+        Description:
+            Triggered after AddSection inserts a new information section.
+
+        Parameters:
+            sectionName (string)
+            color (Color)
+            priority (number)
+            location (number)
+
+        Realm:
+            Client
+        Example:
+            hook.Add("F1OnAddSection", "PrintSection", function(name)
+                print("Added section", name)
+            end)
+]]
+
+--[[
+        GetWeaponName(weapon)
+
+        Description:
+            Allows overriding of the displayed weapon name in the selector.
+
+        Parameters:
+            weapon (Weapon)
+
+        Realm:
+            Client
+        Returns:
+            string|nil – Replacement name.
+        Example:
+            hook.Add("GetWeaponName", "UppercaseName", function(wep)
+                return wep:GetClass():upper()
+            end)
+]]
+
+--[[
+        OnCharGetup(client, entity)
+
+        Description:
+            Called when a ragdolled character finishes getting up.
+
+        Parameters:
+            client (Player)
+            entity (Entity) – Ragdoll entity.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("OnCharGetup", "NotifyGetup", function(ply)
+                ply:ChatPrint("You stood up")
+            end)
+]]
+
+--[[
+        OnLocalizationLoaded()
+
+        Description:
+            Fired once language files finish loading.
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("OnLocalizationLoaded", "PrintLang", function()
+                print("Localization ready")
+            end)
+]]
+
+--[[
+        OnPlayerObserve(client, state)
+
+        Description:
+            Called when a player's observe mode is toggled.
+
+        Parameters:
+            client (Player)
+            state (boolean)
+
+        Realm:
+            Server
+        Example:
+            hook.Add("OnPlayerObserve", "AnnounceObserve", function(ply, s)
+                print(ply, s and "entered" or "left", "observe mode")
+            end)
+]]
+
+--[[
+        PlayerLoadedChar(client, character, previousChar)
+
+        Description:
+            Runs after a character has been loaded and set up for a player.
+
+        Parameters:
+            client (Player)
+            character (table)
+            previousChar (table|nil)
+
+        Realm:
+            Server
+        Example:
+            hook.Add("PlayerLoadedChar", "WelcomeBack", function(ply, char)
+                ply:ChatPrint("Welcome, " .. char:getName())
+            end)
+]]
+
+--[[
+        PrePlayerLoadedChar(client, newChar, oldChar)
+
+        Description:
+            Fired right before a player switches to a new character.
+
+        Parameters:
+            client (Player)
+            newChar (table)
+            oldChar (table|nil)
+
+        Realm:
+            Server
+        Example:
+            hook.Add("PrePlayerLoadedChar", "SaveStuff", function(ply, new, old)
+                print("Switching characters")
+            end)
+]]
+
+--[[
+        PostPlayerLoadedChar(client, character, previousChar)
+
+        Description:
+            Called after PlayerLoadedChar to allow post-load operations.
+
+        Parameters:
+            client (Player)
+            character (table)
+            previousChar (table|nil)
+
+        Realm:
+            Server
+        Example:
+            hook.Add("PostPlayerLoadedChar", "GiveItems", function(ply, char)
+                -- Give starter items here
+            end)
+]]
+
+--[[
+        PlayerSay(client, text)
+
+        Description:
+            Custom hook executed when a player sends a chat message server-side.
+
+        Parameters:
+            client (Player)
+            text (string)
+
+        Realm:
+            Server
+        Example:
+            hook.Add("PlayerSay", "LogChat", function(ply, msg)
+                print(ply:Name() .. ": " .. msg)
+            end)
+]]
+
+--[[
+        PopulateAdminStick(menu, target)
+
+        Description:
+            Called after the admin stick menu is created so additional commands can be added.
+
+        Parameters:
+            menu (DermaPanel)
+            target (Entity)
+
+        Realm:
+            Client
+        Example:
+            hook.Add("PopulateAdminStick", "AddCustomOption", function(menu, ent)
+                menu:AddOption("Wave", function() RunConsoleCommand("act", "wave") end)
+            end)
+]]
+
+--[[
+        TicketSystemClaim(admin, requester)
+
+        Description:
+            Fired when a staff member claims a help ticket.
+
+        Parameters:
+            admin (Player)
+            requester (Player)
+
+        Realm:
+            Server
+        Example:
+            hook.Add("TicketSystemClaim", "NotifyClaim", function(staff, ply)
+                staff:ChatPrint("Claimed ticket from " .. ply:Name())
+            end)
+]]
+
+--[[
+        liaOptionReceived(client, key, value)
+
+        Description:
+            Triggered when a shared option value is changed.
+
+        Parameters:
+            client (Player|nil)
+            key (string)
+            value (any)
+
+        Realm:
+            Server
+        Example:
+            hook.Add("liaOptionReceived", "PrintOptionChange", function(_, k, v)
+                print("Option", k, "set to", v)
+            end)
+]]
