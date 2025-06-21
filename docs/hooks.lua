@@ -3146,3 +3146,844 @@
             end)
 ]]
 
+--[[
+        CanPlayerEarnSalary(client, faction, class)
+
+        Description:
+            Determines if a player is allowed to earn salary.
+
+        Parameters:
+            client (Player)
+            faction (table)
+            class (table)
+
+        Realm:
+            Shared
+
+        Returns:
+            bool
+        Example:
+            hook.Add("CanPlayerEarnSalary", "RestrictSalaryToActivePlayers", function(client, faction, class)
+                if not client:isActive() then
+                    return false -- Inactive players do not earn salary
+                end
+                return true
+            end)
+]]
+
+--[[
+        CanPlayerJoinClass(client, class, info)
+
+        Description:
+            Determines whether a player can join a certain class. Return `false` to block.
+
+        Parameters:
+            client (Player)
+            class (number)
+            info (table)
+
+        Realm:
+            Shared
+
+        Returns:
+            bool|nil: false to block, nil to allow.
+        Example:
+            hook.Add("CanPlayerJoinClass", "RestrictEliteClass", function(client, class, info)
+                if class == CLASS_ELITE and not client:hasPermission("join_elite") then
+                    return false
+                end
+            end)
+]]
+
+--[[
+        CanPlayerUseCommand(client, command)
+
+        Description:
+            Determines if a player can use a specific command. Return `false` to block usage.
+
+        Parameters:
+            client (Player)
+            command (string)
+
+        Realm:
+            Shared
+
+        Returns:
+            bool|nil: false to block, nil to allow.
+        Example:
+            hook.Add("CanPlayerUseCommand", "BlockSensitiveCommands", function(client, command)
+                local blockedCommands = {"shutdown", "restart"}
+                if table.HasValue(blockedCommands, command) and not client:isSuperAdmin() then
+                    return false
+                end
+            end)
+]]
+
+--[[
+        CanPlayerUseDoor(client, door, access)
+
+        Description:
+            Determines if a player is allowed to use a door entity, such as opening, locking, or unlocking. Return `false` to prevent the action.
+
+        Parameters:
+            client (Player): The player attempting to use the door.
+            door (Entity): The door entity being used.
+            access (int): The type of access attempted (e.g., DOOR_LOCK).
+
+        Realm:
+            Server
+
+        Returns:
+            bool: false to block, nil or true to allow.
+        Example:
+            hook.Add("CanPlayerUseDoor", "AllowOnlyOwners", function(client, door, access)
+                if access == DOOR_LOCK and door:getOwner() ~= client then
+                    return false -- Only the owner can lock the door
+                end
+                return true
+            end)
+]]
+
+--[[
+        CharCleanUp(character:)
+
+        Description:
+            Used during character cleanup routines for additional steps when removing or transitioning a character.
+
+        Parameters:
+            character: The character being cleaned up.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("CharCleanUp", "RemoveTemporaryItems", function(character)
+                local inventory = character:getInv()
+                for _, item in ipairs(inventory:getItems()) do
+                    if item:isTemporary() then
+                        inventory:removeItem(item.id)
+                        print("Removed temporary item:", item.name)
+                    end
+                end
+            end)
+]]
+
+--[[
+        CharRestored()
+
+        Description:
+            Called after a character has been restored from the database. Useful for post-restoration logic such as awarding default items or setting up data.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("CharRestored", "AwardWelcomePackage", function(character)
+                local welcomePackage = {"welcome_pack", "starter_weapon", "basic_armor"}
+                for _, itemID in ipairs(welcomePackage) do
+                    character:getInv():addItem(itemID)
+                end
+                print("Welcome package awarded to:", character:getName())
+            end)
+]]
+
+--[[
+        CreateDefaultInventory()
+
+        Description:
+            Called when creating a default inventory for a character. Should return a [deferred](https://github.com/Be1zebub/luassert-deferred) (or similar promise) object that resolves with the new inventory.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("CreateDefaultInventory", "InitializeStarterInventory", function(character)
+                local d = deferred.new()
+            
+                someInventoryCreationFunction(character)
+                    :next(function(inventory)
+                        -- Add starter items
+                        inventory:addItem("health_potion")
+                        inventory:addItem("basic_sword")
+                        d:resolve(inventory)
+                    end, function(err)
+                        print("Failed to create inventory:", err)
+                        d:reject(err)
+                    end)
+            
+                return d
+            end)
+]]
+
+--[[
+        CreateInventoryPanel(inventory, parent)
+
+        Description:
+            Client-side call when creating the graphical representation of an inventory.
+
+        Parameters:
+            inventory
+            parent (Panel)
+
+        Realm:
+            Client
+        Example:
+            hook.Add("CreateInventoryPanel", "CustomInventoryUI", function(inventory, parent)
+                local panel = vgui.Create("DPanel", parent)
+                panel:SetSize(400, 600)
+                panel.Paint = function(self, w, h)
+                    draw.RoundedBox(8, 0, 0, w, h, Color(30, 30, 30, 200))
+                end
+            
+                local itemList = vgui.Create("DScrollPanel", panel)
+                itemList:Dock(FILL)
+            
+                for _, item in ipairs(inventory:getItems()) do
+                    local itemPanel = vgui.Create("DButton", itemList)
+                    itemPanel:SetText(item.name)
+                    itemPanel:Dock(TOP)
+                    itemPanel:SetTall(40)
+                    itemPanel.DoClick = function()
+                        print("Selected item:", item.name)
+                    end
+                end
+            
+                return panel
+            end)
+]]
+
+--[[
+        CreateSalaryTimer(client)
+
+        Description:
+            Creates a timer to manage player salary.
+
+        Parameters:
+            client (Player)
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("CreateSalaryTimer", "SetupSalaryTimer", function(client)
+                timer.Create("SalaryTimer_" .. client:SteamID(), 60, 0, function()
+                    if IsValid(client) and MODULE:CanPlayerEarnSalary(client, client:getFaction(), client:getClass()) then
+                        local salary = MODULE:GetSalaryAmount(client, client:getFaction(), client:getClass())
+                        client:addMoney(salary)
+                        client:ChatPrint("You have received your salary of $" .. salary)
+                        print("Salary of $" .. salary .. " awarded to:", client:Name())
+                    end
+                end)
+                print("Salary timer created for:", client:Name())
+            end)
+]]
+
+--[[
+        DoModuleIncludes(path, module)
+
+        Description:
+            Called when modules include submodules. Useful for advanced module handling or dependency management.
+
+        Parameters:
+            path (string)
+            module (table)
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("DoModuleIncludes", "TrackModuleDependencies", function(path, module)
+                print("Including submodule from path:", path)
+                module.dependencies = module.dependencies or {}
+                table.insert(module.dependencies, "base_module")
+            end)
+]]
+
+--[[
+        GetDefaultCharDesc(client, faction)
+
+        Description:
+            Retrieves a default description for a character during creation. Return `(defaultDesc, overrideBool)`.
+
+        Parameters:
+            client (Player)
+            faction (number)
+
+        Realm:
+            Server
+
+        Returns:
+            string: The default description.
+            bool: Whether to override.
+        Example:
+            hook.Add("GetDefaultCharDesc", "CitizenDefaultDesc", function(client, faction)
+                if faction == FACTION_CITIZEN then
+                    return "A hardworking member of society.", true
+                end
+            end)
+]]
+
+--[[
+        GetDefaultCharName(client, faction, data)
+
+        Description:
+            Retrieves a default name for a character during creation. Return `(defaultName, overrideBool)`.
+
+        Parameters:
+            client (Player): The player creating the character.
+            faction (number): The faction index.
+            data (table): Additional creation data.
+
+        Realm:
+            Server
+
+        Returns:
+            string: The default name.
+            bool: Whether to override the user-provided name.
+        Example:
+            hook.Add("GetDefaultCharName", "PoliceDefaultName", function(client, faction, data)
+                if faction == FACTION_POLICE then
+                    return "Officer " .. data.lastName or "Smith", true
+                end
+            end)
+]]
+
+--[[
+        GetSalaryAmount(client, faction, class)
+
+        Description:
+            Retrieves the amount of salary a player should receive.
+
+        Parameters:
+            client (Player)
+            faction (table)
+            class (table)
+
+        Realm:
+            Shared
+
+        Returns:
+            any: The salary amount
+        Example:
+            hook.Add("GetSalaryAmount", "CalculateDynamicSalary", function(client, faction, class)
+                local baseSalary = faction.baseSalary or 1000
+                local classBonus = class.salaryBonus or 0
+                return baseSalary + classBonus
+            end)
+]]
+
+--[[
+        GetSalaryLimit(client, faction, class)
+
+        Description:
+            Retrieves the salary limit for a player.
+
+        Parameters:
+            client (Player)
+            faction (table)
+            class (table)
+
+        Realm:
+            Shared
+
+        Returns:
+            any: The salary limit
+        Example:
+            hook.Add("GetSalaryLimit", "SetSalaryLimitsBasedOnRole", function(client, faction, class)
+                if faction.name == "Police" then
+                    return 5000 -- Police have a higher salary limit
+                elseif faction.name == "Citizen" then
+                    return 2000
+                end
+            end)
+]]
+
+--[[
+        InitializedConfig()
+
+        Description:
+            Called when `lia.config` is fully initialized.
+
+        Realm:
+            Shared
+        Example:
+            function MODULE:InitializedConfig()
+                if lia.config.enableSpecialFeatures then
+                    lia.features.enable()
+                    print("Special features have been enabled.")
+                else
+                    print("Special features are disabled in the config.")
+                end
+            end
+]]
+
+--[[
+        InitializedItems()
+
+        Description:
+            Called once all item modules have been loaded from a directory.
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("InitializedItems", "SetupSpecialItems", function()
+                local specialItem = lia.item.create({
+                    uniqueID = "magic_ring",
+                    name = "Magic Ring",
+                    description = "A ring imbued with magical properties.",
+                    onUse = function(self, player)
+                        player:grantAbility("invisibility")
+                        print(player:Name() .. " has activated the Magic Ring!")
+                    end
+                })
+                print("Special items have been set up.")
+            end)
+]]
+
+--[[
+        InitializedModules()
+
+        Description:
+            Called after all modules are fully initialized.
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("InitializedModules", "FinalizeModuleSetup", function()
+                lia.modules.finalizeSetup()
+                print("All modules have been fully initialized.")
+            end)
+]]
+
+--[[
+        InitializedOptions()
+
+        Description:
+            Called when `lia.option` is fully initialized.
+
+        Realm:
+            Client
+        Example:
+            function MODULE:InitializedOptions()
+               LocalPlayer():ChatPrint("LOADED OPTIONS!")
+            end
+]]
+
+--[[
+        InitializedSchema()
+
+        Description:
+            Called after the schema has finished initializing.
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("InitializedSchema", "SchemaReadyNotification", function()
+                print("Schema has been successfully initialized.")
+                lia.notifications.broadcast("Welcome to the server! The schema is now active.")
+            end)
+]]
+
+--[[
+        InterceptClickItemIcon(self, itemIcon, keyCode)
+
+        Description:
+            Called when a player clicks on an item icon.
+
+        Parameters:
+            self (panel)
+            itemIcon (panel)
+            keyCode (int)
+
+        Realm:
+            Client
+        Example:
+            hook.Add("InterceptClickItemIcon", "HandleItemDoubleClick", function(self, itemIcon, keyCode)
+                if keyCode == KEY_MOUSE2 then -- Right-click
+                    local item = itemIcon:getItem()
+                    lia.ui.openItemContextMenu(item, itemIcon:GetPos())
+                    print("Item context menu opened for:", item.name)
+                end
+            end)
+]]
+
+--[[
+        ItemCombine(client, item, targetItem)
+
+        Description:
+            Called when the system attempts to combine one item with another in an inventory.
+
+        Parameters:
+            client (Player)
+            item (Item)
+            targetItem (Item)
+
+        Realm:
+            Server
+
+        Returns:
+            bool: true if combination is valid and consumed, false otherwise.
+        Example:
+            hook.Add("ItemCombine", "CombineHealthAndHerb", function(client, item, targetItem)
+                if item.uniqueID == "health_potion" and targetItem.uniqueID == "herb" then
+                    local newItem = lia.item.create("super_health_potion")
+                    client:getInv():addItem(newItem)
+                    client:getInv():removeItem(item.id)
+                    client:getInv():removeItem(targetItem.id)
+                    print(client:Name() .. " combined Health Potion with Herb to create Super Health Potion.")
+                    return true
+                end
+                return false
+            end)
+]]
+
+--[[
+        KeyLock(owner, entity, time)
+
+        Description:
+            Called when a player attempts to lock a door.
+
+        Parameters:
+            owner (Player)
+            entity (Entity)
+            time (float)
+
+        Realm:
+            Server
+        Example:
+            hook.Add("KeyLock", "LogDoorLock", function(owner, entity, time)
+                entity:setLocked(true)
+                lia.log.write("DoorLock", owner:Name() .. " locked door ID: " .. entity:EntIndex() .. " for " .. time .. " seconds.")
+                print(owner:Name() .. " locked door ID:", entity:EntIndex(), "for", time, "seconds.")
+            end)
+]]
+
+--[[
+        KeyUnlock(owner, entity, time)
+
+        Description:
+            Called when a player attempts to unlock a door.
+
+        Parameters:
+            owner (Player)
+            entity (Entity)
+            time (float)
+
+        Realm:
+            Server
+        Example:
+            hook.Add("KeyUnlock", "LogDoorUnlock", function(owner, entity, time)
+                entity:setLocked(false)
+                lia.log.write("DoorUnlock", owner:Name() .. " unlocked door ID: " .. entity:EntIndex() .. " after " .. time .. " seconds.")
+                print(owner:Name() .. " unlocked door ID:", entity:EntIndex(), "after", time, "seconds.")
+            end)
+]]
+
+--[[
+        LiliaTablesLoaded()
+
+        Description:
+            Called after all essential DB tables have been loaded.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("LiliaTablesLoaded", "InitializeGameState", function()
+                lia.gameState = lia.gameState or {}
+                lia.gameState.activeEvents = {}
+                print("All essential Lilia tables have been loaded. Game state initialized.")
+            end)
+]]
+
+--[[
+        OnItemRegistered(item)
+
+        Description:
+            Called after an item has been registered. Useful for customizing item behavior or adding properties.
+
+        Parameters:
+            item (Item)
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("OnItemRegistered", "AddItemDurability", function(item)
+                if item.uniqueID == "sword_basic" then
+                    item.durability = 100
+                    item.onUse = function(self)
+                        self.durability = self.durability - 10
+                        if self.durability <= 0 then
+                            self:destroy()
+                            print("Your sword has broken!")
+                        end
+                    end
+                    print("Durability added to:", item.name)
+                end
+            end)
+]]
+
+--[[
+        OnLoadTables()
+
+        Description:
+            Called before the faction tables are loaded. Good spot for data setup prior to factions being processed.
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("OnLoadTables", "SetupFactionDefaults", function()
+                lia.factions = lia.factions or {}
+                lia.factions.defaultPermissions = {canUseWeapons = true, canAccessBank = false}
+                print("Faction defaults have been set up.")
+            end)
+]]
+
+--[[
+        OnMySQLOOConnected()
+
+        Description:
+            Called when MySQLOO successfully connects to the database. Use to register prepared statements or init DB logic.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("OnMySQLOOConnected", "PrepareDatabaseStatements", function()
+                lia.db.prepare("insertPlayer", "INSERT INTO lia_players (_steamID, _steamName) VALUES (?, ?)", {MYSQLOO_STRING, MYSQLOO_STRING})
+                lia.db.prepare("updatePlayerStats", "UPDATE lia_players SET kills = ?, deaths = ? WHERE _steamID = ?", {MYSQLOO_NUMBER, MYSQLOO_NUMBER, MYSQLOO_STRING})
+                print("Prepared MySQLOO statements.")
+            end)
+]]
+
+--[[
+        OnPlayerPurchaseDoor(client, entity, buying, CallOnDoorChild)
+
+        Description:
+            Called when a player purchases or sells a door.
+
+        Parameters:
+            client (Player)
+            entity (Entity): The door
+            buying (bool): True if buying, false if selling
+            CallOnDoorChild (function)
+
+        Realm:
+            Server
+        Example:
+            hook.Add("OnPlayerPurchaseDoor", "HandleDoorPurchase", function(client, entity, buying, CallOnDoorChild)
+                if buying then
+                    client:deductMoney(entity:getPrice())
+                    lia.log.write("DoorPurchase", client:Name() .. " purchased door ID: " .. entity:EntIndex())
+                    print(client:Name() .. " purchased a door.")
+                else
+                    client:addMoney(entity:getSellPrice())
+                    lia.log.write("DoorSale", client:Name() .. " sold door ID: " .. entity:EntIndex())
+                    print(client:Name() .. " sold a door.")
+                end
+                CallOnDoorChild(entity)
+            end)
+]]
+
+--[[
+        OnServerLog(client, logType, logString, category, color)
+
+        Description:
+            Called whenever a new log message is added. Allows for custom logic or modifications to log handling.
+
+        Parameters:
+            client (Player)
+            logType (string)
+            logString (string)
+            category (string)
+            color (Color)
+
+        Realm:
+            Server
+        Example:
+            hook.Add("OnServerLog", "AlertAdminsOnHighSeverity", function(client, logType, logString, category, color)
+                if category == "error" then
+                for _, admin in player.Iterator() do
+                        if admin:isAdmin() then
+                            lia.notifications.send(admin, "Error Log: " .. logString, color)
+                        end
+                    end
+                end
+            end)
+]]
+
+--[[
+        OnWipeTables()
+
+        Description:
+            Called after wiping tables in the DB, typically after major resets/cleanups.
+
+        Realm:
+            Server
+        Example:
+            hook.Add("OnWipeTables", "ReinitializeDefaults", function()
+                lia.db.execute("INSERT INTO lia_factions (name, description) VALUES ('Citizen', 'Regular inhabitants.')")
+                lia.db.execute("INSERT INTO lia_classes (name, faction) VALUES ('Warrior', 'Citizen')")
+                print("Database tables wiped and defaults reinitialized.")
+            end)
+]]
+
+--[[
+        PlayerMessageSend(speaker, chatType, message, anonymous)
+
+        Description:
+            Called before a chat message is sent. Return `false` to cancel, or modify the message if returning a string.
+
+        Parameters:
+            speaker (Player)
+            chatType (string)
+            message (string)
+            anonymous (bool)
+
+        Realm:
+            Shared
+
+        Returns:
+            bool|nil|modifiedString: false to cancel, or return a modified string to change the message.
+        Example:
+            hook.Add("PlayerMessageSend", "FilterProfanity", function(speaker, chatType, message, anonymous)
+                local filteredMessage = string.gsub(message, "badword", "****")
+                if filteredMessage ~= message then
+                    return filteredMessage
+                end
+            end)
+]]
+
+--[[
+        PlayerModelChanged(client, model)
+
+        Description:
+            Called when a player's model changes.
+
+        Parameters:
+            client (Player): The player whose model changed.
+            model (string): The new model path.
+
+        Realm:
+            Shared
+        Example:
+            hook.Add("PlayerModelChanged", "UpdatePlayerAppearance", function(client, model)
+                print(client:Name() .. " changed their model to " .. model)
+                -- Update related appearance settings
+                client:setBodygroup(1, 2) -- Example of setting a bodygroup based on the new model
+            end)
+]]
+
+--[[
+        PlayerUseDoor(client, entity)
+
+        Description:
+            Called when a player attempts to use a door entity.
+
+        Parameters:
+            client (Player)
+            entity (Entity)
+
+        Realm:
+            Server
+
+        Returns:
+            bool|nil: false to disallow, true to allow, or nil to let other hooks decide.
+        Example:
+            hook.Add("PlayerUseDoor", "LogDoorUsage", function(client, entity)
+                print(client:Name() .. " is attempting to use door ID:", entity:EntIndex())
+                -- Allow or disallow based on custom conditions
+                if client:isBanned() then
+                    return false -- Disallow use if the player is banned
+                end
+            end)
+]]
+
+--[[
+        RegisterPreparedStatements()
+
+        Description:
+            Called for registering DB prepared statements post-MySQLOO connection.
+
+        Realm:
+            Server
+        Example:
+]]
+
+--[[
+        ShouldBarDraw(barName)
+
+        Description:
+            Determines whether a specific HUD bar should be drawn.
+
+        Parameters:
+            barName (string): e.g. "health", "armor".
+
+        Realm:
+            Client
+
+        Returns:
+            bool|nil: false to hide, nil to allow.
+        Example:
+            hook.Add("ShouldBarDraw", "HideArmorHUD", function(barName)
+                if barName == "armor" then
+                    return false
+                end
+            end)
+]]
+
+--[[
+        ShouldDisableThirdperson(client)
+
+        Description:
+            Checks if third-person view is allowed or disabled.
+
+        Parameters:
+            client (Player)
+
+        Realm:
+            Client
+
+        Returns:
+            bool (true if 3rd-person should be disabled)
+        Example:
+            hook.Add("ShouldDisableThirdperson", "DisableForInvisibles", function(client)
+                if client:isInvisible() then
+                    return true -- Disable third-person view when invisible
+                end
+            end)
+]]
+
+--[[
+        ShouldHideBars()
+
+        Description:
+            Determines whether all HUD bars should be hidden.
+
+        Realm:
+            Client
+
+        Returns:
+            bool|nil: true to hide, nil to allow rendering.
+        Example:
+            hook.Add("ShouldHideBars", "HideHUDInCinematic", function()
+                if gui.IsInCinematicMode() then
+                    return true
+                end
+            end)
+]]
+
+--[[
+        thirdPersonToggled(state)
+
+        Description:
+            Called when third-person mode is toggled on or off. Allows for custom handling of third-person mode changes.
+
+        Parameters:
+            state (bool): true if third-person is enabled, false if disabled.
+
+        Realm:
+            Client
+        Example:
+            hook.Add("thirdPersonToggled", "NotifyThirdPersonChange", function(state)
+                if state then
+                    chat.AddText(Color(0,255,0), "Third-person view enabled.")
+                else
+                    chat.AddText(Color(255,0,0), "Third-person view disabled.")
+                end
+                print("Third-person mode toggled to:", state)
+            end)
+]]
