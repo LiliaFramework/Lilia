@@ -352,6 +352,9 @@ end
 
 derma.DefineSkin("lilia", "The base skin for the Lilia framework.", SKIN)
 derma.RefreshSkins()
+
+local g_DermaPreviewFrame
+
 concommand.Add("open_derma_preview", function()
     -- Remove existing preview if already open
     if IsValid(g_DermaPreviewFrame) then g_DermaPreviewFrame:Remove() end
@@ -473,7 +476,7 @@ concommand.Add("open_derma_preview", function()
     addPreview("DPanelList", function()
         local pnlList = scroll:Add("DPanelList")
         pnlList:SetTall(80)
-        pnlList:EnableVerticalScrollbar(true)
+        pnlList:EnableVerticalScrollbar()
         pnlList:SetPadding(5)
         for i = 1, 10 do
             local item = vgui.Create("DLabel")
