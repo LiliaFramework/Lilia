@@ -269,17 +269,22 @@ function playerMeta:forceSequence(sequenceName, callback, time, noFreeze)
 
     local seqId = self:LookupSequence(sequenceName)
     if seqId and seqId > 0 then
-        time = time or self:SequenceDuration(seqId)
-        self.liaSeqCallback = callback
+        local dur = time or self:SequenceDuration(seqId)
+        if isfunction(callback) then
+            self.liaSeqCallback = callback
+        else
+            self.liaSeqCallback = nil
+        end
+
         self.liaForceSeq = seqId
         if not noFreeze then self:SetMoveType(MOVETYPE_NONE) end
-        if time > 0 then timer.Create("liaSeq" .. self:EntIndex(), time, 1, function() if IsValid(self) then self:leaveSequence() end end) end
+        if dur > 0 then timer.Create("liaSeq" .. self:EntIndex(), dur, 1, function() if IsValid(self) then self:leaveSequence() end end) end
         net.Start("seqSet")
         net.WriteEntity(self)
         net.WriteBool(true)
         net.WriteInt(seqId, 16)
         net.Broadcast()
-        return time
+        return dur
     end
     return false
 end
@@ -292,10 +297,8 @@ function playerMeta:leaveSequence()
     net.Broadcast()
     self:SetMoveType(MOVETYPE_WALK)
     self.liaForceSeq = nil
-    if self.liaSeqCallback then
-        self:liaSeqCallback()
-        self.liaSeqCallback = nil
-    end
+    if isfunction(self.liaSeqCallback) then self.liaSeqCallback() end
+    self.liaSeqCallback = nil
 end
 
 if SERVER then
