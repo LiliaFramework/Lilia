@@ -30,7 +30,7 @@ Registers a new keybind by associating a key with a description and callback fun
 **Usage Example:**
 ```lua
 -- Register a keybind for the "F" key
-lia.keybind.add("f", "Activate feature", function(ply)
+lia.keybind.add(KEY_F, "Activate feature", function(ply)
     print("Feature activated!")
 end, function(ply)
     print("Feature deactivated!")

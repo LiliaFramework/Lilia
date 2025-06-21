@@ -393,20 +393,13 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
     }
 end)
 
-lia.keybind.add(KEY_I, "Open Inventory", function()
+lia.keybind.add(KEY_NONE, "Open Inventory", function()
     local f1Menu = vgui.Create("liaMenu")
-    f1Menu:setActiveTab("inv")
-end)
-
-lia.keybind.add(KEY_T, "Quick Take Item", function()
-    local client = LocalPlayer()
-    if not client:getChar() or vgui.CursorVisible() then return end
-    local ent = client:getTracedEntity()
-    if IsValid(ent) and ent:isItem() then netstream.Start("invAct", "take", ent) end
+    f1Menu:setActiveTab(L("inv"))
 end)
 
 lia.keybind.add(KEY_NONE, "Admin Mode", function() lia.command.send("adminmode") end)
-lia.keybind.add(KEY_O, "Open Classes Menu", function()
+lia.keybind.add(KEY_NONE, "Open Classes Menu", function()
     local client = LocalPlayer()
     if not client:getChar() or vgui.CursorVisible() then return end
     if IsValid(lia.gui.classesFrame) then
