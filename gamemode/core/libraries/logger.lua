@@ -1,8 +1,8 @@
-﻿lia.log = lia.log or {}
+lia.log = lia.log or {}
 lia.log.types = lia.log.types or {}
 if SERVER then
     --[[
-      lia.log.loadTables
+      lia.log.loadTables()
 
       Description:
          Creates the logs directory for the current active gamemode under "lilia/logs".
@@ -11,7 +11,7 @@ if SERVER then
          None
 
       Returns:
-         nil
+          nil
 
       Realm:
          Server
@@ -24,7 +24,7 @@ if SERVER then
     end
 
     --[[
-      lia.log.addType
+      lia.log.addType(logType, func, category)
 
       Description:
          Registers a new log type by associating a log generating function and a category with the log type identifier.
@@ -36,7 +36,7 @@ if SERVER then
          category (string) - The category for the log type, used for organizing log files.
 
       Returns:
-         nil
+          nil
 
       Realm:
          Server
@@ -49,7 +49,7 @@ if SERVER then
     end
 
     --[[
-      lia.log.getString
+      lia.log.getString(client, logType, ...)
 
       Description:
          Retrieves the log string and its associated category for a given client and log type.
@@ -61,7 +61,7 @@ if SERVER then
          ... (vararg) - Additional parameters passed to the log function.
 
       Returns:
-         string, string - The generated log string and its category if successful; otherwise, nil.
+          string, string - The generated log string and its category if successful; otherwise, nil.
 
       Realm:
          Server
@@ -79,7 +79,7 @@ if SERVER then
     end
 
     --[[
-      lia.log.add
+      lia.log.add(client, logType, ...)
 
       Description:
          Generates a log string using the registered log type function, triggers the "OnServerLog" hook,
@@ -91,7 +91,7 @@ if SERVER then
          ... (vararg) - Additional parameters passed to the log type function.
 
       Returns:
-         nil
+          nil
 
       Realm:
          Server
