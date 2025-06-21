@@ -1,8 +1,8 @@
-﻿lia.lang = lia.lang or {}
+lia.lang = lia.lang or {}
 lia.lang.names = lia.lang.names or {}
 lia.lang.stored = lia.lang.stored or {}
 --[[
-   lia.lang.loadFromDir
+    lia.lang.loadFromDir(directory)
 
    Description:
       Loads all Lua language files (*.lua) from the specified directory,
@@ -13,17 +13,14 @@ lia.lang.stored = lia.lang.stored or {}
    Parameters:
       directory (string) - The path to the directory containing language files.
 
-   Returns:
-      nil
+    Returns:
+        nil
 
-   Realm:
-      Shared
+    Realm:
+        Shared
 
-   Internal Function:
-      true
-
-   Example Usage:
-      lia.lang.loadFromDir("path/to/languages")
+    Internal Function:
+        true
 ]]
 function lia.lang.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
@@ -48,7 +45,7 @@ function lia.lang.loadFromDir(directory)
 end
 
 --[[
-   lia.lang.AddTable
+    lia.lang.AddTable(name, tbl)
 
    Description:
       Adds or merges a table of language key-value pairs into the stored language table
@@ -59,14 +56,11 @@ end
       name (string) - The name of the language to update.
       tbl (table) - A table containing language key-value pairs to add.
 
-   Returns:
-      nil
+    Returns:
+        nil
 
-   Realm:
-      Shared
-
-   Example Usage:
-      lia.lang.AddTable("english", { greeting = "Hello", farewell = "Goodbye" })
+    Realm:
+        Shared
 ]]
 function lia.lang.AddTable(name, tbl)
     local lowerName = name:lower()

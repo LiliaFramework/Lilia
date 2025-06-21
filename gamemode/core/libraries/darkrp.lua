@@ -1,7 +1,24 @@
-﻿DarkRP = DarkRP or {}
+DarkRP = DarkRP or {}
 RPExtraTeams = RPExtraTeams or {}
 lia.darkrp = lia.darkrp or {}
 if SERVER then
+    --[[
+        lia.darkrp.isEmpty(position, entitiesToIgnore)
+
+        Description:
+            Checks whether the specified position is free from players, NPCs,
+            and props.
+
+        Parameters:
+            position (Vector) – World position to test.
+            entitiesToIgnore (table) – Entities ignored during the check.
+
+        Realm:
+            Server
+
+        Returns:
+            boolean – True if the position is clear, false otherwise.
+    ]]
     function lia.darkrp.isEmpty(position, entitiesToIgnore)
         entitiesToIgnore = entitiesToIgnore or {}
         local contents = util.PointContents(position)
@@ -17,6 +34,25 @@ if SERVER then
         return isClear and isEmpty
     end
 
+    --[[
+        lia.darkrp.findEmptyPos(startPos, entitiesToIgnore, maxDistance, searchStep, checkArea)
+
+        Description:
+            Finds a nearby position that is unobstructed by players or props.
+
+        Parameters:
+            startPos (Vector) – The initial position to search from.
+            entitiesToIgnore (table) – Entities ignored during the search.
+            maxDistance (number) – Maximum distance to search in units.
+            searchStep (number) – Step increment when expanding the search radius.
+            checkArea (Vector) – Additional offset tested for clearance.
+
+        Realm:
+            Server
+
+        Returns:
+            Vector – A position considered safe for spawning.
+    ]]
     function lia.darkrp.findEmptyPos(startPos, entitiesToIgnore, maxDistance, searchStep, checkArea)
         if lia.darkrp.isEmpty(startPos, entitiesToIgnore) and lia.darkrp.isEmpty(startPos + checkArea, entitiesToIgnore) then return startPos end
         for distance = searchStep, maxDistance, searchStep do
@@ -30,6 +66,25 @@ if SERVER then
         return startPos
     end
 
+    --[[
+        lia.darkrp.notify(client, _, _, message)
+
+        Description:
+            Forwards a notification message to the given client using
+            lia's notify system.
+
+        Parameters:
+            client (Player) – The player to receive the message.
+            _ – Unused parameter maintained for compatibility.
+            _ – Unused parameter maintained for compatibility.
+            message (string) – Text of the notification.
+
+        Realm:
+            Server
+
+        Returns:
+            None
+    ]]
     function lia.darkrp.notify(client, _, _, message)
         client:notify(message)
     end
@@ -48,6 +103,24 @@ else
         return text, accumulatedWidth
     end
 
+    --[[
+        lia.darkrp.textWrap(text, fontName, maxLineWidth)
+
+        Description:
+            Wraps a text string so that it fits within the specified width
+            when drawn with the given font.
+
+        Parameters:
+            text (string) – The text to wrap.
+            fontName (string) – The font used to measure width.
+            maxLineWidth (number) – Maximum pixel width before wrapping occurs.
+
+        Realm:
+            Client
+
+        Returns:
+            string – The wrapped text with newline characters inserted.
+    ]]
     function lia.darkrp.textWrap(text, fontName, maxLineWidth)
         local accumulatedWidth = 0
         surface.SetFont(fontName)
@@ -82,10 +155,43 @@ for index, faction in ipairs(lia.faction.indices) do
     RPExtraTeams[index].team = index
 end
 
+--[[
+    lia.darkrp.formatMoney(amount)
+
+    Description:
+        Converts a numeric amount to a formatted currency string.
+
+    Parameters:
+        amount (number) – The value of money to format.
+
+    Realm:
+        Shared
+
+    Returns:
+        string – The formatted currency value.
+]]
 function lia.darkrp.formatMoney(amount)
     return lia.currency.get(amount)
 end
 
+--[[
+    lia.darkrp.createEntity(name, data)
+
+    Description:
+        Registers a new DarkRP entity as an item so that it can be spawned
+        through lia's item system.
+
+    Parameters:
+        name (string) – Display name of the entity.
+        data (table) – Table containing entity definition fields such as
+        model, description, and price.
+
+    Realm:
+        Shared
+
+    Returns:
+        None
+]]
 function lia.darkrp.createEntity(name, data)
     local cmd = data.cmd or string.lower(name)
     local ITEM = lia.item.register(cmd, "base_entities", nil, nil, true)
@@ -98,6 +204,21 @@ function lia.darkrp.createEntity(name, data)
     lia.information("Generated DarkRP entity as item " .. name)
 end
 
+--[[
+    lia.darkrp.createCategory()
+
+    Description:
+        Placeholder for DarkRP category creation. Currently unused.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Returns:
+        None
+]]
 function lia.darkrp.createCategory()
 end
 

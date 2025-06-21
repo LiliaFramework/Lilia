@@ -1,4 +1,4 @@
-﻿lia.keybind = lia.keybind or {}
+lia.keybind = lia.keybind or {}
 lia.keybind.stored = lia.keybind.stored or {}
 local KeybindKeys = {
     ["first"] = KEY_FIRST,
@@ -113,7 +113,7 @@ local KeybindKeys = {
 }
 
 --[[
-   lia.keybind.add
+    lia.keybind.add(k, d, cb, rcb)
 
    Description:
       Registers a new keybind for a given action.
@@ -127,8 +127,8 @@ local KeybindKeys = {
       cb (function) - The callback function to be executed when the key is pressed.
       rcb (function) - The callback function to be executed when the key is released.
 
-   Returns:
-      nil
+    Returns:
+        nil
 
    Realm:
       Client
@@ -148,7 +148,7 @@ function lia.keybind.add(k, d, cb, rcb)
 end
 
 --[[
-   lia.keybind.get
+    lia.keybind.get(a, df)
 
    Description:
       Retrieves the current key code for a specified keybind action.
@@ -159,8 +159,8 @@ end
       a (string) - The unique identifier for the keybind action.
       df (number) - An optional default key code to return if the keybind is not set.
 
-   Returns:
-      number - The key code associated with the keybind action, or the default/fallback value if not set.
+    Returns:
+        number - The key code associated with the keybind action, or the default/fallback value if not set.
 
    Realm:
       Client
@@ -175,7 +175,7 @@ function lia.keybind.get(a, df)
 end
 
 --[[
-   lia.keybind.save
+    lia.keybind.save()
 
    Description:
       Saves the current keybind settings to a file.
@@ -185,8 +185,8 @@ end
    Parameters:
       None
 
-   Returns:
-      nil
+    Returns:
+        nil
 
    Realm:
       Client
@@ -213,7 +213,7 @@ function lia.keybind.save()
 end
 
 --[[
-   lia.keybind.load
+    lia.keybind.load()
 
    Description:
       Loads keybind settings from a file.
@@ -225,8 +225,8 @@ end
    Parameters:
       None
 
-   Returns:
-      nil
+    Returns:
+        nil
 
    Realm:
       Client
