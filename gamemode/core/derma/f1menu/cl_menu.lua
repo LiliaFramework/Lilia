@@ -152,7 +152,6 @@ function PANEL:addTab(name, callback, uniqueID)
 
         tab:SetSelected(true)
         self.activeTab = tab
-        lastMenuTab = uniqueID
         self.panel:Clear()
         self.panel:AlphaTo(255, 0.3, 0)
         if callback then
