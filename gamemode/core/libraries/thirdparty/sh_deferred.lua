@@ -179,6 +179,8 @@ function Promise:_handle(value)
     end
 end
 
+
+
 deferred = {}
 function deferred.isPromise(value)
     return istable(value) and isfunction(value.next) and isfunction(value.resolve) and value.state

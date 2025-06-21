@@ -102,7 +102,7 @@ function PANEL:openInspect()
     model.OnMousePressed = function(p, btn)
         if btn == MOUSE_LEFT then
             p.dragging = true
-            p.lastX, p.lastY = gui.MousePos()
+            p.lastX, p.lastY = input.GetCursorPos()
             p:MouseCapture(true)
         end
     end
@@ -114,7 +114,7 @@ function PANEL:openInspect()
 
     model.Think = function(p)
         if p.dragging then
-            local x, y = gui.MousePos()
+            local x, y = input.GetCursorPos()
             local dx, dy = x - p.lastX, y - p.lastY
             p.lastX, p.lastY = x, y
             local off = Vector(-dx, dy, 0) * 0.03

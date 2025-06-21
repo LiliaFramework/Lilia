@@ -367,7 +367,7 @@ function parse(ml, maxwidth)
                     end
 
                     if string.utf8len(curString) > 0 then
-                        local x1, y1 = surface.GetTextSize(curString)
+                        local x1, _ = surface.GetTextSize(curString)
                         local new_block = {}
                         new_block.text = curString
                         new_block.font = block.font
@@ -389,7 +389,7 @@ function parse(ml, maxwidth)
                     thisMaxY = 0
                 elseif ch == "\t" then
                     if string.utf8len(curString) > 0 then
-                        local x1, y1 = surface.GetTextSize(curString)
+                        local x1, _ = surface.GetTextSize(curString)
                         local new_block = {}
                         new_block.text = curString
                         new_block.font = block.font
@@ -475,7 +475,7 @@ function parse(ml, maxwidth)
             end
 
             if string.utf8len(curString) > 0 then
-                local x1, y1 = surface.GetTextSize(curString)
+                local x1, _ = surface.GetTextSize(curString)
                 local new_block = {}
                 new_block.text = curString
                 new_block.font = block.font

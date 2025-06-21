@@ -1,4 +1,5 @@
 local PANEL = {}
+local renderedIcons = {}
 local function renderNewIcon(panel, itemTable)
     if itemTable.iconCam and (not renderedIcons[string.lower(itemTable.model)] or itemTable.forceRender) then
         local iconCam = itemTable.iconCam
