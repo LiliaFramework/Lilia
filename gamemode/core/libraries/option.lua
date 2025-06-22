@@ -19,6 +19,9 @@ lia.option.stored = lia.option.stored or {}
 
     Realm:
         Shared
+
+    Example:
+        lia.option.add("showHints", "Show Hints", "Display hints", true)
 ]]
 function lia.option.add(key, name, desc, default, callback, data)
     assert(isstring(key), "Expected option key to be a string, got " .. type(key))
@@ -62,6 +65,9 @@ end
 
     Realm:
         Client
+
+    Example:
+        lia.option.set("showHints", false)
 ]]
 function lia.option.set(key, value)
     local opt = lia.option.stored[key]
@@ -88,6 +94,9 @@ end
 
     Realm:
         Client
+
+    Example:
+        local show = lia.option.get("showHints", true)
 ]]
 function lia.option.get(key, default)
     local opt = lia.option.stored[key]
@@ -112,6 +121,9 @@ end
 
     Realm:
         Client
+
+    Example:
+        lia.option.save()
 ]]
 function lia.option.save()
     local dir = "lilia/options/" .. engine.ActiveGamemode()
@@ -142,6 +154,9 @@ end
 
     Realm:
         Client
+
+    Example:
+        lia.option.load()
 ]]
 function lia.option.load()
     local dir = "lilia/options/" .. engine.ActiveGamemode()

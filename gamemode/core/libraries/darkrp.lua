@@ -18,6 +18,11 @@ if SERVER then
 
         Returns:
             boolean – True if the position is clear, false otherwise.
+
+        Example:
+            if lia.darkrp.isEmpty(Vector(0,0,0)) then
+                print("Spawn point is clear")
+            end
     ]]
     function lia.darkrp.isEmpty(position, entitiesToIgnore)
         entitiesToIgnore = entitiesToIgnore or {}
@@ -52,6 +57,9 @@ if SERVER then
 
         Returns:
             Vector – A position considered safe for spawning.
+
+        Example:
+            local pos = lia.darkrp.findEmptyPos(Vector(0,0,0), nil, 128, 16, Vector(0,0,32))
     ]]
     function lia.darkrp.findEmptyPos(startPos, entitiesToIgnore, maxDistance, searchStep, checkArea)
         if lia.darkrp.isEmpty(startPos, entitiesToIgnore) and lia.darkrp.isEmpty(startPos + checkArea, entitiesToIgnore) then return startPos end
@@ -84,6 +92,9 @@ if SERVER then
 
         Returns:
             None
+
+        Example:
+            lia.darkrp.notify(player.GetAll()[1], nil, nil, "Hello!")
     ]]
     function lia.darkrp.notify(client, _, _, message)
         client:notify(message)
@@ -120,6 +131,9 @@ else
 
         Returns:
             string – The wrapped text with newline characters inserted.
+
+        Example:
+            local wrapped = lia.darkrp.textWrap("Some very long text", "DermaDefault", 150)
     ]]
     function lia.darkrp.textWrap(text, fontName, maxLineWidth)
         local accumulatedWidth = 0
@@ -164,11 +178,14 @@ end
     Parameters:
         amount (number) – The value of money to format.
 
-    Realm:
-        Shared
+        Realm:
+            Shared
 
-    Returns:
-        string – The formatted currency value.
+        Returns:
+            string – The formatted currency value.
+
+        Example:
+            print(lia.darkrp.formatMoney(2500))
 ]]
 function lia.darkrp.formatMoney(amount)
     return lia.currency.get(amount)
@@ -186,11 +203,14 @@ end
         data (table) – Table containing entity definition fields such as
         model, description, and price.
 
-    Realm:
-        Shared
+        Realm:
+            Shared
 
-    Returns:
-        None
+        Returns:
+            None
+
+        Example:
+            lia.darkrp.createEntity("Fuel", {model = "models/props_c17/oildrum001.mdl", price = 50})
 ]]
 function lia.darkrp.createEntity(name, data)
     local cmd = data.cmd or string.lower(name)
@@ -218,6 +238,9 @@ end
 
     Returns:
         None
+
+    Example:
+        lia.darkrp.createCategory()
 ]]
 function lia.darkrp.createCategory()
 end

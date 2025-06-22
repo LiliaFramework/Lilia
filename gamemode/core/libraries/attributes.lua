@@ -18,6 +18,9 @@ lia.attribs.list = lia.attribs.list or {}
 
     Returns:
         None
+
+    Example:
+        lia.attribs.loadFromDir("schema/attributes")
 ]]
 function lia.attribs.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
@@ -48,6 +51,9 @@ if SERVER then
 
         Returns:
             None
+
+        Example:
+            lia.attribs.setup(client)
     ]]
     function lia.attribs.setup(client)
         local character = client:getChar()

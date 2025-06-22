@@ -16,6 +16,9 @@ if CLIENT then
 
         Returns:
             None
+
+        Example:
+            lia.font.register("MyFont", {font = "Arial", size = 16})
     ]]
     function lia.font.register(fontName, fontData)
         if not (isstring(fontName) and istable(fontData)) then return lia.error("[Font] Invalid font name or data provided.") end
@@ -887,6 +890,10 @@ if CLIENT then
 
         Realm:
             Client
+
+        Example:
+            local fonts = lia.font.getAvailableFonts()
+            PrintTable(fonts)
     ]]
 
 
@@ -913,6 +920,9 @@ if CLIENT then
 
         Realm:
             Client
+
+        Example:
+            lia.font.refresh()
     ]]
 
 
