@@ -711,6 +711,25 @@ function lia.db.delete(dbTable, condition)
     return d
 end
 
+--[[
+    lia.db.GetCharacterTable(callback)
+
+    Description:
+        Fetches a list of column names from the ``lia_characters`` table.
+        This is useful for debugging or database maintenance tasks.
+
+    Parameters:
+        callback (function) – Function executed with the table of column names.
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+        lia.db.GetCharacterTable(function(columns) PrintTable(columns) end)
+]]
 function lia.db.GetCharacterTable(callback)
     local query = lia.db.module == "sqlite" and "PRAGMA table_info(lia_characters)" or "DESCRIBE lia_characters"
     lia.db.query(query, function(results)
