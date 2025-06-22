@@ -361,27 +361,119 @@ lia.includeDir("lilia/gamemode/core/derma", true, true, "client")
 lia.include("lilia/gamemode/core/libraries/database.lua", "server")
 lia.include("lilia/gamemode/core/libraries/config.lua", "shared")
 lia.include("lilia/gamemode/core/libraries/data.lua", "shared")
+--[[
+    lia.error(msg)
+
+    Description:
+        Prints a colored error message prefixed with "[Lilia]" to the console.
+
+    Parameters:
+        msg (string) – Error text to display.
+
+    Returns:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+        lia.error("Invalid configuration detected")
+]]
 function lia.error(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[Error] ")
     MsgC(Color(255, 0, 0), msg, "\n")
 end
 
+--[[
+    lia.deprecated(methodName, callback)
+
+    Description:
+        Notifies that a method is deprecated and optionally runs a callback.
+
+    Parameters:
+        methodName (string) – Name of the deprecated method.
+        callback (function) – Optional function executed after warning.
+
+    Returns:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+        lia.deprecated("OldFunction")
+]]
 function lia.deprecated(methodName, callback)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[Deprecated] ")
     MsgC(Color(255, 255, 0), string.format("%s is deprecated. Please use the new methods for optimization purposes.", methodName), "\n")
     if callback and isfunction(callback) then callback() end
 end
 
+--[[
+    lia.updater(msg)
+
+    Description:
+        Prints an updater message in cyan to the console with the Lilia prefix.
+
+    Parameters:
+        msg (string) – Update text to display.
+
+    Returns:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+        lia.updater("Loading additional content...")
+]]
 function lia.updater(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[Updater] ")
     MsgC(Color(0, 255, 255), msg, "\n")
 end
 
+--[[
+    lia.information(msg)
+
+    Description:
+        Prints an informational message with the Lilia prefix.
+
+    Parameters:
+        msg (string) – Text to print to the console.
+
+    Returns:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+        lia.information("Server started successfully")
+]]
 function lia.information(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[Information] ")
     MsgC(Color(83, 143, 239), msg, "\n")
 end
 
+--[[
+    lia.bootstrap(section, msg)
+
+    Description:
+        Logs a bootstrap message with a colored section tag for clarity.
+
+    Parameters:
+        section (string) – Category or stage of bootstrap.
+        msg (string) – Message describing the bootstrap step.
+
+    Returns:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+        lia.bootstrap("Database", "Connection established")
+]]
 function lia.bootstrap(section, msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[Bootstrap] ")
     MsgC(Color(0, 255, 0), "[" .. section .. "] ")
