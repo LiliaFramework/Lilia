@@ -22,6 +22,9 @@ end
 
     Returns:
         table or nil – The bar table if found, or nil if not found.
+
+    Example:
+        local bar = lia.bar.get("health")
 ]]
 function lia.bar.get(identifier)
     for _, bar in ipairs(lia.bar.list) do
@@ -48,6 +51,9 @@ end
 
     Returns:
         number – The priority assigned to the added bar.
+
+    Example:
+        lia.bar.add(function() return 1 end, Color(255,0,0), 1, "example")
 ]]
 function lia.bar.add(getValue, color, priority, identifier)
     if identifier then
@@ -80,6 +86,9 @@ end
 
     Returns:
         None
+
+    Example:
+        lia.bar.remove("example")
 ]]
 function lia.bar.remove(identifier)
     local idx = findIndexByIdentifier(identifier)
@@ -114,6 +123,9 @@ end
 
     Returns:
         None
+
+    Example:
+        lia.bar.drawBar(10, 10, 200, 20, 0.5, 1, Color(255,0,0))
 ]]
 function lia.bar.drawBar(x, y, w, h, pos, max, color)
     pos = math.min(pos, max)
@@ -140,6 +152,9 @@ end
 
     Returns:
         None
+
+    Example:
+        lia.bar.drawAction("Reloading", 2)
 ]]
 function lia.bar.drawAction(text, duration)
     local startTime, endTime = CurTime(), CurTime() + duration
@@ -181,6 +196,9 @@ end
 
     Returns:
         None
+
+    Example:
+        hook.Add("HUDPaintBackground", "liaBarDraw", lia.bar.drawAll)
 ]]
 function lia.bar.drawAll()
     if hook.Run("ShouldHideBars") then return end

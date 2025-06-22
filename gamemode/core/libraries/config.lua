@@ -18,6 +18,9 @@ lia.config.stored = lia.config.stored or {}
 
     Realm:
         Shared
+
+    Example:
+        lia.config.add("maxPlayers", "Maximum Players", 64)
 ]]
 function lia.config.add(key, name, value, callback, data)
     assert(isstring(key), "Expected config key to be string, got " .. type(key))
@@ -56,6 +59,9 @@ end
 
     Realm:
         Shared
+
+    Example:
+        lia.config.setDefault("maxPlayers", 32)
 ]]
 function lia.config.setDefault(key, value)
     local config = lia.config.stored[key]
@@ -78,6 +84,9 @@ end
 
     Realm:
         Shared
+
+    Example:
+        lia.config.forceSet("someSetting", true, true)
 ]]
 function lia.config.forceSet(key, value, noSave)
     local config = lia.config.stored[key]
@@ -100,6 +109,9 @@ end
 
     Realm:
         Shared
+
+    Example:
+        lia.config.set("maxPlayers", 24)
 ]]
 function lia.config.set(key, value)
     local config = lia.config.stored[key]
@@ -129,6 +141,9 @@ end
 
     Realm:
         Shared
+
+    Example:
+        local players = lia.config.get("maxPlayers", 64)
 ]]
 function lia.config.get(key, default)
     local config = lia.config.stored[key]
@@ -161,6 +176,9 @@ end
 
     Internal Function:
         true
+
+    Example:
+        lia.config.load()
 ]]
 function lia.config.load()
     if SERVER then
@@ -191,6 +209,9 @@ if SERVER then
 
         Realm:
             Server
+
+        Example:
+            local changed = lia.config.getChangedValues()
 ]]
     function lia.config.getChangedValues()
         local data = {}
@@ -214,6 +235,9 @@ if SERVER then
 
         Realm:
             Server
+
+        Example:
+            lia.config.send(client)
 ]]
     function lia.config.send(client)
         netstream.Start(client, "cfgList", lia.config.getChangedValues())
@@ -233,6 +257,9 @@ if SERVER then
 
         Realm:
             Server
+
+        Example:
+            lia.config.save()
 ]]
     function lia.config.save()
         local data = {}

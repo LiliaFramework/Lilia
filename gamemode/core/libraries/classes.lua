@@ -14,6 +14,9 @@ lia.class.list = lia.class.list or {}
 
     Realm:
         Shared
+
+    Example:
+        lia.class.loadFromDir("schema/classes")
 ]]
 function lia.class.loadFromDir(directory)
    for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
@@ -67,6 +70,9 @@ end
 
     Realm:
         Shared
+
+    Example:
+        local allowed = lia.class.canBe(client, classID)
 ]]
 function lia.class.canBe(client, class)
    local info = lia.class.list[class]
@@ -79,14 +85,6 @@ function lia.class.canBe(client, class)
    return info.isDefault
 end
 
---[[
-   lia.class.get
-
-   Description:
-      Retrieves the class information table from the class list using the provided identifier.
-
-   Parameters:
-      identifier (string/number) - The unique identifier for the class.
 --[[
     lia.class.get(identifier)
 
@@ -101,6 +99,9 @@ end
 
     Realm:
         Shared
+
+    Example:
+        local classData = lia.class.get(1)
 ]]
 function lia.class.get(identifier)
    return lia.class.list[identifier]
@@ -120,6 +121,9 @@ end
 
     Realm:
         Shared
+
+    Example:
+        local players = lia.class.getPlayers(classID)
 ]]
 function lia.class.getPlayers(class)
    local players = {}
@@ -144,6 +148,9 @@ end
 
     Realm:
         Shared
+
+    Example:
+        local count = lia.class.getPlayerCount(classID)
 ]]
 function lia.class.getPlayerCount(class)
    local count = 0
@@ -154,8 +161,6 @@ function lia.class.getPlayerCount(class)
    return count
 end
 
---[[
-   lia.class.retrieveClass
 
 --[[
     lia.class.retrieveClass(class)
@@ -171,6 +176,9 @@ end
 
     Realm:
         Shared
+
+    Example:
+        local id = lia.class.retrieveClass("police")
 ]]
 function lia.class.retrieveClass(class)
    for key, classTable in pairs(lia.class.list) do
@@ -179,7 +187,6 @@ function lia.class.retrieveClass(class)
    return nil
 end
 
---[[
 --[[
     lia.class.hasWhitelist(class)
 
@@ -194,6 +201,11 @@ end
 
     Realm:
         Shared
+
+    Example:
+        if lia.class.hasWhitelist(classID) then
+            print("Whitelist required")
+        end
 ]]
 function lia.class.hasWhitelist(class)
    local info = lia.class.list[class]
