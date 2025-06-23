@@ -24,7 +24,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
         return
     end
 
-    if dmgInfo:IsExplosionDamage() and lia.config.get("ExplosionRagdoll", true) then
+    if dmgInfo:IsExplosionDamage() and lia.config.get("ExplosionRagdoll", false) then
         dmgInfo:ScaleDamage(0.5)
         local dmgPos = dmgInfo:GetDamagePosition()
         local direction = (entity:GetPos() - dmgPos):GetNormalized()
@@ -40,7 +40,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
             if applyCooldown then entity.LastDamaged = CurTime() end
         end
 
-        if lia.config.get("CarRagdoll", true) and IsValid(inflictor) and inflictor:isSimfphysCar() then
+        if lia.config.get("CarRagdoll", false) and IsValid(inflictor) and inflictor:isSimfphysCar() then
             local veh = entity:GetVehicle()
             local inSimCar = IsValid(veh) and veh:isSimfphysCar()
             if not inSimCar then

@@ -20,13 +20,13 @@ lia.config.add("CharacterSwitchCooldownTimer", "Character switch cooldown timer"
     max = 120
 })
 
-lia.config.add("ExplosionRagdoll", "Explosion Ragdoll on Hit", true, nil, {
+lia.config.add("ExplosionRagdoll", "Explosion Ragdoll on Hit", false, nil, {
     desc = "Determines whether being hit by an explosion results in ragdolling",
     category = "Quality of Life",
     type = "Boolean"
 })
 
-lia.config.add("CarRagdoll", "Car Ragdoll on Hit", true, nil, {
+lia.config.add("CarRagdoll", "Car Ragdoll on Hit", false, nil, {
     desc = "Determines whether being hit by a car results in ragdolling",
     category = "Quality of Life",
     type = "Boolean"
