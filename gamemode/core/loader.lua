@@ -2,8 +2,7 @@
     util = {},
     gui = {},
     meta = {},
-    notices = {},
-    fileCache = {}
+    notices = {}
 }
 
 local RealmIDs = {
@@ -234,15 +233,7 @@ local ConditionalFiles = {
  ]]
 function lia.include(path, realm)
     if not path then error("[Lilia] missing file path") end
-    local cur = file.Time(path, "LUA") or 0
-    local prev = lia.fileCache[path]
     local resolved = realm or RealmIDs[path:match("/([^/]+)%.lua$")] or path:find("sv_") and "server" or path:find("sh_") and "shared" or path:find("cl_") and "client" or "shared"
-    if prev and prev == cur then
-        if SERVER and (resolved == "client" or resolved == "shared") then AddCSLuaFile(path) end
-        return
-    end
-
-    lia.fileCache[path] = cur
     if resolved == "server" then
         if SERVER then include(path) end
     elseif resolved == "client" then
@@ -331,7 +322,7 @@ function lia.includeGroupedDir(dir, raw, recursive, realm)
             if prefix then
                 if not groups[name] then
                     groups[name] = {}
-                    table.insert(order, name)
+                    order[#order + 1] = name
                 end
 
                 groups[name][prefix] = fname
