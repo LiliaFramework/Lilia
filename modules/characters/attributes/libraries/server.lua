@@ -28,7 +28,7 @@
 
         local maxStamina = character:getMaxStamina()
         local currentStamina = client:getLocalVar("stamina", 0)
-        local isHoldingSprint = client:KeyDown(IN_SPEED) and not client:InVehicle()
+        local isHoldingSprint = key == IN_JUMP and client:Alive() and not client:isNoClipping() and client:getChar() and not client:InVehicle() and not IsValid(Entity(client:getLocalVar("ragdoll")))
         local endBonus = character:getAttrib("end", 0) or 0
         local offset
         if isHoldingSprint and currentStamina > 0 then
