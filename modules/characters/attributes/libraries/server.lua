@@ -28,7 +28,7 @@
 
         local maxStamina = character:getMaxStamina()
         local currentStamina = client:getLocalVar("stamina", 0)
-        local isHoldingSprint = client:KeyDown(IN_SPEED)
+        local isHoldingSprint = client:KeyDown(IN_SPEED) and not client:InVehicle()
         local endBonus = character:getAttrib("end", 0) or 0
         local offset
         if isHoldingSprint and currentStamina > 0 then
