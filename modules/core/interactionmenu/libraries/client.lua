@@ -43,7 +43,7 @@ local function openMenu(options, isInteraction, titleText, closeKey, netMsg)
     local frameH = isInteraction and baseH or math.min(baseH, ScrH() * 0.6)
     local titleH = isInteraction and 36 or 16
     local titleY = 12
-    local gap = 20
+    local gap = 24
     local padding = ScrW() * 0.15
     local xPos = ScrW() - frameW - padding
     local yPos = (ScrH() - frameH) / 2
@@ -75,7 +75,6 @@ local function openMenu(options, isInteraction, titleText, closeKey, netMsg)
     title:SetContentAlignment(5)
     function title:PaintOver(w, h)
         surface.SetDrawColor(Color(60, 60, 60))
-        surface.DrawLine(0, h - 1, w, h - 1)
     end
 
     local scroll = frame:Add("DScrollPanel")
