@@ -1,4 +1,4 @@
-lia.keybind = lia.keybind or {}
+﻿lia.keybind = lia.keybind or {}
 lia.keybind.stored = lia.keybind.stored or {}
 local KeybindKeys = {
     ["first"] = KEY_FIRST,

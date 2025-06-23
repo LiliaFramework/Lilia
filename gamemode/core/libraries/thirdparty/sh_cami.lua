@@ -1,4 +1,6 @@
-﻿CAMI = CAMI or {}
+﻿local version = 20211019
+if CAMI and CAMI.Version >= version then return end
+CAMI = CAMI or {}
 CAMI.Version = 20211019
 local CAMI_PRIVILEGE = {}
 function CAMI_PRIVILEGE:HasAccess(actor, target)

@@ -18,7 +18,7 @@ do
 end
 
 function playerMeta:hasPrivilege(privilegeName)
-    return CAMI.PlayerHasAccess(self, privilegeName, nil)
+    return CAMI.PlayerHasAccess(self, privilegeName)
 end
 
 function playerMeta:getCurrentVehicle()

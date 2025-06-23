@@ -1,4 +1,4 @@
-lia.class = lia.class or {}
+﻿lia.class = lia.class or {}
 lia.class.list = lia.class.list or {}
 --[[
     lia.class.loadFromDir(directory)

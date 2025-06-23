@@ -1,4 +1,4 @@
-lia.attribs = lia.attribs or {}
+﻿lia.attribs = lia.attribs or {}
 lia.attribs.list = lia.attribs.list or {}
 --[[
     lia.attribs.loadFromDir(directory)

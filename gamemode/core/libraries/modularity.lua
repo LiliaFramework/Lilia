@@ -1,6 +1,5 @@
 ﻿lia.module = lia.module or {}
 lia.module.list = lia.module.list or {}
-lia.module.fileTimes = lia.module.fileTimes or {}
 local ModuleFolders = {"config", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim"}
 local ModuleFiles = {"pim.lua", "client.lua", "server.lua", "config.lua", "commands.lua"}
 local function loadPermissions(Privileges)
@@ -170,7 +169,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
         end
 
         local watch = isSingleFile and path or coreFile
-        lia.module.fileTimes[uniqueID] = file.Time(watch, "LUA") or 0
         if string.StartsWith(path, engine.ActiveGamemode() .. "/modules") then lia.bootstrap("Module", "Finished Loading Module '" .. MODULE.name .. "'") end
         _G[variable] = prev
     end

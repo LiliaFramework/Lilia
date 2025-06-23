@@ -1,4 +1,4 @@
-lia.currency = lia.currency or {}
+﻿lia.currency = lia.currency or {}
 lia.currency.symbol = lia.config.get("CurrencySymbol") or ""
 lia.currency.singular = lia.config.get("CurrencySingularName") or "dollar"
 lia.currency.plural = lia.config.get("CurrencyPluralName") or "dollars"

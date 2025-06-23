@@ -1,4 +1,4 @@
-if SERVER then
+﻿if SERVER then
     --[[
         lia.notices.notify(message, recipient)
 

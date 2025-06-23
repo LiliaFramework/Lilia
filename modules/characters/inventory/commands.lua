@@ -1,4 +1,4 @@
-lia.command.add("updateinvsize", {
+﻿lia.command.add("updateinvsize", {
     adminOnly = true,
     privilege = "Set Inventory Size",
     desc = L("updateInventorySizeDesc"),

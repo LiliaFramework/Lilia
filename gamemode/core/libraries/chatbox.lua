@@ -1,4 +1,4 @@
-lia.chat = lia.chat or {}
+﻿lia.chat = lia.chat or {}
 lia.chat.classes = lia.char.classes or {}
 --[[
     lia.chat.timestamp(ooc)

@@ -133,7 +133,7 @@ function PANEL:CreateSection(parent, title)
     cat:SetLabel("")
     cat:SetExpanded(true)
     cat.Header:SetTall(30)
-    cat.Paint = function()end
+    cat.Paint = function() end
     cat.Header.Paint = function(p, w, h)
         derma.SkinHook("Paint", "Panel", p, w, h)
         draw.SimpleText(title, "liaSmallFont", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)

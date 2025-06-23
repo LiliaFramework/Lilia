@@ -81,3 +81,126 @@ AddAction(L("changeToYell"), {
     end,
     runServer = true
 })
+
+local function canRecog(ply)
+    local ok = lia.config.get("RecognitionEnabled", true) and ply:getChar() and ply:Alive()
+    print(ply:Nick(), "canRecog:", ok)
+    return ok
+end
+
+local function promptName(ply, cb)
+    print(ply:Nick(), "promptName called")
+    if lia.config.get("FakeNamesEnabled", false) then
+        ply:requestString(L("recogFakeNamePrompt"), "", function(nm)
+            nm = (nm or ""):Trim()
+            local finalName = nm == "" and ply:getChar():getName() or nm
+            print(ply:Nick(), "entered fake name:", finalName)
+            cb(finalName)
+        end, ply:getChar():getName())
+    else
+        print(ply:Nick(), "using real name")
+        cb()
+    end
+end
+
+local function CharRecognize(ply, lvl, nm)
+    print(ply:Nick(), "CharRecognize called with level", lvl, "and name", nm or "nil")
+    local tgt = {}
+    if isnumber(lvl) then
+        local clsKey = lvl == 3 and "ic" or lvl == 4 and "y" or "w"
+        local cls = lia.chat.classes[clsKey]
+        for _, v in player.Iterator() do
+            if ply == v then continue end
+            if v:getChar() and cls.onCanHear(ply, v) then tgt[#tgt + 1] = v end
+        end
+    end
+
+    print(ply:Nick(), "found", #tgt, "targets to recognize")
+    if #tgt == 0 then return end
+    local count = 0
+    for _, v in ipairs(tgt) do
+        local success = v:getChar():recognize(ply:getChar(), nm)
+        if success then
+            count = count + 1
+            print(ply:Nick(), "recognized", v:Nick())
+        else
+            print(ply:Nick(), "failed to recognize", v:Nick())
+        end
+    end
+
+    if count == 0 then return end
+    for _, v in ipairs(tgt) do
+        lia.log.add(ply, "charRecognize", v:getChar():getID(), nm)
+    end
+
+    net.Start("rgnDone")
+    net.Send(ply)
+    print(ply:Nick(), "recognition complete, total successes:", count)
+    hook.Run("OnCharRecognized", ply)
+end
+
+local function doRange(ply, lvl)
+    print(ply:Nick(), "doRange called with level", lvl)
+    promptName(ply, function(nm)
+        print(ply:Nick(), "doRange callback with name", nm or "nil")
+        CharRecognize(ply, lvl, nm)
+    end)
+end
+
+AddAction(L("recognizeInWhisperRange"), {
+    shouldShow = function(ply) return canRecog(ply) end,
+    onRun = function(ply)
+        if CLIENT then return end
+        print(ply:Nick(), "action recognizeInWhisperRange triggered")
+        doRange(ply, 1)
+    end,
+    runServer = false
+})
+
+AddAction(L("recognizeInTalkRange"), {
+    shouldShow = function(ply) return canRecog(ply) end,
+    onRun = function(ply)
+        if CLIENT then return end
+        print(ply:Nick(), "action recognizeInTalkRange triggered")
+        doRange(ply, 3)
+    end,
+    runServer = false
+})
+
+AddAction(L("recognizeInYellRange"), {
+    shouldShow = function(ply) return canRecog(ply) end,
+    onRun = function(ply)
+        if CLIENT then return end
+        print(ply:Nick(), "action recognizeInYellRange triggered")
+        doRange(ply, 4)
+    end,
+    runServer = false
+})
+
+AddInteraction(L("recognizeOption"), {
+    runServer = false,
+    shouldShow = function(ply, tgt)
+        if not canRecog(ply) then return false end
+        local a, b = ply:getChar(), tgt:getChar()
+        local show = a and b and not hook.Run("isCharRecognized", a, b:getID())
+        return show
+    end,
+    onRun = function(ply, tgt)
+        print(ply, tgt)
+        print("?")
+        if CLIENT then return end
+        print(ply:Nick(), "interaction recognizeOption triggered on", tgt:Nick())
+        promptName(ply, function(nm)
+            print(ply:Nick(), "interaction callback with name", nm or "nil")
+            if tgt:getChar():recognize(ply:getChar(), nm) then
+                lia.log.add(ply, "charRecognize", tgt:getChar():getID(), nm)
+                net.Start("rgnDone")
+                net.Send(ply)
+                hook.Run("OnCharRecognized", ply)
+                print(ply:Nick(), "interaction recognition succeeded on", tgt:Nick())
+            else
+                print(ply:Nick(), "interaction recognition failed on", tgt:Nick())
+            end
+        end)
+    end
+})

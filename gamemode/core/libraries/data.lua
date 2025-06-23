@@ -1,4 +1,4 @@
-file.CreateDir("lilia")
+﻿file.CreateDir("lilia")
 lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
 if SERVER then

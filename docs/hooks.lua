@@ -1,4 +1,4 @@
---[[
+﻿--[[
     This file documents hooks triggered via hook.Run within
     gamemode/core/derma and gamemode/core/libraries/thirdparty.
 

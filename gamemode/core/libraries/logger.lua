@@ -1,4 +1,4 @@
-lia.log = lia.log or {}
+﻿lia.log = lia.log or {}
 lia.log.types = lia.log.types or {}
 if SERVER then
     --[[

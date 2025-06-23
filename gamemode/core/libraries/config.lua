@@ -1,4 +1,4 @@
-lia.config = lia.config or {}
+﻿lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
 --[[
     lia.config.add(key, name, value, callback, data)
@@ -910,7 +910,7 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
         populate("")
     end
 
-    if LocalPlayer():hasPrivilege("Staff Permissions - Access Edit Configuration Menu") then
+    if hook.Run("CanPlayerModifyConfig", LocalPlayer()) ~= false then
         pages[#pages + 1] = {
             name = "Configuration",
             drawFunc = function(parent) buildConfiguration(parent) end

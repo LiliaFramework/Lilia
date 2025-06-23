@@ -1,4 +1,4 @@
-AddInteraction("Invite To Faction", {
+﻿AddInteraction("Invite To Faction", {
     runServer = true,
     shouldShow = function(client, target)
         local clientChar = client:getChar()

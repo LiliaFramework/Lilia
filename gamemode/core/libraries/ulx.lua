@@ -1,4 +1,4 @@
-CAMI.ULX_TOKEN = "ULX"
+﻿CAMI.ULX_TOKEN = "ULX"
 local camiHooks = {{"CAMI.PlayerHasAccess", "ULXCamiPlayerHasAccess"}, {"CAMI.SteamIDHasAccess", "ULXCamiSteamidHasAccess"}, {"CAMI.OnUsergroupRegistered", "ULXCamiGroupRegistered"}, {"CAMI.OnUsergroupUnregistered", "ULXCamiGroupRemoved"}, {"CAMI.SteamIDUsergroupChanged", "ULXCamiSteamidUserGroupChanged"}, {"CAMI.PlayerUsergroupChanged", "ULXCamiPlayerUserGroupChanged"}, {"CAMI.OnPrivilegeRegistered", "ULXCamiPrivilegeRegistered"}}
 for _, hookInfo in ipairs(camiHooks) do
     hook.Remove(hookInfo[1], hookInfo[2])

@@ -36,12 +36,17 @@ local function openMenu(options, isInteraction, titleText, closeKey, netMsg)
     end
 
     if #visible == 0 then return end
-    local frameW, baseH = 300, 25 * #visible + 100
-    local maxH = isInteraction and baseH or math.min(baseH, 150)
-    local frameH = maxH * 2
-    local titleH, titleY, gap = isInteraction and 32 or 12, 16, 15
+    local fadeSpeed = 0.05
+    local frameW = 400
+    local entryH = 30
+    local baseH = entryH * #visible + 140
+    local frameH = isInteraction and baseH or math.min(baseH, ScrH() * 0.6)
+    local titleH = isInteraction and 36 or 16
+    local titleY = 12
+    local gap = 20
     local padding = ScrW() * 0.15
-    local xPos, yPos = ScrW() - frameW - padding, (ScrH() - frameH) / 2
+    local xPos = ScrW() - frameW - padding
+    local yPos = (ScrH() - frameH) / 2
     local frame = vgui.Create("DFrame")
     frame:SetSize(frameW, frameH)
     frame:SetPos(xPos, yPos)
@@ -49,9 +54,16 @@ local function openMenu(options, isInteraction, titleText, closeKey, netMsg)
     frame:SetTitle("")
     frame:ShowCloseButton(false)
     frame:SetAlpha(0)
-    frame:AlphaTo(255, 0.05)
-    frame.Think = function(pnl) if not input.IsKeyDown(closeKey) then pnl:Close() end end
-    frame.Paint = function(_, w, h) draw.RoundedBox(8, 0, 0, w, h, Color(30, 30, 30, 200)) end
+    frame:AlphaTo(255, fadeSpeed)
+    function frame:Paint(w, h)
+        lia.util.drawBlur(self, 4)
+        draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 120))
+    end
+
+    function frame:Think()
+        if not input.IsKeyDown(closeKey) then self:Close() end
+    end
+
     timer.Remove("InteractionMenu_Frame_Timer")
     timer.Create("InteractionMenu_Frame_Timer", 30, 1, function() if IsValid(frame) then frame:Close() end end)
     local title = frame:Add("DLabel")
@@ -61,40 +73,44 @@ local function openMenu(options, isInteraction, titleText, closeKey, netMsg)
     title:SetFont("liaSmallFont")
     title:SetColor(color_white)
     title:SetContentAlignment(5)
+    function title:PaintOver(w, h)
+        surface.SetDrawColor(Color(60, 60, 60))
+        surface.DrawLine(0, h - 1, w, h - 1)
+    end
+
     local scroll = frame:Add("DScrollPanel")
     scroll:SetPos(0, titleH + titleY + gap)
     scroll:SetSize(frameW, frameH - titleH - titleY - gap)
-    scroll.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 150)) end
     local layout = scroll:Add("DIconLayout")
     layout:Dock(FILL)
-    layout:SetSpaceY(12)
-    for i, item in ipairs(visible) do
+    layout:SetSpaceY(14)
+    for i, entry in ipairs(visible) do
         local btn = layout:Add("DButton")
         btn:Dock(TOP)
-        btn:SetTall(25)
-        btn:DockMargin(10, 0, 10, i == #visible and 20 or 12)
-        btn:SetText(item.name)
+        btn:SetTall(entryH)
+        btn:DockMargin(15, 0, 15, i == #visible and 25 or 14)
+        btn:SetText(entry.name)
         btn:SetFont("liaSmallFont")
         btn:SetTextColor(color_white)
-        btn.Paint = function(self, w, h)
+        function btn:Paint(w, h)
             if self:IsHovered() then
-                draw.RoundedBox(4, 0, 0, w, h, Color(50, 50, 50, 200))
+                draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 30, 160))
             else
-                draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 150))
+                draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 30, 100))
             end
         end
 
         btn.DoClick = function()
-            frame:AlphaTo(0, 0.05, 0, function() if IsValid(frame) then frame:Close() end end)
+            frame:AlphaTo(0, fadeSpeed, 0, function() if IsValid(frame) then frame:Close() end end)
             if isInteraction then
-                item.opt.onRun(client, ent)
+                entry.opt.onRun(client, ent)
             else
-                item.opt.onRun(client)
+                entry.opt.onRun(client)
             end
 
-            if item.opt.runServer then
+            if entry.opt.runServer then
                 net.Start(netMsg)
-                net.WriteString(item.name)
+                net.WriteString(entry.name)
                 net.SendToServer()
             end
         end

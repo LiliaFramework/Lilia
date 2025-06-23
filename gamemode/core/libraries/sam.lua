@@ -1,4 +1,4 @@
-hook.Add("InitializedModules", "SAM_InitializedModules", function()
+﻿hook.Add("InitializedModules", "SAM_InitializedModules", function()
     for _, commandInfo in ipairs(sam.command.get_commands()) do
         local customSyntax = ""
         for _, argInfo in ipairs(commandInfo.args) do

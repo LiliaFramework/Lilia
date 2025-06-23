@@ -1,4 +1,4 @@
-if SERVER then
+﻿if SERVER then
     hook.Add("VC_canAddMoney", "VCMOD_VC_canAfford", function(client, amount)
         client:getChar():giveMoney(amount)
         return false

@@ -1,4 +1,4 @@
-local menu = lia.menu or {}
+﻿local menu = lia.menu or {}
 lia.menu = menu
 menu.list = menu.list or {}
 local surface_SetFont = surface.SetFont

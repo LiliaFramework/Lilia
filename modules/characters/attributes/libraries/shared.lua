@@ -1,4 +1,4 @@
-function MODULE:GetAttributeMax(_, attribute)
+﻿function MODULE:GetAttributeMax(_, attribute)
     local attribTable = lia.attribs.list[attribute]
     if not attribTable then return lia.config.get("MaxAttributePoints") end
     if istable(attribTable) and isnumber(attribTable.maxValue) then return attribTable.maxValue end

@@ -1,4 +1,4 @@
-lia.command = lia.command or {}
+﻿lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
 --[[
     lia.command.add(command, data)
@@ -338,4 +338,3 @@ hook.Add("CreateInformationButtons", "liaInformationCommands", function(pages)
 end)
 
 lia.command.findPlayer = lia.util.findPlayer
-
