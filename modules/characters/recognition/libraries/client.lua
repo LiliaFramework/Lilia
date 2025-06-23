@@ -45,10 +45,7 @@ function MODULE:ShouldAllowScoreboardOverride(client, var)
     return isRecognitionEnabled and isVarHiddenInScoreboard and isNotRecognized
 end
 
-function MODULE:OnCharRecognized()
-    surface.PlaySound("buttons/button17.wav")
-end
-
-function MODULE:CharRecognize(level, name)
-    netstream.Start("rgn", level, name)
-end
+net.Receive("rgnDone", function()
+    local client = LocalPlayer()
+    hook.Run("OnCharRecognized", client, client:getChar():getID())
+end)

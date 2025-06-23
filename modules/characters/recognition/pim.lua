@@ -1,18 +1,22 @@
 ﻿local MODULE = MODULE
+function MODULE:CharRecognize(level, name)
+    netstream.Start("rgn", level, name)
+end
+
 AddAction(L("recognizeInWhisperRange"), {
-    shouldShow = function(client) return client:getChar() and client:Alive() end,
+    shouldShow = function(client) return lia.config.get("RecognitionEnabled", true) and client:getChar() and client:Alive() end,
     onRun = function() MODULE:CharRecognize(2) end,
     runServer = false
 })
 
 AddAction(L("recognizeInTalkRange"), {
-    shouldShow = function(client) return client:getChar() and client:Alive() end,
+    shouldShow = function(client) return lia.config.get("RecognitionEnabled", true) and client:getChar() and client:Alive() end,
     onRun = function() MODULE:CharRecognize(3) end,
     runServer = false
 })
 
 AddAction(L("recognizeInYellRange"), {
-    shouldShow = function(client) return client:getChar() and client:Alive() end,
+    shouldShow = function(client) return lia.config.get("RecognitionEnabled", true) and client:getChar() and client:Alive() end,
     onRun = function() MODULE:CharRecognize(4) end,
     runServer = false
 })
@@ -20,9 +24,10 @@ AddAction(L("recognizeInYellRange"), {
 AddInteraction(L("recognizeOption"), {
     runServer = false,
     shouldShow = function(client, target)
+        if not lia.config.get("RecognitionEnabled", true) then return false end
         local ourChar = client:getChar()
-        local tarCharID = target:getChar():getID()
-        return not hook.Run("isCharRecognized", ourChar, tarCharID)
+        local tarChar = target:getChar()
+        return ourChar and tarChar and not hook.Run("isCharRecognized", ourChar, tarChar:getID())
     end,
     onRun = function(_, target) if CLIENT then netstream.Start("rgnDirect", target) end end
 })
@@ -30,9 +35,10 @@ AddInteraction(L("recognizeOption"), {
 AddInteraction(L("recognizeWithFakeNameOption"), {
     runServer = false,
     shouldShow = function(client, target)
+        if not lia.config.get("RecognitionEnabled", true) then return false end
         local ourChar = client:getChar()
-        local tarCharID = target:getChar():getID()
-        return not hook.Run("isCharRecognized", ourChar, tarCharID) and lia.config.get("FakeNamesEnabled", false)
+        local tarChar = target:getChar()
+        return ourChar and tarChar and not hook.Run("isCharRecognized", ourChar, tarChar:getID()) and lia.config.get("FakeNamesEnabled", false)
     end,
     onRun = function(_, target)
         local tarChar = target:getChar()
