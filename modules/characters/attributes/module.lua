@@ -1,5 +1,5 @@
 ﻿MODULE.name = "Attributes"
-MODULE.author = "Samael"
+MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
 MODULE.version = "1.0"
 MODULE.desc = "Adds Several Character Tied Attributes That Influence Gameplay"

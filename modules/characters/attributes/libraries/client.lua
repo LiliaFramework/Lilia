@@ -1,4 +1,5 @@
-﻿local stmBlurAmount = 0
+﻿local predictedStamina = 100
+local stmBlurAmount = 0
 local stmBlurAlpha = 0
 function MODULE:ConfigureCharacterCreationSteps(panel)
     panel:addStep(vgui.Create("liaCharacterAttribs"), 98)
@@ -8,13 +9,24 @@ function MODULE:PlayerBindPress(client, bind, pressed)
     if not pressed then return end
     local char = client:getChar()
     if not char then return end
-    local stamina = client:getLocalVar("stamina", 0)
-    local jumpThreshold = lia.config.get("JumpStaminaThreshold")
-    if bind == "+jump" and stamina < jumpThreshold then return true end
-    if bind == "+speed" and stamina <= 5 then
+    local stam = predictedStamina or 0
+    if stam == 0 then stam = client:getLocalVar("stamina", 0) end
+    local jumpReq = lia.config.get("JumpStaminaThreshold")
+    if bind == "+jump" and stam < jumpReq then return true end
+    if bind == "+speed" and stam <= 5 then
         client:ConCommand("-speed")
         return true
     end
+end
+
+function MODULE:Think()
+    local client = LocalPlayer()
+    if not client:getChar() then return end
+    local character = client:getChar()
+    local maxStamina = character:getMaxStamina()
+    local offset = self:CalcStaminaChange(client)
+    offset = math.Remap(FrameTime(), 0, 0.25, 0, offset)
+    if offset ~= 0 then predictedStamina = math.Clamp(predictedStamina + offset, 0, maxStamina) end
 end
 
 function MODULE:HUDPaintBackground()

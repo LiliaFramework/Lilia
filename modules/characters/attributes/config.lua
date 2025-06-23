@@ -4,20 +4,10 @@
     type = "Boolean"
 })
 
-lia.config.add("JumpStaminaCost", "Jump Stamina Cost", 20, nil, {
-    desc = "Amount of stamina consumed when the player jumps",
+lia.config.add("StaminaSlowdown", "Stamina Slowdown Enabled", true, nil, {
+    desc = "Is Stamina Slowdown Enabled?",
     category = "Attributes",
-    type = "Int",
-    min = 0,
-    max = 100
-})
-
-lia.config.add("JumpStaminaThreshold", "Jump Stamina Threshold", 25, nil, {
-    desc = "Minimum stamina required to perform a jump",
-    category = "Attributes",
-    type = "Int",
-    min = 0,
-    max = 100
+    type = "Boolean"
 })
 
 lia.config.add("DefaultStamina", "Default Stamina Value", 100, nil, {
@@ -26,22 +16,6 @@ lia.config.add("DefaultStamina", "Default Stamina Value", 100, nil, {
     type = "Int",
     min = 0,
     max = 1000
-})
-
-lia.config.add("StaminaBlurThreshold", "Stamina Blur Threshold", 25, nil, {
-    desc = "Sets Stamina Threshold for Blur to Show",
-    category = "Attributes",
-    type = "Int",
-    min = 0,
-    max = 100
-})
-
-lia.config.add("StaminaBreathingThreshold", "Stamina Breathing Threshold", 50, nil, {
-    desc = "Sets Stamina Threshold for Breathing to Happen",
-    category = "Attributes",
-    type = "Int",
-    min = 0,
-    max = 100
 })
 
 lia.config.add("MaxAttributePoints", "Max Attribute Points", 30, nil, {
@@ -100,12 +74,4 @@ lia.config.add("AllowPush", "Allow Push", true, nil, {
     desc = "Whether or not pushing with hands is allowed",
     category = "General",
     type = "Boolean"
-})
-
-lia.config.add("StaminaRegenMultiplier", "Stamina Regeneration Multiplier", 1, nil, {
-    desc = "Multiplier applied to stamina regeneration rate (higher = faster regeneration)",
-    category = "Attributes",
-    type = "Int",
-    min = 0,
-    max = 1000
 })
