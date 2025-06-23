@@ -42,7 +42,7 @@ end
 - **Type:**  
   `String`
     
-- **Example:**
+- **Example Usage:**
     ```lua
     ATTRIBUTE.name = "Strength"
     ```
@@ -58,7 +58,7 @@ end
 - **Type:**  
   `String`
     
-- **Example:**
+- **Example Usage:**
     ```lua
     ATTRIBUTE.desc = "Strength Skill."
     ```
@@ -74,7 +74,7 @@ end
 - **Type:**  
   `Boolean`
     
-- **Example:**
+- **Example Usage:**
     ```lua
     ATTRIBUTE.noStartBonus = false
     ```
@@ -90,7 +90,7 @@ end
 - **Type:**  
   `Number`
     
-- **Example:**
+- **Example Usage:**
     ```lua
     ATTRIBUTE.maxValue = 50
     ```
@@ -106,7 +106,7 @@ end
 - **Type:**  
   `Number`
     
-- **Example:**
+- **Example Usage:**
     ```lua
     ATTRIBUTE.startingMax = 15
     ```
@@ -122,7 +122,7 @@ end
 - **Type:**  
   `Function`
     
-- **Example:**
+- **Example Usage:**
     ```lua
     function ATTRIBUTE:OnSetup(client, value)
         if value > 5 then 

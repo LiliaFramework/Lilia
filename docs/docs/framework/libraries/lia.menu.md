@@ -32,7 +32,7 @@ Adds a menu with the provided options at a specified position. The menu can be a
 **Returns:**  
 `number` - The index of the added menu in the `lia.menu.list` table.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Add a context menu with options "Take" and "Drop" at a specific position
 lia.menu.add({
@@ -57,7 +57,7 @@ Draws all active menus currently on the screen. This function should be called e
 **Realm:**  
 `Client`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Hook the drawAll function to the HUDPaint event
 hook.Add("HUDPaint", "DrawAllMenus", function()
@@ -79,7 +79,7 @@ Retrieves the index and the chosen option of the active menu, if any. This funct
 `number|nil, string|nil`  
 Returns the index of the active menu in the `lia.menu.list` table and the chosen option. If no menu is active, returns `nil, nil`.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Check if a menu option was selected
 local menuIndex, chosenOption = lia.menu.getActiveMenu()
@@ -113,7 +113,7 @@ Executes a callback function when a menu button is pressed and removes the menu 
 **Returns:**  
 `bool` - `True` if a callback was provided and executed, `false` otherwise.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Execute a callback when a menu option is pressed
 lia.menu.onButtonPressed(menuIndex, function()

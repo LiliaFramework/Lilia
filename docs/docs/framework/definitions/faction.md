@@ -61,7 +61,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `String`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.name = "Minecrafters"
   ```
@@ -76,7 +76,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `String`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.desc = "Surviving and crafting in the blocky world."
   ```
@@ -91,7 +91,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Boolean`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.isDefault = false
   ```
@@ -106,7 +106,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Color`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.color = Color(0, 255, 0)
   ```
@@ -121,7 +121,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Table` of `Strings`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.models = {"minecraft_model_1.mdl", "minecraft_model_2.mdl", "minecraft_model_3.mdl"}
   ```
@@ -136,7 +136,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Table` of `Strings`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.weapons = {"stone_sword", "iron_pickaxe"}
   ```
@@ -151,7 +151,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.pay = 50
   ```
@@ -166,7 +166,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.payLimit = 1000
   ```
@@ -181,7 +181,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.payTimer = 3600
   ```
@@ -196,7 +196,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.limit = 20
   ```
@@ -211,7 +211,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Boolean`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.oneCharOnly = true
   ```
@@ -226,7 +226,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.health = 150
   ```
@@ -241,7 +241,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.armor = 25
   ```
@@ -256,7 +256,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.scale = 1.1
   ```
@@ -271,7 +271,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.runSpeed = 250
   ```
@@ -286,7 +286,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Boolean`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.runSpeedMultiplier = false
   ```
@@ -301,7 +301,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.walkSpeed = 200
   ```
@@ -316,7 +316,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Boolean`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.walkSpeedMultiplier = true
   ```
@@ -331,7 +331,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.jumpPower = 200
   ```
@@ -346,7 +346,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Boolean`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.jumpPowerMultiplier = true
   ```
@@ -361,7 +361,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Boolean`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.MemberToMemberAutoRecognition = true
   ```
@@ -376,7 +376,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Number` (Enum)
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.bloodcolor = BLOOD_COLOR_RED
   ```
@@ -391,7 +391,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Table`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.bodyGroups = { [1] = 2, [2] = 1 }
   ```
@@ -406,7 +406,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Boolean`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.RecognizesGlobally = false
   ```
@@ -421,7 +421,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Boolean`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION.ScoreboardHidden = false
   ```
@@ -434,7 +434,7 @@ Below are more in-depth explanations of each **FACTION** variable, closely match
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   FACTION_MINECRAFTER = FACTION.index
   ```

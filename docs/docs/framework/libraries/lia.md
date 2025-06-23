@@ -29,7 +29,7 @@ Includes a Lua file into the specified realm (`server`, `client`, or `shared`). 
 **Returns:**  
 If the Lua file is included on the server and the state is `"server"`, it returns the included file. Otherwise, there is no return value.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Include a shared library
 lia.include("lilia/gamemode/core/libraries/util.lua", "shared")
@@ -66,7 +66,7 @@ Includes all Lua files from a specified directory into the designated realm. Thi
   The realm in which the Lua files should be included. Acceptable values are `"server"`, `"client"`, or `"shared"`.
 
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Include all shared libraries from the core libraries directory recursively
 lia.includeDir("core/libraries", false, true, "shared")
@@ -93,7 +93,7 @@ Dynamically loads Lua files for entities, weapons, tools, and effects into the a
 - `path` (`string`):  
   The directory containing the Lua files to be included. Typically points to the `entities`, `weapons`, `tools`, or `effects` directories within the gamemode.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Include all entity-related Lua files
 lia.includeEntities("lilia/gamemode/entities")

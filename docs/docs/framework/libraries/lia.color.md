@@ -27,7 +27,7 @@ Adjusts the components of a color by the specified offsets.
 **Returns:**  
 `Color` - The adjusted color as a new color table.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local originalColor = Color(100, 150, 200, 255)
 local newColor = lia.color.Adjust(originalColor, 10, -20, 30)
@@ -51,7 +51,7 @@ Converts a color to a hexadecimal string.
 **Returns:**  
 `string` - The hexadecimal color code.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local color = Color(255, 0, 0)
 local hex = lia.color.ColorToHex(color)
@@ -76,7 +76,7 @@ Lightens a color by the specified amount.
 **Returns:**  
 `Color` - The resulting lightened color.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local darkColor = Color(50, 50, 50)
 local lightColor = lia.color.Lighten(darkColor, 0.2)
@@ -100,7 +100,7 @@ Returns a color that cycles through the hues of the HSV color spectrum.
 **Returns:**  
 `Color` - The color object with the current hue.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 hook.Add("Think", "RainbowColor", function()
     local rainbowColor = lia.color.Rainbow(30)
@@ -128,7 +128,7 @@ Returns a color that smoothly transitions between two given colors.
 **Returns:**  
 `Color` - The color resulting from the transition.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 hook.Add("Think", "ColorCycleExample", function()
     local cyclingColor = lia.color.ColorCycle(Color(255, 0, 0), Color(0, 0, 255), 1)
@@ -154,7 +154,7 @@ Converts a color object to a string representation.
 **Returns:**  
 `string` - A string representation of the color in the format `"r,g,b,a"`.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local color = Color(255, 255, 255, 255)
 local colorText = lia.color.toText(color)
@@ -179,7 +179,7 @@ Darkens a color by the specified amount.
 **Returns:**  
 `Color` - The resulting darkened color.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local lightColor = Color(200, 200, 200)
 local darkColor = lia.color.Darken(lightColor, 0.3)
@@ -205,7 +205,7 @@ Blends two colors together by a specified ratio.
 **Returns:**  
 `Color` - The resulting blended color.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local colorA = Color(255, 0, 0)
 local colorB = Color(0, 0, 255)
@@ -232,7 +232,7 @@ Converts RGB values to a `Color` object.
 **Returns:**  
 `Color` - The resulting color.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local color = lia.color.rgb(128, 64, 255)
 print(color) -- Outputs: Color(128, 64, 255, 255)
@@ -257,7 +257,7 @@ Linearly interpolates between two colors.
 **Returns:**  
 `Color` - The resulting interpolated color.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local startColor = Color(255, 0, 0)
 local endColor = Color(0, 0, 255)
@@ -286,7 +286,7 @@ Returns a table of adjusted colors based on a base color. This function calculat
 - `border`: Border color.
 - `highlight`: Highlight color.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local adjustedColors = lia.color.ReturnMainAdjustedColors()
 surface.SetDrawColor(adjustedColors.background)
@@ -314,7 +314,7 @@ Interpolates between two colors in the HSV color space.
 **Returns:**  
 `Color` - The resulting interpolated color.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local startHSV = Color(255, 0, 0) -- Red
 local endHSV = Color(0, 255, 0)   -- Green

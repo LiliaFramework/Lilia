@@ -57,7 +57,7 @@ MODULE.Dependencies = {
 - **Type:**  
   `String`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   MODULE.name = "A Module"
   ```
@@ -72,7 +72,7 @@ MODULE.Dependencies = {
 - **Type:**  
   `String`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   MODULE.author = "Samael"
   ```
@@ -87,7 +87,7 @@ MODULE.Dependencies = {
 - **Type:**  
   `String`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   MODULE.discord = "@liliaplayer"
   ```
@@ -102,7 +102,7 @@ MODULE.Dependencies = {
 - **Type:**  
   `String`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   MODULE.version = "Stock"
   ```
@@ -117,7 +117,7 @@ MODULE.Dependencies = {
 - **Type:**  
   `String`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   MODULE.desc = "This is an Example Module."
   ```
@@ -132,7 +132,7 @@ MODULE.Dependencies = {
 - **Type:**  
   `String`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   MODULE.identifier = "example_mod"
   ```
@@ -148,7 +148,7 @@ MODULE.Dependencies = {
 - **Type:**  
   `Table`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   MODULE.CAMIPrivileges = {
       {
@@ -169,7 +169,7 @@ MODULE.Dependencies = {
 - **Type:**  
   `Table` of `Strings`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   MODULE.WorkshopContent = {"2959728255"}
   ```
@@ -184,7 +184,7 @@ MODULE.Dependencies = {
 - **Type:**  
   `Boolean`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   MODULE.enabled = true
   ```
@@ -199,7 +199,7 @@ MODULE.Dependencies = {
 - **Type:**  
   `Table` of `Table`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   MODULE.Dependencies = {
       {

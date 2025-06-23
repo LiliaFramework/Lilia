@@ -33,7 +33,7 @@ Adds a new option to the system.
 - `"Color"`: A color option with `r`, `g`, and `b` values.
 - `"Generic"`: A text field.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Adding a new option on the client side
 lia.option.add("ShowHUD", "Show HUD", "Toggle the visibility of the HUD.", true, nil, {
@@ -55,7 +55,7 @@ Sets the value of an existing option and handles callbacks and saving.
 - `key` (`string`): The unique identifier of the option.
 - `value` (`any`): The new value to set for the option.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Setting an option value on the client side
 lia.option.set("ShowHUD", false)
@@ -79,7 +79,7 @@ Retrieves the current value of an option, falling back to the default if not set
 **Returns:**  
 `any`: The current value of the option or the default value.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local showHUD = lia.option.get("ShowHUD", true)
 print("HUD Visibility:", showHUD)
@@ -95,7 +95,7 @@ Saves all current option values to persistent storage based on the client's IP a
 **Realm:**  
 `Client`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.option.save()
 ```
@@ -110,7 +110,7 @@ Loads all option values from persistent storage. If no saved options are found, 
 **Realm:**  
 `Client`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.option.load()
 ```

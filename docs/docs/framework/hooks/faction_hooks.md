@@ -19,7 +19,7 @@ This page details the various hooks associated with a **Faction** in your schema
 - **Returns:**  
   `String`: The default name for the newly created character.
 
-- **Usage Example:**
+- **Example Usage:**
   ```lua
   function FACTION:GetDefaultName(client)
       return "CT-" .. math.random(111111, 999999)
@@ -45,7 +45,7 @@ This page details the various hooks associated with a **Faction** in your schema
 - **Returns:**  
   `String`: The default description for the newly created character.
 
-- **Usage Example:**
+- **Example Usage:**
   ```lua
   function FACTION:GetDefaultDesc(client, faction)
       return "A police officer"
@@ -67,7 +67,7 @@ This page details the various hooks associated with a **Faction** in your schema
   
   - `character` (`Character`): The character that has been created.
 
-- **Usage Example:**
+- **Example Usage:**
   ```lua
   function FACTION:OnCharCreated(client, character)
       local inventory = character:getInv()
@@ -89,7 +89,7 @@ This page details the various hooks associated with a **Faction** in your schema
 - **Parameters:**
   - `client` (`Player`): The player that has just spawned.
 
-- **Usage Example:**
+- **Example Usage:**
   ```lua
   function FACTION:OnSpawn(client)
       client:ChatPrint("You have spawned!")
@@ -110,7 +110,7 @@ This page details the various hooks associated with a **Faction** in your schema
 - **Parameters:**
   - `character` (`Character`): The character that was transferred.
 
-- **Usage Example:**
+- **Example Usage:**
   ```lua
   function FACTION:OnTransferred(character)
       local randomModelIndex = math.random(1, #self.models)

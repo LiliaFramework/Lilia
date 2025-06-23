@@ -23,7 +23,7 @@ end
     Returns:
         table or nil – The bar table if found, or nil if not found.
 
-    Example:
+    Example Usage:
         local bar = lia.bar.get("health")
 ]]
 function lia.bar.get(identifier)
@@ -52,7 +52,7 @@ end
     Returns:
         number – The priority assigned to the added bar.
 
-    Example:
+    Example Usage:
         lia.bar.add(function() return 1 end, Color(255,0,0), 1, "example")
 ]]
 function lia.bar.add(getValue, color, priority, identifier)
@@ -87,7 +87,7 @@ end
     Returns:
         None
 
-    Example:
+    Example Usage:
         lia.bar.remove("example")
 ]]
 function lia.bar.remove(identifier)
@@ -124,7 +124,7 @@ end
     Returns:
         None
 
-    Example:
+    Example Usage:
         lia.bar.drawBar(10, 10, 200, 20, 0.5, 1, Color(255,0,0))
 ]]
 function lia.bar.drawBar(x, y, w, h, pos, max, color)
@@ -153,7 +153,7 @@ end
     Returns:
         None
 
-    Example:
+    Example Usage:
         lia.bar.drawAction("Reloading", 2)
 ]]
 function lia.bar.drawAction(text, duration)
@@ -197,7 +197,7 @@ end
     Returns:
         None
 
-    Example:
+    Example Usage:
         hook.Add("HUDPaintBackground", "liaBarDraw", lia.bar.drawAll)
 ]]
 function lia.bar.drawAll()

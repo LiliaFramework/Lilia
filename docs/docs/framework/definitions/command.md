@@ -55,7 +55,7 @@ lia.command.add("charsetskin", {
 - **Type:**  
   `bool`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   adminOnly = true
   ```
@@ -70,7 +70,7 @@ lia.command.add("charsetskin", {
 - **Type:**  
   `bool`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   superAdminOnly = false
   ```
@@ -86,7 +86,7 @@ lia.command.add("charsetskin", {
 - **Type:**  
   `String`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   privilege = "Manage Character Stats"
   ```
@@ -101,7 +101,7 @@ lia.command.add("charsetskin", {
 - **Type:**  
   `String`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   syntax = "[string name] [number skin]"
   ```
@@ -121,7 +121,7 @@ lia.command.add("charsetskin", {
 - **Type:**  
   `Table`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   AdminStick = {
       Name = "Set Character Skin",
@@ -144,7 +144,7 @@ lia.command.add("charsetskin", {
 - **Type:**  
   `Function`
 
-- **Example:**
+- **Example Usage:**
   ```lua
   onRun = function(client, arguments)
       local name = arguments[1]

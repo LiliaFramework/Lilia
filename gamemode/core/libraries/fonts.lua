@@ -17,7 +17,7 @@ if CLIENT then
         Returns:
             None
 
-        Example:
+        Example Usage:
             lia.font.register("MyFont", {font = "Arial", size = 16})
     ]]
     function lia.font.register(fontName, fontData)
@@ -876,6 +876,7 @@ if CLIENT then
         extended = true,
         size = 64
     })
+
     --[[
         lia.font.getAvailableFonts()
 
@@ -891,12 +892,10 @@ if CLIENT then
         Realm:
             Client
 
-        Example:
+        Example Usage:
             local fonts = lia.font.getAvailableFonts()
             PrintTable(fonts)
     ]]
-
-
     function lia.font.getAvailableFonts()
         local list = {}
         for name in pairs(lia.font.stored) do
@@ -906,6 +905,7 @@ if CLIENT then
         table.sort(list)
         return list
     end
+
     --[[
         lia.font.refresh()
 
@@ -921,11 +921,9 @@ if CLIENT then
         Realm:
             Client
 
-        Example:
+        Example Usage:
             lia.font.refresh()
     ]]
-
-
     function lia.font.refresh()
         local storedFonts = lia.font.stored
         lia.font.stored = {}

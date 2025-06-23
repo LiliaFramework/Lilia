@@ -33,7 +33,7 @@ Loads a module into the system. This function handles the inclusion of module fi
 - `firstLoad` (`bool`):  
   Indicates if this is the first load of the module.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Load a module with unique ID "exampleModule"
 lia.module.load("exampleModule", "path/to/exampleModule", false, "EXAMPLE_MODULE", true)
@@ -57,7 +57,7 @@ Called after a module finishes loading to load its submodules. This internal fun
 - `firstLoad` (`bool`):  
   Indicates if this is the first load of the module.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- This function is typically called internally by lia.module.load
 lia.module.OnFinishLoad("path/to/module", true)
@@ -78,7 +78,7 @@ Loads and initializes all modules. This function is typically called during the 
 - `firstLoad` (`bool`):  
   Indicates if this is the first load of the modules.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Initialize all modules on server start
 lia.module.initialize(true)
@@ -105,7 +105,7 @@ Loads modules from a specified directory. It handles both single-file modules an
 - `firstLoad` (`bool`):  
   Indicates if this is the first load of the modules.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Load all modules from the "utilities" directory
 lia.module.loadFromDir("lilia/modules/utilities", "module", false)
@@ -129,7 +129,7 @@ Retrieves a module by its identifier. This function allows access to the module'
 **Returns:**  
 `table|nil` - The module object if found, otherwise `nil`.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Retrieve the "exampleModule" module
 local exampleModule = lia.module.get("exampleModule")
@@ -153,7 +153,7 @@ A table that keeps track of enabled modules. Each key corresponds to a module's 
 **Type:**  
 `table`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Check if "exampleModule" is enabled
 if lia.module.EnabledList["exampleModule"] then
@@ -176,7 +176,7 @@ A table that stores all loaded modules. Each key is the module's unique identifi
 **Type:**  
 `table`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Iterate through all loaded modules
 for uniqueID, module in pairs(lia.module.list) do

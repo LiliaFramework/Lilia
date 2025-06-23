@@ -39,7 +39,7 @@ Generates a formatted date string based on the current system time. This functio
 **Returns:**  
 `string` - The formatted date string.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Generate a formatted date with all components
 local formattedDate = lia.time.GetFormattedDate("Current Date:", true, true, true, true, true)
@@ -85,7 +85,7 @@ Generates a formatted date string based on the current system time for in-game u
 **Returns:**  
 `string` - The formatted date string tailored for in-game usage.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Generate an in-game formatted date with custom schema year
 local inGameDate = lia.time.GetFormattedDateInGame("Game Date:", true, true, true, true, true)
@@ -134,7 +134,7 @@ Generates a pre-formatted date string based on the provided time. This function 
 **Returns:**  
 `string` - The formatted date string.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Define a specific time to format
 local specificTime = {
@@ -194,7 +194,7 @@ Generates a pre-formatted date string based on the provided time for in-game usa
 **Returns:**  
 `string` - The formatted date string tailored for in-game usage.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Define a specific time to format
 local specificTime = {
@@ -242,7 +242,7 @@ Converts a date string in the format "YYYY-MM-DD HH:MM:SS" into a table containi
 - `min` (`number`)
 - `sec` (`number`)
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Convert a specific date string to a table
 local dateTable = lia.time.toNumber("2025-12-25 18:45:30")
@@ -278,7 +278,7 @@ Returns the amount of time passed since the given time. The input can be a UNIX 
 **Returns:**  
 `string` - A human-readable string indicating the time passed since the given time, such as "10 seconds ago", "5 minutes ago", "3 hours ago", or "2 days ago". Returns "Invalid date" or "Invalid input" if the input is not in the expected format.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Calculate time since a specific date string
 local timePassed = lia.time.TimeSince("14:30:00 - 01/01/2025")
@@ -310,7 +310,7 @@ Returns the amount of time remaining until the given time. The input must be a d
 **Returns:**  
 `string` - A human-readable string indicating the time remaining until the given time, such as "2 years, 3 months, 5 days, 4 hours, 30 minutes, 15 seconds". Returns an error message if the input is invalid or the time is in the past.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Calculate time until a specific date string
 local timeRemaining = lia.time.TimeUntil("18:45:30 - 25/12/2025")
@@ -331,7 +331,7 @@ Returns the current local time in the format "HH:MM:SS - DD/MM/YYYY". This funct
 **Returns:**  
 `string` - The current local time string in the format "HH:MM:SS - DD/MM/YYYY".
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Get the current local time
 local localTime = lia.time.CurrentLocalTime()
@@ -360,7 +360,7 @@ Converts a number of seconds into days, hours, minutes, and seconds. This functi
 - `minutes` (`number`)
 - `secs` (`number`)
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Convert 100000 seconds to days, hours, minutes, and seconds
 local days, hours, minutes, seconds = lia.time.SecondsToDHMS(100000)
@@ -392,7 +392,7 @@ Converts hours, minutes, and seconds into a total number of seconds. This functi
 **Returns:**  
 `number` - The total number of seconds.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Convert 2 hours, 30 minutes, and 45 seconds to total seconds
 local totalSeconds = lia.time.HMSToSeconds(2, 30, 45)
@@ -418,7 +418,7 @@ Formats a UNIX timestamp into a string with the format "HH:MM:SS - DD/MM/YYYY". 
 **Returns:**  
 `string` - The formatted time string.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Format the current UNIX timestamp
 local currentTimestamp = os.time()
@@ -451,7 +451,7 @@ Parses a time string in the format "HH:MM:SS - DD/MM/YYYY" into its individual n
 - `second` (`number`)  
 - `nil` if parsing fails.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Parse a specific time string
 local year, month, day, hour, minute, second = lia.time.ParseTime("14:30:45 - 15/03/2025")
@@ -482,7 +482,7 @@ Calculates the difference in days between a specified date and the current date.
 **Returns:**  
 `number|nil` - The difference in days between the given date and the current date, or `nil` if the input is invalid.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Calculate the time difference until a specific date
 local daysLeft = lia.time.TimeDifference("18:45:30 - 25/12/2025")
@@ -513,7 +513,7 @@ Returns the amount of time passed since the given time. The input can be a UNIX 
 **Returns:**  
 `string` - A human-readable string indicating the time passed since the given time, such as "10 seconds ago", "5 minutes ago", "3 hours ago", or "2 days ago". Returns "Invalid date" or "Invalid input" if the input is not in the expected format.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Calculate time since a specific date string
 local timePassed = lia.time.TimeSince("14:30:00 - 01/01/2025")
@@ -545,7 +545,7 @@ Returns the amount of time remaining until the given time. The input must be a d
 **Returns:**  
 `string` - A human-readable string indicating the time remaining until the given time, such as "2 years, 3 months, 5 days, 4 hours, 30 minutes, 15 seconds". Returns an error message if the input is invalid or the time is in the past.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Calculate time until a specific date string
 local timeRemaining = lia.time.TimeUntil("18:45:30 - 25/12/2025")
@@ -566,7 +566,7 @@ Returns the current local time in the format "HH:MM:SS - DD/MM/YYYY". This funct
 **Returns:**  
 `string` - The current local time string in the format "HH:MM:SS - DD/MM/YYYY".
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Get the current local time
 local localTime = lia.time.CurrentLocalTime()
@@ -595,7 +595,7 @@ Converts a number of seconds into days, hours, minutes, and seconds. This functi
 - `minutes` (`number`)
 - `secs` (`number`)
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Convert 100000 seconds to days, hours, minutes, and seconds
 local days, hours, minutes, seconds = lia.time.SecondsToDHMS(100000)
@@ -627,7 +627,7 @@ Converts hours, minutes, and seconds into a total number of seconds. This functi
 **Returns:**  
 `number` - The total number of seconds.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Convert 2 hours, 30 minutes, and 45 seconds to total seconds
 local totalSeconds = lia.time.HMSToSeconds(2, 30, 45)
@@ -653,7 +653,7 @@ Formats a UNIX timestamp into a string with the format "HH:MM:SS - DD/MM/YYYY". 
 **Returns:**  
 `string` - The formatted time string.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Format the current UNIX timestamp
 local currentTimestamp = os.time()
@@ -686,7 +686,7 @@ Parses a time string in the format "HH:MM:SS - DD/MM/YYYY" into its individual n
 - `second` (`number`)  
 - `nil` if parsing fails.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Parse a specific time string
 local year, month, day, hour, minute, second = lia.time.ParseTime("14:30:45 - 15/03/2025")
@@ -720,7 +720,7 @@ Calculates the number of days between two dates, ignoring the time of day. The d
 **Returns:**  
 `number|string` - The number of days between the two dates or "Invalid dates" if the inputs are not correctly formatted.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Calculate days between two dates
 local daysBetween = lia.time.DaysBetween("00:00:00 - 01/01/2025", "00:00:00 - 31/12/2025")
@@ -751,7 +751,7 @@ Returns the name of the weekday for the given date and time. The input must be a
 **Returns:**  
 `string` - The name of the weekday (e.g., "Monday") or "Invalid date" if the input is not correctly formatted.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Get the weekday name for a specific date
 local weekday = lia.time.WeekdayName("14:30:45 - 15/03/2025")
@@ -782,7 +782,7 @@ Calculates the difference in days between a specified date and the current date.
 **Returns:**  
 `number|nil` - The difference in days between the given date and the current date, or `nil` if the input is invalid.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Calculate the time difference until a specific date
 local daysLeft = lia.time.TimeDifference("18:45:30 - 25/12/2025")

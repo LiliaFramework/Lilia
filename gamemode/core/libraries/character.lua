@@ -808,10 +808,7 @@ if SERVER then
         local charIDsafe = tonumber(charID)
         if not name or not charID then return end
         local setQ = "UPDATE lia_characters SET _name=" .. sql.SQLStr(name) .. " WHERE _id=" .. charIDsafe
-        if not sql.Query(setQ) then
-            return false
-        end
-
+        if not sql.Query(setQ) then return false end
         if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setName(name) end
         return true
     end
@@ -837,10 +834,7 @@ if SERVER then
         local charIDsafe = tonumber(charID)
         if not model or not charID then return end
         local setQ = "UPDATE lia_characters SET _model=" .. sql.SQLStr(model) .. " WHERE _id=" .. charIDsafe
-        if not sql.Query(setQ) then
-            return false
-        end
-
+        if not sql.Query(setQ) then return false end
         local groups = {}
         for _, v in pairs(bg or {}) do
             groups[v.id] = v.value

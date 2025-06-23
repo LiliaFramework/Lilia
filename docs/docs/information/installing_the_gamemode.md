@@ -154,7 +154,7 @@ Edit your server's startup parameters to set the gamemode:
 +gamemode <SchemaName>
 ```
 
-Example:
+Example Usage:
 
 ```plaintext
 +gamemode scprp

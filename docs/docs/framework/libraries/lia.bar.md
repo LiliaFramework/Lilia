@@ -21,7 +21,7 @@ Retrieves information about a bar identified by its unique identifier.
 **Returns:**  
 - `Table` | `nil`: The information about the bar if found; otherwise, `nil`.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local barInfo = lia.bar.get("healthBar")
 if barInfo then
@@ -56,7 +56,7 @@ Adds a new bar or updates an existing one. Bars can display dynamic values and a
 **Returns:**  
 - `Number`: The priority of the added or updated bar.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.bar.add(function() return LocalPlayer():GetHealth() / LocalPlayer():GetMaxHealth() end, Color(255, 0, 0), 1, "healthBar")
 ```
@@ -75,7 +75,7 @@ Removes a bar identified by its unique identifier.
 
 - `identifier` (`String`): The unique identifier of the bar to remove.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.bar.remove("healthBar")
 ```
@@ -104,7 +104,7 @@ Draws a single bar with the specified parameters on the screen.
 
 - `color` (`Color`): The color of the bar.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.bar.draw(50, 50, 200, 20, 0.75, Color(0, 255, 0))
 ```

@@ -4,7 +4,6 @@
 
     Generated automatically.
 ]]
-
 --[[
         LoadCharInformation()
 
@@ -14,13 +13,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Prints a message after the info panel is built.
             hook.Add("LoadCharInformation", "PrintLoad", function()
                 print("F1 information sections loaded")
             end)
 ]]
-
 --[[
         CreateMenuButtons(tabs)
 
@@ -33,13 +31,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Inserts a custom "Help" tab into the F1 menu.
             hook.Add("CreateMenuButtons", "AddHelpTab", function(tabs)
                 tabs.help = {text = "Help", panel = "liaHelp"}
             end)
 ]]
-
 --[[
         DrawLiliaModelView(panel, entity)
 
@@ -53,13 +50,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Draws "Preview" text over the character model each frame.
             hook.Add("DrawLiliaModelView", "Watermark", function(panel, entity)
                 draw.SimpleText("Preview", "Trebuchet24", 8, 8, color_white)
             end)
 ]]
-
 --[[
         ShouldAllowScoreboardOverride(client, field)
 
@@ -73,13 +69,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Allows other hooks to replace player names on the scoreboard.
             hook.Add("ShouldAllowScoreboardOverride", "OverrideNames", function(ply, field)
                 if field == "name" then return true end
             end)
 ]]
-
 --[[
         GetDisplayedName(client)
 
@@ -92,13 +87,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Displays player names with a VIP prefix.
             hook.Add("GetDisplayedName", "VIPPrefix", function(ply)
                 return "[VIP] " .. ply:Nick()
             end)
 ]]
-
 --[[
         PlayerEndVoice(client)
 
@@ -111,13 +105,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Announces in chat when someone stops using voice chat.
             hook.Add("PlayerEndVoice", "NotifyVoiceStop", function(ply)
                 chat.AddText(ply:Nick() .. " stopped talking")
             end)
 ]]
-
 --[[
         SpawnlistContentChanged(icon)
 
@@ -130,13 +123,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Lets you react when a spawn menu icon is removed.
             hook.Add("SpawnlistContentChanged", "IconRemoved", function(icon)
                 print("Removed spawn icon", icon)
             end)
 ]]
-
 --[[
         ItemPaintOver(panel, itemTable, width, height)
 
@@ -152,13 +144,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Draws the item quantity in the bottom-right corner.
             hook.Add("ItemPaintOver", "ShowQuantity", function(panel, item, w, h)
                 draw.SimpleText(item.qty or 1, "DermaDefault", w - 4, h - 4, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
             end)
 ]]
-
 --[[
         OnCreateItemInteractionMenu(panel, menu, itemTable)
 
@@ -173,13 +164,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Adds an "Inspect" choice to an item's context menu.
             hook.Add("OnCreateItemInteractionMenu", "AddInspect", function(panel, menu, item)
                 menu:AddOption("Inspect", function() print("Inspecting", item.name) end)
             end)
 ]]
-
 --[[
         CanRunItemAction(itemTable, action)
 
@@ -196,13 +186,12 @@
 
         Returns:
             boolean – True if the action can run.
-        Example:
+        Example Usage:
             -- Disables the drop action for all items.
             hook.Add("CanRunItemAction", "BlockDrop", function(item, action)
                 if action == "drop" then return false end
             end)
 ]]
-
 --[[
         GetMaxStartingAttributePoints(client, context)
 
@@ -216,13 +205,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Gives every new character 60 starting points.
             hook.Add("GetMaxStartingAttributePoints", "DoublePoints", function(client)
                 return 60
             end)
 ]]
-
 --[[
         GetAttributeStartingMax(client, attribute)
 
@@ -236,13 +224,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Limits the Strength attribute to a maximum of 20.
             hook.Add("GetAttributeStartingMax", "CapStrength", function(client, attribute)
                 if attribute == "strength" then return 20 end
             end)
 ]]
-
 --[[
         ShouldShowPlayerOnScoreboard(player)
 
@@ -255,13 +242,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Stops bots from showing up on the scoreboard.
             hook.Add("ShouldShowPlayerOnScoreboard", "HideBots", function(ply)
                 if ply:IsBot() then return false end
             end)
 ]]
-
 --[[
         ShowPlayerOptions(player, options)
 
@@ -275,13 +261,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Adds a friendly "Wave" choice in the scoreboard menu.
             hook.Add("ShowPlayerOptions", "WaveOption", function(ply, options)
                 options[#options + 1] = {name = "Wave", func = function() RunConsoleCommand("say", "/me waves to " .. ply:Nick()) end}
             end)
 ]]
-
 --[[
         GetDisplayedDescription(player, isOOC)
 
@@ -295,13 +280,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Shows an OOC description when requested by the scoreboard.
             hook.Add("GetDisplayedDescription", "OOCDesc", function(ply, isOOC)
                 if isOOC then return ply:GetNWString("oocDesc", "") end
             end)
 ]]
-
 --[[
         ChatTextChanged(text)
 
@@ -314,13 +298,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Displays a hint when the user types "/help".
             hook.Add("ChatTextChanged", "CommandHint", function(text)
                 if text == "/help" then chat.AddText("Type /commands for commands list") end
             end)
 ]]
-
 --[[
         FinishChat()
 
@@ -330,13 +313,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Prints a message whenever the chat box closes.
             hook.Add("FinishChat", "ChatClosed", function()
                 print("Chat closed")
             end)
 ]]
-
 --[[
         StartChat()
 
@@ -346,13 +328,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Plays a sound whenever the chat box opens.
             hook.Add("StartChat", "ChatOpened", function()
                 surface.PlaySound("buttons/lightswitch2.wav")
             end)
 ]]
-
 --[[
         ChatAddText(text, ...)
 
@@ -369,13 +350,12 @@
 
         Returns:
             string – Modified markup text.
-        Example:
+        Example Usage:
             -- Turns chat messages green before they appear.
             hook.Add("ChatAddText", "GreenSystem", function(text, ...)
                 return Color(0,255,0), text, ...
             end)
 ]]
-
 --[[
         DisplayItemRelevantInfo(extra, client, item)
 
@@ -390,13 +370,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Adds the item's weight to its tooltip.
             hook.Add("DisplayItemRelevantInfo", "ShowWeight", function(extra, client, item)
                 extra[#extra + 1] = "Weight: " .. (item.weight or 0)
             end)
 ]]
-
 --[[
         GetMainMenuPosition(character)
 
@@ -412,13 +391,12 @@
 
         Returns:
             Vector, Angle – Position and angle values.
-        Example:
+        Example Usage:
             -- Positions the main menu camera with a slight offset.
             hook.Add("GetMainMenuPosition", "OffsetCharView", function(character)
                 return Vector(30, 10, 60), Angle(0, 30, 0)
             end)
 ]]
-
 --[[
         CanDeleteChar(characterID)
 
@@ -434,13 +412,12 @@
 
         Returns:
             boolean – False to disallow deletion.
-        Example:
+        Example Usage:
             -- Blocks deletion of the first character slot.
             hook.Add("CanDeleteChar", "ProtectSlot1", function(id)
                 if id == 1 then return false end
             end)
 ]]
-
 --[[
         LoadMainMenuInformation(info, character)
 
@@ -454,13 +431,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Adds the character's faction to the menu info panel.
             hook.Add("LoadMainMenuInformation", "AddFactionInfo", function(info, character)
                 info.faction = character:getFaction() or "Citizen"
             end)
 ]]
-
 --[[
         CanPlayerCreateChar(player)
 
@@ -476,13 +452,12 @@
 
         Returns:
             boolean – False to disallow creation.
-        Example:
+        Example Usage:
             -- Restricts character creation to admins only.
             hook.Add("CanPlayerCreateChar", "AdminsOnly", function(ply)
                 if not ply:IsAdmin() then return false end
             end)
 ]]
-
 --[[
         ModifyCharacterModel(entity, character)
 
@@ -496,13 +471,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Changes a bodygroup on the preview model.
             hook.Add("ModifyCharacterModel", "ApplyBodygroup", function(ent, character)
                 ent:SetBodygroup(2, 1)
             end)
 ]]
-
 --[[
         ConfigureCharacterCreationSteps(panel)
 
@@ -515,13 +489,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Adds a custom "background" step to the character creator.
             hook.Add("ConfigureCharacterCreationSteps", "InsertBackground", function(panel)
                 panel:AddStep("background")
             end)
 ]]
-
 --[[
         GetMaxPlayerChar(player)
 
@@ -537,13 +510,12 @@
 
         Returns:
             number – Maximum character count.
-        Example:
+        Example Usage:
             -- Gives admins extra character slots.
             hook.Add("GetMaxPlayerChar", "AdminSlots", function(ply)
                 return ply:IsAdmin() and 10 or 5
             end)
 ]]
-
 --[[
         ShouldMenuButtonShow(name)
 
@@ -559,13 +531,12 @@
 
         Returns:
             boolean, string – False and reason to hide.
-        Example:
+        Example Usage:
             -- Hides the delete button when the feature is locked.
             hook.Add("ShouldMenuButtonShow", "HideDelete", function(name)
                 if name == "delete" then return false, "Locked" end
             end)
 ]]
-
 --[[
         ResetCharacterPanel()
 
@@ -575,13 +546,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Notifies whenever the creation panel resets.
             hook.Add("ResetCharacterPanel", "ClearFields", function()
                 print("Character creator reset")
             end)
 ]]
-
 --[[
         EasyIconsLoaded()
 
@@ -591,13 +561,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Prints a message once the EasyIcons font is loaded.
             hook.Add("EasyIconsLoaded", "Notify", function()
                 print("EasyIcons ready")
             end)
 ]]
-
 --[[
         CAMI.OnUsergroupRegistered(usergroup, source)
 
@@ -611,13 +580,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Logs newly registered CAMI usergroups.
             hook.Add("CAMI.OnUsergroupRegistered", "LogGroup", function(group)
                 print("Registered group:", group.Name)
             end)
 ]]
-
 --[[
         CAMI.OnUsergroupUnregistered(usergroup, source)
 
@@ -631,13 +599,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Logs whenever a usergroup is removed from CAMI.
             hook.Add("CAMI.OnUsergroupUnregistered", "LogRemoval", function(group)
                 print("Removed group:", group.Name)
             end)
 ]]
-
 --[[
         CAMI.OnPrivilegeRegistered(privilege)
 
@@ -650,13 +617,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Reports when a new CAMI privilege is registered.
             hook.Add("CAMI.OnPrivilegeRegistered", "LogPrivilege", function(priv)
                 print("Registered privilege:", priv.Name)
             end)
 ]]
-
 --[[
         CAMI.OnPrivilegeUnregistered(privilege)
 
@@ -669,13 +635,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Reports when a CAMI privilege is removed.
             hook.Add("CAMI.OnPrivilegeUnregistered", "LogPrivRemoval", function(priv)
                 print("Removed privilege:", priv.Name)
             end)
 ]]
-
 --[[
         CAMI.PlayerHasAccess(handler, actor, privilegeName, callback, target, extra)
 
@@ -693,13 +658,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Lets superadmins bypass privilege checks.
             hook.Add("CAMI.PlayerHasAccess", "AllowSuperadmins", function(_, actor, priv, cb)
                 if actor:IsSuperAdmin() then cb(true) return true end
             end)
 ]]
-
 --[[
         CAMI.SteamIDHasAccess(handler, steamID, privilegeName, callback, targetID, extra)
 
@@ -717,13 +681,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Grants access for a specific SteamID.
             hook.Add("CAMI.SteamIDHasAccess", "AllowSteamID", function(_, steamID, priv, cb)
                 if steamID == "STEAM_0:1:1" then cb(true) return true end
             end)
 ]]
-
 --[[
         CAMI.PlayerUsergroupChanged(player, oldGroup, newGroup, source)
 
@@ -739,13 +702,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Announces when a player's usergroup changes.
             hook.Add("CAMI.PlayerUsergroupChanged", "AnnounceChange", function(ply, old, new)
                 print(ply:Nick() .. " moved from " .. old .. " to " .. new)
             end)
 ]]
-
 --[[
         CAMI.SteamIDUsergroupChanged(steamID, oldGroup, newGroup, source)
 
@@ -761,12 +723,13 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Logs usergroup changes by SteamID.
             hook.Add("CAMI.SteamIDUsergroupChanged", "LogSIDChange", function(sid, old, new)
                 print(sid .. " changed from " .. old .. " to " .. new)
             end)
-]]--[[
+]]
+--[[
         TooltipLayout(panel)
 
         Description:
@@ -777,7 +740,7 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Sets a fixed width for tooltips before layout.
             hook.Add("TooltipLayout", "FixedWidth", function(panel)
                 panel:SetWide(200)
@@ -796,7 +759,7 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Adds a dark background and skips default paint.
             hook.Add("TooltipPaint", "BlurBackground", function(panel, w, h)
                 surface.SetDrawColor(0, 0, 0, 200)
@@ -816,14 +779,13 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Fades tooltips in when they are created.
             hook.Add("TooltipInitialize", "SetupFade", function(panel, target)
                 panel:SetAlpha(0)
                 panel:AlphaTo(255, 0.2, 0)
             end)
 ]]
-
 --[[
         PlayerLoadout(client)
 
@@ -836,13 +798,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Gives players a crowbar on spawn.
             hook.Add("PlayerLoadout", "GiveCrowbar", function(ply)
                 ply:Give("weapon_crowbar")
             end)
 ]]
-
 --[[
         PlayerShouldPermaKill(client, inflictor, attacker)
 
@@ -857,13 +818,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Prevent permanent death from fall damage.
             hook.Add("PlayerShouldPermaKill", "NoFallPK", function(ply, inflictor)
                 if inflictor == game.GetWorld() then return false end
             end)
 ]]
-
 --[[
         CanPlayerDropItem(client, item)
 
@@ -877,13 +837,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Disallow dropping locked items.
             hook.Add("CanPlayerDropItem", "NoLockedDrop", function(ply, item)
                 if item.locked then return false end
             end)
 ]]
-
 --[[
         CanPlayerTakeItem(client, item)
 
@@ -897,13 +856,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Block taking admin items.
             hook.Add("CanPlayerTakeItem", "NoAdminPickup", function(ply, item)
                 if item.adminOnly then return false end
             end)
 ]]
-
 --[[
         CanPlayerEquipItem(client, item)
 
@@ -917,7 +875,7 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Allow equipping only if level requirement met.
             hook.Add("CanPlayerEquipItem", "CheckLevel", function(ply, item)
                 if item.minLevel and ply:getChar():getAttrib("level", 0) < item.minLevel then
@@ -925,7 +883,6 @@
                 end
             end)
 ]]
-
 --[[
         CanPlayerUnequipItem(client, item)
 
@@ -939,13 +896,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Prevent unequipping cursed gear.
             hook.Add("CanPlayerUnequipItem", "Cursed", function(ply, item)
                 if item.cursed then return false end
             end)
 ]]
-
 --[[
         PostPlayerSay(client, message, chatType, anonymous)
 
@@ -961,13 +917,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Log all OOC chat.
             hook.Add("PostPlayerSay", "LogOOC", function(ply, msg, chatType)
                 if chatType == "ooc" then print("[OOC]", ply:Nick(), msg) end
             end)
 ]]
-
 --[[
         ShouldSpawnClientRagdoll(client)
 
@@ -980,13 +935,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Disable ragdolls for bots.
             hook.Add("ShouldSpawnClientRagdoll", "NoBotRagdoll", function(ply)
                 if ply:IsBot() then return false end
             end)
 ]]
-
 --[[
         SaveData()
 
@@ -996,13 +950,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Save a timestamp to file.
             hook.Add("SaveData", "RecordTime", function()
                 file.Write("lastsave.txt", os.time())
             end)
 ]]
-
 --[[
         PersistenceSave()
 
@@ -1012,12 +965,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("PersistenceSave", "Notice", function()
                 print("Saving persistent entities")
             end)
 ]]
-
 --[[
         LoadData()
 
@@ -1027,12 +979,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("LoadData", "LoadExtras", function()
                 print("Loading custom data")
             end)
 ]]
-
 --[[
         PostLoadData()
 
@@ -1042,12 +993,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("PostLoadData", "Ready", function()
                 print("Data fully loaded")
             end)
 ]]
-
 --[[
         ShouldDataBeSaved()
 
@@ -1057,13 +1007,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Skip saving during quick restarts.
             hook.Add("ShouldDataBeSaved", "NoSave", function()
                 return game.IsDedicated() and os.getenv("NOSAVE")
             end)
 ]]
-
 --[[
         OnCharDisconnect(client, character)
 
@@ -1077,12 +1026,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("OnCharDisconnect", "Goodbye", function(ply, char)
                 print(char:getName(), "has left")
             end)
 ]]
-
 --[[
         SetupBotPlayer(client)
 
@@ -1095,12 +1043,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("SetupBotPlayer", "WelcomeBot", function(bot)
                 bot:ChatPrint("Beep boop!")
             end)
 ]]
-
 --[[
         PlayerLiliaDataLoaded(client)
 
@@ -1113,12 +1060,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("PlayerLiliaDataLoaded", "SendWelcome", function(ply)
                 ply:ChatPrint("Data loaded")
             end)
 ]]
-
 --[[
         PostPlayerInitialSpawn(client)
 
@@ -1131,12 +1077,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("PostPlayerInitialSpawn", "Greet", function(ply)
                 print("Hello", ply:Nick())
             end)
 ]]
-
 --[[
         FactionOnLoadout(client)
 
@@ -1149,14 +1094,13 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("FactionOnLoadout", "GiveRadio", function(ply)
                 if ply:getChar():getFaction() == "police" then
                     ply:Give("weapon_radio")
                 end
             end)
 ]]
-
 --[[
         ClassOnLoadout(client)
 
@@ -1169,14 +1113,13 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("ClassOnLoadout", "MedicItems", function(ply)
                 if ply:getChar():getClass() == "medic" then
                     ply:Give("medkit")
                 end
             end)
 ]]
-
 --[[
         PostPlayerLoadout(client)
 
@@ -1189,12 +1132,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("PostPlayerLoadout", "SetColor", function(ply)
                 ply:SetPlayerColor(Vector(0,1,0))
             end)
 ]]
-
 --[[
         FactionPostLoadout(client)
 
@@ -1207,14 +1149,13 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("FactionPostLoadout", "Shout", function(ply)
                 if ply:getChar():getFaction() == "soldier" then
                     ply:EmitSound("npc/combine_soldier/gear6.wav")
                 end
             end)
 ]]
-
 --[[
         ClassPostLoadout(client)
 
@@ -1227,12 +1168,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("ClassPostLoadout", "Pose", function(ply)
                 ply:ConCommand("act muscle")
             end)
 ]]
-
 --[[
         GetDefaultInventoryType(character)
 
@@ -1245,12 +1185,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("GetDefaultInventoryType", "UseGrid", function()
                 return "GridInv"
             end)
 ]]
-
 --[[
         ShouldDeleteSavedItems()
 
@@ -1260,12 +1199,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("ShouldDeleteSavedItems", "ClearDrops", function()
                 return false
             end)
 ]]
-
 --[[
         OnSavedItemLoaded(items)
 
@@ -1278,12 +1216,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("OnSavedItemLoaded", "PrintCount", function(items)
                 print("Loaded", #items, "items")
             end)
 ]]
-
 --[[
         ShouldDrawEntityInfo(entity)
 
@@ -1296,12 +1233,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("ShouldDrawEntityInfo", "HideNPCs", function(ent)
                 if ent:IsNPC() then return false end
             end)
 ]]
-
 --[[
         DrawEntityInfo(entity, alpha, position)
 
@@ -1316,12 +1252,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("DrawEntityInfo", "LabelProps", function(ent, a, pos)
                 draw.SimpleText(ent:GetClass(), "DermaDefault", pos.x, pos.y, Color(255,255,255,a))
             end)
 ]]
-
 --[[
         GetInjuredText(client)
 
@@ -1334,12 +1269,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("GetInjuredText", "SimpleHealth", function(ply)
                 if ply:Health() <= 20 then return {"Critical", Color(255,0,0)} end
             end)
 ]]
-
 --[[
         ShouldDrawPlayerInfo(player)
 
@@ -1352,12 +1286,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("ShouldDrawPlayerInfo", "HideLocal", function(ply)
                 if ply == LocalPlayer() then return false end
             end)
 ]]
-
 --[[
         DrawCharInfo(player, character, info)
 
@@ -1372,12 +1305,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("DrawCharInfo", "JobTitle", function(ply, char, info)
                 info[#info + 1] = {"Job: " .. (char:getClass() or "None")}
             end)
 ]]
-
 --[[
         ItemShowEntityMenu(entity)
 
@@ -1390,12 +1322,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("ItemShowEntityMenu", "QuickTake", function(ent)
                 print("Opening menu for", ent)
             end)
 ]]
-
 --[[
         PreLiliaLoaded()
 
@@ -1405,12 +1336,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("PreLiliaLoaded", "Prep", function()
                 print("About to finish loading")
             end)
 ]]
-
 --[[
         LiliaLoaded()
 
@@ -1420,12 +1350,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("LiliaLoaded", "Ready", function()
                 print("Lilia client ready")
             end)
 ]]
-
 --[[
         InventoryDataChanged(inventory, key, oldValue, value)
 
@@ -1441,12 +1370,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("InventoryDataChanged", "TrackWeight", function(inv, k, old, new)
                 if k == "weight" then print("Weight changed to", new) end
             end)
 ]]
-
 --[[
         ItemInitialized(item)
 
@@ -1459,12 +1387,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("ItemInitialized", "PrintID", function(item)
                 print("Created item", item.uniqueID)
             end)
 ]]
-
 --[[
         InventoryInitialized(inventory)
 
@@ -1477,12 +1404,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("InventoryInitialized", "AnnounceInv", function(inv)
                 print("Inventory", inv:getID(), "ready")
             end)
 ]]
-
 --[[
         InventoryItemAdded(inventory, item)
 
@@ -1496,12 +1422,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("InventoryItemAdded", "NotifyAdd", function(inv, item)
                 print("Added", item.name)
             end)
 ]]
-
 --[[
         InventoryItemRemoved(inventory, item)
 
@@ -1515,12 +1440,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("InventoryItemRemoved", "NotifyRemove", function(inv, item)
                 print("Removed", item.name)
             end)
 ]]
-
 --[[
         InventoryDeleted(inventory)
 
@@ -1533,12 +1457,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("InventoryDeleted", "Clear", function(inv)
                 print("Inventory", inv:getID(), "deleted")
             end)
 ]]
-
 --[[
         ItemDeleted(item)
 
@@ -1551,12 +1474,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("ItemDeleted", "Log", function(item)
                 print("Item", item.uniqueID, "gone")
             end)
 ]]
-
 --[[
         OnCharVarChanged(character, key, oldValue, value)
 
@@ -1572,12 +1494,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("OnCharVarChanged", "WatchMoney", function(char, k, old, new)
                 if k == "money" then print("Money changed", new) end
             end)
 ]]
-
 --[[
         OnCharLocalVarChanged(character, key, oldVar, value)
 
@@ -1593,12 +1514,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("OnCharLocalVarChanged", "WatchFlags", function(char, k, old, new)
                 if k == "flags" then print("Flags changed") end
             end)
 ]]
-
 --[[
         ItemDataChanged(item, key, oldValue, value)
 
@@ -1614,12 +1534,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("ItemDataChanged", "TrackDurability", function(item, key)
                 if key == "durability" then print("New durability", item.data[key]) end
             end)
 ]]
-
 --[[
         ItemQuantityChanged(item, oldQuantity, quantity)
 
@@ -1634,12 +1553,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("ItemQuantityChanged", "CountStacks", function(item, old, new)
                 print("Quantity now", new)
             end)
 ]]
-
 --[[
         KickedFromChar(id, isCurrentChar)
 
@@ -1653,12 +1571,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("KickedFromChar", "Notify", function(id, current)
                 print("Kicked from", id, current and "(current)" or "")
             end)
 ]]
-
 --[[
         HandleItemTransferRequest(client, itemID, x, y, inventoryID)
 
@@ -1675,12 +1592,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("HandleItemTransferRequest", "LogMove", function(ply, itemID, x, y)
                 print(ply, "moved item", itemID, "to", x, y)
             end)
 ]]
-
 --[[
         CharLoaded(id)
 
@@ -1693,12 +1609,11 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("CharLoaded", "Notify", function(id)
                 print("Character", id, "loaded")
             end)
 ]]
-
 --[[
         PreCharDelete(id)
 
@@ -1711,12 +1626,11 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("PreCharDelete", "Protect", function(id)
                 if id == 1 then return false end
             end)
 ]]
-
 --[[
         OnCharDelete(client, id)
 
@@ -1730,12 +1644,11 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("OnCharDelete", "Announce", function(ply, id)
                 print(ply, "deleted char", id)
             end)
 ]]
-
 --[[
         OnCharCreated(client, character, data)
 
@@ -1750,12 +1663,11 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("OnCharCreated", "Welcome", function(ply, char)
                 print("Created", char:getName())
             end)
 ]]
-
 --[[
         OnTransferred(client)
 
@@ -1768,12 +1680,11 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("OnTransferred", "Goodbye", function(ply)
                 print(ply, "left the server")
             end)
 ]]
-
 --[[
         CharPreSave(character)
 
@@ -1786,12 +1697,11 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("CharPreSave", "Record", function(char)
                 char:setData("lastSave", os.time())
             end)
 ]]
-
 --[[
         CanDisplayCharInfo(client, id)
 
@@ -1805,12 +1715,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("CanDisplayCharInfo", "AllowAll", function()
                 return true
             end)
 ]]
-
 --[[
         CharListLoaded(newCharList)
 
@@ -1823,12 +1732,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("CharListLoaded", "CountChars", function(list)
                 print("Loaded", #list, "characters")
             end)
 ]]
-
 --[[
         CharListUpdated(oldCharList, newCharList)
 
@@ -1842,12 +1750,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("CharListUpdated", "Diff", function(old, new)
                 print("Characters updated")
             end)
 ]]
-
 --[[
         getCharMaxStamina(character)
 
@@ -1860,12 +1767,11 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("getCharMaxStamina", "Double", function(char)
                 return 200
             end)
 ]]
-
 --[[
         PostLoadFonts(...)
 
@@ -1878,7 +1784,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("PostLoadFonts", "LogoFont", function()
                 surface.CreateFont("Logo", {size = 32, font = "Tahoma"})
             end)
@@ -1891,13 +1797,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Adds a custom thirst bar next to stamina.
             hook.Add("AddBarField", "AddThirstBar", function(section, id, label, min, max, value)
                 lia.bar.add(value, Color(0, 150, 255), nil, id)
             end)
 ]]
-
 --[[
         AddSection(...)
 
@@ -1906,7 +1811,7 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Add a custom "Settings" tab.
             hook.Add("AddSection", "AddSettingsSection", function(name, color, priority)
                 if name == "settings" then
@@ -1915,7 +1820,6 @@
                 end
             end)
 ]]
-
 --[[
         CanItemBeTransfered(...)
 
@@ -1924,13 +1828,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Prevent quest items from being dropped.
             hook.Add("CanItemBeTransfered", "BlockQuestItemDrop", function(item, newInv, oldInv)
                 if item.isQuest then return false, "Quest items cannot be moved" end
             end)
 ]]
-
 --[[
         CanOpenBagPanel(...)
 
@@ -1939,13 +1842,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Disallow bag use while fighting.
             hook.Add("CanOpenBagPanel", "BlockBagInCombat", function(item)
                 if LocalPlayer():getNetVar("inCombat") then return false end
             end)
 ]]
-
 --[[
         CanOutfitChangeModel(...)
 
@@ -1954,13 +1856,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Restrict model swaps for certain factions.
             hook.Add("CanOutfitChangeModel", "RestrictModelSwap", function(item)
                 if item.factionRestricted then return false end
             end)
 ]]
-
 --[[
         CanPerformVendorEdit(...)
 
@@ -1969,13 +1870,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Allow only admins to edit vendors.
             hook.Add("CanPerformVendorEdit", "AdminVendorEdit", function(client)
                 return client:IsAdmin()
             end)
 ]]
-
 --[[
         CanPickupMoney(...)
 
@@ -1984,13 +1884,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Prevent money pickup while handcuffed.
             hook.Add("CanPickupMoney", "BlockWhileCuffed", function(client)
                 if client:isHandcuffed() then return false end
             end)
 ]]
-
 --[[
         CanPlayerAccessDoor(...)
 
@@ -1999,13 +1898,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Only police can unlock jail cells.
             hook.Add("CanPlayerAccessDoor", "PoliceDoors", function(client, door, access)
                 if door.isJail and not client:isPolice() then return false end
             end)
 ]]
-
 --[[
         CanPlayerAccessVendor(...)
 
@@ -2014,13 +1912,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Block access unless the vendor allows the player's faction.
             hook.Add("CanPlayerAccessVendor", "CheckVendorFaction", function(client, vendor)
                 if not vendor:isFactionAllowed(client:Team()) then return false end
             end)
 ]]
-
 --[[
         CanPlayerHoldObject(...)
 
@@ -2029,13 +1926,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Prevent grabbing heavy physics objects.
             hook.Add("CanPlayerHoldObject", "WeightLimit", function(client, ent)
                 if ent:GetMass() > 50 then return false end
             end)
 ]]
-
 --[[
         CanPlayerInteractItem(...)
 
@@ -2044,7 +1940,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Block medkit use inside safe zones.
             hook.Add("CanPlayerInteractItem", "SafeZoneBlock", function(client, action, item)
                 if action == "use" and item.uniqueID == "medkit" and client:isInSafeZone() then
@@ -2052,7 +1948,6 @@
                 end
             end)
 ]]
-
 --[[
         CanPlayerKnock(...)
 
@@ -2061,13 +1956,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Prevent knocking while disguised.
             hook.Add("CanPlayerKnock", "BlockDisguisedKnock", function(client, door)
                 if client:getNetVar("disguised") then return false end
             end)
 ]]
-
 --[[
         CanPlayerSpawnStorage(...)
 
@@ -2076,13 +1970,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Limit players to one storage crate.
             hook.Add("CanPlayerSpawnStorage", "LimitStorage", function(client, ent, data)
                 if client.storageSpawned then return false end
             end)
 ]]
-
 --[[
         CanPlayerThrowPunch(...)
 
@@ -2091,13 +1984,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Prevent punching while restrained.
             hook.Add("CanPlayerThrowPunch", "NoPunchWhenTied", function(client)
                 if client:IsFlagSet(FL_KNOCKED) then return false end
             end)
 ]]
-
 --[[
         CanPlayerTradeWithVendor(...)
 
@@ -2106,13 +1998,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Block selling stolen goods.
             hook.Add("CanPlayerTradeWithVendor", "DisallowStolenItems", function(client, vendor, itemType, selling)
                 if lia.stolen[itemType] then return false, "Stolen items" end
             end)
 ]]
-
 --[[
         CanPlayerViewInventory(...)
 
@@ -2121,13 +2012,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Prevent opening inventory while in a cutscene.
             hook.Add("CanPlayerViewInventory", "BlockDuringCutscene", function()
                 return not LocalPlayer():getNetVar("cutscene")
             end)
 ]]
-
 --[[
         CanSaveData(...)
 
@@ -2136,13 +2026,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Disable saving during special events.
             hook.Add("CanSaveData", "NoEventSaves", function(entity, inv)
                 if lia.eventActive then return false end
             end)
 ]]
-
 --[[
         CharHasFlags(...)
 
@@ -2151,13 +2040,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Grant extra access if the character is VIP.
             hook.Add("CharHasFlags", "VIPExtraFlags", function(char, flags)
                 if char:isVIP() and flags == "v" then return true end
             end)
 ]]
-
 --[[
         CharPostSave(...)
 
@@ -2166,13 +2054,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Log every time characters save data.
             hook.Add("CharPostSave", "LogCharSaves", function(char)
                 print(char:getName() .. " saved")
             end)
 ]]
-
 --[[
         DatabaseConnected(...)
 
@@ -2181,13 +2068,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Prepare custom tables once the DB connects.
             hook.Add("DatabaseConnected", "CreateCustomTables", function()
                 lia.db.query("CREATE TABLE IF NOT EXISTS extras(id INT)")
             end)
 ]]
-
 --[[
         DrawItemDescription(...)
 
@@ -2196,13 +2082,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Display remaining uses next to item name.
             hook.Add("DrawItemDescription", "AddUseCount", function(item, x, y, color, alpha)
                 draw.SimpleText("Uses: " .. item:getData("uses", 0), "DermaDefault", x, y + 20, color)
             end)
 ]]
-
 --[[
         GetAttributeMax(...)
 
@@ -2211,13 +2096,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Increase stamina cap for VIP players.
             hook.Add("GetAttributeMax", "VIPStamina", function(client, attrib)
                 if attrib == "stm" and client:isVIP() then return 150 end
             end)
 ]]
-
 --[[
         GetDefaultInventorySize(...)
 
@@ -2226,13 +2110,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Expand default bags for premium players.
             hook.Add("GetDefaultInventorySize", "PremiumBags", function(client)
                 if client:isVIP() then return 6, 6 end
             end)
 ]]
-
 --[[
         GetMoneyModel(...)
 
@@ -2241,12 +2124,13 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Use a golden model for large sums.
             hook.Add("GetMoneyModel", "GoldMoneyModel", function(amount)
                 if amount > 5000 then return "models/props_lab/box01a.mdl" end
             end)
 ]]
+--[[
 
         GetPlayerPunchDamage(...)
 
@@ -2255,13 +2139,13 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Scale punch damage by strength attribute.
             hook.Add("GetPlayerPunchDamage", "StrengthPunch", function(client, dmg, context)
                 return dmg * (1 + client:getChar():getAttrib("str", 0) / 100)
             end)
 ]]
-
+--[[
         InterceptClickItemIcon(...)
 
         Description:
@@ -2269,13 +2153,13 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Shift-click to quickly move items.
             hook.Add("InterceptClickItemIcon", "ShiftQuickMove", function(panel, icon, key)
                 if key == KEY_LSHIFT then return true end
             end)
 ]]
-
+--[[
         ItemCombine(...)
 
         Description:
@@ -2283,7 +2167,7 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Combine two ammo boxes into one stack.
             hook.Add("ItemCombine", "StackAmmo", function(client, base, other)
                 if base.uniqueID == "ammo" and other.uniqueID == "ammo" then
@@ -2292,7 +2176,6 @@
                 end
             end)
 ]]
-
 --[[
         ItemDraggedOutOfInventory(...)
 
@@ -2301,13 +2184,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Drop the item into the world when removed.
             hook.Add("ItemDraggedOutOfInventory", "DropOnDragOut", function(invPanel, item)
                 item:spawn(invPanel:LocalToWorld(item:getPosition()))
             end)
 ]]
-
 --[[
         ItemFunctionCalled(...)
 
@@ -2316,7 +2198,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Log item function usage for analytics.
             hook.Add("ItemFunctionCalled", "TrackItemUse", function(item, action, client, entity, result)
                 lia.log.add(client, "item_use", item.uniqueID, action)
@@ -2330,13 +2212,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Notify the player about the transfer result.
             hook.Add("ItemTransfered", "NotifyTransfer", function(context)
                 context.client:notify("Item moved!")
             end)
 ]]
-
 --[[
         OnCharAttribBoosted(...)
 
@@ -2345,7 +2226,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Notify the player when they gain a temporary bonus.
             hook.Add("OnCharAttribBoosted", "BoostNotice", function(client, char, key, id, amount)
                 if amount ~= true then client:notify("Boosted " .. key .. " by " .. amount) end
@@ -2359,7 +2240,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Sync the new attribute to the HUD.
             hook.Add("OnCharAttribUpdated", "UpdateHUDAttrib", function(client, char, key, value)
                 if client == LocalPlayer() then MyHUD:SetStat(key, value) end
@@ -2373,7 +2254,7 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Apply a stun effect when knocked down.
             hook.Add("OnCharFallover", "ApplyStun", function(client, _, forced)
                 if forced then client:setAction("stunned", 3) end
@@ -2387,7 +2268,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Record the kick reason.
             hook.Add("OnCharKick", "LogKickReason", function(char, client)
                 print(char:getName(), "was kicked")
@@ -2401,7 +2282,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Announce permadeath in chat.
             hook.Add('OnCharPermakilled', 'AnnouncePK', function(char, time)
                 PrintMessage(HUD_PRINTTALK, char:getName() .. ' has met their end!')
@@ -2415,7 +2296,7 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Play a sound whenever someone becomes recognized.
             hook.Add('OnCharRecognized', 'PlayRecognizeSound', function(client)
                 surface.PlaySound('buttons/button17.wav')
@@ -2429,13 +2310,12 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Log vendor transactions to the console.
             hook.Add('OnCharTradeVendor', 'LogVendorTrade', function(client, vendor, item, selling)
                 print(client:Nick(), selling and 'sold' or 'bought', item and item:getName() or 'unknown')
             end)
 ]]
-
 --[[
         OnCreatePlayerRagdoll(...)
 
@@ -2444,7 +2324,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Tint death ragdolls red.
             hook.Add('OnCreatePlayerRagdoll', 'RedRagdoll', function(client, ent, dead)
                 if dead then ent:SetColor(Color(255,0,0)) end
@@ -2458,13 +2338,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Add a custom tab to storage windows.
             hook.Add('OnCreateStoragePanel', 'AddSortTab', function(localPanel, storagePanel, storage)
                 storagePanel:AddTab('Sort', function() return vgui.Create('liaStorageSort') end)
             end)
 ]]
-
 --[[
         OnItemAdded(...)
 
@@ -2473,13 +2352,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Update the HUD when we pick up ammo.
             hook.Add('OnItemAdded', 'UpdateAmmoHUD', function(ply, item)
                 if item.category == 'ammo' then MyHUD:AddAmmo(item) end
             end)
 ]]
-
 --[[
         OnItemCreated(...)
 
@@ -2488,7 +2366,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Set custom data on freshly made items.
             hook.Add('OnItemCreated', 'InitCustomData', function(item)
                 item:setData('born', os.time())
@@ -2502,7 +2380,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Play a sound when rare items appear.
             hook.Add('OnItemSpawned', 'RareSpawnSound', function(itemEnt)
                 if itemEnt.rare then itemEnt:EmitSound('items/ammo_pickup.wav') end
@@ -2516,7 +2394,7 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Automatically switch to the buy tab.
             hook.Add('OnOpenVendorMenu', 'DefaultBuyTab', function(panel, vendor)
                 panel:openTab('Buy')
@@ -2530,13 +2408,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Reward an achievement for looting money.
             hook.Add('OnPickupMoney', 'MoneyAchievement', function(client, ent)
                 client:addProgress('rich', ent:getAmount())
             end)
 ]]
-
 --[[
         OnPlayerEnterSequence(...)
 
@@ -2545,13 +2422,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Freeze the player during the sequence.
             hook.Add('OnPlayerEnterSequence', 'FreezeDuringSeq', function(client, seq, callback, time, noFreeze)
                 if not noFreeze then client:Freeze(true) end
             end)
 ]]
-
 --[[
         OnPlayerInteractItem(...)
 
@@ -2560,7 +2436,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Send analytics for item usage.
             hook.Add('OnPlayerInteractItem', 'Analytics', function(client, action, item, result, data)
                 lia.analytics.log(client, action, item.uniqueID)
@@ -2574,7 +2450,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Give class specific weapons.
             hook.Add('OnPlayerJoinClass', 'ClassWeapons', function(client, class, oldClass)
                 for _, wep in ipairs(class.weapons or {}) do client:Give(wep) end
@@ -2588,7 +2464,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Unfreeze the player after the sequence.
             hook.Add('OnPlayerLeaveSequence', 'UnfreezeAfterSeq', function(client)
                 client:Freeze(false)
@@ -2602,7 +2478,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Warn players when their ammo stack disappears.
             hook.Add('OnPlayerLostStackItem', 'WarnLostAmmo', function(item)
                 if item.category == 'ammo' then print('Ammo stack lost!') end
@@ -2616,7 +2492,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Prevent switching while in combat.
             hook.Add('OnPlayerSwitchClass', 'NoCombatSwap', function(client, class, oldClass)
                 if client:getNetVar('inCombat') then return false end
@@ -2630,7 +2506,7 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Validate transfers before sending to the server.
             hook.Add('OnRequestItemTransfer', 'ValidateTransfer', function(panel, itemID, invID, x, y)
                 return itemID ~= 0 -- block invalid ids
@@ -2644,7 +2520,7 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Verify entities when the map reloads.
             hook.Add('PersistenceLoad', 'CheckPersistent', function(name)
                 print('Loading persistence file', name)
@@ -2658,7 +2534,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Track how often players browse vendors.
             hook.Add('PlayerAccessVendor', 'VendorAnalytics', function(client, vendor)
                 lia.log.add(client, 'vendor_open', vendor:GetClass())
@@ -2672,7 +2548,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Update a stamina HUD element.
             hook.Add('PlayerStaminaGained', 'HUDUpdateGain', function(client)
                 MyHUD:UpdateStamina(client:getLocalVar('stamina'))
@@ -2686,7 +2562,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Flash the stamina bar when exhausted.
             hook.Add('PlayerStaminaLost', 'FlashStamina', function(client)
                 if client:getLocalVar('stamina', 0) <= 0 then MyHUD:Flash() end
@@ -2700,7 +2576,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Play a custom sound on punch.
             hook.Add('PlayerThrowPunch', 'PunchSound', function(client, trace)
                 client:EmitSound('npc/vort/claw_swing1.wav')
@@ -2714,7 +2590,7 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Draw a watermark over the inventory.
             hook.Add('PostDrawInventory', 'InventoryWatermark', function(panel)
                 draw.SimpleText('MY SERVER', 'DermaLarge', panel:GetWide()-100, 8, color_white)
@@ -2728,7 +2604,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Deny using keys on locked chests.
             hook.Add('PrePlayerInteractItem', 'BlockChestKeys', function(client, action, item)
                 if action == 'use' and item.uniqueID == 'key' and client.lockedChest then return false end
@@ -2742,7 +2618,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Only the bag owner may open it.
             hook.Add('SetupBagInventoryAccessRules', 'OwnerOnlyBags', function(inv)
                 inv:allowAccess('transfer', inv:getOwner())
@@ -2756,7 +2632,7 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Register additional tables.
             hook.Add('SetupDatabase', 'AddExtraTables', function()
                 lia.db.query('CREATE TABLE IF NOT EXISTS mytable(id INT)')
@@ -2770,7 +2646,7 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Prevent weapons from being stored in car trunks.
             hook.Add('StorageCanTransferItem', 'NoWeaponsInCars', function(client, storage, item)
                 if storage.isCar and item.category == 'weapons' then return false end
@@ -2784,7 +2660,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Drop items when a crate is destroyed.
             hook.Add('StorageEntityRemoved', 'DropContents', function(entity, inv)
                 inv:dropItems(entity:GetPos())
@@ -2798,7 +2674,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             -- Send a notification when storage is initialized.
             hook.Add('StorageInventorySet', 'NotifyStorage', function(entity, inv, isCar)
                 if isCar then print('Trunk inventory ready') end
@@ -2812,7 +2688,7 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Display storage name in the chat.
             hook.Add('StorageOpen', 'AnnounceStorage', function(entity, isCar)
                 chat.AddText('Opened storage:', entity:GetClass())
@@ -2826,7 +2702,7 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Log how many items were restored.
             hook.Add('StorageRestored', 'PrintRestore', function(storage, inv)
                 print('Storage restored with', #inv:getItems(), 'items')
@@ -2840,7 +2716,7 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Auto-fill a remembered password.
             hook.Add('StorageUnlockPrompt', 'AutoFill', function(entity)
                 return '1234' -- automatically send this string
@@ -2854,13 +2730,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- React to class access changes.
             hook.Add("VendorClassUpdated", "LogVendorClassChange", function(vendor, id, allowed)
                 print("Vendor class", id, "now", allowed and "allowed" or "blocked")
             end)
 ]]
-
 --[[
         VendorEdited(vendor, key)
 
@@ -2869,13 +2744,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Log which key changed.
             hook.Add("VendorEdited", "PrintVendorEdit", function(vendor, key)
                 print("Vendor", vendor:GetClass(), "edited key", key)
             end)
 ]]
-
 --[[
         VendorExited()
 
@@ -2884,13 +2758,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Notify the player when they leave a vendor.
             hook.Add("VendorExited", "PrintVendorExit", function()
                 print("Stopped interacting with vendor")
             end)
 ]]
-
 --[[
         VendorFactionUpdated(vendor, id, allowed)
 
@@ -2899,13 +2772,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Print updated faction permissions.
             hook.Add("VendorFactionUpdated", "LogVendorFactionUpdate", function(vendor, id, allowed)
                 print("Vendor faction", id, "now", allowed and "allowed" or "blocked")
             end)
 ]]
-
 --[[
         VendorItemMaxStockUpdated(vendor, itemType, value)
 
@@ -2914,13 +2786,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Log stock limit changes.
             hook.Add("VendorItemMaxStockUpdated", "LogVendorStockLimits", function(vendor, itemType, value)
                 print("Vendor stock limit for", itemType, "set to", value)
             end)
 ]]
-
 --[[
         VendorItemModeUpdated(vendor, itemType, value)
 
@@ -2929,13 +2800,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Print the new mode value.
             hook.Add("VendorItemModeUpdated", "PrintVendorMode", function(vendor, itemType, value)
                 print("Vendor mode for", itemType, "changed to", value)
             end)
 ]]
-
 --[[
         VendorItemPriceUpdated(vendor, itemType, value)
 
@@ -2944,13 +2814,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Print the new item price.
             hook.Add("VendorItemPriceUpdated", "LogVendorItemPrice", function(vendor, itemType, value)
                 print("Vendor price for", itemType, "is now", value)
             end)
 ]]
-
 --[[
         VendorItemStockUpdated(vendor, itemType, value)
 
@@ -2959,13 +2828,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Log remaining stock for the item.
             hook.Add("VendorItemStockUpdated", "LogVendorItemStock", function(vendor, itemType, value)
                 print("Vendor stock for", itemType, "is now", value)
             end)
 ]]
-
 --[[
         VendorMoneyUpdated(vendor, money, oldMoney)
 
@@ -2974,13 +2842,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Print the vendor's new money amount.
             hook.Add("VendorMoneyUpdated", "LogVendorMoney", function(vendor, money, oldMoney)
                 print("Vendor money changed from", oldMoney, "to", money)
             end)
 ]]
-
 --[[
         VendorOpened(vendor)
 
@@ -2989,13 +2856,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Print which vendor was opened.
             hook.Add("VendorOpened", "PrintVendorOpened", function(vendor)
                 print("Opened vendor", vendor:GetClass())
             end)
 ]]
-
 --[[
         VendorSynchronized(vendor)
 
@@ -3004,13 +2870,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Print a message when vendor data syncs.
             hook.Add("VendorSynchronized", "LogVendorSync", function(vendor)
                 print("Vendor", vendor:GetClass(), "synchronized")
             end)
 ]]
-
 --[[
         VendorTradeEvent(client, entity, uniqueID, isSellingToVendor)
 
@@ -3019,14 +2884,13 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             -- Log all vendor trades to the console.
             hook.Add("VendorTradeEvent", "LogVendorTrades", function(client, entity, uniqueID, isSellingToVendor)
                 local action = isSellingToVendor and "sold" or "bought"
                 print(client:Name() .. " " .. action .. " " .. uniqueID .. " with " .. entity:GetClass())
             end)
 ]]
-
 --[[
         getItemDropModel(itemTable, entity)
 
@@ -3038,7 +2902,7 @@
 
         Returns:
             string|nil – Alternate model path or nil for default.
-        Example:
+        Example Usage:
             -- Replace drop model for weapons.
             hook.Add("getItemDropModel", "CustomDropModelForWeapons", function(itemTable, entity)
                 if itemTable.category == "Weapon" then
@@ -3046,7 +2910,6 @@
                 end
             end)
 ]]
-
 --[[
         getPriceOverride(vendor, uniqueID, price, isSellingToVendor)
 
@@ -3058,7 +2921,7 @@
 
         Returns:
             integer|nil – New price or nil for default.
-        Example:
+        Example Usage:
             -- Increase price for rare items when buying from the vendor.
             hook.Add("getPriceOverride", "DynamicPricing", function(vendor, uniqueID, price, isSellingToVendor)
                 if uniqueID == "rare_item" then
@@ -3070,7 +2933,6 @@
                 end
             end)
 ]]
-
 --[[
         isCharFakeRecognized(character, id)
 
@@ -3082,7 +2944,7 @@
 
         Returns:
             boolean
-        Example:
+        Example Usage:
             -- Flag suspicious characters as fake.
             hook.Add("isCharFakeRecognized", "DetectFakeCharacters", function(character, id)
                 if character:isSuspicious() then
@@ -3090,7 +2952,6 @@
                 end
             end)
 ]]
-
 --[[
         isCharRecognized(character, id)
 
@@ -3102,13 +2963,12 @@
 
         Returns:
             boolean
-        Example:
+        Example Usage:
             -- Only recognize characters from the same faction.
             hook.Add("isCharRecognized", "ValidateCharacterRecognition", function(character, id)
                 return character:getFaction() == lia.char.loaded[id]:getFaction()
             end)
 ]]
-
 --[[
         isRecognizedChatType(chatType)
 
@@ -3120,14 +2980,13 @@
 
         Returns:
             boolean
-        Example:
+        Example Usage:
             -- Mark admin chat as recognized to reveal player names.
             hook.Add("isRecognizedChatType", "ValidateRecognitionChat", function(chatType)
                 local recognized = {"admin", "system", "recognition"}
                 return table.HasValue(recognized, chatType)
             end)
 ]]
-
 --[[
         isSuitableForTrunk(entity)
 
@@ -3139,13 +2998,12 @@
 
         Returns:
             boolean
-        Example:
+        Example Usage:
             -- Only vehicles are valid trunk containers.
             hook.Add("isSuitableForTrunk", "AllowOnlyCars", function(entity)
                 return entity:IsVehicle()
             end)
 ]]
-
 --[[
         CanPlayerEarnSalary(client, faction, class)
 
@@ -3162,7 +3020,7 @@
 
         Returns:
             bool
-        Example:
+        Example Usage:
             hook.Add("CanPlayerEarnSalary", "RestrictSalaryToActivePlayers", function(client, faction, class)
                 if not client:isActive() then
                     return false -- Inactive players do not earn salary
@@ -3170,7 +3028,6 @@
                 return true
             end)
 ]]
-
 --[[
         CanPlayerJoinClass(client, class, info)
 
@@ -3187,14 +3044,13 @@
 
         Returns:
             bool|nil: false to block, nil to allow.
-        Example:
+        Example Usage:
             hook.Add("CanPlayerJoinClass", "RestrictEliteClass", function(client, class, info)
                 if class == CLASS_ELITE and not client:hasPermission("join_elite") then
                     return false
                 end
             end)
 ]]
-
 --[[
         CanPlayerUseCommand(client, command)
 
@@ -3210,7 +3066,7 @@
 
         Returns:
             bool|nil: false to block, nil to allow.
-        Example:
+        Example Usage:
             hook.Add("CanPlayerUseCommand", "BlockSensitiveCommands", function(client, command)
                 local blockedCommands = {"shutdown", "restart"}
                 if table.HasValue(blockedCommands, command) and not client:isSuperAdmin() then
@@ -3218,7 +3074,6 @@
                 end
             end)
 ]]
-
 --[[
         CanPlayerUseDoor(client, door, access)
 
@@ -3235,7 +3090,7 @@
 
         Returns:
             bool: false to block, nil or true to allow.
-        Example:
+        Example Usage:
             hook.Add("CanPlayerUseDoor", "AllowOnlyOwners", function(client, door, access)
                 if access == DOOR_LOCK and door:getOwner() ~= client then
                     return false -- Only the owner can lock the door
@@ -3243,7 +3098,6 @@
                 return true
             end)
 ]]
-
 --[[
         CharCleanUp(character:)
 
@@ -3255,7 +3109,7 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("CharCleanUp", "RemoveTemporaryItems", function(character)
                 local inventory = character:getInv()
                 for _, item in ipairs(inventory:getItems()) do
@@ -3266,7 +3120,6 @@
                 end
             end)
 ]]
-
 --[[
         CharRestored()
 
@@ -3275,7 +3128,7 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("CharRestored", "AwardWelcomePackage", function(character)
                 local welcomePackage = {"welcome_pack", "starter_weapon", "basic_armor"}
                 for _, itemID in ipairs(welcomePackage) do
@@ -3284,7 +3137,6 @@
                 print("Welcome package awarded to:", character:getName())
             end)
 ]]
-
 --[[
         CreateDefaultInventory()
 
@@ -3293,7 +3145,7 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("CreateDefaultInventory", "InitializeStarterInventory", function(character)
                 local d = deferred.new()
             
@@ -3311,7 +3163,6 @@
                 return d
             end)
 ]]
-
 --[[
         CreateInventoryPanel(inventory, parent)
 
@@ -3324,7 +3175,7 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("CreateInventoryPanel", "CustomInventoryUI", function(inventory, parent)
                 local panel = vgui.Create("DPanel", parent)
                 panel:SetSize(400, 600)
@@ -3348,7 +3199,6 @@
                 return panel
             end)
 ]]
-
 --[[
         CreateSalaryTimer(client)
 
@@ -3360,7 +3210,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("CreateSalaryTimer", "SetupSalaryTimer", function(client)
                 timer.Create("SalaryTimer_" .. client:SteamID(), 60, 0, function()
                     if IsValid(client) and MODULE:CanPlayerEarnSalary(client, client:getFaction(), client:getClass()) then
@@ -3373,7 +3223,6 @@
                 print("Salary timer created for:", client:Name())
             end)
 ]]
-
 --[[
         DoModuleIncludes(path, module)
 
@@ -3386,14 +3235,13 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("DoModuleIncludes", "TrackModuleDependencies", function(path, module)
                 print("Including submodule from path:", path)
                 module.dependencies = module.dependencies or {}
                 table.insert(module.dependencies, "base_module")
             end)
 ]]
-
 --[[
         GetDefaultCharDesc(client, faction)
 
@@ -3410,14 +3258,13 @@
         Returns:
             string: The default description.
             bool: Whether to override.
-        Example:
+        Example Usage:
             hook.Add("GetDefaultCharDesc", "CitizenDefaultDesc", function(client, faction)
                 if faction == FACTION_CITIZEN then
                     return "A hardworking member of society.", true
                 end
             end)
 ]]
-
 --[[
         GetDefaultCharName(client, faction, data)
 
@@ -3435,14 +3282,13 @@
         Returns:
             string: The default name.
             bool: Whether to override the user-provided name.
-        Example:
+        Example Usage:
             hook.Add("GetDefaultCharName", "PoliceDefaultName", function(client, faction, data)
                 if faction == FACTION_POLICE then
                     return "Officer " .. data.lastName or "Smith", true
                 end
             end)
 ]]
-
 --[[
         GetSalaryAmount(client, faction, class)
 
@@ -3459,14 +3305,13 @@
 
         Returns:
             any: The salary amount
-        Example:
+        Example Usage:
             hook.Add("GetSalaryAmount", "CalculateDynamicSalary", function(client, faction, class)
                 local baseSalary = faction.baseSalary or 1000
                 local classBonus = class.salaryBonus or 0
                 return baseSalary + classBonus
             end)
 ]]
-
 --[[
         GetSalaryLimit(client, faction, class)
 
@@ -3483,7 +3328,7 @@
 
         Returns:
             any: The salary limit
-        Example:
+        Example Usage:
             hook.Add("GetSalaryLimit", "SetSalaryLimitsBasedOnRole", function(client, faction, class)
                 if faction.name == "Police" then
                     return 5000 -- Police have a higher salary limit
@@ -3492,7 +3337,6 @@
                 end
             end)
 ]]
-
 --[[
         InitializedConfig()
 
@@ -3501,7 +3345,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             function MODULE:InitializedConfig()
                 if lia.config.enableSpecialFeatures then
                     lia.features.enable()
@@ -3511,7 +3355,6 @@
                 end
             end
 ]]
-
 --[[
         InitializedItems()
 
@@ -3520,7 +3363,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("InitializedItems", "SetupSpecialItems", function()
                 local specialItem = lia.item.create({
                     uniqueID = "magic_ring",
@@ -3534,7 +3377,6 @@
                 print("Special items have been set up.")
             end)
 ]]
-
 --[[
         InitializedModules()
 
@@ -3543,13 +3385,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("InitializedModules", "FinalizeModuleSetup", function()
                 lia.modules.finalizeSetup()
                 print("All modules have been fully initialized.")
             end)
 ]]
-
 --[[
         InitializedOptions()
 
@@ -3558,12 +3399,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             function MODULE:InitializedOptions()
                LocalPlayer():ChatPrint("LOADED OPTIONS!")
             end
 ]]
-
 --[[
         InitializedSchema()
 
@@ -3572,13 +3412,12 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("InitializedSchema", "SchemaReadyNotification", function()
                 print("Schema has been successfully initialized.")
                 lia.notifications.broadcast("Welcome to the server! The schema is now active.")
             end)
 ]]
-
 --[[
         InterceptClickItemIcon(self, itemIcon, keyCode)
 
@@ -3592,7 +3431,7 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("InterceptClickItemIcon", "HandleItemDoubleClick", function(self, itemIcon, keyCode)
                 if keyCode == KEY_MOUSE2 then -- Right-click
                     local item = itemIcon:getItem()
@@ -3601,7 +3440,6 @@
                 end
             end)
 ]]
-
 --[[
         ItemCombine(client, item, targetItem)
 
@@ -3618,7 +3456,7 @@
 
         Returns:
             bool: true if combination is valid and consumed, false otherwise.
-        Example:
+        Example Usage:
             hook.Add("ItemCombine", "CombineHealthAndHerb", function(client, item, targetItem)
                 if item.uniqueID == "health_potion" and targetItem.uniqueID == "herb" then
                     local newItem = lia.item.create("super_health_potion")
@@ -3631,7 +3469,6 @@
                 return false
             end)
 ]]
-
 --[[
         KeyLock(owner, entity, time)
 
@@ -3645,14 +3482,13 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("KeyLock", "LogDoorLock", function(owner, entity, time)
                 entity:setLocked(true)
                 lia.log.write("DoorLock", owner:Name() .. " locked door ID: " .. entity:EntIndex() .. " for " .. time .. " seconds.")
                 print(owner:Name() .. " locked door ID:", entity:EntIndex(), "for", time, "seconds.")
             end)
 ]]
-
 --[[
         KeyUnlock(owner, entity, time)
 
@@ -3666,14 +3502,13 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("KeyUnlock", "LogDoorUnlock", function(owner, entity, time)
                 entity:setLocked(false)
                 lia.log.write("DoorUnlock", owner:Name() .. " unlocked door ID: " .. entity:EntIndex() .. " after " .. time .. " seconds.")
                 print(owner:Name() .. " unlocked door ID:", entity:EntIndex(), "after", time, "seconds.")
             end)
 ]]
-
 --[[
         LiliaTablesLoaded()
 
@@ -3682,14 +3517,13 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("LiliaTablesLoaded", "InitializeGameState", function()
                 lia.gameState = lia.gameState or {}
                 lia.gameState.activeEvents = {}
                 print("All essential Lilia tables have been loaded. Game state initialized.")
             end)
 ]]
-
 --[[
         OnItemRegistered(item)
 
@@ -3701,7 +3535,7 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("OnItemRegistered", "AddItemDurability", function(item)
                 if item.uniqueID == "sword_basic" then
                     item.durability = 100
@@ -3716,7 +3550,6 @@
                 end
             end)
 ]]
-
 --[[
         OnLoadTables()
 
@@ -3725,14 +3558,13 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("OnLoadTables", "SetupFactionDefaults", function()
                 lia.factions = lia.factions or {}
                 lia.factions.defaultPermissions = {canUseWeapons = true, canAccessBank = false}
                 print("Faction defaults have been set up.")
             end)
 ]]
-
 --[[
         OnMySQLOOConnected()
 
@@ -3741,14 +3573,13 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("OnMySQLOOConnected", "PrepareDatabaseStatements", function()
                 lia.db.prepare("insertPlayer", "INSERT INTO lia_players (_steamID, _steamName) VALUES (?, ?)", {MYSQLOO_STRING, MYSQLOO_STRING})
                 lia.db.prepare("updatePlayerStats", "UPDATE lia_players SET kills = ?, deaths = ? WHERE _steamID = ?", {MYSQLOO_NUMBER, MYSQLOO_NUMBER, MYSQLOO_STRING})
                 print("Prepared MySQLOO statements.")
             end)
 ]]
-
 --[[
         OnPlayerPurchaseDoor(client, entity, buying, CallOnDoorChild)
 
@@ -3763,7 +3594,7 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("OnPlayerPurchaseDoor", "HandleDoorPurchase", function(client, entity, buying, CallOnDoorChild)
                 if buying then
                     client:deductMoney(entity:getPrice())
@@ -3777,7 +3608,6 @@
                 CallOnDoorChild(entity)
             end)
 ]]
-
 --[[
         OnServerLog(client, logType, logString, category, color)
 
@@ -3793,7 +3623,7 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("OnServerLog", "AlertAdminsOnHighSeverity", function(client, logType, logString, category, color)
                 if category == "error" then
                 for _, admin in player.Iterator() do
@@ -3804,7 +3634,6 @@
                 end
             end)
 ]]
-
 --[[
         OnWipeTables()
 
@@ -3813,14 +3642,13 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("OnWipeTables", "ReinitializeDefaults", function()
                 lia.db.execute("INSERT INTO lia_factions (name, description) VALUES ('Citizen', 'Regular inhabitants.')")
                 lia.db.execute("INSERT INTO lia_classes (name, faction) VALUES ('Warrior', 'Citizen')")
                 print("Database tables wiped and defaults reinitialized.")
             end)
 ]]
-
 --[[
         PlayerMessageSend(speaker, chatType, message, anonymous)
 
@@ -3838,7 +3666,7 @@
 
         Returns:
             bool|nil|modifiedString: false to cancel, or return a modified string to change the message.
-        Example:
+        Example Usage:
             hook.Add("PlayerMessageSend", "FilterProfanity", function(speaker, chatType, message, anonymous)
                 local filteredMessage = string.gsub(message, "badword", "****")
                 if filteredMessage ~= message then
@@ -3846,7 +3674,6 @@
                 end
             end)
 ]]
-
 --[[
         PlayerModelChanged(client, model)
 
@@ -3859,14 +3686,13 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("PlayerModelChanged", "UpdatePlayerAppearance", function(client, model)
                 print(client:Name() .. " changed their model to " .. model)
                 -- Update related appearance settings
                 client:setBodygroup(1, 2) -- Example of setting a bodygroup based on the new model
             end)
 ]]
-
 --[[
         PlayerUseDoor(client, entity)
 
@@ -3882,7 +3708,7 @@
 
         Returns:
             bool|nil: false to disallow, true to allow, or nil to let other hooks decide.
-        Example:
+        Example Usage:
             hook.Add("PlayerUseDoor", "LogDoorUsage", function(client, entity)
                 print(client:Name() .. " is attempting to use door ID:", entity:EntIndex())
                 -- Allow or disallow based on custom conditions
@@ -3891,7 +3717,6 @@
                 end
             end)
 ]]
-
 --[[
         RegisterPreparedStatements()
 
@@ -3900,9 +3725,8 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
 ]]
-
 --[[
         ShouldBarDraw(barName)
 
@@ -3917,14 +3741,13 @@
 
         Returns:
             bool|nil: false to hide, nil to allow.
-        Example:
+        Example Usage:
             hook.Add("ShouldBarDraw", "HideArmorHUD", function(barName)
                 if barName == "armor" then
                     return false
                 end
             end)
 ]]
-
 --[[
         ShouldDisableThirdperson(client)
 
@@ -3939,14 +3762,13 @@
 
         Returns:
             bool (true if 3rd-person should be disabled)
-        Example:
+        Example Usage:
             hook.Add("ShouldDisableThirdperson", "DisableForInvisibles", function(client)
                 if client:isInvisible() then
                     return true -- Disable third-person view when invisible
                 end
             end)
 ]]
-
 --[[
         ShouldHideBars()
 
@@ -3958,14 +3780,13 @@
 
         Returns:
             bool|nil: true to hide, nil to allow rendering.
-        Example:
+        Example Usage:
             hook.Add("ShouldHideBars", "HideHUDInCinematic", function()
                 if gui.IsInCinematicMode() then
                     return true
                 end
             end)
 ]]
-
 --[[
         thirdPersonToggled(state)
 
@@ -3977,7 +3798,7 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("thirdPersonToggled", "NotifyThirdPersonChange", function(state)
                 if state then
                     chat.AddText(Color(0,255,0), "Third-person view enabled.")
@@ -3987,7 +3808,6 @@
                 print("Third-person mode toggled to:", state)
             end)
 ]]
-
 --[[
         AddTextField(sectionName, fieldName, labelText, valueFunc)
 
@@ -4003,7 +3823,7 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Change the money field label.
             hook.Add("AddTextField", "RenameMoneyField", function(section, name, label, value)
                 if name == "money" then
@@ -4011,7 +3831,6 @@
                 end
             end)
 ]]
-
 --[[
         F1OnAddTextField(sectionName, fieldName, labelText, valueFunc)
 
@@ -4026,13 +3845,12 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             -- Log newly added fields.
             hook.Add("F1OnAddTextField", "LogFields", function(section, name)
                 print("Added field", name, "to section", section)
             end)
 ]]
-
 --[[
         F1OnAddBarField(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
 
@@ -4049,12 +3867,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("F1OnAddBarField", "TrackBars", function(section, name)
                 print("Added bar", name)
             end)
 ]]
-
 --[[
         CreateInformationButtons(pages)
 
@@ -4066,12 +3883,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("CreateInformationButtons", "AddHelpPage", function(pages)
                 table.insert(pages, {name = "Help", drawFunc = function(parent) end})
             end)
 ]]
-
 --[[
         PopulateConfigurationButtons(pages)
 
@@ -4083,12 +3899,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("PopulateConfigurationButtons", "AddControlsPage", function(pages)
                 table.insert(pages, {name = "Controls", drawFunc = function(p) end})
             end)
 ]]
-
 --[[
         InitializedKeybinds()
 
@@ -4097,12 +3912,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("InitializedKeybinds", "NotifyKeybinds", function()
                 chat.AddText("Keybinds loaded")
             end)
 ]]
-
 --[[
         getOOCDelay(client)
 
@@ -4116,12 +3930,11 @@
             Server
         Returns:
             number|nil – Custom cooldown in seconds.
-        Example:
+        Example Usage:
             hook.Add("getOOCDelay", "VIPOOC", function(ply)
                 if ply:IsVIP() then return 5 end
             end)
 ]]
-
 --[[
         OnChatReceived(client, chatType, text, anonymous)
 
@@ -4139,12 +3952,11 @@
             Client
         Returns:
             string|nil – Replacement text.
-        Example:
+        Example Usage:
             hook.Add("OnChatReceived", "CensorChat", function(ply, type, msg)
                 return msg:gsub("badword", "****")
             end)
 ]]
-
 --[[
         getAdjustedPartData(wearer, id)
 
@@ -4159,12 +3971,11 @@
             Client
         Returns:
             table|nil – Adjusted part data.
-        Example:
+        Example Usage:
             hook.Add("getAdjustedPartData", "DebugParts", function(ply, partID)
                 print("Requesting part", partID)
             end)
 ]]
-
 --[[
         AdjustPACPartData(wearer, id, data)
 
@@ -4180,13 +3991,12 @@
             Client
         Returns:
             table|nil – Modified data table.
-        Example:
+        Example Usage:
             hook.Add("AdjustPACPartData", "ColorParts", function(ply, partID, d)
                 d.Color = Vector(1,0,0)
                 return d
             end)
 ]]
-
 --[[
         attachPart(client, id)
 
@@ -4199,12 +4009,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("attachPart", "AnnouncePart", function(ply, partID)
                 print(ply, "received part", partID)
             end)
 ]]
-
 --[[
         removePart(client, id)
 
@@ -4217,12 +4026,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("removePart", "LogPartRemoval", function(ply, partID)
                 print(partID, "removed from", ply)
             end)
 ]]
-
 --[[
         OnPAC3PartTransfered(part)
 
@@ -4234,12 +4042,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("OnPAC3PartTransfered", "TrackTransfers", function(p)
                 print("Part transferred", p)
             end)
 ]]
-
 --[[
         DrawPlayerRagdoll(entity)
 
@@ -4251,12 +4058,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("DrawPlayerRagdoll", "TintRagdoll", function(ent)
                 render.SetColorModulation(1,0,0)
             end)
 ]]
-
 --[[
         setupPACDataFromItems()
 
@@ -4265,12 +4071,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("setupPACDataFromItems", "InitPAC", function()
                 print("Equipped PAC data loaded")
             end)
 ]]
-
 --[[
         TryViewModel(entity)
 
@@ -4284,12 +4089,11 @@
             Client
         Returns:
             Entity – Replacement entity.
-        Example:
+        Example Usage:
             hook.Add("TryViewModel", "UsePlayerViewModel", function(ent)
                 return ent == LocalPlayer():GetViewModel() and LocalPlayer() or ent
             end)
 ]]
-
 --[[
         WeaponCycleSound()
 
@@ -4301,12 +4105,11 @@
         Returns:
             string|nil – Sound path.
             number|nil – Playback pitch.
-        Example:
+        Example Usage:
             hook.Add("WeaponCycleSound", "SilentCycle", function()
                 return "buttons/button15.wav", 100
             end)
 ]]
-
 --[[
         WeaponSelectSound()
 
@@ -4318,12 +4121,11 @@
         Returns:
             string|nil – Sound path.
             number|nil – Playback pitch.
-        Example:
+        Example Usage:
             hook.Add("WeaponSelectSound", "CustomSelectSound", function()
                 return "buttons/button24.wav", 90
             end)
 ]]
-
 --[[
         ShouldDrawWepSelect(client)
 
@@ -4337,12 +4139,11 @@
             Client
         Returns:
             boolean
-        Example:
+        Example Usage:
             hook.Add("ShouldDrawWepSelect", "HideInVehicles", function(ply)
                 return not ply:InVehicle()
             end)
 ]]
-
 --[[
         CanPlayerChooseWeapon(weapon)
 
@@ -4356,14 +4157,13 @@
             Client
         Returns:
             boolean|nil – false to block selection.
-        Example:
+        Example Usage:
             hook.Add("CanPlayerChooseWeapon", "BlockPhysgun", function(wep)
                 if IsValid(wep) and wep:GetClass() == "weapon_physgun" then
                     return false
                 end
             end)
 ]]
-
 --[[
         OverrideSpawnTime(client, baseTime)
 
@@ -4378,12 +4178,11 @@
             Client
         Returns:
             number|nil – New respawn time.
-        Example:
+        Example Usage:
             hook.Add("OverrideSpawnTime", "ShortRespawns", function(ply, time)
                 if ply:IsAdmin() then return 2 end
             end)
 ]]
-
 --[[
         ShouldRespawnScreenAppear()
 
@@ -4394,12 +4193,11 @@
             Client
         Returns:
             boolean|nil – false to hide.
-        Example:
+        Example Usage:
             hook.Add("ShouldRespawnScreenAppear", "NoRespawnHUD", function()
                 return false
             end)
 ]]
-
 --[[
         VoiceToggled(enabled)
 
@@ -4411,12 +4209,11 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("VoiceToggled", "AnnounceVoice", function(state)
                 print("Voice chat set to", state)
             end)
 ]]
-
 --[[
         RefreshFonts()
 
@@ -4425,12 +4222,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("RefreshFonts", "ReloadFonts", function()
                 print("Fonts refreshed")
             end)
 ]]
-
 --[[
         AdjustCreationData(client, data, newData, originalData)
 
@@ -4445,12 +4241,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("AdjustCreationData", "EnforceName", function(ply, data, newData)
                 if data.name == "" then newData.name = "Unnamed" end
             end)
 ]]
-
 --[[
         CanCharBeTransfered(character, newFaction, oldFaction)
 
@@ -4466,12 +4261,11 @@
             Server
         Returns:
             bool|nil – false to block.
-        Example:
+        Example Usage:
             hook.Add("CanCharBeTransfered", "BlockRestrictedFactions", function(char, faction)
                 if faction.isRestricted then return false end
             end)
 ]]
-
 --[[
         CanPlayerUseChar(client, character)
 
@@ -4486,12 +4280,11 @@
             Server
         Returns:
             bool|nil – false to deny.
-        Example:
+        Example Usage:
             hook.Add("CanPlayerUseChar", "CheckBans", function(ply, char)
                 if char:isBanned() then return false, "Character banned" end
             end)
 ]]
-
 --[[
         CanPlayerSwitchChar(client, currentChar, newChar)
 
@@ -4507,12 +4300,11 @@
             Server
         Returns:
             bool|nil – false to block the switch.
-        Example:
+        Example Usage:
             hook.Add("CanPlayerSwitchChar", "NoSwitchInCombat", function(ply)
                 if ply:isInCombat() then return false end
             end)
 ]]
-
 --[[
         CanPlayerLock(client, door)
 
@@ -4527,12 +4319,11 @@
             Server
         Returns:
             bool|nil – false to disallow.
-        Example:
+        Example Usage:
             hook.Add("CanPlayerLock", "AdminsAlwaysLock", function(ply)
                 if ply:IsAdmin() then return true end
             end)
 ]]
-
 --[[
         CanPlayerUnlock(client, door)
 
@@ -4547,12 +4338,11 @@
             Server
         Returns:
             bool|nil – false to disallow.
-        Example:
+        Example Usage:
             hook.Add("CanPlayerUnlock", "AdminsAlwaysUnlock", function(ply)
                 if ply:IsAdmin() then return true end
             end)
 ]]
-
 --[[
         CanPlayerModifyConfig(client, key)
 
@@ -4567,12 +4357,11 @@
             Server
         Returns:
             bool|nil – false to deny modification.
-        Example:
+        Example Usage:
             hook.Add("CanPlayerModifyConfig", "RestrictConfig", function(ply, k)
                 return ply:IsSuperAdmin()
             end)
 ]]
-
 --[[
         CharDeleted(client, character)
 
@@ -4585,12 +4374,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("CharDeleted", "LogDeletion", function(ply, char)
                 print(ply:Name(), "deleted character", char:getName())
             end)
 ]]
-
 --[[
         CheckFactionLimitReached(faction, character, client)
 
@@ -4606,12 +4394,11 @@
             Shared
         Returns:
             boolean
-        Example:
+        Example Usage:
             hook.Add("CheckFactionLimitReached", "IgnoreVIP", function(faction, char, ply)
                 if ply:IsVIP() then return false end
             end)
 ]]
-
 --[[
         F1OnAddSection(sectionName, color, priority, location)
 
@@ -4626,12 +4413,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("F1OnAddSection", "PrintSection", function(name)
                 print("Added section", name)
             end)
 ]]
-
 --[[
         GetWeaponName(weapon)
 
@@ -4645,12 +4431,11 @@
             Client
         Returns:
             string|nil – Replacement name.
-        Example:
+        Example Usage:
             hook.Add("GetWeaponName", "UppercaseName", function(wep)
                 return wep:GetClass():upper()
             end)
 ]]
-
 --[[
         OnCharGetup(client, entity)
 
@@ -4663,12 +4448,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("OnCharGetup", "NotifyGetup", function(ply)
                 ply:ChatPrint("You stood up")
             end)
 ]]
-
 --[[
         OnLocalizationLoaded()
 
@@ -4677,12 +4461,11 @@
 
         Realm:
             Shared
-        Example:
+        Example Usage:
             hook.Add("OnLocalizationLoaded", "PrintLang", function()
                 print("Localization ready")
             end)
 ]]
-
 --[[
         OnPlayerObserve(client, state)
 
@@ -4695,12 +4478,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("OnPlayerObserve", "AnnounceObserve", function(ply, s)
                 print(ply, s and "entered" or "left", "observe mode")
             end)
 ]]
-
 --[[
         PlayerLoadedChar(client, character, previousChar)
 
@@ -4714,12 +4496,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("PlayerLoadedChar", "WelcomeBack", function(ply, char)
                 ply:ChatPrint("Welcome, " .. char:getName())
             end)
 ]]
-
 --[[
         PrePlayerLoadedChar(client, newChar, oldChar)
 
@@ -4733,12 +4514,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("PrePlayerLoadedChar", "SaveStuff", function(ply, new, old)
                 print("Switching characters")
             end)
 ]]
-
 --[[
         PostPlayerLoadedChar(client, character, previousChar)
 
@@ -4752,12 +4532,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("PostPlayerLoadedChar", "GiveItems", function(ply, char)
                 -- Give starter items here
             end)
 ]]
-
 --[[
         PlayerSay(client, text)
 
@@ -4770,12 +4549,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("PlayerSay", "LogChat", function(ply, msg)
                 print(ply:Name() .. ": " .. msg)
             end)
 ]]
-
 --[[
         PopulateAdminStick(menu, target)
 
@@ -4788,12 +4566,11 @@
 
         Realm:
             Client
-        Example:
+        Example Usage:
             hook.Add("PopulateAdminStick", "AddCustomOption", function(menu, ent)
                 menu:AddOption("Wave", function() RunConsoleCommand("act", "wave") end)
             end)
 ]]
-
 --[[
         TicketSystemClaim(admin, requester)
 
@@ -4806,12 +4583,11 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("TicketSystemClaim", "NotifyClaim", function(staff, ply)
                 staff:ChatPrint("Claimed ticket from " .. ply:Name())
             end)
 ]]
-
 --[[
         liaOptionReceived(client, key, value)
 
@@ -4825,7 +4601,7 @@
 
         Realm:
             Server
-        Example:
+        Example Usage:
             hook.Add("liaOptionReceived", "PrintOptionChange", function(_, k, v)
                 print("Option", k, "set to", v)
             end)

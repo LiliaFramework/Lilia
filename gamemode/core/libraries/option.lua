@@ -20,7 +20,7 @@ lia.option.stored = lia.option.stored or {}
     Realm:
         Shared
 
-    Example:
+    Example Usage:
         lia.option.add("showHints", "Show Hints", "Display hints", true)
 ]]
 function lia.option.add(key, name, desc, default, callback, data)
@@ -66,7 +66,7 @@ end
     Realm:
         Client
 
-    Example:
+    Example Usage:
         lia.option.set("showHints", false)
 ]]
 function lia.option.set(key, value)
@@ -95,7 +95,7 @@ end
     Realm:
         Client
 
-    Example:
+    Example Usage:
         local show = lia.option.get("showHints", true)
 ]]
 function lia.option.get(key, default)
@@ -122,7 +122,7 @@ end
     Realm:
         Client
 
-    Example:
+    Example Usage:
         lia.option.save()
 ]]
 function lia.option.save()
@@ -155,7 +155,7 @@ end
     Realm:
         Client
 
-    Example:
+    Example Usage:
         lia.option.load()
 ]]
 function lia.option.load()

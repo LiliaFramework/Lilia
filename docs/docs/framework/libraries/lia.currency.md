@@ -22,7 +22,7 @@ Sets the symbol, singular, and plural forms of the currency.
 - `singular` (`string`): The singular form of the currency name.
 - `plural` (`string`): The plural form of the currency name.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.currency.set("$", "dollar", "dollars")
 ```
@@ -44,7 +44,7 @@ Retrieves the formatted currency string based on the amount.
 **Returns:**  
 `string` - The formatted currency string.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local formattedCurrency = lia.currency.get(5)
 print(formattedCurrency) -- Outputs: "$5 dollars"
@@ -69,7 +69,7 @@ Spawns a currency entity at the specified position with the given amount and ang
 **Returns:**  
 `Entity|nil` - The spawned currency entity, or `nil` if spawning failed.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local pos = Vector(100, 200, 300)
 local moneyEntity = lia.currency.spawn(pos, 50)
@@ -93,7 +93,7 @@ The symbol representing the currency (e.g., `$`).
 **Type:**  
 `string`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 print(lia.currency.symbol) -- Outputs: "$"
 ```
@@ -111,7 +111,7 @@ The singular form of the currency name (e.g., "dollar").
 **Type:**  
 `string`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 print(lia.currency.singular) -- Outputs: "dollar"
 ```
@@ -129,7 +129,7 @@ The plural form of the currency name (e.g., "dollars").
 **Type:**  
 `string`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 print(lia.currency.plural) -- Outputs: "dollars"
 ```

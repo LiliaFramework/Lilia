@@ -26,7 +26,7 @@ Populates a file in the `data/lilia` folder with serialized data.
 **Returns:**  
 `string` - The path where the file is saved.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.data.set("playerStats", {kills = 10, deaths = 2}, false, false)
 ```
@@ -50,7 +50,7 @@ Deletes the contents of a saved file in the `data/lilia` folder.
 **Returns:**  
 `boolean` - Whether the deletion succeeded.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local success = lia.data.delete("playerStats")
 if success then
@@ -81,7 +81,7 @@ Retrieves the contents of a saved file in the `data/lilia` folder.
 **Returns:**  
 `any` - Value associated with the key, or the default value if it doesn't exist.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local playerStats = lia.data.get("playerStats", {kills = 0, deaths = 0})
 print("Kills:", playerStats.kills)
@@ -99,7 +99,7 @@ Initializes currency settings based on the configuration after a short delay.
 
 This function is intended for internal use and should not be called directly.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 timer.Simple(1, function()
     lia.currency.set(lia.config.CurrencySymbol, lia.config.CurrencySingularName, lia.config.CurrencyPluralName)

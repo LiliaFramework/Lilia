@@ -26,7 +26,7 @@ Converts units to inches.
 **Returns:**  
 `number` - The equivalent measurement in inches.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local inches = lia.math.UnitsToInches(10)
 print("10 units is equal to", inches, "inches.")
@@ -51,7 +51,7 @@ Converts units to centimeters.
 **Returns:**  
 `number` - The equivalent measurement in centimeters.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local centimeters = lia.math.UnitsToCentimeters(10)
 print("10 units is equal to", centimeters, "centimeters.")
@@ -76,7 +76,7 @@ Converts units to meters.
 **Returns:**  
 `number` - The equivalent measurement in meters.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local meters = lia.math.UnitsToMeters(10)
 print("10 units is equal to", meters, "meters.")
@@ -101,7 +101,7 @@ Determines success based on a given probability.
 **Returns:**  
 `bool` - `True` if the chance is successful, `false` otherwise.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 if lia.math.chance(25) then
     print("Success!")
@@ -131,7 +131,7 @@ Applies a bias to a value based on a specified amount.
 **Returns:**  
 `number` - The biased value.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local biasedValue = lia.math.Bias(2, 0.5)
 print("Biased Value:", biasedValue)
@@ -158,7 +158,7 @@ Applies a gain to a value based on a specified amount.
 **Returns:**  
 `number` - The value with applied gain.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local gainedValue = lia.math.Gain(0.3, 0.7)
 print("Gained Value:", gainedValue)
@@ -188,7 +188,7 @@ Approaches a value towards a target value at a specified speed.
 **Returns:**  
 `number` - The approached value.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local newValue = lia.math.ApproachSpeed(10, 20, 2)
 print("Approached Value:", newValue)
@@ -218,7 +218,7 @@ Approaches a vector towards a target vector at a specified speed.
 **Returns:**  
 `Vector` - The approached vector.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local newVector = lia.math.ApproachVectorSpeed(Vector(0, 0, 0), Vector(10, 10, 10), 5)
 print("Approached Vector:", newVector)
@@ -248,7 +248,7 @@ Approaches an angle towards a target angle at a specified speed.
 **Returns:**  
 `Angle` - The approached angle.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local newAngle = lia.math.ApproachAngleSpeed(Angle(0, 0, 0), Angle(90, 90, 90), 10)
 print("Approached Angle:", newAngle)
@@ -278,7 +278,7 @@ Checks if a value is within a specified range.
 **Returns:**  
 `bool` - `True` if the value is within the range, `false` otherwise.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 if lia.math.InRange(5, 1, 10) then
     print("Value is within range.")
@@ -311,7 +311,7 @@ Clamps an angle to a specified range.
 **Returns:**  
 `Angle` - The clamped angle.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local clampedAngle = lia.math.ClampAngle(Angle(100, 200, 300), Angle(0, 0, 0), Angle(90, 180, 270))
 print("Clamped Angle:", clampedAngle)
@@ -347,7 +347,7 @@ Remaps a value from one range to another and clamps it.
 **Returns:**  
 `number` - The remapped and clamped value.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local remappedValue = lia.math.ClampedRemap(50, 0, 100, 0, 1)
 print("Remapped Value:", remappedValue)

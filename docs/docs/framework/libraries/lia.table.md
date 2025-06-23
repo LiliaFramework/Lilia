@@ -26,7 +26,7 @@ Sums all numerical values in a table. This function recursively traverses nested
 **Returns:**  
 `number` - The sum of all numerical values.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local numbers = {1, 2, {3, 4}, 5}
 local total = lia.table.Sum(numbers)
@@ -52,7 +52,7 @@ Creates a lookup table from a list of values. This function transforms a list in
 **Returns:**  
 `table` - A lookup table where the keys are the values from the input list.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local fruits = {"apple", "banana", "cherry"}
 local fruitLookup = lia.table.Lookupify(fruits)
@@ -78,7 +78,7 @@ Converts a table into an associative table where the original values become keys
 **Returns:**  
 `table` - The associative table.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local colors = {"red", "green", "blue"}
 local colorSet = lia.table.MakeAssociative(colors)
@@ -104,7 +104,7 @@ Returns a table of unique values from the input table. This function removes dup
 **Returns:**  
 `table` - The table of unique values.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local numbers = {1, 2, 2, 3, 4, 4, 5}
 local uniqueNumbers = lia.table.Unique(numbers)
@@ -137,7 +137,7 @@ Creates a deep copy of a table. This function recursively copies all nested tabl
 **Returns:**  
 `table` - A deep copy of the table.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local original = {
     name = "Alice",
@@ -171,7 +171,7 @@ Filters a table in-place based on a callback function. This function modifies th
 **Returns:**  
 `table` - The modified (filtered) table.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local numbers = {1, 2, 3, 4, 5, 6}
 -- Filter out even numbers
@@ -208,7 +208,7 @@ Creates a copy of the table containing only elements that pass the callback func
 **Returns:**  
 `table` - A new table containing the filtered elements.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local numbers = {1, 2, 3, 4, 5, 6}
 -- Create a new table with only even numbers
@@ -242,7 +242,7 @@ Returns a table of unique values from the input table by converting it into an a
 **Returns:**  
 `table` - The table of unique values.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local items = {"sword", "shield", "sword", "potion", "shield"}
 local uniqueItems = lia.table.Unique(items)

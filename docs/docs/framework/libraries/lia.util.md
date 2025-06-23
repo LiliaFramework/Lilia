@@ -27,7 +27,7 @@ Finds all players within a box defined by minimum and maximum coordinates. This 
 **Returns:**  
 `table` - A list of players within the specified box.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local mins = Vector(-100, -100, 0)
 local maxs = Vector(100, 100, 200)
@@ -59,7 +59,7 @@ Finds all players within a sphere defined by an origin point and radius. This fu
 **Returns:**  
 `table` - A list of players within the specified sphere.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local origin = Vector(0, 0, 0)
 local radius = 500
@@ -91,7 +91,7 @@ Attempts to find a player by matching their name or Steam ID. This function supp
 **Returns:**  
 `Player|nil` - The player that matches the given search query, or `nil` if no match is found.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Find a player by exact name
 local ply = lia.util.findPlayer("Alice")
@@ -124,7 +124,7 @@ Finds all items owned by a specified player. This function is useful for invento
 **Returns:**  
 `table` - A table containing all items owned by the given player.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local playerItems = lia.util.findPlayerItems(LocalPlayer())
 
@@ -154,7 +154,7 @@ Finds items of a specific class owned by a specified player. This function allow
 **Returns:**  
 `table` - A table containing all items of the specified class owned by the given player.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local swords = lia.util.findPlayerItemsByClass(player, "weapon_sword")
 
@@ -184,7 +184,7 @@ Finds all entities of a specific class owned by a specified player. If no class 
 **Returns:**  
 `table` - A table containing all entities of the specified class (or all entities if no class is specified) owned by the given player.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Find all entities owned by the player
 local allEntities = lia.util.findPlayerEntities(player)
@@ -222,7 +222,7 @@ Checks if two strings are equivalent using a fuzzy matching approach. Both strin
 **Returns:**  
 `bool` - Whether or not the strings are equivalent based on fuzzy matching.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local match1 = lia.util.stringMatches("HelloWorld", "helloworld") -- true
 local match2 = lia.util.stringMatches("HelloWorld", "world")      -- true
@@ -244,7 +244,7 @@ Retrieves all online players with administrative permissions. This function is u
 **Returns:**  
 `table` - A table containing all online players with administrative permissions.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local admins = lia.util.getAdmins()
 
@@ -271,7 +271,7 @@ Finds a player by their SteamID64. This function is particularly useful for iden
 **Returns:**  
 `Player|nil` - The player object if found, `nil` otherwise.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local steamID64 = "76561198000000000"
 local ply = lia.util.findPlayerBySteamID64(steamID64)
@@ -301,7 +301,7 @@ Finds a player by their SteamID. This function assists in locating players using
 **Returns:**  
 `Player|nil` - The player object if found, `nil` otherwise.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local steamID = "STEAM_1:1:12345678"
 local ply = lia.util.findPlayerBySteamID(steamID)
@@ -340,7 +340,7 @@ Checks if a position can accommodate a player's collision hull. This function is
 **Returns:**  
 `bool` - `true` if the position can fit the collision hull, `false` otherwise.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local position = Vector(0, 0, 0)
 local canFit = lia.util.canFit(position)
@@ -373,7 +373,7 @@ Retrieves all players within a certain radius from a given position. This functi
 **Returns:**  
 `table` - A table containing players within the specified radius.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local center = Vector(100, 100, 0)
 local radius = 300
@@ -417,7 +417,7 @@ Finds empty spaces around an entity where another entity can be placed. This ser
 **Returns:**  
 `table` - A table containing positions of empty spaces.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local entity = ents.FindByClass("prop_physics")[1]
 local emptySpaces = lia.util.findEmptySpace(entity)
@@ -448,7 +448,7 @@ Returns a string with named arguments in the format string replaced by the provi
 **Returns:**  
 `string` - The formatted string with placeholders replaced by the provided arguments.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Using a table for named arguments
 local formatted1 = lia.util.formatStringNamed("Hello, {name}! Welcome to {place}.", {name = "Bobby", place = "Lua Land"})
@@ -482,7 +482,7 @@ Returns a cached copy of the given material or creates and caches one if it does
 **Returns:**  
 `Material|nil` - The cached material or `nil` if the material doesn't exist in the filesystem.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local mat = lia.util.getMaterial("vgui/gradient-u", "noclamp smooth")
 surface.SetMaterial(mat)
@@ -520,7 +520,7 @@ Sends a request to the client to display a table UI. This function is useful for
 - `characterID` (`number`, optional):  
   The character ID associated with the data.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local columns = {
     {name = "Item", field = "itemName", width = 200},
@@ -570,7 +570,7 @@ Finds empty spaces around an entity where another entity can be placed. This fun
 **Returns:**  
 `table` - A table containing positions of empty spaces.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local entity = ents.FindByClass("prop_physics")[1]
 local emptyPositions = lia.util.findEmptySpace(entity)
@@ -601,7 +601,7 @@ Blurs the content underneath the given panel. If the player has blurring disable
 - `passes` (`number`, optional):  
   Quality of the blur. Defaults to `0.2`.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 function PANEL:Paint(width, height)
     lia.util.drawBlur(self)
@@ -638,7 +638,7 @@ Draws a blurred rectangle at the specified position and bounds. This function is
 - `passes` (`number`, optional):  
   Quality of the blur. Defaults to `0.2`.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 hook.Add("HUDPaint", "MyHUDPaint", function()
     lia.util.drawBlurAt(100, 100, 200, 150)
@@ -684,7 +684,7 @@ Draws text with a shadow effect, enhancing readability against various backgroun
 - `yalign` (`number`):  
   Vertical alignment of the text (e.g., `TEXT_ALIGN_TOP`, `TEXT_ALIGN_CENTER`, `TEXT_ALIGN_BOTTOM`).
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.util.ShadowText("Hello, World!", "Default", 200, 200, Color(255, 255, 255), Color(0, 0, 0, 150), 2, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 ```
@@ -728,7 +728,7 @@ Draws text with an outline, making it stand out against complex backgrounds. Thi
 **Returns:**  
 `number` - The result of the `draw.DrawText` function.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.util.DrawTextOutlined("Outlined Text", "Default", 300, 300, Color(255, 255, 255), TEXT_ALIGN_CENTER, 2, Color(0, 0, 0))
 ```
@@ -769,7 +769,7 @@ Draws a tip box with text, providing contextual information or guidance to playe
 - `outlineCol` (`Color`):  
   The color of the outline.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.util.DrawTip(50, 50, 200, 100, "This is a helpful tip!", "Default", Color(255, 255, 255), Color(0, 0, 0))
 ```
@@ -813,7 +813,7 @@ Draws text with a shadow, enhancing its visibility against varying backgrounds. 
 **Returns:**  
 `number` - The result of the `draw.TextShadow` function.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.util.drawText("Shadowed Text", 400, 400, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, "Default", 150)
 ```
@@ -849,7 +849,7 @@ Draws a textured rectangle with a specified material and color. This function si
   Height of the rectangle.
 
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.util.drawTexture("vgui/gradient-u", Color(255, 255, 255, 200), 500, 500, 100, 50)
 ```
@@ -896,7 +896,7 @@ Calls a named skin function with optional arguments on a panel. This function al
 **Returns:**  
 `any` - The result of the skin function call.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local result = lia.util.skinFunc("Paint", myPanel, 255, 255, 255, 255)
 ```
@@ -927,7 +927,7 @@ Wraps text so it does not exceed a certain width. This function intelligently br
 
 - `number` - The maximum width of the wrapped text.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local wrappedLines, maxWidth = lia.util.wrapText("This is a very long piece of text that needs to be wrapped.", 300)
 
@@ -962,7 +962,7 @@ Blurs the content underneath the given panel. This function falls back to a simp
 - `passes` (`number`, optional):  
   Quality of the blur. Recommended to keep as default (`0.2`).
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 function PANEL:Paint(width, height)
     lia.util.drawBlur(self)
@@ -999,7 +999,7 @@ Draws a blurred rectangle with the specified position and bounds. This function 
 - `passes` (`number`, optional):  
   Quality of the blur. Recommended to keep as default (`0.2`).
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 hook.Add("HUDPaint", "MyHUDPaint", function()
     lia.util.drawBlurAt(100, 100, 300, 200)
@@ -1039,7 +1039,7 @@ Displays a query notification panel with customizable options. This function is 
 **Returns:**  
 `Panel` - The created notification panel.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.util.notifQuery("Do you want to accept the quest?", "Yes", "No", false, 7, function(option, panel)
     if option == 1 then
@@ -1071,7 +1071,7 @@ Returns a string with named arguments in the format string replaced by the provi
 **Returns:**  
 `string` - The formatted string with placeholders replaced by the provided arguments.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Using a table for named arguments
 local formatted1 = lia.util.formatStringNamed("Hello, {name}! Welcome to {place}.", {name = "Bobby", place = "Lua Land"})
@@ -1105,7 +1105,7 @@ Returns a cached copy of the given material or creates and caches one if it does
 **Returns:**  
 `Material|nil` - The cached material or `nil` if the material doesn't exist in the filesystem.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local mat = lia.util.getMaterial("vgui/gradient-u", "noclamp smooth")
 surface.SetMaterial(mat)
@@ -1134,7 +1134,7 @@ Blurs the content underneath the given panel. This function falls back to a simp
 - `passes` (`number`, optional):  
   Quality of the blur. Defaults to `0.2`.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 function PANEL:Paint(width, height)
     lia.util.drawBlur(self)
@@ -1171,7 +1171,7 @@ Draws a blurred rectangle with the specified position and bounds. This function 
 - `passes` (`number`, optional):  
   Quality of the blur. Defaults to `0.2`.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 hook.Add("HUDPaint", "MyHUDPaint", function()
     lia.util.drawBlurAt(100, 100, 300, 200)
@@ -1208,7 +1208,7 @@ Draws a textured rectangle with a specified material and color. This function si
 - `h` (`number`):  
   Height of the rectangle.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.util.drawTexture("vgui/gradient-u", Color(255, 255, 255, 200), 500, 500, 100, 50)
 ```
@@ -1255,7 +1255,7 @@ Calls a named skin function with optional arguments on a panel. This function al
 **Returns:**  
 `any` - The result of the skin function call.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local result = lia.util.skinFunc("Paint", myPanel, 255, 255, 255, 255)
 ```
@@ -1286,7 +1286,7 @@ Wraps text so it does not exceed a certain width. This function intelligently br
 
 - `number` - The maximum width of the wrapped text.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local wrappedLines, maxWidth = lia.util.wrapText("This is a very long piece of text that needs to be wrapped.", 300)
 
@@ -1321,7 +1321,7 @@ Blurs the content underneath the given panel. This function falls back to a simp
 - `passes` (`number`, optional):  
   Quality of the blur. Recommended to keep as default (`0.2`).
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 function PANEL:Paint(width, height)
     lia.util.drawBlur(self)
@@ -1361,7 +1361,7 @@ Displays a query notification panel with customizable options. This function is 
 **Returns:**  
 `Panel` - The created notification panel.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.util.notifQuery("Do you want to accept the quest?", "Yes", "No", false, 7, function(option, panel)
     if option == 1 then
@@ -1399,7 +1399,7 @@ Creates and displays a table UI on the client-side. This function allows for the
 - `charID` (`number`, optional):  
   The character ID associated with the data.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local columns = {
     {name = "Item", field = "itemName", width = 200},
@@ -1454,7 +1454,7 @@ Finds empty spaces around an entity where another entity can be placed. This fun
 **Returns:**  
 `table` - A table containing positions of empty spaces.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local entity = ents.FindByClass("prop_physics")[1]
 local emptyPositions = lia.util.findEmptySpace(entity)
@@ -1479,7 +1479,7 @@ A table that stores all registered utility functions. These functions extend the
 **Type:**  
 `table`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Access and use the FindPlayersInBox function
 local mins = Vector(-100, -100, 0)

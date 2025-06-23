@@ -14,7 +14,7 @@ Called when creating a default inventory for a character. Should return a [defer
 **Realm:** 
 `Server`
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CreateDefaultInventory", "InitializeStarterInventory", function(character)
     local d = deferred.new()
@@ -42,7 +42,7 @@ Called after a character has been restored from the database. Useful for post-re
 **Realm:** 
 `Server`
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CharRestored", "AwardWelcomePackage", function(character)
     local welcomePackage = {"welcome_pack", "starter_weapon", "basic_armor"}
@@ -64,7 +64,7 @@ Called before a character is deleted. Allows for clean-up tasks or checks before
 **Parameters:**
 - `id` (`number`): The ID of the character to be deleted.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PreCharDelete", "BackupCharacterData", function(id)
     local character = lia.character.getByID(id)
@@ -87,7 +87,7 @@ Called after a character is deleted. Finalize any remaining actions or remove as
 - `client` (`Player`): The player who triggered the deletion.
 - `id` (`number`): The ID of the deleted character.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnCharDelete", "NotifyDeletion", function(client, id)
     print(client:Name() .. " has deleted character ID:", id)
@@ -110,7 +110,7 @@ Called when a character variable changes (server-side). Useful for responding to
 - `oldValue` (`any`): The old value.
 - `newValue` (`any`): The new value.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnCharVarChanged", "LogAttributeChanges", function(character, key, oldValue, newValue)
     print("Character " .. character:getName() .. " had " .. key .. " changed from " .. tostring(oldValue) .. " to " .. tostring(newValue))
@@ -133,7 +133,7 @@ Called when a player's model changes.
 - `client` (`Player`): The player whose model changed.
 - `model` (`string`): The new model path.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PlayerModelChanged", "UpdatePlayerAppearance", function(client, model)
     print(client:Name() .. " changed their model to " .. model)
@@ -159,7 +159,7 @@ Retrieves a default name for a character during creation. Return `(defaultName, 
 - `string`: The default name.
 - `bool`: Whether to override the user-provided name.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("GetDefaultCharName", "PoliceDefaultName", function(client, faction, data)
     if faction == FACTION_POLICE then
@@ -184,7 +184,7 @@ Retrieves a default description for a character during creation. Return `(defaul
 - `string`: The default description.
 - `bool`: Whether to override.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("GetDefaultCharDesc", "CitizenDefaultDesc", function(client, faction)
     if faction == FACTION_CITIZEN then
@@ -204,7 +204,7 @@ Determines whether all HUD bars should be hidden.
 **Returns:**
 - `bool|nil`: `true` to hide, `nil` to allow rendering.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShouldHideBars", "HideHUDInCinematic", function()
     if gui.IsInCinematicMode() then
@@ -227,7 +227,7 @@ Determines whether a specific HUD bar should be drawn.
 **Returns:**
 - `bool|nil`: `false` to hide, `nil` to allow.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShouldBarDraw", "HideArmorHUD", function(barName)
     if barName == "armor" then
@@ -244,7 +244,7 @@ Called once all chat classes have been initialized.
 **Realm:** 
 `Shared`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("InitializedChatClasses", "RegisterGlobalOOC", function()
     lia.chat.register("globalOOC", {
@@ -274,7 +274,7 @@ Called before a chat message is sent. Return `false` to cancel, or modify the me
 **Returns:**
 - `bool|nil|modifiedString`: `false` to cancel, or return a modified string to change the message.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PlayerMessageSend", "FilterProfanity", function(speaker, chatType, message, anonymous)
     local filteredMessage = string.gsub(message, "badword", "****")
@@ -299,7 +299,7 @@ Determines whether a player can join a certain class. Return `false` to block.
 **Returns:**  
 - `bool|nil`: `false` to block, `nil` to allow.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanPlayerJoinClass", "RestrictEliteClass", function(client, class, info)
     if class == CLASS_ELITE and not client:hasPermission("join_elite") then
@@ -316,7 +316,7 @@ Called after all classes have been initialized.
 **Realm:** 
 `Shared`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("InitializedClasses", "AddCustomClass", function()
     local CLASS = {}
@@ -344,7 +344,7 @@ Determines if a player can use a specific command. Return `false` to block usage
 **Returns:**  
 - `bool|nil`: `false` to block, `nil` to allow.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanPlayerUseCommand", "BlockSensitiveCommands", function(client, command)
     local blockedCommands = {"shutdown", "restart"}
@@ -365,7 +365,7 @@ Determines whether data should be saved during server shutdown.
 **Returns:**  
 - `bool`: `true` to save, `false` to skip.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShouldDataBeSaved", "ConditionalDataSave", function()
     if not lia.config.enableDataPersistence then
@@ -382,7 +382,7 @@ Called after all data has been loaded.
 **Realm:** 
 `Server`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PostLoadData", "InitializePlayerStats", function()
     for _, ply in player.Iterator() do
@@ -402,7 +402,7 @@ Saves all relevant data to disk, triggered during map cleanup and shutdown.
 **Realm:** 
 `Server`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("SaveData", "PersistPlayerData", function()
     for _, ply in player.Iterator() do
@@ -423,7 +423,7 @@ Loads all relevant data from disk, typically after map cleanup.
 **Realm:** 
 `Server`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("LoadData", "LoadPlayerData", function()
     for key, _ in pairs(lia.data.stored) do
@@ -449,7 +449,7 @@ Called when MySQLOO successfully connects to the database. Use to register prepa
 **Realm:** 
 `Server`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnMySQLOOConnected", "PrepareDatabaseStatements", function()
     lia.db.prepare("insertPlayer", "INSERT INTO lia_players (_steamID, _steamName) VALUES (?, ?)", {MYSQLOO_STRING, MYSQLOO_STRING})
@@ -466,7 +466,7 @@ Called after all essential DB tables have been loaded.
 **Realm:** 
 `Server`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("LiliaTablesLoaded", "InitializeGameState", function()
     lia.gameState = lia.gameState or {}
@@ -483,7 +483,7 @@ Called before the faction tables are loaded. Good spot for data setup prior to f
 **Realm:** 
 `Shared`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnLoadTables", "SetupFactionDefaults", function()
     lia.factions = lia.factions or {}
@@ -500,7 +500,7 @@ Called to save persistent data (like map entities), often during map cleanup or 
 **Realm:** 
 `Server`
     
-**Usage Example:**
+**Example Usage:**
 ```lua
 hook.Add("PersistenceSave", "SaveMapEntities", function()
     for _, ent in ents.Iterator() do
@@ -520,7 +520,7 @@ Called for registering DB prepared statements post-MySQLOO connection.
 **Realm:** 
 `Server`
     
-**Usage Example:**
+**Example Usage:**
 ```lua
 hook.Add("RegisterPreparedStatements", "RegisterAllStatements", function()
     lia.db.prepare("deletePlayer", "DELETE FROM lia_players WHERE _steamID = ?", {MYSQLOO_STRING})
@@ -540,7 +540,7 @@ Used during character cleanup routines for additional steps when removing or tra
 **Parameters:**
 - `character`: The character being cleaned up.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CharCleanUp", "RemoveTemporaryItems", function(character)
     local inventory = character:getInv()
@@ -568,7 +568,7 @@ Client-side call when creating the graphical representation of an inventory.
 **Returns:**  
 `Panel|nil` — A custom panel or nil for default logic.
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CreateInventoryPanel", "CustomInventoryUI", function(inventory, parent)
     local panel = vgui.Create("DPanel", parent)
@@ -605,7 +605,7 @@ Called after an item has been registered. Useful for customizing item behavior o
 **Parameters:**  
 - `item` (Item)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnItemRegistered", "AddItemDurability", function(item)
     if item.uniqueID == "sword_basic" then
@@ -630,7 +630,7 @@ Called once all item modules have been loaded from a directory.
 **Realm:** 
 `Shared`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("InitializedItems", "SetupSpecialItems", function()
     local specialItem = lia.item.create({
@@ -661,7 +661,7 @@ Called whenever a new log message is added. Allows for custom logic or modificat
 - `category` (`string`)
 - `color` (`Color`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnServerLog", "AlertAdminsOnHighSeverity", function(client, logType, logString, category, color)
     if category == "error" then
@@ -686,7 +686,7 @@ Called when modules include submodules. Useful for advanced module handling or d
 - `path` (`string`)
 - `module` (`table`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("DoModuleIncludes", "TrackModuleDependencies", function(path, module)
     print("Including submodule from path:", path)
@@ -707,7 +707,7 @@ Called after a module finishes loading. Ideal for final logic once all module fi
 - `path` (`string`): The file path.
 - `firstLoad` (`bool`): Whether this is the first load of the module.
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnFinishLoad", "ModuleLoadNotifier", function(path, firstLoad)
     if firstLoad then
@@ -726,7 +726,7 @@ Called after the schema has finished initializing.
 **Realm:** 
 `Shared`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("InitializedSchema", "SchemaReadyNotification", function()
     print("Schema has been successfully initialized.")
@@ -742,7 +742,7 @@ Called after all modules are fully initialized.
 **Realm:** 
 `Shared`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("InitializedModules", "FinalizeModuleSetup", function()
     lia.modules.finalizeSetup()
@@ -762,7 +762,7 @@ Called when a player picks up money from the ground.
 - `client` (`Player`)
 - `moneyEntity` (`Entity`)
     
-**Example:**
+**Example Usage:**
 ```lua
 function MODULE:OnPickupMoney(client, moneyEntity)
     local amount = moneyEntity:getAmount()
@@ -783,7 +783,7 @@ Called whenever an item entity spawns in the world. Use `entity:getItemTable()` 
 **Parameters:**
 - `entity` (`Entity`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnItemSpawned", "LogItemSpawns", function(entity)
     local item = entity:getItemTable()
@@ -807,7 +807,7 @@ Loads custom fonts for the client.
 - `font` (`string`)
 - `genericFont` (`string`)
     
-**Example:**
+**Example Usage:**
 ```lua
 function MODULE:LoadFonts(font, genericFont)
     surface.CreateFont("CustomHUDFont", {
@@ -839,7 +839,7 @@ Used internally to load core fonts. Override only if you understand the implicat
 - `font` (`string`)
 - `genericFont` (`string`)
     
-**Example:**
+**Example Usage:**
 ```lua
 function MODULE:LoadLiliaFonts(font, genericFont)
     surface.CreateFont("LiliaDefault", {
@@ -859,7 +859,7 @@ Called when `lia.config` is fully initialized.
 **Realm:** 
 `Shared`
     
-**Example:**
+**Example Usage:**
 ```lua
 function MODULE:InitializedConfig()
     if lia.config.enableSpecialFeatures then
@@ -879,7 +879,7 @@ Called when `lia.option` is fully initialized.
 **Realm:** 
 `Client`
     
-**Example:**
+**Example Usage:**
 ```lua
 function MODULE:InitializedOptions()
    LocalPlayer():ChatPrint("LOADED OPTIONS!")
@@ -895,7 +895,7 @@ Called when a module has finished loading (post-load logic).
 **Realm:** 
 `Shared`
     
-**Example:**
+**Example Usage:**
 ```lua
 function MODULE:ModuleLoaded()
     print("Module '" .. self.name .. "' has been loaded successfully.")
@@ -914,7 +914,7 @@ This function is intended for internal use and should not be called directly.
 **Realm:** 
 `Server`
     
-**Example:**
+**Example Usage:**
 ```lua
 -- Internal usage; generally not overridden by modules
 function MODULE:DatabaseConnected()
@@ -931,7 +931,7 @@ Called after wiping tables in the DB, typically after major resets/cleanups.
 **Realm:** 
 `Server`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnWipeTables", "ReinitializeDefaults", function()
     lia.db.execute("INSERT INTO lia_factions (name, description) VALUES ('Citizen', 'Regular inhabitants.')")
@@ -951,7 +951,7 @@ This function is intended for internal use and should not be called directly.
 **Realm:** 
 `Server`
     
-**Example:**
+**Example Usage:**
 ```lua
 -- Internal usage; generally not overridden by modules
 function MODULE:SetupDatabase()
@@ -976,7 +976,7 @@ Determines whether a player can unequip a given item.
 **Returns:**  
 - `bool`: `true` if allowed, `false` if blocked.
     
-**Example:**
+**Example Usage:**
 ```lua
 function MODULE:CanPlayerUnequipItem(client, item)
     if item.uniqueID == "quest_item" then
@@ -1001,7 +1001,7 @@ Determines if a player is allowed to drop a specific item.
 **Returns:**  
 - `bool`: `true` to allow, `false` to block.
     
-**Example:**
+**Example Usage:**
 ```lua
 function MODULE:CanPlayerDropItem(client, item)
     if item.uniqueID == "rare_artifact" and not client:isAdmin() then
@@ -1026,7 +1026,7 @@ Determines if a player can pick up an item into their inventory.
 **Returns:**  
 - `bool`: `true` if allowed, `false` otherwise.
     
-**Example:**
+**Example Usage:**
 ```lua
 function MODULE:CanPlayerTakeItem(client, item)
     if item:isBoundToPlayer() and item:getOwner() ~= client then
@@ -1051,7 +1051,7 @@ Determines if a player can equip a given item (e.g., outfits, weapons).
 **Returns:**  
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 function MODULE:CanPlayerEquipItem(client, item)
     if item.category == "Weapon" and not client:hasLicense("weapon") then
@@ -1077,7 +1077,7 @@ Determines if a player can interact with an item (pick up, drop, transfer, etc.)
 **Returns:**  
 - `bool`: `true` if allowed, `false` otherwise.
     
-**Example:**
+**Example Usage:**
 ```lua
 function MODULE:CanPlayerInteractItem(client, action, item)
     if action == "transfer" and item:isBoundToFaction("Police") and not client:isPolice() then
@@ -1098,7 +1098,7 @@ Called when an entity is removed. Often used for cleaning up net variables.
 **Parameters:**  
 - `entity` (`Entity`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("EntityRemoved", "CleanupEntityData", function(entity)
     if entity:isItem() then
@@ -1119,7 +1119,7 @@ Called when a player initially spawns on the server. Used to sync net vars or se
 **Parameters:**
 - `client` (`Player`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PlayerInitialSpawn", "SyncPlayerData", function(client)
     local char = client:getChar()
@@ -1141,7 +1141,7 @@ Called after a player has fully initialized (post-initial-spawn logic).
 **Parameters:**
 - `client` (`Player`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PostPlayerInitialSpawn", "SendWelcomeMessage", function(client)
     client:ChatPrint("Welcome to the server, " .. client:Name() .. "!")
@@ -1160,7 +1160,7 @@ Called when Lilia has finished loading all its data for a player (e.g., characte
 **Parameters:**
 - `client` (`Player`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PlayerLiliaDataLoaded", "InitializePlayerStats", function(client)
     client:SetHealth(client:getChar():getHealth())
@@ -1181,7 +1181,7 @@ Called when a player disconnects while having a valid character. Often used for 
 - `client` (`Player`)
 - `character` (Character)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnCharDisconnect", "SavePartialData", function(client, character)
     lia.data.set("player_" .. character:getID(), character:getPartialData(), true)
@@ -1203,7 +1203,7 @@ Determines if a client ragdoll should spawn (e.g., on death or fallover).
 **Returns:**  
 - `bool` (`false` to prevent ragdoll)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShouldSpawnClientRagdoll", "DisableRagdollForVIPs", function(client)
     if client:isVIP() then
@@ -1224,7 +1224,7 @@ Called when a player attempts to use an entity recognized as a door or player.
 - `client` (`Player`)
 - `entity` (`Entity`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PlayerUse", "PreventUsingLockedDoors", function(client, entity)
     if entity:isDoor() and not entity:isUnlocked() then
@@ -1249,7 +1249,7 @@ Determines if a particular menu button should appear (e.g., character creation).
 1. `bool|nil` — Return `false` to hide, or `nil` to allow.  
 2. `string|nil` — Optional reason or message.
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShouldMenuButtonShow", "HideAdminMenuButton", function(buttonName)
     if buttonName == "AdminPanel" and not LocalPlayer():isAdmin() then
@@ -1270,7 +1270,7 @@ Called when an item entity is *created* in the world (different from *OnItemSpaw
 - `itemTable` (`table`)
 - `entity` (`Entity`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnItemCreated", "LogNewItemCreation", function(itemTable, entity)
     print("New item created:", itemTable.name, "at position", entity:GetPos())
@@ -1296,7 +1296,7 @@ Returns an alternate model path for a dropped item instead of the default.
 **Returns:**
 - `string|nil`: An alternate path, or `nil` for default.
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("getItemDropModel", "CustomDropModelForWeapons", function(itemTable, entity)
     if itemTable.category == "Weapon" then
@@ -1319,7 +1319,7 @@ Triggered when the client sends a request to transfer an item from one inventory
 - `x`, `y` (coordinates or nil)
 - `invID` (target inventory ID or nil)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("HandleItemTransferRequest", "ValidateItemTransfer", function(client, itemID, x, y, invID)
     local item = client:getInv():getItemByID(itemID)
@@ -1343,7 +1343,7 @@ Configure or override rules for a *bag* inventory (e.g., restricting categories)
 **Parameters:**
 - `inventory` (Inventory)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("SetupBagInventoryAccessRules", "RestrictBagToConsumables", function(inventory)
     inventory:setAllowedCategories({"Consumables"})
@@ -1366,7 +1366,7 @@ Determines if a player can pick up a money entity from the ground.
 **Returns:**  
 - `bool` (`false` to block)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanPickupMoney", "LimitMoneyPickupInSafeZones", function(activator, entity)
     if activator:isInSafeZone() then
@@ -1389,7 +1389,7 @@ Returns a custom model path for a money entity based on its amount.
 **Returns:**
 - `string|nil`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("GetMoneyModel", "DynamicMoneyModels", function(amount)
     if amount >= 1000 then
@@ -1416,7 +1416,7 @@ Determines whether an outfit item can change the player’s model.
 **Returns:**  
 - `bool` (`false` to block)
     
-**Example:**
+**Example Usage:**
 ```lua
 function MODULE:CanOutfitChangeModel(item)
     if item.uniqueID == "halloween_costume" then
@@ -1438,7 +1438,7 @@ Called when a character is permanently killed.
 - `character` (Character)
 - `time` (`number|nil`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnCharPermakilled", "HandleCharacterPermakill", function(character, time)
     print("Character " .. character:getName() .. " has been permanently killed.")
@@ -1463,7 +1463,7 @@ Called when the system attempts to combine one item with another in an inventory
 **Returns:**  
 - `bool`: `true` if combination is valid and consumed, `false` otherwise.
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ItemCombine", "CombineHealthAndHerb", function(client, item, targetItem)
     if item.uniqueID == "health_potion" and targetItem.uniqueID == "herb" then
@@ -1491,7 +1491,7 @@ Called when a character ragdolls or “falls over.”
 - `unknown` (any)
 - `bool` (forced or not)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnCharFallover", "HandleFallover", function(client, unknown, forced)
     if forced then
@@ -1518,7 +1518,7 @@ Allows modifying or adding extra data steps in the character creation process (s
 - `newData` (`table`)
 - `originalData` (`table`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("AddCreationData", "IncludeBackgroundStory", function(client, data, newData, originalData)
     newData.background = "A mysterious past awaits."
@@ -1538,7 +1538,7 @@ Called when the character list for a player is updated (client side).
 - `oldCharList` (`table`)
 - `newCharList` (`table`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CharListUpdated", "UpdateUIOnCharListChange", function(oldCharList, newCharList)
     if #newCharList > #oldCharList then
@@ -1564,7 +1564,7 @@ Allows schemas/modules to insert or modify steps in the char creation UI (client
 **Parameters:**
 - `panel` (`Panel`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ConfigureCharacterCreationSteps", "AddAppearanceStep", function(panel)
     local appearanceStep = vgui.Create("DPanel", panel)
@@ -1593,7 +1593,7 @@ Checks if a character can be deleted before the UI or server attempts it.
 - `bool`: `false` to block
 - `string|nil`: Optional reason
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanDeleteChar", "PreventDeletionOfMainChar", function(charID)
     local character = lia.character.getByID(charID)
@@ -1615,7 +1615,7 @@ Called when a player is forcibly kicked from their current character.
 - `id` (`number`): The character ID
 - `isCurrentChar` (`bool`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("KickedFromChar", "NotifyPlayerOfKick", function(id, isCurrentChar)
     if isCurrentChar then
@@ -1634,7 +1634,7 @@ Called when Lilia’s client-side scripts have fully loaded.
 **Realm:** 
 `Client`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("LiliaLoaded", "InitializeClientFeatures", function()
     lia.clientFeatures.initialize()
@@ -1658,7 +1658,7 @@ This function is intended for internal use and should not be called directly.
 - `id` (`string`): Class ID
 - `allowed` (`bool`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("VendorClassUpdated", "UpdateVendorUIForClasses", function(vendor, id, allowed)
     local vendorPanel = lia.ui.getVendorPanel(vendor)
@@ -1685,7 +1685,7 @@ This function is intended for internal use and should not be called directly.
 - `id` (`string`)
 - `allowed` (`bool`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("VendorFactionUpdated", "RefreshVendorFactionDisplay", function(vendor, id, allowed)
     local vendorUI = lia.ui.getVendorUI(vendor)
@@ -1712,7 +1712,7 @@ This function is intended for internal use and should not be called directly.
 - `itemType` (`string`)
 - `value` (`int`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("VendorItemMaxStockUpdated", "UpdateVendorStockLimits", function(vendor, itemType, value)
     local vendorPanel = lia.ui.getVendorPanel(vendor)
@@ -1739,7 +1739,7 @@ This function is intended for internal use and should not be called directly.
 - `itemType` (`string`)
 - `value` (`int`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("VendorItemStockUpdated", "RefreshVendorItemStock", function(vendor, itemType, value)
     local vendorUI = lia.ui.getVendorUI(vendor)
@@ -1766,7 +1766,7 @@ This function is intended for internal use and should not be called directly.
 - `itemType` (`string`)
 - `value` (`int`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("VendorItemModeUpdated", "ChangeVendorItemMode", function(vendor, itemType, value)
     local vendorUI = lia.ui.getVendorUI(vendor)
@@ -1793,7 +1793,7 @@ This function is intended for internal use and should not be called directly.
 - `itemType` (`string`)
 - `value` (`int`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("VendorItemPriceUpdated", "UpdateVendorItemPrices", function(vendor, itemType, value)
     local vendorPanel = lia.ui.getVendorPanel(vendor)
@@ -1820,7 +1820,7 @@ This function is intended for internal use and should not be called directly.
 - `money` (`int`)
 - `oldMoney` (`int`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("VendorMoneyUpdated", "RefreshVendorFunds", function(vendor, money, oldMoney)
     local vendorUI = lia.ui.getVendorUI(vendor)
@@ -1846,7 +1846,7 @@ This function is intended for internal use and should not be called directly.
 - `vendor` (`Entity`)
 - `key` (`string`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("VendorEdited", "NotifyVendorEdit", function(vendor, key)
     lia.notifications.sendAdmins("Vendor " .. vendor:GetClass() .. " has been edited. Key changed: " .. key)
@@ -1871,7 +1871,7 @@ This function is intended for internal use and should not be called directly.
 - `uniqueID` (`string`): The item ID
 - `isSellingToVendor` (`bool`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("VendorTradeEvent", "LogVendorTrades", function(client, entity, uniqueID, isSellingToVendor)
     local action = isSellingToVendor and "sold" or "bought"
@@ -1892,7 +1892,7 @@ Called when vendor synchronization data is received.
 **Parameters:**
 - `vendor` (`Entity`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("VendorSynchronized", "UpdateVendorUIAfterSync", function(vendor)
     local vendorUI = lia.ui.getVendorUI(vendor)
@@ -1918,7 +1918,7 @@ Determines whether a player can access a vendor.
 **Returns:**  
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanPlayerAccessVendor", "RestrictVendorAccess", function(client, entity)
     if entity.requiresLevel and client:getLevel() < entity.requiredLevel then
@@ -1944,7 +1944,7 @@ Called when a character trades with a vendor.
 - `isSellingToVendor` (`bool`)
 - `character` (Character)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnCharTradeVendor", "ApplyTradeBonuses", function(client, vendor, item, isSellingToVendor, character)
     if isSellingToVendor and item.category == "Weapon" then
@@ -1965,7 +1965,7 @@ Called when a player exits from interacting with a vendor.
 **Realm:** 
 `Client`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("VendorExited", "CloseVendorUI", function()
     local vendorUI = lia.ui.getActiveVendorUI()
@@ -1987,7 +1987,7 @@ Called when a vendor is opened (client side).
 **Parameters:**
 - `vendor` (`Entity`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("VendorOpened", "InitializeVendorInterface", function(vendor)
     local vendorPanel = lia.ui.createVendorPanel(vendor)
@@ -2007,7 +2007,7 @@ Called when the vendor menu is opened.
 **Parameters:**
 - `self` (`Entity`): The vendor
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnOpenVendorMenu", "CustomizeVendorMenu", function(vendor)
     local menu = lia.ui.getVendorMenu(vendor)
@@ -2029,7 +2029,7 @@ Called after `PlayerLoadout` is executed, specifically for faction loadout.
 **Parameters:**
 - `client` (`Player`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("FactionOnLoadout", "EquipFactionWeapons", function(client)
     local faction = client:getFaction()
@@ -2052,7 +2052,7 @@ Called after `FactionOnLoadout` is executed, specifically for class loadout.
 **Parameters:**
 - `client` (`Player`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ClassOnLoadout", "EquipClassSpecificGear", function(client)
     local class = client:getClass()
@@ -2077,7 +2077,7 @@ Called after `ClassOnLoadout`, for extra faction loadout logic.
 **Parameters:**
 - `client` (`Player`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("FactionPostLoadout", "AssignFactionRole", function(client)
     local faction = client:getFaction()
@@ -2099,7 +2099,7 @@ Called after `FactionPostLoadout`, for extra class loadout logic.
 **Parameters:**
 - `client` (`Player`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ClassPostLoadout", "ApplyClassModifiers", function(client)
     local class = client:getClass()
@@ -2121,7 +2121,7 @@ Called after all player loadout hooks (PlayerLoadout, FactionOnLoadout, ClassOnL
 **Parameters:**
 - `client` (`Player`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PostPlayerLoadout", "FinalizePlayerStats", function(client)
     client:updateStats()
@@ -2141,7 +2141,7 @@ Called when the text in the chat input box changes.
 **Parameters:**
 - `text` (`string`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ChatTextChanged", "MonitorChatInput", function(text)
     if string.len(text) > 100 then
@@ -2158,7 +2158,7 @@ Called when the chat input box is closed.
 **Realm:** 
 `Client`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("FinishChat", "ClearChatInput", function()
     print("Chat input has been closed.")
@@ -2181,7 +2181,7 @@ Called to add text to the chat. Allows formatting or modifying text before displ
 **Returns:**  
 - `string` modified text markup
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ChatAddText", "FormatChatMessages", function(text, ...)
     local formattedText = "<font=DefaultBold>" .. text .. "</font>"
@@ -2197,7 +2197,7 @@ Called when the chat input box is opened.
 **Realm:** 
 `Client`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("StartChat", "PrepareChatInput", function()
     print("Chat input has been opened.")
@@ -2219,7 +2219,7 @@ Called after a player sends a chat message.
 - `chatType` (`string`)
 - `anonymous` (`bool`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PostPlayerSay", "LogPlayerChats", function(client, message, chatType, anonymous)
     lia.log.write("PlayerChat", client:Name() .. " [" .. chatType .. "]: " .. message)
@@ -2241,7 +2241,7 @@ Called after a player sends a chat message.
 - `chatType` (`string`)
 - `anonymous` (`bool`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnChatReceived", "HandleSpecialCommands", function(client, message, chatType, anonymous)
     if string.sub(message, 1, 1) == "!" then
@@ -2288,7 +2288,7 @@ Determines if a player is allowed to open/view their inventory from F1 menu.
 **Returns:**  
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanPlayerViewInventory", "RestrictInventoryAccess", function()
     if LocalPlayer():isInCombat() then
@@ -2309,7 +2309,7 @@ Called when the help menu is being built.
 **Parameters:**
 - `tabs` (table): Contains help menu tabs.
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("BuildHelpMenu", "AddCustomHelpTab", function(tabs)
     local customTab = {}
@@ -2331,7 +2331,7 @@ Creates menu buttons for the F1 menu.
 **Parameters:**
 - `tabs` (table)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CreateMenuButtons", "AddSettingsButton", function(tabs)
     table.insert(tabs, {
@@ -2359,7 +2359,7 @@ Whether or not the ammo HUD should be drawn.
 **Returns:**  
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShouldDrawAmmoHUD", "HideAmmoHUDForSnipers", function(weapon)
     if weapon:GetClass() == "weapon_sniper" then
@@ -2383,7 +2383,7 @@ Determines whether character info should be drawn for the given entity/character
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShouldDrawCharInfo", "HideSensitiveInfo", function(entity, character, charInfo)
     if character:hasFlag("private") then
@@ -2407,7 +2407,7 @@ Determines whether entity info should be drawn for the given entity.
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShouldDrawEntityInfo", "HideInfoForProtectedEntities", function(entity)
     if entity:isProtected() then
@@ -2429,7 +2429,7 @@ Draws information about the given entity.
 - `entity` (`Entity`)
 - `alpha` (`float`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("DrawEntityInfo", "DisplayEntityHealth", function(entity, alpha)
     if entity:isNPC() then
@@ -2447,7 +2447,7 @@ Draws the crosshair (if `ShouldDrawCrosshair` is `true`).
 **Realm:** 
 `Client`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("DrawCrosshair", "CustomCrosshair", function()
     surface.SetDrawColor(255, 255, 255, 255)
@@ -2469,7 +2469,7 @@ Determines whether the vignette effect should be drawn.
 **Returns:**  
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShouldDrawVignette", "ConditionalVignette", function()
     if LocalPlayer():isInDarkArea() then
@@ -2487,7 +2487,7 @@ Draws the vignette effect.
 **Realm:** 
 `Client`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("DrawVignette", "CustomVignetteEffect", function()
     surface.SetDrawColor(0, 0, 0, 150)
@@ -2507,7 +2507,7 @@ Determines whether a branching path warning should be drawn.
 **Returns:**  
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShouldDrawBranchWarning", "ShowWarningForNewPlayers", function()
     if LocalPlayer():getLevel() < 5 then
@@ -2525,7 +2525,7 @@ Draws a branching path warning.
 **Realm:** 
 `Client`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("DrawBranchWarning", "RenderBranchWarning", function()
     draw.SimpleText("Warning: You are on a risky path. Proceed with caution!", "DermaLarge", ScrW()/2, ScrH()/2, Color(255,0,0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
@@ -2544,7 +2544,7 @@ Determines whether the blur effect should be drawn.
 **Returns:**  
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShouldDrawBlur", "EnableBlurInMenus", function()
     if gui.IsMenuVisible() then
@@ -2562,7 +2562,7 @@ Draws the blur effect.
 **Realm:** 
 `Client`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("DrawBlur", "RenderBlurEffect", function()
     local blur = Material("pp/blurscreen")
@@ -2584,7 +2584,7 @@ Determines whether player information should be drawn.
 **Returns:**  
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShouldDrawPlayerInfo", "ShowInfoOnlyForAdmins", function()
     if LocalPlayer():isAdmin() then
@@ -2606,7 +2606,7 @@ Initializes the tooltip before it is displayed.
 - `panel` (tooltip panel)
 - `targetPanel` (the panel for which the tooltip is displayed)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("TooltipInitialize", "CustomizeTooltip", function(panel, targetPanel)
     panel:SetSkin("DarkSkin")
@@ -2627,7 +2627,7 @@ Handles painting of the tooltip.
 - `panel`
 - `w`, `h` (width, height)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("TooltipPaint", "CustomTooltipAppearance", function(panel, w, h)
     surface.SetDrawColor(50, 50, 50, 200)
@@ -2648,7 +2648,7 @@ Handles layout of the tooltip.
 **Parameters:**
 - `panel`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("TooltipLayout", "ArrangeTooltipElements", function(panel)
     local text = panel:GetChild("TooltipText")
@@ -2672,7 +2672,7 @@ Adjusts the amount of blur applied to the screen.
 **Returns:**  
 - `number`: The adjusted blur amount.
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("AdjustBlurAmount", "IncreaseBlurInRain", function(blurGoal)
     if weather.isRaining then
@@ -2693,7 +2693,7 @@ Sets up the quick menu by adding buttons, sliders, etc. Called during the panel�
 **Parameters:**
 - `panel` (the quick menu panel)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("SetupQuickMenu", "AddQuickSettingsButton", function(panel)
     local settingsButton = vgui.Create("DButton", panel)
@@ -2719,7 +2719,7 @@ Called to draw additional content within a model view panel.
 - `panel`
 - `entity`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("DrawLiliaModelView", "EnhanceModelView", function(panel, entity)
     cam.Start3D2D(entity:GetPos() + Vector(0,0,50), Angle(0, LocalPlayer():EyeAngles().y - 90, 90), 0.1)
@@ -2743,7 +2743,7 @@ Determines if a player should be shown on the scoreboard.
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShouldShowPlayerOnScoreboard", "HideSpectators", function(client)
     if client:isSpectator() then
@@ -2766,7 +2766,7 @@ Provides options for the player context menu on the scoreboard.
 - `options` (table)  
   Each option is a table `{icon, callback}`.
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShowPlayerOptions", "AddReportOption", function(targetPlayer, options)
     table.insert(options, {
@@ -2794,7 +2794,7 @@ Determines whether a scoreboard value should be overridden (e.g., name, desc).
 **Returns:**
 - `bool` (true if override)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShouldAllowScoreboardOverride", "CustomNameDisplay", function(client, var)
     if var == "name" and client:hasRole("Admin") then
@@ -2819,7 +2819,7 @@ Called when a player tries to use abilities on the door (locking, etc.).
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanPlayerAccessDoor", "RestrictDoorAccess", function(client, door, access)
     if access == DOOR_LOCK and not client:hasPermission("lock_doors") then
@@ -2843,7 +2843,7 @@ Called when a player purchases or sells a door.
 - `buying` (`bool`): True if buying, false if selling
 - `CallOnDoorChild` (function)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnPlayerPurchaseDoor", "HandleDoorPurchase", function(client, entity, buying, CallOnDoorChild)
     if buying then
@@ -2873,7 +2873,7 @@ Called when a player attempts to use a door entity.
 **Returns:**
 - `bool|nil`: `false` to disallow, `true` to allow, or `nil` to let other hooks decide.
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PlayerUseDoor", "LogDoorUsage", function(client, entity)
     print(client:Name() .. " is attempting to use door ID:", entity:EntIndex())
@@ -2897,7 +2897,7 @@ Called when a player attempts to lock a door.
 - `entity` (`Entity`)
 - `time` (`float`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("KeyLock", "LogDoorLock", function(owner, entity, time)
     entity:setLocked(true)
@@ -2919,7 +2919,7 @@ Called when a player attempts to unlock a door.
 - `entity` (`Entity`)
 - `time` (`float`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("KeyUnlock", "LogDoorUnlock", function(owner, entity, time)
     entity:setLocked(false)
@@ -2941,7 +2941,7 @@ Toggles the lock state of a door.
 - `door` (`Entity`)
 - `state` (`bool`): `true`=locked, `false`=unlocked
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ToggleLock", "HandleDoorLockToggle", function(client, door, state)
     door:setLocked(state)
@@ -2963,7 +2963,7 @@ Calls a function on all child entities of a door.
 - `entity` (`Entity`)
 - `callback` (function)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("callOnDoorChildren", "UpdateChildEntities", function(entity, callback)
     for _, child in ipairs(entity:GetChildren()) do
@@ -2984,7 +2984,7 @@ Copies the parent door's properties to a child door.
 **Parameters:**
 - `child` (`Entity`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("copyParentDoor", "SyncChildDoorProperties", function(child)
     local parent = child:getParentDoor()
@@ -3007,7 +3007,7 @@ Determines if saved items should be deleted on server restart.
 **Returns:**  
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShouldDeleteSavedItems", "ConditionalItemDeletion", function()
     if lia.config.resetItemsOnRestart then
@@ -3028,7 +3028,7 @@ Called after saved items are loaded from the database.
 **Parameters:**
 - `loadedItems` (table): Contains loaded item entities.
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnSavedItemLoaded", "InitializeLoadedItems", function(loadedItems)
     for _, item in ipairs(loadedItems) do
@@ -3053,7 +3053,7 @@ Checks if third-person view is allowed or disabled.
 **Returns:**
 - `bool` (true if 3rd-person should be disabled)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ShouldDisableThirdperson", "DisableForInvisibles", function(client)
     if client:isInvisible() then
@@ -3076,7 +3076,7 @@ Called when a character’s attribute is updated.
 - `key` (`string`)
 - `value` (`int`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnCharAttribBoosted", "NotifyAttributeBoost", function(client, character, key, value)
     chat.AddText(Color(0,255,0), "Your " .. key .. " attribute has been increased by " .. value .. "!")
@@ -3096,7 +3096,7 @@ Called when a player gains stamina.
 **Parameters:**
 - `client` (`Player`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PlayerStaminaGained", "NotifyStaminaGain", function(client)
     client:ChatPrint("You have regained stamina!")
@@ -3115,7 +3115,7 @@ Called when a player loses stamina.
 **Parameters:**
 - `client` (`Player`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PlayerStaminaLost", "WarnStaminaLow", function(client)
     if client:getStamina() < 20 then
@@ -3139,7 +3139,7 @@ Determines if a player can throw a punch.
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanPlayerThrowPunch", "RestrictPunchDuringStealth", function(client)
     if client:isStealthed() then
@@ -3164,7 +3164,7 @@ Adjusts stamina offset when a player is running.
 **Returns:**
 - `number`: The modified offset
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("AdjustStaminaOffsetRunning", "IncreaseStaminaDrainForHeavyGear", function(client, offset)
     if client:hasHeavyGear() then
@@ -3189,7 +3189,7 @@ Adjusts the rate at which a player regenerates stamina.
 **Returns:**
 - `number`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("AdjustStaminaRegeneration", "BoostRegenerationForMedics", function(client, offset)
     if client:getClass() == CLASS_MEDIC then
@@ -3214,7 +3214,7 @@ Adjusts the stamina offset otherwise (generic hook).
 **Returns:**
 - `number`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("AdjustStaminaOffset", "ModifyStaminaForNightMode", function(client, offset)
     if lia.time.isNight() then
@@ -3238,7 +3238,7 @@ Calculates the change in a player’s stamina (positive or negative).
 **Returns:**
 - `number` (the stamina change)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CalcStaminaChange", "StaminaChangeBasedOnSpeed", function(client)
     local speed = client:getVelocity():Length()
@@ -3266,7 +3266,7 @@ Checks if a player is allowed to view their attributes.
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanPlayerViewAttributes", "RestrictAttributeViewForLockedCharacters", function(client)
     if client:getChar():isLocked() then
@@ -3291,7 +3291,7 @@ Retrieves the initial number of attribute points a player starts with.
 **Returns:**
 - `number`: The starting attribute points
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("GetStartAttribPoints", "BonusPointsForVeterans", function(client, context)
     if client:isVeteran() then
@@ -3316,7 +3316,7 @@ Determines if a player can pick up an item with their hands.
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PlayerCanPickupItem", "PreventPickupOfCursedItems", function(client, item)
     if item:isCursed() and not client:isBlessed() then
@@ -3340,7 +3340,7 @@ Determines the maximum stamina for a character.
 **Returns:**
 - `number`: The maximum stamina
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("getCharMaxStamina", "SetMaxStaminaBasedOnClass", function(character)
     local class = character:getClass()
@@ -3365,7 +3365,7 @@ Called after the player's inventory is drawn.
 **Parameters:**
 - `panel` (inventory panel)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PostDrawInventory", "AddInventoryFooter", function(panel)
     draw.SimpleText("End of Inventory", "Default", panel:GetWide() / 2, panel:GetTall() - 20, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
@@ -3386,7 +3386,7 @@ Called when a player clicks on an item icon.
 - `itemIcon` (panel)
 - `keyCode` (int)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("InterceptClickItemIcon", "HandleItemDoubleClick", function(self, itemIcon, keyCode)
     if keyCode == KEY_MOUSE2 then -- Right-click
@@ -3412,7 +3412,7 @@ Called when an item transfer is requested (client side).
 - `x` (int)
 - `y` (int)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnRequestItemTransfer", "SendTransferRequest", function(self, itemID, inventoryID, x, y)
     lia.netstream.Start("TransferItem", {itemID = itemID, inventoryID = inventoryID, x = x, y = y})
@@ -3434,7 +3434,7 @@ Called when an item is being painted over in the inventory.
 - `w` (int)
 - `h` (int)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ItemPaintOver", "DisplayItemRarity", function(self, itemTable, w, h)
     if itemTable.rarity == "rare" then
@@ -3458,7 +3458,7 @@ Called when an item interaction menu is created (e.g., right-click menu).
 - `menu` (panel)
 - `itemTable` (table)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnCreateItemInteractionMenu", "AddCustomActions", function(self, menu, itemTable)
     if itemTable.uniqueID == "magic_scroll" then
@@ -3485,7 +3485,7 @@ Determines if a specific action can be run on an item.
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanRunItemAction", "RestrictActionForCursedItems", function(itemTable, action)
     if itemTable.isCursed and action == "use" then
@@ -3511,7 +3511,7 @@ Determines whether an item can be transferred between inventories.
 **Returns:**
 - `bool|string`: `true` to allow, or `false`/string for disallowed & reason.
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanItemBeTransfered", "PreventTransferOfBoundItems", function(item, currentInv, oldInv)
     if item:isBound() and not currentInv:isBoundToOwner(item.owner) then
@@ -3533,7 +3533,7 @@ Called when an item is dragged out of an inventory.
 - `client` (`Player`)
 - `item` (Item)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ItemDraggedOutOfInventory", "LogItemDrag", function(client, item)
     lia.log.write("ItemDrag", client:Name() .. " dragged item ID " .. item.id .. " out of inventory.")
@@ -3552,7 +3552,7 @@ Called when an item is transferred between inventories.
 **Parameters:**
 - `context` (table)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("ItemTransfered", "TrackItemTransfers", function(context)
     local client = context.client
@@ -3575,7 +3575,7 @@ Called when a player drops a stackable item.
 **Parameters:**
 - `itemTypeOrItem`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnPlayerLostStackItem", "HandleStackItemDrop", function(itemTypeOrItem)
     local itemName = type(itemTypeOrItem) == "table" and itemTypeOrItem.name or "Unknown Item"
@@ -3600,7 +3600,7 @@ Whether a player is allowed to spawn a container entity.
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanPlayerSpawnStorage", "RestrictStorageSpawn", function(client, entity, data)
     if client:getLevel() < 10 then
@@ -3625,7 +3625,7 @@ Determines whether an entity is suitable for use as storage (e.g., a trunk).
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("isSuitableForTrunk", "AllowOnlyCars", function(entity)
     return entity:IsVehicle() -- Only vehicles are suitable for trunks
@@ -3645,7 +3645,7 @@ Called when a storage panel is created (client side).
 - `storageInvPanel` (panel)
 - `storage` (entity)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnCreateStoragePanel", "CustomizeStorageUI", function(localInvPanel, storageInvPanel, storage)
     storageInvPanel:SetBackgroundColor(Color(50, 50, 50, 200))
@@ -3672,7 +3672,7 @@ Determines whether data associated with a storage entity should be saved.
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanSaveData", "ExcludeTemporaryStorages", function(entity, inventory)
     if entity:isTemporary() then
@@ -3694,7 +3694,7 @@ Called when a storage entity is restored.
 - `storage` (`Entity`)
 - `inventory` (Inventory)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("StorageRestored", "ReinitializeStorage", function(storage, inventory)
     storage:setOwner(inventory:getOwner())
@@ -3714,7 +3714,7 @@ Called when a storage is opened (car trunk or other).
 - `entity` (`Entity`)
 - `isCar` (`bool`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("StorageOpen", "LogStorageAccess", function(entity, isCar)
     if isCar then
@@ -3737,7 +3737,7 @@ Called when a prompt to unlock storage is displayed (client side).
 **Parameters:**
 - `entity` (`Entity`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("StorageUnlockPrompt", "CustomizeUnlockPrompt", function(entity)
     local prompt = vgui.Create("DFrame")
@@ -3781,7 +3781,7 @@ Determines whether a player can transfer an item into storage.
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("StorageCanTransferItem", "RestrictItemTypesInStorage", function(client, storage, item)
     if item.category == "Weapon" and not client:hasPermission("store_weapons") then
@@ -3803,7 +3803,7 @@ Called when a storage entity is removed.
 - `entity` (`Entity`)
 - `inventory` (Inventory)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("StorageEntityRemoved", "HandleStorageRemoval", function(entity, inventory)
     lia.data.remove("storage_" .. entity:EntIndex())
@@ -3824,7 +3824,7 @@ Called when the inventory of a storage entity is set.
 - `inventory` (Inventory)
 - `isInitial` (`bool`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("StorageInventorySet", "InitializeStorageInventory", function(entity, inventory, isInitial)
     if isInitial then
@@ -3853,7 +3853,7 @@ Checks if a character is recognized.
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("isCharRecognized", "ValidateCharacterRecognition", function(character, id)
     if character:getID() == id and character:isActive() then
@@ -3878,7 +3878,7 @@ Checks if a character is *fake* recognized.
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("isCharFakeRecognized", "DetectFakeCharacters", function(character, id)
     if character:isSuspicious() then
@@ -3903,7 +3903,7 @@ Checks if a fake name exists in a given name list.
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("isFakeNameExistant", "PreventDuplicateFakeNames", function(name, nameList)
     for _, existingName in ipairs(nameList) do
@@ -3927,7 +3927,7 @@ Called when a character is recognized.
 - `client` (`Player`)
 - `id` (int)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnCharRecognized", "WelcomeRecognizedCharacter", function(client, id)
     local character = lia.character.getByID(id)
@@ -3951,7 +3951,7 @@ Initiates a character recognition process (client side).
 - `level` (int)
 - `name` (string)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CharRecognize", "StartRecognitionProcess", function(level, name)
     local recognitionPanel = lia.ui.createRecognitionPanel(level, name)
@@ -3975,7 +3975,7 @@ Retrieves the displayed description of an entity (HUD or otherwise).
 **Returns:**
 - `string`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("GetDisplayedDescription", "CustomEntityDescription", function(entity, isHUD)
     if entity:GetClass() == "npc_boss" then
@@ -4000,7 +4000,7 @@ Retrieves a displayed name for a client/character in a recognition context.
 **Returns:**
 - `string`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("GetDisplayedName", "RecognitionNameTag", function(client, chatType)
     if chatType == "recognition" and client:isRecognized() then
@@ -4023,7 +4023,7 @@ Determines if a chat type is recognized by the recognition system.
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("isRecognizedChatType", "ValidateRecognitionChat", function(chatType)
     local recognizedTypes = {"admin", "system", "recognition"}
@@ -4047,7 +4047,7 @@ Retrieves the salary limit for a player.
 **Returns:**
 - `any`: The salary limit
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("GetSalaryLimit", "SetSalaryLimitsBasedOnRole", function(client, faction, class)
     if faction.name == "Police" then
@@ -4074,7 +4074,7 @@ Retrieves the amount of salary a player should receive.
 **Returns:**
 - `any`: The salary amount
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("GetSalaryAmount", "CalculateDynamicSalary", function(client, faction, class)
     local baseSalary = faction.baseSalary or 1000
@@ -4099,7 +4099,7 @@ Determines if a player is allowed to earn salary.
 **Returns:**
 - `bool`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanPlayerEarnSalary", "RestrictSalaryToActivePlayers", function(client, faction, class)
     if not client:isActive() then
@@ -4120,7 +4120,7 @@ Creates a timer to manage player salary.
 **Parameters:**
 - `client` (`Player`)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CreateSalaryTimer", "SetupSalaryTimer", function(client)
     timer.Create("SalaryTimer_" .. client:SteamID(), 60, 0, function()
@@ -4151,7 +4151,7 @@ Checks if a player is allowed to use a specific character.
 - `bool`
 - `string|nil` (Reason if disallowed)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanPlayerUseChar", "RestrictCharacterUsage", function(client, character)
     if character:isBanned() then
@@ -4177,7 +4177,7 @@ Whether a player can create a new character.
 - `string` (Lang phrase or reason)
 - `...` (Args for the phrase)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanPlayerCreateChar", "LimitCharacterCreation", function(client)
     if client:getCharacterCount() >= MODULE:GetMaxPlayerChar(client) then
@@ -4199,7 +4199,7 @@ Called after a character is deleted.
 - `client` (`Player`)
 - `character` (Character)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PostCharDelete", "NotifyCharacterDeletion", function(client, character)
     lia.notifications.broadcast(client:Name() .. " has deleted their character: " .. character:getName())
@@ -4221,7 +4221,7 @@ Retrieves the max number of characters a player can have.
 **Returns:**
 - `int`
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("GetMaxPlayerChar", "SetMaxCharacters", function(client)
     if client:isPremium() then
@@ -4245,7 +4245,7 @@ Called after a character is deleted.
 - `client` (`Player`)
 - `character` (Character)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CharDeleted", "LogCharacterDeletion", function(client, character)
     lia.log.write("CharDeleted", "Character " .. character:getName() .. " deleted by " .. client:Name())
@@ -4266,7 +4266,7 @@ Called before a player's character is loaded.
 - `character` (Character)
 - `currentChar` (Character)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PrePlayerLoadedChar", "PrepareForCharacterLoad", function(client, character, currentChar)
     if currentChar then
@@ -4289,7 +4289,7 @@ Called when a player's character is loaded.
 - `character` (Character)
 - `currentChar` (Character)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PlayerLoadedChar", "InitializeNewCharacter", function(client, character, currentChar)
     client:SetHealth(character:getHealth())
@@ -4311,7 +4311,7 @@ Called after a player's character is loaded.
 - `character` (Character)
 - `currentChar` (Character)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PostPlayerLoadedChar", "WelcomeCharacter", function(client, character, currentChar)
     client:ChatPrint("Welcome back, " .. character:getName() .. "!")
@@ -4331,7 +4331,7 @@ Called after a character has been successfully loaded (sometimes shared realm us
 **Parameters:**
 - `character` (Character)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CharLoaded", "InitializeCharacterSkills", function(character)
     character:initSkills()
@@ -4350,7 +4350,7 @@ Called after a character is saved.
 **Parameters:**
 - `character` (Character)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CharPostSave", "NotifyCharacterSaved", function(character)
     lia.notifications.sendAdmins("Character " .. character:getName() .. " has been saved.")
@@ -4369,7 +4369,7 @@ Called before a character is saved.
 **Parameters:**
 - `character` (Character)
     
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CharPreSave", "ValidateCharacterBeforeSave", function(character)
     if not character:isValid() then
@@ -4407,7 +4407,7 @@ Called when adding a new section to the F1 menu. Allows customization of section
 - `color` (`Color`): The color associated with the section.
 - `priority` (`number`): The priority/order of the section in the menu.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("F1OnAddSection", "AddSettingsSection", function(sectionName, color, priority)
     if sectionName == "settings" then
@@ -4436,7 +4436,7 @@ Called when adding a text field to a section in the F1 menu. Allows adding custo
 **Returns:**
 - `nil` or custom behavior.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("F1OnAddTextField", "AddNicknameField", function(sectionName, fieldName, labelText, valueFunc)
     if sectionName == "character" then
@@ -4470,7 +4470,7 @@ Called when adding a bar field (e.g., progress bar) to a section in the F1 menu.
 **Returns:**
 - `nil` or custom behavior.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("F1OnAddBarField", "AddHealthBar", function(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
     if sectionName == "stats" then
@@ -4502,7 +4502,7 @@ Determines if a player is allowed to view the list of available commands. Return
 **Returns:**
 - `bool`: `false` to block, `nil` or `true` to allow.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanPlayerViewCommands", "HideCommandsForRegularPlayers", function()
     if not LocalPlayer():isAdmin() then
@@ -4523,7 +4523,7 @@ Called when the character list has been fully loaded for a player. Useful for pe
 **Parameters:**
 - `newCharList` (`table`): The updated list of characters for the player.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CharListLoaded", "InitializeCharacterUI", function(newCharList)
     lia.ui.initializeCharacterSelection(newCharList)
@@ -4548,7 +4548,7 @@ Determines if a player can switch from their current character to another charac
 **Returns:**
 - `bool|nil`: `false` to block, `nil` or `true` to allow.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanPlayerSwitchChar", "PreventSwitchDuringCombat", function(client, currentChar, character)
     if client:isInCombat() then
@@ -4572,7 +4572,7 @@ Called after a new character has been successfully created. Allows for additiona
 - `character` (`Character`): The newly created character.
 - `originalData` (`table`): The data provided during character creation.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("OnCharCreated", "SetupInitialInventory", function(client, character, originalData)
     local inventory = character:getInv()
@@ -4597,7 +4597,7 @@ Allows modifying or adding extra data steps in the character creation process on
 - `newData` (`table`): The new data that can be modified.
 - `originalData` (`table`): The unmodified original data.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("AdjustCreationData", "IncludeSkillPoints", function(client, data, newData, originalData)
     newData.skillPoints = 10
@@ -4619,7 +4619,7 @@ Called to draw information about a character, such as stats or status effects, w
 - `character` (`Character`): The character whose info is being drawn.
 - `charInfo` (`table`): A table containing character information to be displayed.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("DrawCharInfo", "DisplayCharacterStats", function(entity, character, charInfo)
     draw.SimpleText("Strength: " .. character:getAttribute("strength"), "Default", 10, 10, Color(255,255,255))
@@ -4644,7 +4644,7 @@ Called to retrieve the text displayed when a player is injured. Allows customiza
 **Returns:**
 - `string`: The injury message to display.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("GetInjuredText", "CustomInjuryMessage", function(client)
     if isSevere then
@@ -4670,7 +4670,7 @@ Called to retrieve the display name for a weapon. Allows customization of weapon
 **Returns:**
 - `string|nil`: A custom weapon name, or `nil` to use the default.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("GetWeaponName", "RenameAK47", function(weapon)
     if weapon:GetClass() == "weapon_ak47" then
@@ -4694,7 +4694,7 @@ Called when a player cycles through their weapons, allowing custom sounds to be 
 **Returns:**
 - `bool|nil`: Can be used to prevent default sound if handled.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("WeaponCycleSound", "PlayCustomCycleSound", function()
     print("Custom weapon cycle sound played.")
@@ -4717,7 +4717,7 @@ Determines if a player is allowed to choose a specific weapon. Return `false` to
 **Returns:**
 - `bool`: `false` to block, `nil` or `true` to allow.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanPlayerChooseWeapon", "RestrictWeaponChoiceForNovices", function()
     if LocalPlayer():getLevel() < 5 then
@@ -4741,7 +4741,7 @@ Called when a weapon is selected, allowing custom sounds to be played.
 **Returns:**
 - `bool|nil`: `false` to block default sound, or `nil` to allow.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("WeaponSelectSound", "CustomSelectSound", function(weapon)
     surface.PlaySound("custom/sounds/weapon_select.wav")
@@ -4767,7 +4767,7 @@ Determines if a player is allowed to use a door entity, such as opening, locking
 **Returns:**
 - `bool`: `false` to block, `nil` or `true` to allow.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("CanPlayerUseDoor", "AllowOnlyOwners", function(client, door, access)
     if access == DOOR_LOCK and door:getOwner() ~= client then
@@ -4789,7 +4789,7 @@ Called when a player accesses a vendor. Useful for tracking access or applying a
 - `activator` (`Player`): The player accessing the vendor.
 - `self` (`Entity`): The vendor entity being accessed.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("PlayerAccessVendor", "TrackVendorAccess", function(activator, vendor)
     lia.log.write("VendorAccess", activator:Name() .. " accessed vendor " .. vendor:GetClass())
@@ -4816,7 +4816,7 @@ Gets the price override for an item in a vendor's inventory. Allows dynamic pric
 **Returns:**
 - `int|nil`: The overridden price, or `nil` to use the default.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("getPriceOverride", "DynamicPricing", function(vendor, uniqueID, price, isSellingToVendor)
     if uniqueID == "rare_item" then
@@ -4841,7 +4841,7 @@ Called when third-person mode is toggled on or off. Allows for custom handling o
 **Parameters:**
 - `state` (`bool`): `true` if third-person is enabled, `false` if disabled.
 
-**Example:**
+**Example Usage:**
 ```lua
 hook.Add("thirdPersonToggled", "NotifyThirdPersonChange", function(state)
     if state then

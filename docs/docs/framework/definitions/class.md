@@ -57,7 +57,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `String`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.name = "Steve"
     ```
@@ -73,7 +73,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `String`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.desc = "The Steves of the Minecrafter Faction."
     ```
@@ -89,7 +89,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Boolean`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.isDefault = true
     ```
@@ -105,7 +105,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Boolean`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.isWhitelisted = false
     ```
@@ -121,7 +121,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Number` (Faction Index)
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.faction = FACTION_MINECRAFTER
     ```
@@ -137,7 +137,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Color`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.color = Color(0, 255, 0)
     ```
@@ -153,7 +153,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Table` of `Strings`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.weapons = {"gold_pickaxe", "netherite_spade"}
     ```
@@ -169,7 +169,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.pay = 50
     ```
@@ -185,7 +185,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.payLimit = 1000
     ```
@@ -201,7 +201,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.payTimer = 3600
     ```
@@ -217,7 +217,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.limit = 10
     ```
@@ -233,7 +233,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.health = 150
     ```
@@ -249,7 +249,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.armor = 50
     ```
@@ -265,7 +265,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.scale = 1.2
     ```
@@ -281,7 +281,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.runSpeed = 250
     ```
@@ -297,7 +297,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Boolean`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.runSpeedMultiplier = true
     ```
@@ -313,7 +313,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.walkSpeed = 200
     ```
@@ -329,7 +329,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Boolean`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.walkSpeedMultiplier = false
     ```
@@ -345,7 +345,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.jumpPower = 200
     ```
@@ -361,7 +361,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Boolean`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.jumpPowerMultiplier = true
     ```
@@ -377,7 +377,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.bloodcolor = BLOOD_COLOR_RED
     ```
@@ -393,7 +393,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Table`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.bodyGroups = { [1] = 2, [3] = 1 }
     ```
@@ -409,7 +409,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `String` or `Table` of `Strings`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.model = "models/player/steve.mdl"
     ```
@@ -432,7 +432,7 @@ CLASS.index = CLASS_STEVE
 - **Type:**  
   `Number`
 
-- **Example:**
+- **Example Usage:**
     ```lua
     CLASS.index = CLASS_STEVE
     ```

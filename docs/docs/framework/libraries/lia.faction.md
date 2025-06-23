@@ -20,7 +20,7 @@ Loads factions from a specified directory. It reads all Lua files within the giv
 
 - `directory` (`string`): The path to the faction files.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.faction.loadFromDir("schema/factions")
 ```
@@ -42,7 +42,7 @@ Retrieves a faction table based on its index or name. This function allows acces
 **Returns:**  
 `table|nil` - The faction table if found, otherwise `nil`.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local faction = lia.faction.get(1)
 if faction then
@@ -67,7 +67,7 @@ Retrieves the index of a faction based on its unique identifier. Useful for obta
 **Returns:**  
 `number|nil` - The faction index if found, otherwise `nil`.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local index = lia.faction.getIndex("police")
 if index then
@@ -92,7 +92,7 @@ Returns a table containing all classes associated with a specific faction. Class
 **Returns:**  
 `table` - A table containing the classes associated with the faction.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local classes = lia.faction.getClasses(1)
 for _, class in ipairs(classes) do
@@ -117,7 +117,7 @@ Returns a table containing all players belonging to a specific faction. This fun
 **Returns:**  
 `table` - A table containing the players belonging to the specified faction.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local policePlayers = lia.faction.getPlayers(1)
 for _, player in ipairs(policePlayers) do
@@ -142,7 +142,7 @@ Returns the number of players belonging to a specific faction. Useful for tracki
 **Returns:**  
 `number` - The number of players in the specified faction.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local count = lia.faction.getPlayerCount(1)
 print("Number of Police Officers:", count)
@@ -166,7 +166,7 @@ Checks if a given faction is part of a specified category of factions. Useful fo
 **Returns:**  
 `bool` - `true` if the faction is in the category, `false` otherwise.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local isLawEnforcement = lia.faction.isFactionCategory(1, {1, 2, 3})
 if isLawEnforcement then
@@ -195,7 +195,7 @@ Generates a custom faction by defining its properties such as index, name, color
 **Returns:**  
 `table` - The generated faction table.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local customFaction = lia.faction.jobGenerate(9, "Custom Faction", Color(255, 0, 0), false, {"models/player/custom_model.mdl", "models/player/custom_accessory.mdl"})
 print("Custom Faction Created:", customFaction.name)
@@ -211,7 +211,7 @@ Iterates through faction model data and formats the model groups to ensure consi
 **Realm:**  
 `Shared`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.faction.formatModelData()
 ```
@@ -236,7 +236,7 @@ Retrieves the default class of a specified faction. The default class is determi
 **Returns:**  
 `table|nil` - Information about the default class if found, `nil` otherwise.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local defaultClass = lia.faction.getDefaultClass(1)
 if defaultClass then
@@ -261,7 +261,7 @@ Determines whether a faction requires a whitelist. Useful for restricting access
 **Returns:**  
 `bool` - `true` if the faction requires a whitelist, `false` otherwise.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 if lia.faction.hasWhitelist(1) then
     print("Police faction requires a whitelist.")

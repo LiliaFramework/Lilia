@@ -25,7 +25,7 @@ Retrieves an item table based on its unique identifier. This function allows acc
 **Returns:**  
 `table|nil` - The item table if found, otherwise `nil`.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local item = lia.item.get("health_potion")
 if item then
@@ -51,7 +51,7 @@ Retrieves an item instance by its ID and determines its current location (e.g., 
 **Returns:**  
 `table|nil, string|nil` - Returns a table containing the item instance and its location if found, otherwise `nil` and an error message.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local itemInfo, location = lia.item.getItemByID(42)
 if itemInfo then
@@ -80,7 +80,7 @@ Retrieves an instanced item by its ID.
 **Returns:**  
 `table|nil, string|nil` - Returns the item instance if found, otherwise `nil` and an error message.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local item, err = lia.item.getInstancedItemByID(42)
 if item then
@@ -108,7 +108,7 @@ Retrieves an item's data by its ID.
 **Returns:**  
 `table|nil, string|nil` - Returns the item's data table if found, otherwise `nil` and an error message.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local data, err = lia.item.getItemDataByID(42)
 if data then
@@ -139,7 +139,7 @@ Loads an item from a Lua file. It registers the item within the framework, ensur
 - `isBaseItem` (`bool`):  
   Indicates whether the item is a base item.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Load a base item
 lia.item.load("path/to/sh_base_medkit.lua", nil, true)
@@ -166,7 +166,7 @@ Checks if a given object is recognized as an item within the framework.
 **Returns:**  
 `bool` - `true` if the object is an item, `false` otherwise.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local obj = someObject
 if lia.item.isItem(obj) then
@@ -206,7 +206,7 @@ Registers a new item within the framework. This function ensures that the item i
 **Returns:**  
 `table` - The registered item table.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Register a new item
 local newItem = lia.item.register("health_potion", "base_medkit", false, "path/to/sh_health_potion.lua")
@@ -228,7 +228,7 @@ Loads items from a specified directory. It first loads base items, then derived 
 - `directory` (`string`):  
   The directory path containing the item Lua files.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Load all items from the items directory
 lia.item.loadFromDir("lilia/gamemode/items")
@@ -255,7 +255,7 @@ Creates a new item instance based on its unique ID and assigns it a specific ID 
 **Returns:**  
 `table` - The new item instance.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Create a new item instance
 local item = lia.item.new("health_potion", 101)
@@ -283,7 +283,7 @@ Registers a new inventory type with specified dimensions. This function extends 
 - `h` (`number`):  
   The height of the inventory.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Register a new inventory type "backpack" with dimensions 4x4
 lia.item.registerInv("backpack", 4, 4)
@@ -310,7 +310,7 @@ Creates a new inventory instance for a specified owner and inventory type. This 
 - `callback` (`function`):  
   The callback function to execute after the inventory is created.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Create a new backpack inventory for character ID 5
 lia.item.newInv(5, "backpack", function(inventory)
@@ -336,7 +336,7 @@ Retrieves an inventory by its ID.
 **Returns:**  
 `table|nil` - The inventory object if found, otherwise `nil`.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local inventory = lia.item.getInv(10)
 if inventory then
@@ -368,7 +368,7 @@ Creates a new inventory instance with specified dimensions and assigns it a uniq
 **Returns:**  
 `table` - The new inventory instance.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Create a new 5x5 inventory with ID 20
 local newInventory = lia.item.createInv(5, 5, 20)
@@ -408,7 +408,7 @@ Sets the data of an item by its ID. This function updates specific data fields o
 **Returns:**  
 `bool, string|nil` - `true` if successful, otherwise `false` and an error message.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Set the "description" data field of item ID 42
 local success, err = lia.item.setItemDataByID(42, "description", "A shiny health potion.")
@@ -452,7 +452,7 @@ Instantiates an item and adds it to an inventory. This function handles the crea
 **Returns:**  
 `table` - A deferred promise that resolves with the instantiated item.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Instantiate a health potion in inventory ID 5 at position (2,3)
 lia.item.instance(5, "health_potion", {quantity = 10}, 2, 3, function(item)
@@ -475,7 +475,7 @@ Deletes an item by its ID from both the database and the cache. This function en
 - `id` (`number`):  
   The ID of the item to delete.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Delete item with ID 15
 lia.item.deleteByID(15)
@@ -497,7 +497,7 @@ Loads an item by its ID from the database and instantiates it within the framewo
 - `itemIndex` (`number|table`):  
   The item ID or a table of item IDs to load.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Load a single item by ID
 lia.item.loadItemByID(42)
@@ -536,7 +536,7 @@ Instances and spawns a given item type in the game world. This function creates 
 **Returns:**  
 `table` - A deferred promise that resolves with the spawned item and its entity.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Spawn a health potion at a specific position
 lia.item.spawn("health_potion", Vector(0, 0, 100), function(item, entity)
@@ -568,7 +568,7 @@ Restores an inventory with specified dimensions. This function is used to reset 
 - `callback` (`function`):  
   The callback function to execute after restoration.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Restore inventory ID 10 to dimensions 6x6
 lia.item.restoreInv(10, 6, 6, function(inventory)
@@ -591,7 +591,7 @@ A table that stores all registered items. Each key is the item's unique identifi
 **Type:**  
 `table`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Access the "health_potion" item
 local healthPotion = lia.item.list["health_potion"]
@@ -611,7 +611,7 @@ A table that stores base item definitions. Base items serve as templates for der
 **Type:**  
 `table`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Access the base_medkit item
 local baseMedkit = lia.item.base["base_medkit"]
@@ -631,7 +631,7 @@ A table that maps item IDs to their corresponding item instances. This cache all
 **Type:**  
 `table`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Access item instance with ID 42
 local item = lia.item.instances[42]
@@ -653,7 +653,7 @@ A reference to `lia.inventory.instances`, linking item inventories to their corr
 **Type:**  
 `table`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Access all inventory instances
 for invID, inventory in pairs(lia.item.inventories) do
@@ -674,7 +674,7 @@ A table that stores all registered inventory types related to items. Each key is
 **Type:**  
 `table`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Access the "backpack" inventory type
 local backpackType = lia.item.inventoryTypes["backpack"]

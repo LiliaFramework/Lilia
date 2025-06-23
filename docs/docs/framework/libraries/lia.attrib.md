@@ -17,7 +17,7 @@ Loads attribute data from Lua files located in the specified directory.
 
 - `directory` (`String`): The directory path from which to load attribute files.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.attribs.loadFromDir("schema/attributes")
 ```
@@ -36,7 +36,7 @@ Sets up attributes for a given character. Attributes can define custom behavior 
 
 - `client` (`Player`): The player for whom attributes are being set up.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 ATTRIBUTE.name = "Strength"
 ATTRIBUTE.desc = "Strength Skill."

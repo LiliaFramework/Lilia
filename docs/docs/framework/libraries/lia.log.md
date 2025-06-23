@@ -46,7 +46,7 @@ Adds a new log type to the logging system. This function registers a log categor
   Color associated with the log category. Defaults to `Color(52, 152, 219)` if not provided.
 
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Define a new log type "playerJoin"
 lia.log.addType("playerJoin", function(client, playerName)
@@ -79,7 +79,7 @@ Retrieves a formatted log string based on the specified log type and additional 
 `string, string, Color|nil`  
 Returns the formatted log string, its category, and color. If the log type is invalid, returns `nil`.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local logString, category, color = lia.log.getString(client, "playerJoin", "Alice")
 print(logString)  -- Output: "Alice has joined the game."
@@ -106,7 +106,7 @@ Adds a log message to the logging system. It formats the log based on its type a
 - `...` (`any`):  
   Arguments to pass to the log formatting function.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Log a player joining the game
 lia.log.add(player, "playerJoin", player:GetName())
@@ -130,7 +130,7 @@ Sends a log message to a specified client. This function transmits the log strin
 - `logString` (`string`):  
   The log message to be sent.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Send a custom log message to a client
 lia.log.send(targetPlayer, "You have received a special item!")

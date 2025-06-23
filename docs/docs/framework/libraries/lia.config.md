@@ -28,7 +28,7 @@ Adds a new configuration option to the system.
   - `isGlobal` (`boolean`, optional): If `true`, the configuration is global. Defaults to `false`.
   - `type` (`string`, optional): The type of the configuration. Defaults based on the value provided. `"Generic"` is a text field.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.config.add("MoneyModel", "Money Model", "models/props_lab/box01a.mdl", nil, {
     desc = "Defines the model used for representing money in the game.",
@@ -55,7 +55,7 @@ Sets the default value for a configuration option.
 - `key` (`string`): The unique identifier of the configuration option.
 - `value` (`any`): The default value to set.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.config.setDefault("MoneyModel", "models/props_lab/box01a.mdl")
 ```
@@ -76,7 +76,7 @@ Forces the configuration option to a specific value, optionally preventing it fr
 - `value` (`any`): The value to set.
 - `noSave` (`boolean`, optional): If `true`, the change won't be saved. Defaults to `false`.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.config.forceSet("MaxPlayers", 100, true)
 ```
@@ -96,7 +96,7 @@ Sets the value of a configuration option and handles networking and callbacks if
 - `key` (`string`): The unique identifier of the configuration option.
 - `value` (`any`): The new value to set.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.config.set("MoneyModel", "models/props_c17/briefcase001a.mdl")
 ```
@@ -119,7 +119,7 @@ Retrieves the current value of a configuration option, falling back to the defau
 **Returns:**  
 `any`: The current value of the configuration option or the default value.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local moneyModel = lia.config.get("MoneyModel", "models/props_lab/box01a.mdl")
 print("Current Money Model:", moneyModel)
@@ -135,7 +135,7 @@ Loads all configuration options from storage. Should be called during initializa
 **Realm:**  
 `Shared`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.config.load()
 ```
@@ -153,7 +153,7 @@ Retrieves all configuration options that have been changed from their default va
 **Returns:**  
 `table`: A table containing key-value pairs of changed configuration options.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local changedConfigs = lia.config.getChangedValues()
 for key, value in pairs(changedConfigs) do
@@ -175,7 +175,7 @@ Sends the changed configuration values to a specific client.
 
 - `client` (`Player`): The client to send the configuration data to.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.config.send(somePlayer)
 ```
@@ -190,7 +190,7 @@ Saves all changed configuration options to persistent storage.
 **Realm:**  
 `Server`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.config.save()
 ```

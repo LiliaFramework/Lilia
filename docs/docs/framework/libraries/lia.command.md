@@ -24,7 +24,7 @@ Creates a new command by registering it with the provided structure. This includ
 - `command` (`string`): Name of the command (recommended in UpperCamelCase).
 - `data` (`table`): Data describing the command, adhering to the [`Command Fields`](/framework/definitions/command).
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.command.add("Slap", {
     adminOnly = true,
@@ -61,7 +61,7 @@ Checks if a player has access to execute a specific command. This function deter
 - `boolean`: Whether the player has access to the command.
 - `string`: The privilege associated with the command.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local canUse, privilege = lia.command.hasAccess(playerInstance, "Ban")
 if canUse then
@@ -89,7 +89,7 @@ Returns a table of arguments from a given string. Words separated by spaces are 
     
 - `table`: Arguments extracted from the string.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local args = lia.command.extractArgs('kick "John Doe" 30')
 PrintTable(args)
@@ -118,7 +118,7 @@ Attempts to find a player by an identifier. If unsuccessful, a notice is display
     
 - `Player|nil`: The player that matches the given search query, or `nil` if not found.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local target = lia.util.findPlayer(adminPlayer, "PlayerName")
 if target then
@@ -145,7 +145,7 @@ Attempts to find a faction by an identifier.
     
 - `table|nil`: The faction that matches the given search query, or `nil` if not found.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local faction = lia.command.findFaction(adminPlayer, "Police")
 if faction then
@@ -172,7 +172,7 @@ Attempts to find a player by an identifier silently. If the player is not found,
     
 - `Player|nil`: The player that matches the given search query, or `nil` if not found.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local target = lia.command.findPlayerSilent(adminPlayer, "PlayerName")
 if target then
@@ -196,7 +196,7 @@ Forces a player to execute a command by name. This mimics similar functionality 
 - `command` (`string`): The full name of the command to be executed. This string is case-insensitive.
 - `arguments` (`table`): An array of arguments to be passed to the command.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.command.run(adminPlayer, "Roll", {10})
 ```
@@ -222,7 +222,7 @@ Parses a command from an input string and executes it.
     
 - `boolean`: Whether a command has been found and executed.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local success = lia.command.parse(adminPlayer, "/roll 10")
 if success then
@@ -245,7 +245,7 @@ Requests the server to run a command. This mimics similar functionality to the c
 - `command` (`string`): Unique ID of the command.
 - `...` (`any`): Arguments to pass to the command.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.command.send("roll", 10)
 ```

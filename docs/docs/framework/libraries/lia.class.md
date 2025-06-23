@@ -20,7 +20,7 @@ Loads class information from Lua files in the specified directory.
 
 - `directory` (`string`): The directory path from which to load class Lua files.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.class.loadFromDir("schema/classes")
 ```
@@ -44,7 +44,7 @@ Checks if a player can join a particular class.
 - `boolean`: Whether the player can join the class.
 - `string`: Reason for the failure, if any.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local canJoin, reason = lia.class.canBe(playerInstance, 2)
 if canJoin then
@@ -71,7 +71,7 @@ Retrieves information about a class.
 **Returns:**  
 `table`: Information about the class.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local classInfo = lia.class.get(1)
 print(classInfo.name) -- Outputs the name of the class
@@ -94,7 +94,7 @@ Retrieves a list of players belonging to a specific class.
 **Returns:**  
 `table`: List of players belonging to the class.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local policePlayers = lia.class.getPlayers(3)
 for _, player in ipairs(policePlayers) do
@@ -119,7 +119,7 @@ Retrieves the count of players belonging to a specific class.
 **Returns:**  
 `integer`: The count of players belonging to the class.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local count = lia.class.getPlayerCount(3)
 print("Number of police officers:", count)
@@ -142,7 +142,7 @@ Retrieves the identifier of a class based on its unique ID or name.
 **Returns:**  
 `integer|nil`: The identifier of the class if found, `nil` otherwise.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local classID = lia.class.retrieveClass("police_chief")
 if classID then
@@ -169,7 +169,7 @@ Checks if a class has a whitelist.
 **Returns:**  
 `boolean`: `true` if the class has a whitelist, `false` otherwise.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local hasWL = lia.class.hasWhitelist(2)
 if hasWL then

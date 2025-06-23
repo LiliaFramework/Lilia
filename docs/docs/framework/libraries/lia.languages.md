@@ -22,7 +22,7 @@ Loads language files from a specified directory. It processes each Lua file with
 - `directory` (`string`):  
   The directory path from which to load language files.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Load all language files from the specified directory
 lia.lang.loadFromDir("lilia/gamemode/languages")
@@ -45,7 +45,7 @@ Adds a table of phrases to a specified language. This function merges the provid
 - `tbl` (`table`):  
   A table containing key-value pairs where the key is the phrase ID and the value is the translated string.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Add new phrases to the French language
 lia.lang.AddTable("french", {

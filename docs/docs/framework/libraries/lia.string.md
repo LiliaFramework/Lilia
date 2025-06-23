@@ -26,7 +26,7 @@ Converts all uppercase letters in a string to lowercase, including special chara
 **Returns:**  
 `string` - The string with all letters converted to lowercase.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local originalStr = "HELLO WORLD!"
 local lowerStr = lia.string.lower(originalStr)
@@ -52,7 +52,7 @@ Converts all lowercase letters in a string to uppercase, including special chara
 **Returns:**  
 `string` - The string with all letters converted to uppercase.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local originalStr = "hello world!"
 local upperStr = lia.string.upper(originalStr)
@@ -78,7 +78,7 @@ Generates a random string of a given length using uppercase letters, lowercase l
 **Returns:**  
 `string` - The generated random string.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local randomStr = lia.string.generateRandom(12)
 print(randomStr)
@@ -103,7 +103,7 @@ Safely quotes a string by escaping backslashes and double quotes, then wrapping 
 **Returns:**  
 `string` - The quoted and escaped string.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local unsafeStr = 'He said, "Hello, World!"'
 local safeStr = lia.string.quote(unsafeStr)
@@ -129,7 +129,7 @@ Reverses the characters in a string, including special characters. This function
 **Returns:**  
 `string` - The reversed string.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local originalStr = "Hello, World!"
 local reversedStr = lia.string.reverse(originalStr)
@@ -155,7 +155,7 @@ Capitalizes the first letter of a string using `lia.string.upper`. This function
 **Returns:**  
 `string` - The string with the first letter capitalized.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local originalStr = "hello world"
 local capitalizedStr = lia.string.FirstToUpper(originalStr)
@@ -181,7 +181,7 @@ Formats a number with commas for thousands separation. This function enhances th
 **Returns:**  
 `string` - The formatted number with commas.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local number = 1234567
 local formattedNumber = lia.string.CommaNumber(number)
@@ -207,7 +207,7 @@ Converts a single digit to its English word representation. If the input is not 
 **Returns:**  
 `string` - The word representation of the digit, or "invalid" if not a digit.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local word = lia.string.DigitToString(5)
 print(word)
@@ -236,7 +236,7 @@ Removes non-printable ASCII characters from a string. This function ensures that
 **Returns:**  
 `string` - The cleaned string.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local dirtyStr = "Hello\x00World\x1F!"
 local cleanStr = lia.string.Clean(dirtyStr)
@@ -265,7 +265,7 @@ Randomly introduces gibberish characters into a string based on a specified prob
 **Returns:**  
 `string` - The modified string with possible gibberish.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local originalStr = "Hello, World!"
 local gibberishStr = lia.string.Gibberish(originalStr, 30)

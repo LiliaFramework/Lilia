@@ -25,7 +25,7 @@ Generates a timestamp string for chat messages.
 **Returns:**  
 `string` - The formatted timestamp string, including date and time if configured to show.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local timestamp = lia.chat.timestamp(true)
 print(timestamp) -- Outputs: (12:34) 
@@ -46,7 +46,7 @@ Registers a new chat type with the information provided. Chat classes should usu
 - `chatType` (`string`): Name of the chat type.
 - `data` (`table`): Properties and functions to assign to this chat class.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.chat.register("me", {
     format = "**%s %s",
@@ -80,7 +80,7 @@ Identifies which chat mode should be used.
 - `string`: Message that was parsed.
 - `boolean`: Whether or not the speaker should be anonymous.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local chatType, parsedMessage, isAnonymous = lia.chat.parse(playerInstance, "/me waves")
 if chatType then
@@ -107,7 +107,7 @@ Sends a chat message from a speaker to specified receivers, based on the provide
 - `anonymous` (`boolean`, optional, default `false`): Whether the message should be sent anonymously.
 - `receivers` (`table`, optional): List of entities to receive the message (if specified).
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.chat.send(playerInstance, "ic", "Hello, world!", false)
 ```
@@ -127,7 +127,7 @@ List of all chat classes that have been registered by the framework, where each 
 **Type:**  
 `table`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 print(lia.chat.classes.ic.format)
 -- Output: "%s says \"%s\""
@@ -182,7 +182,7 @@ Chat messages can have different classes or "types" of messages that have differ
 - **`onCanSay`** (`function`, optional):  
   Function to run to check whether or not a player can send a message with this chat class. By default, it will return `false` if the player is dead and `deadCanChat` is `false`. Overriding this function will prevent `deadCanChat` from working, and you must implement this functionality manually.
   
-  **Example:**
+  **Example Usage:**
   ```lua
   onCanSay = function(speaker, text)
       return false -- The speaker will never be able to send a message with this chat class
@@ -192,7 +192,7 @@ Chat messages can have different classes or "types" of messages that have differ
 - **`onGetColor`** (`function`, optional):  
   Function to run to set the color of a message with this chat class. Generally, stick to using `color`, but this is useful for when you want the color of the message to change based on some criteria.
   
-  **Example:**
+  **Example Usage:**
   ```lua
   onGetColor = function(speaker, text)
       return Color(math.random(120, 200), 0, 0) -- Each message will be colored a random shade of red
@@ -204,7 +204,7 @@ Chat messages can have different classes or "types" of messages that have differ
   
   **NOTE:** Using your own `onChatAdd` function will prevent `color`, `onGetColor`, or `format` from being used since you'll be overriding the base function that uses those properties. In such cases, you'll need to add that functionality back in manually. In general, avoid overriding this function where possible. The `data` argument in the function is whatever is passed into the same `data` argument in `lia.chat.send`.
   
-  **Example:**
+  **Example Usage:**
   ```lua
   onChatAdd = function(speaker, text, bAnonymous, data)
       chat.AddText(color_white, speaker:GetName(), ": ", text) -- Adds white text in the form of "Player Name: Message contents"

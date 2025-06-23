@@ -27,7 +27,7 @@ Registers a new keybind by associating a key with a description and callback fun
 
 - `releaseCallback` (`function`, optional): The function to call when the key is released.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Register a keybind for the "F" key
 lia.keybind.add(KEY_F, "Activate feature", function(ply)

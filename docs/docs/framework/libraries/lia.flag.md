@@ -24,7 +24,7 @@ Creates a new flag that can be assigned to characters. This function should be c
   - `client` (`Player`): The player to whom the flag is being assigned or removed.
   - `bGiven` (`boolean`): `true` if the flag is being given, `false` if it is being taken.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.flag.add("z", "Grants the ability to fly.", function(client, bGiven)
     if bGiven then

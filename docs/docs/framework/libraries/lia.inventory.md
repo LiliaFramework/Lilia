@@ -26,7 +26,7 @@ Creates a new inventory type by defining its unique identifier and structure. Th
 - `invTypeStruct` (`table`):  
   The structure defining the behavior and configuration of the new inventory type. It must adhere to the `InvTypeStructType` structure, ensuring all required fields are present and correctly typed.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Define a new inventory type "backpack" with specific configurations
 lia.inventory.newType("backpack", {
@@ -68,7 +68,7 @@ Creates a new inventory instance of the specified type. This function initialize
 `Inventory`  
 A new instance of the specified inventory type.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Create a new backpack inventory
 local backpack = lia.inventory.new("backpack")
@@ -97,7 +97,7 @@ Loads an inventory instance by its ID from the cache or default storage if not c
 `Deferred`  
 A deferred object that resolves with the loaded inventory instance or `nil` if not found.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Load inventory with ID 5
 lia.inventory.loadByID(5):next(function(inventory)
@@ -131,7 +131,7 @@ Loads an inventory instance from the default storage system. This function is us
 `Deferred`  
 A deferred object that resolves with the loaded inventory instance or `nil` if not found.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Load inventory with ID 10 from default storage
 lia.inventory.loadFromDefaultStorage(10):next(function(inventory)
@@ -165,7 +165,7 @@ Creates and initializes a new inventory instance based on the specified type ID 
 `Deferred`  
 A deferred object that resolves with the created inventory instance.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Create a new weapon inventory with initial data
 lia.inventory.instance("weapon", {char = 2}):next(function(inventory)
@@ -192,7 +192,7 @@ Loads all inventory instances associated with a specific character ID. This func
 `Deferred`  
 A deferred object that resolves with an array of loaded inventory instances.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Load all inventories for character ID 3
 lia.inventory.loadAllFromCharID(3):next(function(inventories)
@@ -217,7 +217,7 @@ Deletes an inventory instance by its ID from both the database and the cache. Th
 - `id` (`number`):  
   The ID of the inventory to delete.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Delete inventory with ID 7
 lia.inventory.deleteByID(7)
@@ -239,7 +239,7 @@ Cleans up all inventory instances associated with a specific character. This fun
 - `character` (`Character`):  
   The character for which to clean up inventory instances.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Clean up inventories for a character
 lia.inventory.cleanUpForCharacter(playerCharacter)
@@ -268,7 +268,7 @@ Displays the graphical representation of an inventory. This function creates a u
 `Panel`  
 The panel displaying the inventory.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Show the player's backpack inventory
 local backpack = player:getChar():getInv("backpack")
@@ -292,7 +292,7 @@ A table that stores all registered inventory types. Each key is the inventory ty
 **Type:**  
 `table`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Retrieve the "backpack" inventory type
 local backpackType = lia.inventory.types["backpack"]
@@ -312,7 +312,7 @@ A table that maps inventory IDs to their corresponding inventory instances. This
 **Type:**  
 `table`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Access inventory instance with ID 4
 local inventory = lia.inventory.instances[4]

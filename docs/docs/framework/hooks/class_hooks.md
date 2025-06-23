@@ -126,7 +126,7 @@ end
 - **Parameters:**
   - `character` (`Character`): The character that was transferred.
 
-- **Usage Example:**
+- **Example Usage:**
   ```lua
   function CLASS:OnTransferred(character)
       local randomModelIndex = math.random(1, #self.models)

@@ -23,7 +23,7 @@ Sends a notification message to all connected players. This function is useful f
 - `msg` (`string`):  
   The message to send to all players.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Broadcast a server-wide announcement
 lia.notices.notifyAll("The server will undergo maintenance in 10 minutes.")
@@ -48,7 +48,7 @@ Displays a notification message to a specific player or broadcasts it to all pla
 - `recipient` (`Player`, optional server side):  
   The specific player to receive the notification. If omitted, the message is sent to all players.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Notify a specific player
 lia.notices.notify("You have received a new item!", targetPlayer)
@@ -57,7 +57,7 @@ lia.notices.notify("You have received a new item!", targetPlayer)
 lia.notices.notify("A new event has started!", nil)
 ```
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Display a notification on the client's screen
 lia.notices.notify("Welcome to the server!", true)
@@ -85,7 +85,7 @@ Displays a localized notification message to a specific player or broadcasts it 
 - `...` (`any`, optional):  
   Additional parameters for string formatting within the localized message.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Notify a player with a formatted localized message
 lia.notices.notifyLocalized("welcomeMessage", targetPlayer, "Alice")
@@ -94,7 +94,7 @@ lia.notices.notifyLocalized("welcomeMessage", targetPlayer, "Alice")
 lia.notices.notifyLocalized("victory", nil, "Bob")
 ```
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Display a localized notification on the client's screen
 lia.notices.notifyLocalized("achievementUnlocked", true, "First Blood")

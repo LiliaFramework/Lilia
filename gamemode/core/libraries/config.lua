@@ -19,7 +19,7 @@ lia.config.stored = lia.config.stored or {}
     Realm:
         Shared
 
-    Example:
+    Example Usage:
         lia.config.add("maxPlayers", "Maximum Players", 64)
 ]]
 function lia.config.add(key, name, value, callback, data)
@@ -60,7 +60,7 @@ end
     Realm:
         Shared
 
-    Example:
+    Example Usage:
         lia.config.setDefault("maxPlayers", 32)
 ]]
 function lia.config.setDefault(key, value)
@@ -85,7 +85,7 @@ end
     Realm:
         Shared
 
-    Example:
+    Example Usage:
         lia.config.forceSet("someSetting", true, true)
 ]]
 function lia.config.forceSet(key, value, noSave)
@@ -110,7 +110,7 @@ end
     Realm:
         Shared
 
-    Example:
+    Example Usage:
         lia.config.set("maxPlayers", 24)
 ]]
 function lia.config.set(key, value)
@@ -142,7 +142,7 @@ end
     Realm:
         Shared
 
-    Example:
+    Example Usage:
         local players = lia.config.get("maxPlayers", 64)
 ]]
 function lia.config.get(key, default)
@@ -177,7 +177,7 @@ end
     Internal Function:
         true
 
-    Example:
+    Example Usage:
         lia.config.load()
 ]]
 function lia.config.load()
@@ -210,7 +210,7 @@ if SERVER then
         Realm:
             Server
 
-        Example:
+        Example Usage:
             local changed = lia.config.getChangedValues()
 ]]
     function lia.config.getChangedValues()
@@ -236,7 +236,7 @@ if SERVER then
         Realm:
             Server
 
-        Example:
+        Example Usage:
             lia.config.send(client)
 ]]
     function lia.config.send(client)
@@ -258,7 +258,7 @@ if SERVER then
         Realm:
             Server
 
-        Example:
+        Example Usage:
             lia.config.save()
 ]]
     function lia.config.save()

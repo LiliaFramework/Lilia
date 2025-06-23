@@ -29,7 +29,7 @@ Sets the value of a networked global variable. This function updates the global 
 - `receiver` (`Player`, optional):  
   The specific client to receive the network update. If omitted, all clients are notified.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Set a global variable "gameState" to "active" for all clients
 lia.net.setNetVar("gameState", "active")
@@ -59,7 +59,7 @@ Retrieves the value of a networked global variable. If the variable does not exi
 **Returns:**  
 `any` - The value of the networked global variable, or the default value if not found.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Get the current game state, defaulting to "inactive" if not set
 local currentState = lia.net.getNetVar("gameState", "inactive")
@@ -90,7 +90,7 @@ Checks if the provided object or any of its nested elements contain an unsupport
 **Internal:**  
 This function is intended for internal use and should not be called directly.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 -- Internal usage within lia.net
 local hasBadType = lia.net.checkBadType("playerData", someObject)

@@ -21,7 +21,7 @@ Establishes a connection to the specified database module based on the configura
 - `callback` (`function`, optional): A function to be called after the database connection is established.
 - `reconnect` (`boolean`, optional, default `false`): Determines whether to force a reconnection to the database module.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.db.connect(function()
     print("Database connected successfully!")
@@ -46,7 +46,7 @@ Converts a Lua value to a format suitable for insertion into the database.
 **Returns:**  
 `string` - The converted value suitable for database insertion.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local safeValue = lia.db.convertDataType("O'Reilly")
 print(safeValue) -- Outputs: 'O\'Reilly'
@@ -70,7 +70,7 @@ Deletes rows from the specified database table based on the given condition.
 **Returns:**  
 `Deferred` - A deferred object that resolves to a table containing the deletion results and the last inserted ID.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.db.delete("characters", "_id = 1"):next(function(result)
     print("Deletion successful:", result.results)
@@ -96,7 +96,7 @@ Inserts a new row into the specified database table with the provided values.
 **Returns:**  
 `Deferred` - A deferred object that resolves to a table containing the insertion results and the last inserted ID.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.db.insertTable({
     _steamID = "STEAM_0:1:123456",
@@ -135,7 +135,7 @@ Prepares a SQL statement with the specified key, query string, and value types f
 - `str` (`string`): The SQL query string.
 - `values` (`table`): A table defining the types of the values (`MYSQLOO_INTEGER`, `MYSQLOO_STRING`, `MYSQLOO_BOOL`).
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.db.prepare("insertPlayer", "INSERT INTO lia_players (_steamID, _steamName) VALUES (?, ?)", {MYSQLOO_STRING, MYSQLOO_STRING})
 ```
@@ -156,7 +156,7 @@ Executes a prepared SQL statement with the specified key and arguments.
 - `callback` (`function`): A function to be called after the prepared statement is executed.
 - `...` (`any`): Arguments to pass to the prepared statement.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.db.preparedCall("insertPlayer", function(result)
     print("Player inserted successfully with ID:", result.lastID)
@@ -183,7 +183,7 @@ Selects data from the specified database table based on the provided fields, con
 **Returns:**  
 `Deferred` - A deferred object that resolves to a table containing the selected results and the last inserted ID.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.db.select({"_name", "_money"}, "characters", "_id = 1", 1):next(function(result)
     print("Character Name:", result.results[1]._name)
@@ -209,7 +209,7 @@ Inserts or updates rows in the specified database table with the provided values
 **Returns:**  
 `Deferred` - A deferred object that resolves to a table containing the insertion or update results and the last inserted ID.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.db.upsert({
     _id = 1,
@@ -233,7 +233,7 @@ Waits for the database tables to be loaded.
 **Returns:**  
 `Deferred` - A deferred object that resolves when the tables are loaded.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.db.waitForTablesToLoad():next(function()
     print("Database tables are loaded and ready.")

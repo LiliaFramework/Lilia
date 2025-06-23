@@ -19,7 +19,7 @@ lia.attribs.list = lia.attribs.list or {}
     Returns:
         None
 
-    Example:
+    Example Usage:
         lia.attribs.loadFromDir("schema/attributes")
 ]]
 function lia.attribs.loadFromDir(directory)
@@ -52,7 +52,7 @@ if SERVER then
         Returns:
             None
 
-        Example:
+        Example Usage:
             lia.attribs.setup(client)
     ]]
     function lia.attribs.setup(client)

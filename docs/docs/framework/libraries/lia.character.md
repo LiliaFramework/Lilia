@@ -27,7 +27,7 @@ Creates a new empty `Character` object. If you are looking to create a usable ch
 - `client` (`Player`): Player that will own the character.
 - `steamID` (`string`, optional): SteamID64 of the player that will own the character. Defaults to `client:SteamID64()` if not provided.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local character = lia.char.new({
     name = "Alice",
@@ -52,7 +52,7 @@ Adds a hook function to be called when a character variable is modified.
 - `hookName` (`string`): The name of the hook.
 - `func` (`function`): The function to be called when the character variable is modified.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.char.hookVar("money", "OnMoneyChange", function(character, oldValue, newValue)
     character.player:ChatPrint("Your money changed from " .. oldValue .. " to " .. newValue)
@@ -74,7 +74,7 @@ Registers a new character variable with specified data and associated hooks. Thi
 - `key` (`string`): The key identifier for the character variable. This is used as the variable's name.
 - `data` (`table`): A table containing the data and configuration for the character variable.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.char.registerVar("strength", {
     field = "_strength",
@@ -106,7 +106,7 @@ Loads data for a character from the database.
 **Returns:**  
 If `key` is provided, returns the value associated with that key in the character's data. Otherwise, returns the entire data table.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local money = lia.char.getCharData(123, "money")
 local allData = lia.char.getCharData(123)
@@ -132,7 +132,7 @@ Loads raw data for a character from the database.
 - If `key` is not provided, returns the entire data table for the character.
 - Returns `false` if the character data could not be found.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local rawData = lia.char.getCharDataRaw(123)
 local specificData = lia.char.getCharDataRaw(123, "inventory")
@@ -155,7 +155,7 @@ Retrieves the client associated with a character by their character ID.
 **Returns:**  
 `Player|nil` - The client associated with the character, or `nil` if no client is found.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local client = lia.char.getByID(123)
 if IsValid(client) then
@@ -182,7 +182,7 @@ Retrieves the character associated with a player's SteamID or SteamID64.
 **Returns:**  
 `table|nil` - The character associated with the SteamID, or `nil` if no character is found.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local character = lia.char.getBySteamID("STEAM_0:1:12345678")
 if character then
@@ -205,7 +205,7 @@ Retrieves the SteamIDs of all connected players.
 **Returns:**  
 `table` - Table containing SteamIDs of all connected players.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local allCharacters = lia.char.getAll()
 for client, character in pairs(allCharacters) do
@@ -230,7 +230,7 @@ Gets the color associated with a player's team or class.
 **Returns:**  
 `Color` - The color associated with the player's team or class.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local color = lia.char.GetTeamColor(playerInstance)
 playerInstance:SetPlayerColor(Vector(color.r/255, color.g/255, color.b/255))
@@ -251,7 +251,7 @@ Creates a character object with its assigned properties and saves it to the data
 - `data` (`table`): Properties to assign to this character. If fields are missing from the table, it will use the default value for that property.
 - `callback` (`function`): Function to call after the character saves.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.char.create({
     name = "Bob",
@@ -278,7 +278,7 @@ Loads all of a player's characters into memory.
 - `callback` (`function`, optional): Function to call when the characters have been loaded.
 - `id` (`integer`, optional): The ID of a specific character to load instead of all of the player's characters.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.char.restore(playerInstance, function(characters)
     print("Characters loaded:", characters)
@@ -299,7 +299,7 @@ Cleans up a player's characters, removing them from memory and database.
 
 - `client` (`Player`): The player whose characters to clean up.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.char.cleanUpForPlayer(playerInstance)
 ```
@@ -319,7 +319,7 @@ Deletes a character from memory and database.
 - `id` (`integer`): The ID of the character to delete.
 - `client` (`Player`): The player associated with the character.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.char.delete(123, playerInstance)
 ```
@@ -343,7 +343,7 @@ Sets data for a character in the database and in memory.
 **Returns:**  
 `boolean` - `True` if the data was successfully set, `false` otherwise.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local success = lia.char.setCharData(123, "health", 100)
 if success then
@@ -371,7 +371,7 @@ Sets the name for a character in the database and in memory.
 **Returns:**  
 `boolean` - `True` if the name was successfully set, `false` otherwise.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local success = lia.char.setCharName(123, "Charlie")
 if success then
@@ -400,7 +400,7 @@ Sets the model and bodygroups for a character in the database and in memory.
 **Returns:**  
 `boolean` - `True` if the model and bodygroups were successfully set, `false` otherwise.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 lia.char.setCharModel(123, "models/player/male_02.mdl", {
     {id = 1, value = 2},
@@ -427,7 +427,7 @@ Ensures the name is a non-empty string and, if configured, unique.
 **Adjustment:**  
 Trims the name to a maximum of 70 characters or overrides it based on hooks.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local character = lia.char.new({ name = "Alice" }, 1, playerInstance)
 print(character:getName()) -- Outputs: Alice
@@ -451,7 +451,7 @@ Ensures the description meets the minimum length requirement.
 **Adjustment:**  
 Trims the description or overrides it based on hooks.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local character = lia.char.new({ desc = "A brave warrior." }, 1, playerInstance)
 print(character:getDesc()) -- Outputs: A brave warrior.
@@ -477,7 +477,7 @@ Sets the model and applies bodygroups based on faction.
 **Display:**  
 Provides a UI panel with model selection for the character.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local character = lia.char.new({ model = "models/player/male_01.mdl" }, 1, playerInstance)
 print(character:getModel()) -- Outputs: models/player/male_01.mdl
@@ -492,7 +492,7 @@ The class of the character.
 
 **Default:** `{}`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local character = lia.char.new({ class = "Warrior" }, 1, playerInstance)
 print(character:getClass()) -- Outputs: Warrior
@@ -515,7 +515,7 @@ Ensures the faction exists and the client has access to it.
 **Adjustment:**  
 Sets the faction's unique ID based on the selected faction.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local success = lia.char.setFaction(123, "Police")
 if success then
@@ -536,7 +536,7 @@ The money the character possesses.
 
 **Field:** `_money`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local character = lia.char.new({ money = 500 }, 1, playerInstance)
 print(character:getMoney()) -- Outputs: 500
@@ -553,7 +553,7 @@ Additional data associated with the character.
 
 **Field:** `_data`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local character = lia.char.new({ data = { reputation = 10 } }, 1, playerInstance)
 print(character:getData("reputation")) -- Outputs: 10
@@ -568,7 +568,7 @@ Custom variables associated with the character.
 
 **Default:** `{}`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local character = lia.char.new({ var = { customKey = "customValue" } }, 1, playerInstance)
 print(character:getVar("customKey")) -- Outputs: customValue
@@ -585,7 +585,7 @@ Represents the character's inventory, containing all items the character possess
 
 **Field:** `_inv`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 character:getInv()
 ```
@@ -604,7 +604,7 @@ Holds the character's attributes, such as strength, agility, intelligence, etc.
 **Validation:**  
 Ensures that each attribute does not exceed its maximum allowed value and that the total attribute points do not surpass the permitted maximum.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local strength = character:getAttrib("strength")
 character:setAttrib("agility", 5)
@@ -621,7 +621,7 @@ A list of entities or roles that recognize this character as another, allowing f
 
 **Field:** `recognized_as`
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 character:setRecognizedAs("UndercoverAgent")
 local recognitions = character:getRecognizedAs()

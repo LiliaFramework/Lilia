@@ -26,7 +26,7 @@ Eases in the value over time using a cubic easing function. The animation starts
 **Returns:**  
 `number` - The eased value at the given time.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local currentTime = 0
 local duration = 2 -- seconds
@@ -61,7 +61,7 @@ Eases out the value over time using a cubic easing function. The animation start
 **Returns:**  
 `number` - The eased value at the given time.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local currentTime = 0
 local duration = 2 -- seconds
@@ -96,7 +96,7 @@ Eases in and out the value over time using a cubic easing function. The animatio
 **Returns:**  
 `number` - The eased value at the given time.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local currentTime = 0
 local duration = 2 -- seconds
@@ -131,7 +131,7 @@ Eases out and then in the value over time using a cubic easing function. The ani
 **Returns:**  
 `number` - The eased value at the given time.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local currentTime = 0
 local duration = 2 -- seconds
@@ -166,7 +166,7 @@ Eases in the value with a back effect. The animation overshoots the starting poi
 **Returns:**  
 `number` - The eased value at the given time.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local currentTime = 0
 local duration = 2 -- seconds
@@ -201,7 +201,7 @@ Eases out the value with a back effect. The animation overshoots the target valu
 **Returns:**  
 `number` - The eased value at the given time.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local currentTime = 0
 local duration = 2 -- seconds
@@ -236,7 +236,7 @@ Eases in and out the value with a back effect. The animation overshoots both the
 **Returns:**  
 `number` - The eased value at the given time.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local currentTime = 0
 local duration = 2 -- seconds
@@ -271,7 +271,7 @@ Eases out and then in the value with a back effect. The animation first overshoo
 **Returns:**  
 `number` - The eased value at the given time.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local currentTime = 0
 local duration = 2 -- seconds
@@ -306,7 +306,7 @@ Eases in the value with an elastic effect. The animation starts with a spring-li
 **Returns:**  
 `number` - The eased value at the given time.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local currentTime = 0
 local duration = 2 -- seconds
@@ -341,7 +341,7 @@ Eases out the value with an elastic effect. The animation overshoots the target 
 **Returns:**  
 `number` - The eased value at the given time.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local currentTime = 0
 local duration = 2 -- seconds
@@ -376,7 +376,7 @@ Eases in and out the value with an elastic effect. The animation starts and ends
 **Returns:**  
 `number` - The eased value at the given time.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local currentTime = 0
 local duration = 2 -- seconds
@@ -411,7 +411,7 @@ Eases out and then in the value with an elastic effect. The animation first over
 **Returns:**  
 `number` - The eased value at the given time.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local currentTime = 0
 local duration = 2 -- seconds
@@ -446,7 +446,7 @@ Eases in the value with a bounce effect. The animation starts by bouncing into t
 **Returns:**  
 `number` - The eased value at the given time.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local currentTime = 0
 local duration = 2 -- seconds
@@ -481,7 +481,7 @@ Eases out the value with a bounce effect. The animation overshoots the target an
 **Returns:**  
 `number` - The eased value at the given time.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local currentTime = 0
 local duration = 2 -- seconds
@@ -516,7 +516,7 @@ Eases in and out the value with a bounce effect. The animation starts with a bou
 **Returns:**  
 `number` - The eased value at the given time.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local currentTime = 0
 local duration = 2 -- seconds
@@ -551,7 +551,7 @@ Eases out and then in the value with a bounce effect. The animation first bounce
 **Returns:**  
 `number` - The eased value at the given time.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local currentTime = 0
 local duration = 2 -- seconds
@@ -583,7 +583,7 @@ Eases in and out a value over time using a circular easing function. The animati
 **Returns:**  
 `number` - The eased value based on the circular easing function.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local normalizedTime = 0.5 -- halfway through the animation
 local easedValue = lia.ease.InOutCirc(normalizedTime)

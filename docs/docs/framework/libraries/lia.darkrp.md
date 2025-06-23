@@ -28,7 +28,7 @@ Checks if a given position is empty by evaluating the presence of obstacles, ent
 **Returns:**  
 `boolean` - Returns `true` if the position is empty; otherwise, `false`.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local position = Vector(0, 0, 0)
 local ignoredEntities = {someEntity}
@@ -71,7 +71,7 @@ Finds an empty position within a specified maximum distance from a starting posi
 **Returns:**  
 `Vector` - Returns the found empty position. If none are found within the specified distance, it returns the original starting position.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local startPosition = Vector(100, 200, 300)
 local ignoredEntities = {someEntity}
@@ -110,7 +110,7 @@ Sends a notification message to a specific client. This function utilizes the cl
 **Returns:**  
 None
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local targetClient = somePlayer
 local notificationMessage = "You have received a new item!"
@@ -142,7 +142,7 @@ Wraps text to fit within a specified maximum line width by inserting line breaks
 **Returns:**  
 `string` - The wrapped text with inserted line breaks.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local originalText = "This is a sample text that needs to be wrapped properly."
 local font = "Arial"
@@ -174,7 +174,7 @@ Formats a given amount of money according to the server's currency system. This 
 **Returns:**  
 `string` - The formatted money string.
 
-**Usage Example:**
+**Example Usage:**
 ```lua
 local moneyAmount = 1500.75
 local formattedMoney = lia.darkrp.formatMoney(moneyAmount)
