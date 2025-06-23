@@ -3,13 +3,11 @@ if SERVER then
     lia.workshop.ids = lia.workshop.ids or {}
     lia.workshop.known = lia.workshop.known or {}
     lia.workshop.cache = lia.workshop.cache or {}
-    local _add = resource.AddWorkshop
     function lia.workshop.AddWorkshop(id)
         id = tostring(id)
         if not lia.workshop.ids[id] then lia.bootstrap("Workshop Downloader", "Added workshop " .. id .. " to download list") end
         lia.bootstrap("Workshop Downloader", "Downloading workshop " .. id)
         lia.workshop.ids[id] = true
-        _add(id)
     end
 
     local function addKnown(id)
