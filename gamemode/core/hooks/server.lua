@@ -657,11 +657,26 @@ local function DatabaseQuery()
     end
 end
 
+local hasChttp = util.IsBinaryModuleInstalled("chttp")
+if hasChttp then require("chttp") end
+local function fetchURL(url, onSuccess, onError)
+    if hasChttp then
+        CHTTP({
+            url = url,
+            method = "GET",
+            success = function(code, body) onSuccess(body, code) end,
+            failed = function(err) onError(err) end
+        })
+    else
+        http.Fetch(url, function(body, _, _, code) onSuccess(body, code) end, function(err) onError(err) end)
+    end
+end
+
 local publicURL = "https://raw.githubusercontent.com/LiliaFramework/Modules/refs/heads/gh-pages/modules.json"
 local privateURL = "https://raw.githubusercontent.com/bleonheart/bleonheart.github.io/main/modules.json"
 local versionURL = "https://raw.githubusercontent.com/LiliaFramework/LiliaFramework.github.io/main/version.json"
 local function checkPublicModules()
-    http.Fetch(publicURL, function(body, _, _, code)
+    fetchURL(publicURL, function(body, code)
         if code ~= 200 then
             lia.updater("Error fetching module list (HTTP " .. code .. ")")
             return
@@ -690,11 +705,11 @@ local function checkPublicModules()
                 lia.updater("Module '" .. info.name .. "' is outdated. Update to version " .. match.version .. " at " .. match.source)
             end
         end
-    end, function(err) lia.updater("HTTP.Fetch error: " .. err) end)
+    end, function(err) lia.updater("Error fetching module list: " .. err) end)
 end
 
 local function checkPrivateModules()
-    http.Fetch(privateURL, function(body, _, _, code)
+    fetchURL(privateURL, function(body, code)
         if code ~= 200 then
             lia.updater("Error fetching private module list (HTTP " .. code .. ")")
             return
@@ -707,21 +722,18 @@ local function checkPrivateModules()
         end
 
         for _, info in ipairs(lia.module.privateVersionChecks) do
-            local match
             for _, m in ipairs(remote) do
-                if m.uniqueID == info.uniqueID then
-                    match = m
+                if m.uniqueID == info.uniqueID and m.version and m.version ~= info.localVersion then
+                    lia.updater("Module '" .. info.name .. "' is outdated, please report back to the author to get an updated copy.")
                     break
                 end
             end
-
-            if match and match.version and match.version ~= info.localVersion then lia.updater("Module '" .. info.name .. "' is outdated, please report back to the author to get an updated copy.") end
         end
-    end, function(err) lia.updater("HTTP.Fetch error: " .. err) end)
+    end, function(err) lia.updater("Error fetching private module list: " .. err) end)
 end
 
 local function checkFrameworkVersion()
-    http.Fetch(versionURL, function(body, _, _, code)
+    fetchURL(versionURL, function(body, code)
         if code ~= 200 then
             lia.updater("Error fetching framework version (HTTP " .. code .. ")")
             return
@@ -739,16 +751,16 @@ local function checkFrameworkVersion()
             return
         end
 
-        if remote.version ~= localVersion then lia.updater("Framework is outdated. Update it with the latest release found at https://github.com/LiliaFramework/Lilia/releases/tag/release") end
-    end, function(err) lia.updater("HTTP.Fetch error: " .. err) end)
+        if remote.version ~= localVersion then lia.updater("Framework is outdated. Update it with the latest release at https://github.com/LiliaFramework/Lilia/releases/tag/release") end
+    end, function(err) lia.updater("Error fetching framework version: " .. err) end)
 end
 
 function GM:InitializedModules()
-    timer.Simple(5, DatabaseQuery)
     if self.UpdateCheckDone then return end
     if lia.module.versionChecks then checkPublicModules() end
     if lia.module.privateVersionChecks then checkPrivateModules() end
     checkFrameworkVersion()
+    timer.Simple(5, DatabaseQuery)
     self.UpdateCheckDone = true
 end
 
