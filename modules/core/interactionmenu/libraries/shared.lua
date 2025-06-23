@@ -154,7 +154,7 @@ AddAction(L("recognizeInWhisperRange"), {
         print(ply:Nick(), "action recognizeInWhisperRange triggered")
         doRange(ply, 1)
     end,
-    runServer = false
+    runServer = true
 })
 
 AddAction(L("recognizeInTalkRange"), {
@@ -164,7 +164,7 @@ AddAction(L("recognizeInTalkRange"), {
         print(ply:Nick(), "action recognizeInTalkRange triggered")
         doRange(ply, 3)
     end,
-    runServer = false
+    runServer = true
 })
 
 AddAction(L("recognizeInYellRange"), {
@@ -174,11 +174,11 @@ AddAction(L("recognizeInYellRange"), {
         print(ply:Nick(), "action recognizeInYellRange triggered")
         doRange(ply, 4)
     end,
-    runServer = false
+    runServer = true
 })
 
 AddInteraction(L("recognizeOption"), {
-    runServer = false,
+    runServer = true,
     shouldShow = function(ply, tgt)
         if not canRecog(ply) then return false end
         local a, b = ply:getChar(), tgt:getChar()
@@ -186,8 +186,6 @@ AddInteraction(L("recognizeOption"), {
         return show
     end,
     onRun = function(ply, tgt)
-        print(ply, tgt)
-        print("?")
         if CLIENT then return end
         print(ply:Nick(), "interaction recognizeOption triggered on", tgt:Nick())
         promptName(ply, function(nm)
