@@ -1790,10 +1790,18 @@
             end)
 ]]
 --[[
-        AddBarField(...)
+        AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
 
         Description:
             Called when the F1 menu builds status bars so new fields can be added.
+
+        Parameters:
+            sectionName (string) – Section identifier.
+            fieldName (string) – Unique field name.
+            labelText (string) – Display label for the bar.
+            minFunc (function) – Returns the minimum value.
+            maxFunc (function) – Returns the maximum value.
+            valueFunc (function) – Returns the current value.
 
         Realm:
             Client
@@ -1804,10 +1812,16 @@
             end)
 ]]
 --[[
-        AddSection(...)
+        AddSection(sectionName, color, priority, location)
 
         Description:
             Fired when building the F1 menu so modules can insert additional sections.
+
+        Parameters:
+            sectionName (string) – Name of the section.
+            color (Color) – Display color.
+            priority (number) – Sort order priority.
+            location (number) – Column/location index.
 
         Realm:
             Client
@@ -1821,10 +1835,16 @@
             end)
 ]]
 --[[
-        CanItemBeTransfered(...)
+        CanItemBeTransfered(item, oldInventory, newInventory, client)
 
         Description:
             Determines whether an item may move between inventories.
+
+        Parameters:
+            item (Item) – Item being transferred.
+            oldInventory (Inventory) – Source inventory.
+            newInventory (Inventory) – Destination inventory.
+            client (Player) – Owning player.
 
         Realm:
             Server
@@ -1835,13 +1855,18 @@
             end)
 ]]
 --[[
-        CanOpenBagPanel(...)
+        CanOpenBagPanel(item)
 
         Description:
             Called right before a bag inventory UI opens. Return false to block opening.
 
+        Parameters:
+            item (Item) – Bag item being opened.
+
         Realm:
             Client
+        Returns:
+            boolean – False to block opening.
         Example Usage:
             -- Disallow bag use while fighting.
             hook.Add("CanOpenBagPanel", "BlockBagInCombat", function(item)
@@ -1849,13 +1874,18 @@
             end)
 ]]
 --[[
-        CanOutfitChangeModel(...)
+        CanOutfitChangeModel(item)
 
         Description:
             Checks if an outfit is allowed to change the player model.
 
+        Parameters:
+            item (Item) – Outfit item attempting to change the model.
+
         Realm:
             Shared
+        Returns:
+            boolean – False to block the change.
         Example Usage:
             -- Restrict model swaps for certain factions.
             hook.Add("CanOutfitChangeModel", "RestrictModelSwap", function(item)
@@ -1863,13 +1893,19 @@
             end)
 ]]
 --[[
-        CanPerformVendorEdit(...)
+        CanPerformVendorEdit(client, vendor)
 
         Description:
             Determines if a player can modify a vendor's settings.
 
+        Parameters:
+            client (Player) – Player attempting the edit.
+            vendor (Entity) – Vendor entity targeted.
+
         Realm:
             Shared
+        Returns:
+            boolean – False to disallow editing.
         Example Usage:
             -- Allow only admins to edit vendors.
             hook.Add("CanPerformVendorEdit", "AdminVendorEdit", function(client)
@@ -1877,13 +1913,19 @@
             end)
 ]]
 --[[
-        CanPickupMoney(...)
+        CanPickupMoney(client, moneyEntity)
 
         Description:
             Called when a player attempts to pick up a money entity.
 
+        Parameters:
+            client (Player) – Player attempting to pick up the money.
+            moneyEntity (Entity) – The money entity.
+
         Realm:
             Shared
+        Returns:
+            boolean – False to disallow pickup.
         Example Usage:
             -- Prevent money pickup while handcuffed.
             hook.Add("CanPickupMoney", "BlockWhileCuffed", function(client)
@@ -1891,13 +1933,20 @@
             end)
 ]]
 --[[
-        CanPlayerAccessDoor(...)
+        CanPlayerAccessDoor(client, door, access)
 
         Description:
             Determines if a player can open or lock a door entity.
 
+        Parameters:
+            client (Player) – Player attempting access.
+            door (Entity) – Door entity in question.
+            access (number) – Desired access level.
+
         Realm:
             Shared
+        Returns:
+            boolean – False to deny access.
         Example Usage:
             -- Only police can unlock jail cells.
             hook.Add("CanPlayerAccessDoor", "PoliceDoors", function(client, door, access)
@@ -1905,13 +1954,19 @@
             end)
 ]]
 --[[
-        CanPlayerAccessVendor(...)
+        CanPlayerAccessVendor(client, vendor)
 
         Description:
             Checks if a player is permitted to open a vendor menu.
 
+        Parameters:
+            client (Player) – Player requesting access.
+            vendor (Entity) – Vendor entity.
+
         Realm:
             Server
+        Returns:
+            boolean – False to deny access.
         Example Usage:
             -- Block access unless the vendor allows the player's faction.
             hook.Add("CanPlayerAccessVendor", "CheckVendorFaction", function(client, vendor)
@@ -1919,13 +1974,19 @@
             end)
 ]]
 --[[
-        CanPlayerHoldObject(...)
+        CanPlayerHoldObject(client, entity)
 
         Description:
             Determines if the player can pick up an entity with the hands swep.
 
+        Parameters:
+            client (Player) – Player attempting to hold the entity.
+            entity (Entity) – Target entity.
+
         Realm:
             Shared
+        Returns:
+            boolean – False to prevent holding.
         Example Usage:
             -- Prevent grabbing heavy physics objects.
             hook.Add("CanPlayerHoldObject", "WeightLimit", function(client, ent)
@@ -1933,13 +1994,20 @@
             end)
 ]]
 --[[
-        CanPlayerInteractItem(...)
+        CanPlayerInteractItem(client, action, item)
 
         Description:
             Called when a player tries to use or drop an item.
 
+        Parameters:
+            client (Player) – Player interacting with the item.
+            action (string) – Action name such as "use" or "drop".
+            item (Item) – Item being interacted with.
+
         Realm:
             Shared
+        Returns:
+            boolean – False to block the action.
         Example Usage:
             -- Block medkit use inside safe zones.
             hook.Add("CanPlayerInteractItem", "SafeZoneBlock", function(client, action, item)
@@ -1949,13 +2017,19 @@
             end)
 ]]
 --[[
-        CanPlayerKnock(...)
+        CanPlayerKnock(client, door)
 
         Description:
             Called when a player attempts to knock on a door.
 
+        Parameters:
+            client (Player) – Player knocking.
+            door (Entity) – Door being knocked on.
+
         Realm:
             Shared
+        Returns:
+            boolean – False to block knocking.
         Example Usage:
             -- Prevent knocking while disguised.
             hook.Add("CanPlayerKnock", "BlockDisguisedKnock", function(client, door)
@@ -1963,13 +2037,20 @@
             end)
 ]]
 --[[
-        CanPlayerSpawnStorage(...)
+        CanPlayerSpawnStorage(client, entity, data)
 
         Description:
             Checks if the player is allowed to spawn a storage container.
 
+        Parameters:
+            client (Player) – Player attempting to spawn.
+            entity (Entity) – Prop that will become storage.
+            data (table) – Storage definition data.
+
         Realm:
             Server
+        Returns:
+            boolean – False to deny spawning.
         Example Usage:
             -- Limit players to one storage crate.
             hook.Add("CanPlayerSpawnStorage", "LimitStorage", function(client, ent, data)
@@ -1977,13 +2058,18 @@
             end)
 ]]
 --[[
-        CanPlayerThrowPunch(...)
+        CanPlayerThrowPunch(client)
 
         Description:
             Called when the fists weapon tries to punch.
 
+        Parameters:
+            client (Player) – Player performing the punch.
+
         Realm:
             Shared
+        Returns:
+            boolean – False to block punching.
         Example Usage:
             -- Prevent punching while restrained.
             hook.Add("CanPlayerThrowPunch", "NoPunchWhenTied", function(client)
