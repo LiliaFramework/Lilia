@@ -54,7 +54,7 @@ end
 function TooltipPanel:Paint(w, h)
     self:PositionTooltip()
     if hookRun("TooltipPaint", self, w, h) then return end
-    derma.SkinHook("Paint", "Panel", self, w, h)
+    derma.SkinHook("Paint", "Tooltip", self, w, h)
 end
 
 function TooltipPanel:OpenForPanel(panel)
