@@ -73,7 +73,7 @@ local function openMenu(options, isInteraction, titleText, closeKey, netMsg)
     title:SetFont("liaSmallFont")
     title:SetColor(color_white)
     title:SetContentAlignment(5)
-    function title:PaintOver(w, h)
+    function title:PaintOver()
         surface.SetDrawColor(Color(60, 60, 60))
     end
 

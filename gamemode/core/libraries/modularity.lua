@@ -168,7 +168,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
             })
         end
 
-        local watch = isSingleFile and path or coreFile
         if string.StartsWith(path, engine.ActiveGamemode() .. "/modules") then lia.bootstrap("Module", "Finished Loading Module '" .. MODULE.name .. "'") end
         _G[variable] = prev
     end

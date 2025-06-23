@@ -4,7 +4,7 @@ for _, hookInfo in ipairs(camiHooks) do
     hook.Remove(hookInfo[1], hookInfo[2])
 end
 
-local function playerHasAccess(_, actorPly, privilegeName, callback, targetPly, extraInfoTbl)
+local function playerHasAccess(_, actorPly, privilegeName, callback)
     local priv = privilegeName:lower()
     local result = ULib.ucl.query(actorPly, priv, true)
     callback(not not result)
@@ -13,7 +13,6 @@ end
 
 hook.Add("CAMI.PlayerHasAccess", "ULXCamiPlayerHasAccess", playerHasAccess)
 local function steamIDHasAccess(_, actorSteam, privilegeName, callback, targetSteam, extraInfoTbl)
-    local priv = privilegeName:lower()
     local steamid = actorSteam:upper()
     if not ULib.isValidSteamID(steamid) then return end
     local connectedPly = ULib.getPlyByID(steamid)
@@ -36,7 +35,7 @@ local function onGroupRemoved(camiGroup, originToken)
 end
 
 hook.Add("CAMI.OnUsergroupUnregistered", "ULXCamiGroupRemoved", onGroupRemoved)
-local function onSteamIDUserGroupChanged(id, oldGroup, newGroup, originToken)
+local function onSteamIDUserGroupChanged(id, _, newGroup, originToken)
     if originToken == CAMI.ULX_TOKEN then return end
     if newGroup == ULib.ACCESS_ALL then
         if ULib.ucl.users[id] then ULib.ucl.removeUser(id, true) end
