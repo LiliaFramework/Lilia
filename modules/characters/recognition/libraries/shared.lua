@@ -6,6 +6,7 @@
 end
 
 function MODULE:isCharRecognized(character, id)
+    if not lia.config.get("RecognitionEnabled", true) then return true end
     local client = character:getPlayer()
     local recognized = character:getData("rgn", "")
     local other = lia.char.loaded[id]
