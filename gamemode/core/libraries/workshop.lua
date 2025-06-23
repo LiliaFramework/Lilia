@@ -4,23 +4,7 @@ if SERVER then
     lia.workshop.known = lia.workshop.known or {}
     lia.workshop.cache = lia.workshop.cache or {}
     local _add = resource.AddWorkshop
-    --[[
-        resource.AddWorkshop(id)
-
-        Description:
-            Overrides the default workshop adder to keep track of
-            requested addons and notify players when downloads occur.
-
-        Parameters:
-            id (string|number) – Workshop addon ID.
-
-        Realm:
-            Server
-
-        Returns:
-            None
-    ]]
-    function resource.AddWorkshop(id)
+    function lia.workshop.AddWorkshop(id)
         id = tostring(id)
         if not lia.workshop.ids[id] then lia.bootstrap("Workshop Downloader", "Added workshop " .. id .. " to download list") end
         lia.bootstrap("Workshop Downloader", "Downloading workshop " .. id)
@@ -74,7 +58,6 @@ if SERVER then
     end
 
     hook.Add("InitializedModules", "liaWorkshopInitializedModules", function() lia.workshop.cache = lia.workshop.gather() end)
-
     --[[
         lia.workshop.send(ply)
 
@@ -113,6 +96,8 @@ if SERVER then
         if not lia.config.get("AutoDownloadWorkshop", true) then return end
         timer.Simple(10, function() if IsValid(ply) then lia.workshop.send(ply) end end)
     end)
+
+    resource.AddWorkshop = lia.workshop.AddWorkshop
 else
     local queue, panel, total, remain = {}, nil, 0, 0
     local function gather()

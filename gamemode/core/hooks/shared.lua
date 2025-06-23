@@ -32,6 +32,30 @@ function GM:Move(client, moveData)
     end
 end
 
+function GM:SetupMove(client, cMoveData)
+    local character = client:getChar()
+    if not character then return end
+    local maxStamina = character:getMaxStamina()
+    local stamina = client:getLocalVar("stamina", maxStamina)
+    local walkSpeed = lia.config.get("WalkSpeed")
+    local runSpeed = lia.config.get("RunSpeed") + (character:getAttrib("stamina", 0) or 0)
+    local slowState = client:getNetVar("slow", false)
+    local slowThreshold = maxStamina * 0.15
+    if slowState then
+        cMoveData:SetMaxClientSpeed(walkSpeed * 0.5)
+        return
+    end
+
+    if stamina <= 0 then
+        client:setNetVar("slow", true)
+        cMoveData:SetMaxClientSpeed(walkSpeed * 0.5)
+    elseif stamina <= slowThreshold then
+        cMoveData:SetMaxClientSpeed(walkSpeed)
+    elseif client:WaterLevel() > 1 then
+        cMoveData:SetMaxClientSpeed(runSpeed * 0.775)
+    end
+end
+
 function GM:InitPostEntity()
     if SERVER then
         lia.faction.formatModelData()

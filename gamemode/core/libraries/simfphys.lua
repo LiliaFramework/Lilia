@@ -1,18 +1,4 @@
 if SERVER then
-    --[[
-        hook.Add("EntityTakeDamage")
-
-        Description:
-            Transfers a portion of vehicle damage to the driver when a
-            simfphys seat is hit near the player.
-
-        Parameters:
-            seat (Entity) – Vehicle seat entity receiving damage.
-            dmgInfo (CTakeDamageInfo) – Damage information.
-
-        Realm:
-            Server
-    ]]
     hook.Add("EntityTakeDamage", "SIMFPHYS_EntityTakeDamage", function(seat, dmgInfo)
         if seat:IsVehicle() and seat:GetClass() == "gmod_sent_vehicle_fphysics_base" then
             local player = seat:GetDriver()
@@ -32,22 +18,6 @@ if SERVER then
         end
     end)
 
-    --[[
-        hook.Add("simfphysUse")
-
-        Description:
-            Adds a configurable delay before entering a Simfphys vehicle.
-
-        Parameters:
-            entity (Entity) – Vehicle being used.
-            client (Player) – Player attempting to enter.
-
-        Realm:
-            Server
-
-        Returns:
-            alwaysTrue (boolean) – Always returns true to override default behavior.
-    ]]
     hook.Add("simfphysUse", "SIMFPHYS_simfphysUse", function(entity, client)
         if entity.IsBeingEntered then
             client:notifyLocalized("carOccupiedNotice")
@@ -74,22 +44,6 @@ else
     hook.Remove("HUDPaint", "simfphys_HUD")
 end
 
---[[
-    hook.Add("CheckValidSit")
-
-    Description:
-        Prevents players from sitting on Simfphys vehicles when using
-        the Sit Anywhere module.
-
-    Parameters:
-        client (Player) – Player attempting to sit.
-
-    Realm:
-        Shared
-
-    Returns:
-        false if the traced entity is a Simfphys vehicle.
-]]
 hook.Add("CheckValidSit", "SIMFPHYS_CheckValidSit", function(client)
     local vehicle = client:getTracedEntity()
     if IsValid(vehicle) and vehicle:isSimfphysCar() then return false end
@@ -121,31 +75,6 @@ CAMI.RegisterPrivilege({
     Description = "Allows access to Editting Simfphys Cars"
 })
 
---[[
-    hook.Add("simfphysPhysicsCollide")
-
-    Description:
-        Always allows physics collisions for Simfphys vehicles.
-]]
 hook.Add("simfphysPhysicsCollide", "SIMFPHYS_simfphysPhysicsCollide", function() return true end)
-
---[[
-    hook.Add("IsSuitableForTrunk")
-
-    Description:
-        Marks Simfphys vehicles as valid targets for trunk storage.
-]]
 hook.Add("IsSuitableForTrunk", "SIMFPHYS_IsSuitableForTrunk", function(vehicle) if IsValid(vehicle) and vehicle:isSimfphysCar() then return true end end)
-
---[[
-    hook.Add("CanProperty")
-
-    Description:
-        Restricts the "editentity" property to staff with the appropriate privilege.
-
-    Parameters:
-        client (Player) – Player using the property tool.
-        property (string) – Property name.
-        ent (Entity) – Target entity.
-]]
 hook.Add("CanProperty", "SIMFPHYS_CanProperty", function(client, property, ent) if property == "editentity" and ent:isSimfphysCar() then return client:hasPrivilege("Staff Permissions - Can Edit Simfphys Cars") end end)

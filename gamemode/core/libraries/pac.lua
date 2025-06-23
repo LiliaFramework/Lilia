@@ -236,19 +236,6 @@ else
     end)
 end
 
---[[
-    net.Receive("liaPACSync")
-
-    Description:
-        Attaches all currently equipped PAC3 parts from every player when
-        the local client requests synchronization.
-
-    Realm:
-        Client
-
-    Returns:
-        None
-]]
 net.Receive("liaPACSync", function()
     for _, client in player.Iterator() do
         for id in pairs(client:getParts()) do
@@ -257,18 +244,6 @@ net.Receive("liaPACSync", function()
     end
 end)
 
---[[
-    net.Receive("liaPACPartAdd")
-
-    Description:
-        Receives a part addition for a player and attaches it locally.
-
-    Realm:
-        Client
-
-    Returns:
-        None
-]]
 net.Receive("liaPACPartAdd", function()
     local client = net.ReadEntity()
     local id = net.ReadString()
@@ -276,18 +251,6 @@ net.Receive("liaPACPartAdd", function()
     hook.Run("attachPart", client, id)
 end)
 
---[[
-    net.Receive("liaPACPartRemove")
-
-    Description:
-        Handles the removal of a PAC3 part from a player on the client.
-
-    Realm:
-        Client
-
-    Returns:
-        None
-]]
 net.Receive("liaPACPartRemove", function()
     local client = net.ReadEntity()
     local id = net.ReadString()
@@ -295,18 +258,6 @@ net.Receive("liaPACPartRemove", function()
     hook.Run("removePart", client, id)
 end)
 
---[[
-    net.Receive("liaPACPartReset")
-
-    Description:
-        Clears all PAC3 parts from a player on the client side.
-
-    Realm:
-        Client
-
-    Returns:
-        None
-]]
 net.Receive("liaPACPartReset", function()
     local client = net.ReadEntity()
     if not IsValid(client) or not client.RemovePACPart then return end
@@ -319,15 +270,6 @@ net.Receive("liaPACPartReset", function()
     end
 end)
 
---[[
-    fixpac command
-
-    Description:
-        Clears cached PAC3 data on the client to resolve issues.
-
-    Realm:
-        Server
-]]
 lia.command.add("fixpac", {
     adminOnly = false,
     desc = L("pacFixCommandDesc"),
@@ -345,15 +287,6 @@ lia.command.add("fixpac", {
     end
 })
 
---[[
-    pacenable command
-
-    Description:
-        Enables PAC3 for the calling player.
-
-    Realm:
-        Server
-]]
 lia.command.add("pacenable", {
     adminOnly = false,
     desc = L("pacEnableCommandDesc"),
@@ -363,15 +296,6 @@ lia.command.add("pacenable", {
     end
 })
 
---[[
-    pacdisable command
-
-    Description:
-        Disables PAC3 for the calling player.
-
-    Realm:
-        Server
-]]
 lia.command.add("pacdisable", {
     adminOnly = false,
     desc = L("pacDisableCommandDesc"),
