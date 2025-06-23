@@ -910,8 +910,10 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
         populate("")
     end
 
-    pages[#pages + 1] = {
-        name = "Configuration",
-        drawFunc = function(parent) buildConfiguration(parent) end
-    }
+    if LocalPlayer():hasPrivilege("Staff Permissions - Access Edit Configuration Menu") then
+        pages[#pages + 1] = {
+            name = "Configuration",
+            drawFunc = function(parent) buildConfiguration(parent) end
+        }
+    end
 end)
