@@ -637,7 +637,7 @@ end
 
 function GM:OnReloaded()
     lia.config.load()
-    lia.module.refreshChanged()
+    lia.module.initialize()
     lia.faction.formatModelData()
     if CLIENT then
         lia.option.load()

@@ -243,34 +243,6 @@ function lia.module.loadFromDir(directory, group)
 end
 
 --[[
-   lia.module.refreshChanged
-
-   Description:
-      Checks each registered module’s source file timestamp and reloads any module whose file has been modified since the last check.
-
-   Parameters:
-      None
-
-   Returns:
-      None
-]]
-function lia.module.refreshChanged()
-    for id, mod in pairs(lia.module.list) do
-        local single = mod.folder:sub(-4) == ".lua"
-        local watch = single and mod.folder or file.Exists(mod.folder .. "/module.lua", "LUA") and mod.folder .. "/module.lua" or mod.folder .. "/" .. id .. ".lua"
-        local t = file.Time(watch, "LUA") or 0
-        if t ~= lia.module.fileTimes[id] then
-            local var = id == "schema" and "SCHEMA" or "MODULE"
-            lia.module.load(id, mod.folder, single, var, true)
-            local m = lia.module.list[id]
-            if id ~= "schema" and m then lia.bootstrap("Module", "Reloaded Module '" .. m.name .. "'") end
-        end
-
-        lia.module.fileTimes[id] = t
-    end
-end
-
---[[
    lia.module.get
 
    Description:
