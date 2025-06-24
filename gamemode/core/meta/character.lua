@@ -2,18 +2,69 @@
 characterMeta.__index = characterMeta
 characterMeta.id = characterMeta.id or 0
 characterMeta.vars = characterMeta.vars or {}
+--[[
+    characterMeta:tostring()
+
+    Description:
+        Returns a printable identifier for this character.
+
+    Realm:
+        Shared
+
+    Returns:
+        string – Format "character[id]".
+]]
 function characterMeta:tostring()
     return "character[" .. (self.id or 0) .. "]"
 end
 
+--[[
+    characterMeta:eq(other)
+
+    Description:
+        Compares two characters by ID for equality.
+
+    Parameters:
+        other (Character) – Character to compare.
+
+    Realm:
+        Shared
+
+    Returns:
+        boolean – True if both share the same ID.
+]]
 function characterMeta:eq(other)
     return self:getID() == other:getID()
 end
 
+--[[
+    characterMeta:getID()
+
+    Description:
+        Returns the unique database ID for this character.
+
+    Realm:
+        Shared
+
+    Returns:
+        number – Character identifier.
+]]
 function characterMeta:getID()
     return self.id
 end
 
+--[[
+    characterMeta:getPlayer()
+
+    Description:
+        Returns the player entity currently controlling this character.
+
+    Realm:
+        Shared
+
+    Returns:
+        Player|nil – Owning player or nil.
+]]
 function characterMeta:getPlayer()
     if IsValid(self.player) then return self.player end
     for _, v in player.Iterator() do
@@ -32,6 +83,21 @@ function characterMeta:getPlayer()
     end
 end
 
+--[[
+    characterMeta:getDisplayedName(client)
+
+    Description:
+        Returns the character's name as it should be shown to the given player.
+
+    Parameters:
+        client (Player) – Player requesting the name.
+
+    Realm:
+        Shared
+
+    Returns:
+        string – Localized or recognized character name.
+]]
 function characterMeta:getDisplayedName(client)
     local isRecognitionEnabled = lia.config.get("RecognitionEnabled", true)
     if not isRecognitionEnabled then return self:getName() end
@@ -46,16 +112,58 @@ function characterMeta:getDisplayedName(client)
     return L("unknown")
 end
 
+--[[
+    characterMeta:hasMoney(amount)
+
+    Description:
+        Checks if the character has at least the given amount of money.
+
+    Parameters:
+        amount (number) – Amount to check for.
+
+    Realm:
+        Shared
+
+    Returns:
+        boolean – True if the character's funds are sufficient.
+]]
 function characterMeta:hasMoney(amount)
     amount = tonumber(amount) or 0
     if amount < 0 then return false end
     return self:getMoney() >= amount
 end
 
+--[[
+    characterMeta:getFlags()
+
+    Description:
+        Retrieves the string of permission flags for this character.
+
+    Realm:
+        Shared
+
+    Returns:
+        string – Concatenated flag characters.
+]]
 function characterMeta:getFlags()
     return self:getData("f", "")
 end
 
+--[[
+    characterMeta:hasFlags(flags)
+
+    Description:
+        Checks if the character possesses any of the specified flags.
+
+    Parameters:
+        flags (string) – String of flag characters to check.
+
+    Realm:
+        Shared
+
+    Returns:
+        boolean – True if at least one flag is present.
+]]
 function characterMeta:hasFlags(flags)
     for i = 1, #flags do
         if self:getFlags():find(flags:sub(i, i), 1, true) then return true end
@@ -63,6 +171,21 @@ function characterMeta:hasFlags(flags)
     return hook.Run("CharHasFlags", self, flags) or false
 end
 
+--[[
+    characterMeta:getItemWeapon(requireEquip)
+
+    Description:
+        Checks the player's active weapon against items in the inventory.
+
+    Parameters:
+        requireEquip (boolean) – Only match equipped items if true.
+
+    Realm:
+        Shared
+
+    Returns:
+        boolean – True if the active weapon corresponds to an item.
+]]
 function characterMeta:getItemWeapon(requireEquip)
     if requireEquip == nil then requireEquip = true end
     local client = self:getPlayer()
@@ -76,29 +199,114 @@ function characterMeta:getItemWeapon(requireEquip)
     return false
 end
 
+--[[
+    characterMeta:getMaxStamina()
+
+    Description:
+        Returns the maximum stamina value for this character.
+
+    Realm:
+        Shared
+
+    Returns:
+        number – Maximum stamina points.
+]]
 function characterMeta:getMaxStamina()
     local maxStamina = hook.Run("getCharMaxStamina", self) or lia.config.get("DefaultStamina", 100)
     return maxStamina
 end
 
+--[[
+    characterMeta:getStamina()
+
+    Description:
+        Retrieves the character's current stamina value.
+
+    Realm:
+        Shared
+
+    Returns:
+        number – Current stamina.
+]]
 function characterMeta:getStamina()
     local stamina = self:getPlayer():getLocalVar("stamina", 100) or lia.config.get("DefaultStamina", 100)
     return stamina
 end
 
+--[[
+    characterMeta:hasClassWhitelist(class)
+
+    Description:
+        Checks if the character has whitelisted the given class.
+
+    Parameters:
+        class (number) – Class index.
+
+    Realm:
+        Shared
+
+    Returns:
+        boolean – True if the class is whitelisted.
+]]
 function characterMeta:hasClassWhitelist(class)
     local wl = self:getData("whitelist", {})
     return wl[class] ~= nil
 end
 
+--[[
+    characterMeta:isFaction(faction)
+
+    Description:
+        Returns true if the character's faction matches.
+
+    Parameters:
+        faction (number) – Faction index.
+
+    Realm:
+        Shared
+
+    Returns:
+        boolean – Whether the faction matches.
+]]
 function characterMeta:isFaction(faction)
     return self:getFaction() == faction
 end
 
+--[[
+    characterMeta:isClass(class)
+
+    Description:
+        Returns true if the character's class equals the specified class.
+
+    Parameters:
+        class (number) – Class index.
+
+    Realm:
+        Shared
+
+    Returns:
+        boolean – Whether the classes match.
+]]
 function characterMeta:isClass(class)
     return self:getClass() == class
 end
 
+--[[
+    characterMeta:getAttrib(key, default)
+
+    Description:
+        Retrieves the value of an attribute including boosts.
+
+    Parameters:
+        key (string) – Attribute identifier.
+        default (number) – Default value when attribute is missing.
+
+    Realm:
+        Shared
+
+    Returns:
+        number – Final attribute value.
+]]
 function characterMeta:getAttrib(key, default)
     local att = self:getAttribs()[key] or default or 0
     local boosts = self:getBoosts()[key]
@@ -110,20 +318,77 @@ function characterMeta:getAttrib(key, default)
     return att
 end
 
+--[[
+    characterMeta:getBoost(attribID)
+
+    Description:
+        Returns the boost table for the given attribute.
+
+    Parameters:
+        attribID (string) – Attribute identifier.
+
+    Realm:
+        Shared
+
+    Returns:
+        table|nil – Table of boosts or nil.
+]]
 function characterMeta:getBoost(attribID)
     local boosts = self:getBoosts()
     return boosts[attribID]
 end
 
+--[[
+    characterMeta:getBoosts()
+
+    Description:
+        Retrieves all attribute boosts for this character.
+
+    Realm:
+        Shared
+
+    Returns:
+        table – Mapping of attribute IDs to boost tables.
+]]
 function characterMeta:getBoosts()
     return self:getVar("boosts", {})
 end
 
+--[[
+    characterMeta:doesRecognize(id)
+
+    Description:
+        Determines if this character recognizes another character.
+
+    Parameters:
+        id (number|Character) – Character ID or object to check.
+
+    Realm:
+        Shared
+
+    Returns:
+        boolean – True if recognized.
+]]
 function characterMeta:doesRecognize(id)
     if not isnumber(id) and id.getID then id = id:getID() end
     return hook.Run("isCharRecognized", self, id) ~= false
 end
 
+--[[
+    characterMeta:doesFakeRecognize(id)
+
+    Description:
+        Checks if the character has a fake recognition entry for another.
+
+    Parameters:
+        id (number|Character) – Character identifier.
+
+    Realm:
+        Shared
+
+    Returns:
+        boolean – True if fake recognized.
+]]
 function characterMeta:doesFakeRecognize(id)
     if not isnumber(id) and id.getID then id = id:getID() end
     return hook.Run("isCharFakeRecognized", self, id) ~= false
