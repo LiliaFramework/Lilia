@@ -1,4 +1,9 @@
-﻿DarkRP = DarkRP or {}
+--[[
+    Provides compatibility with the DarkRP gamemode.
+    Maps functions such as entity creation, money formatting and
+    empty position checks so DarkRP addons work with the Lilia framework.
+]]
+DarkRP = DarkRP or {}
 RPExtraTeams = RPExtraTeams or {}
 lia.darkrp = lia.darkrp or {}
 if SERVER then

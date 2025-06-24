@@ -1,4 +1,9 @@
-﻿hook.Add("InitializedModules", "SAM_InitializedModules", function()
+--[[
+    Integrates the SAM admin mod with Lilia.
+    Recreates SAM commands, adds staff permission checks and
+    exposes SAM privileges through CAMI.
+]]
+hook.Add("InitializedModules", "SAM_InitializedModules", function()
     for _, commandInfo in ipairs(sam.command.get_commands()) do
         local customSyntax = ""
         for _, argInfo in ipairs(commandInfo.args) do
