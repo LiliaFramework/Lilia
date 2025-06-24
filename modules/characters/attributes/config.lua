@@ -27,6 +27,14 @@ lia.config.add("MaxAttributePoints", "Max Attribute Points", 30, nil, {
     max = 100
 })
 
+lia.config.add("JumpStaminaCost", "Jump Stamina Cost", 100, nil, {
+    desc = "Stamina cost deducted when the player jumps",
+    category = "Attributes",
+    type = "Int",
+    min = 0,
+    max = 1000
+})
+
 lia.config.add("MaxStartingAttributes", "Max Starting Attributes", 30, nil, {
     desc = "Maximum value of each attribute at character creation.",
     category = "Attributes",
