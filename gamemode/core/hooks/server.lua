@@ -702,7 +702,7 @@ local function checkPublicModules()
             elseif not match.version then
                 lia.updater("Module '" .. info.name .. "' has no remote version info")
             elseif match.version ~= info.localVersion then
-                lia.updater("Module '" .. info.name .. "' is outdated. Update to version " .. match.version .. " at " .. match.source)
+                lia.updater("Module '" .. info.name .. "' is outdated. Update to version " .. match.version)
             end
         end
     end, function(err) lia.updater("Error fetching module list: " .. err) end)

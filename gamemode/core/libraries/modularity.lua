@@ -160,7 +160,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
                 uniqueID = MODULE.uniqueID,
                 name = MODULE.name,
                 localVersion = MODULE.version,
-                source = MODULE.source
             })
         end
 
@@ -170,7 +169,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
                 uniqueID = MODULE.uniqueID,
                 name = MODULE.name,
                 localVersion = MODULE.version,
-                source = MODULE.source
             })
         end
 
