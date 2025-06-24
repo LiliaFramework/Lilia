@@ -1,4 +1,9 @@
-﻿if SERVER then
+--[[
+    Adds Simfphys vehicle support.
+    Applies crash damage to drivers, registers configuration settings
+    and defines privileges for editing cars.
+]]
+if SERVER then
     hook.Add("EntityTakeDamage", "SIMFPHYS_EntityTakeDamage", function(seat, dmgInfo)
         if seat:IsVehicle() and seat:GetClass() == "gmod_sent_vehicle_fphysics_base" then
             local player = seat:GetDriver()
