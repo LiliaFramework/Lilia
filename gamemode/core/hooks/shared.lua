@@ -21,10 +21,6 @@ function GM:OnCharVarChanged(character, varName, oldVar, newVar)
     end
 end
 
-function GM:GetDefaultInventoryType()
-    return lia.module.list["weightinv"] and "WeightInv" or "GridInv"
-end
-
 local GamemodeFunctions = {
     server = {
         {
@@ -90,11 +86,6 @@ local GamemodeFunctions = {
         {
             name = "DrawDeathNotice",
             returnValue = false
-        },
-        {
-            name = "CanDisplayCharacterInfo",
-            args = {"client", "id"},
-            replacement = "CanDisplayCharInfo"
         },
         {
             name = "KickedFromCharacter",
