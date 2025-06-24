@@ -1703,24 +1703,6 @@
             end)
 ]]
 --[[
-        CanDisplayCharInfo(client, id)
-
-        Description:
-            Replacement for deprecated CanDisplayCharacterInfo.
-            Determines if a character can be shown.
-
-        Parameters:
-            client (Player) – Local player.
-            id (number) – Character ID.
-
-        Realm:
-            Client
-        Example Usage:
-            hook.Add("CanDisplayCharInfo", "AllowAll", function()
-                return true
-            end)
-]]
---[[
         CharListLoaded(newCharList)
 
         Description:
@@ -1768,8 +1750,73 @@
         Realm:
             Shared
         Example Usage:
-            hook.Add("getCharMaxStamina", "Double", function(char)
-                return 200
+        hook.Add("getCharMaxStamina", "Double", function(char)
+            return 200
+        end)
+]]
+--[[
+        AdjustStaminaOffsetRunning(client, runCost)
+
+        Description:
+            Alters the stamina offset applied each tick while sprinting.
+            Return a new cost to modify how quickly stamina drains when running.
+
+        Parameters:
+            client (Player) – Player that is sprinting.
+            runCost (number) – Proposed stamina cost.
+
+        Realm:
+            Shared
+
+        Returns:
+            number – Modified stamina cost.
+        Example Usage:
+            hook.Add("AdjustStaminaOffsetRunning", "EnduranceBonus", function(ply, cost)
+                return cost + ply:getChar():getAttrib("stm", 0) * -0.01
+            end)
+]]
+--[[
+        AdjustStaminaRegeneration(client, regen)
+
+        Description:
+            Allows changing how quickly stamina regenerates when not sprinting.
+            Return a new amount to modify regeneration speed.
+
+        Parameters:
+            client (Player) – Player recovering stamina.
+            regen (number) – Default regeneration per tick.
+
+        Realm:
+            Shared
+
+        Returns:
+            number – Modified regeneration amount.
+        Example Usage:
+            hook.Add("AdjustStaminaRegeneration", "RestAreaBoost", function(ply, amount)
+                if ply:isInSafeZone() then
+                    return amount * 2
+                end
+            end)
+]]
+--[[
+        AdjustStaminaOffset(client, offset)
+
+        Description:
+            Final hook for tweaking the calculated stamina offset.
+            Return the modified offset value to apply each tick.
+
+        Parameters:
+            client (Player) – Player whose stamina is updating.
+            offset (number) – Current offset after other adjustments.
+
+        Realm:
+            Shared
+
+        Returns:
+            number – New offset to apply.
+        Example Usage:
+            hook.Add("AdjustStaminaOffset", "MinimumDrain", function(ply, off)
+                return math.max(off, -1)
             end)
 ]]
 --[[
@@ -3234,7 +3281,7 @@
         Example Usage:
             hook.Add("CreateDefaultInventory", "InitializeStarterInventory", function(character)
                 local d = deferred.new()
-            
+
                 someInventoryCreationFunction(character)
                     :next(function(inventory)
                         -- Add starter items
@@ -3245,7 +3292,7 @@
                         print("Failed to create inventory:", err)
                         d:reject(err)
                     end)
-            
+
                 return d
             end)
 ]]
@@ -3268,10 +3315,10 @@
                 panel.Paint = function(self, w, h)
                     draw.RoundedBox(8, 0, 0, w, h, Color(30, 30, 30, 200))
                 end
-            
+
                 local itemList = vgui.Create("DScrollPanel", panel)
                 itemList:Dock(FILL)
-            
+
                 for _, item in ipairs(inventory:getItems()) do
                     local itemPanel = vgui.Create("DButton", itemList)
                     itemPanel:SetText(item.name)
@@ -3281,7 +3328,7 @@
                         print("Selected item:", item.name)
                     end
                 end
-            
+
                 return panel
             end)
 ]]
