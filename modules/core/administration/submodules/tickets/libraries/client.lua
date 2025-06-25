@@ -33,7 +33,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     frm.lblTitle:SetFont("ticketsystem")
     frm.lblTitle:SetContentAlignment(7)
     if claimed and IsValid(claimed) and claimed:IsPlayer() then
-        frm:SetTitle(requester:Nick() .. " - Claimed by " .. claimed:Nick())
+        frm:SetTitle(requester:Nick() .. " - " .. L("claimedBy") .. " " .. claimed:Nick())
         if claimed == LocalPlayer() then
             function frm:Paint(w, h)
                 draw.RoundedBox(0, 0, 0, w, h, Color(10, 10, 10, 230))
@@ -83,7 +83,7 @@ function MODULE:TicketFrame(requester, message, claimed)
             surface.DrawTexturedRect(5, 1, 16, 16)
         end
 
-        if disabled then btn:SetTooltip("You cannot perform this action on your own ticket.") end
+        if disabled then btn:SetTooltip(L("ticketActionSelf")) end
         return btn
     end
 
@@ -94,17 +94,17 @@ function MODULE:TicketFrame(requester, message, claimed)
     createButton("bring", mat_arrow, 20 * 4, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "bring", sam and requester:SteamID() or requester:SteamID64()) end, isLocalPlayer)
     local shouldClose = false
     local claimButton
-    claimButton = createButton("Claim case", mat_case, 20 * 5, function()
+    claimButton = createButton("claimCase", mat_case, 20 * 5, function()
         if not shouldClose then
             if frm.lblTitle:GetText():lower():find("claimed") then
-                chat.AddText(Color(255, 150, 0), "[ERROR] Case has already been claimed")
+                chat.AddText(Color(255, 150, 0), "[ERROR] " .. L("caseAlreadyClaimed"))
                 surface.PlaySound("common/wpn_denyselect.wav")
             else
                 net.Start("TicketSystemClaim")
                 net.WriteEntity(requester)
                 net.SendToServer()
                 shouldClose = true
-                claimButton:SetText("          Close case")
+                claimButton:SetText("          " .. L("closeCase"))
             end
         else
             net.Start("TicketSystemClose")
@@ -115,7 +115,7 @@ function MODULE:TicketFrame(requester, message, claimed)
 
     local closeButton = vgui.Create("DButton", frm)
     closeButton:SetText("×")
-    closeButton:SetTooltip("Close")
+    closeButton:SetTooltip(L("close"))
     closeButton:SetColor(Color(255, 255, 255))
     closeButton:SetPos(w - 18, 2)
     closeButton:SetSize(16, 16)

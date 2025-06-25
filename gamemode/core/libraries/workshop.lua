@@ -272,7 +272,7 @@ else
                 lbl:SetFont("liaSmallFont")
                 lbl:SetTextColor(color_white)
                 lbl:SetContentAlignment(5)
-                lbl:SetText("Total Auto Downloaded Addons: " .. table.Count(ids))
+                lbl:SetText(L("totalAutoAddons", table.Count(ids)))
                 local sc = vgui.Create("DScrollPanel", panel)
                 sc:Dock(FILL)
                 sc:DockPadding(0, 10, 0, 0)

@@ -1200,12 +1200,12 @@ lia.command.add("getmodel", {
     onRun = function(client)
         local entity = client:getTracedEntity()
         if not IsValid(entity) then
-            client:notify("No valid entity found in front of you.")
+            client:notifyLocalized("noEntityInFront")
             return
         end
 
         local model = entity:GetModel() or "No model found."
-        client:ChatPrint("The model is: " .. model)
+        client:ChatPrint(L("modelIs", model))
     end
 })
 
@@ -1253,7 +1253,7 @@ lia.command.add("chargetmodel", {
             return
         end
 
-        client:ChatPrint("Character Model: " .. target:GetModel())
+        client:ChatPrint(L("charModelIs", target:GetModel()))
     end
 })
 
@@ -1289,9 +1289,9 @@ lia.command.add("checkflags", {
 
         local flags = target:getChar():getFlags()
         if flags and #flags > 0 then
-            client:ChatPrint(target:Name() .. " — " .. table.concat(flags, ", "))
+            client:ChatPrint(L("charFlags", target:Name(), table.concat(flags, ", ")))
         else
-            client:ChatPrint(target:Name() .. " has no flags.")
+            client:ChatPrint(L("noFlags", target:Name()))
         end
     end
 })
@@ -1314,7 +1314,7 @@ lia.command.add("chargetname", {
             return
         end
 
-        client:ChatPrint("Character Name: " .. target:getChar():getName())
+        client:ChatPrint(L("charNameIs", target:getChar():getName()))
     end
 })
 
@@ -1336,7 +1336,7 @@ lia.command.add("chargethealth", {
             return
         end
 
-        client:ChatPrint("Character Health: " .. target:Health() .. "/" .. target:GetMaxHealth())
+        client:ChatPrint(L("charHealthIs", target:Health(), target:GetMaxHealth()))
     end
 })
 
@@ -1359,7 +1359,7 @@ lia.command.add("chargetmoney", {
         end
 
         local money = target:getChar():getMoney()
-        client:ChatPrint("Character Money: " .. lia.currency.get(money))
+        client:ChatPrint(L("charMoneyIs", lia.currency.get(money)))
     end
 })
 
@@ -1393,6 +1393,6 @@ lia.command.add("chargetinventory", {
             table.insert(result, item.name)
         end
 
-        client:ChatPrint("Character Inventory: " .. table.concat(result, ", "))
+        client:ChatPrint(L("charInventoryIs", table.concat(result, ", ")))
     end
 })

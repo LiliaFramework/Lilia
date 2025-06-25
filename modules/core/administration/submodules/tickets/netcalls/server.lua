@@ -10,7 +10,7 @@ end)
 net.Receive("TicketSystemClaim", function(_, client)
     local requester = net.ReadEntity()
     if client == requester then
-        client:ChatPrint("You cannot claim your own ticket.")
+        client:notifyLocalized("ticketActionSelf")
         return
     end
 
@@ -32,7 +32,7 @@ end)
 net.Receive("TicketSystemClose", function(_, client)
     local requester = net.ReadEntity()
     if client == requester then
-        client:ChatPrint("You cannot close your own ticket.")
+        client:notifyLocalized("ticketActionSelf")
         return
     end
 

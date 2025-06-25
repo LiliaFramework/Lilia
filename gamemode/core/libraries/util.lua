@@ -1058,7 +1058,7 @@ else
                                 local combo = vgui.Create("DComboBox", form)
                                 combo:Dock(TOP)
                                 combo:DockMargin(5, 5, 5, 0)
-                                combo:SetValue("Select " .. fName)
+                                combo:SetValue(L("selectPrompt", fName))
                                 form:AddItem(combo)
                                 inputs[fName] = {
                                     panel = combo,
@@ -1068,7 +1068,7 @@ else
                                 local combo = vgui.Create("DComboBox", form)
                                 combo:Dock(TOP)
                                 combo:DockMargin(5, 5, 5, 0)
-                                combo:SetValue("Select " .. fName)
+                                combo:SetValue(L("selectPrompt", fName))
                                 for _, choice in ipairs(fType) do
                                     combo:AddChoice(choice)
                                 end
@@ -1082,7 +1082,7 @@ else
                         end
 
                         local submitButton = vgui.Create("DButton", form)
-                        submitButton:SetText("submit")
+                        submitButton:SetText(L("submit"))
                         submitButton:Dock(TOP)
                         submitButton:DockMargin(5, 10, 5, 0)
                         form:AddItem(submitButton)

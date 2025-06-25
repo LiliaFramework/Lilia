@@ -402,7 +402,7 @@ lia.command.add("savedoors", {
     onRun = function(client)
         MODULE:SaveData()
         lia.log.add(client, "doorSaveData")
-        client:notify("Saved Doors!")
+        client:notifyLocalized("doorsSaved")
     end
 })
 

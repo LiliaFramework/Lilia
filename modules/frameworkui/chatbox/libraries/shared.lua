@@ -187,7 +187,7 @@ lia.chat.register("adminchat", {
     onCanHear = function(_, listener) return listener:hasPrivilege("Staff Permissions - Admin Chat") end,
     onCanSay = function(speaker)
         if not speaker:hasPrivilege("Staff Permissions - Admin Chat") then
-            speaker:notify("You aren't an admin. Use '@messagehere' to create a ticket.")
+            speaker:notifyLocalized("notAdminForTicket")
             return false
         end
         return true
@@ -248,17 +248,17 @@ lia.chat.register("ooc", {
     desc = L("oocDesc"),
     onCanSay = function(speaker, text)
         if GetGlobalBool("oocblocked", false) then
-            speaker:notify("The OOC is Globally Blocked!")
+            speaker:notifyLocalized("oocBlocked")
             return false
         end
 
         if MODULE.OOCBans[speaker:SteamID64()] then
-            speaker:notify("You have been banned from using OOC!")
+            speaker:notifyLocalized("oocBanned")
             return false
         end
 
         if #text > lia.config.get("OOCLimit", 150) then
-            speaker:notify("Text too big!")
+            speaker:notifyLocalized("textTooBig")
             return false
         end
 

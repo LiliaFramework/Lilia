@@ -6,7 +6,7 @@
                 name = "Name: " .. target:Name() .. " (copy)",
                 image = "icon16/page_copy.png",
                 func = function()
-                    client:ChatPrint("Copied " .. target:Name() .. " to Clipboard!")
+                    client:ChatPrint(L("copiedToClipboard", target:Name(), "Name"))
                     SetClipboardText(target:Name())
                 end
             },
@@ -15,7 +15,7 @@
                 image = "icon16/page_copy.png",
                 func = function()
                     if target:getChar() then
-                        client:ChatPrint("Copied CharID: " .. target:getChar():getID() .. " to Clipboard!")
+                        client:ChatPrint(L("copiedCharID", target:getChar():getID()))
                         SetClipboardText(target:getChar():getID())
                     end
                 end
@@ -24,7 +24,7 @@
                 name = "SteamID: " .. target:SteamID() .. " (copy)",
                 image = "icon16/page_copy.png",
                 func = function()
-                    client:ChatPrint("Copied SteamID: " .. target:SteamID() .. " to Clipboard!")
+                    client:ChatPrint(L("copiedToClipboard", target:Name(), "SteamID"))
                     SetClipboardText(target:SteamID())
                 end
             },
@@ -32,7 +32,7 @@
                 name = "SteamID64: " .. target:SteamID64() .. " (copy)",
                 image = "icon16/page_copy.png",
                 func = function()
-                    client:ChatPrint("Copied SteamID64: " .. target:SteamID64() .. " to Clipboard!")
+                    client:ChatPrint(L("copiedToClipboard", target:Name(), "SteamID64"))
                     SetClipboardText(target:SteamID64())
                 end
             },
