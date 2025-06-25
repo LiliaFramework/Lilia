@@ -1,33 +1,4 @@
-﻿local function textWrap(text, font, maxWidth)
-    text = text or ""
-    local totalWidth = 0
-    surface.SetFont(font)
-    local spaceWidth = surface.GetTextSize(' ')
-    text = text:gsub("(%s?[%S]+)", function(word)
-        local char = string.sub(word, 1, 1)
-        if char == "\n" or char == "\t" then totalWidth = 0 end
-        local wordlen = surface.GetTextSize(word)
-        totalWidth = totalWidth + wordlen
-        if wordlen >= maxWidth then
-            local splitWord, splitPoint = charWrap(word, maxWidth - (totalWidth - wordlen), maxWidth)
-            totalWidth = splitPoint
-            return splitWord
-        elseif totalWidth < maxWidth then
-            return word
-        end
-
-        if char == ' ' then
-            totalWidth = wordlen - spaceWidth
-            return '\n' .. string.sub(word, 2)
-        end
-
-        totalWidth = wordlen
-        return '\n' .. word
-    end)
-    return text
-end
-
-spawnmenu.AddContentType("inventoryitem", function(container, data)
+﻿spawnmenu.AddContentType("inventoryitem", function(container, data)
     local client = LocalPlayer()
     if not client:hasPrivilege("Staff Permissions - Can Use Item Spawner") then return end
     local icon = vgui.Create("ContentIcon", container)
@@ -39,7 +10,7 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
     local matName = string.Replace(model, ".mdl", "")
     icon.Image:SetMaterial(Material("spawnicons/" .. matName .. ".png"))
     icon:SetColor(Color(205, 92, 92, 255))
-    icon:SetTooltip(textWrap(itemData.desc or "", "DermaDefault", 560))
+    icon:SetTooltip(lia.darkrp.textWrap(itemData.desc or "", "DermaDefault", 560))
     icon.DoClick = function()
         net.Start("SpawnMenuSpawnItem")
         net.WriteString(data.id)
