@@ -33,7 +33,7 @@ net.Receive("lia_managesitrooms_action", function(_, client)
             client:SetNW2Vector("previousSitroomPos", client:GetPos())
             client:SetPos(targetPos)
             client:notifyLocalized("sitroomTeleport", name)
-            lia.log.add(client, "sendToSitRoom", string.format("Map: %s | Name: %s | Position: %s", mapName, name, tostring(targetPos)), "Teleported to sitroom")
+            lia.log.add(client, "sendToSitRoom", client:Name(), name)
         end
     elseif action == 2 then
         local newName = net.ReadString()

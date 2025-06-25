@@ -336,6 +336,7 @@ lia.command.add("flaggive", {
 
         target:getChar():giveFlags(flags)
         client:notifyLocalized("flagGive", client:Name(), flags, target:Name())
+        lia.log.add(client, "flagGive", target:Name(), flags)
     end,
     alias = {"giveflag", "chargiveflag"}
 })
@@ -364,6 +365,7 @@ lia.command.add("flaggiveall", {
         end
 
         client:notifyLocalized("gaveAllFlags")
+        lia.log.add(client, "flagGiveAll", target:Name())
     end
 })
 
@@ -396,6 +398,7 @@ lia.command.add("flagtakeall", {
         end
 
         client:notifyLocalized("tookAllFlags")
+        lia.log.add(client, "flagTakeAll", target:Name())
     end
 })
 
@@ -419,6 +422,7 @@ lia.command.add("flagtake", {
 
         target:getChar():takeFlags(flags)
         client:notifyLocalized("flagTake", client:Name(), flags, target:Name())
+        lia.log.add(client, "flagTake", target:Name(), flags)
     end,
     alias = {"takeflag"}
 })
@@ -468,6 +472,7 @@ lia.command.add("charvoicetoggle", {
                 client:notifyLocalized("voiceMuted", target:Name())
                 target:notifyLocalized("voiceMutedByAdmin")
             end
+            lia.log.add(client, "voiceToggle", target:Name(), isBanned and "Unmuted" or "Muted")
         else
             client:notifyLocalized("noValidCharacter")
         end
@@ -887,6 +892,13 @@ lia.command.add("chargiveitem", {
         if succ then
             target:notifyLocalized("itemCreated")
             if target ~= client then client:notifyLocalized("itemCreated") end
+            lia.log.add(
+                client,
+                "chargiveItem",
+                lia.item.list[uniqueID] and lia.item.list[uniqueID].name or uniqueID,
+                target,
+                "Command"
+            )
         else
             target:notify(tostring(succ))
             target:notify(tostring(err))
@@ -1087,6 +1099,7 @@ lia.command.add("charsetmoney", {
 
         target:getChar():setMoney(math.floor(amount))
         client:notifyLocalized("setMoney", target:Name(), lia.currency.get(math.floor(amount)))
+        lia.log.add(client, "charSetMoney", target:Name(), math.floor(amount))
     end
 })
 
@@ -1112,6 +1125,7 @@ lia.command.add("charaddmoney", {
         local currentMoney = target:getChar():getMoney()
         target:getChar():setMoney(currentMoney + amount)
         client:notifyLocalized("addMoney", target:Name(), lia.currency.get(amount), lia.currency.get(currentMoney + amount))
+        lia.log.add(client, "charAddMoney", target:Name(), amount, currentMoney + amount)
     end,
     alias = {"chargivemoney"}
 })
@@ -1192,6 +1206,7 @@ lia.command.add("forcesay", {
         end
 
         target:Say(message)
+        lia.log.add(client, "forceSay", target:Name(), message)
     end
 })
 

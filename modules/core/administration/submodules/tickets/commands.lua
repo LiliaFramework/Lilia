@@ -41,6 +41,7 @@
 
         local message = string.format("=== Claims for %s ===\n%s: %s\n%s: %s\n%s: %d\n%s: %s\n%s: %s\n%s:\n%s", target:Nick(), L("steamID"), steamID, L("adminName"), claim.name, L("totalClaims"), claim.claims, L("lastClaimDate"), os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim), L("timeSinceLastClaim"), lia.time.TimeSince(claim.lastclaim), L("claimedFor"), claimedForList)
         client:ChatPrint(message)
+        lia.log.add(client, "viewPlayerClaims", target:Name())
     end
 })
 
@@ -104,6 +105,7 @@ lia.command.add("viewallclaims", {
                 field = "claimedFor"
             }
         }, claimsData)
+        lia.log.add(client, "viewAllClaims")
     end
 })
 
@@ -117,6 +119,8 @@ lia.command.add("viewclaims", {
             client:ChatPrint(L("noClaimsData"))
             return
         end
+
+        lia.log.add(client, "viewAllClaims")
 
         client:ChatPrint(L("adminClaimsHeader"))
         for steamID, claim in pairs(caseclaims) do

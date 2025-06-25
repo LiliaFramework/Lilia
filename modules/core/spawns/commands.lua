@@ -21,6 +21,7 @@ lia.command.add("spawnadd", {
             MODULE.spawns[factionInfo.uniqueID] = MODULE.spawns[factionInfo.uniqueID] or {}
             table.insert(MODULE.spawns[factionInfo.uniqueID], client:GetPos())
             MODULE:SaveData()
+            lia.log.add(client, "spawnAdd", factionInfo.name)
             return L("spawnAdded", L(factionInfo.name))
         else
             return L("invalidFaction")
@@ -47,6 +48,7 @@ lia.command.add("spawnremoveinradius", {
         end
 
         if removedCount > 0 then MODULE:SaveData() end
+        lia.log.add(client, "spawnRemoveRadius", radius, removedCount)
         return L("spawnDeleted", removedCount)
     end
 })
@@ -73,6 +75,7 @@ lia.command.add("spawnremovebyname", {
                 local removedCount = #MODULE.spawns[factionInfo.uniqueID]
                 MODULE.spawns[factionInfo.uniqueID] = nil
                 MODULE:SaveData()
+                lia.log.add(client, "spawnRemoveByName", factionInfo.name, removedCount)
                 return L("spawnDeletedByName", L(factionInfo.name), removedCount)
             else
                 return L("noSpawnsForFaction")
@@ -118,6 +121,7 @@ lia.command.add("returnitems", {
             target.LostItems = nil
             target:notifyLocalized("returnItemsReturnedToPlayer")
             client:notifyLocalized("returnItemsAdminConfirmed")
+            lia.log.add(client, "returnItems", target:Name())
         else
             client:notifyLocalized("returnItemsNotEnabled")
         end

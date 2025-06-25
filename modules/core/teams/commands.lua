@@ -20,6 +20,7 @@
 
         local targetChar = targetPlayer:getChar()
         if hook.Run("CanCharBeTransfered", targetChar, faction, targetPlayer:Team()) == false then return end
+        local oldFactionName = lia.faction.indices[targetChar:getFaction()] and lia.faction.indices[targetChar:getFaction()].name or targetChar:getFaction()
         targetChar.vars.faction = faction.uniqueID
         targetChar:setFaction(faction.index)
         targetChar:kickClass()
@@ -30,6 +31,7 @@
         hook.Run("PlayerLoadout", targetPlayer)
         client:notifyLocalized("transferSuccess", targetPlayer:Name(), L(faction.name, client))
         if client ~= targetPlayer then targetPlayer:notifyLocalized("transferNotification", L(faction.name, targetPlayer), client:Name()) end
+        lia.log.add(client, "plyTransfer", targetPlayer:Name(), oldFactionName, faction.name)
     end
 })
 
@@ -51,6 +53,7 @@ lia.command.add("plywhitelist", {
             for _, v in player.Iterator() do
                 v:notifyLocalized("whitelist", client:Name(), target:Name(), L(faction.name, v))
             end
+            lia.log.add(client, "plyWhitelist", target:Name(), faction.name)
         end
     end
 })
@@ -73,6 +76,7 @@ lia.command.add("plyunwhitelist", {
             for _, v in player.Iterator() do
                 v:notifyLocalized("unwhitelist", client:Name(), target:Name(), L(faction.name, v))
             end
+            lia.log.add(client, "plyUnwhitelist", target:Name(), faction.name)
         end
     end
 })
@@ -94,6 +98,7 @@ lia.command.add("beclass", {
         if classData and lia.class.canBe(client, classID) then
             if character:joinClass(classID) then
                 client:notifyLocalized("becomeClass", L(classData.name))
+                lia.log.add(client, "beClass", classData.name)
             else
                 client:notifyLocalized("becomeClassFail", L(classData.name))
             end
@@ -121,6 +126,7 @@ lia.command.add("setclass", {
         if classData then
             if target:Team() == classData.faction then
                 target:getChar():joinClass(classID, true)
+                lia.log.add(client, "setClass", target:Name(), classData.name)
                 target:notifyLocalized("classSet", L(classData.name), client:GetName())
                 if client ~= target then client:notifyLocalized("classSetOther", target:GetName(), L(classData.name)) end
                 hook.Run("PlayerLoadout", target)
@@ -158,6 +164,7 @@ lia.command.add("classwhitelist", {
             target:classWhitelist(classID)
             client:notifyLocalized("whitelistedSuccess")
             target:notifyLocalized("classAssigned", L(classData.name))
+            lia.log.add(client, "classWhitelist", target:Name(), classData.name)
         end
     end
 })
@@ -187,6 +194,7 @@ lia.command.add("classunwhitelist", {
             target:classUnWhitelist(classID)
             client:notifyLocalized("unwhitelistedSuccess")
             target:notifyLocalized("classUnassigned", L(classData.name))
+            lia.log.add(client, "classUnwhitelist", target:Name(), classData.name)
         end
     end
 })

@@ -34,6 +34,7 @@
         inv:setSize(dw, dh)
         inv:sync(target)
         client:notifyLocalized("updatedInventorySize", target:Name(), dw, dh)
+        lia.log.add(client, "invUpdateSize", target:Name(), dw, dh)
     end
 })
 
@@ -67,6 +68,8 @@ lia.command.add("setinventorysize", {
             inv:setSize(w, h)
             inv:sync(target)
         end
+
+        lia.log.add(client, "invSetSize", target:Name(), w, h)
 
         client:notifyLocalized("setInventorySizeNotify", target:Name(), w, h)
     end
