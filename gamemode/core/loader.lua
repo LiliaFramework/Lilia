@@ -292,59 +292,46 @@ end
     Function: lia.includeGroupedDir
 
     Description:
-       Recursively includes all Lua files in a specified directory.
-       Files are grouped by their base name (the part after the realm prefix)
-       and for each group loaded in this order:
-         1) shared (sh_*)
-         2) server (sv_*)
-         3) client (cl_*)
-       After all file groups are processed, subdirectories are traversed (if recursive).
+        Recursively includes all Lua files in a specified directory, preserving alphabetical order within each folder.
+        Determines each file’s realm (client, server, or shared) either by forced override or by filename prefix,
+        then calls lia.include on each file.
 
     Parameters:
-       directory (string) — Directory path to include, relative to the gamemode or schema.
-       raw (boolean)     — If true, use `directory` as a raw path; otherwise prepend the active schema or gamemode base path.
-       recursive (boolean) — If true, recurse into subdirectories after loading files.
-       realm (string)    — Optional realm override passed through to `lia.include` for each file.
+        dir (string)         – Directory path to load files from (relative to gamemode or schema folder if raw is false).
+        raw (boolean)        – If true, uses dir as the literal filesystem path; otherwise prepends the gamemode/schema root.
+        recursive (boolean)  – Whether to traverse subdirectories recursively.
+        forceRealm (string)  – Optional override for the realm of all included files ("client", "server", or "shared").
 
     Returns:
-       nil
+        nil
 
-    Example Usage:
-       lia.includeGroupedDir("lilia/gamemode/core/libraries/thirdparty", true, true, "shared")
+    Realm:
+        Shared
 ]]
-function lia.includeGroupedDir(dir, raw, recursive, realm)
-    local base = raw and dir or (SCHEMA and SCHEMA.folder and SCHEMA.loading and SCHEMA.folder .. "/schema" or "lilia/gamemode") .. "/" .. dir
-    local function loadDir(folder)
-        local files, folders = file.Find(folder .. "/*.lua", "LUA")
-        local groups, order = {}, {}
-        for _, fname in ipairs(files) do
-            local prefix, name = fname:match("^(sh|sv|cl)_(.+)%.lua$")
-            if prefix then
-                if not groups[name] then
-                    groups[name] = {}
-                    order[#order + 1] = name
-                end
-
-                groups[name][prefix] = fname
+function lia.includeGroupedDir(dir, raw, recursive, forceRealm)
+    local baseDir = raw and dir or (SCHEMA and SCHEMA.folder and SCHEMA.loading and SCHEMA.folder .. "/schema" or "lilia/gamemode") .. "/" .. dir
+    local stack = {baseDir}
+    while #stack > 0 do
+        local path = table.remove(stack)
+        local files, folders = file.Find(path .. "/*.lua", "LUA")
+        table.sort(files)
+        for _, fileName in ipairs(files) do
+            local realm = forceRealm
+            if not realm then
+                local prefix = fileName:sub(1, 3)
+                realm = (prefix == "sh_" or fileName == "shared.lua") and "shared" or (prefix == "sv_" or fileName == "server.lua") and "server" or (prefix == "cl_" or fileName == "client.lua") and "client" or "shared"
             end
-        end
 
-        for _, name in ipairs(order) do
-            local g = groups[name]
-            if g.sh then lia.include(folder .. "/" .. g.sh, realm) end
-            if g.sv then lia.include(folder .. "/" .. g.sv, realm) end
-            if g.cl then lia.include(folder .. "/" .. g.cl, realm) end
+            local filePath = path .. "/" .. fileName
+            if file.Exists(filePath, "LUA") then lia.include(filePath, realm) end
         end
 
         if recursive then
-            table.sort(folders)
-            for _, sub in ipairs(folders) do
-                loadDir(folder .. "/" .. sub)
+            for _, subfolder in ipairs(folders) do
+                table.insert(stack, path .. "/" .. subfolder)
             end
         end
     end
-
-    loadDir(base)
 end
 
 lia.includeDir("lilia/gamemode/core/libraries/thirdparty", true, true)
