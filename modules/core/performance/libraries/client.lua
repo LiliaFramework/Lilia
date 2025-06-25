@@ -20,7 +20,7 @@ function MODULE:InitPostEntity()
                 f:MakePopup()
                 local h = vgui.Create("DHTML", f)
                 h:Dock(FILL)
-                h:OpenURL("https://i.imgur.com/sbCmM2T.png")
+                h:OpenURL(L("upgradeImage"))
             end)
 
             pnl:MakePopup()

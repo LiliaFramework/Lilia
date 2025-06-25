@@ -78,7 +78,7 @@ lia.command.add("sendtositroom", {
     syntax = "[string charname]",
     AdminStick = {
         Name = L("sendToSitRoom"),
-        Category = L("Moderation Tools"),
+        Category = "moderationTools",
         SubCategory = L("misc"),
         Icon = "icon16/arrow_down.png"
     },
@@ -124,7 +124,7 @@ lia.command.add("returnsitroom", {
     syntax = "[string charname]",
     AdminStick = {
         Name = L("returnFromSitroom"),
-        Category = L("Moderation Tools"),
+        Category = "moderationTools",
         SubCategory = L("misc"),
         Icon = "icon16/arrow_up.png"
     },

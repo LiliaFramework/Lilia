@@ -5,8 +5,8 @@
     syntax = "[string charname]",
     AdminStick = {
         Name = L("viewTicketClaims"),
-        Category = L("moderationTools"),
-        SubCategory = L("miscellaneous"),
+        Category = "moderationTools",
+        SubCategory = L("misc"),
         Icon = "icon16/page_white_text.png"
     },
     onRun = function(client, arguments)

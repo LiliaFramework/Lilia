@@ -5,15 +5,15 @@
     },
     ["charCreate"] = {
         func = function(client, character) return L("charCreateLog", client:SteamID64(), client:Name(), character:getName(), character:getID()) end,
-        category = L("characterCategory")
+        category = L("character")
     },
     ["charLoad"] = {
         func = function(client, name) return L("charLoadLog", client:SteamID64(), client:Name(), name, client:getChar():getID()) end,
-        category = L("characterCategory")
+        category = L("character")
     },
     ["charDelete"] = {
         func = function(client, id) return L("charDeleteLog", IsValid(client) and client:SteamID64() or "CONSOLE", IsValid(client) and client:Name() or "CONSOLE", id, IsValid(client) and client:getChar():getID() or L("unknown")) end,
-        category = L("characterCategory")
+        category = L("character")
     },
     ["playerHurt"] = {
         func = function(client, attacker, damage, health) return L("playerHurtLog", client:SteamID64(), client:Name(), damage, attacker, health, client:getChar():getID()) end,
@@ -136,7 +136,7 @@
         category = L("doors")
     },
     ["doorSetHidden"] = {
-        func = function(client, door, state) return L("doorLogSetHidden", client:SteamID64(), client:Name(), door:GetClass(), state and "hidden" or "visible") end,
+        func = function(client, door, state) return L("doorLogToggleOwnable", client:SteamID64(), client:Name(), door:GetClass(), state and "hidden" or "visible") end,
         category = L("doors")
     },
     ["doorSetTitle"] = {

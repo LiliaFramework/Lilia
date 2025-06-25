@@ -7,7 +7,7 @@ lia.command.add("banooc", {
     syntax = "[string charname]",
     AdminStick = {
         Name = L("banOOCCommandName"),
-        Category = L("moderationTools"),
+        Category = "moderationTools",
         SubCategory = L("oocCategory"),
         Icon = "icon16/sound_mute.png"
     },
@@ -30,7 +30,7 @@ lia.command.add("unbanooc", {
     syntax = "[string charname]",
     AdminStick = {
         Name = L("unbanOOCCommandName"),
-        Category = L("moderationTools"),
+        Category = "moderationTools",
         SubCategory = L("oocCategory"),
         Icon = "icon16/sound.png"
     },

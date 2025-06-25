@@ -90,8 +90,8 @@ lia.command.add("returnitems", {
     syntax = "[string name]",
     AdminStick = {
         Name = L("returnItemsName"),
-        Category = L("returnItemsCategory"),
-        SubCategory = L("returnItemsSubCategory"),
+        Category = "characterManagement",
+        SubCategory = L("items"),
         Icon = "icon16/arrow_refresh.png"
     },
     onRun = function(client, arguments)
