@@ -5,7 +5,7 @@
     privilege = "Manage Attributes",
     AdminStick = {
         Name = L("setAttributes"),
-        Category = L("characterManagement"),
+        Category = "characterManagement",
         SubCategory = L("attributes"),
         Icon = "icon16/wrench.png",
         ExtraFields = {
@@ -48,7 +48,7 @@ lia.command.add("checkattributes", {
     privilege = "Manage Attributes",
     AdminStick = {
         Name = L("checkAttributes"),
-        Category = L("characterManagement"),
+        Category = "characterManagement",
         SubCategory = L("attributes"),
         Icon = "icon16/zoom.png"
     },
@@ -110,7 +110,7 @@ lia.command.add("charaddattrib", {
     privilege = "Manage Attributes",
     AdminStick = {
         Name = L("addAttributes"),
-        Category = L("characterManagement"),
+        Category = "characterManagement",
         SubCategory = L("attributes"),
         Icon = "icon16/add.png",
         ExtraFields = {

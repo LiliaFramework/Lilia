@@ -5,8 +5,8 @@
     syntax = "[string charname]",
     AdminStick = {
         Name = "Toggle Character Killing (Ban)",
-        Category = "Character Management",
-        SubCategory = "Bans",
+        Category = "characterManagement",
+        SubCategory = L("adminStickSubCategoryBans"),
         Icon = "icon16/user_delete.png"
     },
     onRun = function(client, arguments)
@@ -280,8 +280,8 @@ lia.command.add("checkinventory", {
     syntax = "[string playerName]",
     AdminStick = {
         Name = L("adminStickCheckInventoryName"),
-        Category = L("adminStickCategoryCharManagement"),
-        SubCategory = L("adminStickSubCategoryItems"),
+        Category = "characterManagement",
+        SubCategory = L("items"),
         Icon = "icon16/box.png"
     },
     onRun = function(client, arguments)
@@ -331,7 +331,7 @@ lia.command.add("flaggive", {
                 client:notifyLocalized("noAvailableFlags")
                 return
             end
-            return client:requestString(L("flagGiveTitle"), L("flagGiveDesc"), function(text) lia.command.run(client, "flaggive", {target:Name(), text}) end, available)
+            return client:requestString(L("giveFlagsMenu"), L("flagGiveDesc"), function(text) lia.command.run(client, "flaggive", {target:Name(), text}) end, available)
         end
 
         target:getChar():giveFlags(flags)
@@ -347,7 +347,7 @@ lia.command.add("flaggiveall", {
     syntax = "[string playerName]",
     AdminStick = {
         Name = L("adminStickGiveAllFlagsName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategorySetInfos"),
         Icon = "icon16/flag_blue.png"
     },
@@ -374,7 +374,7 @@ lia.command.add("flagtakeall", {
     syntax = "[string playerName]",
     AdminStick = {
         Name = L("adminStickTakeAllFlagsName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategorySetInfos"),
         Icon = "icon16/flag_green.png"
     },
@@ -414,7 +414,7 @@ lia.command.add("flagtake", {
         local flags = arguments[2]
         if not flags then
             local currentFlags = target:getChar():getFlags()
-            return client:requestString(L("flagTakeTitle"), L("flagTakeDesc"), function(text) lia.command.run(client, "flagtake", {target:Name(), text}) end, table.concat(currentFlags, ", "))
+            return client:requestString(L("takeFlagsMenu"), L("flagTakeDesc"), function(text) lia.command.run(client, "flagtake", {target:Name(), text}) end, table.concat(currentFlags, ", "))
         end
 
         target:getChar():takeFlags(flags)
@@ -441,8 +441,8 @@ lia.command.add("charvoicetoggle", {
     syntax = "[string name]",
     AdminStick = {
         Name = L("toggleVoice"),
-        Category = L("moderationTools"),
-        SubCategory = L("miscellaneous"),
+        Category = "moderationTools",
+        SubCategory = L("misc"),
         Icon = "icon16/sound_mute.png"
     },
     onRun = function(client, arguments)
@@ -589,8 +589,8 @@ lia.command.add("clearinv", {
     syntax = "[string playerName]",
     AdminStick = {
         Name = L("adminStickClearInventoryName"),
-        Category = L("adminStickCategoryCharManagement"),
-        SubCategory = L("adminStickSubCategoryItems"),
+        Category = "characterManagement",
+        SubCategory = L("items"),
         Icon = "icon16/bin.png"
     },
     onRun = function(client, arguments)
@@ -612,7 +612,7 @@ lia.command.add("charkick", {
     syntax = "[string playerName]",
     AdminStick = {
         Name = L("adminStickKickCharacterName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategoryBans"),
         Icon = "icon16/user_delete.png"
     },
@@ -671,7 +671,7 @@ lia.command.add("charban", {
     syntax = "[string name or number id]",
     AdminStick = {
         Name = L("adminStickBanCharacterName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategoryBans"),
         Icon = "icon16/user_red.png"
     },
@@ -720,8 +720,8 @@ lia.command.add("checkmoney", {
     syntax = "[string playerName]",
     AdminStick = {
         Name = L("adminStickCheckMoneyName"),
-        Category = L("adminStickCategoryCharManagement"),
-        SubCategory = L("adminStickSubCategoryItems"),
+        Category = "characterManagement",
+        SubCategory = L("items"),
         Icon = "icon16/money.png"
     },
     onRun = function(client, arguments)
@@ -788,7 +788,7 @@ lia.command.add("charsetspeed", {
     syntax = "[string playerName] [number speed]",
     AdminStick = {
         Name = L("adminStickSetCharSpeedName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategorySetInfos"),
         Icon = "icon16/lightning.png",
         ExtraFields = {
@@ -814,7 +814,7 @@ lia.command.add("charsetmodel", {
     syntax = "[string playerName] [string model]",
     AdminStick = {
         Name = L("adminStickSetCharModelName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategorySetInfos"),
         Icon = "icon16/user_gray.png",
         ExtraFields = {
@@ -843,8 +843,8 @@ lia.command.add("chargiveitem", {
     syntax = "[string playerName] [string itemNameOrID]",
     AdminStick = {
         Name = L("adminStickGiveItemName"),
-        Category = L("adminStickCategoryCharManagement"),
-        SubCategory = L("adminStickSubCategoryItems"),
+        Category = "characterManagement",
+        SubCategory = L("items"),
         Icon = "icon16/user_gray.png",
         ExtraFields = {
             ["item"] = function()
@@ -901,7 +901,7 @@ lia.command.add("charsetdesc", {
     syntax = "[string playerName] [string description]",
     AdminStick = {
         Name = L("adminStickSetCharDescName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategorySetInfos"),
         Icon = "icon16/user_comment.png",
         ExtraFields = {
@@ -934,7 +934,7 @@ lia.command.add("charsetname", {
     syntax = "[string playerName] [string newName]",
     AdminStick = {
         Name = L("adminStickSetCharNameName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategorySetInfos"),
         Icon = "icon16/user_edit.png",
         ExtraFields = {
@@ -962,7 +962,7 @@ lia.command.add("charsetscale", {
     syntax = "[string playerName] [number scale]",
     AdminStick = {
         Name = L("adminStickSetCharScaleName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategorySetInfos"),
         Icon = "icon16/arrow_out.png",
         ExtraFields = {
@@ -989,7 +989,7 @@ lia.command.add("charsetjump", {
     syntax = "[string playerName] [number power]",
     AdminStick = {
         Name = L("adminStickSetCharJumpName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategorySetInfos"),
         Icon = "icon16/arrow_up.png",
         ExtraFields = {
@@ -1044,8 +1044,8 @@ lia.command.add("charsetskin", {
     desc = L("setSkinDesc"),
     syntax = "[string playerName] [number skin]",
     AdminStick = {
-        Name = L("adminStickChangeName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Name = L("adminStickSetCharSkinName"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategorySetInfos"),
         Icon = "icon16/user_gray.png",
         ExtraFields = {
@@ -1171,8 +1171,8 @@ lia.command.add("forcesay", {
     syntax = "[string playerName] [string message]",
     AdminStick = {
         Name = "Force Say",
-        Category = L("adminStickCategoryModeration"),
-        SubCategory = L("adminStickSubCategoryMisc"),
+        Category = "moderationTools",
+        SubCategory = L("misc"),
         Icon = "icon16/comments.png",
         ExtraFields = {
             ["message"] = "text"
@@ -1242,7 +1242,7 @@ lia.command.add("chargetmodel", {
     syntax = "[string playerName]",
     AdminStick = {
         Name = L("adminStickGetCharModelName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategoryGetInfos"),
         Icon = "icon16/user_gray.png"
     },
@@ -1276,7 +1276,7 @@ lia.command.add("checkflags", {
     syntax = "[string playerName]",
     AdminStick = {
         Name = L("adminStickGetCharFlagsName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategoryGetInfos"),
         Icon = "icon16/flag_yellow.png"
     },
@@ -1303,7 +1303,7 @@ lia.command.add("chargetname", {
     syntax = "[string playerName]",
     AdminStick = {
         Name = L("adminStickGetCharNameName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategoryGetInfos"),
         Icon = "icon16/user.png"
     },
@@ -1325,7 +1325,7 @@ lia.command.add("chargethealth", {
     syntax = "[string playerName]",
     AdminStick = {
         Name = L("adminStickGetCharHealthName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategoryGetInfos"),
         Icon = "icon16/heart.png"
     },
@@ -1347,7 +1347,7 @@ lia.command.add("chargetmoney", {
     syntax = "[string playerName]",
     AdminStick = {
         Name = L("adminStickGetCharMoneyName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategoryGetInfos"),
         Icon = "icon16/money.png"
     },
@@ -1370,7 +1370,7 @@ lia.command.add("chargetinventory", {
     syntax = "[string playerName]",
     AdminStick = {
         Name = L("adminStickGetCharInventoryName"),
-        Category = L("adminStickCategoryCharManagement"),
+        Category = "characterManagement",
         SubCategory = L("adminStickSubCategoryGetInfos"),
         Icon = "icon16/box.png"
     },

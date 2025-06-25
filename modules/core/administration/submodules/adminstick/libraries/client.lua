@@ -1,12 +1,12 @@
 ﻿local MODULE = MODULE
 AdminStickIsOpen = false
 local subMenuIcons = {
-    ["Moderation Tools"] = "icon16/wrench.png",
-    ["Player Information"] = "icon16/information.png",
-    ["Character Management"] = "icon16/user_gray.png",
-    ["Flags Management"] = "icon16/flag_blue.png",
-    ["Give Flags"] = "icon16/flag_blue.png",
-    ["Take Flags"] = "icon16/flag_red.png",
+    ["moderationTools"] = "icon16/wrench.png",
+    ["playerInformation"] = "icon16/information.png",
+    ["characterManagement"] = "icon16/user_gray.png",
+    ["flagsManagement"] = "icon16/flag_blue.png",
+    ["giveFlagsMenu"] = "icon16/flag_blue.png",
+    ["takeFlagsMenu"] = "icon16/flag_red.png",
 }
 
 local function GetOrCreateSubMenu(parentMenu, name, submenusTable)
@@ -226,7 +226,7 @@ end
 local function IncludeAdminMenu(target, AdminMenu, submenus)
     local client = LocalPlayer()
     if client:GetUserGroup() == "user" then return end
-    local moderationMenu = GetOrCreateSubMenu(AdminMenu, "Moderation Tools", submenus)
+    local moderationMenu = GetOrCreateSubMenu(AdminMenu, "moderationTools", submenus)
     local teleportationOptions = {
         {
             name = "Bring",
@@ -345,7 +345,7 @@ local function IncludeCharacterManagement(target, AdminMenu, submenus)
     local client = LocalPlayer()
     local factionMenuAllowed = client:hasPrivilege("Commands - Manage Transfers")
     local classMenuAllowed = client:hasPrivilege("Commands - Manage Classes")
-    local characterMenu = GetOrCreateSubMenu(AdminMenu, "Character Management", submenus)
+    local characterMenu = GetOrCreateSubMenu(AdminMenu, "characterManagement", submenus)
     local factionOptions = {}
     local char = target:getChar()
     if char and factionMenuAllowed then
@@ -416,9 +416,9 @@ end
 local function IncludeFlagManagement(target, AdminMenu, submenus)
     local client = LocalPlayer()
     if not client:hasPrivilege("Commands - Manage Flags") then return end
-    local flagsMenu = GetOrCreateSubMenu(AdminMenu, "Flags Management", submenus)
-    local giveFlagsSubMenu = GetOrCreateSubMenu(flagsMenu, "Give Flags", submenus)
-    local takeFlagsSubMenu = GetOrCreateSubMenu(flagsMenu, "Take Flags", submenus)
+    local flagsMenu = GetOrCreateSubMenu(AdminMenu, "flagsManagement", submenus)
+    local giveFlagsSubMenu = GetOrCreateSubMenu(flagsMenu, "giveFlagsMenu", submenus)
+    local takeFlagsSubMenu = GetOrCreateSubMenu(flagsMenu, "takeFlagsMenu", submenus)
     local giveFlags, takeFlags = {}, {}
     for flag, _ in pairs(lia.flag.list) do
         if not target:getChar():hasFlags(flag) then
@@ -545,7 +545,7 @@ function MODULE:OpenAdminStickUI(target)
         }
 
         table.sort(playerOptions, function(a, b) return a.name < b.name end)
-        local playerInfoMenu = GetOrCreateSubMenu(AdminMenu, "Player Information", submenus)
+        local playerInfoMenu = GetOrCreateSubMenu(AdminMenu, "playerInformation", submenus)
         for _, option in ipairs(playerOptions) do
             playerInfoMenu:AddOption(L(option.name), option.cmd):SetIcon(option.icon)
         end

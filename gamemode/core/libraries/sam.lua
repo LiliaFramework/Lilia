@@ -144,7 +144,7 @@ lia.command.add("plygetplaytime", {
     syntax = "[string charname]",
     AdminStick = {
         Name = L("adminStickGetPlayTimeName"),
-        Category = L("adminStickCategoryModeration"),
+        Category = "moderationTools",
         SubCategory = L("misc"),
         Icon = "icon16/time.png"
     },

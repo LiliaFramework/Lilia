@@ -96,7 +96,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
             if SteamIDWhitelist then
                 errorMessage = L("vendorSteamIDWhitelist")
             elseif FactionWhitelist then
-                errorMessage = L("vendorFactionWhitelist")
+                errorMessage = L("illegalAccess")
             elseif UserGroupWhitelist then
                 errorMessage = L("vendorUserGroupWhitelist")
             elseif VIPOnly then

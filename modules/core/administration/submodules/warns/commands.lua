@@ -5,7 +5,7 @@
     syntax = "[string target] [string reason]",
     AdminStick = {
         Name = L("warnPlayer"),
-        Category = L("moderationTools"),
+        Category = "moderationTools",
         SubCategory = L("warnings"),
         Icon = "icon16/error.png",
         ExtraFields = {
@@ -44,7 +44,7 @@ lia.command.add("viewwarns", {
     syntax = "[string target]",
     AdminStick = {
         Name = L("viewPlayerWarnings"),
-        Category = L("moderationTools"),
+        Category = "moderationTools",
         SubCategory = L("warnings"),
         Icon = "icon16/eye.png"
     },

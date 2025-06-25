@@ -14,7 +14,7 @@ function PANEL:Init()
 
     self.faction:SetTextColor(color_white)
     self.faction.OnSelect = function(_, _, _, id) self:onFactionSelected(lia.faction.teams[id]) end
-    self.desc = self:addLabel(L("factionDescription"))
+    self.desc = self:addLabel(L("desc"))
     self.desc:DockMargin(0, 8, 0, 0)
     self.desc:SetFont("liaCharSubTitleFont")
     self.desc:SetWrap(true)

@@ -55,7 +55,7 @@ lia.command.add("resetallvendormoney", {
         Name = L("resetAllVendorMoneyStickName"),
         TargetClass = "lia_vendor",
         ExtraFields = {
-            [L("resetAllVendorMoneyAmount")] = "text"
+            [L("amount")] = "text"
         }
     },
     onRun = function(client, arguments)
@@ -84,7 +84,7 @@ lia.command.add("restockvendormoney", {
         Name = L("restockVendorMoneyStickName"),
         TargetClass = "lia_vendor",
         ExtraFields = {
-            [L("restockVendorMoneyAmount")] = "text"
+            [L("amount")] = "text"
         }
     },
     onRun = function(client, arguments)
