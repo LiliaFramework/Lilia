@@ -16,7 +16,7 @@ function SWEP:SecondaryAttack()
         local cmd = target:IsFrozen() and (sam and "sam unfreeze" or ulx and "ulx unfreeze") or sam and "sam freeze" or ulx and "ulx freeze"
         client:ConCommand(cmd .. " " .. target:SteamID())
     else
-        client:notify("You cannot freeze this!")
+        client:notifyLocalized("cantFreezeTarget")
     end
 end
 

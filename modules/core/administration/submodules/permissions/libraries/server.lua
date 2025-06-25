@@ -3,7 +3,7 @@ local MODULE = MODULE
 local resetCalled = 0
 function GM:PlayerSpawnProp(client, model)
     if MODULE.BlackListedProps and MODULE.BlackListedProps[model] and not client:hasPrivilege("Spawn Permissions - Can Spawn Blacklisted Props") then
-        client:notify("Blacklisted Prop!")
+        client:notifyLocalized("blacklistedProp")
         return false
     end
 
@@ -14,7 +14,7 @@ function GM:PlayerSpawnProp(client, model)
     end
 
     local canSpawn = client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Props") or client:getChar():hasFlags("e")
-    if not canSpawn then client:notify("You do not have permission to spawn props.") end
+    if not canSpawn then client:notifyLocalized("noSpawnPropsPerm") end
     return canSpawn
 end
 
@@ -26,26 +26,26 @@ function GM:CanProperty(client, property, entity)
     }
 
     if restrictedProperties[property] then
-        client:notify("This is disabled to avoid issues with Lilia's Core Features")
+        client:notifyLocalized("disabledFeature")
         return false
     end
 
     if entity:IsWorld() and IsValid(entity) then
         if client:hasPrivilege("Staff Permissions - Can Property World Entities") then return true end
-        client:notify("You do not have permission to modify world entities.")
+        client:notifyLocalized("noModifyWorldEntities")
         return false
     end
 
     local entityClass = entity:GetClass()
     if MODULE.RemoverBlockedEntities and MODULE.RemoverBlockedEntities[entityClass] or MODULE.RestrictedEnts and MODULE.RestrictedEnts[entityClass] then
         if client:hasPrivilege("Staff Permissions - Use Entity Properties on Blocked Entities") then return true end
-        client:notify("You do not have permission to modify properties on this entity.")
+        client:notifyLocalized("noModifyEntityProps")
         return false
     end
 
     if entity:GetCreator() == client and (property == "remover" or property == "collision") then return true end
     if client:IsSuperAdmin() or client:hasPrivilege("Staff Permissions - Access Property " .. property:gsub("^%l", string.upper)) and client:isStaffOnDuty() then return true end
-    client:notify("You do not have permission to modify this property.")
+    client:notifyLocalized("noModifyProperty")
     return false
 end
 
@@ -57,7 +57,7 @@ function GM:PhysgunPickup(client, entity)
     local entityClass = entity:GetClass()
     if (client:hasPrivilege("Staff Permissions - Physgun Pickup") or client:isStaffOnDuty()) and MODULE.RestrictedEnts and MODULE.RestrictedEnts[entityClass] then
         if not client:hasPrivilege("Staff Permissions - Physgun Pickup on Restricted Entities") then
-            client:notify("You do not have permission to pick up restricted entities with the physgun.")
+                client:notifyLocalized("noPickupRestricted")
             return false
         end
         return true
@@ -68,19 +68,19 @@ function GM:PhysgunPickup(client, entity)
     if client:hasPrivilege("Staff Permissions - Physgun Pickup") then
         if entity:IsVehicle() then
             if not client:hasPrivilege("Staff Permissions - Physgun Pickup on Vehicles") then
-                client:notify("You do not have permission to pick up vehicles with the physgun.")
+                client:notifyLocalized("noPickupVehicles")
                 return false
             end
             return true
         elseif entity:IsPlayer() then
             if entity:hasPrivilege("Staff Permissions - Can't be Grabbed with PhysGun") or not client:hasPrivilege("Staff Permissions - Can Grab Players") then
-                client:notify("You do not have permission to pick up this player with the physgun.")
+                client:notifyLocalized("noPickupPlayer")
                 return false
             end
             return true
         elseif entity:IsWorld() or entity:CreatedByMap() then
             if not client:hasPrivilege("Staff Permissions - Can Grab World Props") then
-                client:notify("You do not have permission to pick up world props with the physgun.")
+                client:notifyLocalized("noPickupWorld")
                 return false
             end
             return true
@@ -88,25 +88,25 @@ function GM:PhysgunPickup(client, entity)
         return true
     end
 
-    client:notify("You do not have permission to pick up this entity with the physgun.")
+    client:notifyLocalized("noPickupEntity")
     return false
 end
 
 function GM:PlayerSpawnVehicle(client, _, name)
     if MODULE.RestrictedVehicles and MODULE.RestrictedVehicles[name] and not client:hasPrivilege("Spawn Permissions - Can Spawn Restricted Cars") then
-        client:notify("You can't spawn this vehicle since it's restricted!")
+        client:notifyLocalized("restrictedVehicle")
         return false
     end
 
     if not client:hasPrivilege("Spawn Permissions - No Car Spawn Delay") then client.NextVehicleSpawn = SysTime() + lia.config.get("PlayerSpawnVehicleDelay", 30) end
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Cars") or client:getChar():hasFlags("C")
-    if not canSpawn then client:notify("You do not have permission to spawn vehicles.") end
+    if not canSpawn then client:notifyLocalized("noSpawnVehicles") end
     return canSpawn
 end
 
 function GM:PlayerNoClip(ply, enabled)
     if not (ply:isStaffOnDuty() or ply:hasPrivilege("Staff Permissions - No Clip Outside Staff Character")) then
-        ply:notify("You do not have permission to noclip.")
+        ply:notifyLocalized("noNoclip")
         return false
     end
 
@@ -119,43 +119,43 @@ end
 
 function GM:PlayerSpawnEffect(client)
     local canSpawn = client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Effects") or client:getChar():hasFlags("L")
-    if not canSpawn then client:notify("You do not have permission to spawn effects.") end
+    if not canSpawn then client:notifyLocalized("noSpawnEffects") end
     return canSpawn
 end
 
 function GM:PlayerSpawnNPC(client)
     local canSpawn = client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn NPCs") or client:getChar():hasFlags("n")
-    if not canSpawn then client:notify("You do not have permission to spawn NPCs.") end
+    if not canSpawn then client:notifyLocalized("noSpawnNPCs") end
     return canSpawn
 end
 
 function GM:PlayerSpawnRagdoll(client)
     local canSpawn = client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Ragdolls") or client:getChar():hasFlags("r")
-    if not canSpawn then client:notify("You do not have permission to spawn ragdolls.") end
+    if not canSpawn then client:notifyLocalized("noSpawnRagdolls") end
     return canSpawn
 end
 
 function GM:PlayerSpawnSENT(client)
     local canSpawn = client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn SENTs") or client:getChar():hasFlags("E")
-    if not canSpawn then client:notify("You do not have permission to spawn SENTs.") end
+    if not canSpawn then client:notifyLocalized("noSpawnSents") end
     return canSpawn
 end
 
 function GM:PlayerSpawnSWEP(client)
     local canSpawn = client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn SWEPs") or client:getChar():hasFlags("z")
-    if not canSpawn then client:notify("You do not have permission to spawn SWEPs.") end
+    if not canSpawn then client:notifyLocalized("noSpawnSweps") end
     return canSpawn
 end
 
 function GM:PlayerGiveSWEP(client)
     local canGive = client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn SWEPs") or client:getChar():hasFlags("W")
-    if not canGive then client:notify("You do not have permission to give SWEPs.") end
+    if not canGive then client:notifyLocalized("noGiveSweps") end
     return canGive
 end
 
 function GM:OnPhysgunReload(_, client)
     local canReload = client:hasPrivilege("Staff Permissions - Can Physgun Reload")
-    if not canReload then client:notify("You do not have permission to reload the physgun.") end
+    if not canReload then client:notifyLocalized("noPhysgunReload") end
     return canReload
 end
 
@@ -174,7 +174,7 @@ function GM:CanTool(client, _, tool)
         entities = entities or {}
         for _, v in pairs(entities) do
             if v.ModelScale and v.ModelScale > 10 then
-                client:notify("A model within this duplication exceeds the size limit!")
+                client:notifyLocalized("duplicationSizeLimit")
                 print("[Server Warning] Potential server crash using dupes attempt by player: " .. client:Name() .. " (" .. client:SteamID64() .. ")")
                 return false
             end
@@ -185,7 +185,7 @@ function GM:CanTool(client, _, tool)
     end
 
     if DisallowedTools[tool] and not client:IsSuperAdmin() then
-        client:notify("You are not allowed to use the " .. tool .. " tool.")
+        client:notifyLocalized("toolNotAllowed", tool)
         return false
     end
 
@@ -198,7 +198,7 @@ function GM:CanTool(client, _, tool)
         if not isSuperAdmin then table.insert(reasons, "SuperAdmin") end
         if not isStaffOrFlagged then table.insert(reasons, "On‑duty staff or flag 't'") end
         if not hasPriv then table.insert(reasons, "Privilege '" .. privilege .. "'") end
-        client:notify("You do not have permission to access tool '" .. tool .. "'. Missing: " .. table.concat(reasons, ", "))
+        client:notifyLocalized("toolNoPermission", tool, table.concat(reasons, ", "))
         return false
     end
 
@@ -210,13 +210,13 @@ function GM:CanTool(client, _, tool)
         if tool == "remover" then
             if MODULE.RemoverBlockedEntities and MODULE.RemoverBlockedEntities[entClass] then
                 if not client:hasPrivilege("Staff Permissions - Can Remove Blocked Entities") then
-                    client:notify("You do not have permission to remove blocked entities.")
+                    client:notifyLocalized("noRemoveBlockedEntities")
                     return false
                 end
                 return true
             elseif entity:IsWorld() then
                 if not client:hasPrivilege("Staff Permissions - Can Remove World Entities") then
-                    client:notify("You do not have permission to remove world entities.")
+                    client:notifyLocalized("noRemoveWorldEntities")
                     return false
                 end
                 return true
@@ -225,17 +225,17 @@ function GM:CanTool(client, _, tool)
         end
 
         if (tool == "permaall" or tool == "permaprops" or tool == "blacklistandremove") and (string.StartWith(entClass, "lia_") or MODULE.CanNotPermaProp and MODULE.CanNotPermaProp[entClass] or entity:isLiliaPersistent() or entity:CreatedByMap()) then
-            client:notify("You cannot use " .. tool .. " on this entity.")
+            client:notifyLocalized("toolCantUseEntity", tool)
             return false
         end
 
         if (tool == "adv_duplicator" or tool == "advdupe2" or tool == "duplicator" or tool == "blacklistandremove") and (MODULE.DuplicatorBlackList and MODULE.DuplicatorBlackList[entClass] or entity.NoDuplicate) then
-            client:notify("This entity cannot be duplicated using " .. tool .. ".")
+            client:notifyLocalized("cannotDuplicateEntity", tool)
             return false
         end
 
         if tool == "weld" and entClass == "sent_ball" then
-            client:notify("You cannot weld this entity with the weld tool.")
+            client:notifyLocalized("cannotWeldBall")
             return false
         end
     end
@@ -290,14 +290,14 @@ concommand.Add("stopsoundall", function(client)
             v:ConCommand("stopsound")
         end
     else
-        client:notify("You must be a Super Admin to forcefully stopsound everyone!")
+        client:notifyLocalized("mustSuperAdminStopSound")
     end
 end)
 
 local function handleDatabaseWipe(commandName)
     concommand.Add(commandName, function(client)
         if IsValid(client) then
-            client:notify("This command can only be run from the server console.")
+            client:notifyLocalized("commandConsoleOnly")
             return
         end
 

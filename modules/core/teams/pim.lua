@@ -23,7 +23,7 @@
 
         target:binaryQuestion("Do you want to join this faction?", "Yes", "No", false, function(choice)
             if choice ~= 0 then
-                client:notify("Invite declined.")
+                client:notifyLocalized("inviteDeclined")
                 return
             end
 

@@ -15,7 +15,7 @@ net.Receive("send_logs", function()
     local jsonData = util.Decompress(fullData)
     local categorizedLogs = util.JSONToTable(jsonData)
     if not categorizedLogs then
-        chat.AddText(Color(255, 0, 0), "Failed to retrieve logs.")
+        chat.AddText(Color(255, 0, 0), L("failedRetrieveLogs"))
         return
     end
 
@@ -33,16 +33,16 @@ function OpenLogsUI(panel, categorizedLogs)
     contentPanel:DockMargin(10, 10, 10, 10)
     local search = contentPanel:Add("DTextEntry")
     search:Dock(TOP)
-    search:SetPlaceholderText("Search logs...")
+    search:SetPlaceholderText(L("searchLogs"))
     search:SetTextColor(Color(255, 255, 255))
     local list = contentPanel:Add("DListView")
     list:Dock(FILL)
     list:SetMultiSelect(false)
-    list:AddColumn("Timestamp"):SetFixedWidth(150)
-    list:AddColumn("Message")
+    list:AddColumn(L("timestamp")):SetFixedWidth(150)
+    list:AddColumn(L("logMessage"))
     local copyButton = contentPanel:Add("liaMediumButton")
     copyButton:Dock(BOTTOM)
-    copyButton:SetText("Copy Selected Row")
+    copyButton:SetText(L("copySelectedRow"))
     copyButton:SetTall(40)
     local currentLogs = {}
     local selectedButton

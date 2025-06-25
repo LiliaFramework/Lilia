@@ -661,7 +661,7 @@ if SERVER then
                 end, function(err)
                     lia.information("Failed to load inventories for " .. tostring(id))
                     lia.information(err)
-                    if IsValid(client) then client:ChatPrint("A server error occured while loading your" .. " inventories. Check server log for details.") end
+                    if IsValid(client) then client:notifyLocalized("fixInventoryError") end
                 end):next(function(inventories)
                     character.vars.inv = inventories
                     lia.char.loaded[id] = character
