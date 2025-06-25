@@ -1772,7 +1772,7 @@
             number – Modified stamina cost.
         Example Usage:
             hook.Add("AdjustStaminaOffsetRunning", "EnduranceBonus", function(ply, cost)
-                return cost + ply:getChar():getAttrib("stm", 0) * -0.01
+                return cost + ply:getChar():getAttrib("stamina", 0) * -0.01
             end)
 ]]
 --[[
@@ -2232,7 +2232,7 @@
         Example Usage:
             -- Increase stamina cap for VIP players.
             hook.Add("GetAttributeMax", "VIPStamina", function(client, attrib)
-                if attrib == "stm" and client:isVIP() then return 150 end
+                if attrib == "stamina" and client:isVIP() then return 150 end
             end)
 ]]
 --[[
