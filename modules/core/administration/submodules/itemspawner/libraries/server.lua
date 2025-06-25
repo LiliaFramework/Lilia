@@ -57,5 +57,5 @@ net.Receive("SpawnMenuGiveItem", function(_, client)
     local target = targetChar:getPlayer()
     if not targetChar then return end
     targetChar:getInv():add(id)
-    lia.log.add(client, "chargiveItem", id, target:Nick(), "SpawnMenuGiveItem")
+    lia.log.add(client, "chargiveItem", id, target, "SpawnMenuGiveItem")
 end)

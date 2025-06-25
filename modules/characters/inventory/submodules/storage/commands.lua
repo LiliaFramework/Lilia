@@ -11,10 +11,12 @@
                 entity:setNetVar("locked", true)
                 entity.password = password
                 client:notifyLocalized("storPass", password)
+                lia.log.add(client, "storageLock", entity:GetClass(), true)
             else
                 entity:setNetVar("locked", nil)
                 entity.password = nil
                 client:notifyLocalized("storPassRmv")
+                lia.log.add(client, "storageLock", entity:GetClass(), false)
             end
 
             MODULE:SaveData()

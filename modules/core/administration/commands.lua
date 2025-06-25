@@ -112,7 +112,7 @@ lia.command.add("sendtositroom", {
             target:SetPos(pos)
             client:notifyLocalized("sitroomTeleport", target:Nick())
             target:notifyLocalized("sitroomArrive")
-            lia.log.add(client, "sendToSitRoom", string.format("Map: %s | Name: %s | Target: %s | Position: %s", mapName, selection, target:Nick(), tostring(pos)), "Teleported player to the named sitroom")
+            lia.log.add(client, "sendToSitRoom", target:Nick(), selection)
         end)
     end
 })
@@ -144,5 +144,6 @@ lia.command.add("returnsitroom", {
         target:SetPos(prev)
         client:notifyLocalized("sitroomReturnSuccess", target:Nick())
         if target ~= client then target:notifyLocalized("sitroomReturned") end
+        lia.log.add(client, "sitRoomReturn", target:Nick())
     end
 })

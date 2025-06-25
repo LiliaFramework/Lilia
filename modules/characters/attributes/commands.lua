@@ -28,12 +28,15 @@
             return
         end
 
+        lia.log.add(client, "attribCheck", target:Name())
+
         local character = target:getChar()
         if character then
             for k, v in pairs(lia.attribs.list) do
                 if lia.util.stringMatches(L(v.name), attribName) or lia.util.stringMatches(k, attribName) then
                     character:setAttrib(k, math.abs(attribNumber))
                     client:notifyLocalized("attribSet", target:Name(), L(v.name), math.abs(attribNumber))
+                    lia.log.add(client, "attribSet", target:Name(), k, math.abs(attribNumber))
                     return
                 end
             end
@@ -139,6 +142,7 @@ lia.command.add("charaddattrib", {
                 if lia.util.stringMatches(L(v.name), attribName) or lia.util.stringMatches(k, attribName) then
                     character:updateAttrib(k, math.abs(attribNumber))
                     client:notifyLocalized("attribUpdate", target:Name(), L(v.name), math.abs(attribNumber))
+                    lia.log.add(client, "attribAdd", target:Name(), k, math.abs(attribNumber))
                     return
                 end
             end
