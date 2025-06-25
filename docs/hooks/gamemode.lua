@@ -88,9 +88,11 @@
         Realm:
             Client
         Example Usage:
-            -- Displays player names with a VIP prefix.
-            hook.Add("GetDisplayedName", "VIPPrefix", function(ply)
-                return "[VIP] " .. ply:Nick()
+            -- Displays player names with an admin prefix.
+            hook.Add("GetDisplayedName", "AdminPrefix", function(ply)
+                if ply:IsAdmin() then
+                    return "[ADMIN] " .. ply:Nick()
+                end
             end)
 ]]
 --[[
@@ -2174,9 +2176,12 @@
         Realm:
             Shared
         Example Usage:
-            -- Grant extra access if the character is VIP.
-            hook.Add("CharHasFlags", "VIPExtraFlags", function(char, flags)
-                if char:isVIP() and flags == "v" then return true end
+            -- Grant extra access for characters owned by admins.
+            hook.Add("CharHasFlags", "AdminExtraFlags", function(char, flags)
+                local ply = char:getPlayer()
+                if IsValid(ply) and ply:IsAdmin() and flags == "a" then
+                    return true
+                end
             end)
 ]]
 --[[
@@ -2230,9 +2235,11 @@
         Realm:
             Shared
         Example Usage:
-            -- Increase stamina cap for VIP players.
-            hook.Add("GetAttributeMax", "VIPStamina", function(client, attrib)
-                if attrib == "stamina" and client:isVIP() then return 150 end
+            -- Increase stamina cap for admins.
+            hook.Add("GetAttributeMax", "AdminStamina", function(client, attrib)
+                if attrib == "stamina" and client:IsAdmin() then
+                    return 150
+                end
             end)
 ]]
 --[[
@@ -2244,9 +2251,11 @@
         Realm:
             Server
         Example Usage:
-            -- Expand default bags for premium players.
-            hook.Add("GetDefaultInventorySize", "PremiumBags", function(client)
-                if client:isVIP() then return 6, 6 end
+            -- Expand default bags for admins.
+            hook.Add("GetDefaultInventorySize", "AdminBags", function(client)
+                if client:IsAdmin() then
+                    return 6, 6
+                end
             end)
 ]]
 --[[
@@ -2374,9 +2383,11 @@
         Realm:
             Shared
         Example Usage:
-            -- Sync the new attribute to the HUD.
-            hook.Add("OnCharAttribUpdated", "UpdateHUDAttrib", function(client, char, key, value)
-                if client == LocalPlayer() then MyHUD:SetStat(key, value) end
+            -- Print the changed attribute on the local player's HUD.
+            hook.Add("OnCharAttribUpdated", "PrintAttribChange", function(client, char, key, value)
+                if client == LocalPlayer() then
+                    chat.AddText(key .. ": " .. value)
+                end
             end)
 ]]
 --[[
@@ -2486,9 +2497,11 @@
         Realm:
             Shared
         Example Usage:
-            -- Update the HUD when we pick up ammo.
-            hook.Add('OnItemAdded', 'UpdateAmmoHUD', function(ply, item)
-                if item.category == 'ammo' then MyHUD:AddAmmo(item) end
+            -- Play a sound when ammo is picked up.
+            hook.Add('OnItemAdded', 'AmmoPickupSound', function(ply, item)
+                if item.category == 'ammo' then
+                    ply:EmitSound('items/ammo_pickup.wav')
+                end
             end)
 ]]
 --[[
@@ -2682,9 +2695,11 @@
         Realm:
             Shared
         Example Usage:
-            -- Update a stamina HUD element.
-            hook.Add('PlayerStaminaGained', 'HUDUpdateGain', function(client)
-                MyHUD:UpdateStamina(client:getLocalVar('stamina'))
+            -- Print the player's stamina amount whenever it increases.
+            hook.Add('PlayerStaminaGained', 'PrintStaminaGain', function(client)
+                if client == LocalPlayer() then
+                    print('Stamina:', client:getLocalVar('stamina'))
+                end
             end)
 ]]
 --[[
@@ -2696,9 +2711,11 @@
         Realm:
             Shared
         Example Usage:
-            -- Flash the stamina bar when exhausted.
-            hook.Add('PlayerStaminaLost', 'FlashStamina', function(client)
-                if client:getLocalVar('stamina', 0) <= 0 then MyHUD:Flash() end
+            -- Play a sound when the player runs out of stamina.
+            hook.Add('PlayerStaminaLost', 'TiredSound', function(client)
+                if client:getLocalVar('stamina', 0) <= 0 then
+                    client:EmitSound('player/suit_denydevice.wav')
+                end
             end)
 ]]
 --[[
@@ -3080,7 +3097,7 @@
         Example Usage:
             -- Flag suspicious characters as fake.
             hook.Add("isCharFakeRecognized", "DetectFakeCharacters", function(character, id)
-                if character:isSuspicious() then
+                if character:getData("suspicious", false) then
                     return true
                 end
             end)
@@ -3282,7 +3299,7 @@
             hook.Add("CreateDefaultInventory", "InitializeStarterInventory", function(character)
                 local d = deferred.new()
 
-                someInventoryCreationFunction(character)
+                lia.inventory.new("bag")
                     :next(function(inventory)
                         -- Add starter items
                         inventory:addItem("health_potion")
@@ -3503,7 +3520,7 @@
                     name = "Magic Ring",
                     description = "A ring imbued with magical properties.",
                     onUse = function(self, player)
-                        player:grantAbility("invisibility")
+                        player:SetNoDraw(true)
                         print(player:Name() .. " has activated the Magic Ring!")
                     end
                 })
@@ -4064,8 +4081,10 @@
         Returns:
             number|nil – Custom cooldown in seconds.
         Example Usage:
-            hook.Add("getOOCDelay", "VIPOOC", function(ply)
-                if ply:IsVIP() then return 5 end
+            hook.Add("getOOCDelay", "AdminOOC", function(ply)
+                if ply:IsAdmin() then
+                    return 5
+                end
             end)
 ]]
 --[[
@@ -4528,8 +4547,10 @@
         Returns:
             boolean
         Example Usage:
-            hook.Add("CheckFactionLimitReached", "IgnoreVIP", function(faction, char, ply)
-                if ply:IsVIP() then return false end
+            hook.Add("CheckFactionLimitReached", "IgnoreAdmins", function(faction, char, ply)
+                if ply:IsAdmin() then
+                    return false
+                end
             end)
 ]]
 --[[
