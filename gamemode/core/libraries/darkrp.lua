@@ -242,7 +242,7 @@ end
         Shared
 
     Returns:
-        None
+        nil
 
     Example Usage:
         lia.darkrp.createCategory()

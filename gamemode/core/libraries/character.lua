@@ -71,7 +71,7 @@ end
         Shared
 
     Returns:
-        None
+        nil
 ]]
 function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
@@ -92,7 +92,7 @@ end
         Shared
 
     Returns:
-        None
+        nil
 ]]
 function lia.char.registerVar(key, data)
     lia.char.vars[key] = data

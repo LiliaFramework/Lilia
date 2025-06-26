@@ -85,7 +85,7 @@ end
         Client
 
     Returns:
-        None
+        nil
 
     Example Usage:
         lia.bar.remove("example")
@@ -122,7 +122,7 @@ end
         Client
 
     Returns:
-        None
+        nil
 
     Example Usage:
         lia.bar.drawBar(10, 10, 200, 20, 0.5, 1, Color(255,0,0))
@@ -151,7 +151,7 @@ end
         Client
 
     Returns:
-        None
+        nil
 
     Example Usage:
         lia.bar.drawAction("Reloading", 2)
@@ -195,7 +195,7 @@ end
         Client
 
     Returns:
-        None
+        nil
 
     Example Usage:
         hook.Add("HUDPaintBackground", "liaBarDraw", lia.bar.drawAll)

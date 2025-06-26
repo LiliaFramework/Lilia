@@ -17,7 +17,7 @@ lia.attribs.list = lia.attribs.list or {}
         Shared
 
     Returns:
-        None
+        nil
 
     Example Usage:
         lia.attribs.loadFromDir("schema/attributes")

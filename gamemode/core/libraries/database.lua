@@ -722,7 +722,7 @@ end
         callback (function) – Function executed with the table of column names.
 
     Returns:
-        None
+        nil
 
     Realm:
         Server

@@ -115,7 +115,7 @@ end
         Client
 
     Returns:
-        None
+        nil
 ]]
 function menu.drawAll()
     local client = LocalPlayer()
