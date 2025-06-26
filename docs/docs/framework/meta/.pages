@@ -4,3 +4,6 @@ arrange:
   - inventory_meta.md
   - item_meta.md
   - player_meta.md
+  - panel_meta.md
+  - tool_meta.md
+  - vector_meta.md
