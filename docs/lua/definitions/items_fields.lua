@@ -15,7 +15,6 @@
         Example Usage:
             ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
 ]]
-
 --[[
         ITEM.DropOnDeath
 
@@ -28,7 +27,6 @@
         Example Usage:
             ITEM.DropOnDeath = true
 ]]
-
 --[[
         ITEM.FactionWhitelist
 
@@ -41,7 +39,6 @@
         Example Usage:
             ITEM.FactionWhitelist = {FACTION_CITIZEN}
 ]]
-
 --[[
         ITEM.RequiredSkillLevels
 
@@ -54,7 +51,6 @@
         Example Usage:
             ITEM.RequiredSkillLevels = {Strength = 5}
 ]]
-
 --[[
         ITEM.SteamIDWhitelist
 
@@ -67,7 +63,6 @@
         Example Usage:
             ITEM.SteamIDWhitelist = {"STEAM_0:1:123"}
 ]]
-
 --[[
         ITEM.UsergroupWhitelist
 
@@ -80,7 +75,6 @@
         Example Usage:
             ITEM.UsergroupWhitelist = {"admin"}
 ]]
-
 --[[
         ITEM.VIPWhitelist
 
@@ -93,20 +87,6 @@
         Example Usage:
             ITEM.VIPWhitelist = true
 ]]
-
---[[
-        ITEM.VManipDisabled
-
-        Description:
-            Disables VManip grabbing support for this item.
-
-        Base:
-            General
-
-        Example Usage:
-            ITEM.VManipDisabled = true
-]]
-
 --[[
         ITEM.ammo
 
@@ -119,7 +99,6 @@
         Example Usage:
             ITEM.ammo = "pistol"
 ]]
-
 --[[
         ITEM.ammoAmount
 
@@ -132,7 +111,6 @@
         Example Usage:
             ITEM.ammoAmount = 30
 ]]
-
 --[[
         ITEM.armor
 
@@ -145,7 +123,6 @@
         Example Usage:
             ITEM.armor = 50
 ]]
-
 --[[
         ITEM.attribBoosts
 
@@ -158,7 +135,6 @@
         Example Usage:
             ITEM.attribBoosts = {strength = 5}
 ]]
-
 --[[
         ITEM.base
 
@@ -171,7 +147,6 @@
         Example Usage:
             ITEM.base = "weapon"
 ]]
-
 --[[
         ITEM.canSplit
 
@@ -184,7 +159,6 @@
         Example Usage:
             ITEM.canSplit = true
 ]]
-
 --[[
         ITEM.category
 
@@ -197,7 +171,6 @@
         Example Usage:
             ITEM.category = "Storage"
 ]]
-
 --[[
         ITEM.class
 
@@ -210,7 +183,6 @@
         Example Usage:
             ITEM.class = "weapon_pistol"
 ]]
-
 --[[
         ITEM.contents
 
@@ -223,7 +195,6 @@
         Example Usage:
             ITEM.contents = "<h1>Book</h1>"
 ]]
-
 --[[
         ITEM.desc
 
@@ -236,7 +207,6 @@
         Example Usage:
             ITEM.desc = "An example item"
 ]]
-
 --[[
         ITEM.entityid
 
@@ -249,7 +219,6 @@
         Example Usage:
             ITEM.entityid = "item_suit"
 ]]
-
 --[[
         ITEM.equipSound
 
@@ -262,7 +231,6 @@
         Example Usage:
             ITEM.equipSound = "items/ammo_pickup.wav"
 ]]
-
 --[[
         ITEM.flag
 
@@ -275,7 +243,6 @@
         Example Usage:
             ITEM.flag = "Y"
 ]]
-
 --[[
         ITEM.functions
 
@@ -288,7 +255,6 @@
         Example Usage:
             ITEM.functions = {}
 ]]
-
 --[[
         ITEM.grenadeClass
 
@@ -301,7 +267,6 @@
         Example Usage:
             ITEM.grenadeClass = "weapon_frag"
 ]]
-
 --[[
         ITEM.health
 
@@ -314,7 +279,6 @@
         Example Usage:
             ITEM.health = 50
 ]]
-
 --[[
         ITEM.height
 
@@ -327,7 +291,6 @@
         Example Usage:
             ITEM.height = 1
 ]]
-
 --[[
         ITEM.id
 
@@ -340,7 +303,6 @@
         Example Usage:
             print(item.id)
 ]]
-
 --[[
         ITEM.invHeight
 
@@ -353,7 +315,6 @@
         Example Usage:
             ITEM.invHeight = 2
 ]]
-
 --[[
         ITEM.invWidth
 
@@ -366,7 +327,6 @@
         Example Usage:
             ITEM.invWidth = 2
 ]]
-
 --[[
         ITEM.isBag
 
@@ -379,7 +339,6 @@
         Example Usage:
             ITEM.isBag = true
 ]]
-
 --[[
         ITEM.isBase
 
@@ -392,7 +351,6 @@
         Example Usage:
             ITEM.isBase = true
 ]]
-
 --[[
         ITEM.isOutfit
 
@@ -405,7 +363,6 @@
         Example Usage:
             ITEM.isOutfit = true
 ]]
-
 --[[
         ITEM.isStackable
 
@@ -418,7 +375,6 @@
         Example Usage:
             ITEM.isStackable = false
 ]]
-
 --[[
         ITEM.isWeapon
 
@@ -431,7 +387,6 @@
         Example Usage:
             ITEM.isWeapon = true
 ]]
-
 --[[
         ITEM.maxQuantity
 
@@ -444,7 +399,6 @@
         Example Usage:
             ITEM.maxQuantity = 10
 ]]
-
 --[[
         ITEM.model
 
@@ -457,7 +411,6 @@
         Example Usage:
             ITEM.model = "models/props_c17/oildrum001.mdl"
 ]]
-
 --[[
         ITEM.name
 
@@ -470,7 +423,6 @@
         Example Usage:
             ITEM.name = "Example Item"
 ]]
-
 --[[
         ITEM.newSkin
 
@@ -483,7 +435,6 @@
         Example Usage:
             ITEM.newSkin = 1
 ]]
-
 --[[
         ITEM.outfitCategory
 
@@ -496,7 +447,6 @@
         Example Usage:
             ITEM.outfitCategory = "body"
 ]]
-
 --[[
         ITEM.pacData
 
@@ -516,7 +466,6 @@
                 }
             }
 ]]
-
 --[[
         ITEM.postHooks
 
@@ -533,7 +482,6 @@
                 end
             }
 ]]
-
 --[[
         ITEM.price
 
@@ -546,7 +494,6 @@
         Example Usage:
             ITEM.price = 100
 ]]
-
 --[[
         ITEM.quantity
 
@@ -559,7 +506,6 @@
         Example Usage:
             item:getQuantity()
 ]]
-
 --[[
         ITEM.rarity
 
@@ -572,7 +518,6 @@
         Example Usage:
             ITEM.rarity = "Legendary"
 ]]
-
 --[[
         ITEM.replacements
 
@@ -585,7 +530,6 @@
         Example Usage:
             ITEM.replacements = "models/player/combine_soldier.mdl"
 ]]
-
 --[[
         ITEM.unequipSound
 
@@ -598,7 +542,6 @@
         Example Usage:
             ITEM.unequipSound = "items/ammo_pickup.wav"
 ]]
-
 --[[
         ITEM.uniqueID
 
@@ -611,7 +554,6 @@
         Example Usage:
             ITEM.uniqueID = "custom_unique_id"
 ]]
-
 --[[
         ITEM.url
 
@@ -624,7 +566,6 @@
         Example Usage:
             ITEM.url = "https://example.com"
 ]]
-
 --[[
         ITEM.visualData
 
@@ -637,7 +578,6 @@
         Example Usage:
             ITEM.visualData = {}
 ]]
-
 --[[
         ITEM.weaponCategory
 
@@ -650,7 +590,6 @@
         Example Usage:
             ITEM.weaponCategory = "sidearm"
 ]]
-
 --[[
         ITEM.width
 
