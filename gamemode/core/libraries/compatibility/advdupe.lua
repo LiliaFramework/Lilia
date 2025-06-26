@@ -12,7 +12,7 @@ local function CheckDuplicationScale(client, entities)
     return true
 end
 
-hook.Add("CanTool", "lia_CheckAdvDuplicatorScale", function(client, _, tool)
+hook.Add("CanTool", "liaAdvDupe", function(client, _, tool)
     if tool == "adv_duplicator" then
         local weapon = client:GetActiveWeapon()
         if IsValid(weapon) then
