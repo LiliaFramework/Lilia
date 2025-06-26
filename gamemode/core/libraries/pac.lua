@@ -1,3 +1,9 @@
+--[[
+    Compatibility support for the PAC3 editor.
+    Handles retrieval and networking of player outfits,
+    ensuring PAC3 parts sync reliably between the server
+    and all clients in Lilia.
+]]
 ﻿local playerMeta = FindMetaTable("Entity")
 --[[
     Entity:getParts()
