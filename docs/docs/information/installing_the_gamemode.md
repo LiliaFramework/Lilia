@@ -1,20 +1,21 @@
 ## Installation Tutorial
 
-Lilia is a versatile roleplaying framework for Garry's Mod. This tutorial will guide you through installing Lilia on your Garry's Mod server, ensuring a smooth setup for your roleplaying environment.
+Lilia is a versatile roleplay framework for Garry's Mod. This tutorial guides you through installing Lilia on your server so you can create a stable roleplaying environment.
+
+> **Note**
+> Lilia runs beneath a roleplay schema. After installing Lilia, you must also install a schema and start your server using that schema's gamemode (for example, `+gamemode scprp`).
 
 ---
 
 ## Prerequisites
 
-Before you begin, ensure you have the following:
+Before you begin, make sure you have the following:
 
-- **A Working Garry's Mod Server:** Ensure your server is properly set up and running without issues.
-- **Basic Knowledge of Server Administration:** Familiarity with managing a Garry's Mod server is beneficial.
-- **Command Line Proficiency:** Understanding the command line is necessary for certain installation steps.
-- **Admin Menu:** We recommend using [SAM](https://www.gmodstore.com/market/view/sam) for enhanced administrative capabilities.
-- **Code Editor (optional):**
-
-  If you do not already have one, it is highly recommended to use a code editor to develop your scripts. Recommended editors include:
+- **A Working Garry's Mod Server:** Make sure your server is set up and running without issues.
+- **Basic Knowledge of Server Administration:** Familiarity with managing a Garry's Mod server is helpful.
+- **Command Line Proficiency:** You should be comfortable using the command line.
+- **Admin Menu:** We recommend [SAM](https://www.gmodstore.com/market/view/sam) for administrative tasks.
+- **Code Editor (optional):** If you don't already have one, a code editor makes development easier. Recommended editors include:
   
   1. [Visual Studio Code](https://code.visualstudio.com/)
   2. [Notepad++](https://notepad-plus-plus.org/)
@@ -80,26 +81,7 @@ If you haven't already, set up your Garry's Mod server and ensure it is running 
 
 ---
 
-## Step 5: Starting Lilia on Your Server
-
-1. **Start Your Garry's Mod Server:**
-
-    Once you have uploaded Lilia and completed the configuration, start your Garry's Mod server.
-
-2. **Verify Lilia is Running:**
-
-    - Monitor the **server console** for any error messages related to Lilia during startup.
-    - Look for a confirmation message indicating that Lilia has loaded successfully.
-    - Ensure there are no errors and that the server is running smoothly with Lilia active.
-
-    ```plaintext
-    Example Console Output:
-    [Lilia] [Bootstrap] Loaded successfully after X seconds.
-    ```
-
----
-
-## Step 7: Installing Roleplay Schemas
+## Step 5: Installing a Roleplay Schema
 
 Enhance your roleplaying experience by installing a compatible roleplay schema for the Lilia framework. Follow the steps below:
 
@@ -109,11 +91,11 @@ Select a schema that fits your server theme:
 
 - **Skeleton Schema**
     - [GitHub Repository](https://github.com/LiliaFramework/Skeleton)
-    - [Direct Download](https://github.com/LiliaFramework/SCPRP/releases/download/release/scprp.zip)
+    - [Direct Download](https://github.com/LiliaFramework/Skeleton/releases/download/release/skeleton.zip)
 
 - **SCPRP Schema**
     - [GitHub Repository](https://github.com/LiliaFramework/SCPRP)
-    - [Direct Download](https://github.com/LiliaFramework/Skeleton/releases/download/release/skeleton.zip)
+    - [Direct Download](https://github.com/LiliaFramework/SCPRP/releases/download/release/scprp.zip)
 
 ---
 
@@ -146,22 +128,33 @@ Modules:   garrysmod/gamemodes/<SchemaName>/modules/
 
 ---
 
-### 5. Set the Startup Gamemode
+## Step 6: Launching the Server with Your Schema
 
-Edit your server's startup parameters to set the gamemode:
+1. **Set the Startup Gamemode**
 
-```plaintext
-+gamemode <SchemaName>
-```
+    Edit your server's startup parameters so the server boots directly into your chosen schema:
 
-Example Usage:
+    ```plaintext
+    +gamemode <SchemaName>
+    ```
 
-```plaintext
-+gamemode scprp
-```
+    Example usage:
 
----
+    ```plaintext
+    +gamemode scprp
+    ```
 
-### 6. Restart the Server
+2. **Start the Server**
 
-Restart your Garry's Mod server and verify that the schema loads correctly with all configurations applied.
+    Launch or restart your Garry's Mod server. Lilia will load as the framework beneath the schema.
+
+3. **Verify the Installation**
+
+    Watch the console for a line such as:
+
+    ```plaintext
+    [Lilia] [Bootstrap] Loaded successfully after X seconds.
+    ```
+
+    If no errors appear and the schema loads, you're ready to play.
+
