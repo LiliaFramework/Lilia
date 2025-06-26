@@ -1,26 +1,5 @@
 ﻿lia.flag = lia.flag or {}
 lia.flag.list = lia.flag.list or {}
---[[
-   lia.flag.add
-
-   Description:
-      Registers a new flag by adding it to the flag list.
-      Each flag has a description and an optional callback that is executed when the flag is applied to a player.
-
-   Parameters:
-      flag (string) - The unique flag identifier.
-      desc (string) - A description of what the flag does.
-      callback (function) - An optional callback function executed when the flag is applied to a player.
-
-   Returns:
-      nil
-
-   Realm:
-      Shared
-
-   Example Usage:
-      lia.flag.add("C", "Spawn vehicles.")
-]]
 function lia.flag.add(flag, desc, callback)
     if lia.flag.list[flag] then return end
     lia.flag.list[flag] = {
@@ -30,25 +9,6 @@ function lia.flag.add(flag, desc, callback)
 end
 
 if SERVER then
-    --[[
-      lia.flag.onSpawn
-
-      Description:
-         Called when a player spawns. This function checks the player's character flags and triggers
-         the associated callbacks for each flag that the character possesses.
-
-      Parameters:
-         client (Player) - The player who spawned.
-
-      Returns:
-         nil
-
-      Realm:
-         Server
-
-      Example Usage:
-         lia.flag.onSpawn(player)
-]]
     function lia.flag.onSpawn(client)
         if client:getChar() then
             local flags = client:getChar():getFlags()
