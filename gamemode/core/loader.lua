@@ -467,8 +467,11 @@ function GM:OnReloaded()
     end
 end
 
-for _, data in ipairs(ConditionalFiles) do
-    if _G[data.global] then lia.include(data.path, "shared") end
+for _, file in ipairs(ConditionalFiles) do
+    if _G[file.global] then
+        lia.bootstrap("Compatibility", "Loaded " .. file.global .. " compatibility")
+        lia.include(file.path, "shared")
+    end
 end
 
 if game.IsDedicated() then concommand.Remove("gm_save") end
