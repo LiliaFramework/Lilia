@@ -1,32 +1,39 @@
 arrange:
   - lia.md
-  - lia.attrib.md
-  - lia.bar.md
+  - lia.attributes.md
+  - lia.bars.md
   - lia.character.md
-  - lia.chat.md
-  - lia.class.md
+  - lia.chatbox.md
+  - lia.cl_markup.md
+  - lia.classes.md
   - lia.color.md
-  - lia.command.md
+  - lia.commands.md
   - lia.config.md
   - lia.currency.md
-  - lia.darkrp.md
   - lia.data.md
-  - lia.db.md
-  - lia.ease.md
-  - lia.faction.md
-  - lia.flag.md
+  - lia.database.md
+  - lia.darkrp.md
+  - lia.factions.md
+  - lia.flags.md
+  - lia.fonts.md
   - lia.inventory.md
   - lia.item.md
   - lia.keybind.md
   - lia.languages.md
-  - lia.log.md
-  - lia.math.md
+  - lia.logger.md
   - lia.menu.md
-  - lia.module.md
-  - lia.net.md
+  - lia.modularity.md
+  - lia.networking.md
   - lia.notice.md
   - lia.option.md
-  - lia.string.md
-  - lia.table.md
+  - lia.pac.md
+  - lia.sam.md
+  - lia.serverguard.md
+  - lia.simfphys.md
+  - lia.sitanywhere.md
   - lia.time.md
+  - lia.ulx.md
   - lia.util.md
+  - lia.vcmod.md
+  - lia.vjbase.md
+  - lia.workshop.md
