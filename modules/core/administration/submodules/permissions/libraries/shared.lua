@@ -1,8 +1,8 @@
-﻿function MODULE:InitializedModules()
-    local defaultUserTools = {
-        remover = true,
-    }
+﻿local defaultUserTools = {
+    remover = true,
+}
 
+function MODULE:InitializedModules()
     if properties.List then
         for name in pairs(properties.List) do
             if name ~= "persist" and name ~= "drive" and name ~= "bonemanipulate" then

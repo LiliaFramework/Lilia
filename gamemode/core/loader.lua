@@ -163,6 +163,10 @@ local FilesToLoad = {
         realm = "client"
     },
     {
+        path = "lilia/gamemode/core/libraries/webimage.lua",
+        realm = "client"
+    },
+    {
         path = "lilia/gamemode/core/netcalls/client.lua",
         realm = "client"
     },
