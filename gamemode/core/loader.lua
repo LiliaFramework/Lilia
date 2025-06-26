@@ -169,7 +169,7 @@ local FilesToLoad = {
     {
         path = "lilia/gamemode/core/netcalls/server.lua",
         realm = "server"
-    },
+    }
 }
 
 local ConditionalFiles = {
@@ -211,26 +211,6 @@ local ConditionalFiles = {
     }
 }
 
---[[
-    Function: lia.include
-
-    Description:
-       Includes a Lua file based on its realm. It determines the realm from the file name or provided state,
-       and handles server/client inclusion logic.
-
-    Parameters:
-       fileName (string) - The path to the Lua file.
-       state (string) - The realm state ("server", "client", "shared", etc.).
-
-    Returns:
-       The result of the include, if applicable.
-
-    Realm:
-       Depends on the file realm.
-
-    Example Usage:
-       lia.include("lilia/gamemode/core/libraries/util.lua", "shared")
- ]]
 function lia.include(path, realm)
     if not path then error("[Lilia] missing file path") end
     local resolved = realm or RealmIDs[path:match("/([^/]+)%.lua$")] or path:find("sv_") and "server" or path:find("sh_") and "shared" or path:find("cl_") and "client" or "shared"
@@ -248,29 +228,6 @@ function lia.include(path, realm)
     end
 end
 
---[[
-    Function: lia.includeDir
-
-    Description:
-       Includes all Lua files in a specified directory.
-       If recursive is true, it recursively includes files from subdirectories.
-       It determines the base directory based on the active schema or gamemode.
-
-    Parameters:
-       directory (string) - The directory path to include.
-       fromLua (boolean) - Whether to use the raw Lua directory path.
-       recursive (boolean) - Whether to include files recursively.
-       realm (string) - The realm state to use ("client", "server", "shared").
-
-    Returns:
-       nil
-
-    Realm:
-       Depends on file inclusion.
-
-    Example Usage:
-       lia.includeDir("lilia/gamemode/core/libraries/shared/thirdparty", true, true)
- ]]
 function lia.includeDir(dir, raw, deep, realm)
     local root = raw and dir or (SCHEMA and SCHEMA.folder and SCHEMA.loading and SCHEMA.folder .. "/schema" or "lilia/gamemode") .. "/" .. dir
     local function loadDir(folder)
@@ -288,26 +245,6 @@ function lia.includeDir(dir, raw, deep, realm)
     loadDir(root)
 end
 
---[[
-    Function: lia.includeGroupedDir
-
-    Description:
-        Recursively includes all Lua files in a specified directory, preserving alphabetical order within each folder.
-        Determines each file’s realm (client, server, or shared) either by forced override or by filename prefix,
-        then calls lia.include on each file.
-
-    Parameters:
-        dir (string)         – Directory path to load files from (relative to gamemode or schema folder if raw is false).
-        raw (boolean)        – If true, uses dir as the literal filesystem path; otherwise prepends the gamemode/schema root.
-        recursive (boolean)  – Whether to traverse subdirectories recursively.
-        forceRealm (string)  – Optional override for the realm of all included files ("client", "server", or "shared").
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-]]
 function lia.includeGroupedDir(dir, raw, recursive, forceRealm)
     local baseDir = raw and dir or (SCHEMA and SCHEMA.folder and SCHEMA.loading and SCHEMA.folder .. "/schema" or "lilia/gamemode") .. "/" .. dir
     local stack = {baseDir}
@@ -339,119 +276,27 @@ lia.includeDir("lilia/gamemode/core/derma", true, true, "client")
 lia.include("lilia/gamemode/core/libraries/database.lua", "server")
 lia.include("lilia/gamemode/core/libraries/config.lua", "shared")
 lia.include("lilia/gamemode/core/libraries/data.lua", "shared")
---[[
-    lia.error(msg)
-
-    Description:
-        Prints a colored error message prefixed with "[Lilia]" to the console.
-
-    Parameters:
-        msg (string) – Error text to display.
-
-    Returns:
-        None
-
-    Realm:
-        Shared
-
-    Example Usage:
-        lia.error("Invalid configuration detected")
-]]
 function lia.error(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[Error] ")
     MsgC(Color(255, 0, 0), msg, "\n")
 end
 
---[[
-    lia.deprecated(methodName, callback)
-
-    Description:
-        Notifies that a method is deprecated and optionally runs a callback.
-
-    Parameters:
-        methodName (string) – Name of the deprecated method.
-        callback (function) – Optional function executed after warning.
-
-    Returns:
-        None
-
-    Realm:
-        Shared
-
-    Example Usage:
-        lia.deprecated("OldFunction")
-]]
 function lia.deprecated(methodName, callback)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[Deprecated] ")
     MsgC(Color(255, 255, 0), string.format("%s is deprecated. Please use the new methods for optimization purposes.", methodName), "\n")
     if callback and isfunction(callback) then callback() end
 end
 
---[[
-    lia.updater(msg)
-
-    Description:
-        Prints an updater message in cyan to the console with the Lilia prefix.
-
-    Parameters:
-        msg (string) – Update text to display.
-
-    Returns:
-        None
-
-    Realm:
-        Shared
-
-    Example Usage:
-        lia.updater("Loading additional content...")
-]]
 function lia.updater(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[Updater] ")
     MsgC(Color(0, 255, 255), msg, "\n")
 end
 
---[[
-    lia.information(msg)
-
-    Description:
-        Prints an informational message with the Lilia prefix.
-
-    Parameters:
-        msg (string) – Text to print to the console.
-
-    Returns:
-        None
-
-    Realm:
-        Shared
-
-    Example Usage:
-        lia.information("Server started successfully")
-]]
 function lia.information(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[Information] ")
     MsgC(Color(83, 143, 239), msg, "\n")
 end
 
---[[
-    lia.bootstrap(section, msg)
-
-    Description:
-        Logs a bootstrap message with a colored section tag for clarity.
-
-    Parameters:
-        section (string) – Category or stage of bootstrap.
-        msg (string) – Message describing the bootstrap step.
-
-    Returns:
-        None
-
-    Realm:
-        Shared
-
-    Example Usage:
-        lia.bootstrap("Database", "Connection established")
-]]
 function lia.bootstrap(section, msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[Bootstrap] ")
     MsgC(Color(0, 255, 0), "[" .. section .. "] ")
@@ -462,29 +307,7 @@ for _, files in ipairs(FilesToLoad) do
     lia.include(files.path, files.realm)
 end
 
---[[
-    Function: lia.includeEntities
-
-    Description:
-       Includes entity files from the specified directory.
-       It checks for standard entity files ("init.lua", "shared.lua", "cl_init.lua"),
-       handles the inclusion and registration of entities, weapons, tools, and effects,
-       and supports recursive inclusion within entity folders.
-
-    Parameters:
-       path (string) - The directory path containing entity files.
-
-    Returns:
-       nil
-
-    Realm:
-       Client/Server (depending on the file names)
-
-    Example Usage:
-       lia.includeEntities("lilia/entities")
- ]]
 function lia.includeEntities(path)
-    local files, folders
     local function IncludeFiles(path2)
         if file.Exists(path2 .. "init.lua", "LUA") then lia.include(path2 .. "init.lua", "server") end
         if file.Exists(path2 .. "shared.lua", "LUA") then lia.include(path2 .. "shared.lua", "shared") end
@@ -497,7 +320,7 @@ function lia.includeEntities(path)
     end
 
     local function HandleEntityInclusion(folder, variable, register, default, clientOnly, create, complete)
-        files, folders = file.Find(path .. "/" .. folder .. "/*", "LUA")
+        local files, folders = file.Find(path .. "/" .. folder .. "/*", "LUA")
         default = default or {}
         for _, v in ipairs(folders) do
             local path2 = path .. "/" .. folder .. "/" .. v .. "/"
@@ -550,7 +373,7 @@ function lia.includeEntities(path)
         Type = "anim",
         Base = "base_gmodentity",
         Spawnable = true
-    }, false, nil)
+    }, false)
 
     HandleEntityInclusion("weapons", "SWEP", weapons.Register, {
         Primary = {},
