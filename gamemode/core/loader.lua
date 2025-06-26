@@ -147,7 +147,7 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/libraries/darkrp.lua",
+        path = "lilia/gamemode/core/libraries/compatibility/darkrp.lua",
         realm = "shared"
     },
     {
@@ -178,40 +178,48 @@ local FilesToLoad = {
 
 local ConditionalFiles = {
     {
-        path = "lilia/gamemode/core/libraries/pac.lua",
-        global = "pac"
-    },
-    {
-        path = "lilia/gamemode/core/libraries/simfphys.lua",
-        global = "simfphys"
-    },
-    {
-        path = "lilia/gamemode/core/libraries/sitanywhere.lua",
-        global = "SitAnywhere"
-    },
-    {
-        path = "lilia/gamemode/core/libraries/vcmod.lua",
+        path = "lilia/gamemode/core/libraries/compatibility/vcmod.lua",
         global = "VCMod"
     },
     {
-        path = "lilia/gamemode/core/libraries/vjbase.lua",
+        path = "lilia/gamemode/core/libraries/compatibility/vjbase.lua",
         global = "VJ"
     },
     {
-        path = "lilia/gamemode/core/libraries/prone.lua",
+        path = "lilia/gamemode/core/libraries/compatibility/advdupe.lua",
+        global = "AdvDupe"
+    },
+    {
+        path = "lilia/gamemode/core/libraries/compatibility/advdupe2.lua",
+        global = "AdvDupe2"
+    },
+    {
+        path = "lilia/gamemode/core/libraries/compatibility/pac.lua",
+        global = "pac"
+    },
+    {
+        path = "lilia/gamemode/core/libraries/compatibility/prone.lua",
         global = "prone"
     },
     {
-        path = "lilia/gamemode/core/libraries/sam.lua",
+        path = "lilia/gamemode/core/libraries/compatibility/sam.lua",
         global = "sam"
     },
     {
-        path = "lilia/gamemode/core/libraries/ulx.lua",
-        global = "ulx"
+        path = "lilia/gamemode/core/libraries/compatibility/serverguard.lua",
+        global = "serverguard"
     },
     {
-        path = "lilia/gamemode/core/libraries/serverguard.lua",
-        global = "serverguard"
+        path = "lilia/gamemode/core/libraries/compatibility/simfphys.lua",
+        global = "simfphys"
+    },
+    {
+        path = "lilia/gamemode/core/libraries/compatibility/sitanywhere.lua",
+        global = "SitAnywhere"
+    },
+    {
+        path = "lilia/gamemode/core/libraries/compatibility/ulx.lua",
+        global = "ulx"
     }
 }
 
