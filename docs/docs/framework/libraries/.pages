@@ -4,15 +4,14 @@ arrange:
   - lia.bars.md
   - lia.character.md
   - lia.chatbox.md
-  - lia.cl_markup.md
   - lia.classes.md
   - lia.color.md
   - lia.commands.md
   - lia.config.md
   - lia.currency.md
+  - lia.darkrp.md
   - lia.data.md
   - lia.database.md
-  - lia.darkrp.md
   - lia.factions.md
   - lia.flags.md
   - lia.fonts.md
@@ -22,18 +21,12 @@ arrange:
   - lia.languages.md
   - lia.logger.md
   - lia.menu.md
+  - lia.markup.md
   - lia.modularity.md
   - lia.networking.md
   - lia.notice.md
   - lia.option.md
   - lia.pac.md
-  - lia.sam.md
-  - lia.serverguard.md
-  - lia.simfphys.md
-  - lia.sitanywhere.md
   - lia.time.md
-  - lia.ulx.md
   - lia.util.md
-  - lia.vcmod.md
-  - lia.vjbase.md
   - lia.workshop.md

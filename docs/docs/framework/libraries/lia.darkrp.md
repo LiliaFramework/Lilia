@@ -1,28 +1,3 @@
-        ## Provides compatibility with the DarkRP gamemode.
-
-        **Description:**
-            Maps functions such as entity creation, money formatting and
-empty position checks so DarkRP addons work with the Lilia framework.
-
-        ---
-
-        ### Parameters
-
-            None
-
-        ---
-
-        ### Returns
-
-            None
-
-        ---
-
-        ### Example
-
-            ```lua
-            ```
-
         ## lia.darkrp.isEmpty(position, entitiesToIgnore)
 
         **Description:**
