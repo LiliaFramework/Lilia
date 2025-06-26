@@ -3,7 +3,7 @@
 ---
 ![Lilia Logo](assets/logo_big.png){style="display: block; margin: 0 auto" }
 
-Lilia is an advanced roleplay gamemode framework for Garry's Mod. Inspired by Lillia, a character from League of Legends, Lilia aims to fulfill your dreams of creating immersive roleplay servers. With a focus on stability, rich features, and open-source flexibility, Lilia provides a platform for users to bring their visions to life easily and effectively.
+Lilia is an advanced roleplay framework for Garry's Mod. Inspired by Lillia from League of Legends, it lets you create immersive servers with stability, rich features, and open-source flexibility. Because Lilia is only a framework, you must install a roleplay schema and launch your server using that schema's gamemode (for example, `+gamemode scprp`).
 
 ## Server Owners
 
