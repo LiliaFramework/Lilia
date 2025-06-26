@@ -1,28 +1,5 @@
 ﻿lia.option = lia.option or {}
 lia.option.stored = lia.option.stored or {}
---[[
-    lia.option.add(key, name, desc, default, callback, data)
-
-       Description:
-          Adds a configuration option to the lia.option system.
-
-       Parameters:
-          key (string) — The unique key for the option.
-          name (string) — The display name of the option.
-          desc (string) — A brief description of the option's purpose.
-          default (any) — The default value for this option.
-          callback (function) — A function to call when the option’s value changes (optional).
-          data (table) — Additional data describing the option (e.g., min, max, type, category, visible, shouldNetwork).
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-        lia.option.add("showHints", "Show Hints", "Display hints", true)
-]]
 function lia.option.add(key, name, desc, default, callback, data)
     assert(isstring(key), "Expected option key to be a string, got " .. type(key))
     assert(isstring(name), "Expected option name to be a string, got " .. type(name))
@@ -50,25 +27,6 @@ function lia.option.add(key, name, desc, default, callback, data)
     }
 end
 
---[[
-    lia.option.set(key, value)
-
-       Description:
-          Sets the value of a specified option, saves locally, and optionally networks to the server.
-
-       Parameters:
-          key (string) — The unique key identifying the option.
-          value (any) — The new value to assign to this option.
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-
-    Example Usage:
-        lia.option.set("showHints", false)
-]]
 function lia.option.set(key, value)
     local opt = lia.option.stored[key]
     if not opt then return end
@@ -81,25 +39,6 @@ function lia.option.set(key, value)
     end
 end
 
---[[
-    lia.option.get(key, default)
-
-       Description:
-          Retrieves the value of a specified option, or returns a default if it doesn't exist.
-
-       Parameters:
-          key (string) — The unique key identifying the option.
-          default (any) — The value to return if the option is not found.
-
-    Returns:
-        (any) The current value of the option or the provided default.
-
-    Realm:
-        Client
-
-    Example Usage:
-        local show = lia.option.get("showHints", true)
-]]
 function lia.option.get(key, default)
     local opt = lia.option.stored[key]
     if opt then
@@ -109,24 +48,6 @@ function lia.option.get(key, default)
     return default
 end
 
---[[
-    lia.option.save()
-
-       Description:
-          Saves all current option values to a file, named based on the server IP, within the active gamemode folder.
-
-       Parameters:
-          None
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-
-    Example Usage:
-        lia.option.save()
-]]
 function lia.option.save()
     local dir = "lilia/options/" .. engine.ActiveGamemode()
     file.CreateDir(dir)
@@ -142,24 +63,6 @@ function lia.option.save()
     if json then file.Write(path, json) end
 end
 
---[[
-    lia.option.load()
-
-       Description:
-          Loads saved option values from disk based on server IP and applies them to lia.option.stored.
-
-       Parameters:
-          None
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-
-    Example Usage:
-        lia.option.load()
-]]
 function lia.option.load()
     local dir = "lilia/options/" .. engine.ActiveGamemode()
     file.CreateDir(dir)

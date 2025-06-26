@@ -14,26 +14,6 @@ if SERVER then
         end
     end
 
-    --[[
-        setNetVar(key, value, receiver)
-
-        Description:
-            Stores a global network variable and broadcasts the new value
-            to clients via the "gVar" netstream message.
-
-        Parameters:
-            key (string) – The unique identifier for the variable.
-            value (any) – Value to assign. Functions and nested functions
-            are disallowed.
-            receiver (Player or table) – Optional receiver(s) for the update.
-            Pass nil to broadcast to everyone.
-
-        Realm:
-            Server
-
-        Returns:
-            None
-    ]]
     function setNetVar(key, value, receiver)
         if checkBadType(key, value) then return end
         if getNetVar(key) == value then return end
@@ -41,23 +21,6 @@ if SERVER then
         netstream.Start(receiver, "gVar", key, value)
     end
 
-    --[[
-        getNetVar(key, default)
-
-        Description:
-            Returns the value of a global network variable previously set
-            with setNetVar.
-
-        Parameters:
-            key (string) – Name of the variable to read.
-            default (any) – Value returned when the variable is nil.
-
-        Realm:
-            Shared
-
-        Returns:
-            any – The stored value or the provided default.
-    ]]
     function getNetVar(key, default)
         local value = lia.net.globals[key]
         return value ~= nil and value or default
@@ -75,44 +38,10 @@ if SERVER then
         netstream.Start(client, "liaCharFetchNames", lia.char.names)
     end)
 else
-    --[[
-        getNetVar(key, default)
-
-        Description:
-            Client-side access to global variables synchronized from the server.
-
-        Parameters:
-            key (string) – Name of the variable to read.
-            default (any) – Value returned when the variable is nil.
-
-        Realm:
-            Client
-
-        Returns:
-            any – The stored value or the provided default.
-    ]]
     function getNetVar(key, default)
         local value = lia.net.globals[key]
         return value ~= nil and value or default
     end
 
-    --[[
-        playerMeta.getLocalVar(key, default)
-
-        Description:
-            Alias for entityMeta.getNetVar available on the client. This
-            allows code written for entities to work directly on the local
-            player object.
-
-        Parameters:
-            key (string) – Name of the variable to read.
-            default (any) – Value returned when the variable is nil.
-
-        Realm:
-            Client
-
-        Returns:
-            any – The stored value or the provided default.
-    ]]
     playerMeta.getLocalVar = entityMeta.getNetVar
 end

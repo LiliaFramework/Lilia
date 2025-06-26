@@ -3,64 +3,14 @@ lia.color.stored = lia.color.stored or {}
 local clamp = math.Clamp
 local configGet = lia.config.get
 local unpack = unpack
---[[
-    lia.color.register(name, color)
-
-    Description:
-        Registers a named color for later lookup.
-
-    Parameters:
-        name (string) – Key used to reference the color.
-        color (Color) – Color object or table.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-]]
 function lia.color.register(name, color)
     lia.color.stored[name:lower()] = color
 end
 
---[[
-    lia.color.Adjust(color, rOffset, gOffset, bOffset, aOffset)
-
-    Description:
-        Creates a new color by applying offsets to each channel.
-
-    Parameters:
-        color (Color) – Base color.
-        rOffset (number) – Red channel delta.
-        gOffset (number) – Green channel delta.
-        bOffset (number) – Blue channel delta.
-        aOffset (number) – Alpha channel delta (optional).
-
-    Returns:
-        Color – Adjusted color.
-
-    Realm:
-        Shared
-]]
 function lia.color.Adjust(color, rOffset, gOffset, bOffset, aOffset)
     return Color(clamp(color.r + rOffset, 0, 255), clamp(color.g + gOffset, 0, 255), clamp(color.b + bOffset, 0, 255), clamp((color.a or 255) + (aOffset or 0), 0, 255))
 end
 
---[[
-    lia.color.ReturnMainAdjustedColors()
-
-    Description:
-        Returns a table of commonly used UI colors derived from the base config color.
-
-    Parameters:
-        None
-
-    Returns:
-        table – Mapping of UI color keys to Color objects.
-
-    Realm:
-        Shared
-]]
 function lia.color.ReturnMainAdjustedColors()
     local base = configGet("Color")
     return {

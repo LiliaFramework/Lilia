@@ -1,40 +1,9 @@
 ﻿lia.chat = lia.chat or {}
 lia.chat.classes = lia.char.classes or {}
---[[
-    lia.chat.timestamp(ooc)
-
-    Description:
-        Returns a formatted timestamp if chat timestamps are enabled.
-
-    Parameters:
-        ooc (boolean) – True for out-of-character messages.
-
-    Returns:
-        string – Formatted time string or an empty string.
-
-    Realm:
-        Shared
-]]
 function lia.chat.timestamp(ooc)
     return lia.option.ChatShowTime and (ooc and " " or "") .. "(" .. lia.time.GetHour() .. ")" .. (ooc and "" or " ") or ""
 end
 
---[[
-    lia.chat.register(chatType, data)
-
-    Description:
-        Registers a new chat class and sets up command aliases.
-
-    Parameters:
-        chatType (string) – Identifier for the chat class.
-        data (table) – Table of chat class properties.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-]]
 function lia.chat.register(chatType, data)
     data.syntax = data.syntax or ""
     data.desc = data.desc or ""
@@ -89,23 +58,6 @@ function lia.chat.register(chatType, data)
     lia.chat.classes[chatType] = data
 end
 
---[[
-    lia.chat.parse(client, message, noSend)
-
-    Description:
-        Parses chat text for the proper chat type and optionally sends it.
-
-    Parameters:
-        client (Player) – Player sending the message.
-        message (string) – The chat text.
-        noSend (boolean) – Suppress sending when true.
-
-    Returns:
-        chatType (string), text (string), anonymous (boolean)
-
-    Realm:
-        Shared
-]]
 function lia.chat.parse(client, message, noSend)
     local anonymous = false
     local chatType = "ic"
@@ -139,25 +91,6 @@ function lia.chat.parse(client, message, noSend)
     return chatType, message, anonymous
 end
 
---[[
-    lia.chat.send(speaker, chatType, text, anonymous, receivers)
-
-    Description:
-        Broadcasts a chat message to all eligible receivers.
-
-    Parameters:
-        speaker (Player) – The message sender.
-        chatType (string) – Chat class identifier.
-        text (string) – Message text.
-        anonymous (boolean) – Whether the sender is anonymous.
-        receivers (table) – Optional list of target players.
-
-    Returns:
-        nil
-
-    Realm:
-        Server
-]]
 if SERVER then
     function lia.chat.send(speaker, chatType, text, anonymous, receivers)
         local class = lia.chat.classes[chatType]
