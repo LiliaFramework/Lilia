@@ -1,23 +1,5 @@
 ﻿lia.class = lia.class or {}
 lia.class.list = lia.class.list or {}
---[[
-    lia.class.loadFromDir(directory)
-
-    Description:
-        Loads all class definitions from the given directory and stores them in lia.class.list.
-
-    Parameters:
-        directory (string) – Folder path containing class Lua files.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-        lia.class.loadFromDir("schema/classes")
-]]
 function lia.class.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local index = #lia.class.list + 1
@@ -55,25 +37,6 @@ function lia.class.loadFromDir(directory)
     end
 end
 
---[[
-    lia.class.canBe(client, class)
-
-    Description:
-        Determines if the given client may become the specified class.
-
-    Parameters:
-        client (Player) – Player attempting to join.
-        class (string|number) – Class identifier.
-
-    Returns:
-        boolean – False with a message if denied; default status when allowed.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        local allowed = lia.class.canBe(client, classID)
-]]
 function lia.class.canBe(client, class)
     local info = lia.class.list[class]
     if not info then return false, L("classNoInfo") end
@@ -85,46 +48,10 @@ function lia.class.canBe(client, class)
     return info.isDefault
 end
 
---[[
-    lia.class.get(identifier)
-
-    Description:
-        Retrieves the class table associated with the given identifier.
-
-    Parameters:
-        identifier (string|number) – Unique identifier for the class.
-
-    Returns:
-        table|nil – Class table if found.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        local classData = lia.class.get(1)
-]]
 function lia.class.get(identifier)
     return lia.class.list[identifier]
 end
 
---[[
-    lia.class.getPlayers(class)
-
-    Description:
-        Returns a table of players whose characters belong to the given class.
-
-    Parameters:
-        class (string|number) – Class identifier.
-
-    Returns:
-        table – List of player objects.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        local players = lia.class.getPlayers(classID)
-]]
 function lia.class.getPlayers(class)
     local players = {}
     for _, v in player.Iterator() do
@@ -134,24 +61,6 @@ function lia.class.getPlayers(class)
     return players
 end
 
---[[
-    lia.class.getPlayerCount(class)
-
-    Description:
-        Counts how many players belong to the given class.
-
-    Parameters:
-        class (string|number) – Class identifier.
-
-    Returns:
-        number – Player count.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        local count = lia.class.getPlayerCount(classID)
-]]
 function lia.class.getPlayerCount(class)
     local count = 0
     for _, v in player.Iterator() do
@@ -161,24 +70,6 @@ function lia.class.getPlayerCount(class)
     return count
 end
 
---[[
-    lia.class.retrieveClass(class)
-
-    Description:
-        Searches the class list for a class whose ID or name matches the given text.
-
-    Parameters:
-        class (string) – Search text.
-
-    Returns:
-        string|nil – Matching class identifier or nil.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        local id = lia.class.retrieveClass("police")
-]]
 function lia.class.retrieveClass(class)
     for key, classTable in pairs(lia.class.list) do
         if lia.util.stringMatches(classTable.uniqueID, class) or lia.util.stringMatches(classTable.name, class) then return key end
@@ -186,26 +77,6 @@ function lia.class.retrieveClass(class)
     return nil
 end
 
---[[
-    lia.class.hasWhitelist(class)
-
-    Description:
-        Returns whether the specified class requires a whitelist.
-
-    Parameters:
-        class (string|number) – Class identifier.
-
-    Returns:
-        boolean – True if the class is whitelisted.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        if lia.class.hasWhitelist(classID) then
-            print("Whitelist required")
-        end
-]]
 function lia.class.hasWhitelist(class)
     local info = lia.class.list[class]
     if not info then return false end

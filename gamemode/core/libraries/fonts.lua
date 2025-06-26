@@ -1,25 +1,6 @@
 ﻿lia.font = lia.font or {}
 lia.font.stored = lia.font.stored or {}
 if CLIENT then
-    --[[
-        lia.font.register(fontName, fontData)
-
-        Description:
-            Creates and stores a font using surface.CreateFont for later refresh.
-
-        Parameters:
-            fontName (string) – Font identifier.
-            fontData (table) – Font properties table.
-
-        Realm:
-            Client
-
-        Returns:
-            None
-
-        Example Usage:
-            lia.font.register("MyFont", {font = "Arial", size = 16})
-    ]]
     function lia.font.register(fontName, fontData)
         if not (isstring(fontName) and istable(fontData)) then return lia.error("[Font] Invalid font name or data provided.") end
         surface.CreateFont(fontName, fontData)
@@ -877,25 +858,6 @@ if CLIENT then
         size = 64
     })
 
-    --[[
-        lia.font.getAvailableFonts()
-
-        Description:
-            Returns a sorted list of font names that have been registered.
-
-        Parameters:
-            None
-
-        Returns:
-            table – Array of font name strings.
-
-        Realm:
-            Client
-
-        Example Usage:
-            local fonts = lia.font.getAvailableFonts()
-            PrintTable(fonts)
-    ]]
     function lia.font.getAvailableFonts()
         local list = {}
         for name in pairs(lia.font.stored) do
@@ -906,24 +868,6 @@ if CLIENT then
         return list
     end
 
-    --[[
-        lia.font.refresh()
-
-        Description:
-            Recreates all stored fonts. Called when font related config values change.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-
-        Realm:
-            Client
-
-        Example Usage:
-            lia.font.refresh()
-    ]]
     function lia.font.refresh()
         local storedFonts = lia.font.stored
         lia.font.stored = {}

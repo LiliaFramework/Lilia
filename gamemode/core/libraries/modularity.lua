@@ -53,23 +53,6 @@ local function loadSubmodules(path)
     if #files > 0 or #folders > 0 then lia.module.loadFromDir(path .. "/submodules", "module") end
 end
 
---[[
-   lia.module.load
-
-   Description:
-      Loads a module from a specified path. If the module is a single file, it includes it directly;
-      if it is a directory, it loads the core file (or its extended version), applies permissions, workshop content, dependencies, extras, and submodules.
-      It also registers the module in the module list if applicable.
-
-   Parameters:
-      uniqueID - The unique identifier of the module.
-      path - The file system path where the module is located.
-      isSingleFile - Boolean indicating if the module is a single file.
-      variable - A global variable name used to temporarily store the module.
-
-   Returns:
-      nil
-]]
 function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
     variable = variable or "MODULE"
     local lowerVar = variable:lower()
@@ -177,19 +160,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
     end
 end
 
---[[
-   lia.module.initialize
-
-   Description:
-      Initializes the module system by loading the schema and various module directories,
-      then running the appropriate hooks after modules have been loaded.
-
-   Parameters:
-      None
-
-   Returns:
-      nil
-]]
 function lia.module.initialize()
     local schemaPath = engine.ActiveGamemode()
     lia.module.load("schema", schemaPath .. "/schema", false, "schema")
@@ -213,21 +183,6 @@ function lia.module.initialize()
     end
 end
 
---[[
-   lia.module.loadFromDir
-
-   Description:
-      Loads modules from a specified directory. It iterates over all subfolders and .lua files in the directory.
-      Each subfolder is treated as a multi-file module, and each .lua file as a single-file module.
-      Non-Lua files are ignored.
-
-   Parameters:
-      directory - The directory path from which to load modules.
-      group - A string representing the module group (e.g., "schema" or "module").
-
-   Returns:
-      nil
-]]
 function lia.module.loadFromDir(directory, group)
     local locationVar = group == "schema" and "SCHEMA" or "MODULE"
     local files, folders = file.Find(directory .. "/*", "LUA")
@@ -243,18 +198,6 @@ function lia.module.loadFromDir(directory, group)
     end
 end
 
---[[
-   lia.module.get
-
-   Description:
-      Retrieves a module table by its identifier.
-
-   Parameters:
-      identifier - The unique identifier of the module to retrieve.
-
-   Returns:
-      The module table if found, or nil if the module is not registered.
-]]
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end

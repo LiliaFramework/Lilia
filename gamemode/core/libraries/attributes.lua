@@ -1,27 +1,5 @@
 ﻿lia.attribs = lia.attribs or {}
 lia.attribs.list = lia.attribs.list or {}
---[[
-    lia.attribs.loadFromDir(directory)
-
-    Description:
-        Loads attribute definitions from the given folder. Files prefixed
-        with "sh_" are treated as shared and loaded on both client and
-        server. The ATTRIBUTE table returned from each file is stored in
-        lia.attribs.list using the filename, without prefix or extension,
-        as the key.
-
-    Parameters:
-        directory (string) – Path to the folder containing attribute Lua files.
-
-    Realm:
-        Shared
-
-    Returns:
-        nil
-
-    Example Usage:
-        lia.attribs.loadFromDir("schema/attributes")
-]]
 function lia.attribs.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local niceName = v:sub(1, 3) == "sh_" and v:sub(4, -5):lower() or v:sub(1, -5)
@@ -35,26 +13,6 @@ function lia.attribs.loadFromDir(directory)
 end
 
 if SERVER then
-    --[[
-        lia.attribs.setup(client)
-
-        Description:
-            Initializes attribute data for a client's character. Each attribute in
-            lia.attribs.list is read from the character and, if the attribute has
-            an OnSetup callback, it is executed with the current value.
-
-        Parameters:
-            client (Player) – The player whose character attributes should be set up.
-
-        Realm:
-            Server
-
-        Returns:
-            None
-
-        Example Usage:
-            lia.attribs.setup(client)
-    ]]
     function lia.attribs.setup(client)
         local character = client:getChar()
         if not character then return end
