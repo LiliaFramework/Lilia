@@ -12,54 +12,77 @@ local function ensureDir(path)
     end
 end
 
-function lia.webimage.register(name, url, callback)
+local function buildMaterial(path, flags)
+    return Material("data/" .. path, flags or "noclamp smooth")
+end
+
+function lia.webimage.register(name, url, callback, flags)
     if cache[name] then
         if callback then callback(cache[name], true) end
         return
     end
 
     local savePath = baseDir .. name
+    local function finalize(fromCache)
+        local mat = buildMaterial(savePath, flags)
+        cache[name] = mat
+        if callback then callback(mat, fromCache) end
+    end
+
     if file.Exists(savePath, "DATA") then
-        cache[name] = savePath
-        if callback then callback(savePath, true) end
+        finalize(true)
         return
     end
 
     http.Fetch(url, function(body)
         ensureDir(baseDir)
         file.Write(savePath, body)
-        cache[name] = savePath
-        if callback then callback(savePath, false) end
+        finalize(false)
     end, function(err) if callback then callback(nil, false, err) end end)
 end
 
-function lia.webimage.get(name)
-    local savePath = cache[name] or baseDir .. name
+function lia.webimage.get(name, flags)
+    if cache[name] then return cache[name] end
+    local savePath = baseDir .. name
     if file.Exists(savePath, "DATA") then
-        cache[name] = savePath
-        return savePath
+        local mat = buildMaterial(savePath, flags)
+        cache[name] = mat
+        return mat
     end
     return nil
 end
 
-local function openTest(mat)
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle("lia.webimage test")
-    frame:SetSize(512, 512)
-    frame:Center()
-    frame:MakePopup()
-    local img = vgui.Create("DImage", frame)
-    img:Dock(FILL)
-    img:SetMaterial(mat)
+local origMaterial = Material
+function Material(path, ...)
+    if type(path) == "string" and path:find("^https?://") then
+        local ext = path:match("%.([%w]+)$") or "png"
+        local name = util.CRC(path) .. "." .. ext
+        lia.webimage.register(name, path)
+        return origMaterial("data/" .. baseDir .. name, ...)
+    end
+    return origMaterial(path, ...)
 end
 
-concommand.Add("openlilialogo", function()
-    lia.webimage.register("lilia.png", "https://i.imgur.com/8uRCbmB.png", function(path)
-        if path then
-            local mat = Material("data/" .. path, "noclamp smooth")
-            if not mat:IsError() then openTest(mat) end
+local dimage = vgui.GetControlTable("DImage")
+if dimage and dimage.SetImage then
+    local origSetImage = dimage.SetImage
+    function dimage:SetImage(src, backup)
+        if type(src) == "string" and src:find("^https?://") then
+            local ext = src:match("%.([%w]+)$") or "png"
+            local name = util.CRC(src) .. "." .. ext
+            local savePath = baseDir .. name
+            lia.webimage.register(name, src, function(mat)
+                if mat and not mat:IsError() then
+                    origSetImage(self, "data/" .. savePath, backup)
+                elseif backup then
+                    origSetImage(self, backup)
+                end
+            end)
+            return
         end
-    end)
-end)
+
+        origSetImage(self, src, backup)
+    end
+end
 
 ensureDir(baseDir)
