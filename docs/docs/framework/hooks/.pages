@@ -1,4 +1,4 @@
 arrange:
-  - gamemode_hooks.md
+  - gamemode.md
   - faction_hooks.md
   - class_hooks.md
