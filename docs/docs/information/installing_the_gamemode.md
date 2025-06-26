@@ -157,4 +157,3 @@ Modules:   garrysmod/gamemodes/<SchemaName>/modules/
     ```
 
     If no errors appear and the schema loads, you're ready to play.
-
