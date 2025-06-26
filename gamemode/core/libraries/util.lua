@@ -15,7 +15,7 @@
       Shared
 
    Example Usage:
-      local players = lia.util.FindPlayersInBox(Vector(0, 0, 0), Vector(100, 100, 100))
+      local players = lia.util.FindPlayersInBox(vector_origin, Vector(100, 100, 100))
       for _, ply in ipairs(players) do
          print(ply:Name())
       end
@@ -46,7 +46,7 @@ end
       Shared
 
    Example Usage:
-      local players = lia.util.FindPlayersInSphere(Vector(0, 0, 0), 200)
+      local players = lia.util.FindPlayersInSphere(vector_origin, 200)
       for _, ply in ipairs(players) do
          print(ply:Name())
       end
@@ -385,7 +385,7 @@ end
       Shared
 
    Example Usage:
-      local playersNearby = lia.util.playerInRadius(Vector(0, 0, 0), 250)
+      local playersNearby = lia.util.playerInRadius(vector_origin, 250)
       for _, ply in ipairs(playersNearby) do
          print("Nearby player: " .. ply:Name())
       end

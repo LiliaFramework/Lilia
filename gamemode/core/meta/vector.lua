@@ -16,7 +16,7 @@ local vectorMeta = FindMetaTable("Vector")
         Vector – The center point of the two vectors.
 
     Example Usage:
-        local midpoint = Vector(0, 0, 0):Center(Vector(10, 10, 10))
+        local midpoint = vector_origin:Center(Vector(10, 10, 10))
         print(midpoint) -- Vector(5, 5, 5)
 ]]
 function vectorMeta:Center(vec2)
@@ -39,7 +39,7 @@ end
         number – The distance between the two vectors.
 
     Example Usage:
-        local dist = Vector(0, 0, 0):Distance(Vector(3, 4, 0))
+        local dist = vector_origin:Distance(Vector(3, 4, 0))
         print(dist) -- 5
 ]]
 function vectorMeta:Distance(vec2)

@@ -38,7 +38,7 @@ function MODULE:CalcView(client)
         local heightMax = lia.config.get("MaxThirdPersonHeight", 30)
         local horizontalMax = lia.config.get("MaxThirdPersonHorizontal", 30)
         local distanceMax = lia.config.get("MaxThirdPersonDistance", 100)
-        curAng = client.camAng or Angle(0, 0, 0)
+        curAng = client.camAng or angle_zero
         view = {}
         traceData = {}
         traceData.start = client:GetPos() + client:GetViewOffset() + curAng:Up() * math.Clamp(lia.option.get("thirdPersonHeight", 10), 0, heightMax) + curAng:Right() * math.Clamp(lia.option.get("thirdPersonHorizontal", 10), -horizontalMax, horizontalMax) - client:GetViewOffsetDucked() * 0.5 * crouchFactor
@@ -84,7 +84,7 @@ end
 
 function MODULE:InputMouseApply(_, x, y)
     local client = LocalPlayer()
-    if not client.camAng then client.camAng = Angle(0, 0, 0) end
+    if not client.camAng then client.camAng = angle_zero end
     if client:CanOverrideView() and client:GetViewEntity() == client then
         client.camAng.p = math.Clamp(math.NormalizeAngle(client.camAng.p + y / 50), -85, 85)
         client.camAng.y = math.NormalizeAngle(client.camAng.y - x / 50)

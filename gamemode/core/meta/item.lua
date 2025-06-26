@@ -389,7 +389,7 @@ if SERVER then
             local entity = ents.Create("lia_item")
             entity:Spawn()
             entity:SetPos(position)
-            entity:SetAngles(angles or Angle(0, 0, 0))
+            entity:SetAngles(angles or angle_zero)
             entity:setItem(self.id)
             instance.entity = entity
             if IsValid(client) then

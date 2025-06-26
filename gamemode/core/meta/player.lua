@@ -1288,7 +1288,7 @@ else
     function playerMeta:NetworkAnimation(active, boneData)
         for name, ang in pairs(boneData) do
             local i = self:LookupBone(name)
-            if i then self:ManipulateBoneAngles(i, active and ang or Angle(0, 0, 0)) end
+            if i then self:ManipulateBoneAngles(i, active and ang or angle_zero) end
         end
     end
 end

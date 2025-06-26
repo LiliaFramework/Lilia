@@ -37,7 +37,7 @@ if SERVER then
         Parameters:
             pos (Vector) – The spawn position for the currency entity.
             amount (number) – The monetary value for the entity.
-            angle (Angle, optional) – The orientation for the entity (defaults to Angle(0, 0, 0)).
+            angle (Angle, optional) – The orientation for the entity (defaults to angle_zero).
 
         Returns:
             Entity – The spawned currency entity if successful; nil otherwise.
@@ -46,7 +46,7 @@ if SERVER then
             Server
 
         Example Usage:
-            lia.currency.spawn(Vector(0, 0, 0), 100)
+            lia.currency.spawn(vector_origin, 100)
     ]]
     function lia.currency.spawn(pos, amount, angle)
         if not pos then
@@ -57,7 +57,7 @@ if SERVER then
             local money = ents.Create("lia_money")
             money:SetPos(pos)
             money:setAmount(math.Round(math.abs(amount)))
-            money:SetAngles(angle or Angle(0, 0, 0))
+            money:SetAngles(angle or angle_zero)
             money:Spawn()
             money:Activate()
             return money
