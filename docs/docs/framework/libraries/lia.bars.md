@@ -1,4 +1,4 @@
-# `lia.bar` API
+# `lia.bar`
 
 All methods below run on the **Client** realm.
 
