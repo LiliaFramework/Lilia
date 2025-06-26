@@ -40,7 +40,6 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 | `SteamIDWhitelist`      | `string[]`         | Allowed Steam IDs for vendor interaction.              |
 | `UsergroupWhitelist`    | `string[]`         | Allowed user groups for vendor interaction.            |
 | `VIPWhitelist`          | `boolean`          | Restricts usage to VIP players.                        |
-| `VManipDisabled`        | `boolean`          | Disables VManip grabbing for the item.                 |
 | `ammo`                  | `string`           | Ammo type provided.                                    |
 | `ammoAmount`            | `number`           | Amount of ammo contained.                              |
 | `armor`                 | `number`           | Armor value granted when equipped.                     |
@@ -180,16 +179,6 @@ ITEM.UsergroupWhitelist = {"admin"}
 
 ```lua
 ITEM.VIPWhitelist = true
-```
-
-#### `VManipDisabled`
-
-**Type:** `boolean`
-**Description:** Disables VManip grabbing for the item.
-**Example:**
-
-```lua
-ITEM.VManipDisabled = true
 ```
 
 ---
