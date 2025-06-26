@@ -1,6 +1,7 @@
 --[[
     This file documents ITEM fields defined within the codebase.
 
+    Generated automatically.
 ]]
 --[[
         ITEM.BagSound
@@ -22,7 +23,7 @@
             Deletes the item upon player death.
 
         Base:
-            Weapons/Grenade Base
+            Weapon/Grenade Base
 
         Example Usage:
             ITEM.DropOnDeath = true
@@ -32,7 +33,7 @@
         ITEM.FactionWhitelist
 
         Description:
-            Allowed factions for vendor interaction.
+            Factions allowed to interact with vendors.
 
         Base:
             General
@@ -45,7 +46,7 @@
         ITEM.RequiredSkillLevels
 
         Description:
-            Skill requirements needed to use the item.
+            Minimum skill levels required to use the item.
 
         Base:
             General
@@ -58,7 +59,7 @@
         ITEM.SteamIDWhitelist
 
         Description:
-            Allowed Steam IDs for vendor interaction.
+            Steam IDs permitted to interact with vendors.
 
         Base:
             General
@@ -71,7 +72,7 @@
         ITEM.UsergroupWhitelist
 
         Description:
-            Allowed user groups for vendor interaction.
+            User groups permitted to interact with vendors.
 
         Base:
             General
@@ -84,7 +85,7 @@
         ITEM.VIPWhitelist
 
         Description:
-            Restricts usage to VIP players.
+            Restricts usage to VIP players only.
 
         Base:
             General
@@ -97,7 +98,7 @@
         ITEM.VManipDisabled
 
         Description:
-            Disables VManip grabbing for the item.
+            Disables VManip grabbing support for this item.
 
         Base:
             General
@@ -110,7 +111,7 @@
         ITEM.ammo
 
         Description:
-            Ammo type provided.
+            Type of ammunition provided.
 
         Base:
             Ammo Base
@@ -123,7 +124,7 @@
         ITEM.ammoAmount
 
         Description:
-            Amount of ammo contained.
+            Amount of ammunition contained.
 
         Base:
             Ammo Base
@@ -149,7 +150,7 @@
         ITEM.attribBoosts
 
         Description:
-            Attribute boosts applied on equip.
+            Attribute boosts applied when equipped.
 
         Base:
             Outfit Base
@@ -162,7 +163,7 @@
         ITEM.base
 
         Description:
-            Base item this item derives from.
+            Base item from which this item derives.
 
         Base:
             General
@@ -175,7 +176,7 @@
         ITEM.canSplit
 
         Description:
-            Whether the item stack can be divided.
+            Whether the item stack can be divided into smaller stacks.
 
         Base:
             General
@@ -188,7 +189,7 @@
         ITEM.category
 
         Description:
-            Inventory grouping category.
+            Inventory category used for grouping.
 
         Base:
             General
@@ -201,7 +202,7 @@
         ITEM.class
 
         Description:
-            Weapon entity class.
+            Class name of the weapon entity.
 
         Base:
             Weapon/Grenade Base
@@ -214,7 +215,7 @@
         ITEM.contents
 
         Description:
-            HTML contents of a readable book.
+            HTML content for a readable book.
 
         Base:
             Book Base
@@ -240,7 +241,7 @@
         ITEM.entityid
 
         Description:
-            Entity class spawned by the item.
+            Entity class that this item spawns.
 
         Base:
             Entities Base
@@ -253,7 +254,7 @@
         ITEM.equipSound
 
         Description:
-            Sound played when equipping.
+            Sound to play when the item is equipped.
 
         Base:
             Weapon/Outfit
@@ -266,7 +267,7 @@
         ITEM.flag
 
         Description:
-            Flag required to purchase the item.
+            Flag required in order to purchase the item.
 
         Base:
             General
@@ -279,7 +280,7 @@
         ITEM.functions
 
         Description:
-            Table of interaction functions.
+            Table of item interaction functions.
 
         Base:
             General
@@ -292,7 +293,7 @@
         ITEM.grenadeClass
 
         Description:
-            Class name used when spawning a grenade.
+            Class name used when spawning the grenade.
 
         Base:
             Grenade Base
@@ -318,7 +319,7 @@
         ITEM.height
 
         Description:
-            Height in inventory grid.
+            Height of the item in the inventory grid.
 
         Base:
             General
@@ -331,7 +332,7 @@
         ITEM.id
 
         Description:
-            Database identifier.
+            Unique database identifier.
 
         Base:
             General
@@ -344,7 +345,7 @@
         ITEM.invHeight
 
         Description:
-            Internal bag inventory height.
+            Height of the internal bag inventory.
 
         Base:
             Bag Base
@@ -357,7 +358,7 @@
         ITEM.invWidth
 
         Description:
-            Internal bag inventory width.
+            Width of the internal bag inventory.
 
         Base:
             Bag Base
@@ -370,7 +371,7 @@
         ITEM.isBag
 
         Description:
-            Marks the item as a bag providing extra inventory.
+            Marks the item as a bag that provides extra inventory space.
 
         Base:
             Bag Base
@@ -383,7 +384,7 @@
         ITEM.isBase
 
         Description:
-            Indicates the table is a base item.
+            Indicates that this table is a base item.
 
         Base:
             General
@@ -396,7 +397,7 @@
         ITEM.isOutfit
 
         Description:
-            Marks the item as an outfit.
+            Marks the item as an outfit item.
 
         Base:
             Outfit Base
@@ -409,7 +410,7 @@
         ITEM.isStackable
 
         Description:
-            Allows stacking multiple quantities.
+            Allows stacking multiple copies.
 
         Base:
             General
@@ -422,7 +423,7 @@
         ITEM.isWeapon
 
         Description:
-            Marks the item as a weapon.
+            Marks the item as a weapon item.
 
         Base:
             Weapon Base
@@ -435,7 +436,7 @@
         ITEM.maxQuantity
 
         Description:
-            Maximum stack size.
+            Maximum allowed stack size.
 
         Base:
             General
@@ -448,7 +449,7 @@
         ITEM.model
 
         Description:
-            3D model path for the item.
+            Path to the item model.
 
         Base:
             General
@@ -461,7 +462,7 @@
         ITEM.name
 
         Description:
-            Displayed name of the item.
+            Display name of the item.
 
         Base:
             General
@@ -474,7 +475,7 @@
         ITEM.newSkin
 
         Description:
-            Skin index applied to the player model.
+            Skin index applied to the player's model.
 
         Base:
             Outfit Base
@@ -487,7 +488,7 @@
         ITEM.outfitCategory
 
         Description:
-            Slot or category for the outfit.
+            Slot or category assigned to the outfit.
 
         Base:
             Outfit/PAC Outfit
@@ -500,33 +501,44 @@
         ITEM.pacData
 
         Description:
-            PAC3 customization information.
+            Saved data from your PAC3 addon used to apply custom outfits when the item is equipped.
 
         Base:
             Bag/Outfit/PAC Outfit
 
         Example Usage:
-            ITEM.pacData = {}
+            ITEM.pacData = {
+                [1] = {
+                    self = {
+                        ClassName = "model",
+                        Model = "models/Gibs/HGIBS.mdl"
+                    }
+                }
+            }
 ]]
 
 --[[
         ITEM.postHooks
 
         Description:
-            Table of post-hook callbacks.
+            Callbacks executed after built-in item actions, such as after the item is equipped or used.
 
         Base:
             General
 
         Example Usage:
-            ITEM.postHooks = {}
+            ITEM.postHooks = {
+                drop = function(item)
+                    print(item:getName() .. " dropped")
+                end
+            }
 ]]
 
 --[[
         ITEM.price
 
         Description:
-            Item cost for trading or selling.
+            Item cost when trading or selling.
 
         Base:
             General
@@ -539,7 +551,7 @@
         ITEM.quantity
 
         Description:
-            Current amount in the item stack.
+            Current quantity within the stack.
 
         Base:
             General
@@ -552,7 +564,7 @@
         ITEM.rarity
 
         Description:
-            Rarity level affecting vendor color.
+            Rarity level that affects vendor color.
 
         Base:
             General
@@ -565,7 +577,7 @@
         ITEM.replacements
 
         Description:
-            Model replacements when equipped.
+            Model replacements applied when equipped.
 
         Base:
             Outfit Base
@@ -578,7 +590,7 @@
         ITEM.unequipSound
 
         Description:
-            Sound played when unequipping.
+            Sound to play when the item is unequipped.
 
         Base:
             Weapon/Outfit
@@ -591,7 +603,7 @@
         ITEM.uniqueID
 
         Description:
-            Overrides the automatically generated unique identifier.
+            Overrides the automatically generated unique ID.
 
         Base:
             General
@@ -604,7 +616,7 @@
         ITEM.url
 
         Description:
-            Web address opened when using the item.
+            URL opened when the item is used.
 
         Base:
             URL Base
@@ -617,7 +629,7 @@
         ITEM.visualData
 
         Description:
-            Table storing outfit visual information.
+            Table storing outfit visual data.
 
         Base:
             Outfit Base
@@ -630,7 +642,7 @@
         ITEM.weaponCategory
 
         Description:
-            Slot category for the weapon.
+            Slot category assigned to the weapon.
 
         Base:
             Weapon Base
@@ -643,7 +655,7 @@
         ITEM.width
 
         Description:
-            Width in inventory grid.
+            Width of the item in the inventory grid.
 
         Base:
             General
