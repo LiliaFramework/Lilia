@@ -1,8 +1,5 @@
 ﻿function MODULE:InitializedModules()
     local defaultUserTools = {
-        adv_duplicator = true,
-        duplicator = true,
-        advdupe2 = true,
         remover = true,
     }
 
