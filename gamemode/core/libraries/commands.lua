@@ -26,11 +26,6 @@ function lia.command.add(command, data)
         return
     end
 
-    if data.group then
-        ErrorNoHalt("Command '" .. (data.name or command) .. "' tried to use the deprecated field 'group'!\n")
-        return
-    end
-
     if superAdminOnly or adminOnly then
         local privilegeName = "Commands - " .. (isstring(data.privilege) and data.privilege or command)
         if not CAMI.GetPrivilege(privilegeName) then

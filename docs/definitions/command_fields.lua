@@ -3,7 +3,6 @@
 
     Generated automatically.
 ]]
-
 --[[
     alias
 
@@ -14,7 +13,6 @@
     Example Usage:
         alias = {"chargiveflag", "giveflag"}
 ]]
-
 --[[
     adminOnly
 
@@ -26,7 +24,6 @@
     Example Usage:
         adminOnly = true
 ]]
-
 --[[
     superAdminOnly
 
@@ -37,7 +34,6 @@
     Example Usage:
         superAdminOnly = true
 ]]
-
 --[[
     privilege
 
@@ -48,7 +44,6 @@
     Example Usage:
         privilege = "Manage Doors"
 ]]
-
 --[[
     syntax
 
@@ -60,7 +55,6 @@
     Example Usage:
         syntax = "[string target] [number amount]"
 ]]
-
 --[[
     desc
 
@@ -71,7 +65,6 @@
     Example Usage:
         desc = L("doorbuyDesc")
 ]]
-
 --[[
     AdminStick
 
@@ -95,7 +88,6 @@
             }
         }
 ]]
-
 --[[
     onRun(client, arguments)
 
@@ -111,12 +103,4 @@
                 target:Kill()
             end
         end
-]]
-
---[[
-    group (DEPRECATED)
-
-    Description:
-        Old field used for categorizing commands. Its use is
-        discouraged as it no longer has any effect.
 ]]
