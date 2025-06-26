@@ -42,4 +42,24 @@ function lia.webimage.get(name)
     return nil
 end
 
+local function openTest(mat)
+    local frame = vgui.Create("DFrame")
+    frame:SetTitle("lia.webimage test")
+    frame:SetSize(512, 512)
+    frame:Center()
+    frame:MakePopup()
+    local img = vgui.Create("DImage", frame)
+    img:Dock(FILL)
+    img:SetMaterial(mat)
+end
+
+concommand.Add("openlilialogo", function()
+    lia.webimage.register("lilia.png", "https://i.imgur.com/8uRCbmB.png", function(path)
+        if path then
+            local mat = Material("data/" .. path, "noclamp smooth")
+            if not mat:IsError() then openTest(mat) end
+        end
+    end)
+end)
+
 ensureDir(baseDir)
