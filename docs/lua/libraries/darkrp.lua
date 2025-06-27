@@ -16,7 +16,7 @@
             boolean – True if the position is clear, false otherwise.
 
         Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.darkrp.isEmpty
             if lia.darkrp.isEmpty(Vector(0,0,0)) then
                 print("Spawn point is clear")
             end
@@ -42,7 +42,7 @@
             Vector – A position considered safe for spawning.
 
         Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.darkrp.findEmptyPos
             local pos = lia.darkrp.findEmptyPos(Vector(0,0,0), nil, 128, 16, Vector(0,0,32))
     ]]
 
@@ -64,7 +64,7 @@
             nil
 
         Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.darkrp.notify
             lia.darkrp.notify(player.GetAll()[1], nil, nil, "Hello!")
     ]]
 
@@ -87,7 +87,7 @@
             string – The wrapped text with newline characters inserted.
 
         Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.darkrp.textWrap
             local wrapped = lia.darkrp.textWrap("Some very long text", "DermaDefault", 150)
     ]]
 
@@ -107,7 +107,7 @@
             string – The formatted currency value.
 
         Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of print
             print(lia.darkrp.formatMoney(2500))
 ]]
 
@@ -130,7 +130,7 @@
             nil
 
         Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.darkrp.createEntity
             lia.darkrp.createEntity("Fuel", {model = "models/props_c17/oildrum001.mdl", price = 50})
 ]]
 
@@ -150,6 +150,6 @@
         nil
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.darkrp.createCategory
         lia.darkrp.createCategory()
 ]]
