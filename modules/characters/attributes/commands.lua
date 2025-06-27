@@ -1,7 +1,7 @@
 ﻿lia.command.add("charsetattrib", {
     superAdminOnly = true,
     desc = L("setAttributes"),
-    syntax = "[string charname] [string attribname] [number level]",
+    syntax = "[string playerName] [string attribname] [number level]",
     privilege = "Manage Attributes",
     AdminStick = {
         Name = L("setAttributes"),
@@ -47,7 +47,7 @@
 lia.command.add("checkattributes", {
     adminOnly = true,
     desc = L("checkAttributes"),
-    syntax = "[string charname]",
+    syntax = "[string playerName]",
     privilege = "Manage Attributes",
     AdminStick = {
         Name = L("checkAttributes"),
@@ -109,7 +109,7 @@ lia.command.add("checkattributes", {
 lia.command.add("charaddattrib", {
     superAdminOnly = true,
     desc = L("addAttributes"),
-    syntax = "[string charname] [string attribname] [number level]",
+    syntax = "[string playerName] [string attribname] [number level]",
     privilege = "Manage Attributes",
     AdminStick = {
         Name = L("addAttributes"),
