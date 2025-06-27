@@ -19,8 +19,12 @@
         Shared
     
     Example Usage:
-        -- This snippet demonstrates a common usage of lia.data.set
-        lia.data.set("spawn_pos", Vector(0, 0, 0))
+        -- Save the admin's position as the global spawn point with a command
+        concommand.Add("save_spawn", function(ply)
+            if ply:IsAdmin() then
+                lia.data.set("spawn_pos", ply:GetPos(), true)
+            end
+        end)
    ]]
 
     --[[
@@ -68,6 +72,11 @@
         Shared
 
     Example Usage:
-        -- This snippet demonstrates a common usage of lia.data.get
-        local pos = lia.data.get("spawn_pos", Vector(0, 0, 0))
+        -- Teleport players to the saved spawn point when they spawn
+        hook.Add("PlayerSpawn", "UseSavedSpawn", function(ply)
+            local pos = lia.data.get("spawn_pos", Vector(0, 0, 0), true)
+            if pos then
+                ply:SetPos(pos)
+            end
+        end)
 ]]
