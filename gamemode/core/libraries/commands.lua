@@ -273,7 +273,7 @@ else
                 combo:SetPos(100, y)
                 combo:SetSize(300, 30)
                 combo:SetValue("Select Player")
-                for _, ply in ipairs(player.GetAll()) do
+                for _, ply in player.Iterator() do
                     combo:AddChoice(ply:Name(), ply:SteamID())
                 end
                 inputs[name] = combo

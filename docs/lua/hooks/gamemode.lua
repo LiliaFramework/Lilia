@@ -1172,7 +1172,7 @@
             -- Backs up all persistent entities to a data file whenever saving occurs.
             hook.Add("PersistenceSave", "BackupEntities", function()
                 local entities = {}
-                for _, ent in ipairs(ents.GetAll()) do
+                for _, ent in ents.Iterator() do
                     if ent:GetPersistent() then
                         entities[#entities + 1] = {
                             class = ent:GetClass(),

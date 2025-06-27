@@ -41,7 +41,7 @@ end
 
 local function update_transmit_states(pPlayer, range)
     local range_sqr = range and range * range
-    for _, ent in pairs(ents.GetAll()) do
+    for _, ent in ents.Iterator() do
         local cls = ent:GetClass()
         if always_send[cls] or ent.UpdateTransmitState and ent:UpdateTransmitState() == TRANSMIT_ALWAYS then
             ent:SetPreventTransmit(pPlayer, false)

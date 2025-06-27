@@ -350,7 +350,7 @@
 
     Example Usage:
         -- Broadcast the "doorState" variable to every connected player
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             ent:sendNetVar("doorState", ply)
         end
     ]]
