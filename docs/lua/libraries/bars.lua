@@ -14,8 +14,11 @@
         table or nil – The bar table if found, or nil if not found.
 
     Example Usage:
-        -- This snippet demonstrates a common usage of lia.bar.get
+        -- Retrieve the health bar and change its color at runtime
         local bar = lia.bar.get("health")
+        if bar then
+            bar.color = Color(0, 200, 0) -- make the bar green
+        end
 ]]
 
 --[[

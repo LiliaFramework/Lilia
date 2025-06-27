@@ -57,8 +57,13 @@
         Shared
 
     Example Usage:
-        -- This snippet demonstrates a common usage of lia.chat.parse
-        local class, text = lia.chat.parse(client, "/me waves")
+        -- Parse chat messages and log "/me" actions to the console
+        hook.Add("PlayerSay", "LogActions", function(ply, text)
+            local class, parsed = lia.chat.parse(ply, text)
+            if class == "me" then
+                print(ply:Name() .. " performs action: " .. parsed)
+            end
+        end)
 ]]
 
 --[[
