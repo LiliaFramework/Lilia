@@ -348,6 +348,60 @@
         end,
         category = "Connections"
     },
+    ["failedPassword"] = {
+        func = function(_, steamid64, name, svpass, clpass)
+            return string.format(
+                "[%s] %s failed server password (Server: '%s', Client: '%s')",
+                steamid64,
+                name,
+                svpass,
+                clpass
+            )
+        end,
+        category = "Connections"
+    },
+    ["exploitAttempt"] = {
+        func = function(_, name, steamID, netMessage)
+            return string.format(
+                "Player '%s' [%s] triggered exploit net message '%s'.",
+                name,
+                steamID,
+                netMessage
+            )
+        end,
+        category = "Connections"
+    },
+    ["steamIDMissing"] = {
+        func = function(_, name, steamID)
+            return string.format(
+                "SteamID missing for '%s' [%s] during CheckSeed.",
+                name,
+                steamID
+            )
+        end,
+        category = "Connections"
+    },
+    ["steamIDMismatch"] = {
+        func = function(_, name, realSteamID, sentSteamID)
+            return string.format(
+                "SteamID mismatch for '%s': expected [%s] but got [%s].",
+                name,
+                realSteamID,
+                sentSteamID
+            )
+        end,
+        category = "Connections"
+    },
+    ["hackAttempt"] = {
+        func = function(client)
+            return string.format(
+                "Client [%s] %s triggered hack detection.",
+                client:SteamID64(),
+                client:Name()
+            )
+        end,
+        category = "Connections"
+    },
     ["doorSetClass"] = {
         func = function(client, door, className)
             return string.format(
@@ -1149,6 +1203,29 @@
         end,
         category = "Storage"
     },
+    ["storageUnlock"] = {
+        func = function(client, entClass)
+            return string.format(
+                "Client [%s] %s unlocked storage %s.",
+                client:SteamID64(),
+                client:Name(),
+                entClass
+            )
+        end,
+        category = "Storage"
+    },
+    ["storageUnlockFailed"] = {
+        func = function(client, entClass, password)
+            return string.format(
+                "Client [%s] %s failed to unlock storage %s with password '%s'.",
+                client:SteamID64(),
+                client:Name(),
+                entClass,
+                password
+            )
+        end,
+        category = "Storage"
+    },
     ["spawnAdd"] = {
         func = function(client, faction)
             return string.format(
@@ -1191,6 +1268,81 @@
                 client:SteamID64(),
                 client:Name(),
                 targetName
+            )
+        end,
+        category = "Admin Actions"
+    },
+    ["banOOC"] = {
+        func = function(client, targetName, steamID)
+            return string.format(
+                "Admin [%s] '%s' banned %s (%s) from OOC chat.",
+                client:SteamID64(),
+                client:Name(),
+                targetName,
+                steamID
+            )
+        end,
+        category = "Admin Actions"
+    },
+    ["unbanOOC"] = {
+        func = function(client, targetName, steamID)
+            return string.format(
+                "Admin [%s] '%s' unbanned %s (%s) from OOC chat.",
+                client:SteamID64(),
+                client:Name(),
+                targetName,
+                steamID
+            )
+        end,
+        category = "Admin Actions"
+    },
+    ["blockOOC"] = {
+        func = function(client, state)
+            return string.format(
+                "Admin [%s] '%s' %s OOC chat globally.",
+                client:SteamID64(),
+                client:Name(),
+                state and "blocked" or "unblocked"
+            )
+        end,
+        category = "Admin Actions"
+    },
+    ["clearChat"] = {
+        func = function(client)
+            return string.format(
+                "Admin [%s] '%s' cleared the chat.",
+                client:SteamID64(),
+                client:Name()
+            )
+        end,
+        category = "Admin Actions"
+    },
+    ["cheaterBanned"] = {
+        func = function(_, name, steamID)
+            return string.format(
+                "Cheater '%s' [%s] was automatically banned.",
+                name,
+                steamID
+            )
+        end,
+        category = "Admin Actions"
+    },
+    ["altKicked"] = {
+        func = function(_, name, steamID)
+            return string.format(
+                "Alt account '%s' [%s] was kicked.",
+                name,
+                steamID
+            )
+        end,
+        category = "Admin Actions"
+    },
+    ["altBanned"] = {
+        func = function(_, name, steamID)
+            return string.format(
+                "Alt account '%s' [%s] was banned due to blacklist.",
+                name,
+                steamID
             )
         end,
         category = "Admin Actions"

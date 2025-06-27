@@ -20,6 +20,7 @@ lia.command.add("banooc", {
 
         MODULE.OOCBans[target:SteamID64()] = true
         client:notify(target:Name() .. " " .. L("hasBeenBannedFromOOC"))
+        lia.log.add(client, "banOOC", target:Name(), target:SteamID64())
     end
 })
 
@@ -43,6 +44,7 @@ lia.command.add("unbanooc", {
 
         MODULE.OOCBans[target:SteamID64()] = nil
         client:notify(target:Name() .. " " .. L("hasBeenUnbannedFromOOC"))
+        lia.log.add(client, "unbanOOC", target:Name(), target:SteamID64())
     end
 })
 
@@ -54,6 +56,7 @@ lia.command.add("blockooc", {
         local blocked = GetGlobalBool("oocblocked", false)
         SetGlobalBool("oocblocked", not blocked)
         client:notify(blocked and L("unlockedOOC") or L("blockedOOC"))
+        lia.log.add(client, "blockOOC", not blocked)
     end
 })
 
@@ -61,9 +64,10 @@ lia.command.add("clearchat", {
     adminOnly = true,
     privilege = "Clear Chat",
     desc = L("clearChatCommandDesc"),
-    onRun = function()
+    onRun = function(client)
         for _, ply in player.Iterator() do
             ply:ConCommand("fixchatplz")
         end
+        lia.log.add(client, "clearChat")
     end
 })

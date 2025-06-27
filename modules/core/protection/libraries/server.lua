@@ -52,7 +52,11 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
 end
 
 function MODULE:CheckPassword(steamid64, _, svpass, clpass, name)
-    lia.information(svpass ~= clpass and "Passwords do not match for " .. name .. " (" .. steamid64 .. "), server password: " .. svpass .. ", client password: " .. clpass .. "." or "Passwords match for " .. name .. " (" .. steamid64 .. ").")
+    local mismatch = svpass ~= clpass
+    if mismatch then
+        lia.log.add(nil, "failedPassword", steamid64, name, svpass, clpass)
+    end
+    lia.information(mismatch and "Passwords do not match for " .. name .. " (" .. steamid64 .. "), server password: " .. svpass .. ", client password: " .. clpass .. "." or "Passwords match for " .. name .. " (" .. steamid64 .. ").")
 end
 
 function MODULE:PlayerShouldAct()
@@ -111,15 +115,18 @@ function MODULE:PlayerAuthed(client, steamid)
     if KnownCheaters[steamID64] or KnownCheaters[ownerSteamID64] then
         ApplyPunishment(client, "using third-party cheats", false, true, 0)
         NotifyAdmin(L("bannedCheaterNotify", steamName, steamID))
+        lia.log.add(nil, "cheaterBanned", steamName, steamID)
         return
     end
 
     if lia.config.get("AltsDisabled", false) and ownerSteamID64 ~= steamID64 then
         ApplyPunishment(client, "family sharing (alts are disabled)", true, false)
         NotifyAdmin(L("kickedAltNotify", steamName, steamID))
+        lia.log.add(nil, "altKicked", steamName, steamID)
     elseif lia.module.list["whitelist"] and lia.module.list["whitelist"].BlacklistedSteamID64[ownerSteamID64] then
         ApplyPunishment(client, "using a family-shared account that is blacklisted", false, true, 0)
         NotifyAdmin(L("bannedAltNotify", steamName, steamID))
+        lia.log.add(nil, "altBanned", steamName, steamID)
     end
 end
 
