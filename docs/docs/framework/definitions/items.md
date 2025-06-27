@@ -1,7 +1,7 @@
-````markdown
 # Item Fields
 
 This document describes all configurable `ITEM` fields in the codebase. Use these to customize item behavior, appearance, interactions, and metadata.
+Unspecified fields will use sensible defaults.
 
 ---
 
@@ -591,7 +591,4 @@ ITEM.functions = {}
 
 ```lua
 ITEM.postHooks = {}
-```
-
-```
 ```

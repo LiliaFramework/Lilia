@@ -311,7 +311,3 @@ CLASS.bodyGroups = { [1] = 2, [3] = 1 }
 ```lua
 CLASS.model = "models/player/alyx.mdl"
 ```
-
----
-
-```

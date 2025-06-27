@@ -1,6 +1,7 @@
 # Faction Fields
 
 This document describes all the configurable `FACTION` fields available in the codebase, with their descriptions and example usages.
+Unspecified fields will use sensible defaults.
 
 ---
 
@@ -374,6 +375,4 @@ FACTION.bloodcolor = BLOOD_COLOR_RED
 
 ```lua
 FACTION.ScoreboardHidden = false
-```
-
 ```
