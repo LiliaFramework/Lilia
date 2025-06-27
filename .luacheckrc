@@ -1,5 +1,5 @@
 exclude_files = {
     "gamemode/core/libraries/thirdparty/**/*.lua",
-    "docs/*.*",
+    "docs/**/*.*",
     "lilia.txt",
 }
