@@ -3,6 +3,7 @@
 
     Generated automatically.
 ]]
+
 --[[
     alias
 
@@ -11,8 +12,9 @@
         Can be a single string or a table of strings.
 
     Example Usage:
-        alias = {"chargiveflag", "giveflag"}
+            alias = {"chargiveflag", "giveflag"}
 ]]
+
 --[[
     adminOnly
 
@@ -22,8 +24,9 @@
         automatically.
 
     Example Usage:
-        adminOnly = true
+            adminOnly = true
 ]]
+
 --[[
     superAdminOnly
 
@@ -32,8 +35,9 @@
         registers a CAMI privilege if needed.
 
     Example Usage:
-        superAdminOnly = true
+            superAdminOnly = true
 ]]
+
 --[[
     privilege
 
@@ -42,8 +46,9 @@
         If omitted, the command name itself is used as the privilege.
 
     Example Usage:
-        privilege = "Manage Doors"
+            privilege = "Manage Doors"
 ]]
+
 --[[
     syntax
 
@@ -53,8 +58,9 @@
         the arguments.
 
     Example Usage:
-        syntax = "[string target] [number amount]"
+            syntax = "[string target] [number amount]"
 ]]
+
 --[[
     desc
 
@@ -63,8 +69,9 @@
         command lists and menus.
 
     Example Usage:
-        desc = L("doorbuyDesc")
+            desc = L("doorbuyDesc")
 ]]
+
 --[[
     AdminStick
 
@@ -78,16 +85,17 @@
             ExtraFields - additional field definitions.
 
     Example Usage:
-        AdminStick = {
-            Name = "Set Character Skin",
-            Category = "Player Informations",
-            SubCategory = "Set Informations",
-            Icon = "icon16/user_gray.png",
-            ExtraFields = {
-                ["skin"] = "number"
+            AdminStick = {
+                Name = "Set Character Skin",
+                Category = "Player Informations",
+                SubCategory = "Set Informations",
+                Icon = "icon16/user_gray.png",
+                ExtraFields = {
+                    ["skin"] = "number"
+                }
             }
-        }
 ]]
+
 --[[
     onRun(client, arguments)
 
@@ -97,10 +105,10 @@
         Return a string to notify the caller or nothing to stay silent.
 
     Example Usage:
-        onRun = function(client, arguments)
-            local target = lia.util.findPlayer(client, arguments[1])
-            if target then
-                target:Kill()
+            onRun = function(client, arguments)
+                local target = lia.util.findPlayer(client, arguments[1])
+                if target then
+                    target:Kill()
+                end
             end
-        end
 ]]
