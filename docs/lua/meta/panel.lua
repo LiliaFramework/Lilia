@@ -16,6 +16,7 @@
         any – Whatever the wrapped Panel function returns.
 
     Example Usage:
+        -- This creates a simple frame positioned using screen scaling
         local frame = vgui.Create("DFrame")
         frame:SetSize(200, 100)
         frame:SetPos(25, 25)

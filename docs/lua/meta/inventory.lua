@@ -310,8 +310,11 @@
 
         Realm:
             Server
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Insert a new item without sending it to clients
         local result = inv:addItem(item, noReplicate)
     ]]
 --[[
@@ -326,8 +329,11 @@
 
         Realm:
             Server
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Remove an item and keep it saved if preserveItem is true
         local result = inv:removeItem(itemID, preserveItem)
     ]]
 --[[
@@ -342,8 +348,11 @@
 
         Realm:
             Server
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Replicate a single field to the given players
         local result = inv:syncData(key, recipients)
     ]]
 --[[
@@ -357,8 +366,11 @@
 
         Realm:
             Server
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Send the entire inventory to specified players
         local result = inv:sync(recipients)
     ]]
 --[[
@@ -372,8 +384,11 @@
 
         Realm:
             Server
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Remove the inventory permanently from the database
         local result = inv:delete()
     ]]
 --[[
@@ -387,7 +402,10 @@
 
         Realm:
             Server
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Completely clear the inventory and its items
         local result = inv:destroy()
     ]]
