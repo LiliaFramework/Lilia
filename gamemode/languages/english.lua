@@ -417,6 +417,8 @@ LANGUAGE = {
     disabledFeature = "This is disabled to avoid issues with Lilia's Core Features",
     noModifyWorldEntities = "You do not have permission to modify world entities.",
     noModifyProperty = "You do not have permission to modify this property.",
+    AddPropToBlacklist = "Add Prop To Blacklist",
+    RemovePropFromBlacklist = "Remove Prop From Blacklist",
     noPickupRestricted = "You do not have permission to pick up restricted entities with the physgun.",
     noPickupVehicles = "You do not have permission to pick up vehicles with the physgun.",
     noPickupPlayer = "You do not have permission to pick up this player with the physgun.",
@@ -812,5 +814,4 @@ LANGUAGE = {
     noPreviousSitroomPos = "No previous sitroom position found.",
     sitroomReturnSuccess = "Returned %s to their previous position.",
     sitroomReturned = "Returned to your previous position.",
-    -- FAdmin-style labels replaced with shared keys
 }
