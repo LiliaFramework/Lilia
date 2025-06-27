@@ -16,7 +16,7 @@ for _, name in ipairs(exploitable_nets) do
     net.Receive(name, function(_, client) handle_exploitable_net(client, name) end)
 end
 
-timer.Create("vjbase_console_commands", 180, 0, function() RunConsoleCommand("vj_npc_processtime", 1 + #player.GetAll() / 40) end)
+timer.Create("vjbase_console_commands", 180, 0, function() RunConsoleCommand("vj_npc_processtime", 1 + player.GetCount() / 40) end)
 hook.Add("OnEntityCreated", "liaVJBase", function(ent)
     timer.Simple(0, function()
         if not IsValid(ent) then return end
