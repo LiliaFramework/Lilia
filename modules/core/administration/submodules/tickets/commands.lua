@@ -122,18 +122,36 @@ lia.command.add("viewclaims", {
 
         lia.log.add(client, "viewAllClaims")
 
-        client:ChatPrint(L("adminClaimsHeader"))
+        local claimsData = {}
         for steamID, claim in pairs(caseclaims) do
-            local claimedForList = "None"
+            local claimedFor = "None"
             if next(claim.claimedFor) then
-                claimedForList = ""
-                for sid, name in pairs(claim.claimedFor) do
-                    claimedForList = claimedForList .. string.format("- %s (%s)\n", name, sid)
-                end
+                claimedFor = table.concat((function()
+                    local t = {}
+                    for sid, name in pairs(claim.claimedFor) do
+                        table.insert(t, string.format("%s (%s)", name, sid))
+                    end
+                    return t
+                end)(), "\n")
             end
 
-            local message = string.format("%s: %s\n%s: %s\n%s: %d\n%s: %s\n%s: %s\n%s:\n%s\n-------------------------", L("steamID"), steamID, L("adminName"), claim.name, L("totalClaims"), claim.claims, L("lastClaimDate"), os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim), L("timeSinceLastClaim"), lia.time.TimeSince(claim.lastclaim), L("claimedFor"), claimedForList)
-            client:ChatPrint(message)
+            table.insert(claimsData, {
+                steamID = steamID,
+                name = claim.name,
+                claims = claim.claims,
+                lastclaim = os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim),
+                timeSinceLastClaim = lia.time.TimeSince(claim.lastclaim),
+                claimedFor = claimedFor
+            })
         end
+
+        lia.util.CreateTableUI(client, "Admin Claims", {
+            { name = L("steamID"), field = "steamID" },
+            { name = L("adminName"), field = "name" },
+            { name = L("totalClaims"), field = "claims" },
+            { name = L("lastClaimDate"), field = "lastclaim" },
+            { name = L("timeSinceLastClaim"), field = "timeSinceLastClaim" },
+            { name = L("claimedFor"), field = "claimedFor" }
+        }, claimsData)
     end
 })
