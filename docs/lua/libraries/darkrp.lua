@@ -1,4 +1,4 @@
-    --[[
+--[[
         lia.darkrp.isEmpty(position, entitiesToIgnore)
 
         Description:
@@ -21,8 +21,7 @@
                 print("Spawn point is clear")
             end
     ]]
-
-    --[[
+--[[
         lia.darkrp.findEmptyPos(startPos, entitiesToIgnore, maxDistance, searchStep, checkArea)
 
         Description:
@@ -45,8 +44,7 @@
         -- This snippet demonstrates a common usage of lia.darkrp.findEmptyPos
             local pos = lia.darkrp.findEmptyPos(Vector(0,0,0), nil, 128, 16, Vector(0,0,32))
     ]]
-
-    --[[
+--[[
         lia.darkrp.notify(client, _, _, message)
 
         Description:
@@ -67,8 +65,7 @@
         -- This snippet demonstrates a common usage of lia.darkrp.notify
             lia.darkrp.notify(player.GetAll()[1], nil, nil, "Hello!")
     ]]
-
-    --[[
+--[[
         lia.darkrp.textWrap(text, fontName, maxLineWidth)
 
         Description:
@@ -90,7 +87,6 @@
         -- This snippet demonstrates a common usage of lia.darkrp.textWrap
             local wrapped = lia.darkrp.textWrap("Some very long text", "DermaDefault", 150)
     ]]
-
 --[[
     lia.darkrp.formatMoney(amount)
 
@@ -110,7 +106,6 @@
         -- This snippet demonstrates a common usage of print
             print(lia.darkrp.formatMoney(2500))
 ]]
-
 --[[
     lia.darkrp.createEntity(name, data)
 
@@ -133,7 +128,6 @@
         -- This snippet demonstrates a common usage of lia.darkrp.createEntity
             lia.darkrp.createEntity("Fuel", {model = "models/props_c17/oildrum001.mdl", price = 50})
 ]]
-
 --[[
     lia.darkrp.createCategory()
 

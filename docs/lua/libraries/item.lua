@@ -17,7 +17,6 @@
         -- This snippet demonstrates a common usage of lia.item.get
       local itemDef = lia.item.get("testItem")
 ]]
-
 --[[
    lia.item.getItemByID
 
@@ -42,7 +41,6 @@
           print("Item location: " .. result.location)
       end
 ]]
-
 --[[
    lia.item.getInstancedItemByID
 
@@ -65,7 +63,6 @@
           print("Got item: " .. itemInstance.name)
       end
 ]]
-
 --[[
    lia.item.getItemDataByID
 
@@ -88,7 +85,6 @@
           print("Item data found.")
       end
 ]]
-
 --[[
    lia.item.load
 
@@ -111,7 +107,6 @@
         -- This snippet demonstrates a common usage of lia.item.load
       lia.item.load("items/base/sh_item_base.lua", nil, true)
 ]]
-
 --[[
    lia.item.isItem
 
@@ -134,7 +129,6 @@
           print("It's an item!")
       end
 ]]
-
 --[[
    lia.item.getInv
 
@@ -157,7 +151,6 @@
           print("Got inventory with ID 5")
       end
 ]]
-
 --[[
    lia.item.register
 
@@ -182,7 +175,6 @@
         -- This snippet demonstrates a common usage of lia.item.register
       lia.item.register("special_item", "base_item", false, "path/to/item.lua")
 ]]
-
 --[[
    lia.item.loadFromDir
 
@@ -203,7 +195,6 @@
         -- This snippet demonstrates a common usage of lia.item.loadFromDir
       lia.item.loadFromDir("lilia/gamemode/items")
 ]]
-
 --[[
    lia.item.new
 
@@ -226,7 +217,6 @@
       local newItem = lia.item.new("testItem", 101)
       print(newItem.id) -- 101
 ]]
-
 --[[
    lia.item.registerInv
 
@@ -249,7 +239,6 @@
         -- This snippet demonstrates a common usage of lia.item.registerInv
       lia.item.registerInv("smallInv", 4, 4)
 ]]
-
 --[[
    lia.item.newInv
 
@@ -274,7 +263,6 @@
           print("New inventory created:", inventory.id)
       end)
 ]]
-
 --[[
    lia.item.createInv
 
@@ -298,8 +286,7 @@
       local inv = lia.item.createInv(6, 6, 200)
       print("Created inventory with ID:", inv.id)
 ]]
-
-    --[[
+--[[
        lia.item.setItemDataByID
 
        Description:
@@ -327,8 +314,7 @@
               print("Error:", err)
           end
     ]]
-
-    --[[
+--[[
        lia.item.instance
 
        Description:
@@ -355,8 +341,7 @@
               print("Item created with ID:", item.id)
           end)
     ]]
-
-    --[[
+--[[
        lia.item.deleteByID
 
        Description:
@@ -375,8 +360,7 @@
         -- This snippet demonstrates a common usage of lia.item.deleteByID
           lia.item.deleteByID(42)
     ]]
-
-    --[[
+--[[
        lia.item.loadItemByID
 
        Description:
@@ -398,8 +382,7 @@
           -- or
           lia.item.loadItemByID({10, 11, 12})
     ]]
-
-    --[[
+--[[
        lia.item.spawn
 
        Description:
@@ -425,8 +408,7 @@
               print("Spawned item entity with ID:", item.id)
           end)
     ]]
-
-    --[[
+--[[
        lia.item.restoreInv
 
        Description:

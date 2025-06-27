@@ -1,4 +1,4 @@
-    --[[
+--[[
       lia.log.loadTables()
 
       Description:
@@ -20,8 +20,7 @@
         -- This snippet demonstrates a common usage of lia.log.loadTables
           lia.log.loadTables()
    ]]
-
-    --[[
+--[[
       lia.log.addType(logType, func, category)
 
       Description:
@@ -45,8 +44,7 @@
               return client:Name() .. " did something"
           end, "actions")
    ]]
-
-    --[[
+--[[
       lia.log.getString(client, logType, ...)
 
       Description:
@@ -71,8 +69,7 @@
         -- This snippet demonstrates a common usage of lia.log.getString
           local str, category = lia.log.getString(client, "mytype", "info")
    ]]
-
-    --[[
+--[[
       lia.log.add(client, logType, ...)
 
       Description:

@@ -1,4 +1,4 @@
-    --[[
+--[[
     lia.data.set(key, value, global, ignoreMap)
 
       Description:
@@ -26,8 +26,7 @@
             end
         end)
    ]]
-
-    --[[
+--[[
     lia.data.delete(key, global, ignoreMap)
 
       Description:
@@ -49,7 +48,6 @@
         -- This snippet demonstrates a common usage of lia.data.delete
         lia.data.delete("spawn_pos")
    ]]
-
 --[[
     lia.data.get(key, default, global, ignoreMap, refresh)
 

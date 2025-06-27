@@ -29,7 +29,6 @@
             lia.data.set(key, os.time(), true)
         end)
  ]]
-
 --[[
    lia.time.toNumber
 
@@ -56,7 +55,6 @@
             end)
         end
 ]]
-
 --[[
     lia.time.GetDate
 
@@ -84,7 +82,6 @@
             end
         end)
  ]]
-
 --[[
     lia.time.GetHour
 

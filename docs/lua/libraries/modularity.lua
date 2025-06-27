@@ -22,7 +22,6 @@
         -- This snippet demonstrates a common usage of lia.module.load
       lia.module.load("example", "lilia/modules/example", false)
 ]]
-
 --[[
    lia.module.initialize
 
@@ -43,7 +42,6 @@
         -- This snippet demonstrates a common usage of lia.module.initialize
       lia.module.initialize()
 ]]
-
 --[[
    lia.module.loadFromDir
 
@@ -66,7 +64,6 @@
         -- This snippet demonstrates a common usage of lia.module.loadFromDir
       lia.module.loadFromDir("lilia/modules/core", "module")
 ]]
-
 --[[
    lia.module.get
 

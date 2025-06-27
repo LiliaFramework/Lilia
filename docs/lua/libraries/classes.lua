@@ -17,7 +17,6 @@
         -- This snippet demonstrates a common usage of lia.class.loadFromDir
         lia.class.loadFromDir("schema/classes")
 ]]
-
 --[[
     lia.class.canBe(client, class)
 
@@ -38,7 +37,6 @@
         -- This snippet demonstrates a common usage of lia.class.canBe
         local allowed = lia.class.canBe(client, classID)
 ]]
-
 --[[
     lia.class.get(identifier)
 
@@ -58,7 +56,6 @@
         -- This snippet demonstrates a common usage of lia.class.get
         local classData = lia.class.get(1)
 ]]
-
 --[[
     lia.class.getPlayers(class)
 
@@ -78,7 +75,6 @@
         -- This snippet demonstrates a common usage of lia.class.getPlayers
         local players = lia.class.getPlayers(classID)
 ]]
-
 --[[
     lia.class.getPlayerCount(class)
 
@@ -98,7 +94,6 @@
         -- This snippet demonstrates a common usage of lia.class.getPlayerCount
         local count = lia.class.getPlayerCount(classID)
 ]]
-
 --[[
     lia.class.retrieveClass(class)
 
@@ -118,7 +113,6 @@
         -- This snippet demonstrates a common usage of lia.class.retrieveClass
         local id = lia.class.retrieveClass("police")
 ]]
-
 --[[
     lia.class.hasWhitelist(class)
 

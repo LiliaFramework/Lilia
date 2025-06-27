@@ -1,4 +1,4 @@
-    --[[
+--[[
         lia.notices.notify(message, recipient)
 
         Description:
@@ -18,8 +18,7 @@
         -- This snippet demonstrates a common usage of lia.notices.notify
         lia.notices.notify("Server restarting", nil)
     ]]
-
-    --[[
+--[[
         lia.notices.notifyLocalized(key, recipient, ...)
 
         Description:
@@ -40,8 +39,7 @@
         -- This snippet demonstrates a common usage of lia.notices.notifyLocalized
         lia.notices.notifyLocalized("welcome", client)
     ]]
-
-    --[[
+--[[
         lia.notices.notify(message)
 
         Description:
@@ -60,8 +58,7 @@
         -- This snippet demonstrates a common usage of lia.notices.notify
         lia.notices.notify("Item picked up")
     ]]
-
-    --[[
+--[[
         lia.notices.notifyLocalized(key, ...)
 
         Description:

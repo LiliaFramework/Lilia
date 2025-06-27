@@ -18,7 +18,6 @@
         -- This snippet demonstrates a common usage of lia.color.register
         lia.color.register("myRed", Color(255,0,0))
 ]]
-
 --[[
     lia.color.Adjust(color, rOffset, gOffset, bOffset, aOffset)
 
@@ -42,7 +41,6 @@
         -- This snippet demonstrates a common usage of lia.color.Adjust
         local lighter = lia.color.Adjust(Color(50,50,50), 10,10,10)
 ]]
-
 --[[
     lia.color.ReturnMainAdjustedColors()
 

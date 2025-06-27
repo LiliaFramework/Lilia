@@ -21,7 +21,6 @@
         -- This snippet demonstrates a common usage of lia.config.add
         lia.config.add("maxPlayers", "Maximum Players", 64)
 ]]
-
 --[[
     lia.config.setDefault(key, value)
 
@@ -42,7 +41,6 @@
         -- This snippet demonstrates a common usage of lia.config.setDefault
         lia.config.setDefault("maxPlayers", 32)
 ]]
-
 --[[
     lia.config.forceSet(key, value, noSave)
 
@@ -64,7 +62,6 @@
         -- This snippet demonstrates a common usage of lia.config.forceSet
         lia.config.forceSet("someSetting", true, true)
 ]]
-
 --[[
     lia.config.set(key, value)
 
@@ -85,7 +82,6 @@
         -- This snippet demonstrates a common usage of lia.config.set
         lia.config.set("maxPlayers", 24)
 ]]
-
 --[[
     lia.config.get(key, default)
 
@@ -106,7 +102,6 @@
         -- This snippet demonstrates a common usage of lia.config.get
         local players = lia.config.get("maxPlayers", 64)
 ]]
-
 --[[
     lia.config.load()
 
@@ -130,8 +125,7 @@
         -- This snippet demonstrates a common usage of lia.config.load
         lia.config.load()
 ]]
-
-    --[[
+--[[
         lia.config.getChangedValues()
 
        Description:
@@ -150,8 +144,7 @@
         -- This snippet demonstrates a common usage of lia.config.getChangedValues
             local changed = lia.config.getChangedValues()
 ]]
-
-    --[[
+--[[
         lia.config.send(client)
 
        Description:
@@ -170,8 +163,7 @@
         -- This snippet demonstrates a common usage of lia.config.send
             lia.config.send(client)
 ]]
-
-    --[[
+--[[
         lia.config.save()
 
        Description:

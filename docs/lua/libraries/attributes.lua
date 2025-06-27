@@ -21,8 +21,7 @@
         -- This snippet demonstrates a common usage of lia.attribs.loadFromDir
         lia.attribs.loadFromDir("schema/attributes")
 ]]
-
-    --[[
+--[[
         lia.attribs.setup(client)
 
         Description:

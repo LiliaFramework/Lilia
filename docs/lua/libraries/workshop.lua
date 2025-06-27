@@ -1,4 +1,4 @@
-    --[[
+--[[
         lia.workshop.gather()
 
         Description:
@@ -14,8 +14,7 @@
         -- This snippet demonstrates a common usage of lia.workshop.gather
             local ids = lia.workshop.gather()
     ]]
-
-    --[[
+--[[
         lia.workshop.send(ply)
 
         Description:

@@ -14,7 +14,6 @@
     Realm:
         Shared
 ]]
-
 --[[
     lia.command.hasAccess(client, command, data)
 
@@ -33,7 +32,6 @@
     Realm:
         Shared
 ]]
-
 --[[
   lia.command.extractArgs
 
@@ -54,8 +52,7 @@
         -- This snippet demonstrates a common usage of lia.command.extractArgs
       local args = lia.command.extractArgs('/mycommand "quoted arg" anotherArg')
       -- args = {"quoted arg", "anotherArg"}
-]] 
-
+]]
 --[[
   lia.command.parseSyntaxFields
 
@@ -76,8 +73,7 @@
         -- Extract field data from a syntax string
         local fields = lia.command.parseSyntaxFields("[string name] [number time]")
   ]]
-
-    --[[
+--[[
       lia.command.run
 
       Description:
@@ -99,8 +95,7 @@
         -- This snippet demonstrates a common usage of lia.command.run
          lia.command.run(player, "mycommand", {"arg1", "arg2"})
    ]]
-
-    --[[
+--[[
       lia.command.parse
 
       Description:
@@ -123,8 +118,7 @@
         -- This snippet demonstrates a common usage of lia.command.parse
          lia.command.parse(player, "/mycommand arg1 arg2")
    ]]
-
-    --[[
+--[[
   lia.command.send
 
       Description:
@@ -145,7 +139,6 @@
         -- This snippet demonstrates a common usage of lia.command.send
          lia.command.send("mycommand", "arg1", "arg2")
   ]]
-
 --[[
   lia.command.openArgumentPrompt
 

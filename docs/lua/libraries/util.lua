@@ -21,7 +21,6 @@
          print(ply:Name())
       end
 ]]
-
 --[[
    lia.util.findPlayer
 
@@ -48,7 +47,6 @@
          print("Found player: " .. foundPly:Name())
       end
 ]]
-
 --[[
    lia.util.findPlayerItems
 
@@ -71,7 +69,6 @@
          print("Found item entity: " .. item:GetClass())
       end
 ]]
-
 --[[
    lia.util.findPlayerItemsByClass
 
@@ -95,7 +92,6 @@
          print("Found item entity: " .. item:GetClass())
       end
 ]]
-
 --[[
    lia.util.findPlayerEntities
 
@@ -119,7 +115,6 @@
          print("Found player entity: " .. ent:GetClass())
       end
 ]]
-
 --[[
    lia.util.stringMatches
 
@@ -142,7 +137,6 @@
          print("Strings match!")
       end
 ]]
-
 --[[
    lia.util.getAdmins
 
@@ -162,7 +156,6 @@
          print("Staff: " .. admin:Name())
       end
 ]]
-
 --[[
    lia.util.findPlayerBySteamID64
 
@@ -185,7 +178,6 @@
          print("Found player: " .. ply:Name())
       end
 ]]
-
 --[[
    lia.util.findPlayerBySteamID
 
@@ -208,7 +200,6 @@
          print("Found player: " .. ply:Name())
       end
 ]]
-
 --[[
    lia.util.canFit
 
@@ -234,7 +225,6 @@
          print("The player can stand here.")
       end
 ]]
-
 --[[
    lia.util.playerInRadius
 
@@ -258,7 +248,6 @@
          print("Nearby player: " .. ply:Name())
       end
 ]]
-
 --[[
    lia.util.formatStringNamed
 
@@ -280,7 +269,6 @@
       local result = lia.util.formatStringNamed("Hello, {name}!", {name = "Bob"})
       print(result) -- "Hello, Bob!"
 ]]
-
 --[[
    lia.util.getMaterial
 
@@ -303,7 +291,6 @@
       surface.SetMaterial(mat)
       surface.DrawTexturedRect(0, 0, 100, 100)
 ]]
-
 --[[
    lia.util.findFaction
 
@@ -327,8 +314,7 @@
          print("Found faction: " .. faction.name)
       end
 ]]
-
-    --[[
+--[[
        lia.util.CreateTableUI
 
        Description:
@@ -352,8 +338,7 @@
         -- This snippet demonstrates a common usage of lia.util.CreateTableUI
           lia.util.CreateTableUI(somePlayer, "My Table", {{name="ID", field="id"}, {name="Name", field="name"}}, someData, someOptions, charID)
     ]]
-
-    --[[
+--[[
        lia.util.findEmptySpace
 
        Description:
@@ -380,8 +365,7 @@
              print("Empty space at: " .. tostring(pos))
           end
     ]]
-
-    --[[
+--[[
        lia.util.ShadowText
 
        Description:
@@ -408,8 +392,7 @@
         -- This snippet demonstrates a common usage of lia.util.ShadowText
           lia.util.ShadowText("Hello!", "DermaDefault", 100, 100, color_white, color_black, 2, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     ]]
-
-    --[[
+--[[
        lia.util.DrawTextOutlined
 
        Description:
@@ -435,8 +418,7 @@
         -- This snippet demonstrates a common usage of lia.util.DrawTextOutlined
           lia.util.DrawTextOutlined("Outlined Text", "DermaLarge", 100, 200, color_white, TEXT_ALIGN_CENTER, 2, color_black)
     ]]
-
-    --[[
+--[[
        lia.util.DrawTip
 
        Description:
@@ -462,8 +444,7 @@
         -- This snippet demonstrates a common usage of lia.util.DrawTip
           lia.util.DrawTip(100, 100, 200, 60, "This is a tip!", "DermaDefault", color_white, color_black)
     ]]
-
-    --[[
+--[[
        lia.util.drawText
 
        Description:
@@ -489,8 +470,7 @@
         -- This snippet demonstrates a common usage of lia.util.drawText
           lia.util.drawText("Hello World", 200, 300, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, "liaGenericFont", 100)
     ]]
-
-    --[[
+--[[
        lia.util.drawTexture
 
        Description:
@@ -514,8 +494,7 @@
         -- This snippet demonstrates a common usage of lia.util.drawTexture
           lia.util.drawTexture("path/to/material", color_white, 50, 50, 64, 64)
     ]]
-
-    --[[
+--[[
        lia.util.skinFunc
 
        Description:
@@ -536,8 +515,7 @@
         -- This snippet demonstrates a common usage of lia.util.skinFunc
           lia.util.skinFunc("PaintButton", someButton, 10, 20)
     ]]
-
-    --[[
+--[[
        lia.util.wrapText
 
        Description:
@@ -562,8 +540,7 @@
           end
           print("Max width: " .. maxW)
     ]]
-
-    --[[
+--[[
        lia.util.drawBlur
 
        Description:
@@ -584,8 +561,7 @@
         -- This snippet demonstrates a common usage of lia.util.drawBlur
           lia.util.drawBlur(somePanel, 5, 1)
     ]]
-
-    --[[
+--[[
        lia.util.drawBlurAt
 
        Description:
@@ -609,8 +585,7 @@
         -- This snippet demonstrates a common usage of lia.util.drawBlurAt
           lia.util.drawBlurAt(100, 100, 200, 150, 5, 1)
     ]]
-
-    --[[
+--[[
        lia.util.CreateTableUI
 
        Description:

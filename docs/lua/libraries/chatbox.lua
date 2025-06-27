@@ -17,7 +17,6 @@
         -- This snippet demonstrates a common usage of lia.chat.timestamp
         local ts = lia.chat.timestamp(false)
 ]]
-
 --[[
     lia.chat.register(chatType, data)
 
@@ -38,7 +37,6 @@
         -- This snippet demonstrates a common usage of lia.chat.register
         lia.chat.register("me", {onChatAdd = function(...) end})
 ]]
-
 --[[
     lia.chat.parse(client, message, noSend)
 
@@ -65,7 +63,6 @@
             end
         end)
 ]]
-
 --[[
     lia.chat.send(speaker, chatType, text, anonymous, receivers)
 

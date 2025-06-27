@@ -20,7 +20,6 @@
             bar.color = Color(0, 200, 0) -- make the bar green
         end
 ]]
-
 --[[
     lia.bar.add(getValue, color, priority, identifier)
 
@@ -50,7 +49,6 @@
             return client:Health() / client:GetMaxHealth()
         end, Color(200, 50, 40), 1, "health")
 ]]
-
 --[[
     lia.bar.remove(identifier)
 
@@ -70,7 +68,6 @@
         -- This snippet demonstrates a common usage of lia.bar.remove
         lia.bar.remove("example")
 ]]
-
 --[[
     lia.bar.drawBar(x, y, w, h, pos, max, color)
 
@@ -97,7 +94,6 @@
         -- This snippet demonstrates a common usage of lia.bar.drawBar
         lia.bar.drawBar(10, 10, 200, 20, 0.5, 1, Color(255,0,0))
 ]]
-
 --[[
     lia.bar.drawAction(text, duration)
 
@@ -119,7 +115,6 @@
         -- This snippet demonstrates a common usage of lia.bar.drawAction
         lia.bar.drawAction("Reloading", 2)
 ]]
-
 --[[
     lia.bar.drawAll()
 

@@ -20,7 +20,6 @@
         -- This snippet demonstrates a common usage of lia.char.new
         local char = lia.char.new({name = "John"}, 1, client)
 ]]
-
 --[[
     lia.char.hookVar(varName, hookName, func)
 
@@ -42,7 +41,6 @@
         -- This snippet demonstrates a common usage of lia.char.hookVar
         lia.char.hookVar("name", "PrintName", function(old, new) print(new) end)
 ]]
-
 --[[
     lia.char.registerVar(key, data)
 
@@ -63,7 +61,6 @@
         -- This snippet demonstrates a common usage of lia.char.registerVar
         lia.char.registerVar("age", {field = "_age", default = 20})
 ]]
-
 --[[
     lia.char.getCharData(charID, key)
 
@@ -84,7 +81,6 @@
         -- This snippet demonstrates a common usage of lia.char.getCharData
         local age = lia.char.getCharData(1, "age")
 ]]
-
 --[[
     lia.char.getCharDataRaw(charID, key)
 
@@ -105,7 +101,6 @@
         -- This snippet demonstrates a common usage of lia.char.getCharDataRaw
         local row = lia.char.getCharDataRaw(1)
 ]]
-
 --[[
     lia.char.getOwnerByID(ID)
 
@@ -125,7 +120,6 @@
         -- This snippet demonstrates a common usage of lia.char.getOwnerByID
         local ply = lia.char.getOwnerByID(1)
 ]]
-
 --[[
     lia.char.getBySteamID(steamID)
 
@@ -145,7 +139,6 @@
         -- This snippet demonstrates a common usage of lia.char.getBySteamID
         local char = lia.char.getBySteamID("STEAM_0:0:11101")
 ]]
-
 --[[
     lia.char.getAll()
 
@@ -165,7 +158,6 @@
         -- This snippet demonstrates a common usage of pairs
         for ply, char in pairs(lia.char.getAll()) do print(ply, char:getName()) end
 ]]
-
 --[[
     lia.char.GetTeamColor(client)
 
@@ -185,8 +177,7 @@
         -- This snippet demonstrates a common usage of lia.char.GetTeamColor
         local color = lia.char.GetTeamColor(client)
 ]]
-
-    --[[
+--[[
         lia.char.create(data, callback)
 
         Description:
@@ -206,8 +197,7 @@
         -- This snippet demonstrates a common usage of lia.char.create
             lia.char.create({name = "John"}, function(id) print("Created", id) end)
     ]]
-
-    --[[
+--[[
         lia.char.restore(client, callback, id)
 
         Description:
@@ -228,8 +218,7 @@
         -- This snippet demonstrates a common usage of lia.char.restore
             lia.char.restore(client, print)
     ]]
-
-    --[[
+--[[
         lia.char.cleanUpForPlayer(client)
 
         Description:
@@ -248,8 +237,7 @@
         -- This snippet demonstrates a common usage of lia.char.cleanUpForPlayer
             lia.char.cleanUpForPlayer(client)
     ]]
-
-    --[[
+--[[
         lia.char.delete(id, client)
 
         Description:
@@ -269,8 +257,7 @@
         -- This snippet demonstrates a common usage of lia.char.delete
             lia.char.delete(1, client)
     ]]
-
-    --[[
+--[[
         lia.char.setCharData(charID, key, val)
 
         Description:
@@ -291,8 +278,7 @@
         -- This snippet demonstrates a common usage of lia.char.setCharData
             lia.char.setCharData(1, "age", 25)
     ]]
-
-    --[[
+--[[
         lia.char.setCharName(charID, name)
 
         Description:
@@ -312,8 +298,7 @@
         -- This snippet demonstrates a common usage of lia.char.setCharName
             lia.char.setCharName(1, "NewName")
     ]]
-
-    --[[
+--[[
         lia.char.setCharModel(charID, model, bg)
 
         Description:

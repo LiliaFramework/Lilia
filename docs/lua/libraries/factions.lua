@@ -19,7 +19,6 @@
         -- This snippet demonstrates a common usage of lia.faction.loadFromDir
       lia.faction.loadFromDir("path/to/factions")
 ]]
-
 --[[
    lia.faction.get
 
@@ -39,7 +38,6 @@
         -- This snippet demonstrates a common usage of lia.faction.get
       local faction = lia.faction.get("citizen")
 ]]
-
 --[[
    lia.faction.getIndex
 
@@ -59,7 +57,6 @@
         -- This snippet demonstrates a common usage of lia.faction.getIndex
       local index = lia.faction.getIndex("citizen")
 ]]
-
 --[[
    lia.faction.getClasses
 
@@ -79,7 +76,6 @@
         -- This snippet demonstrates a common usage of lia.faction.getClasses
       local classes = lia.faction.getClasses("citizen")
 ]]
-
 --[[
    lia.faction.getPlayers
 
@@ -99,7 +95,6 @@
         -- This snippet demonstrates a common usage of lia.faction.getPlayers
       local players = lia.faction.getPlayers("citizen")
 ]]
-
 --[[
    lia.faction.getPlayerCount
 
@@ -119,7 +114,6 @@
         -- This snippet demonstrates a common usage of lia.faction.getPlayerCount
       local count = lia.faction.getPlayerCount("citizen")
 ]]
-
 --[[
    lia.faction.isFactionCategory
 
@@ -139,7 +133,6 @@
         -- This snippet demonstrates a common usage of lia.faction.isFactionCategory
       local isMember = lia.faction.isFactionCategory("citizen", {"citizen", "veteran"})
 ]]
-
 --[[
    lia.faction.jobGenerate
 
@@ -165,7 +158,6 @@
         -- This snippet demonstrates a common usage of lia.faction.jobGenerate
       local faction = lia.faction.jobGenerate(2, "Police", Color(0, 0, 255), false, {"models/player/police.mdl"})
 ]]
-
 --[[
    lia.faction.formatModelData
 
@@ -186,7 +178,6 @@
         -- This snippet demonstrates a common usage of lia.faction.formatModelData
       lia.faction.formatModelData()
 ]]
-
 --[[
    lia.faction.getCategories
 
@@ -207,7 +198,6 @@
         -- This snippet demonstrates a common usage of lia.faction.getCategories
       local categories = lia.faction.getCategories("citizen")
 ]]
-
 --[[
    lia.faction.getModelsFromCategory
 
@@ -228,7 +218,6 @@
         -- This snippet demonstrates a common usage of lia.faction.getModelsFromCategory
       local models = lia.faction.getModelsFromCategory("citizen", "special")
 ]]
-
 --[[
    lia.faction.getDefaultClass
 
@@ -249,8 +238,7 @@
         -- This snippet demonstrates a common usage of lia.faction.getDefaultClass
       local defaultClass = lia.faction.getDefaultClass("citizen")
 ]]
-
-    --[[
+--[[
       lia.faction.hasWhitelist
 
       Description:

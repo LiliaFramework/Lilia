@@ -19,8 +19,7 @@
         -- This snippet demonstrates a common usage of lia.currency.get
         lia.currency.get(10)  -- e.g., "$10 dollars"
 ]]
-
-    --[[
+--[[
         lia.currency.spawn
 
         Description:

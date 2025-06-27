@@ -22,7 +22,6 @@
         -- This snippet demonstrates a common usage of lia.option.add
         lia.option.add("showHints", "Show Hints", "Display hints", true)
 ]]
-
 --[[
     lia.option.set(key, value)
 
@@ -43,7 +42,6 @@
         -- This snippet demonstrates a common usage of lia.option.set
         lia.option.set("showHints", false)
 ]]
-
 --[[
     lia.option.get(key, default)
 
@@ -64,7 +62,6 @@
         -- This snippet demonstrates a common usage of lia.option.get
         local show = lia.option.get("showHints", true)
 ]]
-
 --[[
     lia.option.save()
 
@@ -84,7 +81,6 @@
         -- This snippet demonstrates a common usage of lia.option.save
         lia.option.save()
 ]]
-
 --[[
     lia.option.load()
 

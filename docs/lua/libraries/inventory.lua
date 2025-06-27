@@ -18,7 +18,6 @@
         -- This snippet demonstrates a common usage of lia.inventory.newType
         lia.inventory.newType("bag", {className = "liaBag"})
 ]]
-
 --[[
     lia.inventory.new(typeID)
 
@@ -38,8 +37,7 @@
         -- This snippet demonstrates a common usage of lia.inventory.new
         local inv = lia.inventory.new("bag")
 ]]
-
-    --[[
+--[[
       lia.inventory.loadByID(id, noCache)
 
       Description:
@@ -58,8 +56,7 @@
         -- This snippet demonstrates a common usage of lia.inventory.loadByID
           lia.inventory.loadByID(1):next(function(inv) print(inv) end)
    ]]
-
-    --[[
+--[[
       lia.inventory.loadFromDefaultStorage(id, noCache)
 
       Description:
@@ -78,8 +75,7 @@
         -- This snippet demonstrates a common usage of lia.inventory.loadFromDefaultStorage
           lia.inventory.loadFromDefaultStorage(1)
    ]]
-
-    --[[
+--[[
       lia.inventory.instance(typeID, initialData)
 
       Description:
@@ -98,8 +94,7 @@
         -- This snippet demonstrates a common usage of lia.inventory.instance
           lia.inventory.instance("bag", {charID = 1})
    ]]
-
-    --[[
+--[[
       lia.inventory.loadAllFromCharID(charID)
 
       Description:
@@ -118,8 +113,7 @@
         -- This snippet demonstrates a common usage of lia.inventory.loadAllFromCharID
           lia.inventory.loadAllFromCharID(client:getChar():getID())
    ]]
-
-    --[[
+--[[
       lia.inventory.deleteByID(id)
 
       Description:
@@ -138,8 +132,7 @@
         -- This snippet demonstrates a common usage of lia.inventory.deleteByID
           lia.inventory.deleteByID(1)
    ]]
-
-    --[[
+--[[
       lia.inventory.cleanUpForCharacter(character)
 
       Description:
@@ -158,8 +151,7 @@
         -- This snippet demonstrates a common usage of lia.inventory.cleanUpForCharacter
           lia.inventory.cleanUpForCharacter(client:getChar())
    ]]
-
-    --[[
+--[[
       lia.inventory.show(inventory, parent)
 
       Description:

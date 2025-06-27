@@ -22,7 +22,6 @@
         -- This snippet demonstrates a common usage of lia.menu.add
         lia.menu.add({["Hello"] = function() print("Hi") end})
 ]]
-
 --[[
     lia.menu.drawAll()
 
@@ -43,7 +42,6 @@
         -- This snippet demonstrates a common usage of hook.Add
         hook.Add("HUDPaint", "DrawMenus", lia.menu.drawAll)
 ]]
-
 --[[
     lia.menu.getActiveMenu()
 
@@ -65,7 +63,6 @@
         -- This snippet demonstrates a common usage of lia.menu.getActiveMenu
         local id, callback = lia.menu.getActiveMenu()
 ]]
-
 --[[
     lia.menu.onButtonPressed(id, callback)
 

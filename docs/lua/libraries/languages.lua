@@ -23,7 +23,6 @@
         -- This snippet demonstrates a common usage of lia.lang.loadFromDir
         lia.lang.loadFromDir("languages")
 ]]
-
 --[[
     lia.lang.AddTable(name, tbl)
 

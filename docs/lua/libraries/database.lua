@@ -22,7 +22,6 @@
             print("Database connected")
         end)
 ]]
-
 --[[
     lia.db.wipeTables(callback)
 
@@ -45,7 +44,6 @@
             print("Tables wiped")
         end)
 ]]
-
 --[[
     lia.db.loadTables()
 
@@ -66,7 +64,6 @@
         -- This snippet demonstrates a common usage of lia.db.loadTables
         lia.db.loadTables()
 ]]
-
 --[[
     lia.db.waitForTablesToLoad()
 
@@ -89,7 +86,6 @@
             print("Tables loaded")
         end)
 ]]
-
 --[[
     lia.db.convertDataType(value, noEscape)
 
@@ -112,7 +108,6 @@
         -- This snippet demonstrates a common usage of lia.db.convertDataType
         local str = lia.db.convertDataType({name = "Lilia"})
 ]]
-
 --[[
     lia.db.insertTable(value, callback, dbTable)
 
@@ -137,7 +132,6 @@
             print("Inserted", id)
         end, "characters")
 ]]
-
 --[[
     lia.db.updateTable(value, callback, dbTable, condition)
 
@@ -163,7 +157,6 @@
             print("Row updated")
         end, "characters", "id = 1")
 ]]
-
 --[[
     lia.db.select(fields, dbTable, condition, limit)
 
@@ -190,7 +183,6 @@
             PrintTable(rows)
         end)
 ]]
-
 --[[
     lia.db.upsert(value, dbTable)
 
@@ -213,7 +205,6 @@
         -- This snippet demonstrates a common usage of lia.db.upsert
         lia.db.upsert({id = 1, name = "John"}, "characters")
 ]]
-
 --[[
     lia.db.delete(dbTable, condition)
 
@@ -237,7 +228,6 @@
             print("Row deleted")
         end)
 ]]
-
 --[[
     lia.db.GetCharacterTable(callback)
 

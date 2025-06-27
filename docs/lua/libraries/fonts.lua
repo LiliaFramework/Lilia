@@ -1,4 +1,4 @@
-    --[[
+--[[
         lia.font.register(fontName, fontData)
 
         Description:
@@ -18,8 +18,7 @@
         -- This snippet demonstrates a common usage of lia.font.register
             lia.font.register("MyFont", {font = "Arial", size = 16})
     ]]
-
-    --[[
+--[[
         lia.font.getAvailableFonts()
 
         Description:
@@ -39,8 +38,7 @@
             local fonts = lia.font.getAvailableFonts()
             PrintTable(fonts)
     ]]
-
-    --[[
+--[[
         lia.font.refresh()
 
         Description:

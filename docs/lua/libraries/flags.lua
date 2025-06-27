@@ -20,8 +20,7 @@
         -- This snippet demonstrates a common usage of lia.flag.add
       lia.flag.add("C", "Spawn vehicles.")
 ]]
-
-    --[[
+--[[
       lia.flag.onSpawn
 
       Description:

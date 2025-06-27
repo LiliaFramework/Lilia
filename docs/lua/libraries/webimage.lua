@@ -22,7 +22,6 @@
         -- This snippet demonstrates a common usage of lia.webimage.register
         lia.webimage.register("logo.png", "https://example.com/logo.png")
 ]]
-
 --[[
     lia.webimage.get(name, flags)
 

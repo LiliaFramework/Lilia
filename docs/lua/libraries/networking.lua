@@ -22,7 +22,6 @@
         setNetVar("round", round)
         hook.Run("RoundStarted", round)
 ]]
-
 --[[
     getNetVar(key, default)
 
@@ -46,4 +45,3 @@
             ply:ChatPrint("Current round: " .. round)
         end)
 ]]
-
