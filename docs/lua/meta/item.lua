@@ -14,7 +14,8 @@
         number – Quantity contained in this item instance.
 
     Example Usage:
-        local result = item:getQuantity()
+        -- Give the player ammo equal to the stack quantity
+        player:GiveAmmo(item:getQuantity(), "pistol")
 ]]
 --[[
     eq(other)
@@ -32,7 +33,10 @@
         boolean – True if both items share the same ID.
 
     Example Usage:
-        local result = item:eq(other)
+        -- Check if the held item matches the inventory slot
+        if item:eq(slotItem) then
+            print("Same item instance")
+        end
 ]]
 --[[
     tostring()
@@ -50,7 +54,8 @@
         string – Identifier in the form "item[uniqueID][id]".
 
     Example Usage:
-        local result = item:tostring()
+        -- Log the item identifier during saving
+        print("Saving " .. item:tostring())
 ]]
 --[[
     getID()
@@ -68,7 +73,8 @@
         number – Item database ID.
 
     Example Usage:
-        local result = item:getID()
+        -- Use the ID when updating the database
+        lia.db.updateItem(item:getID(), {price = 50})
 ]]
 --[[
     getModel()
@@ -86,7 +92,10 @@
         string – Model path.
 
     Example Usage:
-        local result = item:getModel()
+        -- Spawn the item's model as a world prop
+        local prop = ents.Create("prop_physics")
+        prop:SetModel(item:getModel())
+        prop:Spawn()
 ]]
 --[[
     getSkin()
@@ -104,7 +113,8 @@
         number – Skin ID applied to the model.
 
     Example Usage:
-        local result = item:getSkin()
+        -- Apply the correct skin when displaying the item
+        model:SetSkin(item:getSkin())
 ]]
 --[[
     getPrice()
@@ -122,7 +132,10 @@
         number – The price value.
 
     Example Usage:
-        local result = item:getPrice()
+        -- Charge the player the item's price before giving it
+        if char:hasMoney(item:getPrice()) then
+            char:takeMoney(item:getPrice())
+        end
 ]]
 --[[
     call(method, client, entity, ...)
@@ -143,7 +156,8 @@
         any – Results returned by the called function.
 
     Example Usage:
-        local result = item:call(method, client, entity, ...)
+        -- Trigger a custom "use" function when the player presses Use
+        item:call("use", client, entity)
 ]]
 --[[
     getOwner()
@@ -161,7 +175,11 @@
         Player|nil – The owner if available.
 
     Example Usage:
-        local result = item:getOwner()
+        -- Notify whoever currently owns the item
+        local owner = item:getOwner()
+        if IsValid(owner) then
+            owner:notify("Your item glows brightly.")
+        end
 ]]
 --[[
     getData(key, default)
@@ -180,7 +198,8 @@
         any – Stored value or default.
 
     Example Usage:
-        local result = item:getData(key, default)
+        -- Retrieve a custom paint color stored on the item
+        local color = item:getData("paintColor", Color(255,255,255))
 ]]
 --[[
     getAllData()
@@ -199,7 +218,8 @@
         table – Key/value table of all data fields.
 
     Example Usage:
-        local result = item:getAllData()
+        -- Print all stored data for debugging
+        PrintTable(item:getAllData())
 ]]
 --[[
     hook(name, func)
@@ -217,8 +237,8 @@
         nil – This function does not return a value.
 
     Example Usage:
-        -- Register a function to run when the hook triggers
-        local result = item:hook(name, func)
+        -- Run code when the item is used
+        item:hook("use", function(ply) ply:ChatPrint("Used!") end)
 ]]
 --[[
     postHook(name, func)
@@ -236,8 +256,8 @@
         nil – This function does not return a value.
 
     Example Usage:
-        -- Run code after the base hook executes
-        local result = item:postHook(name, func)
+        -- Give a pistol after the item is picked up
+        item:postHook("pickup", function(ply) ply:Give("weapon_pistol") end)
 ]]
 --[[
     onRegistered()
@@ -254,8 +274,8 @@
         nil – This function does not return a value.
 
     Example Usage:
-        -- Called when this item type is first added
-        local result = item:onRegistered()
+        -- Initialize data when the item type loads
+        item:onRegistered()
 ]]
 --[[
     print(detail)
@@ -272,8 +292,8 @@
         nil – This function does not return a value.
 
     Example Usage:
-        -- Debug print the item information
-        local result = item:print(detail)
+        -- Output item info while debugging spawn issues
+        item:print(true)
 ]]
 --[[
     printData()
@@ -290,8 +310,8 @@
         nil – This function does not return a value.
 
     Example Usage:
-        -- Output every piece of stored item data
-        local result = item:printData()
+        -- Dump all stored data to the console
+        item:printData()
 ]]
 --[[
         addQuantity(quantity, receivers, noCheckEntity)
@@ -310,8 +330,8 @@
             nil – This function does not return a value.
 
     Example Usage:
-        -- Increase the stack count and sync to players
-        local result = item:addQuantity(quantity, receivers, noCheckEntity)
+        -- Combine stacks and update clients
+        item:addQuantity(5, {player})
     ]]
 --[[
         setQuantity(quantity, receivers, noCheckEntity)
@@ -330,6 +350,6 @@
             nil – This function does not return a value.
 
     Example Usage:
-        -- Force the stack to a specific amount
-        local result = item:setQuantity(quantity, receivers, noCheckEntity)
+        -- Set quantity to 1 after splitting the stack
+        item:setQuantity(1, nil, true)
     ]]
