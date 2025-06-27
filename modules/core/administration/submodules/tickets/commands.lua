@@ -2,7 +2,7 @@
     adminOnly = true,
     privilege = "View Claims",
     desc = L("plyViewClaimsDesc"),
-    syntax = "[string charname]",
+    syntax = "[string playerName]",
     AdminStick = {
         Name = L("viewTicketClaims"),
         Category = "moderationTools",

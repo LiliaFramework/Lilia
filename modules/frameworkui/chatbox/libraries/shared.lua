@@ -211,7 +211,7 @@ lia.chat.register("roll", {
 })
 
 lia.chat.register("pm", {
-    syntax = "[string player] [string message]",
+    syntax = "[string playerName] [string message]",
     desc = L("pmDesc"),
     format = "[PM] %s: %s.",
     color = Color(249, 211, 89),

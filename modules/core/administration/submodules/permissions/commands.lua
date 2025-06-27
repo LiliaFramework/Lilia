@@ -2,7 +2,7 @@
     adminOnly = true,
     privilege = "Toggle Permakill",
     desc = L("togglePermakillDesc"),
-    syntax = "[string charname]",
+    syntax = "[string playerName]",
     AdminStick = {
         Name = "Toggle Character Killing (Ban)",
         Category = "characterManagement",
@@ -55,7 +55,7 @@ lia.command.add("playsound", {
     superAdminOnly = true,
     privilege = "Play Sounds",
     desc = L("playSoundDesc"),
-    syntax = "[string player] [string sound]",
+    syntax = "[string playerName] [string sound]",
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         local sound = arguments[2]
@@ -106,7 +106,7 @@ lia.command.add("forcefallover", {
     adminOnly = true,
     privilege = "Force Fallover",
     desc = L("forceFalloverDesc"),
-    syntax = "[player target] [number time]",
+    syntax = "[string playerName] [number time]",
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
@@ -150,7 +150,7 @@ lia.command.add("forcegetup", {
     adminOnly = true,
     privilege = "Force GetUp",
     desc = L("forceGetUpDesc"),
-    syntax = "[player target]",
+    syntax = "[string playerName]",
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then

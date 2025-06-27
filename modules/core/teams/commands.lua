@@ -112,7 +112,7 @@ lia.command.add("setclass", {
     adminOnly = true,
     privilege = "Manage Classes",
     desc = L("setClassDesc"),
-    syntax = "[string charname] [string class]",
+    syntax = "[string playerName] [string class]",
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
