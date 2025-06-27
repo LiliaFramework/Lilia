@@ -1,17 +1,6 @@
 local ScreenScale, ScreenScaleH = ScreenScale(), ScreenScaleH()
 local panel = FindMetaTable("Panel")
 
---[[
-    Screen-scaling helper wrappers for Panel positioning functions.
-
-    Description:
-        These helpers apply ScreenScale and ScreenScaleH to common panel
-        positioning and sizing methods so that UIs remain consistent across
-        different resolutions.
-
-    Realm:
-        Client
-]]
 
 local map = {
     SetPos = {ScreenScale, ScreenScaleH},    -- panel:SetPos(x, y)

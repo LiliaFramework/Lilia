@@ -4,43 +4,12 @@ lia.Inventory = Inventory
 Inventory.data = {}
 Inventory.items = {}
 Inventory.id = -1
---[[
-    Inventory:getData(key, default)
-
-    Description:
-        Returns a stored data value for this inventory.
-
-    Parameters:
-        key (string) – Data field key.
-        default (any) – Value if the key does not exist.
-
-    Realm:
-        Shared
-
-    Returns:
-        any – Stored value or default.
-]]
 function Inventory:getData(key, default)
     local value = self.data[key]
     if value == nil then return default end
     return value
 end
 
---[[
-    Inventory:extend(className)
-
-    Description:
-        Creates a subclass of the inventory meta table with a new class name.
-
-    Parameters:
-        className (string) – Name of the subclass meta table.
-
-    Realm:
-        Shared
-
-    Returns:
-        table – The newly derived inventory table.
-]]
 function Inventory:extend(className)
     local base = debug.getregistry()[className] or {}
     table.Empty(base)
@@ -50,53 +19,15 @@ function Inventory:extend(className)
     return subClass
 end
 
---[[
-    Inventory:configure()
-
-    Description:
-        Stub for inventory configuration; meant to be overridden.
-
-    Realm:
-        Shared
-]]
 function Inventory:configure()
 end
 
---[[
-    Inventory:addDataProxy(key, onChange)
-
-    Description:
-        Adds a proxy function that is called when a data field changes.
-
-    Parameters:
-        key (string) – Data field to watch.
-        onChange (function) – Callback receiving old and new values.
-
-    Realm:
-        Shared
-]]
 function Inventory:addDataProxy(key, onChange)
     local dataConfig = self.config.data[key] or {}
     dataConfig.proxies[#dataConfig.proxies + 1] = onChange
     self.config.data[key] = dataConfig
 end
 
---[[
-    Inventory:getItemsByUniqueID(uniqueID, onlyMain)
-
-    Description:
-        Returns all items in the inventory matching the given unique ID.
-
-    Parameters:
-        uniqueID (string) – Item unique identifier.
-        onlyMain (boolean) – Search only the main item list.
-
-    Realm:
-        Shared
-
-    Returns:
-        table – Table of matching item objects.
-]]
 function Inventory:getItemsByUniqueID(uniqueID, onlyMain)
     local items = {}
     for _, v in pairs(self:getItems(onlyMain)) do
@@ -105,18 +36,6 @@ function Inventory:getItemsByUniqueID(uniqueID, onlyMain)
     return items
 end
 
---[[
-    Inventory:register(typeID)
-
-    Description:
-        Registers this inventory type with the lia.inventory system.
-
-    Parameters:
-        typeID (string) – Unique identifier for this inventory type.
-
-    Realm:
-        Shared
-]]
 function Inventory:register(typeID)
     assert(isstring(typeID), "Expected argument #1 of " .. self.className .. ".register to be a string")
     self.typeID = typeID
@@ -136,69 +55,18 @@ function Inventory:register(typeID)
     end
 end
 
---[[
-    Inventory:new()
-
-    Description:
-        Creates a new inventory of this type.
-
-    Realm:
-        Shared
-
-    Returns:
-        table – New inventory instance.
-]]
 function Inventory:new()
     return lia.inventory.new(self.typeID)
 end
 
---[[
-    Inventory:tostring()
-
-    Description:
-        Returns a printable representation of this inventory.
-
-    Realm:
-        Shared
-
-    Returns:
-        string – Formatted as "ClassName[id]".
-]]
 function Inventory:tostring()
     return self.className .. "[" .. tostring(self.id) .. "]"
 end
 
---[[
-    Inventory:getType()
-
-    Description:
-        Retrieves the inventory type table from lia.inventory.
-
-    Realm:
-        Shared
-
-    Returns:
-        table – Inventory type definition.
-]]
 function Inventory:getType()
     return lia.inventory.types[self.typeID]
 end
 
---[[
-    Inventory:onDataChanged(key, oldValue, newValue)
-
-    Description:
-        Called when an inventory data field changes. Executes any
-        registered proxy callbacks for that field.
-
-    Parameters:
-        key (string) – Data field key.
-        oldValue (any) – Previous value.
-        newValue (any) – Updated value.
-
-    Realm:
-        Shared
-]]
 function Inventory:onDataChanged(key, oldValue, newValue)
     local keyData = self.config.data[key]
     if keyData and keyData.proxies then
@@ -208,37 +76,10 @@ function Inventory:onDataChanged(key, oldValue, newValue)
     end
 end
 
---[[
-    Inventory:getItems()
-
-    Description:
-        Returns all items stored in this inventory.
-
-    Realm:
-        Shared
-
-    Returns:
-        table – Item instance table indexed by itemID.
-]]
 function Inventory:getItems()
     return self.items
 end
 
---[[
-    Inventory:getItemsOfType(itemType)
-
-    Description:
-        Collects all items that match the given unique ID.
-
-    Parameters:
-        itemType (string) – Item unique identifier.
-
-    Realm:
-        Shared
-
-    Returns:
-        table – Array of matching items.
-]]
 function Inventory:getItemsOfType(itemType)
     local items = {}
     for _, item in pairs(self:getItems()) do
@@ -247,42 +88,12 @@ function Inventory:getItemsOfType(itemType)
     return items
 end
 
---[[
-    Inventory:getFirstItemOfType(itemType)
-
-    Description:
-        Retrieves the first item matching the given unique ID.
-
-    Parameters:
-        itemType (string) – Item unique identifier.
-
-    Realm:
-        Shared
-
-    Returns:
-        Item|nil – The first matching item or nil.
-]]
 function Inventory:getFirstItemOfType(itemType)
     for _, item in pairs(self:getItems()) do
         if item.uniqueID == itemType then return item end
     end
 end
 
---[[
-    Inventory:hasItem(itemType)
-
-    Description:
-        Determines whether the inventory contains an item type.
-
-    Parameters:
-        itemType (string) – Item unique identifier.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – True if an item is found.
-]]
 function Inventory:hasItem(itemType)
     for _, item in pairs(self:getItems()) do
         if item.uniqueID == itemType then return true end
@@ -290,21 +101,6 @@ function Inventory:hasItem(itemType)
     return false
 end
 
---[[
-    Inventory:getItemCount(itemType)
-
-    Description:
-        Counts the total quantity of a specific item type.
-
-    Parameters:
-        itemType (string|nil) – Item unique ID to count. Counts all if nil.
-
-    Realm:
-        Shared
-
-    Returns:
-        number – Sum of quantities.
-]]
 function Inventory:getItemCount(itemType)
     local count = 0
     for _, item in pairs(self:getItems()) do
@@ -315,55 +111,15 @@ function Inventory:getItemCount(itemType)
     return count
 end
 
---[[
-    Inventory:getID()
-
-    Description:
-        Returns the unique database ID of this inventory.
-
-    Realm:
-        Shared
-
-    Returns:
-        number – Inventory identifier.
-]]
 function Inventory:getID()
     return self.id
 end
 
---[[
-    Inventory:eq(other)
-
-    Description:
-        Compares two inventories by ID for equality.
-
-    Parameters:
-        other (Inventory) – Other inventory to compare.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – True if both inventories share the same ID.
-]]
 function Inventory:eq(other)
     return self:getID() == other:getID()
 end
 
 if SERVER then
-    --[[
-        Inventory:addItem(item, noReplicate)
-
-        Description:
-            Inserts an item instance into this inventory and persists it.
-
-        Parameters:
-            item (Item) – Item to add.
-            noReplicate (boolean) – Skip network replication when true.
-
-        Realm:
-            Server
-    ]]
     function Inventory:addItem(item, noReplicate)
         self.items[item:getID()] = item
         item.invID = self:getID()
@@ -422,19 +178,6 @@ if SERVER then
     function Inventory:restoreFromStorage()
     end
 
-    --[[
-        Inventory:removeItem(itemID, preserveItem)
-
-        Description:
-            Removes an item by ID and optionally deletes it.
-
-        Parameters:
-            itemID (number) – Unique item identifier.
-            preserveItem (boolean) – Keep item in database when true.
-
-        Realm:
-            Server
-    ]]
     function Inventory:removeItem(itemID, preserveItem)
         assert(isnumber(itemID), "itemID must be a number for remove")
         local d = deferred.new()
@@ -567,19 +310,6 @@ if SERVER then
         return lia.inventory.instance(self.typeID, initialData)
     end
 
-    --[[
-        Inventory:syncData(key, recipients)
-
-        Description:
-            Sends a single data field to clients.
-
-        Parameters:
-            key (string) – Field to replicate.
-            recipients (table|nil) – Player recipients.
-
-        Realm:
-            Server
-    ]]
     function Inventory:syncData(key, recipients)
         if self.config.data[key] and self.config.data[key].noReplication then return end
         net.Start("liaInventoryData")
@@ -589,18 +319,6 @@ if SERVER then
         net.Send(recipients or self:getRecipients())
     end
 
-    --[[
-        Inventory:sync(recipients)
-
-        Description:
-            Sends the entire inventory and its items to players.
-
-        Parameters:
-            recipients (table|nil) – Player recipients.
-
-        Realm:
-            Server
-    ]]
     function Inventory:sync(recipients)
         net.Start("liaInventoryInit")
         net.WriteType(self.id)
@@ -629,28 +347,10 @@ if SERVER then
         end
     end
 
-    --[[
-        Inventory:delete()
-
-        Description:
-            Removes this inventory record from the database.
-
-        Realm:
-            Server
-    ]]
     function Inventory:delete()
         lia.inventory.deleteByID(self.id)
     end
 
-    --[[
-        Inventory:destroy()
-
-        Description:
-            Destroys all items and removes network references.
-
-        Realm:
-            Server
-    ]]
     function Inventory:destroy()
         for _, item in pairs(self:getItems()) do
             item:destroy()

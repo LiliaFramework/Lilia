@@ -3,34 +3,10 @@ local vectorMeta = FindMetaTable("Vector")
 do
     playerMeta.steamName = playerMeta.steamName or playerMeta.Name
     playerMeta.SteamName = playerMeta.steamName
-    --[[
-        playerMeta:getChar()
-
-        Description:
-            Returns the currently loaded character object for this player.
-
-        Realm:
-            Shared
-
-        Returns:
-            Character|nil – The player's active character.
-    ]]
     function playerMeta:getChar()
         return lia.char.loaded[self.getNetVar(self, "char")]
     end
 
-    --[[
-        playerMeta:Name()
-
-        Description:
-            Returns either the character's roleplay name or the player's Steam name.
-
-        Realm:
-            Shared
-
-        Returns:
-            string – Display name.
-    ]]
     function playerMeta:Name()
         local character = self.getChar(self)
         return character and character.getName(character) or self.steamName(self)
@@ -41,71 +17,20 @@ do
     playerMeta.GetName = playerMeta.Name
 end
 
---[[
-    playerMeta:hasPrivilege(privilegeName)
-
-    Description:
-        Wrapper for CAMI privilege checks.
-
-    Parameters:
-        privilegeName (string) – Privilege identifier.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – Result from CAMI.PlayerHasAccess.
-]]
 function playerMeta:hasPrivilege(privilegeName)
     return CAMI.PlayerHasAccess(self, privilegeName)
 end
 
---[[
-    playerMeta:getCurrentVehicle()
-
-    Description:
-        Safely returns the vehicle the player is currently using.
-
-    Realm:
-        Shared
-
-    Returns:
-        Entity|nil – Vehicle entity or nil.
-]]
 function playerMeta:getCurrentVehicle()
     local vehicle = self:GetVehicle()
     if vehicle and IsValid(vehicle) then return vehicle end
     return nil
 end
 
---[[
-    playerMeta:hasValidVehicle()
-
-    Description:
-        Determines if the player is currently inside a valid vehicle.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – True if a vehicle entity is valid.
-]]
 function playerMeta:hasValidVehicle()
     return IsValid(self:getCurrentVehicle())
 end
 
---[[
-    playerMeta:isNoClipping()
-
-    Description:
-        Returns true if the player is in noclip mode and not inside a vehicle.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – Whether the player is noclipping.
-]]
 function playerMeta:isNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP and not self:hasValidVehicle()
 end
@@ -189,18 +114,6 @@ function playerMeta:getItemDropPos()
     return trace.HitPos
 end
 
---[[
-    playerMeta:getItems()
-
-    Description:
-        Returns the player's inventory item list if a character is loaded.
-
-    Realm:
-        Shared
-
-    Returns:
-        table|nil – Table of items or nil if absent.
-]]
 function playerMeta:getItems()
     local character = self:getChar()
     if character then
@@ -209,21 +122,6 @@ function playerMeta:getItems()
     end
 end
 
---[[
-    playerMeta:getTracedEntity(distance)
-
-    Description:
-        Performs a simple trace from the player's shoot position.
-
-    Parameters:
-        distance (number) – Trace length in units.
-
-    Realm:
-        Shared
-
-    Returns:
-        Entity|nil – The entity hit or nil.
-]]
 function playerMeta:getTracedEntity(distance)
     if not distance then distance = 96 end
     local data = {}
@@ -234,21 +132,6 @@ function playerMeta:getTracedEntity(distance)
     return targetEntity
 end
 
---[[
-    playerMeta:getTrace(distance)
-
-    Description:
-        Returns a hull trace in front of the player.
-
-    Parameters:
-        distance (number) – Hull length in units.
-
-    Realm:
-        Shared
-
-    Returns:
-        table – Trace result.
-]]
 function playerMeta:getTrace(distance)
     if not distance then distance = 200 end
     local data = {}
@@ -261,160 +144,42 @@ function playerMeta:getTrace(distance)
     return trace
 end
 
---[[
-    playerMeta:getEyeEnt(distance)
-
-    Description:
-        Returns the entity the player is looking at within a distance.
-
-    Parameters:
-        distance (number) – Maximum distance.
-
-    Realm:
-        Shared
-
-    Returns:
-        Entity|nil – The entity or nil if too far.
-]]
 function playerMeta:getEyeEnt(distance)
     distance = distance or 150
     local e = self:GetEyeTrace().Entity
     return e:GetPos():Distance(self:GetPos()) <= distance and e or nil
 end
 
---[[
-    playerMeta:notify(message)
-
-    Description:
-        Sends a plain notification message to the player.
-
-    Parameters:
-        message (string) – Text to display.
-
-    Realm:
-        Server
-]]
 function playerMeta:notify(message)
     lia.notices.notify(message, self)
 end
 
---[[
-    playerMeta:notifyLocalized(message, ...)
-
-    Description:
-        Sends a localized notification to the player.
-
-    Parameters:
-        message (string) – Translation key.
-        ... – Additional parameters for localization.
-
-    Realm:
-        Server
-]]
 function playerMeta:notifyLocalized(message, ...)
     lia.notices.notifyLocalized(message, self, ...)
 end
 
---[[
-    playerMeta:CanEditVendor(vendor)
-
-    Description:
-        Determines whether the player can edit the given vendor.
-
-    Parameters:
-        vendor (Entity) – Vendor entity to check.
-
-    Realm:
-        Server
-
-    Returns:
-        boolean – True if allowed to edit.
-]]
 function playerMeta:CanEditVendor(vendor)
     local hookResult = hook.Run("CanPerformVendorEdit", self, vendor)
     if hookResult ~= nil then return hookResult end
     return self:hasPrivilege("Staff Permissions - Can Edit Vendors")
 end
 
---[[
-    playerMeta:isUser()
-
-    Description:
-        Convenience wrapper to check if the player is in the "user" group.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – Whether usergroup is "user".
-]]
 function playerMeta:isUser()
     return self:IsUserGroup("user")
 end
 
---[[
-    playerMeta:isStaff()
-
-    Description:
-        Returns true if the player belongs to a staff group.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – Result from the privilege check.
-]]
 function playerMeta:isStaff()
     return self:hasPrivilege("UserGroups - Staff Group")
 end
 
---[[
-    playerMeta:isVIP()
-
-    Description:
-        Checks whether the player is in the VIP group.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – Result from privilege check.
-]]
 function playerMeta:isVIP()
     return self:hasPrivilege("UserGroups - VIP Group")
 end
 
---[[
-    playerMeta:isStaffOnDuty()
-
-    Description:
-        Determines if the player is currently in the staff faction.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – True if staff faction is active.
-]]
 function playerMeta:isStaffOnDuty()
     return self:Team() == FACTION_STAFF
 end
 
---[[
-    playerMeta:isFaction(faction)
-
-    Description:
-        Checks if the player's character belongs to the given faction.
-
-    Parameters:
-        faction (number) – Faction index to compare.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – True if the factions match.
-]]
 function playerMeta:isFaction(faction)
     local character = self:getChar()
     if not character then return end
@@ -422,21 +187,6 @@ function playerMeta:isFaction(faction)
     return pFaction and pFaction == faction
 end
 
---[[
-    playerMeta:isClass(class)
-
-    Description:
-        Returns true if the player's character is of the given class.
-
-    Parameters:
-        class (number) – Class index to compare.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – Whether the character matches the class.
-]]
 function playerMeta:isClass(class)
     local character = self:getChar()
     if not character then return end
@@ -444,21 +194,6 @@ function playerMeta:isClass(class)
     return pClass and pClass == class
 end
 
---[[
-    playerMeta:hasWhitelist(faction)
-
-    Description:
-        Determines if the player has whitelist access for a faction.
-
-    Parameters:
-        faction (number) – Faction index.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – True if whitelisted.
-]]
 function playerMeta:hasWhitelist(faction)
     local data = lia.faction.indices[faction]
     if data then
@@ -470,38 +205,11 @@ function playerMeta:hasWhitelist(faction)
     return false
 end
 
---[[
-    playerMeta:getClass()
-
-    Description:
-        Retrieves the class index of the player's character.
-
-    Realm:
-        Shared
-
-    Returns:
-        number|nil – Class index or nil.
-]]
 function playerMeta:getClass()
     local character = self:getChar()
     if character then return character:getClass() end
 end
 
---[[
-    playerMeta:hasClassWhitelist(class)
-
-    Description:
-        Checks if the player's character is whitelisted for a class.
-
-    Parameters:
-        class (number) – Class index.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – True if class whitelist exists.
-]]
 function playerMeta:hasClassWhitelist(class)
     local char = self:getChar()
     if not char then return false end
@@ -509,18 +217,6 @@ function playerMeta:hasClassWhitelist(class)
     return wl[class] ~= nil
 end
 
---[[
-    playerMeta:getClassData()
-
-    Description:
-        Returns the class table of the player's current class.
-
-    Realm:
-        Shared
-
-    Returns:
-        table|nil – Class definition table.
-]]
 function playerMeta:getClassData()
     local character = self:getChar()
     if character then
@@ -532,100 +228,27 @@ function playerMeta:getClassData()
     end
 end
 
---[[
-    playerMeta:getDarkRPVar(var)
-
-    Description:
-        Compatibility helper for retrieving money with DarkRP-style calls.
-
-    Parameters:
-        var (string) – Currently only supports "money".
-
-    Realm:
-        Shared
-
-    Returns:
-        number|nil – Money amount or nil.
-]]
 function playerMeta:getDarkRPVar(var)
     if var ~= "money" then return end
     local char = self:getChar()
     return char:getMoney()
 end
 
---[[
-    playerMeta:getMoney()
-
-    Description:
-        Convenience function to get the character's money amount.
-
-    Realm:
-        Shared
-
-    Returns:
-        number – Current funds or 0.
-]]
 function playerMeta:getMoney()
     local character = self:getChar()
     return character and character:getMoney() or 0
 end
 
---[[
-    playerMeta:canAfford(amount)
-
-    Description:
-        Checks if the player has enough money for a purchase.
-
-    Parameters:
-        amount (number) – Cost to test.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – True if funds are sufficient.
-]]
 function playerMeta:canAfford(amount)
     local character = self:getChar()
     return character and character:hasMoney(amount)
 end
 
---[[
-    playerMeta:hasSkillLevel(skill, level)
-
-    Description:
-        Verifies the player's character meets an attribute level.
-
-    Parameters:
-        skill (string) – Attribute ID.
-        level (number) – Required level.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – Whether the character satisfies the requirement.
-]]
 function playerMeta:hasSkillLevel(skill, level)
     local currentLevel = self:getChar():getAttrib(skill, 0)
     return currentLevel >= level
 end
 
---[[
-    playerMeta:meetsRequiredSkills(requiredSkillLevels)
-
-    Description:
-        Checks a table of skill requirements against the player.
-
-    Parameters:
-        requiredSkillLevels (table) – Mapping of attribute IDs to levels.
-
-    Realm:
-        Shared
-
-    Returns:
-        boolean – True if all requirements are met.
-]]
 function playerMeta:meetsRequiredSkills(requiredSkillLevels)
     if not requiredSkillLevels then return true end
     for skill, level in pairs(requiredSkillLevels) do
@@ -634,24 +257,6 @@ function playerMeta:meetsRequiredSkills(requiredSkillLevels)
     return true
 end
 
---[[
-    playerMeta:forceSequence(sequenceName, callback, time, noFreeze)
-
-    Description:
-        Plays an animation sequence and optionally freezes the player.
-
-    Parameters:
-        sequenceName (string) – Sequence to play.
-        callback (function|nil) – Called when finished.
-        time (number|nil) – Duration override.
-        noFreeze (boolean) – Don't freeze movement when true.
-
-    Realm:
-        Shared
-
-    Returns:
-        number|boolean – Duration or false on failure.
-]]
 function playerMeta:forceSequence(sequenceName, callback, time, noFreeze)
     hook.Run("OnPlayerEnterSequence", self, sequenceName, callback, time, noFreeze)
     if not sequenceName then
@@ -684,15 +289,6 @@ function playerMeta:forceSequence(sequenceName, callback, time, noFreeze)
     return false
 end
 
---[[
-    playerMeta:leaveSequence()
-
-    Description:
-        Stops any forced sequence and restores player movement.
-
-    Realm:
-        Shared
-]]
 function playerMeta:leaveSequence()
     hook.Run("OnPlayerLeaveSequence", self)
     net.Start("seqSet")
@@ -706,18 +302,6 @@ function playerMeta:leaveSequence()
 end
 
 if SERVER then
-    --[[
-        playerMeta:restoreStamina(amount)
-
-        Description:
-            Increases the player's stamina value.
-
-        Parameters:
-            amount (number) – Amount to restore.
-
-        Realm:
-            Server
-    ]]
     function playerMeta:restoreStamina(amount)
         local current = self:getLocalVar("stamina", 0)
         local maxStamina = self:getChar():getMaxStamina()
@@ -729,18 +313,6 @@ if SERVER then
         end
     end
 
-    --[[
-        playerMeta:consumeStamina(amount)
-
-        Description:
-            Reduces the player's stamina value.
-
-        Parameters:
-            amount (number) – Amount to subtract.
-
-        Realm:
-            Server
-    ]]
     function playerMeta:consumeStamina(amount)
         local current = self:getLocalVar("stamina", 0)
         local value = math.Clamp(current - amount, 0, self:getChar():getMaxStamina())
@@ -751,18 +323,6 @@ if SERVER then
         end
     end
 
-    --[[
-        playerMeta:addMoney(amount)
-
-        Description:
-            Adds funds to the player's character, clamping to limits.
-
-        Parameters:
-            amount (number) – Money to add.
-
-        Realm:
-            Server
-    ]]
     function playerMeta:addMoney(amount)
         local character = self:getChar()
         if not character then return false end
@@ -787,18 +347,6 @@ if SERVER then
         return true
     end
 
-    --[[
-        playerMeta:takeMoney(amount)
-
-        Description:
-            Removes money from the player's character.
-
-        Parameters:
-            amount (number) – Amount to subtract.
-
-        Realm:
-            Server
-    ]]
     function playerMeta:takeMoney(amount)
         local character = self:getChar()
         if character then character:giveMoney(-amount) end
