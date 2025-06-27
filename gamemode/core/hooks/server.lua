@@ -724,7 +724,7 @@ local function checkPrivateModules()
         for _, info in ipairs(lia.module.privateVersionChecks) do
             for _, m in ipairs(remote) do
                 if m.uniqueID == info.uniqueID and m.version and m.version ~= info.localVersion then
-                    lia.updater("Module '" .. info.name .. "' is outdated, please report back to the author to get an updated copy.")
+                    lia.updater("Module '" .. info.name .. "' is outdated, please report back to the author")
                     break
                 end
             end
@@ -751,15 +751,18 @@ local function checkFrameworkVersion()
             return
         end
 
-        if remote.version ~= localVersion then lia.updater("Framework is outdated. Update it with the latest release at https://github.com/LiliaFramework/Lilia/releases/tag/release") end
+        if remote.version ~= localVersion then lia.updater("Framework is outdated. Update at https://github.com/LiliaFramework/Lilia/releases/tag/release") end
     end, function(err) lia.updater("Error fetching framework version: " .. err) end)
 end
 
 function GM:InitializedModules()
     if self.UpdateCheckDone then return end
-    if lia.module.versionChecks then checkPublicModules() end
-    if lia.module.privateVersionChecks then checkPrivateModules() end
-    checkFrameworkVersion()
+    timer.Simple(0, function()
+        if lia.module.versionChecks then checkPublicModules() end
+        if lia.module.privateVersionChecks then checkPrivateModules() end
+        checkFrameworkVersion()
+    end)
+
     timer.Simple(5, DatabaseQuery)
     self.UpdateCheckDone = true
 end
