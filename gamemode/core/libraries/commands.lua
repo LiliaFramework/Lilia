@@ -113,6 +113,8 @@ function lia.command.parseSyntaxFields(syntax)
                 typ = "number"
             elseif typ == "bool" or typ == "boolean" then
                 typ = "boolean"
+            elseif typ == "player" or typ == "ply" then
+                typ = "player"
             else
                 valid = false
             end
@@ -266,6 +268,15 @@ else
 
                     inputs[name] = combo
                 end
+            elseif typ == "player" then
+                local combo = vgui.Create("DComboBox", frame)
+                combo:SetPos(100, y)
+                combo:SetSize(300, 30)
+                combo:SetValue("Select Player")
+                for _, ply in ipairs(player.GetAll()) do
+                    combo:AddChoice(ply:Name(), ply:SteamID())
+                end
+                inputs[name] = combo
             elseif typ == "text" or typ == "number" then
                 local textEntry = vgui.Create("DTextEntry", frame)
                 textEntry:SetPos(100, y)
@@ -294,8 +305,9 @@ else
             local args = {}
             for key, typ in pairs(fields) do
                 local value
-                if isfunction(typ) then
-                    value = inputs[key]:GetSelected()
+                if isfunction(typ) or typ == "player" then
+                    local text, data = inputs[key]:GetSelected()
+                    value = data or text
                 elseif typ == "text" or typ == "number" then
                     value = inputs[key]:GetValue()
                 elseif typ == "boolean" then
