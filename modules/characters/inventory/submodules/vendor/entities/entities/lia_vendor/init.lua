@@ -168,7 +168,7 @@ function ENT:setItemMaxStock(itemType, value)
 end
 
 function ENT:OnRemove()
-    LIA_VENDORS[self:EntIndex()] = nil
+    LiliaVendors[self:EntIndex()] = nil
     net.Start("VendorExit")
     net.Send(self.receivers)
     if lia.shuttingDown or self.liaIsSafe then return end

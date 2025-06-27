@@ -416,7 +416,6 @@ LANGUAGE = {
     noSpawnPropsPerm = "You do not have permission to spawn props.",
     disabledFeature = "This is disabled to avoid issues with Lilia's Core Features",
     noModifyWorldEntities = "You do not have permission to modify world entities.",
-    noModifyEntityProps = "You do not have permission to modify properties on this entity.",
     noModifyProperty = "You do not have permission to modify this property.",
     noPickupRestricted = "You do not have permission to pick up restricted entities with the physgun.",
     noPickupVehicles = "You do not have permission to pick up vehicles with the physgun.",
