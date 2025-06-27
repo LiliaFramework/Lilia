@@ -814,4 +814,7 @@ LANGUAGE = {
     noPreviousSitroomPos = "No previous sitroom position found.",
     sitroomReturnSuccess = "Returned %s to their previous position.",
     sitroomReturned = "Returned to your previous position.",
+    TogglePropBlacklist = "Toggle Prop Blacklist",
+    addedToBlacklist = "Added to blacklist: %s",
+    removedFromBlacklist = "Removed from blacklist: %s",
 }
