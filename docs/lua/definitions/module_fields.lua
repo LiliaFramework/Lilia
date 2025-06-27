@@ -156,7 +156,7 @@
     path
 
     Description:
-        Absolute path to the module's root directory.
+        Path to the module's root directory used when including files.
 
     Type:
         string
