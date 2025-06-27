@@ -7,10 +7,7 @@
         Name = L("warnPlayer"),
         Category = "moderationTools",
         SubCategory = L("warnings"),
-        Icon = "icon16/error.png",
-        ExtraFields = {
-            [L("warning")] = "text"
-        }
+        Icon = "icon16/error.png"
     },
     onRun = function(client, arguments)
         local targetName = arguments[1]

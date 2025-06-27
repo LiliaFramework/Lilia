@@ -83,17 +83,15 @@
             Category    - top level grouping.
             SubCategory - secondary grouping.
             Icon        - 16x16 icon path.
-            ExtraFields - additional field definitions.
+            ExtraFields - (optional) legacy field definitions. Missing
+            arguments are now prompted automatically using the syntax string.
 
     Example Usage:
             AdminStick = {
                 Name = "Set Character Skin",
                 Category = "Player Informations",
                 SubCategory = "Set Informations",
-                Icon = "icon16/user_gray.png",
-                ExtraFields = {
-                    ["skin"] = "number"
-                }
+                Icon = "icon16/user_gray.png"
             }
 ]]
 

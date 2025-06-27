@@ -253,10 +253,7 @@ lia.command.add("doorsetprice", {
     privilege = "Manage Doors",
     AdminStick = {
         Name = "Set Door Price",
-        TargetClass = "Door",
-        ExtraFields = {
-            ["price"] = "text"
-        }
+        TargetClass = "Door"
     },
     onRun = function(client, arguments)
         local door = client:getTracedEntity()
@@ -281,10 +278,7 @@ lia.command.add("doorsettitle", {
     privilege = "Manage Doors",
     AdminStick = {
         Name = "Set Door Title",
-        TargetClass = "Door",
-        ExtraFields = {
-            ["title"] = "text"
-        }
+        TargetClass = "Door"
     },
     onRun = function(client, arguments)
         local door = client:getTracedEntity()

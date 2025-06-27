@@ -53,10 +53,7 @@ lia.command.add("resetallvendormoney", {
     syntax = "[number Amount]",
     AdminStick = {
         Name = L("resetAllVendorMoneyStickName"),
-        TargetClass = "lia_vendor",
-        ExtraFields = {
-            [L("amount")] = "text"
-        }
+        TargetClass = "lia_vendor"
     },
     onRun = function(client, arguments)
         local amount = tonumber(arguments[1])
@@ -82,10 +79,7 @@ lia.command.add("restockvendormoney", {
     syntax = "[number Amount]",
     AdminStick = {
         Name = L("restockVendorMoneyStickName"),
-        TargetClass = "lia_vendor",
-        ExtraFields = {
-            [L("amount")] = "text"
-        }
+        TargetClass = "lia_vendor"
     },
     onRun = function(client, arguments)
         local target = client:getTracedEntity()

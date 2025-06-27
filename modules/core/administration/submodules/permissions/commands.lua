@@ -795,10 +795,7 @@ lia.command.add("charsetspeed", {
         Name = L("adminStickSetCharSpeedName"),
         Category = "characterManagement",
         SubCategory = L("adminStickSubCategorySetInfos"),
-        Icon = "icon16/lightning.png",
-        ExtraFields = {
-            ["speed"] = "text"
-        }
+        Icon = "icon16/lightning.png"
     },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
@@ -821,10 +818,7 @@ lia.command.add("charsetmodel", {
         Name = L("adminStickSetCharModelName"),
         Category = "characterManagement",
         SubCategory = L("adminStickSubCategorySetInfos"),
-        Icon = "icon16/user_gray.png",
-        ExtraFields = {
-            ["model"] = "text"
-        }
+        Icon = "icon16/user_gray.png"
     },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
@@ -850,16 +844,7 @@ lia.command.add("chargiveitem", {
         Name = L("adminStickGiveItemName"),
         Category = "characterManagement",
         SubCategory = L("items"),
-        Icon = "icon16/user_gray.png",
-        ExtraFields = {
-            ["item"] = function()
-                local items = {}
-                for _, v in pairs(lia.item.list) do
-                    table.insert(items, v.name)
-                end
-                return items, "combo"
-            end
-        }
+        Icon = "icon16/user_gray.png"
     },
     onRun = function(client, arguments)
         local itemName = arguments[2]
@@ -915,10 +900,7 @@ lia.command.add("charsetdesc", {
         Name = L("adminStickSetCharDescName"),
         Category = "characterManagement",
         SubCategory = L("adminStickSubCategorySetInfos"),
-        Icon = "icon16/user_comment.png",
-        ExtraFields = {
-            ["desc"] = "text"
-        }
+        Icon = "icon16/user_comment.png"
     },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
@@ -948,10 +930,7 @@ lia.command.add("charsetname", {
         Name = L("adminStickSetCharNameName"),
         Category = "characterManagement",
         SubCategory = L("adminStickSubCategorySetInfos"),
-        Icon = "icon16/user_edit.png",
-        ExtraFields = {
-            ["newName"] = "text"
-        }
+        Icon = "icon16/user_edit.png"
     },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
@@ -976,10 +955,7 @@ lia.command.add("charsetscale", {
         Name = L("adminStickSetCharScaleName"),
         Category = "characterManagement",
         SubCategory = L("adminStickSubCategorySetInfos"),
-        Icon = "icon16/arrow_out.png",
-        ExtraFields = {
-            ["value"] = "text"
-        }
+        Icon = "icon16/arrow_out.png"
     },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
@@ -1003,10 +979,7 @@ lia.command.add("charsetjump", {
         Name = L("adminStickSetCharJumpName"),
         Category = "characterManagement",
         SubCategory = L("adminStickSubCategorySetInfos"),
-        Icon = "icon16/arrow_up.png",
-        ExtraFields = {
-            ["power"] = "text"
-        }
+        Icon = "icon16/arrow_up.png"
     },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
@@ -1059,10 +1032,7 @@ lia.command.add("charsetskin", {
         Name = L("adminStickSetCharSkinName"),
         Category = "characterManagement",
         SubCategory = L("adminStickSubCategorySetInfos"),
-        Icon = "icon16/user_gray.png",
-        ExtraFields = {
-            ["skin"] = "text"
-        }
+        Icon = "icon16/user_gray.png"
     },
     onRun = function(client, arguments)
         local name = arguments[1]
@@ -1187,10 +1157,7 @@ lia.command.add("forcesay", {
         Name = "Force Say",
         Category = "moderationTools",
         SubCategory = L("misc"),
-        Icon = "icon16/comments.png",
-        ExtraFields = {
-            ["message"] = "text"
-        }
+        Icon = "icon16/comments.png"
     },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])

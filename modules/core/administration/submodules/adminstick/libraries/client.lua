@@ -369,12 +369,10 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
     local ic = data.AdminStick.Icon or "icon16/page.png"
     m:AddOption(L(name), function()
         local id = GetIdentifier(tgt)
-        if data.AdminStick.ExtraFields and table.Count(data.AdminStick.ExtraFields) > 0 then
-            lia.command.openArgumentPrompt(key, data.AdminStick.ExtraFields, id ~= "" and id or nil)
-        else
-            if id ~= "" then cl:ConCommand("say /" .. key .. " " .. id) end
-            AdminStickIsOpen = false
-        end
+        local cmd = "say /" .. key
+        if id ~= "" then cmd = cmd .. " " .. id end
+        cl:ConCommand(cmd)
+        AdminStickIsOpen = false
     end):SetIcon(ic)
 end
 
