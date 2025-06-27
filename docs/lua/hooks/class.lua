@@ -20,6 +20,7 @@
             boolean – true if the player is permitted to switch to the class, false otherwise.
 
         Example Usage:
+            -- Only allow staff members or players with the "Z" flag to use this class.
             function CLASS:OnCanBe(client)
                 return client:isStaff() or client:getChar():hasFlags("Z")
             end
@@ -40,6 +41,7 @@
             None
 
         Example Usage:
+            -- Reset the player's model to Alyx when leaving this class.
             function CLASS:OnLeave(client)
                 local character = client:getChar()
                 character:setModel("models/player/alyx.mdl")
@@ -61,6 +63,7 @@
             None
 
         Example Usage:
+            -- Set the player's model to the police model upon joining this class.
             function CLASS:OnSet(client)
                 client:setModel("models/police.mdl")
             end
@@ -81,6 +84,7 @@
             None
 
         Example Usage:
+            -- Spawn the player with increased health when they join this class.
             function CLASS:OnSpawn(client)
                 client:SetMaxHealth(500)
                 client:SetHealth(500)
@@ -104,6 +108,7 @@
             None
 
         Example Usage:
+            -- Output the player's name and previous class after switching.
             function CLASS:OnTransferred(client, oldClass)
                 print(client:Name(), "switched from class", oldClass)
             end

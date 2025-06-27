@@ -1169,6 +1169,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PersistenceSave", "Notice", function()
                 print("Saving persistent entities")
             end)
@@ -1212,6 +1213,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("LoadData", "LoadExtras", function()
                 print("Loading custom data")
             end)
@@ -1233,6 +1235,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PostLoadData", "Ready", function()
                 print("Data fully loaded")
             end)
@@ -1277,6 +1280,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnCharDisconnect", "Goodbye", function(ply, char)
                 print(char:getName(), "has left")
             end)
@@ -1298,6 +1302,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("SetupBotPlayer", "WelcomeBot", function(bot)
                 bot:ChatPrint("Beep boop!")
             end)
@@ -1319,6 +1324,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PlayerLiliaDataLoaded", "SendWelcome", function(ply)
                 ply:ChatPrint("Data loaded")
             end)
@@ -1340,6 +1346,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PostPlayerInitialSpawn", "Greet", function(ply)
                 print("Hello", ply:Nick())
             end)
@@ -1361,6 +1368,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("FactionOnLoadout", "GiveRadio", function(ply)
                 if ply:getChar():getFaction() == "police" then
                     ply:Give("weapon_radio")
@@ -1384,6 +1392,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("ClassOnLoadout", "MedicItems", function(ply)
                 if ply:getChar():getClass() == "medic" then
                     ply:Give("medkit")
@@ -1407,6 +1416,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PostPlayerLoadout", "SetColor", function(ply)
                 ply:SetPlayerColor(Vector(0,1,0))
             end)
@@ -1428,6 +1438,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("FactionPostLoadout", "Shout", function(ply)
                 if ply:getChar():getFaction() == "soldier" then
                     ply:EmitSound("npc/combine_soldier/gear6.wav")
@@ -1451,6 +1462,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("ClassPostLoadout", "Pose", function(ply)
                 ply:ConCommand("act muscle")
             end)
@@ -1472,6 +1484,7 @@
             string – Inventory type
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("GetDefaultInventoryType", "UseGrid", function()
                 return "GridInv"
             end)
@@ -1493,6 +1506,7 @@
             boolean – True to delete items
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("ShouldDeleteSavedItems", "ClearDrops", function()
                 return false
             end)
@@ -1514,6 +1528,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnSavedItemLoaded", "PrintCount", function(items)
                 print("Loaded", #items, "items")
             end)
@@ -1535,6 +1550,7 @@
             boolean – False to hide info
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("ShouldDrawEntityInfo", "HideNPCs", function(ent)
                 if ent:IsNPC() then return false end
             end)
@@ -1558,6 +1574,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("DrawEntityInfo", "LabelProps", function(ent, a, pos)
                 draw.SimpleText(ent:GetClass(), "DermaDefault", pos.x, pos.y, Color(255,255,255,a))
             end)
@@ -1579,6 +1596,7 @@
             table – {text, color} info
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("GetInjuredText", "SimpleHealth", function(ply)
                 if ply:Health() <= 20 then return {"Critical", Color(255,0,0)} end
             end)
@@ -1600,6 +1618,7 @@
             boolean – False to hide info
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("ShouldDrawPlayerInfo", "HideLocal", function(ply)
                 if ply == LocalPlayer() then return false end
             end)
@@ -1623,6 +1642,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("DrawCharInfo", "JobTitle", function(ply, char, info)
                 info[#info + 1] = {"Job: " .. (char:getClass() or "None")}
             end)
@@ -1644,6 +1664,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("ItemShowEntityMenu", "QuickTake", function(ent)
                 print("Opening menu for", ent)
             end)
@@ -1665,6 +1686,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PreLiliaLoaded", "Prep", function()
                 print("About to finish loading")
             end)
@@ -1686,6 +1708,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("LiliaLoaded", "Ready", function()
                 print("Lilia client ready")
             end)
@@ -1710,6 +1733,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("InventoryDataChanged", "TrackWeight", function(inv, k, old, new)
                 if k == "weight" then print("Weight changed to", new) end
             end)
@@ -1731,6 +1755,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("ItemInitialized", "PrintID", function(item)
                 print("Created item", item.uniqueID)
             end)
@@ -1752,6 +1777,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("InventoryInitialized", "AnnounceInv", function(inv)
                 print("Inventory", inv:getID(), "ready")
             end)
@@ -1774,6 +1800,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("InventoryItemAdded", "NotifyAdd", function(inv, item)
                 print("Added", item.name)
             end)
@@ -1796,6 +1823,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("InventoryItemRemoved", "NotifyRemove", function(inv, item)
                 print("Removed", item.name)
             end)
@@ -1817,6 +1845,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("InventoryDeleted", "Clear", function(inv)
                 print("Inventory", inv:getID(), "deleted")
             end)
@@ -1838,6 +1867,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("ItemDeleted", "Log", function(item)
                 print("Item", item.uniqueID, "gone")
             end)
@@ -1862,6 +1892,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnCharVarChanged", "WatchMoney", function(char, k, old, new)
                 if k == "money" then print("Money changed", new) end
             end)
@@ -1886,6 +1917,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnCharLocalVarChanged", "WatchFlags", function(char, k, old, new)
                 if k == "flags" then print("Flags changed") end
             end)
@@ -1910,6 +1942,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("ItemDataChanged", "TrackDurability", function(item, key)
                 if key == "durability" then print("New durability", item.data[key]) end
             end)
@@ -1933,6 +1966,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("ItemQuantityChanged", "CountStacks", function(item, old, new)
                 print("Quantity now", new)
             end)
@@ -1955,6 +1989,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("KickedFromChar", "Notify", function(id, current)
                 print("Kicked from", id, current and "(current)" or "")
             end)
@@ -1980,6 +2015,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("HandleItemTransferRequest", "LogMove", function(ply, itemID, x, y)
                 print(ply, "moved item", itemID, "to", x, y)
             end)
@@ -2001,6 +2037,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CharLoaded", "Notify", function(id)
                 print("Character", id, "loaded")
             end)
@@ -2022,6 +2059,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PreCharDelete", "Protect", function(id)
                 if id == 1 then return false end
             end)
@@ -2044,6 +2082,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnCharDelete", "Announce", function(ply, id)
                 print(ply, "deleted char", id)
             end)
@@ -2067,6 +2106,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnCharCreated", "Welcome", function(ply, char)
                 print("Created", char:getName())
             end)
@@ -2088,6 +2128,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnTransferred", "Goodbye", function(ply)
                 print(ply, "left the server")
             end)
@@ -2109,6 +2150,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CharPreSave", "Record", function(char)
                 char:setData("lastSave", os.time())
             end)
@@ -2130,6 +2172,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CharListLoaded", "CountChars", function(list)
                 print("Loaded", #list, "characters")
             end)
@@ -2152,6 +2195,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CharListUpdated", "Diff", function(old, new)
                 print("Characters updated")
             end)
@@ -2173,6 +2217,7 @@
             None
 
         Example Usage:
+        -- Example snippet demonstrating usage
         hook.Add("getCharMaxStamina", "Double", function(char)
             return 200
         end)
@@ -2195,6 +2240,7 @@
             number – Modified stamina cost.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("AdjustStaminaOffsetRunning", "EnduranceBonus", function(ply, cost)
                 return cost + ply:getChar():getAttrib("stamina", 0) * -0.01
             end)
@@ -2217,6 +2263,7 @@
             number – Modified regeneration amount.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("AdjustStaminaRegeneration", "RestAreaBoost", function(ply, amount)
                 if ply:isInSafeZone() then
                     return amount * 2
@@ -2241,6 +2288,7 @@
             number – New offset to apply.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("AdjustStaminaOffset", "MinimumDrain", function(ply, off)
                 return math.max(off, -1)
             end)
@@ -2263,6 +2311,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PostLoadFonts", "LogoFont", function()
                 surface.CreateFont("Logo", {size = 32, font = "Tahoma"})
             end)
@@ -4182,6 +4231,7 @@
             bool
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CanPlayerEarnSalary", "RestrictSalaryToActivePlayers", function(client, faction, class)
                 if not client:isActive() then
                     return false -- Inactive players do not earn salary
@@ -4207,6 +4257,7 @@
             bool|nil: false to block, nil to allow.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CanPlayerJoinClass", "RestrictEliteClass", function(client, class, info)
                 if class == CLASS_ELITE and not client:hasPermission("join_elite") then
                     return false
@@ -4230,6 +4281,7 @@
             bool|nil: false to block, nil to allow.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CanPlayerUseCommand", "BlockSensitiveCommands", function(client, command)
                 local blockedCommands = {"shutdown", "restart"}
                 if table.HasValue(blockedCommands, command) and not client:isSuperAdmin() then
@@ -4255,6 +4307,7 @@
             bool: false to block, nil or true to allow.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CanPlayerUseDoor", "AllowOnlyOwners", function(client, door, access)
                 if access == DOOR_LOCK and door:getOwner() ~= client then
                     return false -- Only the owner can lock the door
@@ -4278,6 +4331,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CharCleanUp", "RemoveTemporaryItems", function(character)
                 local inventory = character:getInv()
                 for _, item in ipairs(inventory:getItems()) do
@@ -4304,6 +4358,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CharRestored", "AwardWelcomePackage", function(character)
                 local welcomePackage = {"welcome_pack", "starter_weapon", "basic_armor"}
                 for _, itemID in ipairs(welcomePackage) do
@@ -4328,6 +4383,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CreateDefaultInventory", "InitializeStarterInventory", function(character)
                 local d = deferred.new()
 
@@ -4362,6 +4418,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CreateInventoryPanel", "CustomInventoryUI", function(inventory, parent)
                 local panel = vgui.Create("DPanel", parent)
                 panel:SetSize(400, 600)
@@ -4401,6 +4458,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CreateSalaryTimer", "SetupSalaryTimer", function(client)
                 timer.Create("SalaryTimer_" .. client:SteamID(), 60, 0, function()
                     if IsValid(client) and MODULE:CanPlayerEarnSalary(client, client:getFaction(), client:getClass()) then
@@ -4430,6 +4488,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("DoModuleIncludes", "TrackModuleDependencies", function(path, module)
                 print("Including submodule from path:", path)
                 module.dependencies = module.dependencies or {}
@@ -4454,6 +4513,7 @@
             bool: Whether to override.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("GetDefaultCharDesc", "CitizenDefaultDesc", function(client, faction)
                 if faction == FACTION_CITIZEN then
                     return "A hardworking member of society.", true
@@ -4479,6 +4539,7 @@
             bool: Whether to override the user-provided name.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("GetDefaultCharName", "PoliceDefaultName", function(client, faction, data)
                 if faction == FACTION_POLICE then
                     return "Officer " .. data.lastName or "Smith", true
@@ -4503,6 +4564,7 @@
             any: The salary amount
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("GetSalaryAmount", "CalculateDynamicSalary", function(client, faction, class)
                 local baseSalary = faction.baseSalary or 1000
                 local classBonus = class.salaryBonus or 0
@@ -4527,6 +4589,7 @@
             any: The salary limit
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("GetSalaryLimit", "SetSalaryLimitsBasedOnRole", function(client, faction, class)
                 if faction.name == "Police" then
                     return 5000 -- Police have a higher salary limit
@@ -4551,6 +4614,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             function MODULE:InitializedConfig()
                 if lia.config.enableSpecialFeatures then
                     lia.features.enable()
@@ -4576,6 +4640,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("InitializedItems", "SetupSpecialItems", function()
                 local specialItem = lia.item.create({
                     uniqueID = "magic_ring",
@@ -4605,6 +4670,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("InitializedModules", "FinalizeModuleSetup", function()
                 lia.modules.finalizeSetup()
                 print("All modules have been fully initialized.")
@@ -4626,6 +4692,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             function MODULE:InitializedOptions()
                LocalPlayer():ChatPrint("LOADED OPTIONS!")
             end
@@ -4646,6 +4713,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("InitializedSchema", "SchemaReadyNotification", function()
                 print("Schema has been successfully initialized.")
                 lia.notifications.broadcast("Welcome to the server! The schema is now active.")
@@ -4669,6 +4737,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("KeyLock", "LogDoorLock", function(owner, entity, time)
                 entity:setLocked(true)
                 lia.log.write("DoorLock", owner:Name() .. " locked door ID: " .. entity:EntIndex() .. " for " .. time .. " seconds.")
@@ -4693,6 +4762,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("KeyUnlock", "LogDoorUnlock", function(owner, entity, time)
                 entity:setLocked(false)
                 lia.log.write("DoorUnlock", owner:Name() .. " unlocked door ID: " .. entity:EntIndex() .. " after " .. time .. " seconds.")
@@ -4715,6 +4785,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("LiliaTablesLoaded", "InitializeGameState", function()
                 lia.gameState = lia.gameState or {}
                 lia.gameState.activeEvents = {}
@@ -4737,6 +4808,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnItemRegistered", "AddItemDurability", function(item)
                 if item.uniqueID == "sword_basic" then
                     item.durability = 100
@@ -4767,6 +4839,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnLoadTables", "SetupFactionDefaults", function()
                 lia.factions = lia.factions or {}
                 lia.factions.defaultPermissions = {canUseWeapons = true, canAccessBank = false}
@@ -4789,6 +4862,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnMySQLOOConnected", "PrepareDatabaseStatements", function()
                 lia.db.prepare("insertPlayer", "INSERT INTO lia_players (_steamID, _steamName) VALUES (?, ?)", {MYSQLOO_STRING, MYSQLOO_STRING})
                 lia.db.prepare("updatePlayerStats", "UPDATE lia_players SET kills = ?, deaths = ? WHERE _steamID = ?", {MYSQLOO_NUMBER, MYSQLOO_NUMBER, MYSQLOO_STRING})
@@ -4814,6 +4888,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnPlayerPurchaseDoor", "HandleDoorPurchase", function(client, entity, buying, CallOnDoorChild)
                 if buying then
                     client:deductMoney(entity:getPrice())
@@ -4847,6 +4922,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnServerLog", "AlertAdminsOnHighSeverity", function(client, logType, logString, category, color)
                 if category == "error" then
                 for _, admin in player.Iterator() do
@@ -4873,6 +4949,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnWipeTables", "ReinitializeDefaults", function()
                 lia.db.execute("INSERT INTO lia_factions (name, description) VALUES ('Citizen', 'Regular inhabitants.')")
                 lia.db.execute("INSERT INTO lia_classes (name, faction) VALUES ('Warrior', 'Citizen')")
@@ -4898,6 +4975,7 @@
             bool|nil|modifiedString: false to cancel, or return a modified string to change the message.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PlayerMessageSend", "FilterProfanity", function(speaker, chatType, message, anonymous)
                 local filteredMessage = string.gsub(message, "badword", "****")
                 if filteredMessage ~= message then
@@ -4922,6 +5000,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PlayerModelChanged", "UpdatePlayerAppearance", function(client, model)
                 print(client:Name() .. " changed their model to " .. model)
                 -- Update related appearance settings
@@ -4945,6 +5024,7 @@
             bool|nil: false to disallow, true to allow, or nil to let other hooks decide.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PlayerUseDoor", "LogDoorUsage", function(client, entity)
                 print(client:Name() .. " is attempting to use door ID:", entity:EntIndex())
                 -- Allow or disallow based on custom conditions
@@ -4969,6 +5049,7 @@
             None
 
         Example Usage:
+-- Example snippet demonstrating usage
 ]]
 --[[
         ShouldBarDraw(barName)
@@ -4986,6 +5067,7 @@
             bool|nil: false to hide, nil to allow.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("ShouldBarDraw", "HideArmorHUD", function(barName)
                 if barName == "armor" then
                     return false
@@ -5008,6 +5090,7 @@
             bool (true if 3rd-person should be disabled)
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("ShouldDisableThirdperson", "DisableForInvisibles", function(client)
                 if client:isInvisible() then
                     return true -- Disable third-person view when invisible
@@ -5030,6 +5113,7 @@
             bool|nil: true to hide, nil to allow rendering.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("ShouldHideBars", "HideHUDInCinematic", function()
                 if gui.IsInCinematicMode() then
                     return true
@@ -5052,6 +5136,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("thirdPersonToggled", "NotifyThirdPersonChange", function(state)
                 if state then
                     chat.AddText(Color(0,255,0), "Third-person view enabled.")
@@ -5133,6 +5218,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("F1OnAddBarField", "TrackBars", function(section, name)
                 print("Added bar", name)
             end)
@@ -5153,6 +5239,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CreateInformationButtons", "AddHelpPage", function(pages)
                 table.insert(pages, {name = "Help", drawFunc = function(parent) end})
             end)
@@ -5173,6 +5260,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PopulateConfigurationButtons", "AddControlsPage", function(pages)
                 table.insert(pages, {name = "Controls", drawFunc = function(p) end})
             end)
@@ -5193,6 +5281,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("InitializedKeybinds", "NotifyKeybinds", function()
                 chat.AddText("Keybinds loaded")
             end)
@@ -5213,6 +5302,7 @@
             number|nil – Custom cooldown in seconds.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("getOOCDelay", "AdminOOC", function(ply)
                 if ply:IsAdmin() then
                     return 5
@@ -5239,6 +5329,7 @@
             string|nil – Replacement text.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnChatReceived", "CensorChat", function(ply, type, msg)
                 return msg:gsub("badword", "****")
             end)
@@ -5260,6 +5351,7 @@
             table|nil – Adjusted part data.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("getAdjustedPartData", "DebugParts", function(ply, partID)
                 print("Requesting part", partID)
             end)
@@ -5282,6 +5374,7 @@
             table|nil – Modified data table.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("AdjustPACPartData", "ColorParts", function(ply, partID, d)
                 d.Color = Vector(1,0,0)
                 return d
@@ -5304,6 +5397,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("attachPart", "AnnouncePart", function(ply, partID)
                 print(ply, "received part", partID)
             end)
@@ -5325,6 +5419,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("removePart", "LogPartRemoval", function(ply, partID)
                 print(partID, "removed from", ply)
             end)
@@ -5345,6 +5440,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnPAC3PartTransfered", "TrackTransfers", function(p)
                 print("Part transferred", p)
             end)
@@ -5365,6 +5461,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("DrawPlayerRagdoll", "TintRagdoll", function(ent)
                 render.SetColorModulation(1,0,0)
             end)
@@ -5385,6 +5482,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("setupPACDataFromItems", "InitPAC", function()
                 print("Equipped PAC data loaded")
             end)
@@ -5405,6 +5503,7 @@
             Entity – Replacement entity.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("TryViewModel", "UsePlayerViewModel", function(ent)
                 return ent == LocalPlayer():GetViewModel() and LocalPlayer() or ent
             end)
@@ -5426,6 +5525,7 @@
             number|nil – Playback pitch.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("WeaponCycleSound", "SilentCycle", function()
                 return "buttons/button15.wav", 100
             end)
@@ -5447,6 +5547,7 @@
             number|nil – Playback pitch.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("WeaponSelectSound", "CustomSelectSound", function()
                 return "buttons/button24.wav", 90
             end)
@@ -5467,6 +5568,7 @@
             boolean
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("ShouldDrawWepSelect", "HideInVehicles", function(ply)
                 return not ply:InVehicle()
             end)
@@ -5487,6 +5589,7 @@
             boolean|nil – false to block selection.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CanPlayerChooseWeapon", "BlockPhysgun", function(wep)
                 if IsValid(wep) and wep:GetClass() == "weapon_physgun" then
                     return false
@@ -5510,6 +5613,7 @@
             number|nil – New respawn time.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OverrideSpawnTime", "ShortRespawns", function(ply, time)
                 if ply:IsAdmin() then return 2 end
             end)
@@ -5530,6 +5634,7 @@
             boolean|nil – false to hide.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("ShouldRespawnScreenAppear", "NoRespawnHUD", function()
                 return false
             end)
@@ -5550,6 +5655,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("VoiceToggled", "AnnounceVoice", function(state)
                 print("Voice chat set to", state)
             end)
@@ -5570,6 +5676,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("RefreshFonts", "ReloadFonts", function()
                 print("Fonts refreshed")
             end)
@@ -5593,6 +5700,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("AdjustCreationData", "EnforceName", function(ply, data, newData)
                 if data.name == "" then newData.name = "Unnamed" end
             end)
@@ -5615,6 +5723,7 @@
             bool|nil – false to block.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CanCharBeTransfered", "BlockRestrictedFactions", function(char, faction)
                 if faction.isRestricted then return false end
             end)
@@ -5636,6 +5745,7 @@
             bool|nil – false to deny.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CanPlayerUseChar", "CheckBans", function(ply, char)
                 if char:isBanned() then return false, "Character banned" end
             end)
@@ -5658,6 +5768,7 @@
             bool|nil – false to block the switch.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CanPlayerSwitchChar", "NoSwitchInCombat", function(ply)
                 if ply:isInCombat() then return false end
             end)
@@ -5679,6 +5790,7 @@
             bool|nil – false to disallow.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CanPlayerLock", "AdminsAlwaysLock", function(ply)
                 if ply:IsAdmin() then return true end
             end)
@@ -5700,6 +5812,7 @@
             bool|nil – false to disallow.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CanPlayerUnlock", "AdminsAlwaysUnlock", function(ply)
                 if ply:IsAdmin() then return true end
             end)
@@ -5721,6 +5834,7 @@
             bool|nil – false to deny modification.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CanPlayerModifyConfig", "RestrictConfig", function(ply, k)
                 return ply:IsSuperAdmin()
             end)
@@ -5742,6 +5856,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CharDeleted", "LogDeletion", function(ply, char)
                 print(ply:Name(), "deleted character", char:getName())
             end)
@@ -5764,6 +5879,7 @@
             boolean
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("CheckFactionLimitReached", "IgnoreAdmins", function(faction, char, ply)
                 if ply:IsAdmin() then
                     return false
@@ -5789,6 +5905,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("F1OnAddSection", "PrintSection", function(name)
                 print("Added section", name)
             end)
@@ -5809,6 +5926,7 @@
             string|nil – Replacement name.
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("GetWeaponName", "UppercaseName", function(wep)
                 return wep:GetClass():upper()
             end)
@@ -5830,6 +5948,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnCharGetup", "NotifyGetup", function(ply)
                 ply:ChatPrint("You stood up")
             end)
@@ -5850,6 +5969,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnLocalizationLoaded", "PrintLang", function()
                 print("Localization ready")
             end)
@@ -5871,6 +5991,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("OnPlayerObserve", "AnnounceObserve", function(ply, s)
                 print(ply, s and "entered" or "left", "observe mode")
             end)
@@ -5893,6 +6014,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PlayerLoadedChar", "WelcomeBack", function(ply, char)
                 ply:ChatPrint("Welcome, " .. char:getName())
             end)
@@ -5915,6 +6037,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PrePlayerLoadedChar", "SaveStuff", function(ply, new, old)
                 print("Switching characters")
             end)
@@ -5937,6 +6060,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PostPlayerLoadedChar", "GiveItems", function(ply, char)
                 -- Give starter items here
             end)
@@ -5958,6 +6082,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PlayerSay", "LogChat", function(ply, msg)
                 print(ply:Name() .. ": " .. msg)
             end)
@@ -5979,6 +6104,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("PopulateAdminStick", "AddCustomOption", function(menu, ent)
                 menu:AddOption("Wave", function() RunConsoleCommand("act", "wave") end)
             end)
@@ -6000,6 +6126,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("TicketSystemClaim", "NotifyClaim", function(staff, ply)
                 staff:ChatPrint("Claimed ticket from " .. ply:Name())
             end)
@@ -6022,6 +6149,7 @@
             None
 
         Example Usage:
+            -- Example snippet demonstrating usage
             hook.Add("liaOptionReceived", "PrintOptionChange", function(_, k, v)
                 print("Option", k, "set to", v)
             end)

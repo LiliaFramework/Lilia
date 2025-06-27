@@ -20,6 +20,7 @@
             string – Default name text.
 
         Example Usage:
+            -- Creates a clone trooper style name for new characters.
             function FACTION:GetDefaultName(client)
                 return "CT-" .. math.random(111111, 999999)
             end
@@ -40,6 +41,7 @@
             string – Default description text.
 
         Example Usage:
+            -- Provides a simple police-themed description.
             function FACTION:GetDefaultDesc(client)
                 return "A police officer"
             end
@@ -61,6 +63,7 @@
             None
 
         Example Usage:
+            -- Adds a fancy suit to the character's inventory when created.
             function FACTION:OnCharCreated(client, character)
                 local inventory = character:getInv()
                 inventory:add("fancy_suit")
@@ -82,6 +85,7 @@
             None
 
         Example Usage:
+            -- Notify the player in chat after spawning.
             function FACTION:OnSpawn(client)
                 client:ChatPrint("You have spawned!")
             end
@@ -102,6 +106,7 @@
             None
 
         Example Usage:
+            -- Randomize the player's model when switching to this faction.
             function FACTION:OnTransferred(client)
                 local randomModelIndex = math.random(1, #self.models)
                 client:getChar():setModel(self.models[randomModelIndex])
