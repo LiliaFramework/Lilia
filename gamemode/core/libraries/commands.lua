@@ -97,6 +97,63 @@ function lia.command.extractArgs(text)
     return arguments
 end
 
+-- Parses a command syntax string into an ordered list of fields.
+-- Each field is returned as {name = <string>, type = <string>}.
+function lia.command.parseSyntaxFields(syntax)
+    local fields = {}
+    if not syntax or syntax == "" then return fields end
+    for token in syntax:gmatch("%b[]") do
+        local inner = token:sub(2, -2)
+        local typ, name = inner:match("^(%S+)%s+(%S+)$")
+        if name then
+            typ = typ:lower()
+            if typ == "string" then
+                typ = "text"
+            elseif typ == "number" then
+                typ = "number"
+            elseif typ == "bool" or typ == "boolean" then
+                typ = "boolean"
+            end
+        else
+            name = inner
+            typ = "text"
+        end
+
+        fields[#fields + 1] = {name = name, type = typ}
+    end
+
+    return fields
+end
+
+-- Combines arguments split within brackets back into a single token.
+local function combineBracketArgs(args)
+    local result = {}
+    local buffer
+    for _, a in ipairs(args) do
+        if buffer then
+            buffer = buffer .. " " .. a
+            if a:sub(-1) == "]" then
+                result[#result + 1] = buffer
+                buffer = nil
+            end
+        elseif a:sub(1, 1) == "[" and a:sub(-1) ~= "]" then
+            buffer = a
+            if a:sub(-1) == "]" then
+                result[#result + 1] = buffer
+                buffer = nil
+            end
+        else
+            result[#result + 1] = a
+        end
+    end
+    if buffer then result[#result + 1] = buffer end
+    return result
+end
+
+local function isPlaceholder(arg)
+    return isstring(arg) and arg:sub(1, 1) == "[" and arg:sub(-1) == "]"
+end
+
 if SERVER then
     function lia.command.run(client, command, arguments)
         local commandTbl = lia.command.list[command:lower()]
@@ -130,6 +187,31 @@ if SERVER then
             local command = lia.command.list[match]
             if command then
                 if not arguments then arguments = lia.command.extractArgs(text:sub(#match + 3)) end
+
+                local fields = lia.command.parseSyntaxFields(command.syntax)
+                if IsValid(client) and client:IsPlayer() and #fields > 0 then
+                    local tokens = combineBracketArgs(arguments)
+                    local missing = {}
+                    local prefix = {}
+                    for i, field in ipairs(fields) do
+                        local arg = tokens[i]
+                        if not arg or isPlaceholder(arg) then
+                            missing[field.name] = field.type
+                        else
+                            prefix[#prefix + 1] = arg
+                        end
+                    end
+
+                    if table.Count(missing) > 0 then
+                        net.Start("liaCmdArgPrompt")
+                        net.WriteString(match)
+                        net.WriteTable(missing)
+                        net.WriteTable(prefix)
+                        net.Send(client)
+                        return true
+                    end
+                end
+
                 lia.command.run(client, match, arguments)
                 if not realCommand then lia.log.add(client, "command", text) end
             else
@@ -172,12 +254,13 @@ else
 
                     inputs[name] = combo
                 end
-            elseif typ == "text" then
+            elseif typ == "text" or typ == "number" then
                 local textEntry = vgui.Create("DTextEntry", frame)
                 textEntry:SetPos(100, y)
                 textEntry:SetSize(300, 30)
                 textEntry:SetFont("DermaDefault")
                 textEntry:SetPaintBackground(true)
+                if typ == "number" and textEntry.SetNumeric then textEntry:SetNumeric(true) end
                 inputs[name] = textEntry
             elseif typ == "boolean" then
                 local checkBox = vgui.Create("DCheckBox", frame)
@@ -201,7 +284,7 @@ else
                 local value
                 if isfunction(typ) then
                     value = inputs[key]:GetSelected()
-                elseif typ == "text" then
+                elseif typ == "text" or typ == "number" then
                     value = inputs[key]:GetValue()
                 elseif typ == "boolean" then
                     value = inputs[key]:GetChecked() and "1" or "0"
@@ -243,8 +326,18 @@ else
         end
     end
 
+    net.Receive("liaCmdArgPrompt", function()
+        local cmd = net.ReadString()
+        local fields = net.ReadTable()
+        local prefix = net.ReadTable()
+        lia.command.openArgumentPrompt(cmd, fields, prefix)
+    end)
+
     function lia.command.send(command, ...)
-        netstream.Start("cmd", command, {...})
+        net.Start("cmd")
+        net.WriteString(command)
+        net.WriteTable({...})
+        net.SendToServer()
     end
 end
 
