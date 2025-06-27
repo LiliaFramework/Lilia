@@ -1,7 +1,7 @@
 --[[
-    This file documents ATTRIBUTE fields defined within the codebase.
+        This file documents ATTRIBUTE fields defined within the codebase.
 
-    Generated automatically.
+        Generated automatically.
 ]]
 
 --[[
@@ -58,7 +58,9 @@
         ATTRIBUTE:OnSetup(client, value)
 
         Description:
-            Executes custom logic when the attribute is set up for a player, such as notifications or additional effects.
+            Runs custom logic when the attribute is initialized on a player,
+            for example after character load or whenever the attribute
+            value is modified.
 
         Example Usage:
             function ATTRIBUTE:OnSetup(client, value)
