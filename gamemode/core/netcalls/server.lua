@@ -67,7 +67,9 @@ netstream.Hook("invAct", function(client, action, item, _, data)
     item:interact(action, client, entity, data)
 end)
 
-netstream.Hook("cmd", function(client, command, arguments)
+net.Receive("cmd", function(len, client)
+    local command = net.ReadString()
+    local arguments = net.ReadTable()
     if (client.liaNextCmd or 0) < CurTime() then
         local arguments2 = {}
         for _, v in ipairs(arguments) do

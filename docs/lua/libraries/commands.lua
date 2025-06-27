@@ -35,7 +35,7 @@
 ]]
 
 --[[
-   lia.command.extractArgs
+  lia.command.extractArgs
 
    Description:
       Splits the provided text into arguments, respecting quotes.
@@ -54,7 +54,28 @@
         -- This snippet demonstrates a common usage of lia.command.extractArgs
       local args = lia.command.extractArgs('/mycommand "quoted arg" anotherArg')
       -- args = {"quoted arg", "anotherArg"}
-]]
+]] 
+
+--[[
+  lia.command.parseSyntaxFields
+
+  Description:
+     Parses a command syntax string into an ordered list of field tables.
+     Each field contains a name and a type derived from the syntax.
+
+  Parameters:
+     syntax (string) - The syntax string, e.g. "[string name] [number time]".
+
+  Returns:
+     table - List of fields in call order.
+
+  Realm:
+     Shared
+
+  Example Usage:
+        -- Extract field data from a syntax string
+        local fields = lia.command.parseSyntaxFields("[string name] [number time]")
+  ]]
 
     --[[
       lia.command.run
@@ -104,11 +125,11 @@
    ]]
 
     --[[
-      lia.command.send
+  lia.command.send
 
       Description:
-         Sends a command (and optional arguments) from the client to the server using netstream.
-         The server will then execute the command.
+         Sends a command (and optional arguments) from the client to the server using the
+         Garry's Mod net library. The server will then execute the command.
 
       Parameters:
          command (string) - The name of the command to send.
@@ -123,4 +144,23 @@
       Example Usage:
         -- This snippet demonstrates a common usage of lia.command.send
          lia.command.send("mycommand", "arg1", "arg2")
-   ]]
+  ]]
+
+--[[
+  lia.command.openArgumentPrompt
+
+  Description:
+     Opens a window asking the player to fill in any arguments that were
+     omitted or left as placeholders when running a chat command.
+
+  Parameters:
+     cmd (string) - The command name.
+     fields (table) - Table of field names to their types.
+     prefix (table) - Arguments that were already supplied before the prompt.
+
+  Returns:
+     nil
+
+  Realm:
+     Client
+]]
