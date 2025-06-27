@@ -1,0 +1,352 @@
+--[[
+    Create()
+
+    Description:
+        Creates a new tool object with default values.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Returns:
+        table – The newly created tool object.
+
+    Example Usage:
+        local tool = ToolGunMeta:Create()
+]]
+--[[
+    CreateConVars()
+
+    Description:
+        Creates client and server ConVars for this tool.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+        tool:CreateConVars()
+]]
+--[[
+    GetServerInfo(property)
+
+    Description:
+        Returns the server ConVar for the given property.
+
+    Parameters:
+        property (string) – Property name.
+
+    Realm:
+        Shared
+
+    Returns:
+        ConVar – The server ConVar object.
+
+    Example Usage:
+        local allow = tool:GetServerInfo("allow_use"):GetBool()
+]]
+--[[
+    BuildConVarList()
+
+    Description:
+        Returns a table of client ConVars prefixed by the tool mode.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Returns:
+        table – Table of convars.
+
+    Example Usage:
+        local cvars = tool:BuildConVarList()
+]]
+--[[
+    GetClientInfo(property)
+
+    Description:
+        Retrieves a client ConVar value as a string.
+
+    Parameters:
+        property (string) – ConVar name without mode prefix.
+
+    Realm:
+        Shared
+
+    Returns:
+        string – The value stored in the ConVar.
+
+    Example Usage:
+        local val = tool:GetClientInfo("setting")
+]]
+--[[
+    GetClientNumber(property, default)
+
+    Description:
+        Retrieves a numeric client ConVar value.
+
+    Parameters:
+        property (string) – ConVar name without mode prefix.
+        default (number) – Value returned if the ConVar doesn't exist.
+
+    Realm:
+        Shared
+
+    Returns:
+        number – The numeric value of the ConVar.
+
+    Example Usage:
+        local power = tool:GetClientNumber("power", 10)
+]]
+--[[
+    Allowed()
+
+    Description:
+        Determines whether this tool is allowed to be used.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Returns:
+        boolean – True if the tool is allowed.
+
+    Example Usage:
+        if tool:Allowed() then print("ok") end
+]]
+--[[
+    Init()
+
+    Description:
+        Placeholder for tool initialization.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+        local result = tool:Init()
+]]
+--[[
+    GetMode()
+
+    Description:
+        Gets the current tool mode string.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Returns:
+        string – Tool mode name.
+
+    Example Usage:
+        local result = tool:GetMode()
+]]
+--[[
+    GetSWEP()
+
+    Description:
+        Returns the SWEP associated with this tool.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Returns:
+        SWEP – The tool's weapon entity.
+
+    Example Usage:
+        local result = tool:GetSWEP()
+]]
+--[[
+    GetOwner()
+
+    Description:
+        Retrieves the tool owner's player object.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Returns:
+        Player – Owner of the tool.
+
+    Example Usage:
+        local result = tool:GetOwner()
+]]
+--[[
+    GetWeapon()
+
+    Description:
+        Retrieves the weapon entity this tool is attached to.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Returns:
+        Weapon – The weapon object.
+
+    Example Usage:
+        local result = tool:GetWeapon()
+]]
+--[[
+    LeftClick()
+
+    Description:
+        Handles the left-click action. Override for custom behavior.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Returns:
+        boolean – False by default.
+
+    Example Usage:
+        local result = tool:LeftClick()
+]]
+--[[
+    RightClick()
+
+    Description:
+        Handles the right-click action. Override for custom behavior.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Returns:
+        boolean – False by default.
+
+    Example Usage:
+        local result = tool:RightClick()
+]]
+--[[
+    Reload()
+
+    Description:
+        Clears stored objects when the tool reloads.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+        local result = tool:Reload()
+]]
+--[[
+    Deploy()
+
+    Description:
+        Called when the tool is equipped. Releases ghost entity.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+        local result = tool:Deploy()
+]]
+--[[
+    Holster()
+
+    Description:
+        Called when the tool is holstered. Releases ghost entity.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+        local result = tool:Holster()
+]]
+--[[
+    Think()
+
+    Description:
+        Called every tick; releases ghost entities by default.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+        local result = tool:Think()
+]]
+--[[
+    CheckObjects()
+
+    Description:
+        Validates stored objects and clears them if invalid.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+        local result = tool:CheckObjects()
+]]
+--[[
+    ClearObjects()
+
+    Description:
+        Removes all stored objects from the tool.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+        local result = tool:ClearObjects()
+]]
+--[[
+    ReleaseGhostEntity()
+
+    Description:
+        Removes the ghost entity used for previewing placements.
+
+    Parameters:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+        local result = tool:ReleaseGhostEntity()
+]]
