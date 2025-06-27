@@ -179,48 +179,64 @@ local FilesToLoad = {
 local ConditionalFiles = {
     {
         path = "lilia/gamemode/core/libraries/compatibility/vcmod.lua",
-        global = "VCMod"
+        global = "VCMod",
+        name = "VCMod"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/vjbase.lua",
-        global = "VJ"
+        global = "VJ",
+        name = "VJ"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/advdupe.lua",
-        global = "AdvDupe"
+        global = "AdvDupe",
+        name = "AdvDupe"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/advdupe2.lua",
-        global = "AdvDupe2"
+        global = "AdvDupe2",
+        name = "AdvDupe2"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/pac.lua",
-        global = "pac"
+        global = "pac",
+        name = "PAC"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/prone.lua",
-        global = "prone"
+        global = "prone",
+        name = "Prone"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/sam.lua",
-        global = "sam"
+        global = "sam",
+        name = "SAM"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/serverguard.lua",
-        global = "serverguard"
+        global = "serverguard",
+        name = "ServerGuard"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/simfphys.lua",
-        global = "simfphys"
+        global = "simfphys",
+        name = "Simfphys"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/sitanywhere.lua",
-        global = "SitAnywhere"
+        global = "SitAnywhere",
+        name = "SitAnywhere"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/ulx.lua",
-        global = "ulx"
-    }
+        global = "ulx",
+        name = "ULX"
+    },
+    {
+        path = "lilia/gamemode/core/libraries/compatibility/permaprops.lua",
+        global = "PermaProps",
+        name = "PermaProps"
+    },
 }
 
 function lia.include(path, realm)
@@ -467,11 +483,17 @@ function GM:OnReloaded()
     end
 end
 
+local loadedCompatibility = {}
 for _, file in ipairs(ConditionalFiles) do
     if _G[file.global] then
-        lia.bootstrap("Compatibility", "Loaded " .. file.global .. " compatibility")
         lia.include(file.path, "shared")
+        loadedCompatibility[#loadedCompatibility + 1] = file.name
     end
+end
+
+if #loadedCompatibility > 0 then
+    local message = #loadedCompatibility == 1 and "Loaded compatibility for the following addons: " .. loadedCompatibility[1] or "Loaded the compatibilities for the following addons: " .. table.concat(loadedCompatibility, ", ")
+    lia.bootstrap("Compatibility", message)
 end
 
 if game.IsDedicated() then concommand.Remove("gm_save") end
