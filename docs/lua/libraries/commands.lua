@@ -65,13 +65,14 @@
 
   Returns:
      table - List of fields in call order.
+     boolean - Whether the syntax strictly used the "[type Name]" format.
 
   Realm:
      Shared
 
   Example Usage:
         -- Extract field data from a syntax string
-        local fields = lia.command.parseSyntaxFields("[string Name] [number Time]")
+        local fields, valid = lia.command.parseSyntaxFields("[string Name] [number Time]")
   ]]
 --[[
       lia.command.run
@@ -144,7 +145,8 @@
 
   Description:
      Opens a window asking the player to fill in any arguments that were
-     omitted or left as placeholders when running a chat command.
+     omitted or left as placeholders when running a chat command. The
+     prompt only appears if the command's syntax fields were valid.
 
   Parameters:
      cmd (string) - The command name.

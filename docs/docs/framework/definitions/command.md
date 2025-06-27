@@ -95,6 +95,7 @@ privilege = "Manage Doors"
 **Type:** `string`
 **Description:** Human-readable syntax string shown in help menus. Does not affect argument parsing.
 You can use spaces in argument names for better readability.
+The in-game prompt only appears when every argument follows the `[type Name]` format.
 **Example:**
 
 ```lua

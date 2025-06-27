@@ -55,7 +55,8 @@
     Description:
         Human readable syntax string shown in help menus. This has
         no effect on parsing but informs players how to format
-        the arguments.
+        the arguments. The argument prompt only appears when
+        each token follows the "[type Name]" format.
 
     Example Usage:
             syntax = "[string Target Name] [number Amount]"
