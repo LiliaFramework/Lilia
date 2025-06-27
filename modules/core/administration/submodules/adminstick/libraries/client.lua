@@ -24,99 +24,6 @@ local function GetIdentifier(ent)
     return ent:SteamID64()
 end
 
-local function OpenArgumentPrompt(cmdKey, fields, prefix)
-    local cl = LocalPlayer()
-    local fr = vgui.Create("DFrame")
-    fr:SetTitle(L(cmdKey))
-    fr:SetSize(500, 150 + table.Count(fields) * 40 + 100)
-    fr:Center()
-    fr:MakePopup()
-    fr:ShowCloseButton(false)
-    local y = 40
-    local inputs = {}
-    for name, typ in pairs(fields) do
-        local lb = vgui.Create("DLabel", fr)
-        lb:SetPos(25, y)
-        lb:SetSize(150, 30)
-        lb:SetFont("DermaDefaultBold")
-        lb:SetText(L(name))
-        if isfunction(typ) then
-            local opts, mode = typ()
-            if mode == "combo" then
-                local cb = vgui.Create("DComboBox", fr)
-                cb:SetPos(100, y)
-                cb:SetSize(300, 30)
-                for _, o in ipairs(opts) do
-                    cb:AddChoice(o)
-                end
-
-                inputs[name] = cb
-            end
-        elseif typ == "text" then
-            local tx = vgui.Create("DTextEntry", fr)
-            tx:SetPos(100, y)
-            tx:SetSize(300, 30)
-            tx:SetFont("DermaDefault")
-            tx:SetPaintBackground(true)
-            inputs[name] = tx
-        end
-
-        y = y + 40
-    end
-
-    local sub = vgui.Create("DButton", fr)
-    sub:SetText(L("submit"))
-    sub:SetPos(100, fr:GetTall() - 70)
-    sub:SetSize(150, 50)
-    sub:SetFont("DermaDefaultBold")
-    sub:SetColor(Color(255, 255, 255))
-    sub:SetMaterial("icon16/tick.png")
-    sub.DoClick = function()
-        local args = {}
-        for k, t in pairs(fields) do
-            local v
-            if isfunction(t) then
-                v = inputs[k]:GetSelected()
-            elseif t == "text" then
-                v = inputs[k]:GetValue()
-            end
-
-            table.insert(args, v)
-        end
-
-        if prefix then
-            if istable(prefix) then
-                for i = #prefix, 1, -1 do
-                    table.insert(args, 1, prefix[i])
-                end
-            else
-                table.insert(args, 1, prefix)
-            end
-        end
-
-        local cmd = "/" .. cmdKey
-        for _, a in ipairs(args) do
-            cmd = cmd .. " " .. a
-        end
-
-        cl:ConCommand("say " .. cmd)
-        fr:Remove()
-        AdminStickIsOpen = false
-    end
-
-    local cancel = vgui.Create("DButton", fr)
-    cancel:SetText(L("cancel"))
-    cancel:SetPos(250, fr:GetTall() - 70)
-    cancel:SetSize(150, 50)
-    cancel:SetFont("DermaDefaultBold")
-    cancel:SetColor(Color(255, 255, 255))
-    cancel:SetMaterial("icon16/cross.png")
-    cancel.DoClick = function()
-        fr:Remove()
-        AdminStickIsOpen = false
-    end
-end
-
 local function OpenPlayerModelUI(tgt)
     AdminStickIsOpen = true
     local fr = vgui.Create("DFrame")
@@ -463,7 +370,7 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
     m:AddOption(L(name), function()
         local id = GetIdentifier(tgt)
         if data.AdminStick.ExtraFields and table.Count(data.AdminStick.ExtraFields) > 0 then
-            OpenArgumentPrompt(key, data.AdminStick.ExtraFields, id ~= "" and id or nil)
+            lia.command.openArgumentPrompt(key, data.AdminStick.ExtraFields, id ~= "" and id or nil)
         else
             if id ~= "" then cl:ConCommand("say /" .. key .. " " .. id) end
             AdminStickIsOpen = false
