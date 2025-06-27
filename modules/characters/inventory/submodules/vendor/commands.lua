@@ -50,7 +50,7 @@ lia.command.add("resetallvendormoney", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
     desc = L("resetAllVendorMoneyDesc"),
-    syntax = "[number amount]",
+    syntax = "[number Amount]",
     AdminStick = {
         Name = L("resetAllVendorMoneyStickName"),
         TargetClass = "lia_vendor",
@@ -79,7 +79,7 @@ lia.command.add("restockvendormoney", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
     desc = L("restockVendorMoneyDesc"),
-    syntax = "[number amount]",
+    syntax = "[number Amount]",
     AdminStick = {
         Name = L("restockVendorMoneyStickName"),
         TargetClass = "lia_vendor",

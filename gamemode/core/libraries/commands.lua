@@ -99,10 +99,12 @@ end
 
 function lia.command.parseSyntaxFields(syntax)
     local fields = {}
-    if not syntax or syntax == "" then return fields end
+    local valid = true
+    if not syntax or syntax == "" then return fields, true end
+
     for token in syntax:gmatch("%b[]") do
         local inner = token:sub(2, -2)
-        local typ, name = inner:match("^(%S+)%s+(%S+)$")
+        local typ, name = inner:match("^(%S+)%s+(.+)$")
         if name then
             typ = typ:lower()
             if typ == "string" then
@@ -111,10 +113,13 @@ function lia.command.parseSyntaxFields(syntax)
                 typ = "number"
             elseif typ == "bool" or typ == "boolean" then
                 typ = "boolean"
+            else
+                valid = false
             end
         else
             name = inner
             typ = "text"
+            valid = false
         end
 
         fields[#fields + 1] = {
@@ -122,7 +127,14 @@ function lia.command.parseSyntaxFields(syntax)
             type = typ
         }
     end
-    return fields
+
+    local open = select(2, syntax:gsub("%[", ""))
+    local close = select(2, syntax:gsub("%]", ""))
+    if open ~= close then valid = false end
+
+    if syntax:gsub("%b[]", ""):find("%S") then valid = false end
+
+    return fields, valid
 end
 
 -- Combines arguments split within brackets back into a single token.
@@ -188,8 +200,8 @@ if SERVER then
             local command = lia.command.list[match]
             if command then
                 if not arguments then arguments = lia.command.extractArgs(text:sub(#match + 3)) end
-                local fields = lia.command.parseSyntaxFields(command.syntax)
-                if IsValid(client) and client:IsPlayer() and #fields > 0 then
+                local fields, valid = lia.command.parseSyntaxFields(command.syntax)
+                if IsValid(client) and client:IsPlayer() and valid and #fields > 0 then
                     local tokens = combineBracketArgs(arguments)
                     local missing = {}
                     local prefix = {}
