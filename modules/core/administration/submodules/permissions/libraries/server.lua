@@ -1,16 +1,16 @@
 ﻿local GM = GM or GAMEMODE
-local MODULE = MODULE
 local resetCalled = 0
+local restrictedProperties = {
+    persist = true,
+    drive = true,
+    bonemanipulate = true
+}
+
 function GM:PlayerSpawnProp(client, model)
-    if MODULE.BlackListedProps and MODULE.BlackListedProps[model] and not client:hasPrivilege("Spawn Permissions - Can Spawn Blacklisted Props") then
+    local list = lia.data.get("blacklist", {}, true, true)
+    if table.HasValue(list, model) and not client:hasPrivilege("Spawn Permissions - Can Spawn Blacklisted Props") then
         client:notifyLocalized("blacklistedProp")
         return false
-    end
-
-    local weapon = client:GetActiveWeapon()
-    if IsValid(weapon) and weapon:GetClass() == "gmod_tool" then
-        local toolobj = weapon:GetToolObject()
-        if toolobj and (client.AdvDupe2 and client.AdvDupe2.Entities or client.CurrentDupe and client.CurrentDupe.Entities or toolobj.Entities) then return true end
     end
 
     local canSpawn = client:IsSuperAdmin() or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Props") or client:getChar():hasFlags("e")
@@ -19,12 +19,6 @@ function GM:PlayerSpawnProp(client, model)
 end
 
 function GM:CanProperty(client, property, entity)
-    local restrictedProperties = {
-        persist = true,
-        drive = true,
-        bonemanipulate = true
-    }
-
     if restrictedProperties[property] then
         client:notifyLocalized("disabledFeature")
         return false
@@ -33,13 +27,6 @@ function GM:CanProperty(client, property, entity)
     if entity:IsWorld() and IsValid(entity) then
         if client:hasPrivilege("Staff Permissions - Can Property World Entities") then return true end
         client:notifyLocalized("noModifyWorldEntities")
-        return false
-    end
-
-    local entityClass = entity:GetClass()
-    if MODULE.RemoverBlockedEntities and MODULE.RemoverBlockedEntities[entityClass] or MODULE.RestrictedEnts and MODULE.RestrictedEnts[entityClass] then
-        if client:hasPrivilege("Staff Permissions - Use Entity Properties on Blocked Entities") then return true end
-        client:notifyLocalized("noModifyEntityProps")
         return false
     end
 
@@ -54,10 +41,9 @@ function GM:DrawPhysgunBeam(client)
 end
 
 function GM:PhysgunPickup(client, entity)
-    local entityClass = entity:GetClass()
-    if (client:hasPrivilege("Staff Permissions - Physgun Pickup") or client:isStaffOnDuty()) and MODULE.RestrictedEnts and MODULE.RestrictedEnts[entityClass] then
+    if (client:hasPrivilege("Staff Permissions - Physgun Pickup") or client:isStaffOnDuty()) and entity.NoPhysgun then
         if not client:hasPrivilege("Staff Permissions - Physgun Pickup on Restricted Entities") then
-                client:notifyLocalized("noPickupRestricted")
+            client:notifyLocalized("noPickupRestricted")
             return false
         end
         return true
@@ -92,12 +78,7 @@ function GM:PhysgunPickup(client, entity)
     return false
 end
 
-function GM:PlayerSpawnVehicle(client, _, name)
-    if MODULE.RestrictedVehicles and MODULE.RestrictedVehicles[name] and not client:hasPrivilege("Spawn Permissions - Can Spawn Restricted Cars") then
-        client:notifyLocalized("restrictedVehicle")
-        return false
-    end
-
+function GM:PlayerSpawnVehicle(client)
     if not client:hasPrivilege("Spawn Permissions - No Car Spawn Delay") then client.NextVehicleSpawn = SysTime() + lia.config.get("PlayerSpawnVehicleDelay", 30) end
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Cars") or client:getChar():hasFlags("C")
     if not canSpawn then client:notifyLocalized("noSpawnVehicles") end
@@ -159,17 +140,17 @@ function GM:OnPhysgunReload(_, client)
     return canReload
 end
 
-function GM:CanTool(client, _, tool)
-    local DisallowedTools = {
-        rope = true,
-        light = true,
-        lamp = true,
-        dynamite = true,
-        physprop = true,
-        faceposer = true,
-        stacker = true
-    }
+local DisallowedTools = {
+    rope = true,
+    light = true,
+    lamp = true,
+    dynamite = true,
+    physprop = true,
+    faceposer = true,
+    stacker = true
+}
 
+function GM:CanTool(client, _, tool)
     local function CheckDuplicationScale(client, entities)
         entities = entities or {}
         for _, v in pairs(entities) do
@@ -196,19 +177,17 @@ function GM:CanTool(client, _, tool)
     if not isSuperAdmin and not (isStaffOrFlagged and hasPriv) then
         local reasons = {}
         if not isSuperAdmin then table.insert(reasons, "SuperAdmin") end
-        if not isStaffOrFlagged then table.insert(reasons, "On‑duty staff or flag 't'") end
+        if not isStaffOrFlagged then table.insert(reasons, "On-duty staff or flag 't'") end
         if not hasPriv then table.insert(reasons, "Privilege '" .. privilege .. "'") end
         client:notifyLocalized("toolNoPermission", tool, table.concat(reasons, ", "))
         return false
     end
 
-    local weapon = client:GetActiveWeapon()
-    local toolobj = IsValid(weapon) and weapon:GetToolObject() or nil
     local entity = client:getTracedEntity()
     if IsValid(entity) then
         local entClass = entity:GetClass()
         if tool == "remover" then
-            if MODULE.RemoverBlockedEntities and MODULE.RemoverBlockedEntities[entClass] then
+            if entity.NoRemover then
                 if not client:hasPrivilege("Staff Permissions - Can Remove Blocked Entities") then
                     client:notifyLocalized("noRemoveBlockedEntities")
                     return false
@@ -224,12 +203,12 @@ function GM:CanTool(client, _, tool)
             return true
         end
 
-        if (tool == "permaall" or tool == "permaprops" or tool == "blacklistandremove") and (string.StartWith(entClass, "lia_") or MODULE.CanNotPermaProp and MODULE.CanNotPermaProp[entClass] or entity:isLiliaPersistent() or entity:CreatedByMap()) then
+        if (tool == "permaall" or tool == "blacklistandremove") and hook.Run("CanPersistEntity", entity) ~= false and (string.StartWith(entClass, "lia_") or entity:isLiliaPersistent() or entity:CreatedByMap()) then
             client:notifyLocalized("toolCantUseEntity", tool)
             return false
         end
 
-        if (tool == "adv_duplicator" or tool == "advdupe2" or tool == "duplicator" or tool == "blacklistandremove") and (MODULE.DuplicatorBlackList and MODULE.DuplicatorBlackList[entClass] or entity.NoDuplicate) then
+        if (tool == "duplicator" or tool == "blacklistandremove") and entity.NoDuplicate then
             client:notifyLocalized("cannotDuplicateEntity", tool)
             return false
         end
@@ -241,8 +220,6 @@ function GM:CanTool(client, _, tool)
     end
 
     if tool == "duplicator" and client.CurrentDupe and not CheckDuplicationScale(client, client.CurrentDupe.Entities) then return false end
-    if tool == "advdupe2" and client.AdvDupe2 and not CheckDuplicationScale(client, client.AdvDupe2.Entities) then return false end
-    if tool == "adv_duplicator" and toolobj and toolobj.Entities and not CheckDuplicationScale(client, toolobj.Entities) then return false end
     return true
 end
 

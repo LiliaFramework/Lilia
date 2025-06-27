@@ -65,11 +65,6 @@ MODULE.CAMIPrivileges = {
         Description = "Allows access to propertying world props."
     },
     {
-        Name = "Staff Permissions - Use Entity Properties on Blocked Entities",
-        MinAccess = "admin",
-        Description = "Allows access to using Entity Properties on Blocked Entities."
-    },
-    {
         Name = "Spawn Permissions - Can Spawn Ragdolls",
         MinAccess = "admin",
         Description = "Allows access to spawning ."
@@ -113,11 +108,6 @@ MODULE.CAMIPrivileges = {
         Name = "Spawn Permissions - Can Spawn Cars",
         MinAccess = "admin",
         Description = "Allows access to Spawning Cars."
-    },
-    {
-        Name = "Spawn Permissions - Can Spawn Restricted Cars",
-        MinAccess = "superadmin",
-        Description = "Allows access to Spawning Restricted Cars."
     },
     {
         Name = "Spawn Permissions - Can Spawn SENTs",

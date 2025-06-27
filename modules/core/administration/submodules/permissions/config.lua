@@ -4,42 +4,6 @@
     type = "Boolean"
 })
 
-MODULE.RestrictedEnts = {
-    ["func_button"] = true,
-    ["class C_BaseEntity"] = true,
-    ["func_brush"] = true,
-    ["func_tracktrain"] = true,
-    ["func_door"] = true,
-    ["func_door_rotating"] = true,
-    ["prop_static"] = true,
-    ["prop_physics_override"] = true,
-    ["prop_dynamic"] = true,
-    ["func_movelinear"] = true,
-    ["prop_door_rotating"] = true,
-    ["lia_vendor"] = true,
-}
-
-MODULE.RemoverBlockedEntities = {
-    ["lia_bodygroupcloset"] = true,
-    ["lia_vendor"] = true,
-}
-
-MODULE.BlackListedProps = {
-    ["models/props_c17/FurnitureCupboard001a.mdl"] = true,
-    ["models/props_c17/FurnitureDresser001a.mdl"] = true,
-}
-
-MODULE.RestrictedVehicles = {}
-MODULE.CanNotPermaProp = {
-    ["lia_vendor"] = true,
-    ["lia_bodygrouper"] = true,
-}
-
-MODULE.DuplicatorBlackList = {
-    ["lia_storage"] = true,
-    ["lia_money"] = true,
-}
-
 lia.option.add("espActive", "ESP Active", "Enable ESP to highlight entities", false, nil, {
     category = "ESP",
     visible = function()
