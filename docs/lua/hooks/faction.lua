@@ -21,19 +21,18 @@
             end
 ]]
 --[[
-        GetDefaultDesc(client, faction)
+        GetDefaultDesc(client)
 
         Description:
             Retrieves the default description for a character upon initial creation within the faction.
 
         Parameters:
             client (Player) – The client for whom the default description is being retrieved.
-            faction (Number) – The faction ID for which the default description is being retrieved.
 
         Realm:
             Shared
         Example Usage:
-            function FACTION:GetDefaultDesc(client, faction)
+            function FACTION:GetDefaultDesc(client)
                 return "A police officer"
             end
 ]]
@@ -72,19 +71,19 @@
             end
 ]]
 --[[
-        OnTransferred(character)
+        OnTransferred(client)
 
         Description:
-            Executes actions when a character is transferred to the faction.
+            Executes after a player is moved into this faction.
 
         Parameters:
-            character (Character) – The character that was transferred.
+            client (Player) – The player that was transferred.
 
         Realm:
             Server
         Example Usage:
-            function FACTION:OnTransferred(character)
+            function FACTION:OnTransferred(client)
                 local randomModelIndex = math.random(1, #self.models)
-                character:setModel(self.models[randomModelIndex])
+                client:getChar():setModel(self.models[randomModelIndex])
             end
 ]]

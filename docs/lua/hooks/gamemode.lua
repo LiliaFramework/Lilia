@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     This file documents hooks triggered via hook.Run within
     gamemode/core/derma and gamemode/core/libraries/thirdparty.
 
@@ -60,8 +60,7 @@
         ShouldAllowScoreboardOverride(client, field)
 
         Description:
-            Queries if a scoreboard field like the player's name or model may be replaced.
-            Determines if a scoreboard field can be overridden.
+            Determines if a scoreboard field such as a player's name or model can be replaced.
 
         Parameters:
             client (Player) – Player being displayed.
@@ -79,8 +78,7 @@
         GetDisplayedName(client)
 
         Description:
-            Provides the player name text shown in UI panels.
-            Returns a display name for a player.
+            Returns the name text to display for a player in UI panels.
 
         Parameters:
             client (Player) – Player to query.
@@ -99,8 +97,7 @@
         PlayerEndVoice(client)
 
         Description:
-            Fired when a player's voice indicator is removed from the HUD.
-            Called when a player's voice panel is removed.
+            Fired when the voice panel for a player is removed from the HUD.
 
         Parameters:
             client (Player) – Player whose panel ended.
@@ -973,6 +970,28 @@
             end)
 ]]
 --[[
+        CanPersistEntity(entity)
+
+        Description:
+            Invoked before an entity is saved as persistent.
+            Return false to disallow persisting the entity.
+
+        Parameters:
+            entity (Entity) – Entity being considered for persistence.
+
+        Realm:
+            Server
+
+        Returns:
+            boolean – False to prevent the entity from being saved.
+
+        Example Usage:
+            -- Skip weapons when marking props permanent.
+            hook.Add("CanPersistEntity", "BlockWeapons", function(entity)
+                if entity:IsWeapon() then return false end
+            end)
+]]
+--[[
         LoadData()
 
         Description:
@@ -1822,14 +1841,15 @@
             end)
 ]]
 --[[
-        PostLoadFonts(...)
+        PostLoadFonts(currentFont, genericFont)
 
         Description:
             Runs after all font files have loaded.
             Allows registering additional fonts.
 
         Parameters:
-            ... – Extra arguments passed through.
+            currentFont (string) – Name of the primary UI font.
+            genericFont (string) – Name of the generic fallback font.
 
         Realm:
             Shared
@@ -2126,10 +2146,16 @@
             end)
 ]]
 --[[
-        CanPlayerTradeWithVendor(...)
+        CanPlayerTradeWithVendor(client, vendor, itemType, selling)
 
         Description:
             Checks whether a vendor trade is allowed.
+
+        Parameters:
+            client (Player) – Player attempting the trade.
+            vendor (Entity) – Vendor entity involved.
+            itemType (string) – Item identifier.
+            selling (boolean) – True if the player is selling to the vendor.
 
         Realm:
             Server
@@ -2140,7 +2166,7 @@
             end)
 ]]
 --[[
-        CanPlayerViewInventory(...)
+        CanPlayerViewInventory()
 
         Description:
             Called before any inventory menu is shown.
@@ -2154,10 +2180,14 @@
             end)
 ]]
 --[[
-        CanSaveData(...)
+        CanSaveData(entity, inventory)
 
         Description:
             Called before persistent storage saves.
+
+        Parameters:
+            entity (Entity) – Storage entity being saved.
+            inventory (Inventory) – Inventory associated with the entity.
 
         Realm:
             Server
@@ -2168,10 +2198,14 @@
             end)
 ]]
 --[[
-        CharHasFlags(...)
+        CharHasFlags(character, flags)
 
         Description:
             Allows custom checks for a character's permission flags.
+
+        Parameters:
+            character (Character) – Character to check.
+            flags (string) – Flags being queried.
 
         Realm:
             Shared
@@ -2185,10 +2219,13 @@
             end)
 ]]
 --[[
-        CharPostSave(...)
+        CharPostSave(character)
 
         Description:
             Runs after a character's data has been saved to the database.
+
+        Parameters:
+            character (Character) – Character that finished saving.
 
         Realm:
             Shared
@@ -2199,7 +2236,7 @@
             end)
 ]]
 --[[
-        DatabaseConnected(...)
+        DatabaseConnected()
 
         Description:
             Fired after the database has been successfully connected.
@@ -2213,10 +2250,17 @@
             end)
 ]]
 --[[
-        DrawItemDescription(...)
+        DrawItemDescription(entity, x, y, color, alpha)
 
         Description:
             Called when an item entity draws its description text.
+
+        Parameters:
+            entity (Entity) – Item entity being drawn.
+            x (number) – X screen position.
+            y (number) – Y screen position.
+            color (Color) – Text color.
+            alpha (number) – Current alpha value.
 
         Realm:
             Client
@@ -2227,10 +2271,14 @@
             end)
 ]]
 --[[
-        GetAttributeMax(...)
+        GetAttributeMax(client, attribute)
 
         Description:
             Returns the maximum value allowed for an attribute.
+
+        Parameters:
+            client (Player) – Player being queried.
+            attribute (string) – Attribute identifier.
 
         Realm:
             Shared
@@ -2243,10 +2291,13 @@
             end)
 ]]
 --[[
-        GetDefaultInventorySize(...)
+        GetDefaultInventorySize(client)
 
         Description:
             Returns the default width and height for new inventories.
+
+        Parameters:
+            client (Player) – Player the inventory belongs to.
 
         Realm:
             Server
@@ -2259,10 +2310,13 @@
             end)
 ]]
 --[[
-        GetMoneyModel(...)
+        GetMoneyModel(amount)
 
         Description:
             Allows overriding the entity model used for dropped money.
+
+        Parameters:
+            amount (number) – Money amount being dropped.
 
         Realm:
             Shared
@@ -2274,10 +2328,15 @@
 ]]
 --[[
 
-        GetPlayerPunchDamage(...)
+        GetPlayerPunchDamage(client, damage, context)
 
         Description:
             Lets addons modify how much damage the fists weapon deals.
+
+        Parameters:
+            client (Player) – Punching player.
+            damage (number) – Base damage value.
+            context (table) – Additional context table.
 
         Realm:
             Shared
@@ -2288,10 +2347,15 @@
             end)
 ]]
 --[[
-        InterceptClickItemIcon(...)
+        InterceptClickItemIcon(self, itemIcon, keyCode)
 
         Description:
             Allows overriding default clicks on inventory icons.
+
+        Parameters:
+            self (Panel) – Inventory panel.
+            itemIcon (Panel) – Icon that was clicked.
+            keyCode (number) – Key that was pressed.
 
         Realm:
             Client
@@ -2302,41 +2366,61 @@
             end)
 ]]
 --[[
-        ItemCombine(...)
+        ItemCombine(client, item, targetItem)
 
         Description:
-            Called when attempting to combine one item with another.
+            Called when the system attempts to combine one item with another in an inventory.
+
+        Parameters:
+            client (Player) – Owning player.
+            item (Item) – Item being combined.
+            targetItem (Item) – Item it is being combined with.
 
         Realm:
             Server
+
+        Returns:
+            bool – true if combination succeeds and items are consumed, false otherwise.
         Example Usage:
             -- Combine two ammo boxes into one stack.
             hook.Add("ItemCombine", "StackAmmo", function(client, base, other)
                 if base.uniqueID == "ammo" and other.uniqueID == "ammo" then
                     base:setData("amount", base:getData("amount",0) + other:getData("amount",0))
+                    client:getChar():getInv():removeItem(other.id)
                     return true
                 end
             end)
 ]]
 --[[
-        ItemDraggedOutOfInventory(...)
+        ItemDraggedOutOfInventory(client, item)
 
         Description:
             Called when an item icon is dragged completely out of an inventory.
+
+        Parameters:
+            client (Player) – Player dragging the item.
+            item (Item) – Item being removed.
 
         Realm:
             Server
         Example Usage:
             -- Drop the item into the world when removed.
-            hook.Add("ItemDraggedOutOfInventory", "DropOnDragOut", function(invPanel, item)
-                item:spawn(invPanel:LocalToWorld(item:getPosition()))
+            hook.Add("ItemDraggedOutOfInventory", "DropOnDragOut", function(_, item)
+                item:spawn(LocalPlayer():getItemDropPos())
             end)
 ]]
 --[[
-        ItemFunctionCalled(...)
+        ItemFunctionCalled(item, action, client, entity, result)
 
         Description:
             Triggered whenever an item function is executed by a player.
+
+        Parameters:
+            item (Item) – Item on which the function ran.
+            action (string) – Action identifier.
+            client (Player) – Player performing the action.
+            entity (Entity|nil) – Target entity if any.
+            result (any) – Result returned by the item function.
 
         Realm:
             Shared
@@ -2347,10 +2431,13 @@
             end)
 ]]
 --[[
-        ItemTransfered(...)
+        ItemTransfered(context)
 
         Description:
             Runs after an item successfully moves between inventories.
+
+        Parameters:
+            context (table) – Transfer context table containing client, item, from and to inventories.
 
         Realm:
             Server
@@ -2361,10 +2448,17 @@
             end)
 ]]
 --[[
-        OnCharAttribBoosted(...)
+        OnCharAttribBoosted(client, character, key, boostID, amount)
 
         Description:
             Fired when an attribute boost is added or removed.
+
+        Parameters:
+            client (Player) – Player owning the character.
+            character (Character) – Character affected.
+            key (string) – Attribute identifier.
+            boostID (string) – Unique boost key.
+            amount (number|boolean) – Amount added or true when removed.
 
         Realm:
             Shared
@@ -2375,10 +2469,16 @@
             end)
 ]]
 --[[
-        OnCharAttribUpdated(...)
+        OnCharAttribUpdated(client, character, key, value)
 
         Description:
             Fired when a character attribute value is changed.
+
+        Parameters:
+            client (Player) – Player owning the character.
+            character (Character) – Character updated.
+            key (string) – Attribute identifier.
+            value (number) – New attribute value.
 
         Realm:
             Shared
@@ -2391,10 +2491,15 @@
             end)
 ]]
 --[[
-        OnCharFallover(...)
+        OnCharFallover(client, ragdoll, forced)
 
         Description:
             Called when a character ragdolls or is forced to fall over.
+
+        Parameters:
+            client (Player) – Player being ragdolled.
+            ragdoll (Entity|nil) – Created ragdoll entity if any.
+            forced (boolean) – True when the ragdoll was forced.
 
         Realm:
             Server
@@ -2405,10 +2510,14 @@
             end)
 ]]
 --[[
-        OnCharKick(...)
+        OnCharKick(character, client)
 
         Description:
             Called when a character is kicked from the server.
+
+        Parameters:
+            character (Character) – Character that was kicked.
+            client (Player) – Player owning the character.
 
         Realm:
             Shared
@@ -2419,10 +2528,14 @@
             end)
 ]]
 --[[
-        OnCharPermakilled(...)
+        OnCharPermakilled(character, time)
 
         Description:
             Called when a character is permanently killed.
+
+        Parameters:
+            character (Character) – Character being permanently killed.
+            time (number|nil) – Ban duration or nil for permanent.
 
         Realm:
             Shared
@@ -2433,10 +2546,13 @@
             end)
 ]]
 --[[
-        OnCharRecognized(...)
+        OnCharRecognized(client)
 
         Description:
             Called clientside when your character recognizes another.
+
+        Parameters:
+            client (Player) – Player that initiated recognition.
 
         Realm:
             Client
@@ -2447,10 +2563,19 @@
             end)
 ]]
 --[[
-        OnCharTradeVendor(...)
+        OnCharTradeVendor(client, vendor, item, selling, character, itemType, failed)
 
         Description:
             Called after a character buys from or sells to a vendor.
+
+        Parameters:
+            client (Player) – Player completing the trade.
+            vendor (Entity) – Vendor entity involved.
+            item (Item|nil) – Item traded, if any.
+            selling (boolean) – True if selling to the vendor.
+            character (Character) – Player's character.
+            itemType (string|nil) – Item identifier when item is nil.
+            failed (boolean|nil) – True if the trade failed.
 
         Realm:
             Server
@@ -2461,10 +2586,15 @@
             end)
 ]]
 --[[
-        OnCreatePlayerRagdoll(...)
+        OnCreatePlayerRagdoll(client, entity, dead)
 
         Description:
             Called when a ragdoll entity is created for a player.
+
+        Parameters:
+            client (Player) – The player the ragdoll belongs to.
+            entity (Entity) – The ragdoll entity.
+            dead (boolean) – True if the player died.
 
         Realm:
             Shared
@@ -2475,10 +2605,15 @@
             end)
 ]]
 --[[
-        OnCreateStoragePanel(...)
+        OnCreateStoragePanel(localPanel, storagePanel, storage)
 
         Description:
             Called when both the player's inventory and storage panels are created.
+
+        Parameters:
+            localPanel (Panel) – The player's inventory panel.
+            storagePanel (Panel) – The storage entity's panel.
+            storage (Entity) – The storage entity.
 
         Realm:
             Client
@@ -2489,10 +2624,14 @@
             end)
 ]]
 --[[
-        OnItemAdded(...)
+        OnItemAdded(client, item)
 
         Description:
             Called when a new item instance is placed into an inventory.
+
+        Parameters:
+            client (Player|nil) – Owner of the inventory the item was added to.
+            item (Item) – Item that was inserted.
 
         Realm:
             Shared
@@ -2505,10 +2644,14 @@
             end)
 ]]
 --[[
-        OnItemCreated(...)
+        OnItemCreated(itemTable, entity)
 
         Description:
             Called when a new item instance table is initialized.
+
+        Parameters:
+            itemTable (table) – Item definition table.
+            entity (Entity) – Spawned item entity.
 
         Realm:
             Shared
@@ -2519,10 +2662,13 @@
             end)
 ]]
 --[[
-        OnItemSpawned(...)
+        OnItemSpawned(entity)
 
         Description:
             Called when an item entity has been spawned in the world.
+
+        Parameters:
+            entity (Entity) – Spawned item entity.
 
         Realm:
             Shared
@@ -2533,10 +2679,14 @@
             end)
 ]]
 --[[
-        OnOpenVendorMenu(...)
+        OnOpenVendorMenu(panel, vendor)
 
         Description:
             Called when the vendor dialog panel is opened.
+
+        Parameters:
+            panel (Panel) – The vendor menu panel.
+            vendor (Entity) – The vendor entity.
 
         Realm:
             Client
@@ -2547,10 +2697,14 @@
             end)
 ]]
 --[[
-        OnPickupMoney(...)
+        OnPickupMoney(client, moneyEntity)
 
         Description:
             Called after a player picks up a money entity.
+
+        Parameters:
+            client (Player) – The player picking up the money.
+            moneyEntity (Entity) – The money entity collected.
 
         Realm:
             Shared
@@ -2561,10 +2715,17 @@
             end)
 ]]
 --[[
-        OnPlayerEnterSequence(...)
+        OnPlayerEnterSequence(client, sequence, callback, time, noFreeze)
 
         Description:
             Fired when a scripted animation sequence begins.
+
+        Parameters:
+            client (Player) – Player starting the sequence.
+            sequence (string) – Sequence name.
+            callback (function) – Completion callback.
+            time (number) – Duration in seconds.
+            noFreeze (boolean) – True if the player should not be frozen.
 
         Realm:
             Shared
@@ -2575,10 +2736,17 @@
             end)
 ]]
 --[[
-        OnPlayerInteractItem(...)
+        OnPlayerInteractItem(client, action, item, result, data)
 
         Description:
             Runs after a player has interacted with an item.
+
+        Parameters:
+            client (Player) – Player performing the interaction.
+            action (string) – Action key used.
+            item (Item) – Item affected.
+            result (any) – Result returned by the action.
+            data (table|nil) – Additional data table.
 
         Realm:
             Shared
@@ -2589,10 +2757,15 @@
             end)
 ]]
 --[[
-        OnPlayerJoinClass(...)
+        OnPlayerJoinClass(client, class, oldClass)
 
         Description:
             Called when a player changes to a new class.
+
+        Parameters:
+            client (Player) – The player switching classes.
+            class (table|number) – New class table or index.
+            oldClass (table|number) – Previous class table or index.
 
         Realm:
             Shared
@@ -2603,10 +2776,13 @@
             end)
 ]]
 --[[
-        OnPlayerLeaveSequence(...)
+        OnPlayerLeaveSequence(client)
 
         Description:
             Fired when a scripted animation sequence ends for a player.
+
+        Parameters:
+            client (Player) – Player that finished the sequence.
 
         Realm:
             Shared
@@ -2617,10 +2793,13 @@
             end)
 ]]
 --[[
-        OnPlayerLostStackItem(...)
+        OnPlayerLostStackItem(item)
 
         Description:
             Called if a stackable item is removed unexpectedly.
+
+        Parameters:
+            item (Item) – The item that disappeared.
 
         Realm:
             Shared
@@ -2631,10 +2810,15 @@
             end)
 ]]
 --[[
-        OnPlayerSwitchClass(...)
+        OnPlayerSwitchClass(client, class, oldClass)
 
         Description:
             Occurs right before a player's class changes.
+
+        Parameters:
+            client (Player) – Player who is switching.
+            class (table|number) – Class being joined.
+            oldClass (table|number) – Class being left.
 
         Realm:
             Shared
@@ -2645,10 +2829,17 @@
             end)
 ]]
 --[[
-        OnRequestItemTransfer(...)
+        OnRequestItemTransfer(panel, itemID, inventoryID, x, y)
 
         Description:
             Called when the UI asks to move an item between inventories.
+
+        Parameters:
+            panel (Panel) – Inventory panel requesting the move.
+            itemID (number) – Identifier of the item to move.
+            inventoryID (number|string) – Destination inventory ID.
+            x (number) – Destination X coordinate.
+            y (number) – Destination Y coordinate.
 
         Realm:
             Client
@@ -2659,10 +2850,13 @@
             end)
 ]]
 --[[
-        PersistenceLoad(...)
+        PersistenceLoad(name)
 
         Description:
             Called when map persistence data is loaded.
+
+        Parameters:
+            name (string) – Name of the persistence file.
 
         Realm:
             Server
@@ -2673,10 +2867,14 @@
             end)
 ]]
 --[[
-        PlayerAccessVendor(...)
+        PlayerAccessVendor(client, vendor)
 
         Description:
             Occurs when a player successfully opens a vendor.
+
+        Parameters:
+            client (Player) – Player accessing the vendor.
+            vendor (Entity) – Vendor entity opened.
 
         Realm:
             Shared
@@ -2687,10 +2885,13 @@
             end)
 ]]
 --[[
-        PlayerStaminaGained(...)
+        PlayerStaminaGained(client)
 
         Description:
             Called when a player regenerates stamina points.
+
+        Parameters:
+            client (Player) – Player gaining stamina.
 
         Realm:
             Shared
@@ -2703,10 +2904,13 @@
             end)
 ]]
 --[[
-        PlayerStaminaLost(...)
+        PlayerStaminaLost(client)
 
         Description:
             Called when a player's stamina decreases.
+
+        Parameters:
+            client (Player) – Player losing stamina.
 
         Realm:
             Shared
@@ -2719,10 +2923,14 @@
             end)
 ]]
 --[[
-        PlayerThrowPunch(...)
+        PlayerThrowPunch(client, trace)
 
         Description:
             Fires when a player lands a punch with the fists weapon.
+
+        Parameters:
+            client (Player) – Punching player.
+            trace (table) – Trace result of the punch.
 
         Realm:
             Shared
@@ -2733,10 +2941,14 @@
             end)
 ]]
 --[[
-        PostDrawInventory(...)
+        PostDrawInventory(panel, parentPanel)
 
         Description:
             Called each frame after the inventory panel draws.
+
+        Parameters:
+            panel (Panel) – The inventory panel being drawn.
+            parentPanel (Panel|nil) – Parent panel if any.
 
         Realm:
             Client
@@ -2747,10 +2959,15 @@
             end)
 ]]
 --[[
-        PrePlayerInteractItem(...)
+        PrePlayerInteractItem(client, action, item)
 
         Description:
             Called just before a player interacts with an item.
+
+        Parameters:
+            client (Player) – Player performing the action.
+            action (string) – Action identifier.
+            item (Item) – Target item.
 
         Realm:
             Shared
@@ -2761,10 +2978,13 @@
             end)
 ]]
 --[[
-        SetupBagInventoryAccessRules(...)
+        SetupBagInventoryAccessRules(inventory)
 
         Description:
             Allows modules to define who can access a bag inventory.
+
+        Parameters:
+            inventory (Inventory) – Bag inventory object.
 
         Realm:
             Shared
@@ -2775,7 +2995,7 @@
             end)
 ]]
 --[[
-        SetupDatabase(...)
+        SetupDatabase()
 
         Description:
             Runs before the gamemode initializes its database connection.
@@ -2789,10 +3009,15 @@
             end)
 ]]
 --[[
-        StorageCanTransferItem(...)
+        StorageCanTransferItem(client, storage, item)
 
         Description:
             Determines if an item can move in or out of a storage entity.
+
+        Parameters:
+            client (Player) – Player moving the item.
+            storage (Entity) – Storage entity.
+            item (Item) – Item being transferred.
 
         Realm:
             Server
@@ -2803,10 +3028,14 @@
             end)
 ]]
 --[[
-        StorageEntityRemoved(...)
+        StorageEntityRemoved(entity, inventory)
 
         Description:
             Fired when a storage entity is removed from the world.
+
+        Parameters:
+            entity (Entity) – The storage entity being removed.
+            inventory (Inventory) – Inventory associated with the entity.
 
         Realm:
             Shared
@@ -2817,10 +3046,15 @@
             end)
 ]]
 --[[
-        StorageInventorySet(...)
+        StorageInventorySet(entity, inventory, isCar)
 
         Description:
             Called when a storage entity is assigned an inventory.
+
+        Parameters:
+            entity (Entity) – The storage entity.
+            inventory (Inventory) – Inventory assigned.
+            isCar (boolean) – True if the entity is a vehicle trunk.
 
         Realm:
             Shared
@@ -2831,10 +3065,14 @@
             end)
 ]]
 --[[
-        StorageOpen(...)
+        StorageOpen(entity, isCar)
 
         Description:
             Called clientside when a storage menu is opened.
+
+        Parameters:
+            entity (Entity) – Storage entity opened.
+            isCar (boolean) – True if opening a vehicle trunk.
 
         Realm:
             Client
@@ -2845,10 +3083,14 @@
             end)
 ]]
 --[[
-        StorageRestored(...)
+        StorageRestored(storage, inventory)
 
         Description:
             Called when a storage's contents are loaded from disk.
+
+        Parameters:
+            storage (Entity) – Storage entity.
+            inventory (Inventory) – Inventory loaded.
 
         Realm:
             Server
@@ -2859,10 +3101,13 @@
             end)
 ]]
 --[[
-        StorageUnlockPrompt(...)
+        StorageUnlockPrompt(entity)
 
         Description:
             Called clientside when you must enter a storage password.
+
+        Parameters:
+            entity (Entity) – Storage entity being opened.
 
         Realm:
             Client
@@ -3161,9 +3406,9 @@
             Determines if a player is allowed to earn salary.
 
         Parameters:
-            client (Player)
-            faction (table)
-            class (table)
+            client (Player) – Player to check.
+            faction (table) – Faction data for the player.
+            class (table) – Class table for the player.
 
         Realm:
             Shared
@@ -3185,9 +3430,9 @@
             Determines whether a player can join a certain class. Return `false` to block.
 
         Parameters:
-            client (Player)
-            class (number)
-            info (table)
+            client (Player) – Player requesting the class.
+            class (number) – Class index being joined.
+            info (table) – Additional class info table.
 
         Realm:
             Shared
@@ -3208,8 +3453,8 @@
             Determines if a player can use a specific command. Return `false` to block usage.
 
         Parameters:
-            client (Player)
-            command (string)
+            client (Player) – Player running the command.
+            command (string) – Command name.
 
         Realm:
             Shared
@@ -3231,9 +3476,9 @@
             Determines if a player is allowed to use a door entity, such as opening, locking, or unlocking. Return `false` to prevent the action.
 
         Parameters:
-            client (Player): The player attempting to use the door.
-            door (Entity): The door entity being used.
-            access (int): The type of access attempted (e.g., DOOR_LOCK).
+            client (Player) – The player attempting to use the door.
+            door (Entity) – The door entity being used.
+            access (int) – Access type attempted (e.g. DOOR_LOCK).
 
         Realm:
             Server
@@ -3249,13 +3494,13 @@
             end)
 ]]
 --[[
-        CharCleanUp(character:)
+        CharCleanUp(character)
 
         Description:
             Used during character cleanup routines for additional steps when removing or transitioning a character.
 
         Parameters:
-            character: The character being cleaned up.
+            character (Character) – The character being cleaned up.
 
         Realm:
             Server
@@ -3320,8 +3565,8 @@
             Client-side call when creating the graphical representation of an inventory.
 
         Parameters:
-            inventory
-            parent (Panel)
+            inventory (Inventory) – Inventory instance to draw.
+            parent (Panel) – Parent container panel.
 
         Realm:
             Client
@@ -3356,7 +3601,7 @@
             Creates a timer to manage player salary.
 
         Parameters:
-            client (Player)
+            client (Player) – Player receiving the salary timer.
 
         Realm:
             Shared
@@ -3380,8 +3625,8 @@
             Called when modules include submodules. Useful for advanced module handling or dependency management.
 
         Parameters:
-            path (string)
-            module (table)
+            path (string) – Directory path containing the submodule.
+            module (table) – Module performing the include.
 
         Realm:
             Shared
@@ -3399,8 +3644,8 @@
             Retrieves a default description for a character during creation. Return `(defaultDesc, overrideBool)`.
 
         Parameters:
-            client (Player)
-            faction (number)
+            client (Player) – Player creating the character.
+            faction (number) – Faction index of the new character.
 
         Realm:
             Server
@@ -3422,9 +3667,9 @@
             Retrieves a default name for a character during creation. Return `(defaultName, overrideBool)`.
 
         Parameters:
-            client (Player): The player creating the character.
-            faction (number): The faction index.
-            data (table): Additional creation data.
+            client (Player) – Player creating the character.
+            faction (number) – Faction index.
+            data (table) – Additional creation data.
 
         Realm:
             Server
@@ -3446,9 +3691,9 @@
             Retrieves the amount of salary a player should receive.
 
         Parameters:
-            client (Player)
-            faction (table)
-            class (table)
+            client (Player) – Player receiving salary.
+            faction (table) – Player's faction data.
+            class (table) – Player's class data.
 
         Realm:
             Shared
@@ -3469,9 +3714,9 @@
             Retrieves the salary limit for a player.
 
         Parameters:
-            client (Player)
-            faction (table)
-            class (table)
+            client (Player) – Player being checked.
+            faction (table) – Player's faction data.
+            class (table) – Player's class data.
 
         Realm:
             Shared
@@ -3569,66 +3814,15 @@
             end)
 ]]
 --[[
-        InterceptClickItemIcon(self, itemIcon, keyCode)
-
-        Description:
-            Called when a player clicks on an item icon.
-
-        Parameters:
-            self (panel)
-            itemIcon (panel)
-            keyCode (int)
-
-        Realm:
-            Client
-        Example Usage:
-            hook.Add("InterceptClickItemIcon", "HandleItemDoubleClick", function(self, itemIcon, keyCode)
-                if keyCode == KEY_MOUSE2 then -- Right-click
-                    local item = itemIcon:getItem()
-                    lia.ui.openItemContextMenu(item, itemIcon:GetPos())
-                    print("Item context menu opened for:", item.name)
-                end
-            end)
-]]
---[[
-        ItemCombine(client, item, targetItem)
-
-        Description:
-            Called when the system attempts to combine one item with another in an inventory.
-
-        Parameters:
-            client (Player)
-            item (Item)
-            targetItem (Item)
-
-        Realm:
-            Server
-
-        Returns:
-            bool: true if combination is valid and consumed, false otherwise.
-        Example Usage:
-            hook.Add("ItemCombine", "CombineHealthAndHerb", function(client, item, targetItem)
-                if item.uniqueID == "health_potion" and targetItem.uniqueID == "herb" then
-                    local newItem = lia.item.create("super_health_potion")
-                    client:getInv():addItem(newItem)
-                    client:getInv():removeItem(item.id)
-                    client:getInv():removeItem(targetItem.id)
-                    print(client:Name() .. " combined Health Potion with Herb to create Super Health Potion.")
-                    return true
-                end
-                return false
-            end)
-]]
---[[
         KeyLock(owner, entity, time)
 
         Description:
             Called when a player attempts to lock a door.
 
         Parameters:
-            owner (Player)
-            entity (Entity)
-            time (float)
+            owner (Player) – Player locking the door.
+            entity (Entity) – Door entity being locked.
+            time (float) – Duration of the locking animation.
 
         Realm:
             Server
@@ -3646,9 +3840,9 @@
             Called when a player attempts to unlock a door.
 
         Parameters:
-            owner (Player)
-            entity (Entity)
-            time (float)
+            owner (Player) – Player unlocking the door.
+            entity (Entity) – Door entity being unlocked.
+            time (float) – How long the process took.
 
         Realm:
             Server
@@ -3681,7 +3875,7 @@
             Called after an item has been registered. Useful for customizing item behavior or adding properties.
 
         Parameters:
-            item (Item)
+            item (Item) – Item definition being registered.
 
         Realm:
             Shared
@@ -3737,10 +3931,10 @@
             Called when a player purchases or sells a door.
 
         Parameters:
-            client (Player)
-            entity (Entity): The door
-            buying (bool): True if buying, false if selling
-            CallOnDoorChild (function)
+            client (Player) – Player buying or selling the door.
+            entity (Entity) – Door entity affected.
+            buying (bool) – True if buying, false if selling.
+            CallOnDoorChild (function) – Optional callback for door children.
 
         Realm:
             Server
@@ -3765,11 +3959,11 @@
             Called whenever a new log message is added. Allows for custom logic or modifications to log handling.
 
         Parameters:
-            client (Player)
-            logType (string)
-            logString (string)
-            category (string)
-            color (Color)
+            client (Player) – Player associated with the log or nil.
+            logType (string) – Type identifier for the log entry.
+            logString (string) – Formatted log text.
+            category (string) – Category name.
+            color (Color) – Display color.
 
         Realm:
             Server
@@ -3806,10 +4000,10 @@
             Called before a chat message is sent. Return `false` to cancel, or modify the message if returning a string.
 
         Parameters:
-            speaker (Player)
-            chatType (string)
-            message (string)
-            anonymous (bool)
+            speaker (Player) – Player sending the message.
+            chatType (string) – Chat type key.
+            message (string) – Message contents.
+            anonymous (bool) – True if the speaker is hidden.
 
         Realm:
             Shared
@@ -3831,8 +4025,8 @@
             Called when a player's model changes.
 
         Parameters:
-            client (Player): The player whose model changed.
-            model (string): The new model path.
+            client (Player) – The player whose model changed.
+            model (string) – The new model path.
 
         Realm:
             Shared
@@ -3850,8 +4044,8 @@
             Called when a player attempts to use a door entity.
 
         Parameters:
-            client (Player)
-            entity (Entity)
+            client (Player) – Player using the door.
+            entity (Entity) – Door entity targeted.
 
         Realm:
             Server
@@ -3884,7 +4078,7 @@
             Determines whether a specific HUD bar should be drawn.
 
         Parameters:
-            barName (string): e.g. "health", "armor".
+            barName (string) – HUD bar identifier, e.g. "health" or "armor".
 
         Realm:
             Client
@@ -3905,7 +4099,7 @@
             Checks if third-person view is allowed or disabled.
 
         Parameters:
-            client (Player)
+            client (Player) – Player to test.
 
         Realm:
             Client
@@ -3944,7 +4138,7 @@
             Called when third-person mode is toggled on or off. Allows for custom handling of third-person mode changes.
 
         Parameters:
-            state (bool): true if third-person is enabled, false if disabled.
+            state (bool) – true if third-person is enabled, false if disabled.
 
         Realm:
             Client
@@ -3966,10 +4160,10 @@
             Allows modules to modify or monitor the field being inserted.
 
         Parameters:
-            sectionName (string)
-            fieldName (string)
-            labelText (string)
-            valueFunc (function)
+            sectionName (string) – Target section name.
+            fieldName (string) – Unique field identifier.
+            labelText (string) – Text shown for the field.
+            valueFunc (function) – Function returning the value string.
 
         Realm:
             Client
@@ -3988,10 +4182,10 @@
             Fired after AddTextField so other modules can react to new fields.
 
         Parameters:
-            sectionName (string)
-            fieldName (string)
-            labelText (string)
-            valueFunc (function)
+            sectionName (string) – Section name that received the field.
+            fieldName (string) – Identifier of the new field.
+            labelText (string) – Field label.
+            valueFunc (function) – Function returning the field value.
 
         Realm:
             Client
@@ -4008,12 +4202,12 @@
             Triggered after AddBarField inserts a status bar into the F1 menu.
 
         Parameters:
-            sectionName (string)
-            fieldName (string)
-            labelText (string)
-            minFunc (function)
-            maxFunc (function)
-            valueFunc (function)
+            sectionName (string) – Section identifier.
+            fieldName (string) – Bar field name.
+            labelText (string) – Bar label text.
+            minFunc (function) – Function returning the minimum value.
+            maxFunc (function) – Function returning the maximum value.
+            valueFunc (function) – Function returning the current value.
 
         Realm:
             Client
@@ -4029,7 +4223,7 @@
             Called while building the F1 information menu to populate navigation buttons.
 
         Parameters:
-            pages (table)
+            pages (table) – Table to add page definitions into.
 
         Realm:
             Client
@@ -4045,7 +4239,7 @@
             Invoked when the settings tab is constructed allowing new configuration pages.
 
         Parameters:
-            pages (table)
+            pages (table) – Table to populate with config pages.
 
         Realm:
             Client
@@ -4074,7 +4268,7 @@
             Allows modification of the cooldown delay between OOC messages.
 
         Parameters:
-            client (Player)
+            client (Player) – Player sending OOC chat.
 
         Realm:
             Server
@@ -4095,10 +4289,10 @@
             Returning modified text will replace the message.
 
         Parameters:
-            client (Player)
-            chatType (string)
-            text (string)
-            anonymous (boolean)
+            client (Player) – Player that sent the chat.
+            chatType (string) – Chat type identifier.
+            text (string) – Message text.
+            anonymous (boolean) – True if anonymous chat.
 
         Realm:
             Client
@@ -4116,8 +4310,8 @@
             Requests PAC3 part data after adjustments have been applied.
 
         Parameters:
-            wearer (Entity)
-            id (string)
+            wearer (Entity) – Entity wearing the outfit.
+            id (string) – Part identifier.
 
         Realm:
             Client
@@ -4135,9 +4329,9 @@
             Allows modules to modify PAC3 part data before it is attached.
 
         Parameters:
-            wearer (Entity)
-            id (string)
-            data (table)
+            wearer (Entity) – Entity wearing the part.
+            id (string) – Part identifier.
+            data (table) – Part data table.
 
         Realm:
             Client
@@ -4156,8 +4350,8 @@
             Called when a PAC3 part should be attached to a player.
 
         Parameters:
-            client (Player)
-            id (string)
+            client (Player) – Player receiving the part.
+            id (string) – Part identifier.
 
         Realm:
             Client
@@ -4173,8 +4367,8 @@
             Triggered when a PAC3 part is removed from a player.
 
         Parameters:
-            client (Player)
-            id (string)
+            client (Player) – Player losing the part.
+            id (string) – Part identifier being removed.
 
         Realm:
             Client
@@ -4190,7 +4384,7 @@
             Fired when a PAC3 outfit part transfers ownership to a ragdoll.
 
         Parameters:
-            part (Entity)
+            part (Entity) – The outfit part being transferred.
 
         Realm:
             Client
@@ -4206,7 +4400,7 @@
             Allows custom rendering of a player's ragdoll created by PAC3.
 
         Parameters:
-            entity (Entity)
+            entity (Entity) – Ragdoll entity to draw.
 
         Realm:
             Client
@@ -4235,7 +4429,7 @@
             Allows PAC3 to swap the view model entity for event checks.
 
         Parameters:
-            entity (Entity)
+            entity (Entity) – The view model entity.
 
         Realm:
             Client
@@ -4285,7 +4479,7 @@
             Determines if the weapon selection UI should be visible.
 
         Parameters:
-            client (Player)
+            client (Player) – Player whose UI is drawing.
 
         Realm:
             Client
@@ -4303,7 +4497,7 @@
             Checks whether the active weapon can be selected via the weapon wheel.
 
         Parameters:
-            weapon (Weapon)
+            weapon (Weapon) – Weapon to name.
 
         Realm:
             Client
@@ -4323,8 +4517,8 @@
             Allows modules to modify the respawn delay after death.
 
         Parameters:
-            client (Player)
-            baseTime (number)
+            client (Player) – Respawning player.
+            baseTime (number) – Default respawn delay.
 
         Realm:
             Client
@@ -4357,7 +4551,7 @@
             Fired when voice chat is enabled or disabled via config.
 
         Parameters:
-            enabled (boolean)
+            enabled (boolean) – Current voice chat state.
 
         Realm:
             Shared
@@ -4386,10 +4580,10 @@
             Allows modification of character creation data before the character is saved.
 
         Parameters:
-            client (Player)
-            data (table)
-            newData (table)
-            originalData (table)
+            client (Player) – Player creating the character.
+            data (table) – Sanitized creation data.
+            newData (table) – Table to modify.
+            originalData (table) – Raw data before adjustments.
 
         Realm:
             Server
@@ -4405,9 +4599,9 @@
             Determines if a character may switch factions.
 
         Parameters:
-            character (table)
-            newFaction (table)
-            oldFaction (number)
+            character (table) – Character being transferred.
+            newFaction (table) – Faction to join.
+            oldFaction (number) – Index of the current faction.
 
         Realm:
             Server
@@ -4425,8 +4619,8 @@
             Called when a player attempts to load one of their characters.
 
         Parameters:
-            client (Player)
-            character (table)
+            client (Player) – Player loading the character.
+            character (table) – Character being loaded.
 
         Realm:
             Server
@@ -4444,9 +4638,9 @@
             Checks if a player can switch from their current character to another.
 
         Parameters:
-            client (Player)
-            currentChar (table)
-            newChar (table)
+            client (Player) – Player attempting the switch.
+            currentChar (table) – Currently loaded character.
+            newChar (table) – Character to switch to.
 
         Realm:
             Server
@@ -4464,8 +4658,8 @@
             Determines whether the player may lock the given door or vehicle.
 
         Parameters:
-            client (Player)
-            door (Entity)
+            client (Player) – Player attempting to lock.
+            door (Entity) – Door or vehicle entity.
 
         Realm:
             Server
@@ -4483,8 +4677,8 @@
             Determines whether the player may unlock the given door or vehicle.
 
         Parameters:
-            client (Player)
-            door (Entity)
+            client (Player) – Player attempting to unlock.
+            door (Entity) – Door or vehicle entity.
 
         Realm:
             Server
@@ -4502,8 +4696,8 @@
             Called when a player attempts to change a configuration value.
 
         Parameters:
-            client (Player)
-            key (string)
+            client (Player) – Player attempting the change.
+            key (string) – Config key being modified.
 
         Realm:
             Server
@@ -4521,8 +4715,8 @@
             Fired after a character is permanently removed.
 
         Parameters:
-            client (Player)
-            character (table)
+            client (Player) – Player who owned the character.
+            character (table) – Character that was deleted.
 
         Realm:
             Server
@@ -4538,9 +4732,9 @@
             Allows custom logic for determining if a faction has reached its player limit.
 
         Parameters:
-            faction (table)
-            character (table)
-            client (Player)
+            faction (table) – Faction being checked.
+            character (table) – Character requesting to join.
+            client (Player) – Owning player.
 
         Realm:
             Shared
@@ -4560,10 +4754,10 @@
             Triggered after AddSection inserts a new information section.
 
         Parameters:
-            sectionName (string)
-            color (Color)
-            priority (number)
-            location (number)
+            sectionName (string) – Name of the inserted section.
+            color (Color) – Display color for the section.
+            priority (number) – Sorting priority.
+            location (number) – Column index.
 
         Realm:
             Client
@@ -4579,7 +4773,7 @@
             Allows overriding of the displayed weapon name in the selector.
 
         Parameters:
-            weapon (Weapon)
+            weapon (Weapon) – Weapon to name.
 
         Realm:
             Client
@@ -4597,7 +4791,7 @@
             Called when a ragdolled character finishes getting up.
 
         Parameters:
-            client (Player)
+            client (Player) – Player getting up.
             entity (Entity) – Ragdoll entity.
 
         Realm:
@@ -4627,8 +4821,8 @@
             Called when a player's observe mode is toggled.
 
         Parameters:
-            client (Player)
-            state (boolean)
+            client (Player) – Player toggling observe mode.
+            state (boolean) – True to enable observing.
 
         Realm:
             Server
@@ -4644,9 +4838,9 @@
             Runs after a character has been loaded and set up for a player.
 
         Parameters:
-            client (Player)
-            character (table)
-            previousChar (table|nil)
+            client (Player) – Player who loaded the character.
+            character (table) – New character object.
+            previousChar (table|nil) – Previously active character.
 
         Realm:
             Server
@@ -4662,9 +4856,9 @@
             Fired right before a player switches to a new character.
 
         Parameters:
-            client (Player)
-            newChar (table)
-            oldChar (table|nil)
+            client (Player) – Player switching characters.
+            newChar (table) – Character being loaded.
+            oldChar (table|nil) – Character being left.
 
         Realm:
             Server
@@ -4680,9 +4874,9 @@
             Called after PlayerLoadedChar to allow post-load operations.
 
         Parameters:
-            client (Player)
-            character (table)
-            previousChar (table|nil)
+            client (Player) – Player that finished loading.
+            character (table) – Active character table.
+            previousChar (table|nil) – Previous character if any.
 
         Realm:
             Server
@@ -4698,8 +4892,8 @@
             Custom hook executed when a player sends a chat message server-side.
 
         Parameters:
-            client (Player)
-            text (string)
+            client (Player) – Speaking player.
+            text (string) – Message content.
 
         Realm:
             Server
@@ -4715,8 +4909,8 @@
             Called after the admin stick menu is created so additional commands can be added.
 
         Parameters:
-            menu (DermaPanel)
-            target (Entity)
+            menu (DermaPanel) – Context menu panel.
+            target (Entity) – Target entity of the admin stick.
 
         Realm:
             Client
@@ -4732,8 +4926,8 @@
             Fired when a staff member claims a help ticket.
 
         Parameters:
-            admin (Player)
-            requester (Player)
+            admin (Player) – Staff member claiming the ticket.
+            requester (Player) – Player who opened the ticket.
 
         Realm:
             Server
@@ -4749,9 +4943,9 @@
             Triggered when a shared option value is changed.
 
         Parameters:
-            client (Player|nil)
-            key (string)
-            value (any)
+            client (Player|nil) – Player that changed the option or nil if server.
+            key (string) – Option identifier.
+            value (any) – New value.
 
         Realm:
             Server

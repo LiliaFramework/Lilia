@@ -13,8 +13,11 @@
         Parameters:
             client (Player) – The player attempting to switch to the class.
 
+        Realm:
+            Server
+
         Returns:
-            bool – true if the player is permitted to switch to the class, false otherwise.
+            boolean – true if the player is permitted to switch to the class, false otherwise.
 
         Example Usage:
             function CLASS:OnCanBe(client)
@@ -72,19 +75,20 @@
             end
 ]]
 --[[
-        OnTransferred(character)
+        OnTransferred(client, oldClass)
 
         Description:
-            Executes actions when a character is transferred to the class.
+            Executes after a player joins this class from another.
+            Use this to react to class changes.
 
         Parameters:
-            character (Character) – The character that was transferred.
+            client (Player) – The player that joined this class.
+            oldClass (number) – Index of the previous class.
 
         Realm:
             Server
         Example Usage:
-            function CLASS:OnTransferred(character)
-                local randomModelIndex = math.random(1, #self.models)
-                character:setModel(self.models[randomModelIndex])
+            function CLASS:OnTransferred(client, oldClass)
+                print(client:Name(), "switched from class", oldClass)
             end
 ]]
