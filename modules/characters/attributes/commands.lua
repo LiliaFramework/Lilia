@@ -7,17 +7,7 @@
         Name = L("setAttributes"),
         Category = "characterManagement",
         SubCategory = L("attributes"),
-        Icon = "icon16/wrench.png",
-        ExtraFields = {
-            ["attribute"] = function()
-                local attributes = {}
-                for _, v in pairs(lia.attribs.list) do
-                    table.insert(attributes, L(v.name))
-                end
-                return attributes, "combo"
-            end,
-            ["value"] = "text"
-        }
+        Icon = "icon16/wrench.png"
     },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
@@ -115,17 +105,7 @@ lia.command.add("charaddattrib", {
         Name = L("addAttributes"),
         Category = "characterManagement",
         SubCategory = L("attributes"),
-        Icon = "icon16/add.png",
-        ExtraFields = {
-            ["attribute"] = function()
-                local attributes = {}
-                for _, v in pairs(lia.attribs.list) do
-                    table.insert(attributes, L(v.name))
-                end
-                return attributes, "combo"
-            end,
-            ["value"] = "text"
-        }
+        Icon = "icon16/add.png"
     },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])

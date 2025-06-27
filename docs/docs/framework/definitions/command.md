@@ -127,7 +127,8 @@ desc = L("doorbuyDesc")
 * `Category` (string): Top-level grouping.
 * `SubCategory` (string): Secondary grouping.
 * `Icon` (string): 16×16 icon path.
-* `ExtraFields` (table): Additional field definitions as key→type.
+* `ExtraFields` (table, optional): Legacy way to define extra argument fields.
+  Missing arguments are now prompted automatically using the command's `syntax`.
 
 **Example:**
 
@@ -136,10 +137,7 @@ AdminStick = {
     Name        = "Set Character Skin",
     Category    = "Player Information",
     SubCategory = "Set Attributes",
-    Icon        = "icon16/user_gray.png",
-    ExtraFields = {
-        ["skin"] = "number"
-    }
+    Icon        = "icon16/user_gray.png"
 }
 ```
 
