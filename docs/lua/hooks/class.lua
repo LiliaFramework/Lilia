@@ -35,6 +35,10 @@
 
         Realm:
             Server
+
+        Returns:
+            None
+
         Example Usage:
             function CLASS:OnLeave(client)
                 local character = client:getChar()
@@ -52,6 +56,10 @@
 
         Realm:
             Server
+
+        Returns:
+            None
+
         Example Usage:
             function CLASS:OnSet(client)
                 client:setModel("models/police.mdl")
@@ -68,6 +76,10 @@
 
         Realm:
             Server
+
+        Returns:
+            None
+
         Example Usage:
             function CLASS:OnSpawn(client)
                 client:SetMaxHealth(500)
@@ -87,6 +99,10 @@
 
         Realm:
             Server
+
+        Returns:
+            None
+
         Example Usage:
             function CLASS:OnTransferred(client, oldClass)
                 print(client:Name(), "switched from class", oldClass)
