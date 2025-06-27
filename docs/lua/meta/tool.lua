@@ -133,8 +133,11 @@
 
     Realm:
         Shared
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Prepare the tool for use
         local result = tool:Init()
 ]]
 --[[
@@ -225,6 +228,7 @@
         boolean – False by default.
 
     Example Usage:
+        -- Attempt the primary tool action
         local result = tool:LeftClick()
 ]]
 --[[
@@ -243,6 +247,7 @@
         boolean – False by default.
 
     Example Usage:
+        -- Attempt the secondary tool action
         local result = tool:RightClick()
 ]]
 --[[
@@ -256,8 +261,11 @@
 
     Realm:
         Shared
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Clear saved objects when reloading the tool
         local result = tool:Reload()
 ]]
 --[[
@@ -271,8 +279,11 @@
 
     Realm:
         Shared
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Equip the tool and spawn its ghost entity
         local result = tool:Deploy()
 ]]
 --[[
@@ -286,8 +297,11 @@
 
     Realm:
         Shared
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Unequip the tool and remove its ghost entity
         local result = tool:Holster()
 ]]
 --[[
@@ -301,8 +315,11 @@
 
     Realm:
         Shared
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Run per-tick logic for the active tool
         local result = tool:Think()
 ]]
 --[[
@@ -316,8 +333,11 @@
 
     Realm:
         Shared
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Validate all stored objects each tick
         local result = tool:CheckObjects()
 ]]
 --[[
@@ -331,8 +351,11 @@
 
     Realm:
         Shared
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Remove any objects the tool is storing
         local result = tool:ClearObjects()
 ]]
 --[[
@@ -346,7 +369,10 @@
 
     Realm:
         Shared
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Remove the placement preview entity
         local result = tool:ReleaseGhostEntity()
 ]]

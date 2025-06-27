@@ -213,8 +213,11 @@
 
     Realm:
         Shared
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Register a function to run when the hook triggers
         local result = item:hook(name, func)
 ]]
 --[[
@@ -229,8 +232,11 @@
 
     Realm:
         Shared
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Run code after the base hook executes
         local result = item:postHook(name, func)
 ]]
 --[[
@@ -244,8 +250,11 @@
 
     Realm:
         Shared
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Called when this item type is first added
         local result = item:onRegistered()
 ]]
 --[[
@@ -259,8 +268,11 @@
 
     Realm:
         Server
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Debug print the item information
         local result = item:print(detail)
 ]]
 --[[
@@ -274,8 +286,11 @@
 
     Realm:
         Server
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Output every piece of stored item data
         local result = item:printData()
 ]]
 --[[
@@ -291,8 +306,11 @@
 
         Realm:
             Server
+        Returns:
+            nil – This function does not return a value.
 
     Example Usage:
+        -- Increase the stack count and sync to players
         local result = item:addQuantity(quantity, receivers, noCheckEntity)
     ]]
 --[[
@@ -308,7 +326,10 @@
 
         Realm:
             Server
+        Returns:
+            nil – This function does not return a value.
 
     Example Usage:
+        -- Force the stack to a specific amount
         local result = item:setQuantity(quantity, receivers, noCheckEntity)
     ]]

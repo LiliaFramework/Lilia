@@ -189,9 +189,12 @@
 
     Realm:
         Server
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
-        local result = player:notify(message)
+        -- Send a chat notification to the player
+        local result = player:notify("Welcome to the server!")
 ]]
 --[[
     notifyLocalized(message, ...)
@@ -205,9 +208,12 @@
 
     Realm:
         Server
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
-        local result = player:notifyLocalized(message, ...)
+        -- Send a localized message to the player
+        local result = player:notifyLocalized("greeting_key", player:Name())
 ]]
 --[[
     CanEditVendor(vendor)
@@ -530,8 +536,11 @@
 
     Realm:
         Shared
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Stop the player's forced animation sequence
         local result = player:leaveSequence()
 ]]
 --[[
@@ -545,8 +554,11 @@
 
         Realm:
             Server
+        Returns:
+            nil – This function does not return a value.
 
     Example Usage:
+        -- Give the player extra stamina points
         local result = player:restoreStamina(amount)
     ]]
 --[[
@@ -560,8 +572,11 @@
 
         Realm:
             Server
+        Returns:
+            nil – This function does not return a value.
 
     Example Usage:
+        -- Spend stamina as the player performs an action
         local result = player:consumeStamina(amount)
     ]]
 --[[
@@ -575,8 +590,11 @@
 
         Realm:
             Server
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Give the player additional money
         local result = player:addMoney(amount)
     ]]
 --[[
@@ -590,7 +608,10 @@
 
         Realm:
             Server
+    Returns:
+        nil – This function does not return a value.
 
     Example Usage:
+        -- Remove money from the player's character
         local result = player:takeMoney(amount)
     ]]
