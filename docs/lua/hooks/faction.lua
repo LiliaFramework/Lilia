@@ -15,6 +15,10 @@
 
         Realm:
             Shared
+
+        Returns:
+            string – Default name text.
+
         Example Usage:
             function FACTION:GetDefaultName(client)
                 return "CT-" .. math.random(111111, 999999)
@@ -31,6 +35,10 @@
 
         Realm:
             Shared
+
+        Returns:
+            string – Default description text.
+
         Example Usage:
             function FACTION:GetDefaultDesc(client)
                 return "A police officer"
@@ -48,6 +56,10 @@
 
         Realm:
             Server
+
+        Returns:
+            None
+
         Example Usage:
             function FACTION:OnCharCreated(client, character)
                 local inventory = character:getInv()
@@ -65,6 +77,10 @@
 
         Realm:
             Server
+
+        Returns:
+            None
+
         Example Usage:
             function FACTION:OnSpawn(client)
                 client:ChatPrint("You have spawned!")
@@ -81,6 +97,10 @@
 
         Realm:
             Server
+
+        Returns:
+            None
+
         Example Usage:
             function FACTION:OnTransferred(client)
                 local randomModelIndex = math.random(1, #self.models)
