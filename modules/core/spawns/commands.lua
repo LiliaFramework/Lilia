@@ -90,7 +90,7 @@ lia.command.add("returnitems", {
     superAdminOnly = true,
     privilege = "Return Items",
     desc = L("returnItemsDesc"),
-    syntax = "[string Name]",
+    syntax = "[player Name]",
     AdminStick = {
         Name = L("returnItemsName"),
         Category = "characterManagement",

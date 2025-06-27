@@ -140,7 +140,7 @@ lia.command.add("playtime", {
 lia.command.add("plygetplaytime", {
     adminOnly = true,
     privilege = "View Playtime",
-    syntax = "[string Char Name]",
+    syntax = "[player Char Name]",
     AdminStick = {
         Name = L("adminStickGetPlayTimeName"),
         Category = "moderationTools",
