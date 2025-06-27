@@ -180,63 +180,81 @@ local ConditionalFiles = {
     {
         path = "lilia/gamemode/core/libraries/compatibility/vcmod.lua",
         global = "VCMod",
-        name = "VCMod"
+        name = "VCMod",
+        realm = "shared"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/vjbase.lua",
         global = "VJ",
-        name = "VJ"
+        name = "VJ",
+        realm = "shared"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/advdupe.lua",
         global = "AdvDupe",
-        name = "AdvDupe"
+        name = "AdvDupe",
+        realm = "shared"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/advdupe2.lua",
         global = "AdvDupe2",
-        name = "AdvDupe2"
+        name = "AdvDupe2",
+        realm = "shared"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/pac.lua",
         global = "pac",
-        name = "PAC"
+        name = "PAC",
+        realm = "shared"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/prone.lua",
         global = "prone",
-        name = "Prone"
+        name = "Prone",
+        realm = "shared"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/sam.lua",
         global = "sam",
-        name = "SAM"
+        name = "SAM",
+        realm = "shared"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/serverguard.lua",
         global = "serverguard",
-        name = "ServerGuard"
+        name = "ServerGuard",
+        realm = "server"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/simfphys.lua",
         global = "simfphys",
-        name = "Simfphys"
+        name = "Simfphys",
+        realm = "shared"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/sitanywhere.lua",
         global = "SitAnywhere",
-        name = "SitAnywhere"
+        name = "SitAnywhere",
+        realm = "shared"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/ulx.lua",
         global = "ulx",
-        name = "ULX"
+        name = "ULX",
+        realm = "server"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/permaprops.lua",
         global = "PermaProps",
-        name = "PermaProps"
+        name = "PermaProps",
+        realm = "shared"
     },
+    {
+        path = "lilia/gamemode/core/libraries/compatibility/lvs.lua",
+        global = "LVS",
+        name = "LVS",
+        realm = "shared"
+    }
 }
 
 function lia.include(path, realm)
@@ -486,7 +504,7 @@ end
 local loadedCompatibility = {}
 for _, file in ipairs(ConditionalFiles) do
     if _G[file.global] then
-        lia.include(file.path, "shared")
+        lia.include(file.path, file.realm or "shared")
         loadedCompatibility[#loadedCompatibility + 1] = file.name
     end
 end

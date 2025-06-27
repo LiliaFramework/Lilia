@@ -4,30 +4,18 @@
     transactions use Lilia's economy.
 ]]
 if SERVER then
-    hook.Add("VC_canAddMoney", "VCMOD_VC_canAfford", function(client, amount)
+    hook.Add("VC_canAddMoney", "VCMOD_canAddMoney", function(client, amount)
         client:getChar():giveMoney(amount)
         return false
     end)
 
-    hook.Add("VC_canRemoveMoney", "VCMOD_VC_canAfford", function(client, amount)
+    hook.Add("VC_canRemoveMoney", "VCMOD_canRemoveMoney", function(client, amount)
         client:getChar():takeMoney(amount)
         return false
     end)
 end
 
-hook.Add("VC_canAfford", "VCMOD_VC_canAfford", function(client, amount)
+hook.Add("VC_canAfford", "VCMOD_canAfford", function(client, amount)
     if client:getChar():hasMoney(amount) then return true end
     return false
 end)
-
-if SERVER then
-    hook.Add("VC_canAddMoney", "VCMOD_VC_canAfford", function(client, amount)
-        client:getChar():giveMoney(amount)
-        return false
-    end)
-
-    hook.Add("VC_canRemoveMoney", "VCMOD_VC_canAfford", function(client, amount)
-        client:getChar():takeMoney(amount)
-        return false
-    end)
-end

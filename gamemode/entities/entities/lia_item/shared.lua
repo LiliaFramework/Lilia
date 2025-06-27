@@ -8,6 +8,7 @@ ENT.DrawEntityInfo = true
 ENT.isItem = true
 ENT.noTarget = true
 ENT.Holdable = true
+ENT.NoDuplicate = true
 function ENT:getItemID()
     return self:getNetVar("instanceID")
 end
