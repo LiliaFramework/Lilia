@@ -16,7 +16,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.faction.loadFromDir
       lia.faction.loadFromDir("path/to/factions")
 ]]
 
@@ -36,7 +36,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.faction.get
       local faction = lia.faction.get("citizen")
 ]]
 
@@ -56,7 +56,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.faction.getIndex
       local index = lia.faction.getIndex("citizen")
 ]]
 
@@ -76,7 +76,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.faction.getClasses
       local classes = lia.faction.getClasses("citizen")
 ]]
 
@@ -96,7 +96,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.faction.getPlayers
       local players = lia.faction.getPlayers("citizen")
 ]]
 
@@ -116,7 +116,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.faction.getPlayerCount
       local count = lia.faction.getPlayerCount("citizen")
 ]]
 
@@ -136,7 +136,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.faction.isFactionCategory
       local isMember = lia.faction.isFactionCategory("citizen", {"citizen", "veteran"})
 ]]
 
@@ -162,7 +162,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.faction.jobGenerate
       local faction = lia.faction.jobGenerate(2, "Police", Color(0, 0, 255), false, {"models/player/police.mdl"})
 ]]
 
@@ -183,7 +183,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.faction.formatModelData
       lia.faction.formatModelData()
 ]]
 
@@ -204,7 +204,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.faction.getCategories
       local categories = lia.faction.getCategories("citizen")
 ]]
 
@@ -225,7 +225,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.faction.getModelsFromCategory
       local models = lia.faction.getModelsFromCategory("citizen", "special")
 ]]
 
@@ -246,7 +246,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.faction.getDefaultClass
       local defaultClass = lia.faction.getDefaultClass("citizen")
 ]]
 
@@ -267,6 +267,6 @@
          Client
 
       Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.faction.hasWhitelist
          local whitelisted = lia.faction.hasWhitelist("citizen")
    ]]

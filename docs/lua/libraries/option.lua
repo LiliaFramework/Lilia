@@ -19,7 +19,7 @@
         Shared
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.option.add
         lia.option.add("showHints", "Show Hints", "Display hints", true)
 ]]
 
@@ -40,7 +40,7 @@
         Client
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.option.set
         lia.option.set("showHints", false)
 ]]
 
@@ -61,7 +61,7 @@
         Client
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.option.get
         local show = lia.option.get("showHints", true)
 ]]
 
@@ -81,7 +81,7 @@
         Client
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.option.save
         lia.option.save()
 ]]
 
@@ -101,6 +101,6 @@
         Client
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.option.load
         lia.option.load()
 ]]

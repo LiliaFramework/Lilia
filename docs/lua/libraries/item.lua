@@ -14,7 +14,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.get
       local itemDef = lia.item.get("testItem")
 ]]
 
@@ -36,7 +36,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.getItemByID
       local result = lia.item.getItemByID(42)
       if result then
           print("Item location: " .. result.location)
@@ -59,7 +59,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.getInstancedItemByID
       local itemInstance = lia.item.getInstancedItemByID(42)
       if itemInstance then
           print("Got item: " .. itemInstance.name)
@@ -82,7 +82,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.getItemDataByID
       local data = lia.item.getItemDataByID(42)
       if data then
           print("Item data found.")
@@ -108,7 +108,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.load
       lia.item.load("items/base/sh_item_base.lua", nil, true)
 ]]
 
@@ -128,7 +128,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.isItem
       local result = lia.item.isItem(myObject)
       if result then
           print("It's an item!")
@@ -151,7 +151,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.getInv
       local inv = lia.item.getInv(5)
       if inv then
           print("Got inventory with ID 5")
@@ -179,7 +179,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.register
       lia.item.register("special_item", "base_item", false, "path/to/item.lua")
 ]]
 
@@ -200,7 +200,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.loadFromDir
       lia.item.loadFromDir("lilia/gamemode/items")
 ]]
 
@@ -222,7 +222,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.new
       local newItem = lia.item.new("testItem", 101)
       print(newItem.id) -- 101
 ]]
@@ -246,7 +246,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.registerInv
       lia.item.registerInv("smallInv", 4, 4)
 ]]
 
@@ -269,7 +269,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.newInv
       lia.item.newInv(10, "smallInv", function(inventory)
           print("New inventory created:", inventory.id)
       end)
@@ -294,7 +294,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.createInv
       local inv = lia.item.createInv(6, 6, 200)
       print("Created inventory with ID:", inv.id)
 ]]
@@ -321,7 +321,7 @@
           Server
 
        Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.setItemDataByID
           local success, err = lia.item.setItemDataByID(50, "durability", 90)
           if not success then
               print("Error:", err)
@@ -350,7 +350,7 @@
           Server
 
        Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.instance
           lia.item.instance(1, "testItem", {someKey = "someValue"}):next(function(item)
               print("Item created with ID:", item.id)
           end)
@@ -372,7 +372,7 @@
           Server
 
        Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.deleteByID
           lia.item.deleteByID(42)
     ]]
 
@@ -393,7 +393,7 @@
           Server
 
        Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.loadItemByID
           lia.item.loadItemByID(42)
           -- or
           lia.item.loadItemByID({10, 11, 12})
@@ -420,7 +420,7 @@
           Server
 
        Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.spawn
           lia.item.spawn("testItem", Vector(0,0,0)):next(function(item)
               print("Spawned item entity with ID:", item.id)
           end)
@@ -446,7 +446,7 @@
           Server
 
        Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.item.restoreInv
           lia.item.restoreInv(101, 5, 5, function(inv)
               print("Restored inventory with ID 101.")
           end)

@@ -1402,7 +1402,7 @@
             None
 
         Example Usage:
-            -- Gives police faction members a radio before they spawn.
+            -- Prints a message when FactionOnLoadout is triggered
             hook.Add("FactionOnLoadout", "GiveRadio", function(ply)
                 if ply:getChar():getFaction() == "police" then
                     ply:Give("weapon_radio")
@@ -1426,7 +1426,7 @@
             None
 
         Example Usage:
-            -- Provides medics with a medkit in their starting gear.
+            -- Prints a message when ClassOnLoadout is triggered
             hook.Add("ClassOnLoadout", "MedicItems", function(ply)
                 if ply:getChar():getClass() == "medic" then
                     ply:Give("medkit")
@@ -1450,7 +1450,7 @@
             None
 
         Example Usage:
-            -- Colors the player's model bright green after spawning.
+            -- Prints a message when PostPlayerLoadout is triggered
             hook.Add("PostPlayerLoadout", "SetColor", function(ply)
                 ply:SetPlayerColor(Vector(0, 1, 0))
             end)
@@ -1472,7 +1472,7 @@
             None
 
         Example Usage:
-            -- Plays a gear sound for soldier faction members after loadout.
+            -- Prints a message when FactionPostLoadout is triggered
             hook.Add("FactionPostLoadout", "Shout", function(ply)
                 if ply:getChar():getFaction() == "soldier" then
                     ply:EmitSound("npc/combine_soldier/gear6.wav")
@@ -1496,7 +1496,7 @@
             None
 
         Example Usage:
-            -- Makes players perform a "muscle" gesture after class loadout.
+            -- Prints a message when ClassPostLoadout is triggered
             hook.Add("ClassPostLoadout", "Pose", function(ply)
                 ply:ConCommand("act muscle")
             end)
@@ -1518,7 +1518,7 @@
             string – Inventory type
 
         Example Usage:
-            -- Forces all characters to start with a grid inventory.
+            -- Prints a message when GetDefaultInventoryType is triggered
             hook.Add("GetDefaultInventoryType", "UseGrid", function()
                 return "GridInv"
             end)
@@ -1540,9 +1540,9 @@
             boolean – True to delete items
 
         Example Usage:
-            -- Only wipe dropped items if the server owner requested it.
-            hook.Add("ShouldDeleteSavedItems", "RespectWipeSetting", function()
-                return GetConVar("lia_nowipe"):GetBool()
+            -- Prints a message when ShouldDeleteSavedItems is triggered
+            hook.Add("ShouldDeleteSavedItems", "ClearDrops", function()
+                return false
             end)
 ]]
 --[[
@@ -1562,17 +1562,9 @@
             None
 
         Example Usage:
-            -- Reinitializes physics on all loaded props.
-            hook.Add("OnSavedItemLoaded", "RestoreItemPhysics", function(items)
-                for _, ent in ipairs(items) do
-                    if ent:GetClass() == "prop_physics" then
-                        ent:PhysicsInit(SOLID_VPHYSICS)
-                        local phys = ent:GetPhysicsObject()
-                        if IsValid(phys) then
-                            phys:Wake()
-                        end
-                    end
-                end
+            -- Prints a message when OnSavedItemLoaded is triggered
+            hook.Add("OnSavedItemLoaded", "PrintCount", function(items)
+                print("Loaded", #items, "items")
             end)
 ]]
 --[[
