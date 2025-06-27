@@ -18,7 +18,7 @@ local playerMeta = FindMetaTable("Entity")
         Shared
 
     Returns:
-        parts (table) – Table of equipped part IDs.
+        parts (table) - Table of equipped part IDs.
 ]]
 function playerMeta:getParts()
     return self:getNetVar("parts", {})
@@ -52,7 +52,7 @@ if SERVER then
             Adds a PAC3 part to the player and broadcasts the change.
 
         Parameters:
-            partID (string) – Identifier of the part to add.
+            partID (string) - Identifier of the part to add.
 
         Realm:
             Server
@@ -78,7 +78,7 @@ if SERVER then
             Removes a PAC3 part from the player and broadcasts the change.
 
         Parameters:
-            partID (string) – Identifier of the part to remove.
+            partID (string) - Identifier of the part to remove.
 
         Realm:
             Server

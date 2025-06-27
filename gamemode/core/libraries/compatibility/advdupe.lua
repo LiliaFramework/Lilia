@@ -1,3 +1,9 @@
+--[[
+    Compatibility helper for the original Advanced Duplicator tool.
+    Adds safety checks to prevent duplication of restricted entities
+    and blocks oversized props that could destabilize the server.
+]]
+
 local function CheckDuplicationScale(client, entities)
     entities = entities or {}
     for _, ent in pairs(entities) do

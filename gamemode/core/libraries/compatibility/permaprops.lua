@@ -1,3 +1,9 @@
+--[[
+    Compatibility layer for the PermaProps tool.
+    Prevents saving Lilia's persistent entities or
+    map-created props as permanent to avoid conflicts.
+]]
+
 hook.Add("CanTool", "liaPermaProps", function(client, _, tool)
     local entity = client:getTracedEntity()
     local entClass = entity:GetClass()
