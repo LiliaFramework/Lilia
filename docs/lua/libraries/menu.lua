@@ -19,6 +19,7 @@
         number – Identifier for the created menu entry.
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.menu.add({["Hello"] = function() print("Hi") end})
 ]]
 
@@ -39,6 +40,7 @@
         nil
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         hook.Add("HUDPaint", "DrawMenus", lia.menu.drawAll)
 ]]
 
@@ -60,6 +62,7 @@
         callback (function|nil) – Callback for the hovered item.
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local id, callback = lia.menu.getActiveMenu()
 ]]
 
@@ -80,5 +83,6 @@
         boolean – True if a callback was executed.
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.menu.onButtonPressed(id)
 ]]

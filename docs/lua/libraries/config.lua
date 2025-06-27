@@ -18,6 +18,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.config.add("maxPlayers", "Maximum Players", 64)
 ]]
 
@@ -38,6 +39,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.config.setDefault("maxPlayers", 32)
 ]]
 
@@ -59,6 +61,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.config.forceSet("someSetting", true, true)
 ]]
 
@@ -79,6 +82,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.config.set("maxPlayers", 24)
 ]]
 
@@ -99,6 +103,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local players = lia.config.get("maxPlayers", 64)
 ]]
 
@@ -122,6 +127,7 @@
         true
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.config.load()
 ]]
 
@@ -141,6 +147,7 @@
             Server
 
         Example Usage:
+        -- [[ Example of how to use this function ]]
             local changed = lia.config.getChangedValues()
 ]]
 
@@ -160,6 +167,7 @@
             Server
 
         Example Usage:
+        -- [[ Example of how to use this function ]]
             lia.config.send(client)
 ]]
 
@@ -179,5 +187,6 @@
             Server
 
         Example Usage:
+        -- [[ Example of how to use this function ]]
             lia.config.save()
 ]]

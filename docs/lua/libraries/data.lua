@@ -19,6 +19,7 @@
         Shared
     
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.data.set("spawn_pos", Vector(0, 0, 0))
    ]]
 
@@ -41,6 +42,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.data.delete("spawn_pos")
    ]]
 
@@ -66,5 +68,6 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local pos = lia.data.get("spawn_pos", Vector(0, 0, 0))
 ]]

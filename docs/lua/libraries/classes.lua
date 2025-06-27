@@ -14,6 +14,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.class.loadFromDir("schema/classes")
 ]]
 
@@ -34,6 +35,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local allowed = lia.class.canBe(client, classID)
 ]]
 
@@ -53,6 +55,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local classData = lia.class.get(1)
 ]]
 
@@ -72,6 +75,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local players = lia.class.getPlayers(classID)
 ]]
 
@@ -91,6 +95,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local count = lia.class.getPlayerCount(classID)
 ]]
 
@@ -110,6 +115,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local id = lia.class.retrieveClass("police")
 ]]
 
@@ -129,6 +135,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         if lia.class.hasWhitelist(classID) then
             print("Whitelist required")
         end

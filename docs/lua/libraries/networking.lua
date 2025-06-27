@@ -17,6 +17,7 @@
         nil
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         setNetVar("round", 1)
 ]]
 
@@ -37,6 +38,7 @@
         any – Stored value or default.
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local round = getNetVar("round", 0)
 ]]
 

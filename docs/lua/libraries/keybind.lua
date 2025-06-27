@@ -20,6 +20,7 @@
       Client
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       lia.keybind.add("space", "jump", function() print("Jump pressed!") end, function() print("Jump released!") end)
 ]]
 
@@ -42,6 +43,7 @@
       Client
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       local jumpKey = lia.keybind.get("jump", KEY_SPACE)
 ]]
 
@@ -66,6 +68,7 @@
       true
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       lia.keybind.save()
 ]]
 
@@ -92,5 +95,6 @@
       true
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       lia.keybind.load()
 ]]

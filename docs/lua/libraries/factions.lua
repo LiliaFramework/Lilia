@@ -16,6 +16,7 @@
       Shared
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       lia.faction.loadFromDir("path/to/factions")
 ]]
 
@@ -35,6 +36,7 @@
       Shared
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       local faction = lia.faction.get("citizen")
 ]]
 
@@ -54,6 +56,7 @@
       Shared
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       local index = lia.faction.getIndex("citizen")
 ]]
 
@@ -73,6 +76,7 @@
       Shared
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       local classes = lia.faction.getClasses("citizen")
 ]]
 
@@ -92,6 +96,7 @@
       Shared
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       local players = lia.faction.getPlayers("citizen")
 ]]
 
@@ -111,6 +116,7 @@
       Shared
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       local count = lia.faction.getPlayerCount("citizen")
 ]]
 
@@ -130,6 +136,7 @@
       Shared
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       local isMember = lia.faction.isFactionCategory("citizen", {"citizen", "veteran"})
 ]]
 
@@ -155,6 +162,7 @@
       Shared
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       local faction = lia.faction.jobGenerate(2, "Police", Color(0, 0, 255), false, {"models/player/police.mdl"})
 ]]
 
@@ -175,6 +183,7 @@
       Shared
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       lia.faction.formatModelData()
 ]]
 
@@ -195,6 +204,7 @@
       Shared
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       local categories = lia.faction.getCategories("citizen")
 ]]
 
@@ -215,6 +225,7 @@
       Shared
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       local models = lia.faction.getModelsFromCategory("citizen", "special")
 ]]
 
@@ -235,6 +246,7 @@
       Shared
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       local defaultClass = lia.faction.getDefaultClass("citizen")
 ]]
 
@@ -255,5 +267,6 @@
          Client
 
       Example Usage:
+        -- [[ Example of how to use this function ]]
          local whitelisted = lia.faction.hasWhitelist("citizen")
    ]]

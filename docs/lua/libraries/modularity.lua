@@ -19,6 +19,7 @@
       nil
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       lia.module.load("example", "lilia/modules/example", false)
 ]]
 
@@ -39,6 +40,7 @@
       nil
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       lia.module.initialize()
 ]]
 
@@ -61,6 +63,7 @@
       nil
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       lia.module.loadFromDir("lilia/modules/core", "module")
 ]]
 
@@ -80,5 +83,6 @@
       The module table if found, or nil if the module is not registered.
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       local mod = lia.module.get("schema")
 ]]

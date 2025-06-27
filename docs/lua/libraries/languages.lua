@@ -20,6 +20,7 @@
         true
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.lang.loadFromDir("languages")
 ]]
 
@@ -42,5 +43,6 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.lang.AddTable("english", {greeting = "Hello"})
 ]]

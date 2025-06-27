@@ -15,6 +15,7 @@
             None
 
         Example Usage:
+        -- [[ Example of how to use this function ]]
             lia.font.register("MyFont", {font = "Arial", size = 16})
     ]]
 
@@ -34,6 +35,7 @@
             Client
 
         Example Usage:
+        -- [[ Example of how to use this function ]]
             local fonts = lia.font.getAvailableFonts()
             PrintTable(fonts)
     ]]
@@ -54,5 +56,6 @@
             Client
 
         Example Usage:
+        -- [[ Example of how to use this function ]]
             lia.font.refresh()
     ]]
