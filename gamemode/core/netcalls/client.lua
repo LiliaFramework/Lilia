@@ -551,6 +551,13 @@ net.Receive("AnimationStatus", function()
     if IsValid(ply) then ply:NetworkAnimation(active, boneData) end
 end)
 
+net.Receive("liaCmdArgPrompt", function()
+    local cmd = net.ReadString()
+    local fields = net.ReadTable()
+    local prefix = net.ReadTable()
+    lia.command.openArgumentPrompt(cmd, fields, prefix)
+end)
+
 netstream.Hook("charInfo", function(data, id, client) lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client) end)
 netstream.Hook("charKick", function(id, isCurrentChar) hook.Run("KickedFromChar", id, isCurrentChar) end)
 netstream.Hook("gVar", function(key, value) lia.net.globals[key] = value end)

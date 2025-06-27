@@ -97,8 +97,6 @@ function lia.command.extractArgs(text)
     return arguments
 end
 
--- Parses a command syntax string into an ordered list of fields.
--- Each field is returned as {name = <string>, type = <string>}.
 function lia.command.parseSyntaxFields(syntax)
     local fields = {}
     if not syntax or syntax == "" then return fields end
@@ -119,9 +117,11 @@ function lia.command.parseSyntaxFields(syntax)
             typ = "text"
         end
 
-        fields[#fields + 1] = {name = name, type = typ}
+        fields[#fields + 1] = {
+            name = name,
+            type = typ
+        }
     end
-
     return fields
 end
 
@@ -146,6 +146,7 @@ local function combineBracketArgs(args)
             result[#result + 1] = a
         end
     end
+
     if buffer then result[#result + 1] = buffer end
     return result
 end
@@ -187,7 +188,6 @@ if SERVER then
             local command = lia.command.list[match]
             if command then
                 if not arguments then arguments = lia.command.extractArgs(text:sub(#match + 3)) end
-
                 local fields = lia.command.parseSyntaxFields(command.syntax)
                 if IsValid(client) and client:IsPlayer() and #fields > 0 then
                     local tokens = combineBracketArgs(arguments)
@@ -325,13 +325,6 @@ else
             AdminStickIsOpen = false
         end
     end
-
-    net.Receive("liaCmdArgPrompt", function()
-        local cmd = net.ReadString()
-        local fields = net.ReadTable()
-        local prefix = net.ReadTable()
-        lia.command.openArgumentPrompt(cmd, fields, prefix)
-    end)
 
     function lia.command.send(command, ...)
         net.Start("cmd")
