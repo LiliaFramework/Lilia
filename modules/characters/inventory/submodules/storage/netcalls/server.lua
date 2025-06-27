@@ -19,8 +19,10 @@ net.Receive("liaStorageUnlock", function(_, client)
         client:notifyLocalized("passwordTooQuick")
     else
         if storage.password == password then
+            lia.log.add(client, "storageUnlock", storage:GetClass())
             storage:openInv(client)
         else
+            lia.log.add(client, "storageUnlockFailed", storage:GetClass(), password)
             client:notifyLocalized("wrongPassword")
             client.liaStorageEntity = nil
         end

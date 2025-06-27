@@ -4,6 +4,7 @@ for _, v in pairs(KnownExploits) do
         client.nextExploitNotify = client.nextExploitNotify or 0
         if client.nextExploitNotify > CurTime() then return end
         client.nextExploitNotify = CurTime() + 2
+        lia.log.add(nil, "exploitAttempt", client:Name(), client:SteamID64(), tostring(v))
         for _, p in player.Iterator() do
             if p:isStaffOnDuty() then p:notifyLocalized("exploitAttempt", client:Name(), client:SteamID64(), tostring(v)) end
         end
@@ -25,11 +26,18 @@ end
 net.Receive("CheckSeed", function(_, client)
     local sentSteamID = net.ReadString()
     if not sentSteamID or sentSteamID == "" then
+        lia.log.add(nil, "steamIDMissing", client:Name(), client:SteamID64())
         NotifyAdmin(L("steamIDMissing", client:Name(), client:SteamID64()))
         return
     end
 
-    if client:SteamID64() ~= sentSteamID then NotifyAdmin(L("steamIDMismatch", client:Name(), client:SteamID64(), sentSteamID)) end
+    if client:SteamID64() ~= sentSteamID then
+        lia.log.add(nil, "steamIDMismatch", client:Name(), client:SteamID64(), sentSteamID)
+        NotifyAdmin(L("steamIDMismatch", client:Name(), client:SteamID64(), sentSteamID))
+    end
 end)
 
-net.Receive("CheckHack", function(_, client) ApplyPunishment(client, "Hacking", true, true, 0) end)
+net.Receive("CheckHack", function(_, client)
+    lia.log.add(client, "hackAttempt")
+    ApplyPunishment(client, "Hacking", true, true, 0)
+end)
