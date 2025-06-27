@@ -15,6 +15,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.color.register("myRed", Color(255,0,0))
 ]]
 
@@ -38,6 +39,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local lighter = lia.color.Adjust(Color(50,50,50), 10,10,10)
 ]]
 
@@ -57,5 +59,6 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local uiColors = lia.color.ReturnMainAdjustedColors()
 ]]

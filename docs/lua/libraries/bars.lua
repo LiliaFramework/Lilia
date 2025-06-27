@@ -14,6 +14,7 @@
         table or nil – The bar table if found, or nil if not found.
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local bar = lia.bar.get("health")
 ]]
 
@@ -38,6 +39,7 @@
         number – The priority assigned to the added bar.
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.bar.add(function() return 1 end, Color(255,0,0), 1, "example")
 ]]
 
@@ -57,6 +59,7 @@
         nil
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.bar.remove("example")
 ]]
 
@@ -83,6 +86,7 @@
         nil
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.bar.drawBar(10, 10, 200, 20, 0.5, 1, Color(255,0,0))
 ]]
 
@@ -104,6 +108,7 @@
         nil
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.bar.drawAction("Reloading", 2)
 ]]
 
@@ -124,5 +129,6 @@
         nil
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         hook.Add("HUDPaintBackground", "liaBarDraw", lia.bar.drawAll)
 ]]

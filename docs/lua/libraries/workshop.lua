@@ -11,6 +11,7 @@
             ids (table) – Table of workshop IDs to download.
 
         Example Usage:
+        -- [[ Example of how to use this function ]]
             local ids = lia.workshop.gather()
     ]]
 
@@ -30,5 +31,6 @@
             None
 
         Example Usage:
+        -- [[ Example of how to use this function ]]
             lia.workshop.send(ply)
     ]]

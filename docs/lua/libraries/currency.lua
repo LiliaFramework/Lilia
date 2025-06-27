@@ -16,6 +16,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.currency.get(10)  -- e.g., "$10 dollars"
 ]]
 
@@ -38,5 +39,6 @@
             Server
 
         Example Usage:
+        -- [[ Example of how to use this function ]]
             lia.currency.spawn(Vector(0, 0, 0), 100)
     ]]

@@ -17,6 +17,7 @@
          true
 
       Example Usage:
+        -- [[ Example of how to use this function ]]
           lia.log.loadTables()
    ]]
 
@@ -39,6 +40,7 @@
          Server
 
       Example Usage:
+        -- [[ Example of how to use this function ]]
           lia.log.addType("mytype", function(client)
               return client:Name() .. " did something"
           end, "actions")
@@ -66,6 +68,7 @@
          true
 
       Example Usage:
+        -- [[ Example of how to use this function ]]
           local str, category = lia.log.getString(client, "mytype", "info")
    ]]
 
@@ -88,5 +91,6 @@
          Server
 
       Example Usage:
+        -- [[ Example of how to use this function ]]
           lia.log.add(client, "mytype", "info")
    ]]

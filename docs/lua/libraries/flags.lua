@@ -17,6 +17,7 @@
       Shared
 
    Example Usage:
+        -- [[ Example of how to use this function ]]
       lia.flag.add("C", "Spawn vehicles.")
 ]]
 
@@ -37,5 +38,6 @@
          Server
 
       Example Usage:
+        -- [[ Example of how to use this function ]]
          lia.flag.onSpawn(player)
 ]]

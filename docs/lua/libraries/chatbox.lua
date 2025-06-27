@@ -14,6 +14,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local ts = lia.chat.timestamp(false)
 ]]
 
@@ -34,6 +35,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.chat.register("me", {onChatAdd = function(...) end})
 ]]
 
@@ -55,6 +57,7 @@
         Shared
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local class, text = lia.chat.parse(client, "/me waves")
 ]]
 
@@ -78,5 +81,6 @@
         Server
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.chat.send(client, "ic", "Hello")
 ]]

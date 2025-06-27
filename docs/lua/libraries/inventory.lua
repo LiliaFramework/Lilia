@@ -15,6 +15,7 @@
         nil
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.inventory.newType("bag", {className = "liaBag"})
 ]]
 
@@ -34,6 +35,7 @@
         table
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local inv = lia.inventory.new("bag")
 ]]
 
@@ -53,6 +55,7 @@
           deferred
 
       Example Usage:
+        -- [[ Example of how to use this function ]]
           lia.inventory.loadByID(1):next(function(inv) print(inv) end)
    ]]
 
@@ -72,6 +75,7 @@
           deferred
 
       Example Usage:
+        -- [[ Example of how to use this function ]]
           lia.inventory.loadFromDefaultStorage(1)
    ]]
 
@@ -91,6 +95,7 @@
           deferred
 
       Example Usage:
+        -- [[ Example of how to use this function ]]
           lia.inventory.instance("bag", {charID = 1})
    ]]
 
@@ -110,6 +115,7 @@
           deferred
 
       Example Usage:
+        -- [[ Example of how to use this function ]]
           lia.inventory.loadAllFromCharID(client:getChar():getID())
    ]]
 
@@ -129,6 +135,7 @@
           nil
 
       Example Usage:
+        -- [[ Example of how to use this function ]]
           lia.inventory.deleteByID(1)
    ]]
 
@@ -148,6 +155,7 @@
           nil
 
       Example Usage:
+        -- [[ Example of how to use this function ]]
           lia.inventory.cleanUpForCharacter(client:getChar())
    ]]
 
@@ -167,5 +175,6 @@
           Panel
 
       Example Usage:
+        -- [[ Example of how to use this function ]]
           local panel = lia.inventory.show(inv)
    ]]

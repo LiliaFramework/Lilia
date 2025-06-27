@@ -17,6 +17,7 @@
         character (table) – New character object.
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local char = lia.char.new({name = "John"}, 1, client)
 ]]
 
@@ -38,6 +39,7 @@
         nil
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.char.hookVar("name", "PrintName", function(old, new) print(new) end)
 ]]
 
@@ -58,6 +60,7 @@
         nil
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         lia.char.registerVar("age", {field = "_age", default = 20})
 ]]
 
@@ -78,6 +81,7 @@
         value (any) – Data value or full table if no key provided.
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local age = lia.char.getCharData(1, "age")
 ]]
 
@@ -98,6 +102,7 @@
         row (table|any) – Full row table or column value.
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local row = lia.char.getCharDataRaw(1)
 ]]
 
@@ -117,6 +122,7 @@
         Player – Player entity or nil if not found.
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local ply = lia.char.getOwnerByID(1)
 ]]
 
@@ -136,6 +142,7 @@
         Character – Character object or nil.
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local char = lia.char.getBySteamID("STEAM_0:0:11101")
 ]]
 
@@ -155,6 +162,7 @@
         table – Map of Player to Character.
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         for ply, char in pairs(lia.char.getAll()) do print(ply, char:getName()) end
 ]]
 
@@ -174,6 +182,7 @@
         Color – Team or class color.
 
     Example Usage:
+        -- [[ Example of how to use this function ]]
         local color = lia.char.GetTeamColor(client)
 ]]
 
@@ -194,6 +203,7 @@
             None
 
         Example Usage:
+        -- [[ Example of how to use this function ]]
             lia.char.create({name = "John"}, function(id) print("Created", id) end)
     ]]
 
@@ -215,6 +225,7 @@
             None
 
         Example Usage:
+        -- [[ Example of how to use this function ]]
             lia.char.restore(client, print)
     ]]
 
@@ -234,6 +245,7 @@
             None
 
         Example Usage:
+        -- [[ Example of how to use this function ]]
             lia.char.cleanUpForPlayer(client)
     ]]
 
@@ -254,6 +266,7 @@
             None
 
         Example Usage:
+        -- [[ Example of how to use this function ]]
             lia.char.delete(1, client)
     ]]
 
@@ -275,6 +288,7 @@
             boolean – True on success, false on failure.
 
         Example Usage:
+        -- [[ Example of how to use this function ]]
             lia.char.setCharData(1, "age", 25)
     ]]
 
@@ -295,6 +309,7 @@
             boolean – True on success, false on failure.
 
         Example Usage:
+        -- [[ Example of how to use this function ]]
             lia.char.setCharName(1, "NewName")
     ]]
 
@@ -316,5 +331,6 @@
             boolean – True on success, false on failure.
 
         Example Usage:
+        -- [[ Example of how to use this function ]]
             lia.char.setCharModel(1, "models/player.mdl", {})
     ]]
