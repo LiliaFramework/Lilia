@@ -13,6 +13,9 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        lia.color.register("myRed", Color(255,0,0))
 ]]
 
 --[[
@@ -33,6 +36,9 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        local lighter = lia.color.Adjust(Color(50,50,50), 10,10,10)
 ]]
 
 --[[
@@ -49,4 +55,7 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        local uiColors = lia.color.ReturnMainAdjustedColors()
 ]]

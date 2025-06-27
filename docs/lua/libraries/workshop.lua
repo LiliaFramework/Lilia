@@ -9,6 +9,9 @@
 
         Returns:
             ids (table) – Table of workshop IDs to download.
+
+        Example Usage:
+            local ids = lia.workshop.gather()
     ]]
 
     --[[
@@ -25,4 +28,7 @@
 
         Returns:
             None
+
+        Example Usage:
+            lia.workshop.send(ply)
     ]]

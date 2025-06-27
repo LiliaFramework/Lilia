@@ -17,6 +17,9 @@
 
     Realm:
         Shared
+    
+    Example Usage:
+        lia.data.set("spawn_pos", Vector(0, 0, 0))
    ]]
 
     --[[
@@ -36,6 +39,9 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        lia.data.delete("spawn_pos")
    ]]
 
 --[[
@@ -58,4 +64,7 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        local pos = lia.data.get("spawn_pos", Vector(0, 0, 0))
 ]]

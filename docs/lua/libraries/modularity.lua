@@ -12,8 +12,14 @@
       isSingleFile - Boolean indicating if the module is a single file.
       variable - A global variable name used to temporarily store the module.
 
+   Realm:
+      Server
+
    Returns:
       nil
+
+   Example Usage:
+      lia.module.load("example", "lilia/modules/example", false)
 ]]
 
 --[[
@@ -26,8 +32,14 @@
    Parameters:
       None
 
+   Realm:
+      Server
+
    Returns:
       nil
+
+   Example Usage:
+      lia.module.initialize()
 ]]
 
 --[[
@@ -42,8 +54,14 @@
       directory - The directory path from which to load modules.
       group - A string representing the module group (e.g., "schema" or "module").
 
+   Realm:
+      Server
+
    Returns:
       nil
+
+   Example Usage:
+      lia.module.loadFromDir("lilia/modules/core", "module")
 ]]
 
 --[[
@@ -55,6 +73,12 @@
    Parameters:
       identifier - The unique identifier of the module to retrieve.
 
+   Realm:
+      Server
+
    Returns:
       The module table if found, or nil if the module is not registered.
+
+   Example Usage:
+      local mod = lia.module.get("schema")
 ]]
