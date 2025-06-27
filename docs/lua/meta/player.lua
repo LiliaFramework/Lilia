@@ -11,7 +11,7 @@
             Shared
 
         Returns:
-            Character|nil – The player's active character.
+            Character|None – The player's active character.
 
     Example Usage:
         -- Retrieve the character to modify inventory
@@ -70,7 +70,7 @@
         Shared
 
     Returns:
-        Entity|nil – Vehicle entity or nil.
+        Entity|None – Vehicle entity or None.
 
     Example Usage:
         -- Attach a camera to the vehicle the player is in
@@ -132,7 +132,7 @@
         Shared
 
     Returns:
-        table|nil – Table of items or nil if absent.
+        table|None – Table of items or None if absent.
 
     Example Usage:
         -- Iterate player's items to calculate total weight
@@ -153,7 +153,7 @@
         Shared
 
     Returns:
-        Entity|nil – The entity hit or nil.
+        Entity|None – The entity hit or None.
 
     Example Usage:
         -- Grab the entity the player is pointing at
@@ -191,7 +191,7 @@
         Shared
 
     Returns:
-        Entity|nil – The entity or nil if too far.
+        Entity|None – The entity or None if too far.
 
     Example Usage:
         -- Show the name of the object being looked at
@@ -212,11 +212,12 @@
     Realm:
         Server
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
-        -- Send a chat notification to the player
-        local result = player:notify("Welcome to the server!")
+        -- Send a welcome notification and log the join event
+        player:notify("Welcome to the server!")
+        file.Append("welcome.txt", player:SteamID() .. " joined\n")
 ]]
 --[[
     notifyLocalized(message, ...)
@@ -231,11 +232,12 @@
     Realm:
         Server
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
-        -- Send a localized message to the player
-        local result = player:notifyLocalized("greeting_key", player:Name())
+        -- Send a localized message including the player's name and score
+        local score = player:GetFrags()
+        player:notifyLocalized("greeting_key", player:Name(), score)
 ]]
 --[[
     CanEditVendor(vendor)
@@ -253,6 +255,7 @@
         boolean – True if allowed to edit.
 
     Example Usage:
+        -- Determine if the player may modify the vendor
         local result = player:CanEditVendor(vendor)
 ]]
 --[[
@@ -271,6 +274,7 @@
         boolean – Whether usergroup is "user".
 
     Example Usage:
+        -- Check if the player belongs to the default user group
         local result = player:isUser()
 ]]
 --[[
@@ -289,6 +293,7 @@
         boolean – Result from the privilege check.
 
     Example Usage:
+        -- Verify staff permissions for administrative actions
         local result = player:isStaff()
 ]]
 --[[
@@ -307,6 +312,7 @@
         boolean – Result from privilege check.
 
     Example Usage:
+        -- Test if the player has VIP status
         local result = player:isVIP()
 ]]
 --[[
@@ -325,6 +331,7 @@
         boolean – True if staff faction is active.
 
     Example Usage:
+        -- Confirm the player is currently in a staff role
         local result = player:isStaffOnDuty()
 ]]
 --[[
@@ -343,6 +350,7 @@
         boolean – True if the factions match.
 
     Example Usage:
+        -- Compare the player's faction to a requirement
         local result = player:isFaction(faction)
 ]]
 --[[
@@ -361,6 +369,7 @@
         boolean – Whether the character matches the class.
 
     Example Usage:
+        -- Determine if the player's class matches
         local result = player:isClass(class)
 ]]
 --[[
@@ -379,6 +388,7 @@
         boolean – True if whitelisted.
 
     Example Usage:
+        -- Check for whitelist permission on a faction
         local result = player:hasWhitelist(faction)
 ]]
 --[[
@@ -394,9 +404,10 @@
         Shared
 
     Returns:
-        number|nil – Class index or nil.
+        number|None – Class index or None.
 
     Example Usage:
+        -- Retrieve the current class index
         local result = player:getClass()
 ]]
 --[[
@@ -415,6 +426,7 @@
         boolean – True if class whitelist exists.
 
     Example Usage:
+        -- Verify the player is approved for a specific class
         local result = player:hasClassWhitelist(class)
 ]]
 --[[
@@ -430,9 +442,10 @@
         Shared
 
     Returns:
-        table|nil – Class definition table.
+        table|None – Class definition table.
 
     Example Usage:
+        -- Access data table for the player's class
         local result = player:getClassData()
 ]]
 --[[
@@ -448,9 +461,10 @@
         Shared
 
     Returns:
-        number|nil – Money amount or nil.
+        number|None – Money amount or None.
 
     Example Usage:
+        -- Read money amount in a DarkRP-compatible way
         local result = player:getDarkRPVar(var)
 ]]
 --[[
@@ -469,6 +483,7 @@
         number – Current funds or 0.
 
     Example Usage:
+        -- Fetch the character's stored funds
         local result = player:getMoney()
 ]]
 --[[
@@ -487,6 +502,7 @@
         boolean – True if funds are sufficient.
 
     Example Usage:
+        -- Check if the player has enough money to buy something
         local result = player:canAfford(amount)
 ]]
 --[[
@@ -506,6 +522,7 @@
         boolean – Whether the character satisfies the requirement.
 
     Example Usage:
+        -- Ensure the player meets a single skill requirement
         local result = player:hasSkillLevel(skill, level)
 ]]
 --[[
@@ -524,6 +541,7 @@
         boolean – True if all requirements are met.
 
     Example Usage:
+        -- Validate multiple skill requirements at once
         local result = player:meetsRequiredSkills(requiredSkillLevels)
 ]]
 --[[
@@ -534,8 +552,8 @@
 
     Parameters:
         sequenceName (string) – Sequence to play.
-        callback (function|nil) – Called when finished.
-        time (number|nil) – Duration override.
+        callback (function|None) – Called when finished.
+        time (number|None) – Duration override.
         noFreeze (boolean) – Don't freeze movement when true.
 
     Realm:
@@ -545,6 +563,7 @@
         number|boolean – Duration or false on failure.
 
     Example Usage:
+        -- Play an animation while freezing the player
         local result = player:forceSequence(sequenceName, callback, time, noFreeze)
 ]]
 --[[
@@ -559,7 +578,7 @@
     Realm:
         Shared
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Stop the player's forced animation sequence
@@ -577,7 +596,7 @@
         Realm:
             Server
         Returns:
-            nil – This function does not return a value.
+            None – This function does not return a value.
 
     Example Usage:
         -- Give the player extra stamina points
@@ -595,7 +614,7 @@
         Realm:
             Server
         Returns:
-            nil – This function does not return a value.
+            None – This function does not return a value.
 
     Example Usage:
         -- Spend stamina as the player performs an action
@@ -613,11 +632,12 @@
         Realm:
             Server
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
-        -- Give the player additional money
-        local result = player:addMoney(amount)
+        -- Reward the player and announce the payout
+        player:addMoney(100)
+        player:notify("You received $100 for completing the quest.")
     ]]
 --[[
         takeMoney(amount)
@@ -631,7 +651,7 @@
         Realm:
             Server
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Remove money from the player's character

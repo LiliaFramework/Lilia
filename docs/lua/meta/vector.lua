@@ -14,6 +14,7 @@
         Vector – The center point of the two vectors.
 
     Example Usage:
+        -- Average two vectors to find the midpoint
         local midpoint = vector_origin:Center(Vector(10, 10, 10))
         print(midpoint) -- Vector(5, 5, 5)
 ]]
@@ -33,6 +34,7 @@
         number – The distance between the two vectors.
 
     Example Usage:
+        -- Measure the distance between two points
         local dist = vector_origin:Distance(Vector(3, 4, 0))
         print(dist) -- 5
 ]]
@@ -53,6 +55,7 @@
         Vector – The rotated vector.
 
     Example Usage:
+        -- Rotate a vector 90 degrees around the Z axis
         local rotated = Vector(1, 0, 0):RotateAroundAxis(Vector(0, 0, 1), 90)
         print(rotated) -- Vector(0, 1, 0)
 ]]
@@ -72,6 +75,7 @@
         Vector – The calculated right vector.
 
     Example Usage:
+        -- Get the right direction vector
         local rightVec = Vector(0, 1, 0):Right()
         print(rightVec)
 ]]
@@ -91,6 +95,7 @@
         Vector – The calculated up vector.
 
     Example Usage:
+        -- Get the up direction vector
         local upVec = Vector(1, 0, 0):Up()
         print(upVec)
 ]]

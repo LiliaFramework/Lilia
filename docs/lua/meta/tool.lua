@@ -30,6 +30,9 @@
     Realm:
         Shared
 
+    Returns:
+        None – This function does not return a value.
+
     Example Usage:
         -- Ensure console variables exist for configuration
         tool:CreateConVars()
@@ -127,7 +130,13 @@
         boolean – True if the tool is allowed.
 
     Example Usage:
-        if tool:Allowed() then print("ok") end
+        -- Check if the player can use the current tool
+        if tool:Allowed() then
+            tool:GetOwner():ChatPrint("Tool is permitted!")
+            hook.Run("PlayerToolPermitted", tool:GetOwner(), tool:GetMode())
+        else
+            tool:GetOwner():ChatPrint("Tool usage blocked.")
+        end
 ]]
 --[[
     Init()
@@ -141,7 +150,7 @@
     Realm:
         Shared
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Prepare the tool for use
@@ -163,6 +172,7 @@
         string – Tool mode name.
 
     Example Usage:
+        -- Retrieve the tool's active mode string
         local result = tool:GetMode()
 ]]
 --[[
@@ -181,6 +191,7 @@
         SWEP – The tool's weapon entity.
 
     Example Usage:
+        -- Obtain the weapon entity representing this tool
         local result = tool:GetSWEP()
 ]]
 --[[
@@ -199,6 +210,7 @@
         Player – Owner of the tool.
 
     Example Usage:
+        -- Reference the player who deployed the tool
         local result = tool:GetOwner()
 ]]
 --[[
@@ -217,6 +229,7 @@
         Weapon – The weapon object.
 
     Example Usage:
+        -- Access the underlying weapon object
         local result = tool:GetWeapon()
 ]]
 --[[
@@ -269,7 +282,7 @@
     Realm:
         Shared
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Clear saved objects when reloading the tool
@@ -287,7 +300,7 @@
     Realm:
         Shared
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Equip the tool and spawn its ghost entity
@@ -305,7 +318,7 @@
     Realm:
         Shared
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Unequip the tool and remove its ghost entity
@@ -323,7 +336,7 @@
     Realm:
         Shared
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Run per-tick logic for the active tool
@@ -341,7 +354,7 @@
     Realm:
         Shared
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Validate all stored objects each tick
@@ -359,7 +372,7 @@
     Realm:
         Shared
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Remove any objects the tool is storing
@@ -377,7 +390,7 @@
     Realm:
         Shared
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Remove the placement preview entity
