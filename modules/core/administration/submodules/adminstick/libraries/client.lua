@@ -1,364 +1,367 @@
 ﻿local MODULE = MODULE
 AdminStickIsOpen = false
 local subMenuIcons = {
-    ["moderationTools"] = "icon16/wrench.png",
-    ["playerInformation"] = "icon16/information.png",
-    ["characterManagement"] = "icon16/user_gray.png",
-    ["flagsManagement"] = "icon16/flag_blue.png",
-    ["giveFlagsMenu"] = "icon16/flag_blue.png",
-    ["takeFlagsMenu"] = "icon16/flag_red.png",
+    moderationTools = "icon16/wrench.png",
+    playerInformation = "icon16/information.png",
+    characterManagement = "icon16/user_gray.png",
+    flagsManagement = "icon16/flag_blue.png",
+    giveFlagsMenu = "icon16/flag_blue.png",
+    takeFlagsMenu = "icon16/flag_red.png",
 }
 
-local function GetOrCreateSubMenu(parentMenu, name, submenusTable)
-    if not submenusTable[name] then
-        local newSubMenu, newSubMenuPanel = parentMenu:AddSubMenu(L(name))
-        if subMenuIcons[name] then newSubMenuPanel:SetIcon(subMenuIcons[name]) end
-        submenusTable[name] = newSubMenu
+local function GetOrCreateSubMenu(parent, name, store)
+    if not store[name] then
+        local menu, panel = parent:AddSubMenu(L(name))
+        if subMenuIcons[name] then panel:SetIcon(subMenuIcons[name]) end
+        store[name] = menu
     end
-    return submenusTable[name]
+    return store[name]
 end
 
-local function GetIdentifier(target)
-    if not IsValid(target) or not target:IsPlayer() then return "" end
-    if target:IsBot() then return target:Name() end
-    return target:SteamID64()
+local function GetIdentifier(ent)
+    if not IsValid(ent) or not ent:IsPlayer() then return "" end
+    if ent:IsBot() then return ent:Name() end
+    return ent:SteamID64()
 end
 
-local function HandleExtraFields(commandKey, commandData, target, commandName)
-    local client = LocalPlayer()
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle(L(commandName))
-    frame:SetSize(500, 150 + table.Count(commandData.AdminStick.ExtraFields) * 40 + 100)
-    frame:Center()
-    frame:MakePopup()
-    frame:ShowCloseButton(false)
-    local yPos = 40
+local function OpenArgumentPrompt(cmdKey, fields, prefix)
+    local cl = LocalPlayer()
+    local fr = vgui.Create("DFrame")
+    fr:SetTitle(L(cmdKey))
+    fr:SetSize(500, 150 + table.Count(fields) * 40 + 100)
+    fr:Center()
+    fr:MakePopup()
+    fr:ShowCloseButton(false)
+    local y = 40
     local inputs = {}
-    for field, fieldType in pairs(commandData.AdminStick.ExtraFields) do
-        local label = vgui.Create("DLabel", frame)
-        label:SetPos(25, yPos)
-        label:SetSize(150, 30)
-        label:SetFont("DermaDefaultBold")
-        label:SetText(L(field))
-        if isfunction(fieldType) then
-            local options, typeField = fieldType()
-            if typeField == "combo" then
-                local comboBox = vgui.Create("DComboBox", frame)
-                comboBox:SetPos(100, yPos)
-                comboBox:SetSize(300, 30)
-                for _, option in ipairs(options) do
-                    comboBox:AddChoice(option)
+    for name, typ in pairs(fields) do
+        local lb = vgui.Create("DLabel", fr)
+        lb:SetPos(25, y)
+        lb:SetSize(150, 30)
+        lb:SetFont("DermaDefaultBold")
+        lb:SetText(L(name))
+        if isfunction(typ) then
+            local opts, mode = typ()
+            if mode == "combo" then
+                local cb = vgui.Create("DComboBox", fr)
+                cb:SetPos(100, y)
+                cb:SetSize(300, 30)
+                for _, o in ipairs(opts) do
+                    cb:AddChoice(o)
                 end
 
-                inputs[field] = comboBox
+                inputs[name] = cb
             end
-        elseif fieldType == "text" then
-            local input = vgui.Create("DTextEntry", frame)
-            input:SetPos(100, yPos)
-            input:SetSize(300, 30)
-            input:SetFont("DermaDefault")
-            input:SetValue("")
-            input:SetPaintBackground(true)
-            inputs[field] = input
+        elseif typ == "text" then
+            local tx = vgui.Create("DTextEntry", fr)
+            tx:SetPos(100, y)
+            tx:SetSize(300, 30)
+            tx:SetFont("DermaDefault")
+            tx:SetPaintBackground(true)
+            inputs[name] = tx
         end
 
-        yPos = yPos + 40
+        y = y + 40
     end
 
-    local submitBtn = vgui.Create("DButton", frame)
-    submitBtn:SetText(L("submit"))
-    submitBtn:SetPos(100, frame:GetTall() - 70)
-    submitBtn:SetSize(150, 50)
-    submitBtn:SetFont("DermaDefaultBold")
-    submitBtn:SetColor(Color(255, 255, 255))
-    submitBtn:SetMaterial("icon16/tick.png")
-    submitBtn.DoClick = function()
+    local sub = vgui.Create("DButton", fr)
+    sub:SetText(L("submit"))
+    sub:SetPos(100, fr:GetTall() - 70)
+    sub:SetSize(150, 50)
+    sub:SetFont("DermaDefaultBold")
+    sub:SetColor(Color(255, 255, 255))
+    sub:SetMaterial("icon16/tick.png")
+    sub.DoClick = function()
         local args = {}
-        for field, fieldType in pairs(commandData.AdminStick.ExtraFields) do
-            local value
-            if isfunction(fieldType) then
-                local selected = inputs[field]:GetSelected()
-                value = selected
-            elseif fieldType == "text" then
-                value = inputs[field]:GetValue()
+        for k, t in pairs(fields) do
+            local v
+            if isfunction(t) then
+                v = inputs[k]:GetSelected()
+            elseif t == "text" then
+                v = inputs[k]:GetValue()
             end
 
-            table.insert(args, value)
+            table.insert(args, v)
         end
 
-        local identifier = GetIdentifier(target)
-        local commandStr = "/" .. commandKey
-        if identifier ~= "" then table.insert(args, 1, identifier) end
-        for _, arg in ipairs(args) do
-            commandStr = commandStr .. " " .. arg
+        if prefix then
+            if istable(prefix) then
+                for i = #prefix, 1, -1 do
+                    table.insert(args, 1, prefix[i])
+                end
+            else
+                table.insert(args, 1, prefix)
+            end
         end
 
-        client:ConCommand("say " .. commandStr)
-        frame:Close()
+        local cmd = "/" .. cmdKey
+        for _, a in ipairs(args) do
+            cmd = cmd .. " " .. a
+        end
+
+        cl:ConCommand("say " .. cmd)
+        fr:Remove()
         AdminStickIsOpen = false
     end
 
-    local cancelBtn = vgui.Create("DButton", frame)
-    cancelBtn:SetText(L("cancel"))
-    cancelBtn:SetPos(250, frame:GetTall() - 70)
-    cancelBtn:SetSize(150, 50)
-    cancelBtn:SetFont("DermaDefaultBold")
-    cancelBtn:SetColor(Color(255, 255, 255))
-    cancelBtn:SetMaterial("icon16/cross.png")
-    cancelBtn.DoClick = function() frame:Close() end
+    local cancel = vgui.Create("DButton", fr)
+    cancel:SetText(L("cancel"))
+    cancel:SetPos(250, fr:GetTall() - 70)
+    cancel:SetSize(150, 50)
+    cancel:SetFont("DermaDefaultBold")
+    cancel:SetColor(Color(255, 255, 255))
+    cancel:SetMaterial("icon16/cross.png")
+    cancel.DoClick = function()
+        fr:Remove()
+        AdminStickIsOpen = false
+    end
 end
 
-local function OpenPlayerModelUI(target)
+local function OpenPlayerModelUI(tgt)
     AdminStickIsOpen = true
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle(L("changePlayerModel"))
-    frame:SetSize(450, 300)
-    frame:Center()
-    function frame:OnClose()
-        frame:Remove()
+    local fr = vgui.Create("DFrame")
+    fr:SetTitle(L("changePlayerModel"))
+    fr:SetSize(450, 300)
+    fr:Center()
+    function fr:OnClose()
+        fr:Remove()
         AdminStickIsOpen = false
     end
 
-    local scroll = vgui.Create("DScrollPanel", frame)
-    scroll:Dock(FILL)
-    local wrapper = vgui.Create("DIconLayout", scroll)
-    wrapper:Dock(FILL)
-    local edit = vgui.Create("DTextEntry", frame)
-    edit:Dock(BOTTOM)
-    edit:SetText(target:GetModel())
-    local button = vgui.Create("DButton", frame)
-    button:SetText(L("change"))
-    button:Dock(TOP)
-    function button:DoClick()
-        local txt = edit:GetValue()
-        local identifier = GetIdentifier(target)
-        if identifier ~= "" then RunConsoleCommand("say", "/charsetmodel " .. identifier .. " " .. txt) end
-        frame:Remove()
+    local sc = vgui.Create("DScrollPanel", fr)
+    sc:Dock(FILL)
+    local wr = vgui.Create("DIconLayout", sc)
+    wr:Dock(FILL)
+    local ed = vgui.Create("DTextEntry", fr)
+    ed:Dock(BOTTOM)
+    ed:SetText(tgt:GetModel())
+    local bt = vgui.Create("DButton", fr)
+    bt:SetText(L("change"))
+    bt:Dock(TOP)
+    function bt:DoClick()
+        local txt = ed:GetValue()
+        local id = GetIdentifier(tgt)
+        if id ~= "" then RunConsoleCommand("say", "/charsetmodel " .. id .. " " .. txt) end
+        fr:Remove()
         AdminStickIsOpen = false
     end
 
-    local sortedModels = {}
-    for name, model in SortedPairs(player_manager.AllValidModels()) do
-        table.insert(sortedModels, {
-            name = name,
-            model = model
+    local modList = {}
+    for n, m in SortedPairs(player_manager.AllValidModels()) do
+        table.insert(modList, {
+            name = n,
+            mdl = m
         })
     end
 
-    table.sort(sortedModels, function(a, b) return a.name < b.name end)
-    for _, mdl in ipairs(sortedModels) do
-        local icon = wrapper:Add("SpawnIcon")
-        icon:SetModel(mdl.model)
-        icon:SetSize(64, 64)
-        icon:SetTooltip(mdl.name)
-        icon.playermodel = mdl.name
-        icon.model_path = mdl.model
-        icon.DoClick = function(self) edit:SetValue(self.model_path) end
+    table.sort(modList, function(a, b) return a.name < b.name end)
+    for _, md in ipairs(modList) do
+        local ic = wr:Add("SpawnIcon")
+        ic:SetModel(md.mdl)
+        ic:SetSize(64, 64)
+        ic:SetTooltip(md.name)
+        ic.model_path = md.mdl
+        ic.DoClick = function() ed:SetValue(ic.model_path) end
     end
 
-    frame:MakePopup()
+    fr:MakePopup()
 end
 
-local function OpenReasonUI(target, cmd)
+local function OpenReasonUI(tgt, cmd)
     AdminStickIsOpen = true
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle(L("reasonFor", cmd))
-    frame:SetSize(300, 150)
-    frame:Center()
-    function frame:OnClose()
-        frame:Remove()
+    local fr = vgui.Create("DFrame")
+    fr:SetTitle(L("reasonFor", cmd))
+    fr:SetSize(300, 150)
+    fr:Center()
+    function fr:OnClose()
+        fr:Remove()
         AdminStickIsOpen = false
     end
 
-    local edit = vgui.Create("DTextEntry", frame)
-    edit:Dock(FILL)
-    edit:SetMultiline(true)
-    edit:SetPlaceholderText(L("reason"))
-    local timeedit
+    local ed = vgui.Create("DTextEntry", fr)
+    ed:Dock(FILL)
+    ed:SetMultiline(true)
+    ed:SetPlaceholderText(L("reason"))
+    local ts
     if cmd == "banid" then
-        local time = vgui.Create("DNumSlider", frame)
-        time:Dock(TOP)
-        time:SetText(L("lengthInDays"))
-        time:SetMin(0)
-        time:SetMax(365)
-        time:SetDecimals(0)
-        timeedit = time
+        ts = vgui.Create("DNumSlider", fr)
+        ts:Dock(TOP)
+        ts:SetText(L("lengthInDays"))
+        ts:SetMin(0)
+        ts:SetMax(365)
+        ts:SetDecimals(0)
     end
 
-    local button = vgui.Create("DButton", frame)
-    button:Dock(BOTTOM)
-    button:SetText(L("change"))
-    function button:DoClick()
-        local txt = edit:GetValue()
-        local identifier = GetIdentifier(target)
+    local bt = vgui.Create("DButton", fr)
+    bt:Dock(BOTTOM)
+    bt:SetText(L("change"))
+    function bt:DoClick()
+        local txt = ed:GetValue()
+        local id = GetIdentifier(tgt)
         if cmd == "banid" then
-            if identifier ~= "" then
-                if timeedit then
-                    local length = timeedit:GetValue() * 60 * 24
-                    RunConsoleCommand("say", "!banid " .. identifier .. " " .. length .. " " .. txt)
-                else
-                    RunConsoleCommand("say", "!banid " .. identifier .. " " .. txt)
-                end
+            if id ~= "" then
+                local len = ts and ts:GetValue() * 60 * 24 or 0
+                RunConsoleCommand("say", "!banid " .. id .. " " .. len .. " " .. txt)
             end
         elseif cmd == "kick" then
-            if identifier ~= "" then RunConsoleCommand("say", "!kick " .. identifier .. " " .. txt) end
+            if id ~= "" then RunConsoleCommand("say", "!kick " .. id .. " " .. txt) end
         end
 
-        frame:Remove()
+        fr:Remove()
         AdminStickIsOpen = false
     end
 
-    frame:MakePopup()
+    fr:MakePopup()
 end
 
-local function HandleModerationOption(option, target)
-    if option.name == "Ban" then
-        OpenReasonUI(target, "banid")
-    elseif option.name == "Kick" then
-        OpenReasonUI(target, "kick")
+local function HandleModerationOption(opt, tgt)
+    if opt.name == "Ban" then
+        OpenReasonUI(tgt, "banid")
+    elseif opt.name == "Kick" then
+        OpenReasonUI(tgt, "kick")
     else
-        RunConsoleCommand("say", option.cmd)
+        RunConsoleCommand("say", opt.cmd)
     end
 
     AdminStickIsOpen = false
 end
 
-local function IncludeAdminMenu(target, AdminMenu, submenus)
-    local client = LocalPlayer()
-    if client:GetUserGroup() == "user" then return end
-    local moderationMenu = GetOrCreateSubMenu(AdminMenu, "moderationTools", submenus)
-    local teleportationOptions = {
+local function IncludeAdminMenu(tgt, menu, stores)
+    local cl = LocalPlayer()
+    if cl:GetUserGroup() == "user" then return end
+    local mod = GetOrCreateSubMenu(menu, "moderationTools", stores)
+    local tp = {
         {
             name = "Bring",
-            cmd = "!bring " .. GetIdentifier(target),
+            cmd = "!bring " .. GetIdentifier(tgt),
             icon = "icon16/arrow_down.png"
         },
         {
             name = "Goto",
-            cmd = "!goto " .. GetIdentifier(target),
+            cmd = "!goto " .. GetIdentifier(tgt),
             icon = "icon16/arrow_right.png"
         },
         {
             name = "Return",
-            cmd = "!return " .. GetIdentifier(target),
+            cmd = "!return " .. GetIdentifier(tgt),
             icon = "icon16/arrow_redo.png"
         },
         {
             name = "Respawn",
-            cmd = "!respawn " .. GetIdentifier(target),
+            cmd = "!respawn " .. GetIdentifier(tgt),
             icon = "icon16/arrow_refresh.png"
         }
     }
 
-    local moderationOptions = {
+    local mods = {
         {
             action = {
                 name = "Blind",
-                cmd = "!blind " .. GetIdentifier(target),
+                cmd = "!blind " .. GetIdentifier(tgt),
                 icon = "icon16/eye.png"
             },
             inverse = {
                 name = "Unblind",
-                cmd = "!unblind " .. GetIdentifier(target),
+                cmd = "!unblind " .. GetIdentifier(tgt),
                 icon = "icon16/eye.png"
             }
         },
         {
             action = {
                 name = "Freeze",
-                cmd = "!freeze " .. GetIdentifier(target),
+                cmd = "!freeze " .. GetIdentifier(tgt),
                 icon = "icon16/lock.png"
             },
             inverse = {
                 name = "Unfreeze",
-                cmd = "!unfreeze " .. GetIdentifier(target),
+                cmd = "!unfreeze " .. GetIdentifier(tgt),
                 icon = "icon16/accept.png"
             }
         },
         {
             action = {
                 name = "Gag",
-                cmd = "!gag " .. GetIdentifier(target),
+                cmd = "!gag " .. GetIdentifier(tgt),
                 icon = "icon16/sound_mute.png"
             },
             inverse = {
                 name = "Ungag",
-                cmd = "!ungag " .. GetIdentifier(target),
+                cmd = "!ungag " .. GetIdentifier(tgt),
                 icon = "icon16/sound_low.png"
             }
         },
         {
             action = {
                 name = "Mute",
-                cmd = "!mute " .. GetIdentifier(target),
+                cmd = "!mute " .. GetIdentifier(tgt),
                 icon = "icon16/sound_delete.png"
             },
             inverse = {
                 name = "Unmute",
-                cmd = "!unmute " .. GetIdentifier(target),
+                cmd = "!unmute " .. GetIdentifier(tgt),
                 icon = "icon16/sound_add.png"
             }
         },
         {
             name = "Ignite",
-            cmd = "!ignite " .. GetIdentifier(target),
+            cmd = "!ignite " .. GetIdentifier(tgt),
             icon = "icon16/fire.png"
         },
         {
             name = "Jail",
-            cmd = "!jail " .. GetIdentifier(target),
+            cmd = "!jail " .. GetIdentifier(tgt),
             icon = "icon16/lock.png"
         },
         {
             name = "Slay",
-            cmd = "!slay " .. GetIdentifier(target),
+            cmd = "!slay " .. GetIdentifier(tgt),
             icon = "icon16/bomb.png"
         }
     }
 
-    table.sort(moderationOptions, function(a, b)
-        local nameA = a.action and a.action.name or a.name
-        local nameB = b.action and b.action.name or b.name
-        return nameA < nameB
+    table.sort(mods, function(a, b)
+        local na = a.action and a.action.name or a.name
+        local nb = b.action and b.action.name or b.name
+        return na < nb
     end)
 
-    table.sort(teleportationOptions, function(a, b) return a.name < b.name end)
-    for _, optionPair in ipairs(moderationOptions) do
-        if optionPair.action then
-            moderationMenu:AddOption(L(optionPair.action.name), function() HandleModerationOption(optionPair.action, target) end):SetIcon(optionPair.action.icon)
-            if optionPair.inverse then moderationMenu:AddOption(L(optionPair.inverse.name), function() HandleModerationOption(optionPair.inverse, target) end):SetIcon(optionPair.inverse.icon) end
+    table.sort(tp, function(a, b) return a.name < b.name end)
+    for _, p in ipairs(mods) do
+        if p.action then
+            mod:AddOption(L(p.action.name), function() HandleModerationOption(p.action, tgt) end):SetIcon(p.action.icon)
+            if p.inverse then mod:AddOption(L(p.inverse.name), function() HandleModerationOption(p.inverse, tgt) end):SetIcon(p.inverse.icon) end
         else
-            moderationMenu:AddOption(L(optionPair.name), function() HandleModerationOption(optionPair, target) end):SetIcon(optionPair.icon)
+            mod:AddOption(L(p.name), function() HandleModerationOption(p, tgt) end):SetIcon(p.icon)
         end
     end
 
-    for _, option in ipairs(teleportationOptions) do
-        moderationMenu:AddOption(L(option.name), function()
-            client:ChatPrint(option.cmd)
-            RunConsoleCommand("say", option.cmd)
+    for _, o in ipairs(tp) do
+        mod:AddOption(L(o.name), function()
+            cl:ChatPrint(o.cmd)
+            RunConsoleCommand("say", o.cmd)
             AdminStickIsOpen = false
-        end):SetIcon(option.icon)
+        end):SetIcon(o.icon)
     end
 end
 
-local function IncludeCharacterManagement(target, AdminMenu, submenus)
-    local client = LocalPlayer()
-    local factionMenuAllowed = client:hasPrivilege("Commands - Manage Transfers")
-    local classMenuAllowed = client:hasPrivilege("Commands - Manage Classes")
-    local characterMenu = GetOrCreateSubMenu(AdminMenu, "characterManagement", submenus)
-    local factionOptions = {}
-    local char = target:getChar()
-    if char and factionMenuAllowed then
-        local currentFactionID = char:getFaction()
-        local currentFactionName = L("unknown")
-        if currentFactionID then
-            for _, fac in pairs(lia.faction.teams) do
-                if fac.index == currentFactionID then
-                    currentFactionName = fac.name
+local function IncludeCharacterManagement(tgt, menu, stores)
+    local cl = LocalPlayer()
+    local canFaction = cl:hasPrivilege("Commands - Manage Transfers")
+    local canClass = cl:hasPrivilege("Commands - Manage Classes")
+    local charMenu = GetOrCreateSubMenu(menu, "characterManagement", stores)
+    local char = tgt:getChar()
+    if char and canFaction then
+        local facID = char:getFaction()
+        local curName = L("unknown")
+        local facOptions = {}
+        if facID then
+            for _, f in pairs(lia.faction.teams) do
+                if f.index == facID then
+                    curName = f.name
                     for _, v in pairs(lia.faction.teams) do
-                        table.insert(factionOptions, {
+                        table.insert(facOptions, {
                             name = v.name,
-                            cmd = 'say /plytransfer ' .. GetIdentifier(target) .. ' ' .. v.name
+                            cmd = 'say /plytransfer ' .. GetIdentifier(tgt) .. ' ' .. v.name
                         })
                     end
 
@@ -366,32 +369,32 @@ local function IncludeCharacterManagement(target, AdminMenu, submenus)
                 end
             end
 
-            table.sort(factionOptions, function(a, b) return a.name < b.name end)
-            if #factionOptions > 0 then
-                local factionMenu = GetOrCreateSubMenu(characterMenu, "Set Faction (" .. currentFactionName .. ")", submenus)
-                for _, option in ipairs(factionOptions) do
-                    factionMenu:AddOption(L(option.name), function()
-                        client:ConCommand(option.cmd)
+            table.sort(facOptions, function(a, b) return a.name < b.name end)
+            if #facOptions > 0 then
+                local fm = GetOrCreateSubMenu(charMenu, "Set Faction (" .. curName .. ")", stores)
+                for _, o in ipairs(facOptions) do
+                    fm:AddOption(L(o.name), function()
+                        cl:ConCommand(o.cmd)
                         AdminStickIsOpen = false
                     end):SetIcon("icon16/group.png")
                 end
             end
 
-            local classes = lia.faction.getClasses and lia.faction.getClasses(currentFactionID)
-            if classes and #classes > 1 and classMenuAllowed then
-                local classOptions = {}
-                for _, class in ipairs(classes) do
-                    table.insert(classOptions, {
-                        name = class.name,
-                        cmd = 'say /setclass ' .. GetIdentifier(target) .. ' ' .. class.uniqueID
+            local classes = lia.faction.getClasses and lia.faction.getClasses(facID) or {}
+            if classes and #classes > 1 and canClass then
+                local cls = {}
+                for _, c in ipairs(classes) do
+                    table.insert(cls, {
+                        name = c.name,
+                        cmd = 'say /setclass ' .. GetIdentifier(tgt) .. ' ' .. c.uniqueID
                     })
                 end
 
-                table.sort(classOptions, function(a, b) return a.name < b.name end)
-                local classMenu = GetOrCreateSubMenu(characterMenu, "Set Class", submenus)
-                for _, option in ipairs(classOptions) do
-                    classMenu:AddOption(L(option.name), function()
-                        client:ConCommand(option.cmd)
+                table.sort(cls, function(a, b) return a.name < b.name end)
+                local cm = GetOrCreateSubMenu(charMenu, "Set Class", stores)
+                for _, o in ipairs(cls) do
+                    cm:AddOption(L(o.name), function()
+                        cl:ConCommand(o.cmd)
                         AdminStickIsOpen = false
                     end):SetIcon("icon16/user.png")
                 end
@@ -399,113 +402,98 @@ local function IncludeCharacterManagement(target, AdminMenu, submenus)
         end
     end
 
-    if client:hasPrivilege("Commands - Manage Character Information") then
-        local changeModelOption = {
-            name = "Change Playermodel",
-            cmd = "",
-            icon = "icon16/user_suit.png"
-        }
-
-        characterMenu:AddOption(L(changeModelOption.name), function()
-            OpenPlayerModelUI(target)
+    if cl:hasPrivilege("Commands - Manage Character Information") then
+        charMenu:AddOption(L("Change Playermodel"), function()
+            OpenPlayerModelUI(tgt)
             AdminStickIsOpen = false
-        end):SetIcon(changeModelOption.icon)
+        end):SetIcon("icon16/user_suit.png")
     end
 end
 
-local function IncludeFlagManagement(target, AdminMenu, submenus)
-    local client = LocalPlayer()
-    if not client:hasPrivilege("Commands - Manage Flags") then return end
-    local flagsMenu = GetOrCreateSubMenu(AdminMenu, "flagsManagement", submenus)
-    local giveFlagsSubMenu = GetOrCreateSubMenu(flagsMenu, "giveFlagsMenu", submenus)
-    local takeFlagsSubMenu = GetOrCreateSubMenu(flagsMenu, "takeFlagsMenu", submenus)
-    local giveFlags, takeFlags = {}, {}
-    for flag, _ in pairs(lia.flag.list) do
-        if not target:getChar():hasFlags(flag) then
-            table.insert(giveFlags, {
-                name = "Give Flag " .. flag,
-                cmd = 'say /giveflag ' .. GetIdentifier(target) .. ' ' .. flag,
+local function IncludeFlagManagement(tgt, menu, stores)
+    local cl = LocalPlayer()
+    if not cl:hasPrivilege("Commands - Manage Flags") then return end
+    local fm = GetOrCreateSubMenu(menu, "flagsManagement", stores)
+    local give = GetOrCreateSubMenu(fm, "giveFlagsMenu", stores)
+    local take = GetOrCreateSubMenu(fm, "takeFlagsMenu", stores)
+    local toGive, toTake = {}, {}
+    for fl in pairs(lia.flag.list) do
+        if not tgt:getChar():hasFlags(fl) then
+            table.insert(toGive, {
+                name = "Give Flag " .. fl,
+                cmd = 'say /giveflag ' .. GetIdentifier(tgt) .. ' ' .. fl,
                 icon = "icon16/flag_blue.png"
             })
-        end
-
-        if target:getChar():hasFlags(flag) then
-            table.insert(takeFlags, {
-                name = "Take Flag " .. flag,
-                cmd = 'say /takeflag ' .. GetIdentifier(target) .. ' ' .. flag,
+        else
+            table.insert(toTake, {
+                name = "Take Flag " .. fl,
+                cmd = 'say /takeflag ' .. GetIdentifier(tgt) .. ' ' .. fl,
                 icon = "icon16/flag_red.png"
             })
         end
     end
 
-    table.sort(giveFlags, function(a, b) return a.name < b.name end)
-    table.sort(takeFlags, function(a, b) return a.name < b.name end)
-    for _, flag in ipairs(giveFlags) do
-        giveFlagsSubMenu:AddOption(L(flag.name), function()
-            client:ConCommand(flag.cmd)
+    table.sort(toGive, function(a, b) return a.name < b.name end)
+    table.sort(toTake, function(a, b) return a.name < b.name end)
+    for _, f in ipairs(toGive) do
+        give:AddOption(L(f.name), function()
+            cl:ConCommand(f.cmd)
             AdminStickIsOpen = false
-        end):SetIcon(flag.icon)
+        end):SetIcon(f.icon)
     end
 
-    for _, flag in ipairs(takeFlags) do
-        takeFlagsSubMenu:AddOption(L(flag.name), function()
-            client:ConCommand(flag.cmd)
+    for _, f in ipairs(toTake) do
+        take:AddOption(L(f.name), function()
+            cl:ConCommand(f.cmd)
             AdminStickIsOpen = false
-        end):SetIcon(flag.icon)
+        end):SetIcon(f.icon)
     end
 end
 
-local function AddCommandToMenu(AdminMenu, commandData, commandKey, target, commandName, submenus)
-    local client = LocalPlayer()
-    local canUse, _ = lia.command.hasAccess(client, commandKey, commandData)
-    if not canUse then return end
-    local category = commandData.AdminStick.Category
-    local subCategory = commandData.AdminStick.SubCategory
-    local categoryMenu = AdminMenu
-    if category then categoryMenu = GetOrCreateSubMenu(AdminMenu, category, submenus) end
-    if subCategory then categoryMenu = GetOrCreateSubMenu(categoryMenu, subCategory, submenus) end
-    local iconPath = commandData.AdminStick.Icon or "icon16/page.png"
-    local commandOption = categoryMenu:AddOption(L(commandName), function()
-        if commandData.AdminStick.ExtraFields and table.Count(commandData.AdminStick.ExtraFields) > 0 then
-            HandleExtraFields(commandKey, commandData, target, commandName)
+local function AddCommandToMenu(menu, data, key, tgt, name, stores)
+    local cl = LocalPlayer()
+    local can = lia.command.hasAccess(cl, key, data)
+    if not can then return end
+    local cat = data.AdminStick.Category
+    local sub = data.AdminStick.SubCategory
+    local m = menu
+    if cat then m = GetOrCreateSubMenu(menu, cat, stores) end
+    if sub then m = GetOrCreateSubMenu(m, sub, stores) end
+    local ic = data.AdminStick.Icon or "icon16/page.png"
+    m:AddOption(L(name), function()
+        local id = GetIdentifier(tgt)
+        if data.AdminStick.ExtraFields and table.Count(data.AdminStick.ExtraFields) > 0 then
+            OpenArgumentPrompt(key, data.AdminStick.ExtraFields, id ~= "" and id or nil)
         else
-            local identifier = GetIdentifier(target)
-            if identifier ~= "" then
-                local cmd = "/" .. commandKey .. " " .. identifier
-                client:ConCommand("say " .. cmd)
-            end
-
+            if id ~= "" then cl:ConCommand("say /" .. key .. " " .. id) end
             AdminStickIsOpen = false
         end
-    end)
-
-    commandOption:SetImage(iconPath)
+    end):SetIcon(ic)
 end
 
-local function hasAdminStickTargetClass(targetClassName)
-    for _, cmd in pairs(lia.command.list) do
-        if istable(cmd.AdminStick) and cmd.AdminStick.TargetClass == targetClassName then return true end
+local function hasAdminStickTargetClass(class)
+    for _, c in pairs(lia.command.list) do
+        if istable(c.AdminStick) and c.AdminStick.TargetClass == class then return true end
     end
     return false
 end
 
-function MODULE:OpenAdminStickUI(target)
-    local client = LocalPlayer()
-    if not IsValid(target) or not target:isDoor() and not target:IsPlayer() and not hasAdminStickTargetClass(target:GetClass()) then return end
+function MODULE:OpenAdminStickUI(tgt)
+    local cl = LocalPlayer()
+    if not IsValid(tgt) or not tgt:isDoor() and not tgt:IsPlayer() and not hasAdminStickTargetClass(tgt:GetClass()) then return end
     AdminStickIsOpen = true
-    local AdminMenu = DermaMenu()
-    AdminMenu:Center()
-    AdminMenu:MakePopup()
-    local submenus = {}
-    if target:IsPlayer() then
-        local playerOptions = {
+    local menu = DermaMenu()
+    menu:Center()
+    menu:MakePopup()
+    local stores = {}
+    if tgt:IsPlayer() then
+        local info = {
             {
-                name = "CharID: " .. (target:getChar() and target:getChar():getID() or "N/A") .. " (copy)",
+                name = "CharID: " .. (tgt:getChar() and tgt:getChar():getID() or "N/A") .. " (copy)",
                 cmd = function()
-                    if target:getChar() then
-                        local msg = L("copiedCharID", target:getChar():getID())
-                        client:ChatPrint(msg)
-                        SetClipboardText(target:getChar():getID())
+                    if tgt:getChar() then
+                        cl:ChatPrint(L("copiedCharID", tgt:getChar():getID()))
+                        SetClipboardText(tgt:getChar():getID())
                     end
 
                     AdminStickIsOpen = false
@@ -513,70 +501,61 @@ function MODULE:OpenAdminStickUI(target)
                 icon = "icon16/page_copy.png"
             },
             {
-                name = "Name: " .. target:Name() .. " (copy)",
+                name = "Name: " .. tgt:Name() .. " (copy)",
                 cmd = function()
-                    local msg = L("copiedToClipboard", target:Name(), "Name")
-                    client:ChatPrint(msg)
-                    SetClipboardText(target:Name())
+                    cl:ChatPrint(L("copiedToClipboard", tgt:Name(), "Name"))
+                    SetClipboardText(tgt:Name())
                     AdminStickIsOpen = false
                 end,
                 icon = "icon16/page_copy.png"
             },
             {
-                name = "SteamID: " .. target:SteamID() .. " (copy)",
+                name = "SteamID: " .. tgt:SteamID() .. " (copy)",
                 cmd = function()
-                    local msg = L("copiedToClipboard", target:Name(), "SteamID")
-                    client:ChatPrint(msg)
-                    SetClipboardText(target:SteamID64())
+                    cl:ChatPrint(L("copiedToClipboard", tgt:Name(), "SteamID"))
+                    SetClipboardText(tgt:SteamID())
                     AdminStickIsOpen = false
                 end,
                 icon = "icon16/page_copy.png"
             },
             {
-                name = "SteamID64: " .. target:SteamID64() .. " (copy)",
+                name = "SteamID64: " .. tgt:SteamID64() .. " (copy)",
                 cmd = function()
-                    local msg = L("copiedToClipboard", target:Name(), "SteamID64")
-                    client:ChatPrint(msg)
-                    SetClipboardText(target:SteamID64())
+                    cl:ChatPrint(L("copiedToClipboard", tgt:Name(), "SteamID64"))
+                    SetClipboardText(tgt:SteamID64())
                     AdminStickIsOpen = false
                 end,
                 icon = "icon16/page_copy.png"
             }
         }
 
-        table.sort(playerOptions, function(a, b) return a.name < b.name end)
-        local playerInfoMenu = GetOrCreateSubMenu(AdminMenu, "playerInformation", submenus)
-        for _, option in ipairs(playerOptions) do
-            playerInfoMenu:AddOption(L(option.name), option.cmd):SetIcon(option.icon)
+        table.sort(info, function(a, b) return a.name < b.name end)
+        local pi = GetOrCreateSubMenu(menu, "playerInformation", stores)
+        for _, o in ipairs(info) do
+            pi:AddOption(L(o.name), o.cmd):SetIcon(o.icon)
         end
 
-        IncludeAdminMenu(target, AdminMenu, submenus)
-        IncludeCharacterManagement(target, AdminMenu, submenus)
-        IncludeFlagManagement(target, AdminMenu, submenus)
+        IncludeAdminMenu(tgt, menu, stores)
+        IncludeCharacterManagement(tgt, menu, stores)
+        IncludeFlagManagement(tgt, menu, stores)
     end
 
-    local targetClassName = target:GetClass()
-    local commands = {}
+    local tgtClass = tgt:GetClass()
+    local cmds = {}
     for k, v in pairs(lia.command.list) do
         if v.AdminStick and istable(v.AdminStick) then
-            local commandTargetClass = v.AdminStick.TargetClass
-            if commandTargetClass then
-                if commandTargetClass == "Door" and target:isDoor() then
-                    table.insert(commands, {
-                        name = v.AdminStick.Name or k,
-                        data = v,
-                        key = k
-                    })
-                elseif commandTargetClass == targetClassName then
-                    table.insert(commands, {
+            local tc = v.AdminStick.TargetClass
+            if tc then
+                if tc == "Door" and tgt:isDoor() or tc == tgtClass then
+                    table.insert(cmds, {
                         name = v.AdminStick.Name or k,
                         data = v,
                         key = k
                     })
                 end
             else
-                if target:IsPlayer() then
-                    table.insert(commands, {
+                if tgt:IsPlayer() then
+                    table.insert(cmds, {
                         name = v.AdminStick.Name or k,
                         data = v,
                         key = k
@@ -586,16 +565,16 @@ function MODULE:OpenAdminStickUI(target)
         end
     end
 
-    table.sort(commands, function(a, b) return a.name < b.name end)
-    for _, cmd in ipairs(commands) do
-        AddCommandToMenu(AdminMenu, cmd.data, cmd.key, target, cmd.name, submenus)
+    table.sort(cmds, function(a, b) return a.name < b.name end)
+    for _, c in ipairs(cmds) do
+        AddCommandToMenu(menu, c.data, c.key, tgt, c.name, stores)
     end
 
-    hook.Run("PopulateAdminStick", AdminMenu, target)
-    function AdminMenu:OnRemove()
-        client.AdminStickTarget = nil
+    hook.Run("PopulateAdminStick", menu, tgt)
+    function menu:OnRemove()
+        cl.AdminStickTarget = nil
         AdminStickIsOpen = false
     end
 
-    AdminMenu:Open()
+    menu:Open()
 end
