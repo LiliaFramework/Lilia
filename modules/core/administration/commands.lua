@@ -75,7 +75,7 @@ lia.command.add("sendtositroom", {
     adminOnly = true,
     privilege = "Manage SitRooms",
     desc = L("sendToSitRoomDesc"),
-    syntax = "[string Player Name]",
+    syntax = "[player Player Name]",
     AdminStick = {
         Name = L("sendToSitRoom"),
         Category = "moderationTools",
@@ -121,7 +121,7 @@ lia.command.add("returnsitroom", {
     adminOnly = true,
     privilege = "Manage SitRooms",
     desc = L("returnFromSitroomDesc"),
-    syntax = "[string Player Name]",
+    syntax = "[player Player Name]",
     AdminStick = {
         Name = L("returnFromSitroom"),
         Category = "moderationTools",
