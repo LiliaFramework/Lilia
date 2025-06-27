@@ -51,6 +51,10 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
     end
 end
 
+function MODULE:CheckPassword(steamid64, _, svpass, clpass, name)
+    lia.information(svpass ~= clpass and "Passwords do not match for " .. name .. " (" .. steamid64 .. "), server password: " .. svpass .. ", client password: " .. clpass .. "." or "Passwords match for " .. name .. " (" .. steamid64 .. ").")
+end
+
 function MODULE:PlayerShouldAct()
     return lia.config.get("ActsActive", false)
 end
