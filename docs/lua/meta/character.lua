@@ -14,7 +14,8 @@
         string – Format "character[id]".
 
     Example Usage:
-        local result = char:tostring()
+        -- Print a readable identifier when saving debug logs
+        print("Active char: " .. char:tostring())
 ]]
 --[[
     eq(other)
@@ -32,7 +33,10 @@
         boolean – True if both share the same ID.
 
     Example Usage:
-        local result = char:eq(other)
+        -- Check if the player is controlling the door owner
+        if char:eq(door:getNetVar("ownChar")) then
+            door:Fire("unlock", "", 0)
+        end
 ]]
 --[[
     getID()
@@ -50,7 +54,9 @@
         number – Character identifier.
 
     Example Usage:
-        local result = char:getID()
+        -- Store the character ID for later reference
+        local id = char:getID()
+        session.lastCharID = id
 ]]
 --[[
     getPlayer()
@@ -68,7 +74,11 @@
         Player|nil – Owning player or nil.
 
     Example Usage:
-        local result = char:getPlayer()
+        -- Notify the controlling player that the character loaded
+        local ply = char:getPlayer()
+        if IsValid(ply) then
+            ply:ChatPrint("Character ready")
+        end
 ]]
 --[[
     getDisplayedName(client)
@@ -86,7 +96,8 @@
         string – Localized or recognized character name.
 
     Example Usage:
-        local result = char:getDisplayedName(client)
+        -- Announce the character's name to a viewer
+        client:ChatPrint("You see " .. char:getDisplayedName(client))
 ]]
 --[[
     hasMoney(amount)
@@ -104,7 +115,10 @@
         boolean – True if the character's funds are sufficient.
 
     Example Usage:
-        local result = char:hasMoney(amount)
+        -- Verify the character can pay for an item before buying
+        if char:hasMoney(item.price) then
+            char:takeMoney(item.price)
+        end
 ]]
 --[[
     getFlags()
@@ -122,7 +136,10 @@
         string – Concatenated flag characters.
 
     Example Usage:
-        local result = char:getFlags()
+        -- Look for the admin flag on this character
+        if char:getFlags():find("A") then
+            print("Admin privileges detected")
+        end
 ]]
 --[[
     hasFlags(flags)
@@ -140,7 +157,10 @@
         boolean – True if at least one flag is present.
 
     Example Usage:
-        local result = char:hasFlags(flags)
+        -- Allow special command if any required flag is present
+        if char:hasFlags("abc") then
+            performSpecialAction()
+        end
 ]]
 --[[
     getItemWeapon(requireEquip)
@@ -158,7 +178,9 @@
         boolean – True if the active weapon corresponds to an item.
 
     Example Usage:
-        local result = char:getItemWeapon(requireEquip)
+        -- Determine if the equipped weapon is linked to an item
+        local match = char:getItemWeapon(true)
+        if match then print("Using weapon item") end
 ]]
 --[[
     getMaxStamina()
@@ -176,7 +198,8 @@
         number – Maximum stamina points.
 
     Example Usage:
-        local result = char:getMaxStamina()
+        -- Calculate the proportion of stamina remaining
+        local pct = char:getStamina() / char:getMaxStamina()
 ]]
 --[[
     getStamina()
@@ -194,7 +217,9 @@
         number – Current stamina.
 
     Example Usage:
-        local result = char:getStamina()
+        -- Display current stamina in the HUD
+        local stamina = char:getStamina()
+        drawStaminaBar(stamina)
 ]]
 --[[
     hasClassWhitelist(class)
@@ -212,7 +237,10 @@
         boolean – True if the class is whitelisted.
 
     Example Usage:
-        local result = char:hasClassWhitelist(class)
+        -- Decide if the player may choose the medic class
+        if char:hasClassWhitelist(CLASS_MEDIC) then
+            print("You may become a medic")
+        end
 ]]
 --[[
     isFaction(faction)
@@ -230,7 +258,10 @@
         boolean – Whether the faction matches.
 
     Example Usage:
-        local result = char:isFaction(faction)
+        -- Restrict access to citizens only
+        if char:isFaction(FACTION_CITIZEN) then
+            door:keysOwn(char:getPlayer())
+        end
 ]]
 --[[
     isClass(class)
@@ -248,7 +279,10 @@
         boolean – Whether the classes match.
 
     Example Usage:
-        local result = char:isClass(class)
+        -- Provide a bonus if the character is currently an engineer
+        if char:isClass(CLASS_ENGINEER) then
+            char:restoreStamina(10)
+        end
 ]]
 --[[
     getAttrib(key, default)
@@ -267,7 +301,9 @@
         number – Final attribute value.
 
     Example Usage:
-        local result = char:getAttrib(key, default)
+        -- Calculate damage using the strength attribute
+        local strength = char:getAttrib("str", 0)
+        dmg = baseDamage + strength * 0.5
 ]]
 --[[
     getBoost(attribID)
@@ -285,7 +321,8 @@
         table|nil – Table of boosts or nil.
 
     Example Usage:
-        local result = char:getBoost(attribID)
+        -- Inspect active boosts on agility
+        PrintTable(char:getBoost("agi"))
 ]]
 --[[
     getBoosts()
@@ -303,7 +340,10 @@
         table – Mapping of attribute IDs to boost tables.
 
     Example Usage:
-        local result = char:getBoosts()
+        -- Print all attribute boosts for debugging
+        for id, data in pairs(char:getBoosts()) do
+            print(id, data)
+        end
 ]]
 --[[
     doesRecognize(id)
@@ -321,7 +361,10 @@
         boolean – True if recognized.
 
     Example Usage:
-        local result = char:doesRecognize(id)
+        -- Reveal names in chat only if recognized
+        if char:doesRecognize(targetChar) then
+            print("Known: " .. targetChar:getName())
+        end
 ]]
 --[[
     doesFakeRecognize(id)
@@ -339,5 +382,8 @@
         boolean – True if fake recognized.
 
     Example Usage:
-        local result = char:doesFakeRecognize(id)
+        -- See if recognition was forced by a disguise item
+        if char:doesFakeRecognize(targetChar) then
+            print("Recognition is fake")
+        end
 ]]

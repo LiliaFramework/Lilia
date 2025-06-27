@@ -14,7 +14,9 @@
         table – The newly created tool object.
 
     Example Usage:
+        -- Create a table for a custom door tool mode
         local tool = ToolGunMeta:Create()
+        tool.Mode = "lia_dooredit"
 ]]
 --[[
     CreateConVars()
@@ -29,6 +31,7 @@
         Shared
 
     Example Usage:
+        -- Ensure console variables exist for configuration
         tool:CreateConVars()
 ]]
 --[[
@@ -47,6 +50,7 @@
         ConVar – The server ConVar object.
 
     Example Usage:
+        -- Check if the server allows using this tool
         local allow = tool:GetServerInfo("allow_use"):GetBool()
 ]]
 --[[
@@ -65,6 +69,7 @@
         table – Table of convars.
 
     Example Usage:
+        -- Get a table of client ConVars for networking
         local cvars = tool:BuildConVarList()
 ]]
 --[[
@@ -83,7 +88,8 @@
         string – The value stored in the ConVar.
 
     Example Usage:
-        local val = tool:GetClientInfo("setting")
+        -- Get the client's chosen material from a ConVar
+        local mat = tool:GetClientInfo("material")
 ]]
 --[[
     GetClientNumber(property, default)
@@ -102,6 +108,7 @@
         number – The numeric value of the ConVar.
 
     Example Usage:
+        -- Read the numeric power setting with a fallback
         local power = tool:GetClientNumber("power", 10)
 ]]
 --[[

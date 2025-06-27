@@ -15,7 +15,8 @@
         any – Stored value or default.
 
     Example Usage:
-        local result = inv:getData(key, default)
+        -- Read how many times the container was opened
+        local opens = inv:getData("openCount", 0)
 ]]
 --[[
     extend(className)
@@ -33,7 +34,8 @@
         table – The newly derived inventory table.
 
     Example Usage:
-        local result = inv:extend(className)
+        -- Define a custom inventory class for weapon crates
+        local WeaponInv = inv:extend("WeaponInventory")
 ]]
 --[[
     configure()
@@ -48,7 +50,8 @@
         Shared
 
     Example Usage:
-        local result = inv:configure()
+        -- Called from a subclass to set up custom slots
+        inv:configure()
 ]]
 --[[
     addDataProxy(key, onChange)
@@ -64,7 +67,10 @@
         Shared
 
     Example Usage:
-        local result = inv:addDataProxy(key, onChange)
+        -- Track changes to the "locked" data field
+        inv:addDataProxy("locked", function(old, new)
+            print("Locked state changed", old, new)
+        end)
 ]]
 --[[
     getItemsByUniqueID(uniqueID, onlyMain)
@@ -83,7 +89,8 @@
         table – Table of matching item objects.
 
     Example Usage:
-        local result = inv:getItemsByUniqueID(uniqueID, onlyMain)
+        -- Get all ammo boxes stored in the main list
+        local ammo = inv:getItemsByUniqueID("ammo_box", true)
 ]]
 --[[
     register(typeID)
@@ -98,7 +105,8 @@
         Shared
 
     Example Usage:
-        local result = inv:register(typeID)
+        -- Register the custom inventory type
+        WeaponInv:register("weapon_inv")
 ]]
 --[[
     new()
@@ -116,7 +124,8 @@
         table – New inventory instance.
 
     Example Usage:
-        local result = inv:new()
+        -- Create an inventory for a spawned chest
+        local chestInv = WeaponInv:new()
 ]]
 --[[
     tostring()
@@ -134,7 +143,8 @@
         string – Formatted as "ClassName[id]".
 
     Example Usage:
-        local result = inv:tostring()
+        -- Print the identifier when debugging
+        print("Inventory: " .. inv:tostring())
 ]]
 --[[
     getType()
@@ -152,7 +162,8 @@
         table – Inventory type definition.
 
     Example Usage:
-        local result = inv:getType()
+        -- Read slot data from the type definition
+        local def = inv:getType()
 ]]
 --[[
     onDataChanged(key, oldValue, newValue)
@@ -170,7 +181,8 @@
         Shared
 
     Example Usage:
-        local result = inv:onDataChanged(key, oldValue, newValue)
+        -- React when the stored credit amount changes
+        inv:onDataChanged("credits", 0, 100)
 ]]
 --[[
     getItems()
@@ -188,7 +200,10 @@
         table – Item instance table indexed by itemID.
 
     Example Usage:
-        local result = inv:getItems()
+        -- Sum the weight of all items
+        for _, itm in pairs(inv:getItems()) do
+            totalWeight = totalWeight + itm.weight
+        end
 ]]
 --[[
     getItemsOfType(itemType)
@@ -206,7 +221,8 @@
         table – Array of matching items.
 
     Example Usage:
-        local result = inv:getItemsOfType(itemType)
+        -- List all medkits currently in the inventory
+        local kits = inv:getItemsOfType("medkit")
 ]]
 --[[
     getFirstItemOfType(itemType)
@@ -224,7 +240,8 @@
         Item|nil – The first matching item or nil.
 
     Example Usage:
-        local result = inv:getFirstItemOfType(itemType)
+        -- Grab the first pistol found in the inventory
+        local pistol = inv:getFirstItemOfType("pistol")
 ]]
 --[[
     hasItem(itemType)
@@ -242,7 +259,8 @@
         boolean – True if an item is found.
 
     Example Usage:
-        local result = inv:hasItem(itemType)
+        -- See if any health potion exists
+        if inv:hasItem("health_potion") then ... end
 ]]
 --[[
     getItemCount(itemType)
@@ -260,7 +278,8 @@
         number – Sum of quantities.
 
     Example Usage:
-        local result = inv:getItemCount(itemType)
+        -- Count the total number of bullets
+        local ammoTotal = inv:getItemCount("bullet")
 ]]
 --[[
     getID()
@@ -278,7 +297,8 @@
         number – Inventory identifier.
 
     Example Usage:
-        local result = inv:getID()
+        -- Store the inventory ID on its container entity
+        entity:setNetVar("invID", inv:getID())
 ]]
 --[[
     eq(other)
@@ -296,7 +316,10 @@
         boolean – True if both inventories share the same ID.
 
     Example Usage:
-        local result = inv:eq(other)
+        -- Check if two chests share the same inventory record
+        if inv:eq(other) then
+            print("Duplicate inventory")
+        end
 ]]
 --[[
         addItem(item, noReplicate)
@@ -314,8 +337,8 @@
         nil – This function does not return a value.
 
     Example Usage:
-        -- Insert a new item without sending it to clients
-        local result = inv:addItem(item, noReplicate)
+        -- Add a looted item to the inventory
+        inv:addItem(item, false)
     ]]
 --[[
         removeItem(itemID, preserveItem)
@@ -333,8 +356,8 @@
         nil – This function does not return a value.
 
     Example Usage:
-        -- Remove an item and keep it saved if preserveItem is true
-        local result = inv:removeItem(itemID, preserveItem)
+        -- Remove an item but keep it saved for later
+        inv:removeItem(itemID, true)
     ]]
 --[[
         syncData(key, recipients)
@@ -352,8 +375,8 @@
         nil – This function does not return a value.
 
     Example Usage:
-        -- Replicate a single field to the given players
-        local result = inv:syncData(key, recipients)
+        -- Sync the locked state to nearby players
+        inv:syncData("locked", recipients)
     ]]
 --[[
         sync(recipients)
@@ -370,8 +393,8 @@
         nil – This function does not return a value.
 
     Example Usage:
-        -- Send the entire inventory to specified players
-        local result = inv:sync(recipients)
+        -- Send all items to the owner after they join
+        inv:sync({owner})
     ]]
 --[[
         delete()
@@ -388,8 +411,8 @@
         nil – This function does not return a value.
 
     Example Usage:
-        -- Remove the inventory permanently from the database
-        local result = inv:delete()
+        -- Permanently delete a chest inventory on cleanup
+        inv:delete()
     ]]
 --[[
         destroy()
@@ -406,6 +429,6 @@
         nil – This function does not return a value.
 
     Example Usage:
-        -- Completely clear the inventory and its items
-        local result = inv:destroy()
+        -- Clear all items when the container entity is removed
+        inv:destroy()
     ]]

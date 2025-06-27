@@ -14,7 +14,8 @@
             Character|nil – The player's active character.
 
     Example Usage:
-        local result = player:getChar()
+        -- Retrieve the character to modify inventory
+        local char = player:getChar()
     ]]
 --[[
         Name()
@@ -32,7 +33,8 @@
             string – Display name.
 
     Example Usage:
-        local result = player:Name()
+        -- Print the roleplay name in chat
+        chat.AddText(player:Name())
     ]]
 --[[
     hasPrivilege(privilegeName)
@@ -50,7 +52,10 @@
         boolean – Result from CAMI.PlayerHasAccess.
 
     Example Usage:
-        local result = player:hasPrivilege(privilegeName)
+        -- Deny access if the player lacks a privilege
+        if not player:hasPrivilege("Manage") then
+            return false
+        end
 ]]
 --[[
     getCurrentVehicle()
@@ -68,7 +73,11 @@
         Entity|nil – Vehicle entity or nil.
 
     Example Usage:
-        local result = player:getCurrentVehicle()
+        -- Attach a camera to the vehicle the player is in
+        local veh = player:getCurrentVehicle()
+        if IsValid(veh) then
+            AttachCamera(veh)
+        end
 ]]
 --[[
     hasValidVehicle()
@@ -86,7 +95,10 @@
         boolean – True if a vehicle entity is valid.
 
     Example Usage:
-        local result = player:hasValidVehicle()
+        -- Allow honking only when in a valid vehicle
+        if player:hasValidVehicle() then
+            player:GetVehicle():EmitSound("Horn")
+        end
 ]]
 --[[
     isNoClipping()
@@ -104,7 +116,8 @@
         boolean – Whether the player is noclipping.
 
     Example Usage:
-        local result = player:isNoClipping()
+        -- Disable certain actions while noclipping
+        if player:isNoClipping() then return end
 ]]
 --[[
     getItems()
@@ -122,7 +135,10 @@
         table|nil – Table of items or nil if absent.
 
     Example Usage:
-        local result = player:getItems()
+        -- Iterate player's items to calculate total weight
+        for _, it in pairs(player:getItems() or {}) do
+            total = total + it.weight
+        end
 ]]
 --[[
     getTracedEntity(distance)
@@ -140,7 +156,8 @@
         Entity|nil – The entity hit or nil.
 
     Example Usage:
-        local result = player:getTracedEntity(distance)
+        -- Grab the entity the player is pointing at
+        local entity = player:getTracedEntity(96)
 ]]
 --[[
     getTrace(distance)
@@ -158,7 +175,8 @@
         table – Trace result.
 
     Example Usage:
-        local result = player:getTrace(distance)
+        -- Use a hull trace for melee attacks
+        local tr = player:getTrace(48)
 ]]
 --[[
     getEyeEnt(distance)
@@ -176,7 +194,11 @@
         Entity|nil – The entity or nil if too far.
 
     Example Usage:
-        local result = player:getEyeEnt(distance)
+        -- Show the name of the object being looked at
+        local target = player:getEyeEnt(128)
+        if IsValid(target) then
+            player:ChatPrint(target:GetClass())
+        end
 ]]
 --[[
     notify(message)

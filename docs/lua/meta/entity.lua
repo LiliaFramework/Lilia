@@ -14,7 +14,10 @@
         boolean – Whether the entity is a physics prop.
 
     Example Usage:
-        local result = ent:isProp()
+        -- Apply physics damage only if this is a prop
+        if ent:isProp() then
+            ent:TakeDamage(50)
+        end
 ]]
 --[[
     isItem()
@@ -32,7 +35,10 @@
         boolean – True if the entity represents an item.
 
     Example Usage:
-        local result = ent:isItem()
+        -- Attempt to pick up the entity as an item
+        if ent:isItem() then
+            lia.item.pickup(client, ent)
+        end
 ]]
 --[[
     isMoney()
@@ -50,7 +56,10 @@
         boolean – True if the entity represents money.
 
     Example Usage:
-        local result = ent:isMoney()
+        -- Collect money dropped on the ground
+        if ent:isMoney() then
+            char:addMoney(ent:getAmount())
+        end
 ]]
 --[[
     isSimfphysCar()
@@ -68,7 +77,10 @@
         boolean – True if this is a simfphys vehicle.
 
     Example Usage:
-        local result = ent:isSimfphysCar()
+        -- Show a custom HUD when entering a simfphys vehicle
+        if ent:isSimfphysCar() then
+            OpenCarHUD(ent)
+        end
 ]]
 --[[
     isLiliaPersistent()
@@ -86,7 +98,10 @@
         boolean – Whether the entity should persist.
 
     Example Usage:
-        local result = ent:isLiliaPersistent()
+        -- Save this entity across map resets if persistent
+        if ent:isLiliaPersistent() then
+            lia.persist.saveEntity(ent)
+        end
 ]]
 --[[
     checkDoorAccess(client, access)
@@ -105,7 +120,10 @@
         boolean – True if the player has access.
 
     Example Usage:
-        local result = ent:checkDoorAccess(client, access)
+        -- Block a player from opening the door without access
+        if not door:checkDoorAccess(client, DOOR_ACCESS_OPEN) then
+            client:notify("The door is locked.")
+        end
 ]]
 --[[
     keysOwn(client)
@@ -120,7 +138,8 @@
         Shared
 
     Example Usage:
-        local result = ent:keysOwn(client)
+        -- Assign ownership when a player buys the door
+        door:keysOwn(buyer)
 ]]
 --[[
     keysLock()
@@ -135,7 +154,8 @@
         Shared
 
     Example Usage:
-        local result = ent:keysLock()
+        -- Lock the vehicle after the driver exits
+        car:keysLock()
 ]]
 --[[
     keysUnLock()
@@ -150,7 +170,8 @@
         Shared
 
     Example Usage:
-        local result = ent:keysUnLock()
+        -- Unlock the vehicle when the owner presses a key
+        car:keysUnLock()
 ]]
 --[[
     getDoorOwner()
@@ -168,7 +189,11 @@
         Player|nil – Door owner or nil.
 
     Example Usage:
-        local result = ent:getDoorOwner()
+        -- Print the name of the door owner when inspecting
+        local owner = door:getDoorOwner()
+        if owner then
+            print("Owned by", owner:Name())
+        end
 ]]
 --[[
     isLocked()
@@ -186,7 +211,10 @@
         boolean – Whether the door is locked.
 
     Example Usage:
-        local result = ent:isLocked()
+        -- Display a lock icon if the door is networked as locked
+        if door:isLocked() then
+            DrawLockedIcon(door)
+        end
 ]]
 --[[
     isDoorLocked()
@@ -204,7 +232,10 @@
         boolean – True if the door is locked.
 
     Example Usage:
-        local result = ent:isDoorLocked()
+        -- Play a sound when trying to open a locked door server-side
+        if door:isDoorLocked() then
+            door:EmitSound("doors/door_locked2.wav")
+        end
 ]]
 --[[
     getEntItemDropPos(offset)
@@ -222,7 +253,9 @@
         Vector – Drop position and angle.
 
     Example Usage:
-        local result = ent:getEntItemDropPos(offset)
+        -- Spawn an item drop in front of the entity's eyes
+        local pos, ang = ent:getEntItemDropPos(16)
+        lia.item.spawn("item_water", pos, ang)
 ]]
 --[[
     isNearEntity(radius, otherEntity)
@@ -241,7 +274,10 @@
         boolean – True if another entity is within radius.
 
     Example Usage:
-        local result = ent:isNearEntity(radius, otherEntity)
+        -- Prevent building too close to another chest
+        if ent:isNearEntity(128, otherChest) then
+            client:notify("Too close to another chest!")
+        end
 ]]
 --[[
     GetCreator()
@@ -259,7 +295,11 @@
         Player|nil – Creator player if stored.
 
     Example Usage:
-        local result = ent:GetCreator()
+        -- Credit the creator when the entity is removed
+        local creator = ent:GetCreator()
+        if IsValid(creator) then
+            creator:notify("Your prop was removed.")
+        end
 ]]
 --[[
         SetCreator(client)
@@ -274,7 +314,8 @@
             Server
 
     Example Usage:
-        local result = ent:SetCreator(client)
+        -- Record the spawner for cleanup tracking
+        ent:SetCreator(client)
     ]]
 --[[
         sendNetVar(key, receiver)
