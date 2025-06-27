@@ -61,7 +61,7 @@
         weapons
 
         Description:
-            Weapons available to class members.
+            Weapons given to members of the class on spawn.
 
         Example Usage:
             CLASS.weapons = {"weapon_pistol", "weapon_crowbar"}
@@ -70,7 +70,7 @@
         pay
 
         Description:
-            Payment amount for class members.
+            Salary amount each member receives per pay interval.
 
         Example Usage:
             CLASS.pay = 50
@@ -79,7 +79,7 @@
         payLimit
 
         Description:
-            Maximum accumulated pay for class members.
+            Maximum salary that can accumulate for a player.
 
         Example Usage:
             CLASS.payLimit = 1000
@@ -88,7 +88,7 @@
         payTimer
 
         Description:
-            Interval in seconds for issuing pay.
+            Time in seconds between salary payouts.
 
         Example Usage:
             CLASS.payTimer = 3600
@@ -97,7 +97,7 @@
         limit
 
         Description:
-            Maximum number of players allowed in the class.
+            Maximum number of players allowed in this class.
 
         Example Usage:
             CLASS.limit = 10
@@ -142,7 +142,7 @@
         runSpeedMultiplier
 
         Description:
-            If true, multiplies runSpeed by the base speed; otherwise sets it directly.
+            If `true`, multiplies `runSpeed` with the base running speed instead of replacing it.
 
         Example Usage:
             CLASS.runSpeedMultiplier = true
@@ -160,7 +160,7 @@
         walkSpeedMultiplier
 
         Description:
-            If true, multiplies walkSpeed by the base speed; otherwise sets it directly.
+            If `true`, multiplies `walkSpeed` with the base walking speed instead of replacing it.
 
         Example Usage:
             CLASS.walkSpeedMultiplier = false
@@ -178,7 +178,7 @@
         jumpPowerMultiplier
 
         Description:
-            If true, multiplies jumpPower by the base jump power; otherwise sets it directly.
+            If `true`, multiplies `jumpPower` with the base jump power instead of replacing it.
 
         Example Usage:
             CLASS.jumpPowerMultiplier = true
@@ -196,7 +196,7 @@
         bodyGroups
 
         Description:
-            Assigns bodygroup values on spawn.
+            Table mapping bodygroup indices to values applied on spawn.
 
         Example Usage:
             CLASS.bodyGroups = { [1] = 2, [3] = 1 }
@@ -205,7 +205,7 @@
         model
 
         Description:
-            Model or models assigned to the class.
+            Model path or table of models assigned to the class.
 
         Example Usage:
             CLASS.model = "models/player/alyx.mdl"
@@ -214,7 +214,7 @@
         index
 
         Description:
-            Unique ID (team index) identifying the class.
+            Unique team index assigned when the class is registered.
 
         Example Usage:
             CLASS.index = CLASS_ENGINEER
