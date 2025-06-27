@@ -5,7 +5,12 @@ MODULE.version = "1.0"
 MODULE.desc = "Adds some Administration Utilities"
 MODULE.CAMIPrivileges = {
     {
-        Name = "Staff Permissions - Can Remove Warnrs",
+        Name = "Staff Permissions - Can Remove Warns",
+        MinAccess = "superadmin",
+        Description = "Allows access to Removing Player Warnings.",
+    },
+    {
+        Name = "Staff Permissions - Manage Prop Blacklist",
         MinAccess = "superadmin",
         Description = "Allows access to Removing Player Warnings.",
     },

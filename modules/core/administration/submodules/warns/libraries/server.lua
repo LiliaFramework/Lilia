@@ -1,5 +1,5 @@
 ﻿net.Receive("RequestRemoveWarning", function(_, client)
-    if not client:hasPrivilege("Staff Permissions - Can Remove Warnrs") then return end
+    if not client:hasPrivilege("Staff Permissions - Can Remove Warns") then return end
     local charID = net.ReadInt(32)
     local rowData = net.ReadTable()
     local warnIndex = tonumber(rowData.ID or rowData.index)
