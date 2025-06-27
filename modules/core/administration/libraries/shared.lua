@@ -19,11 +19,11 @@ properties.Add("TogglePropBlacklist", {
         if table.HasValue(list, model) then
             table.RemoveByValue(list, model)
             lia.data.set("blacklist", list, true, true)
-            ply:ChatPrint("Removed from blacklist: " .. model)
+            ply:notifyLocalized("removedFromBlacklist", model)
         else
             table.insert(list, model)
             lia.data.set("blacklist", list, true, true)
-            ply:ChatPrint("Added to blacklist: " .. model)
+            ply:notifyLocalized("addedToBlacklist", model)
         end
     end
 })
