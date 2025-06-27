@@ -18,7 +18,7 @@ local function CheckDuplicationScale(client, entities)
     return true
 end
 
-hook.Add("PlayerSpawnProp", "liaAdvDupe", function(client, model)
+hook.Add("PlayerSpawnProp", "liaAdvDupe", function(client)
     local w = client:GetActiveWeapon()
     if IsValid(w) and w:GetClass() == "gmod_tool" then
         local t = w:GetToolObject()
