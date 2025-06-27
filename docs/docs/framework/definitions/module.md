@@ -1,6 +1,7 @@
 # Module Fields
 
 This document describes the default `MODULE` fields provided by the Lilia framework. Use these to configure module metadata, dependencies, loading behavior, and lifecycle hooks.
+Unspecified fields will use sensible defaults.
 
 ---
 
@@ -239,6 +240,4 @@ print(MODULE.path)
 
 ```lua
 print(MODULE.uniqueID)
-```
-
 ```

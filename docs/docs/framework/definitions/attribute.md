@@ -1,6 +1,7 @@
 # Attribute Fields
 
 This document describes all configurable `ATTRIBUTE` fields and hooks in the codebase. Use these to control each attribute’s display, limits, and behavior when applied to players.
+Unspecified fields fall back to sensible defaults.
 
 ---
 
@@ -107,6 +108,4 @@ function ATTRIBUTE:OnSetup(client, value)
         client:ChatPrint("You are very Strong!")
     end
 end
-```
-
 ```

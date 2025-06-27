@@ -1,6 +1,7 @@
 # Command Fields
 
 This document describes all configurable fields accepted by `lia.command.add`. Use these to define command behavior, permissions, help text, and admin utility integration.
+All fields are optional unless noted otherwise.
 
 ---
 
@@ -158,6 +159,4 @@ onRun = function(client, arguments)
         target:Kill()
     end
 end
-```
-
 ```
