@@ -15,6 +15,11 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        lia.db.connect(function()
+            print("Database connected")
+        end)
 ]]
 
 --[[
@@ -32,6 +37,11 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        lia.db.wipeTables(function()
+            print("Tables wiped")
+        end)
 ]]
 
 --[[
@@ -49,6 +59,9 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        lia.db.loadTables()
 ]]
 
 --[[
@@ -66,6 +79,11 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        lia.db.waitForTablesToLoad():next(function()
+            print("Tables loaded")
+        end)
 ]]
 
 --[[
@@ -85,6 +103,9 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        local str = lia.db.convertDataType({name = "Lilia"})
 ]]
 
 --[[
@@ -104,6 +125,11 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        lia.db.insertTable({name = "Test"}, function(id)
+            print("Inserted", id)
+        end, "characters")
 ]]
 
 --[[
@@ -124,6 +150,11 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        lia.db.updateTable({name = "Updated"}, function()
+            print("Row updated")
+        end, "characters", "id = 1")
 ]]
 
 --[[
@@ -145,6 +176,11 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        lia.db.select("*", "characters", "id = 1"):next(function(rows)
+            PrintTable(rows)
+        end)
 ]]
 
 --[[
@@ -164,6 +200,9 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        lia.db.upsert({id = 1, name = "John"}, "characters")
 ]]
 
 --[[
@@ -182,6 +221,11 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        lia.db.delete("characters", "id = 1"):next(function()
+            print("Row deleted")
+        end)
 ]]
 
 --[[

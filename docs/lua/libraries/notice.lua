@@ -13,6 +13,9 @@
 
         Returns:
             None
+
+    Example Usage:
+        lia.notices.notify("Server restarting", nil)
     ]]
 
     --[[
@@ -31,6 +34,9 @@
 
         Returns:
             None
+
+    Example Usage:
+        lia.notices.notifyLocalized("welcome", client)
     ]]
 
     --[[
@@ -47,6 +53,9 @@
 
         Returns:
             None
+
+    Example Usage:
+        lia.notices.notify("Item picked up")
     ]]
 
     --[[
@@ -64,4 +73,7 @@
 
         Returns:
             None
+
+    Example Usage:
+        lia.notices.notifyLocalized("item_picked_up")
     ]]

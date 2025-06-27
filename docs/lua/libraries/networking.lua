@@ -15,6 +15,9 @@
 
     Returns:
         nil
+
+    Example Usage:
+        setNetVar("round", 1)
 ]]
 
 --[[
@@ -32,5 +35,8 @@
 
     Returns:
         any – Stored value or default.
+
+    Example Usage:
+        local round = getNetVar("round", 0)
 ]]
 

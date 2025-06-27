@@ -15,6 +15,9 @@
 
       Internal Function:
          true
+
+      Example Usage:
+          lia.log.loadTables()
    ]]
 
     --[[
@@ -34,6 +37,11 @@
 
       Realm:
          Server
+
+      Example Usage:
+          lia.log.addType("mytype", function(client)
+              return client:Name() .. " did something"
+          end, "actions")
    ]]
 
     --[[
@@ -56,6 +64,9 @@
 
       Internal Function:
          true
+
+      Example Usage:
+          local str, category = lia.log.getString(client, "mytype", "info")
    ]]
 
     --[[
@@ -75,4 +86,7 @@
 
       Realm:
          Server
+
+      Example Usage:
+          lia.log.add(client, "mytype", "info")
    ]]

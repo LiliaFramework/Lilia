@@ -15,6 +15,9 @@
 
     Returns:
         character (table) – New character object.
+
+    Example Usage:
+        local char = lia.char.new({name = "John"}, 1, client)
 ]]
 
 --[[
@@ -33,6 +36,9 @@
 
     Returns:
         nil
+
+    Example Usage:
+        lia.char.hookVar("name", "PrintName", function(old, new) print(new) end)
 ]]
 
 --[[
@@ -50,6 +56,9 @@
 
     Returns:
         nil
+
+    Example Usage:
+        lia.char.registerVar("age", {field = "_age", default = 20})
 ]]
 
 --[[
@@ -67,6 +76,9 @@
 
     Returns:
         value (any) – Data value or full table if no key provided.
+
+    Example Usage:
+        local age = lia.char.getCharData(1, "age")
 ]]
 
 --[[
@@ -84,6 +96,9 @@
 
     Returns:
         row (table|any) – Full row table or column value.
+
+    Example Usage:
+        local row = lia.char.getCharDataRaw(1)
 ]]
 
 --[[
@@ -100,6 +115,9 @@
 
     Returns:
         Player – Player entity or nil if not found.
+
+    Example Usage:
+        local ply = lia.char.getOwnerByID(1)
 ]]
 
 --[[
@@ -116,6 +134,9 @@
 
     Returns:
         Character – Character object or nil.
+
+    Example Usage:
+        local char = lia.char.getBySteamID("STEAM_0:0:11101")
 ]]
 
 --[[
@@ -132,6 +153,9 @@
 
     Returns:
         table – Map of Player to Character.
+
+    Example Usage:
+        for ply, char in pairs(lia.char.getAll()) do print(ply, char:getName()) end
 ]]
 
 --[[
@@ -148,6 +172,9 @@
 
     Returns:
         Color – Team or class color.
+
+    Example Usage:
+        local color = lia.char.GetTeamColor(client)
 ]]
 
     --[[
@@ -165,6 +192,9 @@
 
         Returns:
             None
+
+        Example Usage:
+            lia.char.create({name = "John"}, function(id) print("Created", id) end)
     ]]
 
     --[[
@@ -183,6 +213,9 @@
 
         Returns:
             None
+
+        Example Usage:
+            lia.char.restore(client, print)
     ]]
 
     --[[
@@ -199,6 +232,9 @@
 
         Returns:
             None
+
+        Example Usage:
+            lia.char.cleanUpForPlayer(client)
     ]]
 
     --[[
@@ -216,6 +252,9 @@
 
         Returns:
             None
+
+        Example Usage:
+            lia.char.delete(1, client)
     ]]
 
     --[[
@@ -234,6 +273,9 @@
 
         Returns:
             boolean – True on success, false on failure.
+
+        Example Usage:
+            lia.char.setCharData(1, "age", 25)
     ]]
 
     --[[
@@ -251,6 +293,9 @@
 
         Returns:
             boolean – True on success, false on failure.
+
+        Example Usage:
+            lia.char.setCharName(1, "NewName")
     ]]
 
     --[[
@@ -269,4 +314,7 @@
 
         Returns:
             boolean – True on success, false on failure.
+
+        Example Usage:
+            lia.char.setCharModel(1, "models/player.mdl", {})
     ]]

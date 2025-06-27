@@ -12,6 +12,9 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        local ts = lia.chat.timestamp(false)
 ]]
 
 --[[
@@ -29,6 +32,9 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        lia.chat.register("me", {onChatAdd = function(...) end})
 ]]
 
 --[[
@@ -47,6 +53,9 @@
 
     Realm:
         Shared
+
+    Example Usage:
+        local class, text = lia.chat.parse(client, "/me waves")
 ]]
 
 --[[
@@ -67,4 +76,7 @@
 
     Realm:
         Server
+
+    Example Usage:
+        lia.chat.send(client, "ic", "Hello")
 ]]
