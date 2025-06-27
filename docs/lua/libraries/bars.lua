@@ -14,7 +14,7 @@
         table or nil – The bar table if found, or nil if not found.
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.bar.get
         local bar = lia.bar.get("health")
 ]]
 
@@ -39,8 +39,13 @@
         number – The priority assigned to the added bar.
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
-        lia.bar.add(function() return 1 end, Color(255,0,0), 1, "example")
+        -- Calculates the player's current health as a fraction of their maximum health.
+        -- Uses a custom color (RGB 200, 50, 40) for the bar's fill.
+        -- Assigns priority 1 so this bar draws before lower-priority bars.
+        lia.bar.add(function()
+            local client = LocalPlayer()
+            return client:Health() / client:GetMaxHealth()
+        end, Color(200, 50, 40), 1, "health")
 ]]
 
 --[[
@@ -59,7 +64,7 @@
         nil
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.bar.remove
         lia.bar.remove("example")
 ]]
 
@@ -86,7 +91,7 @@
         nil
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.bar.drawBar
         lia.bar.drawBar(10, 10, 200, 20, 0.5, 1, Color(255,0,0))
 ]]
 
@@ -108,7 +113,7 @@
         nil
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.bar.drawAction
         lia.bar.drawAction("Reloading", 2)
 ]]
 
@@ -129,6 +134,6 @@
         nil
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of hook.Add
         hook.Add("HUDPaintBackground", "liaBarDraw", lia.bar.drawAll)
 ]]

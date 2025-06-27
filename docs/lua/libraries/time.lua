@@ -13,7 +13,7 @@
        Shared
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of print
        print(lia.time.TimeSince("2025-03-27"))
  ]]
 
@@ -34,7 +34,7 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.time.toNumber
       local t = lia.time.toNumber("2025-03-27 14:30:00")
       print(t.year, t.month, t.day, t.hour, t.min, t.sec)
  ]]
