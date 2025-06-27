@@ -8,7 +8,7 @@
         name
 
         Description:
-            Display name shown for members of this faction.
+            Display name shown for players in this faction.
 
         Example Usage:
             FACTION.name = "Minecrafters"
@@ -247,7 +247,7 @@
         bloodcolor
 
         Description:
-            Blood color enumeration for faction members.
+            Blood color constant from GMOD's BLOOD_COLOR_* enumeration.
 
         Example Usage:
             FACTION.bloodcolor = BLOOD_COLOR_RED
