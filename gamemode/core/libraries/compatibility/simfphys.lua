@@ -4,7 +4,7 @@
     and defines privileges for editing cars.
 ]]
 if SERVER then
-    hook.Add("EntityTakeDamage", "Simfphys_EntityTakeDamage", function(seat, dmgInfo)
+    hook.Add("EntityTakeDamage", "liaSimfphys", function(seat, dmgInfo)
         if seat:IsVehicle() and seat:GetClass() == "gmod_sent_vehicle_fphysics_base" then
             local player = seat:GetDriver()
             if IsValid(player) then
@@ -23,7 +23,7 @@ if SERVER then
         end
     end)
 
-    hook.Add("simfphysUse", "Simfphys_simfphysUse", function(entity, client)
+    hook.Add("simfphysUse", "liaSimfphys", function(entity, client)
         if entity.IsBeingEntered then
             client:notifyLocalized("carOccupiedNotice")
             return true
@@ -49,7 +49,7 @@ else
     hook.Remove("HUDPaint", "simfphys_HUD")
 end
 
-hook.Add("CheckValidSit", "Simfphys_CheckValidSit", function(client)
+hook.Add("CheckValidSit", "liaSimfphys", function(client)
     local vehicle = client:getTracedEntity()
     if IsValid(vehicle) and vehicle:isSimfphysCar() then return false end
 end)
