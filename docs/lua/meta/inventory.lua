@@ -34,8 +34,13 @@
         table – The newly derived inventory table.
 
     Example Usage:
-        -- Define a custom inventory class for weapon crates
+        -- Define a subclass for weapon crates and register it
         local WeaponInv = inv:extend("WeaponInventory")
+        function WeaponInv:configure()
+            self:addSlot("Ammo")
+            self:addSlot("Weapons")
+        end
+        WeaponInv:register("weapon_inv")
 ]]
 --[[
     configure()
@@ -49,9 +54,15 @@
     Realm:
         Shared
 
+    Returns:
+        None – This function does not return a value.
+
     Example Usage:
         -- Called from a subclass to set up custom slots
-        inv:configure()
+        function WeaponInv:configure()
+            self:addSlot("Ammo")
+            self:addSlot("Weapons")
+        end
 ]]
 --[[
     addDataProxy(key, onChange)
@@ -66,10 +77,14 @@
     Realm:
         Shared
 
+    Returns:
+        None – This function does not return a value.
+
     Example Usage:
         -- Track changes to the "locked" data field
         inv:addDataProxy("locked", function(old, new)
             print("Locked state changed", old, new)
+            hook.Run("ChestLocked", inv, new)
         end)
 ]]
 --[[
@@ -104,9 +119,13 @@
     Realm:
         Shared
 
+    Returns:
+        None – This function does not return a value.
+
     Example Usage:
-        -- Register the custom inventory type
+        -- Register and then immediately create the inventory type
         WeaponInv:register("weapon_inv")
+        local chestInv = WeaponInv:new()
 ]]
 --[[
     new()
@@ -124,8 +143,11 @@
         table – New inventory instance.
 
     Example Usage:
-        -- Create an inventory for a spawned chest
-        local chestInv = WeaponInv:new()
+        -- Create an inventory and attach it to a spawned chest entity
+        local chest = ents.Create("prop_physics")
+        chest:SetModel("models/props_junk/wood_crate001a.mdl")
+        chest:Spawn()
+        chest.inv = WeaponInv:new()
 ]]
 --[[
     tostring()
@@ -179,6 +201,9 @@
 
     Realm:
         Shared
+
+    Returns:
+        None – This function does not return a value.
 
     Example Usage:
         -- React when the stored credit amount changes
@@ -237,7 +262,7 @@
         Shared
 
     Returns:
-        Item|nil – The first matching item or nil.
+        Item|None – The first matching item or None.
 
     Example Usage:
         -- Grab the first pistol found in the inventory
@@ -269,7 +294,7 @@
         Counts the total quantity of a specific item type.
 
     Parameters:
-        itemType (string|nil) – Item unique ID to count. Counts all if nil.
+        itemType (string|None) – Item unique ID to count. Counts all if nil.
 
     Realm:
         Shared
@@ -334,7 +359,7 @@
         Realm:
             Server
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Add a looted item to the inventory
@@ -353,7 +378,7 @@
         Realm:
             Server
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Remove an item but keep it saved for later
@@ -367,12 +392,12 @@
 
         Parameters:
             key (string) – Field to replicate.
-            recipients (table|nil) – Player recipients.
+            recipients (table|None) – Player recipients.
 
         Realm:
             Server
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Sync the locked state to nearby players
@@ -385,12 +410,12 @@
             Sends the entire inventory and its items to players.
 
         Parameters:
-            recipients (table|nil) – Player recipients.
+            recipients (table|None) – Player recipients.
 
         Realm:
             Server
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Send all items to the owner after they join
@@ -408,7 +433,7 @@
         Realm:
             Server
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Permanently delete a chest inventory on cleanup
@@ -426,7 +451,7 @@
         Realm:
             Server
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Clear all items when the container entity is removed

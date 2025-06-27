@@ -137,6 +137,9 @@
     Realm:
         Shared
 
+    Returns:
+        None – This function does not return a value.
+
     Example Usage:
         -- Assign ownership when a player buys the door
         door:keysOwn(buyer)
@@ -153,6 +156,9 @@
     Realm:
         Shared
 
+    Returns:
+        None – This function does not return a value.
+
     Example Usage:
         -- Lock the vehicle after the driver exits
         car:keysLock()
@@ -168,6 +174,9 @@
 
     Realm:
         Shared
+
+    Returns:
+        None – This function does not return a value.
 
     Example Usage:
         -- Unlock the vehicle when the owner presses a key
@@ -186,7 +195,7 @@
         Shared
 
     Returns:
-        Player|nil – Door owner or nil.
+        Player|None – Door owner or None.
 
     Example Usage:
         -- Print the name of the door owner when inspecting
@@ -292,7 +301,7 @@
         Shared
 
     Returns:
-        Player|nil – Creator player if stored.
+        Player|None – Creator player if stored.
 
     Example Usage:
         -- Credit the creator when the entity is removed
@@ -313,9 +322,12 @@
         Realm:
             Server
 
-    Example Usage:
-        -- Record the spawner for cleanup tracking
-        ent:SetCreator(client)
+        Returns:
+            None – This function does not return a value.
+
+        Example Usage:
+            -- Record the spawner for cleanup tracking
+            ent:SetCreator(client)
     ]]
 --[[
         sendNetVar(key, receiver)
@@ -325,7 +337,7 @@
 
         Parameters:
             key (string) – Identifier of the variable.
-            receiver (Player|nil) – Who to send to.
+            receiver (Player|None) – Who to send to.
 
         Realm:
             Server
@@ -333,8 +345,14 @@
         Internal:
             Used by the networking system.
 
+    Returns:
+        None – This function does not return a value.
+
     Example Usage:
-        local result = ent:sendNetVar(key, receiver)
+        -- Broadcast the "doorState" variable to every connected player
+        for _, ply in ipairs(player.GetAll()) do
+            ent:sendNetVar("doorState", ply)
+        end
     ]]
 --[[
         clearNetVars(receiver)
@@ -343,13 +361,18 @@
             Clears all network variables on this entity.
 
         Parameters:
-            receiver (Player|nil) – Receiver to notify.
+            receiver (Player|None) – Receiver to notify.
 
         Realm:
             Server
 
+        Returns:
+            None – This function does not return a value.
+
     Example Usage:
-        local result = ent:clearNetVars(receiver)
+        -- Force reinitialization by clearing all variables for this receiver
+        ent:clearNetVars(client)
+        ent:sendNetVar("initialized", client)
     ]]
 --[[
         removeDoorAccessData()
@@ -363,7 +386,11 @@
         Realm:
             Server
 
+    Returns:
+        None – This function does not return a value.
+
     Example Usage:
+        -- Wipe door permissions during cleanup
         local result = ent:removeDoorAccessData()
     ]]
 --[[
@@ -378,8 +405,13 @@
         Realm:
             Server
 
+    Returns:
+        None – This function does not return a value.
+
     Example Usage:
-        local result = ent:setLocked(state)
+        -- Toggle the door lock and play a latch sound for everyone
+        door:setLocked(true)
+        door:EmitSound("doors/door_latch3.wav")
     ]]
 --[[
         isDoor()
@@ -397,6 +429,7 @@
             boolean – Whether the entity is a door.
 
     Example Usage:
+        -- Check if the entity behaves like a door
         local result = ent:isDoor()
     ]]
 --[[
@@ -412,10 +445,14 @@
             Server
 
         Returns:
-            Entity|nil – The partnered door.
+            Entity|None – The partnered door.
 
     Example Usage:
-        local result = ent:getDoorPartner()
+        -- Unlock both doors when opening a double-door setup
+        local partner = ent:getDoorPartner()
+        if IsValid(partner) then
+            partner:setLocked(false)
+        end
     ]]
 --[[
         setNetVar(key, value, receiver)
@@ -426,12 +463,16 @@
         Parameters:
             key (string) – Variable name.
             value (any) – Value to store.
-            receiver (Player|nil) – Who to send update to.
+            receiver (Player|None) – Who to send update to.
 
         Realm:
             Server
 
+    Returns:
+        None – This function does not return a value.
+
     Example Usage:
+        -- Store a variable and sync it to players
         local result = ent:setNetVar(key, value, receiver)
     ]]
 --[[
@@ -452,6 +493,7 @@
             any – Stored value or default.
 
     Example Usage:
+        -- Retrieve the stored variable or fallback to the default
         local result = ent:getNetVar(key, default)
     ]]
 --[[
@@ -470,6 +512,7 @@
             boolean – True if entity class contains "door".
 
     Example Usage:
+        -- Determine if this entity's class name contains "door"
         local result = ent:isDoor()
     ]]
 --[[
@@ -485,10 +528,14 @@
             Client
 
         Returns:
-            Entity|nil – The partner door entity.
+            Entity|None – The partner door entity.
 
     Example Usage:
-        local result = ent:getDoorPartner()
+        -- Highlight the partner door of the one being looked at
+        local partner = ent:getDoorPartner()
+        if IsValid(partner) then
+            partner:SetColor(Color(0, 255, 0))
+        end
     ]]
 --[[
         getNetVar(key, default)
@@ -507,5 +554,6 @@
             any – Stored value or default.
 
     Example Usage:
+        -- Access a synced variable on the client side
         local result = ent:getNetVar(key, default)
     ]]

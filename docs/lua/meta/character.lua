@@ -71,7 +71,7 @@
         Shared
 
     Returns:
-        Player|nil – Owning player or nil.
+        Player|None – Owning player or None.
 
     Example Usage:
         -- Notify the controlling player that the character loaded
@@ -318,7 +318,7 @@
         Shared
 
     Returns:
-        table|nil – Table of boosts or nil.
+        table|None – Table of boosts or None.
 
     Example Usage:
         -- Inspect active boosts on agility

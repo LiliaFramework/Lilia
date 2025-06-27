@@ -20,4 +20,6 @@
         local frame = vgui.Create("DFrame")
         frame:SetSize(200, 100)
         frame:SetPos(25, 25)
+        frame:SetTitle("Scaled Frame")
+        frame:MakePopup()
 ]]

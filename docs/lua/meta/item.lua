@@ -172,7 +172,7 @@
         Shared
 
     Returns:
-        Player|nil – The owner if available.
+        Player|None – The owner if available.
 
     Example Usage:
         -- Notify whoever currently owns the item
@@ -234,7 +234,7 @@
     Realm:
         Shared
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Run code when the item is used
@@ -253,7 +253,7 @@
     Realm:
         Shared
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Give a pistol after the item is picked up
@@ -271,7 +271,7 @@
     Realm:
         Shared
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Initialize data when the item type loads
@@ -289,7 +289,7 @@
     Realm:
         Server
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Output item info while debugging spawn issues
@@ -307,7 +307,7 @@
     Realm:
         Server
     Returns:
-        nil – This function does not return a value.
+        None – This function does not return a value.
 
     Example Usage:
         -- Dump all stored data to the console
@@ -321,17 +321,18 @@
 
         Parameters:
             quantity (number) – Amount to add.
-            receivers (Player|nil) – Who to network the change to.
+            receivers (Player|None) – Who to network the change to.
             noCheckEntity (boolean) – Skip entity network update.
 
         Realm:
             Server
         Returns:
-            nil – This function does not return a value.
+            None – This function does not return a value.
 
     Example Usage:
-        -- Combine stacks and update clients
+        -- Combine stacks from a loot drop and notify the owner
         item:addQuantity(5, {player})
+        player:notifyLocalized("item_added", item.name, 5)
     ]]
 --[[
         setQuantity(quantity, receivers, noCheckEntity)
@@ -341,13 +342,13 @@
 
         Parameters:
             quantity (number) – New amount to store.
-            receivers (Player|nil) – Recipients to send updates to.
+            receivers (Player|None) – Recipients to send updates to.
             noCheckEntity (boolean) – Skip entity updates when true.
 
         Realm:
             Server
         Returns:
-            nil – This function does not return a value.
+            None – This function does not return a value.
 
     Example Usage:
         -- Set quantity to 1 after splitting the stack
