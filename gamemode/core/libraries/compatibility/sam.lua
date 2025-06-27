@@ -3,7 +3,7 @@
     Recreates SAM commands, adds staff permission checks and
     exposes SAM privileges through CAMI.
 ]]
-hook.Add("InitializedModules", "SAM_InitializedModules", function()
+hook.Add("InitializedModules", "liaSAM", function()
     for _, commandInfo in ipairs(sam.command.get_commands()) do
         local customSyntax = ""
         for _, argInfo in ipairs(commandInfo.args) do
@@ -23,7 +23,7 @@ hook.Add("InitializedModules", "SAM_InitializedModules", function()
     end
 end)
 
-hook.Add("SAM.CanRunCommand", "Check4Staff", function(client, _, _, cmd)
+hook.Add("SAM.CanRunCommand", "liaSAM", function(client, _, _, cmd)
     if type(client) ~= "Player" then return true end
     if lia.config.get("SAMEnforceStaff", false) then
         if cmd.permission and not client:HasPermission(cmd.permission) then
@@ -86,7 +86,7 @@ else
 end
 
 local function CanReadNotifications(client)
-    if not lia.config.get("AdminOnlyNotification") then return true end
+    if not lia.config.get("AdminOnlyNotification", true) then return true end
     return client:hasPrivilege("Staff Permissions - Can See SAM Notifications") or client:isStaffOnDuty()
 end
 
@@ -95,16 +95,15 @@ function sam.player.send_message(client, msg, tbl)
         if sam.isconsole(client) then
             local result = sam.format_message(msg, tbl)
             sam.print(unpack(result, 1, result.__cnt))
-        elseif client then
+        else
             return sam.netstream.Start(client, "send_message", msg, tbl)
         end
     else
-        if client and CanReadNotifications(client) then
-            local prefix_result = sam.format_message(sam.config.get("ChatPrefix", ""))
-            local prefix_n = #prefix_result
-            local result = sam.format_message(msg, tbl, prefix_result, prefix_n)
-            chat.AddText(unpack(result, 1, result.__cnt))
-        end
+        if not CanReadNotifications(LocalPlayer()) then return end
+        local prefix_result = sam.format_message(sam.config.get("ChatPrefix", ""))
+        local prefix_n = #prefix_result
+        local result = sam.format_message(msg, tbl, prefix_result, prefix_n)
+        chat.AddText(unpack(result, 1, result.__cnt))
     end
 end
 
