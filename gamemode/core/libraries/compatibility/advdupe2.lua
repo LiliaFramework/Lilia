@@ -1,15 +1,35 @@
 local function CheckDuplicationScale(client, entities)
     entities = entities or {}
-    for _, v in pairs(entities) do
-        if v.ModelScale and v.ModelScale > 10 then
+    for _, ent in pairs(entities) do
+        if ent.ModelScale and ent.ModelScale > 10 then
             client:notifyLocalized("duplicationSizeLimit")
             print("[Server Warning] Potential server crash using dupes attempt by player: " .. client:Name() .. " (" .. client:SteamID64() .. ")")
             return false
         end
 
-        v.ModelScale = 1
+        ent.ModelScale = 1
     end
     return true
 end
 
-hook.Add("CanTool", "liaAdvDupe2", function(client, _, tool) if tool == "advdupe2" and client.AdvDupe2 and not CheckDuplicationScale(client, client.AdvDupe2.Entities) then return false end end)
+hook.Add("PlayerSpawnProp", "liaAdvDupe2", function(client, model)
+    local weapon = client:GetActiveWeapon()
+    if IsValid(weapon) and weapon:GetClass() == "gmod_tool" then
+        local toolobj = weapon:GetToolObject()
+        if toolobj and (client.AdvDupe2 and client.AdvDupe2.Entities or client.CurrentDupe and client.CurrentDupe.Entities or toolobj.Entities) then return true end
+    end
+end)
+
+hook.Add("CanTool", "liaAdvDupe2", function(client, trace, tool)
+    if tool ~= "advdupe2" then return end
+    local dupe = client.AdvDupe2
+    if not dupe then return end
+    for _, ent in pairs(dupe.Entities or {}) do
+        if ent.NoDuplicate then
+            client:notifyLocalized("cannotDuplicateEntity", tool)
+            return false
+        end
+    end
+
+    if not CheckDuplicationScale(client, dupe.Entities) then return false end
+end)
