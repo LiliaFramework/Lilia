@@ -102,7 +102,7 @@ function lia.command.parseSyntaxFields(syntax)
     if not syntax or syntax == "" then return fields end
     for token in syntax:gmatch("%b[]") do
         local inner = token:sub(2, -2)
-        local typ, name = inner:match("^(%S+)%s+(%S+)$")
+        local typ, name = inner:match("^(%S+)%s+(.+)$")
         if name then
             typ = typ:lower()
             if typ == "string" then

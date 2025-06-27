@@ -58,7 +58,7 @@
         the arguments.
 
     Example Usage:
-            syntax = "[string target] [number amount]"
+            syntax = "[string Target Name] [number Amount]"
 ]]
 
 --[[

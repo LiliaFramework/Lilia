@@ -61,7 +61,7 @@
      Each field contains a name and a type derived from the syntax.
 
   Parameters:
-     syntax (string) - The syntax string, e.g. "[string name] [number time]".
+     syntax (string) - The syntax string, e.g. "[string Name] [number Time]".
 
   Returns:
      table - List of fields in call order.
@@ -71,7 +71,7 @@
 
   Example Usage:
         -- Extract field data from a syntax string
-        local fields = lia.command.parseSyntaxFields("[string name] [number time]")
+        local fields = lia.command.parseSyntaxFields("[string Name] [number Time]")
   ]]
 --[[
       lia.command.run
