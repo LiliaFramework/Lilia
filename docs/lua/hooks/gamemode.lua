@@ -1452,7 +1452,7 @@
         Example Usage:
             -- Prints a message when PostPlayerLoadout is triggered
             hook.Add("PostPlayerLoadout", "SetColor", function(ply)
-                ply:SetPlayerColor(Vector(0,1,0))
+                ply:SetPlayerColor(Vector(0, 1, 0))
             end)
 ]]
 --[[
