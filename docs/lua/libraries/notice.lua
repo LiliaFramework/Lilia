@@ -15,7 +15,7 @@
             None
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.notices.notify
         lia.notices.notify("Server restarting", nil)
     ]]
 
@@ -37,7 +37,7 @@
             None
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.notices.notifyLocalized
         lia.notices.notifyLocalized("welcome", client)
     ]]
 
@@ -57,7 +57,7 @@
             None
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.notices.notify
         lia.notices.notify("Item picked up")
     ]]
 
@@ -78,6 +78,6 @@
             None
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.notices.notifyLocalized
         lia.notices.notifyLocalized("item_picked_up")
     ]]

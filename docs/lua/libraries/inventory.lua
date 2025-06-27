@@ -15,7 +15,7 @@
         nil
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.inventory.newType
         lia.inventory.newType("bag", {className = "liaBag"})
 ]]
 
@@ -35,7 +35,7 @@
         table
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.inventory.new
         local inv = lia.inventory.new("bag")
 ]]
 
@@ -55,7 +55,7 @@
           deferred
 
       Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.inventory.loadByID
           lia.inventory.loadByID(1):next(function(inv) print(inv) end)
    ]]
 
@@ -75,7 +75,7 @@
           deferred
 
       Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.inventory.loadFromDefaultStorage
           lia.inventory.loadFromDefaultStorage(1)
    ]]
 
@@ -95,7 +95,7 @@
           deferred
 
       Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.inventory.instance
           lia.inventory.instance("bag", {charID = 1})
    ]]
 
@@ -115,7 +115,7 @@
           deferred
 
       Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.inventory.loadAllFromCharID
           lia.inventory.loadAllFromCharID(client:getChar():getID())
    ]]
 
@@ -135,7 +135,7 @@
           nil
 
       Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.inventory.deleteByID
           lia.inventory.deleteByID(1)
    ]]
 
@@ -155,7 +155,7 @@
           nil
 
       Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.inventory.cleanUpForCharacter
           lia.inventory.cleanUpForCharacter(client:getChar())
    ]]
 
@@ -175,6 +175,6 @@
           Panel
 
       Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.inventory.show
           local panel = lia.inventory.show(inv)
    ]]

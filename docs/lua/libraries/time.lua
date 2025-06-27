@@ -13,8 +13,21 @@
        Shared
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
-       print(lia.time.TimeSince("2025-03-27"))
+        -- Greet players with the time since they last joined using persistence data
+        hook.Add("PlayerInitialSpawn", "welcomeLastSeen", function(ply)
+            -- Retrieve the time this player last joined from persistent data
+            local key = "lastLogin_" .. ply:SteamID64()
+            local last = lia.data.get(key, nil, true)
+
+            if last then
+                ply:ChatPrint("Welcome back! You last joined " .. lia.time.TimeSince(last) .. ".")
+            else
+                ply:ChatPrint("Welcome for the first time!")
+            end
+
+            -- Store the current time for the next login
+            lia.data.set(key, os.time(), true)
+        end)
  ]]
 
 --[[
@@ -34,10 +47,15 @@
       Shared
 
    Example Usage:
-        -- [[ Example of how to use this function ]]
-      local t = lia.time.toNumber("2025-03-27 14:30:00")
-      print(t.year, t.month, t.day, t.hour, t.min, t.sec)
- ]]
+        -- Schedule an event at a custom date and time using the parsed table
+        local targetInfo = lia.time.toNumber("2025-04-01 12:30:00")
+        local delay = os.time(targetInfo) - os.time()
+        if delay > 0 then
+            timer.Simple(delay, function()
+                print("It's now April 1st, 2025, 12:30 PM!")
+            end)
+        end
+]]
 
 --[[
     lia.time.GetDate
@@ -53,6 +71,18 @@
 
     Returns:
        (string) Formatted date and time string.
+
+    Realm:
+       Shared
+
+    Example Usage:
+        -- Announce the current server date and time to all players every hour
+        timer.Create("ServerTimeAnnounce", 3600, 0, function()
+            local dateString = lia.time.GetDate()
+            for _, ply in ipairs(player.GetAll()) do
+                ply:ChatPrint("Server time: " .. dateString)
+            end
+        end)
  ]]
 
 --[[
@@ -70,4 +100,16 @@
     Returns:
        (string|number) Current hour string with suffix when AmericanTimeStamps
                       is enabled, otherwise numeric hour in 24-hour format.
+
+    Realm:
+       Shared
+
+    Example Usage:
+        -- Toggle an NPC's shop based on the in-game hour
+        local hour = lia.time.GetHour()
+        if hour >= 9 and hour < 17 then
+            npc:SetNWBool("ShopOpen", true)
+        else
+            npc:SetNWBool("ShopOpen", false)
+        end
  ]]

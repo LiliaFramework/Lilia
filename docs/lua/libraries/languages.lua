@@ -20,7 +20,7 @@
         true
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.lang.loadFromDir
         lia.lang.loadFromDir("languages")
 ]]
 
@@ -43,6 +43,6 @@
         Shared
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
+        -- This snippet demonstrates a common usage of lia.lang.AddTable
         lia.lang.AddTable("english", {greeting = "Hello"})
 ]]

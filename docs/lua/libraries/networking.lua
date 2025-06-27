@@ -17,8 +17,10 @@
         nil
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
-        setNetVar("round", 1)
+        -- Start a new round and notify clients of the round number
+        local round = getNetVar("round", 0) + 1
+        setNetVar("round", round)
+        hook.Run("RoundStarted", round)
 ]]
 
 --[[
@@ -38,7 +40,10 @@
         any – Stored value or default.
 
     Example Usage:
-        -- [[ Example of how to use this function ]]
-        local round = getNetVar("round", 0)
+        -- Inform a joining player of the current round
+        hook.Add("PlayerInitialSpawn", "ShowRound", function(ply)
+            local round = getNetVar("round", 0)
+            ply:ChatPrint("Current round: " .. round)
+        end)
 ]]
 
