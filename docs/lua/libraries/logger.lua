@@ -28,9 +28,9 @@
          The registered function will be used later to generate log messages for that type.
 
       Parameters:
-         logType (string) - The unique identifier for the log type.
-         func (function) - A function that takes a client and additional parameters, returning a log string.
-         category (string) - The category for the log type, used for organizing log files.
+         logType (string) – The unique identifier for the log type.
+         func (function) – A function that takes a client and additional parameters, returning a log string.
+         category (string) – The category for the log type, used for organizing log files.
 
       Returns:
           nil
@@ -52,12 +52,12 @@
          It calls the registered log function with the provided parameters.
 
       Parameters:
-         client (Player) - The client for which the log is generated.
-         logType (string) - The identifier for the log type.
-         ... (vararg) - Additional parameters passed to the log function.
+         client (Player) – The client for which the log is generated.
+         logType (string) – The identifier for the log type.
+         ... (vararg) – Additional parameters passed to the log function.
 
       Returns:
-          string, string - The generated log string and its category if successful; otherwise, nil.
+          string, string – The generated log string and its category if successful; otherwise, nil.
 
       Realm:
          Server
@@ -77,9 +77,9 @@
          and appends the log string to a log file corresponding to its category in the logs directory.
 
       Parameters:
-         client (Player) - The client associated with the log event.
-         logType (string) - The identifier for the log type.
-         ... (vararg) - Additional parameters passed to the log type function.
+         client (Player) – The client associated with the log event.
+         logType (string) – The identifier for the log type.
+         ... (vararg) – Additional parameters passed to the log type function.
 
       Returns:
           nil

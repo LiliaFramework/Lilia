@@ -7,19 +7,19 @@ Unspecified fields will use sensible defaults.
 
 ## Table of Contents
 
-1. [Overview](#overview)  
-2. [Field Summary](#field-summary)  
-3. [Field Details](#field-details)  
-   - [Audio & Interaction](#audio--interaction)  
-   - [Restrictions & Whitelists](#restrictions--whitelists)  
-   - [Inventory & Stacking](#inventory--stacking)  
-   - [Categorization & Metadata](#categorization--metadata)  
-   - [Equipment & Stats](#equipment--stats)  
-   - [Combat & Ammo](#combat--ammo)  
-   - [Visuals & Models](#visuals--models)  
-   - [Entity & Content](#entity--content)  
-   - [Economic & Pricing](#economic--pricing)  
-   - [Behavior & Hooks](#behavior--hooks)  
+1. [Overview](#overview)
+2. [Field Summary](#field-summary)
+3. [Field Details](#field-details)
+   - [Audio & Interaction](#audio--interaction)
+   - [Restrictions & Whitelists](#restrictions--whitelists)
+   - [Inventory & Stacking](#inventory--stacking)
+   - [Categorization & Metadata](#categorization--metadata)
+   - [Equipment & Stats](#equipment--stats)
+   - [Combat & Ammo](#combat--ammo)
+   - [Visuals & Models](#visuals--models)
+   - [Entity & Content](#entity--content)
+   - [Economic & Pricing](#economic--pricing)
+   - [Behavior & Hooks](#behavior--hooks)
 
 ---
 
@@ -90,8 +90,8 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 ### Audio & Interaction
 
 #### `BagSound`
-**Type:** `table`  
-**Description:** Sound played when moving items to/from the bag; specified as `{path, volume}`.  
+**Type:** `table`
+**Description:** Sound played when moving items to/from the bag; specified as `{path, volume}`.
 **Example:**
 ```lua
 ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
@@ -319,6 +319,15 @@ ITEM.category = "Storage"
 ITEM.name = "Example Item"
 ```
 
+#### `desc`
+
+**Type:** `string`
+**Description:** Short description shown to players.
+**Example:**
+```lua
+ITEM.desc = "An example item"
+```
+
 #### `uniqueID`
 
 **Type:** `string`
@@ -371,6 +380,15 @@ ITEM.health = 50
 
 ```lua
 ITEM.attribBoosts = {strength = 5}
+```
+
+#### `isOutfit`
+
+**Type:** `boolean`
+**Description:** Marks the item as an outfit.
+**Example:**
+```lua
+ITEM.isOutfit = true
 ```
 
 #### `newSkin`
