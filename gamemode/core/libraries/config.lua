@@ -355,6 +355,23 @@ lia.config.add("AutoDownloadWorkshop", "Auto Download Workshop Content", true, n
     type = "Boolean"
 })
 
+local function getDermaSkins()
+    local skins = {}
+    for name in pairs(derma.GetSkinTable()) do
+        table.insert(skins, name)
+    end
+
+    table.sort(skins)
+    return skins
+end
+
+lia.config.add("DermaSkin", "Derma UI Skin", "lilia", function(_, newSkin) hook.Run("DermaSkinChanged", newSkin) end, {
+    desc = "Select the Derma UI skin to use",
+    category = "Visuals",
+    type = "Table",
+    options = CLIENT and getDermaSkins() or {"lilia"}
+})
+
 hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
     local ConfigFormatting = {
         Int = function(key, name, config, parent)

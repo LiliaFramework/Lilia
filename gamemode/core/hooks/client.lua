@@ -379,7 +379,11 @@ function GM:CharListLoaded()
 end
 
 function GM:ForceDermaSkin()
-    return "lilia"
+    return lia.config.get("DermaSkin", "lilia")
+end
+
+function GM:DermaSkinChanged()
+    derma.RefreshSkins()
 end
 
 function GM:HUDShouldDraw(element)
