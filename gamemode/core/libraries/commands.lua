@@ -101,7 +101,6 @@ function lia.command.parseSyntaxFields(syntax)
     local fields = {}
     local valid = true
     if not syntax or syntax == "" then return fields, true end
-
     for token in syntax:gmatch("%b[]") do
         local inner = token:sub(2, -2)
         local typ, name = inner:match("^(%S+)%s+(.+)$")
@@ -133,9 +132,7 @@ function lia.command.parseSyntaxFields(syntax)
     local open = select(2, syntax:gsub("%[", ""))
     local close = select(2, syntax:gsub("%]", ""))
     if open ~= close then valid = false end
-
     if syntax:gsub("%b[]", ""):find("%S") then valid = false end
-
     return fields, valid
 end
 
@@ -241,80 +238,98 @@ if SERVER then
     end
 else
     function lia.command.openArgumentPrompt(cmdKey, fields, prefix)
-        local player = LocalPlayer()
+        local ply = LocalPlayer()
+        local numFields = table.Count(fields)
+        local width, height = 780, 240 + numFields * 68
         local frame = vgui.Create("DFrame")
         frame:SetTitle(L(cmdKey))
-        frame:SetSize(500, 150 + table.Count(fields) * 40 + 100)
+        frame:SetSize(width, height)
         frame:Center()
         frame:MakePopup()
         frame:ShowCloseButton(false)
-        local y = 40
-        local inputs = {}
-        for name, typ in pairs(fields) do
-            local label = vgui.Create("DLabel", frame)
-            label:SetPos(25, y)
-            label:SetSize(150, 30)
-            label:SetFont("DermaDefaultBold")
-            label:SetText(L(name))
-            if isfunction(typ) then
-                local opts, mode = typ()
-                if mode == "combo" then
-                    local combo = vgui.Create("DComboBox", frame)
-                    combo:SetPos(100, y)
-                    combo:SetSize(300, 30)
-                    for _, option in ipairs(opts) do
-                        combo:AddChoice(option)
-                    end
-
-                    inputs[name] = combo
-                end
-            elseif typ == "player" then
-                local combo = vgui.Create("DComboBox", frame)
-                combo:SetPos(100, y)
-                combo:SetSize(300, 30)
-                combo:SetValue("Select Player")
-                for _, ply in player.Iterator() do
-                    combo:AddChoice(ply:Name(), ply:SteamID())
-                end
-                inputs[name] = combo
-            elseif typ == "text" or typ == "number" then
-                local textEntry = vgui.Create("DTextEntry", frame)
-                textEntry:SetPos(100, y)
-                textEntry:SetSize(300, 30)
-                textEntry:SetFont("DermaDefault")
-                textEntry:SetPaintBackground(true)
-                if typ == "number" and textEntry.SetNumeric then textEntry:SetNumeric(true) end
-                inputs[name] = textEntry
-            elseif typ == "boolean" then
-                local checkBox = vgui.Create("DCheckBox", frame)
-                checkBox:SetPos(100, y + 5)
-                inputs[name] = checkBox
-            end
-
-            y = y + 40
+        frame:SetTitle("")
+        frame.Paint = function(self, w, h)
+            derma.SkinHook("Paint", "Frame", self, w, h)
+            draw.SimpleText(L(cmdKey), "DermaLarge", w / 2, 10, Color(255, 255, 255), TEXT_ALIGN_CENTER)
         end
 
-        local submitButton = vgui.Create("DButton", frame)
-        submitButton:SetText(L("submit"))
-        submitButton:SetPos(100, frame:GetTall() - 70)
-        submitButton:SetSize(150, 50)
-        submitButton:SetFont("DermaDefaultBold")
-        submitButton:SetColor(Color(255, 255, 255))
-        submitButton:SetMaterial("icon16/tick.png")
-        submitButton.DoClick = function()
-            local args = {}
-            for key, typ in pairs(fields) do
-                local value
-                if isfunction(typ) or typ == "player" then
-                    local text, data = inputs[key]:GetSelected()
-                    value = data or text
-                elseif typ == "text" or typ == "number" then
-                    value = inputs[key]:GetValue()
-                elseif typ == "boolean" then
-                    value = inputs[key]:GetChecked() and "1" or "0"
+        local scroll = vgui.Create("DScrollPanel", frame)
+        scroll:Dock(FILL)
+        scroll:DockMargin(10, 40, 10, 105)
+        local list = vgui.Create("DIconLayout", scroll)
+        list:Dock(FILL)
+        list:SetSpaceY(7)
+        list:SetSpaceX(0)
+        for name, fieldType in pairs(fields) do
+            local panel = list:Add("DPanel")
+            panel:Dock(TOP)
+            panel:SetTall(60)
+            panel.Paint = function() end
+            local label = vgui.Create("DLabel", panel)
+            label:Dock(LEFT)
+            label:DockMargin(0, 0, 15, 0)
+            label:SetWide(210)
+            label:SetFont("DermaDefaultBold")
+            label:SetText(L(name))
+            label:SetContentAlignment(4)
+            if isfunction(fieldType) then
+                local options, mode = fieldType()
+                if mode == "combo" then
+                    local combo = vgui.Create("DComboBox", panel)
+                    combo:Dock(FILL)
+                    for _, opt in ipairs(options) do
+                        combo:AddChoice(opt)
+                    end
+
+                    list[name] = combo
+                end
+            elseif fieldType == "player" then
+                local combo = vgui.Create("DComboBox", panel)
+                combo:Dock(FILL)
+                combo:SetValue("Select Player")
+                for _, p in ipairs(player.GetAll()) do
+                    if IsValid(p) then combo:AddChoice(p:Name(), p:SteamID()) end
                 end
 
-                table.insert(args, value)
+                list[name] = combo
+            elseif fieldType == "text" or fieldType == "number" then
+                local entry = vgui.Create("DTextEntry", panel)
+                entry:Dock(FILL)
+                entry:SetFont("DermaDefault")
+                if fieldType == "number" and entry.SetNumeric then entry:SetNumeric(true) end
+                list[name] = entry
+            elseif fieldType == "boolean" then
+                local checkbox = vgui.Create("DCheckBox", panel)
+                checkbox:Dock(RIGHT)
+                checkbox:DockMargin(0, 8, 0, 0)
+                list[name] = checkbox
+            end
+        end
+
+        local buttons = vgui.Create("DPanel", frame)
+        buttons:Dock(BOTTOM)
+        buttons:SetTall(90)
+        buttons:DockPadding(15, 15, 15, 15)
+        buttons.Paint = function() end
+        local submit = vgui.Create("DButton", buttons)
+        submit:Dock(LEFT)
+        submit:DockMargin(0, 0, 15, 0)
+        submit:SetWide(270)
+        submit:SetText(L("submit"))
+        submit:SetFont("DermaDefaultBold")
+        submit:SetIcon("icon16/tick.png")
+        submit.DoClick = function()
+            local args = {}
+            for key, fieldType in pairs(fields) do
+                local ctl = list[key]
+                if isfunction(fieldType) or fieldType == "player" then
+                    local txt, data = ctl:GetSelected()
+                    args[#args + 1] = data or txt
+                elseif fieldType == "text" or fieldType == "number" then
+                    args[#args + 1] = ctl:GetValue()
+                elseif fieldType == "boolean" then
+                    args[#args + 1] = ctl:GetChecked() and "1" or "0"
+                end
             end
 
             if prefix then
@@ -328,23 +343,22 @@ else
             end
 
             local cmd = "/" .. cmdKey
-            for _, arg in ipairs(args) do
-                cmd = cmd .. " " .. arg
+            for _, v in ipairs(args) do
+                cmd = cmd .. " " .. tostring(v)
             end
 
-            player:ConCommand("say " .. cmd)
+            ply:ConCommand("say " .. cmd)
             frame:Remove()
             AdminStickIsOpen = false
         end
 
-        local cancelButton = vgui.Create("DButton", frame)
-        cancelButton:SetText(L("cancel"))
-        cancelButton:SetPos(250, frame:GetTall() - 70)
-        cancelButton:SetSize(150, 50)
-        cancelButton:SetFont("DermaDefaultBold")
-        cancelButton:SetColor(Color(255, 255, 255))
-        cancelButton:SetMaterial("icon16/cross.png")
-        cancelButton.DoClick = function()
+        local cancel = vgui.Create("DButton", buttons)
+        cancel:Dock(RIGHT)
+        cancel:SetWide(270)
+        cancel:SetText(L("cancel"))
+        cancel:SetFont("DermaDefaultBold")
+        cancel:SetIcon("icon16/cross.png")
+        cancel.DoClick = function()
             frame:Remove()
             AdminStickIsOpen = false
         end
