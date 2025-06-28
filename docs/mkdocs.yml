@@ -1,10 +1,21 @@
 site_name: Lilia Documentation
+site_description: Official documentation for the Lilia Framework
+site_author: Lilia Framework Team
 site_url: 'https://liliaframework.github.io/'
+repo_url: 'https://github.com/LiliaFramework/Lilia'
+edit_uri: 'edit/main/docs/docs/'
 theme:
   name: material
   logo: assets/logo_small.png
   favicon: assets/favicon.ico
   features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tabs
+    - navigation.top
+    - toc.integrate
+    - content.code.copy
+    - navigation.tracking
     - navigation.footer
   font:
     text: Noto Sans
@@ -30,17 +41,3 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
-  - attr_list
-  - md_in_html
-  - pymdownx.blocks.caption
-  - admonition
-  - pymdownx.details
-  - pymdownx.tabbed:
-      alternate_style: true
-extra:
-  social:
-    - icon: simple/github
-      link: 'https://github.com/LiliaFramework/Lilia'
-plugins:
-  - search
-  - awesome-pages
