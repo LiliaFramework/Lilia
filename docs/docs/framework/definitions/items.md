@@ -4,31 +4,11 @@ This document describes all configurable `ITEM` fields in the codebase. Use thes
 Unspecified fields will use sensible defaults.
 
 ---
-
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Field Summary](#field-summary)
-3. [Field Details](#field-details)
-   - [Audio & Interaction](#audio--interaction)
-   - [Restrictions & Whitelists](#restrictions--whitelists)
-   - [Inventory & Stacking](#inventory--stacking)
-   - [Categorization & Metadata](#categorization--metadata)
-   - [Equipment & Stats](#equipment--stats)
-   - [Combat & Ammo](#combat--ammo)
-   - [Visuals & Models](#visuals--models)
-   - [Entity & Content](#entity--content)
-   - [Economic & Pricing](#economic--pricing)
-   - [Behavior & Hooks](#behavior--hooks)
-
----
-
 ## Overview
 
 The global `ITEM` table defines per-item settings such as sounds, inventory dimensions, restrictions, stats, and hooks. Unspecified fields will use sensible defaults.
 
 ---
-
 ## Field Summary
 
 | Field                   | Type               | Description                                            |
@@ -84,7 +64,6 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 | `width`                 | `number`           | Width in inventory grid.                               |
 
 ---
-
 ## Field Details
 
 ### Audio & Interaction
@@ -118,7 +97,6 @@ ITEM.unequipSound = "items/ammo_pickup.wav"
 ```
 
 ---
-
 ### Restrictions & Whitelists
 
 #### `DropOnDeath`
@@ -182,7 +160,6 @@ ITEM.VIPWhitelist = true
 ```
 
 ---
-
 ### Inventory & Stacking
 
 #### `isBag`
@@ -276,7 +253,6 @@ print(item:getQuantity())
 ```
 
 ---
-
 ### Categorization & Metadata
 
 #### `base`
@@ -349,7 +325,6 @@ print(item.id)
 ```
 
 ---
-
 ### Equipment & Stats
 
 #### `armor`
@@ -442,7 +417,6 @@ ITEM.replacements = "models/player/combine_soldier.mdl"
 ```
 
 ---
-
 ### Combat & Ammo
 
 #### `class`
@@ -506,7 +480,6 @@ ITEM.weaponCategory = "sidearm"
 ```
 
 ---
-
 ### Visuals & Models
 
 #### `model`
@@ -520,7 +493,6 @@ ITEM.model = "models/props_c17/oildrum001.mdl"
 ```
 
 ---
-
 ### Entity & Content
 
 #### `entityid`
@@ -544,7 +516,6 @@ ITEM.contents = "<h1>Book</h1>"
 ```
 
 ---
-
 ### Economic & Pricing
 
 #### `price`
@@ -588,7 +559,6 @@ ITEM.url = "https://example.com"
 ```
 
 ---
-
 ### Behavior & Hooks
 
 #### `functions`
