@@ -68,7 +68,7 @@ end
 
 local origMaterial = Material
 function Material(p, ...)
-    if type(p) == "string" and p:find("^https?://") then
+    if isstring(p) and p:find("^https?://") then
         local ext = p:match("%.([%w]+)$") or "png"
         local n = util.CRC(p) .. "." .. ext
         lia.webimage.register(n, p)
@@ -81,7 +81,7 @@ local dimage = vgui.GetControlTable("DImage")
 if dimage and dimage.SetImage then
     local origSetImage = dimage.SetImage
     function dimage:SetImage(src, backup)
-        if type(src) == "string" then
+        if isstring(src) then
             if src:find("^https?://") then
                 local ext = src:match("%.([%w]+)$") or "png"
                 local n = util.CRC(src) .. "." .. ext
