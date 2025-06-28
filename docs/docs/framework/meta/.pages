@@ -1,9 +1,9 @@
 arrange:
-  - character_meta.md
-  - entity_meta.md
-  - inventory_meta.md
-  - item_meta.md
-  - player_meta.md
-  - panel_meta.md
-  - tool_meta.md
-  - vector_meta.md
+  - character.md
+  - entity.md
+  - inventory.md
+  - item.md
+  - player.md
+  - panel.md
+  - tool.md
+  - vector.md
