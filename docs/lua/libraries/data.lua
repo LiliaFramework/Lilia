@@ -7,17 +7,17 @@
          Also caches the value in lia.data.stored.
 
       Parameters:
-         key (string) - The key under which the data is stored.
-         value (any) - The value to store.
-         global (boolean) - If true, uses a global path; otherwise, includes folder and map.
-         ignoreMap (boolean) - If true, ignores the map directory.
+         key (string) – The key under which the data is stored.
+         value (any) – The value to store.
+         global (boolean) – If true, uses a global path; otherwise, includes folder and map.
+         ignoreMap (boolean) – If true, ignores the map directory.
 
     Returns:
-        string - The path where the data was saved.
+        string – The path where the data was saved.
 
     Realm:
         Shared
-    
+
     Example Usage:
         -- Save the admin's position as the global spawn point with a command
         concommand.Add("save_spawn", function(ply)
@@ -34,12 +34,12 @@
          Also removes the value from the cached storage.
 
       Parameters:
-         key (string) - The key corresponding to the data to be deleted.
-         global (boolean) - If true, uses a global path; otherwise, includes folder and map.
-         ignoreMap (boolean) - If true, ignores the map directory.
+         key (string) – The key corresponding to the data to be deleted.
+         global (boolean) – If true, uses a global path; otherwise, includes folder and map.
+         ignoreMap (boolean) – If true, ignores the map directory.
 
     Returns:
-        boolean - True if the file was deleted, false otherwise.
+        boolean – True if the file was deleted, false otherwise.
 
     Realm:
         Shared
@@ -57,14 +57,14 @@
       Otherwise, reads from the file, decodes, and caches the value.
 
    Parameters:
-      key (string) - The key corresponding to the data.
-      default (any) - The default value to return if no data is found.
-      global (boolean) - If true, uses a global path; otherwise, includes folder and map.
-      ignoreMap (boolean) - If true, ignores the map directory.
-      refresh (boolean) - If true, forces reading from file instead of cache.
+      key (string) – The key corresponding to the data.
+      default (any) – The default value to return if no data is found.
+      global (boolean) – If true, uses a global path; otherwise, includes folder and map.
+      ignoreMap (boolean) – If true, ignores the map directory.
+      refresh (boolean) – If true, forces reading from file instead of cache.
 
     Returns:
-        any - The stored value, or the default if not found.
+        any – The stored value, or the default if not found.
 
     Realm:
         Shared

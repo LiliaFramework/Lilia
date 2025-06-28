@@ -7,10 +7,10 @@
       It also registers the module in the module list if applicable.
 
    Parameters:
-      uniqueID - The unique identifier of the module.
-      path - The file system path where the module is located.
-      isSingleFile - Boolean indicating if the module is a single file.
-      variable - A global variable name used to temporarily store the module.
+      uniqueID – The unique identifier of the module.
+      path – The file system path where the module is located.
+      isSingleFile – Boolean indicating if the module is a single file.
+      variable – A global variable name used to temporarily store the module.
 
    Realm:
       Server
@@ -51,8 +51,8 @@
       Non-Lua files are ignored.
 
    Parameters:
-      directory - The directory path from which to load modules.
-      group - A string representing the module group (e.g., "schema" or "module").
+      directory – The directory path from which to load modules.
+      group – A string representing the module group (e.g., "schema" or "module").
 
    Realm:
       Server
@@ -71,7 +71,7 @@
       Retrieves a module table by its identifier.
 
    Parameters:
-      identifier - The unique identifier of the module to retrieve.
+      identifier – The unique identifier of the module to retrieve.
 
    Realm:
       Server

@@ -72,11 +72,11 @@
     Description:
         Table describing how the command should appear in admin
         utilities. Common keys include:
-            Name        - display text in the menu.
-            Category    - top level grouping.
-            SubCategory - secondary grouping.
-            Icon        - 16x16 icon path.
-            ExtraFields - (optional) legacy field definitions. Missing
+            Name – display text in the menu.
+            Category – top level grouping.
+            SubCategory – secondary grouping.
+            Icon – 16x16 icon path.
+            ExtraFields – (optional) legacy field definitions. Missing
             arguments are now prompted automatically using the syntax string.
 
     Example Usage:
