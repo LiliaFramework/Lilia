@@ -1,5 +1,4 @@
-﻿local PANEL = FindMetaTable("Panel")
-local baseW, baseH = 1920, 1080
+﻿local baseW, baseH = 1920, 1080
 local scaleW, scaleH
 local cache = {
     width = {},
@@ -24,12 +23,4 @@ end
 function ScreenScaleH(v)
     cache.height[v] = cache.height[v] or v * scaleH
     return cache.height[v]
-end
-
-function PANEL:SetScaledPos(x, y)
-    self:SetPos(ScreenScale(x), ScreenScaleH(y))
-end
-
-function PANEL:SetScaledSize(w, h)
-    self:SetSize(ScreenScale(w), ScreenScaleH(h))
 end
