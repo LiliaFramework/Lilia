@@ -4,6 +4,12 @@
     desc = L("plyTransferDesc"),
     syntax = "[player Name] [string Faction]",
     alias = {"charsetfaction"},
+    AdminStick = {
+        Name = L("adminStickTransferName"),
+        Category = "characterManagement",
+        SubCategory = L("adminStickSubCategorySetInfos"),
+        Icon = "icon16/user_go.png"
+    },
     onRun = function(client, arguments)
         local targetPlayer = lia.util.findPlayer(client, arguments[1])
         if not targetPlayer or not IsValid(targetPlayer) then
@@ -41,6 +47,12 @@ lia.command.add("plywhitelist", {
     desc = L("plyWhitelistDesc"),
     syntax = "[player Name] [string Faction]",
     alias = {"factionwhitelist"},
+    AdminStick = {
+        Name = L("adminStickWhitelistName"),
+        Category = "characterManagement",
+        SubCategory = L("adminStickSubCategorySetInfos"),
+        Icon = "icon16/user_add.png"
+    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
@@ -64,6 +76,12 @@ lia.command.add("plyunwhitelist", {
     desc = L("plyUnwhitelistDesc"),
     syntax = "[player Name] [string Faction]",
     alias = {"factionunwhitelist"},
+    AdminStick = {
+        Name = L("adminStickUnwhitelistName"),
+        Category = "characterManagement",
+        SubCategory = L("adminStickSubCategorySetInfos"),
+        Icon = "icon16/user_delete.png"
+    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
@@ -113,6 +131,12 @@ lia.command.add("setclass", {
     privilege = "Manage Classes",
     desc = L("setClassDesc"),
     syntax = "[player Player Name] [string Class]",
+    AdminStick = {
+        Name = L("adminStickSetClassName"),
+        Category = "characterManagement",
+        SubCategory = L("adminStickSubCategorySetInfos"),
+        Icon = "icon16/user_suit.png"
+    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
@@ -144,6 +168,12 @@ lia.command.add("classwhitelist", {
     privilege = "Manage Whitelists",
     desc = L("classWhitelistDesc"),
     syntax = "[player Name] [string Class]",
+    AdminStick = {
+        Name = L("adminStickClassWhitelistName"),
+        Category = "characterManagement",
+        SubCategory = L("adminStickSubCategorySetInfos"),
+        Icon = "icon16/user_add.png"
+    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         local classID = lia.class.retrieveClass(table.concat(arguments, " ", 2))
@@ -174,6 +204,12 @@ lia.command.add("classunwhitelist", {
     privilege = "Manage Classes",
     desc = L("classUnwhitelistDesc"),
     syntax = "[player Name] [string Class]",
+    AdminStick = {
+        Name = L("adminStickClassUnwhitelistName"),
+        Category = "characterManagement",
+        SubCategory = L("adminStickSubCategorySetInfos"),
+        Icon = "icon16/user_delete.png"
+    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         local classID = lia.class.retrieveClass(table.concat(arguments, " ", 2))
