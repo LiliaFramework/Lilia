@@ -365,11 +365,11 @@ local function getDermaSkins()
     return skins
 end
 
-lia.config.add("DermaSkin", "Derma UI Skin", "lilia", function(_, newSkin) hook.Run("DermaSkinChanged", newSkin) end, {
+lia.config.add("DermaSkin", "Derma UI Skin", "Lilia Skin", function(_, newSkin) hook.Run("DermaSkinChanged", newSkin) end, {
     desc = "Select the Derma UI skin to use",
     category = "Visuals",
     type = "Table",
-    options = CLIENT and getDermaSkins() or {"lilia"}
+    options = CLIENT and getDermaSkins() or {"Lilia Skin"}
 })
 
 hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
