@@ -403,9 +403,9 @@
           Server
 
        Example Usage:
-        -- This snippet demonstrates a common usage of lia.item.spawn
-          lia.item.spawn("testItem", Vector(0,0,0)):next(function(item)
-              print("Spawned item entity with ID:", item.id)
+        -- Spawn an item and use a callback to access the spawned entity
+          lia.item.spawn("testItem", Vector(0, 0, 0), function(item, ent)
+              print("Spawned", item.uniqueID, "at", ent:GetPos())
           end)
     ]]
 --[[

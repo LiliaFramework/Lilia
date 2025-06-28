@@ -18,8 +18,16 @@
         Shared
 
     Example Usage:
-        -- This snippet demonstrates a common usage of lia.config.add
-        lia.config.add("maxPlayers", "Maximum Players", 64)
+        -- Register a config option with a callback that prints when it changes
+        lia.config.add(
+            "maxPlayers",                 -- unique key
+            "Maximum Players",            -- name shown in the menu
+            64,                            -- default value
+            function(old, new)
+                print("Player limit updated from", old, "to", new)
+            end,
+            {category = "Server"}
+        )
 ]]
 --[[
     lia.config.setDefault(key, value)
