@@ -127,8 +127,6 @@ desc = L("doorbuyDesc")
 * `Category` (string): Top-level grouping.
 * `SubCategory` (string): Secondary grouping.
 * `Icon` (string): 16×16 icon path.
-* `ExtraFields` (table, optional): Legacy way to define extra argument fields.
-  Missing arguments are now prompted automatically using the command's `syntax`.
 
 **Example:**
 
