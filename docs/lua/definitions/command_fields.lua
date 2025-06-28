@@ -82,8 +82,8 @@
     Example Usage:
             AdminStick = {
                 Name = "Set Character Skin",
-                Category = "Player Informations",
-                SubCategory = "Set Informations",
+                Category = "Player Information",
+                SubCategory = "Set Information",
                 Icon = "icon16/user_gray.png"
             }
 ]]
