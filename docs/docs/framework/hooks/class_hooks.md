@@ -3,26 +3,11 @@
 This document describes all `CLASS` function hooks defined within the codebase. Use these to customize behavior before and after class changes and spawns.
 
 ---
-
-## Table of Contents
-
-1. [Overview](#overview)  
-2. [Hook Summary](#hook-summary)  
-3. [Hook Details](#hook-details)  
-   - [OnCanBe](#oncanbe)  
-   - [OnLeave](#onleave)  
-   - [OnSet](#onset)  
-   - [OnSpawn](#onspawn)  
-   - [OnTransferred](#ontransferred)  
-
----
-
 ## Overview
 
 Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
 
 ---
-
 ## Hook Summary
 
 | Hook                    | Description                                                       |
@@ -34,7 +19,6 @@ Each class can implement lifecycle hooks to control access, initialize settings,
 | `OnTransferred(character)` | Execute actions when a character is transferred into this class. |
 
 ---
-
 ## Hook Details
 
 ### OnCanBe
@@ -63,7 +47,6 @@ end
 ```
 
 ---
-
 ### OnLeave
 
 ```lua
@@ -91,7 +74,6 @@ end
 ```
 
 ---
-
 ### OnSet
 
 ```lua
@@ -118,7 +100,6 @@ end
 ```
 
 ---
-
 ### OnSpawn
 
 ```lua
@@ -146,7 +127,6 @@ end
 ```
 
 ---
-
 ### OnTransferred
 
 ```lua

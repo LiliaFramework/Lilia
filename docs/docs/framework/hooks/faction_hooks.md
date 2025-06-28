@@ -3,26 +3,11 @@
 This document describes all `FACTION` function hooks defined within the codebase. Use these to customize default naming, descriptions, and lifecycle events when characters are created, spawned, or transferred within a faction.
 
 ---
-
-## Table of Contents
-
-1. [Overview](#overview)  
-2. [Hook Summary](#hook-summary)  
-3. [Hook Details](#hook-details)  
-   - [GetDefaultName](#getdefaultname)  
-   - [GetDefaultDesc](#getdefaultdesc)  
-   - [OnCharCreated](#oncharcreated)  
-   - [OnSpawn](#onspawn)  
-   - [OnTransferred](#ontransferred)  
-
----
-
 ## Overview
 
 Each faction can implement these shared- and server-side hooks to control how characters are initialized, described, and handled as they move through creation, spawning, and transfers. All hooks are optional; if you omit a hook, default behavior applies.
 
 ---
-
 ## Hook Summary
 
 | Hook                       | Description                                                                        |
@@ -34,7 +19,6 @@ Each faction can implement these shared- and server-side hooks to control how ch
 | `OnTransferred(character)` | Run logic when a character is moved into this faction (e.g., via admin transfer). |
 
 ---
-
 ## Hook Details
 
 ### GetDefaultName
@@ -65,7 +49,6 @@ end
 ```
 
 ---
-
 ### GetDefaultDesc
 
 ```lua
@@ -95,7 +78,6 @@ end
 ```
 
 ---
-
 ### OnCharCreated
 
 ```lua
@@ -125,7 +107,6 @@ end
 ```
 
 ---
-
 ### OnSpawn
 
 ```lua
@@ -153,7 +134,6 @@ end
 ```
 
 ---
-
 ### OnTransferred
 
 ```lua

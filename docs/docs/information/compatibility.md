@@ -3,25 +3,6 @@
 This page details the optional compatibility libraries bundled with Lilia. Each section lists the addon, a brief description of what the library does, and a link to the original addon.
 
 ---
-
-## Table of Contents
-1. [Advanced Duplicator](#advanced-duplicator)
-2. [Advanced Duplicator 2](#advanced-duplicator-2)
-3. [DarkRP](#darkrp)
-4. [LVS](#lvs)
-5. [PAC3](#pac3)
-6. [PermaProps](#permaprops)
-7. [Prone Mod](#prone-mod)
-8. [SAM](#sam)
-9. [ServerGuard](#serverguard)
-10. [Simfphys](#simfphys)
-11. [Sit Anywhere](#sit-anywhere)
-12. [ULX](#ulx)
-13. [VCMod](#vcmod)
-14. [VJBase](#vjbase)
-
----
-
 ## Advanced Duplicator
 - **Addon URL:** [Advanced Duplicator](https://steamcommunity.com/sharedfiles/filedetails/?id=163806212)
 - **Compatibility Highlights:**
@@ -33,7 +14,6 @@ This page details the optional compatibility libraries bundled with Lilia. Each 
 This library hooks into dupe placement checks to stop players from spawning unstable or restricted entities. Oversized props can crash a server, so the compatibility layer validates models before allowing a dupe to spawn.
 
 ---
-
 ## Advanced Duplicator 2
 - **Addon URL:** [Advanced Duplicator 2](https://steamcommunity.com/sharedfiles/filedetails/?id=773402917)
 - **Compatibility Highlights:**
@@ -44,7 +24,6 @@ This library hooks into dupe placement checks to stop players from spawning unst
 Advanced Duplicator 2 stores duplication data slightly differently from the original tool. Lilia's library integrates with those systems while still blocking problematic entities and scaling exploits.
 
 ---
-
 ## DarkRP
 - **Addon URL:** [DarkRP](https://github.com/FPtje/DarkRP)
 - **Compatibility Highlights:**
@@ -55,7 +34,6 @@ Advanced Duplicator 2 stores duplication data slightly differently from the orig
 Some community addons expect DarkRP specific globals or utility functions. This library recreates the most widely used helpers so those addons can run in Lilia without modification.
 
 ---
-
 ## LVS
 - **Addon URL:** [Simfphys Vehicles](https://steamcommunity.com/sharedfiles/filedetails/?id=771487490)
 - **Compatibility Highlights:**
@@ -65,7 +43,6 @@ Some community addons expect DarkRP specific globals or utility functions. This 
 LVS allows players to use high‑speed vehicles. Collisions or explosions from a driver's own vehicle can sometimes damage them unexpectedly. The compatibility hook prevents such self‑damage during normal gameplay.
 
 ---
-
 ## PAC3
 - **Addon URL:** [PAC3](https://steamcommunity.com/workshop/filedetails/?id=104691717)
 - **Compatibility Highlights:**
@@ -76,7 +53,6 @@ LVS allows players to use high‑speed vehicles. Collisions or explosions from a
 PAC3 outfits need to be synchronized carefully to avoid missing or broken parts. This library exposes helper methods to add, remove, or reset parts and registers network messages to keep every client in sync.
 
 ---
-
 ## PermaProps
 - **Addon URL:** [PermaProps](https://steamcommunity.com/sharedfiles/filedetails/?id=220336312)
 - **Compatibility Highlights:**
@@ -86,7 +62,6 @@ PAC3 outfits need to be synchronized carefully to avoid missing or broken parts.
 Permanent props can conflict with Lilia's own persistence system. The compatibility hook checks the target entity and prevents PermaProps from saving anything that could break future loads.
 
 ---
-
 ## Prone Mod
 - **Addon URL:** [Prone Mod](https://github.com/gspetrou/Prone-Mod)
 - **Compatibility Highlights:**
@@ -96,7 +71,6 @@ Permanent props can conflict with Lilia's own persistence system. The compatibil
 Without this patch, players could remain stuck in the prone state when they respawn or switch characters. The library listens for these events and exits prone automatically.
 
 ---
-
 ## SAM
 - **Addon URL:** [SAM](https://www.gmodstore.com/market/view/sam)
 - **Compatibility Highlights:**
@@ -107,7 +81,6 @@ Without this patch, players could remain stuck in the prone state when they resp
 Lilia integrates SAM so that existing SAM commands work alongside the framework's permission system. By mirroring SAM commands and verifying permissions, server admins can continue using familiar tools.
 
 ---
-
 ## ServerGuard
 - **Addon URL:** [ServerGuard](https://www.gmodstore.com/market/view/serverguard)
 - **Compatibility Highlights:**
@@ -117,7 +90,6 @@ Lilia integrates SAM so that existing SAM commands work alongside the framework'
 ServerGuard's restriction plugin can conflict with Lilia's access controls. Turning it off ensures a single consistent permission system while still allowing the rest of ServerGuard to operate.
 
 ---
-
 ## Simfphys
 - **Addon URL:** [Simfphys Vehicles](https://steamcommunity.com/sharedfiles/filedetails/?id=771487490)
 - **Compatibility Highlights:**
@@ -129,7 +101,6 @@ ServerGuard's restriction plugin can conflict with Lilia's access controls. Turn
 Simfphys provides an extensive vehicle system. Lilia's library adds more realistic crash damage and exposes configuration variables to fine‑tune vehicle behavior. It also ties advanced editing to a specific admin privilege.
 
 ---
-
 ## Sit Anywhere
 - **Addon URL:** [Sit Anywhere](https://steamcommunity.com/sharedfiles/filedetails/?id=108176967)
 - **Compatibility Highlights:**
@@ -141,7 +112,6 @@ Simfphys provides an extensive vehicle system. Lilia's library adds more realist
 These adjustments keep Sit Anywhere from being exploited for trolling. By limiting where players can sit and enabling damage, seats remain balanced while still useful for roleplay scenarios.
 
 ---
-
 ## ULX
 - **Addon URL:** [ULX](https://steamcommunity.com/sharedfiles/filedetails/?id=557962280)
 - **Compatibility Highlights:**
@@ -152,7 +122,6 @@ These adjustments keep Sit Anywhere from being exploited for trolling. By limiti
 ULX uses the CAMI system for permissions. The compatibility layer keeps CAMI and ULX in sync so admin ranks and privileges behave as expected in Lilia.
 
 ---
-
 ## VCMod
 - **Addon URL:** [VCMod Main](https://www.gmodstore.com/market/view/vcmod-main)
 - **Compatibility Highlights:**
@@ -162,7 +131,6 @@ ULX uses the CAMI system for permissions. The compatibility layer keeps CAMI and
 Vehicle purchases and upgrades in VCMod should use the player's roleplay money. This library forwards all money checks and transactions to the character system.
 
 ---
-
 ## VJBase
 - **Addon URL:** [VJBase](https://steamcommunity.com/workshop/filedetails/?id=131759821)
 - **Compatibility Highlights:**
