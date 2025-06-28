@@ -51,47 +51,6 @@ function lia.webimage.get(n, flags)
     end
 end
 
-local origMaterial = Material
-function Material(p, ...)
-    if type(p) == "string" and p:find("^https?://") then
-        local ext = p:match("%.([%w]+)$") or "png"
-        local n = util.CRC(p) .. "." .. ext
-        lia.webimage.register(n, p)
-        return origMaterial("data/" .. baseDir .. n, ...)
-    end
-    return origMaterial(p, ...)
-end
-
-local dimage = vgui.GetControlTable("DImage")
-if dimage and dimage.SetImage then
-    local origSetImage = dimage.SetImage
-    function dimage:SetImage(src, backup)
-        if type(src) == "string" then
-            if src:find("^https?://") then
-                local ext = src:match("%.([%w]+)$") or "png"
-                local n = util.CRC(src) .. "." .. ext
-                local savePath = baseDir .. n
-                lia.webimage.register(n, src, function(m)
-                    if m and not m:IsError() then
-                        origSetImage(self, "data/" .. savePath, backup)
-                    elseif backup then
-                        origSetImage(self, backup)
-                    end
-                end)
-                return
-            end
-
-            local m = lia.webimage.get(src)
-            if m and not m:IsError() then
-                origSetImage(self, "data/" .. baseDir .. src, backup)
-                return
-            end
-        end
-
-        origSetImage(self, src, backup)
-    end
-end
-
 ensureDir(baseDir)
 concommand.Add("lia_saved_images", function()
     local files = file.Find(baseDir .. "*", "DATA")
