@@ -5745,6 +5745,28 @@
             end)
 ]]
 --[[
+        DermaSkinChanged(skin)
+
+        Description:
+            Fired when the Derma UI skin configuration value changes.
+            Allows modules to react to the UI skin being switched.
+
+        Parameters:
+            skin (string) – Name of the new Derma skin.
+
+        Realm:
+            Client
+
+        Returns:
+            None
+
+        Example Usage:
+            -- Reload custom panels when the skin changes
+            hook.Add("DermaSkinChanged", "UpdatePanels", function(skin)
+                MyPanel:ReloadSkin(skin)
+            end)
+]]
+--[[
         RefreshFonts()
 
         Description:
