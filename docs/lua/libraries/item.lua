@@ -5,7 +5,7 @@
       Retrieves an item definition by its identifier, checking both lia.item.base and lia.item.list.
 
    Parameters:
-      identifier (string) - The unique identifier of the item.
+      identifier (string) – The unique identifier of the item.
 
    Returns:
       The item table if found, otherwise nil.
@@ -25,7 +25,7 @@
       or in the world.
 
    Parameters:
-      itemID (number) - The numeric item ID.
+      itemID (number) – The numeric item ID.
 
    Returns:
       A table containing 'item' (the item object) and 'location' (the string location) if found,
@@ -48,7 +48,7 @@
       Retrieves the item instance table itself by its numeric ID without additional location info.
 
    Parameters:
-      itemID (number) - The numeric item ID.
+      itemID (number) – The numeric item ID.
 
    Returns:
       The item instance table if found, otherwise nil and an error message.
@@ -70,7 +70,7 @@
       Retrieves the 'data' table of an item instance by its numeric item ID.
 
    Parameters:
-      itemID (number) - The numeric item ID.
+      itemID (number) – The numeric item ID.
 
    Returns:
       The data table if found, otherwise nil and an error message.
@@ -93,9 +93,9 @@
       to register the item. Used for loading items from directory structures.
 
    Parameters:
-      path (string) - The path to the Lua file for the item.
-      baseID (string) - The base item's uniqueID to inherit from.
-      isBaseItem (boolean) - Whether this item is a base item.
+      path (string) – The path to the Lua file for the item.
+      baseID (string) – The base item's uniqueID to inherit from.
+      isBaseItem (boolean) – Whether this item is a base item.
 
    Returns:
       None
@@ -114,7 +114,7 @@
       Checks if the given object is recognized as an item (via isItem flag).
 
    Parameters:
-      object (any) - The object to check.
+      object (any) – The object to check.
 
    Returns:
       true if the object is an item, false otherwise.
@@ -136,7 +136,7 @@
       Retrieves an inventory table by its ID from lia.item.inventories.
 
    Parameters:
-      id (number) - The ID of the inventory to retrieve.
+      id (number) – The ID of the inventory to retrieve.
 
    Returns:
       The inventory table if found, otherwise nil.
@@ -159,11 +159,11 @@
       and merges data from the specified base. Optionally includes the file if provided.
 
    Parameters:
-      uniqueID (string) - The unique identifier for the item.
-      baseID (string) - The unique identifier of the base item.
-      isBaseItem (boolean) - Whether this should be registered as a base item.
-      path (string) - The optional path to the item file for inclusion.
-      luaGenerated (boolean) - True if the item is generated in code without file.
+      uniqueID (string) – The unique identifier for the item.
+      baseID (string) – The unique identifier of the base item.
+      isBaseItem (boolean) – Whether this should be registered as a base item.
+      path (string) – The optional path to the item file for inclusion.
+      luaGenerated (boolean) – True if the item is generated in code without file.
 
    Returns:
       The registered item table.
@@ -183,7 +183,7 @@
       then any folders (with base_ prefix usage), and finally any loose Lua files.
 
    Parameters:
-      directory (string) - The path to the directory containing item files.
+      directory (string) – The path to the directory containing item files.
 
    Returns:
       None
@@ -203,8 +203,8 @@
       The new item is stored in lia.item.instances using the provided item ID.
 
    Parameters:
-      uniqueID (string) - The unique identifier of the item definition.
-      id (number) - The numeric ID for this new item instance.
+      uniqueID (string) – The unique identifier of the item definition.
+      id (number) – The numeric ID for this new item instance.
 
    Returns:
       The newly created item instance.
@@ -225,9 +225,9 @@
       becomes accessible for creation or usage in the system.
 
    Parameters:
-      invType (string) - The inventory type name (identifier).
-      w (number) - The width of this inventory type.
-      h (number) - The height of this inventory type.
+      invType (string) – The inventory type name (identifier).
+      w (number) – The width of this inventory type.
+      h (number) – The height of this inventory type.
 
    Returns:
       None
@@ -247,9 +247,9 @@
       with the given character owner. Once created, it syncs the inventory to the owner if online.
 
    Parameters:
-      owner (number) - The character ID who owns this inventory.
-      invType (string) - The inventory type (must be registered first).
-      callback (function) - Optional callback function receiving the new inventory.
+      owner (number) – The character ID who owns this inventory.
+      invType (string) – The inventory type (must be registered first).
+      callback (function) – Optional callback function receiving the new inventory.
 
    Returns:
       None (asynchronous, uses a deferred internally).
@@ -271,9 +271,9 @@
       then caches it in lia.inventory.instances.
 
    Parameters:
-      w (number) - The width of the inventory.
-      h (number) - The height of the inventory.
-      id (number) - The numeric ID to assign to this inventory.
+      w (number) – The width of the inventory.
+      h (number) – The height of the inventory.
+      id (number) – The numeric ID to assign to this inventory.
 
    Returns:
       The newly created GridInv instance.
@@ -294,12 +294,12 @@
           Optionally notifies receivers about the change.
 
        Parameters:
-          itemID (number) - The numeric item ID.
-          key (string) - The data key to set.
-          value (any) - The value to set for the specified key.
-          receivers (table) - Optional table of players to receive the update.
-          noSave (boolean) - If true, won't save the data to the database immediately.
-          noCheckEntity (boolean) - If true, won't check if the item entity is valid.
+          itemID (number) – The numeric item ID.
+          key (string) – The data key to set.
+          value (any) – The value to set for the specified key.
+          receivers (table) – Optional table of players to receive the update.
+          noSave (boolean) – If true, won't save the data to the database immediately.
+          noCheckEntity (boolean) – If true, won't check if the item entity is valid.
 
        Returns:
           true if successful, false and error message if item not found.
@@ -322,12 +322,12 @@
           Once the item is created, a new item object is constructed and returned via a deferred.
 
        Parameters:
-          index (number) - The inventory ID to place the item into (or 0/NULL if none).
-          uniqueID (string) - The item definition's unique ID.
-          itemData (table) - The data table to store on the item.
-          x (number) - Optional grid X position (for grid inventories).
-          y (number) - Optional grid Y position.
-          callback (function) - Optional callback with the newly created item.
+          index (number) – The inventory ID to place the item into (or 0/NULL if none).
+          uniqueID (string) – The item definition's unique ID.
+          itemData (table) – The data table to store on the item.
+          x (number) – Optional grid X position (for grid inventories).
+          y (number) – Optional grid Y position.
+          callback (function) – Optional callback with the newly created item.
 
        Returns:
           A deferred object that resolves to the new item.
@@ -348,7 +348,7 @@
           Deletes an item from the system (database and memory) by its numeric ID.
 
        Parameters:
-          id (number) - The numeric item ID to delete.
+          id (number) – The numeric item ID to delete.
 
        Returns:
           None
@@ -368,7 +368,7 @@
           item instances in memory. This is commonly used during inventory or character loading.
 
        Parameters:
-          itemIndex (number or table) - Either a single numeric item ID or a table of numeric item IDs.
+          itemIndex (number or table) – Either a single numeric item ID or a table of numeric item IDs.
 
        Returns:
           None (asynchronous query).
@@ -390,11 +390,11 @@
           entity in the world at the specified position/angles.
 
        Parameters:
-          uniqueID (string) - The unique ID of the item definition.
-          position (Vector) - The spawn position in the world.
-          callback (function) - Optional callback when the item and entity are created.
-          angles (Angle) - Optional spawn angles.
-          data (table) - Additional data to set on the item.
+          uniqueID (string) – The unique ID of the item definition.
+          position (Vector) – The spawn position in the world.
+          callback (function) – Optional callback when the item and entity are created.
+          angles (Angle) – Optional spawn angles.
+          data (table) – Additional data to set on the item.
 
        Returns:
           A deferred object if callback is not given, otherwise none.
@@ -416,10 +416,10 @@
           then sets its width/height data, optionally providing a callback once loaded.
 
        Parameters:
-          invID (number) - The inventory ID to restore.
-          w (number) - Width to set for the inventory.
-          h (number) - Height to set for the inventory.
-          callback (function) - Optional function to call once the inventory is restored.
+          invID (number) – The inventory ID to restore.
+          w (number) – Width to set for the inventory.
+          h (number) – Height to set for the inventory.
+          callback (function) – Optional function to call once the inventory is restored.
 
        Returns:
           None (asynchronous call).

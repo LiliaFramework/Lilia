@@ -6,9 +6,9 @@
       Each flag has a description and an optional callback that is executed when the flag is applied to a player.
 
    Parameters:
-      flag (string) - The unique flag identifier.
-      desc (string) - A description of what the flag does.
-      callback (function) - An optional callback function executed when the flag is applied to a player.
+      flag (string) – The unique flag identifier.
+      desc (string) – A description of what the flag does.
+      callback (function) – An optional callback function executed when the flag is applied to a player.
 
    Returns:
       nil
@@ -28,7 +28,7 @@
          the associated callbacks for each flag that the character possesses.
 
       Parameters:
-         client (Player) - The player who spawned.
+         client (Player) – The player who spawned.
 
       Returns:
          nil

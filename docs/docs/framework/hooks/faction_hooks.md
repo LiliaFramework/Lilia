@@ -180,5 +180,3 @@ function FACTION:OnTransferred(character)
     character:setModel(self.models[randomModelIndex])
 end
 ```
-
-```

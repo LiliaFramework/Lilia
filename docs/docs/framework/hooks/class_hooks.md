@@ -173,4 +173,3 @@ function CLASS:OnTransferred(character)
 end
 ```
 
-```
