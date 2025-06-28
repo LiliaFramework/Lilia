@@ -111,6 +111,10 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/libraries/webimage.lua",
+        realm = "client"
+    },
+    {
         path = "lilia/gamemode/core/libraries/networking.lua",
         realm = "shared"
     },
@@ -147,6 +151,10 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/meta/panel.lua",
+        realm = "client"
+    },
+    {
         path = "lilia/gamemode/core/libraries/darkrp.lua",
         realm = "shared"
     },
@@ -160,10 +168,6 @@ local FilesToLoad = {
     },
     {
         path = "lilia/gamemode/core/libraries/bars.lua",
-        realm = "client"
-    },
-    {
-        path = "lilia/gamemode/core/libraries/webimage.lua",
         realm = "client"
     },
     {
