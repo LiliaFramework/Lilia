@@ -3007,7 +3007,7 @@
             Server
 
         Returns:
-            bool – true if combination succeeds and items are consumed, false otherwise.
+            boolean – true if combination succeeds and items are consumed, false otherwise.
 
         Example Usage:
             -- Combine two ammo boxes into one stack.
@@ -4309,7 +4309,7 @@
             Shared
 
         Returns:
-            bool
+            boolean
 
         Example Usage:
             -- Prints a message when CanPlayerEarnSalary is triggered
@@ -4335,7 +4335,7 @@
             Shared
 
         Returns:
-            bool|nil: false to block, nil to allow.
+            boolean|nil: false to block, nil to allow.
 
         Example Usage:
             -- Prints a message when CanPlayerJoinClass is triggered
@@ -4359,7 +4359,7 @@
             Shared
 
         Returns:
-            bool|nil: false to block, nil to allow.
+            boolean|nil: false to block, nil to allow.
 
         Example Usage:
             -- Prints a message when CanPlayerUseCommand is triggered
@@ -4385,7 +4385,7 @@
             Server
 
         Returns:
-            bool: false to block, nil or true to allow.
+            boolean: false to block, nil or true to allow.
 
         Example Usage:
             -- Prints a message when CanPlayerUseDoor is triggered
@@ -4591,7 +4591,7 @@
 
         Returns:
             string: The default description.
-            bool: Whether to override.
+            boolean: Whether to override.
 
         Example Usage:
             -- Prints a message when GetDefaultCharDesc is triggered
@@ -4617,7 +4617,7 @@
 
         Returns:
             string: The default name.
-            bool: Whether to override the user-provided name.
+            boolean: Whether to override the user-provided name.
 
         Example Usage:
             -- Prints a message when GetDefaultCharName is triggered
@@ -4959,7 +4959,7 @@
         Parameters:
             client (Player) – Player buying or selling the door.
             entity (Entity) – Door entity affected.
-            buying (bool) – True if buying, false if selling.
+            buying (boolean) – True if buying, false if selling.
             CallOnDoorChild (function) – Optional callback for door children.
 
         Realm:
@@ -5047,13 +5047,13 @@
             speaker (Player) – Player sending the message.
             chatType (string) – Chat type key.
             message (string) – Message contents.
-            anonymous (bool) – True if the speaker is hidden.
+            anonymous (boolean) – True if the speaker is hidden.
 
         Realm:
             Shared
 
         Returns:
-            bool|nil|modifiedString: false to cancel, or return a modified string to change the message.
+            boolean|nil|modifiedString: false to cancel, or return a modified string to change the message.
 
         Example Usage:
             -- Prints a message when PlayerMessageSend is triggered
@@ -5102,7 +5102,7 @@
             Server
 
         Returns:
-            bool|nil: false to disallow, true to allow, or nil to let other hooks decide.
+            boolean|nil: false to disallow, true to allow, or nil to let other hooks decide.
 
         Example Usage:
             -- Prints a message when PlayerUseDoor is triggered
@@ -5148,7 +5148,7 @@
             Client
 
         Returns:
-            bool|nil: false to hide, nil to allow.
+            boolean|nil: false to hide, nil to allow.
 
         Example Usage:
             -- Prints a message when ShouldBarDraw is triggered
@@ -5171,7 +5171,7 @@
             Client
 
         Returns:
-            bool (true if 3rd-person should be disabled)
+            boolean (true if 3rd-person should be disabled)
 
         Example Usage:
             -- Prints a message when ShouldDisableThirdperson is triggered
@@ -5194,7 +5194,7 @@
             Client
 
         Returns:
-            bool|nil: true to hide, nil to allow rendering.
+            boolean|nil: true to hide, nil to allow rendering.
 
         Example Usage:
             -- Prints a message when ShouldHideBars is triggered
@@ -5211,7 +5211,7 @@
             Called when third-person mode is toggled on or off. Allows for custom handling of third-person mode changes.
 
         Parameters:
-            state (bool) – true if third-person is enabled, false if disabled.
+            state (boolean) – true if third-person is enabled, false if disabled.
 
         Realm:
             Client
@@ -5804,7 +5804,7 @@
             Server
 
         Returns:
-            bool|nil – false to block.
+            boolean|nil – false to block.
 
         Example Usage:
             -- Prints a message when CanCharBeTransfered is triggered
@@ -5826,7 +5826,7 @@
             Server
 
         Returns:
-            bool|nil – false to deny.
+            boolean|nil – false to deny.
 
         Example Usage:
             -- Prints a message when CanPlayerUseChar is triggered
@@ -5849,7 +5849,7 @@
             Server
 
         Returns:
-            bool|nil – false to block the switch.
+            boolean|nil – false to block the switch.
 
         Example Usage:
             -- Prints a message when CanPlayerSwitchChar is triggered
@@ -5871,7 +5871,7 @@
             Server
 
         Returns:
-            bool|nil – false to disallow.
+            boolean|nil – false to disallow.
 
         Example Usage:
             -- Prints a message when CanPlayerLock is triggered
@@ -5893,7 +5893,7 @@
             Server
 
         Returns:
-            bool|nil – false to disallow.
+            boolean|nil – false to disallow.
 
         Example Usage:
             -- Prints a message when CanPlayerUnlock is triggered
@@ -5915,7 +5915,7 @@
             Server
 
         Returns:
-            bool|nil – false to deny modification.
+            boolean|nil – false to deny modification.
 
         Example Usage:
             -- Prints a message when CanPlayerModifyConfig is triggered
