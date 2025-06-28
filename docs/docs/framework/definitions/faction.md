@@ -4,26 +4,11 @@ This document describes all the configurable `FACTION` fields available in the c
 Unspecified fields will use sensible defaults.
 
 ---
-
-## Table of Contents
-
-1. [Overview](#overview)  
-2. [Field Summary](#field-summary)  
-3. [Field Details](#field-details)  
-   - [Basic Info](#basic-info)  
-   - [Appearance & Models](#appearance--models)  
-   - [Economy & Limits](#economy--limits)  
-   - [Movement & Stats](#movement--stats)  
-   - [Recognition & Relations](#recognition--relations)  
-
----
-
 ## Overview
 
 Each faction in the game is defined by a set of fields on the global `FACTION` table. These fields control everything from display name and lore, to starting weapons and player statistics. All fields are optional; unspecified fields will fall back to sensible defaults.
 
 ---
-
 ## Field Summary
 
 | Field                       | Type         | Description                                            |
@@ -59,7 +44,6 @@ Each faction in the game is defined by a set of fields on the global `FACTION` t
 | `ScoreboardHidden`          | `boolean`    | Hide members from the scoreboard.                      |
 
 ---
-
 ## Field Details
 
 ### Basic Info
@@ -113,7 +97,6 @@ FACTION_STAFF = FACTION.index
 ```
 
 ---
-
 ### Appearance & Models
 
 #### `color`
@@ -153,7 +136,6 @@ FACTION.bodyGroups = {
 ```
 
 ---
-
 ### Economy & Limits
 
 #### `weapons`
@@ -227,7 +209,6 @@ FACTION.oneCharOnly = true
 ```
 
 ---
-
 ### Movement & Stats
 
 #### `health`
@@ -321,7 +302,6 @@ FACTION.jumpPowerMultiplier = true
 ```
 
 ---
-
 ### Recognition & Relations
 
 #### `MemberToMemberAutoRecognition`

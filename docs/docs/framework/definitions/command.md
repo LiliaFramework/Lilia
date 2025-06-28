@@ -4,25 +4,11 @@ This document describes all configurable fields accepted by `lia.command.add`. U
 All fields are optional unless noted otherwise.
 
 ---
-
-## Table of Contents
-
-1. [Overview](#overview)  
-2. [Field Summary](#field-summary)  
-3. [Field Details](#field-details)  
-   - [Aliases & Permissions](#aliases--permissions)  
-   - [Syntax & Description](#syntax--description)  
-   - [AdminStick Integration](#adminstick-integration)  
-   - [Execution Hook](#execution-hook)  
-
----
-
 ## Overview
 
 When you register a command with `lia.command.add`, you provide a table of fields that control its names, who can run it, how it appears in help menus or admin utilities, and what code runs when it’s invoked. All fields are optional unless noted otherwise.
 
 ---
-
 ## Field Summary
 
 | Field               | Type                       | Description                                                      |
@@ -37,7 +23,6 @@ When you register a command with `lia.command.add`, you provide a table of field
 | `onRun(client, args)` | `function(client, table)` | Function executed when the command is invoked.                   |
 
 ---
-
 ## Field Details
 
 ### Aliases & Permissions
@@ -51,7 +36,6 @@ alias = {"chargiveflag", "giveflag"}
 ````
 
 ---
-
 #### `adminOnly`
 
 **Type:** `boolean`
@@ -63,7 +47,6 @@ adminOnly = true
 ```
 
 ---
-
 #### `superAdminOnly`
 
 **Type:** `boolean`
@@ -75,7 +58,6 @@ superAdminOnly = true
 ```
 
 ---
-
 #### `privilege`
 
 **Type:** `string`
@@ -87,7 +69,6 @@ privilege = "Manage Doors"
 ```
 
 ---
-
 ### Syntax & Description
 
 #### `syntax`
@@ -103,7 +84,6 @@ syntax = "[string Target Name] [number Amount]"
 ```
 
 ---
-
 #### `desc`
 
 **Type:** `string`
@@ -115,7 +95,6 @@ desc = L("doorbuyDesc")
 ```
 
 ---
-
 ### AdminStick Integration
 
 #### `AdminStick`
@@ -140,7 +119,6 @@ AdminStick = {
 ```
 
 ---
-
 ### Execution Hook
 
 #### `onRun(client, args)`
