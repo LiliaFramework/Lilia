@@ -3,7 +3,6 @@
 
     Generated automatically.
 ]]
-
 --[[
         name
 
@@ -13,7 +12,6 @@
         Example Usage:
             FACTION.name = "Minecrafters"
 ]]
-
 --[[
         desc
 
@@ -23,7 +21,6 @@
         Example Usage:
             FACTION.desc = "Surviving and crafting in the blocky world."
 ]]
-
 --[[
         isDefault
 
@@ -33,7 +30,6 @@
         Example Usage:
             FACTION.isDefault = false
 ]]
-
 --[[
         color
 
@@ -43,7 +39,6 @@
         Example Usage:
             FACTION.color = Color(255, 56, 252)
 ]]
-
 --[[
         models
 
@@ -53,7 +48,6 @@
         Example Usage:
             FACTION.models = {"models/Humans/Group02/male_07.mdl"}
 ]]
-
 --[[
         uniqueID
 
@@ -63,7 +57,6 @@
         Example Usage:
             FACTION.uniqueID = "staff"
 ]]
-
 --[[
         weapons
 
@@ -73,7 +66,6 @@
         Example Usage:
             FACTION.weapons = {"weapon_physgun", "gmod_tool"}
 ]]
-
 --[[
         items
 
@@ -83,7 +75,6 @@
         Example Usage:
             FACTION.items = {"radio", "handcuffs"}
 ]]
-
 --[[
         index
 
@@ -102,7 +93,6 @@
         Example Usage:
             FACTION.pay = 50
 ]]
-
 --[[
         payLimit
 
@@ -112,7 +102,6 @@
         Example Usage:
             FACTION.payLimit = 1000
 ]]
-
 --[[
         payTimer
 
@@ -122,7 +111,6 @@
         Example Usage:
             FACTION.payTimer = 3600
 ]]
-
 --[[
         limit
 
@@ -132,7 +120,6 @@
         Example Usage:
             FACTION.limit = 20
 ]]
-
 --[[
         oneCharOnly
 
@@ -142,7 +129,6 @@
         Example Usage:
             FACTION.oneCharOnly = true
 ]]
-
 --[[
         health
 
@@ -152,7 +138,6 @@
         Example Usage:
             FACTION.health = 150
 ]]
-
 --[[
         armor
 
@@ -162,7 +147,6 @@
         Example Usage:
             FACTION.armor = 25
 ]]
-
 --[[
         scale
 
@@ -172,7 +156,6 @@
         Example Usage:
             FACTION.scale = 1.1
 ]]
-
 --[[
         runSpeed
 
@@ -182,7 +165,6 @@
         Example Usage:
             FACTION.runSpeed = 250
 ]]
-
 --[[
         runSpeedMultiplier
 
@@ -192,7 +174,6 @@
         Example Usage:
             FACTION.runSpeedMultiplier = false
 ]]
-
 --[[
         walkSpeed
 
@@ -202,7 +183,6 @@
         Example Usage:
             FACTION.walkSpeed = 200
 ]]
-
 --[[
         walkSpeedMultiplier
 
@@ -212,7 +192,6 @@
         Example Usage:
             FACTION.walkSpeedMultiplier = true
 ]]
-
 --[[
         jumpPower
 
@@ -222,7 +201,6 @@
         Example Usage:
             FACTION.jumpPower = 200
 ]]
-
 --[[
         jumpPowerMultiplier
 
@@ -232,7 +210,6 @@
         Example Usage:
             FACTION.jumpPowerMultiplier = true
 ]]
-
 --[[
         MemberToMemberAutoRecognition
 
@@ -242,7 +219,6 @@
         Example Usage:
             FACTION.MemberToMemberAutoRecognition = true
 ]]
-
 --[[
         bloodcolor
 
@@ -252,7 +228,6 @@
         Example Usage:
             FACTION.bloodcolor = BLOOD_COLOR_RED
 ]]
-
 --[[
         bodyGroups
 
@@ -266,7 +241,6 @@
                 torso = 3
             }
 ]]
-
 --[[
         NPCRelations
 
@@ -281,7 +255,6 @@
                 ["npc_citizen"] = D_LI
             }
 ]]
-
 --[[
         RecognizesGlobally
 
@@ -291,7 +264,6 @@
         Example Usage:
             FACTION.RecognizesGlobally = false
 ]]
-
 --[[
         ScoreboardHidden
 

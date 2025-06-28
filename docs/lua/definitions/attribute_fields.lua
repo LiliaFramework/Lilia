@@ -3,7 +3,6 @@
 
         Generated automatically.
 ]]
-
 --[[
         ATTRIBUTE.name
 
@@ -13,7 +12,6 @@
         Example Usage:
             ATTRIBUTE.name = "Strength"
 ]]
-
 --[[
         ATTRIBUTE.desc
 
@@ -23,7 +21,6 @@
         Example Usage:
             ATTRIBUTE.desc = "Strength Skill."
 ]]
-
 --[[
         ATTRIBUTE.noStartBonus
 
@@ -33,7 +30,6 @@
         Example Usage:
             ATTRIBUTE.noStartBonus = false
 ]]
-
 --[[
         ATTRIBUTE.maxValue
 
@@ -43,7 +39,6 @@
         Example Usage:
             ATTRIBUTE.maxValue = 50
 ]]
-
 --[[
         ATTRIBUTE.startingMax
 
@@ -53,7 +48,6 @@
         Example Usage:
             ATTRIBUTE.startingMax = 15
 ]]
-
 --[[
         ATTRIBUTE:OnSetup(client, value)
 

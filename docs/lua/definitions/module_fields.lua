@@ -4,7 +4,6 @@
 
     Generated automatically.
 ]]
-
 --[[
     name
 
@@ -17,7 +16,6 @@
     Example Usage:
         MODULE.name = "My Module"
 ]]
-
 --[[
     author
 
@@ -30,7 +28,6 @@
     Example Usage:
         MODULE.author = "Samael"
 ]]
-
 --[[
     discord
 
@@ -43,7 +40,6 @@
     Example Usage:
         MODULE.discord = "@liliaplayer"
 ]]
-
 --[[
     version
 
@@ -56,7 +52,6 @@
     Example Usage:
         MODULE.version = "1.0"
 ]]
-
 --[[
     desc
 
@@ -69,7 +64,6 @@
     Example Usage:
         MODULE.desc = "Adds a Chatbox"
 ]]
-
 --[[
     identifier
 
@@ -82,7 +76,6 @@
     Example Usage:
         MODULE.identifier = "example_mod"
 ]]
-
 --[[
     CAMIPrivileges
 
@@ -97,7 +90,6 @@
             {Name = "Staff Permissions - Admin Chat", MinAccess = "admin"}
         }
 ]]
-
 --[[
     WorkshopContent
 
@@ -110,7 +102,6 @@
     Example Usage:
         MODULE.WorkshopContent = {"2959728255"}
 ]]
-
 --[[
     enabled
 
@@ -123,7 +114,6 @@
     Example Usage:
         MODULE.enabled = true
 ]]
-
 --[[
     Dependencies
 
@@ -138,7 +128,6 @@
             {File = "logs.lua", Realm = "server"}
         }
 ]]
-
 --[[
     folder
 
@@ -151,7 +140,6 @@
     Example Usage:
         print(MODULE.folder)
 ]]
-
 --[[
     path
 
@@ -164,7 +152,6 @@
     Example Usage:
         print(MODULE.path)
 ]]
-
 --[[
     uniqueID
 
@@ -177,7 +164,6 @@
     Example Usage:
         print(MODULE.uniqueID)
 ]]
-
 --[[
     loading
 
@@ -190,7 +176,6 @@
     Example Usage:
         if MODULE.loading then return end
 ]]
-
 --[[
     ModuleLoaded
 
@@ -205,7 +190,6 @@
             print("Module fully initialized")
         end
 ]]
-
 --[[
     Public
 
@@ -218,7 +202,6 @@
     Example Usage:
         MODULE.Public = true
 ]]
-
 --[[
     Private
 
@@ -231,4 +214,3 @@
     Example Usage:
         MODULE.Private = true
 ]]
-

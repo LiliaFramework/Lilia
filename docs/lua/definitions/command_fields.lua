@@ -3,7 +3,6 @@
 
     Generated automatically.
 ]]
-
 --[[
     alias
 
@@ -14,7 +13,6 @@
     Example Usage:
             alias = {"chargiveflag", "giveflag"}
 ]]
-
 --[[
     adminOnly
 
@@ -26,7 +24,6 @@
     Example Usage:
             adminOnly = true
 ]]
-
 --[[
     superAdminOnly
 
@@ -37,7 +34,6 @@
     Example Usage:
             superAdminOnly = true
 ]]
-
 --[[
     privilege
 
@@ -48,7 +44,6 @@
     Example Usage:
             privilege = "Manage Doors"
 ]]
-
 --[[
     syntax
 
@@ -61,7 +56,6 @@
     Example Usage:
             syntax = "[string Target Name] [number Amount]"
 ]]
-
 --[[
     desc
 
@@ -72,7 +66,6 @@
     Example Usage:
             desc = L("doorbuyDesc")
 ]]
-
 --[[
     AdminStick
 
@@ -94,7 +87,6 @@
                 Icon = "icon16/user_gray.png"
             }
 ]]
-
 --[[
     onRun(client, arguments)
 
