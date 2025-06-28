@@ -21,9 +21,14 @@
             None
 
         Example Usage:
-            -- Prints a message after the info panel is built.
-            hook.Add("LoadCharInformation", "PrintLoad", function()
-                print("F1 information sections loaded")
+            -- Adds a custom hunger info field after the menu is ready.
+            hook.Add("LoadCharInformation", "AddHungerField", function()
+                local char = LocalPlayer():getChar()
+                if char then
+                    hook.Run("AddTextField", L("generalInfo"), "hunger", "Hunger", function()
+                        return char:getData("hunger", 0) .. "%"
+                    end)
+                end
             end)
 ]]
 --[[
@@ -43,9 +48,24 @@
             None
 
         Example Usage:
-            -- Inserts a custom "Help" tab into the F1 menu.
+            -- Inserts a custom "Help" tab listing available commands.
             hook.Add("CreateMenuButtons", "AddHelpTab", function(tabs)
-                tabs.help = {text = "Help", panel = "liaHelp"}
+                tabs.help = {
+                    text = "Help",
+                    panel = function()
+                        local pnl = vgui.Create("DPanel")
+                        pnl:Dock(FILL)
+                        local label = vgui.Create("DLabel", pnl)
+                        local commands = {}
+                        for k in pairs(lia.command.list) do
+                            commands[#commands + 1] = k
+                        end
+                        label:SetText(table.concat(commands, "\n"))
+                        label:Dock(FILL)
+                        label:SetFont("DermaDefault")
+                        return pnl
+                    end
+                }
             end)
 ]]
 --[[
@@ -66,9 +86,12 @@
             None
 
         Example Usage:
-            -- Draws "Preview" text over the character model each frame.
-            hook.Add("DrawLiliaModelView", "Watermark", function(panel, entity)
-                draw.SimpleText("Preview", "Trebuchet24", 8, 8, color_white)
+            -- Overlays the player's name above the preview model.
+            hook.Add("DrawLiliaModelView", "ShowName", function(panel, entity)
+                local char = LocalPlayer():getChar()
+                if not char then return end
+                draw.SimpleTextOutlined(char:getName(), "Trebuchet24",
+                    panel:GetWide() / 2, 8, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, color_black)
             end)
 ]]
 --[[
@@ -132,9 +155,10 @@
             None
 
         Example Usage:
-            -- Announces in chat when someone stops using voice chat.
+            -- Announces in chat and plays a sound when someone stops using voice chat.
             hook.Add("PlayerEndVoice", "NotifyVoiceStop", function(ply)
-                chat.AddText(ply:Nick() .. " stopped talking")
+                chat.AddText(Color(200, 200, 255), ply:Nick() .. " stopped talking")
+                surface.PlaySound("buttons/button19.wav")
             end)
 ]]
 --[[
@@ -154,9 +178,11 @@
             None
 
         Example Usage:
-            -- Lets you react when a spawn menu icon is removed.
-            hook.Add("SpawnlistContentChanged", "IconRemoved", function(icon)
-                print("Removed spawn icon", icon)
+            -- Plays a sound and prints which model was removed from the spawn menu.
+            hook.Add("SpawnlistContentChanged", "IconRemovedNotify", function(icon)
+                surface.PlaySound("buttons/button9.wav")
+                local name = icon:GetSpawnName() or icon:GetModelName() or tostring(icon)
+                print("Removed spawn icon", name)
             end)
 ]]
 --[[
@@ -319,7 +345,13 @@
         Example Usage:
             -- Adds a friendly "Wave" choice in the scoreboard menu.
             hook.Add("ShowPlayerOptions", "WaveOption", function(ply, options)
-                options[#options + 1] = {name = "Wave", func = function() RunConsoleCommand("say", "/me waves to " .. ply:Nick()) end}
+                options[#options + 1] = {
+                    name = "Wave",
+                    func = function()
+                        RunConsoleCommand("say", "/me waves to " .. ply:Nick())
+                        LocalPlayer():ConCommand("act wave")
+                    end
+                }
             end)
 ]]
 --[[
@@ -384,9 +416,11 @@
             None
 
         Example Usage:
-            -- Prints a message whenever the chat box closes.
+            -- Fade out the chat box when it closes.
             hook.Add("FinishChat", "ChatClosed", function()
-                print("Chat closed")
+                if IsValid(lia.gui.chat) then
+                    lia.gui.chat:AlphaTo(0, 0.2, 0, function() lia.gui.chat:Remove() end)
+                end
             end)
 ]]
 --[[
@@ -406,9 +440,12 @@
             None
 
         Example Usage:
-            -- Plays a sound whenever the chat box opens.
+            -- Plays a sound and focuses the chat window when it opens.
             hook.Add("StartChat", "ChatOpened", function()
                 surface.PlaySound("buttons/lightswitch2.wav")
+                if IsValid(lia.gui.chat) then
+                    lia.gui.chat:MakePopup()
+                end
             end)
 ]]
 --[[
@@ -429,9 +466,10 @@
             string – Modified markup text.
 
         Example Usage:
-            -- Turns chat messages green before they appear.
+            -- Turns chat messages green and prefixes the time before they appear.
             hook.Add("ChatAddText", "GreenSystem", function(text, ...)
-                return Color(0,255,0), text, ...
+                local stamp = os.date("[%H:%M] ")
+                return Color(0,255,0), stamp .. text, ...
             end)
 ]]
 --[[
@@ -675,9 +713,11 @@
             None
 
         Example Usage:
-            -- Prints a message once the EasyIcons font is loaded.
+            -- Rebuild icons using the font after it loads.
             hook.Add("EasyIconsLoaded", "Notify", function()
-                print("EasyIcons ready")
+                surface.SetFont("liaEasyIcons")
+                chat.AddText(Color(0, 255, 200), "EasyIcons font loaded!")
+                hook.Run("RefreshFonts")
             end)
 ]]
 --[[
@@ -960,9 +1000,11 @@
             None
 
         Example Usage:
-            -- Gives players a crowbar on spawn.
+            -- Gives players a crowbar and ammo on spawn.
             hook.Add("PlayerLoadout", "GiveCrowbar", function(ply)
                 ply:Give("weapon_crowbar")
+                ply:GiveAmmo(10, "357", true)
+                ply:SelectWeapon("weapon_crowbar")
             end)
 ]]
 --[[
@@ -1540,9 +1582,11 @@
             boolean – True to delete items
 
         Example Usage:
-            -- Prints a message when ShouldDeleteSavedItems is triggered
+            -- Remove stored items if too many exist on the map.
             hook.Add("ShouldDeleteSavedItems", "ClearDrops", function()
-                return false
+                if table.Count(lia.item.instances) > 1000 then
+                    return true
+                end
             end)
 ]]
 --[[
@@ -1562,8 +1606,11 @@
             None
 
         Example Usage:
-            -- Prints a message when OnSavedItemLoaded is triggered
+            -- Adjusts item collision settings after loading from storage.
             hook.Add("OnSavedItemLoaded", "PrintCount", function(items)
+                for _, ent in ipairs(items) do
+                    ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+                end
                 print("Loaded", #items, "items")
             end)
 ]]
