@@ -239,6 +239,26 @@ if SERVER then
 else
     function lia.command.openArgumentPrompt(cmdKey, fields, prefix)
         local ply = LocalPlayer()
+        local command = lia.command.list[cmdKey]
+        if not command then return end
+        local firstKey = istable(fields) and next(fields)
+        if not fields or isstring(fields) or (firstKey and isnumber(firstKey)) then
+            local args = fields
+            if isstring(args) then args = lia.command.extractArgs(args) end
+            local parsed, valid = lia.command.parseSyntaxFields(command.syntax)
+            if not valid then return end
+            fields = {}
+            prefix = {}
+            local tokens = args and combineBracketArgs(args) or {}
+            for i, field in ipairs(parsed) do
+                local arg = tokens[i]
+                if arg then
+                    prefix[#prefix + 1] = arg
+                else
+                    fields[field.name] = field.type
+                end
+            end
+        end
         local numFields = table.Count(fields)
         local frameW, frameH = 600, 200 + numFields * 75
         local frame = vgui.Create("DFrame")
