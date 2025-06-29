@@ -3,11 +3,13 @@
 This document describes all configurable `CLASS` fields in the codebase. Each field controls a specific aspect of how a class behaves, appears, or is granted to players. Unspecified fields will use sensible defaults.
 
 ---
+
 ## Overview
 
 The global `CLASS` table defines per-class settings such as display name, lore, starting equipment, pay parameters, movement speeds, and visual appearance. Use these fields to fully customize each class’s behavior and presentation.
 
 ---
+
 ## Field Summary
 
 | Field                 | Type           | Description                                                    |
@@ -38,6 +40,7 @@ The global `CLASS` table defines per-class settings such as display name, lore, 
 | `index`               | `number`       | Unique team index assigned at registration.                    |
 
 ---
+
 ## Field Details
 
 ### Basic Info
@@ -71,6 +74,7 @@ CLASS.index = CLASS_ENGINEER
 ```
 
 ---
+
 ### Affiliation & Availability
 
 #### `isDefault`
@@ -114,6 +118,7 @@ CLASS.color = Color(255, 0, 0)
 ```
 
 ---
+
 ### Equipment & Economy
 
 #### `weapons`
@@ -167,6 +172,7 @@ CLASS.limit = 10
 ```
 
 ---
+
 ### Movement & Stats
 
 #### `health`
@@ -270,6 +276,7 @@ CLASS.bloodcolor = BLOOD_COLOR_RED
 ```
 
 ---
+
 ### Appearance & Identity
 
 #### `bodyGroups`

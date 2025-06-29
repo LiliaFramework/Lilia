@@ -3,23 +3,12 @@
 This document describes all `FACTION` function hooks defined within the codebase. Use these to customize default naming, descriptions, and lifecycle events when characters are created, spawned, or transferred within a faction.
 
 ---
+
 ## Overview
 
 Each faction can implement these shared- and server-side hooks to control how characters are initialized, described, and handled as they move through creation, spawning, and transfers. All hooks are optional; if you omit a hook, default behavior applies.
 
 ---
-## Hook Summary
-
-| Hook                       | Description                                                                        |
-|----------------------------|------------------------------------------------------------------------------------|
-| `GetDefaultName(client)`   | Return the initial character name when a new character is created in this faction. |
-| `GetDefaultDesc(client, faction)` | Return the initial character description on creation for this faction.      |
-| `OnCharCreated(client, character)` | Run logic immediately after a character is created and assigned to this faction. |
-| `OnSpawn(client)`          | Run logic when a faction member spawns into the world.                             |
-| `OnTransferred(character)` | Run logic when a character is moved into this faction (e.g., via admin transfer). |
-
----
-## Hook Details
 
 ### GetDefaultName
 
@@ -49,6 +38,7 @@ end
 ```
 
 ---
+
 ### GetDefaultDesc
 
 ```lua
@@ -78,6 +68,7 @@ end
 ```
 
 ---
+
 ### OnCharCreated
 
 ```lua
@@ -107,6 +98,7 @@ end
 ```
 
 ---
+
 ### OnSpawn
 
 ```lua
@@ -134,6 +126,7 @@ end
 ```
 
 ---
+
 ### OnTransferred
 
 ```lua

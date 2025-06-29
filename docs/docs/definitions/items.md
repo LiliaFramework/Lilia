@@ -4,11 +4,13 @@ This document describes all configurable `ITEM` fields in the codebase. Use thes
 Unspecified fields will use sensible defaults.
 
 ---
+
 ## Overview
 
 The global `ITEM` table defines per-item settings such as sounds, inventory dimensions, restrictions, stats, and hooks. Unspecified fields will use sensible defaults.
 
 ---
+
 ## Field Summary
 
 | Field                   | Type               | Description                                            |
@@ -64,6 +66,7 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 | `width`                 | `number`           | Width in inventory grid.                               |
 
 ---
+
 ## Field Details
 
 ### Audio & Interaction
@@ -97,6 +100,7 @@ ITEM.unequipSound = "items/ammo_pickup.wav"
 ```
 
 ---
+
 ### Restrictions & Whitelists
 
 #### `DropOnDeath`
@@ -160,6 +164,7 @@ ITEM.VIPWhitelist = true
 ```
 
 ---
+
 ### Inventory & Stacking
 
 #### `isBag`
@@ -253,6 +258,7 @@ print(item:getQuantity())
 ```
 
 ---
+
 ### Categorization & Metadata
 
 #### `base`
@@ -325,6 +331,7 @@ print(item.id)
 ```
 
 ---
+
 ### Equipment & Stats
 
 #### `armor`
@@ -417,6 +424,7 @@ ITEM.replacements = "models/player/combine_soldier.mdl"
 ```
 
 ---
+
 ### Combat & Ammo
 
 #### `class`
@@ -480,6 +488,7 @@ ITEM.weaponCategory = "sidearm"
 ```
 
 ---
+
 ### Visuals & Models
 
 #### `model`
@@ -493,6 +502,7 @@ ITEM.model = "models/props_c17/oildrum001.mdl"
 ```
 
 ---
+
 ### Entity & Content
 
 #### `entityid`
@@ -516,6 +526,7 @@ ITEM.contents = "<h1>Book</h1>"
 ```
 
 ---
+
 ### Economic & Pricing
 
 #### `price`
@@ -559,6 +570,7 @@ ITEM.url = "https://example.com"
 ```
 
 ---
+
 ### Behavior & Hooks
 
 #### `functions`

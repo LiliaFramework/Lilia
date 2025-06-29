@@ -3,11 +3,13 @@
 This document describes every custom panel bundled with **Lilia**. Each entry lists the base Garry's Mod panel it derives from, a short description of its purpose, and a small code snippet demonstrating typical usage.
 
 ---
+
 ## Overview
 
 Panels provide the building blocks for Lilia's user interface. Most derive from common Source engine panels such as `DFrame` or `DPanel` and extend them with additional behaviour. Use these panels when creating new menus or modifying existing ones.
 
 ---
+
 ## Panel Summary
 
 | Panel Name | Base Panel | Description |
@@ -54,6 +56,7 @@ Panels provide the building blocks for Lilia's user interface. Most derive from 
 | `VendorFactionEditor` | `DFrame` | Editor for vendor faction and class access. |
 
 ---
+
 ## Panel Details
 
 ### `liaMarkupPanel`

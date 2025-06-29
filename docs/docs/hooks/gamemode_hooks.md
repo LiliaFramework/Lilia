@@ -1,3 +1,15 @@
+# Gamemode Hooks
+
+This document describes all `FACTION` function hooks defined within the codebase. Use these to customize default naming, descriptions, and lifecycle events when characters are created, spawned, or transferred within a faction.
+
+---
+
+## Overview
+
+Each faction can implement these shared- and server-side hooks to control how characters are initialized, described, and handled as they move through creation, spawning, and transfers. All hooks are optional; if you omit a hook, default behavior applies.
+
+---
+
 ### `LoadCharInformation()`
 
     

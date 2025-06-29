@@ -3,23 +3,12 @@
 This document describes all `CLASS` function hooks defined within the codebase. Use these to customize behavior before and after class changes and spawns.
 
 ---
+
 ## Overview
 
 Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
 
 ---
-## Hook Summary
-
-| Hook                    | Description                                                       |
-|-------------------------|-------------------------------------------------------------------|
-| `OnCanBe(client)`       | Check if a player is allowed to switch to this class.            |
-| `OnLeave(client)`       | Run logic when a player leaves the class.                        |
-| `OnSet(client)`         | Initialize settings when a player joins the class.               |
-| `OnSpawn(client)`       | Apply spawn-time setup for class members.                        |
-| `OnTransferred(character)` | Execute actions when a character is transferred into this class. |
-
----
-## Hook Details
 
 ### OnCanBe
 
@@ -47,6 +36,7 @@ end
 ```
 
 ---
+
 ### OnLeave
 
 ```lua
@@ -74,6 +64,7 @@ end
 ```
 
 ---
+
 ### OnSet
 
 ```lua
@@ -100,6 +91,7 @@ end
 ```
 
 ---
+
 ### OnSpawn
 
 ```lua
@@ -127,6 +119,7 @@ end
 ```
 
 ---
+
 ### OnTransferred
 
 ```lua

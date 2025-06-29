@@ -1,24 +1,13 @@
-### `Screen-scaling helper wrappers for Panel positioning functions.`
+# Attribute Hooks
 
-    Description:
-        These helpers apply ScreenScale and ScreenScaleH to common panel
-        positioning and sizing methods so that user interfaces remain
-        consistent across different resolutions.
+This document lists hooks related to attribute setup and changes.
 
-    Parameters:
-        None
+---
 
-    Realm:
-        Client
+## Overview
 
-    Returns:
-        any – Whatever the wrapped Panel function returns.
+Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
 
-    Example Usage:
-        -- This creates a simple frame positioned using screen scaling
-        local frame = vgui.Create("DFrame")
-        frame:SetSize(200, 100)
-        frame:SetPos(25, 25)
-        frame:SetTitle("Scaled Frame")
-        frame:MakePopup()
+---
 
+// TODO ADD PANEL META

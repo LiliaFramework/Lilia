@@ -4,11 +4,13 @@ This document describes the default `MODULE` fields provided by the Lilia framew
 Unspecified fields will use sensible defaults.
 
 ---
+
 ## Overview
 
 A `MODULE` table defines a self-contained add-on for the Lilia framework. Each field controls how the module is identified, loaded, and interacts with permissions and workshop content.
 
 ---
+
 ## Field Summary
 
 | Field                | Type                    | Description                                                      |
@@ -32,6 +34,7 @@ A `MODULE` table defines a self-contained add-on for the Lilia framework. Each f
 | `Private`            | `boolean`               | Uses private version checking.                                   |
 
 ---
+
 ## Field Details
 
 ### Identification & Metadata
@@ -85,6 +88,7 @@ MODULE.identifier = "example_mod"
 ```
 
 ---
+
 ### Version & Compatibility
 
 #### `version`
@@ -118,6 +122,7 @@ MODULE.Private = true
 ```
 
 ---
+
 ### Dependencies & Content
 
 #### `CAMIPrivileges`
@@ -155,6 +160,7 @@ MODULE.Dependencies = {
 ```
 
 ---
+
 ### Loading & Lifecycle
 
 #### `enabled`
@@ -190,6 +196,7 @@ end
 ```
 
 ---
+
 ### Access & Visibility
 
 #### `folder`

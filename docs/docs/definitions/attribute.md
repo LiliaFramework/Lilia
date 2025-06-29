@@ -4,11 +4,13 @@ This document describes all configurable `ATTRIBUTE` fields and hooks in the cod
 Unspecified fields fall back to sensible defaults.
 
 ---
+
 ## Overview
 
 Each attribute is defined on a global `ATTRIBUTE` table. You can configure its name, description, whether it receives a startup bonus, its maximum and starting values, and respond to setup events via a hook.
 
 ---
+
 ## Field Summary
 
 | Field / Hook             | Type            | Description                                                  |
@@ -21,6 +23,7 @@ Each attribute is defined on a global `ATTRIBUTE` table. You can configure its n
 | `OnSetup(client, value)` | `function`      | Hook executed when the attribute is applied to a player.     |
 
 ---
+
 ## Field Details
 
 ### Basic Info
@@ -44,6 +47,7 @@ ATTRIBUTE.desc = "Strength Skill."
 ```
 
 ---
+
 ### Value Constraints
 
 #### `noStartBonus`
