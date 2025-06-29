@@ -6,15 +6,7 @@ This page documents command registration and execution.
 
 ## Overview
 
-The commands library registers console and chat commands. It parses arguments, checks permissions, and routes the command handlers for execution.
-
---[[--
-Registration, parsing, and handling of commands.
-
-Commands can be ran through the chat with slash commands or they can be executed through the console. Commands can be manually
-restricted to certain usergroups using a [CAMI](https://github.com/glua/CAMI)-compliant admin mod.
-]]
----
+The commands library registers console and chat commands. It parses arguments, checks permissions, and routes the handlers for execution. Commands can be run via slash chat or the console and may be restricted to specific usergroups through a CAMI-compliant admin mod.
 
 ### `lia.command.add(command, data)`
 

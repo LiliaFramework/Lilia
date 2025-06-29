@@ -6,16 +6,8 @@ Entities in Garry's Mod may represent props, items, and interactive objects. Thi
 
 ## Overview
 
-The entity meta library exposes detection routines, network-safe data helpers, and wrappers for retrieving item information or safe positions. Using these functions ensures consistent behavior when handling game objects across Lilia.
+The entity meta library extends Garry's Mod entities with helpers for detection, network-safe data, and item information. Using these functions ensures consistent behavior when handling game objects across Lilia.
 
---[[--
-Physical object in the game world.
-
-Entities are physical representations of objects in the game world. Helix extends the functionality of entities to interface
-between Helix's own classes, and to reduce boilerplate code.
-
-See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Entity) for all other methods that the `Player` class has.
-]]
 
 ---
 

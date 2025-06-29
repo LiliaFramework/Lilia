@@ -6,20 +6,7 @@ This page lists time and date utilities.
 
 ## Overview
 
-The time library handles date formatting and relative time conversions. It offers helper functions to compute durations such as 'time since' or 'time until'.
---[[--
-Persistent date and time handling.
-
-All of Lua's time functions are dependent on the Unix epoch, which means we can't have dates that go further than 1970. This
-library remedies this problem. Time/date is represented by a `date` object that is queried, instead of relying on the seconds
-since the epoch.
-
-## Futher documentation
-This library makes use of a third-party date library found at https://github.com/Tieske/date - you can find all documentation
-regarding the `date` object and its methods there.
-]]
-
-
+The time library handles date formatting and relative time conversions. It offers helper functions to compute durations such as "time since" or "time until" and uses a third-party date module to avoid the 1970 epoch limitation.
 ---
 
 ### `lia.time.TimeSince`
