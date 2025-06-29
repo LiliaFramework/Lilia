@@ -111,6 +111,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Permission management integrated with CAMI
 - Searchable history of all player tickets and warns
 - Camera spectate and teleport commands for staff
+- Sitroom management commands let staff teleport players to holding areas
 
 ### Performance
 - Libraries focused on optimizing heavy operations
@@ -266,6 +267,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Hook support for custom command types
 - Command descriptions support multiple languages
 - Provides suggestions and detailed error messages
+- Unified `execAdminCommand` helper simplifies running kick/ban commands
 
 ### Config Library
 - Register server configs with categories and callbacks
