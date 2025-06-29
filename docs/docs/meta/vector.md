@@ -1,12 +1,12 @@
 # Vector Meta
 
-This document describes the methods available on vector objects.
+Vector utilities expand Garry's Mod's math library. This document describes additional operations for 3D vectors.
 
 ---
 
 ## Overview
 
-These meta functions extend standard vector objects with convenience helpers used throughout Lilia.
+Vector meta functions provide calculations such as midpoints, distances, and axis rotations to support movement, physics, and placement tasks.
 
 ---
 

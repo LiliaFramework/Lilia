@@ -1,12 +1,12 @@
 # Character Meta
 
-This document describes the methods available on character objects.
+Character objects returned by `player:getChar()` persist inventory, stats, and money. This reference outlines helper functions for managing those records.
 
 ---
 
 ## Overview
 
-These meta functions extend standard character objects with convenience helpers used throughout Lilia.
+The character meta library provides shortcuts for fetching stored values, verifying permissions, and linking a character back to its player. These routines centralize logic used by banking, crafting, and other gameplay systems.
 
 ---
 

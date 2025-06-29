@@ -1,12 +1,12 @@
 # Tool Meta
 
-This document describes the methods available on the ToolGun object.
+The ToolGun interacts with the world through specialized meta functions. This guide lists utilities for object manipulation and ghost entity management.
 
 ---
 
 ## Overview
 
-These meta functions extend the ToolGun object with convenience helpers used throughout Lilia.
+Tool meta functions track hovered entities, create ghost previews, and wrap common building operations. They ensure consistent behavior across custom tools in Lilia.
 
 ---
 
