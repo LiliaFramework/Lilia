@@ -1,9 +1,3 @@
---[[
-    Compatibility helper for Advanced Duplicator 2.
-    Performs the same duplication safety checks as the
-    advdupe compatibility library while respecting AD2's entity lists.
-]]
-
 local function CheckDuplicationScale(client, entities)
     entities = entities or {}
     for _, ent in pairs(entities) do

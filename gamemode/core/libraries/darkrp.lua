@@ -1,9 +1,3 @@
---[[
-    Compatibility layer for DarkRP addons.
-    Recreates common DarkRP helpers such as spawn checks,
-    notifications and entity registration so scripts built
-    for DarkRP continue functioning inside Lilia.
-]]
 DarkRP = DarkRP or {}
 RPExtraTeams = RPExtraTeams or {}
 lia.darkrp = lia.darkrp or {}

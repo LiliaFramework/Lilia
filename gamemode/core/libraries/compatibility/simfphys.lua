@@ -1,9 +1,3 @@
---[[
-    Adds Simfphys vehicle support.
-    Drivers only take damage when the vehicle is hit near their seat
-    and a configurable delay is applied before entering cars.
-    Also registers settings and privileges for editing vehicles.
-]]
 if SERVER then
     hook.Add("EntityTakeDamage", "liaSimfphys", function(seat, dmgInfo)
         if seat:IsVehicle() and seat:GetClass() == "gmod_sent_vehicle_fphysics_base" then

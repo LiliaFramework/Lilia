@@ -1,8 +1,3 @@
---[[
-    VCMod monetary compatibility.
-    Redirects VCMod money hooks to a character's funds so vehicle
-    transactions use Lilia's economy.
-]]
 if SERVER then
     hook.Add("VC_canAddMoney", "liaVCMOD", function(client, amount)
         client:getChar():giveMoney(amount)

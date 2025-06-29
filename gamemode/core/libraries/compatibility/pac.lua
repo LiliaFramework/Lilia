@@ -1,65 +1,14 @@
---[[
-    Compatibility support for the PAC3 editor.
-    Handles retrieval and networking of player outfits,
-    ensuring PAC3 parts sync reliably between the server
-    and all clients in Lilia.
-]]
 local playerMeta = FindMetaTable("Entity")
---[[
-    Entity:getParts()
-
-    Description:
-        Retrieves the PAC3 parts currently equipped on this player.
-
-    Parameters:
-        None
-
-    Realm:
-        Shared
-
-    Returns:
-        parts (table) - Table of equipped part IDs.
-]]
 function playerMeta:getParts()
     return self:getNetVar("parts", {})
 end
 
 if SERVER then
-    --[[
-        Entity:syncParts()
-
-        Description:
-            Sends the player's equipped PAC3 parts to the client.
-
-        Parameters:
-            None
-
-        Realm:
-            Server
-
-        Returns:
-            None
-    ]]
     function playerMeta:syncParts()
         net.Start("liaPACSync")
         net.Send(self)
     end
 
-    --[[
-        Entity:addPart(partID)
-
-        Description:
-            Adds a PAC3 part to the player and broadcasts the change.
-
-        Parameters:
-            partID (string) - Identifier of the part to add.
-
-        Realm:
-            Server
-
-        Returns:
-            None
-    ]]
     function playerMeta:addPart(partID)
         if self:getParts()[partID] then return end
         net.Start("liaPACPartAdd")
@@ -71,21 +20,6 @@ if SERVER then
         self:setNetVar("parts", parts)
     end
 
-    --[[
-        Entity:removePart(partID)
-
-        Description:
-            Removes a PAC3 part from the player and broadcasts the change.
-
-        Parameters:
-            partID (string) - Identifier of the part to remove.
-
-        Realm:
-            Server
-
-        Returns:
-            None
-    ]]
     function playerMeta:removePart(partID)
         net.Start("liaPACPartRemove")
         net.WriteEntity(self)
@@ -96,21 +30,6 @@ if SERVER then
         self:setNetVar("parts", parts)
     end
 
-    --[[
-        Entity:resetParts()
-
-        Description:
-            Clears all PAC3 parts from the player and notifies clients.
-
-        Parameters:
-            None
-
-        Realm:
-            Server
-
-        Returns:
-            None
-    ]]
     function playerMeta:resetParts()
         net.Start("liaPACPartReset")
         net.WriteEntity(self)
