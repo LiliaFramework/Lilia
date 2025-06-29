@@ -13,533 +13,587 @@ The entity meta library extends Garry's Mod entities with helpers for detection,
 
 ### `isProp()`
 
-    Description:
-        Returns true if the entity is a physics prop.
+**Description:**
+Returns true if the entity is a physics prop.
 
-    Parameters:
-        None
+**Parameters:**
+* None
 
-    Realm:
-        Shared
+**Realm:**
+* Shared
 
-    Returns:
-        boolean – Whether the entity is a physics prop.
+**Returns:**
+* boolean – Whether the entity is a physics prop.
 
-    Example Usage:
-        -- Apply physics damage only if this is a prop
-        if ent:isProp() then
-            ent:TakeDamage(50)
-        end
+**Example Usage:**
+```lua
+-- Apply physics damage only if this is a prop
+if ent:isProp() then
+    ent:TakeDamage(50)
+end
+```
 
 ### `isItem()`
 
-    Description:
-        Checks if the entity is an item entity.
+**Description:**
+Checks if the entity is an item entity.
 
-    Parameters:
-        None
+**Parameters:**
+* None
 
-    Realm:
-        Shared
+**Realm:**
+* Shared
 
-    Returns:
-        boolean – True if the entity represents an item.
+**Returns:**
+* boolean – True if the entity represents an item.
 
-    Example Usage:
-        -- Attempt to pick up the entity as an item
-        if ent:isItem() then
-            lia.item.pickup(client, ent)
-        end
+**Example Usage:**
+```lua
+-- Attempt to pick up the entity as an item
+if ent:isItem() then
+    lia.item.pickup(client, ent)
+end
+```
 
 ### `isMoney()`
 
-    Description:
-        Checks if the entity is a money entity.
+**Description:**
+Checks if the entity is a money entity.
 
-    Parameters:
-        None
+**Parameters:**
+* None
 
-    Realm:
-        Shared
+**Realm:**
+* Shared
 
-    Returns:
-        boolean – True if the entity represents money.
+**Returns:**
+* boolean – True if the entity represents money.
 
-    Example Usage:
-        -- Collect money dropped on the ground
-        if ent:isMoney() then
-            char:addMoney(ent:getAmount())
-        end
+**Example Usage:**
+```lua
+-- Collect money dropped on the ground
+if ent:isMoney() then
+    char:addMoney(ent:getAmount())
+end
+```
 
 ### `isSimfphysCar()`
 
-    Description:
-        Checks if the entity is a simfphys car.
+**Description:**
+Checks if the entity is a simfphys car.
 
-    Parameters:
-        None
+**Parameters:**
+* None
 
-    Realm:
-        Shared
+**Realm:**
+* Shared
 
-    Returns:
-        boolean – True if this is a simfphys vehicle.
+**Returns:**
+* boolean – True if this is a simfphys vehicle.
 
-    Example Usage:
-        -- Show a custom HUD when entering a simfphys vehicle
-        if ent:isSimfphysCar() then
-            OpenCarHUD(ent)
-        end
+**Example Usage:**
+```lua
+-- Show a custom HUD when entering a simfphys vehicle
+if ent:isSimfphysCar() then
+    OpenCarHUD(ent)
+end
+```
 
 ### `isLiliaPersistent()`
 
-    Description:
-        Determines if the entity is persistent in Lilia.
+**Description:**
+Determines if the entity is persistent in Lilia.
 
-    Parameters:
-        None
+**Parameters:**
+* None
 
-    Realm:
-        Shared
+**Realm:**
+* Shared
 
-    Returns:
-        boolean – Whether the entity should persist.
+**Returns:**
+* boolean – Whether the entity should persist.
 
-    Example Usage:
-        -- Save this entity across map resets if persistent
-        if ent:isLiliaPersistent() then
-            lia.persist.saveEntity(ent)
-        end
+**Example Usage:**
+```lua
+-- Save this entity across map resets if persistent
+if ent:isLiliaPersistent() then
+    lia.persist.saveEntity(ent)
+end
+```
 
 ### `checkDoorAccess(client, access)`
 
-    Description:
-        Checks if a player has the given door access level.
+**Description:**
+Checks if a player has the given door access level.
 
-    Parameters:
-        client (Player) – The player to check.
-        access (number, optional) – Door permission level.
+**Parameters:**
+* client (Player) – The player to check.
+* access (number, optional) – Door permission level.
 
-    Realm:
-        Shared
+**Realm:**
+* Shared
 
-    Returns:
-        boolean – True if the player has access.
+**Returns:**
+* boolean – True if the player has access.
 
-    Example Usage:
-        -- Block a player from opening the door without access
-        if not door:checkDoorAccess(client, DOOR_ACCESS_OPEN) then
-            client:notify("The door is locked.")
-        end
+**Example Usage:**
+```lua
+-- Block a player from opening the door without access
+if not door:checkDoorAccess(client, DOOR_ACCESS_OPEN) then
+    client:notify("The door is locked.")
+end
+```
 
 ### `keysOwn(client)`
 
-    Description:
-        Assigns the entity to the specified player.
+**Description:**
+Assigns the entity to the specified player.
 
-    Parameters:
-        client (Player) – Player to set as owner.
+**Parameters:**
+* client (Player) – Player to set as owner.
 
-    Realm:
-        Shared
+**Realm:**
+* Shared
 
-    Returns:
-        None – This function does not return a value.
+**Returns:**
+* None – This function does not return a value.
 
-    Example Usage:
-        -- Assign ownership when a player buys the door
-        door:keysOwn(buyer)
+**Example Usage:**
+```lua
+-- Assign ownership when a player buys the door
+door:keysOwn(buyer)
+```
 
 ### `keysLock()`
 
-    Description:
-        Locks the entity if it is a vehicle.
+**Description:**
+Locks the entity if it is a vehicle.
 
-    Parameters:
-        None
+**Parameters:**
+* None
 
-    Realm:
-        Shared
+**Realm:**
+* Shared
 
-    Returns:
-        None – This function does not return a value.
+**Returns:**
+* None – This function does not return a value.
 
-    Example Usage:
-        -- Lock the vehicle after the driver exits
-        car:keysLock()
+**Example Usage:**
+```lua
+-- Lock the vehicle after the driver exits
+car:keysLock()
+```
 
 ### `keysUnLock()`
 
-    Description:
-        Unlocks the entity if it is a vehicle.
+**Description:**
+Unlocks the entity if it is a vehicle.
 
-    Parameters:
-        None
+**Parameters:**
+* None
 
-    Realm:
-        Shared
+**Realm:**
+* Shared
 
-    Returns:
-        None – This function does not return a value.
+**Returns:**
+* None – This function does not return a value.
 
-    Example Usage:
-        -- Unlock the vehicle when the owner presses a key
-        car:keysUnLock()
+**Example Usage:**
+```lua
+-- Unlock the vehicle when the owner presses a key
+car:keysUnLock()
+```
 
 ### `getDoorOwner()`
 
-    Description:
-        Returns the player that owns this door if available.
+**Description:**
+Returns the player that owns this door if available.
 
-    Parameters:
-        None
+**Parameters:**
+* None
 
-    Realm:
-        Shared
+**Realm:**
+* Shared
 
-    Returns:
-        Player|None – Door owner or None.
+**Returns:**
+* Player|None – Door owner or None.
 
-    Example Usage:
-        -- Print the name of the door owner when inspecting
-        local owner = door:getDoorOwner()
-        if owner then
-            print("Owned by", owner:Name())
-        end
+**Example Usage:**
+```lua
+-- Print the name of the door owner when inspecting
+local owner = door:getDoorOwner()
+if owner then
+    print("Owned by", owner:Name())
+end
+```
 
 ### `isLocked()`
 
-    Description:
-        Returns the locked state stored in net variables.
+**Description:**
+Returns the locked state stored in net variables.
 
-    Parameters:
-        None
+**Parameters:**
+* None
 
-    Realm:
-        Shared
+**Realm:**
+* Shared
 
-    Returns:
-        boolean – Whether the door is locked.
+**Returns:**
+* boolean – Whether the door is locked.
 
-    Example Usage:
-        -- Display a lock icon if the door is networked as locked
-        if door:isLocked() then
-            DrawLockedIcon(door)
-        end
+**Example Usage:**
+```lua
+-- Display a lock icon if the door is networked as locked
+if door:isLocked() then
+    DrawLockedIcon(door)
+end
+```
 
 ### `isDoorLocked()`
 
-    Description:
-        Checks the internal door locked state.
+**Description:**
+Checks the internal door locked state.
 
-    Parameters:
-        None
+**Parameters:**
+* None
 
-    Realm:
-        Shared
+**Realm:**
+* Shared
 
-    Returns:
-        boolean – True if the door is locked.
+**Returns:**
+* boolean – True if the door is locked.
 
-    Example Usage:
-        -- Play a sound when trying to open a locked door server-side
-        if door:isDoorLocked() then
-            door:EmitSound("doors/door_locked2.wav")
-        end
+**Example Usage:**
+```lua
+-- Play a sound when trying to open a locked door server-side
+if door:isDoorLocked() then
+    door:EmitSound("doors/door_locked2.wav")
+end
+```
 
 ### `getEntItemDropPos(offset)`
 
-    Description:
-        Calculates a drop position in front of the entity's eyes.
+**Description:**
+Calculates a drop position in front of the entity's eyes.
 
-    Parameters:
-        offset (number) – Distance from the player eye position.
+**Parameters:**
+* offset (number) – Distance from the player eye position.
 
-    Realm:
-        Shared
+**Realm:**
+* Shared
 
-    Returns:
-        Vector – Drop position and angle.
+**Returns:**
+* Vector – Drop position and angle.
 
-    Example Usage:
-        -- Spawn an item drop in front of the entity's eyes
-        local pos, ang = ent:getEntItemDropPos(16)
-        lia.item.spawn("item_water", pos, ang)
+**Example Usage:**
+```lua
+-- Spawn an item drop in front of the entity's eyes
+local pos, ang = ent:getEntItemDropPos(16)
+lia.item.spawn("item_water", pos, ang)
+```
 
 ### `isNearEntity(radius, otherEntity)`
 
-    Description:
-        Checks for another entity of the same class nearby.
+**Description:**
+Checks for another entity of the same class nearby.
 
-    Parameters:
-        radius (number) – Sphere radius in units.
-        otherEntity (Entity, optional) – Specific entity to look for.
+**Parameters:**
+* radius (number) – Sphere radius in units.
+* otherEntity (Entity, optional) – Specific entity to look for.
 
-    Realm:
-        Shared
+**Realm:**
+* Shared
 
-    Returns:
-        boolean – True if another entity is within radius.
+**Returns:**
+* boolean – True if another entity is within radius.
 
-    Example Usage:
-        -- Prevent building too close to another chest
-        if ent:isNearEntity(128, otherChest) then
-            client:notify("Too close to another chest!")
-        end
+**Example Usage:**
+```lua
+-- Prevent building too close to another chest
+if ent:isNearEntity(128, otherChest) then
+    client:notify("Too close to another chest!")
+end
+```
 
 ### `GetCreator()`
 
-    Description:
-        Returns the entity creator player.
+**Description:**
+Returns the entity creator player.
 
-    Parameters:
-        None
+**Parameters:**
+* None
 
-    Realm:
-        Shared
+**Realm:**
+* Shared
 
-    Returns:
-        Player|None – Creator player if stored.
+**Returns:**
+* Player|None – Creator player if stored.
 
-    Example Usage:
-        -- Credit the creator when the entity is removed
-        local creator = ent:GetCreator()
-        if IsValid(creator) then
-            creator:notify("Your prop was removed.")
-        end
+**Example Usage:**
+```lua
+-- Credit the creator when the entity is removed
+local creator = ent:GetCreator()
+if IsValid(creator) then
+    creator:notify("Your prop was removed.")
+end
+```
 
 ### `SetCreator(client)`
 
-        Description:
-            Stores the creator player on the entity.
+**Description:**
+Stores the creator player on the entity.
 
-        Parameters:
-            client (Player) – Creator of the entity.
+**Parameters:**
+* client (Player) – Creator of the entity.
 
-        Realm:
-            Server
+**Realm:**
+* Server
 
-        Returns:
-            None – This function does not return a value.
+**Returns:**
+* None – This function does not return a value.
 
-        Example Usage:
-            -- Record the spawner for cleanup tracking
-            ent:SetCreator(client)
+**Example Usage:**
+```lua
+    -- Record the spawner for cleanup tracking
+    ent:SetCreator(client)
+```
 
 ### `sendNetVar(key, receiver)`
 
-        Description:
-            Sends a network variable to recipients.
+**Description:**
+Sends a network variable to recipients.
 
-        Parameters:
-            key (string) – Identifier of the variable.
-            receiver (Player|None) – Who to send to.
+**Parameters:**
+* key (string) – Identifier of the variable.
+* receiver (Player|None) – Who to send to.
 
-        Realm:
-            Server
+**Realm:**
+* Server
 
         Internal:
             Used by the networking system.
 
-    Returns:
-        None – This function does not return a value.
+**Returns:**
+* None – This function does not return a value.
 
-    Example Usage:
-        -- Broadcast the "doorState" variable to every connected player
-        for _, ply in player.Iterator() do
-            ent:sendNetVar("doorState", ply)
-        end
+**Example Usage:**
+```lua
+-- Broadcast the "doorState" variable to every connected player
+for _, ply in player.Iterator() do
+    ent:sendNetVar("doorState", ply)
+end
+```
 
 ### `clearNetVars(receiver)`
 
-        Description:
-            Clears all network variables on this entity.
+**Description:**
+Clears all network variables on this entity.
 
-        Parameters:
-            receiver (Player|None) – Receiver to notify.
+**Parameters:**
+* receiver (Player|None) – Receiver to notify.
 
-        Realm:
-            Server
+**Realm:**
+* Server
 
-        Returns:
-            None – This function does not return a value.
+**Returns:**
+* None – This function does not return a value.
 
-    Example Usage:
-        -- Force reinitialization by clearing all variables for this receiver
-        ent:clearNetVars(client)
-        ent:sendNetVar("initialized", client)
+**Example Usage:**
+```lua
+-- Force reinitialization by clearing all variables for this receiver
+ent:clearNetVars(client)
+ent:sendNetVar("initialized", client)
+```
 
 ### `removeDoorAccessData()`
 
-        Description:
-            Clears all stored door access information.
+**Description:**
+Clears all stored door access information.
 
-    Parameters:
-        None
+**Parameters:**
+* None
 
-        Realm:
-            Server
+**Realm:**
+* Server
 
-    Returns:
-        None – This function does not return a value.
+**Returns:**
+* None – This function does not return a value.
 
-    Example Usage:
-        -- Wipe door permissions during cleanup
-        local result = ent:removeDoorAccessData()
+**Example Usage:**
+```lua
+-- Wipe door permissions during cleanup
+local result = ent:removeDoorAccessData()
+```
 
 ### `setLocked(state)`
 
-        Description:
-            Stores the door locked state in network variables.
+**Description:**
+Stores the door locked state in network variables.
 
-        Parameters:
-            state (boolean) – New locked state.
+**Parameters:**
+* state (boolean) – New locked state.
 
-        Realm:
-            Server
+**Realm:**
+* Server
 
-    Returns:
-        None – This function does not return a value.
+**Returns:**
+* None – This function does not return a value.
 
-    Example Usage:
-        -- Toggle the door lock and play a latch sound for everyone
-        door:setLocked(true)
-        door:EmitSound("doors/door_latch3.wav")
+**Example Usage:**
+```lua
+-- Toggle the door lock and play a latch sound for everyone
+door:setLocked(true)
+door:EmitSound("doors/door_latch3.wav")
+```
 
 ### `isDoor()`
 
-        Description:
-            Returns true if the entity's class indicates a door.
+**Description:**
+Returns true if the entity's class indicates a door.
 
-    Parameters:
-        None
+**Parameters:**
+* None
 
-        Realm:
-            Server
+**Realm:**
+* Server
 
-        Returns:
-            boolean – Whether the entity is a door.
+**Returns:**
+* boolean – Whether the entity is a door.
 
-    Example Usage:
-        -- Check if the entity behaves like a door
-        local result = ent:isDoor()
+**Example Usage:**
+```lua
+-- Check if the entity behaves like a door
+local result = ent:isDoor()
+```
 
 ### `getDoorPartner()`
 
-        Description:
-            Returns the partner door linked with this entity.
+**Description:**
+Returns the partner door linked with this entity.
 
-    Parameters:
-        None
+**Parameters:**
+* None
 
-        Realm:
-            Server
+**Realm:**
+* Server
 
-        Returns:
-            Entity|None – The partnered door.
+**Returns:**
+* Entity|None – The partnered door.
 
-    Example Usage:
-        -- Unlock both doors when opening a double-door setup
-        local partner = ent:getDoorPartner()
-        if IsValid(partner) then
-            partner:setLocked(false)
-        end
+**Example Usage:**
+```lua
+-- Unlock both doors when opening a double-door setup
+local partner = ent:getDoorPartner()
+if IsValid(partner) then
+    partner:setLocked(false)
+end
+```
 
 ### `setNetVar(key, value, receiver)`
 
-        Description:
-            Updates a network variable and sends it to recipients.
+**Description:**
+Updates a network variable and sends it to recipients.
 
-        Parameters:
-            key (string) – Variable name.
-            value (any) – Value to store.
-            receiver (Player|None) – Who to send update to.
+**Parameters:**
+* key (string) – Variable name.
+* value (any) – Value to store.
+* receiver (Player|None) – Who to send update to.
 
-        Realm:
-            Server
+**Realm:**
+* Server
 
-    Returns:
-        None – This function does not return a value.
+**Returns:**
+* None – This function does not return a value.
 
-    Example Usage:
-        -- Store a variable and sync it to players
-        local result = ent:setNetVar(key, value, receiver)
+**Example Usage:**
+```lua
+-- Store a variable and sync it to players
+local result = ent:setNetVar(key, value, receiver)
+```
 
 ### `getNetVar(key, default)`
 
-        Description:
-            Retrieves a stored network variable or a default value.
+**Description:**
+Retrieves a stored network variable or a default value.
 
-        Parameters:
-            key (string) – Variable name.
-            default (any) – Value returned if variable is nil.
+**Parameters:**
+* key (string) – Variable name.
+* default (any) – Value returned if variable is nil.
 
-        Realm:
-            Server
-            Client
+**Realm:**
+* Server
+* Client
 
-        Returns:
-            any – Stored value or default.
+**Returns:**
+* any – Stored value or default.
 
-    Example Usage:
-        -- Retrieve the stored variable or fallback to the default
-        local result = ent:getNetVar(key, default)
+**Example Usage:**
+```lua
+-- Retrieve the stored variable or fallback to the default
+local result = ent:getNetVar(key, default)
+```
 
 ### `isDoor()`
 
-        Description:
-            Client-side door check using class name.
+**Description:**
+Client-side door check using class name.
 
-    Parameters:
-        None
+**Parameters:**
+* None
 
-        Realm:
-            Client
+**Realm:**
+* Client
 
-        Returns:
-            boolean – True if entity class contains "door".
+**Returns:**
+* boolean – True if entity class contains "door".
 
-    Example Usage:
-        -- Determine if this entity's class name contains "door"
-        local result = ent:isDoor()
+**Example Usage:**
+```lua
+-- Determine if this entity's class name contains "door"
+local result = ent:isDoor()
+```
 
 ### `getDoorPartner()`
 
-        Description:
-            Attempts to find the door partnered with this one.
+**Description:**
+Attempts to find the door partnered with this one.
 
-    Parameters:
-        None
+**Parameters:**
+* None
 
-        Realm:
-            Client
+**Realm:**
+* Client
 
-        Returns:
-            Entity|None – The partner door entity.
+**Returns:**
+* Entity|None – The partner door entity.
 
-    Example Usage:
-        -- Highlight the partner door of the one being looked at
-        local partner = ent:getDoorPartner()
-        if IsValid(partner) then
-            partner:SetColor(Color(0, 255, 0))
-        end
+**Example Usage:**
+```lua
+-- Highlight the partner door of the one being looked at
+local partner = ent:getDoorPartner()
+if IsValid(partner) then
+    partner:SetColor(Color(0, 255, 0))
+end
+```
 
 ### `getNetVar(key, default)`
 
-        Description:
-            Retrieves a network variable for this entity on the client.
+**Description:**
+Retrieves a network variable for this entity on the client.
 
-        Parameters:
-            key (string) – Variable name.
-            default (any) – Default if not set.
+**Parameters:**
+* key (string) – Variable name.
+* default (any) – Default if not set.
 
-        Realm:
-            Client
+**Realm:**
+* Client
 
-        Returns:
-            any – Stored value or default.
+**Returns:**
+* any – Stored value or default.
 
-    Example Usage:
-        -- Access a synced variable on the client side
-        local result = ent:getNetVar(key, default)
+**Example Usage:**
+```lua
+-- Access a synced variable on the client side
+local result = ent:getNetVar(key, default)
+```
 
