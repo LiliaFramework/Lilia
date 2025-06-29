@@ -33,12 +33,12 @@ Called after the F1 menu panel is created so additional sections can be added. P
 ```lua
 -- Adds a custom hunger info field after the menu is ready.
 hook.Add("LoadCharInformation", "AddHungerField", function()
-local char = LocalPlayer():getChar()
-if char then
-hook.Run("AddTextField", L("generalInfo"), "hunger", "Hunger", function()
-return char:getData("hunger", 0) .. "%"
-end)
-end
+    local char = LocalPlayer():getChar()
+    if char then
+        hook.Run("AddTextField", L("generalInfo"), "hunger", "Hunger", function()
+            return char:getData("hunger", 0) .. "%"
+        end)
+    end
 end)
 ```
 
@@ -62,22 +62,22 @@ Executed during menu creation allowing you to define custom tabs. Allows modules
 ```lua
 -- Inserts a custom "Help" tab listing available commands.
 hook.Add("CreateMenuButtons", "AddHelpTab", function(tabs)
-tabs.help = {
-text = "Help",
-panel = function()
-local pnl = vgui.Create("DPanel")
-pnl:Dock(FILL)
-local label = vgui.Create("DLabel", pnl)
-local commands = {}
-for k in pairs(lia.command.list) do
-commands[#commands + 1] = k
-end
-label:SetText(table.concat(commands, "\n"))
-label:Dock(FILL)
-label:SetFont("DermaDefault")
-return pnl
-end
-}
+    tabs.help = {
+        text = "Help",
+        panel = function()
+            local pnl = vgui.Create("DPanel")
+            pnl:Dock(FILL)
+            local label = vgui.Create("DLabel", pnl)
+            local commands = {}
+            for k in pairs(lia.command.list) do
+                commands[#commands + 1] = k
+            end
+            label:SetText(table.concat(commands, "\n"))
+            label:Dock(FILL)
+            label:SetFont("DermaDefault")
+            return pnl
+        end,
+    }
 end)
 ```
 
@@ -102,10 +102,21 @@ Runs every frame when the character model panel draws. Lets code draw over the m
 ```lua
 -- Overlays the player's name above the preview model.
 hook.Add("DrawLiliaModelView", "ShowName", function(panel, entity)
-local char = LocalPlayer():getChar()
-if not char then return end
-draw.SimpleTextOutlined(char:getName(), "Trebuchet24",
-panel:GetWide() / 2, 8, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, color_black)
+    local char = LocalPlayer():getChar()
+    if not char then
+        return
+    end
+    draw.SimpleTextOutlined(
+        char:getName(),
+        "Trebuchet24",
+        panel:GetWide() / 2,
+        8,
+        color_white,
+        TEXT_ALIGN_CENTER,
+        TEXT_ALIGN_TOP,
+        1,
+        color_black
+    )
 end)
 ```
 
@@ -130,7 +141,9 @@ Determines if a scoreboard field such as a player's name or model can be replace
 ```lua
 -- Allows other hooks to replace player names on the scoreboard.
 hook.Add("ShouldAllowScoreboardOverride", "OverrideNames", function(ply, field)
-if field == "name" then return true end
+    if field == "name" then
+        return true
+    end
 end)
 ```
 
@@ -154,9 +167,9 @@ Returns the name text to display for a player in UI panels.
 ```lua
 -- Displays player names with an admin prefix.
 hook.Add("GetDisplayedName", "AdminPrefix", function(ply)
-if ply:IsAdmin() then
-return "[ADMIN] " .. ply:Nick()
-end
+    if ply:IsAdmin() then
+        return "[ADMIN] " .. ply:Nick()
+    end
 end)
 ```
 
@@ -180,8 +193,8 @@ Fired when the voice panel for a player is removed from the HUD.
 ```lua
 -- Announces in chat and plays a sound when someone stops using voice chat.
 hook.Add("PlayerEndVoice", "NotifyVoiceStop", function(ply)
-chat.AddText(Color(200, 200, 255), ply:Nick() .. " stopped talking")
-surface.PlaySound("buttons/button19.wav")
+    chat.AddText(Color(200, 200, 255), ply:Nick() .. " stopped talking")
+    surface.PlaySound("buttons/button19.wav")
 end)
 ```
 
@@ -205,9 +218,9 @@ Triggered when a spawn icon is removed from the extended spawn menu. Fired when 
 ```lua
 -- Plays a sound and prints which model was removed from the spawn menu.
 hook.Add("SpawnlistContentChanged", "IconRemovedNotify", function(icon)
-surface.PlaySound("buttons/button9.wav")
-local name = icon:GetSpawnName() or icon:GetModelName() or tostring(icon)
-print("Removed spawn icon", name)
+    surface.PlaySound("buttons/button9.wav")
+    local name = icon:GetSpawnName() or icon:GetModelName() or tostring(icon)
+    print("Removed spawn icon", name)
 end)
 ```
 
@@ -234,7 +247,7 @@ Gives a chance to draw additional info over item icons. Allows drawing over item
 ```lua
 -- Draws the item quantity in the bottom-right corner.
 hook.Add("ItemPaintOver", "ShowQuantity", function(panel, item, w, h)
-draw.SimpleText(item.qty or 1, "DermaDefault", w - 4, h - 4, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
+    draw.SimpleText(item.qty or 1, "DermaDefault", w - 4, h - 4, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
 end)
 ```
 
@@ -260,7 +273,9 @@ Allows extensions to populate the right-click menu for an item. Allows overridin
 ```lua
 -- Adds an "Inspect" choice to an item's context menu.
 hook.Add("OnCreateItemInteractionMenu", "AddInspect", function(panel, menu, item)
-menu:AddOption("Inspect", function() print("Inspecting", item.name) end)
+    menu:AddOption("Inspect", function()
+        print("Inspecting", item.name)
+    end)
 end)
 ```
 
@@ -285,7 +300,9 @@ Determines whether an item action should be displayed. Determines whether a spec
 ```lua
 -- Disables the drop action for all items.
 hook.Add("CanRunItemAction", "BlockDrop", function(item, action)
-if action == "drop" then return false end
+    if action == "drop" then
+        return false
+    end
 end)
 ```
 
@@ -309,7 +326,9 @@ Return false to omit players from the scoreboard. Determines if a player should 
 ```lua
 -- Stops bots from showing up on the scoreboard.
 hook.Add("ShouldShowPlayerOnScoreboard", "HideBots", function(ply)
-if ply:IsBot() then return false end
+    if ply:IsBot() then
+        return false
+    end
 end)
 ```
 
@@ -334,13 +353,13 @@ Populate the scoreboard context menu with extra options. Allows modules to add s
 ```lua
 -- Adds a friendly "Wave" choice in the scoreboard menu.
 hook.Add("ShowPlayerOptions", "WaveOption", function(ply, options)
-options[#options + 1] = {
-name = "Wave",
-func = function()
-RunConsoleCommand("say", "/me waves to " .. ply:Nick())
-LocalPlayer():ConCommand("act wave")
-end
-}
+    options[#options + 1] = {
+        name = "Wave",
+        func = function()
+            RunConsoleCommand("say", "/me waves to " .. ply:Nick())
+            LocalPlayer():ConCommand("act wave")
+        end,
+    }
 end)
 ```
 
@@ -365,7 +384,9 @@ Supplies the description text shown on the scoreboard. Returns the description t
 ```lua
 -- Shows an OOC description when requested by the scoreboard.
 hook.Add("GetDisplayedDescription", "OOCDesc", function(ply, isOOC)
-if isOOC then return ply:GetNWString("oocDesc", "") end
+    if isOOC then
+        return ply:GetNWString("oocDesc", "")
+    end
 end)
 ```
 
@@ -389,7 +410,9 @@ Runs whenever the chat entry text is modified. Called whenever the chat entry te
 ```lua
 -- Displays a hint when the user types "/help".
 hook.Add("ChatTextChanged", "CommandHint", function(text)
-if text == "/help" then chat.AddText("Type /commands for commands list") end
+    if text == "/help" then
+        chat.AddText("Type /commands for commands list")
+    end
 end)
 ```
 
@@ -413,9 +436,11 @@ Fires when the chat box closes. Fired when the chat box is closed.
 ```lua
 -- Fade out the chat box when it closes.
 hook.Add("FinishChat", "ChatClosed", function()
-if IsValid(lia.gui.chat) then
-lia.gui.chat:AlphaTo(0, 0.2, 0, function() lia.gui.chat:Remove() end)
-end
+    if IsValid(lia.gui.chat) then
+        lia.gui.chat:AlphaTo(0, 0.2, 0, function()
+            lia.gui.chat:Remove()
+        end)
+    end
 end)
 ```
 
@@ -439,10 +464,10 @@ Fires when the chat box opens. Fired when the chat box is opened.
 ```lua
 -- Plays a sound and focuses the chat window when it opens.
 hook.Add("StartChat", "ChatOpened", function()
-surface.PlaySound("buttons/lightswitch2.wav")
-if IsValid(lia.gui.chat) then
-lia.gui.chat:MakePopup()
-end
+    surface.PlaySound("buttons/lightswitch2.wav")
+    if IsValid(lia.gui.chat) then
+        lia.gui.chat:MakePopup()
+    end
 end)
 ```
 
@@ -467,8 +492,8 @@ Allows modification of the markup before chat messages are printed. Allows modif
 ```lua
 -- Turns chat messages green and prefixes the time before they appear.
 hook.Add("ChatAddText", "GreenSystem", function(text, ...)
-local stamp = os.date("[%H:%M] ")
-return Color(0,255,0), stamp .. text, ...
+    local stamp = os.date("[%H:%M] ")
+    return Color(0, 255, 0), stamp .. text, ...
 end)
 ```
 
@@ -494,7 +519,7 @@ Add extra lines to an item tooltip. Populates additional information for an item
 ```lua
 -- Adds the item's weight to its tooltip.
 hook.Add("DisplayItemRelevantInfo", "ShowWeight", function(extra, client, item)
-extra[#extra + 1] = "Weight: " .. (item.weight or 0)
+    extra[#extra + 1] = "Weight: " .. (item.weight or 0)
 end)
 ```
 
@@ -518,7 +543,7 @@ Returns the camera position and angle for the main menu character preview. Provi
 ```lua
 -- Positions the main menu camera with a slight offset.
 hook.Add("GetMainMenuPosition", "OffsetCharView", function(character)
-return Vector(30, 10, 60), Angle(0, 30, 0)
+    return Vector(30, 10, 60), Angle(0, 30, 0)
 end)
 ```
 
@@ -542,7 +567,9 @@ Return false here to prevent character deletion. Determines if a character can b
 ```lua
 -- Blocks deletion of the first character slot.
 hook.Add("CanDeleteChar", "ProtectSlot1", function(id)
-if id == 1 then return false end
+    if id == 1 then
+        return false
+    end
 end)
 ```
 
@@ -567,7 +594,7 @@ Lets modules insert additional information on the main menu info panel. Allows m
 ```lua
 -- Adds the character's faction to the menu info panel.
 hook.Add("LoadMainMenuInformation", "AddFactionInfo", function(info, character)
-info.faction = character:getFaction() or "Citizen"
+    info.faction = character:getFaction() or "Citizen"
 end)
 ```
 
@@ -591,7 +618,9 @@ Checks if the local player may start creating a character. Determines if the pla
 ```lua
 -- Restricts character creation to admins only.
 hook.Add("CanPlayerCreateChar", "AdminsOnly", function(ply)
-if not ply:IsAdmin() then return false end
+    if not ply:IsAdmin() then
+        return false
+    end
 end)
 ```
 
@@ -616,7 +645,7 @@ Lets you edit the clientside model used in the main menu. Allows adjustments to 
 ```lua
 -- Changes a bodygroup on the preview model.
 hook.Add("ModifyCharacterModel", "ApplyBodygroup", function(ent, character)
-ent:SetBodygroup(2, 1)
+    ent:SetBodygroup(2, 1)
 end)
 ```
 
@@ -640,7 +669,7 @@ Add or reorder steps in the character creation flow. Lets modules alter the char
 ```lua
 -- Adds a custom "background" step to the character creator.
 hook.Add("ConfigureCharacterCreationSteps", "InsertBackground", function(panel)
-panel:AddStep("background")
+    panel:AddStep("background")
 end)
 ```
 
@@ -664,7 +693,7 @@ Override to change how many characters a player can have. Returns the maximum nu
 ```lua
 -- Gives admins extra character slots.
 hook.Add("GetMaxPlayerChar", "AdminSlots", function(ply)
-return ply:IsAdmin() and 10 or 5
+    return ply:IsAdmin() and 10 or 5
 end)
 ```
 
@@ -688,7 +717,9 @@ Return false and a reason to hide buttons on the main menu. Determines if a butt
 ```lua
 -- Hides the delete button when the feature is locked.
 hook.Add("ShouldMenuButtonShow", "HideDelete", function(name)
-if name == "delete" then return false, "Locked" end
+    if name == "delete" then
+        return false, "Locked"
+    end
 end)
 ```
 
@@ -712,7 +743,7 @@ Called when the character creation panel should reset. Called to reset the chara
 ```lua
 -- Notifies whenever the creation panel resets.
 hook.Add("ResetCharacterPanel", "ClearFields", function()
-print("Character creator reset")
+    print("Character creator reset")
 end)
 ```
 
@@ -736,9 +767,9 @@ Notifies when the EasyIcons font sheet has loaded. Fired when the EasyIcons libr
 ```lua
 -- Rebuild icons using the font after it loads.
 hook.Add("EasyIconsLoaded", "Notify", function()
-surface.SetFont("liaEasyIcons")
-chat.AddText(Color(0, 255, 200), "EasyIcons font loaded!")
-hook.Run("RefreshFonts")
+    surface.SetFont("liaEasyIcons")
+    chat.AddText(Color(0, 255, 200), "EasyIcons font loaded!")
+    hook.Run("RefreshFonts")
 end)
 ```
 
@@ -763,7 +794,7 @@ Called when CAMI registers a new usergroup. CAMI notification that a usergroup w
 ```lua
 -- Logs newly registered CAMI usergroups.
 hook.Add("CAMI.OnUsergroupRegistered", "LogGroup", function(group)
-print("Registered group:", group.Name)
+    print("Registered group:", group.Name)
 end)
 ```
 
@@ -788,7 +819,7 @@ Called when a usergroup is removed from CAMI. CAMI notification that a usergroup
 ```lua
 -- Logs whenever a usergroup is removed from CAMI.
 hook.Add("CAMI.OnUsergroupUnregistered", "LogRemoval", function(group)
-print("Removed group:", group.Name)
+    print("Removed group:", group.Name)
 end)
 ```
 
@@ -812,7 +843,7 @@ Fired when a privilege is created in CAMI. CAMI notification that a privilege wa
 ```lua
 -- Reports when a new CAMI privilege is registered.
 hook.Add("CAMI.OnPrivilegeRegistered", "LogPrivilege", function(priv)
-print("Registered privilege:", priv.Name)
+    print("Registered privilege:", priv.Name)
 end)
 ```
 
@@ -836,7 +867,7 @@ Fired when a privilege is removed from CAMI. CAMI notification that a privilege 
 ```lua
 -- Reports when a CAMI privilege is removed.
 hook.Add("CAMI.OnPrivilegeUnregistered", "LogPrivRemoval", function(priv)
-print("Removed privilege:", priv.Name)
+    print("Removed privilege:", priv.Name)
 end)
 ```
 
@@ -865,7 +896,10 @@ Allows an override of player privilege checks. Allows external libraries to over
 ```lua
 -- Lets superadmins bypass privilege checks.
 hook.Add("CAMI.PlayerHasAccess", "AllowSuperadmins", function(_, actor, priv, cb)
-if actor:IsSuperAdmin() then cb(true) return true end
+    if actor:IsSuperAdmin() then
+        cb(true)
+        return true
+    end
 end)
 ```
 
@@ -894,7 +928,10 @@ Allows an override of SteamID-based privilege checks. Similar to PlayerHasAccess
 ```lua
 -- Grants access for a specific SteamID.
 hook.Add("CAMI.SteamIDHasAccess", "AllowSteamID", function(_, steamID, priv, cb)
-if steamID == "STEAM_0:1:1" then cb(true) return true end
+    if steamID == "STEAM_0:1:1" then
+        cb(true)
+        return true
+    end
 end)
 ```
 
@@ -921,7 +958,7 @@ Notification that a player's group changed. Fired when a player's usergroup has 
 ```lua
 -- Announces when a player's usergroup changes.
 hook.Add("CAMI.PlayerUsergroupChanged", "AnnounceChange", function(ply, old, new)
-print(ply:Nick() .. " moved from " .. old .. " to " .. new)
+    print(ply:Nick() .. " moved from " .. old .. " to " .. new)
 end)
 ```
 
@@ -948,7 +985,7 @@ Notification that a SteamID's group changed. Fired when a SteamID's usergroup ha
 ```lua
 -- Logs usergroup changes by SteamID.
 hook.Add("CAMI.SteamIDUsergroupChanged", "LogSIDChange", function(sid, old, new)
-print(sid .. " changed from " .. old .. " to " .. new)
+    print(sid .. " changed from " .. old .. " to " .. new)
 end)
 ```
 
@@ -972,7 +1009,7 @@ Customize tooltip sizing and layout before it appears.
 ```lua
 -- Sets a fixed width for tooltips before layout.
 hook.Add("TooltipLayout", "FixedWidth", function(panel)
-panel:SetWide(200)
+    panel:SetWide(200)
 end)
 ```
 
@@ -998,9 +1035,9 @@ Draw custom visuals on the tooltip, returning true skips default painting.
 ```lua
 -- Adds a dark background and skips default paint.
 hook.Add("TooltipPaint", "BlurBackground", function(panel, w, h)
-surface.SetDrawColor(0, 0, 0, 200)
-surface.DrawRect(0, 0, w, h)
-return true
+    surface.SetDrawColor(0, 0, 0, 200)
+    surface.DrawRect(0, 0, w, h)
+    return true
 end)
 ```
 
@@ -1025,8 +1062,8 @@ Runs when a tooltip is opened for a panel.
 ```lua
 -- Fades tooltips in when they are created.
 hook.Add("TooltipInitialize", "SetupFade", function(panel, target)
-panel:SetAlpha(0)
-panel:AlphaTo(255, 0.2, 0)
+    panel:SetAlpha(0)
+    panel:AlphaTo(255, 0.2, 0)
 end)
 ```
 
@@ -1050,9 +1087,9 @@ Runs when a player spawns and equips items. Allows modification of the default l
 ```lua
 -- Gives players a crowbar and ammo on spawn.
 hook.Add("PlayerLoadout", "GiveCrowbar", function(ply)
-ply:Give("weapon_crowbar")
-ply:GiveAmmo(10, "357", true)
-ply:SelectWeapon("weapon_crowbar")
+    ply:Give("weapon_crowbar")
+    ply:GiveAmmo(10, "357", true)
+    ply:SelectWeapon("weapon_crowbar")
 end)
 ```
 
@@ -1078,7 +1115,9 @@ Determines if a player's death should permanently kill their character. Return t
 ```lua
 -- Prevent permanent death from fall damage.
 hook.Add("PlayerShouldPermaKill", "NoFallPK", function(ply, inflictor)
-if inflictor == game.GetWorld() then return false end
+    if inflictor == game.GetWorld() then
+        return false
+    end
 end)
 ```
 
@@ -1103,7 +1142,9 @@ Checks if a player may drop an item. Return false to block dropping.
 ```lua
 -- Disallow dropping locked items.
 hook.Add("CanPlayerDropItem", "NoLockedDrop", function(ply, item)
-if item.locked then return false end
+    if item.locked then
+        return false
+    end
 end)
 ```
 
@@ -1128,7 +1169,9 @@ Determines if a player can pick up an item. Return false to prevent taking.
 ```lua
 -- Block taking admin items.
 hook.Add("CanPlayerTakeItem", "NoAdminPickup", function(ply, item)
-if item.adminOnly then return false end
+    if item.adminOnly then
+        return false
+    end
 end)
 ```
 
@@ -1153,9 +1196,9 @@ Queries if a player can equip an item. Returning false stops the equip action.
 ```lua
 -- Allow equipping only if level requirement met.
 hook.Add("CanPlayerEquipItem", "CheckLevel", function(ply, item)
-if item.minLevel and ply:getChar():getAttrib("level", 0) < item.minLevel then
-return false
-end
+    if item.minLevel and ply:getChar():getAttrib("level", 0) < item.minLevel then
+        return false
+    end
 end)
 ```
 
@@ -1180,7 +1223,9 @@ Called before an item is unequipped. Return false to keep the item equipped.
 ```lua
 -- Prevent unequipping cursed gear.
 hook.Add("CanPlayerUnequipItem", "Cursed", function(ply, item)
-if item.cursed then return false end
+    if item.cursed then
+        return false
+    end
 end)
 ```
 
@@ -1207,7 +1252,9 @@ Runs after chat messages are processed. Allows reacting to player chat.
 ```lua
 -- Log all OOC chat.
 hook.Add("PostPlayerSay", "LogOOC", function(ply, msg, chatType)
-if chatType == "ooc" then print("[OOC]", ply:Nick(), msg) end
+    if chatType == "ooc" then
+        print("[OOC]", ply:Nick(), msg)
+    end
 end)
 ```
 
@@ -1231,7 +1278,9 @@ Decides if a corpse ragdoll should spawn for a player. Return false to skip ragd
 ```lua
 -- Disable ragdolls for bots.
 hook.Add("ShouldSpawnClientRagdoll", "NoBotRagdoll", function(ply)
-if ply:IsBot() then return false end
+    if ply:IsBot() then
+        return false
+    end
 end)
 ```
 
@@ -1255,7 +1304,7 @@ Called when the framework saves persistent data. Modules can store custom inform
 ```lua
 -- Save a timestamp to file.
 hook.Add("SaveData", "RecordTime", function()
-file.Write("lastsave.txt", os.time())
+    file.Write("lastsave.txt", os.time())
 end)
 ```
 
@@ -1279,17 +1328,17 @@ Fires when map persistence should be written to disk. Allows adding extra persis
 ```lua
 -- Backs up all persistent entities to a data file whenever saving occurs.
 hook.Add("PersistenceSave", "BackupEntities", function()
-local entities = {}
-for _, ent in ents.Iterator() do
-if ent:GetPersistent() then
-entities[#entities + 1] = {
-class = ent:GetClass(),
-pos = ent:GetPos(),
-ang = ent:GetAngles()
-}
-end
-end
-file.Write("backup/entities.txt", util.TableToJSON(entities, true))
+    local entities = {}
+    for _, ent in ents.Iterator() do
+        if ent:GetPersistent() then
+            entities[#entities + 1] = {
+                class = ent:GetClass(),
+                pos = ent:GetPos(),
+                ang = ent:GetAngles(),
+            }
+        end
+    end
+    file.Write("backup/entities.txt", util.TableToJSON(entities, true))
 end)
 ```
 
@@ -1313,7 +1362,9 @@ Invoked before an entity is saved as persistent. Return false to disallow persis
 ```lua
 -- Skip weapons when marking props permanent.
 hook.Add("CanPersistEntity", "BlockWeapons", function(entity)
-if entity:IsWeapon() then return false end
+    if entity:IsWeapon() then
+        return false
+    end
 end)
 ```
 
@@ -1337,18 +1388,18 @@ Triggered when stored data should be loaded. Modules can restore custom informat
 ```lua
 -- Restores map props from a saved JSON file on disk.
 hook.Add("LoadData", "LoadCustomProps", function()
-if file.Exists("map/props.txt", "DATA") then
-local props = util.JSONToTable(file.Read("map/props.txt", "DATA")) or {}
-for _, info in ipairs(props) do
-local ent = ents.Create(info.class)
-if IsValid(ent) then
-ent:SetPos(info.pos)
-ent:SetAngles(info.ang)
-ent:Spawn()
-ent:Activate()
-end
-end
-end
+    if file.Exists("map/props.txt", "DATA") then
+        local props = util.JSONToTable(file.Read("map/props.txt", "DATA")) or {}
+        for _, info in ipairs(props) do
+            local ent = ents.Create(info.class)
+            if IsValid(ent) then
+                ent:SetPos(info.pos)
+                ent:SetAngles(info.ang)
+                ent:Spawn()
+                ent:Activate()
+            end
+        end
+    end
 end)
 ```
 
@@ -1372,13 +1423,13 @@ Called after all persistent data has loaded. Useful for post-processing.
 ```lua
 -- Spawns a supply crate at a stored position once everything is loaded.
 hook.Add("PostLoadData", "SpawnCrate", function()
-local info = lia.data.get("supplyCrate")
-if info then
-local crate = ents.Create("prop_physics")
-crate:SetModel("models/props_junk/wood_crate001a.mdl")
-crate:SetPos(info.pos)
-crate:Spawn()
-end
+    local info = lia.data.get("supplyCrate")
+    if info then
+        local crate = ents.Create("prop_physics")
+        crate:SetModel("models/props_junk/wood_crate001a.mdl")
+        crate:SetPos(info.pos)
+        crate:Spawn()
+    end
 end)
 ```
 
@@ -1402,7 +1453,7 @@ Queries if data saving should occur during shutdown. Return false to cancel savi
 ```lua
 -- Skip saving during quick restarts.
 hook.Add("ShouldDataBeSaved", "NoSave", function()
-return game.IsDedicated() and os.getenv("NOSAVE")
+    return game.IsDedicated() and os.getenv("NOSAVE")
 end)
 ```
 
@@ -1427,7 +1478,7 @@ Called when a player's character disconnects. Provides a last chance to handle d
 ```lua
 -- Store the character's last position so it can be restored later.
 hook.Add("OnCharDisconnect", "SaveLogoutPos", function(ply, char)
-char:setData("logoutPos", ply:GetPos())
+    char:setData("logoutPos", ply:GetPos())
 end)
 ```
 
@@ -1451,9 +1502,9 @@ Initializes a bot's character when it first joins. Allows custom bot setup.
 ```lua
 -- Give the bot a starter pistol and set up a small inventory.
 hook.Add("SetupBotPlayer", "InitBot", function(bot)
-local char = bot:getChar()
-char.vars.inv = {lia.inventory.new("GridInv")}
-bot:Give("weapon_pistol")
+    local char = bot:getChar()
+    char.vars.inv = { lia.inventory.new("GridInv") }
+    bot:Give("weapon_pistol")
 end)
 ```
 
@@ -1477,11 +1528,11 @@ Fired after a player's personal data has loaded. Useful for syncing additional i
 ```lua
 -- Cache the player's faction color from saved data for use after their character loads.
 hook.Add("PlayerLiliaDataLoaded", "CacheFactionColor", function(ply)
-local fid = ply:getData("factionID", 0)
-local faction = lia.faction.indices[fid]
-if faction then
-ply.cachedFactionColor = faction.color
-end
+    local fid = ply:getData("factionID", 0)
+    local faction = lia.faction.indices[fid]
+    if faction then
+        ply.cachedFactionColor = faction.color
+    end
 end)
 ```
 
@@ -1505,8 +1556,8 @@ Runs after the player entity has spawned and data is ready. Allows post-initiali
 ```lua
 -- Initialize some default variables for new players.
 hook.Add("PostPlayerInitialSpawn", "SetupTutorialState", function(ply)
-ply:setNetVar("inTutorial", true)
-ply:ChatPrint("Welcome! Follow the arrows to begin the tutorial.")
+    ply:setNetVar("inTutorial", true)
+    ply:ChatPrint("Welcome! Follow the arrows to begin the tutorial.")
 end)
 ```
 
@@ -1530,9 +1581,9 @@ Gives factions a chance to modify player loadouts. Runs before weapons are equip
 ```lua
 -- Prints a message when FactionOnLoadout is triggered
 hook.Add("FactionOnLoadout", "GiveRadio", function(ply)
-if ply:getChar():getFaction() == "police" then
-ply:Give("weapon_radio")
-end
+    if ply:getChar():getFaction() == "police" then
+        ply:Give("weapon_radio")
+    end
 end)
 ```
 
@@ -1556,9 +1607,9 @@ Allows classes to modify the player's starting gear. Executed prior to PostPlaye
 ```lua
 -- Prints a message when ClassOnLoadout is triggered
 hook.Add("ClassOnLoadout", "MedicItems", function(ply)
-if ply:getChar():getClass() == "medic" then
-ply:Give("medkit")
-end
+    if ply:getChar():getClass() == "medic" then
+        ply:Give("medkit")
+    end
 end)
 ```
 
@@ -1582,7 +1633,7 @@ Called after the player has been equipped. Last chance to modify the loadout.
 ```lua
 -- Prints a message when PostPlayerLoadout is triggered
 hook.Add("PostPlayerLoadout", "SetColor", function(ply)
-ply:SetPlayerColor(Vector(0, 1, 0))
+    ply:SetPlayerColor(Vector(0, 1, 0))
 end)
 ```
 
@@ -1606,9 +1657,9 @@ Runs after faction loadout logic completes. Allows post-loadout tweaks.
 ```lua
 -- Prints a message when FactionPostLoadout is triggered
 hook.Add("FactionPostLoadout", "Shout", function(ply)
-if ply:getChar():getFaction() == "soldier" then
-ply:EmitSound("npc/combine_soldier/gear6.wav")
-end
+    if ply:getChar():getFaction() == "soldier" then
+        ply:EmitSound("npc/combine_soldier/gear6.wav")
+    end
 end)
 ```
 
@@ -1632,7 +1683,7 @@ Runs after class loadout logic completes. Allows post-loadout tweaks for classes
 ```lua
 -- Prints a message when ClassPostLoadout is triggered
 hook.Add("ClassPostLoadout", "Pose", function(ply)
-ply:ConCommand("act muscle")
+    ply:ConCommand("act muscle")
 end)
 ```
 
@@ -1656,7 +1707,7 @@ Returns the inventory type used for new characters. Modules can override to prov
 ```lua
 -- Prints a message when GetDefaultInventoryType is triggered
 hook.Add("GetDefaultInventoryType", "UseGrid", function()
-return "GridInv"
+    return "GridInv"
 end)
 ```
 
@@ -1680,9 +1731,9 @@ Decides whether saved persistent items should be deleted on load. Return true to
 ```lua
 -- Remove stored items if too many exist on the map.
 hook.Add("ShouldDeleteSavedItems", "ClearDrops", function()
-if table.Count(lia.item.instances) > 1000 then
-return true
-end
+    if table.Count(lia.item.instances) > 1000 then
+        return true
+    end
 end)
 ```
 
@@ -1706,10 +1757,10 @@ Called after map items have been loaded from storage. Provides the table of crea
 ```lua
 -- Adjusts item collision settings after loading from storage.
 hook.Add("OnSavedItemLoaded", "PrintCount", function(items)
-for _, ent in ipairs(items) do
-ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)
-end
-print("Loaded", #items, "items")
+    for _, ent in ipairs(items) do
+        ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+    end
+    print("Loaded", #items, "items")
 end)
 ```
 
@@ -1733,7 +1784,9 @@ Determines if world-space info should be rendered for an entity. Return false to
 ```lua
 -- Prints a message when ShouldDrawEntityInfo is triggered
 hook.Add("ShouldDrawEntityInfo", "HideNPCs", function(ent)
-if ent:IsNPC() then return false end
+    if ent:IsNPC() then
+        return false
+    end
 end)
 ```
 
@@ -1759,7 +1812,7 @@ Allows custom drawing of entity information in the world. Drawn every frame whil
 ```lua
 -- Prints a message when DrawEntityInfo is triggered
 hook.Add("DrawEntityInfo", "LabelProps", function(ent, a, pos)
-draw.SimpleText(ent:GetClass(), "DermaDefault", pos.x, pos.y, Color(255,255,255,a))
+    draw.SimpleText(ent:GetClass(), "DermaDefault", pos.x, pos.y, Color(255, 255, 255, a))
 end)
 ```
 
@@ -1783,7 +1836,9 @@ Provides the health status text and color for a player. Return a table with text
 ```lua
 -- Prints a message when GetInjuredText is triggered
 hook.Add("GetInjuredText", "SimpleHealth", function(ply)
-if ply:Health() <= 20 then return {"Critical", Color(255,0,0)} end
+    if ply:Health() <= 20 then
+        return { "Critical", Color(255, 0, 0) }
+    end
 end)
 ```
 
@@ -1807,7 +1862,9 @@ Determines if character info should draw above a player. Return false to suppres
 ```lua
 -- Prints a message when ShouldDrawPlayerInfo is triggered
 hook.Add("ShouldDrawPlayerInfo", "HideLocal", function(ply)
-if ply == LocalPlayer() then return false end
+    if ply == LocalPlayer() then
+        return false
+    end
 end)
 ```
 
@@ -1833,7 +1890,7 @@ Allows modules to add lines to the character info display. Called when building 
 ```lua
 -- Prints a message when DrawCharInfo is triggered
 hook.Add("DrawCharInfo", "JobTitle", function(ply, char, info)
-info[#info + 1] = {"Job: " .. (char:getClass() or "None")}
+    info[#info + 1] = { "Job: " .. (char:getClass() or "None") }
 end)
 ```
 
@@ -1857,7 +1914,7 @@ Opens the context menu for a world item when used. Allows replacing the default 
 ```lua
 -- Prints a message when ItemShowEntityMenu is triggered
 hook.Add("ItemShowEntityMenu", "QuickTake", function(ent)
-print("Opening menu for", ent)
+    print("Opening menu for", ent)
 end)
 ```
 
@@ -1881,7 +1938,7 @@ Fired just before the client finishes loading the framework. Useful for setup ta
 ```lua
 -- Prints a message when PreLiliaLoaded is triggered
 hook.Add("PreLiliaLoaded", "Prep", function()
-print("About to finish loading")
+    print("About to finish loading")
 end)
 ```
 
@@ -1905,7 +1962,7 @@ Indicates the client finished initializing the framework. Modules can start crea
 ```lua
 -- Prints a message when LiliaLoaded is triggered
 hook.Add("LiliaLoaded", "Ready", function()
-print("Lilia client ready")
+    print("Lilia client ready")
 end)
 ```
 
@@ -1932,7 +1989,9 @@ Notifies when inventory metadata changes. Provides old and new values.
 ```lua
 -- Prints a message when InventoryDataChanged is triggered
 hook.Add("InventoryDataChanged", "TrackWeight", function(inv, k, old, new)
-if k == "weight" then print("Weight changed to", new) end
+    if k == "weight" then
+        print("Weight changed to", new)
+    end
 end)
 ```
 
@@ -1956,7 +2015,7 @@ Called when a new item instance is created clientside. Allows additional setup f
 ```lua
 -- Prints a message when ItemInitialized is triggered
 hook.Add("ItemInitialized", "PrintID", function(item)
-print("Created item", item.uniqueID)
+    print("Created item", item.uniqueID)
 end)
 ```
 
@@ -1980,7 +2039,7 @@ Fired when an inventory instance finishes loading. Modules may modify it here.
 ```lua
 -- Prints a message when InventoryInitialized is triggered
 hook.Add("InventoryInitialized", "AnnounceInv", function(inv)
-print("Inventory", inv:getID(), "ready")
+    print("Inventory", inv:getID(), "ready")
 end)
 ```
 
@@ -2005,7 +2064,7 @@ Invoked when an item is placed into an inventory. Lets code react to the additio
 ```lua
 -- Prints a message when InventoryItemAdded is triggered
 hook.Add("InventoryItemAdded", "NotifyAdd", function(inv, item)
-print("Added", item.name)
+    print("Added", item.name)
 end)
 ```
 
@@ -2030,7 +2089,7 @@ Called when an item is removed from an inventory. Runs after the item table is u
 ```lua
 -- Prints a message when InventoryItemRemoved is triggered
 hook.Add("InventoryItemRemoved", "NotifyRemove", function(inv, item)
-print("Removed", item.name)
+    print("Removed", item.name)
 end)
 ```
 
@@ -2054,7 +2113,7 @@ Signals that an inventory was deleted clientside. Allows cleanup of references.
 ```lua
 -- Prints a message when InventoryDeleted is triggered
 hook.Add("InventoryDeleted", "Clear", function(inv)
-print("Inventory", inv:getID(), "deleted")
+    print("Inventory", inv:getID(), "deleted")
 end)
 ```
 
@@ -2078,7 +2137,7 @@ Fired when an item is removed entirely. Modules should clear any cached data.
 ```lua
 -- Prints a message when ItemDeleted is triggered
 hook.Add("ItemDeleted", "Log", function(item)
-print("Item", item.uniqueID, "gone")
+    print("Item", item.uniqueID, "gone")
 end)
 ```
 
@@ -2105,7 +2164,9 @@ Runs when a networked character variable changes. Gives both old and new values.
 ```lua
 -- Prints a message when OnCharVarChanged is triggered
 hook.Add("OnCharVarChanged", "WatchMoney", function(char, k, old, new)
-if k == "money" then print("Money changed", new) end
+    if k == "money" then
+        print("Money changed", new)
+    end
 end)
 ```
 
@@ -2132,7 +2193,9 @@ Similar to OnCharVarChanged but for local-only variables. Called after the table
 ```lua
 -- Prints a message when OnCharLocalVarChanged is triggered
 hook.Add("OnCharLocalVarChanged", "WatchFlags", function(char, k, old, new)
-if k == "flags" then print("Flags changed") end
+    if k == "flags" then
+        print("Flags changed")
+    end
 end)
 ```
 
@@ -2159,7 +2222,9 @@ Called when item data values change clientside. Provides both the old and new va
 ```lua
 -- Prints a message when ItemDataChanged is triggered
 hook.Add("ItemDataChanged", "TrackDurability", function(item, key)
-if key == "durability" then print("New durability", item.data[key]) end
+    if key == "durability" then
+        print("New durability", item.data[key])
+    end
 end)
 ```
 
@@ -2185,7 +2250,7 @@ Runs when an item's quantity value updates. Allows reacting to stack changes.
 ```lua
 -- Prints a message when ItemQuantityChanged is triggered
 hook.Add("ItemQuantityChanged", "CountStacks", function(item, old, new)
-print("Quantity now", new)
+    print("Quantity now", new)
 end)
 ```
 
@@ -2210,7 +2275,7 @@ Indicates that a character was forcefully removed. isCurrentChar denotes if it w
 ```lua
 -- Prints a message when KickedFromChar is triggered
 hook.Add("KickedFromChar", "Notify", function(id, current)
-print("Kicked from", id, current and "(current)" or "")
+    print("Kicked from", id, current and "(current)" or "")
 end)
 ```
 
@@ -2238,7 +2303,7 @@ Server receives a request to move an item. Modules can validate or modify the tr
 ```lua
 -- Prints a message when HandleItemTransferRequest is triggered
 hook.Add("HandleItemTransferRequest", "LogMove", function(ply, itemID, x, y)
-print(ply, "moved item", itemID, "to", x, y)
+    print(ply, "moved item", itemID, "to", x, y)
 end)
 ```
 
@@ -2262,7 +2327,7 @@ Fired when a character object is fully loaded. Receives the character ID.
 ```lua
 -- Prints a message when CharLoaded is triggered
 hook.Add("CharLoaded", "Notify", function(id)
-print("Character", id, "loaded")
+    print("Character", id, "loaded")
 end)
 ```
 
@@ -2286,7 +2351,9 @@ Called before a character is removed. Return false to cancel deletion.
 ```lua
 -- Prints a message when PreCharDelete is triggered
 hook.Add("PreCharDelete", "Protect", function(id)
-if id == 1 then return false end
+    if id == 1 then
+        return false
+    end
 end)
 ```
 
@@ -2311,7 +2378,7 @@ Fired when a character is deleted. Provides the owning player if available.
 ```lua
 -- Prints a message when OnCharDelete is triggered
 hook.Add("OnCharDelete", "Announce", function(ply, id)
-print(ply, "deleted char", id)
+    print(ply, "deleted char", id)
 end)
 ```
 
@@ -2337,7 +2404,7 @@ Invoked after a new character is created. Supplies the character table and creat
 ```lua
 -- Prints a message when OnCharCreated is triggered
 hook.Add("OnCharCreated", "Welcome", function(ply, char)
-print("Created", char:getName())
+    print("Created", char:getName())
 end)
 ```
 
@@ -2361,7 +2428,7 @@ Runs when a player transfers to another server. Useful for cleanup.
 ```lua
 -- Prints a message when OnTransferred is triggered
 hook.Add("OnTransferred", "Goodbye", function(ply)
-print(ply, "left the server")
+    print(ply, "left the server")
 end)
 ```
 
@@ -2385,7 +2452,7 @@ Executed before a character is saved to disk. Allows writing custom data.
 ```lua
 -- Prints a message when CharPreSave is triggered
 hook.Add("CharPreSave", "Record", function(char)
-char:setData("lastSave", os.time())
+    char:setData("lastSave", os.time())
 end)
 ```
 
@@ -2409,7 +2476,7 @@ Called when the character selection list finishes loading. Provides the loaded l
 ```lua
 -- Prints a message when CharListLoaded is triggered
 hook.Add("CharListLoaded", "CountChars", function(list)
-print("Loaded", #list, "characters")
+    print("Loaded", #list, "characters")
 end)
 ```
 
@@ -2434,7 +2501,7 @@ Fires when the character list is refreshed. Gives both old and new tables.
 ```lua
 -- Prints a message when CharListUpdated is triggered
 hook.Add("CharListUpdated", "Diff", function(old, new)
-print("Characters updated")
+    print("Characters updated")
 end)
 ```
 
@@ -2458,7 +2525,7 @@ Returns the maximum stamina for a character. Override to change stamina capacity
 ```lua
 -- Prints a message when getCharMaxStamina is triggered
 hook.Add("getCharMaxStamina", "Double", function(char)
-return 200
+    return 200
 end)
 ```
 
@@ -2483,7 +2550,7 @@ Alters the stamina offset applied each tick while sprinting. Return a new cost t
 ```lua
 -- Prints a message when AdjustStaminaOffsetRunning is triggered
 hook.Add("AdjustStaminaOffsetRunning", "EnduranceBonus", function(ply, cost)
-return cost + ply:getChar():getAttrib("stamina", 0) * -0.01
+    return cost + ply:getChar():getAttrib("stamina", 0) * -0.01
 end)
 ```
 
@@ -2508,9 +2575,9 @@ Allows changing how quickly stamina regenerates when not sprinting. Return a new
 ```lua
 -- Prints a message when AdjustStaminaRegeneration is triggered
 hook.Add("AdjustStaminaRegeneration", "RestAreaBoost", function(ply, amount)
-if ply:isInSafeZone() then
-return amount * 2
-end
+    if ply:isInSafeZone() then
+        return amount * 2
+    end
 end)
 ```
 
@@ -2535,7 +2602,7 @@ Final hook for tweaking the calculated stamina offset. Return the modified offse
 ```lua
 -- Prints a message when AdjustStaminaOffset is triggered
 hook.Add("AdjustStaminaOffset", "MinimumDrain", function(ply, off)
-return math.max(off, -1)
+    return math.max(off, -1)
 end)
 ```
 
@@ -2560,7 +2627,7 @@ Runs after all font files have loaded. Allows registering additional fonts.
 ```lua
 -- Prints a message when PostLoadFonts is triggered
 hook.Add("PostLoadFonts", "LogoFont", function()
-surface.CreateFont("Logo", {size = 32, font = "Tahoma"})
+    surface.CreateFont("Logo", { size = 32, font = "Tahoma" })
 end)
 ```
 
@@ -2589,7 +2656,7 @@ Called when the F1 menu builds status bars so new fields can be added.
 ```lua
 -- Adds a custom thirst bar next to stamina.
 hook.Add("AddBarField", "AddThirstBar", function(section, id, label, min, max, value)
-lia.bar.add(value, Color(0, 150, 255), nil, id)
+    lia.bar.add(value, Color(0, 150, 255), nil, id)
 end)
 ```
 
@@ -2616,10 +2683,10 @@ Fired when building the F1 menu so modules can insert additional sections.
 ```lua
 -- Add a custom "Settings" tab.
 hook.Add("AddSection", "AddSettingsSection", function(name, color, priority)
-if name == "settings" then
-color = Color(0, 128, 255)
-priority = 5
-end
+    if name == "settings" then
+        color = Color(0, 128, 255)
+        priority = 5
+    end
 end)
 ```
 
@@ -2646,7 +2713,9 @@ Determines whether an item may move between inventories.
 ```lua
 -- Prevent quest items from being dropped.
 hook.Add("CanItemBeTransfered", "BlockQuestItemDrop", function(item, newInv, oldInv)
-if item.isQuest then return false, "Quest items cannot be moved" end
+    if item.isQuest then
+        return false, "Quest items cannot be moved"
+    end
 end)
 ```
 
@@ -2670,7 +2739,9 @@ Called right before a bag inventory UI opens. Return false to block opening.
 ```lua
 -- Disallow bag use while fighting.
 hook.Add("CanOpenBagPanel", "BlockBagInCombat", function(item)
-if LocalPlayer():getNetVar("inCombat") then return false end
+    if LocalPlayer():getNetVar("inCombat") then
+        return false
+    end
 end)
 ```
 
@@ -2694,7 +2765,9 @@ Checks if an outfit is allowed to change the player model.
 ```lua
 -- Restrict model swaps for certain factions.
 hook.Add("CanOutfitChangeModel", "RestrictModelSwap", function(item)
-if item.factionRestricted then return false end
+    if item.factionRestricted then
+        return false
+    end
 end)
 ```
 
@@ -2719,7 +2792,7 @@ Determines if a player can modify a vendor's settings.
 ```lua
 -- Allow only admins to edit vendors.
 hook.Add("CanPerformVendorEdit", "AdminVendorEdit", function(client)
-return client:IsAdmin()
+    return client:IsAdmin()
 end)
 ```
 
@@ -2744,7 +2817,9 @@ Called when a player attempts to pick up a money entity.
 ```lua
 -- Prevent money pickup while handcuffed.
 hook.Add("CanPickupMoney", "BlockWhileCuffed", function(client)
-if client:isHandcuffed() then return false end
+    if client:isHandcuffed() then
+        return false
+    end
 end)
 ```
 
@@ -2770,7 +2845,9 @@ Determines if a player can open or lock a door entity.
 ```lua
 -- Only police can unlock jail cells.
 hook.Add("CanPlayerAccessDoor", "PoliceDoors", function(client, door, access)
-if door.isJail and not client:isPolice() then return false end
+    if door.isJail and not client:isPolice() then
+        return false
+    end
 end)
 ```
 
@@ -2795,7 +2872,9 @@ Checks if a player is permitted to open a vendor menu.
 ```lua
 -- Block access unless the vendor allows the player's faction.
 hook.Add("CanPlayerAccessVendor", "CheckVendorFaction", function(client, vendor)
-if not vendor:isFactionAllowed(client:Team()) then return false end
+    if not vendor:isFactionAllowed(client:Team()) then
+        return false
+    end
 end)
 ```
 
@@ -2820,7 +2899,9 @@ Determines if the player can pick up an entity with the hands swep.
 ```lua
 -- Prevent grabbing heavy physics objects.
 hook.Add("CanPlayerHoldObject", "WeightLimit", function(client, ent)
-if ent:GetMass() > 50 then return false end
+    if ent:GetMass() > 50 then
+        return false
+    end
 end)
 ```
 
@@ -2846,9 +2927,9 @@ Called when a player tries to use or drop an item.
 ```lua
 -- Block medkit use inside safe zones.
 hook.Add("CanPlayerInteractItem", "SafeZoneBlock", function(client, action, item)
-if action == "use" and item.uniqueID == "medkit" and client:isInSafeZone() then
-return false
-end
+    if action == "use" and item.uniqueID == "medkit" and client:isInSafeZone() then
+        return false
+    end
 end)
 ```
 
@@ -2873,7 +2954,9 @@ Called when a player attempts to knock on a door.
 ```lua
 -- Prevent knocking while disguised.
 hook.Add("CanPlayerKnock", "BlockDisguisedKnock", function(client, door)
-if client:getNetVar("disguised") then return false end
+    if client:getNetVar("disguised") then
+        return false
+    end
 end)
 ```
 
@@ -2899,7 +2982,9 @@ Checks if the player is allowed to spawn a storage container.
 ```lua
 -- Limit players to one storage crate.
 hook.Add("CanPlayerSpawnStorage", "LimitStorage", function(client, ent, data)
-if client.storageSpawned then return false end
+    if client.storageSpawned then
+        return false
+    end
 end)
 ```
 
@@ -2923,7 +3008,9 @@ Called when the fists weapon tries to punch.
 ```lua
 -- Prevent punching while restrained.
 hook.Add("CanPlayerThrowPunch", "NoPunchWhenTied", function(client)
-if client:IsFlagSet(FL_KNOCKED) then return false end
+    if client:IsFlagSet(FL_KNOCKED) then
+        return false
+    end
 end)
 ```
 
@@ -2950,7 +3037,9 @@ Checks whether a vendor trade is allowed.
 ```lua
 -- Block selling stolen goods.
 hook.Add("CanPlayerTradeWithVendor", "DisallowStolenItems", function(client, vendor, itemType, selling)
-if lia.stolen[itemType] then return false, "Stolen items" end
+    if lia.stolen[itemType] then
+        return false, "Stolen items"
+    end
 end)
 ```
 
@@ -2974,7 +3063,7 @@ Called before any inventory menu is shown.
 ```lua
 -- Prevent opening inventory while in a cutscene.
 hook.Add("CanPlayerViewInventory", "BlockDuringCutscene", function()
-return not LocalPlayer():getNetVar("cutscene")
+    return not LocalPlayer():getNetVar("cutscene")
 end)
 ```
 
@@ -2999,7 +3088,9 @@ Called before persistent storage saves.
 ```lua
 -- Disable saving during special events.
 hook.Add("CanSaveData", "NoEventSaves", function(entity, inv)
-if lia.eventActive then return false end
+    if lia.eventActive then
+        return false
+    end
 end)
 ```
 
@@ -3024,10 +3115,10 @@ Allows custom checks for a character's permission flags.
 ```lua
 -- Grant extra access for characters owned by admins.
 hook.Add("CharHasFlags", "AdminExtraFlags", function(char, flags)
-local ply = char:getPlayer()
-if IsValid(ply) and ply:IsAdmin() and flags == "a" then
-return true
-end
+    local ply = char:getPlayer()
+    if IsValid(ply) and ply:IsAdmin() and flags == "a" then
+        return true
+    end
 end)
 ```
 
@@ -3051,7 +3142,7 @@ Runs after a character's data has been saved to the database.
 ```lua
 -- Log every time characters save data.
 hook.Add("CharPostSave", "LogCharSaves", function(char)
-print(char:getName() .. " saved")
+    print(char:getName() .. " saved")
 end)
 ```
 
@@ -3075,7 +3166,7 @@ Fired after the database has been successfully connected.
 ```lua
 -- Prepare custom tables once the DB connects.
 hook.Add("DatabaseConnected", "CreateCustomTables", function()
-lia.db.query("CREATE TABLE IF NOT EXISTS extras(id INT)")
+    lia.db.query("CREATE TABLE IF NOT EXISTS extras(id INT)")
 end)
 ```
 
@@ -3103,7 +3194,7 @@ Called when an item entity draws its description text.
 ```lua
 -- Display remaining uses next to item name.
 hook.Add("DrawItemDescription", "AddUseCount", function(item, x, y, color, alpha)
-draw.SimpleText("Uses: " .. item:getData("uses", 0), "DermaDefault", x, y + 20, color)
+    draw.SimpleText("Uses: " .. item:getData("uses", 0), "DermaDefault", x, y + 20, color)
 end)
 ```
 
@@ -3127,9 +3218,9 @@ Returns the default width and height for new inventories.
 ```lua
 -- Expand default bags for admins.
 hook.Add("GetDefaultInventorySize", "AdminBags", function(client)
-if client:IsAdmin() then
-return 6, 6
-end
+    if client:IsAdmin() then
+        return 6, 6
+    end
 end)
 ```
 
@@ -3153,7 +3244,9 @@ Allows overriding the entity model used for dropped money.
 ```lua
 -- Use a golden model for large sums.
 hook.Add("GetMoneyModel", "GoldMoneyModel", function(amount)
-if amount > 5000 then return "models/props_lab/box01a.mdl" end
+    if amount > 5000 then
+        return "models/props_lab/box01a.mdl"
+    end
 end)
 ```
 
@@ -3179,7 +3272,7 @@ Lets addons modify how much damage the fists weapon deals.
 ```lua
 -- Scale punch damage by strength attribute.
 hook.Add("GetPlayerPunchDamage", "StrengthPunch", function(client, dmg, context)
-return dmg * (1 + client:getChar():getAttrib("str", 0) / 100)
+    return dmg * (1 + client:getChar():getAttrib("str", 0) / 100)
 end)
 ```
 
@@ -3205,7 +3298,9 @@ Allows overriding default clicks on inventory icons.
 ```lua
 -- Shift-click to quickly move items.
 hook.Add("InterceptClickItemIcon", "ShiftQuickMove", function(panel, icon, key)
-if key == KEY_LSHIFT then return true end
+    if key == KEY_LSHIFT then
+        return true
+    end
 end)
 ```
 
@@ -3231,11 +3326,11 @@ Called when the system attempts to combine one item with another in an inventory
 ```lua
 -- Combine two ammo boxes into one stack.
 hook.Add("ItemCombine", "StackAmmo", function(client, base, other)
-if base.uniqueID == "ammo" and other.uniqueID == "ammo" then
-base:setData("amount", base:getData("amount",0) + other:getData("amount",0))
-client:getChar():getInv():removeItem(other.id)
-return true
-end
+    if base.uniqueID == "ammo" and other.uniqueID == "ammo" then
+        base:setData("amount", base:getData("amount", 0) + other:getData("amount", 0))
+        client:getChar():getInv():removeItem(other.id)
+        return true
+    end
 end)
 ```
 
@@ -3260,7 +3355,7 @@ Called when an item icon is dragged completely out of an inventory.
 ```lua
 -- Drop the item into the world when removed.
 hook.Add("ItemDraggedOutOfInventory", "DropOnDragOut", function(_, item)
-item:spawn(LocalPlayer():getItemDropPos())
+    item:spawn(LocalPlayer():getItemDropPos())
 end)
 ```
 
@@ -3288,7 +3383,7 @@ Triggered whenever an item function is executed by a player.
 ```lua
 -- Log item function usage for analytics.
 hook.Add("ItemFunctionCalled", "TrackItemUse", function(item, action, client, entity, result)
-lia.log.add(client, "item_use", item.uniqueID, action)
+    lia.log.add(client, "item_use", item.uniqueID, action)
 end)
 ```
 
@@ -3312,7 +3407,7 @@ Runs after an item successfully moves between inventories.
 ```lua
 -- Notify the player about the transfer result.
 hook.Add("ItemTransfered", "NotifyTransfer", function(context)
-context.client:notify("Item moved!")
+    context.client:notify("Item moved!")
 end)
 ```
 
@@ -3338,7 +3433,9 @@ Called when a character ragdolls or is forced to fall over.
 ```lua
 -- Apply a stun effect when knocked down.
 hook.Add("OnCharFallover", "ApplyStun", function(client, _, forced)
-if forced then client:setAction("stunned", 3) end
+    if forced then
+        client:setAction("stunned", 3)
+    end
 end)
 ```
 
@@ -3363,7 +3460,7 @@ Called when a character is kicked from the server.
 ```lua
 -- Record the kick reason.
 hook.Add("OnCharKick", "LogKickReason", function(char, client)
-print(char:getName(), "was kicked")
+    print(char:getName(), "was kicked")
 end)
 ```
 
@@ -3387,8 +3484,8 @@ Called when a character is permanently killed.
 **Example:**
 ```lua
 -- Announce permadeath in chat.
-hook.Add('OnCharPermakilled', 'AnnouncePK', function(char, time)
-PrintMessage(HUD_PRINTTALK, char:getName() .. ' has met their end!')
+hook.Add("OnCharPermakilled", "AnnouncePK", function(char, time)
+    PrintMessage(HUD_PRINTTALK, char:getName() .. " has met their end!")
 end)
 ```
 
@@ -3411,8 +3508,8 @@ Called clientside when your character recognizes another.
 **Example:**
 ```lua
 -- Play a sound whenever someone becomes recognized.
-hook.Add('OnCharRecognized', 'PlayRecognizeSound', function(client)
-surface.PlaySound('buttons/button17.wav')
+hook.Add("OnCharRecognized", "PlayRecognizeSound", function(client)
+    surface.PlaySound("buttons/button17.wav")
 end)
 ```
 
@@ -3441,8 +3538,8 @@ Called after a character buys from or sells to a vendor.
 **Example:**
 ```lua
 -- Log vendor transactions to the console.
-hook.Add('OnCharTradeVendor', 'LogVendorTrade', function(client, vendor, item, selling)
-print(client:Nick(), selling and 'sold' or 'bought', item and item:getName() or 'unknown')
+hook.Add("OnCharTradeVendor", "LogVendorTrade", function(client, vendor, item, selling)
+    print(client:Nick(), selling and "sold" or "bought", item and item:getName() or "unknown")
 end)
 ```
 
@@ -3467,8 +3564,10 @@ Called when a ragdoll entity is created for a player.
 **Example:**
 ```lua
 -- Tint death ragdolls red.
-hook.Add('OnCreatePlayerRagdoll', 'RedRagdoll', function(client, ent, dead)
-if dead then ent:SetColor(Color(255,0,0)) end
+hook.Add("OnCreatePlayerRagdoll", "RedRagdoll", function(client, ent, dead)
+    if dead then
+        ent:SetColor(Color(255, 0, 0))
+    end
 end)
 ```
 
@@ -3493,8 +3592,10 @@ Called when both the player's inventory and storage panels are created.
 **Example:**
 ```lua
 -- Add a custom tab to storage windows.
-hook.Add('OnCreateStoragePanel', 'AddSortTab', function(localPanel, storagePanel, storage)
-storagePanel:AddTab('Sort', function() return vgui.Create('liaStorageSort') end)
+hook.Add("OnCreateStoragePanel", "AddSortTab", function(localPanel, storagePanel, storage)
+    storagePanel:AddTab("Sort", function()
+        return vgui.Create("liaStorageSort")
+    end)
 end)
 ```
 
@@ -3518,10 +3619,10 @@ Called when a new item instance is placed into an inventory.
 **Example:**
 ```lua
 -- Play a sound when ammo is picked up.
-hook.Add('OnItemAdded', 'AmmoPickupSound', function(ply, item)
-if item.category == 'ammo' then
-ply:EmitSound('items/ammo_pickup.wav')
-end
+hook.Add("OnItemAdded", "AmmoPickupSound", function(ply, item)
+    if item.category == "ammo" then
+        ply:EmitSound("items/ammo_pickup.wav")
+    end
 end)
 ```
 
@@ -3545,8 +3646,8 @@ Called when a new item instance table is initialized.
 **Example:**
 ```lua
 -- Set custom data on freshly made items.
-hook.Add('OnItemCreated', 'InitCustomData', function(item)
-item:setData('born', os.time())
+hook.Add("OnItemCreated", "InitCustomData", function(item)
+    item:setData("born", os.time())
 end)
 ```
 
@@ -3569,8 +3670,10 @@ Called when an item entity has been spawned in the world.
 **Example:**
 ```lua
 -- Play a sound when rare items appear.
-hook.Add('OnItemSpawned', 'RareSpawnSound', function(itemEnt)
-if itemEnt.rare then itemEnt:EmitSound('items/ammo_pickup.wav') end
+hook.Add("OnItemSpawned", "RareSpawnSound", function(itemEnt)
+    if itemEnt.rare then
+        itemEnt:EmitSound("items/ammo_pickup.wav")
+    end
 end)
 ```
 
@@ -3594,8 +3697,8 @@ Called when the vendor dialog panel is opened.
 **Example:**
 ```lua
 -- Automatically switch to the buy tab.
-hook.Add('OnOpenVendorMenu', 'DefaultBuyTab', function(panel, vendor)
-panel:openTab('Buy')
+hook.Add("OnOpenVendorMenu", "DefaultBuyTab", function(panel, vendor)
+    panel:openTab("Buy")
 end)
 ```
 
@@ -3619,8 +3722,8 @@ Called after a player picks up a money entity.
 **Example:**
 ```lua
 -- Reward an achievement for looting money.
-hook.Add('OnPickupMoney', 'MoneyAchievement', function(client, ent)
-client:addProgress('rich', ent:getAmount())
+hook.Add("OnPickupMoney", "MoneyAchievement", function(client, ent)
+    client:addProgress("rich", ent:getAmount())
 end)
 ```
 
@@ -3647,8 +3750,10 @@ Fired when a scripted animation sequence begins.
 **Example:**
 ```lua
 -- Freeze the player during the sequence.
-hook.Add('OnPlayerEnterSequence', 'FreezeDuringSeq', function(client, seq, callback, time, noFreeze)
-if not noFreeze then client:Freeze(true) end
+hook.Add("OnPlayerEnterSequence", "FreezeDuringSeq", function(client, seq, callback, time, noFreeze)
+    if not noFreeze then
+        client:Freeze(true)
+    end
 end)
 ```
 
@@ -3675,8 +3780,8 @@ Runs after a player has interacted with an item.
 **Example:**
 ```lua
 -- Send analytics for item usage.
-hook.Add('OnPlayerInteractItem', 'Analytics', function(client, action, item, result, data)
-lia.analytics.log(client, action, item.uniqueID)
+hook.Add("OnPlayerInteractItem", "Analytics", function(client, action, item, result, data)
+    lia.analytics.log(client, action, item.uniqueID)
 end)
 ```
 
@@ -3701,8 +3806,10 @@ Called when a player changes to a new class.
 **Example:**
 ```lua
 -- Give class specific weapons.
-hook.Add('OnPlayerJoinClass', 'ClassWeapons', function(client, class, oldClass)
-for _, wep in ipairs(class.weapons or {}) do client:Give(wep) end
+hook.Add("OnPlayerJoinClass", "ClassWeapons", function(client, class, oldClass)
+    for _, wep in ipairs(class.weapons or {}) do
+        client:Give(wep)
+    end
 end)
 ```
 
@@ -3725,8 +3832,8 @@ Fired when a scripted animation sequence ends for a player.
 **Example:**
 ```lua
 -- Unfreeze the player after the sequence.
-hook.Add('OnPlayerLeaveSequence', 'UnfreezeAfterSeq', function(client)
-client:Freeze(false)
+hook.Add("OnPlayerLeaveSequence", "UnfreezeAfterSeq", function(client)
+    client:Freeze(false)
 end)
 ```
 
@@ -3749,8 +3856,10 @@ Called if a stackable item is removed unexpectedly.
 **Example:**
 ```lua
 -- Warn players when their ammo stack disappears.
-hook.Add('OnPlayerLostStackItem', 'WarnLostAmmo', function(item)
-if item.category == 'ammo' then print('Ammo stack lost!') end
+hook.Add("OnPlayerLostStackItem", "WarnLostAmmo", function(item)
+    if item.category == "ammo" then
+        print("Ammo stack lost!")
+    end
 end)
 ```
 
@@ -3775,8 +3884,10 @@ Occurs right before a player's class changes.
 **Example:**
 ```lua
 -- Prevent switching while in combat.
-hook.Add('OnPlayerSwitchClass', 'NoCombatSwap', function(client, class, oldClass)
-if client:getNetVar('inCombat') then return false end
+hook.Add("OnPlayerSwitchClass", "NoCombatSwap", function(client, class, oldClass)
+    if client:getNetVar("inCombat") then
+        return false
+    end
 end)
 ```
 
@@ -3803,8 +3914,8 @@ Called when the UI asks to move an item between inventories.
 **Example:**
 ```lua
 -- Validate transfers before sending to the server.
-hook.Add('OnRequestItemTransfer', 'ValidateTransfer', function(panel, itemID, invID, x, y)
-return itemID ~= 0 -- block invalid ids
+hook.Add("OnRequestItemTransfer", "ValidateTransfer", function(panel, itemID, invID, x, y)
+    return itemID ~= 0 -- block invalid ids
 end)
 ```
 
@@ -3827,8 +3938,8 @@ Called when map persistence data is loaded.
 **Example:**
 ```lua
 -- Verify entities when the map reloads.
-hook.Add('PersistenceLoad', 'CheckPersistent', function(name)
-print('Loading persistence file', name)
+hook.Add("PersistenceLoad", "CheckPersistent", function(name)
+    print("Loading persistence file", name)
 end)
 ```
 
@@ -3852,8 +3963,8 @@ Occurs when a player successfully opens a vendor.
 **Example:**
 ```lua
 -- Track how often players browse vendors.
-hook.Add('PlayerAccessVendor', 'VendorAnalytics', function(client, vendor)
-lia.log.add(client, 'vendor_open', vendor:GetClass())
+hook.Add("PlayerAccessVendor", "VendorAnalytics", function(client, vendor)
+    lia.log.add(client, "vendor_open", vendor:GetClass())
 end)
 ```
 
@@ -3876,10 +3987,10 @@ Called when a player regenerates stamina points.
 **Example:**
 ```lua
 -- Print the player's stamina amount whenever it increases.
-hook.Add('PlayerStaminaGained', 'PrintStaminaGain', function(client)
-if client == LocalPlayer() then
-print('Stamina:', client:getLocalVar('stamina'))
-end
+hook.Add("PlayerStaminaGained", "PrintStaminaGain", function(client)
+    if client == LocalPlayer() then
+        print("Stamina:", client:getLocalVar("stamina"))
+    end
 end)
 ```
 
@@ -3902,10 +4013,10 @@ Called when a player's stamina decreases.
 **Example:**
 ```lua
 -- Play a sound when the player runs out of stamina.
-hook.Add('PlayerStaminaLost', 'TiredSound', function(client)
-if client:getLocalVar('stamina', 0) <= 0 then
-client:EmitSound('player/suit_denydevice.wav')
-end
+hook.Add("PlayerStaminaLost", "TiredSound", function(client)
+    if client:getLocalVar("stamina", 0) <= 0 then
+        client:EmitSound("player/suit_denydevice.wav")
+    end
 end)
 ```
 
@@ -3929,8 +4040,8 @@ Fires when a player lands a punch with the fists weapon.
 **Example:**
 ```lua
 -- Play a custom sound on punch.
-hook.Add('PlayerThrowPunch', 'PunchSound', function(client, trace)
-client:EmitSound('npc/vort/claw_swing1.wav')
+hook.Add("PlayerThrowPunch", "PunchSound", function(client, trace)
+    client:EmitSound("npc/vort/claw_swing1.wav")
 end)
 ```
 
@@ -3954,8 +4065,8 @@ Called each frame after the inventory panel draws.
 **Example:**
 ```lua
 -- Draw a watermark over the inventory.
-hook.Add('PostDrawInventory', 'InventoryWatermark', function(panel)
-draw.SimpleText('MY SERVER', 'DermaLarge', panel:GetWide()-100, 8, color_white)
+hook.Add("PostDrawInventory", "InventoryWatermark", function(panel)
+    draw.SimpleText("MY SERVER", "DermaLarge", panel:GetWide() - 100, 8, color_white)
 end)
 ```
 
@@ -3980,8 +4091,10 @@ Called just before a player interacts with an item.
 **Example:**
 ```lua
 -- Deny using keys on locked chests.
-hook.Add('PrePlayerInteractItem', 'BlockChestKeys', function(client, action, item)
-if action == 'use' and item.uniqueID == 'key' and client.lockedChest then return false end
+hook.Add("PrePlayerInteractItem", "BlockChestKeys", function(client, action, item)
+    if action == "use" and item.uniqueID == "key" and client.lockedChest then
+        return false
+    end
 end)
 ```
 
@@ -4004,8 +4117,8 @@ Allows modules to define who can access a bag inventory.
 **Example:**
 ```lua
 -- Only the bag owner may open it.
-hook.Add('SetupBagInventoryAccessRules', 'OwnerOnlyBags', function(inv)
-inv:allowAccess('transfer', inv:getOwner())
+hook.Add("SetupBagInventoryAccessRules", "OwnerOnlyBags", function(inv)
+    inv:allowAccess("transfer", inv:getOwner())
 end)
 ```
 
@@ -4028,8 +4141,8 @@ Runs before the gamemode initializes its database connection.
 **Example:**
 ```lua
 -- Register additional tables.
-hook.Add('SetupDatabase', 'AddExtraTables', function()
-lia.db.query('CREATE TABLE IF NOT EXISTS mytable(id INT)')
+hook.Add("SetupDatabase", "AddExtraTables", function()
+    lia.db.query("CREATE TABLE IF NOT EXISTS mytable(id INT)")
 end)
 ```
 
@@ -4054,8 +4167,10 @@ Determines if an item can move in or out of a storage entity.
 **Example:**
 ```lua
 -- Prevent weapons from being stored in car trunks.
-hook.Add('StorageCanTransferItem', 'NoWeaponsInCars', function(client, storage, item)
-if storage.isCar and item.category == 'weapons' then return false end
+hook.Add("StorageCanTransferItem", "NoWeaponsInCars", function(client, storage, item)
+    if storage.isCar and item.category == "weapons" then
+        return false
+    end
 end)
 ```
 
@@ -4079,8 +4194,8 @@ Fired when a storage entity is removed from the world.
 **Example:**
 ```lua
 -- Drop items when a crate is destroyed.
-hook.Add('StorageEntityRemoved', 'DropContents', function(entity, inv)
-inv:dropItems(entity:GetPos())
+hook.Add("StorageEntityRemoved", "DropContents", function(entity, inv)
+    inv:dropItems(entity:GetPos())
 end)
 ```
 
@@ -4105,8 +4220,10 @@ Called when a storage entity is assigned an inventory.
 **Example:**
 ```lua
 -- Send a notification when storage is initialized.
-hook.Add('StorageInventorySet', 'NotifyStorage', function(entity, inv, isCar)
-if isCar then print('Trunk inventory ready') end
+hook.Add("StorageInventorySet", "NotifyStorage", function(entity, inv, isCar)
+    if isCar then
+        print("Trunk inventory ready")
+    end
 end)
 ```
 
@@ -4130,8 +4247,8 @@ Called clientside when a storage menu is opened.
 **Example:**
 ```lua
 -- Display storage name in the chat.
-hook.Add('StorageOpen', 'AnnounceStorage', function(entity, isCar)
-chat.AddText('Opened storage:', entity:GetClass())
+hook.Add("StorageOpen", "AnnounceStorage", function(entity, isCar)
+    chat.AddText("Opened storage:", entity:GetClass())
 end)
 ```
 
@@ -4155,8 +4272,8 @@ Called when a storage's contents are loaded from disk.
 **Example:**
 ```lua
 -- Log how many items were restored.
-hook.Add('StorageRestored', 'PrintRestore', function(storage, inv)
-print('Storage restored with', #inv:getItems(), 'items')
+hook.Add("StorageRestored", "PrintRestore", function(storage, inv)
+    print("Storage restored with", #inv:getItems(), "items")
 end)
 ```
 
@@ -4179,8 +4296,8 @@ Called clientside when you must enter a storage password.
 **Example:**
 ```lua
 -- Auto-fill a remembered password.
-hook.Add('StorageUnlockPrompt', 'AutoFill', function(entity)
-return '1234' -- automatically send this string
+hook.Add("StorageUnlockPrompt", "AutoFill", function(entity)
+    return "1234" -- automatically send this string
 end)
 ```
 
@@ -4204,7 +4321,7 @@ Called when a vendor's allowed classes are updated.
 ```lua
 -- React to class access changes.
 hook.Add("VendorClassUpdated", "LogVendorClassChange", function(vendor, id, allowed)
-print("Vendor class", id, "now", allowed and "allowed" or "blocked")
+    print("Vendor class", id, "now", allowed and "allowed" or "blocked")
 end)
 ```
 
@@ -4228,7 +4345,7 @@ Called after a delay when a vendor's data is edited.
 ```lua
 -- Log which key changed.
 hook.Add("VendorEdited", "PrintVendorEdit", function(vendor, key)
-print("Vendor", vendor:GetClass(), "edited key", key)
+    print("Vendor", vendor:GetClass(), "edited key", key)
 end)
 ```
 
@@ -4252,7 +4369,7 @@ Called when a player exits from interacting with a vendor.
 ```lua
 -- Notify the player when they leave a vendor.
 hook.Add("VendorExited", "PrintVendorExit", function()
-print("Stopped interacting with vendor")
+    print("Stopped interacting with vendor")
 end)
 ```
 
@@ -4276,7 +4393,7 @@ Called when a vendor's allowed factions are updated.
 ```lua
 -- Print updated faction permissions.
 hook.Add("VendorFactionUpdated", "LogVendorFactionUpdate", function(vendor, id, allowed)
-print("Vendor faction", id, "now", allowed and "allowed" or "blocked")
+    print("Vendor faction", id, "now", allowed and "allowed" or "blocked")
 end)
 ```
 
@@ -4300,7 +4417,7 @@ Called when a vendor's item max stock value changes.
 ```lua
 -- Log stock limit changes.
 hook.Add("VendorItemMaxStockUpdated", "LogVendorStockLimits", function(vendor, itemType, value)
-print("Vendor stock limit for", itemType, "set to", value)
+    print("Vendor stock limit for", itemType, "set to", value)
 end)
 ```
 
@@ -4324,7 +4441,7 @@ Called when a vendor's item mode is changed.
 ```lua
 -- Print the new mode value.
 hook.Add("VendorItemModeUpdated", "PrintVendorMode", function(vendor, itemType, value)
-print("Vendor mode for", itemType, "changed to", value)
+    print("Vendor mode for", itemType, "changed to", value)
 end)
 ```
 
@@ -4348,7 +4465,7 @@ Called when a vendor's item price is changed.
 ```lua
 -- Print the new item price.
 hook.Add("VendorItemPriceUpdated", "LogVendorItemPrice", function(vendor, itemType, value)
-print("Vendor price for", itemType, "is now", value)
+    print("Vendor price for", itemType, "is now", value)
 end)
 ```
 
@@ -4372,7 +4489,7 @@ Called when a vendor's item stock value changes.
 ```lua
 -- Log remaining stock for the item.
 hook.Add("VendorItemStockUpdated", "LogVendorItemStock", function(vendor, itemType, value)
-print("Vendor stock for", itemType, "is now", value)
+    print("Vendor stock for", itemType, "is now", value)
 end)
 ```
 
@@ -4396,7 +4513,7 @@ Called when a vendor's available money changes.
 ```lua
 -- Print the vendor's new money amount.
 hook.Add("VendorMoneyUpdated", "LogVendorMoney", function(vendor, money, oldMoney)
-print("Vendor money changed from", oldMoney, "to", money)
+    print("Vendor money changed from", oldMoney, "to", money)
 end)
 ```
 
@@ -4420,7 +4537,7 @@ Called when a vendor menu is opened on the client.
 ```lua
 -- Print which vendor was opened.
 hook.Add("VendorOpened", "PrintVendorOpened", function(vendor)
-print("Opened vendor", vendor:GetClass())
+    print("Opened vendor", vendor:GetClass())
 end)
 ```
 
@@ -4444,7 +4561,7 @@ Called when vendor synchronization data is received.
 ```lua
 -- Print a message when vendor data syncs.
 hook.Add("VendorSynchronized", "LogVendorSync", function(vendor)
-print("Vendor", vendor:GetClass(), "synchronized")
+    print("Vendor", vendor:GetClass(), "synchronized")
 end)
 ```
 
@@ -4468,8 +4585,8 @@ Called when a player attempts to trade with a vendor.
 ```lua
 -- Log all vendor trades to the console.
 hook.Add("VendorTradeEvent", "LogVendorTrades", function(client, entity, uniqueID, isSellingToVendor)
-local action = isSellingToVendor and "sold" or "bought"
-print(client:Name() .. " " .. action .. " " .. uniqueID .. " with " .. entity:GetClass())
+    local action = isSellingToVendor and "sold" or "bought"
+    print(client:Name() .. " " .. action .. " " .. uniqueID .. " with " .. entity:GetClass())
 end)
 ```
 
@@ -4493,9 +4610,9 @@ Returns an alternate model path for a dropped item.
 ```lua
 -- Replace drop model for weapons.
 hook.Add("getItemDropModel", "CustomDropModelForWeapons", function(itemTable, entity)
-if itemTable.category == "Weapon" then
-return "models/weapons/w_rif_ak47.mdl"
-end
+    if itemTable.category == "Weapon" then
+        return "models/weapons/w_rif_ak47.mdl"
+    end
 end)
 ```
 
@@ -4519,13 +4636,13 @@ Allows modules to override a vendor item's price dynamically.
 ```lua
 -- Increase price for rare items when buying from the vendor.
 hook.Add("getPriceOverride", "DynamicPricing", function(vendor, uniqueID, price, isSellingToVendor)
-if uniqueID == "rare_item" then
-if isSellingToVendor then
-return math.floor(price * 0.75)
-else
-return math.floor(price * 1.25)
-end
-end
+    if uniqueID == "rare_item" then
+        if isSellingToVendor then
+            return math.floor(price * 0.75)
+        else
+            return math.floor(price * 1.25)
+        end
+    end
 end)
 ```
 
@@ -4549,9 +4666,9 @@ Checks if a character is fake recognized rather than truly known.
 ```lua
 -- Flag suspicious characters as fake.
 hook.Add("isCharFakeRecognized", "DetectFakeCharacters", function(character, id)
-if character:getData("suspicious", false) then
-return true
-end
+    if character:getData("suspicious", false) then
+        return true
+    end
 end)
 ```
 
@@ -4575,7 +4692,7 @@ Determines whether one character recognizes another.
 ```lua
 -- Only recognize characters from the same faction.
 hook.Add("isCharRecognized", "ValidateCharacterRecognition", function(character, id)
-return character:getFaction() == lia.char.loaded[id]:getFaction()
+    return character:getFaction() == lia.char.loaded[id]:getFaction()
 end)
 ```
 
@@ -4599,8 +4716,8 @@ Determines if a chat type counts toward recognition.
 ```lua
 -- Mark admin chat as recognized to reveal player names.
 hook.Add("isRecognizedChatType", "ValidateRecognitionChat", function(chatType)
-local recognized = {"admin", "system", "recognition"}
-return table.HasValue(recognized, chatType)
+    local recognized = { "admin", "system", "recognition" }
+    return table.HasValue(recognized, chatType)
 end)
 ```
 
@@ -4624,7 +4741,7 @@ Determines whether an entity can be used as trunk storage.
 ```lua
 -- Only vehicles are valid trunk containers.
 hook.Add("isSuitableForTrunk", "AllowOnlyCars", function(entity)
-return entity:IsVehicle()
+    return entity:IsVehicle()
 end)
 ```
 
@@ -4650,10 +4767,10 @@ Determines if a player is allowed to earn salary.
 ```lua
 -- Prints a message when CanPlayerEarnSalary is triggered
 hook.Add("CanPlayerEarnSalary", "RestrictSalaryToActivePlayers", function(client, faction, class)
-if not client:isActive() then
-return false -- Inactive players do not earn salary
-end
-return true
+    if not client:isActive() then
+        return false -- Inactive players do not earn salary
+    end
+    return true
 end)
 ```
 
@@ -4679,9 +4796,9 @@ Determines whether a player can join a certain class. Return `false` to block.
 ```lua
 -- Prints a message when CanPlayerJoinClass is triggered
 hook.Add("CanPlayerJoinClass", "RestrictEliteClass", function(client, class, info)
-if class == CLASS_ELITE and not client:hasPermission("join_elite") then
-return false
-end
+    if class == CLASS_ELITE and not client:hasPermission("join_elite") then
+        return false
+    end
 end)
 ```
 
@@ -4706,10 +4823,10 @@ Determines if a player can use a specific command. Return `false` to block usage
 ```lua
 -- Prints a message when CanPlayerUseCommand is triggered
 hook.Add("CanPlayerUseCommand", "BlockSensitiveCommands", function(client, command)
-local blockedCommands = {"shutdown", "restart"}
-if table.HasValue(blockedCommands, command) and not client:isSuperAdmin() then
-return false
-end
+    local blockedCommands = { "shutdown", "restart" }
+    if table.HasValue(blockedCommands, command) and not client:isSuperAdmin() then
+        return false
+    end
 end)
 ```
 
@@ -4735,10 +4852,10 @@ Determines if a player is allowed to use a door entity, such as opening, locking
 ```lua
 -- Prints a message when CanPlayerUseDoor is triggered
 hook.Add("CanPlayerUseDoor", "AllowOnlyOwners", function(client, door, access)
-if access == DOOR_LOCK and door:getOwner() ~= client then
-return false -- Only the owner can lock the door
-end
-return true
+    if access == DOOR_LOCK and door:getOwner() ~= client then
+        return false -- Only the owner can lock the door
+    end
+    return true
 end)
 ```
 
@@ -4762,13 +4879,13 @@ Used during character cleanup routines for additional steps when removing or tra
 ```lua
 -- Prints a message when CharCleanUp is triggered
 hook.Add("CharCleanUp", "RemoveTemporaryItems", function(character)
-local inventory = character:getInv()
-for _, item in ipairs(inventory:getItems()) do
-if item:isTemporary() then
-inventory:removeItem(item.id)
-print("Removed temporary item:", item.name)
-end
-end
+    local inventory = character:getInv()
+    for _, item in ipairs(inventory:getItems()) do
+        if item:isTemporary() then
+            inventory:removeItem(item.id)
+            print("Removed temporary item:", item.name)
+        end
+    end
 end)
 ```
 
@@ -4792,11 +4909,11 @@ Called after a character has been restored from the database. Useful for post-re
 ```lua
 -- Prints a message when CharRestored is triggered
 hook.Add("CharRestored", "AwardWelcomePackage", function(character)
-local welcomePackage = {"welcome_pack", "starter_weapon", "basic_armor"}
-for _, itemID in ipairs(welcomePackage) do
-character:getInv():addItem(itemID)
-end
-print("Welcome package awarded to:", character:getName())
+    local welcomePackage = { "welcome_pack", "starter_weapon", "basic_armor" }
+    for _, itemID in ipairs(welcomePackage) do
+        character:getInv():addItem(itemID)
+    end
+    print("Welcome package awarded to:", character:getName())
 end)
 ```
 
@@ -4820,18 +4937,17 @@ Called when creating a default inventory for a character. Should return a [defer
 ```lua
 -- Prints a message when CreateDefaultInventory is triggered
 hook.Add("CreateDefaultInventory", "InitializeStarterInventory", function(character)
-local d = deferred.new()
-lia.inventory.new("bag")
-:next(function(inventory)
--- Add starter items
-inventory:addItem("health_potion")
-inventory:addItem("basic_sword")
-d:resolve(inventory)
-end, function(err)
-print("Failed to create inventory:", err)
-d:reject(err)
-end)
-return d
+    local d = deferred.new()
+    lia.inventory.new("bag"):next(function(inventory)
+        -- Add starter items
+        inventory:addItem("health_potion")
+        inventory:addItem("basic_sword")
+        d:resolve(inventory)
+    end, function(err)
+        print("Failed to create inventory:", err)
+        d:reject(err)
+    end)
+    return d
 end)
 ```
 
@@ -4856,23 +4972,23 @@ Client-side call when creating the graphical representation of an inventory.
 ```lua
 -- Prints a message when CreateInventoryPanel is triggered
 hook.Add("CreateInventoryPanel", "CustomInventoryUI", function(inventory, parent)
-local panel = vgui.Create("DPanel", parent)
-panel:SetSize(400, 600)
-panel.Paint = function(self, w, h)
-draw.RoundedBox(8, 0, 0, w, h, Color(30, 30, 30, 200))
-end
-local itemList = vgui.Create("DScrollPanel", panel)
-itemList:Dock(FILL)
-for _, item in ipairs(inventory:getItems()) do
-local itemPanel = vgui.Create("DButton", itemList)
-itemPanel:SetText(item.name)
-itemPanel:Dock(TOP)
-itemPanel:SetTall(40)
-itemPanel.DoClick = function()
-print("Selected item:", item.name)
-end
-end
-return panel
+    local panel = vgui.Create("DPanel", parent)
+    panel:SetSize(400, 600)
+    panel.Paint = function(self, w, h)
+        draw.RoundedBox(8, 0, 0, w, h, Color(30, 30, 30, 200))
+    end
+    local itemList = vgui.Create("DScrollPanel", panel)
+    itemList:Dock(FILL)
+    for _, item in ipairs(inventory:getItems()) do
+        local itemPanel = vgui.Create("DButton", itemList)
+        itemPanel:SetText(item.name)
+        itemPanel:Dock(TOP)
+        itemPanel:SetTall(40)
+        itemPanel.DoClick = function()
+            print("Selected item:", item.name)
+        end
+    end
+    return panel
 end)
 ```
 
@@ -4896,15 +5012,15 @@ Creates a timer to manage player salary.
 ```lua
 -- Prints a message when CreateSalaryTimer is triggered
 hook.Add("CreateSalaryTimer", "SetupSalaryTimer", function(client)
-timer.Create("SalaryTimer_" .. client:SteamID(), 60, 0, function()
-if IsValid(client) and MODULE:CanPlayerEarnSalary(client, client:getFaction(), client:getClass()) then
-local salary = MODULE:GetSalaryAmount(client, client:getFaction(), client:getClass())
-client:addMoney(salary)
-client:ChatPrint("You have received your salary of $" .. salary)
-print("Salary of $" .. salary .. " awarded to:", client:Name())
-end
-end)
-print("Salary timer created for:", client:Name())
+    timer.Create("SalaryTimer_" .. client:SteamID(), 60, 0, function()
+        if IsValid(client) and MODULE:CanPlayerEarnSalary(client, client:getFaction(), client:getClass()) then
+            local salary = MODULE:GetSalaryAmount(client, client:getFaction(), client:getClass())
+            client:addMoney(salary)
+            client:ChatPrint("You have received your salary of $" .. salary)
+            print("Salary of $" .. salary .. " awarded to:", client:Name())
+        end
+    end)
+    print("Salary timer created for:", client:Name())
 end)
 ```
 
@@ -4929,9 +5045,9 @@ Called when modules include submodules. Useful for advanced module handling or d
 ```lua
 -- Prints a message when DoModuleIncludes is triggered
 hook.Add("DoModuleIncludes", "TrackModuleDependencies", function(path, module)
-print("Including submodule from path:", path)
-module.dependencies = module.dependencies or {}
-table.insert(module.dependencies, "base_module")
+    print("Including submodule from path:", path)
+    module.dependencies = module.dependencies or {}
+    table.insert(module.dependencies, "base_module")
 end)
 ```
 
@@ -4957,9 +5073,9 @@ Retrieves a default description for a character during creation. Return `(defaul
 ```lua
 -- Prints a message when GetDefaultCharDesc is triggered
 hook.Add("GetDefaultCharDesc", "CitizenDefaultDesc", function(client, faction)
-if faction == FACTION_CITIZEN then
-return "A hardworking member of society.", true
-end
+    if faction == FACTION_CITIZEN then
+        return "A hardworking member of society.", true
+    end
 end)
 ```
 
@@ -4986,9 +5102,9 @@ Retrieves a default name for a character during creation. Return `(defaultName, 
 ```lua
 -- Prints a message when GetDefaultCharName is triggered
 hook.Add("GetDefaultCharName", "PoliceDefaultName", function(client, faction, data)
-if faction == FACTION_POLICE then
-return "Officer " .. data.lastName or "Smith", true
-end
+    if faction == FACTION_POLICE then
+        return "Officer " .. data.lastName or "Smith", true
+    end
 end)
 ```
 
@@ -5014,9 +5130,9 @@ Retrieves the amount of salary a player should receive.
 ```lua
 -- Prints a message when GetSalaryAmount is triggered
 hook.Add("GetSalaryAmount", "CalculateDynamicSalary", function(client, faction, class)
-local baseSalary = faction.baseSalary or 1000
-local classBonus = class.salaryBonus or 0
-return baseSalary + classBonus
+    local baseSalary = faction.baseSalary or 1000
+    local classBonus = class.salaryBonus or 0
+    return baseSalary + classBonus
 end)
 ```
 
@@ -5042,11 +5158,11 @@ Retrieves the salary limit for a player.
 ```lua
 -- Prints a message when GetSalaryLimit is triggered
 hook.Add("GetSalaryLimit", "SetSalaryLimitsBasedOnRole", function(client, faction, class)
-if faction.name == "Police" then
-return 5000 -- Police have a higher salary limit
-elseif faction.name == "Citizen" then
-return 2000
-end
+    if faction.name == "Police" then
+        return 5000 -- Police have a higher salary limit
+    elseif faction.name == "Citizen" then
+        return 2000
+    end
 end)
 ```
 
@@ -5070,12 +5186,12 @@ Called when `lia.config` is fully initialized.
 ```lua
 -- Prints a message when this hook is triggered
 function MODULE:InitializedConfig()
-if lia.config.enableSpecialFeatures then
-lia.features.enable()
-print("Special features have been enabled.")
-else
-print("Special features are disabled in the config.")
-end
+    if lia.config.enableSpecialFeatures then
+        lia.features.enable()
+        print("Special features have been enabled.")
+    else
+        print("Special features are disabled in the config.")
+    end
 end
 ```
 
@@ -5099,16 +5215,16 @@ Called once all item modules have been loaded from a directory.
 ```lua
 -- Prints a message when InitializedItems is triggered
 hook.Add("InitializedItems", "SetupSpecialItems", function()
-local specialItem = lia.item.create({
-uniqueID = "magic_ring",
-name = "Magic Ring",
-description = "A ring imbued with magical properties.",
-onUse = function(self, player)
-player:SetNoDraw(true)
-print(player:Name() .. " has activated the Magic Ring!")
-end
-})
-print("Special items have been set up.")
+    local specialItem = lia.item.create({
+        uniqueID = "magic_ring",
+        name = "Magic Ring",
+        description = "A ring imbued with magical properties.",
+        onUse = function(self, player)
+            player:SetNoDraw(true)
+            print(player:Name() .. " has activated the Magic Ring!")
+        end,
+    })
+    print("Special items have been set up.")
 end)
 ```
 
@@ -5132,8 +5248,8 @@ Called after all modules are fully initialized.
 ```lua
 -- Prints a message when InitializedModules is triggered
 hook.Add("InitializedModules", "FinalizeModuleSetup", function()
-lia.modules.finalizeSetup()
-print("All modules have been fully initialized.")
+    lia.modules.finalizeSetup()
+    print("All modules have been fully initialized.")
 end)
 ```
 
@@ -5157,7 +5273,7 @@ Called when `lia.option` is fully initialized.
 ```lua
 -- Prints a message when this hook is triggered
 function MODULE:InitializedOptions()
-LocalPlayer():ChatPrint("LOADED OPTIONS!")
+    LocalPlayer():ChatPrint("LOADED OPTIONS!")
 end
 ```
 
@@ -5181,8 +5297,8 @@ Called after the schema has finished initializing.
 ```lua
 -- Prints a message when InitializedSchema is triggered
 hook.Add("InitializedSchema", "SchemaReadyNotification", function()
-print("Schema has been successfully initialized.")
-lia.notifications.broadcast("Welcome to the server! The schema is now active.")
+    print("Schema has been successfully initialized.")
+    lia.notifications.broadcast("Welcome to the server! The schema is now active.")
 end)
 ```
 
@@ -5208,9 +5324,12 @@ Called when a player attempts to lock a door.
 ```lua
 -- Prints a message when KeyLock is triggered
 hook.Add("KeyLock", "LogDoorLock", function(owner, entity, time)
-entity:setLocked(true)
-lia.log.write("DoorLock", owner:Name() .. " locked door ID: " .. entity:EntIndex() .. " for " .. time .. " seconds.")
-print(owner:Name() .. " locked door ID:", entity:EntIndex(), "for", time, "seconds.")
+    entity:setLocked(true)
+    lia.log.write(
+        "DoorLock",
+        owner:Name() .. " locked door ID: " .. entity:EntIndex() .. " for " .. time .. " seconds."
+    )
+    print(owner:Name() .. " locked door ID:", entity:EntIndex(), "for", time, "seconds.")
 end)
 ```
 
@@ -5236,9 +5355,12 @@ Called when a player attempts to unlock a door.
 ```lua
 -- Prints a message when KeyUnlock is triggered
 hook.Add("KeyUnlock", "LogDoorUnlock", function(owner, entity, time)
-entity:setLocked(false)
-lia.log.write("DoorUnlock", owner:Name() .. " unlocked door ID: " .. entity:EntIndex() .. " after " .. time .. " seconds.")
-print(owner:Name() .. " unlocked door ID:", entity:EntIndex(), "after", time, "seconds.")
+    entity:setLocked(false)
+    lia.log.write(
+        "DoorUnlock",
+        owner:Name() .. " unlocked door ID: " .. entity:EntIndex() .. " after " .. time .. " seconds."
+    )
+    print(owner:Name() .. " unlocked door ID:", entity:EntIndex(), "after", time, "seconds.")
 end)
 ```
 
@@ -5262,9 +5384,9 @@ Called after all essential DB tables have been loaded.
 ```lua
 -- Prints a message when LiliaTablesLoaded is triggered
 hook.Add("LiliaTablesLoaded", "InitializeGameState", function()
-lia.gameState = lia.gameState or {}
-lia.gameState.activeEvents = {}
-print("All essential Lilia tables have been loaded. Game state initialized.")
+    lia.gameState = lia.gameState or {}
+    lia.gameState.activeEvents = {}
+    print("All essential Lilia tables have been loaded. Game state initialized.")
 end)
 ```
 
@@ -5288,17 +5410,17 @@ Called after an item has been registered. Useful for customizing item behavior o
 ```lua
 -- Prints a message when OnItemRegistered is triggered
 hook.Add("OnItemRegistered", "AddItemDurability", function(item)
-if item.uniqueID == "sword_basic" then
-item.durability = 100
-item.onUse = function(self)
-self.durability = self.durability - 10
-if self.durability <= 0 then
-self:destroy()
-print("Your sword has broken!")
-end
-end
-print("Durability added to:", item.name)
-end
+    if item.uniqueID == "sword_basic" then
+        item.durability = 100
+        item.onUse = function(self)
+            self.durability = self.durability - 10
+            if self.durability <= 0 then
+                self:destroy()
+                print("Your sword has broken!")
+            end
+        end
+        print("Durability added to:", item.name)
+    end
 end)
 ```
 
@@ -5322,9 +5444,9 @@ Called before the faction tables are loaded. Good spot for data setup prior to f
 ```lua
 -- Prints a message when OnLoadTables is triggered
 hook.Add("OnLoadTables", "SetupFactionDefaults", function()
-lia.factions = lia.factions or {}
-lia.factions.defaultPermissions = {canUseWeapons = true, canAccessBank = false}
-print("Faction defaults have been set up.")
+    lia.factions = lia.factions or {}
+    lia.factions.defaultPermissions = { canUseWeapons = true, canAccessBank = false }
+    print("Faction defaults have been set up.")
 end)
 ```
 
@@ -5348,9 +5470,17 @@ Called when MySQLOO successfully connects to the database. Use to register prepa
 ```lua
 -- Prints a message when OnMySQLOOConnected is triggered
 hook.Add("OnMySQLOOConnected", "PrepareDatabaseStatements", function()
-lia.db.prepare("insertPlayer", "INSERT INTO lia_players (_steamID, _steamName) VALUES (?, ?)", {MYSQLOO_STRING, MYSQLOO_STRING})
-lia.db.prepare("updatePlayerStats", "UPDATE lia_players SET kills = ?, deaths = ? WHERE _steamID = ?", {MYSQLOO_NUMBER, MYSQLOO_NUMBER, MYSQLOO_STRING})
-print("Prepared MySQLOO statements.")
+    lia.db.prepare(
+        "insertPlayer",
+        "INSERT INTO lia_players (_steamID, _steamName) VALUES (?, ?)",
+        { MYSQLOO_STRING, MYSQLOO_STRING }
+    )
+    lia.db.prepare(
+        "updatePlayerStats",
+        "UPDATE lia_players SET kills = ?, deaths = ? WHERE _steamID = ?",
+        { MYSQLOO_NUMBER, MYSQLOO_NUMBER, MYSQLOO_STRING }
+    )
+    print("Prepared MySQLOO statements.")
 end)
 ```
 
@@ -5377,16 +5507,16 @@ Called when a player purchases or sells a door.
 ```lua
 -- Prints a message when OnPlayerPurchaseDoor is triggered
 hook.Add("OnPlayerPurchaseDoor", "HandleDoorPurchase", function(client, entity, buying, CallOnDoorChild)
-if buying then
-client:deductMoney(entity:getPrice())
-lia.log.write("DoorPurchase", client:Name() .. " purchased door ID: " .. entity:EntIndex())
-print(client:Name() .. " purchased a door.")
-else
-client:addMoney(entity:getSellPrice())
-lia.log.write("DoorSale", client:Name() .. " sold door ID: " .. entity:EntIndex())
-print(client:Name() .. " sold a door.")
-end
-CallOnDoorChild(entity)
+    if buying then
+        client:deductMoney(entity:getPrice())
+        lia.log.write("DoorPurchase", client:Name() .. " purchased door ID: " .. entity:EntIndex())
+        print(client:Name() .. " purchased a door.")
+    else
+        client:addMoney(entity:getSellPrice())
+        lia.log.write("DoorSale", client:Name() .. " sold door ID: " .. entity:EntIndex())
+        print(client:Name() .. " sold a door.")
+    end
+    CallOnDoorChild(entity)
 end)
 ```
 
@@ -5414,13 +5544,13 @@ Called whenever a new log message is added. Allows for custom logic or modificat
 ```lua
 -- Prints a message when OnServerLog is triggered
 hook.Add("OnServerLog", "AlertAdminsOnHighSeverity", function(client, logType, logString, category, color)
-if category == "error" then
-for _, admin in player.Iterator() do
-if admin:isAdmin() then
-lia.notifications.send(admin, "Error Log: " .. logString, color)
-end
-end
-end
+    if category == "error" then
+        for _, admin in player.Iterator() do
+            if admin:isAdmin() then
+                lia.notifications.send(admin, "Error Log: " .. logString, color)
+            end
+        end
+    end
 end)
 ```
 
@@ -5444,9 +5574,9 @@ Called after wiping tables in the DB, typically after major resets/cleanups.
 ```lua
 -- Prints a message when OnWipeTables is triggered
 hook.Add("OnWipeTables", "ReinitializeDefaults", function()
-lia.db.execute("INSERT INTO lia_factions (name, description) VALUES ('Citizen', 'Regular inhabitants.')")
-lia.db.execute("INSERT INTO lia_classes (name, faction) VALUES ('Warrior', 'Citizen')")
-print("Database tables wiped and defaults reinitialized.")
+    lia.db.execute("INSERT INTO lia_factions (name, description) VALUES ('Citizen', 'Regular inhabitants.')")
+    lia.db.execute("INSERT INTO lia_classes (name, faction) VALUES ('Warrior', 'Citizen')")
+    print("Database tables wiped and defaults reinitialized.")
 end)
 ```
 
@@ -5473,10 +5603,10 @@ Called before a chat message is sent. Return `false` to cancel, or modify the me
 ```lua
 -- Prints a message when PlayerMessageSend is triggered
 hook.Add("PlayerMessageSend", "FilterProfanity", function(speaker, chatType, message, anonymous)
-local filteredMessage = string.gsub(message, "badword", "****")
-if filteredMessage ~= message then
-return filteredMessage
-end
+    local filteredMessage = string.gsub(message, "badword", "****")
+    if filteredMessage ~= message then
+        return filteredMessage
+    end
 end)
 ```
 
@@ -5501,9 +5631,9 @@ Called when a player's model changes.
 ```lua
 -- Prints a message when PlayerModelChanged is triggered
 hook.Add("PlayerModelChanged", "UpdatePlayerAppearance", function(client, model)
-print(client:Name() .. " changed their model to " .. model)
--- Update related appearance settings
-client:setBodygroup(1, 2) -- Example of setting a bodygroup based on the new model
+    print(client:Name() .. " changed their model to " .. model)
+    -- Update related appearance settings
+    client:setBodygroup(1, 2) -- Example of setting a bodygroup based on the new model
 end)
 ```
 
@@ -5528,11 +5658,11 @@ Called when a player attempts to use a door entity.
 ```lua
 -- Prints a message when PlayerUseDoor is triggered
 hook.Add("PlayerUseDoor", "LogDoorUsage", function(client, entity)
-print(client:Name() .. " is attempting to use door ID:", entity:EntIndex())
--- Allow or disallow based on custom conditions
-if client:isBanned() then
-return false -- Disallow use if the player is banned
-end
+    print(client:Name() .. " is attempting to use door ID:", entity:EntIndex())
+    -- Allow or disallow based on custom conditions
+    if client:isBanned() then
+        return false -- Disallow use if the player is banned
+    end
 end)
 ```
 
@@ -5556,7 +5686,7 @@ Called for registering DB prepared statements post-MySQLOO connection.
 ```lua
 -- Set up a prepared SQL statement for later use.
 hook.Add("RegisterPreparedStatements", "InitLogStatement", function()
-lia.db.prepare("insert_log", "INSERT INTO logs(text) VALUES(?)")
+    lia.db.prepare("insert_log", "INSERT INTO logs(text) VALUES(?)")
 end)
 ```
 
@@ -5580,9 +5710,9 @@ Determines whether a specific HUD bar should be drawn.
 ```lua
 -- Prints a message when ShouldBarDraw is triggered
 hook.Add("ShouldBarDraw", "HideArmorHUD", function(barName)
-if barName == "armor" then
-return false
-end
+    if barName == "armor" then
+        return false
+    end
 end)
 ```
 
@@ -5606,9 +5736,9 @@ Checks if third-person view is allowed or disabled.
 ```lua
 -- Prints a message when ShouldDisableThirdperson is triggered
 hook.Add("ShouldDisableThirdperson", "DisableForInvisibles", function(client)
-if client:isInvisible() then
-return true -- Disable third-person view when invisible
-end
+    if client:isInvisible() then
+        return true -- Disable third-person view when invisible
+    end
 end)
 ```
 
@@ -5632,9 +5762,9 @@ Determines whether all HUD bars should be hidden.
 ```lua
 -- Prints a message when ShouldHideBars is triggered
 hook.Add("ShouldHideBars", "HideHUDInCinematic", function()
-if gui.IsInCinematicMode() then
-return true
-end
+    if gui.IsInCinematicMode() then
+        return true
+    end
 end)
 ```
 
@@ -5658,12 +5788,12 @@ Called when third-person mode is toggled on or off. Allows for custom handling o
 ```lua
 -- Prints a message when thirdPersonToggled is triggered
 hook.Add("thirdPersonToggled", "NotifyThirdPersonChange", function(state)
-if state then
-chat.AddText(Color(0,255,0), "Third-person view enabled.")
-else
-chat.AddText(Color(255,0,0), "Third-person view disabled.")
-end
-print("Third-person mode toggled to:", state)
+    if state then
+        chat.AddText(Color(0, 255, 0), "Third-person view enabled.")
+    else
+        chat.AddText(Color(255, 0, 0), "Third-person view disabled.")
+    end
+    print("Third-person mode toggled to:", state)
 end)
 ```
 
@@ -5690,9 +5820,9 @@ Called when a text field is added to an F1 menu information section. Allows modu
 ```lua
 -- Change the money field label.
 hook.Add("AddTextField", "RenameMoneyField", function(section, name, label, value)
-if name == "money" then
-return section, name, "Credits", value
-end
+    if name == "money" then
+        return section, name, "Credits", value
+    end
 end)
 ```
 
@@ -5719,7 +5849,7 @@ Fired after AddTextField so other modules can react to new fields.
 ```lua
 -- Log newly added fields.
 hook.Add("F1OnAddTextField", "LogFields", function(section, name)
-print("Added field", name, "to section", section)
+    print("Added field", name, "to section", section)
 end)
 ```
 
@@ -5748,7 +5878,7 @@ Triggered after AddBarField inserts a status bar into the F1 menu.
 ```lua
 -- Prints a message when F1OnAddBarField is triggered
 hook.Add("F1OnAddBarField", "TrackBars", function(section, name)
-print("Added bar", name)
+    print("Added bar", name)
 end)
 ```
 
@@ -5772,7 +5902,7 @@ Called while building the F1 information menu to populate navigation buttons.
 ```lua
 -- Prints a message when CreateInformationButtons is triggered
 hook.Add("CreateInformationButtons", "AddHelpPage", function(pages)
-table.insert(pages, {name = "Help", drawFunc = function(parent) end})
+    table.insert(pages, { name = "Help", drawFunc = function(parent) end })
 end)
 ```
 
@@ -5796,7 +5926,7 @@ Invoked when the settings tab is constructed allowing new configuration pages.
 ```lua
 -- Prints a message when PopulateConfigurationButtons is triggered
 hook.Add("PopulateConfigurationButtons", "AddControlsPage", function(pages)
-table.insert(pages, {name = "Controls", drawFunc = function(p) end})
+    table.insert(pages, { name = "Controls", drawFunc = function(p) end })
 end)
 ```
 
@@ -5820,7 +5950,7 @@ Called after keybinds have been loaded from disk.
 ```lua
 -- Prints a message when InitializedKeybinds is triggered
 hook.Add("InitializedKeybinds", "NotifyKeybinds", function()
-chat.AddText("Keybinds loaded")
+    chat.AddText("Keybinds loaded")
 end)
 ```
 
@@ -5844,9 +5974,9 @@ Allows modification of the cooldown delay between OOC messages.
 ```lua
 -- Prints a message when getOOCDelay is triggered
 hook.Add("getOOCDelay", "AdminOOC", function(ply)
-if ply:IsAdmin() then
-return 5
-end
+    if ply:IsAdmin() then
+        return 5
+    end
 end)
 ```
 
@@ -5873,7 +6003,7 @@ Runs on the client when chat text is received before display. Returning modified
 ```lua
 -- Prints a message when OnChatReceived is triggered
 hook.Add("OnChatReceived", "CensorChat", function(ply, type, msg)
-return msg:gsub("badword", "****")
+    return msg:gsub("badword", "****")
 end)
 ```
 
@@ -5898,7 +6028,7 @@ Requests PAC3 part data after adjustments have been applied.
 ```lua
 -- Prints a message when getAdjustedPartData is triggered
 hook.Add("getAdjustedPartData", "DebugParts", function(ply, partID)
-print("Requesting part", partID)
+    print("Requesting part", partID)
 end)
 ```
 
@@ -5924,8 +6054,8 @@ Allows modules to modify PAC3 part data before it is attached.
 ```lua
 -- Prints a message when AdjustPACPartData is triggered
 hook.Add("AdjustPACPartData", "ColorParts", function(ply, partID, d)
-d.Color = Vector(1,0,0)
-return d
+    d.Color = Vector(1, 0, 0)
+    return d
 end)
 ```
 
@@ -5950,7 +6080,7 @@ Called when a PAC3 part should be attached to a player.
 ```lua
 -- Prints a message when attachPart is triggered
 hook.Add("attachPart", "AnnouncePart", function(ply, partID)
-print(ply, "received part", partID)
+    print(ply, "received part", partID)
 end)
 ```
 
@@ -5975,7 +6105,7 @@ Triggered when a PAC3 part is removed from a player.
 ```lua
 -- Prints a message when removePart is triggered
 hook.Add("removePart", "LogPartRemoval", function(ply, partID)
-print(partID, "removed from", ply)
+    print(partID, "removed from", ply)
 end)
 ```
 
@@ -5999,7 +6129,7 @@ Fired when a PAC3 outfit part transfers ownership to a ragdoll.
 ```lua
 -- Prints a message when OnPAC3PartTransfered is triggered
 hook.Add("OnPAC3PartTransfered", "TrackTransfers", function(p)
-print("Part transferred", p)
+    print("Part transferred", p)
 end)
 ```
 
@@ -6023,7 +6153,7 @@ Allows custom rendering of a player's ragdoll created by PAC3.
 ```lua
 -- Prints a message when DrawPlayerRagdoll is triggered
 hook.Add("DrawPlayerRagdoll", "TintRagdoll", function(ent)
-render.SetColorModulation(1,0,0)
+    render.SetColorModulation(1, 0, 0)
 end)
 ```
 
@@ -6047,7 +6177,7 @@ Initializes PAC3 outfits from equipped items after modules load.
 ```lua
 -- Prints a message when setupPACDataFromItems is triggered
 hook.Add("setupPACDataFromItems", "InitPAC", function()
-print("Equipped PAC data loaded")
+    print("Equipped PAC data loaded")
 end)
 ```
 
@@ -6071,7 +6201,7 @@ Allows PAC3 to swap the view model entity for event checks.
 ```lua
 -- Prints a message when TryViewModel is triggered
 hook.Add("TryViewModel", "UsePlayerViewModel", function(ent)
-return ent == LocalPlayer():GetViewModel() and LocalPlayer() or ent
+    return ent == LocalPlayer():GetViewModel() and LocalPlayer() or ent
 end)
 ```
 
@@ -6096,7 +6226,7 @@ Lets modules provide a custom sound when cycling weapons in the selector.
 ```lua
 -- Prints a message when WeaponCycleSound is triggered
 hook.Add("WeaponCycleSound", "SilentCycle", function()
-return "buttons/button15.wav", 100
+    return "buttons/button15.wav", 100
 end)
 ```
 
@@ -6121,7 +6251,7 @@ Similar to WeaponCycleSound but used when confirming a weapon choice.
 ```lua
 -- Prints a message when WeaponSelectSound is triggered
 hook.Add("WeaponSelectSound", "CustomSelectSound", function()
-return "buttons/button24.wav", 90
+    return "buttons/button24.wav", 90
 end)
 ```
 
@@ -6145,7 +6275,7 @@ Determines if the weapon selection UI should be visible.
 ```lua
 -- Prints a message when ShouldDrawWepSelect is triggered
 hook.Add("ShouldDrawWepSelect", "HideInVehicles", function(ply)
-return not ply:InVehicle()
+    return not ply:InVehicle()
 end)
 ```
 
@@ -6169,9 +6299,9 @@ Checks whether the active weapon can be selected via the weapon wheel.
 ```lua
 -- Prints a message when CanPlayerChooseWeapon is triggered
 hook.Add("CanPlayerChooseWeapon", "BlockPhysgun", function(wep)
-if IsValid(wep) and wep:GetClass() == "weapon_physgun" then
-return false
-end
+    if IsValid(wep) and wep:GetClass() == "weapon_physgun" then
+        return false
+    end
 end)
 ```
 
@@ -6196,7 +6326,9 @@ Allows modules to modify the respawn delay after death.
 ```lua
 -- Prints a message when OverrideSpawnTime is triggered
 hook.Add("OverrideSpawnTime", "ShortRespawns", function(ply, time)
-if ply:IsAdmin() then return 2 end
+    if ply:IsAdmin() then
+        return 2
+    end
 end)
 ```
 
@@ -6220,7 +6352,7 @@ Lets modules suppress the respawn HUD from showing.
 ```lua
 -- Prints a message when ShouldRespawnScreenAppear is triggered
 hook.Add("ShouldRespawnScreenAppear", "NoRespawnHUD", function()
-return false
+    return false
 end)
 ```
 
@@ -6244,7 +6376,7 @@ Fired when voice chat is enabled or disabled via config.
 ```lua
 -- Prints a message when VoiceToggled is triggered
 hook.Add("VoiceToggled", "AnnounceVoice", function(state)
-print("Voice chat set to", state)
+    print("Voice chat set to", state)
 end)
 ```
 
@@ -6268,7 +6400,7 @@ Fired when the Derma UI skin configuration value changes. Allows modules to reac
 ```lua
 -- Reload custom panels when the skin changes
 hook.Add("DermaSkinChanged", "UpdatePanels", function(skin)
-MyPanel:ReloadSkin(skin)
+    MyPanel:ReloadSkin(skin)
 end)
 ```
 
@@ -6292,7 +6424,7 @@ Requests recreation of all registered UI fonts.
 ```lua
 -- Prints a message when RefreshFonts is triggered
 hook.Add("RefreshFonts", "ReloadFonts", function()
-print("Fonts refreshed")
+    print("Fonts refreshed")
 end)
 ```
 
@@ -6319,7 +6451,9 @@ Allows modification of character creation data before the character is saved.
 ```lua
 -- Prints a message when AdjustCreationData is triggered
 hook.Add("AdjustCreationData", "EnforceName", function(ply, data, newData)
-if data.name == "" then newData.name = "Unnamed" end
+    if data.name == "" then
+        newData.name = "Unnamed"
+    end
 end)
 ```
 
@@ -6345,7 +6479,9 @@ Determines if a character may switch factions.
 ```lua
 -- Prints a message when CanCharBeTransfered is triggered
 hook.Add("CanCharBeTransfered", "BlockRestrictedFactions", function(char, faction)
-if faction.isRestricted then return false end
+    if faction.isRestricted then
+        return false
+    end
 end)
 ```
 
@@ -6370,7 +6506,9 @@ Called when a player attempts to load one of their characters.
 ```lua
 -- Prints a message when CanPlayerUseChar is triggered
 hook.Add("CanPlayerUseChar", "CheckBans", function(ply, char)
-if char:isBanned() then return false, "Character banned" end
+    if char:isBanned() then
+        return false, "Character banned"
+    end
 end)
 ```
 
@@ -6396,7 +6534,9 @@ Checks if a player can switch from their current character to another.
 ```lua
 -- Prints a message when CanPlayerSwitchChar is triggered
 hook.Add("CanPlayerSwitchChar", "NoSwitchInCombat", function(ply)
-if ply:isInCombat() then return false end
+    if ply:isInCombat() then
+        return false
+    end
 end)
 ```
 
@@ -6421,7 +6561,9 @@ Determines whether the player may lock the given door or vehicle.
 ```lua
 -- Prints a message when CanPlayerLock is triggered
 hook.Add("CanPlayerLock", "AdminsAlwaysLock", function(ply)
-if ply:IsAdmin() then return true end
+    if ply:IsAdmin() then
+        return true
+    end
 end)
 ```
 
@@ -6446,7 +6588,9 @@ Determines whether the player may unlock the given door or vehicle.
 ```lua
 -- Prints a message when CanPlayerUnlock is triggered
 hook.Add("CanPlayerUnlock", "AdminsAlwaysUnlock", function(ply)
-if ply:IsAdmin() then return true end
+    if ply:IsAdmin() then
+        return true
+    end
 end)
 ```
 
@@ -6471,7 +6615,7 @@ Lets you change how many attribute points a new character receives. Retrieves th
 ```lua
 -- Gives every new character 60 starting points.
 hook.Add("GetMaxStartingAttributePoints", "DoublePoints", function(client)
-return 60
+    return 60
 end)
 ```
 
@@ -6496,7 +6640,9 @@ Sets a limit for a specific attribute at character creation. Returns the startin
 ```lua
 -- Limits the Strength attribute to a maximum of 20.
 hook.Add("GetAttributeStartingMax", "CapStrength", function(client, attribute)
-if attribute == "strength" then return 20 end
+    if attribute == "strength" then
+        return 20
+    end
 end)
 ```
 
@@ -6521,9 +6667,9 @@ Returns the maximum value allowed for an attribute.
 ```lua
 -- Increase stamina cap for admins.
 hook.Add("GetAttributeMax", "AdminStamina", function(client, attrib)
-if attrib == "stamina" and client:IsAdmin() then
-return 150
-end
+    if attrib == "stamina" and client:IsAdmin() then
+        return 150
+    end
 end)
 ```
 
@@ -6551,7 +6697,9 @@ Fired when an attribute boost is added or removed.
 ```lua
 -- Notify the player when they gain a temporary bonus.
 hook.Add("OnCharAttribBoosted", "BoostNotice", function(client, char, key, id, amount)
-if amount ~= true then client:notify("Boosted " .. key .. " by " .. amount) end
+    if amount ~= true then
+        client:notify("Boosted " .. key .. " by " .. amount)
+    end
 end)
 ```
 
@@ -6578,9 +6726,9 @@ Fired when a character attribute value is changed.
 ```lua
 -- Print the changed attribute on the local player's HUD.
 hook.Add("OnCharAttribUpdated", "PrintAttribChange", function(client, char, key, value)
-if client == LocalPlayer() then
-chat.AddText(key .. ": " .. value)
-end
+    if client == LocalPlayer() then
+        chat.AddText(key .. ": " .. value)
+    end
 end)
 ```
 
@@ -6605,7 +6753,7 @@ Called when a player attempts to change a configuration value.
 ```lua
 -- Prints a message when CanPlayerModifyConfig is triggered
 hook.Add("CanPlayerModifyConfig", "RestrictConfig", function(ply, k)
-return ply:IsSuperAdmin()
+    return ply:IsSuperAdmin()
 end)
 ```
 
@@ -6630,7 +6778,7 @@ Fired after a character is permanently removed.
 ```lua
 -- Prints a message when CharDeleted is triggered
 hook.Add("CharDeleted", "LogDeletion", function(ply, char)
-print(ply:Name(), "deleted character", char:getName())
+    print(ply:Name(), "deleted character", char:getName())
 end)
 ```
 
@@ -6656,9 +6804,9 @@ Allows custom logic for determining if a faction has reached its player limit.
 ```lua
 -- Prints a message when CheckFactionLimitReached is triggered
 hook.Add("CheckFactionLimitReached", "IgnoreAdmins", function(faction, char, ply)
-if ply:IsAdmin() then
-return false
-end
+    if ply:IsAdmin() then
+        return false
+    end
 end)
 ```
 
@@ -6685,7 +6833,7 @@ Triggered after AddSection inserts a new information section.
 ```lua
 -- Prints a message when F1OnAddSection is triggered
 hook.Add("F1OnAddSection", "PrintSection", function(name)
-print("Added section", name)
+    print("Added section", name)
 end)
 ```
 
@@ -6709,7 +6857,7 @@ Allows overriding of the displayed weapon name in the selector.
 ```lua
 -- Prints a message when GetWeaponName is triggered
 hook.Add("GetWeaponName", "UppercaseName", function(wep)
-return wep:GetClass():upper()
+    return wep:GetClass():upper()
 end)
 ```
 
@@ -6734,7 +6882,7 @@ Called when a ragdolled character finishes getting up.
 ```lua
 -- Prints a message when OnCharGetup is triggered
 hook.Add("OnCharGetup", "NotifyGetup", function(ply)
-ply:ChatPrint("You stood up")
+    ply:ChatPrint("You stood up")
 end)
 ```
 
@@ -6758,7 +6906,7 @@ Fired once language files finish loading.
 ```lua
 -- Prints a message when OnLocalizationLoaded is triggered
 hook.Add("OnLocalizationLoaded", "PrintLang", function()
-print("Localization ready")
+    print("Localization ready")
 end)
 ```
 
@@ -6783,7 +6931,7 @@ Called when a player's observe mode is toggled.
 ```lua
 -- Prints a message when OnPlayerObserve is triggered
 hook.Add("OnPlayerObserve", "AnnounceObserve", function(ply, s)
-print(ply, s and "entered" or "left", "observe mode")
+    print(ply, s and "entered" or "left", "observe mode")
 end)
 ```
 
@@ -6809,7 +6957,7 @@ Runs after a character has been loaded and set up for a player.
 ```lua
 -- Prints a message when PlayerLoadedChar is triggered
 hook.Add("PlayerLoadedChar", "WelcomeBack", function(ply, char)
-ply:ChatPrint("Welcome, " .. char:getName())
+    ply:ChatPrint("Welcome, " .. char:getName())
 end)
 ```
 
@@ -6835,7 +6983,7 @@ Fired right before a player switches to a new character.
 ```lua
 -- Prints a message when PrePlayerLoadedChar is triggered
 hook.Add("PrePlayerLoadedChar", "SaveStuff", function(ply, new, old)
-print("Switching characters")
+    print("Switching characters")
 end)
 ```
 
@@ -6861,7 +7009,7 @@ Called after PlayerLoadedChar to allow post-load operations.
 ```lua
 -- Prints a message when PostPlayerLoadedChar is triggered
 hook.Add("PostPlayerLoadedChar", "GiveItems", function(ply, char)
--- Give starter items here
+    -- Give starter items here
 end)
 ```
 
@@ -6886,7 +7034,7 @@ Custom hook executed when a player sends a chat message server-side.
 ```lua
 -- Prints a message when PlayerSay is triggered
 hook.Add("PlayerSay", "LogChat", function(ply, msg)
-print(ply:Name() .. ": " .. msg)
+    print(ply:Name() .. ": " .. msg)
 end)
 ```
 
@@ -6911,7 +7059,9 @@ Called after the admin stick menu is created so additional commands can be added
 ```lua
 -- Prints a message when PopulateAdminStick is triggered
 hook.Add("PopulateAdminStick", "AddCustomOption", function(menu, ent)
-menu:AddOption("Wave", function() RunConsoleCommand("act", "wave") end)
+    menu:AddOption("Wave", function()
+        RunConsoleCommand("act", "wave")
+    end)
 end)
 ```
 
@@ -6936,7 +7086,7 @@ Fired when a staff member claims a help ticket.
 ```lua
 -- Prints a message when TicketSystemClaim is triggered
 hook.Add("TicketSystemClaim", "NotifyClaim", function(staff, ply)
-staff:ChatPrint("Claimed ticket from " .. ply:Name())
+    staff:ChatPrint("Claimed ticket from " .. ply:Name())
 end)
 ```
 
@@ -6962,6 +7112,6 @@ Triggered when a shared option value is changed.
 ```lua
 -- Prints a message when liaOptionReceived is triggered
 hook.Add("liaOptionReceived", "PrintOptionChange", function(_, k, v)
-print("Option", k, "set to", v)
+    print("Option", k, "set to", v)
 end)
 ```
