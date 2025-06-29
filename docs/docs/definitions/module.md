@@ -13,25 +13,25 @@ A `MODULE` table defines a self-contained add-on for the Lilia framework. Each f
 
 ## Field Summary
 
-| Field                | Type                    | Description                                                      |
-|----------------------|-------------------------|------------------------------------------------------------------|
-| `name`               | `string`                | Identifies the module in logs and UI.                            |
-| `author`             | `string`                | Name or SteamID64 of the module’s author.                        |
-| `discord`            | `string`                | Discord tag or support channel.                                  |
-| `version`            | `string`                | Version string for compatibility checks.                         |
-| `desc`               | `string`                | Short description of module functionality.                       |
-| `identifier`         | `string`                | Unique global key referencing the module.                        |
-| `CAMIPrivileges`     | `table`                 | CAMI privileges defined or required by the module.               |
-| `WorkshopContent`    | `table`                 | Steam Workshop add-on IDs required.                              |
-| `enabled`            | `boolean` or `function` | Controls whether the module loads.                               |
-| `Dependencies`       | `table`                 | Files or folders required for the module to run.                 |
-| `folder`             | `string`                | Filesystem path where the module resides.                        |
-| `path`               | `string`                | Absolute path to the module’s root directory.                    |
-| `uniqueID`           | `string`                | Internal identifier for the module list.                         |
-| `loading`            | `boolean`               | True while the module is in the process of loading.              |
-| `ModuleLoaded`       | `function`              | Callback run after module finishes loading.                      |
-| `Public`             | `boolean`               | Participates in public version checks.                           |
-| `Private`            | `boolean`               | Uses private version checking.                                   |
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `name` | `string` | `"Unknown"` | Identifies the module in logs and UI. |
+| `author` | `string` | `"Anonymous"` | Name or SteamID64 of the module’s author. |
+| `discord` | `string` | `""` | Discord tag or support channel. |
+| `version` | `string` | `""` | Version string for compatibility checks. |
+| `desc` | `string` | `"No Description"` | Short description of module functionality. |
+| `identifier` | `string` | `""` | Unique global key referencing the module. |
+| `CAMIPrivileges` | `table` | `nil` | CAMI privileges defined or required by the module. |
+| `WorkshopContent` | `table` | `nil` | Steam Workshop add-on IDs required. |
+| `enabled` | `boolean` or `function` | `true` | Controls whether the module loads. |
+| `Dependencies` | `table` | `nil` | Files or folders required for the module to run. |
+| `folder` | `string` | `""` | Filesystem path where the module resides. |
+| `path` | `string` | `""` | Absolute path to the module’s root directory. |
+| `uniqueID` | `string` | `""` | Internal identifier for the module list. |
+| `loading` | `boolean` | `false` | True while the module is in the process of loading. |
+| `ModuleLoaded` | `function` | `nil` | Callback run after module finishes loading. |
+| `Public` | `boolean` | `false` | Participates in public version checks. |
+| `Private` | `boolean` | `false` | Uses private version checking. |
 
 ---
 
@@ -228,3 +228,4 @@ print(MODULE.path)
 ```lua
 print(MODULE.uniqueID)
 ```
+---

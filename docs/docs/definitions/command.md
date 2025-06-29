@@ -13,16 +13,16 @@ When you register a command with `lia.command.add`, you provide a table of field
 
 ## Field Summary
 
-| Field               | Type                       | Description                                                      |
-|---------------------|----------------------------|------------------------------------------------------------------|
-| `alias`             | `string` or `string[]`     | Alternative names for the command.                               |
-| `adminOnly`         | `boolean`                  | Restrict to admins (registers a CAMI privilege).                 |
-| `superAdminOnly`    | `boolean`                  | Restrict to superadmins (registers a CAMI privilege).            |
-| `privilege`         | `string`                   | Custom CAMI privilege name (defaults to command name).           |
-| `syntax`            | `string`                   | Human-readable argument format shown in help.                    |
-| `desc`              | `string`                   | Short description shown in command lists and menus.              |
-| `AdminStick`        | `table`                    | Defines how the command appears in admin utilities.              |
-| `onRun(client, args)` | `function(client, table)` | Function executed when the command is invoked.                   |
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `alias` | `string` or `table` | `nil` | Alternative names for the command. |
+| `adminOnly` | `boolean` | `false` | Restrict to admins (registers a CAMI privilege). |
+| `superAdminOnly` | `boolean` | `false` | Restrict to superadmins (registers a CAMI privilege). |
+| `privilege` | `string` | `nil` | Custom CAMI privilege name (defaults to command name). |
+| `syntax` | `string` | `""` | Human-readable argument format shown in help. |
+| `desc` | `string` | `""` | Short description shown in command lists and menus. |
+| `AdminStick` | `table` | `nil` | Defines how the command appears in admin utilities. |
+| `onRun(client, args)` | `function(client, table)` | `nil` | Function executed when the command is invoked. |
 
 ---
 
@@ -31,7 +31,7 @@ When you register a command with `lia.command.add`, you provide a table of field
 ### Aliases & Permissions
 
 #### `alias`
-**Type:** `string` or `string[]`  
+**Type:** `string` or `table`  
 **Description:** One or more alternative command names that trigger the same behavior.  
 **Example:**
 ```lua
@@ -99,7 +99,7 @@ syntax = "[string Target Name] [number Amount]"
 **Example:**
 
 ```lua
-desc = L("doorbuyDesc")
+desc = "Purchase a door if it is available and you can afford it."
 ```
 
 ---
@@ -146,3 +146,4 @@ onRun = function(client, arguments)
     end
 end
 ```
+---

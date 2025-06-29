@@ -13,57 +13,57 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 
 ## Field Summary
 
-| Field                   | Type               | Description                                            |
-|-------------------------|--------------------|--------------------------------------------------------|
-| `BagSound`              | `table`            | Sound played when moving items to/from the bag.       |
-| `DropOnDeath`           | `boolean`          | Deletes the item upon player death.                    |
-| `FactionWhitelist`      | `number[]`         | Allowed faction indices for vendor interaction.        |
-| `RequiredSkillLevels`   | `table`            | Skill requirements needed to use the item.             |
-| `SteamIDWhitelist`      | `string[]`         | Allowed Steam IDs for vendor interaction.              |
-| `UsergroupWhitelist`    | `string[]`         | Allowed user groups for vendor interaction.            |
-| `VIPWhitelist`          | `boolean`          | Restricts usage to VIP players.                        |
-| `ammo`                  | `string`           | Ammo type provided.                                    |
-| `ammoAmount`            | `number`           | Amount of ammo contained.                              |
-| `armor`                 | `number`           | Armor value granted when equipped.                     |
-| `attribBoosts`          | `table`            | Attribute boosts applied when equipped.                |
-| `base`                  | `string`           | Base item this item derives from.                      |
-| `canSplit`              | `boolean`          | Whether the item stack can be divided.                 |
-| `category`              | `string`           | Inventory grouping category.                           |
-| `class`                 | `string`           | Weapon entity class.                                   |
-| `contents`              | `string`           | HTML contents of a readable book.                      |
-| `desc`                  | `string`           | Short description shown to players.                    |
-| `entityid`              | `string`           | Entity class spawned by the item.                      |
-| `equipSound`            | `string`           | Sound played when equipping.                           |
-| `flag`                  | `string`           | Flag required to purchase the item.                    |
-| `functions`             | `table`            | Table of interaction functions.                        |
-| `grenadeClass`          | `string`           | Class name used when spawning a grenade.               |
-| `health`                | `number`           | Amount of health restored when used.                   |
-| `height`                | `number`           | Height in inventory grid.                              |
-| `id`                    | `any`              | Database identifier.                                   |
-| `invHeight`             | `number`           | Internal bag inventory height.                         |
-| `invWidth`              | `number`           | Internal bag inventory width.                          |
-| `isBag`                 | `boolean`          | Marks the item as a bag providing extra inventory.     |
-| `isBase`                | `boolean`          | Indicates the table is a base item.                    |
-| `isOutfit`              | `boolean`          | Marks the item as an outfit.                           |
-| `isStackable`           | `boolean`          | Allows stacking multiple quantities.                   |
-| `isWeapon`              | `boolean`          | Marks the item as a weapon.                            |
-| `maxQuantity`           | `number`           | Maximum stack size.                                    |
-| `model`                 | `string`           | 3D model path for the item.                            |
-| `name`                  | `string`           | Displayed name of the item.                            |
-| `newSkin`               | `number`           | Skin index applied to the player model.                |
-| `outfitCategory`        | `string`           | Slot or category for the outfit.                       |
-| `pacData`               | `table`            | PAC3 customization information.                        |
-| `postHooks`             | `table`            | Table of post-hook callbacks.                          |
-| `price`                 | `number`           | Item cost for trading or selling.                      |
-| `quantity`              | `number`           | Current amount in the item stack.                      |
-| `rarity`                | `string`           | Rarity level affecting vendor color.                   |
-| `replacements`          | `string`           | Model replacements when equipped.                      |
-| `unequipSound`          | `string`           | Sound played when unequipping.                         |
-| `uniqueID`              | `string`           | Overrides the automatically generated unique identifier.|
-| `url`                   | `string`           | Web address opened when using the item.                |
-| `visualData`            | `table`            | Table storing outfit visual information.               |
-| `weaponCategory`        | `string`           | Slot category for the weapon.                          |
-| `width`                 | `number`           | Width in inventory grid.                               |
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `BagSound` | `table` | `nil` | Sound played when moving items to/from the bag. |
+| `DropOnDeath` | `boolean` | `false` | Deletes the item upon player death. |
+| `FactionWhitelist` | `table` | `nil` | Allowed faction indices for vendor interaction. |
+| `RequiredSkillLevels` | `table` | `nil` | Skill requirements needed to use the item. |
+| `SteamIDWhitelist` | `table` | `nil` | Allowed Steam IDs for vendor interaction. |
+| `UsergroupWhitelist` | `table` | `nil` | Allowed user groups for vendor interaction. |
+| `VIPWhitelist` | `boolean` | `false` | Restricts usage to VIP players. |
+| `ammo` | `string` | `""` | Ammo type provided. |
+| `ammoAmount` | `number` | `0` | Amount of ammo contained. |
+| `armor` | `number` | `0` | Armor value granted when equipped. |
+| `attribBoosts` | `table` | `{}` | Attribute boosts applied when equipped. |
+| `base` | `string` | `""` | Base item this item derives from. |
+| `canSplit` | `boolean` | `true` | Whether the item stack can be divided. |
+| `category` | `string` | `"Miscellaneous"` | Inventory grouping category. |
+| `class` | `string` | `""` | Weapon entity class. |
+| `contents` | `string` | `""` | HTML contents of a readable book. |
+| `desc` | `string` | `"No Description"` | Short description shown to players. |
+| `entityid` | `string` | `""` | Entity class spawned by the item. |
+| `equipSound` | `string` | `""` | Sound played when equipping. |
+| `flag` | `string` | `""` | Flag required to purchase the item. |
+| `functions` | `table` | `DefaultFunctions` | Table of interaction functions. |
+| `grenadeClass` | `string` | `""` | Class name used when spawning a grenade. |
+| `health` | `number` | `0` | Amount of health restored when used. |
+| `height` | `number` | `1` | Height in inventory grid. |
+| `id` | `any` | `0` | Database identifier. |
+| `invHeight` | `number` | `0` | Internal bag inventory height. |
+| `invWidth` | `number` | `0` | Internal bag inventory width. |
+| `isBag` | `boolean` | `false` | Marks the item as a bag providing extra inventory. |
+| `isBase` | `boolean` | `false` | Indicates the table is a base item. |
+| `isOutfit` | `boolean` | `false` | Marks the item as an outfit. |
+| `isStackable` | `boolean` | `false` | Allows stacking multiple quantities. |
+| `isWeapon` | `boolean` | `false` | Marks the item as a weapon. |
+| `maxQuantity` | `number` | `1` | Maximum stack size. |
+| `model` | `string` | `""` | 3D model path for the item. |
+| `name` | `string` | `"INVALID NAME"` | Displayed name of the item. |
+| `newSkin` | `number` | `0` | Skin index applied to the player model. |
+| `outfitCategory` | `string` | `""` | Slot or category for the outfit. |
+| `pacData` | `table` | `{}` | PAC3 customization information. |
+| `postHooks` | `table` | `{}` | Table of post-hook callbacks. |
+| `price` | `number` | `0` | Item cost for trading or selling. |
+| `quantity` | `number` | `1` | Current amount in the item stack. |
+| `rarity` | `string` | `""` | Rarity level affecting vendor color. |
+| `replacements` | `string` | `""` | Model replacements when equipped. |
+| `unequipSound` | `string` | `""` | Sound played when unequipping. |
+| `uniqueID` | `string` | `"undefined"` | Overrides the automatically generated unique identifier. |
+| `url` | `string` | `""` | Web address opened when using the item. |
+| `visualData` | `table` | `{}` | Table storing outfit visual information. |
+| `weaponCategory` | `string` | `""` | Slot category for the weapon. |
+| `width` | `number` | `1` | Width in inventory grid. |
 
 ---
 
@@ -115,7 +115,7 @@ ITEM.DropOnDeath = true
 
 #### `FactionWhitelist`
 
-**Type:** `number[]`
+**Type:** `table`
 **Description:** Allowed faction indices for vendor interaction.
 **Example:**
 
@@ -135,7 +135,7 @@ ITEM.RequiredSkillLevels = {Strength = 5}
 
 #### `SteamIDWhitelist`
 
-**Type:** `string[]`
+**Type:** `table`
 **Description:** Allowed Steam IDs for vendor interaction.
 **Example:**
 
@@ -145,7 +145,7 @@ ITEM.SteamIDWhitelist = {"STEAM_0:1:123"}
 
 #### `UsergroupWhitelist`
 
-**Type:** `string[]`
+**Type:** `table`
 **Description:** Allowed user groups for vendor interaction.
 **Example:**
 
@@ -592,3 +592,4 @@ ITEM.functions = {}
 ```lua
 ITEM.postHooks = {}
 ```
+---
