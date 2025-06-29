@@ -65,6 +65,11 @@ MODULE.CAMIPrivileges = {
         Description = "Allows access to propertying world props."
     },
     {
+        Name = "Staff Permissions - Manage Car Blacklist",
+        MinAccess = "superadmin",
+        Description = "Allows access to managing the car blacklist.",
+    },
+    {
         Name = "Spawn Permissions - Can Spawn Ragdolls",
         MinAccess = "admin",
         Description = "Allows access to spawning ."
@@ -108,6 +113,11 @@ MODULE.CAMIPrivileges = {
         Name = "Spawn Permissions - Can Spawn Cars",
         MinAccess = "admin",
         Description = "Allows access to Spawning Cars."
+    },
+    {
+        Name = "Spawn Permissions - Can Spawn Blacklisted Cars",
+        MinAccess = "superadmin",
+        Description = "Allows access to spawning Blacklisted Cars."
     },
     {
         Name = "Spawn Permissions - Can Spawn SENTs",

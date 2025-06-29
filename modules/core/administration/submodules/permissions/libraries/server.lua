@@ -78,8 +78,16 @@ function GM:PhysgunPickup(client, entity)
     return false
 end
 
-function GM:PlayerSpawnVehicle(client)
-    if not client:hasPrivilege("Spawn Permissions - No Car Spawn Delay") then client.NextVehicleSpawn = SysTime() + lia.config.get("PlayerSpawnVehicleDelay", 30) end
+function GM:PlayerSpawnVehicle(client, model)
+    if not client:hasPrivilege("Spawn Permissions - No Car Spawn Delay") then
+        client.NextVehicleSpawn = SysTime() + lia.config.get("PlayerSpawnVehicleDelay", 30)
+    end
+    local list = lia.data.get("carBlacklist", {}, true, true)
+    if model and table.HasValue(list, model) and not client:hasPrivilege("Spawn Permissions - Can Spawn Blacklisted Cars") then
+        client:notifyLocalized("blacklistedVehicle")
+        return false
+    end
+
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Cars") or client:getChar():hasFlags("C")
     if not canSpawn then client:notifyLocalized("noSpawnVehicles") end
     return canSpawn
