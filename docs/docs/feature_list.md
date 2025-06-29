@@ -261,6 +261,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Provides predefined palettes for common UI elements
 
 - Convert hex codes to color tables
+
 ### Commands Library
 - Register chat commands with syntax parsing
 - Built-in access checks and argument extraction
@@ -336,6 +337,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Drag-and-drop system for moving and splitting stacks
 
 - Containers can hold other containers if allowed
+
 ### Item Library
 - Framework for defining items with metadata and hooks
 - Supports consumables, weapons and clothing types
@@ -344,6 +346,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Items can override rendering and interaction behaviour
 
 - Items may expose custom networked fields
+
 ### Keybind Library
 - Add custom client keybinds and save them per player
 - Rebind keys through a menu interface
@@ -411,6 +414,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Commands to set starting wages
 - Supports bonuses based on rank or faction
 - Logging tracks salary payouts for auditing
+
 ### Time Library
 - Scheduler helpers and shared timers
 - Real time to game time conversions
