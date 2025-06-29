@@ -1,5 +1,4 @@
 ﻿local ToolGunMeta = lia.meta.tool or {}
-
 function ToolGunMeta:Create()
     local object = {}
     setmetatable(object, self)

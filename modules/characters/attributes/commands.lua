@@ -19,7 +19,6 @@
         end
 
         lia.log.add(client, "attribCheck", target:Name())
-
         local character = target:getChar()
         if character then
             for k, v in pairs(lia.attribs.list) do

@@ -1,4 +1,4 @@
-DarkRP = DarkRP or {}
+﻿DarkRP = DarkRP or {}
 RPExtraTeams = RPExtraTeams or {}
 lia.darkrp = lia.darkrp or {}
 if SERVER then

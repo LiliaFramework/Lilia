@@ -280,9 +280,7 @@ if SERVER then
             if IsValid(entity) then entity:setNetVar("quantity", self.quantity) end
         end
 
-        if receivers or self:getOwner() then
-            netstream.Start(receivers or self:getOwner(), "invQuantity", self:getID(), self.quantity)
-        end
+        if receivers or self:getOwner() then netstream.Start(receivers or self:getOwner(), "invQuantity", self:getID(), self.quantity) end
         if noSave or not lia.db then return end
         if MYSQLOO_PREPARED then
             lia.db.preparedCall("itemq", nil, self.quantity, self:getID())

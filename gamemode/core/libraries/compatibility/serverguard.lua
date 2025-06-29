@@ -1,4 +1,4 @@
-hook.Add("RunAdminSystemCommand", "liaServerguard", function(cmd, exec, victim, dur, reason)
+﻿hook.Add("RunAdminSystemCommand", "liaServerguard", function(cmd, exec, victim, dur, reason)
     local caller = IsValid(exec) and exec or false
     if cmd == "kick" then
         serverguard.command.Run("kick", caller, victim:SteamID64(), reason or "")

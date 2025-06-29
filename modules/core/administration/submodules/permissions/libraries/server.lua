@@ -79,9 +79,7 @@ function GM:PhysgunPickup(client, entity)
 end
 
 function GM:PlayerSpawnVehicle(client, model)
-    if not client:hasPrivilege("Spawn Permissions - No Car Spawn Delay") then
-        client.NextVehicleSpawn = SysTime() + lia.config.get("PlayerSpawnVehicleDelay", 30)
-    end
+    if not client:hasPrivilege("Spawn Permissions - No Car Spawn Delay") then client.NextVehicleSpawn = SysTime() + lia.config.get("PlayerSpawnVehicleDelay", 30) end
     local list = lia.data.get("carBlacklist", {}, true, true)
     if model and table.HasValue(list, model) and not client:hasPrivilege("Spawn Permissions - Can Spawn Blacklisted Cars") then
         client:notifyLocalized("blacklistedVehicle")
@@ -265,9 +263,7 @@ end
 
 concommand.Add("kickbots", function()
     for _, bot in player.Iterator() do
-        if bot:IsBot() then
-            lia.command.execAdminCommand("kick", nil, bot, nil, "All bots kicked")
-        end
+        if bot:IsBot() then lia.command.execAdminCommand("kick", nil, bot, nil, "All bots kicked") end
     end
 end)
 

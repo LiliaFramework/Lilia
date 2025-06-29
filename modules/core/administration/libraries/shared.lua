@@ -27,4 +27,3 @@ properties.Add("TogglePropBlacklist", {
         end
     end
 })
-

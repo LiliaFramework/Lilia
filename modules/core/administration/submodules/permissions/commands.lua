@@ -472,6 +472,7 @@ lia.command.add("charvoicetoggle", {
                 client:notifyLocalized("voiceMuted", target:Name())
                 target:notifyLocalized("voiceMutedByAdmin")
             end
+
             lia.log.add(client, "voiceToggle", target:Name(), isBanned and "Unmuted" or "Muted")
         else
             client:notifyLocalized("noValidCharacter")
@@ -877,13 +878,7 @@ lia.command.add("chargiveitem", {
         if succ then
             target:notifyLocalized("itemCreated")
             if target ~= client then client:notifyLocalized("itemCreated") end
-            lia.log.add(
-                client,
-                "chargiveItem",
-                lia.item.list[uniqueID] and lia.item.list[uniqueID].name or uniqueID,
-                target,
-                "Command"
-            )
+            lia.log.add(client, "chargiveItem", lia.item.list[uniqueID] and lia.item.list[uniqueID].name or uniqueID, target, "Command")
         else
             target:notify(tostring(succ))
             target:notify(tostring(err))

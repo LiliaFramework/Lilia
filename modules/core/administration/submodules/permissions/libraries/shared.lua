@@ -2,8 +2,6 @@
     remover = true,
 }
 
-
-
 function MODULE:InitializedModules()
     if properties.List then
         for name in pairs(properties.List) do
@@ -80,16 +78,11 @@ lia.flag.add("L", "Access to spawn Effects.")
 lia.flag.add("r", "Access to spawn ragdolls.")
 lia.flag.add("e", "Access to spawn props.")
 lia.flag.add("n", "Access to spawn NPCs.")
-
 properties.Add("ToggleCarBlacklist", {
     MenuLabel = L("ToggleCarBlacklist"),
     Order = 901,
     MenuIcon = "icon16/link.png",
-    Filter = function(_, ent, ply)
-        return IsValid(ent)
-            and (ent:IsVehicle() or ent:isSimfphysCar())
-            and ply:hasPrivilege("Staff Permissions - Manage Car Blacklist")
-    end,
+    Filter = function(_, ent, ply) return IsValid(ent) and (ent:IsVehicle() or ent:isSimfphysCar()) and ply:hasPrivilege("Staff Permissions - Manage Car Blacklist") end,
     Action = function(self, ent)
         self:MsgStart()
         net.WriteString(ent:GetModel())
@@ -110,4 +103,3 @@ properties.Add("ToggleCarBlacklist", {
         end
     end
 })
-

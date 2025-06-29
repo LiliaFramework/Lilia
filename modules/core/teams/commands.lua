@@ -65,6 +65,7 @@ lia.command.add("plywhitelist", {
             for _, v in player.Iterator() do
                 v:notifyLocalized("whitelist", client:Name(), target:Name(), L(faction.name, v))
             end
+
             lia.log.add(client, "plyWhitelist", target:Name(), faction.name)
         end
     end
@@ -94,6 +95,7 @@ lia.command.add("plyunwhitelist", {
             for _, v in player.Iterator() do
                 v:notifyLocalized("unwhitelist", client:Name(), target:Name(), L(faction.name, v))
             end
+
             lia.log.add(client, "plyUnwhitelist", target:Name(), faction.name)
         end
     end

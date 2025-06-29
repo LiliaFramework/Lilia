@@ -82,7 +82,6 @@ lia.command.add("setinventorysize", {
         end
 
         lia.log.add(client, "invSetSize", target:Name(), w, h)
-
         client:notifyLocalized("setInventorySizeNotify", target:Name(), w, h)
     end
 })

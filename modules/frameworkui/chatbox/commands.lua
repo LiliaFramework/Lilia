@@ -68,6 +68,7 @@ lia.command.add("clearchat", {
         for _, ply in player.Iterator() do
             ply:ConCommand("fixchatplz")
         end
+
         lia.log.add(client, "clearChat")
     end
 })

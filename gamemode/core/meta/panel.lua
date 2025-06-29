@@ -1,4 +1,4 @@
-local panelMeta = FindMetaTable("Panel")
+﻿local panelMeta = FindMetaTable("Panel")
 function panelMeta:liaListenForInventoryChanges(inventory)
     assert(inventory, "No inventory has been set!")
     local id = inventory:getID()
