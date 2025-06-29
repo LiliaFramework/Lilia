@@ -7,7 +7,14 @@ This page explains how translations and phrases are loaded.
 ## Overview
 
 The languages library loads localization files from directories. It resolves phrase keys to translated text and allows runtime language switching.
+--[[--
+Multi-language phrase support.
 
+Helix has support for multiple languages, and you can easily leverage this system for use in your own schema, plugins, etc.
+Languages will be loaded from the schema and any plugins in `languages/sh_languagename.lua`, where `languagename` is the id of a
+language (`english` for English, `french` for French, etc). The structure of a language file is a table of phrases with the key
+
+]]
 ---
 
 ### `lia.lang.loadFromDir(directory)`

@@ -7,7 +7,14 @@ This document describes all `FACTION` function hooks defined within the codebase
 ## Overview
 
 Each faction can implement these shared- and server-side hooks to control how characters are initialized, described, and handled as they move through creation, spawning, and transfers. All hooks are optional; if you omit a hook, default behavior applies.
+--[[--
+Faction setup hooks.
 
+Factions get their own hooks that are called for various reasons, but the most common one is to set up a character
+once it's created and assigned to a certain faction. For example, giving a police faction character a weapon on creation.
+These hooks are used in faction tables that are created in `schema/factions/sh_factionname.lua` and cannot be used like
+regular gamemode hooks.
+]]
 ---
 
 ### GetDefaultName

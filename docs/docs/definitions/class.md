@@ -286,7 +286,10 @@ CLASS.bloodcolor = BLOOD_COLOR_RED
 **Example:**
 
 ```lua
-CLASS.bodyGroups = { [1] = 2, [3] = 1 }
+CLASS.bodyGroups = {
+    hands = 1,
+    torso = 3
+}
 ```
 
 #### `model`

@@ -7,7 +7,12 @@ This document lists global hooks triggered by the gamemode. You can define them 
 - **hook.Add** may be used from any file.
 
 If multiple definitions of the same hook exist on `GM`, `MODULE`, or `SCHEMA`, the one loaded last overrides the others.
+--[[--
+Global hooks for general use.
 
+Plugin hooks are regular hooks that can be used in your schema with `Schema:HookName(args)`, in your plugin with
+`PLUGIN:HookName(args)`, or in your addon with `hook.Add("HookName", function(args) end)`.
+]]
 ---
 
 ## Overview

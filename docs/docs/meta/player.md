@@ -8,6 +8,18 @@ Lilia extends Garry's Mod players with characters, inventories, and permission c
 
 Player meta functions provide quick access to the active character, networking helpers for messaging or data transfer, and utility checks such as admin status. They unify player-related logic across the framework.
 
+--[[--
+Physical representation of connected player.
+
+`Player`s are a type of `Entity`. They are a physical representation of a `Character` - and can possess at most one `Character`
+object at a time that you can interface with.
+
+See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for all other methods that the `Player` class has.
+]]
+
+
+
+
 ---
 
 ### `getChar()`

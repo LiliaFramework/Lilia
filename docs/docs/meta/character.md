@@ -7,7 +7,19 @@ Character objects returned by `player:getChar()` persist inventory, stats, and m
 ## Overview
 
 The character meta library provides shortcuts for fetching stored values, verifying permissions, and linking a character back to its player. These routines centralize logic used by banking, crafting, and other gameplay systems.
+--[[--
+Contains information about a player's current game state.
 
+Characters are a fundamental object type in Helix. They are distinct from players, where players are the representation of a
+person's existence in the server that owns a character, and their character is their currently selected persona. All the
+characters that a player owns will be loaded into memory once they connect to the server. Characters are saved during a regular
+interval, and during specific events (e.g when the owning player switches away from one character to another).
+
+They contain all information that is not persistent with the player; names, descriptions, model, currency, etc. For the most
+part, you'll want to keep all information stored on the character since it will probably be different or change if the
+player switches to another character. An easy way to do this is to use `ix.char.RegisterVar` to easily create accessor functions
+for variables that automatically save to the character object.
+]]
 ---
 
 ### `tostring()`

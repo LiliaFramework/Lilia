@@ -61,7 +61,6 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 | `unequipSound` | `string` | `""` | Sound played when unequipping. |
 | `uniqueID` | `string` | `"undefined"` | Overrides the automatically generated unique identifier. |
 | `url` | `string` | `""` | Web address opened when using the item. |
-| `visualData` | `table` | `{}` | Table storing outfit visual information. |
 | `weaponCategory` | `string` | `""` | Slot category for the weapon. |
 | `width` | `number` | `1` | Width in inventory grid. |
 
@@ -393,10 +392,10 @@ ITEM.newSkin = 1
 ITEM.outfitCategory = "body"
 ```
 
-#### `visualData`
+#### `pacData`
 
 **Type:** `table`
-**Description:** Table storing outfit visual information.
+**Description:** PAC3 customization information.
 **Example:**
 
 ```lua
@@ -427,16 +426,6 @@ ITEM.pacData = {
 }
 ```
 
-#### `pacData`
-
-**Type:** `table`
-**Description:** PAC3 customization information.
-**Example:**
-
-```lua
-ITEM.pacData = {}
-```
-
 #### `replacements`
 
 **Type:** `string`
@@ -444,8 +433,15 @@ ITEM.pacData = {}
 **Example:**
 
 ```lua
-ITEM.replacements = "models/player/combine_soldier.mdl"
-```
+-- This will change a certain part of the model.
+ITEM.replacements = {"group01", "group02"}
+-- This will change the player's model completely.
+ITEM.replacements = "models/manhack.mdl"
+-- This will have multiple replacements.
+ITEM.replacements = {
+	{"male", "female"},
+	{"group01", "group02"}
+}```
 
 ---
 

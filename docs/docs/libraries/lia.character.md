@@ -7,7 +7,12 @@ This page covers utilities for manipulating character data.
 ## Overview
 
 The character library handles creation and persistence of player characters. It manages character variables, interacts with the database, and offers helpers for retrieving characters by ID or SteamID.
+--[[--
+Character creation and management.
 
+**NOTE:** For the most part you shouldn't use this library unless you know what you're doing. You can very easily corrupt
+character data using these functions!
+]]
 ---
 
 ### `lia.char.new(data, id, client, steamID)`

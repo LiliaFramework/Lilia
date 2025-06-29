@@ -7,7 +7,15 @@ This page explains permission flag management.
 ## Overview
 
 The flags library assigns text-based permission flags to players. It offers tools for checking whether a player possesses a flag and for saving or loading flag data.
+--[[--
+Grants abilities to characters.
 
+Flags are a simple way of adding/removing certain abilities to players on a per-character basis. Helix comes with a few flags
+by default, for example to restrict spawning of props, usage of the physgun, etc. All flags will be listed in the
+`Flags` section of the `Help` menu. Flags are usually used when server validation is required to allow a player to do something
+on their character. However, it's usually preferable to use in-character methods over flags when possible (i.e restricting
+the business menu to characters that have a permit item, rather than using flags to determine availability).
+]]
 ---
 
 ### `lia.flag.add`
