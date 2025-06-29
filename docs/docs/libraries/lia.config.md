@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Config Library
 
-This document lists hooks related to attribute setup and changes.
+This page explains how to add and access configuration settings.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The config library stores server configuration values with descriptions and default settings. It also provides callbacks when values change so modules can react to new options.
 
 ---
 

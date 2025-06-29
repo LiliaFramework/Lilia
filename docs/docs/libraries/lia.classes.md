@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Classes Library
 
-This document lists hooks related to attribute setup and changes.
+This page details the class system functions.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The classes library loads Lua definitions that describe player classes. It stores available classes, registers default attributes, and provides lookup functions by name or index.
 
 ---
 

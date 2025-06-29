@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Option Library
 
-This document lists hooks related to attribute setup and changes.
+This page details the client/server option system.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The option library stores user and server options with default values. It offers getters and setters that automatically network changes between client and server.
 
 ---
 

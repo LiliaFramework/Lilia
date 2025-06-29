@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Time Library
 
-This document lists hooks related to attribute setup and changes.
+This page lists time and date utilities.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The time library handles date formatting and relative time conversions. It offers helper functions to compute durations such as 'time since' or 'time until'.
 
 ---
 

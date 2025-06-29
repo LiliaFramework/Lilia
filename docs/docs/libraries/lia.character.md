@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Character Library
 
-This document lists hooks related to attribute setup and changes.
+This page covers utilities for manipulating character data.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The character library handles creation and persistence of player characters. It manages character variables, interacts with the database, and offers helpers for retrieving characters by ID or SteamID.
 
 ---
 

@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Utility Library
 
-This document lists hooks related to attribute setup and changes.
+This page documents miscellaneous helper functions.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The util library contains small miscellaneous helper functions used across modules. These include player searches, entity queries, and geometric calculations.
 
 ---
 

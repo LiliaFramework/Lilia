@@ -1,12 +1,12 @@
-# Attribute Hooks
+# WebImage Library
 
-This document lists hooks related to attribute setup and changes.
+This page explains how web images are downloaded and cached.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The webimage library downloads remote images and caches them as materials. It avoids repeated downloads and allows you to reference web images by name.
 
 ---
 

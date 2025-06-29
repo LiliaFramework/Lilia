@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Languages Library
 
-This document lists hooks related to attribute setup and changes.
+This page explains how translations and phrases are loaded.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The languages library loads localization files from directories. It resolves phrase keys to translated text and allows runtime language switching.
 
 ---
 

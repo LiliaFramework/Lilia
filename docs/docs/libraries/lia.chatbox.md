@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Chatbox Library
 
-This document lists hooks related to attribute setup and changes.
+This page outlines chatbox related functions and helpers.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The chatbox library defines chat commands and renders messages. It lets you register new chat types with custom formatting and handles radius-based or global message visibility.
 
 ---
 
