@@ -413,6 +413,7 @@ LANGUAGE = {
     cmdVehicle = "You cannot use this as you are in a vehicle!",
     cmdNoclip = "You cannot use this while in noclip!",
     blacklistedProp = "Blacklisted Prop!",
+    blacklistedVehicle = "Blacklisted Vehicle!",
     noSpawnPropsPerm = "You do not have permission to spawn props.",
     disabledFeature = "This is disabled to avoid issues with Lilia's Core Features",
     noModifyWorldEntities = "You do not have permission to modify world entities.",
@@ -823,6 +824,7 @@ LANGUAGE = {
     sitroomReturnSuccess = "Returned %s to their previous position.",
     sitroomReturned = "Returned to your previous position.",
     TogglePropBlacklist = "Toggle Prop Blacklist",
+    ToggleCarBlacklist = "Toggle Car Blacklist",
     addedToBlacklist = "Added to blacklist: %s",
     removedFromBlacklist = "Removed from blacklist: %s",
 }
