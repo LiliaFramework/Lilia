@@ -1,5 +1,6 @@
 arrange:
   - index.md
+  - feature_list.md
   - installation.md
   - framework
   - definitions
