@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Menu Library
 
-This document lists hooks related to attribute setup and changes.
+This page describes small menu creation helpers.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The menu library offers convenience functions for building simple context menus. It supports nested options and automatically positions them on screen.
 
 ---
 

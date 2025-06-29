@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Inventory Library
 
-This document lists hooks related to attribute setup and changes.
+This page documents inventory handling functions.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The inventory library manages item containers and grid inventories. It supports registering new inventory types and handles item transfers between them.
 
 ---
 

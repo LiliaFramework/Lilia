@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Flags Library
 
-This document lists hooks related to attribute setup and changes.
+This page explains permission flag management.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The flags library assigns text-based permission flags to players. It offers tools for checking whether a player possesses a flag and for saving or loading flag data.
 
 ---
 

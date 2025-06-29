@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Item Library
 
-This document lists hooks related to attribute setup and changes.
+This page covers item definition helpers.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The item library contains utilities for retrieving item definitions and creating new items. It also provides shared item methods used throughout the framework.
 
 ---
 

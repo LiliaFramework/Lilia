@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Networking Library
 
-This document lists hooks related to attribute setup and changes.
+This page documents network variable and message helpers.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The networking library synchronizes data between the server and clients. It provides wrappers around net messages and networked variables.
 
 ---
 

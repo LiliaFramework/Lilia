@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Color Library
 
-This document lists hooks related to attribute setup and changes.
+This page lists helper functions for working with colors.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The color library centralizes color utilities used throughout the UI. You can register reusable colors, adjust their channels to create variants, and fetch the main palette from the configuration.
 
 ---
 

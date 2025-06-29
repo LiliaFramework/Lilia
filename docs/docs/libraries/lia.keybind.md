@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Keybind Library
 
-This document lists hooks related to attribute setup and changes.
+This page describes functions to register custom keybinds.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The keybind library stores user-defined keyboard bindings. It reads and writes keybind files and dispatches callbacks when the associated keys are pressed.
 
 ---
 

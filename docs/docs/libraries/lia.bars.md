@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Bars Library
 
-This document lists hooks related to attribute setup and changes.
+This page describes the API for status bars displayed on the HUD.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The bars library manages health, stamina, and other progress bars displayed on the player's HUD. It lets you register custom bar callbacks, draws them every frame, and provides helpers for temporary action bars.
 
 ---
 

@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Data Library
 
-This document lists hooks related to attribute setup and changes.
+This page describes persistent data storage helpers.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The data library persists key/value pairs either on disk or through the database backend. It supplies convenience methods for saving, retrieving, and deleting stored data.
 
 ---
 

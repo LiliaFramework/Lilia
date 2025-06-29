@@ -1,12 +1,12 @@
-# Attribute Hooks
+# Fonts Library
 
-This document lists hooks related to attribute setup and changes.
+This page lists utilities for creating fonts.
 
 ---
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+The fonts library wraps surface.CreateFont for commonly used fonts. It reduces duplication by registering fonts once and allowing them to be recalled by name.
 
 ---
 
