@@ -14,15 +14,20 @@ The fonts library wraps surface.CreateFont for commonly used fonts. It reduces d
 
     
 **Description:**
+
 Creates and stores a font using surface.CreateFont for later refresh.
 **Parameters:**
+
 * fontName (string) – Font identifier.
 * fontData (table) – Font properties table.
 **Realm:**
+
 * Client
 **Returns:**
+
 * None
 **Example:**
+
 ```lua
     -- This snippet demonstrates a common usage of lia.font.register
     lia.font.register("MyFont", {font = "Arial", size = 16})
@@ -35,14 +40,19 @@ Creates and stores a font using surface.CreateFont for later refresh.
 
     
 **Description:**
+
 Returns a sorted list of font names that have been registered.
 **Parameters:**
+
 * None
 **Returns:**
+
 * table – Array of font name strings.
 **Realm:**
+
 * Client
 **Example:**
+
 ```lua
     -- This snippet demonstrates a common usage of lia.font.getAvailableFonts
     local fonts = lia.font.getAvailableFonts()
@@ -56,14 +66,19 @@ Returns a sorted list of font names that have been registered.
 
     
 **Description:**
+
 Recreates all stored fonts. Called when font related config values change.
 **Parameters:**
+
 * None
 **Returns:**
+
 * None
 **Realm:**
+
 * Client
 **Example:**
+
 ```lua
     -- This snippet demonstrates a common usage of lia.font.refresh
     lia.font.refresh()

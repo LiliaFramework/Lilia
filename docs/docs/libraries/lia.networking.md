@@ -14,17 +14,22 @@ The networking library synchronizes data between the server and clients. It prov
 
     
 **Description:**
+
 Stores a global networked variable and broadcasts it to clients. When a
 receiver is specified the update is only sent to those players.
 **Parameters:**
+
 * key (string) – Name of the variable.
 * value (any) – Value to store.
 * receiver (Player|table|nil) – Optional receiver(s) for the update.
 **Realm:**
+
 * Server
 **Returns:**
+
 * nil
 **Example:**
+
 ```lua
     -- Start a new round and only inform the winner
     local round = getNetVar("round", 0) + 1
@@ -41,15 +46,20 @@ receiver is specified the update is only sent to those players.
 
     
 **Description:**
+
 Retrieves a global networked variable previously set by setNetVar.
 **Parameters:**
+
 * key (string) – Variable name.
 * default (any) – Fallback value if the variable is not set.
 **Realm:**
+
 * Shared
 **Returns:**
+
 * any – Stored value or default.
 **Example:**
+
 ```lua
     -- Inform a joining player of the current round and last winner
     hook.Add("PlayerInitialSpawn", "ShowRound", function(ply)

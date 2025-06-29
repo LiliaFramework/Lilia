@@ -20,6 +20,7 @@ function CLASS:OnCanBe(client) → boolean
 ```
 
 **Description:**
+
 Determines whether a player is permitted to switch to this class. Evaluated before the class change occurs.
 
 **Parameters:**
@@ -47,6 +48,7 @@ function CLASS:OnLeave(client)
 ```
 
 **Description:**
+
 Triggered when a player leaves the class. Useful for resetting models or other class-specific attributes.
 
 **Parameters:**
@@ -75,6 +77,7 @@ function CLASS:OnSet(client)
 ```
 
 **Description:**
+
 Called when a player successfully joins the class. Initialize class-specific settings here.
 
 **Parameters:**
@@ -102,6 +105,7 @@ function CLASS:OnSpawn(client)
 ```
 
 **Description:**
+
 Invoked when a class member spawns. Use this for spawn-specific setup like health, armor, or weapons.
 
 **Parameters:**
@@ -130,6 +134,7 @@ function CLASS:OnTransferred(character)
 ```
 
 **Description:**
+
 Executes actions when a character is transferred into this class (e.g., by an admin or system transfer).
 
 **Parameters:**

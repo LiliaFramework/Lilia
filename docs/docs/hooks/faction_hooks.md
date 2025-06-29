@@ -17,6 +17,7 @@ end
 ```
 
 **Description:**
+
 Retrieves the default name for a newly created character in this faction.
 
 **Parameters:**
@@ -46,6 +47,7 @@ end
 ```
 
 **Description:**
+
 Retrieves the default description for a newly created character in this faction.
 
 **Parameters:**
@@ -75,6 +77,7 @@ end
 ```
 
 **Description:**
+
 Executes actions when a new character is created and assigned to this faction. Ideal for initializing inventories or character data.
 
 **Parameters:**
@@ -105,6 +108,7 @@ end
 ```
 
 **Description:**
+
 Invoked when a faction member spawns into the world. Use this for per-spawn setup such as notifications or custom status.
 
 **Parameters:**
@@ -133,6 +137,7 @@ end
 ```
 
 **Description:**
+
 Executes actions when an existing character is transferred into this faction (e.g., via admin or system transfer).
 
 **Parameters:**

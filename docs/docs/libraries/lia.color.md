@@ -14,15 +14,20 @@ The color library centralizes color utilities used throughout the UI. You can re
 
     
 **Description:**
+
 Registers a named color for later lookup.
 **Parameters:**
+
 * name (string) – Key used to reference the color.
 * color (Color) – Color object or table.
 **Returns:**
+
 * nil
 **Realm:**
+
 * Shared
 **Example:**
+
 ```lua
     -- This snippet demonstrates a common usage of lia.color.register
     lia.color.register("myRed", Color(255,0,0))
@@ -35,18 +40,23 @@ Registers a named color for later lookup.
 
     
 **Description:**
+
 Creates a new color by applying offsets to each channel.
 **Parameters:**
+
 * color (Color) – Base color.
 * rOffset (number) – Red channel delta.
 * gOffset (number) – Green channel delta.
 * bOffset (number) – Blue channel delta.
 * aOffset (number) – Alpha channel delta (optional).
 **Returns:**
+
 * Color – Adjusted color.
 **Realm:**
+
 * Shared
 **Example:**
+
 ```lua
     -- This snippet demonstrates a common usage of lia.color.Adjust
     local lighter = lia.color.Adjust(Color(50,50,50), 10,10,10)
@@ -59,14 +69,19 @@ Creates a new color by applying offsets to each channel.
 
     
 **Description:**
+
 Returns a table of commonly used UI colors derived from the base config color.
 **Parameters:**
+
 * None
 **Returns:**
+
 * table – Mapping of UI color keys to Color objects.
 **Realm:**
+
 * Shared
 **Example:**
+
 ```lua
     -- This snippet demonstrates a common usage of lia.color.ReturnMainAdjustedColors
     local uiColors = lia.color.ReturnMainAdjustedColors()
