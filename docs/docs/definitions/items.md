@@ -400,7 +400,31 @@ ITEM.outfitCategory = "body"
 **Example:**
 
 ```lua
-ITEM.visualData = {}
+-- This attaches an HGIBS gib model to the player’s eyes bone
+ITEM.pacData = {
+	[1] = {
+		["children"] = {
+			[1] = {
+				["children"] = {
+				},
+				["self"] = {
+					["Angles"] = Angle(12.919322967529, 6.5696062847564e-006, -1.0949343050015e-005),
+					["Position"] = Vector(-2.099609375, 0.019973754882813, 1.0180969238281),
+					["UniqueID"] = "4249811628",
+					["Size"] = 1.25,
+					["Bone"] = "eyes",
+					["Model"] = "models/Gibs/HGIBS.mdl",
+					["ClassName"] = "model",
+				},
+			},
+		},
+		["self"] = {
+			["ClassName"] = "group",
+			["UniqueID"] = "907159817",
+			["EditorExpand"] = true,
+		},
+	},
+}
 ```
 
 #### `pacData`
