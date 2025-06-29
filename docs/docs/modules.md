@@ -2,9 +2,7 @@
 
 These free modules expand the base mechanics of Lilia. They are all open source and hosted in the [Modules repository](https://github.com/LiliaFramework/Modules) as well as on the [Modules website](https://liliaframework.github.io/Modules/). Click a module name to download it or use the direct URL listed under "Download Here."
 
-## [Advert](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/advert.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/advert.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/advert.zip)
+## Advert
 
 **Module Website:** [https://liliaframework.github.io/Modules/advert.html](https://liliaframework.github.io/Modules/advert.html)
 
@@ -15,11 +13,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Includes a configurable delay to prevent spam
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/advert.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/advert.zip)
 ---
 
-## [Alcoholism](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/alcoholism.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/alcoholism.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/alcoholism.zip)
+## Alcoholism
 
 **Module Website:** [https://liliaframework.github.io/Modules/alcoholism.html](https://liliaframework.github.io/Modules/alcoholism.html)
 
@@ -32,11 +29,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - BAC gradually lowers over time
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/alcoholism.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/alcoholism.zip)
 ---
 
-## [Auto Restarter](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/autorestarter.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/autorestarter.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/autorestarter.zip)
+## Auto Restarter
 
 **Module Website:** [https://liliaframework.github.io/Modules/autorestarter.html](https://liliaframework.github.io/Modules/autorestarter.html)
 
@@ -47,11 +43,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Displays countdown warnings to connected players
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/autorestarter.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/autorestarter.zip)
 ---
 
-## [Bodygrouper](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/bodygrouper.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/bodygrouper.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/bodygrouper.zip)
+## Bodygrouper
 
 **Module Website:** [https://liliaframework.github.io/Modules/bodygrouper.html](https://liliaframework.github.io/Modules/bodygrouper.html)
 
@@ -62,11 +57,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Closet entity that lets players change model bodygroups
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/bodygrouper.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/bodygrouper.zip)
 ---
 
-## [Broadcasts](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/broadcasts.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/broadcasts.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/broadcasts.zip)
+## Broadcasts
 
 **Module Website:** [https://liliaframework.github.io/Modules/broadcasts.html](https://liliaframework.github.io/Modules/broadcasts.html)
 
@@ -77,11 +71,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Sends messages to selected factions or classes
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/broadcasts.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/broadcasts.zip)
 ---
 
-## [Captions](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/captions.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/captions.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/captions.zip)
+## Captions
 
 **Module Website:** [https://liliaframework.github.io/Modules/captions.html](https://liliaframework.github.io/Modules/captions.html)
 
@@ -92,11 +85,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Captions fade in and out and are networked to all clients
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/captions.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/captions.zip)
 ---
 
-## [Cards](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cards.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cards.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cards.zip)
+## Cards
 
 **Module Website:** [https://liliaframework.github.io/Modules/cards.html](https://liliaframework.github.io/Modules/cards.html)
 
@@ -107,11 +99,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Includes card deck items
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cards.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cards.zip)
 ---
 
-## [Chat Messages](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/chatmessages.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/chatmessages.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/chatmessages.zip)
+## Chat Messages
 
 **Module Website:** [https://liliaframework.github.io/Modules/chatmessages.html](https://liliaframework.github.io/Modules/chatmessages.html)
 
@@ -122,11 +113,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Interval and message list are configurable
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/chatmessages.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/chatmessages.zip)
 ---
 
-## [Cinematic Text](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cinematictext.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cinematictext.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cinematictext.zip)
+## Cinematic Text
 
 **Module Website:** [https://liliaframework.github.io/Modules/cinematictext.html](https://liliaframework.github.io/Modules/cinematictext.html)
 
@@ -137,11 +127,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Supports custom colors, large titles and countdowns
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cinematictext.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cinematictext.zip)
 ---
 
-## [Climb](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/climb.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/climb.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/climb.zip)
+## Climb
 
 **Module Website:** [https://liliaframework.github.io/Modules/climb.html](https://liliaframework.github.io/Modules/climb.html)
 
@@ -152,11 +141,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Uses trace detection to start the climb animation
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/climb.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/climb.zip)
 ---
 
-## [Code Utils](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/codeutils.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/codeutils.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/codeutils.zip)
+## Code Utils
 
 **Module Website:** [https://liliaframework.github.io/Modules/codeutils.html](https://liliaframework.github.io/Modules/codeutils.html)
 
@@ -167,11 +155,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Includes network convenience wrappers
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/codeutils.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/codeutils.zip)
 ---
 
-## [Community Commands](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/communitycommands.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/communitycommands.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/communitycommands.zip)
+## Community Commands
 
 **Module Website:** [https://liliaframework.github.io/Modules/communitycommands.html](https://liliaframework.github.io/Modules/communitycommands.html)
 
@@ -182,11 +169,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Simple to customize
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/communitycommands.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/communitycommands.zip)
 ---
 
-## [Corpse ID](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/corpseid.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/corpseid.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/corpseid.zip)
+## Corpse ID
 
 **Module Website:** [https://liliaframework.github.io/Modules/corpseid.html](https://liliaframework.github.io/Modules/corpseid.html)
 
@@ -197,11 +183,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Stores identification state on the corpse
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/corpseid.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/corpseid.zip)
 ---
 
-## [Cursor](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cursor.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cursor.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cursor.zip)
+## Cursor
 
 **Module Website:** [https://liliaframework.github.io/Modules/cursor.html](https://liliaframework.github.io/Modules/cursor.html)
 
@@ -212,11 +197,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Can be toggled via configuration
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cursor.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cursor.zip)
 ---
 
-## [Simple Cutscenes](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cutscenes.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cutscenes.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cutscenes.zip)
+## Simple Cutscenes
 
 **Module Website:** [https://liliaframework.github.io/Modules/cutscenes.html](https://liliaframework.github.io/Modules/cutscenes.html)
 
@@ -227,11 +211,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Includes chat command to play predefined scenes
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cutscenes.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cutscenes.zip)
 ---
 
-## [Damage Numbers](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/damagenumbers.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/damagenumbers.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/damagenumbers.zip)
+## Damage Numbers
 
 **Module Website:** [https://liliaframework.github.io/Modules/damagenumbers.html](https://liliaframework.github.io/Modules/damagenumbers.html)
 
@@ -242,11 +225,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Display style and duration are configurable
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/damagenumbers.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/damagenumbers.zip)
 ---
 
-## [Development HUD](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmenthud.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmenthud.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmenthud.zip)
+## Development HUD
 
 **Module Website:** [https://liliaframework.github.io/Modules/developmenthud.html](https://liliaframework.github.io/Modules/developmenthud.html)
 
@@ -257,11 +239,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Useful while developing new content
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmenthud.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmenthud.zip)
 ---
 
-## [Development Server](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmentserver.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmentserver.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmentserver.zip)
+## Development Server
 
 **Module Website:** [https://liliaframework.github.io/Modules/developmentserver.html](https://liliaframework.github.io/Modules/developmentserver.html)
 
@@ -272,11 +253,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Enables special debug commands
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmentserver.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmentserver.zip)
 ---
 
-## [Discord Relay](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/discordrelay.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/discordrelay.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/discordrelay.zip)
+## Discord Relay
 
 **Module Website:** [https://liliaframework.github.io/Modules/discordrelay.html](https://liliaframework.github.io/Modules/discordrelay.html)
 
@@ -287,11 +267,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Channel configuration is handled in settings
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/discordrelay.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/discordrelay.zip)
 ---
 
-## [Donator](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/donator.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/donator.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/donator.zip)
+## Donator
 
 **Module Website:** [https://liliaframework.github.io/Modules/donator.html](https://liliaframework.github.io/Modules/donator.html)
 
@@ -302,11 +281,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Integrates with donation systems
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/donator.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/donator.zip)
 ---
 
-## [Door Kick](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/doorkick.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/doorkick.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/doorkick.zip)
+## Door Kick
 
 **Module Website:** [https://liliaframework.github.io/Modules/doorkick.html](https://liliaframework.github.io/Modules/doorkick.html)
 
@@ -317,11 +295,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Only works on unlocked or breachable doors
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/doorkick.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/doorkick.zip)
 ---
 
-## [Hospitals](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/enhanceddeath.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/enhanceddeath.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/enhanceddeath.zip)
+## Hospitals
 
 **Module Website:** [https://liliaframework.github.io/Modules/enhanceddeath.html](https://liliaframework.github.io/Modules/enhanceddeath.html)
 
@@ -332,11 +309,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Supports placement of multiple hospital spawn points
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/enhanceddeath.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/enhanceddeath.zip)
 ---
 
-## [Extended Descriptions](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/extendeddescriptions.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/extendeddescriptions.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/extendeddescriptions.zip)
+## Extended Descriptions
 
 **Module Website:** [https://liliaframework.github.io/Modules/extendeddescriptions.html](https://liliaframework.github.io/Modules/extendeddescriptions.html)
 
@@ -347,11 +323,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Displays them in info panels
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/extendeddescriptions.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/extendeddescriptions.zip)
 ---
 
-## [First Person Effects](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/firstpersoneffects.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/firstpersoneffects.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/firstpersoneffects.zip)
+## First Person Effects
 
 **Module Website:** [https://liliaframework.github.io/Modules/firstpersoneffects.html](https://liliaframework.github.io/Modules/firstpersoneffects.html)
 
@@ -362,11 +337,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Enhances immersion when running or landing
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/firstpersoneffects.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/firstpersoneffects.zip)
 ---
 
-## [Flashlight](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/flashlight.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/flashlight.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/flashlight.zip)
+## Flashlight
 
 **Module Website:** [https://liliaframework.github.io/Modules/flashlight.html](https://liliaframework.github.io/Modules/flashlight.html)
 
@@ -377,11 +351,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Optional battery drain system
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/flashlight.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/flashlight.zip)
 ---
 
-## [Free Look](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/freelook.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/freelook.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/freelook.zip)
+## Free Look
 
 **Module Website:** [https://liliaframework.github.io/Modules/freelook.html](https://liliaframework.github.io/Modules/freelook.html)
 
@@ -392,11 +365,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Bind a key to look around without moving your aim
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/freelook.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/freelook.zip)
 ---
 
-## [Gamemaster Teleport Points](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/gamemasterpoints.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/gamemasterpoints.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/gamemasterpoints.zip)
+## Gamemaster Teleport Points
 
 **Module Website:** [https://liliaframework.github.io/Modules/gamemasterpoints.html](https://liliaframework.github.io/Modules/gamemasterpoints.html)
 
@@ -407,11 +379,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Commands to save, remove and travel to points
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/gamemasterpoints.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/gamemasterpoints.zip)
 ---
 
-## [Extra HUD Elements](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/hud_extras.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/hud_extras.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/hud_extras.zip)
+## Extra HUD Elements
 
 **Module Website:** [https://liliaframework.github.io/Modules/hud_extras.html](https://liliaframework.github.io/Modules/hud_extras.html)
 
@@ -422,11 +393,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Elements can be toggled in configuration
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/hud_extras.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/hud_extras.zip)
 ---
 
-## [Instant Killing](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/instakill.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/instakill.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/instakill.zip)
+## Instant Killing
 
 **Module Website:** [https://liliaframework.github.io/Modules/instakill.html](https://liliaframework.github.io/Modules/instakill.html)
 
@@ -437,11 +407,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Damage scaling controlled via config
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/instakill.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/instakill.zip)
 ---
 
-## [Join Leave Messages](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/joinleavemessages.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/joinleavemessages.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/joinleavemessages.zip)
+## Join Leave Messages
 
 **Module Website:** [https://liliaframework.github.io/Modules/joinleavemessages.html](https://liliaframework.github.io/Modules/joinleavemessages.html)
 
@@ -452,11 +421,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Uses color-coded messages
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/joinleavemessages.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/joinleavemessages.zip)
 ---
 
-## [Load Messages](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loadmessages.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loadmessages.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loadmessages.zip)
+## Load Messages
 
 **Module Website:** [https://liliaframework.github.io/Modules/loadmessages.html](https://liliaframework.github.io/Modules/loadmessages.html)
 
@@ -467,11 +435,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Can vary message by faction
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loadmessages.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loadmessages.zip)
 ---
 
-## [Loyalism](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loyalism.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loyalism.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loyalism.zip)
+## Loyalism
 
 **Module Website:** [https://liliaframework.github.io/Modules/loyalism.html](https://liliaframework.github.io/Modules/loyalism.html)
 
@@ -482,11 +449,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Tiers grant access to special items or areas
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loyalism.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loyalism.zip)
 ---
 
-## [Map Cleaner](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/mapcleaner.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/mapcleaner.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/mapcleaner.zip)
+## Map Cleaner
 
 **Module Website:** [https://liliaframework.github.io/Modules/mapcleaner.html](https://liliaframework.github.io/Modules/mapcleaner.html)
 
@@ -497,11 +463,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Warns players before removing entities
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/mapcleaner.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/mapcleaner.zip)
 ---
 
-## [Model Pay](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modelpay.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modelpay.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modelpay.zip)
+## Model Pay
 
 **Module Website:** [https://liliaframework.github.io/Modules/modelpay.html](https://liliaframework.github.io/Modules/modelpay.html)
 
@@ -512,11 +477,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Supports custom prices for each model
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modelpay.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modelpay.zip)
 ---
 
-## [Model Tweaker](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modeltweaker.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modeltweaker.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modeltweaker.zip)
+## Model Tweaker
 
 **Module Website:** [https://liliaframework.github.io/Modules/modeltweaker.html](https://liliaframework.github.io/Modules/modeltweaker.html)
 
@@ -527,11 +491,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Saves adjustments for later
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modeltweaker.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modeltweaker.zip)
 ---
 
-## [NPC Drops](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcdrop.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcdrop.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcdrop.zip)
+## NPC Drops
 
 **Module Website:** [https://liliaframework.github.io/Modules/npcdrop.html](https://liliaframework.github.io/Modules/npcdrop.html)
 
@@ -542,11 +505,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Supports custom loot lists per NPC type
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcdrop.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcdrop.zip)
 ---
 
-## [NPC Spawner](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcspawner.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcspawner.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcspawner.zip)
+## NPC Spawner
 
 **Module Website:** [https://liliaframework.github.io/Modules/npcspawner.html](https://liliaframework.github.io/Modules/npcspawner.html)
 
@@ -557,11 +519,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Spawner intervals and limits are configurable
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcspawner.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcspawner.zip)
 ---
 
-## [Perma Remove](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/permaremove.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/permaremove.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/permaremove.zip)
+## Perma Remove
 
 **Module Website:** [https://liliaframework.github.io/Modules/permaremove.html](https://liliaframework.github.io/Modules/permaremove.html)
 
@@ -572,11 +533,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Removals persist across server restarts
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/permaremove.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/permaremove.zip)
 ---
 
-## [Radio](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/radio.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/radio.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/radio.zip)
+## Radio
 
 **Module Website:** [https://liliaframework.github.io/Modules/radio.html](https://liliaframework.github.io/Modules/radio.html)
 
@@ -587,11 +547,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Includes UI for channel selection and push-to-talk
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/radio.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/radio.zip)
 ---
 
-## [Raised Weapons](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/raisedweapons.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/raisedweapons.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/raisedweapons.zip)
+## Raised Weapons
 
 **Module Website:** [https://liliaframework.github.io/Modules/raisedweapons.html](https://liliaframework.github.io/Modules/raisedweapons.html)
 
@@ -602,11 +561,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Players must raise weapons to fire
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/raisedweapons.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/raisedweapons.zip)
 ---
 
-## [Realistic Damage](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticdamage.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticdamage.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticdamage.zip)
+## Realistic Damage
 
 **Module Website:** [https://liliaframework.github.io/Modules/realisticdamage.html](https://liliaframework.github.io/Modules/realisticdamage.html)
 
@@ -617,11 +575,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Tweaks hit group multipliers and armor effects
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticdamage.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticdamage.zip)
 ---
 
-## [Realistic View](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticview.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticview.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticview.zip)
+## Realistic View
 
 **Module Website:** [https://liliaframework.github.io/Modules/realisticview.html](https://liliaframework.github.io/Modules/realisticview.html)
 
@@ -632,11 +589,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Adjusts camera position for a realistic view
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticview.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticview.zip)
 ---
 
-## [Rumour](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/rumour.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/rumour.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/rumour.zip)
+## Rumour
 
 **Module Website:** [https://liliaframework.github.io/Modules/rumour.html](https://liliaframework.github.io/Modules/rumour.html)
 
@@ -647,11 +603,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Rumours are broadcast to nearby players
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/rumour.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/rumour.zip)
 ---
 
-## [Shoot Locks](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/shootlock.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/shootlock.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/shootlock.zip)
+## Shoot Locks
 
 **Module Website:** [https://liliaframework.github.io/Modules/shootlock.html](https://liliaframework.github.io/Modules/shootlock.html)
 
@@ -662,11 +617,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Checks lock health and plays effects
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/shootlock.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/shootlock.zip)
 ---
 
-## [Lockpicking](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/simple_lockpicking.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/simple_lockpicking.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/simple_lockpicking.zip)
+## Lockpicking
 
 **Module Website:** [https://liliaframework.github.io/Modules/simple_lockpicking.html](https://liliaframework.github.io/Modules/simple_lockpicking.html)
 
@@ -677,11 +631,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Includes custom lockpick items
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/simple_lockpicking.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/simple_lockpicking.zip)
 ---
 
-## [Slots](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slots.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slots.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slots.zip)
+## Slots
 
 **Module Website:** [https://liliaframework.github.io/Modules/slots.html](https://liliaframework.github.io/Modules/slots.html)
 
@@ -692,11 +645,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Uses animated reels and configurable payouts
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slots.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slots.zip)
 ---
 
-## [Heavy Weapons](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slowweapons.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slowweapons.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slowweapons.zip)
+## Heavy Weapons
 
 **Module Website:** [https://liliaframework.github.io/Modules/slowweapons.html](https://liliaframework.github.io/Modules/slowweapons.html)
 
@@ -707,11 +659,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Define which weapons count as heavy
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slowweapons.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slowweapons.zip)
 ---
 
-## [Stun Gun](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/stungun.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/stungun.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/stungun.zip)
+## Stun Gun
 
 **Module Website:** [https://liliaframework.github.io/Modules/stungun.html](https://liliaframework.github.io/Modules/stungun.html)
 
@@ -722,11 +673,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Temporarily incapacitates targets
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/stungun.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/stungun.zip)
 ---
 
-## [Tying](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/tying.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/tying.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/tying.zip)
+## Tying
 
 **Module Website:** [https://liliaframework.github.io/Modules/tying.html](https://liliaframework.github.io/Modules/tying.html)
 
@@ -737,11 +687,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Tied players have restricted actions
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/tying.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/tying.zip)
 ---
 
-## [View Bob](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/viewbob.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/viewbob.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/viewbob.zip)
+## View Bob
 
 **Module Website:** [https://liliaframework.github.io/Modules/viewbob.html](https://liliaframework.github.io/Modules/viewbob.html)
 
@@ -752,11 +701,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Amount of bob can be configured
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/viewbob.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/viewbob.zip)
 ---
 
-## [VManip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/vmanip.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/vmanip.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/vmanip.zip)
+## VManip
 
 **Module Website:** [https://liliaframework.github.io/Modules/vmanip.html](https://liliaframework.github.io/Modules/vmanip.html)
 
@@ -767,11 +715,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Provides networked VManip events
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/vmanip.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/vmanip.zip)
 ---
 
-## [Warrant](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/warrants.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/warrants.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/warrants.zip)
+## Warrant
 
 **Module Website:** [https://liliaframework.github.io/Modules/warrants.html](https://liliaframework.github.io/Modules/warrants.html)
 
@@ -782,11 +729,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Includes commands to issue and revoke warrants
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/warrants.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/warrants.zip)
 ---
 
-## [War Table](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wartable.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wartable.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wartable.zip)
+## War Table
 
 **Module Website:** [https://liliaframework.github.io/Modules/wartable.html](https://liliaframework.github.io/Modules/wartable.html)
 
@@ -797,11 +743,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Supports moving pieces and drawing zones
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wartable.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wartable.zip)
 ---
 
-## [Weight Inv](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/weightinv.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/weightinv.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/weightinv.zip)
+## Weight Inv
 
 **Module Website:** [https://liliaframework.github.io/Modules/weightinv.html](https://liliaframework.github.io/Modules/weightinv.html)
 
@@ -812,11 +757,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Items have weight values that limit carrying capacity
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/weightinv.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/weightinv.zip)
 ---
 
-## [Whitelist](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/whitelist.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/whitelist.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/whitelist.zip)
+## Whitelist
 
 **Module Website:** [https://liliaframework.github.io/Modules/whitelist.html](https://liliaframework.github.io/Modules/whitelist.html)
 
@@ -827,11 +771,10 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Players not on the list cannot join
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/whitelist.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/whitelist.zip)
 ---
 
-## [Word Filter](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wordfilter.zip)
-
-**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wordfilter.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wordfilter.zip)
+## Word Filter
 
 **Module Website:** [https://liliaframework.github.io/Modules/wordfilter.html](https://liliaframework.github.io/Modules/wordfilter.html)
 
@@ -842,4 +785,5 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 
 - Customizable blocked word list
 
+**Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wordfilter.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wordfilter.zip)
 ---
