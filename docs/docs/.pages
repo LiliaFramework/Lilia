@@ -1,4 +1,9 @@
 arrange:
   - index.md
+  - installation.md
   - framework
-  - information
+  - definitions
+  - hooks
+  - libraries
+  - meta
+  - compatibility.md
