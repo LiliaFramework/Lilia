@@ -1,6 +1,18 @@
 # Addons with Improved Compatibility
 
-This page details the optional compatibility libraries bundled with Lilia. Each section below is a standalone sub-section named after the addon, with its URL, key compatibility highlights, and a brief explanation.
+This page details the optional compatibility libraries bundled with Lilia. These libraries greatly expand support for a variety of popular addons used across the Garry's Mod community. Each section below is a standalone sub-section named after the addon, with its URL, key compatibility highlights, and a brief explanation.
+
+The compatibility layer covers administration suites such as ULX and SAM, vehicle frameworks like Simfphys and VCMod, outfit systems including PAC3, and more. Installing these addons alongside Lilia will automatically enable the related integration.
+In recent releases the compatibility set has grown even larger. Popular community addons now work out of the box:
+
+- **Advanced Duplicator 2** and **Advanced Duplicator** integration
+- **PAC3** outfit synchronization
+- **ServerGuard** permission support
+- **ULX** and **SAM** admin suites
+- **Simfphys** and **VCMod** vehicle frameworks
+- **VJBase** NPC base improvements
+
+Simply install these addons and the matching compatibility layer will load automatically.
 
 ## [Advanced Duplicator](https://steamcommunity.com/sharedfiles/filedetails/?id=163806212)
 
