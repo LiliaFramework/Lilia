@@ -62,36 +62,6 @@ function MODULE:PlayerShouldAct()
     return lia.config.get("ActsActive", false)
 end
 
-local function NotifyAdmin(notification)
-    for _, client in player.Iterator() do
-        if IsValid(client) and client:hasPrivilege("Staff Permissions - Can See Alting Notifications") then client:ChatPrint(notification) end
-    end
-end
-
-local function ApplyPunishment(client, infraction, kick, ban, time)
-    local bantime = time or 0
-    if kick then
-        if sam then
-            sam.player.kick_id(client:SteamID64(), L("kickedForInfraction") .. infraction)
-        elseif ULib then
-            ULib.kick(client, L("kickedForInfraction") .. infraction)
-        else
-            client:Kick(L("kickedForInfraction") .. infraction)
-        end
-    end
-
-    if ban then
-        if sam then
-            sam.player.ban_id(client:SteamID64(), bantime, L("bannedForInfraction") .. infraction)
-        elseif ULib then
-            ULib.ban(client, bantime, L("bannedForInfraction") .. infraction)
-            ULib.kick(client, L("kickedForInfraction") .. infraction)
-        else
-            client:Ban(bantime, L("bannedForInfractionPeriod", infraction))
-            client:Kick(L("bannedForInfractionPeriod", infraction))
-        end
-    end
-end
 
 function MODULE:PlayerAuthed(client, steamid)
     local KnownCheaters = {
@@ -112,19 +82,19 @@ function MODULE:PlayerAuthed(client, steamid)
     local steamName = client:SteamName()
     local steamID = client:SteamID64()
     if KnownCheaters[steamID64] or KnownCheaters[ownerSteamID64] then
-        ApplyPunishment(client, "using third-party cheats", false, true, 0)
-        NotifyAdmin(L("bannedCheaterNotify", steamName, steamID))
+        lia.applyPunishment(client, "using third-party cheats", false, true, 0)
+        lia.notifyAdmin(L("bannedCheaterNotify", steamName, steamID))
         lia.log.add(nil, "cheaterBanned", steamName, steamID)
         return
     end
 
     if lia.config.get("AltsDisabled", false) and ownerSteamID64 ~= steamID64 then
-        ApplyPunishment(client, "family sharing (alts are disabled)", true, false)
-        NotifyAdmin(L("kickedAltNotify", steamName, steamID))
+        lia.applyPunishment(client, "family sharing (alts are disabled)", true, false)
+        lia.notifyAdmin(L("kickedAltNotify", steamName, steamID))
         lia.log.add(nil, "altKicked", steamName, steamID)
     elseif lia.module.list["whitelist"] and lia.module.list["whitelist"].BlacklistedSteamID64[ownerSteamID64] then
-        ApplyPunishment(client, "using a family-shared account that is blacklisted", false, true, 0)
-        NotifyAdmin(L("bannedAltNotify", steamName, steamID))
+        lia.applyPunishment(client, "using a family-shared account that is blacklisted", false, true, 0)
+        lia.notifyAdmin(L("bannedAltNotify", steamName, steamID))
         lia.log.add(nil, "altBanned", steamName, steamID)
     end
 end
@@ -133,7 +103,7 @@ function MODULE:PlayerSay(client, message)
     local hasIPAddress = string.match(message, "%d+%.%d+%.%d+%.%d+(:%d*)?")
     local hasBadWords = string.find(string.upper(message), string.upper("clone")) and string.find(string.upper(message), string.upper("nutscript"))
     if hasIPAddress then
-        ApplyPunishment(client, L("ipInChat"), true, false)
+        lia.applyPunishment(client, L("ipInChat"), true, false)
         return ""
     elseif hasBadWords then
         return ""
