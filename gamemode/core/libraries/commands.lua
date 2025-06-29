@@ -236,6 +236,46 @@ if SERVER then
         end
         return false
     end
+
+    function lia.command.execAdminCommand(cmd, executor, target, duration, reason)
+        local handled = hook.Run("RunAdminSystemCommand", cmd, executor, target, duration, reason)
+        if handled then return end
+        if cmd == "kick" and IsValid(target) then
+            target:Kick(reason or "")
+        elseif cmd == "ban" and IsValid(target) then
+            target:Ban(duration or 0, true)
+            target:Kick(reason or "")
+        elseif cmd == "unban" then
+            if isstring(target) then
+                RunConsoleCommand("removeid", target)
+                RunConsoleCommand("writeid")
+            end
+        elseif cmd == "freeze" and IsValid(target) then
+            target:Freeze(true)
+        elseif cmd == "unfreeze" and IsValid(target) then
+            target:Freeze(false)
+        elseif cmd == "slay" and IsValid(target) then
+            target:Kill()
+        elseif cmd == "bring" and IsValid(executor) and IsValid(target) then
+            target:SetPos(executor:GetPos())
+        elseif cmd == "goto" and IsValid(executor) and IsValid(target) then
+            executor:SetPos(target:GetPos())
+        elseif cmd == "strip" and IsValid(target) then
+            target:StripWeapons()
+        elseif cmd == "ignite" and IsValid(target) then
+            target:Ignite(duration or 0)
+        elseif (cmd == "extinguish" or cmd == "unignite") and IsValid(target) then
+            target:Extinguish()
+        elseif cmd == "god" and IsValid(target) then
+            target:GodEnable()
+        elseif cmd == "ungod" and IsValid(target) then
+            target:GodDisable()
+        elseif cmd == "cloak" and IsValid(target) then
+            target:SetNoDraw(true)
+        elseif cmd == "uncloak" and IsValid(target) then
+            target:SetNoDraw(false)
+        end
+    end
 else
     function lia.command.openArgumentPrompt(cmdKey, fields, prefix)
         local ply = LocalPlayer()
