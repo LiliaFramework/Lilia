@@ -28,9 +28,12 @@ It also registers the module in the module list if applicable.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.module.load
-lia.module.load("example", "lilia/modules/example", false)
+    -- This snippet demonstrates a common usage of lia.module.load
+    lia.module.load("example", "lilia/modules/example", false)
 ```
+
+---
+
 
 ### lia.module.initialize
 
@@ -46,9 +49,12 @@ then running the appropriate hooks after modules have been loaded.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.module.initialize
-lia.module.initialize()
+    -- This snippet demonstrates a common usage of lia.module.initialize
+    lia.module.initialize()
 ```
+
+---
+
 
 ### lia.module.loadFromDir
 
@@ -66,9 +72,12 @@ Non-Lua files are ignored.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.module.loadFromDir
-lia.module.loadFromDir("lilia/modules/core", "module")
+    -- This snippet demonstrates a common usage of lia.module.loadFromDir
+    lia.module.loadFromDir("lilia/modules/core", "module")
 ```
+
+---
+
 
 ### lia.module.get
 
@@ -83,6 +92,6 @@ Retrieves a module table by its identifier.
 * The module table if found, or nil if the module is not registered.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.module.get
-local mod = lia.module.get("schema")
+    -- This snippet demonstrates a common usage of lia.module.get
+    local mod = lia.module.get("schema")
 ```

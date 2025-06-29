@@ -28,9 +28,12 @@ it is registered in lia.lang.names.
     
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.lang.loadFromDir
-lia.lang.loadFromDir("languages")
+    -- This snippet demonstrates a common usage of lia.lang.loadFromDir
+    lia.lang.loadFromDir("languages")
 ```
+
+---
+
 
 ### lia.lang.AddTable(name, tbl)
 
@@ -48,6 +51,6 @@ will be merged with the existing ones.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.lang.AddTable
-lia.lang.AddTable("english", {greeting = "Hello"})
+    -- This snippet demonstrates a common usage of lia.lang.AddTable
+    lia.lang.AddTable("english", {greeting = "Hello"})
 ```

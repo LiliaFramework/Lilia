@@ -24,9 +24,12 @@ Registers a new inventory type.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.inventory.newType
-lia.inventory.newType("bag", {className = "liaBag"})
+    -- This snippet demonstrates a common usage of lia.inventory.newType
+    lia.inventory.newType("bag", {className = "liaBag"})
 ```
+
+---
+
 
 ### lia.inventory.new(typeID)
 
@@ -41,9 +44,12 @@ Instantiates a new inventory instance.
 * table
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.inventory.new
-local inv = lia.inventory.new("bag")
+    -- This snippet demonstrates a common usage of lia.inventory.new
+    local inv = lia.inventory.new("bag")
 ```
+
+---
+
 
 ### lia.inventory.loadByID(id, noCache)
 
@@ -58,9 +64,12 @@ Loads an inventory by ID (cached or via custom loader).
 * deferred
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.inventory.loadByID
-lia.inventory.loadByID(1):next(function(inv) print(inv) end)
+    -- This snippet demonstrates a common usage of lia.inventory.loadByID
+    lia.inventory.loadByID(1):next(function(inv) print(inv) end)
 ```
+
+---
+
 
 ### lia.inventory.loadFromDefaultStorage(id, noCache)
 
@@ -75,9 +84,12 @@ Default database loader.
 * deferred
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.inventory.loadFromDefaultStorage
-lia.inventory.loadFromDefaultStorage(1)
+    -- This snippet demonstrates a common usage of lia.inventory.loadFromDefaultStorage
+    lia.inventory.loadFromDefaultStorage(1)
 ```
+
+---
+
 
 ### lia.inventory.instance(typeID, initialData)
 
@@ -92,9 +104,12 @@ Creates & persists a new inventory instance.
 * deferred
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.inventory.instance
-lia.inventory.instance("bag", {charID = 1})
+    -- This snippet demonstrates a common usage of lia.inventory.instance
+    lia.inventory.instance("bag", {charID = 1})
 ```
+
+---
+
 
 ### lia.inventory.loadAllFromCharID(charID)
 
@@ -109,9 +124,12 @@ Loads all inventories for a character.
 * deferred
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.inventory.loadAllFromCharID
-lia.inventory.loadAllFromCharID(client:getChar():getID())
+    -- This snippet demonstrates a common usage of lia.inventory.loadAllFromCharID
+    lia.inventory.loadAllFromCharID(client:getChar():getID())
 ```
+
+---
+
 
 ### lia.inventory.deleteByID(id)
 
@@ -126,9 +144,12 @@ Deletes an inventory and its data.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.inventory.deleteByID
-lia.inventory.deleteByID(1)
+    -- This snippet demonstrates a common usage of lia.inventory.deleteByID
+    lia.inventory.deleteByID(1)
 ```
+
+---
+
 
 ### lia.inventory.cleanUpForCharacter(character)
 
@@ -143,9 +164,12 @@ Destroys all inventories for a character.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.inventory.cleanUpForCharacter
-lia.inventory.cleanUpForCharacter(client:getChar())
+    -- This snippet demonstrates a common usage of lia.inventory.cleanUpForCharacter
+    lia.inventory.cleanUpForCharacter(client:getChar())
 ```
+
+---
+
 
 ### lia.inventory.show(inventory, parent)
 
@@ -160,6 +184,6 @@ Displays inventory UI client‑side.
 * Panel
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.inventory.show
-local panel = lia.inventory.show(inv)
+    -- This snippet demonstrates a common usage of lia.inventory.show
+    local panel = lia.inventory.show(inv)
 ```

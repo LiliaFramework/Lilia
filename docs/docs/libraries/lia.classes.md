@@ -21,9 +21,12 @@ Loads all class definitions from the given directory and stores them in lia.clas
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.class.loadFromDir
-lia.class.loadFromDir("schema/classes")
+    -- This snippet demonstrates a common usage of lia.class.loadFromDir
+    lia.class.loadFromDir("schema/classes")
 ```
+
+---
+
 
 ### lia.class.canBe(client, class)
 
@@ -39,9 +42,12 @@ Determines if the given client may become the specified class.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.class.canBe
-local allowed = lia.class.canBe(client, classID)
+    -- This snippet demonstrates a common usage of lia.class.canBe
+    local allowed = lia.class.canBe(client, classID)
 ```
+
+---
+
 
 ### lia.class.get(identifier)
 
@@ -56,9 +62,12 @@ Retrieves the class table associated with the given identifier.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.class.get
-local classData = lia.class.get(1)
+    -- This snippet demonstrates a common usage of lia.class.get
+    local classData = lia.class.get(1)
 ```
+
+---
+
 
 ### lia.class.getPlayers(class)
 
@@ -73,9 +82,12 @@ Returns a table of players whose characters belong to the given class.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.class.getPlayers
-local players = lia.class.getPlayers(classID)
+    -- This snippet demonstrates a common usage of lia.class.getPlayers
+    local players = lia.class.getPlayers(classID)
 ```
+
+---
+
 
 ### lia.class.getPlayerCount(class)
 
@@ -90,9 +102,12 @@ Counts how many players belong to the given class.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.class.getPlayerCount
-local count = lia.class.getPlayerCount(classID)
+    -- This snippet demonstrates a common usage of lia.class.getPlayerCount
+    local count = lia.class.getPlayerCount(classID)
 ```
+
+---
+
 
 ### lia.class.retrieveClass(class)
 
@@ -107,9 +122,12 @@ Searches the class list for a class whose ID or name matches the given text.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.class.retrieveClass
-local id = lia.class.retrieveClass("police")
+    -- This snippet demonstrates a common usage of lia.class.retrieveClass
+    local id = lia.class.retrieveClass("police")
 ```
+
+---
+
 
 ### lia.class.hasWhitelist(class)
 
@@ -124,8 +142,8 @@ Returns whether the specified class requires a whitelist.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.class.hasWhitelist
-if lia.class.hasWhitelist(classID) then
-print("Whitelist required")
-end
+    -- This snippet demonstrates a common usage of lia.class.hasWhitelist
+    if lia.class.hasWhitelist(classID) then
+        print("Whitelist required")
+    end
 ```

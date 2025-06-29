@@ -24,9 +24,12 @@ Includes a Lua file based on its realm. It determines the realm from the file na
 * The result of the include, if applicable.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.include
-lia.include("lilia/gamemode/core/libraries/util.lua", "shared")
+    -- This snippet demonstrates a common usage of lia.include
+    lia.include("lilia/gamemode/core/libraries/util.lua", "shared")
 ```
+
+---
+
 
 ### lia.includeDir(directory, fromLua, recursive, realm)
 
@@ -44,9 +47,12 @@ Includes all Lua files in a specified directory. If recursive is true, it traver
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.includeDir
-lia.includeDir("lilia/gamemode/core/libraries/shared/thirdparty", true, true)
+    -- This snippet demonstrates a common usage of lia.includeDir
+    lia.includeDir("lilia/gamemode/core/libraries/shared/thirdparty", true, true)
 ```
+
+---
+
 
 ### lia.includeGroupedDir(dir, raw, recursive, forceRealm)
 
@@ -64,9 +70,12 @@ Recursively includes all Lua files in a specified directory, preserving alphabet
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.includeGroupedDir
-lia.includeGroupedDir("core/modules", false, true, "shared")
+    -- This snippet demonstrates a common usage of lia.includeGroupedDir
+    lia.includeGroupedDir("core/modules", false, true, "shared")
 ```
+
+---
+
 
 ### lia.error(msg)
 
@@ -81,9 +90,12 @@ Prints a colored error message prefixed with "[Lilia]" to the console.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.error
-lia.error("Invalid configuration detected")
+    -- This snippet demonstrates a common usage of lia.error
+    lia.error("Invalid configuration detected")
 ```
+
+---
+
 
 ### lia.deprecated(methodName, callback)
 
@@ -99,9 +111,12 @@ Notifies that a method is deprecated and optionally runs a callback.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.deprecated
-lia.deprecated("OldFunction", function() print("Called fallback") end)
+    -- This snippet demonstrates a common usage of lia.deprecated
+    lia.deprecated("OldFunction", function() print("Called fallback") end)
 ```
+
+---
+
 
 ### lia.updater(msg)
 
@@ -116,9 +131,12 @@ Prints an updater message in cyan to the console with the Lilia prefix.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.updater
-lia.updater("Loading additional content...")
+    -- This snippet demonstrates a common usage of lia.updater
+    lia.updater("Loading additional content...")
 ```
+
+---
+
 
 ### lia.information(msg)
 
@@ -133,9 +151,12 @@ Prints an informational message with the Lilia prefix.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.information
-lia.information("Server started successfully")
+    -- This snippet demonstrates a common usage of lia.information
+    lia.information("Server started successfully")
 ```
+
+---
+
 
 ### lia.bootstrap(section, msg)
 
@@ -151,9 +172,12 @@ Logs a bootstrap message with a colored section tag for clarity.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.bootstrap
-lia.bootstrap("Database", "Connection established")
+    -- This snippet demonstrates a common usage of lia.bootstrap
+    lia.bootstrap("Database", "Connection established")
 ```
+
+---
+
 
 ### lia.includeEntities(path)
 
@@ -168,6 +192,6 @@ Includes entity files from the specified directory. It checks for standard entit
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.includeEntities
-lia.includeEntities("lilia/entities")
+    -- This snippet demonstrates a common usage of lia.includeEntities
+    lia.includeEntities("lilia/entities")
 ```

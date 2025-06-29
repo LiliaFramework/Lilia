@@ -48,10 +48,13 @@ Quoted sections are treated as single arguments.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.command.extractArgs
-local args = lia.command.extractArgs('/mycommand "quoted arg" anotherArg')
--- args = {"quoted arg", "anotherArg"}
+    -- This snippet demonstrates a common usage of lia.command.extractArgs
+    local args = lia.command.extractArgs('/mycommand "quoted arg" anotherArg')
+    -- args = {"quoted arg", "anotherArg"}
 ```
+
+---
+
 
 ### lia.command.parseSyntaxFields
 
@@ -68,9 +71,12 @@ Each field contains a name and a type derived from the syntax.
 * Shared
 **Example:**
 ```lua
--- Extract field data from a syntax string
-local fields, valid = lia.command.parseSyntaxFields("[string Name] [number Time]")
+    -- Extract field data from a syntax string
+    local fields, valid = lia.command.parseSyntaxFields("[string Name] [number Time]")
 ```
+
+---
+
 
 ### lia.command.run
 
@@ -88,9 +94,12 @@ If the command returns a string, it notifies the client (if valid).
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.command.run
-lia.command.run(player, "mycommand", {"arg1", "arg2"})
+    -- This snippet demonstrates a common usage of lia.command.run
+    lia.command.run(player, "mycommand", {"arg1", "arg2"})
 ```
+
+---
+
 
 ### lia.command.parse
 
@@ -109,9 +118,12 @@ and arguments if provided. If parsed successfully, the command is executed.
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.command.parse
-lia.command.parse(player, "/mycommand arg1 arg2")
+    -- This snippet demonstrates a common usage of lia.command.parse
+    lia.command.parse(player, "/mycommand arg1 arg2")
 ```
+
+---
+
 
 ### lia.command.send
 
@@ -128,9 +140,12 @@ Garry's Mod net library. The server will then execute the command.
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.command.send
-lia.command.send("mycommand", "arg1", "arg2")
+    -- This snippet demonstrates a common usage of lia.command.send
+    lia.command.send("mycommand", "arg1", "arg2")
 ```
+
+---
+
 
 ### lia.command.openArgumentPrompt
 

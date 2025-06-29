@@ -24,12 +24,15 @@ Finds and returns a table of players within a given spherical radius from an ori
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.FindPlayersInSphere
-local players = lia.util.FindPlayersInSphere(Vector(0, 0, 0), 200)
-for _, ply in ipairs(players) do
-print(ply:Name())
-end
+    -- This snippet demonstrates a common usage of lia.util.FindPlayersInSphere
+    local players = lia.util.FindPlayersInSphere(Vector(0, 0, 0), 200)
+    for _, ply in ipairs(players) do
+        print(ply:Name())
+    end
 ```
+
+---
+
 
 ### lia.util.findPlayer
 
@@ -48,12 +51,15 @@ Attempts to find a player by identifier. The identifier can be STEAMID, SteamID6
     
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.findPlayer
-local foundPly = lia.util.findPlayer(someAdmin, "Bob")
-if foundPly then
-print("Found player: " .. foundPly:Name())
-end
+    -- This snippet demonstrates a common usage of lia.util.findPlayer
+    local foundPly = lia.util.findPlayer(someAdmin, "Bob")
+    if foundPly then
+        print("Found player: " .. foundPly:Name())
+    end
 ```
+
+---
+
 
 ### lia.util.findPlayerItems
 
@@ -68,12 +74,15 @@ Finds all item entities in the world created by the specified player.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.findPlayerItems
-local items = lia.util.findPlayerItems(LocalPlayer())
-for _, item in ipairs(items) do
-print("Found item entity: " .. item:GetClass())
-end
+    -- This snippet demonstrates a common usage of lia.util.findPlayerItems
+    local items = lia.util.findPlayerItems(LocalPlayer())
+    for _, item in ipairs(items) do
+        print("Found item entity: " .. item:GetClass())
+    end
 ```
+
+---
+
 
 ### lia.util.findPlayerItemsByClass
 
@@ -89,12 +98,15 @@ Finds all item entities in the world created by the specified player with a spec
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.findPlayerItemsByClass
-local items = lia.util.findPlayerItemsByClass(LocalPlayer(), "food_banana")
-for _, item in ipairs(items) do
-print("Found item entity: " .. item:GetClass())
-end
+    -- This snippet demonstrates a common usage of lia.util.findPlayerItemsByClass
+    local items = lia.util.findPlayerItemsByClass(LocalPlayer(), "food_banana")
+    for _, item in ipairs(items) do
+        print("Found item entity: " .. item:GetClass())
+    end
 ```
+
+---
+
 
 ### lia.util.findPlayerEntities
 
@@ -110,12 +122,15 @@ Finds all entities in the world created by or associated with the specified play
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.findPlayerEntities
-local entities = lia.util.findPlayerEntities(LocalPlayer(), "prop_physics")
-for _, ent in ipairs(entities) do
-print("Found player entity: " .. ent:GetClass())
-end
+    -- This snippet demonstrates a common usage of lia.util.findPlayerEntities
+    local entities = lia.util.findPlayerEntities(LocalPlayer(), "prop_physics")
+    for _, ent in ipairs(entities) do
+        print("Found player entity: " .. ent:GetClass())
+    end
 ```
+
+---
+
 
 ### lia.util.stringMatches
 
@@ -131,11 +146,14 @@ Checks if string a matches string b (case-insensitive, partial matches).
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.stringMatches
-if lia.util.stringMatches("Hello", "he") then
-print("Strings match!")
-end
+    -- This snippet demonstrates a common usage of lia.util.stringMatches
+    if lia.util.stringMatches("Hello", "he") then
+        print("Strings match!")
+    end
 ```
+
+---
+
 
 ### lia.util.getAdmins
 
@@ -148,12 +166,15 @@ Returns all players considered staff or admins, as determined by client:isStaff(
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.getAdmins
-local admins = lia.util.getAdmins()
-for _, admin in ipairs(admins) do
-print("Staff: " .. admin:Name())
-end
+    -- This snippet demonstrates a common usage of lia.util.getAdmins
+    local admins = lia.util.getAdmins()
+    for _, admin in ipairs(admins) do
+        print("Staff: " .. admin:Name())
+    end
 ```
+
+---
+
 
 ### lia.util.findPlayerBySteamID64
 
@@ -168,12 +189,15 @@ Finds a player currently on the server by their SteamID64.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.findPlayerBySteamID64
-local ply = lia.util.findPlayerBySteamID64("76561198000000000")
-if ply then
-print("Found player: " .. ply:Name())
-end
+    -- This snippet demonstrates a common usage of lia.util.findPlayerBySteamID64
+    local ply = lia.util.findPlayerBySteamID64("76561198000000000")
+    if ply then
+        print("Found player: " .. ply:Name())
+    end
 ```
+
+---
+
 
 ### lia.util.findPlayerBySteamID
 
@@ -188,12 +212,15 @@ Finds a player currently on the server by their SteamID.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.findPlayerBySteamID
-local ply = lia.util.findPlayerBySteamID("STEAM_0:1:23456789")
-if ply then
-print("Found player: " .. ply:Name())
-end
+    -- This snippet demonstrates a common usage of lia.util.findPlayerBySteamID
+    local ply = lia.util.findPlayerBySteamID("STEAM_0:1:23456789")
+    if ply then
+        print("Found player: " .. ply:Name())
+    end
 ```
+
+---
+
 
 ### lia.util.canFit
 
@@ -211,12 +238,15 @@ Checks if a hull (defined by mins and maxs) can fit at the given position withou
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.canFit
-local canStand = lia.util.canFit(somePos, Vector(-16, -16, 0), Vector(16, 16, 72))
-if canStand then
-print("The player can stand here.")
-end
+    -- This snippet demonstrates a common usage of lia.util.canFit
+    local canStand = lia.util.canFit(somePos, Vector(-16, -16, 0), Vector(16, 16, 72))
+    if canStand then
+        print("The player can stand here.")
+    end
 ```
+
+---
+
 
 ### lia.util.playerInRadius
 
@@ -232,12 +262,15 @@ Finds and returns a table of players within a given radius from a position.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.playerInRadius
-local playersNearby = lia.util.playerInRadius(Vector(0, 0, 0), 250)
-for _, ply in ipairs(playersNearby) do
-print("Nearby player: " .. ply:Name())
-end
+    -- This snippet demonstrates a common usage of lia.util.playerInRadius
+    local playersNearby = lia.util.playerInRadius(Vector(0, 0, 0), 250)
+    for _, ply in ipairs(playersNearby) do
+        print("Nearby player: " .. ply:Name())
+    end
 ```
+
+---
+
 
 ### lia.util.formatStringNamed
 
@@ -253,10 +286,13 @@ Formats a string with named or indexed placeholders. If a table is passed, uses 
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.formatStringNamed
-local result = lia.util.formatStringNamed("Hello, {name}!", {name = "Bob"})
-print(result) -- "Hello, Bob!"
+    -- This snippet demonstrates a common usage of lia.util.formatStringNamed
+    local result = lia.util.formatStringNamed("Hello, {name}!", {name = "Bob"})
+    print(result) -- "Hello, Bob!"
 ```
+
+---
+
 
 ### lia.util.getMaterial
 
@@ -272,11 +308,14 @@ Retrieves a cached Material for the specified path and parameters, to avoid repe
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.getMaterial
-local mat = lia.util.getMaterial("path/to/material", "noclamp smooth")
-surface.SetMaterial(mat)
-surface.DrawTexturedRect(0, 0, 100, 100)
+    -- This snippet demonstrates a common usage of lia.util.getMaterial
+    local mat = lia.util.getMaterial("path/to/material", "noclamp smooth")
+    surface.SetMaterial(mat)
+    surface.DrawTexturedRect(0, 0, 100, 100)
 ```
+
+---
+
 
 ### lia.util.findFaction
 
@@ -292,12 +331,15 @@ Finds a faction by name or uniqueID. If an exact identifier is found in lia.fact
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.findFaction
-local faction = lia.util.findFaction(client, "citizen")
-if faction then
-print("Found faction: " .. faction.name)
-end
+    -- This snippet demonstrates a common usage of lia.util.findFaction
+    local faction = lia.util.findFaction(client, "citizen")
+    if faction then
+        print("Found faction: " .. faction.name)
+    end
 ```
+
+---
+
 
 ### lia.util.CreateTableUI
 
@@ -317,9 +359,12 @@ Sends a net message to the client to create a table UI with given data.
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.CreateTableUI
-lia.util.CreateTableUI(somePlayer, "My Table", {{name="ID", field="id"}, {name="Name", field="name"}}, someData, someOptions, charID)
+    -- This snippet demonstrates a common usage of lia.util.CreateTableUI
+    lia.util.CreateTableUI(somePlayer, "My Table", {{name="ID", field="id"}, {name="Name", field="name"}}, someData, someOptions, charID)
 ```
+
+---
+
 
 ### lia.util.findEmptySpace
 
@@ -339,12 +384,15 @@ Finds potential empty space positions around an entity using a grid-based approa
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.findEmptySpace
-local positions = lia.util.findEmptySpace(someEntity, someFilter, 32, 3, 36, 5)
-for _, pos in ipairs(positions) do
-print("Empty space at: " .. tostring(pos))
-end
+    -- This snippet demonstrates a common usage of lia.util.findEmptySpace
+    local positions = lia.util.findEmptySpace(someEntity, someFilter, 32, 3, 36, 5)
+    for _, pos in ipairs(positions) do
+        print("Empty space at: " .. tostring(pos))
+    end
 ```
+
+---
+
 
 ### lia.util.ShadowText
 
@@ -367,9 +415,12 @@ Draws text with a shadow offset.
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.ShadowText
-lia.util.ShadowText("Hello!", "DermaDefault", 100, 100, color_white, color_black, 2, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+    -- This snippet demonstrates a common usage of lia.util.ShadowText
+    lia.util.ShadowText("Hello!", "DermaDefault", 100, 100, color_white, color_black, 2, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 ```
+
+---
+
 
 ### lia.util.DrawTextOutlined
 
@@ -391,9 +442,12 @@ Draws text with an outlined border.
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.DrawTextOutlined
-lia.util.DrawTextOutlined("Outlined Text", "DermaLarge", 100, 200, color_white, TEXT_ALIGN_CENTER, 2, color_black)
+    -- This snippet demonstrates a common usage of lia.util.DrawTextOutlined
+    lia.util.DrawTextOutlined("Outlined Text", "DermaLarge", 100, 200, color_white, TEXT_ALIGN_CENTER, 2, color_black)
 ```
+
+---
+
 
 ### lia.util.DrawTip
 
@@ -415,9 +469,12 @@ Draws a tooltip-like shape with text in the center.
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.DrawTip
-lia.util.DrawTip(100, 100, 200, 60, "This is a tip!", "DermaDefault", color_white, color_black)
+    -- This snippet demonstrates a common usage of lia.util.DrawTip
+    lia.util.DrawTip(100, 100, 200, 60, "This is a tip!", "DermaDefault", color_white, color_black)
 ```
+
+---
+
 
 ### lia.util.drawText
 
@@ -439,9 +496,12 @@ Draws text with a subtle shadow effect.
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.drawText
-lia.util.drawText("Hello World", 200, 300, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, "liaGenericFont", 100)
+    -- This snippet demonstrates a common usage of lia.util.drawText
+    lia.util.drawText("Hello World", 200, 300, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, "liaGenericFont", 100)
 ```
+
+---
+
 
 ### lia.util.drawTexture
 
@@ -461,9 +521,12 @@ Draws a textured rectangle with the specified material.
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.drawTexture
-lia.util.drawTexture("path/to/material", color_white, 50, 50, 64, 64)
+    -- This snippet demonstrates a common usage of lia.util.drawTexture
+    lia.util.drawTexture("path/to/material", color_white, 50, 50, 64, 64)
 ```
+
+---
+
 
 ### lia.util.skinFunc
 
@@ -480,9 +543,12 @@ Calls a skin function by name, passing the panel and any extra arguments.
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.skinFunc
-lia.util.skinFunc("PaintButton", someButton, 10, 20)
+    -- This snippet demonstrates a common usage of lia.util.skinFunc
+    lia.util.skinFunc("PaintButton", someButton, 10, 20)
 ```
+
+---
+
 
 ### lia.util.wrapText
 
@@ -499,13 +565,16 @@ Wraps text to a maximum width, returning a table of lines and the maximum line w
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.wrapText
-local lines, maxW = lia.util.wrapText("Some long string that needs wrapping...", 200, "liaChatFont")
-for _, line in ipairs(lines) do
-print(line)
-end
-print("Max width: " .. maxW)
+    -- This snippet demonstrates a common usage of lia.util.wrapText
+    local lines, maxW = lia.util.wrapText("Some long string that needs wrapping...", 200, "liaChatFont")
+    for _, line in ipairs(lines) do
+        print(line)
+    end
+    print("Max width: " .. maxW)
 ```
+
+---
+
 
 ### lia.util.drawBlur
 
@@ -522,9 +591,12 @@ Draws a blur effect over the specified panel.
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.drawBlur
-lia.util.drawBlur(somePanel, 5, 1)
+    -- This snippet demonstrates a common usage of lia.util.drawBlur
+    lia.util.drawBlur(somePanel, 5, 1)
 ```
+
+---
+
 
 ### lia.util.drawBlurAt
 
@@ -544,9 +616,12 @@ Draws a blur effect at a specified rectangle on the screen.
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.drawBlurAt
-lia.util.drawBlurAt(100, 100, 200, 150, 5, 1)
+    -- This snippet demonstrates a common usage of lia.util.drawBlurAt
+    lia.util.drawBlurAt(100, 100, 200, 150, 5, 1)
 ```
+
+---
+
 
 ### lia.util.CreateTableUI
 
@@ -565,6 +640,6 @@ Creates and displays a table UI with given columns and data on the client side.
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.util.CreateTableUI
-lia.util.CreateTableUI("My Table", {{name="ID", field="id"}, {name="Name", field="name"}}, myData, myOptions, 1)
+    -- This snippet demonstrates a common usage of lia.util.CreateTableUI
+    lia.util.CreateTableUI("My Table", {{name="ID", field="id"}, {name="Name", field="name"}}, myData, myOptions, 1)
 ```

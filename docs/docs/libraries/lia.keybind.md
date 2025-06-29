@@ -29,9 +29,12 @@ Also maps the key code back to the action identifier for reverse lookup.
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.keybind.add
-lia.keybind.add("space", "jump", function() print("Jump pressed!") end, function() print("Jump released!") end)
+    -- This snippet demonstrates a common usage of lia.keybind.add
+    lia.keybind.add("space", "jump", function() print("Jump pressed!") end, function() print("Jump released!") end)
 ```
+
+---
+
 
 ### lia.keybind.get(a, df)
 
@@ -49,9 +52,12 @@ or an optionally provided fallback value.
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.keybind.get
-local jumpKey = lia.keybind.get("jump", KEY_SPACE)
+    -- This snippet demonstrates a common usage of lia.keybind.get
+    local jumpKey = lia.keybind.get("jump", KEY_SPACE)
 ```
+
+---
+
 
 ### lia.keybind.save()
 
@@ -71,9 +77,12 @@ and writes the keybind mapping (action identifiers to key codes) in JSON format.
     
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.keybind.save
-lia.keybind.save()
+    -- This snippet demonstrates a common usage of lia.keybind.save
+    lia.keybind.save()
 ```
+
+---
+
 
 ### lia.keybind.load()
 
@@ -95,6 +104,6 @@ Finally, it triggers the "InitializedKeybinds" hook.
     
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.keybind.load
-lia.keybind.load()
+    -- This snippet demonstrates a common usage of lia.keybind.load
+    lia.keybind.load()
 ```

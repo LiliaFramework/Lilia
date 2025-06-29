@@ -26,9 +26,12 @@ an entity.
 * number – Identifier for the created menu entry.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.menu.add
-lia.menu.add({["Hello"] = function() print("Hi") end})
+    -- This snippet demonstrates a common usage of lia.menu.add
+    lia.menu.add({["Hello"] = function() print("Hi") end})
 ```
+
+---
+
 
 ### lia.menu.drawAll()
 
@@ -44,9 +47,12 @@ HUDPaint.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of hook.Add
-hook.Add("HUDPaint", "DrawMenus", lia.menu.drawAll)
+    -- This snippet demonstrates a common usage of hook.Add
+    hook.Add("HUDPaint", "DrawMenus", lia.menu.drawAll)
 ```
+
+---
+
 
 ### lia.menu.getActiveMenu()
 
@@ -63,9 +69,12 @@ or selected by the player.
 * callback (function|nil) – Callback for the hovered item.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.menu.getActiveMenu
-local id, callback = lia.menu.getActiveMenu()
+    -- This snippet demonstrates a common usage of lia.menu.getActiveMenu
+    local id, callback = lia.menu.getActiveMenu()
 ```
+
+---
+
 
 ### lia.menu.onButtonPressed(id, callback)
 
@@ -81,6 +90,6 @@ Removes the specified menu and runs its callback if provided.
 * boolean – True if a callback was executed.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.menu.onButtonPressed
-lia.menu.onButtonPressed(id)
+    -- This snippet demonstrates a common usage of lia.menu.onButtonPressed
+    lia.menu.onButtonPressed(id)
 ```

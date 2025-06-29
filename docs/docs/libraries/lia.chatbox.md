@@ -18,9 +18,12 @@ Returns a formatted timestamp if chat timestamps are enabled.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.chat.timestamp
-local ts = lia.chat.timestamp(false)
+    -- This snippet demonstrates a common usage of lia.chat.timestamp
+    local ts = lia.chat.timestamp(false)
 ```
+
+---
+
 
 ### lia.chat.register(chatType, data)
 
@@ -36,14 +39,17 @@ Registers a new chat class and sets up command aliases.
 * Shared
 **Example:**
 ```lua
--- Register a simple "/me" chat command that prints actions in purple
-lia.chat.register("me", {
-onChatAdd = function(_, speaker, text)
-chat.AddText(Color(200, 100, 255), "* " .. speaker:Name() .. " " .. text)
-end,
-prefix = {"/me"}
-})
+    -- Register a simple "/me" chat command that prints actions in purple
+    lia.chat.register("me", {
+        onChatAdd = function(_, speaker, text)
+            chat.AddText(Color(200, 100, 255), "* " .. speaker:Name() .. " " .. text)
+        end,
+        prefix = {"/me"}
+    })
 ```
+
+---
+
 
 ### lia.chat.parse(client, message, noSend)
 
@@ -60,14 +66,17 @@ Parses chat text for the proper chat type and optionally sends it.
 * Shared
 **Example:**
 ```lua
--- Parse chat messages and log "/me" actions to the console
-hook.Add("PlayerSay", "LogActions", function(ply, text)
-local class, parsed = lia.chat.parse(ply, text)
-if class == "me" then
-print(ply:Name() .. " performs action: " .. parsed)
-end
-end)
+    -- Parse chat messages and log "/me" actions to the console
+    hook.Add("PlayerSay", "LogActions", function(ply, text)
+        local class, parsed = lia.chat.parse(ply, text)
+        if class == "me" then
+            print(ply:Name() .. " performs action: " .. parsed)
+        end
+    end)
 ```
+
+---
+
 
 ### lia.chat.send(speaker, chatType, text, anonymous, receivers)
 
@@ -86,6 +95,6 @@ Broadcasts a chat message to all eligible receivers.
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.chat.send
-lia.chat.send(client, "ic", "Hello")
+    -- This snippet demonstrates a common usage of lia.chat.send
+    lia.chat.send(client, "ic", "Hello")
 ```

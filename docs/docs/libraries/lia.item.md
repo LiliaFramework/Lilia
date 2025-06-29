@@ -23,9 +23,12 @@ Retrieves an item definition by its identifier, checking both lia.item.base and 
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.get
-local itemDef = lia.item.get("testItem")
+    -- This snippet demonstrates a common usage of lia.item.get
+    local itemDef = lia.item.get("testItem")
 ```
+
+---
+
 
 ### lia.item.getItemByID
 
@@ -42,12 +45,15 @@ or in the world.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.getItemByID
-local result = lia.item.getItemByID(42)
-if result then
-print("Item location: " .. result.location)
-end
+    -- This snippet demonstrates a common usage of lia.item.getItemByID
+    local result = lia.item.getItemByID(42)
+    if result then
+        print("Item location: " .. result.location)
+    end
 ```
+
+---
+
 
 ### lia.item.getInstancedItemByID
 
@@ -62,12 +68,15 @@ Retrieves the item instance table itself by its numeric ID without additional lo
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.getInstancedItemByID
-local itemInstance = lia.item.getInstancedItemByID(42)
-if itemInstance then
-print("Got item: " .. itemInstance.name)
-end
+    -- This snippet demonstrates a common usage of lia.item.getInstancedItemByID
+    local itemInstance = lia.item.getInstancedItemByID(42)
+    if itemInstance then
+        print("Got item: " .. itemInstance.name)
+    end
 ```
+
+---
+
 
 ### lia.item.getItemDataByID
 
@@ -82,12 +91,15 @@ Retrieves the 'data' table of an item instance by its numeric item ID.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.getItemDataByID
-local data = lia.item.getItemDataByID(42)
-if data then
-print("Item data found.")
-end
+    -- This snippet demonstrates a common usage of lia.item.getItemDataByID
+    local data = lia.item.getItemDataByID(42)
+    if data then
+        print("Item data found.")
+    end
 ```
+
+---
+
 
 ### lia.item.load
 
@@ -105,9 +117,12 @@ to register the item. Used for loading items from directory structures.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.load
-lia.item.load("items/base/sh_item_base.lua", nil, true)
+    -- This snippet demonstrates a common usage of lia.item.load
+    lia.item.load("items/base/sh_item_base.lua", nil, true)
 ```
+
+---
+
 
 ### lia.item.isItem
 
@@ -122,12 +137,15 @@ Checks if the given object is recognized as an item (via isItem flag).
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.isItem
-local result = lia.item.isItem(myObject)
-if result then
-print("It's an item!")
-end
+    -- This snippet demonstrates a common usage of lia.item.isItem
+    local result = lia.item.isItem(myObject)
+    if result then
+        print("It's an item!")
+    end
 ```
+
+---
+
 
 ### lia.item.getInv
 
@@ -142,12 +160,15 @@ Retrieves an inventory table by its ID from lia.item.inventories.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.getInv
-local inv = lia.item.getInv(5)
-if inv then
-print("Got inventory with ID 5")
-end
+    -- This snippet demonstrates a common usage of lia.item.getInv
+    local inv = lia.item.getInv(5)
+    if inv then
+        print("Got inventory with ID 5")
+    end
 ```
+
+---
+
 
 ### lia.item.register
 
@@ -167,9 +188,12 @@ and merges data from the specified base. Optionally includes the file if provide
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.register
-lia.item.register("special_item", "base_item", false, "path/to/item.lua")
+    -- This snippet demonstrates a common usage of lia.item.register
+    lia.item.register("special_item", "base_item", false, "path/to/item.lua")
 ```
+
+---
+
 
 ### lia.item.loadFromDir
 
@@ -185,9 +209,12 @@ then any folders (with base_ prefix usage), and finally any loose Lua files.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.loadFromDir
-lia.item.loadFromDir("lilia/gamemode/items")
+    -- This snippet demonstrates a common usage of lia.item.loadFromDir
+    lia.item.loadFromDir("lilia/gamemode/items")
 ```
+
+---
+
 
 ### lia.item.new
 
@@ -204,10 +231,13 @@ The new item is stored in lia.item.instances using the provided item ID.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.new
-local newItem = lia.item.new("testItem", 101)
-print(newItem.id) -- 101
+    -- This snippet demonstrates a common usage of lia.item.new
+    local newItem = lia.item.new("testItem", 101)
+    print(newItem.id) -- 101
 ```
+
+---
+
 
 ### lia.item.registerInv
 
@@ -225,9 +255,12 @@ becomes accessible for creation or usage in the system.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.registerInv
-lia.item.registerInv("smallInv", 4, 4)
+    -- This snippet demonstrates a common usage of lia.item.registerInv
+    lia.item.registerInv("smallInv", 4, 4)
 ```
+
+---
+
 
 ### lia.item.newInv
 
@@ -245,11 +278,14 @@ with the given character owner. Once created, it syncs the inventory to the owne
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.newInv
-lia.item.newInv(10, "smallInv", function(inventory)
-print("New inventory created:", inventory.id)
-end)
+    -- This snippet demonstrates a common usage of lia.item.newInv
+    lia.item.newInv(10, "smallInv", function(inventory)
+        print("New inventory created:", inventory.id)
+    end)
 ```
+
+---
+
 
 ### lia.item.createInv
 
@@ -267,10 +303,13 @@ then caches it in lia.inventory.instances.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.createInv
-local inv = lia.item.createInv(6, 6, 200)
-print("Created inventory with ID:", inv.id)
+    -- This snippet demonstrates a common usage of lia.item.createInv
+    local inv = lia.item.createInv(6, 6, 200)
+    print("Created inventory with ID:", inv.id)
 ```
+
+---
+
 
 ### lia.item.setItemDataByID
 
@@ -291,12 +330,15 @@ Optionally notifies receivers about the change.
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.setItemDataByID
-local success, err = lia.item.setItemDataByID(50, "durability", 90)
-if not success then
-print("Error:", err)
-end
+    -- This snippet demonstrates a common usage of lia.item.setItemDataByID
+    local success, err = lia.item.setItemDataByID(50, "durability", 90)
+    if not success then
+        print("Error:", err)
+    end
 ```
+
+---
+
 
 ### lia.item.instance
 
@@ -317,11 +359,14 @@ Once the item is created, a new item object is constructed and returned via a de
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.instance
-lia.item.instance(1, "testItem", {someKey = "someValue"}):next(function(item)
-print("Item created with ID:", item.id)
-end)
+    -- This snippet demonstrates a common usage of lia.item.instance
+    lia.item.instance(1, "testItem", {someKey = "someValue"}):next(function(item)
+        print("Item created with ID:", item.id)
+    end)
 ```
+
+---
+
 
 ### lia.item.deleteByID
 
@@ -336,9 +381,12 @@ Deletes an item from the system (database and memory) by its numeric ID.
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.deleteByID
-lia.item.deleteByID(42)
+    -- This snippet demonstrates a common usage of lia.item.deleteByID
+    lia.item.deleteByID(42)
 ```
+
+---
+
 
 ### lia.item.loadItemByID
 
@@ -354,11 +402,14 @@ item instances in memory. This is commonly used during inventory or character lo
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.loadItemByID
-lia.item.loadItemByID(42)
--- or
-lia.item.loadItemByID({10, 11, 12})
+    -- This snippet demonstrates a common usage of lia.item.loadItemByID
+    lia.item.loadItemByID(42)
+    -- or
+    lia.item.loadItemByID({10, 11, 12})
 ```
+
+---
+
 
 ### lia.item.spawn
 
@@ -378,11 +429,14 @@ entity in the world at the specified position/angles.
 * Server
 **Example:**
 ```lua
--- Spawn an item and use a callback to access the spawned entity
-lia.item.spawn("testItem", Vector(0, 0, 0), function(item, ent)
-print("Spawned", item.uniqueID, "at", ent:GetPos())
-end)
+    -- Spawn an item and use a callback to access the spawned entity
+    lia.item.spawn("testItem", Vector(0, 0, 0), function(item, ent)
+        print("Spawned", item.uniqueID, "at", ent:GetPos())
+    end)
 ```
+
+---
+
 
 ### lia.item.restoreInv
 
@@ -401,8 +455,8 @@ then sets its width/height data, optionally providing a callback once loaded.
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.item.restoreInv
-lia.item.restoreInv(101, 5, 5, function(inv)
-print("Restored inventory with ID 101.")
-end)
+    -- This snippet demonstrates a common usage of lia.item.restoreInv
+    lia.item.restoreInv(101, 5, 5, function(inv)
+        print("Restored inventory with ID 101.")
+    end)
 ```
