@@ -26,11 +26,14 @@ or re-establish one.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.db.connect
-lia.db.connect(function()
-print("Database connected")
-end)
+    -- This snippet demonstrates a common usage of lia.db.connect
+    lia.db.connect(function()
+        print("Database connected")
+    end)
 ```
+
+---
+
 
 ### lia.db.wipeTables(callback)
 
@@ -46,11 +49,14 @@ tables. This action is irreversible and will remove all stored data.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.db.wipeTables
-lia.db.wipeTables(function()
-print("Tables wiped")
-end)
+    -- This snippet demonstrates a common usage of lia.db.wipeTables
+    lia.db.wipeTables(function()
+        print("Tables wiped")
+    end)
 ```
+
+---
+
 
 ### lia.db.loadTables()
 
@@ -66,9 +72,12 @@ storing Lilia data. This ensures the schema is properly set up.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.db.loadTables
-lia.db.loadTables()
+    -- This snippet demonstrates a common usage of lia.db.loadTables
+    lia.db.loadTables()
 ```
+
+---
+
 
 ### lia.db.waitForTablesToLoad()
 
@@ -84,11 +93,14 @@ This allows asynchronous code to wait for table creation before proceeding.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.db.waitForTablesToLoad
-lia.db.waitForTablesToLoad():next(function()
-print("Tables loaded")
-end)
+    -- This snippet demonstrates a common usage of lia.db.waitForTablesToLoad
+    lia.db.waitForTablesToLoad():next(function()
+        print("Tables loaded")
+    end)
 ```
+
+---
+
 
 ### lia.db.convertDataType(value, noEscape)
 
@@ -106,9 +118,12 @@ unless noEscape is set.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.db.convertDataType
-local str = lia.db.convertDataType({name = "Lilia"})
+    -- This snippet demonstrates a common usage of lia.db.convertDataType
+    local str = lia.db.convertDataType({name = "Lilia"})
 ```
+
+---
+
 
 ### lia.db.insertTable(value, callback, dbTable)
 
@@ -126,11 +141,14 @@ The callback is invoked after the insert query is complete.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.db.insertTable
-lia.db.insertTable({name = "Test"}, function(id)
-print("Inserted", id)
-end, "characters")
+    -- This snippet demonstrates a common usage of lia.db.insertTable
+    lia.db.insertTable({name = "Test"}, function(id)
+        print("Inserted", id)
+    end, "characters")
 ```
+
+---
+
 
 ### lia.db.updateTable(value, callback, dbTable, condition)
 
@@ -149,11 +167,14 @@ provided condition. The callback is invoked once the update query finishes.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.db.updateTable
-lia.db.updateTable({name = "Updated"}, function()
-print("Row updated")
-end, "characters", "id = 1")
+    -- This snippet demonstrates a common usage of lia.db.updateTable
+    lia.db.updateTable({name = "Updated"}, function()
+        print("Row updated")
+    end, "characters", "id = 1")
 ```
+
+---
+
 
 ### lia.db.select(fields, dbTable, condition, limit)
 
@@ -173,11 +194,14 @@ object that resolves with the query results.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.db.select
-lia.db.select("*", "characters", "id = 1"):next(function(rows)
-PrintTable(rows)
-end)
+    -- This snippet demonstrates a common usage of lia.db.select
+    lia.db.select("*", "characters", "id = 1"):next(function(rows)
+        PrintTable(rows)
+    end)
 ```
+
+---
+
 
 ### lia.db.upsert(value, dbTable)
 
@@ -195,9 +219,12 @@ Returns a deferred object that resolves when the operation completes.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.db.upsert
-lia.db.upsert({id = 1, name = "John"}, "characters")
+    -- This snippet demonstrates a common usage of lia.db.upsert
+    lia.db.upsert({id = 1, name = "John"}, "characters")
 ```
+
+---
+
 
 ### lia.db.delete(dbTable, condition)
 
@@ -214,11 +241,14 @@ If no condition is specified, all rows are deleted. Returns a deferred object.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.db.delete
-lia.db.delete("characters", "id = 1"):next(function()
-print("Row deleted")
-end)
+    -- This snippet demonstrates a common usage of lia.db.delete
+    lia.db.delete("characters", "id = 1"):next(function()
+        print("Row deleted")
+    end)
 ```
+
+---
+
 
 ### lia.db.GetCharacterTable(callback)
 
@@ -234,6 +264,6 @@ This is useful for debugging or database maintenance tasks.
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.db.GetCharacterTable
-lia.db.GetCharacterTable(function(columns) PrintTable(columns) end)
+    -- This snippet demonstrates a common usage of lia.db.GetCharacterTable
+    lia.db.GetCharacterTable(function(columns) PrintTable(columns) end)
 ```

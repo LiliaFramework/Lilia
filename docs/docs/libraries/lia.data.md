@@ -28,13 +28,16 @@ Also caches the value in lia.data.stored.
 * Shared
 **Example:**
 ```lua
--- Save the admin's position as the global spawn point with a command
-concommand.Add("save_spawn", function(ply)
-if ply:IsAdmin() then
-lia.data.set("spawn_pos", ply:GetPos(), true)
-end
-end)
+    -- Save the admin's position as the global spawn point with a command
+    concommand.Add("save_spawn", function(ply)
+        if ply:IsAdmin() then
+            lia.data.set("spawn_pos", ply:GetPos(), true)
+        end
+    end)
 ```
+
+---
+
 
 ### lia.data.delete(key, global, ignoreMap)
 
@@ -52,9 +55,12 @@ Also removes the value from the cached storage.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.data.delete
-lia.data.delete("spawn_pos")
+    -- This snippet demonstrates a common usage of lia.data.delete
+    lia.data.delete("spawn_pos")
 ```
+
+---
+
 
 ### lia.data.get(key, default, global, ignoreMap, refresh)
 
@@ -75,11 +81,11 @@ Otherwise, reads from the file, decodes, and caches the value.
 * Shared
 **Example:**
 ```lua
--- Teleport players to the saved spawn point when they spawn
-hook.Add("PlayerSpawn", "UseSavedSpawn", function(ply)
-local pos = lia.data.get("spawn_pos", Vector(0, 0, 0), true)
-if pos then
-ply:SetPos(pos)
-end
-end)
+    -- Teleport players to the saved spawn point when they spawn
+    hook.Add("PlayerSpawn", "UseSavedSpawn", function(ply)
+        local pos = lia.data.get("spawn_pos", Vector(0, 0, 0), true)
+        if pos then
+            ply:SetPos(pos)
+        end
+    end)
 ```

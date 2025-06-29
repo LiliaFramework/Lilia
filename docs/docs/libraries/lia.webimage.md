@@ -28,9 +28,12 @@ resulting Material.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.webimage.register
-lia.webimage.register("logo.png", "https://example.com/logo.png")
+    -- This snippet demonstrates a common usage of lia.webimage.register
+    lia.webimage.register("logo.png", "https://example.com/logo.png")
 ```
+
+---
+
 
 ### lia.webimage.get(name, flags)
 
@@ -47,9 +50,12 @@ the cache.
 * Material|nil – The image material or nil if missing.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.webimage.get
-local mat = lia.webimage.get("logo.png")
+    -- This snippet demonstrates a common usage of lia.webimage.get
+    local mat = lia.webimage.get("logo.png")
 ```
+
+---
+
 
 HTTPS URL Handling
     
@@ -60,9 +66,9 @@ automatically downloaded via `lia.webimage.register` and cached before
 the material is returned or applied.
 **Example:**
 ```lua
--- Load a material directly from the web
-local mat = Material("https://example.com/icon.png")
+    -- Load a material directly from the web
+    local mat = Material("https://example.com/icon.png")
 
--- Apply a remote image to a button
-button:SetImage("https://example.com/icon.png")
+    -- Apply a remote image to a button
+    button:SetImage("https://example.com/icon.png")
 ```

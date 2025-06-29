@@ -27,9 +27,12 @@ as the key.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.attribs.loadFromDir
-lia.attribs.loadFromDir("schema/attributes")
+    -- This snippet demonstrates a common usage of lia.attribs.loadFromDir
+    lia.attribs.loadFromDir("schema/attributes")
 ```
+
+---
+
 
 ### lia.attribs.setup(client)
 
@@ -46,6 +49,6 @@ an OnSetup callback, it is executed with the current value.
 * None
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.attribs.setup
-lia.attribs.setup(client)
+    -- This snippet demonstrates a common usage of lia.attribs.setup
+    lia.attribs.setup(client)
 ```

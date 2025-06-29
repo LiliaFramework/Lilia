@@ -26,9 +26,12 @@ Creates the logs directory for the current active gamemode under "lilia/logs".
     
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.log.loadTables
-lia.log.loadTables()
+    -- This snippet demonstrates a common usage of lia.log.loadTables
+    lia.log.loadTables()
 ```
+
+---
+
 
 ### lia.log.addType(logType, func, category)
 
@@ -46,11 +49,14 @@ The registered function will be used later to generate log messages for that typ
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.log.addType
-lia.log.addType("mytype", function(client)
-return client:Name() .. " did something"
-end, "actions")
+    -- This snippet demonstrates a common usage of lia.log.addType
+    lia.log.addType("mytype", function(client)
+        return client:Name() .. " did something"
+    end, "actions")
 ```
+
+---
+
 
 ### lia.log.getString(client, logType, ...)
 
@@ -71,9 +77,12 @@ It calls the registered log function with the provided parameters.
     
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.log.getString
-local str, category = lia.log.getString(client, "mytype", "info")
+    -- This snippet demonstrates a common usage of lia.log.getString
+    local str, category = lia.log.getString(client, "mytype", "info")
 ```
+
+---
+
 
 ### lia.log.add(client, logType, ...)
 
@@ -91,6 +100,6 @@ and appends the log string to a log file corresponding to its category in the lo
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.log.add
-lia.log.add(client, "mytype", "info")
+    -- This snippet demonstrates a common usage of lia.log.add
+    lia.log.add(client, "mytype", "info")
 ```

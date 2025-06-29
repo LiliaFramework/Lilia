@@ -27,9 +27,12 @@ Adds a configuration option to the lia.option system.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.option.add
-lia.option.add("showHints", "Show Hints", "Display hints", true)
+    -- This snippet demonstrates a common usage of lia.option.add
+    lia.option.add("showHints", "Show Hints", "Display hints", true)
 ```
+
+---
+
 
 ### lia.option.set(key, value)
 
@@ -45,9 +48,12 @@ Sets the value of a specified option, saves locally, and optionally networks to 
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.option.set
-lia.option.set("showHints", false)
+    -- This snippet demonstrates a common usage of lia.option.set
+    lia.option.set("showHints", false)
 ```
+
+---
+
 
 ### lia.option.get(key, default)
 
@@ -63,9 +69,12 @@ Retrieves the value of a specified option, or returns a default if it doesn't ex
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.option.get
-local show = lia.option.get("showHints", true)
+    -- This snippet demonstrates a common usage of lia.option.get
+    local show = lia.option.get("showHints", true)
 ```
+
+---
+
 
 ### lia.option.save()
 
@@ -80,9 +89,12 @@ Saves all current option values to a file, named based on the server IP, within 
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.option.save
-lia.option.save()
+    -- This snippet demonstrates a common usage of lia.option.save
+    lia.option.save()
 ```
+
+---
+
 
 ### lia.option.load()
 
@@ -97,6 +109,6 @@ Loads saved option values from disk based on server IP and applies them to lia.o
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.option.load
-lia.option.load()
+    -- This snippet demonstrates a common usage of lia.option.load
+    lia.option.load()
 ```

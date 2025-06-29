@@ -25,9 +25,12 @@ form; otherwise, it returns the plural form.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.currency.get
-lia.currency.get(10)  -- e.g., "$10 dollars"
+    -- This snippet demonstrates a common usage of lia.currency.get
+    lia.currency.get(10)  -- e.g., "$10 dollars"
 ```
+
+---
+
 
 ### lia.currency.spawn
 
@@ -45,6 +48,6 @@ Validates the position and ensures the amount is a non-negative number.
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.currency.spawn
-lia.currency.spawn(Vector(0, 0, 0), 100)
+    -- This snippet demonstrates a common usage of lia.currency.spawn
+    lia.currency.spawn(Vector(0, 0, 0), 100)
 ```

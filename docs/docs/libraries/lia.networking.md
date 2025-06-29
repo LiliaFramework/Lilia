@@ -26,13 +26,16 @@ receiver is specified the update is only sent to those players.
 * nil
 **Example:**
 ```lua
--- Start a new round and only inform the winner
-local round = getNetVar("round", 0) + 1
-setNetVar("round", round)
-local winner = DetermineWinner()
-setNetVar("last_winner", winner, winner)
-hook.Run("RoundStarted", round)
+    -- Start a new round and only inform the winner
+    local round = getNetVar("round", 0) + 1
+    setNetVar("round", round)
+    local winner = DetermineWinner()
+    setNetVar("last_winner", winner, winner)
+    hook.Run("RoundStarted", round)
 ```
+
+---
+
 
 ### getNetVar(key, default)
 
@@ -48,12 +51,12 @@ Retrieves a global networked variable previously set by setNetVar.
 * any – Stored value or default.
 **Example:**
 ```lua
--- Inform a joining player of the current round and last winner
-hook.Add("PlayerInitialSpawn", "ShowRound", function(ply)
-ply:ChatPrint("Current round: " .. getNetVar("round", 0))
-local winner = getNetVar("last_winner")
-if IsValid(winner) then
-ply:ChatPrint("Last round won by " .. winner:Name())
-end
-end)
+    -- Inform a joining player of the current round and last winner
+    hook.Add("PlayerInitialSpawn", "ShowRound", function(ply)
+        ply:ChatPrint("Current round: " .. getNetVar("round", 0))
+        local winner = getNetVar("last_winner")
+        if IsValid(winner) then
+            ply:ChatPrint("Last round won by " .. winner:Name())
+        end
+    end)
 ```

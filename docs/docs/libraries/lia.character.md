@@ -21,9 +21,12 @@ Creates a new character instance with default variables and metatable.
 * character (table) – New character object.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.char.new
-local char = lia.char.new({name = "John"}, 1, client)
+    -- This snippet demonstrates a common usage of lia.char.new
+    local char = lia.char.new({name = "John"}, 1, client)
 ```
+
+---
+
 
 ### lia.char.hookVar(varName, hookName, func)
 
@@ -40,9 +43,12 @@ Registers a hook function for when a character variable changes.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.char.hookVar
-lia.char.hookVar("name", "PrintName", function(old, new) print(new) end)
+    -- This snippet demonstrates a common usage of lia.char.hookVar
+    lia.char.hookVar("name", "PrintName", function(old, new) print(new) end)
 ```
+
+---
+
 
 ### lia.char.registerVar(key, data)
 
@@ -58,9 +64,12 @@ Registers a character variable with metadata and generates accessor methods.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.char.registerVar
-lia.char.registerVar("age", {field = "_age", default = 20})
+    -- This snippet demonstrates a common usage of lia.char.registerVar
+    lia.char.registerVar("age", {field = "_age", default = 20})
 ```
+
+---
+
 
 ### lia.char.getCharData(charID, key)
 
@@ -76,9 +85,12 @@ Retrieves character data JSON from the database as a Lua table.
 * value (any) – Data value or full table if no key provided.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.char.getCharData
-local age = lia.char.getCharData(1, "age")
+    -- This snippet demonstrates a common usage of lia.char.getCharData
+    local age = lia.char.getCharData(1, "age")
 ```
+
+---
+
 
 ### lia.char.getCharDataRaw(charID, key)
 
@@ -94,9 +106,12 @@ Retrieves raw character database row or specific column.
 * row (table|any) – Full row table or column value.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.char.getCharDataRaw
-local row = lia.char.getCharDataRaw(1)
+    -- This snippet demonstrates a common usage of lia.char.getCharDataRaw
+    local row = lia.char.getCharDataRaw(1)
 ```
+
+---
+
 
 ### lia.char.getOwnerByID(ID)
 
@@ -111,9 +126,12 @@ Finds the player entity that owns the character with the given ID.
 * Player – Player entity or nil if not found.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.char.getOwnerByID
-local ply = lia.char.getOwnerByID(1)
+    -- This snippet demonstrates a common usage of lia.char.getOwnerByID
+    local ply = lia.char.getOwnerByID(1)
 ```
+
+---
+
 
 ### lia.char.getBySteamID(steamID)
 
@@ -128,9 +146,12 @@ Retrieves a character object by SteamID or SteamID64.
 * Character – Character object or nil.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.char.getBySteamID
-local char = lia.char.getBySteamID("STEAM_0:0:11101")
+    -- This snippet demonstrates a common usage of lia.char.getBySteamID
+    local char = lia.char.getBySteamID("STEAM_0:0:11101")
 ```
+
+---
+
 
 ### lia.char.getAll()
 
@@ -145,9 +166,12 @@ Returns a table mapping all players to their loaded character objects.
 * table – Map of Player to Character.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of pairs
-for ply, char in pairs(lia.char.getAll()) do print(ply, char:getName()) end
+    -- This snippet demonstrates a common usage of pairs
+    for ply, char in pairs(lia.char.getAll()) do print(ply, char:getName()) end
 ```
+
+---
+
 
 ### lia.char.GetTeamColor(client)
 
@@ -162,9 +186,12 @@ Determines the team color for a client based on their character class or default
 * Color – Team or class color.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.char.GetTeamColor
-local color = lia.char.GetTeamColor(client)
+    -- This snippet demonstrates a common usage of lia.char.GetTeamColor
+    local color = lia.char.GetTeamColor(client)
 ```
+
+---
+
 
 ### lia.char.create(data, callback)
 
@@ -180,9 +207,12 @@ Inserts a new character into the database and sets up default inventory.
 * None
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.char.create
-lia.char.create({name = "John"}, function(id) print("Created", id) end)
+    -- This snippet demonstrates a common usage of lia.char.create
+    lia.char.create({name = "John"}, function(id) print("Created", id) end)
 ```
+
+---
+
 
 ### lia.char.restore(client, callback, id)
 
@@ -199,9 +229,12 @@ Loads characters for a client from the database, optionally filtering by ID.
 * None
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.char.restore
-lia.char.restore(client, print)
+    -- This snippet demonstrates a common usage of lia.char.restore
+    lia.char.restore(client, print)
 ```
+
+---
+
 
 ### lia.char.cleanUpForPlayer(client)
 
@@ -216,9 +249,12 @@ Cleans up loaded characters and inventories for a player on disconnect.
 * None
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.char.cleanUpForPlayer
-lia.char.cleanUpForPlayer(client)
+    -- This snippet demonstrates a common usage of lia.char.cleanUpForPlayer
+    lia.char.cleanUpForPlayer(client)
 ```
+
+---
+
 
 ### lia.char.delete(id, client)
 
@@ -234,9 +270,12 @@ Deletes a character by ID from the database, cleans up and notifies players.
 * None
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.char.delete
-lia.char.delete(1, client)
+    -- This snippet demonstrates a common usage of lia.char.delete
+    lia.char.delete(1, client)
 ```
+
+---
+
 
 ### lia.char.setCharData(charID, key, val)
 
@@ -253,9 +292,12 @@ Updates a character's JSON data field in the database and loaded object.
 * boolean – True on success, false on failure.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.char.setCharData
-lia.char.setCharData(1, "age", 25)
+    -- This snippet demonstrates a common usage of lia.char.setCharData
+    lia.char.setCharData(1, "age", 25)
 ```
+
+---
+
 
 ### lia.char.setCharName(charID, name)
 
@@ -271,9 +313,12 @@ Updates the character's name in the database and loaded object.
 * boolean – True on success, false on failure.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.char.setCharName
-lia.char.setCharName(1, "NewName")
+    -- This snippet demonstrates a common usage of lia.char.setCharName
+    lia.char.setCharName(1, "NewName")
 ```
+
+---
+
 
 ### lia.char.setCharModel(charID, model, bg)
 
@@ -290,6 +335,6 @@ Updates the character's model and bodygroups in the database and in-game.
 * boolean – True on success, false on failure.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.char.setCharModel
-lia.char.setCharModel(1, "models/player.mdl", {})
+    -- This snippet demonstrates a common usage of lia.char.setCharModel
+    lia.char.setCharModel(1, "models/player.mdl", {})
 ```

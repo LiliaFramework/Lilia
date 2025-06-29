@@ -21,9 +21,12 @@ Collects workshop IDs from installed addons and registered modules.
 * ids (table) – Table of workshop IDs to download.
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.workshop.gather
-local ids = lia.workshop.gather()
+    -- This snippet demonstrates a common usage of lia.workshop.gather
+    local ids = lia.workshop.gather()
 ```
+
+---
+
 
 ### lia.workshop.send(ply)
 
@@ -38,6 +41,6 @@ Sends the collected workshop IDs to a connecting player.
 * None
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.workshop.send
-lia.workshop.send(ply)
+    -- This snippet demonstrates a common usage of lia.workshop.send
+    lia.workshop.send(ply)
 ```

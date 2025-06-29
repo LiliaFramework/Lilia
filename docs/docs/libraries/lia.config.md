@@ -27,17 +27,20 @@ Registers a new config option with the given key, display name, default value, a
 * Shared
 **Example:**
 ```lua
--- Register a config option with a callback that prints when it changes
-lia.config.add(
-"maxPlayers",                 -- unique key
-"Maximum Players",            -- name shown in the menu
-64,                            -- default value
-function(old, new)
-print("Player limit updated from", old, "to", new)
-end,
-{category = "Server"}
-)
+    -- Register a config option with a callback that prints when it changes
+    lia.config.add(
+    "maxPlayers",                 -- unique key
+    "Maximum Players",            -- name shown in the menu
+    64,                            -- default value
+    function(old, new)
+        print("Player limit updated from", old, "to", new)
+    end,
+    {category = "Server"}
+    )
 ```
+
+---
+
 
 ### lia.config.setDefault(key, value)
 
@@ -53,9 +56,12 @@ Overrides the default value of an existing config.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.config.setDefault
-lia.config.setDefault("maxPlayers", 32)
+    -- This snippet demonstrates a common usage of lia.config.setDefault
+    lia.config.setDefault("maxPlayers", 32)
 ```
+
+---
+
 
 ### lia.config.forceSet(key, value, noSave)
 
@@ -72,9 +78,12 @@ Forces a config value without triggering networking or callback if 'noSave' is t
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.config.forceSet
-lia.config.forceSet("someSetting", true, true)
+    -- This snippet demonstrates a common usage of lia.config.forceSet
+    lia.config.forceSet("someSetting", true, true)
 ```
+
+---
+
 
 ### lia.config.set(key, value)
 
@@ -90,9 +99,12 @@ Sets a config value, runs callback, and handles networking (if on server). Also 
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.config.set
-lia.config.set("maxPlayers", 24)
+    -- This snippet demonstrates a common usage of lia.config.set
+    lia.config.set("maxPlayers", 24)
 ```
+
+---
+
 
 ### lia.config.get(key, default)
 
@@ -108,9 +120,12 @@ Retrieves the current value of a config, or returns a default if neither value n
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.config.get
-local players = lia.config.get("maxPlayers", 64)
+    -- This snippet demonstrates a common usage of lia.config.get
+    local players = lia.config.get("maxPlayers", 64)
 ```
+
+---
+
 
 ### lia.config.load()
 
@@ -129,9 +144,12 @@ Triggers "InitializedConfig" hook once done.
     
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.config.load
-lia.config.load()
+    -- This snippet demonstrates a common usage of lia.config.load
+    lia.config.load()
 ```
+
+---
+
 
 ### lia.config.getChangedValues()
 
@@ -146,9 +164,12 @@ Returns a table of all config entries where the current value differs from the d
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.config.getChangedValues
-local changed = lia.config.getChangedValues()
+    -- This snippet demonstrates a common usage of lia.config.getChangedValues
+    local changed = lia.config.getChangedValues()
 ```
+
+---
+
 
 ### lia.config.send(client)
 
@@ -163,9 +184,12 @@ Sends current changed config values to a specified client.
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.config.send
-lia.config.send(client)
+    -- This snippet demonstrates a common usage of lia.config.send
+    lia.config.send(client)
 ```
+
+---
+
 
 ### lia.config.save()
 
@@ -180,6 +204,6 @@ Saves all changed config values to persistent storage.
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.config.save
-lia.config.save()
+    -- This snippet demonstrates a common usage of lia.config.save
+    lia.config.save()
 ```

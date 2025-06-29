@@ -23,12 +23,15 @@ Retrieves a bar object from the list by its unique identifier.
 * table or nil – The bar table if found, or nil if not found.
 **Example:**
 ```lua
--- Retrieve the health bar and change its color at runtime
-local bar = lia.bar.get("health")
-if bar then
-bar.color = Color(0, 200, 0) -- make the bar green
-end
+    -- Retrieve the health bar and change its color at runtime
+    local bar = lia.bar.get("health")
+    if bar then
+        bar.color = Color(0, 200, 0) -- make the bar green
+    end
 ```
+
+---
+
 
 ### lia.bar.add(getValue, color, priority, identifier)
 
@@ -48,14 +51,17 @@ Bars are drawn in order of ascending priority.
 * number – The priority assigned to the added bar.
 **Example:**
 ```lua
--- Calculates the player's current health as a fraction of their maximum health.
--- Uses a custom color (RGB 200, 50, 40) for the bar's fill.
--- Assigns priority 1 so this bar draws before lower-priority bars.
-lia.bar.add(function()
-local client = LocalPlayer()
-return client:Health() / client:GetMaxHealth()
-end, Color(200, 50, 40), 1, "health")
+    -- Calculates the player's current health as a fraction of their maximum health.
+    -- Uses a custom color (RGB 200, 50, 40) for the bar's fill.
+    -- Assigns priority 1 so this bar draws before lower-priority bars.
+    lia.bar.add(function()
+        local client = LocalPlayer()
+        return client:Health() / client:GetMaxHealth()
+    end, Color(200, 50, 40), 1, "health")
 ```
+
+---
+
 
 ### lia.bar.remove(identifier)
 
@@ -70,9 +76,12 @@ Removes a bar from the list based on its unique identifier.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.bar.remove
-lia.bar.remove("example")
+    -- This snippet demonstrates a common usage of lia.bar.remove
+    lia.bar.remove("example")
 ```
+
+---
+
 
 ### lia.bar.drawBar(x, y, w, h, pos, max, color)
 
@@ -94,9 +103,12 @@ filling it proportionally based on pos and max.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.bar.drawBar
-lia.bar.drawBar(10, 10, 200, 20, 0.5, 1, Color(255,0,0))
+    -- This snippet demonstrates a common usage of lia.bar.drawBar
+    lia.bar.drawBar(10, 10, 200, 20, 0.5, 1, Color(255,0,0))
 ```
+
+---
+
 
 ### lia.bar.drawAction(text, duration)
 
@@ -113,9 +125,12 @@ for the specified duration on the HUD.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.bar.drawAction
-lia.bar.drawAction("Reloading", 2)
+    -- This snippet demonstrates a common usage of lia.bar.drawAction
+    lia.bar.drawAction("Reloading", 2)
 ```
+
+---
+
 
 ### lia.bar.drawAll()
 
@@ -131,6 +146,6 @@ and draws them on the HUD according to their priority and visibility rules.
 * nil
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of hook.Add
-hook.Add("HUDPaintBackground", "liaBarDraw", lia.bar.drawAll)
+    -- This snippet demonstrates a common usage of hook.Add
+    hook.Add("HUDPaintBackground", "liaBarDraw", lia.bar.drawAll)
 ```

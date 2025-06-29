@@ -24,9 +24,12 @@ Creates and stores a font using surface.CreateFont for later refresh.
 * None
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.font.register
-lia.font.register("MyFont", {font = "Arial", size = 16})
+    -- This snippet demonstrates a common usage of lia.font.register
+    lia.font.register("MyFont", {font = "Arial", size = 16})
 ```
+
+---
+
 
 ### lia.font.getAvailableFonts()
 
@@ -41,10 +44,13 @@ Returns a sorted list of font names that have been registered.
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.font.getAvailableFonts
-local fonts = lia.font.getAvailableFonts()
-PrintTable(fonts)
+    -- This snippet demonstrates a common usage of lia.font.getAvailableFonts
+    local fonts = lia.font.getAvailableFonts()
+    PrintTable(fonts)
 ```
+
+---
+
 
 ### lia.font.refresh()
 
@@ -59,6 +65,6 @@ Recreates all stored fonts. Called when font related config values change.
 * Client
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.font.refresh
-lia.font.refresh()
+    -- This snippet demonstrates a common usage of lia.font.refresh
+    lia.font.refresh()
 ```

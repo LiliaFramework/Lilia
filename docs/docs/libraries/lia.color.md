@@ -24,9 +24,12 @@ Registers a named color for later lookup.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.color.register
-lia.color.register("myRed", Color(255,0,0))
+    -- This snippet demonstrates a common usage of lia.color.register
+    lia.color.register("myRed", Color(255,0,0))
 ```
+
+---
+
 
 ### lia.color.Adjust(color, rOffset, gOffset, bOffset, aOffset)
 
@@ -45,9 +48,12 @@ Creates a new color by applying offsets to each channel.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.color.Adjust
-local lighter = lia.color.Adjust(Color(50,50,50), 10,10,10)
+    -- This snippet demonstrates a common usage of lia.color.Adjust
+    local lighter = lia.color.Adjust(Color(50,50,50), 10,10,10)
 ```
+
+---
+
 
 ### lia.color.ReturnMainAdjustedColors()
 
@@ -62,6 +68,6 @@ Returns a table of commonly used UI colors derived from the base config color.
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.color.ReturnMainAdjustedColors
-local uiColors = lia.color.ReturnMainAdjustedColors()
+    -- This snippet demonstrates a common usage of lia.color.ReturnMainAdjustedColors
+    local uiColors = lia.color.ReturnMainAdjustedColors()
 ```

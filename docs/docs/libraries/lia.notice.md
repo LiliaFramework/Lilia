@@ -24,9 +24,12 @@ Sends a notification message to a specific player or all players.
 * None
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.notices.notify
-lia.notices.notify("Server restarting", nil)
+    -- This snippet demonstrates a common usage of lia.notices.notify
+    lia.notices.notify("Server restarting", nil)
 ```
+
+---
+
 
 ### lia.notices.notifyLocalized(key, recipient, ...)
 
@@ -43,9 +46,12 @@ Sends a localized notification to a player or all players.
 * None
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.notices.notifyLocalized
-lia.notices.notifyLocalized("welcome", client)
+    -- This snippet demonstrates a common usage of lia.notices.notifyLocalized
+    lia.notices.notifyLocalized("welcome", client)
 ```
+
+---
+
 
 ### lia.notices.notify(message)
 
@@ -60,9 +66,12 @@ Creates a visual notification panel on the client's screen.
 * None
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.notices.notify
-lia.notices.notify("Item picked up")
+    -- This snippet demonstrates a common usage of lia.notices.notify
+    lia.notices.notify("Item picked up")
 ```
+
+---
+
 
 ### lia.notices.notifyLocalized(key, ...)
 
@@ -78,6 +87,6 @@ Displays a localized notification on the client's screen.
 * None
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.notices.notifyLocalized
-lia.notices.notifyLocalized("item_picked_up")
+    -- This snippet demonstrates a common usage of lia.notices.notifyLocalized
+    lia.notices.notifyLocalized("item_picked_up")
 ```

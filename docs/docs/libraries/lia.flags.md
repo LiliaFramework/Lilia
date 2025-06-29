@@ -25,9 +25,12 @@ Each flag has a description and an optional callback that is executed when the f
 * Shared
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.flag.add
-lia.flag.add("C", "Spawn vehicles.")
+    -- This snippet demonstrates a common usage of lia.flag.add
+    lia.flag.add("C", "Spawn vehicles.")
 ```
+
+---
+
 
 ### lia.flag.onSpawn
 
@@ -43,6 +46,6 @@ the associated callbacks for each flag that the character possesses.
 * Server
 **Example:**
 ```lua
--- This snippet demonstrates a common usage of lia.flag.onSpawn
-lia.flag.onSpawn(player)
+    -- This snippet demonstrates a common usage of lia.flag.onSpawn
+    lia.flag.onSpawn(player)
 ```
