@@ -11,33 +11,23 @@ for _, v in pairs(KnownExploits) do
     end)
 end
 
-local function NotifyAdmin(notification)
-    for _, client in player.Iterator() do
-        if IsValid(client) and client:hasPrivilege("Staff Permissions - Can See Alting Notifications") then client:ChatPrint(notification) end
-    end
-end
 
-local function ApplyPunishment(client, infraction, kick, ban, time)
-    local bantime = time or 0
-    if kick then client:Kick(L("kickedForInfractionPeriod", infraction)) end
-    if ban then client:Ban(bantime, L("bannedForInfractionPeriod", infraction)) end
-end
 
 net.Receive("CheckSeed", function(_, client)
     local sentSteamID = net.ReadString()
     if not sentSteamID or sentSteamID == "" then
         lia.log.add(nil, "steamIDMissing", client:Name(), client:SteamID64())
-        NotifyAdmin(L("steamIDMissing", client:Name(), client:SteamID64()))
+        lia.notifyAdmin(L("steamIDMissing", client:Name(), client:SteamID64()))
         return
     end
 
     if client:SteamID64() ~= sentSteamID then
         lia.log.add(nil, "steamIDMismatch", client:Name(), client:SteamID64(), sentSteamID)
-        NotifyAdmin(L("steamIDMismatch", client:Name(), client:SteamID64(), sentSteamID))
+        lia.notifyAdmin(L("steamIDMismatch", client:Name(), client:SteamID64(), sentSteamID))
     end
 end)
 
 net.Receive("CheckHack", function(_, client)
     lia.log.add(client, "hackAttempt")
-    ApplyPunishment(client, "Hacking", true, true, 0)
+    lia.applyPunishment(client, "Hacking", true, true, 0, "kickedForInfractionPeriod", "bannedForInfractionPeriod")
 end)

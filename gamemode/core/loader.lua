@@ -353,6 +353,28 @@ function lia.bootstrap(section, msg)
     MsgC(Color(255, 255, 255), msg, "\n")
 end
 
+function lia.notifyAdmin(notification)
+    for _, client in player.Iterator() do
+        if IsValid(client) and client:hasPrivilege("Staff Permissions - Can See Alting Notifications") then
+            client:ChatPrint(notification)
+        end
+    end
+end
+
+function lia.applyPunishment(client, infraction, kick, ban, time, kickKey, banKey)
+    local bantime = time or 0
+    kickKey = kickKey or "kickedForInfraction"
+    banKey = banKey or "bannedForInfraction"
+
+    if kick then
+        lia.command.execAdminCommand("kick", nil, client, nil, L(kickKey, infraction))
+    end
+
+    if ban then
+        lia.command.execAdminCommand("ban", nil, client, bantime, L(banKey, infraction))
+    end
+end
+
 for _, files in ipairs(FilesToLoad) do
     lia.include(files.path, files.realm)
 end
