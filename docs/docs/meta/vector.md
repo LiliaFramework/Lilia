@@ -10,7 +10,7 @@ Vector meta functions provide calculations such as midpoints, distances, and axi
 
 ---
 
-### `Center(vec2)`
+### Center(vec2)
 
 **Description:**
 Returns the midpoint between this vector and the supplied vector.
@@ -24,14 +24,15 @@ Returns the midpoint between this vector and the supplied vector.
 **Returns:**
 * Vector – The center point of the two vectors.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Average two vectors to find the midpoint
 local midpoint = vector_origin:Center(Vector(10, 10, 10))
 print(midpoint) -- Vector(5, 5, 5)
 ```
+---
 
-### `Distance(vec2)`
+### Distance(vec2)
 
 **Description:**
 Calculates the distance between this vector and another vector.
@@ -45,14 +46,15 @@ Calculates the distance between this vector and another vector.
 **Returns:**
 * number – The distance between the two vectors.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Measure the distance between two points
 local dist = vector_origin:Distance(Vector(3, 4, 0))
 print(dist) -- 5
 ```
+---
 
-### `RotateAroundAxis(axis, degrees)`
+### RotateAroundAxis(axis, degrees)
 
 **Description:**
 Rotates the vector around an axis by the specified degrees and returns the new vector.
@@ -67,14 +69,15 @@ Rotates the vector around an axis by the specified degrees and returns the new v
 **Returns:**
 * Vector – The rotated vector.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Rotate a vector 90 degrees around the Z axis
 local rotated = Vector(1, 0, 0):RotateAroundAxis(Vector(0, 0, 1), 90)
 print(rotated) -- Vector(0, 1, 0)
 ```
+---
 
-### `Right(vUp)`
+### Right(vUp)
 
 **Description:**
 Returns a normalized right-direction vector relative to this vector.
@@ -88,14 +91,15 @@ Returns a normalized right-direction vector relative to this vector.
 **Returns:**
 * Vector – The calculated right vector.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Get the right direction vector
 local rightVec = Vector(0, 1, 0):Right()
 print(rightVec)
 ```
+---
 
-### `Up(vUp)`
+### Up(vUp)
 
 **Description:**
 Returns a normalized up-direction vector relative to this vector.
@@ -109,10 +113,9 @@ Returns a normalized up-direction vector relative to this vector.
 **Returns:**
 * Vector – The calculated up vector.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Get the up direction vector
 local upVec = Vector(1, 0, 0):Up()
 print(upVec)
 ```
-

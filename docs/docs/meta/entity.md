@@ -11,7 +11,7 @@ The entity meta library extends Garry's Mod entities with helpers for detection,
 
 ---
 
-### `isProp()`
+### isProp()
 
 **Description:**
 Returns true if the entity is a physics prop.
@@ -25,15 +25,16 @@ Returns true if the entity is a physics prop.
 **Returns:**
 * boolean – Whether the entity is a physics prop.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Apply physics damage only if this is a prop
 if ent:isProp() then
     ent:TakeDamage(50)
 end
 ```
+---
 
-### `isItem()`
+### isItem()
 
 **Description:**
 Checks if the entity is an item entity.
@@ -47,15 +48,16 @@ Checks if the entity is an item entity.
 **Returns:**
 * boolean – True if the entity represents an item.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Attempt to pick up the entity as an item
 if ent:isItem() then
     lia.item.pickup(client, ent)
 end
 ```
+---
 
-### `isMoney()`
+### isMoney()
 
 **Description:**
 Checks if the entity is a money entity.
@@ -69,15 +71,16 @@ Checks if the entity is a money entity.
 **Returns:**
 * boolean – True if the entity represents money.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Collect money dropped on the ground
 if ent:isMoney() then
     char:addMoney(ent:getAmount())
 end
 ```
+---
 
-### `isSimfphysCar()`
+### isSimfphysCar()
 
 **Description:**
 Checks if the entity is a simfphys car.
@@ -91,15 +94,16 @@ Checks if the entity is a simfphys car.
 **Returns:**
 * boolean – True if this is a simfphys vehicle.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Show a custom HUD when entering a simfphys vehicle
 if ent:isSimfphysCar() then
     OpenCarHUD(ent)
 end
 ```
+---
 
-### `isLiliaPersistent()`
+### isLiliaPersistent()
 
 **Description:**
 Determines if the entity is persistent in Lilia.
@@ -113,15 +117,16 @@ Determines if the entity is persistent in Lilia.
 **Returns:**
 * boolean – Whether the entity should persist.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Save this entity across map resets if persistent
 if ent:isLiliaPersistent() then
     lia.persist.saveEntity(ent)
 end
 ```
+---
 
-### `checkDoorAccess(client, access)`
+### checkDoorAccess(client, access)
 
 **Description:**
 Checks if a player has the given door access level.
@@ -136,15 +141,16 @@ Checks if a player has the given door access level.
 **Returns:**
 * boolean – True if the player has access.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Block a player from opening the door without access
 if not door:checkDoorAccess(client, DOOR_ACCESS_OPEN) then
     client:notify("The door is locked.")
 end
 ```
+---
 
-### `keysOwn(client)`
+### keysOwn(client)
 
 **Description:**
 Assigns the entity to the specified player.
@@ -158,13 +164,14 @@ Assigns the entity to the specified player.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Assign ownership when a player buys the door
 door:keysOwn(buyer)
 ```
+---
 
-### `keysLock()`
+### keysLock()
 
 **Description:**
 Locks the entity if it is a vehicle.
@@ -178,13 +185,14 @@ Locks the entity if it is a vehicle.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Lock the vehicle after the driver exits
 car:keysLock()
 ```
+---
 
-### `keysUnLock()`
+### keysUnLock()
 
 **Description:**
 Unlocks the entity if it is a vehicle.
@@ -198,13 +206,14 @@ Unlocks the entity if it is a vehicle.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Unlock the vehicle when the owner presses a key
 car:keysUnLock()
 ```
+---
 
-### `getDoorOwner()`
+### getDoorOwner()
 
 **Description:**
 Returns the player that owns this door if available.
@@ -218,7 +227,7 @@ Returns the player that owns this door if available.
 **Returns:**
 * Player|None – Door owner or None.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Print the name of the door owner when inspecting
 local owner = door:getDoorOwner()
@@ -226,8 +235,9 @@ if owner then
     print("Owned by", owner:Name())
 end
 ```
+---
 
-### `isLocked()`
+### isLocked()
 
 **Description:**
 Returns the locked state stored in net variables.
@@ -241,15 +251,16 @@ Returns the locked state stored in net variables.
 **Returns:**
 * boolean – Whether the door is locked.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Display a lock icon if the door is networked as locked
 if door:isLocked() then
     DrawLockedIcon(door)
 end
 ```
+---
 
-### `isDoorLocked()`
+### isDoorLocked()
 
 **Description:**
 Checks the internal door locked state.
@@ -263,15 +274,16 @@ Checks the internal door locked state.
 **Returns:**
 * boolean – True if the door is locked.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Play a sound when trying to open a locked door server-side
 if door:isDoorLocked() then
     door:EmitSound("doors/door_locked2.wav")
 end
 ```
+---
 
-### `getEntItemDropPos(offset)`
+### getEntItemDropPos(offset)
 
 **Description:**
 Calculates a drop position in front of the entity's eyes.
@@ -285,14 +297,15 @@ Calculates a drop position in front of the entity's eyes.
 **Returns:**
 * Vector – Drop position and angle.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Spawn an item drop in front of the entity's eyes
 local pos, ang = ent:getEntItemDropPos(16)
 lia.item.spawn("item_water", pos, ang)
 ```
+---
 
-### `isNearEntity(radius, otherEntity)`
+### isNearEntity(radius, otherEntity)
 
 **Description:**
 Checks for another entity of the same class nearby.
@@ -307,15 +320,16 @@ Checks for another entity of the same class nearby.
 **Returns:**
 * boolean – True if another entity is within radius.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Prevent building too close to another chest
 if ent:isNearEntity(128, otherChest) then
     client:notify("Too close to another chest!")
 end
 ```
+---
 
-### `GetCreator()`
+### GetCreator()
 
 **Description:**
 Returns the entity creator player.
@@ -329,7 +343,7 @@ Returns the entity creator player.
 **Returns:**
 * Player|None – Creator player if stored.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Credit the creator when the entity is removed
 local creator = ent:GetCreator()
@@ -337,8 +351,9 @@ if IsValid(creator) then
     creator:notify("Your prop was removed.")
 end
 ```
+---
 
-### `SetCreator(client)`
+### SetCreator(client)
 
 **Description:**
 Stores the creator player on the entity.
@@ -352,13 +367,14 @@ Stores the creator player on the entity.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
     -- Record the spawner for cleanup tracking
     ent:SetCreator(client)
 ```
+---
 
-### `sendNetVar(key, receiver)`
+### sendNetVar(key, receiver)
 
 **Description:**
 Sends a network variable to recipients.
@@ -370,21 +386,22 @@ Sends a network variable to recipients.
 **Realm:**
 * Server
 
-        Internal:
-            Used by the networking system.
+    Internal:
+        Used by the networking system.
 
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Broadcast the "doorState" variable to every connected player
 for _, ply in player.Iterator() do
     ent:sendNetVar("doorState", ply)
 end
 ```
+---
 
-### `clearNetVars(receiver)`
+### clearNetVars(receiver)
 
 **Description:**
 Clears all network variables on this entity.
@@ -398,14 +415,15 @@ Clears all network variables on this entity.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Force reinitialization by clearing all variables for this receiver
 ent:clearNetVars(client)
 ent:sendNetVar("initialized", client)
 ```
+---
 
-### `removeDoorAccessData()`
+### removeDoorAccessData()
 
 **Description:**
 Clears all stored door access information.
@@ -419,13 +437,14 @@ Clears all stored door access information.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Wipe door permissions during cleanup
 local result = ent:removeDoorAccessData()
 ```
+---
 
-### `setLocked(state)`
+### setLocked(state)
 
 **Description:**
 Stores the door locked state in network variables.
@@ -439,14 +458,15 @@ Stores the door locked state in network variables.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Toggle the door lock and play a latch sound for everyone
 door:setLocked(true)
 door:EmitSound("doors/door_latch3.wav")
 ```
+---
 
-### `isDoor()`
+### isDoor()
 
 **Description:**
 Returns true if the entity's class indicates a door.
@@ -460,13 +480,14 @@ Returns true if the entity's class indicates a door.
 **Returns:**
 * boolean – Whether the entity is a door.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Check if the entity behaves like a door
 local result = ent:isDoor()
 ```
+---
 
-### `getDoorPartner()`
+### getDoorPartner()
 
 **Description:**
 Returns the partner door linked with this entity.
@@ -480,7 +501,7 @@ Returns the partner door linked with this entity.
 **Returns:**
 * Entity|None – The partnered door.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Unlock both doors when opening a double-door setup
 local partner = ent:getDoorPartner()
@@ -488,8 +509,9 @@ if IsValid(partner) then
     partner:setLocked(false)
 end
 ```
+---
 
-### `setNetVar(key, value, receiver)`
+### setNetVar(key, value, receiver)
 
 **Description:**
 Updates a network variable and sends it to recipients.
@@ -505,13 +527,14 @@ Updates a network variable and sends it to recipients.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Store a variable and sync it to players
 local result = ent:setNetVar(key, value, receiver)
 ```
+---
 
-### `getNetVar(key, default)`
+### getNetVar(key, default)
 
 **Description:**
 Retrieves a stored network variable or a default value.
@@ -527,13 +550,14 @@ Retrieves a stored network variable or a default value.
 **Returns:**
 * any – Stored value or default.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Retrieve the stored variable or fallback to the default
 local result = ent:getNetVar(key, default)
 ```
+---
 
-### `isDoor()`
+### isDoor()
 
 **Description:**
 Client-side door check using class name.
@@ -547,13 +571,14 @@ Client-side door check using class name.
 **Returns:**
 * boolean – True if entity class contains "door".
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Determine if this entity's class name contains "door"
 local result = ent:isDoor()
 ```
+---
 
-### `getDoorPartner()`
+### getDoorPartner()
 
 **Description:**
 Attempts to find the door partnered with this one.
@@ -567,7 +592,7 @@ Attempts to find the door partnered with this one.
 **Returns:**
 * Entity|None – The partner door entity.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Highlight the partner door of the one being looked at
 local partner = ent:getDoorPartner()
@@ -575,8 +600,9 @@ if IsValid(partner) then
     partner:SetColor(Color(0, 255, 0))
 end
 ```
+---
 
-### `getNetVar(key, default)`
+### getNetVar(key, default)
 
 **Description:**
 Retrieves a network variable for this entity on the client.
@@ -591,9 +617,8 @@ Retrieves a network variable for this entity on the client.
 **Returns:**
 * any – Stored value or default.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Access a synced variable on the client side
 local result = ent:getNetVar(key, default)
 ```
-

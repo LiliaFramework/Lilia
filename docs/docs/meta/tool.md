@@ -10,7 +10,7 @@ Tool meta functions track hovered entities, create ghost previews, and wrap comm
 
 ---
 
-### `Create()`
+### Create()
 
 **Description:**
 Creates a new tool object with default values.
@@ -24,14 +24,15 @@ Creates a new tool object with default values.
 **Returns:**
 * table – The newly created tool object.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Create a table for a custom door tool mode
 local tool = ToolGunMeta:Create()
 tool.Mode = "lia_dooredit"
 ```
+---
 
-### `CreateConVars()`
+### CreateConVars()
 
 **Description:**
 Creates client and server ConVars for this tool.
@@ -45,13 +46,14 @@ Creates client and server ConVars for this tool.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Ensure console variables exist for configuration
 tool:CreateConVars()
 ```
+---
 
-### `GetServerInfo(property)`
+### GetServerInfo(property)
 
 **Description:**
 Returns the server ConVar for the given property.
@@ -65,13 +67,14 @@ Returns the server ConVar for the given property.
 **Returns:**
 * ConVar – The server ConVar object.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Check if the server allows using this tool
 local allow = tool:GetServerInfo("allow_use"):GetBool()
 ```
+---
 
-### `BuildConVarList()`
+### BuildConVarList()
 
 **Description:**
 Returns a table of client ConVars prefixed by the tool mode.
@@ -85,13 +88,14 @@ Returns a table of client ConVars prefixed by the tool mode.
 **Returns:**
 * table – Table of convars.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Get a table of client ConVars for networking
 local cvars = tool:BuildConVarList()
 ```
+---
 
-### `GetClientInfo(property)`
+### GetClientInfo(property)
 
 **Description:**
 Retrieves a client ConVar value as a string.
@@ -105,13 +109,14 @@ Retrieves a client ConVar value as a string.
 **Returns:**
 * string – The value stored in the ConVar.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Get the client's chosen material from a ConVar
 local mat = tool:GetClientInfo("material")
 ```
+---
 
-### `GetClientNumber(property, default)`
+### GetClientNumber(property, default)
 
 **Description:**
 Retrieves a numeric client ConVar value.
@@ -126,13 +131,14 @@ Retrieves a numeric client ConVar value.
 **Returns:**
 * number – The numeric value of the ConVar.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Read the numeric power setting with a fallback
 local power = tool:GetClientNumber("power", 10)
 ```
+---
 
-### `Allowed()`
+### Allowed()
 
 **Description:**
 Determines whether this tool is allowed to be used.
@@ -146,7 +152,7 @@ Determines whether this tool is allowed to be used.
 **Returns:**
 * boolean – True if the tool is allowed.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Check if the player can use the current tool
 if tool:Allowed() then
@@ -156,8 +162,9 @@ else
     tool:GetOwner():ChatPrint("Tool usage blocked.")
 end
 ```
+---
 
-### `Init()`
+### Init()
 
 **Description:**
 Placeholder for tool initialization.
@@ -170,13 +177,14 @@ Placeholder for tool initialization.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Prepare the tool for use
 local result = tool:Init()
 ```
+---
 
-### `GetMode()`
+### GetMode()
 
 **Description:**
 Gets the current tool mode string.
@@ -190,13 +198,14 @@ Gets the current tool mode string.
 **Returns:**
 * string – Tool mode name.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Retrieve the tool's active mode string
 local result = tool:GetMode()
 ```
+---
 
-### `GetSWEP()`
+### GetSWEP()
 
 **Description:**
 Returns the SWEP associated with this tool.
@@ -210,13 +219,14 @@ Returns the SWEP associated with this tool.
 **Returns:**
 * SWEP – The tool's weapon entity.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Obtain the weapon entity representing this tool
 local result = tool:GetSWEP()
 ```
+---
 
-### `GetOwner()`
+### GetOwner()
 
 **Description:**
 Retrieves the tool owner's player object.
@@ -230,13 +240,14 @@ Retrieves the tool owner's player object.
 **Returns:**
 * Player – Owner of the tool.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Reference the player who deployed the tool
 local result = tool:GetOwner()
 ```
+---
 
-### `GetWeapon()`
+### GetWeapon()
 
 **Description:**
 Retrieves the weapon entity this tool is attached to.
@@ -250,13 +261,14 @@ Retrieves the weapon entity this tool is attached to.
 **Returns:**
 * Weapon – The weapon object.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Access the underlying weapon object
 local result = tool:GetWeapon()
 ```
+---
 
-### `LeftClick()`
+### LeftClick()
 
 **Description:**
 Handles the left-click action. Override for custom behavior.
@@ -270,13 +282,14 @@ Handles the left-click action. Override for custom behavior.
 **Returns:**
 * boolean – False by default.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Attempt the primary tool action
 local result = tool:LeftClick()
 ```
+---
 
-### `RightClick()`
+### RightClick()
 
 **Description:**
 Handles the right-click action. Override for custom behavior.
@@ -290,13 +303,14 @@ Handles the right-click action. Override for custom behavior.
 **Returns:**
 * boolean – False by default.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Attempt the secondary tool action
 local result = tool:RightClick()
 ```
+---
 
-### `Reload()`
+### Reload()
 
 **Description:**
 Clears stored objects when the tool reloads.
@@ -309,13 +323,14 @@ Clears stored objects when the tool reloads.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Clear saved objects when reloading the tool
 local result = tool:Reload()
 ```
+---
 
-### `Deploy()`
+### Deploy()
 
 **Description:**
 Called when the tool is equipped. Releases ghost entity.
@@ -328,13 +343,14 @@ Called when the tool is equipped. Releases ghost entity.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Equip the tool and spawn its ghost entity
 local result = tool:Deploy()
 ```
+---
 
-### `Holster()`
+### Holster()
 
 **Description:**
 Called when the tool is holstered. Releases ghost entity.
@@ -347,13 +363,14 @@ Called when the tool is holstered. Releases ghost entity.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Unequip the tool and remove its ghost entity
 local result = tool:Holster()
 ```
+---
 
-### `Think()`
+### Think()
 
 **Description:**
 Called every tick; releases ghost entities by default.
@@ -366,13 +383,14 @@ Called every tick; releases ghost entities by default.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Run per-tick logic for the active tool
 local result = tool:Think()
 ```
+---
 
-### `CheckObjects()`
+### CheckObjects()
 
 **Description:**
 Validates stored objects and clears them if invalid.
@@ -385,13 +403,14 @@ Validates stored objects and clears them if invalid.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Validate all stored objects each tick
 local result = tool:CheckObjects()
 ```
+---
 
-### `ClearObjects()`
+### ClearObjects()
 
 **Description:**
 Removes all stored objects from the tool.
@@ -404,13 +423,14 @@ Removes all stored objects from the tool.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Remove any objects the tool is storing
 local result = tool:ClearObjects()
 ```
+---
 
-### `ReleaseGhostEntity()`
+### ReleaseGhostEntity()
 
 **Description:**
 Removes the ghost entity used for previewing placements.
@@ -423,9 +443,8 @@ Removes the ghost entity used for previewing placements.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Remove the placement preview entity
 local result = tool:ReleaseGhostEntity()
 ```
-

@@ -10,7 +10,7 @@ Inventory meta functions handle transactions, capacity checks, retrieval by slot
 
 ---
 
-### `getData(key, default)`
+### getData(key, default)
 
 **Description:**
 Returns a stored data value for this inventory.
@@ -25,13 +25,14 @@ Returns a stored data value for this inventory.
 **Returns:**
 * any – Stored value or default.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Read how many times the container was opened
 local opens = inv:getData("openCount", 0)
 ```
+---
 
-### `extend(className)`
+### extend(className)
 
 **Description:**
 Creates a subclass of the inventory meta table with a new class name.
@@ -45,7 +46,7 @@ Creates a subclass of the inventory meta table with a new class name.
 **Returns:**
 * table – The newly derived inventory table.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Define a subclass for weapon crates and register it
 local WeaponInv = inv:extend("WeaponInventory")
@@ -55,8 +56,9 @@ function WeaponInv:configure()
 end
 WeaponInv:register("weapon_inv")
 ```
+---
 
-### `configure()`
+### configure()
 
 **Description:**
 Stub for inventory configuration; meant to be overridden.
@@ -70,7 +72,7 @@ Stub for inventory configuration; meant to be overridden.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Called from a subclass to set up custom slots
 function WeaponInv:configure()
@@ -78,8 +80,9 @@ function WeaponInv:configure()
     self:addSlot("Weapons")
 end
 ```
+---
 
-### `addDataProxy(key, onChange)`
+### addDataProxy(key, onChange)
 
 **Description:**
 Adds a proxy function that is called when a data field changes.
@@ -94,7 +97,7 @@ Adds a proxy function that is called when a data field changes.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Track changes to the "locked" data field
 inv:addDataProxy("locked", function(old, new)
@@ -102,8 +105,9 @@ inv:addDataProxy("locked", function(old, new)
     hook.Run("ChestLocked", inv, new)
 end)
 ```
+---
 
-### `getItemsByUniqueID(uniqueID, onlyMain)`
+### getItemsByUniqueID(uniqueID, onlyMain)
 
 **Description:**
 Returns all items in the inventory matching the given unique ID.
@@ -118,13 +122,14 @@ Returns all items in the inventory matching the given unique ID.
 **Returns:**
 * table – Table of matching item objects.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Get all ammo boxes stored in the main list
 local ammo = inv:getItemsByUniqueID("ammo_box", true)
 ```
+---
 
-### `register(typeID)`
+### register(typeID)
 
 **Description:**
 Registers this inventory type with the lia.inventory system.
@@ -138,14 +143,15 @@ Registers this inventory type with the lia.inventory system.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Register and then immediately create the inventory type
 WeaponInv:register("weapon_inv")
 local chestInv = WeaponInv:new()
 ```
+---
 
-### `new()`
+### new()
 
 **Description:**
 Creates a new inventory of this type.
@@ -159,7 +165,7 @@ Creates a new inventory of this type.
 **Returns:**
 * table – New inventory instance.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Create an inventory and attach it to a spawned chest entity
 local chest = ents.Create("prop_physics")
@@ -167,8 +173,9 @@ chest:SetModel("models/props_junk/wood_crate001a.mdl")
 chest:Spawn()
 chest.inv = WeaponInv:new()
 ```
+---
 
-### `tostring()`
+### tostring()
 
 **Description:**
 Returns a printable representation of this inventory.
@@ -182,13 +189,14 @@ Returns a printable representation of this inventory.
 **Returns:**
 * string – Formatted as "ClassName[id]".
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Print the identifier when debugging
 print("Inventory: " .. inv:tostring())
 ```
+---
 
-### `getType()`
+### getType()
 
 **Description:**
 Retrieves the inventory type table from lia.inventory.
@@ -202,13 +210,14 @@ Retrieves the inventory type table from lia.inventory.
 **Returns:**
 * table – Inventory type definition.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Read slot data from the type definition
 local def = inv:getType()
 ```
+---
 
-### `onDataChanged(key, oldValue, newValue)`
+### onDataChanged(key, oldValue, newValue)
 
 **Description:**
 Called when an inventory data field changes. Executes any
@@ -225,13 +234,14 @@ registered proxy callbacks for that field.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- React when the stored credit amount changes
 inv:onDataChanged("credits", 0, 100)
 ```
+---
 
-### `getItems()`
+### getItems()
 
 **Description:**
 Returns all items stored in this inventory.
@@ -245,15 +255,16 @@ Returns all items stored in this inventory.
 **Returns:**
 * table – Item instance table indexed by itemID.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Sum the weight of all items
 for _, itm in pairs(inv:getItems()) do
     totalWeight = totalWeight + itm.weight
 end
 ```
+---
 
-### `getItemsOfType(itemType)`
+### getItemsOfType(itemType)
 
 **Description:**
 Collects all items that match the given unique ID.
@@ -267,13 +278,14 @@ Collects all items that match the given unique ID.
 **Returns:**
 * table – Array of matching items.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- List all medkits currently in the inventory
 local kits = inv:getItemsOfType("medkit")
 ```
+---
 
-### `getFirstItemOfType(itemType)`
+### getFirstItemOfType(itemType)
 
 **Description:**
 Retrieves the first item matching the given unique ID.
@@ -287,13 +299,14 @@ Retrieves the first item matching the given unique ID.
 **Returns:**
 * Item|None – The first matching item or None.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Grab the first pistol found in the inventory
 local pistol = inv:getFirstItemOfType("pistol")
 ```
+---
 
-### `hasItem(itemType)`
+### hasItem(itemType)
 
 **Description:**
 Determines whether the inventory contains an item type.
@@ -307,13 +320,14 @@ Determines whether the inventory contains an item type.
 **Returns:**
 * boolean – True if an item is found.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- See if any health potion exists
 if inv:hasItem("health_potion") then ... end
 ```
+---
 
-### `getItemCount(itemType)`
+### getItemCount(itemType)
 
 **Description:**
 Counts the total quantity of a specific item type.
@@ -327,13 +341,14 @@ Counts the total quantity of a specific item type.
 **Returns:**
 * number – Sum of quantities.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Count the total number of bullets
 local ammoTotal = inv:getItemCount("bullet")
 ```
+---
 
-### `getID()`
+### getID()
 
 **Description:**
 Returns the unique database ID of this inventory.
@@ -347,13 +362,14 @@ Returns the unique database ID of this inventory.
 **Returns:**
 * number – Inventory identifier.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Store the inventory ID on its container entity
 entity:setNetVar("invID", inv:getID())
 ```
+---
 
-### `eq(other)`
+### eq(other)
 
 **Description:**
 Compares two inventories by ID for equality.
@@ -367,15 +383,16 @@ Compares two inventories by ID for equality.
 **Returns:**
 * boolean – True if both inventories share the same ID.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Check if two chests share the same inventory record
 if inv:eq(other) then
     print("Duplicate inventory")
 end
 ```
+---
 
-### `addItem(item, noReplicate)`
+### addItem(item, noReplicate)
 
 **Description:**
 Inserts an item instance into this inventory and persists it.
@@ -389,13 +406,14 @@ Inserts an item instance into this inventory and persists it.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Add a looted item to the inventory
 inv:addItem(item, false)
 ```
+---
 
-### `removeItem(itemID, preserveItem)`
+### removeItem(itemID, preserveItem)
 
 **Description:**
 Removes an item by ID and optionally deletes it.
@@ -409,13 +427,14 @@ Removes an item by ID and optionally deletes it.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Remove an item but keep it saved for later
 inv:removeItem(itemID, true)
 ```
+---
 
-### `syncData(key, recipients)`
+### syncData(key, recipients)
 
 **Description:**
 Sends a single data field to clients.
@@ -429,13 +448,14 @@ Sends a single data field to clients.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Sync the locked state to nearby players
 inv:syncData("locked", recipients)
 ```
+---
 
-### `sync(recipients)`
+### sync(recipients)
 
 **Description:**
 Sends the entire inventory and its items to players.
@@ -448,13 +468,14 @@ Sends the entire inventory and its items to players.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Send all items to the owner after they join
 inv:sync({owner})
 ```
+---
 
-### `delete()`
+### delete()
 
 **Description:**
 Removes this inventory record from the database.
@@ -467,13 +488,14 @@ Removes this inventory record from the database.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Permanently delete a chest inventory on cleanup
 inv:delete()
 ```
+---
 
-### `destroy()`
+### destroy()
 
 **Description:**
 Destroys all items and removes network references.
@@ -486,9 +508,8 @@ Destroys all items and removes network references.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Clear all items when the container entity is removed
 inv:destroy()
 ```
-
