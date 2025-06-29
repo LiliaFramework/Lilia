@@ -363,4 +363,3 @@ FACTION.bloodcolor = BLOOD_COLOR_RED
 ```lua
 FACTION.ScoreboardHidden = false
 ```
----

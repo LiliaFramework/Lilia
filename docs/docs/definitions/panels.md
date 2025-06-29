@@ -530,4 +530,3 @@ factionButton.DoClick = function()
     vgui.Create("VendorFactionEditor"):MoveLeftOf(factionButton, 4)
 end
 ```
----
