@@ -13,37 +13,37 @@ Each faction in the game is defined by a set of fields on the global `FACTION` t
 
 ## Field Summary
 
-| Field                       | Type         | Description                                            |
-|-----------------------------|--------------|--------------------------------------------------------|
-| `name`                      | `string`     | Display name shown to players.                         |
-| `desc`                      | `string`     | Lore or descriptive text.                              |
-| `isDefault`                 | `boolean`    | Whether the faction is available without whitelist.    |
-| `color`                     | `Color`      | UI color representing the faction.                     |
-| `models`                    | `string[]`   | Available player model paths.                          |
-| `uniqueID`                  | `string`     | Internal string identifier.                            |
-| `weapons`                   | `string[]`   | Automatically granted weapons.                         |
-| `items`                     | `string[]`   | Automatically granted items.                           |
-| `index`                     | `number`     | Numeric ID assigned at registration time.              |
-| `pay`                       | `number`     | Payment amount per interval.                           |
-| `payLimit`                  | `number`     | Maximum accumulated pay.                               |
-| `payTimer`                  | `number`     | Interval (in seconds) between paychecks.               |
-| `limit`                     | `number`     | Maximum number of players in the faction.              |
-| `oneCharOnly`               | `boolean`    | Restrict players to one character only.                |
-| `health`                    | `number`     | Starting health.                                       |
-| `armor`                     | `number`     | Starting armor.                                        |
-| `scale`                     | `number`     | Player model scale multiplier.                        |
-| `runSpeed`                  | `number`     | Base running speed.                                    |
-| `runSpeedMultiplier`        | `boolean`    | Multiply base speed instead of replacing it.           |
-| `walkSpeed`                 | `number`     | Base walking speed.                                    |
-| `walkSpeedMultiplier`       | `boolean`    | Multiply base walk speed instead of replacing it.      |
-| `jumpPower`                 | `number`     | Base jump power.                                       |
-| `jumpPowerMultiplier`       | `boolean`    | Multiply base jump power instead of replacing it.      |
-| `MemberToMemberAutoRecognition` | `boolean` | Auto-recognition among faction members.                |
-| `bloodcolor`                | `number`     | Blood color enum.                                      |
-| `bodyGroups`                | `table`      | Bodygroup name→index mapping applied on spawn.         |
-| `NPCRelations`              | `table`      | NPC class→disposition mapping on spawn/creation.       |
-| `RecognizesGlobally`        | `boolean`    | Global player recognition.                             |
-| `ScoreboardHidden`          | `boolean`    | Hide members from the scoreboard.                      |
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `name` | `string` | `"Unknown"` | Display name shown to players. |
+| `desc` | `string` | `"No Description"` | Lore or descriptive text. |
+| `isDefault` | `boolean` | `true` | Whether the faction is available without whitelist. |
+| `color` | `Color` | `Color(255,255,255)` | UI color representing the faction. |
+| `models` | `table` | `DefaultModels` | Available player model paths. |
+| `uniqueID` | `string` | `filename` | Internal string identifier. |
+| `weapons` | `table` | `{}` | Automatically granted weapons. |
+| `items` | `table` | `{}` | Automatically granted items. |
+| `index` | `number` | `auto` | Numeric ID assigned at registration time. |
+| `pay` | `number` | `0` | Payment amount per interval. |
+| `payLimit` | `number` | `0` | Maximum accumulated pay. |
+| `payTimer` | `number` | `300` | Interval (in seconds) between paychecks. |
+| `limit` | `number` | `0` | Maximum number of players in the faction. |
+| `oneCharOnly` | `boolean` | `false` | Restrict players to one character only. |
+| `health` | `number` | `0` | Starting health. |
+| `armor` | `number` | `0` | Starting armor. |
+| `scale` | `number` | `1` | Player model scale multiplier. |
+| `runSpeed` | `number` | `0` | Base running speed. |
+| `runSpeedMultiplier` | `boolean` | `false` | Multiply base speed instead of replacing it. |
+| `walkSpeed` | `number` | `0` | Base walking speed. |
+| `walkSpeedMultiplier` | `boolean` | `false` | Multiply base walk speed instead of replacing it. |
+| `jumpPower` | `number` | `0` | Base jump power. |
+| `jumpPowerMultiplier` | `boolean` | `false` | Multiply base jump power instead of replacing it. |
+| `MemberToMemberAutoRecognition` | `boolean` | `false` | Auto-recognition among faction members. |
+| `bloodcolor` | `number` | `0` | Blood color enum. |
+| `bodyGroups` | `table` | `{}` | Bodygroup name→index mapping applied on spawn. |
+| `NPCRelations` | `table` | `{}` | NPC class→disposition mapping on spawn/creation. |
+| `RecognizesGlobally` | `boolean` | `false` | Global player recognition. |
+| `ScoreboardHidden` | `boolean` | `false` | Hide members from the scoreboard. |
 
 ---
 
@@ -106,7 +106,7 @@ FACTION_STAFF = FACTION.index
 #### `color`
 
 **Type:** `Color`
-**Description:** Color used in UI elements to represent the faction.
+**Description:** Color used in UI elements to represent the faction. Defaults to `Color(255, 255, 255)` if not specified.
 **Example:**
 
 ```lua
@@ -115,7 +115,7 @@ FACTION.color = Color(255, 56, 252)
 
 #### `models`
 
-**Type:** `string[]`
+**Type:** `table`
 **Description:** Table of player model paths available to faction members.
 **Example:**
 
@@ -145,7 +145,7 @@ FACTION.bodyGroups = {
 
 #### `weapons`
 
-**Type:** `string[]`
+**Type:** `table`
 **Description:** Weapons automatically granted on spawn.
 **Example:**
 
@@ -155,7 +155,7 @@ FACTION.weapons = {"weapon_physgun", "gmod_tool"}
 
 #### `items`
 
-**Type:** `string[]`
+**Type:** `table`
 **Description:** Item uniqueIDs automatically granted on character creation.
 **Example:**
 
@@ -363,3 +363,4 @@ FACTION.bloodcolor = BLOOD_COLOR_RED
 ```lua
 FACTION.ScoreboardHidden = false
 ```
+---

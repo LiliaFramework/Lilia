@@ -18,9 +18,9 @@ Each attribute is registered on the global `ATTRIBUTE` table. You can customize:
 
 | Field          | Type      | Default | Description                                                                                    |
 | -------------- | --------- | ------- | ---------------------------------------------------------------------------------------------- |
-| `name`         | `string`  | —       | Human-readable title of the attribute.                                                         |
-| `desc`         | `string`  | —       | Brief description or lore text.                                                                |
-| `startingMax`  | `number`  | `0`     | Maximum base value at character creation, before any startup bonus points are applied.         |
+| `name`         | `string`  | `"Unknown"` | Human-readable title of the attribute. |
+| `desc`         | `string`  | `"No Description"`  | Brief description or lore text. |
+| `startingMax`  | `number`  | `30`    | Maximum base value at character creation, before any startup bonus points are applied. |
 | `noStartBonus` | `boolean` | `false` | If `true`, players cannot allocate any of the creation startup bonus points to this attribute. |
 | `maxValue`     | `number`  | `30`    | Absolute upper limit an attribute can ever reach.                                              |
 

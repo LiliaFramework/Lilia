@@ -12,32 +12,32 @@ The global `CLASS` table defines per-class settings such as display name, lore, 
 
 ## Field Summary
 
-| Field                 | Type           | Description                                                    |
-|-----------------------|----------------|----------------------------------------------------------------|
-| `name`                | `string`       | Displayed name of the class.                                   |
-| `desc`                | `string`       | Description or lore of the class.                              |
-| `isDefault`           | `boolean`      | Whether the class is available by default.                     |
-| `isWhitelisted`       | `boolean`      | Whether the class requires whitelist to join.                  |
-| `faction`             | `number`       | Linked faction index (e.g., `FACTION_CITIZEN`).                |
-| `color`               | `Color`        | UI color associated with the class.                            |
-| `weapons`             | `string[]`     | Weapons granted to members of this class.                      |
-| `pay`                 | `number`       | Payment amount per interval.                                   |
-| `payLimit`            | `number`       | Maximum accumulated pay.                                       |
-| `payTimer`            | `number`       | Interval (seconds) between paychecks.                          |
-| `limit`               | `number`       | Maximum number of players in this class.                       |
-| `health`              | `number`       | Default starting health.                                       |
-| `armor`               | `number`       | Default starting armor.                                        |
-| `scale`               | `number`       | Player model scale multiplier.                                |
-| `runSpeed`            | `number`       | Default running speed.                                         |
-| `runSpeedMultiplier`  | `boolean`      | Multiply base speed instead of replacing it.                   |
-| `walkSpeed`           | `number`       | Default walking speed.                                         |
-| `walkSpeedMultiplier` | `boolean`      | Multiply base walk speed instead of replacing it.              |
-| `jumpPower`           | `number`       | Default jump power.                                            |
-| `jumpPowerMultiplier` | `boolean`      | Multiply base jump power instead of replacing it.              |
-| `bloodcolor`          | `number`       | Blood color enumeration constant.                              |
-| `bodyGroups`          | `table`        | Bodygroup index mapping applied on spawn.                      |
-| `model`               | `string`       | Model path (or table of paths) used by this class.             |
-| `index`               | `number`       | Unique team index assigned at registration.                    |
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `name` | `string` | `"Unknown"` | Displayed name of the class. |
+| `desc` | `string` | `"No Description"` | Description or lore of the class. |
+| `isDefault` | `boolean` | `false` | Whether the class is available by default. |
+| `isWhitelisted` | `boolean` | `false` | Whether the class requires whitelist to join. |
+| `faction` | `number` | `0` | Linked faction index (e.g., `FACTION_CITIZEN`). |
+| `color` | `Color` | `Color(255,255,255)` | UI color associated with the class. |
+| `weapons` | `table` | `{}` | Weapons granted to members of this class. |
+| `pay` | `number` | `0` | Payment amount per interval. |
+| `payLimit` | `number` | `0` | Maximum accumulated pay. |
+| `payTimer` | `number` | `300` | Interval (seconds) between paychecks. |
+| `limit` | `number` | `0` | Maximum number of players in this class. |
+| `health` | `number` | `0` | Default starting health. |
+| `armor` | `number` | `0` | Default starting armor. |
+| `scale` | `number` | `1` | Player model scale multiplier. |
+| `runSpeed` | `number` | `0` | Default running speed. |
+| `runSpeedMultiplier` | `boolean` | `false` | Multiply base speed instead of replacing it. |
+| `walkSpeed` | `number` | `0` | Default walking speed. |
+| `walkSpeedMultiplier` | `boolean` | `false` | Multiply base walk speed instead of replacing it. |
+| `jumpPower` | `number` | `0` | Default jump power. |
+| `jumpPowerMultiplier` | `boolean` | `false` | Multiply base jump power instead of replacing it. |
+| `bloodcolor` | `number` | `0` | Blood color enumeration constant. |
+| `bodyGroups` | `table` | `{}` | Bodygroup index mapping applied on spawn. |
+| `model` | `string` | `""` | Model path (or table of paths) used by this class. |
+| `index` | `number` | `auto` | Unique team index assigned at registration. |
 
 ---
 
@@ -110,7 +110,7 @@ CLASS.faction = FACTION_CITIZEN
 #### `color`
 
 **Type:** `Color`
-**Description:** UI color representing the class.
+**Description:** UI color representing the class. Defaults to `Color(255, 255, 255)` if not specified.
 **Example:**
 
 ```lua
@@ -123,7 +123,7 @@ CLASS.color = Color(255, 0, 0)
 
 #### `weapons`
 
-**Type:** `string[]`
+**Type:** `table`
 **Description:** Weapons granted to members of this class on spawn.
 **Example:**
 
@@ -291,10 +291,11 @@ CLASS.bodyGroups = { [1] = 2, [3] = 1 }
 
 #### `model`
 
-**Type:** `string` or `string[]`
+**Type:** `string` or `table`
 **Description:** Model path (or list of paths) assigned to this class.
 **Example:**
 
 ```lua
 CLASS.model = "models/player/alyx.mdl"
 ```
+---
