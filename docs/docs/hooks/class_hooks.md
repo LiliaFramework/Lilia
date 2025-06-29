@@ -7,15 +7,8 @@ This document describes all `CLASS` function hooks defined within the codebase. 
 ## Overview
 
 Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+These hooks live on the class tables created under `schema/classes` and only run there rather than acting as global gamemode hooks.
 
-
-
---[[--
-Class setup hooks.
-
-As with `Faction`s, `Class`es get their own hooks for when players leave/join a class, etc. These hooks are only
-valid in class tables that are created in `schema/classes/sh_classname.lua`, and cannot be used like regular gamemode hooks.
-]]
 
 
 ---

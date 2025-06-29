@@ -5,22 +5,7 @@ This page outlines chatbox related functions and helpers.
 ---
 
 ## Overview
-
-The chatbox library defines chat commands and renders messages. It lets you register new chat types with custom formatting and handles radius-based or global message visibility.
-
---[[--
-Chat manipulation and helper functions.
-
-Chat messages are a core part of the framework - it's takes up a good chunk of the gameplay, and is also used to interact with
-the framework. Chat messages can have types or "classes" that describe how the message should be interpreted. All chat messages
-will have some type of class: `ic` for regular in-character speech, `me` for actions, `ooc` for out-of-character, etc. These
-chat classes can affect how the message is displayed in each player's chatbox. See `ix.chat.Register` and `ChatClassStructure`
-to create your own chat classes.
-]]
-
----
-
-### `lia.chat.timestamp(ooc)`
+The chatbox library defines chat commands and renders messages. It lets you register chat classes that determine how text such as IC, action, and OOC messages appear and handles radius-based or global visibility.
 
     
     Description:

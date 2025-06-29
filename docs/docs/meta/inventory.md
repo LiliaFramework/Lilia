@@ -6,16 +6,8 @@ Inventories hold items for characters or in-world containers. This document list
 
 ## Overview
 
-Inventory meta functions handle transactions, capacity checks, retrieval by slot or ID, and persistent data storage. They also manage network updates so clients remain in sync with server-side inventory changes.
+Inventory meta functions handle transactions, capacity checks, retrieval by slot or ID, and persistent data storage. Inventories hold items in a grid layout and may belong to characters or world containers. The functions also manage network updates so clients remain in sync with server-side changes.
 
---[[--
-Holds items within a grid layout.
-
-Inventories are an object that contains `Item`s in a grid layout. Every `Character` will have exactly one inventory attached to
-it, which is the only inventory that is allowed to hold bags - any item that has its own inventory (i.e a suitcase). Inventories
-can be owned by a character, or it can be individually interacted with as a standalone object. For example, the container plugin
-attaches inventories to props, allowing for items to be stored outside of any character inventories and remain "in the world".
-]]
 ---
 
 ### `getData(key, default)`

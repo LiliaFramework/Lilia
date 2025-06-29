@@ -6,15 +6,7 @@ This page details the class system functions.
 
 ## Overview
 
-The classes library loads Lua definitions that describe player classes. It stores available classes, registers default attributes, and provides lookup functions by name or index.
---[[--
-Helper library for loading/getting class information.
-
-Classes are temporary assignments for characters - analogous to a "job" in a faction. For example, you may have a police faction
-in your schema, and have "police recruit" and "police chief" as different classes in your faction. Anyone can join a class in
-their faction by default, but you can restrict this as you need with `CLASS.CanSwitchTo`.
-]]
----
+The classes library loads Lua definitions that describe player classes. Classes act like temporary jobs within a faction. The library stores available classes, registers default attributes, and provides lookup functions by name or index.
 
 ### `lia.class.loadFromDir(directory)`
 

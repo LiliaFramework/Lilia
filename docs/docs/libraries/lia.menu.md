@@ -6,14 +6,7 @@ This page describes small menu creation helpers.
 
 ## Overview
 
-The menu library offers convenience functions for building simple context menus. It supports nested options and automatically positions them on screen.
---[[--
-Entity menu manipulation.
-
-The `menu` library allows you to open up a context menu of arbitrary options whose callbacks will be ran when they are selected
-from the panel that shows up for the player.
-]]
----
+The menu library offers convenience functions for building simple context menus. It supports nested options whose callbacks execute when selected and automatically positions the menu on screen.
 
 ### `lia.menu.add(opts, pos, onRemove)`
 
