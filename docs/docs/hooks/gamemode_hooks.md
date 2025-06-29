@@ -1,12 +1,18 @@
 # Gamemode Hooks
 
-This document describes all `FACTION` function hooks defined within the codebase. Use these to customize default naming, descriptions, and lifecycle events when characters are created, spawned, or transferred within a faction.
+This document lists global hooks triggered by the gamemode. You can define them on the `GM` table, inside a `MODULE`, on the `SCHEMA`, or call them anywhere with `hook.Add`.
+
+- **MODULE** functions load only from `/modules`.
+- **SCHEMA** functions live in `/schema`.
+- **hook.Add** may be used from any file.
+
+If multiple definitions of the same hook exist on `GM`, `MODULE`, or `SCHEMA`, the one loaded last overrides the others.
 
 ---
 
 ## Overview
 
-Each faction can implement these shared- and server-side hooks to control how characters are initialized, described, and handled as they move through creation, spawning, and transfers. All hooks are optional; if you omit a hook, default behavior applies.
+Gamemode hooks fire at various stages during play and let you modify global behavior. Implement them in any of the locations described above. When the same hook is defined in more than one place, whichever version loads last takes effect. All hooks are optional; if no handler is present, the default logic runs.
 
 ---
 
