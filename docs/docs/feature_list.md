@@ -303,5 +303,3 @@ This page provides an extensive overview of the core modules and libraries inclu
 The `config` library exposes numerous settings allowing you to control walk and run speeds, voice chat, crosshair usage, salary intervals, theme colors, workshop downloads, and much more. These options can be tweaked in game via the configuration menu.
 
 ---
-
-This list is not exhaustive, but it covers the major components shipped with Lilia so you can understand what the framework provides out of the box.
