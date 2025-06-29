@@ -2,14 +2,14 @@
 
 This page details the optional compatibility libraries bundled with Lilia. These libraries greatly expand support for a variety of popular addons used across the Garry's Mod community. Each section below is a standalone sub-section named after the addon, with its URL, key compatibility highlights, and a brief explanation.
 
-The compatibility layer covers administration suites such as ULX and SAM, vehicle frameworks like Simfphys and VCMod, outfit systems including PAC3, and more. Installing these addons alongside Lilia will automatically enable the related integration.
+The compatibility layer covers administration suites such as ULX and SAM, vehicle frameworks like **LVS**, **Simfphys**, and **VCMod**, outfit systems including PAC3, and more. Installing these addons alongside Lilia will automatically enable the related integration.
 In recent releases the compatibility set has grown even larger. Popular community addons now work out of the box:
 
 - **Advanced Duplicator 2** and **Advanced Duplicator** integration
 - **PAC3** outfit synchronization
 - **ServerGuard** permission support
 - **ULX** and **SAM** admin suites
-- **Simfphys** and **VCMod** vehicle frameworks
+- **LVS**, **Simfphys**, and **VCMod** vehicle frameworks
 - **VJBase** NPC base improvements
 
 Simply install these addons and the matching compatibility layer will load automatically.
@@ -54,15 +54,15 @@ Recreates widely used DarkRP globals and utilities so community addons run under
 
 ---
 
-## [LVS (Simfphys Vehicles)](https://steamcommunity.com/sharedfiles/filedetails/?id=771487490)
+## [LVS](https://steamcommunity.com/workshop/browse/?appid=4000&searchtext=LVS+Base)
 
 **Compatibility Highlights:**
 
-* Filters out self-inflicted damage from the player’s own vehicle.
+* Filters out self-inflicted damage from the player's own vehicle.
 
 **Detailed Explanation:**
 
-Prevents players from being damaged by their own high-speed vehicle collisions or explosions during normal gameplay.
+Stops collisions or weapons fired from your own LVS vehicle from injuring you. Drivers can still take damage if an impact occurs close to their seat.
 
 ---
 
@@ -138,7 +138,7 @@ Turns off ServerGuard’s restriction module to ensure a single consistent permi
 
 **Detailed Explanation:**
 
-Enhances Simfphys with realistic crash damage, configurable behavior, and ties vehicle editing to an admin privilege.
+Drivers only take damage when the vehicle is struck near their seat and a configurable delay is applied before entering cars. Vehicle editing remains gated behind an admin privilege.
 
 ---
 
