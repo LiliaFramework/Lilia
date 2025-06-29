@@ -99,7 +99,6 @@ This page provides an extensive overview of the core modules and libraries inclu
 ### Interaction Menu
 - Quick-access radial menu for common actions
 - Give money or change voice type directly from the menu
-- Remote screenshot tool helps gather evidence
 - Recognize characters from whisper/talk/yell range
 - Extensible via `AddAction` and `AddInteraction`
 - Dynamically builds options based on player context
@@ -127,7 +126,6 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Item filters can be saved as reusable presets
 - Option to disable potentially dangerous console commands
 - Monitors unusual damage events and logs suspicious behaviour
-- Captures screenshot evidence when cheats are detected
 
 ### Admin Stick
 - Staff-only SWEP for quick moderation actions
@@ -162,6 +160,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 - ESP tools and spawn menu restrictions configurable
 - Supports privilege inheritance and group hierarchies
 - Simple API to register new permissions from plugins
+- Vehicle blacklist privileges restrict certain car spawns
 
 ### Logging
 - Log server events with category filtering
