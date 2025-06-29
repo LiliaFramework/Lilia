@@ -44,10 +44,12 @@ This page provides an extensive overview of the core modules and libraries inclu
 ### Scoreboard
 - Roleplay-themed scoreboard with recognition integration
 - Context menu for admin actions like kick or mute
+- Quick ban or kick shortcuts via the context menu
 - Player ping and playtime displayed next to names
 - Width, height and background color can be configured
 - Optionally show class logos and group headers
 - Live player counts and faction sorting
+- Warning icons appear next to a player nearing a ban
 - Tooltips reveal full character names and SteamIDs
 
 ### Chatbox
@@ -111,13 +113,11 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Searchable history of all player tickets and warns
 - Camera spectate and teleport commands for staff
 
-- Captures screenshot evidence when cheats are detected
 ### Performance
 - Libraries focused on optimizing heavy operations
 - Useful for tracking tick rate and network performance
 - Includes debug overlays for server load and network usage
 
-- Quick ban or kick shortcuts via the context menu
 ### Protection
 - Anti-exploitation features such as alting notifications
 - Cooldowns on character switching after taking damage
@@ -127,6 +127,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Item filters can be saved as reusable presets
 - Option to disable potentially dangerous console commands
 - Monitors unusual damage events and logs suspicious behaviour
+- Captures screenshot evidence when cheats are detected
 
 ### Admin Stick
 - Staff-only SWEP for quick moderation actions
@@ -135,7 +136,6 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Left-click freezes or unfreezes targeted players
 - Right-click opens a menu of administrative shortcuts
 
-- Warning icons appear next to a player nearing a ban
 ### Item Spawner
 - GUI interface to spawn any item
 - Respects privilege checks before spawning
@@ -163,7 +163,6 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Supports privilege inheritance and group hierarchies
 - Simple API to register new permissions from plugins
 
-- Doors can auto-close after configurable delays
 ### Logging
 - Log server events with category filtering
 - Configurable retention time and line limits
@@ -184,6 +183,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Faction or class based access control
 - Lock and unlock using the key SWEP
 - Configurable lock times and sell ratio
+- Doors can auto-close after configurable delays
 - Supports linked child doors
 - Can mark doors as unownable for public spaces
 - Property groups allow mass purchasing of connected doors
@@ -409,7 +409,6 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Configurable intervals and amounts
 - Commands to set starting wages
 - Supports bonuses based on rank or faction
-
 - Logging tracks salary payouts for auditing
 ### Time Library
 - Scheduler helpers and shared timers
