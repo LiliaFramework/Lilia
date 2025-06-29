@@ -8,7 +8,7 @@ Character objects returned by `player:getChar()` persist inventory, stats, and m
 
 The character meta library contains information about a player's current game state. It provides shortcuts for fetching stored values, verifying permissions, and linking a character back to its player. Characters are separate from players and hold names, models, money, and other data that persists across sessions.
 
-### `tostring()`
+### tostring()
 
 **Description:**
 Returns a printable identifier for this character.
@@ -22,13 +22,14 @@ Returns a printable identifier for this character.
 **Returns:**
 * string – Format "character[id]".
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Print a readable identifier when saving debug logs
 print("Active char: " .. char:tostring())
 ```
+---
 
-### `eq(other)`
+### eq(other)
 
 **Description:**
 Compares two characters by ID for equality.
@@ -42,15 +43,16 @@ Compares two characters by ID for equality.
 **Returns:**
 * boolean – True if both share the same ID.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Check if the player is controlling the door owner
 if char:eq(door:getNetVar("ownChar")) then
     door:Fire("unlock", "", 0)
 end
 ```
+---
 
-### `getID()`
+### getID()
 
 **Description:**
 Returns the unique database ID for this character.
@@ -64,14 +66,15 @@ Returns the unique database ID for this character.
 **Returns:**
 * number – Character identifier.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Store the character ID for later reference
 local id = char:getID()
 session.lastCharID = id
 ```
+---
 
-### `getPlayer()`
+### getPlayer()
 
 **Description:**
 Returns the player entity currently controlling this character.
@@ -85,7 +88,7 @@ Returns the player entity currently controlling this character.
 **Returns:**
 * Player|None – Owning player or None.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Notify the controlling player that the character loaded
 local ply = char:getPlayer()
@@ -93,8 +96,9 @@ if IsValid(ply) then
     ply:ChatPrint("Character ready")
 end
 ```
+---
 
-### `getDisplayedName(client)`
+### getDisplayedName(client)
 
 **Description:**
 Returns the character's name as it should be shown to the given player.
@@ -108,13 +112,14 @@ Returns the character's name as it should be shown to the given player.
 **Returns:**
 * string – Localized or recognized character name.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Announce the character's name to a viewer
 client:ChatPrint("You see " .. char:getDisplayedName(client))
 ```
+---
 
-### `hasMoney(amount)`
+### hasMoney(amount)
 
 **Description:**
 Checks if the character has at least the given amount of money.
@@ -128,15 +133,16 @@ Checks if the character has at least the given amount of money.
 **Returns:**
 * boolean – True if the character's funds are sufficient.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Verify the character can pay for an item before buying
 if char:hasMoney(item.price) then
     char:takeMoney(item.price)
 end
 ```
+---
 
-### `getFlags()`
+### getFlags()
 
 **Description:**
 Retrieves the string of permission flags for this character.
@@ -150,15 +156,16 @@ Retrieves the string of permission flags for this character.
 **Returns:**
 * string – Concatenated flag characters.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Look for the admin flag on this character
 if char:getFlags():find("A") then
     print("Admin privileges detected")
 end
 ```
+---
 
-### `hasFlags(flags)`
+### hasFlags(flags)
 
 **Description:**
 Checks if the character possesses any of the specified flags.
@@ -172,15 +179,16 @@ Checks if the character possesses any of the specified flags.
 **Returns:**
 * boolean – True if at least one flag is present.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Allow special command if any required flag is present
 if char:hasFlags("abc") then
     performSpecialAction()
 end
 ```
+---
 
-### `getItemWeapon(requireEquip)`
+### getItemWeapon(requireEquip)
 
 **Description:**
 Checks the player's active weapon against items in the inventory.
@@ -194,14 +202,15 @@ Checks the player's active weapon against items in the inventory.
 **Returns:**
 * boolean – True if the active weapon corresponds to an item.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Determine if the equipped weapon is linked to an item
 local match = char:getItemWeapon(true)
 if match then print("Using weapon item") end
 ```
+---
 
-### `getMaxStamina()`
+### getMaxStamina()
 
 **Description:**
 Returns the maximum stamina value for this character.
@@ -215,13 +224,14 @@ Returns the maximum stamina value for this character.
 **Returns:**
 * number – Maximum stamina points.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Calculate the proportion of stamina remaining
 local pct = char:getStamina() / char:getMaxStamina()
 ```
+---
 
-### `getStamina()`
+### getStamina()
 
 **Description:**
 Retrieves the character's current stamina value.
@@ -235,14 +245,15 @@ Retrieves the character's current stamina value.
 **Returns:**
 * number – Current stamina.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Display current stamina in the HUD
 local stamina = char:getStamina()
 drawStaminaBar(stamina)
 ```
+---
 
-### `hasClassWhitelist(class)`
+### hasClassWhitelist(class)
 
 **Description:**
 Checks if the character has whitelisted the given class.
@@ -256,15 +267,16 @@ Checks if the character has whitelisted the given class.
 **Returns:**
 * boolean – True if the class is whitelisted.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Decide if the player may choose the medic class
 if char:hasClassWhitelist(CLASS_MEDIC) then
     print("You may become a medic")
 end
 ```
+---
 
-### `isFaction(faction)`
+### isFaction(faction)
 
 **Description:**
 Returns true if the character's faction matches.
@@ -278,15 +290,16 @@ Returns true if the character's faction matches.
 **Returns:**
 * boolean – Whether the faction matches.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Restrict access to citizens only
 if char:isFaction(FACTION_CITIZEN) then
     door:keysOwn(char:getPlayer())
 end
 ```
+---
 
-### `isClass(class)`
+### isClass(class)
 
 **Description:**
 Returns true if the character's class equals the specified class.
@@ -300,15 +313,16 @@ Returns true if the character's class equals the specified class.
 **Returns:**
 * boolean – Whether the classes match.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Provide a bonus if the character is currently an engineer
 if char:isClass(CLASS_ENGINEER) then
     char:restoreStamina(10)
 end
 ```
+---
 
-### `getAttrib(key, default)`
+### getAttrib(key, default)
 
 **Description:**
 Retrieves the value of an attribute including boosts.
@@ -323,14 +337,15 @@ Retrieves the value of an attribute including boosts.
 **Returns:**
 * number – Final attribute value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Calculate damage using the strength attribute
 local strength = char:getAttrib("str", 0)
 dmg = baseDamage + strength * 0.5
 ```
+---
 
-### `getBoost(attribID)`
+### getBoost(attribID)
 
 **Description:**
 Returns the boost table for the given attribute.
@@ -344,13 +359,14 @@ Returns the boost table for the given attribute.
 **Returns:**
 * table|None – Table of boosts or None.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Inspect active boosts on agility
 PrintTable(char:getBoost("agi"))
 ```
+---
 
-### `getBoosts()`
+### getBoosts()
 
 **Description:**
 Retrieves all attribute boosts for this character.
@@ -364,15 +380,16 @@ Retrieves all attribute boosts for this character.
 **Returns:**
 * table – Mapping of attribute IDs to boost tables.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Print all attribute boosts for debugging
 for id, data in pairs(char:getBoosts()) do
     print(id, data)
 end
 ```
+---
 
-### `doesRecognize(id)`
+### doesRecognize(id)
 
 **Description:**
 Determines if this character recognizes another character.
@@ -386,15 +403,16 @@ Determines if this character recognizes another character.
 **Returns:**
 * boolean – True if recognized.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Reveal names in chat only if recognized
 if char:doesRecognize(targetChar) then
     print("Known: " .. targetChar:getName())
 end
 ```
+---
 
-### `doesFakeRecognize(id)`
+### doesFakeRecognize(id)
 
 **Description:**
 Checks if the character has a fake recognition entry for another.
@@ -408,11 +426,10 @@ Checks if the character has a fake recognition entry for another.
 **Returns:**
 * boolean – True if fake recognized.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- See if recognition was forced by a disguise item
 if char:doesFakeRecognize(targetChar) then
     print("Recognition is fake")
 end
 ```
-

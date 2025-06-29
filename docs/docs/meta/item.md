@@ -8,7 +8,7 @@ Item objects represent things found in inventories or spawned in the world. This
 
 Item meta functions cover stack counts, categories, weight calculations, and network variables. Items are objects that can exist in inventories or the world, and item instances clone the base properties defined by the item table. These helpers enable consistent interaction across trading, crafting, and interface components.
 
-### `getQuantity()`
+### getQuantity()
 
 **Description:**
 Retrieves how many of this item the stack represents.
@@ -22,13 +22,14 @@ Retrieves how many of this item the stack represents.
 **Returns:**
 * number – Quantity contained in this item instance.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Give the player ammo equal to the stack quantity
 player:GiveAmmo(item:getQuantity(), "pistol")
 ```
+---
 
-### `eq(other)`
+### eq(other)
 
 **Description:**
 Compares this item instance to another by ID.
@@ -42,15 +43,16 @@ Compares this item instance to another by ID.
 **Returns:**
 * boolean – True if both items share the same ID.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Check if the held item matches the inventory slot
 if item:eq(slotItem) then
     print("Same item instance")
 end
 ```
+---
 
-### `tostring()`
+### tostring()
 
 **Description:**
 Returns a printable representation of this item.
@@ -64,13 +66,14 @@ Returns a printable representation of this item.
 **Returns:**
 * string – Identifier in the form "item[uniqueID][id]".
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Log the item identifier during saving
 print("Saving " .. item:tostring())
 ```
+---
 
-### `getID()`
+### getID()
 
 **Description:**
 Retrieves the unique identifier of this item.
@@ -84,13 +87,14 @@ Retrieves the unique identifier of this item.
 **Returns:**
 * number – Item database ID.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Use the ID when updating the database
 lia.db.updateItem(item:getID(), {price = 50})
 ```
+---
 
-### `getModel()`
+### getModel()
 
 **Description:**
 Returns the model path associated with this item.
@@ -104,15 +108,16 @@ Returns the model path associated with this item.
 **Returns:**
 * string – Model path.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Spawn the item's model as a world prop
 local prop = ents.Create("prop_physics")
 prop:SetModel(item:getModel())
 prop:Spawn()
 ```
+---
 
-### `getSkin()`
+### getSkin()
 
 **Description:**
 Retrieves the skin index this item uses.
@@ -126,13 +131,14 @@ Retrieves the skin index this item uses.
 **Returns:**
 * number – Skin ID applied to the model.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Apply the correct skin when displaying the item
 model:SetSkin(item:getSkin())
 ```
+---
 
-### `getPrice()`
+### getPrice()
 
 **Description:**
 Returns the calculated purchase price for the item.
@@ -146,15 +152,16 @@ Returns the calculated purchase price for the item.
 **Returns:**
 * number – The price value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Charge the player the item's price before giving it
 if char:hasMoney(item:getPrice()) then
     char:takeMoney(item:getPrice())
 end
 ```
+---
 
-### `call(method, client, entity, ...)`
+### call(method, client, entity, ...)
 
 **Description:**
 Invokes an item method with the given player and entity context.
@@ -171,13 +178,14 @@ Invokes an item method with the given player and entity context.
 **Returns:**
 * any – Results returned by the called function.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Trigger a custom "use" function when the player presses Use
 item:call("use", client, entity)
 ```
+---
 
-### `getOwner()`
+### getOwner()
 
 **Description:**
 Attempts to find the player currently owning this item.
@@ -191,7 +199,7 @@ Attempts to find the player currently owning this item.
 **Returns:**
 * Player|None – The owner if available.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Notify whoever currently owns the item
 local owner = item:getOwner()
@@ -199,8 +207,9 @@ if IsValid(owner) then
     owner:notify("Your item glows brightly.")
 end
 ```
+---
 
-### `getData(key, default)`
+### getData(key, default)
 
 **Description:**
 Retrieves a piece of persistent data stored on the item.
@@ -215,13 +224,14 @@ Retrieves a piece of persistent data stored on the item.
 **Returns:**
 * any – Stored value or default.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Retrieve a custom paint color stored on the item
 local color = item:getData("paintColor", Color(255,255,255))
 ```
+---
 
-### `getAllData()`
+### getAllData()
 
 **Description:**
 Returns a merged table of this item's stored data and any
@@ -236,13 +246,14 @@ networked values on its entity.
 **Returns:**
 * table – Key/value table of all data fields.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Print all stored data for debugging
 PrintTable(item:getAllData())
 ```
+---
 
-### `hook(name, func)`
+### hook(name, func)
 
 **Description:**
 Registers a hook callback for this item instance.
@@ -256,13 +267,14 @@ Registers a hook callback for this item instance.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Run code when the item is used
 item:hook("use", function(ply) ply:ChatPrint("Used!") end)
 ```
+---
 
-### `postHook(name, func)`
+### postHook(name, func)
 
 **Description:**
 Registers a post-hook callback for this item.
@@ -276,13 +288,14 @@ Registers a post-hook callback for this item.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Give a pistol after the item is picked up
 item:postHook("pickup", function(ply) ply:Give("weapon_pistol") end)
 ```
+---
 
-### `onRegistered()`
+### onRegistered()
 
 **Description:**
 Called when the item table is first registered.
@@ -295,13 +308,14 @@ Called when the item table is first registered.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Initialize data when the item type loads
 item:onRegistered()
 ```
+---
 
-### `print(detail)`
+### print(detail)
 
 **Description:**
 Prints a simple representation of the item to the console.
@@ -314,13 +328,14 @@ Prints a simple representation of the item to the console.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Output item info while debugging spawn issues
 item:print(true)
 ```
+---
 
-### `printData()`
+### printData()
 
 **Description:**
 Debug helper that prints all stored item data.
@@ -333,13 +348,14 @@ Debug helper that prints all stored item data.
 **Returns:**
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Dump all stored data to the console
 item:printData()
 ```
+---
 
-### `addQuantity(quantity, receivers, noCheckEntity)`
+### addQuantity(quantity, receivers, noCheckEntity)
 
 **Description:**
 Increases the stored quantity for this item instance.
@@ -354,14 +370,15 @@ Increases the stored quantity for this item instance.
 * Returns:
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Combine stacks from a loot drop and notify the owner
 item:addQuantity(5, {player})
 player:notifyLocalized("item_added", item.name, 5)
 ```
+---
 
-### `setQuantity(quantity, receivers, noCheckEntity)`
+### setQuantity(quantity, receivers, noCheckEntity)
 
 **Description:**
 Sets the current stack quantity and replicates the change.
@@ -376,9 +393,8 @@ Sets the current stack quantity and replicates the change.
 * Returns:
 * None – This function does not return a value.
 
-**Example Usage:**
+**Example:**
 ```lua
 -- Set quantity to 1 after splitting the stack
 item:setQuantity(1, nil, true)
 ```
-

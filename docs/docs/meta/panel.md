@@ -10,7 +10,7 @@ Panel meta functions support scaled positioning, listen for inventory changes, a
 
 ---
 
-### `liaListenForInventoryChanges(inventory)`
+### liaListenForInventoryChanges(inventory)
 
 **Description:**
 Subscribes this panel to updates for a specific inventory.
@@ -21,12 +21,13 @@ Subscribes this panel to updates for a specific inventory.
 **Realm:**
 * Client
 
-**Example Usage:**
+**Example:**
 ```lua
 panel:liaListenForInventoryChanges(player:getChar():getInv())
 ```
+---
 
-### `liaDeleteInventoryHooks(id)`
+### liaDeleteInventoryHooks(id)
 
 **Description:**
 Removes inventory update hooks created by `liaListenForInventoryChanges`.
@@ -37,7 +38,7 @@ Removes inventory update hooks created by `liaListenForInventoryChanges`.
 **Realm:**
 * Client
 
-### `SetScaledPos(x, y)`
+### SetScaledPos(x, y)
 
 **Description:**
 Positions the panel using screen scale units.
@@ -49,7 +50,7 @@ Positions the panel using screen scale units.
 **Realm:**
 * Client
 
-### `SetScaledSize(w, h)`
+### SetScaledSize(w, h)
 
 **Description:**
 Sizes the panel using screen scale units.
