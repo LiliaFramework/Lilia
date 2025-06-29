@@ -9,14 +9,19 @@ The chatbox library defines chat commands and renders messages. It lets you regi
 
     
 **Description:**
+
 Returns a formatted timestamp if chat timestamps are enabled.
 **Parameters:**
+
 * ooc (boolean) – True for out-of-character messages.
 **Returns:**
+
 * string – Formatted time string or an empty string.
 **Realm:**
+
 * Shared
 **Example:**
+
 ```lua
     -- This snippet demonstrates a common usage of lia.chat.timestamp
     local ts = lia.chat.timestamp(false)
@@ -29,15 +34,20 @@ Returns a formatted timestamp if chat timestamps are enabled.
 
     
 **Description:**
+
 Registers a new chat class and sets up command aliases.
 **Parameters:**
+
 * chatType (string) – Identifier for the chat class.
 * data (table) – Table of chat class properties.
 **Returns:**
+
 * nil
 **Realm:**
+
 * Shared
 **Example:**
+
 ```lua
     -- Register a simple "/me" chat command that prints actions in purple
     lia.chat.register("me", {
@@ -55,16 +65,21 @@ Registers a new chat class and sets up command aliases.
 
     
 **Description:**
+
 Parses chat text for the proper chat type and optionally sends it.
 **Parameters:**
+
 * client (Player) – Player sending the message.
 * message (string) – The chat text.
 * noSend (boolean) – Suppress sending when true.
 **Returns:**
+
 * chatType (string), text (string), anonymous (boolean)
 **Realm:**
+
 * Shared
 **Example:**
+
 ```lua
     -- Parse chat messages and log "/me" actions to the console
     hook.Add("PlayerSay", "LogActions", function(ply, text)
@@ -82,18 +97,23 @@ Parses chat text for the proper chat type and optionally sends it.
 
     
 **Description:**
+
 Broadcasts a chat message to all eligible receivers.
 **Parameters:**
+
 * speaker (Player) – The message sender.
 * chatType (string) – Chat class identifier.
 * text (string) – Message text.
 * anonymous (boolean) – Whether the sender is anonymous.
 * receivers (table) – Optional list of target players.
 **Returns:**
+
 * nil
 **Realm:**
+
 * Server
 **Example:**
+
 ```lua
     -- This snippet demonstrates a common usage of lia.chat.send
     lia.chat.send(client, "ic", "Hello")
