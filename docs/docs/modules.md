@@ -1,6 +1,8 @@
 # Optional Modules
 
-## Advert
+These free modules expand the base mechanics of Lilia. They are all open source and hosted in the [Modules repository](https://github.com/LiliaFramework/Modules) as well as on the [Modules website](https://liliaframework.github.io/Modules/). Click a module name to download it or use the direct URL listed under "Download Here."
+
+## [Advert](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/advert.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/advert.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/advert.zip)
 
@@ -15,7 +17,7 @@
 
 ---
 
-## Alcoholism
+## [Alcoholism](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/alcoholism.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/alcoholism.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/alcoholism.zip)
 
@@ -32,7 +34,7 @@
 
 ---
 
-## Auto Restarter
+## [Auto Restarter](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/autorestarter.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/autorestarter.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/autorestarter.zip)
 
@@ -47,7 +49,7 @@
 
 ---
 
-## Bodygrouper
+## [Bodygrouper](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/bodygrouper.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/bodygrouper.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/bodygrouper.zip)
 
@@ -62,7 +64,7 @@
 
 ---
 
-## Broadcasts
+## [Broadcasts](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/broadcasts.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/broadcasts.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/broadcasts.zip)
 
@@ -77,7 +79,7 @@
 
 ---
 
-## Captions
+## [Captions](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/captions.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/captions.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/captions.zip)
 
@@ -92,7 +94,7 @@
 
 ---
 
-## Cards
+## [Cards](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cards.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cards.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cards.zip)
 
@@ -107,7 +109,7 @@
 
 ---
 
-## Chat Messages
+## [Chat Messages](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/chatmessages.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/chatmessages.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/chatmessages.zip)
 
@@ -122,7 +124,7 @@
 
 ---
 
-## Cinematic Text
+## [Cinematic Text](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cinematictext.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cinematictext.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cinematictext.zip)
 
@@ -137,7 +139,7 @@
 
 ---
 
-## Climb
+## [Climb](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/climb.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/climb.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/climb.zip)
 
@@ -152,7 +154,7 @@
 
 ---
 
-## Code Utils
+## [Code Utils](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/codeutils.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/codeutils.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/codeutils.zip)
 
@@ -167,7 +169,7 @@
 
 ---
 
-## Community Commands
+## [Community Commands](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/communitycommands.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/communitycommands.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/communitycommands.zip)
 
@@ -182,7 +184,7 @@
 
 ---
 
-## Corpse ID
+## [Corpse ID](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/corpseid.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/corpseid.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/corpseid.zip)
 
@@ -197,7 +199,7 @@
 
 ---
 
-## Cursor
+## [Cursor](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cursor.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cursor.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cursor.zip)
 
@@ -212,7 +214,7 @@
 
 ---
 
-## Simple Cutscenes
+## [Simple Cutscenes](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cutscenes.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cutscenes.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cutscenes.zip)
 
@@ -227,7 +229,7 @@
 
 ---
 
-## Damage Numbers
+## [Damage Numbers](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/damagenumbers.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/damagenumbers.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/damagenumbers.zip)
 
@@ -242,7 +244,7 @@
 
 ---
 
-## Development HUD
+## [Development HUD](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmenthud.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmenthud.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmenthud.zip)
 
@@ -257,7 +259,7 @@
 
 ---
 
-## Development Server
+## [Development Server](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmentserver.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmentserver.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmentserver.zip)
 
@@ -272,7 +274,7 @@
 
 ---
 
-## Discord Relay
+## [Discord Relay](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/discordrelay.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/discordrelay.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/discordrelay.zip)
 
@@ -287,7 +289,7 @@
 
 ---
 
-## Donator
+## [Donator](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/donator.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/donator.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/donator.zip)
 
@@ -302,7 +304,7 @@
 
 ---
 
-## Door Kick
+## [Door Kick](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/doorkick.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/doorkick.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/doorkick.zip)
 
@@ -317,7 +319,7 @@
 
 ---
 
-## Hospitals
+## [Hospitals](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/enhanceddeath.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/enhanceddeath.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/enhanceddeath.zip)
 
@@ -332,7 +334,7 @@
 
 ---
 
-## Extended Descriptions
+## [Extended Descriptions](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/extendeddescriptions.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/extendeddescriptions.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/extendeddescriptions.zip)
 
@@ -347,7 +349,7 @@
 
 ---
 
-## First Person Effects
+## [First Person Effects](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/firstpersoneffects.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/firstpersoneffects.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/firstpersoneffects.zip)
 
@@ -362,7 +364,7 @@
 
 ---
 
-## Flashlight
+## [Flashlight](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/flashlight.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/flashlight.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/flashlight.zip)
 
@@ -377,7 +379,7 @@
 
 ---
 
-## Free Look
+## [Free Look](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/freelook.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/freelook.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/freelook.zip)
 
@@ -392,7 +394,7 @@
 
 ---
 
-## Gamemaster Teleport Points
+## [Gamemaster Teleport Points](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/gamemasterpoints.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/gamemasterpoints.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/gamemasterpoints.zip)
 
@@ -407,7 +409,7 @@
 
 ---
 
-## Extra HUD Elements
+## [Extra HUD Elements](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/hud_extras.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/hud_extras.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/hud_extras.zip)
 
@@ -422,7 +424,7 @@
 
 ---
 
-## Instant Killing
+## [Instant Killing](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/instakill.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/instakill.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/instakill.zip)
 
@@ -437,7 +439,7 @@
 
 ---
 
-## Join Leave Messages
+## [Join Leave Messages](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/joinleavemessages.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/joinleavemessages.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/joinleavemessages.zip)
 
@@ -452,7 +454,7 @@
 
 ---
 
-## Load Messages
+## [Load Messages](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loadmessages.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loadmessages.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loadmessages.zip)
 
@@ -467,7 +469,7 @@
 
 ---
 
-## Loyalism
+## [Loyalism](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loyalism.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loyalism.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loyalism.zip)
 
@@ -482,7 +484,7 @@
 
 ---
 
-## Map Cleaner
+## [Map Cleaner](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/mapcleaner.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/mapcleaner.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/mapcleaner.zip)
 
@@ -497,7 +499,7 @@
 
 ---
 
-## Model Pay
+## [Model Pay](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modelpay.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modelpay.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modelpay.zip)
 
@@ -512,7 +514,7 @@
 
 ---
 
-## Model Tweaker
+## [Model Tweaker](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modeltweaker.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modeltweaker.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modeltweaker.zip)
 
@@ -527,7 +529,7 @@
 
 ---
 
-## NPC Drops
+## [NPC Drops](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcdrop.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcdrop.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcdrop.zip)
 
@@ -542,7 +544,7 @@
 
 ---
 
-## NPC Spawner
+## [NPC Spawner](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcspawner.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcspawner.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcspawner.zip)
 
@@ -557,7 +559,7 @@
 
 ---
 
-## Perma Remove
+## [Perma Remove](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/permaremove.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/permaremove.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/permaremove.zip)
 
@@ -572,7 +574,7 @@
 
 ---
 
-## Radio
+## [Radio](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/radio.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/radio.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/radio.zip)
 
@@ -587,7 +589,7 @@
 
 ---
 
-## Raised Weapons
+## [Raised Weapons](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/raisedweapons.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/raisedweapons.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/raisedweapons.zip)
 
@@ -602,7 +604,7 @@
 
 ---
 
-## Realistic Damage
+## [Realistic Damage](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticdamage.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticdamage.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticdamage.zip)
 
@@ -617,7 +619,7 @@
 
 ---
 
-## Realistic View
+## [Realistic View](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticview.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticview.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticview.zip)
 
@@ -632,7 +634,7 @@
 
 ---
 
-## Rumour
+## [Rumour](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/rumour.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/rumour.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/rumour.zip)
 
@@ -647,7 +649,7 @@
 
 ---
 
-## Shoot Locks
+## [Shoot Locks](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/shootlock.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/shootlock.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/shootlock.zip)
 
@@ -662,7 +664,7 @@
 
 ---
 
-## Lockpicking
+## [Lockpicking](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/simple_lockpicking.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/simple_lockpicking.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/simple_lockpicking.zip)
 
@@ -677,7 +679,7 @@
 
 ---
 
-## Slots
+## [Slots](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slots.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slots.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slots.zip)
 
@@ -692,7 +694,7 @@
 
 ---
 
-## Heavy Weapons
+## [Heavy Weapons](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slowweapons.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slowweapons.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slowweapons.zip)
 
@@ -707,7 +709,7 @@
 
 ---
 
-## Stun Gun
+## [Stun Gun](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/stungun.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/stungun.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/stungun.zip)
 
@@ -722,7 +724,7 @@
 
 ---
 
-## Tying
+## [Tying](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/tying.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/tying.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/tying.zip)
 
@@ -737,7 +739,7 @@
 
 ---
 
-## View Bob
+## [View Bob](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/viewbob.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/viewbob.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/viewbob.zip)
 
@@ -752,7 +754,7 @@
 
 ---
 
-## VManip
+## [VManip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/vmanip.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/vmanip.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/vmanip.zip)
 
@@ -767,7 +769,7 @@
 
 ---
 
-## Warrant
+## [Warrant](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/warrants.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/warrants.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/warrants.zip)
 
@@ -782,7 +784,7 @@
 
 ---
 
-## War Table
+## [War Table](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wartable.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wartable.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wartable.zip)
 
@@ -797,7 +799,7 @@
 
 ---
 
-## Weight Inv
+## [Weight Inv](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/weightinv.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/weightinv.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/weightinv.zip)
 
@@ -812,7 +814,7 @@
 
 ---
 
-## Whitelist
+## [Whitelist](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/whitelist.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/whitelist.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/whitelist.zip)
 
@@ -827,7 +829,7 @@
 
 ---
 
-## Word Filter
+## [Word Filter](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wordfilter.zip)
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wordfilter.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wordfilter.zip)
 
@@ -841,4 +843,3 @@
 - Customizable blocked word list
 
 ---
-
