@@ -236,114 +236,74 @@ if SERVER then
         end
         return false
     end
-
-    function lia.command.execAdminCommand(cmd, executor, target, duration, reason)
-        local handled = hook.Run("RunAdminSystemCommand", cmd, executor, target, duration, reason)
-        if handled then return end
-        if cmd == "kick" and IsValid(target) then
-            target:Kick(reason or "")
-        elseif cmd == "ban" and IsValid(target) then
-            target:Ban(duration or 0, true)
-            target:Kick(reason or "")
-        elseif cmd == "unban" then
-            if isstring(target) then
-                RunConsoleCommand("removeid", target)
-                RunConsoleCommand("writeid")
-            end
-        elseif cmd == "freeze" and IsValid(target) then
-            target:Freeze(true)
-        elseif cmd == "unfreeze" and IsValid(target) then
-            target:Freeze(false)
-        elseif cmd == "slay" and IsValid(target) then
-            target:Kill()
-        elseif cmd == "bring" and IsValid(executor) and IsValid(target) then
-            target:SetPos(executor:GetPos())
-        elseif cmd == "goto" and IsValid(executor) and IsValid(target) then
-            executor:SetPos(target:GetPos())
-        elseif cmd == "strip" and IsValid(target) then
-            target:StripWeapons()
-        elseif cmd == "ignite" and IsValid(target) then
-            target:Ignite(duration or 0)
-        elseif (cmd == "extinguish" or cmd == "unignite") and IsValid(target) then
-            target:Extinguish()
-        elseif cmd == "god" and IsValid(target) then
-            target:GodEnable()
-        elseif cmd == "ungod" and IsValid(target) then
-            target:GodDisable()
-        elseif cmd == "cloak" and IsValid(target) then
-            target:SetNoDraw(true)
-        elseif cmd == "uncloak" and IsValid(target) then
-            target:SetNoDraw(false)
-        end
-    end
 else
     function lia.command.openArgumentPrompt(cmdKey, fields, prefix)
         local ply = LocalPlayer()
         local numFields = table.Count(fields)
-        local width, height = 780, 240 + numFields * 68
+        local frameW, frameH = 600, 200 + numFields * 75
         local frame = vgui.Create("DFrame")
-        frame:SetTitle(L(cmdKey))
-        frame:SetSize(width, height)
+        frame:SetTitle("")
+        frame:SetSize(frameW, frameH)
         frame:Center()
         frame:MakePopup()
         frame:ShowCloseButton(false)
-        frame:SetTitle("")
         frame.Paint = function(self, w, h)
             derma.SkinHook("Paint", "Frame", self, w, h)
-            draw.SimpleText(L(cmdKey), "DermaLarge", w / 2, 10, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+            draw.SimpleText(L(cmdKey), "liaMediumFont", w / 2, 10, color_white, TEXT_ALIGN_CENTER)
         end
 
         local scroll = vgui.Create("DScrollPanel", frame)
         scroll:Dock(FILL)
-        scroll:DockMargin(10, 40, 10, 105)
-        local list = vgui.Create("DIconLayout", scroll)
-        list:Dock(FILL)
-        list:SetSpaceY(7)
-        list:SetSpaceX(0)
+        scroll:DockMargin(10, 40, 10, 10)
+        surface.SetFont("liaSmallFont")
+        local controls = {}
         for name, fieldType in pairs(fields) do
-            local panel = list:Add("DPanel")
+            local panel = vgui.Create("DPanel", scroll)
             panel:Dock(TOP)
-            panel:SetTall(60)
+            panel:DockMargin(0, 0, 0, 5)
+            panel:SetTall(70)
             panel.Paint = function() end
-            local label = vgui.Create("DLabel", panel)
-            label:Dock(LEFT)
-            label:DockMargin(0, 0, 15, 0)
-            label:SetWide(210)
-            label:SetFont("DermaDefaultBold")
-            label:SetText(L(name))
-            label:SetContentAlignment(4)
+            local labelText = L(name)
+            local textW = select(1, surface.GetTextSize(labelText))
+            local ctrl
             if isfunction(fieldType) then
                 local options, mode = fieldType()
                 if mode == "combo" then
-                    local combo = vgui.Create("DComboBox", panel)
-                    combo:Dock(FILL)
+                    ctrl = vgui.Create("DComboBox", panel)
                     for _, opt in ipairs(options) do
-                        combo:AddChoice(opt)
+                        ctrl:AddChoice(opt)
                     end
-
-                    list[name] = combo
                 end
             elseif fieldType == "player" then
-                local combo = vgui.Create("DComboBox", panel)
-                combo:Dock(FILL)
-                combo:SetValue("Select Player")
-                for _, p in ipairs(player.GetAll()) do
-                    if IsValid(p) then combo:AddChoice(p:Name(), p:SteamID()) end
+                ctrl = vgui.Create("DComboBox", panel)
+                ctrl:SetValue("Select Player")
+                for _, plyObj in ipairs(player.GetAll()) do
+                    if IsValid(plyObj) then ctrl:AddChoice(plyObj:Name(), plyObj:SteamID()) end
                 end
-
-                list[name] = combo
             elseif fieldType == "text" or fieldType == "number" then
-                local entry = vgui.Create("DTextEntry", panel)
-                entry:Dock(FILL)
-                entry:SetFont("DermaDefault")
-                if fieldType == "number" and entry.SetNumeric then entry:SetNumeric(true) end
-                list[name] = entry
+                ctrl = vgui.Create("DTextEntry", panel)
+                ctrl:SetFont("liaSmallFont")
+                if fieldType == "number" and ctrl.SetNumeric then ctrl:SetNumeric(true) end
             elseif fieldType == "boolean" then
-                local checkbox = vgui.Create("DCheckBox", panel)
-                checkbox:Dock(RIGHT)
-                checkbox:DockMargin(0, 8, 0, 0)
-                list[name] = checkbox
+                ctrl = vgui.Create("DCheckBox", panel)
             end
+
+            local label = vgui.Create("DLabel", panel)
+            label:SetFont("liaSmallFont")
+            label:SetText(labelText)
+            label:SizeToContents()
+            panel.PerformLayout = function(self, w, h)
+                local ctrlH = 30
+                ctrl:SetTall(ctrlH)
+                local ctrlW = w * 0.7
+                local totalW = textW + 10 + ctrlW
+                local xOff = (w - totalW) / 2
+                label:SetPos(xOff, (h - label:GetTall()) / 2)
+                ctrl:SetPos(xOff + textW + 10, (h - ctrlH) / 2)
+                ctrl:SetWide(ctrlW)
+            end
+
+            controls[name] = ctrl
         end
 
         local buttons = vgui.Create("DPanel", frame)
@@ -356,18 +316,18 @@ else
         submit:DockMargin(0, 0, 15, 0)
         submit:SetWide(270)
         submit:SetText(L("submit"))
-        submit:SetFont("DermaDefaultBold")
+        submit:SetFont("liaSmallFont")
         submit:SetIcon("icon16/tick.png")
         submit.DoClick = function()
             local args = {}
-            for key, fieldType in pairs(fields) do
-                local ctl = list[key]
-                if isfunction(fieldType) or fieldType == "player" then
+            for key, ft in pairs(fields) do
+                local ctl = controls[key]
+                if isfunction(ft) or ft == "player" then
                     local txt, data = ctl:GetSelected()
                     args[#args + 1] = data or txt
-                elseif fieldType == "text" or fieldType == "number" then
+                elseif ft == "text" or ft == "number" then
                     args[#args + 1] = ctl:GetValue()
-                elseif fieldType == "boolean" then
+                elseif ft == "boolean" then
                     args[#args + 1] = ctl:GetChecked() and "1" or "0"
                 end
             end
@@ -396,7 +356,7 @@ else
         cancel:Dock(RIGHT)
         cancel:SetWide(270)
         cancel:SetText(L("cancel"))
-        cancel:SetFont("DermaDefaultBold")
+        cancel:SetFont("liaSmallFont")
         cancel:SetIcon("icon16/cross.png")
         cancel.DoClick = function()
             frame:Remove()

@@ -1,10 +1,10 @@
 ﻿local pi = math.pi
-local index = MODULE.index or 1
-local deltaIndex = MODULE.deltaIndex or index
-local infoAlpha = MODULE.infoAlpha or 0
-local alpha = MODULE.alpha or 0
-local alphaDelta = MODULE.alphaDelta or alpha
-local fadeTime = MODULE.fadeTime or 0
+local index = index or 1
+local deltaIndex = deltaIndex or index
+local infoAlpha = infoAlpha or 0
+local alpha = alpha or 0
+local alphaDelta = alphaDelta or alpha
+local fadeTime = fadeTime or 0
 local IsValid = IsValid
 local tonumber = tonumber
 local FrameTime = FrameTime
@@ -25,7 +25,8 @@ local function shouldDrawWepSelect(client)
     return hook.Run("ShouldDrawWepSelect", client) ~= false
 end
 
-function MODULE:HUDPaint()
+local infoMarkup
+local function HUDPaint()
     if not shouldDrawWepSelect() then return end
     local frameTime = FrameTime()
     local fraction = alphaDelta
@@ -43,20 +44,19 @@ function MODULE:HUDPaint()
     local spacing = pi * 0.85
     local radius = 240 * alphaDelta
     deltaIndex = Lerp(frameTime * 12, deltaIndex, index)
-    local currentIndex = deltaIndex
     local activeColor = lia.config.get("Color")
     for realIndex, weapon in ipairs(weapons) do
-        local theta = (realIndex - currentIndex) * 0.1
+        local theta = (realIndex - deltaIndex) * 0.1
         local isActive = realIndex == index
         local colAlpha = (255 - math.abs(theta * 3) * 255) * fraction
         local col = ColorAlpha(isActive and activeColor or color_white, colAlpha)
         local lastY = 0
-        if self.markup and (realIndex == 1 or realIndex < index) then
-            local _, h = self.markup:Size()
+        if infoMarkup and (realIndex == 1 or realIndex < index) then
+            local _, h = infoMarkup:Size()
             lastY = h * fraction
             if realIndex == index - 1 or realIndex == 1 then
                 infoAlpha = Lerp(frameTime * 5, infoAlpha, 255)
-                self.markup:Draw(x + 6 + shiftX, y + 30, 0, 0, infoAlpha * fraction)
+                infoMarkup:Draw(x + 6 + shiftX, y + 30, 0, 0, infoAlpha * fraction)
             end
 
             if index == 1 then lastY = 0 end
@@ -77,14 +77,14 @@ function MODULE:HUDPaint()
     if fadeTime < CurTime() and alpha > 0 then alpha = 0 end
 end
 
-function MODULE:onIndexChanged()
+local function onIndexChanged()
     if not shouldDrawWepSelect() then return end
     alpha = 1
     fadeTime = CurTime() + 5
     local client = LocalPlayer()
     local weapons = client:GetWeapons()
     local weapon = getWeaponFromIndex(index, weapons)
-    self.markup = nil
+    infoMarkup = nil
     infoAlpha = 0
     if IsValid(weapon) then
         local textParts = {}
@@ -95,7 +95,7 @@ function MODULE:onIndexChanged()
 
         if #textParts > 0 then
             local text = table.concat(textParts)
-            self.markup = markup.Parse("<font=liaItemDescFont>" .. text, ScrW() * 0.3)
+            infoMarkup = markup.Parse("<font=liaItemDescFont>" .. text, ScrW() * 0.3)
         end
 
         local source, pitch = hook.Run("WeaponCycleSound")
@@ -105,7 +105,7 @@ function MODULE:onIndexChanged()
     end
 end
 
-function MODULE:PlayerBindPress(client, bind, pressed)
+local function PlayerBindPress(client, bind, pressed)
     if not shouldDrawWepSelect(client) then return end
     if not pressed then return end
     if client:InVehicle() then return end
@@ -127,12 +127,12 @@ function MODULE:PlayerBindPress(client, bind, pressed)
             if index > total then index = 1 end
         end
 
-        self:onIndexChanged()
+        onIndexChanged()
         return true
     elseif bind:find("slot") then
         local slot = tonumber(bind:match("slot(%d)"))
         index = math.Clamp(slot or 1, 1, total)
-        self:onIndexChanged()
+        onIndexChanged()
         return true
     elseif bind:find("attack") and alpha > 0 then
         local weapon = getWeaponFromIndex(index, weapons)
@@ -160,9 +160,13 @@ function meta:SelectWeapon(class)
     self.doWeaponSwitch = self:GetWeapon(class)
 end
 
-function MODULE:StartCommand(client, cmd)
+local function StartCommand(client, cmd)
     if not shouldDrawWepSelect(client) then return end
     if not IsValid(client.doWeaponSwitch) then return end
     cmd:SelectWeapon(client.doWeaponSwitch)
     if client:GetActiveWeapon() == client.doWeaponSwitch then client.doWeaponSwitch = nil end
 end
+
+hook.Add("HUDPaint", "liaWeaponSelectHUDPaint", HUDPaint)
+hook.Add("PlayerBindPress", "liaWeaponSelectPlayerBindPress", PlayerBindPress)
+hook.Add("StartCommand", "liaWeaponSelectStartCommand", StartCommand)

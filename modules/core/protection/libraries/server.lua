@@ -62,21 +62,20 @@ function MODULE:PlayerShouldAct()
     return lia.config.get("ActsActive", false)
 end
 
+local KnownCheaters = {
+    ["76561198095382821"] = true,
+    ["76561198211231421"] = true,
+    ["76561199121878196"] = true,
+    ["76561199548880910"] = true,
+    ["76561198218940592"] = true,
+    ["76561198095156121"] = true,
+    ["76561198281775968"] = true,
+    ["76561197960446376"] = true,
+    ["76561199029065559"] = true,
+    ["76561198234911980"] = true,
+}
 
 function MODULE:PlayerAuthed(client, steamid)
-    local KnownCheaters = {
-        ["76561198095382821"] = true,
-        ["76561198211231421"] = true,
-        ["76561199121878196"] = true,
-        ["76561199548880910"] = true,
-        ["76561198218940592"] = true,
-        ["76561198095156121"] = true,
-        ["76561198281775968"] = true,
-        ["76561197960446376"] = true,
-        ["76561199029065559"] = true,
-        ["76561198234911980"] = true,
-    }
-
     local steamID64 = util.SteamIDTo64(steamid)
     local ownerSteamID64 = client:OwnerSteamID64()
     local steamName = client:SteamName()
@@ -161,14 +160,14 @@ function MODULE:OnPlayerHitGround(client)
     client:SetVelocity(Vector(-(vel.x * 0.45), -(vel.y * 0.45), 0))
 end
 
-function MODULE:ShouldCollide(ent1, ent2)
-    local blocked = {
-        lia_money = true,
-        lia_item = true,
-        prop_physics = true,
-        func_tanktrain = true,
-    }
+local blocked = {
+    lia_money = true,
+    lia_item = true,
+    prop_physics = true,
+    func_tanktrain = true,
+}
 
+function MODULE:ShouldCollide(ent1, ent2)
     local c1, c2 = ent1:GetClass(), ent2:GetClass()
     local b1, b2 = blocked[c1], blocked[c2]
     if b1 and b2 then return false end

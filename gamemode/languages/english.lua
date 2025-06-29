@@ -660,7 +660,6 @@ LANGUAGE = {
     charVoiceToggleDesc = "Toggles voice chat ban for the specified character.",
     upgradeNotice = "Hey there, we noticed that you're running an older version of Garry's Mod. We highly recommend switch to the updated, more stable x64 branch of the game.\nSwitching comes with a ton of benefits, including less risk of crashing, increased performance, and more!",
     upgradeTitle = "Garry's Mod 32-bit Client detected!",
-    upgradeImage = "https://i.imgur.com/sbCmM2T.png",
     tookDamageSwitchCooldown = "You took damage too recently to switch characters!",
     switchCooldown = "You are on cooldown!",
     exploitAttempt = "%s (%s) may be attempting to run exploits! Used %s",

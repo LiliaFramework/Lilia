@@ -11,8 +11,6 @@ for _, v in pairs(KnownExploits) do
     end)
 end
 
-
-
 net.Receive("CheckSeed", function(_, client)
     local sentSteamID = net.ReadString()
     if not sentSteamID or sentSteamID == "" then

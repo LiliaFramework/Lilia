@@ -47,6 +47,10 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/libraries/performance.lua",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/core/meta/character.lua",
         realm = "shared"
     },
@@ -355,9 +359,7 @@ end
 
 function lia.notifyAdmin(notification)
     for _, client in player.Iterator() do
-        if IsValid(client) and client:hasPrivilege("Staff Permissions - Can See Alting Notifications") then
-            client:ChatPrint(notification)
-        end
+        if IsValid(client) and client:hasPrivilege("Staff Permissions - Can See Alting Notifications") then client:ChatPrint(notification) end
     end
 end
 
@@ -365,14 +367,8 @@ function lia.applyPunishment(client, infraction, kick, ban, time, kickKey, banKe
     local bantime = time or 0
     kickKey = kickKey or "kickedForInfraction"
     banKey = banKey or "bannedForInfraction"
-
-    if kick then
-        lia.command.execAdminCommand("kick", nil, client, nil, L(kickKey, infraction))
-    end
-
-    if ban then
-        lia.command.execAdminCommand("ban", nil, client, bantime, L(banKey, infraction))
-    end
+    if kick then lia.command.execAdminCommand("kick", nil, client, nil, L(kickKey, infraction)) end
+    if ban then lia.command.execAdminCommand("ban", nil, client, bantime, L(banKey, infraction)) end
 end
 
 for _, files in ipairs(FilesToLoad) do

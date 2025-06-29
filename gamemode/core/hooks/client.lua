@@ -429,6 +429,14 @@ function GM:VoiceToggled(enabled)
     end
 end
 
+function GM:MouthMoveAnimation()
+    return nil
+end
+
+function GM:GrabEarAnimation()
+    return nil
+end
+
 function GM:SpawnMenuOpen()
     local client = LocalPlayer()
     if lia.config.get("SpawnMenuLimit", false) and not (client:getChar():hasFlags("pet") or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Props")) then return end
