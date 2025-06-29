@@ -14,6 +14,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Includes a configurable delay to prevent spam
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/advert.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/advert.zip)
+
 ---
 
 ## Alcoholism
@@ -30,6 +31,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - BAC gradually lowers over time
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/alcoholism.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/alcoholism.zip)
+
 ---
 
 ## Auto Restarter
@@ -44,6 +46,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Displays countdown warnings to connected players
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/autorestarter.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/autorestarter.zip)
+
 ---
 
 ## Bodygrouper
@@ -58,6 +61,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Closet entity that lets players change model bodygroups
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/bodygrouper.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/bodygrouper.zip)
+
 ---
 
 ## Broadcasts
@@ -72,6 +76,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Sends messages to selected factions or classes
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/broadcasts.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/broadcasts.zip)
+
 ---
 
 ## Captions
@@ -86,6 +91,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Captions fade in and out and are networked to all clients
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/captions.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/captions.zip)
+
 ---
 
 ## Cards
@@ -100,6 +106,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Includes card deck items
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cards.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cards.zip)
+
 ---
 
 ## Chat Messages
@@ -114,6 +121,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Interval and message list are configurable
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/chatmessages.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/chatmessages.zip)
+
 ---
 
 ## Cinematic Text
@@ -128,6 +136,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Supports custom colors, large titles and countdowns
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cinematictext.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cinematictext.zip)
+
 ---
 
 ## Climb
@@ -142,6 +151,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Uses trace detection to start the climb animation
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/climb.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/climb.zip)
+
 ---
 
 ## Code Utils
@@ -156,6 +166,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Includes network convenience wrappers
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/codeutils.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/codeutils.zip)
+
 ---
 
 ## Community Commands
@@ -170,6 +181,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Simple to customize
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/communitycommands.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/communitycommands.zip)
+
 ---
 
 ## Corpse ID
@@ -184,6 +196,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Stores identification state on the corpse
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/corpseid.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/corpseid.zip)
+
 ---
 
 ## Cursor
@@ -198,6 +211,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Can be toggled via configuration
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cursor.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cursor.zip)
+
 ---
 
 ## Simple Cutscenes
@@ -212,6 +226,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Includes chat command to play predefined scenes
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cutscenes.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cutscenes.zip)
+
 ---
 
 ## Damage Numbers
@@ -226,6 +241,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Display style and duration are configurable
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/damagenumbers.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/damagenumbers.zip)
+
 ---
 
 ## Development HUD
@@ -240,6 +256,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Useful while developing new content
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmenthud.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmenthud.zip)
+
 ---
 
 ## Development Server
@@ -254,6 +271,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Enables special debug commands
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmentserver.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmentserver.zip)
+
 ---
 
 ## Discord Relay
@@ -268,6 +286,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Channel configuration is handled in settings
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/discordrelay.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/discordrelay.zip)
+
 ---
 
 ## Donator
@@ -282,6 +301,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Integrates with donation systems
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/donator.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/donator.zip)
+
 ---
 
 ## Door Kick
@@ -296,6 +316,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Only works on unlocked or breachable doors
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/doorkick.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/doorkick.zip)
+
 ---
 
 ## Hospitals
@@ -310,6 +331,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Supports placement of multiple hospital spawn points
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/enhanceddeath.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/enhanceddeath.zip)
+
 ---
 
 ## Extended Descriptions
@@ -324,6 +346,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Displays them in info panels
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/extendeddescriptions.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/extendeddescriptions.zip)
+
 ---
 
 ## First Person Effects
@@ -338,6 +361,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Enhances immersion when running or landing
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/firstpersoneffects.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/firstpersoneffects.zip)
+
 ---
 
 ## Flashlight
@@ -352,6 +376,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Optional battery drain system
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/flashlight.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/flashlight.zip)
+
 ---
 
 ## Free Look
@@ -366,6 +391,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Bind a key to look around without moving your aim
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/freelook.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/freelook.zip)
+
 ---
 
 ## Gamemaster Teleport Points
@@ -380,6 +406,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Commands to save, remove and travel to points
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/gamemasterpoints.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/gamemasterpoints.zip)
+
 ---
 
 ## Extra HUD Elements
@@ -394,6 +421,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Elements can be toggled in configuration
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/hud_extras.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/hud_extras.zip)
+
 ---
 
 ## Instant Killing
@@ -408,6 +436,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Damage scaling controlled via config
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/instakill.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/instakill.zip)
+
 ---
 
 ## Join Leave Messages
@@ -422,6 +451,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Uses color-coded messages
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/joinleavemessages.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/joinleavemessages.zip)
+
 ---
 
 ## Load Messages
@@ -436,6 +466,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Can vary message by faction
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loadmessages.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loadmessages.zip)
+
 ---
 
 ## Loyalism
@@ -450,6 +481,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Tiers grant access to special items or areas
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loyalism.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loyalism.zip)
+
 ---
 
 ## Map Cleaner
@@ -464,6 +496,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Warns players before removing entities
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/mapcleaner.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/mapcleaner.zip)
+
 ---
 
 ## Model Pay
@@ -478,6 +511,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Supports custom prices for each model
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modelpay.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modelpay.zip)
+
 ---
 
 ## Model Tweaker
@@ -492,6 +526,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Saves adjustments for later
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modeltweaker.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modeltweaker.zip)
+
 ---
 
 ## NPC Drops
@@ -506,6 +541,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Supports custom loot lists per NPC type
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcdrop.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcdrop.zip)
+
 ---
 
 ## NPC Spawner
@@ -520,6 +556,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Spawner intervals and limits are configurable
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcspawner.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcspawner.zip)
+
 ---
 
 ## Perma Remove
@@ -534,6 +571,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Removals persist across server restarts
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/permaremove.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/permaremove.zip)
+
 ---
 
 ## Radio
@@ -548,6 +586,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Includes UI for channel selection and push-to-talk
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/radio.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/radio.zip)
+
 ---
 
 ## Raised Weapons
@@ -562,6 +601,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Players must raise weapons to fire
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/raisedweapons.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/raisedweapons.zip)
+
 ---
 
 ## Realistic Damage
@@ -576,6 +616,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Tweaks hit group multipliers and armor effects
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticdamage.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticdamage.zip)
+
 ---
 
 ## Realistic View
@@ -590,6 +631,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Adjusts camera position for a realistic view
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticview.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticview.zip)
+
 ---
 
 ## Rumour
@@ -604,6 +646,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Rumours are broadcast to nearby players
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/rumour.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/rumour.zip)
+
 ---
 
 ## Shoot Locks
@@ -618,6 +661,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Checks lock health and plays effects
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/shootlock.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/shootlock.zip)
+
 ---
 
 ## Lockpicking
@@ -632,6 +676,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Includes custom lockpick items
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/simple_lockpicking.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/simple_lockpicking.zip)
+
 ---
 
 ## Slots
@@ -646,6 +691,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Uses animated reels and configurable payouts
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slots.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slots.zip)
+
 ---
 
 ## Heavy Weapons
@@ -660,6 +706,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Define which weapons count as heavy
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slowweapons.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slowweapons.zip)
+
 ---
 
 ## Stun Gun
@@ -674,6 +721,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Temporarily incapacitates targets
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/stungun.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/stungun.zip)
+
 ---
 
 ## Tying
@@ -688,6 +736,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Tied players have restricted actions
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/tying.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/tying.zip)
+
 ---
 
 ## View Bob
@@ -702,6 +751,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Amount of bob can be configured
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/viewbob.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/viewbob.zip)
+
 ---
 
 ## VManip
@@ -716,6 +766,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Provides networked VManip events
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/vmanip.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/vmanip.zip)
+
 ---
 
 ## Warrant
@@ -730,6 +781,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Includes commands to issue and revoke warrants
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/warrants.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/warrants.zip)
+
 ---
 
 ## War Table
@@ -744,6 +796,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Supports moving pieces and drawing zones
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wartable.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wartable.zip)
+
 ---
 
 ## Weight Inv
@@ -758,6 +811,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Items have weight values that limit carrying capacity
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/weightinv.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/weightinv.zip)
+
 ---
 
 ## Whitelist
@@ -772,6 +826,7 @@ These free modules expand the base mechanics of Lilia. They are all open source 
 - Players not on the list cannot join
 
 **Download Here:** [https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/whitelist.zip](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/whitelist.zip)
+
 ---
 
 ## Word Filter
