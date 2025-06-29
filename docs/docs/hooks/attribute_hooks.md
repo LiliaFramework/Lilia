@@ -6,7 +6,7 @@ This document lists hooks related to attribute setup and changes.
 
 ## Overview
 
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
+Attributes can define their own hooks to react when a player's attribute is created or its value changes. Implement these functions on the `ATTRIBUTE` table to run custom logic. All hooks are optional; if a hook is omitted the default behavior is used.
 
 ---
 
