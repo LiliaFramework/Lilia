@@ -1,7 +1,8 @@
 --[[
     Adds Simfphys vehicle support.
-    Applies crash damage to drivers, registers configuration settings
-    and defines privileges for editing cars.
+    Drivers only take damage when the vehicle is hit near their seat
+    and a configurable delay is applied before entering cars.
+    Also registers settings and privileges for editing vehicles.
 ]]
 if SERVER then
     hook.Add("EntityTakeDamage", "liaSimfphys", function(seat, dmgInfo)
