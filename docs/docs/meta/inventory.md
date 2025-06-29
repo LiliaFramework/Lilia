@@ -1,12 +1,12 @@
 # Inventory Meta
 
-This document describes the methods available on inventory objects.
+Inventories hold items for characters or in-world containers. This document lists methods for managing and syncing these item stores.
 
 ---
 
 ## Overview
 
-These meta functions extend standard inventory objects with convenience helpers used throughout Lilia.
+Inventory meta functions handle transactions, capacity checks, retrieval by slot or ID, and persistent data storage. They also manage network updates so clients remain in sync with server-side inventory changes.
 
 ---
 

@@ -1,12 +1,12 @@
 # Panel Meta
 
-This document describes the methods available on panel objects.
+Lilia's interface relies on VGUI panels with extra functionality. This document describes convenience methods available to those panels.
 
 ---
 
 ## Overview
 
-These meta functions extend standard panel objects with convenience helpers used throughout Lilia.
+Panel meta functions support scaled positioning, listen for inventory changes, and offer other utilities that make building responsive menus and HUD elements easier.
 
 ---
 

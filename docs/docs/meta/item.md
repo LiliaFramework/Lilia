@@ -1,12 +1,12 @@
 # Item Meta
 
-This document describes the methods available on item objects.
+Item objects represent things found in inventories or spawned in the world. This guide describes methods for reading and manipulating item data.
 
 ---
 
 ## Overview
 
-These meta functions extend standard item objects with convenience helpers used throughout Lilia.
+Item meta functions cover stack counts, categories, weight calculations, and network variables. They enable consistent item interaction across trading, crafting, and interface components.
 
 ---
 

@@ -1,12 +1,12 @@
 # Player Meta
 
-This document describes the methods available on player objects.
+Lilia extends Garry's Mod players with characters, inventories, and permission checks. This reference details the meta functions enabling that integration.
 
 ---
 
 ## Overview
 
-These meta functions extend standard player objects with convenience helpers used throughout Lilia.
+Player meta functions provide quick access to the active character, networking helpers for messaging or data transfer, and utility checks such as admin status. They unify player-related logic across the framework.
 
 ---
 

@@ -1,12 +1,12 @@
 # Entity Meta
 
-This document describes the methods available on entity objects.
+Entities in Garry's Mod may represent props, items, and interactive objects. This reference describes utility functions added to entity metatables for easier classification and management.
 
 ---
 
 ## Overview
 
-These meta functions extend standard entity objects with convenience helpers used throughout Lilia.
+The entity meta library exposes detection routines, network-safe data helpers, and wrappers for retrieving item information or safe positions. Using these functions ensures consistent behavior when handling game objects across Lilia.
 
 ---
 
