@@ -14,7 +14,7 @@ Each class can implement lifecycle hooks to control access, initialize settings,
 
 ```lua
 function CLASS:OnCanBe(client) → boolean
-````
+```
 
 **Description:**
 Determines whether a player is permitted to switch to this class. Evaluated before the class change occurs.

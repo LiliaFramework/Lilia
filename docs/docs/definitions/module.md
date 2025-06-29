@@ -45,7 +45,7 @@ A `MODULE` table defines a self-contained add-on for the Lilia framework. Each f
 **Example:**
 ```lua
 MODULE.name = "My Module"
-````
+```
 
 #### `author`
 

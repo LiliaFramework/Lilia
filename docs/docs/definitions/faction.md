@@ -57,7 +57,7 @@ Each faction in the game is defined by a set of fields on the global `FACTION` t
 **Example:**
 ```lua
 FACTION.name = "Minecrafters"
-````
+```
 
 #### `desc`
 

@@ -16,7 +16,7 @@ Each faction can implement these shared- and server-side hooks to control how ch
 function FACTION:GetDefaultName(client)
     -- return string
 end
-````
+```
 
 **Description:**
 Retrieves the default name for a newly created character in this faction.

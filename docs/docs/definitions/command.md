@@ -36,7 +36,7 @@ When you register a command with `lia.command.add`, you provide a table of field
 **Example:**
 ```lua
 alias = {"chargiveflag", "giveflag"}
-````
+```
 
 ---
 

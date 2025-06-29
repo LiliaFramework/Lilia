@@ -1,60 +1,61 @@
 # Attribute Fields
 
-This document describes all configurable `ATTRIBUTE` fields and hooks in the codebase. Use these to control each attribute’s display, limits, and behavior when applied to players.
-Unspecified fields fall back to sensible defaults.
+> This entry describes all configurable `ATTRIBUTE` fields in the codebase. Use these to control each attribute’s display, limits, and behavior when applied to players. Unspecified fields fall back to sensible defaults.
 
 ---
 
 ## Overview
 
-Each attribute is defined on a global `ATTRIBUTE` table. You can configure its name, description, whether it receives a startup bonus, its maximum and starting values, and respond to setup events via a hook.
+Each attribute is registered on the global `ATTRIBUTE` table. You can customize:
+
+* **Display**: The `name` and `desc` that players see in-game.
+* **Startup bonus**: Whether this attribute can receive points from the pool allocated during character creation.
+* **Value limits**: The hard cap (`maxValue`) and the creation-time base cap (`startingMax`).
 
 ---
 
 ## Field Summary
 
-| Field / Hook             | Type            | Description                                                  |
-|--------------------------|-----------------|--------------------------------------------------------------|
-| `name`                   | `string`        | Display name of the attribute.                               |
-| `desc`                   | `string`        | Short description or lore of the attribute.                  |
-| `noStartBonus`           | `boolean`       | If `true`, attribute cannot receive a bonus at game start.   |
-| `maxValue`               | `number`        | Absolute maximum value the attribute can reach.             |
-| `startingMax`            | `number`        | Maximum value the attribute can start with at character creation. |
-| `OnSetup(client, value)` | `function`      | Hook executed when the attribute is applied to a player.     |
+| Field          | Type      | Default | Description                                                                                    |
+| -------------- | --------- | ------- | ---------------------------------------------------------------------------------------------- |
+| `name`         | `string`  | —       | Human-readable title of the attribute.                                                         |
+| `desc`         | `string`  | —       | Brief description or lore text.                                                                |
+| `startingMax`  | `number`  | `0`     | Maximum base value at character creation, before any startup bonus points are applied.         |
+| `noStartBonus` | `boolean` | `false` | If `true`, players cannot allocate any of the creation startup bonus points to this attribute. |
+| `maxValue`     | `number`  | `30`    | Absolute upper limit an attribute can ever reach.                                              |
 
 ---
 
 ## Field Details
 
-### Basic Info
-
 #### `name`
-**Type:** `string`  
-**Description:** Specifies the display name of the attribute.  
-**Example:**
+
+Specify the human-readable title for the attribute.
+
 ```lua
 ATTRIBUTE.name = "Strength"
-````
+```
 
 #### `desc`
 
-**Type:** `string`
-**Description:** Provides a short description or lore for the attribute.
-**Example:**
+Provide a concise description for the attribute.
 
 ```lua
-ATTRIBUTE.desc = "Strength Skill."
+ATTRIBUTE.desc = "Determines physical power and carrying capacity."
 ```
 
----
+#### `startingMax`
 
-### Value Constraints
+Defines the cap on the attribute’s base value at character creation.
+
+```lua
+ATTRIBUTE.startingMax = 15
+```
 
 #### `noStartBonus`
 
-**Type:** `boolean`
-**Description:** Determines whether the attribute is eligible for a bonus at the start of the game.
-**Example:**
+Controls whether this attribute is eligible for the startup bonus—the pool of points players assign when creating a character.
+If set to `true`, players cannot allocate any of their initial creation points to this attribute.
 
 ```lua
 ATTRIBUTE.noStartBonus = false
@@ -62,22 +63,10 @@ ATTRIBUTE.noStartBonus = false
 
 #### `maxValue`
 
-**Type:** `number`
-**Description:** Specifies the absolute upper limit the attribute can ever reach.
-**Example:**
+Sets the hard cap for this attribute.
 
 ```lua
 ATTRIBUTE.maxValue = 50
-```
-
-#### `startingMax`
-
-**Type:** `number`
-**Description:** Defines the maximum value the attribute can begin with when a character is created.
-**Example:**
-
-```lua
-ATTRIBUTE.startingMax = 15
 ```
 
 ---

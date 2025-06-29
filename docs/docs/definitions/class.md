@@ -51,7 +51,7 @@ The global `CLASS` table defines per-class settings such as display name, lore, 
 **Example:**
 ```lua
 CLASS.name = "Engineer"
-````
+```
 
 #### `desc`
 

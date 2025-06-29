@@ -77,7 +77,7 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 **Example:**
 ```lua
 ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
-````
+```
 
 #### `equipSound`
 
