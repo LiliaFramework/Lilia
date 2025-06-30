@@ -39,6 +39,21 @@ function playerMeta:hasRagdoll()
     return IsValid(self.liaRagdoll)
 end
 
+function playerMeta:CanOverrideView()
+    local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
+    local isInVehicle = self:hasValidVehicle()
+    if IsValid(lia.gui.char) then return false end
+    if isInVehicle then return false end
+    if hook.Run("ShouldDisableThirdperson", self) == true then return false end
+    return lia.option.get("thirdPersonEnabled", false) and lia.config.get("ThirdPersonEnabled", true) and IsValid(self) and self:getChar() and not IsValid(ragdoll)
+end
+
+function playerMeta:IsInThirdPerson()
+    local thirdPersonEnabled = lia.config.get("ThirdPersonEnabled", true)
+    local tpEnabled = lia.option.get("thirdPersonEnabled", false)
+    return tpEnabled and thirdPersonEnabled
+end
+
 function playerMeta:removeRagdoll()
     if not self:hasRagdoll() then return end
     local ragdoll = self:getRagdoll()

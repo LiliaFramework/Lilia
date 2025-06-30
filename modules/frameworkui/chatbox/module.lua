@@ -25,8 +25,3 @@ MODULE.CAMIPrivileges = {
         MinAccess = "superadmin"
     },
 }
-
-lia.option.add("ChatShowTime", "Show Chat Timestamp", "Should chat show timestamp", false, nil, {
-    category = "Chat",
-    type = "Boolean"
-})

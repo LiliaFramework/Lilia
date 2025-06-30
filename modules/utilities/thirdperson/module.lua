@@ -1,5 +1,0 @@
-﻿MODULE.name = "Third Person"
-MODULE.author = "Samael"
-MODULE.discord = "@liliaplayer"
-MODULE.version = "1.0"
-MODULE.desc = "Adds Tweakable Third Person"

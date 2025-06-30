@@ -135,6 +135,10 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/libraries/thirdperson.lua",
+        realm = "client"
+    },
+    {
         path = "lilia/gamemode/core/libraries/currency.lua",
         realm = "shared"
     },
