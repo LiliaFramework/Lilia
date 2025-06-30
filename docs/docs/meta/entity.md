@@ -757,3 +757,166 @@ Retrieves a network variable for this entity on the client.
 -- Access a synced variable on the client side
 local result = ent:getNetVar(key, default)
 ```
+
+---
+
+### getParts()
+
+```lua
+function ENTITY:getParts()
+    -- returns table
+end
+```
+
+**Description:**
+
+Retrieves the table of PAC3 part identifiers applied to this entity.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* table – The currently applied part IDs.
+
+**Example:**
+
+```lua
+-- Print all equipped PAC3 parts for a player
+for id in pairs(client:getParts()) do
+    print(id)
+end
+```
+
+---
+
+### syncParts()
+
+```lua
+function ENTITY:syncParts()
+end
+```
+
+**Description:**
+
+Broadcasts the entity's PAC3 part list to synchronize with clients.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example:**
+
+```lua
+-- Resend parts when a player respawns
+client:syncParts()
+```
+
+---
+
+### addPart(partID)
+
+```lua
+function ENTITY:addPart(partID)
+end
+```
+
+**Description:**
+
+Attaches a PAC3 part to this entity and networks the change.
+
+**Parameters:**
+
+* partID (string) – Identifier for the PAC3 outfit to add.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example:**
+
+```lua
+-- Give the player a custom hat part
+client:addPart("hat01")
+```
+
+---
+
+### removePart(partID)
+
+```lua
+function ENTITY:removePart(partID)
+end
+```
+
+**Description:**
+
+Detaches a PAC3 part from this entity and updates clients.
+
+**Parameters:**
+
+* partID (string) – Identifier of the PAC3 outfit to remove.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example:**
+
+```lua
+-- Remove the previously equipped hat part
+client:removePart("hat01")
+```
+
+---
+
+### resetParts()
+
+```lua
+function ENTITY:resetParts()
+end
+```
+
+**Description:**
+
+Clears all PAC3 parts from this entity and notifies clients.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example:**
+
+```lua
+-- Remove all PAC3 outfits from the player
+client:resetParts()
+```
