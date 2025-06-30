@@ -19,10 +19,10 @@ local NotSolidModels = {
 }
 
 local NotSolidMatTypes = {
-    [MAT_GLASS] = true,
+    [MAT_GLASS] = true
 }
 
-function MODULE:CalcView(client)
+hook.Add("CalcView", "liaThirdPersonCalcView", function(client)
     ft = FrameTime()
     if client:CanOverrideView() and client:GetViewEntity() == client then
         if client:OnGround() and (client:KeyDown(IN_DUCK) or client:Crouching()) then
@@ -35,18 +35,22 @@ function MODULE:CalcView(client)
         local horizontalMax = lia.config.get("MaxThirdPersonHorizontal", 30)
         local distanceMax = lia.config.get("MaxThirdPersonDistance", 100)
         curAng = client.camAng or angle_zero
+        traceData = {
+            start = client:GetPos() + client:GetViewOffset() + curAng:Up() * math.Clamp(lia.option.get("thirdPersonHeight", 10), 0, heightMax) + curAng:Right() * math.Clamp(lia.option.get("thirdPersonHorizontal", 10), -horizontalMax, horizontalMax) - client:GetViewOffsetDucked() * 0.5 * crouchFactor,
+            endpos = client:GetPos() + client:GetViewOffset() + curAng:Up() * math.Clamp(lia.option.get("thirdPersonHeight", 10), 0, heightMax) + curAng:Right() * math.Clamp(lia.option.get("thirdPersonHorizontal", 10), -horizontalMax, horizontalMax) - client:GetViewOffsetDucked() * 0.5 * crouchFactor - curAng:Forward() * math.Clamp(lia.option.get("thirdPersonDistance", 100), 0, distanceMax),
+            filter = client
+        }
+
         view = {}
-        traceData = {}
-        traceData.start = client:GetPos() + client:GetViewOffset() + curAng:Up() * math.Clamp(lia.option.get("thirdPersonHeight", 10), 0, heightMax) + curAng:Right() * math.Clamp(lia.option.get("thirdPersonHorizontal", 10), -horizontalMax, horizontalMax) - client:GetViewOffsetDucked() * 0.5 * crouchFactor
-        traceData.endpos = traceData.start - curAng:Forward() * math.Clamp(lia.option.get("thirdPersonDistance", 100), 0, distanceMax)
-        traceData.filter = client
         view.origin = util.TraceLine(traceData).HitPos
         aimOrigin = view.origin
         view.angles = curAng + client:GetViewPunchAngles()
-        traceData2 = {}
-        traceData2.start = aimOrigin
-        traceData2.endpos = aimOrigin + curAng:Forward() * 65535
-        traceData2.filter = client
+        traceData2 = {
+            start = aimOrigin,
+            endpos = aimOrigin + curAng:Forward() * 65535,
+            filter = client
+        }
+
         local tr = util.TraceLine(traceData2)
         local shouldAutoFace = lia.option.get("thirdPersonClassicMode", false) or client.isWepRaised and client:isWepRaised() or client:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and client:GetVelocity():Length() >= 10
         if shouldAutoFace then
@@ -61,9 +65,9 @@ function MODULE:CalcView(client)
         end
         return view
     end
-end
+end)
 
-function MODULE:CreateMove(cmd)
+hook.Add("CreateMove", "liaThirdPersonCreateMove", function(cmd)
     local client = LocalPlayer()
     if client:CanOverrideView() and not client:isNoClipping() and client:GetViewEntity() == client then
         local fm = cmd:GetForwardMove()
@@ -76,9 +80,9 @@ function MODULE:CreateMove(cmd)
         cmd:SetSideMove(newSm)
         return false
     end
-end
+end)
 
-function MODULE:InputMouseApply(_, x, y)
+hook.Add("InputMouseApply", "liaThirdPersonInputMouseApply", function(cmd, x, y)
     local client = LocalPlayer()
     if not client.camAng then client.camAng = angle_zero end
     if client:CanOverrideView() and client:GetViewEntity() == client then
@@ -86,22 +90,22 @@ function MODULE:InputMouseApply(_, x, y)
         client.camAng.y = math.NormalizeAngle(client.camAng.y - x / 50)
         return true
     end
-end
+end)
 
-function MODULE:PlayerButtonDown(_, button)
+hook.Add("PlayerButtonDown", "liaThirdPersonPlayerButtonDown", function(_, button)
     if button == KEY_F4 and IsFirstTimePredicted() then
         local currentState = lia.option.get("thirdPersonEnabled", false)
         lia.option.set("thirdPersonEnabled", not currentState)
         hook.Run("thirdPersonToggled", not currentState)
     end
-end
+end)
 
-function MODULE:ShouldDrawLocalPlayer()
+hook.Add("ShouldDrawLocalPlayer", "liaThirdPersonShouldDrawLocalPlayer", function()
     local client = LocalPlayer()
     if client:GetViewEntity() == client and client:CanOverrideView() then return true end
-end
+end)
 
-function MODULE:EntityEmitSound(data)
+hook.Add("EntityEmitSound", "liaThirdPersonEntityEmitSound", function(data)
     local steps = {".stepleft", ".stepright"}
     local thirdPersonIsEnabled = lia.option.get("thirdPersonEnabled", false)
     if thirdPersonIsEnabled then
@@ -109,9 +113,9 @@ function MODULE:EntityEmitSound(data)
         local sName = data.OriginalSoundName
         if sName:find(steps[1]) or sName:find(steps[2]) then return false end
     end
-end
+end)
 
-function MODULE:PrePlayerDraw(drawnClient)
+hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(drawnClient)
     local client = LocalPlayer()
     if drawnClient == client then return end
     if client:isStaffOnDuty() or not lia.config.get("WallPeek", false) or client:InVehicle() or client:hasValidVehicle() or client:isNoClipping() or not client:CanOverrideView() then
@@ -159,4 +163,4 @@ function MODULE:PrePlayerDraw(drawnClient)
     drawnClient:DrawShadow(visible)
     drawnClient.IsHidden = not visible
     return not visible
-end
+end)
