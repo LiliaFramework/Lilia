@@ -218,7 +218,7 @@ Safely removes the player's ragdoll entity if present.
 * None – This function does not return a value.
 
 **Example Usage:**
-**Example Usage:**
+
 ```lua
 -- Clean up any ragdoll left behind
 player:removeRagdoll()
@@ -244,7 +244,7 @@ Retrieves the ragdoll entity associated with the player.
 * Entity|None – The ragdoll entity or None.
 
 **Example Usage:**
-**Example Usage:**
+
 ```lua
 local ragdoll = player:getRagdoll()
 ```
@@ -270,7 +270,6 @@ Determines whether the player's position is stuck in the world.
 
 **Example Usage:**
 
-**Example Usage:**
 if player:isStuck() then
     player:SetPos(player:GetPos() + Vector(0, 0, 16))
 end
@@ -286,6 +285,7 @@ Checks if an entity is within the given radius of the player.
 **Parameters:**
 
 * radius (number) – Distance in units.
+
 * entity (Entity) – Entity to compare.
 
 **Realm:**
@@ -298,7 +298,6 @@ Checks if an entity is within the given radius of the player.
 
 **Example Usage:**
 
-**Example Usage:**
 if player:isNearPlayer(128, target) then
     print("Target is nearby")
 end
@@ -314,6 +313,7 @@ Returns a table of entities within radius of the player.
 **Parameters:**
 
 * radius (number) – Search distance in units.
+
 * playerOnly (boolean|None) – Only include players when true.
 
 **Realm:**
@@ -325,10 +325,14 @@ Returns a table of entities within radius of the player.
 * table – List of nearby entities.
 
 **Example Usage:**
-**Example Usage:**
+
 ```lua
 for _, ent in ipairs(player:entitiesNearPlayer(256)) do
-    print(ent)
+    if ent:IsPlayer() then
+        ent:ChatPrint("Someone is close to you!")
+    else
+        DebugDrawBox(ent:GetPos(), ent:OBBMins(), ent:OBBMaxs(), 0, 255, 0, 0, 5)
+    end
 end
 ```
 ---
@@ -352,7 +356,7 @@ Returns the active weapon entity and associated item if equipped.
 * Entity|None – Weapon entity when matched.
 
 **Example Usage:**
-**Example Usage:**
+
 ```lua
 local weapon, item = player:getItemWeapon()
 ```
@@ -378,7 +382,6 @@ Checks whether the player is moving faster than walking speed.
 
 **Example Usage:**
 
-**Example Usage:**
 if player:isRunning() then
     -- player is sprinting
 end
@@ -404,7 +407,7 @@ Returns true if the player's model is considered female.
 * boolean – Whether a female model is detected.
 
 **Example Usage:**
-**Example Usage:**
+
 ```lua
 if player:isFemale() then
     print("Female model detected")
@@ -456,7 +459,7 @@ Returns the player's inventory item list if a character is loaded.
 * table|None – Table of items or None if absent.
 
 **Example Usage:**
-**Example Usage:**
+
 ```lua
 -- Iterate player's items to calculate total weight
 for _, it in pairs(player:getItems() or {}) do
@@ -482,7 +485,7 @@ Performs a simple trace from the player's shoot position.
 **Returns:**
 
 * Entity|None – The entity hit or None.
-**Example Usage:**
+
 **Example Usage:**
 
 ```lua
@@ -508,7 +511,7 @@ Returns a hull trace in front of the player.
 **Returns:**
 
 * table – Trace result.
-**Example Usage:**
+
 **Example Usage:**
 
 ```lua
@@ -534,7 +537,7 @@ Returns the entity the player is looking at within a distance.
 **Returns:**
 
 * Entity|None – The entity or None if too far.
-**Example Usage:**
+
 **Example Usage:**
 
 ```lua
@@ -559,8 +562,11 @@ Sends a plain notification message to the player.
 **Realm:**
 
 * Server
+
 **Returns:**
+
 **Example Usage:**
+
 * None – This function does not return a value.
 
 **Example Usage:**
@@ -581,11 +587,13 @@ Sends a localized notification to the player.
 **Parameters:**
 
 * message (string) – Translation key.
+
 * ... – Additional parameters for localization.
 
 **Realm:**
 
 * Server
+
 **Example Usage:**
 
 * None – This function does not return a value.
@@ -612,7 +620,9 @@ Determines whether the player can edit the given vendor.
 **Realm:**
 
 * Server
+
 **Example Usage:**
+
 **Returns:**
 
 * boolean – True if allowed to edit.
@@ -638,7 +648,9 @@ Convenience wrapper to check if the player is in the "user" group.
 **Realm:**
 
 * Shared
+
 **Example Usage:**
+
 **Returns:**
 
 * boolean – Whether usergroup is "user".
@@ -664,7 +676,9 @@ Returns true if the player belongs to a staff group.
 **Realm:**
 
 * Shared
+
 **Example Usage:**
+
 **Returns:**
 
 * boolean – Result from the privilege check.
@@ -690,7 +704,9 @@ Checks whether the player is in the VIP group.
 **Realm:**
 
 * Shared
+
 **Example Usage:**
+
 **Returns:**
 
 * boolean – Result from privilege check.
@@ -772,7 +788,7 @@ Returns true if the player's character is of the given class.
 **Returns:**
 
 * boolean – Whether the character matches the class.
-**Example Usage:**
+
 **Example Usage:**
 
 ```lua
@@ -870,7 +886,9 @@ Returns the class table of the player's current class.
 * None
 
 **Realm:**
+
 **Example Usage:**
+
 * Shared
 
 **Returns:**
@@ -896,7 +914,9 @@ Compatibility helper for retrieving money with DarkRP-style calls.
 * var (string) – Currently only supports "money".
 
 **Realm:**
+
 **Example Usage:**
+
 * Shared
 
 **Returns:**
@@ -972,6 +992,7 @@ Verifies the player's character meets an attribute level.
 **Parameters:**
 
 * skill (string) – Attribute ID.
+
 * level (number) – Required level.
 
 **Realm:**
@@ -1025,8 +1046,11 @@ Plays an animation sequence and optionally freezes the player.
 **Parameters:**
 
 * sequenceName (string) – Sequence to play.
+
 * callback (function|None) – Called when finished.
+
 * time (number|None) – Duration override.
+
 * noFreeze (boolean) – Don't freeze movement when true.
 
 **Realm:**
@@ -1058,6 +1082,7 @@ Stops any forced sequence and restores player movement.
 **Realm:**
 
 * Shared
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -1083,7 +1108,9 @@ Increases the player's stamina value.
 **Realm:**
 
 * Server
+
 * Returns:
+
 * None – This function does not return a value.
 
 **Example Usage:**
@@ -1107,7 +1134,9 @@ Reduces the player's stamina value.
 **Realm:**
 
 * Server
+
 * Returns:
+
 * None – This function does not return a value.
 
 **Example Usage:**
@@ -1131,6 +1160,7 @@ Adds funds to the player's character, clamping to limits.
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -1157,6 +1187,7 @@ Removes money from the player's character.
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -1305,6 +1336,7 @@ Sets or clears whitelist permission for a faction.
 **Parameters:**
 
 * faction (number) – Faction index.
+
 * whitelisted (boolean|None) – Enable when true, disable when false/nil.
 
 **Realm:**
@@ -1381,7 +1413,9 @@ Stores a value in the player's persistent data table.
 **Parameters:**
 
 * key (string) – Data key.
+
 * value (any) – Value to store.
+
 * noNetworking (boolean|None) – Skip network update when true.
 
 **Realm:**
@@ -1408,6 +1442,7 @@ Sends a waypoint to the client at the specified position.
 **Parameters:**
 
 * name (string) – Display label.
+
 * vector (Vector) – World position.
 
 **Realm:**
@@ -1434,6 +1469,7 @@ Alias of `setWaypoint()` for backwards compatibility.
 **Parameters:**
 
 * name (string) – Display label.
+
 * vector (Vector) – World position.
 
 **Realm:**
@@ -1460,7 +1496,9 @@ Creates a waypoint using a custom logo material.
 **Parameters:**
 
 * name (string) – Display label.
+
 * vector (Vector) – World position.
+
 * logo (string) – Material path for the icon.
 
 **Realm:**
@@ -1487,6 +1525,7 @@ Retrieves a stored value from the player's data table.
 **Parameters:**
 
 * key (string) – Data key.
+
 * default (any) – Returned if the key is nil.
 
 **Realm:**
@@ -1563,6 +1602,7 @@ Broadcasts animation bone data to all clients.
 **Parameters:**
 
 * active (boolean) – Enable or disable manipulation.
+
 * boneData (table) – Map of bone names to angles.
 
 **Realm:**
@@ -1589,7 +1629,9 @@ Displays an action bar for a set duration and optionally runs a callback.
 **Parameters:**
 
 * text (string|None) – Text to display, or nil to clear.
+
 * time (number|None) – How long to show it for.
+
 * callback (function|None) – Executed when time elapses.
 
 **Realm:**
@@ -1616,9 +1658,13 @@ Runs an action only while the player stares at the entity.
 **Parameters:**
 
 * entity (Entity) – Target entity.
+
 * callback (function) – Called when the timer finishes.
+
 * time (number) – Duration in seconds.
+
 * onCancel (function|None) – Called if gaze breaks.
+
 * distance (number|None) – Max distance to maintain.
 
 **Realm:**
@@ -1670,8 +1716,11 @@ Prompts the client with a dropdown selection dialog.
 **Parameters:**
 
 * title (string) – Window title.
+
 * subTitle (string) – Description text.
+
 * options (table) – Table of options.
+
 * callback (function) – Receives the chosen value.
 
 **Realm:**
@@ -1698,9 +1747,13 @@ Asks the client to select one or more options from a list.
 **Parameters:**
 
 * title (string) – Window title.
+
 * subTitle (string) – Description text.
+
 * options (table) – Available options.
+
 * limit (number) – Maximum selections allowed.
+
 * callback (function) – Receives the chosen values.
 
 **Realm:**
@@ -1727,8 +1780,11 @@ Requests a string from the client.
 **Parameters:**
 
 * title (string) – Prompt title.
+
 * subTitle (string) – Prompt description.
+
 * callback (function|None) – Called with the string.
+
 * default (string|None) – Default value.
 
 **Realm:**
@@ -1755,9 +1811,13 @@ Displays a yes/no style question to the player.
 **Parameters:**
 
 * question (string) – Main text.
+
 * option1 (string) – Text for the first option.
+
 * option2 (string) – Text for the second option.
+
 * manualDismiss (boolean) – Require manual closing.
+
 * callback (function) – Called with chosen value.
 
 **Realm:**
@@ -1809,6 +1869,7 @@ Spawns a ragdoll copy of the player and optionally freezes it.
 **Parameters:**
 
 * freeze (boolean|None) – Disable physics when true.
+
 * isDead (boolean|None) – Mark as a death ragdoll.
 
 **Realm:**
@@ -1835,8 +1896,11 @@ Toggles the player's ragdoll state for a duration.
 **Parameters:**
 
 * state (boolean) – Enable or disable ragdoll.
+
 * time (number|None) – Duration before standing up.
+
 * getUpGrace (number|None) – Extra time to prevent early stand.
+
 * getUpMessage (string|None) – Message while downed.
 
 **Realm:**
@@ -1888,6 +1952,7 @@ Sets a networked local variable on the player.
 **Parameters:**
 
 * key (string) – Variable name.
+
 * value (any) – Value to set.
 
 **Realm:**
@@ -1939,7 +2004,9 @@ Displays a waypoint on the HUD until the player reaches it.
 **Parameters:**
 
 * name (string) – Display label.
+
 * vector (Vector) – World position.
+
 * onReach (function|None) – Called when reached.
 
 **Realm:**
@@ -1966,7 +2033,9 @@ Alias of the client version of `setWaypoint`.
 **Parameters:**
 
 * name (string) – Display label.
+
 * vector (Vector) – World position.
+
 * onReach (function|None) – Called when reached.
 
 **Realm:**
@@ -1993,8 +2062,11 @@ Places a waypoint using a logo material on the client HUD.
 **Parameters:**
 
 * name (string) – Display label.
+
 * vector (Vector) – Position to navigate to.
+
 * logo (string) – Material path for the icon.
+
 * onReach (function|None) – Called when reached.
 
 **Realm:**
@@ -2021,6 +2093,7 @@ Client side accessor for stored player data.
 **Parameters:**
 
 * key (string) – Data key.
+
 * default (any) – Fallback value.
 
 **Realm:**
@@ -2072,6 +2145,7 @@ Applies or clears clientside bone angles based on animation data.
 **Parameters:**
 
 * active (boolean) – Enable or disable animation.
+
 * boneData (table) – Bones and angles to apply.
 
 **Realm:**

@@ -12,19 +12,22 @@ The bars library manages health, stamina, and other progress bars displayed on t
 
 ### lia.bar.get(identifier)
 
-    
+
 **Description:**
 
 Retrieves a bar object from the list by its unique identifier.
 **Parameters:**
 
 * identifier (string) – The unique identifier of the bar to retrieve.
+
 **Realm:**
 
 * Client
+
 **Returns:**
 
 * table or nil – The bar table if found, or nil if not found.
+
 **Example Usage:**
 
 ```lua
@@ -40,7 +43,7 @@ Retrieves a bar object from the list by its unique identifier.
 
 ### lia.bar.add(getValue, color, priority, identifier)
 
-    
+
 **Description:**
 
 Adds a new bar or replaces an existing one in the bar list.
@@ -49,15 +52,21 @@ Bars are drawn in order of ascending priority.
 **Parameters:**
 
 * getValue (function) – A callback that returns the current value of the bar.
+
 * color (Color) – The fill color for the bar. Defaults to a random pastel color.
+
 * priority (number) – Determines drawing order; lower values draw first. Defaults to end of list.
+
 * identifier (string) – Optional unique identifier for the bar.
+
 **Realm:**
 
 * Client
+
 **Returns:**
 
 * number – The priority assigned to the added bar.
+
 **Example Usage:**
 
 ```lua
@@ -75,19 +84,22 @@ Bars are drawn in order of ascending priority.
 
 ### lia.bar.remove(identifier)
 
-    
+
 **Description:**
 
 Removes a bar from the list based on its unique identifier.
 **Parameters:**
 
 * identifier (string) – The unique identifier of the bar to remove.
+
 **Realm:**
 
 * Client
+
 **Returns:**
 
 * nil
+
 **Example Usage:**
 
 ```lua
@@ -100,7 +112,7 @@ Removes a bar from the list based on its unique identifier.
 
 ### lia.bar.drawBar(x, y, w, h, pos, max, color)
 
-    
+
 **Description:**
 
 Draws a single horizontal bar at the specified screen coordinates,
@@ -108,18 +120,27 @@ filling it proportionally based on pos and max.
 **Parameters:**
 
 * x (number) – The x-coordinate of the bar's top-left corner.
+
 * y (number) – The y-coordinate of the bar's top-left corner.
+
 * w (number) – The total width of the bar (including padding).
+
 * h (number) – The total height of the bar.
+
 * pos (number) – The current value to display (will be clamped to max).
+
 * max (number) – The maximum possible value for the bar.
+
 * color (Color) – The color to fill the bar.
+
 **Realm:**
 
 * Client
+
 **Returns:**
 
 * nil
+
 **Example Usage:**
 
 ```lua
@@ -132,7 +153,7 @@ filling it proportionally based on pos and max.
 
 ### lia.bar.drawAction(text, duration)
 
-    
+
 **Description:**
 
 Displays a temporary action progress bar with accompanying text
@@ -140,13 +161,17 @@ for the specified duration on the HUD.
 **Parameters:**
 
 * text (string) – The text to display above the progress bar.
+
 * duration (number) – Duration in seconds for which the bar is displayed.
+
 **Realm:**
 
 * Client
+
 **Returns:**
 
 * nil
+
 **Example Usage:**
 
 ```lua
@@ -159,7 +184,7 @@ for the specified duration on the HUD.
 
 ### lia.bar.drawAll()
 
-    
+
 **Description:**
 
 Iterates through all registered bars, applies smoothing to their values,
@@ -167,12 +192,15 @@ and draws them on the HUD according to their priority and visibility rules.
 **Parameters:**
 
 * None
+
 **Realm:**
 
 * Client
+
 **Returns:**
 
 * nil
+
 **Example Usage:**
 
 ```lua

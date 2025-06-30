@@ -38,12 +38,17 @@ Called after the F1 menu panel is created so additional sections can be added. P
 ```lua
 -- Adds a custom hunger info field after the menu is ready.
 hook.Add("LoadCharInformation", "AddHungerField", function()
-    local char = LocalPlayer():getChar()
-    if char then
-        hook.Run("AddTextField", L("generalInfo"), "hunger", "Hunger", function()
-            return char:getData("hunger", 0) .. "%"
-        end)
+    local ply = LocalPlayer()
+    local char = ply:getChar()
+    if not char then return end
+
+    local function hungerField()
+        local hunger = char:getData("hunger", 0)
+        local color = hunger < 25 and Color(200, 50, 50) or color_white
+        return string.format("%d%%", hunger), color
     end
+
+    hook.Run("AddTextField", L("generalInfo"), "hunger", "Hunger", hungerField)
 end)
 ```
 
@@ -102,6 +107,7 @@ Runs every frame when the character model panel draws. Lets code draw over the m
 **Parameters:**
 
 * panel (Panel) – The model panel being drawn.
+
 * entity (Entity) – Model entity displayed.
 
 **Realm:**
@@ -146,6 +152,7 @@ Determines if a scoreboard field such as a player's name or model can be replace
 **Parameters:**
 
 * client (Player) – Player being displayed.
+
 * field (string) – Field name such as "name" or "model".
 
 **Realm:**
@@ -270,8 +277,11 @@ Gives a chance to draw additional info over item icons. Allows drawing over item
 **Parameters:**
 
 * panel (Panel) – Icon panel.
+
 * itemTable (table) – Item data.
+
 * width (number) – Panel width.
+
 * height (number) – Panel height.
 
 **Realm:**
@@ -302,7 +312,9 @@ Allows extensions to populate the right-click menu for an item. Allows overridin
 **Parameters:**
 
 * panel (Panel) – Icon panel.
+
 * menu (Panel) – Menu being built.
+
 * itemTable (table) – Item data.
 
 **Realm:**
@@ -335,6 +347,7 @@ Determines whether an item action should be displayed. Determines whether a spec
 **Parameters:**
 
 * itemTable (table) – Item data.
+
 * action (string) – Action key.
 
 **Realm:**
@@ -398,6 +411,7 @@ Populate the scoreboard context menu with extra options. Allows modules to add s
 **Parameters:**
 
 * player (Player) – Target player.
+
 * options (table) – Options table to populate.
 
 **Realm:**
@@ -434,6 +448,7 @@ Supplies the description text shown on the scoreboard. Returns the description t
 **Parameters:**
 
 * player (Player) – Target player.
+
 * isOOC (boolean) – Whether OOC description is requested.
 
 **Realm:**
@@ -562,6 +577,7 @@ Allows modification of the markup before chat messages are printed. Allows modif
 **Parameters:**
 
 * text (string) – Base markup text.
+
 * ... – Additional segments.
 
 **Realm:**
@@ -593,7 +609,9 @@ Add extra lines to an item tooltip. Populates additional information for an item
 **Parameters:**
 
 * extra (table) – Info table to fill.
+
 * client (Player) – Local player.
+
 * item (table) – Item being displayed.
 
 **Realm:**
@@ -684,6 +702,7 @@ Lets modules insert additional information on the main menu info panel. Allows m
 **Parameters:**
 
 * info (table) – Table to receive information.
+
 * character (Character) – Selected character.
 
 **Realm:**
@@ -745,6 +764,7 @@ Lets you edit the clientside model used in the main menu. Allows adjustments to 
 **Parameters:**
 
 * entity (Entity) – Model entity.
+
 * character (Character) – Character data.
 
 **Realm:**
@@ -924,6 +944,7 @@ Called when CAMI registers a new usergroup. CAMI notification that a usergroup w
 **Parameters:**
 
 * usergroup (table) – Registered usergroup data.
+
 * source (string) – Source identifier.
 
 **Realm:**
@@ -954,6 +975,7 @@ Called when a usergroup is removed from CAMI. CAMI notification that a usergroup
 **Parameters:**
 
 * usergroup (table) – Unregistered usergroup data.
+
 * source (string) – Source identifier.
 
 **Realm:**
@@ -1042,10 +1064,15 @@ Allows an override of player privilege checks. Allows external libraries to over
 **Parameters:**
 
 * handler (function) – Default handler.
+
 * actor (Player) – Player requesting access.
+
 * privilegeName (string) – Privilege identifier.
+
 * callback (function) – Callback to receive result.
+
 * target (Player) – Optional target player.
+
 * extra (table) – Extra information table.
 
 **Realm:**
@@ -1079,10 +1106,15 @@ Allows an override of SteamID-based privilege checks. Similar to PlayerHasAccess
 **Parameters:**
 
 * handler (function) – Default handler.
+
 * steamID (string) – SteamID to check.
+
 * privilegeName (string) – Privilege identifier.
+
 * callback (function) – Callback to receive result.
+
 * targetID (string) – Target SteamID.
+
 * extra (table) – Extra information table.
 
 **Realm:**
@@ -1116,8 +1148,11 @@ Notification that a player's group changed. Fired when a player's usergroup has 
 **Parameters:**
 
 * player (Player) – Affected player.
+
 * oldGroup (string) – Previous group.
+
 * newGroup (string) – New group.
+
 * source (string) – Source identifier.
 
 **Realm:**
@@ -1148,8 +1183,11 @@ Notification that a SteamID's group changed. Fired when a SteamID's usergroup ha
 **Parameters:**
 
 * steamID (string) – Affected SteamID.
+
 * oldGroup (string) – Previous group.
+
 * newGroup (string) – New group.
+
 * source (string) – Source identifier.
 
 **Realm:**
@@ -1209,7 +1247,9 @@ Draw custom visuals on the tooltip, returning true skips default painting.
 **Parameters:**
 
 * panel (Panel) – Tooltip panel.
+
 * width (number) – Panel width.
+
 * height (number) – Panel height.
 
 **Realm:**
@@ -1242,6 +1282,7 @@ Runs when a tooltip is opened for a panel.
 **Parameters:**
 
 * panel (Panel) – Tooltip panel.
+
 * target (Panel) – Target panel that opened the tooltip.
 
 **Realm:**
@@ -1304,7 +1345,9 @@ Determines if a player's death should permanently kill their character. Return t
 **Parameters:**
 
 * client (Player) – Player that died.
+
 * inflictor (Entity) – Damage inflictor.
+
 * attacker (Entity) – Damage attacker.
 
 **Realm:**
@@ -1337,6 +1380,7 @@ Checks if a player may drop an item. Return false to block dropping.
 **Parameters:**
 
 * client (Player) – Player attempting to drop.
+
 * item (table) – Item being dropped.
 
 **Realm:**
@@ -1369,6 +1413,7 @@ Determines if a player can pick up an item. Return false to prevent taking.
 **Parameters:**
 
 * client (Player) – Player attempting pickup.
+
 * item (table) – Item in question.
 
 **Realm:**
@@ -1401,6 +1446,7 @@ Queries if a player can equip an item. Returning false stops the equip action.
 **Parameters:**
 
 * client (Player) – Player equipping.
+
 * item (table) – Item to equip.
 
 **Realm:**
@@ -1433,6 +1479,7 @@ Called before an item is unequipped. Return false to keep the item equipped.
 **Parameters:**
 
 * client (Player) – Player unequipping.
+
 * item (table) – Item being unequipped.
 
 **Realm:**
@@ -1465,8 +1512,11 @@ Runs after chat messages are processed. Allows reacting to player chat.
 **Parameters:**
 
 * client (Player) – Speaking player.
+
 * message (string) – Chat text.
+
 * chatType (string) – Chat channel.
+
 * anonymous (boolean) – Whether the message was anonymous.
 
 **Realm:**
@@ -1733,6 +1783,7 @@ Called when a player's character disconnects. Provides a last chance to handle d
 **Parameters:**
 
 * client (Player) – Disconnecting player.
+
 * character (Character) – Their character.
 
 **Realm:**
@@ -2131,7 +2182,9 @@ Allows custom drawing of entity information in the world. Drawn every frame whil
 **Parameters:**
 
 * entity (Entity) – Entity to draw info for.
+
 * alpha (number) – Current alpha value.
+
 * position (table) – Screen position table.
 
 **Realm:**
@@ -2224,7 +2277,9 @@ Allows modules to add lines to the character info display. Called when building 
 **Parameters:**
 
 * player (Player) – Player being displayed.
+
 * character (Character) – Their character data.
+
 * info (table) – Table to add lines to.
 
 **Realm:**
@@ -2342,8 +2397,11 @@ Notifies when inventory metadata changes. Provides old and new values.
 **Parameters:**
 
 * inventory (table) – Inventory affected.
+
 * key (string) – Data key.
+
 * oldValue (any) – Previous value.
+
 * value (any) – New value.
 
 **Realm:**
@@ -2434,6 +2492,7 @@ Invoked when an item is placed into an inventory. Lets code react to the additio
 **Parameters:**
 
 * inventory (table) – Inventory receiving the item.
+
 * item (table) – Item added.
 
 **Realm:**
@@ -2464,6 +2523,7 @@ Called when an item is removed from an inventory. Runs after the item table is u
 **Parameters:**
 
 * inventory (table) – Inventory modified.
+
 * item (table) – Item removed.
 
 **Realm:**
@@ -2552,8 +2612,11 @@ Runs when a networked character variable changes. Gives both old and new values.
 **Parameters:**
 
 * character (Character) – Affected character.
+
 * key (string) – Variable name.
+
 * oldValue (any) – Previous value.
+
 * value (any) – New value.
 
 **Realm:**
@@ -2586,8 +2649,11 @@ Similar to OnCharVarChanged but for local-only variables. Called after the table
 **Parameters:**
 
 * character (Character) – Affected character.
+
 * key (string) – Variable name.
+
 * oldVar (any) – Old value.
+
 * value (any) – New value.
 
 **Realm:**
@@ -2620,8 +2686,11 @@ Called when item data values change clientside. Provides both the old and new va
 **Parameters:**
 
 * item (table) – Item modified.
+
 * key (string) – Key that changed.
+
 * oldValue (any) – Previous value.
+
 * value (any) – New value.
 
 **Realm:**
@@ -2654,7 +2723,9 @@ Runs when an item's quantity value updates. Allows reacting to stack changes.
 **Parameters:**
 
 * item (table) – Item affected.
+
 * oldQuantity (number) – Previous quantity.
+
 * quantity (number) – New quantity.
 
 **Realm:**
@@ -2685,6 +2756,7 @@ Indicates that a character was forcefully removed. isCurrentChar denotes if it w
 **Parameters:**
 
 * id (number) – Character identifier.
+
 * isCurrentChar (boolean) – Was this the active character?
 
 **Realm:**
@@ -2715,9 +2787,13 @@ Server receives a request to move an item. Modules can validate or modify the tr
 **Parameters:**
 
 * client (Player) – Requesting player.
+
 * itemID (number) – Item identifier.
+
 * x (number) – X position.
+
 * y (number) – Y position.
+
 * inventoryID (number|string) – Target inventory ID.
 
 **Realm:**
@@ -2808,6 +2884,7 @@ Fired when a character is deleted. Provides the owning player if available.
 **Parameters:**
 
 * client (Player) – Player who deleted.
+
 * id (number) – Character identifier.
 
 **Realm:**
@@ -2838,7 +2915,9 @@ Invoked after a new character is created. Supplies the character table and creat
 **Parameters:**
 
 * client (Player) – Owner player.
+
 * character (table) – New character object.
+
 * data (table) – Raw creation info.
 
 **Realm:**
@@ -2956,6 +3035,7 @@ Fires when the character list is refreshed. Gives both old and new tables.
 **Parameters:**
 
 * oldCharList (table) – Previous list.
+
 * newCharList (table) – Updated list.
 
 **Realm:**
@@ -3015,6 +3095,7 @@ Alters the stamina offset applied each tick while sprinting. Return a new cost t
 **Parameters:**
 
 * client (Player) – Player that is sprinting.
+
 * runCost (number) – Proposed stamina cost.
 
 **Realm:**
@@ -3045,6 +3126,7 @@ Allows changing how quickly stamina regenerates when not sprinting. Return a new
 **Parameters:**
 
 * client (Player) – Player recovering stamina.
+
 * regen (number) – Default regeneration per tick.
 
 **Realm:**
@@ -3077,6 +3159,7 @@ Final hook for tweaking the calculated stamina offset. Return the modified offse
 **Parameters:**
 
 * client (Player) – Player whose stamina is updating.
+
 * offset (number) – Current offset after other adjustments.
 
 **Realm:**
@@ -3107,6 +3190,7 @@ Runs after all font files have loaded. Allows registering additional fonts.
 **Parameters:**
 
 * currentFont (string) – Name of the primary UI font.
+
 * genericFont (string) – Name of the generic fallback font.
 
 **Realm:**
@@ -3137,10 +3221,15 @@ Called when the F1 menu builds status bars so new fields can be added.
 **Parameters:**
 
 * sectionName (string) – Section identifier.
+
 * fieldName (string) – Unique field name.
+
 * labelText (string) – Display label for the bar.
+
 * minFunc (function) – Returns the minimum value.
+
 * maxFunc (function) – Returns the maximum value.
+
 * valueFunc (function) – Returns the current value.
 
 **Realm:**
@@ -3171,8 +3260,11 @@ Fired when building the F1 menu so modules can insert additional sections.
 **Parameters:**
 
 * sectionName (string) – Name of the section.
+
 * color (Color) – Display color.
+
 * priority (number) – Sort order priority.
+
 * location (number) – Column/location index.
 
 **Realm:**
@@ -3206,8 +3298,11 @@ Determines whether an item may move between inventories.
 **Parameters:**
 
 * item (Item) – Item being transferred.
+
 * oldInventory (Inventory) – Source inventory.
+
 * newInventory (Inventory) – Destination inventory.
+
 * client (Player) – Owning player.
 
 **Realm:**
@@ -3302,6 +3397,7 @@ Determines if a player can modify a vendor's settings.
 **Parameters:**
 
 * client (Player) – Player attempting the edit.
+
 * vendor (Entity) – Vendor entity targeted.
 
 **Realm:**
@@ -3332,6 +3428,7 @@ Called when a player attempts to pick up a money entity.
 **Parameters:**
 
 * client (Player) – Player attempting to pick up the money.
+
 * moneyEntity (Entity) – The money entity.
 
 **Realm:**
@@ -3364,7 +3461,9 @@ Determines if a player can open or lock a door entity.
 **Parameters:**
 
 * client (Player) – Player attempting access.
+
 * door (Entity) – Door entity in question.
+
 * access (number) – Desired access level.
 
 **Realm:**
@@ -3397,6 +3496,7 @@ Checks if a player is permitted to open a vendor menu.
 **Parameters:**
 
 * client (Player) – Player requesting access.
+
 * vendor (Entity) – Vendor entity.
 
 **Realm:**
@@ -3429,6 +3529,7 @@ Determines if the player can pick up an entity with the hands swep.
 **Parameters:**
 
 * client (Player) – Player attempting to hold the entity.
+
 * entity (Entity) – Target entity.
 
 **Realm:**
@@ -3461,7 +3562,9 @@ Called when a player tries to use or drop an item.
 **Parameters:**
 
 * client (Player) – Player interacting with the item.
+
 * action (string) – Action name such as "use" or "drop".
+
 * item (Item) – Item being interacted with.
 
 **Realm:**
@@ -3494,6 +3597,7 @@ Called when a player attempts to knock on a door.
 **Parameters:**
 
 * client (Player) – Player knocking.
+
 * door (Entity) – Door being knocked on.
 
 **Realm:**
@@ -3526,7 +3630,9 @@ Checks if the player is allowed to spawn a storage container.
 **Parameters:**
 
 * client (Player) – Player attempting to spawn.
+
 * entity (Entity) – Prop that will become storage.
+
 * data (table) – Storage definition data.
 
 **Realm:**
@@ -3590,8 +3696,11 @@ Checks whether a vendor trade is allowed.
 **Parameters:**
 
 * client (Player) – Player attempting the trade.
+
 * vendor (Entity) – Vendor entity involved.
+
 * itemType (string) – Item identifier.
+
 * selling (boolean) – True if the player is selling to the vendor.
 
 **Realm:**
@@ -3653,6 +3762,7 @@ Called before persistent storage saves.
 **Parameters:**
 
 * entity (Entity) – Storage entity being saved.
+
 * inventory (Inventory) – Inventory associated with the entity.
 
 **Realm:**
@@ -3685,6 +3795,7 @@ Allows custom checks for a character's permission flags.
 **Parameters:**
 
 * character (Character) – Character to check.
+
 * flags (string) – Flags being queried.
 
 **Realm:**
@@ -3776,9 +3887,13 @@ Called when an item entity draws its description text.
 **Parameters:**
 
 * entity (Entity) – Item entity being drawn.
+
 * x (number) – X screen position.
+
 * y (number) – Y screen position.
+
 * color (Color) – Text color.
+
 * alpha (number) – Current alpha value.
 
 **Realm:**
@@ -3871,7 +3986,9 @@ Lets addons modify how much damage the fists weapon deals.
 **Parameters:**
 
 * client (Player) – Punching player.
+
 * damage (number) – Base damage value.
+
 * context (table) – Additional context table.
 
 **Realm:**
@@ -3902,7 +4019,9 @@ Allows overriding default clicks on inventory icons.
 **Parameters:**
 
 * self (Panel) – Inventory panel.
+
 * itemIcon (Panel) – Icon that was clicked.
+
 * keyCode (number) – Key that was pressed.
 
 **Realm:**
@@ -3935,7 +4054,9 @@ Called when the system attempts to combine one item with another in an inventory
 **Parameters:**
 
 * client (Player) – Owning player.
+
 * item (Item) – Item being combined.
+
 * targetItem (Item) – Item it is being combined with.
 
 **Realm:**
@@ -3970,6 +4091,7 @@ Called when an item icon is dragged completely out of an inventory.
 **Parameters:**
 
 * client (Player) – Player dragging the item.
+
 * item (Item) – Item being removed.
 
 **Realm:**
@@ -4000,9 +4122,13 @@ Triggered whenever an item function is executed by a player.
 **Parameters:**
 
 * item (Item) – Item on which the function ran.
+
 * action (string) – Action identifier.
+
 * client (Player) – Player performing the action.
+
 * entity (Entity|nil) – Target entity if any.
+
 * result (any) – Result returned by the item function.
 
 **Realm:**
@@ -4062,7 +4188,9 @@ Called when a character ragdolls or is forced to fall over.
 **Parameters:**
 
 * client (Player) – Player being ragdolled.
+
 * ragdoll (Entity|nil) – Created ragdoll entity if any.
+
 * forced (boolean) – True when the ragdoll was forced.
 
 **Realm:**
@@ -4095,6 +4223,7 @@ Called when a character is kicked from the server.
 **Parameters:**
 
 * character (Character) – Character that was kicked.
+
 * client (Player) – Player owning the character.
 
 **Realm:**
@@ -4125,6 +4254,7 @@ Called when a character is permanently killed.
 **Parameters:**
 
 * character (Character) – Character being permanently killed.
+
 * time (number|nil) – Ban duration or nil for permanent.
 
 **Realm:**
@@ -4184,11 +4314,17 @@ Called after a character buys from or sells to a vendor.
 **Parameters:**
 
 * client (Player) – Player completing the trade.
+
 * vendor (Entity) – Vendor entity involved.
+
 * item (Item|nil) – Item traded, if any.
+
 * selling (boolean) – True if selling to the vendor.
+
 * character (Character) – Player's character.
+
 * itemType (string|nil) – Item identifier when item is nil.
+
 * failed (boolean|nil) – True if the trade failed.
 
 **Realm:**
@@ -4219,7 +4355,9 @@ Called when a ragdoll entity is created for a player.
 **Parameters:**
 
 * client (Player) – The player the ragdoll belongs to.
+
 * entity (Entity) – The ragdoll entity.
+
 * dead (boolean) – True if the player died.
 
 **Realm:**
@@ -4252,7 +4390,9 @@ Called when both the player's inventory and storage panels are created.
 **Parameters:**
 
 * localPanel (Panel) – The player's inventory panel.
+
 * storagePanel (Panel) – The storage entity's panel.
+
 * storage (Entity) – The storage entity.
 
 **Realm:**
@@ -4285,6 +4425,7 @@ Called when a new item instance is placed into an inventory.
 **Parameters:**
 
 * client (Player|nil) – Owner of the inventory the item was added to.
+
 * item (Item) – Item that was inserted.
 
 **Realm:**
@@ -4317,6 +4458,7 @@ Called when a new item instance table is initialized.
 **Parameters:**
 
 * itemTable (table) – Item definition table.
+
 * entity (Entity) – Spawned item entity.
 
 **Realm:**
@@ -4378,6 +4520,7 @@ Called when the vendor dialog panel is opened.
 **Parameters:**
 
 * panel (Panel) – The vendor menu panel.
+
 * vendor (Entity) – The vendor entity.
 
 **Realm:**
@@ -4408,6 +4551,7 @@ Called after a player picks up a money entity.
 **Parameters:**
 
 * client (Player) – The player picking up the money.
+
 * moneyEntity (Entity) – The money entity collected.
 
 **Realm:**
@@ -4438,9 +4582,13 @@ Fired when a scripted animation sequence begins.
 **Parameters:**
 
 * client (Player) – Player starting the sequence.
+
 * sequence (string) – Sequence name.
+
 * callback (function) – Completion callback.
+
 * time (number) – Duration in seconds.
+
 * noFreeze (boolean) – True if the player should not be frozen.
 
 **Realm:**
@@ -4473,9 +4621,13 @@ Runs after a player has interacted with an item.
 **Parameters:**
 
 * client (Player) – Player performing the interaction.
+
 * action (string) – Action key used.
+
 * item (Item) – Item affected.
+
 * result (any) – Result returned by the action.
+
 * data (table|nil) – Additional data table.
 
 **Realm:**
@@ -4506,7 +4658,9 @@ Called when a player changes to a new class.
 **Parameters:**
 
 * client (Player) – The player switching classes.
+
 * class (table|number) – New class table or index.
+
 * oldClass (table|number) – Previous class table or index.
 
 **Realm:**
@@ -4599,7 +4753,9 @@ Occurs right before a player's class changes.
 **Parameters:**
 
 * client (Player) – Player who is switching.
+
 * class (table|number) – Class being joined.
+
 * oldClass (table|number) – Class being left.
 
 **Realm:**
@@ -4632,9 +4788,13 @@ Called when the UI asks to move an item between inventories.
 **Parameters:**
 
 * panel (Panel) – Inventory panel requesting the move.
+
 * itemID (number) – Identifier of the item to move.
+
 * inventoryID (number|string) – Destination inventory ID.
+
 * x (number) – Destination X coordinate.
+
 * y (number) – Destination Y coordinate.
 
 **Realm:**
@@ -4694,6 +4854,7 @@ Occurs when a player successfully opens a vendor.
 **Parameters:**
 
 * client (Player) – Player accessing the vendor.
+
 * vendor (Entity) – Vendor entity opened.
 
 **Realm:**
@@ -4786,6 +4947,7 @@ Fires when a player lands a punch with the fists weapon.
 **Parameters:**
 
 * client (Player) – Punching player.
+
 * trace (table) – Trace result of the punch.
 
 **Realm:**
@@ -4816,6 +4978,7 @@ Called each frame after the inventory panel draws.
 **Parameters:**
 
 * panel (Panel) – The inventory panel being drawn.
+
 * parentPanel (Panel|nil) – Parent panel if any.
 
 **Realm:**
@@ -4846,7 +5009,9 @@ Called just before a player interacts with an item.
 **Parameters:**
 
 * client (Player) – Player performing the action.
+
 * action (string) – Action identifier.
+
 * item (Item) – Target item.
 
 **Realm:**
@@ -4937,7 +5102,9 @@ Determines if an item can move in or out of a storage entity.
 **Parameters:**
 
 * client (Player) – Player moving the item.
+
 * storage (Entity) – Storage entity.
+
 * item (Item) – Item being transferred.
 
 **Realm:**
@@ -4970,6 +5137,7 @@ Fired when a storage entity is removed from the world.
 **Parameters:**
 
 * entity (Entity) – The storage entity being removed.
+
 * inventory (Inventory) – Inventory associated with the entity.
 
 **Realm:**
@@ -5000,7 +5168,9 @@ Called when a storage entity is assigned an inventory.
 **Parameters:**
 
 * entity (Entity) – The storage entity.
+
 * inventory (Inventory) – Inventory assigned.
+
 * isCar (boolean) – True if the entity is a vehicle trunk.
 
 **Realm:**
@@ -5033,6 +5203,7 @@ Called clientside when a storage menu is opened.
 **Parameters:**
 
 * entity (Entity) – Storage entity opened.
+
 * isCar (boolean) – True if opening a vehicle trunk.
 
 **Realm:**
@@ -5063,6 +5234,7 @@ Called when a storage's contents are loaded from disk.
 **Parameters:**
 
 * storage (Entity) – Storage entity.
+
 * inventory (Inventory) – Inventory loaded.
 
 **Realm:**
@@ -5656,7 +5828,9 @@ Determines if a player is allowed to earn salary.
 **Parameters:**
 
 * client (Player) – Player to check.
+
 * faction (table) – Faction data for the player.
+
 * class (table) – Class table for the player.
 
 **Realm:**
@@ -5690,7 +5864,9 @@ Determines whether a player can join a certain class. Return `false` to block.
 **Parameters:**
 
 * client (Player) – Player requesting the class.
+
 * class (number) – Class index being joined.
+
 * info (table) – Additional class info table.
 
 **Realm:**
@@ -5723,6 +5899,7 @@ Determines if a player can use a specific command. Return `false` to block usage
 **Parameters:**
 
 * client (Player) – Player running the command.
+
 * command (string) – Command name.
 
 **Realm:**
@@ -5756,7 +5933,9 @@ Determines if a player is allowed to use a door entity, such as opening, locking
 **Parameters:**
 
 * client (Player) – The player attempting to use the door.
+
 * door (Entity) – The door entity being used.
+
 * access (int) – Access type attempted (e.g. DOOR_LOCK).
 
 **Realm:**
@@ -5897,6 +6076,7 @@ Client-side call when creating the graphical representation of an inventory.
 **Parameters:**
 
 * inventory (Inventory) – Inventory instance to draw.
+
 * parent (Panel) – Parent container panel.
 
 **Realm:**
@@ -5980,6 +6160,7 @@ Called when modules include submodules. Useful for advanced module handling or d
 **Parameters:**
 
 * path (string) – Directory path containing the submodule.
+
 * module (table) – Module performing the include.
 
 **Realm:**
@@ -6012,6 +6193,7 @@ Retrieves a default description for a character during creation. Return `(defaul
 **Parameters:**
 
 * client (Player) – Player creating the character.
+
 * faction (number) – Faction index of the new character.
 
 **Realm:**
@@ -6021,6 +6203,7 @@ Retrieves a default description for a character during creation. Return `(defaul
 **Returns:**
 
 * string: The default description.
+
 * boolean: Whether to override.
 
 **Example Usage:**
@@ -6045,7 +6228,9 @@ Retrieves a default name for a character during creation. Return `(defaultName, 
 **Parameters:**
 
 * client (Player) – Player creating the character.
+
 * faction (number) – Faction index.
+
 * data (table) – Additional creation data.
 
 **Realm:**
@@ -6055,6 +6240,7 @@ Retrieves a default name for a character during creation. Return `(defaultName, 
 **Returns:**
 
 * string: The default name.
+
 * boolean: Whether to override the user-provided name.
 
 **Example Usage:**
@@ -6079,7 +6265,9 @@ Retrieves the amount of salary a player should receive.
 **Parameters:**
 
 * client (Player) – Player receiving salary.
+
 * faction (table) – Player's faction data.
+
 * class (table) – Player's class data.
 
 **Realm:**
@@ -6112,7 +6300,9 @@ Retrieves the salary limit for a player.
 **Parameters:**
 
 * client (Player) – Player being checked.
+
 * faction (table) – Player's faction data.
+
 * class (table) – Player's class data.
 
 **Realm:**
@@ -6308,7 +6498,9 @@ Called when a player attempts to lock a door.
 **Parameters:**
 
 * owner (Player) – Player locking the door.
+
 * entity (Entity) – Door entity being locked.
+
 * time (float) – Duration of the locking animation.
 
 **Realm:**
@@ -6344,7 +6536,9 @@ Called when a player attempts to unlock a door.
 **Parameters:**
 
 * owner (Player) – Player unlocking the door.
+
 * entity (Entity) – Door entity being unlocked.
+
 * time (float) – How long the process took.
 
 **Realm:**
@@ -6520,8 +6714,11 @@ Called when a player purchases or sells a door.
 **Parameters:**
 
 * client (Player) – Player buying or selling the door.
+
 * entity (Entity) – Door entity affected.
+
 * buying (boolean) – True if buying, false if selling.
+
 * CallOnDoorChild (function) – Optional callback for door children.
 
 **Realm:**
@@ -6561,9 +6758,13 @@ Called whenever a new log message is added. Allows for custom logic or modificat
 **Parameters:**
 
 * client (Player) – Player associated with the log or nil.
+
 * logType (string) – Type identifier for the log entry.
+
 * logString (string) – Formatted log text.
+
 * category (string) – Category name.
+
 * color (Color) – Display color.
 
 **Realm:**
@@ -6631,8 +6832,11 @@ Called before a chat message is sent. Return `false` to cancel, or modify the me
 **Parameters:**
 
 * speaker (Player) – Player sending the message.
+
 * chatType (string) – Chat type key.
+
 * message (string) – Message contents.
+
 * anonymous (boolean) – True if the speaker is hidden.
 
 **Realm:**
@@ -6666,6 +6870,7 @@ Called when a player's model changes.
 **Parameters:**
 
 * client (Player) – The player whose model changed.
+
 * model (string) – The new model path.
 
 **Realm:**
@@ -6698,6 +6903,7 @@ Called when a player attempts to use a door entity.
 **Parameters:**
 
 * client (Player) – Player using the door.
+
 * entity (Entity) – Door entity targeted.
 
 **Realm:**
@@ -6888,8 +7094,11 @@ Called when a text field is added to an F1 menu information section. Allows modu
 **Parameters:**
 
 * sectionName (string) – Target section name.
+
 * fieldName (string) – Unique field identifier.
+
 * labelText (string) – Text shown for the field.
+
 * valueFunc (function) – Function returning the value string.
 
 **Realm:**
@@ -6922,8 +7131,11 @@ Fired after AddTextField so other modules can react to new fields.
 **Parameters:**
 
 * sectionName (string) – Section name that received the field.
+
 * fieldName (string) – Identifier of the new field.
+
 * labelText (string) – Field label.
+
 * valueFunc (function) – Function returning the field value.
 
 **Realm:**
@@ -6954,10 +7166,15 @@ Triggered after AddBarField inserts a status bar into the F1 menu.
 **Parameters:**
 
 * sectionName (string) – Section identifier.
+
 * fieldName (string) – Bar field name.
+
 * labelText (string) – Bar label text.
+
 * minFunc (function) – Function returning the minimum value.
+
 * maxFunc (function) – Function returning the maximum value.
+
 * valueFunc (function) – Function returning the current value.
 
 **Realm:**
@@ -7106,8 +7323,11 @@ Runs on the client when chat text is received before display. Returning modified
 **Parameters:**
 
 * client (Player) – Player that sent the chat.
+
 * chatType (string) – Chat type identifier.
+
 * text (string) – Message text.
+
 * anonymous (boolean) – True if anonymous chat.
 
 **Realm:**
@@ -7138,6 +7358,7 @@ Requests PAC3 part data after adjustments have been applied.
 **Parameters:**
 
 * wearer (Entity) – Entity wearing the outfit.
+
 * id (string) – Part identifier.
 
 **Realm:**
@@ -7168,7 +7389,9 @@ Allows modules to modify PAC3 part data before it is attached.
 **Parameters:**
 
 * wearer (Entity) – Entity wearing the part.
+
 * id (string) – Part identifier.
+
 * data (table) – Part data table.
 
 **Realm:**
@@ -7200,6 +7423,7 @@ Called when a PAC3 part should be attached to a player.
 **Parameters:**
 
 * client (Player) – Player receiving the part.
+
 * id (string) – Part identifier.
 
 **Realm:**
@@ -7230,6 +7454,7 @@ Triggered when a PAC3 part is removed from a player.
 **Parameters:**
 
 * client (Player) – Player losing the part.
+
 * id (string) – Part identifier being removed.
 
 **Realm:**
@@ -7384,6 +7609,7 @@ Lets modules provide a custom sound when cycling weapons in the selector.
 **Returns:**
 
 * string|nil – Sound path.
+
 * number|nil – Playback pitch.
 
 **Example Usage:**
@@ -7414,6 +7640,7 @@ Similar to WeaponCycleSound but used when confirming a weapon choice.
 **Returns:**
 
 * string|nil – Sound path.
+
 * number|nil – Playback pitch.
 
 **Example Usage:**
@@ -7496,6 +7723,7 @@ Allows modules to modify the respawn delay after death.
 **Parameters:**
 
 * client (Player) – Respawning player.
+
 * baseTime (number) – Default respawn delay.
 
 **Realm:**
@@ -7644,8 +7872,11 @@ Allows modification of character creation data before the character is saved.
 **Parameters:**
 
 * client (Player) – Player creating the character.
+
 * data (table) – Sanitized creation data.
+
 * newData (table) – Table to modify.
+
 * originalData (table) – Raw data before adjustments.
 
 **Realm:**
@@ -7678,7 +7909,9 @@ Determines if a character may switch factions.
 **Parameters:**
 
 * character (table) – Character being transferred.
+
 * newFaction (table) – Faction to join.
+
 * oldFaction (number) – Index of the current faction.
 
 **Realm:**
@@ -7711,6 +7944,7 @@ Called when a player attempts to load one of their characters.
 **Parameters:**
 
 * client (Player) – Player loading the character.
+
 * character (table) – Character being loaded.
 
 **Realm:**
@@ -7743,7 +7977,9 @@ Checks if a player can switch from their current character to another.
 **Parameters:**
 
 * client (Player) – Player attempting the switch.
+
 * currentChar (table) – Currently loaded character.
+
 * newChar (table) – Character to switch to.
 
 **Realm:**
@@ -7776,6 +8012,7 @@ Determines whether the player may lock the given door or vehicle.
 **Parameters:**
 
 * client (Player) – Player attempting to lock.
+
 * door (Entity) – Door or vehicle entity.
 
 **Realm:**
@@ -7808,6 +8045,7 @@ Determines whether the player may unlock the given door or vehicle.
 **Parameters:**
 
 * client (Player) – Player attempting to unlock.
+
 * door (Entity) – Door or vehicle entity.
 
 **Realm:**
@@ -7840,6 +8078,7 @@ Lets you change how many attribute points a new character receives. Retrieves th
 **Parameters:**
 
 * client (Player) – Viewing player.
+
 * context (string) – Creation context.
 
 **Realm:**
@@ -7870,6 +8109,7 @@ Sets a limit for a specific attribute at character creation. Returns the startin
 **Parameters:**
 
 * client (Player) – Viewing player.
+
 * attribute (string) – Attribute identifier.
 
 **Realm:**
@@ -7902,6 +8142,7 @@ Returns the maximum value allowed for an attribute.
 **Parameters:**
 
 * client (Player) – Player being queried.
+
 * attribute (string) – Attribute identifier.
 
 **Realm:**
@@ -7934,9 +8175,13 @@ Fired when an attribute boost is added or removed.
 **Parameters:**
 
 * client (Player) – Player owning the character.
+
 * character (Character) – Character affected.
+
 * key (string) – Attribute identifier.
+
 * boostID (string) – Unique boost key.
+
 * amount (number|boolean) – Amount added or true when removed.
 
 **Realm:**
@@ -7969,8 +8214,11 @@ Fired when a character attribute value is changed.
 **Parameters:**
 
 * client (Player) – Player owning the character.
+
 * character (Character) – Character updated.
+
 * key (string) – Attribute identifier.
+
 * value (number) – New attribute value.
 
 **Realm:**
@@ -8003,6 +8251,7 @@ Called when a player attempts to change a configuration value.
 **Parameters:**
 
 * client (Player) – Player attempting the change.
+
 * key (string) – Config key being modified.
 
 **Realm:**
@@ -8033,6 +8282,7 @@ Fired after a character is permanently removed.
 **Parameters:**
 
 * client (Player) – Player who owned the character.
+
 * character (table) – Character that was deleted.
 
 **Realm:**
@@ -8063,7 +8313,9 @@ Allows custom logic for determining if a faction has reached its player limit.
 **Parameters:**
 
 * faction (table) – Faction being checked.
+
 * character (table) – Character requesting to join.
+
 * client (Player) – Owning player.
 
 **Realm:**
@@ -8096,8 +8348,11 @@ Triggered after AddSection inserts a new information section.
 **Parameters:**
 
 * sectionName (string) – Name of the inserted section.
+
 * color (Color) – Display color for the section.
+
 * priority (number) – Sorting priority.
+
 * location (number) – Column index.
 
 **Realm:**
@@ -8157,6 +8412,7 @@ Called when a ragdolled character finishes getting up.
 **Parameters:**
 
 * client (Player) – Player getting up.
+
 * entity (Entity) – Ragdoll entity.
 
 **Realm:**
@@ -8216,6 +8472,7 @@ Called when a player's observe mode is toggled.
 **Parameters:**
 
 * client (Player) – Player toggling observe mode.
+
 * state (boolean) – True to enable observing.
 
 **Realm:**
@@ -8246,7 +8503,9 @@ Runs after a character has been loaded and set up for a player.
 **Parameters:**
 
 * client (Player) – Player who loaded the character.
+
 * character (table) – New character object.
+
 * previousChar (table|nil) – Previously active character.
 
 **Realm:**
@@ -8277,7 +8536,9 @@ Fired right before a player switches to a new character.
 **Parameters:**
 
 * client (Player) – Player switching characters.
+
 * newChar (table) – Character being loaded.
+
 * oldChar (table|nil) – Character being left.
 
 **Realm:**
@@ -8308,7 +8569,9 @@ Called after PlayerLoadedChar to allow post-load operations.
 **Parameters:**
 
 * client (Player) – Player that finished loading.
+
 * character (table) – Active character table.
+
 * previousChar (table|nil) – Previous character if any.
 
 **Realm:**
@@ -8339,6 +8602,7 @@ Custom hook executed when a player sends a chat message server-side.
 **Parameters:**
 
 * client (Player) – Speaking player.
+
 * text (string) – Message content.
 
 **Realm:**
@@ -8369,6 +8633,7 @@ Called after the admin stick menu is created so additional commands can be added
 **Parameters:**
 
 * menu (DermaPanel) – Context menu panel.
+
 * target (Entity) – Target entity of the admin stick.
 
 **Realm:**
@@ -8401,6 +8666,7 @@ Fired when a staff member claims a help ticket.
 **Parameters:**
 
 * admin (Player) – Staff member claiming the ticket.
+
 * requester (Player) – Player who opened the ticket.
 
 **Realm:**
@@ -8431,7 +8697,9 @@ Triggered when a shared option value is changed.
 **Parameters:**
 
 * client (Player|nil) – Player that changed the option or nil if server.
+
 * key (string) – Option identifier.
+
 * value (any) – New value.
 
 **Realm:**

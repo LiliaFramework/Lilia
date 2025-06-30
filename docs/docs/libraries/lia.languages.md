@@ -11,7 +11,7 @@ The languages library loads localization files from directories. It resolves phr
 
 ### lia.lang.loadFromDir(directory)
 
-    
+
 **Description:**
 
 Loads all Lua language files (*.lua) from the specified directory,
@@ -21,15 +21,18 @@ it is registered in lia.lang.names.
 **Parameters:**
 
 * directory (string) – The path to the directory containing language files.
+
 **Returns:**
 
 * nil
+
 **Realm:**
 
 * Shared
+
     Internal Function:
     true
-    
+
 **Example Usage:**
 
 ```lua
@@ -42,7 +45,7 @@ it is registered in lia.lang.names.
 
 ### lia.lang.AddTable(name, tbl)
 
-    
+
 **Description:**
 
 Adds or merges a table of language key-value pairs into the stored language table
@@ -51,13 +54,17 @@ will be merged with the existing ones.
 **Parameters:**
 
 * name (string) – The name of the language to update.
+
 * tbl (table) – A table containing language key-value pairs to add.
+
 **Returns:**
 
 * nil
+
 **Realm:**
 
 * Shared
+
 **Example Usage:**
 
 ```lua

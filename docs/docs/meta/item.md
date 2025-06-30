@@ -205,8 +205,11 @@ Invokes an item method with the given player and entity context.
 **Parameters:**
 
 * method (string) – Method name to run.
+
 * client (Player) – The player performing the action.
+
 * entity (Entity) – Entity representing this item.
+
 * ... – Additional arguments passed to the method.
 
 **Realm:**
@@ -263,6 +266,7 @@ Retrieves a piece of persistent data stored on the item.
 **Parameters:**
 
 * key (string) – Data key to read.
+
 * default (any) – Value to return when the key is absent.
 
 **Realm:**
@@ -317,11 +321,13 @@ Registers a hook callback for this item instance.
 **Parameters:**
 
 * name (string) – Hook identifier.
+
 * func (function) – Function to call.
 
 **Realm:**
 
 * Shared
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -343,11 +349,13 @@ Registers a post-hook callback for this item.
 **Parameters:**
 
 * name (string) – Hook identifier.
+
 * func (function) – Function invoked after the main hook.
 
 **Realm:**
 
 * Shared
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -373,6 +381,7 @@ Called when the item table is first registered.
 **Realm:**
 
 * Shared
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -398,6 +407,7 @@ Prints a simple representation of the item to the console.
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -423,6 +433,7 @@ Debug helper that prints all stored item data.
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -444,13 +455,17 @@ Increases the stored quantity for this item instance.
 **Parameters:**
 
 * quantity (number) – Amount to add.
+
 * receivers (Player|None) – Who to network the change to.
+
 * noCheckEntity (boolean) – Skip entity network update.
 
 **Realm:**
 
 * Server
+
 * Returns:
+
 * None – This function does not return a value.
 
 **Example Usage:**
@@ -471,13 +486,17 @@ Sets the current stack quantity and replicates the change.
 **Parameters:**
 
 * quantity (number) – New amount to store.
+
 * receivers (Player|None) – Recipients to send updates to.
+
 * noCheckEntity (boolean) – Skip entity updates when true.
 
 **Realm:**
 
 * Server
+
 * Returns:
+
 * None – This function does not return a value.
 
 **Example Usage:**
@@ -715,6 +734,7 @@ Creates a world entity for this item at the specified position.
 **Parameters:**
 
 * position (Vector|Player) – Drop position or player dropping the item.
+
 * angles (Angle|None) – Orientation for the entity.
 
 **Realm:**
@@ -742,6 +762,7 @@ Moves the item to another inventory, optionally bypassing access checks.
 **Parameters:**
 
 * newInventory (Inventory) – Destination inventory.
+
 * bBypass (boolean) – Skip permission checking.
 
 **Realm:**
@@ -905,9 +926,13 @@ Sets a data field on the item and optionally networks and saves it.
 **Parameters:**
 
 * key (string) – Data key to modify.
+
 * value (any) – New value to store.
+
 * receivers (Player|None) – Who to send the update to.
+
 * noSave (boolean) – Avoid saving to the database.
+
 * noCheckEntity (boolean) – Skip updating the world entity.
 
 **Realm:**
@@ -935,8 +960,11 @@ Processes an interaction action performed by `client` on this item.
 **Parameters:**
 
 * action (string) – Identifier of the interaction.
+
 * client (Player) – Player performing the action.
+
 * entity (Entity|None) – Entity used for the interaction.
+
 * data (table|None) – Extra data passed to the hooks.
 
 **Realm:**

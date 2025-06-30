@@ -150,6 +150,7 @@ Retrieves a numeric client ConVar value.
 **Parameters:**
 
 * property (string) – ConVar name without mode prefix.
+
 * default (number) – Value returned if the ConVar doesn't exist.
 
 **Realm:**
@@ -212,6 +213,7 @@ Placeholder for tool initialization.
 **Realm:**
 
 * Shared
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -393,6 +395,7 @@ Clears stored objects when the tool reloads.
 **Realm:**
 
 * Shared
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -418,6 +421,7 @@ Called when the tool is equipped. Releases ghost entity.
 **Realm:**
 
 * Shared
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -443,6 +447,7 @@ Called when the tool is holstered. Releases ghost entity.
 **Realm:**
 
 * Shared
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -468,6 +473,7 @@ Called every tick; releases ghost entities by default.
 **Realm:**
 
 * Shared
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -493,6 +499,7 @@ Validates stored objects and clears them if invalid.
 **Realm:**
 
 * Shared
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -518,6 +525,7 @@ Removes all stored objects from the tool.
 **Realm:**
 
 * Shared
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -543,6 +551,7 @@ Removes the ghost entity used for previewing placements.
 **Realm:**
 
 * Shared
+
 **Returns:**
 
 * None – This function does not return a value.

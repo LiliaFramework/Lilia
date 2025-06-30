@@ -11,7 +11,7 @@ The flags library assigns text-based permission flags to players. It offers tool
 
 ### lia.flag.add
 
-    
+
 **Description:**
 
 Registers a new flag by adding it to the flag list.
@@ -19,14 +19,19 @@ Each flag has a description and an optional callback that is executed when the f
 **Parameters:**
 
 * flag (string) – The unique flag identifier.
+
 * desc (string) – A description of what the flag does.
+
 * callback (function) – An optional callback function executed when the flag is applied to a player.
+
 **Returns:**
 
 * nil
+
 **Realm:**
 
 * Shared
+
 **Example Usage:**
 
 ```lua
@@ -39,7 +44,7 @@ Each flag has a description and an optional callback that is executed when the f
 
 ### lia.flag.onSpawn
 
-    
+
 **Description:**
 
 Called when a player spawns. This function checks the player's character flags and triggers
@@ -47,12 +52,15 @@ the associated callbacks for each flag that the character possesses.
 **Parameters:**
 
 * client (Player) – The player who spawned.
+
 **Returns:**
 
 * nil
+
 **Realm:**
 
 * Server
+
 **Example Usage:**
 
 ```lua

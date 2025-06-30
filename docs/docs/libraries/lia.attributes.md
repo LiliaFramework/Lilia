@@ -12,7 +12,7 @@ The attributes library loads attribute definitions from Lua files, keeps track o
 
 ### lia.attribs.loadFromDir(directory)
 
-    
+
 **Description:**
 
 Loads attribute definitions from the given folder. Files prefixed
@@ -23,12 +23,15 @@ as the key.
 **Parameters:**
 
 * directory (string) – Path to the folder containing attribute Lua files.
+
 **Realm:**
 
 * Shared
+
 **Returns:**
 
 * nil
+
 **Example Usage:**
 
 ```lua
@@ -41,7 +44,7 @@ as the key.
 
 ### lia.attribs.setup(client)
 
-    
+
 **Description:**
 
 Initializes attribute data for a client's character. Each attribute in
@@ -50,12 +53,15 @@ an OnSetup callback, it is executed with the current value.
 **Parameters:**
 
 * client (Player) – The player whose character attributes should be set up.
+
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * None
+
 **Example Usage:**
 
 ```lua

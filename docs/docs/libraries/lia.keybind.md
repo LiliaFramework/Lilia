@@ -12,7 +12,7 @@ The keybind library stores user-defined keyboard bindings. It reads and writes k
 
 ### lia.keybind.add(k, d, cb, rcb)
 
-    
+
 **Description:**
 
 Registers a new keybind for a given action.
@@ -22,15 +22,21 @@ Also maps the key code back to the action identifier for reverse lookup.
 **Parameters:**
 
 * k (string or number) – The key identifier, either as a string (to be converted) or as a key code.
+
 * d (string) – The unique identifier for the keybind action.
+
 * cb (function) – The callback function to be executed when the key is pressed.
+
 * rcb (function) – The callback function to be executed when the key is released.
+
 **Returns:**
 
 * nil
+
 **Realm:**
 
 * Client
+
 **Example Usage:**
 
 ```lua
@@ -43,7 +49,7 @@ Also maps the key code back to the action identifier for reverse lookup.
 
 ### lia.keybind.get(a, df)
 
-    
+
 **Description:**
 
 Retrieves the current key code for a specified keybind action.
@@ -52,13 +58,17 @@ or an optionally provided fallback value.
 **Parameters:**
 
 * a (string) – The unique identifier for the keybind action.
+
 * df (number) – An optional default key code to return if the keybind is not set.
+
 **Returns:**
 
 * number – The key code associated with the keybind action, or the default/fallback value if not set.
+
 **Realm:**
 
 * Client
+
 **Example Usage:**
 
 ```lua
@@ -71,7 +81,7 @@ or an optionally provided fallback value.
 
 ### lia.keybind.save()
 
-    
+
 **Description:**
 
 Saves the current keybind settings to a file.
@@ -80,15 +90,18 @@ and writes the keybind mapping (action identifiers to key codes) in JSON format.
 **Parameters:**
 
 * None
+
 **Returns:**
 
 * nil
+
 **Realm:**
 
 * Client
+
     Internal Function:
     true
-    
+
 **Example Usage:**
 
 ```lua
@@ -101,7 +114,7 @@ and writes the keybind mapping (action identifiers to key codes) in JSON format.
 
 ### lia.keybind.load()
 
-    
+
 **Description:**
 
 Loads keybind settings from a file.
@@ -112,15 +125,18 @@ Finally, it triggers the "InitializedKeybinds" hook.
 **Parameters:**
 
 * None
+
 **Returns:**
 
 * nil
+
 **Realm:**
 
 * Client
+
     Internal Function:
     true
-    
+
 **Example Usage:**
 
 ```lua

@@ -25,6 +25,7 @@ Returns a stored data value for this inventory.
 **Parameters:**
 
 * key (string) – Data field key.
+
 * default (any) – Value if the key does not exist.
 
 **Realm:**
@@ -130,6 +131,7 @@ Adds a proxy function that is called when a data field changes.
 **Parameters:**
 
 * key (string) – Data field to watch.
+
 * onChange (function) – Callback receiving old and new values.
 
 **Realm:**
@@ -166,6 +168,7 @@ Returns all items in the inventory matching the given unique ID.
 **Parameters:**
 
 * uniqueID (string) – Item unique identifier.
+
 * onlyMain (boolean) – Search only the main item list.
 
 **Realm:**
@@ -334,7 +337,9 @@ registered proxy callbacks for that field.
 **Parameters:**
 
 * key (string) – Data field key.
+
 * oldValue (any) – Previous value.
+
 * newValue (any) – Updated value.
 
 **Realm:**
@@ -601,11 +606,13 @@ Inserts an item instance into this inventory and persists it.
 **Parameters:**
 
 * item (Item) – Item to add.
+
 * noReplicate (boolean) – Skip network replication when true.
 
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -760,11 +767,13 @@ Removes an item by ID and optionally deletes it.
 **Parameters:**
 
 * itemID (number) – Unique item identifier.
+
 * preserveItem (boolean) – Keep item in database when true.
 
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -826,6 +835,7 @@ Sets a data field on the inventory and replicates the change to clients.
 **Parameters:**
 
 * key (string) – Data field name.
+
 * value (any) – Value to store.
 
 **Realm:**
@@ -858,6 +868,7 @@ Evaluates access rules to determine whether an action is permitted.
 **Parameters:**
 
 * action (string) – Action identifier.
+
 * context (table|None) – Additional data such as the client.
 
 **Realm:**
@@ -867,6 +878,7 @@ Evaluates access rules to determine whether an action is permitted.
 **Returns:**
 
 * boolean|nil – True, false, or nil if undecided.
+
 * string|nil – Optional failure reason.
 
 **Example Usage:**
@@ -891,6 +903,7 @@ Registers a function used by `canAccess` to grant or deny actions.
 **Parameters:**
 
 * rule (function) – Access rule function.
+
 * priority (number|None) – Insertion position for the rule.
 
 **Realm:**
@@ -1147,11 +1160,13 @@ Sends a single data field to clients.
 **Parameters:**
 
 * key (string) – Field to replicate.
+
 * recipients (table|None) – Player recipients.
 
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -1183,6 +1198,7 @@ Sends the entire inventory and its items to players.
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -1214,6 +1230,7 @@ Removes this inventory record from the database.
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -1246,6 +1263,7 @@ Destroys all items and removes network references.
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * None – This function does not return a value.

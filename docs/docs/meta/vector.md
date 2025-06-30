@@ -73,6 +73,7 @@ Rotates the vector around an axis by the specified degrees and returns the new v
 **Parameters:**
 
 * `axis` (`Vector`) – Axis to rotate around.
+
 * `degrees` (`number`) – Angle in degrees.
 
 **Realm:**
