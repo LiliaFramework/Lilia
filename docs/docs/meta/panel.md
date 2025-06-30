@@ -24,6 +24,10 @@ Subscribes this panel to updates for a specific inventory.
 
 * Client
 
+**Returns:**
+
+* None – This function does not return a value.
+
 **Example:**
 
 ```lua
@@ -44,6 +48,17 @@ Removes inventory update hooks created by `liaListenForInventoryChanges`.
 **Realm:**
 
 * Client
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example:**
+
+```lua
+-- Remove all registered hooks for this panel
+panel:liaDeleteInventoryHooks()
+```
+---
 
 ### SetScaledPos(x, y)
 
@@ -59,6 +74,17 @@ Positions the panel using screen scale units.
 **Realm:**
 
 * Client
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example:**
+
+```lua
+-- Position the panel 10 units from the left and 20 units down
+panel:SetScaledPos(10, 20)
+```
+---
 
 ### SetScaledSize(w, h)
 
@@ -74,3 +100,14 @@ Sizes the panel using screen scale units.
 **Realm:**
 
 * Client
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example:**
+
+```lua
+-- Set panel size to 64 by 32 scaled units
+panel:SetScaledSize(64, 32)
+```
+---
