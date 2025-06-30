@@ -135,7 +135,6 @@ function lia.command.parseSyntaxFields(syntax)
     return fields, valid
 end
 
--- Combines arguments split within brackets back into a single token.
 local function combineBracketArgs(args)
     local result = {}
     local buffer
