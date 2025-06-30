@@ -1,85 +1,125 @@
 # Player Meta
 
+
 Lilia extends Garry's Mod players with characters, inventories, and permission checks. This reference details the meta functions enabling that integration.
 
+
 ---
+
 
 ## Overview
 
+
 Player meta functions provide quick access to the active character, networking helpers for messaging or data transfer, and utility checks such as admin status. Players are entity objects that hold at most one Character instance, so these helpers unify player-related logic across the framework.
+
 ---
+
 
 ### getChar()
 
+
 **Description:**
+
 
 Returns the currently loaded character object for this player.
 
+
 **Parameters:**
+
 
 * None
 
+
 **Realm:**
+
 
 * Shared
 
+
 **Returns:**
+
 
 * Character|None – The player's active character.
 
+
 **Example Usage:**
+
 
 ```lua
 -- Retrieve the character to modify inventory
 local char = player:getChar()
 ```
+
 ---
+
 
 ### Name()
 
+
 **Description:**
+
 
 Returns either the character's roleplay name or the player's Steam name.
 
+
 **Parameters:**
+
 
 * None
 
+
 **Realm:**
+
 
 * Shared
 
+
 **Returns:**
+
 
 * string – Display name.
 
+
 **Example Usage:**
+
 
 ```lua
 -- Print the roleplay name in chat
 chat.AddText(player:Name())
 ```
+
 ---
+
 
 ### hasPrivilege(privilegeName)
 
+
 **Description:**
+
 
 Wrapper for CAMI privilege checks.
 
+
 **Parameters:**
+
 
 * privilegeName (string) – Privilege identifier.
 
+
 **Realm:**
+
 
 * Shared
 
+
 **Returns:**
+
 
 * boolean – Result from CAMI.PlayerHasAccess.
 
+
 **Example Usage:**
+
 
 ```lua
 -- Deny access if the player lacks a privilege
@@ -87,27 +127,39 @@ if not player:hasPrivilege("Manage") then
     return false
 end
 ```
+
 ---
+
 
 ### getCurrentVehicle()
 
+
 **Description:**
+
 
 Safely returns the vehicle the player is currently using.
 
+
 **Parameters:**
+
 
 * None
 
+
 **Realm:**
+
 
 * Shared
 
+
 **Returns:**
+
 
 * Entity|None – Vehicle entity or None.
 
+
 **Example Usage:**
+
 
 ```lua
 -- Attach a camera to the vehicle the player is in
@@ -116,27 +168,39 @@ if IsValid(veh) then
     AttachCamera(veh)
 end
 ```
+
 ---
+
 
 ### hasValidVehicle()
 
+
 **Description:**
+
 
 Determines if the player is currently inside a valid vehicle.
 
+
 **Parameters:**
+
 
 * None
 
+
 **Realm:**
+
 
 * Shared
 
+
 **Returns:**
+
 
 * boolean – True if a vehicle entity is valid.
 
+
 **Example Usage:**
+
 
 ```lua
 -- Allow honking only when in a valid vehicle
@@ -144,135 +208,198 @@ if player:hasValidVehicle() then
     player:GetVehicle():EmitSound("Horn")
 end
 ```
+
 ---
+
 
 ### isNoClipping()
 
+
 **Description:**
+
 
 Returns true if the player is in noclip mode and not inside a vehicle.
 
+
 **Parameters:**
+
 
 * None
 
+
 **Realm:**
+
 
 * Shared
 
+
 **Returns:**
+
 
 * boolean – Whether the player is noclipping.
 
+
 **Example Usage:**
+
 
 ```lua
 -- Disable certain actions while noclipping
 if player:isNoClipping() then return end
 ```
+
 ---
+
 
 ### hasRagdoll()
 
+
 **Description:**
+
 
 Checks if the player currently has an active ragdoll entity.
 
+
 **Parameters:**
+
 
 * None
 
+
 **Realm:**
+
 
 * Shared
 
+
 **Returns:**
+
 
 * boolean – True when a ragdoll entity exists.
 
+
 **Example Usage:**
+
 
 ```lua
 if player:hasRagdoll() then
     print("Player is ragdolled")
 end
 ```
+
 ---
+
 
 ### removeRagdoll()
 
+
 **Description:**
+
 
 Safely removes the player's ragdoll entity if present.
 
+
 **Parameters:**
+
 
 * None
 
+
 **Realm:**
+
 
 * Shared
 
+
 **Returns:**
+
 
 * None – This function does not return a value.
 
+
 **Example Usage:**
+
 
 ```lua
 -- Clean up any ragdoll left behind
 player:removeRagdoll()
 ```
+
 ---
+
 
 ### getRagdoll()
 
+
 **Description:**
+
 
 Retrieves the ragdoll entity associated with the player.
 
+
 **Parameters:**
+
 
 * None
 
+
 **Realm:**
+
 
 * Shared
 
+
 **Returns:**
+
 
 * Entity|None – The ragdoll entity or None.
 
+
 **Example Usage:**
+
 
 ```lua
 local ragdoll = player:getRagdoll()
 ```
+
 ---
+
 
 ### isStuck()
 
+
 **Description:**
+
 
 Determines whether the player's position is stuck in the world.
 
+
 **Parameters:**
+
 
 * None
 
+
 **Realm:**
+
 
 * Shared
 
+
 **Returns:**
+
 
 * boolean – True if the trace detects a stuck state.
 
+
 **Example Usage:**
 
+
 if player:isStuck() then
+
     player:SetPos(player:GetPos() + Vector(0, 0, 16))
+
 end
+
 ```
 ---
 
@@ -302,29 +429,42 @@ if player:isNearPlayer(128, target) then
     print("Target is nearby")
 end
 ```
+
 ---
+
 
 ### entitiesNearPlayer(radius, playerOnly)
 
+
 **Description:**
+
 
 Returns a table of entities within radius of the player.
 
+
 **Parameters:**
+
 
 * radius (number) – Search distance in units.
 
+
 * playerOnly (boolean|None) – Only include players when true.
+
 
 **Realm:**
 
+
 * Shared
+
 
 **Returns:**
 
+
 * table – List of nearby entities.
 
+
 **Example Usage:**
+
 
 ```lua
 for _, ent in ipairs(player:entitiesNearPlayer(256)) do
@@ -335,56 +475,83 @@ for _, ent in ipairs(player:entitiesNearPlayer(256)) do
     end
 end
 ```
+
 ---
+
 
 ### getItemWeapon()
 
+
 **Description:**
+
 
 Returns the active weapon entity and associated item if equipped.
 
+
 **Parameters:**
+
 
 * None
 
+
 **Realm:**
+
 
 * Shared
 
+
 **Returns:**
+
 
 * Entity|None – Weapon entity when matched.
 
+
 **Example Usage:**
+
 
 ```lua
 local weapon, item = player:getItemWeapon()
 ```
+
 ---
+
 
 ### isRunning()
 
+
 **Description:**
+
 
 Checks whether the player is moving faster than walking speed.
 
+
 **Parameters:**
+
 
 * None
 
+
 **Realm:**
+
 
 * Shared
 
+
 **Returns:**
+
 
 * boolean – True if the player is running.
 
+
 **Example Usage:**
 
+
 if player:isRunning() then
+
     -- player is sprinting
+
 end
+
 ```
 ---
 
@@ -409,9 +576,13 @@ Returns true if the player's model is considered female.
 **Example Usage:**
 
 ```lua
+
 if player:isFemale() then
+
     print("Female model detected")
+
 end
+
 ```
 ---
 
@@ -436,7 +607,9 @@ Finds a safe position in front of the player to drop items.
 **Example Usage:**
 
 ```lua
+
 local pos = player:getItemDropPos()
+
 ```
 ---
 
@@ -461,10 +634,15 @@ Returns the player's inventory item list if a character is loaded.
 **Example Usage:**
 
 ```lua
+
 -- Iterate player's items to calculate total weight
+
 for _, it in pairs(player:getItems() or {}) do
+
     total = total + it.weight
+
 end
+
 ```
 ---
 
@@ -489,8 +667,11 @@ Performs a simple trace from the player's shoot position.
 **Example Usage:**
 
 ```lua
+
 -- Grab the entity the player is pointing at
+
 local entity = player:getTracedEntity(96)
+
 ```
 ---
 
@@ -515,8 +696,11 @@ Returns a hull trace in front of the player.
 **Example Usage:**
 
 ```lua
+
 -- Use a hull trace for melee attacks
+
 local tr = player:getTrace(48)
+
 ```
 ---
 
@@ -541,11 +725,17 @@ Returns the entity the player is looking at within a distance.
 **Example Usage:**
 
 ```lua
+
 -- Show the name of the object being looked at
+
 local target = player:getEyeEnt(128)
+
 if IsValid(target) then
+
     player:ChatPrint(target:GetClass())
+
 end
+
 ```
 ---
 
@@ -572,9 +762,13 @@ Sends a plain notification message to the player.
 **Example Usage:**
 
 ```lua
+
 -- Send a welcome notification and log the join event
+
 player:notify("Welcome to the server!")
+
 file.Append("welcome.txt", player:SteamID() .. " joined\n")
+
 ```
 ---
 
@@ -601,9 +795,13 @@ Sends a localized notification to the player.
 **Example Usage:**
 
 ```lua
+
 -- Send a localized message including the player's name and score
+
 local score = player:GetFrags()
+
 player:notifyLocalized("greeting_key", player:Name(), score)
+
 ```
 ---
 
@@ -630,8 +828,11 @@ Determines whether the player can edit the given vendor.
 **Example Usage:**
 
 ```lua
+
 -- Determine if the player may modify the vendor
+
 local result = player:CanEditVendor(vendor)
+
 ```
 ---
 
@@ -658,8 +859,11 @@ Convenience wrapper to check if the player is in the "user" group.
 **Example Usage:**
 
 ```lua
+
 -- Check if the player belongs to the default user group
+
 local result = player:isUser()
+
 ```
 ---
 
@@ -686,8 +890,11 @@ Returns true if the player belongs to a staff group.
 **Example Usage:**
 
 ```lua
+
 -- Verify staff permissions for administrative actions
+
 local result = player:isStaff()
+
 ```
 ---
 
@@ -714,8 +921,11 @@ Checks whether the player is in the VIP group.
 **Example Usage:**
 
 ```lua
+
 -- Test if the player has VIP status
+
 local result = player:isVIP()
+
 ```
 ---
 
@@ -740,8 +950,11 @@ Determines if the player is currently in the staff faction.
 **Example Usage:**
 
 ```lua
+
 -- Confirm the player is currently in a staff role
+
 local result = player:isStaffOnDuty()
+
 ```
 ---
 
@@ -766,8 +979,11 @@ Checks if the player's character belongs to the given faction.
 **Example Usage:**
 
 ```lua
+
 -- Compare the player's faction to a requirement
+
 local result = player:isFaction(faction)
+
 ```
 ---
 
@@ -792,8 +1008,11 @@ Returns true if the player's character is of the given class.
 **Example Usage:**
 
 ```lua
+
 -- Determine if the player's class matches
+
 local result = player:isClass(class)
+
 ```
 ---
 
@@ -818,8 +1037,11 @@ Determines if the player has whitelist access for a faction.
 **Example Usage:**
 
 ```lua
+
 -- Check for whitelist permission on a faction
+
 local result = player:hasWhitelist(faction)
+
 ```
 ---
 
@@ -844,8 +1066,11 @@ Retrieves the class index of the player's character.
 **Example Usage:**
 
 ```lua
+
 -- Retrieve the current class index
+
 local result = player:getClass()
+
 ```
 ---
 
@@ -868,8 +1093,11 @@ Checks if the player's character is whitelisted for a class.
 **Example Usage:**
 
 ```lua
+
 -- Verify the player is approved for a specific class
+
 local result = player:hasClassWhitelist(class)
+
 ```
 ---
 
@@ -894,8 +1122,11 @@ Returns the class table of the player's current class.
 **Example Usage:**
 
 ```lua
+
 -- Access data table for the player's class
+
 local result = player:getClassData()
+
 ```
 ---
 
@@ -920,8 +1151,11 @@ Compatibility helper for retrieving money with DarkRP-style calls.
 **Example Usage:**
 
 ```lua
+
 -- Read money amount in a DarkRP-compatible way
+
 local result = player:getDarkRPVar(var)
+
 ```
 ---
 
@@ -946,8 +1180,11 @@ Convenience function to get the character's money amount.
 **Example Usage:**
 
 ```lua
+
 -- Fetch the character's stored funds
+
 local result = player:getMoney()
+
 ```
 ---
 
@@ -972,8 +1209,11 @@ Checks if the player has enough money for a purchase.
 **Example Usage:**
 
 ```lua
+
 -- Check if the player has enough money to buy something
+
 local result = player:canAfford(amount)
+
 ```
 ---
 
@@ -1000,8 +1240,11 @@ Verifies the player's character meets an attribute level.
 **Example Usage:**
 
 ```lua
+
 -- Ensure the player meets a single skill requirement
+
 local result = player:hasSkillLevel(skill, level)
+
 ```
 ---
 
@@ -1026,8 +1269,11 @@ Checks a table of skill requirements against the player.
 **Example Usage:**
 
 ```lua
+
 -- Validate multiple skill requirements at once
+
 local result = player:meetsRequiredSkills(requiredSkillLevels)
+
 ```
 ---
 
@@ -1058,8 +1304,11 @@ Plays an animation sequence and optionally freezes the player.
 **Example Usage:**
 
 ```lua
+
 -- Play an animation while freezing the player
+
 local result = player:forceSequence(sequenceName, callback, time, noFreeze)
+
 ```
 ---
 
@@ -1084,8 +1333,11 @@ Stops any forced sequence and restores player movement.
 **Example Usage:**
 
 ```lua
+
 -- Stop the player's forced animation sequence
+
 local result = player:leaveSequence()
+
 ```
 ---
 
@@ -1110,8 +1362,11 @@ Increases the player's stamina value.
 **Example Usage:**
 
 ```lua
+
 -- Give the player extra stamina points
+
 local result = player:restoreStamina(amount)
+
 ```
 ---
 
@@ -1136,8 +1391,11 @@ Reduces the player's stamina value.
 **Example Usage:**
 
 ```lua
+
 -- Spend stamina as the player performs an action
+
 local result = player:consumeStamina(amount)
+
 ```
 ---
 
@@ -1162,9 +1420,13 @@ Adds funds to the player's character, clamping to limits.
 **Example Usage:**
 
 ```lua
+
 -- Reward the player and announce the payout
+
 player:addMoney(100)
+
 player:notify("You received $100 for completing the quest.")
+
 ```
 ---
 
@@ -1189,8 +1451,11 @@ Removes money from the player's character.
 **Example Usage:**
 
 ```lua
+
 -- Remove money from the player's character
+
 local result = player:takeMoney(amount)
+
 ```
 ---
 
@@ -1215,8 +1480,11 @@ Grants whitelist access to every registered class.
 **Example Usage:**
 
 ```lua
+
 -- Unlock every class for the player
+
 player:WhitelistAllClasses()
+
 ```
 ---
 
@@ -1241,7 +1509,9 @@ Whitelists the player for all factions.
 **Example Usage:**
 
 ```lua
+
 player:WhitelistAllFactions()
+
 ```
 ---
 
@@ -1266,8 +1536,11 @@ Convenience method to whitelist all factions and classes.
 **Example Usage:**
 
 ```lua
+
 -- Give the player access to all content
+
 player:WhitelistEverything()
+
 ```
 ---
 
@@ -1292,7 +1565,9 @@ Adds a single class to the character's whitelist table.
 **Example Usage:**
 
 ```lua
+
 player:classWhitelist(CLASS_MEDIC)
+
 ```
 ---
 
@@ -1317,7 +1592,9 @@ Removes a class from the character's whitelist table.
 **Example Usage:**
 
 ```lua
+
 player:classUnWhitelist(CLASS_MEDIC)
+
 ```
 ---
 
@@ -1344,7 +1621,9 @@ Sets or clears whitelist permission for a faction.
 **Example Usage:**
 
 ```lua
+
 player:setWhitelisted(FACTION_POLICE, true)
+
 ```
 ---
 
@@ -1369,7 +1648,9 @@ Loads persistent Lilia data for the player from the database.
 **Example Usage:**
 
 ```lua
+
 player:loadLiliaData(function(data) print(data) end)
+
 ```
 ---
 
@@ -1394,7 +1675,9 @@ Saves the player's Lilia data back to the database.
 **Example Usage:**
 
 ```lua
+
 player:saveLiliaData()
+
 ```
 ---
 
@@ -1423,7 +1706,9 @@ Stores a value in the player's persistent data table.
 **Example Usage:**
 
 ```lua
+
 player:setLiliaData("settings", {foo = true})
+
 ```
 ---
 
@@ -1450,7 +1735,9 @@ Sends a waypoint to the client at the specified position.
 **Example Usage:**
 
 ```lua
+
 player:setWaypoint("Objective", Vector(0, 0, 0))
+
 ```
 ---
 
@@ -1477,7 +1764,9 @@ Alias of `setWaypoint()` for backwards compatibility.
 **Example Usage:**
 
 ```lua
+
 player:setWeighPoint("Target", Vector(100, 100, 0))
+
 ```
 ---
 
@@ -1506,7 +1795,9 @@ Creates a waypoint using a custom logo material.
 **Example Usage:**
 
 ```lua
+
 player:setWaypointWithLogo("Objective", Vector(0,0,0), "path/to/icon.png")
+
 ```
 ---
 
@@ -1533,7 +1824,9 @@ Retrieves a stored value from the player's data table.
 **Example Usage:**
 
 ```lua
+
 local settings = player:getLiliaData("settings", {})
+
 ```
 ---
 
@@ -1558,7 +1851,9 @@ Returns the entire table of persistent data for the player.
 **Example Usage:**
 
 ```lua
+
 local data = player:getAllLiliaData()
+
 ```
 ---
 
@@ -1583,7 +1878,9 @@ Associates a ragdoll entity with the player for later retrieval.
 **Example Usage:**
 
 ```lua
+
 player:setRagdoll(ragdollEnt)
+
 ```
 ---
 
@@ -1610,7 +1907,9 @@ Broadcasts animation bone data to all clients.
 **Example Usage:**
 
 ```lua
+
 player:NetworkAnimation(true, data)
+
 ```
 ---
 
@@ -1639,7 +1938,9 @@ Displays an action bar for a set duration and optionally runs a callback.
 **Example Usage:**
 
 ```lua
+
 player:setAction("Lockpicking", 5)
+
 ```
 ---
 
@@ -1672,7 +1973,9 @@ Runs an action only while the player stares at the entity.
 **Example Usage:**
 
 ```lua
+
 player:doStaredAction(door, function() door:Open() end, 3)
+
 ```
 ---
 
@@ -1697,7 +2000,9 @@ Cancels any running action bar on the player.
 **Example Usage:**
 
 ```lua
+
 player:stopAction()
+
 ```
 ---
 
@@ -1728,7 +2033,9 @@ Prompts the client with a dropdown selection dialog.
 **Example Usage:**
 
 ```lua
+
 player:requestDropdown("Choose", "Pick one", {"A", "B"}, print)
+
 ```
 ---
 
@@ -1761,7 +2068,9 @@ Asks the client to select one or more options from a list.
 **Example Usage:**
 
 ```lua
+
 player:requestOptions("Permissions", "Select", {"A", "B"}, 2, print)
+
 ```
 ---
 
@@ -1792,7 +2101,9 @@ Requests a string from the client.
 **Example Usage:**
 
 ```lua
+
 player:requestString("Name", "Enter text", print)
+
 ```
 ---
 
@@ -1825,7 +2136,9 @@ Displays a yes/no style question to the player.
 **Example Usage:**
 
 ```lua
+
 player:binaryQuestion("Proceed?", "Yes", "No", false, print)
+
 ```
 ---
 
@@ -1850,7 +2163,9 @@ Calculates how long the player has been on the server.
 **Example Usage:**
 
 ```lua
+
 print(player:getPlayTime())
+
 ```
 ---
 
@@ -1877,7 +2192,9 @@ Spawns a ragdoll copy of the player and optionally freezes it.
 **Example Usage:**
 
 ```lua
+
 local rag = player:createRagdoll(true)
+
 ```
 ---
 
@@ -1908,7 +2225,9 @@ Toggles the player's ragdoll state for a duration.
 **Example Usage:**
 
 ```lua
+
 player:setRagdolled(true, 5)
+
 ```
 ---
 
@@ -1933,7 +2252,9 @@ Sends all networked variables to the player.
 **Example Usage:**
 
 ```lua
+
 player:syncVars()
+
 ```
 ---
 
@@ -1960,7 +2281,9 @@ Sets a networked local variable on the player.
 **Example Usage:**
 
 ```lua
+
 player:setLocalVar("health", 75)
+
 ```
 ---
 
@@ -1985,7 +2308,9 @@ Returns playtime calculated client side when called on a client.
 **Example Usage:**
 
 ```lua
+
 print(LocalPlayer():getPlayTime())
+
 ```
 ---
 
@@ -2014,7 +2339,9 @@ Displays a waypoint on the HUD until the player reaches it.
 **Example Usage:**
 
 ```lua
+
 LocalPlayer():setWaypoint("Home", Vector(0,0,0))
+
 ```
 ---
 
@@ -2043,7 +2370,9 @@ Alias of the client version of `setWaypoint`.
 **Example Usage:**
 
 ```lua
+
 LocalPlayer():setWeighPoint("Spot", Vector(10,10,0))
+
 ```
 ---
 
@@ -2074,7 +2403,9 @@ Places a waypoint using a logo material on the client HUD.
 **Example Usage:**
 
 ```lua
+
 LocalPlayer():setWaypointWithLogo("Loot", Vector(1,1,1), "icon.png")
+
 ```
 ---
 
@@ -2101,7 +2432,9 @@ Client side accessor for stored player data.
 **Example Usage:**
 
 ```lua
+
 local data = LocalPlayer():getLiliaData("settings")
+
 ```
 ---
 
@@ -2126,7 +2459,9 @@ Returns the entire local data table for the player.
 **Example Usage:**
 
 ```lua
+
 local data = LocalPlayer():getAllLiliaData()
+
 ```
 ---
 
@@ -2153,6 +2488,8 @@ Applies or clears clientside bone angles based on animation data.
 **Example Usage:**
 
 ```lua
+
 LocalPlayer():NetworkAnimation(true, data)
+
 ```
 ---
