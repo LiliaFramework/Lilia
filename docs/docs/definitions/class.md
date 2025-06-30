@@ -50,11 +50,9 @@ The global `CLASS` table defines per-class settings such as display name, lore, 
 **Type:**
 
 `string`
-
 **Description:**
 
 The displayed name of the class.
-
 **Example Usage:**
 
 ```lua
@@ -68,11 +66,9 @@ CLASS.name = "Engineer"
 **Type:**
 
 `string`
-
 **Description:**
 
 The description or lore of the class.
-
 **Example Usage:**
 
 ```lua
@@ -86,11 +82,9 @@ CLASS.desc = "Technicians who maintain equipment."
 **Type:**
 
 `number`
-
 **Description:**
 
 Unique numeric identifier (team index) for the class.
-
 **Example Usage:**
 
 ```lua
@@ -106,11 +100,9 @@ CLASS.index = CLASS_ENGINEER
 **Type:**
 
 `boolean`
-
 **Description:**
 
 Determines if the class is available to all players by default.
-
 **Example Usage:**
 
 ```lua
@@ -124,11 +116,9 @@ CLASS.isDefault = true
 **Type:**
 
 `boolean`
-
 **Description:**
 
 Indicates if the class requires a whitelist entry to be accessible.
-
 **Example Usage:**
 
 ```lua
@@ -142,11 +132,9 @@ CLASS.isWhitelisted = false
 **Type:**
 
 `number`
-
 **Description:**
 
 Links this class to a specific faction index.
-
 **Example Usage:**
 
 ```lua
@@ -160,11 +148,9 @@ CLASS.faction = FACTION_CITIZEN
 **Type:**
 
 `Color`
-
 **Description:**
 
 UI color representing the class. Defaults to `Color(255, 255, 255)` if not specified.
-
 **Example Usage:**
 
 ```lua
@@ -180,11 +166,9 @@ CLASS.color = Color(255, 0, 0)
 **Type:**
 
 `table`
-
 **Description:**
 
 Weapons granted to members of this class on spawn.
-
 **Example Usage:**
 
 ```lua
@@ -198,11 +182,9 @@ CLASS.weapons = {"weapon_pistol", "weapon_crowbar"}
 **Type:**
 
 `number`
-
 **Description:**
 
 Payment amount issued per pay interval.
-
 **Example Usage:**
 
 ```lua
@@ -216,11 +198,9 @@ CLASS.pay = 50
 **Type:**
 
 `number`
-
 **Description:**
 
 Maximum accumulated pay a player can hold.
-
 **Example Usage:**
 
 ```lua
@@ -234,11 +214,9 @@ CLASS.payLimit = 1000
 **Type:**
 
 `number`
-
 **Description:**
 
 Interval in seconds between salary payouts.
-
 **Example Usage:**
 
 ```lua
@@ -252,11 +230,9 @@ CLASS.payTimer = 3600
 **Type:**
 
 `number`
-
 **Description:**
 
 Maximum number of players allowed in this class simultaneously.
-
 **Example Usage:**
 
 ```lua
@@ -272,11 +248,9 @@ CLASS.limit = 10
 **Type:**
 
 `number`
-
 **Description:**
 
 Default starting health for class members.
-
 **Example Usage:**
 
 ```lua
@@ -290,11 +264,9 @@ CLASS.health = 150
 **Type:**
 
 `number`
-
 **Description:**
 
 Default starting armor.
-
 **Example Usage:**
 
 ```lua
@@ -308,11 +280,9 @@ CLASS.armor = 50
 **Type:**
 
 `number`
-
 **Description:**
 
 Multiplier for player model size.
-
 **Example Usage:**
 
 ```lua
@@ -326,11 +296,9 @@ CLASS.scale = 1.2
 **Type:**
 
 `number`
-
 **Description:**
 
 Default running speed.
-
 **Example Usage:**
 
 ```lua
@@ -344,11 +312,9 @@ CLASS.runSpeed = 250
 **Type:**
 
 `boolean`
-
 **Description:**
 
 Multiply base run speed instead of replacing it.
-
 **Example Usage:**
 
 ```lua
@@ -362,11 +328,9 @@ CLASS.runSpeedMultiplier = true
 **Type:**
 
 `number`
-
 **Description:**
 
 Default walking speed.
-
 **Example Usage:**
 
 ```lua
@@ -380,11 +344,9 @@ CLASS.walkSpeed = 200
 **Type:**
 
 `boolean`
-
 **Description:**
 
 Multiply base walk speed instead of replacing it.
-
 **Example Usage:**
 
 ```lua
@@ -398,11 +360,9 @@ CLASS.walkSpeedMultiplier = false
 **Type:**
 
 `number`
-
 **Description:**
 
 Default jump power.
-
 **Example Usage:**
 
 ```lua
@@ -416,11 +376,9 @@ CLASS.jumpPower = 200
 **Type:**
 
 `boolean`
-
 **Description:**
 
 Multiply base jump power instead of replacing it.
-
 **Example Usage:**
 
 ```lua
@@ -434,11 +392,9 @@ CLASS.jumpPowerMultiplier = true
 **Type:**
 
 `number`
-
 **Description:**
 
 Blood color enumeration constant for this class.
-
 **Example Usage:**
 
 ```lua
@@ -454,11 +410,9 @@ CLASS.bloodcolor = BLOOD_COLOR_RED
 **Type:**
 
 `table`
-
 **Description:**
 
 Mapping of bodygroup indices to values applied on spawn.
-
 **Example Usage:**
 
 ```lua
@@ -475,11 +429,9 @@ CLASS.bodyGroups = {
 **Type:**
 
 `string` or `table`
-
 **Description:**
 
 Model path (or list of paths) assigned to this class.
-
 **Example Usage:**
 
 ```lua

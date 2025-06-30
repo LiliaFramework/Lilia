@@ -57,11 +57,9 @@ Each faction in the game is defined by a set of fields on the global `FACTION` t
 **Type:**
 
 `string`
-
 **Description:**
 
 Display name shown for members of this faction.
-
 **Example Usage:**
 
 ```lua
@@ -75,11 +73,9 @@ FACTION.name = "Minecrafters"
 **Type:**
 
 `string`
-
 **Description:**
 
 Lore or descriptive text about the faction.
-
 **Example Usage:**
 
 ```lua
@@ -93,11 +89,9 @@ FACTION.desc = "Surviving and crafting in the blocky world."
 **Type:**
 
 `boolean`
-
 **Description:**
 
 Set to `true` if players may select this faction without a whitelist.
-
 **Example Usage:**
 
 ```lua
@@ -111,11 +105,9 @@ FACTION.isDefault = false
 **Type:**
 
 `string`
-
 **Description:**
 
 Internal string identifier for referencing the faction.
-
 **Example Usage:**
 
 ```lua
@@ -129,11 +121,9 @@ FACTION.uniqueID = "staff"
 **Type:**
 
 `number`
-
 **Description:**
 
 Numeric identifier assigned during faction registration.
-
 **Example Usage:**
 
 ```lua
@@ -149,11 +139,9 @@ FACTION_STAFF = FACTION.index
 **Type:**
 
 `Color`
-
 **Description:**
 
 Color used in UI elements to represent the faction. Defaults to `Color(255, 255, 255)` if not specified.
-
 **Example Usage:**
 
 ```lua
@@ -167,11 +155,9 @@ FACTION.color = Color(255, 56, 252)
 **Type:**
 
 `table`
-
 **Description:**
 
 Table of player model paths available to faction members.
-
 **Example Usage:**
 
 ```lua
@@ -188,11 +174,9 @@ FACTION.models = {
 **Type:**
 
 `table`
-
 **Description:**
 
 Mapping of bodygroup names to index values applied on spawn.
-
 **Example Usage:**
 
 ```lua
@@ -211,11 +195,9 @@ FACTION.bodyGroups = {
 **Type:**
 
 `table`
-
 **Description:**
 
 Weapons automatically granted on spawn.
-
 **Example Usage:**
 
 ```lua
@@ -229,11 +211,9 @@ FACTION.weapons = {"weapon_physgun", "gmod_tool"}
 **Type:**
 
 `table`
-
 **Description:**
 
 Item uniqueIDs automatically granted on character creation.
-
 **Example Usage:**
 
 ```lua
@@ -247,11 +227,9 @@ FACTION.items = {"radio", "handcuffs"}
 **Type:**
 
 `number`
-
 **Description:**
 
 Payment amount for members each interval.
-
 **Example Usage:**
 
 ```lua
@@ -265,11 +243,9 @@ FACTION.pay = 50
 **Type:**
 
 `number`
-
 **Description:**
 
 Maximum pay a member can accumulate.
-
 **Example Usage:**
 
 ```lua
@@ -283,11 +259,9 @@ FACTION.payLimit = 1000
 **Type:**
 
 `number`
-
 **Description:**
 
 Interval in seconds between salary payouts.
-
 **Example Usage:**
 
 ```lua
@@ -301,11 +275,9 @@ FACTION.payTimer = 3600
 **Type:**
 
 `number`
-
 **Description:**
 
 Maximum number of players allowed in this faction.
-
 **Example Usage:**
 
 ```lua
@@ -319,11 +291,9 @@ FACTION.limit = 20
 **Type:**
 
 `boolean`
-
 **Description:**
 
 If `true`, players may only create one character in this faction.
-
 **Example Usage:**
 
 ```lua
@@ -339,11 +309,9 @@ FACTION.oneCharOnly = true
 **Type:**
 
 `number`
-
 **Description:**
 
 Starting health for faction members.
-
 **Example Usage:**
 
 ```lua
@@ -357,11 +325,9 @@ FACTION.health = 150
 **Type:**
 
 `number`
-
 **Description:**
 
 Starting armor for faction members.
-
 **Example Usage:**
 
 ```lua
@@ -375,11 +341,9 @@ FACTION.armor = 25
 **Type:**
 
 `number`
-
 **Description:**
 
 Player model scale multiplier.
-
 **Example Usage:**
 
 ```lua
@@ -393,11 +357,9 @@ FACTION.scale = 1.1
 **Type:**
 
 `number`
-
 **Description:**
 
 Base running speed.
-
 **Example Usage:**
 
 ```lua
@@ -411,11 +373,9 @@ FACTION.runSpeed = 250
 **Type:**
 
 `boolean`
-
 **Description:**
 
 If `true`, multiplies the base speed rather than replacing it.
-
 **Example Usage:**
 
 ```lua
@@ -429,11 +389,9 @@ FACTION.runSpeedMultiplier = false
 **Type:**
 
 `number`
-
 **Description:**
 
 Base walking speed.
-
 **Example Usage:**
 
 ```lua
@@ -447,11 +405,9 @@ FACTION.walkSpeed = 200
 **Type:**
 
 `boolean`
-
 **Description:**
 
 If `true`, multiplies the base walk speed rather than replacing it.
-
 **Example Usage:**
 
 ```lua
@@ -465,11 +421,9 @@ FACTION.walkSpeedMultiplier = true
 **Type:**
 
 `number`
-
 **Description:**
 
 Base jump power.
-
 **Example Usage:**
 
 ```lua
@@ -483,11 +437,9 @@ FACTION.jumpPower = 200
 **Type:**
 
 `boolean`
-
 **Description:**
 
 If `true`, multiplies the base jump power rather than replacing it.
-
 **Example Usage:**
 
 ```lua
@@ -503,11 +455,9 @@ FACTION.jumpPowerMultiplier = true
 **Type:**
 
 `boolean`
-
 **Description:**
 
 Whether faction members automatically recognize each other on sight.
-
 **Example Usage:**
 
 ```lua
@@ -521,11 +471,9 @@ FACTION.MemberToMemberAutoRecognition = true
 **Type:**
 
 `boolean`
-
 **Description:**
 
 If `true`, members recognize all players globally, regardless of faction.
-
 **Example Usage:**
 
 ```lua
@@ -539,11 +487,9 @@ FACTION.RecognizesGlobally = false
 **Type:**
 
 `table`
-
 **Description:**
 
 Mapping of NPC class names to disposition constants (`D_HT`, `D_LI`, etc.). NPCs are updated on spawn/creation.
-
 **Example Usage:**
 
 ```lua
@@ -560,11 +506,9 @@ FACTION.NPCRelations = {
 **Type:**
 
 `number`
-
 **Description:**
 
 Blood color enumeration constant for faction members.
-
 **Example Usage:**
 
 ```lua
@@ -578,11 +522,9 @@ FACTION.bloodcolor = BLOOD_COLOR_RED
 **Type:**
 
 `boolean`
-
 **Description:**
 
 If `true`, members of this faction are hidden from the scoreboard.
-
 **Example Usage:**
 
 ```lua
