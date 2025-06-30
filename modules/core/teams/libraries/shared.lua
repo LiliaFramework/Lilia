@@ -1,4 +1,4 @@
-﻿function MODULE:CheckFactionLimitReached(faction, character, client)
+function MODULE:CheckFactionLimitReached(faction, character, client)
     if faction.OnCheckLimitReached then return faction:OnCheckLimitReached(character, client) end
     if not isnumber(faction.limit) then return false end
     local maxPlayers = faction.limit
@@ -8,16 +8,24 @@ end
 
 function MODULE:GetDefaultCharName(client, faction, data)
     local info = lia.faction.indices[faction]
+
+    -- Allow factions to provide a completely custom name template.
     local nameFunc = info and (info.NameTemplate or info.nameTemplate)
     if isfunction(nameFunc) then
         local name, override = nameFunc(info, client)
-        if override then return name, true end
+        if name then return name, override ~= false end
     end
 
+    -- Base name comes from the provided data or the faction hook.
+    local baseName = data and data.name or nil
+    if info and info.GetDefaultName then
+        baseName = info:GetDefaultName(client) or baseName
+    end
+    baseName = baseName or client:SteamName()
+
     local prefix = info and (isfunction(info.prefix) and info.prefix(client) or info.prefix) or ""
-    if not prefix or prefix == "" then return data, false end
-    local nameWithPrefix = string.Trim(prefix .. " " .. data)
-    if info and info.GetDefaultName then info:GetDefaultName(client) end
+    local nameWithPrefix = prefix ~= "" and string.Trim(prefix .. " " .. baseName) or baseName
+
     return nameWithPrefix, false
 end
 
