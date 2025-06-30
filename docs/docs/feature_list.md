@@ -1,11 +1,8 @@
 # Feature List
 
-
 ---
 
-
 This page provides an extensive overview of the core modules and libraries included with Lilia. Use it as a quick reference for the capabilities baked into the framework. The framework ships with numerous optional compatibility layers so popular Garry's Mod addons work seamlessly alongside these features. For a breakdown of those integrations see the [compatibility guide](./compatibility.md).
-
 
 ### Grid Inventory
 
@@ -828,16 +825,12 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 ### Configuration Options
 
-
 - Modules load automatically when compatible addons are detected
 
 The `config` library exposes numerous settings allowing you to control walk and run speeds, voice chat, crosshair usage, salary intervals, theme colors, workshop downloads, and much more. These options can be tweaked in game via the configuration menu.
 
-
 ### Addon Compatibility
 
-
 Lilia includes built-in modules that expand support for many common Garry's Mod addons. These integrations cover administration suites, vehicle packs, and utility tools so you can drop your favorite addons in without conflicts. See the [compatibility guide](./compatibility.md) for details.
-
 
 ---

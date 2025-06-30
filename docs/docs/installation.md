@@ -69,7 +69,6 @@ If you haven't already, set up your Garry's Mod server and ensure it is running 
 
     Find the `Lilia.zip` file you downloaded.
 
-
 2. **Extract the Contents:**
 
 
@@ -94,12 +93,10 @@ If you haven't already, set up your Garry's Mod server and ensure it is running 
 
     Use an FTP or SFTP client (e.g., [FileZilla](https://filezilla-project.org/) or [WinSCP](https://winscp.net/eng/index.php)) to connect to your Garry's Mod server.
 
-
 2. **Navigate to the Gamemodes Directory:**
 
 
     Go to `garrysmod/gamemodes` within your server's file structure.
-
 
 3. **Upload the Lilia Folder:**
 

@@ -58,6 +58,7 @@ alias = {"chargiveflag", "giveflag"}
 **Description:**
 
 If `true`, only players with the registered CAMI admin privilege (automatically created) may run the command.
+
 **Example Usage:**
 
 ```lua

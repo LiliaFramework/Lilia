@@ -1,64 +1,48 @@
 # Chatbox Library
 
-
 This page outlines chatbox related functions and helpers.
 
-
 ---
-
 
 ## Overview
 
 The chatbox library defines chat commands and renders messages. It lets you register chat classes that determine how text such as IC, action, and OOC messages appear and handles radius-based or global visibility.
 
-
-
 **Description:**
-
 
 Returns a formatted timestamp if chat timestamps are enabled.
 
 **Parameters:**
-
 
 * ooc (boolean) – True for out-of-character messages.
 
 
 **Returns:**
 
-
 * string – Formatted time string or an empty string.
 
 
 **Realm:**
-
 
 * Shared
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.chat.timestamp
     local ts = lia.chat.timestamp(false)
 ```
 
-
 ---
-
-
 
 ### lia.chat.register(chatType, data)
 
 **Description:**
 
-
 Registers a new chat class and sets up command aliases.
 
-
 **Parameters:**
-
 
 * chatType (string) – Identifier for the chat class.
 
@@ -68,18 +52,15 @@ Registers a new chat class and sets up command aliases.
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * None
 
 
 **Example Usage:**
-
 
 ```lua
     -- Register a simple "/me" chat command that prints actions in purple
@@ -91,20 +72,15 @@ Registers a new chat class and sets up command aliases.
     })
 ```
 
-
 ---
-
 
 ### lia.chat.parse(client, message, noSend)
 
 **Description:**
 
-
 Parses chat text for the proper chat type and optionally sends it.
 
-
 **Parameters:**
-
 
 * client (Player) – Player sending the message.
 
@@ -117,18 +93,15 @@ Parses chat text for the proper chat type and optionally sends it.
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * chatType (string), text (string), anonymous (boolean)
 
 
 **Example Usage:**
-
 
 ```lua
     -- Parse chat messages and log "/me" actions to the console
@@ -140,20 +113,15 @@ Parses chat text for the proper chat type and optionally sends it.
     end)
 ```
 
-
 ---
-
 
 ### lia.chat.send(speaker, chatType, text, anonymous, receivers)
 
 **Description:**
 
-
 Broadcasts a chat message to all eligible receivers.
 
-
 **Parameters:**
-
 
 * speaker (Player) – The message sender.
 
@@ -172,21 +140,17 @@ Broadcasts a chat message to all eligible receivers.
 
 **Realm:**
 
-
 * Server
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.chat.send
     lia.chat.send(client, "ic", "Hello")
 ```
-

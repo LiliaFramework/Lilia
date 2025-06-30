@@ -538,4 +538,3 @@ Administrative window for editing a vendor's inventory and settings, including i
 **Description:**
 
 Secondary editor for selecting which factions and player classes can trade with the vendor.
-

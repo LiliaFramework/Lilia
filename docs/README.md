@@ -1,8 +1,6 @@
 # Lilia Documentation
 
-
 This repository contains the source files for the official Lilia Wiki documentation.
-
 
 > **Note:**
 
@@ -12,15 +10,11 @@ This repository contains the source files for the official Lilia Wiki documentat
 
 > Please do **not** open pull requests or push directly to this repo.
 
-
 ---
-
 
 ## 📖 Overview
 
-
 Lilia is a lightweight, modular framework for building Garry’s Mod addons in GLua. Its documentation covers:
-
 
 - **Getting Started:** installation, setup, and core concepts
 
@@ -33,9 +27,7 @@ Lilia is a lightweight, modular framework for building Garry’s Mod addons in G
 
 ---
 
-
 ## 🚀 Local Preview
-
 
 1. **Clone** this repo:
 

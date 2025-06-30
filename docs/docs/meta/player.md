@@ -1,49 +1,37 @@
 # Player Meta
 
-
 Lilia extends Garry's Mod players with characters, inventories, and permission checks. This reference details the meta functions enabling that integration.
-
 
 ---
 
-
 ## Overview
-
 
 Player meta functions provide quick access to the active character, networking helpers for messaging or data transfer, and utility checks such as admin status. Players are entity objects that hold at most one Character instance, so these helpers unify player-related logic across the framework.
 
 ---
 
-
 ### getChar()
-
 
 **Description:**
 
-
 Returns the currently loaded character object for this player.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * Character|None – The player's active character.
 
 
 **Example Usage:**
-
 
 ```lua
 -- Retrieve the character to modify inventory
@@ -52,36 +40,28 @@ local char = player:getChar()
 
 ---
 
-
 ### Name()
-
 
 **Description:**
 
-
 Returns either the character's roleplay name or the player's Steam name.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * string – Display name.
 
 
 **Example Usage:**
-
 
 ```lua
 -- Print the roleplay name in chat
@@ -90,36 +70,28 @@ chat.AddText(player:Name())
 
 ---
 
-
 ### hasPrivilege(privilegeName)
-
 
 **Description:**
 
-
 Wrapper for CAMI privilege checks.
 
-
 **Parameters:**
-
 
 * privilegeName (string) – Privilege identifier.
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * boolean – Result from CAMI.PlayerHasAccess.
 
 
 **Example Usage:**
-
 
 ```lua
 -- Deny access if the player lacks a privilege
@@ -130,36 +102,28 @@ end
 
 ---
 
-
 ### getCurrentVehicle()
-
 
 **Description:**
 
-
 Safely returns the vehicle the player is currently using.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * Entity|None – Vehicle entity or None.
 
 
 **Example Usage:**
-
 
 ```lua
 -- Attach a camera to the vehicle the player is in
@@ -171,36 +135,28 @@ end
 
 ---
 
-
 ### hasValidVehicle()
-
 
 **Description:**
 
-
 Determines if the player is currently inside a valid vehicle.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * boolean – True if a vehicle entity is valid.
 
 
 **Example Usage:**
-
 
 ```lua
 -- Allow honking only when in a valid vehicle
@@ -211,36 +167,28 @@ end
 
 ---
 
-
 ### isNoClipping()
-
 
 **Description:**
 
-
 Returns true if the player is in noclip mode and not inside a vehicle.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * boolean – Whether the player is noclipping.
 
 
 **Example Usage:**
-
 
 ```lua
 -- Disable certain actions while noclipping
@@ -249,36 +197,28 @@ if player:isNoClipping() then return end
 
 ---
 
-
 ### hasRagdoll()
-
 
 **Description:**
 
-
 Checks if the player currently has an active ragdoll entity.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * boolean – True when a ragdoll entity exists.
 
 
 **Example Usage:**
-
 
 ```lua
 if player:hasRagdoll() then
@@ -288,36 +228,28 @@ end
 
 ---
 
-
 ### removeRagdoll()
-
 
 **Description:**
 
-
 Safely removes the player's ragdoll entity if present.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * None – This function does not return a value.
 
 
 **Example Usage:**
-
 
 ```lua
 -- Clean up any ragdoll left behind
@@ -326,36 +258,28 @@ player:removeRagdoll()
 
 ---
 
-
 ### getRagdoll()
-
 
 **Description:**
 
-
 Retrieves the ragdoll entity associated with the player.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * Entity|None – The ragdoll entity or None.
 
 
 **Example Usage:**
-
 
 ```lua
 local ragdoll = player:getRagdoll()
@@ -363,36 +287,28 @@ local ragdoll = player:getRagdoll()
 
 ---
 
-
 ### isStuck()
-
 
 **Description:**
 
-
 Determines whether the player's position is stuck in the world.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * boolean – True if the trace detects a stuck state.
 
 
 **Example Usage:**
-
 
 if player:isStuck() then
 
@@ -432,18 +348,13 @@ end
 
 ---
 
-
 ### entitiesNearPlayer(radius, playerOnly)
-
 
 **Description:**
 
-
 Returns a table of entities within radius of the player.
 
-
 **Parameters:**
-
 
 * radius (number) – Search distance in units.
 
@@ -453,18 +364,15 @@ Returns a table of entities within radius of the player.
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * table – List of nearby entities.
 
 
 **Example Usage:**
-
 
 ```lua
 for _, ent in ipairs(player:entitiesNearPlayer(256)) do
@@ -478,36 +386,28 @@ end
 
 ---
 
-
 ### getItemWeapon()
-
 
 **Description:**
 
-
 Returns the active weapon entity and associated item if equipped.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * Entity|None – Weapon entity when matched.
 
 
 **Example Usage:**
-
 
 ```lua
 local weapon, item = player:getItemWeapon()
@@ -515,36 +415,28 @@ local weapon, item = player:getItemWeapon()
 
 ---
 
-
 ### isRunning()
-
 
 **Description:**
 
-
 Checks whether the player is moving faster than walking speed.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * boolean – True if the player is running.
 
 
 **Example Usage:**
-
 
 if player:isRunning() then
 

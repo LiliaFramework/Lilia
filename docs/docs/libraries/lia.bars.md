@@ -1,49 +1,37 @@
 # Bars Library
 
-
 This page describes the API for status bars displayed on the HUD.
 
-
 ---
-
 
 ## Overview
 
-
 The bars library manages health, stamina, and other progress bars displayed on the player's HUD. It lets you register custom bar callbacks, draws them every frame, and provides helpers for temporary action bars.
 
-
 ---
-
 
 ### lia.bar.get(identifier)
 
 **Description:**
 
-
 Retrieves a bar object from the list by its unique identifier.
 
-
 **Parameters:**
-
 
 * identifier (string) – The unique identifier of the bar to retrieve.
 
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
 
-
 * table or nil – The bar table if found, or nil if not found.
 
 
 **Example Usage:**
-
 
 ```lua
     -- Retrieve the health bar and change its color at runtime
@@ -53,14 +41,11 @@ Retrieves a bar object from the list by its unique identifier.
     end
 ```
 
-
 ---
-
 
 ### lia.bar.add(getValue, color, priority, identifier)
 
 **Description:**
-
 
 Adds a new bar or replaces an existing one in the bar list.
 
@@ -68,9 +53,7 @@ If the identifier matches an existing bar, the old bar is removed first.
 
 Bars are drawn in order of ascending priority.
 
-
 **Parameters:**
-
 
 * getValue (function) – A callback that returns the current value of the bar.
 
@@ -86,18 +69,15 @@ Bars are drawn in order of ascending priority.
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
 
-
 * number – The priority assigned to the added bar.
 
 
 **Example Usage:**
-
 
 ```lua
     -- Calculates the player's current health as a fraction of their maximum health.
@@ -109,60 +89,47 @@ Bars are drawn in order of ascending priority.
     end, Color(200, 50, 40), 1, "health")
 ```
 
-
 ---
-
 
 ### lia.bar.remove(identifier)
 
 **Description:**
 
-
 Removes a bar from the list based on its unique identifier.
 
-
 **Parameters:**
-
 
 * identifier (string) – The unique identifier of the bar to remove.
 
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.bar.remove
     lia.bar.remove("example")
 ```
 
-
 ---
-
 
 ### lia.bar.drawBar(x, y, w, h, pos, max, color)
 
 **Description:**
 
-
 Draws a single horizontal bar at the specified screen coordinates,
 
 filling it proportionally based on pos and max.
 
-
 **Parameters:**
-
 
 * x (number) – The x-coordinate of the bar's top-left corner.
 
@@ -187,40 +154,32 @@ filling it proportionally based on pos and max.
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.bar.drawBar
     lia.bar.drawBar(10, 10, 200, 20, 0.5, 1, Color(255,0,0))
 ```
 
-
 ---
-
 
 ### lia.bar.drawAction(text, duration)
 
 **Description:**
 
-
 Displays a temporary action progress bar with accompanying text
 
 for the specified duration on the HUD.
 
-
 **Parameters:**
-
 
 * text (string) – The text to display above the progress bar.
 
@@ -230,61 +189,49 @@ for the specified duration on the HUD.
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
 
-
 * None
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.bar.drawAction
     lia.bar.drawAction("Reloading", 2)
 ```
 
-
 ---
-
 
 ### lia.bar.drawAll()
 
 **Description:**
 
-
 Iterates through all registered bars, applies smoothing to their values,
 
 and draws them on the HUD according to their priority and visibility rules.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of hook.Add
     hook.Add("HUDPaintBackground", "liaBarDraw", lia.bar.drawAll)
 ```
-

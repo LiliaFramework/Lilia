@@ -1,22 +1,16 @@
 # Menu Library
 
-
 This page describes small menu creation helpers.
-
 
 ---
 
-
 ## Overview
 
-
 The menu library offers convenience functions for building simple context menus. It supports nested options whose callbacks execute when selected and automatically positions the menu on screen.
-
 
 ### lia.menu.add(opts, pos, onRemove)
 
 **Description:**
-
 
 Creates a new world or entity menu using the entries provided in 'opts'.
 
@@ -26,9 +20,7 @@ selected. The menu may be positioned at a world Vector or anchored to
 
 an entity.
 
-
 **Parameters:**
-
 
 * opts (table) – Table of label/callback pairs.
 
@@ -41,92 +33,74 @@ an entity.
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
-
 
 * number – Identifier for the created menu entry.
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.menu.add
     lia.menu.add({["Hello"] = function() print("Hi") end})
 ```
 
-
 ---
-
 
 ### lia.menu.drawAll()
 
 **Description:**
 
-
 Draws all active menus on the player's screen. Typically called from
 
 HUDPaint.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of hook.Add
     hook.Add("HUDPaint", "DrawMenus", lia.menu.drawAll)
 ```
 
-
 ---
-
 
 ### lia.menu.getActiveMenu()
 
 **Description:**
 
-
 Returns the ID and callback of the menu item currently being hovered
 
 or selected by the player.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
-
 
 * id (number|nil) – Index of the active menu.
 
@@ -136,26 +110,20 @@ or selected by the player.
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.menu.getActiveMenu
     local id, callback = lia.menu.getActiveMenu()
 ```
 
-
 ---
-
 
 ### lia.menu.onButtonPressed(id, callback)
 
 **Description:**
 
-
 Removes the specified menu and runs its callback if provided.
 
-
 **Parameters:**
-
 
 * id (number) – Identifier returned by lia.menu.add.
 
@@ -165,21 +133,17 @@ Removes the specified menu and runs its callback if provided.
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
-
 
 * boolean – True if a callback was executed.
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.menu.onButtonPressed
     lia.menu.onButtonPressed(id)
 ```
-
