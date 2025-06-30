@@ -312,7 +312,7 @@ else
             label:SetFont("liaSmallFont")
             label:SetText(labelText)
             label:SizeToContents()
-            panel.PerformLayout = function(self, w, h)
+            panel.PerformLayout = function(_, w, h)
                 local ctrlH = 30
                 ctrl:SetTall(ctrlH)
                 local ctrlW = w * 0.7
