@@ -349,6 +349,44 @@ lia.config.add("SalaryThreshold", "Salary Threshold", 0, nil, {
     max = 100000
 })
 
+lia.config.add("ThirdPersonEnabled", "Enable Third-Person View", true, nil, {
+    desc = "Allows players to toggle third-person view on or off.",
+    category = "Third Person",
+    type = "Boolean"
+})
+
+lia.config.add("MaxThirdPersonDistance", "Maximum Third-Person Distance", 100, nil, {
+    desc = "The maximum allowable camera distance in third-person view.",
+    category = "Third Person",
+    type = "Int"
+})
+
+lia.config.add("WallPeek", "Wall Peek", true, nil, {
+    desc = "Limits third‑person wall peeking by hiding players outside view or obstructed.",
+    category = "Rendering",
+    type = "Boolean"
+})
+
+lia.config.add("MaxThirdPersonHorizontal", "Maximum Third-Person Horizontal Offset", 30, nil, {
+    desc = "The maximum allowable horizontal offset for third-person view.",
+    category = "Third Person",
+    type = "Int"
+})
+
+lia.config.add("MaxThirdPersonHeight", "Maximum Third-Person Height Offset", 30, nil, {
+    desc = "The maximum allowable vertical offset for third-person view.",
+    category = "Third Person",
+    type = "Int"
+})
+
+lia.config.add("MaxViewDistance", "Maximum View Distance", 5000, nil, {
+    desc = "The maximum distance (in units) at which players are visible.",
+    category = "Quality of Life",
+    type = "Int",
+    min = 1000,
+    max = 5000,
+})
+
 lia.config.add("AutoDownloadWorkshop", "Auto Download Workshop Content", true, nil, {
     desc = "Automatically download both collection and module-defined WorkshopContent.",
     category = "Workshop",
