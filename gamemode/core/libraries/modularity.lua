@@ -65,7 +65,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
         name = L("unknown"),
         desc = L("noDesc"),
         author = L("anonymous"),
-        identifier = "",
         enabled = true,
         IsValid = function() return true end
     }
@@ -103,12 +102,10 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
     if uniqueID ~= "schema" and not enabled then
         lia.bootstrap("Module", "Disabled module '" .. MODULE.name .. "'")
         lia.module.list[uniqueID] = nil
-        if MODULE.identifier ~= "" then _G[MODULE.identifier] = nil end
         _G[variable] = prev
         return
     end
 
-    if uniqueID ~= "schema" and MODULE.identifier ~= "" then _G[MODULE.identifier] = {} end
     loadPermissions(MODULE.CAMIPrivileges)
     if not isSingleFile then
         loadDependencies(MODULE.Dependencies)
@@ -177,7 +174,6 @@ function lia.module.initialize()
             local ok = isfunction(mod.enabled) and mod.enabled() or mod.enabled
             if not ok then
                 lia.module.list[id] = nil
-                if mod.identifier ~= "" then _G[mod.identifier] = nil end
             end
         end
     end

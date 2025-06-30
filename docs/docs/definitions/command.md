@@ -31,8 +31,12 @@ When you register a command with `lia.command.add`, you provide a table of field
 ### Aliases & Permissions
 
 #### `alias`
-**Type:** `string` or `table`  
-**Description:** One or more alternative command names that trigger the same behavior.  
+**Type:**
+
+`string` or `table`  
+**Description:**
+
+One or more alternative command names that trigger the same behavior.  
 **Example Usage:**
 ```lua
 alias = {"chargiveflag", "giveflag"}
@@ -42,8 +46,12 @@ alias = {"chargiveflag", "giveflag"}
 
 #### `adminOnly`
 
-**Type:** `boolean`
-**Description:** If `true`, only players with the registered CAMI admin privilege (automatically created) may run the command.
+**Type:**
+
+`boolean`
+**Description:**
+
+If `true`, only players with the registered CAMI admin privilege (automatically created) may run the command.
 **Example Usage:**
 
 ```lua
@@ -54,8 +62,12 @@ adminOnly = true
 
 #### `superAdminOnly`
 
-**Type:** `boolean`
-**Description:** If `true`, restricts usage to super administrators (automatically registers a CAMI privilege).
+**Type:**
+
+`boolean`
+**Description:**
+
+If `true`, restricts usage to super administrators (automatically registers a CAMI privilege).
 **Example Usage:**
 
 ```lua
@@ -66,8 +78,12 @@ superAdminOnly = true
 
 #### `privilege`
 
-**Type:** `string`
-**Description:** Custom CAMI privilege name checked when running the command. Defaults to the command’s primary name if omitted.
+**Type:**
+
+`string`
+**Description:**
+
+Custom CAMI privilege name checked when running the command. Defaults to the command’s primary name if omitted.
 **Example Usage:**
 
 ```lua
@@ -80,8 +96,12 @@ privilege = "Manage Doors"
 
 #### `syntax`
 
-**Type:** `string`
-**Description:** Human-readable syntax string shown in help menus. Does not affect argument parsing.
+**Type:**
+
+`string`
+**Description:**
+
+Human-readable syntax string shown in help menus. Does not affect argument parsing.
 You can use spaces in argument names for better readability.
 The in-game prompt only appears when every argument follows the `[type Name]` format.
 **Example Usage:**
@@ -94,8 +114,12 @@ syntax = "[string Target Name] [number Amount]"
 
 #### `desc`
 
-**Type:** `string`
-**Description:** Short description of what the command does, displayed in command lists and menus.
+**Type:**
+
+`string`
+**Description:**
+
+Short description of what the command does, displayed in command lists and menus.
 **Example Usage:**
 
 ```lua
@@ -108,8 +132,12 @@ desc = "Purchase a door if it is available and you can afford it."
 
 #### `AdminStick`
 
-**Type:** `table`
-**Description:** Defines how the command appears in admin utility menus. Common keys:
+**Type:**
+
+`table`
+**Description:**
+
+Defines how the command appears in admin utility menus. Common keys:
 
 * `Name` (string): Display text.
 * `Category` (string): Top-level grouping.
@@ -133,8 +161,12 @@ AdminStick = {
 
 #### `onRun(client, args)`
 
-**Type:** `function(client, table)`
-**Description:** Function called when the command is executed. `args` is a table of parsed arguments. Return a string to send a message back to the caller, or return nothing for silent execution.
+**Type:**
+
+`function(client, table)`
+**Description:**
+
+Function called when the command is executed. `args` is a table of parsed arguments. Return a string to send a message back to the caller, or return nothing for silent execution.
 
 **Example Usage:**
 

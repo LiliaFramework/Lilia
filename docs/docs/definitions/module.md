@@ -20,7 +20,6 @@ A `MODULE` table defines a self-contained add-on for the Lilia framework. Each f
 | `discord` | `string` | `""` | Discord tag or support channel. |
 | `version` | `string` | `""` | Version string for compatibility checks. |
 | `desc` | `string` | `"No Description"` | Short description of module functionality. |
-| `identifier` | `string` | `""` | Unique global key referencing the module. |
 | `CAMIPrivileges` | `table` | `nil` | CAMI privileges defined or required by the module. |
 | `WorkshopContent` | `table` | `nil` | Steam Workshop add-on IDs required. |
 | `enabled` | `boolean` or `function` | `true` | Controls whether the module loads. |
@@ -40,8 +39,12 @@ A `MODULE` table defines a self-contained add-on for the Lilia framework. Each f
 ### Identification & Metadata
 
 #### `name`
-**Type:** `string`  
-**Description:** Identifies the module in logs and UI elements.  
+**Type:**
+
+`string`  
+**Description:**
+
+Identifies the module in logs and UI elements.  
 **Example Usage:**
 ```lua
 MODULE.name = "My Module"
@@ -49,8 +52,12 @@ MODULE.name = "My Module"
 
 #### `author`
 
-**Type:** `string`
-**Description:** Name or SteamID64 of the module’s author.
+**Type:**
+
+`string`
+**Description:**
+
+Name or SteamID64 of the module’s author.
 **Example Usage:**
 
 ```lua
@@ -59,8 +66,12 @@ MODULE.author = "Samael"
 
 #### `discord`
 
-**Type:** `string`
-**Description:** Discord tag or support channel for the module.
+**Type:**
+
+`string`
+**Description:**
+
+Discord tag or support channel for the module.
 **Example Usage:**
 
 ```lua
@@ -69,32 +80,29 @@ MODULE.discord = "@liliaplayer"
 
 #### `desc`
 
-**Type:** `string`
-**Description:** Short description of what the module provides.
+**Type:**
+
+`string`
+**Description:**
+
+Short description of what the module provides.
 **Example Usage:**
 
 ```lua
 MODULE.desc = "Adds a Chatbox"
 ```
-
-#### `identifier`
-
-**Type:** `string`
-**Description:** Unique key used to reference this module globally.
-**Example Usage:**
-
-```lua
-MODULE.identifier = "example_mod"
-```
-
 ---
 
 ### Version & Compatibility
 
 #### `version`
 
-**Type:** `string`
-**Description:** Version string used for compatibility checks.
+**Type:**
+
+`string`
+**Description:**
+
+Version string used for compatibility checks.
 **Example Usage:**
 
 ```lua
@@ -103,8 +111,12 @@ MODULE.version = "1.0"
 
 #### `Public`
 
-**Type:** `boolean`
-**Description:** When true, the module participates in public version checks.
+**Type:**
+
+`boolean`
+**Description:**
+
+When true, the module participates in public version checks.
 **Example Usage:**
 
 ```lua
@@ -113,8 +125,12 @@ MODULE.Public = true
 
 #### `Private`
 
-**Type:** `boolean`
-**Description:** When true, the module uses private version checking.
+**Type:**
+
+`boolean`
+**Description:**
+
+When true, the module uses private version checking.
 **Example Usage:**
 
 ```lua
@@ -127,8 +143,12 @@ MODULE.Private = true
 
 #### `CAMIPrivileges`
 
-**Type:** `table`
-**Description:** CAMI privileges required or provided by the module.
+**Type:**
+
+`table`
+**Description:**
+
+CAMI privileges required or provided by the module.
 **Example Usage:**
 
 ```lua
@@ -139,8 +159,12 @@ MODULE.CAMIPrivileges = {
 
 #### `WorkshopContent`
 
-**Type:** `table`
-**Description:** Steam Workshop add-on IDs required by this module.
+**Type:**
+
+`table`
+**Description:**
+
+Steam Workshop add-on IDs required by this module.
 **Example Usage:**
 
 ```lua
@@ -149,8 +173,12 @@ MODULE.WorkshopContent = { "2959728255" }
 
 #### `Dependencies`
 
-**Type:** `table`
-**Description:** Files or folders that this module requires to run.
+**Type:**
+
+`table`
+**Description:**
+
+Files or folders that this module requires to run.
 **Example Usage:**
 
 ```lua
@@ -165,8 +193,12 @@ MODULE.Dependencies = {
 
 #### `enabled`
 
-**Type:** `boolean` or `function`
-**Description:** Controls whether the module loads. Can be a static boolean or a function returning a boolean.
+**Type:**
+
+`boolean` or `function`
+**Description:**
+
+Controls whether the module loads. Can be a static boolean or a function returning a boolean.
 **Example Usage:**
 
 ```lua
@@ -175,8 +207,12 @@ MODULE.enabled = true
 
 #### `loading`
 
-**Type:** `boolean`
-**Description:** True while the module is in the process of loading.
+**Type:**
+
+`boolean`
+**Description:**
+
+True while the module is in the process of loading.
 **Example Usage:**
 
 ```lua
@@ -185,8 +221,12 @@ if MODULE.loading then return end
 
 #### `ModuleLoaded`
 
-**Type:** `function`
-**Description:** Optional callback run after the module finishes loading.
+**Type:**
+
+`function`
+**Description:**
+
+Optional callback run after the module finishes loading.
 **Example Usage:**
 
 ```lua
@@ -201,8 +241,12 @@ end
 
 #### `folder`
 
-**Type:** `string`
-**Description:** Filesystem path where the module is located.
+**Type:**
+
+`string`
+**Description:**
+
+Filesystem path where the module is located.
 **Example Usage:**
 
 ```lua
@@ -211,8 +255,12 @@ print(MODULE.folder)
 
 #### `path`
 
-**Type:** `string`
-**Description:** Absolute path to the module’s root directory.
+**Type:**
+
+`string`
+**Description:**
+
+Absolute path to the module’s root directory.
 **Example Usage:**
 
 ```lua
@@ -221,8 +269,12 @@ print(MODULE.path)
 
 #### `uniqueID`
 
-**Type:** `string`
-**Description:** Identifier used internally for the module list.
+**Type:**
+
+`string`
+**Description:**
+
+Identifier used internally for the module list.
 **Example Usage:**
 
 ```lua

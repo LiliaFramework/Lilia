@@ -10,11 +10,24 @@ Attributes can define their own hooks to react when a player's attribute is crea
 
 ---
 
-#### `OnSetup(client, value)`
+### OnSetup
 
-**Type:** `function(client, number)`
+```lua
+function ATTRIBUTE:OnSetup(client, value)
+```
 
-**Description:** Called when the attribute is initialized on a player (e.g., at character load or creation). Use this hook to run custom logic, send notifications, apply effects, etc.
+**Description:**
+
+Called when the attribute is initialized on a player (for example, during character load or creation). Use this hook to run custom logic, send notifications or apply effects.
+
+**Parameters:**
+
+* `client` (`Player`) – The player the attribute belongs to.
+* `value` (`number`) – The value assigned to the attribute.
+
+**Realm:**
+
+* Server
 
 **Example Usage:**
 
@@ -28,3 +41,4 @@ function ATTRIBUTE:OnSetup(client, value)
     end
 end
 ```
+

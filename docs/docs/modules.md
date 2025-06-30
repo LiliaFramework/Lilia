@@ -4,7 +4,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Advert
 
-**Description:** Adds an Advert command
+**Description:**
+
+Adds an Advert command
 
 **Features:**
 
@@ -20,7 +22,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Alcoholism
 
-**Description:** Adds Alcohol and its effects
+**Description:**
+
+Adds Alcohol and its effects
 
 **Features:**
 
@@ -38,7 +42,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Auto Restarter
 
-**Description:** Automatically restarts the server every interval
+**Description:**
+
+Automatically restarts the server every interval
 
 **Features:**
 
@@ -54,7 +60,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Bodygrouper
 
-**Description:** Adds a bodygroup menu and bodygroup closet, akin to BodygroupR on GModStore
+**Description:**
+
+Adds a bodygroup menu and bodygroup closet, akin to BodygroupR on GModStore
 
 **Features:**
 
@@ -70,7 +78,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Broadcasts
 
-**Description:** Adds a Faction & Class broadcast command
+**Description:**
+
+Adds a Faction & Class broadcast command
 
 **Features:**
 
@@ -86,7 +96,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Captions
 
-**Description:** Adds an easy way of showing in-game captions
+**Description:**
+
+Adds an easy way of showing in-game captions
 
 **Features:**
 
@@ -102,7 +114,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Cards
 
-**Description:** Adds the ability to draw a random card from a deck
+**Description:**
+
+Adds the ability to draw a random card from a deck
 
 **Features:**
 
@@ -118,7 +132,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Chat Messages
 
-**Description:** Adds simple adverts
+**Description:**
+
+Adds simple adverts
 
 **Features:**
 
@@ -134,7 +150,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Cinematic Text
 
-**Description:** Cinematic-looking splash text for extra flair
+**Description:**
+
+Cinematic-looking splash text for extra flair
 
 **Features:**
 
@@ -150,7 +168,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Climb
 
-**Description:** Adds the ability to climb up ledges
+**Description:**
+
+Adds the ability to climb up ledges
 
 **Features:**
 
@@ -166,7 +186,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Code Utils
 
-**Description:** Adds a few extensions to the `lia.util` library
+**Description:**
+
+Adds a few extensions to the `lia.util` library
 
 **Features:**
 
@@ -182,7 +204,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Community Commands
 
-**Description:** Adds links to various community content
+**Description:**
+
+Adds links to various community content
 
 **Features:**
 
@@ -198,7 +222,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Corpse ID
 
-**Description:** Adds a corpse identification mechanic
+**Description:**
+
+Adds a corpse identification mechanic
 
 **Features:**
 
@@ -214,7 +240,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Cursor
 
-**Description:** Adds a cursor system
+**Description:**
+
+Adds a cursor system
 
 **Features:**
 
@@ -230,7 +258,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Simple Cutscenes
 
-**Description:** A system for simple cutscenes
+**Description:**
+
+A system for simple cutscenes
 
 **Features:**
 
@@ -246,7 +276,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Damage Numbers
 
-**Description:** Displays damage numbers when you hit someone or get hit
+**Description:**
+
+Displays damage numbers when you hit someone or get hit
 
 **Features:**
 
@@ -262,7 +294,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Development HUD
 
-**Description:** Adds a development HUD
+**Description:**
+
+Adds a development HUD
 
 **Features:**
 
@@ -278,7 +312,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Development Server
 
-**Description:** Adds the option for a development server that can run specific functions
+**Description:**
+
+Adds the option for a development server that can run specific functions
 
 **Features:**
 
@@ -294,7 +330,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Discord Relay
 
-**Description:** Relays logs to Discord
+**Description:**
+
+Relays logs to Discord
 
 **Features:**
 
@@ -310,7 +348,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Donator
 
-**Description:** Adds several donation-related libraries
+**Description:**
+
+Adds several donation-related libraries
 
 **Features:**
 
@@ -326,7 +366,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Door Kick
 
-**Description:** Allows you to kick doors open
+**Description:**
+
+Allows you to kick doors open
 
 **Features:**
 
@@ -342,7 +384,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Hospitals
 
-**Description:** Adds hospitals that spawn you after dying
+**Description:**
+
+Adds hospitals that spawn you after dying
 
 **Features:**
 
@@ -358,7 +402,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Extended Descriptions
 
-**Description:** Adds support for extended descriptions
+**Description:**
+
+Adds support for extended descriptions
 
 **Features:**
 
@@ -374,7 +420,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## First Person Effects
 
-**Description:** Realistic first-person effects
+**Description:**
+
+Realistic first-person effects
 
 **Features:**
 
@@ -390,7 +438,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Flashlight
 
-**Description:** Makes the flashlight more serious
+**Description:**
+
+Makes the flashlight more serious
 
 **Features:**
 
@@ -406,7 +456,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Free Look
 
-**Description:** Adds Free Look similar to EFT
+**Description:**
+
+Adds Free Look similar to EFT
 
 **Features:**
 
@@ -422,7 +474,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Gamemaster Teleport Points
 
-**Description:** Allows GMs to teleport to predefined points on the map
+**Description:**
+
+Allows GMs to teleport to predefined points on the map
 
 **Features:**
 
@@ -438,7 +492,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Extra HUD Elements
 
-**Description:** Implements extra HUD elements
+**Description:**
+
+Implements extra HUD elements
 
 **Features:**
 
@@ -454,7 +510,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Instant Killing
 
-**Description:** Enables instant kills on headshots
+**Description:**
+
+Enables instant kills on headshots
 
 **Features:**
 
@@ -470,7 +528,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Join Leave Messages
 
-**Description:** Adds join and leave messages
+**Description:**
+
+Adds join and leave messages
 
 **Features:**
 
@@ -486,7 +546,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Load Messages
 
-**Description:** Sends faction-based messages when players first load their character
+**Description:**
+
+Sends faction-based messages when players first load their character
 
 **Features:**
 
@@ -502,7 +564,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Loyalism
 
-**Description:** System for loyalist tiers
+**Description:**
+
+System for loyalist tiers
 
 **Features:**
 
@@ -518,7 +582,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Map Cleaner
 
-**Description:** Adds a map cleaner with configurable timings
+**Description:**
+
+Adds a map cleaner with configurable timings
 
 **Features:**
 
@@ -534,7 +600,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Model Pay
 
-**Description:** Adds a system to pay per model
+**Description:**
+
+Adds a system to pay per model
 
 **Features:**
 
@@ -550,7 +618,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Model Tweaker
 
-**Description:** Adds a Model-Tweaker entity
+**Description:**
+
+Adds a Model-Tweaker entity
 
 **Features:**
 
@@ -566,7 +636,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## NPC Drops
 
-**Description:** Adds NPCs that drop items
+**Description:**
+
+Adds NPCs that drop items
 
 **Features:**
 
@@ -582,7 +654,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## NPC Spawner
 
-**Description:** Adds automatic NPC spawning
+**Description:**
+
+Adds automatic NPC spawning
 
 **Features:**
 
@@ -598,7 +672,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Perma Remove
 
-**Description:** Allows staff to permanently remove map entities
+**Description:**
+
+Allows staff to permanently remove map entities
 
 **Features:**
 
@@ -614,7 +690,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Radio
 
-**Description:** Radio system
+**Description:**
+
+Radio system
 
 **Features:**
 
@@ -630,7 +708,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Raised Weapons
 
-**Description:** Adds a safety system that holsters sweps
+**Description:**
+
+Adds a safety system that holsters sweps
 
 **Features:**
 
@@ -646,7 +726,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Realistic Damage
 
-**Description:** Adds damage scalers for realism
+**Description:**
+
+Adds damage scalers for realism
 
 **Features:**
 
@@ -662,7 +744,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Realistic View
 
-**Description:** Adds a realistic 1st-person view that allows you to see the entire body
+**Description:**
+
+Adds a realistic 1st-person view that allows you to see the entire body
 
 **Features:**
 
@@ -678,7 +762,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Rumour
 
-**Description:** Adds a Rumour command
+**Description:**
+
+Adds a Rumour command
 
 **Features:**
 
@@ -694,7 +780,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Shoot Locks
 
-**Description:** Shoot locks to open doors
+**Description:**
+
+Shoot locks to open doors
 
 **Features:**
 
@@ -710,7 +798,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Lockpicking
 
-**Description:** Adds simple lockpicking to brute-force doors
+**Description:**
+
+Adds simple lockpicking to brute-force doors
 
 **Features:**
 
@@ -726,7 +816,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Slots
 
-**Description:** Adds a slot-machine entity
+**Description:**
+
+Adds a slot-machine entity
 
 **Features:**
 
@@ -742,7 +834,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Heavy Weapons
 
-**Description:** Slows movement when carrying heavy weapons
+**Description:**
+
+Slows movement when carrying heavy weapons
 
 **Features:**
 
@@ -758,7 +852,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Stun Gun
 
-**Description:** A stun gun reworked from CustomHQ
+**Description:**
+
+A stun gun reworked from CustomHQ
 
 **Features:**
 
@@ -774,7 +870,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Tying
 
-**Description:** Adds tying items that serve as handcuffs, enhancing role-play
+**Description:**
+
+Adds tying items that serve as handcuffs, enhancing role-play
 
 **Features:**
 
@@ -790,7 +888,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## View Bob
 
-**Description:** Adds custom view-bob
+**Description:**
+
+Adds custom view-bob
 
 **Features:**
 
@@ -806,7 +906,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## VManip
 
-**Description:** Adds VManip compatibility to Lilia
+**Description:**
+
+Adds VManip compatibility to Lilia
 
 **Features:**
 
@@ -822,7 +924,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Warrant
 
-**Description:** Adds warrants
+**Description:**
+
+Adds warrants
 
 **Features:**
 
@@ -838,7 +942,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## War Table
 
-**Description:** Adds an interactive war table
+**Description:**
+
+Adds an interactive war table
 
 **Features:**
 
@@ -854,7 +960,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Weight Inv
 
-**Description:** Adds a weight-based inventory
+**Description:**
+
+Adds a weight-based inventory
 
 **Features:**
 
@@ -870,7 +978,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Whitelist
 
-**Description:** Adds a server whitelist
+**Description:**
+
+Adds a server whitelist
 
 **Features:**
 
@@ -886,7 +996,9 @@ These free modules expand the base mechanics of Lilia. They are all open-source 
 
 ## Word Filter
 
-**Description:** Filters unwanted words out of the chat
+**Description:**
+
+Filters unwanted words out of the chat
 
 **Features:**
 
