@@ -137,16 +137,17 @@ end
 ### OnTransferred
 
 ```lua
-function CLASS:OnTransferred(character)
+function CLASS:OnTransferred(client, oldClass)
 ```
 
 **Description:**
 
-Executes actions when a character is transferred into this class (e.g., by an admin or system transfer).
+Executes actions when a player is transferred into this class (e.g., by an admin or system transfer). The previous class index is provided as an argument.
 
 **Parameters:**
 
-* `character` (`Character`) – The character that was transferred.
+* `client` (`Player`) – The player who was transferred.
+* `oldClass` (`number`) – The class index the player previously belonged to.
 
 
 **Realm:**
@@ -157,8 +158,12 @@ Executes actions when a character is transferred into this class (e.g., by an ad
 **Example Usage:**
 
 ```lua
-function CLASS:OnTransferred(character)
-    local randomModelIndex = math.random(1, #self.models)
-    character:setModel(self.models[randomModelIndex])
+function CLASS:OnTransferred(client, oldClass)
+    local char = client:getChar()
+    if char then
+        local randomModelIndex = math.random(1, #self.models)
+        char:setModel(self.models[randomModelIndex])
+    end
+    print("Transferred from class", oldClass)
 end
 ```
