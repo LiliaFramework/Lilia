@@ -173,7 +173,6 @@ function PANEL:setActive(state)
                     local selectedCommand = children[self.commandIndex]
                     if IsValid(selectedCommand) then
                         local commandName = selectedCommand:GetText():match("^/([^ ]+)")
-                        local commandData = self.commands[commandName]
                         self.text:SetText("/" .. commandName)
                         self.text:SetCaretPos(#self.text:GetText())
                         self.text:RequestFocus()
