@@ -18,6 +18,7 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 |---|---|---|---|
 | `BagSound` | `table` | `nil` | Sound played when moving items to/from the bag. |
 | `DropOnDeath` | `boolean` | `false` | Deletes the item upon player death. |
+| `noDrop` | `boolean` | `false` | Prevents dropping or giving the item. |
 | `FactionWhitelist` | `table` | `nil` | Allowed faction indices for vendor interaction. |
 | `RequiredSkillLevels` | `table` | `nil` | Skill requirements needed to use the item. |
 | `SteamIDWhitelist` | `table` | `nil` | Allowed Steam IDs for vendor interaction. |
@@ -35,6 +36,7 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 | `desc` | `string` | `"No Description"` | Short description shown to players. |
 | `entityid` | `string` | `""` | Entity class spawned by the item. |
 | `equipSound` | `string` | `""` | Sound played when equipping. |
+| `useSound` | `string` | `""` | Sound played when using the item. |
 | `flag` | `string` | `""` | Flag required to purchase the item. |
 | `functions` | `table` | `DefaultFunctions` | Table of interaction functions. |
 | `grenadeClass` | `string` | `""` | Class name used when spawning a grenade. |
@@ -54,6 +56,7 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 | `newSkin` | `number` | `0` | Skin index applied to the player model. |
 | `outfitCategory` | `string` | `""` | Slot or category for the outfit. |
 | `pacData` | `table` | `{}` | PAC3 customization information. |
+| `bodyGroups` | `table` | `nil` | Bodygroup values applied when equipped. |
 | `postHooks` | `table` | `{}` | Table of post-hook callbacks. |
 | `price` | `number` | `0` | Item cost for trading or selling. |
 | `quantity` | `number` | `1` | Current amount in the item stack. |
@@ -125,6 +128,24 @@ ITEM.unequipSound = "items/ammo_pickup.wav"
 
 ---
 
+#### `useSound`
+
+**Type:**
+
+`string`
+
+**Description:**
+
+Sound played when using the item.
+
+**Example Usage:**
+
+```lua
+ITEM.useSound = "items/ammo_pickup.wav"
+```
+
+---
+
 ### Restrictions & Whitelists
 
 #### `DropOnDeath`
@@ -141,6 +162,24 @@ Deletes the item upon player death.
 
 ```lua
 ITEM.DropOnDeath = true
+```
+
+---
+
+#### `noDrop`
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+Prevents the item from being dropped or given to another player.
+
+**Example Usage:**
+
+```lua
+ITEM.noDrop = true
 ```
 
 ---
@@ -675,6 +714,23 @@ ITEM.pacData = {
 		},
 	},
 }
+```
+
+
+#### `bodyGroups`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Bodygroup values applied when the outfit is equipped.
+
+**Example Usage:**
+
+```lua
+ITEM.bodyGroups = { head = 1, torso = 2 }
 ```
 
 ---
