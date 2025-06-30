@@ -1078,6 +1078,35 @@ char:ban(3600)
 
 ---
 
+### isBanned()
+
+**Description:**
+
+Checks whether this character is currently banned.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* boolean – True if the character has an active ban.
+
+**Example:**
+
+```lua
+-- Prevent actions while the character is banned
+if char:isBanned() then
+    return client:notify("You cannot do that while banned")
+end
+```
+
+---
+
 ### delete()
 
 **Description:**
