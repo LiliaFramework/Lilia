@@ -443,7 +443,7 @@ function PANEL:OnKeyCodePressed()
 end
 
 vgui.Register("Vendor", PANEL, "EditablePanel")
-local PANEL = {}
+PANEL = {}
 function PANEL:Init()
     self:SetSize(600, 200)
     self:Dock(TOP)
@@ -593,7 +593,7 @@ function PANEL:updateLabel()
 end
 
 vgui.Register("VendorItem", PANEL, "DPanel")
-local PANEL = {}
+PANEL = {}
 function PANEL:Init()
     if IsValid(lia.gui.vendorEditor) then lia.gui.vendorEditor:Remove() end
     lia.gui.vendorEditor = self
@@ -845,7 +845,7 @@ function PANEL:ReloadItemList(filter)
 end
 
 vgui.Register("VendorEditor", PANEL, "DFrame")
-local PANEL = {}
+PANEL = {}
 local function onFactionStateChanged(checkBox, state)
     EDITOR.faction(checkBox.factionID, state)
 end
