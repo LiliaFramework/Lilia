@@ -153,4 +153,3 @@ function CLASS:OnTransferred(character)
     character:setModel(self.models[randomModelIndex])
 end
 ```
-

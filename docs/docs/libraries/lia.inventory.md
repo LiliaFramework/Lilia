@@ -12,20 +12,24 @@ The inventory library manages item containers and grid inventories. It supports 
 
 ### lia.inventory.newType(typeID, invTypeStruct)
 
-    
+
 **Description:**
 
 Registers a new inventory type.
 **Parameters:**
 
 * typeID (string) — unique identifier
+
 * invTypeStruct (table) — definition matching InvTypeStructType
+
 **Realm:**
 
 * Shared
+
 **Returns:**
 
 * nil
+
 **Example Usage:**
 
 ```lua
@@ -38,19 +42,22 @@ Registers a new inventory type.
 
 ### lia.inventory.new(typeID)
 
-    
+
 **Description:**
 
 Instantiates a new inventory instance.
 **Parameters:**
 
 * typeID (string)
+
 **Realm:**
 
 * Shared
+
 **Returns:**
 
 * table
+
 **Example Usage:**
 
 ```lua
@@ -63,19 +70,22 @@ Instantiates a new inventory instance.
 
 ### lia.inventory.loadByID(id, noCache)
 
-    
+
 **Description:**
 
 Loads an inventory by ID (cached or via custom loader).
 **Parameters:**
 
 * id (number), noCache? (boolean)
+
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * deferred
+
 **Example Usage:**
 
 ```lua
@@ -88,19 +98,22 @@ Loads an inventory by ID (cached or via custom loader).
 
 ### lia.inventory.loadFromDefaultStorage(id, noCache)
 
-    
+
 **Description:**
 
 Default database loader.
 **Parameters:**
 
 * id (number), noCache? (boolean)
+
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * deferred
+
 **Example Usage:**
 
 ```lua
@@ -113,19 +126,22 @@ Default database loader.
 
 ### lia.inventory.instance(typeID, initialData)
 
-    
+
 **Description:**
 
 Creates & persists a new inventory instance.
 **Parameters:**
 
 * typeID (string), initialData? (table)
+
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * deferred
+
 **Example Usage:**
 
 ```lua
@@ -138,19 +154,22 @@ Creates & persists a new inventory instance.
 
 ### lia.inventory.loadAllFromCharID(charID)
 
-    
+
 **Description:**
 
 Loads all inventories for a character.
 **Parameters:**
 
 * charID (number)
+
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * deferred
+
 **Example Usage:**
 
 ```lua
@@ -163,19 +182,22 @@ Loads all inventories for a character.
 
 ### lia.inventory.deleteByID(id)
 
-    
+
 **Description:**
 
 Deletes an inventory and its data.
 **Parameters:**
 
 * id (number)
+
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * nil
+
 **Example Usage:**
 
 ```lua
@@ -188,19 +210,22 @@ Deletes an inventory and its data.
 
 ### lia.inventory.cleanUpForCharacter(character)
 
-    
+
 **Description:**
 
 Destroys all inventories for a character.
 **Parameters:**
 
 * character
+
 **Realm:**
 
 * Server
+
 **Returns:**
 
 * nil
+
 **Example Usage:**
 
 ```lua
@@ -213,19 +238,22 @@ Destroys all inventories for a character.
 
 ### lia.inventory.show(inventory, parent)
 
-    
+
 **Description:**
 
 Displays inventory UI client‑side.
 **Parameters:**
 
 * inventory, parent
+
 **Realm:**
 
 * Client
+
 **Returns:**
 
 * Panel
+
 **Example Usage:**
 
 ```lua

@@ -12,7 +12,7 @@ The markup library parses a subset of HTML-like tags for drawing rich text in ch
 
 ### lia.markup.parse(text, maxwidth)
 
-    
+
 **Description:**
 
 Parses the provided markup text and returns a markup object representing
@@ -21,13 +21,17 @@ automatically wrap at that width.
 **Parameters:**
 
 * text (string) – String containing markup to be parsed.
+
 * maxwidth (number|nil) – Optional maximum width for wrapping.
+
 **Realm:**
 
 * Client
+
 **Returns:**
 
 * MarkupObject – The parsed markup object with size information.
+
 **Example Usage:**
 
 ```lua

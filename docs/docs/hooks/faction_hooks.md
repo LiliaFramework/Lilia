@@ -53,6 +53,7 @@ Retrieves the default description for a newly created character in this faction.
 **Parameters:**
 
 * `client` (`Player`) – The client for whom the default description is being generated.
+
 * `faction` (`number`) – The faction ID of this faction.
 
 **Realm:**
@@ -83,6 +84,7 @@ Executes actions when a new character is created and assigned to this faction. I
 **Parameters:**
 
 * `client` (`Player`) – The client that owns the new character.
+
 * `character` (`Character`) – The character object that was created.
 
 **Realm:**

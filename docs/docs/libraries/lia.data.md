@@ -12,7 +12,7 @@ The data library persists key/value pairs either on disk or through the database
 
 ### lia.data.set(key, value, global, ignoreMap)
 
-    
+
 **Description:**
 
 Saves the provided value under the specified key to persistent storage.
@@ -21,15 +21,21 @@ Also caches the value in lia.data.stored.
 **Parameters:**
 
 * key (string) – The key under which the data is stored.
+
 * value (any) – The value to store.
+
 * global (boolean) – If true, uses a global path; otherwise, includes folder and map.
+
 * ignoreMap (boolean) – If true, ignores the map directory.
+
 **Returns:**
 
 * string – The path where the data was saved.
+
 **Realm:**
 
 * Shared
+
 **Example Usage:**
 
 ```lua
@@ -46,7 +52,7 @@ Also caches the value in lia.data.stored.
 
 ### lia.data.delete(key, global, ignoreMap)
 
-    
+
 **Description:**
 
 Deletes the stored data file corresponding to the specified key.
@@ -54,14 +60,19 @@ Also removes the value from the cached storage.
 **Parameters:**
 
 * key (string) – The key corresponding to the data to be deleted.
+
 * global (boolean) – If true, uses a global path; otherwise, includes folder and map.
+
 * ignoreMap (boolean) – If true, ignores the map directory.
+
 **Returns:**
 
 * boolean – True if the file was deleted, false otherwise.
+
 **Realm:**
 
 * Shared
+
 **Example Usage:**
 
 ```lua
@@ -74,7 +85,7 @@ Also removes the value from the cached storage.
 
 ### lia.data.get(key, default, global, ignoreMap, refresh)
 
-    
+
 **Description:**
 
 Retrieves the stored data for the specified key.
@@ -83,16 +94,23 @@ Otherwise, reads from the file, decodes, and caches the value.
 **Parameters:**
 
 * key (string) – The key corresponding to the data.
+
 * default (any) – The default value to return if no data is found.
+
 * global (boolean) – If true, uses a global path; otherwise, includes folder and map.
+
 * ignoreMap (boolean) – If true, ignores the map directory.
+
 * refresh (boolean) – If true, forces reading from file instead of cache.
+
 **Returns:**
 
 * any – The stored value, or the default if not found.
+
 **Realm:**
 
 * Shared
+
 **Example Usage:**
 
 ```lua

@@ -48,6 +48,7 @@ Removes inventory update hooks created by `liaListenForInventoryChanges`.
 **Realm:**
 
 * Client
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -69,11 +70,13 @@ Positions the panel using screen scale units.
 **Parameters:**
 
 * x (number) – Horizontal position using `ScreenScale`.
+
 * y (number) – Vertical position using `ScreenScaleH`.
 
 **Realm:**
 
 * Client
+
 **Returns:**
 
 * None – This function does not return a value.
@@ -95,11 +98,13 @@ Sizes the panel using screen scale units.
 **Parameters:**
 
 * w (number) – Width using `ScreenScale`.
+
 * h (number) – Height using `ScreenScaleH`.
 
 **Realm:**
 
 * Client
+
 **Returns:**
 
 * None – This function does not return a value.

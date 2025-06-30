@@ -21,7 +21,10 @@ Attributes can define their own hooks to react when a player's attribute is crea
 ```lua
 function ATTRIBUTE:OnSetup(client, value)
     if value > 5 then
-        client:ChatPrint("You are very Strong!")
+        client:ChatPrint("You feel your strength surging!")
+        client:SetHealth(client:Health() + value * 10)
+    else
+        client:ChatPrint("Your muscles ache from weakness...")
     end
 end
 ```

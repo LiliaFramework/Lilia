@@ -17,12 +17,15 @@ Returns a human-readable string indicating how long ago a given time occurred (e
 **Parameters:**
 
 * strTime (string or number) — The time in string or timestamp form.
+
 **Returns:**
 
 * (string) The time since the given date/time in a readable format.
+
 **Realm:**
 
 * Shared
+
 **Example Usage:**
 
 ```lua
@@ -48,7 +51,7 @@ Returns a human-readable string indicating how long ago a given time occurred (e
 
 ### lia.time.toNumber
 
-    
+
 **Description:**
 
 Converts a string timestamp (YYYY-MM-DD HH:MM:SS) to a table with numeric fields:
@@ -56,12 +59,15 @@ year, month, day, hour, min, sec. Defaults to current time if not provided.
 **Parameters:**
 
 * str (string) — The time string to convert (optional).
+
 **Returns:**
 
 * (table) A table with numeric year, month, day, hour, min, sec.
+
 **Realm:**
 
 * Shared
+
 **Example Usage:**
 
 ```lua
@@ -80,7 +86,7 @@ year, month, day, hour, min, sec. Defaults to current time if not provided.
 
 ### lia.time.GetDate
 
-    
+
 **Description:**
 
 Returns the full current date and time formatted based on the
@@ -90,12 +96,15 @@ Returns the full current date and time formatted based on the
 **Parameters:**
 
 * None
+
 **Returns:**
 
 * (string) Formatted date and time string.
+
 **Realm:**
 
 * Shared
+
 **Example Usage:**
 
 ```lua
@@ -113,7 +122,7 @@ Returns the full current date and time formatted based on the
 
 ### lia.time.GetHour
 
-    
+
 **Description:**
 
 Returns the current hour formatted based on the
@@ -123,13 +132,17 @@ Returns the current hour formatted based on the
 **Parameters:**
 
 * None
+
 **Returns:**
 
 * (string|number) Current hour string with suffix when AmericanTimeStamps
+
 * is enabled, otherwise numeric hour in 24-hour format.
+
 **Realm:**
 
 * Shared
+
 **Example Usage:**
 
 ```lua

@@ -401,6 +401,7 @@ Retrieves the value of an attribute including boosts.
 **Parameters:**
 
 * key (string) – Attribute identifier.
+
 * default (number) – Default value when attribute is missing.
 
 **Realm:**
@@ -540,6 +541,7 @@ Adds another character to this one's recognition list. If a name is supplied the
 **Parameters:**
 
 * character (number|Character) – Character to recognize or its ID.
+
 * name (string|nil) – Optional fake name to store.
 
 **Realm:**
@@ -703,6 +705,7 @@ Attempts to set the character's current class. When `isForced` is true the norma
 **Parameters:**
 
 * class (number) – Class index to join.
+
 * isForced (boolean) – Bypass restrictions when true.
 
 **Realm:**
@@ -758,6 +761,7 @@ Increases an attribute by the specified value, clamped to the maximum allowed.
 **Parameters:**
 
 * key (string) – Attribute identifier.
+
 * value (number) – Amount to add.
 
 **Realm:**
@@ -786,6 +790,7 @@ Directly sets an attribute to the given value.
 **Parameters:**
 
 * key (string) – Attribute identifier.
+
 * value (number) – New level for the attribute.
 
 **Realm:**
@@ -814,7 +819,9 @@ Applies a temporary boost to one of the character's attributes.
 **Parameters:**
 
 * boostID (string) – Unique identifier for the boost.
+
 * attribID (string) – Attribute to modify.
+
 * boostAmount (number) – Amount of the boost.
 
 **Realm:**
@@ -843,6 +850,7 @@ Removes a previously applied attribute boost.
 **Parameters:**
 
 * boostID (string) – Identifier used when the boost was added.
+
 * attribID (string) – Attribute affected by the boost.
 
 **Realm:**
@@ -1538,6 +1546,7 @@ Returns arbitrary data previously stored on the character.
 **Parameters:**
 
 * key (string) – Data key.
+
 * default (any) – Value to return if the entry is missing.
 
 **Realm:**
@@ -1565,8 +1574,11 @@ Writes a data entry on the character and optionally syncs it.
 **Parameters:**
 
 * key (string) – Data key to modify.
+
 * value (any) – New value to store.
+
 * noReplication (boolean) – Suppress network updates.
+
 * receiver (Player) – Optional specific client to send the update to.
 
 **Realm:**
@@ -1594,6 +1606,7 @@ Fetches a temporary variable from the character.
 **Parameters:**
 
 * key (string) – Variable key.
+
 * default (any) – Value returned if the variable is absent.
 
 **Realm:**
@@ -1621,8 +1634,11 @@ Stores a temporary variable on the character.
 **Parameters:**
 
 * key (string) – Variable name.
+
 * value (any) – Data to store.
+
 * noReplication (boolean) – If true, skip networking the change.
+
 * receiver (Player) – Specific target for the update.
 
 **Realm:**
@@ -1794,4 +1810,3 @@ Updates the table of fake recognition names for this character.
 ```lua
 char:setRecognizedAs({ [123] = "Masked Stranger" })
 ```
-

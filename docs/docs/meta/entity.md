@@ -160,6 +160,7 @@ Checks if a player has the given door access level.
 **Parameters:**
 
 * client (Player) – The player to check.
+
 * access (number, optional) – Door permission level.
 
 **Realm:**
@@ -379,6 +380,7 @@ Checks for another entity of the same class nearby.
 **Parameters:**
 
 * radius (number) – Sphere radius in units.
+
 * otherEntity (Entity, optional) – Specific entity to look for.
 
 **Realm:**
@@ -463,6 +465,7 @@ Sends a network variable to recipients.
 **Parameters:**
 
 * key (string) – Identifier of the variable.
+
 * receiver (Player|None) – Who to send to.
 
 **Realm:**
@@ -630,7 +633,9 @@ Updates a network variable and sends it to recipients.
 **Parameters:**
 
 * key (string) – Variable name.
+
 * value (any) – Value to store.
+
 * receiver (Player|None) – Who to send update to.
 
 **Realm:**
@@ -658,11 +663,13 @@ Retrieves a stored network variable or a default value.
 **Parameters:**
 
 * key (string) – Variable name.
+
 * default (any) – Value returned if variable is nil.
 
 **Realm:**
 
 * Server
+
 * Client
 
 **Returns:**
@@ -741,6 +748,7 @@ Retrieves a network variable for this entity on the client.
 **Parameters:**
 
 * key (string) – Variable name.
+
 * default (any) – Default if not set.
 
 **Realm:**
