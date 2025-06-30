@@ -1,5 +1,0 @@
-﻿MODULE.name = "Easy Weapons"
-MODULE.author = "Samael"
-MODULE.discord = "@liliaplayer"
-MODULE.version = "1.0"
-MODULE.desc = "Adds an Easy Way of Making Weapons."

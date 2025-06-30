@@ -52,10 +52,12 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
 end
 
 function MODULE:CheckPassword(steamid64, _, svpass, clpass, name)
-    if not svpass then return end
+    if svpass == "" then return end
     local mismatch = svpass ~= clpass
-    if mismatch then lia.log.add(nil, "failedPassword", steamid64, name, svpass, clpass) end
-    lia.information(mismatch and "Passwords do not match for " .. name .. " (" .. steamid64 .. "), server password: " .. svpass .. ", client password: " .. clpass .. "." or "Passwords match for " .. name .. " (" .. steamid64 .. ").")
+    if mismatch then
+        lia.log.add(nil, "failedPassword", steamid64, name, svpass, clpass)
+        lia.information(mismatch and "Passwords do not match for " .. name .. " (" .. steamid64 .. "), server password: " .. svpass .. ", client password: " .. clpass .. "." or "Passwords match for " .. name .. " (" .. steamid64 .. ").")
+    end
 end
 
 function MODULE:PlayerShouldAct()

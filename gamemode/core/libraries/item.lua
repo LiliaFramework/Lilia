@@ -4,6 +4,16 @@ lia.item.list = lia.item.list or {}
 lia.item.instances = lia.item.instances or {}
 lia.item.inventories = lia.inventory.instances or {}
 lia.item.inventoryTypes = lia.item.inventoryTypes or {}
+lia.item.WeaponOverrides = lia.item.WeaponOverrides or {}
+lia.item.WeaponsBlackList = lia.item.WeaponsBlackList or {
+    weapon_fists = true,
+    weapon_medkit = true,
+    gmod_camera = true,
+    gmod_tool = true,
+    lia_hands = true,
+    lia_keys = true
+}
+
 local DefaultFunctions = {
     drop = {
         tip = "dropTip",
@@ -288,6 +298,121 @@ function lia.item.createInv(w, h, id)
     return instance
 end
 
+lia.item.holdTypeToWeaponCategory = {
+    grenade = "grenade",
+    pistol = "sidearm",
+    smg = "primary",
+    ar2 = "primary",
+    rpg = "primary",
+    shotgun = "primary",
+    crossbow = "primary",
+    normal = "primary",
+    melee = "secondary",
+    melee2 = "secondary",
+    fist = "secondary",
+    knife = "secondary",
+    physgun = "secondary",
+    slam = "secondary",
+    passive = "secondary"
+}
+
+lia.item.holdTypeSizeMapping = {
+    grenade = {
+        width = 1,
+        height = 1
+    },
+    pistol = {
+        width = 1,
+        height = 1
+    },
+    smg = {
+        width = 2,
+        height = 1
+    },
+    ar2 = {
+        width = 2,
+        height = 2
+    },
+    rpg = {
+        width = 1,
+        height = 2
+    },
+    shotgun = {
+        width = 2,
+        height = 1
+    },
+    crossbow = {
+        width = 1,
+        height = 2
+    },
+    normal = {
+        width = 2,
+        height = 1
+    },
+    melee = {
+        width = 1,
+        height = 1
+    },
+    melee2 = {
+        width = 1,
+        height = 1
+    },
+    fist = {
+        width = 1,
+        height = 1
+    },
+    knife = {
+        width = 1,
+        height = 1
+    },
+    physgun = {
+        width = 2,
+        height = 1
+    },
+    slam = {
+        width = 1,
+        height = 2
+    },
+    passive = {
+        width = 1,
+        height = 1
+    }
+}
+
+function lia.item.addWeaponOverride(className, data)
+    lia.item.WeaponOverrides[className] = data
+end
+
+function lia.item.addWeaponToBlacklist(className)
+    lia.item.WeaponsBlackList[className] = true
+end
+
+function lia.item.generateWeapons()
+    for _, wep in ipairs(weapons.GetList()) do
+        local className = wep.ClassName
+        if not className or className:find("_base") or lia.item.WeaponsBlackList[className] then continue end
+        local override = lia.item.WeaponOverrides[className] or {}
+        local holdType = wep.HoldType or "normal"
+        local isGrenade = holdType == "grenade"
+        local baseType = isGrenade and "base_grenade" or "base_weapons"
+        local ITEM = lia.item.register(className, baseType, nil, nil, true)
+        ITEM.name = override.name or wep.PrintName or className
+        ITEM.desc = override.desc or "A Weapon"
+        ITEM.category = override.category or "Weapons"
+        ITEM.model = override.model or wep.WorldModel or wep.WM or "models/props_c17/suitcase_passenger_physics.mdl"
+        ITEM.class = override.class or className
+        local size = lia.item.holdTypeSizeMapping[holdType] or {
+            width = 2,
+            height = 1
+        }
+
+        ITEM.width = override.width or size.width
+        ITEM.height = override.height or size.height
+        ITEM.weaponCategory = override.weaponCategory or lia.item.holdTypeToWeaponCategory[holdType] or "primary"
+        ITEM.category = isGrenade and "grenade" or "weapons"
+    end
+end
+
 if SERVER then
     function lia.item.setItemDataByID(itemID, key, value, receivers, noSave, noCheckEntity)
         assert(isnumber(itemID), "itemID must be a number")
@@ -421,3 +546,4 @@ if SERVER then
 end
 
 lia.item.loadFromDir("lilia/gamemode/items")
+hook.Add("InitializedModules", "liaWeapons", function() lia.item.generateWeapons() end)
