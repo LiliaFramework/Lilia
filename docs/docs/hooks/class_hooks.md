@@ -36,7 +36,8 @@ Determines whether a player is permitted to switch to this class. Evaluated befo
 
 ```lua
 function CLASS:OnCanBe(client)
-    return client:isStaff() or client:getChar():hasFlags("Z")
+    -- Only allow admins or players with the "V" flag
+    return client:IsAdmin() or client:getChar():hasFlags("V")
 end
 ```
 
@@ -67,7 +68,10 @@ Triggered when a player leaves the class. Useful for resetting models or other c
 ```lua
 function CLASS:OnLeave(client)
     local character = client:getChar()
-    character:setModel("models/player/alyx.mdl")
+    if character and self.defaultModel then
+        -- Restore the default model when leaving
+        character:setModel(self.defaultModel)
+    end
 end
 ```
 
@@ -97,7 +101,9 @@ Called when a player successfully joins the class. Initialize class-specific set
 
 ```lua
 function CLASS:OnSet(client)
-    client:setModel("models/police.mdl")
+    -- Equip the player with the class uniform and a sidearm
+    if self.model then client:SetModel(self.model) end
+    client:Give("weapon_pistol")
 end
 ```
 
@@ -127,8 +133,9 @@ Invoked when a class member spawns. Use this for spawn-specific setup like healt
 
 ```lua
 function CLASS:OnSpawn(client)
-    client:SetMaxHealth(500)
-    client:SetHealth(500)
+    client:SetMaxHealth(self.health or 150)
+    client:SetHealth(self.health or 150)
+    client:SetArmor(self.armor or 50)
 end
 ```
 

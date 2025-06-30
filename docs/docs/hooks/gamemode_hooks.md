@@ -9751,6 +9751,37 @@ end)
 
 ---
 
+### TicketSystemClose
+
+**Description:**
+
+Fired when a staff member closes a help ticket.
+
+**Parameters:**
+
+* admin (Player) – Staff member closing the ticket.
+
+* requester (Player) – Player who opened the ticket.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None
+
+**Example Usage:**
+
+```lua
+-- Notify the player that staff closed their ticket
+hook.Add("TicketSystemClose", "AlertRequester", function(admin, requester)
+    requester:ChatPrint(admin:Nick() .. " closed your help ticket.")
+end)
+```
+
+---
+
 ### liaOptionReceived
 
 **Description:**
@@ -9786,3 +9817,4 @@ hook.Add("liaOptionReceived", "PrintOptionChange", function(_, k, v)
     print("Option", k, "set to", v)
 end)
 ```
+
