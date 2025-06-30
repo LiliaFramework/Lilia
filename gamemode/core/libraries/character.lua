@@ -109,10 +109,22 @@ lia.char.registerVar("name", {
     end,
     onAdjust = function(client, data, value, newData)
         local name, override = hook.Run("GetDefaultCharName", client, data.faction, data)
+        local info = lia.faction.indices[data.faction]
+        local prefix = info and (isfunction(info.prefix) and info.prefix(client) or info.prefix) or ""
+
         if isstring(name) and override then
-            newData.name = name
+            if prefix ~= "" then
+                newData.name = string.Trim(prefix .. " " .. name)
+            else
+                newData.name = name
+            end
         else
-            newData.name = string.Trim(value):sub(1, 70)
+            local trimmed = string.Trim(value):sub(1, 70)
+            if prefix ~= "" then
+                newData.name = string.Trim(prefix .. " " .. trimmed)
+            else
+                newData.name = trimmed
+            end
         end
     end,
 })
