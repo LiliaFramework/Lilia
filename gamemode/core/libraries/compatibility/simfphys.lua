@@ -71,8 +71,7 @@ lia.config.add("TimeToEnterVehicle", "Time To Enter Vehicle", 4, nil, {
 
 CAMI.RegisterPrivilege({
     Name = "Staff Permissions - Can Edit Simfphys Cars",
-    MinAccess = "superadmin",
-    Description = "Allows access to Editting Simfphys Cars"
+    MinAccess = "superadmin"
 })
 
 hook.Add("simfphysPhysicsCollide", "SIMFPHYS_simfphysPhysicsCollide", function() return true end)

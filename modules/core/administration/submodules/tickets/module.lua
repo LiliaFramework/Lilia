@@ -7,7 +7,6 @@ MODULE.desc = "Adds a module that manages tickets"
 MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Always See Tickets",
-        MinAccess = "superadmin",
-        Description = "Allows access to See Tickets."
+        MinAccess = "superadmin"
     },
 }

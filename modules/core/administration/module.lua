@@ -6,22 +6,18 @@ MODULE.desc = "Adds some Administration Utilities"
 MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can Remove Warns",
-        MinAccess = "superadmin",
-        Description = "Allows access to Removing Player Warnings.",
+        MinAccess = "superadmin"
     },
     {
         Name = "Staff Permissions - Manage Prop Blacklist",
-        MinAccess = "superadmin",
-        Description = "Allows access to Removing Player Warnings.",
+        MinAccess = "superadmin"
     },
     {
         Name = "Staff Permissions - Access Configuration Menu",
-        MinAccess = "superadmin",
-        Description = "Allows access to Access Configuration Menu.",
+        MinAccess = "superadmin"
     },
     {
         Name = "Staff Permissions - Access Edit Configuration Menu",
-        MinAccess = "superadmin",
-        Description = "Allows access to Access Configuration Menu.",
+        MinAccess = "superadmin"
     },
 }

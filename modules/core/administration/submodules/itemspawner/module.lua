@@ -6,7 +6,6 @@ MODULE.desc = "Adds a Item Spawner to assist on spawning items."
 MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can Use Item Spawner",
-        MinAccess = "admin",
-        Description = "Allows access to Spawning Menu Items.",
+        MinAccess = "admin"
     }
 }
