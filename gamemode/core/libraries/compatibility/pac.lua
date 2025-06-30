@@ -240,8 +240,7 @@ lia.config.add("BlockPackURLoad", "Block Pack URL Load", true, nil, {
 
 CAMI.RegisterPrivilege({
     Name = "Staff Permissions - Can Use PAC3",
-    MinAccess = "admin",
-    Description = "Allows access to PAC3"
+    MinAccess = "admin"
 })
 
 lia.flag.add("P", "Access to PAC3.")

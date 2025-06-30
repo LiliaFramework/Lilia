@@ -15,8 +15,7 @@ function lia.command.add(command, data)
         if not CAMI.GetPrivilege(privilegeName) then
             CAMI.RegisterPrivilege({
                 Name = privilegeName,
-                MinAccess = superAdminOnly and "superadmin" or "admin",
-                Description = data.description
+                MinAccess = superAdminOnly and "superadmin" or "admin"
             })
         end
     end

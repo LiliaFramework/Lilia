@@ -165,14 +165,17 @@ Defines how the command appears in admin utility menus. Common keys:
 
 * `Icon` (string): 16×16 icon path.
 
+* `TargetClass` (string): Limit the command to a specific entity class when using the Admin Stick.
+
 **Example Usage:**
 
 ```lua
 AdminStick = {
-    Name        = "Set Character Skin",
-    Category    = "Player Information",
-    SubCategory = "Set Attributes",
-    Icon        = "icon16/user_gray.png"
+    Name        = "Restock Vendor",
+    Category    = "Vendors",
+    SubCategory = "Management",
+    Icon        = "icon16/box.png",
+    TargetClass = "lia_vendor"
 }
 ```
 
@@ -199,6 +202,40 @@ onRun = function(client, arguments)
         target:Kill()
     end
 end
+```
+
+---
+
+### Full Command Example
+
+```lua
+lia.command.add("restockvendor", {
+    superAdminOnly = true,
+    privilege = "Manage Vendors",
+    desc = "Restock the vendor you are looking at.",
+    syntax = "[player Target]",
+    alias = {"vendorrestock"},
+    AdminStick = {
+        Name        = "Restock Vendor",
+        Category    = "Vendors",
+        SubCategory = "Management",
+        Icon        = "icon16/box.png",
+        TargetClass = "lia_vendor"
+    },
+    onRun = function(client, args)
+        local vendor = client:getTracedEntity()
+        if IsValid(vendor) and vendor:GetClass() == "lia_vendor" then
+            for id, itemData in pairs(vendor.items) do
+                if itemData[2] and itemData[4] then
+                    vendor.items[id][2] = itemData[4]
+                end
+            end
+            client:notifyLocalized("vendorRestocked")
+        else
+            client:notifyLocalized("NotLookingAtValidVendor")
+        end
+    end
+})
 ```
 
 ---
