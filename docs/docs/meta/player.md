@@ -813,7 +813,7 @@ Determines if the player has whitelist access for a faction.
 
 **Returns:**
 
-**Example Usage:**True if whitelisted.
+* boolean – True if whitelisted.
 
 **Example Usage:**
 
@@ -837,7 +837,7 @@ Retrieves the class index of the player's character.
 
 * Shared
 
-**Example Usage:**
+**Returns:**
 
 * number|None – Class index or None.
 
@@ -860,8 +860,6 @@ Checks if the player's character is whitelisted for a class.
 * class (number) – Class index.
 
 **Realm:**
-
-**Example Usage:**
 
 **Returns:**
 
@@ -886,8 +884,6 @@ Returns the class table of the player's current class.
 * None
 
 **Realm:**
-
-**Example Usage:**
 
 * Shared
 
@@ -914,8 +910,6 @@ Compatibility helper for retrieving money with DarkRP-style calls.
 * var (string) – Currently only supports "money".
 
 **Realm:**
-
-**Example Usage:**
 
 * Shared
 

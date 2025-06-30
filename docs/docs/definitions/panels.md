@@ -60,473 +60,362 @@ Panels provide the building blocks for Lilia's user interface. Most derive from 
 ## Panel Details
 
 ### `liaMarkupPanel`
-**Base Panel:** `DPanel`
+**Base Panel:**
 
-**Description:** Panel that renders text using Garry's Mod markup language and wraps `markup.Parse` so formatted chat messages can be displayed easily.
+`DPanel`
 
-**Example Usage:**
-```lua
--- Create a formatted chat line
-local chatLine = vgui.Create("liaMarkupPanel", chatScroll)
-chatLine:setMarkup("<color=255,255,0>Hello!</color>")
-chatLine:Dock(TOP)
-```
+**Description:**
+
+Panel that renders text using Garry's Mod markup language and wraps `markup.Parse` so formatted chat messages can be displayed easily.
 
 ### `liaCharInfo`
-**Base Panel:** `EditablePanel`
+**Base Panel:**
 
-**Description:** Displays the current character's stats and fields in the F1 menu. The panel updates periodically and can show plugin-defined information.
+`EditablePanel`
 
-**Example Usage:**
-```lua
-local infoPanel = vgui.Create("liaCharInfo") -- part of the F1 menu
-infoPanel:Dock(FILL)
-infoPanel:setup() -- populate displayed fields
-```
+**Description:**
+
+Displays the current character's stats and fields in the F1 menu. The panel updates periodically and can show plugin-defined information.
 
 ### `liaMenu`
-**Base Panel:** `EditablePanel`
+**Base Panel:**
 
-**Description:** Main F1 menu housing tabs like Character, Help and Settings. It controls switching between tabs and can be opened on demand.
+`EditablePanel`
 
-**Example Usage:**
-```lua
-local menu = vgui.Create("liaMenu")
-menu:MakePopup()
-menu:openTab("Character")
-```
+**Description:**
+
+Main F1 menu housing tabs like Character, Help and Settings. It controls switching between tabs and can be opened on demand.
 
 ### `liaClasses`
-**Base Panel:** `EditablePanel`
+**Base Panel:**
 
-**Description:** Lists available classes in the F1 menu and shows requirements for each. Players may click a button to join a class when eligible.
+`EditablePanel`
 
-**Example Usage:**
-```lua
-local btn = parent:Add("liaMediumButton")
-btn:SetText("Medic")
-btn.DoClick = function()
-    RunConsoleCommand("lia_class", "medic")
-end
-```
+**Description:**
+
+Lists available classes in the F1 menu and shows requirements for each. Players may click a button to join a class when eligible.
 
 ### `liaModelPanel`
-**Base Panel:** `DModelPanel`
+**Base Panel:**
 
-**Description:** Displays a model with custom lighting and mouse controls for rotation and zoom. Useful for previewing items or player characters.
+`DModelPanel`
 
-**Example Usage:**
-```lua
-local mdl = vgui.Create("liaModelPanel", frame)
-mdl:SetModel("models/props_c17/oildrum001.mdl")
-mdl:SetCamPos(Vector(35, 0, 55))
-```
+**Description:**
+
+Displays a model with custom lighting and mouse controls for rotation and zoom. Useful for previewing items or player characters.
 
 ### `FacingModelPanel`
-**Base Panel:** `DModelPanel`
+**Base Panel:**
 
-**Description:** Variant of `liaModelPanel` that locks the camera to the model's head bone, ideal for mugshots or scoreboard avatars.
+`DModelPanel`
 
-**Example Usage:**
-```lua
-local avatar = vgui.Create("FacingModelPanel", frame)
-avatar:SetModel("models/Humans/Group01/Female_01.mdl")
-```
+**Description:**
+
+Variant of `liaModelPanel` that locks the camera to the model's head bone, ideal for mugshots or scoreboard avatars.
 
 ### `DProgressBar`
-**Base Panel:** `DPanel`
+**Base Panel:**
 
-**Description:** Simple progress bar panel. Update its fraction each frame to visually represent timed actions.
+`DPanel`
 
-**Example Usage:**
-```lua
-local progress = vgui.Create("DProgressBar", panel)
-progress:SetFraction(0)
-timer.Simple(2, function() progress:SetFraction(1) end)
-```
+**Description:**
+
+Simple progress bar panel. Update its fraction each frame to visually represent timed actions.
 
 ### `liaNotice`
-**Base Panel:** `DLabel`
+**Base Panel:**
 
-**Description:** Small label for quick notifications. It draws a blurred backdrop and fades away after a short delay.
+`DLabel`
 
-**Example Usage:**
-```lua
-local notice = vgui.Create("liaNotice")
-notice:SetText("Item picked up!")
-notice.start = CurTime() + 2
-```
+**Description:**
+
+Small label for quick notifications. It draws a blurred backdrop and fades away after a short delay.
 
 ### `noticePanel`
-**Base Panel:** `DPanel`
+**Base Panel:**
 
-**Description:** Expanded version of `liaNotice` supporting more text and optional buttons. Often used for yes/no prompts.
+`DPanel`
 
-**Example Usage:**
-```lua
-local prompt = vgui.Create("noticePanel")
-prompt.text:SetText("Are you sure?")
-prompt.yes.DoClick = function() print("confirmed") end
-```
+**Description:**
+
+Expanded version of `liaNotice` supporting more text and optional buttons. Often used for yes/no prompts.
 
 ### `liaChatBox`
-**Base Panel:** `DPanel`
+**Base Panel:**
 
-**Description:** In-game chat window supporting multiple tabs, command prefix detection and color-coded messages.
+`DPanel`
 
-**Example Usage:**
-```lua
-local chatBox = vgui.Create("liaChatBox")
-chatBox:setActive(true)
-```
+**Description:**
+
+In-game chat window supporting multiple tabs, command prefix detection and color-coded messages.
 
 ### `liaSpawnIcon`
-**Base Panel:** `DModelPanel`
+**Base Panel:**
 
-**Description:** Improved spawn icon built on `DModelPanel`. It centers models and applies good lighting for use in inventories or lists.
+`DModelPanel`
 
-**Example Usage:**
-```lua
-local icon = vgui.Create("liaSpawnIcon", frame)
-icon:SetModel("models/props_c17/oildrum001.mdl")
-icon:SetSize(64, 64)
-icon.DoClick = function() print("clicked") end
-```
+**Description:**
+
+Improved spawn icon built on `DModelPanel`. It centers models and applies good lighting for use in inventories or lists.
 
 ### `VoicePanel`
-**Base Panel:** `DPanel`
+**Base Panel:**
 
-**Description:** HUD element that lists players using voice chat. Each entry fades out after a player stops talking.
+`DPanel`
 
-**Example Usage:**
-```lua
-local voiceEntry = voiceList:Add("VoicePanel")
-voiceEntry:Setup(player)
-```
+**Description:**
+
+HUD element that lists players using voice chat. Each entry fades out after a player stops talking.
 
 ### `liaHorizontalScroll`
-**Base Panel:** `DPanel`
+**Base Panel:**
 
-**Description:** Container that arranges child panels in a single row. Often paired with a custom scrollbar when content overflows.
+`DPanel`
 
-**Example Usage:**
-```lua
-local scroll = vgui.Create("liaHorizontalScroll")
-scroll.bar = scroll:Add("liaHorizontalScrollBar")
-scroll.bar:Dock(BOTTOM)
-```
+**Description:**
+
+Container that arranges child panels in a single row. Often paired with a custom scrollbar when content overflows.
 
 ### `liaHorizontalScrollBar`
-**Base Panel:** `DVScrollBar`
+**Base Panel:**
 
-**Description:** Custom scrollbar paired with `liaHorizontalScroll`. It moves the canvas horizontally when items overflow.
+`DVScrollBar`
 
-**Example Usage:**
-```lua
-local bar = vgui.Create("liaHorizontalScrollBar")
-bar.TargetCanvas = scroll.canvas
-```
+**Description:**
+
+Custom scrollbar paired with `liaHorizontalScroll`. It moves the canvas horizontally when items overflow.
 
 ### `liaItemMenu`
-**Base Panel:** `EditablePanel`
+**Base Panel:**
 
-**Description:** Drop-down menu that appears when interacting with items in the world. Lets players pick up, examine or drop the item.
+`EditablePanel`
 
-**Example Usage:**
-```lua
-local menu = vgui.Create("liaItemMenu")
-menu:SetEntity(targetItem)
-menu:Open()
-menu:Center()
-```
+**Description:**
+
+Drop-down menu that appears when interacting with items in the world. Lets players pick up, examine or drop the item.
 
 ### `liaAttribBar`
-**Base Panel:** `DPanel`
+**Base Panel:**
 
-**Description:** Interactive bar used during character creation to assign starting attribute points.
+`DPanel`
 
-**Example Usage:**
-```lua
-local bar = vgui.Create("liaAttribBar", panel)
-bar:SetMax(10)
-bar:SetValue(0)
-```
+**Description:**
+
+Interactive bar used during character creation to assign starting attribute points.
 
 ### `liaCharacterAttribs`
-**Base Panel:** `liaCharacterCreateStep`
+**Base Panel:**
 
-**Description:** Character creation step panel for distributing attribute points across stats.
+`liaCharacterCreateStep`
 
-**Example Usage:**
-```lua
-local row = vgui.Create("liaCharacterAttribsRow", attributesPanel)
-row:setAttribute("strength", 5)
-```
+**Description:**
+
+Character creation step panel for distributing attribute points across stats.
 
 ### `liaCharacterAttribsRow`
-**Base Panel:** `DPanel`
+**Base Panel:**
 
-**Description:** Represents a single attribute with its description and current points, including buttons for adjustment.
+`DPanel`
 
-**Example Usage:**
-```lua
-local row = vgui.Create("liaCharacterAttribsRow")
-row:setAttribute("agility", 2)
-row:updateQuantity()
-```
+**Description:**
+
+Represents a single attribute with its description and current points, including buttons for adjustment.
 
 ### `liaItemIcon`
-**Base Panel:** `SpawnIcon`
+**Base Panel:**
 
-**Description:** Spawn icon specialised for Lilia item tables. Displays custom tooltips and supports right-click menus.
+`SpawnIcon`
 
-**Example Usage:**
-```lua
-local icon = vgui.Create("liaItemIcon", parent)
-icon:setItem(item)
-icon:SetTooltip(item:getName())
-```
+**Description:**
+
+Spawn icon specialised for Lilia item tables. Displays custom tooltips and supports right-click menus.
 
 ### `BlurredDFrame`
-**Base Panel:** `DFrame`
+**Base Panel:**
 
-**Description:** Frame that draws a screen blur behind its contents. Useful for overlay menus that shouldn't fully obscure the game.
+`DFrame`
 
-**Example Usage:**
-```lua
-local frame = vgui.Create("BlurredDFrame")
-frame:SetSize(300, 200)
-```
+**Description:**
+
+Frame that draws a screen blur behind its contents. Useful for overlay menus that shouldn't fully obscure the game.
 
 ### `SemiTransparentDFrame`
-**Base Panel:** `DFrame`
+**Base Panel:**
 
-**Description:** Simplified frame with a semi-transparent background, ideal for pop-up windows where the game should remain partially visible.
+`DFrame`
 
-**Example Usage:**
-```lua
-local frame = vgui.Create("SemiTransparentDFrame")
-frame:SetTitle("Notice")
-```
+**Description:**
+
+Simplified frame with a semi-transparent background, ideal for pop-up windows where the game should remain partially visible.
 
 ### `SemiTransparentDPanel`
-**Base Panel:** `DPanel`
+**Base Panel:**
 
-**Description:** Basic panel that paints itself with partial transparency. Often used inside `SemiTransparentDFrame` as an inner container.
+`DPanel`
 
-**Example Usage:**
-```lua
-local panel = vgui.Create("SemiTransparentDPanel", frame)
-panel:SetSize(200, 100)
-```
+**Description:**
+
+Basic panel that paints itself with partial transparency. Often used inside `SemiTransparentDFrame` as an inner container.
 
 ### `liaDoorMenu`
-**Base Panel:** `DFrame`
+**Base Panel:**
 
-**Description:** Interface for property doors showing ownership and faction access. Owners can lock, sell or share the door through this menu.
+`DFrame`
 
-**Example Usage:**
-```lua
-local doorMenu = vgui.Create("liaDoorMenu")
-doorMenu:setDoor(doorEntity, true)
-doorMenu:Center()
-```
+**Description:**
+
+Interface for property doors showing ownership and faction access. Owners can lock, sell or share the door through this menu.
 
 ### `liaScoreboard`
-**Base Panel:** `EditablePanel`
+**Base Panel:**
 
-**Description:** Replacement scoreboard that groups players by team or faction and displays additional stats like ping and play time.
+`EditablePanel`
 
-**Example Usage:**
-```lua
-local board = vgui.Create("liaScoreboard")
-board:Show()
-```
+**Description:**
+
+Replacement scoreboard that groups players by team or faction and displays additional stats like ping and play time.
 
 ### `liaCharacter`
-**Base Panel:** `EditablePanel`
+**Base Panel:**
 
-**Description:** Main panel of the character selection menu. Lists the player's characters with options to create, delete or load them.
+`EditablePanel`
 
-**Example Usage:**
-```lua
-local charMenu = vgui.Create("liaCharacter")
-charMenu:Dock(FILL)
-charMenu:populateList()
-```
+**Description:**
+
+Main panel of the character selection menu. Lists the player's characters with options to create, delete or load them.
 
 ### `liaCharBGMusic`
-**Base Panel:** `DPanel`
+**Base Panel:**
 
-**Description:** Small panel that plays ambient music when the main menu is open. It fades the track in and out as the menu is shown or closed.
+`DPanel`
 
-**Example Usage:**
-```lua
-local musicPanel = vgui.Create("liaCharBGMusic")
-musicPanel:Play("music/menu_theme.mp3")
-```
+**Description:**
+
+Small panel that plays ambient music when the main menu is open. It fades the track in and out as the menu is shown or closed.
 
 ### `liaCharacterCreation`
-**Base Panel:** `EditablePanel`
+**Base Panel:**
 
-**Description:** Parent panel that hosts each character creation step such as biography, faction and model. It provides navigation buttons and validates input before advancing.
+`EditablePanel`
 
-**Example Usage:**
-```lua
-local creator = vgui.Create("liaCharacterCreation")
-creator:nextStep()
-```
+**Description:**
+
+Parent panel that hosts each character creation step such as biography, faction and model. It provides navigation buttons and validates input before advancing.
 
 ### `liaCharacterCreateStep`
-**Base Panel:** `DScrollPanel`
+**Base Panel:**
 
-**Description:** Scroll panel used as the foundation for each creation step. Provides helpers for saving user input and moving forward in the flow.
+`DScrollPanel`
 
-**Example Usage:**
-```lua
-local step = vgui.Create("liaCharacterCreateStep")
-step:next()
-```
+**Description:**
+
+Scroll panel used as the foundation for each creation step. Provides helpers for saving user input and moving forward in the flow.
 
 ### `liaCharacterConfirm`
-**Base Panel:** `SemiTransparentDFrame`
+**Base Panel:**
 
-**Description:** Confirmation dialog used for dangerous actions like deleting a character. Inherits from `SemiTransparentDFrame` for a consistent overlay look.
+`SemiTransparentDFrame`
 
-**Example Usage:**
-```lua
-local confirm = vgui.Create("liaCharacterConfirm")
-confirm:setMessage("Are you sure?")
-confirm:onConfirm(function() print("confirmed") end)
-```
+**Description:**
+
+Confirmation dialog used for dangerous actions like deleting a character. Inherits from `SemiTransparentDFrame` for a consistent overlay look.
 
 ### `liaCharacterBiography`
-**Base Panel:** `liaCharacterCreateStep`
+**Base Panel:**
 
-**Description:** Step where players input their character's name and optional backstory. These values are validated and stored for later steps.
+`liaCharacterCreateStep`
 
-**Example Usage:**
-```lua
-step.nameEntry:SetValue("John")
-step.descEntry:SetMultiline(true)
-```
+**Description:**
+
+Step where players input their character's name and optional backstory. These values are validated and stored for later steps.
 
 ### `liaCharacterFaction`
-**Base Panel:** `liaCharacterCreateStep`
+**Base Panel:**
 
-**Description:** Allows the player to choose from available factions. The selected faction updates the model panel and determines accessible classes.
+`liaCharacterCreateStep`
 
-**Example Usage:**
-```lua
-step:setContext("faction", 1)
-step:updateModelPanel()
-```
+**Description:**
+
+Allows the player to choose from available factions. The selected faction updates the model panel and determines accessible classes.
 
 ### `liaCharacterModel`
-**Base Panel:** `liaCharacterCreateStep`
+**Base Panel:**
 
-**Description:** Lets the player browse and select a player model appropriate for the chosen faction. Clicking an icon saves the choice and refreshes the preview.
+`liaCharacterCreateStep`
 
-**Example Usage:**
-```lua
-function PANEL:onModelSelected(icon)
-    self:setContext("model", icon.index or 1)
-    self:updateModelPanel()
-    icon:SetSelected(true)
-end
-```
+**Description:**
+
+Lets the player browse and select a player model appropriate for the chosen faction. Clicking an icon saves the choice and refreshes the preview.
 
 ### `liaInventory`
-**Base Panel:** `DFrame`
+**Base Panel:**
 
-**Description:** Main inventory frame for characters. It listens for network updates and renders items in the layout provided by its subclass.
+`DFrame`
 
-**Example Usage:**
-```lua
-local invFrame = vgui.Create("liaInventory")
-invFrame:SetTitle("Inventory")
-```
+**Description:**
+
+Main inventory frame for characters. It listens for network updates and renders items in the layout provided by its subclass.
 
 ### `liaGridInventory`
-**Base Panel:** `liaInventory`
+**Base Panel:**
 
-**Description:** Subclass of `liaInventory` that arranges item icons into a fixed grid. Often used for storage containers or equipment screens.
+`liaInventory`
 
-**Example Usage:**
-```lua
-local grid = vgui.Create("liaGridInventory", invFrame)
-grid:setGridSize(5, 4, 64)
-grid:Dock(FILL)
-```
+**Description:**
+
+Subclass of `liaInventory` that arranges item icons into a fixed grid. Often used for storage containers or equipment screens.
 
 ### `liaGridInvItem`
-**Base Panel:** `liaItemIcon`
+**Base Panel:**
 
-**Description:** Specialized icon used by `liaGridInventory`. Supports drag-and-drop for moving items between slots.
+`liaItemIcon`
 
-**Example Usage:**
-```lua
-local icon = vgui.Create("liaGridInvItem", grid)
-icon:setItem(item)
-icon:SetPos(0, 0)
-```
+**Description:**
+
+Specialized icon used by `liaGridInventory`. Supports drag-and-drop for moving items between slots.
 
 ### `liaGridInventoryPanel`
-**Base Panel:** `DPanel`
+**Base Panel:**
 
-**Description:** Container responsible for laying out `liaGridInvItem` icons in rows and columns. Handles drag-and-drop and keeps the grid in sync with item data.
+`DPanel`
 
-**Example Usage:**
-```lua
-function PANEL:populateItems()
-    -- Rebuild icons after inventory change
-    self:InvalidateLayout()
-end
-```
+**Description:**
+
+Container responsible for laying out `liaGridInvItem` icons in rows and columns. Handles drag-and-drop and keeps the grid in sync with item data.
 
 ### `Vendor`
-**Base Panel:** `EditablePanel`
+**Base Panel:**
 
-**Description:** Main vendor window that lists items the NPC will buy or sell. Provides buttons for transactions and updates when the player's inventory changes.
+`EditablePanel`
 
-**Example Usage:**
-```lua
-local vendorUI = vgui.Create("Vendor")
-vendorUI:PopulateItems()
-```
+**Description:**
+
+Main vendor window that lists items the NPC will buy or sell. Provides buttons for transactions and updates when the player's inventory changes.
 
 ### `VendorItem`
-**Base Panel:** `DPanel`
+**Base Panel:**
 
-**Description:** Panel representing an individual item within the vendor list. Shows price information and handles clicks for buying or selling.
+`DPanel`
 
-**Example Usage:**
-```lua
-local itemRow = vgui.Create("VendorItem", vendorUI.list)
-itemRow:setItemType("ammo")
-itemRow.DoClick = function() vendorUI:buy("ammo") end
-itemRow:SetTall(40)
-```
+**Description:**
+
+Panel representing an individual item within the vendor list. Shows price information and handles clicks for buying or selling.
 
 ### `VendorEditor`
-**Base Panel:** `DFrame`
+**Base Panel:**
 
-**Description:** Administrative window for editing a vendor's inventory and settings, including item prices and faction permissions.
+`DFrame`
 
-**Example Usage:**
-```lua
-local editor = vgui.Create("VendorEditor")
-editor:SetZPos(99)
-```
+**Description:**
+
+Administrative window for editing a vendor's inventory and settings, including item prices and faction permissions.
 
 ### `VendorFactionEditor`
-**Base Panel:** `DFrame`
+**Base Panel:**
 
-**Description:** Secondary editor for selecting which factions and player classes can trade with the vendor.
+`DFrame`
 
-**Example Usage:**
-```lua
-factionButton.DoClick = function()
-    vgui.Create("VendorFactionEditor"):MoveLeftOf(factionButton, 4)
-end
-```
+**Description:**
+
+Secondary editor for selecting which factions and player classes can trade with the vendor.
+
