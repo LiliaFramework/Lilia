@@ -1,20 +1,14 @@
 # Attribute Hooks
 
-
 This document lists hooks related to attribute setup and changes.
 
-
 ---
-
 
 ## Overview
 
-
 Attributes can define their own hooks to react when a player's attribute is created or its value changes. Implement these functions on the `ATTRIBUTE` table to run custom logic. All hooks are optional; if a hook is omitted the default behavior is used.
 
-
 ---
-
 
 ### OnSetup
 

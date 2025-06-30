@@ -1,31 +1,22 @@
 # Config Library
 
-
 This page explains how to add and access configuration settings.
 
-
 ---
-
 
 ## Overview
 
-
 The config library stores server configuration values with descriptions and default settings. It also provides callbacks when values change so modules can react to new options.
 
-
 ---
-
 
 ### lia.config.add(key, name, value, callback, data)
 
 **Description:**
 
-
 Registers a new config option with the given key, display name, default value, and optional callback/data.
 
-
 **Parameters:**
-
 
 * key (string) — The unique key identifying the config.
 
@@ -44,18 +35,15 @@ Registers a new config option with the given key, display name, default value, a
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * None
 
 
 **Example Usage:**
-
 
 ```lua
     -- Register a config option with a callback that prints when it changes
@@ -70,20 +58,15 @@ Registers a new config option with the given key, display name, default value, a
     )
 ```
 
-
 ---
-
 
 ### lia.config.setDefault(key, value)
 
 **Description:**
 
-
 Overrides the default value of an existing config.
 
-
 **Parameters:**
-
 
 * key (string) — The key identifying the config.
 
@@ -93,38 +76,30 @@ Overrides the default value of an existing config.
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.config.setDefault
     lia.config.setDefault("maxPlayers", 32)
 ```
 
-
 ---
-
 
 ### lia.config.forceSet(key, value, noSave)
 
 **Description:**
 
-
 Forces a config value without triggering networking or callback if 'noSave' is true, then optionally saves.
 
-
 **Parameters:**
-
 
 * key (string) — The key identifying the config.
 
@@ -137,38 +112,30 @@ Forces a config value without triggering networking or callback if 'noSave' is t
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.config.forceSet
     lia.config.forceSet("someSetting", true, true)
 ```
 
-
 ---
-
 
 ### lia.config.set(key, value)
 
 **Description:**
 
-
 Sets a config value, runs callback, and handles networking (if on server). Also saves the config.
 
-
 **Parameters:**
-
 
 * key (string) — The key identifying the config.
 
@@ -178,38 +145,30 @@ Sets a config value, runs callback, and handles networking (if on server). Also 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.config.set
     lia.config.set("maxPlayers", 24)
 ```
 
-
 ---
-
 
 ### lia.config.get(key, default)
 
 **Description:**
 
-
 Retrieves the current value of a config, or returns a default if neither value nor default is set.
 
-
 **Parameters:**
-
 
 * key (string) — The key identifying the config.
 
@@ -219,46 +178,37 @@ Retrieves the current value of a config, or returns a default if neither value n
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
-
 
 * (any) The config's value or the provided default.
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.config.get
     local players = lia.config.get("maxPlayers", 64)
 ```
 
-
 ---
-
 
 ### lia.config.load()
 
 **Description:**
 
-
 Loads the config data from storage (server-side) and updates the stored config values.
 
 Triggers "InitializedConfig" hook once done.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
-
 
 * Shared
 
@@ -267,132 +217,104 @@ Triggers "InitializedConfig" hook once done.
 
     true
 
-
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.config.load
     lia.config.load()
 ```
 
-
 ---
-
 
 ### lia.config.getChangedValues()
 
 **Description:**
 
-
 Returns a table of all config entries where the current value differs from the default.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Server
 
 
 **Returns:**
-
 
 * (table) Key-value pairs of changed config entries.
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.config.getChangedValues
     local changed = lia.config.getChangedValues()
 ```
 
-
 ---
-
 
 ### lia.config.send(client)
 
 **Description:**
 
-
 Sends current changed config values to a specified client.
 
-
 **Parameters:**
-
 
 * client (player) — The player to receive the config data.
 
 
 **Realm:**
 
-
 * Server
 
 
 **Returns:**
 
-
 * None
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.config.send
     lia.config.send(client)
 ```
 
-
 ---
-
 
 ### lia.config.save()
 
 **Description:**
 
-
 Saves all changed config values to persistent storage.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Server
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.config.save
     lia.config.save()
 ```
-

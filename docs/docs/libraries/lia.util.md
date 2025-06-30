@@ -1,31 +1,22 @@
 # Utility Library
 
-
 This page documents miscellaneous helper functions.
 
-
 ---
-
 
 ## Overview
 
-
 The util library contains small miscellaneous helper functions used across modules. These include player searches, entity queries, and geometric calculations.
 
-
 ---
-
 
 ### lia.util.FindPlayersInBox
 
 **Description:**
 
-
 Finds and returns players located inside a world-space bounding box. Useful for quickly gathering clients within rectangular areas like rooms or zones.
 
-
 **Parameters:**
-
 
 * mins (Vector) – The minimum corner of the box.
 
@@ -35,18 +26,15 @@ Finds and returns players located inside a world-space bounding box. Useful for 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * table – A table of matching player entities.
 
 
 **Example Usage:**
-
 
 ```lua
     -- Kick everyone hiding inside a restricted building
@@ -56,20 +44,15 @@ Finds and returns players located inside a world-space bounding box. Useful for 
     end
 ```
 
-
 ---
-
 
 ### lia.util.FindPlayersInSphere
 
 **Description:**
 
-
 Finds and returns a table of players within a given spherical radius from an origin.
 
-
 **Parameters:**
-
 
 * origin (Vector) — The center of the sphere.
 
@@ -79,18 +62,15 @@ Finds and returns a table of players within a given spherical radius from an ori
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * table — A table of valid player entities.
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.FindPlayersInSphere
@@ -100,20 +80,15 @@ Finds and returns a table of players within a given spherical radius from an ori
     end
 ```
 
-
 ---
-
 
 ### lia.util.findPlayer
 
 **Description:**
 
-
 Attempts to find a player by identifier. The identifier can be STEAMID, SteamID64, "^" (self), "@" (looking at target), or partial name.
 
-
 **Parameters:**
-
 
 * client (Player) — The player requesting the find (used for notifications).
 
@@ -123,7 +98,6 @@ Attempts to find a player by identifier. The identifier can be STEAMID, SteamID6
 
 **Realm:**
 
-
 * Shared
 
 
@@ -131,15 +105,12 @@ Attempts to find a player by identifier. The identifier can be STEAMID, SteamID6
 
     lia.util.findPlayer
 
-
 **Returns:**
-
 
 * Player|nil — The found player, or nil if not found.
 
 
 **Example Usage:**
-
 
 ```lua
     -- Teleport an admin next to the found player by partial name
@@ -149,38 +120,30 @@ Attempts to find a player by identifier. The identifier can be STEAMID, SteamID6
     end
 ```
 
-
 ---
-
 
 ### lia.util.findPlayerItems
 
 **Description:**
 
-
 Finds all item entities in the world created by the specified player.
 
-
 **Parameters:**
-
 
 * client (Player) — The player whose items to find.
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * table — A table of valid item entities.
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.findPlayerItems
@@ -190,20 +153,15 @@ Finds all item entities in the world created by the specified player.
     end
 ```
 
-
 ---
-
 
 ### lia.util.findPlayerItemsByClass
 
 **Description:**
 
-
 Finds all item entities in the world created by the specified player with a specific class ID.
 
-
 **Parameters:**
-
 
 * client (Player) — The player whose items to find.
 
@@ -213,18 +171,15 @@ Finds all item entities in the world created by the specified player with a spec
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * table — A table of valid item entities matching the class.
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.findPlayerItemsByClass
@@ -234,20 +189,15 @@ Finds all item entities in the world created by the specified player with a spec
     end
 ```
 
-
 ---
-
 
 ### lia.util.findPlayerEntities
 
 **Description:**
 
-
 Finds all entities in the world created by or associated with the specified player. An optional class filter can be applied.
 
-
 **Parameters:**
-
 
 * client (Player) — The player whose entities to find.
 
@@ -257,18 +207,15 @@ Finds all entities in the world created by or associated with the specified play
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * table — A table of valid entities.
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.findPlayerEntities
@@ -278,20 +225,15 @@ Finds all entities in the world created by or associated with the specified play
     end
 ```
 
-
 ---
-
 
 ### lia.util.stringMatches
 
 **Description:**
 
-
 Checks if string a matches string b (case-insensitive, partial matches).
 
-
 **Parameters:**
-
 
 * a (string) — The first string to check.
 
@@ -301,18 +243,15 @@ Checks if string a matches string b (case-insensitive, partial matches).
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * boolean — True if they match, false otherwise.
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.stringMatches
@@ -321,38 +260,30 @@ Checks if string a matches string b (case-insensitive, partial matches).
     end
 ```
 
-
 ---
-
 
 ### lia.util.getAdmins
 
 **Description:**
 
-
 Returns all players considered staff or admins, as determined by client:isStaff().
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * table — A table of player entities who are staff.
 
 
 **Example Usage:**
-
 
 ```lua
     -- Notify all online staff members about an upcoming restart
@@ -362,38 +293,30 @@ Returns all players considered staff or admins, as determined by client:isStaff(
     end
 ```
 
-
 ---
-
 
 ### lia.util.findPlayerBySteamID64
 
 **Description:**
 
-
 Finds a player currently on the server by their SteamID64.
 
-
 **Parameters:**
-
 
 * SteamID64 (string) — The SteamID64 to search for.
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * Player|nil — The found player or nil if not found.
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.findPlayerBySteamID64
@@ -403,38 +326,30 @@ Finds a player currently on the server by their SteamID64.
     end
 ```
 
-
 ---
-
 
 ### lia.util.findPlayerBySteamID
 
 **Description:**
 
-
 Finds a player currently on the server by their SteamID.
 
-
 **Parameters:**
-
 
 * SteamID (string) — The SteamID to search for (e.g. "STEAM_0:1:23456789").
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * Player|nil — The found player or nil if not found.
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.findPlayerBySteamID
@@ -444,20 +359,15 @@ Finds a player currently on the server by their SteamID.
     end
 ```
 
-
 ---
-
 
 ### lia.util.canFit
 
 **Description:**
 
-
 Checks if a hull (defined by mins and maxs) can fit at the given position without intersecting obstacles.
 
-
 **Parameters:**
-
 
 * pos (Vector) — The position to test.
 
@@ -473,18 +383,15 @@ Checks if a hull (defined by mins and maxs) can fit at the given position withou
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * boolean — True if it can fit, false otherwise.
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.canFit
@@ -494,20 +401,15 @@ Checks if a hull (defined by mins and maxs) can fit at the given position withou
     end
 ```
 
-
 ---
-
 
 ### lia.util.playerInRadius
 
 **Description:**
 
-
 Finds and returns a table of players within a given radius from a position.
 
-
 **Parameters:**
-
 
 * pos (Vector) — The center position.
 
@@ -517,18 +419,15 @@ Finds and returns a table of players within a given radius from a position.
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * table — A table of player entities within the radius.
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.playerInRadius
@@ -538,20 +437,15 @@ Finds and returns a table of players within a given radius from a position.
     end
 ```
 
-
 ---
-
 
 ### lia.util.formatStringNamed
 
 **Description:**
 
-
 Formats a string with named or indexed placeholders. If a table is passed, uses named keys. Otherwise uses ordered arguments.
 
-
 **Parameters:**
-
 
 * format (string) — The format string with placeholders like "{key}".
 
@@ -561,18 +455,15 @@ Formats a string with named or indexed placeholders. If a table is passed, uses 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * string — The formatted string.
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.formatStringNamed
@@ -580,20 +471,15 @@ Formats a string with named or indexed placeholders. If a table is passed, uses 
     print(result) -- "Hello, Bob!"
 ```
 
-
 ---
-
 
 ### lia.util.getMaterial
 
 **Description:**
 
-
 Retrieves a cached Material for the specified path and parameters, to avoid repeated creation.
 
-
 **Parameters:**
-
 
 * materialPath (string) — The file path to the material.
 
@@ -603,18 +489,15 @@ Retrieves a cached Material for the specified path and parameters, to avoid repe
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * Material — The requested material.
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.getMaterial
@@ -623,20 +506,15 @@ Retrieves a cached Material for the specified path and parameters, to avoid repe
     surface.DrawTexturedRect(0, 0, 100, 100)
 ```
 
-
 ---
-
 
 ### lia.util.findFaction
 
 **Description:**
 
-
 Finds a faction by name or uniqueID. If an exact identifier is found in lia.faction.teams, returns that. Otherwise checks for partial match.
 
-
 **Parameters:**
-
 
 * client (Player) — The player requesting the search (used for notifications).
 
@@ -646,18 +524,15 @@ Finds a faction by name or uniqueID. If an exact identifier is found in lia.fact
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * table|nil — The found faction table, or nil if not found.
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.findFaction
@@ -667,20 +542,15 @@ Finds a faction by name or uniqueID. If an exact identifier is found in lia.fact
     end
 ```
 
-
 ---
-
 
 ### lia.util.CreateTableUI
 
 **Description:**
 
-
 Sends a net message to the client to create a table UI with given data.
 
-
 **Parameters:**
-
 
 * client (Player) — The player to whom the UI will be sent.
 
@@ -702,38 +572,30 @@ Sends a net message to the client to create a table UI with given data.
 
 **Realm:**
 
-
 * Server
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.util.CreateTableUI
     lia.util.CreateTableUI(somePlayer, "My Table", {{name="ID", field="id"}, {name="Name", field="name"}}, someData, someOptions, charID)
 ```
 
-
 ---
-
 
 ### lia.util.findEmptySpace
 
 **Description:**
 
-
 Finds potential empty space positions around an entity using a grid-based approach.
 
-
 **Parameters:**
-
 
 * entity (Entity) — The entity around which to search.
 
@@ -755,18 +617,15 @@ Finds potential empty space positions around an entity using a grid-based approa
 
 **Realm:**
 
-
 * Server
 
 
 **Returns:**
 
-
 * table — A sorted table of valid positions found.
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.findEmptySpace
@@ -776,20 +635,15 @@ Finds potential empty space positions around an entity using a grid-based approa
     end
 ```
 
-
 ---
-
 
 ### lia.util.ShadowText
 
 **Description:**
 
-
 Draws text with a shadow offset.
 
-
 **Parameters:**
-
 
 * text (string) — The text to draw.
 
@@ -820,38 +674,30 @@ Draws text with a shadow offset.
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.util.ShadowText
     lia.util.ShadowText("Hello!", "DermaDefault", 100, 100, color_white, color_black, 2, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 ```
 
-
 ---
-
 
 ### lia.util.DrawTextOutlined
 
 **Description:**
 
-
 Draws text with an outlined border.
 
-
 **Parameters:**
-
 
 * text (string) — The text to draw.
 
@@ -879,38 +725,30 @@ Draws text with an outlined border.
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.util.DrawTextOutlined
     lia.util.DrawTextOutlined("Outlined Text", "DermaLarge", 100, 200, color_white, TEXT_ALIGN_CENTER, 2, color_black)
 ```
 
-
 ---
-
 
 ### lia.util.DrawTip
 
 **Description:**
 
-
 Draws a tooltip-like shape with text in the center.
 
-
 **Parameters:**
-
 
 * x (number) — The x position.
 
@@ -938,38 +776,30 @@ Draws a tooltip-like shape with text in the center.
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.util.DrawTip
     lia.util.DrawTip(100, 100, 200, 60, "This is a tip!", "DermaDefault", color_white, color_black)
 ```
 
-
 ---
-
 
 ### lia.util.drawText
 
 **Description:**
 
-
 Draws text with a subtle shadow effect.
 
-
 **Parameters:**
-
 
 * text (string) — The text to draw.
 
@@ -997,38 +827,30 @@ Draws text with a subtle shadow effect.
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.util.drawText
     lia.util.drawText("Hello World", 200, 300, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, "liaGenericFont", 100)
 ```
 
-
 ---
-
 
 ### lia.util.drawTexture
 
 **Description:**
 
-
 Draws a textured rectangle with the specified material.
 
-
 **Parameters:**
-
 
 * material (string) — The material path.
 
@@ -1050,38 +872,30 @@ Draws a textured rectangle with the specified material.
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.util.drawTexture
     lia.util.drawTexture("path/to/material", color_white, 50, 50, 64, 64)
 ```
 
-
 ---
-
 
 ### lia.util.skinFunc
 
 **Description:**
 
-
 Calls a skin function by name, passing the panel and any extra arguments.
 
-
 **Parameters:**
-
 
 * name (string) — The name of the skin function.
 
@@ -1094,38 +908,30 @@ Calls a skin function by name, passing the panel and any extra arguments.
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
-
 
 * any — The result of the skin function call, if any.
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.util.skinFunc
     lia.util.skinFunc("PaintButton", someButton, 10, 20)
 ```
 
-
 ---
-
 
 ### lia.util.wrapText
 
 **Description:**
 
-
 Wraps text to a maximum width, returning a table of lines and the maximum line width found.
 
-
 **Parameters:**
-
 
 * text (string) — The text to wrap.
 
@@ -1138,18 +944,15 @@ Wraps text to a maximum width, returning a table of lines and the maximum line w
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
 
-
 * table, number — A table of wrapped lines and the maximum line width found.
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.wrapText
@@ -1160,20 +963,15 @@ Wraps text to a maximum width, returning a table of lines and the maximum line w
     print("Max width: " .. maxW)
 ```
 
-
 ---
-
 
 ### lia.util.drawBlur
 
 **Description:**
 
-
 Draws a blur effect over the specified panel.
 
-
 **Parameters:**
-
 
 * panel (Panel) — The panel to blur.
 
@@ -1186,38 +984,30 @@ Draws a blur effect over the specified panel.
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.util.drawBlur
     lia.util.drawBlur(somePanel, 5, 1)
 ```
 
-
 ---
-
 
 ### lia.util.drawBlurAt
 
 **Description:**
 
-
 Draws a blur effect at a specified rectangle on the screen.
 
-
 **Parameters:**
-
 
 * x (number) — The x position.
 
@@ -1239,38 +1029,30 @@ Draws a blur effect at a specified rectangle on the screen.
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.util.drawBlurAt
     lia.util.drawBlurAt(100, 100, 200, 150, 5, 1)
 ```
 
-
 ---
-
 
 ### lia.util.CreateTableUI
 
 **Description:**
 
-
 Creates and displays a table UI with given columns and data on the client side.
 
-
 **Parameters:**
-
 
 * title (string) — The title of the table.
 
@@ -1289,21 +1071,17 @@ Creates and displays a table UI with given columns and data on the client side.
 
 **Realm:**
 
-
 * Client
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.util.CreateTableUI
     lia.util.CreateTableUI("My Table", {{name="ID", field="id"}, {name="Name", field="name"}}, myData, myOptions, 1)
 ```
-

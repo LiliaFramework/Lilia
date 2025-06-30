@@ -1,33 +1,24 @@
 # Networking Library
 
-
 This page documents network variable and message helpers.
 
-
 ---
-
 
 ## Overview
 
-
 The networking library synchronizes data between the server and clients. It provides wrappers around net messages and networked variables.
 
-
 ---
-
 
 ### setNetVar(key, value, receiver)
 
 **Description:**
 
-
 Stores a global networked variable and broadcasts it to clients. When a
 
 receiver is specified the update is only sent to those players.
 
-
 **Parameters:**
-
 
 * key (string) – Name of the variable.
 
@@ -40,18 +31,15 @@ receiver is specified the update is only sent to those players.
 
 **Realm:**
 
-
 * Server
 
 
 **Returns:**
 
-
 * None
 
 
 **Example Usage:**
-
 
 ```lua
     -- Start a new round and only inform the winner
@@ -62,20 +50,15 @@ receiver is specified the update is only sent to those players.
     hook.Run("RoundStarted", round)
 ```
 
-
 ---
-
 
 ### getNetVar(key, default)
 
 **Description:**
 
-
 Retrieves a global networked variable previously set by setNetVar.
 
-
 **Parameters:**
-
 
 * key (string) – Variable name.
 
@@ -85,18 +68,15 @@ Retrieves a global networked variable previously set by setNetVar.
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * any – Stored value or default.
 
 
 **Example Usage:**
-
 
 ```lua
     -- Inform a joining player of the current round and last winner
@@ -108,4 +88,3 @@ Retrieves a global networked variable previously set by setNetVar.
         end
     end)
 ```
-

@@ -1,32 +1,24 @@
 # Flags Library
 
-
 This page explains permission flag management.
-
 
 ---
 
-
 ## Overview
-
 
 The flags library assigns text-based permission flags to players. It offers tools for checking whether a player possesses a flag and for saving or loading flag data. Flags grant characters extra abilities but are often best replaced with in-character checks when possible.
 
 ---
 
-
 ### lia.flag.add
 
 **Description:**
-
 
 Registers a new flag by adding it to the flag list.
 
 Each flag has a description and an optional callback that is executed when the flag is applied to a player.
 
-
 **Parameters:**
-
 
 * flag (string) – The unique flag identifier.
 
@@ -39,61 +31,49 @@ Each flag has a description and an optional callback that is executed when the f
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * None
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.flag.add
     lia.flag.add("C", "Spawn vehicles.")
 ```
 
-
 ---
-
 
 ### lia.flag.onSpawn
 
 **Description:**
 
-
 Called when a player spawns. This function checks the player's character flags and triggers
 
 the associated callbacks for each flag that the character possesses.
 
-
 **Parameters:**
-
 
 * client (Player) – The player who spawned.
 
 
 **Realm:**
 
-
 * Server
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.flag.onSpawn
     lia.flag.onSpawn(player)
 ```
-

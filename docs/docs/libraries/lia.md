@@ -1,31 +1,22 @@
 # Lia Core Library
 
-
 This page documents general utilities used throughout Lilia.
 
-
 ---
-
 
 ## Overview
 
-
 The lia core library exposes shared helper functions used across multiple modules. It primarily handles file inclusion logic and other small utilities.
 
-
 ---
-
 
 ### lia.include(fileName, state)
 
 **Description:**
 
-
 Includes a Lua file based on its realm. It determines the realm from the file name or provided state, and handles server/client inclusion logic.
 
-
 **Parameters:**
-
 
 * fileName (string) – The path to the Lua file.
 
@@ -35,38 +26,30 @@ Includes a Lua file based on its realm. It determines the realm from the file na
 
 **Realm:**
 
-
 * Depends on the file realm.
 
 
 **Returns:**
-
 
 * The result of the include, if applicable.
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.include
     lia.include("lilia/gamemode/core/libraries/util.lua", "shared")
 ```
 
-
 ---
-
 
 ### lia.includeDir(directory, fromLua, recursive, realm)
 
 **Description:**
 
-
 Includes all Lua files in a specified directory. If recursive is true, it traverses subdirectories. It determines the base directory based on the active schema or gamemode.
 
-
 **Parameters:**
-
 
 * directory (string) – The directory path to include.
 
@@ -82,38 +65,30 @@ Includes all Lua files in a specified directory. If recursive is true, it traver
 
 **Realm:**
 
-
 * Depends on file inclusion.
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.includeDir
     lia.includeDir("lilia/gamemode/core/libraries/shared/thirdparty", true, true)
 ```
 
-
 ---
-
 
 ### lia.includeGroupedDir(dir, raw, recursive, forceRealm)
 
 **Description:**
 
-
 Recursively includes all Lua files in a specified directory, preserving alphabetical order within each folder. Determines each file’s realm by override or filename prefix, then calls lia.include on each file.
 
-
 **Parameters:**
-
 
 * dir        (string) – Directory path to load files from (relative if raw is false).
 
@@ -129,76 +104,60 @@ Recursively includes all Lua files in a specified directory, preserving alphabet
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * None
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.includeGroupedDir
     lia.includeGroupedDir("core/modules", false, true, "shared")
 ```
 
-
 ---
-
 
 ### lia.error(msg)
 
 **Description:**
 
-
 Prints a colored error message prefixed with "[Lilia]" to the console.
 
-
 **Parameters:**
-
 
 * msg (string) – Error text to display.
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.error
     lia.error("Invalid configuration detected")
 ```
 
-
 ---
-
 
 ### lia.deprecated(methodName, callback)
 
 **Description:**
 
-
 Notifies that a method is deprecated and optionally runs a callback.
 
-
 **Parameters:**
-
 
 * methodName (string) – Name of the deprecated method.
 
@@ -208,114 +167,90 @@ Notifies that a method is deprecated and optionally runs a callback.
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * None
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.deprecated
     lia.deprecated("OldFunction", function() print("Called fallback") end)
 ```
 
-
 ---
-
 
 ### lia.updater(msg)
 
 **Description:**
 
-
 Prints an updater message in cyan to the console with the Lilia prefix.
 
-
 **Parameters:**
-
 
 * msg (string) – Update text to display.
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * None
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.updater
     lia.updater("Loading additional content...")
 ```
 
-
 ---
-
 
 ### lia.information(msg)
 
 **Description:**
 
-
 Prints an informational message with the Lilia prefix.
 
-
 **Parameters:**
-
 
 * msg (string) – Text to print to the console.
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.information
     lia.information("Server started successfully")
 ```
 
-
 ---
-
 
 ### lia.bootstrap(section, msg)
 
 **Description:**
 
-
 Logs a bootstrap message with a colored section tag for clarity.
 
-
 **Parameters:**
-
 
 * section (string) – Category or stage of bootstrap.
 
@@ -325,59 +260,47 @@ Logs a bootstrap message with a colored section tag for clarity.
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
 
-
 * None
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.bootstrap
     lia.bootstrap("Database", "Connection established")
 ```
 
-
 ---
-
 
 ### lia.includeEntities(path)
 
 **Description:**
 
-
 Includes entity files from the specified directory. It checks for standard entity files ("init.lua", "shared.lua", "cl_init.lua"), handles inclusion and registration of entities, weapons, tools, and effects, and supports recursive inclusion within entity folders.
 
-
 **Parameters:**
-
 
 * path (string) – The directory path containing entity files.
 
 
 **Realm:**
 
-
 * Shared
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.includeEntities
     lia.includeEntities("lilia/entities")
 ```
-

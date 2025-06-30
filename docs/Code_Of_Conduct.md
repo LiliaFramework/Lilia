@@ -1,8 +1,6 @@
 # Contributor Covenant Code of Conduct
 
-
 ## Our Pledge
-
 
 In the interest of fostering an open and welcoming environment, we as
 
@@ -16,14 +14,11 @@ level of experience, education, socio-economic status, nationality, personal
 
 appearance, race, religion, or sexual identity and orientation.
 
-
 ## Our Standards
-
 
 Examples of behavior that contributes to creating a positive environment
 
 include:
-
 
 * Using welcoming and inclusive language
 
@@ -37,7 +32,6 @@ include:
 
 
 Examples of unacceptable behavior by participants include:
-
 
 * The use of sexualized language or imagery and unwelcome sexual attention or
 
@@ -55,16 +49,13 @@ Examples of unacceptable behavior by participants include:
 
  professional setting
 
-
 ## Our Responsibilities
-
 
 Project maintainers are responsible for clarifying the standards of acceptable
 
 behavior and are expected to take appropriate and fair corrective action in
 
 response to any instances of unacceptable behavior.
-
 
 Project maintainers have the right and responsibility to remove, edit, or
 
@@ -76,9 +67,7 @@ permanently any contributor for other behaviors that they deem inappropriate,
 
 threatening, offensive, or harmful.
 
-
 ## Scope
-
 
 This Code of Conduct applies both within project spaces and in public spaces
 
@@ -92,9 +81,7 @@ representative at an online or offline event. Representation of a project may be
 
 further defined and clarified by project maintainers.
 
-
 ## Enforcement
-
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 
@@ -108,21 +95,17 @@ obligated to maintain confidentiality with regard to the reporter of an incident
 
 Further details of specific enforcement policies may be posted separately.
 
-
 Project maintainers who do not follow or enforce the Code of Conduct in good
 
 faith may face temporary or permanent repercussions as determined by other
 
 members of the project's leadership.
 
-
 ## Attribution
-
 
 This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org), version 1.4,
 
 available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
-
 
 For answers to common questions about this code of conduct, see
 

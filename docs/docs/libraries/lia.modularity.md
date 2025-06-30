@@ -1,25 +1,18 @@
 # Modularity Library
 
-
 This page explains the module loading system.
 
-
 ---
-
 
 ## Overview
 
-
 The modularity library loads modules contained in the 'modules' folder. It resolves dependencies and initializes serverside and clientside components.
 
-
 ---
-
 
 ### lia.module.load
 
 **Description:**
-
 
 Loads a module from a specified path. If the module is a single file, it includes it directly;
 
@@ -27,9 +20,7 @@ if it is a directory, it loads the core file (or its extended version), applies 
 
 It also registers the module in the module list if applicable.
 
-
 **Parameters:**
-
 
 * uniqueID – The unique identifier of the module.
 
@@ -45,72 +36,58 @@ It also registers the module in the module list if applicable.
 
 **Realm:**
 
-
 * Server
 
 
 **Returns:**
 
-
 * None
 
 
 **Example Usage:**
-
 
 ```lua
     -- This snippet demonstrates a common usage of lia.module.load
     lia.module.load("example", "lilia/modules/example", false)
 ```
 
-
 ---
-
 
 ### lia.module.initialize
 
 **Description:**
 
-
 Initializes the module system by loading the schema and various module directories,
 
 then running the appropriate hooks after modules have been loaded.
 
-
 **Parameters:**
-
 
 * None
 
 
 **Realm:**
 
-
 * Server
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.module.initialize
     lia.module.initialize()
 ```
 
-
 ---
-
 
 ### lia.module.loadFromDir
 
 **Description:**
-
 
 Loads modules from a specified directory. It iterates over all subfolders and .lua files in the directory.
 
@@ -118,9 +95,7 @@ Each subfolder is treated as a multi-file module, and each .lua file as a single
 
 Non-Lua files are ignored.
 
-
 **Parameters:**
-
 
 * directory – The directory path from which to load modules.
 
@@ -130,59 +105,47 @@ Non-Lua files are ignored.
 
 **Realm:**
 
-
 * Server
 
 
 **Returns:**
-
 
 * None
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.module.loadFromDir
     lia.module.loadFromDir("lilia/modules/core", "module")
 ```
 
-
 ---
-
 
 ### lia.module.get
 
 **Description:**
 
-
 Retrieves a module table by its identifier.
 
-
 **Parameters:**
-
 
 * identifier – The unique identifier of the module to retrieve.
 
 
 **Realm:**
 
-
 * Server
 
 
 **Returns:**
-
 
 * The module table if found, or nil if the module is not registered.
 
 
 **Example Usage:**
 
-
 ```lua
     -- This snippet demonstrates a common usage of lia.module.get
     local mod = lia.module.get("schema")
 ```
-
