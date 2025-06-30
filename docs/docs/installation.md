@@ -13,8 +13,7 @@ Before you begin, make sure you have the following:
 
 - **A Working Garry's Mod Server:** Make sure your server is set up and running without issues.
 - **Basic Knowledge of Server Administration:** Familiarity with managing a Garry's Mod server is helpful.
-- **Command Line Proficiency:** You should be comfortable using the command line.
-- **Admin Menu:** We recommend [SAM](https://www.gmodstore.com/market/view/sam) for administrative tasks.
+- **Admin Menu:** We recommend [SAM](https://www.gmodstore.com/market/view/sam), although, the gamemode also has native compatibility with [ULX](https://steamcommunity.com/sharedfiles/filedetails/?id=557962280) and [ServerGuard](https://www.gmodstore.com/market/view/serverguard).
 - **Code Editor (optional):** If you don't already have one, a code editor makes development easier. Recommended editors include:
   
   1. [Visual Studio Code](https://code.visualstudio.com/)
