@@ -22,65 +22,35 @@ Each faction in the game is defined by a set of fields on the global `FACTION` t
 
 
 | Field | Type | Default | Description |
-
 |---|---|---|---|
-
 | `name` | `string` | `"Unknown"` | Display name shown to players. |
-
 | `desc` | `string` | `"No Description"` | Lore or descriptive text. |
-
 | `isDefault` | `boolean` | `true` | Whether the faction is available without whitelist. |
-
 | `color` | `Color` | `Color(255,255,255)` | UI color representing the faction. |
-
 | `models` | `table` | `DefaultModels` | Available player model paths. |
-
 | `uniqueID` | `string` | `filename` | Internal string identifier. |
-
 | `weapons` | `table` | `{}` | Automatically granted weapons. |
-
 | `items` | `table` | `{}` | Automatically granted items. |
-
 | `index` | `number` | `auto` | Numeric ID assigned at registration time. |
-
 | `pay` | `number` | `0` | Payment amount per interval. |
-
 | `payLimit` | `number` | `0` | Maximum accumulated pay. |
-
 | `payTimer` | `number` | `300` | Interval (in seconds) between paychecks. |
-
 | `limit` | `number` | `0` | Maximum number of players in the faction. |
-
 | `oneCharOnly` | `boolean` | `false` | Restrict players to one character only. |
-
 | `health` | `number` | `0` | Starting health. |
-
 | `armor` | `number` | `0` | Starting armor. |
-
 | `scale` | `number` | `1` | Player model scale multiplier. |
-
 | `runSpeed` | `number` | `0` | Base running speed. |
-
 | `runSpeedMultiplier` | `boolean` | `false` | Multiply base speed instead of replacing it. |
-
 | `walkSpeed` | `number` | `0` | Base walking speed. |
-
 | `walkSpeedMultiplier` | `boolean` | `false` | Multiply base walk speed instead of replacing it. |
-
 | `jumpPower` | `number` | `0` | Base jump power. |
-
 | `jumpPowerMultiplier` | `boolean` | `false` | Multiply base jump power instead of replacing it. |
-
 | `MemberToMemberAutoRecognition` | `boolean` | `false` | Auto-recognition among faction members. |
-
 | `bloodcolor` | `number` | `0` | Blood color enum. |
-
 | `bodyGroups` | `table` | `{}` | Bodygroup name→index mapping applied on spawn. |
-
 | `NPCRelations` | `table` | `{}` | NPC class→disposition mapping on spawn/creation. |
-
 | `RecognizesGlobally` | `boolean` | `false` | Global player recognition. |
-
 | `ScoreboardHidden` | `boolean` | `false` | Hide members from the scoreboard. |
 
 

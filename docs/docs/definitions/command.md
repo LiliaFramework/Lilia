@@ -22,23 +22,14 @@ When you register a command with `lia.command.add`, you provide a table of field
 
 
 | Field | Type | Default | Description |
-
 |---|---|---|---|
-
 | `alias` | `string` or `table` | `nil` | Alternative names for the command. |
-
 | `adminOnly` | `boolean` | `false` | Restrict to admins (registers a CAMI privilege). |
-
 | `superAdminOnly` | `boolean` | `false` | Restrict to superadmins (registers a CAMI privilege). |
-
 | `privilege` | `string` | `nil` | Custom CAMI privilege name (defaults to command name). |
-
 | `syntax` | `string` | `""` | Human-readable argument format shown in help. |
-
 | `desc` | `string` | `""` | Short description shown in command lists and menus. |
-
 | `AdminStick` | `table` | `nil` | Defines how the command appears in admin utilities. |
-
 | `onRun(client, args)` | `function(client, table)` | `nil` | Function executed when the command is invoked. |
 
 
