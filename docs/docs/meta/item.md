@@ -486,3 +486,470 @@ Sets the current stack quantity and replicates the change.
 -- Set quantity to 1 after splitting the stack
 item:setQuantity(1, nil, true)
 ```
+---
+
+### getName()
+
+**Description:**
+
+Returns the display name of this item. On the client this value is localized.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* string – Item name.
+
+**Example:**
+
+```lua
+-- Inform the player which item they found
+client:ChatPrint("Picked up: " .. item:getName())
+```
+---
+
+### getDesc()
+
+**Description:**
+
+Retrieves the description text for this item.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* string – Item description.
+
+**Example:**
+
+```lua
+-- Display a tooltip describing the item
+tooltip:AddRowAfter("name", "desc"):SetText(item:getDesc())
+```
+---
+
+### removeFromInventory(preserveItem)
+
+**Description:**
+
+Removes this item from its inventory without deleting it when `preserveItem` is true.
+
+**Parameters:**
+
+* preserveItem (boolean) – Keep the item saved in the database.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* Deferred – Resolves when the item has been removed.
+
+**Example:**
+
+```lua
+-- Unequip and drop the item while keeping it saved
+item:removeFromInventory(true):next(function()
+    client:ChatPrint("Item unequipped")
+end)
+```
+---
+
+### delete()
+
+**Description:**
+
+Deletes this item from the database after destroying it.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* Deferred – Resolves when deletion completes.
+
+**Example:**
+
+```lua
+-- Permanently remove the item from the database
+item:delete():next(function()
+    print("Item purged")
+end)
+```
+---
+
+### remove()
+
+**Description:**
+
+Destroys the item's entity then removes and deletes it from its inventory.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* Deferred – Resolves when the item has been removed.
+
+**Example:**
+
+```lua
+-- Remove the item from the world and database
+item:remove():next(function()
+    print("Removed and deleted")
+end)
+```
+---
+
+### destroy()
+
+**Description:**
+
+Broadcasts deletion of this item and removes it from memory.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example:**
+
+```lua
+-- Instantly delete the item across the network
+item:destroy()
+```
+---
+
+### onDisposed()
+
+**Description:**
+
+Callback executed after the item is destroyed.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example:**
+
+```lua
+function ITEM:onDisposed()
+    print(self:getName() .. " was cleaned up")
+end
+```
+---
+
+### getEntity()
+
+**Description:**
+
+Finds the entity spawned for this item, if any.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* Entity|nil – The world entity representing the item.
+
+**Example:**
+
+```lua
+-- Grab the world entity to modify it
+local ent = item:getEntity()
+if IsValid(ent) then
+    ent:SetColor(Color(255, 0, 0))
+end
+```
+---
+
+### spawn(position, angles)
+
+**Description:**
+
+Creates a world entity for this item at the specified position.
+
+**Parameters:**
+
+* position (Vector|Player) – Drop position or player dropping the item.
+* angles (Angle|None) – Orientation for the entity.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* Entity|nil – The created entity if successful.
+
+**Example:**
+
+```lua
+-- Drop the item at the player's feet
+item:spawn(client:getItemDropPos(), Angle(0, 0, 0))
+```
+---
+
+### transfer(newInventory, bBypass)
+
+**Description:**
+
+Moves the item to another inventory, optionally bypassing access checks.
+
+**Parameters:**
+
+* newInventory (Inventory) – Destination inventory.
+* bBypass (boolean) – Skip permission checking.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* boolean – True if the transfer was initiated.
+
+**Example:**
+
+```lua
+-- Move the item into another container
+item:transfer(targetInv):next(function()
+    print("Transferred successfully")
+end)
+```
+---
+
+### onInstanced()
+
+**Description:**
+
+Called when a new instance of this item is created.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example:**
+
+```lua
+function ITEM:onInstanced()
+    print(self:getName() .. " instance created")
+end
+```
+---
+
+### onSync(recipient)
+
+**Description:**
+
+Runs after this item is networked to `recipient`.
+
+**Parameters:**
+
+* recipient (Player|None) – Who received the data.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example:**
+
+```lua
+function ITEM:onSync(ply)
+    print("Sent item to", IsValid(ply) and ply:Name() or "all clients")
+end
+```
+---
+
+### onRemoved()
+
+**Description:**
+
+Executed after the item is permanently removed.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example:**
+
+```lua
+function ITEM:onRemoved()
+    print(self.uniqueID .. " permanently deleted")
+end
+```
+---
+
+### onRestored()
+
+**Description:**
+
+Called when the item is restored from the database.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example:**
+
+```lua
+function ITEM:onRestored()
+    print(self:getName() .. " loaded from the database")
+end
+```
+---
+
+### sync(recipient)
+
+**Description:**
+
+Sends this item's data to a player or broadcasts to all.
+
+**Parameters:**
+
+* recipient (Player|None) – Target player or nil for broadcast.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example:**
+
+```lua
+-- Resend the item data to a specific player
+item:sync(player)
+```
+---
+
+### setData(key, value, receivers, noSave, noCheckEntity)
+
+**Description:**
+
+Sets a data field on the item and optionally networks and saves it.
+
+**Parameters:**
+
+* key (string) – Data key to modify.
+* value (any) – New value to store.
+* receivers (Player|None) – Who to send the update to.
+* noSave (boolean) – Avoid saving to the database.
+* noCheckEntity (boolean) – Skip updating the world entity.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example:**
+
+```lua
+-- Mark the item as legendary and notify the owner
+item:setData("rarity", "legendary", player)
+```
+---
+
+### interact(action, client, entity, data)
+
+**Description:**
+
+Processes an interaction action performed by `client` on this item.
+
+**Parameters:**
+
+* action (string) – Identifier of the interaction.
+* client (Player) – Player performing the action.
+* entity (Entity|None) – Entity used for the interaction.
+* data (table|None) – Extra data passed to the hooks.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* boolean – True if the interaction succeeded.
+
+**Example:**
+
+```lua
+-- Trigger the "use" interaction from code
+item:interact("use", client, nil)
+```
