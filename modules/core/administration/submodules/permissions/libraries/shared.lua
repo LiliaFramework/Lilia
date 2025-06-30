@@ -10,8 +10,7 @@ function MODULE:InitializedModules()
                 if not CAMI.GetPrivilege(privilege) then
                     CAMI.RegisterPrivilege({
                         Name = privilege,
-                        MinAccess = "admin",
-                        Description = "Allows access to Entity Property " .. name:gsub("^%l", string.upper)
+                        MinAccess = "admin"
                     })
                 end
             end
@@ -25,8 +24,7 @@ function MODULE:InitializedModules()
                 if not CAMI.GetPrivilege(privilege) then
                     CAMI.RegisterPrivilege({
                         Name = privilege,
-                        MinAccess = defaultUserTools[string.lower(tool)] and "user" or "admin",
-                        Description = "Allows access to " .. tool:gsub("^%l", string.upper)
+                        MinAccess = defaultUserTools[string.lower(tool)] and "user" or "admin"
                     })
                 end
             end

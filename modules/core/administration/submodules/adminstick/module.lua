@@ -6,7 +6,6 @@ MODULE.desc = "Adds a module that facilitates Adminstration"
 MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Use Admin Stick",
-        MinAccess = "superadmin",
-        Description = "Allows access to using Admin Stick."
+        MinAccess = "superadmin"
     },
 }

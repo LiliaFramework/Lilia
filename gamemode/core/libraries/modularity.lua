@@ -9,8 +9,7 @@ local function loadPermissions(Privileges)
         if not CAMI.GetPrivilege(privilegeName) then
             CAMI.RegisterPrivilege({
                 Name = privilegeName,
-                MinAccess = privilegeData.MinAccess or "admin",
-                Description = privilegeData.Description or "Allows access to " .. privilegeName:gsub("^%l", string.upper)
+                MinAccess = privilegeData.MinAccess or "admin"
             })
         end
     end
