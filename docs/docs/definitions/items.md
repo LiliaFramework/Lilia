@@ -645,9 +645,11 @@ ITEM.replacements = {
 **Type:**
 
 `string`
+
 **Description:**
 
 Weapon entity class.
+
 **Example Usage:**
 
 ```lua
@@ -663,9 +665,11 @@ ITEM.class = "weapon_pistol"
 **Type:**
 
 `boolean`
+
 **Description:**
 
 Marks the item as a weapon.
+
 **Example Usage:**
 
 ```lua
@@ -681,9 +685,11 @@ ITEM.isWeapon = true
 **Type:**
 
 `string`
+
 **Description:**
 
 Class name used when spawning a grenade.
+
 **Example Usage:**
 
 ```lua
@@ -699,9 +705,11 @@ ITEM.grenadeClass = "weapon_frag"
 **Type:**
 
 `string`
+
 **Description:**
 
 Ammo type provided.
+
 **Example Usage:**
 
 ```lua
@@ -717,9 +725,11 @@ ITEM.ammo = "pistol"
 **Type:**
 
 `number`
+
 **Description:**
 
 Amount of ammo contained.
+
 **Example Usage:**
 
 ```lua
@@ -735,9 +745,11 @@ ITEM.ammoAmount = 30
 **Type:**
 
 `string`
+
 **Description:**
 
 Slot category for the weapon.
+
 **Example Usage:**
 
 ```lua
@@ -755,9 +767,11 @@ ITEM.weaponCategory = "sidearm"
 **Type:**
 
 `string`
+
 **Description:**
 
 3D model path for the item.
+
 **Example Usage:**
 
 ```lua
@@ -775,9 +789,11 @@ ITEM.model = "models/props_c17/oildrum001.mdl"
 **Type:**
 
 `string`
+
 **Description:**
 
 Entity class spawned by the item.
+
 **Example Usage:**
 
 ```lua
@@ -793,9 +809,11 @@ ITEM.entityid = "item_suit"
 **Type:**
 
 `string`
+
 **Description:**
 
 HTML contents of a readable book.
+
 **Example Usage:**
 
 ```lua
@@ -813,9 +831,11 @@ ITEM.contents = "<h1>Book</h1>"
 **Type:**
 
 `number`
+
 **Description:**
 
 Item cost for trading or selling.
+
 **Example Usage:**
 
 ```lua
@@ -831,9 +851,11 @@ ITEM.price = 100
 **Type:**
 
 `string`
+
 **Description:**
 
 Flag required to purchase the item.
+
 **Example Usage:**
 
 ```lua
@@ -849,9 +871,11 @@ ITEM.flag = "Y"
 **Type:**
 
 `string`
+
 **Description:**
 
 Rarity level affecting vendor color.
+
 **Example Usage:**
 
 ```lua
@@ -867,9 +891,11 @@ ITEM.rarity = "Legendary"
 **Type:**
 
 `string`
+
 **Description:**
 
 Web address opened when using the item.
+
 **Example Usage:**
 
 ```lua
@@ -887,9 +913,11 @@ ITEM.url = "https://example.com"
 **Type:**
 
 `table`
+
 **Description:**
 
 Table of interaction functions.
+
 **Example Usage:**
 
 ```lua
@@ -905,9 +933,11 @@ ITEM.functions = {}
 **Type:**
 
 `table`
+
 **Description:**
 
 Table of post-hook callbacks.
+
 **Example Usage:**
 
 ```lua

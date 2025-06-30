@@ -151,6 +151,7 @@ Defines how the command appears in admin utility menus. Common keys:
 * `SubCategory` (string): Secondary grouping.
 
 * `Icon` (string): 16×16 icon path.
+
 **Example Usage:**
 
 ```lua
@@ -174,6 +175,7 @@ AdminStick = {
 **Description:**
 
 Function called when the command is executed. `args` is a table of parsed arguments. Return a string to send a message back to the caller, or return nothing for silent execution.
+
 **Example Usage:**
 
 ```lua
