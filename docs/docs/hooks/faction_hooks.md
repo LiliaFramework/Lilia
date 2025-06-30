@@ -10,6 +10,41 @@ These hooks belong to tables under `schema/factions` and are most often used to 
 
 Each faction can implement these shared- and server-side hooks to control how characters are initialized, described, and handled as they move through creation, spawning, and transfers. All hooks are optional; if you omit a hook, default behavior applies.
 
+### NameTemplate
+
+```lua
+function FACTION:NameTemplate(client)
+    -- return string name, bool override
+end
+```
+
+**Description:**
+
+Allows you to supply a custom character name before any prefix or default logic is used. If you return `true` as the second value, the returned name is used directly.
+
+**Parameters:**
+
+* `client` (`Player`) – The player creating the character.
+
+**Returns:**
+
+* `string`, `boolean` – The generated name and whether to skip default processing.
+
+**Realm:**
+
+* Shared
+
+**Example Usage:**
+
+```lua
+function FACTION:NameTemplate(client)
+    -- Use the player's Steam name and add a tag.
+    local name = string.format("%s [Recruit]", client:SteamName())
+    return name, true -- skip any automatic naming
+end
+```
+
+
 ### GetDefaultName
 
 ```lua
@@ -36,7 +71,9 @@ Retrieves the default name for a newly created character in this faction.
 
 ```lua
 function FACTION:GetDefaultName(client)
-    return "CT-" .. math.random(111111, 999999)
+    -- Generate a simple numeric identifier.
+    local id = math.random(1000, 9999)
+    return string.format("Recruit #%04d", id)
 end
 ```
 
@@ -71,46 +108,13 @@ Retrieves the default description for a newly created character in this faction.
 
 ```lua
 function FACTION:GetDefaultDesc(client, faction)
-    return "A police officer"
+    -- Provide a short backstory or description.
+    return "A newly recruited officer"
 end
 ```
 
 ---
 
-### OnCharCreated
-
-```lua
-function FACTION:OnCharCreated(client, character)
-end
-```
-
-**Description:**
-
-Executes actions when a new character is created and assigned to this faction. Ideal for initializing inventories or character data.
-
-**Parameters:**
-
-* `client` (`Player`) – The client that owns the new character.
-
-
-* `character` (`Character`) – The character object that was created.
-
-
-**Realm:**
-
-* Server
-
-
-**Example Usage:**
-
-```lua
-function FACTION:OnCharCreated(client, character)
-    local inventory = character:getInv()
-    inventory:add("fancy_suit")
-end
-```
-
----
 
 ### OnSpawn
 
@@ -137,7 +141,9 @@ Invoked when a faction member spawns into the world. Use this for per-spawn setu
 
 ```lua
 function FACTION:OnSpawn(client)
-    client:ChatPrint("You have spawned!")
+    -- Restore full health and greet the player.
+    client:SetHealth(client:GetMaxHealth())
+    client:ChatPrint("Welcome back to duty!")
 end
 ```
 
@@ -146,17 +152,18 @@ end
 ### OnTransferred
 
 ```lua
-function FACTION:OnTransferred(character)
+function FACTION:OnTransferred(client, oldFaction)
 end
 ```
 
 **Description:**
 
-Executes actions when an existing character is transferred into this faction (e.g., via admin or system transfer).
+Executes actions when a player is transferred into this faction (e.g., by an admin or scripted transfer). The previous faction is provided so you can perform cleanup or messaging.
 
 **Parameters:**
 
-* `character` (`Character`) – The character that was moved into this faction.
+* `client` (`Player`) – The player that was moved into this faction.
+* `oldFaction` (`number`) – The index of the faction the player came from.
 
 
 **Realm:**
@@ -167,8 +174,55 @@ Executes actions when an existing character is transferred into this faction (e.
 **Example Usage:**
 
 ```lua
-function FACTION:OnTransferred(character)
-    local randomModelIndex = math.random(1, #self.models)
-    character:setModel(self.models[randomModelIndex])
+function FACTION:OnTransferred(client, oldFaction)
+    -- Give the character a random faction model.
+    local char = client:getChar()
+    if char then
+        local randomModelIndex = math.random(1, #self.models)
+        char:setModel(self.models[randomModelIndex])
+    end
+    print("Transferred from faction", oldFaction)
 end
 ```
+
+---
+
+### OnCheckLimitReached
+
+```lua
+function FACTION:OnCheckLimitReached(character, client)
+    -- return boolean
+end
+```
+
+**Description:**
+
+Called when the game checks whether this faction has reached its player limit. Returning `true` prevents the character from joining.
+
+**Parameters:**
+
+* `character` (`Character`) – The character attempting to join the faction.
+* `client` (`Player`) – The player owning that character.
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* `boolean` – Whether the faction limit is considered reached.
+
+**Example Usage:**
+
+```lua
+function FACTION:OnCheckLimitReached(character, client)
+    -- Allow admins to bypass the limit.
+    if client:IsAdmin() then
+        return false
+    end
+
+    local maxMembers = 10
+    return lia.faction.getPlayerCount(self.index) >= maxMembers
+end
+```
+

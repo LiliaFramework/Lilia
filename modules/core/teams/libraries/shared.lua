@@ -8,8 +8,9 @@ end
 
 function MODULE:GetDefaultCharName(client, faction, data)
     local info = lia.faction.indices[faction]
-    if info and isfunction(info.NameTemplate) then
-        local name, override = info:NameTemplate(client)
+    local nameFunc = info and (info.NameTemplate or info.nameTemplate)
+    if isfunction(nameFunc) then
+        local name, override = nameFunc(info, client)
         if override then return name, true end
     end
 

@@ -38,6 +38,7 @@ The global `CLASS` table defines per-class settings such as display name, lore, 
 | `bodyGroups` | `table` | `{}` | Bodygroup index mapping applied on spawn. |
 | `model` | `string` | `""` | Model path (or table of paths) used by this class. |
 | `index` | `number` | `auto` | Unique team index assigned at registration. |
+| `uniqueID` | `string` | `filename` | Optional identifier; defaults to the file name when omitted. |
 
 ---
 
@@ -80,6 +81,25 @@ CLASS.desc = "Technicians who maintain equipment."
 ```
 
 ---
+#### `uniqueID`
+
+**Type:**
+
+`string`
+
+**Description:**
+
+Internal identifier used when referencing the class. If omitted, it defaults to the file name this class was loaded from.
+
+**Example Usage:**
+
+```lua
+CLASS.uniqueID = "engineer"
+```
+
+---
+
+
 
 #### `index`
 
@@ -191,7 +211,6 @@ Weapons granted to members of this class on spawn.
 CLASS.weapons = {"weapon_pistol", "weapon_crowbar"}
 ```
 
----
 
 #### `pay`
 
@@ -329,12 +348,18 @@ CLASS.scale = 1.2
 
 **Description:**
 
-Default running speed.
+Default running speed. Set a number to override or a multiplier in
+conjunction with `runSpeedMultiplier`.
 
 **Example Usage:**
 
 ```lua
+-- explicit speed value
 CLASS.runSpeed = 250
+OR
+-- 25% faster than the base run speed
+CLASS.runSpeed = 1.25
+CLASS.runSpeedMultiplier = true
 ```
 
 ---
@@ -463,8 +488,8 @@ Mapping of bodygroup indices to values applied on spawn.
 
 ```lua
 CLASS.bodyGroups = {
-    hands = 1,
-    torso = 3
+    hands = 1, -- bodygroup name → value
+    torso = 3  -- applies option 3 for the torso group
 }
 ```
 
@@ -487,3 +512,4 @@ CLASS.model = "models/player/alyx.mdl"
 ```
 
 ---
+

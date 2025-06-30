@@ -30,13 +30,17 @@ Called when the attribute is initialized on a player (for example, during charac
 
 ```lua
 function ATTRIBUTE:OnSetup(client, value)
-    if value > 5 then
-        client:ChatPrint("You feel your strength surging!")
-        client:SetHealth(client:Health() + value * 10)
+    -- Reward exceptionally high values with extra health.
+    if value >= 10 then
+        local bonus = (value - 9) * 5
+        client:SetMaxHealth(client:GetMaxHealth() + bonus)
+        client:SetHealth(client:GetMaxHealth())
+        client:ChatPrint("You gained " .. bonus .. " max health from " .. self.name .. "!")
     else
-        client:ChatPrint("Your muscles ache from weakness...")
+        client:ChatPrint("You need more practice in " .. self.name .. ".")
     end
 end
 ```
 
 ---
+
