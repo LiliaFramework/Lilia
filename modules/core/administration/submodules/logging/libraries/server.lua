@@ -159,3 +159,19 @@ end
 function MODULE:CanTool(client, _, tool)
     lia.log.add(client, "toolgunUse", tool)
 end
+
+function MODULE:PlayerSpawn(client)
+    lia.log.add(client, "playerSpawn")
+end
+
+function MODULE:OnPlayerObserve(client, state)
+    lia.log.add(client, "observeToggle", state and "enabled" or "disabled")
+end
+
+function MODULE:TicketSystemClaim(admin, requester)
+    lia.log.add(admin, "ticketClaimed", requester:Name())
+end
+
+function MODULE:TicketSystemClose(admin, requester)
+    lia.log.add(admin, "ticketClosed", requester:Name())
+end

@@ -91,5 +91,6 @@ lia.command.add("viewwarns", {
                 net = "RequestRemoveWarning"
             }
         }, target:getChar():getID())
+        lia.log.add(client, "viewWarns", target)
     end
 })

@@ -23,6 +23,13 @@
         func = function(client, attacker) return string.format("Player [%s] '%s' was killed by '%s'. (CharID: %s)", client:SteamID64(), client:Name(), attacker, client:getChar():getID()) end,
         category = "Death"
     },
+    ["playerSpawn"] = {
+        func = function(client)
+            local char = client:getChar()
+            return string.format("Player [%s] '%s' spawned. (CharID: %s)", client:SteamID64(), client:Name(), char and char:getID() or "N/A")
+        end,
+        category = "Character"
+    },
     ["spawned_prop"] = {
         func = function(client, model) return string.format("Player [%s] '%s' spawned prop: %s. (CharID: %s)", client:SteamID64(), client:Name(), model, client:getChar():getID()) end,
         category = "Spawn"
@@ -106,6 +113,13 @@
     ["toolgunUse"] = {
         func = function(client, tool) return string.format("Player [%s] '%s' used toolgun: '%s'. (CharID: %s)", client:SteamID64(), client:Name(), tool, client:getChar():getID()) end,
         category = "Toolgun"
+    },
+    ["observeToggle"] = {
+        func = function(client, state)
+            local char = client:getChar()
+            return string.format("Player [%s] '%s' toggled observe mode %s. (CharID: %s)", client:SteamID64(), client:Name(), state, char and char:getID() or "N/A")
+        end,
+        category = "Admin Actions"
     },
     ["playerConnected"] = {
         func = function(client) return string.format("Player connected: [%s] '%s'.", client:SteamID64(), client:Name()) end,
@@ -312,11 +326,49 @@
         category = "Admin Actions"
     },
     ["warningIssued"] = {
-        func = function(client, target, reason) return string.format("Warning issued at %s by admin [%s] to player [%s] for: '%s'.", os.date("%Y-%m-%d %H:%M:%S"), client:SteamID64(), target:SteamID64(), reason) end,
+        func = function(client, target, reason)
+            local char = IsValid(target) and target:getChar()
+            return string.format(
+                "Warning issued at %s by admin [%s] '%s' to player [%s] '%s' for: '%s'. (CharID: %s)",
+                os.date("%Y-%m-%d %H:%M:%S"),
+                client:SteamID64(),
+                client:Name(),
+                IsValid(target) and target:SteamID64() or "N/A",
+                IsValid(target) and target:Name() or "N/A",
+                reason,
+                char and char:getID() or "N/A"
+            )
+        end,
         category = "Warnings"
     },
     ["warningRemoved"] = {
-        func = function(client, target, warning) return string.format("Warning removed at %s by admin [%s] for player [%s]. Reason: '%s'.", os.date("%Y-%m-%d %H:%M:%S"), client:SteamID64(), target:SteamID64(), warning.reason) end,
+        func = function(client, target, warning)
+            local char = IsValid(target) and target:getChar()
+            return string.format(
+                "Warning removed at %s by admin [%s] '%s' for player [%s] '%s'. Reason: '%s'. (CharID: %s)",
+                os.date("%Y-%m-%d %H:%M:%S"),
+                client:SteamID64(),
+                client:Name(),
+                IsValid(target) and target:SteamID64() or "N/A",
+                IsValid(target) and target:Name() or "N/A",
+                warning.reason,
+                char and char:getID() or "N/A"
+            )
+        end,
+        category = "Warnings"
+    },
+    ["viewWarns"] = {
+        func = function(client, target)
+            local char = IsValid(target) and target:getChar()
+            return string.format(
+                "Admin [%s] '%s' viewed warnings for player [%s] '%s'. (CharID: %s)",
+                client:SteamID64(),
+                client:Name(),
+                IsValid(target) and target:SteamID64() or "N/A",
+                IsValid(target) and target:Name() or tostring(target),
+                char and char:getID() or "N/A"
+            )
+        end,
         category = "Warnings"
     },
     ["adminMode"] = {
@@ -377,6 +429,18 @@
     },
     ["voiceToggle"] = {
         func = function(client, targetName, state) return string.format("Admin [%s] '%s' toggled voice ban for %s: %s.", client:SteamID64(), client:Name(), targetName, state) end,
+        category = "Admin Actions"
+    },
+    ["charBan"] = {
+        func = function(client, targetName, charID) return string.format("Admin [%s] '%s' banned character '%s'. (CharID: %s)", client:SteamID64(), client:Name(), targetName, charID or "N/A") end,
+        category = "Admin Actions"
+    },
+    ["charUnban"] = {
+        func = function(client, targetName, charID) return string.format("Admin [%s] '%s' unbanned character '%s'. (CharID: %s)", client:SteamID64(), client:Name(), targetName, charID or "N/A") end,
+        category = "Admin Actions"
+    },
+    ["charKick"] = {
+        func = function(client, targetName, charID) return string.format("Admin [%s] '%s' kicked character '%s'. (CharID: %s)", client:SteamID64(), client:Name(), targetName, charID or "N/A") end,
         category = "Admin Actions"
     },
     ["sitRoomSet"] = {
@@ -487,6 +551,18 @@
     },
     ["viewAllClaims"] = {
         func = function(client) return string.format("Admin [%s] '%s' viewed all ticket claims.", client:SteamID64(), client:Name()) end,
+        category = "Tickets"
+    },
+    ["ticketClaimed"] = {
+        func = function(client, requester)
+            return string.format("Admin [%s] '%s' claimed a ticket for %s.", client:SteamID64(), client:Name(), requester)
+        end,
+        category = "Tickets"
+    },
+    ["ticketClosed"] = {
+        func = function(client, requester)
+            return string.format("Admin [%s] '%s' closed a ticket for %s.", client:SteamID64(), client:Name(), requester)
+        end,
         category = "Tickets"
     },
     ["unprotectedVJNetCall"] = {

@@ -560,6 +560,7 @@ lia.command.add("charunban", {
                 charFound:setData("banned", nil)
                 charFound:setData("permakilled", nil)
                 client:notifyLocalized("charUnBan", client:Name(), charFound:getName())
+                lia.log.add(client, "charUnban", charFound:getName(), charFound:getID())
             else
                 return L("charNotBanned")
             end
@@ -583,6 +584,7 @@ lia.command.add("charunban", {
                 }, nil, nil, "_id = " .. charID)
 
                 client:notifyLocalized("charUnBan", client:Name(), data[1]._name)
+                lia.log.add(client, "charUnban", data[1]._name, charID)
             end
         end)
     end
@@ -636,6 +638,7 @@ lia.command.add("charkick", {
             end
 
             character:kick()
+            lia.log.add(client, "charKick", target:Name(), character:getID())
         else
             client:notifyLocalized("noChar")
         end
@@ -713,6 +716,7 @@ lia.command.add("charban", {
             character:save()
             character:kick()
             client:notifyLocalized("charBan", client:Name(), target:Name())
+            lia.log.add(client, "charBan", target:Name(), character:getID())
         else
             client:notifyLocalized("noChar")
         end

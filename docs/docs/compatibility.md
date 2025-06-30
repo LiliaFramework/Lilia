@@ -6,11 +6,18 @@ The compatibility layer covers administration suites such as ULX and SAM, vehicl
 In recent releases the compatibility set has grown even larger. Popular community addons now work out of the box:
 
 - **Advanced Duplicator 2** and **Advanced Duplicator** integration
+
 - **PAC3** outfit synchronization
+
 - **ServerGuard** permission support
+
 - **ULX** and **SAM** admin suites
+
 - **LVS**, **Simfphys**, and **VCMod** vehicle frameworks
+
 - **VJBase** NPC base improvements
+
+- **VManip** animation support
 
 Simply install these addons and the matching compatibility layer will load automatically.
 
@@ -19,7 +26,9 @@ Simply install these addons and the matching compatibility layer will load autom
 **Compatibility Highlights:**
 
 * Prevents duplication of entities flagged as `NoDuplicate`.
+
 * Rejects dupes containing props scaled to excessive sizes.
+
 * Logs attempted exploits and notifies the offending player.
 
 **Detailed Explanation:**
@@ -33,6 +42,7 @@ Hooks into dupe placement checks to stop players from spawning unstable or restr
 **Compatibility Highlights:**
 
 * Performs the same safety checks as the original dupe compatibility library.
+
 * Respects AD2’s internal entity lists when validating dupes.
 
 **Detailed Explanation:**
@@ -46,6 +56,7 @@ Integrates with AD2’s duplication data system while still blocking problematic
 **Compatibility Highlights:**
 
 * Provides helper functions like `isEmpty`, `findEmptyPos`, and text wrapping.
+
 * Recreates monetary helpers so other DarkRP addons can function.
 
 **Detailed Explanation:**
@@ -71,6 +82,7 @@ Stops collisions or weapons fired from your own LVS vehicle from injuring you. D
 **Compatibility Highlights:**
 
 * Networks player outfit parts reliably between server and clients.
+
 * Adds commands for repairing, enabling, and disabling PAC3.
 
 **Detailed Explanation:**
@@ -108,6 +120,7 @@ Listens for death and character-switch events, automatically exiting prone to av
 **Compatibility Highlights:**
 
 * Recreates SAM chat commands via Lilia’s command system.
+
 * Checks staff privileges before executing sensitive commands.
 
 **Detailed Explanation:**
@@ -133,7 +146,9 @@ Turns off ServerGuard’s restriction module to ensure a single consistent permi
 **Compatibility Highlights:**
 
 * Applies crash damage to drivers on vehicle collisions.
+
 * Adds configuration options for seat damage and entry delays.
+
 * Registers a privilege for editing vehicles.
 
 **Detailed Explanation:**
@@ -147,7 +162,9 @@ Drivers only take damage when the vehicle is struck near their seat and a config
 **Compatibility Highlights:**
 
 * Sets recommended console variables on load.
+
 * Prevents sitting on players or vehicles.
+
 * Enables seat damage by default.
 
 **Detailed Explanation:**
@@ -161,6 +178,7 @@ Adjusts console settings and seat interactions to prevent trolling while maintai
 **Compatibility Highlights:**
 
 * Removes obsolete hooks that conflict with recent versions of CAMI.
+
 * Synchronizes CAMI groups and privileges with ULX.
 
 **Detailed Explanation:**
@@ -186,8 +204,23 @@ Forwards vehicle purchase and upgrade transactions to the roleplay money system,
 **Compatibility Highlights:**
 
 * Blocks dangerous network messages.
+
 * Applies safer default settings and removes heavy hooks.
 
 **Detailed Explanation:**
 
 Intercepts exploitable VJBase network messages and disables resource-intensive hooks to maintain server security and performance.
+
+---
+
+## [VManip](https://liliaframework.github.io/Modules/vmanip.html)
+
+**Compatibility Highlights:**
+
+* Synchronizes VManip animations between server and clients.
+
+* Exposes hooks for triggering VManip actions.
+
+**Detailed Explanation:**
+
+Provides helper networking and event hooks so player animation gestures triggered through VManip play correctly for everyone.
