@@ -31,7 +31,7 @@ Also maps the key code back to the action identifier for reverse lookup.
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.keybind.add
@@ -59,7 +59,7 @@ or an optionally provided fallback value.
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.keybind.get
@@ -89,7 +89,7 @@ and writes the keybind mapping (action identifiers to key codes) in JSON format.
     Internal Function:
     true
     
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.keybind.save
@@ -121,7 +121,7 @@ Finally, it triggers the "InitializedKeybinds" hook.
     Internal Function:
     true
     
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.keybind.load

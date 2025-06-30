@@ -29,7 +29,7 @@ as the key.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.attribs.loadFromDir
@@ -56,7 +56,7 @@ an OnSetup callback, it is executed with the current value.
 **Returns:**
 
 * None
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.attribs.setup

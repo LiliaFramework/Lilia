@@ -26,7 +26,7 @@ Registers a named color for later lookup.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.color.register
@@ -55,7 +55,7 @@ Creates a new color by applying offsets to each channel.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.color.Adjust
@@ -80,7 +80,7 @@ Returns a table of commonly used UI colors derived from the base config color.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.color.ReturnMainAdjustedColors

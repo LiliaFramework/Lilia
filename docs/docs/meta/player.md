@@ -27,7 +27,7 @@ Returns the currently loaded character object for this player.
 
 * Character|None – The player's active character.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Retrieve the character to modify inventory
@@ -53,7 +53,7 @@ Returns either the character's roleplay name or the player's Steam name.
 
 * string – Display name.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Print the roleplay name in chat
@@ -79,7 +79,7 @@ Wrapper for CAMI privilege checks.
 
 * boolean – Result from CAMI.PlayerHasAccess.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Deny access if the player lacks a privilege
@@ -107,7 +107,7 @@ Safely returns the vehicle the player is currently using.
 
 * Entity|None – Vehicle entity or None.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Attach a camera to the vehicle the player is in
@@ -136,7 +136,7 @@ Determines if the player is currently inside a valid vehicle.
 
 * boolean – True if a vehicle entity is valid.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Allow honking only when in a valid vehicle
@@ -164,7 +164,7 @@ Returns true if the player is in noclip mode and not inside a vehicle.
 
 * boolean – Whether the player is noclipping.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Disable certain actions while noclipping
@@ -190,7 +190,7 @@ Checks if the player currently has an active ragdoll entity.
 
 * boolean – True when a ragdoll entity exists.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 if player:hasRagdoll() then
@@ -218,7 +218,7 @@ Safely removes the player's ragdoll entity if present.
 * None – This function does not return a value.
 
 **Example:**
-
+**Example Usage:**
 ```lua
 -- Clean up any ragdoll left behind
 player:removeRagdoll()
@@ -244,7 +244,7 @@ Retrieves the ragdoll entity associated with the player.
 * Entity|None – The ragdoll entity or None.
 
 **Example:**
-
+**Example Usage:**
 ```lua
 local ragdoll = player:getRagdoll()
 ```
@@ -270,7 +270,7 @@ Determines whether the player's position is stuck in the world.
 
 **Example:**
 
-```lua
+**Example Usage:**
 if player:isStuck() then
     player:SetPos(player:GetPos() + Vector(0, 0, 16))
 end
@@ -298,7 +298,7 @@ Checks if an entity is within the given radius of the player.
 
 **Example:**
 
-```lua
+**Example Usage:**
 if player:isNearPlayer(128, target) then
     print("Target is nearby")
 end
@@ -325,7 +325,7 @@ Returns a table of entities within radius of the player.
 * table – List of nearby entities.
 
 **Example:**
-
+**Example Usage:**
 ```lua
 for _, ent in ipairs(player:entitiesNearPlayer(256)) do
     print(ent)
@@ -352,7 +352,7 @@ Returns the active weapon entity and associated item if equipped.
 * Entity|None – Weapon entity when matched.
 
 **Example:**
-
+**Example Usage:**
 ```lua
 local weapon, item = player:getItemWeapon()
 ```
@@ -378,7 +378,7 @@ Checks whether the player is moving faster than walking speed.
 
 **Example:**
 
-```lua
+**Example Usage:**
 if player:isRunning() then
     -- player is sprinting
 end
@@ -404,7 +404,7 @@ Returns true if the player's model is considered female.
 * boolean – Whether a female model is detected.
 
 **Example:**
-
+**Example Usage:**
 ```lua
 if player:isFemale() then
     print("Female model detected")
@@ -430,7 +430,7 @@ Finds a safe position in front of the player to drop items.
 
 * Vector – World position for dropping items.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 local pos = player:getItemDropPos()
@@ -456,7 +456,7 @@ Returns the player's inventory item list if a character is loaded.
 * table|None – Table of items or None if absent.
 
 **Example:**
-
+**Example Usage:**
 ```lua
 -- Iterate player's items to calculate total weight
 for _, it in pairs(player:getItems() or {}) do
@@ -482,7 +482,7 @@ Performs a simple trace from the player's shoot position.
 **Returns:**
 
 * Entity|None – The entity hit or None.
-
+**Example Usage:**
 **Example:**
 
 ```lua
@@ -508,7 +508,7 @@ Returns a hull trace in front of the player.
 **Returns:**
 
 * table – Trace result.
-
+**Example Usage:**
 **Example:**
 
 ```lua
@@ -534,7 +534,7 @@ Returns the entity the player is looking at within a distance.
 **Returns:**
 
 * Entity|None – The entity or None if too far.
-
+**Example Usage:**
 **Example:**
 
 ```lua
@@ -560,7 +560,7 @@ Sends a plain notification message to the player.
 
 * Server
 **Returns:**
-
+**Example Usage:**
 * None – This function does not return a value.
 
 **Example:**
@@ -586,7 +586,7 @@ Sends a localized notification to the player.
 **Realm:**
 
 * Server
-**Returns:**
+**Example Usage:**
 
 * None – This function does not return a value.
 
@@ -612,7 +612,7 @@ Determines whether the player can edit the given vendor.
 **Realm:**
 
 * Server
-
+**Example Usage:**
 **Returns:**
 
 * boolean – True if allowed to edit.
@@ -638,7 +638,7 @@ Convenience wrapper to check if the player is in the "user" group.
 **Realm:**
 
 * Shared
-
+**Example Usage:**
 **Returns:**
 
 * boolean – Whether usergroup is "user".
@@ -664,7 +664,7 @@ Returns true if the player belongs to a staff group.
 **Realm:**
 
 * Shared
-
+**Example Usage:**
 **Returns:**
 
 * boolean – Result from the privilege check.
@@ -690,7 +690,7 @@ Checks whether the player is in the VIP group.
 **Realm:**
 
 * Shared
-
+**Example Usage:**
 **Returns:**
 
 * boolean – Result from privilege check.
@@ -717,7 +717,7 @@ Determines if the player is currently in the staff faction.
 
 * Shared
 
-**Returns:**
+**Example Usage:**
 
 * boolean – True if staff faction is active.
 
@@ -743,7 +743,7 @@ Checks if the player's character belongs to the given faction.
 
 * Shared
 
-**Returns:**
+**Example Usage:**
 
 * boolean – True if the factions match.
 
@@ -772,7 +772,7 @@ Returns true if the player's character is of the given class.
 **Returns:**
 
 * boolean – Whether the character matches the class.
-
+**Example Usage:**
 **Example:**
 
 ```lua
@@ -797,7 +797,7 @@ Determines if the player has whitelist access for a faction.
 
 **Returns:**
 
-* boolean – True if whitelisted.
+**Example Usage:**True if whitelisted.
 
 **Example:**
 
@@ -821,7 +821,7 @@ Retrieves the class index of the player's character.
 
 * Shared
 
-**Returns:**
+**Example Usage:**
 
 * number|None – Class index or None.
 
@@ -845,7 +845,7 @@ Checks if the player's character is whitelisted for a class.
 
 **Realm:**
 
-* Shared
+**Example Usage:**
 
 **Returns:**
 
@@ -870,7 +870,7 @@ Returns the class table of the player's current class.
 * None
 
 **Realm:**
-
+**Example Usage:**
 * Shared
 
 **Returns:**
@@ -896,7 +896,7 @@ Compatibility helper for retrieving money with DarkRP-style calls.
 * var (string) – Currently only supports "money".
 
 **Realm:**
-
+**Example Usage:**
 * Shared
 
 **Returns:**

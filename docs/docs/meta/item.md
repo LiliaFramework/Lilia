@@ -26,7 +26,7 @@ Retrieves how many of this item the stack represents.
 
 * number – Quantity contained in this item instance.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Give the player ammo equal to the stack quantity
@@ -52,7 +52,7 @@ Compares this item instance to another by ID.
 
 * boolean – True if both items share the same ID.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Check if the held item matches the inventory slot
@@ -80,7 +80,7 @@ Returns a printable representation of this item.
 
 * string – Identifier in the form "item[uniqueID][id]".
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Log the item identifier during saving
@@ -106,7 +106,7 @@ Retrieves the unique identifier of this item.
 
 * number – Item database ID.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Use the ID when updating the database
@@ -132,7 +132,7 @@ Returns the model path associated with this item.
 
 * string – Model path.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Spawn the item's model as a world prop
@@ -160,7 +160,7 @@ Retrieves the skin index this item uses.
 
 * number – Skin ID applied to the model.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Apply the correct skin when displaying the item
@@ -186,7 +186,7 @@ Returns the calculated purchase price for the item.
 
 * number – The price value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Charge the player the item's price before giving it
@@ -217,7 +217,7 @@ Invokes an item method with the given player and entity context.
 
 * any – Results returned by the called function.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Trigger a custom "use" function when the player presses Use
@@ -243,7 +243,7 @@ Attempts to find the player currently owning this item.
 
 * Player|None – The owner if available.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Notify whoever currently owns the item
@@ -273,7 +273,7 @@ Retrieves a piece of persistent data stored on the item.
 
 * any – Stored value or default.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Retrieve a custom paint color stored on the item
@@ -300,7 +300,7 @@ networked values on its entity.
 
 * table – Key/value table of all data fields.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Print all stored data for debugging
@@ -326,7 +326,7 @@ Registers a hook callback for this item instance.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Run code when the item is used
@@ -352,7 +352,7 @@ Registers a post-hook callback for this item.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Give a pistol after the item is picked up
@@ -377,7 +377,7 @@ Called when the item table is first registered.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Initialize data when the item type loads
@@ -402,7 +402,7 @@ Prints a simple representation of the item to the console.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Output item info while debugging spawn issues
@@ -427,7 +427,7 @@ Debug helper that prints all stored item data.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Dump all stored data to the console
@@ -453,7 +453,7 @@ Increases the stored quantity for this item instance.
 * Returns:
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Combine stacks from a loot drop and notify the owner
@@ -480,7 +480,7 @@ Sets the current stack quantity and replicates the change.
 * Returns:
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Set quantity to 1 after splitting the stack

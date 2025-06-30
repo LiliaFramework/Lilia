@@ -22,7 +22,7 @@ Collects workshop IDs from installed addons and registered modules.
 **Returns:**
 
 * ids (table) – Table of workshop IDs to download.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.workshop.gather
@@ -47,7 +47,7 @@ Sends the collected workshop IDs to a connecting player.
 **Returns:**
 
 * None
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.workshop.send

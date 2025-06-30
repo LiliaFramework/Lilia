@@ -33,7 +33,7 @@ Called after the F1 menu panel is created so additional sections can be added. P
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Adds a custom hunger info field after the menu is ready.
@@ -67,7 +67,7 @@ Executed during menu creation allowing you to define custom tabs. Allows modules
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Inserts a custom "Help" tab listing available commands.
@@ -112,7 +112,7 @@ Runs every frame when the character model panel draws. Lets code draw over the m
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Overlays the player's name above the preview model.
@@ -156,7 +156,7 @@ Determines if a scoreboard field such as a player's name or model can be replace
 
 * boolean – Return true to allow override
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Allows other hooks to replace player names on the scoreboard.
@@ -187,7 +187,7 @@ Returns the name text to display for a player in UI panels.
 
 * string or nil – Name text to display
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Displays player names with an admin prefix.
@@ -218,7 +218,7 @@ Fired when the voice panel for a player is removed from the HUD.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Announces in chat and plays a sound when someone stops using voice chat.
@@ -248,7 +248,7 @@ Triggered when a spawn icon is removed from the extended spawn menu. Fired when 
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Plays a sound and prints which model was removed from the spawn menu.
@@ -282,7 +282,7 @@ Gives a chance to draw additional info over item icons. Allows drawing over item
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Draws the item quantity in the bottom-right corner.
@@ -313,7 +313,7 @@ Allows extensions to populate the right-click menu for an item. Allows overridin
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Adds an "Inspect" choice to an item's context menu.
@@ -345,7 +345,7 @@ Determines whether an item action should be displayed. Determines whether a spec
 
 * boolean – True if the action can run.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Disables the drop action for all items.
@@ -376,7 +376,7 @@ Return false to omit players from the scoreboard. Determines if a player should 
 
 * boolean – False to hide the player
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Stops bots from showing up on the scoreboard.
@@ -408,7 +408,7 @@ Populate the scoreboard context menu with extra options. Allows modules to add s
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Adds a friendly "Wave" choice in the scoreboard menu.
@@ -444,7 +444,7 @@ Supplies the description text shown on the scoreboard. Returns the description t
 
 * string – Description text
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Shows an OOC description when requested by the scoreboard.
@@ -475,7 +475,7 @@ Runs whenever the chat entry text is modified. Called whenever the chat entry te
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Displays a hint when the user types "/help".
@@ -506,7 +506,7 @@ Fires when the chat box closes. Fired when the chat box is closed.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Fade out the chat box when it closes.
@@ -539,7 +539,7 @@ Fires when the chat box opens. Fired when the chat box is opened.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Plays a sound and focuses the chat window when it opens.
@@ -572,7 +572,7 @@ Allows modification of the markup before chat messages are printed. Allows modif
 
 * string – Modified markup text.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Turns chat messages green and prefixes the time before they appear.
@@ -604,7 +604,7 @@ Add extra lines to an item tooltip. Populates additional information for an item
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Adds the item's weight to its tooltip.
@@ -633,7 +633,7 @@ Returns the camera position and angle for the main menu character preview. Provi
 
 * Vector, Angle – Position and angle values.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Positions the main menu camera with a slight offset.
@@ -662,7 +662,7 @@ Return false here to prevent character deletion. Determines if a character can b
 
 * boolean – False to disallow deletion.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Blocks deletion of the first character slot.
@@ -694,7 +694,7 @@ Lets modules insert additional information on the main menu info panel. Allows m
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Adds the character's faction to the menu info panel.
@@ -723,7 +723,7 @@ Checks if the local player may start creating a character. Determines if the pla
 
 * boolean – False to disallow creation.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Restricts character creation to admins only.
@@ -755,7 +755,7 @@ Lets you edit the clientside model used in the main menu. Allows adjustments to 
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Changes a bodygroup on the preview model.
@@ -784,7 +784,7 @@ Add or reorder steps in the character creation flow. Lets modules alter the char
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Adds a custom "background" step to the character creator.
@@ -813,7 +813,7 @@ Override to change how many characters a player can have. Returns the maximum nu
 
 * number – Maximum character count.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Gives admins extra character slots.
@@ -842,7 +842,7 @@ Return false and a reason to hide buttons on the main menu. Determines if a butt
 
 * boolean, string – False and reason to hide.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Hides the delete button when the feature is locked.
@@ -873,7 +873,7 @@ Called when the character creation panel should reset. Called to reset the chara
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Notifies whenever the creation panel resets.
@@ -902,7 +902,7 @@ Notifies when the EasyIcons font sheet has loaded. Fired when the EasyIcons libr
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Rebuild icons using the font after it loads.
@@ -934,7 +934,7 @@ Called when CAMI registers a new usergroup. CAMI notification that a usergroup w
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Logs newly registered CAMI usergroups.
@@ -964,7 +964,7 @@ Called when a usergroup is removed from CAMI. CAMI notification that a usergroup
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Logs whenever a usergroup is removed from CAMI.
@@ -993,7 +993,7 @@ Fired when a privilege is created in CAMI. CAMI notification that a privilege wa
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Reports when a new CAMI privilege is registered.
@@ -1022,7 +1022,7 @@ Fired when a privilege is removed from CAMI. CAMI notification that a privilege 
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Reports when a CAMI privilege is removed.
@@ -1056,7 +1056,7 @@ Allows an override of player privilege checks. Allows external libraries to over
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Lets superadmins bypass privilege checks.
@@ -1093,7 +1093,7 @@ Allows an override of SteamID-based privilege checks. Similar to PlayerHasAccess
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Grants access for a specific SteamID.
@@ -1128,7 +1128,7 @@ Notification that a player's group changed. Fired when a player's usergroup has 
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Announces when a player's usergroup changes.
@@ -1160,7 +1160,7 @@ Notification that a SteamID's group changed. Fired when a SteamID's usergroup ha
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Logs usergroup changes by SteamID.
@@ -1189,7 +1189,7 @@ Customize tooltip sizing and layout before it appears.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Sets a fixed width for tooltips before layout.
@@ -1220,7 +1220,7 @@ Draw custom visuals on the tooltip, returning true skips default painting.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Adds a dark background and skips default paint.
@@ -1252,7 +1252,7 @@ Runs when a tooltip is opened for a panel.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Fades tooltips in when they are created.
@@ -1282,7 +1282,7 @@ Runs when a player spawns and equips items. Allows modification of the default l
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Gives players a crowbar and ammo on spawn.
@@ -1315,7 +1315,7 @@ Determines if a player's death should permanently kill their character. Return t
 
 * boolean – Return true to mark for permanent death
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prevent permanent death from fall damage.
@@ -1347,7 +1347,7 @@ Checks if a player may drop an item. Return false to block dropping.
 
 * boolean – False to block dropping
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Disallow dropping locked items.
@@ -1379,7 +1379,7 @@ Determines if a player can pick up an item. Return false to prevent taking.
 
 * boolean – False to prevent pickup
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Block taking admin items.
@@ -1411,7 +1411,7 @@ Queries if a player can equip an item. Returning false stops the equip action.
 
 * boolean – False to block equipping
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Allow equipping only if level requirement met.
@@ -1443,7 +1443,7 @@ Called before an item is unequipped. Return false to keep the item equipped.
 
 * boolean – False to prevent unequipping
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prevent unequipping cursed gear.
@@ -1477,7 +1477,7 @@ Runs after chat messages are processed. Allows reacting to player chat.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Log all OOC chat.
@@ -1508,7 +1508,7 @@ Decides if a corpse ragdoll should spawn for a player. Return false to skip ragd
 
 * boolean – False to skip ragdoll
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Disable ragdolls for bots.
@@ -1539,7 +1539,7 @@ Called when the framework saves persistent data. Modules can store custom inform
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Save a timestamp to file.
@@ -1568,7 +1568,7 @@ Fires when map persistence should be written to disk. Allows adding extra persis
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Backs up all persistent entities to a data file whenever saving occurs.
@@ -1607,7 +1607,7 @@ Invoked before an entity is saved as persistent. Return false to disallow persis
 
 * boolean – False to prevent the entity from being saved.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Skip weapons when marking props permanent.
@@ -1638,7 +1638,7 @@ Triggered when stored data should be loaded. Modules can restore custom informat
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Restores map props from a saved JSON file on disk.
@@ -1678,7 +1678,7 @@ Called after all persistent data has loaded. Useful for post-processing.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Spawns a supply crate at a stored position once everything is loaded.
@@ -1713,7 +1713,7 @@ Queries if data saving should occur during shutdown. Return false to cancel savi
 
 * boolean – False to cancel saving
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Skip saving during quick restarts.
@@ -1743,7 +1743,7 @@ Called when a player's character disconnects. Provides a last chance to handle d
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Store the character's last position so it can be restored later.
@@ -1772,7 +1772,7 @@ Initializes a bot's character when it first joins. Allows custom bot setup.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Give the bot a starter pistol and set up a small inventory.
@@ -1803,7 +1803,7 @@ Fired after a player's personal data has loaded. Useful for syncing additional i
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Cache the player's faction color from saved data for use after their character loads.
@@ -1836,7 +1836,7 @@ Runs after the player entity has spawned and data is ready. Allows post-initiali
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Initialize some default variables for new players.
@@ -1866,7 +1866,7 @@ Gives factions a chance to modify player loadouts. Runs before weapons are equip
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when FactionOnLoadout is triggered
@@ -1897,7 +1897,7 @@ Allows classes to modify the player's starting gear. Executed prior to PostPlaye
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when ClassOnLoadout is triggered
@@ -1928,7 +1928,7 @@ Called after the player has been equipped. Last chance to modify the loadout.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when PostPlayerLoadout is triggered
@@ -1957,7 +1957,7 @@ Runs after faction loadout logic completes. Allows post-loadout tweaks.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when FactionPostLoadout is triggered
@@ -1988,7 +1988,7 @@ Runs after class loadout logic completes. Allows post-loadout tweaks for classes
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when ClassPostLoadout is triggered
@@ -2017,7 +2017,7 @@ Returns the inventory type used for new characters. Modules can override to prov
 
 * string – Inventory type
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when GetDefaultInventoryType is triggered
@@ -2046,7 +2046,7 @@ Decides whether saved persistent items should be deleted on load. Return true to
 
 * boolean – True to delete items
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Remove stored items if too many exist on the map.
@@ -2077,7 +2077,7 @@ Called after map items have been loaded from storage. Provides the table of crea
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Adjusts item collision settings after loading from storage.
@@ -2109,7 +2109,7 @@ Determines if world-space info should be rendered for an entity. Return false to
 
 * boolean – False to hide info
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when ShouldDrawEntityInfo is triggered
@@ -2142,7 +2142,7 @@ Allows custom drawing of entity information in the world. Drawn every frame whil
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when DrawEntityInfo is triggered
@@ -2171,7 +2171,7 @@ Provides the health status text and color for a player. Return a table with text
 
 * table – {text, color} info
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when GetInjuredText is triggered
@@ -2202,7 +2202,7 @@ Determines if character info should draw above a player. Return false to suppres
 
 * boolean – False to hide info
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when ShouldDrawPlayerInfo is triggered
@@ -2235,7 +2235,7 @@ Allows modules to add lines to the character info display. Called when building 
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when DrawCharInfo is triggered
@@ -2264,7 +2264,7 @@ Opens the context menu for a world item when used. Allows replacing the default 
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when ItemShowEntityMenu is triggered
@@ -2293,7 +2293,7 @@ Fired just before the client finishes loading the framework. Useful for setup ta
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when PreLiliaLoaded is triggered
@@ -2322,7 +2322,7 @@ Indicates the client finished initializing the framework. Modules can start crea
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when LiliaLoaded is triggered
@@ -2354,7 +2354,7 @@ Notifies when inventory metadata changes. Provides old and new values.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when InventoryDataChanged is triggered
@@ -2385,7 +2385,7 @@ Called when a new item instance is created clientside. Allows additional setup f
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when ItemInitialized is triggered
@@ -2414,7 +2414,7 @@ Fired when an inventory instance finishes loading. Modules may modify it here.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when InventoryInitialized is triggered
@@ -2444,7 +2444,7 @@ Invoked when an item is placed into an inventory. Lets code react to the additio
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when InventoryItemAdded is triggered
@@ -2474,7 +2474,7 @@ Called when an item is removed from an inventory. Runs after the item table is u
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when InventoryItemRemoved is triggered
@@ -2503,7 +2503,7 @@ Signals that an inventory was deleted clientside. Allows cleanup of references.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when InventoryDeleted is triggered
@@ -2532,7 +2532,7 @@ Fired when an item is removed entirely. Modules should clear any cached data.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when ItemDeleted is triggered
@@ -2564,7 +2564,7 @@ Runs when a networked character variable changes. Gives both old and new values.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OnCharVarChanged is triggered
@@ -2598,7 +2598,7 @@ Similar to OnCharVarChanged but for local-only variables. Called after the table
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OnCharLocalVarChanged is triggered
@@ -2632,7 +2632,7 @@ Called when item data values change clientside. Provides both the old and new va
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when ItemDataChanged is triggered
@@ -2665,7 +2665,7 @@ Runs when an item's quantity value updates. Allows reacting to stack changes.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when ItemQuantityChanged is triggered
@@ -2695,7 +2695,7 @@ Indicates that a character was forcefully removed. isCurrentChar denotes if it w
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when KickedFromChar is triggered
@@ -2728,7 +2728,7 @@ Server receives a request to move an item. Modules can validate or modify the tr
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when HandleItemTransferRequest is triggered
@@ -2757,7 +2757,7 @@ Fired when a character object is fully loaded. Receives the character ID.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CharLoaded is triggered
@@ -2786,7 +2786,7 @@ Called before a character is removed. Return false to cancel deletion.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when PreCharDelete is triggered
@@ -2818,7 +2818,7 @@ Fired when a character is deleted. Provides the owning player if available.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OnCharDelete is triggered
@@ -2849,7 +2849,7 @@ Invoked after a new character is created. Supplies the character table and creat
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OnCharCreated is triggered
@@ -2878,7 +2878,7 @@ Runs when a player transfers to another server. Useful for cleanup.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OnTransferred is triggered
@@ -2907,7 +2907,7 @@ Executed before a character is saved to disk. Allows writing custom data.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CharPreSave is triggered
@@ -2936,7 +2936,7 @@ Called when the character selection list finishes loading. Provides the loaded l
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CharListLoaded is triggered
@@ -2966,7 +2966,7 @@ Fires when the character list is refreshed. Gives both old and new tables.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CharListUpdated is triggered
@@ -2995,7 +2995,7 @@ Returns the maximum stamina for a character. Override to change stamina capacity
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when getCharMaxStamina is triggered
@@ -3025,7 +3025,7 @@ Alters the stamina offset applied each tick while sprinting. Return a new cost t
 
 * number – Modified stamina cost.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when AdjustStaminaOffsetRunning is triggered
@@ -3055,7 +3055,7 @@ Allows changing how quickly stamina regenerates when not sprinting. Return a new
 
 * number – Modified regeneration amount.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when AdjustStaminaRegeneration is triggered
@@ -3087,7 +3087,7 @@ Final hook for tweaking the calculated stamina offset. Return the modified offse
 
 * number – New offset to apply.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when AdjustStaminaOffset is triggered
@@ -3117,7 +3117,7 @@ Runs after all font files have loaded. Allows registering additional fonts.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when PostLoadFonts is triggered
@@ -3151,7 +3151,7 @@ Called when the F1 menu builds status bars so new fields can be added.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Adds a custom thirst bar next to stamina.
@@ -3183,7 +3183,7 @@ Fired when building the F1 menu so modules can insert additional sections.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Add a custom "Settings" tab.
@@ -3218,7 +3218,7 @@ Determines whether an item may move between inventories.
 
 * boolean, string – False and reason to block
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prevent quest items from being dropped.
@@ -3249,7 +3249,7 @@ Called right before a bag inventory UI opens. Return false to block opening.
 
 * boolean – False to block opening.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Disallow bag use while fighting.
@@ -3280,7 +3280,7 @@ Checks if an outfit is allowed to change the player model.
 
 * boolean – False to block the change.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Restrict model swaps for certain factions.
@@ -3312,7 +3312,7 @@ Determines if a player can modify a vendor's settings.
 
 * boolean – False to disallow editing.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Allow only admins to edit vendors.
@@ -3342,7 +3342,7 @@ Called when a player attempts to pick up a money entity.
 
 * boolean – False to disallow pickup.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prevent money pickup while handcuffed.
@@ -3375,7 +3375,7 @@ Determines if a player can open or lock a door entity.
 
 * boolean – False to deny access.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Only police can unlock jail cells.
@@ -3407,7 +3407,7 @@ Checks if a player is permitted to open a vendor menu.
 
 * boolean – False to deny access.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Block access unless the vendor allows the player's faction.
@@ -3439,7 +3439,7 @@ Determines if the player can pick up an entity with the hands swep.
 
 * boolean – False to prevent holding.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prevent grabbing heavy physics objects.
@@ -3472,7 +3472,7 @@ Called when a player tries to use or drop an item.
 
 * boolean – False to block the action.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Block medkit use inside safe zones.
@@ -3504,7 +3504,7 @@ Called when a player attempts to knock on a door.
 
 * boolean – False to block knocking.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prevent knocking while disguised.
@@ -3537,7 +3537,7 @@ Checks if the player is allowed to spawn a storage container.
 
 * boolean – False to deny spawning.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Limit players to one storage crate.
@@ -3568,7 +3568,7 @@ Called when the fists weapon tries to punch.
 
 * boolean – False to block punching.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prevent punching while restrained.
@@ -3602,7 +3602,7 @@ Checks whether a vendor trade is allowed.
 
 * boolean, string – False and reason to deny trade
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Block selling stolen goods.
@@ -3633,7 +3633,7 @@ Called before any inventory menu is shown.
 
 * boolean – False to prevent opening
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prevent opening inventory while in a cutscene.
@@ -3663,7 +3663,7 @@ Called before persistent storage saves.
 
 * boolean – False to cancel saving
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Disable saving during special events.
@@ -3695,7 +3695,7 @@ Allows custom checks for a character's permission flags.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Grant extra access for characters owned by admins.
@@ -3727,7 +3727,7 @@ Runs after a character's data has been saved to the database.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Log every time characters save data.
@@ -3756,7 +3756,7 @@ Fired after the database has been successfully connected.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prepare custom tables once the DB connects.
@@ -3789,7 +3789,7 @@ Called when an item entity draws its description text.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Display remaining uses next to item name.
@@ -3818,7 +3818,7 @@ Returns the default width and height for new inventories.
 
 * number, number – Width and height
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Expand default bags for admins.
@@ -3849,7 +3849,7 @@ Allows overriding the entity model used for dropped money.
 
 * string – Model path to use
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Use a golden model for large sums.
@@ -3882,7 +3882,7 @@ Lets addons modify how much damage the fists weapon deals.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Scale punch damage by strength attribute.
@@ -3913,7 +3913,7 @@ Allows overriding default clicks on inventory icons.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Shift-click to quickly move items.
@@ -3946,7 +3946,7 @@ Called when the system attempts to combine one item with another in an inventory
 
 * boolean – true if combination succeeds and items are consumed, false otherwise.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Combine two ammo boxes into one stack.
@@ -3980,7 +3980,7 @@ Called when an item icon is dragged completely out of an inventory.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Drop the item into the world when removed.
@@ -4013,7 +4013,7 @@ Triggered whenever an item function is executed by a player.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Log item function usage for analytics.
@@ -4042,7 +4042,7 @@ Runs after an item successfully moves between inventories.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Notify the player about the transfer result.
@@ -4073,7 +4073,7 @@ Called when a character ragdolls or is forced to fall over.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Apply a stun effect when knocked down.
@@ -4105,7 +4105,7 @@ Called when a character is kicked from the server.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Record the kick reason.
@@ -4135,7 +4135,7 @@ Called when a character is permanently killed.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Announce permadeath in chat.
@@ -4164,7 +4164,7 @@ Called clientside when your character recognizes another.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Play a sound whenever someone becomes recognized.
@@ -4199,7 +4199,7 @@ Called after a character buys from or sells to a vendor.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Log vendor transactions to the console.
@@ -4230,7 +4230,7 @@ Called when a ragdoll entity is created for a player.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Tint death ragdolls red.
@@ -4263,7 +4263,7 @@ Called when both the player's inventory and storage panels are created.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Add a custom tab to storage windows.
@@ -4295,7 +4295,7 @@ Called when a new item instance is placed into an inventory.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Play a sound when ammo is picked up.
@@ -4327,7 +4327,7 @@ Called when a new item instance table is initialized.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Set custom data on freshly made items.
@@ -4356,7 +4356,7 @@ Called when an item entity has been spawned in the world.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Play a sound when rare items appear.
@@ -4388,7 +4388,7 @@ Called when the vendor dialog panel is opened.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Automatically switch to the buy tab.
@@ -4418,7 +4418,7 @@ Called after a player picks up a money entity.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Reward an achievement for looting money.
@@ -4451,7 +4451,7 @@ Fired when a scripted animation sequence begins.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Freeze the player during the sequence.
@@ -4486,7 +4486,7 @@ Runs after a player has interacted with an item.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Send analytics for item usage.
@@ -4517,7 +4517,7 @@ Called when a player changes to a new class.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Give class specific weapons.
@@ -4548,7 +4548,7 @@ Fired when a scripted animation sequence ends for a player.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Unfreeze the player after the sequence.
@@ -4577,7 +4577,7 @@ Called if a stackable item is removed unexpectedly.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Warn players when their ammo stack disappears.
@@ -4610,7 +4610,7 @@ Occurs right before a player's class changes.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prevent switching while in combat.
@@ -4645,7 +4645,7 @@ Called when the UI asks to move an item between inventories.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Validate transfers before sending to the server.
@@ -4674,7 +4674,7 @@ Called when map persistence data is loaded.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Verify entities when the map reloads.
@@ -4704,7 +4704,7 @@ Occurs when a player successfully opens a vendor.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Track how often players browse vendors.
@@ -4733,7 +4733,7 @@ Called when a player regenerates stamina points.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Print the player's stamina amount whenever it increases.
@@ -4764,7 +4764,7 @@ Called when a player's stamina decreases.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Play a sound when the player runs out of stamina.
@@ -4796,7 +4796,7 @@ Fires when a player lands a punch with the fists weapon.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Play a custom sound on punch.
@@ -4826,7 +4826,7 @@ Called each frame after the inventory panel draws.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Draw a watermark over the inventory.
@@ -4857,7 +4857,7 @@ Called just before a player interacts with an item.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Deny using keys on locked chests.
@@ -4888,7 +4888,7 @@ Allows modules to define who can access a bag inventory.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Only the bag owner may open it.
@@ -4917,7 +4917,7 @@ Runs before the gamemode initializes its database connection.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Register additional tables.
@@ -4948,7 +4948,7 @@ Determines if an item can move in or out of a storage entity.
 
 * boolean – False to disallow transfer
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prevent weapons from being stored in car trunks.
@@ -4980,7 +4980,7 @@ Fired when a storage entity is removed from the world.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Drop items when a crate is destroyed.
@@ -5011,7 +5011,7 @@ Called when a storage entity is assigned an inventory.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Send a notification when storage is initialized.
@@ -5043,7 +5043,7 @@ Called clientside when a storage menu is opened.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Display storage name in the chat.
@@ -5073,7 +5073,7 @@ Called when a storage's contents are loaded from disk.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Log how many items were restored.
@@ -5102,7 +5102,7 @@ Called clientside when you must enter a storage password.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Auto-fill a remembered password.
@@ -5131,7 +5131,7 @@ Called when a vendor's allowed classes are updated.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- React to class access changes.
@@ -5160,7 +5160,7 @@ Called after a delay when a vendor's data is edited.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Log which key changed.
@@ -5189,7 +5189,7 @@ Called when a player exits from interacting with a vendor.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Notify the player when they leave a vendor.
@@ -5218,7 +5218,7 @@ Called when a vendor's allowed factions are updated.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Print updated faction permissions.
@@ -5247,7 +5247,7 @@ Called when a vendor's item max stock value changes.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Log stock limit changes.
@@ -5276,7 +5276,7 @@ Called when a vendor's item mode is changed.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Print the new mode value.
@@ -5305,7 +5305,7 @@ Called when a vendor's item price is changed.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Print the new item price.
@@ -5334,7 +5334,7 @@ Called when a vendor's item stock value changes.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Log remaining stock for the item.
@@ -5363,7 +5363,7 @@ Called when a vendor's available money changes.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Print the vendor's new money amount.
@@ -5392,7 +5392,7 @@ Called when a vendor menu is opened on the client.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Print which vendor was opened.
@@ -5421,7 +5421,7 @@ Called when vendor synchronization data is received.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Print a message when vendor data syncs.
@@ -5450,7 +5450,7 @@ Called when a player attempts to trade with a vendor.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Log all vendor trades to the console.
@@ -5480,7 +5480,7 @@ Returns an alternate model path for a dropped item.
 
 * string|nil – Alternate model path or nil for default.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Replace drop model for weapons.
@@ -5511,7 +5511,7 @@ Allows modules to override a vendor item's price dynamically.
 
 * integer|nil – New price or nil for default.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Increase price for rare items when buying from the vendor.
@@ -5546,7 +5546,7 @@ Checks if a character is fake recognized rather than truly known.
 
 * boolean
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Flag suspicious characters as fake.
@@ -5577,7 +5577,7 @@ Determines whether one character recognizes another.
 
 * boolean
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Only recognize characters from the same faction.
@@ -5606,7 +5606,7 @@ Determines if a chat type counts toward recognition.
 
 * boolean
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Mark admin chat as recognized to reveal player names.
@@ -5636,7 +5636,7 @@ Determines whether an entity can be used as trunk storage.
 
 * boolean
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Only vehicles are valid trunk containers.
@@ -5667,7 +5667,7 @@ Determines if a player is allowed to earn salary.
 
 * boolean
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CanPlayerEarnSalary is triggered
@@ -5701,7 +5701,7 @@ Determines whether a player can join a certain class. Return `false` to block.
 
 * boolean|nil: false to block, nil to allow.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CanPlayerJoinClass is triggered
@@ -5733,7 +5733,7 @@ Determines if a player can use a specific command. Return `false` to block usage
 
 * boolean|nil: false to block, nil to allow.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CanPlayerUseCommand is triggered
@@ -5767,7 +5767,7 @@ Determines if a player is allowed to use a door entity, such as opening, locking
 
 * boolean: false to block, nil or true to allow.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CanPlayerUseDoor is triggered
@@ -5799,7 +5799,7 @@ Used during character cleanup routines for additional steps when removing or tra
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CharCleanUp is triggered
@@ -5834,7 +5834,7 @@ Called after a character has been restored from the database. Useful for post-re
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CharRestored is triggered
@@ -5867,7 +5867,7 @@ Called when creating a default inventory for a character. Should return a [defer
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CreateDefaultInventory is triggered
@@ -5907,7 +5907,7 @@ Client-side call when creating the graphical representation of an inventory.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CreateInventoryPanel is triggered
@@ -5952,7 +5952,7 @@ Creates a timer to manage player salary.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CreateSalaryTimer is triggered
@@ -5990,7 +5990,7 @@ Called when modules include submodules. Useful for advanced module handling or d
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when DoModuleIncludes is triggered
@@ -6023,7 +6023,7 @@ Retrieves a default description for a character during creation. Return `(defaul
 * string: The default description.
 * boolean: Whether to override.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when GetDefaultCharDesc is triggered
@@ -6057,7 +6057,7 @@ Retrieves a default name for a character during creation. Return `(defaultName, 
 * string: The default name.
 * boolean: Whether to override the user-provided name.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when GetDefaultCharName is triggered
@@ -6090,7 +6090,7 @@ Retrieves the amount of salary a player should receive.
 
 * any: The salary amount
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when GetSalaryAmount is triggered
@@ -6123,7 +6123,7 @@ Retrieves the salary limit for a player.
 
 * any: The salary limit
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when GetSalaryLimit is triggered
@@ -6156,7 +6156,7 @@ Called when `lia.config` is fully initialized.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when this hook is triggered
@@ -6190,7 +6190,7 @@ Called once all item modules have been loaded from a directory.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when InitializedItems is triggered
@@ -6228,7 +6228,7 @@ Called after all modules are fully initialized.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when InitializedModules is triggered
@@ -6258,7 +6258,7 @@ Called when `lia.option` is fully initialized.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when this hook is triggered
@@ -6287,7 +6287,7 @@ Called after the schema has finished initializing.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when InitializedSchema is triggered
@@ -6319,7 +6319,7 @@ Called when a player attempts to lock a door.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when KeyLock is triggered
@@ -6355,7 +6355,7 @@ Called when a player attempts to unlock a door.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when KeyUnlock is triggered
@@ -6389,7 +6389,7 @@ Called after all essential DB tables have been loaded.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when LiliaTablesLoaded is triggered
@@ -6420,7 +6420,7 @@ Called after an item has been registered. Useful for customizing item behavior o
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OnItemRegistered is triggered
@@ -6459,7 +6459,7 @@ Called before the faction tables are loaded. Good spot for data setup prior to f
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OnLoadTables is triggered
@@ -6490,7 +6490,7 @@ Called when MySQLOO successfully connects to the database. Use to register prepa
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OnMySQLOOConnected is triggered
@@ -6532,7 +6532,7 @@ Called when a player purchases or sells a door.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OnPlayerPurchaseDoor is triggered
@@ -6574,7 +6574,7 @@ Called whenever a new log message is added. Allows for custom logic or modificat
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OnServerLog is triggered
@@ -6609,7 +6609,7 @@ Called after wiping tables in the DB, typically after major resets/cleanups.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OnWipeTables is triggered
@@ -6643,7 +6643,7 @@ Called before a chat message is sent. Return `false` to cancel, or modify the me
 
 * boolean|nil|modifiedString: false to cancel, or return a modified string to change the message.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when PlayerMessageSend is triggered
@@ -6676,7 +6676,7 @@ Called when a player's model changes.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when PlayerModelChanged is triggered
@@ -6708,7 +6708,7 @@ Called when a player attempts to use a door entity.
 
 * boolean|nil: false to disallow, true to allow, or nil to let other hooks decide.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when PlayerUseDoor is triggered
@@ -6741,7 +6741,7 @@ Called for registering DB prepared statements post-MySQLOO connection.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Set up a prepared SQL statement for later use.
@@ -6770,7 +6770,7 @@ Determines whether a specific HUD bar should be drawn.
 
 * boolean|nil: false to hide, nil to allow.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when ShouldBarDraw is triggered
@@ -6801,7 +6801,7 @@ Checks if third-person view is allowed or disabled.
 
 * boolean (true if 3rd-person should be disabled)
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when ShouldDisableThirdperson is triggered
@@ -6832,7 +6832,7 @@ Determines whether all HUD bars should be hidden.
 
 * boolean|nil: true to hide, nil to allow rendering.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when ShouldHideBars is triggered
@@ -6863,7 +6863,7 @@ Called when third-person mode is toggled on or off. Allows for custom handling o
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when thirdPersonToggled is triggered
@@ -6900,7 +6900,7 @@ Called when a text field is added to an F1 menu information section. Allows modu
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Change the money field label.
@@ -6934,7 +6934,7 @@ Fired after AddTextField so other modules can react to new fields.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Log newly added fields.
@@ -6968,7 +6968,7 @@ Triggered after AddBarField inserts a status bar into the F1 menu.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when F1OnAddBarField is triggered
@@ -6997,7 +6997,7 @@ Called while building the F1 information menu to populate navigation buttons.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CreateInformationButtons is triggered
@@ -7026,7 +7026,7 @@ Invoked when the settings tab is constructed allowing new configuration pages.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when PopulateConfigurationButtons is triggered
@@ -7055,7 +7055,7 @@ Called after keybinds have been loaded from disk.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when InitializedKeybinds is triggered
@@ -7084,7 +7084,7 @@ Allows modification of the cooldown delay between OOC messages.
 
 * number|nil – Custom cooldown in seconds.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when getOOCDelay is triggered
@@ -7118,7 +7118,7 @@ Runs on the client when chat text is received before display. Returning modified
 
 * string|nil – Replacement text.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OnChatReceived is triggered
@@ -7148,7 +7148,7 @@ Requests PAC3 part data after adjustments have been applied.
 
 * table|nil – Adjusted part data.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when getAdjustedPartData is triggered
@@ -7179,7 +7179,7 @@ Allows modules to modify PAC3 part data before it is attached.
 
 * table|nil – Modified data table.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when AdjustPACPartData is triggered
@@ -7210,7 +7210,7 @@ Called when a PAC3 part should be attached to a player.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when attachPart is triggered
@@ -7240,7 +7240,7 @@ Triggered when a PAC3 part is removed from a player.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when removePart is triggered
@@ -7269,7 +7269,7 @@ Fired when a PAC3 outfit part transfers ownership to a ragdoll.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OnPAC3PartTransfered is triggered
@@ -7298,7 +7298,7 @@ Allows custom rendering of a player's ragdoll created by PAC3.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when DrawPlayerRagdoll is triggered
@@ -7327,7 +7327,7 @@ Initializes PAC3 outfits from equipped items after modules load.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when setupPACDataFromItems is triggered
@@ -7356,7 +7356,7 @@ Allows PAC3 to swap the view model entity for event checks.
 
 * Entity – Replacement entity.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when TryViewModel is triggered
@@ -7386,7 +7386,7 @@ Lets modules provide a custom sound when cycling weapons in the selector.
 * string|nil – Sound path.
 * number|nil – Playback pitch.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when WeaponCycleSound is triggered
@@ -7416,7 +7416,7 @@ Similar to WeaponCycleSound but used when confirming a weapon choice.
 * string|nil – Sound path.
 * number|nil – Playback pitch.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when WeaponSelectSound is triggered
@@ -7445,7 +7445,7 @@ Determines if the weapon selection UI should be visible.
 
 * boolean
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when ShouldDrawWepSelect is triggered
@@ -7474,7 +7474,7 @@ Checks whether the active weapon can be selected via the weapon wheel.
 
 * boolean|nil – false to block selection.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CanPlayerChooseWeapon is triggered
@@ -7506,7 +7506,7 @@ Allows modules to modify the respawn delay after death.
 
 * number|nil – New respawn time.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OverrideSpawnTime is triggered
@@ -7537,7 +7537,7 @@ Lets modules suppress the respawn HUD from showing.
 
 * boolean|nil – false to hide.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when ShouldRespawnScreenAppear is triggered
@@ -7566,7 +7566,7 @@ Fired when voice chat is enabled or disabled via config.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when VoiceToggled is triggered
@@ -7595,7 +7595,7 @@ Fired when the Derma UI skin configuration value changes. Allows modules to reac
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Reload custom panels when the skin changes
@@ -7624,7 +7624,7 @@ Requests recreation of all registered UI fonts.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when RefreshFonts is triggered
@@ -7656,7 +7656,7 @@ Allows modification of character creation data before the character is saved.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when AdjustCreationData is triggered
@@ -7689,7 +7689,7 @@ Determines if a character may switch factions.
 
 * boolean|nil – false to block.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CanCharBeTransfered is triggered
@@ -7721,7 +7721,7 @@ Called when a player attempts to load one of their characters.
 
 * boolean|nil – false to deny.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CanPlayerUseChar is triggered
@@ -7754,7 +7754,7 @@ Checks if a player can switch from their current character to another.
 
 * boolean|nil – false to block the switch.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CanPlayerSwitchChar is triggered
@@ -7786,7 +7786,7 @@ Determines whether the player may lock the given door or vehicle.
 
 * boolean|nil – false to disallow.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CanPlayerLock is triggered
@@ -7818,7 +7818,7 @@ Determines whether the player may unlock the given door or vehicle.
 
 * boolean|nil – false to disallow.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CanPlayerUnlock is triggered
@@ -7850,7 +7850,7 @@ Lets you change how many attribute points a new character receives. Retrieves th
 
 * number – Maximum starting points
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Gives every new character 60 starting points.
@@ -7880,7 +7880,7 @@ Sets a limit for a specific attribute at character creation. Returns the startin
 
 * number – Maximum starting value
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Limits the Strength attribute to a maximum of 20.
@@ -7912,7 +7912,7 @@ Returns the maximum value allowed for an attribute.
 
 * number – Maximum attribute value
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Increase stamina cap for admins.
@@ -7947,7 +7947,7 @@ Fired when an attribute boost is added or removed.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Notify the player when they gain a temporary bonus.
@@ -7981,7 +7981,7 @@ Fired when a character attribute value is changed.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Print the changed attribute on the local player's HUD.
@@ -8013,7 +8013,7 @@ Called when a player attempts to change a configuration value.
 
 * boolean|nil – false to deny modification.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CanPlayerModifyConfig is triggered
@@ -8043,7 +8043,7 @@ Fired after a character is permanently removed.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CharDeleted is triggered
@@ -8074,7 +8074,7 @@ Allows custom logic for determining if a faction has reached its player limit.
 
 * boolean
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when CheckFactionLimitReached is triggered
@@ -8108,7 +8108,7 @@ Triggered after AddSection inserts a new information section.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when F1OnAddSection is triggered
@@ -8137,7 +8137,7 @@ Allows overriding of the displayed weapon name in the selector.
 
 * string|nil – Replacement name.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when GetWeaponName is triggered
@@ -8167,7 +8167,7 @@ Called when a ragdolled character finishes getting up.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OnCharGetup is triggered
@@ -8196,7 +8196,7 @@ Fired once language files finish loading.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OnLocalizationLoaded is triggered
@@ -8226,7 +8226,7 @@ Called when a player's observe mode is toggled.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when OnPlayerObserve is triggered
@@ -8257,7 +8257,7 @@ Runs after a character has been loaded and set up for a player.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when PlayerLoadedChar is triggered
@@ -8288,7 +8288,7 @@ Fired right before a player switches to a new character.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when PrePlayerLoadedChar is triggered
@@ -8319,7 +8319,7 @@ Called after PlayerLoadedChar to allow post-load operations.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when PostPlayerLoadedChar is triggered
@@ -8349,7 +8349,7 @@ Custom hook executed when a player sends a chat message server-side.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when PlayerSay is triggered
@@ -8379,7 +8379,7 @@ Called after the admin stick menu is created so additional commands can be added
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when PopulateAdminStick is triggered
@@ -8411,7 +8411,7 @@ Fired when a staff member claims a help ticket.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when TicketSystemClaim is triggered
@@ -8442,7 +8442,7 @@ Triggered when a shared option value is changed.
 
 * None
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prints a message when liaOptionReceived is triggered

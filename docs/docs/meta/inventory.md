@@ -29,7 +29,7 @@ Returns a stored data value for this inventory.
 
 * any – Stored value or default.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Read how many times the container was opened
@@ -55,7 +55,7 @@ Creates a subclass of the inventory meta table with a new class name.
 
 * table – The newly derived inventory table.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Define a subclass for weapon crates and register it
@@ -86,7 +86,7 @@ Stub for inventory configuration; meant to be overridden.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Called from a subclass to set up custom slots
@@ -116,7 +116,7 @@ Adds a proxy function that is called when a data field changes.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Track changes to the "locked" data field
@@ -146,7 +146,7 @@ Returns all items in the inventory matching the given unique ID.
 
 * table – Table of matching item objects.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Get all ammo boxes stored in the main list
@@ -172,7 +172,7 @@ Registers this inventory type with the lia.inventory system.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Register and then immediately create the inventory type
@@ -199,7 +199,7 @@ Creates a new inventory of this type.
 
 * table – New inventory instance.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Create an inventory and attach it to a spawned chest entity
@@ -228,7 +228,7 @@ Returns a printable representation of this inventory.
 
 * string – Formatted as "ClassName[id]".
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Print the identifier when debugging
@@ -254,7 +254,7 @@ Retrieves the inventory type table from lia.inventory.
 
 * table – Inventory type definition.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Read slot data from the type definition
@@ -283,7 +283,7 @@ registered proxy callbacks for that field.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- React when the stored credit amount changes
@@ -309,7 +309,7 @@ Returns all items stored in this inventory.
 
 * table – Item instance table indexed by itemID.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Sum the weight of all items
@@ -337,7 +337,7 @@ Collects all items that match the given unique ID.
 
 * table – Array of matching items.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- List all medkits currently in the inventory
@@ -363,7 +363,7 @@ Retrieves the first item matching the given unique ID.
 
 * Item|None – The first matching item or None.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Grab the first pistol found in the inventory
@@ -389,7 +389,7 @@ Determines whether the inventory contains an item type.
 
 * boolean – True if an item is found.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- See if any health potion exists
@@ -415,7 +415,7 @@ Counts the total quantity of a specific item type.
 
 * number – Sum of quantities.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Count the total number of bullets
@@ -441,7 +441,7 @@ Returns the unique database ID of this inventory.
 
 * number – Inventory identifier.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Store the inventory ID on its container entity
@@ -467,7 +467,7 @@ Compares two inventories by ID for equality.
 
 * boolean – True if both inventories share the same ID.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Check if two chests share the same inventory record
@@ -495,7 +495,7 @@ Inserts an item instance into this inventory and persists it.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Add a looted item to the inventory
@@ -521,7 +521,7 @@ Removes an item by ID and optionally deletes it.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Remove an item but keep it saved for later
@@ -547,7 +547,7 @@ Sends a single data field to clients.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Sync the locked state to nearby players
@@ -572,7 +572,7 @@ Sends the entire inventory and its items to players.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Send all items to the owner after they join
@@ -597,7 +597,7 @@ Removes this inventory record from the database.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Permanently delete a chest inventory on cleanup
@@ -622,7 +622,7 @@ Destroys all items and removes network references.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Clear all items when the container entity is removed

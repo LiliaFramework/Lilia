@@ -28,7 +28,7 @@ Retrieves the default name for a newly created character in this faction.
 
 * Shared
 
-**Example:**
+**Example Usage:**
 
 ```lua
 function FACTION:GetDefaultName(client)
@@ -59,7 +59,7 @@ Retrieves the default description for a newly created character in this faction.
 
 * Shared
 
-**Example:**
+**Example Usage:**
 
 ```lua
 function FACTION:GetDefaultDesc(client, faction)
@@ -89,7 +89,7 @@ Executes actions when a new character is created and assigned to this faction. I
 
 * Server
 
-**Example:**
+**Example Usage:**
 
 ```lua
 function FACTION:OnCharCreated(client, character)
@@ -119,7 +119,7 @@ Invoked when a faction member spawns into the world. Use this for per-spawn setu
 
 * Server
 
-**Example:**
+**Example Usage:**
 
 ```lua
 function FACTION:OnSpawn(client)
@@ -148,7 +148,7 @@ Executes actions when an existing character is transferred into this faction (e.
 
 * Server
 
-**Example:**
+**Example Usage:**
 
 ```lua
 function FACTION:OnTransferred(character)

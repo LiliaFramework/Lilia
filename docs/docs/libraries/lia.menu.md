@@ -28,7 +28,7 @@ an entity.
 **Returns:**
 
 * number – Identifier for the created menu entry.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.menu.add
@@ -54,7 +54,7 @@ HUDPaint.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of hook.Add
@@ -81,7 +81,7 @@ or selected by the player.
 
 * id (number|nil) – Index of the active menu.
 * callback (function|nil) – Callback for the hovered item.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.menu.getActiveMenu
@@ -107,7 +107,7 @@ Removes the specified menu and runs its callback if provided.
 **Returns:**
 
 * boolean – True if a callback was executed.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.menu.onButtonPressed

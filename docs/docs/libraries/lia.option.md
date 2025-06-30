@@ -29,7 +29,7 @@ Adds a configuration option to the lia.option system.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.option.add
@@ -55,7 +55,7 @@ Sets the value of a specified option, saves locally, and optionally networks to 
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.option.set
@@ -81,7 +81,7 @@ Retrieves the value of a specified option, or returns a default if it doesn't ex
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.option.get
@@ -106,7 +106,7 @@ Saves all current option values to a file, named based on the server IP, within 
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.option.save
@@ -131,7 +131,7 @@ Loads saved option values from disk based on server IP and applies them to lia.o
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.option.load

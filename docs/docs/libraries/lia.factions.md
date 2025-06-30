@@ -27,7 +27,7 @@ Each faction file should define a FACTION table with properties such as name, de
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.faction.loadFromDir
@@ -52,7 +52,7 @@ Retrieves a faction by its index or unique identifier.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.faction.get
@@ -77,7 +77,7 @@ Retrieves the index of a faction by its unique identifier.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.faction.getIndex
@@ -102,7 +102,7 @@ Retrieves a list of classes associated with the specified faction.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.faction.getClasses
@@ -127,7 +127,7 @@ Retrieves all player entities whose characters belong to the specified faction.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.faction.getPlayers
@@ -152,7 +152,7 @@ Counts the number of players whose characters belong to the specified faction.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.faction.getPlayerCount
@@ -178,7 +178,7 @@ Checks if the specified faction is a member of a given category.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.faction.isFactionCategory
@@ -209,7 +209,7 @@ Pre-caches the faction models.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.faction.jobGenerate
@@ -235,7 +235,7 @@ Iterates through each faction's model data and applies formatting to ensure prop
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.faction.formatModelData
@@ -261,7 +261,7 @@ Categories are determined by keys in the faction's models table that are strings
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.faction.getCategories
@@ -287,7 +287,7 @@ Retrieves models from a specified category for a given faction.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.faction.getModelsFromCategory
@@ -313,7 +313,7 @@ Searches through the class list for the first class that is marked as default fo
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.faction.getDefaultClass
@@ -339,7 +339,7 @@ Checks the local whitelist data against the faction's uniqueID.
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.faction.hasWhitelist

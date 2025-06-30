@@ -30,7 +30,7 @@ resulting Material.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.webimage.register
@@ -57,7 +57,7 @@ the cache.
 **Returns:**
 
 * Material|nil – The image material or nil if missing.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.webimage.get
@@ -75,7 +75,7 @@ The library extends Garry's Mod's `Material()` and `DImage:SetImage()`
 functions so they accept direct HTTP or HTTPS image URLs. The image is
 automatically downloaded via `lia.webimage.register` and cached before
 the material is returned or applied.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Load a material directly from the web

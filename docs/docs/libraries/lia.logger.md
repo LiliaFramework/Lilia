@@ -28,7 +28,7 @@ Creates the logs directory for the current active gamemode under "lilia/logs".
     Internal Function:
     true
     
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.log.loadTables
@@ -56,7 +56,7 @@ The registered function will be used later to generate log messages for that typ
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.log.addType
@@ -89,7 +89,7 @@ It calls the registered log function with the provided parameters.
     Internal Function:
     true
     
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.log.getString
@@ -117,7 +117,7 @@ and appends the log string to a log file corresponding to its category in the lo
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.log.add

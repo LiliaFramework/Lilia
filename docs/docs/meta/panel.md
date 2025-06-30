@@ -24,7 +24,7 @@ Subscribes this panel to updates for a specific inventory.
 
 * Client
 
-**Returns:**
+**Example Usage:**
 
 * None – This function does not return a value.
 

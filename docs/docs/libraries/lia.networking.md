@@ -28,7 +28,7 @@ receiver is specified the update is only sent to those players.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Start a new round and only inform the winner
@@ -58,7 +58,7 @@ Retrieves a global networked variable previously set by setNetVar.
 **Returns:**
 
 * any – Stored value or default.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Inform a joining player of the current round and last winner

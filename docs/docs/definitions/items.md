@@ -73,7 +73,7 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 #### `BagSound`
 **Type:** `table`
 **Description:** Sound played when moving items to/from the bag; specified as `{path, volume}`.
-**Example:**
+**Example Usage:**
 ```lua
 ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
 ```
@@ -82,7 +82,7 @@ ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
 
 **Type:** `string`
 **Description:** Sound played when equipping the item.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.equipSound = "items/ammo_pickup.wav"
@@ -92,7 +92,7 @@ ITEM.equipSound = "items/ammo_pickup.wav"
 
 **Type:** `string`
 **Description:** Sound played when unequipping the item.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.unequipSound = "items/ammo_pickup.wav"
@@ -106,7 +106,7 @@ ITEM.unequipSound = "items/ammo_pickup.wav"
 
 **Type:** `boolean`
 **Description:** Deletes the item upon player death.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.DropOnDeath = true
@@ -116,7 +116,7 @@ ITEM.DropOnDeath = true
 
 **Type:** `table`
 **Description:** Allowed faction indices for vendor interaction.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.FactionWhitelist = {FACTION_CITIZEN}
@@ -126,7 +126,7 @@ ITEM.FactionWhitelist = {FACTION_CITIZEN}
 
 **Type:** `table`
 **Description:** Skill requirements needed to use the item.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.RequiredSkillLevels = {Strength = 5}
@@ -136,7 +136,7 @@ ITEM.RequiredSkillLevels = {Strength = 5}
 
 **Type:** `table`
 **Description:** Allowed Steam IDs for vendor interaction.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.SteamIDWhitelist = {"STEAM_0:1:123"}
@@ -146,7 +146,7 @@ ITEM.SteamIDWhitelist = {"STEAM_0:1:123"}
 
 **Type:** `table`
 **Description:** Allowed user groups for vendor interaction.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.UsergroupWhitelist = {"admin"}
@@ -156,7 +156,7 @@ ITEM.UsergroupWhitelist = {"admin"}
 
 **Type:** `boolean`
 **Description:** Restricts usage to VIP players.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.VIPWhitelist = true
@@ -170,7 +170,7 @@ ITEM.VIPWhitelist = true
 
 **Type:** `boolean`
 **Description:** Marks the item as a bag providing extra inventory.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.isBag = true
@@ -180,7 +180,7 @@ ITEM.isBag = true
 
 **Type:** `number`
 **Description:** Internal bag inventory width.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.invWidth = 2
@@ -190,7 +190,7 @@ ITEM.invWidth = 2
 
 **Type:** `number`
 **Description:** Internal bag inventory height.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.invHeight = 2
@@ -200,7 +200,7 @@ ITEM.invHeight = 2
 
 **Type:** `number`
 **Description:** Width in the external inventory grid.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.width = 2
@@ -210,7 +210,7 @@ ITEM.width = 2
 
 **Type:** `number`
 **Description:** Height in the external inventory grid.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.height = 1
@@ -220,7 +220,7 @@ ITEM.height = 1
 
 **Type:** `boolean`
 **Description:** Whether the item stack can be divided.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.canSplit = true
@@ -230,7 +230,7 @@ ITEM.canSplit = true
 
 **Type:** `boolean`
 **Description:** Allows stacking multiple quantities.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.isStackable = false
@@ -240,7 +240,7 @@ ITEM.isStackable = false
 
 **Type:** `number`
 **Description:** Maximum stack size.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.maxQuantity = 10
@@ -250,7 +250,7 @@ ITEM.maxQuantity = 10
 
 **Type:** `number`
 **Description:** Current amount in the item stack.
-**Example:**
+**Example Usage:**
 
 ```lua
 print(item:getQuantity())
@@ -264,7 +264,7 @@ print(item:getQuantity())
 
 **Type:** `string`
 **Description:** Base item this item derives from.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.base = "weapon"
@@ -274,7 +274,7 @@ ITEM.base = "weapon"
 
 **Type:** `boolean`
 **Description:** Indicates the table is a base item.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.isBase = true
@@ -284,7 +284,7 @@ ITEM.isBase = true
 
 **Type:** `string`
 **Description:** Inventory grouping category.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.category = "Storage"
@@ -294,7 +294,7 @@ ITEM.category = "Storage"
 
 **Type:** `string`
 **Description:** Displayed name of the item.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.name = "Example Item"
@@ -304,7 +304,7 @@ ITEM.name = "Example Item"
 
 **Type:** `string`
 **Description:** Short description shown to players.
-**Example:**
+**Example Usage:**
 ```lua
 ITEM.desc = "An example item"
 ```
@@ -313,7 +313,7 @@ ITEM.desc = "An example item"
 
 **Type:** `string`
 **Description:** Overrides the automatically generated unique identifier.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.uniqueID = "custom_unique_id"
@@ -323,7 +323,7 @@ ITEM.uniqueID = "custom_unique_id"
 
 **Type:** `any`
 **Description:** Database identifier.
-**Example:**
+**Example Usage:**
 
 ```lua
 print(item.id)
@@ -337,7 +337,7 @@ print(item.id)
 
 **Type:** `number`
 **Description:** Armor value granted when equipped.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.armor = 50
@@ -347,7 +347,7 @@ ITEM.armor = 50
 
 **Type:** `number`
 **Description:** Amount of health restored when used.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.health = 50
@@ -357,7 +357,7 @@ ITEM.health = 50
 
 **Type:** `table`
 **Description:** Attribute boosts applied on equip.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.attribBoosts = {strength = 5}
@@ -367,7 +367,7 @@ ITEM.attribBoosts = {strength = 5}
 
 **Type:** `boolean`
 **Description:** Marks the item as an outfit.
-**Example:**
+**Example Usage:**
 ```lua
 ITEM.isOutfit = true
 ```
@@ -376,7 +376,7 @@ ITEM.isOutfit = true
 
 **Type:** `number`
 **Description:** Skin index applied to the player model.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.newSkin = 1
@@ -386,7 +386,7 @@ ITEM.newSkin = 1
 
 **Type:** `string`
 **Description:** Slot or category for the outfit.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.outfitCategory = "body"
@@ -396,7 +396,7 @@ ITEM.outfitCategory = "body"
 
 **Type:** `table`
 **Description:** PAC3 customization information.
-**Example:**
+**Example Usage:**
 
 ```lua
 -- This attaches an HGIBS gib model to the player’s eyes bone
@@ -430,7 +430,7 @@ ITEM.pacData = {
 
 **Type:** `string`
 **Description:** Model replacements when equipped.
-**Example:**
+**Example Usage:**
 
 ```lua
 -- This will change a certain part of the model.
@@ -451,7 +451,7 @@ ITEM.replacements = {
 
 **Type:** `string`
 **Description:** Weapon entity class.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.class = "weapon_pistol"
@@ -461,7 +461,7 @@ ITEM.class = "weapon_pistol"
 
 **Type:** `boolean`
 **Description:** Marks the item as a weapon.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.isWeapon = true
@@ -471,7 +471,7 @@ ITEM.isWeapon = true
 
 **Type:** `string`
 **Description:** Class name used when spawning a grenade.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.grenadeClass = "weapon_frag"
@@ -481,7 +481,7 @@ ITEM.grenadeClass = "weapon_frag"
 
 **Type:** `string`
 **Description:** Ammo type provided.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.ammo = "pistol"
@@ -491,7 +491,7 @@ ITEM.ammo = "pistol"
 
 **Type:** `number`
 **Description:** Amount of ammo contained.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.ammoAmount = 30
@@ -501,7 +501,7 @@ ITEM.ammoAmount = 30
 
 **Type:** `string`
 **Description:** Slot category for the weapon.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.weaponCategory = "sidearm"
@@ -515,7 +515,7 @@ ITEM.weaponCategory = "sidearm"
 
 **Type:** `string`
 **Description:** 3D model path for the item.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.model = "models/props_c17/oildrum001.mdl"
@@ -529,7 +529,7 @@ ITEM.model = "models/props_c17/oildrum001.mdl"
 
 **Type:** `string`
 **Description:** Entity class spawned by the item.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.entityid = "item_suit"
@@ -539,7 +539,7 @@ ITEM.entityid = "item_suit"
 
 **Type:** `string`
 **Description:** HTML contents of a readable book.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.contents = "<h1>Book</h1>"
@@ -553,7 +553,7 @@ ITEM.contents = "<h1>Book</h1>"
 
 **Type:** `number`
 **Description:** Item cost for trading or selling.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.price = 100
@@ -563,7 +563,7 @@ ITEM.price = 100
 
 **Type:** `string`
 **Description:** Flag required to purchase the item.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.flag = "Y"
@@ -573,7 +573,7 @@ ITEM.flag = "Y"
 
 **Type:** `string`
 **Description:** Rarity level affecting vendor color.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.rarity = "Legendary"
@@ -583,7 +583,7 @@ ITEM.rarity = "Legendary"
 
 **Type:** `string`
 **Description:** Web address opened when using the item.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.url = "https://example.com"
@@ -597,7 +597,7 @@ ITEM.url = "https://example.com"
 
 **Type:** `table`
 **Description:** Table of interaction functions.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.functions = {}
@@ -607,7 +607,7 @@ ITEM.functions = {}
 
 **Type:** `table`
 **Description:** Table of post-hook callbacks.
-**Example:**
+**Example Usage:**
 
 ```lua
 ITEM.postHooks = {}

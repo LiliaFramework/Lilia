@@ -48,7 +48,7 @@ The global `CLASS` table defines per-class settings such as display name, lore, 
 #### `name`
 **Type:** `string`  
 **Description:** The displayed name of the class.  
-**Example:**
+**Example Usage:**
 ```lua
 CLASS.name = "Engineer"
 ```
@@ -57,7 +57,7 @@ CLASS.name = "Engineer"
 
 **Type:** `string`
 **Description:** The description or lore of the class.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.desc = "Technicians who maintain equipment."
@@ -67,7 +67,7 @@ CLASS.desc = "Technicians who maintain equipment."
 
 **Type:** `number`
 **Description:** Unique numeric identifier (team index) for the class.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.index = CLASS_ENGINEER
@@ -81,7 +81,7 @@ CLASS.index = CLASS_ENGINEER
 
 **Type:** `boolean`
 **Description:** Determines if the class is available to all players by default.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.isDefault = true
@@ -91,7 +91,7 @@ CLASS.isDefault = true
 
 **Type:** `boolean`
 **Description:** Indicates if the class requires a whitelist entry to be accessible.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.isWhitelisted = false
@@ -101,7 +101,7 @@ CLASS.isWhitelisted = false
 
 **Type:** `number`
 **Description:** Links this class to a specific faction index.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.faction = FACTION_CITIZEN
@@ -111,7 +111,7 @@ CLASS.faction = FACTION_CITIZEN
 
 **Type:** `Color`
 **Description:** UI color representing the class. Defaults to `Color(255, 255, 255)` if not specified.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.color = Color(255, 0, 0)
@@ -125,7 +125,7 @@ CLASS.color = Color(255, 0, 0)
 
 **Type:** `table`
 **Description:** Weapons granted to members of this class on spawn.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.weapons = {"weapon_pistol", "weapon_crowbar"}
@@ -135,7 +135,7 @@ CLASS.weapons = {"weapon_pistol", "weapon_crowbar"}
 
 **Type:** `number`
 **Description:** Payment amount issued per pay interval.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.pay = 50
@@ -145,7 +145,7 @@ CLASS.pay = 50
 
 **Type:** `number`
 **Description:** Maximum accumulated pay a player can hold.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.payLimit = 1000
@@ -155,7 +155,7 @@ CLASS.payLimit = 1000
 
 **Type:** `number`
 **Description:** Interval in seconds between salary payouts.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.payTimer = 3600
@@ -165,7 +165,7 @@ CLASS.payTimer = 3600
 
 **Type:** `number`
 **Description:** Maximum number of players allowed in this class simultaneously.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.limit = 10
@@ -179,7 +179,7 @@ CLASS.limit = 10
 
 **Type:** `number`
 **Description:** Default starting health for class members.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.health = 150
@@ -189,7 +189,7 @@ CLASS.health = 150
 
 **Type:** `number`
 **Description:** Default starting armor.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.armor = 50
@@ -199,7 +199,7 @@ CLASS.armor = 50
 
 **Type:** `number`
 **Description:** Multiplier for player model size.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.scale = 1.2
@@ -209,7 +209,7 @@ CLASS.scale = 1.2
 
 **Type:** `number`
 **Description:** Default running speed.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.runSpeed = 250
@@ -219,7 +219,7 @@ CLASS.runSpeed = 250
 
 **Type:** `boolean`
 **Description:** Multiply base run speed instead of replacing it.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.runSpeedMultiplier = true
@@ -229,7 +229,7 @@ CLASS.runSpeedMultiplier = true
 
 **Type:** `number`
 **Description:** Default walking speed.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.walkSpeed = 200
@@ -239,7 +239,7 @@ CLASS.walkSpeed = 200
 
 **Type:** `boolean`
 **Description:** Multiply base walk speed instead of replacing it.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.walkSpeedMultiplier = false
@@ -249,7 +249,7 @@ CLASS.walkSpeedMultiplier = false
 
 **Type:** `number`
 **Description:** Default jump power.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.jumpPower = 200
@@ -259,7 +259,7 @@ CLASS.jumpPower = 200
 
 **Type:** `boolean`
 **Description:** Multiply base jump power instead of replacing it.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.jumpPowerMultiplier = true
@@ -269,7 +269,7 @@ CLASS.jumpPowerMultiplier = true
 
 **Type:** `number`
 **Description:** Blood color enumeration constant for this class.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.bloodcolor = BLOOD_COLOR_RED
@@ -283,7 +283,7 @@ CLASS.bloodcolor = BLOOD_COLOR_RED
 
 **Type:** `table`
 **Description:** Mapping of bodygroup indices to values applied on spawn.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.bodyGroups = {
@@ -296,7 +296,7 @@ CLASS.bodyGroups = {
 
 **Type:** `string` or `table`
 **Description:** Model path (or list of paths) assigned to this class.
-**Example:**
+**Example Usage:**
 
 ```lua
 CLASS.model = "models/player/alyx.mdl"

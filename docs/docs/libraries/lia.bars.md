@@ -25,7 +25,7 @@ Retrieves a bar object from the list by its unique identifier.
 **Returns:**
 
 * table or nil – The bar table if found, or nil if not found.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Retrieve the health bar and change its color at runtime
@@ -58,7 +58,7 @@ Bars are drawn in order of ascending priority.
 **Returns:**
 
 * number – The priority assigned to the added bar.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Calculates the player's current health as a fraction of their maximum health.
@@ -88,7 +88,7 @@ Removes a bar from the list based on its unique identifier.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.bar.remove
@@ -120,7 +120,7 @@ filling it proportionally based on pos and max.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.bar.drawBar
@@ -147,7 +147,7 @@ for the specified duration on the HUD.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.bar.drawAction
@@ -173,7 +173,7 @@ and draws them on the HUD according to their priority and visibility rules.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of hook.Add

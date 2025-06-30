@@ -23,7 +23,7 @@ Creates a new character instance with default variables and metatable.
 **Returns:**
 
 * character (table) – New character object.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.char.new
@@ -50,7 +50,7 @@ Registers a hook function for when a character variable changes.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.char.hookVar
@@ -76,7 +76,7 @@ Registers a character variable with metadata and generates accessor methods.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.char.registerVar
@@ -102,7 +102,7 @@ Retrieves character data JSON from the database as a Lua table.
 **Returns:**
 
 * value (any) – Data value or full table if no key provided.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.char.getCharData
@@ -128,7 +128,7 @@ Retrieves raw character database row or specific column.
 **Returns:**
 
 * row (table|any) – Full row table or column value.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.char.getCharDataRaw
@@ -153,7 +153,7 @@ Finds the player entity that owns the character with the given ID.
 **Returns:**
 
 * Player – Player entity or nil if not found.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.char.getOwnerByID
@@ -178,7 +178,7 @@ Retrieves a character object by SteamID or SteamID64.
 **Returns:**
 
 * Character – Character object or nil.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.char.getBySteamID
@@ -203,7 +203,7 @@ Returns a table mapping all players to their loaded character objects.
 **Returns:**
 
 * table – Map of Player to Character.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of pairs
@@ -228,7 +228,7 @@ Determines the team color for a client based on their character class or default
 **Returns:**
 
 * Color – Team or class color.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.char.GetTeamColor
@@ -254,7 +254,7 @@ Inserts a new character into the database and sets up default inventory.
 **Returns:**
 
 * None
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.char.create
@@ -281,7 +281,7 @@ Loads characters for a client from the database, optionally filtering by ID.
 **Returns:**
 
 * None
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.char.restore
@@ -306,7 +306,7 @@ Cleans up loaded characters and inventories for a player on disconnect.
 **Returns:**
 
 * None
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.char.cleanUpForPlayer
@@ -332,7 +332,7 @@ Deletes a character by ID from the database, cleans up and notifies players.
 **Returns:**
 
 * None
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.char.delete
@@ -359,7 +359,7 @@ Updates a character's JSON data field in the database and loaded object.
 **Returns:**
 
 * boolean – True on success, false on failure.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.char.setCharData
@@ -385,7 +385,7 @@ Updates the character's name in the database and loaded object.
 **Returns:**
 
 * boolean – True on success, false on failure.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.char.setCharName
@@ -412,7 +412,7 @@ Updates the character's model and bodygroups in the database and in-game.
 **Returns:**
 
 * boolean – True on success, false on failure.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.char.setCharModel

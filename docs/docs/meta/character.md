@@ -26,7 +26,7 @@ Returns a printable identifier for this character.
 
 * string – Format "character[id]".
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Print a readable identifier when saving debug logs
@@ -52,7 +52,7 @@ Compares two characters by ID for equality.
 
 * boolean – True if both share the same ID.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Check if the player is controlling the door owner
@@ -80,7 +80,7 @@ Returns the unique database ID for this character.
 
 * number – Character identifier.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Store the character ID for later reference
@@ -107,7 +107,7 @@ Returns the player entity currently controlling this character.
 
 * Player|None – Owning player or None.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Notify the controlling player that the character loaded
@@ -136,7 +136,7 @@ Returns the character's name as it should be shown to the given player.
 
 * string – Localized or recognized character name.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Announce the character's name to a viewer
@@ -162,7 +162,7 @@ Checks if the character has at least the given amount of money.
 
 * boolean – True if the character's funds are sufficient.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Verify the character can pay for an item before buying
@@ -190,7 +190,7 @@ Retrieves the string of permission flags for this character.
 
 * string – Concatenated flag characters.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Look for the admin flag on this character
@@ -218,7 +218,7 @@ Checks if the character possesses any of the specified flags.
 
 * boolean – True if at least one flag is present.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Allow special command if any required flag is present
@@ -246,7 +246,7 @@ Checks the player's active weapon against items in the inventory.
 
 * boolean – True if the active weapon corresponds to an item.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Determine if the equipped weapon is linked to an item
@@ -273,7 +273,7 @@ Returns the maximum stamina value for this character.
 
 * number – Maximum stamina points.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Calculate the proportion of stamina remaining
@@ -299,7 +299,7 @@ Retrieves the character's current stamina value.
 
 * number – Current stamina.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Display current stamina in the HUD
@@ -326,7 +326,7 @@ Checks if the character has whitelisted the given class.
 
 * boolean – True if the class is whitelisted.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Decide if the player may choose the medic class
@@ -354,7 +354,7 @@ Returns true if the character's faction matches.
 
 * boolean – Whether the faction matches.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Restrict access to citizens only
@@ -382,7 +382,7 @@ Returns true if the character's class equals the specified class.
 
 * boolean – Whether the classes match.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Provide a bonus if the character is currently an engineer
@@ -411,7 +411,7 @@ Retrieves the value of an attribute including boosts.
 
 * number – Final attribute value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Calculate damage using the strength attribute
@@ -438,7 +438,7 @@ Returns the boost table for the given attribute.
 
 * table|None – Table of boosts or None.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Inspect active boosts on agility
@@ -464,7 +464,7 @@ Retrieves all attribute boosts for this character.
 
 * table – Mapping of attribute IDs to boost tables.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Print all attribute boosts for debugging
@@ -492,7 +492,7 @@ Determines if this character recognizes another character.
 
 * boolean – True if recognized.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Reveal names in chat only if recognized
@@ -520,7 +520,7 @@ Checks if the character has a fake recognition entry for another.
 
 * boolean – True if fake recognized.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- See if recognition was forced by a disguise item

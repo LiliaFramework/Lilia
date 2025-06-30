@@ -27,7 +27,7 @@ and props.
 **Returns:**
 
 * boolean – True if the position is clear, false otherwise.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.darkrp.isEmpty
@@ -58,7 +58,7 @@ Finds a nearby position that is unobstructed by players or props.
 **Returns:**
 
 * Vector – A position considered safe for spawning.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.darkrp.findEmptyPos
@@ -85,7 +85,7 @@ lia's notify system.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.darkrp.notify
@@ -113,7 +113,7 @@ when drawn with the given font.
 **Returns:**
 
 * string – The wrapped text with newline characters inserted.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.darkrp.textWrap
@@ -138,7 +138,7 @@ Converts a numeric amount to a formatted currency string.
 **Returns:**
 
 * string – The formatted currency value.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of print
@@ -166,7 +166,7 @@ through lia's item system.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.darkrp.createEntity
@@ -191,7 +191,7 @@ Placeholder for DarkRP category creation. Currently unused.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.darkrp.createCategory

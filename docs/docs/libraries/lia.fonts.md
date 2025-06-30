@@ -26,7 +26,7 @@ Creates and stores a font using surface.CreateFont for later refresh.
 **Returns:**
 
 * None
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.font.register
@@ -51,7 +51,7 @@ Returns a sorted list of font names that have been registered.
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.font.getAvailableFonts
@@ -77,7 +77,7 @@ Recreates all stored fonts. Called when font related config values change.
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.font.refresh

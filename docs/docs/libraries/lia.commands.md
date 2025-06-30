@@ -58,7 +58,7 @@ Quoted sections are treated as single arguments.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.command.extractArgs
@@ -86,7 +86,7 @@ Each field contains a name and a type derived from the syntax.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Extract field data from a syntax string
@@ -114,7 +114,7 @@ If the command returns a string, it notifies the client (if valid).
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.command.run
@@ -143,7 +143,7 @@ and arguments if provided. If parsed successfully, the command is executed.
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.command.parse
@@ -170,7 +170,7 @@ Garry's Mod net library. The server will then execute the command.
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.command.send

@@ -28,7 +28,7 @@ or re-establish one.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.db.connect
@@ -56,7 +56,7 @@ tables. This action is irreversible and will remove all stored data.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.db.wipeTables
@@ -84,7 +84,7 @@ storing Lilia data. This ensures the schema is properly set up.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.db.loadTables
@@ -110,7 +110,7 @@ This allows asynchronous code to wait for table creation before proceeding.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.db.waitForTablesToLoad
@@ -140,7 +140,7 @@ unless noEscape is set.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.db.convertDataType
@@ -168,7 +168,7 @@ The callback is invoked after the insert query is complete.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.db.insertTable
@@ -199,7 +199,7 @@ provided condition. The callback is invoked once the update query finishes.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.db.updateTable
@@ -231,7 +231,7 @@ object that resolves with the query results.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.db.select
@@ -261,7 +261,7 @@ Returns a deferred object that resolves when the operation completes.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.db.upsert
@@ -288,7 +288,7 @@ If no condition is specified, all rows are deleted. Returns a deferred object.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.db.delete
@@ -316,7 +316,7 @@ This is useful for debugging or database maintenance tasks.
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.db.GetCharacterTable

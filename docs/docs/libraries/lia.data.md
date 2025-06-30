@@ -30,7 +30,7 @@ Also caches the value in lia.data.stored.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Save the admin's position as the global spawn point with a command
@@ -62,7 +62,7 @@ Also removes the value from the cached storage.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.data.delete
@@ -93,7 +93,7 @@ Otherwise, reads from the file, decodes, and caches the value.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Teleport players to the saved spawn point when they spawn

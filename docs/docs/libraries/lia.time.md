@@ -23,7 +23,7 @@ Returns a human-readable string indicating how long ago a given time occurred (e
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Greet players with the time since they last joined using persistence data
@@ -62,7 +62,7 @@ year, month, day, hour, min, sec. Defaults to current time if not provided.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Schedule an event at a custom date and time using the parsed table
@@ -96,7 +96,7 @@ Returns the full current date and time formatted based on the
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Announce the current server date and time to all players every hour
@@ -130,7 +130,7 @@ Returns the current hour formatted based on the
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Toggle an NPC's shop based on the in-game hour

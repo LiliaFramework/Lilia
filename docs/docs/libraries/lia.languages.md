@@ -30,7 +30,7 @@ it is registered in lia.lang.names.
     Internal Function:
     true
     
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.lang.loadFromDir
@@ -58,7 +58,7 @@ will be merged with the existing ones.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.lang.AddTable

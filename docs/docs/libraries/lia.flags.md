@@ -27,7 +27,7 @@ Each flag has a description and an optional callback that is executed when the f
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.flag.add
@@ -53,7 +53,7 @@ the associated callbacks for each flag that the character possesses.
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.flag.onSpawn

@@ -26,7 +26,7 @@ Sends a notification message to a specific player or all players.
 **Returns:**
 
 * None
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.notices.notify
@@ -53,7 +53,7 @@ Sends a localized notification to a player or all players.
 **Returns:**
 
 * None
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.notices.notifyLocalized
@@ -78,7 +78,7 @@ Creates a visual notification panel on the client's screen.
 **Returns:**
 
 * None
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.notices.notify
@@ -104,7 +104,7 @@ Displays a localized notification on the client's screen.
 **Returns:**
 
 * None
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.notices.notifyLocalized

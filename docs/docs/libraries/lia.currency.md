@@ -27,7 +27,7 @@ form; otherwise, it returns the plural form.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.currency.get
@@ -55,7 +55,7 @@ Validates the position and ensures the amount is a non-negative number.
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.currency.spawn

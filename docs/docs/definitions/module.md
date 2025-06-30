@@ -42,7 +42,7 @@ A `MODULE` table defines a self-contained add-on for the Lilia framework. Each f
 #### `name`
 **Type:** `string`  
 **Description:** Identifies the module in logs and UI elements.  
-**Example:**
+**Example Usage:**
 ```lua
 MODULE.name = "My Module"
 ```
@@ -51,7 +51,7 @@ MODULE.name = "My Module"
 
 **Type:** `string`
 **Description:** Name or SteamID64 of the module’s author.
-**Example:**
+**Example Usage:**
 
 ```lua
 MODULE.author = "Samael"
@@ -61,7 +61,7 @@ MODULE.author = "Samael"
 
 **Type:** `string`
 **Description:** Discord tag or support channel for the module.
-**Example:**
+**Example Usage:**
 
 ```lua
 MODULE.discord = "@liliaplayer"
@@ -71,7 +71,7 @@ MODULE.discord = "@liliaplayer"
 
 **Type:** `string`
 **Description:** Short description of what the module provides.
-**Example:**
+**Example Usage:**
 
 ```lua
 MODULE.desc = "Adds a Chatbox"
@@ -81,7 +81,7 @@ MODULE.desc = "Adds a Chatbox"
 
 **Type:** `string`
 **Description:** Unique key used to reference this module globally.
-**Example:**
+**Example Usage:**
 
 ```lua
 MODULE.identifier = "example_mod"
@@ -95,7 +95,7 @@ MODULE.identifier = "example_mod"
 
 **Type:** `string`
 **Description:** Version string used for compatibility checks.
-**Example:**
+**Example Usage:**
 
 ```lua
 MODULE.version = "1.0"
@@ -105,7 +105,7 @@ MODULE.version = "1.0"
 
 **Type:** `boolean`
 **Description:** When true, the module participates in public version checks.
-**Example:**
+**Example Usage:**
 
 ```lua
 MODULE.Public = true
@@ -115,7 +115,7 @@ MODULE.Public = true
 
 **Type:** `boolean`
 **Description:** When true, the module uses private version checking.
-**Example:**
+**Example Usage:**
 
 ```lua
 MODULE.Private = true
@@ -129,7 +129,7 @@ MODULE.Private = true
 
 **Type:** `table`
 **Description:** CAMI privileges required or provided by the module.
-**Example:**
+**Example Usage:**
 
 ```lua
 MODULE.CAMIPrivileges = {
@@ -141,7 +141,7 @@ MODULE.CAMIPrivileges = {
 
 **Type:** `table`
 **Description:** Steam Workshop add-on IDs required by this module.
-**Example:**
+**Example Usage:**
 
 ```lua
 MODULE.WorkshopContent = { "2959728255" }
@@ -151,7 +151,7 @@ MODULE.WorkshopContent = { "2959728255" }
 
 **Type:** `table`
 **Description:** Files or folders that this module requires to run.
-**Example:**
+**Example Usage:**
 
 ```lua
 MODULE.Dependencies = {
@@ -167,7 +167,7 @@ MODULE.Dependencies = {
 
 **Type:** `boolean` or `function`
 **Description:** Controls whether the module loads. Can be a static boolean or a function returning a boolean.
-**Example:**
+**Example Usage:**
 
 ```lua
 MODULE.enabled = true
@@ -177,7 +177,7 @@ MODULE.enabled = true
 
 **Type:** `boolean`
 **Description:** True while the module is in the process of loading.
-**Example:**
+**Example Usage:**
 
 ```lua
 if MODULE.loading then return end
@@ -187,7 +187,7 @@ if MODULE.loading then return end
 
 **Type:** `function`
 **Description:** Optional callback run after the module finishes loading.
-**Example:**
+**Example Usage:**
 
 ```lua
 function MODULE:ModuleLoaded()
@@ -203,7 +203,7 @@ end
 
 **Type:** `string`
 **Description:** Filesystem path where the module is located.
-**Example:**
+**Example Usage:**
 
 ```lua
 print(MODULE.folder)
@@ -213,7 +213,7 @@ print(MODULE.folder)
 
 **Type:** `string`
 **Description:** Absolute path to the module’s root directory.
-**Example:**
+**Example Usage:**
 
 ```lua
 print(MODULE.path)
@@ -223,7 +223,7 @@ print(MODULE.path)
 
 **Type:** `string`
 **Description:** Identifier used internally for the module list.
-**Example:**
+**Example Usage:**
 
 ```lua
 print(MODULE.uniqueID)

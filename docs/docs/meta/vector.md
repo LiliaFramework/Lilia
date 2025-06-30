@@ -28,7 +28,7 @@ Returns the midpoint between this vector and the supplied vector.
 
 * `Vector` – The center point of the two vectors.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Average two vectors to find the midpoint
@@ -55,7 +55,7 @@ Calculates the distance between this vector and another vector.
 
 * `number` – The distance between the two vectors.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Measure the distance between two points
@@ -83,7 +83,7 @@ Rotates the vector around an axis by the specified degrees and returns the new v
 
 * `Vector` – The rotated vector.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Rotate a vector 90 degrees around the Z axis
@@ -110,7 +110,7 @@ Returns a normalized right-direction vector relative to this vector.
 
 * `Vector` – The calculated right vector.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Get the right direction vector
@@ -137,7 +137,7 @@ Returns a normalized up-direction vector relative to this vector.
 
 * `Vector` – The calculated up vector.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Get the up direction vector

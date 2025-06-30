@@ -20,7 +20,7 @@ Returns a formatted timestamp if chat timestamps are enabled.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.chat.timestamp
@@ -46,7 +46,7 @@ Registers a new chat class and sets up command aliases.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Register a simple "/me" chat command that prints actions in purple
@@ -78,7 +78,7 @@ Parses chat text for the proper chat type and optionally sends it.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Parse chat messages and log "/me" actions to the console
@@ -112,7 +112,7 @@ Broadcasts a chat message to all eligible receivers.
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.chat.send

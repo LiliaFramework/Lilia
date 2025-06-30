@@ -26,7 +26,7 @@ Finds and returns a table of players within a given spherical radius from an ori
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.FindPlayersInSphere
@@ -58,7 +58,7 @@ Attempts to find a player by identifier. The identifier can be STEAMID, SteamID6
     Alias:
     lia.util.findPlayer
     
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.findPlayer
@@ -86,7 +86,7 @@ Finds all item entities in the world created by the specified player.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.findPlayerItems
@@ -115,7 +115,7 @@ Finds all item entities in the world created by the specified player with a spec
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.findPlayerItemsByClass
@@ -144,7 +144,7 @@ Finds all entities in the world created by or associated with the specified play
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.findPlayerEntities
@@ -173,7 +173,7 @@ Checks if string a matches string b (case-insensitive, partial matches).
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.stringMatches
@@ -197,7 +197,7 @@ Returns all players considered staff or admins, as determined by client:isStaff(
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.getAdmins
@@ -225,7 +225,7 @@ Finds a player currently on the server by their SteamID64.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.findPlayerBySteamID64
@@ -253,7 +253,7 @@ Finds a player currently on the server by their SteamID.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.findPlayerBySteamID
@@ -284,7 +284,7 @@ Checks if a hull (defined by mins and maxs) can fit at the given position withou
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.canFit
@@ -313,7 +313,7 @@ Finds and returns a table of players within a given radius from a position.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.playerInRadius
@@ -342,7 +342,7 @@ Formats a string with named or indexed placeholders. If a table is passed, uses 
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.formatStringNamed
@@ -369,7 +369,7 @@ Retrieves a cached Material for the specified path and parameters, to avoid repe
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.getMaterial
@@ -397,7 +397,7 @@ Finds a faction by name or uniqueID. If an exact identifier is found in lia.fact
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.findFaction
@@ -430,7 +430,7 @@ Sends a net message to the client to create a table UI with given data.
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.CreateTableUI
@@ -460,7 +460,7 @@ Finds potential empty space positions around an entity using a grid-based approa
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.findEmptySpace
@@ -496,7 +496,7 @@ Draws text with a shadow offset.
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.ShadowText
@@ -528,7 +528,7 @@ Draws text with an outlined border.
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.DrawTextOutlined
@@ -560,7 +560,7 @@ Draws a tooltip-like shape with text in the center.
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.DrawTip
@@ -592,7 +592,7 @@ Draws text with a subtle shadow effect.
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.drawText
@@ -622,7 +622,7 @@ Draws a textured rectangle with the specified material.
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.drawTexture
@@ -649,7 +649,7 @@ Calls a skin function by name, passing the panel and any extra arguments.
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.skinFunc
@@ -676,7 +676,7 @@ Wraps text to a maximum width, returning a table of lines and the maximum line w
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.wrapText
@@ -707,7 +707,7 @@ Draws a blur effect over the specified panel.
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.drawBlur
@@ -737,7 +737,7 @@ Draws a blur effect at a specified rectangle on the screen.
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.drawBlurAt
@@ -766,7 +766,7 @@ Creates and displays a table UI with given columns and data on the client side.
 **Realm:**
 
 * Client
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.util.CreateTableUI

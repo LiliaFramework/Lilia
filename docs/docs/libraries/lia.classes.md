@@ -23,7 +23,7 @@ Loads all class definitions from the given directory and stores them in lia.clas
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.class.loadFromDir
@@ -49,7 +49,7 @@ Determines if the given client may become the specified class.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.class.canBe
@@ -74,7 +74,7 @@ Retrieves the class table associated with the given identifier.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.class.get
@@ -99,7 +99,7 @@ Returns a table of players whose characters belong to the given class.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.class.getPlayers
@@ -124,7 +124,7 @@ Counts how many players belong to the given class.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.class.getPlayerCount
@@ -149,7 +149,7 @@ Searches the class list for a class whose ID or name matches the given text.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.class.retrieveClass
@@ -174,7 +174,7 @@ Returns whether the specified class requires a whitelist.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.class.hasWhitelist

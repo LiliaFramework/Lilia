@@ -26,7 +26,7 @@ Registers a new inventory type.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.inventory.newType
@@ -51,7 +51,7 @@ Instantiates a new inventory instance.
 **Returns:**
 
 * table
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.inventory.new
@@ -76,7 +76,7 @@ Loads an inventory by ID (cached or via custom loader).
 **Returns:**
 
 * deferred
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.inventory.loadByID
@@ -101,7 +101,7 @@ Default database loader.
 **Returns:**
 
 * deferred
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.inventory.loadFromDefaultStorage
@@ -126,7 +126,7 @@ Creates & persists a new inventory instance.
 **Returns:**
 
 * deferred
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.inventory.instance
@@ -151,7 +151,7 @@ Loads all inventories for a character.
 **Returns:**
 
 * deferred
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.inventory.loadAllFromCharID
@@ -176,7 +176,7 @@ Deletes an inventory and its data.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.inventory.deleteByID
@@ -201,7 +201,7 @@ Destroys all inventories for a character.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.inventory.cleanUpForCharacter
@@ -226,7 +226,7 @@ Displays inventory UI client‑side.
 **Returns:**
 
 * Panel
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.inventory.show

@@ -29,7 +29,7 @@ Registers a new config option with the given key, display name, default value, a
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Register a config option with a callback that prints when it changes
@@ -63,7 +63,7 @@ Overrides the default value of an existing config.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.config.setDefault
@@ -90,7 +90,7 @@ Forces a config value without triggering networking or callback if 'noSave' is t
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.config.forceSet
@@ -116,7 +116,7 @@ Sets a config value, runs callback, and handles networking (if on server). Also 
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.config.set
@@ -142,7 +142,7 @@ Retrieves the current value of a config, or returns a default if neither value n
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.config.get
@@ -171,7 +171,7 @@ Triggers "InitializedConfig" hook once done.
     Internal Function:
     true
     
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.config.load
@@ -196,7 +196,7 @@ Returns a table of all config entries where the current value differs from the d
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.config.getChangedValues
@@ -221,7 +221,7 @@ Sends current changed config values to a specified client.
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.config.send
@@ -246,7 +246,7 @@ Saves all changed config values to persistent storage.
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.config.save

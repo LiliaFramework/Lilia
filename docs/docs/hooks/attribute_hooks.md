@@ -16,7 +16,7 @@ Attributes can define their own hooks to react when a player's attribute is crea
 
 **Description:** Called when the attribute is initialized on a player (e.g., at character load or creation). Use this hook to run custom logic, send notifications, apply effects, etc.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 function ATTRIBUTE:OnSetup(client, value)

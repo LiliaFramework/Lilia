@@ -29,7 +29,7 @@ Returns true if the entity is a physics prop.
 
 * boolean – Whether the entity is a physics prop.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Apply physics damage only if this is a prop
@@ -57,7 +57,7 @@ Checks if the entity is an item entity.
 
 * boolean – True if the entity represents an item.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Attempt to pick up the entity as an item
@@ -85,7 +85,7 @@ Checks if the entity is a money entity.
 
 * boolean – True if the entity represents money.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Collect money dropped on the ground
@@ -113,7 +113,7 @@ Checks if the entity is a simfphys car.
 
 * boolean – True if this is a simfphys vehicle.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Show a custom HUD when entering a simfphys vehicle
@@ -141,7 +141,7 @@ Determines if the entity is persistent in Lilia.
 
 * boolean – Whether the entity should persist.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Save this entity across map resets if persistent
@@ -170,7 +170,7 @@ Checks if a player has the given door access level.
 
 * boolean – True if the player has access.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Block a player from opening the door without access
@@ -198,7 +198,7 @@ Assigns the entity to the specified player.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Assign ownership when a player buys the door
@@ -224,7 +224,7 @@ Locks the entity if it is a vehicle.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Lock the vehicle after the driver exits
@@ -250,7 +250,7 @@ Unlocks the entity if it is a vehicle.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Unlock the vehicle when the owner presses a key
@@ -276,7 +276,7 @@ Returns the player that owns this door if available.
 
 * Player|None – Door owner or None.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Print the name of the door owner when inspecting
@@ -305,7 +305,7 @@ Returns the locked state stored in net variables.
 
 * boolean – Whether the door is locked.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Display a lock icon if the door is networked as locked
@@ -333,7 +333,7 @@ Checks the internal door locked state.
 
 * boolean – True if the door is locked.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Play a sound when trying to open a locked door server-side
@@ -361,7 +361,7 @@ Calculates a drop position in front of the entity's eyes.
 
 * Vector – Drop position and angle.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Spawn an item drop in front of the entity's eyes
@@ -389,7 +389,7 @@ Checks for another entity of the same class nearby.
 
 * boolean – True if another entity is within radius.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Prevent building too close to another chest
@@ -417,7 +417,7 @@ Returns the entity creator player.
 
 * Player|None – Creator player if stored.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Credit the creator when the entity is removed
@@ -446,7 +446,7 @@ Stores the creator player on the entity.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Record the spawner for cleanup tracking
@@ -476,7 +476,7 @@ Sends a network variable to recipients.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Broadcast the "doorState" variable to every connected player
@@ -504,7 +504,7 @@ Clears all network variables on this entity.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Force reinitialization by clearing all variables for this receiver
@@ -531,7 +531,7 @@ Clears all stored door access information.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Wipe door permissions during cleanup
@@ -557,7 +557,7 @@ Stores the door locked state in network variables.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Toggle the door lock and play a latch sound for everyone
@@ -584,7 +584,7 @@ Returns true if the entity's class indicates a door.
 
 * boolean – Whether the entity is a door.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Check if the entity behaves like a door
@@ -610,7 +610,7 @@ Returns the partner door linked with this entity.
 
 * Entity|None – The partnered door.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Unlock both doors when opening a double-door setup
@@ -641,7 +641,7 @@ Updates a network variable and sends it to recipients.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Store a variable and sync it to players
@@ -669,7 +669,7 @@ Retrieves a stored network variable or a default value.
 
 * any – Stored value or default.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Retrieve the stored variable or fallback to the default
@@ -695,7 +695,7 @@ Client-side door check using class name.
 
 * boolean – True if entity class contains "door".
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Determine if this entity's class name contains "door"
@@ -721,7 +721,7 @@ Attempts to find the door partnered with this one.
 
 * Entity|None – The partner door entity.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Highlight the partner door of the one being looked at
@@ -751,7 +751,7 @@ Retrieves a network variable for this entity on the client.
 
 * any – Stored value or default.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Access a synced variable on the client side

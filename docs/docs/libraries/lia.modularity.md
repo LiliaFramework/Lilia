@@ -30,7 +30,7 @@ It also registers the module in the module list if applicable.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.module.load
@@ -56,7 +56,7 @@ then running the appropriate hooks after modules have been loaded.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.module.initialize
@@ -84,7 +84,7 @@ Non-Lua files are ignored.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.module.loadFromDir
@@ -109,7 +109,7 @@ Retrieves a module table by its identifier.
 **Returns:**
 
 * The module table if found, or nil if the module is not registered.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.module.get

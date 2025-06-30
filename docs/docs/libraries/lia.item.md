@@ -25,7 +25,7 @@ Retrieves an item definition by its identifier, checking both lia.item.base and 
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.get
@@ -52,7 +52,7 @@ or in the world.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.getItemByID
@@ -80,7 +80,7 @@ Retrieves the item instance table itself by its numeric ID without additional lo
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.getInstancedItemByID
@@ -108,7 +108,7 @@ Retrieves the 'data' table of an item instance by its numeric item ID.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.getItemDataByID
@@ -139,7 +139,7 @@ to register the item. Used for loading items from directory structures.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.load
@@ -164,7 +164,7 @@ Checks if the given object is recognized as an item (via isItem flag).
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.isItem
@@ -192,7 +192,7 @@ Retrieves an inventory table by its ID from lia.item.inventories.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.getInv
@@ -225,7 +225,7 @@ and merges data from the specified base. Optionally includes the file if provide
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.register
@@ -251,7 +251,7 @@ then any folders (with base_ prefix usage), and finally any loose Lua files.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.loadFromDir
@@ -278,7 +278,7 @@ The new item is stored in lia.item.instances using the provided item ID.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.new
@@ -307,7 +307,7 @@ becomes accessible for creation or usage in the system.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.registerInv
@@ -335,7 +335,7 @@ with the given character owner. Once created, it syncs the inventory to the owne
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.newInv
@@ -365,7 +365,7 @@ then caches it in lia.inventory.instances.
 **Realm:**
 
 * Shared
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.createInv
@@ -397,7 +397,7 @@ Optionally notifies receivers about the change.
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.setItemDataByID
@@ -431,7 +431,7 @@ Once the item is created, a new item object is constructed and returned via a de
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.instance
@@ -458,7 +458,7 @@ Deletes an item from the system (database and memory) by its numeric ID.
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.deleteByID
@@ -484,7 +484,7 @@ item instances in memory. This is commonly used during inventory or character lo
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.loadItemByID
@@ -516,7 +516,7 @@ entity in the world at the specified position/angles.
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- Spawn an item and use a callback to access the spawned entity
@@ -547,7 +547,7 @@ then sets its width/height data, optionally providing a callback once loaded.
 **Realm:**
 
 * Server
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.restoreInv

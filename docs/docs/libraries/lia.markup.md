@@ -28,7 +28,7 @@ automatically wrap at that width.
 **Returns:**
 
 * MarkupObject – The parsed markup object with size information.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.markup.parse

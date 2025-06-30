@@ -26,7 +26,7 @@ Includes a Lua file based on its realm. It determines the realm from the file na
 **Returns:**
 
 * The result of the include, if applicable.
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.include
@@ -54,7 +54,7 @@ Includes all Lua files in a specified directory. If recursive is true, it traver
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.includeDir
@@ -82,7 +82,7 @@ Recursively includes all Lua files in a specified directory, preserving alphabet
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.includeGroupedDir
@@ -107,7 +107,7 @@ Prints a colored error message prefixed with "[Lilia]" to the console.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.error
@@ -133,7 +133,7 @@ Notifies that a method is deprecated and optionally runs a callback.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.deprecated
@@ -158,7 +158,7 @@ Prints an updater message in cyan to the console with the Lilia prefix.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.updater
@@ -183,7 +183,7 @@ Prints an informational message with the Lilia prefix.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.information
@@ -209,7 +209,7 @@ Logs a bootstrap message with a colored section tag for clarity.
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.bootstrap
@@ -234,7 +234,7 @@ Includes entity files from the specified directory. It checks for standard entit
 **Returns:**
 
 * nil
-**Example:**
+**Example Usage:**
 
 ```lua
     -- This snippet demonstrates a common usage of lia.includeEntities
