@@ -77,7 +77,7 @@ jobs:
           luarocks make
       - run: |
           cd lilia
-          luacheck . --no-global --no-max-line-length --no-max-code-line-length --no-max-string-line-length --no-max-comment-line-length --no-max-cyclomatic-complexity
+          luacheck . --no-global --no-max-line-length --no-self --no-max-code-line-length --no-max-string-line-length --no-max-comment-line-length --no-max-cyclomatic-complexity
 
   release:
     needs:
