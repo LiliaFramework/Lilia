@@ -36,9 +36,11 @@ When you register a command with `lia.command.add`, you provide a table of field
 **Type:**
 
 `string` or `table`
+
 **Description:**
 
 One or more alternative command names that trigger the same behavior.
+
 **Example Usage:**
 
 ```lua
@@ -52,6 +54,7 @@ alias = {"chargiveflag", "giveflag"}
 **Type:**
 
 `boolean`
+
 **Description:**
 
 If `true`, only players with the registered CAMI admin privilege (automatically created) may run the command.
@@ -68,9 +71,11 @@ adminOnly = true
 **Type:**
 
 `boolean`
+
 **Description:**
 
 If `true`, restricts usage to super administrators (automatically registers a CAMI privilege).
+
 **Example Usage:**
 
 ```lua
@@ -84,9 +89,11 @@ superAdminOnly = true
 **Type:**
 
 `string`
+
 **Description:**
 
 Custom CAMI privilege name checked when running the command. Defaults to the command’s primary name if omitted.
+
 **Example Usage:**
 
 ```lua
@@ -102,6 +109,7 @@ privilege = "Manage Doors"
 **Type:**
 
 `string`
+
 **Description:**
 
 Human-readable syntax string shown in help menus. Does not affect argument parsing.
@@ -109,6 +117,7 @@ Human-readable syntax string shown in help menus. Does not affect argument parsi
 You can use spaces in argument names for better readability.
 
 The in-game prompt only appears when every argument follows the `[type Name]` format.
+
 **Example Usage:**
 
 ```lua
@@ -122,9 +131,11 @@ syntax = "[string Target Name] [number Amount]"
 **Type:**
 
 `string`
+
 **Description:**
 
 Short description of what the command does, displayed in command lists and menus.
+
 **Example Usage:**
 
 ```lua
@@ -140,6 +151,7 @@ desc = "Purchase a door if it is available and you can afford it."
 **Type:**
 
 `table`
+
 **Description:**
 
 Defines how the command appears in admin utility menus. Common keys:
@@ -172,6 +184,7 @@ AdminStick = {
 **Type:**
 
 `function(client, table)`
+
 **Description:**
 
 Function called when the command is executed. `args` is a table of parsed arguments. Return a string to send a message back to the caller, or return nothing for silent execution.
