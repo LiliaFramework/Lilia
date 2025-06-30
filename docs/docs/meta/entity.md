@@ -784,7 +784,7 @@ Retrieves the table of PAC3 part identifiers applied to this entity.
 
 * table – The currently applied part IDs.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Print all equipped PAC3 parts for a player
@@ -818,7 +818,7 @@ Broadcasts the entity's PAC3 part list to synchronize with clients.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Resend parts when a player respawns
@@ -850,7 +850,7 @@ Attaches a PAC3 part to this entity and networks the change.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Give the player a custom hat part
@@ -882,7 +882,7 @@ Detaches a PAC3 part from this entity and updates clients.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Remove the previously equipped hat part
@@ -914,7 +914,7 @@ Clears all PAC3 parts from this entity and notifies clients.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Remove all PAC3 outfits from the player

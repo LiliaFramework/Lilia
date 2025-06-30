@@ -28,7 +28,7 @@ Subscribes this panel to updates for a specific inventory.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 panel:liaListenForInventoryChanges(player:getChar():getInv())
@@ -52,7 +52,7 @@ Removes inventory update hooks created by `liaListenForInventoryChanges`.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Remove all registered hooks for this panel
@@ -78,7 +78,7 @@ Positions the panel using screen scale units.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Position the panel 10 units from the left and 20 units down
@@ -104,7 +104,7 @@ Sizes the panel using screen scale units.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Set panel size to 64 by 32 scaled units

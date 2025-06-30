@@ -506,7 +506,7 @@ Returns the display name of this item. On the client this value is localized.
 
 * string – Item name.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Inform the player which item they found
@@ -532,7 +532,7 @@ Retrieves the description text for this item.
 
 * string – Item description.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Display a tooltip describing the item
@@ -558,7 +558,7 @@ Removes this item from its inventory without deleting it when `preserveItem` is 
 
 * Deferred – Resolves when the item has been removed.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Unequip and drop the item while keeping it saved
@@ -586,7 +586,7 @@ Deletes this item from the database after destroying it.
 
 * Deferred – Resolves when deletion completes.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Permanently remove the item from the database
@@ -614,7 +614,7 @@ Destroys the item's entity then removes and deletes it from its inventory.
 
 * Deferred – Resolves when the item has been removed.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Remove the item from the world and database
@@ -642,7 +642,7 @@ Broadcasts deletion of this item and removes it from memory.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Instantly delete the item across the network
@@ -668,7 +668,7 @@ Callback executed after the item is destroyed.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 function ITEM:onDisposed()
@@ -695,7 +695,7 @@ Finds the entity spawned for this item, if any.
 
 * Entity|nil – The world entity representing the item.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Grab the world entity to modify it
@@ -725,7 +725,7 @@ Creates a world entity for this item at the specified position.
 
 * Entity|nil – The created entity if successful.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Drop the item at the player's feet
@@ -752,7 +752,7 @@ Moves the item to another inventory, optionally bypassing access checks.
 
 * boolean – True if the transfer was initiated.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Move the item into another container
@@ -780,7 +780,7 @@ Called when a new instance of this item is created.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 function ITEM:onInstanced()
@@ -807,7 +807,7 @@ Runs after this item is networked to `recipient`.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 function ITEM:onSync(ply)
@@ -834,7 +834,7 @@ Executed after the item is permanently removed.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 function ITEM:onRemoved()
@@ -861,7 +861,7 @@ Called when the item is restored from the database.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 function ITEM:onRestored()
@@ -888,7 +888,7 @@ Sends this item's data to a player or broadcasts to all.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Resend the item data to a specific player
@@ -918,7 +918,7 @@ Sets a data field on the item and optionally networks and saves it.
 
 * None – This function does not return a value.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Mark the item as legendary and notify the owner
@@ -947,7 +947,7 @@ Processes an interaction action performed by `client` on this item.
 
 * boolean – True if the interaction succeeded.
 
-**Example:**
+**Example Usage:**
 
 ```lua
 -- Trigger the "use" interaction from code

@@ -12,6 +12,12 @@ Inventory meta functions handle transactions, capacity checks, retrieval by slot
 
 ### getData(key, default)
 
+```lua
+function Inventory:getData(key, default)
+    -- return any
+end
+```
+
 **Description:**
 
 Returns a stored data value for this inventory.
@@ -38,6 +44,12 @@ local opens = inv:getData("openCount", 0)
 ---
 
 ### extend(className)
+
+```lua
+function Inventory:extend(className)
+    -- return table
+end
+```
 
 **Description:**
 
@@ -70,6 +82,12 @@ WeaponInv:register("weapon_inv")
 
 ### configure()
 
+```lua
+function Inventory:configure()
+    -- override to setup slots
+end
+```
+
 **Description:**
 
 Stub for inventory configuration; meant to be overridden.
@@ -98,6 +116,12 @@ end
 ---
 
 ### addDataProxy(key, onChange)
+
+```lua
+function Inventory:addDataProxy(key, onChange)
+    -- return nil
+end
+```
 
 **Description:**
 
@@ -129,6 +153,12 @@ end)
 
 ### getItemsByUniqueID(uniqueID, onlyMain)
 
+```lua
+function Inventory:getItemsByUniqueID(uniqueID, onlyMain)
+    -- return table
+end
+```
+
 **Description:**
 
 Returns all items in the inventory matching the given unique ID.
@@ -149,12 +179,20 @@ Returns all items in the inventory matching the given unique ID.
 **Example Usage:**
 
 ```lua
--- Get all ammo boxes stored in the main list
-local ammo = inv:getItemsByUniqueID("ammo_box", true)
+-- Use each ammo box found in the main list
+for _, box in ipairs(inv:getItemsByUniqueID("ammo_box", true)) do
+    box:use()
+end
 ```
 ---
 
 ### register(typeID)
+
+```lua
+function Inventory:register(typeID)
+    -- persistence setup
+end
+```
 
 **Description:**
 
@@ -182,6 +220,12 @@ local chestInv = WeaponInv:new()
 ---
 
 ### new()
+
+```lua
+function Inventory:new()
+    -- return table
+end
+```
 
 **Description:**
 
@@ -212,6 +256,12 @@ chest.inv = WeaponInv:new()
 
 ### tostring()
 
+```lua
+function Inventory:tostring()
+    -- return string
+end
+```
+
 **Description:**
 
 Returns a printable representation of this inventory.
@@ -238,6 +288,12 @@ print("Inventory: " .. inv:tostring())
 
 ### getType()
 
+```lua
+function Inventory:getType()
+    -- return table
+end
+```
+
 **Description:**
 
 Retrieves the inventory type table from lia.inventory.
@@ -263,6 +319,12 @@ local def = inv:getType()
 ---
 
 ### onDataChanged(key, oldValue, newValue)
+
+```lua
+function Inventory:onDataChanged(key, oldValue, newValue)
+    -- callback after setData
+end
+```
 
 **Description:**
 
@@ -293,6 +355,12 @@ inv:onDataChanged("credits", 0, 100)
 
 ### getItems()
 
+```lua
+function Inventory:getItems()
+    -- return table
+end
+```
+
 **Description:**
 
 Returns all items stored in this inventory.
@@ -313,13 +381,21 @@ Returns all items stored in this inventory.
 
 ```lua
 -- Sum the weight of all items
+local totalWeight = 0
 for _, itm in pairs(inv:getItems()) do
     totalWeight = totalWeight + itm.weight
 end
+print("Weight:", totalWeight)
 ```
 ---
 
 ### getItemsOfType(itemType)
+
+```lua
+function Inventory:getItemsOfType(itemType)
+    -- return table
+end
+```
 
 **Description:**
 
@@ -347,6 +423,12 @@ local kits = inv:getItemsOfType("medkit")
 
 ### getFirstItemOfType(itemType)
 
+```lua
+function Inventory:getFirstItemOfType(itemType)
+    -- return item
+end
+```
+
 **Description:**
 
 Retrieves the first item matching the given unique ID.
@@ -373,6 +455,12 @@ local pistol = inv:getFirstItemOfType("pistol")
 
 ### hasItem(itemType)
 
+```lua
+function Inventory:hasItem(itemType)
+    -- return boolean
+end
+```
+
 **Description:**
 
 Determines whether the inventory contains an item type.
@@ -393,11 +481,19 @@ Determines whether the inventory contains an item type.
 
 ```lua
 -- See if any health potion exists
-if inv:hasItem("health_potion") then ... end
+if inv:hasItem("health_potion") then
+    print("You have a potion ready!")
+end
 ```
 ---
 
 ### getItemCount(itemType)
+
+```lua
+function Inventory:getItemCount(itemType)
+    -- return number
+end
+```
 
 **Description:**
 
@@ -420,10 +516,17 @@ Counts the total quantity of a specific item type.
 ```lua
 -- Count the total number of bullets
 local ammoTotal = inv:getItemCount("bullet")
+print("Ammo remaining:", ammoTotal)
 ```
 ---
 
 ### getID()
+
+```lua
+function Inventory:getID()
+    -- return number
+end
+```
 
 **Description:**
 
@@ -450,6 +553,12 @@ entity:setNetVar("invID", inv:getID())
 ---
 
 ### eq(other)
+
+```lua
+function Inventory:eq(other)
+    -- return boolean
+end
+```
 
 **Description:**
 
@@ -479,6 +588,12 @@ end
 
 ### addItem(item, noReplicate)
 
+```lua
+function Inventory:addItem(item, noReplicate)
+    -- return self
+end
+```
+
 **Description:**
 
 Inserts an item instance into this inventory and persists it.
@@ -499,11 +614,144 @@ Inserts an item instance into this inventory and persists it.
 
 ```lua
 -- Add a looted item to the inventory
-inv:addItem(item, false)
+if not inv:hasItem(item.uniqueID) then
+    inv:addItem(item, false)
+end
+```
+---
+
+### add(item)
+
+```lua
+function Inventory:add(item)
+    return self:addItem(item)
+end
+```
+
+**Description:**
+
+Alias for `addItem` that inserts an item into the inventory.
+
+**Parameters:**
+
+* item (Item) – Item to add.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* table – The inventory instance.
+
+**Example Usage:**
+
+```lua
+inv:add(item)
+```
+---
+
+### syncItemAdded(item)
+
+```lua
+function Inventory:syncItemAdded(item)
+    -- networking
+end
+```
+
+**Description:**
+
+Replicates a newly added item to all clients that can access the inventory.
+
+**Parameters:**
+
+* item (Item) – Item instance that was added.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example Usage:**
+
+```lua
+inv:syncItemAdded(item)
+```
+---
+
+### initializeStorage(initialData)
+
+```lua
+function Inventory:initializeStorage(initialData)
+    -- return Deferred
+end
+```
+
+**Description:**
+
+Creates a persistent inventory record in the database using the supplied initial data.
+
+**Parameters:**
+
+* initialData (table) – Values to store when creating the inventory.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* Deferred – Resolves with the new inventory ID.
+
+**Example Usage:**
+
+```lua
+WeaponInv:initializeStorage({char = charID, locked = true}):next(function(id)
+    print("Created inventory", id)
+end)
+```
+---
+
+### restoreFromStorage()
+
+```lua
+function Inventory:restoreFromStorage()
+end
+```
+
+**Description:**
+
+Stub called when loading an inventory from custom storage systems.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example Usage:**
+
+```lua
+inv:restoreFromStorage()
 ```
 ---
 
 ### removeItem(itemID, preserveItem)
+
+```lua
+function Inventory:removeItem(itemID, preserveItem)
+    -- return Deferred
+end
+```
 
 **Description:**
 
@@ -525,11 +773,372 @@ Removes an item by ID and optionally deletes it.
 
 ```lua
 -- Remove an item but keep it saved for later
-inv:removeItem(itemID, true)
+local dropped = inv:removeItem(itemID, true)
+if dropped then
+    print("Item stored for later")
+end
+```
+---
+
+### remove(itemID)
+
+```lua
+function Inventory:remove(itemID)
+    return self:removeItem(itemID)
+end
+```
+
+**Description:**
+
+Alias for `removeItem` that removes an item from the inventory.
+
+**Parameters:**
+
+* itemID (number) – Unique item identifier.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* Deferred – Resolves once the item is removed.
+
+**Example Usage:**
+
+```lua
+inv:remove(itemID)
+```
+---
+
+### setData(key, value)
+
+```lua
+function Inventory:setData(key, value)
+    -- persistence
+end
+```
+
+**Description:**
+
+Sets a data field on the inventory and replicates the change to clients.
+
+**Parameters:**
+
+* key (string) – Data field name.
+* value (any) – Value to store.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* table – The inventory instance.
+
+**Example Usage:**
+
+```lua
+inv:setData("locked", true)
+```
+---
+
+### canAccess(action, context)
+
+```lua
+function Inventory:canAccess(action, context)
+    -- return boolean, reason
+end
+```
+
+**Description:**
+
+Evaluates access rules to determine whether an action is permitted.
+
+**Parameters:**
+
+* action (string) – Action identifier.
+* context (table|None) – Additional data such as the client.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* boolean|nil – True, false, or nil if undecided.
+* string|nil – Optional failure reason.
+
+**Example Usage:**
+
+```lua
+local allowed = inv:canAccess("take", {client = ply})
+```
+---
+
+### addAccessRule(rule, priority)
+
+```lua
+function Inventory:addAccessRule(rule, priority)
+    -- return self
+end
+```
+
+**Description:**
+
+Registers a function used by `canAccess` to grant or deny actions.
+
+**Parameters:**
+
+* rule (function) – Access rule function.
+* priority (number|None) – Insertion position for the rule.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* table – The inventory instance.
+
+**Example Usage:**
+
+```lua
+inv:addAccessRule(function(inv, action, ctx)
+    return ctx.client:IsAdmin()
+end)
+```
+---
+
+### removeAccessRule(rule)
+
+```lua
+function Inventory:removeAccessRule(rule)
+    -- return self
+end
+```
+
+**Description:**
+
+Unregisters a previously added access rule.
+
+**Parameters:**
+
+* rule (function) – The rule to remove.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* table – The inventory instance.
+
+**Example Usage:**
+
+```lua
+inv:removeAccessRule(myRule)
+```
+---
+
+### getRecipients()
+
+```lua
+function Inventory:getRecipients()
+    -- return table
+end
+```
+
+**Description:**
+
+Returns a list of players that should receive network updates for this inventory.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* table – Array of Player objects.
+
+**Example Usage:**
+
+```lua
+local receivers = inv:getRecipients()
+```
+---
+
+### onInstanced()
+
+```lua
+function Inventory:onInstanced()
+end
+```
+
+**Description:**
+
+Called after a new inventory is created in the database.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example Usage:**
+
+```lua
+function WeaponInv:onInstanced()
+    print("Created inventory", self:getID())
+end
+```
+---
+
+### onLoaded()
+
+```lua
+function Inventory:onLoaded()
+end
+```
+
+**Description:**
+
+Called after an inventory is loaded from the database.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example Usage:**
+
+```lua
+function WeaponInv:onLoaded()
+    print("Loaded inventory", self:getID())
+end
+```
+---
+
+### loadItems()
+
+```lua
+function Inventory:loadItems()
+    -- return Deferred
+end
+```
+
+**Description:**
+
+Loads all items belonging to this inventory from storage.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* Deferred – Resolves with a table of loaded items.
+
+**Example Usage:**
+
+```lua
+inv:loadItems():next(function(items)
+    print("Loaded", table.Count(items), "items")
+end)
+```
+---
+
+### onItemsLoaded(items)
+
+```lua
+function Inventory:onItemsLoaded(items)
+end
+```
+
+**Description:**
+
+Hook called after `loadItems` finishes loading all items.
+
+**Parameters:**
+
+* items (table) – Loaded items indexed by ID.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example Usage:**
+
+```lua
+function WeaponInv:onItemsLoaded(items)
+    print("Ready with", #items, "items")
+end
+```
+---
+
+### instance(initialData)
+
+```lua
+function Inventory:instance(initialData)
+    -- return Deferred
+end
+```
+
+**Description:**
+
+Creates and stores a new inventory instance of this type.
+
+**Parameters:**
+
+* initialData (table|None) – Data to populate the inventory with.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* Deferred – Resolves with the created inventory.
+
+**Example Usage:**
+
+```lua
+WeaponInv:instance({char = charID}):next(function(inv) end)
 ```
 ---
 
 ### syncData(key, recipients)
+
+```lua
+function Inventory:syncData(key, recipients)
+    -- networking
+end
+```
 
 **Description:**
 
@@ -557,6 +1166,12 @@ inv:syncData("locked", recipients)
 
 ### sync(recipients)
 
+```lua
+function Inventory:sync(recipients)
+    -- networking
+end
+```
+
 **Description:**
 
 Sends the entire inventory and its items to players.
@@ -582,6 +1197,12 @@ inv:sync({owner})
 
 ### delete()
 
+```lua
+function Inventory:delete()
+    -- persistence
+end
+```
+
 **Description:**
 
 Removes this inventory record from the database.
@@ -602,10 +1223,17 @@ Removes this inventory record from the database.
 ```lua
 -- Permanently delete a chest inventory on cleanup
 inv:delete()
+print("Inventory removed from database")
 ```
 ---
 
 ### destroy()
+
+```lua
+function Inventory:destroy()
+    -- cleanup
+end
+```
 
 **Description:**
 
@@ -627,4 +1255,37 @@ Destroys all items and removes network references.
 ```lua
 -- Clear all items when the container entity is removed
 inv:destroy()
+print("Inventory destroyed")
+```
+
+### show(parent)
+
+```lua
+function Inventory:show(parent)
+    -- returns Panel
+end
+```
+
+**Description:**
+
+Opens the inventory user interface on the client.
+
+**Parameters:**
+
+* parent (Panel|None) – Optional parent panel.
+
+**Realm:**
+
+* Client
+
+**Returns:**
+
+* Panel – The created inventory UI panel.
+
+**Example Usage:**
+
+```lua
+inv:show()
+-- or attach to an existing panel
+local ui = inv:show(parentPanel)
 ```
