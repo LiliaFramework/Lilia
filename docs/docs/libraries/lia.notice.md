@@ -11,11 +11,10 @@ The notice library displays temporary popup notifications at the top of the play
 ---
 
 ### lia.notices.notify(message, recipient)
-
-
 **Description:**
 
 Sends a notification message to a specific player or all players.
+
 **Parameters:**
 
 * message (string) – Message text to send.
@@ -39,13 +38,11 @@ Sends a notification message to a specific player or all players.
 
 ---
 
-
 ### lia.notices.notifyLocalized(key, recipient, ...)
-
-
 **Description:**
 
 Sends a localized notification to a player or all players.
+
 **Parameters:**
 
 * key (string) – Localization key.
@@ -71,13 +68,11 @@ Sends a localized notification to a player or all players.
 
 ---
 
-
 ### lia.notices.notify(message)
-
-
 **Description:**
 
 Creates a visual notification panel on the client's screen.
+
 **Parameters:**
 
 * message (string) – Message text to display.
@@ -99,13 +94,11 @@ Creates a visual notification panel on the client's screen.
 
 ---
 
-
 ### lia.notices.notifyLocalized(key, ...)
-
-
 **Description:**
 
 Displays a localized notification on the client's screen.
+
 **Parameters:**
 
 * key (string) – Localization key.
@@ -126,3 +119,4 @@ Displays a localized notification on the client's screen.
     -- This snippet demonstrates a common usage of lia.notices.notifyLocalized
     lia.notices.notifyLocalized("item_picked_up")
 ```
+

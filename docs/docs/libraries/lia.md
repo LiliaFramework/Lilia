@@ -11,11 +11,10 @@ The lia core library exposes shared helper functions used across multiple module
 ---
 
 ### lia.include(fileName, state)
-
-
 **Description:**
 
 Includes a Lua file based on its realm. It determines the realm from the file name or provided state, and handles server/client inclusion logic.
+
 **Parameters:**
 
 * fileName (string) – The path to the Lua file.
@@ -39,13 +38,11 @@ Includes a Lua file based on its realm. It determines the realm from the file na
 
 ---
 
-
 ### lia.includeDir(directory, fromLua, recursive, realm)
-
-
 **Description:**
 
 Includes all Lua files in a specified directory. If recursive is true, it traverses subdirectories. It determines the base directory based on the active schema or gamemode.
+
 **Parameters:**
 
 * directory (string) – The directory path to include.
@@ -62,7 +59,7 @@ Includes all Lua files in a specified directory. If recursive is true, it traver
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -73,13 +70,11 @@ Includes all Lua files in a specified directory. If recursive is true, it traver
 
 ---
 
-
 ### lia.includeGroupedDir(dir, raw, recursive, forceRealm)
-
-
 **Description:**
 
 Recursively includes all Lua files in a specified directory, preserving alphabetical order within each folder. Determines each file’s realm by override or filename prefix, then calls lia.include on each file.
+
 **Parameters:**
 
 * dir        (string) – Directory path to load files from (relative if raw is false).
@@ -96,7 +91,7 @@ Recursively includes all Lua files in a specified directory, preserving alphabet
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -107,13 +102,11 @@ Recursively includes all Lua files in a specified directory, preserving alphabet
 
 ---
 
-
 ### lia.error(msg)
-
-
 **Description:**
 
 Prints a colored error message prefixed with "[Lilia]" to the console.
+
 **Parameters:**
 
 * msg (string) – Error text to display.
@@ -124,7 +117,7 @@ Prints a colored error message prefixed with "[Lilia]" to the console.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -135,13 +128,11 @@ Prints a colored error message prefixed with "[Lilia]" to the console.
 
 ---
 
-
 ### lia.deprecated(methodName, callback)
-
-
 **Description:**
 
 Notifies that a method is deprecated and optionally runs a callback.
+
 **Parameters:**
 
 * methodName (string) – Name of the deprecated method.
@@ -154,7 +145,7 @@ Notifies that a method is deprecated and optionally runs a callback.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -165,13 +156,11 @@ Notifies that a method is deprecated and optionally runs a callback.
 
 ---
 
-
 ### lia.updater(msg)
-
-
 **Description:**
 
 Prints an updater message in cyan to the console with the Lilia prefix.
+
 **Parameters:**
 
 * msg (string) – Update text to display.
@@ -182,7 +171,7 @@ Prints an updater message in cyan to the console with the Lilia prefix.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -193,13 +182,11 @@ Prints an updater message in cyan to the console with the Lilia prefix.
 
 ---
 
-
 ### lia.information(msg)
-
-
 **Description:**
 
 Prints an informational message with the Lilia prefix.
+
 **Parameters:**
 
 * msg (string) – Text to print to the console.
@@ -210,7 +197,7 @@ Prints an informational message with the Lilia prefix.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -221,13 +208,11 @@ Prints an informational message with the Lilia prefix.
 
 ---
 
-
 ### lia.bootstrap(section, msg)
-
-
 **Description:**
 
 Logs a bootstrap message with a colored section tag for clarity.
+
 **Parameters:**
 
 * section (string) – Category or stage of bootstrap.
@@ -240,7 +225,7 @@ Logs a bootstrap message with a colored section tag for clarity.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -251,13 +236,11 @@ Logs a bootstrap message with a colored section tag for clarity.
 
 ---
 
-
 ### lia.includeEntities(path)
-
-
 **Description:**
 
 Includes entity files from the specified directory. It checks for standard entity files ("init.lua", "shared.lua", "cl_init.lua"), handles inclusion and registration of entities, weapons, tools, and effects, and supports recursive inclusion within entity folders.
+
 **Parameters:**
 
 * path (string) – The directory path containing entity files.
@@ -268,7 +251,7 @@ Includes entity files from the specified directory. It checks for standard entit
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -276,3 +259,4 @@ Includes entity files from the specified directory. It checks for standard entit
     -- This snippet demonstrates a common usage of lia.includeEntities
     lia.includeEntities("lilia/entities")
 ```
+

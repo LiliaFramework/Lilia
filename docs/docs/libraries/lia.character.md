@@ -40,11 +40,10 @@ Creates a new character instance with default variables and metatable.
 
 
 ### lia.char.hookVar(varName, hookName, func)
-
-
 **Description:**
 
 Registers a hook function for when a character variable changes.
+
 **Parameters:**
 
 * varName (string) – Variable name to hook.
@@ -59,7 +58,7 @@ Registers a hook function for when a character variable changes.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -70,13 +69,11 @@ Registers a hook function for when a character variable changes.
 
 ---
 
-
 ### lia.char.registerVar(key, data)
-
-
 **Description:**
 
 Registers a character variable with metadata and generates accessor methods.
+
 **Parameters:**
 
 * key (string) – Variable key.
@@ -89,7 +86,7 @@ Registers a character variable with metadata and generates accessor methods.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -100,13 +97,11 @@ Registers a character variable with metadata and generates accessor methods.
 
 ---
 
-
 ### lia.char.getCharData(charID, key)
-
-
 **Description:**
 
 Retrieves character data JSON from the database as a Lua table.
+
 **Parameters:**
 
 * charID (number|string) – Character ID.
@@ -130,13 +125,11 @@ Retrieves character data JSON from the database as a Lua table.
 
 ---
 
-
 ### lia.char.getCharDataRaw(charID, key)
-
-
 **Description:**
 
 Retrieves raw character database row or specific column.
+
 **Parameters:**
 
 * charID (number|string) – Character ID.
@@ -160,13 +153,11 @@ Retrieves raw character database row or specific column.
 
 ---
 
-
 ### lia.char.getOwnerByID(ID)
-
-
 **Description:**
 
 Finds the player entity that owns the character with the given ID.
+
 **Parameters:**
 
 * ID (number|string) – Character ID.
@@ -188,13 +179,11 @@ Finds the player entity that owns the character with the given ID.
 
 ---
 
-
 ### lia.char.getBySteamID(steamID)
-
-
 **Description:**
 
 Retrieves a character object by SteamID or SteamID64.
+
 **Parameters:**
 
 * steamID (string) – SteamID or SteamID64.
@@ -216,13 +205,11 @@ Retrieves a character object by SteamID or SteamID64.
 
 ---
 
-
 ### lia.char.getAll()
-
-
 **Description:**
 
 Returns a table mapping all players to their loaded character objects.
+
 **Parameters:**
 
 * None
@@ -244,13 +231,11 @@ Returns a table mapping all players to their loaded character objects.
 
 ---
 
-
 ### lia.char.GetTeamColor(client)
-
-
 **Description:**
 
 Determines the team color for a client based on their character class or default team.
+
 **Parameters:**
 
 * client (Player) – Player entity.
@@ -272,13 +257,11 @@ Determines the team color for a client based on their character class or default
 
 ---
 
-
 ### lia.char.create(data, callback)
-
-
 **Description:**
 
 Inserts a new character into the database and sets up default inventory.
+
 **Parameters:**
 
 * data (table) – Character creation data.
@@ -302,13 +285,11 @@ Inserts a new character into the database and sets up default inventory.
 
 ---
 
-
 ### lia.char.restore(client, callback, id)
-
-
 **Description:**
 
 Loads characters for a client from the database, optionally filtering by ID.
+
 **Parameters:**
 
 * client (Player) – Player entity.
@@ -334,13 +315,11 @@ Loads characters for a client from the database, optionally filtering by ID.
 
 ---
 
-
 ### lia.char.cleanUpForPlayer(client)
-
-
 **Description:**
 
 Cleans up loaded characters and inventories for a player on disconnect.
+
 **Parameters:**
 
 * client (Player) – Player entity.
@@ -362,13 +341,11 @@ Cleans up loaded characters and inventories for a player on disconnect.
 
 ---
 
-
 ### lia.char.delete(id, client)
-
-
 **Description:**
 
 Deletes a character by ID from the database, cleans up and notifies players.
+
 **Parameters:**
 
 * id (number) – Character ID to delete.
@@ -392,13 +369,11 @@ Deletes a character by ID from the database, cleans up and notifies players.
 
 ---
 
-
 ### lia.char.setCharData(charID, key, val)
-
-
 **Description:**
 
 Updates a character's JSON data field in the database and loaded object.
+
 **Parameters:**
 
 * charID (number|string) – Character ID.
@@ -424,13 +399,11 @@ Updates a character's JSON data field in the database and loaded object.
 
 ---
 
-
 ### lia.char.setCharName(charID, name)
-
-
 **Description:**
 
 Updates the character's name in the database and loaded object.
+
 **Parameters:**
 
 * charID (number|string) – Character ID.
@@ -454,13 +427,11 @@ Updates the character's name in the database and loaded object.
 
 ---
 
-
 ### lia.char.setCharModel(charID, model, bg)
-
-
 **Description:**
 
 Updates the character's model and bodygroups in the database and in-game.
+
 **Parameters:**
 
 * charID (number|string) – Character ID.
@@ -483,3 +454,4 @@ Updates the character's model and bodygroups in the database and in-game.
     -- This snippet demonstrates a common usage of lia.char.setCharModel
     lia.char.setCharModel(1, "models/player.mdl", {})
 ```
+

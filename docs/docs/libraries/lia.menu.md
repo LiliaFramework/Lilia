@@ -9,14 +9,13 @@ This page describes small menu creation helpers.
 The menu library offers convenience functions for building simple context menus. It supports nested options whose callbacks execute when selected and automatically positions the menu on screen.
 
 ### lia.menu.add(opts, pos, onRemove)
-
-
 **Description:**
 
 Creates a new world or entity menu using the entries provided in 'opts'.
 Keys are display text and values are callback functions executed when
 selected. The menu may be positioned at a world Vector or anchored to
 an entity.
+
 **Parameters:**
 
 * opts (table) – Table of label/callback pairs.
@@ -42,14 +41,12 @@ an entity.
 
 ---
 
-
 ### lia.menu.drawAll()
-
-
 **Description:**
 
 Draws all active menus on the player's screen. Typically called from
 HUDPaint.
+
 **Parameters:**
 
 * None
@@ -60,7 +57,7 @@ HUDPaint.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -71,14 +68,12 @@ HUDPaint.
 
 ---
 
-
 ### lia.menu.getActiveMenu()
-
-
 **Description:**
 
 Returns the ID and callback of the menu item currently being hovered
 or selected by the player.
+
 **Parameters:**
 
 * None
@@ -102,13 +97,11 @@ or selected by the player.
 
 ---
 
-
 ### lia.menu.onButtonPressed(id, callback)
-
-
 **Description:**
 
 Removes the specified menu and runs its callback if provided.
+
 **Parameters:**
 
 * id (number) – Identifier returned by lia.menu.add.
@@ -129,3 +122,4 @@ Removes the specified menu and runs its callback if provided.
     -- This snippet demonstrates a common usage of lia.menu.onButtonPressed
     lia.menu.onButtonPressed(id)
 ```
+

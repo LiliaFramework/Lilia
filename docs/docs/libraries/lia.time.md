@@ -10,21 +10,21 @@ The time library handles date formatting and relative time conversions. It offer
 ---
 
 ### lia.time.TimeSince
-
 **Description:**
 
 Returns a human-readable string indicating how long ago a given time occurred (e.g., "5 minutes ago").
+
 **Parameters:**
 
 * strTime (string or number) — The time in string or timestamp form.
 
-**Returns:**
-
-* (string) The time since the given date/time in a readable format.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* (string) The time since the given date/time in a readable format.
 
 **Example Usage:**
 
@@ -48,25 +48,23 @@ Returns a human-readable string indicating how long ago a given time occurred (e
 
 ---
 
-
 ### lia.time.toNumber
-
-
 **Description:**
 
 Converts a string timestamp (YYYY-MM-DD HH:MM:SS) to a table with numeric fields:
 year, month, day, hour, min, sec. Defaults to current time if not provided.
+
 **Parameters:**
 
 * str (string) — The time string to convert (optional).
 
-**Returns:**
-
-* (table) A table with numeric year, month, day, hour, min, sec.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* (table) A table with numeric year, month, day, hour, min, sec.
 
 **Example Usage:**
 
@@ -83,27 +81,25 @@ year, month, day, hour, min, sec. Defaults to current time if not provided.
 
 ---
 
-
 ### lia.time.GetDate
-
-
 **Description:**
 
 Returns the full current date and time formatted based on the
 "AmericanTimeStamps" configuration flag:
 • If enabled: "Weekday, Month DD, YYYY, HH:MM:SSam/pm"
 • If disabled: "Weekday, DD Month YYYY, HH:MM:SS"
+
 **Parameters:**
 
 * None
 
-**Returns:**
-
-* (string) Formatted date and time string.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* (string) Formatted date and time string.
 
 **Example Usage:**
 
@@ -119,29 +115,27 @@ Returns the full current date and time formatted based on the
 
 ---
 
-
 ### lia.time.GetHour
-
-
 **Description:**
 
 Returns the current hour formatted based on the
 "AmericanTimeStamps" configuration flag:
 • If enabled: "Ham" or "Hpm" (12-hour with am/pm)
 • If disabled: H (0–23, 24-hour)
+
 **Parameters:**
 
 * None
+
+**Realm:**
+
+* Shared
 
 **Returns:**
 
 * (string|number) Current hour string with suffix when AmericanTimeStamps
 
 * is enabled, otherwise numeric hour in 24-hour format.
-
-**Realm:**
-
-* Shared
 
 **Example Usage:**
 
@@ -154,3 +148,4 @@ Returns the current hour formatted based on the
     npc:SetNWBool("ShopOpen", false)
     end
 ```
+

@@ -11,11 +11,10 @@ The bars library manages health, stamina, and other progress bars displayed on t
 ---
 
 ### lia.bar.get(identifier)
-
-
 **Description:**
 
 Retrieves a bar object from the list by its unique identifier.
+
 **Parameters:**
 
 * identifier (string) – The unique identifier of the bar to retrieve.
@@ -40,15 +39,13 @@ Retrieves a bar object from the list by its unique identifier.
 
 ---
 
-
 ### lia.bar.add(getValue, color, priority, identifier)
-
-
 **Description:**
 
 Adds a new bar or replaces an existing one in the bar list.
 If the identifier matches an existing bar, the old bar is removed first.
 Bars are drawn in order of ascending priority.
+
 **Parameters:**
 
 * getValue (function) – A callback that returns the current value of the bar.
@@ -81,13 +78,11 @@ Bars are drawn in order of ascending priority.
 
 ---
 
-
 ### lia.bar.remove(identifier)
-
-
 **Description:**
 
 Removes a bar from the list based on its unique identifier.
+
 **Parameters:**
 
 * identifier (string) – The unique identifier of the bar to remove.
@@ -98,7 +93,7 @@ Removes a bar from the list based on its unique identifier.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -109,14 +104,12 @@ Removes a bar from the list based on its unique identifier.
 
 ---
 
-
 ### lia.bar.drawBar(x, y, w, h, pos, max, color)
-
-
 **Description:**
 
 Draws a single horizontal bar at the specified screen coordinates,
 filling it proportionally based on pos and max.
+
 **Parameters:**
 
 * x (number) – The x-coordinate of the bar's top-left corner.
@@ -139,7 +132,7 @@ filling it proportionally based on pos and max.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -150,14 +143,12 @@ filling it proportionally based on pos and max.
 
 ---
 
-
 ### lia.bar.drawAction(text, duration)
-
-
 **Description:**
 
 Displays a temporary action progress bar with accompanying text
 for the specified duration on the HUD.
+
 **Parameters:**
 
 * text (string) – The text to display above the progress bar.
@@ -170,7 +161,7 @@ for the specified duration on the HUD.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -181,14 +172,12 @@ for the specified duration on the HUD.
 
 ---
 
-
 ### lia.bar.drawAll()
-
-
 **Description:**
 
 Iterates through all registered bars, applies smoothing to their values,
 and draws them on the HUD according to their priority and visibility rules.
+
 **Parameters:**
 
 * None
@@ -199,7 +188,7 @@ and draws them on the HUD according to their priority and visibility rules.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -207,3 +196,4 @@ and draws them on the HUD according to their priority and visibility rules.
     -- This snippet demonstrates a common usage of hook.Add
     hook.Add("HUDPaintBackground", "liaBarDraw", lia.bar.drawAll)
 ```
+

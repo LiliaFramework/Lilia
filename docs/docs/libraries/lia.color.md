@@ -11,24 +11,23 @@ The color library centralizes color utilities used throughout the UI. You can re
 ---
 
 ### lia.color.register(name, color)
-
-
 **Description:**
 
 Registers a named color for later lookup.
+
 **Parameters:**
 
 * name (string) – Key used to reference the color.
 
 * color (Color) – Color object or table.
 
-**Returns:**
-
-* nil
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* None
 
 **Example Usage:**
 
@@ -39,13 +38,11 @@ Registers a named color for later lookup.
 
 ---
 
-
 ### lia.color.Adjust(color, rOffset, gOffset, bOffset, aOffset)
-
-
 **Description:**
 
 Creates a new color by applying offsets to each channel.
+
 **Parameters:**
 
 * color (Color) – Base color.
@@ -58,13 +55,13 @@ Creates a new color by applying offsets to each channel.
 
 * aOffset (number) – Alpha channel delta (optional).
 
-**Returns:**
-
-* Color – Adjusted color.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* Color – Adjusted color.
 
 **Example Usage:**
 
@@ -75,24 +72,22 @@ Creates a new color by applying offsets to each channel.
 
 ---
 
-
 ### lia.color.ReturnMainAdjustedColors()
-
-
 **Description:**
 
 Returns a table of commonly used UI colors derived from the base config color.
+
 **Parameters:**
 
 * None
 
-**Returns:**
-
-* table – Mapping of UI color keys to Color objects.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* table – Mapping of UI color keys to Color objects.
 
 **Example Usage:**
 
@@ -100,3 +95,4 @@ Returns a table of commonly used UI colors derived from the base config color.
     -- This snippet demonstrates a common usage of lia.color.ReturnMainAdjustedColors
     local uiColors = lia.color.ReturnMainAdjustedColors()
 ```
+

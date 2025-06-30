@@ -11,12 +11,11 @@ The networking library synchronizes data between the server and clients. It prov
 ---
 
 ### setNetVar(key, value, receiver)
-
-
 **Description:**
 
 Stores a global networked variable and broadcasts it to clients. When a
 receiver is specified the update is only sent to those players.
+
 **Parameters:**
 
 * key (string) – Name of the variable.
@@ -31,7 +30,7 @@ receiver is specified the update is only sent to those players.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -46,13 +45,11 @@ receiver is specified the update is only sent to those players.
 
 ---
 
-
 ### getNetVar(key, default)
-
-
 **Description:**
 
 Retrieves a global networked variable previously set by setNetVar.
+
 **Parameters:**
 
 * key (string) – Variable name.
@@ -79,3 +76,4 @@ Retrieves a global networked variable previously set by setNetVar.
         end
     end)
 ```
+
