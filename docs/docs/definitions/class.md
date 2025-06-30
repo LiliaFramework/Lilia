@@ -81,6 +81,7 @@ CLASS.desc = "Technicians who maintain equipment."
 
 ---
 
+
 #### `index`
 
 **Type:**
@@ -329,12 +330,15 @@ CLASS.scale = 1.2
 
 **Description:**
 
-Default running speed.
+Default running speed. Set a number to override or a multiplier in
+conjunction with `runSpeedMultiplier`.
 
 **Example Usage:**
 
 ```lua
-CLASS.runSpeed = 250
+-- 25% faster than the base run speed
+CLASS.runSpeed = 1.25
+CLASS.runSpeedMultiplier = true
 ```
 
 ---
@@ -463,7 +467,7 @@ Mapping of bodygroup indices to values applied on spawn.
 
 ```lua
 CLASS.bodyGroups = {
-    hands = 1,
+    hands = 1, -- bodygroup name → value
     torso = 3
 }
 ```
@@ -487,3 +491,4 @@ CLASS.model = "models/player/alyx.mdl"
 ```
 
 ---
+
