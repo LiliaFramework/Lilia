@@ -149,12 +149,12 @@ function CLASS:OnTransferred(client, oldClass)
 
 **Description:**
 
-Executes actions when a player is moved into this class (for example by an admin command).
+Executes actions when a player is transferred into this class (e.g., by an admin or system transfer). The previous class index is provided as an argument.
 
 **Parameters:**
 
-* `client` (`Player`) – The player being transferred.
-* `oldClass` (`number`) – The class index that the player came from.
+* `client` (`Player`) – The player who was transferred.
+* `oldClass` (`number`) – The class index the player previously belonged to.
 
 
 **Realm:**
@@ -166,7 +166,11 @@ Executes actions when a player is moved into this class (for example by an admin
 
 ```lua
 function CLASS:OnTransferred(client, oldClass)
-    local oldName = lia.class.list[oldClass] and lia.class.list[oldClass].name or "Unknown"
-    client:notify("Transferred from " .. oldName .. " to " .. self.name)
+    local char = client:getChar()
+    if char then
+        local randomModelIndex = math.random(1, #self.models)
+        char:setModel(self.models[randomModelIndex])
+    end
+    print("Transferred from class", oldClass)
 end
 ```

@@ -28,13 +28,14 @@
             end
 
             if hook.Run("CanCharBeTransfered", targetChar, faction, targetChar:getFaction()) == false then return end
+            local oldFaction = targetChar:getFaction()
             targetChar.vars.faction = faction.uniqueID
             targetChar:setFaction(factionIndex)
             targetChar:kickClass()
             local defaultClass = lia.faction.getDefaultClass(factionIndex)
             if defaultClass then targetChar:joinClass(defaultClass.index) end
             hook.Run("OnTransferred", target)
-            if faction.OnTransferred then faction:OnTransferred(target) end
+            if faction.OnTransferred then faction:OnTransferred(target, oldFaction) end
             hook.Run("PlayerLoadout", target)
             client:notifyLocalized("transferSuccess", target:Name(), faction.name)
             if client ~= target then target:notifyLocalized("transferNotification", faction.name, client:Name()) end
