@@ -7,6 +7,7 @@ This document lists global hooks triggered by the gamemode. You can define them 
 - **hook.Add** may be used from any file.
 
 If multiple definitions of the same hook exist on `GM`, `MODULE`, or `SCHEMA`, the one loaded last overrides the others.
+
 ---
 
 ## Overview
