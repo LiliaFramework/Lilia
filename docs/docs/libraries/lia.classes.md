@@ -9,22 +9,21 @@ This page details the class system functions.
 The classes library loads Lua definitions that describe player classes. Classes act like temporary jobs within a faction. The library stores available classes, registers default attributes, and provides lookup functions by name or index.
 
 ### lia.class.loadFromDir(directory)
-
-
 **Description:**
 
 Loads all class definitions from the given directory and stores them in lia.class.list.
+
 **Parameters:**
 
 * directory (string) – Folder path containing class Lua files.
 
-**Returns:**
-
-* nil
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* None
 
 **Example Usage:**
 
@@ -35,26 +34,24 @@ Loads all class definitions from the given directory and stores them in lia.clas
 
 ---
 
-
 ### lia.class.canBe(client, class)
-
-
 **Description:**
 
 Determines if the given client may become the specified class.
+
 **Parameters:**
 
 * client (Player) – Player attempting to join.
 
 * class (string|number) – Class identifier.
 
-**Returns:**
-
-* boolean – False with a message if denied; default status when allowed.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* boolean – False with a message if denied; default status when allowed.
 
 **Example Usage:**
 
@@ -65,24 +62,22 @@ Determines if the given client may become the specified class.
 
 ---
 
-
 ### lia.class.get(identifier)
-
-
 **Description:**
 
 Retrieves the class table associated with the given identifier.
+
 **Parameters:**
 
 * identifier (string|number) – Unique identifier for the class.
 
-**Returns:**
-
-* table|nil – Class table if found.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* table|nil – Class table if found.
 
 **Example Usage:**
 
@@ -93,24 +88,22 @@ Retrieves the class table associated with the given identifier.
 
 ---
 
-
 ### lia.class.getPlayers(class)
-
-
 **Description:**
 
 Returns a table of players whose characters belong to the given class.
+
 **Parameters:**
 
 * class (string|number) – Class identifier.
 
-**Returns:**
-
-* table – List of player objects.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* table – List of player objects.
 
 **Example Usage:**
 
@@ -121,24 +114,22 @@ Returns a table of players whose characters belong to the given class.
 
 ---
 
-
 ### lia.class.getPlayerCount(class)
-
-
 **Description:**
 
 Counts how many players belong to the given class.
+
 **Parameters:**
 
 * class (string|number) – Class identifier.
 
-**Returns:**
-
-* number – Player count.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* number – Player count.
 
 **Example Usage:**
 
@@ -149,24 +140,22 @@ Counts how many players belong to the given class.
 
 ---
 
-
 ### lia.class.retrieveClass(class)
-
-
 **Description:**
 
 Searches the class list for a class whose ID or name matches the given text.
+
 **Parameters:**
 
 * class (string) – Search text.
 
-**Returns:**
-
-* string|nil – Matching class identifier or nil.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* string|nil – Matching class identifier or nil.
 
 **Example Usage:**
 
@@ -177,24 +166,22 @@ Searches the class list for a class whose ID or name matches the given text.
 
 ---
 
-
 ### lia.class.hasWhitelist(class)
-
-
 **Description:**
 
 Returns whether the specified class requires a whitelist.
+
 **Parameters:**
 
 * class (string|number) – Class identifier.
 
-**Returns:**
-
-* boolean – True if the class is whitelisted.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* boolean – True if the class is whitelisted.
 
 **Example Usage:**
 
@@ -204,3 +191,4 @@ Returns whether the specified class requires a whitelist.
         print("Whitelist required")
     end
 ```
+

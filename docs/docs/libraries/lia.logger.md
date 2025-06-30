@@ -11,18 +11,13 @@ The logger library writes structured log entries to files and the console. It tr
 ---
 
 ### lia.log.loadTables()
-
-
 **Description:**
 
 Creates the logs directory for the current active gamemode under "lilia/logs".
+
 **Parameters:**
 
 * None
-
-**Returns:**
-
-* nil
 
 **Realm:**
 
@@ -30,6 +25,10 @@ Creates the logs directory for the current active gamemode under "lilia/logs".
 
     Internal Function:
     true
+
+**Returns:**
+
+* None
 
 **Example Usage:**
 
@@ -40,14 +39,12 @@ Creates the logs directory for the current active gamemode under "lilia/logs".
 
 ---
 
-
 ### lia.log.addType(logType, func, category)
-
-
 **Description:**
 
 Registers a new log type by associating a log generating function and a category with the log type identifier.
 The registered function will be used later to generate log messages for that type.
+
 **Parameters:**
 
 * logType (string) – The unique identifier for the log type.
@@ -56,13 +53,13 @@ The registered function will be used later to generate log messages for that typ
 
 * category (string) – The category for the log type, used for organizing log files.
 
-**Returns:**
-
-* nil
-
 **Realm:**
 
 * Server
+
+**Returns:**
+
+* None
 
 **Example Usage:**
 
@@ -75,14 +72,12 @@ The registered function will be used later to generate log messages for that typ
 
 ---
 
-
 ### lia.log.getString(client, logType, ...)
-
-
 **Description:**
 
 Retrieves the log string and its associated category for a given client and log type.
 It calls the registered log function with the provided parameters.
+
 **Parameters:**
 
 * client (Player) – The client for which the log is generated.
@@ -91,16 +86,16 @@ It calls the registered log function with the provided parameters.
 
 * ... (vararg) – Additional parameters passed to the log function.
 
-**Returns:**
-
-* string, string – The generated log string and its category if successful; otherwise, nil.
-
 **Realm:**
 
 * Server
 
     Internal Function:
     true
+
+**Returns:**
+
+* string, string – The generated log string and its category if successful; otherwise, nil.
 
 **Example Usage:**
 
@@ -111,14 +106,12 @@ It calls the registered log function with the provided parameters.
 
 ---
 
-
 ### lia.log.add(client, logType, ...)
-
-
 **Description:**
 
 Generates a log string using the registered log type function, triggers the "OnServerLog" hook,
 and appends the log string to a log file corresponding to its category in the logs directory.
+
 **Parameters:**
 
 * client (Player) – The client associated with the log event.
@@ -127,13 +120,13 @@ and appends the log string to a log file corresponding to its category in the lo
 
 * ... (vararg) – Additional parameters passed to the log type function.
 
-**Returns:**
-
-* nil
-
 **Realm:**
 
 * Server
+
+**Returns:**
+
+* None
 
 **Example Usage:**
 
@@ -141,3 +134,4 @@ and appends the log string to a log file corresponding to its category in the lo
     -- This snippet demonstrates a common usage of lia.log.add
     lia.log.add(client, "mytype", "info")
 ```
+

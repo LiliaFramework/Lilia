@@ -34,24 +34,23 @@ Returns a formatted timestamp if chat timestamps are enabled.
 
 
 ### lia.chat.register(chatType, data)
-
-
 **Description:**
 
 Registers a new chat class and sets up command aliases.
+
 **Parameters:**
 
 * chatType (string) – Identifier for the chat class.
 
 * data (table) – Table of chat class properties.
 
-**Returns:**
-
-* nil
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* None
 
 **Example Usage:**
 
@@ -67,13 +66,11 @@ Registers a new chat class and sets up command aliases.
 
 ---
 
-
 ### lia.chat.parse(client, message, noSend)
-
-
 **Description:**
 
 Parses chat text for the proper chat type and optionally sends it.
+
 **Parameters:**
 
 * client (Player) – Player sending the message.
@@ -82,13 +79,13 @@ Parses chat text for the proper chat type and optionally sends it.
 
 * noSend (boolean) – Suppress sending when true.
 
-**Returns:**
-
-* chatType (string), text (string), anonymous (boolean)
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* chatType (string), text (string), anonymous (boolean)
 
 **Example Usage:**
 
@@ -104,13 +101,11 @@ Parses chat text for the proper chat type and optionally sends it.
 
 ---
 
-
 ### lia.chat.send(speaker, chatType, text, anonymous, receivers)
-
-
 **Description:**
 
 Broadcasts a chat message to all eligible receivers.
+
 **Parameters:**
 
 * speaker (Player) – The message sender.
@@ -123,13 +118,13 @@ Broadcasts a chat message to all eligible receivers.
 
 * receivers (table) – Optional list of target players.
 
-**Returns:**
-
-* nil
-
 **Realm:**
 
 * Server
+
+**Returns:**
+
+* None
 
 **Example Usage:**
 
@@ -137,3 +132,4 @@ Broadcasts a chat message to all eligible receivers.
     -- This snippet demonstrates a common usage of lia.chat.send
     lia.chat.send(client, "ic", "Hello")
 ```
+

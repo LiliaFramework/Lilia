@@ -11,12 +11,11 @@ The darkrp library bridges functionality with the DarkRP gamemode. It offers hel
 ---
 
 ### lia.darkrp.isEmpty(position, entitiesToIgnore)
-
-
 **Description:**
 
 Checks whether the specified position is free from players, NPCs,
 and props.
+
 **Parameters:**
 
 * position (Vector) – World position to test.
@@ -42,13 +41,11 @@ and props.
 
 ---
 
-
 ### lia.darkrp.findEmptyPos(startPos, entitiesToIgnore, maxDistance, searchStep, checkArea)
-
-
 **Description:**
 
 Finds a nearby position that is unobstructed by players or props.
+
 **Parameters:**
 
 * startPos (Vector) – The initial position to search from.
@@ -78,14 +75,12 @@ Finds a nearby position that is unobstructed by players or props.
 
 ---
 
-
 ### lia.darkrp.notify(client, _, _, message)
-
-
 **Description:**
 
 Forwards a notification message to the given client using
 lia's notify system.
+
 **Parameters:**
 
 * client (Player) – The player to receive the message.
@@ -98,7 +93,7 @@ lia's notify system.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -109,14 +104,12 @@ lia's notify system.
 
 ---
 
-
 ### lia.darkrp.textWrap(text, fontName, maxLineWidth)
-
-
 **Description:**
 
 Wraps a text string so that it fits within the specified width
 when drawn with the given font.
+
 **Parameters:**
 
 * text (string) – The text to wrap.
@@ -142,13 +135,11 @@ when drawn with the given font.
 
 ---
 
-
 ### lia.darkrp.formatMoney(amount)
-
-
 **Description:**
 
 Converts a numeric amount to a formatted currency string.
+
 **Parameters:**
 
 * amount (number) – The value of money to format.
@@ -170,14 +161,12 @@ Converts a numeric amount to a formatted currency string.
 
 ---
 
-
 ### lia.darkrp.createEntity(name, data)
-
-
 **Description:**
 
 Registers a new DarkRP entity as an item so that it can be spawned
 through lia's item system.
+
 **Parameters:**
 
 * name (string) – Display name of the entity.
@@ -192,7 +181,7 @@ through lia's item system.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -203,13 +192,11 @@ through lia's item system.
 
 ---
 
-
 ### lia.darkrp.createCategory()
-
-
 **Description:**
 
 Placeholder for DarkRP category creation. Currently unused.
+
 **Parameters:**
 
 * None
@@ -220,7 +207,7 @@ Placeholder for DarkRP category creation. Currently unused.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -228,3 +215,4 @@ Placeholder for DarkRP category creation. Currently unused.
     -- This snippet demonstrates a common usage of lia.darkrp.createCategory
     lia.darkrp.createCategory()
 ```
+

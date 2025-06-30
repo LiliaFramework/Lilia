@@ -11,11 +11,10 @@ The inventory library manages item containers and grid inventories. It supports 
 ---
 
 ### lia.inventory.newType(typeID, invTypeStruct)
-
-
 **Description:**
 
 Registers a new inventory type.
+
 **Parameters:**
 
 * typeID (string) — unique identifier
@@ -28,7 +27,7 @@ Registers a new inventory type.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -39,13 +38,11 @@ Registers a new inventory type.
 
 ---
 
-
 ### lia.inventory.new(typeID)
-
-
 **Description:**
 
 Instantiates a new inventory instance.
+
 **Parameters:**
 
 * typeID (string)
@@ -67,13 +64,11 @@ Instantiates a new inventory instance.
 
 ---
 
-
 ### lia.inventory.loadByID(id, noCache)
-
-
 **Description:**
 
 Loads an inventory by ID (cached or via custom loader).
+
 **Parameters:**
 
 * id (number), noCache? (boolean)
@@ -95,13 +90,11 @@ Loads an inventory by ID (cached or via custom loader).
 
 ---
 
-
 ### lia.inventory.loadFromDefaultStorage(id, noCache)
-
-
 **Description:**
 
 Default database loader.
+
 **Parameters:**
 
 * id (number), noCache? (boolean)
@@ -123,13 +116,11 @@ Default database loader.
 
 ---
 
-
 ### lia.inventory.instance(typeID, initialData)
-
-
 **Description:**
 
 Creates & persists a new inventory instance.
+
 **Parameters:**
 
 * typeID (string), initialData? (table)
@@ -151,13 +142,11 @@ Creates & persists a new inventory instance.
 
 ---
 
-
 ### lia.inventory.loadAllFromCharID(charID)
-
-
 **Description:**
 
 Loads all inventories for a character.
+
 **Parameters:**
 
 * charID (number)
@@ -179,13 +168,11 @@ Loads all inventories for a character.
 
 ---
 
-
 ### lia.inventory.deleteByID(id)
-
-
 **Description:**
 
 Deletes an inventory and its data.
+
 **Parameters:**
 
 * id (number)
@@ -196,7 +183,7 @@ Deletes an inventory and its data.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -207,13 +194,11 @@ Deletes an inventory and its data.
 
 ---
 
-
 ### lia.inventory.cleanUpForCharacter(character)
-
-
 **Description:**
 
 Destroys all inventories for a character.
+
 **Parameters:**
 
 * character
@@ -224,7 +209,7 @@ Destroys all inventories for a character.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -235,13 +220,11 @@ Destroys all inventories for a character.
 
 ---
 
-
 ### lia.inventory.show(inventory, parent)
-
-
 **Description:**
 
 Displays inventory UI client‑side.
+
 **Parameters:**
 
 * inventory, parent
@@ -260,3 +243,4 @@ Displays inventory UI client‑side.
     -- This snippet demonstrates a common usage of lia.inventory.show
     local panel = lia.inventory.show(inv)
 ```
+

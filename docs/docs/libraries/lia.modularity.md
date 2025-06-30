@@ -11,13 +11,12 @@ The modularity library loads modules contained in the 'modules' folder. It resol
 ---
 
 ### lia.module.load
-
-
 **Description:**
 
 Loads a module from a specified path. If the module is a single file, it includes it directly;
 if it is a directory, it loads the core file (or its extended version), applies permissions, workshop content, dependencies, extras, and submodules.
 It also registers the module in the module list if applicable.
+
 **Parameters:**
 
 * uniqueID – The unique identifier of the module.
@@ -34,7 +33,7 @@ It also registers the module in the module list if applicable.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -45,14 +44,12 @@ It also registers the module in the module list if applicable.
 
 ---
 
-
 ### lia.module.initialize
-
-
 **Description:**
 
 Initializes the module system by loading the schema and various module directories,
 then running the appropriate hooks after modules have been loaded.
+
 **Parameters:**
 
 * None
@@ -63,7 +60,7 @@ then running the appropriate hooks after modules have been loaded.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -74,15 +71,13 @@ then running the appropriate hooks after modules have been loaded.
 
 ---
 
-
 ### lia.module.loadFromDir
-
-
 **Description:**
 
 Loads modules from a specified directory. It iterates over all subfolders and .lua files in the directory.
 Each subfolder is treated as a multi-file module, and each .lua file as a single-file module.
 Non-Lua files are ignored.
+
 **Parameters:**
 
 * directory – The directory path from which to load modules.
@@ -95,7 +90,7 @@ Non-Lua files are ignored.
 
 **Returns:**
 
-* nil
+* None
 
 **Example Usage:**
 
@@ -106,13 +101,11 @@ Non-Lua files are ignored.
 
 ---
 
-
 ### lia.module.get
-
-
 **Description:**
 
 Retrieves a module table by its identifier.
+
 **Parameters:**
 
 * identifier – The unique identifier of the module to retrieve.
@@ -131,3 +124,4 @@ Retrieves a module table by its identifier.
     -- This snippet demonstrates a common usage of lia.module.get
     local mod = lia.module.get("schema")
 ```
+

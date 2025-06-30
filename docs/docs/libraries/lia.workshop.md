@@ -11,11 +11,14 @@ The workshop library tracks required Workshop addon IDs and mounts them on clien
 ---
 
 ### lia.workshop.gather()
-
-
 **Description:**
 
 Collects workshop IDs from installed addons and registered modules.
+
+**Parameters:**
+
+* None
+
 **Realm:**
 
 * Server
@@ -33,13 +36,11 @@ Collects workshop IDs from installed addons and registered modules.
 
 ---
 
-
 ### lia.workshop.send(ply)
-
-
 **Description:**
 
 Sends the collected workshop IDs to a connecting player.
+
 **Parameters:**
 
 * ply (Player) – Player to send the download list to.
@@ -58,3 +59,4 @@ Sends the collected workshop IDs to a connecting player.
     -- This snippet demonstrates a common usage of lia.workshop.send
     lia.workshop.send(ply)
 ```
+

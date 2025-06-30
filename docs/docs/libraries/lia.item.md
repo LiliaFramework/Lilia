@@ -11,22 +11,21 @@ The item library contains utilities for retrieving item definitions and creating
 ---
 
 ### lia.item.get
-
-
 **Description:**
 
 Retrieves an item definition by its identifier, checking both lia.item.base and lia.item.list.
+
 **Parameters:**
 
 * identifier (string) – The unique identifier of the item.
 
-**Returns:**
-
-* The item table if found, otherwise nil.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* The item table if found, otherwise nil.
 
 **Example Usage:**
 
@@ -37,27 +36,25 @@ Retrieves an item definition by its identifier, checking both lia.item.base and 
 
 ---
 
-
 ### lia.item.getItemByID
-
-
 **Description:**
 
 Retrieves an item instance by its numeric item ID. Also determines whether it's in an inventory
 or in the world.
+
 **Parameters:**
 
 * itemID (number) – The numeric item ID.
+
+**Realm:**
+
+* Shared
 
 **Returns:**
 
 * A table containing 'item' (the item object) and 'location' (the string location) if found,
 
 * otherwise nil and an error message.
-
-**Realm:**
-
-* Shared
 
 **Example Usage:**
 
@@ -71,24 +68,22 @@ or in the world.
 
 ---
 
-
 ### lia.item.getInstancedItemByID
-
-
 **Description:**
 
 Retrieves the item instance table itself by its numeric ID without additional location info.
+
 **Parameters:**
 
 * itemID (number) – The numeric item ID.
 
-**Returns:**
-
-* The item instance table if found, otherwise nil and an error message.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* The item instance table if found, otherwise nil and an error message.
 
 **Example Usage:**
 
@@ -102,24 +97,22 @@ Retrieves the item instance table itself by its numeric ID without additional lo
 
 ---
 
-
 ### lia.item.getItemDataByID
-
-
 **Description:**
 
 Retrieves the 'data' table of an item instance by its numeric item ID.
+
 **Parameters:**
 
 * itemID (number) – The numeric item ID.
 
-**Returns:**
-
-* The data table if found, otherwise nil and an error message.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* The data table if found, otherwise nil and an error message.
 
 **Example Usage:**
 
@@ -133,14 +126,12 @@ Retrieves the 'data' table of an item instance by its numeric item ID.
 
 ---
 
-
 ### lia.item.load
-
-
 **Description:**
 
 Processes the item file path to generate a uniqueID, and calls lia.item.register
 to register the item. Used for loading items from directory structures.
+
 **Parameters:**
 
 * path (string) – The path to the Lua file for the item.
@@ -149,13 +140,13 @@ to register the item. Used for loading items from directory structures.
 
 * isBaseItem (boolean) – Whether this item is a base item.
 
-**Returns:**
-
-* None
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* None
 
 **Example Usage:**
 
@@ -166,24 +157,22 @@ to register the item. Used for loading items from directory structures.
 
 ---
 
-
 ### lia.item.isItem
-
-
 **Description:**
 
 Checks if the given object is recognized as an item (via isItem flag).
+
 **Parameters:**
 
 * object (any) – The object to check.
 
-**Returns:**
-
-* true if the object is an item, false otherwise.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* true if the object is an item, false otherwise.
 
 **Example Usage:**
 
@@ -197,24 +186,22 @@ Checks if the given object is recognized as an item (via isItem flag).
 
 ---
 
-
 ### lia.item.getInv
-
-
 **Description:**
 
 Retrieves an inventory table by its ID from lia.item.inventories.
+
 **Parameters:**
 
 * id (number) – The ID of the inventory to retrieve.
 
-**Returns:**
-
-* The inventory table if found, otherwise nil.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* The inventory table if found, otherwise nil.
 
 **Example Usage:**
 
@@ -228,14 +215,12 @@ Retrieves an inventory table by its ID from lia.item.inventories.
 
 ---
 
-
 ### lia.item.register
-
-
 **Description:**
 
 Registers a new item or base item with a unique ID. This sets up the meta table
 and merges data from the specified base. Optionally includes the file if provided.
+
 **Parameters:**
 
 * uniqueID (string) – The unique identifier for the item.
@@ -248,13 +233,13 @@ and merges data from the specified base. Optionally includes the file if provide
 
 * luaGenerated (boolean) – True if the item is generated in code without file.
 
-**Returns:**
-
-* The registered item table.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* The registered item table.
 
 **Example Usage:**
 
@@ -265,25 +250,23 @@ and merges data from the specified base. Optionally includes the file if provide
 
 ---
 
-
 ### lia.item.loadFromDir
-
-
 **Description:**
 
 Loads item Lua files from a specified directory. Base items are loaded first,
 then any folders (with base_ prefix usage), and finally any loose Lua files.
+
 **Parameters:**
 
 * directory (string) – The path to the directory containing item files.
 
-**Returns:**
-
-* None
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* None
 
 **Example Usage:**
 
@@ -294,27 +277,25 @@ then any folders (with base_ prefix usage), and finally any loose Lua files.
 
 ---
 
-
 ### lia.item.new
-
-
 **Description:**
 
 Creates an item instance (not in the database) from a registered item definition.
 The new item is stored in lia.item.instances using the provided item ID.
+
 **Parameters:**
 
 * uniqueID (string) – The unique identifier of the item definition.
 
 * id (number) – The numeric ID for this new item instance.
 
-**Returns:**
-
-* The newly created item instance.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* The newly created item instance.
 
 **Example Usage:**
 
@@ -326,14 +307,12 @@ The new item is stored in lia.item.instances using the provided item ID.
 
 ---
 
-
 ### lia.item.registerInv
-
-
 **Description:**
 
 Registers an inventory type with a given width and height. The inventory type
 becomes accessible for creation or usage in the system.
+
 **Parameters:**
 
 * invType (string) – The inventory type name (identifier).
@@ -342,13 +321,13 @@ becomes accessible for creation or usage in the system.
 
 * h (number) – The height of this inventory type.
 
-**Returns:**
-
-* None
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* None
 
 **Example Usage:**
 
@@ -359,14 +338,12 @@ becomes accessible for creation or usage in the system.
 
 ---
 
-
 ### lia.item.newInv
-
-
 **Description:**
 
 Asynchronously creates a new inventory (with a specific invType) and associates it
 with the given character owner. Once created, it syncs the inventory to the owner if online.
+
 **Parameters:**
 
 * owner (number) – The character ID who owns this inventory.
@@ -375,13 +352,13 @@ with the given character owner. Once created, it syncs the inventory to the owne
 
 * callback (function) – Optional callback function receiving the new inventory.
 
-**Returns:**
-
-* None (asynchronous, uses a deferred internally).
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* None (asynchronous, uses a deferred internally).
 
 **Example Usage:**
 
@@ -394,14 +371,12 @@ with the given character owner. Once created, it syncs the inventory to the owne
 
 ---
 
-
 ### lia.item.createInv
-
-
 **Description:**
 
 Creates a new GridInv instance with a specified width, height, and ID,
 then caches it in lia.inventory.instances.
+
 **Parameters:**
 
 * w (number) – The width of the inventory.
@@ -410,13 +385,13 @@ then caches it in lia.inventory.instances.
 
 * id (number) – The numeric ID to assign to this inventory.
 
-**Returns:**
-
-* The newly created GridInv instance.
-
 **Realm:**
 
 * Shared
+
+**Returns:**
+
+* The newly created GridInv instance.
 
 **Example Usage:**
 
@@ -428,14 +403,12 @@ then caches it in lia.inventory.instances.
 
 ---
 
-
 ### lia.item.setItemDataByID
-
-
 **Description:**
 
 Sets a specific key-value in the data table of an item instance by its numeric ID.
 Optionally notifies receivers about the change.
+
 **Parameters:**
 
 * itemID (number) – The numeric item ID.
@@ -450,13 +423,13 @@ Optionally notifies receivers about the change.
 
 * noCheckEntity (boolean) – If true, won't check if the item entity is valid.
 
-**Returns:**
-
-* true if successful, false and error message if item not found.
-
 **Realm:**
 
 * Server
+
+**Returns:**
+
+* true if successful, false and error message if item not found.
 
 **Example Usage:**
 
@@ -470,14 +443,12 @@ Optionally notifies receivers about the change.
 
 ---
 
-
 ### lia.item.instance
-
-
 **Description:**
 
 Asynchronously creates a new item in the database, optionally assigned to an inventory.
 Once the item is created, a new item object is constructed and returned via a deferred.
+
 **Parameters:**
 
 * index (number) – The inventory ID to place the item into (or 0/NULL if none).
@@ -492,13 +463,13 @@ Once the item is created, a new item object is constructed and returned via a de
 
 * callback (function) – Optional callback with the newly created item.
 
-**Returns:**
-
-* A deferred object that resolves to the new item.
-
 **Realm:**
 
 * Server
+
+**Returns:**
+
+* A deferred object that resolves to the new item.
 
 **Example Usage:**
 
@@ -511,24 +482,22 @@ Once the item is created, a new item object is constructed and returned via a de
 
 ---
 
-
 ### lia.item.deleteByID
-
-
 **Description:**
 
 Deletes an item from the system (database and memory) by its numeric ID.
+
 **Parameters:**
 
 * id (number) – The numeric item ID to delete.
 
-**Returns:**
-
-* None
-
 **Realm:**
 
 * Server
+
+**Returns:**
+
+* None
 
 **Example Usage:**
 
@@ -539,25 +508,23 @@ Deletes an item from the system (database and memory) by its numeric ID.
 
 ---
 
-
 ### lia.item.loadItemByID
-
-
 **Description:**
 
 Loads items from the database by a given ID or set of IDs, creating the corresponding
 item instances in memory. This is commonly used during inventory or character loading.
+
 **Parameters:**
 
 * itemIndex (number or table) – Either a single numeric item ID or a table of numeric item IDs.
 
-**Returns:**
-
-* None (asynchronous query).
-
 **Realm:**
 
 * Server
+
+**Returns:**
+
+* None (asynchronous query).
 
 **Example Usage:**
 
@@ -570,14 +537,12 @@ item instances in memory. This is commonly used during inventory or character lo
 
 ---
 
-
 ### lia.item.spawn
-
-
 **Description:**
 
 Creates a new item instance (not in an inventory) and spawns a corresponding
 entity in the world at the specified position/angles.
+
 **Parameters:**
 
 * uniqueID (string) – The unique ID of the item definition.
@@ -590,13 +555,13 @@ entity in the world at the specified position/angles.
 
 * data (table) – Additional data to set on the item.
 
-**Returns:**
-
-* A deferred object if callback is not given, otherwise none.
-
 **Realm:**
 
 * Server
+
+**Returns:**
+
+* A deferred object if callback is not given, otherwise none.
 
 **Example Usage:**
 
@@ -609,14 +574,12 @@ entity in the world at the specified position/angles.
 
 ---
 
-
 ### lia.item.restoreInv
-
-
 **Description:**
 
 Restores an existing inventory by loading it through lia.inventory.loadByID,
 then sets its width/height data, optionally providing a callback once loaded.
+
 **Parameters:**
 
 * invID (number) – The inventory ID to restore.
@@ -627,13 +590,13 @@ then sets its width/height data, optionally providing a callback once loaded.
 
 * callback (function) – Optional function to call once the inventory is restored.
 
-**Returns:**
-
-* None (asynchronous call).
-
 **Realm:**
 
 * Server
+
+**Returns:**
+
+* None (asynchronous call).
 
 **Example Usage:**
 
@@ -643,3 +606,4 @@ then sets its width/height data, optionally providing a callback once loaded.
         print("Restored inventory with ID 101.")
     end)
 ```
+
