@@ -241,7 +241,7 @@ else
         local command = lia.command.list[cmdKey]
         if not command then return end
         local firstKey = istable(fields) and next(fields)
-        if not fields or isstring(fields) or (firstKey and isnumber(firstKey)) then
+        if not fields or isstring(fields) or firstKey and isnumber(firstKey) then
             local args = fields
             if isstring(args) then args = lia.command.extractArgs(args) end
             local parsed, valid = lia.command.parseSyntaxFields(command.syntax)
@@ -258,6 +258,7 @@ else
                 end
             end
         end
+
         local numFields = table.Count(fields)
         local frameW, frameH = 600, 200 + numFields * 75
         local frame = vgui.Create("DFrame")

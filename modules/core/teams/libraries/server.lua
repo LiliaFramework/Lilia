@@ -176,7 +176,7 @@ end
 function MODULE:ClassOnLoadout(client)
     local character = client:getChar()
     local class = lia.class.list[character:getClass()]
-    if not class or class.None then return end
+    if not class then return end
     applyAttributes(client, class)
     if class.model then client:SetModel(class.model) end
 end
