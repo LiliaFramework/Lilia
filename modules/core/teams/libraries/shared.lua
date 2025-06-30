@@ -23,10 +23,7 @@ function MODULE:GetDefaultCharName(client, faction, data)
     end
     baseName = baseName or client:SteamName()
 
-    local prefix = info and (isfunction(info.prefix) and info.prefix(client) or info.prefix) or ""
-    local nameWithPrefix = prefix ~= "" and string.Trim(prefix .. " " .. baseName) or baseName
-
-    return nameWithPrefix, false
+    return baseName, false
 end
 
 function MODULE:GetDefaultCharDesc(client, faction)

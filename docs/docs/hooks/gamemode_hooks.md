@@ -6979,6 +6979,7 @@ end)
 **Description:**
 
 Retrieves a default name for a character during creation. Return `(defaultName, overrideBool)`.
+If the character's faction defines a prefix it will automatically be prepended to the name.
 
 **Parameters:**
 
