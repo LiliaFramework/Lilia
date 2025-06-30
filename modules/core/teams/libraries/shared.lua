@@ -9,14 +9,12 @@ end
 function MODULE:GetDefaultCharName(client, faction, data)
     local info = lia.faction.indices[faction]
 
-    -- Allow factions to provide a completely custom name template.
     local nameFunc = info and (info.NameTemplate or info.nameTemplate)
     if isfunction(nameFunc) then
         local name, override = nameFunc(info, client)
         if name then return name, override ~= false end
     end
 
-    -- Base name comes from the provided data or the faction hook.
     local baseName = data and data.name or nil
     if info and info.GetDefaultName then
         baseName = info:GetDefaultName(client) or baseName

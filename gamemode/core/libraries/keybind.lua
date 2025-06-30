@@ -360,7 +360,6 @@ lia.keybind.add(KEY_NONE, "Open Classes Menu", function()
             lbl:SetTextColor(color_white)
             lbl:SetWrap(true)
             lbl:Dock(TOP)
-            -- Increase bottom margin for extra spacing
             lbl:DockMargin(10, 10, 10, 10)
         end
 
