@@ -99,7 +99,6 @@ This page provides an extensive overview of the core modules and libraries inclu
 ### Interaction Menu
 - Quick-access radial menu for common actions
 - Give money or change voice type directly from the menu
-- Remote screenshot tool helps gather evidence
 - Recognize characters from whisper/talk/yell range
 - Extensible via `AddAction` and `AddInteraction`
 - Dynamically builds options based on player context
@@ -112,6 +111,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Permission management integrated with CAMI
 - Searchable history of all player tickets and warns
 - Camera spectate and teleport commands for staff
+- Sitroom management commands let staff teleport players to holding areas
 
 ### Performance
 - Libraries focused on optimizing heavy operations
@@ -127,7 +127,6 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Item filters can be saved as reusable presets
 - Option to disable potentially dangerous console commands
 - Monitors unusual damage events and logs suspicious behaviour
-- Captures screenshot evidence when cheats are detected
 
 ### Admin Stick
 - Staff-only SWEP for quick moderation actions
@@ -162,6 +161,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 - ESP tools and spawn menu restrictions configurable
 - Supports privilege inheritance and group hierarchies
 - Simple API to register new permissions from plugins
+- Vehicle blacklist privileges restrict certain car spawns
 
 ### Logging
 - Log server events with category filtering
@@ -261,12 +261,14 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Provides predefined palettes for common UI elements
 
 - Convert hex codes to color tables
+
 ### Commands Library
 - Register chat commands with syntax parsing
 - Built-in access checks and argument extraction
 - Hook support for custom command types
 - Command descriptions support multiple languages
 - Provides suggestions and detailed error messages
+- Unified `execAdminCommand` helper simplifies running kick/ban commands
 
 ### Config Library
 - Register server configs with categories and callbacks
@@ -335,6 +337,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Drag-and-drop system for moving and splitting stacks
 
 - Containers can hold other containers if allowed
+
 ### Item Library
 - Framework for defining items with metadata and hooks
 - Supports consumables, weapons and clothing types
@@ -343,6 +346,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Items can override rendering and interaction behaviour
 
 - Items may expose custom networked fields
+
 ### Keybind Library
 - Add custom client keybinds and save them per player
 - Rebind keys through a menu interface
@@ -410,6 +414,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Commands to set starting wages
 - Supports bonuses based on rank or faction
 - Logging tracks salary payouts for auditing
+
 ### Time Library
 - Scheduler helpers and shared timers
 - Real time to game time conversions
