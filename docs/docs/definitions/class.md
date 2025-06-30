@@ -100,6 +100,7 @@ CLASS.uniqueID = "engineer"
 ---
 
 
+
 #### `index`
 
 **Type:**
@@ -355,7 +356,7 @@ conjunction with `runSpeedMultiplier`.
 ```lua
 -- explicit speed value
 CLASS.runSpeed = 250
-
+OR
 -- 25% faster than the base run speed
 CLASS.runSpeed = 1.25
 CLASS.runSpeedMultiplier = true

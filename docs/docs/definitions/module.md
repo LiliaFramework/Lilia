@@ -202,7 +202,10 @@ Steam Workshop add-on IDs required by this module.
 **Example Usage:**
 
 ```lua
-MODULE.WorkshopContent = { "2959728255" }
+MODULE.WorkshopContent = {
+    "2959728255", -- shared assets
+    "1234567890"  -- map data
+}
 ```
 
 ---
@@ -221,7 +224,8 @@ Files or folders that this module requires to run.
 
 ```lua
 MODULE.Dependencies = {
-    { File = "logs.lua", Realm = "server" }
+    { File = "logs.lua", Realm = "server" },
+    { Folder = "libs", Realm = "shared" },
 }
 ```
 
@@ -242,7 +246,13 @@ Controls whether the module loads. Can be a static boolean or a function returni
 **Example Usage:**
 
 ```lua
+-- Enabled by default
 MODULE.enabled = true
+
+-- Or evaluate a configuration value
+MODULE.enabled = function()
+    return lia.config.get("EnableMyModule", true)
+end
 ```
 
 ---
@@ -340,3 +350,4 @@ print(MODULE.uniqueID)
 ```
 
 ---
+
