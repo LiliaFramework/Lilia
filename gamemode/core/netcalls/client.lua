@@ -173,8 +173,11 @@ net.Receive("liaItemDelete", function()
     hook.Run("ItemDeleted", instance)
 end)
 
-netstream.Hook("charSet", function(key, value, id)
-    id = id or LocalPlayer():getChar() and LocalPlayer():getChar().id
+net.Receive("charSet", function()
+    local key = net.ReadString()
+    local value = net.ReadType()
+    local id = net.ReadType()
+    id = id or (LocalPlayer():getChar() and LocalPlayer():getChar().id)
     local character = lia.char.loaded[id]
     if character then
         local oldValue = character.vars[key]
@@ -183,8 +186,11 @@ netstream.Hook("charSet", function(key, value, id)
     end
 end)
 
-netstream.Hook("charVar", function(key, value, id)
-    id = id or LocalPlayer():getChar() and LocalPlayer():getChar().id
+net.Receive("charVar", function()
+    local key = net.ReadString()
+    local value = net.ReadType()
+    local id = net.ReadType()
+    id = id or (LocalPlayer():getChar() and LocalPlayer():getChar().id)
     local character = lia.char.loaded[id]
     if character then
         local oldVar = character:getVar()[key]
@@ -193,7 +199,10 @@ netstream.Hook("charVar", function(key, value, id)
     end
 end)
 
-netstream.Hook("charData", function(id, key, value)
+net.Receive("charData", function()
+    local id = net.ReadUInt(32)
+    local key = net.ReadString()
+    local value = net.ReadType()
     local character = lia.char.loaded[id]
     if character then
         character.vars.data = character.vars.data or {}
@@ -239,9 +248,14 @@ netstream.Hook("liaData", function(key, value)
     lia.localData[key] = value
 end)
 
-netstream.Hook("attrib", function(id, key, value)
+net.Receive("attrib", function()
+    local id = net.ReadUInt(32)
+    local key = net.ReadString()
+    local value = net.ReadType()
     local character = lia.char.loaded[id]
-    if character then character:getAttribs()[key] = value end
+    if character then
+        character:getAttribs()[key] = value
+    end
 end)
 
 netstream.Hook("nVar", function(index, key, value)
@@ -564,8 +578,17 @@ net.Receive("liaCmdArgPrompt", function()
     lia.command.openArgumentPrompt(cmd, fields, prefix)
 end)
 
-netstream.Hook("charInfo", function(data, id, client) lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client) end)
-netstream.Hook("charKick", function(id, isCurrentChar) hook.Run("KickedFromChar", id, isCurrentChar) end)
+net.Receive("charInfo", function()
+    local data = net.ReadTable()
+    local id = net.ReadUInt(32)
+    local client = net.BytesLeft() > 0 and net.ReadEntity() or nil
+    lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client)
+end)
+net.Receive("charKick", function()
+    local id = net.ReadUInt(32)
+    local isCurrentChar = net.ReadBool()
+    hook.Run("KickedFromChar", id, isCurrentChar)
+end)
 net.Receive("prePlayerLoadedChar", function()
     local charID = net.ReadUInt(32)
     local currentID = net.ReadType()

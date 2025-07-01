@@ -235,7 +235,11 @@ if SERVER then
         local maxLevel = hook.Run("GetAttributeMax", client, key) or math.huge
         attrib[key] = math.min(currentLevel + value, maxLevel)
         if IsValid(client) then
-            netstream.Start(client, "attrib", self:getID(), key, attrib[key])
+            net.Start("attrib")
+            net.WriteUInt(self:getID(), 32)
+            net.WriteString(key)
+            net.WriteType(attrib[key])
+            net.Send(client)
             hook.Run("OnCharAttribUpdated", client, self, key, attrib[key])
         end
     end
@@ -247,7 +251,11 @@ if SERVER then
             local attrib = self:getAttribs()
             attrib[key] = value
             if IsValid(client) then
-                netstream.Start(client, "attrib", self:getID(), key, attrib[key])
+                net.Start("attrib")
+                net.WriteUInt(self:getID(), 32)
+                net.WriteString(key)
+                net.WriteType(attrib[key])
+                net.Send(client)
                 hook.Run("OnCharAttribUpdated", client, self, key, attrib[key])
             end
         end
@@ -327,7 +335,10 @@ if SERVER then
                 if lia.char.vars[k] ~= nil and not lia.char.vars[k].noNetworking then data[k] = v end
             end
 
-            netstream.Start(self.player, "charInfo", data, self:getID())
+            net.Start("charInfo")
+            net.WriteTable(data)
+            net.WriteUInt(self:getID(), 32)
+            net.Send(self.player)
             for _, v in pairs(lia.char.vars) do
                 if isfunction(v.onSync) then v.onSync(self, self.player) end
             end
@@ -337,7 +348,11 @@ if SERVER then
                 if not v.noNetworking and not v.isLocal then data[k] = self.vars[k] end
             end
 
-            netstream.Start(receiver, "charInfo", data, self:getID(), self.player)
+            net.Start("charInfo")
+            net.WriteTable(data)
+            net.WriteUInt(self:getID(), 32)
+            net.WriteEntity(self.player)
+            net.Send(receiver)
             for _, v in pairs(lia.char.vars) do
                 if isfunction(v.onSync) then v.onSync(self, receiver) end
             end
@@ -380,7 +395,10 @@ if SERVER then
         local curChar, steamID = client:getChar(), client:SteamID64()
         local isCurChar = curChar and curChar:getID() == self:getID() or false
         if self.steamID == steamID then
-            netstream.Start(client, "charKick", id, isCurChar)
+            net.Start("charKick")
+            net.WriteUInt(self:getID(), 32)
+            net.WriteBool(isCurChar)
+            net.Send(client)
             if isCurChar then
                 client:setNetVar("char", nil)
                 client:Spawn()
