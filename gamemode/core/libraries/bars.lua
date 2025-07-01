@@ -1,6 +1,7 @@
 ﻿local surfaceSetDrawColor, surfaceDrawRect, surfaceDrawOutlinedRect = surface.SetDrawColor, surface.DrawRect, surface.DrawOutlinedRect
 lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
+lia.bar.values = lia.bar.values or {}
 lia.bar.list = {}
 local function findIndexByIdentifier(identifier)
     for idx, bar in ipairs(lia.bar.list) do
@@ -86,12 +87,23 @@ function lia.bar.drawAll()
     local update = FrameTime() * 0.6
     local now = CurTime()
     local always = lia.option.get("BarsAlwaysVisible")
+    local values = lia.bar.values
     for i, bar in ipairs(lia.bar.list) do
+        local id = bar.identifier or i
         local target = bar.getValue()
-        deltas[i] = deltas[i] or target
-        deltas[i] = math.Approach(deltas[i], target, update)
-        local value = deltas[i]
-        if value ~= target then bar.lifeTime = now + 5 end
+        local last = values[id]
+        values[id] = target
+
+        deltas[id] = deltas[id] or target
+        deltas[id] = math.Approach(deltas[id], target, update)
+        local value = deltas[id]
+
+        if last ~= nil and last ~= target then
+            bar.lifeTime = now + 5
+        elseif value ~= target then
+            bar.lifeTime = now + 5
+        end
+
         if always or bar.lifeTime >= now or bar.visible or hook.Run("ShouldBarDraw", bar) then
             lia.bar.drawBar(x, y, w, h, value, 1, bar.color)
             y = y + h + 2
