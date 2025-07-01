@@ -113,7 +113,9 @@ Quoted sections are treated as single arguments.
 
 Parses a command syntax string into an ordered list of field tables.
 
-Each field contains a name and a type derived from the syntax.
+Each field contains a name and a type derived from the syntax. If the word
+`optional` appears inside a field's brackets, that field is treated as
+optional when prompting for arguments.
 
 **Parameters:**
 
@@ -127,7 +129,8 @@ Each field contains a name and a type derived from the syntax.
 
 **Returns:**
 
-* table – List of fields in call order.
+* table – List of fields in call order. Each field table includes `name`,
+  `type`, and an `optional` boolean.
 
 
 * boolean – Whether the syntax strictly used the "[type Name]" format.
@@ -267,12 +270,10 @@ Garry's Mod net library. The server will then execute the command.
 **Description:**
 
 Opens a window asking the player to fill in arguments for the given command. If only
-
 the command name is supplied, all arguments defined in the command's syntax are
-
 requested. Passing existing arguments causes the prompt to request only the missing
-
-ones.
+ones. Fields containing the word `optional` may be left blank, while all other
+fields must be filled before the **Submit** button is enabled.
 
 **Parameters:**
 

@@ -124,7 +124,8 @@ function lia.command.parseSyntaxFields(syntax)
 
         fields[#fields + 1] = {
             name = name,
-            type = typ
+            type = typ,
+            optional = inner:lower():find("optional", 1, true) ~= nil
         }
     end
 
@@ -205,7 +206,9 @@ if SERVER then
                     for i, field in ipairs(fields) do
                         local arg = tokens[i]
                         if not arg or isPlaceholder(arg) then
-                            missing[field.name] = field.type
+                            if not field.optional then
+                                missing[field.name] = field.type
+                            end
                         else
                             prefix[#prefix + 1] = arg
                         end
@@ -253,7 +256,13 @@ else
                 if arg then
                     prefix[#prefix + 1] = arg
                 else
-                    fields[field.name] = field.type
+                    fields[field.name] = {type = field.type, optional = field.optional}
+                end
+            end
+        else
+            for k, v in pairs(fields) do
+                if not istable(v) then
+                    fields[k] = {type = v, optional = false}
                 end
             end
         end
@@ -276,7 +285,10 @@ else
         scroll:DockMargin(10, 40, 10, 10)
         surface.SetFont("liaSmallFont")
         local controls = {}
-        for name, fieldType in pairs(fields) do
+        local watchers = {}
+        for name, data in pairs(fields) do
+            local fieldType = data.type
+            local optional = data.optional
             local panel = vgui.Create("DPanel", scroll)
             panel:Dock(TOP)
             panel:DockMargin(0, 0, 0, 5)
@@ -322,7 +334,34 @@ else
                 ctrl:SetWide(ctrlW)
             end
 
-            controls[name] = ctrl
+            controls[name] = {ctrl = ctrl, type = fieldType, optional = optional}
+            watchers[#watchers + 1] = function()
+                if ctrl.OnValueChange then
+                    local old = ctrl.OnValueChange
+                    function ctrl:OnValueChange(...)
+                        if old then old(self, ...) end
+                        validate()
+                    end
+                elseif ctrl.OnTextChanged then
+                    local old = ctrl.OnTextChanged
+                    function ctrl:OnTextChanged(...)
+                        if old then old(self, ...) end
+                        validate()
+                    end
+                elseif ctrl.OnChange then
+                    local old = ctrl.OnChange
+                    function ctrl:OnChange(...)
+                        if old then old(self, ...) end
+                        validate()
+                    end
+                elseif ctrl.OnSelect then
+                    local old = ctrl.OnSelect
+                    function ctrl:OnSelect(...)
+                        if old then old(self, ...) end
+                        validate()
+                    end
+                end
+            end
         end
 
         local buttons = vgui.Create("DPanel", frame)
@@ -337,16 +376,49 @@ else
         submit:SetText(L("submit"))
         submit:SetFont("liaSmallFont")
         submit:SetIcon("icon16/tick.png")
+        submit:SetEnabled(false)
+        local function validate()
+            for key, data in pairs(controls) do
+                if not data.optional then
+                    local ctl = data.ctrl
+                    local ftype = data.type
+                    local filled = false
+                    if isfunction(ftype) or ftype == "player" then
+                        local txt, dat = ctl:GetSelected()
+                        filled = txt ~= nil and txt ~= ""
+                    elseif ftype == "text" or ftype == "number" then
+                        filled = ctl:GetValue() ~= nil and ctl:GetValue() ~= ""
+                    elseif ftype == "boolean" then
+                        filled = true
+                    end
+                    if not filled then
+                        submit:SetEnabled(false)
+                        return
+                    end
+                end
+            end
+            submit:SetEnabled(true)
+        end
+
+        for _, fn in ipairs(watchers) do
+            fn()
+        end
+
+        validate()
+
         submit.DoClick = function()
             local args = {}
-            for key, ft in pairs(fields) do
-                local ctl = controls[key]
-                if isfunction(ft) or ft == "player" then
+            for key, field in pairs(fields) do
+                local ctlData = controls[key]
+                local ctl = ctlData.ctrl
+                local ftype = field.type
+                if isfunction(ftype) or ftype == "player" then
                     local txt, data = ctl:GetSelected()
-                    args[#args + 1] = data or txt
-                elseif ft == "text" or ft == "number" then
-                    args[#args + 1] = ctl:GetValue()
-                elseif ft == "boolean" then
+                    if txt and txt ~= "" then args[#args + 1] = data or txt end
+                elseif ftype == "text" or ftype == "number" then
+                    local val = ctl:GetValue()
+                    if val ~= "" or not field.optional then args[#args + 1] = val end
+                elseif ftype == "boolean" then
                     args[#args + 1] = ctl:GetChecked() and "1" or "0"
                 end
             end
