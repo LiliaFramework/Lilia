@@ -57,6 +57,7 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 | `outfitCategory` | `string` | `""` | Slot or category for the outfit. |
 | `pacData` | `table` | `{}` | PAC3 customization information. |
 | `bodyGroups` | `table` | `nil` | Bodygroup values applied when equipped. |
+| `hooks` | `table` | `{}` | Table of hook callbacks. |
 | `postHooks` | `table` | `{}` | Table of post-hook callbacks. |
 | `price` | `number` | `0` | Item cost for trading or selling. |
 | `quantity` | `number` | `1` | Current amount in the item stack. |
@@ -453,8 +454,13 @@ Base item this item derives from.
 **Example Usage:**
 
 ```lua
-ITEM.base = "weapon"
+ITEM.base = "base_weapons"
 ```
+
+When loading items from a folder such as `items/weapons/`, the framework
+automatically sets `ITEM.base` to match that folder (e.g. `base_weapons`).
+Ideally you should organize item files under directories named after the base
+they inherit from so this assignment happens automatically.
 
 ---
 
@@ -715,7 +721,6 @@ ITEM.pacData = {
 	},
 }
 ```
-
 
 #### `bodyGroups`
 
@@ -1047,6 +1052,24 @@ Table of interaction functions.
 ITEM.functions = {}
 
 ```
+#### `hooks`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Callbacks triggered on specific item events. Use `ITEM:hook("event", func)` to attach them.
+
+**Example Usage:**
+
+```lua
+ITEM:hook("drop", function(itm)
+    print(itm.name .. " was dropped")
+end)
+```
+
 
 ---
 
@@ -1063,9 +1086,21 @@ Table of post-hook callbacks.
 **Example Usage:**
 
 ```lua
+-- Defined in base_weapons
+function ITEM.postHooks:drop(result)
+    local ply = self.player
+    if ply:HasWeapon(self.class) then
+        ply:StripWeapon(self.class)
+    end
+end
+```
 
-ITEM.postHooks = {}
+Additional post hooks can be registered dynamically using `ITEM:postHook`:
 
+```lua
+ITEM:postHook("drop", function(itm, res)
+    print("Post drop result: " .. tostring(res))
+end)
 ```
 
 ---
