@@ -23,7 +23,32 @@ permissions:
   statuses: write
 
 jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: lilia
+      - uses: leafo/gh-actions-lua@v8.0.0
+        with:
+          luaVersion: 5.2
+      - uses: leafo/gh-actions-luarocks@v4.0.0
+      - run: |
+          luarocks install luafilesystem
+          luarocks install argparse
+      - uses: actions/checkout@v3
+        with:
+          repository: LiliaFramework/GluaCheck
+          path: luacheck
+      - run: |
+          cd luacheck
+          luarocks make
+      - run: |
+          cd lilia
+          luacheck . --no-global --no-max-line-length --no-self --no-max-code-line-length --no-max-string-line-length --no-max-comment-line-length --no-max-cyclomatic-complexity
+
   compute-version:
+    needs: linter
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.calc_version.outputs.version }}
@@ -54,30 +79,6 @@ jobs:
           VERSION="$MAJOR.$MINOR.$PATCH_PADDED"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "valid_count=$VALID_COUNT" >> "$GITHUB_OUTPUT"
-
-  linter:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          path: lilia
-      - uses: leafo/gh-actions-lua@v8.0.0
-        with:
-          luaVersion: 5.2
-      - uses: leafo/gh-actions-luarocks@v4.0.0
-      - run: |
-          luarocks install luafilesystem
-          luarocks install argparse
-      - uses: actions/checkout@v3
-        with:
-          repository: LiliaFramework/GluaCheck
-          path: luacheck
-      - run: |
-          cd luacheck
-          luarocks make
-      - run: |
-          cd lilia
-          luacheck . --no-global --no-max-line-length --no-self --no-max-code-line-length --no-max-string-line-length --no-max-comment-line-length --no-max-cyclomatic-complexity
 
   release:
     needs:
