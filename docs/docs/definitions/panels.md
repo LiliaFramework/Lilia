@@ -54,6 +54,12 @@ Panels provide the building blocks for Lilia's user interface. Most derive from 
 | `VendorItem` | `DPanel` | Single item entry in the vendor menu. |
 | `VendorEditor` | `DFrame` | Admin window for configuring vendors. |
 | `VendorFactionEditor` | `DFrame` | Editor for vendor faction and class access. |
+| `liaHugeButton` | `DButton` | Large button with prominent styling. |
+| `liaBigButton` | `DButton` | Button using a big font size. |
+| `liaMediumButton` | `DButton` | Standard medium button. |
+| `liaSmallButton` | `DButton` | Compact button for tight layouts. |
+| `liaMiniButton` | `DButton` | Very small button variant. |
+| `liaNoBGButton` | `DButton` | Text-only button with no background. |
 
 ---
 
@@ -167,7 +173,6 @@ Small label for quick notifications. It draws a blurred backdrop and fades away 
 
 Expanded version of `liaNotice` supporting more text and optional buttons. Often used for yes/no prompts.
 
----
 
 ### `liaChatBox`
 
@@ -237,7 +242,13 @@ Custom scrollbar paired with `liaHorizontalScroll`. It moves the canvas horizont
 
 **Description:**
 
-Drop-down menu that appears when interacting with items in the world. Lets players pick up, examine or drop the item.
+Panel shown when you interact with an item entity. Displays item info and action buttons.
+```lua
+-- called from GM:ItemShowEntityMenu
+if IsValid(liaItemMenuInstance) then liaItemMenuInstance:Remove() end
+liaItemMenuInstance = vgui.Create("liaItemMenu")
+liaItemMenuInstance:SetEntity(entity)
+```
 
 ---
 
@@ -538,3 +549,80 @@ Administrative window for editing a vendor's inventory and settings, including i
 **Description:**
 
 Secondary editor for selecting which factions and player classes can trade with the vendor.
+---
+
+### `liaHugeButton`
+
+**Base Panel:**
+
+`DButton`
+
+**Description:**
+
+Large button styled with `liaHugeFont` and an underline effect on hover.
+
+```lua
+local btn = vgui.Create("liaHugeButton")
+btn:SetText("Play")
+btn:SetSelected(true) -- keep underline visible
+```
+
+---
+
+### `liaBigButton`
+
+**Base Panel:**
+
+`DButton`
+
+**Description:**
+
+Big-font button with the same underline hover animation.
+
+---
+
+### `liaMediumButton`
+
+**Base Panel:**
+
+`DButton`
+
+**Description:**
+
+Medium-size button using `liaMediumFont`.
+
+---
+
+### `liaSmallButton`
+
+**Base Panel:**
+
+`DButton`
+
+**Description:**
+
+Small button sized for compact layouts.
+
+---
+
+### `liaMiniButton`
+
+**Base Panel:**
+
+`DButton`
+
+**Description:**
+
+Tiny button using `liaMiniFont` for dense interfaces.
+
+---
+
+### `liaNoBGButton`
+
+**Base Panel:**
+
+`DButton`
+
+**Description:**
+
+Text-only button that still shows the underline animation.
