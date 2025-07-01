@@ -44,6 +44,7 @@ Each faction in the game is defined by a set of fields on the global `FACTION` t
 | `bodyGroups` | `table` | `{}` | Bodygroup name→index mapping applied on spawn. |
 | `NPCRelations` | `table` | `{}` | NPC class→disposition mapping on spawn/creation. |
 | `RecognizesGlobally` | `boolean` | `false` | Global player recognition. |
+| `isGloballyRecognized` | `boolean` | `false` | Everyone automatically recognizes this faction.
 | `ScoreboardHidden` | `boolean` | `false` | Hide members from the scoreboard. |
 
 ---
@@ -531,6 +532,22 @@ If `true`, members recognize all players globally, regardless of faction.
 ```lua
 FACTION.RecognizesGlobally = false
 ```
+#### `isGloballyRecognized`
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+If set to `true`, all players will automatically recognize members of this faction.
+
+**Example Usage:**
+
+```lua
+FACTION.isGloballyRecognized = true
+```
+
 
 ---
 
