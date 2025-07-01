@@ -30,7 +30,7 @@
         target:setLiliaData("warns", warns)
         target:notifyLocalized("playerWarned", warning.admin, reason)
         client:notifyLocalized("warningIssued", target:Nick())
-        lia.log.add(client, "warningIssued", target, reason)
+        hook.Run("WarningIssued", client, target, reason, #warns)
     end
 })
 

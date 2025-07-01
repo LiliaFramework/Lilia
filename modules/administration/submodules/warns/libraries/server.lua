@@ -31,5 +31,5 @@
     targetClient:setLiliaData("warns", warns)
     targetClient:notifyLocalized("warningRemovedNotify", client:Nick())
     client:notifyLocalized("warningRemoved", warnIndex, targetClient:Nick())
-    lia.log.add(client, "warningRemoved", targetClient, warning)
+    hook.Run("WarningRemoved", client, targetClient, warning, warnIndex)
 end)
