@@ -1,36 +1,27 @@
-function MODULE:CalcStaminaChange(client)
-    local character = client:getChar()
-    if not character or client:isNoClipping() then return 0 end
-
-    local walkSpeed = lia.config.get("WalkSpeed", client:GetWalkSpeed())
-    local maxAttributes = lia.config.get("MaxAttributePoints", 100)
+﻿function MODULE:CalcStaminaChange(client)
+    local char = client:getChar()
+    if not char or client:isNoClipping() then return 0 end
+    local walk = client:GetWalkSpeed()
     local offset
-
-    if client:KeyDown(IN_SPEED) and client:GetVelocity():LengthSqr() >= walkSpeed * walkSpeed then
-        offset = -lia.config.get("StaminaDrain", 1) + math.min(character:getAttrib("endurance", 0), maxAttributes) / 100
+    if not client:getNetVar("brth", false) and client:KeyDown(IN_SPEED) and client:GetVelocity():LengthSqr() >= walk * walk and client:OnGround() then
+        local runCost = -4
+        offset = hook.Run("AdjustStaminaOffsetRunning", client, runCost) or runCost
     else
-        offset = client:Crouching() and lia.config.get("StaminaCrouchRegeneration", 2) or lia.config.get("StaminaRegeneration", 1.75)
+        local regen = 2
+        offset = hook.Run("AdjustStaminaRegeneration", client, regen) or regen
     end
 
     offset = hook.Run("AdjustStaminaOffset", client, offset) or offset
-
-    if CLIENT then
-        return offset
-    end
-
-    local max = character:getMaxStamina()
-    local current = client:getLocalVar("stamina", 0)
-    local value = math.Clamp(current + offset, 0, max)
-
-    if current ~= value then
-        client:setLocalVar("stamina", value)
-
-        if value == 0 and not client:getNetVar("brth", false) then
+    if CLIENT then return offset end
+    local max = char:getMaxStamina()
+    local cur = client:getLocalVar("stamina", 0)
+    local new = math.Clamp(cur + offset, 0, max)
+    if cur ~= new then
+        client:setLocalVar("stamina", new)
+        if new == 0 and not client:getNetVar("brth", false) then
             client:setNetVar("brth", true)
-            character:updateAttrib("endurance", 0.1)
-            character:updateAttrib("stamina", 0.01)
             hook.Run("PlayerStaminaLost", client)
-        elseif value >= max * 0.5 and client:getNetVar("brth", false) then
+        elseif new >= max * 0.5 and client:getNetVar("brth", false) then
             client:setNetVar("brth", nil)
             hook.Run("PlayerStaminaGained", client)
         end
@@ -41,6 +32,8 @@ function MODULE:SetupMove(client, cMoveData)
     if not lia.config.get("StaminaSlowdown", true) then return end
     if client:getNetVar("brth", false) then
         cMoveData:SetMaxClientSpeed(client:GetWalkSpeed())
+    elseif client:WaterLevel() > 1 then
+        cMoveData:SetMaxClientSpeed(client:GetRunSpeed() * 0.775)
     end
 end
 
