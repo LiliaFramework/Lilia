@@ -68,7 +68,7 @@ function PANEL:Clear()
 end
 
 vgui.Register("liaHorizontalScroll", PANEL, "DPanel")
-local PANEL = {}
+PANEL = {}
 function PANEL:Init()
     self.btnLeft = self.btnUp
     self.btnRight = self.btnDown

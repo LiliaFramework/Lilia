@@ -120,7 +120,7 @@ function PANEL:Paint(w, h)
 end
 
 vgui.Register("liaAttribBar", PANEL, "DPanel")
-local PANEL = {}
+PANEL = {}
 function PANEL:Init()
     self.title = self:addLabel(L("attributes"))
     self.title:SetTextColor(color_white)
@@ -177,7 +177,7 @@ function PANEL:onPointChange(k, d)
 end
 
 vgui.Register("liaCharacterAttribs", PANEL, "liaCharacterCreateStep")
-local PANEL = {}
+PANEL = {}
 function PANEL:Init()
     self:Dock(TOP)
     self:DockMargin(0, 0, 0, 4)

@@ -24,7 +24,7 @@ function PANEL:Paint(w, h)
 end
 
 vgui.Register("liaNotice", PANEL, "DLabel")
-local PANEL = {}
+PANEL = {}
 function PANEL:Init()
     self.padding = 80
     self:SetSize(400, 60)
