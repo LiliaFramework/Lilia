@@ -566,6 +566,27 @@ end)
 
 netstream.Hook("charInfo", function(data, id, client) lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client) end)
 netstream.Hook("charKick", function(id, isCurrentChar) hook.Run("KickedFromChar", id, isCurrentChar) end)
+net.Receive("prePlayerLoadedChar", function()
+    local charID = net.ReadUInt(32)
+    local currentID = net.ReadType()
+    local char = lia.char.loaded[charID]
+    local current = currentID and lia.char.loaded[currentID] or nil
+    hook.Run("PrePlayerLoadedChar", LocalPlayer(), char, current)
+end)
+net.Receive("playerLoadedChar", function()
+    local charID = net.ReadUInt(32)
+    local currentID = net.ReadType()
+    local char = lia.char.loaded[charID]
+    local current = currentID and lia.char.loaded[currentID] or nil
+    hook.Run("PlayerLoadedChar", LocalPlayer(), char, current)
+end)
+net.Receive("postPlayerLoadedChar", function()
+    local charID = net.ReadUInt(32)
+    local currentID = net.ReadType()
+    local char = lia.char.loaded[charID]
+    local current = currentID and lia.char.loaded[currentID] or nil
+    hook.Run("PostPlayerLoadedChar", LocalPlayer(), char, current)
+end)
 netstream.Hook("gVar", function(key, value)
     local oldValue = lia.net.globals[key]
     lia.net.globals[key] = value

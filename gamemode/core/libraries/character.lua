@@ -480,6 +480,30 @@ if SERVER then
                     end
                 end
 
+                if not lia.faction.teams[data.faction] then
+                    local defaultFaction
+                    for _, fac in pairs(lia.faction.teams) do
+                        if fac.isDefault then
+                            defaultFaction = fac
+                            break
+                        end
+                    end
+
+                    if not defaultFaction then
+                        for _, fac in pairs(lia.faction.teams) do
+                            defaultFaction = fac
+                            break
+                        end
+                    end
+
+                    if defaultFaction then
+                        data.faction = defaultFaction.uniqueID
+                        lia.db.updateTable({
+                            _faction = defaultFaction.uniqueID
+                        }, nil, "characters", "_id = " .. id)
+                    end
+                end
+
                 characters[#characters + 1] = id
                 local character = lia.char.new(data, id, client)
                 hook.Run("CharRestored", character)

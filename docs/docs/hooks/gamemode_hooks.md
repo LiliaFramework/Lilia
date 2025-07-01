@@ -1475,7 +1475,7 @@ Runs when a player spawns and equips items. Allows modification of the default l
 
 **Realm:**
 
-* Server
+* Shared
 
 
 **Returns:**
@@ -9610,6 +9610,7 @@ end)
 **Description:**
 
 Runs after a character has been loaded and set up for a player.
+This hook also runs client-side when the server loads the character.
 
 **Parameters:**
 
@@ -9624,7 +9625,7 @@ Runs after a character has been loaded and set up for a player.
 
 **Realm:**
 
-* Server
+* Shared
 
 
 **Returns:**
@@ -9648,6 +9649,7 @@ end)
 **Description:**
 
 Fired right before a player switches to a new character.
+This hook also runs client-side when the server loads the character.
 
 **Parameters:**
 
@@ -9662,7 +9664,7 @@ Fired right before a player switches to a new character.
 
 **Realm:**
 
-* Server
+* Shared
 
 
 **Returns:**
@@ -9686,6 +9688,7 @@ end)
 **Description:**
 
 Called after PlayerLoadedChar to allow post-load operations.
+This hook also runs client-side when the server loads the character.
 
 **Parameters:**
 
@@ -9700,7 +9703,7 @@ Called after PlayerLoadedChar to allow post-load operations.
 
 **Realm:**
 
-* Server
+* Shared
 
 
 **Returns:**
