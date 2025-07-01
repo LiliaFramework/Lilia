@@ -174,7 +174,11 @@ function MODULE:ShowTeam(client)
         if entity:checkDoorAccess(client, DOOR_TENANT) then
             local door = entity
             if IsValid(door.liaParent) then door = door.liaParent end
-            netstream.Start(client, "doorMenu", door, door.liaAccess, entity)
+            net.Start("doorMenu")
+            net.WriteEntity(door)
+            net.WriteTable(door.liaAccess)
+            net.WriteEntity(entity)
+            net.Send(client)
         elseif not IsValid(entity:GetDTEntity(0)) then
             lia.command.run(client, "doorbuy")
         else

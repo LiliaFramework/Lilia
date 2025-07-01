@@ -1,12 +1,22 @@
-﻿netstream.Hook("doorMenu", function(entity, access, door2)
-    if IsValid(lia.gui.door) then return lia.gui.door:Remove() end
-    if IsValid(entity) then
-        lia.gui.door = vgui.Create("liaDoorMenu")
-        lia.gui.door:setDoor(entity, access, door2)
+net.Receive("doorMenu", function()
+    if net.BytesLeft() > 0 then
+        local entity = net.ReadEntity()
+        local access = net.ReadTable()
+        local door2 = net.ReadEntity()
+        if IsValid(lia.gui.door) then return lia.gui.door:Remove() end
+        if IsValid(entity) then
+            lia.gui.door = vgui.Create("liaDoorMenu")
+            lia.gui.door:setDoor(entity, access, door2)
+        end
+    elseif IsValid(lia.gui.door) then
+        lia.gui.door:Remove()
     end
 end)
 
-netstream.Hook("doorPerm", function(door, client, access)
+net.Receive("doorPerm", function()
+    local door = net.ReadEntity()
+    local client = net.ReadEntity()
+    local access = net.ReadUInt(2)
     local panel = door.liaPanel
     if IsValid(panel) and IsValid(client) then
         panel.access[client] = access

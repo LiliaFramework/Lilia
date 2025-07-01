@@ -15,9 +15,16 @@ function PANEL:Init()
         local ply = line.player
         local accessData = self.accessData
         local door = self.door
-        menu:AddOption(L("tenant"), function() if accessData[ply] ~= DOOR_TENANT then netstream.Start("doorPerm", door, ply, DOOR_TENANT) end end):SetImage("icon16/user_add.png")
-        menu:AddOption(L("guest"), function() if accessData[ply] ~= DOOR_GUEST then netstream.Start("doorPerm", door, ply, DOOR_GUEST) end end):SetImage("icon16/user_green.png")
-        menu:AddOption(L("none"), function() if accessData[ply] ~= DOOR_NONE then netstream.Start("doorPerm", door, ply, DOOR_NONE) end end):SetImage("icon16/user_red.png")
+        local function sendPerm(level)
+            net.Start("doorPerm")
+            net.WriteEntity(door)
+            net.WriteEntity(ply)
+            net.WriteUInt(level, 2)
+            net.SendToServer()
+        end
+        menu:AddOption(L("tenant"), function() if accessData[ply] ~= DOOR_TENANT then sendPerm(DOOR_TENANT) end end):SetImage("icon16/user_add.png")
+        menu:AddOption(L("guest"), function() if accessData[ply] ~= DOOR_GUEST then sendPerm(DOOR_GUEST) end end):SetImage("icon16/user_green.png")
+        menu:AddOption(L("none"), function() if accessData[ply] ~= DOOR_NONE then sendPerm(DOOR_NONE) end end):SetImage("icon16/user_red.png")
         menu:Open()
     end
 end
