@@ -229,9 +229,9 @@ function PANEL:addPlayer(ply, parent)
     slot.model:SetModel(ply:GetModel(), ply:GetSkin())
     slot.model:SetCamPos(Vector(0, 0, 55))
     slot.model:SetLookAt(Vector(0, 0, 0))
-    slot.model.LayoutEntity = function(self, ent)
+    slot.model.LayoutEntity = function(_, ent)
         ent:SetAngles(Angle(0, 0, 0))
-        self:RunAnimation()
+        slot.model:RunAnimation()
     end
 
     for i = 0, ply:GetNumBodyGroups() - 1 do

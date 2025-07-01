@@ -454,11 +454,11 @@ lia.command.add("dooraddfaction", {
                 local json = util.TableToJSON(facs)
                 door:setNetVar("factions", json)
                 MODULE:callOnDoorChildren(door, function()
-                    local facs = door:getNetVar("factions", "[]")
-                    facs = util.JSONToTable(facs)
-                    facs[faction.index] = true
-                    local json = util.TableToJSON(facs)
-                    door:setNetVar("factions", json)
+                    local childFacs = door:getNetVar("factions", "[]")
+                    childFacs = util.JSONToTable(childFacs)
+                    childFacs[faction.index] = true
+                    local childJson = util.TableToJSON(childFacs)
+                    door:setNetVar("factions", childJson)
                 end)
 
                 lia.log.add(client, "doorSetFaction", door, faction.name)
@@ -504,11 +504,11 @@ lia.command.add("doorremovefaction", {
                 local json = util.TableToJSON(facs)
                 door:setNetVar("factions", json)
                 MODULE:callOnDoorChildren(door, function()
-                    local facs = door:getNetVar("factions", "[]")
-                    facs = util.JSONToTable(facs)
-                    facs[faction.index] = nil
-                    local json = util.TableToJSON(facs)
-                    door:setNetVar("factions", json)
+                    local childFacs = door:getNetVar("factions", "[]")
+                    childFacs = util.JSONToTable(childFacs)
+                    childFacs[faction.index] = nil
+                    local childJson = util.TableToJSON(childFacs)
+                    door:setNetVar("factions", childJson)
                 end)
 
                 lia.log.add(client, "doorRemoveFaction", door, faction.name)
