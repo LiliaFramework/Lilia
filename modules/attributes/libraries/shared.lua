@@ -1,6 +1,6 @@
 function MODULE:CalcStaminaChange(client)
     local character = client:getChar()
-    if not character or client:isNoClipping() then return 0 end
+    if not character or client:isNoClipping() then return 1 end
 
     local walkSpeed = lia.config.get("WalkSpeed", client:GetWalkSpeed())
     local maxAttributes = lia.config.get("MaxAttributePoints", 100)
