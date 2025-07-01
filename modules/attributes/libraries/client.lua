@@ -1,4 +1,4 @@
-﻿local predictedStamina = 100
+local predictedStamina = 100
 local stmBlurAmount = 0
 local stmBlurAlpha = 0
 function MODULE:ConfigureCharacterCreationSteps(panel)
@@ -27,6 +27,13 @@ function MODULE:Think()
     local offset = self:CalcStaminaChange(client)
     offset = math.Remap(FrameTime(), 0, 0.25, 0, offset)
     if offset ~= 0 then predictedStamina = math.Clamp(predictedStamina + offset, 0, maxStamina) end
+end
+
+function MODULE:OnLocalVarSet(key, var)
+    if key ~= "stamina" then return end
+    if math.abs(predictedStamina - var) > 5 then
+        predictedStamina = var
+    end
 end
 
 function MODULE:HUDPaintBackground()

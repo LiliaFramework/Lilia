@@ -1,6 +1,7 @@
-﻿function MODULE:PostPlayerLoadout(client)
+function MODULE:PostPlayerLoadout(client)
     local char = client:getChar()
     if not char then return end
+
     lia.attribs.setup(client)
     local inv = char:getInv()
     if inv then
@@ -14,11 +15,12 @@
         end
     end
 
-    client:setLocalVar("stamina", char:getMaxStamina())
-    local id = "StamCheck" .. client:SteamID64()
-    timer.Create(id, 0.25, 0, function()
+    client:setLocalVar("stamina", char:getData("stamina", char:getMaxStamina()))
+
+    local uniqueID = "liaStam" .. client:SteamID()
+    timer.Create(uniqueID, 0.25, 0, function()
         if not IsValid(client) then
-            timer.Remove(id)
+            timer.Remove(uniqueID)
             return
         end
 
@@ -27,7 +29,14 @@
 end
 
 function MODULE:PlayerDisconnected(client)
-    timer.Remove("StamCheck" .. client:SteamID64())
+    timer.Remove("liaStam" .. client:SteamID())
+end
+
+function MODULE:CharPreSave(character)
+    local client = character:getPlayer()
+    if IsValid(client) then
+        character:setData("stamina", client:getLocalVar("stamina", 0))
+    end
 end
 
 function MODULE:KeyRelease(client, key)
@@ -55,7 +64,11 @@ function MODULE:KeyPress(client, key)
 end
 
 function MODULE:PlayerLoadedChar(client, character)
-    timer.Simple(0.25, function() if IsValid(client) then client:setLocalVar("stamina", character:getMaxStamina()) end end)
+    timer.Simple(0.25, function()
+        if IsValid(client) then
+            client:setLocalVar("stamina", character:getData("stamina", character:getMaxStamina()))
+        end
+    end)
 end
 
 function MODULE:PlayerStaminaLost(client)
