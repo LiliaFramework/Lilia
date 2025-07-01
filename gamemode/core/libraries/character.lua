@@ -59,14 +59,22 @@ function lia.char.registerVar(key, data)
                 if curChar and curChar == self then sendID = false end
                 local oldVar = self.vars[key]
                 self.vars[key] = value
-                netstream.Start(self.player, "charSet", key, value, sendID and self:getID() or nil)
+                net.Start("charSet")
+                net.WriteString(key)
+                net.WriteType(value)
+                net.WriteType(sendID and self:getID() or nil)
+                net.Send(self.player)
                 hook.Run("OnCharVarChanged", self, key, oldVar, value)
             end
         else
             characterMeta["set" .. upperName] = function(self, value)
                 local oldVar = self.vars[key]
                 self.vars[key] = value
-                netstream.Start(nil, "charSet", key, value, self:getID())
+                net.Start("charSet")
+                net.WriteString(key)
+                net.WriteType(value)
+                net.WriteType(self:getID())
+                net.Broadcast()
                 hook.Run("OnCharVarChanged", self, key, oldVar, value)
             end
         end
@@ -96,8 +104,11 @@ lia.char.registerVar("name", {
         if not isstring(value) or not value:find("%S") then return false, "invalid", "name" end
         local allowExistNames = lia.config.get("AllowExistNames", true)
         if CLIENT and #lia.char.names < 1 and not allowExistNames then
-            netstream.Start("liaCharFetchNames")
-            netstream.Hook("liaCharFetchNames", function(data) lia.char.names = data end)
+            net.Start("liaCharFetchNames")
+            net.SendToServer()
+            net.Receive("liaCharFetchNames", function()
+                lia.char.names = net.ReadTable()
+            end)
         end
 
         if not lia.config.get("AllowExistNames", true) then
@@ -158,7 +169,11 @@ lia.char.registerVar("model", {
         local client = character:getPlayer()
         if IsValid(client) and client:getChar() == character then client:SetModel(value) end
         character.vars.model = value
-        netstream.Start(nil, "charSet", "model", character.vars.model, character:getID())
+        net.Start("charSet")
+        net.WriteString("model")
+        net.WriteType(character.vars.model)
+        net.WriteType(character:getID())
+        net.Broadcast()
         hook.Run("PlayerModelChanged", client, value)
         hook.Run("OnCharVarChanged", character, "model", oldVar, value)
     end,
@@ -215,7 +230,11 @@ lia.char.registerVar("faction", {
         local client = character:getPlayer()
         client:SetTeam(value)
         character.vars.faction = faction.uniqueID
-        netstream.Start(nil, "charSet", "faction", character.vars.faction, character:getID())
+        net.Start("charSet")
+        net.WriteString("faction")
+        net.WriteType(character.vars.faction)
+        net.WriteType(character:getID())
+        net.Broadcast()
         hook.Run("OnCharVarChanged", character, "faction", oldVar, value)
         return true
     end,
@@ -247,7 +266,17 @@ lia.char.registerVar("data", {
         local data = character:getData()
         local client = character:getPlayer()
         data[key] = value
-        if not noReplication and IsValid(client) then netstream.Start(receiver or client, "charData", character:getID(), key, value) end
+        if not noReplication and IsValid(client) then
+            net.Start("charData")
+            net.WriteUInt(character:getID(), 32)
+            net.WriteString(key)
+            net.WriteType(value)
+            if receiver then
+                net.Send(receiver)
+            else
+                net.Send(client)
+            end
+        end
         character.vars.data = data
     end,
     onGet = function(character, key, default)
@@ -277,7 +306,15 @@ lia.char.registerVar("var", {
                 id = character:getID()
             end
 
-            netstream.Start(receiver or client, "charVar", key, value, id)
+            net.Start("charVar")
+            net.WriteString(key)
+            net.WriteType(value)
+            net.WriteType(id)
+            if receiver then
+                net.Send(receiver)
+            else
+                net.Send(client)
+            end
         end
 
         character.vars.vars = data
@@ -547,7 +584,10 @@ if SERVER then
             client:KillSilent()
             client:setNetVar("char", nil)
             client:Spawn()
-            netstream.Start(client, "charKick", nil, true)
+            net.Start("charKick")
+            net.WriteType(nil)
+            net.WriteBool(true)
+            net.Send(client)
         end
     end
 

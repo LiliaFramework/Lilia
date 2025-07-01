@@ -81,4 +81,8 @@ net.Receive("cmd", function(_, client)
     end
 end)
 
-netstream.Hook("liaCharFetchNames", function(client) netstream.Start(client, "liaCharFetchNames", lia.char.names) end)
+net.Receive("liaCharFetchNames", function(_, client)
+    net.Start("liaCharFetchNames")
+    net.WriteTable(lia.char.names)
+    net.Send(client)
+end)

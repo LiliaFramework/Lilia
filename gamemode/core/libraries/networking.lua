@@ -32,12 +32,16 @@ if SERVER then
     hook.Add("PlayerInitialSpawn", "liaNetworkingSync", function(client) client:syncVars() end)
     hook.Add("CharDeleted", "liaNetworkingCharDeleted", function(client, character)
         lia.char.names[character:getID()] = nil
-        netstream.Start(client, "liaCharFetchNames", lia.char.names)
+        net.Start("liaCharFetchNames")
+        net.WriteTable(lia.char.names)
+        net.Send(client)
     end)
 
     hook.Add("OnCharCreated", "liaNetworkingCharCreated", function(client, character, data)
         lia.char.names[character:getID()] = data.name
-        netstream.Start(client, "liaCharFetchNames", lia.char.names)
+        net.Start("liaCharFetchNames")
+        net.WriteTable(lia.char.names)
+        net.Send(client)
     end)
 else
     function getNetVar(key, default)
