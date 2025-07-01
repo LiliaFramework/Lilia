@@ -23,13 +23,11 @@ SKIN.Colours.Tree.Text = Color(255, 255, 255)
 SKIN.Colours.Tree.SelectedText = Color(255, 255, 255)
 function SKIN:PaintFrame(panel)
     if not panel.LaidOut then
-        if panel.btnClose and panel.btnClose:IsValid() then
-            panel.btnClose:SetPos(panel:GetWide() - 16, 4)
-            panel.btnClose:SetSize(24, 24)
-            panel.btnClose:SetFont("marlett")
-            panel.btnClose:SetText("r")
-            panel.btnClose:SetTextColor(Color(255, 255, 255))
-            panel.btnClose:PerformLayout()
+        for _, btn in ipairs({panel.btnMinimize, panel.btnMaximize, panel.btnClose}) do
+            if btn and btn:IsValid() then
+                btn:SetText("")
+                btn:SetPaintBackground(true)
+            end
         end
 
         panel.LaidOut = true
@@ -74,6 +72,43 @@ local function paintButtonBase(panel, w, h)
     surface.DrawRect(0, 0, w, h)
     surface.SetDrawColor(100, 100, 100, a)
     surface.DrawRect(2, 2, w - 4, h - 4)
+end
+
+local function drawBtnIcon(panel, w, h, drawFn)
+    paintButtonBase(panel, w, h)
+    surface.SetDrawColor(255, 255, 255)
+    drawFn(w, h)
+end
+
+function SKIN:PaintWindowMinimizeButton(panel, w, h)
+    paintButtonBase(panel, w, h)
+    surface.SetDrawColor(255, 255, 255, 255)
+    local t = 1
+    local iconW = w * 0.4
+    local x = (w - iconW) * 0.5
+    local y = (h - t) * 0.5
+    surface.DrawRect(x, y, iconW, t)
+end
+
+function SKIN:PaintWindowMaximizeButton(panel, w, h)
+    paintButtonBase(panel, w, h)
+    surface.SetDrawColor(255, 255, 255, 255)
+    local iconW = w * 0.4
+    local x = (w - iconW) * 0.5
+    local y = (h - iconW) * 0.5
+    surface.DrawOutlinedRect(x, y, iconW, iconW)
+end
+
+function SKIN:PaintWindowCloseButton(panel, w, h)
+    paintButtonBase(panel, w, h)
+    surface.SetDrawColor(255, 255, 255, 255)
+    local iconW = w * 0.4
+    local x1 = (w - iconW) * 0.5
+    local y1 = (h - iconW) * 0.5
+    local x2 = x1 + iconW
+    local y2 = y1 + iconW
+    surface.DrawLine(x1, y1, x2, y2)
+    surface.DrawLine(x2, y1, x1, y2)
 end
 
 function SKIN:PaintButton(panel)
