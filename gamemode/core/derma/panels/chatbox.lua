@@ -13,9 +13,9 @@ function PANEL:Init()
     self.tabs:SetVisible(false)
     self.commandIndex = 0
     self.commands = lia.command.list
-    self.tabs.Paint = function(_, w, h)
+    self.tabs.Paint = function(_, width, height)
         surface.SetDrawColor(0, 0, 0, 100)
-        surface.DrawRect(0, 0, w, h)
+        surface.DrawRect(0, 0, width, height)
     end
 
     self.arguments = {}
@@ -87,11 +87,11 @@ function PANEL:setActive(state)
         end
 
         self.text:SetAllowNonAsciiCharacters(true)
-        self.text.Paint = function(this, w, h)
+        self.text.Paint = function(this, width, height)
             surface.SetDrawColor(0, 0, 0, 100)
-            surface.DrawRect(0, 0, w, h)
+            surface.DrawRect(0, 0, width, height)
             surface.SetDrawColor(0, 0, 0, 200)
-            surface.DrawOutlinedRect(0, 0, w, h)
+            surface.DrawOutlinedRect(0, 0, width, height)
             this:DrawTextEntryText(Color(255, 255, 255, 200), lia.config.get("Color"), Color(255, 255, 255, 200))
         end
 
@@ -115,14 +115,14 @@ function PANEL:setActive(state)
                     commandButton:Dock(TOP)
                     commandButton:DockMargin(0, 0, 0, 2)
                     commandButton:SetTall(20)
-                    commandButton.Paint = function(_, w, h)
+                    commandButton.Paint = function(_, width, height)
                         surface.SetDrawColor(ColorAlpha(color_black, 200))
-                        surface.DrawRect(0, 0, w, h)
+                        surface.DrawRect(0, 0, width, height)
                     end
 
                     commandButton.DoClick = function()
-                        local commandData = self.commands[commandName]
-                        local syntaxPreview = commandData and commandData.syntax or ""
+                        local cmdData = self.commands[commandName]
+                        local syntaxPreview = cmdData and cmdData.syntax or ""
                         self.text:SetText("/" .. commandName .. " " .. syntaxPreview)
                         self.text:RequestFocus()
                         self.commandList:Remove()
@@ -159,11 +159,11 @@ function PANEL:setActive(state)
                     for i, child in ipairs(children) do
                         child.commandIndex = i
                         if not child.PaintConfigured then
-                            child.Paint = function(this, w, h)
-                                local isSelected = this.commandIndex == self.commandIndex
+                            child.Paint = function(pnl, width, height)
+                                local isSelected = pnl.commandIndex == self.commandIndex
                                 surface.SetDrawColor(isSelected and ColorAlpha(lia.config.get("Color"), 255) or ColorAlpha(color_black, 200))
-                                surface.DrawRect(0, 0, w, h)
-                                if IsValid(this.text) then this.text:SetTextColor(isSelected and ColorAlpha(lia.config.get("Color"), 255) or ColorAlpha(color_white, 200)) end
+                                surface.DrawRect(0, 0, width, height)
+                                if IsValid(pnl.text) then pnl.text:SetTextColor(isSelected and ColorAlpha(lia.config.get("Color"), 255) or ColorAlpha(color_white, 200)) end
                             end
 
                             child.PaintConfigured = true

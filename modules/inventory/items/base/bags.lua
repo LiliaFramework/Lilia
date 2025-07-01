@@ -58,10 +58,10 @@ ITEM.functions.View = {
         local parent = item.invID and lia.gui["inv" .. item.invID] or nil
         if IsValid(panel) then panel:Remove() end
         if inventory then
-            local panel = lia.inventory.show(inventory, parent)
-            if IsValid(panel) then
-                panel:ShowCloseButton(true)
-                panel:SetTitle(item:getName())
+            local invPanel = lia.inventory.show(inventory, parent)
+            if IsValid(invPanel) then
+                invPanel:ShowCloseButton(true)
+                invPanel:SetTitle(item:getName())
             end
         end
         return false
@@ -123,9 +123,9 @@ function ITEM:onCombine(other)
     if not invID then return end
     local res = hook.Run("HandleItemTransferRequest", client, other:getID(), nil, nil, invID)
     if not res then return end
-    res:next(function(res)
+    res:next(function(result)
         if not IsValid(client) then return end
-        if istable(res) and isstring(res.error) then return client:notifyLocalized(res.error) end
+        if istable(result) and isstring(result.error) then return client:notifyLocalized(result.error) end
         client:EmitSound(unpack(self.BagSound))
     end)
 end

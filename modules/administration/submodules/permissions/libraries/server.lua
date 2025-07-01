@@ -157,12 +157,12 @@ local DisallowedTools = {
 }
 
 function GM:CanTool(client, _, tool)
-    local function CheckDuplicationScale(client, entities)
+    local function CheckDuplicationScale(ply, entities)
         entities = entities or {}
         for _, v in pairs(entities) do
             if v.ModelScale and v.ModelScale > 10 then
-                client:notifyLocalized("duplicationSizeLimit")
-                print("[Server Warning] Potential server crash using dupes attempt by player: " .. client:Name() .. " (" .. client:SteamID64() .. ")")
+                ply:notifyLocalized("duplicationSizeLimit")
+                print("[Server Warning] Potential server crash using dupes attempt by player: " .. ply:Name() .. " (" .. ply:SteamID64() .. ")")
                 return false
             end
 

@@ -432,8 +432,8 @@ hook.Add("CreateInformationButtons", "liaInformationCommands", function(pages)
                     local height = hasDesc and 80 or 40
                     local commandPanel = vgui.Create("DPanel", iconLayout)
                     commandPanel:SetSize(panel:GetWide(), height)
-                    commandPanel.Paint = function(panel, w, h)
-                        derma.SkinHook("Paint", "Panel", panel, w, h)
+                    commandPanel.Paint = function(pnl, w, h)
+                        derma.SkinHook("Paint", "Panel", pnl, w, h)
                         local baseX = 20
                         local text = "/" .. cmdName
                         if cmdData.syntax and cmdData.syntax ~= "" then text = text .. " " .. cmdData.syntax end

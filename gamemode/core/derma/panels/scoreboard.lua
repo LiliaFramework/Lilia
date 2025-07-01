@@ -344,9 +344,9 @@ function PANEL:addPlayer(ply, parent)
         local mdl, sk = ply:GetModel(), ply:GetSkin()
         if self.lastModel ~= mdl or self.lastSkin ~= sk then
             self.model:SetModel(mdl, sk)
-            local ent = self.model.Entity
+            local modelEnt = self.model.Entity
             for i = 0, ply:GetNumBodyGroups() - 1 do
-                ent:SetBodygroup(i, ply:GetBodygroup(i))
+                modelEnt:SetBodygroup(i, ply:GetBodygroup(i))
             end
 
             self.lastModel, self.lastSkin = mdl, sk

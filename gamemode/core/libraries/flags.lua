@@ -73,7 +73,7 @@ hook.Add("CreateInformationButtons", "liaInformationFlags", function(pages)
                     flagPanel:Dock(TOP)
                     flagPanel:DockMargin(10, 5, 10, 0)
                     flagPanel:SetTall(height)
-                    flagPanel.Paint = function(panel, w, h)
+                    flagPanel.Paint = function(pnl, w, h)
                         local hasFlag = client:getChar():hasFlags(flagName)
                         local status = hasFlag and "✓" or "✗"
                         local statusColor = hasFlag and Color(0, 255, 0) or Color(255, 0, 0)

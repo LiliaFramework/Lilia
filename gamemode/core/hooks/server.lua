@@ -232,9 +232,9 @@ local logTypeMap = {
 }
 
 function GM:PlayerSay(client, message)
-    local chatType, message, anonymous = lia.chat.parse(client, message, true)
-    if chatType == "ic" and lia.command.parse(client, message) then return "" end
-    if utf8.len(message) > lia.config.get("MaxChatLength") then
+    local chatType, parsedMessage, anonymous = lia.chat.parse(client, message, true)
+    if chatType == "ic" and lia.command.parse(client, parsedMessage) then return "" end
+    if utf8.len(parsedMessage) > lia.config.get("MaxChatLength") then
         client:notifyLocalized("tooLongMessage")
         return ""
     end

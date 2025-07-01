@@ -97,7 +97,7 @@ lia.char.registerVar("name", {
         local allowExistNames = lia.config.get("AllowExistNames", true)
         if CLIENT and #lia.char.names < 1 and not allowExistNames then
             netstream.Start("liaCharFetchNames")
-            netstream.Hook("liaCharFetchNames", function(data) lia.char.names = data end)
+            netstream.Hook("liaCharFetchNames", function(payload) lia.char.names = payload end)
         end
 
         if not lia.config.get("AllowExistNames", true) then
@@ -448,9 +448,9 @@ if SERVER then
         local condition = "_schema = '" .. lia.db.escape(SCHEMA.folder) .. "' AND _steamID = " .. steamID64
         if id then condition = condition .. " AND _id = " .. id end
         local query = "SELECT " .. fields .. " FROM lia_characters WHERE " .. condition
-        lia.db.query(query, function(data)
+        lia.db.query(query, function(resultsData)
             local characters = {}
-            local results = data or {}
+            local results = resultsData or {}
             local done = 0
             if #results == 0 then
                 if callback then callback(characters) end
@@ -458,13 +458,13 @@ if SERVER then
             end
 
             for _, v in ipairs(results) do
-                local id = tonumber(v._id)
-                if not id then
-                    ErrorNoHalt("[Lilia] Attempt to load character '" .. (data._name or "nil") .. "' with invalid ID!")
+                local charId = tonumber(v._id)
+                if not charId then
+                    ErrorNoHalt("[Lilia] Attempt to load character '" .. (resultsData._name or "nil") .. "' with invalid ID!")
                     continue
                 end
 
-                local data = {}
+                local charData = {}
                 for k2, v2 in pairs(lia.char.vars) do
                     if v2.field and v[v2.field] then
                         local value = tostring(v[v2.field])
@@ -476,12 +476,12 @@ if SERVER then
                             value = util.JSONToTable(value)
                         end
 
-                        data[k2] = value
+                        charData[k2] = value
                     end
                 end
 
-                characters[#characters + 1] = id
-                local character = lia.char.new(data, id, client)
+                characters[#characters + 1] = charId
+                local character = lia.char.new(charData, charId, client)
                 hook.Run("CharRestored", character)
                 character.vars.inv = {}
                 lia.inventory.loadAllFromCharID(id):next(function(inventories)
