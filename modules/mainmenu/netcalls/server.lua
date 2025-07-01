@@ -26,10 +26,22 @@
     end
 
     hook.Run("PrePlayerLoadedChar", client, character, currentChar)
+    net.Start("prePlayerLoadedChar")
+    net.WriteUInt(character:getID(), 32)
+    net.WriteType(currentChar and currentChar:getID() or nil)
+    net.Send(client)
     character:setup()
     hook.Run("PlayerLoadedChar", client, character, currentChar)
+    net.Start("playerLoadedChar")
+    net.WriteUInt(character:getID(), 32)
+    net.WriteType(currentChar and currentChar:getID() or nil)
+    net.Send(client)
     response()
     hook.Run("PostPlayerLoadedChar", client, character, currentChar)
+    net.Start("postPlayerLoadedChar")
+    net.WriteUInt(character:getID(), 32)
+    net.WriteType(currentChar and currentChar:getID() or nil)
+    net.Send(client)
 end)
 
 net.Receive("liaCharCreate", function(_, client)
