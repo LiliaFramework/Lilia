@@ -23,7 +23,7 @@ The global `CLASS` table defines per-class settings such as display name, lore, 
 | `weapons` | `table` | `{}` | Weapons granted to members of this class. |
 | `pay` | `number` | `0` | Payment amount per interval. |
 | `payLimit` | `number` | `0` | Maximum accumulated pay. |
-| `payTimer` | `number` | `300` | Interval (seconds) between paychecks. |
+| `payTimer` | `number` | `3600` | Seconds between paychecks when not overridden. |
 | `limit` | `number` | `0` | Maximum number of players in this class. |
 | `health` | `number` | `0` | Default starting health. |
 | `armor` | `number` | `0` | Default starting armor. |
@@ -256,7 +256,9 @@ CLASS.payLimit = 1000
 
 **Description:**
 
-Interval in seconds between salary payouts.
+How often salaries are paid to members of this class.
+If omitted, the timer falls back to the faction's `payTimer` or
+the global `SalaryInterval` configuration value (default `3600`).
 
 **Example Usage:**
 
