@@ -266,18 +266,18 @@ if SERVER then
         }, data or {})
 
         local itemType = item.uniqueID
-        lia.item.instance(targetInventory:getID(), itemType, data, 0, 0, function(item)
+        lia.item.instance(targetInventory:getID(), itemType, data, 0, 0, function(newItem)
             if targetInventory.occupied then
-                for x2 = 0, (item.width or 1) - 1 do
-                    for y2 = 0, (item.height or 1) - 1 do
+                for x2 = 0, (newItem.width or 1) - 1 do
+                    for y2 = 0, (newItem.height or 1) - 1 do
                         targetInventory.occupied[x + x2 .. y + y2] = nil
                     end
                 end
             end
 
-            targetInventory:addItem(item, noReplicate)
-            d:resolve(item)
-        end):next(function(item)
+            targetInventory:addItem(newItem, noReplicate)
+            d:resolve(newItem)
+        end):next(function(resultItem)
             if isStackCommand and remainingQuantity > 0 then
                 for targetItem, assignedQuantity in pairs(targetAssignments) do
                     targetItem:addQuantity(assignedQuantity)
