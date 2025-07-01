@@ -1,6 +1,6 @@
 # Class Hooks
 
-This document describes all `CLASS` function hooks defined within the codebase. Use these to customize behavior before and after class changes and spawns.
+This document lists every available `CLASS` hook. Place these functions on a class table to run custom logic whenever a player joins, leaves, or spawns with that class.
 
 ---
 
@@ -20,7 +20,8 @@ function CLASS:OnCanBe(client) → boolean
 
 **Description:**
 
-Determines whether a player is permitted to switch to this class. Evaluated before the class change occurs.
+Determines whether a player is permitted to switch to this class. It is called
+by `lia.class.canBe` before the class change happens.
 
 **Parameters:**
 
@@ -51,7 +52,9 @@ function CLASS:OnLeave(client)
 
 **Description:**
 
-Triggered when a player leaves the class. Useful for resetting models or other class-specific attributes.
+Runs after `OnTransferred` and is passed the player that has just left the
+class. Use it to clean up any class-specific state such as reverting models or
+removing temporary items.
 
 **Parameters:**
 
@@ -85,7 +88,9 @@ function CLASS:OnSet(client)
 
 **Description:**
 
-Called when a player successfully joins the class. Initialize class-specific settings here.
+Called right after a player is moved into the class. Use it to grant weapons,
+set models, or perform other one-time setup. If the player was transferred from
+another class, `OnTransferred` will run afterwards.
 
 **Parameters:**
 
@@ -117,7 +122,9 @@ function CLASS:OnSpawn(client)
 
 **Description:**
 
-Invoked when a class member spawns. Use this for spawn-specific setup like health, armor, or weapons.
+Runs every time a member of the class spawns. This is the place for spawn
+specific adjustments such as setting health values, giving starting weapons or
+modifying movement speeds.
 
 **Parameters:**
 
@@ -136,6 +143,10 @@ function CLASS:OnSpawn(client)
     client:SetMaxHealth(self.health or 150)
     client:SetHealth(self.health or 150)
     client:SetArmor(self.armor or 50)
+
+    -- Apply custom movement settings
+    if self.runSpeed then client:SetRunSpeed(self.runSpeed) end
+    if self.walkSpeed then client:SetWalkSpeed(self.walkSpeed) end
 end
 ```
 
@@ -149,7 +160,9 @@ function CLASS:OnTransferred(client, oldClass)
 
 **Description:**
 
-Executes actions when a player is transferred into this class (e.g., by an admin or system transfer). The previous class index is provided as an argument.
+Executes after `OnSet` when a player is moved from another class into this one
+(for example by an admin command). The class index the player previously belonged
+to is provided so you can migrate data or adjust loadouts.
 
 **Parameters:**
 
