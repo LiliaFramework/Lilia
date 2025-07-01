@@ -35,8 +35,7 @@ end
 function PANEL:Init()
     if IsValid(lia.gui.score) then lia.gui.score:Remove() end
     lia.gui.score = self
-    local w = ScrW() * lia.config.get("sbWidth", 0.35)
-    local h = ScrH() * lia.config.get("sbHeight", 0.65)
+    local w, h = ScrW() * lia.config.get("sbWidth", 0.35), ScrH() * lia.config.get("sbHeight", 0.65)
     self:SetSize(w, h)
     self:Center()
     local header = self:Add("DPanel")
@@ -83,13 +82,9 @@ function PANEL:Init()
     scroll.VBar:SetWide(0)
     local layout = scroll:Add("DListLayout")
     layout:Dock(TOP)
-    self.staffOnline = staffOnline
-    self.playersOnline = playersOnline
-    self.staffOnDuty = staffOnDuty
-    self.scroll = scroll
-    self.layout = layout
-    self.playerSlots = {}
-    self.factionLists = {}
+    self.staffOnline, self.playersOnline, self.staffOnDuty = staffOnline, playersOnline, staffOnDuty
+    self.scroll, self.layout = scroll, layout
+    self.playerSlots, self.factionLists = {}, {}
     for facID, facData in ipairs(lia.faction.indices) do
         local facColor = team.GetColor(facID)
         local facCont = layout:Add("DListLayout")
@@ -170,13 +165,12 @@ end
 
 function PANEL:updateStaff()
     local total, duty = 0, 0
-    for _, ply in player.Iterator() do
+    for _, ply in pairs(player.GetAll()) do
         if ply:isStaff() then total = total + 1 end
         if ply:isStaffOnDuty() then duty = duty + 1 end
     end
 
-    local current = player.GetCount()
-    local maximum = game.MaxPlayers()
+    local current, maximum = player.GetCount(), game.MaxPlayers()
     self.staffOnline:SetText(L("staffOnline", total))
     self.playersOnline:SetText(L("playersOnline", current .. "/" .. maximum))
     self.staffOnDuty:SetText(L("staffOnDuty", duty))
@@ -187,7 +181,7 @@ end
 
 function PANEL:Think()
     if (self.nextUpdate or 0) > CurTime() then return end
-    for _, ply in player.Iterator() do
+    for _, ply in pairs(player.GetAll()) do
         if hook.Run("ShouldShowPlayerOnScoreboard", ply) == false then continue end
         local char = ply:getChar()
         if not char then continue end
@@ -204,8 +198,7 @@ function PANEL:Think()
     for _, facCont in pairs(self.factionLists) do
         local showFaction = facCont.noClass:ChildCount() > 0
         for _, lst in pairs(facCont.classLists) do
-            local cat = lst:GetParent()
-            local hasPlayers = lst:ChildCount() > 0
+            local cat, hasPlayers = lst:GetParent(), lst:ChildCount() > 0
             cat:SetVisible(hasPlayers)
             if hasPlayers then showFaction = true end
         end
@@ -229,15 +222,20 @@ function PANEL:addPlayer(ply, parent)
     slot.Paint = function() end
     slot.character = ply:getChar()
     ply.liaScoreSlot = slot
-    local margin = 5
-    local iconSize = height * 0.9
+    local margin, iconSize = 5, height * 0.9
     slot.model = vgui.Create("liaSpawnIcon", slot)
     slot.model:SetPos(margin, (height - iconSize) * 0.5)
     slot.model:SetSize(iconSize, iconSize)
     slot.model:SetModel(ply:GetModel(), ply:GetSkin())
-    local ent = slot.model.Entity
+    slot.model:SetCamPos(Vector(0, 0, 55))
+    slot.model:SetLookAt(Vector(0, 0, 0))
+    slot.model.LayoutEntity = function(self, ent)
+        ent:SetAngles(Angle(0, 0, 0))
+        self:RunAnimation()
+    end
+
     for i = 0, ply:GetNumBodyGroups() - 1 do
-        ent:SetBodygroup(i, ply:GetBodygroup(i))
+        slot.model.Entity:SetBodygroup(i, ply:GetBodygroup(i))
     end
 
     slot.model:setHidden(hook.Run("ShouldAllowScoreboardOverride", ply, "model"))
@@ -268,14 +266,12 @@ function PANEL:addPlayer(ply, parent)
     slot.ping:SetContentAlignment(6)
     slot.ping:SetTextColor(color_white)
     slot.ping:SetTextInset(16, 0)
-    local logoSize = height * 0.65
-    local logoOffset = 10
+    local logoSize, logoOffset = height * 0.65, 10
     slot.classLogo = vgui.Create("DImage", slot)
     slot.classLogo:SetSize(logoSize, logoSize)
     function slot:layout()
         self.ping:SizeToContents()
-        local pingW, pingH = self.ping:GetWide(), self.ping:GetTall()
-        local totalW = self:GetWide()
+        local pingW, totalW = self.ping:GetWide(), self:GetWide()
         local hasLogo = lia.config.get("ClassLogo", false) and self.classLogo:GetMaterial()
         local extra = hasLogo and logoSize + logoOffset or 0
         local availW = totalW - (iconSize + margin * 2) - extra - pingW - margin
@@ -290,7 +286,7 @@ function PANEL:addPlayer(ply, parent)
             self.classLogo:SetVisible(false)
         end
 
-        self.ping:SetPos(totalW - pingW, (height - pingH) * 0.5)
+        self.ping:SetPos(totalW - pingW, (height - self.ping:GetTall()) * 0.5)
     end
 
     slot.ping.Think = function(lbl)
@@ -344,9 +340,8 @@ function PANEL:addPlayer(ply, parent)
         local mdl, sk = ply:GetModel(), ply:GetSkin()
         if self.lastModel ~= mdl or self.lastSkin ~= sk then
             self.model:SetModel(mdl, sk)
-            local modelEnt = self.model.Entity
             for i = 0, ply:GetNumBodyGroups() - 1 do
-                modelEnt:SetBodygroup(i, ply:GetBodygroup(i))
+                self.model.Entity:SetBodygroup(i, ply:GetBodygroup(i))
             end
 
             self.lastModel, self.lastSkin = mdl, sk
