@@ -73,5 +73,8 @@ end
 
 lia.bar.add(function()
     local client = LocalPlayer()
-    return client:getLocalVar("stamina", 0) / 100
+    local char = client:getChar()
+    if not char then return 0 end
+    local max = char:getMaxStamina()
+    return (predictedStamina or client:getLocalVar("stamina", max)) / max
 end, Color(200, 200, 40), nil, "stamina")

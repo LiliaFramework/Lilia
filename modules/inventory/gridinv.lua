@@ -277,7 +277,7 @@ if SERVER then
 
             targetInventory:addItem(newItem, noReplicate)
             d:resolve(newItem)
-        end):next(function(resultItem)
+        end):next(function()
             if isStackCommand and remainingQuantity > 0 then
                 for targetItem, assignedQuantity in pairs(targetAssignments) do
                     targetItem:addQuantity(assignedQuantity)
