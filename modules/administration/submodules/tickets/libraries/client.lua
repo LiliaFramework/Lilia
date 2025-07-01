@@ -86,10 +86,10 @@ function MODULE:TicketFrame(requester, message, claimed)
     end
 
     local isLocalPlayer = requester == LocalPlayer()
-    createButton("goto", mat_lightning, 20, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "goto", sam and requester:SteamID() or requester:SteamID64()) end, isLocalPlayer)
-    createButton("return", mat_arrow, 40, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "return", sam and requester:SteamID() or requester:SteamID64()) end, isLocalPlayer)
-    createButton("freeze", mat_link, 60, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "freeze", sam and requester:SteamID() or requester:SteamID64()) end, isLocalPlayer)
-    createButton("bring", mat_arrow, 80, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "bring", sam and requester:SteamID() or requester:SteamID64()) end, isLocalPlayer)
+    createButton("goto", mat_lightning, 20, function() lia.command.execAdminCommand("goto", nil, requester) end, isLocalPlayer)
+    createButton("return", mat_arrow, 40, function() lia.command.execAdminCommand("return", nil, requester) end, isLocalPlayer)
+    createButton("freeze", mat_link, 60, function() lia.command.execAdminCommand("freeze", nil, requester) end, isLocalPlayer)
+    createButton("bring", mat_arrow, 80, function() lia.command.execAdminCommand("bring", nil, requester) end, isLocalPlayer)
     local shouldClose = false
     local claimButton
     claimButton = createButton("claimCase", mat_case, 100, function()
