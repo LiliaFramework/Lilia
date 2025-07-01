@@ -176,8 +176,7 @@ if SERVER then
 
         if not item then return d:reject("invalid item type") end
         local targetInventory = self
-        local fits = targetInventory:canAdd(itemTypeOrItem)
-        if not fits then return d:reject("No space available for the item.") end
+        if not targetInventory:canAdd(itemTypeOrItem) then return d:reject("No space available for the item.") end
         if not x or not y then
             x, y = self:findFreePosition(item)
             if not x or not y then
@@ -195,12 +194,11 @@ if SERVER then
         end
 
         if isStackCommand and item.isStackable ~= true then isStackCommand = false end
-        local targetAssignments = {}
-        local remainingQuantity = xOrQuantity
+        local targetAssignments, remainingQuantity = {}, xOrQuantity
         if isStackCommand then
-            local items = targetInventory:getItemsOfType(itemTypeOrItem)
-            if items then
-                for _, targetItem in pairs(items) do
+            local existing = targetInventory:getItemsOfType(itemTypeOrItem)
+            if existing then
+                for _, targetItem in pairs(existing) do
                     if remainingQuantity == 0 then break end
                     local freeSpace = targetItem.maxQuantity - targetItem:getQuantity()
                     if freeSpace > 0 then
@@ -238,9 +236,8 @@ if SERVER then
                 return d:resolve({
                     error = reason
                 })
-            else
-                return d:reject(tostring(reason or L("noAccess")))
             end
+            return d:reject(tostring(reason or L("noAccess")))
         end
 
         if not isStackCommand and justAddDirectly then
@@ -263,24 +260,24 @@ if SERVER then
         }, data or {})
 
         local itemType = item.uniqueID
-        lia.item.instance(targetInventory:getID(), itemType, data, 0, 0, function(item)
+        lia.item.instance(targetInventory:getID(), itemType, data, 0, 0, function(instItem)
             if targetInventory.occupied then
-                for x2 = 0, (item.width or 1) - 1 do
-                    for y2 = 0, (item.height or 1) - 1 do
+                for x2 = 0, (instItem.width or 1) - 1 do
+                    for y2 = 0, (instItem.height or 1) - 1 do
                         targetInventory.occupied[x + x2 .. y + y2] = nil
                     end
                 end
             end
 
-            targetInventory:addItem(item, noReplicate)
-            d:resolve(item)
-        end):next(function(item)
+            targetInventory:addItem(instItem, noReplicate)
+            d:resolve(instItem)
+        end):next(function(returnedItem)
             if isStackCommand and remainingQuantity > 0 then
                 for targetItem, assignedQuantity in pairs(targetAssignments) do
                     targetItem:addQuantity(assignedQuantity)
                 end
 
-                local overStacks = math.ceil(remainingQuantity / item.maxQuantity) - 1
+                local overStacks = math.ceil(remainingQuantity / returnedItem.maxQuantity) - 1
                 if overStacks > 0 then
                     local items = {}
                     for i = 1, overStacks do
@@ -288,12 +285,12 @@ if SERVER then
                     end
 
                     deferred.all(items):next(nil, function() hook.Run("OnPlayerLostStackItem", itemTypeOrItem) end)
-                    item:setQuantity(remainingQuantity - item.maxQuantity * overStacks)
-                    targetInventory:addItem(item, noReplicate)
+                    returnedItem:setQuantity(remainingQuantity - returnedItem.maxQuantity * overStacks)
+                    targetInventory:addItem(returnedItem, noReplicate)
                     return d:resolve(items)
-                else
-                    item:setQuantity(remainingQuantity)
                 end
+
+                returnedItem:setQuantity(remainingQuantity)
             end
         end)
         return d
