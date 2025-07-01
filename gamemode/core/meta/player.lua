@@ -754,8 +754,10 @@ if SERVER then
     function playerMeta:setLocalVar(key, value)
         if checkBadType(key, value) then return end
         lia.net[self] = lia.net[self] or {}
+        local oldValue = lia.net[self][key]
         lia.net[self][key] = value
         netstream.Start(self, "nLcl", key, value)
+        hook.Run("LocalVarChanged", self, key, oldValue, value)
     end
 else
     function playerMeta:getPlayTime()

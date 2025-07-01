@@ -18,6 +18,8 @@ Stores a global networked variable and broadcasts it to clients. When a
 
 receiver is specified the update is only sent to those players.
 
+Calling this fires the **NetVarChanged** hook on both server and clients.
+
 **Parameters:**
 
 * key (string) – Name of the variable.

@@ -2156,6 +2156,8 @@ player:syncVars()
 
 Sets a networked local variable on the player.
 
+Triggers the **LocalVarChanged** hook on both server and client.
+
 **Parameters:**
 
 * key (string) – Variable name.

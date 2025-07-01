@@ -2988,6 +2988,80 @@ end)
 
 ---
 
+### LocalVarChanged
+
+**Description:**
+
+Triggered when `setLocalVar` updates a player's local variable. Provides both the old and new values.
+
+**Parameters:**
+
+* player (Player) – Affected player.
+
+* key (string) – Variable name.
+
+* oldValue (any) – Previous value.
+
+* value (any) – New value.
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* None
+
+**Example Usage:**
+
+```lua
+-- Print when a player's stamina local var changes
+hook.Add("LocalVarChanged", "TrackStamina", function(ply, k, old, new)
+    if k == "stamina" then
+        print(ply:Name(), "stamina:", new)
+    end
+end)
+```
+
+---
+
+### NetVarChanged
+
+**Description:**
+
+Runs when `setNetVar` changes an entity's networked variable. Works for global variables when the entity argument is nil.
+
+**Parameters:**
+
+* entity (Entity|nil) – Entity with the updated variable, or nil for global vars.
+
+* key (string) – Variable name.
+
+* oldValue (any) – Previous value.
+
+* value (any) – New value.
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* None
+
+**Example Usage:**
+
+```lua
+-- React to door network vars
+hook.Add("NetVarChanged", "WatchDoors", function(ent, k, old, new)
+    if IsValid(ent) and ent:isDoor() then
+        print("Door var", k, "changed to", new)
+    end
+end)
+```
+
+---
+
 ### ItemDataChanged
 
 **Description:**
