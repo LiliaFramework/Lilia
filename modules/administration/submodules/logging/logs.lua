@@ -326,32 +326,36 @@
         category = "Admin Actions"
     },
     ["warningIssued"] = {
-        func = function(client, target, reason)
+        func = function(client, target, reason, count, index)
             local char = IsValid(target) and target:getChar()
             return string.format(
-                "Warning issued at %s by admin [%s] '%s' to player [%s] '%s' for: '%s'. (CharID: %s)",
+                "Warning issued at %s by admin [%s] '%s' to player [%s] '%s' for: '%s'. Total warnings: %d (added #%d). (CharID: %s)",
                 os.date("%Y-%m-%d %H:%M:%S"),
                 client:SteamID64(),
                 client:Name(),
                 IsValid(target) and target:SteamID64() or "N/A",
                 IsValid(target) and target:Name() or "N/A",
                 reason,
+                count or 0,
+                index or count or 0,
                 char and char:getID() or "N/A"
             )
         end,
         category = "Warnings"
     },
     ["warningRemoved"] = {
-        func = function(client, target, warning)
+        func = function(client, target, warning, count, index)
             local char = IsValid(target) and target:getChar()
             return string.format(
-                "Warning removed at %s by admin [%s] '%s' for player [%s] '%s'. Reason: '%s'. (CharID: %s)",
+                "Warning removed at %s by admin [%s] '%s' for player [%s] '%s'. Reason: '%s'. Remaining warnings: %d (removed #%d). (CharID: %s)",
                 os.date("%Y-%m-%d %H:%M:%S"),
                 client:SteamID64(),
                 client:Name(),
                 IsValid(target) and target:SteamID64() or "N/A",
                 IsValid(target) and target:Name() or "N/A",
                 warning.reason,
+                count or 0,
+                index or 0,
                 char and char:getID() or "N/A"
             )
         end,
@@ -554,14 +558,14 @@
         category = "Tickets"
     },
     ["ticketClaimed"] = {
-        func = function(client, requester)
-            return string.format("Admin [%s] '%s' claimed a ticket for %s.", client:SteamID64(), client:Name(), requester)
+        func = function(client, requester, count)
+            return string.format("Admin [%s] '%s' claimed a ticket for %s. Total claims: %d.", client:SteamID64(), client:Name(), requester, count or 0)
         end,
         category = "Tickets"
     },
     ["ticketClosed"] = {
-        func = function(client, requester)
-            return string.format("Admin [%s] '%s' closed a ticket for %s.", client:SteamID64(), client:Name(), requester)
+        func = function(client, requester, count)
+            return string.format("Admin [%s] '%s' closed a ticket for %s. Total claims: %d.", client:SteamID64(), client:Name(), requester, count or 0)
         end,
         category = "Tickets"
     },
