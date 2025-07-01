@@ -40,27 +40,21 @@ function MODULE:ChatText(_, _, text, messageType)
 end
 
 function MODULE:ChatAddText(text, ...)
-    if lia.config.get("ChatSizeDiff", false) then
-        local chatText = {...}
-        local chatMode = #chatText <= 4 and chatText[2] or chatText[3]
-        if not chatMode or istable(chatMode) then
-            return "<font=liaChatFont>"
-        else
-            local chatMode = string.lower(chatMode)
-            if string.match(chatMode, "yell") then
-                return "<font=liaBigChatFont>"
-            elseif string.sub(chatMode, 1, 2) == "**" then
-                return "<font=liaItalicsChatFont>"
-            elseif string.match(chatMode, "whisper") then
-                return "<font=liaSmallChatFont>"
-            elseif string.match(chatMode, "ooc") or string.match(chatMode, "looc") then
-                return "<font=liaChatFont>"
-            else
-                return "<font=liaMediumChatFont>"
-            end
-        end
+    if not lia.config.get("ChatSizeDiff", false) then return text end
+    local chatArgs = {...}
+    local chatMode = #chatArgs <= 4 and chatArgs[2] or chatArgs[3]
+    if not chatMode or istable(chatMode) then return "<font=liaChatFont>" end
+    chatMode = string.lower(chatMode)
+    if string.find(chatMode, "yell", 1, true) then
+        return "<font=liaBigChatFont>"
+    elseif string.sub(chatMode, 1, 2) == "**" then
+        return "<font=liaItalicsChatFont>"
+    elseif string.find(chatMode, "whisper", 1, true) then
+        return "<font=liaSmallChatFont>"
+    elseif string.find(chatMode, "ooc", 1, true) or string.find(chatMode, "looc", 1, true) then
+        return "<font=liaChatFont>"
     else
-        return text
+        return "<font=liaMediumChatFont>"
     end
 end
 
