@@ -74,12 +74,6 @@ local function paintButtonBase(panel, w, h)
     surface.DrawRect(2, 2, w - 4, h - 4)
 end
 
-local function drawBtnIcon(panel, w, h, drawFn)
-    paintButtonBase(panel, w, h)
-    surface.SetDrawColor(255, 255, 255)
-    drawFn(w, h)
-end
-
 function SKIN:PaintWindowMinimizeButton(panel, w, h)
     paintButtonBase(panel, w, h)
     surface.SetDrawColor(255, 255, 255, 255)
