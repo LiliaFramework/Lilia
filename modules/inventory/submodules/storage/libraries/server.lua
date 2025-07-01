@@ -79,8 +79,8 @@ function MODULE:LoadData()
     if not data then return end
     for _, info in ipairs(data) do
         local position, angles, invID, model, password = unpack(info)
-        local storage = self.StorageDefinitions[model]
-        if not storage then continue end
+        local storageDef = self.StorageDefinitions[model]
+        if not storageDef then continue end
         local storage = ents.Create("lia_storage")
         storage:SetPos(position)
         storage:SetAngles(angles)
@@ -147,10 +147,6 @@ function MODULE:PlayerInitialSpawn(client)
 end
 
 function MODULE:StorageInventorySet(_, inventory, isCar)
-    if isCar then
-        inventory:addAccessRule(RULES.AccessIfCarStorageReceiver)
-    else
-        inventory:addAccessRule(RULES.AccessIfStorageReceiver)
-    end
+    inventory:addAccessRule(isCar and RULES.AccessIfCarStorageReceiver or RULES.AccessIfStorageReceiver)
 end
 return RULES
