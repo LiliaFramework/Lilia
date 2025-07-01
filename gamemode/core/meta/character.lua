@@ -236,7 +236,7 @@ if SERVER then
         attrib[key] = math.min(currentLevel + value, maxLevel)
         if IsValid(client) then
             netstream.Start(client, "attrib", self:getID(), key, attrib[key])
-            if attribute.setup then attribute.setup(attrib[key]) end
+            hook.Run("OnCharAttribUpdated", client, self, key, attrib[key])
         end
     end
 
@@ -248,11 +248,9 @@ if SERVER then
             attrib[key] = value
             if IsValid(client) then
                 netstream.Start(client, "attrib", self:getID(), key, attrib[key])
-                if attribute.setup then attribute.setup(attrib[key]) end
+                hook.Run("OnCharAttribUpdated", client, self, key, attrib[key])
             end
         end
-
-        hook.Run("OnCharAttribUpdated", client, self, key, value)
     end
 
     function characterMeta:addBoost(boostID, attribID, boostAmount)

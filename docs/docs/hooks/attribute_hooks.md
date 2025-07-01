@@ -1,12 +1,12 @@
 # Attribute Hooks
 
-This document lists hooks related to attribute setup and changes.
+This document lists hooks related to attribute setup events.
 
 ---
 
 ## Overview
 
-Attributes can define their own hooks to react when a player's attribute is created or its value changes. Implement these functions on the `ATTRIBUTE` table to run custom logic. All hooks are optional; if a hook is omitted the default behavior is used.
+Attributes may define callback functions that run when their values are first initialized or when certain events occur, such as temporary boosts. These functions live on the `ATTRIBUTE` table of each attribute definition and are entirely optional.
 
 ---
 
@@ -14,13 +14,12 @@ Attributes can define their own hooks to react when a player's attribute is crea
 
 **Description:**
 
-Called when the attribute is initialized on a player (for example, during character load or creation). Use this hook to run custom logic, send notifications or apply effects.
+Called when the attribute is initialized for a player (for example during character creation or when loading a character). This hook also fires again when a temporary boost is applied so the attribute can refresh any effects.
 
 **Parameters:**
 
-* `client` (`Player`) – The player the attribute belongs to.
-
-* `value` (`number`) – The value assigned to the attribute.
+* `client` (`Player`) – The player that owns the attribute.
+* `value` (`number`) – The current value assigned to the attribute.
 
 **Realm:**
 
@@ -30,14 +29,10 @@ Called when the attribute is initialized on a player (for example, during charac
 
 ```lua
 function ATTRIBUTE:OnSetup(client, value)
-    -- Reward exceptionally high values with extra health.
-    if value >= 10 then
-        local bonus = (value - 9) * 5
+    -- Give an extra 5 max health for every point above 10.
+    if value > 10 then
+        local bonus = (value - 10) * 5
         client:SetMaxHealth(client:GetMaxHealth() + bonus)
-        client:SetHealth(client:GetMaxHealth())
-        client:ChatPrint("You gained " .. bonus .. " max health from " .. self.name .. "!")
-    else
-        client:ChatPrint("You need more practice in " .. self.name .. ".")
     end
 end
 ```
