@@ -134,19 +134,16 @@ if SERVER then
             return
         end
 
-        if SERVER then
-            if fullUpdate then
-                for _, client in player.Iterator() do
-                    if client:getChar():getID() == owner then
-                        self:sync(client)
-                        break
-                    end
+        if fullUpdate then
+            for _, client in player.Iterator() do
+                if client:getChar():getID() == owner then
+                    self:sync(client)
+                    break
                 end
             end
-
-            self:setData("char", owner)
         end
 
+        self:setData("char", owner)
         self.owner = owner
     end
 
