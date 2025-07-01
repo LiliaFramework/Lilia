@@ -1,7 +1,5 @@
 ﻿local xpos = xpos or 20
 local ypos = ypos or 20
-local xpos = xpos or 20
-local ypos = ypos or 20
 function MODULE:TicketFrame(requester, message, claimed)
     local mat_lightning = Material("icon16/lightning_go.png")
     local mat_arrow = Material("icon16/arrow_left.png")
@@ -20,13 +18,13 @@ function MODULE:TicketFrame(requester, message, claimed)
         end
     end
 
-    local w, h = 300, 120
+    local frameWidth, frameHeight = 300, 120
     local frm = vgui.Create("DFrame")
-    frm:SetSize(w, h)
+    frm:SetSize(frameWidth, frameHeight)
     frm:SetPos(xpos, ypos)
     frm.idiot = requester
-    function frm:Paint(w, h)
-        draw.RoundedBox(0, 0, 0, w, h, Color(10, 10, 10, 230))
+    function frm:Paint(paintWidth, paintHeight)
+        draw.RoundedBox(0, 0, 0, paintWidth, paintHeight, Color(10, 10, 10, 230))
     end
 
     frm.lblTitle:SetColor(Color(255, 255, 255))
@@ -35,14 +33,14 @@ function MODULE:TicketFrame(requester, message, claimed)
     if claimed and IsValid(claimed) and claimed:IsPlayer() then
         frm:SetTitle(requester:Nick() .. " - " .. L("claimedBy") .. " " .. claimed:Nick())
         if claimed == LocalPlayer() then
-            function frm:Paint(w, h)
-                draw.RoundedBox(0, 0, 0, w, h, Color(10, 10, 10, 230))
-                draw.RoundedBox(0, 2, 2, w - 4, 16, Color(38, 166, 91))
+            function frm:Paint(paintWidth, paintHeight)
+                draw.RoundedBox(0, 0, 0, paintWidth, paintHeight, Color(10, 10, 10, 230))
+                draw.RoundedBox(0, 2, 2, paintWidth - 4, 16, Color(38, 166, 91))
             end
         else
-            function frm:Paint(w, h)
-                draw.RoundedBox(0, 0, 0, w, h, Color(10, 10, 10, 230))
-                draw.RoundedBox(0, 2, 2, w - 4, 16, Color(207, 0, 15))
+            function frm:Paint(paintWidth, paintHeight)
+                draw.RoundedBox(0, 0, 0, paintWidth, paintHeight, Color(10, 10, 10, 230))
+                draw.RoundedBox(0, 2, 2, paintWidth - 4, 16, Color(207, 0, 15))
             end
         end
     else
@@ -51,7 +49,7 @@ function MODULE:TicketFrame(requester, message, claimed)
 
     local msg = vgui.Create("RichText", frm)
     msg:SetPos(10, 30)
-    msg:SetSize(190, h - 35)
+    msg:SetSize(190, frameHeight - 35)
     msg:SetContentAlignment(7)
     msg:SetVerticalScrollbarEnabled(false)
     function msg:PerformLayout()
@@ -69,13 +67,13 @@ function MODULE:TicketFrame(requester, message, claimed)
         btn:SetContentAlignment(4)
         btn.Disabled = disabled
         btn.DoClick = function() if not btn.Disabled then clickFunc() end end
-        btn.Paint = function(self, w, h)
-            if self.Depressed or self.m_bSelected then
-                draw.RoundedBox(1, 0, 0, w, h, Color(255, 50, 50, 255))
-            elseif self.Hovered and not self.Disabled then
-                draw.RoundedBox(1, 0, 0, w, h, Color(205, 30, 30, 255))
+        btn.Paint = function(panel, paintWidth, paintHeight)
+            if panel.Depressed or panel.m_bSelected then
+                draw.RoundedBox(1, 0, 0, paintWidth, paintHeight, Color(255, 50, 50, 255))
+            elseif panel.Hovered and not panel.Disabled then
+                draw.RoundedBox(1, 0, 0, paintWidth, paintHeight, Color(205, 30, 30, 255))
             else
-                draw.RoundedBox(1, 0, 0, w, h, self.Disabled and Color(100, 100, 100, 255) or Color(80, 80, 80, 255))
+                draw.RoundedBox(1, 0, 0, paintWidth, paintHeight, panel.Disabled and Color(100, 100, 100, 255) or Color(80, 80, 80, 255))
             end
 
             surface.SetDrawColor(Color(255, 255, 255))
@@ -88,13 +86,13 @@ function MODULE:TicketFrame(requester, message, claimed)
     end
 
     local isLocalPlayer = requester == LocalPlayer()
-    createButton("goto", mat_lightning, 20 * 1, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "goto", sam and requester:SteamID() or requester:SteamID64()) end, isLocalPlayer)
-    createButton("return", mat_arrow, 20 * 2, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "return", sam and requester:SteamID() or requester:SteamID64()) end, isLocalPlayer)
-    createButton("freeze", mat_link, 20 * 3, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "freeze", sam and requester:SteamID() or requester:SteamID64()) end, isLocalPlayer)
-    createButton("bring", mat_arrow, 20 * 4, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "bring", sam and requester:SteamID() or requester:SteamID64()) end, isLocalPlayer)
+    createButton("goto", mat_lightning, 20, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "goto", sam and requester:SteamID() or requester:SteamID64()) end, isLocalPlayer)
+    createButton("return", mat_arrow, 40, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "return", sam and requester:SteamID() or requester:SteamID64()) end, isLocalPlayer)
+    createButton("freeze", mat_link, 60, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "freeze", sam and requester:SteamID() or requester:SteamID64()) end, isLocalPlayer)
+    createButton("bring", mat_arrow, 80, function() RunConsoleCommand(sam and "sam" or ulx and "ulx", "bring", sam and requester:SteamID() or requester:SteamID64()) end, isLocalPlayer)
     local shouldClose = false
     local claimButton
-    claimButton = createButton("claimCase", mat_case, 20 * 5, function()
+    claimButton = createButton("claimCase", mat_case, 100, function()
         if not shouldClose then
             if frm.lblTitle:GetText():lower():find("claimed") then
                 chat.AddText(Color(255, 150, 0), "[ERROR] " .. L("caseAlreadyClaimed"))
@@ -117,7 +115,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     closeButton:SetText("×")
     closeButton:SetTooltip(L("close"))
     closeButton:SetColor(Color(255, 255, 255))
-    closeButton:SetPos(w - 18, 2)
+    closeButton:SetPos(frameWidth - 18, 2)
     closeButton:SetSize(16, 16)
     function closeButton:Paint()
     end
@@ -130,7 +128,7 @@ function MODULE:TicketFrame(requester, message, claimed)
         if TicketFrames then
             table.RemoveByValue(TicketFrames, frm)
             for k, v in ipairs(TicketFrames) do
-                v:MoveTo(xpos, ypos + 130 * (k - 1), 0.1, 0, 1, function() end)
+                v:MoveTo(xpos, ypos + 130 * (k - 1), 0.1, 0, 1)
             end
         end
 
