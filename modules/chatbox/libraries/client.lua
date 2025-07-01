@@ -46,14 +46,14 @@ function MODULE:ChatAddText(text, ...)
         if not chatMode or istable(chatMode) then
             return "<font=liaChatFont>"
         else
-            local chatModeLower = string.lower(chatMode)
-            if string.match(chatModeLower, "yell") then
+            local chatMode = string.lower(chatMode)
+            if string.match(chatMode, "yell") then
                 return "<font=liaBigChatFont>"
-            elseif string.sub(chatModeLower, 1, 2) == "**" then
+            elseif string.sub(chatMode, 1, 2) == "**" then
                 return "<font=liaItalicsChatFont>"
-            elseif string.match(chatModeLower, "whisper") then
+            elseif string.match(chatMode, "whisper") then
                 return "<font=liaSmallChatFont>"
-            elseif string.match(chatModeLower, "ooc") or string.match(chatModeLower, "looc") then
+            elseif string.match(chatMode, "ooc") or string.match(chatMode, "looc") then
                 return "<font=liaChatFont>"
             else
                 return "<font=liaMediumChatFont>"

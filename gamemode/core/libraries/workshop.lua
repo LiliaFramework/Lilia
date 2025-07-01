@@ -183,14 +183,14 @@ else
         if not lia.config.get("AutoDownloadWorkshop", true) then return end
         table.insert(pages, {
             name = L("workshopAddons"),
-            drawFunc = function(container)
+            drawFunc = function(panel)
                 local ids = gather()
-                local search = vgui.Create("DTextEntry", container)
+                local search = vgui.Create("DTextEntry", panel)
                 search:Dock(TOP)
                 search:DockMargin(0, 0, 0, 5)
                 search:SetTall(30)
                 search:SetPlaceholderText(L("searchAddons"))
-                local info = vgui.Create("DPanel", container)
+                local info = vgui.Create("DPanel", panel)
                 info:Dock(TOP)
                 info:DockMargin(10, 0, 10, 5)
                 info:SetTall(30)
@@ -201,7 +201,7 @@ else
                 lbl:SetTextColor(color_white)
                 lbl:SetContentAlignment(5)
                 lbl:SetText(L("totalAutoAddons", table.Count(ids)))
-                local sc = vgui.Create("DScrollPanel", container)
+                local sc = vgui.Create("DScrollPanel", panel)
                 sc:Dock(FILL)
                 sc:DockPadding(0, 10, 0, 0)
                 local canvas = sc:GetCanvas()

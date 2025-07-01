@@ -135,8 +135,8 @@ local function PlayerBindPress(client, bind, pressed)
         onIndexChanged()
         return true
     elseif bind:find("attack") and alpha > 0 then
-        local selectedWeapon = getWeaponFromIndex(index, weapons)
-        if not IsValid(selectedWeapon) then
+        local weapon = getWeaponFromIndex(index, weapons)
+        if not IsValid(weapon) then
             alpha = 0
             infoAlpha = 0
             return
@@ -146,7 +146,7 @@ local function PlayerBindPress(client, bind, pressed)
         source = source or "common/talk.wav"
         pitch = pitch or 180
         client:EmitSound(source, 75, pitch)
-        client:SelectWeapon(selectedWeapon:GetClass())
+        client:SelectWeapon(weapon:GetClass())
         alpha = 0
         infoAlpha = 0
         return true

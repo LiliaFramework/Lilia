@@ -11,11 +11,11 @@ function panelMeta:liaListenForInventoryChanges(inventory)
     self.liaToRemoveHooks[id] = {}
     local function listenForInventoryChange(name, panelHook)
         panelHook = panelHook or name
-        hook.Add(name, hookID, function(inv, ...)
+        hook.Add(name, hookID, function(inventory, ...)
             if not IsValid(self) then return end
             if not isfunction(self[panelHook]) then return end
             local args = {...}
-            args[#args + 1] = inv
+            args[#args + 1] = inventory
             self[panelHook](self, unpack(args))
             if name == "InventoryDeleted" and self.deleteInventoryHooks then self:deleteInventoryHooks(id) end
         end)

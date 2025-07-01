@@ -26,8 +26,8 @@ local function CanNotTransferBagIfNestedItemCanNotBe(_, action, context)
     if not item.isBag then return end
     local bagInventory = item:getInv()
     if not bagInventory then return end
-    for _, nestedItem in pairs(bagInventory:getItems()) do
-        local canTransferItem, reason = hook.Run("CanItemBeTransfered", nestedItem, bagInventory, bagInventory, context.client)
+    for _, item in pairs(bagInventory:getItems()) do
+        local canTransferItem, reason = hook.Run("CanItemBeTransfered", item, bagInventory, bagInventory, context.client)
         if canTransferItem == false then return false, reason or L("nestedItemTransferError") end
     end
 end
@@ -70,9 +70,9 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
     if not item then return end
     local oldInventory = lia.inventory.instances[item.invID]
     if not oldInventory or not oldInventory.items[itemID] then return end
-    local status, statusReason = hook.Run("CanItemBeTransfered", item, oldInventory, inventory, client)
+    local status, reason = hook.Run("CanItemBeTransfered", item, oldInventory, inventory, client)
     if status == false then
-        client:notify(statusReason or L("notNow"))
+        client:notify(reason or L("notNow"))
         return
     end
 
@@ -83,10 +83,10 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
         to = inventory
     }
 
-    local canTransfer, reason2 = oldInventory:canAccess("transfer", context)
+    local canTransfer, reason = oldInventory:canAccess("transfer", context)
     if not inventory then return hook.Run("ItemDraggedOutOfInventory", client, item) end
     if not canTransfer then
-        if isstring(reason2) then client:notifyLocalized(reason2) end
+        if isstring(reason) then client:notifyLocalized(reason) end
         return
     end
 

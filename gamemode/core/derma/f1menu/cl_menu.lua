@@ -16,8 +16,8 @@ function PANEL:Init()
     local iconMat = Material("https://raw.githubusercontent.com/LiliaFramework/Lilia/refs/heads/main/logo.png", "smooth")
     local schemaIconMat = SCHEMA and SCHEMA.icon and Material(SCHEMA.icon, "smooth") or nil
     local schemaName = SCHEMA and SCHEMA.name or nil
-    topBar.Paint = function(pnl, w, h)
-        lia.util.drawBlur(pnl)
+    topBar.Paint = function(self, w, h)
+        lia.util.drawBlur(self)
         surface.SetDrawColor(34, 34, 34, 220)
         surface.DrawRect(0, 0, w, h)
         local col = lia.config.get("Color")

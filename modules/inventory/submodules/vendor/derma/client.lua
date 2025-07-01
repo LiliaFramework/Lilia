@@ -443,7 +443,7 @@ function PANEL:OnKeyCodePressed()
 end
 
 vgui.Register("Vendor", PANEL, "EditablePanel")
-PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     self:SetSize(600, 200)
     self:Dock(TOP)
@@ -593,7 +593,7 @@ function PANEL:updateLabel()
 end
 
 vgui.Register("VendorItem", PANEL, "DPanel")
-PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     if IsValid(lia.gui.vendorEditor) then lia.gui.vendorEditor:Remove() end
     lia.gui.vendorEditor = self
@@ -807,8 +807,8 @@ function PANEL:OnRowRightClick(line)
         end)
     end):SetImage("icon16/coins.png")
 
-    local stock, stockPanel = menu:AddSubMenu(L("stock"))
-    stockPanel:SetImage("icon16/table.png")
+    local stock, panel = menu:AddSubMenu(L("stock"))
+    panel:SetImage("icon16/table.png")
     stock:AddOption(L("disable"), function() EDITOR.stockDisable(uniqueID) end):SetImage("icon16/table_delete.png")
     stock:AddOption(L("edit"), function()
         local _, max = entity:getStock(uniqueID)
@@ -845,7 +845,7 @@ function PANEL:ReloadItemList(filter)
 end
 
 vgui.Register("VendorEditor", PANEL, "DFrame")
-PANEL = {}
+local PANEL = {}
 local function onFactionStateChanged(checkBox, state)
     EDITOR.faction(checkBox.factionID, state)
 end

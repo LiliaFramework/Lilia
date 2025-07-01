@@ -81,29 +81,29 @@ function MODULE:LoadData()
         local position, angles, invID, model, password = unpack(info)
         local storage = self.StorageDefinitions[model]
         if not storage then continue end
-        local storageEnt = ents.Create("lia_storage")
-        storageEnt:SetPos(position)
-        storageEnt:SetAngles(angles)
-        storageEnt:Spawn()
-        storageEnt:SetModel(model)
-        storageEnt:SetSolid(SOLID_VPHYSICS)
-        storageEnt:PhysicsInit(SOLID_VPHYSICS)
+        local storage = ents.Create("lia_storage")
+        storage:SetPos(position)
+        storage:SetAngles(angles)
+        storage:Spawn()
+        storage:SetModel(model)
+        storage:SetSolid(SOLID_VPHYSICS)
+        storage:PhysicsInit(SOLID_VPHYSICS)
         if password then
-            storageEnt.password = password
-            storageEnt:setNetVar("locked", true)
+            storage.password = password
+            storage:setNetVar("locked", true)
         end
 
         lia.inventory.loadByID(invID):next(function(inventory)
-            if inventory and IsValid(storageEnt) then
+            if inventory and IsValid(storage) then
                 inventory.isStorage = true
-                storageEnt:setInventory(inventory)
-                hook.Run("StorageRestored", storageEnt, inventory)
-            elseif IsValid(storageEnt) then
-                SafeRemoveEntityDelayed(storageEnt, 1)
+                storage:setInventory(inventory)
+                hook.Run("StorageRestored", storage, inventory)
+            elseif IsValid(storage) then
+                SafeRemoveEntityDelayed(storage, 1)
             end
         end)
 
-        local physObject = storageEnt:GetPhysicsObject()
+        local physObject = storage:GetPhysicsObject()
         if physObject then physObject:EnableMotion() end
     end
 

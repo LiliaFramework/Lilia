@@ -68,15 +68,15 @@ function PANEL:Clear()
 end
 
 vgui.Register("liaHorizontalScroll", PANEL, "DPanel")
-local SB_PANEL = {}
-function SB_PANEL:Init()
+local PANEL = {}
+function PANEL:Init()
     self.btnLeft = self.btnUp
     self.btnRight = self.btnDown
     self.btnLeft.Paint = function(p, w, h) derma.SkinHook("Paint", "ButtonLeft", p, w, h) end
     self.btnRight.Paint = function(p, w, h) derma.SkinHook("Paint", "ButtonRight", p, w, h) end
 end
 
-function SB_PANEL:SetScroll(offset)
+function PANEL:SetScroll(offset)
     if self.Enabled then
         self.Scroll = math.Clamp(offset, 0, self.CanvasSize)
         self:InvalidateLayout()
@@ -91,7 +91,7 @@ function SB_PANEL:SetScroll(offset)
     end
 end
 
-function SB_PANEL:OnCursorMoved()
+function PANEL:OnCursorMoved()
     if not self.Enabled or not self.Dragging then return end
     local x = self:ScreenToLocal(gui.MouseX(), 0) - self.btnLeft:GetWide() - self.HoldPos
     local btnSize = self:GetHideButtons() and 0 or self:GetTall()
@@ -99,12 +99,12 @@ function SB_PANEL:OnCursorMoved()
     self:SetScroll(x * self.CanvasSize / track)
 end
 
-function SB_PANEL:Grip()
+function PANEL:Grip()
     self.BaseClass.Grip(self)
     self.HoldPos = self.btnGrip:ScreenToLocal(gui.MouseX(), 0)
 end
 
-function SB_PANEL:PerformLayout()
+function PANEL:PerformLayout()
     local h, w = self:GetTall(), self:GetWide()
     local btnSize = self:GetHideButtons() and 0 or h
     local ratio = self.Scroll / self.CanvasSize
@@ -125,4 +125,4 @@ function SB_PANEL:PerformLayout()
     end
 end
 
-vgui.Register("liaHorizontalScrollBar", SB_PANEL, "DVScrollBar")
+vgui.Register("liaHorizontalScrollBar", PANEL, "DVScrollBar")

@@ -84,9 +84,9 @@ net.Receive("liaInventoryInit", function()
     local datatable = items
     local expectedItems = #datatable
     for i = 1, expectedItems do
-        local itemID, itemType, itemData, quantity = readItem(i)
+        local itemID, itemType, data, quantity = readItem(i)
         local item = lia.item.new(itemType, itemID)
-        item.data = table.Merge(item.data, itemData)
+        item.data = table.Merge(item.data, data)
         item.invID = instance.id
         item.quantity = quantity
         instance.items[itemID] = item

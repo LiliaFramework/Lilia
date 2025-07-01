@@ -75,7 +75,7 @@ function PANEL:fitFOV()
 end
 
 vgui.Register("liaModelPanel", PANEL, "DModelPanel")
-PANEL = {}
+local PANEL = {}
 local HEAD_BONE = "ValveBiped.Bip01_Head1"
 local DEFAULT_ANGLE = Angle(0, 45, 0)
 function PANEL:Init()

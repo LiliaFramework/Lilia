@@ -1,5 +1,4 @@
 ﻿local MODULE = MODULE
-
 function MODULE:LoadData()
     self.spawns = self:getData() or {}
 end

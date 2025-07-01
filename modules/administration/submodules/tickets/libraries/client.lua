@@ -1,5 +1,7 @@
 ﻿local xpos = xpos or 20
 local ypos = ypos or 20
+local xpos = xpos or 20
+local ypos = ypos or 20
 function MODULE:TicketFrame(requester, message, claimed)
     local mat_lightning = Material("icon16/lightning_go.png")
     local mat_arrow = Material("icon16/arrow_left.png")
@@ -23,8 +25,8 @@ function MODULE:TicketFrame(requester, message, claimed)
     frm:SetSize(w, h)
     frm:SetPos(xpos, ypos)
     frm.idiot = requester
-    function frm:Paint(width, height)
-        draw.RoundedBox(0, 0, 0, width, height, Color(10, 10, 10, 230))
+    function frm:Paint(w, h)
+        draw.RoundedBox(0, 0, 0, w, h, Color(10, 10, 10, 230))
     end
 
     frm.lblTitle:SetColor(Color(255, 255, 255))
@@ -33,14 +35,14 @@ function MODULE:TicketFrame(requester, message, claimed)
     if claimed and IsValid(claimed) and claimed:IsPlayer() then
         frm:SetTitle(requester:Nick() .. " - " .. L("claimedBy") .. " " .. claimed:Nick())
         if claimed == LocalPlayer() then
-            function frm:Paint(width, height)
-                draw.RoundedBox(0, 0, 0, width, height, Color(10, 10, 10, 230))
-                draw.RoundedBox(0, 2, 2, width - 4, 16, Color(38, 166, 91))
+            function frm:Paint(w, h)
+                draw.RoundedBox(0, 0, 0, w, h, Color(10, 10, 10, 230))
+                draw.RoundedBox(0, 2, 2, w - 4, 16, Color(38, 166, 91))
             end
         else
-            function frm:Paint(width, height)
-                draw.RoundedBox(0, 0, 0, width, height, Color(10, 10, 10, 230))
-                draw.RoundedBox(0, 2, 2, width - 4, 16, Color(207, 0, 15))
+            function frm:Paint(w, h)
+                draw.RoundedBox(0, 0, 0, w, h, Color(10, 10, 10, 230))
+                draw.RoundedBox(0, 2, 2, w - 4, 16, Color(207, 0, 15))
             end
         end
     else
@@ -67,13 +69,13 @@ function MODULE:TicketFrame(requester, message, claimed)
         btn:SetContentAlignment(4)
         btn.Disabled = disabled
         btn.DoClick = function() if not btn.Disabled then clickFunc() end end
-        btn.Paint = function(button, width, height)
-            if button.Depressed or button.m_bSelected then
-                draw.RoundedBox(1, 0, 0, width, height, Color(255, 50, 50, 255))
-            elseif button.Hovered and not button.Disabled then
-                draw.RoundedBox(1, 0, 0, width, height, Color(205, 30, 30, 255))
+        btn.Paint = function(self, w, h)
+            if self.Depressed or self.m_bSelected then
+                draw.RoundedBox(1, 0, 0, w, h, Color(255, 50, 50, 255))
+            elseif self.Hovered and not self.Disabled then
+                draw.RoundedBox(1, 0, 0, w, h, Color(205, 30, 30, 255))
             else
-                draw.RoundedBox(1, 0, 0, width, height, button.Disabled and Color(100, 100, 100, 255) or Color(80, 80, 80, 255))
+                draw.RoundedBox(1, 0, 0, w, h, self.Disabled and Color(100, 100, 100, 255) or Color(80, 80, 80, 255))
             end
 
             surface.SetDrawColor(Color(255, 255, 255))

@@ -72,7 +72,6 @@ function MODULE:LoadCharInformation()
 end
 
 lia.bar.add(function()
-    local client = LocalPlayer()
     local char = client:getChar()
     if not char then return 0 end
     local max = char:getMaxStamina()
