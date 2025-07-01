@@ -721,6 +721,8 @@ end
 
 Updates a network variable and sends it to recipients.
 
+This will trigger the **NetVarChanged** hook on both server and client.
+
 **Parameters:**
 
 * key (string) – Variable name.

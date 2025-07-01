@@ -137,8 +137,10 @@ if SERVER then
     function entityMeta:setNetVar(key, value, receiver)
         if checkBadType(key, value) then return end
         lia.net[self] = lia.net[self] or {}
-        if lia.net[self][key] ~= value then lia.net[self][key] = value end
+        local oldValue = lia.net[self][key]
+        if oldValue ~= value then lia.net[self][key] = value end
         self:sendNetVar(key, receiver)
+        hook.Run("NetVarChanged", self, key, oldValue, value)
     end
 
     function entityMeta:getNetVar(key, default)

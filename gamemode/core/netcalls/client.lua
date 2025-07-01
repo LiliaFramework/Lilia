@@ -246,12 +246,18 @@ end)
 
 netstream.Hook("nVar", function(index, key, value)
     lia.net[index] = lia.net[index] or {}
+    local oldValue = lia.net[index][key]
     lia.net[index][key] = value
+    local entity = Entity(index)
+    if IsValid(entity) then hook.Run("NetVarChanged", entity, key, oldValue, value) end
 end)
 
 netstream.Hook("nLcl", function(key, value)
-    lia.net[LocalPlayer():EntIndex()] = lia.net[LocalPlayer():EntIndex()] or {}
-    lia.net[LocalPlayer():EntIndex()][key] = value
+    local idx = LocalPlayer():EntIndex()
+    lia.net[idx] = lia.net[idx] or {}
+    local oldValue = lia.net[idx][key]
+    lia.net[idx][key] = value
+    hook.Run("LocalVarChanged", LocalPlayer(), key, oldValue, value)
 end)
 
 net.Receive("actBar", function()
@@ -560,5 +566,9 @@ end)
 
 netstream.Hook("charInfo", function(data, id, client) lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client) end)
 netstream.Hook("charKick", function(id, isCurrentChar) hook.Run("KickedFromChar", id, isCurrentChar) end)
-netstream.Hook("gVar", function(key, value) lia.net.globals[key] = value end)
+netstream.Hook("gVar", function(key, value)
+    local oldValue = lia.net.globals[key]
+    lia.net.globals[key] = value
+    hook.Run("NetVarChanged", nil, key, oldValue, value)
+end)
 netstream.Hook("nDel", function(index) lia.net[index] = nil end)

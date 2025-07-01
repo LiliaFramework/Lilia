@@ -16,9 +16,11 @@ if SERVER then
 
     function setNetVar(key, value, receiver)
         if checkBadType(key, value) then return end
-        if getNetVar(key) == value then return end
+        local oldValue = getNetVar(key)
+        if oldValue == value then return end
         lia.net.globals[key] = value
         netstream.Start(receiver, "gVar", key, value)
+        hook.Run("NetVarChanged", nil, key, oldValue, value)
     end
 
     function getNetVar(key, default)
