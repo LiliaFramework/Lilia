@@ -29,11 +29,9 @@ function MODULE:Think()
     if offset ~= 0 then predictedStamina = math.Clamp(predictedStamina + offset, 0, maxStamina) end
 end
 
-function MODULE:OnLocalVarSet(key, var)
-    if key ~= "stamina" then return end
-    if math.abs(predictedStamina - var) > 5 then
-        predictedStamina = var
-    end
+function MODULE:LocalVarChanged(client, key, _, newVar)
+    if client ~= LocalPlayer() or key ~= "stamina" then return end
+    if math.abs(predictedStamina - newVar) > 5 then predictedStamina = newVar end
 end
 
 function MODULE:HUDPaintBackground()
@@ -83,5 +81,5 @@ lia.bar.add(function()
     local char = client:getChar()
     if not char then return 0 end
     local max = char:getMaxStamina()
-    return (predictedStamina or client:getLocalVar("stamina", max)) / max
+    return predictedStamina / max
 end, Color(200, 200, 40), nil, "stamina")
