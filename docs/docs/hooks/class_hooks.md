@@ -167,9 +167,9 @@ Executes actions when a player is transferred into this class (e.g., by an admin
 ```lua
 function CLASS:OnTransferred(client, oldClass)
     local char = client:getChar()
-    if char then
-        local randomModelIndex = math.random(1, #self.models)
-        char:setModel(self.models[randomModelIndex])
+    if char and self.model then
+        -- Give the player the model defined for this class
+        char:setModel(self.model)
     end
     print("Transferred from class", oldClass)
 end
