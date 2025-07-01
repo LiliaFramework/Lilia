@@ -108,7 +108,8 @@ if SERVER then
     function entityMeta:removeDoorAccessData()
         if IsValid(self) then
             for k, _ in pairs(self.liaAccess or {}) do
-                netstream.Start(k, "doorMenu")
+                net.Start("doorMenu")
+                net.Send(k)
             end
 
             self.liaAccess = {}
