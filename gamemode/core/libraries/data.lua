@@ -1,10 +1,8 @@
 file.CreateDir("lilia")
 lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
-
 if SERVER then
     lia.data.isConverting = lia.data.isConverting or false
-
     local function buildCondition(key, folder, map)
         local cond = "_key = " .. lia.db.convertDataType(key)
         cond = cond .. " AND " .. (folder and "_folder = " .. lia.db.convertDataType(folder) or "_folder IS NULL")
@@ -15,7 +13,6 @@ if SERVER then
     local function scanLegacyData()
         local entries = {}
         local base = "lilia"
-
         local function scan(dir)
             local files, dirs = file.Find(dir .. "/*", "DATA")
             for _, f in ipairs(files) do
@@ -32,6 +29,7 @@ if SERVER then
                             folder = segments[1]
                             map = segments[2]
                         end
+
                         local data = file.Read(dir .. "/" .. f, "DATA")
                         local ok, decoded = pcall(pon.decode, data)
                         if ok and decoded then
@@ -45,6 +43,7 @@ if SERVER then
                     end
                 end
             end
+
             for _, d in ipairs(dirs) do
                 scan(dir .. "/" .. d)
             end
@@ -71,7 +70,6 @@ if SERVER then
                 _value = {value}
             }, "data")
         end)
-
         return "lilia/" .. (folder and folder .. "/" or "") .. (map and map .. "/" or "")
     end
 
@@ -85,37 +83,26 @@ if SERVER then
 
         lia.data.stored[key] = nil
         local condition = buildCondition(key, folder, map)
-        lia.db.waitForTablesToLoad():next(function()
-            lia.db.delete("data", condition)
-        end)
+        lia.db.waitForTablesToLoad():next(function() lia.db.delete("data", condition) end)
         return true
     end
 
     function lia.data.convertToDatabase(changeMap)
         if lia.data.isConverting then return end
         lia.data.isConverting = true
-        SetGlobalBool("liaDataConverting", true)
         print("[Lilia] Converting lia.data to database...")
         local dataEntries = scanLegacyData()
         local queries = {"DELETE FROM lia_data"}
         for _, entry in ipairs(dataEntries) do
-            print("[Lilia]  - " .. entry.key)
             lia.data.stored[entry.key] = entry.value
-            queries[#queries + 1] = "INSERT INTO lia_data (_key,_folder,_map,_value) VALUES (" ..
-                lia.db.convertDataType(entry.key) .. ", " ..
-                lia.db.convertDataType(entry.folder or NULL) .. ", " ..
-                lia.db.convertDataType(entry.map or NULL) .. ", " ..
-                lia.db.convertDataType({entry.value}) .. ")"
+            queries[#queries + 1] = "INSERT INTO lia_data (_key,_folder,_map,_value) VALUES (" .. lia.db.convertDataType(entry.key) .. ", " .. lia.db.convertDataType(entry.folder or NULL) .. ", " .. lia.db.convertDataType(entry.map or NULL) .. ", " .. lia.db.convertDataType({entry.value}) .. ")"
         end
 
         lia.db.waitForTablesToLoad():next(function()
             lia.db.transaction(queries):next(function()
                 lia.data.isConverting = false
-                SetGlobalBool("liaDataConverting", false)
                 print("[Lilia] Data conversion complete.")
-                if changeMap then
-                    game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n")
-                end
+                if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
             end)
         end)
     end
@@ -128,21 +115,12 @@ if SERVER then
                     local decoded = util.JSONToTable(row._value or "[]")
                     lia.data.stored[row._key] = decoded and decoded[1]
                 end
+
                 local legacy = scanLegacyData()
-                lia.db.count("data"):next(function(n)
-                    if n == 0 and #legacy > 0 then
-                        lia.data.convertToDatabase(true)
-                    end
-                end)
+                lia.db.count("data"):next(function(n) if n == 0 and #legacy > 0 then lia.data.convertToDatabase(true) end end)
             end)
         end)
     end
-
-    hook.Add("CheckPassword", "liaDataConversion", function()
-        if lia.data.isConverting then
-            return false, "Server is converting data, please retry later"
-        end
-    end)
 
     timer.Create("liaSaveData", lia.config.get("DataSaveInterval", 600), 0, function()
         hook.Run("SaveData")
@@ -155,6 +133,5 @@ function lia.data.get(key, default, global, ignoreMap, refresh)
         local stored = lia.data.stored[key]
         if stored ~= nil then return stored end
     end
-
     return default
 end

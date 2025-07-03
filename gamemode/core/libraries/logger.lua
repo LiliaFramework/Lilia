@@ -2,7 +2,6 @@
 lia.log.types = lia.log.types or {}
 if SERVER then
     lia.log.isConverting = lia.log.isConverting or false
-
     local function createLogsTable()
         if lia.db.module == "sqlite" then
             lia.db.query([[CREATE TABLE IF NOT EXISTS lia_logs (
@@ -26,11 +25,7 @@ if SERVER then
         local logsDir = "lilia/logs/" .. engine.ActiveGamemode()
         local files = file.Find(logsDir .. "/*.txt", "DATA")
         if #files == 0 then return end
-        lia.db.count("logs"):next(function(n)
-            if n == 0 then
-                lia.log.convertToDatabase(true)
-            end
-        end)
+        lia.db.count("logs"):next(function(n) if n == 0 then lia.log.convertToDatabase(true) end end)
     end
 
     function lia.log.loadTables()
@@ -79,7 +74,6 @@ if SERVER then
     function lia.log.convertToDatabase(changeMap)
         if lia.log.isConverting then return end
         lia.log.isConverting = true
-        SetGlobalBool("liaLogsConverting", true)
         print("[Lilia] Converting legacy logs to database...")
         local logsDir = "lilia/logs/" .. engine.ActiveGamemode()
         local files = file.Find(logsDir .. "/*.txt", "DATA")
@@ -91,7 +85,6 @@ if SERVER then
                 for line in data:gmatch("[^\r\n]+") do
                     local ts, msg = line:match("^%[([^%]]+)%]%s*(.+)")
                     if ts and msg then
-                        print("[Lilia]  - " .. line)
                         entries[#entries + 1] = {
                             _timestamp = ts,
                             _category = category,
@@ -107,23 +100,15 @@ if SERVER then
                 i = i or 1
                 if i > #entries then
                     lia.log.isConverting = false
-                    SetGlobalBool("liaLogsConverting", false)
                     print("[Lilia] Log conversion complete.")
-                    if changeMap then
-                        game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n")
-                    end
+                    if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
                     return
                 end
+
                 lia.db.insertTable(entries[i], function() insertNext(i + 1) end, "logs")
             end
 
             insertNext()
         end)
     end
-
-    hook.Add("CheckPassword", "liaLogConversion", function()
-        if lia.log.isConverting then
-            return false, "Server is converting logs, please retry later"
-        end
-    end)
 end

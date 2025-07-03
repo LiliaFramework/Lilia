@@ -231,6 +231,15 @@ local logTypeMap = {
     looc = "chatLOOC"
 }
 
+function GM:CheckPassword(steamid64, _, svpass, clpass, name)
+    local convertingMessage = lia.config.isConverting and "Server is converting configuration, please retry later" or lia.data.isConverting and "Server is converting data, please retry later" or lia.log.isConverting and "Server is converting logs, please retry later"
+    if convertingMessage then return false, convertingMessage end
+    if svpass ~= "" and svpass ~= clpass then
+        lia.log.add(nil, "failedPassword", steamid64, name, svpass, clpass)
+        lia.information("Passwords do not match for " .. name .. " (" .. steamid64 .. "), " .. "server password: " .. svpass .. ", client password: " .. clpass .. ".")
+    end
+end
+
 function GM:PlayerSay(client, message)
     local chatType, parsedMessage, anonymous = lia.chat.parse(client, message, true)
     message = parsedMessage

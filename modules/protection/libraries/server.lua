@@ -51,15 +51,6 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
     end
 end
 
-function MODULE:CheckPassword(steamid64, _, svpass, clpass, name)
-    if svpass == "" then return end
-    local mismatch = svpass ~= clpass
-    if mismatch then
-        lia.log.add(nil, "failedPassword", steamid64, name, svpass, clpass)
-        lia.information(mismatch and "Passwords do not match for " .. name .. " (" .. steamid64 .. "), server password: " .. svpass .. ", client password: " .. clpass .. "." or "Passwords match for " .. name .. " (" .. steamid64 .. ").")
-    end
-end
-
 function MODULE:PlayerShouldAct()
     return lia.config.get("ActsActive", false)
 end
@@ -141,13 +132,9 @@ function MODULE:OnEntityCreated(entity)
             return true
         end
 
-        timer.Simple(0, function()
-            if IsValid(entity) then SafeRemoveEntity(entity) end
-        end)
+        timer.Simple(0, function() if IsValid(entity) then SafeRemoveEntity(entity) end end)
     elseif class == "point_servercommand" then
-        timer.Simple(0, function()
-            if IsValid(entity) then SafeRemoveEntity(entity) end
-        end)
+        timer.Simple(0, function() if IsValid(entity) then SafeRemoveEntity(entity) end end)
     elseif class == "prop_vehicle_prisoner_pod" then
         entity:AddEFlags(EFL_NO_THINK_FUNCTION)
     end
