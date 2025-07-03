@@ -751,6 +751,10 @@ end
 
 function GM:DatabaseConnected()
     lia.bootstrap("Database", "Lilia has connected to the database. We are using " .. lia.db.module .. "!", Color(0, 255, 0))
+    if SERVER then
+        lia.log.loadTables()
+        lia.data.loadTables()
+    end
 end
 
 function GM:OnMySQLOOConnected()
