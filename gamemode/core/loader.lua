@@ -367,6 +367,12 @@ function lia.notifyAdmin(notification)
     end
 end
 
+function lia.printLog(category, logString)
+    MsgC(Color(83, 143, 239), "[Lilia] ")
+    MsgC(Color(0, 255, 0), "[LOG - " .. tostring(category) .. "] ")
+    MsgC(Color(255, 255, 255), tostring(logString) .. "\n")
+end
+
 function lia.applyPunishment(client, infraction, kick, ban, time, kickKey, banKey)
     local bantime = time or 0
     kickKey = kickKey or "kickedForInfraction"

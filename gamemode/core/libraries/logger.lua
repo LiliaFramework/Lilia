@@ -26,6 +26,7 @@ if SERVER then
         if not isstring(category) then category = "Uncategorized" end
         if not isstring(logString) then return end
         hook.Run("OnServerLog", client, logType, logString, category)
+        lia.printLog(category, logString)
         local logsDir = "lilia/logs/" .. engine.ActiveGamemode()
         if not file.Exists(logsDir, "DATA") then file.CreateDir(logsDir) end
         local filenameCategory = string.lower(string.gsub(category, "%s+", "_"))
