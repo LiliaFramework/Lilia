@@ -475,9 +475,9 @@ if SERVER then
         hook.Run("SetupDatabase")
         lia.db.connect(function()
             lia.db.loadTables()
+            hook.Run("DatabaseConnected")
             lia.log.loadTables()
             lia.data.loadTables()
-            hook.Run("DatabaseConnected")
         end)
     end
 

@@ -131,6 +131,7 @@ if SERVER then
         lia.config.isConverting = true
         print("[Lilia] Converting lia.config to database...")
         data = data or lia.data.get("config", nil, false, true) or {}
+        local entryCount = table.Count(data)
         local queries = {"DELETE FROM lia_config"}
         for k, v in pairs(data) do
             lia.config.stored[k] = lia.config.stored[k] or {}
@@ -139,13 +140,25 @@ if SERVER then
         end
 
         lia.db.waitForTablesToLoad():next(function()
-            lia.db.transaction(queries):next(function()
-                lia.config.isConverting = false
-                print("[Lilia] Configuration conversion complete.")
-                if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
-            end)
+        lia.db.transaction(queries):next(function()
+            lia.config.isConverting = false
+            print("[Lilia] Configuration conversion complete. Ported " .. entryCount .. " entries.")
+            if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
         end)
+    end)
+end
+
+    local function countLegacyConfigEntries()
+        local data = lia.data.get("config", nil, false, true) or {}
+        local total = istable(data) and table.Count(data) or 0
+        return total, total
     end
+
+    concommand.Add("lia_config_legacy_count", function(ply)
+        if IsValid(ply) then return end
+        local ported, total = countLegacyConfigEntries()
+        print("[Lilia] lia.config legacy file has " .. total .. " entries; " .. ported .. " can be ported.")
+    end)
 end
 
 lia.config.add("MoneyModel", "Money Model", "models/props_lab/box01a.mdl", nil, {
