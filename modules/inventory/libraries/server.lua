@@ -22,13 +22,13 @@ end
 
 local function CanNotTransferBagIfNestedItemCanNotBe(_, action, context)
     if action ~= "transfer" then return end
-    local item = context.item
-    if not item.isBag then return end
-    local bagInventory = item:getInv()
+    local bag = context.item
+    if not bag.isBag then return end
+    local bagInventory = bag:getInv()
     if not bagInventory then return end
-    for _, item in pairs(bagInventory:getItems()) do
-        local canTransferItem, reason = hook.Run("CanItemBeTransfered", item, bagInventory, bagInventory, context.client)
-        if canTransferItem == false then return false, reason or L("nestedItemTransferError") end
+    for _, nestedItem in pairs(bagInventory:getItems()) do
+        local canTransfer, reason = hook.Run("CanItemBeTransfered", nestedItem, bagInventory, bagInventory, context.client)
+        if canTransfer == false then return false, reason or L("nestedItemTransferError") end
     end
 end
 
@@ -65,14 +65,14 @@ function MODULE:PlayerLoadedChar(client, character)
 end
 
 function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
-    local inventory = lia.inventory.instances[invID]
+    local newInventory = lia.inventory.instances[invID]
     local item = lia.item.instances[itemID]
     if not item then return end
     local oldInventory = lia.inventory.instances[item.invID]
     if not oldInventory or not oldInventory.items[itemID] then return end
-    local status, reason = hook.Run("CanItemBeTransfered", item, oldInventory, inventory, client)
-    if status == false then
-        client:notify(reason or L("notNow"))
+    local transferAllowed, transferReason = hook.Run("CanItemBeTransfered", item, oldInventory, newInventory, client)
+    if transferAllowed == false then
+        client:notify(transferReason or L("notNow"))
         return
     end
 
@@ -80,18 +80,18 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
         client = client,
         item = item,
         from = oldInventory,
-        to = inventory
+        to = newInventory
     }
 
-    local canTransfer, reason = oldInventory:canAccess("transfer", context)
-    if not inventory then return hook.Run("ItemDraggedOutOfInventory", client, item) end
-    if not canTransfer then
-        if isstring(reason) then client:notifyLocalized(reason) end
+    local canAccessTransfer, accessReason = oldInventory:canAccess("transfer", context)
+    if not newInventory then return hook.Run("ItemDraggedOutOfInventory", client, item) end
+    if not canAccessTransfer then
+        if isstring(accessReason) then client:notifyLocalized(accessReason) end
         return
     end
 
     local oldX, oldY = item:getData("x"), item:getData("y")
-    local failItemDropPos = client:getItemDropPos()
+    local dropPos = client:getItemDropPos()
     if client.invTransferTransaction and client.invTransferTransactionTimeout > RealTime() then return end
     client.invTransferTransaction = true
     client.invTransferTransactionTimeout = RealTime()
@@ -103,16 +103,15 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
         end
 
         if IsValid(client) then client:notifyLocalized("itemOnGround") end
-        item:spawn(failItemDropPos)
+        item:spawn(dropPos)
     end
 
     local tryCombineWith
-    local originalAddRes
-    return oldInventory:removeItem(itemID, true):next(function() return inventory:add(item, x, y) end):next(function(res)
+    local originalAddResult
+    return oldInventory:removeItem(itemID, true):next(function() return newInventory:add(item, x, y) end):next(function(res)
         if not res or not res.error then return end
-        local conflictingItem = istable(res.error) and res.error.item
-        if conflictingItem then tryCombineWith = conflictingItem end
-        originalAddRes = res
+        if istable(res.error) then tryCombineWith = res.error.item end
+        originalAddResult = res
         return oldInventory:add(item, oldX, oldY)
     end):next(function(res)
         if res and res.error then return res end
@@ -124,6 +123,6 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
         else
             hook.Run("ItemTransfered", context)
         end
-        return originalAddRes
+        return originalAddResult
     end):catch(fail)
 end
