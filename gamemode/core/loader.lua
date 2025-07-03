@@ -368,8 +368,8 @@ function lia.notifyAdmin(notification)
 end
 
 function lia.printLog(category, logString)
-    MsgC(Color(83, 143, 239), "[Lilia] ")
-    MsgC(Color(0, 255, 0), "[LOG - " .. tostring(category) .. "] ")
+    MsgC(Color(83, 143, 239), "[LOG] ")
+    MsgC(Color(0, 255, 0), "[" .. tostring(category) .. "] ")
     MsgC(Color(255, 255, 255), tostring(logString) .. "\n")
 end
 
