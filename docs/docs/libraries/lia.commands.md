@@ -43,6 +43,11 @@ Registers a new command with its associated data.
 **Description:**
 
 Determines if a player may run the specified command.
+Before checking CAMI privileges, the function consults the
+`CanPlayerUseCommand` hook. If that hook returns either `true` or
+`false`, the result overrides the default permission logic. In
+addition, factions and classes can whitelist commands by placing them
+in a `commands` table on their definition.
 
 **Parameters:**
 
@@ -71,7 +76,17 @@ Determines if a player may run the specified command.
 **Example Usage:**
 
 ```lua
-    -- TODO
+-- Whitelist `/plytransfer` for the "Staff" faction
+FACTION.commands = {
+    plytransfer = true,
+}
+
+-- Globally block a command for non-admins via hook
+hook.Add("CanPlayerUseCommand", "BlockReserve", function(client, cmd)
+    if cmd == "reserve" and not client:IsAdmin() then
+        return false
+    end
+end)
 ```
 
 ### lia.command.extractArgs

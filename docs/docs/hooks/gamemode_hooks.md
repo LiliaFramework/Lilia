@@ -6689,7 +6689,9 @@ end)
 
 **Description:**
 
-Determines if a player can use a specific command. Return `false` to block usage.
+Determines if a player can use a specific command. Returning either
+`true` or `false` overrides the normal permission logic; returning
+`nil` falls back to the default checks.
 
 **Parameters:**
 
@@ -6706,7 +6708,8 @@ Determines if a player can use a specific command. Return `false` to block usage
 
 **Returns:**
 
-* boolean|nil: false to block, nil to allow.
+* boolean|nil: non-nil values override the result; return `nil` to
+  allow built‑in checks to decide.
 
 
 **Example Usage:**
