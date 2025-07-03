@@ -133,7 +133,6 @@ function MODULE:OnEntityCreated(entity)
     local class = entity:GetClass():lower():Trim()
     entity:SetCustomCollisionCheck(true)
     if class == "lua_run" and not lia.config.get("DisableLuaRun", false) then
-        print(L("notifyLuaRun"))
         function entity:AcceptInput()
             return true
         end
@@ -142,10 +141,13 @@ function MODULE:OnEntityCreated(entity)
             return true
         end
 
-        timer.Simple(0, function() SafeRemoveEntity(entity) end)
+        timer.Simple(0, function()
+            if IsValid(entity) then SafeRemoveEntity(entity) end
+        end)
     elseif class == "point_servercommand" then
-        print(L("notifyPointServer"))
-        timer.Simple(0, function() SafeRemoveEntity(entity) end)
+        timer.Simple(0, function()
+            if IsValid(entity) then SafeRemoveEntity(entity) end
+        end)
     elseif class == "prop_vehicle_prisoner_pod" then
         entity:AddEFlags(EFL_NO_THINK_FUNCTION)
     end

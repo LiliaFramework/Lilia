@@ -149,6 +149,14 @@
         func = function(client) return string.format("Client [%s] %s triggered hack detection.", client:SteamID64(), client:Name()) end,
         category = "Connections"
     },
+    ["dupeCrashAttempt"] = {
+        func = function(client)
+            local name = IsValid(client) and client:Name() or "Unknown"
+            local steamID = IsValid(client) and client:SteamID64() or "N/A"
+            return string.format("Player '%s' [%s] attempted to duplicate oversized entities.", name, steamID)
+        end,
+        category = "Security"
+    },
     ["doorSetClass"] = {
         func = function(client, door, className) return string.format("Client [%s] %s set door class to %s on door %s.", client:SteamID64(), client:Name(), className, door:GetClass()) end,
         category = "Doors"
