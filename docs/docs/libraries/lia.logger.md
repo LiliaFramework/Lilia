@@ -161,3 +161,33 @@ and appends the log string to a log file corresponding to its category in the lo
     -- This snippet demonstrates a common usage of lia.log.add
     lia.log.add(client, "mytype", "info")
 ```
+
+---
+
+### lia.log.convertToDatabase(changeMap)
+
+**Description:**
+
+Moves legacy log files from `data/lilia/logs` into the `lia_logs` database table.
+
+While the conversion is running, players are prevented from joining the server.
+If `changeMap` is true, the current level will reload after conversion completes.
+
+**Parameters:**
+
+* changeMap (boolean) – Whether to reload the current map when finished.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None
+
+**Example Usage:**
+
+```lua
+    -- Force log conversion and reload the map
+    lia.log.convertToDatabase(true)
+```

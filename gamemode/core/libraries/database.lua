@@ -261,7 +261,7 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS `lia_items`;
     DROP TABLE IF EXISTS `lia_invdata`;
     DROP TABLE IF EXISTS `lia_config`;
-    DROP TABLE IF EXISTS `lilia_logs`;
+    DROP TABLE IF EXISTS `lia_logs`;
 ]])
             local done = 0
             for i = 1, #queries do
@@ -286,6 +286,7 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS lia_items;
     DROP TABLE IF EXISTS lia_invdata;
     DROP TABLE IF EXISTS lia_config;
+    DROP TABLE IF EXISTS lia_logs;
 ]], realCallback)
     end
 end
@@ -351,6 +352,13 @@ function lia.db.loadTables()
                 _key text PRIMARY KEY,
                 _value text
             );
+
+            CREATE TABLE IF NOT EXISTS lia_logs (
+                _id INTEGER PRIMARY KEY AUTOINCREMENT,
+                _timestamp DATETIME,
+                _category VARCHAR,
+                _message TEXT
+            );
         ]], done)
     else
         local queries = string.Explode(";", [[
@@ -411,6 +419,14 @@ function lia.db.loadTables()
                 `_key` VARCHAR(64) NOT NULL COLLATE 'utf8mb4_general_ci',
                 `_value` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
                 PRIMARY KEY (`_key`)
+            );
+
+            CREATE TABLE IF NOT EXISTS `lia_logs` (
+                `_id` INT(12) NOT NULL AUTO_INCREMENT,
+                `_timestamp` DATETIME NOT NULL,
+                `_category` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
+                `_message` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
+                PRIMARY KEY (`_id`)
             );
         ]])
         local i = 1
