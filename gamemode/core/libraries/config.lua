@@ -143,12 +143,27 @@ if SERVER then
         end
 
         lia.db.waitForTablesToLoad():next(function()
-        lia.db.transaction(queries):next(function()
-            lia.config.isConverting = false
-            print("[Lilia] Configuration conversion complete. Ported " .. entryCount .. " entries.")
-            if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
+            lia.db.transaction(queries):next(function()
+                lia.config.isConverting = false
+                local counts = {}
+                deferred.all({
+                    lia.db.count("config"):next(function(n) counts.config = n end),
+                    lia.db.count("data"):next(function(n) counts.data = n end),
+                    lia.db.count("logs"):next(function(n) counts.logs = n end)
+                }):next(function()
+                    print(
+                        string.format(
+                            "[Lilia] Configuration conversion complete. Converted %d config entries, %d data entries and %d log entries.",
+                            counts.config or entryCount,
+                            counts.data or 0,
+                            counts.logs or 0
+                        )
+                    )
+                    if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
+                end)
+            end)
         end)
-    end)
+    end
 end
 
     local function countLegacyConfigEntries()
@@ -161,8 +176,7 @@ end
         if IsValid(ply) then return end
         local ported, total = countLegacyConfigEntries()
         print("[Lilia] lia.config legacy file has " .. total .. " entries; " .. ported .. " can be ported.")
-    end)
-end
+end)
 
 lia.config.add("MoneyModel", "Money Model", "models/props_lab/box01a.mdl", nil, {
     desc = "Defines the model used for representing money in the game.",

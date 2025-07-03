@@ -155,8 +155,22 @@ if SERVER then
                 i = i or 1
                 if i > #entries then
                     lia.log.isConverting = false
-                    print("[Lilia] Log conversion complete. Ported " .. entryCount .. " entries.")
-                    if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
+                    local counts = {}
+                    deferred.all({
+                        lia.db.count("config"):next(function(n) counts.config = n end),
+                        lia.db.count("data"):next(function(n) counts.data = n end),
+                        lia.db.count("logs"):next(function(n) counts.logs = n end)
+                    }):next(function()
+                        print(
+                            string.format(
+                                "[Lilia] Log conversion complete. Converted %d config entries, %d data entries and %d log entries.",
+                                counts.config or 0,
+                                counts.data or 0,
+                                counts.logs or entryCount
+                            )
+                        )
+                        if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
+                    end)
                     return
                 end
 
