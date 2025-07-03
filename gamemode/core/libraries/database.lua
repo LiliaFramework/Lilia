@@ -261,6 +261,7 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS `lia_items`;
     DROP TABLE IF EXISTS `lia_invdata`;
     DROP TABLE IF EXISTS `lia_config`;
+    DROP TABLE IF EXISTS `lia_data`;
     DROP TABLE IF EXISTS `lia_logs`;
 ]])
             local done = 0
@@ -286,6 +287,7 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS lia_items;
     DROP TABLE IF EXISTS lia_invdata;
     DROP TABLE IF EXISTS lia_config;
+    DROP TABLE IF EXISTS lia_data;
     DROP TABLE IF EXISTS lia_logs;
 ]], realCallback)
     end
@@ -351,6 +353,14 @@ function lia.db.loadTables()
             CREATE TABLE IF NOT EXISTS lia_config (
                 _key text PRIMARY KEY,
                 _value text
+            );
+
+            CREATE TABLE IF NOT EXISTS lia_data (
+                _key text,
+                _folder text,
+                _map text,
+                _value text,
+                PRIMARY KEY (_key, _folder, _map)
             );
 
             CREATE TABLE IF NOT EXISTS lia_logs (
@@ -419,6 +429,14 @@ function lia.db.loadTables()
                 `_key` VARCHAR(64) NOT NULL COLLATE 'utf8mb4_general_ci',
                 `_value` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
                 PRIMARY KEY (`_key`)
+            );
+
+            CREATE TABLE IF NOT EXISTS `lia_data` (
+                `_key` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
+                `_folder` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+                `_map` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+                `_value` TEXT NULL COLLATE 'utf8mb4_general_ci',
+                PRIMARY KEY (`_key`, `_folder`, `_map`)
             );
 
             CREATE TABLE IF NOT EXISTS `lia_logs` (
