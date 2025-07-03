@@ -351,8 +351,10 @@ function lia.db.loadTables()
             );
 
             CREATE TABLE IF NOT EXISTS lia_config (
-                _key text PRIMARY KEY,
-                _value text
+                _schema text,
+                _key text,
+                _value text,
+                PRIMARY KEY (_schema, _key)
             );
 
             CREATE TABLE IF NOT EXISTS lia_data (
@@ -426,9 +428,10 @@ function lia.db.loadTables()
             );
 
             CREATE TABLE IF NOT EXISTS `lia_config` (
+                `_schema` VARCHAR(24) NOT NULL COLLATE 'utf8mb4_general_ci',
                 `_key` VARCHAR(64) NOT NULL COLLATE 'utf8mb4_general_ci',
                 `_value` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
-                PRIMARY KEY (`_key`)
+                PRIMARY KEY (`_schema`, `_key`)
             );
 
             CREATE TABLE IF NOT EXISTS `lia_data` (
