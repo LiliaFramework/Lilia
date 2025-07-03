@@ -495,22 +495,20 @@ if SERVER then
             return
         end
 
-        lia.db.query("SELECT _itemID, _uniqueID, _data, _x, _y, _quantity FROM lia_items WHERE _itemID IN " .. range, function(data)
-            if data then
-                for _, v in ipairs(data) do
-                    local itemID = tonumber(v._itemID)
-                    local data = util.JSONToTable(v._data or "[]")
-                    local uniqueID = v._uniqueID
-                    local itemTable = lia.item.list[uniqueID]
-                    if itemTable and itemID then
-                        local item = lia.item.new(uniqueID, itemID)
-                        item.invID = 0
-                        item.data = data or {}
-                        item.data.x = tonumber(v._x)
-                        item.data.y = tonumber(v._y)
-                        item.quantity = tonumber(v._quantity)
-                        item:onRestored()
-                    end
+        lia.db.query("SELECT _itemID, _uniqueID, _data, _x, _y, _quantity FROM lia_items WHERE _itemID IN " .. range, function(results)
+            if not results then return end
+            for _, row in ipairs(results) do
+                local id = tonumber(row._itemID)
+                local itemDef = lia.item.list[row._uniqueID]
+                if id and itemDef then
+                    local item = lia.item.new(row._uniqueID, id)
+                    local itemData = util.JSONToTable(row._data or "[]") or {}
+                    item.invID = 0
+                    item.data = itemData
+                    item.data.x = tonumber(row._x)
+                    item.data.y = tonumber(row._y)
+                    item.quantity = tonumber(row._quantity)
+                    item:onRestored()
                 end
             end
         end)
