@@ -1,8 +1,44 @@
 ﻿lia.log = lia.log or {}
 lia.log.types = lia.log.types or {}
 if SERVER then
+    lia.log.isConverting = lia.log.isConverting or false
+
+    local function createLogsTable()
+        if lia.db.module == "sqlite" then
+            lia.db.query([[CREATE TABLE IF NOT EXISTS lia_logs (
+                _id INTEGER PRIMARY KEY AUTOINCREMENT,
+                _timestamp DATETIME,
+                _category VARCHAR,
+                _message TEXT
+            );]])
+        else
+            lia.db.query([[CREATE TABLE IF NOT EXISTS `lia_logs` (
+                `_id` INT(12) NOT NULL AUTO_INCREMENT,
+                `_timestamp` DATETIME NOT NULL,
+                `_category` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
+                `_message` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
+                PRIMARY KEY (`_id`)
+            );]])
+        end
+    end
+
+    local function checkLegacyLogs()
+        local logsDir = "lilia/logs/" .. engine.ActiveGamemode()
+        local files = file.Find(logsDir .. "/*.txt", "DATA")
+        if #files == 0 then return end
+        lia.db.count("logs"):next(function(n)
+            if n == 0 then
+                lia.log.convertToDatabase(true)
+            end
+        end)
+    end
+
     function lia.log.loadTables()
         file.CreateDir("lilia/logs/" .. engine.ActiveGamemode())
+        lia.db.waitForTablesToLoad():next(function()
+            createLogsTable()
+            checkLegacyLogs()
+        end)
     end
 
     function lia.log.addType(logType, func, category)
@@ -31,6 +67,63 @@ if SERVER then
         if not file.Exists(logsDir, "DATA") then file.CreateDir(logsDir) end
         local filenameCategory = string.lower(string.gsub(category, "%s+", "_"))
         local logFilePath = logsDir .. "/" .. filenameCategory .. ".txt"
-        file.Append(logFilePath, "[" .. os.date("%Y-%m-%d %H:%M:%S") .. "]\t" .. logString .. "\r\n")
+        local timestamp = os.date("%Y-%m-%d %H:%M:%S")
+        file.Append(logFilePath, "[" .. timestamp .. "]\t" .. logString .. "\r\n")
+        lia.db.insertTable({
+            _timestamp = timestamp,
+            _category = category,
+            _message = logString
+        }, nil, "logs")
     end
+
+    function lia.log.convertToDatabase(changeMap)
+        if lia.log.isConverting then return end
+        lia.log.isConverting = true
+        SetGlobalBool("liaLogsConverting", true)
+        print("[Lilia] Converting legacy logs to database...")
+        local logsDir = "lilia/logs/" .. engine.ActiveGamemode()
+        local files = file.Find(logsDir .. "/*.txt", "DATA")
+        local entries = {}
+        for _, fileName in ipairs(files) do
+            local category = string.StripExtension(fileName)
+            local data = file.Read(logsDir .. "/" .. fileName, "DATA")
+            if data then
+                for line in data:gmatch("[^\r\n]+") do
+                    local ts, msg = line:match("^%[([^%]]+)%]%s*(.+)")
+                    if ts and msg then
+                        print("[Lilia]  - " .. line)
+                        entries[#entries + 1] = {
+                            _timestamp = ts,
+                            _category = category,
+                            _message = msg
+                        }
+                    end
+                end
+            end
+        end
+
+        lia.db.waitForTablesToLoad():next(function()
+            local function insertNext(i)
+                i = i or 1
+                if i > #entries then
+                    lia.log.isConverting = false
+                    SetGlobalBool("liaLogsConverting", false)
+                    print("[Lilia] Log conversion complete.")
+                    if changeMap then
+                        game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n")
+                    end
+                    return
+                end
+                lia.db.insertTable(entries[i], function() insertNext(i + 1) end, "logs")
+            end
+
+            insertNext()
+        end)
+    end
+
+    hook.Add("CheckPassword", "liaLogConversion", function()
+        if lia.log.isConverting then
+            return false, "Server is converting logs, please retry later"
+        end
+    end)
 end
