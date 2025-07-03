@@ -39,6 +39,7 @@ The global `CLASS` table defines per-class settings such as display name, lore, 
 | `model` | `string` | `""` | Model path (or table of paths) used by this class. |
 | `index` | `number` | `auto` | Unique team index assigned at registration. |
 | `uniqueID` | `string` | `filename` | Optional identifier; defaults to the file name when omitted. |
+| `commands` | `table` | `{}` | Command names members may always use. |
 
 ---
 
@@ -511,6 +512,27 @@ Model path (or list of paths) assigned to this class.
 
 ```lua
 CLASS.model = "models/player/alyx.mdl"
+```
+
+---
+
+#### `commands`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Table of command names that members of this class may always use,
+overriding standard command permissions.
+
+**Example Usage:**
+
+```lua
+CLASS.commands = {
+    plytransfer = true,
+}
 ```
 
 ---

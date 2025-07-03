@@ -63,7 +63,24 @@ function lia.command.hasAccess(client, command, data)
         hasAccess = client:hasPrivilege(privilegeName)
     end
 
-    if hook.Run("CanPlayerUseCommand", client, command) == false then hasAccess = false end
+    local hookResult = hook.Run("CanPlayerUseCommand", client, command)
+    if hookResult ~= nil then
+        return hookResult, privilege
+    end
+
+    local char = IsValid(client) and client.getChar and client:getChar()
+    if char then
+        local faction = lia.faction.indices[char:getFaction()]
+        if faction and faction.commands and faction.commands[command] then
+            return true, privilege
+        end
+
+        local classData = lia.class.list[char:getClass()]
+        if classData and classData.commands and classData.commands[command] then
+            return true, privilege
+        end
+    end
+
     return hasAccess, privilege
 end
 
