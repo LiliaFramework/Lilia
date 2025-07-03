@@ -67,37 +67,35 @@ end)
 net.Receive("liaInventoryInit", function()
     local id = net.ReadType()
     local typeID = net.ReadString()
-    local data = net.ReadTable()
+    local invData = net.ReadTable()
     local instance = lia.inventory.new(typeID)
     instance.id = id
-    instance.data = data
+    instance.data = invData
     instance.items = {}
     local length = net.ReadUInt(32)
-    local data2 = net.ReadData(length)
-    local uncompressed_data = util.Decompress(data2)
-    local items = util.JSONToTable(uncompressed_data)
-    local function readItem(I)
-        local c = items[I]
-        return c.i, c.u, c.d, c.q
+    local compressedData = net.ReadData(length)
+    local uncompressedData = util.Decompress(compressedData)
+    local itemsTable = util.JSONToTable(uncompressedData)
+    local function readItem(index)
+        local entry = itemsTable[index]
+        return entry.i, entry.u, entry.d, entry.q
     end
 
-    local datatable = items
-    local expectedItems = #datatable
-    for i = 1, expectedItems do
-        local itemID, itemType, data, quantity = readItem(i)
+    for i = 1, #itemsTable do
+        local itemID, itemType, itemData, quantity = readItem(i)
         local item = lia.item.new(itemType, itemID)
-        item.data = table.Merge(item.data, data)
-        item.invID = instance.id
+        item.data = table.Merge(item.data, itemData)
+        item.invID = id
         item.quantity = quantity
         instance.items[itemID] = item
         hook.Run("ItemInitialized", item)
     end
 
-    lia.inventory.instances[instance.id] = instance
+    lia.inventory.instances[id] = instance
     hook.Run("InventoryInitialized", instance)
     for _, character in pairs(lia.char.loaded) do
-        for index, inventory in pairs(character.vars.inv) do
-            if inventory:getID() == id then character.vars.inv[index] = instance end
+        for idx, inventory in pairs(character.vars.inv) do
+            if inventory:getID() == id then character.vars.inv[idx] = instance end
         end
     end
 end)
@@ -177,7 +175,7 @@ net.Receive("charSet", function()
     local key = net.ReadString()
     local value = net.ReadType()
     local id = net.ReadType()
-    id = id or (LocalPlayer():getChar() and LocalPlayer():getChar().id)
+    id = id or LocalPlayer():getChar() and LocalPlayer():getChar().id
     local character = lia.char.loaded[id]
     if character then
         local oldValue = character.vars[key]
@@ -190,7 +188,7 @@ net.Receive("charVar", function()
     local key = net.ReadString()
     local value = net.ReadType()
     local id = net.ReadType()
-    id = id or (LocalPlayer():getChar() and LocalPlayer():getChar().id)
+    id = id or LocalPlayer():getChar() and LocalPlayer():getChar().id
     local character = lia.char.loaded[id]
     if character then
         local oldVar = character:getVar()[key]
@@ -253,9 +251,7 @@ net.Receive("attrib", function()
     local key = net.ReadString()
     local value = net.ReadType()
     local character = lia.char.loaded[id]
-    if character then
-        character:getAttribs()[key] = value
-    end
+    if character then character:getAttribs()[key] = value end
 end)
 
 netstream.Hook("nVar", function(index, key, value)
@@ -584,11 +580,13 @@ net.Receive("charInfo", function()
     local client = net.BytesLeft() > 0 and net.ReadEntity() or nil
     lia.char.loaded[id] = lia.char.new(data, id, client == nil and LocalPlayer() or client)
 end)
+
 net.Receive("charKick", function()
     local id = net.ReadUInt(32)
     local isCurrentChar = net.ReadBool()
     hook.Run("KickedFromChar", id, isCurrentChar)
 end)
+
 net.Receive("prePlayerLoadedChar", function()
     local charID = net.ReadUInt(32)
     local currentID = net.ReadType()
@@ -596,6 +594,7 @@ net.Receive("prePlayerLoadedChar", function()
     local current = currentID and lia.char.loaded[currentID] or nil
     hook.Run("PrePlayerLoadedChar", LocalPlayer(), char, current)
 end)
+
 net.Receive("playerLoadedChar", function()
     local charID = net.ReadUInt(32)
     local currentID = net.ReadType()
@@ -603,6 +602,7 @@ net.Receive("playerLoadedChar", function()
     local current = currentID and lia.char.loaded[currentID] or nil
     hook.Run("PlayerLoadedChar", LocalPlayer(), char, current)
 end)
+
 net.Receive("postPlayerLoadedChar", function()
     local charID = net.ReadUInt(32)
     local currentID = net.ReadType()
@@ -610,9 +610,11 @@ net.Receive("postPlayerLoadedChar", function()
     local current = currentID and lia.char.loaded[currentID] or nil
     hook.Run("PostPlayerLoadedChar", LocalPlayer(), char, current)
 end)
+
 netstream.Hook("gVar", function(key, value)
     local oldValue = lia.net.globals[key]
     lia.net.globals[key] = value
     hook.Run("NetVarChanged", nil, key, oldValue, value)
 end)
+
 netstream.Hook("nDel", function(index) lia.net[index] = nil end)
