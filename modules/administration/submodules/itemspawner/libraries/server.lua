@@ -36,7 +36,8 @@ net.Receive("SpawnMenuSpawnItem", function(_, client)
     })
 
     if not tr.Hit then return end
-    lia.item.spawn(id, tr.HitPos, function(_, ent)
+    lia.item.spawn(id, tr.HitPos, function(item)
+        local ent = item:getEntity()
         if not IsValid(ent) then return end
         tryFixPropPosition(client, ent)
         undo.Create("item")
