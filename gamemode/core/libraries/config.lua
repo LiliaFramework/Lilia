@@ -63,7 +63,8 @@ end
 function lia.config.load()
     if SERVER then
         lia.db.waitForTablesToLoad():next(function()
-            lia.db.select({"_key", "_value"}, "config"):next(function(res)
+            local schema = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+            lia.db.select({"_key", "_value"}, "config", "_schema = " .. lia.db.convertDataType(schema)):next(function(res)
                 local rows = res.results or {}
                 if #rows == 0 then
                     local legacy = lia.data.get("config", nil, false, true)
@@ -117,9 +118,10 @@ if SERVER then
         end
 
         lia.db.waitForTablesToLoad():next(function()
-            local queries = {"DELETE FROM lia_config"}
+            local schema = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+            local queries = {"DELETE FROM lia_config WHERE _schema = " .. lia.db.convertDataType(schema)}
             for _, row in ipairs(rows) do
-                queries[#queries + 1] = "INSERT INTO lia_config (_key,_value) VALUES (" .. lia.db.convertDataType(row._key) .. ", " .. lia.db.convertDataType(row._value) .. ")"
+                queries[#queries + 1] = "INSERT INTO lia_config (_schema,_key,_value) VALUES (" .. lia.db.convertDataType(schema) .. ", " .. lia.db.convertDataType(row._key) .. ", " .. lia.db.convertDataType(row._value) .. ")"
             end
 
             lia.db.transaction(queries)
@@ -132,11 +134,12 @@ if SERVER then
         print("[Lilia] Converting lia.config to database...")
         data = data or lia.data.get("config", nil, false, true) or {}
         local entryCount = table.Count(data)
-        local queries = {"DELETE FROM lia_config"}
+        local schema = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+        local queries = {"DELETE FROM lia_config WHERE _schema = " .. lia.db.convertDataType(schema)}
         for k, v in pairs(data) do
             lia.config.stored[k] = lia.config.stored[k] or {}
             lia.config.stored[k].value = v
-            queries[#queries + 1] = "INSERT INTO lia_config (_key,_value) VALUES (" .. lia.db.convertDataType(k) .. ", " .. lia.db.convertDataType({v}) .. ")"
+            queries[#queries + 1] = "INSERT INTO lia_config (_schema,_key,_value) VALUES (" .. lia.db.convertDataType(schema) .. ", " .. lia.db.convertDataType(k) .. ", " .. lia.db.convertDataType({v}) .. ")"
         end
 
         lia.db.waitForTablesToLoad():next(function()
