@@ -378,13 +378,13 @@ else
         submit:SetIcon("icon16/tick.png")
         submit:SetEnabled(false)
         local function validate()
-            for key, data in pairs(controls) do
+            for _, data in pairs(controls) do
                 if not data.optional then
                     local ctl = data.ctrl
                     local ftype = data.type
                     local filled = false
                     if isfunction(ftype) or ftype == "player" then
-                        local txt, dat = ctl:GetSelected()
+                        local txt, _ = ctl:GetSelected()
                         filled = txt ~= nil and txt ~= ""
                     elseif ftype == "text" or ftype == "number" then
                         filled = ctl:GetValue() ~= nil and ctl:GetValue() ~= ""
