@@ -52,7 +52,7 @@
             }
         }
 
-        lia.util.CreateTableUI(client, "Claims for " .. target:Nick(), {
+        lia.util.CreateTableUI(client, L("claimsForTitle", target:Nick()), {
             {
                 name = L("steamID"),
                 field = "steamID"
@@ -117,7 +117,7 @@ lia.command.add("viewallclaims", {
             })
         end
 
-        lia.util.CreateTableUI(client, "Admin Claims", {
+        lia.util.CreateTableUI(client, L("adminClaimsTitle"), {
             {
                 name = L("steamID"),
                 field = "steamID"
@@ -183,7 +183,7 @@ lia.command.add("viewclaims", {
             })
         end
 
-        lia.util.CreateTableUI(client, "Admin Claims", {
+        lia.util.CreateTableUI(client, L("adminClaimsTitle"), {
             {
                 name = L("steamID"),
                 field = "steamID"

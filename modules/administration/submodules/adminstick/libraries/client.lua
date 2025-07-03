@@ -244,7 +244,7 @@ local function IncludeAdminMenu(tgt, menu, stores)
 
     for _, o in ipairs(tp) do
         mod:AddOption(L(o.name), function()
-            cl:ChatPrint(o.cmd)
+            cl:ChatPrint(L("adminStickExecutedCommand", o.cmd))
             RunConsoleCommand("say", o.cmd)
             AdminStickIsOpen = false
         end):SetIcon(o.icon)

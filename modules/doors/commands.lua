@@ -2,7 +2,7 @@
     desc = L("doorsellDesc"),
     adminOnly = false,
     AdminStick = {
-        Name = "Sell Door",
+        Name = L("adminStickDoorSellName"),
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -30,7 +30,7 @@ lia.command.add("admindoorsell", {
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
-        Name = "Admin Sell Door",
+        Name = L("adminStickAdminDoorSellName"),
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -60,7 +60,7 @@ lia.command.add("doortogglelock", {
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
-        Name = "Toggle Door Lock",
+        Name = L("adminStickToggleDoorLockName"),
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -98,7 +98,7 @@ lia.command.add("doorbuy", {
     desc = L("doorbuyDesc"),
     adminOnly = false,
     AdminStick = {
-        Name = "Buy Door",
+        Name = L("adminStickDoorBuyName"),
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -136,7 +136,7 @@ lia.command.add("doortoggleownable", {
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
-        Name = "Toggle Door Ownable",
+        Name = L("adminStickToggleDoorOwnableName"),
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -160,7 +160,7 @@ lia.command.add("doorresetdata", {
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
-        Name = "Reset Door Data",
+        Name = L("adminStickResetDoorDataName"),
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -199,7 +199,7 @@ lia.command.add("doortoggleenabled", {
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
-        Name = "Toggle Door Enabled",
+        Name = L("adminStickToggleDoorEnabledName"),
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -223,7 +223,7 @@ lia.command.add("doortogglehidden", {
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
-        Name = "Toggle Door Hidden",
+        Name = L("adminStickToggleDoorHiddenName"),
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -252,7 +252,7 @@ lia.command.add("doorsetprice", {
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
-        Name = "Set Door Price",
+        Name = L("adminStickSetDoorPriceName"),
         TargetClass = "Door"
     },
     onRun = function(client, arguments)
@@ -277,7 +277,7 @@ lia.command.add("doorsettitle", {
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
-        Name = "Set Door Title",
+        Name = L("adminStickSetDoorTitleName"),
         TargetClass = "Door"
     },
     onRun = function(client, arguments)
@@ -306,7 +306,7 @@ lia.command.add("doorsetparent", {
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
-        Name = "Set Door Parent",
+        Name = L("adminStickSetDoorParentName"),
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -326,7 +326,7 @@ lia.command.add("doorsetchild", {
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
-        Name = "Set Door Child",
+        Name = L("adminStickSetDoorChildName"),
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -355,7 +355,7 @@ lia.command.add("doorremovechild", {
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
-        Name = "Remove Door Child",
+        Name = L("adminStickRemoveDoorChildName"),
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -390,7 +390,7 @@ lia.command.add("savedoors", {
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
-        Name = "Save Doors",
+        Name = L("adminStickSaveDoorsName"),
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -405,7 +405,7 @@ lia.command.add("doorinfo", {
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
-        Name = "Get Door Information",
+        Name = L("adminStickDoorInfoName"),
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -420,7 +420,23 @@ lia.command.add("doorinfo", {
             local class = door:getNetVar("class", "None")
             local hidden = door:getNetVar("hidden", false)
             local locked = door:getNetVar("locked", false)
-            client:ChatPrint("disabled: " .. tostring(disabled) .. "\n" .. "name: " .. tostring(name) .. "\n" .. "price: " .. lia.currency.get(price) .. "\n" .. "noSell: " .. tostring(noSell) .. "\n" .. "faction: " .. tostring(faction) .. "\n" .. "factions: " .. tostring(factions) .. "\n" .. "class: " .. tostring(class) .. "\n" .. "hidden: " .. tostring(hidden) .. "\n" .. "locked: " .. tostring(locked))
+
+            local doorData = {
+                {property = L("doorInfoDisabled"), value = tostring(disabled)},
+                {property = L("doorInfoName"), value = tostring(name)},
+                {property = L("doorInfoPrice"), value = lia.currency.get(price)},
+                {property = L("doorInfoNoSell"), value = tostring(noSell)},
+                {property = L("doorInfoFaction"), value = tostring(faction)},
+                {property = L("doorInfoFactions"), value = tostring(factions)},
+                {property = L("doorInfoClass"), value = tostring(class)},
+                {property = L("doorInfoHidden"), value = tostring(hidden)},
+                {property = L("doorInfoLocked"), value = tostring(locked)}
+            }
+
+            lia.util.CreateTableUI(client, L("doorInfoTitle"), {
+                {name = L("doorInfoProperty"), field = "property"},
+                {name = L("doorInfoValue"), field = "value"}
+            }, doorData)
         else
             client:notifyLocalized("doorNotValid")
         end

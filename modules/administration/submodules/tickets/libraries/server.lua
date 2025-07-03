@@ -21,7 +21,7 @@ end
 function MODULE:PlayerSay(client, text)
     if string.sub(text, 1, 1) == "@" then
         text = string.sub(text, 2)
-        ClientAddText(client, Color(70, 0, 130), "You", Color(151, 211, 255), " to admins: ", Color(0, 255, 0), text)
+        ClientAddText(client, Color(70, 0, 130), L("ticketMessageYou"), Color(151, 211, 255), " " .. L("ticketMessageToAdmins") .. " ", Color(0, 255, 0), text)
         self:SendPopup(client, text)
         return ""
     end

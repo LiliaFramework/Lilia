@@ -266,9 +266,9 @@ lia.command.add("togglelockcharacters", {
         local newVal = not GetGlobalBool("characterSwapLock", false)
         SetGlobalBool("characterSwapLock", newVal)
         if not newVal then
-            return "Now the players will be able to change character"
+            return L("characterLockDisabled")
         else
-            return "Now the players won't be able to change character until the server is restarted or until you re-enable it"
+            return L("characterLockEnabled")
         end
     end
 })
