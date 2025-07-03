@@ -86,7 +86,7 @@ function PANEL:openInspect()
 
     local model = vgui.Create("DModelPanel", view)
     model:Dock(FILL)
-    model:SetModel(self.item.model or "models/props_junk/popcan01a.mdl")
+    model:SetModel(self.item.model or "models/props_junk/cardboard_box002b.mdl")
     model.LayoutEntity = function() end
     timer.Simple(0, function()
         if not IsValid(model) then return end

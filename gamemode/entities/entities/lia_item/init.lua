@@ -1,5 +1,5 @@
 ﻿function ENT:Initialize()
-    self:SetModel("models/props_junk/watermelon01.mdl")
+    self:SetModel("models/props_junk/cardboard_box002b.mdl")
     self:SetSolid(SOLID_VPHYSICS)
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
@@ -30,6 +30,7 @@ function ENT:setItem(itemID)
     if not itemTable then return SafeRemoveEntity(self) end
     itemTable:sync()
     local model = hook.Run("getItemDropModel", itemTable, self) or itemTable:getModel() or itemTable.model
+    if not model or model == "" then model = "models/props_junk/cardboard_box002b.mdl" end
     self:SetModel(model)
     self:SetSkin(itemTable.skin or 0)
     self:SetMaterial(itemTable.material or "")
