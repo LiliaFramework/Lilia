@@ -826,4 +826,5 @@ LANGUAGE = {
     ToggleCarBlacklist = "Toggle Car Blacklist",
     addedToBlacklist = "Added to blacklist: %s",
     removedFromBlacklist = "Removed from blacklist: %s",
+    permaPropOverlapWarning = "Warning: perma-props spawning too close together!",
 }

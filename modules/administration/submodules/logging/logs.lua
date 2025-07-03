@@ -572,5 +572,15 @@
     ["unprotectedVJNetCall"] = {
         func = function(client, netMessage) return string.format("[%s] %s triggered unprotected net message '%s'", client:SteamID64(), client:Name(), netMessage) end,
         category = "VJ Base"
+    },
+    ["permaPropSaved"] = {
+        func = function(client, class, model, pos)
+            return string.format("[%s] %s perma-propped %s (%s) at %s", client:SteamID64(), client:Name(), class, model, pos)
+        end,
+        category = "PermaProps"
+    },
+    ["permaPropOverlap"] = {
+        func = function(_, pos, other) return string.format("Perma-prop spawned at %s overlapping prop at %s.", pos, other) end,
+        category = "PermaProps"
     }
 }
