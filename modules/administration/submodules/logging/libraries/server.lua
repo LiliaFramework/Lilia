@@ -148,6 +148,10 @@ function MODULE:PlayerSpawnedNPC(client, npc)
     lia.log.add(client, "spawned_npc", npc:GetClass(), npc:GetModel())
 end
 
+function MODULE:PlayerSpawnedSENT(client, sent)
+    lia.log.add(client, "spawned_sent", sent:GetClass(), sent:GetModel())
+end
+
 function MODULE:PlayerGiveSWEP(client, swep)
     lia.log.add(client, "swep_spawning", swep)
 end
