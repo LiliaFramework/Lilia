@@ -88,8 +88,9 @@ tables. This action is irreversible and will remove all stored data.
 **Description:**
 
 Creates the required database tables if they do not already exist for
-
-storing Lilia data. This ensures the schema is properly set up.
+storing Lilia data. This includes tables such as `lia_players`,
+`lia_characters`, and the `lia_data` table used by `lia.data`.
+This ensures the schema is properly set up.
 
 **Parameters:**
 

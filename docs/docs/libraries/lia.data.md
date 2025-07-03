@@ -6,7 +6,7 @@ This page describes persistent data storage helpers.
 
 ## Overview
 
-The data library persists key/value pairs either on disk or through the database backend. It supplies convenience methods for saving, retrieving, and deleting stored data.
+The data library persists key/value pairs. Legacy versions stored values as files within the `data/lilia` directory, but data is now written directly to the `lia_data` database table. Existing files are kept for compatibility and can be migrated using the `lia_convertdata` console command.
 
 ---
 
