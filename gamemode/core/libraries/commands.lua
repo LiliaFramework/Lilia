@@ -64,23 +64,14 @@ function lia.command.hasAccess(client, command, data)
     end
 
     local hookResult = hook.Run("CanPlayerUseCommand", client, command)
-    if hookResult ~= nil then
-        return hookResult, privilege
-    end
-
+    if hookResult ~= nil then return hookResult, privilege end
     local char = IsValid(client) and client.getChar and client:getChar()
     if char then
         local faction = lia.faction.indices[char:getFaction()]
-        if faction and faction.commands and faction.commands[command] then
-            return true, privilege
-        end
-
+        if faction and faction.commands and faction.commands[command] then return true, privilege end
         local classData = lia.class.list[char:getClass()]
-        if classData and classData.commands and classData.commands[command] then
-            return true, privilege
-        end
+        if classData and classData.commands and classData.commands[command] then return true, privilege end
     end
-
     return hasAccess, privilege
 end
 
@@ -223,9 +214,7 @@ if SERVER then
                     for i, field in ipairs(fields) do
                         local arg = tokens[i]
                         if not arg or isPlaceholder(arg) then
-                            if not field.optional then
-                                missing[field.name] = field.type
-                            end
+                            if not field.optional then missing[field.name] = field.type end
                         else
                             prefix[#prefix + 1] = arg
                         end
@@ -273,13 +262,19 @@ else
                 if arg then
                     prefix[#prefix + 1] = arg
                 else
-                    fields[field.name] = {type = field.type, optional = field.optional}
+                    fields[field.name] = {
+                        type = field.type,
+                        optional = field.optional
+                    }
                 end
             end
         else
             for k, v in pairs(fields) do
                 if not istable(v) then
-                    fields[k] = {type = v, optional = false}
+                    fields[k] = {
+                        type = v,
+                        optional = false
+                    }
                 end
             end
         end
@@ -351,7 +346,12 @@ else
                 ctrl:SetWide(ctrlW)
             end
 
-            controls[name] = {ctrl = ctrl, type = fieldType, optional = optional}
+            controls[name] = {
+                ctrl = ctrl,
+                type = fieldType,
+                optional = optional
+            }
+
             watchers[#watchers + 1] = function()
                 if ctrl.OnValueChange then
                     local old = ctrl.OnValueChange
@@ -408,12 +408,14 @@ else
                     elseif ftype == "boolean" then
                         filled = true
                     end
+
                     if not filled then
                         submit:SetEnabled(false)
                         return
                     end
                 end
             end
+
             submit:SetEnabled(true)
         end
 
@@ -422,7 +424,6 @@ else
         end
 
         validate()
-
         submit.DoClick = function()
             local args = {}
             for key, field in pairs(fields) do
@@ -521,8 +522,8 @@ hook.Add("CreateInformationButtons", "liaInformationCommands", function(pages)
                     local height = hasDesc and 80 or 40
                     local commandPanel = vgui.Create("DPanel", iconLayout)
                     commandPanel:SetSize(panel:GetWide(), height)
-                    commandPanel.Paint = function(panel, w, h)
-                        derma.SkinHook("Paint", "Panel", panel, w, h)
+                    commandPanel.Paint = function(self, w, h)
+                        derma.SkinHook("Paint", "Panel", self, w, h)
                         local baseX = 20
                         local text = "/" .. cmdName
                         if cmdData.syntax and cmdData.syntax ~= "" then text = text .. " " .. cmdData.syntax end
