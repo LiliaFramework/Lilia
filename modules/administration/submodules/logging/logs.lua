@@ -50,6 +50,10 @@
         func = function(client, npc, model) return string.format("Player [%s] '%s' spawned NPC '%s' with model '%s'. (CharID: %s)", client:SteamID64(), client:Name(), npc, model, client:getChar():getID()) end,
         category = "Spawn"
     },
+    ["spawned_sent"] = {
+        func = function(client, class, model) return string.format("Player [%s] '%s' spawned entity '%s' with model '%s'. (CharID: %s)", client:SteamID64(), client:Name(), class, model, client:getChar():getID()) end,
+        category = "Spawn"
+    },
     ["swep_spawning"] = {
         func = function(client, swep) return string.format("Player [%s] '%s' spawned SWEP '%s'. (CharID: %s)", client:SteamID64(), client:Name(), swep, client:getChar():getID()) end,
         category = "SWEP"
