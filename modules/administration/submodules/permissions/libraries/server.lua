@@ -299,3 +299,12 @@ end
 
 handleDatabaseWipe("lia_recreatedb")
 handleDatabaseWipe("lia_wipedb")
+
+concommand.Add("lia_convertconfig", function(client)
+    if IsValid(client) then
+        client:notifyLocalized("commandConsoleOnly")
+        return
+    end
+
+    lia.config.convertToDatabase(true)
+end)
