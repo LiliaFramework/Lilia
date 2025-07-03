@@ -162,7 +162,7 @@ function GM:CanTool(client, _, tool)
         for _, v in pairs(entities) do
             if v.ModelScale and v.ModelScale > 10 then
                 ply:notifyLocalized("duplicationSizeLimit")
-                print("[Server Warning] Potential server crash using dupes attempt by player: " .. ply:Name() .. " (" .. ply:SteamID64() .. ")")
+                lia.log.add(ply, "dupeCrashAttempt")
                 return false
             end
 

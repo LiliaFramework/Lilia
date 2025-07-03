@@ -3,7 +3,7 @@
     for _, ent in pairs(entities) do
         if ent.ModelScale and ent.ModelScale > 10 then
             client:notifyLocalized("duplicationSizeLimit")
-            print("[Server Warning] Potential server crash using dupes attempt by player: " .. client:Name() .. " (" .. client:SteamID64() .. ")")
+            lia.log.add(client, "dupeCrashAttempt")
             return false
         end
 
