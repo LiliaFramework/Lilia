@@ -66,26 +66,43 @@ function lia.config.load()
             local schema = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
             lia.db.select({"_key", "_value"}, "config", "_schema = " .. lia.db.convertDataType(schema)):next(function(res)
                 local rows = res.results or {}
+                local existing = {}
                 if #rows == 0 then
                     local legacy = lia.data.get("config", nil, false, true)
                     if legacy then
                         for k, v in pairs(legacy) do
                             lia.config.stored[k] = lia.config.stored[k] or {}
                             lia.config.stored[k].value = v
+                            existing[k] = true
                         end
 
                         lia.config.convertToDatabase(true, legacy)
                     end
-
-                    hook.Run("InitializedConfig")
                 else
                     for _, row in ipairs(rows) do
                         local decoded = util.JSONToTable(row._value)
                         lia.config.stored[row._key] = lia.config.stored[row._key] or {}
                         lia.config.stored[row._key].value = decoded and decoded[1]
+                        existing[row._key] = true
                     end
+                end
 
-                    hook.Run("InitializedConfig")
+                local inserts = {}
+                for k, v in pairs(lia.config.stored) do
+                    if not existing[k] then
+                        inserts[#inserts + 1] = {
+                            _schema = schema,
+                            _key = k,
+                            _value = {v.default}
+                        }
+                    end
+                end
+
+                local finalize = function() hook.Run("InitializedConfig") end
+                if #inserts > 0 then
+                    lia.db.bulkInsert("config", inserts):next(finalize)
+                else
+                    finalize()
                 end
             end)
         end)
