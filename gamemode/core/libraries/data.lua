@@ -20,15 +20,25 @@ if SERVER then
                     local rel = string.sub(dir .. "/" .. f, #base + 2)
                     if not rel:StartWith("logs/") then
                         local segments = string.Explode("/", rel)
-                        local key = string.StripExtension(segments[#segments])
                         local folder
                         local map
-                        if #segments == 2 then
-                            folder = segments[1]
-                        elseif #segments >= 3 then
+                        local keySegments = {}
+                        if #segments >= 3 then
                             folder = segments[1]
                             map = segments[2]
+                            for i = 3, #segments do
+                                keySegments[#keySegments + 1] = segments[i]
+                            end
+                        elseif #segments == 2 then
+                            folder = segments[1]
+                            keySegments[1] = segments[2]
+                        else
+                            keySegments[1] = segments[1]
                         end
+
+                        local last = keySegments[#keySegments]
+                        keySegments[#keySegments] = string.StripExtension(last)
+                        local key = table.concat(keySegments, "/")
 
                         local data = file.Read(dir .. "/" .. f, "DATA")
                         local ok, decoded = pcall(pon.decode, data)
