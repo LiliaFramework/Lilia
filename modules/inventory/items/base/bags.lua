@@ -21,9 +21,8 @@ ITEM.functions.Equip = {
     icon = "icon16/tick.png",
     onRun = function(item)
         local client = item.player
-        local items = client:getChar():getInv():getItems()
-        for _, v in pairs(items) do
-            if v.id ~= item.id and v.isBag and v:getData("equip") then
+        for _, eqItem in pairs(client:getChar():getInv():getItems()) do
+            if eqItem.id ~= item.id and eqItem.isBag and eqItem:getData("equip", false) then
                 client:notifyLocalized("bagAlreadyEquipped")
                 return false
             end
@@ -33,7 +32,7 @@ ITEM.functions.Equip = {
         item:setData("equip", true)
         return false
     end,
-    onCanRun = function(item) if not IsValid(item.entity) then return not item:getData("equip", false) end end
+    onCanRun = function(item) return not IsValid(item.entity) and not item:getData("equip", false) end
 }
 
 ITEM.functions.Unequip = {
@@ -45,7 +44,7 @@ ITEM.functions.Unequip = {
         item:setData("equip", false)
         return false
     end,
-    onCanRun = function(item) if not IsValid(item.entity) then return item:getData("equip", false) end end
+    onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip", false) end
 }
 
 ITEM.functions.View = {
