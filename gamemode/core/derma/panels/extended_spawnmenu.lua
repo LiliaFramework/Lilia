@@ -181,7 +181,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
         if not IsValid(tree) or not IsValid(pnlContent) then return end
         local view = vgui.Create("ContentContainer", pnlContent)
         view:SetVisible(false)
-        local root = tree:AddNode("Browse Sounds", "icon16/sound.png")
+        local root = tree:AddNode(L("browseSoundsTitle"), "icon16/sound.png")
         root.ViewPanel, root.pnlContent = view, pnlContent
         local addons = root:AddNode("#spawnmenu.category.addons", "icon16/folder_database.png")
         addons.ViewPanel, addons.pnlContent = view, pnlContent
@@ -209,7 +209,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
         if not IsValid(tree) or not IsValid(pnlContent) then return end
         local view = vgui.Create("ContentContainer", pnlContent)
         view:SetVisible(false)
-        local root = tree:AddNode("Browse Materials", "icon16/picture_empty.png")
+        local root = tree:AddNode(L("browseMaterialsTitle"), "icon16/picture_empty.png")
         root.ViewPanel, root.pnlContent = view, pnlContent
         local addons = root:AddNode("#spawnmenu.category.addons", "icon16/folder_database.png")
         addons.ViewPanel, addons.pnlContent = view, pnlContent
@@ -453,7 +453,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
     if not IsValid(node) or not IsValid(pnlContent) then return end
     local view = vgui.Create("ContentContainer", pnlContent)
     view:SetVisible(false)
-    local legacy = node:AddNode("Addons - Legacy", "icon16/folder_database.png")
+    local legacy = node:AddNode(L("addonsLegacyTitle"), "icon16/folder_database.png")
     for _, a in ipairs(file.Find("addons/*", "MOD")) do
         if file.IsDir("addons/" .. a .. "/models/", "MOD") then
             local c = countRecursive("addons/" .. a .. "/models/")

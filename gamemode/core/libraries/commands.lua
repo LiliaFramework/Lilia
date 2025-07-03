@@ -319,7 +319,7 @@ else
                 end
             elseif fieldType == "player" then
                 ctrl = vgui.Create("DComboBox", panel)
-                ctrl:SetValue("Select Player")
+                ctrl:SetValue(L("selectPlayerPrompt"))
                 for _, plyObj in ipairs(player.GetAll()) do
                     if IsValid(plyObj) then ctrl:AddChoice(plyObj:Name(), plyObj:SteamID()) end
                 end

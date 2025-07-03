@@ -24,19 +24,19 @@ end
 
 concommand.Add("test_icons", function()
     if not ICON_FONT then
-        chat.AddText(Color(255, 100, 100), "test_icons: ICON_FONT not loaded")
+        chat.AddText(Color(255, 100, 100), L("iconTesterNotLoaded"))
         return
     end
 
     local frame = vgui.Create("DFrame")
-    frame:SetTitle("Icon Tester")
+    frame:SetTitle(L("iconTesterTitle"))
     frame:SetSize(500, 250)
     frame:Center()
     frame:MakePopup()
     local list = vgui.Create("DListView", frame)
     list:SetPos(10, 30)
     list:SetSize(220, 200)
-    list:AddColumn("Icon Name")
+    list:AddColumn(L("iconName"))
     for name in pairs(ICON_FONT) do
         list:AddLine(name)
     end
@@ -44,7 +44,7 @@ concommand.Add("test_icons", function()
     local entry = vgui.Create("DTextEntry", frame)
     entry:SetPos(240, 30)
     entry:SetSize(250, 20)
-    entry:SetPlaceholderText("Or enter raw code")
+    entry:SetPlaceholderText(L("iconPlaceholder"))
     local label = vgui.Create("DLabel", frame)
     label:SetPos(240, 60)
     label:SetFont("liaIconsMediumNew")

@@ -248,7 +248,7 @@ if SERVER then
     function lia.util.CreateTableUI(client, title, columns, data, options, characterID)
         if not IsValid(client) or not client:IsPlayer() then return end
         local tableData = util.Compress(util.TableToJSON({
-            title = title or "Table List",
+            title = title or L("tableListTitle"),
             columns = columns,
             data = data,
             options = options or {},
@@ -439,7 +439,7 @@ else
     function lia.util.CreateTableUI(title, columns, data, options, charID)
         local frameWidth, frameHeight = ScrH() * 0.8, ScrH() * 0.8
         local frame = vgui.Create("DFrame")
-        frame:SetTitle(title or "Table List")
+        frame:SetTitle(title or L("tableListTitle"))
         frame:SetSize(frameWidth, frameHeight)
         frame:Center()
         frame:MakePopup()
@@ -494,7 +494,7 @@ else
                     if not option.net then return end
                     if option.ExtraFields then
                         local inputPanel = vgui.Create("DFrame")
-                        inputPanel:SetTitle(option.name .. " Options")
+                        inputPanel:SetTitle(L("optionsTitle", option.name))
                         inputPanel:SetSize(300, 300 + #table.GetKeys(option.ExtraFields) * 35)
                         inputPanel:Center()
                         inputPanel:MakePopup()
@@ -513,7 +513,7 @@ else
                                 local entry = vgui.Create("DTextEntry", form)
                                 entry:Dock(TOP)
                                 entry:DockMargin(5, 5, 5, 0)
-                                entry:SetPlaceholderText("Type " .. fName)
+                                entry:SetPlaceholderText(L("typeFieldPrompt", fName))
                                 form:AddItem(entry)
                                 inputs[fName] = {
                                     panel = entry,
