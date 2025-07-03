@@ -143,3 +143,30 @@ Otherwise, reads from the file, decodes, and caches the value.
         end
     end)
 ```
+
+---
+
+### lia.data.convertToDatabase(changeMap)
+
+**Description:**
+
+Moves legacy `lia.data` files from `data/lilia` into the `lia_data` database table. While the conversion is running, players are prevented from joining the server. If `changeMap` is true, the current level will reload after conversion completes.
+
+**Parameters:**
+
+* changeMap (boolean) – Whether to reload the current map when finished.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None
+
+**Example Usage:**
+
+```lua
+    -- Force data conversion and reload the map
+    lia.data.convertToDatabase(true)
+```

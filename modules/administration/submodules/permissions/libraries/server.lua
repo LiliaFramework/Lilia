@@ -317,3 +317,12 @@ concommand.Add("lia_convertlogs", function(client)
 
     lia.log.convertToDatabase(true)
 end)
+
+concommand.Add("lia_convertdata", function(client)
+    if IsValid(client) then
+        client:notifyLocalized("commandConsoleOnly")
+        return
+    end
+
+    lia.data.convertToDatabase(true)
+end)
