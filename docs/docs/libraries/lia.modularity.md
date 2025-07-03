@@ -59,7 +59,8 @@ It also registers the module in the module list if applicable.
 
 Initializes the module system by loading the schema and various module directories,
 
-then running the appropriate hooks after modules have been loaded.
+then running the appropriate hooks after modules have been loaded. Items within
+`schema/items/` are loaded during this stage so all modules are available first.
 
 **Parameters:**
 
