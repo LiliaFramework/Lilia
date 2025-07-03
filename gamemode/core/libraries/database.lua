@@ -260,6 +260,7 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS `lia_inventories`;
     DROP TABLE IF EXISTS `lia_items`;
     DROP TABLE IF EXISTS `lia_invdata`;
+    DROP TABLE IF EXISTS `lia_config`;
     DROP TABLE IF EXISTS `lilia_logs`;
 ]])
             local done = 0
@@ -284,6 +285,7 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS lia_inventories;
     DROP TABLE IF EXISTS lia_items;
     DROP TABLE IF EXISTS lia_invdata;
+    DROP TABLE IF EXISTS lia_config;
 ]], realCallback)
     end
 end
@@ -344,6 +346,11 @@ function lia.db.loadTables()
                 FOREIGN KEY(_invID) REFERENCES lia_inventories(_invID),
                 PRIMARY KEY (_invID, _key)
             );
+
+            CREATE TABLE IF NOT EXISTS lia_config (
+                _key text PRIMARY KEY,
+                _value text
+            );
         ]], done)
     else
         local queries = string.Explode(";", [[
@@ -398,6 +405,12 @@ function lia.db.loadTables()
                 `_value` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
                 FOREIGN KEY (`_invID`) REFERENCES lia_inventories(_invID) ON DELETE CASCADE,
                 PRIMARY KEY (`_invID`, `_key`)
+            );
+
+            CREATE TABLE IF NOT EXISTS `lia_config` (
+                `_key` VARCHAR(64) NOT NULL COLLATE 'utf8mb4_general_ci',
+                `_value` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
+                PRIMARY KEY (`_key`)
             );
         ]])
         local i = 1

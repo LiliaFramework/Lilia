@@ -1,5 +1,6 @@
 ﻿lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
+lia.config.isConverting = lia.config.isConverting or false
 function lia.config.add(key, name, value, callback, data)
     assert(isstring(key), "Expected config key to be string, got " .. type(key))
     assert(istable(data), "Expected config data to be a table, got " .. type(data))
@@ -61,16 +62,32 @@ end
 
 function lia.config.load()
     if SERVER then
-        local data = lia.data.get("config", nil, false, true)
-        if data then
-            for k, v in pairs(data) do
-                lia.config.stored[k] = lia.config.stored[k] or {}
-                lia.config.stored[k].value = v
-            end
-        end
+        lia.db.waitForTablesToLoad():next(function()
+            lia.db.select({"_key", "_value"}, "config"):next(function(res)
+                local rows = res.results or {}
+                if #rows == 0 then
+                    local legacy = lia.data.get("config", nil, false, true)
+                    if legacy then
+                        for k, v in pairs(legacy) do
+                            lia.config.stored[k] = lia.config.stored[k] or {}
+                            lia.config.stored[k].value = v
+                        end
+                        lia.config.convertToDatabase(true, legacy)
+                    end
+                    hook.Run("InitializedConfig")
+                else
+                    for _, row in ipairs(rows) do
+                        local decoded = util.JSONToTable(row._value)
+                        lia.config.stored[row._key] = lia.config.stored[row._key] or {}
+                        lia.config.stored[row._key].value = decoded and decoded[1]
+                    end
+                    hook.Run("InitializedConfig")
+                end
+            end)
+        end)
+    else
+        hook.Run("InitializedConfig")
     end
-
-    hook.Run("InitializedConfig")
 end
 
 if SERVER then
@@ -87,13 +104,55 @@ if SERVER then
     end
 
     function lia.config.save()
-        local data = {}
-        for k, v in pairs(lia.config.getChangedValues()) do
-            data[k] = v
+        local changed = lia.config.getChangedValues()
+        local rows = {}
+        for k, v in pairs(changed) do
+            rows[#rows + 1] = {
+                _key = k,
+                _value = {v}
+            }
         end
 
-        lia.data.set("config", data, false, true)
+        lia.db.waitForTablesToLoad():next(function()
+            local queries = {"DELETE FROM lia_config"}
+            for _, row in ipairs(rows) do
+                queries[#queries + 1] = "INSERT INTO lia_config (_key,_value) VALUES (" .. lia.db.convertDataType(row._key) .. ", " .. lia.db.convertDataType(row._value) .. ")"
+            end
+            lia.db.transaction(queries)
+        end)
     end
+
+    function lia.config.convertToDatabase(changeMap, data)
+        if lia.config.isConverting then return end
+        lia.config.isConverting = true
+        SetGlobalBool("liaConfigConverting", true)
+        print("[Lilia] Converting lia.config to database...")
+        data = data or lia.data.get("config", nil, false, true) or {}
+        local queries = {"DELETE FROM lia_config"}
+        for k, v in pairs(data) do
+            print("[Lilia]  - " .. k)
+            lia.config.stored[k] = lia.config.stored[k] or {}
+            lia.config.stored[k].value = v
+            queries[#queries + 1] = "INSERT INTO lia_config (_key,_value) VALUES (" .. lia.db.convertDataType(k) .. ", " .. lia.db.convertDataType({v}) .. ")"
+        end
+
+        lia.db.waitForTablesToLoad():next(function()
+            lia.db.transaction(queries):next(function()
+                lia.config.isConverting = false
+                SetGlobalBool("liaConfigConverting", false)
+                print("[Lilia] Configuration conversion complete.")
+                if changeMap then
+                    game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n")
+                end
+            end)
+        end)
+    end
+
+    hook.Add("CheckPassword", "liaConfigConversion", function()
+        if lia.config.isConverting then
+            return false, "Server is converting configuration, please retry later"
+        end
+    end)
 end
 
 lia.config.add("MoneyModel", "Money Model", "models/props_lab/box01a.mdl", nil, {
