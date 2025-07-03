@@ -7,24 +7,46 @@ if SERVER then
             lia.db.query([[CREATE TABLE IF NOT EXISTS lia_logs (
                 _id INTEGER PRIMARY KEY AUTOINCREMENT,
                 _timestamp DATETIME,
+                _gamemode VARCHAR,
                 _category VARCHAR,
-                _message TEXT
+                _message TEXT,
+                _charID INTEGER,
+                _steamID VARCHAR
             );]])
         else
             lia.db.query([[CREATE TABLE IF NOT EXISTS `lia_logs` (
                 `_id` INT(12) NOT NULL AUTO_INCREMENT,
                 `_timestamp` DATETIME NOT NULL,
+                `_gamemode` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_general_ci',
                 `_category` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
                 `_message` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
+                `_charID` INT(12) NULL,
+                `_steamID` VARCHAR(20) NULL COLLATE 'utf8mb4_general_ci',
                 PRIMARY KEY (`_id`)
             );]])
         end
     end
 
     local function checkLegacyLogs()
-        local logsDir = "lilia/logs/" .. engine.ActiveGamemode()
-        local files = file.Find(logsDir .. "/*.txt", "DATA")
-        if #files == 0 then return end
+        local baseDir = "lilia/logs"
+        local found = false
+        local files, dirs = file.Find(baseDir .. "/*", "DATA")
+        for _, fileName in ipairs(files) do
+            if fileName:sub(-4) == ".txt" then
+                found = true
+                break
+            end
+        end
+        if not found then
+            for _, gm in ipairs(dirs) do
+                local f = file.Find(baseDir .. "/" .. gm .. "/*.txt", "DATA")
+                if #f > 0 then
+                    found = true
+                    break
+                end
+            end
+        end
+        if not found then return end
         lia.db.count("logs"):next(function(n) if n == 0 then lia.log.convertToDatabase(true) end end)
     end
 
@@ -64,10 +86,21 @@ if SERVER then
         local logFilePath = logsDir .. "/" .. filenameCategory .. ".txt"
         local timestamp = os.date("%Y-%m-%d %H:%M:%S")
         file.Append(logFilePath, "[" .. timestamp .. "]\t" .. logString .. "\r\n")
+        local charID
+        local steamID
+        if IsValid(client) then
+            local char = client:getChar()
+            charID = char and char:getID() or nil
+            steamID = client:SteamID64()
+        end
+
         lia.db.insertTable({
             _timestamp = timestamp,
+            _gamemode = engine.ActiveGamemode(),
             _category = category,
-            _message = logString
+            _message = logString,
+            _charID = charID,
+            _steamID = steamID
         }, nil, "logs")
     end
 
@@ -75,23 +108,43 @@ if SERVER then
         if lia.log.isConverting then return end
         lia.log.isConverting = true
         print("[Lilia] Converting legacy logs to database...")
-        local logsDir = "lilia/logs/" .. engine.ActiveGamemode()
-        local files = file.Find(logsDir .. "/*.txt", "DATA")
+        local baseDir = "lilia/logs"
         local entries = {}
-        for _, fileName in ipairs(files) do
-            local category = string.StripExtension(fileName)
-            local data = file.Read(logsDir .. "/" .. fileName, "DATA")
-            if data then
-                for line in data:gmatch("[^\r\n]+") do
-                    local ts, msg = line:match("^%[([^%]]+)%]%s*(.+)")
-                    if ts and msg then
-                        entries[#entries + 1] = {
-                            _timestamp = ts,
-                            _category = category,
-                            _message = msg
-                        }
-                    end
+        local files, dirs = file.Find(baseDir .. "/*", "DATA")
+
+        local function processFile(path, gamemode, category)
+            local data = file.Read(path, "DATA")
+            if not data then return end
+            for line in data:gmatch("[^\r\n]+") do
+                local ts, msg = line:match("^%[([^%]]+)%]%s*(.+)")
+                if ts and msg then
+                    local steamID = msg:match("%[(%d+)%]")
+                    local charID = msg:match("CharID:%s*(%d+)")
+                    entries[#entries + 1] = {
+                        _timestamp = ts,
+                        _gamemode = gamemode,
+                        _category = category,
+                        _message = msg,
+                        _charID = charID,
+                        _steamID = steamID
+                    }
                 end
+            end
+        end
+
+        for _, fileName in ipairs(files) do
+            if fileName:sub(-4) == ".txt" then
+                local category = string.StripExtension(fileName)
+                processFile(baseDir .. "/" .. fileName, engine.ActiveGamemode(), category)
+            end
+        end
+
+        for _, gm in ipairs(dirs) do
+            local gmPath = baseDir .. "/" .. gm
+            local gmFiles = file.Find(gmPath .. "/*.txt", "DATA")
+            for _, fileName in ipairs(gmFiles) do
+                local category = string.StripExtension(fileName)
+                processFile(gmPath .. "/" .. fileName, gm, category)
             end
         end
 
@@ -115,19 +168,33 @@ if SERVER then
     end
 
     local function countLegacyLogEntries()
-        local logsDir = "lilia/logs/" .. engine.ActiveGamemode()
-        local files = file.Find(logsDir .. "/*.txt", "DATA")
+        local baseDir = "lilia/logs"
         local total, ported = 0, 0
-        for _, fileName in ipairs(files) do
-            local data = file.Read(logsDir .. "/" .. fileName, "DATA")
-            if data then
-                for line in data:gmatch("[^\r\n]+") do
-                    total = total + 1
-                    local ts, msg = line:match("^%[([^%]]+)%]%s*(.+)")
-                    if ts and msg then ported = ported + 1 end
-                end
+        local files, dirs = file.Find(baseDir .. "/*", "DATA")
+
+        local function scanFile(path)
+            local data = file.Read(path, "DATA")
+            if not data then return end
+            for line in data:gmatch("[^\r\n]+") do
+                total = total + 1
+                local ts, msg = line:match("^%[([^%]]+)%]%s*(.+)")
+                if ts and msg then ported = ported + 1 end
             end
         end
+
+        for _, fileName in ipairs(files) do
+            if fileName:sub(-4) == ".txt" then
+                scanFile(baseDir .. "/" .. fileName)
+            end
+        end
+
+        for _, gm in ipairs(dirs) do
+            local gmFiles = file.Find(baseDir .. "/" .. gm .. "/*.txt", "DATA")
+            for _, fileName in ipairs(gmFiles) do
+                scanFile(baseDir .. "/" .. gm .. "/" .. fileName)
+            end
+        end
+
         return ported, total
     end
 
