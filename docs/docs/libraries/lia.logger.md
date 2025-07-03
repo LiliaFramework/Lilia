@@ -7,6 +7,9 @@ This page documents logging utilities.
 ## Overview
 
 The logger library writes structured log entries to files and the console. It tracks important gameplay events for later auditing or debugging.
+All log entries are also saved in the `lia_logs` database table which stores the
+current gamemode, log category, message text, character ID and SteamID when
+available.
 
 ---
 
@@ -168,7 +171,9 @@ and appends the log string to a log file corresponding to its category in the lo
 
 **Description:**
 
-Moves legacy log files from `data/lilia/logs` into the `lia_logs` database table.
+Moves legacy log files from `data/lilia/logs` (including all gamemode subfolders)
+into the `lia_logs` database table. Each imported entry records the gamemode,
+category, log text, character ID and SteamID when possible.
 
 While the conversion is running, players are prevented from joining the server.
 If `changeMap` is true, the current level will reload after conversion completes.
