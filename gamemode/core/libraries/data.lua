@@ -53,6 +53,30 @@ if SERVER then
         return entries
     end
 
+    local function countLegacyDataEntries()
+        local ported, total = 0, 0
+        local base = "lilia"
+        local function scan(dir)
+            local files, dirs = file.Find(dir .. "/*", "DATA")
+            for _, f in ipairs(files) do
+                if f:sub(-4) == ".txt" then
+                    local rel = string.sub(dir .. "/" .. f, #base + 2)
+                    if not rel:StartWith("logs/") then
+                        total = total + 1
+                        local data = file.Read(dir .. "/" .. f, "DATA")
+                        local ok, decoded = pcall(pon.decode, data)
+                        if ok and decoded then ported = ported + 1 end
+                    end
+                end
+            end
+            for _, d in ipairs(dirs) do
+                scan(dir .. "/" .. d)
+            end
+        end
+        scan(base)
+        return ported, total
+    end
+
     function lia.data.set(key, value, global, ignoreMap)
         local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local map = ignoreMap and nil or game.GetMap()
@@ -92,6 +116,7 @@ if SERVER then
         lia.data.isConverting = true
         print("[Lilia] Converting lia.data to database...")
         local dataEntries = scanLegacyData()
+        local entryCount = #dataEntries
         local queries = {"DELETE FROM lia_data"}
         for _, entry in ipairs(dataEntries) do
             lia.data.stored[entry.key] = entry.value
@@ -101,11 +126,17 @@ if SERVER then
         lia.db.waitForTablesToLoad():next(function()
             lia.db.transaction(queries):next(function()
                 lia.data.isConverting = false
-                print("[Lilia] Data conversion complete.")
+                print("[Lilia] Data conversion complete. Ported " .. entryCount .. " entries.")
                 if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
             end)
         end)
     end
+
+    concommand.Add("lia_data_legacy_count", function(ply)
+        if IsValid(ply) then return end
+        local ported, total = countLegacyDataEntries()
+        print("[Lilia] lia.data legacy files contain " .. total .. " entries; " .. ported .. " can be ported.")
+    end)
 
     function lia.data.loadTables()
         lia.db.waitForTablesToLoad():next(function()

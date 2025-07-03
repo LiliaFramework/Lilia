@@ -95,12 +95,14 @@ if SERVER then
             end
         end
 
+        local entryCount = #entries
+
         lia.db.waitForTablesToLoad():next(function()
             local function insertNext(i)
                 i = i or 1
                 if i > #entries then
                     lia.log.isConverting = false
-                    print("[Lilia] Log conversion complete.")
+                    print("[Lilia] Log conversion complete. Ported " .. entryCount .. " entries.")
                     if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
                     return
                 end
@@ -111,4 +113,27 @@ if SERVER then
             insertNext()
         end)
     end
+
+    local function countLegacyLogEntries()
+        local logsDir = "lilia/logs/" .. engine.ActiveGamemode()
+        local files = file.Find(logsDir .. "/*.txt", "DATA")
+        local total, ported = 0, 0
+        for _, fileName in ipairs(files) do
+            local data = file.Read(logsDir .. "/" .. fileName, "DATA")
+            if data then
+                for line in data:gmatch("[^\r\n]+") do
+                    total = total + 1
+                    local ts, msg = line:match("^%[([^%]]+)%]%s*(.+)")
+                    if ts and msg then ported = ported + 1 end
+                end
+            end
+        end
+        return ported, total
+    end
+
+    concommand.Add("lia_log_legacy_count", function(ply)
+        if IsValid(ply) then return end
+        local ported, total = countLegacyLogEntries()
+        print("[Lilia] lia.log legacy files contain " .. total .. " lines; " .. ported .. " can be ported.")
+    end)
 end
