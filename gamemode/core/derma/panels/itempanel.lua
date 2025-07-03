@@ -136,7 +136,7 @@ function PANEL:openInspect()
     hook.Run("DisplayItemRelevantInfo", extra, LocalPlayer(), self.item)
     for _, info in ipairs(extra) do
         if info.title and info.value then
-            local v = type(info.value) == "function" and info.value(LocalPlayer(), self.item) or tostring(info.value)
+            local v = isfunction(info.value) and info.value(LocalPlayer(), self.item) or tostring(info.value)
             drawLine(scroll, info.title, v)
         end
     end
@@ -162,7 +162,7 @@ function PANEL:buildButtons()
     for key, fn in SortedPairs(self.item.functions) do
         if key == "combine" then continue end
         if hook.Run("CanRunItemAction", self.item, key) == false then continue end
-        if type(fn.onCanRun) == "function" and not fn.onCanRun(self.item) then continue end
+        if isfunction(fn.onCanRun) and not fn.onCanRun(self.item) then continue end
         self:addBtn(L(fn.name or key), function()
             if fn.sound then surface.PlaySound(fn.sound) end
             if not fn.onClick or fn.onClick(self.item) ~= false then netstream.Start("invAct", key, self.ent) end

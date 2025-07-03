@@ -54,7 +54,7 @@ local function registerContentType(typeName, setupIcon, onClick, menuEntries)
                 if e.spacer then
                     menu:AddSpacer()
                 else
-                    local txt = type(e.text) == "function" and e.text(obj.spawnname) or e.text
+                    local txt = isfunction(e.text) and e.text(obj.spawnname) or e.text
                     menu:AddOption(txt, function() e.action(obj.spawnname, icn) end):SetIcon(e.icon)
                 end
             end
