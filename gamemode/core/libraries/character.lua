@@ -106,9 +106,7 @@ lia.char.registerVar("name", {
         if CLIENT and #lia.char.names < 1 and not allowExistNames then
             net.Start("liaCharFetchNames")
             net.SendToServer()
-            net.Receive("liaCharFetchNames", function()
-                lia.char.names = net.ReadTable()
-            end)
+            net.Receive("liaCharFetchNames", function() lia.char.names = net.ReadTable() end)
         end
 
         if not lia.config.get("AllowExistNames", true) then
@@ -122,7 +120,6 @@ lia.char.registerVar("name", {
         local name, override = hook.Run("GetDefaultCharName", client, data.faction, data)
         local info = lia.faction.indices[data.faction]
         local prefix = info and (isfunction(info.prefix) and info.prefix(client) or info.prefix) or ""
-
         if isstring(name) and override then
             if prefix ~= "" then
                 newData.name = string.Trim(prefix .. " " .. name)
@@ -277,6 +274,7 @@ lia.char.registerVar("data", {
                 net.Send(client)
             end
         end
+
         character.vars.data = data
     end,
     onGet = function(character, key, default)
@@ -495,13 +493,13 @@ if SERVER then
             end
 
             for _, v in ipairs(results) do
-                local id = tonumber(v._id)
-                if not id then
+                local charId = tonumber(v._id)
+                if not charId then
                     ErrorNoHalt("[Lilia] Attempt to load character '" .. (data._name or "nil") .. "' with invalid ID!")
                     continue
                 end
 
-                local data = {}
+                local charData = {}
                 for k2, v2 in pairs(lia.char.vars) do
                     if v2.field and v[v2.field] then
                         local value = tostring(v[v2.field])
@@ -513,11 +511,11 @@ if SERVER then
                             value = util.JSONToTable(value)
                         end
 
-                        data[k2] = value
+                        charData[k2] = value
                     end
                 end
 
-                if not lia.faction.teams[data.faction] then
+                if not lia.faction.teams[charData.faction] then
                     local defaultFaction
                     for _, fac in pairs(lia.faction.teams) do
                         if fac.isDefault then
@@ -527,25 +525,23 @@ if SERVER then
                     end
 
                     if not defaultFaction then
-                        for _, fac in pairs(lia.faction.teams) do
-                            defaultFaction = fac
-                            break
-                        end
+                        local _, fac = next(lia.faction.teams)
+                        defaultFaction = fac
                     end
 
                     if defaultFaction then
-                        data.faction = defaultFaction.uniqueID
+                        charData.faction = defaultFaction.uniqueID
                         lia.db.updateTable({
                             _faction = defaultFaction.uniqueID
-                        }, nil, "characters", "_id = " .. id)
+                        }, nil, "characters", "_id = " .. charId)
                     end
                 end
 
-                characters[#characters + 1] = id
-                local character = lia.char.new(data, id, client)
+                characters[#characters + 1] = charId
+                local character = lia.char.new(charData, charId, client)
                 hook.Run("CharRestored", character)
                 character.vars.inv = {}
-                lia.inventory.loadAllFromCharID(id):next(function(inventories)
+                lia.inventory.loadAllFromCharID(charId):next(function(inventories)
                     if #inventories == 0 then
                         local promise = hook.Run("CreateDefaultInventory", character)
                         assert(promise ~= nil, "No default inventory available")
@@ -556,12 +552,12 @@ if SERVER then
                     end
                     return inventories
                 end, function(err)
-                    lia.information("Failed to load inventories for " .. tostring(id))
+                    lia.information("Failed to load inventories for " .. tostring(charId))
                     lia.information(err)
                     if IsValid(client) then client:notifyLocalized("fixInventoryError") end
                 end):next(function(inventories)
                     character.vars.inv = inventories
-                    lia.char.loaded[id] = character
+                    lia.char.loaded[charId] = character
                     done = done + 1
                     if done == #results and callback then callback(characters) end
                 end)
