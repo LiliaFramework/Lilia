@@ -51,30 +51,64 @@ end
 
 ```lua
 function FACTION:GetDefaultName(client)
-    -- return string
+    -- return string name, bool override
 end
 ```
 
 **Description:**
 
-Retrieves the default name for a newly created character in this faction.
+Retrieves the default name for a newly created character in this faction. Return
+both the name and a boolean specifying whether to override any user-provided
+name.
 
 **Parameters:**
 
 * `client` (`Player`) – The client for whom the default name is being generated.
 
+**Returns:**
+
+* `string`, `boolean` – The generated name and whether it should override user
+  input.
 
 **Realm:**
 
 * Shared
-
 
 **Example Usage:**
 
 ```lua
 function FACTION:GetDefaultName(client)
     -- Generate a simple callsign from the player's ID.
-    return string.format("Recruit-%03d", math.random(11111, 99999))
+    return string.format("Recruit-%03d", math.random(11111, 99999)), true
+end
+```
+
+---
+
+### OnSpawn
+
+```lua
+function FACTION:OnSpawn(client)
+end
+```
+
+Runs each time a faction member spawns. Use this to assign loadouts,
+send notifications, or adjust player attributes.
+
+**Parameters:**
+
+* `client` (`Player`) – The player who has just spawned.
+
+**Realm:**
+
+* Server
+
+**Example Usage:**
+
+```lua
+function FACTION:OnSpawn(client)
+    client:SetHealth(client:GetMaxHealth())
+    client:Give("weapon_pistol")
 end
 ```
 
@@ -84,17 +118,22 @@ end
 
 ```lua
 function FACTION:GetDefaultDesc(client)
-    -- return string
+    -- return string desc, bool override
 end
 ```
 
 **Description:**
 
 Retrieves the default description for a newly created character in this faction.
+Return both the description and whether it should override user input.
 
 **Parameters:**
 
 * `client` (`Player`) – The client for whom the default description is being generated.
+
+**Returns:**
+
+* `string`, `boolean` – The description text and whether to override.
 
 **Realm:**
 
@@ -105,46 +144,13 @@ Retrieves the default description for a newly created character in this faction.
 ```lua
 function FACTION:GetDefaultDesc(client)
     -- Provide a short biography for new members.
-    return "A newly enlisted soldier ready for duty."
+    return "A newly enlisted soldier ready for duty.", true
 end
 ```
 
 ---
 
 
-### OnSpawn
-
-```lua
-function FACTION:OnSpawn(client)
-end
-```
-
-**Description:**
-
-Invoked when a faction member spawns into the world. Use this for per-spawn setup such as notifications or custom status.
-
-**Parameters:**
-
-* `client` (`Player`) – The player who has just spawned.
-
-
-**Realm:**
-
-* Server
-
-
-**Example Usage:**
-
-```lua
-function FACTION:OnSpawn(client)
-    -- Restore health and equip the standard loadout.
-    client:SetHealth(client:GetMaxHealth())
-    client:Give("weapon_pistol")
-    client:ChatPrint(L("welcomeDuty"))
-end
-```
-
----
 
 ### OnTransferred
 
