@@ -14,27 +14,27 @@ Panel meta functions support scaled positioning, listen for inventory changes, a
 
 **Description:**
 
-Subscribes this panel to updates for a specific inventory.
+Registers this panel to automatically receive inventory events for the provided inventory. When hooks such as `InventoryItemAdded` or `InventoryDeleted` fire, matching methods on the panel are invoked.
 
 **Parameters:**
 
-* inventory (Inventory) – Inventory to watch for changes.
-
+* inventory (Inventory) – Inventory to listen for updates.
 
 **Realm:**
 
 * Client
 
-
-**Example Usage:**
+**Returns:**
 
 * None – This function does not return a value.
-
 
 **Example Usage:**
 
 ```lua
-panel:liaListenForInventoryChanges(player:getChar():getInv())
+function PANEL:setInventory(inv)
+    self.inventory = inv
+    self:liaListenForInventoryChanges(inv)
+end
 ```
 
 ---
@@ -43,60 +43,52 @@ panel:liaListenForInventoryChanges(player:getChar():getInv())
 
 **Description:**
 
-Removes inventory update hooks created by `liaListenForInventoryChanges`.
+Removes hooks added by `liaListenForInventoryChanges`. Supply an inventory ID to stop listening for just that inventory or omit the argument to clear all hooks.
 
 **Parameters:**
 
-* id (number) – ID of the inventory to stop listening to.
-
+* id (number|nil) – ID of the inventory to stop listening to, or nil to remove all.
 
 **Realm:**
 
 * Client
 
-
 **Returns:**
 
 * None – This function does not return a value.
 
-
 **Example Usage:**
 
 ```lua
--- Remove all registered hooks for this panel
-panel:liaDeleteInventoryHooks()
+function PANEL:OnRemove()
+    self:liaDeleteInventoryHooks()
+end
 ```
-
 ---
+
 
 ### SetScaledPos(x, y)
 
 **Description:**
 
-Positions the panel using screen scale units.
+Sets the panel position using `ScreenScale(x)` and `ScreenScaleH(y)`.
 
 **Parameters:**
 
-* x (number) – Horizontal position using `ScreenScale`.
-
-
-* y (number) – Vertical position using `ScreenScaleH`.
-
+* x (number) – Horizontal position in screen scale units.
+* y (number) – Vertical position in screen scale units.
 
 **Realm:**
 
 * Client
 
-
 **Returns:**
 
 * None – This function does not return a value.
 
-
 **Example Usage:**
 
 ```lua
--- Position the panel 10 units from the left and 20 units down
 panel:SetScaledPos(10, 20)
 ```
 
@@ -106,30 +98,24 @@ panel:SetScaledPos(10, 20)
 
 **Description:**
 
-Sizes the panel using screen scale units.
+Sets the panel size using `ScreenScale(w)` and `ScreenScaleH(h)`.
 
 **Parameters:**
 
-* w (number) – Width using `ScreenScale`.
-
-
-* h (number) – Height using `ScreenScaleH`.
-
+* w (number) – Width in screen scale units.
+* h (number) – Height in screen scale units.
 
 **Realm:**
 
 * Client
 
-
 **Returns:**
 
 * None – This function does not return a value.
 
-
 **Example Usage:**
 
 ```lua
--- Set panel size to 64 by 32 scaled units
 panel:SetScaledSize(64, 32)
 ```
 
