@@ -701,13 +701,13 @@ local versionURL = "https://raw.githubusercontent.com/LiliaFramework/LiliaFramew
 local function checkPublicModules()
     fetchURL(publicURL, function(body, code)
         if code ~= 200 then
-            lia.updater("Error fetching module list (HTTP " .. code .. ")")
+            lia.updater(L("moduleListHTTPError", code))
             return
         end
 
         local remote = util.JSONToTable(body)
         if not remote then
-            lia.updater("Error parsing module data")
+            lia.updater(L("moduleDataParseError"))
             return
         end
 
@@ -721,61 +721,61 @@ local function checkPublicModules()
             end
 
             if not match then
-                lia.updater("Module with uniqueID '" .. info.uniqueID .. "' not found")
+                lia.updater(L("moduleUniqueIDNotFound", info.uniqueID))
             elseif not match.version then
-                lia.updater("Module '" .. info.name .. "' has no remote version info")
+                lia.updater(L("moduleNoRemoteVersion", info.name))
             elseif match.version ~= info.localVersion then
-                lia.updater("Module '" .. info.name .. "' is outdated. Update to version " .. match.version)
+                lia.updater(L("moduleOutdated", info.name, match.version))
             end
         end
-    end, function(err) lia.updater("Error fetching module list: " .. err) end)
+    end, function(err) lia.updater(L("moduleListError", err)) end)
 end
 
 local function checkPrivateModules()
     fetchURL(privateURL, function(body, code)
         if code ~= 200 then
-            lia.updater("Error fetching private module list (HTTP " .. code .. ")")
+            lia.updater(L("privateModuleListHTTPError", code))
             return
         end
 
         local remote = util.JSONToTable(body)
         if not remote then
-            lia.updater("Error parsing private module data")
+            lia.updater(L("privateModuleDataParseError"))
             return
         end
 
         for _, info in ipairs(lia.module.privateVersionChecks) do
             for _, m in ipairs(remote) do
                 if m.uniqueID == info.uniqueID and m.version and m.version ~= info.localVersion then
-                    lia.updater("Module '" .. info.name .. "' is outdated, please report back to the author")
+                    lia.updater(L("privateModuleOutdated", info.name))
                     break
                 end
             end
         end
-    end, function(err) lia.updater("Error fetching private module list: " .. err) end)
+    end, function(err) lia.updater(L("privateModuleListError", err)) end)
 end
 
 local function checkFrameworkVersion()
     fetchURL(versionURL, function(body, code)
         if code ~= 200 then
-            lia.updater("Error fetching framework version (HTTP " .. code .. ")")
+            lia.updater(L("frameworkVersionHTTPError", code))
             return
         end
 
         local remote = util.JSONToTable(body)
         if not remote or not remote.version then
-            lia.updater("Error parsing framework version data")
+            lia.updater(L("frameworkVersionDataParseError"))
             return
         end
 
         local localVersion = GM.version
         if not localVersion then
-            lia.updater("Error reading local framework version")
+            lia.updater(L("localFrameworkVersionError"))
             return
         end
 
-        if remote.version ~= localVersion then lia.updater("Framework is outdated. Update at https://github.com/LiliaFramework/Lilia/releases/tag/release") end
-    end, function(err) lia.updater("Error fetching framework version: " .. err) end)
+        if remote.version ~= localVersion then lia.updater(L("frameworkOutdated")) end
+    end, function(err) lia.updater(L("frameworkVersionError", err)) end)
 end
 
 function GM:InitializedModules()

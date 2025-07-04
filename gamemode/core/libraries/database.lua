@@ -14,7 +14,7 @@ local function ThrowQueryFault(query, fault)
 end
 
 local function ThrowConnectionFault(fault)
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " Lilia has failed to connect to the database.\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. L("dbConnectionFail") .. "\n")
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. fault .. "\n")
     setNetVar("dbError", fault)
 end
@@ -120,15 +120,15 @@ modules.mysqloo = {
             end
         end
 
-        if not lowest then error("failed to find database in the pool") end
+        if not lowest then error(L("dbPoolFail")) end
         return lowest, lowestIndex
     end,
     connect = function(callback)
         if not pcall(require, "mysqloo") then return setNetVar("dbError", system.IsWindows() and "Server is missing VC++ redistributables! " or "Server is missing binaries for mysqloo! ") end
         if mysqloo.VERSION ~= "9" or not mysqloo.MINOR_VERSION or tonumber(mysqloo.MINOR_VERSION) < 1 then
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " You are using an outdated mysqloo version.\n")
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " Download the latest mysqloo9 from here.\n")
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " https://github.com/syl0r/MySQLOO/releases.\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. L("mysqlooOutdated") .. "\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. L("mysqlooDownload") .. "\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. L("mysqlooDownloadURL") .. "\n")
             return
         end
 
