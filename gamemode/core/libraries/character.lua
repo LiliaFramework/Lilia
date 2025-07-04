@@ -552,7 +552,7 @@ if SERVER then
                     end
                     return inventories
                 end, function(err)
-                    lia.information("Failed to load inventories for " .. tostring(charId))
+                    lia.information(L("failedLoadInventories", tostring(charId)))
                     lia.information(err)
                     if IsValid(client) then client:notifyLocalized("fixInventoryError") end
                 end):next(function(inventories)
@@ -628,7 +628,7 @@ if SERVER then
         data[key] = val
         local setQ = "UPDATE lia_characters SET _data=" .. sql.SQLStr(util.TableToJSON(data)) .. " WHERE _id=" .. charIDsafe
         if not sql.Query(setQ) then
-            lia.information("lia.char.setCharData SQL Error, q=" .. setQ .. ", Error = " .. sql.LastError())
+            lia.information(L("charSetDataSQLError", setQ, sql.LastError()))
             return false
         end
 

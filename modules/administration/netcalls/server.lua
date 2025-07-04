@@ -45,12 +45,12 @@ net.Receive("lia_managesitrooms_action", function(_, client)
             rooms[name] = nil
             lia.data.set("sitrooms", sitrooms, true, true)
             client:notifyLocalized("sitroomRenamed")
-            lia.log.add(client, "sitRoomRenamed", string.format("Map: %s | Old: %s | New: %s", mapName, name, newName), "Renamed sitroom")
+            lia.log.add(client, "sitRoomRenamed", string.format("Map: %s | Old: %s | New: %s", mapName, name, newName), L("logRenamedSitroom"))
         end
     elseif action == 3 then
         rooms[name] = client:GetPos()
         lia.data.set("sitrooms", sitrooms, true, true)
         client:notifyLocalized("sitroomRepositioned")
-        lia.log.add(client, "sitRoomRepositioned", string.format("Map: %s | Name: %s | New Position: %s", mapName, name, tostring(rooms[name])), "Repositioned sitroom")
+        lia.log.add(client, "sitRoomRepositioned", string.format("Map: %s | Name: %s | New Position: %s", mapName, name, tostring(rooms[name])), L("logRepositionedSitroom"))
     end
 end)

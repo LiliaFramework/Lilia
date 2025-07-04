@@ -9,9 +9,9 @@ end
 if SERVER then
     function lia.currency.spawn(pos, amount, angle)
         if not pos then
-            lia.information("[Lilia] Can't create currency entity: Invalid Position")
+            lia.information(L("invalidCurrencyPosition"))
         elseif not amount or amount < 0 then
-            lia.information("[Lilia] Can't create currency entity: Invalid Amount of money")
+            lia.information(L("invalidCurrencyAmount"))
         else
             local money = ents.Create("lia_money")
             money:SetPos(pos)

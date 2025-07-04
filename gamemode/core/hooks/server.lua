@@ -232,11 +232,11 @@ local logTypeMap = {
 }
 
 function GM:CheckPassword(steamid64, _, svpass, clpass, name)
-    local convertingMessage = lia.config.isConverting and "Server is converting configuration, please retry later" or lia.data.isConverting and "Server is converting data, please retry later" or lia.log.isConverting and "Server is converting logs, please retry later"
+    local convertingMessage = lia.config.isConverting and L("serverConvertingConfig") or lia.data.isConverting and L("serverConvertingData") or lia.log.isConverting and L("serverConvertingLogs")
     if convertingMessage then return false, convertingMessage end
     if svpass ~= "" and svpass ~= clpass then
         lia.log.add(nil, "failedPassword", steamid64, name, svpass, clpass)
-        lia.information("Passwords do not match for " .. name .. " (" .. steamid64 .. "), " .. "server password: " .. svpass .. ", client password: " .. clpass .. ".")
+        lia.information(L("passwordMismatchInfo", name, steamid64, svpass, clpass))
     end
 end
 
@@ -599,7 +599,7 @@ function GM:LoadData()
             local range = "(" .. table.concat(idRange, ", ") .. ")"
             if hook.Run("ShouldDeleteSavedItems") == true then
                 lia.db.query("DELETE FROM lia_items WHERE _itemID IN " .. range)
-                lia.information("Server Deleted Server Items (does not include Logical Items)")
+                lia.information(L("serverDeletedItems"))
             else
                 lia.db.query("SELECT _itemID, _uniqueID, _data FROM lia_items WHERE _itemID IN " .. range, function(data)
                     if data then
