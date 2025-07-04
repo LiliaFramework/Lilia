@@ -6,7 +6,20 @@ This page describes the API for status bars displayed on the HUD.
 
 ## Overview
 
-The bars library manages health, stamina, and other progress bars displayed on the player's HUD. It lets you register custom bar callbacks, draws them every frame, and provides helpers for temporary action bars.
+The bars library manages health, stamina, and other progress bars displayed on the player's HUD. It lets you register custom bar callbacks, draws them every frame, and provides helpers for temporary action bars. Bars automatically fade out after a few seconds unless kept visible. The `BarsAlwaysVisible` configuration option can override this behaviour, and the hooks `ShouldHideBars` and `ShouldBarDraw` allow modules to control when bars are rendered.
+
+Default health, armor and stamina bars are registered automatically when the client loads.
+
+### Bar Table Fields
+
+Each bar returned by `lia.bar.get` or inserted via `lia.bar.add` is a table with the following fields:
+
+* `getValue` (function) – Function that returns the bar's progress as a fraction.
+* `color` (Color) – Bar fill color.
+* `priority` (number) – Draw order; lower priorities draw first.
+* `identifier` (string|nil) – Unique identifier if provided.
+* `visible` (boolean|nil) – Set to `true` to force the bar to remain visible.
+* `lifeTime` (number) – Internal timer used for fading; usually managed automatically.
 
 ---
 
@@ -34,10 +47,11 @@ Retrieves a bar object from the list by its unique identifier.
 **Example Usage:**
 
 ```lua
-    -- Retrieve the health bar and change its color at runtime
+    -- Retrieve the health bar and keep it visible
     local bar = lia.bar.get("health")
     if bar then
         bar.color = Color(0, 200, 0) -- make the bar green
+        bar.visible = true          -- prevent fading out
     end
 ```
 
@@ -80,13 +94,12 @@ Bars are drawn in order of ascending priority.
 **Example Usage:**
 
 ```lua
-    -- Calculates the player's current health as a fraction of their maximum health.
-    -- Uses a custom color (RGB 200, 50, 40) for the bar's fill.
-    -- Assigns priority 1 so this bar draws before lower-priority bars.
-    lia.bar.add(function()
+    -- Adds a custom health bar with high priority
+    local prio = lia.bar.add(function()
         local client = LocalPlayer()
         return client:Health() / client:GetMaxHealth()
     end, Color(200, 50, 40), 1, "health")
+    print("Health bar priority:", prio)
 ```
 
 ---
@@ -115,8 +128,8 @@ Removes a bar from the list based on its unique identifier.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.bar.remove
-    lia.bar.remove("example")
+    -- Remove the bar created in the previous example
+    lia.bar.remove("health")
 ```
 
 ---
@@ -165,8 +178,8 @@ filling it proportionally based on pos and max.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.bar.drawBar
-    lia.bar.drawBar(10, 10, 200, 20, 0.5, 1, Color(255,0,0))
+    -- Draw a bar showing 75/100 progress at the top left
+    lia.bar.drawBar(10, 10, 200, 20, 75, 100, Color(255,0,0))
 ```
 
 ---
@@ -200,7 +213,7 @@ for the specified duration on the HUD.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.bar.drawAction
+    -- Show a reload progress bar for two seconds
     lia.bar.drawAction("Reloading", 2)
 ```
 
@@ -211,8 +224,7 @@ for the specified duration on the HUD.
 **Description:**
 
 Iterates through all registered bars, applies smoothing to their values,
-
-and draws them on the HUD according to their priority and visibility rules.
+and draws them on the HUD according to their priority and visibility rules. The hooks `ShouldHideBars` and `ShouldBarDraw` are consulted to decide when a bar is rendered.
 
 **Parameters:**
 
@@ -232,6 +244,6 @@ and draws them on the HUD according to their priority and visibility rules.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of hook.Add
+    -- Draw all registered bars each frame
     hook.Add("HUDPaintBackground", "liaBarDraw", lia.bar.drawAll)
 ```
