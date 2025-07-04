@@ -110,7 +110,7 @@ end
 
 **Description:**
 
-Checks if the entity is a simfphys car.
+Returns true if this entity is recognized as a simfphys or LVS vehicle.
 
 **Parameters:**
 
@@ -130,9 +130,8 @@ Checks if the entity is a simfphys car.
 **Example Usage:**
 
 ```lua
--- Show a custom HUD when entering a simfphys vehicle
 if ent:isSimfphysCar() then
-    OpenCarHUD(ent)
+    print("Simfphys vehicle detected")
 end
 ```
 
@@ -181,7 +180,7 @@ Checks if a player has the given door access level.
 * client (Player) – The player to check.
 
 
-* access (number, optional) – Door permission level.
+* access (number, optional) – Door permission level. Defaults to DOOR_GUEST.
 
 
 **Realm:**
@@ -209,8 +208,7 @@ end
 
 **Description:**
 
-Assigns the entity to the specified player.
-
+Assigns the vehicle to the specified player. Works only for vehicles.
 **Parameters:**
 
 * client (Player) – Player to set as owner.
@@ -229,8 +227,8 @@ Assigns the entity to the specified player.
 **Example Usage:**
 
 ```lua
--- Assign ownership when a player buys the door
-door:keysOwn(buyer)
+-- Assign ownership when a player buys the vehicle
+car:keysOwn(buyer)
 ```
 
 ---
@@ -299,7 +297,7 @@ car:keysUnLock()
 
 **Description:**
 
-Returns the player that owns this door if available.
+Returns the player that owns this vehicle if available.
 
 **Parameters:**
 
@@ -320,7 +318,7 @@ Returns the player that owns this door if available.
 
 ```lua
 -- Print the name of the door owner when inspecting
-local owner = door:getDoorOwner()
+local owner = car:getDoorOwner()
 if owner then
     print("Owned by", owner:Name())
 end
@@ -400,7 +398,7 @@ Calculates a drop position in front of the entity's eyes.
 
 **Parameters:**
 
-* offset (number) – Distance from the player eye position.
+* offset (number) – Distance from the player eye position. Defaults to 64.
 
 
 **Realm:**
@@ -410,7 +408,7 @@ Calculates a drop position in front of the entity's eyes.
 
 **Returns:**
 
-* Vector – Drop position and angle.
+* Vector, Angle – Drop position and eye angle.
 
 
 **Example Usage:**
@@ -431,7 +429,7 @@ Checks for another entity of the same class nearby.
 
 **Parameters:**
 
-* radius (number) – Sphere radius in units.
+* radius (number) – Sphere radius in units. Defaults to 96.
 
 
 * otherEntity (Entity, optional) – Specific entity to look for.
@@ -532,7 +530,7 @@ Sends a network variable to recipients.
 * key (string) – Identifier of the variable.
 
 
-* receiver (Player|None) – Who to send to.
+* receiver (Player|None, optional) – Player to send to. Broadcasts if omitted.
 
 
 **Realm:**
@@ -552,10 +550,7 @@ Sends a network variable to recipients.
 **Example Usage:**
 
 ```lua
--- Broadcast the "doorState" variable to every connected player
-for _, ply in player.Iterator() do
-    ent:sendNetVar("doorState", ply)
-end
+ent:sendNetVar("doorState")
 ```
 
 ---
@@ -568,7 +563,7 @@ Clears all network variables on this entity.
 
 **Parameters:**
 
-* receiver (Player|None) – Receiver to notify.
+* receiver (Player|None, optional) – Receiver to notify. Broadcasts if omitted.
 
 
 **Realm:**
@@ -582,11 +577,8 @@ Clears all network variables on this entity.
 
 
 **Example Usage:**
-
 ```lua
--- Force reinitialization by clearing all variables for this receiver
 ent:clearNetVars(client)
-ent:sendNetVar("initialized", client)
 ```
 
 ---
@@ -731,7 +723,7 @@ This will trigger the **NetVarChanged** hook on both server and client.
 * value (any) – Value to store.
 
 
-* receiver (Player|None) – Who to send update to.
+* receiver (Player|None, optional) – Who to send update to. Broadcasts if omitted.
 
 
 **Realm:**
@@ -747,8 +739,7 @@ This will trigger the **NetVarChanged** hook on both server and client.
 **Example Usage:**
 
 ```lua
--- Store a variable and sync it to players
-local result = ent:setNetVar(key, value, receiver)
+ent:setNetVar("locked", true)
 ```
 
 ---
