@@ -74,18 +74,18 @@ function MODULE:PlayerAuthed(client, steamid)
     local steamName = client:SteamName()
     local steamID = client:SteamID64()
     if KnownCheaters[steamID64] or KnownCheaters[ownerSteamID64] then
-        lia.applyPunishment(client, "using third-party cheats", false, true, 0)
+        lia.applyPunishment(client, L("usingThirdPartyCheats"), false, true, 0)
         lia.notifyAdmin(L("bannedCheaterNotify", steamName, steamID))
         lia.log.add(nil, "cheaterBanned", steamName, steamID)
         return
     end
 
     if lia.config.get("AltsDisabled", false) and ownerSteamID64 ~= steamID64 then
-        lia.applyPunishment(client, "family sharing (alts are disabled)", true, false)
+        lia.applyPunishment(client, L("familySharingDisabled"), true, false)
         lia.notifyAdmin(L("kickedAltNotify", steamName, steamID))
         lia.log.add(nil, "altKicked", steamName, steamID)
     elseif lia.module.list["whitelist"] and lia.module.list["whitelist"].BlacklistedSteamID64[ownerSteamID64] then
-        lia.applyPunishment(client, "using a family-shared account that is blacklisted", false, true, 0)
+        lia.applyPunishment(client, L("familySharedAccountBlacklisted"), false, true, 0)
         lia.notifyAdmin(L("bannedAltNotify", steamName, steamID))
         lia.log.add(nil, "altBanned", steamName, steamID)
     end

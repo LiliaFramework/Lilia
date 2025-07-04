@@ -1,14 +1,11 @@
-﻿SWEP.PrintName = "Hands"
+SWEP.PrintName = L("handsWeaponName")
 SWEP.Slot = 0
 SWEP.SlotPos = 1
 SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = true
 SWEP.Author = "Samael"
-SWEP.Instructions = [[Primary Fire: Throw/Punch
-Secondary Fire: Knock/Pickup
-Secondary Fire + Mouse: Rotate Object
-Reload: Drop]]
-SWEP.Purpose = "Hitting things and knocking on doors."
+SWEP.Instructions = L("handsInstructions")
+SWEP.Purpose = L("handsPurpose")
 SWEP.Drop = false
 SWEP.ViewModelFOV = 45
 SWEP.ViewModelFlip = false

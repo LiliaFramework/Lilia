@@ -1,6 +1,6 @@
 ﻿LiliaVendors = LiliaVendors or {}
 ENT.Type = "anim"
-ENT.PrintName = "Vendor"
+ENT.PrintName = L("entityVendorName")
 ENT.Category = "Lilia"
 ENT.Spawnable = true
 ENT.AdminOnly = true

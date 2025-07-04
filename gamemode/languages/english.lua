@@ -963,5 +963,25 @@ LANGUAGE = {
     giveFlagFormat = "Give Flag %s",
     takeFlagFormat = "Take Flag %s",
     setFactionTitle = "Set Faction (%s)",
+    flagLabel = "Flag '%s'",
     downloads = "Downloads",
+    adminStickWeaponName = "Admin Stick",
+    adminStickPurpose = "Instructions: Press R when looking at someone to select them \nPress Shift R to select yourself \nLeft click to open menu \nRight click with selection to freeze.",
+    keysWeaponName = "Keys",
+    keysInstructions = "Primary Fire: Lock\nSecondary Fire: Unlock",
+    keysPurpose = "Locking and Unlocking Stuff.",
+    handsWeaponName = "Hands",
+    handsInstructions = [[Primary Fire: Throw/Punch
+Secondary Fire: Knock/Pickup
+Secondary Fire + Mouse: Rotate Object
+Reload: Drop]],
+    handsPurpose = "Hitting things and knocking on doors.",
+    entityVendorName = "Vendor",
+    entityStorageName = "Storage",
+    entityItemName = "Item",
+    entityMoneyName = "Money",
+    hackingInfraction = "Hacking",
+    usingThirdPartyCheats = "using third-party cheats",
+    familySharingDisabled = "family sharing (alts are disabled)",
+    familySharedAccountBlacklisted = "using a family-shared account that is blacklisted",
 }
