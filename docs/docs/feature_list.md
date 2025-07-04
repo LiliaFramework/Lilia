@@ -334,8 +334,6 @@ Categorized logs with optional webhooks.
 ### Doors
 Ownable doors with keys and dynamic pricing.
 
-- Each container type can play unique open sounds
-
 - Ownable doors with selling and price settings
 
 - Faction or class based access control
@@ -380,7 +378,7 @@ Physical crates and trunks storing items persistently.
 
 - Vehicle trunk storage supported
 
-- Circular HUD bars can surround NPCs or players
+- Each container type can play unique open sounds
 
 - Optional open/close animations for certain models
 
@@ -389,7 +387,6 @@ Physical crates and trunks storing items persistently.
 - Can be locked and unlocked with keys or commands
 
 - Persists contents between server restarts
-
 
 ### NPC Vendors
 NPCs that buy and sell items from inventories.
@@ -407,7 +404,6 @@ NPCs that buy and sell items from inventories.
 - Items can restock automatically on a timer
 
 - Dialogue trees allow branching conversations
-- Plugin hooks for chat preprocessing
 
 ### Lia Core Library
 Shared utilities for file inclusion and helper functions.
@@ -445,6 +441,8 @@ HUD bars for health, armor and custom stats.
 
 - Threshold colors make critical levels stand out
 
+- Circular HUD bars can surround NPCs or players
+
 
 ### Character Library
 Helpers for saving and transferring characters.
@@ -470,6 +468,8 @@ Enhanced chat with ranges and colors plus utilities for custom commands.
 - Overridable parsing for unique chat effects
 
 - Supports icons, colors and markup tags
+- Plugin hooks for chat preprocessing
+
 
 - Works with the recognition system for display names
 
