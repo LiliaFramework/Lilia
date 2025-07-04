@@ -8,6 +8,8 @@ This page covers utilities for manipulating character data.
 
 The character library handles creation and persistence of player characters. It manages character variables, interacts with the database, and offers helpers for retrieving characters by ID or SteamID. Because these functions directly modify stored data, use them carefully or you may corrupt character information.
 
+### lia.char.new(data, id, client, steamID)
+
 **Description:**
 
 Creates a new character instance with default variables and metatable.
@@ -75,8 +77,10 @@ Registers a hook function for when a character variable changes.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.char.hookVar
-    lia.char.hookVar("name", "PrintName", function(old, new) print(new) end)
+    -- Print the new name whenever a character's name changes
+    lia.char.hookVar("name", "PrintName", function(char, old, new)
+        print(char, old, new)
+    end)
 ```
 
 ---
@@ -94,6 +98,21 @@ Registers a character variable with metadata and generates accessor methods.
 
 * data (table) – Variable metadata including default, validation, networking, etc.
 
+Common `data` fields include:
+
+* `field` (string) – Database column name for persistence.
+* `default` (any) – Default value when none is provided.
+* `index` (number) – Order in the character creation menu.
+* `noNetworking` (boolean) – Do not network this variable.
+* `isLocal` (boolean) – Only network the value to the owning player.
+* `noDisplay` (boolean) – Hide the variable from character menus.
+* `isNotModifiable` (boolean) – Do not automatically generate setter methods.
+* `shouldDisplay` (function) – Return false to hide in the creation menu.
+* `onSet` / `onGet` (function) – Custom setter or getter logic.
+* `onValidate` (function) – Validate input during creation.
+* `onAdjust` (function) – Modify the submitted value before saving.
+* `onSync` (function) – Called when the variable is networked.
+
 
 **Realm:**
 
@@ -108,8 +127,12 @@ Registers a character variable with metadata and generates accessor methods.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.char.registerVar
-    lia.char.registerVar("age", {field = "_age", default = 20})
+    -- Register an age field that only accepts numbers
+    lia.char.registerVar("age", {
+        field = "_age",
+        default = 20,
+        onValidate = function(v) return isnumber(v) end
+    })
 ```
 
 ---
@@ -305,6 +328,7 @@ Determines the team color for a client based on their character class or default
 **Description:**
 
 Inserts a new character into the database and sets up default inventory.
+Calls `CreateDefaultInventory` and after completion the `OnCharCreated` hook.
 
 **Parameters:**
 
@@ -327,8 +351,14 @@ Inserts a new character into the database and sets up default inventory.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.char.create
-    lia.char.create({name = "John"}, function(id) print("Created", id) end)
+    -- Create a character for the given player
+    lia.char.create({
+        name = "John",
+        steamID = client:SteamID64(),
+        faction = "Citizen"
+    }, function(id)
+        print("Created", id)
+    end)
 ```
 
 ---
@@ -338,6 +368,7 @@ Inserts a new character into the database and sets up default inventory.
 **Description:**
 
 Loads characters for a client from the database, optionally filtering by ID.
+Each loaded character triggers the `CharRestored` hook.
 
 **Parameters:**
 
@@ -363,8 +394,10 @@ Loads characters for a client from the database, optionally filtering by ID.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.char.restore
-    lia.char.restore(client, print)
+    -- Load all characters belonging to a player
+    lia.char.restore(client, function(ids)
+        PrintTable(ids)
+    end)
 ```
 
 ---
@@ -374,6 +407,7 @@ Loads characters for a client from the database, optionally filtering by ID.
 **Description:**
 
 Cleans up loaded characters and inventories for a player on disconnect.
+Runs the `CharCleanUp` hook for each cleaned character.
 
 **Parameters:**
 
@@ -404,6 +438,7 @@ Cleans up loaded characters and inventories for a player on disconnect.
 **Description:**
 
 Deletes a character by ID from the database, cleans up and notifies players.
+Fires `PreCharDelete` before removal and `OnCharDelete` afterwards.
 
 **Parameters:**
 
@@ -437,6 +472,7 @@ Deletes a character by ID from the database, cleans up and notifies players.
 **Description:**
 
 Updates a character's JSON data field in the database and loaded object.
+Setting a value on a loaded character triggers `OnCharVarChanged`.
 
 **Parameters:**
 
@@ -473,6 +509,7 @@ Updates a character's JSON data field in the database and loaded object.
 **Description:**
 
 Updates the character's name in the database and loaded object.
+Triggers `OnCharVarChanged` for the `name` variable if the character is loaded.
 
 **Parameters:**
 
@@ -506,6 +543,7 @@ Updates the character's name in the database and loaded object.
 **Description:**
 
 Updates the character's model and bodygroups in the database and in-game.
+Also fires `PlayerModelChanged` and `OnCharVarChanged` for the `model` variable.
 
 **Parameters:**
 
