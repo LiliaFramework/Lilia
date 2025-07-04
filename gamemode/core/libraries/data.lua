@@ -172,7 +172,7 @@ if SERVER then
     end)
 end
 
-function lia.data.get(key, default, global, ignoreMap, refresh)
+function lia.data.get(key, default, _, _, refresh)
     if not refresh then
         local stored = lia.data.stored[key]
         if stored ~= nil then return stored end
