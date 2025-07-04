@@ -51,15 +51,15 @@ end
 
 ```lua
 function FACTION:GetDefaultName(client)
-    -- return string name, bool override
+    -- return string name
 end
 ```
 
 **Description:**
 
-Retrieves the default name for a newly created character in this faction. Return
-both the name and a boolean specifying whether to override any user-provided
-name.
+Retrieves the default name for a newly created character in this faction. The
+returned string is used as the base name before any prefix or other logic is
+applied.
 
 **Parameters:**
 
@@ -67,8 +67,7 @@ name.
 
 **Returns:**
 
-* `string`, `boolean` – The generated name and whether it should override user
-  input.
+* `string` – The generated name.
 
 **Realm:**
 
@@ -79,7 +78,7 @@ name.
 ```lua
 function FACTION:GetDefaultName(client)
     -- Generate a simple callsign from the player's ID.
-    return string.format("Recruit-%03d", math.random(11111, 99999)), true
+    return string.format("Recruit-%03d", math.random(11111, 99999))
 end
 ```
 
@@ -118,14 +117,15 @@ end
 
 ```lua
 function FACTION:GetDefaultDesc(client)
-    -- return string desc, bool override
+    -- return string desc
 end
 ```
 
 **Description:**
 
 Retrieves the default description for a newly created character in this faction.
-Return both the description and whether it should override user input.
+The returned text becomes the character's description if no other value is
+provided.
 
 **Parameters:**
 
@@ -133,7 +133,7 @@ Return both the description and whether it should override user input.
 
 **Returns:**
 
-* `string`, `boolean` – The description text and whether to override.
+* `string` – The description text.
 
 **Realm:**
 
@@ -144,7 +144,7 @@ Return both the description and whether it should override user input.
 ```lua
 function FACTION:GetDefaultDesc(client)
     -- Provide a short biography for new members.
-    return "A newly enlisted soldier ready for duty.", true
+    return "A newly enlisted soldier ready for duty."
 end
 ```
 
