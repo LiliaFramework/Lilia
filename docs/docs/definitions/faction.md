@@ -22,6 +22,7 @@ Each faction in the game is defined by a set of fields on the global `FACTION` t
 | `color` | `Color` | `Color(150,150,150)` | UI color representing the faction. |
 | `models` | `table` | `DefaultModels` | Available player model paths. |
 | `uniqueID` | `string` | `filename` | Internal string identifier. |
+| `prefix` | `string`/`function` | `""` | Optional name prefix or function returning one. |
 | `weapons` | `table` | `{}` | Automatically granted weapons. |
 | `items` | `table` | `{}` | Automatically granted items. |
 | `index` | `number` | `auto` | Numeric ID assigned at registration time. |
@@ -122,6 +123,29 @@ Internal string identifier for referencing the faction.
 
 ```lua
 FACTION.uniqueID = "staff"
+```
+
+#### `prefix`
+
+**Type:**
+
+`string` or `function`
+
+**Description:**
+
+Optional prefix automatically prepended to new character names. If a function is
+provided, it is called with the player creating the character and should return
+the desired text. The result is inserted before the base name with a space and
+trimmed; returning `nil` or an empty string results in no prefix being applied.
+
+**Example Usage:**
+
+```lua
+FACTION.prefix = "[CIT]"
+-- or
+FACTION.prefix = function(client)
+    return client:isVIP() and "[VIP]" or ""
+end
 ```
 
 ---
@@ -626,6 +650,39 @@ even if they normally lack the required privilege.
 FACTION.commands = {
     plytransfer = true,
 }
+```
+
+---
+
+## Example Faction Definition
+
+The snippet below shows a minimal faction script using many of the fields described above.
+
+```lua
+FACTION.name = "Citizens"
+FACTION.desc = "Everyday city dwellers."
+FACTION.color = Color(75, 150, 50)
+FACTION.isDefault = true
+FACTION.models = {
+    "models/Humans/Group01/male_01.mdl",
+    "models/Humans/Group01/female_01.mdl"
+}
+FACTION.prefix = "[CIT]"
+FACTION.weapons = {"weapon_radio"}
+FACTION.items = {"water"}
+FACTION.pay = 20
+FACTION.payTimer = 1800
+FACTION.health = 100
+FACTION.armor = 0
+FACTION.runSpeed = 200
+FACTION.walkSpeed = 100
+FACTION.jumpPower = 160
+FACTION.bodyGroups = {hands = 1}
+FACTION.NPCRelations = {
+    ["npc_metropolice"] = D_HT
+}
+
+FACTION_CITIZEN = FACTION.index
 ```
 
 ---
