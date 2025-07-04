@@ -310,7 +310,7 @@ local function IncludeCharacterManagement(tgt, menu, stores)
     end
 
     if cl:hasPrivilege("Commands - Manage Character Information") then
-        charMenu:AddOption(L("Change Playermodel"), function()
+        charMenu:AddOption(L("changePlayerModel"), function()
             OpenPlayerModelUI(tgt)
             AdminStickIsOpen = false
         end):SetIcon("icon16/user_suit.png")
