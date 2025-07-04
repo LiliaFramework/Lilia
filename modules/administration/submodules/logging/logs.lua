@@ -531,19 +531,19 @@
         category = "Admin Actions"
     },
     ["charBan"] = {
-        func = function(client, targetName, charID)
+        func = function(client, targetName)
             return string.format("Admin '%s' banned character '%s'.", client:Name(), targetName)
         end,
         category = "Admin Actions"
     },
     ["charUnban"] = {
-        func = function(client, targetName, charID)
+        func = function(client, targetName)
             return string.format("Admin '%s' unbanned character '%s'.", client:Name(), targetName)
         end,
         category = "Admin Actions"
     },
     ["charKick"] = {
-        func = function(client, targetName, charID)
+        func = function(client, targetName)
             return string.format("Admin '%s' kicked character '%s'.", client:Name(), targetName)
         end,
         category = "Admin Actions"

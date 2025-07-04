@@ -45,7 +45,6 @@ net.Receive("invAct", function(_, client)
     local item = net.ReadType()
     local data = net.ReadType()
     local character = client:getChar()
-    local character = client:getChar()
     if not character then return end
     local entity
     if isentity(item) then
