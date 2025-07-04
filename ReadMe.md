@@ -1,6 +1,6 @@
 <p align="center">
-  <b>Official modules for the Lilia framework.</b><br/>
-  Extend your server with new mechanics and features.
+  <b>Official repository for Lilia, an advanced roleplay framework for Garry's Mod.</b><br/>
+  Build immersive servers using our modular foundation.
 </p>
 
 <p align="center">
