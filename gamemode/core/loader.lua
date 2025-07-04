@@ -341,7 +341,7 @@ end
 
 function lia.deprecated(methodName, callback)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[Deprecated] ")
-    MsgC(Color(255, 255, 0), string.format("%s is deprecated. Please use the new methods for optimization purposes.", methodName), "\n")
+    MsgC(Color(255, 255, 0), L("deprecatedMessage", methodName), "\n")
     if callback and isfunction(callback) then callback() end
 end
 
