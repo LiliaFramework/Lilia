@@ -204,6 +204,6 @@ if SERVER then
     concommand.Add("lia_log_legacy_count", function(ply)
         if IsValid(ply) then return end
         local ported, total = countLegacyLogEntries()
-        print("[Lilia] lia.log legacy files contain " .. total .. " lines; " .. ported .. " can be ported.")
+        print("[Lilia] " .. L("liaLogLegacyCount", total, ported))
     end)
 end

@@ -140,7 +140,7 @@ function lia.item.load(path, baseID, isBaseItem)
         uniqueID = (isBaseItem and "base_" or "") .. uniqueID
         lia.item.register(uniqueID, baseID, isBaseItem, path)
     elseif not path:find(".txt") then
-        ErrorNoHalt("[Lilia] Item at '" .. path .. "' follows an invalid naming convention!\n")
+        ErrorNoHalt("[Lilia] " .. L("invalidItemNaming", path) .. "\n")
     end
 end
 
@@ -246,7 +246,7 @@ function lia.item.new(uniqueID, id)
         lia.item.instances[id] = item
         return item
     else
-        error("[Lilia] Attempt to create an unknown item '" .. tostring(uniqueID) .. "'\n")
+        error("[Lilia] " .. L("unknownItem", tostring(uniqueID)) .. "\n")
     end
 end
 
@@ -432,7 +432,7 @@ if SERVER then
         local d = deferred.new()
         local itemTable = lia.item.list[uniqueID]
         if not itemTable then
-            d:reject("Attempt to instantiate invalid item " .. tostring(uniqueID))
+            d:reject(L("invalidItemInstantiate", tostring(uniqueID)))
             return d
         end
 
