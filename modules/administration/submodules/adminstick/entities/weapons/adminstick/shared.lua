@@ -1,6 +1,6 @@
 ﻿SWEP.Author = "Samael"
-SWEP.PrintName = "Admin Stick"
-SWEP.Purpose = "Instructions: Press R when looking at someone to select them \nPress Shift R to select yourself \nLeft click to open menu \nRight click with selection to freeze."
+SWEP.PrintName = L("adminStickWeaponName")
+SWEP.Purpose = L("adminStickPurpose")
 SWEP.ViewModelFOV = 50
 SWEP.ViewModelFlip = false
 SWEP.IsAlwaysRaised = true

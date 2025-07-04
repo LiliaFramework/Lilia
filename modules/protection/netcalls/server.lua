@@ -27,5 +27,5 @@ end)
 
 net.Receive("CheckHack", function(_, client)
     lia.log.add(client, "hackAttempt")
-    lia.applyPunishment(client, "Hacking", true, true, 0, "kickedForInfractionPeriod", "bannedForInfractionPeriod")
+    lia.applyPunishment(client, L("hackingInfraction"), true, true, 0, "kickedForInfractionPeriod", "bannedForInfractionPeriod")
 end)

@@ -1,6 +1,6 @@
 ﻿SWEP.Author = "Samael"
-SWEP.Instructions = "Primary Fire: Lock\nSecondary Fire: Unlock"
-SWEP.Purpose = "Locking and Unlocking Stuff."
+SWEP.Instructions = L("keysInstructions")
+SWEP.Purpose = L("keysPurpose")
 SWEP.Drop = false
 SWEP.ViewModelFOV = 45
 SWEP.ViewModelFlip = false
