@@ -74,7 +74,7 @@ Retrieves the default name for a newly created character in this faction.
 ```lua
 function FACTION:GetDefaultName(client)
     -- Generate a simple callsign from the player's ID.
-    return string.format("Recruit-%03d", client:UserID())
+    return string.format("Recruit-%03d", math.random(11111, 99999))
 end
 ```
 
