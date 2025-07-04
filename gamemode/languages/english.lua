@@ -221,6 +221,7 @@ LANGUAGE = {
     noPerm = "You are not allowed to do this.",
     chgName = "Change Name",
     chgNameDesc = "Enter the character's new name below.",
+    chgDescTitle = "Change %s's Description",
     whitelist = "%s has whitelisted %s for the %s faction.",
     unwhitelist = "%s has unwhitelisted %s from the %s faction.",
     load = "Load",
