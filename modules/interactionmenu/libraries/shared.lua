@@ -83,49 +83,35 @@ AddAction(L("changeToYell"), {
 })
 
 local function canRecog(ply)
-    local ok = lia.config.get("RecognitionEnabled", true) and ply:getChar() and ply:Alive()
-    print(ply:Nick(), "canRecog:", ok)
-    return ok
+    return lia.config.get("RecognitionEnabled", true) and ply:getChar() and ply:Alive()
 end
 
 local function promptName(ply, cb)
-    print(ply:Nick(), "promptName called")
     if lia.config.get("FakeNamesEnabled", false) then
         ply:requestString(L("recogFakeNamePrompt"), "", function(nm)
             nm = (nm or ""):Trim()
             local finalName = nm == "" and ply:getChar():getName() or nm
-            print(ply:Nick(), "entered fake name:", finalName)
             cb(finalName)
         end, ply:getChar():getName())
     else
-        print(ply:Nick(), "using real name")
         cb()
     end
 end
 
 local function CharRecognize(ply, lvl, nm)
-    print(ply:Nick(), "CharRecognize called with level", lvl, "and name", nm or "nil")
     local tgt = {}
     if isnumber(lvl) then
         local clsKey = lvl == 3 and "ic" or lvl == 4 and "y" or "w"
         local cls = lia.chat.classes[clsKey]
         for _, v in player.Iterator() do
-            if ply == v then continue end
-            if v:getChar() and cls.onCanHear(ply, v) then tgt[#tgt + 1] = v end
+            if ply ~= v and v:getChar() and cls.onCanHear(ply, v) then tgt[#tgt + 1] = v end
         end
     end
 
-    print(ply:Nick(), "found", #tgt, "targets to recognize")
     if #tgt == 0 then return end
     local count = 0
     for _, v in ipairs(tgt) do
-        local success = v:getChar():recognize(ply:getChar(), nm)
-        if success then
-            count = count + 1
-            print(ply:Nick(), "recognized", v:Nick())
-        else
-            print(ply:Nick(), "failed to recognize", v:Nick())
-        end
+        if v:getChar():recognize(ply:getChar(), nm) then count = count + 1 end
     end
 
     if count == 0 then return end
@@ -135,23 +121,17 @@ local function CharRecognize(ply, lvl, nm)
 
     net.Start("rgnDone")
     net.Send(ply)
-    print(ply:Nick(), "recognition complete, total successes:", count)
     hook.Run("OnCharRecognized", ply)
 end
 
 local function doRange(ply, lvl)
-    print(ply:Nick(), "doRange called with level", lvl)
-    promptName(ply, function(nm)
-        print(ply:Nick(), "doRange callback with name", nm or "nil")
-        CharRecognize(ply, lvl, nm)
-    end)
+    promptName(ply, function(nm) CharRecognize(ply, lvl, nm) end)
 end
 
 AddAction(L("recognizeInWhisperRange"), {
     shouldShow = function(ply) return canRecog(ply) end,
     onRun = function(ply)
         if CLIENT then return end
-        print(ply:Nick(), "action recognizeInWhisperRange triggered")
         doRange(ply, 1)
     end,
     runServer = true
@@ -161,7 +141,6 @@ AddAction(L("recognizeInTalkRange"), {
     shouldShow = function(ply) return canRecog(ply) end,
     onRun = function(ply)
         if CLIENT then return end
-        print(ply:Nick(), "action recognizeInTalkRange triggered")
         doRange(ply, 3)
     end,
     runServer = true
@@ -171,7 +150,6 @@ AddAction(L("recognizeInYellRange"), {
     shouldShow = function(ply) return canRecog(ply) end,
     onRun = function(ply)
         if CLIENT then return end
-        print(ply:Nick(), "action recognizeInYellRange triggered")
         doRange(ply, 4)
     end,
     runServer = true
@@ -182,23 +160,66 @@ AddInteraction(L("recognizeOption"), {
     shouldShow = function(ply, tgt)
         if not canRecog(ply) then return false end
         local a, b = ply:getChar(), tgt:getChar()
-        local show = a and b and not hook.Run("isCharRecognized", a, b:getID())
-        return show
+        if not a or not b then return false end
+        return not hook.Run("isCharRecognized", a, b:getID())
     end,
     onRun = function(ply, tgt)
         if CLIENT then return end
-        print(ply:Nick(), "interaction recognizeOption triggered on", tgt:Nick())
         promptName(ply, function(nm)
-            print(ply:Nick(), "interaction callback with name", nm or "nil")
             if tgt:getChar():recognize(ply:getChar(), nm) then
                 lia.log.add(ply, "charRecognize", tgt:getChar():getID(), nm)
                 net.Start("rgnDone")
                 net.Send(ply)
                 hook.Run("OnCharRecognized", ply)
-                print(ply:Nick(), "interaction recognition succeeded on", tgt:Nick())
-            else
-                print(ply:Nick(), "interaction recognition failed on", tgt:Nick())
             end
+        end)
+    end
+})
+
+AddInteraction("Invite To Faction", {
+    runServer = true,
+    shouldShow = function(client, target)
+        local cChar, tChar = client:getChar(), target:getChar()
+        if not cChar or not tChar then return false end
+        if cChar:hasFlags("Z") then return true end
+        return hook.Run("CanInviteToFaction", client, target) ~= false and cChar:getFaction() ~= tChar:getFaction()
+    end,
+    onRun = function(client, target)
+        if not SERVER then return end
+        local iChar, tChar = client:getChar(), target:getChar()
+        if not iChar or not tChar then return end
+        local faction
+        for _, fac in pairs(lia.faction.teams) do
+            if fac.index == client:Team() then
+                faction = fac
+                break
+            end
+        end
+
+        if not faction then
+            client:notifyLocalized("invalidFaction")
+            return
+        end
+
+        target:binaryQuestion("Do you want to join this faction?", "Yes", "No", false, function(choice)
+            if choice ~= 0 then
+                client:notifyLocalized("inviteDeclined")
+                return
+            end
+
+            if hook.Run("CanCharBeTransfered", tChar, faction, tChar:getFaction()) == false then return end
+            local oldFaction = tChar:getFaction()
+            tChar.vars.faction = faction.uniqueID
+            tChar:setFaction(faction.index)
+            tChar:kickClass()
+            local defClass = lia.faction.getDefaultClass(faction.index)
+            if defClass then tChar:joinClass(defClass.index) end
+            hook.Run("OnTransferred", target)
+            if faction.OnTransferred then faction:OnTransferred(target, oldFaction) end
+            hook.Run("PlayerLoadout", target)
+            client:notifyLocalized("transferSuccess", target:Name(), faction.name)
+            if client ~= target then target:notifyLocalized("transferNotification", faction.name, client:Name()) end
+            tChar:takeFlags("Z")
         end)
     end
 })
