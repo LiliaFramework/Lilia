@@ -38,11 +38,12 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 | `equipSound` | `string` | `""` | Sound played when equipping. |
 | `useSound` | `string` | `""` | Sound played when using the item. |
 | `flag` | `string` | `""` | Flag required to purchase the item. |
+| `forceRender` | `boolean` | `false` | Always regenerate the spawn icon. |
 | `functions` | `table` | `DefaultFunctions` | Table of interaction functions. |
-| `grenadeClass` | `string` | `""` | Class name used when spawning a grenade. |
 | `health` | `number` | `0` | Amount of health restored when used. |
 | `height` | `number` | `1` | Height in inventory grid. |
 | `id` | `any` | `0` | Database identifier. |
+| `iconCam` | `table` | `nil` | Custom spawn icon camera settings. |
 | `invHeight` | `number` | `0` | Internal bag inventory height. |
 | `invWidth` | `number` | `0` | Internal bag inventory width. |
 | `isBag` | `boolean` | `false` | Marks the item as a bag providing extra inventory. |
@@ -775,7 +776,7 @@ ITEM.replacements = {
 
 **Description:**
 
-Weapon entity class.
+Weapon entity class. Also used by grenade items to determine the weapon entity spawned.
 
 **Example Usage:**
 
@@ -807,25 +808,6 @@ ITEM.isWeapon = true
 
 ---
 
-#### `grenadeClass`
-
-**Type:**
-
-`string`
-
-**Description:**
-
-Class name used when spawning a grenade.
-
-**Example Usage:**
-
-```lua
-
-ITEM.grenadeClass = "weapon_frag"
-
-```
-
----
 
 #### `ammo`
 
@@ -905,6 +887,42 @@ ITEM.weaponCategory = "sidearm"
 
 ITEM.model = "models/props_c17/oildrum001.mdl"
 
+```
+
+#### `iconCam`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Custom camera parameters used when rendering the item's spawn icon. Contains `pos`, `ang`, and `fov` keys.
+
+**Example Usage:**
+
+```lua
+ITEM.iconCam = {
+    pos = Vector(0, 0, 32),
+    ang = Angle(0, 180, 0),
+    fov = 45
+}
+```
+
+#### `forceRender`
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+When `true`, forces the spawn icon to regenerate even if an icon for the model already exists.
+
+**Example Usage:**
+
+```lua
+ITEM.forceRender = true
 ```
 
 ---
