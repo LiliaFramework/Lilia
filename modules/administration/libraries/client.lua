@@ -11,7 +11,7 @@
                 end
             },
             {
-                name = L("charIDCopyFormat", target:getChar() and target:getChar():getID() or "N/A"),
+                name = L("charIDCopyFormat", target:getChar() and target:getChar():getID() or L("na")),
                 image = "icon16/page_copy.png",
                 func = function()
                     if target:getChar() then

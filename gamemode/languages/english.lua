@@ -151,6 +151,7 @@ LANGUAGE = {
     invalid = "You have provided an invalid %s",
     fixInventoryError = "A server error occurred while loading your inventories. Check server log for details.",
     unknown = "Unknown",
+    na = "N/A",
     wakingUp = "Waking Up",
     unknownError = "An unknown error has occurred",
     illegalAccess = "You are not whitelisted for this faction.",
