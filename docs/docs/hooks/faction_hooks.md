@@ -140,7 +140,7 @@ function FACTION:OnSpawn(client)
     -- Restore health and equip the standard loadout.
     client:SetHealth(client:GetMaxHealth())
     client:Give("weapon_pistol")
-    client:ChatPrint("Welcome back to duty!")
+    client:ChatPrint(L("welcomeDuty"))
 end
 ```
 
