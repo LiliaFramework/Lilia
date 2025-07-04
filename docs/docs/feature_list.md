@@ -5,6 +5,7 @@
 This page provides an extensive overview of the core modules and libraries included with Lilia. Use it as a quick reference for the capabilities baked into the framework. The framework ships with numerous optional compatibility layers so popular Garry's Mod addons work seamlessly alongside these features. For a breakdown of those integrations see the [compatibility guide](./compatibility.md).
 
 ### Grid Inventory
+Drag-and-drop container system with customizable weight and size limits.
 
 - Drag-and-drop item placement using a grid layout
 
@@ -24,6 +25,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Recognition
+Players must manually recognize others to see their names.
 
 - Manually recognize other players within whisper, talk or yell range
 
@@ -41,6 +43,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Attributes
+Character stats that improve through gameplay.
 
 - Character-bound statistics that affect gameplay
 
@@ -55,9 +58,12 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Progress bars show growth toward the next level
 
 - Supports dynamic maximums and configurable starting values
+- Built-in stamina system drains while sprinting and regenerates when resting
+- Hands SWEP lets players pick up, push and throw light objects
 
 
 ### F1 Menu
+Central hub for staff utilities and character management.
 
 - Staff tools for teleporting to entities and viewing lists
 
@@ -75,6 +81,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Scoreboard
+In-game player list with faction sorting and admin actions.
 
 - Roleplay-themed scoreboard with recognition integration
 
@@ -96,6 +103,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Chatbox
+Enhanced chat with colors, ranges and channels.
 
 - Customizable chat colors and message length limits
 
@@ -113,6 +121,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Main Menu
+Character selection screen with background and news options.
 
 - Multi-column layout scales to widescreen resolutions
 
@@ -132,6 +141,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Weapon Selector
+Radial menu for quick weapon switching.
 
 - Radial weapon menu with smooth fade animations
 
@@ -147,6 +157,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Spawns
+Flexible spawn point management with death penalties.
 
 - Manage player spawn points per faction or class
 
@@ -164,6 +175,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Teams
+Factions and classes with custom ranks and spawns.
 
 - Faction and class management helpers
 
@@ -179,6 +191,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Interaction Menu
+Contextual radial menu for money, voice and recognition.
 
 - Quick-access radial menu for common actions
 
@@ -196,6 +209,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Administration Utilities
+Logging and ticket tools for server staff.
 
 - Central logging, warning history and ticket system
 
@@ -211,6 +225,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Performance
+Libraries for monitoring tick and network load.
 
 - Libraries focused on optimizing heavy operations
 
@@ -220,6 +235,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Protection
+Anti-exploit features and action cooldowns.
 
 - Anti-exploitation features such as alting notifications
 
@@ -239,6 +255,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Admin Stick
+SWEP granting teleport, freeze and noclip abilities.
 
 - Staff-only SWEP for quick moderation actions
 
@@ -252,6 +269,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Item Spawner
+GUI for spawning items with privilege checks.
 
 - GUI interface to spawn any item
 
@@ -267,6 +285,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Tickets
+Players submit help tickets for staff review.
 
 - Players can submit tickets that staff can claim
 
@@ -280,6 +299,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Warns
+Issue warnings with history and auto punishments.
 
 - Issue warnings with reasons and durations
 
@@ -291,6 +311,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Permissions
+CAMI-based privilege system with inheritance.
 
 - CAMI-based framework for defining privileges
 
@@ -304,6 +325,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Logging
+Categorized logs with optional webhooks.
 
 - Log server events with category filtering
 
@@ -313,10 +335,10 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Easy Weapons
+Automatically registers items from installed weapons.
 
 - Automatically generates items from installed weapons
 
-- Vehicle mode keeps the camera locked behind the car
 
 - Hold-type mapping defines item size and category
 
@@ -330,6 +352,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Doors
+Ownable doors with keys and dynamic pricing.
 
 - Each container type can play unique open sounds
 
@@ -353,6 +376,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Third Person
+Toggleable camera that prevents wall peeking.
 
 - Toggleable third-person view with camera options
 
@@ -370,6 +394,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Storage Containers
+Physical crates and trunks storing items persistently.
 
 - Crates, lockers, fridges and more with predefined sizes
 
@@ -387,6 +412,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### NPC Vendors
+NPCs that buy and sell items from inventories.
 
 - Built-in squad roster management functions
 
@@ -401,11 +427,15 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Items can restock automatically on a timer
 
 - Dialogue trees allow branching conversations
-
 - Plugin hooks for chat preprocessing
 
+### Lia Core Library
+Shared utilities for file inclusion and helper functions.
+- Include helper automatically handles client and server realms
+- Small utility wrappers shared across modules
 
 ### Attributes Library
+Character stats that improve through gameplay with an API for modifying values.
 
 - Manage character attribute values and levels
 
@@ -421,6 +451,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Bars
+HUD bars for health, armor and custom stats.
 
 - Draw health, armor and custom HUD bars
 
@@ -436,6 +467,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Character Library
+Helpers for saving and transferring characters.
 
 - Helper functions for accessing character data
 
@@ -449,6 +481,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Chatbox Library
+Enhanced chat with ranges and colors plus utilities for custom commands.
 
 - Building blocks for custom chat classes
 
@@ -462,6 +495,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Classes Library
+Manage class definitions and loadouts.
 
 - Register player classes with spawn data and loadouts
 
@@ -475,6 +509,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Color Utilities
+Color conversion and palette helpers.
 
 - Helper functions for color math and interpolation
 
@@ -489,6 +524,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Commands Library
+Chat command registration system.
 
 - Register chat commands with syntax parsing
 
@@ -504,6 +540,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Config Library
+Register and network configuration variables.
 
 - Register server configs with categories and callbacks
 
@@ -519,6 +556,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Currency Library
+Money handling with support for multiple currencies.
 
 - Format amounts with currency symbols
 
@@ -534,6 +572,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### DarkRP Compatibility
+Implements DarkRP-style helpers for addons.
 
 - Replicates DarkRP door groups for compatibility
 
@@ -547,6 +586,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Data Library
+Key/value persistence wrappers.
 
 - Key/value storage wrappers with automatic serialization
 
@@ -560,6 +600,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Database Library
+Asynchronous MySQL or SQLite layer.
 
 - Interface for saving characters and items asynchronously
 
@@ -575,6 +616,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Factions Library
+Manage faction data and chat colors.
 
 - Create factions with colors, models and global recognition
 
@@ -590,6 +632,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Flags Library
+Temporary permission flags for players.
 
 - Permission flags assignable to players
 
@@ -603,6 +646,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Fonts Library
+Register fonts for user interface elements.
 
 - Outline and shadow options for crisp text
 
@@ -616,6 +660,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Inventory Library
+Shared inventory logic used across modules.
 
 - Shared logic for inventories including networking
 
@@ -630,6 +675,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Item Library
+Framework for defining items and hooks.
 
 - Framework for defining items with metadata and hooks
 
@@ -646,6 +692,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Keybind Library
+System for adding and saving custom key binds.
 
 - Add custom client keybinds and save them per player
 
@@ -659,6 +706,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Languages Library
+Multi-language phrase system for translations.
 
 - Multi-language phrase system with fallback support
 
@@ -672,6 +720,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Logger Library
+Simplified logging utilities for modules.
 
 - Simplified logging functions for modules
 
@@ -687,6 +736,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Markup Library
+Markup rendering helpers for UI text.
 
 - Parse and render markup or BBCode text
 
@@ -700,6 +750,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Menu Helper
+Functions that simplify building Derma menus.
 
 - Utility functions for building Derma menus
 
@@ -713,6 +764,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Modularity
+Hot-load modules and manage dependencies.
 
 - Dynamic loading and disabling of modules and plugins
 
@@ -726,6 +778,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Networking
+Netstream wrappers for reliable data transfer.
 
 - Netstream utilities for efficient communication
 
@@ -737,6 +790,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Notice System
+On-screen notifications with priority handling.
 
 - On-screen notifications with queueing
 
@@ -748,6 +802,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Option Library
+Store client preferences on the server.
 
 - Store player preferences using sliders and checkboxes
 
@@ -759,6 +814,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Salary System
+Automated periodic wages for characters.
 
 - Periodic salary payouts for characters
 
@@ -772,6 +828,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Time Library
+Shared timers and scheduling utilities.
 
 - Scheduler helpers and shared timers
 
@@ -785,6 +842,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Util Library
+General helper functions used throughout Lilia.
 
 - Miscellaneous helper functions used across modules
 
@@ -798,6 +856,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Web Image
+Download and cache images for the UI.
 
 - Download and cache web images for the UI
 
@@ -811,6 +870,7 @@ This page provides an extensive overview of the core modules and libraries inclu
 
 
 ### Workshop
+Manage Steam Workshop collections for clients.
 
 - Handles dependencies between Workshop collections
 
@@ -821,15 +881,24 @@ This page provides an extensive overview of the core modules and libraries inclu
 - Update notifications for outdated addons
 
 - Prompts admins to restart when addons update
-
+### Third-Party Helpers
+Patches and helper libraries for external addons.
+- CAMI fallback library for permissions
+- Meta extensions and type helpers
+- Async promises and net library patches
+- Markup, UTF-8 and icon utilities
+- EasyIcons downloader for custom fonts
+- SFS helper for file serialization
 
 ### Configuration Options
+Exposes numerous settings via the in-game config menu.
 
 - Modules load automatically when compatible addons are detected
 
 The `config` library exposes numerous settings allowing you to control walk and run speeds, voice chat, crosshair usage, salary intervals, theme colors, workshop downloads, and much more. These options can be tweaked in game via the configuration menu.
 
 ### Addon Compatibility
+Built-in integrations for popular community addons.
 
 Lilia includes built-in modules that expand support for many common Garry's Mod addons. These integrations cover administration suites, vehicle packs, and utility tools so you can drop your favorite addons in without conflicts. See the [compatibility guide](./compatibility.md) for details.
 
