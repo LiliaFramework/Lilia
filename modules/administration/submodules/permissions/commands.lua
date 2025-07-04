@@ -913,7 +913,14 @@ lia.command.add("charsetdesc", {
         end
 
         local desc = table.concat(arguments, " ", 2)
-        if not desc:find("%S") then return client:requestString("Change " .. target:Name() .. "'s Description", L("enterNewDesc"), function(text) lia.command.run(client, "charsetdesc", {arguments[1], text}) end, target:getChar():getDesc()) end
+        if not desc:find("%S") then
+            return client:requestString(
+                L("chgDescTitle", target:Name()),
+                L("enterNewDesc"),
+                function(text) lia.command.run(client, "charsetdesc", {arguments[1], text}) end,
+                target:getChar():getDesc()
+            )
+        end
         target:getChar():setDesc(desc)
         return L("descChangedTarget", client:Name(), target:Name())
     end
