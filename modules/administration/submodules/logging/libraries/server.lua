@@ -29,13 +29,14 @@ function MODULE:ReadLogEntries(category)
     }, " AND ") ..
         " ORDER BY _id DESC LIMIT " .. maxLines
 
-    lia.db.select({"_timestamp", "_message"}, "logs", condition):next(function(res)
+    lia.db.select({"_timestamp", "_message", "_steamID"}, "logs", condition):next(function(res)
         local rows = res.results or {}
         local logs = {}
         for _, row in ipairs(rows) do
             logs[#logs + 1] = {
                 timestamp = row._timestamp,
-                message = row._message
+                message = row._message,
+                steamID = row._steamID
             }
         end
         d:resolve(logs)
