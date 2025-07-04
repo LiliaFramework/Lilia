@@ -415,9 +415,9 @@ lia.command.add("doorinfo", {
             local name = door:getNetVar("title", door:getNetVar("name", L("doorTitle")))
             local price = door:getNetVar("price", 0)
             local noSell = door:getNetVar("noSell", false)
-            local faction = door:getNetVar("faction", "None")
+            local faction = door:getNetVar("faction", L("none"))
             local factions = door:getNetVar("factions", "[]")
-            local class = door:getNetVar("class", "None")
+            local class = door:getNetVar("class", L("none"))
             local hidden = door:getNetVar("hidden", false)
             local locked = door:getNetVar("locked", false)
 

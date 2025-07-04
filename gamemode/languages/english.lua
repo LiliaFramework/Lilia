@@ -522,6 +522,7 @@ LANGUAGE = {
     adminStickClearInventoryName = "Clear Inventory",
     adminStickKickCharacterName = "Kick Character",
     adminStickBanCharacterName = "Ban Character",
+    adminStickTogglePermakillName = "Toggle Character Killing (Ban)",
     adminStickSubCategoryBans = "Bans",
     adminStickSubCategoryGetInfos = "Get Information",
     adminStickSubCategorySetInfos = "Set Information",

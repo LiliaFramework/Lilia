@@ -4,7 +4,7 @@
     desc = L("togglePermakillDesc"),
     syntax = "[player Player Name]",
     AdminStick = {
-        Name = "Toggle Character Killing (Ban)",
+        Name = L("adminStickTogglePermakillName"),
         Category = "characterManagement",
         SubCategory = L("adminStickSubCategoryBans"),
         Icon = "icon16/user_delete.png"
