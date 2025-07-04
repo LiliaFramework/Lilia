@@ -10,7 +10,7 @@
                 net.WriteInt(oldCharID, 32)
                 net.Send(client)
                 client:setNetVar("OldCharID", nil)
-                lia.log.add(client, "adminMode", oldCharID, "Switched back to their IC character")
+                lia.log.add(client, "adminMode", oldCharID, L("adminModeLogBack"))
             else
                 client:ChatPrint(L("noPrevChar"))
             end
@@ -23,7 +23,7 @@
                         net.Start("AdminModeSwapCharacter")
                         net.WriteInt(id, 32)
                         net.Send(client)
-                        lia.log.add(client, "adminMode", id, "Switched to their staff character")
+                        lia.log.add(client, "adminMode", id, L("adminModeLogStaff"))
                         return
                     end
                 end
