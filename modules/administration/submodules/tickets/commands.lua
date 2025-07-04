@@ -30,7 +30,7 @@
             return
         end
 
-        local claimedFor = "None"
+        local claimedFor = L("none")
         if next(claim.claimedFor) then
             claimedFor = table.concat((function()
                 local t = {}
@@ -96,7 +96,7 @@ lia.command.add("viewallclaims", {
 
         local claimsData = {}
         for steamID, claim in pairs(caseclaims) do
-            local claimedFor = "None"
+            local claimedFor = L("none")
             if next(claim.claimedFor) then
                 claimedFor = table.concat((function()
                     local t = {}
@@ -162,7 +162,7 @@ lia.command.add("viewclaims", {
         lia.log.add(client, "viewAllClaims")
         local claimsData = {}
         for steamID, claim in pairs(caseclaims) do
-            local claimedFor = "None"
+            local claimedFor = L("none")
             if next(claim.claimedFor) then
                 claimedFor = table.concat((function()
                     local t = {}
