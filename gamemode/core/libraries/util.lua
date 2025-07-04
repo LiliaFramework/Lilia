@@ -458,7 +458,7 @@ else
         local availableWidth = frame:GetWide() - totalFixedWidth
         local dynamicWidth = dynamicColumns > 0 and math.max(availableWidth / dynamicColumns, 50) or 0
         for _, colInfo in ipairs(columns) do
-            local columnName = colInfo.name or "N/A"
+            local columnName = colInfo.name or L("na")
             local columnWidth = colInfo.width or dynamicWidth
             listView:AddColumn(columnName):SetFixedWidth(columnWidth)
         end
@@ -466,8 +466,8 @@ else
         for _, row in ipairs(data) do
             local lineData = {}
             for _, colInfo in ipairs(columns) do
-                local fieldName = colInfo.field or "N/A"
-                table.insert(lineData, row[fieldName] or "N/A")
+                local fieldName = colInfo.field or L("na")
+                table.insert(lineData, row[fieldName] or L("na"))
             end
 
             local line = listView:AddLine(unpack(lineData))
@@ -481,7 +481,7 @@ else
             menu:AddOption(L("copyRow"), function()
                 local rowString = ""
                 for key, value in pairs(rowData) do
-                    value = tostring(value or "N/A")
+                    value = tostring(value or L("na"))
                     rowString = rowString .. key:gsub("^%l", string.upper) .. " " .. value .. " | "
                 end
 

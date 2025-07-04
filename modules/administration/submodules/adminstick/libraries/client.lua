@@ -394,7 +394,7 @@ function MODULE:OpenAdminStickUI(tgt)
     if tgt:IsPlayer() then
         local info = {
             {
-                name = L("charIDCopyFormat", tgt:getChar() and tgt:getChar():getID() or "N/A"),
+                name = L("charIDCopyFormat", tgt:getChar() and tgt:getChar():getID() or L("na")),
                 cmd = function()
                     if tgt:getChar() then
                         cl:ChatPrint(L("copiedCharID", tgt:getChar():getID()))

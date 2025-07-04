@@ -62,9 +62,9 @@ lia.command.add("viewwarns", {
         for index, warn in ipairs(warns) do
             table.insert(warningList, {
                 index = index,
-                timestamp = warn.timestamp or "N/A",
-                reason = warn.reason or "N/A",
-                admin = warn.admin or "N/A"
+                timestamp = warn.timestamp or L("na"),
+                reason = warn.reason or L("na"),
+                admin = warn.admin or L("na")
             })
         end
 

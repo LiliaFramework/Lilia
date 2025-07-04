@@ -216,8 +216,8 @@
     },
     ["dupeCrashAttempt"] = {
         func = function(client)
-            local name = IsValid(client) and client:Name() or "Unknown"
-            local steamID = IsValid(client) and client:SteamID64() or "N/A"
+            local name = IsValid(client) and client:Name() or L("unknown")
+            local steamID = IsValid(client) and client:SteamID64() or L("na")
             return string.format("Player '%s' [%s] attempted to duplicate oversized entities.", name, steamID)
         end,
         category = "Security"
@@ -324,35 +324,35 @@
     },
     ["vendorAccess"] = {
         func = function(client, vendor)
-            local vendorName = vendor:getNetVar("name") or "Unknown"
+            local vendorName = vendor:getNetVar("name") or L("unknown")
             return string.format("%s accessed vendor %s", client:Name(), vendorName)
         end,
         category = "Vendors"
     },
     ["vendorExit"] = {
         func = function(client, vendor)
-            local vendorName = vendor:getNetVar("name") or "Unknown"
+            local vendorName = vendor:getNetVar("name") or L("unknown")
             return string.format("%s exited vendor %s", client:Name(), vendorName)
         end,
         category = "Vendors"
     },
     ["vendorSell"] = {
         func = function(client, item, vendor)
-            local vendorName = vendor:getNetVar("name") or "Unknown"
+            local vendorName = vendor:getNetVar("name") or L("unknown")
             return string.format("%s sold a %s to %s", client:Name(), item, vendorName)
         end,
         category = "Vendors"
     },
     ["vendorEdit"] = {
         func = function(client, vendor, key)
-            local vendorName = vendor:getNetVar("name") or "Unknown"
+            local vendorName = vendor:getNetVar("name") or L("unknown")
             return string.format("%s edited vendor %s with key %s", client:Name(), vendorName, key)
         end,
         category = "Vendors"
     },
     ["vendorBuy"] = {
         func = function(client, item, vendor, isFailed)
-            local vendorName = vendor:getNetVar("name") or "Unknown"
+            local vendorName = vendor:getNetVar("name") or L("unknown")
             if isFailed then
                 return string.format("%s tried to buy a %s from %s but it failed. They likely had no space!", client:Name(), item, vendorName)
             else
@@ -363,7 +363,7 @@
     },
     ["restockvendor"] = {
         func = function(client, vendor)
-            local vendorName = IsValid(vendor) and (vendor:getNetVar("name") or "Unknown") or "Unknown"
+            local vendorName = IsValid(vendor) and (vendor:getNetVar("name") or L("unknown")) or L("unknown")
             return string.format("%s restocked vendor %s", client:Name(), vendorName)
         end,
         category = "Vendors"
@@ -376,7 +376,7 @@
     },
     ["resetvendormoney"] = {
         func = function(client, vendor, amount)
-            local vendorName = IsValid(vendor) and (vendor:getNetVar("name") or "Unknown") or "Unknown"
+            local vendorName = IsValid(vendor) and (vendor:getNetVar("name") or L("unknown")) or L("unknown")
             return string.format("%s set vendor %s money to %s", client:Name(), vendorName, lia.currency.get(amount))
         end,
         category = "Vendors"
@@ -389,7 +389,7 @@
     },
     ["restockvendormoney"] = {
         func = function(client, vendor, amount)
-            local vendorName = IsValid(vendor) and (vendor:getNetVar("name") or "Unknown") or "Unknown"
+            local vendorName = IsValid(vendor) and (vendor:getNetVar("name") or L("unknown")) or L("unknown")
             return string.format("%s restocked vendor %s money to %s", client:Name(), vendorName, lia.currency.get(amount))
         end,
         category = "Vendors"
@@ -408,7 +408,7 @@
                 "Warning issued at %s by admin '%s' to player '%s' for: '%s'. Total warnings: %d (added #%d).",
                 os.date("%Y-%m-%d %H:%M:%S"),
                 client:Name(),
-                IsValid(target) and target:Name() or "N/A",
+                IsValid(target) and target:Name() or L("na"),
                 reason,
                 count or 0,
                 index or count or 0
@@ -422,7 +422,7 @@
                 "Warning removed at %s by admin '%s' for player '%s'. Reason: '%s'. Remaining warnings: %d (removed #%d).",
                 os.date("%Y-%m-%d %H:%M:%S"),
                 client:Name(),
-                IsValid(target) and target:Name() or "N/A",
+                IsValid(target) and target:Name() or L("na"),
                 warning.reason,
                 count or 0,
                 index or 0
