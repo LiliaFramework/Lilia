@@ -1,14 +1,14 @@
 ﻿local function getGameList()
     local games = engine.GetGames()
     table.insert(games, {
-        title = "All",
+        title = L("spawnmenuAll"),
         folder = "GAME",
         icon = "all",
         mounted = true
     })
 
     table.insert(games, {
-        title = "Garry's Mod",
+        title = L("spawnmenuGMod"),
         folder = "garrysmod",
         icon = nil,
         mounted = true
@@ -36,7 +36,7 @@ end
 local function showMaterialWarning()
     if materialWarningShown then return end
     materialWarningShown = true
-    Derma_Message("Please note that not all materials are usable on entities.", "Warning", "OK")
+    Derma_Message(L("materialWarning"), L("warning"), L("ok"))
 end
 
 local function registerContentType(typeName, setupIcon, onClick, menuEntries)
@@ -470,7 +470,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
 
     local f, d = file.Find("download/models", "MOD")
     if f and #f > 0 or d and #d > 0 then
-        local dn = node:AddFolder("Downloads", "download/models", "MOD", false, false, "*.*")
+        local dn = node:AddFolder(L("downloads"), "download/models", "MOD", false, false, "*.*")
         dn:SetIcon("icon16/folder_database.png")
         dn.OnNodeSelected = function(self)
             view:Clear(true)
@@ -501,9 +501,9 @@ end)
 
 hook.Add("AddToolMenuCategories", "liaExtendedSpawnMenuAddToolMenuCategories", function() spawnmenu.AddToolCategory("Utilities", "Robotboy655", "#Robotboy655") end)
 hook.Add("PopulateToolMenu", "liaExtendedSpawnMenuPopulateToolMenu", function()
-    spawnmenu.AddToolMenuOption("Utilities", "Robotboy655", "LegacyInfoPanel", "Addon Information", "", "", function(panel)
+    spawnmenu.AddToolMenuOption("Utilities", "Robotboy655", "LegacyInfoPanel", L("addonInformation"), "", "", function(panel)
         panel:ClearControls()
-        panel:Button("Open addon data window", "extsm_addoninfo")
+        panel:Button(L("openAddonDataWindow"), "extsm_addoninfo")
     end)
 end)
 
@@ -572,26 +572,26 @@ function PANEL:Paint()
     if not self.computed then self:Compute() end
     local wdt = self:GetParent():GetWide()
     local y = 0
-    local _, th = DrawText("Cache Sizes", "AddonInfo_Header", 0, y, color_white)
+    local _, th = DrawText(L("cacheSizes"), "AddonInfo_Header", 0, y, color_white)
     y = y + th
     local tw1, h1 = DrawText("~" .. GetSize(self.luaCacheSize) .. " (" .. self.luaCacheFiles .. " files)", "AddonInfo_Small", 0, y, Color(220, 220, 220))
     y = y + h1
     local tw2, h2 = DrawText("~" .. GetSize(self.wsCacheSize) .. " (" .. self.wsCacheFiles .. " files)", "AddonInfo_Small", 0, y, Color(220, 220, 220))
     y = y + h2
     local maxW = math.max(tw1, tw2) + 25
-    local _, th2 = DrawText("Server Lua cache", "AddonInfo_Small", maxW, y, color_white)
+    local _, th2 = DrawText(L("serverLuaCache"), "AddonInfo_Small", maxW, y, color_white)
     y = y + th2
-    local _, th3 = DrawText("Workshop download cache", "AddonInfo_Small", maxW, y)
+    local _, th3 = DrawText(L("workshopDownloadCache"), "AddonInfo_Small", maxW, y)
     y = y + th3 + ScreenScaleH(8)
-    local _, th4 = DrawText("Workshop Subscriptions", "AddonInfo_Header", 0, y, color_white)
+    local _, th4 = DrawText(L("workshopSubscriptions"), "AddonInfo_Header", 0, y, color_white)
     y = y + th4
-    local tw3, th5 = DrawText("Used Size:  ", "AddonInfo_Text", 0, y, color_white)
+    local tw3, th5 = DrawText(L("usedSize"), "AddonInfo_Text", 0, y, color_white)
     local lblW = tw3
     y = y + th5
-    local tw4, th6 = DrawText("Wasted Space:  ", "AddonInfo_Text", 0, y, color_white)
+    local tw4, th6 = DrawText(L("wastedSpace"), "AddonInfo_Text", 0, y, color_white)
     lblW = math.max(lblW, tw4)
     y = y + th6
-    local tw5, th7 = DrawText("Total Size:  ", "AddonInfo_Text", 0, y, color_white)
+    local tw5, th7 = DrawText(L("totalSize"), "AddonInfo_Text", 0, y, color_white)
     lblW = math.max(lblW, tw5)
     y = y + th7 * 2
     local _, th8 = DrawText(GetSize(self.workshopSize - self.workshopWaste), "AddonInfo_Text", lblW, y, Color(220, 220, 220))
@@ -600,7 +600,7 @@ function PANEL:Paint()
     y = y + th9
     local _, th10 = DrawText(GetSize(self.workshopSize), "AddonInfo_Text", lblW, y, Color(220, 220, 220))
     y = y + th10 * 2
-    local _, th11 = DrawText("Files that aren't used: ( Safe to delete )", "AddonInfo_Text", 0, y, color_white)
+    local _, th11 = DrawText(L("filesUnusedDelete"), "AddonInfo_Text", 0, y, color_white)
     y = y + th11
     local maxW2 = 0
     for _, e in ipairs(self.workshopWasteFiles) do
@@ -616,9 +616,9 @@ function PANEL:Paint()
     end
 
     y = y + ScreenScaleH(8)
-    local _, th14 = DrawText("Legacy Addons", "AddonInfo_Header", 0, y, color_white)
+    local _, th14 = DrawText(L("legacyAddons"), "AddonInfo_Header", 0, y, color_white)
     y = y + th14 + ScreenScaleH(8)
-    local _, th15 = DrawText("Legacy Addons with models:", "AddonInfo_Text", 0, y, color_white)
+    local _, th15 = DrawText(L("legacyAddonsWithModels"), "AddonInfo_Text", 0, y, color_white)
     y = y + th15
     if next(self.legacyAddons) then
         local nameW, startY = 0, y
@@ -635,18 +635,18 @@ function PANEL:Paint()
             y = y + th17
         end
     else
-        local _, th18 = DrawText("None.", "AddonInfo_Small", 0, y, color_white)
+        local _, th18 = DrawText(L("nonePeriod"), "AddonInfo_Small", 0, y, color_white)
         y = y + th18
     end
 
     if not system.IsWindows() then
-        local _, th19 = DrawText("OSX AND LINUX USERS BEWARE:", "AddonInfo_Text", 0, y, color_white)
+        local _, th19 = DrawText(L("osxLinuxBeware"), "AddonInfo_Text", 0, y, color_white)
         y = y + th19
-        local _, th20 = DrawText("MAKE SURE ALL FILE AND FOLDER NAMES", "AddonInfo_Text", 0, y, color_white)
+        local _, th20 = DrawText(L("makeSureLowercase"), "AddonInfo_Text", 0, y, color_white)
         y = y + th20
-        local _, th21 = DrawText("IN ALL ADDONS ARE LOWERCASE ONLY", "AddonInfo_Text", 0, y, color_white)
+        local _, th21 = DrawText(L("lowercaseOnlyWarning"), "AddonInfo_Text", 0, y, color_white)
         y = y + th21
-        local _, th22 = DrawText("INCLUDING ALL SUB FOLDERS", "AddonInfo_Text", 0, y, color_white)
+        local _, th22 = DrawText(L("includingAllSubfolders"), "AddonInfo_Text", 0, y, color_white)
         y = y + th22
     end
 

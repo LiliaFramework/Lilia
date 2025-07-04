@@ -278,7 +278,7 @@ local function IncludeCharacterManagement(tgt, menu, stores)
 
             table.sort(facOptions, function(a, b) return a.name < b.name end)
             if #facOptions > 0 then
-                local fm = GetOrCreateSubMenu(charMenu, "Set Faction (" .. curName .. ")", stores)
+                local fm = GetOrCreateSubMenu(charMenu, L("setFactionTitle", curName), stores)
                 for _, o in ipairs(facOptions) do
                     fm:AddOption(L(o.name), function()
                         cl:ConCommand(o.cmd)
@@ -327,13 +327,13 @@ local function IncludeFlagManagement(tgt, menu, stores)
     for fl in pairs(lia.flag.list) do
         if not tgt:getChar():hasFlags(fl) then
             table.insert(toGive, {
-                name = "Give Flag " .. fl,
+                name = L("giveFlagFormat", fl),
                 cmd = 'say /giveflag ' .. GetIdentifier(tgt) .. ' ' .. fl,
                 icon = "icon16/flag_blue.png"
             })
         else
             table.insert(toTake, {
-                name = "Take Flag " .. fl,
+                name = L("takeFlagFormat", fl),
                 cmd = 'say /takeflag ' .. GetIdentifier(tgt) .. ' ' .. fl,
                 icon = "icon16/flag_red.png"
             })
@@ -394,7 +394,7 @@ function MODULE:OpenAdminStickUI(tgt)
     if tgt:IsPlayer() then
         local info = {
             {
-                name = "CharID: " .. (tgt:getChar() and tgt:getChar():getID() or "N/A") .. " (copy)",
+                name = L("charIDCopyFormat", tgt:getChar() and tgt:getChar():getID() or "N/A"),
                 cmd = function()
                     if tgt:getChar() then
                         cl:ChatPrint(L("copiedCharID", tgt:getChar():getID()))
@@ -406,7 +406,7 @@ function MODULE:OpenAdminStickUI(tgt)
                 icon = "icon16/page_copy.png"
             },
             {
-                name = "Name: " .. tgt:Name() .. " (copy)",
+                name = L("nameCopyFormat", tgt:Name()),
                 cmd = function()
                     cl:ChatPrint(L("copiedToClipboard", tgt:Name(), "Name"))
                     SetClipboardText(tgt:Name())
@@ -415,7 +415,7 @@ function MODULE:OpenAdminStickUI(tgt)
                 icon = "icon16/page_copy.png"
             },
             {
-                name = "SteamID: " .. tgt:SteamID() .. " (copy)",
+                name = L("steamIDCopyFormat", tgt:SteamID()),
                 cmd = function()
                     cl:ChatPrint(L("copiedToClipboard", tgt:Name(), "SteamID"))
                     SetClipboardText(tgt:SteamID())
@@ -424,7 +424,7 @@ function MODULE:OpenAdminStickUI(tgt)
                 icon = "icon16/page_copy.png"
             },
             {
-                name = "SteamID64: " .. tgt:SteamID64() .. " (copy)",
+                name = L("steamID64CopyFormat", tgt:SteamID64()),
                 cmd = function()
                     cl:ChatPrint(L("copiedToClipboard", tgt:Name(), "SteamID64"))
                     SetClipboardText(tgt:SteamID64())

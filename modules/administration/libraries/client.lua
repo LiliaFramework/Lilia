@@ -3,7 +3,7 @@
     if (client:hasPrivilege("Staff Permissions - Can Access Scoreboard Info Out Of Staff") or client:hasPrivilege("Staff Permissions - Can Access Scoreboard Admin Options") and client:isStaffOnDuty()) and IsValid(target) then
         local orderedOptions = {
             {
-                name = "Name: " .. target:Name() .. " (copy)",
+                name = L("nameCopyFormat", target:Name()),
                 image = "icon16/page_copy.png",
                 func = function()
                     client:ChatPrint(L("copiedToClipboard", target:Name(), "Name"))
@@ -11,7 +11,7 @@
                 end
             },
             {
-                name = "CharID: " .. (target:getChar() and target:getChar():getID() or "N/A") .. " (copy)",
+                name = L("charIDCopyFormat", target:getChar() and target:getChar():getID() or "N/A"),
                 image = "icon16/page_copy.png",
                 func = function()
                     if target:getChar() then
@@ -21,7 +21,7 @@
                 end
             },
             {
-                name = "SteamID: " .. target:SteamID() .. " (copy)",
+                name = L("steamIDCopyFormat", target:SteamID()),
                 image = "icon16/page_copy.png",
                 func = function()
                     client:ChatPrint(L("copiedToClipboard", target:Name(), "SteamID"))
@@ -29,7 +29,7 @@
                 end
             },
             {
-                name = "SteamID64: " .. target:SteamID64() .. " (copy)",
+                name = L("steamID64CopyFormat", target:SteamID64()),
                 image = "icon16/page_copy.png",
                 func = function()
                     client:ChatPrint(L("copiedToClipboard", target:Name(), "SteamID64"))
