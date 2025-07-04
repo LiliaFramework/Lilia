@@ -1,11 +1,13 @@
-<h1 align="center">Lilia Framework</h1>
-
+<p align="center">
+  <b>Official modules for the Lilia framework.</b><br/>
+  Extend your server with new mechanics and features.
+</p>
 
 <p align="center">
-
   <img src="https://github.com/LiliaFramework/Lilia/blob/main/logo.png?raw=true" alt="Lilia Logo" width="200" />
-
 </p>
+
+<h1 align="center">Lilia Framework</h1>
 
 
 Welcome to **Lilia**, an advanced roleplay framework for Garry’s Mod. Inspired by [Lillia from League of Legends](https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lillia_19.jpg), the project makes creating a serious RP server as straightforward as possible by providing a modular foundation with stable networking, intuitive UIs and a rich API.
