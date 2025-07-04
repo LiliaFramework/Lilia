@@ -146,9 +146,6 @@ Radial menu for quick weapon switching.
 - Radial weapon menu with smooth fade animations
 
 - Obeys hooks to decide when it appears
-
-- Works with weapon categories from the Easy Weapons system
-
 - Displays ammo counts and active attachments
 
 - Designed for quick weapon switching without blocking movement
@@ -332,23 +329,6 @@ Categorized logs with optional webhooks.
 - Configurable retention time and line limits
 
 - Optional webhook integration for Discord or other services
-
-
-### Easy Weapons
-Automatically registers items from installed weapons.
-
-- Automatically generates items from installed weapons
-
-
-- Hold-type mapping defines item size and category
-
-- Weapon overrides for custom names or models
-
-- Blacklist unwanted weapons from registration
-
-- Auto-generates kill icons and category images
-
-- Compatible with attachment systems for model customization
 
 
 ### Doors
