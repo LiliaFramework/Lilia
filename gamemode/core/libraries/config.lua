@@ -159,7 +159,7 @@ if SERVER then
     function lia.config.convertToDatabase(changeMap, data)
         if lia.config.isConverting then return end
         lia.config.isConverting = true
-        lia.bootstrap("Database", "Converting config to database...")
+        lia.bootstrap("Database", L("convertConfigToDatabase"))
         data = data or lia.data.get("config", nil, false, true) or {}
         local entryCount = table.Count(data)
         local schema = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
@@ -175,7 +175,7 @@ if SERVER then
                 lia.config.isConverting = false
                 lia.bootstrap(
                     "Database",
-                    string.format("Converting config to database... Converted %d entries", entryCount)
+                    L("convertConfigToDatabaseDone", entryCount)
                 )
                 if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
             end)

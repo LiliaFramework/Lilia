@@ -210,7 +210,14 @@ modules.mysqloo = {
 
             prepObj:start()
         else
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " INVALID PREPARED STATEMENT : " .. key .. "\n")
+            MsgC(
+                Color(83, 143, 239),
+                "[Lilia] ",
+                Color(0, 255, 0),
+                "[Database]",
+                Color(255, 255, 255),
+                L("invalidPreparedStatement", key) .. "\n"
+            )
         end
     end
 }
@@ -706,15 +713,15 @@ concommand.Add("database_list", function(ply)
     if IsValid(ply) then return end
     lia.db.GetCharacterTable(function(columns)
         if #columns == 0 then
-            print("No columns found in lia_characters.")
+            print(L("dbColumnsNone"))
         else
-            print("Columns in lia_characters: " .. table.concat(columns, ", "))
+            print(L("dbColumnsList", table.concat(columns, ", ")))
         end
     end)
 end)
 
 function GM:RegisterPreparedStatements()
-    lia.bootstrap("Database", "ADDED 5 PREPARED STATEMENTS.")
+    lia.bootstrap("Database", L("preparedStatementsAdded"))
     lia.db.prepare("itemData", "UPDATE lia_items SET _data = ? WHERE _itemID = ?", {MYSQLOO_STRING, MYSQLOO_INTEGER})
     lia.db.prepare("itemx", "UPDATE lia_items SET _x = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
     lia.db.prepare("itemy", "UPDATE lia_items SET _y = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
@@ -750,7 +757,7 @@ function GM:SetupDatabase()
 end
 
 function GM:DatabaseConnected()
-    lia.bootstrap("Database", "Lilia has connected to the database. We are using " .. lia.db.module .. "!", Color(0, 255, 0))
+    lia.bootstrap("Database", L("databaseConnected", lia.db.module), Color(0, 255, 0))
     if SERVER then
         lia.log.loadTables()
         lia.data.loadTables()
