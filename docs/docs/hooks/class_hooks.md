@@ -32,13 +32,18 @@ by `lia.class.canBe` before the class change happens.
 
 * `boolean` – `true` to allow the switch; `false` to deny.
 
+**Realm:**
+
+* Server
+
 
 **Example Usage:**
 
 ```lua
 function CLASS:OnCanBe(client)
     -- Only allow admins or players with the "V" flag
-    return client:IsAdmin() or client:getChar():hasFlags("V")
+    local char = client:getChar()
+    return client:IsAdmin() or (char and char:hasFlags("V"))
 end
 ```
 
@@ -70,11 +75,8 @@ removing temporary items.
 
 ```lua
 function CLASS:OnLeave(client)
-    local character = client:getChar()
-    if character and self.defaultModel then
-        -- Restore the default model when leaving
-        character:setModel(self.defaultModel)
-    end
+    -- Remove class specific equipment
+    client:StripWeapon("weapon_pistol")
 end
 ```
 
