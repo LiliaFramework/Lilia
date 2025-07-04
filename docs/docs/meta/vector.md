@@ -8,6 +8,18 @@ Vector utilities expand Garry's Mod's math library. This document describes addi
 
 Vector meta functions provide calculations such as midpoints, distances, and axis rotations to support movement, physics, and placement tasks.
 
+### Example Hook Usage
+
+Use these helpers inside any Garry's Mod hook. This example rotates a camera
+offset each frame:
+
+```lua
+hook.Add("CalcView", "TiltView", function(ply, pos, angles, fov)
+    local offset = Vector(30, 0, 10):RotateAroundAxis(vector_up, 45)
+    return {origin = pos + offset, angles = angles, fov = fov}
+end)
+```
+
 ---
 
 ### Center(vec2)
@@ -110,7 +122,8 @@ print(rotated) -- Vector(0, 1, 0)
 
 **Description:**
 
-Returns a normalized right-direction vector relative to this vector.
+Returns a normalized right-direction vector relative to this vector. If the
+vector has no horizontal component, it defaults to `Vector(0, -1, 0)`.
 
 **Parameters:**
 
@@ -141,7 +154,8 @@ print(rightVec)
 
 **Description:**
 
-Returns a normalized up-direction vector relative to this vector.
+Returns a normalized up-direction vector relative to this vector. When the
+vector has no horizontal component, it returns `Vector(-self.z, 0, 0)`.
 
 **Parameters:**
 
