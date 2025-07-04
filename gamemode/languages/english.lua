@@ -210,6 +210,7 @@ LANGUAGE = {
     unlocking = "Unlocking this entity...",
     notNow = "You are not allowed to do this right now.",
     areYouSure = "Are you sure?",
+    descChanged = "Character description updated.",
     descChangedTarget = "%s has changed %s's character description.",
     disconnect = "Disconnect",
     noPerm = "You are not allowed to do this.",
