@@ -18,7 +18,7 @@ if SERVER then
             for _, f in ipairs(files) do
                 if f:sub(-4) == ".txt" then
                     local rel = string.sub(dir .. "/" .. f, #base + 2)
-                    if not rel:StartWith("logs/") then
+                    if not rel:StartWith("logs/") and rel ~= "config.txt" then
                         local segments = string.Explode("/", rel)
                         local folder
                         local map
@@ -71,7 +71,7 @@ if SERVER then
             for _, f in ipairs(files) do
                 if f:sub(-4) == ".txt" then
                     local rel = string.sub(dir .. "/" .. f, #base + 2)
-                    if not rel:StartWith("logs/") then
+                    if not rel:StartWith("logs/") and rel ~= "config.txt" then
                         total = total + 1
                         local data = file.Read(dir .. "/" .. f, "DATA")
                         local ok, decoded = pcall(pon.decode, data)
