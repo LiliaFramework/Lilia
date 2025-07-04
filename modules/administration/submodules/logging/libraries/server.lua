@@ -16,57 +16,56 @@ function MODULE:SendLogsInChunks(client, categorizedLogs)
     end
 end
 
-function MODULE:ReadLogFiles(category)
+function MODULE:ReadLogEntries(category)
+    local d = deferred.new()
     local maxDays = lia.config.get("LogRetentionDays", 7)
     local maxLines = lia.config.get("MaxLogLines", 1000)
-    local logs = {}
-    local fnameCat = string.lower(category:gsub("%s+", "_"))
-    local path = "lilia/logs/" .. engine.ActiveGamemode() .. "/" .. fnameCat .. ".txt"
-    if not file.Exists(path, "DATA") then return logs end
-    local content = file.Read(path, "DATA")
-    local lines = {}
     local cutoff = os.time() - maxDays * 86400
-    for line in content:gmatch("[^\r\n]+") do
-        lines[#lines + 1] = line
-    end
+    local cutoffStr = os.date("%Y-%m-%d %H:%M:%S", cutoff)
+    local condition = table.concat({
+        "_gamemode = " .. lia.db.convertDataType(engine.ActiveGamemode()),
+        "_category = " .. lia.db.convertDataType(category),
+        "_timestamp >= " .. lia.db.convertDataType(cutoffStr)
+    }, " AND ") ..
+        " ORDER BY _id DESC LIMIT " .. maxLines
 
-    local startIdx = math.max(#lines - maxLines + 1, 1)
-    for i = startIdx, #lines do
-        local ts, msg = lines[i]:match("^%[([^%]]+)%]%s*(.+)")
-        if ts and msg then
-            local y, m, d, H, M, S = ts:sub(1, 4), ts:sub(6, 7), ts:sub(9, 10), ts:sub(12, 13), ts:sub(15, 16), ts:sub(18, 19)
-            local logTime = os.time{
-                year = tonumber(y),
-                month = tonumber(m),
-                day = tonumber(d),
-                hour = tonumber(H),
-                min = tonumber(M),
-                sec = tonumber(S)
+    lia.db.select({"_timestamp", "_message"}, "logs", condition):next(function(res)
+        local rows = res.results or {}
+        local logs = {}
+        for _, row in ipairs(rows) do
+            logs[#logs + 1] = {
+                timestamp = row._timestamp,
+                message = row._message
             }
-
-            if logTime >= cutoff then
-                logs[#logs + 1] = {
-                    timestamp = ts,
-                    message = msg
-                }
-            end
         end
-    end
-    return logs
+        d:resolve(logs)
+    end)
+    return d
 end
 
 net.Receive("send_logs_request", function(_, client)
     if not MODULE:CanPlayerSeeLog(client) then return end
-    local logsByCategory = {}
+    local categories = {}
     for _, logType in pairs(lia.log.types) do
-        local cat = logType.category or "Uncategorized"
-        logsByCategory[cat] = logsByCategory[cat] or {}
-        for _, entry in ipairs(MODULE:ReadLogFiles(cat)) do
-            logsByCategory[cat][#logsByCategory[cat] + 1] = entry
-        end
+        categories[logType.category or "Uncategorized"] = true
     end
 
-    MODULE:SendLogsInChunks(client, logsByCategory)
+    local catList = {}
+    for cat in pairs(categories) do
+        catList[#catList + 1] = cat
+    end
+
+    local logsByCategory = {}
+    local function fetch(idx)
+        if idx > #catList then return MODULE:SendLogsInChunks(client, logsByCategory) end
+        local cat = catList[idx]
+        MODULE:ReadLogEntries(cat):next(function(entries)
+            logsByCategory[cat] = entries
+            fetch(idx + 1)
+        end)
+    end
+
+    fetch(1)
 end)
 
 function MODULE:CanPlayerSeeLog(client)
