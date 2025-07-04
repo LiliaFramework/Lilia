@@ -107,7 +107,7 @@ if SERVER then
     function lia.log.convertToDatabase(changeMap)
         if lia.log.isConverting then return end
         lia.log.isConverting = true
-        lia.bootstrap("Database", "Converting logs to database...")
+        lia.bootstrap("Database", L("convertLogsToDatabase"))
         local baseDir = "lilia/logs"
         local entries = {}
         local files, dirs = file.Find(baseDir .. "/*", "DATA")
@@ -157,7 +157,7 @@ if SERVER then
                     lia.log.isConverting = false
                     lia.bootstrap(
                         "Database",
-                        string.format("Converting logs to database... Converted %d entries", entryCount)
+                        L("convertLogsToDatabaseDone", entryCount)
                     )
                     if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
                     return

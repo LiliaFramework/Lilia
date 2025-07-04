@@ -85,7 +85,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
         lia.include(path, "shared")
     else
         if not file.Exists(coreFile, "LUA") then
-            lia.bootstrap("Module", "Skipping module '" .. uniqueID .. "' - missing " .. lowerVar .. ".lua")
+            lia.bootstrap("Module", L("moduleSkipMissing", uniqueID, lowerVar))
             _G[variable] = prev
             return
         end
@@ -101,7 +101,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
     end
 
     if uniqueID ~= "schema" and not enabled then
-        lia.bootstrap("Module", "Disabled module '" .. MODULE.name .. "'")
+        lia.bootstrap("Module", L("moduleDisabled", MODULE.name))
         lia.module.list[uniqueID] = nil
         _G[variable] = prev
         return
@@ -153,7 +153,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
             })
         end
 
-        if string.StartsWith(path, engine.ActiveGamemode() .. "/modules") then lia.bootstrap("Module", "Finished Loading Module '" .. MODULE.name .. "'") end
+        if string.StartsWith(path, engine.ActiveGamemode() .. "/modules") then lia.bootstrap("Module", L("moduleFinishedLoading", MODULE.name)) end
         _G[variable] = prev
     end
 end
