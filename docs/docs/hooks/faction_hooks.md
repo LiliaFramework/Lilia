@@ -2,6 +2,8 @@
 
 This document describes all `FACTION` function hooks defined within the codebase. Use these to customize default naming, descriptions, and lifecycle events when characters are created, spawned, or transferred within a faction.
 
+Each hook is defined on a faction table and receives the table itself as `self` when invoked.
+
 ---
 
 ## Overview
@@ -38,10 +40,9 @@ Allows you to supply a custom character name before any prefix or default logic 
 
 ```lua
 function FACTION:NameTemplate(client)
-    -- Prefix the Steam name with the faction name.
+    -- Use the player's Steam name prefixed by the faction name.
     local base = client:SteamName()
-    local name = string.format("[%s] %s", self.name, base)
-    return name, true -- skip the default generator
+    return string.format("[%s] %s", self.name, base), true
 end
 ```
 
@@ -72,9 +73,8 @@ Retrieves the default name for a newly created character in this faction.
 
 ```lua
 function FACTION:GetDefaultName(client)
-    -- Generate an identifier using the player's ID.
-    local id = client:UserID()
-    return string.format("Recruit-%03d", id)
+    -- Generate a simple callsign from the player's ID.
+    return string.format("Recruit-%03d", client:UserID())
 end
 ```
 
@@ -104,8 +104,8 @@ Retrieves the default description for a newly created character in this faction.
 
 ```lua
 function FACTION:GetDefaultDesc(client)
-    -- Give every new member a short biography.
-    return "A seasoned veteran of many battles"
+    -- Provide a short biography for new members.
+    return "A newly enlisted soldier ready for duty."
 end
 ```
 
@@ -172,11 +172,11 @@ Executes actions when a player is transferred into this faction (e.g., by an adm
 
 ```lua
 function FACTION:OnTransferred(client, oldFaction)
-    -- Give the character a random faction model.
+    -- Swap the player's model to one of this faction's options.
     local char = client:getChar()
-    if char then
-        local randomIndex = math.random(1, #self.models)
-        char:setModel(self.models[randomIndex])
+    if char and istable(self.models) then
+        local idx = math.random(1, #self.models)
+        char:setModel(self.models[idx])
     end
     print("Transferred from faction", oldFaction)
 end
@@ -218,7 +218,7 @@ function FACTION:OnCheckLimitReached(character, client)
         return false
     end
 
-    local maxMembers = 10
+    local maxMembers = self.limit or 10
     return lia.faction.getPlayerCount(self.index) >= maxMembers
 end
 ```
