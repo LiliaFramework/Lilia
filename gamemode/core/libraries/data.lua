@@ -124,7 +124,7 @@ if SERVER then
     function lia.data.convertToDatabase(changeMap)
         if lia.data.isConverting then return end
         lia.data.isConverting = true
-        lia.bootstrap("Database", "Converting data to database...")
+        lia.bootstrap("Database", L("convertDataToDatabase"))
         local dataEntries = scanLegacyData()
         local entryCount = #dataEntries
         local queries = {"DELETE FROM lia_data"}
@@ -138,7 +138,7 @@ if SERVER then
                 lia.data.isConverting = false
                 lia.bootstrap(
                     "Database",
-                    string.format("Converting data to database... Converted %d entries", entryCount)
+                    L("convertDataToDatabaseDone", entryCount)
                 )
                 if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
             end)
@@ -148,7 +148,7 @@ if SERVER then
     concommand.Add("lia_data_legacy_count", function(ply)
         if IsValid(ply) then return end
         local ported, total = countLegacyDataEntries()
-        print("[Lilia] lia.data legacy files contain " .. total .. " entries; " .. ported .. " can be ported.")
+        print("[Lilia] " .. L("legacyDataEntries", total, ported))
     end)
 
     function lia.data.loadTables()

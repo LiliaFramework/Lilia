@@ -270,7 +270,7 @@ local ConditionalFiles = {
 }
 
 function lia.include(path, realm)
-    if not path then error("[Lilia] missing file path") end
+    if not path then error("[Lilia] " .. L("missingFilePath")) end
     local resolved = realm or RealmIDs[path:match("/([^/]+)%.lua$")] or path:find("sv_") and "server" or path:find("sh_") and "shared" or path:find("cl_") and "client" or "shared"
     if resolved == "server" then
         if SERVER then include(path) end
@@ -509,7 +509,7 @@ end
 
 local hasInitializedModules = false
 function GM:Initialize()
-    if engine.ActiveGamemode() == "lilia" then lia.error("No schema loaded. Please place the schema in your gamemodes folder, then set it as your gamemode.") end
+    if engine.ActiveGamemode() == "lilia" then lia.error(L("noSchemaLoaded")) end
     lia.config.load()
     if not hasInitializedModules then
         lia.module.initialize()
@@ -541,7 +541,9 @@ for _, file in ipairs(ConditionalFiles) do
 end
 
 if #loadedCompatibility > 0 then
-    local message = #loadedCompatibility == 1 and "Loaded compatibility for the following addons: " .. loadedCompatibility[1] or "Loaded the compatibilities for the following addons: " .. table.concat(loadedCompatibility, ", ")
+    local message =
+        #loadedCompatibility == 1 and L("compatibilityLoadedSingle", loadedCompatibility[1]) or
+        L("compatibilityLoadedMultiple", table.concat(loadedCompatibility, ", "))
     lia.bootstrap("Compatibility", message)
 end
 

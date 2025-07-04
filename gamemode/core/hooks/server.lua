@@ -582,7 +582,7 @@ function GM:LoadData()
                 createdEnt:Activate()
             end
         else
-            lia.error(string.format("Entity creation aborted: An entity of class '%s' is already nearby at position (%.2f, %.2f, %.2f).", ent.class, ent.pos.x, ent.pos.y, ent.pos.z))
+            lia.error(L("entityCreationAborted", ent.class, ent.pos.x, ent.pos.y, ent.pos.z))
         end
     end
 
@@ -662,7 +662,16 @@ local function DatabaseQuery()
                     local colDef = typeMap[v.fieldType](v)
                     if v.default ~= nil then colDef = colDef .. " DEFAULT '" .. tostring(v.default) .. "'" end
                     local alter = ("ALTER TABLE lia_characters ADD COLUMN %s"):format(colDef)
-                    lia.db.query(alter, function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database] ", Color(255, 255, 255), string.format("Added missing column `%s`.\n", v.field)) end)
+                    lia.db.query(alter, function()
+                        MsgC(
+                            Color(83, 143, 239),
+                            "[Lilia] ",
+                            Color(0, 255, 0),
+                            "[Database] ",
+                            Color(255, 255, 255),
+                            L("addedMissingColumn", v.field) .. "\n"
+                        )
+                    end)
                 end
             end
         end)
@@ -783,7 +792,7 @@ end
 
 function ClientAddText(client, ...)
     if not client or not IsValid(client) then
-        lia.error("Invalid client provided to chat.AddText")
+        lia.error(L("invalidClientChatAddText"))
         return
     end
 
