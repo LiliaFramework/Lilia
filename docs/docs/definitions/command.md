@@ -13,6 +13,7 @@ All fields are optional unless noted otherwise.
 When you register a command with `lia.command.add`, you provide a table of
 fields controlling its name, permissions and execution.  Except for
 `onRun`, every field is optional.
+The command name itself is the first argument to `lia.command.add` and is stored in lowercase.
 
 ---
 
@@ -44,6 +45,7 @@ fields controlling its name, permissions and execution.  Except for
 **Description:**
 
 One or more alternative command names that trigger the same behavior.
+Aliases are automatically lower-cased and behave exactly like the main command name.
 
 **Example Usage:**
 
@@ -65,7 +67,7 @@ alias = {"chargiveflag", "giveflag"}
 
 **Description:**
 
-If `true`, only players with the registered CAMI admin privilege (automatically created) may run the command.
+If `true`, only players with the generated CAMI privilege may run the command. The privilege name is automatically registered as `Commands - <privilege>`.
 
 **Example Usage:**
 
@@ -83,7 +85,7 @@ adminOnly = true
 
 **Description:**
 
-If `true`, restricts usage to super administrators (automatically registers a CAMI privilege).
+If `true`, only superadmins with the automatically registered privilege `Commands - <privilege>` can use the command.
 
 **Example Usage:**
 
@@ -100,10 +102,7 @@ superAdminOnly = true
 `string`
 
 **Description:**
-
-Custom CAMI privilege name checked when running the command. Defaults to the command’s primary name if omitted.
-This field is normally used alongside `adminOnly` or `superAdminOnly` to
-register a privilege with a custom name.
+Custom CAMI privilege name checked when running the command. If omitted, `adminOnly` or `superAdminOnly` register `Commands - <command name>`.
 
 **Example Usage:**
 
@@ -166,6 +165,7 @@ desc = "Purchase a door if it is available and you can afford it."
 **Description:**
 
 Defines how the command appears in admin utility menus. Common keys:
+All keys are optional; if omitted the command simply will not appear in the Admin Stick menu.
 
 * `Name` (string) – Text shown on the menu button.
 * `Category` (string) – Top-level grouping.
@@ -198,6 +198,7 @@ AdminStick = {
 **Description:**
 
 Function called when the command is executed. `args` is a table of parsed arguments. Return a string to send a message back to the caller, or return nothing for silent execution.
+Strings starting with `@` are interpreted as localization keys for `notifyLocalized`.
 
 **Example Usage:**
 
@@ -216,21 +217,23 @@ end
 
 ```lua
 lia.command.add("restockvendor", {
-    superAdminOnly = true,
-    privilege = "Manage Vendors",
-    desc = "Restock the vendor you are looking at.",
-    syntax = "[player Target]",
-    alias = {"vendorrestock"},
+    superAdminOnly = true,                -- restrict to super administrators
+    privilege = "Manage Vendors",        -- custom privilege checked before run
+    desc = "Restock the vendor you are looking at.", -- shown in command lists
+    syntax = "[player Target]",          -- help text describing the argument
+    alias = {"vendorrestock"},           -- other names that trigger the command
     AdminStick = {
-        Name        = "Restock Vendor",
-        Category    = "Vendors",
-        SubCategory = "Management",
-        Icon        = "icon16/box.png",
-        TargetClass = "lia_vendor"
+        Name        = "Restock Vendor",  -- text on the Admin Stick button
+        Category    = "Vendors",        -- top-level category
+        SubCategory = "Management",     -- subcategory in the menu
+        Icon        = "icon16/box.png",  -- icon displayed next to the entry
+        TargetClass = "lia_vendor"       -- only usable when aiming at this class
     },
     onRun = function(client, args)
+        -- grab the entity the admin is looking at
         local vendor = client:getTracedEntity()
         if IsValid(vendor) and vendor:GetClass() == "lia_vendor" then
+            -- reset all purchasable item stock counts
             for id, itemData in pairs(vendor.items) do
                 if itemData[2] and itemData[4] then
                     vendor.items[id][2] = itemData[4]
@@ -245,3 +248,19 @@ lia.command.add("restockvendor", {
 ```
 
 ---
+```lua
+lia.command.add("goto", {
+    adminOnly = true,                    -- only admins may run this command
+    syntax = "[player Target]",         -- how the argument appears in help menus
+    desc = "Teleport to the specified player.", -- short description
+    onRun = function(client, args)
+        -- look up the target player from the first argument
+        local target = lia.util.findPlayer(client, args[1])
+        if not target then
+            return "@targetNotFound"     -- localization key sent when player missing
+        end
+        client:SetPos(target:GetPos())   -- move to the target's position
+    end
+})
+```
+
