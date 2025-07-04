@@ -24,7 +24,7 @@ Each attribute is registered on the global `ATTRIBUTE` table. You can customize:
 | `desc`         | `string`  | `"No Description"`  | Brief description or lore text. |
 | `startingMax`  | `number`  | `30`    | Maximum base value at character creation, before any startup bonus points are applied. |
 | `noStartBonus` | `boolean` | `false` | If `true`, players cannot allocate any of the creation startup bonus points to this attribute. |
-| `maxValue`     | `number`  | `30`    | Absolute upper limit an attribute can ever reach.                                              |
+| `maxValue`     | `number`  | `30`    | Absolute upper limit an attribute can ever reach. |
 
 ---
 
@@ -32,7 +32,9 @@ Each attribute is registered on the global `ATTRIBUTE` table. You can customize:
 
 #### `name`
 
-Specify the human-readable title for the attribute.
+Human readable title shown in menus. When the attribute is loaded,
+`lia.attribs.loadFromDir` automatically defaults this to the translated
+string `L("unknown")` if no name is provided.
 
 ```lua
 ATTRIBUTE.name = "Strength"
@@ -42,7 +44,8 @@ ATTRIBUTE.name = "Strength"
 
 #### `desc`
 
-Provide a concise description for the attribute.
+Concise description or lore text for the attribute. Defaults to the
+translation `L("noDesc")` when omitted.
 
 ```lua
 ATTRIBUTE.desc = "Determines physical power and carrying capacity."
@@ -52,7 +55,9 @@ ATTRIBUTE.desc = "Determines physical power and carrying capacity."
 
 #### `startingMax`
 
-Defines the cap on the attribute’s base value at character creation.
+Cap on the attribute’s base value during character creation. The
+configuration variable `MaxStartingAttributes` (default `30`) provides
+the fallback value when this field is not defined.
 
 ```lua
 ATTRIBUTE.startingMax = 15
@@ -62,9 +67,9 @@ ATTRIBUTE.startingMax = 15
 
 #### `noStartBonus`
 
-Controls whether this attribute is eligible for the startup bonus—the pool of points players assign when creating a character.
-
-If set to `true`, players cannot allocate any of their initial creation points to this attribute.
+If set to `true`, players cannot allocate any of their initial creation
+bonus points to this attribute. The attribute can still increase later
+through normal gameplay or boosts.
 
 ```lua
 ATTRIBUTE.noStartBonus = false
@@ -74,9 +79,21 @@ ATTRIBUTE.noStartBonus = false
 
 #### `maxValue`
 
-Sets the hard cap for this attribute.
+Absolute ceiling an attribute can ever reach. Defaults to the
+`MaxAttributePoints` configuration value (30) when unspecified.
 
 ```lua
+ATTRIBUTE.maxValue = 50
+```
+
+### Full Attribute Example
+
+```lua
+-- sh_agility.lua
+ATTRIBUTE.name = "Agility"
+ATTRIBUTE.desc = "Improves your reflexes and overall movement speed."
+ATTRIBUTE.startingMax = 20
+ATTRIBUTE.noStartBonus = false
 ATTRIBUTE.maxValue = 50
 ```
 
