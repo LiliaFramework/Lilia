@@ -124,7 +124,7 @@ if SERVER then
     function lia.data.convertToDatabase(changeMap)
         if lia.data.isConverting then return end
         lia.data.isConverting = true
-        print("[Lilia] Converting lia.data to database...")
+        lia.bootstrap("Database", "Converting data to database...")
         local dataEntries = scanLegacyData()
         local entryCount = #dataEntries
         local queries = {"DELETE FROM lia_data"}
@@ -136,22 +136,11 @@ if SERVER then
         lia.db.waitForTablesToLoad():next(function()
             lia.db.transaction(queries):next(function()
                 lia.data.isConverting = false
-                local counts = {}
-                deferred.all({
-                    lia.db.count("config"):next(function(n) counts.config = n end),
-                    lia.db.count("data"):next(function(n) counts.data = n end),
-                    lia.db.count("logs"):next(function(n) counts.logs = n end)
-                }):next(function()
-                    print(
-                        string.format(
-                            "[Lilia] Data conversion complete. Converted %d config entries, %d data entries and %d log entries.",
-                            counts.config or 0,
-                            counts.data or entryCount,
-                            counts.logs or 0
-                        )
-                    )
-                    if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
-                end)
+                lia.bootstrap(
+                    "Database",
+                    string.format("Converting data to database... Converted %d entries", entryCount)
+                )
+                if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
             end)
         end)
     end
