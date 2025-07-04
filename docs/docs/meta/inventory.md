@@ -692,7 +692,7 @@ Inserts an item instance into this inventory and persists it.
 
 **Returns:**
 
-* None – This function does not return a value.
+* table – The inventory instance.
 
 
 **Example Usage:**
@@ -874,17 +874,15 @@ Removes an item by ID and optionally deletes it.
 
 **Returns:**
 
-* None – This function does not return a value.
-
+* Deferred – Resolves once the item removal completes.
 
 **Example Usage:**
 
 ```lua
 -- Remove an item but keep it saved for later
-local dropped = inv:removeItem(itemID, true)
-if dropped then
+inv:removeItem(itemID, true):next(function()
     print("Item stored for later")
-end
+end)
 ```
 
 ---
@@ -919,7 +917,9 @@ Alias for `removeItem` that removes an item from the inventory.
 **Example Usage:**
 
 ```lua
-inv:remove(itemID)
+inv:remove(itemID):next(function()
+    print("Removed from the container")
+end)
 ```
 
 ---
