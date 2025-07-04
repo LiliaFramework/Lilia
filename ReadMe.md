@@ -1,5 +1,6 @@
 <p align="center">
   <strong>Official repository for Lilia, an advanced roleplay framework for Garry’s Mod.</strong><br/>
+  This repo hosts the full source code, built-in modules and documentation.<br/>
   The perfect foundation for your dream server.<br/><br/>
   <img src="https://github.com/LiliaFramework/Lilia/blob/main/logo.png?raw=true" alt="Lilia Logo" width="200" />
 </p>
@@ -27,7 +28,7 @@
 <h2 align="center">🚀 Getting Started</h2>
 
 <p align="center">
-  Follow our step-by-step <a href="https://liliaframework.github.io/information/installing_the_gamemode/">installation tutorial</a> to set up Lilia on your server.
+  Follow our step-by-step <a href="https://liliaframework.github.io/installation/">installation tutorial</a> to set up Lilia on your server.
 </p>
 
 <h2 align="center">✨ Core Features</h2>
