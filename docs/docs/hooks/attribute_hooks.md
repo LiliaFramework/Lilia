@@ -6,15 +6,19 @@ This document lists hooks related to attribute setup events.
 
 ## Overview
 
-Attributes may define callback functions that run when a player's attribute table is being set up. These functions live on the `ATTRIBUTE` table of each attribute definition and are entirely optional. At the time of writing the only built‑in attribute hook is `OnSetup`, which is called whenever `lia.attribs.setup` runs.
+Attributes may define callback functions that run when a player's attribute table is being set up. These functions live on the `ATTRIBUTE` table of each attribute definition and are entirely optional. The only built‑in attribute hook is `OnSetup`, which is called whenever `lia.attribs.setup` runs.
 
 ---
 
 ### OnSetup
 
+```lua
+function ATTRIBUTE:OnSetup(client, value)
+```
+
 **Description:**
 
-Invoked when `lia.attribs.setup(client)` initializes or refreshes a player's attributes. This occurs after a character spawns or whenever the function is executed manually. It does **not** run when attribute boosts are added or removed. Use it to apply any server‑side effects based on the attribute's current value.
+Called on the server whenever `lia.attribs.setup(client)` initializes or refreshes a player's attributes. This typically happens after a character spawns, or whenever the function is run manually. The hook does **not** fire when attribute boosts are added or removed. Use it to apply any server‑side effects based on the attribute's current value.
 
 **Parameters:**
 
