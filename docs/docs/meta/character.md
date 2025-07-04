@@ -1203,7 +1203,9 @@ char:kick()
 
 **Description:**
 
-Bans the character for the specified duration and immediately kicks them.
+Marks the character as banned for the given duration, saves the state, and
+immediately kicks the controlling player. This also triggers the
+`OnCharPermakilled` hook.
 
 **Parameters:**
 
@@ -1226,40 +1228,8 @@ Bans the character for the specified duration and immediately kicks them.
 -- Ban the character for one hour
 char:ban(3600)
 ```
-
 ---
 
-### isBanned()
-
-**Description:**
-
-Checks whether this character is currently banned.
-
-**Parameters:**
-
-* None
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean – True if the character has an active ban.
-
-
-**Example Usage:**
-
-```lua
--- Prevent actions while the character is banned
-if char:isBanned() then
-    return client:notifyLocalized("bannedAction")
-end
-```
-
----
 
 ### delete()
 
