@@ -228,6 +228,66 @@ end
 
 ---
 
+### CanOverrideView()
+
+**Description:**
+
+Checks if the player is allowed to override the camera view. A valid character
+must be loaded and the player cannot be in a vehicle or ragdoll. The option
+`thirdPersonEnabled` must be enabled both client and server side and the
+`ShouldDisableThirdperson` hook must not return `true`.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* boolean – True when a third person view may be used.
+
+**Example Usage:**
+
+```lua
+if player:CanOverrideView() then
+    -- Place the camera behind the player
+end
+```
+
+---
+
+### IsInThirdPerson()
+
+**Description:**
+
+Returns whether third person view is enabled for this player according to the
+`thirdPersonEnabled` option and configuration.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* boolean – True if third person mode is enabled.
+
+**Example Usage:**
+
+```lua
+if player:IsInThirdPerson() then
+    print("Third person active")
+end
+```
+
+---
+
 ### removeRagdoll()
 
 **Description:**
@@ -405,6 +465,7 @@ Returns the active weapon entity and associated item if equipped.
 **Returns:**
 
 * Entity|None – Weapon entity when matched.
+* Item|None – Inventory item associated with the weapon.
 
 
 **Example Usage:**
@@ -1800,7 +1861,9 @@ Broadcasts animation bone data to all clients.
 
 ```lua
 
-player:NetworkAnimation(true, data)
+player:NetworkAnimation(true, {
+    ["ValveBiped.Bip01_Head"] = Angle(0, 90, 0)
+})
 
 ```
 ---
@@ -2383,7 +2446,9 @@ Applies or clears clientside bone angles based on animation data.
 
 ```lua
 
-LocalPlayer():NetworkAnimation(true, data)
+LocalPlayer():NetworkAnimation(true, {
+    ["ValveBiped.Bip01_Head"] = Angle(0, 90, 0)
+})
 
 ```
 ---
