@@ -185,7 +185,7 @@ lia.command.add("chardesc", {
         if not desc:find("%S") then return client:requestString(L("chgName"), L("chgNameDesc"), function(text) lia.command.run(client, "chardesc", {text}) end, client:getChar() and client:getChar():getDesc() or "") end
         local character = client:getChar()
         if character then character:setDesc(desc) end
-        return "descChanged"
+        return "@descChanged"
     end
 })
 
