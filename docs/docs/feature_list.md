@@ -861,6 +861,7 @@ Manage Steam Workshop collections for clients.
 - Update notifications for outdated addons
 
 - Prompts admins to restart when addons update
+
 ### Third-Party Helpers
 Patches and helper libraries for external addons.
 - CAMI fallback library for permissions
