@@ -1,89 +1,115 @@
 <p align="center">
-  <b>Official repository for Lilia, an advanced roleplay framework for Garry's Mod.</b><br/>
-  The perfect foundation for your dream server.
+  <strong>Official repository for Lilia, an advanced roleplay framework for Garry’s Mod.</strong><br/>
+  The perfect foundation for your dream server.<br/><br/>
+  <img src="https://github.com/LiliaFramework/Lilia/blob/main/logo.png?raw=true" alt="Lilia Logo" width="200" />
 </p>
 
 <p align="center">
-  <img src="https://github.com/LiliaFramework/Lilia/blob/main/logo.png?raw=true" alt="Lilia Logo" width="200" />
+  <a href="https://github.com/LiliaFramework/Lilia/stargazers">
+    <img src="https://img.shields.io/github/stars/LiliaFramework/Lilia?style=social" alt="GitHub Stars" />
+  </a>
+  <a href="https://www.gnu.org/licenses/gpl-3.0">
+    <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License GPL v3" />
+  </a>
+  <a href="https://discord.gg/esCRH5ckbQ">
+    <img src="https://img.shields.io/badge/Discord-Join%20Chat-blue?logo=discord&logoColor=white" alt="Discord Chat" />
+  </a>
+  <a href="https://discord.gg/esCRH5ckbQ">
+    <img
+      src="https://img.shields.io/badge/dynamic/json?url=https://discord.com/api/guilds/1094398664434274454/widget.json&label=Online&query=$.presence_count&logo=discord&logoColor=white&color=7289DA&style=social"
+      alt="Discord Members Online"
+    />
+  </a>
 </p>
 
 <h1 align="center">Lilia Framework</h1>
 
+<h2 align="center">🚀 Getting Started</h2>
 
-Welcome to **Lilia**, an advanced roleplay framework for Garry’s Mod. Inspired by [Lillia from League of Legends](https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lillia_19.jpg), the project makes creating a serious RP server as straightforward as possible by providing a modular foundation with stable networking, intuitive UIs and a rich API.
+<p align="center">
+  Follow our step-by-step <a href="https://liliaframework.github.io/information/installing_the_gamemode/">installation tutorial</a> to set up Lilia on your server.
+</p>
 
+<h2 align="center">✨ Core Features</h2>
 
-## 🚀 Getting Started
+<div align="center">
 
+  **Grid Inventory**  
+  Includes containers, vendors and item weight handling.
 
-Follow our step-by-step [installation tutorial](https://liliaframework.github.io/information/installing_the_gamemode/) to set up Lilia on your server.
+  **Recognition System**  
+  Manage characters and factions with ease.
 
+  **Custom Menus**  
+  Scoreboard, F1 menu and radial weapon selector.
 
-## ✨ Features
+  **Administration Utilities**  
+  Logging, ticket management and warnings.
 
+  **Performance Libraries**  
+  Optimized database access, networking and caching.
 
-- **Grid Inventory** with containers, vendors and item weight handling
+  **Door System**  
+  Ownable doors with key-lock functionality.
 
-- **Recognition System** for characters and factions
+  **Third-Person Camera**  
+  Toggleable, with adjustable view settings.
 
-- **Custom Menus** including scoreboard, F1 menu and radial weapon selector
+  **Team & Spawn Management**  
+  Flexible faction and class configurations.
 
-- **Administration Utilities** like logging, ticket management and warnings
+  **Interaction Menu**  
+  Quick-access common actions.
 
-- **Performance Libraries** for database access, networking and caching
+  **Modular Extensions**  
+  Hot-reloadable modules for seamless extension.
 
-- **Door System** with ownable doors and key locks
+</div>
 
-- **Third-Person Camera** toggle with adjustable view
+<h2 align="center">📚 Documentation</h2>
 
-- **Team & Spawn Management** for factions and classes
+<p align="center">
+  Explore the complete wiki for in-depth guides on configuring and extending Lilia:<br/>
+  <a href="https://liliaframework.github.io">https://liliaframework.github.io</a>
+</p>
 
-- **Interaction Menu** to quickly access common actions
+<h2 align="center">📦 Workshop Content</h2>
 
-- **Modular Plugin System** supporting hot reloads
+<p align="center">
+  Subscribe to our essential <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2959728255">Steam Workshop collection</a> for the assets you’ll need to run Lilia optimally.
+</p>
 
+<h2 align="center">💬 Community Support</h2>
 
-> For a full breakdown of every feature, see our documentation:
+<p align="center">
+  Connect with other server owners and get real-time help on our Discord:<br/>
+  <a href="https://discord.gg/esCRH5ckbQ">https://discord.gg/esCRH5ckbQ</a>
+</p>
 
-> https://liliaframework.github.io/feature_list/
+<h2 align="center">💡 Contributing</h2>
 
+<p align="center">
+  We welcome pull requests and wiki improvements. To submit one, follow the following steps:
+</p>
 
-## 📦 Workshop Content
+<div align="center">
 
+  Fork the repo  
 
-Subscribe to our essential [workshop collection](https://steamcommunity.com/sharedfiles/filedetails/?id=2959728255) for the assets you’ll need to run Lilia optimally.
+  Create a feature branch  
 
+  Submit a pull request  
 
-## 📚 Documentation
+</div>
 
+<p align="center">
+  Please review our <a href="./Code_Of_Conduct.md">Code of Conduct</a> before contributing.
+</p>
 
-Explore the complete wiki for in-depth guides on configuring and extending Lilia:
+<h2 align="center">🎓 Learning & Adaptation</h2>
 
-https://liliaframework.github.io
-
-
-## 💬 Community Support
-
-
-Connect with other server owners and get real-time help on our Discord:
-
-https://discord.gg/esCRH5ckbQ
-
-
-## 💡 Contributing
-
-
-We welcome pull requests and wiki improvements:
-
-
-1. Fork the repo
-
-2. Create a feature branch
-
-3. Submit a pull request
-
-
-## 🎓 Learning & Adaptation
-
-
-All source code is open under the GPL—feel free to study, modify, and adapt it to fit your needs. While commercial resale is discouraged, educational use and experimentation are highly encouraged to foster a collaborative, knowledge-sharing community.
+<p align="center">
+  All <strong>Lilia</strong> content is open source under the <strong>GNU General Public License v3.0</strong>. See the <a href="./License">License</a> file for details. You are free to study, modify and adapt it for your own server. Commercial resale is discouraged, but educational use is encouraged.<br/>
+  Official modules for Lilia can be found here:<br/>
+  <a href="https://github.com/LiliaFramework/Modules">https://github.com/LiliaFramework/Modules</a>
+</p>
