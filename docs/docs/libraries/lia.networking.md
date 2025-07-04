@@ -83,10 +83,10 @@ Retrieves a global networked variable previously set by setNetVar.
 ```lua
     -- Inform a joining player of the current round and last winner
     hook.Add("PlayerInitialSpawn", "ShowRound", function(ply)
-        ply:ChatPrint("Current round: " .. getNetVar("round", 0))
+        ply:ChatPrint(string.format(L("currentRound"), getNetVar("round", 0)))
         local winner = getNetVar("last_winner")
         if IsValid(winner) then
-            ply:ChatPrint("Last round won by " .. winner:Name())
+            ply:ChatPrint(string.format(L("lastRoundWinner"), winner:Name()))
         end
     end)
 ```

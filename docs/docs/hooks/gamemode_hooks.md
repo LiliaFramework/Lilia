@@ -2114,7 +2114,7 @@ Runs after the player entity has spawned and data is ready. Allows post-initiali
 -- Initialize some default variables for new players.
 hook.Add("PostPlayerInitialSpawn", "SetupTutorialState", function(ply)
     ply:setNetVar("inTutorial", true)
-    ply:ChatPrint("Welcome! Follow the arrows to begin the tutorial.")
+    ply:ChatPrint(L("welcomeTutorial"))
 end)
 ```
 
@@ -4685,7 +4685,7 @@ Runs after an item successfully moves between inventories.
 ```lua
 -- Notify the player about the transfer result.
 hook.Add("ItemTransfered", "NotifyTransfer", function(context)
-    context.client:notify("Item moved!")
+    context.client:notifyLocalized("itemMoved")
 end)
 ```
 
@@ -6893,7 +6893,7 @@ hook.Add("CreateSalaryTimer", "SetupSalaryTimer", function(client)
         if IsValid(client) and MODULE:CanPlayerEarnSalary(client, client:getFaction(), client:getClass()) then
             local salary = MODULE:GetSalaryAmount(client, client:getFaction(), client:getClass())
             client:addMoney(salary)
-            client:ChatPrint("You have received your salary of $" .. salary)
+            client:ChatPrint(string.format(L("salaryReceived"), salary))
             print("Salary of $" .. salary .. " awarded to:", client:Name())
         end
     end)
@@ -7243,7 +7243,7 @@ Called when `lia.option` is fully initialized.
 ```lua
 -- Prints a message when this hook is triggered
 function MODULE:InitializedOptions()
-    LocalPlayer():ChatPrint("LOADED OPTIONS!")
+    LocalPlayer():ChatPrint(L("optionsLoaded"))
 end
 ```
 
@@ -9202,7 +9202,7 @@ Fired when an attribute boost is added or removed.
 -- Notify the player when they gain a temporary bonus.
 hook.Add("OnCharAttribBoosted", "BoostNotice", function(client, char, key, id, amount)
     if amount ~= true then
-        client:notify("Boosted " .. key .. " by " .. amount)
+        client:notifyLocalized("attribBoosted", key, amount)
     end
 end)
 ```
@@ -9464,7 +9464,7 @@ Called when a ragdolled character finishes getting up.
 ```lua
 -- Prints a message when OnCharGetup is triggered
 hook.Add("OnCharGetup", "NotifyGetup", function(ply)
-    ply:ChatPrint("You stood up")
+    ply:ChatPrint(L("youStoodUp"))
 end)
 ```
 
@@ -9570,7 +9570,7 @@ This hook also runs client-side when the server loads the character.
 ```lua
 -- Prints a message when PlayerLoadedChar is triggered
 hook.Add("PlayerLoadedChar", "WelcomeBack", function(ply, char)
-    ply:ChatPrint("Welcome, " .. char:getName())
+    ply:ChatPrint(string.format(L("welcomePlayer"), char:getName()))
 end)
 ```
 
@@ -9755,7 +9755,7 @@ Fired when a staff member claims a help ticket.
 ```lua
 -- Prints a message when TicketSystemClaim is triggered
 hook.Add("TicketSystemClaim", "NotifyClaim", function(staff, ply)
-    staff:ChatPrint("Claimed ticket from " .. ply:Name())
+    staff:ChatPrint(string.format(L("ticketClaimed"), ply:Name()))
 end)
 ```
 

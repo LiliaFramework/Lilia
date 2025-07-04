@@ -290,7 +290,7 @@ Attempts to find the player currently owning this item.
 -- Notify whoever currently owns the item
 local owner = item:getOwner()
 if IsValid(owner) then
-    owner:notify("Your item glows brightly.")
+    owner:notifyLocalized("itemGlows")
 end
 ```
 
@@ -389,7 +389,7 @@ Registers a hook callback for this item instance.
 
 ```lua
 -- Run code when the item is used
-item:hook("use", function(ply) ply:ChatPrint("Used!") end)
+item:hook("use", function(ply) ply:ChatPrint(L("usedItem")) end)
 ```
 
 ---
@@ -617,7 +617,7 @@ Returns the display name of this item. On the client this value is localized.
 
 ```lua
 -- Inform the player which item they found
-client:ChatPrint("Picked up: " .. item:getName())
+client:ChatPrint(string.format(L("pickedUpItem"), item:getName()))
 ```
 
 ---
@@ -678,7 +678,7 @@ Removes this item from its inventory without deleting it when `preserveItem` is 
 ```lua
 -- Unequip and drop the item while keeping it saved
 item:removeFromInventory(true):next(function()
-    client:ChatPrint("Item unequipped")
+    client:ChatPrint(L("itemUnequipped"))
 end)
 ```
 

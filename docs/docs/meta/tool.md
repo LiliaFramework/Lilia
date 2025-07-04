@@ -220,10 +220,10 @@ Determines whether this tool is allowed to be used.
 ```lua
 -- Check if the player can use the current tool
 if tool:Allowed() then
-    tool:GetOwner():ChatPrint("Tool is permitted!")
+    tool:GetOwner():ChatPrint(L("toolPermitted"))
     hook.Run("PlayerToolPermitted", tool:GetOwner(), tool:GetMode())
 else
-    tool:GetOwner():ChatPrint("Tool usage blocked.")
+    tool:GetOwner():ChatPrint(L("toolBlocked"))
 end
 ```
 

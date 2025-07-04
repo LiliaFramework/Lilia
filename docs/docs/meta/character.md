@@ -128,7 +128,7 @@ Returns the player entity currently controlling this character.
 -- Notify the controlling player that the character loaded
 local ply = char:getPlayer()
 if IsValid(ply) then
-    ply:ChatPrint("Character ready")
+    ply:ChatPrint(L("charReady"))
 end
 ```
 
@@ -159,7 +159,7 @@ Returns the character's name as it should be shown to the given player.
 
 ```lua
 -- Announce the character's name to a viewer
-client:ChatPrint("You see " .. char:getDisplayedName(client))
+client:ChatPrint(string.format(L("youSee"), char:getDisplayedName(client)))
 ```
 
 ---
@@ -1255,7 +1255,7 @@ Checks whether this character is currently banned.
 ```lua
 -- Prevent actions while the character is banned
 if char:isBanned() then
-    return client:notify("You cannot do that while banned")
+    return client:notifyLocalized("bannedAction")
 end
 ```
 

@@ -199,7 +199,7 @@ Checks if a player has the given door access level.
 ```lua
 -- Block a player from opening the door without access
 if not door:checkDoorAccess(client, DOOR_ACCESS_OPEN) then
-    client:notify("The door is locked.")
+    client:notifyLocalized("doorLocked")
 end
 ```
 
@@ -452,7 +452,7 @@ Checks for another entity of the same class nearby.
 ```lua
 -- Prevent building too close to another chest
 if ent:isNearEntity(128, otherChest) then
-    client:notify("Too close to another chest!")
+    client:notifyLocalized("chestTooClose")
 end
 ```
 
@@ -485,7 +485,7 @@ Returns the entity creator player.
 -- Credit the creator when the entity is removed
 local creator = ent:GetCreator()
 if IsValid(creator) then
-    creator:notify("Your prop was removed.")
+    creator:notifyLocalized("propRemoved")
 end
 ```
 

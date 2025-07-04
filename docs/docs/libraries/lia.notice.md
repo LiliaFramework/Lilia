@@ -38,7 +38,7 @@ Sends a notification message to a specific player or all players.
 
 ```lua
     -- This snippet demonstrates a common usage of lia.notices.notify
-    lia.notices.notify("Server restarting", nil)
+    lia.notices.notifyLocalized("serverRestarting", nil)
 ```
 
 ---
@@ -104,7 +104,7 @@ Creates a visual notification panel on the client's screen.
 
 ```lua
     -- This snippet demonstrates a common usage of lia.notices.notify
-    lia.notices.notify("Item picked up")
+    lia.notices.notifyLocalized("itemPickedUp")
 ```
 
 ---

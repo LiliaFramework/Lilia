@@ -41,10 +41,10 @@ Returns a human-readable string indicating how long ago a given time occurred (e
         local last = lia.data.get(key, nil, true)
 
         if last then
-            ply:ChatPrint("Welcome back! You last joined " .. lia.time.TimeSince(last) .. ".")
+            ply:ChatPrint(string.format(L("welcomeBack"), lia.time.TimeSince(last)))
         else
-        ply:ChatPrint("Welcome for the first time!")
-    end
+            ply:ChatPrint(L("welcomeFirst"))
+        end
 
     -- Store the current time for the next login
     lia.data.set(key, os.time(), true)
@@ -125,7 +125,7 @@ Returns the full current date and time formatted based on the
     timer.Create("ServerTimeAnnounce", 3600, 0, function()
         local dateString = lia.time.GetDate()
         for _, ply in player.Iterator() do
-            ply:ChatPrint("Server time: " .. dateString)
+            ply:ChatPrint(L("serverTime") .. dateString)
         end
     end)
 ```

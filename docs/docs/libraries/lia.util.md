@@ -289,7 +289,7 @@ Returns all players considered staff or admins, as determined by client:isStaff(
     -- Notify all online staff members about an upcoming restart
     local admins = lia.util.getAdmins()
     for _, admin in ipairs(admins) do
-        admin:ChatPrint("Server restart in 5 minutes!")
+        admin:ChatPrint(L("serverRestarting") .. " in 5 minutes!")
     end
 ```
 
