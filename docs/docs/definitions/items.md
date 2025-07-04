@@ -545,7 +545,8 @@ ITEM.desc = "An example item"
 
 **Description:**
 
-Overrides the automatically generated unique identifier.
+String identifier used to register the item. When omitted it is derived
+from the file path, but you may override it to provide a custom ID.
 
 **Example Usage:**
 
@@ -563,7 +564,9 @@ ITEM.uniqueID = "custom_unique_id"
 
 **Description:**
 
-Database identifier.
+Unique numeric identifier assigned by the inventory system. Instances
+use this to reference the item in the database and it should not be
+manually set.
 
 **Example Usage:**
 
@@ -1061,7 +1064,8 @@ ITEM.url = "https://example.com"
 
 **Description:**
 
-Table of interaction functions.
+Table mapping action names to definitions. Each function entry controls
+button text, icons and behavior when the action is triggered.
 
 **Example Usage:**
 
@@ -1122,3 +1126,80 @@ end)
 ```
 
 ---
+## Item Type Examples
+
+Minimal definitions for each built-in item type are shown below.
+
+### Weapon
+```lua
+ITEM.name = "Sub Machine Gun"
+ITEM.model = "models/weapons/w_smg1.mdl"
+ITEM.class = "weapon_smg1"
+ITEM.weaponCategory = "primary"
+ITEM.isWeapon = true
+```
+
+### Ammo
+```lua
+ITEM.name = "Pistol Ammo"
+ITEM.model = "models/items/357ammo.mdl"
+ITEM.ammo = "pistol"
+ITEM.ammoAmount = 30
+```
+
+### Outfit
+```lua
+ITEM.name = "Combine Armor"
+ITEM.model = "models/props_c17/BriefCase001a.mdl"
+ITEM.outfitCategory = "body"
+ITEM.replacements = "models/player/combine_soldier.mdl"
+ITEM.newSkin = 1
+```
+
+### PAC Outfit
+```lua
+ITEM.name = "Skull Mask"
+ITEM.outfitCategory = "hat"
+ITEM.pacData = { ... }
+```
+
+### Aid Item
+```lua
+ITEM.name = "Bandages"
+ITEM.model = "models/weapons/w_package.mdl"
+ITEM.health = 50
+```
+
+### Book
+```lua
+ITEM.name = "Example"
+ITEM.contents = "<h1>An Example</h1>"
+```
+
+### URL Item
+```lua
+ITEM.name = "Hi Barbie"
+ITEM.url = "https://www.youtube.com/watch?v=9ezbBugUQiQ"
+```
+
+### Entity Spawner
+```lua
+ITEM.name = "Item Suit"
+ITEM.entityid = "item_suit"
+```
+
+### Grenade
+```lua
+ITEM.name = "Grenade"
+ITEM.class = "weapon_frag"
+ITEM.DropOnDeath = true
+```
+
+### Bag
+```lua
+ITEM.name = "Small Bag"
+ITEM.isBag = true
+ITEM.invWidth = 2
+ITEM.invHeight = 2
+ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
+```
