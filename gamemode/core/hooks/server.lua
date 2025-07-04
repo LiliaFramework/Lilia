@@ -477,7 +477,7 @@ function GM:SetupBotPlayer(client)
     local character = lia.char.new({
         name = client:Name(),
         faction = faction and faction.uniqueID or "unknown",
-        desc = "This is a bot. BotID is " .. botID .. ".",
+        desc = L("botDesc", botID),
         model = "models/gman.mdl",
     }, botID, client, client:SteamID64())
 
