@@ -12,7 +12,8 @@ A `GridInv` instance stores items in a 2D grid, requiring items to fit within it
 
 **Description:**
 
-Returns the current width of the inventory grid.
+Returns the current width of the inventory grid. If no width has been set,
+the value from `lia.config.invW` is used.
 
 **Parameters:**
 
@@ -37,7 +38,8 @@ local w = inv:getWidth()
 
 **Description:**
 
-Returns the current height of the inventory grid.
+Returns the current height of the inventory grid. Defaults to
+`lia.config.invH` when unset.
 
 **Parameters:**
 
@@ -58,11 +60,37 @@ local h = inv:getHeight()
 ```
 ---
 
+### getSize()
+
+**Description:**
+
+Returns both grid dimensions at once.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* number, number – Width and height in slots.
+
+**Example:**
+
+```lua
+local w, h = inv:getSize()
+```
+---
+
 ### findFreePosition(item)
 
 **Description:**
 
-Searches the grid for open space that can fit the given item.
+Searches the grid sequentially for the first open space that can fit the given
+item.
 
 **Parameters:**
 
@@ -87,7 +115,7 @@ local x, y = inv:findFreePosition(item)
 
 **Description:**
 
-Changes the grid dimensions on the server.
+Updates the stored grid dimensions on the server.
 
 **Parameters:**
 
@@ -109,11 +137,66 @@ inv:setSize(6, 4)
 ```
 ---
 
+### add(item, x, y)
+
+**Description:**
+
+Inserts an item into the inventory at the given position. Extra quantity that
+cannot fit triggers the `OnPlayerLostStackItem` hook.
+
+**Parameters:**
+
+* item (Item|string) – Item instance or unique ID to add.
+* x (number) – X slot, optional.
+* y (number) – Y slot, optional.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* Deferred – Resolves with the newly added item(s).
+
+**Example:**
+
+```lua
+inv:add("pistol_ammo", 1, 1)
+```
+---
+
+### remove(itemID, quantity)
+
+**Description:**
+
+Removes an item by ID or type. Quantity defaults to `1`.
+
+**Parameters:**
+
+* itemID (number|string) – Item ID or unique ID.
+* quantity (number) – Amount to remove.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* Deferred – Resolves once removal finishes.
+
+**Example:**
+
+```lua
+inv:remove("pistol_ammo", 2)
+```
+---
+
 ### requestTransfer(itemID, destID, x, y)
 
 **Description:**
 
-Asks the server to move an item to another inventory at the given position.
+Sends a `liaTransferItem` request telling the server to move an item. The
+server processes this call through the `HandleItemTransferRequest` hook.
 
 **Parameters:**
 
@@ -133,7 +216,8 @@ Asks the server to move an item to another inventory at the given position.
 **Example:**
 
 ```lua
-inv:requestTransfer(id, otherID, 1, 2)
+-- Move the item into another inventory
+inv:requestTransfer(id, bag:getID(), 1, 2)
 ```
 ---
 
