@@ -70,13 +70,23 @@ removing temporary items.
 
 * Server
 
+**Returns:**
+
+* None
+
 
 **Example Usage:**
 
 ```lua
 function CLASS:OnLeave(client)
-    -- Remove class specific equipment
+    -- Remove any class specific weapons and revert the model
     client:StripWeapon("weapon_pistol")
+    if self.model then
+        local char = client:getChar()
+        if char then
+            char:setModel(char:getData("model", char:getModel()))
+        end
+    end
 end
 ```
 
@@ -103,13 +113,20 @@ another class, `OnTransferred` will run afterwards.
 
 * Server
 
+**Returns:**
+
+* None
+
 
 **Example Usage:**
 
 ```lua
 function CLASS:OnSet(client)
-    -- Equip the player with the class uniform and a sidearm
-    if self.model then client:SetModel(self.model) end
+    -- Give the player their uniform and starter pistol
+    local char = client:getChar()
+    if self.model and char then
+        char:setModel(self.model)
+    end
     client:Give("weapon_pistol")
 end
 ```
@@ -137,6 +154,10 @@ modifying movement speeds.
 
 * Server
 
+**Returns:**
+
+* None
+
 
 **Example Usage:**
 
@@ -145,6 +166,11 @@ function CLASS:OnSpawn(client)
     client:SetMaxHealth(self.health or 150)
     client:SetHealth(self.health or 150)
     client:SetArmor(self.armor or 50)
+
+    -- Give default weapons
+    for _, wep in ipairs(self.weapons or {}) do
+        client:Give(wep)
+    end
 
     -- Apply custom movement settings
     if self.runSpeed then client:SetRunSpeed(self.runSpeed) end
@@ -176,6 +202,10 @@ to is provided so you can migrate data or adjust loadouts.
 
 * Server
 
+**Returns:**
+
+* None
+
 
 **Example Usage:**
 
@@ -183,9 +213,9 @@ to is provided so you can migrate data or adjust loadouts.
 function CLASS:OnTransferred(client, oldClass)
     local char = client:getChar()
     if char and self.model then
-        -- Give the player the model defined for this class
+        -- Apply the class model when transferring
         char:setModel(self.model)
     end
-    print("Transferred from class", oldClass)
+    char:setData("previousClass", oldClass)
 end
 ```
