@@ -908,4 +908,11 @@ LANGUAGE = {
     addedToBlacklist = "Added to blacklist: %s",
     removedFromBlacklist = "Removed from blacklist: %s",
     permaPropOverlapWarning = "Warning: perma-props spawning too close together!",
+    interactionMenu = "Interaction Menu",
+    playerInteractions = "Player Interactions",
+    personalActions = "Personal Actions",
+    actionsMenu = "Actions Menu",
+    inventoryTitle = "%s's Inventory",
+    searchKeybinds = "Search keybinds...",
+    searchConfigs = "Search configurations...",
 }

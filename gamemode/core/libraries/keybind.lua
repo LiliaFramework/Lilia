@@ -287,7 +287,7 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
         searchEntry = container:Add("DTextEntry")
         searchEntry:Dock(TOP)
         searchEntry:SetTall(30)
-        searchEntry:SetPlaceholderText("Search keybinds...")
+        searchEntry:SetPlaceholderText(L("searchKeybinds"))
         searchEntry.OnTextChanged = function() populateRows(searchEntry:GetValue():lower()) end
         scroll = container:Add("DScrollPanel")
         scroll:Dock(FILL)
