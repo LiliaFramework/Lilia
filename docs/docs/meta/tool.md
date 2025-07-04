@@ -218,12 +218,9 @@ Determines whether this tool is allowed to be used.
 **Example Usage:**
 
 ```lua
--- Check if the player can use the current tool
+-- Simple permission check
 if tool:Allowed() then
-    tool:GetOwner():ChatPrint(L("toolPermitted"))
-    hook.Run("PlayerToolPermitted", tool:GetOwner(), tool:GetMode())
-else
-    tool:GetOwner():ChatPrint(L("toolBlocked"))
+    print("Tool can be used")
 end
 ```
 
@@ -493,7 +490,7 @@ Called when the tool is equipped. Releases ghost entity.
 **Example Usage:**
 
 ```lua
--- Equip the tool and spawn its ghost entity
+-- Reset ghost entity when equipping
 local result = tool:Deploy()
 ```
 
