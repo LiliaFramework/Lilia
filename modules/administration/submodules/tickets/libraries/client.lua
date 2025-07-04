@@ -31,7 +31,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     frm.lblTitle:SetFont("ticketsystem")
     frm.lblTitle:SetContentAlignment(7)
     if claimed and IsValid(claimed) and claimed:IsPlayer() then
-        frm:SetTitle(requester:Nick() .. " - " .. L("claimedBy") .. " " .. claimed:Nick())
+        frm:SetTitle(L("ticketTitleClaimed", requester:Nick(), claimed:Nick()))
         if claimed == LocalPlayer() then
             function frm:Paint(paintWidth, paintHeight)
                 draw.RoundedBox(0, 0, 0, paintWidth, paintHeight, Color(10, 10, 10, 230))

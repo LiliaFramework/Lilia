@@ -192,7 +192,7 @@ end
     concommand.Add("lia_config_legacy_count", function(ply)
         if IsValid(ply) then return end
         local ported, total = countLegacyConfigEntries()
-        print("[Lilia] lia.config legacy file has " .. total .. " entries; " .. ported .. " can be ported.")
+        print("[Lilia] " .. L("liaConfigLegacyCount", total, ported))
 end)
 
 lia.config.add("MoneyModel", "Money Model", "models/props_lab/box01a.mdl", nil, {
