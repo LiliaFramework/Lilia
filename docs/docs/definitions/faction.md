@@ -19,7 +19,7 @@ Each faction in the game is defined by a set of fields on the global `FACTION` t
 | `name` | `string` | `"Unknown"` | Display name shown to players. |
 | `desc` | `string` | `"No Description"` | Lore or descriptive text. |
 | `isDefault` | `boolean` | `true` | Whether the faction is available without whitelist. |
-| `color` | `Color` | `Color(255,255,255)` | UI color representing the faction. |
+| `color` | `Color` | `Color(150,150,150)` | UI color representing the faction. |
 | `models` | `table` | `DefaultModels` | Available player model paths. |
 | `uniqueID` | `string` | `filename` | Internal string identifier. |
 | `weapons` | `table` | `{}` | Automatically granted weapons. |
@@ -154,7 +154,7 @@ FACTION_STAFF = FACTION.index
 
 **Description:**
 
-Color used in UI elements to represent the faction. Defaults to `Color(255, 255, 255)` if not specified.
+Color used in UI elements to represent the faction. Defaults to `Color(150, 150, 150)` if not specified.
 
 **Example Usage:**
 
