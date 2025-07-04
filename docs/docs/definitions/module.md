@@ -24,7 +24,7 @@ A `MODULE` table defines a self-contained add-on for the Lilia framework. Each f
 | `CAMIPrivileges` | `table` | `nil` | CAMI privileges defined or required by the module. |
 | `WorkshopContent` | `table` | `nil` | Steam Workshop add-on IDs required. |
 | `enabled` | `boolean` or `function` | `true` | Controls whether the module loads. |
-| `Dependencies` | `table` | `nil` | Files or folders required for the module to run. |
+| `Dependencies` | `table` | `nil` | Files or directories included before the module loads. |
 | `folder` | `string` | `""` | Filesystem path where the module resides. |
 | `path` | `string` | `""` | Absolute path to the module’s root directory. |
 | `uniqueID` | `string` | `""` | Internal identifier for the module list. |
@@ -218,7 +218,10 @@ MODULE.WorkshopContent = {
 
 **Description:**
 
-Files or folders that this module requires to run.
+List of additional files or directories to include before the module itself
+loads. Paths are relative to the module's folder. Each entry may specify a
+`File` or `Folder` key along with an optional `Realm` value (`server`, `client`
+or `shared`) to control where the code is executed.
 
 **Example Usage:**
 
