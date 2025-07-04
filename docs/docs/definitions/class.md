@@ -35,8 +35,12 @@ The global `CLASS` table defines per-class settings such as display name, lore, 
 | `jumpPower` | `number` | `0` | Default jump power. |
 | `jumpPowerMultiplier` | `boolean` | `false` | Multiply base jump power instead of replacing it. |
 | `bloodcolor` | `number` | `0` | Blood color enumeration constant. |
-| `bodyGroups` | `table` | `{}` | Bodygroup index mapping applied on spawn. |
-| `model` | `string` | `""` | Model path (or table of paths) used by this class. |
+| `bodyGroups` | `table` | `{}` | List of {id, value} pairs applied on spawn. |
+| `logo` | `string` | `""` | Material path for the class logo. |
+| `skin` | `number` | `0` | Player model skin index. |
+| `subMaterials` | `table` | `{}` | Sub-material overrides for the model. |
+| `model` | `string` | `""` | Model path or list of paths used by this class. |
+| `requirements` | `string` | `""` | Informational requirements text shown to players. |
 | `index` | `number` | `auto` | Unique team index assigned at registration. |
 | `uniqueID` | `string` | `filename` | Optional identifier; defaults to the file name when omitted. |
 | `commands` | `table` | `{}` | Command names members may always use. |
@@ -485,14 +489,71 @@ CLASS.bloodcolor = BLOOD_COLOR_RED
 
 **Description:**
 
-Mapping of bodygroup indices to values applied on spawn.
+List of tables containing a bodygroup `id` and the desired `value`. Applied when the player spawns.
 
 **Example Usage:**
 
 ```lua
 CLASS.bodyGroups = {
-    hands = 1, -- bodygroup name → value
-    torso = 3  -- applies option 3 for the torso group
+    {id = 1, value = 2}, -- bodygroup index 1 uses option 2
+    {id = 3, value = 0}  -- index 3 uses its default option
+}
+```
+
+---
+
+#### `logo`
+
+**Type:**
+
+`string`
+
+**Description:**
+
+Path to the material used as this class's logo. Displayed in the scoreboard and F1 menu.
+
+**Example Usage:**
+
+```lua
+CLASS.logo = "materials/example/eng_logo.png"
+```
+
+---
+
+#### `skin`
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Model skin index to apply to members of this class.
+
+**Example Usage:**
+
+```lua
+CLASS.skin = 2
+```
+
+---
+
+#### `subMaterials`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+List of material paths that replace the model's sub-materials. The first entry applies to sub-material `0`, the second to `1`, and so on.
+
+**Example Usage:**
+
+```lua
+CLASS.subMaterials = {
+    "models/example/custom_cloth", -- sub-material 0
+    "models/example/custom_armor" -- sub-material 1
 }
 ```
 
@@ -512,6 +573,24 @@ Model path (or list of paths) assigned to this class.
 
 ```lua
 CLASS.model = "models/player/alyx.mdl"
+```
+
+---
+
+#### `requirements`
+
+**Type:**
+
+`string`
+
+**Description:**
+
+Text displayed to the player describing what is needed to join this class. This field does not restrict access on its own.
+
+**Example Usage:**
+
+```lua
+CLASS.requirements = "Flag V and Engineering 25+"
 ```
 
 ---
@@ -536,4 +615,53 @@ CLASS.commands = {
 ```
 
 ---
+
+## Complete Example
+
+```lua
+-- schema/classes/sh_engineer.lua
+CLASS.name = "Engineer"
+CLASS.desc = "Technicians who maintain complex machinery."
+CLASS.faction = FACTION_CITIZEN
+CLASS.isDefault = true
+CLASS.color = Color(150, 150, 255)
+CLASS.weapons = {"weapon_pistol", "weapon_crowbar"}
+CLASS.pay = 25
+CLASS.payLimit = 250
+CLASS.payTimer = 1800
+CLASS.limit = 5
+CLASS.health = 120
+CLASS.armor = 25
+CLASS.scale = 1
+CLASS.runSpeed = 1.1
+CLASS.runSpeedMultiplier = true
+CLASS.walkSpeed = 1
+CLASS.walkSpeedMultiplier = true
+CLASS.jumpPower = 200
+CLASS.jumpPowerMultiplier = false
+CLASS.logo = "materials/example/eng_logo.png"
+CLASS.skin = 0
+CLASS.subMaterials = {
+    "models/example/custom_cloth", -- sub-material 0
+    "models/example/custom_armor" -- sub-material 1
+}
+CLASS.bodyGroups = {
+    {id = 1, value = 1},
+    {id = 2, value = 2}
+}
+CLASS.model = {
+    "models/player/Group03/male_07.mdl",
+    "models/player/Group03/female_02.mdl"
+}
+CLASS.requirements = "Flag V"
+CLASS.isWhitelisted = false
+CLASS.uniqueID = "engineer"
+CLASS.index = CLASS_ENGINEER
+CLASS.bloodcolor = BLOOD_COLOR_RED
+CLASS.commands = {
+    plytransfer = true
+}
+```
+
+
 
