@@ -305,7 +305,7 @@ end
 
 **Description:**
 
-Filesystem path where the module is located.
+Relative directory of the module within the gamemode or add-on. Useful when including other files from this module.
 
 **Example Usage:**
 
@@ -323,7 +323,7 @@ print(MODULE.folder)
 
 **Description:**
 
-Absolute path to the module’s root directory.
+Full filesystem path to the module's directory. Usually set automatically by the loader.
 
 **Example Usage:**
 
@@ -351,3 +351,38 @@ print(MODULE.uniqueID)
 
 ---
 
+### Example `module.lua`
+
+A complete example showing common fields in use:
+
+```lua
+-- example/modules/myfeature/module.lua
+MODULE.name = "My Feature"
+MODULE.author = "76561198012345678"
+MODULE.discord = "@example"
+MODULE.version = "1.0"
+MODULE.desc = "Adds an example feature"
+
+MODULE.enabled = true
+MODULE.Public = true
+
+MODULE.WorkshopContent = {
+    "1234567890"
+}
+
+MODULE.CAMIPrivileges = {
+    { Name = "My Feature - Use", MinAccess = "admin" }
+}
+
+MODULE.Dependencies = {
+    { File = "hooks.lua", Realm = "server" },
+    { Folder = "libraries", Realm = "shared" }
+}
+
+function MODULE:ModuleLoaded()
+    print("My Feature loaded!")
+end
+```
+
+
+---
