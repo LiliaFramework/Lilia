@@ -34,18 +34,28 @@ function SWEP:DrawHUD()
     local information = {}
     if IsValid(target) then
         if not target:IsPlayer() then
-            if target.GetCreator and IsValid(target:GetCreator()) then table.Add(information, {"Entity Class: " .. target:GetClass(), "Creator: " .. tostring(target:GetCreator())}) end
+            if target.GetCreator and IsValid(target:GetCreator()) then
+                table.Add(information, {L("entityClassESPLabel", target:GetClass()), L("entityCreatorESPLabel", tostring(target:GetCreator()))})
+            end
             if target:IsVehicle() and IsValid(target:GetDriver()) then target = target:GetDriver() end
         end
 
         if target:IsPlayer() then
-            information = {"Nickname: " .. target:Nick(), "Steam Name: " .. (target.SteamName and target:SteamName() or target:Name()), "Steam ID: " .. target:SteamID(), "SteamID64: " .. target:SteamID64(), "Health: " .. target:Health(), "Armor: " .. target:Armor(), "Usergroup: " .. target:GetUserGroup()}
+            information = {
+                L("nicknameLabel", target:Nick()),
+                L("steamNameLabel", target.SteamName and target:SteamName() or target:Name()),
+                L("steamIDLabel", target:SteamID()),
+                L("steamID64Label", target:SteamID64()),
+                L("healthLabel", target:Health()),
+                L("armorLabel", target:Armor()),
+                L("usergroupLabel", target:GetUserGroup())
+            }
             if target:getChar() then
                 local char = target:getChar()
                 local faction = lia.faction.indices[target:Team()]
-                table.Add(information, {"Character Name: " .. char:getName(), "Character Faction: " .. faction.name})
+                table.Add(information, {L("characterNameLabel", char:getName()), L("characterFactionLabel", faction.name)})
             else
-                table.insert(information, "No Loaded Character")
+                table.insert(information, L("noLoadedCharacter"))
             end
         end
     end

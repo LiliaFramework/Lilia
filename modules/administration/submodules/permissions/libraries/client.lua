@@ -24,13 +24,13 @@ function MODULE:HUDPaint()
         elseif ent.isItem and ent:isItem() and lia.option.get("espItems") then
             entityType = "Items"
             local itemTable = ent.getItemTable and ent:getItemTable()
-            label = "Item: " .. (itemTable and itemTable.name or "Invalid")
+            label = L("itemESPLabel", itemTable and itemTable.name or L("invalid"))
         elseif ent.isProp and ent:isProp() and lia.option.get("espProps") then
             entityType = "Props"
-            label = "Prop Model: " .. (ent:GetModel() or L("unknown"))
+            label = L("propModelESPLabel", ent:GetModel() or L("unknown"))
         elseif ESP_DrawnEntities[ent:GetClass()] and lia.option.get("espEntities") then
             entityType = "Entities"
-            label = "Entity Class: " .. (ent:GetClass() or L("unknown"))
+            label = L("entityClassESPLabel", ent:GetClass() or L("unknown"))
         end
 
         if not entityType then continue end
@@ -52,8 +52,8 @@ end
 
 concommand.Add("dev_GetCameraOrigin", function(client)
     if client:isStaff() then
-        lia.information("origin = (" .. math.ceil(client:GetPos().x) .. ", " .. math.ceil(client:GetPos().y) .. ", " .. math.ceil(client:GetPos().z) .. ")")
-        lia.information("angles = (" .. math.ceil(client:GetAngles().x) .. ", " .. math.ceil(client:GetAngles().y) .. ", " .. math.ceil(client:GetAngles().z) .. ")")
+        lia.information(L("originLabel", math.ceil(client:GetPos().x), math.ceil(client:GetPos().y), math.ceil(client:GetPos().z)))
+        lia.information(L("anglesLabel", math.ceil(client:GetAngles().x), math.ceil(client:GetAngles().y), math.ceil(client:GetAngles().z)))
     end
 end)
 

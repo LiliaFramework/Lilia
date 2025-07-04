@@ -236,7 +236,7 @@ if SERVER then
                 if IsValid(client) then
                     client:notifyLocalized("cmdNoExist")
                 else
-                    lia.information("Sorry, that command does not exist.")
+                    lia.information(L("cmdNoExist"))
                 end
             end
             return true

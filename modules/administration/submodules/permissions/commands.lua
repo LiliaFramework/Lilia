@@ -884,8 +884,7 @@ lia.command.add("chargiveitem", {
             if target ~= client then client:notifyLocalized("itemCreated") end
             lia.log.add(client, "chargiveItem", lia.item.list[uniqueID] and lia.item.list[uniqueID].name or uniqueID, target, "Command")
         else
-            target:notify(tostring(succ))
-            target:notify(tostring(err))
+            target:notifyLocalized(err or "unknownError")
         end
     end
 })
