@@ -6,7 +6,7 @@ This document lists hooks related to attribute setup events.
 
 ## Overview
 
-Attributes may define callback functions that run when their values are first initialized or when certain events occur, such as temporary boosts. These functions live on the `ATTRIBUTE` table of each attribute definition and are entirely optional. At the time of writing the only built‑in attribute hook is `OnSetup`.
+Attributes may define callback functions that run when a player's attribute table is being set up. These functions live on the `ATTRIBUTE` table of each attribute definition and are entirely optional. At the time of writing the only built‑in attribute hook is `OnSetup`, which is called whenever `lia.attribs.setup` runs.
 
 ---
 
@@ -14,7 +14,7 @@ Attributes may define callback functions that run when their values are first in
 
 **Description:**
 
-Called whenever the attribute is (re)initialized for a player—during character creation, when loading a character, and when attribute boosts are added or removed. Use it to apply any server‑side effects based on the attribute's current value.
+Invoked when `lia.attribs.setup(client)` initializes or refreshes a player's attributes. This occurs after a character spawns or whenever the function is executed manually. It does **not** run when attribute boosts are added or removed. Use it to apply any server‑side effects based on the attribute's current value.
 
 **Parameters:**
 
@@ -33,10 +33,9 @@ Called whenever the attribute is (re)initialized for a player—during character
 
 ```lua
 function ATTRIBUTE:OnSetup(client, value)
-    -- Example: scale max health directly with the attribute.
-    local base = 100
-    client:SetMaxHealth(base + value)
-    client:SetHealth(client:GetMaxHealth())
+    -- Give the player extra run speed based on this attribute.
+    local base = lia.config.get("RunSpeed")
+    client:SetRunSpeed(base + value * 5)
 end
 ```
 
