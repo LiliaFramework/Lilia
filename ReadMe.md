@@ -35,34 +35,34 @@
 
 <div align="center">
 
-  **Grid Inventory**  
+* **Grid Inventory**  
   Includes containers, vendors and item weight handling.
 
-  **Recognition System**  
+* **Recognition System**  
   Manage characters and factions with ease.
 
-  **Custom Menus**  
+* **Custom Menus**  
   Scoreboard, F1 menu and radial weapon selector.
 
-  **Administration Utilities**  
+* **Administration Utilities**  
   Logging, ticket management and warnings.
 
-  **Performance Libraries**  
+* **Performance Libraries**  
   Optimized database access, networking and caching.
 
-  **Door System**  
+* **Door System**  
   Ownable doors with key-lock functionality.
 
-  **Third-Person Camera**  
+* **Third-Person Camera**  
   Toggleable, with adjustable view settings.
 
-  **Team & Spawn Management**  
+* **Team & Spawn Management**  
   Flexible faction and class configurations.
 
-  **Interaction Menu**  
+* **Interaction Menu**  
   Quick-access common actions.
 
-  **Modular Extensions**  
+* **Modular Extensions**  
   Hot-reloadable modules for seamless extension.
 
 </div>
