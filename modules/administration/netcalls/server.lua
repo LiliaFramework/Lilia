@@ -1,4 +1,7 @@
-﻿netstream.Hook("cfgSet", function(client, key, name, value)
+net.Receive("cfgSet", function(_, client)
+    local key = net.ReadString()
+    local name = net.ReadString()
+    local value = net.ReadType()
     if type(lia.config.stored[key].default) == type(value) and hook.Run("CanPlayerModifyConfig", client, key) ~= false then
         local oldValue = lia.config.stored[key].value
         lia.config.set(key, value)

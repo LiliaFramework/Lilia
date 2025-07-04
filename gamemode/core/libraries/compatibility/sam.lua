@@ -161,7 +161,11 @@ function sam.player.send_message(client, msg, tbl)
             local result = sam.format_message(msg, tbl)
             sam.print(unpack(result, 1, result.__cnt))
         else
-            return sam.netstream.Start(client, "send_message", msg, tbl)
+            net.Start("send_message")
+            net.WriteString(msg)
+            net.WriteTable(tbl)
+            net.Send(client)
+            return
         end
     else
         if not CanReadNotifications(LocalPlayer()) then return end

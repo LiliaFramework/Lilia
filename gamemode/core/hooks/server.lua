@@ -1,4 +1,4 @@
-﻿local GM = GM or GAMEMODE
+local GM = GM or GAMEMODE
 function GM:CharPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
@@ -414,7 +414,11 @@ function GM:PlayerInitialSpawn(client)
         if not IsValid(client) then return end
         local address = client:IPAddress()
         client:setLiliaData("lastIP", address)
-        netstream.Start(client, "liaDataSync", data, client.firstJoin, client.lastJoin)
+        net.Start("liaDataSync")
+        net.WriteTable(data)
+        net.WriteType(client.firstJoin)
+        net.WriteType(client.lastJoin)
+        net.Send(client)
         for _, v in pairs(lia.item.instances) do
             if v.entity and v.invID == 0 then v:sync(client) end
         end

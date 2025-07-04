@@ -104,7 +104,16 @@ if SERVER then
                 if #receivers == 0 then return end
             end
 
-            netstream.Start(receivers, "cMsg", speaker, chatType, hook.Run("PlayerMessageSend", speaker, chatType, text, anonymous, receivers) or text, anonymous)
+            net.Start("cMsg")
+            net.WriteEntity(speaker)
+            net.WriteString(chatType)
+            net.WriteString(hook.Run("PlayerMessageSend", speaker, chatType, text, anonymous, receivers) or text)
+            net.WriteBool(anonymous)
+            if istable(receivers) then
+                net.Send(receivers)
+            else
+                net.Broadcast()
+            end
         end
     end
 end

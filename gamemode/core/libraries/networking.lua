@@ -19,7 +19,14 @@ if SERVER then
         local oldValue = getNetVar(key)
         if oldValue == value then return end
         lia.net.globals[key] = value
-        netstream.Start(receiver, "gVar", key, value)
+        net.Start("gVar")
+        net.WriteString(key)
+        net.WriteType(value)
+        if receiver then
+            net.Send(receiver)
+        else
+            net.Broadcast()
+        end
         hook.Run("NetVarChanged", nil, key, oldValue, value)
     end
 

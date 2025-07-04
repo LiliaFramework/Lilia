@@ -1,4 +1,4 @@
-﻿local GM = GM or GAMEMODE
+local GM = GM or GAMEMODE
 local RealTime, FrameTime = RealTime, FrameTime
 local mathApproach = math.Approach
 local IsValid = IsValid
@@ -343,7 +343,12 @@ function GM:ItemShowEntityMenu(entity)
     local itemTable = entity:getItemTable()
     if not itemTable then return end
     if input.IsShiftDown() then
-        if IsValid(entity) then netstream.Start("invAct", "take", entity) end
+        if IsValid(entity) then
+            net.Start("invAct")
+            net.WriteString("take")
+            net.WriteEntity(entity)
+            net.SendToServer()
+        end
         return
     end
 

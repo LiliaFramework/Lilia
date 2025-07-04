@@ -717,7 +717,19 @@ function PANEL:OnRemove()
 end
 
 function PANEL:updateVendor(key, value)
-    netstream.Start("vendorEdit", key, value)
+    net.Start("VendorEdit")
+    net.WriteString(key)
+    if value ~= nil then
+        if istable(value) then
+            net.WriteUInt(#value, 16)
+            for _, v in ipairs(value) do
+                net.WriteType(v)
+            end
+        else
+            net.WriteType(value)
+        end
+    end
+    net.SendToServer()
 end
 
 function PANEL:OnFocusChanged(gained)

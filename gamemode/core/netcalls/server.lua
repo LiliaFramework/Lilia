@@ -1,4 +1,4 @@
-﻿net.Receive("StringRequest", function(_, client)
+net.Receive("StringRequest", function(_, client)
     local id = net.ReadUInt(32)
     local value = net.ReadString()
     if client.liaStrReqs and client.liaStrReqs[id] then
@@ -40,7 +40,11 @@ net.Receive("liaTransferItem", function(_, client)
     hook.Run("HandleItemTransferRequest", client, itemID, x, y, invID)
 end)
 
-netstream.Hook("invAct", function(client, action, item, _, data)
+net.Receive("invAct", function(_, client)
+    local action = net.ReadString()
+    local item = net.ReadType()
+    local data = net.ReadType()
+    local character = client:getChar()
     local character = client:getChar()
     if not character then return end
     local entity
