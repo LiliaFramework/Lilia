@@ -515,7 +515,7 @@ local function genInsertValues(value, dbTable)
     local values = {}
     for k, v in pairs(value) do
         keys[#keys + 1] = k
-        values[#keys] = k:find("steamID") and v or lia.db.convertDataType(v)
+        values[#keys] = k:find("steamID64") and v or lia.db.convertDataType(v)
     end
     return query .. table.concat(keys, ", ") .. ") VALUES (" .. table.concat(values, ", ") .. ")"
 end
@@ -523,7 +523,7 @@ end
 local function genUpdateList(value)
     local changes = {}
     for k, v in pairs(value) do
-        changes[#changes + 1] = k .. " = " .. (k:find("steamID") and v or lia.db.convertDataType(v))
+        changes[#changes + 1] = k .. " = " .. (k:find("steamID64") and v or lia.db.convertDataType(v))
     end
     return table.concat(changes, ", ")
 end
