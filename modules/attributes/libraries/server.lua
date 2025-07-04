@@ -1,7 +1,6 @@
 function MODULE:PostPlayerLoadout(client)
     local char = client:getChar()
     if not char then return end
-
     lia.attribs.setup(client)
     local inv = char:getInv()
     if inv then
@@ -16,7 +15,6 @@ function MODULE:PostPlayerLoadout(client)
     end
 
     client:setLocalVar("stamina", char:getData("stamina", char:getMaxStamina()))
-
     local uniqueID = "liaStam" .. client:SteamID()
     timer.Create(uniqueID, 0.25, 0, function()
         if not IsValid(client) then
@@ -34,9 +32,7 @@ end
 
 function MODULE:CharPreSave(character)
     local client = character:getPlayer()
-    if IsValid(client) then
-        character:setData("stamina", client:getLocalVar("stamina", 0))
-    end
+    if IsValid(client) then character:setData("stamina", client:getLocalVar("stamina", 0)) end
 end
 
 function MODULE:KeyRelease(client, key)
@@ -64,11 +60,7 @@ function MODULE:KeyPress(client, key)
 end
 
 function MODULE:PlayerLoadedChar(client, character)
-    timer.Simple(0.25, function()
-        if IsValid(client) then
-            client:setLocalVar("stamina", character:getData("stamina", character:getMaxStamina()))
-        end
-    end)
+    timer.Simple(0.25, function() if IsValid(client) then client:setLocalVar("stamina", character:getData("stamina", character:getMaxStamina())) end end)
 end
 
 function MODULE:PlayerStaminaLost(client)
@@ -92,11 +84,6 @@ function MODULE:PlayerStaminaLost(client)
         client:setNetVar("brth", nil)
         timer.Remove("liaStamBreathCheck" .. client:SteamID64())
     end)
-end
-
-function MODULE:OnCharAttribBoosted(client, character, attribID)
-    local attribute = lia.attribs.list[attribID]
-    if attribute and isfunction(attribute.OnSetup) then attribute:OnSetup(client, character:getAttrib(attribID, 0)) end
 end
 
 net.Receive("ChangeAttribute", function(_, client)
