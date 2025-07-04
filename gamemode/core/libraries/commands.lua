@@ -27,7 +27,7 @@ function lia.command.add(command, data)
         if hasAccess then
             return onRun(client, arguments)
         else
-            return "noPerm"
+            return "@noPerm"
         end
     end
 

@@ -4,10 +4,10 @@ net.Receive("ViewClaims", function()
     local steamid = net.ReadString()
     if steamid and steamid ~= "" and steamid ~= " " then
         local v = tbl[steamid]
-        print(v.name .. " - " .. v.claims .. " - last claim " .. string.NiceTime(os.time() - v.lastclaim) .. " ago")
+        print(L("claimRecordLast", v.name, v.claims, string.NiceTime(os.time() - v.lastclaim)))
     else
         for _, v in pairs(tbl) do
-            print(v.name .. " - " .. v.claims)
+            print(L("claimRecord", v.name, v.claims))
         end
     end
 end)
@@ -25,7 +25,7 @@ net.Receive("TicketSystemClaim", function()
     for _, v in pairs(TicketFrames) do
         if v.idiot == requester then
             local titl = v:GetChildren()[4]
-            titl:SetText(titl:GetText() .. " - Claimed by " .. pl:Nick())
+            titl:SetText(titl:GetText() .. " - " .. L("claimedBy") .. " " .. pl:Nick())
             if pl == LocalPlayer() then
                 function v:Paint(w, h)
                     draw.RoundedBox(0, 0, 0, w, h, Color(10, 10, 10, 230))
