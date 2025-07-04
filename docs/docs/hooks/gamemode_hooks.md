@@ -3189,7 +3189,7 @@ end)
 
 **Description:**
 
-Server receives a request to move an item. Modules can validate or modify the transfer.
+Called when the server receives a request to move an item to another inventory. Add-ons may validate the request, change the destination or return nil to block it.
 
 **Parameters:**
 
@@ -3199,13 +3199,13 @@ Server receives a request to move an item. Modules can validate or modify the tr
 * itemID (number) – Item identifier.
 
 
-* x (number) – X position.
+* x (number) – X grid position.
 
 
-* y (number) – Y position.
+* y (number) – Y grid position.
 
 
-* inventoryID (number|string) – Target inventory ID.
+* inventoryID (number|string) – Target inventory identifier.
 
 
 **Realm:**
@@ -3215,14 +3215,14 @@ Server receives a request to move an item. Modules can validate or modify the tr
 
 **Returns:**
 
-* None
+* DPromise|nil – Promise for the transfer or nil to block.
 
 
 **Example Usage:**
 
 ```lua
 -- Prints a message when HandleItemTransferRequest is triggered
-hook.Add("HandleItemTransferRequest", "LogMove", function(ply, itemID, x, y)
+hook.Add("HandleItemTransferRequest", "LogMove", function(ply, itemID, x, y, invID)
     print(ply, "moved item", itemID, "to", x, y)
 end)
 ```
@@ -4670,7 +4670,7 @@ end)
 
 **Description:**
 
-Runs after an item successfully moves between inventories.
+Called when an item has successfully moved between inventories. The context table provides the player, item and both inventories involved.
 
 **Parameters:**
 
@@ -8910,6 +8910,36 @@ end)
 
 ---
 
+### CanInviteToFaction
+
+**Description:**
+
+Checks if `client` can invite `target` to the same faction. Return false to deny the invitation.
+
+**Parameters:**
+
+* client (Player) – Player sending the invitation.
+
+* target (Player) – Player being invited.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* boolean|nil – false to block.
+
+**Example Usage:**
+
+```lua
+-- Prevent regular members from inviting players
+hook.Add("CanInviteToFaction", "OfficerOnlyInvites", function(ply, target)
+    return ply:hasFlags("Z")
+end)
+```
+
+---
 ### CanPlayerUseChar
 
 **Description:**
@@ -9548,8 +9578,7 @@ end)
 
 **Description:**
 
-Runs after a character has been loaded and set up for a player.
-This hook also runs client-side when the server loads the character.
+Called after a player finishes loading a character. The client receives the same event when the server notifies it of the character load. `previousChar` is only supplied when the player switched from another character.
 
 **Parameters:**
 
@@ -9587,8 +9616,7 @@ end)
 
 **Description:**
 
-Fired right before a player switches to a new character.
-This hook also runs client-side when the server loads the character.
+Runs just before a new character becomes active for the player. The client side receives the same event when the server begins loading the character.
 
 **Parameters:**
 
@@ -9626,8 +9654,7 @@ end)
 
 **Description:**
 
-Called after PlayerLoadedChar to allow post-load operations.
-This hook also runs client-side when the server loads the character.
+Runs after `PlayerLoadedChar` so modules can perform additional setup. The client receives the same event once the server notifies it.
 
 **Parameters:**
 
@@ -9902,4 +9929,5 @@ hook.Add("WarningRemoved", "LogRemoval", function(admin, ply, warn, index)
     print(admin:Name() .. " removed warning #" .. index .. " from " .. ply:Name())
 end)
 ```
+
 
