@@ -84,27 +84,27 @@ AddAction(L("changeToYell"), {
 
 local function canRecog(ply)
     local ok = lia.config.get("RecognitionEnabled", true) and ply:getChar() and ply:Alive()
-    print(ply:Nick(), "canRecog:", ok)
+    print(L("debugCanRecog", ply:Nick(), tostring(ok)))
     return ok
 end
 
 local function promptName(ply, cb)
-    print(ply:Nick(), "promptName called")
+    print(L("debugPromptName", ply:Nick()))
     if lia.config.get("FakeNamesEnabled", false) then
         ply:requestString(L("recogFakeNamePrompt"), "", function(nm)
             nm = (nm or ""):Trim()
             local finalName = nm == "" and ply:getChar():getName() or nm
-            print(ply:Nick(), "entered fake name:", finalName)
+            print(L("debugEnteredFakeName", ply:Nick(), finalName))
             cb(finalName)
         end, ply:getChar():getName())
     else
-        print(ply:Nick(), "using real name")
+        print(L("debugUsingRealName", ply:Nick()))
         cb()
     end
 end
 
 local function CharRecognize(ply, lvl, nm)
-    print(ply:Nick(), "CharRecognize called with level", lvl, "and name", nm or "nil")
+    print(L("debugCharRecognize", ply:Nick(), tostring(lvl), nm or "nil"))
     local tgt = {}
     if isnumber(lvl) then
         local clsKey = lvl == 3 and "ic" or lvl == 4 and "y" or "w"
@@ -115,16 +115,16 @@ local function CharRecognize(ply, lvl, nm)
         end
     end
 
-    print(ply:Nick(), "found", #tgt, "targets to recognize")
+    print(L("debugTargetsFound", ply:Nick(), #tgt))
     if #tgt == 0 then return end
     local count = 0
     for _, v in ipairs(tgt) do
         local success = v:getChar():recognize(ply:getChar(), nm)
         if success then
             count = count + 1
-            print(ply:Nick(), "recognized", v:Nick())
+            print(L("debugRecognized", ply:Nick(), v:Nick()))
         else
-            print(ply:Nick(), "failed to recognize", v:Nick())
+            print(L("debugFailedRecognize", ply:Nick(), v:Nick()))
         end
     end
 
@@ -135,14 +135,14 @@ local function CharRecognize(ply, lvl, nm)
 
     net.Start("rgnDone")
     net.Send(ply)
-    print(ply:Nick(), "recognition complete, total successes:", count)
+    print(L("debugRecognitionComplete", ply:Nick(), count))
     hook.Run("OnCharRecognized", ply)
 end
 
 local function doRange(ply, lvl)
-    print(ply:Nick(), "doRange called with level", lvl)
+    print(L("debugDoRange", ply:Nick(), tostring(lvl)))
     promptName(ply, function(nm)
-        print(ply:Nick(), "doRange callback with name", nm or "nil")
+        print(L("debugDoRangeCallback", ply:Nick(), nm or "nil"))
         CharRecognize(ply, lvl, nm)
     end)
 end
@@ -151,7 +151,7 @@ AddAction(L("recognizeInWhisperRange"), {
     shouldShow = function(ply) return canRecog(ply) end,
     onRun = function(ply)
         if CLIENT then return end
-        print(ply:Nick(), "action recognizeInWhisperRange triggered")
+        print(L("debugActionWhisper", ply:Nick()))
         doRange(ply, 1)
     end,
     runServer = true
@@ -161,7 +161,7 @@ AddAction(L("recognizeInTalkRange"), {
     shouldShow = function(ply) return canRecog(ply) end,
     onRun = function(ply)
         if CLIENT then return end
-        print(ply:Nick(), "action recognizeInTalkRange triggered")
+        print(L("debugActionTalk", ply:Nick()))
         doRange(ply, 3)
     end,
     runServer = true
@@ -171,7 +171,7 @@ AddAction(L("recognizeInYellRange"), {
     shouldShow = function(ply) return canRecog(ply) end,
     onRun = function(ply)
         if CLIENT then return end
-        print(ply:Nick(), "action recognizeInYellRange triggered")
+        print(L("debugActionYell", ply:Nick()))
         doRange(ply, 4)
     end,
     runServer = true
@@ -187,17 +187,17 @@ AddInteraction(L("recognizeOption"), {
     end,
     onRun = function(ply, tgt)
         if CLIENT then return end
-        print(ply:Nick(), "interaction recognizeOption triggered on", tgt:Nick())
+        print(L("debugInteractionTriggered", ply:Nick(), tgt:Nick()))
         promptName(ply, function(nm)
-            print(ply:Nick(), "interaction callback with name", nm or "nil")
+            print(L("debugInteractionCallback", ply:Nick(), nm or "nil"))
             if tgt:getChar():recognize(ply:getChar(), nm) then
                 lia.log.add(ply, "charRecognize", tgt:getChar():getID(), nm)
                 net.Start("rgnDone")
                 net.Send(ply)
                 hook.Run("OnCharRecognized", ply)
-                print(ply:Nick(), "interaction recognition succeeded on", tgt:Nick())
+                print(L("debugInteractionSuccess", ply:Nick(), tgt:Nick()))
             else
-                print(ply:Nick(), "interaction recognition failed on", tgt:Nick())
+                print(L("debugInteractionFail", ply:Nick(), tgt:Nick()))
             end
         end)
     end
