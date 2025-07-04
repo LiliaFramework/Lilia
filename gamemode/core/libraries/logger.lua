@@ -91,7 +91,7 @@ if SERVER then
         if IsValid(client) then
             local char = client:getChar()
             charID = char and char:getID() or nil
-            steamID = client:SteamID64()
+            steamID = client:SteamID()
         end
 
         lia.db.insertTable({
@@ -118,7 +118,7 @@ if SERVER then
             for line in data:gmatch("[^\r\n]+") do
                 local ts, msg = line:match("^%[([^%]]+)%]%s*(.+)")
                 if ts and msg then
-                    local steamID = msg:match("%[(%d+)%]")
+                    local steamID = msg:match("%[(STEAM_[0-5]:[01]:%d+)%]") or msg:match("%[(%d+)%]")
                     local charID = msg:match("CharID:%s*(%d+)")
                     entries[#entries + 1] = {
                         _timestamp = ts,
