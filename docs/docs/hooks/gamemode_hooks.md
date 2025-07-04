@@ -797,9 +797,11 @@ Lets modules insert additional information on the main menu info panel. Allows m
 **Example Usage:**
 
 ```lua
--- Adds the character's faction to the menu info panel.
+-- Adds the character's faction name to the info panel.
 hook.Add("LoadMainMenuInformation", "AddFactionInfo", function(info, character)
-    info.faction = character:getFaction() or "Citizen"
+    local fac = lia.faction.indices[character:getFaction()]
+    local facName = fac and fac.name or "Citizen"
+    info[#info + 1] = L("faction") .. ": " .. facName
 end)
 ```
 
@@ -850,7 +852,7 @@ Lets you edit the clientside model used in the main menu. Allows adjustments to 
 * entity (Entity) – Model entity.
 
 
-* character (Character) – Character data.
+* character (Character|nil) – Character data if available.
 
 
 **Realm:**
@@ -866,9 +868,13 @@ Lets you edit the clientside model used in the main menu. Allows adjustments to 
 **Example Usage:**
 
 ```lua
--- Changes a bodygroup on the preview model.
+-- Apply appearance tweaks to the menu model.
 hook.Add("ModifyCharacterModel", "ApplyBodygroup", function(ent, character)
+    -- bodygroup changes work even if 'character' is nil
     ent:SetBodygroup(2, 1)
+    if character then
+        ent:SetSkin(character:getData("skin", 0))
+    end
 end)
 ```
 
@@ -900,7 +906,8 @@ Add or reorder steps in the character creation flow. Lets modules alter the char
 ```lua
 -- Adds a custom "background" step to the character creator.
 hook.Add("ConfigureCharacterCreationSteps", "InsertBackground", function(panel)
-    panel:AddStep("background")
+    local step = vgui.Create("liaCharacterBackground")
+    panel:addStep(step, 99)
 end)
 ```
 
