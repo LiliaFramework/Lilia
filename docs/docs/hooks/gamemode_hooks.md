@@ -3522,77 +3522,6 @@ hook.Add("getCharMaxStamina", "Double", function(char)
 end)
 ```
 
----
-
-### AdjustStaminaOffsetRunning
-
-**Description:**
-
-Alters the stamina offset applied each tick while sprinting. Return a new cost to modify how quickly stamina drains when running.
-
-**Parameters:**
-
-* client (Player) – Player that is sprinting.
-
-
-* runCost (number) – Proposed stamina cost.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* number – Modified stamina cost.
-
-
-**Example Usage:**
-
-```lua
--- Prints a message when AdjustStaminaOffsetRunning is triggered
-hook.Add("AdjustStaminaOffsetRunning", "EnduranceBonus", function(ply, cost)
-    return cost + ply:getChar():getAttrib("stamina", 0) * -0.01
-end)
-```
-
----
-
-### AdjustStaminaRegeneration
-
-**Description:**
-
-Allows changing how quickly stamina regenerates when not sprinting. Return a new amount to modify regeneration speed.
-
-**Parameters:**
-
-* client (Player) – Player recovering stamina.
-
-
-* regen (number) – Default regeneration per tick.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* number – Modified regeneration amount.
-
-
-**Example Usage:**
-
-```lua
--- Prints a message when AdjustStaminaRegeneration is triggered
-hook.Add("AdjustStaminaRegeneration", "RestAreaBoost", function(ply, amount)
-    if ply:isInSafeZone() then
-        return amount * 2
-    end
-end)
-```
 
 ---
 
@@ -9896,6 +9825,74 @@ Triggered when a shared option value is changed.
 -- Prints a message when liaOptionReceived is triggered
 hook.Add("liaOptionReceived", "PrintOptionChange", function(_, k, v)
     print("Option", k, "set to", v)
+end)
+```
+
+---
+
+### WarningIssued
+
+**Description:**
+
+Fired when an administrator issues a warning to a player.
+
+**Parameters:**
+
+* admin (Player) – Staff member giving the warning.
+
+* target (Player) – Player receiving the warning.
+
+* reason (string) – Text reason for the warning.
+
+* index (number) – Current warning count on the player.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None
+
+**Example Usage:**
+
+```lua
+hook.Add("WarningIssued", "NotifyWarning", function(admin, ply, reason)
+    ply:ChatPrint(admin:Name() .. " warned you: " .. reason)
+end)
+```
+
+---
+
+### WarningRemoved
+
+**Description:**
+
+Fired when an administrator removes one of a player's warnings.
+
+**Parameters:**
+
+* admin (Player) – Staff member removing the warning.
+
+* target (Player) – Player that had the warning.
+
+* warning (table) – Table containing the warning data.
+
+* index (number) – Index of the removed warning.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None
+
+**Example Usage:**
+
+```lua
+hook.Add("WarningRemoved", "LogRemoval", function(admin, ply, warn, index)
+    print(admin:Name() .. " removed warning #" .. index .. " from " .. ply:Name())
 end)
 ```
 
