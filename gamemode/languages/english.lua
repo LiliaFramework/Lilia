@@ -926,4 +926,11 @@ LANGUAGE = {
     noLoadedCharacter = "No Loaded Character",
     originLabel = "origin = (%s, %s, %s)",
     anglesLabel = "angles = (%s, %s, %s)",
+    interactionMenu = "Interaction Menu",
+    playerInteractions = "Player Interactions",
+    personalActions = "Personal Actions",
+    actionsMenu = "Actions Menu",
+    inventoryTitle = "%s's Inventory",
+    searchKeybinds = "Search keybinds...",
+    searchConfigs = "Search configurations...",
 }

@@ -309,7 +309,7 @@ net.Receive("OpenInvMenu", function()
     local targetInv = lia.inventory.instances[index]
     local myInv = LocalPlayer():getChar():getInv()
     local inventoryDerma = targetInv:show()
-    inventoryDerma:SetTitle(target:getChar():getName() .. "'s Inventory")
+    inventoryDerma:SetTitle(L("inventoryTitle", target:getChar():getName()))
     inventoryDerma:MakePopup()
     inventoryDerma:ShowCloseButton(true)
     local myInventoryDerma = myInv:show()
