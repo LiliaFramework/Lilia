@@ -470,7 +470,7 @@ Prints a simple representation of the item to the console.
 
 **Realm:**
 
-* Server
+* Shared
 
 
 **Returns:**
@@ -500,7 +500,7 @@ Debug helper that prints all stored item data.
 
 **Realm:**
 
-* Server
+* Shared
 
 
 **Returns:**
@@ -910,7 +910,7 @@ end)
 
 ---
 
-### onInstanced()
+### onInstanced(invID, x, y, item)
 
 **Description:**
 
@@ -918,7 +918,10 @@ Called when a new instance of this item is created.
 
 **Parameters:**
 
-* None
+* invID (number) – Inventory ID the item belongs to or `NULL` when not placed in one.
+* x (number) – Grid X coordinate where the item spawned.
+* y (number) – Grid Y coordinate where the item spawned.
+* item (Item) – The newly created item instance.
 
 
 **Realm:**
@@ -934,8 +937,8 @@ Called when a new instance of this item is created.
 **Example Usage:**
 
 ```lua
-function ITEM:onInstanced()
-    print(self:getName() .. " instance created")
+function ITEM:onInstanced(invID, x, y, newItem)
+    print(string.format("Item %s placed at %d,%d in inv %s", newItem.uniqueID, x, y, tostring(invID)))
 end
 ```
 
@@ -949,7 +952,7 @@ Runs after this item is networked to `recipient`.
 
 **Parameters:**
 
-* recipient (Player|None) – Who received the data.
+* recipient (Player|nil) – Player who received the data, or nil when broadcast.
 
 
 **Realm:**
@@ -1003,7 +1006,7 @@ end
 
 ---
 
-### onRestored()
+### onRestored(inventory)
 
 **Description:**
 
@@ -1011,7 +1014,7 @@ Called when the item is restored from the database.
 
 **Parameters:**
 
-* None
+* inventory (Inventory|nil) – Inventory the item belongs to when loaded, if any.
 
 
 **Realm:**
@@ -1027,8 +1030,11 @@ Called when the item is restored from the database.
 **Example Usage:**
 
 ```lua
-function ITEM:onRestored()
+function ITEM:onRestored(inv)
     print(self:getName() .. " loaded from the database")
+    if inv then
+        print("Loaded from inventory", inv.id)
+    end
 end
 ```
 
