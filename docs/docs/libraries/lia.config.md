@@ -200,6 +200,7 @@ Retrieves the current value of a config, or returns a default if neither value n
 **Description:**
 
 Loads the config data from storage (server-side) and updates the stored config values.
+Any configuration keys missing from the database will be inserted with their default values when the server starts.
 
 Triggers "InitializedConfig" hook once done.
 
