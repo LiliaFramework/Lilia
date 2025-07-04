@@ -6,7 +6,7 @@ This page lists helper functions for working with colors.
 
 ## Overview
 
-The color library centralizes color utilities used throughout the UI. You can register reusable colors, adjust their channels to create variants, and fetch the main palette from the configuration.
+The color library centralizes color utilities used throughout the UI. You can register reusable colors, adjust their channels to create variants, and fetch the main palette from the configuration. Many common color names are pre-registered and can be used with the global `Color()` function. Custom registrations are stored in `lia.color.stored`.
 
 ---
 
@@ -14,14 +14,14 @@ The color library centralizes color utilities used throughout the UI. You can re
 
 **Description:**
 
-Registers a named color for later lookup.
+Registers a named color for later lookup or use with `Color(name)`.
 
 **Parameters:**
 
 * name (string) – Key used to reference the color.
 
 
-* color (Color) – Color object or table.
+* color (Color|table) – Color object or `{r, g, b}` table.
 
 
 **Realm:**
@@ -37,8 +37,9 @@ Registers a named color for later lookup.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.color.register
-    lia.color.register("myRed", Color(255,0,0))
+    -- Register a custom purple shade and fetch it later
+    lia.color.register("myPurple", {128, 0, 180})
+    local c = Color("myPurple")
 ```
 
 ---
@@ -47,11 +48,11 @@ Registers a named color for later lookup.
 
 **Description:**
 
-Creates a new color by applying offsets to each channel.
+Returns a new Color based on the input color with the given channel offsets.
 
 **Parameters:**
 
-* color (Color) – Base color.
+* color (Color|table) – Base color to modify.
 
 
 * rOffset (number) – Red channel delta.
@@ -63,7 +64,7 @@ Creates a new color by applying offsets to each channel.
 * bOffset (number) – Blue channel delta.
 
 
-* aOffset (number) – Alpha channel delta (optional).
+* aOffset (number|nil) – Alpha channel delta (optional).
 
 
 **Realm:**
@@ -77,10 +78,10 @@ Creates a new color by applying offsets to each channel.
 
 
 **Example Usage:**
-
 ```lua
-    -- This snippet demonstrates a common usage of lia.color.Adjust
-    local lighter = lia.color.Adjust(Color(50,50,50), 10,10,10)
+
+    -- Darken the default red by 30 points
+    local darkRed = lia.color.Adjust(Color("red"), -30, 0, 0)
 ```
 
 ---
@@ -89,7 +90,7 @@ Creates a new color by applying offsets to each channel.
 
 **Description:**
 
-Returns a table of commonly used UI colors derived from the base config color.
+Builds a UI palette derived from the config's base color.
 
 **Parameters:**
 
@@ -103,12 +104,14 @@ Returns a table of commonly used UI colors derived from the base config color.
 
 **Returns:**
 
-* table – Mapping of UI color keys to Color objects.
+* table – Contains `background`, `sidebar`, `accent`, `text`, `hover`, `border` and `highlight` colors.
 
 
 **Example Usage:**
-
 ```lua
-    -- This snippet demonstrates a common usage of lia.color.ReturnMainAdjustedColors
-    local uiColors = lia.color.ReturnMainAdjustedColors()
+
+    local colors = lia.color.ReturnMainAdjustedColors()
+    surface.SetDrawColor(colors.background)
 ```
+
+
