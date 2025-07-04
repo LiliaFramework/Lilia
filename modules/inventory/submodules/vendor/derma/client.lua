@@ -76,7 +76,7 @@ function PANEL:Init()
     self.left:SetDraggable(false)
     self.left.Paint = function()
         if not IsValid(liaVendorEnt) then return end
-        local name = liaVendorEnt:getNetVar("name", "Jane Doe")
+        local name = liaVendorEnt:getNetVar("name", L("vendorDefaultName"))
         local scale = liaVendorEnt:getNetVar("scale", 0.5)
         local money = liaVendorEnt:getMoney() and lia.currency.get(liaVendorEnt:getMoney()) or "∞"
         local count = table.Count(self.items.vendor)
@@ -92,7 +92,7 @@ function PANEL:Init()
         draw.DrawText(L("vendorSellScale"), "liaSmallFont", sw * 0.1, sh * 0.07, color_white, TEXT_ALIGN_LEFT)
         draw.DrawText(math.ceil(scale * 100) .. "%", "liaSmallFont", sw * 0.2, sh * 0.07, color_white, TEXT_ALIGN_RIGHT)
         draw.DrawText(L("vendorItemCount"), "liaSmallFont", sw * 0.1, sh * 0.09, color_white, TEXT_ALIGN_LEFT)
-        local txt = count == 0 and "No Items" or count == 1 and "1 Item" or count .. " Items"
+        local txt = count == 0 and L("vendorNoItems") or count == 1 and L("vendorOneItem") or L("vendorItems", count)
         draw.DrawText(txt, "liaSmallFont", sw * 0.2, sh * 0.09, color_white, TEXT_ALIGN_RIGHT)
     end
 
@@ -118,7 +118,7 @@ function PANEL:Init()
         draw.DrawText(faction, "liaSmallFont", sw * 0.201, sh * 0.05, color_white, TEXT_ALIGN_RIGHT)
         local class = char:getClass()
         local invCount = char:getInv():getItemCount()
-        local disp = invCount == 0 and "No Items" or invCount == 1 and "1 Item" or invCount .. " Items"
+        local disp = invCount == 0 and L("vendorNoItems") or invCount == 1 and L("vendorOneItem") or L("vendorItems", invCount)
         if lia.class.list[class] then
             draw.DrawText(L("class"), "liaSmallFont", sw * 0.085, sh * 0.07, color_white, TEXT_ALIGN_LEFT)
             draw.DrawText(lia.class.list[class].name, "liaSmallFont", sw * 0.2, sh * 0.07, color_white, TEXT_ALIGN_RIGHT)
@@ -329,7 +329,7 @@ function PANEL:GetItemCategoryList()
     for id in pairs(data) do
         local itm = lia.item.list[id]
         if itm then
-            local cat = itm.category or "Misc"
+            local cat = itm.category or L("misc")
             out[cat:sub(1, 1):upper() .. cat:sub(2)] = true
         end
     end
@@ -351,7 +351,7 @@ function PANEL:applyCategoryFilter()
     if not istable(data) then data = liaVendorEnt:getNetVar("items", {}) end
     for id in SortedPairs(data) do
         local itm = lia.item.list[id]
-        local cat = itm and itm.category or "Misc"
+        local cat = itm and itm.category or L("misc")
         cat = cat:sub(1, 1):upper() .. cat:sub(2)
         if not self.currentCategory or self.currentCategory == L("vendorShowAll") or cat == self.currentCategory then
             local mode = liaVendorEnt:getTradeMode(id)
