@@ -7,16 +7,15 @@ This page details the class system functions.
 ## Overview
 
 The classes library loads Lua definitions that describe player classes. Classes act like temporary jobs within a faction. The library stores available classes, registers default attributes, and provides lookup functions by name or index.
+See [Class Fields](../definitions/class.md) for configurable `CLASS` properties and [Class Hooks](../hooks/class_hooks.md) for customization callbacks.
 
 ### lia.class.loadFromDir(directory)
 
 **Description:**
 
-Loads all class definitions from the given directory and stores them in lia.class.list.
-
+Loads all Lua files within the supplied directory. Each file should define a `CLASS` table inserted into `lia.class.list` with an automatic index.
 **Parameters:**
-
-* directory (string) – Folder path containing class Lua files.
+* directory (string) – Folder path containing class Lua files, typically "schema/classes" in a schema.
 
 
 **Realm:**
@@ -30,9 +29,8 @@ Loads all class definitions from the given directory and stores them in lia.clas
 
 
 **Example Usage:**
-
 ```lua
-    -- This snippet demonstrates a common usage of lia.class.loadFromDir
+    -- Example: load all classes for the schema
     lia.class.loadFromDir("schema/classes")
 ```
 
@@ -42,14 +40,14 @@ Loads all class definitions from the given directory and stores them in lia.clas
 
 **Description:**
 
-Determines if the given client may become the specified class.
+Checks faction, whitelist, and limit rules. It also runs the `CanPlayerJoinClass` gamemode hook and the class's `OnCanBe` method to determine if the client may join.
 
 **Parameters:**
 
 * client (Player) – Player attempting to join.
 
 
-* class (string|number) – Class identifier.
+* class (number) – Class index to join.
 
 
 **Realm:**
@@ -59,14 +57,16 @@ Determines if the given client may become the specified class.
 
 **Returns:**
 
-* boolean – False with a message if denied; default status when allowed.
+* boolean allowed, string? reason – Returns `false` and a message when denied. On success it returns the class's `isDefault` flag.
 
 
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.class.canBe
-    local allowed = lia.class.canBe(client, classID)
+    local canJoin, reason = lia.class.canBe(client, classID)
+    if not canJoin then
+        print(reason)
+    end
 ```
 
 ---
@@ -75,11 +75,11 @@ Determines if the given client may become the specified class.
 
 **Description:**
 
-Retrieves the class table associated with the given identifier.
+Retrieves the class table associated with the given numeric index.
 
 **Parameters:**
 
-* identifier (string|number) – Unique identifier for the class.
+* identifier (number) – Numeric index of the class.
 
 
 **Realm:**
@@ -95,8 +95,8 @@ Retrieves the class table associated with the given identifier.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.class.get
-    local classData = lia.class.get(1)
+    -- Retrieve the class table for the engineer class
+    local classData = lia.class.get(CLASS_ENGINEER)
 ```
 
 ---
@@ -105,11 +105,11 @@ Retrieves the class table associated with the given identifier.
 
 **Description:**
 
-Returns a table of players whose characters belong to the given class.
+Returns an array of players whose characters belong to the given class.
 
 **Parameters:**
 
-* class (string|number) – Class identifier.
+* class (number) – Class index to check.
 
 
 **Realm:**
@@ -124,9 +124,9 @@ Returns a table of players whose characters belong to the given class.
 
 **Example Usage:**
 
-```lua
-    -- This snippet demonstrates a common usage of lia.class.getPlayers
-    local players = lia.class.getPlayers(classID)
+    for _, ply in ipairs(lia.class.getPlayers(classID)) do
+        print(ply:Nick())
+    end
 ```
 
 ---
@@ -135,11 +135,11 @@ Returns a table of players whose characters belong to the given class.
 
 **Description:**
 
-Counts how many players belong to the given class.
+Counts the number of players currently in the specified class.
 
 **Parameters:**
 
-* class (string|number) – Class identifier.
+* class (number) – Class index to check.
 
 
 **Realm:**
@@ -153,10 +153,8 @@ Counts how many players belong to the given class.
 
 
 **Example Usage:**
-
-```lua
-    -- This snippet demonstrates a common usage of lia.class.getPlayerCount
     local count = lia.class.getPlayerCount(classID)
+    print("Players in class:", count)
 ```
 
 ---
@@ -165,11 +163,11 @@ Counts how many players belong to the given class.
 
 **Description:**
 
-Searches the class list for a class whose ID or name matches the given text.
+Finds a class whose uniqueID or name matches the given text (case-insensitive).
 
 **Parameters:**
 
-* class (string) – Search text.
+* class (string) – Name or uniqueID to look up.
 
 
 **Realm:**
@@ -179,14 +177,14 @@ Searches the class list for a class whose ID or name matches the given text.
 
 **Returns:**
 
-* string|nil – Matching class identifier or nil.
+* number|nil – Matching class index or nil if not found.
 
 
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.class.retrieveClass
     local id = lia.class.retrieveClass("police")
+    print("Class index:", id)
 ```
 
 ---
@@ -195,11 +193,11 @@ Searches the class list for a class whose ID or name matches the given text.
 
 **Description:**
 
-Returns whether the specified class requires a whitelist.
+Checks if the class requires a whitelist. Default classes always return false.
 
 **Parameters:**
 
-* class (string|number) – Class identifier.
+* class (number) – Class index to check.
 
 
 **Realm:**
@@ -215,7 +213,7 @@ Returns whether the specified class requires a whitelist.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.class.hasWhitelist
+    -- Check whether the class is whitelisted
     if lia.class.hasWhitelist(classID) then
         print("Whitelist required")
     end
