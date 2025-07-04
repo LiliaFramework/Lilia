@@ -96,7 +96,7 @@ else
     local function uiCreate()
         if panel and panel:IsValid() then return end
         surface.SetFont("DermaLarge")
-        local title = "Downloading Workshop Addons"
+        local title = L("downloadingWorkshopAddonsTitle")
         local tw, th = surface.GetTextSize(title)
         local pad, bh = 10, 20
         local w, h = math.max(tw, 200) + pad * 2, th + bh + pad * 3
