@@ -6,7 +6,7 @@ This document lists hooks related to attribute setup events.
 
 ## Overview
 
-Attributes may define callback functions that run when their values are first initialized or when certain events occur, such as temporary boosts. These functions live on the `ATTRIBUTE` table of each attribute definition and are entirely optional.
+Attributes may define callback functions that run when their values are first initialized or when certain events occur, such as temporary boosts. These functions live on the `ATTRIBUTE` table of each attribute definition and are entirely optional. At the time of writing the only built‑in attribute hook is `OnSetup`.
 
 ---
 
@@ -14,26 +14,29 @@ Attributes may define callback functions that run when their values are first in
 
 **Description:**
 
-Called when the attribute is initialized for a player (for example during character creation or when loading a character). This hook also fires again when a temporary boost is applied so the attribute can refresh any effects.
+Called whenever the attribute is (re)initialized for a player—during character creation, when loading a character, and when attribute boosts are added or removed. Use it to apply any server‑side effects based on the attribute's current value.
 
 **Parameters:**
 
 * `client` (`Player`) – The player that owns the attribute.
-* `value` (`number`) – The current value assigned to the attribute.
+* `value` (`number`) – The attribute's value returned by `character:getAttrib`, including temporary boosts.
 
 **Realm:**
 
 * Server
 
+**Returns:**
+
+* None
+
 **Example Usage:**
 
 ```lua
 function ATTRIBUTE:OnSetup(client, value)
-    -- Give an extra 5 max health for every point above 10.
-    if value > 10 then
-        local bonus = (value - 10) * 5
-        client:SetMaxHealth(client:GetMaxHealth() + bonus)
-    end
+    -- Example: scale max health directly with the attribute.
+    local base = 100
+    client:SetMaxHealth(base + value)
+    client:SetHealth(client:GetMaxHealth())
 end
 ```
 
