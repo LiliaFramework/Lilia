@@ -20,7 +20,7 @@ end
 
 **Description:**
 
-Allows you to supply a custom character name before any prefix or default logic is used. If you return `true` as the second value, the returned name is used directly.
+Allows you to supply a custom character name before any prefix or default logic is used. The engine also checks for `nameTemplate` (lower‑case **n**) for backwards compatibility. If you return `true` as the second value, the returned name is used directly.
 
 **Parameters:**
 
@@ -38,9 +38,10 @@ Allows you to supply a custom character name before any prefix or default logic 
 
 ```lua
 function FACTION:NameTemplate(client)
-    -- Use the player's Steam name and add a tag.
-    local name = string.format("%s [Recruit]", client:SteamName())
-    return name, true -- skip any automatic naming
+    -- Prefix the Steam name with the faction name.
+    local base = client:SteamName()
+    local name = string.format("[%s] %s", self.name, base)
+    return name, true -- skip the default generator
 end
 ```
 
@@ -71,9 +72,9 @@ Retrieves the default name for a newly created character in this faction.
 
 ```lua
 function FACTION:GetDefaultName(client)
-    -- Generate a simple numeric identifier.
-    local id = math.random(1000, 9999)
-    return string.format("Recruit #%04d", id)
+    -- Generate an identifier using the player's ID.
+    local id = client:UserID()
+    return string.format("Recruit-%03d", id)
 end
 ```
 
@@ -82,7 +83,7 @@ end
 ### GetDefaultDesc
 
 ```lua
-function FACTION:GetDefaultDesc(client, faction)
+function FACTION:GetDefaultDesc(client)
     -- return string
 end
 ```
@@ -95,21 +96,16 @@ Retrieves the default description for a newly created character in this faction.
 
 * `client` (`Player`) – The client for whom the default description is being generated.
 
-
-* `faction` (`number`) – The faction ID of this faction.
-
-
 **Realm:**
 
 * Shared
 
-
 **Example Usage:**
 
 ```lua
-function FACTION:GetDefaultDesc(client, faction)
-    -- Provide a short backstory or description.
-    return "A newly recruited officer"
+function FACTION:GetDefaultDesc(client)
+    -- Give every new member a short biography.
+    return "A seasoned veteran of many battles"
 end
 ```
 
@@ -141,8 +137,9 @@ Invoked when a faction member spawns into the world. Use this for per-spawn setu
 
 ```lua
 function FACTION:OnSpawn(client)
-    -- Restore full health and greet the player.
+    -- Restore health and equip the standard loadout.
     client:SetHealth(client:GetMaxHealth())
+    client:Give("weapon_pistol")
     client:ChatPrint("Welcome back to duty!")
 end
 ```
@@ -178,8 +175,8 @@ function FACTION:OnTransferred(client, oldFaction)
     -- Give the character a random faction model.
     local char = client:getChar()
     if char then
-        local randomModelIndex = math.random(1, #self.models)
-        char:setModel(self.models[randomModelIndex])
+        local randomIndex = math.random(1, #self.models)
+        char:setModel(self.models[randomIndex])
     end
     print("Transferred from faction", oldFaction)
 end
