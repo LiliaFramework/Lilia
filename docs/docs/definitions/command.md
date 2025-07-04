@@ -1,6 +1,8 @@
 # Command Fields
 
-This document describes all configurable fields accepted by `lia.command.add`. Use these to define command behavior, permissions, help text, and admin utility integration.
+This document describes the table passed to `lia.command.add`.  Each key in the
+table customizes how the command behaves, who can run it and how it appears in
+admin utilities.
 
 All fields are optional unless noted otherwise.
 
@@ -8,7 +10,9 @@ All fields are optional unless noted otherwise.
 
 ## Overview
 
-When you register a command with `lia.command.add`, you provide a table of fields that control its names, who can run it, how it appears in help menus or admin utilities, and what code runs when it’s invoked. All fields are optional unless noted otherwise.
+When you register a command with `lia.command.add`, you provide a table of
+fields controlling its name, permissions and execution.  Except for
+`onRun`, every field is optional.
 
 ---
 
@@ -23,7 +27,7 @@ When you register a command with `lia.command.add`, you provide a table of field
 | `syntax` | `string` | `""` | Human-readable argument format shown in help. |
 | `desc` | `string` | `""` | Short description shown in command lists and menus. |
 | `AdminStick` | `table` | `nil` | Defines how the command appears in admin utilities. |
-| `onRun(client, args)` | `function(client, table)` | `nil` | Function executed when the command is invoked. |
+| `onRun(client, args)` | `function(client, table)` | **required** | Function executed when the command is invoked. |
 
 ---
 
@@ -44,6 +48,10 @@ One or more alternative command names that trigger the same behavior.
 **Example Usage:**
 
 ```lua
+-- as a single string
+alias = "chargiveflag"
+
+-- or multiple aliases
 alias = {"chargiveflag", "giveflag"}
 ```
 
@@ -94,6 +102,8 @@ superAdminOnly = true
 **Description:**
 
 Custom CAMI privilege name checked when running the command. Defaults to the command’s primary name if omitted.
+This field is normally used alongside `adminOnly` or `superAdminOnly` to
+register a privilege with a custom name.
 
 **Example Usage:**
 
@@ -157,15 +167,11 @@ desc = "Purchase a door if it is available and you can afford it."
 
 Defines how the command appears in admin utility menus. Common keys:
 
-* `Name` (string): Display text.
-
-* `Category` (string): Top-level grouping.
-
-* `SubCategory` (string): Secondary grouping.
-
-* `Icon` (string): 16×16 icon path.
-
-* `TargetClass` (string): Limit the command to a specific entity class when using the Admin Stick.
+* `Name` (string) – Text shown on the menu button.
+* `Category` (string) – Top-level grouping.
+* `SubCategory` (string) – Secondary grouping under the main category.
+* `Icon` (string) – 16×16 icon path.
+* `TargetClass` (string) – Limit the command to a specific entity class when using the Admin Stick.
 
 **Example Usage:**
 
