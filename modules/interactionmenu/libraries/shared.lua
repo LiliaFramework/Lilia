@@ -176,7 +176,7 @@ AddInteraction(L("recognizeOption"), {
     end
 })
 
-AddInteraction("Invite To Faction", {
+AddInteraction(L("inviteToFaction"), {
     runServer = true,
     shouldShow = function(client, target)
         local cChar = client:getChar()
@@ -200,7 +200,7 @@ AddInteraction("Invite To Faction", {
             return
         end
 
-        target:binaryQuestion("Do you want to join this faction?", "Yes", "No", false, function(choice)
+        target:binaryQuestion(L("joinFactionPrompt"), L("yes"), L("no"), false, function(choice)
             if choice ~= 0 then
                 client:notifyLocalized("inviteDeclined")
                 return
