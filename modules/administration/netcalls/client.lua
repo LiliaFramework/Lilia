@@ -1,4 +1,5 @@
-﻿netstream.Hook("cfgList", function(data)
+net.Receive("cfgList", function()
+    local data = net.ReadTable()
     for k, v in pairs(data) do
         if lia.config.stored[k] then lia.config.stored[k].value = v end
     end
@@ -6,7 +7,9 @@
     hook.Run("InitializedConfig", data)
 end)
 
-netstream.Hook("cfgSet", function(key, value)
+net.Receive("cfgSet", function()
+    local key = net.ReadString()
+    local value = net.ReadType()
     local config = lia.config.stored[key]
     if config then
         if config.callback then config.callback(config.value, value) end

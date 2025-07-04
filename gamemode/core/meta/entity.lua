@@ -97,12 +97,26 @@ if SERVER then
     end
 
     function entityMeta:sendNetVar(key, receiver)
-        netstream.Start(receiver, "nVar", self:EntIndex(), key, lia.net[self] and lia.net[self][key])
+        net.Start("nVar")
+        net.WriteUInt(self:EntIndex(), 16)
+        net.WriteString(key)
+        net.WriteType(lia.net[self] and lia.net[self][key])
+        if receiver then
+            net.Send(receiver)
+        else
+            net.Broadcast()
+        end
     end
 
     function entityMeta:clearNetVars(receiver)
         lia.net[self] = nil
-        netstream.Start(receiver, "nDel", self:EntIndex())
+        net.Start("nDel")
+        net.WriteUInt(self:EntIndex(), 16)
+        if receiver then
+            net.Send(receiver)
+        else
+            net.Broadcast()
+        end
     end
 
     function entityMeta:removeDoorAccessData()

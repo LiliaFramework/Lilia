@@ -1,4 +1,4 @@
-﻿net.Receive("liaNotifyL", function()
+net.Receive("liaNotifyL", function()
     local message = net.ReadString()
     local length = net.ReadUInt(8)
     if length == 0 then return lia.notices.notifyLocalized(message) end
@@ -208,7 +208,11 @@ net.Receive("charData", function()
     end
 end)
 
-netstream.Hook("item", function(uniqueID, id, data, invID)
+net.Receive("item", function()
+    local uniqueID = net.ReadString()
+    local id = net.ReadUInt(32)
+    local data = net.ReadTable()
+    local invID = net.ReadType()
     local item = lia.item.new(uniqueID, id)
     item.data = {}
     if data then item.data = data end
@@ -216,7 +220,10 @@ netstream.Hook("item", function(uniqueID, id, data, invID)
     hook.Run("ItemInitialized", item)
 end)
 
-netstream.Hook("invData", function(id, key, value)
+net.Receive("invData", function()
+    local id = net.ReadUInt(32)
+    local key = net.ReadString()
+    local value = net.ReadType()
     local item = lia.item.instances[id]
     if item then
         item.data = item.data or {}
@@ -226,7 +233,9 @@ netstream.Hook("invData", function(id, key, value)
     end
 end)
 
-netstream.Hook("invQuantity", function(id, quantity)
+net.Receive("invQuantity", function()
+    local id = net.ReadUInt(32)
+    local quantity = net.ReadUInt(32)
     local item = lia.item.instances[id]
     if item then
         local oldValue = item:getQuantity()
@@ -235,13 +244,18 @@ netstream.Hook("invQuantity", function(id, quantity)
     end
 end)
 
-netstream.Hook("liaDataSync", function(data, first, last)
+net.Receive("liaDataSync", function()
+    local data = net.ReadTable()
+    local first = net.ReadType()
+    local last = net.ReadType()
     lia.localData = data
     lia.firstJoin = first
     lia.lastJoin = last
 end)
 
-netstream.Hook("liaData", function(key, value)
+net.Receive("liaData", function()
+    local key = net.ReadString()
+    local value = net.ReadType()
     lia.localData = lia.localData or {}
     lia.localData[key] = value
 end)
@@ -254,7 +268,10 @@ net.Receive("attrib", function()
     if character then character:getAttribs()[key] = value end
 end)
 
-netstream.Hook("nVar", function(index, key, value)
+net.Receive("nVar", function()
+    local index = net.ReadUInt(16)
+    local key = net.ReadString()
+    local value = net.ReadType()
     lia.net[index] = lia.net[index] or {}
     local oldValue = lia.net[index][key]
     lia.net[index][key] = value
@@ -262,7 +279,9 @@ netstream.Hook("nVar", function(index, key, value)
     if IsValid(entity) then hook.Run("NetVarChanged", entity, key, oldValue, value) end
 end)
 
-netstream.Hook("nLcl", function(key, value)
+net.Receive("nLcl", function()
+    local key = net.ReadString()
+    local value = net.ReadType()
     local idx = LocalPlayer():EntIndex()
     lia.net[idx] = lia.net[idx] or {}
     local oldValue = lia.net[idx][key]
@@ -611,10 +630,15 @@ net.Receive("postPlayerLoadedChar", function()
     hook.Run("PostPlayerLoadedChar", LocalPlayer(), char, current)
 end)
 
-netstream.Hook("gVar", function(key, value)
+net.Receive("gVar", function()
+    local key = net.ReadString()
+    local value = net.ReadType()
     local oldValue = lia.net.globals[key]
     lia.net.globals[key] = value
     hook.Run("NetVarChanged", nil, key, oldValue, value)
 end)
 
-netstream.Hook("nDel", function(index) lia.net[index] = nil end)
+net.Receive("nDel", function()
+    local index = net.ReadUInt(16)
+    lia.net[index] = nil
+end)

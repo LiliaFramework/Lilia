@@ -1,4 +1,4 @@
-﻿local playerMeta = FindMetaTable("Player")
+local playerMeta = FindMetaTable("Player")
 local vectorMeta = FindMetaTable("Vector")
 do
     playerMeta.steamName = playerMeta.steamName or playerMeta.Name
@@ -453,7 +453,12 @@ if SERVER then
     function playerMeta:setLiliaData(key, value, noNetworking)
         self.liaData = self.liaData or {}
         self.liaData[key] = value
-        if not noNetworking then netstream.Start(self, "liaData", key, value) end
+        if not noNetworking then
+            net.Start("liaData")
+            net.WriteString(key)
+            net.WriteType(value)
+            net.Send(self)
+        end
     end
 
     function playerMeta:setWaypoint(name, vector)
@@ -741,11 +746,18 @@ if SERVER then
         for entity, data in pairs(lia.net) do
             if entity == "globals" then
                 for k, v in pairs(data) do
-                    netstream.Start(self, "gVar", k, v)
+                    net.Start("gVar")
+                    net.WriteString(k)
+                    net.WriteType(v)
+                    net.Send(self)
                 end
             elseif IsValid(entity) then
                 for k, v in pairs(data) do
-                    netstream.Start(self, "nVar", entity:EntIndex(), k, v)
+                    net.Start("nVar")
+                    net.WriteUInt(entity:EntIndex(), 16)
+                    net.WriteString(k)
+                    net.WriteType(v)
+                    net.Send(self)
                 end
             end
         end
@@ -756,7 +768,10 @@ if SERVER then
         lia.net[self] = lia.net[self] or {}
         local oldValue = lia.net[self][key]
         lia.net[self][key] = value
-        netstream.Start(self, "nLcl", key, value)
+        net.Start("nLcl")
+        net.WriteString(key)
+        net.WriteType(value)
+        net.Send(self)
         hook.Run("LocalVarChanged", self, key, oldValue, value)
     end
 else

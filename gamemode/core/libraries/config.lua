@@ -1,4 +1,4 @@
-﻿lia.config = lia.config or {}
+lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
 lia.config.isConverting = lia.config.isConverting or false
 function lia.config.add(key, name, value, callback, data)
@@ -40,7 +40,12 @@ function lia.config.set(key, value)
         local oldValue = config.value
         config.value = value
         if SERVER then
-            if not config.noNetworking then netstream.Start(nil, "cfgSet", key, value) end
+            if not config.noNetworking then
+                net.Start("cfgSet")
+                net.WriteString(key)
+                net.WriteType(value)
+                net.Broadcast()
+            end
             if config.callback then config.callback(oldValue, value) end
             lia.config.save()
         end
@@ -121,7 +126,13 @@ if SERVER then
     end
 
     function lia.config.send(client)
-        netstream.Start(client, "cfgList", lia.config.getChangedValues())
+        net.Start("cfgList")
+        net.WriteTable(lia.config.getChangedValues())
+        if client then
+            net.Send(client)
+        else
+            net.Broadcast()
+        end
     end
 
     function lia.config.save()
@@ -551,7 +562,13 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
 
             slider.OnValueChanged = function(_, v)
                 local t = "ConfigChange_" .. key .. "_" .. os.time()
-                timer.Create(t, 0.5, 1, function() netstream.Start("cfgSet", key, name, math.floor(v)) end)
+                timer.Create(t, 0.5, 1, function()
+                    net.Start("cfgSet")
+                    net.WriteString(key)
+                    net.WriteString(name)
+                    net.WriteType(math.floor(v))
+                    net.SendToServer()
+                end)
             end
             return container
         end,
@@ -595,7 +612,13 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
 
             slider.OnValueChanged = function(_, v)
                 local t = "ConfigChange_" .. key .. "_" .. os.time()
-                timer.Create(t, 0.5, 1, function() netstream.Start("cfgSet", key, name, tonumber(v)) end)
+                timer.Create(t, 0.5, 1, function()
+                    net.Start("cfgSet")
+                    net.WriteString(key)
+                    net.WriteString(name)
+                    net.WriteType(tonumber(v))
+                    net.SendToServer()
+                end)
             end
             return container
         end,
@@ -638,7 +661,13 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
 
             entry.OnEnter = function()
                 local t = "ConfigChange_" .. key .. "_" .. os.time()
-                timer.Create(t, 0.5, 1, function() netstream.Start("cfgSet", key, name, entry:GetText()) end)
+                timer.Create(t, 0.5, 1, function()
+                    net.Start("cfgSet")
+                    net.WriteString(key)
+                    net.WriteString(name)
+                    net.WriteType(entry:GetText())
+                    net.SendToServer()
+                end)
             end
             return container
         end,
@@ -680,7 +709,13 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
 
             button.DoClick = function()
                 local t = "ConfigChange_" .. key .. "_" .. os.time()
-                timer.Create(t, 0.5, 1, function() netstream.Start("cfgSet", key, name, not lia.config.get(key, config.value)) end)
+                timer.Create(t, 0.5, 1, function()
+                    net.Start("cfgSet")
+                    net.WriteString(key)
+                    net.WriteString(name)
+                    net.WriteType(not lia.config.get(key, config.value))
+                    net.SendToServer()
+                end)
             end
             return container
         end,
@@ -751,7 +786,13 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
 
                 apply.DoClick = function()
                     local t = "ConfigChange_" .. key .. "_" .. os.time()
-                    timer.Create(t, 0.5, 1, function() netstream.Start("cfgSet", key, name, m:GetColor()) end)
+                    timer.Create(t, 0.5, 1, function()
+                        net.Start("cfgSet")
+                        net.WriteString(key)
+                        net.WriteString(name)
+                        net.WriteType(m:GetColor())
+                        net.SendToServer()
+                    end)
                     f:Remove()
                 end
 
@@ -801,7 +842,13 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
 
             combo.OnSelect = function(_, _, v)
                 local t = "ConfigChange_" .. key .. "_" .. os.time()
-                timer.Create(t, 0.5, 1, function() netstream.Start("cfgSet", key, name, v) end)
+                timer.Create(t, 0.5, 1, function()
+                    net.Start("cfgSet")
+                    net.WriteString(key)
+                    net.WriteString(name)
+                    net.WriteType(v)
+                    net.SendToServer()
+                end)
             end
             return container
         end

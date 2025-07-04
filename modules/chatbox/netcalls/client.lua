@@ -1,4 +1,8 @@
-﻿netstream.Hook("cMsg", function(client, chatType, text, anonymous)
+net.Receive("cMsg", function()
+    local client = net.ReadEntity()
+    local chatType = net.ReadString()
+    local text = net.ReadString()
+    local anonymous = net.ReadBool()
     if IsValid(client) then
         local class = lia.chat.classes[chatType]
         text = hook.Run("OnChatReceived", client, chatType, text, anonymous) or text

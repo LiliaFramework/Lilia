@@ -66,7 +66,14 @@ local function buildActionFunc(action, actionIndex, itemTable, invID, sub)
             end
         end
 
-        if send ~= false then netstream.Start("invAct", actionIndex, itemTable.id, invID, sub and sub.data) end
+        if send ~= false then
+            net.Start("invAct")
+            net.WriteString(actionIndex)
+            net.WriteUInt(itemTable.id, 32)
+            net.WriteType(invID)
+            net.WriteType(sub and sub.data)
+            net.SendToServer()
+        end
         itemTable.player = nil
     end
 end

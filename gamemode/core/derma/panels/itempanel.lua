@@ -152,7 +152,12 @@ function PANEL:openInspect()
     take:SetFont("liaBigBtn")
     take:SetText(L("take"))
     take.DoClick = function()
-        if IsValid(self.ent) then netstream.Start("invAct", "take", self.ent) end
+        if IsValid(self.ent) then
+            net.Start("invAct")
+            net.WriteString("take")
+            net.WriteEntity(self.ent)
+            net.SendToServer()
+        end
         if IsValid(overlay) then overlay:Remove() end
     end
 end
@@ -165,7 +170,12 @@ function PANEL:buildButtons()
         if isfunction(fn.onCanRun) and not fn.onCanRun(self.item) then continue end
         self:addBtn(L(fn.name or key), function()
             if fn.sound then surface.PlaySound(fn.sound) end
-            if not fn.onClick or fn.onClick(self.item) ~= false then netstream.Start("invAct", key, self.ent) end
+            if not fn.onClick or fn.onClick(self.item) ~= false then
+                net.Start("invAct")
+                net.WriteString(key)
+                net.WriteEntity(self.ent)
+                net.SendToServer()
+            end
             self:Remove()
         end)
     end
