@@ -173,7 +173,7 @@ end
 
 **Description:**
 
-Checks if a player has the given door access level.
+Checks if a player has the given door access level. Defaults to `DOOR_GUEST` when no access level is provided.
 
 **Parameters:**
 
@@ -208,7 +208,7 @@ end
 
 **Description:**
 
-Assigns the vehicle to the specified player. Works only for vehicles.
+Assigns vehicle ownership to the given player using CPPI and network variables.
 **Parameters:**
 
 * client (Player) – Player to set as owner.
@@ -228,7 +228,7 @@ Assigns the vehicle to the specified player. Works only for vehicles.
 
 ```lua
 -- Assign ownership when a player buys the vehicle
-car:keysOwn(buyer)
+car:keysOwn(client)
 ```
 
 ---
@@ -237,7 +237,7 @@ car:keysOwn(buyer)
 
 **Description:**
 
-Locks the entity if it is a vehicle.
+Triggers the `lock` input on the entity if it is a vehicle.
 
 **Parameters:**
 
@@ -267,7 +267,7 @@ car:keysLock()
 
 **Description:**
 
-Unlocks the entity if it is a vehicle.
+Triggers the `unlock` input on the entity if it is a vehicle.
 
 **Parameters:**
 
@@ -297,7 +297,7 @@ car:keysUnLock()
 
 **Description:**
 
-Returns the player that owns this vehicle if available.
+Returns the CPPI owner of this vehicle if one is assigned.
 
 **Parameters:**
 
@@ -330,7 +330,7 @@ end
 
 **Description:**
 
-Returns the locked state stored in net variables.
+Reads the locked state previously set with `setLocked`.
 
 **Parameters:**
 
@@ -362,7 +362,7 @@ end
 
 **Description:**
 
-Checks the internal door locked state.
+Checks the door's internal lock flag (m_bLocked).
 
 **Parameters:**
 
@@ -394,11 +394,11 @@ end
 
 **Description:**
 
-Calculates a drop position in front of the entity's eyes.
+Calculates a drop position in front of the entity's eyes, using a trace to ensure the point is unobstructed.
 
 **Parameters:**
 
-* offset (number) – Distance from the player eye position. Defaults to 64.
+* offset (number) – How far forward to trace from the eye position. Defaults to 64.
 
 
 **Realm:**
@@ -425,7 +425,7 @@ lia.item.spawn("item_water", pos, ang)
 
 **Description:**
 
-Checks for another entity of the same class nearby.
+Checks if another entity of the same class is within the given radius. Optionally matches against a specific entity.
 
 **Parameters:**
 
@@ -513,8 +513,8 @@ Stores the creator player on the entity.
 **Example Usage:**
 
 ```lua
-    -- Record the spawner for cleanup tracking
-    ent:SetCreator(client)
+-- Record the spawner for cleanup tracking
+ent:SetCreator(client)
 ```
 
 ---
@@ -523,7 +523,7 @@ Stores the creator player on the entity.
 
 **Description:**
 
-Sends a network variable to recipients.
+Sends the specified network variable to clients. This is usually called from `setNetVar`.
 
 **Parameters:**
 
@@ -538,9 +538,6 @@ Sends a network variable to recipients.
 * Server
 
 
-    Internal:
-
-        Used by the networking system.
 
 **Returns:**
 
@@ -559,7 +556,7 @@ ent:sendNetVar("doorState")
 
 **Description:**
 
-Clears all network variables on this entity.
+Clears all network variables on this entity and tells clients to remove them.
 
 **Parameters:**
 
@@ -587,7 +584,7 @@ ent:clearNetVars(client)
 
 **Description:**
 
-Clears all stored door access information.
+Clears the door's saved access table and informs all clients.
 
 **Parameters:**
 
@@ -608,7 +605,7 @@ Clears all stored door access information.
 
 ```lua
 -- Wipe door permissions during cleanup
-local result = ent:removeDoorAccessData()
+ent:removeDoorAccessData()
 ```
 
 ---
@@ -617,7 +614,7 @@ local result = ent:removeDoorAccessData()
 
 **Description:**
 
-Stores the door locked state in network variables.
+Stores the locked state in a network variable so clients know if the door is secured.
 
 **Parameters:**
 
@@ -648,7 +645,7 @@ door:EmitSound("doors/door_latch3.wav")
 
 **Description:**
 
-Returns true if the entity's class indicates a door.
+Checks the entity's class for common door prefixes to determine if it is a door.
 
 **Parameters:**
 
@@ -678,7 +675,7 @@ local result = ent:isDoor()
 
 **Description:**
 
-Returns the partner door linked with this entity.
+Returns the door entity linked as this one's partner via `liaPartner`.
 
 **Parameters:**
 
@@ -814,7 +811,7 @@ local result = ent:isDoor()
 
 **Description:**
 
-Attempts to find the door partnered with this one.
+Attempts to locate the door partnered with this one by checking its owner or linked prop.
 
 **Parameters:**
 
