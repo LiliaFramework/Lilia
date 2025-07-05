@@ -298,6 +298,7 @@ else
         surface.SetFont("liaSmallFont")
         local controls = {}
         local watchers = {}
+        local validate
         for name, data in pairs(fields) do
             local fieldType = data.type
             local optional = data.optional
@@ -394,7 +395,7 @@ else
         submit:SetFont("liaSmallFont")
         submit:SetIcon("icon16/tick.png")
         submit:SetEnabled(false)
-        local function validate()
+        validate = function()
             for _, data in pairs(controls) do
                 if not data.optional then
                     local ctl = data.ctrl
