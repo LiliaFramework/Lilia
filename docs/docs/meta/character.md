@@ -264,7 +264,9 @@ end
 
 **Description:**
 
-Checks the player's active weapon against items in the inventory.
+Returns **true** only when the player's active weapon matches an item in their
+inventory and that item is equipped. The argument defaults to `true` and the
+method currently only checks for equipped items.
 
 **Parameters:**
 
@@ -284,9 +286,10 @@ Checks the player's active weapon against items in the inventory.
 **Example Usage:**
 
 ```lua
--- Determine if the equipped weapon is linked to an item
-local match = char:getItemWeapon(true)
-if match then print("Using weapon item") end
+-- Check if we're using an inventory weapon
+if char:getItemWeapon(true) then
+    print("Item weapon equipped")
+end
 ```
 
 ---
@@ -1113,7 +1116,9 @@ char:save(function() print("character saved") end)
 
 **Description:**
 
-Sends the character's networkable variables to the specified player. When no receiver is given the data is sent to all players.
+Sends the character's networkable variables to a specific player. Passing
+`nil` broadcasts the data to everyone. When the receiver is the character's own
+player, only local variables intended for them are included.
 
 **Parameters:**
 
@@ -1133,8 +1138,8 @@ Sends the character's networkable variables to the specified player. When no rec
 **Example Usage:**
 
 ```lua
--- Refresh other players with our updated info
-char:sync()
+-- Send this character's data to a newly joined player
+char:sync(newPlayer)
 ```
 
 ---
@@ -1143,7 +1148,8 @@ char:sync()
 
 **Description:**
 
-Initializes the owning player entity using this character's stored data.
+Sets up the player entity to use this character's model, faction, and inventory
+data. Use `noNetworking` to skip network updates during initialization.
 
 **Parameters:**
 
@@ -1163,8 +1169,8 @@ Initializes the owning player entity using this character's stored data.
 **Example Usage:**
 
 ```lua
--- Apply character appearance without sending data to others
-char:setup(true)
+-- Fully prepare the character after selection
+char:setup()
 ```
 
 ---
@@ -1173,7 +1179,8 @@ char:setup(true)
 
 **Description:**
 
-Forcibly disconnects the player from their character and respawns them.
+Forcibly disconnects the player from their character. The player is killed
+silently and immediately respawns with no character loaded.
 
 **Parameters:**
 
@@ -1194,7 +1201,7 @@ Forcibly disconnects the player from their character and respawns them.
 
 ```lua
 -- Eject the player from their character
-char:kick()
+char:kick() -- they will respawn without a character
 ```
 
 ---
@@ -1235,7 +1242,8 @@ char:ban(3600)
 
 **Description:**
 
-Removes the character from the database entirely.
+Completely removes the character from the database along with any inventories
+it owns.
 
 **Parameters:**
 
@@ -1265,7 +1273,9 @@ char:delete()
 
 **Description:**
 
-Clears the character from the server's loaded list without saving.
+Removes the character from the server's loaded cache without touching any saved
+data. Useful after deleting a character or when cleaning up disconnected
+players.
 
 **Parameters:**
 
@@ -1285,7 +1295,7 @@ Clears the character from the server's loaded list without saving.
 **Example Usage:**
 
 ```lua
--- Drop the reference after deletion
+-- Clean up a removed character instance
 char:destroy()
 ```
 
@@ -1295,7 +1305,8 @@ char:destroy()
 
 **Description:**
 
-Credits the character with the given amount of money.
+Adds the specified amount to the character's wallet by calling the owning
+player's `addMoney` method.
 
 **Parameters:**
 
@@ -1315,8 +1326,9 @@ Credits the character with the given amount of money.
 **Example Usage:**
 
 ```lua
--- Pay the character for completing a job
-char:giveMoney(250)
+-- Pay the character for completing a mission
+local reward = 250
+char:giveMoney(reward)
 ```
 
 ---
@@ -1325,7 +1337,8 @@ char:giveMoney(250)
 
 **Description:**
 
-Subtracts the specified amount of money from the character.
+Subtracts the specified amount of money from the character. Internally this
+calls `giveMoney` with a negative value and logs the deduction.
 
 **Parameters:**
 
@@ -1346,7 +1359,8 @@ Subtracts the specified amount of money from the character.
 
 ```lua
 -- Deduct a fine from the character
-char:takeMoney(50)
+local fine = 50
+char:takeMoney(fine)
 ```
 
 ---
