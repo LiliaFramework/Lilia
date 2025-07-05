@@ -139,7 +139,7 @@ lia.char.registerVar("name", {
 
 lia.char.registerVar("desc", {
     field = "_desc",
-    default = L("enterDescriptionMinimum", lia.config.get("MinDescLen", 16)),
+    default = L("descMinLen", lia.config.get("MinDescLen", 16)),
     index = 2,
     onValidate = function(value, data, client)
         local desc, override = hook.Run("GetDefaultCharDesc", client, data.faction)
