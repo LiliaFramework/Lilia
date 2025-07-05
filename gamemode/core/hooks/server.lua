@@ -662,16 +662,7 @@ local function DatabaseQuery()
                     local colDef = typeMap[v.fieldType](v)
                     if v.default ~= nil then colDef = colDef .. " DEFAULT '" .. tostring(v.default) .. "'" end
                     local alter = ("ALTER TABLE lia_characters ADD COLUMN %s"):format(colDef)
-                    lia.db.query(alter, function()
-                        MsgC(
-                            Color(83, 143, 239),
-                            "[Lilia] ",
-                            Color(0, 255, 0),
-                            "[Database] ",
-                            Color(255, 255, 255),
-                            L("addedMissingColumn", v.field) .. "\n"
-                        )
-                    end)
+                    lia.db.query(alter, function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database] ", Color(255, 255, 255), L("addedMissingColumn", v.field) .. "\n") end)
                 end
             end
         end)
@@ -821,7 +812,7 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     return canHear, canHear
 end
 
-local networkStrings = {"msg", "ServerChatAddText", "TogglePropBlacklist", "ToggleCarBlacklist", "liaCharacterInvList", "liaNotify", "liaNotifyL", "CreateTableUI", "WorkshopDownloader_Start", "liaPACSync", "liaPACPartAdd", "liaPACPartRemove", "liaPACPartReset", "sam_blind", "CurTime-Sync", "NetStreamDS", "liaInventoryAdd", "liaInventoryRemove", "liaInventoryData", "liaInventoryInit", "liaInventoryDelete", "liaItemDelete", "liaItemInstance", "seqSet", "setWaypoint", "setWaypointWithLogo", "AnimationStatus", "actBar", "RequestDropdown", "OptionsRequest", "StringRequest", "BinaryQuestionRequest", "liaTransferItem", "liaStorageOpen", "liaStorageUnlock", "liaStorageExit", "liaStorageTransfer", "trunkInitStorage", "VendorTrade", "VendorExit", "VendorMoney", "VendorStock", "VendorMaxStock", "VendorAllowFaction", "VendorAllowClass", "VendorEdit", "VendorMode", "VendorPrice", "VendorSync", "VendorOpen", "rgnDone", "AdminModeSwapCharacter", "managesitrooms", "liaCharChoose", "lia_managesitrooms_action", "SpawnMenuSpawnItem", "SpawnMenuGiveItem", "send_logs_request", "send_logs", "OpenInvMenu", "TicketSystemClaim", "TicketSystemClose", "TicketSystem", "ViewClaims", "RunOption", "RunLocalOption", "TransferMoneyFromP2P", "CheckHack", "CheckSeed", "VerifyCheats", "request_respawn", "classUpdate", "ChangeSpeakMode", "liaTeleportToEntity", "removeF1", "liaCharList", "liaCharCreate", "liaCharDelete", "cmd", "liaCmdArgPrompt", "prePlayerLoadedChar", "playerLoadedChar", "postPlayerLoadedChar", "doorMenu", "doorPerm", "charSet", "charVar", "charData", "charInfo", "charKick", "liaCharFetchNames", "attrib"}
+local networkStrings = {"cMsg", "cfgList", "cfgSet", "gVar", "invAct", "invData", "invQuantity", "liaData", "liaDataSync", "nDel", "nLcl", "nVar", "msg", "ServerChatAddText", "TogglePropBlacklist", "ToggleCarBlacklist", "liaCharacterInvList", "liaNotify", "liaNotifyL", "CreateTableUI", "WorkshopDownloader_Start", "liaPACSync", "liaPACPartAdd", "liaPACPartRemove", "liaPACPartReset", "sam_blind", "CurTime-Sync", "NetStreamDS", "liaInventoryAdd", "liaInventoryRemove", "liaInventoryData", "liaInventoryInit", "liaInventoryDelete", "liaItemDelete", "liaItemInstance", "seqSet", "setWaypoint", "setWaypointWithLogo", "AnimationStatus", "actBar", "RequestDropdown", "OptionsRequest", "StringRequest", "BinaryQuestionRequest", "liaTransferItem", "liaStorageOpen", "liaStorageUnlock", "liaStorageExit", "liaStorageTransfer", "trunkInitStorage", "VendorTrade", "VendorExit", "VendorMoney", "VendorStock", "VendorMaxStock", "VendorAllowFaction", "VendorAllowClass", "VendorEdit", "VendorMode", "VendorPrice", "VendorSync", "VendorOpen", "rgnDone", "AdminModeSwapCharacter", "managesitrooms", "liaCharChoose", "lia_managesitrooms_action", "SpawnMenuSpawnItem", "SpawnMenuGiveItem", "send_logs_request", "send_logs", "OpenInvMenu", "TicketSystemClaim", "TicketSystemClose", "TicketSystem", "ViewClaims", "RunOption", "RunLocalOption", "TransferMoneyFromP2P", "CheckHack", "CheckSeed", "VerifyCheats", "request_respawn", "classUpdate", "ChangeSpeakMode", "liaTeleportToEntity", "removeF1", "liaCharList", "liaCharCreate", "liaCharDelete", "cmd", "liaCmdArgPrompt", "prePlayerLoadedChar", "playerLoadedChar", "postPlayerLoadedChar", "doorMenu", "doorPerm", "charSet", "charVar", "charData", "charInfo", "charKick", "liaCharFetchNames", "attrib"}
 for _, netString in ipairs(networkStrings) do
     util.AddNetworkString(netString)
 end
