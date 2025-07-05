@@ -161,14 +161,15 @@ end)
 
 **Description:**
 
-Determines if a scoreboard field such as a player's name or model can be replaced.
+Checks if a scoreboard value may be overridden by other hooks so modules can
+replace the displayed name, model or description for a player.
 
 **Parameters:**
 
 * client (Player) – Player being displayed.
 
 
-* field (string) – Field name such as "name" or "model".
+* var (string) – Field identifier such as "name", "model" or "desc".
 
 
 **Realm:**
@@ -185,8 +186,8 @@ Determines if a scoreboard field such as a player's name or model can be replace
 
 ```lua
 -- Allows other hooks to replace player names on the scoreboard.
-hook.Add("ShouldAllowScoreboardOverride", "OverrideNames", function(ply, field)
-    if field == "name" then
+hook.Add("ShouldAllowScoreboardOverride", "OverrideNames", function(ply, var)
+    if var == "name" then
         return true
     end
 end)
@@ -223,6 +224,35 @@ hook.Add("GetDisplayedName", "AdminPrefix", function(ply)
     if ply:IsAdmin() then
         return "[ADMIN] " .. ply:Nick()
     end
+end)
+```
+
+---
+
+### PlayerStartVoice
+
+**Description:**
+
+Triggered when the local HUD begins displaying a voice panel for a player.
+
+**Parameters:**
+
+* client (Player) – Player who started speaking.
+
+**Realm:**
+
+* Client
+
+**Returns:**
+
+* None
+
+**Example Usage:**
+
+```lua
+-- Play a sound when anyone starts talking.
+hook.Add("PlayerStartVoice", "VoiceNotify", function(ply)
+    surface.PlaySound("buttons/button15.wav")
 end)
 ```
 
@@ -499,7 +529,7 @@ Supplies the description text shown on the scoreboard. Returns the description t
 * player (Player) – Target player.
 
 
-* isOOC (boolean) – Whether OOC description is requested.
+* isHUD (boolean) – True when drawing overhead text rather than in menus.
 
 
 **Realm:**
@@ -515,9 +545,9 @@ Supplies the description text shown on the scoreboard. Returns the description t
 **Example Usage:**
 
 ```lua
--- Shows an OOC description when requested by the scoreboard.
-hook.Add("GetDisplayedDescription", "OOCDesc", function(ply, isOOC)
-    if isOOC then
+-- Provide an out-of-character description for scoreboard panels.
+hook.Add("GetDisplayedDescription", "OOCDesc", function(ply, isHUD)
+    if not isHUD then
         return ply:GetNWString("oocDesc", "")
     end
 end)
@@ -567,7 +597,7 @@ Fires when the chat box closes. Fired when the chat box is closed.
 
 **Parameters:**
 
-* None
+* chatType (string) – The chat command being checked.
 
 
 **Realm:**
@@ -603,7 +633,7 @@ Fires when the chat box opens. Fired when the chat box is opened.
 
 **Parameters:**
 
-* None
+* chatType (string) – The chat command being checked.
 
 
 **Realm:**
@@ -6451,7 +6481,9 @@ Determines whether one character recognizes another.
 
 **Parameters:**
 
-* None
+* character (Character) – Character performing the check.
+
+* id (number) – Identifier of the other character.
 
 
 **Realm:**
@@ -6483,7 +6515,7 @@ Determines if a chat type counts toward recognition.
 
 **Parameters:**
 
-* None
+* chatType (string) – The chat command being checked.
 
 
 **Realm:**
