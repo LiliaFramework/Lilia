@@ -82,8 +82,12 @@ Creates a subclass of the inventory meta table with a new class name.
 -- Define a subclass for weapon crates and register it
 local WeaponInv = inv:extend("WeaponInventory")
 function WeaponInv:configure()
-    self:addSlot("Ammo")
-    self:addSlot("Weapons")
+    -- only allow weapons to be stored
+    self:addAccessRule(function(_, action, ctx)
+        if action == "add" then
+            return ctx.item.isWeapon == true
+        end
+    end)
 end
 WeaponInv:register("weapon_inv")
 ```
@@ -94,7 +98,7 @@ WeaponInv:register("weapon_inv")
 
 ```lua
 function Inventory:configure()
-    -- override to setup slots
+    -- override to customize this inventory type
 end
 ```
 
@@ -120,10 +124,13 @@ Stub for inventory configuration; meant to be overridden.
 **Example Usage:**
 
 ```lua
--- Called from a subclass to set up custom slots
+-- Called from a subclass to register custom access rules
 function WeaponInv:configure()
-    self:addSlot("Ammo")
-    self:addSlot("Weapons")
+    self:addAccessRule(function(_, action, ctx)
+        if action == "add" then
+            return ctx.item.isWeapon
+        end
+    end)
 end
 ```
 
@@ -398,8 +405,10 @@ registered proxy callbacks for that field.
 **Example Usage:**
 
 ```lua
--- React when the stored credit amount changes
-inv:onDataChanged("credits", 0, 100)
+-- React when a data value is updated
+function WeaponInv:onDataChanged(key, old, new)
+    print(key .. " changed from", old, "to", new)
+end
 ```
 
 ---
