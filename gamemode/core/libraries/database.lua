@@ -8,7 +8,7 @@ MYSQLOO_STRING = 1
 MYSQLOO_BOOL = 2
 local modules = {}
 local function ThrowQueryFault(query, fault)
-    if string.find(fault, "duplicate column name:") then return end
+    if string.find(fault, "duplicate column name:") or string.find(fault, "UNIQUE constraint failed: lia_config") then return end
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " * " .. query .. "\n")
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. fault .. "\n")
 end
