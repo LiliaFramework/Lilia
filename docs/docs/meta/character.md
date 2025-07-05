@@ -132,7 +132,7 @@ Returns the player entity currently controlling this character.
 -- Notify the controlling player that the character loaded
 local ply = char:getPlayer()
 if IsValid(ply) then
-    ply:ChatPrint(L("charReady"))
+    ply:ChatPrint("Character ready")
 end
 ```
 
@@ -163,7 +163,7 @@ Returns the character's name as it should be shown to the given player.
 
 ```lua
 -- Announce the character's name to a viewer
-client:ChatPrint(string.format(L("youSee"), char:getDisplayedName(client)))
+client:ChatPrint(string.format("You see %s", char:getDisplayedName(client)))
 ```
 
 ---

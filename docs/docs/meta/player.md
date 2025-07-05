@@ -441,7 +441,7 @@ Returns a table of entities within radius of the player.
 ```lua
 for _, ent in ipairs(player:entitiesNearPlayer(256)) do
     if ent:IsPlayer() then
-        ent:ChatPrint(L("nearPlayer"))
+        ent:ChatPrint("Someone is close to you!")
     else
         DebugDrawBox(ent:GetPos(), ent:OBBMins(), ent:OBBMaxs(), 0, 255, 0, 0, 5)
     end
@@ -690,7 +690,7 @@ local target = player:getEyeEnt(128)
 
 if IsValid(target) then
 
-    player:ChatPrint(string.format(L("targetClass"), target:GetClass()))
+    player:ChatPrint(string.format("Class: %s", target:GetClass()))
 
 end
 

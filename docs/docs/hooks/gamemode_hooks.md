@@ -55,7 +55,7 @@ hook.Add("LoadCharInformation", "AddHungerField", function()
         return string.format("%d%%", hunger), color
     end
 
-    hook.Run("AddTextField", L("generalInfo"), "hunger", "Hunger", hungerField)
+    hook.Run("AddTextField", "General Info", "hunger", "Hunger", hungerField)
 end)
 ```
 
@@ -832,7 +832,7 @@ Lets modules insert additional information on the main menu info panel. Allows m
 hook.Add("LoadMainMenuInformation", "AddFactionInfo", function(info, character)
     local fac = lia.faction.indices[character:getFaction()]
     local facName = fac and fac.name or "Citizen"
-    info[#info + 1] = L("faction") .. ": " .. facName
+    info[#info + 1] = "Faction" .. ": " .. facName
 end)
 ```
 
@@ -2152,7 +2152,7 @@ Runs after the player entity has spawned and data is ready. Allows post-initiali
 -- Initialize some default variables for new players.
 hook.Add("PostPlayerInitialSpawn", "SetupTutorialState", function(ply)
     ply:setNetVar("inTutorial", true)
-    ply:ChatPrint(L("welcomeTutorial"))
+    ply:ChatPrint("Welcome! Follow the arrows to begin the tutorial.")
 end)
 ```
 
@@ -6936,7 +6936,7 @@ hook.Add("CreateSalaryTimer", "SetupSalaryTimer", function(client)
         if IsValid(client) and MODULE:CanPlayerEarnSalary(client, client:getFaction(), client:getClass()) then
             local salary = MODULE:GetSalaryAmount(client, client:getFaction(), client:getClass())
             client:addMoney(salary)
-            client:ChatPrint(string.format(L("salaryReceived"), salary))
+            client:ChatPrint(string.format("You have received your salary of $%s", salary))
             print("Salary of $" .. salary .. " awarded to:", client:Name())
         end
     end)
@@ -7287,7 +7287,7 @@ Called when `lia.option` is fully initialized.
 ```lua
 -- Prints a message when this hook is triggered
 function MODULE:InitializedOptions()
-    LocalPlayer():ChatPrint(L("optionsLoaded"))
+    LocalPlayer():ChatPrint("LOADED OPTIONS!")
 end
 ```
 
@@ -9539,7 +9539,7 @@ Called when a ragdolled character finishes getting up.
 ```lua
 -- Prints a message when OnCharGetup is triggered
 hook.Add("OnCharGetup", "NotifyGetup", function(ply)
-    ply:ChatPrint(L("youStoodUp"))
+    ply:ChatPrint("You stood up")
 end)
 ```
 
@@ -9644,7 +9644,7 @@ Called after a player finishes loading a character. The client receives the same
 ```lua
 -- Prints a message when PlayerLoadedChar is triggered
 hook.Add("PlayerLoadedChar", "WelcomeBack", function(ply, char)
-    ply:ChatPrint(string.format(L("welcomePlayer"), char:getName()))
+    ply:ChatPrint(string.format("Welcome, %s", char:getName()))
 end)
 ```
 
@@ -9827,7 +9827,7 @@ Fired when a staff member claims a help ticket.
 ```lua
 -- Prints a message when TicketSystemClaim is triggered
 hook.Add("TicketSystemClaim", "NotifyClaim", function(staff, ply)
-    staff:ChatPrint(string.format(L("ticketClaimed"), ply:Name()))
+    staff:ChatPrint(string.format("Claimed ticket from %s", ply:Name()))
 end)
 ```
 
