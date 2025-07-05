@@ -42,7 +42,7 @@ function MODULE:KeyRelease(client, key)
     end
 
     if key == IN_JUMP and not client:isNoClipping() and client:getChar() and not client:InVehicle() and client:Alive() then
-        local cost = lia.config.get("JumpStaminaCost", 100)
+        local cost = lia.config.get("JumpStaminaCost", 25)
         client:consumeStamina(cost)
         local stm = client:getLocalVar("stamina", 0)
         if stm == 0 then
