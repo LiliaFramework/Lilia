@@ -8,23 +8,23 @@ This document lists every available `CLASS` hook. Place these functions on a cla
 
 Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
 
-These hooks live on the class tables created under `schema/classes` and only run there rather than acting as global gamemode hooks.
-
-Define them inside your class definition files (`schema/classes/*.lua`).
+These hooks live on the class tables created under `schema/classes` and are only
+called for instances of that specific class.  Define them inside your class
+definition files (`schema/classes/*.lua`).
 
 ---
 
 ### OnCanBe
 
 ```lua
-function CLASS:OnCanBe(client) → boolean
+function CLASS:OnCanBe(client) → boolean?
 ```
 
 **Description:**
 
-Determines whether a player is permitted to switch to this class. It is called
+Determines whether a player is permitted to switch to this class.  It is invoked
 by `lia.class.canBe` after whitelist, faction, and limit checks but before the
-class change happens.
+class change actually happens.
 
 **Parameters:**
 
@@ -33,7 +33,8 @@ class change happens.
 
 **Returns:**
 
-* `boolean` – `true` to allow the switch; `false` to deny.
+* `boolean?` – Return `false` to deny. Returning `true` or no value allows the
+  switch.
 
 **Realm:**
 
@@ -44,10 +45,18 @@ class change happens.
 
 ```lua
 function CLASS:OnCanBe(client)
-    -- Example: only allow admins or players that own the "V" flag
+    -- Only allow admins or players that own the "V" flag.
+    if client:IsAdmin() then
+        return true
+    end
+
     local char = client:getChar()
-    if client:IsAdmin() then return true end
-    return char and char:hasFlags("V") or false
+    if char and char:hasFlags("V") then
+        return true
+    end
+
+    -- Returning false prevents the switch.
+    return false
 end
 ```
 
@@ -61,9 +70,10 @@ function CLASS:OnLeave(client)
 
 **Description:**
 
-Runs after `OnTransferred` for the class the player is leaving. Use it to clean
-up any class‑specific state such as reverting models, resetting values, or
-removing temporary items.
+Called on the player's previous class after the switch has completed.  It runs
+after the new class has executed `OnSet` (and `OnTransferred` if applicable).
+Use it to clean up any class‑specific state such as reverting models, resetting
+values, or removing temporary items.
 
 **Parameters:**
 
@@ -83,15 +93,16 @@ removing temporary items.
 
 ```lua
 function CLASS:OnLeave(client)
-    -- Remove class specific weapons and revert model/attributes
+    -- Strip any class specific weapons.
     client:StripWeapon("weapon_pistol")
 
     local char = client:getChar()
     if char and self.model then
+        -- Restore the character's previous model.
         char:setModel(char:getData("model", char:getModel()))
     end
 
-    -- Reset any modified speeds
+    -- Reset custom movement speeds back to defaults.
     client:SetWalkSpeed(lia.config.get("WalkSpeed"))
     client:SetRunSpeed(lia.config.get("RunSpeed"))
 end
@@ -107,9 +118,10 @@ function CLASS:OnSet(client)
 
 **Description:**
 
-Called immediately after a player is assigned to this class. Use it to grant
-weapons, set models, or perform other setup. When switching from another class
-`OnTransferred` will run next.
+Called right after a character joins this class.  Use it to equip loadout items,
+set the model, or perform any other initialization.  When switching from another
+class, `OnTransferred` will run immediately afterward.  This hook runs before
+`OnLeave` is executed on the previous class.
 
 **Parameters:**
 
@@ -129,15 +141,23 @@ weapons, set models, or perform other setup. When switching from another class
 
 ```lua
 function CLASS:OnSet(client)
-    -- Give the player their uniform and starter pistol
     local char = client:getChar()
-    if self.model and char then
+
+    -- Apply the class model and give a starter pistol.
+    if char and self.model then
         char:setModel(self.model)
     end
 
     client:Give("weapon_pistol")
-    client:SetArmor(self.armor or 0)
-    client:SetHealth(self.health or client:Health())
+
+    -- Optional starting health/armor values.
+    if self.health then
+        client:SetHealth(self.health)
+        client:SetMaxHealth(self.health)
+    end
+    if self.armor then
+        client:SetArmor(self.armor)
+    end
 end
 ```
 
@@ -151,8 +171,9 @@ function CLASS:OnSpawn(client)
 
 **Description:**
 
-Runs each time a member of the class respawns. Use it to set up spawn
-attributes like health, armor, default weapons or movement speeds.
+Runs every time a member of the class respawns.  The hook is triggered from the
+`ClassOnLoadout` gamemode event, so it is ideal for giving items or tweaking
+stats such as health, armor, or movement speeds.
 
 **Parameters:**
 
@@ -172,19 +193,23 @@ attributes like health, armor, default weapons or movement speeds.
 
 ```lua
 function CLASS:OnSpawn(client)
-    -- Apply base stats whenever a member spawns
+    -- Apply base stats whenever a member spawns.
     client:SetMaxHealth(self.health or 150)
     client:SetHealth(self.health or 150)
     client:SetArmor(self.armor or 50)
 
-    -- Give default weapons
+    -- Give the class's default weapons.
     for _, wep in ipairs(self.weapons or {}) do
         client:Give(wep)
     end
 
-    -- Apply custom movement settings
-    if self.runSpeed then client:SetRunSpeed(self.runSpeed) end
-    if self.walkSpeed then client:SetWalkSpeed(self.walkSpeed) end
+    -- Apply movement settings.
+    if self.runSpeed then
+        client:SetRunSpeed(self.runSpeed)
+    end
+    if self.walkSpeed then
+        client:SetWalkSpeed(self.walkSpeed)
+    end
 end
 ```
 
@@ -198,9 +223,9 @@ function CLASS:OnTransferred(client, oldClass)
 
 **Description:**
 
-Executes after `OnSet` when a player is moved from another class into this one
-(for example via an admin command). The class index the player previously
-belonged to is provided so you can migrate data or adjust loadouts.
+Fires when a player is transferred into this class from a different one (for
+example via an admin command).  It runs immediately after `OnSet`.  The previous
+class index is provided so you can migrate data or adjust loadouts.
 
 **Parameters:**
 
@@ -223,12 +248,12 @@ belonged to is provided so you can migrate data or adjust loadouts.
 function CLASS:OnTransferred(client, oldClass)
     local char = client:getChar()
 
-    -- Apply the class model when transferring from another class
+    -- Apply the class model when transferring from another class.
     if char and self.model then
         char:setModel(self.model)
     end
 
-    -- Record the player's previous class for later use
+    -- Keep track of the player's previous class for later use.
     char:setData("previousClass", oldClass)
 end
 ```
