@@ -6,7 +6,7 @@ This page describes functions to register custom keybinds.
 
 ## Overview
 
-The keybind library stores user-defined keyboard bindings. It reads and writes keybind files and dispatches callbacks when the associated keys are pressed.
+The keybind library stores user-defined keyboard bindings. It is loaded **client side** and automatically loads any saved bindings from `data/lilia/keybinds/`. Press and release callbacks are dispatched through the `PlayerButtonDown` and `PlayerButtonUp` hooks. The library also adds a "Keybinds" page to the configuration menu via the `PopulateConfigurationButtons` hook so players can change their binds in game.
 
 ---
 
@@ -18,7 +18,9 @@ Registers a new keybind for a given action.
 
 Converts the provided key identifier to its corresponding key constant (if it's a string),
 
-and stores the keybind settings including the default key, press callback, and release callback.
+and stores the keybind settings. When the keybind does not yet have a saved value its
+default key will be set to the provided key.  The optional release callback will be executed
+when the key is released.
 
 Also maps the key code back to the action identifier for reverse lookup.
 
@@ -33,7 +35,7 @@ Also maps the key code back to the action identifier for reverse lookup.
 * cb (function) – The callback function to be executed when the key is pressed.
 
 
-* rcb (function) – The callback function to be executed when the key is released.
+* rcb (function, optional) – The callback function to be executed when the key is released.
 
 
 **Realm:**
@@ -49,8 +51,17 @@ Also maps the key code back to the action identifier for reverse lookup.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.keybind.add
-    lia.keybind.add("space", "jump", function() print("Jump pressed!") end, function() print("Jump released!") end)
+-- Bind F1 to open the inventory while held
+local inv
+lia.keybind.add(KEY_F1, "Open Inventory",
+    function()
+        inv = vgui.Create("liaMenu")
+        inv:setActiveTab(L("inv"))
+    end,
+    function()
+        if IsValid(inv) then inv:Close() end
+    end
+)
 ```
 
 ---
@@ -59,11 +70,9 @@ Also maps the key code back to the action identifier for reverse lookup.
 
 **Description:**
 
-Retrieves the current key code for a specified keybind action.
-
-If the keybind has a set value, that value is returned; otherwise, it falls back to the default key
-
-or an optionally provided fallback value.
+Retrieves the key code currently assigned to a keybind action.  The stored value
+is returned if present, otherwise the default key registered with `lia.keybind.add`
+is used.  If both are missing the optional fallback value is returned.
 
 **Parameters:**
 
@@ -86,8 +95,9 @@ or an optionally provided fallback value.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.keybind.get
-    local jumpKey = lia.keybind.get("jump", KEY_SPACE)
+-- Retrieve the key currently bound to opening the inventory
+local invKey = lia.keybind.get("Open Inventory", KEY_I)
+print("Inventory key:", input.GetKeyName(invKey))
 ```
 
 ---
@@ -96,11 +106,10 @@ or an optionally provided fallback value.
 
 **Description:**
 
-Saves the current keybind settings to a file.
-
-The function creates a directory specific to the active gamemode, constructs a filename based on the server's IP address,
-
-and writes the keybind mapping (action identifiers to key codes) in JSON format.
+Persists all keybinds to disk. The library creates a folder under
+`data/lilia/keybinds/` named after the active gamemode and writes a file based on
+the server IP address.  The file contains a JSON table mapping action identifiers
+to key codes.
 
 **Parameters:**
 
@@ -124,8 +133,8 @@ and writes the keybind mapping (action identifiers to key codes) in JSON format.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.keybind.save
-    lia.keybind.save()
+-- Manually save current keybinds (normally handled automatically)
+lia.keybind.save()
 ```
 
 ---
@@ -134,15 +143,12 @@ and writes the keybind mapping (action identifiers to key codes) in JSON format.
 
 **Description:**
 
-Loads keybind settings from a file.
-
-The function reads a JSON file from a gamemode-specific directory, applies the saved keybind values to the stored keybinds,
-
-and if no saved file is found, it resets the keybinds to their default values and saves them.
-
-It also sets up a reverse mapping from key codes to keybind action identifiers.
-
-Finally, it triggers the "InitializedKeybinds" hook.
+Loads keybind settings from disk.  The file is read from the same location used
+by `lia.keybind.save`.  If no saved binds exist the defaults defined via
+`lia.keybind.add` are applied and then written to disk.  After loading, a reverse
+lookup table (key code → action) is built and the `InitializedKeybinds` hook is
+triggered.
+This function is automatically called when the gamemode initializes or reloads.
 
 **Parameters:**
 
@@ -166,6 +172,9 @@ Finally, it triggers the "InitializedKeybinds" hook.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.keybind.load
-    lia.keybind.load()
+-- Reload keybinds and notify when done
+hook.Add("InitializedKeybinds", "NotifyKeybinds", function()
+    chat.AddText("Keybinds loaded")
+end)
+lia.keybind.load()
 ```

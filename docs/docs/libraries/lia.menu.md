@@ -6,29 +6,34 @@ This page describes small menu creation helpers.
 
 ## Overview
 
-The menu library offers convenience functions for building simple context menus. It supports nested options whose callbacks execute when selected and automatically positions the menu on screen.
+The menu library offers convenience functions for building simple context menus. Menus are defined by label/callback pairs and automatically appear at the player's crosshair or attached to a specified entity. Active menus are stored in `lia.menu.list` on the client.
+
+### Menu Entry Fields
+
+Each entry inside `lia.menu.list` is a table with the following fields:
+
+* `position` (Vector) – World position the menu is drawn at.
+* `entity` (Entity|nil) – Entity to follow if attached.
+* `items` (table) – Sorted array of `{label, callback}` pairs.
+* `width` (number) – Calculated pixel width for rendering.
+* `height` (number) – Total pixel height of all rows.
+* `onRemove` (function|nil) – Executed when the menu is removed.
 
 ### lia.menu.add(opts, pos, onRemove)
 
 **Description:**
 
-Creates a new world or entity menu using the entries provided in 'opts'.
-
-Keys are display text and values are callback functions executed when
-
-selected. The menu may be positioned at a world Vector or anchored to
-
-an entity.
+Creates a context menu from the given options table. Each key is the label shown and each value is the function run when selected.
+When an entity is supplied the menu follows that entity. Otherwise the player's eye trace position is used.
 
 **Parameters:**
 
 * opts (table) – Table of label/callback pairs.
 
 
-* pos (Vector|Entity|nil) – World position or entity to attach the menu to.
+* pos (Vector|Entity|nil) – Optional world position or entity to attach the menu to.
 
-
-* onRemove (function|nil) – Called when the menu is removed.
+* onRemove (function|nil) – Function executed when the menu is removed.
 
 
 **Realm:**
@@ -44,8 +49,11 @@ an entity.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.menu.add
-    lia.menu.add({["Hello"] = function() print("Hi") end})
+-- Attach a menu to the entity the player is looking at
+local ent = LocalPlayer():GetEyeTrace().Entity
+lia.menu.add({
+    ["Greet"] = function() print("Hi") end
+}, ent, function() print("menu closed") end)
 ```
 
 ---
@@ -54,9 +62,7 @@ an entity.
 
 **Description:**
 
-Draws all active menus on the player's screen. Typically called from
-
-HUDPaint.
+Draws all active menus on the player's HUD. It should be called from HUDPaint or similar hooks.
 
 **Parameters:**
 
@@ -76,8 +82,8 @@ HUDPaint.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of hook.Add
-    hook.Add("HUDPaint", "DrawMenus", lia.menu.drawAll)
+-- Draw menus each frame
+hook.Add("HUDPaintBackground", "DrawMenus", lia.menu.drawAll)
 ```
 
 ---
@@ -86,9 +92,7 @@ HUDPaint.
 
 **Description:**
 
-Returns the ID and callback of the menu item currently being hovered
-
-or selected by the player.
+Returns the ID and callback of the option currently under the cursor. Often used with PlayerBindPress to trigger selections.
 
 **Parameters:**
 
@@ -111,8 +115,9 @@ or selected by the player.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.menu.getActiveMenu
-    local id, callback = lia.menu.getActiveMenu()
+-- Check which option is under the crosshair
+local id, callback = lia.menu.getActiveMenu()
+if id then print("hovering option", id) end
 ```
 
 ---
@@ -121,7 +126,7 @@ or selected by the player.
 
 **Description:**
 
-Removes the specified menu and runs its callback if provided.
+Removes the menu with the given ID and executes its callback if present.
 
 **Parameters:**
 
@@ -144,6 +149,14 @@ Removes the specified menu and runs its callback if provided.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.menu.onButtonPressed
-    lia.menu.onButtonPressed(id)
+-- Activate menu options when Use or Attack is pressed
+hook.Add("PlayerBindPress", "MenuClick", function(client, bind, pressed)
+    if pressed and (bind:find("use") or bind:find("attack")) then
+        local id, cb = lia.menu.getActiveMenu()
+        if id then
+            return lia.menu.onButtonPressed(id, cb)
+        end
+    end
+end)
 ```
+
