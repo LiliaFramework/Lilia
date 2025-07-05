@@ -7,8 +7,9 @@ This page describes how popup notices are displayed.
 ## Overview
 
 The notice library displays temporary popup notifications at the top of the
-player's screen. Notices can be queued or targeted to specific players. On the
-client, active notice panels are stored in the `lia.notices` table.
+player's screen. Server functions send network messages to connected clients,
+which create `liaNotice` panels on the client. These panels are stored in the
+`lia.notices` table and automatically expire after roughly 7.5 seconds.
 
 ---
 
@@ -16,11 +17,12 @@ client, active notice panels are stored in the `lia.notices` table.
 
 **Description:**
 
-Queues a text notice to display to a specific player or everyone.
+Queues a text notice to display to a specific player or everyone. The
+message is sent over the `liaNotify` network string.
 
 **Parameters:**
 
-* message (string) – Message text to send.
+* message (string) – Message text to send. Converted to a string internally.
 
 
 * recipient (Player|nil) – Optional target player. Leave nil to broadcast.
@@ -39,8 +41,11 @@ Queues a text notice to display to a specific player or everyone.
 **Example Usage:**
 
 ```lua
-    -- Broadcast a restart warning to all players
-    lia.notices.notify("Server restarting in 10 seconds.")
+-- Broadcast a restart warning to everyone
+lia.notices.notify("Server restarting in 10 seconds.")
+
+-- Notify just one player about an error
+lia.notices.notify("Your quest failed.", player)
 ```
 
 ---
@@ -49,9 +54,9 @@ Queues a text notice to display to a specific player or everyone.
 
 **Description:**
 
-Sends a localized notice to a player or everyone. When the second
-argument isn't a player, it becomes the first formatting parameter and
-the notice is broadcast.
+Sends a localized notice to a player or everyone. When the second argument
+isn't a player, it becomes the first formatting parameter and the notice is
+broadcast. Messages use the `liaNotifyL` network string.
 
 **Parameters:**
 
@@ -78,8 +83,11 @@ the notice is broadcast.
 **Example Usage:**
 
 ```lua
-    -- Send a localized greeting to a specific client
-    lia.notices.notifyLocalized("welcome", client)
+-- Send a localized greeting to one player
+lia.notices.notifyLocalized("welcome", player)
+
+-- Broadcast a formatted message when no recipient is provided
+lia.notices.notifyLocalized("questFoundItem", nil, "golden_key")
 ```
 
 ---
@@ -88,7 +96,8 @@ the notice is broadcast.
 
 **Description:**
 
-Creates a visual notification panel on the client's screen.
+Creates a `liaNotice` panel on the local client and stores it in
+`lia.notices`. Notices fade out after about 7.5 seconds.
 
 **Parameters:**
 
@@ -108,8 +117,11 @@ Creates a visual notification panel on the client's screen.
 **Example Usage:**
 
 ```lua
-    -- Display a pickup notice on the local client
-    lia.notices.notify("Item picked up")
+-- Display a pickup notice on the local client
+lia.notices.notify("Item picked up")
+
+-- Print an informational message locally
+lia.notices.notify("Welcome back!")
 ```
 
 ---
@@ -118,7 +130,7 @@ Creates a visual notification panel on the client's screen.
 
 **Description:**
 
-Displays a localized notification on the client's screen.
+Translates the key using `L` and displays the result on the local client.
 
 **Parameters:**
 
@@ -141,33 +153,10 @@ Displays a localized notification on the client's screen.
 **Example Usage:**
 
 ```lua
-    -- Translate and display a pickup message
-    lia.notices.notifyLocalized("item_picked_up")
+-- Show a localized pickup message
+lia.notices.notifyLocalized("item_picked_up")
+
+-- Include formatting parameters
+lia.notices.notifyLocalized("foundCoins", 10)
 ```
 
----
-
-### notification.AddLegacy(text)
-
-**Description:**
-
-Client-side alias that calls `lia.notices.notify`. Any addon using the
-default Garry's Mod function will display the notice using Lilia's UI.
-
-**Parameters:**
-
-* text (string) – Text to display.
-
-**Realm:**
-
-* Client
-
-**Returns:**
-
-* None
-
-**Example Usage:**
-
-```lua
-    notification.AddLegacy("You have leveled up!")
-```
