@@ -14,7 +14,8 @@ Panel meta functions support scaled positioning, listen for inventory changes, a
 
 **Description:**
 
-Registers this panel to automatically receive inventory events for the provided inventory. When hooks such as `InventoryItemAdded`, `InventoryItemRemoved`, or `InventoryDeleted` fire, the panel's methods of the same name are called. `ItemDataChanged` events are forwarded to `InventoryItemDataChanged` when the item belongs to the watched inventory.
+Registers this panel to automatically receive inventory events for the provided inventory. The following events are forwarded to methods on the panel: `InventoryInitialized`, `InventoryDeleted`, `InventoryDataChanged`, `InventoryItemAdded`, and `InventoryItemRemoved`. `ItemDataChanged` is forwarded to `InventoryItemDataChanged` when the changed item belongs to this inventory.
+Hooks are automatically removed when the inventory is deleted, but you should also call `liaDeleteInventoryHooks` in `OnRemove` to avoid stale hooks.
 
 **Parameters:**
 
@@ -67,6 +68,10 @@ Removes hooks added by `liaListenForInventoryChanges`. Supply an inventory ID to
 function PANEL:OnRemove()
     -- Always clear listeners to avoid stale hooks
     self:liaDeleteInventoryHooks()
+end
+function PANEL:StopListening(id)
+    -- Remove hooks for a specific inventory ID
+    self:liaDeleteInventoryHooks(id)
 end
 ```
 ---
