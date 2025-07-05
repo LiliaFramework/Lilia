@@ -42,11 +42,13 @@ hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
         for _, item in pairs(inventory:getItems()) do
             if item.isBag and hook.Run("CanOpenBagPanel", item) ~= false then
                 local bagInv = item:getInv()
-                local bagPanel = bagInv:show(mainPanel)
-                lia.gui["inv" .. bagInv:getID()] = bagPanel
-                table.insert(panels, bagPanel)
-                totalWidth = totalWidth + bagPanel:GetWide() + margin
-                maxHeight = math.max(maxHeight, bagPanel:GetTall())
+                if bagInv then
+                    local bagPanel = bagInv:show(mainPanel)
+                    lia.gui["inv" .. bagInv:getID()] = bagPanel
+                    table.insert(panels, bagPanel)
+                    totalWidth = totalWidth + bagPanel:GetWide() + margin
+                    maxHeight = math.max(maxHeight, bagPanel:GetTall())
+                end
             end
         end
 
