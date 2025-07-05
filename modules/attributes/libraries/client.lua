@@ -9,11 +9,12 @@ function MODULE:PlayerBindPress(client, bind, pressed)
     if not pressed then return end
     local char = client:getChar()
     if not char then return end
-    local stam = predictedStamina or 0
-    if stam == 0 then stam = client:getLocalVar("stamina", 0) end
+    local predicted = predictedStamina or 0
+    local actual = client:getLocalVar("stamina", 0)
     local jumpReq = lia.config.get("JumpStaminaCost")
-    if bind == "+jump" and stam < jumpReq then return true end
-    if bind == "+speed" and stam <= 5 then
+    if bind == "+jump" and predicted < jumpReq and actual < jumpReq then return true end
+    local stamina = math.min(predicted, actual)
+    if bind == "+speed" and stamina <= 5 then
         client:ConCommand("-speed")
         return true
     end
