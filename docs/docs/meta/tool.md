@@ -34,9 +34,11 @@ Creates a new tool object with default values.
 **Example Usage:**
 
 ```lua
--- Create a table for a custom door tool mode
+-- Create a new tool instance and configure it
 local tool = ToolGunMeta:Create()
 tool.Mode = "lia_dooredit"
+tool.SWEP = weapon -- weapon variable from your SWEP
+tool.Owner = client -- client that spawned the tool
 ```
 
 ---
@@ -218,9 +220,9 @@ Determines whether this tool is allowed to be used.
 **Example Usage:**
 
 ```lua
--- Simple permission check
-if tool:Allowed() then
-    print("Tool can be used")
+-- Gate tool usage behind an admin check
+function TOOL:Allowed()
+    return self.AllowedCVar:GetBool() and self:GetOwner():IsAdmin()
 end
 ```
 
@@ -250,8 +252,10 @@ Placeholder for tool initialization.
 **Example Usage:**
 
 ```lua
--- Prepare the tool for use
-local result = tool:Init()
+function TOOL:Init()
+    self.Stage = 1
+    self:CreateConVars()
+end
 ```
 
 ---
@@ -320,7 +324,7 @@ local result = tool:GetSWEP()
 
 **Description:**
 
-Retrieves the tool owner's player object.
+Returns the player who owns the associated weapon.
 
 **Parameters:**
 
@@ -341,7 +345,8 @@ Retrieves the tool owner's player object.
 
 ```lua
 -- Reference the player who deployed the tool
-local result = tool:GetOwner()
+local owner = tool:GetOwner()
+print(owner:Name())
 ```
 
 ---
@@ -400,8 +405,11 @@ Handles the left-click action. Override for custom behavior.
 **Example Usage:**
 
 ```lua
--- Attempt the primary tool action
-local result = tool:LeftClick()
+-- Example override performing a build action
+function TOOL:LeftClick(trace)
+    self:AddPoint(trace.HitPos)
+    return true
+end
 ```
 
 ---
@@ -430,8 +438,11 @@ Handles the right-click action. Override for custom behavior.
 **Example Usage:**
 
 ```lua
--- Attempt the secondary tool action
-local result = tool:RightClick()
+-- Example override for an alternate action
+function TOOL:RightClick(trace)
+    openContextMenu(trace.Entity)
+    return true
+end
 ```
 
 ---
@@ -460,8 +471,10 @@ Clears stored objects when the tool reloads.
 **Example Usage:**
 
 ```lua
--- Clear saved objects when reloading the tool
-local result = tool:Reload()
+function TOOL:Reload()
+    self:ClearObjects()
+    self:ReleaseGhostEntity()
+end
 ```
 
 ---
@@ -490,8 +503,10 @@ Called when the tool is equipped. Releases ghost entity.
 **Example Usage:**
 
 ```lua
--- Reset ghost entity when equipping
-local result = tool:Deploy()
+function TOOL:Deploy()
+    self:ReleaseGhostEntity()
+    self:CreateConVars()
+end
 ```
 
 ---
@@ -520,8 +535,10 @@ Called when the tool is holstered. Releases ghost entity.
 **Example Usage:**
 
 ```lua
--- Unequip the tool and remove its ghost entity
-local result = tool:Holster()
+function TOOL:Holster()
+    self:ReleaseGhostEntity()
+    self:ClearObjects()
+end
 ```
 
 ---
@@ -550,8 +567,10 @@ Called every tick; releases ghost entities by default.
 **Example Usage:**
 
 ```lua
--- Run per-tick logic for the active tool
-local result = tool:Think()
+function TOOL:Think()
+    self:CheckObjects()
+    updateGhost(self:GetOwner(), self.GhostEntity)
+end
 ```
 
 ---
