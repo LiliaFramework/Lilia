@@ -38,15 +38,17 @@ print("Active char: " .. char:tostring())
 
 ---
 
+
 ### eq(other)
 
 **Description:**
 
-Compares two characters by ID for equality.
+Compares this character's ID with another object's ID. The argument can be a
+`Character` instance or any object providing a `getID` method.
 
 **Parameters:**
 
-* other (Character) – Character to compare.
+* other (Character) – Character or object to compare.
 
 
 **Realm:**
@@ -62,8 +64,9 @@ Compares two characters by ID for equality.
 **Example Usage:**
 
 ```lua
--- Check if the player is controlling the door owner
-if char:eq(door:getNetVar("ownChar")) then
+-- Unlock the door only for its controlling character
+local owner = door:getNetVar("ownChar")
+if owner and char:eq(owner) then
     door:Fire("unlock", "", 0)
 end
 ```
@@ -612,7 +615,8 @@ end
 
 **Description:**
 
-Adds another character to this one's recognition list. If a name is supplied the character will be recognized by that alias.
+Adds another character to this one's recognition list. When a custom `name` is
+provided that alias will be shown whenever the character is recognized.
 
 **Parameters:**
 
@@ -635,8 +639,8 @@ Adds another character to this one's recognition list. If a name is supplied the
 **Example Usage:**
 
 ```lua
--- Remember the rival using a codename
-char:recognize(rivalChar, "Mysterious Stranger")
+-- Remember the rival using a codename and by ID
+char:recognize(rivalChar:getID(), "Mysterious Stranger")
 ```
 
 ---
@@ -1113,7 +1117,8 @@ char:save(function() print("character saved") end)
 
 **Description:**
 
-Sends the character's networkable variables to the specified player. When no receiver is given the data is sent to all players.
+Sends the character's networkable variables to the specified player. When no
+receiver is given the data is broadcast to everyone.
 
 **Parameters:**
 
@@ -1133,8 +1138,8 @@ Sends the character's networkable variables to the specified player. When no rec
 **Example Usage:**
 
 ```lua
--- Refresh other players with our updated info
-char:sync()
+-- Send updates only to one player
+char:sync(targetPlayer)
 ```
 
 ---
@@ -1193,7 +1198,7 @@ Forcibly disconnects the player from their character and respawns them.
 **Example Usage:**
 
 ```lua
--- Eject the player from their character
+-- Eject the player from their current character
 char:kick()
 ```
 
@@ -1836,7 +1841,8 @@ Stores a temporary variable on the character.
 **Example Usage:**
 
 ```lua
-char:setVar("mood", "happy")
+-- Store a temporary value and send it only to the owner
+char:setVar("mood", "happy", nil, char:getPlayer())
 ```
 
 ---
