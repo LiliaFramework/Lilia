@@ -6,7 +6,7 @@ This page describes persistent data storage helpers.
 
 ## Overview
 
-The data library persists key/value pairs either on disk or through the database backend. It supplies convenience methods for saving, retrieving, and deleting stored data.
+The data library stores key/value pairs in the `lia_data` database table. Values are cached in memory inside `lia.data.stored` for quick access.
 
 ---
 
@@ -14,11 +14,9 @@ The data library persists key/value pairs either on disk or through the database
 
 **Description:**
 
-Saves the provided value under the specified key to persistent storage.
+Saves the provided value under the specified key in the `lia_data` table.
 
-The data is written to a file whose path is constructed based on the folder, map, and flags.
-
-Also caches the value in lia.data.stored.
+The value is cached in `lia.data.stored` and automatically written to the database.
 
 **Parameters:**
 
@@ -28,15 +26,15 @@ Also caches the value in lia.data.stored.
 * value (any) – The value to store.
 
 
-* global (boolean) – If true, uses a global path; otherwise, includes folder and map.
+* global (boolean) – When true, the entry is stored without gamemode or map restrictions.
 
 
-* ignoreMap (boolean) – If true, ignores the map directory.
+* ignoreMap (boolean) – When true, the map name is omitted from the stored entry.
 
 
 **Realm:**
 
-* Shared
+* Server
 
 
 **Returns:**
@@ -61,29 +59,29 @@ Also caches the value in lia.data.stored.
 
 **Description:**
 
-Deletes the stored data file corresponding to the specified key.
+Removes the stored value corresponding to the key from the `lia_data` table.
 
-Also removes the value from the cached storage.
+The cached entry inside `lia.data.stored` is also cleared.
 
 **Parameters:**
 
 * key (string) – The key corresponding to the data to be deleted.
 
 
-* global (boolean) – If true, uses a global path; otherwise, includes folder and map.
+* global (boolean) – When true, the entry is stored without gamemode or map restrictions.
 
 
-* ignoreMap (boolean) – If true, ignores the map directory.
+* ignoreMap (boolean) – When true, the map name is omitted from the stored entry.
 
 
 **Realm:**
 
-* Shared
+* Server
 
 
 **Returns:**
 
-* boolean – True if the file was deleted, false otherwise.
+* boolean – Always true; the deletion query is queued for the database.
 
 
 **Example Usage:**
@@ -99,11 +97,12 @@ Also removes the value from the cached storage.
 
 **Description:**
 
-Retrieves the stored data for the specified key.
+Retrieves the stored value for the specified key. This function no longer
+consults the database directly; all values are preloaded at startup and cached
+in `lia.data.stored`.
 
-If refresh is not set and data exists in cache, returns the cached data.
-
-Otherwise, reads from the file, decodes, and caches the value.
+The `global`, `ignoreMap`, and `refresh` parameters are legacy placeholders kept
+for backward compatibility.
 
 **Parameters:**
 
@@ -113,13 +112,13 @@ Otherwise, reads from the file, decodes, and caches the value.
 * default (any) – The default value to return if no data is found.
 
 
-* global (boolean) – If true, uses a global path; otherwise, includes folder and map.
+* global (boolean) – Legacy parameter currently ignored.
 
 
-* ignoreMap (boolean) – If true, ignores the map directory.
+* ignoreMap (boolean) – Legacy parameter currently ignored.
 
 
-* refresh (boolean) – If true, forces reading from file instead of cache.
+* refresh (boolean) – Unused legacy parameter kept for compatibility.
 
 
 **Realm:**
@@ -146,11 +145,48 @@ Otherwise, reads from the file, decodes, and caches the value.
 
 ---
 
+### lia.data.loadTables()
+
+**Description:**
+
+Loads all entries from the `lia_data` table into `lia.data.stored`. If the table
+is empty but legacy files exist, `lia.data.convertToDatabase` is automatically
+executed.
+
+**Parameters:**
+
+* None
+
+
+**Realm:**
+
+* Server
+
+
+    Internal Function:
+
+    true
+
+**Returns:**
+
+* None
+
+
+**Example Usage:**
+
+```lua
+    -- Called automatically when the framework finishes connecting to the
+    -- database. Can be invoked manually to reload data.
+    lia.data.loadTables()
+```
+
+---
+
 ### lia.data.convertToDatabase(changeMap)
 
 **Description:**
 
-Moves legacy `lia.data` files from `data/lilia` into the `lia_data` database table. While the conversion is running, players are prevented from joining the server. If `changeMap` is true, the current level will reload after conversion completes.
+Imports legacy `.txt` files from `data/lilia` into the `lia_data` SQL table. While the conversion runs players are prevented from joining. If `changeMap` is true, the current map reloads once conversion finishes.
 
 **Parameters:**
 
