@@ -14,7 +14,7 @@ The lia core library exposes shared helper functions used across multiple module
 
 **Description:**
 
-Includes a Lua file based on its realm. It determines the realm from the file name or provided state, and handles server/client inclusion logic.
+Includes a Lua file. If no realm is supplied the function attempts to infer it from the file name ("sv_", "sh_", or "cl_" prefixes). The file is then included on the appropriate side and sent to clients when necessary.
 
 **Parameters:**
 
@@ -31,14 +31,14 @@ Includes a Lua file based on its realm. It determines the realm from the file na
 
 **Returns:**
 
-* The result of the include, if applicable.
+* None
 
 
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.include
-    lia.include("lilia/gamemode/core/libraries/util.lua", "shared")
+-- Load a shared utility file from the gamemode
+lia.include("lilia/gamemode/core/libraries/util.lua")
 ```
 
 ---
@@ -47,7 +47,7 @@ Includes a Lua file based on its realm. It determines the realm from the file na
 
 **Description:**
 
-Includes all Lua files in a specified directory. If recursive is true, it traverses subdirectories. It determines the base directory based on the active schema or gamemode.
+Includes all Lua files in a directory. When `fromLua` is false the path is resolved relative to the active schema or, if none is loaded, the base gamemode. The function can optionally traverse subfolders.
 
 **Parameters:**
 
@@ -76,8 +76,8 @@ Includes all Lua files in a specified directory. If recursive is true, it traver
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.includeDir
-    lia.includeDir("lilia/gamemode/core/libraries/shared/thirdparty", true, true)
+-- Recursively load all server files within a module
+lia.includeDir("lilia/gamemode/core/modules/admin", true, true, "server")
 ```
 
 ---
@@ -86,7 +86,7 @@ Includes all Lua files in a specified directory. If recursive is true, it traver
 
 **Description:**
 
-Recursively includes all Lua files in a specified directory, preserving alphabetical order within each folder. Determines each file’s realm by override or filename prefix, then calls lia.include on each file.
+Recursively includes all Lua files inside a directory while preserving alphabetical order within each folder. The realm is inferred from each filename unless `forceRealm` is provided.
 
 **Parameters:**
 
@@ -115,8 +115,8 @@ Recursively includes all Lua files in a specified directory, preserving alphabet
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.includeGroupedDir
-    lia.includeGroupedDir("core/modules", false, true, "shared")
+-- Load every module inside the core folder
+lia.includeGroupedDir("core/modules", false, true)
 ```
 
 ---
@@ -274,14 +274,102 @@ Logs a bootstrap message with a colored section tag for clarity.
     -- This snippet demonstrates a common usage of lia.bootstrap
     lia.bootstrap("Database", "Connection established")
 ```
+### lia.notifyAdmin(notification)
+
+**Description:**
+
+Sends a chat message to all staff members who can view alting notifications.
+
+**Parameters:**
+
+* notification (string) – Text to broadcast.
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* None
+
+**Example Usage:**
+
+```lua
+-- Alert staff about suspicious activity
+lia.notifyAdmin("Possible alt account detected")
+```
 
 ---
+
+### lia.printLog(category, logString)
+
+**Description:**
+
+Prints a color-coded log entry to the console. The message is prefixed with
+`[LOG][<category>]` for easy filtering.
+
+**Parameters:**
+
+* category (string) – Name of the log category.
+* logString (string) – Message to log.
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* None
+
+**Example Usage:**
+
+```lua
+lia.printLog("Gameplay", "Third round started")
+```
+
+---
+
+### lia.applyPunishment(client, infraction, kick, ban, time, kickKey, banKey)
+
+**Description:**
+
+Applies standardized kick or ban commands for a player infraction.
+
+**Parameters:**
+
+* client (Player) – The player to punish.
+* infraction (string) – Reason for punishment.
+* kick (boolean) – Whether to kick the player.
+* ban (boolean) – Whether to ban the player.
+* time (number) – Ban duration in minutes.
+* kickKey (string) – Localization key for the kick reason.
+* banKey (string) – Localization key for the ban reason.
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* None
+
+**Example Usage:**
+
+```lua
+-- Ban a cheater permanently and remove them from the server
+lia.applyPunishment(ply, "Cheating", true, true, 0)
+```
+
+---
+
 
 ### lia.includeEntities(path)
 
 **Description:**
 
-Includes entity files from the specified directory. It checks for standard entity files ("init.lua", "shared.lua", "cl_init.lua"), handles inclusion and registration of entities, weapons, tools, and effects, and supports recursive inclusion within entity folders.
+Recursively loads entity-related files from the given directory. Each subfolder
+may contain `init.lua`, `shared.lua`, or `cl_init.lua`. Entities, weapons,
+tools, and effects are automatically registered after inclusion.
 
 **Parameters:**
 
