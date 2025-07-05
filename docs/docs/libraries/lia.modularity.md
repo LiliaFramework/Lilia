@@ -6,7 +6,9 @@ This page explains the module loading system.
 
 ## Overview
 
-The modularity library loads modules contained in the 'modules' folder. It resolves dependencies and initializes serverside and clientside components.
+The modularity library loads modules contained in the `modules` folder. It resolves dependencies and initializes both serverside and clientside components. It fires the `DoModuleIncludes`, `InitializedSchema` and `InitializedModules` hooks during the loading process.
+
+See [Module Fields](../definitions/module.md) for the options and callbacks a module file may define.
 
 ---
 
@@ -14,11 +16,10 @@ The modularity library loads modules contained in the 'modules' folder. It resol
 
 **Description:**
 
-Loads a module from a specified path. If the module is a single file, it includes it directly;
+Loads a module from the given path. If the target is a single file it is included directly.
+When loading a folder, the core file is executed and CAMI privileges, dependencies and additional resources such as languages and factions are loaded. Submodules are processed unless `skipSubmodules` is true.
 
-if it is a directory, it loads the core file (or its extended version), applies permissions, workshop content, dependencies, extras, and submodules.
-
-It also registers the module in the module list if applicable.
+All functions placed on `MODULE` are registered as hooks. During the extra include phase the `DoModuleIncludes` hook is fired and, when complete, `MODULE.ModuleLoaded` runs if defined. The module table also gains `setData` and `getData` helpers for persistent storage. Enabled modules are stored in `lia.module.list`.
 
 **Parameters:**
 
@@ -31,12 +32,14 @@ It also registers the module in the module list if applicable.
 * isSingleFile – Boolean indicating if the module is a single file.
 
 
-* variable – A global variable name used to temporarily store the module.
+* variable – Optional global variable name used to temporarily store the module. Defaults to `"MODULE"`.
+
+* skipSubmodules – When true, do not search for and load submodules. Defaults to `false`.
 
 
 **Realm:**
 
-* Server
+* Shared
 
 
 **Returns:**
@@ -47,8 +50,13 @@ It also registers the module in the module list if applicable.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.module.load
-    lia.module.load("example", "lilia/modules/example", false)
+-- Hook to see when extras are included
+hook.Add("DoModuleIncludes", "DebugInclude", function(path, module)
+    print("Including files from " .. path .. " for " .. module.uniqueID)
+end)
+
+-- Load a folder module and skip submodules
+lia.module.load("example", "lilia/modules/example", false, nil, true)
 ```
 
 ---
@@ -57,10 +65,7 @@ It also registers the module in the module list if applicable.
 
 **Description:**
 
-Initializes the module system by loading the schema and various module directories,
-
-then running the appropriate hooks after modules have been loaded. Items within
-`schema/items/` are loaded during this stage so all modules are available first.
+Initializes the module system by loading the schema and each configured module directory. After the schema finishes loading the `InitializedSchema` hook is triggered. Modules from the base folders and the schema are then processed, followed by the `InitializedModules` hook. Items from `schema/items/` load last so that all modules are already available.
 
 **Parameters:**
 
@@ -69,7 +74,7 @@ then running the appropriate hooks after modules have been loaded. Items within
 
 **Realm:**
 
-* Server
+* Shared
 
 
 **Returns:**
@@ -80,8 +85,12 @@ then running the appropriate hooks after modules have been loaded. Items within
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.module.initialize
-    lia.module.initialize()
+-- Wait for all modules before executing setup code
+hook.Add("InitializedModules", "SetupExampleData", function()
+    print("Modules finished loading.")
+end)
+
+lia.module.initialize()
 ```
 
 ---
@@ -102,11 +111,12 @@ Non-Lua files are ignored.
 
 
 * group – A string representing the module group (e.g., "schema" or "module").
+  This controls whether the module is loaded into `SCHEMA` or `MODULE`.
 
 
 **Realm:**
 
-* Server
+* Shared
 
 
 **Returns:**
@@ -117,8 +127,8 @@ Non-Lua files are ignored.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.module.loadFromDir
-    lia.module.loadFromDir("lilia/modules/core", "module")
+-- Load every module in the core directory (normally done by lia.module.initialize)
+lia.module.loadFromDir("lilia/modules/core", "module")
 ```
 
 ---
@@ -136,7 +146,7 @@ Retrieves a module table by its identifier.
 
 **Realm:**
 
-* Server
+* Shared
 
 
 **Returns:**
@@ -147,6 +157,9 @@ Retrieves a module table by its identifier.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.module.get
-    local mod = lia.module.get("schema")
+-- Retrieve the main menu module and print its display name
+local main = lia.module.get("mainmenu")
+if main then
+    print("Loaded module:", main.name)
+end
 ```

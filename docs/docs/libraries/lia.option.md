@@ -6,7 +6,22 @@ This page details the client/server option system.
 
 ## Overview
 
-The option library stores user and server options with default values. It offers getters and setters that automatically network changes between client and server. Define options clientside with `lia.option.add` to make them available for networking and configuration.
+The option library stores user and server options with default values. It offers
+getters and setters that automatically network changes between client and server.
+Define options clientside with `lia.option.add` to make them available for
+networking and configuration.
+
+Options are kept inside the shared table `lia.option.stored`. Each entry is a
+table containing:
+* `name` (string) – Display name shown in configuration menus.
+* `desc` (string) – Descriptive text.
+* `data` (table) – Extra data such as limits or category.
+* `value` (any) – Current option value.
+* `default` (any) – Fallback value if none was set.
+* `callback` (function|nil) – Called with `(oldValue, newValue)` when the value changes.
+* `type` (string) – Automatically detected or overridden control type like `Boolean` or `Int`.
+* `visible` (boolean|function|nil) – Controls if the option appears in the config UI.
+* `shouldNetwork` (boolean|nil) – When true the server fires the `liaOptionReceived` hook on change.
 
 ---
 
@@ -29,12 +44,16 @@ Adds a configuration option to the lia.option system.
 
 * default (any) — The default value for this option.
 
+* callback (function) — Called as `callback(oldValue, newValue)` when the option changes (optional).
 
-* callback (function) — A function to call when the option’s value changes (optional).
-
-
-* data (table) — Additional data describing the option (e.g., min, max, type, category, visible, shouldNetwork).
-
+* data (table) — Extra information controlling the option. Pass an empty table if you do not need any of the following fields:
+  * `category` (string) – Category heading in the menu.
+  * `min`/`max` (number) – Bounds for numeric options.
+  * `decimals` (number) – Rounding precision for floats.
+  * `options` (table) – Choice list for table options.
+  * `type` (string) – Force a control type such as `Boolean` or `Color`.
+  * `visible` (boolean|function) – If false or returns false the option is hidden.
+  * `shouldNetwork` (boolean) – If true, server changes trigger `liaOptionReceived`.
 
 **Realm:**
 
@@ -50,7 +69,14 @@ Adds a configuration option to the lia.option system.
 
 ```lua
     -- This snippet demonstrates a common usage of lia.option.add
-    lia.option.add("showHints", "Show Hints", "Display hints", true)
+    lia.option.add(
+    "thirdPersonEnabled",
+    "Third Person Enabled",
+    "Toggle third-person view.",
+    false,
+    function(_, newValue) hook.Run("thirdPersonToggled", newValue) end,
+    {category = "Third Person"}
+)
 ```
 
 ---
@@ -59,7 +85,7 @@ Adds a configuration option to the lia.option system.
 
 **Description:**
 
-Sets the value of a specified option, saves locally, and optionally networks to the server.
+Sets the value of an option, runs its callback and saves the data. If the option was created with `shouldNetwork = true`, the server fires `liaOptionReceived` for the change.
 
 **Parameters:**
 
@@ -83,7 +109,7 @@ Sets the value of a specified option, saves locally, and optionally networks to 
 
 ```lua
     -- This snippet demonstrates a common usage of lia.option.set
-    lia.option.set("showHints", false)
+    lia.option.set("thirdPersonEnabled", not lia.option.get("thirdPersonEnabled"))
 ```
 
 ---
@@ -116,7 +142,7 @@ Retrieves the value of a specified option, or returns a default if it doesn't ex
 
 ```lua
     -- This snippet demonstrates a common usage of lia.option.get
-    local show = lia.option.get("showHints", true)
+    local dist = lia.option.get("thirdPersonDistance", 50)
 ```
 
 ---
@@ -155,7 +181,8 @@ Saves all current option values to a file, named based on the server IP, within 
 
 **Description:**
 
-Loads saved option values from disk based on server IP and applies them to lia.option.stored.
+Loads saved option values from disk based on server IP and applies them to `lia.option.stored`.
+After loading, the `InitializedOptions` hook is fired.
 
 **Parameters:**
 
