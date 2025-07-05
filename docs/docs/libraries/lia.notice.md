@@ -6,7 +6,9 @@ This page describes how popup notices are displayed.
 
 ## Overview
 
-The notice library displays temporary popup notifications at the top of the player's screen. Notices can be queued or targeted to specific players.
+The notice library displays temporary popup notifications at the top of the
+player's screen. Notices can be queued or targeted to specific players. On the
+client, active notice panels are stored in the `lia.notices` table.
 
 ---
 
@@ -14,14 +16,14 @@ The notice library displays temporary popup notifications at the top of the play
 
 **Description:**
 
-Sends a notification message to a specific player or all players.
+Queues a text notice to display to a specific player or everyone.
 
 **Parameters:**
 
 * message (string) – Message text to send.
 
 
-* recipient (Player|nil) – Target player, or nil to broadcast.
+* recipient (Player|nil) – Optional target player. Leave nil to broadcast.
 
 
 **Realm:**
@@ -37,8 +39,8 @@ Sends a notification message to a specific player or all players.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.notices.notify
-    lia.notices.notifyLocalized("serverRestarting", nil)
+    -- Broadcast a restart warning to all players
+    lia.notices.notify("Server restarting in 10 seconds.")
 ```
 
 ---
@@ -47,14 +49,17 @@ Sends a notification message to a specific player or all players.
 
 **Description:**
 
-Sends a localized notification to a player or all players.
+Sends a localized notice to a player or everyone. When the second
+argument isn't a player, it becomes the first formatting parameter and
+the notice is broadcast.
 
 **Parameters:**
 
 * key (string) – Localization key.
 
 
-* recipient (Player|nil) – Target player or nil to broadcast.
+* recipient (Player|nil) – Optional target player. Leave nil or pass a
+  non-player as the second argument to broadcast.
 
 
 * ... (any) – Formatting arguments for the localization string.
@@ -73,7 +78,7 @@ Sends a localized notification to a player or all players.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.notices.notifyLocalized
+    -- Send a localized greeting to a specific client
     lia.notices.notifyLocalized("welcome", client)
 ```
 
@@ -103,8 +108,8 @@ Creates a visual notification panel on the client's screen.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.notices.notify
-    lia.notices.notifyLocalized("itemPickedUp")
+    -- Display a pickup notice on the local client
+    lia.notices.notify("Item picked up")
 ```
 
 ---
@@ -136,6 +141,33 @@ Displays a localized notification on the client's screen.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.notices.notifyLocalized
+    -- Translate and display a pickup message
     lia.notices.notifyLocalized("item_picked_up")
+```
+
+---
+
+### notification.AddLegacy(text)
+
+**Description:**
+
+Client-side alias that calls `lia.notices.notify`. Any addon using the
+default Garry's Mod function will display the notice using Lilia's UI.
+
+**Parameters:**
+
+* text (string) – Text to display.
+
+**Realm:**
+
+* Client
+
+**Returns:**
+
+* None
+
+**Example Usage:**
+
+```lua
+    notification.AddLegacy("You have leveled up!")
 ```
