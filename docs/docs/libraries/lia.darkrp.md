@@ -6,7 +6,11 @@ This page describes helpers for integrating with DarkRP.
 
 ## Overview
 
-The darkrp library bridges functionality with the DarkRP gamemode. It offers helper checks and wrappers to maintain compatibility when running Lilia alongside DarkRP.
+The darkrp library bridges functionality with the DarkRP gamemode. It mirrors
+several DarkRP helpers so third-party addons expecting the `DarkRP` globals
+continue to function. The functions documented here are also assigned to the
+global `DarkRP` table. A simplified `RPExtraTeams` table is created as well,
+mapping each faction to its team index for compatibility.
 
 ---
 
@@ -14,16 +18,14 @@ The darkrp library bridges functionality with the DarkRP gamemode. It offers hel
 
 **Description:**
 
-Checks whether the specified position is free from players, NPCs,
-
-and props.
+Checks whether the position is free from world geometry, players, NPCs and props. A 35 unit sphere around the position is checked to ensure spawn areas are unobstructed.
 
 **Parameters:**
 
 * position (Vector) – World position to test.
 
 
-* entitiesToIgnore (table) – Entities ignored during the check.
+* entitiesToIgnore (table, optional) – Entities ignored during the check.
 
 
 **Realm:**
@@ -39,8 +41,8 @@ and props.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.darkrp.isEmpty
-    if lia.darkrp.isEmpty(Vector(0,0,0)) then
+    local ply = Entity(1) -- example player
+    if lia.darkrp.isEmpty(ply:GetPos(), {ply}) then
         print("Spawn point is clear")
     end
 ```
@@ -51,14 +53,14 @@ and props.
 
 **Description:**
 
-Finds a nearby position that is unobstructed by players or props.
+Searches around the given start position for a spot free of world geometry and blocking entities.
 
 **Parameters:**
 
 * startPos (Vector) – The initial position to search from.
 
 
-* entitiesToIgnore (table) – Entities ignored during the search.
+* entitiesToIgnore (table, optional) – Entities ignored during the search.
 
 
 * maxDistance (number) – Maximum distance to search in units.
@@ -67,7 +69,7 @@ Finds a nearby position that is unobstructed by players or props.
 * searchStep (number) – Step increment when expanding the search radius.
 
 
-* checkArea (Vector) – Additional offset tested for clearance.
+* checkArea (Vector) – Additional height offset tested for clearance.
 
 
 **Realm:**
@@ -83,8 +85,7 @@ Finds a nearby position that is unobstructed by players or props.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.darkrp.findEmptyPos
-    local pos = lia.darkrp.findEmptyPos(Vector(0,0,0), nil, 128, 16, Vector(0,0,32))
+    local spawn = lia.darkrp.findEmptyPos(ply:GetPos(), {ply}, 128, 16, Vector(0,0,64))
 ```
 
 ---
@@ -93,9 +94,7 @@ Finds a nearby position that is unobstructed by players or props.
 
 **Description:**
 
-Forwards a notification message to the given client using
-
-lia's notify system.
+Sends a notification to the specified client. The second and third parameters exist only for DarkRP compatibility and are ignored.
 
 **Parameters:**
 
@@ -118,8 +117,7 @@ lia's notify system.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.darkrp.notify
-    lia.darkrp.notify(player.GetAll()[1], nil, nil, "Hello!")
+    lia.darkrp.notify(ply, nil, nil, "Purchase complete")
 ```
 
 ---
@@ -128,9 +126,7 @@ lia's notify system.
 
 **Description:**
 
-Wraps a text string so that it fits within the specified width
-
-when drawn with the given font.
+Clientside helper that wraps a string so it fits within a given pixel width using the provided font.
 
 **Parameters:**
 
@@ -156,8 +152,8 @@ when drawn with the given font.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.darkrp.textWrap
     local wrapped = lia.darkrp.textWrap("Some very long text", "DermaDefault", 150)
+    chat.AddText(wrapped)
 ```
 
 ---
@@ -166,7 +162,7 @@ when drawn with the given font.
 
 **Description:**
 
-Converts a numeric amount to a formatted currency string.
+Formats the given amount using lia.currency.get so other DarkRP addons receive familiar strings.
 
 **Parameters:**
 
@@ -186,7 +182,6 @@ Converts a numeric amount to a formatted currency string.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of print
     print(lia.darkrp.formatMoney(2500))
 ```
 
@@ -203,13 +198,7 @@ through lia's item system.
 **Parameters:**
 
 * name (string) – Display name of the entity.
-
-
-* data (table) – Table containing entity definition fields such as
-
-
-* model, description, and price.
-
+* data (table) – Table containing fields such as `model`, `desc`, `category`, `ent`, `price` and optional `cmd`.
 
 **Realm:**
 
@@ -224,8 +213,11 @@ through lia's item system.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.darkrp.createEntity
-    lia.darkrp.createEntity("Fuel", {model = "models/props_c17/oildrum001.mdl", price = 50})
+    lia.darkrp.createEntity("Fuel", {
+        model = "models/props_c17/oildrum001.mdl",
+        ent = "prop_physics",
+        price = 50
+    })
 ```
 
 ---
@@ -234,7 +226,7 @@ through lia's item system.
 
 **Description:**
 
-Placeholder for DarkRP category creation. Currently unused.
+Stub for DarkRP category creation. Included only for compatibility.
 
 **Parameters:**
 
