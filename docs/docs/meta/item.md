@@ -12,7 +12,9 @@ Item meta functions cover stack counts, categories, weight calculations, and net
 
 **Description:**
 
-Retrieves how many of this item the stack represents.
+Retrieves how many of this item the stack represents. When the item has not
+yet been instanced (`id` equals `0`) this returns the `maxQuantity` defined on
+the base item.
 
 **Parameters:**
 
@@ -257,8 +259,11 @@ Invokes an item method with the given player and entity context.
 **Example Usage:**
 
 ```lua
--- Trigger a custom "use" function when the player presses Use
-item:call("use", client, entity)
+-- Invoke a custom repair function and check the result
+local success = item:call("repair", client, entity, targetItem)
+if success then
+    client:notify("Repaired!")
+end
 ```
 
 ---
@@ -451,8 +456,9 @@ Called when the item table is first registered.
 **Example Usage:**
 
 ```lua
--- Initialize data when the item type loads
-item:onRegistered()
+function ITEM:onRegistered()
+    print("Registered item " .. self.uniqueID)
+end
 ```
 
 ---
@@ -846,7 +852,8 @@ end
 
 **Description:**
 
-Creates a world entity for this item at the specified position.
+Creates a world entity for this item at the specified position. If no angle is
+provided it will spawn upright using `angle_zero`.
 
 **Parameters:**
 
@@ -869,8 +876,11 @@ Creates a world entity for this item at the specified position.
 **Example Usage:**
 
 ```lua
--- Drop the item at the player's feet
-item:spawn(client:getItemDropPos(), Angle(0, 0, 0))
+-- Drop the item at the player's feet with a random yaw
+local ent = item:spawn(client:getItemDropPos(), Angle(0, math.random(0, 360), 0))
+if IsValid(ent) then
+    ent:SetOwner(client)
+end
 ```
 
 ---
