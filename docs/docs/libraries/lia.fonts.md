@@ -6,7 +6,8 @@ This page lists utilities for creating fonts.
 
 ## Overview
 
-The fonts library wraps surface.CreateFont for commonly used fonts. It reduces duplication by registering fonts once and allowing them to be recalled by name.
+The fonts library wraps `surface.CreateFont` for commonly used fonts. It avoids duplication by registering fonts once and allowing them to be recalled by name. Every call to `surface.CreateFont` is intercepted so the data is stored and automatically refreshed when the screen resolution or relevant configuration options change.
+Fonts are refreshed automatically whenever `RefreshFonts` is run and the `PostLoadFonts` hook will then be called with the current font choices. Register custom fonts inside this hook so they persist across refreshes.
 
 ---
 
@@ -14,7 +15,7 @@ The fonts library wraps surface.CreateFont for commonly used fonts. It reduces d
 
 **Description:**
 
-Creates and stores a font using surface.CreateFont for later refresh.
+Creates and stores a font using `surface.CreateFont`. The font is kept in the internal list so it can be recreated later. Invalid parameters raise an error.
 
 **Parameters:**
 
@@ -37,8 +38,14 @@ Creates and stores a font using surface.CreateFont for later refresh.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.font.register
-    lia.font.register("MyFont", {font = "Arial", size = 16})
+-- Register a new font after the default fonts have loaded
+hook.Add("PostLoadFonts", "ExampleFont", function()
+    lia.font.register("MyFont", {
+        font = "Arial",
+        size = 16,
+        weight = 500
+    })
+end)
 ```
 
 ---
@@ -47,7 +54,7 @@ Creates and stores a font using surface.CreateFont for later refresh.
 
 **Description:**
 
-Returns a sorted list of font names that have been registered.
+Returns an alphabetically sorted table of the font names that have been registered.
 
 **Parameters:**
 
@@ -67,9 +74,10 @@ Returns a sorted list of font names that have been registered.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.font.getAvailableFonts
-    local fonts = lia.font.getAvailableFonts()
-    PrintTable(fonts)
+local fonts = lia.font.getAvailableFonts()
+for _, name in ipairs(fonts) do
+    print("Font:", name)
+end
 ```
 
 ---
@@ -78,7 +86,7 @@ Returns a sorted list of font names that have been registered.
 
 **Description:**
 
-Recreates all stored fonts. Called when font related config values change.
+Recreates all stored fonts from the internal list. This runs automatically when the screen resolution changes or when the `Font` or `GenericFont` configs update. Once complete it fires `PostLoadFonts` with `currentFont` and `genericFont`.
 
 **Parameters:**
 
@@ -98,6 +106,11 @@ Recreates all stored fonts. Called when font related config values change.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.font.refresh
-    lia.font.refresh()
+-- Force fonts to reload
+hook.Run("RefreshFonts")
+
+-- React after fonts load
+hook.Add("PostLoadFonts", "NotifyReload", function(cur, gen)
+    print("Fonts loaded:", cur, gen)
+end)
 ```
