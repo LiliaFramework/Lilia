@@ -52,7 +52,8 @@ Returns the midpoint between this vector and the supplied vector.
 -- Average two vectors to find the midpoint
 local a = Vector(0, 0, 0)
 local b = Vector(10, 10, 10)
-print(a:Center(b)) -- Vector(5, 5, 5)
+local result = a:Center(b)
+print(result)
 ```
 
 ---
@@ -84,7 +85,8 @@ Calculates the distance between this vector and another vector.
 -- Measure the distance between two points
 local p1 = Vector(0, 0, 0)
 local p2 = Vector(3, 4, 0)
-print(p1:Distance(p2)) -- 5
+local result = p1:Distance(p2)
+print(result)
 ```
 
 ---
@@ -118,8 +120,8 @@ Rotates the vector around an axis by the specified degrees and returns the new v
 ```lua
 -- Rotate a vector 90 degrees around the Z axis
 local axis = Vector(0, 0, 1)
-local rotated = Vector(1, 0, 0):RotateAroundAxis(axis, 90)
-print(rotated) -- Vector(0, 1, 0)
+local result = Vector(1, 0, 0):RotateAroundAxis(axis, 90)
+print(result)
 ```
 
 ---
@@ -153,8 +155,8 @@ component it defaults to `Vector(0, -1, 0)`.
 ```lua
 -- Get the right direction vector
 local forward = Vector(1, 0, 0)
-local rightVec = forward:Right() -- Vector(0, -1, 0)
-print(rightVec)
+local result = forward:Right()
+print(result)
 ```
 
 ---
@@ -189,6 +191,6 @@ component the fallback value is `Vector(-self.z, 0, 0)`.
 ```lua
 -- Get the up direction vector
 local forward = Vector(1, 0, 0)
-local upVec = forward:Up() -- Vector(0, 0, 1)
-print(upVec)
+local result = forward:Up()
+print(result)
 ```
