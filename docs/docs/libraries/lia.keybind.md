@@ -121,10 +121,6 @@ to key codes.
 * Client
 
 
-    Internal Function:
-
-    true
-
 **Returns:**
 
 * None
@@ -159,10 +155,6 @@ This function is automatically called when the gamemode initializes or reloads.
 
 * Client
 
-
-    Internal Function:
-
-    true
 
 **Returns:**
 
