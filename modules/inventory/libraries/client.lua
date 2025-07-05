@@ -26,6 +26,18 @@ function MODULE:getItemStacks(inventory)
     return stacks
 end
 
+function MODULE:InventoryItemRemoved(_, item)
+    if not item.isBag then return end
+    local bagInv = item:getInv()
+    if not bagInv then return end
+    local bagID = bagInv:getID()
+    local panel = lia.gui["inv" .. bagID]
+    if IsValid(panel) then
+        panel:Remove()
+        lia.gui["inv" .. bagID] = nil
+    end
+end
+
 hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
     local margin = 10
     if hook.Run("CanPlayerViewInventory") == false then return end
