@@ -10,7 +10,7 @@ The config library stores server configuration values with descriptions and defa
 
 ---
 
-### lia.config.add(key, name, value, callback, data)
+### lia.config.add
 
 **Description:**
 
@@ -18,19 +18,19 @@ Registers a new config option with the given key, display name, default value, a
 
 **Parameters:**
 
-* key (string) — The unique key identifying the config.
+* `key` (`string`) — The unique key identifying the config.
 
 
-* name (string) — The display name of the config option.
+* `name` (`string`) — The display name of the config option.
 
 
-* value (any) — The default value of this config option.
+* `value` (`any`) — The default value of this config option.
 
 
-* callback (function) — A function called when the value changes (optional).
+* `callback` (`function`) — A function called when the value changes (optional).
 
 
-* data (table) — Additional data customizing the option. Fields include:
+* `data` (`table`) — Additional data customizing the option. Fields include:
     * desc (string) – Description shown in the menu.
     * category (string) – Category used to group the setting.
     * type (string) – "Boolean", "Int", "Float", "Color", or "Table". If omitted it is inferred from the default value.
@@ -76,7 +76,7 @@ Registers a new config option with the given key, display name, default value, a
 
 ---
 
-### lia.config.setDefault(key, value)
+### lia.config.setDefault
 
 **Description:**
 
@@ -84,10 +84,10 @@ Changes the stored default for an existing config option without affecting its c
 
 **Parameters:**
 
-* key (string) — The key identifying the config.
+* `key` (`string`) — The key identifying the config.
 
 
-* value (any) — The new default value.
+* `value` (`any`) — The new default value.
 
 
 **Realm:**
@@ -109,7 +109,7 @@ Changes the stored default for an existing config option without affecting its c
 
 ---
 
-### lia.config.forceSet(key, value, noSave)
+### lia.config.forceSet
 
 **Description:**
 
@@ -117,13 +117,13 @@ Sets a config value directly without running callbacks or sending network update
 
 **Parameters:**
 
-* key (string) — The key identifying the config.
+* `key` (`string`) — The key identifying the config.
 
 
-* value (any) — The new value to set.
+* `value` (`any`) — The new value to set.
 
 
-* noSave (boolean) — If true, does not save to disk.
+* `noSave` (`boolean`) — If true, does not save to disk.
 
 
 **Realm:**
@@ -145,7 +145,7 @@ Sets a config value directly without running callbacks or sending network update
 
 ---
 
-### lia.config.set(key, value)
+### lia.config.set
 
 **Description:**
 
@@ -153,10 +153,10 @@ Sets a config value, saves it server‑side, runs the callback with the old and 
 
 **Parameters:**
 
-* key (string) — The key identifying the config.
+* `key` (`string`) — The key identifying the config.
 
 
-* value (any) — The new value to set.
+* `value` (`any`) — The new value to set.
 
 
 **Realm:**
@@ -178,7 +178,7 @@ Sets a config value, saves it server‑side, runs the callback with the old and 
 
 ---
 
-### lia.config.get(key, default)
+### lia.config.get
 
 **Description:**
 
@@ -186,10 +186,10 @@ Retrieves the current value of a config. If no value is set, the stored default 
 
 **Parameters:**
 
-* key (string) — The key identifying the config.
+* `key` (`string`) — The key identifying the config.
 
 
-* default (any) — Fallback value if the config is not found.
+* `default` (`any`) — Fallback value if the config is not found.
 
 
 **Realm:**
@@ -211,7 +211,7 @@ Retrieves the current value of a config. If no value is set, the stored default 
 
 ---
 
-### lia.config.load()
+### lia.config.load
 
 **Description:**
 
@@ -245,7 +245,7 @@ Loads config values from the database (server side) and stores them in `lia.conf
 
 ---
 
-### lia.config.getChangedValues()
+### lia.config.getChangedValues
 
 **Description:**
 
@@ -275,7 +275,7 @@ Returns a table of all config entries where the current value differs from the d
 
 ---
 
-### lia.config.send(client)
+### lia.config.send
 
 **Description:**
 
@@ -283,7 +283,7 @@ Sends all changed config values to a client. If no client is specified the value
 
 **Parameters:**
 
-* client (player) — The player to receive the config data.
+* `client` (`player`) — The player to receive the config data.
 
 
 **Realm:**
@@ -305,7 +305,7 @@ Sends all changed config values to a client. If no client is specified the value
 
 ---
 
-### lia.config.save()
+### lia.config.save
 
 **Description:**
 
@@ -335,7 +335,7 @@ Writes all changed config values to the database so they persist across restarts
 
 ---
 
-### lia.config.convertToDatabase(changeMap)
+### lia.config.convertToDatabase
 
 **Description:**
 
@@ -343,7 +343,7 @@ Moves legacy `lia.config` data from the `data/lilia` folder into the `lia_config
 
 **Parameters:**
 
-* changeMap (boolean) – Whether to reload the map after conversion completes.
+* `changeMap` (`boolean`) – Whether to reload the map after conversion completes.
 
 **Realm:**
 

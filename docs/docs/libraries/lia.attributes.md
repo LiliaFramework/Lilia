@@ -36,7 +36,7 @@ documentation](../definitions/attribute.md) for detailed explanations.
 
 ---
 
-### lia.attribs.loadFromDir(directory)
+### lia.attribs.loadFromDir
 
 **Description:**
 
@@ -49,7 +49,7 @@ filename (without extension) as the key.
 
 **Parameters:**
 
-* directory (string) – Path to the folder containing attribute Lua files.
+* `directory` (`string`) – Path to the folder containing attribute Lua files.
 
 
 **Realm:**
@@ -81,7 +81,7 @@ lia.attribs.loadFromDir("schema/attributes")
 
 ---
 
-### lia.attribs.setup(client)
+### lia.attribs.setup
 
 **Description:**
 
@@ -93,7 +93,7 @@ an OnSetup callback, it is executed with the current value.
 
 **Parameters:**
 
-* client (Player) – The player whose character attributes should be set up.
+* `client` (`Player`) – The player whose character attributes should be set up.
 
 
 **Realm:**

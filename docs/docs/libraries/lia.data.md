@@ -10,7 +10,7 @@ The data library stores key/value pairs in the `lia_data` database table. Values
 
 ---
 
-### lia.data.set(key, value, global, ignoreMap)
+### lia.data.set
 
 **Description:**
 
@@ -20,16 +20,16 @@ The value is cached in `lia.data.stored` and automatically written to the databa
 
 **Parameters:**
 
-* key (string) – The key under which the data is stored.
+* `key` (`string`) – The key under which the data is stored.
 
 
-* value (any) – The value to store.
+* `value` (`any`) – The value to store.
 
 
-* global (boolean) – When true, the entry is stored without gamemode or map restrictions.
+* `global` (`boolean`) – When true, the entry is stored without gamemode or map restrictions.
 
 
-* ignoreMap (boolean) – When true, the map name is omitted from the stored entry.
+* `ignoreMap` (`boolean`) – When true, the map name is omitted from the stored entry.
 
 
 **Realm:**
@@ -55,7 +55,7 @@ The value is cached in `lia.data.stored` and automatically written to the databa
 
 ---
 
-### lia.data.delete(key, global, ignoreMap)
+### lia.data.delete
 
 **Description:**
 
@@ -65,13 +65,13 @@ The cached entry inside `lia.data.stored` is also cleared.
 
 **Parameters:**
 
-* key (string) – The key corresponding to the data to be deleted.
+* `key` (`string`) – The key corresponding to the data to be deleted.
 
 
-* global (boolean) – When true, the entry is stored without gamemode or map restrictions.
+* `global` (`boolean`) – When true, the entry is stored without gamemode or map restrictions.
 
 
-* ignoreMap (boolean) – When true, the map name is omitted from the stored entry.
+* `ignoreMap` (`boolean`) – When true, the map name is omitted from the stored entry.
 
 
 **Realm:**
@@ -93,7 +93,7 @@ The cached entry inside `lia.data.stored` is also cleared.
 
 ---
 
-### lia.data.get(key, default, global, ignoreMap, refresh)
+### lia.data.get
 
 **Description:**
 
@@ -106,19 +106,19 @@ for backward compatibility.
 
 **Parameters:**
 
-* key (string) – The key corresponding to the data.
+* `key` (`string`) – The key corresponding to the data.
 
 
-* default (any) – The default value to return if no data is found.
+* `default` (`any`) – The default value to return if no data is found.
 
 
-* global (boolean) – Legacy parameter currently ignored.
+* `global` (`boolean`) – Legacy parameter currently ignored.
 
 
-* ignoreMap (boolean) – Legacy parameter currently ignored.
+* `ignoreMap` (`boolean`) – Legacy parameter currently ignored.
 
 
-* refresh (boolean) – Unused legacy parameter kept for compatibility.
+* `refresh` (`boolean`) – Unused legacy parameter kept for compatibility.
 
 
 **Realm:**
@@ -145,7 +145,7 @@ for backward compatibility.
 
 ---
 
-### lia.data.loadTables()
+### lia.data.loadTables
 
 **Description:**
 
@@ -182,7 +182,7 @@ executed.
 
 ---
 
-### lia.data.convertToDatabase(changeMap)
+### lia.data.convertToDatabase
 
 **Description:**
 
@@ -190,7 +190,7 @@ Imports legacy `.txt` files from `data/lilia` into the `lia_data` SQL table. Whi
 
 **Parameters:**
 
-* changeMap (boolean) – Whether to reload the current map when finished.
+* `changeMap` (`boolean`) – Whether to reload the current map when finished.
 
 **Realm:**
 

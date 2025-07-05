@@ -189,7 +189,7 @@ AdminStick = {
 
 ### Execution Hook
 
-#### `onRun(client, args)`
+#### `onRun`
 
 **Type:**
 

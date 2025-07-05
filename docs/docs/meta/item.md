@@ -8,7 +8,7 @@ Item objects represent things found in inventories or spawned in the world. This
 
 Item meta functions cover stack counts, categories, weight calculations, and network variables. Items are objects that can exist in inventories or the world, and item instances clone the base properties defined by the item table. These helpers enable consistent interaction across trading, crafting, and interface components.
 
-### getQuantity()
+### getQuantity
 
 **Description:**
 
@@ -40,7 +40,7 @@ player:GiveAmmo(item:getQuantity(), "pistol")
 
 ---
 
-### eq(other)
+### eq
 
 **Description:**
 
@@ -48,7 +48,7 @@ Compares this item instance to another by ID.
 
 **Parameters:**
 
-* other (Item) – The other item to compare with.
+* `other` (`Item`) – The other item to compare with.
 
 
 **Realm:**
@@ -72,7 +72,7 @@ end
 
 ---
 
-### tostring()
+### tostring
 
 **Description:**
 
@@ -102,7 +102,7 @@ print("Saving " .. item:tostring())
 
 ---
 
-### getID()
+### getID
 
 **Description:**
 
@@ -132,7 +132,7 @@ lia.db.updateItem(item:getID(), {price = 50})
 
 ---
 
-### getModel()
+### getModel
 
 **Description:**
 
@@ -164,7 +164,7 @@ prop:Spawn()
 
 ---
 
-### getSkin()
+### getSkin
 
 **Description:**
 
@@ -194,7 +194,7 @@ model:SetSkin(item:getSkin())
 
 ---
 
-### getPrice()
+### getPrice
 
 **Description:**
 
@@ -226,7 +226,7 @@ end
 
 ---
 
-### call(method, client, entity, ...)
+### call
 
 **Description:**
 
@@ -234,13 +234,13 @@ Invokes an item method with the given player and entity context.
 
 **Parameters:**
 
-* method (string) – Method name to run.
+* `method` (`string`) – Method name to run.
 
 
-* client (Player) – The player performing the action.
+* `client` (`Player`) – The player performing the action.
 
 
-* entity (Entity) – Entity representing this item.
+* `entity` (`Entity`) – Entity representing this item.
 
 
 * ... – Additional arguments passed to the method.
@@ -268,7 +268,7 @@ end
 
 ---
 
-### getOwner()
+### getOwner
 
 **Description:**
 
@@ -301,7 +301,7 @@ end
 
 ---
 
-### getData(key, default)
+### getData
 
 **Description:**
 
@@ -309,10 +309,10 @@ Retrieves a piece of persistent data stored on the item.
 
 **Parameters:**
 
-* key (string) – Data key to read.
+* `key` (`string`) – Data key to read.
 
 
-* default (any) – Value to return when the key is absent.
+* `default` (`any`) – Value to return when the key is absent.
 
 
 **Realm:**
@@ -334,7 +334,7 @@ local color = item:getData("paintColor", Color(255,255,255))
 
 ---
 
-### getAllData()
+### getAllData
 
 **Description:**
 
@@ -366,7 +366,7 @@ PrintTable(item:getAllData())
 
 ---
 
-### hook(name, func)
+### hook
 
 **Description:**
 
@@ -374,10 +374,10 @@ Registers a hook callback for this item instance.
 
 **Parameters:**
 
-* name (string) – Hook identifier.
+* `name` (`string`) – Hook identifier.
 
 
-* func (function) – Function to call.
+* `func` (`function`) – Function to call.
 
 
 **Realm:**
@@ -399,7 +399,7 @@ item:hook("use", function(ply) ply:ChatPrint(L("usedItem")) end)
 
 ---
 
-### postHook(name, func)
+### postHook
 
 **Description:**
 
@@ -407,10 +407,10 @@ Registers a post-hook callback for this item.
 
 **Parameters:**
 
-* name (string) – Hook identifier.
+* `name` (`string`) – Hook identifier.
 
 
-* func (function) – Function invoked after the main hook.
+* `func` (`function`) – Function invoked after the main hook.
 
 
 **Realm:**
@@ -432,7 +432,7 @@ item:postHook("pickup", function(ply) ply:Give("weapon_pistol") end)
 
 ---
 
-### onRegistered()
+### onRegistered
 
 **Description:**
 
@@ -463,7 +463,7 @@ end
 
 ---
 
-### print(detail)
+### print
 
 **Description:**
 
@@ -471,7 +471,7 @@ Prints a simple representation of the item to the console.
 
 **Parameters:**
 
-* detail (boolean) – Include position details when true.
+* `detail` (`boolean`) – Include position details when true.
 
 
 **Realm:**
@@ -493,7 +493,7 @@ item:print(true)
 
 ---
 
-### printData()
+### printData
 
 **Description:**
 
@@ -523,7 +523,7 @@ item:printData()
 
 ---
 
-### addQuantity(quantity, receivers, noCheckEntity)
+### addQuantity
 
 **Description:**
 
@@ -531,13 +531,13 @@ Increases the stored quantity for this item instance.
 
 **Parameters:**
 
-* quantity (number) – Amount to add.
+* `quantity` (`number`) – Amount to add.
 
 
-* receivers (Player|None) – Who to network the change to.
+* `receivers` (`Player|None`) – Who to network the change to.
 
 
-* noCheckEntity (boolean) – Skip entity network update.
+* `noCheckEntity` (`boolean`) – Skip entity network update.
 
 
 **Realm:**
@@ -561,7 +561,7 @@ player:notifyLocalized("item_added", item.name, 5)
 
 ---
 
-### setQuantity(quantity, receivers, noCheckEntity)
+### setQuantity
 
 **Description:**
 
@@ -569,13 +569,13 @@ Sets the current stack quantity and replicates the change.
 
 **Parameters:**
 
-* quantity (number) – New amount to store.
+* `quantity` (`number`) – New amount to store.
 
 
-* receivers (Player|None) – Recipients to send updates to.
+* `receivers` (`Player|None`) – Recipients to send updates to.
 
 
-* noCheckEntity (boolean) – Skip entity updates when true.
+* `noCheckEntity` (`boolean`) – Skip entity updates when true.
 
 
 **Realm:**
@@ -598,7 +598,7 @@ item:setQuantity(1, nil, true)
 
 ---
 
-### getName()
+### getName
 
 **Description:**
 
@@ -628,7 +628,7 @@ client:ChatPrint(string.format(L("pickedUpItem"), item:getName()))
 
 ---
 
-### getDesc()
+### getDesc
 
 **Description:**
 
@@ -658,7 +658,7 @@ tooltip:AddRowAfter("name", "desc"):SetText(item:getDesc())
 
 ---
 
-### removeFromInventory(preserveItem)
+### removeFromInventory
 
 **Description:**
 
@@ -666,7 +666,7 @@ Removes this item from its inventory without deleting it when `preserveItem` is 
 
 **Parameters:**
 
-* preserveItem (boolean) – Keep the item saved in the database.
+* `preserveItem` (`boolean`) – Keep the item saved in the database.
 
 
 **Realm:**
@@ -690,7 +690,7 @@ end)
 
 ---
 
-### delete()
+### delete
 
 **Description:**
 
@@ -722,7 +722,7 @@ end)
 
 ---
 
-### remove()
+### remove
 
 **Description:**
 
@@ -754,7 +754,7 @@ end)
 
 ---
 
-### destroy()
+### destroy
 
 **Description:**
 
@@ -784,7 +784,7 @@ item:destroy()
 
 ---
 
-### onDisposed()
+### onDisposed
 
 **Description:**
 
@@ -815,7 +815,7 @@ end
 
 ---
 
-### getEntity()
+### getEntity
 
 **Description:**
 
@@ -848,7 +848,7 @@ end
 
 ---
 
-### spawn(position, angles)
+### spawn
 
 **Description:**
 
@@ -857,10 +857,10 @@ provided it will spawn upright using `angle_zero`.
 
 **Parameters:**
 
-* position (Vector|Player) – Drop position or player dropping the item.
+* `position` (`Vector|Player`) – Drop position or player dropping the item.
 
 
-* angles (Angle|None) – Orientation for the entity.
+* `angles` (`Angle|None`) – Orientation for the entity.
 
 
 **Realm:**
@@ -885,7 +885,7 @@ end
 
 ---
 
-### transfer(newInventory, bBypass)
+### transfer
 
 **Description:**
 
@@ -893,10 +893,10 @@ Moves the item to another inventory, optionally bypassing access checks.
 
 **Parameters:**
 
-* newInventory (Inventory) – Destination inventory.
+* `newInventory` (`Inventory`) – Destination inventory.
 
 
-* bBypass (boolean) – Skip permission checking.
+* `bBypass` (`boolean`) – Skip permission checking.
 
 
 **Realm:**
@@ -920,7 +920,7 @@ end)
 
 ---
 
-### onInstanced(invID, x, y, item)
+### onInstanced
 
 **Description:**
 
@@ -928,10 +928,10 @@ Called when a new instance of this item is created.
 
 **Parameters:**
 
-* invID (number) – Inventory ID the item belongs to or `NULL` when not placed in one.
-* x (number) – Grid X coordinate where the item spawned.
-* y (number) – Grid Y coordinate where the item spawned.
-* item (Item) – The newly created item instance.
+* `invID` (`number`) – Inventory ID the item belongs to or `NULL` when not placed in one.
+* `x` (`number`) – Grid X coordinate where the item spawned.
+* `y` (`number`) – Grid Y coordinate where the item spawned.
+* `item` (`Item`) – The newly created item instance.
 
 
 **Realm:**
@@ -954,7 +954,7 @@ end
 
 ---
 
-### onSync(recipient)
+### onSync
 
 **Description:**
 
@@ -962,7 +962,7 @@ Runs after this item is networked to `recipient`.
 
 **Parameters:**
 
-* recipient (Player|nil) – Player who received the data, or nil when broadcast.
+* `recipient` (`Player|nil`) – Player who received the data, or nil when broadcast.
 
 
 **Realm:**
@@ -985,7 +985,7 @@ end
 
 ---
 
-### onRemoved()
+### onRemoved
 
 **Description:**
 
@@ -1016,7 +1016,7 @@ end
 
 ---
 
-### onRestored(inventory)
+### onRestored
 
 **Description:**
 
@@ -1024,7 +1024,7 @@ Called when the item is restored from the database.
 
 **Parameters:**
 
-* inventory (Inventory|nil) – Inventory the item belongs to when loaded, if any.
+* `inventory` (`Inventory|nil`) – Inventory the item belongs to when loaded, if any.
 
 
 **Realm:**
@@ -1050,7 +1050,7 @@ end
 
 ---
 
-### sync(recipient)
+### sync
 
 **Description:**
 
@@ -1058,7 +1058,7 @@ Sends this item's data to a player or broadcasts to all.
 
 **Parameters:**
 
-* recipient (Player|None) – Target player or nil for broadcast.
+* `recipient` (`Player|None`) – Target player or nil for broadcast.
 
 
 **Realm:**
@@ -1080,7 +1080,7 @@ item:sync(player)
 
 ---
 
-### setData(key, value, receivers, noSave, noCheckEntity)
+### setData
 
 **Description:**
 
@@ -1088,19 +1088,19 @@ Sets a data field on the item and optionally networks and saves it.
 
 **Parameters:**
 
-* key (string) – Data key to modify.
+* `key` (`string`) – Data key to modify.
 
 
-* value (any) – New value to store.
+* `value` (`any`) – New value to store.
 
 
-* receivers (Player|None) – Who to send the update to.
+* `receivers` (`Player|None`) – Who to send the update to.
 
 
-* noSave (boolean) – Avoid saving to the database.
+* `noSave` (`boolean`) – Avoid saving to the database.
 
 
-* noCheckEntity (boolean) – Skip updating the world entity.
+* `noCheckEntity` (`boolean`) – Skip updating the world entity.
 
 
 **Realm:**
@@ -1122,7 +1122,7 @@ item:setData("rarity", "legendary", player)
 
 ---
 
-### interact(action, client, entity, data)
+### interact
 
 **Description:**
 
@@ -1130,16 +1130,16 @@ Processes an interaction action performed by `client` on this item.
 
 **Parameters:**
 
-* action (string) – Identifier of the interaction.
+* `action` (`string`) – Identifier of the interaction.
 
 
-* client (Player) – Player performing the action.
+* `client` (`Player`) – Player performing the action.
 
 
-* entity (Entity|None) – Entity used for the interaction.
+* `entity` (`Entity|None`) – Entity used for the interaction.
 
 
-* data (table|None) – Extra data passed to the hooks.
+* `data` (`table|None`) – Extra data passed to the hooks.
 
 
 **Realm:**

@@ -10,7 +10,7 @@ The color library centralizes color utilities used throughout the UI. You can re
 
 ---
 
-### lia.color.register(name, color)
+### lia.color.register
 
 **Description:**
 
@@ -18,10 +18,10 @@ Registers a named color for later lookup or use with `Color(name)`.
 
 **Parameters:**
 
-* name (string) – Key used to reference the color.
+* `name` (`string`) – Key used to reference the color.
 
 
-* color (Color|table) – Color object or `{r, g, b}` table.
+* `color` (`Color|table`) – Color object or `{r, g, b}` table.
 
 
 **Realm:**
@@ -44,7 +44,7 @@ Registers a named color for later lookup or use with `Color(name)`.
 
 ---
 
-### lia.color.Adjust(color, rOffset, gOffset, bOffset, aOffset)
+### lia.color.Adjust
 
 **Description:**
 
@@ -52,19 +52,19 @@ Returns a new Color based on the input color with the given channel offsets.
 
 **Parameters:**
 
-* color (Color|table) – Base color to modify.
+* `color` (`Color|table`) – Base color to modify.
 
 
-* rOffset (number) – Red channel delta.
+* `rOffset` (`number`) – Red channel delta.
 
 
-* gOffset (number) – Green channel delta.
+* `gOffset` (`number`) – Green channel delta.
 
 
-* bOffset (number) – Blue channel delta.
+* `bOffset` (`number`) – Blue channel delta.
 
 
-* aOffset (number|nil) – Alpha channel delta (optional).
+* `aOffset` (`number|nil`) – Alpha channel delta (optional).
 
 
 **Realm:**
@@ -86,7 +86,7 @@ Returns a new Color based on the input color with the given channel offsets.
 
 ---
 
-### lia.color.ReturnMainAdjustedColors()
+### lia.color.ReturnMainAdjustedColors
 
 **Description:**
 

@@ -19,7 +19,7 @@ The workshop library tracks required Workshop addon IDs and mounts them on clien
 
 ---
 
-### lia.workshop.AddWorkshop(id)
+### lia.workshop.AddWorkshop
 
 **Description:**
 
@@ -27,7 +27,7 @@ Registers a Steam Workshop addon ID so it will be downloaded by clients. The ID 
 
 **Parameters:**
 
-* id (string|number) – Workshop item ID to add.
+* `id` (`string|number`) – Workshop item ID to add.
 
 **Realm:**
 
@@ -44,7 +44,7 @@ Registers a Steam Workshop addon ID so it will be downloaded by clients. The ID 
 lia.workshop.AddWorkshop("1234567890")
 ```
 
-### lia.workshop.gather()
+### lia.workshop.gather
 
 **Description:**
 
@@ -62,7 +62,7 @@ Collects Workshop IDs added with `lia.workshop.AddWorkshop`, from installed addo
 
 **Returns:**
 
-* ids (table) – Table of workshop IDs to download.
+* `ids` (`table`) – Table of workshop IDs to download.
 
 
 **Example Usage:**
@@ -77,7 +77,7 @@ end
 
 ---
 
-### lia.workshop.send(ply)
+### lia.workshop.send
 
 **Description:**
 
@@ -85,7 +85,7 @@ Sends the cached list of Workshop IDs to the specified player using the "Worksho
 
 **Parameters:**
 
-* ply (Player) – Player to send the download list to.
+* `ply` (`Player`) – Player to send the download list to.
 
 
 **Realm:**

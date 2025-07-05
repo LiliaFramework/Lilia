@@ -10,7 +10,7 @@ The inventory library manages item containers and grid inventories. It supports 
 
 ---
 
-### lia.inventory.newType(typeID, invTypeStruct)
+### lia.inventory.newType
 
 **Description:**
 
@@ -18,10 +18,10 @@ Registers a new inventory type.
 
 **Parameters:**
 
-* typeID (string) — unique identifier
+* `typeID` (`string`) — unique identifier
 
 
-* invTypeStruct (table) — definition matching InvTypeStructType
+* `invTypeStruct` (`table`) — definition matching InvTypeStructType
 
 
 **Realm:**
@@ -43,7 +43,7 @@ Registers a new inventory type.
 
 ---
 
-### lia.inventory.new(typeID)
+### lia.inventory.new
 
 **Description:**
 
@@ -51,7 +51,7 @@ Instantiates a new inventory instance.
 
 **Parameters:**
 
-* typeID (string)
+* `typeID` (`string`)
 
 
 **Realm:**
@@ -73,7 +73,7 @@ Instantiates a new inventory instance.
 
 ---
 
-### lia.inventory.loadByID(id, noCache)
+### lia.inventory.loadByID
 
 **Description:**
 
@@ -81,7 +81,7 @@ Loads an inventory by ID (cached or via custom loader).
 
 **Parameters:**
 
-* id (number), noCache? (boolean)
+* `id` (`number`), noCache? (boolean)
 
 
 **Realm:**
@@ -109,7 +109,7 @@ Loads an inventory by ID (cached or via custom loader).
 
 ---
 
-### lia.inventory.loadFromDefaultStorage(id, noCache)
+### lia.inventory.loadFromDefaultStorage
 
 **Description:**
 
@@ -117,7 +117,7 @@ Default database loader.
 
 **Parameters:**
 
-* id (number), noCache? (boolean)
+* `id` (`number`), noCache? (boolean)
 
 
 **Realm:**
@@ -145,7 +145,7 @@ Default database loader.
 
 ---
 
-### lia.inventory.instance(typeID, initialData)
+### lia.inventory.instance
 
 **Description:**
 
@@ -153,7 +153,7 @@ Creates & persists a new inventory instance.
 
 **Parameters:**
 
-* typeID (string), initialData? (table)
+* `typeID` (`string`), initialData? (table)
 
 
 **Realm:**
@@ -177,7 +177,7 @@ Creates & persists a new inventory instance.
 
 ---
 
-### lia.inventory.loadAllFromCharID(charID)
+### lia.inventory.loadAllFromCharID
 
 **Description:**
 
@@ -185,7 +185,7 @@ Loads all inventories for a character.
 
 **Parameters:**
 
-* charID (number)
+* `charID` (`number`)
 
 
 **Realm:**
@@ -209,7 +209,7 @@ Loads all inventories for a character.
 
 ---
 
-### lia.inventory.deleteByID(id)
+### lia.inventory.deleteByID
 
 **Description:**
 
@@ -217,7 +217,7 @@ Deletes an inventory from both memory and persistent storage.
 
 **Parameters:**
 
-* id (number)
+* `id` (`number`)
 
 
 **Realm:**
@@ -239,7 +239,7 @@ Deletes an inventory from both memory and persistent storage.
 
 ---
 
-### lia.inventory.cleanUpForCharacter(character)
+### lia.inventory.cleanUpForCharacter
 
 **Description:**
 
@@ -269,7 +269,7 @@ Destroys all inventories associated with a character.
 
 ---
 
-### lia.inventory.show(inventory, parent)
+### lia.inventory.show
 
 **Description:**
 

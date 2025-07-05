@@ -10,7 +10,7 @@ The database library sets up the SQL connection used by the framework. It define
 
 ---
 
-### lia.db.connect(callback, reconnect)
+### lia.db.connect
 
 **Description:**
 
@@ -22,10 +22,10 @@ or re-establish one.
 
 **Parameters:**
 
-* callback (function) – The function to call when the database connection is established.
+* `callback` (`function`) – The function to call when the database connection is established.
 
 
-* reconnect (boolean) – Whether to reconnect using an existing database object or not.
+* `reconnect` (`boolean`) – Whether to reconnect using an existing database object or not.
 
 
 **Realm:**
@@ -49,7 +49,7 @@ or re-establish one.
 
 ---
 
-### lia.db.wipeTables(callback)
+### lia.db.wipeTables
 
 **Description:**
 
@@ -59,7 +59,7 @@ tables. This action is irreversible and will remove all stored data.
 
 **Parameters:**
 
-* callback (function) – The function to call when the wipe operation is completed.
+* `callback` (`function`) – The function to call when the wipe operation is completed.
 
 
 **Realm:**
@@ -83,7 +83,7 @@ tables. This action is irreversible and will remove all stored data.
 
 ---
 
-### lia.db.loadTables()
+### lia.db.loadTables
 
 **Description:**
 
@@ -115,7 +115,7 @@ storing Lilia data. This ensures the schema is properly set up.
 
 ---
 
-### lia.db.waitForTablesToLoad()
+### lia.db.waitForTablesToLoad
 
 **Description:**
 
@@ -149,7 +149,7 @@ This allows asynchronous code to wait for table creation before proceeding.
 
 ---
 
-### lia.db.convertDataType(value, noEscape)
+### lia.db.convertDataType
 
 **Description:**
 
@@ -161,10 +161,10 @@ unless noEscape is set.
 
 **Parameters:**
 
-* value (any) – The value to be converted.
+* `value` (`any`) – The value to be converted.
 
 
-* noEscape (boolean) – If true, the returned string is not escaped.
+* `noEscape` (`boolean`) – If true, the returned string is not escaped.
 
 
 **Realm:**
@@ -186,7 +186,7 @@ unless noEscape is set.
 
 ---
 
-### lia.db.insertTable(value, callback, dbTable)
+### lia.db.insertTable
 
 **Description:**
 
@@ -196,13 +196,13 @@ The callback is invoked after the insert query is complete.
 
 **Parameters:**
 
-* value (table) – Key-value pairs representing the columns and values to insert.
+* `value` (`table`) – Key-value pairs representing the columns and values to insert.
 
 
-* callback (function) – The function to call when the insert operation is complete.
+* `callback` (`function`) – The function to call when the insert operation is complete.
 
 
-* dbTable (string) – The name of the table (without the 'lia_' prefix).
+* `dbTable` (`string`) – The name of the table (without the 'lia_' prefix).
 
 
 **Realm:**
@@ -226,7 +226,7 @@ The callback is invoked after the insert query is complete.
 
 ---
 
-### lia.db.updateTable(value, callback, dbTable, condition)
+### lia.db.updateTable
 
 **Description:**
 
@@ -236,16 +236,16 @@ provided condition. The callback is invoked once the update query finishes.
 
 **Parameters:**
 
-* value (table) – Key-value pairs representing columns to update and their new values.
+* `value` (`table`) – Key-value pairs representing columns to update and their new values.
 
 
-* callback (function) – The function to call after the update query is complete.
+* `callback` (`function`) – The function to call after the update query is complete.
 
 
-* dbTable (string) – The name of the table (without the 'lia_' prefix).
+* `dbTable` (`string`) – The name of the table (without the 'lia_' prefix).
 
 
-* condition (string) – The SQL condition to determine which rows to update.
+* `condition` (`string`) – The SQL condition to determine which rows to update.
 
 
 **Realm:**
@@ -269,7 +269,7 @@ provided condition. The callback is invoked once the update query finishes.
 
 ---
 
-### lia.db.select(fields, dbTable, condition, limit)
+### lia.db.select
 
 **Description:**
 
@@ -281,16 +281,16 @@ object that resolves with the query results.
 
 **Parameters:**
 
-* fields (table|string) – The columns to select, either as a table or a comma-separated string.
+* `fields` (`table|string`) – The columns to select, either as a table or a comma-separated string.
 
 
-* dbTable (string) – The name of the table (without the 'lia_' prefix).
+* `dbTable` (`string`) – The name of the table (without the 'lia_' prefix).
 
 
-* condition (string) – The SQL condition to filter results.
+* `condition` (`string`) – The SQL condition to filter results.
 
 
-* limit (number) – Maximum number of rows to return.
+* `limit` (`number`) – Maximum number of rows to return.
 
 
 **Realm:**
@@ -314,7 +314,7 @@ object that resolves with the query results.
 
 ---
 
-### lia.db.upsert(value, dbTable)
+### lia.db.upsert
 
 **Description:**
 
@@ -326,10 +326,10 @@ Returns a deferred object that resolves when the operation completes.
 
 **Parameters:**
 
-* value (table) – Key-value pairs representing the columns and values.
+* `value` (`table`) – Key-value pairs representing the columns and values.
 
 
-* dbTable (string) – The name of the table (without the 'lia_' prefix).
+* `dbTable` (`string`) – The name of the table (without the 'lia_' prefix).
 
 
 **Realm:**
@@ -351,7 +351,7 @@ Returns a deferred object that resolves when the operation completes.
 
 ---
 
-### lia.db.delete(dbTable, condition)
+### lia.db.delete
 
 **Description:**
 
@@ -361,10 +361,10 @@ If no condition is specified, all rows are deleted. Returns a deferred object.
 
 **Parameters:**
 
-* dbTable (string) – The name of the table (without the 'lia_' prefix).
+* `dbTable` (`string`) – The name of the table (without the 'lia_' prefix).
 
 
-* condition (string) – The SQL condition that determines which rows to delete.
+* `condition` (`string`) – The SQL condition that determines which rows to delete.
 
 
 **Realm:**
@@ -388,7 +388,7 @@ If no condition is specified, all rows are deleted. Returns a deferred object.
 
 ---
 
-### lia.db.GetCharacterTable(callback)
+### lia.db.GetCharacterTable
 
 **Description:**
 
@@ -398,7 +398,7 @@ This is useful for debugging or database maintenance tasks.
 
 **Parameters:**
 
-* callback (function) – Function executed with the table of column names.
+* `callback` (`function`) – Function executed with the table of column names.
 
 
 **Realm:**
@@ -420,7 +420,7 @@ lia.db.GetCharacterTable(function(columns) PrintTable(columns) end)
 
 ---
 
-### lia.db.count(dbTable, condition)
+### lia.db.count
 
 **Description:**
 
@@ -428,9 +428,9 @@ Counts rows in the given table optionally filtered by a condition.
 
 **Parameters:**
 
-* dbTable (string) – Table name without the `lia_` prefix.
+* `dbTable` (`string`) – Table name without the `lia_` prefix.
 
-* condition (string) – Optional SQL condition.
+* `condition` (`string`) – Optional SQL condition.
 
 **Realm:**
 
@@ -450,7 +450,7 @@ Counts rows in the given table optionally filtered by a condition.
 
 ---
 
-### lia.db.exists(dbTable, condition)
+### lia.db.exists
 
 **Description:**
 
@@ -458,9 +458,9 @@ Checks whether any rows satisfy the provided condition.
 
 **Parameters:**
 
-* dbTable (string) – Table name without the `lia_` prefix.
+* `dbTable` (`string`) – Table name without the `lia_` prefix.
 
-* condition (string) – SQL condition to filter results.
+* `condition` (`string`) – SQL condition to filter results.
 
 **Realm:**
 
@@ -480,7 +480,7 @@ Checks whether any rows satisfy the provided condition.
 
 ---
 
-### lia.db.selectOne(fields, dbTable, condition)
+### lia.db.selectOne
 
 **Description:**
 
@@ -488,11 +488,11 @@ Fetches a single row from the given table.
 
 **Parameters:**
 
-* fields (table|string) – Columns to select.
+* `fields` (`table|string`) – Columns to select.
 
-* dbTable (string) – Table name without the `lia_` prefix.
+* `dbTable` (`string`) – Table name without the `lia_` prefix.
 
-* condition (string) – SQL condition to filter results.
+* `condition` (`string`) – SQL condition to filter results.
 
 **Realm:**
 
@@ -514,7 +514,7 @@ Fetches a single row from the given table.
 
 ---
 
-### lia.db.bulkInsert(dbTable, rows)
+### lia.db.bulkInsert
 
 **Description:**
 
@@ -522,9 +522,9 @@ Inserts multiple rows in a single query.
 
 **Parameters:**
 
-* dbTable (string) – Table name without the `lia_` prefix.
+* `dbTable` (`string`) – Table name without the `lia_` prefix.
 
-* rows (table) – Array of row tables to insert.
+* `rows` (`table`) – Array of row tables to insert.
 
 **Realm:**
 
@@ -545,7 +545,7 @@ Inserts multiple rows in a single query.
 
 ---
 
-### lia.db.insertOrIgnore(value, dbTable)
+### lia.db.insertOrIgnore
 
 **Description:**
 
@@ -553,9 +553,9 @@ Inserts a row but ignores it if a unique constraint fails.
 
 **Parameters:**
 
-* value (table) – Column/value pairs to insert.
+* `value` (`table`) – Column/value pairs to insert.
 
-* dbTable (string) – Table name without the `lia_` prefix.
+* `dbTable` (`string`) – Table name without the `lia_` prefix.
 
 **Realm:**
 
@@ -575,7 +575,7 @@ Inserts a row but ignores it if a unique constraint fails.
 
 ---
 
-### lia.db.transaction(queries)
+### lia.db.transaction
 
 **Description:**
 
@@ -583,7 +583,7 @@ Runs multiple queries inside a transaction, rolling back on error.
 
 **Parameters:**
 
-* queries (table) – Array of SQL strings to execute.
+* `queries` (`table`) – Array of SQL strings to execute.
 
 **Realm:**
 
@@ -606,7 +606,7 @@ Runs multiple queries inside a transaction, rolling back on error.
 
 ---
 
-### lia.db.escapeIdentifier(id)
+### lia.db.escapeIdentifier
 
 **Description:**
 
@@ -614,7 +614,7 @@ Escapes an identifier for use in manual SQL queries.
 
 **Parameters:**
 
-* id (string) – Identifier to escape.
+* `id` (`string`) – Identifier to escape.
 
 **Realm:**
 
@@ -633,7 +633,7 @@ Escapes an identifier for use in manual SQL queries.
 
 ---
 
-### lia.db.prepare(key, query, types)
+### lia.db.prepare
 
 **Description:**
 
@@ -641,11 +641,11 @@ Registers a prepared statement. Only available when using MySQLOO.
 
 **Parameters:**
 
-* key (string) – Identifier for the prepared statement.
+* `key` (`string`) – Identifier for the prepared statement.
 
-* query (string) – SQL query string with placeholders.
+* `query` (`string`) – SQL query string with placeholders.
 
-* types (table) – Array of MySQLOO type constants.
+* `types` (`table`) – Array of MySQLOO type constants.
 
 **Realm:**
 
@@ -667,7 +667,7 @@ Registers a prepared statement. Only available when using MySQLOO.
 
 ---
 
-### lia.db.preparedCall(key, callback, ...)
+### lia.db.preparedCall
 
 **Description:**
 
@@ -675,9 +675,9 @@ Executes a prepared statement previously registered with `lia.db.prepare`.
 
 **Parameters:**
 
-* key (string) – Name of the prepared statement.
+* `key` (`string`) – Name of the prepared statement.
 
-* callback (function) – Called with results and last insert ID.
+* `callback` (`function`) – Called with results and last insert ID.
 
 * ... (variant) – Arguments for the placeholders.
 
@@ -696,7 +696,7 @@ Executes a prepared statement previously registered with `lia.db.prepare`.
 ```
 ---
 
-### lia.db.query(query, callback)
+### lia.db.query
 
 **Description:**
 
@@ -705,9 +705,9 @@ supplied a deferred object is returned.
 
 **Parameters:**
 
-* query (string) – SQL query string to execute.
+* `query` (`string`) – SQL query string to execute.
 
-* callback (function) – Optional function called with results and last insert ID.
+* `callback` (`function`) – Optional function called with results and last insert ID.
 
 **Realm:**
 
@@ -727,7 +727,7 @@ supplied a deferred object is returned.
 
 ---
 
-### lia.db.escape(value)
+### lia.db.escape
 
 **Description:**
 
@@ -735,7 +735,7 @@ Escapes a string for safe use in manual SQL queries.
 
 **Parameters:**
 
-* value (string) – String to escape.
+* `value` (`string`) – String to escape.
 
 **Realm:**
 
@@ -753,7 +753,7 @@ Escapes a string for safe use in manual SQL queries.
 
 ---
 
-### lia.db.queue()
+### lia.db.queue
 
 **Description:**
 
@@ -779,7 +779,7 @@ Returns the number of queued queries waiting to be executed.
 
 ---
 
-### lia.db.abort()
+### lia.db.abort
 
 **Description:**
 
@@ -805,7 +805,7 @@ Cancels all running queries on every connection in the pool.
 
 ---
 
-### lia.db.getObject()
+### lia.db.getObject
 
 **Description:**
 

@@ -10,7 +10,7 @@ Player meta functions provide quick access to the active character, networking h
 
 ---
 
-### getChar()
+### getChar
 
 **Description:**
 
@@ -40,7 +40,7 @@ local char = player:getChar()
 
 ---
 
-### Name()
+### Name
 
 **Description:**
 
@@ -70,7 +70,7 @@ chat.AddText(player:Name())
 
 ---
 
-### hasPrivilege(privilegeName)
+### hasPrivilege
 
 **Description:**
 
@@ -78,7 +78,7 @@ Wrapper for CAMI privilege checks.
 
 **Parameters:**
 
-* privilegeName (string) – Privilege identifier.
+* `privilegeName` (`string`) – Privilege identifier.
 
 
 **Realm:**
@@ -102,7 +102,7 @@ end
 
 ---
 
-### getCurrentVehicle()
+### getCurrentVehicle
 
 **Description:**
 
@@ -135,7 +135,7 @@ end
 
 ---
 
-### hasValidVehicle()
+### hasValidVehicle
 
 **Description:**
 
@@ -167,7 +167,7 @@ end
 
 ---
 
-### isNoClipping()
+### isNoClipping
 
 **Description:**
 
@@ -197,7 +197,7 @@ if player:isNoClipping() then return end
 
 ---
 
-### hasRagdoll()
+### hasRagdoll
 
 **Description:**
 
@@ -228,7 +228,7 @@ end
 
 ---
 
-### CanOverrideView()
+### CanOverrideView
 
 **Description:**
 
@@ -259,7 +259,7 @@ end
 
 ---
 
-### IsInThirdPerson()
+### IsInThirdPerson
 
 **Description:**
 
@@ -288,7 +288,7 @@ end
 
 ---
 
-### removeRagdoll()
+### removeRagdoll
 
 **Description:**
 
@@ -318,7 +318,7 @@ player:removeRagdoll()
 
 ---
 
-### getRagdoll()
+### getRagdoll
 
 **Description:**
 
@@ -347,7 +347,7 @@ local ragdoll = player:getRagdoll()
 
 ---
 
-### isStuck()
+### isStuck
 
 **Description:**
 
@@ -379,7 +379,7 @@ end
 ```
 ---
 
-### isNearPlayer(radius, entity)
+### isNearPlayer
 
 **Description:**
 
@@ -387,9 +387,9 @@ Checks if an entity is within the given radius of the player.
 
 **Parameters:**
 
-* radius (number) – Distance in units.
+* `radius` (`number`) – Distance in units.
 
-* entity (Entity) – Entity to compare.
+* `entity` (`Entity`) – Entity to compare.
 
 **Realm:**
 
@@ -408,7 +408,7 @@ end
 
 ---
 
-### entitiesNearPlayer(radius, playerOnly)
+### entitiesNearPlayer
 
 **Description:**
 
@@ -416,10 +416,10 @@ Returns a table of entities within radius of the player.
 
 **Parameters:**
 
-* radius (number) – Search distance in units.
+* `radius` (`number`) – Search distance in units.
 
 
-* playerOnly (boolean|None) – Only include players when true.
+* `playerOnly` (`boolean|None`) – Only include players when true.
 
 
 **Realm:**
@@ -446,7 +446,7 @@ end
 
 ---
 
-### getItemWeapon()
+### getItemWeapon
 
 **Description:**
 
@@ -476,7 +476,7 @@ local weapon, item = player:getItemWeapon()
 
 ---
 
-### isRunning()
+### isRunning
 
 **Description:**
 
@@ -508,7 +508,7 @@ end
 ```
 ---
 
-### isFemale()
+### isFemale
 
 **Description:**
 
@@ -539,7 +539,7 @@ end
 ```
 ---
 
-### getItemDropPos()
+### getItemDropPos
 
 **Description:**
 
@@ -566,7 +566,7 @@ local pos = player:getItemDropPos()
 ```
 ---
 
-### getItems()
+### getItems
 
 **Description:**
 
@@ -599,7 +599,7 @@ end
 ```
 ---
 
-### getTracedEntity(distance)
+### getTracedEntity
 
 **Description:**
 
@@ -607,7 +607,7 @@ Performs a simple trace from the player's shoot position.
 
 **Parameters:**
 
-* distance (number) – Trace length in units.
+* `distance` (`number`) – Trace length in units.
 
 **Realm:**
 
@@ -628,7 +628,7 @@ local entity = player:getTracedEntity(96)
 ```
 ---
 
-### getTrace(distance)
+### getTrace
 
 **Description:**
 
@@ -636,7 +636,7 @@ Returns a hull trace in front of the player.
 
 **Parameters:**
 
-* distance (number) – Hull length in units.
+* `distance` (`number`) – Hull length in units.
 
 **Realm:**
 
@@ -657,7 +657,7 @@ local tr = player:getTrace(48)
 ```
 ---
 
-### getEyeEnt(distance)
+### getEyeEnt
 
 **Description:**
 
@@ -665,7 +665,7 @@ Returns the entity the player is looking at within a distance.
 
 **Parameters:**
 
-* distance (number) – Maximum distance.
+* `distance` (`number`) – Maximum distance.
 
 **Realm:**
 
@@ -692,7 +692,7 @@ end
 ```
 ---
 
-### notify(message)
+### notify
 
 **Description:**
 
@@ -700,7 +700,7 @@ Sends a plain notification message to the player.
 
 **Parameters:**
 
-* message (string) – Text to display.
+* `message` (`string`) – Text to display.
 
 **Realm:**
 
@@ -723,7 +723,7 @@ file.Append("welcome.txt", player:SteamID() .. " joined\n")
 ```
 ---
 
-### notifyLocalized(message, ...)
+### notifyLocalized
 
 **Description:**
 
@@ -731,7 +731,7 @@ Sends a localized notification to the player.
 
 **Parameters:**
 
-* message (string) – Translation key.
+* `message` (`string`) – Translation key.
 
 * ... – Additional parameters for localization.
 
@@ -756,7 +756,7 @@ player:notifyLocalized("greeting_key", player:Name(), score)
 ```
 ---
 
-### CanEditVendor(vendor)
+### CanEditVendor
 
 **Description:**
 
@@ -764,7 +764,7 @@ Determines whether the player can edit the given vendor.
 
 **Parameters:**
 
-* vendor (Entity) – Vendor entity to check.
+* `vendor` (`Entity`) – Vendor entity to check.
 
 **Realm:**
 
@@ -784,7 +784,7 @@ end
 ```
 ---
 
-### isUser()
+### isUser
 
 **Description:**
 
@@ -814,7 +814,7 @@ local result = player:isUser()
 ```
 ---
 
-### isStaff()
+### isStaff
 
 **Description:**
 
@@ -844,7 +844,7 @@ local result = player:isStaff()
 ```
 ---
 
-### isVIP()
+### isVIP
 
 **Description:**
 
@@ -874,7 +874,7 @@ local result = player:isVIP()
 ```
 ---
 
-### isStaffOnDuty()
+### isStaffOnDuty
 
 **Description:**
 
@@ -902,7 +902,7 @@ local result = player:isStaffOnDuty()
 ```
 ---
 
-### isFaction(faction)
+### isFaction
 
 **Description:**
 
@@ -910,7 +910,7 @@ Checks if the player's character belongs to the given faction.
 
 **Parameters:**
 
-* faction (number) – Faction index to compare.
+* `faction` (`number`) – Faction index to compare.
 
 **Realm:**
 
@@ -931,7 +931,7 @@ local result = player:isFaction(faction)
 ```
 ---
 
-### isClass(class)
+### isClass
 
 **Description:**
 
@@ -939,7 +939,7 @@ Returns true if the player's character is of the given class.
 
 **Parameters:**
 
-* class (number) – Class index to compare.
+* `class` (`number`) – Class index to compare.
 
 **Realm:**
 
@@ -960,7 +960,7 @@ local result = player:isClass(class)
 ```
 ---
 
-### hasWhitelist(faction)
+### hasWhitelist
 
 **Description:**
 
@@ -968,7 +968,7 @@ Determines if the player has whitelist access for a faction.
 
 **Parameters:**
 
-* faction (number) – Faction index.
+* `faction` (`number`) – Faction index.
 
 **Realm:**
 
@@ -989,7 +989,7 @@ local result = player:hasWhitelist(faction)
 ```
 ---
 
-### getClass()
+### getClass
 
 **Description:**
 
@@ -1018,7 +1018,7 @@ local result = player:getClass()
 ```
 ---
 
-### hasClassWhitelist(class)
+### hasClassWhitelist
 
 **Description:**
 
@@ -1026,7 +1026,7 @@ Checks if the player's character is whitelisted for a class.
 
 **Parameters:**
 
-* class (number) – Class index.
+* `class` (`number`) – Class index.
 
 **Realm:**
 
@@ -1045,7 +1045,7 @@ local result = player:hasClassWhitelist(class)
 ```
 ---
 
-### getClassData()
+### getClassData
 
 **Description:**
 
@@ -1074,7 +1074,7 @@ local result = player:getClassData()
 ```
 ---
 
-### getDarkRPVar(var)
+### getDarkRPVar
 
 **Description:**
 
@@ -1082,7 +1082,7 @@ Compatibility helper for retrieving money with DarkRP-style calls.
 
 **Parameters:**
 
-* var (string) – Currently only supports "money".
+* `var` (`string`) – Currently only supports "money".
 
 **Realm:**
 
@@ -1103,7 +1103,7 @@ local result = player:getDarkRPVar(var)
 ```
 ---
 
-### getMoney()
+### getMoney
 
 **Description:**
 
@@ -1132,7 +1132,7 @@ local result = player:getMoney()
 ```
 ---
 
-### canAfford(amount)
+### canAfford
 
 **Description:**
 
@@ -1140,7 +1140,7 @@ Checks if the player has enough money for a purchase.
 
 **Parameters:**
 
-* amount (number) – Cost to test.
+* `amount` (`number`) – Cost to test.
 
 **Realm:**
 
@@ -1161,7 +1161,7 @@ local result = player:canAfford(amount)
 ```
 ---
 
-### hasSkillLevel(skill, level)
+### hasSkillLevel
 
 **Description:**
 
@@ -1169,9 +1169,9 @@ Verifies the player's character meets an attribute level.
 
 **Parameters:**
 
-* skill (string) – Attribute ID.
+* `skill` (`string`) – Attribute ID.
 
-* level (number) – Required level.
+* `level` (`number`) – Required level.
 
 **Realm:**
 
@@ -1192,7 +1192,7 @@ local result = player:hasSkillLevel(skill, level)
 ```
 ---
 
-### meetsRequiredSkills(requiredSkillLevels)
+### meetsRequiredSkills
 
 **Description:**
 
@@ -1200,7 +1200,7 @@ Checks a table of skill requirements against the player.
 
 **Parameters:**
 
-* requiredSkillLevels (table) – Mapping of attribute IDs to levels.
+* `requiredSkillLevels` (`table`) – Mapping of attribute IDs to levels.
 
 **Realm:**
 
@@ -1221,7 +1221,7 @@ local result = player:meetsRequiredSkills(requiredSkillLevels)
 ```
 ---
 
-### forceSequence(sequenceName, callback, time, noFreeze)
+### forceSequence
 
 **Description:**
 
@@ -1229,13 +1229,13 @@ Plays an animation sequence and optionally freezes the player.
 
 **Parameters:**
 
-* sequenceName (string) – Sequence to play.
+* `sequenceName` (`string`) – Sequence to play.
 
-* callback (function|None) – Called when finished.
+* `callback` (`function|None`) – Called when finished.
 
-* time (number|None) – Duration override.
+* `time` (`number|None`) – Duration override.
 
-* noFreeze (boolean) – Don't freeze movement when true.
+* `noFreeze` (`boolean`) – Don't freeze movement when true.
 
 **Realm:**
 
@@ -1256,7 +1256,7 @@ local result = player:forceSequence(sequenceName, callback, time, noFreeze)
 ```
 ---
 
-### leaveSequence()
+### leaveSequence
 
 **Description:**
 
@@ -1285,7 +1285,7 @@ local result = player:leaveSequence()
 ```
 ---
 
-### restoreStamina(amount)
+### restoreStamina
 
 **Description:**
 
@@ -1293,7 +1293,7 @@ Increases the player's stamina value.
 
 **Parameters:**
 
-* amount (number) – Amount to restore.
+* `amount` (`number`) – Amount to restore.
 
 **Realm:**
 
@@ -1314,7 +1314,7 @@ local result = player:restoreStamina(amount)
 ```
 ---
 
-### consumeStamina(amount)
+### consumeStamina
 
 **Description:**
 
@@ -1322,7 +1322,7 @@ Reduces the player's stamina value.
 
 **Parameters:**
 
-* amount (number) – Amount to subtract.
+* `amount` (`number`) – Amount to subtract.
 
 **Realm:**
 
@@ -1343,7 +1343,7 @@ local result = player:consumeStamina(amount)
 ```
 ---
 
-### addMoney(amount)
+### addMoney
 
 **Description:**
 
@@ -1351,7 +1351,7 @@ Adds funds to the player's character, clamping to limits.
 
 **Parameters:**
 
-* amount (number) – Money to add.
+* `amount` (`number`) – Money to add.
 
 **Realm:**
 
@@ -1374,7 +1374,7 @@ player:notifyLocalized("questReward", lia.currency.get(100))
 ```
 ---
 
-### takeMoney(amount)
+### takeMoney
 
 **Description:**
 
@@ -1382,7 +1382,7 @@ Removes money from the player's character.
 
 **Parameters:**
 
-* amount (number) – Amount to subtract.
+* `amount` (`number`) – Amount to subtract.
 
 **Realm:**
 
@@ -1403,7 +1403,7 @@ local result = player:takeMoney(amount)
 ```
 ---
 
-### WhitelistAllClasses()
+### WhitelistAllClasses
 
 **Description:**
 
@@ -1432,7 +1432,7 @@ player:WhitelistAllClasses()
 ```
 ---
 
-### WhitelistAllFactions()
+### WhitelistAllFactions
 
 **Description:**
 
@@ -1459,7 +1459,7 @@ player:WhitelistAllFactions()
 ```
 ---
 
-### WhitelistEverything()
+### WhitelistEverything
 
 **Description:**
 
@@ -1488,7 +1488,7 @@ player:WhitelistEverything()
 ```
 ---
 
-### classWhitelist(class)
+### classWhitelist
 
 **Description:**
 
@@ -1496,7 +1496,7 @@ Adds a single class to the character's whitelist table.
 
 **Parameters:**
 
-* class (number) – Class index to whitelist.
+* `class` (`number`) – Class index to whitelist.
 
 **Realm:**
 
@@ -1515,7 +1515,7 @@ player:classWhitelist(CLASS_MEDIC)
 ```
 ---
 
-### classUnWhitelist(class)
+### classUnWhitelist
 
 **Description:**
 
@@ -1523,7 +1523,7 @@ Removes a class from the character's whitelist table.
 
 **Parameters:**
 
-* class (number) – Class index to remove.
+* `class` (`number`) – Class index to remove.
 
 **Realm:**
 
@@ -1542,7 +1542,7 @@ player:classUnWhitelist(CLASS_MEDIC)
 ```
 ---
 
-### setWhitelisted(faction, whitelisted)
+### setWhitelisted
 
 **Description:**
 
@@ -1550,9 +1550,9 @@ Sets or clears whitelist permission for a faction.
 
 **Parameters:**
 
-* faction (number) – Faction index.
+* `faction` (`number`) – Faction index.
 
-* whitelisted (boolean|None) – Enable when true, disable when false/nil.
+* `whitelisted` (`boolean|None`) – Enable when true, disable when false/nil.
 
 **Realm:**
 
@@ -1571,7 +1571,7 @@ player:setWhitelisted(FACTION_POLICE, true)
 ```
 ---
 
-### loadLiliaData(callback)
+### loadLiliaData
 
 **Description:**
 
@@ -1579,7 +1579,7 @@ Loads persistent Lilia data for the player from the database.
 
 **Parameters:**
 
-* callback (function|None) – Invoked with the loaded table.
+* `callback` (`function|None`) – Invoked with the loaded table.
 
 **Realm:**
 
@@ -1598,7 +1598,7 @@ player:loadLiliaData(function(data) print(data) end)
 ```
 ---
 
-### saveLiliaData()
+### saveLiliaData
 
 **Description:**
 
@@ -1625,7 +1625,7 @@ player:saveLiliaData()
 ```
 ---
 
-### setLiliaData(key, value, noNetworking)
+### setLiliaData
 
 **Description:**
 
@@ -1633,11 +1633,11 @@ Stores a value in the player's persistent data table.
 
 **Parameters:**
 
-* key (string) – Data key.
+* `key` (`string`) – Data key.
 
-* value (any) – Value to store.
+* `value` (`any`) – Value to store.
 
-* noNetworking (boolean|None) – Skip network update when true.
+* `noNetworking` (`boolean|None`) – Skip network update when true.
 
 **Realm:**
 
@@ -1656,7 +1656,7 @@ player:setLiliaData("settings", {foo = true})
 ```
 ---
 
-### setWaypoint(name, vector)
+### setWaypoint
 
 **Description:**
 
@@ -1664,9 +1664,9 @@ Sends a waypoint to the client at the specified position.
 
 **Parameters:**
 
-* name (string) – Display label.
+* `name` (`string`) – Display label.
 
-* vector (Vector) – World position.
+* `vector` (`Vector`) – World position.
 
 **Realm:**
 
@@ -1685,7 +1685,7 @@ player:setWaypoint("Objective", Vector(0, 0, 0))
 ```
 ---
 
-### setWeighPoint(name, vector)
+### setWeighPoint
 
 **Description:**
 
@@ -1693,9 +1693,9 @@ Alias of `setWaypoint()` for backwards compatibility.
 
 **Parameters:**
 
-* name (string) – Display label.
+* `name` (`string`) – Display label.
 
-* vector (Vector) – World position.
+* `vector` (`Vector`) – World position.
 
 **Realm:**
 
@@ -1714,7 +1714,7 @@ player:setWeighPoint("Target", Vector(100, 100, 0))
 ```
 ---
 
-### setWaypointWithLogo(name, vector, logo)
+### setWaypointWithLogo
 
 **Description:**
 
@@ -1722,11 +1722,11 @@ Creates a waypoint using a custom logo material.
 
 **Parameters:**
 
-* name (string) – Display label.
+* `name` (`string`) – Display label.
 
-* vector (Vector) – World position.
+* `vector` (`Vector`) – World position.
 
-* logo (string) – Material path for the icon.
+* `logo` (`string`) – Material path for the icon.
 
 **Realm:**
 
@@ -1745,7 +1745,7 @@ player:setWaypointWithLogo("Objective", Vector(0,0,0), "path/to/icon.png")
 ```
 ---
 
-### getLiliaData(key, default)
+### getLiliaData
 
 **Description:**
 
@@ -1753,9 +1753,9 @@ Retrieves a stored value from the player's data table.
 
 **Parameters:**
 
-* key (string) – Data key.
+* `key` (`string`) – Data key.
 
-* default (any) – Returned if the key is nil.
+* `default` (`any`) – Returned if the key is nil.
 
 **Realm:**
 
@@ -1774,7 +1774,7 @@ local settings = player:getLiliaData("settings", {})
 ```
 ---
 
-### getAllLiliaData()
+### getAllLiliaData
 
 **Description:**
 
@@ -1801,7 +1801,7 @@ local data = player:getAllLiliaData()
 ```
 ---
 
-### setRagdoll(entity)
+### setRagdoll
 
 **Description:**
 
@@ -1809,7 +1809,7 @@ Associates a ragdoll entity with the player for later retrieval.
 
 **Parameters:**
 
-* entity (Entity) – The ragdoll entity.
+* `entity` (`Entity`) – The ragdoll entity.
 
 **Realm:**
 
@@ -1828,7 +1828,7 @@ player:setRagdoll(ragdollEnt)
 ```
 ---
 
-### NetworkAnimation(active, boneData)
+### NetworkAnimation
 
 **Description:**
 
@@ -1836,9 +1836,9 @@ Broadcasts animation bone data to all clients.
 
 **Parameters:**
 
-* active (boolean) – Enable or disable manipulation.
+* `active` (`boolean`) – Enable or disable manipulation.
 
-* boneData (table) – Map of bone names to angles.
+* `boneData` (`table`) – Map of bone names to angles.
 
 **Realm:**
 
@@ -1859,7 +1859,7 @@ player:NetworkAnimation(true, {
 ```
 ---
 
-### setAction(text, time, callback)
+### setAction
 
 **Description:**
 
@@ -1867,11 +1867,11 @@ Displays an action bar for a set duration and optionally runs a callback.
 
 **Parameters:**
 
-* text (string|None) – Text to display, or nil to clear.
+* `text` (`string|None`) – Text to display, or nil to clear.
 
-* time (number|None) – How long to show it for.
+* `time` (`number|None`) – How long to show it for.
 
-* callback (function|None) – Executed when time elapses.
+* `callback` (`function|None`) – Executed when time elapses.
 
 **Realm:**
 
@@ -1890,7 +1890,7 @@ player:setAction("Lockpicking", 5)
 ```
 ---
 
-### doStaredAction(entity, callback, time, onCancel, distance)
+### doStaredAction
 
 **Description:**
 
@@ -1898,15 +1898,15 @@ Runs an action only while the player stares at the entity.
 
 **Parameters:**
 
-* entity (Entity) – Target entity.
+* `entity` (`Entity`) – Target entity.
 
-* callback (function) – Called when the timer finishes.
+* `callback` (`function`) – Called when the timer finishes.
 
-* time (number) – Duration in seconds.
+* `time` (`number`) – Duration in seconds.
 
-* onCancel (function|None) – Called if gaze breaks.
+* `onCancel` (`function|None`) – Called if gaze breaks.
 
-* distance (number|None) – Max distance to maintain.
+* `distance` (`number|None`) – Max distance to maintain.
 
 **Realm:**
 
@@ -1925,7 +1925,7 @@ player:doStaredAction(door, function() door:Open() end, 3)
 ```
 ---
 
-### stopAction()
+### stopAction
 
 **Description:**
 
@@ -1952,7 +1952,7 @@ player:stopAction()
 ```
 ---
 
-### requestDropdown(title, subTitle, options, callback)
+### requestDropdown
 
 **Description:**
 
@@ -1960,13 +1960,13 @@ Prompts the client with a dropdown selection dialog.
 
 **Parameters:**
 
-* title (string) – Window title.
+* `title` (`string`) – Window title.
 
-* subTitle (string) – Description text.
+* `subTitle` (`string`) – Description text.
 
-* options (table) – Table of options.
+* `options` (`table`) – Table of options.
 
-* callback (function) – Receives the chosen value.
+* `callback` (`function`) – Receives the chosen value.
 
 **Realm:**
 
@@ -1985,7 +1985,7 @@ player:requestDropdown("Choose", "Pick one", {"A", "B"}, print)
 ```
 ---
 
-### requestOptions(title, subTitle, options, limit, callback)
+### requestOptions
 
 **Description:**
 
@@ -1993,15 +1993,15 @@ Asks the client to select one or more options from a list.
 
 **Parameters:**
 
-* title (string) – Window title.
+* `title` (`string`) – Window title.
 
-* subTitle (string) – Description text.
+* `subTitle` (`string`) – Description text.
 
-* options (table) – Available options.
+* `options` (`table`) – Available options.
 
-* limit (number) – Maximum selections allowed.
+* `limit` (`number`) – Maximum selections allowed.
 
-* callback (function) – Receives the chosen values.
+* `callback` (`function`) – Receives the chosen values.
 
 **Realm:**
 
@@ -2020,7 +2020,7 @@ player:requestOptions("Permissions", "Select", {"A", "B"}, 2, print)
 ```
 ---
 
-### requestString(title, subTitle, callback, default)
+### requestString
 
 **Description:**
 
@@ -2028,13 +2028,13 @@ Requests a string from the client.
 
 **Parameters:**
 
-* title (string) – Prompt title.
+* `title` (`string`) – Prompt title.
 
-* subTitle (string) – Prompt description.
+* `subTitle` (`string`) – Prompt description.
 
-* callback (function|None) – Called with the string.
+* `callback` (`function|None`) – Called with the string.
 
-* default (string|None) – Default value.
+* `default` (`string|None`) – Default value.
 
 **Realm:**
 
@@ -2053,7 +2053,7 @@ player:requestString("Name", "Enter text", print)
 ```
 ---
 
-### binaryQuestion(question, option1, option2, manualDismiss, callback)
+### binaryQuestion
 
 **Description:**
 
@@ -2061,15 +2061,15 @@ Displays a yes/no style question to the player.
 
 **Parameters:**
 
-* question (string) – Main text.
+* `question` (`string`) – Main text.
 
-* option1 (string) – Text for the first option.
+* `option1` (`string`) – Text for the first option.
 
-* option2 (string) – Text for the second option.
+* `option2` (`string`) – Text for the second option.
 
-* manualDismiss (boolean) – Require manual closing.
+* `manualDismiss` (`boolean`) – Require manual closing.
 
-* callback (function) – Called with chosen value.
+* `callback` (`function`) – Called with chosen value.
 
 **Realm:**
 
@@ -2088,7 +2088,7 @@ player:binaryQuestion("Proceed?", "Yes", "No", false, print)
 ```
 ---
 
-### getPlayTime()
+### getPlayTime
 
 **Description:**
 
@@ -2115,7 +2115,7 @@ print(player:getPlayTime())
 ```
 ---
 
-### createRagdoll(freeze, isDead)
+### createRagdoll
 
 **Description:**
 
@@ -2123,9 +2123,9 @@ Spawns a ragdoll copy of the player and optionally freezes it.
 
 **Parameters:**
 
-* freeze (boolean|None) – Disable physics when true.
+* `freeze` (`boolean|None`) – Disable physics when true.
 
-* isDead (boolean|None) – Mark as a death ragdoll.
+* `isDead` (`boolean|None`) – Mark as a death ragdoll.
 
 **Realm:**
 
@@ -2144,7 +2144,7 @@ local rag = player:createRagdoll(true)
 ```
 ---
 
-### setRagdolled(state, time, getUpGrace, getUpMessage)
+### setRagdolled
 
 **Description:**
 
@@ -2152,13 +2152,13 @@ Toggles the player's ragdoll state for a duration.
 
 **Parameters:**
 
-* state (boolean) – Enable or disable ragdoll.
+* `state` (`boolean`) – Enable or disable ragdoll.
 
-* time (number|None) – Duration before standing up.
+* `time` (`number|None`) – Duration before standing up.
 
-* getUpGrace (number|None) – Extra time to prevent early stand.
+* `getUpGrace` (`number|None`) – Extra time to prevent early stand.
 
-* getUpMessage (string|None) – Message while downed.
+* `getUpMessage` (`string|None`) – Message while downed.
 
 **Realm:**
 
@@ -2177,7 +2177,7 @@ player:setRagdolled(true, 5)
 ```
 ---
 
-### syncVars()
+### syncVars
 
 **Description:**
 
@@ -2204,7 +2204,7 @@ player:syncVars()
 ```
 ---
 
-### setLocalVar(key, value)
+### setLocalVar
 
 **Description:**
 
@@ -2214,9 +2214,9 @@ Triggers the **LocalVarChanged** hook on both server and client.
 
 **Parameters:**
 
-* key (string) – Variable name.
+* `key` (`string`) – Variable name.
 
-* value (any) – Value to set.
+* `value` (`any`) – Value to set.
 
 **Realm:**
 
@@ -2235,7 +2235,7 @@ player:setLocalVar("health", 75)
 ```
 ---
 
-### getPlayTime()
+### getPlayTime
 
 **Description:**
 
@@ -2262,7 +2262,7 @@ print(LocalPlayer():getPlayTime())
 ```
 ---
 
-### setWaypoint(name, vector, onReach)
+### setWaypoint
 
 **Description:**
 
@@ -2270,11 +2270,11 @@ Displays a waypoint on the HUD until the player reaches it.
 
 **Parameters:**
 
-* name (string) – Display label.
+* `name` (`string`) – Display label.
 
-* vector (Vector) – World position.
+* `vector` (`Vector`) – World position.
 
-* onReach (function|None) – Called when reached.
+* `onReach` (`function|None`) – Called when reached.
 
 **Realm:**
 
@@ -2293,7 +2293,7 @@ LocalPlayer():setWaypoint("Home", Vector(0,0,0))
 ```
 ---
 
-### setWeighPoint(name, vector, onReach)
+### setWeighPoint
 
 **Description:**
 
@@ -2301,11 +2301,11 @@ Alias of the client version of `setWaypoint`.
 
 **Parameters:**
 
-* name (string) – Display label.
+* `name` (`string`) – Display label.
 
-* vector (Vector) – World position.
+* `vector` (`Vector`) – World position.
 
-* onReach (function|None) – Called when reached.
+* `onReach` (`function|None`) – Called when reached.
 
 **Realm:**
 
@@ -2324,7 +2324,7 @@ LocalPlayer():setWeighPoint("Spot", Vector(10,10,0))
 ```
 ---
 
-### setWaypointWithLogo(name, vector, logo, onReach)
+### setWaypointWithLogo
 
 **Description:**
 
@@ -2332,13 +2332,13 @@ Places a waypoint using a logo material on the client HUD.
 
 **Parameters:**
 
-* name (string) – Display label.
+* `name` (`string`) – Display label.
 
-* vector (Vector) – Position to navigate to.
+* `vector` (`Vector`) – Position to navigate to.
 
-* logo (string) – Material path for the icon.
+* `logo` (`string`) – Material path for the icon.
 
-* onReach (function|None) – Called when reached.
+* `onReach` (`function|None`) – Called when reached.
 
 **Realm:**
 
@@ -2357,7 +2357,7 @@ LocalPlayer():setWaypointWithLogo("Loot", Vector(1,1,1), "icon.png")
 ```
 ---
 
-### getLiliaData(key, default)
+### getLiliaData
 
 **Description:**
 
@@ -2365,9 +2365,9 @@ Client side accessor for stored player data.
 
 **Parameters:**
 
-* key (string) – Data key.
+* `key` (`string`) – Data key.
 
-* default (any) – Fallback value.
+* `default` (`any`) – Fallback value.
 
 **Realm:**
 
@@ -2386,7 +2386,7 @@ local data = LocalPlayer():getLiliaData("settings")
 ```
 ---
 
-### getAllLiliaData()
+### getAllLiliaData
 
 **Description:**
 
@@ -2413,7 +2413,7 @@ local data = LocalPlayer():getAllLiliaData()
 ```
 ---
 
-### NetworkAnimation(active, boneData)
+### NetworkAnimation
 
 **Description:**
 
@@ -2421,9 +2421,9 @@ Applies or clears clientside bone angles based on animation data.
 
 **Parameters:**
 
-* active (boolean) – Enable or disable animation.
+* `active` (`boolean`) – Enable or disable animation.
 
-* boneData (table) – Bones and angles to apply.
+* `boneData` (`table`) – Bones and angles to apply.
 
 **Realm:**
 
@@ -2443,7 +2443,7 @@ LocalPlayer():NetworkAnimation(true, {
 
 ```
 ---
-### getParts()
+### getParts
 
 **Description:**
 
@@ -2470,7 +2470,7 @@ end
 ```
 ---
 
-### syncParts()
+### syncParts
 
 **Description:**
 
@@ -2495,7 +2495,7 @@ player:syncParts()
 ```
 ---
 
-### addPart(partID)
+### addPart
 
 **Description:**
 
@@ -2503,7 +2503,7 @@ Adds the given PAC3 part to the player and broadcasts it.
 
 **Parameters:**
 
-* partID (string) – Identifier of the part to attach.
+* `partID` (`string`) – Identifier of the part to attach.
 
 **Realm:**
 
@@ -2520,7 +2520,7 @@ player:addPart("hat_01")
 ```
 ---
 
-### removePart(partID)
+### removePart
 
 **Description:**
 
@@ -2528,7 +2528,7 @@ Removes a previously added PAC3 part from the player.
 
 **Parameters:**
 
-* partID (string) – Identifier of the part to remove.
+* `partID` (`string`) – Identifier of the part to remove.
 
 **Realm:**
 
@@ -2545,7 +2545,7 @@ player:removePart("hat_01")
 ```
 ---
 
-### resetParts()
+### resetParts
 
 **Description:**
 
@@ -2570,7 +2570,7 @@ player:resetParts()
 ```
 ---
 
-### LagCompensation(state)
+### LagCompensation
 
 **Description:**
 
@@ -2578,7 +2578,7 @@ Wrapper that tracks when lag compensation is enabled on the player.
 
 **Parameters:**
 
-* state (boolean) – Whether to enable lag compensation.
+* `state` (`boolean`) – Whether to enable lag compensation.
 
 **Realm:**
 

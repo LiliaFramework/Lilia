@@ -10,7 +10,7 @@ The lia core library exposes shared helper functions used across multiple module
 
 ---
 
-### lia.include(fileName, state)
+### lia.include
 
 **Description:**
 
@@ -18,7 +18,7 @@ Includes a Lua file. If no realm is supplied the function attempts to infer it f
 
 **Parameters:**
 
-* fileName (string) – The path to the Lua file.
+* `fileName` (`string`) – The path to the Lua file.
 
 
 * state    (string) – The realm state ("server", "client", "shared", etc.).
@@ -43,7 +43,7 @@ lia.include("lilia/gamemode/core/libraries/util.lua")
 
 ---
 
-### lia.includeDir(directory, fromLua, recursive, realm)
+### lia.includeDir
 
 **Description:**
 
@@ -51,13 +51,13 @@ Includes all Lua files in a directory. When `fromLua` is false the path is resol
 
 **Parameters:**
 
-* directory (string) – The directory path to include.
+* `directory` (`string`) – The directory path to include.
 
 
 * fromLua   (boolean) – Whether to use the raw Lua directory path.
 
 
-* recursive (boolean) – Whether to include files recursively.
+* `recursive` (`boolean`) – Whether to include files recursively.
 
 
 * realm     (string) – The realm state to use ("client", "server", "shared").
@@ -82,7 +82,7 @@ lia.includeDir("lilia/gamemode/core/modules/admin", true, true, "server")
 
 ---
 
-### lia.includeGroupedDir(dir, raw, recursive, forceRealm)
+### lia.includeGroupedDir
 
 **Description:**
 
@@ -99,7 +99,7 @@ Recursively includes all Lua files inside a directory while preserving alphabeti
 * recursive  (boolean) – Whether to traverse subdirectories recursively.
 
 
-* forceRealm (string) – Optional override for the realm of all included files ("client", "server", or "shared").
+* `forceRealm` (`string`) – Optional override for the realm of all included files ("client", "server", or "shared").
 
 
 **Realm:**
@@ -121,7 +121,7 @@ lia.includeGroupedDir("core/modules", false, true)
 
 ---
 
-### lia.error(msg)
+### lia.error
 
 **Description:**
 
@@ -129,7 +129,7 @@ Prints a colored error message prefixed with "[Lilia]" to the console.
 
 **Parameters:**
 
-* msg (string) – Error text to display.
+* `msg` (`string`) – Error text to display.
 
 
 **Realm:**
@@ -151,7 +151,7 @@ Prints a colored error message prefixed with "[Lilia]" to the console.
 
 ---
 
-### lia.deprecated(methodName, callback)
+### lia.deprecated
 
 **Description:**
 
@@ -159,7 +159,7 @@ Notifies that a method is deprecated and optionally runs a callback.
 
 **Parameters:**
 
-* methodName (string) – Name of the deprecated method.
+* `methodName` (`string`) – Name of the deprecated method.
 
 
 * callback   (function) – Optional function executed after warning.
@@ -184,7 +184,7 @@ Notifies that a method is deprecated and optionally runs a callback.
 
 ---
 
-### lia.updater(msg)
+### lia.updater
 
 **Description:**
 
@@ -192,7 +192,7 @@ Prints an updater message in cyan to the console with the Lilia prefix.
 
 **Parameters:**
 
-* msg (string) – Update text to display.
+* `msg` (`string`) – Update text to display.
 
 
 **Realm:**
@@ -214,7 +214,7 @@ Prints an updater message in cyan to the console with the Lilia prefix.
 
 ---
 
-### lia.information(msg)
+### lia.information
 
 **Description:**
 
@@ -222,7 +222,7 @@ Prints an informational message with the Lilia prefix.
 
 **Parameters:**
 
-* msg (string) – Text to print to the console.
+* `msg` (`string`) – Text to print to the console.
 
 
 **Realm:**
@@ -244,7 +244,7 @@ Prints an informational message with the Lilia prefix.
 
 ---
 
-### lia.bootstrap(section, msg)
+### lia.bootstrap
 
 **Description:**
 
@@ -252,7 +252,7 @@ Logs a bootstrap message with a colored section tag for clarity.
 
 **Parameters:**
 
-* section (string) – Category or stage of bootstrap.
+* `section` (`string`) – Category or stage of bootstrap.
 
 
 * msg     (string) – Message describing the bootstrap step.
@@ -274,7 +274,7 @@ Logs a bootstrap message with a colored section tag for clarity.
     -- This snippet demonstrates a common usage of lia.bootstrap
     lia.bootstrap("Database", "Connection established")
 ```
-### lia.notifyAdmin(notification)
+### lia.notifyAdmin
 
 **Description:**
 
@@ -282,7 +282,7 @@ Sends a chat message to all staff members who can view alting notifications.
 
 **Parameters:**
 
-* notification (string) – Text to broadcast.
+* `notification` (`string`) – Text to broadcast.
 
 **Realm:**
 
@@ -301,7 +301,7 @@ lia.notifyAdmin("Possible alt account detected")
 
 ---
 
-### lia.printLog(category, logString)
+### lia.printLog
 
 **Description:**
 
@@ -310,8 +310,8 @@ Prints a color-coded log entry to the console. The message is prefixed with
 
 **Parameters:**
 
-* category (string) – Name of the log category.
-* logString (string) – Message to log.
+* `category` (`string`) – Name of the log category.
+* `logString` (`string`) – Message to log.
 
 **Realm:**
 
@@ -329,7 +329,7 @@ lia.printLog("Gameplay", "Third round started")
 
 ---
 
-### lia.applyPunishment(client, infraction, kick, ban, time, kickKey, banKey)
+### lia.applyPunishment
 
 **Description:**
 
@@ -337,13 +337,13 @@ Applies standardized kick or ban commands for a player infraction.
 
 **Parameters:**
 
-* client (Player) – The player to punish.
-* infraction (string) – Reason for punishment.
-* kick (boolean) – Whether to kick the player.
-* ban (boolean) – Whether to ban the player.
-* time (number) – Ban duration in minutes.
-* kickKey (string) – Localization key for the kick reason.
-* banKey (string) – Localization key for the ban reason.
+* `client` (`Player`) – The player to punish.
+* `infraction` (`string`) – Reason for punishment.
+* `kick` (`boolean`) – Whether to kick the player.
+* `ban` (`boolean`) – Whether to ban the player.
+* `time` (`number`) – Ban duration in minutes.
+* `kickKey` (`string`) – Localization key for the kick reason.
+* `banKey` (`string`) – Localization key for the ban reason.
 
 **Realm:**
 
@@ -363,7 +363,7 @@ lia.applyPunishment(ply, "Cheating", true, true, 0)
 ---
 
 
-### lia.includeEntities(path)
+### lia.includeEntities
 
 **Description:**
 
@@ -373,7 +373,7 @@ tools, and effects are automatically registered after inclusion.
 
 **Parameters:**
 
-* path (string) – The directory path containing entity files.
+* `path` (`string`) – The directory path containing entity files.
 
 
 **Realm:**

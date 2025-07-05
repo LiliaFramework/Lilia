@@ -28,7 +28,7 @@ local icClass = lia.chat.classes.ic
 print(icClass.format)
 ```
 
-### lia.chat.timestamp(ooc)
+### lia.chat.timestamp
 
 **Description:**
 
@@ -37,7 +37,7 @@ function returns an empty string.
 
 **Parameters:**
 
-* ooc (boolean) – True for out-of-character messages.
+* `ooc` (`boolean`) – True for out-of-character messages.
 
 
 **Returns:**
@@ -59,7 +59,7 @@ function returns an empty string.
 
 ---
 
-### lia.chat.register(chatType, data)
+### lia.chat.register
 
 **Description:**
 
@@ -67,10 +67,10 @@ Registers a new chat class and sets up command aliases.
 
 **Parameters:**
 
-* chatType (string) – Identifier for the chat class.
+* `chatType` (`string`) – Identifier for the chat class.
 
 
-* data (table) – Table of chat class properties.
+* `data` (`table`) – Table of chat class properties.
   Common fields include:
   - `syntax` (string) – Argument usage description shown in command help.
   - `desc` (string) – Description of the command shown in menus.
@@ -119,7 +119,7 @@ lia.chat.register("wave", {
 
 ---
 
-### lia.chat.parse(client, message, noSend)
+### lia.chat.parse
 
 **Description:**
 
@@ -129,13 +129,13 @@ Server-side this fires the **PlayerMessageSend** hook before calling
 
 **Parameters:**
 
-* client (Player) – Player sending the message.
+* `client` (`Player`) – Player sending the message.
 
 
-* message (string) – The chat text.
+* `message` (`string`) – The chat text.
 
 
-* noSend (boolean) – Suppress sending when true.
+* `noSend` (`boolean`) – Suppress sending when true.
 
 
 **Realm:**
@@ -145,7 +145,7 @@ Server-side this fires the **PlayerMessageSend** hook before calling
 
 **Returns:**
 
-* chatType (string), text (string), anonymous (boolean)
+* `chatType` (`string`), text (string), anonymous (boolean)
 
 
 **Example Usage:**
@@ -163,7 +163,7 @@ end)
 
 ---
 
-### lia.chat.send(speaker, chatType, text, anonymous, receivers)
+### lia.chat.send
 
 **Description:**
 
@@ -173,19 +173,19 @@ the **PlayerMessageSend** hook right before networking, and clients run
 
 **Parameters:**
 
-* speaker (Player) – The message sender.
+* `speaker` (`Player`) – The message sender.
 
 
-* chatType (string) – Chat class identifier.
+* `chatType` (`string`) – Chat class identifier.
 
 
-* text (string) – Message text.
+* `text` (`string`) – Message text.
 
 
-* anonymous (boolean) – Whether the sender is anonymous.
+* `anonymous` (`boolean`) – Whether the sender is anonymous.
 
 
-* receivers (table) – Optional list of target players.
+* `receivers` (`table`) – Optional list of target players.
 
 
 **Realm:**

@@ -13,7 +13,7 @@ which create `liaNotice` panels on the client. These panels are stored in the
 
 ---
 
-### lia.notices.notify(message, recipient)
+### lia.notices.notify
 
 **Description:**
 
@@ -22,10 +22,10 @@ message is sent over the `liaNotify` network string.
 
 **Parameters:**
 
-* message (string) – Message text to send. Converted to a string internally.
+* `message` (`string`) – Message text to send. Converted to a string internally.
 
 
-* recipient (Player|nil) – Optional target player. Leave nil to broadcast.
+* `recipient` (`Player|nil`) – Optional target player. Leave nil to broadcast.
 
 
 **Realm:**
@@ -50,7 +50,7 @@ lia.notices.notify("Your quest failed.", player)
 
 ---
 
-### lia.notices.notifyLocalized(key, recipient, ...)
+### lia.notices.notifyLocalized
 
 **Description:**
 
@@ -60,10 +60,10 @@ broadcast. Messages use the `liaNotifyL` network string.
 
 **Parameters:**
 
-* key (string) – Localization key.
+* `key` (`string`) – Localization key.
 
 
-* recipient (Player|nil) – Optional target player. Leave nil or pass a
+* `recipient` (`Player|nil`) – Optional target player. Leave nil or pass a
   non-player as the second argument to broadcast.
 
 
@@ -92,7 +92,7 @@ lia.notices.notifyLocalized("questFoundItem", nil, "golden_key")
 
 ---
 
-### lia.notices.notify(message)
+### lia.notices.notify
 
 **Description:**
 
@@ -101,7 +101,7 @@ Creates a `liaNotice` panel on the local client and stores it in
 
 **Parameters:**
 
-* message (string) – Message text to display.
+* `message` (`string`) – Message text to display.
 
 
 **Realm:**
@@ -126,7 +126,7 @@ lia.notices.notify("Welcome back!")
 
 ---
 
-### lia.notices.notifyLocalized(key, ...)
+### lia.notices.notifyLocalized
 
 **Description:**
 
@@ -134,7 +134,7 @@ Translates the key using `L` and displays the result on the local client.
 
 **Parameters:**
 
-* key (string) – Localization key.
+* `key` (`string`) – Localization key.
 
 
 * ... (any) – Formatting arguments for the localization string.

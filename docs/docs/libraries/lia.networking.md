@@ -14,7 +14,7 @@ contain functions (or tables holding functions) as they cannot be serialized.
 
 ---
 
-### setNetVar(key, value, receiver)
+### setNetVar
 
 **Description:**
 
@@ -26,13 +26,13 @@ is `nil`. Any attempt to store functions results in an error.
 
 **Parameters:**
 
-* key (string) – Name of the variable.
+* `key` (`string`) – Name of the variable.
 
 
-* value (any) – Value to store.
+* `value` (`any`) – Value to store.
 
 
-* receiver (Player|table|nil) – Optional receiver(s) for the update.
+* `receiver` (`Player|table|nil`) – Optional receiver(s) for the update.
 
 
 **Realm:**
@@ -61,7 +61,7 @@ is `nil`. Any attempt to store functions results in an error.
 
 ---
 
-### getNetVar(key, default)
+### getNetVar
 
 **Description:**
 
@@ -71,10 +71,10 @@ so any values assigned with `setNetVar` will be available after `PlayerInitialSp
 
 **Parameters:**
 
-* key (string) – Variable name.
+* `key` (`string`) – Variable name.
 
 
-* default (any) – Fallback value if the variable is not set.
+* `default` (`any`) – Fallback value if the variable is not set.
 
 
 **Realm:**

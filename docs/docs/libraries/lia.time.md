@@ -18,7 +18,7 @@ Returns a human-readable string indicating how long ago a given time occurred (e
 
 **Parameters:**
 
-* strTime (string or number) — The time in string or timestamp form.
+* `strTime` (`string or number`) — The time in string or timestamp form.
 * Strings should follow `YYYY-MM-DD` while numbers are standard timestamps.
 
 
@@ -62,7 +62,7 @@ Converts a string timestamp (YYYY-MM-DD HH:MM:SS) into a table of numeric compon
 
 **Parameters:**
 
-* str (string) — The time string to convert (optional).
+* `str` (`string`) — The time string to convert (optional).
 
 
 **Realm:**
