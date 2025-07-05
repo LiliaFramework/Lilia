@@ -22,7 +22,7 @@ end
 
 **Description:**
 
-Allows you to supply a custom character name before any prefix or default logic is used. The engine also checks for `nameTemplate` (lower‑case **n**) for backwards compatibility. If you return `true` as the second value, the returned name is used directly.
+Allows you to supply a custom character name before any prefix or default logic is used. The engine also checks for `nameTemplate` (lower-case `n`) for backwards compatibility. If you return `true` as the second value, the returned name is used directly and no further processing occurs.
 
 **Parameters:**
 
@@ -40,9 +40,9 @@ Allows you to supply a custom character name before any prefix or default logic 
 
 ```lua
 function FACTION:NameTemplate(client)
-    -- Use the player's Steam name prefixed by the faction name.
-    local base = client:SteamName()
-    return string.format("[%s] %s", self.name, base), true
+    -- Prefix a random callsign with the faction name.
+    local id = math.random(100, 999)
+    return string.format("%s-%03d", self.name, id), true
 end
 ```
 
@@ -77,8 +77,8 @@ applied.
 
 ```lua
 function FACTION:GetDefaultName(client)
-    -- Generate a simple callsign from the player's ID.
-    return string.format("Recruit-%03d", math.random(11111, 99999))
+    -- Base the callsign on the player's account ID for consistency.
+    return "Recruit-" .. client:AccountID()
 end
 ```
 
@@ -91,8 +91,8 @@ function FACTION:OnSpawn(client)
 end
 ```
 
-Runs each time a faction member spawns. Use this to assign loadouts,
-send notifications, or adjust player attributes.
+Runs each time a faction member spawns while `FactionOnLoadout` is processing. Use
+this to configure per-player attributes, grant equipment or send notifications.
 
 **Parameters:**
 
@@ -106,8 +106,13 @@ send notifications, or adjust player attributes.
 
 ```lua
 function FACTION:OnSpawn(client)
+    -- Restore stats and hand out default weapons.
     client:SetHealth(client:GetMaxHealth())
-    client:Give("weapon_pistol")
+    client:SetArmor(self.armor or 0)
+
+    for _, wep in ipairs(self.weapons or {}) do
+        client:Give(wep)
+    end
 end
 ```
 
@@ -144,7 +149,8 @@ provided.
 ```lua
 function FACTION:GetDefaultDesc(client)
     -- Provide a short biography for new members.
-    return "A newly enlisted soldier ready for duty."
+    local callsign = self:GetDefaultName(client)
+    return string.format("%s recently enlisted and is eager for duty.", callsign)
 end
 ```
 
@@ -161,7 +167,7 @@ end
 
 **Description:**
 
-Executes actions when a player is transferred into this faction (e.g., by an admin or scripted transfer). The previous faction is provided so you can perform cleanup or messaging.
+Executes after a player has been moved into this faction (whether by an admin or scripted transfer). The previous faction index is provided so you can clean up state or notify the player.
 
 **Parameters:**
 
@@ -178,13 +184,13 @@ Executes actions when a player is transferred into this faction (e.g., by an adm
 
 ```lua
 function FACTION:OnTransferred(client, oldFaction)
-    -- Swap the player's model to one of this faction's options.
+    -- Swap the player's model and notify them of the transfer.
     local char = client:getChar()
     if char and istable(self.models) then
-        local idx = math.random(1, #self.models)
-        char:setModel(self.models[idx])
+        char:setModel(self.models[math.random(#self.models)])
     end
-    print("Transferred from faction", oldFaction)
+
+    client:notify(string.format("Joined %s from faction #%d", self.name, oldFaction))
 end
 ```
 
@@ -200,7 +206,7 @@ end
 
 **Description:**
 
-Called when the game checks whether this faction has reached its player limit. Returning `true` prevents the character from joining.
+Called when the game checks whether this faction has reached its player limit. Return `true` to block the player from joining, or `false`/`nil` to allow them.
 
 **Parameters:**
 
