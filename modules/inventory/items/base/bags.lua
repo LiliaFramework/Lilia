@@ -7,67 +7,6 @@ ITEM.invWidth = 2
 ITEM.invHeight = 2
 ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
 ITEM.pacData = {}
-if CLIENT then
-    function ITEM:paintOver(item, w, h)
-        if item:getData("equip", false) then
-            surface.SetDrawColor(110, 255, 110, 100)
-            surface.DrawRect(w - 14, h - 14, 8, 8)
-        end
-    end
-end
-
-ITEM.functions.Equip = {
-    name = L("equip"),
-    icon = "icon16/tick.png",
-    onRun = function(item)
-        local client = item.player
-        for _, eqItem in pairs(client:getChar():getInv():getItems()) do
-            if eqItem.id ~= item.id and eqItem.isBag and eqItem:getData("equip", false) then
-                client:notifyLocalized("bagAlreadyEquipped")
-                return false
-            end
-        end
-
-        if item.pacData and client.addPart then client:addPart(item.uniqueID) end
-        item:setData("equip", true)
-        return false
-    end,
-    onCanRun = function(item) return not IsValid(item.entity) and not item:getData("equip", false) end
-}
-
-ITEM.functions.Unequip = {
-    name = L("unequip"),
-    icon = "icon16/cross.png",
-    onRun = function(item)
-        local client = item.player
-        if item.pacData and client.removePart then client:removePart(item.uniqueID) end
-        item:setData("equip", false)
-        return false
-    end,
-    onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip", false) end
-}
-
-ITEM.functions.View = {
-    name = L("view"),
-    icon = "icon16/briefcase.png",
-    onClick = function(item)
-        local inventory = item:getInv()
-        if not inventory then return false end
-        local existingPanel = lia.gui["inv" .. inventory:getID()]
-        local parent = item.invID and lia.gui["inv" .. item.invID] or nil
-        if IsValid(existingPanel) then existingPanel:Remove() end
-        if inventory then
-            local invPanel = lia.inventory.show(inventory, parent)
-            if IsValid(invPanel) then
-                invPanel:ShowCloseButton(true)
-                invPanel:SetTitle(item:getName())
-            end
-        end
-        return false
-    end,
-    onCanRun = function(item) if not IsValid(item.entity) and item:getInv() then return item:getData("equip", false) end end
-}
-
 function ITEM:onInstanced()
     local data = {
         item = self:getID(),
