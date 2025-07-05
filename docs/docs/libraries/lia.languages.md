@@ -120,5 +120,5 @@ If the key has no translation, the key itself is returned.
 **Example Usage:**
 
 ```lua
-    print(L("vendorShowAll")) -- prints "Show All" in the active language
+    print("Show All") -- prints "Show All" in the active language
 ```

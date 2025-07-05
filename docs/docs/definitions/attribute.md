@@ -36,7 +36,7 @@ Human readable title shown in menus. When the attribute is loaded,
 
 `lia.attribs.loadFromDir` automatically defaults this to the translated
 
-string `L("unknown")` if no name is provided.
+string "Unknown" if no name is provided.
 
 ```lua
 ATTRIBUTE.name = "Strength"
@@ -48,7 +48,7 @@ ATTRIBUTE.name = "Strength"
 
 Concise description or lore text for the attribute. Defaults to the
 
-translation `L("noDesc")` when omitted.
+translation "No Description" when omitted.
 
 ```lua
 ATTRIBUTE.desc = "Determines physical power and carrying capacity."

@@ -58,7 +58,7 @@ local inv
 lia.keybind.add(KEY_F1, "Open Inventory",
     function()
         inv = vgui.Create("liaMenu")
-        inv:setActiveTab(L("inv"))
+        inv:setActiveTab("Inventory")
     end,
     function()
         if IsValid(inv) then inv:Close() end

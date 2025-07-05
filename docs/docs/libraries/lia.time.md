@@ -43,9 +43,9 @@ hook.Add("PlayerInitialSpawn", "welcomeLastSeen", function(ply)
     local last = lia.data.get(key, nil, true)
 
     if last then
-        ply:ChatPrint(string.format(L("welcomeBack"), lia.time.TimeSince(last)))
+        ply:ChatPrint(string.format("Welcome back! You last joined %s.", lia.time.TimeSince(last)))
     else
-        ply:ChatPrint(L("welcomeFirst"))
+        ply:ChatPrint("Welcome for the first time!")
     end
 
     -- Store the current time for the next login
@@ -126,7 +126,7 @@ Returns the full current date and time formatted based on the
     timer.Create("ServerTimeAnnounce", 3600, 0, function()
         local dateString = lia.time.GetDate()
         for _, ply in player.GetAll() do
-            ply:ChatPrint(L("serverTime") .. dateString)
+            ply:ChatPrint("Server time: " .. dateString)
         end
     end)
 ```

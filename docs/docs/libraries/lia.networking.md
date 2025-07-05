@@ -103,11 +103,11 @@ so any values assigned with `setNetVar` will be available after `PlayerInitialSp
     -- Inform new players of the current round and previous champion
     hook.Add("PlayerInitialSpawn", "ShowRound", function(ply)
         local round = getNetVar("round", 0)
-        ply:ChatPrint(string.format(L("currentRound"), round))
+        ply:ChatPrint(string.format("Current round: %s", round))
 
         local lastWinner = getNetVar("last_winner")
         if IsValid(lastWinner) then
-            ply:ChatPrint(string.format(L("lastRoundWinner"), lastWinner:Name()))
+            ply:ChatPrint(string.format("Last round won by %s", lastWinner:Name()))
         end
     end)
 ```
