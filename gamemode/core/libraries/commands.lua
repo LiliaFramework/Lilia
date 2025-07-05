@@ -395,7 +395,7 @@ else
         submit:SetFont("liaSmallFont")
         submit:SetIcon("icon16/tick.png")
         submit:SetEnabled(false)
-        function validate()
+        validate = function()
             for _, data in pairs(controls) do
                 if not data.optional then
                     local ctl = data.ctrl
