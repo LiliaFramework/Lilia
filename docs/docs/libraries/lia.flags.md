@@ -20,13 +20,13 @@ Each flag entry stores a description and an optional callback. The callback is i
 
 **Parameters:**
 
-* flag (string) – The unique single-character identifier for the flag.
+* `flag` (`string`) – The unique single-character identifier for the flag.
 
 
-* desc (string) – A description of what the flag does.
+* `desc` (`string`) – A description of what the flag does.
 
 
-* callback (function) – Optional function called with `(client, isGiven)` whenever the flag is toggled. `isGiven` is `true` when granting the flag or reapplying on spawn and `false` when it is removed.
+* `callback` (`function`) – Optional function called with `(client, isGiven)` whenever the flag is toggled. `isGiven` is `true` when granting the flag or reapplying on spawn and `false` when it is removed.
 
 
 **Realm:**
@@ -65,7 +65,7 @@ after custom spawn logic.
 
 **Parameters:**
 
-* client (Player) – The player who spawned.
+* `client` (`Player`) – The player who spawned.
 
 
 **Realm:**

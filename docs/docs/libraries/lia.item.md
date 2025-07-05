@@ -18,7 +18,7 @@ Retrieves an item definition by its identifier, checking both lia.item.base and 
 
 **Parameters:**
 
-* identifier (string) – The unique identifier of the item.
+* `identifier` (`string`) – The unique identifier of the item.
 
 
 **Realm:**
@@ -50,7 +50,7 @@ or in the world.
 
 **Parameters:**
 
-* itemID (number) – The numeric item ID.
+* `itemID` (`number`) – The numeric item ID.
 
 
 **Realm:**
@@ -86,7 +86,7 @@ Retrieves the item instance table itself by its numeric ID without additional lo
 
 **Parameters:**
 
-* itemID (number) – The numeric item ID.
+* `itemID` (`number`) – The numeric item ID.
 
 
 **Realm:**
@@ -119,7 +119,7 @@ Retrieves the 'data' table of an item instance by its numeric item ID.
 
 **Parameters:**
 
-* itemID (number) – The numeric item ID.
+* `itemID` (`number`) – The numeric item ID.
 
 
 **Realm:**
@@ -154,13 +154,13 @@ to register the item. Used for loading items from directory structures.
 
 **Parameters:**
 
-* path (string) – The path to the Lua file for the item.
+* `path` (`string`) – The path to the Lua file for the item.
 
 
-* baseID (string) – The base item's uniqueID to inherit from.
+* `baseID` (`string`) – The base item's uniqueID to inherit from.
 
 
-* isBaseItem (boolean) – Whether this item is a base item.
+* `isBaseItem` (`boolean`) – Whether this item is a base item.
 
 
 **Realm:**
@@ -190,7 +190,7 @@ Checks if the given object is recognized as an item (via isItem flag).
 
 **Parameters:**
 
-* object (any) – The object to check.
+* `object` (`any`) – The object to check.
 
 
 **Realm:**
@@ -223,7 +223,7 @@ Retrieves an inventory table by its ID from lia.inventory.instances.
 
 **Parameters:**
 
-* id (number) – The ID of the inventory to retrieve.
+* `id` (`number`) – The ID of the inventory to retrieve.
 
 
 **Realm:**
@@ -258,19 +258,19 @@ and merges data from the specified base. Optionally includes the file if provide
 
 **Parameters:**
 
-* uniqueID (string) – The unique identifier for the item.
+* `uniqueID` (`string`) – The unique identifier for the item.
 
 
-* baseID (string) – The unique identifier of the base item.
+* `baseID` (`string`) – The unique identifier of the base item.
 
 
-* isBaseItem (boolean) – Whether this should be registered as a base item.
+* `isBaseItem` (`boolean`) – Whether this should be registered as a base item.
 
 
-* path (string) – The optional path to the item file for inclusion.
+* `path` (`string`) – The optional path to the item file for inclusion.
 
 
-* luaGenerated (boolean) – True if the item is generated in code without file.
+* `luaGenerated` (`boolean`) – True if the item is generated in code without file.
 
 
 **Realm:**
@@ -303,7 +303,7 @@ The "InitializedItems" hook is fired once loading completes.
 
 **Parameters:**
 
-* directory (string) – The path to the directory containing item files.
+* `directory` (`string`) – The path to the directory containing item files.
 
 
 **Realm:**
@@ -336,10 +336,10 @@ If the uniqueID is unregistered, this function errors. Reusing an ID for the sam
 
 **Parameters:**
 
-* uniqueID (string) – The unique identifier of the item definition.
+* `uniqueID` (`string`) – The unique identifier of the item definition.
 
 
-* id (number) – The numeric ID for this new item instance.
+* `id` (`number`) – The numeric ID for this new item instance.
 
 
 **Realm:**
@@ -372,13 +372,13 @@ becomes accessible for creation or usage in the system.
 
 **Parameters:**
 
-* invType (string) – The inventory type name (identifier).
+* `invType` (`string`) – The inventory type name (identifier).
 
 
-* w (number) – The width of this inventory type.
+* `w` (`number`) – The width of this inventory type.
 
 
-* h (number) – The height of this inventory type.
+* `h` (`number`) – The height of this inventory type.
 
 
 **Realm:**
@@ -410,13 +410,13 @@ with the given character owner. Once created, it syncs the inventory to the owne
 
 **Parameters:**
 
-* owner (number) – The character ID who owns this inventory.
+* `owner` (`number`) – The character ID who owns this inventory.
 
 
-* invType (string) – The inventory type (must be registered first).
+* `invType` (`string`) – The inventory type (must be registered first).
 
 
-* callback (function) – Optional callback function receiving the new inventory.
+* `callback` (`function`) – Optional callback function receiving the new inventory.
 
 
 **Realm:**
@@ -426,7 +426,7 @@ with the given character owner. Once created, it syncs the inventory to the owne
 
 **Returns:**
 
-* None (asynchronous, uses a deferred internally).
+* `None` (`asynchronous, uses a deferred internally`).
 
 
 **Example Usage:**
@@ -450,13 +450,13 @@ then caches it in lia.inventory.instances.
 
 **Parameters:**
 
-* w (number) – The width of the inventory.
+* `w` (`number`) – The width of the inventory.
 
 
-* h (number) – The height of the inventory.
+* `h` (`number`) – The height of the inventory.
 
 
-* id (number) – The numeric ID to assign to this inventory.
+* `id` (`number`) – The numeric ID to assign to this inventory.
 
 
 **Realm:**
@@ -486,9 +486,9 @@ Overrides properties used when automatically generating weapon items from script
 
 **Parameters:**
 
-* className (string) – Weapon class to override.
+* `className` (`string`) – Weapon class to override.
 
-* data (table) – Override fields such as name, desc, category, model, class, width, height, and weaponCategory.
+* `data` (`table`) – Override fields such as name, desc, category, model, class, width, height, and weaponCategory.
 
 **Realm:**
 
@@ -518,7 +518,7 @@ Prevents the given weapon class from being auto-generated as an item.
 
 **Parameters:**
 
-* className (string) – Weapon class to blacklist.
+* `className` (`string`) – Weapon class to blacklist.
 
 **Realm:**
 
@@ -574,22 +574,22 @@ Optionally notifies receivers about the change.
 
 **Parameters:**
 
-* itemID (number) – The numeric item ID.
+* `itemID` (`number`) – The numeric item ID.
 
 
-* key (string) – The data key to set.
+* `key` (`string`) – The data key to set.
 
 
-* value (any) – The value to set for the specified key.
+* `value` (`any`) – The value to set for the specified key.
 
 
-* receivers (table) – Optional table of players to receive the update.
+* `receivers` (`table`) – Optional table of players to receive the update.
 
 
-* noSave (boolean) – If true, won't save the data to the database immediately.
+* `noSave` (`boolean`) – If true, won't save the data to the database immediately.
 
 
-* noCheckEntity (boolean) – If true, won't check if the item entity is valid.
+* `noCheckEntity` (`boolean`) – If true, won't check if the item entity is valid.
 
 
 **Realm:**
@@ -624,22 +624,22 @@ Once the item is created, a new item object is constructed and returned via a de
 
 **Parameters:**
 
-* index (number|string) – Inventory ID or the uniqueID if no index is given.
+* `index` (`number|string`) – Inventory ID or the uniqueID if no index is given.
 
 
-* uniqueID (string) – Item ID (omit when passed as the first argument).
+* `uniqueID` (`string`) – Item ID (omit when passed as the first argument).
 
 
-* itemData (table) – The data table to store on the item.
+* `itemData` (`table`) – The data table to store on the item.
 
 
-* x (number) – Optional grid X position (for grid inventories).
+* `x` (`number`) – Optional grid X position (for grid inventories).
 
 
-* y (number) – Optional grid Y position.
+* `y` (`number`) – Optional grid Y position.
 
 
-* callback (function) – Optional callback with the newly created item.
+* `callback` (`function`) – Optional callback with the newly created item.
 
 
 **Realm:**
@@ -671,7 +671,7 @@ If the item exists in memory its delete method is called, otherwise the database
 
 **Parameters:**
 
-* id (number) – The numeric item ID to delete.
+* `id` (`number`) – The numeric item ID to delete.
 
 
 **Realm:**
@@ -703,7 +703,7 @@ item instances in memory. This is commonly used during inventory or character lo
 
 **Parameters:**
 
-* itemIndex (number or table) – Either a single numeric item ID or a table of numeric item IDs.
+* `itemIndex` (`number or table`) – Either a single numeric item ID or a table of numeric item IDs.
 
 
 **Realm:**
@@ -713,7 +713,7 @@ item instances in memory. This is commonly used during inventory or character lo
 
 **Returns:**
 
-* None (asynchronous query).
+* `None` (`asynchronous query`).
 
 
 **Example Usage:**
@@ -737,19 +737,19 @@ entity in the world at the specified position/angles.
 
 **Parameters:**
 
-* uniqueID (string) – The unique ID of the item definition.
+* `uniqueID` (`string`) – The unique ID of the item definition.
 
 
-* position (Vector) – The spawn position in the world.
+* `position` (`Vector`) – The spawn position in the world.
 
 
-* callback (function) – Optional callback when the item and entity are created.
+* `callback` (`function`) – Optional callback when the item and entity are created.
 
 
-* angles (Angle) – Optional spawn angles.
+* `angles` (`Angle`) – Optional spawn angles.
 
 
-* data (table) – Additional data to set on the item.
+* `data` (`table`) – Additional data to set on the item.
 
 
 **Realm:**
@@ -783,16 +783,16 @@ then sets its width/height data, optionally providing a callback once loaded.
 
 **Parameters:**
 
-* invID (number) – The inventory ID to restore.
+* `invID` (`number`) – The inventory ID to restore.
 
 
-* w (number) – Width to set for the inventory.
+* `w` (`number`) – Width to set for the inventory.
 
 
-* h (number) – Height to set for the inventory.
+* `h` (`number`) – Height to set for the inventory.
 
 
-* callback (function) – Optional function to call once the inventory is restored.
+* `callback` (`function`) – Optional function to call once the inventory is restored.
 
 
 **Realm:**
@@ -802,7 +802,7 @@ then sets its width/height data, optionally providing a callback once loaded.
 
 **Returns:**
 
-* None (asynchronous call).
+* `None` (`asynchronous call`).
 
 
 **Example Usage:**

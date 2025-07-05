@@ -22,7 +22,7 @@ registered with `lia.log.addType`.
 
 ---
 
-### lia.log.loadTables()
+### lia.log.loadTables
 
 **Description:**
 
@@ -60,7 +60,7 @@ end)
 
 ---
 
-### lia.log.addType(logType, func, category)
+### lia.log.addType
 
 **Description:**
 
@@ -70,13 +70,13 @@ The registered function will be used later to generate log messages for that typ
 
 **Parameters:**
 
-* logType (string) – The unique identifier for the log type.
+* `logType` (`string`) – The unique identifier for the log type.
 
 
-* func (function) – A function that takes a client and additional parameters, returning a log string.
+* `func` (`function`) – A function that takes a client and additional parameters, returning a log string.
 
 
-* category (string) – The category for the log type, used for organizing log files.
+* `category` (`string`) – The category for the log type, used for organizing log files.
 
 
 **Realm:**
@@ -103,7 +103,7 @@ lia.log.add(client, "mytype", "a backflip")
 
 ---
 
-### lia.log.getString(client, logType, ...)
+### lia.log.getString
 
 **Description:**
 
@@ -113,10 +113,10 @@ function.
 
 **Parameters:**
 
-* client (Player) – The client for which the log is generated.
+* `client` (`Player`) – The client for which the log is generated.
 
 
-* logType (string) – The identifier for the log type.
+* `logType` (`string`) – The identifier for the log type.
 
 
 * ... (vararg) – Additional parameters passed to the log function.
@@ -146,7 +146,7 @@ print(category .. ": " .. text)
 
 ---
 
-### lia.log.add(client, logType, ...)
+### lia.log.add
 
 **Description:**
 
@@ -156,10 +156,10 @@ The entry is written to both a log file and the `lia_logs` SQL table.
 
 **Parameters:**
 
-* client (Player) – The client associated with the log event.
+* `client` (`Player`) – The client associated with the log event.
 
 
-* logType (string) – The identifier for the log type.
+* `logType` (`string`) – The identifier for the log type.
 
 
 * ... (vararg) – Additional parameters passed to the log type function.
@@ -186,7 +186,7 @@ end)
 
 ---
 
-### lia.log.convertToDatabase(changeMap)
+### lia.log.convertToDatabase
 
 **Description:**
 
@@ -199,7 +199,7 @@ reload after conversion completes.
 
 **Parameters:**
 
-* changeMap (boolean) – Whether to reload the current map when finished.
+* `changeMap` (`boolean`) – Whether to reload the current map when finished.
 
 **Realm:**
 
@@ -230,7 +230,7 @@ console to estimate conversion time.
 
 **Realm:**
 
-* Server (Console)
+* `Server` (`Console`)
 
 **Example Usage:**
 

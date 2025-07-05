@@ -10,7 +10,7 @@ Inventory meta functions handle transactions, capacity checks, retrieval by slot
 
 ---
 
-### getData(key, default)
+### getData
 
 ```lua
 function Inventory:getData(key, default)
@@ -24,10 +24,10 @@ Returns a stored data value for this inventory.
 
 **Parameters:**
 
-* key (string) – Data field key.
+* `key` (`string`) – Data field key.
 
 
-* default (any) – Value if the key does not exist.
+* `default` (`any`) – Value if the key does not exist.
 
 
 **Realm:**
@@ -49,7 +49,7 @@ local opens = inv:getData("openCount", 0)
 
 ---
 
-### extend(className)
+### extend
 
 ```lua
 function Inventory:extend(className)
@@ -63,7 +63,7 @@ Creates a subclass of the inventory meta table with a new class name.
 
 **Parameters:**
 
-* className (string) – Name of the subclass meta table.
+* `className` (`string`) – Name of the subclass meta table.
 
 
 **Realm:**
@@ -94,7 +94,7 @@ WeaponInv:register("weapon_inv")
 
 ---
 
-### configure()
+### configure
 
 ```lua
 function Inventory:configure()
@@ -136,7 +136,7 @@ end
 
 ---
 
-### addDataProxy(key, onChange)
+### addDataProxy
 
 ```lua
 function Inventory:addDataProxy(key, onChange)
@@ -150,10 +150,10 @@ Adds a proxy function that is called when a data field changes.
 
 **Parameters:**
 
-* key (string) – Data field to watch.
+* `key` (`string`) – Data field to watch.
 
 
-* onChange (function) – Callback receiving old and new values.
+* `onChange` (`function`) – Callback receiving old and new values.
 
 
 **Realm:**
@@ -178,7 +178,7 @@ end)
 
 ---
 
-### getItemsByUniqueID(uniqueID, onlyMain)
+### getItemsByUniqueID
 
 ```lua
 function Inventory:getItemsByUniqueID(uniqueID, onlyMain)
@@ -192,10 +192,10 @@ Returns all items in the inventory matching the given unique ID.
 
 **Parameters:**
 
-* uniqueID (string) – Item unique identifier.
+* `uniqueID` (`string`) – Item unique identifier.
 
 
-* onlyMain (boolean) – Search only the main item list.
+* `onlyMain` (`boolean`) – Search only the main item list.
 
 
 **Realm:**
@@ -219,7 +219,7 @@ end
 
 ---
 
-### register(typeID)
+### register
 
 ```lua
 function Inventory:register(typeID)
@@ -233,7 +233,7 @@ Registers this inventory type with the lia.inventory system.
 
 **Parameters:**
 
-* typeID (string) – Unique identifier for this inventory type.
+* `typeID` (`string`) – Unique identifier for this inventory type.
 
 
 **Realm:**
@@ -256,7 +256,7 @@ local chestInv = WeaponInv:new()
 
 ---
 
-### new()
+### new
 
 ```lua
 function Inventory:new()
@@ -295,7 +295,7 @@ chest.inv = WeaponInv:new()
 
 ---
 
-### tostring()
+### tostring
 
 ```lua
 function Inventory:tostring()
@@ -331,7 +331,7 @@ print("Inventory: " .. inv:tostring())
 
 ---
 
-### getType()
+### getType
 
 ```lua
 function Inventory:getType()
@@ -367,7 +367,7 @@ local def = inv:getType()
 
 ---
 
-### onDataChanged(key, oldValue, newValue)
+### onDataChanged
 
 ```lua
 function Inventory:onDataChanged(key, oldValue, newValue)
@@ -383,13 +383,13 @@ registered proxy callbacks for that field.
 
 **Parameters:**
 
-* key (string) – Data field key.
+* `key` (`string`) – Data field key.
 
 
-* oldValue (any) – Previous value.
+* `oldValue` (`any`) – Previous value.
 
 
-* newValue (any) – Updated value.
+* `newValue` (`any`) – Updated value.
 
 
 **Realm:**
@@ -413,7 +413,7 @@ end
 
 ---
 
-### getItems()
+### getItems
 
 ```lua
 function Inventory:getItems()
@@ -453,7 +453,7 @@ print("Weight:", totalWeight)
 
 ---
 
-### getItemsOfType(itemType)
+### getItemsOfType
 
 ```lua
 function Inventory:getItemsOfType(itemType)
@@ -467,7 +467,7 @@ Collects all items that match the given unique ID.
 
 **Parameters:**
 
-* itemType (string) – Item unique identifier.
+* `itemType` (`string`) – Item unique identifier.
 
 
 **Realm:**
@@ -489,7 +489,7 @@ local kits = inv:getItemsOfType("medkit")
 
 ---
 
-### getFirstItemOfType(itemType)
+### getFirstItemOfType
 
 ```lua
 function Inventory:getFirstItemOfType(itemType)
@@ -503,7 +503,7 @@ Retrieves the first item matching the given unique ID.
 
 **Parameters:**
 
-* itemType (string) – Item unique identifier.
+* `itemType` (`string`) – Item unique identifier.
 
 
 **Realm:**
@@ -525,7 +525,7 @@ local pistol = inv:getFirstItemOfType("pistol")
 
 ---
 
-### hasItem(itemType)
+### hasItem
 
 ```lua
 function Inventory:hasItem(itemType)
@@ -539,7 +539,7 @@ Determines whether the inventory contains an item type.
 
 **Parameters:**
 
-* itemType (string) – Item unique identifier.
+* `itemType` (`string`) – Item unique identifier.
 
 
 **Realm:**
@@ -563,7 +563,7 @@ end
 
 ---
 
-### getItemCount(itemType)
+### getItemCount
 
 ```lua
 function Inventory:getItemCount(itemType)
@@ -577,7 +577,7 @@ Counts the total quantity of a specific item type.
 
 **Parameters:**
 
-* itemType (string|None) – Item unique ID to count. Counts all if nil.
+* `itemType` (`string|None`) – Item unique ID to count. Counts all if nil.
 
 
 **Realm:**
@@ -600,7 +600,7 @@ print("Ammo remaining:", ammoTotal)
 
 ---
 
-### getID()
+### getID
 
 ```lua
 function Inventory:getID()
@@ -636,7 +636,7 @@ entity:setNetVar("invID", inv:getID())
 
 ---
 
-### eq(other)
+### eq
 
 ```lua
 function Inventory:eq(other)
@@ -650,7 +650,7 @@ Compares two inventories by ID for equality.
 
 **Parameters:**
 
-* other (Inventory) – Other inventory to compare.
+* `other` (`Inventory`) – Other inventory to compare.
 
 
 **Realm:**
@@ -674,7 +674,7 @@ end
 
 ---
 
-### addItem(item, noReplicate)
+### addItem
 
 ```lua
 function Inventory:addItem(item, noReplicate)
@@ -688,10 +688,10 @@ Inserts an item instance into this inventory and persists it.
 
 **Parameters:**
 
-* item (Item) – Item to add.
+* `item` (`Item`) – Item to add.
 
 
-* noReplicate (boolean) – Skip network replication when true.
+* `noReplicate` (`boolean`) – Skip network replication when true.
 
 
 **Realm:**
@@ -715,7 +715,7 @@ end
 
 ---
 
-### add(item)
+### add
 
 ```lua
 function Inventory:add(item)
@@ -729,7 +729,7 @@ Alias for `addItem` that inserts an item into the inventory.
 
 **Parameters:**
 
-* item (Item) – Item to add.
+* `item` (`Item`) – Item to add.
 
 
 **Realm:**
@@ -750,7 +750,7 @@ inv:add(item)
 
 ---
 
-### syncItemAdded(item)
+### syncItemAdded
 
 ```lua
 function Inventory:syncItemAdded(item)
@@ -764,7 +764,7 @@ Replicates a newly added item to all clients that can access the inventory.
 
 **Parameters:**
 
-* item (Item) – Item instance that was added.
+* `item` (`Item`) – Item instance that was added.
 
 
 **Realm:**
@@ -785,7 +785,7 @@ inv:syncItemAdded(item)
 
 ---
 
-### initializeStorage(initialData)
+### initializeStorage
 
 ```lua
 function Inventory:initializeStorage(initialData)
@@ -799,7 +799,7 @@ Creates a persistent inventory record in the database using the supplied initial
 
 **Parameters:**
 
-* initialData (table) – Values to store when creating the inventory.
+* `initialData` (`table`) – Values to store when creating the inventory.
 
 
 **Realm:**
@@ -822,7 +822,7 @@ end)
 
 ---
 
-### restoreFromStorage()
+### restoreFromStorage
 
 ```lua
 function Inventory:restoreFromStorage()
@@ -856,7 +856,7 @@ inv:restoreFromStorage()
 
 ---
 
-### removeItem(itemID, preserveItem)
+### removeItem
 
 ```lua
 function Inventory:removeItem(itemID, preserveItem)
@@ -870,10 +870,10 @@ Removes an item by ID and optionally deletes it.
 
 **Parameters:**
 
-* itemID (number) – Unique item identifier.
+* `itemID` (`number`) – Unique item identifier.
 
 
-* preserveItem (boolean) – Keep item in database when true.
+* `preserveItem` (`boolean`) – Keep item in database when true.
 
 
 **Realm:**
@@ -896,7 +896,7 @@ end)
 
 ---
 
-### remove(itemID)
+### remove
 
 ```lua
 function Inventory:remove(itemID)
@@ -910,7 +910,7 @@ Alias for `removeItem` that removes an item from the inventory.
 
 **Parameters:**
 
-* itemID (number) – Unique item identifier.
+* `itemID` (`number`) – Unique item identifier.
 
 
 **Realm:**
@@ -933,7 +933,7 @@ end)
 
 ---
 
-### setData(key, value)
+### setData
 
 ```lua
 function Inventory:setData(key, value)
@@ -947,10 +947,10 @@ Sets a data field on the inventory and replicates the change to clients.
 
 **Parameters:**
 
-* key (string) – Data field name.
+* `key` (`string`) – Data field name.
 
 
-* value (any) – Value to store.
+* `value` (`any`) – Value to store.
 
 
 **Realm:**
@@ -971,7 +971,7 @@ inv:setData("locked", true)
 
 ---
 
-### canAccess(action, context)
+### canAccess
 
 ```lua
 function Inventory:canAccess(action, context)
@@ -985,10 +985,10 @@ Evaluates access rules to determine whether an action is permitted.
 
 **Parameters:**
 
-* action (string) – Action identifier.
+* `action` (`string`) – Action identifier.
 
 
-* context (table|None) – Additional data such as the client.
+* `context` (`table|None`) – Additional data such as the client.
 
 
 **Realm:**
@@ -1012,7 +1012,7 @@ local allowed = inv:canAccess("take", {client = ply})
 
 ---
 
-### addAccessRule(rule, priority)
+### addAccessRule
 
 ```lua
 function Inventory:addAccessRule(rule, priority)
@@ -1026,10 +1026,10 @@ Registers a function used by `canAccess` to grant or deny actions.
 
 **Parameters:**
 
-* rule (function) – Access rule function.
+* `rule` (`function`) – Access rule function.
 
 
-* priority (number|None) – Insertion position for the rule.
+* `priority` (`number|None`) – Insertion position for the rule.
 
 
 **Realm:**
@@ -1052,7 +1052,7 @@ end)
 
 ---
 
-### removeAccessRule(rule)
+### removeAccessRule
 
 ```lua
 function Inventory:removeAccessRule(rule)
@@ -1066,7 +1066,7 @@ Unregisters a previously added access rule.
 
 **Parameters:**
 
-* rule (function) – The rule to remove.
+* `rule` (`function`) – The rule to remove.
 
 
 **Realm:**
@@ -1087,7 +1087,7 @@ inv:removeAccessRule(myRule)
 
 ---
 
-### getRecipients()
+### getRecipients
 
 ```lua
 function Inventory:getRecipients()
@@ -1122,7 +1122,7 @@ local receivers = inv:getRecipients()
 
 ---
 
-### onInstanced()
+### onInstanced
 
 ```lua
 function Inventory:onInstanced()
@@ -1158,7 +1158,7 @@ end
 
 ---
 
-### onLoaded()
+### onLoaded
 
 ```lua
 function Inventory:onLoaded()
@@ -1194,7 +1194,7 @@ end
 
 ---
 
-### loadItems()
+### loadItems
 
 ```lua
 function Inventory:loadItems()
@@ -1231,7 +1231,7 @@ end)
 
 ---
 
-### onItemsLoaded(items)
+### onItemsLoaded
 
 ```lua
 function Inventory:onItemsLoaded(items)
@@ -1244,7 +1244,7 @@ Hook called after `loadItems` finishes loading all items.
 
 **Parameters:**
 
-* items (table) – Loaded items indexed by ID.
+* `items` (`table`) – Loaded items indexed by ID.
 
 
 **Realm:**
@@ -1267,7 +1267,7 @@ end
 
 ---
 
-### instance(initialData)
+### instance
 
 ```lua
 function Inventory:instance(initialData)
@@ -1281,7 +1281,7 @@ Creates and stores a new inventory instance of this type.
 
 **Parameters:**
 
-* initialData (table|None) – Data to populate the inventory with.
+* `initialData` (`table|None`) – Data to populate the inventory with.
 
 
 **Realm:**
@@ -1302,7 +1302,7 @@ WeaponInv:instance({char = charID}):next(function(inv) end)
 
 ---
 
-### syncData(key, recipients)
+### syncData
 
 ```lua
 function Inventory:syncData(key, recipients)
@@ -1316,10 +1316,10 @@ Sends a single data field to clients.
 
 **Parameters:**
 
-* key (string) – Field to replicate.
+* `key` (`string`) – Field to replicate.
 
 
-* recipients (table|None) – Player recipients.
+* `recipients` (`table|None`) – Player recipients.
 
 
 **Realm:**
@@ -1341,7 +1341,7 @@ inv:syncData("locked", recipients)
 
 ---
 
-### sync(recipients)
+### sync
 
 ```lua
 function Inventory:sync(recipients)
@@ -1355,7 +1355,7 @@ Sends the entire inventory and its items to players.
 
 **Parameters:**
 
-* recipients (table|None) – Player recipients.
+* `recipients` (`table|None`) – Player recipients.
 
 
 **Realm:**
@@ -1377,7 +1377,7 @@ inv:sync({owner})
 
 ---
 
-### delete()
+### delete
 
 ```lua
 function Inventory:delete()
@@ -1414,7 +1414,7 @@ print("Inventory removed from database")
 
 ---
 
-### destroy()
+### destroy
 
 ```lua
 function Inventory:destroy()
@@ -1449,7 +1449,7 @@ inv:destroy()
 print("Inventory destroyed")
 ```
 
-### show(parent)
+### show
 
 ```lua
 function Inventory:show(parent)
@@ -1463,7 +1463,7 @@ Opens the inventory user interface on the client.
 
 **Parameters:**
 
-* parent (Panel|None) – Optional parent panel.
+* `parent` (`Panel|None`) – Optional parent panel.
 
 
 **Realm:**

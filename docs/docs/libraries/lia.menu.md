@@ -19,7 +19,7 @@ Each entry inside `lia.menu.list` is a table with the following fields:
 * `height` (number) – Total pixel height of all rows.
 * `onRemove` (function|nil) – Executed when the menu is removed.
 
-### lia.menu.add(opts, pos, onRemove)
+### lia.menu.add
 
 **Description:**
 
@@ -28,12 +28,12 @@ When an entity is supplied the menu follows that entity. Otherwise the player's 
 
 **Parameters:**
 
-* opts (table) – Table of label/callback pairs.
+* `opts` (`table`) – Table of label/callback pairs.
 
 
-* pos (Vector|Entity|nil) – Optional world position or entity to attach the menu to.
+* `pos` (`Vector|Entity|nil`) – Optional world position or entity to attach the menu to.
 
-* onRemove (function|nil) – Function executed when the menu is removed.
+* `onRemove` (`function|nil`) – Function executed when the menu is removed.
 
 
 **Realm:**
@@ -58,7 +58,7 @@ lia.menu.add({
 
 ---
 
-### lia.menu.drawAll()
+### lia.menu.drawAll
 
 **Description:**
 
@@ -88,7 +88,7 @@ hook.Add("HUDPaintBackground", "DrawMenus", lia.menu.drawAll)
 
 ---
 
-### lia.menu.getActiveMenu()
+### lia.menu.getActiveMenu
 
 **Description:**
 
@@ -106,10 +106,10 @@ Returns the ID and callback of the option currently under the cursor. Often used
 
 **Returns:**
 
-* id (number|nil) – Index of the active menu.
+* `id` (`number|nil`) – Index of the active menu.
 
 
-* callback (function|nil) – Callback for the hovered item.
+* `callback` (`function|nil`) – Callback for the hovered item.
 
 
 **Example Usage:**
@@ -122,7 +122,7 @@ if id then print("hovering option", id) end
 
 ---
 
-### lia.menu.onButtonPressed(id, callback)
+### lia.menu.onButtonPressed
 
 **Description:**
 
@@ -130,10 +130,10 @@ Removes the menu with the given ID and executes its callback if present.
 
 **Parameters:**
 
-* id (number) – Identifier returned by lia.menu.add.
+* `id` (`number`) – Identifier returned by lia.menu.add.
 
 
-* callback (function|nil) – Function to execute after removal.
+* `callback` (`function|nil`) – Function to execute after removal.
 
 
 **Realm:**

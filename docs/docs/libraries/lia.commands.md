@@ -8,7 +8,7 @@ This page documents command registration and execution.
 
 The commands library registers console and chat commands. It parses arguments, checks permissions, and routes the handlers for execution. Commands can be run via slash chat or the console and may be restricted to specific usergroups through a CAMI-compliant admin mod.
 
-### lia.command.add(command, data)
+### lia.command.add
 
 **Description:**
 
@@ -18,10 +18,10 @@ available keys in the `data` table.
 
 **Parameters:**
 
-* command (string) – Command name.
+* `command` (`string`) – Command name.
 
 
-* data (table) – Table containing command properties.
+* `data` (`table`) – Table containing command properties.
 
 
 **Realm:**
@@ -54,7 +54,7 @@ available keys in the `data` table.
     })
 ```
 
-### lia.command.hasAccess(client, command, data)
+### lia.command.hasAccess
 
 **Description:**
 
@@ -67,13 +67,13 @@ in a `commands` table on their definition.
 
 **Parameters:**
 
-* client (Player) – Command caller.
+* `client` (`Player`) – Command caller.
 
 
-* command (string) – Command name.
+* `command` (`string`) – Command name.
 
 
-* data (table) – Command data table.
+* `data` (`table`) – Command data table.
 
 
 **Realm:**
@@ -115,7 +115,7 @@ Quoted sections are treated as single arguments.
 
 **Parameters:**
 
-* text (string) – The raw input text to parse.
+* `text` (`string`) – The raw input text to parse.
 
 
 **Realm:**
@@ -150,7 +150,7 @@ optional when prompting for arguments.
 
 **Parameters:**
 
-* syntax (string) – The syntax string, e.g. "[string Name] [number Time]".
+* `syntax` (`string`) – The syntax string, e.g. "[string Name] [number Time]".
 
 
 **Realm:**
@@ -186,13 +186,13 @@ If the command returns a string, it notifies the client (if valid).
 
 **Parameters:**
 
-* client (Player) – The player or console running the command.
+* `client` (`Player`) – The player or console running the command.
 
 
-* command (string) – The name of the command to run.
+* `command` (`string`) – The name of the command to run.
 
 
-* arguments (table) – A list of arguments for the command.
+* `arguments` (`table`) – A list of arguments for the command.
 
 
 **Realm:**
@@ -230,16 +230,16 @@ and arguments if provided. If parsed successfully, the command is executed.
 
 **Parameters:**
 
-* client (Player) – The player or console issuing the command.
+* `client` (`Player`) – The player or console issuing the command.
 
 
-* text (string) – The raw text that may contain the command name and arguments.
+* `text` (`string`) – The raw text that may contain the command name and arguments.
 
 
-* realCommand (string) – If provided, use this as the command name instead of parsing text.
+* `realCommand` (`string`) – If provided, use this as the command name instead of parsing text.
 
 
-* arguments (table) – If provided, use these as the command arguments instead of parsing text.
+* `arguments` (`table`) – If provided, use these as the command arguments instead of parsing text.
 
 
 **Realm:**
@@ -271,7 +271,7 @@ Garry's Mod net library. The server will then execute the command.
 
 **Parameters:**
 
-* command (string) – The name of the command to send.
+* `command` (`string`) – The name of the command to send.
 
 
 * ... (vararg) – Any additional arguments to pass to the command.
@@ -308,15 +308,15 @@ fields must be filled before the **Submit** button is enabled.
 
 **Parameters:**
 
-* cmd (string) – The command name.
+* `cmd` (`string`) – The command name.
 
 
-* args (table|string) – Optional. Either the arguments already provided or a table of
+* `args` (`table|string`) – Optional. Either the arguments already provided or a table of
 
 
 missing fields from the server.
 
-* prefix (table) – Optional prefix when using the legacy field table format.
+* `prefix` (`table`) – Optional prefix when using the legacy field table format.
 
 
 **Realm:**

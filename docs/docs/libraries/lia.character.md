@@ -8,7 +8,7 @@ This page covers utilities for manipulating character data.
 
 The character library handles creation and persistence of player characters. It manages character variables, interacts with the database, and offers helpers for retrieving characters by ID or SteamID. Because these functions directly modify stored data, use them carefully or you may corrupt character information.
 
-### lia.char.new(data, id, client, steamID)
+### lia.char.new
 
 **Description:**
 
@@ -16,16 +16,16 @@ Creates a new character instance with default variables and metatable.
 
 **Parameters:**
 
-* data (table) – Table of character variables.
+* `data` (`table`) – Table of character variables.
 
 
-* id (number) – Character ID.
+* `id` (`number`) – Character ID.
 
 
-* client (Player) – Player entity.
+* `client` (`Player`) – Player entity.
 
 
-* steamID (string) – SteamID64 string if client is not valid.
+* `steamID` (`string`) – SteamID64 string if client is not valid.
 
 
 **Realm:**
@@ -35,7 +35,7 @@ Creates a new character instance with default variables and metatable.
 
 **Returns:**
 
-* character (table) – New character object.
+* `character` (`table`) – New character object.
 
 
 **Example Usage:**
@@ -47,7 +47,7 @@ Creates a new character instance with default variables and metatable.
 
 ---
 
-### lia.char.hookVar(varName, hookName, func)
+### lia.char.hookVar
 
 **Description:**
 
@@ -55,13 +55,13 @@ Registers a hook function for when a character variable changes.
 
 **Parameters:**
 
-* varName (string) – Variable name to hook.
+* `varName` (`string`) – Variable name to hook.
 
 
-* hookName (string) – Unique hook identifier.
+* `hookName` (`string`) – Unique hook identifier.
 
 
-* func (function) – Function to call on variable change.
+* `func` (`function`) – Function to call on variable change.
 
 
 **Realm:**
@@ -85,7 +85,7 @@ Registers a hook function for when a character variable changes.
 
 ---
 
-### lia.char.registerVar(key, data)
+### lia.char.registerVar
 
 **Description:**
 
@@ -93,10 +93,10 @@ Registers a character variable with metadata and generates accessor methods.
 
 **Parameters:**
 
-* key (string) – Variable key.
+* `key` (`string`) – Variable key.
 
 
-* data (table) – Variable metadata including default, validation, networking, etc.
+* `data` (`table`) – Variable metadata including default, validation, networking, etc.
 
 Common `data` fields include:
 
@@ -137,7 +137,7 @@ Common `data` fields include:
 
 ---
 
-### lia.char.getCharData(charID, key)
+### lia.char.getCharData
 
 **Description:**
 
@@ -145,10 +145,10 @@ Retrieves character data JSON from the database as a Lua table.
 
 **Parameters:**
 
-* charID (number|string) – Character ID.
+* `charID` (`number|string`) – Character ID.
 
 
-* key (string) – Specific data key to return (optional).
+* `key` (`string`) – Specific data key to return (optional).
 
 
 **Realm:**
@@ -158,7 +158,7 @@ Retrieves character data JSON from the database as a Lua table.
 
 **Returns:**
 
-* value (any) – Data value or full table if no key provided.
+* `value` (`any`) – Data value or full table if no key provided.
 
 
 **Example Usage:**
@@ -170,7 +170,7 @@ Retrieves character data JSON from the database as a Lua table.
 
 ---
 
-### lia.char.getCharDataRaw(charID, key)
+### lia.char.getCharDataRaw
 
 **Description:**
 
@@ -178,10 +178,10 @@ Retrieves raw character database row or specific column.
 
 **Parameters:**
 
-* charID (number|string) – Character ID.
+* `charID` (`number|string`) – Character ID.
 
 
-* key (string) – Specific column name to return (optional).
+* `key` (`string`) – Specific column name to return (optional).
 
 
 **Realm:**
@@ -191,7 +191,7 @@ Retrieves raw character database row or specific column.
 
 **Returns:**
 
-* row (table|any) – Full row table or column value.
+* `row` (`table|any`) – Full row table or column value.
 
 
 **Example Usage:**
@@ -203,7 +203,7 @@ Retrieves raw character database row or specific column.
 
 ---
 
-### lia.char.getOwnerByID(ID)
+### lia.char.getOwnerByID
 
 **Description:**
 
@@ -211,7 +211,7 @@ Finds the player entity that owns the character with the given ID.
 
 **Parameters:**
 
-* ID (number|string) – Character ID.
+* `ID` (`number|string`) – Character ID.
 
 
 **Realm:**
@@ -233,7 +233,7 @@ Finds the player entity that owns the character with the given ID.
 
 ---
 
-### lia.char.getBySteamID(steamID)
+### lia.char.getBySteamID
 
 **Description:**
 
@@ -241,7 +241,7 @@ Retrieves a character object by SteamID or SteamID64.
 
 **Parameters:**
 
-* steamID (string) – SteamID or SteamID64.
+* `steamID` (`string`) – SteamID or SteamID64.
 
 
 **Realm:**
@@ -263,7 +263,7 @@ Retrieves a character object by SteamID or SteamID64.
 
 ---
 
-### lia.char.getAll()
+### lia.char.getAll
 
 **Description:**
 
@@ -293,7 +293,7 @@ Returns a table mapping all players to their loaded character objects.
 
 ---
 
-### lia.char.GetTeamColor(client)
+### lia.char.GetTeamColor
 
 **Description:**
 
@@ -301,7 +301,7 @@ Determines the team color for a client based on their character class or default
 
 **Parameters:**
 
-* client (Player) – Player entity.
+* `client` (`Player`) – Player entity.
 
 
 **Realm:**
@@ -323,7 +323,7 @@ Determines the team color for a client based on their character class or default
 
 ---
 
-### lia.char.create(data, callback)
+### lia.char.create
 
 **Description:**
 
@@ -332,10 +332,10 @@ Calls `CreateDefaultInventory` and after completion the `OnCharCreated` hook.
 
 **Parameters:**
 
-* data (table) – Character creation data.
+* `data` (`table`) – Character creation data.
 
 
-* callback (function) – Callback receiving new character ID.
+* `callback` (`function`) – Callback receiving new character ID.
 
 
 **Realm:**
@@ -363,7 +363,7 @@ Calls `CreateDefaultInventory` and after completion the `OnCharCreated` hook.
 
 ---
 
-### lia.char.restore(client, callback, id)
+### lia.char.restore
 
 **Description:**
 
@@ -372,13 +372,13 @@ Each loaded character triggers the `CharRestored` hook.
 
 **Parameters:**
 
-* client (Player) – Player entity.
+* `client` (`Player`) – Player entity.
 
 
-* callback (function) – Callback receiving list of character IDs.
+* `callback` (`function`) – Callback receiving list of character IDs.
 
 
-* id (number) – Specific character ID to restore (optional).
+* `id` (`number`) – Specific character ID to restore (optional).
 
 
 **Realm:**
@@ -402,7 +402,7 @@ Each loaded character triggers the `CharRestored` hook.
 
 ---
 
-### lia.char.cleanUpForPlayer(client)
+### lia.char.cleanUpForPlayer
 
 **Description:**
 
@@ -411,7 +411,7 @@ Runs the `CharCleanUp` hook for each cleaned character.
 
 **Parameters:**
 
-* client (Player) – Player entity.
+* `client` (`Player`) – Player entity.
 
 
 **Realm:**
@@ -433,7 +433,7 @@ Runs the `CharCleanUp` hook for each cleaned character.
 
 ---
 
-### lia.char.delete(id, client)
+### lia.char.delete
 
 **Description:**
 
@@ -442,10 +442,10 @@ Fires `PreCharDelete` before removal and `OnCharDelete` afterwards.
 
 **Parameters:**
 
-* id (number) – Character ID to delete.
+* `id` (`number`) – Character ID to delete.
 
 
-* client (Player) – Player entity reference.
+* `client` (`Player`) – Player entity reference.
 
 
 **Realm:**
@@ -467,7 +467,7 @@ Fires `PreCharDelete` before removal and `OnCharDelete` afterwards.
 
 ---
 
-### lia.char.setCharData(charID, key, val)
+### lia.char.setCharData
 
 **Description:**
 
@@ -476,13 +476,13 @@ Setting a value on a loaded character triggers `OnCharVarChanged`.
 
 **Parameters:**
 
-* charID (number|string) – Character ID.
+* `charID` (`number|string`) – Character ID.
 
 
-* key (string) – Data key.
+* `key` (`string`) – Data key.
 
 
-* val (any) – New value.
+* `val` (`any`) – New value.
 
 
 **Realm:**
@@ -504,7 +504,7 @@ Setting a value on a loaded character triggers `OnCharVarChanged`.
 
 ---
 
-### lia.char.setCharName(charID, name)
+### lia.char.setCharName
 
 **Description:**
 
@@ -513,10 +513,10 @@ Triggers `OnCharVarChanged` for the `name` variable if the character is loaded.
 
 **Parameters:**
 
-* charID (number|string) – Character ID.
+* `charID` (`number|string`) – Character ID.
 
 
-* name (string) – New character name.
+* `name` (`string`) – New character name.
 
 
 **Realm:**
@@ -538,7 +538,7 @@ Triggers `OnCharVarChanged` for the `name` variable if the character is loaded.
 
 ---
 
-### lia.char.setCharModel(charID, model, bg)
+### lia.char.setCharModel
 
 **Description:**
 
@@ -547,13 +547,13 @@ Also fires `PlayerModelChanged` and `OnCharVarChanged` for the `model` variable.
 
 **Parameters:**
 
-* charID (number|string) – Character ID.
+* `charID` (`number|string`) – Character ID.
 
 
-* model (string) – Model path.
+* `model` (`string`) – Model path.
 
 
-* bg (table) – Bodygroup table list.
+* `bg` (`table`) – Bodygroup table list.
 
 
 **Realm:**

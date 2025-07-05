@@ -10,7 +10,7 @@ The markup library parses a subset of HTML-like tags for drawing rich text in ch
 
 ---
 
-### lia.markup.parse(text, maxwidth)
+### lia.markup.parse
 
 **Description:**
 
@@ -23,10 +23,10 @@ The returned object exposes helper methods such as `getWidth`, `getHeight`, `siz
 
 **Parameters:**
 
-* text (string) – String containing markup to be parsed.
+* `text` (`string`) – String containing markup to be parsed.
 
 
-* maxwidth (number|nil) – Optional maximum width for wrapping.
+* `maxwidth` (`number|nil`) – Optional maximum width for wrapping.
 
 
 **Realm:**
@@ -47,7 +47,7 @@ local object = lia.markup.parse("<color=255,0,0>Hello world!</color>", 200)
 print(object:getWidth(), object:getHeight())
 ```
 
-### MarkupObject:create()
+### MarkupObject:create
 
 **Description:**
 
@@ -75,7 +75,7 @@ directly—instead, `lia.markup.parse` returns one for you.
 * `blocks` (table) – Internal table describing each parsed block.
 * `onDrawText` (function|nil) – Callback used by `:draw` when set.
 
-### MarkupObject:getWidth()
+### MarkupObject:getWidth
 
 **Description:**
 
@@ -100,7 +100,7 @@ local obj = lia.markup.parse("<font=liaBigFont>Hello</font>")
 print(obj:getWidth())
 ```
 
-### MarkupObject:getHeight()
+### MarkupObject:getHeight
 
 **Description:**
 
@@ -125,7 +125,7 @@ local obj = lia.markup.parse("<font=liaBigFont>Hello</font>")
 print(obj:getHeight())
 ```
 
-### MarkupObject:size()
+### MarkupObject:size
 
 **Description:**
 
@@ -150,7 +150,7 @@ local obj = lia.markup.parse("<font=liaBigFont>Hello</font>")
 local w, h = obj:size()
 ```
 
-### MarkupObject:draw(x, y, halign, valign, alpha)
+### MarkupObject:draw
 
 **Description:**
 
@@ -160,15 +160,15 @@ constants from Garry's Mod (`TEXT_ALIGN_*`) may be supplied and
 
 **Parameters:**
 
-* x (number) – X position on the screen.
+* `x` (`number`) – X position on the screen.
 
-* y (number) – Y position on the screen.
+* `y` (`number`) – Y position on the screen.
 
-* halign (number|nil) – Horizontal text alignment.
+* `halign` (`number|nil`) – Horizontal text alignment.
 
-* valign (number|nil) – Vertical text alignment.
+* `valign` (`number|nil`) – Vertical text alignment.
 
-* alpha (number|nil) – Optional alpha override.
+* `alpha` (`number|nil`) – Optional alpha override.
 
 **Realm:**
 
@@ -188,7 +188,7 @@ hook.Add("HUDPaint", "DrawWelcome", function()
 end)
 ```
 
-### liaMarkupPanel:setMarkup(text, onDrawText)
+### liaMarkupPanel:setMarkup
 
 **Description:**
 
@@ -198,9 +198,9 @@ for custom drawing if provided.
 
 **Parameters:**
 
-* text (string) – Markup text to render.
+* `text` (`string`) – Markup text to render.
 
-* onDrawText (function|nil) – Called before each text block is drawn.
+* `onDrawText` (`function|nil`) – Called before each text block is drawn.
 
 **Realm:**
 

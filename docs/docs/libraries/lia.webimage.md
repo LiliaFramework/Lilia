@@ -13,7 +13,7 @@ cached and then used automatically.
 
 ---
 
-### lia.webimage.register(name, url, callback, flags)
+### lia.webimage.register
 
 **Description:**
 
@@ -21,16 +21,16 @@ Downloads an image from the given URL and saves it inside the web image cache. I
 
 **Parameters:**
 
-* name (string) – Unique file name including extension.
+* `name` (`string`) – Unique file name including extension.
 
 
-* url (string) – HTTP address of the image.
+* `url` (`string`) – HTTP address of the image.
 
 
-* callback (function|nil) – Function that receives `(Material mat, boolean fromCache, string err)`.
+* `callback` (`function|nil`) – Function that receives `(Material mat, boolean fromCache, string err)`.
 
 
-* flags (string|nil) – Optional material flags for Material().
+* `flags` (`string|nil`) – Optional material flags for Material().
 
 
 **Realm:**
@@ -61,7 +61,7 @@ myIcon:SetImage("logo.png")
 
 ---
 
-### lia.webimage.get(name, flags)
+### lia.webimage.get
 
 **Description:**
 
@@ -69,10 +69,10 @@ Returns the material previously cached with `lia.webimage.register`. If it does 
 
 **Parameters:**
 
-* name (string) – File name used during registration.
+* `name` (`string`) – File name used during registration.
 
 
-* flags (string|nil) – Optional material flags.
+* `flags` (`string|nil`) – Optional material flags.
 
 
 **Realm:**
@@ -112,7 +112,7 @@ Opens a panel listing all cached web images for the current server.
 
 **Realm:**
 
-* Client (Console)
+* `Client` (`Console`)
 
 **Example Usage:**
 
@@ -130,7 +130,7 @@ Shows a simple window for previewing any image URL. Useful for development.
 
 **Realm:**
 
-* Client (Console)
+* `Client` (`Console`)
 
 **Example Usage:**
 

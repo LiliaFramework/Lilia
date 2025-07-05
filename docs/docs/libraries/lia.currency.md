@@ -26,7 +26,7 @@ the singular name is used, otherwise the plural form is shown.
 
 **Parameters:**
 
-* amount (number) – The amount to format.
+* `amount` (`number`) – The amount to format.
 
 
 **Realm:**
@@ -61,13 +61,13 @@ be provided to control the entity's orientation.
 
 **Parameters:**
 
-* pos (Vector) – The spawn position for the currency entity.
+* `pos` (`Vector`) – The spawn position for the currency entity.
 
 
-* amount (number) – The monetary value for the entity.
+* `amount` (`number`) – The monetary value for the entity.
 
 
-* angle (Angle, optional) – The orientation for the entity (defaults to Angle(0, 0, 0)).
+* `angle` (`Angle, optional`) – The orientation for the entity (defaults to Angle(0, 0, 0)).
 
 
 **Realm:**

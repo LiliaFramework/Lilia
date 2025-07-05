@@ -8,7 +8,7 @@ Grid-based inventories extend the base inventory class with slot-based item plac
 
 A `GridInv` instance stores items in a 2D grid, requiring items to fit within its width and height. It provides logic for finding free positions, transferring items, and updating ownership information.
 
-### getWidth()
+### getWidth
 
 **Description:**
 
@@ -34,7 +34,7 @@ print("Inventory width:", width)
 ```
 ---
 
-### getHeight()
+### getHeight
 
 **Description:**
 
@@ -60,7 +60,7 @@ print("Inventory height:", height)
 ```
 ---
 
-### getSize()
+### getSize
 
 **Description:**
 
@@ -86,7 +86,7 @@ print(string.format("Size: %dx%d", w, h))
 ```
 ---
 
-### canItemFitInInventory(item, x, y)
+### canItemFitInInventory
 
 **Description:**
 
@@ -94,9 +94,9 @@ Checks if an item would fit inside the grid bounds when placed at the given coor
 
 **Parameters:**
 
-* item (Item) – Item being tested.
-* x (number) – X slot position.
-* y (number) – Y slot position.
+* `item` (`Item`) – Item being tested.
+* `x` (`number`) – X slot position.
+* `y` (`number`) – Y slot position.
 
 **Realm:**
 
@@ -115,7 +115,7 @@ end
 ```
 ---
 
-### canAdd(item)
+### canAdd
 
 **Description:**
 
@@ -123,7 +123,7 @@ Determines if the inventory is large enough to hold the item's dimensions. Accep
 
 **Parameters:**
 
-* item (Item|string) – Item table or unique ID to test.
+* `item` (`Item|string`) – Item table or unique ID to test.
 
 **Realm:**
 
@@ -142,7 +142,7 @@ end
 ```
 ---
 
-### doesItemOverlapWithOther(testItem, x, y, item)
+### doesItemOverlapWithOther
 
 **Description:**
 
@@ -150,10 +150,10 @@ Returns whether `testItem` placed at `(x, y)` would overlap the given existing i
 
 **Parameters:**
 
-* testItem (Item) – Item being placed.
-* x (number) – Proposed X slot.
-* y (number) – Proposed Y slot.
-* item (Item) – Existing item inside the inventory.
+* `testItem` (`Item`) – Item being placed.
+* `x` (`number`) – Proposed X slot.
+* `y` (`number`) – Proposed Y slot.
+* `item` (`Item`) – Existing item inside the inventory.
 
 **Realm:**
 
@@ -175,7 +175,7 @@ end
 ```
 ---
 
-### doesFitInventory(item)
+### doesFitInventory
 
 **Description:**
 
@@ -183,7 +183,7 @@ Checks this inventory and all nested bags to see if the item could be placed som
 
 **Parameters:**
 
-* item (Item) – Item to test.
+* `item` (`Item`) – Item to test.
 
 **Realm:**
 
@@ -202,7 +202,7 @@ end
 ```
 ---
 
-### doesItemFitAtPos(testItem, x, y)
+### doesItemFitAtPos
 
 **Description:**
 
@@ -210,9 +210,9 @@ Determines if `testItem` can be placed at `(x, y)` without overlapping existing 
 
 **Parameters:**
 
-* testItem (Item) – Item to check.
-* x (number) – X slot position.
-* y (number) – Y slot position.
+* `testItem` (`Item`) – Item to check.
+* `x` (`number`) – X slot position.
+* `y` (`number`) – Y slot position.
 
 **Realm:**
 
@@ -233,7 +233,7 @@ end
 ```
 ---
 
-### findFreePosition(item)
+### findFreePosition
 
 **Description:**
 
@@ -241,7 +241,7 @@ Searches the grid sequentially for the first open space that can fit the given i
 
 **Parameters:**
 
-* item (Item) – Item to place.
+* `item` (`Item`) – Item to place.
 
 **Realm:**
 
@@ -261,7 +261,7 @@ end
 ```
 ---
 
-### configure()
+### configure
 
 **Description:**
 
@@ -288,7 +288,7 @@ end
 ```
 ---
 
-### getItems(noRecurse)
+### getItems
 
 **Description:**
 
@@ -296,7 +296,7 @@ Returns a table of items contained in this inventory. When `noRecurse` is false,
 
 **Parameters:**
 
-* noRecurse (boolean) – Skip nested bag contents when true.
+* `noRecurse` (`boolean`) – Skip nested bag contents when true.
 
 **Realm:**
 
@@ -315,7 +315,7 @@ end
 ```
 ---
 
-### setSize(w, h)
+### setSize
 
 **Description:**
 
@@ -323,8 +323,8 @@ Updates the stored grid dimensions on the server.
 
 **Parameters:**
 
-* w (number) – New width in slots.
-* h (number) – New height in slots.
+* `w` (`number`) – New width in slots.
+* `h` (`number`) – New height in slots.
 
 **Realm:**
 
@@ -342,7 +342,7 @@ inv:setSize(6, 4)
 ```
 ---
 
-### wipeItems()
+### wipeItems
 
 **Description:**
 
@@ -367,7 +367,7 @@ inv:wipeItems()
 ```
 ---
 
-### setOwner(owner, fullUpdate)
+### setOwner
 
 **Description:**
 
@@ -375,8 +375,8 @@ Sets the owning character of this inventory. A player value is automatically con
 
 **Parameters:**
 
-* owner (number|Player) – Character ID or Player to own the inventory.
-* fullUpdate (boolean) – Send a full sync to the owner.
+* `owner` (`number|Player`) – Character ID or Player to own the inventory.
+* `fullUpdate` (`boolean`) – Send a full sync to the owner.
 
 **Realm:**
 
@@ -393,7 +393,7 @@ inv:setOwner(client, true)
 ```
 ---
 
-### add(item, x, y)
+### add
 
 **Description:**
 
@@ -401,9 +401,9 @@ Inserts an item into the inventory at the given position. Extra quantity that ca
 
 **Parameters:**
 
-* item (Item|string) – Item instance or unique ID to add.
-* x (number) – X slot, optional.
-* y (number) – Y slot, optional.
+* `item` (`Item|string`) – Item instance or unique ID to add.
+* `x` (`number`) – X slot, optional.
+* `y` (`number`) – Y slot, optional.
 
 **Realm:**
 
@@ -422,7 +422,7 @@ end)
 ```
 ---
 
-### remove(itemID, quantity)
+### remove
 
 **Description:**
 
@@ -430,8 +430,8 @@ Removes an item by ID or type. Quantity defaults to `1`.
 
 **Parameters:**
 
-* itemID (number|string) – Item ID or unique ID.
-* quantity (number) – Amount to remove.
+* `itemID` (`number|string`) – Item ID or unique ID.
+* `quantity` (`number`) – Amount to remove.
 
 **Realm:**
 
@@ -450,7 +450,7 @@ end)
 ```
 ---
 
-### requestTransfer(itemID, destID, x, y)
+### requestTransfer
 
 **Description:**
 
@@ -458,10 +458,10 @@ Sends a `liaTransferItem` request telling the server to move an item. The server
 
 **Parameters:**
 
-* itemID (number) – ID of the item to move.
-* destID (number) – Destination inventory ID.
-* x (number) – Target X slot.
-* y (number) – Target Y slot.
+* `itemID` (`number`) – ID of the item to move.
+* `destID` (`number`) – Destination inventory ID.
+* `x` (`number`) – Target X slot.
+* `y` (`number`) – Target Y slot.
 
 **Realm:**
 
