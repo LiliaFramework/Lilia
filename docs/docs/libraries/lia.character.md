@@ -101,16 +101,27 @@ Registers a character variable with metadata and generates accessor methods.
 Common `data` fields include:
 
 * `field` (string) – Database column name for persistence.
+
 * `default` (any) – Default value when none is provided.
+
 * `index` (number) – Order in the character creation menu.
+
 * `noNetworking` (boolean) – Do not network this variable.
+
 * `isLocal` (boolean) – Only network the value to the owning player.
+
 * `noDisplay` (boolean) – Hide the variable from character menus.
+
 * `isNotModifiable` (boolean) – Do not automatically generate setter methods.
+
 * `shouldDisplay` (function) – Return false to hide in the creation menu.
+
 * `onSet` / `onGet` (function) – Custom setter or getter logic.
+
 * `onValidate` (function) – Validate input during creation.
+
 * `onAdjust` (function) – Modify the submitted value before saving.
+
 * `onSync` (function) – Called when the variable is networked.
 
 
@@ -328,6 +339,7 @@ Determines the team color for a client based on their character class or default
 **Description:**
 
 Inserts a new character into the database and sets up default inventory.
+
 Calls `CreateDefaultInventory` and after completion the `OnCharCreated` hook.
 
 **Parameters:**
@@ -368,6 +380,7 @@ Calls `CreateDefaultInventory` and after completion the `OnCharCreated` hook.
 **Description:**
 
 Loads characters for a client from the database, optionally filtering by ID.
+
 Each loaded character triggers the `CharRestored` hook.
 
 **Parameters:**
@@ -407,6 +420,7 @@ Each loaded character triggers the `CharRestored` hook.
 **Description:**
 
 Cleans up loaded characters and inventories for a player on disconnect.
+
 Runs the `CharCleanUp` hook for each cleaned character.
 
 **Parameters:**
@@ -438,6 +452,7 @@ Runs the `CharCleanUp` hook for each cleaned character.
 **Description:**
 
 Deletes a character by ID from the database, cleans up and notifies players.
+
 Fires `PreCharDelete` before removal and `OnCharDelete` afterwards.
 
 **Parameters:**
@@ -472,6 +487,7 @@ Fires `PreCharDelete` before removal and `OnCharDelete` afterwards.
 **Description:**
 
 Updates a character's JSON data field in the database and loaded object.
+
 Setting a value on a loaded character triggers `OnCharVarChanged`.
 
 **Parameters:**
@@ -509,6 +525,7 @@ Setting a value on a loaded character triggers `OnCharVarChanged`.
 **Description:**
 
 Updates the character's name in the database and loaded object.
+
 Triggers `OnCharVarChanged` for the `name` variable if the character is loaded.
 
 **Parameters:**
@@ -543,6 +560,7 @@ Triggers `OnCharVarChanged` for the `name` variable if the character is loaded.
 **Description:**
 
 Updates the character's model and bodygroups in the database and in-game.
+
 Also fires `PlayerModelChanged` and `OnCharVarChanged` for the `model` variable.
 
 **Parameters:**

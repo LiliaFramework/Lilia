@@ -243,6 +243,7 @@ Custom scrollbar paired with `liaHorizontalScroll`. It moves the canvas horizont
 **Description:**
 
 Panel shown when you interact with an item entity. Displays item info and action buttons.
+
 ```lua
 -- called from GM:ItemShowEntityMenu
 if IsValid(liaItemMenuInstance) then liaItemMenuInstance:Remove() end
@@ -549,6 +550,7 @@ Administrative window for editing a vendor's inventory and settings, including i
 **Description:**
 
 Secondary editor for selecting which factions and player classes can trade with the vendor.
+
 ---
 
 ### `liaHugeButton`

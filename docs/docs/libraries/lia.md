@@ -274,6 +274,7 @@ Logs a bootstrap message with a colored section tag for clarity.
     -- This snippet demonstrates a common usage of lia.bootstrap
     lia.bootstrap("Database", "Connection established")
 ```
+
 ### lia.notifyAdmin
 
 **Description:**
@@ -306,11 +307,13 @@ lia.notifyAdmin("Possible alt account detected")
 **Description:**
 
 Prints a color-coded log entry to the console. The message is prefixed with
+
 `[LOG][<category>]` for easy filtering.
 
 **Parameters:**
 
 * `category` (`string`) – Name of the log category.
+
 * `logString` (`string`) – Message to log.
 
 **Realm:**
@@ -338,11 +341,17 @@ Applies standardized kick or ban commands for a player infraction.
 **Parameters:**
 
 * `client` (`Player`) – The player to punish.
+
 * `infraction` (`string`) – Reason for punishment.
+
 * `kick` (`boolean`) – Whether to kick the player.
+
 * `ban` (`boolean`) – Whether to ban the player.
+
 * `time` (`number`) – Ban duration in minutes.
+
 * `kickKey` (`string`) – Localization key for the kick reason.
+
 * `banKey` (`string`) – Localization key for the ban reason.
 
 **Realm:**
@@ -368,7 +377,9 @@ lia.applyPunishment(ply, "Cheating", true, true, 0)
 **Description:**
 
 Recursively loads entity-related files from the given directory. Each subfolder
+
 may contain `init.lua`, `shared.lua`, or `cl_init.lua`. Entities, weapons,
+
 tools, and effects are automatically registered after inclusion.
 
 **Parameters:**

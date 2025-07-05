@@ -19,6 +19,7 @@ Parses the provided markup text and returns a markup object representing
 the formatted content. When maxwidth is provided, the text will
 
 automatically wrap at that width.
+
 The returned object exposes helper methods such as `getWidth`, `getHeight`, `size`, and `draw` for measuring and rendering the text.
 
 **Parameters:**
@@ -52,6 +53,7 @@ print(object:getWidth(), object:getHeight())
 **Description:**
 
 Creates a blank markup object. You generally will not call this
+
 directly—instead, `lia.markup.parse` returns one for you.
 
 **Parameters:**
@@ -71,8 +73,11 @@ directly—instead, `lia.markup.parse` returns one for you.
 `MarkupObject` instances returned from `lia.markup.parse` expose a few useful properties:
 
 * `totalWidth` (number) – Total width in pixels of all text blocks.
+
 * `totalHeight` (number) – Overall height in pixels.
+
 * `blocks` (table) – Internal table describing each parsed block.
+
 * `onDrawText` (function|nil) – Callback used by `:draw` when set.
 
 ### MarkupObject:getWidth
@@ -155,7 +160,9 @@ local w, h = obj:size()
 **Description:**
 
 Draws the markup object at the specified position. Alignment
+
 constants from Garry's Mod (`TEXT_ALIGN_*`) may be supplied and
+
 `alpha` overrides the block alpha values.
 
 **Parameters:**
@@ -193,7 +200,9 @@ end)
 **Description:**
 
 Configures a `liaMarkupPanel` to display markup text. The panel
+
 adjusts its height automatically and uses `onDrawText` as a callback
+
 for custom drawing if provided.
 
 **Parameters:**

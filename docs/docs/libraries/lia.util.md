@@ -116,6 +116,7 @@ Attempts to find a player using various identifier formats. The search accepts S
         admin:ChatPrint("Found: " .. target:Name())
     end
 ```
+
 ---
 
 ### lia.util.findPlayerItems
@@ -344,6 +345,7 @@ Finds a player currently on the server by their SteamID64.
 * Player|nil — The found player or nil if not found.
 
 **Example Usage:**
+
 ```lua
     -- Find a player by SteamID64
     local ply = lia.util.findPlayerBySteamID("76561198000000000")
@@ -1030,6 +1032,7 @@ Draws a blur effect at a specified rectangle on the screen.
 
 
 **Example Usage:**
+
 ```lua
     hook.Add("HUDPaint", "ExampleBlur", function()
         lia.util.drawBlurAt(100, 100, 200, 150)

@@ -233,8 +233,11 @@ end
 **Description:**
 
 Checks if the player is allowed to override the camera view. A valid character
+
 must be loaded and the player cannot be in a vehicle or ragdoll. The option
+
 `thirdPersonEnabled` must be enabled both client and server side and the
+
 `ShouldDisableThirdperson` hook must not return `true`.
 
 **Parameters:**
@@ -264,6 +267,7 @@ end
 **Description:**
 
 Returns whether third person view is enabled for this player according to the
+
 `thirdPersonEnabled` option and configuration.
 
 **Parameters:**
@@ -465,6 +469,7 @@ Returns the active weapon entity and associated item if equipped.
 **Returns:**
 
 * Entity|None – Weapon entity when matched.
+
 * Item|None – Inventory item associated with the weapon.
 
 
@@ -779,8 +784,11 @@ Determines whether the player can edit the given vendor.
 ```lua
 
 if player:CanEditVendor(vendor) then
+
     vendor:OpenEditor(player)
+
 end
+
 ```
 ---
 
@@ -1853,7 +1861,9 @@ Broadcasts animation bone data to all clients.
 ```lua
 
 player:NetworkAnimation(true, {
+
     ["ValveBiped.Bip01_Head"] = Angle(0, 90, 0)
+
 })
 
 ```
@@ -2438,7 +2448,9 @@ Applies or clears clientside bone angles based on animation data.
 ```lua
 
 LocalPlayer():NetworkAnimation(true, {
+
     ["ValveBiped.Bip01_Head"] = Angle(0, 90, 0)
+
 })
 
 ```
@@ -2464,9 +2476,13 @@ Returns the table of PAC3 part IDs currently attached to the player.
 **Example Usage:**
 
 ```lua
+
 for id in pairs(player:getParts()) do
+
     print("equipped part", id)
+
 end
+
 ```
 ---
 
@@ -2491,7 +2507,9 @@ Sends the player's PAC3 part data to their client.
 **Example Usage:**
 
 ```lua
+
 player:syncParts()
+
 ```
 ---
 
@@ -2516,7 +2534,9 @@ Adds the given PAC3 part to the player and broadcasts it.
 **Example Usage:**
 
 ```lua
+
 player:addPart("hat_01")
+
 ```
 ---
 
@@ -2541,7 +2561,9 @@ Removes a previously added PAC3 part from the player.
 **Example Usage:**
 
 ```lua
+
 player:removePart("hat_01")
+
 ```
 ---
 
@@ -2566,7 +2588,9 @@ Clears all PAC3 parts that are currently attached to the player.
 **Example Usage:**
 
 ```lua
+
 player:resetParts()
+
 ```
 ---
 
@@ -2591,8 +2615,12 @@ Wrapper that tracks when lag compensation is enabled on the player.
 **Example Usage:**
 
 ```lua
+
 player:LagCompensation(true)
+
 -- perform trace logic here
+
 player:LagCompensation(false)
+
 ```
 ---

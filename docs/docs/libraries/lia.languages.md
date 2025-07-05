@@ -7,9 +7,13 @@ This page explains how translations and phrases are loaded.
 ## Overview
 
 The languages library loads localization files from directories. It resolves phrase
+
 keys to translated text and allows runtime language switching. Language files live
+
 in `languages/langname.lua` within schemas or modules and contain tables of
+
 localized phrases. Loaded phrases are stored in `lia.lang.stored` while display
+
 names are kept in `lia.lang.names`.
 
 ---
@@ -94,7 +98,9 @@ lia.lang.AddTable("english", {
 **Description:**
 
 Looks up the phrase associated with `key` in the language selected by the `Language`
+
 configuration option. Additional arguments are inserted using `string.format`.
+
 If the key has no translation, the key itself is returned.
 
 **Parameters:**

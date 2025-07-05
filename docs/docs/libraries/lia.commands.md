@@ -13,7 +13,9 @@ The commands library registers console and chat commands. It parses arguments, c
 **Description:**
 
 Registers a new command with its associated data.
+
 See [Command Fields](../definitions/command.md) for a list of
+
 available keys in the `data` table.
 
 **Parameters:**
@@ -59,10 +61,15 @@ available keys in the `data` table.
 **Description:**
 
 Determines if a player may run the specified command.
+
 Before checking CAMI privileges, the function consults the
+
 `CanPlayerUseCommand` hook. If that hook returns either `true` or
+
 `false`, the result overrides the default permission logic. In
+
 addition, factions and classes can whitelist commands by placing them
+
 in a `commands` table on their definition.
 
 **Parameters:**
@@ -145,7 +152,9 @@ Quoted sections are treated as single arguments.
 Parses a command syntax string into an ordered list of field tables.
 
 Each field contains a name and a type derived from the syntax. If the word
+
 `optional` appears inside a field's brackets, that field is treated as
+
 optional when prompting for arguments.
 
 **Parameters:**
@@ -161,6 +170,7 @@ optional when prompting for arguments.
 **Returns:**
 
 * table – List of fields in call order. Each field table includes `name`,
+
   `type`, and an `optional` boolean.
 
 
@@ -301,9 +311,13 @@ Garry's Mod net library. The server will then execute the command.
 **Description:**
 
 Opens a window asking the player to fill in arguments for the given command. If only
+
 the command name is supplied, all arguments defined in the command's syntax are
+
 requested. Passing existing arguments causes the prompt to request only the missing
+
 ones. Fields containing the word `optional` may be left blank, while all other
+
 fields must be filled before the **Submit** button is enabled.
 
 **Parameters:**
@@ -345,12 +359,15 @@ missing fields from the server.
 **Description:**
 
 Convenience alias for [lia.util.findPlayer](lia.util.md#liautilfindplayer).
+
 Use this when writing command callbacks to locate another player by name
+
 or SteamID.
 
 **Parameters:**
 
 See [lia.util.findPlayer](lia.util.md#liautilfindplayer) for parameter
+
 information.
 
 **Realm:**

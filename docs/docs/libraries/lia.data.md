@@ -98,10 +98,13 @@ The cached entry inside `lia.data.stored` is also cleared.
 **Description:**
 
 Retrieves the stored value for the specified key. This function no longer
+
 consults the database directly; all values are preloaded at startup and cached
+
 in `lia.data.stored`.
 
 The `global`, `ignoreMap`, and `refresh` parameters are legacy placeholders kept
+
 for backward compatibility.
 
 **Parameters:**
@@ -150,7 +153,9 @@ for backward compatibility.
 **Description:**
 
 Loads all entries from the `lia_data` table into `lia.data.stored`. If the table
+
 is empty but legacy files exist, `lia.data.convertToDatabase` is automatically
+
 executed.
 
 **Parameters:**

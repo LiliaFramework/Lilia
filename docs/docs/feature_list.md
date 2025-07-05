@@ -5,6 +5,7 @@
 This page provides an extensive overview of the core modules and libraries included with Lilia. Use it as a quick reference for the capabilities baked into the framework. The framework ships with numerous optional compatibility layers so popular Garry's Mod addons work seamlessly alongside these features. For a breakdown of those integrations see the [compatibility guide](./compatibility.md).
 
 ### Grid Inventory
+
 Drag-and-drop container system with customizable weight and size limits.
 
 - Drag-and-drop item placement using a grid layout
@@ -25,6 +26,7 @@ Drag-and-drop container system with customizable weight and size limits.
 
 
 ### Recognition
+
 Players must manually recognize others to see their names.
 
 - Manually recognize other players within whisper, talk or yell range
@@ -43,6 +45,7 @@ Players must manually recognize others to see their names.
 
 
 ### Attributes
+
 Character stats that improve through gameplay.
 
 - Character-bound statistics that affect gameplay
@@ -58,11 +61,14 @@ Character stats that improve through gameplay.
 - Progress bars show growth toward the next level
 
 - Supports dynamic maximums and configurable starting values
+
 - Built-in stamina system drains while sprinting and regenerates when resting
+
 - Hands SWEP lets players pick up, push and throw light objects
 
 
 ### F1 Menu
+
 Central hub for staff utilities and character management.
 
 - Staff tools for teleporting to entities and viewing lists
@@ -81,6 +87,7 @@ Central hub for staff utilities and character management.
 
 
 ### Scoreboard
+
 In-game player list with faction sorting and admin actions.
 
 - Roleplay-themed scoreboard with recognition integration
@@ -103,6 +110,7 @@ In-game player list with faction sorting and admin actions.
 
 
 ### Chatbox
+
 Enhanced chat with colors, ranges and channels.
 
 - Customizable chat colors and message length limits
@@ -121,6 +129,7 @@ Enhanced chat with colors, ranges and channels.
 
 
 ### Main Menu
+
 Character selection screen with background and news options.
 
 - Multi-column layout scales to widescreen resolutions
@@ -141,11 +150,13 @@ Character selection screen with background and news options.
 
 
 ### Weapon Selector
+
 Radial menu for quick weapon switching.
 
 - Radial weapon menu with smooth fade animations
 
 - Obeys hooks to decide when it appears
+
 - Displays ammo counts and active attachments
 
 - Designed for quick weapon switching without blocking movement
@@ -154,6 +165,7 @@ Radial menu for quick weapon switching.
 
 
 ### Spawns
+
 Flexible spawn point management with death penalties.
 
 - Manage player spawn points per faction or class
@@ -172,6 +184,7 @@ Flexible spawn point management with death penalties.
 
 
 ### Teams
+
 Factions and classes with custom ranks and spawns.
 
 - Faction and class management helpers
@@ -188,6 +201,7 @@ Factions and classes with custom ranks and spawns.
 
 
 ### Interaction Menu
+
 Contextual radial menu for money, voice and recognition.
 
 - Quick-access radial menu for common actions
@@ -206,6 +220,7 @@ Contextual radial menu for money, voice and recognition.
 
 
 ### Administration Utilities
+
 Logging and ticket tools for server staff.
 
 - Central logging, warning history and ticket system
@@ -222,6 +237,7 @@ Logging and ticket tools for server staff.
 
 
 ### Performance
+
 Libraries for monitoring tick and network load.
 
 - Libraries focused on optimizing heavy operations
@@ -232,6 +248,7 @@ Libraries for monitoring tick and network load.
 
 
 ### Protection
+
 Anti-exploit features and action cooldowns.
 
 - Anti-exploitation features such as alting notifications
@@ -252,6 +269,7 @@ Anti-exploit features and action cooldowns.
 
 
 ### Admin Stick
+
 SWEP granting teleport, freeze and noclip abilities.
 
 - Staff-only SWEP for quick moderation actions
@@ -266,6 +284,7 @@ SWEP granting teleport, freeze and noclip abilities.
 
 
 ### Item Spawner
+
 GUI for spawning items with privilege checks.
 
 - GUI interface to spawn any item
@@ -282,6 +301,7 @@ GUI for spawning items with privilege checks.
 
 
 ### Tickets
+
 Players submit help tickets for staff review.
 
 - Players can submit tickets that staff can claim
@@ -296,6 +316,7 @@ Players submit help tickets for staff review.
 
 
 ### Warns
+
 Issue warnings with history and auto punishments.
 
 - Issue warnings with reasons and durations
@@ -308,6 +329,7 @@ Issue warnings with history and auto punishments.
 
 
 ### Permissions
+
 CAMI-based privilege system with inheritance.
 
 - CAMI-based framework for defining privileges
@@ -322,6 +344,7 @@ CAMI-based privilege system with inheritance.
 
 
 ### Logging
+
 Categorized logs with optional webhooks.
 
 - Log server events with category filtering
@@ -332,6 +355,7 @@ Categorized logs with optional webhooks.
 
 
 ### Doors
+
 Ownable doors with keys and dynamic pricing.
 
 - Ownable doors with selling and price settings
@@ -354,6 +378,7 @@ Ownable doors with keys and dynamic pricing.
 
 
 ### Third Person
+
 Toggleable camera that prevents wall peeking.
 
 - Toggleable third-person view with camera options
@@ -372,6 +397,7 @@ Toggleable camera that prevents wall peeking.
 
 
 ### Storage Containers
+
 Physical crates and trunks storing items persistently.
 
 - Crates, lockers, fridges and more with predefined sizes
@@ -389,6 +415,7 @@ Physical crates and trunks storing items persistently.
 - Persists contents between server restarts
 
 ### NPC Vendors
+
 NPCs that buy and sell items from inventories.
 
 - Built-in squad roster management functions
@@ -406,11 +433,15 @@ NPCs that buy and sell items from inventories.
 - Dialogue trees allow branching conversations
 
 ### Lia Core Library
+
 Shared utilities for file inclusion and helper functions.
+
 - Include helper automatically handles client and server realms
+
 - Small utility wrappers shared across modules
 
 ### Attributes Library
+
 Character stats that improve through gameplay with an API for modifying values.
 
 - Manage character attribute values and levels
@@ -427,6 +458,7 @@ Character stats that improve through gameplay with an API for modifying values.
 
 
 ### Bars
+
 HUD bars for health, armor and custom stats.
 
 - Draw health, armor and custom HUD bars
@@ -445,6 +477,7 @@ HUD bars for health, armor and custom stats.
 
 
 ### Character Library
+
 Helpers for saving and transferring characters.
 
 - Helper functions for accessing character data
@@ -459,6 +492,7 @@ Helpers for saving and transferring characters.
 
 
 ### Chatbox Library
+
 Enhanced chat with ranges and colors plus utilities for custom commands.
 
 - Building blocks for custom chat classes
@@ -468,6 +502,7 @@ Enhanced chat with ranges and colors plus utilities for custom commands.
 - Overridable parsing for unique chat effects
 
 - Supports icons, colors and markup tags
+
 - Plugin hooks for chat preprocessing
 
 
@@ -475,6 +510,7 @@ Enhanced chat with ranges and colors plus utilities for custom commands.
 
 
 ### Classes Library
+
 Manage class definitions and loadouts.
 
 - Register player classes with spawn data and loadouts
@@ -489,6 +525,7 @@ Manage class definitions and loadouts.
 
 
 ### Color Utilities
+
 Color conversion and palette helpers.
 
 - Helper functions for color math and interpolation
@@ -504,6 +541,7 @@ Color conversion and palette helpers.
 
 
 ### Commands Library
+
 Chat command registration system.
 
 - Register chat commands with syntax parsing
@@ -520,6 +558,7 @@ Chat command registration system.
 
 
 ### Config Library
+
 Register and network configuration variables.
 
 - Register server configs with categories and callbacks
@@ -536,6 +575,7 @@ Register and network configuration variables.
 
 
 ### Currency Library
+
 Money handling with support for multiple currencies.
 
 - Format amounts with currency symbols
@@ -552,6 +592,7 @@ Money handling with support for multiple currencies.
 
 
 ### DarkRP Compatibility
+
 Implements DarkRP-style helpers for addons.
 
 - Replicates DarkRP door groups for compatibility
@@ -566,6 +607,7 @@ Implements DarkRP-style helpers for addons.
 
 
 ### Data Library
+
 Key/value persistence wrappers.
 
 - Key/value storage wrappers with automatic serialization
@@ -580,6 +622,7 @@ Key/value persistence wrappers.
 
 
 ### Database Library
+
 Asynchronous MySQL or SQLite layer.
 
 - Interface for saving characters and items asynchronously
@@ -596,6 +639,7 @@ Asynchronous MySQL or SQLite layer.
 
 
 ### Factions Library
+
 Manage faction data and chat colors.
 
 - Create factions with colors, models and global recognition
@@ -612,6 +656,7 @@ Manage faction data and chat colors.
 
 
 ### Flags Library
+
 Temporary permission flags for players.
 
 - Permission flags assignable to players
@@ -626,6 +671,7 @@ Temporary permission flags for players.
 
 
 ### Fonts Library
+
 Register fonts for user interface elements.
 
 - Outline and shadow options for crisp text
@@ -640,6 +686,7 @@ Register fonts for user interface elements.
 
 
 ### Inventory Library
+
 Shared inventory logic used across modules.
 
 - Shared logic for inventories including networking
@@ -655,6 +702,7 @@ Shared inventory logic used across modules.
 
 
 ### Item Library
+
 Framework for defining items and hooks.
 
 - Framework for defining items with metadata and hooks
@@ -672,6 +720,7 @@ Framework for defining items and hooks.
 
 
 ### Keybind Library
+
 System for adding and saving custom key binds.
 
 - Add custom client keybinds and save them per player
@@ -686,6 +735,7 @@ System for adding and saving custom key binds.
 
 
 ### Languages Library
+
 Multi-language phrase system for translations.
 
 - Multi-language phrase system with fallback support
@@ -700,6 +750,7 @@ Multi-language phrase system for translations.
 
 
 ### Logger Library
+
 Simplified logging utilities for modules.
 
 - Simplified logging functions for modules
@@ -716,6 +767,7 @@ Simplified logging utilities for modules.
 
 
 ### Markup Library
+
 Markup rendering helpers for UI text.
 
 - Parse and render markup or BBCode text
@@ -730,6 +782,7 @@ Markup rendering helpers for UI text.
 
 
 ### Menu Helper
+
 Functions that simplify building Derma menus.
 
 - Utility functions for building Derma menus
@@ -744,6 +797,7 @@ Functions that simplify building Derma menus.
 
 
 ### Modularity
+
 Hot-load modules and manage dependencies.
 
 - Dynamic loading and disabling of modules and plugins
@@ -758,6 +812,7 @@ Hot-load modules and manage dependencies.
 
 
 ### Networking
+
 Netstream wrappers for reliable data transfer.
 
 - Netstream utilities for efficient communication
@@ -770,6 +825,7 @@ Netstream wrappers for reliable data transfer.
 
 
 ### Notice System
+
 On-screen notifications with priority handling.
 
 - On-screen notifications with queueing
@@ -782,6 +838,7 @@ On-screen notifications with priority handling.
 
 
 ### Option Library
+
 Store client preferences on the server.
 
 - Store player preferences using sliders and checkboxes
@@ -794,6 +851,7 @@ Store client preferences on the server.
 
 
 ### Salary System
+
 Automated periodic wages for characters.
 
 - Periodic salary payouts for characters
@@ -808,6 +866,7 @@ Automated periodic wages for characters.
 
 
 ### Time Library
+
 Shared timers and scheduling utilities.
 
 - Scheduler helpers and shared timers
@@ -822,6 +881,7 @@ Shared timers and scheduling utilities.
 
 
 ### Util Library
+
 General helper functions used throughout Lilia.
 
 - Miscellaneous helper functions used across modules
@@ -836,6 +896,7 @@ General helper functions used throughout Lilia.
 
 
 ### Web Image
+
 Download and cache images for the UI.
 
 - Download and cache web images for the UI
@@ -850,6 +911,7 @@ Download and cache images for the UI.
 
 
 ### Workshop
+
 Manage Steam Workshop collections for clients.
 
 - Handles dependencies between Workshop collections
@@ -863,15 +925,23 @@ Manage Steam Workshop collections for clients.
 - Prompts admins to restart when addons update
 
 ### Third-Party Helpers
+
 Patches and helper libraries for external addons.
+
 - CAMI fallback library for permissions
+
 - Meta extensions and type helpers
+
 - Async promises and net library patches
+
 - Markup, UTF-8 and icon utilities
+
 - EasyIcons downloader for custom fonts
+
 - SFS helper for file serialization
 
 ### Configuration Options
+
 Exposes numerous settings via the in-game config menu.
 
 - Modules load automatically when compatible addons are detected
@@ -879,6 +949,7 @@ Exposes numerous settings via the in-game config menu.
 The `config` library exposes numerous settings allowing you to control walk and run speeds, voice chat, crosshair usage, salary intervals, theme colors, workshop downloads, and much more. These options can be tweaked in game via the configuration menu.
 
 ### Addon Compatibility
+
 Built-in integrations for popular community addons.
 
 Lilia includes built-in modules that expand support for many common Garry's Mod addons. These integrations cover administration suites, vehicle packs, and utility tools so you can drop your favorite addons in without conflicts. See the [compatibility guide](./compatibility.md) for details.

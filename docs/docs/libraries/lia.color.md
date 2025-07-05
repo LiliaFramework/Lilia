@@ -78,6 +78,7 @@ Returns a new Color based on the input color with the given channel offsets.
 
 
 **Example Usage:**
+
 ```lua
 
     -- Darken the default red by 30 points
@@ -108,6 +109,7 @@ Builds a UI palette derived from the config's base color.
 
 
 **Example Usage:**
+
 ```lua
 
     local colors = lia.color.ReturnMainAdjustedColors()

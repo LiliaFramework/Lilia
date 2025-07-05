@@ -9,7 +9,9 @@ This document lists every available `CLASS` hook. Place these functions on a cla
 Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
 
 These hooks live on the class tables created under `schema/classes` and are only
+
 called for instances of that specific class.  Define them inside your class
+
 definition files (`schema/classes/*.lua`).
 
 ---
@@ -23,7 +25,9 @@ function CLASS:OnCanBe(client) → boolean?
 **Description:**
 
 Determines whether a player is permitted to switch to this class.  It is invoked
+
 by `lia.class.canBe` after whitelist, faction, and limit checks but before the
+
 class change actually happens.
 
 **Parameters:**
@@ -34,6 +38,7 @@ class change actually happens.
 **Returns:**
 
 * `boolean?` – Return `false` to deny. Returning `true` or no value allows the
+
   switch.
 
 **Realm:**
@@ -71,8 +76,11 @@ function CLASS:OnLeave(client)
 **Description:**
 
 Called on the player's previous class after the switch has completed.  It runs
+
 after the new class has executed `OnSet` (and `OnTransferred` if applicable).
+
 Use it to clean up any class‑specific state such as reverting models, resetting
+
 values, or removing temporary items.
 
 **Parameters:**
@@ -119,8 +127,11 @@ function CLASS:OnSet(client)
 **Description:**
 
 Called right after a character joins this class.  Use it to equip loadout items,
+
 set the model, or perform any other initialization.  When switching from another
+
 class, `OnTransferred` will run immediately afterward.  This hook runs before
+
 `OnLeave` is executed on the previous class.
 
 **Parameters:**
@@ -172,7 +183,9 @@ function CLASS:OnSpawn(client)
 **Description:**
 
 Runs every time a member of the class respawns.  The hook is triggered from the
+
 `ClassOnLoadout` gamemode event, so it is ideal for giving items or tweaking
+
 stats such as health, armor, or movement speeds.
 
 **Parameters:**
@@ -224,12 +237,15 @@ function CLASS:OnTransferred(client, oldClass)
 **Description:**
 
 Fires when a player is transferred into this class from a different one (for
+
 example via an admin command).  It runs immediately after `OnSet`.  The previous
+
 class index is provided so you can migrate data or adjust loadouts.
 
 **Parameters:**
 
 * `client` (`Player`) – The player who was transferred.
+
 * `oldClass` (`number`) – The class index the player previously belonged to.
 
 

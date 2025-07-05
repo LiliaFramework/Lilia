@@ -13,8 +13,11 @@ The workshop library tracks required Workshop addon IDs and mounts them on clien
 ### Fields
 
 * **lia.workshop.ids** (table) – IDs registered through `lia.workshop.AddWorkshop`.
+
 * **lia.workshop.known** (table) – IDs that have previously been added and announced.
+
 * **lia.workshop.cache** (table) – Cached list of IDs built after the `InitializedModules` hook.
+
 * **resource.AddWorkshop** (function) – Alias of `lia.workshop.AddWorkshop` for compatibility.
 
 ---
@@ -110,5 +113,6 @@ end)
 ### Console Commands
 
 `workshop_force_redownload` – clears the local queue and downloads all Workshop items again. Useful if a client
+
 needs to re-fetch content that may have been corrupted.
 

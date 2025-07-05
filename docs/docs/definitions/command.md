@@ -1,7 +1,9 @@
 # Command Fields
 
 This document describes the table passed to `lia.command.add`.  Each key in the
+
 table customizes how the command behaves, who can run it and how it appears in
+
 admin utilities.
 
 All fields are optional unless noted otherwise.
@@ -11,8 +13,11 @@ All fields are optional unless noted otherwise.
 ## Overview
 
 When you register a command with `lia.command.add`, you provide a table of
+
 fields controlling its name, permissions and execution.  Except for
+
 `onRun`, every field is optional.
+
 The command name itself is the first argument to `lia.command.add` and is stored in lowercase.
 
 ---
@@ -45,6 +50,7 @@ The command name itself is the first argument to `lia.command.add` and is stored
 **Description:**
 
 One or more alternative command names that trigger the same behavior.
+
 Aliases are automatically lower-cased and behave exactly like the main command name.
 
 **Example Usage:**
@@ -102,6 +108,7 @@ superAdminOnly = true
 `string`
 
 **Description:**
+
 Custom CAMI privilege name checked when running the command. If omitted, `adminOnly` or `superAdminOnly` register `Commands - <command name>`.
 
 **Example Usage:**
@@ -165,12 +172,17 @@ desc = "Purchase a door if it is available and you can afford it."
 **Description:**
 
 Defines how the command appears in admin utility menus. Common keys:
+
 All keys are optional; if omitted the command simply will not appear in the Admin Stick menu.
 
 * `Name` (string) – Text shown on the menu button.
+
 * `Category` (string) – Top-level grouping.
+
 * `SubCategory` (string) – Secondary grouping under the main category.
+
 * `Icon` (string) – 16×16 icon path.
+
 * `TargetClass` (string) – Limit the command to a specific entity class when using the Admin Stick.
 
 **Example Usage:**
@@ -198,6 +210,7 @@ AdminStick = {
 **Description:**
 
 Function called when the command is executed. `args` is a table of parsed arguments. Return a string to send a message back to the caller, or return nothing for silent execution.
+
 Strings starting with `@` are interpreted as localization keys for `notifyLocalized`.
 
 **Example Usage:**
@@ -248,6 +261,7 @@ lia.command.add("restockvendor", {
 ```
 
 ---
+
 ```lua
 lia.command.add("goto", {
     adminOnly = true,                    -- only admins may run this command

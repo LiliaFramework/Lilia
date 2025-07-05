@@ -219,8 +219,11 @@ MODULE.WorkshopContent = {
 **Description:**
 
 List of additional files or directories to include before the module itself
+
 loads. Paths are relative to the module's folder. Each entry may specify a
+
 `File` or `Folder` key along with an optional `Realm` value (`server`, `client`
+
 or `shared`) to control where the code is executed.
 
 **Example Usage:**

@@ -24,7 +24,7 @@ function MODULE:HUDPaint()
         elseif ent.isItem and ent:isItem() and lia.option.get("espItems") then
             entityType = "Items"
             local itemTable = ent.getItemTable and ent:getItemTable()
-            label = L("itemESPLabel", itemTable and itemTable.name or L("invalid"))
+            label = L("itemESPLabel", itemTable and itemTable.name or L("unknown"))
         elseif ent.isProp and ent:isProp() and lia.option.get("espProps") then
             entityType = "Props"
             label = L("propModelESPLabel", ent:GetModel() or L("unknown"))

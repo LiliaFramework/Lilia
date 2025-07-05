@@ -209,6 +209,7 @@ end
 **Description:**
 
 Assigns vehicle ownership to the given player using CPPI and network variables.
+
 **Parameters:**
 
 * `client` (`Player`) – Player to set as owner.
@@ -574,6 +575,7 @@ Clears all network variables on this entity and tells clients to remove them.
 
 
 **Example Usage:**
+
 ```lua
 ent:clearNetVars(client)
 ```
