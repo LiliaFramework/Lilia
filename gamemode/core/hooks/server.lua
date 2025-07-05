@@ -125,7 +125,7 @@ function GM:CanPlayerInteractItem(client, action, item)
                 timer.Create("DropDelay." .. client:SteamID64(), lia.config.get("DropDelay"), 1, function() if IsValid(client) then client.dropDelay = nil end end)
                 return true
             else
-                client:notifyLocalized("waitDrop")
+                client:notifyLocalized("switchCooldown")
                 return false
             end
         else
@@ -140,7 +140,7 @@ function GM:CanPlayerInteractItem(client, action, item)
                 timer.Create("TakeDelay." .. client:SteamID64(), lia.config.get("TakeDelay"), 1, function() if IsValid(client) then client.takeDelay = nil end end)
                 return true
             else
-                client:notifyLocalized("waitPickup")
+                client:notifyLocalized("switchCooldown")
                 return false
             end
         else
@@ -155,7 +155,7 @@ function GM:CanPlayerInteractItem(client, action, item)
                 timer.Create("EquipDelay." .. client:SteamID64(), lia.config.get("EquipDelay"), 1, function() if IsValid(client) then client.equipDelay = nil end end)
                 return true
             else
-                client:notifyLocalized("waitEquip")
+                client:notifyLocalized("switchCooldown")
                 return false
             end
         else
@@ -170,7 +170,7 @@ function GM:CanPlayerInteractItem(client, action, item)
                 timer.Create("UnequipDelay." .. client:SteamID64(), lia.config.get("UnequipDelay"), 1, function() if IsValid(client) then client.unequipDelay = nil end end)
                 return true
             else
-                client:notifyLocalized("waitUnequip")
+                client:notifyLocalized("switchCooldown")
                 return false
             end
         else
@@ -182,7 +182,7 @@ end
 function GM:CanPlayerEquipItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.equipDelay ~= nil then
-        client:notifyLocalized("waitEquip")
+        client:notifyLocalized("switchCooldown")
         return false
     elseif inventory and (inventory.isBag or inventory.isExternalInventory) then
         client:notifyLocalized("forbiddenActionStorage")
@@ -193,7 +193,7 @@ end
 function GM:CanPlayerTakeItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.takeDelay ~= nil then
-        client:notifyLocalized("waitPickup")
+        client:notifyLocalized("switchCooldown")
         return false
     elseif inventory and (inventory.isBag or inventory.isExternalInventory) then
         client:notifyLocalized("forbiddenActionStorage")
@@ -210,7 +210,7 @@ end
 function GM:CanPlayerDropItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.dropDelay ~= nil then
-        client:notifyLocalized("waitDrop")
+        client:notifyLocalized("switchCooldown")
         return false
     elseif item.isBag and item:getInv() then
         local items = item:getInv():getItems()
