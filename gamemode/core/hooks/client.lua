@@ -346,7 +346,7 @@ function GM:ItemShowEntityMenu(entity)
         if IsValid(entity) then
             net.Start("invAct")
             net.WriteString("take")
-            net.WriteEntity(entity)
+            net.WriteType(entity)
             net.SendToServer()
         end
         return
