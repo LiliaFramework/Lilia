@@ -6,12 +6,15 @@ Vector utilities expand Garry's Mod's math library. This document describes addi
 
 ## Overview
 
-Vector meta functions provide calculations such as midpoints, distances, and axis rotations to support movement, physics, and placement tasks.
+Vector meta functions provide calculations such as midpoints, distances and axis
+rotations to support movement, physics and placement tasks. Each helper returns
+a new `Vector` without modifying the originals.
 
 ### Example Hook Usage
 
-Use these helpers inside any Garry's Mod hook. This example rotates a camera
-offset each frame:
+These helpers may be called from either client or server code. The following
+snippet demonstrates rotating a camera offset every frame inside a `CalcView`
+hook:
 
 ```lua
 hook.Add("CalcView", "TiltView", function(ply, pos, angles, fov)
@@ -47,8 +50,9 @@ Returns the midpoint between this vector and the supplied vector.
 
 ```lua
 -- Average two vectors to find the midpoint
-local midpoint = vector_origin:Center(Vector(10, 10, 10))
-print(midpoint) -- Vector(5, 5, 5)
+local a = Vector(0, 0, 0)
+local b = Vector(10, 10, 10)
+print(a:Center(b)) -- Vector(5, 5, 5)
 ```
 
 ---
@@ -78,8 +82,9 @@ Calculates the distance between this vector and another vector.
 
 ```lua
 -- Measure the distance between two points
-local dist = vector_origin:Distance(Vector(3, 4, 0))
-print(dist) -- 5
+local p1 = Vector(0, 0, 0)
+local p2 = Vector(3, 4, 0)
+print(p1:Distance(p2)) -- 5
 ```
 
 ---
@@ -112,7 +117,8 @@ Rotates the vector around an axis by the specified degrees and returns the new v
 
 ```lua
 -- Rotate a vector 90 degrees around the Z axis
-local rotated = Vector(1, 0, 0):RotateAroundAxis(Vector(0, 0, 1), 90)
+local axis = Vector(0, 0, 1)
+local rotated = Vector(1, 0, 0):RotateAroundAxis(axis, 90)
 print(rotated) -- Vector(0, 1, 0)
 ```
 
@@ -122,8 +128,10 @@ print(rotated) -- Vector(0, 1, 0)
 
 **Description:**
 
-Returns a normalized right-direction vector relative to this vector. If the
-vector has no horizontal component, it defaults to `Vector(0, -1, 0)`.
+Calculates the cross product of this vector and the provided up reference to
+derive a right-direction vector. The result is normalized and therefore
+perpendicular to both input vectors. If this vector has no horizontal
+component it defaults to `Vector(0, -1, 0)`.
 
 **Parameters:**
 
@@ -144,7 +152,8 @@ vector has no horizontal component, it defaults to `Vector(0, -1, 0)`.
 
 ```lua
 -- Get the right direction vector
-local rightVec = Vector(0, 1, 0):Right()
+local forward = Vector(1, 0, 0)
+local rightVec = forward:Right() -- Vector(0, -1, 0)
 print(rightVec)
 ```
 
@@ -154,8 +163,11 @@ print(rightVec)
 
 **Description:**
 
-Returns a normalized up-direction vector relative to this vector. When the
-vector has no horizontal component, it returns `Vector(-self.z, 0, 0)`.
+Uses two cross products to determine an up-direction vector that is
+perpendicular to both this vector and the given up reference. First, the right
+vector is obtained via `self:Cross(vUp)`, then that right vector is crossed with
+`self` to yield the final up direction. When this vector lacks a horizontal
+component the fallback value is `Vector(-self.z, 0, 0)`.
 
 **Parameters:**
 
@@ -176,6 +188,7 @@ vector has no horizontal component, it returns `Vector(-self.z, 0, 0)`.
 
 ```lua
 -- Get the up direction vector
-local upVec = Vector(1, 0, 0):Up()
+local forward = Vector(1, 0, 0)
+local upVec = forward:Up() -- Vector(0, 0, 1)
 print(upVec)
 ```

@@ -708,8 +708,6 @@ Sends a plain notification message to the player.
 
 **Returns:**
 
-**Example Usage:**
-
 * None – This function does not return a value.
 
 **Example Usage:**
@@ -718,7 +716,7 @@ Sends a plain notification message to the player.
 
 -- Send a welcome notification and log the join event
 
-player:notifyLocalized("welcomeServer")
+player:notify("Welcome to the server!")
 
 file.Append("welcome.txt", player:SteamID() .. " joined\n")
 
@@ -741,7 +739,7 @@ Sends a localized notification to the player.
 
 * Server
 
-**Example Usage:**
+**Returns:**
 
 * None – This function does not return a value.
 
@@ -772,8 +770,6 @@ Determines whether the player can edit the given vendor.
 
 * Server
 
-**Example Usage:**
-
 **Returns:**
 
 * boolean – True if allowed to edit.
@@ -782,10 +778,9 @@ Determines whether the player can edit the given vendor.
 
 ```lua
 
--- Determine if the player may modify the vendor
-
-local result = player:CanEditVendor(vendor)
-
+if player:CanEditVendor(vendor) then
+    vendor:OpenEditor(player)
+end
 ```
 ---
 
@@ -803,7 +798,6 @@ Convenience wrapper to check if the player is in the "user" group.
 
 * Shared
 
-**Example Usage:**
 
 **Returns:**
 
@@ -834,7 +828,6 @@ Returns true if the player belongs to a staff group.
 
 * Shared
 
-**Example Usage:**
 
 **Returns:**
 
@@ -865,7 +858,6 @@ Checks whether the player is in the VIP group.
 
 * Shared
 
-**Example Usage:**
 
 **Returns:**
 
@@ -895,8 +887,7 @@ Determines if the player is currently in the staff faction.
 **Realm:**
 
 * Shared
-
-**Example Usage:**
+**Returns:**
 
 * boolean – True if staff faction is active.
 
@@ -925,7 +916,7 @@ Checks if the player's character belongs to the given faction.
 
 * Shared
 
-**Example Usage:**
+**Returns:**
 
 * boolean – True if the factions match.
 
@@ -2450,5 +2441,158 @@ LocalPlayer():NetworkAnimation(true, {
     ["ValveBiped.Bip01_Head"] = Angle(0, 90, 0)
 })
 
+```
+---
+### getParts()
+
+**Description:**
+
+Returns the table of PAC3 part IDs currently attached to the player.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* table – Mapping of active part IDs.
+
+**Example Usage:**
+
+```lua
+for id in pairs(player:getParts()) do
+    print("equipped part", id)
+end
+```
+---
+
+### syncParts()
+
+**Description:**
+
+Sends the player's PAC3 part data to their client.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example Usage:**
+
+```lua
+player:syncParts()
+```
+---
+
+### addPart(partID)
+
+**Description:**
+
+Adds the given PAC3 part to the player and broadcasts it.
+
+**Parameters:**
+
+* partID (string) – Identifier of the part to attach.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example Usage:**
+
+```lua
+player:addPart("hat_01")
+```
+---
+
+### removePart(partID)
+
+**Description:**
+
+Removes a previously added PAC3 part from the player.
+
+**Parameters:**
+
+* partID (string) – Identifier of the part to remove.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example Usage:**
+
+```lua
+player:removePart("hat_01")
+```
+---
+
+### resetParts()
+
+**Description:**
+
+Clears all PAC3 parts that are currently attached to the player.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example Usage:**
+
+```lua
+player:resetParts()
+```
+---
+
+### LagCompensation(state)
+
+**Description:**
+
+Wrapper that tracks when lag compensation is enabled on the player.
+
+**Parameters:**
+
+* state (boolean) – Whether to enable lag compensation.
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* None – This function does not return a value.
+
+**Example Usage:**
+
+```lua
+player:LagCompensation(true)
+-- perform trace logic here
+player:LagCompensation(false)
 ```
 ---

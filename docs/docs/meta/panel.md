@@ -14,7 +14,8 @@ Panel meta functions support scaled positioning, listen for inventory changes, a
 
 **Description:**
 
-Registers this panel to automatically receive inventory events for the provided inventory. When hooks such as `InventoryItemAdded` or `InventoryDeleted` fire, matching methods on the panel are invoked.
+Registers this panel to automatically receive inventory events for the provided inventory. The following events are forwarded to methods on the panel: `InventoryInitialized`, `InventoryDeleted`, `InventoryDataChanged`, `InventoryItemAdded`, and `InventoryItemRemoved`. `ItemDataChanged` is forwarded to `InventoryItemDataChanged` when the changed item belongs to this inventory.
+Hooks are automatically removed when the inventory is deleted, but you should also call `liaDeleteInventoryHooks` in `OnRemove` to avoid stale hooks.
 
 **Parameters:**
 
@@ -34,6 +35,10 @@ Registers this panel to automatically receive inventory events for the provided 
 function PANEL:setInventory(inv)
     self.inventory = inv
     self:liaListenForInventoryChanges(inv)
+end
+
+function PANEL:InventoryItemAdded(item)
+    print("Added item:", item:getName())
 end
 ```
 
@@ -61,7 +66,12 @@ Removes hooks added by `liaListenForInventoryChanges`. Supply an inventory ID to
 
 ```lua
 function PANEL:OnRemove()
+    -- Always clear listeners to avoid stale hooks
     self:liaDeleteInventoryHooks()
+end
+function PANEL:StopListening(id)
+    -- Remove hooks for a specific inventory ID
+    self:liaDeleteInventoryHooks(id)
 end
 ```
 ---
@@ -89,6 +99,7 @@ Sets the panel position using `ScreenScale(x)` and `ScreenScaleH(y)`.
 **Example Usage:**
 
 ```lua
+-- Position with screen scaling
 panel:SetScaledPos(10, 20)
 ```
 
@@ -116,6 +127,7 @@ Sets the panel size using `ScreenScale(w)` and `ScreenScaleH(h)`.
 **Example Usage:**
 
 ```lua
+-- Size with screen scaling
 panel:SetScaledSize(64, 32)
 ```
 
