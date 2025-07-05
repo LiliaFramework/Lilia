@@ -19,6 +19,7 @@ Returns a human-readable string indicating how long ago a given time occurred (e
 **Parameters:**
 
 * strTime (string or number) — The time in string or timestamp form.
+* Strings should follow `YYYY-MM-DD` while numbers are standard timestamps.
 
 
 **Realm:**
@@ -34,21 +35,21 @@ Returns a human-readable string indicating how long ago a given time occurred (e
 **Example Usage:**
 
 ```lua
-    -- Greet players with the time since they last joined using persistence data
-    hook.Add("PlayerInitialSpawn", "welcomeLastSeen", function(ply)
-        -- Retrieve the time this player last joined from persistent data
-        local key = "lastLogin_" .. ply:SteamID64()
-        local last = lia.data.get(key, nil, true)
+-- Greet players with the time since they last joined using persistence data
+hook.Add("PlayerInitialSpawn", "welcomeLastSeen", function(ply)
+    -- Retrieve the time this player last joined from persistent data
+    local key = "lastLogin_" .. ply:SteamID64()
+    local last = lia.data.get(key, nil, true)
 
-        if last then
-            ply:ChatPrint(string.format(L("welcomeBack"), lia.time.TimeSince(last)))
-        else
-            ply:ChatPrint(L("welcomeFirst"))
-        end
+    if last then
+        ply:ChatPrint(string.format(L("welcomeBack"), lia.time.TimeSince(last)))
+    else
+        ply:ChatPrint(L("welcomeFirst"))
+    end
 
     -- Store the current time for the next login
     lia.data.set(key, os.time(), true)
-    end)
+end)
 ```
 
 ---
@@ -57,9 +58,7 @@ Returns a human-readable string indicating how long ago a given time occurred (e
 
 **Description:**
 
-Converts a string timestamp (YYYY-MM-DD HH:MM:SS) to a table with numeric fields:
-
-year, month, day, hour, min, sec. Defaults to current time if not provided.
+Converts a string timestamp (YYYY-MM-DD HH:MM:SS) into a table of numeric components: year, month, day, hour, min, and sec. If omitted, it returns the current time.
 
 **Parameters:**
 
@@ -81,7 +80,8 @@ year, month, day, hour, min, sec. Defaults to current time if not provided.
 ```lua
     -- Schedule an event at a custom date and time using the parsed table
     local targetInfo = lia.time.toNumber("2025-04-01 12:30:00")
-    local delay = os.time(targetInfo) - os.time()
+    local targetTimestamp = os.time(targetInfo)
+    local delay = targetTimestamp - os.time()
     if delay > 0 then
         timer.Simple(delay, function()
             print("It's now April 1st, 2025, 12:30 PM!")
@@ -124,7 +124,7 @@ Returns the full current date and time formatted based on the
     -- Announce the current server date and time to all players every hour
     timer.Create("ServerTimeAnnounce", 3600, 0, function()
         local dateString = lia.time.GetDate()
-        for _, ply in player.Iterator() do
+        for _, ply in player.GetAll() do
             ply:ChatPrint(L("serverTime") .. dateString)
         end
     end)
@@ -156,20 +156,15 @@ Returns the current hour formatted based on the
 
 **Returns:**
 
-* (string|number) Current hour string with suffix when AmericanTimeStamps
-
-
-* is enabled, otherwise numeric hour in 24-hour format.
+* (string|number) Current hour string with suffix when AmericanTimeStamps is enabled, otherwise numeric hour in 24-hour format.
 
 
 **Example Usage:**
 
 ```lua
-    -- Toggle an NPC's shop based on the in-game hour
+-- Toggle an NPC's shop based on the in-game hour
+timer.Create("CheckShopHours", 60, 0, function()
     local hour = lia.time.GetHour()
-    if hour >= 9 and hour < 17 then
-        npc:SetNWBool("ShopOpen", true)
-    else
-    npc:SetNWBool("ShopOpen", false)
-    end
+    npc:SetNWBool("ShopOpen", hour >= 9 and hour < 17)
+end)
 ```
