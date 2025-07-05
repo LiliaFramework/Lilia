@@ -139,19 +139,21 @@ jobs:
           cp -R lilia packaged/lilia
           cd packaged
           zip -r ../lilia.zip lilia
-      - name: Update release tag
-        run: |
-          cd lilia
-          git tag -f release
-          git push --force origin release
+      - id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ env.VERSION }}
+          release_name: Lilia ${{ env.VERSION }}
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-      - name: Recreate GitHub release
-        run: |
-          cd lilia
-          gh release delete release -y || true
-          gh release create release ../lilia.zip \
-            -t "Lilia ${VERSION}" -n ""
+      - uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: lilia.zip
+          asset_name: lilia.zip
+          asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
 
