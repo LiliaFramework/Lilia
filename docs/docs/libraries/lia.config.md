@@ -31,13 +31,21 @@ Registers a new config option with the given key, display name, default value, a
 
 
 * `data` (`table`) — Additional data customizing the option. Fields include:
+
     * desc (string) – Description shown in the menu.
+
     * category (string) – Category used to group the setting.
+
     * type (string) – "Boolean", "Int", "Float", "Color", or "Table". If omitted it is inferred from the default value.
+
     * min (number) – Minimum allowed value for numeric types.
+
     * max (number) – Maximum allowed value for numeric types.
+
     * decimals (number) – Number of decimals to display for Float types.
+
     * options (table) – List of choices for the "Table" type.
+
     * noNetworking (boolean) – Do not network this config to clients.
 
 

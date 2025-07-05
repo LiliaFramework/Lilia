@@ -7,8 +7,11 @@ This page explains how web images are downloaded and cached.
 ## Overview
 
 The webimage library downloads remote images and caches them as materials. Cached files are stored under
+
 `data/lilia/<IP>/<Gamemode>/` so each server keeps its own image collection. The library also extends
+
 `Material()` and `DImage:SetImage()` allowing you to pass HTTP(S) URLs directly; the image is downloaded,
+
 cached and then used automatically.
 
 ---

@@ -23,6 +23,7 @@ Called on the server whenever `lia.attribs.setup(client)` initializes or refresh
 **Parameters:**
 
 * `client` (`Player`) – The player that owns the attribute.
+
 * `value` (`number`) – The attribute's value returned by `character:getAttrib`, including temporary boosts.
 
 **Realm:**

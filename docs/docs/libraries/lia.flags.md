@@ -59,8 +59,11 @@ Each flag entry stores a description and an optional callback. The callback is i
 **Description:**
 
 Called on the server when a player spawns. It iterates over the character's flags and runs
+
 their callbacks, passing `(client, true)` so any flag effects are reapplied. The base
+
 gamemode already calls this from its `PlayerSpawn` hook, but modules may invoke it manually
+
 after custom spawn logic.
 
 **Parameters:**
@@ -92,16 +95,27 @@ after custom spawn logic.
 ### Default Flags
 
 The base gamemode registers several permission flags. Modules may define more,
+
 but these are always available:
 
 * `p` – Access to the physgun.
+
 * `t` – Access to the toolgun.
+
 * `C` – Allows spawning vehicles.
+
 * `z` – Allows spawning SWEPS.
+
 * `E` – Allows spawning SENTs.
+
 * `L` – Allows spawning Effects.
+
 * `r` – Allows spawning ragdolls.
+
 * `e` – Allows spawning props.
+
 * `n` – Allows spawning NPCs.
+
 * `Z` – Can invite players to your faction.
+
 * `P` – Access to PAC3 features.

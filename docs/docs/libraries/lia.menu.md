@@ -13,10 +13,15 @@ The menu library offers convenience functions for building simple context menus.
 Each entry inside `lia.menu.list` is a table with the following fields:
 
 * `position` (Vector) – World position the menu is drawn at.
+
 * `entity` (Entity|nil) – Entity to follow if attached.
+
 * `items` (table) – Sorted array of `{label, callback}` pairs.
+
 * `width` (number) – Calculated pixel width for rendering.
+
 * `height` (number) – Total pixel height of all rows.
+
 * `onRemove` (function|nil) – Executed when the menu is removed.
 
 ### lia.menu.add
@@ -24,6 +29,7 @@ Each entry inside `lia.menu.list` is a table with the following fields:
 **Description:**
 
 Creates a context menu from the given options table. Each key is the label shown and each value is the function run when selected.
+
 When an entity is supplied the menu follows that entity. Otherwise the player's eye trace position is used.
 
 **Parameters:**

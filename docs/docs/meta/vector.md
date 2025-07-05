@@ -7,13 +7,17 @@ Vector utilities expand Garry's Mod's math library. This document describes addi
 ## Overview
 
 Vector meta functions provide calculations such as midpoints, distances and axis
+
 rotations to support movement, physics and placement tasks. Each helper returns
+
 a new `Vector` without modifying the originals.
 
 ### Example Hook Usage
 
 These helpers may be called from either client or server code. The following
+
 snippet demonstrates rotating a camera offset every frame inside a `CalcView`
+
 hook:
 
 ```lua
@@ -131,8 +135,11 @@ print(result)
 **Description:**
 
 Calculates the cross product of this vector and the provided up reference to
+
 derive a right-direction vector. The result is normalized and therefore
+
 perpendicular to both input vectors. If this vector has no horizontal
+
 component it defaults to `Vector(0, -1, 0)`.
 
 **Parameters:**
@@ -166,9 +173,13 @@ print(result)
 **Description:**
 
 Uses two cross products to determine an up-direction vector that is
+
 perpendicular to both this vector and the given up reference. First, the right
+
 vector is obtained via `self:Cross(vUp)`, then that right vector is crossed with
+
 `self` to yield the final up direction. When this vector lacks a horizontal
+
 component the fallback value is `Vector(-self.z, 0, 0)`.
 
 **Parameters:**

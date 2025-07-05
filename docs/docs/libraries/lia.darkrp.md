@@ -7,9 +7,13 @@ This page describes helpers for integrating with DarkRP.
 ## Overview
 
 The darkrp library bridges functionality with the DarkRP gamemode. It mirrors
+
 several DarkRP helpers so third-party addons expecting the `DarkRP` globals
+
 continue to function. The functions documented here are also assigned to the
+
 global `DarkRP` table. A simplified `RPExtraTeams` table is created as well,
+
 mapping each faction to its team index for compatibility.
 
 ---
@@ -198,6 +202,7 @@ through lia's item system.
 **Parameters:**
 
 * `name` (`string`) – Display name of the entity.
+
 * `data` (`table`) – Table containing fields such as `model`, `desc`, `category`, `ent`, `price` and optional `cmd`.
 
 **Realm:**

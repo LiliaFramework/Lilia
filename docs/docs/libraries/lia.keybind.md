@@ -19,7 +19,9 @@ Registers a new keybind for a given action.
 Converts the provided key identifier to its corresponding key constant (if it's a string),
 
 and stores the keybind settings. When the keybind does not yet have a saved value its
+
 default key will be set to the provided key.  The optional release callback will be executed
+
 when the key is released.
 
 Also maps the key code back to the action identifier for reverse lookup.
@@ -71,7 +73,9 @@ lia.keybind.add(KEY_F1, "Open Inventory",
 **Description:**
 
 Retrieves the key code currently assigned to a keybind action.  The stored value
+
 is returned if present, otherwise the default key registered with `lia.keybind.add`
+
 is used.  If both are missing the optional fallback value is returned.
 
 **Parameters:**
@@ -107,8 +111,11 @@ print("Inventory key:", input.GetKeyName(invKey))
 **Description:**
 
 Persists all keybinds to disk. The library creates a folder under
+
 `data/lilia/keybinds/` named after the active gamemode and writes a file based on
+
 the server IP address.  The file contains a JSON table mapping action identifiers
+
 to key codes.
 
 **Parameters:**
@@ -140,10 +147,15 @@ lia.keybind.save()
 **Description:**
 
 Loads keybind settings from disk.  The file is read from the same location used
+
 by `lia.keybind.save`.  If no saved binds exist the defaults defined via
+
 `lia.keybind.add` are applied and then written to disk.  After loading, a reverse
+
 lookup table (key code → action) is built and the `InitializedKeybinds` hook is
+
 triggered.
+
 This function is automatically called when the gamemode initializes or reloads.
 
 **Parameters:**

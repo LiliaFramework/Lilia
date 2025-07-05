@@ -459,8 +459,11 @@ ITEM.base = "base_weapons"
 ```
 
 When loading items from a folder such as `items/weapons/`, the framework
+
 automatically sets `ITEM.base` to match that folder (e.g. `base_weapons`).
+
 Ideally you should organize item files under directories named after the base
+
 they inherit from so this assignment happens automatically.
 
 ---
@@ -546,6 +549,7 @@ ITEM.desc = "An example item"
 **Description:**
 
 String identifier used to register the item. When omitted it is derived
+
 from the file path, but you may override it to provide a custom ID.
 
 **Example Usage:**
@@ -565,7 +569,9 @@ ITEM.uniqueID = "custom_unique_id"
 **Description:**
 
 Unique numeric identifier assigned by the inventory system. Instances
+
 use this to reference the item in the database and it should not be
+
 manually set.
 
 **Example Usage:**
@@ -905,11 +911,17 @@ Custom camera parameters used when rendering the item's spawn icon. Contains `po
 **Example Usage:**
 
 ```lua
+
 ITEM.iconCam = {
+
     pos = Vector(0, 0, 32),
+
     ang = Angle(0, 180, 0),
+
     fov = 45
+
 }
+
 ```
 
 #### `forceRender`
@@ -925,7 +937,9 @@ When `true`, forces the spawn icon to regenerate even if an icon for the model a
 **Example Usage:**
 
 ```lua
+
 ITEM.forceRender = true
+
 ```
 
 ---
@@ -1087,9 +1101,13 @@ Callbacks triggered on specific item events. Use `ITEM:hook("event", func)` to a
 **Example Usage:**
 
 ```lua
+
 ITEM:hook("drop", function(itm)
+
     print(itm.name .. " was dropped")
+
 end)
+
 ```
 
 
@@ -1108,21 +1126,33 @@ Table of post-hook callbacks.
 **Example Usage:**
 
 ```lua
+
 -- Defined in base_weapons
+
 function ITEM.postHooks:drop(result)
+
     local ply = self.player
+
     if ply:HasWeapon(self.class) then
+
         ply:StripWeapon(self.class)
+
     end
+
 end
+
 ```
 
 Additional post hooks can be registered dynamically using `ITEM:postHook`:
 
 ```lua
+
 ITEM:postHook("drop", function(itm, res)
+
     print("Post drop result: " .. tostring(res))
+
 end)
+
 ```
 
 ---
@@ -1132,74 +1162,118 @@ Minimal definitions for each built-in item type are shown below.
 
 ### Weapon
 ```lua
+
 ITEM.name = "Sub Machine Gun"
+
 ITEM.model = "models/weapons/w_smg1.mdl"
+
 ITEM.class = "weapon_smg1"
+
 ITEM.weaponCategory = "primary"
+
 ITEM.isWeapon = true
+
 ```
 
 ### Ammo
 ```lua
+
 ITEM.name = "Pistol Ammo"
+
 ITEM.model = "models/items/357ammo.mdl"
+
 ITEM.ammo = "pistol"
+
 ITEM.ammoAmount = 30
+
 ```
 
 ### Outfit
 ```lua
+
 ITEM.name = "Combine Armor"
+
 ITEM.model = "models/props_c17/BriefCase001a.mdl"
+
 ITEM.outfitCategory = "body"
+
 ITEM.replacements = "models/player/combine_soldier.mdl"
+
 ITEM.newSkin = 1
+
 ```
 
 ### PAC Outfit
 ```lua
+
 ITEM.name = "Skull Mask"
+
 ITEM.outfitCategory = "hat"
+
 ITEM.pacData = { ... }
+
 ```
 
 ### Aid Item
 ```lua
+
 ITEM.name = "Bandages"
+
 ITEM.model = "models/weapons/w_package.mdl"
+
 ITEM.health = 50
+
 ```
 
 ### Book
 ```lua
+
 ITEM.name = "Example"
+
 ITEM.contents = "<h1>An Example</h1>"
+
 ```
 
 ### URL Item
 ```lua
+
 ITEM.name = "Hi Barbie"
+
 ITEM.url = "https://www.youtube.com/watch?v=9ezbBugUQiQ"
+
 ```
 
 ### Entity Spawner
 ```lua
+
 ITEM.name = "Item Suit"
+
 ITEM.entityid = "item_suit"
+
 ```
 
 ### Grenade
 ```lua
+
 ITEM.name = "Grenade"
+
 ITEM.class = "weapon_frag"
+
 ITEM.DropOnDeath = true
+
 ```
 
 ### Bag
 ```lua
+
 ITEM.name = "Small Bag"
+
 ITEM.isBag = true
+
 ITEM.invWidth = 2
+
 ITEM.invHeight = 2
+
 ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
+
 ```

@@ -11,7 +11,9 @@ The currency library formats money amounts, spawns physical money entities, and 
 ### Fields
 
 * **lia.currency.symbol** (string) – Prefix used when displaying money amounts.
+
 * **lia.currency.singular** (string) – Singular form of the currency name.
+
 * **lia.currency.plural** (string) – Plural form of the currency name.
 
 ---
@@ -21,7 +23,9 @@ The currency library formats money amounts, spawns physical money entities, and 
 **Description:**
 
 Formats a numeric amount into a currency string using `lia.currency.symbol`,
+
 `lia.currency.singular`, and `lia.currency.plural`. If the amount equals `1`
+
 the singular name is used, otherwise the plural form is shown.
 
 **Parameters:**
@@ -56,7 +60,9 @@ print(lia.currency.get(10)) -- "$10 dollars"
 **Description:**
 
 Creates a `lia_money` entity at the specified position with the given amount.
+
 The position must be valid and the amount non-negative. An optional angle can
+
 be provided to control the entity's orientation.
 
 **Parameters:**

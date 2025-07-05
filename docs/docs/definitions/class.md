@@ -86,6 +86,7 @@ CLASS.desc = "Technicians who maintain equipment."
 ```
 
 ---
+
 #### `uniqueID`
 
 **Type:**
@@ -262,7 +263,9 @@ CLASS.payLimit = 1000
 **Description:**
 
 How often salaries are paid to members of this class.
+
 If omitted, the timer falls back to the faction's `payTimer` or
+
 the global `SalaryInterval` configuration value (default `3600`).
 
 **Example Usage:**
@@ -356,6 +359,7 @@ CLASS.scale = 1.2
 **Description:**
 
 Default running speed. Set a number to override or a multiplier in
+
 conjunction with `runSpeedMultiplier`.
 
 **Example Usage:**
@@ -604,6 +608,7 @@ CLASS.requirements = "Flag V and Engineering 25+"
 **Description:**
 
 Table of command names that members of this class may always use,
+
 overriding standard command permissions.
 
 **Example Usage:**

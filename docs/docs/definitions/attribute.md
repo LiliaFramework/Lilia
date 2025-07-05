@@ -33,7 +33,9 @@ Each attribute is registered on the global `ATTRIBUTE` table. You can customize:
 #### `name`
 
 Human readable title shown in menus. When the attribute is loaded,
+
 `lia.attribs.loadFromDir` automatically defaults this to the translated
+
 string `L("unknown")` if no name is provided.
 
 ```lua
@@ -45,6 +47,7 @@ ATTRIBUTE.name = "Strength"
 #### `desc`
 
 Concise description or lore text for the attribute. Defaults to the
+
 translation `L("noDesc")` when omitted.
 
 ```lua
@@ -56,7 +59,9 @@ ATTRIBUTE.desc = "Determines physical power and carrying capacity."
 #### `startingMax`
 
 Cap on the attribute’s base value during character creation. The
+
 configuration variable `MaxStartingAttributes` (default `30`) provides
+
 the fallback value when this field is not defined.
 
 ```lua
@@ -68,7 +73,9 @@ ATTRIBUTE.startingMax = 15
 #### `noStartBonus`
 
 If set to `true`, players cannot allocate any of their initial creation
+
 bonus points to this attribute. The attribute can still increase later
+
 through normal gameplay or boosts.
 
 ```lua
@@ -80,6 +87,7 @@ ATTRIBUTE.noStartBonus = false
 #### `maxValue`
 
 Absolute ceiling an attribute can ever reach. Defaults to the
+
 `MaxAttributePoints` configuration value (30) when unspecified.
 
 ```lua

@@ -7,11 +7,15 @@ This page covers the faction system helpers.
 ## Overview
 
 The factions library loads faction definitions and stores them for later lookup. Factions are kept in two tables:
+
 `lia.faction.teams` indexed by unique identifier and
+
 `lia.faction.indices` indexed by team number. The library offers helpers to find
+
 factions and iterate over their data.
 
 See [Faction Fields](../definitions/faction.md) for details on the data stored in
+
 each `FACTION` table.
 
 ---
@@ -21,10 +25,15 @@ each `FACTION` table.
 **Description:**
 
 Loads all Lua faction files (`*.lua`) from the specified directory,
+
 includes them as shared files and registers the factions. Each file must
+
 define a `FACTION` table with properties such as name, description, color
+
 and models. The function calls `team.SetUp` for every faction, caches all
+
 models to improve load times and stores the result in both
+
 `lia.faction.teams` and `lia.faction.indices`.
 
 **Parameters:**

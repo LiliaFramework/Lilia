@@ -694,6 +694,7 @@ Executes a prepared statement previously registered with `lia.db.prepare`.
 ```lua
     lia.db.preparedCall("updateName", nil, "Alice", 1)
 ```
+
 ---
 
 ### lia.db.query
@@ -701,6 +702,7 @@ Executes a prepared statement previously registered with `lia.db.prepare`.
 **Description:**
 
 Executes a raw SQL statement using the active backend. When no callback is
+
 supplied a deferred object is returned.
 
 **Parameters:**
