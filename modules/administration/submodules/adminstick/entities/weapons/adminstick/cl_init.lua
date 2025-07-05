@@ -53,7 +53,7 @@ function SWEP:DrawHUD()
             if target:getChar() then
                 local char = target:getChar()
                 local faction = lia.faction.indices[target:Team()]
-                table.Add(information, {L("characterNameLabel", char:getName()), L("characterFactionLabel", faction.name)})
+                table.Add(information, {L("charNameIs", char:getName()), L("characterFactionLabel", faction.name)})
             else
                 table.insert(information, L("noLoadedCharacter"))
             end

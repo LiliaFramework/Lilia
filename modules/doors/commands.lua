@@ -423,12 +423,12 @@ lia.command.add("doorinfo", {
 
             local doorData = {
                 {property = L("doorInfoDisabled"), value = tostring(disabled)},
-                {property = L("doorInfoName"), value = tostring(name)},
-                {property = L("doorInfoPrice"), value = lia.currency.get(price)},
+                {property = L("name"), value = tostring(name)},
+                {property = L("price"), value = lia.currency.get(price)},
                 {property = L("doorInfoNoSell"), value = tostring(noSell)},
-                {property = L("doorInfoFaction"), value = tostring(faction)},
+                {property = L("faction"), value = tostring(faction)},
                 {property = L("doorInfoFactions"), value = tostring(factions)},
-                {property = L("doorInfoClass"), value = tostring(class)},
+                {property = L("class"), value = tostring(class)},
                 {property = L("doorInfoHidden"), value = tostring(hidden)},
                 {property = L("doorInfoLocked"), value = tostring(locked)}
             }
