@@ -91,14 +91,20 @@ Loads an inventory by ID (cached or via custom loader).
 
 **Returns:**
 
-* deferred
+* deferred — resolves to the inventory or `nil` if not found
 
 
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.inventory.loadByID
-    lia.inventory.loadByID(1):next(function(inv) print(inv) end)
+    -- Asynchronously load inventory ID 1
+    lia.inventory.loadByID(1):next(function(inv)
+        if inv then
+            print("Loaded inventory", inv)
+        else
+            print("Inventory not found")
+        end
+    end)
 ```
 
 ---
@@ -121,14 +127,20 @@ Default database loader.
 
 **Returns:**
 
-* deferred
+* deferred — resolves to the inventory or `nil`
 
 
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.inventory.loadFromDefaultStorage
-    lia.inventory.loadFromDefaultStorage(1)
+    -- Use the built‑in SQL loader to fetch inventory 1
+    lia.inventory.loadFromDefaultStorage(1):next(function(inv)
+        if inv then
+            print("Loaded inventory", inv)
+        else
+            print("Inventory not found")
+        end
+    end)
 ```
 
 ---
@@ -151,14 +163,16 @@ Creates & persists a new inventory instance.
 
 **Returns:**
 
-* deferred
+* deferred — resolves to the created inventory instance
 
 
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.inventory.instance
-    lia.inventory.instance("bag", {charID = 1})
+    -- Create a persistent bag inventory for character 1
+    lia.inventory.instance("bag", {char = 1}):next(function(inventory)
+        print("New inventory", inventory:getID())
+    end)
 ```
 
 ---
@@ -181,14 +195,16 @@ Loads all inventories for a character.
 
 **Returns:**
 
-* deferred
+* deferred — resolves to a table of the player's inventories
 
 
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.inventory.loadAllFromCharID
-    lia.inventory.loadAllFromCharID(client:getChar():getID())
+    -- Retrieve all inventories owned by the local player
+    lia.inventory.loadAllFromCharID(client:getChar():getID()):next(function(inventories)
+        PrintTable(inventories)
+    end)
 ```
 
 ---
@@ -197,7 +213,7 @@ Loads all inventories for a character.
 
 **Description:**
 
-Deletes an inventory and its data.
+Deletes an inventory from both memory and persistent storage.
 
 **Parameters:**
 
@@ -227,7 +243,7 @@ Deletes an inventory and its data.
 
 **Description:**
 
-Destroys all inventories for a character.
+Destroys all inventories associated with a character.
 
 **Parameters:**
 
@@ -271,12 +287,15 @@ Displays inventory UI client‑side.
 
 **Returns:**
 
-* Panel
+* Panel — VGUI element representing the inventory
 
 
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.inventory.show
-    local panel = lia.inventory.show(inv)
+    -- Display the local player's inventory in a panel
+    local inv = LocalPlayer():getChar():getInv()
+    if inv then
+        local panel = lia.inventory.show(inv)
+    end
 ```
