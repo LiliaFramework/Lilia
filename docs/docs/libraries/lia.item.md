@@ -177,7 +177,7 @@ to register the item. Used for loading items from directory structures.
 
 ```lua
     -- This snippet demonstrates a common usage of lia.item.load
-    lia.item.load("items/base/sh_item_base.lua", nil, true)
+    lia.item.load("lilia/gamemode/items/base/outfit.lua", nil, true)
 ```
 
 ---
@@ -219,7 +219,7 @@ Checks if the given object is recognized as an item (via isItem flag).
 
 **Description:**
 
-Retrieves an inventory table by its ID from lia.item.inventories.
+Retrieves an inventory table by its ID from lia.inventory.instances.
 
 **Parameters:**
 
@@ -299,6 +299,7 @@ and merges data from the specified base. Optionally includes the file if provide
 Loads item Lua files from a specified directory. Base items are loaded first,
 
 then any folders (with base_ prefix usage), and finally any loose Lua files.
+The "InitializedItems" hook is fired once loading completes.
 
 **Parameters:**
 
@@ -331,6 +332,7 @@ then any folders (with base_ prefix usage), and finally any loose Lua files.
 Creates an item instance (not in the database) from a registered item definition.
 
 The new item is stored in lia.item.instances using the provided item ID.
+If the uniqueID is unregistered, this function errors. Reusing an ID for the same uniqueID returns the existing instance.
 
 **Parameters:**
 
@@ -476,6 +478,91 @@ then caches it in lia.inventory.instances.
 ```
 
 ---
+### lia.item.addWeaponOverride
+
+**Description:**
+
+Overrides properties used when automatically generating weapon items from scripted weapons.
+
+**Parameters:**
+
+* className (string) – Weapon class to override.
+
+* data (table) – Override fields such as name, desc, category, model, class, width, height, and weaponCategory.
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* None
+
+**Example Usage:**
+
+```lua
+-- Give the pistol class a custom model
+lia.item.addWeaponOverride("weapon_pistol", {
+    name = "Old Pistol",
+    model = "models/weapons/w_pist_deagle.mdl"
+})
+```
+
+---
+
+### lia.item.addWeaponToBlacklist
+
+**Description:**
+
+Prevents the given weapon class from being auto-generated as an item.
+
+**Parameters:**
+
+* className (string) – Weapon class to blacklist.
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* None
+
+**Example Usage:**
+
+```lua
+-- Do not create an item for the physgun
+lia.item.addWeaponToBlacklist("weapon_physgun")
+```
+
+---
+
+### lia.item.generateWeapons
+
+**Description:**
+
+Registers item definitions for all scripted weapons that are not blacklisted. Typically called automatically after modules initialize.
+
+**Parameters:**
+
+* None
+
+**Realm:**
+
+* Shared
+
+**Returns:**
+
+* None
+
+**Example Usage:**
+
+```lua
+-- Manually generate weapon items
+lia.item.generateWeapons()
+```
+
+---
 
 ### lia.item.setItemDataByID
 
@@ -537,10 +624,10 @@ Once the item is created, a new item object is constructed and returned via a de
 
 **Parameters:**
 
-* index (number) – The inventory ID to place the item into (or 0/NULL if none).
+* index (number|string) – Inventory ID or the uniqueID if no index is given.
 
 
-* uniqueID (string) – The item definition's unique ID.
+* uniqueID (string) – Item ID (omit when passed as the first argument).
 
 
 * itemData (table) – The data table to store on the item.
@@ -568,8 +655,7 @@ Once the item is created, a new item object is constructed and returned via a de
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.item.instance
-    lia.item.instance(1, "testItem", {someKey = "someValue"}):next(function(item)
+    lia.item.instance("testItem", {quality = 1}):next(function(item)
         print("Item created with ID:", item.id)
     end)
 ```
@@ -581,6 +667,7 @@ Once the item is created, a new item object is constructed and returned via a de
 **Description:**
 
 Deletes an item from the system (database and memory) by its numeric ID.
+If the item exists in memory its delete method is called, otherwise the database row is removed.
 
 **Parameters:**
 
