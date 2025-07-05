@@ -155,7 +155,7 @@ function PANEL:openInspect()
         if IsValid(self.ent) then
             net.Start("invAct")
             net.WriteString("take")
-            net.WriteEntity(self.ent)
+            net.WriteType(self.ent)
             net.SendToServer()
         end
         if IsValid(overlay) then overlay:Remove() end
@@ -173,7 +173,7 @@ function PANEL:buildButtons()
             if not fn.onClick or fn.onClick(self.item) ~= false then
                 net.Start("invAct")
                 net.WriteString(key)
-                net.WriteEntity(self.ent)
+                net.WriteType(self.ent)
                 net.SendToServer()
             end
             self:Remove()
