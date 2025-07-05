@@ -57,7 +57,7 @@ lia.command.add("resetallvendormoney", {
     },
     onRun = function(client, arguments)
         local amount = tonumber(arguments[1])
-        if not amount or amount < 0 then return client:notifyLocalized("vendorInvalidAmount") end
+        if not amount or amount < 0 then return client:notifyLocalized("invalidAmount") end
         local count = 0
         for _, vendor in ipairs(ents.FindByClass("lia_vendor")) do
             if vendor.money ~= nil then
@@ -84,7 +84,7 @@ lia.command.add("restockvendormoney", {
     onRun = function(client, arguments)
         local target = client:getTracedEntity()
         local amount = tonumber(arguments[1])
-        if not amount or amount < 0 then return client:notifyLocalized("vendorInvalidAmount") end
+        if not amount or amount < 0 then return client:notifyLocalized("invalidAmount") end
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return

@@ -390,7 +390,6 @@ LANGUAGE = {
     vendorRestocked = "The vendor has been restocked.",
     NotLookingAtValidVendor = "You are not looking at a valid vendor.",
     vendorAllVendorsRestocked = "All vendors have been restocked. Total vendors restocked: %d.",
-    vendorInvalidAmount = "Invalid amount specified.",
     vendorAllMoneyReset = "All vendors' money has been reset to %s. Total vendors updated: %d.",
     vendorMoneyRestocked = "Vendor's money has been restocked to %s.",
     vendorNoMoneyVariable = "This vendor does not have a money variable.",
