@@ -164,7 +164,11 @@ function sam.player.send_message(client, msg, tbl)
             net.Start("send_message")
             net.WriteString(msg)
             net.WriteTable(tbl)
-            net.Send(client)
+            if istable(client) or IsValid(client) then
+                net.Send(client)
+            else
+                net.Broadcast()
+            end
             return
         end
     else
