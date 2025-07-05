@@ -6,7 +6,7 @@ This document lists hooks related to attribute setup events.
 
 ## Overview
 
-Attributes may define callback functions that run when a player's attribute table is being set up. These functions live on the `ATTRIBUTE` table of each attribute definition and are entirely optional. The only built‑in attribute hook is `OnSetup`, which is called whenever `lia.attribs.setup` runs.
+Attributes may define callback functions that run when a player's attribute table is being set up. These functions live on the `ATTRIBUTE` table of each attribute definition.  At the moment the only built‑in hook is `OnSetup`, which is executed for each attribute whenever `lia.attribs.setup(client)` runs on the server.
 
 ---
 
@@ -37,9 +37,13 @@ Called on the server whenever `lia.attribs.setup(client)` initializes or refresh
 
 ```lua
 function ATTRIBUTE:OnSetup(client, value)
-    -- Give the player extra run speed based on this attribute.
-    local base = lia.config.get("RunSpeed")
-    client:SetRunSpeed(base + value * 5)
+    -- Apply movement bonuses based on this attribute level.
+    local baseRun = lia.config.get("RunSpeed")
+    client:SetRunSpeed(baseRun + value * 5)
+
+    -- Slightly increase jump height as well.
+    local baseJump = client:GetJumpPower()
+    client:SetJumpPower(baseJump + value * 2)
 end
 ```
 
