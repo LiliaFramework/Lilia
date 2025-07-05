@@ -10,7 +10,7 @@ The entity meta library extends Garry's Mod entities with helpers for detection,
 
 ---
 
-### isProp()
+### isProp
 
 **Description:**
 
@@ -42,7 +42,7 @@ end
 
 ---
 
-### isItem()
+### isItem
 
 **Description:**
 
@@ -74,7 +74,7 @@ end
 
 ---
 
-### isMoney()
+### isMoney
 
 **Description:**
 
@@ -106,7 +106,7 @@ end
 
 ---
 
-### isSimfphysCar()
+### isSimfphysCar
 
 **Description:**
 
@@ -137,7 +137,7 @@ end
 
 ---
 
-### isLiliaPersistent()
+### isLiliaPersistent
 
 **Description:**
 
@@ -169,7 +169,7 @@ end
 
 ---
 
-### checkDoorAccess(client, access)
+### checkDoorAccess
 
 **Description:**
 
@@ -177,10 +177,10 @@ Checks if a player has the given door access level. Defaults to `DOOR_GUEST` whe
 
 **Parameters:**
 
-* client (Player) – The player to check.
+* `client` (`Player`) – The player to check.
 
 
-* access (number, optional) – Door permission level. Defaults to DOOR_GUEST.
+* `access` (`number, optional`) – Door permission level. Defaults to DOOR_GUEST.
 
 
 **Realm:**
@@ -204,14 +204,14 @@ end
 
 ---
 
-### keysOwn(client)
+### keysOwn
 
 **Description:**
 
 Assigns vehicle ownership to the given player using CPPI and network variables.
 **Parameters:**
 
-* client (Player) – Player to set as owner.
+* `client` (`Player`) – Player to set as owner.
 
 
 **Realm:**
@@ -233,7 +233,7 @@ car:keysOwn(client)
 
 ---
 
-### keysLock()
+### keysLock
 
 **Description:**
 
@@ -263,7 +263,7 @@ car:keysLock()
 
 ---
 
-### keysUnLock()
+### keysUnLock
 
 **Description:**
 
@@ -293,7 +293,7 @@ car:keysUnLock()
 
 ---
 
-### getDoorOwner()
+### getDoorOwner
 
 **Description:**
 
@@ -326,7 +326,7 @@ end
 
 ---
 
-### isLocked()
+### isLocked
 
 **Description:**
 
@@ -358,7 +358,7 @@ end
 
 ---
 
-### isDoorLocked()
+### isDoorLocked
 
 **Description:**
 
@@ -390,7 +390,7 @@ end
 
 ---
 
-### getEntItemDropPos(offset)
+### getEntItemDropPos
 
 **Description:**
 
@@ -398,7 +398,7 @@ Calculates a drop position in front of the entity's eyes, using a trace to ensur
 
 **Parameters:**
 
-* offset (number) – How far forward to trace from the eye position. Defaults to 64.
+* `offset` (`number`) – How far forward to trace from the eye position. Defaults to 64.
 
 
 **Realm:**
@@ -421,7 +421,7 @@ lia.item.spawn("item_water", pos, ang)
 
 ---
 
-### isNearEntity(radius, otherEntity)
+### isNearEntity
 
 **Description:**
 
@@ -429,10 +429,10 @@ Checks if another entity of the same class is within the given radius. Optionall
 
 **Parameters:**
 
-* radius (number) – Sphere radius in units. Defaults to 96.
+* `radius` (`number`) – Sphere radius in units. Defaults to 96.
 
 
-* otherEntity (Entity, optional) – Specific entity to look for.
+* `otherEntity` (`Entity, optional`) – Specific entity to look for.
 
 
 **Realm:**
@@ -456,7 +456,7 @@ end
 
 ---
 
-### GetCreator()
+### GetCreator
 
 **Description:**
 
@@ -489,7 +489,7 @@ end
 
 ---
 
-### SetCreator(client)
+### SetCreator
 
 **Description:**
 
@@ -497,7 +497,7 @@ Stores the creator player on the entity.
 
 **Parameters:**
 
-* client (Player) – Creator of the entity.
+* `client` (`Player`) – Creator of the entity.
 
 
 **Realm:**
@@ -519,7 +519,7 @@ ent:SetCreator(client)
 
 ---
 
-### sendNetVar(key, receiver)
+### sendNetVar
 
 **Description:**
 
@@ -527,10 +527,10 @@ Sends the specified network variable to clients. This is usually called from `se
 
 **Parameters:**
 
-* key (string) – Identifier of the variable.
+* `key` (`string`) – Identifier of the variable.
 
 
-* receiver (Player|None, optional) – Player to send to. Broadcasts if omitted.
+* `receiver` (`Player|None, optional`) – Player to send to. Broadcasts if omitted.
 
 
 **Realm:**
@@ -552,7 +552,7 @@ ent:sendNetVar("doorState")
 
 ---
 
-### clearNetVars(receiver)
+### clearNetVars
 
 **Description:**
 
@@ -560,7 +560,7 @@ Clears all network variables on this entity and tells clients to remove them.
 
 **Parameters:**
 
-* receiver (Player|None, optional) – Receiver to notify. Broadcasts if omitted.
+* `receiver` (`Player|None, optional`) – Receiver to notify. Broadcasts if omitted.
 
 
 **Realm:**
@@ -580,7 +580,7 @@ ent:clearNetVars(client)
 
 ---
 
-### removeDoorAccessData()
+### removeDoorAccessData
 
 **Description:**
 
@@ -610,7 +610,7 @@ ent:removeDoorAccessData()
 
 ---
 
-### setLocked(state)
+### setLocked
 
 **Description:**
 
@@ -618,7 +618,7 @@ Stores the locked state in a network variable so clients know if the door is sec
 
 **Parameters:**
 
-* state (boolean) – New locked state.
+* `state` (`boolean`) – New locked state.
 
 
 **Realm:**
@@ -641,7 +641,7 @@ door:EmitSound("doors/door_latch3.wav")
 
 ---
 
-### isDoor()
+### isDoor
 
 **Description:**
 
@@ -671,7 +671,7 @@ local result = ent:isDoor()
 
 ---
 
-### getDoorPartner()
+### getDoorPartner
 
 **Description:**
 
@@ -704,7 +704,7 @@ end
 
 ---
 
-### setNetVar(key, value, receiver)
+### setNetVar
 
 **Description:**
 
@@ -714,13 +714,13 @@ This will trigger the **NetVarChanged** hook on both server and client.
 
 **Parameters:**
 
-* key (string) – Variable name.
+* `key` (`string`) – Variable name.
 
 
-* value (any) – Value to store.
+* `value` (`any`) – Value to store.
 
 
-* receiver (Player|None, optional) – Who to send update to. Broadcasts if omitted.
+* `receiver` (`Player|None, optional`) – Who to send update to. Broadcasts if omitted.
 
 
 **Realm:**
@@ -741,7 +741,7 @@ ent:setNetVar("locked", true)
 
 ---
 
-### getNetVar(key, default)
+### getNetVar
 
 **Description:**
 
@@ -749,10 +749,10 @@ Retrieves a stored network variable or a default value.
 
 **Parameters:**
 
-* key (string) – Variable name.
+* `key` (`string`) – Variable name.
 
 
-* default (any) – Value returned if variable is nil.
+* `default` (`any`) – Value returned if variable is nil.
 
 
 **Realm:**
@@ -777,7 +777,7 @@ local result = ent:getNetVar(key, default)
 
 ---
 
-### isDoor()
+### isDoor
 
 **Description:**
 
@@ -807,7 +807,7 @@ local result = ent:isDoor()
 
 ---
 
-### getDoorPartner()
+### getDoorPartner
 
 **Description:**
 
@@ -840,7 +840,7 @@ end
 
 ---
 
-### getNetVar(key, default)
+### getNetVar
 
 **Description:**
 
@@ -848,10 +848,10 @@ Retrieves a network variable for this entity on the client.
 
 **Parameters:**
 
-* key (string) – Variable name.
+* `key` (`string`) – Variable name.
 
 
-* default (any) – Default if not set.
+* `default` (`any`) – Default if not set.
 
 
 **Realm:**
@@ -873,7 +873,7 @@ local result = ent:getNetVar(key, default)
 
 ---
 
-### getParts()
+### getParts
 
 ```lua
 function ENTITY:getParts()
@@ -911,7 +911,7 @@ end
 
 ---
 
-### syncParts()
+### syncParts
 
 ```lua
 function ENTITY:syncParts()
@@ -946,7 +946,7 @@ client:syncParts()
 
 ---
 
-### addPart(partID)
+### addPart
 
 ```lua
 function ENTITY:addPart(partID)
@@ -959,7 +959,7 @@ Attaches a PAC3 part to this entity and networks the change.
 
 **Parameters:**
 
-* partID (string) – Identifier for the PAC3 outfit to add.
+* `partID` (`string`) – Identifier for the PAC3 outfit to add.
 
 
 **Realm:**
@@ -981,7 +981,7 @@ client:addPart("hat01")
 
 ---
 
-### removePart(partID)
+### removePart
 
 ```lua
 function ENTITY:removePart(partID)
@@ -994,7 +994,7 @@ Detaches a PAC3 part from this entity and updates clients.
 
 **Parameters:**
 
-* partID (string) – Identifier of the PAC3 outfit to remove.
+* `partID` (`string`) – Identifier of the PAC3 outfit to remove.
 
 
 **Realm:**
@@ -1016,7 +1016,7 @@ client:removePart("hat01")
 
 ---
 
-### resetParts()
+### resetParts
 
 ```lua
 function ENTITY:resetParts()

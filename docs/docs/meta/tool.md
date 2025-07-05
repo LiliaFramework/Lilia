@@ -10,7 +10,7 @@ Tool meta functions track hovered entities, create ghost previews, and wrap comm
 
 ---
 
-### Create()
+### Create
 
 **Description:**
 
@@ -43,7 +43,7 @@ tool.Owner = client -- client that spawned the tool
 
 ---
 
-### CreateConVars()
+### CreateConVars
 
 **Description:**
 
@@ -73,7 +73,7 @@ tool:CreateConVars()
 
 ---
 
-### GetServerInfo(property)
+### GetServerInfo
 
 **Description:**
 
@@ -81,7 +81,7 @@ Returns the server ConVar for the given property.
 
 **Parameters:**
 
-* property (string) – Property name.
+* `property` (`string`) – Property name.
 
 
 **Realm:**
@@ -103,7 +103,7 @@ local allow = tool:GetServerInfo("allow_use"):GetBool()
 
 ---
 
-### BuildConVarList()
+### BuildConVarList
 
 **Description:**
 
@@ -133,7 +133,7 @@ local cvars = tool:BuildConVarList()
 
 ---
 
-### GetClientInfo(property)
+### GetClientInfo
 
 **Description:**
 
@@ -141,7 +141,7 @@ Retrieves a client ConVar value as a string.
 
 **Parameters:**
 
-* property (string) – ConVar name without mode prefix.
+* `property` (`string`) – ConVar name without mode prefix.
 
 
 **Realm:**
@@ -163,7 +163,7 @@ local mat = tool:GetClientInfo("material")
 
 ---
 
-### GetClientNumber(property, default)
+### GetClientNumber
 
 **Description:**
 
@@ -171,10 +171,10 @@ Retrieves a numeric client ConVar value.
 
 **Parameters:**
 
-* property (string) – ConVar name without mode prefix.
+* `property` (`string`) – ConVar name without mode prefix.
 
 
-* default (number) – Value returned if the ConVar doesn't exist.
+* `default` (`number`) – Value returned if the ConVar doesn't exist.
 
 
 **Realm:**
@@ -196,7 +196,7 @@ local power = tool:GetClientNumber("power", 10)
 
 ---
 
-### Allowed()
+### Allowed
 
 **Description:**
 
@@ -228,7 +228,7 @@ end
 
 ---
 
-### Init()
+### Init
 
 **Description:**
 
@@ -260,7 +260,7 @@ end
 
 ---
 
-### GetMode()
+### GetMode
 
 **Description:**
 
@@ -290,7 +290,7 @@ local result = tool:GetMode()
 
 ---
 
-### GetSWEP()
+### GetSWEP
 
 **Description:**
 
@@ -320,7 +320,7 @@ local result = tool:GetSWEP()
 
 ---
 
-### GetOwner()
+### GetOwner
 
 **Description:**
 
@@ -351,7 +351,7 @@ print(owner:Name())
 
 ---
 
-### GetWeapon()
+### GetWeapon
 
 **Description:**
 
@@ -381,7 +381,7 @@ local result = tool:GetWeapon()
 
 ---
 
-### LeftClick()
+### LeftClick
 
 **Description:**
 
@@ -414,7 +414,7 @@ end
 
 ---
 
-### RightClick()
+### RightClick
 
 **Description:**
 
@@ -447,7 +447,7 @@ end
 
 ---
 
-### Reload()
+### Reload
 
 **Description:**
 
@@ -479,7 +479,7 @@ end
 
 ---
 
-### Deploy()
+### Deploy
 
 **Description:**
 
@@ -511,7 +511,7 @@ end
 
 ---
 
-### Holster()
+### Holster
 
 **Description:**
 
@@ -543,7 +543,7 @@ end
 
 ---
 
-### Think()
+### Think
 
 **Description:**
 
@@ -575,7 +575,7 @@ end
 
 ---
 
-### CheckObjects()
+### CheckObjects
 
 **Description:**
 
@@ -605,7 +605,7 @@ local result = tool:CheckObjects()
 
 ---
 
-### ClearObjects()
+### ClearObjects
 
 **Description:**
 
@@ -635,7 +635,7 @@ local result = tool:ClearObjects()
 
 ---
 
-### ReleaseGhostEntity()
+### ReleaseGhostEntity
 
 **Description:**
 

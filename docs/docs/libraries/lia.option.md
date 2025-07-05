@@ -25,7 +25,7 @@ table containing:
 
 ---
 
-### lia.option.add(key, name, desc, default, callback, data)
+### lia.option.add
 
 **Description:**
 
@@ -33,20 +33,20 @@ Adds a configuration option to the lia.option system.
 
 **Parameters:**
 
-* key (string) — The unique key for the option.
+* `key` (`string`) — The unique key for the option.
 
 
-* name (string) — The display name of the option.
+* `name` (`string`) — The display name of the option.
 
 
-* desc (string) — A brief description of the option's purpose.
+* `desc` (`string`) — A brief description of the option's purpose.
 
 
-* default (any) — The default value for this option.
+* `default` (`any`) — The default value for this option.
 
-* callback (function) — Called as `callback(oldValue, newValue)` when the option changes (optional).
+* `callback` (`function`) — Called as `callback(oldValue, newValue)` when the option changes (optional).
 
-* data (table) — Extra information controlling the option. Pass an empty table if you do not need any of the following fields:
+* `data` (`table`) — Extra information controlling the option. Pass an empty table if you do not need any of the following fields:
   * `category` (string) – Category heading in the menu.
   * `min`/`max` (number) – Bounds for numeric options.
   * `decimals` (number) – Rounding precision for floats.
@@ -81,7 +81,7 @@ Adds a configuration option to the lia.option system.
 
 ---
 
-### lia.option.set(key, value)
+### lia.option.set
 
 **Description:**
 
@@ -89,10 +89,10 @@ Sets the value of an option, runs its callback and saves the data. If the option
 
 **Parameters:**
 
-* key (string) — The unique key identifying the option.
+* `key` (`string`) — The unique key identifying the option.
 
 
-* value (any) — The new value to assign to this option.
+* `value` (`any`) — The new value to assign to this option.
 
 
 **Realm:**
@@ -114,7 +114,7 @@ Sets the value of an option, runs its callback and saves the data. If the option
 
 ---
 
-### lia.option.get(key, default)
+### lia.option.get
 
 **Description:**
 
@@ -122,10 +122,10 @@ Retrieves the value of a specified option, or returns a default if it doesn't ex
 
 **Parameters:**
 
-* key (string) — The unique key identifying the option.
+* `key` (`string`) — The unique key identifying the option.
 
 
-* default (any) — The value to return if the option is not found.
+* `default` (`any`) — The value to return if the option is not found.
 
 
 **Realm:**
@@ -147,7 +147,7 @@ Retrieves the value of a specified option, or returns a default if it doesn't ex
 
 ---
 
-### lia.option.save()
+### lia.option.save
 
 **Description:**
 
@@ -177,7 +177,7 @@ Saves all current option values to a file, named based on the server IP, within 
 
 ---
 
-### lia.option.load()
+### lia.option.load
 
 **Description:**
 

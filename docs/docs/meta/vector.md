@@ -25,7 +25,7 @@ end)
 
 ---
 
-### Center(vec2)
+### Center
 
 **Description:**
 
@@ -57,7 +57,7 @@ print(a:Center(b)) -- Vector(5, 5, 5)
 
 ---
 
-### Distance(vec2)
+### Distance
 
 **Description:**
 
@@ -89,7 +89,7 @@ print(p1:Distance(p2)) -- 5
 
 ---
 
-### RotateAroundAxis(axis, degrees)
+### RotateAroundAxis
 
 **Description:**
 
@@ -124,7 +124,7 @@ print(rotated) -- Vector(0, 1, 0)
 
 ---
 
-### Right(vUp)
+### Right
 
 **Description:**
 
@@ -159,7 +159,7 @@ print(rightVec)
 
 ---
 
-### Up(vUp)
+### Up
 
 **Description:**
 

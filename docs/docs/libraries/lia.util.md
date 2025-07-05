@@ -18,10 +18,10 @@ Finds and returns players located inside a world-space bounding box. Useful for 
 
 **Parameters:**
 
-* mins (Vector) – The minimum corner of the box.
+* `mins` (`Vector`) – The minimum corner of the box.
 
 
-* maxs (Vector) – The maximum corner of the box.
+* `maxs` (`Vector`) – The maximum corner of the box.
 
 
 **Realm:**
@@ -54,10 +54,10 @@ Finds and returns a table of players within a given spherical radius from an ori
 
 **Parameters:**
 
-* origin (Vector) — The center of the sphere.
+* `origin` (`Vector`) — The center of the sphere.
 
 
-* radius (number) — The radius of the sphere.
+* `radius` (`number`) — The radius of the sphere.
 
 
 **Realm:**
@@ -90,10 +90,10 @@ Attempts to find a player using various identifier formats. The search accepts S
 
 **Parameters:**
 
-* client (Player) — The player requesting the find (used for notifications).
+* `client` (`Player`) — The player requesting the find (used for notifications).
 
 
-* identifier (string) — The identifier to search by.
+* `identifier` (`string`) — The identifier to search by.
 
 
 **Realm:**
@@ -126,7 +126,7 @@ Finds all item entities in the world created by the specified player.
 
 **Parameters:**
 
-* client (Player) — The player whose items to find.
+* `client` (`Player`) — The player whose items to find.
 
 
 **Realm:**
@@ -159,10 +159,10 @@ Finds all item entities in the world created by the specified player with a spec
 
 **Parameters:**
 
-* client (Player) — The player whose items to find.
+* `client` (`Player`) — The player whose items to find.
 
 
-* class (string) — The class ID to filter by.
+* `class` (`string`) — The class ID to filter by.
 
 
 **Realm:**
@@ -195,10 +195,10 @@ Finds all entities in the world created by or associated with the specified play
 
 **Parameters:**
 
-* client (Player) — The player whose entities to find.
+* `client` (`Player`) — The player whose entities to find.
 
 
-* class (string|nil) — The class name to filter by (optional).
+* `class` (`string|nil`) — The class name to filter by (optional).
 
 
 **Realm:**
@@ -231,10 +231,10 @@ Checks if string a matches string b (case-insensitive, partial matches).
 
 **Parameters:**
 
-* a (string) — The first string to check.
+* `a` (`string`) — The first string to check.
 
 
-* b (string) — The second string to match against.
+* `b` (`string`) — The second string to match against.
 
 
 **Realm:**
@@ -299,7 +299,7 @@ Finds a player currently on the server by their SteamID64.
 
 **Parameters:**
 
-* SteamID64 (string) — The SteamID64 to search for.
+* `SteamID64` (`string`) — The SteamID64 to search for.
 
 
 **Realm:**
@@ -332,7 +332,7 @@ Finds a player currently on the server by their SteamID64.
 
 **Parameters:**
 
-* steamID64 (string) — The SteamID64 of the player (e.g. "76561198000000000").
+* `steamID64` (`string`) — The SteamID64 of the player (e.g. "76561198000000000").
 
 
 **Realm:**
@@ -360,16 +360,16 @@ Checks if a hull (defined by mins and maxs) can fit at the given position withou
 
 **Parameters:**
 
-* pos (Vector) — The position to test.
+* `pos` (`Vector`) — The position to test.
 
 
-* mins (Vector) — The minimum corner of the hull (defaults to Vector(16, 16, 0) if nil).
+* `mins` (`Vector`) — The minimum corner of the hull (defaults to Vector(16, 16, 0) if nil).
 
 
-* maxs (Vector) — The maximum corner of the hull (defaults to same as mins if nil).
+* `maxs` (`Vector`) — The maximum corner of the hull (defaults to same as mins if nil).
 
 
-* filter (table|Entity|function) — Optional filter for the trace.
+* `filter` (`table|Entity|function`) — Optional filter for the trace.
 
 
 **Realm:**
@@ -402,10 +402,10 @@ Finds and returns a table of players within a given radius from a position.
 
 **Parameters:**
 
-* pos (Vector) — The center position.
+* `pos` (`Vector`) — The center position.
 
 
-* dist (number) — The radius to search within.
+* `dist` (`number`) — The radius to search within.
 
 
 **Realm:**
@@ -438,7 +438,7 @@ Formats a string with named or indexed placeholders. If a table is passed, uses 
 
 **Parameters:**
 
-* format (string) — The format string with placeholders like "{key}".
+* `format` (`string`) — The format string with placeholders like "{key}".
 
 
 * ... (vararg|table) — Either a table or vararg arguments to fill placeholders.
@@ -472,10 +472,10 @@ Retrieves a cached Material for the specified path and parameters, to avoid repe
 
 **Parameters:**
 
-* materialPath (string) — The file path to the material.
+* `materialPath` (`string`) — The file path to the material.
 
 
-* materialParameters (string|nil) — Optional material parameters.
+* `materialParameters` (`string|nil`) — Optional material parameters.
 
 
 **Realm:**
@@ -507,10 +507,10 @@ Finds a faction by name or uniqueID. If an exact identifier is found in lia.fact
 
 **Parameters:**
 
-* client (Player) — The player requesting the search (used for notifications).
+* `client` (`Player`) — The player requesting the search (used for notifications).
 
 
-* name (string) — The name or uniqueID of the faction to find.
+* `name` (`string`) — The name or uniqueID of the faction to find.
 
 
 **Realm:**
@@ -543,22 +543,22 @@ Sends a net message to the client to create a table UI with given data.
 
 **Parameters:**
 
-* client (Player) — The player to whom the UI will be sent.
+* `client` (`Player`) — The player to whom the UI will be sent.
 
 
-* title (string) — The title of the table UI.
+* `title` (`string`) — The title of the table UI.
 
 
-* columns (table) — The columns of the table.
+* `columns` (`table`) — The columns of the table.
 
 
-* data (table) — The row data.
+* `data` (`table`) — The row data.
 
 
-* options (table|nil) — Additional options for the table actions.
+* `options` (`table|nil`) — Additional options for the table actions.
 
 
-* characterID (number|nil) — An optional character ID to pass along.
+* `characterID` (`number|nil`) — An optional character ID to pass along.
 
 
 **Realm:**
@@ -588,22 +588,22 @@ Finds potential empty space positions around an entity using a grid-based approa
 
 **Parameters:**
 
-* entity (Entity) — The entity around which to search.
+* `entity` (`Entity`) — The entity around which to search.
 
 
-* filter (table|function|Entity) — The filter for the trace or the entity to ignore.
+* `filter` (`table|function|Entity`) — The filter for the trace or the entity to ignore.
 
 
-* spacing (number) — The spacing between each point in the grid (default 32).
+* `spacing` (`number`) — The spacing between each point in the grid (default 32).
 
 
-* size (number) — The grid size in each direction (default 3).
+* `size` (`number`) — The grid size in each direction (default 3).
 
 
-* height (number) — The height of the bounding box (default 36).
+* `height` (`number`) — The height of the bounding box (default 36).
 
 
-* tolerance (number) — The trace tolerance (default 5).
+* `tolerance` (`number`) — The trace tolerance (default 5).
 
 
 **Realm:**
@@ -636,31 +636,31 @@ Draws text with a shadow offset.
 
 **Parameters:**
 
-* text (string) — The text to draw.
+* `text` (`string`) — The text to draw.
 
 
-* font (string) — The font used.
+* `font` (`string`) — The font used.
 
 
-* x (number) — The x position.
+* `x` (`number`) — The x position.
 
 
-* y (number) — The y position.
+* `y` (`number`) — The y position.
 
 
-* colortext (Color) — The color of the text.
+* `colortext` (`Color`) — The color of the text.
 
 
-* colorshadow (Color) — The shadow color.
+* `colorshadow` (`Color`) — The shadow color.
 
 
-* dist (number) — The distance offset for the shadow.
+* `dist` (`number`) — The distance offset for the shadow.
 
 
-* xalign (number) — The horizontal alignment (TEXT_ALIGN_*).
+* `xalign` (`number`) — The horizontal alignment (TEXT_ALIGN_*).
 
 
-* yalign (number) — The vertical alignment (TEXT_ALIGN_*).
+* `yalign` (`number`) — The vertical alignment (TEXT_ALIGN_*).
 
 
 **Realm:**
@@ -690,28 +690,28 @@ Draws text with an outlined border.
 
 **Parameters:**
 
-* text (string) — The text to draw.
+* `text` (`string`) — The text to draw.
 
 
-* font (string) — The font used.
+* `font` (`string`) — The font used.
 
 
-* x (number) — The x position.
+* `x` (`number`) — The x position.
 
 
-* y (number) — The y position.
+* `y` (`number`) — The y position.
 
 
-* colour (Color) — The text color.
+* `colour` (`Color`) — The text color.
 
 
-* xalign (number) — The horizontal alignment.
+* `xalign` (`number`) — The horizontal alignment.
 
 
-* outlinewidth (number) — The outline thickness.
+* `outlinewidth` (`number`) — The outline thickness.
 
 
-* outlinecolour (Color) — The outline color.
+* `outlinecolour` (`Color`) — The outline color.
 
 
 **Realm:**
@@ -741,28 +741,28 @@ Draws a tooltip-like shape with text in the center.
 
 **Parameters:**
 
-* x (number) — The x position.
+* `x` (`number`) — The x position.
 
 
-* y (number) — The y position.
+* `y` (`number`) — The y position.
 
 
-* w (number) — The width of the tip.
+* `w` (`number`) — The width of the tip.
 
 
-* h (number) — The height of the tip.
+* `h` (`number`) — The height of the tip.
 
 
-* text (string) — The text to display.
+* `text` (`string`) — The text to display.
 
 
-* font (string) — The font for the text.
+* `font` (`string`) — The font for the text.
 
 
-* textCol (Color) — The text color.
+* `textCol` (`Color`) — The text color.
 
 
-* outlineCol (Color) — The outline color.
+* `outlineCol` (`Color`) — The outline color.
 
 
 **Realm:**
@@ -792,28 +792,28 @@ Draws text with a subtle shadow effect.
 
 **Parameters:**
 
-* text (string) — The text to draw.
+* `text` (`string`) — The text to draw.
 
 
-* x (number) — The x position.
+* `x` (`number`) — The x position.
 
 
-* y (number) — The y position.
+* `y` (`number`) — The y position.
 
 
-* color (Color) — The text color.
+* `color` (`Color`) — The text color.
 
 
-* alignX (number) — Horizontal alignment (TEXT_ALIGN_*).
+* `alignX` (`number`) — Horizontal alignment (TEXT_ALIGN_*).
 
 
-* alignY (number) — Vertical alignment (TEXT_ALIGN_*).
+* `alignY` (`number`) — Vertical alignment (TEXT_ALIGN_*).
 
 
-* font (string) — The font to use (defaults to "liaGenericFont").
+* `font` (`string`) — The font to use (defaults to "liaGenericFont").
 
 
-* alpha (number) — The shadow alpha multiplier.
+* `alpha` (`number`) — The shadow alpha multiplier.
 
 
 **Realm:**
@@ -843,22 +843,22 @@ Draws a textured rectangle with the specified material.
 
 **Parameters:**
 
-* material (string|IMaterial) — Path to the material or IMaterial object.
+* `material` (`string|IMaterial`) — Path to the material or IMaterial object.
 
 
-* color (Color) — The draw color (defaults to color_white).
+* `color` (`Color`) — The draw color (defaults to color_white).
 
 
-* x (number) — The x position.
+* `x` (`number`) — The x position.
 
 
-* y (number) — The y position.
+* `y` (`number`) — The y position.
 
 
-* w (number) — The width.
+* `w` (`number`) — The width.
 
 
-* h (number) — The height.
+* `h` (`number`) — The height.
 
 
 **Realm:**
@@ -888,10 +888,10 @@ Calls a skin function by name, passing the panel and any extra arguments.
 
 **Parameters:**
 
-* name (string) — The name of the skin function.
+* `name` (`string`) — The name of the skin function.
 
 
-* panel (Panel) — The panel to apply the skin function to.
+* `panel` (`Panel`) — The panel to apply the skin function to.
 
 
 * a, b, c, d, e, f, g — Additional arguments passed to the skin function.
@@ -924,13 +924,13 @@ Wraps text to a maximum width, returning a table of lines and the maximum line w
 
 **Parameters:**
 
-* text (string) — The text to wrap.
+* `text` (`string`) — The text to wrap.
 
 
-* width (number) — The maximum width in pixels.
+* `width` (`number`) — The maximum width in pixels.
 
 
-* font (string) — The font name to use for measuring.
+* `font` (`string`) — The font name to use for measuring.
 
 
 **Realm:**
@@ -964,13 +964,13 @@ Draws a blur effect over the specified panel.
 
 **Parameters:**
 
-* panel (Panel) — The panel to blur.
+* `panel` (`Panel`) — The panel to blur.
 
 
-* amount (number) — The blur strength (defaults to 5).
+* `amount` (`number`) — The blur strength (defaults to 5).
 
 
-* passes (number) — The iteration multiplier (defaults to 0.2).
+* `passes` (`number`) — The iteration multiplier (defaults to 0.2).
 
 
 **Realm:**
@@ -1001,22 +1001,22 @@ Draws a blur effect at a specified rectangle on the screen.
 
 **Parameters:**
 
-* x (number) — The x position.
+* `x` (`number`) — The x position.
 
 
-* y (number) — The y position.
+* `y` (`number`) — The y position.
 
 
-* w (number) — The width of the rectangle.
+* `w` (`number`) — The width of the rectangle.
 
 
-* h (number) — The height of the rectangle.
+* `h` (`number`) — The height of the rectangle.
 
 
-* amount (number) — The blur strength (defaults to 5).
+* `amount` (`number`) — The blur strength (defaults to 5).
 
 
-* passes (number) — The iteration multiplier (defaults to 0.2).
+* `passes` (`number`) — The iteration multiplier (defaults to 0.2).
 
 
 **Realm:**
@@ -1046,19 +1046,19 @@ Creates and displays a table UI with given columns and data on the client side.
 
 **Parameters:**
 
-* title (string) — The title of the table.
+* `title` (`string`) — The title of the table.
 
 
-* columns (table) — The columns, each being {name=..., field=..., width=...}.
+* `columns` (`table`) — The columns, each being {name=..., field=..., width=...}.
 
 
-* data (table) — The row data, each row is a table of field values.
+* `data` (`table`) — The row data, each row is a table of field values.
 
 
-* options (table|nil) — Table of options for right-click actions, each containing {name=..., net=..., ExtraFields=...}.
+* `options` (`table|nil`) — Table of options for right-click actions, each containing {name=..., net=..., ExtraFields=...}.
 
 
-* charID (number|nil) — Optional character ID.
+* `charID` (`number|nil`) — Optional character ID.
 
 
 **Realm:**

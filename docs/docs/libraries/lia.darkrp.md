@@ -14,7 +14,7 @@ mapping each faction to its team index for compatibility.
 
 ---
 
-### lia.darkrp.isEmpty(position, entitiesToIgnore)
+### lia.darkrp.isEmpty
 
 **Description:**
 
@@ -22,10 +22,10 @@ Checks whether the position is free from world geometry, players, NPCs and props
 
 **Parameters:**
 
-* position (Vector) – World position to test.
+* `position` (`Vector`) – World position to test.
 
 
-* entitiesToIgnore (table, optional) – Entities ignored during the check.
+* `entitiesToIgnore` (`table, optional`) – Entities ignored during the check.
 
 
 **Realm:**
@@ -49,7 +49,7 @@ Checks whether the position is free from world geometry, players, NPCs and props
 
 ---
 
-### lia.darkrp.findEmptyPos(startPos, entitiesToIgnore, maxDistance, searchStep, checkArea)
+### lia.darkrp.findEmptyPos
 
 **Description:**
 
@@ -57,19 +57,19 @@ Searches around the given start position for a spot free of world geometry and b
 
 **Parameters:**
 
-* startPos (Vector) – The initial position to search from.
+* `startPos` (`Vector`) – The initial position to search from.
 
 
-* entitiesToIgnore (table, optional) – Entities ignored during the search.
+* `entitiesToIgnore` (`table, optional`) – Entities ignored during the search.
 
 
-* maxDistance (number) – Maximum distance to search in units.
+* `maxDistance` (`number`) – Maximum distance to search in units.
 
 
-* searchStep (number) – Step increment when expanding the search radius.
+* `searchStep` (`number`) – Step increment when expanding the search radius.
 
 
-* checkArea (Vector) – Additional height offset tested for clearance.
+* `checkArea` (`Vector`) – Additional height offset tested for clearance.
 
 
 **Realm:**
@@ -90,7 +90,7 @@ Searches around the given start position for a spot free of world geometry and b
 
 ---
 
-### lia.darkrp.notify(client, _, _, message)
+### lia.darkrp.notify
 
 **Description:**
 
@@ -98,10 +98,10 @@ Sends a notification to the specified client. The second and third parameters ex
 
 **Parameters:**
 
-* client (Player) – The player to receive the message.
+* `client` (`Player`) – The player to receive the message.
 
 
-* message (string) – Text of the notification.
+* `message` (`string`) – Text of the notification.
 
 
 **Realm:**
@@ -122,7 +122,7 @@ Sends a notification to the specified client. The second and third parameters ex
 
 ---
 
-### lia.darkrp.textWrap(text, fontName, maxLineWidth)
+### lia.darkrp.textWrap
 
 **Description:**
 
@@ -130,13 +130,13 @@ Clientside helper that wraps a string so it fits within a given pixel width usin
 
 **Parameters:**
 
-* text (string) – The text to wrap.
+* `text` (`string`) – The text to wrap.
 
 
-* fontName (string) – The font used to measure width.
+* `fontName` (`string`) – The font used to measure width.
 
 
-* maxLineWidth (number) – Maximum pixel width before wrapping occurs.
+* `maxLineWidth` (`number`) – Maximum pixel width before wrapping occurs.
 
 
 **Realm:**
@@ -158,7 +158,7 @@ Clientside helper that wraps a string so it fits within a given pixel width usin
 
 ---
 
-### lia.darkrp.formatMoney(amount)
+### lia.darkrp.formatMoney
 
 **Description:**
 
@@ -166,7 +166,7 @@ Formats the given amount using lia.currency.get so other DarkRP addons receive f
 
 **Parameters:**
 
-* amount (number) – The value of money to format.
+* `amount` (`number`) – The value of money to format.
 
 
 **Realm:**
@@ -187,7 +187,7 @@ Formats the given amount using lia.currency.get so other DarkRP addons receive f
 
 ---
 
-### lia.darkrp.createEntity(name, data)
+### lia.darkrp.createEntity
 
 **Description:**
 
@@ -197,8 +197,8 @@ through lia's item system.
 
 **Parameters:**
 
-* name (string) – Display name of the entity.
-* data (table) – Table containing fields such as `model`, `desc`, `category`, `ent`, `price` and optional `cmd`.
+* `name` (`string`) – Display name of the entity.
+* `data` (`table`) – Table containing fields such as `model`, `desc`, `category`, `ent`, `price` and optional `cmd`.
 
 **Realm:**
 
@@ -222,7 +222,7 @@ through lia's item system.
 
 ---
 
-### lia.darkrp.createCategory()
+### lia.darkrp.createCategory
 
 **Description:**
 

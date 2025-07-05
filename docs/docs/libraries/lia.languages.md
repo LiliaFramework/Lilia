@@ -14,7 +14,7 @@ names are kept in `lia.lang.names`.
 
 ---
 
-### lia.lang.loadFromDir(directory)
+### lia.lang.loadFromDir
 
 **Description:**
 
@@ -28,7 +28,7 @@ it is registered in lia.lang.names. Once all files have been processed, the `OnL
 
 **Parameters:**
 
-* directory (string) – The path to the directory containing language files.
+* `directory` (`string`) – The path to the directory containing language files.
 
 
 **Realm:**
@@ -49,7 +49,7 @@ it is registered in lia.lang.names. Once all files have been processed, the `OnL
 
 ---
 
-### lia.lang.AddTable(name, tbl)
+### lia.lang.AddTable
 
 **Description:**
 
@@ -61,10 +61,10 @@ will be merged with the existing ones.
 
 **Parameters:**
 
-* name (string) – The name of the language to update.
+* `name` (`string`) – The name of the language to update.
 
 
-* tbl (table) – A table containing language key-value pairs to add.
+* `tbl` (`table`) – A table containing language key-value pairs to add.
 
 
 **Realm:**
@@ -89,7 +89,7 @@ lia.lang.AddTable("english", {
 
 ---
 
-### L(key, ...)
+### L
 
 **Description:**
 
@@ -99,7 +99,7 @@ If the key has no translation, the key itself is returned.
 
 **Parameters:**
 
-* key (string) – Localization key.
+* `key` (`string`) – Localization key.
 
 * ... (vararg) – Values to format into the phrase.
 

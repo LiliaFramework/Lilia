@@ -10,7 +10,7 @@ The keybind library stores user-defined keyboard bindings. It is loaded **client
 
 ---
 
-### lia.keybind.add(k, d, cb, rcb)
+### lia.keybind.add
 
 **Description:**
 
@@ -26,16 +26,16 @@ Also maps the key code back to the action identifier for reverse lookup.
 
 **Parameters:**
 
-* k (string or number) – The key identifier, either as a string (to be converted) or as a key code.
+* `k` (`string or number`) – The key identifier, either as a string (to be converted) or as a key code.
 
 
-* d (string) – The unique identifier for the keybind action.
+* `d` (`string`) – The unique identifier for the keybind action.
 
 
-* cb (function) – The callback function to be executed when the key is pressed.
+* `cb` (`function`) – The callback function to be executed when the key is pressed.
 
 
-* rcb (function, optional) – The callback function to be executed when the key is released.
+* `rcb` (`function, optional`) – The callback function to be executed when the key is released.
 
 
 **Realm:**
@@ -66,7 +66,7 @@ lia.keybind.add(KEY_F1, "Open Inventory",
 
 ---
 
-### lia.keybind.get(a, df)
+### lia.keybind.get
 
 **Description:**
 
@@ -76,10 +76,10 @@ is used.  If both are missing the optional fallback value is returned.
 
 **Parameters:**
 
-* a (string) – The unique identifier for the keybind action.
+* `a` (`string`) – The unique identifier for the keybind action.
 
 
-* df (number) – An optional default key code to return if the keybind is not set.
+* `df` (`number`) – An optional default key code to return if the keybind is not set.
 
 
 **Realm:**
@@ -102,7 +102,7 @@ print("Inventory key:", input.GetKeyName(invKey))
 
 ---
 
-### lia.keybind.save()
+### lia.keybind.save
 
 **Description:**
 
@@ -139,7 +139,7 @@ lia.keybind.save()
 
 ---
 
-### lia.keybind.load()
+### lia.keybind.load
 
 **Description:**
 

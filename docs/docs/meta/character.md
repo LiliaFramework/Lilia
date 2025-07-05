@@ -8,7 +8,7 @@ Character objects returned by `player:getChar()` persist inventory, stats, and m
 
 The character meta library contains information about a player's current game state. It provides shortcuts for fetching stored values, verifying permissions, and linking a character back to its player. Characters are separate from players and hold names, models, money, and other data that persists across sessions.
 
-### tostring()
+### tostring
 
 **Description:**
 
@@ -39,7 +39,7 @@ print("Active char: " .. char:tostring())
 ---
 
 
-### eq(other)
+### eq
 
 **Description:**
 
@@ -48,7 +48,7 @@ Compares this character's ID with another object's ID. The argument can be a
 
 **Parameters:**
 
-* other (Character) – Character or object to compare.
+* `other` (`Character`) – Character or object to compare.
 
 
 **Realm:**
@@ -73,7 +73,7 @@ end
 
 ---
 
-### getID()
+### getID
 
 **Description:**
 
@@ -104,7 +104,7 @@ session.lastCharID = id
 
 ---
 
-### getPlayer()
+### getPlayer
 
 **Description:**
 
@@ -137,7 +137,7 @@ end
 
 ---
 
-### getDisplayedName(client)
+### getDisplayedName
 
 **Description:**
 
@@ -145,7 +145,7 @@ Returns the character's name as it should be shown to the given player.
 
 **Parameters:**
 
-* client (Player) – Player requesting the name.
+* `client` (`Player`) – Player requesting the name.
 
 
 **Realm:**
@@ -167,7 +167,7 @@ client:ChatPrint(string.format(L("youSee"), char:getDisplayedName(client)))
 
 ---
 
-### hasMoney(amount)
+### hasMoney
 
 **Description:**
 
@@ -175,7 +175,7 @@ Checks if the character has at least the given amount of money.
 
 **Parameters:**
 
-* amount (number) – Amount to check for.
+* `amount` (`number`) – Amount to check for.
 
 
 **Realm:**
@@ -199,7 +199,7 @@ end
 
 ---
 
-### getFlags()
+### getFlags
 
 **Description:**
 
@@ -231,7 +231,7 @@ end
 
 ---
 
-### hasFlags(flags)
+### hasFlags
 
 **Description:**
 
@@ -239,7 +239,7 @@ Checks if the character possesses any of the specified flags.
 
 **Parameters:**
 
-* flags (string) – String of flag characters to check.
+* `flags` (`string`) – String of flag characters to check.
 
 
 **Realm:**
@@ -263,7 +263,7 @@ end
 
 ---
 
-### getItemWeapon(requireEquip)
+### getItemWeapon
 
 **Description:**
 
@@ -273,7 +273,7 @@ method currently only checks for equipped items.
 
 **Parameters:**
 
-* requireEquip (boolean) – Only match equipped items if true.
+* `requireEquip` (`boolean`) – Only match equipped items if true.
 
 
 **Realm:**
@@ -297,7 +297,7 @@ end
 
 ---
 
-### getMaxStamina()
+### getMaxStamina
 
 **Description:**
 
@@ -327,7 +327,7 @@ local pct = char:getStamina() / char:getMaxStamina()
 
 ---
 
-### getStamina()
+### getStamina
 
 **Description:**
 
@@ -358,7 +358,7 @@ drawStaminaBar(stamina)
 
 ---
 
-### hasClassWhitelist(class)
+### hasClassWhitelist
 
 **Description:**
 
@@ -366,7 +366,7 @@ Checks if the character has whitelisted the given class.
 
 **Parameters:**
 
-* class (number) – Class index.
+* `class` (`number`) – Class index.
 
 
 **Realm:**
@@ -390,7 +390,7 @@ end
 
 ---
 
-### isFaction(faction)
+### isFaction
 
 **Description:**
 
@@ -398,7 +398,7 @@ Returns true if the character's faction matches.
 
 **Parameters:**
 
-* faction (number) – Faction index.
+* `faction` (`number`) – Faction index.
 
 
 **Realm:**
@@ -422,7 +422,7 @@ end
 
 ---
 
-### isClass(class)
+### isClass
 
 **Description:**
 
@@ -430,7 +430,7 @@ Returns true if the character's class equals the specified class.
 
 **Parameters:**
 
-* class (number) – Class index.
+* `class` (`number`) – Class index.
 
 
 **Realm:**
@@ -454,7 +454,7 @@ end
 
 ---
 
-### getAttrib(key, default)
+### getAttrib
 
 **Description:**
 
@@ -462,10 +462,10 @@ Retrieves the value of an attribute including boosts.
 
 **Parameters:**
 
-* key (string) – Attribute identifier.
+* `key` (`string`) – Attribute identifier.
 
 
-* default (number) – Default value when attribute is missing.
+* `default` (`number`) – Default value when attribute is missing.
 
 
 **Realm:**
@@ -488,7 +488,7 @@ dmg = baseDamage + strength * 0.5
 
 ---
 
-### getBoost(attribID)
+### getBoost
 
 **Description:**
 
@@ -496,7 +496,7 @@ Returns the boost table for the given attribute.
 
 **Parameters:**
 
-* attribID (string) – Attribute identifier.
+* `attribID` (`string`) – Attribute identifier.
 
 
 **Realm:**
@@ -518,7 +518,7 @@ PrintTable(char:getBoost("agi"))
 
 ---
 
-### getBoosts()
+### getBoosts
 
 **Description:**
 
@@ -550,7 +550,7 @@ end
 
 ---
 
-### doesRecognize(id)
+### doesRecognize
 
 **Description:**
 
@@ -558,7 +558,7 @@ Determines if this character recognizes another character.
 
 **Parameters:**
 
-* id (number|Character) – Character ID or object to check.
+* `id` (`number|Character`) – Character ID or object to check.
 
 
 **Realm:**
@@ -582,7 +582,7 @@ end
 
 ---
 
-### doesFakeRecognize(id)
+### doesFakeRecognize
 
 **Description:**
 
@@ -590,7 +590,7 @@ Checks if the character has a fake recognition entry for another.
 
 **Parameters:**
 
-* id (number|Character) – Character identifier.
+* `id` (`number|Character`) – Character identifier.
 
 
 **Realm:**
@@ -614,7 +614,7 @@ end
 
 ---
 
-### recognize(character, name)
+### recognize
 
 **Description:**
 
@@ -623,10 +623,10 @@ provided that alias will be shown whenever the character is recognized.
 
 **Parameters:**
 
-* character (number|Character) – Character to recognize or its ID.
+* `character` (`number|Character`) – Character to recognize or its ID.
 
 
-* name (string|nil) – Optional fake name to store.
+* `name` (`string|nil`) – Optional fake name to store.
 
 
 **Realm:**
@@ -648,7 +648,7 @@ char:recognize(rivalChar:getID(), "Mysterious Stranger")
 
 ---
 
-### WhitelistAllClasses()
+### WhitelistAllClasses
 
 **Description:**
 
@@ -678,7 +678,7 @@ char:WhitelistAllClasses()
 
 ---
 
-### WhitelistAllFactions()
+### WhitelistAllFactions
 
 **Description:**
 
@@ -708,7 +708,7 @@ char:WhitelistAllFactions()
 
 ---
 
-### WhitelistEverything()
+### WhitelistEverything
 
 **Description:**
 
@@ -738,7 +738,7 @@ char:WhitelistEverything()
 
 ---
 
-### classWhitelist(class)
+### classWhitelist
 
 **Description:**
 
@@ -746,7 +746,7 @@ Adds the specified class to this character's whitelist.
 
 **Parameters:**
 
-* class (number) – Class index to whitelist.
+* `class` (`number`) – Class index to whitelist.
 
 
 **Realm:**
@@ -768,7 +768,7 @@ char:classWhitelist(CLASS_ENGINEER)
 
 ---
 
-### classUnWhitelist(class)
+### classUnWhitelist
 
 **Description:**
 
@@ -776,7 +776,7 @@ Removes the specified class from the character's whitelist.
 
 **Parameters:**
 
-* class (number) – Class index to remove.
+* `class` (`number`) – Class index to remove.
 
 
 **Realm:**
@@ -798,7 +798,7 @@ char:classUnWhitelist(CLASS_MEDIC)
 
 ---
 
-### joinClass(class, isForced)
+### joinClass
 
 **Description:**
 
@@ -806,10 +806,10 @@ Attempts to set the character's current class. When `isForced` is true the norma
 
 **Parameters:**
 
-* class (number) – Class index to join.
+* `class` (`number`) – Class index to join.
 
 
-* isForced (boolean) – Bypass restrictions when true.
+* `isForced` (`boolean`) – Bypass restrictions when true.
 
 
 **Realm:**
@@ -831,7 +831,7 @@ char:joinClass(CLASS_SOLDIER, true)
 
 ---
 
-### kickClass()
+### kickClass
 
 **Description:**
 
@@ -861,7 +861,7 @@ char:kickClass()
 
 ---
 
-### updateAttrib(key, value)
+### updateAttrib
 
 **Description:**
 
@@ -869,10 +869,10 @@ Increases an attribute by the specified value, clamped to the maximum allowed.
 
 **Parameters:**
 
-* key (string) – Attribute identifier.
+* `key` (`string`) – Attribute identifier.
 
 
-* value (number) – Amount to add.
+* `value` (`number`) – Amount to add.
 
 
 **Realm:**
@@ -894,7 +894,7 @@ char:updateAttrib("agi", 5)
 
 ---
 
-### setAttrib(key, value)
+### setAttrib
 
 **Description:**
 
@@ -902,10 +902,10 @@ Directly sets an attribute to the given value.
 
 **Parameters:**
 
-* key (string) – Attribute identifier.
+* `key` (`string`) – Attribute identifier.
 
 
-* value (number) – New level for the attribute.
+* `value` (`number`) – New level for the attribute.
 
 
 **Realm:**
@@ -927,7 +927,7 @@ char:setAttrib("str", 10)
 
 ---
 
-### addBoost(boostID, attribID, boostAmount)
+### addBoost
 
 **Description:**
 
@@ -935,13 +935,13 @@ Applies a temporary boost to one of the character's attributes.
 
 **Parameters:**
 
-* boostID (string) – Unique identifier for the boost.
+* `boostID` (`string`) – Unique identifier for the boost.
 
 
-* attribID (string) – Attribute to modify.
+* `attribID` (`string`) – Attribute to modify.
 
 
-* boostAmount (number) – Amount of the boost.
+* `boostAmount` (`number`) – Amount of the boost.
 
 
 **Realm:**
@@ -963,7 +963,7 @@ char:addBoost("powerGloves", "str", 2)
 
 ---
 
-### removeBoost(boostID, attribID)
+### removeBoost
 
 **Description:**
 
@@ -971,10 +971,10 @@ Removes a previously applied attribute boost.
 
 **Parameters:**
 
-* boostID (string) – Identifier used when the boost was added.
+* `boostID` (`string`) – Identifier used when the boost was added.
 
 
-* attribID (string) – Attribute affected by the boost.
+* `attribID` (`string`) – Attribute affected by the boost.
 
 
 **Realm:**
@@ -996,7 +996,7 @@ char:removeBoost("powerGloves", "str")
 
 ---
 
-### setFlags(flags)
+### setFlags
 
 **Description:**
 
@@ -1004,7 +1004,7 @@ Replaces the character's flag string with the provided value.
 
 **Parameters:**
 
-* flags (string) – New flag characters to assign.
+* `flags` (`string`) – New flag characters to assign.
 
 
 **Realm:**
@@ -1026,7 +1026,7 @@ char:setFlags("")
 
 ---
 
-### giveFlags(flags)
+### giveFlags
 
 **Description:**
 
@@ -1034,7 +1034,7 @@ Adds the specified flag characters to the character.
 
 **Parameters:**
 
-* flags (string) – Flags to grant.
+* `flags` (`string`) – Flags to grant.
 
 
 **Realm:**
@@ -1056,7 +1056,7 @@ char:giveFlags("A")
 
 ---
 
-### takeFlags(flags)
+### takeFlags
 
 **Description:**
 
@@ -1064,7 +1064,7 @@ Removes the given flag characters from the character.
 
 **Parameters:**
 
-* flags (string) – Flags to revoke.
+* `flags` (`string`) – Flags to revoke.
 
 
 **Realm:**
@@ -1086,7 +1086,7 @@ char:takeFlags("A")
 
 ---
 
-### save(callback)
+### save
 
 **Description:**
 
@@ -1094,7 +1094,7 @@ Persists the character's current data to the database.
 
 **Parameters:**
 
-* callback (function|nil) – Optional function run after saving completes.
+* `callback` (`function|nil`) – Optional function run after saving completes.
 
 
 **Realm:**
@@ -1116,7 +1116,7 @@ char:save(function() print("character saved") end)
 
 ---
 
-### sync(receiver)
+### sync
 
 **Description:**
 
@@ -1126,7 +1126,7 @@ player, only local variables intended for them are included.
 
 **Parameters:**
 
-* receiver (Player|nil) – Player to receive the data or nil for broadcast.
+* `receiver` (`Player|nil`) – Player to receive the data or nil for broadcast.
 
 
 **Realm:**
@@ -1148,7 +1148,7 @@ char:sync(targetPlayer)
 
 ---
 
-### setup(noNetworking)
+### setup
 
 **Description:**
 
@@ -1157,7 +1157,7 @@ data. Use `noNetworking` to skip network updates during initialization.
 
 **Parameters:**
 
-* noNetworking (boolean) – Skip networking inventories and vars when true.
+* `noNetworking` (`boolean`) – Skip networking inventories and vars when true.
 
 
 **Realm:**
@@ -1179,7 +1179,7 @@ char:setup()
 
 ---
 
-### kick()
+### kick
 
 **Description:**
 
@@ -1210,7 +1210,7 @@ char:kick() -- they will respawn without a character
 
 ---
 
-### ban(time)
+### ban
 
 **Description:**
 
@@ -1220,7 +1220,7 @@ immediately kicks the controlling player. This also triggers the
 
 **Parameters:**
 
-* time (number|nil) – Ban length in seconds or nil for permanent.
+* `time` (`number|nil`) – Ban length in seconds or nil for permanent.
 
 
 **Realm:**
@@ -1242,7 +1242,7 @@ char:ban(3600)
 ---
 
 
-### delete()
+### delete
 
 **Description:**
 
@@ -1273,7 +1273,7 @@ char:delete()
 
 ---
 
-### destroy()
+### destroy
 
 **Description:**
 
@@ -1305,7 +1305,7 @@ char:destroy()
 
 ---
 
-### giveMoney(amount)
+### giveMoney
 
 **Description:**
 
@@ -1314,7 +1314,7 @@ player's `addMoney` method.
 
 **Parameters:**
 
-* amount (number) – Amount to add to the wallet.
+* `amount` (`number`) – Amount to add to the wallet.
 
 
 **Realm:**
@@ -1337,7 +1337,7 @@ char:giveMoney(reward)
 
 ---
 
-### takeMoney(amount)
+### takeMoney
 
 **Description:**
 
@@ -1346,7 +1346,7 @@ calls `giveMoney` with a negative value and logs the deduction.
 
 **Parameters:**
 
-* amount (number) – Amount to remove.
+* `amount` (`number`) – Amount to remove.
 
 
 **Realm:**
@@ -1369,7 +1369,7 @@ char:takeMoney(fine)
 
 ---
 
-### getName(default)
+### getName
 
 **Description:**
 
@@ -1377,7 +1377,7 @@ Returns the character's stored name or a default value.
 
 **Parameters:**
 
-* default (any) – Value to return if the name is unset.
+* `default` (`any`) – Value to return if the name is unset.
 
 
 **Realm:**
@@ -1398,7 +1398,7 @@ print("Character name:", char:getName("Unknown"))
 
 ---
 
-### setName(value)
+### setName
 
 **Description:**
 
@@ -1406,7 +1406,7 @@ Updates the character's name and replicates the change to players.
 
 **Parameters:**
 
-* value (string) – New name for the character.
+* `value` (`string`) – New name for the character.
 
 
 **Realm:**
@@ -1427,7 +1427,7 @@ char:setName("Alyx Vance")
 
 ---
 
-### getDesc(default)
+### getDesc
 
 **Description:**
 
@@ -1435,7 +1435,7 @@ Fetches the character's description text or returns the given default.
 
 **Parameters:**
 
-* default (any) – Value to return if no description exists.
+* `default` (`any`) – Value to return if no description exists.
 
 
 **Realm:**
@@ -1456,7 +1456,7 @@ local about = char:getDesc("No bio")
 
 ---
 
-### setDesc(value)
+### setDesc
 
 **Description:**
 
@@ -1464,7 +1464,7 @@ Assigns a new description for the character.
 
 **Parameters:**
 
-* value (string) – Description text.
+* `value` (`string`) – Description text.
 
 
 **Realm:**
@@ -1485,7 +1485,7 @@ char:setDesc("Hardened wasteland survivor")
 
 ---
 
-### getModel(default)
+### getModel
 
 **Description:**
 
@@ -1493,7 +1493,7 @@ Retrieves the model path assigned to the character.
 
 **Parameters:**
 
-* default (any) – Value returned when no model is stored.
+* `default` (`any`) – Value returned when no model is stored.
 
 
 **Realm:**
@@ -1514,7 +1514,7 @@ local mdl = char:getModel("models/error.mdl")
 
 ---
 
-### setModel(value)
+### setModel
 
 **Description:**
 
@@ -1522,7 +1522,7 @@ Sets the character's player model and broadcasts the update.
 
 **Parameters:**
 
-* value (string) – Model file path.
+* `value` (`string`) – Model file path.
 
 
 **Realm:**
@@ -1543,7 +1543,7 @@ char:setModel("models/alyx.mdl")
 
 ---
 
-### getClass(default)
+### getClass
 
 **Description:**
 
@@ -1551,7 +1551,7 @@ Returns the class index currently assigned or the supplied default.
 
 **Parameters:**
 
-* default (any) – Value used when the class is unset.
+* `default` (`any`) – Value used when the class is unset.
 
 
 **Realm:**
@@ -1574,7 +1574,7 @@ end
 
 ---
 
-### setClass(value)
+### setClass
 
 **Description:**
 
@@ -1582,7 +1582,7 @@ Stores a new class index for the character.
 
 **Parameters:**
 
-* value (number) – Class identifier.
+* `value` (`number`) – Class identifier.
 
 
 **Realm:**
@@ -1603,7 +1603,7 @@ char:setClass(CLASS_ENGINEER)
 
 ---
 
-### getFaction(default)
+### getFaction
 
 **Description:**
 
@@ -1611,7 +1611,7 @@ Gets the faction index of the character or a fallback value.
 
 **Parameters:**
 
-* default (any) – Value to return when unset.
+* `default` (`any`) – Value to return when unset.
 
 
 **Realm:**
@@ -1632,7 +1632,7 @@ print("Faction:", char:getFaction())
 
 ---
 
-### setFaction(value)
+### setFaction
 
 **Description:**
 
@@ -1640,7 +1640,7 @@ Sets the character's faction team.
 
 **Parameters:**
 
-* value (number) – Faction identifier.
+* `value` (`number`) – Faction identifier.
 
 
 **Realm:**
@@ -1661,7 +1661,7 @@ char:setFaction(FACTION_CITIZEN)
 
 ---
 
-### getMoney(default)
+### getMoney
 
 **Description:**
 
@@ -1669,7 +1669,7 @@ Retrieves the amount of currency this character holds.
 
 **Parameters:**
 
-* default (any) – Value to return when no money value is stored.
+* `default` (`any`) – Value to return when no money value is stored.
 
 
 **Realm:**
@@ -1690,7 +1690,7 @@ local cash = char:getMoney(0)
 
 ---
 
-### setMoney(value)
+### setMoney
 
 **Description:**
 
@@ -1698,7 +1698,7 @@ Overwrites the character's stored money total.
 
 **Parameters:**
 
-* value (number) – Amount of currency.
+* `value` (`number`) – Amount of currency.
 
 
 **Realm:**
@@ -1719,7 +1719,7 @@ char:setMoney(1000)
 
 ---
 
-### getData(key, default)
+### getData
 
 **Description:**
 
@@ -1727,10 +1727,10 @@ Returns arbitrary data previously stored on the character.
 
 **Parameters:**
 
-* key (string) – Data key.
+* `key` (`string`) – Data key.
 
 
-* default (any) – Value to return if the entry is missing.
+* `default` (`any`) – Value to return if the entry is missing.
 
 
 **Realm:**
@@ -1751,7 +1751,7 @@ local rank = char:getData("rank", "rookie")
 
 ---
 
-### setData(key, value, noReplication, receiver)
+### setData
 
 **Description:**
 
@@ -1759,16 +1759,16 @@ Writes a data entry on the character and optionally syncs it.
 
 **Parameters:**
 
-* key (string) – Data key to modify.
+* `key` (`string`) – Data key to modify.
 
 
-* value (any) – New value to store.
+* `value` (`any`) – New value to store.
 
 
-* noReplication (boolean) – Suppress network updates.
+* `noReplication` (`boolean`) – Suppress network updates.
 
 
-* receiver (Player) – Optional specific client to send the update to.
+* `receiver` (`Player`) – Optional specific client to send the update to.
 
 
 **Realm:**
@@ -1789,7 +1789,7 @@ char:setData("rank", "veteran")
 
 ---
 
-### getVar(key, default)
+### getVar
 
 **Description:**
 
@@ -1797,10 +1797,10 @@ Fetches a temporary variable from the character.
 
 **Parameters:**
 
-* key (string) – Variable key.
+* `key` (`string`) – Variable key.
 
 
-* default (any) – Value returned if the variable is absent.
+* `default` (`any`) – Value returned if the variable is absent.
 
 
 **Realm:**
@@ -1821,7 +1821,7 @@ local mood = char:getVar("mood", "neutral")
 
 ---
 
-### setVar(key, value, noReplication, receiver)
+### setVar
 
 **Description:**
 
@@ -1829,16 +1829,16 @@ Stores a temporary variable on the character.
 
 **Parameters:**
 
-* key (string) – Variable name.
+* `key` (`string`) – Variable name.
 
 
-* value (any) – Data to store.
+* `value` (`any`) – Data to store.
 
 
-* noReplication (boolean) – If true, skip networking the change.
+* `noReplication` (`boolean`) – If true, skip networking the change.
 
 
-* receiver (Player) – Specific target for the update.
+* `receiver` (`Player`) – Specific target for the update.
 
 
 **Realm:**
@@ -1860,7 +1860,7 @@ char:setVar("mood", "happy", nil, char:getPlayer())
 
 ---
 
-### getInv(index)
+### getInv
 
 **Description:**
 
@@ -1868,7 +1868,7 @@ Retrieves the character's inventory instance.
 
 **Parameters:**
 
-* index (number) – Optional inventory slot index.
+* `index` (`number`) – Optional inventory slot index.
 
 
 **Realm:**
@@ -1889,7 +1889,7 @@ local inv = char:getInv()
 
 ---
 
-### setInv(value)
+### setInv
 
 **Description:**
 
@@ -1897,7 +1897,7 @@ Directly sets the character's inventory table.
 
 **Parameters:**
 
-* value (table) – Inventory data.
+* `value` (`table`) – Inventory data.
 
 
 **Realm:**
@@ -1918,7 +1918,7 @@ char:setInv({})
 
 ---
 
-### getAttribs(default)
+### getAttribs
 
 **Description:**
 
@@ -1926,7 +1926,7 @@ Returns the table of raw attribute values for the character.
 
 **Parameters:**
 
-* default (any) – Fallback value when no attributes are stored.
+* `default` (`any`) – Fallback value when no attributes are stored.
 
 
 **Realm:**
@@ -1947,7 +1947,7 @@ local stats = char:getAttribs()
 
 ---
 
-### setAttribs(value)
+### setAttribs
 
 **Description:**
 
@@ -1955,7 +1955,7 @@ Overwrites the character's attribute table.
 
 **Parameters:**
 
-* value (table) – Table of attribute levels.
+* `value` (`table`) – Table of attribute levels.
 
 
 **Realm:**
@@ -1976,7 +1976,7 @@ char:setAttribs({ strength = 10 })
 
 ---
 
-### getRecognizedAs(default)
+### getRecognizedAs
 
 **Description:**
 
@@ -1984,7 +1984,7 @@ Gets the mapping of disguised names this character uses to recognize others.
 
 **Parameters:**
 
-* default (any) – Value to return when no data is stored.
+* `default` (`any`) – Value to return when no data is stored.
 
 
 **Realm:**
@@ -2005,7 +2005,7 @@ local aliases = char:getRecognizedAs()
 
 ---
 
-### setRecognizedAs(value)
+### setRecognizedAs
 
 **Description:**
 
@@ -2013,7 +2013,7 @@ Updates the table of fake recognition names for this character.
 
 **Parameters:**
 
-* value (table) – Table of ID to alias mappings.
+* `value` (`table`) – Table of ID to alias mappings.
 
 
 **Realm:**

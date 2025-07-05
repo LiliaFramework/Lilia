@@ -11,7 +11,7 @@ Fonts are refreshed automatically whenever `RefreshFonts` is run and the `PostLo
 
 ---
 
-### lia.font.register(fontName, fontData)
+### lia.font.register
 
 **Description:**
 
@@ -19,10 +19,10 @@ Creates and stores a font using `surface.CreateFont`. The font is kept in the in
 
 **Parameters:**
 
-* fontName (string) – Font identifier.
+* `fontName` (`string`) – Font identifier.
 
 
-* fontData (table) – Font properties table.
+* `fontData` (`table`) – Font properties table.
 
 
 **Realm:**
@@ -50,7 +50,7 @@ end)
 
 ---
 
-### lia.font.getAvailableFonts()
+### lia.font.getAvailableFonts
 
 **Description:**
 
@@ -82,7 +82,7 @@ end
 
 ---
 
-### lia.font.refresh()
+### lia.font.refresh
 
 **Description:**
 

@@ -29,7 +29,7 @@ models to improve load times and stores the result in both
 
 **Parameters:**
 
-* directory (string) – The path to the directory containing faction files.
+* `directory` (`string`) – The path to the directory containing faction files.
 
 
 **Realm:**
@@ -59,7 +59,7 @@ Retrieves a faction by its index or unique identifier.
 
 **Parameters:**
 
-* identifier (number or string) – The faction's index or unique identifier.
+* `identifier` (`number or string`) – The faction's index or unique identifier.
 
 
 **Realm:**
@@ -89,7 +89,7 @@ Retrieves the index of a faction by its unique identifier.
 
 **Parameters:**
 
-* uniqueID (string) – The unique identifier of the faction.
+* `uniqueID` (`string`) – The unique identifier of the faction.
 
 
 **Realm:**
@@ -119,7 +119,7 @@ Retrieves a list of classes associated with the specified faction.
 
 **Parameters:**
 
-* faction (number) – The faction index.
+* `faction` (`number`) – The faction index.
 
 
 **Realm:**
@@ -149,7 +149,7 @@ Retrieves all player entities whose characters belong to the specified faction.
 
 **Parameters:**
 
-* faction (number) – The faction index.
+* `faction` (`number`) – The faction index.
 
 
 **Realm:**
@@ -179,7 +179,7 @@ Counts the number of players whose characters belong to the specified faction.
 
 **Parameters:**
 
-* faction (number) – The faction index.
+* `faction` (`number`) – The faction index.
 
 
 **Realm:**
@@ -209,10 +209,10 @@ Checks if the specified faction is a member of a given category.
 
 **Parameters:**
 
-* faction (string) – The faction unique identifier.
+* `faction` (`string`) – The faction unique identifier.
 
 
-* categoryFactions (table) – A table containing faction identifiers that define the category.
+* `categoryFactions` (`table`) – A table containing faction identifiers that define the category.
 
 
 **Realm:**
@@ -246,19 +246,19 @@ Pre-caches the faction models.
 
 **Parameters:**
 
-* index (number) – The team index for the faction.
+* `index` (`number`) – The team index for the faction.
 
 
-* name (string) – The faction name.
+* `name` (`string`) – The faction name.
 
 
-* color (Color) – The faction color.
+* `color` (`Color`) – The faction color.
 
 
-* default (boolean) – Whether the faction is default.
+* `default` (`boolean`) – Whether the faction is default.
 
 
-* models (table) – A table of model paths or model data for the faction.
+* `models` (`table`) – A table of model paths or model data for the faction.
 
 
 **Realm:**
@@ -322,7 +322,7 @@ Categories are determined by keys in the faction's models table that are strings
 
 **Parameters:**
 
-* teamName (string) – The unique identifier of the faction.
+* `teamName` (`string`) – The unique identifier of the faction.
 
 
 **Realm:**
@@ -352,10 +352,10 @@ Retrieves models from a specified category for a given faction.
 
 **Parameters:**
 
-* teamName (string) – The unique identifier of the faction.
+* `teamName` (`string`) – The unique identifier of the faction.
 
 
-* category (string) – The model category to retrieve.
+* `category` (`string`) – The model category to retrieve.
 
 
 **Realm:**
@@ -387,7 +387,7 @@ Searches through the class list for the first class that is marked as default fo
 
 **Parameters:**
 
-* id (string) – The unique identifier of the faction.
+* `id` (`string`) – The unique identifier of the faction.
 
 
 **Realm:**
@@ -419,7 +419,7 @@ Checks the local whitelist data against the faction's uniqueID.
 
 **Parameters:**
 
-* faction (number) – The faction index.
+* `faction` (`number`) – The faction index.
 
 
 **Realm:**

@@ -9,13 +9,13 @@ This page details the class system functions.
 The classes library loads Lua definitions that describe player classes. Classes act like temporary jobs within a faction. The library stores available classes, registers default attributes, and provides lookup functions by name or index.
 See [Class Fields](../definitions/class.md) for configurable `CLASS` properties and [Class Hooks](../hooks/class_hooks.md) for customization callbacks.
 
-### lia.class.loadFromDir(directory)
+### lia.class.loadFromDir
 
 **Description:**
 
 Loads all Lua files within the supplied directory. Each file should define a `CLASS` table inserted into `lia.class.list` with an automatic index.
 **Parameters:**
-* directory (string) – Folder path containing class Lua files, typically "schema/classes" in a schema.
+* `directory` (`string`) – Folder path containing class Lua files, typically "schema/classes" in a schema.
 
 
 **Realm:**
@@ -36,7 +36,7 @@ Loads all Lua files within the supplied directory. Each file should define a `CL
 
 ---
 
-### lia.class.canBe(client, class)
+### lia.class.canBe
 
 **Description:**
 
@@ -44,10 +44,10 @@ Checks faction, whitelist, and limit rules. It also runs the `CanPlayerJoinClass
 
 **Parameters:**
 
-* client (Player) – Player attempting to join.
+* `client` (`Player`) – Player attempting to join.
 
 
-* class (number) – Class index to join.
+* `class` (`number`) – Class index to join.
 
 
 **Realm:**
@@ -71,7 +71,7 @@ Checks faction, whitelist, and limit rules. It also runs the `CanPlayerJoinClass
 
 ---
 
-### lia.class.get(identifier)
+### lia.class.get
 
 **Description:**
 
@@ -79,7 +79,7 @@ Retrieves the class table associated with the given numeric index.
 
 **Parameters:**
 
-* identifier (number) – Numeric index of the class.
+* `identifier` (`number`) – Numeric index of the class.
 
 
 **Realm:**
@@ -101,7 +101,7 @@ Retrieves the class table associated with the given numeric index.
 
 ---
 
-### lia.class.getPlayers(class)
+### lia.class.getPlayers
 
 **Description:**
 
@@ -109,7 +109,7 @@ Returns an array of players whose characters belong to the given class.
 
 **Parameters:**
 
-* class (number) – Class index to check.
+* `class` (`number`) – Class index to check.
 
 
 **Realm:**
@@ -131,7 +131,7 @@ Returns an array of players whose characters belong to the given class.
 
 ---
 
-### lia.class.getPlayerCount(class)
+### lia.class.getPlayerCount
 
 **Description:**
 
@@ -139,7 +139,7 @@ Counts the number of players currently in the specified class.
 
 **Parameters:**
 
-* class (number) – Class index to check.
+* `class` (`number`) – Class index to check.
 
 
 **Realm:**
@@ -159,7 +159,7 @@ Counts the number of players currently in the specified class.
 
 ---
 
-### lia.class.retrieveClass(class)
+### lia.class.retrieveClass
 
 **Description:**
 
@@ -167,7 +167,7 @@ Finds a class whose uniqueID or name matches the given text (case-insensitive).
 
 **Parameters:**
 
-* class (string) – Name or uniqueID to look up.
+* `class` (`string`) – Name or uniqueID to look up.
 
 
 **Realm:**
@@ -189,7 +189,7 @@ Finds a class whose uniqueID or name matches the given text (case-insensitive).
 
 ---
 
-### lia.class.hasWhitelist(class)
+### lia.class.hasWhitelist
 
 **Description:**
 
@@ -197,7 +197,7 @@ Checks if the class requires a whitelist. Default classes always return false.
 
 **Parameters:**
 
-* class (number) – Class index to check.
+* `class` (`number`) – Class index to check.
 
 
 **Realm:**

@@ -23,7 +23,7 @@ Each bar returned by `lia.bar.get` or inserted via `lia.bar.add` is a table with
 
 ---
 
-### lia.bar.get(identifier)
+### lia.bar.get
 
 **Description:**
 
@@ -31,7 +31,7 @@ Retrieves a bar object from the list by its unique identifier.
 
 **Parameters:**
 
-* identifier (string) – The unique identifier of the bar to retrieve.
+* `identifier` (`string`) – The unique identifier of the bar to retrieve.
 
 
 **Realm:**
@@ -57,7 +57,7 @@ Retrieves a bar object from the list by its unique identifier.
 
 ---
 
-### lia.bar.add(getValue, color, priority, identifier)
+### lia.bar.add
 
 **Description:**
 
@@ -69,16 +69,16 @@ Bars are drawn in order of ascending priority.
 
 **Parameters:**
 
-* getValue (function) – A callback that returns the current value of the bar.
+* `getValue` (`function`) – A callback that returns the current value of the bar.
 
 
-* color (Color) – The fill color for the bar. Defaults to a random pastel color.
+* `color` (`Color`) – The fill color for the bar. Defaults to a random pastel color.
 
 
-* priority (number) – Determines drawing order; lower values draw first. Defaults to end of list.
+* `priority` (`number`) – Determines drawing order; lower values draw first. Defaults to end of list.
 
 
-* identifier (string) – Optional unique identifier for the bar.
+* `identifier` (`string`) – Optional unique identifier for the bar.
 
 
 **Realm:**
@@ -104,7 +104,7 @@ Bars are drawn in order of ascending priority.
 
 ---
 
-### lia.bar.remove(identifier)
+### lia.bar.remove
 
 **Description:**
 
@@ -112,7 +112,7 @@ Removes a bar from the list based on its unique identifier.
 
 **Parameters:**
 
-* identifier (string) – The unique identifier of the bar to remove.
+* `identifier` (`string`) – The unique identifier of the bar to remove.
 
 
 **Realm:**
@@ -134,7 +134,7 @@ Removes a bar from the list based on its unique identifier.
 
 ---
 
-### lia.bar.drawBar(x, y, w, h, pos, max, color)
+### lia.bar.drawBar
 
 **Description:**
 
@@ -144,25 +144,25 @@ filling it proportionally based on pos and max.
 
 **Parameters:**
 
-* x (number) – The x-coordinate of the bar's top-left corner.
+* `x` (`number`) – The x-coordinate of the bar's top-left corner.
 
 
-* y (number) – The y-coordinate of the bar's top-left corner.
+* `y` (`number`) – The y-coordinate of the bar's top-left corner.
 
 
-* w (number) – The total width of the bar (including padding).
+* `w` (`number`) – The total width of the bar (including padding).
 
 
-* h (number) – The total height of the bar.
+* `h` (`number`) – The total height of the bar.
 
 
-* pos (number) – The current value to display (will be clamped to max).
+* `pos` (`number`) – The current value to display (will be clamped to max).
 
 
-* max (number) – The maximum possible value for the bar.
+* `max` (`number`) – The maximum possible value for the bar.
 
 
-* color (Color) – The color to fill the bar.
+* `color` (`Color`) – The color to fill the bar.
 
 
 **Realm:**
@@ -184,7 +184,7 @@ filling it proportionally based on pos and max.
 
 ---
 
-### lia.bar.drawAction(text, duration)
+### lia.bar.drawAction
 
 **Description:**
 
@@ -194,10 +194,10 @@ for the specified duration on the HUD.
 
 **Parameters:**
 
-* text (string) – The text to display above the progress bar.
+* `text` (`string`) – The text to display above the progress bar.
 
 
-* duration (number) – Duration in seconds for which the bar is displayed.
+* `duration` (`number`) – Duration in seconds for which the bar is displayed.
 
 
 **Realm:**
@@ -219,7 +219,7 @@ for the specified duration on the HUD.
 
 ---
 
-### lia.bar.drawAll()
+### lia.bar.drawAll
 
 **Description:**
 
