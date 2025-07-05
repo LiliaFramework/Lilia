@@ -90,6 +90,12 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
         return
     end
 
+    local canAccessTransferTo, accessReasonTo = newInventory:canAccess("transfer", context)
+    if not canAccessTransferTo then
+        if isstring(accessReasonTo) then client:notifyLocalized(accessReasonTo) end
+        return
+    end
+
     local oldX, oldY = item:getData("x"), item:getData("y")
     local dropPos = client:getItemDropPos()
     if client.invTransferTransaction and client.invTransferTransactionTimeout > RealTime() then return end
