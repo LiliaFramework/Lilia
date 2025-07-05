@@ -148,8 +148,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
       - name: Recreate GitHub release
         run: |
+          cd lilia
           gh release delete release -y || true
-          gh release create release lilia.zip \
+          gh release create release ../lilia.zip \
             -t "Lilia ${VERSION}" -n ""
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
