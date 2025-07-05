@@ -163,10 +163,6 @@ executed.
 * Server
 
 
-    Internal Function:
-
-    true
-
 **Returns:**
 
 * None

@@ -227,10 +227,6 @@ Loads config values from the database (server side) and stores them in `lia.conf
 * Shared
 
 
-    Internal Function:
-
-    true
-
 **Returns:**
 
 * None

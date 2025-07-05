@@ -40,10 +40,6 @@ automatically converts any legacy text logs if no entries are present.
 * Server
 
 
-    Internal Function:
-
-    true
-
 **Returns:**
 
 * None
@@ -126,10 +122,6 @@ function.
 
 * Server
 
-
-    Internal Function:
-
-    true
 
 **Returns:**
 
@@ -228,9 +220,17 @@ Console command that prints how many legacy log lines exist inside
 `data/lilia/logs` and how many are valid for import. Run this from the server
 console to estimate conversion time.
 
+**Parameters:**
+
+* None
+
 **Realm:**
 
 * `Server` (`Console`)
+
+**Returns:**
+
+* None
 
 **Example Usage:**
 
