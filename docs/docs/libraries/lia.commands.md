@@ -13,6 +13,8 @@ The commands library registers console and chat commands. It parses arguments, c
 **Description:**
 
 Registers a new command with its associated data.
+See [Command Fields](../definitions/command.md) for a list of
+available keys in the `data` table.
 
 **Parameters:**
 
@@ -35,7 +37,21 @@ Registers a new command with its associated data.
 **Example Usage:**
 
 ```lua
-    -- TODO
+    -- Register a simple warn command for administrators
+    lia.command.add("warn", {
+        adminOnly = true,
+        syntax = "[player Target] [string Reason]",
+        desc = "Send a warning message to the target player.",
+        onRun = function(client, args)
+            local target = lia.util.findPlayer(client, args[1])
+            if not target then
+                return "@targetNotFound"
+            end
+
+            local reason = table.concat(args, " ", 2)
+            target:ChatPrint("[WARN] " .. reason)
+        end
+    })
 ```
 
 ### lia.command.hasAccess(client, command, data)
@@ -316,5 +332,46 @@ missing fields from the server.
 **Example Usage:**
 
 ```lua
-    -- TODO
+    -- Open the argument prompt for the plywhitelist command
+    -- This normally happens automatically when required
+    -- arguments are missing.
+    lia.command.openArgumentPrompt("plywhitelist")
+```
+
+---
+
+### lia.command.findPlayer
+
+**Description:**
+
+Convenience alias for [lia.util.findPlayer](lia.util.md#liautilfindplayer).
+Use this when writing command callbacks to locate another player by name
+or SteamID.
+
+**Parameters:**
+
+See [lia.util.findPlayer](lia.util.md#liautilfindplayer) for parameter
+information.
+
+**Realm:**
+
+* Shared
+
+
+    Alias:
+
+    lia.util.findPlayer
+
+**Returns:**
+
+* Player|nil – The found player if any.
+
+
+**Example Usage:**
+
+```lua
+    local target = lia.command.findPlayer(admin, "Sarah")
+    if target then
+        admin:notify("Found " .. target:Name())
+    end
 ```
