@@ -30,7 +30,15 @@ Registers a new config option with the given key, display name, default value, a
 * callback (function) — A function called when the value changes (optional).
 
 
-* data (table) — Additional data for this config option, including config type, category, description, etc.
+* data (table) — Additional data customizing the option. Fields include:
+    * desc (string) – Description shown in the menu.
+    * category (string) – Category used to group the setting.
+    * type (string) – "Boolean", "Int", "Float", "Color", or "Table". If omitted it is inferred from the default value.
+    * min (number) – Minimum allowed value for numeric types.
+    * max (number) – Maximum allowed value for numeric types.
+    * decimals (number) – Number of decimals to display for Float types.
+    * options (table) – List of choices for the "Table" type.
+    * noNetworking (boolean) – Do not network this config to clients.
 
 
 **Realm:**
@@ -46,15 +54,23 @@ Registers a new config option with the given key, display name, default value, a
 **Example Usage:**
 
 ```lua
-    -- Register a config option with a callback that prints when it changes
+    -- Register a config option with limits and a callback
     lia.config.add(
-    "maxPlayers",                 -- unique key
-    "Maximum Players",            -- name shown in the menu
-    64,                            -- default value
-    function(old, new)
-        print("Player limit updated from", old, "to", new)
-    end,
-    {category = "Server"}
+        "walkSpeed",
+        "Walk Speed",
+        130,
+        function(_, newValue)
+            for _, ply in player.Iterator() do
+                ply:SetWalkSpeed(newValue)
+            end
+        end,
+        {
+            desc = "Base walking speed for all players.",
+            category = "Movement",
+            type = "Int",
+            min = 50,
+            max = 300
+        }
     )
 ```
 
@@ -64,7 +80,7 @@ Registers a new config option with the given key, display name, default value, a
 
 **Description:**
 
-Overrides the default value of an existing config.
+Changes the stored default for an existing config option without affecting its current value or notifying clients.
 
 **Parameters:**
 
@@ -97,7 +113,7 @@ Overrides the default value of an existing config.
 
 **Description:**
 
-Forces a config value without triggering networking or callback if 'noSave' is true, then optionally saves.
+Sets a config value directly without running callbacks or sending network updates. The value is saved unless `noSave` is true.
 
 **Parameters:**
 
@@ -133,7 +149,7 @@ Forces a config value without triggering networking or callback if 'noSave' is t
 
 **Description:**
 
-Sets a config value, runs callback, and handles networking (if on server). Also saves the config.
+Sets a config value, saves it server‑side, runs the callback with the old and new values, and networks the update to clients unless the config is marked `noNetworking`.
 
 **Parameters:**
 
@@ -166,7 +182,7 @@ Sets a config value, runs callback, and handles networking (if on server). Also 
 
 **Description:**
 
-Retrieves the current value of a config, or returns a default if neither value nor default is set.
+Retrieves the current value of a config. If no value is set, the stored default is returned or the supplied fallback is used. Color tables are automatically converted to `Color` objects.
 
 **Parameters:**
 
@@ -199,10 +215,7 @@ Retrieves the current value of a config, or returns a default if neither value n
 
 **Description:**
 
-Loads the config data from storage (server-side) and updates the stored config values.
-Any configuration keys missing from the database will be inserted with their default values when the server starts.
-
-Triggers "InitializedConfig" hook once done.
+Loads config values from the database (server side) and stores them in `lia.config`. Any missing entries are inserted with their defaults. When finished the "InitializedConfig" hook is run. Clients simply wait for the data and then fire the same hook.
 
 **Parameters:**
 
@@ -266,7 +279,7 @@ Returns a table of all config entries where the current value differs from the d
 
 **Description:**
 
-Sends current changed config values to a specified client.
+Sends all changed config values to a client. If no client is specified the values are broadcast to everyone.
 
 **Parameters:**
 
@@ -286,8 +299,8 @@ Sends current changed config values to a specified client.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.config.send
-    lia.config.send(client)
+    -- Broadcast changed configs to all players
+    lia.config.send()
 ```
 
 ---
@@ -296,7 +309,7 @@ Sends current changed config values to a specified client.
 
 **Description:**
 
-Saves all changed config values to persistent storage.
+Writes all changed config values to the database so they persist across restarts.
 
 **Parameters:**
 
@@ -318,4 +331,31 @@ Saves all changed config values to persistent storage.
 ```lua
     -- This snippet demonstrates a common usage of lia.config.save
     lia.config.save()
+```
+
+---
+
+### lia.config.convertToDatabase(changeMap)
+
+**Description:**
+
+Moves legacy `lia.config` data from the `data/lilia` folder into the `lia_config` database table. Players are prevented from joining while the conversion runs. If `changeMap` is true, the current map reloads when finished.
+
+**Parameters:**
+
+* changeMap (boolean) – Whether to reload the map after conversion completes.
+
+**Realm:**
+
+* Server
+
+**Returns:**
+
+* None
+
+**Example Usage:**
+
+```lua
+    -- Force config conversion and reload the map
+    lia.config.convertToDatabase(true)
 ```
