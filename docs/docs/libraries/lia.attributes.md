@@ -7,12 +7,19 @@ This page documents the functions for working with character attributes.
 ## Overview
 
 The attributes library loads attribute definitions from Lua files, keeps track of
+
 character values, and provides helper methods for modifying them. Each attribute
+
 is defined on a global `ATTRIBUTE` table inside its own file. When
+
 `lia.attribs.loadFromDir` is called the file is included **shared**, default
+
 values are filled in and the definition is stored in `lia.attribs.list` using the
+
 file name (without extension or the `sh_` prefix) as the key. The loader will be
+
 invoked automatically when a module is initialized, so most schemas simply place
+
 their attribute files in `schema/attributes/`.
 
 ---
@@ -20,6 +27,7 @@ their attribute files in `schema/attributes/`.
 ### ATTRIBUTE table fields
 
 Each attribute definition may specify any of the following keys on the global
+
 `ATTRIBUTE` table:
 
 | Field | Type | Purpose |
@@ -31,7 +39,9 @@ Each attribute definition may specify any of the following keys on the global
 | `maxValue` | number | Absolute ceiling for this attribute. |
 
 The optional function `ATTRIBUTE:OnSetup(client, value)` runs whenever
+
 `lia.attribs.setup` processes that attribute. See the [Attribute Fields
+
 documentation](../definitions/attribute.md) for detailed explanations.
 
 ---
@@ -41,10 +51,15 @@ documentation](../definitions/attribute.md) for detailed explanations.
 **Description:**
 
 Loads attribute definitions from the given folder. Every Lua file in
+
 the directory is included as **shared** so its contents run on both the
+
 server and the client. Inside each file you create a global table named
+
 `ATTRIBUTE` and populate it with your fields. After the file is included
+
 the table is stored inside `lia.attribs.list` using the lowercase
+
 filename (without extension) as the key.
 
 **Parameters:**

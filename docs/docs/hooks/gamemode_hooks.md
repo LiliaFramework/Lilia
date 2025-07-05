@@ -162,6 +162,7 @@ end)
 **Description:**
 
 Checks if a scoreboard value may be overridden by other hooks so modules can
+
 replace the displayed name, model or description for a player.
 
 **Parameters:**
@@ -6658,7 +6659,9 @@ end)
 **Description:**
 
 Determines if a player can use a specific command. Returning either
+
 `true` or `false` overrides the normal permission logic; returning
+
 `nil` falls back to the default checks.
 
 **Parameters:**
@@ -6677,6 +6680,7 @@ Determines if a player can use a specific command. Returning either
 **Returns:**
 
 * boolean|nil: non-nil values override the result; return `nil` to
+
   allow built‑in checks to decide.
 
 
@@ -7024,6 +7028,7 @@ end)
 **Description:**
 
 Retrieves a default name for a character during creation. Return `(defaultName, overrideBool)`.
+
 If the character's faction defines a prefix it will automatically be prepended to the name.
 
 **Parameters:**
@@ -8972,6 +8977,7 @@ end)
 ```
 
 ---
+
 ### CanPlayerUseChar
 
 **Description:**

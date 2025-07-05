@@ -13,7 +13,9 @@ Item meta functions cover stack counts, categories, weight calculations, and net
 **Description:**
 
 Retrieves how many of this item the stack represents. When the item has not
+
 yet been instanced (`id` equals `0`) this returns the `maxQuantity` defined on
+
 the base item.
 
 **Parameters:**
@@ -853,6 +855,7 @@ end
 **Description:**
 
 Creates a world entity for this item at the specified position. If no angle is
+
 provided it will spawn upright using `angle_zero`.
 
 **Parameters:**
@@ -929,8 +932,11 @@ Called when a new instance of this item is created.
 **Parameters:**
 
 * `invID` (`number`) – Inventory ID the item belongs to or `NULL` when not placed in one.
+
 * `x` (`number`) – Grid X coordinate where the item spawned.
+
 * `y` (`number`) – Grid Y coordinate where the item spawned.
+
 * `item` (`Item`) – The newly created item instance.
 
 

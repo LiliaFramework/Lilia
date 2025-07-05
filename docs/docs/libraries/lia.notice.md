@@ -7,8 +7,11 @@ This page describes how popup notices are displayed.
 ## Overview
 
 The notice library displays temporary popup notifications at the top of the
+
 player's screen. Server functions send network messages to connected clients,
+
 which create `liaNotice` panels on the client. These panels are stored in the
+
 `lia.notices` table and automatically expire after roughly 7.5 seconds.
 
 ---
@@ -18,6 +21,7 @@ which create `liaNotice` panels on the client. These panels are stored in the
 **Description:**
 
 Queues a text notice to display to a specific player or everyone. The
+
 message is sent over the `liaNotify` network string.
 
 **Parameters:**
@@ -55,7 +59,9 @@ lia.notices.notify("Your quest failed.", player)
 **Description:**
 
 Sends a localized notice to a player or everyone. When the second argument
+
 isn't a player, it becomes the first formatting parameter and the notice is
+
 broadcast. Messages use the `liaNotifyL` network string.
 
 **Parameters:**
@@ -64,6 +70,7 @@ broadcast. Messages use the `liaNotifyL` network string.
 
 
 * `recipient` (`Player|nil`) – Optional target player. Leave nil or pass a
+
   non-player as the second argument to broadcast.
 
 
@@ -97,6 +104,7 @@ lia.notices.notifyLocalized("questFoundItem", nil, "golden_key")
 **Description:**
 
 Creates a `liaNotice` panel on the local client and stores it in
+
 `lia.notices`. Notices fade out after about 7.5 seconds.
 
 **Parameters:**

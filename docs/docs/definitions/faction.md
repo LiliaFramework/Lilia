@@ -134,8 +134,11 @@ FACTION.uniqueID = "staff"
 **Description:**
 
 Optional prefix automatically prepended to new character names. If a function is
+
 provided, it is called with the player creating the character and should return
+
 the desired text. The result is inserted before the base name with a space and
+
 trimmed; returning `nil` or an empty string results in no prefix being applied.
 
 **Example Usage:**
@@ -557,6 +560,7 @@ If `true`, members recognize all players globally, regardless of faction.
 ```lua
 FACTION.RecognizesGlobally = false
 ```
+
 #### `isGloballyRecognized`
 
 **Type:**
@@ -642,6 +646,7 @@ FACTION.ScoreboardHidden = false
 **Description:**
 
 Table of command names that members of this faction may always use,
+
 even if they normally lack the required privilege.
 
 **Example Usage:**

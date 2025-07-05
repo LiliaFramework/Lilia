@@ -7,7 +7,9 @@ This page outlines chatbox related functions and helpers.
 ## Overview
 
 The chatbox library defines chat commands and renders messages. It lets you
+
 register chat classes that determine how text such as IC, action, and OOC
+
 messages appear and handles radius-based or global visibility.
 
 ### lia.chat.classes
@@ -15,6 +17,7 @@ messages appear and handles radius-based or global visibility.
 **Description:**
 
 Table containing all registered chat class definitions indexed by their
+
 identifier.
 
 **Realm:**
@@ -33,6 +36,7 @@ print(icClass.format)
 **Description:**
 
 Returns a formatted timestamp if chat timestamps are enabled. When disabled the
+
 function returns an empty string.
 
 **Parameters:**
@@ -71,24 +75,43 @@ Registers a new chat class and sets up command aliases.
 
 
 * `data` (`table`) – Table of chat class properties.
+
   Common fields include:
+
   - `syntax` (string) – Argument usage description shown in command help.
+
   - `desc` (string) – Description of the command shown in menus.
+
   - `prefix` (string or table) – Command prefixes that trigger this chat type.
+
     A command alias is created for each prefix.
+
   - `radius` (number|function) – Hearing range, converted into an `onCanHear`
+
     check automatically.
+
   - `onCanHear` (function|number) – Determines if a listener can see the
+
     message.
+
   - `onCanSay` (function) – Called before sending to verify the speaker may
+
     talk.
+
   - `onChatAdd` (function) – Client-side handler for displaying the text.
+
   - `onGetColor` (function) – Returns a `Color` for the message.
+
   - `color` (Color) – Default color used with the fallback `onChatAdd`.
+
   - `format` (string) – Format string for the fallback `onChatAdd`.
+
   - `filter` (string) – Chat filter category used by the chat UI.
+
   - `font` (string) – Font name used when rendering the message.
+
   - `noSpaceAfter` (boolean) – Allows prefixes without a trailing space.
+
   - `deadCanChat` (boolean) – Permits dead players to use the chat type.
 
 
@@ -124,7 +147,9 @@ lia.chat.register("wave", {
 **Description:**
 
 Parses chat text for the proper chat type and optionally sends it.
+
 Server-side this fires the **PlayerMessageSend** hook before calling
+
 `lia.chat.send` unless `noSend` is true.
 
 **Parameters:**
@@ -168,7 +193,9 @@ end)
 **Description:**
 
 Broadcasts a chat message to all eligible receivers. The text is passed through
+
 the **PlayerMessageSend** hook right before networking, and clients run
+
 **OnChatReceived** when the message arrives.
 
 **Parameters:**

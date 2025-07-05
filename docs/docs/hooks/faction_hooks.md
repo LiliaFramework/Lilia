@@ -58,7 +58,9 @@ end
 **Description:**
 
 Retrieves the default name for a newly created character in this faction. The
+
 returned string is used as the base name before any prefix or other logic is
+
 applied.
 
 **Parameters:**
@@ -92,6 +94,7 @@ end
 ```
 
 Runs each time a faction member spawns while `FactionOnLoadout` is processing. Use
+
 this to configure per-player attributes, grant equipment or send notifications.
 
 **Parameters:**
@@ -129,7 +132,9 @@ end
 **Description:**
 
 Retrieves the default description for a newly created character in this faction.
+
 The returned text becomes the character's description if no other value is
+
 provided.
 
 **Parameters:**
@@ -172,6 +177,7 @@ Executes after a player has been moved into this faction (whether by an admin or
 **Parameters:**
 
 * `client` (`Player`) – The player that was moved into this faction.
+
 * `oldFaction` (`number`) – The index of the faction the player came from.
 
 
@@ -211,6 +217,7 @@ Called when the game checks whether this faction has reached its player limit. R
 **Parameters:**
 
 * `character` (`Character`) – The character attempting to join the faction.
+
 * `client` (`Player`) – The player owning that character.
 
 **Realm:**

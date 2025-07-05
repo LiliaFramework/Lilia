@@ -15,10 +15,15 @@ Default health, armor and stamina bars are registered automatically when the cli
 Each bar returned by `lia.bar.get` or inserted via `lia.bar.add` is a table with the following fields:
 
 * `getValue` (function) – Function that returns the bar's progress as a fraction.
+
 * `color` (Color) – Bar fill color.
+
 * `priority` (number) – Draw order; lower priorities draw first.
+
 * `identifier` (string|nil) – Unique identifier if provided.
+
 * `visible` (boolean|nil) – Set to `true` to force the bar to remain visible.
+
 * `lifeTime` (number) – Internal timer used for fading; usually managed automatically.
 
 ---
@@ -224,6 +229,7 @@ for the specified duration on the HUD.
 **Description:**
 
 Iterates through all registered bars, applies smoothing to their values,
+
 and draws them on the HUD according to their priority and visibility rules. The hooks `ShouldHideBars` and `ShouldBarDraw` are consulted to decide when a bar is rendered.
 
 **Parameters:**

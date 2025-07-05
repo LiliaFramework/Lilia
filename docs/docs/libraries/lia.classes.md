@@ -7,6 +7,7 @@ This page details the class system functions.
 ## Overview
 
 The classes library loads Lua definitions that describe player classes. Classes act like temporary jobs within a faction. The library stores available classes, registers default attributes, and provides lookup functions by name or index.
+
 See [Class Fields](../definitions/class.md) for configurable `CLASS` properties and [Class Hooks](../hooks/class_hooks.md) for customization callbacks.
 
 ### lia.class.loadFromDir
@@ -14,7 +15,9 @@ See [Class Fields](../definitions/class.md) for configurable `CLASS` properties 
 **Description:**
 
 Loads all Lua files within the supplied directory. Each file should define a `CLASS` table inserted into `lia.class.list` with an automatic index.
+
 **Parameters:**
+
 * `directory` (`string`) – Folder path containing class Lua files, typically "schema/classes" in a schema.
 
 
@@ -29,6 +32,7 @@ Loads all Lua files within the supplied directory. Each file should define a `CL
 
 
 **Example Usage:**
+
 ```lua
     -- Example: load all classes for the schema
     lia.class.loadFromDir("schema/classes")
@@ -125,8 +129,11 @@ Returns an array of players whose characters belong to the given class.
 **Example Usage:**
 
     for _, ply in ipairs(lia.class.getPlayers(classID)) do
+
         print(ply:Nick())
+
     end
+
 ```
 
 ---

@@ -44,6 +44,7 @@ print("Active char: " .. char:tostring())
 **Description:**
 
 Compares this character's ID with another object's ID. The argument can be a
+
 `Character` instance or any object providing a `getID` method.
 
 **Parameters:**
@@ -268,7 +269,9 @@ end
 **Description:**
 
 Returns **true** only when the player's active weapon matches an item in their
+
 inventory and that item is equipped. The argument defaults to `true` and the
+
 method currently only checks for equipped items.
 
 **Parameters:**
@@ -619,6 +622,7 @@ end
 **Description:**
 
 Adds another character to this one's recognition list. When a custom `name` is
+
 provided that alias will be shown whenever the character is recognized.
 
 **Parameters:**
@@ -1121,7 +1125,9 @@ char:save(function() print("character saved") end)
 **Description:**
 
 Sends the character's networkable variables to a specific player. Passing
+
 `nil` broadcasts the data to everyone. When the receiver is the character's own
+
 player, only local variables intended for them are included.
 
 **Parameters:**
@@ -1153,6 +1159,7 @@ char:sync(targetPlayer)
 **Description:**
 
 Sets up the player entity to use this character's model, faction, and inventory
+
 data. Use `noNetworking` to skip network updates during initialization.
 
 **Parameters:**
@@ -1184,6 +1191,7 @@ char:setup()
 **Description:**
 
 Forcibly disconnects the player from their character. The player is killed
+
 silently and immediately respawns with no character loaded.
 
 **Parameters:**
@@ -1215,7 +1223,9 @@ char:kick() -- they will respawn without a character
 **Description:**
 
 Marks the character as banned for the given duration, saves the state, and
+
 immediately kicks the controlling player. This also triggers the
+
 `OnCharPermakilled` hook.
 
 **Parameters:**
@@ -1239,6 +1249,7 @@ immediately kicks the controlling player. This also triggers the
 -- Ban the character for one hour
 char:ban(3600)
 ```
+
 ---
 
 
@@ -1247,6 +1258,7 @@ char:ban(3600)
 **Description:**
 
 Completely removes the character from the database along with any inventories
+
 it owns.
 
 **Parameters:**
@@ -1278,7 +1290,9 @@ char:delete()
 **Description:**
 
 Removes the character from the server's loaded cache without touching any saved
+
 data. Useful after deleting a character or when cleaning up disconnected
+
 players.
 
 **Parameters:**
@@ -1310,6 +1324,7 @@ char:destroy()
 **Description:**
 
 Adds the specified amount to the character's wallet by calling the owning
+
 player's `addMoney` method.
 
 **Parameters:**
@@ -1342,6 +1357,7 @@ char:giveMoney(reward)
 **Description:**
 
 Subtracts the specified amount of money from the character. Internally this
+
 calls `giveMoney` with a negative value and logs the deduction.
 
 **Parameters:**

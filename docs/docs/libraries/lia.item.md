@@ -299,6 +299,7 @@ and merges data from the specified base. Optionally includes the file if provide
 Loads item Lua files from a specified directory. Base items are loaded first,
 
 then any folders (with base_ prefix usage), and finally any loose Lua files.
+
 The "InitializedItems" hook is fired once loading completes.
 
 **Parameters:**
@@ -332,6 +333,7 @@ The "InitializedItems" hook is fired once loading completes.
 Creates an item instance (not in the database) from a registered item definition.
 
 The new item is stored in lia.item.instances using the provided item ID.
+
 If the uniqueID is unregistered, this function errors. Reusing an ID for the same uniqueID returns the existing instance.
 
 **Parameters:**
@@ -478,6 +480,7 @@ then caches it in lia.inventory.instances.
 ```
 
 ---
+
 ### lia.item.addWeaponOverride
 
 **Description:**
@@ -667,6 +670,7 @@ Once the item is created, a new item object is constructed and returned via a de
 **Description:**
 
 Deletes an item from the system (database and memory) by its numeric ID.
+
 If the item exists in memory its delete method is called, otherwise the database row is removed.
 
 **Parameters:**

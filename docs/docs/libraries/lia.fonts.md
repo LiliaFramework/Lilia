@@ -7,6 +7,7 @@ This page lists utilities for creating fonts.
 ## Overview
 
 The fonts library wraps `surface.CreateFont` for commonly used fonts. It avoids duplication by registering fonts once and allowing them to be recalled by name. Every call to `surface.CreateFont` is intercepted so the data is stored and automatically refreshed when the screen resolution or relevant configuration options change.
+
 Fonts are refreshed automatically whenever `RefreshFonts` is run and the `PostLoadFonts` hook will then be called with the current font choices. Register custom fonts inside this hook so they persist across refreshes.
 
 ---

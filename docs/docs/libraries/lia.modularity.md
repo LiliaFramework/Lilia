@@ -17,6 +17,7 @@ See [Module Fields](../definitions/module.md) for the options and callbacks a mo
 **Description:**
 
 Loads a module from the given path. If the target is a single file it is included directly.
+
 When loading a folder, the core file is executed and CAMI privileges, dependencies and additional resources such as languages and factions are loaded. Submodules are processed unless `skipSubmodules` is true.
 
 All functions placed on `MODULE` are registered as hooks. During the extra include phase the `DoModuleIncludes` hook is fired and, when complete, `MODULE.ModuleLoaded` runs if defined. The module table also gains `setData` and `getData` helpers for persistent storage. Enabled modules are stored in `lia.module.list`.
@@ -111,6 +112,7 @@ Non-Lua files are ignored.
 
 
 * group – A string representing the module group (e.g., "schema" or "module").
+
   This controls whether the module is loaded into `SCHEMA` or `MODULE`.
 
 
