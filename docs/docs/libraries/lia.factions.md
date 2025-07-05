@@ -6,7 +6,13 @@ This page covers the faction system helpers.
 
 ## Overview
 
-The factions library loads faction definitions and stores them for later lookup. It provides functions to find factions by index or name and to iterate all faction data.
+The factions library loads faction definitions and stores them for later lookup. Factions are kept in two tables:
+`lia.faction.teams` indexed by unique identifier and
+`lia.faction.indices` indexed by team number. The library offers helpers to find
+factions and iterate over their data.
+
+See [Faction Fields](../definitions/faction.md) for details on the data stored in
+each `FACTION` table.
 
 ---
 
@@ -14,11 +20,12 @@ The factions library loads faction definitions and stores them for later lookup.
 
 **Description:**
 
-Loads all Lua faction files (*.lua) from the specified directory,
-
-includes them as shared files, and registers the factions.
-
-Each faction file should define a FACTION table with properties such as name, desc, color, etc.
+Loads all Lua faction files (`*.lua`) from the specified directory,
+includes them as shared files and registers the factions. Each file must
+define a `FACTION` table with properties such as name, description, color
+and models. The function calls `team.SetUp` for every faction, caches all
+models to improve load times and stores the result in both
+`lia.faction.teams` and `lia.faction.indices`.
 
 **Parameters:**
 
@@ -112,7 +119,7 @@ Retrieves a list of classes associated with the specified faction.
 
 **Parameters:**
 
-* faction (string) – The faction unique identifier.
+* faction (number) – The faction index.
 
 
 **Realm:**
@@ -128,8 +135,8 @@ Retrieves a list of classes associated with the specified faction.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.faction.getClasses
-    local classes = lia.faction.getClasses("citizen")
+    -- Retrieve class definitions that belong to the Citizen faction
+    local classes = lia.faction.getClasses(FACTION_CITIZEN)
 ```
 
 ---
@@ -142,7 +149,7 @@ Retrieves all player entities whose characters belong to the specified faction.
 
 **Parameters:**
 
-* faction (string) – The faction unique identifier.
+* faction (number) – The faction index.
 
 
 **Realm:**
@@ -158,8 +165,8 @@ Retrieves all player entities whose characters belong to the specified faction.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.faction.getPlayers
-    local players = lia.faction.getPlayers("citizen")
+    -- Get all players currently in the Citizen faction
+    local players = lia.faction.getPlayers(FACTION_CITIZEN)
 ```
 
 ---
@@ -172,7 +179,7 @@ Counts the number of players whose characters belong to the specified faction.
 
 **Parameters:**
 
-* faction (string) – The faction unique identifier.
+* faction (number) – The faction index.
 
 
 **Realm:**
@@ -188,8 +195,8 @@ Counts the number of players whose characters belong to the specified faction.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.faction.getPlayerCount
-    local count = lia.faction.getPlayerCount("citizen")
+    -- Count how many players are citizens
+    local count = lia.faction.getPlayerCount(FACTION_CITIZEN)
 ```
 
 ---
@@ -412,7 +419,7 @@ Checks the local whitelist data against the faction's uniqueID.
 
 **Parameters:**
 
-* faction (string) – The unique identifier of the faction.
+* faction (number) – The faction index.
 
 
 **Realm:**
@@ -428,6 +435,6 @@ Checks the local whitelist data against the faction's uniqueID.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.faction.hasWhitelist
-    local whitelisted = lia.faction.hasWhitelist("citizen")
+    -- Check whether the local player is whitelisted for the Citizen faction
+    local whitelisted = lia.faction.hasWhitelist(FACTION_CITIZEN)
 ```
