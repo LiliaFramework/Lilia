@@ -86,7 +86,7 @@ Finds and returns a table of players within a given spherical radius from an ori
 
 **Description:**
 
-Attempts to find a player by identifier. The identifier can be STEAMID, SteamID64, "^" (self), "@" (looking at target), or partial name.
+Attempts to find a player using various identifier formats. The search accepts SteamID, SteamID64, "^" for the caller, "@" for their target, or a partial name.
 
 **Parameters:**
 
@@ -101,9 +101,6 @@ Attempts to find a player by identifier. The identifier can be STEAMID, SteamID6
 * Shared
 
 
-    Alias:
-
-    lia.util.findPlayer
 
 **Returns:**
 
@@ -113,13 +110,12 @@ Attempts to find a player by identifier. The identifier can be STEAMID, SteamID6
 **Example Usage:**
 
 ```lua
-    -- Teleport an admin next to the found player by partial name
-    local target = lia.util.findPlayer(someAdmin, "Bob")
+    -- Search for a player by partial name
+    local target = lia.util.findPlayer(admin, "Bob")
     if target then
-        someAdmin:SetPos(target:GetPos() + Vector(50, 0, 0))
+        admin:ChatPrint("Found: " .. target:Name())
     end
 ```
-
 ---
 
 ### lia.util.findPlayerItems
@@ -332,34 +328,29 @@ Finds a player currently on the server by their SteamID64.
 
 **Description:**
 
-Finds a player currently on the server by their SteamID.
+Finds a player currently on the server by their SteamID64.
 
 **Parameters:**
 
-* SteamID (string) — The SteamID to search for (e.g. "STEAM_0:1:23456789").
+* steamID64 (string) — The SteamID64 of the player (e.g. "76561198000000000").
 
 
 **Realm:**
 
 * Shared
 
-
 **Returns:**
 
 * Player|nil — The found player or nil if not found.
 
-
 **Example Usage:**
-
 ```lua
-    -- This snippet demonstrates a common usage of lia.util.findPlayerBySteamID
-    local ply = lia.util.findPlayerBySteamID("STEAM_0:1:23456789")
+    -- Find a player by SteamID64
+    local ply = lia.util.findPlayerBySteamID("76561198000000000")
     if ply then
         print("Found player: " .. ply:Name())
     end
 ```
-
----
 
 ### lia.util.canFit
 
@@ -852,10 +843,10 @@ Draws a textured rectangle with the specified material.
 
 **Parameters:**
 
-* material (string) — The material path.
+* material (string|IMaterial) — Path to the material or IMaterial object.
 
 
-* color (Color) — The draw color.
+* color (Color) — The draw color (defaults to color_white).
 
 
 * x (number) — The x position.
@@ -976,10 +967,10 @@ Draws a blur effect over the specified panel.
 * panel (Panel) — The panel to blur.
 
 
-* amount (number) — The blur strength.
+* amount (number) — The blur strength (defaults to 5).
 
 
-* passes (number) — The number of passes (optional).
+* passes (number) — The iteration multiplier (defaults to 0.2).
 
 
 **Realm:**
@@ -995,8 +986,9 @@ Draws a blur effect over the specified panel.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.util.drawBlur
-    lia.util.drawBlur(somePanel, 5, 1)
+    somePanel.Paint = function(self, w, h)
+        lia.util.drawBlur(self)
+    end
 ```
 
 ---
@@ -1021,10 +1013,10 @@ Draws a blur effect at a specified rectangle on the screen.
 * h (number) — The height of the rectangle.
 
 
-* amount (number) — The blur strength.
+* amount (number) — The blur strength (defaults to 5).
 
 
-* passes (number) — The number of passes (optional).
+* passes (number) — The iteration multiplier (defaults to 0.2).
 
 
 **Realm:**
@@ -1038,10 +1030,10 @@ Draws a blur effect at a specified rectangle on the screen.
 
 
 **Example Usage:**
-
 ```lua
-    -- This snippet demonstrates a common usage of lia.util.drawBlurAt
-    lia.util.drawBlurAt(100, 100, 200, 150, 5, 1)
+    hook.Add("HUDPaint", "ExampleBlur", function()
+        lia.util.drawBlurAt(100, 100, 200, 150)
+    end)
 ```
 
 ---
@@ -1085,3 +1077,4 @@ Creates and displays a table UI with given columns and data on the client side.
     -- This snippet demonstrates a common usage of lia.util.CreateTableUI
     lia.util.CreateTableUI("My Table", {{name="ID", field="id"}, {name="Name", field="name"}}, myData, myOptions, 1)
 ```
+
