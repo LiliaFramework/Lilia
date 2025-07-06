@@ -1088,5 +1088,18 @@ Reload: Drop]],
     urlDesc = "Generic Description",
     weaponsName = "Weapon",
     weaponsDesc = "A Weapon.",
+    -- Added lowercase keys for compatibility with code expecting lowercase
+    invertweaponscroll = "Invert Weapon Scroll",
+    descminlen = "Description must be at least %d characters long.",
+    flagspawnvehicles = "Gives Access to spawning vehicles.",
+    itemuseontarget = "Use on Target",
+    usetip = "Uses the item.",
+    usegrenade = "Use Grenade",
+    equiptip = "Equips the item.",
+    entityitemname = "Item",
+    cleardecalsdesc = "Clears all decals (blood, bullet holes, etc.) for every player.",
+    compatibilityloadedmultiple = "Loaded the compatibilities for the following addons: %s",
+    nodesc = "No Description",
+    databaseconnected = "Lilia has connected to the database. We are using %s!",
 }
 
