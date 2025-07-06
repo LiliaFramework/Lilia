@@ -8,6 +8,12 @@ This page documents command registration and execution.
 
 The commands library registers console and chat commands. It parses arguments, checks permissions, and routes the handlers for execution. Commands can be run via slash chat or the console and may be restricted to specific usergroups through a CAMI-compliant admin mod.
 
+### Fields
+
+* **lia.command.list** (table) – Lookup table of registered commands by name.
+
+---
+
 ### lia.command.add
 
 **Description:**
