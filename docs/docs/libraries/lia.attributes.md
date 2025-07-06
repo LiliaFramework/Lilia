@@ -22,6 +22,10 @@ invoked automatically when a module is initialized, so most schemas simply place
 
 their attribute files in `schema/attributes/`.
 
+### Fields
+
+* **lia.attribs.list** (table) – Table of attribute definitions indexed by ID.
+
 ---
 
 ### ATTRIBUTE table fields
