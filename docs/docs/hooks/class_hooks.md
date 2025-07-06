@@ -51,6 +51,8 @@ function CLASS:OnCanBe(client)
     return false
 end
 ```
+
+---
 ---
 
 
@@ -203,3 +205,4 @@ function CLASS:OnTransferred(client, oldClass)
     char:setData("previousClass", oldClass)
 end
 ```
+---
