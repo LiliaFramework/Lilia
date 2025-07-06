@@ -6,25 +6,26 @@ The compatibility layer covers administration suites such as ULX and SAM, vehicl
 
 In recent releases the compatibility set has grown even larger. Popular community addons now work out of the box:
 
-- **Advanced Duplicator 2** and **Advanced Duplicator** integration
 
+- **Advanced Duplicator 2** and **Advanced Duplicator** integration
 
 - **PAC3** outfit synchronization
 
-
 - **ServerGuard** permission support
-
 
 - **ULX** and **SAM** admin suites
 
+- **PermaProps** management helpers
+
+- **Prone Mod** automatic recovery
+
+- **DarkRP** utility shims
+
+- **Sit Anywhere** seat protections
 
 - **LVS**, **Simfphys**, and **VCMod** vehicle frameworks
 
-
 - **VJBase** NPC base improvements
-
-
-- **VManip** animation support
 
 
 Simply install these addons and the matching compatibility layer will load automatically.
@@ -70,8 +71,7 @@ Integrates with AD2’s duplication data system while still blocking problematic
 
 * Provides helper functions like `isEmpty`, `findEmptyPos`, and text wrapping.
 
-
-* Recreates monetary helpers so other DarkRP addons can function.
+* Implements `formatMoney`, `createEntity`, and `createCategory` shims so other addons can function.
 
 
 **Detailed Explanation:**
@@ -101,6 +101,10 @@ Stops collisions or weapons fired from your own LVS vehicle from injuring you. D
 
 
 * Adds commands for repairing, enabling, and disabling PAC3.
+
+* Honors the `BlockPackURLoad` configuration to restrict loading outfits from URLs.
+
+* Registers the "Staff Permissions - Can Use PAC3" privilege and the `P` flag for access control.
 
 
 **Detailed Explanation:**
@@ -253,17 +257,3 @@ Forwards vehicle purchase and upgrade transactions to the roleplay money system,
 Intercepts exploitable VJBase network messages and disables resource-intensive hooks to maintain server security and performance.
 
 ---
-
-## [VManip](https://liliaframework.github.io/Modules/vmanip.html)
-
-**Compatibility Highlights:**
-
-* Synchronizes VManip animations between server and clients.
-
-
-* Exposes hooks for triggering VManip actions.
-
-
-**Detailed Explanation:**
-
-Provides helper networking and event hooks so player animation gestures triggered through VManip play correctly for everyone.
