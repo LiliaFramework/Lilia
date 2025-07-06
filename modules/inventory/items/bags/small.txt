@@ -1,4 +1,4 @@
-ITEM.name = "Small Bag"
-ITEM.desc = "A small bag."
+ITEM.name = "smallBagName"
+ITEM.desc = "smallBagDesc"
 ITEM.invWidth = 2
 ITEM.invHeight = 2
