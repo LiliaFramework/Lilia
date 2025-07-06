@@ -46,6 +46,7 @@ function lia.config.set(key, value)
                 net.WriteType(value)
                 net.Broadcast()
             end
+
             if config.callback then config.callback(oldValue, value) end
             lia.config.save()
         end
@@ -173,26 +174,23 @@ if SERVER then
         lia.db.waitForTablesToLoad():next(function()
             lia.db.transaction(queries):next(function()
                 lia.config.isConverting = false
-                lia.bootstrap(
-                    "Database",
-                    L("convertConfigToDatabaseDone", entryCount)
-                )
+                lia.bootstrap("Database", L("convertConfigToDatabaseDone", entryCount))
                 if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
             end)
         end)
     end
 end
 
-    local function countLegacyConfigEntries()
-        local data = lia.data.get("config", nil, false, true) or {}
-        local total = istable(data) and table.Count(data) or 0
-        return total, total
-    end
+local function countLegacyConfigEntries()
+    local data = lia.data.get("config", nil, false, true) or {}
+    local total = istable(data) and table.Count(data) or 0
+    return total, total
+end
 
-    concommand.Add("lia_config_legacy_count", function(ply)
-        if IsValid(ply) then return end
-        local ported, total = countLegacyConfigEntries()
-        print("[Lilia] " .. L("liaConfigLegacyCount", total, ported))
+concommand.Add("lia_config_legacy_count", function(ply)
+    if IsValid(ply) then return end
+    local ported, total = countLegacyConfigEntries()
+    print("[Lilia] " .. L("liaConfigLegacyCount", total, ported))
 end)
 
 lia.config.add("MoneyModel", "Money Model", "models/props_lab/box01a.mdl", nil, {
@@ -413,6 +411,12 @@ lia.config.add("CrosshairEnabled", "Enable Crosshair", false, nil, {
 lia.config.add("BarsDisabled", "Disable Bars", false, nil, {
     desc = "Disables bars",
     category = "Visuals",
+    type = "Boolean"
+})
+
+lia.config.add("AutoWeaponItemGeneration", "Auto Weapon-to-Item Generation", true, nil, {
+    desc = "Enables automatic conversion of dropped weapons into inventory items",
+    category = "General",
     type = "Boolean"
 })
 
@@ -782,6 +786,7 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                         net.WriteType(m:GetColor())
                         net.SendToServer()
                     end)
+
                     f:Remove()
                 end
 
