@@ -702,58 +702,6 @@ Returns a hull trace in front of the player.
 local tr = player:getTrace(48)
 
 ```
-### GetEyeTrace
-
-**Purpose**
-
-Returns an eye trace from the player's view position. On the client this result is cached each frame.
-
-**Parameters**
-
-* `distance` (number|nil): Trace length in units, defaults to 32768.
-
-**Realm**
-`Shared`
-
-**Returns**
-
-* table: Trace result.
-
-**Example**
-
-```lua
-local tr = player:GetEyeTrace(128)
-print("Hit entity:", tr.Entity)
-```
----
-
-### GetEyeTraceNoCursor
-
-**Purpose**
-
-Performs an eye trace using the player's view angles instead of the cursor direction.
-
-**Parameters**
-
-* `distance` (number|nil): Trace length in units, defaults to 32768.
-
-**Realm**
-`Shared`
-
-**Returns**
-
-* table: Trace result.
-
-**Example**
-
-```lua
-local tr = player:GetEyeTraceNoCursor()
-if tr.Hit then
-    print("Hit:", tr.Entity)
-end
-```
----
-
 ### getEyeEnt
 
 **Purpose**
