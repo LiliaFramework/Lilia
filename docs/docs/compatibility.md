@@ -114,6 +114,7 @@ Exposes helper methods and network messages to synchronize PAC3 outfits, prevent
 **Compatibility Highlights:**
 
 * Blocks saving Lilia’s persistent entities or map-created props as permanent.
+* Warns about overlapping saves and logs who saved each PermaProp.
 
 
 **Detailed Explanation:**
@@ -141,6 +142,7 @@ Listens for death and character-switch events, automatically exiting prone to av
 
 * Recreates SAM chat commands via Lilia’s command system.
 
+* Includes utilities such as playtime tracking and blind commands.
 
 * Checks staff privileges before executing sensitive commands.
 
@@ -154,6 +156,7 @@ Mirrors SAM commands and enforces Lilia’s permission checks so admins can use 
 ## [ServerGuard](https://www.gmodstore.com/market/view/serverguard)
 
 **Compatibility Highlights:**
+* Translates Lilia admin commands to their ServerGuard equivalents.
 
 * Disables the built-in restrictions plugin so Lilia can manage permissions.
 
@@ -171,6 +174,7 @@ Turns off ServerGuard’s restriction module to ensure a single consistent permi
 * Applies crash damage to drivers on vehicle collisions.
 
 
+* Blocks Sit Anywhere seating on Simfphys vehicles.
 * Adds configuration options for seat damage and entry delays.
 
 
@@ -192,6 +196,7 @@ Drivers only take damage when the vehicle is struck near their seat and a config
 
 * Prevents sitting on players or vehicles.
 
+* Applies anti-prop-surf and tool-abuse protections.
 
 * Enables seat damage by default.
 
@@ -206,6 +211,7 @@ Adjusts console settings and seat interactions to prevent trolling while maintai
 
 **Compatibility Highlights:**
 
+* Routes Lilia admin commands through ULX for consistent moderation.
 * Removes obsolete hooks that conflict with recent versions of CAMI.
 
 
@@ -223,7 +229,7 @@ Keeps CAMI and ULX in sync so admin ranks and permissions behave correctly withi
 **Compatibility Highlights:**
 
 * Redirects VCMod money hooks to a character’s funds.
-
+* Checks vehicle purchases against the character's wallet.
 
 **Detailed Explanation:**
 
@@ -235,6 +241,7 @@ Forwards vehicle purchase and upgrade transactions to the roleplay money system,
 
 **Compatibility Highlights:**
 
+* Removes unprotected VJBase spawners and flags NPCs notarget.
 * Blocks dangerous network messages.
 
 
