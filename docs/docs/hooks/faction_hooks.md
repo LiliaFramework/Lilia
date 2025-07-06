@@ -12,32 +12,20 @@ These hooks belong to tables under `schema/factions` and are most often used to 
 
 Each faction can implement these shared- and server-side hooks to control how characters are initialized, described, and handled as they move through creation, spawning, and transfers. All hooks are optional; if you omit a hook, default behavior applies.
 
+
 ### NameTemplate
 
-```lua
-function FACTION:NameTemplate(client)
-    -- return string name, bool override
-end
-```
+Description: Generates a custom character name before defaults are applied.
 
-**Description:**
+Parameters:
+- `client` (Player): the player creating the character
 
-Allows you to supply a custom character name before any prefix or default logic is used. The engine also checks for `nameTemplate` (lower-case `n`) for backwards compatibility. If you return `true` as the second value, the returned name is used directly and no further processing occurs.
+Realm: Shared
 
-**Parameters:**
+Returns:
+- `string`, `boolean`: generated name and whether to bypass default naming
 
-* `client` (`Player`) – The player creating the character.
-
-**Returns:**
-
-* `string`, `boolean` – The generated name and whether to skip default processing.
-
-**Realm:**
-
-* Shared
-
-**Example Usage:**
-
+Example Usage:
 ```lua
 function FACTION:NameTemplate(client)
     -- Prefix a random callsign with the faction name.
@@ -49,64 +37,38 @@ end
 
 ### GetDefaultName
 
-```lua
-function FACTION:GetDefaultName(client)
-    -- return string name
-end
-```
+Description: Retrieves the default character name for this faction.
 
-**Description:**
+Parameters:
+- `client` (Player): the client requesting the name
 
-Retrieves the default name for a newly created character in this faction. The
+Realm: Shared
 
-returned string is used as the base name before any prefix or other logic is
+Returns:
+- `string`: the generated name
 
-applied.
-
-**Parameters:**
-
-* `client` (`Player`) – The client for whom the default name is being generated.
-
-**Returns:**
-
-* `string` – The generated name.
-
-**Realm:**
-
-* Shared
-
-**Example Usage:**
-
+Example Usage:
 ```lua
 function FACTION:GetDefaultName(client)
     -- Base the callsign on the player's account ID for consistency.
     return "Recruit-" .. client:AccountID()
 end
 ```
-
 ---
 
 ### OnSpawn
 
-```lua
-function FACTION:OnSpawn(client)
-end
-```
+Description: Executes whenever a faction member spawns during loadout.
 
-Runs each time a faction member spawns while `FactionOnLoadout` is processing. Use
+Parameters:
+- `client` (Player): the player who has just spawned
 
-this to configure per-player attributes, grant equipment or send notifications.
+Realm: Server
 
-**Parameters:**
+Returns:
+- `nil`: none
 
-* `client` (`Player`) – The player who has just spawned.
-
-**Realm:**
-
-* Server
-
-**Example Usage:**
-
+Example Usage:
 ```lua
 function FACTION:OnSpawn(client)
     -- Restore stats and hand out default weapons.
@@ -118,118 +80,74 @@ function FACTION:OnSpawn(client)
     end
 end
 ```
-
 ---
 
 ### GetDefaultDesc
 
+Description: Provides the default description for a newly created character.
+
+Parameters:
+- `client` (Player): the client for whom the description is generated
+
+Realm: Shared
+
+Returns:
+- `string`: the description text
+
+Example Usage:
 ```lua
 function FACTION:GetDefaultDesc(client)
-    -- return string desc
-end
-```
-
-**Description:**
-
-Retrieves the default description for a newly created character in this faction.
-
-The returned text becomes the character's description if no other value is
-
-provided.
-
-**Parameters:**
-
-* `client` (`Player`) – The client for whom the default description is being generated.
-
-**Returns:**
-
-* `string` – The description text.
-
-**Realm:**
-
-* Shared
-
-**Example Usage:**
-
-```lua
-function FACTION:GetDefaultDesc(client)
-    -- Provide a short biography for new members.
+    -- Use the name as part of a simple biography.
     local callsign = self:GetDefaultName(client)
     return string.format("%s recently enlisted and is eager for duty.", callsign)
 end
 ```
-
 ---
 
 
 
 ### OnTransferred
 
+Description: Runs after a player is moved into this faction from another.
+
+Parameters:
+- `client` (Player): the player that was transferred
+- `oldFaction` (number): index of the previous faction
+
+Realm: Server
+
+Returns:
+- `nil`: none
+
+Example Usage:
 ```lua
 function FACTION:OnTransferred(client, oldFaction)
-end
-```
-
-**Description:**
-
-Executes after a player has been moved into this faction (whether by an admin or scripted transfer). The previous faction index is provided so you can clean up state or notify the player.
-
-**Parameters:**
-
-* `client` (`Player`) – The player that was moved into this faction.
-
-* `oldFaction` (`number`) – The index of the faction the player came from.
-
-
-**Realm:**
-
-* Server
-
-
-**Example Usage:**
-
-```lua
-function FACTION:OnTransferred(client, oldFaction)
-    -- Swap the player's model and notify them of the transfer.
     local char = client:getChar()
     if char and istable(self.models) then
+        -- Choose a random uniform for the new faction.
         char:setModel(self.models[math.random(#self.models)])
     end
 
+    -- Notify the player about the transfer.
     client:notify(string.format("Joined %s from faction #%d", self.name, oldFaction))
 end
 ```
-
 ---
 
 ### OnCheckLimitReached
 
-```lua
-function FACTION:OnCheckLimitReached(character, client)
-    -- return boolean
-end
-```
+Description: Determines if the faction has reached its player limit.
 
-**Description:**
+Parameters:
+- `character` (Character): the character attempting to join
+- `client` (Player): the owner of that character
 
-Called when the game checks whether this faction has reached its player limit. Return `true` to block the player from joining, or `false`/`nil` to allow them.
+Realm: Shared
 
-**Parameters:**
+Returns:
+- `boolean`: whether the limit is reached
 
-* `character` (`Character`) – The character attempting to join the faction.
-
-* `client` (`Player`) – The player owning that character.
-
-**Realm:**
-
-* Shared
-
-**Returns:**
-
-* `boolean` – Whether the faction limit is considered reached.
-
-**Example Usage:**
-
+Example Usage:
 ```lua
 function FACTION:OnCheckLimitReached(character, client)
     -- Allow admins to bypass the limit.
@@ -241,4 +159,3 @@ function FACTION:OnCheckLimitReached(character, client)
     return lia.faction.getPlayerCount(self.index) >= maxMembers
 end
 ```
-

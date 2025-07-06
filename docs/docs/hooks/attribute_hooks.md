@@ -12,39 +12,29 @@ Attributes may define callback functions that run when a player's attribute tabl
 
 ### OnSetup
 
-```lua
-function ATTRIBUTE:OnSetup(client, value)
-```
+Description: Called whenever `lia.attribs.setup` initializes or refreshes this attribute for a player.
 
-**Description:**
+Parameters:
+- `client` (Player): the player that owns the attribute
+- `value` (number): current attribute value including temporary boosts
 
-Called on the server whenever `lia.attribs.setup(client)` initializes or refreshes a player's attributes. This typically happens after a character spawns, or whenever the function is run manually. The hook does **not** fire when attribute boosts are added or removed. Use it to apply any server‑side effects based on the attribute's current value.
+Realm: Server
 
-**Parameters:**
+Returns:
+- `nil`: none
 
-* `client` (`Player`) – The player that owns the attribute.
-
-* `value` (`number`) – The attribute's value returned by `character:getAttrib`, including temporary boosts.
-
-**Realm:**
-
-* Server
-
-**Returns:**
-
-* None
-
-**Example Usage:**
-
+Example Usage:
 ```lua
 function ATTRIBUTE:OnSetup(client, value)
     -- Apply movement bonuses based on this attribute level.
-    local baseRun = lia.config.get("RunSpeed")
-    client:SetRunSpeed(baseRun + value * 5)
+    client:SetRunSpeed(lia.config.get("RunSpeed") + value * 5)
+    client:SetJumpPower(client:GetJumpPower() + value * 2)
 
-    -- Slightly increase jump height as well.
-    local baseJump = client:GetJumpPower()
-    client:SetJumpPower(baseJump + value * 2)
+    -- Expand the character's carry weight by one kilogram per point.
+    local char = client:getChar()
+    if char then
+        char:setData("maxCarry", 15 + value)
+    end
 end
 ```
 
