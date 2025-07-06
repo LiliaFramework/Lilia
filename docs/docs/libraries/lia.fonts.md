@@ -6,9 +6,9 @@ This page lists utilities for creating fonts.
 
 ## Overview
 
-The fonts library wraps `surface.CreateFont` for commonly used fonts. It avoids duplication by registering fonts once and allowing them to be recalled by name. Every call to `surface.CreateFont` is intercepted so the data is stored and automatically refreshed when the screen resolution or relevant configuration options change.
+The fonts library wraps `surface.CreateFont` for commonly used fonts. It registers each font once, stores the definition, and then re-creates those fonts automatically when the screen resolution or relevant config values change.
 
-Fonts are refreshed automatically whenever `RefreshFonts` is run and the `PostLoadFonts` hook will then be called with the current font choices. Register custom fonts inside this hook so they persist across refreshes.
+Fonts are refreshed whenever `lia.font.refresh` runs; afterward, the `PostLoadFonts` hook fires with the current UI and generic font names. Register custom fonts inside that hook so they persist across refreshes.
 
 ---
 
@@ -16,12 +16,13 @@ Fonts are refreshed automatically whenever `RefreshFonts` is run and the `PostLo
 
 **Purpose**
 
-Creates and stores a font using `surface.CreateFont`; the font is kept in an internal list for later recreation.
+Creates and stores a font via `surface.CreateFont`. The definition is kept in an internal list so the font can be regenerated later.
 
 **Parameters**
 
 * `fontName` (*string*): Font identifier.
-* `fontData` (*table*): Font properties table.
+
+* `fontData` (*table*): Font properties table (family, size, weight, etc.).
 
 **Realm**
 
@@ -29,12 +30,12 @@ Creates and stores a font using `surface.CreateFont`; the font is kept in an int
 
 **Returns**
 
-* `nil`: None.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- Register a new font after the default fonts have loaded
+-- Register a custom font after default fonts reload
 hook.Add("PostLoadFonts", "ExampleFont", function()
     lia.font.register("MyFont", {
         font = "Arial",
@@ -50,11 +51,11 @@ end)
 
 **Purpose**
 
-Returns an alphabetically sorted table of the font names that have been registered.
+Returns an alphabetically sorted list of all font identifiers that have been registered.
 
 **Parameters**
 
-* None
+* *None*
 
 **Realm**
 
@@ -62,7 +63,7 @@ Returns an alphabetically sorted table of the font names that have been register
 
 **Returns**
 
-* `table`: Array of font name strings.
+* *table*: Array of font-name strings.
 
 **Example**
 
@@ -79,11 +80,11 @@ end
 
 **Purpose**
 
-Recreates all stored fonts from the internal list. This runs automatically when the screen resolution changes or when the `Font` or `GenericFont` configs update. Once complete it fires `PostLoadFonts` with `currentFont` and `genericFont`.
+Recreates every stored font definition. This function runs automatically when screen resolution changes or when the `Font` / `GenericFont` configs update. After recreating the fonts, it triggers the `PostLoadFonts` hook with the active `currentFont` and `genericFont`.
 
 **Parameters**
 
-* None
+* *None*
 
 **Realm**
 
@@ -91,16 +92,18 @@ Recreates all stored fonts from the internal list. This runs automatically when 
 
 **Returns**
 
-* `nil`: None.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- Force fonts to reload
+-- Manually trigger a font refresh
 hook.Run("RefreshFonts")
 
--- React after fonts load
+-- React after fonts are reloaded
 hook.Add("PostLoadFonts", "NotifyReload", function(cur, gen)
     print("Fonts loaded:", cur, gen)
 end)
 ```
+
+---

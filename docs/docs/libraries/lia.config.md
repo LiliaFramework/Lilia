@@ -6,7 +6,7 @@ This page explains how to add and access configuration settings.
 
 ## Overview
 
-The config library stores server configuration values with descriptions and default settings. It also provides callbacks when values change so modules can react to new options.
+The config library stores server configuration values with descriptions and default settings. It also provides callbacks when values change, so modules can react to new options.
 
 ---
 
@@ -14,15 +14,19 @@ The config library stores server configuration values with descriptions and defa
 
 **Purpose**
 
-Registers a new config option with the given key, display name, default value and optional callback or data.
+Registers a new config option with the given key, display name, default value, and optional callback or data.
 
 **Parameters**
 
 * `key` (*string*): Unique identifier for the option.
+
 * `name` (*string*): Display name shown in menus.
+
 * `value` (*any*): Default stored value.
-* `callback` (*function*): Function run when the value changes. Optional.
-* `data` (*table*): Additional fields such as `desc`, `category`, `type`, `min`, `max`, `decimals`, `options` and `noNetworking`.
+
+* `callback` (*function*): Function run when the value changes. *Optional*.
+
+* `data` (*table*): Additional fields such as `desc`, `category`, `type`, `min`, `max`, `decimals`, `options`, and `noNetworking`.
 
 **Realm**
 
@@ -30,12 +34,12 @@ Registers a new config option with the given key, display name, default value an
 
 **Returns**
 
-* *nil*: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- Register a config option with limits and a callback
+-- Register a walk-speed option with limits and a callback
 lia.config.add(
     "walkSpeed",
     "Walk Speed",
@@ -57,7 +61,6 @@ lia.config.add(
 
 ---
 
-
 ### lia.config.setDefault
 
 **Purpose**
@@ -67,6 +70,7 @@ Changes the stored default for an existing config option without affecting its c
 **Parameters**
 
 * `key` (*string*): Key identifying the option.
+
 * `value` (*any*): New default value.
 
 **Realm**
@@ -75,7 +79,7 @@ Changes the stored default for an existing config option without affecting its c
 
 **Returns**
 
-* *nil*: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -83,20 +87,22 @@ Changes the stored default for an existing config option without affecting its c
 -- Update the default maximum players
 lia.config.setDefault("maxPlayers", 32)
 ```
----
 
+---
 
 ### lia.config.forceSet
 
 **Purpose**
 
-Sets a config value directly without running callbacks or networking the update. The value is saved unless `noSave` is true.
+Sets a config value directly without running callbacks or networking the update. The value is saved unless `noSave` is `true`.
 
 **Parameters**
 
 * `key` (*string*): Key identifying the option.
+
 * `value` (*any*): New value to set.
-* `noSave` (*boolean*): If true, value is not written to disk.
+
+* `noSave` (*boolean*): If `true`, value is not written to disk.
 
 **Realm**
 
@@ -104,25 +110,26 @@ Sets a config value directly without running callbacks or networking the update.
 
 **Returns**
 
-* *nil*: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
 lia.config.forceSet("someSetting", true, true)
 ```
----
 
+---
 
 ### lia.config.set
 
 **Purpose**
 
-Sets a config value, saves it server side, triggers callbacks with the old and new values and networks the update unless the config is marked `noNetworking`.
+Sets a config value, saves it server-side, triggers callbacks with the old and new values, and networks the update unless the config is marked `noNetworking`.
 
 **Parameters**
 
 * `key` (*string*): Key identifying the option.
+
 * `value` (*any*): New value to set.
 
 **Realm**
@@ -131,13 +138,14 @@ Sets a config value, saves it server side, triggers callbacks with the old and n
 
 **Returns**
 
-* *nil*: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
 lia.config.set("maxPlayers", 24)
 ```
+
 ---
 
 ### lia.config.get
@@ -149,6 +157,7 @@ Retrieves the current value of a config entry. If unset, returns the stored defa
 **Parameters**
 
 * `key` (*string*): Key identifying the config option.
+
 * `default` (*any*): Value to return if the config is not found.
 
 **Realm**
@@ -164,6 +173,7 @@ Retrieves the current value of a config entry. If unset, returns the stored defa
 ```lua
 local players = lia.config.get("maxPlayers", 64)
 ```
+
 ---
 
 ### lia.config.load
@@ -182,7 +192,7 @@ Loads config values from the database and stores them in `lia.config`. Missing e
 
 **Returns**
 
-* *nil*: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -222,11 +232,11 @@ local changed = lia.config.getChangedValues()
 
 **Purpose**
 
-Sends all changed config values to a client. If no client is provided the values are broadcast to everyone.
+Sends all changed config values to a client. If no client is provided, the values are broadcast to everyone.
 
 **Parameters**
 
-* `client` (*player*): Player to receive the config data.
+* `client` (*Player*): Player to receive the config data.
 
 **Realm**
 
@@ -234,17 +244,17 @@ Sends all changed config values to a client. If no client is provided the values
 
 **Returns**
 
-* *nil*: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
+-- Broadcast current config to every player
 lia.config.send()
 ```
 
 ---
 
-```
 ### lia.config.save
 
 **Purpose**
@@ -261,7 +271,7 @@ Writes all changed config values to the database so they persist across restarts
 
 **Returns**
 
-* *nil*: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -275,7 +285,7 @@ lia.config.save()
 
 **Purpose**
 
-Migrates legacy config files from `data/lilia` into the `lia_config` SQL table. Players are prevented from joining while this runs. If `changeMap` is true, the current map reloads when finished.
+Migrates legacy config files from `data/lilia` into the `lia_config` SQL table. Players are prevented from joining while this runs. If `changeMap` is `true`, the current map reloads when finished.
 
 **Parameters**
 
@@ -287,10 +297,12 @@ Migrates legacy config files from `data/lilia` into the `lia_config` SQL table. 
 
 **Returns**
 
-* *nil*: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
 lia.config.convertToDatabase(true)
 ```
+
+---

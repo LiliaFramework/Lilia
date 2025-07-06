@@ -6,7 +6,7 @@ This page covers markup parsing helpers.
 
 ## Overview
 
-The markup library parses a subset of HTML-like tags for drawing rich text in chat panels. It handles basic color, size, and font formatting.
+The markup library parses a subset of HTML-like tags for drawing rich text in chat panels. It handles basic colour, size, and font formatting.
 
 ---
 
@@ -19,7 +19,8 @@ Parses markup text and returns a markup object that handles wrapping and drawing
 **Parameters**
 
 * `text` (*string*): Markup string to parse.
-* `maxwidth` (*number|nil*): Optional maximum width for wrapping.
+
+* `maxwidth` (*number | nil*): Maximum width for wrapping. *Optional*.
 
 **Realm**
 
@@ -27,7 +28,7 @@ Parses markup text and returns a markup object that handles wrapping and drawing
 
 **Returns**
 
-* `MarkupObject`: Parsed markup object with size information.
+* *MarkupObject*: Parsed markup object with size information.
 
 **Example**
 
@@ -36,15 +37,17 @@ local object = lia.markup.parse("<color=255,0,0>Hello world!</color>", 200)
 print(object:getWidth(), object:getHeight())
 ```
 
-### MarkupObject:create
+---
+
+### MarkupObject\:create
 
 **Purpose**
 
-Constructs an empty markup object. Usually returned by `lia.markup.parse`.
+Constructs an empty markup object (usually returned by `lia.markup.parse`).
 
 **Parameters**
 
-* None
+* *None*
 
 **Realm**
 
@@ -52,26 +55,29 @@ Constructs an empty markup object. Usually returned by `lia.markup.parse`.
 
 **Returns**
 
-* `MarkupObject`: Newly constructed object with zero size.
+* *MarkupObject*: Newly constructed object with zero size.
+
 **Example**
 
 ```lua
 local obj = lia.markup.MarkupObject:create()
 ```
 
-### MarkupObject Fields
+---
 
-`MarkupObject` instances returned from `lia.markup.parse` expose a few useful properties:
+### MarkupObject fields
 
-* `totalWidth` (number) – Total width in pixels of all text blocks.
+* `totalWidth` (*number*) – Total width in pixels of all text blocks.
 
-* `totalHeight` (number) – Overall height in pixels.
+* `totalHeight` (*number*) – Overall height in pixels.
 
-* `blocks` (table) – Internal table describing each parsed block.
+* `blocks` (*table*) – Internal table describing each parsed block.
 
-* `onDrawText` (function|nil) – Callback used by `:draw` when set.
+* `onDrawText` (*function | nil*) – Callback used by `:draw` when set.
 
-### MarkupObject:getWidth
+---
+
+### MarkupObject\:getWidth
 
 **Purpose**
 
@@ -79,7 +85,7 @@ Returns the pixel width of the parsed markup text.
 
 **Parameters**
 
-* None
+* *None*
 
 **Realm**
 
@@ -87,7 +93,7 @@ Returns the pixel width of the parsed markup text.
 
 **Returns**
 
-* `number`: Width in pixels.
+* *number*: Width in pixels.
 
 **Example**
 
@@ -95,7 +101,10 @@ Returns the pixel width of the parsed markup text.
 local obj = lia.markup.parse("<font=liaBigFont>Hello</font>")
 print(obj:getWidth())
 ```
-### MarkupObject:getHeight
+
+---
+
+### MarkupObject\:getHeight
 
 **Purpose**
 
@@ -103,7 +112,7 @@ Returns the pixel height of the parsed markup text.
 
 **Parameters**
 
-* None
+* *None*
 
 **Realm**
 
@@ -111,7 +120,7 @@ Returns the pixel height of the parsed markup text.
 
 **Returns**
 
-* `number`: Height in pixels.
+* *number*: Height in pixels.
 
 **Example**
 
@@ -120,7 +129,9 @@ local obj = lia.markup.parse("<font=liaBigFont>Hello</font>")
 print(obj:getHeight())
 ```
 
-### MarkupObject:size
+---
+
+### MarkupObject\:size
 
 **Purpose**
 
@@ -128,7 +139,7 @@ Returns both width and height of the markup object.
 
 **Parameters**
 
-* None
+* *None*
 
 **Realm**
 
@@ -136,7 +147,7 @@ Returns both width and height of the markup object.
 
 **Returns**
 
-* `number`, `number`: Width and height in pixels.
+* *number*, *number*: Width and height in pixels.
 
 **Example**
 
@@ -145,7 +156,9 @@ local obj = lia.markup.parse("<font=liaBigFont>Hello</font>")
 local w, h = obj:size()
 ```
 
-### MarkupObject:draw
+---
+
+### MarkupObject\:draw
 
 **Purpose**
 
@@ -154,10 +167,14 @@ Draws the markup object at the specified screen position.
 **Parameters**
 
 * `x` (*number*): X position.
+
 * `y` (*number*): Y position.
-* `halign` (*number|nil*): Horizontal text alignment.
-* `valign` (*number|nil*): Vertical text alignment.
-* `alpha` (*number|nil*): Optional alpha override.
+
+* `halign` (*number | nil*): Horizontal alignment. *Optional*.
+
+* `valign` (*number | nil*): Vertical alignment. *Optional*.
+
+* `alpha` (*number | nil*): Alpha override. *Optional*.
 
 **Realm**
 
@@ -165,26 +182,37 @@ Draws the markup object at the specified screen position.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
 local obj = lia.markup.parse("<color=0,255,0>Welcome</color>", 300)
+
 hook.Add("HUDPaint", "DrawWelcome", function()
-    obj:draw(ScrW() / 2, ScrH() / 2, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 200)
+    obj:draw(
+        ScrW() / 2,
+        ScrH() / 2,
+        TEXT_ALIGN_CENTER,
+        TEXT_ALIGN_CENTER,
+        200
+    )
 end)
 ```
-### liaMarkupPanel:setMarkup
+
+---
+
+### liaMarkupPanel\:setMarkup
 
 **Purpose**
 
-Configures a `liaMarkupPanel` to display markup text with optional custom drawing.
+Configures a `liaMarkupPanel` to display markup text with an optional custom draw callback.
 
 **Parameters**
 
-* `text` (*string*): Markup text to render.
-* `onDrawText` (*function|nil*): Callback executed before each block is drawn.
+* `text` (*string*): Markup to render.
+
+* `onDrawText` (*function | nil*): Callback executed before each block is drawn. *Optional*.
 
 **Realm**
 
@@ -192,15 +220,20 @@ Configures a `liaMarkupPanel` to display markup text with optional custom drawin
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
 local panel = vgui.Create("liaMarkupPanel")
 panel:SetWide(300)
-panel:setMarkup("<font=liaMediumFont>Hi there!</font>", function(text, font, x, y, color)
-    draw.SimpleText(text, font, x, y, color)
-end)
+
+panel:setMarkup(
+    "<font=liaMediumFont>Hi there!</font>",
+    function(text, font, x, y, colour)
+        draw.SimpleText(text, font, x, y, colour)
+    end
+)
 ```
 
+---

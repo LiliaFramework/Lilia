@@ -1,12 +1,8 @@
 # Attribute Hooks
 
-This document lists hooks related to attribute setup events.
+Attributes may define callbacks that run when a player's attribute table is set up.
 
----
-
-## Overview
-
-Attributes may define callback functions that run when a player's attribute table is being set up. These functions live on the `ATTRIBUTE` table of each attribute definition.  At the moment the only built‑in hook is `OnSetup`, which is executed for each attribute whenever `lia.attribs.setup(client)` runs on the server.
+These functions live on each attribute’s `ATTRIBUTE` table.
 
 ---
 
@@ -18,8 +14,9 @@ Called whenever `lia.attribs.setup` initializes or refreshes this attribute for 
 
 **Parameters**
 
-* `client` (*Player*): the player that owns the attribute.
-* `value` (*number*): current attribute value including temporary boosts.
+* `client` (`Player`): The player that owns the attribute.
+
+* `value` (`number`): Current attribute value including temporary boosts.
 
 **Realm**
 
@@ -27,9 +24,10 @@ Called whenever `lia.attribs.setup` initializes or refreshes this attribute for 
 
 **Returns**
 
-* `nil`: none.
+* `nil`: This function does not return a value.
 
 **Example**
+
 ```lua
 function ATTRIBUTE:OnSetup(client, value)
     -- Apply movement bonuses based on this attribute level.
@@ -45,4 +43,3 @@ end
 ```
 
 ---
-

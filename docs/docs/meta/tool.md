@@ -1,18 +1,23 @@
 # Tool Meta
 
-The ToolGun interacts with the world through specialized meta functions. This guide lists utilities for object manipulation and ghost entity management.
+The ToolGun interacts with the world through specialized meta functions.
+
+This guide lists utilities for object manipulation and ghost entity management.
 
 ---
 
 ## Overview
 
-Tool meta functions track hovered entities, create ghost previews, and wrap common building operations. They ensure consistent behavior across custom tools in Lilia.
+Tool meta functions track hovered entities, create ghost previews, and wrap common building operations.
+
+They ensure consistent behavior across custom tools in Lilia.
 
 ---
 
 ### Create
 
 **Purpose**
+
 Creates a new tool object with default values.
 
 **Parameters**
@@ -20,6 +25,7 @@ Creates a new tool object with default values.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -41,6 +47,7 @@ tool.Owner = client -- client that spawned the tool
 ### CreateConVars
 
 **Purpose**
+
 Creates client and server ConVars for this tool.
 
 **Parameters**
@@ -48,6 +55,7 @@ Creates client and server ConVars for this tool.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -66,13 +74,15 @@ tool:CreateConVars()
 ### GetServerInfo
 
 **Purpose**
+
 Returns the server ConVar for the given property.
 
 **Parameters**
 
-* `property` (string): Property name.
+* `property` (*string*): Property name.
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -91,6 +101,7 @@ local allow = tool:GetServerInfo("allow_use"):GetBool()
 ### BuildConVarList
 
 **Purpose**
+
 Returns a table of client ConVars prefixed by the tool mode.
 
 **Parameters**
@@ -98,6 +109,7 @@ Returns a table of client ConVars prefixed by the tool mode.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -116,13 +128,15 @@ local cvars = tool:BuildConVarList()
 ### GetClientInfo
 
 **Purpose**
+
 Retrieves a client ConVar value as a string.
 
 **Parameters**
 
-* `property` (string): ConVar name without mode prefix.
+* `property` (*string*): ConVar name without mode prefix.
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -141,14 +155,17 @@ local mat = tool:GetClientInfo("material")
 ### GetClientNumber
 
 **Purpose**
+
 Retrieves a numeric client ConVar value.
 
 **Parameters**
 
-* `property` (string): ConVar name without mode prefix.
-* `default` (number): Value returned if the ConVar doesn't exist.
+* `property` (*string*): ConVar name without mode prefix.
+
+* `default` (*number*): Value returned if the ConVar doesn't exist.
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -167,6 +184,7 @@ local power = tool:GetClientNumber("power", 10)
 ### Allowed
 
 **Purpose**
+
 Determines whether this tool is allowed to be used.
 
 **Parameters**
@@ -174,6 +192,7 @@ Determines whether this tool is allowed to be used.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -194,6 +213,7 @@ end
 ### Init
 
 **Purpose**
+
 Placeholder for tool initialization.
 
 **Parameters**
@@ -201,6 +221,7 @@ Placeholder for tool initialization.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -221,6 +242,7 @@ end
 ### GetMode
 
 **Purpose**
+
 Gets the current tool mode string.
 
 **Parameters**
@@ -228,6 +250,7 @@ Gets the current tool mode string.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -246,6 +269,7 @@ local result = tool:GetMode()
 ### GetSWEP
 
 **Purpose**
+
 Returns the SWEP associated with this tool.
 
 **Parameters**
@@ -253,6 +277,7 @@ Returns the SWEP associated with this tool.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -271,6 +296,7 @@ local result = tool:GetSWEP()
 ### GetOwner
 
 **Purpose**
+
 Returns the player who owns the associated weapon.
 
 **Parameters**
@@ -278,6 +304,7 @@ Returns the player who owns the associated weapon.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -297,6 +324,7 @@ print(owner:Name())
 ### GetWeapon
 
 **Purpose**
+
 Retrieves the weapon entity this tool is attached to.
 
 **Parameters**
@@ -304,6 +332,7 @@ Retrieves the weapon entity this tool is attached to.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -322,6 +351,7 @@ local result = tool:GetWeapon()
 ### LeftClick
 
 **Purpose**
+
 Handles the left-click action. Override for custom behavior.
 
 **Parameters**
@@ -329,6 +359,7 @@ Handles the left-click action. Override for custom behavior.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -350,6 +381,7 @@ end
 ### RightClick
 
 **Purpose**
+
 Handles the right-click action. Override for custom behavior.
 
 **Parameters**
@@ -357,6 +389,7 @@ Handles the right-click action. Override for custom behavior.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -378,6 +411,7 @@ end
 ### Reload
 
 **Purpose**
+
 Clears stored objects when the tool reloads.
 
 **Parameters**
@@ -385,6 +419,7 @@ Clears stored objects when the tool reloads.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -405,6 +440,7 @@ end
 ### Deploy
 
 **Purpose**
+
 Called when the tool is equipped. Releases ghost entity.
 
 **Parameters**
@@ -412,6 +448,7 @@ Called when the tool is equipped. Releases ghost entity.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -432,6 +469,7 @@ end
 ### Holster
 
 **Purpose**
+
 Called when the tool is holstered. Releases ghost entity.
 
 **Parameters**
@@ -439,6 +477,7 @@ Called when the tool is holstered. Releases ghost entity.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -459,6 +498,7 @@ end
 ### Think
 
 **Purpose**
+
 Called every tick; releases ghost entities by default.
 
 **Parameters**
@@ -466,6 +506,7 @@ Called every tick; releases ghost entities by default.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -486,6 +527,7 @@ end
 ### CheckObjects
 
 **Purpose**
+
 Validates stored objects and clears them if invalid.
 
 **Parameters**
@@ -493,6 +535,7 @@ Validates stored objects and clears them if invalid.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -511,6 +554,7 @@ local result = tool:CheckObjects()
 ### ClearObjects
 
 **Purpose**
+
 Removes all stored objects from the tool.
 
 **Parameters**
@@ -518,6 +562,7 @@ Removes all stored objects from the tool.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
@@ -536,6 +581,7 @@ local result = tool:ClearObjects()
 ### ReleaseGhostEntity
 
 **Purpose**
+
 Removes the ghost entity used for previewing placements.
 
 **Parameters**
@@ -543,6 +589,7 @@ Removes the ghost entity used for previewing placements.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**

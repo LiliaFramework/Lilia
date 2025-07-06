@@ -12,101 +12,79 @@ The commands library registers console and chat commands. It parses arguments, c
 
 ### lia.command.add
 
-**Description:**
+**Purpose**
 
-Registers a new command with its associated data.
+Registers a new command with its associated data. See [Command Fields](../definitions/command.md) for available keys in the `data` table.
 
-See [Command Fields](../definitions/command.md) for a list of
+**Parameters**
 
-available keys in the `data` table.
+* `command` (*string*): Command name.
 
-**Parameters:**
+* `data` (*table*): Table containing command properties.
 
-* `command` (`string`) – Command name.
+**Realm**
 
+`Shared`
 
-* `data` (`table`) – Table containing command properties.
+**Returns**
 
+* *nil*: This function does not return a value.
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Register a simple warn command for administrators
-    lia.command.add("warn", {
-        adminOnly = true,
-        syntax = "[player Target] [string Reason]",
-        desc = "Send a warning message to the target player.",
-        onRun = function(client, args)
-            local target = lia.util.findPlayer(client, args[1])
-            if not target then
-                return "@targetNotFound"
-            end
-
-            local reason = table.concat(args, " ", 2)
-            target:ChatPrint("[WARN] " .. reason)
+-- Register a simple warn command for administrators
+lia.command.add("warn", {
+    adminOnly = true,
+    syntax = "[player Target] [string Reason]",
+    desc = "Send a warning message to the target player.",
+    onRun = function(client, args)
+        local target = lia.util.findPlayer(client, args[1])
+        if not target then
+            return "@targetNotFound"
         end
-    })
+
+        local reason = table.concat(args, " ", 2)
+        target:ChatPrint("[WARN] " .. reason)
+    end
+})
 ```
+
+---
 
 ### lia.command.hasAccess
 
-**Description:**
+**Purpose**
 
-Determines if a player may run the specified command.
+Determines if a player may run the specified command. Before checking CAMI privileges, the function consults the `CanPlayerUseCommand` hook. If that hook returns `true` or `false`, the result overrides default permission logic. Factions and classes can also whitelist commands by adding them to a `commands` table on their definition.
 
-Before checking CAMI privileges, the function consults the
+**Parameters**
 
-`CanPlayerUseCommand` hook. If that hook returns either `true` or
+* `client` (*Player*): Command caller.
 
-`false`, the result overrides the default permission logic. In
+* `command` (*string*): Command name.
 
-addition, factions and classes can whitelist commands by placing them
+* `data` (*table*): Command data table.
 
-in a `commands` table on their definition.
+**Realm**
 
-**Parameters:**
+`Shared`
 
-* `client` (`Player`) – Command caller.
+**Returns**
 
+* *boolean*: Whether access is granted.
 
-* `command` (`string`) – Command name.
+* *string*: Privilege checked.
 
-
-* `data` (`table`) – Command data table.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean – Whether access is granted.
-
-
-* string – Privilege checked.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
 -- Whitelist `/plytransfer` for the "Staff" faction
 FACTION.commands = {
-    plytransfer = true,
+    plytransfer = true
 }
 
--- Globally block a command for non-admins via hook
+-- Globally block a command for non-admins
 hook.Add("CanPlayerUseCommand", "BlockReserve", function(client, cmd)
     if cmd == "reserve" and not client:IsAdmin() then
         return false
@@ -114,283 +92,219 @@ hook.Add("CanPlayerUseCommand", "BlockReserve", function(client, cmd)
 end)
 ```
 
+---
+
 ### lia.command.extractArgs
 
-**Description:**
+**Purpose**
 
-Splits the provided text into arguments, respecting quotes.
+Splits the provided text into arguments, respecting quotes. Quoted sections are treated as single arguments.
 
-Quoted sections are treated as single arguments.
+**Parameters**
 
-**Parameters:**
+* `text` (*string*): Raw input text to parse.
 
-* `text` (`string`) – The raw input text to parse.
+**Realm**
 
+`Shared`
 
-**Realm:**
+**Returns**
 
-* Shared
+* *table*: List of arguments extracted from the text.
 
-
-**Returns:**
-
-* table – A list of arguments extracted from the text.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.command.extractArgs
-    local args = lia.command.extractArgs('/mycommand "quoted arg" anotherArg')
-    -- args = {"quoted arg", "anotherArg"}
+local args = lia.command.extractArgs('/mycommand "quoted arg" anotherArg')
+-- args = { "quoted arg", "anotherArg" }
 ```
 
 ---
 
 ### lia.command.parseSyntaxFields
 
-**Description:**
+**Purpose**
 
-Parses a command syntax string into an ordered list of field tables.
+Parses a command syntax string into an ordered list of field tables. Each field contains a `name`, a `type`, and an `optional` flag derived from the syntax.
 
-Each field contains a name and a type derived from the syntax. If the word
+**Parameters**
 
-`optional` appears inside a field's brackets, that field is treated as
+* `syntax` (*string*): Syntax string, e.g. `[string Name] [number Time]`.
 
-optional when prompting for arguments.
+**Realm**
 
-**Parameters:**
+`Shared`
 
-* `syntax` (`string`) – The syntax string, e.g. "[string Name] [number Time]".
+**Returns**
 
+* *table*: Ordered list of field tables.
 
-**Realm:**
+* *boolean*: Whether the syntax strictly used the `[type Name]` format.
 
-* Shared
-
-
-**Returns:**
-
-* table – List of fields in call order. Each field table includes `name`,
-
-  `type`, and an `optional` boolean.
-
-
-* boolean – Whether the syntax strictly used the "[type Name]" format.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Extract field data from a syntax string
-    local fields, valid = lia.command.parseSyntaxFields("[string Name] [number Time]")
+local fields, valid = lia.command.parseSyntaxFields("[string Name] [number Time]")
 ```
 
 ---
 
 ### lia.command.run
 
-**Description:**
+**Purpose**
 
-Executes a command by its name, passing the provided arguments.
+Executes a command by its name, passing the provided arguments. If the command returns a string, it notifies the client (if valid).
 
-If the command returns a string, it notifies the client (if valid).
+**Parameters**
 
-**Parameters:**
+* `client` (*Player*): The player or console running the command.
 
-* `client` (`Player`) – The player or console running the command.
+* `command` (*string*): Name of the command to run.
 
+* `arguments` (*table*): List of arguments for the command.
 
-* `command` (`string`) – The name of the command to run.
+**Realm**
 
+`Server`
 
-* `arguments` (`table`) – A list of arguments for the command.
+**Returns**
 
+* *nil*: This function does not return a value.
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Execute the "boost" command when a player types !boost in chat
-    hook.Add("PlayerSay", "RunBoostCommand", function(client, text)
-        if text == "!boost" then
-            local dest = client:GetPos() + Vector(0, 0, 64)
-            lia.command.run(client, "boost", {dest, 60})
-            return ""
-        end
-    end)
+-- Execute the "boost" command when a player types !boost
+hook.Add("PlayerSay", "RunBoostCommand", function(client, text)
+    if text == "!boost" then
+        local dest = client:GetPos() + Vector(0, 0, 64)
+        lia.command.run(client, "boost", { dest, 60 })
+        return ""
+    end
+end)
 ```
 
 ---
 
 ### lia.command.parse
 
-**Description:**
+**Purpose**
 
-Attempts to parse the input text as a command, optionally using realCommand
+Attempts to parse the input text as a command, optionally using `realCommand` and `arguments` if provided. If parsed successfully, the command is executed.
 
-and arguments if provided. If parsed successfully, the command is executed.
+**Parameters**
 
-**Parameters:**
+* `client` (*Player*): Player or console issuing the command.
 
-* `client` (`Player`) – The player or console issuing the command.
+* `text` (*string*): Raw text that may contain the command and arguments.
 
+* `realCommand` (*string*): Command name override (optional).
 
-* `text` (`string`) – The raw text that may contain the command name and arguments.
+* `arguments` (*table*): Argument list override (optional).
 
+**Realm**
 
-* `realCommand` (`string`) – If provided, use this as the command name instead of parsing text.
+`Server`
 
+**Returns**
 
-* `arguments` (`table`) – If provided, use these as the command arguments instead of parsing text.
+* *boolean*: `true` if the text was parsed as a valid command, `false` otherwise.
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – True if the text was parsed as a valid command, false otherwise.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.command.parse
-    lia.command.parse(player, "/mycommand arg1 arg2")
+lia.command.parse(player, "/mycommand arg1 arg2")
 ```
 
 ---
 
 ### lia.command.send
 
-**Description:**
+**Purpose**
 
-Sends a command (and optional arguments) from the client to the server using the
+Sends a command (and optional arguments) from the client to the server via the net library. The server then executes the command.
 
-Garry's Mod net library. The server will then execute the command.
+**Parameters**
 
-**Parameters:**
+* `command` (*string*): Command name.
 
-* `command` (`string`) – The name of the command to send.
+* … (*vararg*): Additional arguments.
 
+**Realm**
 
-* ... (vararg) – Any additional arguments to pass to the command.
+`Client`
 
+**Returns**
 
-**Realm:**
+* *nil*: This function does not return a value.
 
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.command.send
-    lia.command.send("mycommand", "arg1", "arg2")
+lia.command.send("mycommand", "arg1", "arg2")
 ```
 
 ---
 
 ### lia.command.openArgumentPrompt
 
-**Description:**
+**Purpose**
 
-Opens a window asking the player to fill in arguments for the given command. If only
+Opens a window asking the player to fill in arguments for the given command. Missing fields defined as `optional` may be left blank; all others must be filled before **Submit** is enabled.
 
-the command name is supplied, all arguments defined in the command's syntax are
+**Parameters**
 
-requested. Passing existing arguments causes the prompt to request only the missing
+* `cmd` (*string*): Command name.
 
-ones. Fields containing the word `optional` may be left blank, while all other
+* `args` (*table | string*): Existing arguments or server-supplied missing fields.
 
-fields must be filled before the **Submit** button is enabled.
+* `prefix` (*table*): Legacy prefix table (optional).
 
-**Parameters:**
+**Realm**
 
-* `cmd` (`string`) – The command name.
+`Client`
 
+**Returns**
 
-* `args` (`table|string`) – Optional. Either the arguments already provided or a table of
+* *nil*: This function does not return a value.
 
-
-missing fields from the server.
-
-* `prefix` (`table`) – Optional prefix when using the legacy field table format.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Open the argument prompt for the plywhitelist command
-    -- This normally happens automatically when required
-    -- arguments are missing.
-    lia.command.openArgumentPrompt("plywhitelist")
+lia.command.openArgumentPrompt("plywhitelist")
 ```
 
 ---
 
 ### lia.command.findPlayer
 
-**Description:**
+**Purpose**
 
-Convenience alias for [lia.util.findPlayer](lia.util.md#liautilfindplayer).
+Convenience alias for [lia.util.findPlayer](lia.util.md#liautilfindplayer). Use this when writing command callbacks to locate another player by name or SteamID.
 
-Use this when writing command callbacks to locate another player by name
+**Parameters**
 
-or SteamID.
+See [lia.util.findPlayer](lia.util.md#liautilfindplayer).
 
-**Parameters:**
+**Realm**
 
-See [lia.util.findPlayer](lia.util.md#liautilfindplayer) for parameter
+`Shared`
 
-information.
+*Alias*
 
-**Realm:**
+`lia.util.findPlayer`
 
-* Shared
+**Returns**
 
+* *Player | nil*: The found player, if any.
 
-    Alias:
-
-    lia.util.findPlayer
-
-**Returns:**
-
-* Player|nil – The found player if any.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    local target = lia.command.findPlayer(admin, "Sarah")
-    if target then
-        admin:notify("Found " .. target:Name())
-    end
+local target = lia.command.findPlayer(admin, "Sarah")
+if target then
+    admin:notify("Found " .. target:Name())
+end
 ```
+
+---

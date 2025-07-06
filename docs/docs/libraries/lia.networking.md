@@ -1,20 +1,12 @@
 # Networking Library
 
-This page documents network variable and message helpers.
+This page documents network-variable and message helpers.
 
 ---
 
 ## Overview
 
-The networking library synchronizes data between the server and clients. It
-
-wraps a few Garry's Mod networking helpers so global variables can be stored in
-
-`lia.net.globals` and automatically replicated. Any values sent through this
-
-system are synced to players on spawn using `PlayerInitialSpawn` and must not
-
-contain functions (or tables holding functions) as they cannot be serialized.
+The networking library synchronises data between the server and clients. It wraps a few Garry’s Mod helpers so global variables can be stored in `lia.net.globals` and automatically replicated. Any value sent through this system is re-sent to players on spawn via `PlayerInitialSpawn` and **must not** contain functions (or tables that contain functions), as they cannot be serialised.
 
 ---
 
@@ -27,8 +19,10 @@ Stores a value in `lia.net.globals` and optionally broadcasts the change to clie
 **Parameters**
 
 * `key` (*string*): Name of the variable.
+
 * `value` (*any*): Value to store.
-* `receiver` (*Player|table|nil*): Optional target player(s).
+
+* `receiver` (*Player | table | nil*): Target player or list of players. `nil` broadcasts to everyone.
 
 **Realm**
 
@@ -36,7 +30,7 @@ Stores a value in `lia.net.globals` and optionally broadcasts the change to clie
 
 **Returns**
 
-* `nil`
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -46,6 +40,7 @@ local nextRound = getNetVar("round", 0) + 1
 setNetVar("round", nextRound)
 
 local champion = DetermineWinner()
+
 -- Only the winner receives this variable
 setNetVar("last_winner", champion, champion)
 
@@ -58,11 +53,12 @@ hook.Run("RoundStarted", nextRound)
 
 **Purpose**
 
-Retrieves a value from `lia.net.globals`, returning a default if not set.
+Retrieves a value from `lia.net.globals`, returning a default if the key is unset.
 
 **Parameters**
 
 * `key` (*string*): Variable name.
+
 * `default` (*any*): Fallback value if unset.
 
 **Realm**
@@ -71,7 +67,7 @@ Retrieves a value from `lia.net.globals`, returning a default if not set.
 
 **Returns**
 
-* *any*: Stored value or default.
+* *any*: Stored value or the supplied default.
 
 **Example**
 
@@ -79,14 +75,13 @@ Retrieves a value from `lia.net.globals`, returning a default if not set.
 -- Inform new players of the current round and previous champion
 hook.Add("PlayerInitialSpawn", "ShowRound", function(ply)
     local round = getNetVar("round", 0)
-    ply:ChatPrint(string.format("Current round: %s", round))
+    ply:ChatPrint(("Current round: %s"):format(round))
 
     local lastWinner = getNetVar("last_winner")
     if IsValid(lastWinner) then
-        ply:ChatPrint(string.format("Last round won by %s", lastWinner:Name()))
+        ply:ChatPrint(("Last round won by %s"):format(lastWinner:Name()))
     end
 end)
 ```
 
 ---
-

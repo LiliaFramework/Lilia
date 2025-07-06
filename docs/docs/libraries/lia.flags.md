@@ -1,123 +1,97 @@
 # Flags Library
 
-This page explains permission flag management.
+This page explains permission-flag management.
 
 ---
 
 ## Overview
 
-The flags library assigns text-based permission strings to characters. The library exposes a `lia.flag.list` table that stores registered flags and their callbacks. Flags are referenced by **single-character identifiers**. They grant characters extra abilities but are often best replaced with specific in‑character checks when possible.
+The flags library assigns text-based permission strings to characters. All registered flags live in `lia.flag.list`, each referenced by a **single-character identifier**. Flags grant characters extra abilities, though—in many cases—specific in-character checks are preferable.
 
 ---
 
 ### lia.flag.add
 
-**Description:**
+**Purpose**
 
-Registers a new flag by adding it to `lia.flag.list`.
+Registers a flag in `lia.flag.list`, storing its description and an optional callback. The callback runs whenever the flag is granted or removed and on every spawn if the character already has the flag.
 
-Each flag entry stores a description and an optional callback. The callback is invoked when the flag is given or removed from a character and on player spawn if the character already has the flag.
+**Parameters**
 
-**Parameters:**
+* `flag` (*string*): Unique single-character identifier.
 
-* `flag` (`string`) – The unique single-character identifier for the flag.
+* `desc` (*string*): Human-readable description of the flag’s effect.
 
+* `callback` (*function*): Called as `callback(client, isGiven)` where `isGiven` is `true` when granting or re-applying on spawn, and `false` on removal. *Optional*.
 
-* `desc` (`string`) – A description of what the flag does.
+**Realm**
 
+`Shared`
 
-* `callback` (`function`) – Optional function called with `(client, isGiven)` whenever the flag is toggled. `isGiven` is `true` when granting the flag or reapplying on spawn and `false` when it is removed.
+**Returns**
 
+* *nil*: This function does not return a value.
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Give players with the "p" flag a physgun whenever the flag is granted.
-    lia.flag.add("p", "Access to the physgun", function(client, isGiven)
-        if isGiven then
-            client:Give("weapon_physgun")
-        else
-            client:StripWeapon("weapon_physgun")
-        end
-    end)
-    -- Advanced example of the usage of the function.
+-- Give players with the "p" flag a physgun whenever they receive it.
+lia.flag.add("p", "Access to the physgun", function(client, isGiven)
+    if isGiven then
+        client:Give("weapon_physgun")
+    else
+        client:StripWeapon("weapon_physgun")
+    end
+end)
 ```
 
 ---
 
 ### lia.flag.onSpawn
 
-**Description:**
+**Purpose**
 
-Called on the server when a player spawns. It iterates over the character's flags and runs
+Re-applies all flag callbacks for a player who just spawned by iterating over their character’s flags and calling each callback with `(client, true)`. The base gamemode already invokes this from its `PlayerSpawn` hook, but modules can call it manually after custom spawn logic.
 
-their callbacks, passing `(client, true)` so any flag effects are reapplied. The base
+**Parameters**
 
-gamemode already calls this from its `PlayerSpawn` hook, but modules may invoke it manually
+* `client` (*Player*): The player who spawned.
 
-after custom spawn logic.
+**Realm**
 
-**Parameters:**
+`Server`
 
-* `client` (`Player`) – The player who spawned.
+**Returns**
 
+* *nil*: This function does not return a value.
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Re-run flag callbacks whenever a player respawns
-    hook.Add("PlayerSpawn", "ApplyFlagCallbacks", function(ply)
-        lia.flag.onSpawn(ply)
-    end)
-    -- Advanced example of the usage of the function.
+-- Re-run flag callbacks whenever a player respawns.
+hook.Add("PlayerSpawn", "ApplyFlagCallbacks", function(ply)
+    lia.flag.onSpawn(ply)
+end)
 ```
 
 ---
 
-### Default Flags
+### Default flags
 
-The base gamemode registers several permission flags. Modules may define more,
+The base gamemode registers the following permission flags. Additional flags can be defined by modules.
 
-but these are always available:
+| Flag | Ability                        |
+| ---- | ------------------------------ |
+| `p`  | Access to the physgun          |
+| `t`  | Access to the toolgun          |
+| `C`  | Spawn vehicles                 |
+| `z`  | Spawn SWEPS                    |
+| `E`  | Spawn SENTs                    |
+| `L`  | Spawn Effects                  |
+| `r`  | Spawn ragdolls                 |
+| `e`  | Spawn props                    |
+| `n`  | Spawn NPCs                     |
+| `Z`  | Invite players to your faction |
+| `P`  | Use PAC3 features              |
 
-* `p` – Access to the physgun.
-
-* `t` – Access to the toolgun.
-
-* `C` – Allows spawning vehicles.
-
-* `z` – Allows spawning SWEPS.
-
-* `E` – Allows spawning SENTs.
-
-* `L` – Allows spawning Effects.
-
-* `r` – Allows spawning ragdolls.
-
-* `e` – Allows spawning props.
-
-* `n` – Allows spawning NPCs.
-
-* `Z` – Can invite players to your faction.
-
-* `P` – Access to PAC3 features.
+---

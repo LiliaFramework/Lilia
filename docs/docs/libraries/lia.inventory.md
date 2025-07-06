@@ -8,11 +8,6 @@ This page documents inventory handling functions.
 
 The inventory library manages item containers and grid inventories. It supports registering new inventory types and handles item transfers between them.
 
-### Fields
-
-* **lia.inventory.types** (table) – Registered inventory classes indexed by type ID.
-* **lia.inventory.instances** (table) – Loaded inventory instances indexed by ID.
-
 ---
 
 ### lia.inventory.newType
@@ -24,7 +19,8 @@ Registers a new inventory type.
 **Parameters**
 
 * `typeID` (*string*): Unique identifier.
-* `invTypeStruct` (*table*): Definition matching InvTypeStructType.
+
+* `invTypeStruct` (*table*): Definition matching `InvTypeStructType`.
 
 **Realm**
 
@@ -32,13 +28,13 @@ Registers a new inventory type.
 
 **Returns**
 
-* `nil`: None.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- This snippet demonstrates a common usage of lia.inventory.newType
-lia.inventory.newType("bag", {className = "liaBag"})
+-- Register a simple “bag” type
+lia.inventory.newType("bag", { className = "liaBag" })
 ```
 
 ---
@@ -59,12 +55,11 @@ Instantiates a new inventory instance.
 
 **Returns**
 
-* `table`: The created inventory object.
+* *table*: The created inventory object.
 
 **Example**
 
 ```lua
--- This snippet demonstrates a common usage of lia.inventory.new
 local inv = lia.inventory.new("bag")
 ```
 
@@ -79,7 +74,8 @@ Loads an inventory by ID (cached or via custom loader).
 **Parameters**
 
 * `id` (*number*): Inventory ID.
-* `noCache` (*boolean*): Optional flag to bypass caching.
+
+* `noCache` (*boolean*): Bypass caching when `true`.
 
 **Realm**
 
@@ -87,12 +83,11 @@ Loads an inventory by ID (cached or via custom loader).
 
 **Returns**
 
-* `deferred`: Resolves to the inventory or `nil` if not found.
+* *deferred*: Resolves to the inventory or `nil` if not found.
 
 **Example**
 
 ```lua
--- Asynchronously load inventory ID 1
 lia.inventory.loadByID(1):next(function(inv)
     if inv then
         print("Loaded inventory", inv)
@@ -108,12 +103,13 @@ end)
 
 **Purpose**
 
-Default database loader.
+Default SQL loader used by `lia.inventory.loadByID` when no custom loader is provided.
 
 **Parameters**
 
 * `id` (*number*): Inventory ID.
-* `noCache` (*boolean*): Optional flag to bypass caching.
+
+* `noCache` (*boolean*): Bypass caching when `true`.
 
 **Realm**
 
@@ -121,12 +117,11 @@ Default database loader.
 
 **Returns**
 
-* `deferred`: Resolves to the inventory or `nil`.
+* *deferred*: Resolves to the inventory or `nil`.
 
 **Example**
 
 ```lua
--- Use the built‑in SQL loader to fetch inventory 1
 lia.inventory.loadFromDefaultStorage(1):next(function(inv)
     if inv then
         print("Loaded inventory", inv)
@@ -147,6 +142,7 @@ Creates and persists a new inventory instance.
 **Parameters**
 
 * `typeID` (*string*): Inventory type identifier.
+
 * `initialData` (*table*): Optional initial data.
 
 **Realm**
@@ -155,13 +151,12 @@ Creates and persists a new inventory instance.
 
 **Returns**
 
-* `deferred`: Resolves to the created inventory instance.
+* *deferred*: Resolves to the created inventory instance.
 
 **Example**
 
 ```lua
--- Create a persistent bag inventory for character 1
-lia.inventory.instance("bag", {char = 1}):next(function(inventory)
+lia.inventory.instance("bag", { char = 1 }):next(function(inventory)
     print("New inventory", inventory:getID())
 end)
 ```
@@ -172,7 +167,7 @@ end)
 
 **Purpose**
 
-Loads all inventories for a character.
+Loads every inventory that belongs to a character.
 
 **Parameters**
 
@@ -184,13 +179,14 @@ Loads all inventories for a character.
 
 **Returns**
 
-* `deferred`: Resolves to a table of the player's inventories.
+* *deferred*: Resolves to a table of inventories.
 
 **Example**
 
 ```lua
--- Retrieve all inventories owned by the local player
-lia.inventory.loadAllFromCharID(client:getChar():getID()):next(function(inventories)
+local charID = client:getChar():getID()
+
+lia.inventory.loadAllFromCharID(charID):next(function(inventories)
     PrintTable(inventories)
 end)
 ```
@@ -201,7 +197,7 @@ end)
 
 **Purpose**
 
-Deletes an inventory from both memory and persistent storage.
+Deletes an inventory from memory and persistent storage.
 
 **Parameters**
 
@@ -213,12 +209,11 @@ Deletes an inventory from both memory and persistent storage.
 
 **Returns**
 
-* `nil`: None.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- This snippet demonstrates a common usage of lia.inventory.deleteByID
 lia.inventory.deleteByID(1)
 ```
 
@@ -228,11 +223,11 @@ lia.inventory.deleteByID(1)
 
 **Purpose**
 
-Destroys all inventories associated with a character.
+Destroys every inventory associated with a character.
 
 **Parameters**
 
-* `character` (*Player*): Character to clean up.
+* `character` (*Player*): Character entity or table.
 
 **Realm**
 
@@ -240,12 +235,11 @@ Destroys all inventories associated with a character.
 
 **Returns**
 
-* `nil`: None.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- This snippet demonstrates a common usage of lia.inventory.cleanUpForCharacter
 lia.inventory.cleanUpForCharacter(client:getChar())
 ```
 
@@ -255,11 +249,12 @@ lia.inventory.cleanUpForCharacter(client:getChar())
 
 **Purpose**
 
-Displays inventory UI client‑side.
+Displays an inventory UI panel on the client.
 
 **Parameters**
 
 * `inventory` (*table*): Inventory to display.
+
 * `parent` (*Panel*): Optional parent panel.
 
 **Realm**
@@ -268,14 +263,16 @@ Displays inventory UI client‑side.
 
 **Returns**
 
-* `Panel`: VGUI element representing the inventory.
+* *Panel*: The created VGUI panel.
 
 **Example**
 
 ```lua
--- Display the local player's inventory in a panel
 local inv = LocalPlayer():getChar():getInv()
+
 if inv then
     local panel = lia.inventory.show(inv)
 end
 ```
+
+---

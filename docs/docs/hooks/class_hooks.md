@@ -1,18 +1,10 @@
 # Class Hooks
 
-This document lists every available `CLASS` hook. Place these functions on a class table to run custom logic whenever a player joins, leaves, or spawns with that class.
+Classes can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred.
 
----
+Define these functions inside your class definition files (`schema/classes/*.lua`).
 
-## Overview
-
-Each class can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred. All hooks are optional; unspecified hooks will not alter default behavior.
-
-These hooks live on the class tables created under `schema/classes` and are only
-
-called for instances of that specific class.  Define them inside your class
-
-definition files (`schema/classes/*.lua`).
+All hooks are optional; unspecified hooks fall back to default behaviour.
 
 ---
 
@@ -24,7 +16,7 @@ Determines whether a player is allowed to switch to this class.
 
 **Parameters**
 
-* `client` (*Player*): the player attempting to switch.
+* `client` (`Player`): The player attempting to switch.
 
 **Realm**
 
@@ -32,9 +24,10 @@ Determines whether a player is allowed to switch to this class.
 
 **Returns**
 
-* `boolean?`: return `false` to deny the change.
+* `boolean?`: Return `false` to deny the change.
 
 **Example**
+
 ```lua
 function CLASS:OnCanBe(client)
     -- Only allow admins or players that own the "V" flag.
@@ -53,8 +46,6 @@ end
 ```
 
 ---
----
-
 
 ### OnLeave
 
@@ -64,7 +55,7 @@ Runs on the previous class after a player successfully changes classes.
 
 **Parameters**
 
-* `client` (*Player*): the player who has left the class.
+* `client` (`Player`): The player who has left the class.
 
 **Realm**
 
@@ -72,9 +63,10 @@ Runs on the previous class after a player successfully changes classes.
 
 **Returns**
 
-* `nil`: none.
+* `nil`: This function does not return a value.
 
 **Example**
+
 ```lua
 function CLASS:OnLeave(client)
     -- Strip any class-specific weapons.
@@ -91,6 +83,7 @@ function CLASS:OnLeave(client)
     client:SetRunSpeed(lia.config.get("RunSpeed"))
 end
 ```
+
 ---
 
 ### OnSet
@@ -101,7 +94,7 @@ Executes immediately after a player joins this class.
 
 **Parameters**
 
-* `client` (*Player*): the player who has joined the class.
+* `client` (`Player`): The player who has joined the class.
 
 **Realm**
 
@@ -109,9 +102,10 @@ Executes immediately after a player joins this class.
 
 **Returns**
 
-* `nil`: none.
+* `nil`: This function does not return a value.
 
 **Example**
+
 ```lua
 function CLASS:OnSet(client)
     local char = client:getChar()
@@ -132,6 +126,7 @@ function CLASS:OnSet(client)
     end
 end
 ```
+
 ---
 
 ### OnSpawn
@@ -142,7 +137,7 @@ Runs each time a member of this class respawns.
 
 **Parameters**
 
-* `client` (*Player*): the player who has just spawned.
+* `client` (`Player`): The player who has just spawned.
 
 **Realm**
 
@@ -150,12 +145,13 @@ Runs each time a member of this class respawns.
 
 **Returns**
 
-* `nil`: none.
+* `nil`: This function does not return a value.
 
 **Example**
+
 ```lua
 function CLASS:OnSpawn(client)
-    -- Apply the class loadout and stats every respawn.
+    -- Apply the class load-out and stats every respawn.
     client:SetMaxHealth(self.health or 150)
     client:SetHealth(client:GetMaxHealth())
     client:SetArmor(self.armor or 50)
@@ -172,7 +168,9 @@ function CLASS:OnSpawn(client)
     end
 end
 ```
+
 ---
+
 ### OnTransferred
 
 **Purpose**
@@ -181,8 +179,8 @@ Fires when a player is moved into this class from another.
 
 **Parameters**
 
-* `client` (*Player*): the player who was transferred.
-* `oldClass` (*number*): index of the previous class.
+* `client` (`Player`): The player who was transferred.
+* `oldClass` (`number`): Index of the previous class.
 
 **Realm**
 
@@ -190,9 +188,10 @@ Fires when a player is moved into this class from another.
 
 **Returns**
 
-* `nil`: none.
+* `nil`: This function does not return a value.
 
 **Example**
+
 ```lua
 function CLASS:OnTransferred(client, oldClass)
     local char = client:getChar()
@@ -205,4 +204,5 @@ function CLASS:OnTransferred(client, oldClass)
     char:setData("previousClass", oldClass)
 end
 ```
+
 ---

@@ -1,29 +1,38 @@
 # GridInv Meta
 
-Grid-based inventories extend the base inventory class with slot-based item placement. This document lists helper methods for managing grid dimensions and item arrangement.
+Grid-based inventories extend the base inventory class with slot-based item placement.
+
+This document lists helper methods for managing grid dimensions and item arrangement.
 
 ---
 
 ## Overview
 
-A `GridInv` instance stores items in a 2D grid, requiring items to fit within its width and height. It provides logic for finding free positions, transferring items, and updating ownership information.
+A `GridInv` instance stores items in a 2-D grid, requiring items to fit within its width and height.
+
+It provides logic for finding free positions, transferring items, and updating ownership information.
 
 ---
+
 ### getWidth
 
 **Purpose**
-Returns the current width of the inventory grid. If no width has been set, the value from `lia.config.invW` is used.
+
+Returns the current width of the inventory grid.
+
+If no width has been set, the value from `lia.config.invW` is used.
 
 **Parameters**
 
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-* number: Grid width in slots.
+* `number`: Grid width in slots.
 
 **Example**
 
@@ -37,18 +46,22 @@ print("Inventory width:", width)
 ### getHeight
 
 **Purpose**
-Returns the current height of the inventory grid. Defaults to `lia.config.invH` when unset.
+
+Returns the current height of the inventory grid.
+
+Defaults to `lia.config.invH` when unset.
 
 **Parameters**
 
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-* number: Grid height in slots.
+* `number`: Grid height in slots.
 
 **Example**
 
@@ -62,6 +75,7 @@ print("Inventory height:", height)
 ### getSize
 
 **Purpose**
+
 Returns both grid dimensions at once.
 
 **Parameters**
@@ -69,11 +83,12 @@ Returns both grid dimensions at once.
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-* number, number: Width and height in slots.
+* `number`, `number`: Width and height in slots.
 
 **Example**
 
@@ -87,20 +102,24 @@ print(string.format("Size: %dx%d", w, h))
 ### canItemFitInInventory
 
 **Purpose**
-Checks if an item would fit inside the grid bounds when placed at the given coordinates. This does not test collisions with other items.
+
+Checks if an item would fit inside the grid bounds when placed at the given coordinates.
+
+This does **not** test collisions with other items.
 
 **Parameters**
 
 * `item` (`Item`): Item being tested.
-* `x` (`number`) – X slot position.
-* `y` (`number`) – Y slot position.
+* `x` (`number`): X slot position.
+* `y` (`number`): Y slot position.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-* boolean: True if the entire item lies within the grid.
+* `boolean`: True if the entire item lies within the grid.
 
 **Example**
 
@@ -115,18 +134,22 @@ end
 ### canAdd
 
 **Purpose**
-Determines if the inventory is large enough to hold the item's dimensions. Accepts either an Item object or a unique ID.
+
+Determines if the inventory is large enough to hold the item's dimensions.
+
+Accepts either an `Item` object or a unique ID.
 
 **Parameters**
 
 * `item` (`Item|string`): Item table or unique ID to test.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-* boolean: True when the item size fits inside the grid.
+* `boolean`: True when the item size fits inside the grid.
 
 **Example**
 
@@ -141,21 +164,25 @@ end
 ### doesItemOverlapWithOther
 
 **Purpose**
-Returns whether `testItem` placed at `(x, y)` would overlap the given existing item. Used internally when checking placement validity.
+
+Returns whether `testItem` placed at `(x, y)` would overlap the given existing item.
+
+Used internally when checking placement validity.
 
 **Parameters**
 
 * `testItem` (`Item`): Item being placed.
-* `x` (`number`) – Proposed X slot.
-* `y` (`number`) – Proposed Y slot.
-* `item` (`Item`) – Existing item inside the inventory.
+* `x` (`number`): Proposed X slot.
+* `y` (`number`): Proposed Y slot.
+* `item` (`Item`): Existing item inside the inventory.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-* boolean: True if the two items intersect.
+* `boolean`: True if the two items intersect.
 
 **Example**
 
@@ -173,18 +200,20 @@ end
 ### doesFitInventory
 
 **Purpose**
-Checks this inventory and all nested bags to see if the item could be placed somewhere.
+
+Checks this inventory **and all nested bags** to see if the item could be placed somewhere.
 
 **Parameters**
 
 * `item` (`Item`): Item to test.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-* boolean: True if a free position exists.
+* `boolean`: True if a free position exists.
 
 **Example**
 
@@ -199,21 +228,23 @@ end
 ### doesItemFitAtPos
 
 **Purpose**
+
 Determines if `testItem` can be placed at `(x, y)` without overlapping existing items and while staying inside the grid.
 
 **Parameters**
 
 * `testItem` (`Item`): Item to check.
-* `x` (`number`) – X slot position.
-* `y` (`number`) – Y slot position.
+* `x` (`number`): X slot position.
+* `y` (`number`): Y slot position.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-* boolean: True when placement is valid.
-* Item|nil – Conflicting item if placement fails.
+* `boolean`: True when placement is valid.
+* `Item|nil`: Conflicting item if placement fails.
 
 **Example**
 
@@ -229,18 +260,20 @@ end
 ### findFreePosition
 
 **Purpose**
-Searches the grid sequentially for the first open space that can fit the given item.
+
+Searches the grid sequentially for the **first** open space that can fit the given item.
 
 **Parameters**
 
 * `item` (`Item`): Item to place.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-* number|nil, number|nil: X and Y slot coordinates or nil if none found.
+* `number|nil`, `number|nil`: X and Y slot coordinates, or `nil` if none found.
 
 **Example**
 
@@ -256,18 +289,22 @@ end
 ### configure
 
 **Purpose**
-Called when the inventory type registers. On the server it adds default access rules preventing players from placing items that do not fit and restricting access to the owner.
+
+Called when the inventory type registers.
+
+On the server it adds default access rules preventing players from placing items that do not fit and restricting access to the owner.
 
 **Parameters**
 
 * None
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-* None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -282,18 +319,22 @@ end
 ### getItems
 
 **Purpose**
-Returns a table of items contained in this inventory. When `noRecurse` is false, items inside nested bags are also returned.
+
+Returns a table of items contained in this inventory.
+
+When `noRecurse` is `false`, items inside nested bags are also returned.
 
 **Parameters**
 
 * `noRecurse` (`boolean`): Skip nested bag contents when true.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-* table: Item table indexed by item ID.
+* `table`: Item table indexed by item ID.
 
 **Example**
 
@@ -308,24 +349,26 @@ end
 ### setSize
 
 **Purpose**
-Updates the stored grid dimensions on the server.
+
+Updates the stored grid dimensions **on the server**.
 
 **Parameters**
 
 * `w` (`number`): New width in slots.
-* `h` (`number`) – New height in slots.
+* `h` (`number`): New height in slots.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-* None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
 ```lua
--- Expand the inventory to 6x4 slots
+-- Expand the inventory to 6×4 slots
 inv:setSize(6, 4)
 ```
 
@@ -334,18 +377,20 @@ inv:setSize(6, 4)
 ### wipeItems
 
 **Purpose**
-Removes all items from the inventory.
+
+Removes **all** items from the inventory.
 
 **Parameters**
 
 * None
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-* None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -358,19 +403,25 @@ inv:wipeItems()
 ### setOwner
 
 **Purpose**
-Sets the owning character of this inventory. A player value is automatically converted to their character ID. When `fullUpdate` is true the inventory is synced to that owner immediately.
+
+Sets the owning character of this inventory.
+
+A `Player` value is automatically converted to their character ID.
+
+When `fullUpdate` is `true` the inventory is synced to that owner immediately.
 
 **Parameters**
 
-* `owner` (`number|Player`): Character ID or Player to own the inventory.
-* `fullUpdate` (`boolean`) – Send a full sync to the owner.
+* `owner` (`number|Player`): Character ID or `Player` to own the inventory.
+* `fullUpdate` (`boolean`): Send a full sync to the owner.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-* None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -383,20 +434,24 @@ inv:setOwner(client, true)
 ### add
 
 **Purpose**
-Inserts an item into the inventory at the given position. Extra quantity that cannot fit triggers the `OnPlayerLostStackItem` hook.
+
+Inserts an item into the inventory at the given position.
+
+Extra quantity that cannot fit triggers the `OnPlayerLostStackItem` hook.
 
 **Parameters**
 
 * `item` (`Item|string`): Item instance or unique ID to add.
-* `x` (`number`) – X slot, optional.
-* `y` (`number`) – Y slot, optional.
+* `x` (`number`): X slot (optional).
+* `y` (`number`): Y slot (optional).
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-* Deferred: Resolves with the newly added item(s).
+* `Deferred`: Resolves with the newly added item(s).
 
 **Example**
 
@@ -411,19 +466,23 @@ end)
 ### remove
 
 **Purpose**
-Removes an item by ID or type. Quantity defaults to `1`.
+
+Removes an item by ID **or type**.
+
+Quantity defaults to `1`.
 
 **Parameters**
 
 * `itemID` (`number|string`): Item ID or unique ID.
-* `quantity` (`number`) – Amount to remove.
+* `quantity` (`number`): Amount to remove.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-* Deferred: Resolves once removal finishes.
+* `Deferred`: Resolves once removal finishes.
 
 **Example**
 
@@ -438,21 +497,25 @@ end)
 ### requestTransfer
 
 **Purpose**
-Sends a `liaTransferItem` request telling the server to move an item. The server processes this call through the `HandleItemTransferRequest` hook.
+
+Sends a `liaTransferItem` request telling the server to move an item.
+
+The server processes this call through the `HandleItemTransferRequest` hook.
 
 **Parameters**
 
 * `itemID` (`number`): ID of the item to move.
-* `destID` (`number`) – Destination inventory ID.
-* `x` (`number`) – Target X slot.
-* `y` (`number`) – Target Y slot.
+* `destID` (`number`): Destination inventory ID.
+* `x` (`number`): Target X slot.
+* `y` (`number`): Target Y slot.
 
 **Realm**
+
 `Client`
 
 **Returns**
 
-* None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 

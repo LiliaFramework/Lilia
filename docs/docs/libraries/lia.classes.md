@@ -14,216 +14,196 @@ See [Class Fields](../definitions/class.md) for configurable `CLASS` properties 
 
 ### lia.class.loadFromDir
 
-**Description:**
+**Purpose**
 
 Loads all Lua files within the supplied directory. Each file should define a `CLASS` table inserted into `lia.class.list` with an automatic index.
 
-**Parameters:**
+**Parameters**
 
-* `directory` (`string`) – Folder path containing class Lua files, typically "schema/classes" in a schema.
+* `directory` (*string*): Folder path containing class Lua files, typically `"schema/classes"` in a schema.
 
+**Realm**
 
-**Realm:**
+`Shared`
 
-* Shared
+**Returns**
 
+* *nil*: This function does not return a value.
 
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Example: load all classes for the schema
-    lia.class.loadFromDir("schema/classes")
+-- Load all classes for the schema
+lia.class.loadFromDir("schema/classes")
 ```
 
 ---
 
 ### lia.class.canBe
 
-**Description:**
+**Purpose**
 
-Checks faction, whitelist, and limit rules. It also runs the `CanPlayerJoinClass` gamemode hook and the class's `OnCanBe` method to determine if the client may join.
+Checks faction, whitelist, and limit rules. It also runs the `CanPlayerJoinClass` gamemode hook and the class’s `OnCanBe` method to determine if the client may join.
 
-**Parameters:**
+**Parameters**
 
-* `client` (`Player`) – Player attempting to join.
+* `client` (*Player*): Player attempting to join.
 
+* `class` (*number*): Class index to join.
 
-* `class` (`number`) – Class index to join.
+**Realm**
 
+`Shared`
 
-**Realm:**
+**Returns**
 
-* Shared
+* *boolean*, *string?*: `false` and a reason when denied; on success, returns the class’s `isDefault` flag.
 
-
-**Returns:**
-
-* boolean allowed, string? reason – Returns `false` and a message when denied. On success it returns the class's `isDefault` flag.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    local canJoin, reason = lia.class.canBe(client, classID)
-    if not canJoin then
-        print(reason)
-    end
+local canJoin, reason = lia.class.canBe(client, classID)
+if not canJoin then
+    print(reason)
+end
 ```
 
 ---
 
 ### lia.class.get
 
-**Description:**
+**Purpose**
 
 Retrieves the class table associated with the given numeric index.
 
-**Parameters:**
+**Parameters**
 
-* `identifier` (`number`) – Numeric index of the class.
+* `identifier` (*number*): Numeric index of the class.
 
+**Realm**
 
-**Realm:**
+`Shared`
 
-* Shared
+**Returns**
 
+* *table | nil*: Class table if found.
 
-**Returns:**
-
-* table|nil – Class table if found.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Retrieve the class table for the engineer class
-    local classData = lia.class.get(CLASS_ENGINEER)
+-- Retrieve the class table for the engineer class
+local classData = lia.class.get(CLASS_ENGINEER)
 ```
 
 ---
 
 ### lia.class.getPlayers
 
-**Description:**
+**Purpose**
 
 Returns an array of players whose characters belong to the given class.
 
-**Parameters:**
+**Parameters**
 
-* `class` (`number`) – Class index to check.
+* `class` (*number*): Class index to check.
 
+**Realm**
 
-**Realm:**
+`Shared`
 
-* Shared
+**Returns**
 
+* *table*: List of player objects.
 
-**Returns:**
+**Example**
 
-* table – List of player objects.
-
-
-**Example Usage:**
-
-    for _, ply in ipairs(lia.class.getPlayers(classID)) do
-
-        print(ply:Nick())
-
-    end
-
+```lua
+for _, ply in ipairs(lia.class.getPlayers(classID)) do
+    print(ply:Nick())
+end
 ```
 
 ---
 
 ### lia.class.getPlayerCount
 
-**Description:**
+**Purpose**
 
 Counts the number of players currently in the specified class.
 
-**Parameters:**
+**Parameters**
 
-* `class` (`number`) – Class index to check.
+* `class` (*number*): Class index to check.
 
+**Realm**
 
-**Realm:**
+`Shared`
 
-* Shared
+**Returns**
 
+* *number*: Player count.
 
-**Returns:**
+**Example**
 
-* number – Player count.
-
-
-**Example Usage:**
-    local count = lia.class.getPlayerCount(classID)
-    print("Players in class:", count)
+```lua
+local count = lia.class.getPlayerCount(classID)
+print("Players in class:", count)
 ```
 
 ---
 
 ### lia.class.retrieveClass
 
-**Description:**
+**Purpose**
 
-Finds a class whose uniqueID or name matches the given text (case-insensitive).
+Finds a class whose `uniqueID` or `name` matches the given text (case-insensitive).
 
-**Parameters:**
+**Parameters**
 
-* `class` (`string`) – Name or uniqueID to look up.
+* `class` (*string*): Name or `uniqueID` to look up.
 
+**Realm**
 
-**Realm:**
+`Shared`
 
-* Shared
+**Returns**
 
+* *number | nil*: Matching class index or `nil` if not found.
 
-**Returns:**
-
-* number|nil – Matching class index or nil if not found.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    local id = lia.class.retrieveClass("police")
-    print("Class index:", id)
+local id = lia.class.retrieveClass("police")
+print("Class index:", id)
 ```
 
 ---
 
 ### lia.class.hasWhitelist
 
-**Description:**
+**Purpose**
 
-Checks if the class requires a whitelist. Default classes always return false.
+Checks if the class requires a whitelist. Default classes always return `false`.
 
-**Parameters:**
+**Parameters**
 
-* `class` (`number`) – Class index to check.
+* `class` (*number*): Class index to check.
 
+**Realm**
 
-**Realm:**
+`Shared`
 
-* Shared
+**Returns**
 
+* *boolean*: `true` if the class is whitelisted.
 
-**Returns:**
-
-* boolean – True if the class is whitelisted.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Check whether the class is whitelisted
-    if lia.class.hasWhitelist(classID) then
-        print("Whitelist required")
-    end
+-- Check whether the class is whitelisted
+if lia.class.hasWhitelist(classID) then
+    print("Whitelist required")
+end
 ```
+
+---

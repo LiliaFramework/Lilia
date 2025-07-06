@@ -6,13 +6,7 @@ This page describes how popup notices are displayed.
 
 ## Overview
 
-The notice library displays temporary popup notifications at the top of the
-
-player's screen. Server functions send network messages to connected clients,
-
-which create `liaNotice` panels on the client. These panels are stored in the
-
-`lia.notices` table and automatically expire after roughly 7.5 seconds.
+The notice library displays temporary popup notifications at the top of the player’s screen. Server functions send network messages to clients, which create `liaNotice` panels client-side. These panels are stored in `lia.notices` and automatically expire about 7.5 seconds after creation.
 
 ---
 
@@ -20,12 +14,13 @@ which create `liaNotice` panels on the client. These panels are stored in the
 
 **Purpose**
 
-Sends a text notice to one player or everyone using the `liaNotify` network string.
+Sends a text notice to a specific player or to everyone using the `liaNotify` net message.
 
 **Parameters**
 
-* `message` (*string*): Message text.
-* `recipient` (*Player|nil*): Optional target player, or nil to broadcast.
+* `message` (*string*): Notice text.
+
+* `recipient` (*Player | nil*): Target player; `nil` broadcasts to all.
 
 **Realm**
 
@@ -33,15 +28,15 @@ Sends a text notice to one player or everyone using the `liaNotify` network stri
 
 **Returns**
 
-* `nil`
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- Broadcast a restart warning to everyone
+-- Broadcast a restart warning
 lia.notices.notify("Server restarting in 10 seconds.")
 
--- Notify just one player about an error
+-- Notify a single player about an error
 lia.notices.notify("Your quest failed.", player)
 ```
 
@@ -51,13 +46,15 @@ lia.notices.notify("Your quest failed.", player)
 
 **Purpose**
 
-Sends a localized notice. When the second argument isn't a player it becomes the first formatting parameter and the notice is broadcast.
+Sends a localised notice. If `recipient` is not a `Player`, it is treated as the first formatting argument and the notice is broadcast.
 
 **Parameters**
 
-* `key` (*string*): Localization key.
-* `recipient` (*Player|nil*): Optional target player or formatting argument.
-* ... (*any*): Additional formatting values.
+* `key` (*string*): Localisation key.
+
+* `recipient` (*Player | nil*): Target player, or first format argument if not a `Player`.
+
+* … (*any*): Additional `string.format` values.
 
 **Realm**
 
@@ -65,29 +62,29 @@ Sends a localized notice. When the second argument isn't a player it becomes the
 
 **Returns**
 
-* `nil`
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- Send a localized greeting to one player
+-- Send a localised greeting to one player
 lia.notices.notifyLocalized("welcome", player)
 
--- Broadcast a formatted message when no recipient is provided
+-- Broadcast a formatted message
 lia.notices.notifyLocalized("questFoundItem", nil, "golden_key")
-
 ```
+
 ---
 
-### lia.notices.notify
+### lia.notices.notify (client)
 
 **Purpose**
 
-Creates a `liaNotice` panel on the local client. Notices fade out after about 7.5 seconds.
+Creates a `liaNotice` panel on the local client. The notice fades after \~7.5 seconds.
 
 **Parameters**
 
-* `message` (*string*): Message text to display.
+* `message` (*string*): Text to display.
 
 **Realm**
 
@@ -95,30 +92,31 @@ Creates a `liaNotice` panel on the local client. Notices fade out after about 7.
 
 **Returns**
 
-* `nil`
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- Display a pickup notice on the local client
+-- Display a pickup notice locally
 lia.notices.notify("Item picked up")
 
--- Print an informational message locally
+-- Simple informational message
 lia.notices.notify("Welcome back!")
 ```
 
 ---
 
-### lia.notices.notifyLocalized
+### lia.notices.notifyLocalized (client)
 
 **Purpose**
 
-Translates the key using `L` and displays the result on the local client.
+Translates a localisation key with `L` and shows the result on the local client.
 
 **Parameters**
 
-* `key` (*string*): Localization key.
-* ... (*any*): Formatting arguments for the localization string.
+* `key` (*string*): Localisation key.
+
+* … (*any*): Formatting values.
 
 **Realm**
 
@@ -126,18 +124,16 @@ Translates the key using `L` and displays the result on the local client.
 
 **Returns**
 
-* `nil`
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- Show a localized pickup message
+-- Show a localised pickup message
 lia.notices.notifyLocalized("item_picked_up")
 
 -- Include formatting parameters
 lia.notices.notifyLocalized("foundCoins", 10)
-
 ```
 
 ---
-

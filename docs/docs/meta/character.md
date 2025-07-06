@@ -1,28 +1,38 @@
 # Character Meta
 
-Character objects returned by `player:getChar()` persist inventory, stats, and money. This reference outlines helper functions for managing those records.
+Character objects returned by `player:getChar()` persist inventory, stats, and money.
+
+This reference outlines helper functions for managing those records.
 
 ---
 
 ## Overview
 
-The character meta library contains information about a player's current game state. It provides shortcuts for fetching stored values, verifying permissions, and linking a character back to its player. Characters are separate from players and hold names, models, money, and other data that persists across sessions.
+The character-meta library contains information about a player's current game state.
+
+It provides shortcuts for fetching stored values, verifying permissions, and linking a character back to its player.
+
+Characters are separate from players and hold names, models, money, and other data that persists across sessions.
+
+---
 
 ### tostring
 
 **Purpose**
+
 Returns a printable identifier for this character.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- string: Format "character[id]".
+* `string`: Format `"character[id]"`.
 
 **Example**
 
@@ -33,28 +43,32 @@ print("Active char: " .. char:tostring())
 
 ---
 
-
 ### eq
 
 **Purpose**
-Compares this character's ID with another object's ID. The argument can be a `Character` instance or any object providing a `getID` method.
+
+Compares this character's ID with another object's ID.
+
+The argument can be a `Character` instance or any object providing a `getID` method.
 
 **Parameters**
 
-- `other` (`Character`): Character or object to compare.
+* `other` (`Character`): Character or object to compare.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- boolean: True if both share the same ID.
+* `boolean`: `true` if both share the same ID.
 
 **Example**
 
 ```lua
 -- Unlock the door only for its controlling character
 local owner = door:getNetVar("ownChar")
+
 if owner and char:eq(owner) then
     door:Fire("unlock", "", 0)
 end
@@ -65,24 +79,27 @@ end
 ### getID
 
 **Purpose**
+
 Returns the unique database ID for this character.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- number: Character identifier.
+* `number`: Character identifier.
 
 **Example**
 
 ```lua
 -- Store the character ID for later reference
 local id = char:getID()
+
 session.lastCharID = id
 ```
 
@@ -91,24 +108,27 @@ session.lastCharID = id
 ### getPlayer
 
 **Purpose**
+
 Returns the player entity currently controlling this character.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- Player|None: Owning player or None.
+* `Player|nil`: Owning player or `nil`.
 
 **Example**
 
 ```lua
 -- Notify the controlling player that the character loaded
 local ply = char:getPlayer()
+
 if IsValid(ply) then
     ply:ChatPrint("Character ready")
 end
@@ -119,18 +139,20 @@ end
 ### getDisplayedName
 
 **Purpose**
+
 Returns the character's name as it should be shown to the given player.
 
 **Parameters**
 
-- `client` (`Player`): Player requesting the name.
+* `client` (`Player`): Player requesting the name.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- string: Localized or recognized character name.
+* `string`: Localized or recognized character name.
 
 **Example**
 
@@ -144,18 +166,20 @@ client:ChatPrint(string.format("You see %s", char:getDisplayedName(client)))
 ### hasMoney
 
 **Purpose**
+
 Checks if the character has at least the given amount of money.
 
 **Parameters**
 
-- `amount` (`number`): Amount to check for.
+* `amount` (`number`): Amount to check for.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- boolean: True if the character's funds are sufficient.
+* `boolean`: `true` if the character's funds are sufficient.
 
 **Example**
 
@@ -171,18 +195,20 @@ end
 ### getFlags
 
 **Purpose**
+
 Retrieves the string of permission flags for this character.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- string: Concatenated flag characters.
+* `string`: Concatenated flag characters.
 
 **Example**
 
@@ -198,18 +224,20 @@ end
 ### hasFlags
 
 **Purpose**
+
 Checks if the character possesses any of the specified flags.
 
 **Parameters**
 
-- `flags` (`string`): String of flag characters to check.
+* `flags` (`string`): String of flag characters to check.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- boolean: True if at least one flag is present.
+* `boolean`: `true` if at least one flag is present.
 
 **Example**
 
@@ -225,18 +253,22 @@ end
 ### getItemWeapon
 
 **Purpose**
-Returns **true** only when the player's active weapon matches an item in their inventory and that item is equipped. The argument defaults to `true` and the method currently only checks for equipped items.
+
+Returns **true** only when the player's active weapon matches an item in their inventory and that item is equipped.
+
+The argument defaults to `true` and the method currently only checks for equipped items.
 
 **Parameters**
 
-- `requireEquip` (`boolean`): Only match equipped items if true.
+* `requireEquip` (`boolean`): Only match equipped items if `true`.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- boolean: True if the active weapon corresponds to an item.
+* `boolean`: `true` if the active weapon corresponds to an item.
 
 **Example**
 
@@ -252,18 +284,20 @@ end
 ### getMaxStamina
 
 **Purpose**
+
 Returns the maximum stamina value for this character.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- number: Maximum stamina points.
+* `number`: Maximum stamina points.
 
 **Example**
 
@@ -277,24 +311,27 @@ local pct = char:getStamina() / char:getMaxStamina()
 ### getStamina
 
 **Purpose**
+
 Retrieves the character's current stamina value.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- number: Current stamina.
+* `number`: Current stamina.
 
 **Example**
 
 ```lua
 -- Display current stamina in the HUD
 local stamina = char:getStamina()
+
 drawStaminaBar(stamina)
 ```
 
@@ -303,18 +340,20 @@ drawStaminaBar(stamina)
 ### hasClassWhitelist
 
 **Purpose**
+
 Checks if the character has whitelisted the given class.
 
 **Parameters**
 
-- `class` (`number`): Class index.
+* `class` (`number`): Class index.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- boolean: True if the class is whitelisted.
+* `boolean`: `true` if the class is whitelisted.
 
 **Example**
 
@@ -330,18 +369,20 @@ end
 ### isFaction
 
 **Purpose**
-Returns true if the character's faction matches.
+
+Returns `true` if the character's faction matches.
 
 **Parameters**
 
-- `faction` (`number`): Faction index.
+* `faction` (`number`): Faction index.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- boolean: Whether the faction matches.
+* `boolean`: Whether the faction matches.
 
 **Example**
 
@@ -357,18 +398,20 @@ end
 ### isClass
 
 **Purpose**
-Returns true if the character's class equals the specified class.
+
+Returns `true` if the character's class equals the specified class.
 
 **Parameters**
 
-- `class` (`number`): Class index.
+* `class` (`number`): Class index.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- boolean: Whether the classes match.
+* `boolean`: Whether the classes match.
 
 **Example**
 
@@ -384,26 +427,30 @@ end
 ### getAttrib
 
 **Purpose**
+
 Retrieves the value of an attribute including boosts.
 
 **Parameters**
 
-- `key` (`string`): Attribute identifier.
-- `default` (`number`) – Default value when attribute is missing.
+* `key` (`string`): Attribute identifier.
+
+* `default` (`number`): Default value when attribute is missing.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- number: Final attribute value.
+* `number`: Final attribute value.
 
 **Example**
 
 ```lua
 -- Calculate damage using the strength attribute
 local strength = char:getAttrib("str", 0)
-dmg = baseDamage + strength * 0.5
+
+local dmg = baseDamage + strength * 0.5
 ```
 
 ---
@@ -411,18 +458,20 @@ dmg = baseDamage + strength * 0.5
 ### getBoost
 
 **Purpose**
+
 Returns the boost table for the given attribute.
 
 **Parameters**
 
-- `attribID` (`string`): Attribute identifier.
+* `attribID` (`string`): Attribute identifier.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- table|None: Table of boosts or None.
+* `table|nil`: Table of boosts or `nil`.
 
 **Example**
 
@@ -436,18 +485,20 @@ PrintTable(char:getBoost("agi"))
 ### getBoosts
 
 **Purpose**
+
 Retrieves all attribute boosts for this character.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- table: Mapping of attribute IDs to boost tables.
+* `table`: Mapping of attribute IDs to boost tables.
 
 **Example**
 
@@ -463,18 +514,20 @@ end
 ### doesRecognize
 
 **Purpose**
+
 Determines if this character recognizes another character.
 
 **Parameters**
 
-- `id` (`number|Character`): Character ID or object to check.
+* `id` (`number|Character`): Character ID or object to check.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- boolean: True if recognized.
+* `boolean`: `true` if recognized.
 
 **Example**
 
@@ -490,18 +543,20 @@ end
 ### doesFakeRecognize
 
 **Purpose**
+
 Checks if the character has a fake recognition entry for another.
 
 **Parameters**
 
-- `id` (`number|Character`): Character identifier.
+* `id` (`number|Character`): Character identifier.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- boolean: True if fake recognized.
+* `boolean`: `true` if fake recognized.
 
 **Example**
 
@@ -517,19 +572,24 @@ end
 ### recognize
 
 **Purpose**
-Adds another character to this one's recognition list. When a custom `name` is provided that alias will be shown whenever the character is recognized.
+
+Adds another character to this one's recognition list.
+
+When a custom `name` is provided that alias will be shown whenever the character is recognized.
 
 **Parameters**
 
-- `character` (`number|Character`): Character to recognize or its ID.
-- `name` (`string|nil`) – Optional fake name to store.
+* `character` (`number|Character`): Character to recognize or its ID.
+
+* `name` (`string|nil`): Optional fake name to store.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- boolean: Always true once processed.
+* `boolean`: Always `true` once processed.
 
 **Example**
 
@@ -543,18 +603,20 @@ char:recognize(rivalChar:getID(), "Mysterious Stranger")
 ### WhitelistAllClasses
 
 **Purpose**
+
 Grants class whitelist access for every class defined by the schema.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -568,18 +630,20 @@ char:WhitelistAllClasses()
 ### WhitelistAllFactions
 
 **Purpose**
+
 Marks the character as whitelisted for every faction.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -593,18 +657,20 @@ char:WhitelistAllFactions()
 ### WhitelistEverything
 
 **Purpose**
+
 Convenience wrapper that whitelists the character for all factions and classes.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -618,18 +684,20 @@ char:WhitelistEverything()
 ### classWhitelist
 
 **Purpose**
+
 Adds the specified class to this character's whitelist.
 
 **Parameters**
 
-- `class` (`number`): Class index to whitelist.
+* `class` (`number`): Class index to whitelist.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -643,18 +711,20 @@ char:classWhitelist(CLASS_ENGINEER)
 ### classUnWhitelist
 
 **Purpose**
+
 Removes the specified class from the character's whitelist.
 
 **Parameters**
 
-- `class` (`number`): Class index to remove.
+* `class` (`number`): Class index to remove.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -668,19 +738,24 @@ char:classUnWhitelist(CLASS_MEDIC)
 ### joinClass
 
 **Purpose**
-Attempts to set the character's current class. When `isForced` is true the normal eligibility checks are skipped.
+
+Attempts to set the character's current class.
+
+When `isForced` is `true` the normal eligibility checks are skipped.
 
 **Parameters**
 
-- `class` (`number`): Class index to join.
-- `isForced` (`boolean`) – Bypass restrictions when true.
+* `class` (`number`): Class index to join.
+
+* `isForced` (`boolean`): Bypass restrictions when `true`.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- boolean: True on success, false otherwise.
+* `boolean`: `true` on success, `false` otherwise.
 
 **Example**
 
@@ -694,18 +769,20 @@ char:joinClass(CLASS_SOLDIER, true)
 ### kickClass
 
 **Purpose**
+
 Removes the character from their current class, reverting to the default for their faction.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -719,19 +796,22 @@ char:kickClass()
 ### updateAttrib
 
 **Purpose**
+
 Increases an attribute by the specified value, clamped to the maximum allowed.
 
 **Parameters**
 
-- `key` (`string`): Attribute identifier.
-- `value` (`number`) – Amount to add.
+* `key` (`string`): Attribute identifier.
+
+* `value` (`number`): Amount to add.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -745,19 +825,22 @@ char:updateAttrib("agi", 5)
 ### setAttrib
 
 **Purpose**
+
 Directly sets an attribute to the given value.
 
 **Parameters**
 
-- `key` (`string`): Attribute identifier.
-- `value` (`number`) – New level for the attribute.
+* `key` (`string`): Attribute identifier.
+
+* `value` (`number`): New level for the attribute.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -771,20 +854,24 @@ char:setAttrib("str", 10)
 ### addBoost
 
 **Purpose**
+
 Applies a temporary boost to one of the character's attributes.
 
 **Parameters**
 
-- `boostID` (`string`): Unique identifier for the boost.
-- `attribID` (`string`) – Attribute to modify.
-- `boostAmount` (`number`) – Amount of the boost.
+* `boostID` (`string`): Unique identifier for the boost.
+
+* `attribID` (`string`): Attribute to modify.
+
+* `boostAmount` (`number`): Amount of the boost.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -798,19 +885,22 @@ char:addBoost("powerGloves", "str", 2)
 ### removeBoost
 
 **Purpose**
+
 Removes a previously applied attribute boost.
 
 **Parameters**
 
-- `boostID` (`string`): Identifier used when the boost was added.
-- `attribID` (`string`) – Attribute affected by the boost.
+* `boostID` (`string`): Identifier used when the boost was added.
+
+* `attribID` (`string`): Attribute affected by the boost.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -824,18 +914,20 @@ char:removeBoost("powerGloves", "str")
 ### setFlags
 
 **Purpose**
+
 Replaces the character's flag string with the provided value.
 
 **Parameters**
 
-- `flags` (`string`): New flag characters to assign.
+* `flags` (`string`): New flag characters to assign.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -849,18 +941,20 @@ char:setFlags("")
 ### giveFlags
 
 **Purpose**
+
 Adds the specified flag characters to the character.
 
 **Parameters**
 
-- `flags` (`string`): Flags to grant.
+* `flags` (`string`): Flags to grant.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -874,18 +968,20 @@ char:giveFlags("A")
 ### takeFlags
 
 **Purpose**
+
 Removes the given flag characters from the character.
 
 **Parameters**
 
-- `flags` (`string`): Flags to revoke.
+* `flags` (`string`): Flags to revoke.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -899,24 +995,28 @@ char:takeFlags("A")
 ### save
 
 **Purpose**
+
 Persists the character's current data to the database.
 
 **Parameters**
 
-- `callback` (`function|nil`): Optional function run after saving completes.
+* `callback` (`function|nil`): Optional function run after saving completes.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
 ```lua
 -- Save and then notify when finished
-char:save(function() print("character saved") end)
+char:save(function()
+    print("character saved")
+end)
 ```
 
 ---
@@ -924,18 +1024,24 @@ char:save(function() print("character saved") end)
 ### sync
 
 **Purpose**
-Sends the character's networkable variables to a specific player. Passing `nil` broadcasts the data to everyone. When the receiver is the character's own player, only local variables intended for them are included.
+
+Sends the character's networkable variables to a specific player.
+
+Passing `nil` broadcasts the data to everyone.
+
+When the receiver is the character's own player, only local variables intended for them are included.
 
 **Parameters**
 
-- `receiver` (`Player|nil`): Player to receive the data or nil for broadcast.
+* `receiver` (`Player|nil`): Player to receive the data or `nil` for broadcast.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -949,18 +1055,22 @@ char:sync(targetPlayer)
 ### setup
 
 **Purpose**
-Sets up the player entity to use this character's model, faction, and inventory data. Use `noNetworking` to skip network updates during initialization.
+
+Sets up the player entity to use this character's model, faction, and inventory data.
+
+Use `noNetworking` to skip network updates during initialization.
 
 **Parameters**
 
-- `noNetworking` (`boolean`): Skip networking inventories and vars when true.
+* `noNetworking` (`boolean`): Skip networking inventories and vars when `true`.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -974,18 +1084,22 @@ char:setup()
 ### kick
 
 **Purpose**
-Forcibly disconnects the player from their character. The player is killed silently and immediately respawns with no character loaded.
+
+Forcibly disconnects the player from their character.
+
+The player is killed silently and immediately respawns with no character loaded.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -999,18 +1113,22 @@ char:kick() -- they will respawn without a character
 ### ban
 
 **Purpose**
-Marks the character as banned for the given duration, saves the state, and immediately kicks the controlling player. This also triggers the `OnCharPermakilled` hook.
+
+Marks the character as banned for the given duration, saves the state, and immediately kicks the controlling player.
+
+This also triggers the `OnCharPermakilled` hook.
 
 **Parameters**
 
-- `time` (`number|nil`): Ban length in seconds or nil for permanent.
+* `time` (`number|nil`): Ban length in seconds or `nil` for permanent.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -1021,22 +1139,23 @@ char:ban(3600)
 
 ---
 
-
 ### delete
 
 **Purpose**
+
 Completely removes the character from the database along with any inventories it owns.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -1050,18 +1169,22 @@ char:delete()
 ### destroy
 
 **Purpose**
-Removes the character from the server's loaded cache without touching any saved data. Useful after deleting a character or when cleaning up disconnected players.
+
+Removes the character from the server's loaded cache without touching any saved data.
+
+Useful after deleting a character or when cleaning up disconnected players.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -1075,24 +1198,27 @@ char:destroy()
 ### giveMoney
 
 **Purpose**
+
 Adds the specified amount to the character's wallet by calling the owning player's `addMoney` method.
 
 **Parameters**
 
-- `amount` (`number`): Amount to add to the wallet.
+* `amount` (`number`): Amount to add to the wallet.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- boolean: False if the owner is missing, otherwise true.
+* `boolean`: `false` if the owner is missing, otherwise `true`.
 
 **Example**
 
 ```lua
 -- Pay the character for completing a mission
 local reward = 250
+
 char:giveMoney(reward)
 ```
 
@@ -1101,24 +1227,29 @@ char:giveMoney(reward)
 ### takeMoney
 
 **Purpose**
-Subtracts the specified amount of money from the character. Internally this calls `giveMoney` with a negative value and logs the deduction.
+
+Subtracts the specified amount of money from the character.
+
+Internally this calls `giveMoney` with a negative value and logs the deduction.
 
 **Parameters**
 
-- `amount` (`number`): Amount to remove.
+* `amount` (`number`): Amount to remove.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- boolean: Always true when the deduction occurs.
+* `boolean`: Always `true` when the deduction occurs.
 
 **Example**
 
 ```lua
 -- Deduct a fine from the character
 local fine = 50
+
 char:takeMoney(fine)
 ```
 
@@ -1127,18 +1258,20 @@ char:takeMoney(fine)
 ### getName
 
 **Purpose**
+
 Returns the character's stored name or a default value.
 
 **Parameters**
 
-- `default` (`any`): Value to return if the name is unset.
+* `default` (`any`): Value to return if the name is unset.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- string: Character name or the provided default.
+* `string`: Character name or the provided default.
 
 **Example**
 
@@ -1151,18 +1284,20 @@ print("Character name:", char:getName("Unknown"))
 ### setName
 
 **Purpose**
+
 Updates the character's name and replicates the change to players.
 
 **Parameters**
 
-- `value` (`string`): New name for the character.
+* `value` (`string`): New name for the character.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -1175,18 +1310,20 @@ char:setName("Alyx Vance")
 ### getDesc
 
 **Purpose**
+
 Fetches the character's description text or returns the given default.
 
 **Parameters**
 
-- `default` (`any`): Value to return if no description exists.
+* `default` (`any`): Value to return if no description exists.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- string: Description or fallback value.
+* `string`: Description or fallback value.
 
 **Example**
 
@@ -1199,18 +1336,20 @@ local about = char:getDesc("No bio")
 ### setDesc
 
 **Purpose**
+
 Assigns a new description for the character.
 
 **Parameters**
 
-- `value` (`string`): Description text.
+* `value` (`string`): Description text.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -1223,18 +1362,20 @@ char:setDesc("Hardened wasteland survivor")
 ### getModel
 
 **Purpose**
+
 Retrieves the model path assigned to the character.
 
 **Parameters**
 
-- `default` (`any`): Value returned when no model is stored.
+* `default` (`any`): Value returned when no model is stored.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- string: Model path or the fallback value.
+* `string`: Model path or the fallback value.
 
 **Example**
 
@@ -1247,18 +1388,20 @@ local mdl = char:getModel("models/error.mdl")
 ### setModel
 
 **Purpose**
+
 Sets the character's player model and broadcasts the update.
 
 **Parameters**
 
-- `value` (`string`): Model file path.
+* `value` (`string`): Model file path.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -1271,18 +1414,20 @@ char:setModel("models/alyx.mdl")
 ### getClass
 
 **Purpose**
+
 Returns the class index currently assigned or the supplied default.
 
 **Parameters**
 
-- `default` (`any`): Value used when the class is unset.
+* `default` (`any`): Value used when the class is unset.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- number: Class index.
+* `number`: Class index.
 
 **Example**
 
@@ -1297,18 +1442,20 @@ end
 ### setClass
 
 **Purpose**
+
 Stores a new class index for the character.
 
 **Parameters**
 
-- `value` (`number`): Class identifier.
+* `value` (`number`): Class identifier.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -1321,18 +1468,20 @@ char:setClass(CLASS_ENGINEER)
 ### getFaction
 
 **Purpose**
+
 Gets the faction index of the character or a fallback value.
 
 **Parameters**
 
-- `default` (`any`): Value to return when unset.
+* `default` (`any`): Value to return when unset.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- number: Faction index.
+* `number`: Faction index.
 
 **Example**
 
@@ -1345,18 +1494,20 @@ print("Faction:", char:getFaction())
 ### setFaction
 
 **Purpose**
+
 Sets the character's faction team.
 
 **Parameters**
 
-- `value` (`number`): Faction identifier.
+* `value` (`number`): Faction identifier.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -1369,18 +1520,20 @@ char:setFaction(FACTION_CITIZEN)
 ### getMoney
 
 **Purpose**
+
 Retrieves the amount of currency this character holds.
 
 **Parameters**
 
-- `default` (`any`): Value to return when no money value is stored.
+* `default` (`any`): Value to return when no money value is stored.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- number: Amount of money or default value.
+* `number`: Amount of money or default value.
 
 **Example**
 
@@ -1393,18 +1546,20 @@ local cash = char:getMoney(0)
 ### setMoney
 
 **Purpose**
+
 Overwrites the character's stored money total.
 
 **Parameters**
 
-- `value` (`number`): Amount of currency.
+* `value` (`number`): Amount of currency.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -1417,19 +1572,22 @@ char:setMoney(1000)
 ### getData
 
 **Purpose**
+
 Returns arbitrary data previously stored on the character.
 
 **Parameters**
 
-- `key` (`string`): Data key.
-- `default` (`any`) – Value to return if the entry is missing.
+* `key` (`string`): Data key.
+
+* `default` (`any`): Value to return if the entry is missing.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- any: Stored value or default.
+* `any`: Stored value or default.
 
 **Example**
 
@@ -1442,21 +1600,26 @@ local rank = char:getData("rank", "rookie")
 ### setData
 
 **Purpose**
+
 Writes a data entry on the character and optionally syncs it.
 
 **Parameters**
 
-- `key` (`string`): Data key to modify.
-- `value` (`any`) – New value to store.
-- `noReplication` (`boolean`) – Suppress network updates.
-- `receiver` (`Player`) – Optional specific client to send the update to.
+* `key` (`string`): Data key to modify.
+
+* `value` (`any`): New value to store.
+
+* `noReplication` (`boolean`): Suppress network updates.
+
+* `receiver` (`Player`): Optional specific client to send the update to.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -1469,19 +1632,22 @@ char:setData("rank", "veteran")
 ### getVar
 
 **Purpose**
+
 Fetches a temporary variable from the character.
 
 **Parameters**
 
-- `key` (`string`): Variable key.
-- `default` (`any`) – Value returned if the variable is absent.
+* `key` (`string`): Variable key.
+
+* `default` (`any`): Value returned if the variable is absent.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- any: Variable value or default.
+* `any`: Variable value or default.
 
 **Example**
 
@@ -1494,21 +1660,26 @@ local mood = char:getVar("mood", "neutral")
 ### setVar
 
 **Purpose**
+
 Stores a temporary variable on the character.
 
 **Parameters**
 
-- `key` (`string`): Variable name.
-- `value` (`any`) – Data to store.
-- `noReplication` (`boolean`) – If true, skip networking the change.
-- `receiver` (`Player`) – Specific target for the update.
+* `key` (`string`): Variable name.
+
+* `value` (`any`): Data to store.
+
+* `noReplication` (`boolean`): If `true`, skip networking the change.
+
+* `receiver` (`Player`): Specific target for the update.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -1522,18 +1693,20 @@ char:setVar("mood", "happy", nil, char:getPlayer())
 ### getInv
 
 **Purpose**
+
 Retrieves the character's inventory instance.
 
 **Parameters**
 
-- `index` (`number`): Optional inventory slot index.
+* `index` (`number`): Optional inventory slot index.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- table: Inventory object or list of inventories.
+* `table`: Inventory object or list of inventories.
 
 **Example**
 
@@ -1546,18 +1719,20 @@ local inv = char:getInv()
 ### setInv
 
 **Purpose**
+
 Directly sets the character's inventory table.
 
 **Parameters**
 
-- `value` (`table`): Inventory data.
+* `value` (`table`): Inventory data.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -1570,18 +1745,20 @@ char:setInv({})
 ### getAttribs
 
 **Purpose**
+
 Returns the table of raw attribute values for the character.
 
 **Parameters**
 
-- `default` (`any`): Fallback value when no attributes are stored.
+* `default` (`any`): Fallback value when no attributes are stored.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- table: Attribute values table.
+* `table`: Attribute values table.
 
 **Example**
 
@@ -1594,18 +1771,20 @@ local stats = char:getAttribs()
 ### setAttribs
 
 **Purpose**
+
 Overwrites the character's attribute table.
 
 **Parameters**
 
-- `value` (`table`): Table of attribute levels.
+* `value` (`table`): Table of attribute levels.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None
+* `nil`: This function does not return a value.
 
 **Example**
 
@@ -1618,18 +1797,20 @@ char:setAttribs({ strength = 10 })
 ### getRecognizedAs
 
 **Purpose**
+
 Gets the mapping of disguised names this character uses to recognize others.
 
 **Parameters**
 
-- `default` (`any`): Value to return when no data is stored.
+* `default` (`any`): Value to return when no data is stored.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- table: Table of ID to alias mappings.
+* `table`: Table of ID-to-alias mappings.
 
 **Example**
 
@@ -1642,18 +1823,20 @@ local aliases = char:getRecognizedAs()
 ### setRecognizedAs
 
 **Purpose**
+
 Updates the table of fake recognition names for this character.
 
 **Parameters**
 
-- `value` (`table`): Table of ID to alias mappings.
+* `value` (`table`): Table of ID-to-alias mappings.
 
 **Realm**
+
 `Server`
 
 **Returns**
 
-- None
+* `nil`: This function does not return a value.
 
 **Example**
 

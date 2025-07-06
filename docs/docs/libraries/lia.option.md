@@ -6,35 +6,27 @@ This page details the client/server option system.
 
 ## Overview
 
-The option library stores user and server options with default values. It offers
+The option library stores user- and server-side options with default values. It provides getters and setters that automatically network changes between client and server.
 
-getters and setters that automatically network changes between client and server.
+Options are kept inside `lia.option.stored`; each entry contains:
 
-Define options clientside with `lia.option.add` to make them available for
+* `name` (*string*) – Display name for configuration menus.
 
-networking and configuration.
+* `desc` (*string*) – Description text.
 
-Options are kept inside the shared table `lia.option.stored`. Each entry is a
+* `data` (*table*) – Extra data (limits, category, etc.).
 
-table containing:
+* `value` (*any*) – Current value.
 
-* `name` (string) – Display name shown in configuration menus.
+* `default` (*any*) – Fallback value.
 
-* `desc` (string) – Descriptive text.
+* `callback` (*function | nil*) – Runs as `callback(oldValue, newValue)` on change.
 
-* `data` (table) – Extra data such as limits or category.
+* `type` (*string*) – Control type (`Boolean`, `Int`, …).
 
-* `value` (any) – Current option value.
+* `visible` (*boolean | function | nil*) – Whether the option appears in the config UI.
 
-* `default` (any) – Fallback value if none was set.
-
-* `callback` (function|nil) – Called with `(oldValue, newValue)` when the value changes.
-
-* `type` (string) – Automatically detected or overridden control type like `Boolean` or `Int`.
-
-* `visible` (boolean|function|nil) – Controls if the option appears in the config UI.
-
-* `shouldNetwork` (boolean|nil) – When true the server fires the `liaOptionReceived` hook on change.
+* `shouldNetwork` (*boolean | nil*) – When `true`, the server fires `liaOptionReceived` upon change.
 
 ---
 
@@ -42,16 +34,21 @@ table containing:
 
 **Purpose**
 
-Registers a configurable option that can be networked between client and server.
+Registers a configurable option that can be networked.
 
 **Parameters**
 
-* `key` (*string*): Unique key for the option.
-* `name` (*string*): Display name of the option.
-* `desc` (*string*): Brief description of the option.
+* `key` (*string*): Unique option key.
+
+* `name` (*string*): Display name.
+
+* `desc` (*string*): Brief description.
+
 * `default` (*any*): Default value.
-* `callback` (*function*): Called with `(oldValue, newValue)` when changed.
-* `data` (*table*): Extra option information.
+
+* `callback` (*function*): Runs on change.
+
+* `data` (*table*): Extra option data.
 
 **Realm**
 
@@ -59,19 +56,20 @@ Registers a configurable option that can be networked between client and server.
 
 **Returns**
 
-* `nil`
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- This snippet demonstrates a common usage of lia.option.add
 lia.option.add(
     "thirdPersonEnabled",
     "Third Person Enabled",
     "Toggle third-person view.",
     false,
-    function(_, newValue) hook.Run("thirdPersonToggled", newValue) end,
-    {category = "Third Person"}
+    function(_, newValue)
+        hook.Run("thirdPersonToggled", newValue)
+    end,
+    { category = "Third Person" }
 )
 ```
 
@@ -81,12 +79,13 @@ lia.option.add(
 
 **Purpose**
 
-Sets the value of an option, runs its callback and saves the data. If `shouldNetwork` is true the server fires `liaOptionReceived`.
+Changes the value of an option, runs its callback, saves it, and networks if `shouldNetwork` is `true`.
 
 **Parameters**
 
-* `key` (*string*): Unique option identifier.
-* `value` (*any*): New value to assign.
+* `key` (*string*): Option key.
+
+* `value` (*any*): New value.
 
 **Realm**
 
@@ -94,13 +93,15 @@ Sets the value of an option, runs its callback and saves the data. If `shouldNet
 
 **Returns**
 
-* `nil`
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- This snippet demonstrates a common usage of lia.option.set
-lia.option.set("thirdPersonEnabled", not lia.option.get("thirdPersonEnabled"))
+-- Toggle third-person mode
+local enabled = lia.option.get("thirdPersonEnabled", false)
+lia.option.set("thirdPersonEnabled", not enabled)
+```
 
 ---
 
@@ -108,12 +109,13 @@ lia.option.set("thirdPersonEnabled", not lia.option.get("thirdPersonEnabled"))
 
 **Purpose**
 
-Retrieves the value of a specified option, or returns a default if it doesn't exist.
+Retrieves an option value or returns a fallback.
 
 **Parameters**
 
-* `key` (*string*): Unique key identifying the option.
-* `default` (*any*): Value to return if not found.
+* `key` (*string*): Option key.
+
+* `default` (*any*): Fallback value.
 
 **Realm**
 
@@ -121,13 +123,13 @@ Retrieves the value of a specified option, or returns a default if it doesn't ex
 
 **Returns**
 
-* *any*: Current value or provided default.
+* *any*: Current value or fallback.
 
 **Example**
 
 ```lua
--- This snippet demonstrates a common usage of lia.option.get
 local dist = lia.option.get("thirdPersonDistance", 50)
+```
 
 ---
 
@@ -135,11 +137,11 @@ local dist = lia.option.get("thirdPersonDistance", 50)
 
 **Purpose**
 
-Saves all current option values to disk in a file based on server IP.
+Writes all current option values to disk (file is keyed by server IP).
 
 **Parameters**
 
-* None
+* *None*
 
 **Realm**
 
@@ -147,13 +149,13 @@ Saves all current option values to disk in a file based on server IP.
 
 **Returns**
 
-* `nil`
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- This snippet demonstrates a common usage of lia.option.save
 lia.option.save()
+```
 
 ---
 
@@ -161,11 +163,11 @@ lia.option.save()
 
 **Purpose**
 
-Loads saved option values from disk based on server IP and applies them to `lia.option.stored`. Fires `InitializedOptions` when done.
+Loads saved option values from disk, applies them to `lia.option.stored`, and fires `InitializedOptions`.
 
 **Parameters**
 
-* None
+* *None*
 
 **Realm**
 
@@ -173,14 +175,12 @@ Loads saved option values from disk based on server IP and applies them to `lia.
 
 **Returns**
 
-* `nil`
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- This snippet demonstrates a common usage of lia.option.load
 lia.option.load()
 ```
 
 ---
-

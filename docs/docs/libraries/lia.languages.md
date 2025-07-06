@@ -6,15 +6,7 @@ This page explains how translations and phrases are loaded.
 
 ## Overview
 
-The languages library loads localization files from directories. It resolves phrase
-
-keys to translated text and allows runtime language switching. Language files live
-
-in `languages/langname.lua` within schemas or modules and contain tables of
-
-localized phrases. Loaded phrases are stored in `lia.lang.stored` while display
-
-names are kept in `lia.lang.names`.
+The languages library loads localisation files from directories, resolves phrase keys to translated text, and supports runtime language switching. Language files live in `languages/<langname>.lua` inside schemas or modules; each file defines a `LANGUAGE` table of phrases. Loaded phrases are cached in `lia.lang.stored`, while user-facing language names are kept in `lia.lang.names`.
 
 ---
 
@@ -22,7 +14,7 @@ names are kept in `lia.lang.names`.
 
 **Purpose**
 
-Loads all Lua language files from the given directory and merges their `LANGUAGE` tables.
+Loads every Lua language file in a directory and merges their `LANGUAGE` tables into the cache.
 
 **Parameters**
 
@@ -34,7 +26,7 @@ Loads all Lua language files from the given directory and merges their `LANGUAGE
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -49,12 +41,13 @@ lia.lang.loadFromDir(SCHEMA.folder .. "/languages")
 
 **Purpose**
 
-Adds or merges language key-value pairs into the stored table.
+Adds or merges key-value pairs into an existing language table.
 
 **Parameters**
 
 * `name` (*string*): Language identifier to update.
-* `tbl` (*table*): Key-value pairs to insert or merge.
+
+* `tbl` (*table*): Key-value pairs to insert or override.
 
 **Realm**
 
@@ -62,7 +55,7 @@ Adds or merges language key-value pairs into the stored table.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -80,12 +73,13 @@ lia.lang.AddTable("english", {
 
 **Purpose**
 
-Retrieves the translated text for the given key in the active language.
+Returns the translated phrase for a key in the active language, using `string.format` with any additional arguments.
 
 **Parameters**
 
-* `key` (*string*): Localization key.
-* ...: Additional values inserted with `string.format`.
+* `key` (*string*): Localisation key.
+
+* …: Values interpolated via `string.format`.
 
 **Realm**
 
@@ -93,7 +87,7 @@ Retrieves the translated text for the given key in the active language.
 
 **Returns**
 
-* `string`: The translated phrase or the key if missing.
+* *string*: Translated phrase, or the key itself if no translation exists.
 
 **Example**
 
@@ -101,3 +95,4 @@ Retrieves the translated text for the given key in the active language.
 print(L("Show All"))
 ```
 
+---

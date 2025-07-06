@@ -6,12 +6,9 @@ This page outlines chatbox related functions and helpers.
 
 ## Overview
 
-The chatbox library defines chat commands and renders messages. It lets you
+The chatbox library defines chat commands, renders messages, and registers chat classes that control how IC, action, OOC, and other messages appear. It also handles radius-based or global visibility for receivers.
 
-register chat classes that determine how text such as IC, action, and OOC
-
-messages appear and handles radius-based or global visibility.
-
+---
 
 ### lia.chat.classes
 
@@ -30,6 +27,8 @@ local icClass = lia.chat.classes.ic
 print(icClass.format)
 ```
 
+---
+
 ### lia.chat.timestamp
 
 **Purpose**
@@ -46,38 +45,42 @@ Returns a formatted timestamp if chat timestamps are enabled; otherwise returns 
 
 **Returns**
 
-* `string`: Formatted time string or an empty string.
+* *string*: Formatted time string or an empty string.
 
 **Example**
 
 ```lua
 chat.AddText(lia.chat.timestamp(false), Color(255, 255, 255), "Hello!")
 ```
+
 ---
+
 ### lia.chat.register
 
 **Purpose**
 
-Registers a new chat class and sets up command aliases.
+Registers a new chat class and sets up its command aliases.
 
 **Parameters**
 
 * `chatType` (*string*): Identifier for the chat class.
+
 * `data` (*table*): Table of chat class properties.
-  - `syntax` (string) – Argument usage description shown in command help.
-  - `desc` (string) – Description of the command shown in menus. The value is automatically localized using `L`.
-  - `prefix` (string or table) – Command prefixes that trigger this chat type. A command alias is created for each prefix.
-  - `radius` (number|function) – Hearing range, converted into an `onCanHear` check automatically.
-  - `onCanHear` (function|number) – Determines if a listener can see the message.
-  - `onCanSay` (function) – Called before sending to verify the speaker may talk.
-  - `onChatAdd` (function) – Client-side handler for displaying the text.
-  - `onGetColor` (function) – Returns a `Color` for the message.
-  - `color` (Color) – Default color used with the fallback `onChatAdd`.
-  - `format` (string) – Format string for the fallback `onChatAdd`. The value is automatically localized using `L`.
-  - `filter` (string) – Chat filter category used by the chat UI.
-  - `font` (string) – Font name used when rendering the message.
-  - `noSpaceAfter` (boolean) – Allows prefixes without a trailing space.
-  - `deadCanChat` (boolean) – Permits dead players to use the chat type.
+
+  * `syntax` (string) – Argument usage description shown in command help.
+  * `desc` (string) – Description of the command shown in menus.
+  * `prefix` (string | table) – Command prefixes that trigger this chat type.
+  * `radius` (number | function) – Hearing range or custom range logic.
+  * `onCanHear` (function | number) – Determines if a listener can see the message.
+  * `onCanSay` (function) – Called before sending to verify the speaker may talk.
+  * `onChatAdd` (function) – Client-side handler for displaying the text.
+  * `onGetColor` (function) – Returns a `Color` for the message.
+  * `color` (Color) – Default colour for the fallback `onChatAdd`.
+  * `format` (string) – Format string used by the fallback `onChatAdd`.
+  * `filter` (string) – Chat filter category used by the chat UI.
+  * `font` (string) – Font name used when rendering the message.
+  * `noSpaceAfter` (boolean) – Allows prefixes without a trailing space.
+  * `deadCanChat` (boolean) – Permits dead players to use the chat type.
 
 **Realm**
 
@@ -85,7 +88,7 @@ Registers a new chat class and sets up command aliases.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -102,18 +105,21 @@ lia.chat.register("wave", {
 })
 ```
 
+---
 
 ### lia.chat.parse
 
 **Purpose**
 
-Parses chat text for the appropriate chat type and optionally sends it.
+Parses chat text, determines the appropriate chat type, and optionally sends it.
 
 **Parameters**
 
 * `client` (*Player*): Player sending the message.
-* `message` (*string*): The chat text.
-* `noSend` (*boolean*): Suppress sending when true.
+
+* `message` (*string*): Raw chat text.
+
+* `noSend` (*boolean*): Suppress sending when `true`.
 
 **Realm**
 
@@ -121,7 +127,11 @@ Parses chat text for the appropriate chat type and optionally sends it.
 
 **Returns**
 
-* `string`, string, boolean: Chat type identifier, parsed text and anonymous flag.
+* *string*: Chat type identifier.
+
+* *string*: Parsed text.
+
+* *boolean*: Whether the speaker is anonymous.
 
 **Example**
 
@@ -133,8 +143,8 @@ hook.Add("PlayerSay", "ParseChat", function(ply, text)
     return ""
 end)
 ```
----
 
+---
 
 ### lia.chat.send
 
@@ -144,10 +154,14 @@ Broadcasts a chat message to all eligible receivers.
 
 **Parameters**
 
-* `speaker` (*Player*): The message sender.
+* `speaker` (*Player*): Message sender.
+
 * `chatType` (*string*): Chat class identifier.
+
 * `text` (*string*): Message text.
+
 * `anonymous` (*boolean*): Whether the sender is anonymous.
+
 * `receivers` (*table*): Optional list of target players.
 
 **Realm**
@@ -156,13 +170,13 @@ Broadcasts a chat message to all eligible receivers.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
 local target = player.GetByID(1)
 if IsValid(target) then
-    lia.chat.send(client, "ic", "Hello", false, {target})
+    lia.chat.send(client, "ic", "Hello", false, { target })
 end
 ```

@@ -6,11 +6,7 @@ This page describes functions to register custom keybinds.
 
 ## Overview
 
-The keybind library stores user-defined keyboard bindings. It is loaded **client side** and automatically loads any saved bindings from `data/lilia/keybinds/`. Press and release callbacks are dispatched through the `PlayerButtonDown` and `PlayerButtonUp` hooks. The library also adds a "Keybinds" page to the configuration menu via the `PopulateConfigurationButtons` hook so players can change their binds in game.
-
-### Fields
-
-* **lia.keybind.stored** (table) – Mapping of keybind actions and their settings.
+The keybind library stores user-defined keyboard bindings. It is loaded **client-side** and automatically loads any saved bindings from `data/lilia/keybinds/`. Press- and release-callbacks are dispatched through the `PlayerButtonDown` and `PlayerButtonUp` hooks. The library also adds a “Keybinds” page to the config menu via the `PopulateConfigurationButtons` hook so players can change their binds in-game.
 
 ---
 
@@ -18,54 +14,42 @@ The keybind library stores user-defined keyboard bindings. It is loaded **client
 
 **Purpose**
 
-Registers a new keybind for a given action.
-
-Converts the provided key identifier to its corresponding key constant (if it's a string),
-
-and stores the keybind settings. When the keybind does not yet have a saved value its
-
-default key will be set to the provided key.  The optional release callback will be executed
-
-when the key is released.
-
-Also maps the key code back to the action identifier for reverse lookup.
+Registers a new keybind for an action, ensuring a default value is set and mapping the key code back to the action for reverse lookup.
 
 **Parameters**
 
-* `k` (*string or number*): The key identifier, either as a string (to be converted) or as a key code.
+* `k` (*string | number*): Key identifier (string name or key code).
 
+* `d` (*string*): Unique identifier for the keybind action.
 
-* `d` (*string*): The unique identifier for the keybind action.
+* `cb` (*function*): Callback executed when the key is pressed.
 
-
-* `cb` (*function*): The callback function to be executed when the key is pressed.
-
-
-* `rcb` (*function, optional*): The callback function to be executed when the key is released.
-
+* `rcb` (*function*): Callback executed when the key is released. *Optional*.
 
 **Realm**
 
 `Client`
 
-
 **Returns**
 
-* None
-
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
 -- Bind F1 to open the inventory while held
 local inv
-lia.keybind.add(KEY_F1, "Open Inventory",
+lia.keybind.add(
+    KEY_F1,
+    "Open Inventory",
     function()
         inv = vgui.Create("liaMenu")
         inv:setActiveTab("Inventory")
     end,
     function()
-        if IsValid(inv) then inv:Close() end
+        if IsValid(inv) then
+            inv:Close()
+        end
     end
 )
 ```
@@ -76,34 +60,25 @@ lia.keybind.add(KEY_F1, "Open Inventory",
 
 **Purpose**
 
-Retrieves the key code currently assigned to a keybind action.  The stored value
-
-is returned if present, otherwise the default key registered with `lia.keybind.add`
-
-is used.  If both are missing the optional fallback value is returned.
+Returns the key code assigned to a keybind action, falling back to the registered default or a caller-supplied default.
 
 **Parameters**
 
-* `a` (*string*): The unique identifier for the keybind action.
+* `a` (*string*): Action identifier.
 
-
-* `df` (*number*): An optional default key code to return if the keybind is not set.
-
+* `df` (*number*): Fallback key code. *Optional*.
 
 **Realm**
 
 `Client`
 
-
 **Returns**
 
-* number – The key code associated with the keybind action, or the default/fallback value if not set.
-
+* *number*: Key code associated with the action (or fallback).
 
 **Example**
 
 ```lua
--- Retrieve the key currently bound to opening the inventory
 local invKey = lia.keybind.get("Open Inventory", KEY_I)
 print("Inventory key:", input.GetKeyName(invKey))
 ```
@@ -114,33 +89,24 @@ print("Inventory key:", input.GetKeyName(invKey))
 
 **Purpose**
 
-Persists all keybinds to disk. The library creates a folder under
-
-`data/lilia/keybinds/` named after the active gamemode and writes a file based on
-
-the server IP address.  The file contains a JSON table mapping action identifiers
-
-to key codes.
+Writes all current keybinds to `data/lilia/keybinds/<gamemode>/<server-ip>.json`.
 
 **Parameters**
 
-* None
-
+* *None*
 
 **Realm**
 
 `Client`
 
-
 **Returns**
 
-* None
-
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- Manually save current keybinds (normally handled automatically)
+-- Manually save current keybinds
 lia.keybind.save()
 ```
 
@@ -150,39 +116,29 @@ lia.keybind.save()
 
 **Purpose**
 
-Loads keybind settings from disk.  The file is read from the same location used
-
-by `lia.keybind.save`.  If no saved binds exist the defaults defined via
-
-`lia.keybind.add` are applied and then written to disk.  After loading, a reverse
-
-lookup table (key code → action) is built and the `InitializedKeybinds` hook is
-
-triggered.
-
-This function is automatically called when the gamemode initializes or reloads.
+Loads keybinds from disk. If none exist, defaults registered via `lia.keybind.add` are applied and then saved. After loading, a reverse lookup table is rebuilt and the `InitializedKeybinds` hook fires.
 
 **Parameters**
 
-* None
-
+* *None*
 
 **Realm**
 
 `Client`
 
-
 **Returns**
 
-* None
-
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- Reload keybinds and notify when done
 hook.Add("InitializedKeybinds", "NotifyKeybinds", function()
     chat.AddText("Keybinds loaded")
 end)
+
+-- Reload keybinds
 lia.keybind.load()
 ```
+
+---

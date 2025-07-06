@@ -1,24 +1,22 @@
 # Vector Meta
 
-Vector utilities expand Garry's Mod's math library. This document describes additional operations for 3D vectors.
+Vector utilities expand Garry's Mod's math library.
+
+This document describes additional operations for 3D vectors.
 
 ---
 
 ## Overview
 
-Vector meta functions provide calculations such as midpoints, distances and axis
+Vector meta functions provide calculations such as midpoints, distances and axis rotations to support movement, physics and placement tasks.
 
-rotations to support movement, physics and placement tasks. Each helper returns
-
-a new `Vector` without modifying the originals.
+Each helper returns a new `Vector` without modifying the originals.
 
 ### Example Hook Usage
 
-These helpers may be called from either client or server code. The following
+These helpers may be called from either client or server code.
 
-snippet demonstrates rotating a camera offset every frame inside a `CalcView`
-
-hook:
+The following snippet demonstrates rotating a camera offset every frame inside a `CalcView` hook:
 
 ```lua
 hook.Add("CalcView", "TiltView", function(ply, pos, angles, fov)
@@ -32,18 +30,20 @@ end)
 ### Center
 
 **Purpose**
+
 Returns the midpoint between this vector and the supplied vector.
 
 **Parameters**
 
-- `vec2` (Vector): The vector to average with this vector.
+* `vec2` (*Vector*): The vector to average with this vector.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- `Vector`: The center point of the two vectors.
+* *Vector*: The center point of the two vectors.
 
 **Example**
 
@@ -60,18 +60,20 @@ print(result)
 ### Distance
 
 **Purpose**
+
 Calculates the distance between this vector and another vector.
 
 **Parameters**
 
-- `vec2` (Vector): The other vector.
+* `vec2` (*Vector*): The other vector.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- `number`: The distance between the two vectors.
+* *number*: The distance between the two vectors.
 
 **Example**
 
@@ -88,19 +90,21 @@ print(result)
 ### RotateAroundAxis
 
 **Purpose**
+
 Rotates the vector around an axis by the specified degrees and returns the new vector.
 
 **Parameters**
 
-- `axis` (Vector): Axis to rotate around.
-- `degrees` (number): Angle in degrees.
+* `axis` (*Vector*): Axis to rotate around.
+* `degrees` (*number*): Angle in degrees.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- `Vector`: The rotated vector.
+* *Vector*: The rotated vector.
 
 **Example**
 
@@ -116,18 +120,24 @@ print(result)
 ### Right
 
 **Purpose**
-Calculates the cross product of this vector and the provided up reference to derive a right-direction vector. The result is normalized and therefore perpendicular to both input vectors. If this vector has no horizontal component it defaults to `Vector(0, -1, 0)`.
+
+Calculates the cross product of this vector and the provided up reference to derive a right-direction vector.
+
+The result is normalized and therefore perpendicular to both input vectors.
+
+If this vector has no horizontal component it defaults to `Vector(0, -1, 0)`.
 
 **Parameters**
 
-* `vUp` (`Vector`, optional) – Up direction to compare against. Defaults to `vector_up`.
+* `vUp` (*Vector*, optional): Up direction to compare against. Defaults to `vector_up`.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- `Vector`: The calculated right vector.
+* *Vector*: The calculated right vector.
 
 **Example**
 
@@ -143,18 +153,24 @@ print(result)
 ### Up
 
 **Purpose**
-Uses two cross products to determine an up-direction vector that is perpendicular to both this vector and the given up reference. First, the right vector is obtained via `self:Cross(vUp)`, then that right vector is crossed with `self` to yield the final up direction. When this vector lacks a horizontal component the fallback value is `Vector(-self.z, 0, 0)`.
+
+Uses two cross products to determine an up-direction vector that is perpendicular to both this vector and the given up reference.
+
+First, the right vector is obtained via `self:Cross(vUp)`, then that right vector is crossed with `self` to yield the final up direction.
+
+When this vector lacks a horizontal component the fallback value is `Vector(-self.z, 0, 0)`.
 
 **Parameters**
 
-* `vUp` (`Vector`, optional) – Up direction to compare against. Defaults to `vector_up`.
+* `vUp` (*Vector*, optional): Up direction to compare against. Defaults to `vector_up`.
 
 **Realm**
+
 `Shared`
 
 **Returns**
 
-- `Vector`: The calculated up vector.
+* *Vector*: The calculated up vector.
 
 **Example**
 

@@ -1,14 +1,12 @@
 # Modularity Library
 
-This page explains the module loading system.
+This page explains the module-loading system.
 
 ---
 
 ## Overview
 
-The modularity library loads modules contained in the `modules` folder. It resolves dependencies and initializes both serverside and clientside components. It fires the `DoModuleIncludes`, `InitializedSchema` and `InitializedModules` hooks during the loading process.
-
-See [Module Fields](../definitions/module.md) for the options and callbacks a module file may define.
+The modularity library loads modules contained in the **`modules`** folder, resolves dependencies, and initialises both serverside and clientside components. During the process it fires the `DoModuleIncludes`, `InitializedSchema`, and `InitializedModules` hooks. See [Module Fields](../definitions/module.md) for the callbacks and options a module may define.
 
 ---
 
@@ -16,16 +14,19 @@ See [Module Fields](../definitions/module.md) for the options and callbacks a mo
 
 **Purpose**
 
-Loads a module from the given path and processes any dependencies, permissions
-or submodules associated with it.
+Loads a module at a given path, processing dependencies, permissions, and any sub-modules.
 
 **Parameters**
 
 * `uniqueID` (*string*): Identifier for the module.
-* `path` (*string*): Location of the module on disk.
-* `isSingleFile` (*boolean*): Set to `true` to load a single file module.
-* `variable` (*string*): Temporary global table name. Defaults to `"MODULE"`.
-* `skipSubmodules` (*boolean*): Prevent loading submodules when `true`.
+
+* `path` (*string*): Filesystem path of the module.
+
+* `isSingleFile` (*boolean*): `true` to load a single-file module.
+
+* `variable` (*string*): Temporary global table name (default `"MODULE"`).
+
+* `skipSubmodules` (*boolean*): When `true`, sub-modules are not loaded.
 
 **Realm**
 
@@ -33,17 +34,17 @@ or submodules associated with it.
 
 **Returns**
 
-* `nil`
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- Hook to see when extras are included
+-- Watch the include process
 hook.Add("DoModuleIncludes", "DebugInclude", function(path, module)
     print("Including files from " .. path .. " for " .. module.uniqueID)
 end)
 
--- Load a folder module and skip submodules
+-- Load a folder module and skip its sub-modules
 lia.module.load("example", "lilia/modules/example", false, nil, true)
 ```
 
@@ -53,11 +54,11 @@ lia.module.load("example", "lilia/modules/example", false, nil, true)
 
 **Purpose**
 
-Loads the schema and all modules, firing initialization hooks when done.
+Loads the active schema and every discovered module, then fires initialisation hooks.
 
 **Parameters**
 
-* None
+* *None*
 
 **Realm**
 
@@ -65,12 +66,11 @@ Loads the schema and all modules, firing initialization hooks when done.
 
 **Returns**
 
-* `nil`
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- Wait for all modules before executing setup code
 hook.Add("InitializedModules", "SetupExampleData", function()
     print("Modules finished loading.")
 end)
@@ -84,12 +84,13 @@ lia.module.initialize()
 
 **Purpose**
 
-Searches a directory for modules and loads each one it finds.
+Finds and loads every module located in a directory.
 
 **Parameters**
 
-* `directory` (*string*): Path containing module folders and files.
-* `group` (*string*): Module group such as `"schema"` or `"module"`.
+* `directory` (*string*): Path containing module folders or files.
+
+* `group` (*string*): Group identifier such as `"schema"` or `"module"`.
 
 **Realm**
 
@@ -97,12 +98,12 @@ Searches a directory for modules and loads each one it finds.
 
 **Returns**
 
-* `nil`
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
--- Load every module in the core directory (normally done by lia.module.initialize)
+-- Manually load all core modules (usually done by lia.module.initialize)
 lia.module.loadFromDir("lilia/modules/core", "module")
 ```
 
@@ -112,11 +113,11 @@ lia.module.loadFromDir("lilia/modules/core", "module")
 
 **Purpose**
 
-Fetches a loaded module by its identifier.
+Fetches a previously loaded module by its identifier.
 
 **Parameters**
 
-* `identifier` (*string*): Unique identifier of the module.
+* `identifier` (*string*): Module unique ID.
 
 **Realm**
 
@@ -124,17 +125,16 @@ Fetches a loaded module by its identifier.
 
 **Returns**
 
-* `table|nil`: The module table if present.
+* *table | nil*: Module table if present, otherwise `nil`.
 
 **Example**
 
 ```lua
--- Retrieve the main menu module and print its display name
 local main = lia.module.get("mainmenu")
+
 if main then
     print("Loaded module:", main.name)
 end
 ```
 
 ---
-

@@ -6,13 +6,11 @@ This page explains how web images are downloaded and cached.
 
 ## Overview
 
-The webimage library downloads remote images and caches them as materials. Cached files are stored under
+The web-image library downloads remote images and caches them as materials. Cached files are stored under
 
-`data/lilia/<IP>/<Gamemode>/` so each server keeps its own image collection. The library also extends
+`data/lilia/<IP>/<Gamemode>/`, so each server keeps its own image collection. The library also extends
 
-`Material()` and `DImage:SetImage()` allowing you to pass HTTP(S) URLs directly; the image is downloaded,
-
-cached and then used automatically.
+`Material()` and `DImage:SetImage()` so you can pass HTTP(S) URLs directly—the image is downloaded, cached, and used automatically.
 
 ---
 
@@ -20,31 +18,25 @@ cached and then used automatically.
 
 **Purpose**
 
-Downloads an image from the given URL and saves it inside the web image cache. If the file already exists locally the callback fires immediately with the cached Material. When the HTTP request fails the callback receives `nil` and an error string.
+Downloads an image from the given URL and saves it inside the web-image cache. If the file already exists locally the callback fires immediately with the cached `Material`. On HTTP failure the callback receives `nil` and an error string.
 
 **Parameters**
 
-* `name` (`string`): Unique file name including extension.
+* `name` (*string*): Unique file name including extension.
 
+* `url` (*string*): HTTP address of the image.
 
-* `url` (`string`): HTTP address of the image.
+* `callback` (*function | nil*): Called as `callback(mat, fromCache, err)` where `mat` is a `Material`, `fromCache` is `true` if loaded from disk, and `err` is an error string on failure.
 
-
-* `callback` (`function|nil`): Function that receives `(Material mat, boolean fromCache, string err)`.
-
-
-* `flags` (`string|nil`): Optional material flags for Material().
-
+* `flags` (*string | nil*): Optional material flags passed to `Material()`.
 
 **Realm**
 
 `Client`
 
-
 **Returns**
 
-* None
-
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -58,7 +50,7 @@ lia.webimage.register("logo.png", "https://example.com/logo.png", function(mat, 
     end
 end)
 
--- DImage:SetImage can use the saved name later
+-- Later, DImage:SetImage can use the cached name
 myIcon:SetImage("logo.png")
 ```
 
@@ -68,25 +60,21 @@ myIcon:SetImage("logo.png")
 
 **Purpose**
 
-Returns the material previously cached with `lia.webimage.register`. If it does not exist this function returns `nil`. `Material()` and `DImage:SetImage()` call this internally when given a matching name or URL.
+Returns the material cached with `lia.webimage.register`. If the file is missing, returns `nil`. Both `Material()` and `DImage:SetImage()` call this internally when a cached name or matching URL is supplied.
 
 **Parameters**
 
-* `name` (`string`): File name used during registration.
+* `name` (*string*): File name used during registration.
 
-
-* `flags` (`string|nil`): Optional material flags.
-
+* `flags` (*string | nil*): Optional material flags.
 
 **Realm**
 
 `Client`
 
-
 **Returns**
 
-* Material|nil: The image material or nil if missing.
-
+* *Material | nil*: Cached material or `nil` if not found.
 
 **Example**
 
@@ -98,47 +86,11 @@ if mat then
     surface.DrawTexturedRect(0, 0, 64, 64)
 end
 
--- Load directly from the web
+-- Load directly from the web with Material()
 local direct = Material("https://example.com/icon.png")
 
--- Apply with DImage
+-- Apply to a DImage
 button:SetImage("https://example.com/icon.png")
-```
-
----
-
-### lia_saved_images
-
-**Purpose**
-
-Opens a panel listing all cached web images for the current server.
-
-**Realm**
-
-`Client` (`Console`)
-
-**Example**
-
-```bash
-lia_saved_images
-```
-
----
-
-### test_webimage_menu
-
-**Purpose**
-
-Shows a simple window for previewing any image URL. Useful for development.
-
-**Realm**
-
-`Client` (`Console`)
-
-**Example**
-
-```bash
-test_webimage_menu
 ```
 
 ---

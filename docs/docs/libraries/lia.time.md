@@ -1,12 +1,12 @@
 # Time Library
 
-This page lists time and date utilities.
+This page lists time- and date-utilities.
 
 ---
 
 ## Overview
 
-The time library handles date formatting and relative time conversions. It offers helper functions to compute durations such as "time since" or "time until" and uses a third-party date module to avoid the 1970 epoch limitation.
+The time library formats dates and converts relative times. It relies on a bundled date module, avoiding the 1970-epoch limitation, to compute phrases like “time since” and “time until.”
 
 ---
 
@@ -14,41 +14,37 @@ The time library handles date formatting and relative time conversions. It offer
 
 **Purpose**
 
-Returns a human-readable string indicating how long ago a given time occurred (e.g., "5 minutes ago").
+Returns a human-readable string describing how long ago a given time occurred (e.g. “5 minutes ago”).
 
 **Parameters**
 
-* `strTime` (`string or number`): The time in string or timestamp form.
+* `strTime` (*string | number*): Timestamp to measure from.
 
-* Strings should follow `YYYY-MM-DD` while numbers are standard timestamps.
-
+  * Strings must use `YYYY-MM-DD` (or `YYYY-MM-DD HH:MM:SS`).
+  * Numbers are standard UNIX timestamps.
 
 **Realm**
 
 `Shared`
 
-
 **Returns**
 
-* (string) The time since the given date/time in a readable format.
-
+* *string*: Readable “time since” string.
 
 **Example**
 
 ```lua
--- Greet players with the time since they last joined using persistence data
+-- Greet joining players with the time since they last logged in
 hook.Add("PlayerInitialSpawn", "welcomeLastSeen", function(ply)
-    -- Retrieve the time this player last joined from persistent data
-    local key = "lastLogin_" .. ply:SteamID64()
+    local key  = "lastLogin_" .. ply:SteamID64()
     local last = lia.data.get(key, nil, true)
 
     if last then
-        ply:ChatPrint(string.format("Welcome back! You last joined %s.", lia.time.TimeSince(last)))
+        ply:ChatPrint(("Welcome back! You last joined %s."):format(lia.time.TimeSince(last)))
     else
         ply:ChatPrint("Welcome for the first time!")
     end
 
-    -- Store the current time for the next login
     lia.data.set(key, os.time(), true)
 end)
 ```
@@ -59,35 +55,33 @@ end)
 
 **Purpose**
 
-Converts a string timestamp (YYYY-MM-DD HH:MM:SS) into a table of numeric components: year, month, day, hour, min, and sec. If omitted, it returns the current time.
+Parses a timestamp string (`YYYY-MM-DD HH:MM:SS`) into its numeric components. If no argument is given, returns the current time table.
 
 **Parameters**
 
-* `str` (`string`): The time string to convert (optional).
-
+* `str` (*string*): Timestamp string. *Optional*.
 
 **Realm**
 
 `Shared`
 
-
 **Returns**
 
-* (table) A table with numeric year, month, day, hour, min, sec.
-
+* *table*: `{ year, month, day, hour, min, sec }`.
 
 **Example**
 
 ```lua
-    -- Schedule an event at a custom date and time using the parsed table
-    local targetInfo = lia.time.toNumber("2025-04-01 12:30:00")
-    local targetTimestamp = os.time(targetInfo)
-    local delay = targetTimestamp - os.time()
-    if delay > 0 then
-        timer.Simple(delay, function()
-            print("It's now April 1st, 2025, 12:30 PM!")
-        end)
-    end
+-- Schedule an event for 1 April 2025 12:30
+local tInfo     = lia.time.toNumber("2025-04-01 12:30:00")
+local timestamp = os.time(tInfo)
+local delay     = timestamp - os.time()
+
+if delay > 0 then
+    timer.Simple(delay, function()
+        print("It is now April 1st 2025, 12:30 PM!")
+    end)
+end
 ```
 
 ---
@@ -96,39 +90,33 @@ Converts a string timestamp (YYYY-MM-DD HH:MM:SS) into a table of numeric compon
 
 **Purpose**
 
-Returns the full current date and time formatted based on the
+Returns the full current date/time using the `AmericanTimeStamps` config:
 
-"AmericanTimeStamps" configuration flag:
-
-• If enabled: "Weekday, Month DD, YYYY, HH:MM:SSam/pm"
-
-• If disabled: "Weekday, DD Month YYYY, HH:MM:SS"
+* **Enabled**: `"Weekday, Month DD, YYYY, HH:MM:SSam/pm"`
+* **Disabled**: `"Weekday, DD Month YYYY, HH:MM:SS"`
 
 **Parameters**
 
-* None
-
+* *None*
 
 **Realm**
 
 `Shared`
 
-
 **Returns**
 
-* (string) Formatted date and time string.
-
+* *string*: Formatted current date/time.
 
 **Example**
 
 ```lua
-    -- Announce the current server date and time to all players every hour
-    timer.Create("ServerTimeAnnounce", 3600, 0, function()
-        local dateString = lia.time.GetDate()
-        for _, ply in player.GetAll() do
-            ply:ChatPrint("Server time: " .. dateString)
-        end
-    end)
+-- Announce the current server date every hour
+timer.Create("ServerTimeAnnounce", 3600, 0, function()
+    local text = lia.time.GetDate()
+    for _, ply in ipairs(player.GetAll()) do
+        ply:ChatPrint("Server time: " .. text)
+    end
+end)
 ```
 
 ---
@@ -137,35 +125,32 @@ Returns the full current date and time formatted based on the
 
 **Purpose**
 
-Returns the current hour formatted based on the
+Returns the current hour formatted by `AmericanTimeStamps`:
 
-"AmericanTimeStamps" configuration flag:
-
-• If enabled: "Ham" or "Hpm" (12-hour with am/pm)
-
-• If disabled: H (0–23, 24-hour)
+* **Enabled** → `"Ham"` / `"Hpm"` (12-hour clock)
+* **Disabled** → `H` (0 – 23, 24-hour clock)
 
 **Parameters**
 
-* None
-
+* *None*
 
 **Realm**
 
 `Shared`
 
-
 **Returns**
 
-* (string|number) Current hour string with suffix when AmericanTimeStamps is enabled, otherwise numeric hour in 24-hour format.
-
+* *string | number*: Hour with suffix (am/pm) or 24-hour integer.
 
 **Example**
 
 ```lua
--- Toggle an NPC's shop based on the in-game hour
+-- Toggle an NPC shop by hour
 timer.Create("CheckShopHours", 60, 0, function()
-    local hour = lia.time.GetHour()
-    npc:SetNWBool("ShopOpen", hour >= 9 and hour < 17)
+    local hour = lia.time.GetHour()      -- could be "3pm" or 15
+    local hNum = tonumber(hour) or tonumber(hour:sub(1, -3)) % 12  -- convert if am/pm
+    npc:SetNWBool("ShopOpen", hNum >= 9 and hNum < 17)
 end)
 ```
+
+---

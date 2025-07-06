@@ -6,7 +6,7 @@ This page documents general utilities used throughout Lilia.
 
 ## Overview
 
-The lia core library exposes shared helper functions used across multiple modules. It primarily handles file inclusion logic and other small utilities.
+The core library exposes shared helper functions used across multiple modules. Its main jobs include realm-aware file inclusion and small convenience utilities for coloured console output, deprecation warnings, and standardised punishments.
 
 ---
 
@@ -14,12 +14,12 @@ The lia core library exposes shared helper functions used across multiple module
 
 **Purpose**
 
-Includes a Lua file on the appropriate realm, sending it to clients when needed.
+Includes a Lua file on the appropriate realm, sending it to clients when required.
 
 **Parameters**
 
 * `fileName` (*string*): Path to the Lua file.
-* `state` (*string*): Realm state ("server", "client", "shared", etc.).
+* `state` (*string*): Realm state (`"server"`, `"client"`, `"shared"`, etc.).
 
 **Realm**
 
@@ -27,7 +27,7 @@ Depends on the file realm.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -35,44 +35,49 @@ Depends on the file realm.
 lia.include("lilia/gamemode/core/libraries/util.lua")
 ```
 
+---
+
 ### lia.includeDir
 
 **Purpose**
 
-Includes all Lua files in a directory, optionally traversing subfolders.
+Includes every Lua file in a directory, with optional recursion and realm override.
 
 **Parameters**
 
-* `directory` (*string*): Directory path to include.
-* `fromLua` (*boolean*): Use the raw Lua path when true.
-* `recursive` (*boolean*): Include files recursively.
-* `realm` (*string*): Realm state for inclusion.
+* `directory` (*string*): Directory path.
+* `fromLua` (*boolean*): Treat `directory` as a raw Lua path.
+* `recursive` (*boolean*): Include sub-folders when `true`.
+* `realm` (*string*): Realm state override.
 
 **Realm**
 
-Depends on file inclusion.
+Depends on included files.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
 lia.includeDir("lilia/gamemode/core/modules/admin", true, true, "server")
 ```
+
+---
+
 ### lia.includeGroupedDir
 
 **Purpose**
 
-Recursively includes Lua files in a directory while preserving alphabetical order.
+Recursively includes Lua files while preserving alphabetical order.
 
 **Parameters**
 
-* `dir` (*string*): Directory path to load files from.
+* `dir` (*string*): Directory path.
 * `raw` (*boolean*): Treat `dir` as a raw filesystem path.
-* `recursive` (*boolean*): Traverse subdirectories recursively.
-* `forceRealm` (*string*): Optional realm override for all files.
+* `recursive` (*boolean*): Traverse sub-directories.
+* `forceRealm` (*string*): Realm override for all files.
 
 **Realm**
 
@@ -80,22 +85,25 @@ Recursively includes Lua files in a directory while preserving alphabetical orde
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
 lia.includeGroupedDir("core/modules", false, true)
 ```
+
+---
+
 ### lia.error
 
 **Purpose**
 
-Prints a colored error message prefixed with "[Lilia]".
+Prints a coloured error message prefixed with “$Lilia$”.
 
 **Parameters**
 
-* `msg` (*string*): Error text to display.
+* `msg` (*string*): Error text.
 
 **Realm**
 
@@ -103,23 +111,26 @@ Prints a colored error message prefixed with "[Lilia]".
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
 lia.error("Something went wrong")
 ```
+
+---
+
 ### lia.deprecated
 
 **Purpose**
 
-Displays a deprecation warning and optionally runs a callback.
+Displays a deprecation warning and optionally runs a fallback callback.
 
 **Parameters**
 
 * `methodName` (*string*): Name of the deprecated method.
-* `callback` (*function*): Optional function executed after warning.
+* `callback` (*function*): Fallback function. *Optional*.
 
 **Realm**
 
@@ -127,13 +138,17 @@ Displays a deprecation warning and optionally runs a callback.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
-lia.deprecated("OldFunction", function() print("Called fallback") end)
+lia.deprecated("OldFunction", function()
+    print("Called fallback")
+end)
 ```
+
+---
 
 ### lia.updater
 
@@ -143,7 +158,7 @@ Prints an updater message in cyan with the Lilia prefix.
 
 **Parameters**
 
-* `msg` (*string*): Update text to display.
+* `msg` (*string*): Message text.
 
 **Realm**
 
@@ -151,15 +166,16 @@ Prints an updater message in cyan with the Lilia prefix.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
-lia.updater("Loading additional content...")
+lia.updater("Loading additional content…")
 ```
 
 ---
+
 ### lia.information
 
 **Purpose**
@@ -168,7 +184,7 @@ Prints an informational message with the Lilia prefix.
 
 **Parameters**
 
-* `msg` (*string*): Text to print to the console.
+* `msg` (*string*): Console text.
 
 **Realm**
 
@@ -176,7 +192,7 @@ Prints an informational message with the Lilia prefix.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -184,16 +200,18 @@ Prints an informational message with the Lilia prefix.
 lia.information("Server started successfully")
 ```
 
+---
+
 ### lia.bootstrap
 
 **Purpose**
 
-Logs a bootstrap message with a colored section tag.
+Logs a bootstrap message with a coloured section tag.
 
 **Parameters**
 
-* `section` (*string*): Category or stage of bootstrap.
-* `msg` (*string*): Message describing the bootstrap step.
+* `section` (*string*): Bootstrap stage.
+* `msg` (*string*): Descriptive message.
 
 **Realm**
 
@@ -201,7 +219,7 @@ Logs a bootstrap message with a colored section tag.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -209,11 +227,13 @@ Logs a bootstrap message with a colored section tag.
 lia.bootstrap("Database", "Connection established")
 ```
 
+---
+
 ### lia.notifyAdmin
 
 **Purpose**
 
-Sends a chat message to all staff members who can view alting notifications.
+Broadcasts a chat message to all staff members permitted to view alt-account notifications.
 
 **Parameters**
 
@@ -225,7 +245,7 @@ Sends a chat message to all staff members who can view alting notifications.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -233,16 +253,18 @@ Sends a chat message to all staff members who can view alting notifications.
 lia.notifyAdmin("Possible alt account detected")
 ```
 
+---
+
 ### lia.printLog
 
 **Purpose**
 
-Prints a color-coded log entry to the console.
+Prints a colour-coded log entry to the console.
 
 **Parameters**
 
-* `category` (*string*): Name of the log category.
-* `logString` (*string*): Message to log.
+* `category` (*string*): Log category name.
+* `logString` (*string*): Text to log.
 
 **Realm**
 
@@ -250,7 +272,7 @@ Prints a color-coded log entry to the console.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -258,21 +280,23 @@ Prints a color-coded log entry to the console.
 lia.printLog("Gameplay", "Third round started")
 ```
 
+---
+
 ### lia.applyPunishment
 
 **Purpose**
 
-Applies standardized kick or ban commands for a player infraction.
+Applies standardised kick/ban commands for a player infraction.
 
 **Parameters**
 
-* `client` (*Player*): The player to punish.
-* `infraction` (*string*): Reason for punishment.
-* `kick` (*boolean*): Whether to kick the player.
-* `ban` (*boolean*): Whether to ban the player.
-* `time` (*number*): Ban duration in minutes.
-* `kickKey` (*string*): Localization key for the kick reason.
-* `banKey` (*string*): Localization key for the ban reason.
+* `client` (*Player*): Player to punish.
+* `infraction` (*string*): Reason.
+* `kick` (*boolean*): Kick the player.
+* `ban` (*boolean*): Ban the player.
+* `time` (*number*): Ban duration (minutes).
+* `kickKey` (*string*): Localisation key for kick reason.
+* `banKey` (*string*): Localisation key for ban reason.
 
 **Realm**
 
@@ -280,7 +304,7 @@ Applies standardized kick or ban commands for a player infraction.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -288,15 +312,17 @@ Applies standardized kick or ban commands for a player infraction.
 lia.applyPunishment(ply, "Cheating", true, true, 0)
 ```
 
+---
+
 ### lia.includeEntities
 
 **Purpose**
 
-Recursively loads entity-related files from the given directory.
+Recursively loads entity-related files from a directory.
 
 **Parameters**
 
-* `path` (*string*): Directory containing entity files.
+* `path` (*string*): Directory path containing entity files.
 
 **Realm**
 
@@ -304,7 +330,7 @@ Recursively loads entity-related files from the given directory.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -312,4 +338,4 @@ Recursively loads entity-related files from the given directory.
 lia.includeEntities("lilia/entities")
 ```
 
-
+---

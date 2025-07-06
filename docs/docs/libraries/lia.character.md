@@ -8,585 +8,473 @@ This page covers utilities for manipulating character data.
 
 The character library handles creation and persistence of player characters. It manages character variables, interacts with the database, and offers helpers for retrieving characters by ID or SteamID. Because these functions directly modify stored data, use them carefully or you may corrupt character information.
 
+---
+
 ### lia.char.new
 
-**Description:**
+**Purpose**
 
 Creates a new character instance with default variables and metatable.
 
-**Parameters:**
+**Parameters**
 
-* `data` (`table`) – Table of character variables.
+* `data` (*table*): Table of character variables.
 
+* `id` (*number*): Character ID.
 
-* `id` (`number`) – Character ID.
+* `client` (*Player*): Player entity.
 
+* `steamID` (*string*): SteamID64 string if the client is not valid.
 
-* `client` (`Player`) – Player entity.
+**Realm**
 
+`Shared`
 
-* `steamID` (`string`) – SteamID64 string if client is not valid.
+**Returns**
 
+* *table*: New character object.
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* `character` (`table`) – New character object.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.char.new
-    local char = lia.char.new({name = "John"}, 1, client)
+-- Create a simple character for a player
+local char = lia.char.new({ name = "John" }, 1, client)
 ```
 
 ---
 
 ### lia.char.hookVar
 
-**Description:**
+**Purpose**
 
-Registers a hook function for when a character variable changes.
+Registers a hook function that runs whenever a specific character variable changes.
 
-**Parameters:**
+**Parameters**
 
-* `varName` (`string`) – Variable name to hook.
+* `varName` (*string*): Variable name to hook.
 
+* `hookName` (*string*): Unique hook identifier.
 
-* `hookName` (`string`) – Unique hook identifier.
+* `func` (*function*): Function called on variable change.
 
+**Realm**
 
-* `func` (`function`) – Function to call on variable change.
+`Shared`
 
+**Returns**
 
-**Realm:**
+* *nil*: This function does not return a value.
 
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Print the new name whenever a character's name changes
-    lia.char.hookVar("name", "PrintName", function(char, old, new)
-        print(char, old, new)
-    end)
+-- Print the new name whenever a character's name changes
+lia.char.hookVar("name", "PrintName", function(char, old, new)
+    print(char, old, new)
+end)
 ```
 
 ---
 
 ### lia.char.registerVar
 
-**Description:**
+**Purpose**
 
-Registers a character variable with metadata and generates accessor methods.
+Registers a character variable with metadata and auto-generates accessor methods.
 
-**Parameters:**
+**Parameters**
 
-* `key` (`string`) – Variable key.
+* `key` (*string*): Variable key.
 
+* `data` (*table*): Variable metadata (default value, validation, networking, etc.).
 
-* `data` (`table`) – Variable metadata including default, validation, networking, etc.
+**Realm**
 
-Common `data` fields include:
+`Shared`
 
-* `field` (string) – Database column name for persistence.
+**Returns**
 
-* `default` (any) – Default value when none is provided.
+* *nil*: This function does not return a value.
 
-* `index` (number) – Order in the character creation menu.
-
-* `noNetworking` (boolean) – Do not network this variable.
-
-* `isLocal` (boolean) – Only network the value to the owning player.
-
-* `noDisplay` (boolean) – Hide the variable from character menus.
-
-* `isNotModifiable` (boolean) – Do not automatically generate setter methods.
-
-* `shouldDisplay` (function) – Return false to hide in the creation menu.
-
-* `onSet` / `onGet` (function) – Custom setter or getter logic.
-
-* `onValidate` (function) – Validate input during creation.
-
-* `onAdjust` (function) – Modify the submitted value before saving.
-
-* `onSync` (function) – Called when the variable is networked.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Register an age field that only accepts numbers
-    lia.char.registerVar("age", {
-        field = "_age",
-        default = 20,
-        onValidate = function(v) return isnumber(v) end
-    })
+-- Register an "age" field that only accepts numbers
+lia.char.registerVar("age", {
+    field = "_age",
+    default = 20,
+    onValidate = isnumber
+})
 ```
 
 ---
 
 ### lia.char.getCharData
 
-**Description:**
+**Purpose**
 
-Retrieves character data JSON from the database as a Lua table.
+Retrieves a character’s JSON data from the database as a Lua table (or a single key).
 
-**Parameters:**
+**Parameters**
 
-* `charID` (`number|string`) – Character ID.
+* `charID` (*number | string*): Character ID.
 
+* `key` (*string*): Specific data key to return (optional).
 
-* `key` (`string`) – Specific data key to return (optional).
+**Realm**
 
+`Shared`
 
-**Realm:**
+**Returns**
 
-* Shared
+* *any*: Data value or full table if no key is provided.
 
-
-**Returns:**
-
-* `value` (`any`) – Data value or full table if no key provided.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.char.getCharData
-    local age = lia.char.getCharData(1, "age")
+local age = lia.char.getCharData(1, "age")
 ```
 
 ---
 
 ### lia.char.getCharDataRaw
 
-**Description:**
+**Purpose**
 
-Retrieves raw character database row or specific column.
+Returns the raw database row for a character or a specific column value.
 
-**Parameters:**
+**Parameters**
 
-* `charID` (`number|string`) – Character ID.
+* `charID` (*number | string*): Character ID.
 
+* `key` (*string*): Specific column name to return (optional).
 
-* `key` (`string`) – Specific column name to return (optional).
+**Realm**
 
+`Shared`
 
-**Realm:**
+**Returns**
 
-* Shared
+* *table | any*: Full row table or column value.
 
-
-**Returns:**
-
-* `row` (`table|any`) – Full row table or column value.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.char.getCharDataRaw
-    local row = lia.char.getCharDataRaw(1)
+local row = lia.char.getCharDataRaw(1)
 ```
 
 ---
 
 ### lia.char.getOwnerByID
 
-**Description:**
+**Purpose**
 
 Finds the player entity that owns the character with the given ID.
 
-**Parameters:**
+**Parameters**
 
-* `ID` (`number|string`) – Character ID.
+* `ID` (*number | string*): Character ID.
 
+**Realm**
 
-**Realm:**
+`Shared`
 
-* Shared
+**Returns**
 
+* *Player | nil*: Player entity or `nil` if not found.
 
-**Returns:**
-
-* Player – Player entity or nil if not found.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.char.getOwnerByID
-    local ply = lia.char.getOwnerByID(1)
+local ply = lia.char.getOwnerByID(1)
 ```
 
 ---
 
 ### lia.char.getBySteamID
 
-**Description:**
+**Purpose**
 
 Retrieves a character object by SteamID or SteamID64.
 
-**Parameters:**
+**Parameters**
 
-* `steamID` (`string`) – SteamID or SteamID64.
+* `steamID` (*string*): SteamID or SteamID64.
 
+**Realm**
 
-**Realm:**
+`Shared`
 
-* Shared
+**Returns**
 
+* *table | nil*: Character object or `nil`.
 
-**Returns:**
-
-* Character – Character object or nil.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.char.getBySteamID
-    local char = lia.char.getBySteamID("STEAM_0:0:11101")
+local char = lia.char.getBySteamID("STEAM_0:0:11101")
 ```
 
 ---
 
 ### lia.char.getAll
 
-**Description:**
+**Purpose**
 
-Returns a table mapping all players to their loaded character objects.
+Returns a table mapping all players to their loaded characters.
 
-**Parameters:**
+**Parameters**
 
-* None
+* *None*
 
+**Realm**
 
-**Realm:**
+`Shared`
 
-* Shared
+**Returns**
 
+* *table*: Map of `Player → Character`.
 
-**Returns:**
-
-* table – Map of Player to Character.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of pairs
-    for ply, char in pairs(lia.char.getAll()) do print(ply, char:getName()) end
+for ply, char in pairs(lia.char.getAll()) do
+    print(ply, char:getName())
+end
 ```
 
 ---
 
 ### lia.char.GetTeamColor
 
-**Description:**
+**Purpose**
 
-Determines the team color for a client based on their character class or default team.
+Determines the team colour for a client based on their character class or default team.
 
-**Parameters:**
+**Parameters**
 
-* `client` (`Player`) – Player entity.
+* `client` (*Player*): Player entity.
 
+**Realm**
 
-**Realm:**
+`Shared`
 
-* Shared
+**Returns**
 
+* *Color*: Team or class colour.
 
-**Returns:**
-
-* Color – Team or class color.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.char.GetTeamColor
-    local color = lia.char.GetTeamColor(client)
+local color = lia.char.GetTeamColor(client)
 ```
 
 ---
 
 ### lia.char.create
 
-**Description:**
+**Purpose**
 
-Inserts a new character into the database and sets up default inventory.
+Inserts a new character into the database, creates a default inventory, and fires hooks.
 
-Calls `CreateDefaultInventory` and after completion the `OnCharCreated` hook.
+**Parameters**
 
-**Parameters:**
+* `data` (*table*): Character creation data.
 
-* `data` (`table`) – Character creation data.
+* `callback` (*function*): Callback receiving the new character ID.
 
+**Realm**
 
-* `callback` (`function`) – Callback receiving new character ID.
+`Server`
 
+**Returns**
 
-**Realm:**
+* *nil*: This function does not return a value.
 
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Create a character for the given player
-    lia.char.create({
-        name = "John",
-        steamID = client:SteamID64(),
-        faction = "Citizen"
-    }, function(id)
-        print("Created", id)
-    end)
+lia.char.create({
+    name = "John",
+    steamID = client:SteamID64(),
+    faction = "Citizen"
+}, function(id)
+    print("Created", id)
+end)
 ```
 
 ---
 
 ### lia.char.restore
 
-**Description:**
+**Purpose**
 
-Loads characters for a client from the database, optionally filtering by ID.
+Loads characters for a client from the database, optionally filtering by ID, and fires hooks.
 
-Each loaded character triggers the `CharRestored` hook.
+**Parameters**
 
-**Parameters:**
+* `client` (*Player*): Player entity.
 
-* `client` (`Player`) – Player entity.
+* `callback` (*function*): Callback receiving a list of character IDs.
 
+* `id` (*number*): Specific character ID to restore (optional).
 
-* `callback` (`function`) – Callback receiving list of character IDs.
+**Realm**
 
+`Server`
 
-* `id` (`number`) – Specific character ID to restore (optional).
+**Returns**
 
+* *nil*: This function does not return a value.
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Load all characters belonging to a player
-    lia.char.restore(client, function(ids)
-        PrintTable(ids)
-    end)
+lia.char.restore(client, function(ids)
+    PrintTable(ids)
+end)
 ```
 
 ---
 
 ### lia.char.cleanUpForPlayer
 
-**Description:**
+**Purpose**
 
 Cleans up loaded characters and inventories for a player on disconnect.
 
-Runs the `CharCleanUp` hook for each cleaned character.
+**Parameters**
 
-**Parameters:**
+* `client` (*Player*): Player entity.
 
-* `client` (`Player`) – Player entity.
+**Realm**
 
+`Server`
 
-**Realm:**
+**Returns**
 
-* Server
+* *nil*: This function does not return a value.
 
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.char.cleanUpForPlayer
-    lia.char.cleanUpForPlayer(client)
+lia.char.cleanUpForPlayer(client)
 ```
 
 ---
 
 ### lia.char.delete
 
-**Description:**
+**Purpose**
 
-Deletes a character by ID from the database, cleans up and notifies players.
+Deletes a character by ID, cleans up, and notifies players via hooks.
 
-Fires `PreCharDelete` before removal and `OnCharDelete` afterwards.
+**Parameters**
 
-**Parameters:**
+* `id` (*number*): Character ID to delete.
 
-* `id` (`number`) – Character ID to delete.
+* `client` (*Player*): Player entity reference.
 
+**Realm**
 
-* `client` (`Player`) – Player entity reference.
+`Server`
 
+**Returns**
 
-**Realm:**
+* *nil*: This function does not return a value.
 
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.char.delete
-    lia.char.delete(1, client)
+lia.char.delete(1, client)
 ```
 
 ---
 
 ### lia.char.setCharData
 
-**Description:**
+**Purpose**
 
-Updates a character's JSON data field in the database and loaded object.
+Updates a character’s JSON data field in the database and the loaded object. Triggers `OnCharVarChanged` if loaded.
 
-Setting a value on a loaded character triggers `OnCharVarChanged`.
+**Parameters**
 
-**Parameters:**
+* `charID` (*number | string*): Character ID.
 
-* `charID` (`number|string`) – Character ID.
+* `key` (*string*): Data key.
 
+* `val` (*any*): New value.
 
-* `key` (`string`) – Data key.
+**Realm**
 
+`Server`
 
-* `val` (`any`) – New value.
+**Returns**
 
+* *boolean*: `true` on success, `false` on failure.
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – True on success, false on failure.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.char.setCharData
-    lia.char.setCharData(1, "age", 25)
+lia.char.setCharData(1, "age", 25)
 ```
 
 ---
 
 ### lia.char.setCharName
 
-**Description:**
+**Purpose**
 
-Updates the character's name in the database and loaded object.
+Changes a character’s name in the database and the loaded object, firing appropriate hooks.
 
-Triggers `OnCharVarChanged` for the `name` variable if the character is loaded.
+**Parameters**
 
-**Parameters:**
+* `charID` (*number | string*): Character ID.
 
-* `charID` (`number|string`) – Character ID.
+* `name` (*string*): New character name.
 
+**Realm**
 
-* `name` (`string`) – New character name.
+`Server`
 
+**Returns**
 
-**Realm:**
+* *boolean*: `true` on success, `false` on failure.
 
-* Server
-
-
-**Returns:**
-
-* boolean – True on success, false on failure.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.char.setCharName
-    lia.char.setCharName(1, "NewName")
+lia.char.setCharName(1, "NewName")
 ```
 
 ---
 
 ### lia.char.setCharModel
 
-**Description:**
+**Purpose**
 
-Updates the character's model and bodygroups in the database and in-game.
+Updates the character’s model and bodygroups in the database and in-game, firing hooks.
 
-Also fires `PlayerModelChanged` and `OnCharVarChanged` for the `model` variable.
+**Parameters**
 
-**Parameters:**
+* `charID` (*number | string*): Character ID.
 
-* `charID` (`number|string`) – Character ID.
+* `model` (*string*): Model path.
 
+* `bg` (*table*): Bodygroup list.
 
-* `model` (`string`) – Model path.
+**Realm**
 
+`Server`
 
-* `bg` (`table`) – Bodygroup table list.
+**Returns**
 
+* *boolean*: `true` on success, `false` on failure.
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – True on success, false on failure.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.char.setCharModel
-    lia.char.setCharModel(1, "models/player.mdl", {})
+lia.char.setCharModel(1, "models/player.mdl", {})
 ```
+
+---

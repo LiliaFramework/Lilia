@@ -10,7 +10,6 @@ The data library stores key/value pairs in the `lia_data` database table. Values
 
 ---
 
-
 ### lia.data.set
 
 **Purpose**
@@ -20,8 +19,11 @@ Saves the provided value under the specified key in the `lia_data` table and cac
 **Parameters**
 
 * `key` (*string*): Key under which the data is stored.
+
 * `value` (*any*): Value to store.
+
 * `global` (*boolean*): Store without gamemode or map restrictions.
+
 * `ignoreMap` (*boolean*): Omit the map name from the stored entry.
 
 **Realm**
@@ -41,8 +43,8 @@ concommand.Add("save_spawn", function(ply)
     end
 end)
 ```
----
 
+---
 
 ### lia.data.delete
 
@@ -53,7 +55,9 @@ Removes the stored value corresponding to the key from the `lia_data` table and 
 **Parameters**
 
 * `key` (*string*): Key corresponding to the data to delete.
+
 * `global` (*boolean*): Store without gamemode or map restrictions.
+
 * `ignoreMap` (*boolean*): Omit the map name from the stored entry.
 
 **Realm**
@@ -69,8 +73,8 @@ Removes the stored value corresponding to the key from the `lia_data` table and 
 ```lua
 lia.data.delete("spawn_pos")
 ```
----
 
+---
 
 ### lia.data.get
 
@@ -81,9 +85,13 @@ Retrieves the stored value for the specified key from the cache.
 **Parameters**
 
 * `key` (*string*): Key corresponding to the data.
+
 * `default` (*any*): Default value to return if no data is found.
+
 * `global` (*boolean*): Legacy parameter, currently ignored.
+
 * `ignoreMap` (*boolean*): Legacy parameter, currently ignored.
+
 * `refresh` (*boolean*): Unused legacy parameter kept for compatibility.
 
 **Realm**
@@ -98,14 +106,15 @@ Retrieves the stored value for the specified key from the cache.
 
 ```lua
 hook.Add("PlayerSpawn", "UseSavedSpawn", function(ply)
-    local pos = lia.data.get("spawn_pos", Vector(0,0,0), true)
+    local pos = lia.data.get("spawn_pos", Vector(0, 0, 0), true)
     if pos then
         ply:SetPos(pos)
     end
 end)
 ```
+
 ---
----
+
 ### lia.data.loadTables
 
 **Purpose**
@@ -122,7 +131,7 @@ Loads all entries from the `lia_data` table into `lia.data.stored`. If the table
 
 **Returns**
 
-* *nil*: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -130,12 +139,13 @@ Loads all entries from the `lia_data` table into `lia.data.stored`. If the table
 lia.data.loadTables()
 ```
 
+---
 
 ### lia.data.convertToDatabase
 
 **Purpose**
 
-Imports legacy `.txt` files from `data/lilia` into the `lia_data` SQL table. Players are prevented from joining while the conversion runs. If `changeMap` is true, the current map reloads once conversion finishes.
+Imports legacy `.txt` files from `data/lilia` into the `lia_data` SQL table. Players are prevented from joining while the conversion runs. If `changeMap` is `true`, the current map reloads once conversion finishes.
 
 **Parameters**
 
@@ -147,7 +157,7 @@ Imports legacy `.txt` files from `data/lilia` into the `lia_data` SQL table. Pla
 
 **Returns**
 
-* *nil*: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -155,3 +165,4 @@ Imports legacy `.txt` files from `data/lilia` into the `lia_data` SQL table. Pla
 lia.data.convertToDatabase(true)
 ```
 
+---

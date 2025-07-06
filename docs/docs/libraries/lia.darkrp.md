@@ -6,15 +6,7 @@ This page describes helpers for integrating with DarkRP.
 
 ## Overview
 
-The darkrp library bridges functionality with the DarkRP gamemode. It mirrors
-
-several DarkRP helpers so third-party addons expecting the `DarkRP` globals
-
-continue to function. The functions documented here are also assigned to the
-
-global `DarkRP` table. A simplified `RPExtraTeams` table is created as well,
-
-mapping each faction to its team index for compatibility.
+The `darkrp` library bridges functionality with the DarkRP gamemode. It mirrors several DarkRP helpers so third-party addons expecting the `DarkRP` globals continue to function. The functions documented here are also assigned to the global `DarkRP` table. A simplified `RPExtraTeams` table is created as well, mapping each faction to its team index for compatibility.
 
 ---
 
@@ -22,12 +14,13 @@ mapping each faction to its team index for compatibility.
 
 **Purpose**
 
-Checks whether a position is free of world geometry, players, NPCs and props within a 35 unit sphere.
+Checks whether a position is free of world geometry, players, NPCs, and props within a 35-unit sphere.
 
 **Parameters**
 
 * `position` (*Vector*): World position to test.
-* `entitiesToIgnore` (*table*): Entities ignored during the check. Optional.
+
+* `entitiesToIgnore` (*table*): Entities ignored during the check. *Optional*.
 
 **Realm**
 
@@ -41,10 +34,12 @@ Checks whether a position is free of world geometry, players, NPCs and props wit
 
 ```lua
 local ply = Entity(1)
-if lia.darkrp.isEmpty(ply:GetPos(), {ply}) then
+if lia.darkrp.isEmpty(ply:GetPos(), { ply }) then
     print("Spawn point is clear")
 end
 ```
+
+---
 
 ### lia.darkrp.findEmptyPos
 
@@ -55,9 +50,13 @@ Searches around a start position for a spot free of world geometry and blocking 
 **Parameters**
 
 * `startPos` (*Vector*): Initial position to search from.
-* `entitiesToIgnore` (*table*): Entities ignored during the search. Optional.
+
+* `entitiesToIgnore` (*table*): Entities ignored during the search. *Optional*.
+
 * `maxDistance` (*number*): Maximum distance to search in units.
+
 * `searchStep` (*number*): Step increment when expanding the search radius.
+
 * `checkArea` (*Vector*): Additional height offset tested for clearance.
 
 **Realm**
@@ -71,7 +70,10 @@ Searches around a start position for a spot free of world geometry and blocking 
 **Example**
 
 ```lua
-local spawn = lia.darkrp.findEmptyPos(ply:GetPos(), {ply}, 128, 16, Vector(0,0,64))
+local spawn = lia.darkrp.findEmptyPos(ply:GetPos(), { ply }, 128, 16, Vector(0, 0, 64))
+```
+
+---
 
 ### lia.darkrp.notify
 
@@ -82,6 +84,7 @@ Sends a notification to the specified client. The second and third parameters ex
 **Parameters**
 
 * `client` (*Player*): Player to receive the message.
+
 * `message` (*string*): Text of the notification.
 
 **Realm**
@@ -90,7 +93,7 @@ Sends a notification to the specified client. The second and third parameters ex
 
 **Returns**
 
-* *nil*: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -98,16 +101,20 @@ Sends a notification to the specified client. The second and third parameters ex
 lia.darkrp.notify(ply, nil, nil, "Purchase complete")
 ```
 
+---
+
 ### lia.darkrp.textWrap
 
 **Purpose**
 
-Clientside helper that wraps a string so it fits within a given pixel width using the provided font.
+Client-side helper that wraps a string so it fits within a given pixel width using the provided font.
 
 **Parameters**
 
 * `text` (*string*): Text to wrap.
+
 * `fontName` (*string*): Font used to measure width.
+
 * `maxLineWidth` (*number*): Maximum pixel width before wrapping occurs.
 
 **Realm**
@@ -124,6 +131,8 @@ Clientside helper that wraps a string so it fits within a given pixel width usin
 local wrapped = lia.darkrp.textWrap("Some very long text", "DermaDefault", 150)
 chat.AddText(wrapped)
 ```
+
+---
 
 ### lia.darkrp.formatMoney
 
@@ -148,8 +157,8 @@ Formats the given amount using `lia.currency.get` so other DarkRP addons receive
 ```lua
 print(lia.darkrp.formatMoney(2500))
 ```
----
 
+---
 
 ### lia.darkrp.createEntity
 
@@ -160,7 +169,8 @@ Registers a new DarkRP entity as an item so that it can be spawned through lia's
 **Parameters**
 
 * `name` (*string*): Display name of the entity.
-* `data` (*table*): Table containing fields such as `model`, `desc`, `category`, `ent`, `price` and optional `cmd`.
+
+* `data` (*table*): Table containing fields such as `model`, `desc`, `category`, `ent`, `price`, and optional `cmd`.
 
 **Realm**
 
@@ -168,7 +178,7 @@ Registers a new DarkRP entity as an item so that it can be spawned through lia's
 
 **Returns**
 
-* *nil*: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -179,6 +189,7 @@ lia.darkrp.createEntity("Fuel", {
     price = 50
 })
 ```
+
 ---
 
 ### lia.darkrp.createCategory
@@ -197,11 +208,13 @@ Stub for DarkRP category creation. Included only for compatibility.
 
 **Returns**
 
-* *nil*: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
 lia.darkrp.createCategory()
 ```
+
+---
 

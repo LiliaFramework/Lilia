@@ -12,122 +12,112 @@ The color library centralizes color utilities used throughout the UI. You can re
 
 ### lia.color.register
 
-**Description:**
+**Purpose**
 
 Registers a named color for later lookup or use with `Color(name)`.
 
-**Parameters:**
+**Parameters**
 
-* `name` (`string`) – Key used to reference the color.
+* `name` (*string*): Key used to reference the color.
 
+* `color` (*Color | table*): Color object or `{ r, g, b }` table.
 
-* `color` (`Color|table`) – Color object or `{r, g, b}` table.
+**Realm**
 
+`Shared`
 
-**Realm:**
+**Returns**
 
-* Shared
+* *nil*: This function does not return a value.
 
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Register a custom purple shade and fetch it later
-    lia.color.register("myPurple", {128, 0, 180})
-    local c = Color("myPurple")
+-- Register a custom purple shade and fetch it later
+lia.color.register("myPurple", { 128, 0, 180 })
+local c = Color("myPurple")
 ```
 
 ---
 
 ### lia.color.Adjust
 
-**Description:**
+**Purpose**
 
-Returns a new Color based on the input color with the given channel offsets.
+Creates a new `Color` based on the input color with the given channel offsets.
 
-**Parameters:**
+**Parameters**
 
-* `color` (`Color|table`) – Base color to modify.
+* `color` (*Color | table*): Base color to modify.
 
+* `rOffset` (*number*): Red channel delta.
 
-* `rOffset` (`number`) – Red channel delta.
+* `gOffset` (*number*): Green channel delta.
 
+* `bOffset` (*number*): Blue channel delta.
 
-* `gOffset` (`number`) – Green channel delta.
+* `aOffset` (*number | nil*): Alpha channel delta (optional).
 
+**Realm**
 
-* `bOffset` (`number`) – Blue channel delta.
+`Shared`
 
+**Returns**
 
-* `aOffset` (`number|nil`) – Alpha channel delta (optional).
+* *Color*: Adjusted color.
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* Color – Adjusted color.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-
-    -- Darken the default red by 30 points
-    local darkRed = lia.color.Adjust(Color("red"), -30, 0, 0)
+-- Darken the default red by 30 points
+local darkRed = lia.color.Adjust(Color("red"), -30, 0, 0)
 ```
 
 ---
 
 ### lia.color.ReturnMainAdjustedColors
 
-**Description:**
+**Purpose**
 
-Builds a UI palette derived from the config's base color.
+Builds and returns a UI palette derived from the config’s base color.
 
-**Parameters:**
+**Parameters**
 
-* None
+* *None*
 
+**Realm**
 
-**Realm:**
+`Shared`
 
-* Shared
+**Returns**
 
+* *table*: Contains `background`, `sidebar`, `accent`, `text`, `hover`, `border`, and `highlight` colors.
 
-**Returns:**
-
-* table – Contains `background`, `sidebar`, `accent`, `text`, `hover`, `border` and `highlight` colors.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-
-    local colors = lia.color.ReturnMainAdjustedColors()
-    surface.SetDrawColor(colors.background)
+local colors = lia.color.ReturnMainAdjustedColors()
+surface.SetDrawColor(colors.background)
 ```
+
+---
 
 ### Color(name)
 
-The global `Color()` function is overridden to accept a registered color name.
-Passing a string will look up the color in `lia.color.stored` and return a
-`Color` object. Unrecognized names default to white.
+**Purpose**
 
-**Realm:**
+The global `Color()` function is overridden to accept a registered color name. Passing a string looks up the color in `lia.color.stored` and returns a `Color` object. Unrecognized names default to white.
 
-* Shared
+**Parameters**
 
-**Returns:**
+* `name` (*string*): Registered color name.
 
-* Color – The color object matching the name.
+**Realm**
 
+`Shared`
 
+**Returns**
+
+* *Color*: The color object matching the name.
+
+---

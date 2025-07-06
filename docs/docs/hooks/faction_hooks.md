@@ -1,6 +1,8 @@
 # Faction Hooks
 
-This document describes all `FACTION` function hooks defined within the codebase. Use these to customize default naming, descriptions, and lifecycle events when characters are created, spawned, or transferred within a faction.
+This document describes all `FACTION` function hooks defined within the codebase.
+
+Use these to customize default naming, descriptions, and lifecycle events when characters are created, spawned, or transferred within a faction.
 
 Each hook is defined on a faction table and receives the table itself as `self` when invoked.
 
@@ -8,10 +10,13 @@ Each hook is defined on a faction table and receives the table itself as `self` 
 
 ## Overview
 
-These hooks belong to tables under `schema/factions` and are most often used to set up characters when they first join the faction.
+Hooks belong to tables under `schema/factions`.
 
-Each faction can implement these shared- and server-side hooks to control how characters are initialized, described, and handled as they move through creation, spawning, and transfers. All hooks are optional; if you omit a hook, default behavior applies.
+They are most often used to set up characters when they first join the faction.
 
+All hooks are optional — if you omit a hook, default behaviour applies.
+
+---
 
 ### NameTemplate
 
@@ -21,7 +26,7 @@ Generates a custom character name before defaults are applied.
 
 **Parameters**
 
-* `client` (*Player*): the player creating the character.
+* `client` (`Player`): The player creating the character.
 
 **Realm**
 
@@ -29,9 +34,10 @@ Generates a custom character name before defaults are applied.
 
 **Returns**
 
-* `string`, `boolean`: generated name and whether to bypass default naming.
+* `string`, `boolean`: Generated name and whether to bypass default naming.
 
 **Example**
+
 ```lua
 function FACTION:NameTemplate(client)
     -- Prefix a random callsign with the faction name.
@@ -40,6 +46,7 @@ function FACTION:NameTemplate(client)
 end
 ```
 
+---
 
 ### GetDefaultName
 
@@ -49,7 +56,7 @@ Retrieves the default character name for this faction.
 
 **Parameters**
 
-* `client` (*Player*): the client requesting the name.
+* `client` (`Player`): The client requesting the name.
 
 **Realm**
 
@@ -57,26 +64,58 @@ Retrieves the default character name for this faction.
 
 **Returns**
 
-* `string`: the generated name.
+* `string`: The generated name.
 
 **Example**
+
 ```lua
 function FACTION:GetDefaultName(client)
     -- Base the callsign on the player's account ID for consistency.
     return "Recruit-" .. client:AccountID()
 end
 ```
+
+---
+
+### GetDefaultDesc
+
+**Purpose**
+
+Provides the default description for a newly created character.
+
+**Parameters**
+
+* `client` (`Player`): The client for whom the description is generated.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `string`: The description text.
+
+**Example**
+
+```lua
+function FACTION:GetDefaultDesc(client)
+    -- Use the name as part of a simple biography.
+    local callsign = self:GetDefaultName(client)
+    return string.format("%s recently enlisted and is eager for duty.", callsign)
+end
+```
+
 ---
 
 ### OnSpawn
 
 **Purpose**
 
-Executes whenever a faction member spawns during loadout.
+Executes whenever a faction member spawns during load-out.
 
 **Parameters**
 
-* `client` (*Player*): the player who has just spawned.
+* `client` (`Player`): The player who has just spawned.
 
 **Realm**
 
@@ -84,9 +123,10 @@ Executes whenever a faction member spawns during loadout.
 
 **Returns**
 
-* `nil`: none.
+* `nil`: This function does not return a value.
 
 **Example**
+
 ```lua
 function FACTION:OnSpawn(client)
     -- Restore stats and hand out default weapons.
@@ -98,37 +138,8 @@ function FACTION:OnSpawn(client)
     end
 end
 ```
+
 ---
-
-### GetDefaultDesc
-
-**Purpose**
-
-Provides the default description for a newly created character.
-
-**Parameters**
-
-* `client` (*Player*): the client for whom the description is generated.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `string`: the description text.
-
-**Example**
-```lua
-function FACTION:GetDefaultDesc(client)
-    -- Use the name as part of a simple biography.
-    local callsign = self:GetDefaultName(client)
-    return string.format("%s recently enlisted and is eager for duty.", callsign)
-end
-```
----
-
-
 
 ### OnTransferred
 
@@ -138,8 +149,8 @@ Runs after a player is moved into this faction from another.
 
 **Parameters**
 
-* `client` (*Player*): the player that was transferred.
-* `oldFaction` (*number*): index of the previous faction.
+* `client` (`Player`): The player that was transferred.
+* `oldFaction` (`number`): Index of the previous faction.
 
 **Realm**
 
@@ -147,9 +158,10 @@ Runs after a player is moved into this faction from another.
 
 **Returns**
 
-* `nil`: none.
+* `nil`: This function does not return a value.
 
 **Example**
+
 ```lua
 function FACTION:OnTransferred(client, oldFaction)
     local char = client:getChar()
@@ -162,6 +174,7 @@ function FACTION:OnTransferred(client, oldFaction)
     client:notify(string.format("Joined %s from faction #%d", self.name, oldFaction))
 end
 ```
+
 ---
 
 ### OnCheckLimitReached
@@ -172,8 +185,8 @@ Determines if the faction has reached its player limit.
 
 **Parameters**
 
-* `character` (*Character*): the character attempting to join.
-* `client` (*Player*): the owner of that character.
+* `character` (`Character`): The character attempting to join.
+* `client` (`Player`): The owner of that character.
 
 **Realm**
 
@@ -181,9 +194,10 @@ Determines if the faction has reached its player limit.
 
 **Returns**
 
-* `boolean`: whether the limit is reached.
+* `boolean`: Whether the limit is reached.
 
 **Example**
+
 ```lua
 function FACTION:OnCheckLimitReached(character, client)
     -- Allow admins to bypass the limit.
@@ -195,4 +209,5 @@ function FACTION:OnCheckLimitReached(character, client)
     return lia.faction.getPlayerCount(self.index) >= maxMembers
 end
 ```
+
 ---

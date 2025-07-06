@@ -6,19 +6,7 @@ This page documents logging utilities.
 
 ## Overview
 
-The logger library writes structured log entries to files and the console. It
-
-tracks important gameplay events for later auditing or debugging. All entries are
-
-also saved in the `lia_logs` database table which stores the current gamemode,
-
-log category, message text, character ID and SteamID when available.
-
-Built‑in log types reside in
-
-`modules/administration/submodules/logging/logs.lua` and custom types can be
-
-registered with `lia.log.addType`.
+The logger library writes structured log entries to files, to the console, and to the `lia_logs` SQL table (gamemode, category, text, character ID, SteamID). Built-in log types live in `modules/administration/submodules/logging/logs.lua`; custom types can be added with `lia.log.addType`.
 
 ---
 
@@ -26,11 +14,11 @@ registered with `lia.log.addType`.
 
 **Purpose**
 
-Initializes the logging system and converts any legacy text logs.
+Initialises the logging system and converts any legacy text logs.
 
 **Parameters**
 
-* None
+* *None*
 
 **Realm**
 
@@ -38,7 +26,7 @@ Initializes the logging system and converts any legacy text logs.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -54,13 +42,13 @@ end)
 
 **Purpose**
 
-Registers a new log type with a generating function and category.
+Registers a log type by supplying a generator function and a category.
 
 **Parameters**
 
-* `logType` (*string*): Unique identifier for the log type.
-* `func` (*function*): Generates the log string.
-* `category` (*string*): Category name used for log files.
+* `logType` (*string*): Unique identifier.
+* `func` (*function*): Builds the log string (`func(client, ...) → string`).
+* `category` (*string*): Folder/category name used for log files.
 
 **Realm**
 
@@ -68,14 +56,18 @@ Registers a new log type with a generating function and category.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
 ```lua
-lia.log.addType("mytype", function(client, action)
-    return string.format("%s performed %s", client:Name(), action)
-end, "Actions")
+lia.log.addType(
+    "mytype",
+    function(client, action)
+        return string.format("%s performed %s", client:Name(), action)
+    end,
+    "Actions"
+)
 
 lia.log.add(client, "mytype", "a backflip")
 ```
@@ -86,13 +78,13 @@ lia.log.add(client, "mytype", "a backflip")
 
 **Purpose**
 
-Returns the formatted log string and its category for a given log type.
+Returns the formatted log string (and its category) for a given type without writing anything.
 
 **Parameters**
 
-* `client` (*Player*): Player for which the log is generated.
-* `logType` (*string*): Identifier for the log type.
-* ...: Additional parameters passed to the log function.
+* `client` (*Player*): Player tied to the entry.
+* `logType` (*string*): Log-type identifier.
+* …: Additional arguments forwarded to the generator.
 
 **Realm**
 
@@ -100,13 +92,13 @@ Returns the formatted log string and its category for a given log type.
 
 **Returns**
 
-* `string`, `string`: The log text and its category, or `nil`.
+* *string*, *string*: Log text and its category, or `nil`.
 
 **Example**
 
 ```lua
-local text, category = lia.log.getString(client, "mytype", "test")
-print(category .. ": " .. text)
+local text, cat = lia.log.getString(client, "mytype", "test")
+print(cat .. ": " .. text)
 ```
 
 ---
@@ -115,13 +107,13 @@ print(category .. ": " .. text)
 
 **Purpose**
 
-Generates a log entry, triggers the `OnServerLog` hook and writes it to disk and the database.
+Creates a log entry, fires `OnServerLog`, prints to console, writes to file, and inserts into `lia_logs`.
 
 **Parameters**
 
 * `client` (*Player*): Player associated with the event.
-* `logType` (*string*): Identifier of the log type.
-* ...: Additional parameters for the log function.
+* `logType` (*string*): Log-type identifier.
+* …: Extra values for the generator.
 
 **Realm**
 
@@ -129,7 +121,7 @@ Generates a log entry, triggers the `OnServerLog` hook and writes it to disk and
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -145,11 +137,11 @@ end)
 
 **Purpose**
 
-Imports legacy log files into the database and optionally reloads the map.
+Migrates legacy text logs into the database. Players cannot join during conversion. Optionally reloads the map afterward.
 
 **Parameters**
 
-* `changeMap` (*boolean*): Reload the current map when finished.
+* `changeMap` (*boolean*): Reload the map when finished.
 
 **Realm**
 
@@ -157,7 +149,7 @@ Imports legacy log files into the database and optionally reloads the map.
 
 **Returns**
 
-* `nil`: Nothing.
+* *nil*: This function does not return a value.
 
 **Example**
 
@@ -167,29 +159,4 @@ if not lia.log.isConverting then
 end
 ```
 
-### lia_log_legacy_count
-
-
-**Purpose**
-
-Prints how many legacy log lines are available for conversion.
-
-**Parameters**
-
-* None
-
-**Realm**
-
-`Server` (`Console`)
-
-**Returns**
-
-* `nil`: Nothing.
-
-**Example**
-
-```bash
-lia_log_legacy_count
-```
-
-
+---
