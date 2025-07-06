@@ -93,7 +93,7 @@ Provides the default description for a newly created character.
 
 **Returns**
 
-* `string`: The description text.
+* `string`, `boolean`: The description text and whether to override the user input.
 
 **Example**
 
@@ -101,7 +101,8 @@ Provides the default description for a newly created character.
 function FACTION:GetDefaultDesc(client)
     -- Use the name as part of a simple biography.
     local callsign = self:GetDefaultName(client)
-    return string.format("%s recently enlisted and is eager for duty.", callsign)
+    -- Returning true overrides any description entered by the player.
+    return string.format("%s recently enlisted and is eager for duty.", callsign), true
 end
 ```
 
