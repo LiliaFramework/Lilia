@@ -630,20 +630,37 @@ Retrieves a stored network variable or a default value.
 
 **Returns**
 
-- nil
+- any: Stored value or the provided default.
 
 **Example**
 
+```lua
+local locked = ent:getNetVar("locked", false)
+```
 
 ---
-- Client
 
+### getNetVar
 
-Returns:
+**Purpose**
+Retrieves a network variable for this entity on the client.
+
+**Parameters**
+
+- `key` (`string`): Variable name.
+- `default` (`any`) – Default if not set.
+
+**Realm**
+`Client`
+
+**Returns**
+
 - any: Stored value or default.
-Example Usage:
+
+**Example**
+
 ```lua
--- Retrieve the stored variable or fallback to the default
+-- Access a synced variable on the client side
 local result = ent:getNetVar(key, default)
 ```
 
@@ -700,33 +717,6 @@ if IsValid(partner) then
 end
 ```
 
----
-
-### getNetVar
-
-**Purpose**
-Retrieves a network variable for this entity on the client.
-
-**Parameters**
-
-- `key` (`string`): Variable name.
-- `default` (`any`) – Default if not set.
-
-**Realm**
-`Client`
-
-**Returns**
-
-- any: Stored value or default.
-
-**Example**
-
-```lua
--- Access a synced variable on the client side
-local result = ent:getNetVar(key, default)
-```
-
----
 
 ### getParts
 
