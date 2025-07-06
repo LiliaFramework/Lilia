@@ -121,6 +121,10 @@ function lia.command.parseSyntaxFields(syntax)
                 typ = "boolean"
             elseif typ == "player" or typ == "ply" then
                 typ = "player"
+            elseif typ == "item" then
+                typ = "item"
+            elseif typ == "faction" then
+                typ = "faction"
             else
                 valid = false
             end
@@ -324,6 +328,19 @@ else
                 for _, plyObj in ipairs(player.GetAll()) do
                     if IsValid(plyObj) then ctrl:AddChoice(plyObj:Name(), plyObj:SteamID()) end
                 end
+            elseif fieldType == "item" then
+                ctrl = vgui.Create("DComboBox", panel)
+                ctrl:SetValue(L("selectItemPrompt"))
+                for uniqueID, item in SortedPairsByMemberValue(lia.item.list, "name") do
+                    local itemName = item.getName and item:getName() or L(item.name)
+                    ctrl:AddChoice(itemName, uniqueID)
+                end
+            elseif fieldType == "faction" then
+                ctrl = vgui.Create("DComboBox", panel)
+                ctrl:SetValue(L("selectFactionPrompt"))
+                for _, fac in ipairs(lia.faction.indices) do
+                    ctrl:AddChoice(L(fac.name), fac.index)
+                end
             elseif fieldType == "text" or fieldType == "number" then
                 ctrl = vgui.Create("DTextEntry", panel)
                 ctrl:SetFont("liaSmallFont")
@@ -399,7 +416,7 @@ else
                     local ctl = data.ctrl
                     local ftype = data.type
                     local filled = false
-                    if isfunction(ftype) or ftype == "player" then
+                    if isfunction(ftype) or ftype == "player" or ftype == "item" or ftype == "faction" then
                         local txt, _ = ctl:GetSelected()
                         filled = txt ~= nil and txt ~= ""
                     elseif ftype == "text" or ftype == "number" then
@@ -429,7 +446,7 @@ else
                 local ctlData = controls[key]
                 local ctl = ctlData.ctrl
                 local ftype = field.type
-                if isfunction(ftype) or ftype == "player" then
+                if isfunction(ftype) or ftype == "player" or ftype == "item" or ftype == "faction" then
                     local txt, data = ctl:GetSelected()
                     if txt and txt ~= "" then args[#args + 1] = data or txt end
                 elseif ftype == "text" or ftype == "number" then
