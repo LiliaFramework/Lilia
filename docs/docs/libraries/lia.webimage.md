@@ -18,35 +18,35 @@ cached and then used automatically.
 
 ### lia.webimage.register
 
-**Description:**
+**Purpose**
 
 Downloads an image from the given URL and saves it inside the web image cache. If the file already exists locally the callback fires immediately with the cached Material. When the HTTP request fails the callback receives `nil` and an error string.
 
-**Parameters:**
+**Parameters**
 
-* `name` (`string`) – Unique file name including extension.
-
-
-* `url` (`string`) – HTTP address of the image.
+* `name` (`string`): Unique file name including extension.
 
 
-* `callback` (`function|nil`) – Function that receives `(Material mat, boolean fromCache, string err)`.
+* `url` (`string`): HTTP address of the image.
 
 
-* `flags` (`string|nil`) – Optional material flags for Material().
+* `callback` (`function|nil`): Function that receives `(Material mat, boolean fromCache, string err)`.
 
 
-**Realm:**
-
-* Client
+* `flags` (`string|nil`): Optional material flags for Material().
 
 
-**Returns:**
+**Realm**
+
+`Client`
+
+
+**Returns**
 
 * None
 
 
-**Example Usage:**
+**Example**
 
 ```lua
 -- Download an image and apply it when ready
@@ -66,29 +66,29 @@ myIcon:SetImage("logo.png")
 
 ### lia.webimage.get
 
-**Description:**
+**Purpose**
 
 Returns the material previously cached with `lia.webimage.register`. If it does not exist this function returns `nil`. `Material()` and `DImage:SetImage()` call this internally when given a matching name or URL.
 
-**Parameters:**
+**Parameters**
 
-* `name` (`string`) – File name used during registration.
-
-
-* `flags` (`string|nil`) – Optional material flags.
+* `name` (`string`): File name used during registration.
 
 
-**Realm:**
-
-* Client
+* `flags` (`string|nil`): Optional material flags.
 
 
-**Returns:**
+**Realm**
 
-* Material|nil – The image material or nil if missing.
+`Client`
 
 
-**Example Usage:**
+**Returns**
+
+* Material|nil: The image material or nil if missing.
+
+
+**Example**
 
 ```lua
 -- Retrieve a cached material and draw it
@@ -109,15 +109,15 @@ button:SetImage("https://example.com/icon.png")
 
 ### lia_saved_images
 
-**Description:**
+**Purpose**
 
 Opens a panel listing all cached web images for the current server.
 
-**Realm:**
+**Realm**
 
-* `Client` (`Console`)
+`Client` (`Console`)
 
-**Example Usage:**
+**Example**
 
 ```bash
 lia_saved_images
@@ -127,15 +127,15 @@ lia_saved_images
 
 ### test_webimage_menu
 
-**Description:**
+**Purpose**
 
 Shows a simple window for previewing any image URL. Useful for development.
 
-**Realm:**
+**Realm**
 
-* `Client` (`Console`)
+`Client` (`Console`)
 
-**Example Usage:**
+**Example**
 
 ```bash
 test_webimage_menu
