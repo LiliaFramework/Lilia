@@ -1146,7 +1146,7 @@ lia.command.add("forcesay", {
     desc = L("forceSayDesc"),
     syntax = "[player Player Name] [string Message]",
     AdminStick = {
-        Name = "Force Say",
+        Name = "forceSayName",
         Category = "moderationTools",
         SubCategory = "misc",
         Icon = "icon16/comments.png"

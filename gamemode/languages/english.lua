@@ -746,6 +746,7 @@ LANGUAGE = {
     globalBotSayDesc = "Force all bots on the server to say something.",
     botSayDesc = "Force a specific bot to say something.",
     forceSayDesc = "Force a player to say something in chat.",
+    forceSayName = "Force Say",
     getModelDesc = "Get the model of the entity you are looking at.",
     getCharModelDesc = "Get the model of a player's character.",
     checkAllMoneyDesc = "Check every player's money balance.",
