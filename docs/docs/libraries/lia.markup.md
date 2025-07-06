@@ -12,61 +12,47 @@ The markup library parses a subset of HTML-like tags for drawing rich text in ch
 
 ### lia.markup.parse
 
-**Description:**
+**Purpose**
 
-Parses the provided markup text and returns a markup object representing
+Parses markup text and returns a markup object that handles wrapping and drawing.
 
-the formatted content. When maxwidth is provided, the text will
+**Parameters**
 
-automatically wrap at that width.
+* `text` (*string*): Markup string to parse.
+* `maxwidth` (*number|nil*): Optional maximum width for wrapping.
 
-The returned object exposes helper methods such as `getWidth`, `getHeight`, `size`, and `draw` for measuring and rendering the text.
+**Realm**
 
-**Parameters:**
+`Client`
 
-* `text` (`string`) – String containing markup to be parsed.
+**Returns**
 
+* `MarkupObject`: Parsed markup object with size information.
 
-* `maxwidth` (`number|nil`) – Optional maximum width for wrapping.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* MarkupObject – The parsed markup object with size information.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
--- Parse a short colored string that wraps at 200px
 local object = lia.markup.parse("<color=255,0,0>Hello world!</color>", 200)
 print(object:getWidth(), object:getHeight())
 ```
 
 ### MarkupObject:create
 
-**Description:**
+**Purpose**
 
-Creates a blank markup object. You generally will not call this
+Constructs an empty markup object. Usually returned by `lia.markup.parse`.
 
-directly—instead, `lia.markup.parse` returns one for you.
-
-**Parameters:**
+**Parameters**
 
 * None
 
-**Realm:**
+**Realm**
 
-* Client
+`Client`
 
-**Returns:**
+**Returns**
 
-* MarkupObject – Newly constructed object with zero size.
+* `MarkupObject`: Newly constructed object with zero size.
 
 ### MarkupObject Fields
 
@@ -82,48 +68,47 @@ directly—instead, `lia.markup.parse` returns one for you.
 
 ### MarkupObject:getWidth
 
-**Description:**
+**Purpose**
 
 Returns the pixel width of the parsed markup text.
 
-**Parameters:**
+**Parameters**
 
 * None
 
-**Realm:**
+**Realm**
 
-* Client
+`Client`
 
-**Returns:**
+**Returns**
 
-* number – Width in pixels.
+* `number`: Width in pixels.
 
-**Example Usage:**
+**Example**
 
 ```lua
 local obj = lia.markup.parse("<font=liaBigFont>Hello</font>")
 print(obj:getWidth())
 ```
-
 ### MarkupObject:getHeight
 
-**Description:**
+**Purpose**
 
 Returns the pixel height of the parsed markup text.
 
-**Parameters:**
+**Parameters**
 
 * None
 
-**Realm:**
+**Realm**
 
-* Client
+`Client`
 
-**Returns:**
+**Returns**
 
-* number – Height in pixels.
+* `number`: Height in pixels.
 
-**Example Usage:**
+**Example**
 
 ```lua
 local obj = lia.markup.parse("<font=liaBigFont>Hello</font>")
@@ -132,23 +117,23 @@ print(obj:getHeight())
 
 ### MarkupObject:size
 
-**Description:**
+**Purpose**
 
 Returns both width and height of the markup object.
 
-**Parameters:**
+**Parameters**
 
 * None
 
-**Realm:**
+**Realm**
 
-* Client
+`Client`
 
-**Returns:**
+**Returns**
 
-* number, number – Width and height in pixels.
+* `number`, `number`: Width and height in pixels.
 
-**Example Usage:**
+**Example**
 
 ```lua
 local obj = lia.markup.parse("<font=liaBigFont>Hello</font>")
@@ -157,69 +142,54 @@ local w, h = obj:size()
 
 ### MarkupObject:draw
 
-**Description:**
+**Purpose**
 
-Draws the markup object at the specified position. Alignment
+Draws the markup object at the specified screen position.
 
-constants from Garry's Mod (`TEXT_ALIGN_*`) may be supplied and
+**Parameters**
 
-`alpha` overrides the block alpha values.
+* `x` (*number*): X position.
+* `y` (*number*): Y position.
+* `halign` (*number|nil*): Horizontal text alignment.
+* `valign` (*number|nil*): Vertical text alignment.
+* `alpha` (*number|nil*): Optional alpha override.
 
-**Parameters:**
+**Realm**
 
-* `x` (`number`) – X position on the screen.
+`Client`
 
-* `y` (`number`) – Y position on the screen.
+**Returns**
 
-* `halign` (`number|nil`) – Horizontal text alignment.
+* `nil`: Nothing.
 
-* `valign` (`number|nil`) – Vertical text alignment.
-
-* `alpha` (`number|nil`) – Optional alpha override.
-
-**Realm:**
-
-* Client
-
-**Returns:**
-
-* None
-
-**Example Usage:**
+**Example**
 
 ```lua
 local obj = lia.markup.parse("<color=0,255,0>Welcome</color>", 300)
 hook.Add("HUDPaint", "DrawWelcome", function()
-    -- Center the text and draw it with 75% opacity
     obj:draw(ScrW() / 2, ScrH() / 2, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 200)
 end)
 ```
-
 ### liaMarkupPanel:setMarkup
 
-**Description:**
+**Purpose**
 
-Configures a `liaMarkupPanel` to display markup text. The panel
+Configures a `liaMarkupPanel` to display markup text with optional custom drawing.
 
-adjusts its height automatically and uses `onDrawText` as a callback
+**Parameters**
 
-for custom drawing if provided.
+* `text` (*string*): Markup text to render.
+* `onDrawText` (*function|nil*): Callback executed before each block is drawn.
 
-**Parameters:**
+**Realm**
 
-* `text` (`string`) – Markup text to render.
+`Client`
 
-* `onDrawText` (`function|nil`) – Called before each text block is drawn.
+**Returns**
 
-**Realm:**
+* `nil`: Nothing.
 
-* Client
-
-**Returns:**
-
-* None
-
-**Example Usage:**
+**Example**
 
 ```lua
 local panel = vgui.Create("liaMarkupPanel")
@@ -228,3 +198,4 @@ panel:setMarkup("<font=liaMediumFont>Hi there!</font>", function(text, font, x, 
     draw.SimpleText(text, font, x, y, color)
 end)
 ```
+
