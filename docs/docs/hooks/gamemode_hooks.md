@@ -21,7 +21,7 @@ Gamemode hooks fire at various stages during play and let you modify global beha
 ### LoadCharInformation
 
 **Purpose**
- Called after the F1 menu panel is created so additional sections can be added. Populates the character information sections of the F1 menu.
+Called after the F1 menu panel is created so additional sections can be added. Populates the character information sections of the F1 menu.
 
 **Parameters**
 
@@ -57,7 +57,7 @@ end)
 ### CreateMenuButtons
 
 **Purpose**
- Executed during menu creation allowing you to define custom tabs. Allows modules to insert additional tabs into the F1 menu.
+Executed during menu creation allowing you to define custom tabs. Allows modules to insert additional tabs into the F1 menu.
 
 **Parameters**
 
@@ -98,7 +98,7 @@ end)
 ### DrawLiliaModelView
 
 **Purpose**
- Runs every frame when the character model panel draws. Lets code draw over the model view used in character menus.
+Runs every frame when the character model panel draws. Lets code draw over the model view used in character menus.
 
 **Parameters**
 
@@ -140,7 +140,7 @@ end)
 ### ShouldAllowScoreboardOverride
 
 **Purpose**
- Checks if a scoreboard value may be overridden by other hooks so modules can
+Checks if a scoreboard value may be overridden by other hooks so modules can
 
 replace the displayed name, model or description for a player.
 
@@ -172,7 +172,7 @@ end)
 ### GetDisplayedName
 
 **Purpose**
- Returns the name text to display for a player in UI panels.
+Returns the name text to display for a player in UI panels.
 
 **Parameters**
 
@@ -200,7 +200,7 @@ end)
 ### PlayerStartVoice
 
 **Purpose**
- Triggered when the local HUD begins displaying a voice panel for a player.
+Triggered when the local HUD begins displaying a voice panel for a player.
 
 **Parameters**
 
@@ -226,7 +226,7 @@ end)
 ### PlayerEndVoice
 
 **Purpose**
- Fired when the voice panel for a player is removed from the HUD.
+Fired when the voice panel for a player is removed from the HUD.
 
 **Parameters**
 
@@ -253,7 +253,7 @@ end)
 ### SpawnlistContentChanged
 
 **Purpose**
- Triggered when a spawn icon is removed from the extended spawn menu. Fired when content is removed from the spawn menu.
+Triggered when a spawn icon is removed from the extended spawn menu. Fired when content is removed from the spawn menu.
 
 **Parameters**
 
@@ -281,7 +281,7 @@ end)
 ### ItemPaintOver
 
 **Purpose**
- Gives a chance to draw additional info over item icons. Allows drawing over item icons in inventories.
+Gives a chance to draw additional info over item icons. Allows drawing over item icons in inventories.
 
 **Parameters**
 
@@ -313,7 +313,7 @@ end)
 ### OnCreateItemInteractionMenu
 
 **Purpose**
- Allows extensions to populate the right-click menu for an item. Allows overriding the context menu for an item icon.
+Allows extensions to populate the right-click menu for an item. Allows overriding the context menu for an item icon.
 
 **Parameters**
 
@@ -345,7 +345,7 @@ end)
 ### CanRunItemAction
 
 **Purpose**
- Determines whether an item action should be displayed. Determines whether a specific item action is allowed.
+Determines whether an item action should be displayed. Determines whether a specific item action is allowed.
 
 **Parameters**
 
@@ -375,7 +375,7 @@ end)
 ### ShouldShowPlayerOnScoreboard
 
 **Purpose**
- Return false to omit players from the scoreboard. Determines if a player should appear on the scoreboard.
+Return false to omit players from the scoreboard. Determines if a player should appear on the scoreboard.
 
 **Parameters**
 
@@ -403,7 +403,7 @@ end)
 ### ShowPlayerOptions
 
 **Purpose**
- Populate the scoreboard context menu with extra options. Allows modules to add scoreboard options for a player.
+Populate the scoreboard context menu with extra options. Allows modules to add scoreboard options for a player.
 
 **Parameters**
 
@@ -437,7 +437,7 @@ end)
 ### GetDisplayedDescription
 
 **Purpose**
- Supplies the description text shown on the scoreboard. Returns the description text to display for a player.
+Supplies the description text shown on the scoreboard. Returns the description text to display for a player.
 
 **Parameters**
 
@@ -467,7 +467,7 @@ end)
 ### ChatTextChanged
 
 **Purpose**
- Runs whenever the chat entry text is modified. Called whenever the chat entry text changes.
+Runs whenever the chat entry text is modified. Called whenever the chat entry text changes.
 
 **Parameters**
 
@@ -495,7 +495,7 @@ end)
 ### FinishChat
 
 **Purpose**
- Fires when the chat box closes. Fired when the chat box is closed.
+Fires when the chat box closes. Fired when the chat box is closed.
 
 **Parameters**
 
@@ -525,7 +525,7 @@ end)
 ### StartChat
 
 **Purpose**
- Fires when the chat box opens. Fired when the chat box is opened.
+Fires when the chat box opens. Fired when the chat box is opened.
 
 **Parameters**
 
@@ -554,7 +554,7 @@ end)
 ### ChatAddText
 
 **Purpose**
- Allows modification of the markup before chat messages are printed. Allows modification of markup before chat text is shown.
+Allows modification of the markup before chat messages are printed. Allows modification of markup before chat text is shown.
 
 **Parameters**
 
@@ -583,7 +583,7 @@ end)
 ### DisplayItemRelevantInfo
 
 **Purpose**
- Add extra lines to an item tooltip. Populates additional information for an item tooltip.
+Add extra lines to an item tooltip. Populates additional information for an item tooltip.
 
 **Parameters**
 
@@ -613,7 +613,7 @@ end)
 ### GetMainMenuPosition
 
 **Purpose**
- Returns the camera position and angle for the main menu character preview. Provides the camera position and angle for the main menu model.
+Returns the camera position and angle for the main menu character preview. Provides the camera position and angle for the main menu model.
 
 **Parameters**
 
@@ -639,7 +639,7 @@ end)
 ### CanDeleteChar
 
 **Purpose**
- Return false here to prevent character deletion. Determines if a character can be deleted.
+Return false here to prevent character deletion. Determines if a character can be deleted.
 
 **Parameters**
 
@@ -667,7 +667,7 @@ end)
 ### LoadMainMenuInformation
 
 **Purpose**
- Lets modules insert additional information on the main menu info panel. Allows modules to populate extra information on the main menu panel.
+Lets modules insert additional information on the main menu info panel. Allows modules to populate extra information on the main menu panel.
 
 **Parameters**
 
@@ -697,7 +697,7 @@ end)
 ### CanPlayerCreateChar
 
 **Purpose**
- Checks if the local player may start creating a character. Determines if the player may create a new character.
+Checks if the local player may start creating a character. Determines if the player may create a new character.
 
 **Parameters**
 
@@ -725,7 +725,7 @@ end)
 ### ModifyCharacterModel
 
 **Purpose**
- Lets you edit the clientside model used in the main menu. Allows adjustments to the character model in menus.
+Lets you edit the clientside model used in the main menu. Allows adjustments to the character model in menus.
 
 **Parameters**
 
@@ -757,7 +757,7 @@ end)
 ### ConfigureCharacterCreationSteps
 
 **Purpose**
- Add or reorder steps in the character creation flow. Lets modules alter the character creation step layout.
+Add or reorder steps in the character creation flow. Lets modules alter the character creation step layout.
 
 **Parameters**
 
@@ -784,7 +784,7 @@ end)
 ### GetMaxPlayerChar
 
 **Purpose**
- Override to change how many characters a player can have. Returns the maximum number of characters a player can have.
+Override to change how many characters a player can have. Returns the maximum number of characters a player can have.
 
 **Parameters**
 
@@ -810,7 +810,7 @@ end)
 ### ShouldMenuButtonShow
 
 **Purpose**
- Return false and a reason to hide buttons on the main menu. Determines if a button should be visible on the main menu.
+Return false and a reason to hide buttons on the main menu. Determines if a button should be visible on the main menu.
 
 **Parameters**
 
@@ -838,7 +838,7 @@ end)
 ### ResetCharacterPanel
 
 **Purpose**
- Called when the character creation panel should reset. Called to reset the character creation panel.
+Called when the character creation panel should reset. Called to reset the character creation panel.
 
 **Parameters**
 
@@ -864,7 +864,7 @@ end)
 ### EasyIconsLoaded
 
 **Purpose**
- Notifies when the EasyIcons font sheet has loaded. Fired when the EasyIcons library has loaded.
+Notifies when the EasyIcons font sheet has loaded. Fired when the EasyIcons library has loaded.
 
 **Parameters**
 
@@ -892,7 +892,7 @@ end)
 ### CAMI.OnUsergroupRegistered
 
 **Purpose**
- Called when CAMI registers a new usergroup. CAMI notification that a usergroup was registered.
+Called when CAMI registers a new usergroup. CAMI notification that a usergroup was registered.
 
 **Parameters**
 
@@ -920,7 +920,7 @@ end)
 ### CAMI.OnUsergroupUnregistered
 
 **Purpose**
- Called when a usergroup is removed from CAMI. CAMI notification that a usergroup was removed.
+Called when a usergroup is removed from CAMI. CAMI notification that a usergroup was removed.
 
 **Parameters**
 
@@ -948,7 +948,7 @@ end)
 ### CAMI.OnPrivilegeRegistered
 
 **Purpose**
- Fired when a privilege is created in CAMI. CAMI notification that a privilege was registered.
+Fired when a privilege is created in CAMI. CAMI notification that a privilege was registered.
 
 **Parameters**
 
@@ -974,7 +974,7 @@ end)
 ### CAMI.OnPrivilegeUnregistered
 
 **Purpose**
- Fired when a privilege is removed from CAMI. CAMI notification that a privilege was unregistered.
+Fired when a privilege is removed from CAMI. CAMI notification that a privilege was unregistered.
 
 **Parameters**
 
@@ -1000,7 +1000,7 @@ end)
 ### CAMI.PlayerHasAccess
 
 **Purpose**
- Allows an override of player privilege checks. Allows external libraries to override privilege checks.
+Allows an override of player privilege checks. Allows external libraries to override privilege checks.
 
 **Parameters**
 
@@ -1039,7 +1039,7 @@ end)
 ### CAMI.SteamIDHasAccess
 
 **Purpose**
- Allows an override of SteamID-based privilege checks. Similar to PlayerHasAccess but for SteamIDs.
+Allows an override of SteamID-based privilege checks. Similar to PlayerHasAccess but for SteamIDs.
 
 **Parameters**
 
@@ -1078,7 +1078,7 @@ end)
 ### CAMI.PlayerUsergroupChanged
 
 **Purpose**
- Notification that a player's group changed. Fired when a player's usergroup has changed.
+Notification that a player's group changed. Fired when a player's usergroup has changed.
 
 **Parameters**
 
@@ -1110,7 +1110,7 @@ end)
 ### CAMI.SteamIDUsergroupChanged
 
 **Purpose**
- Notification that a SteamID's group changed. Fired when a SteamID's usergroup has changed.
+Notification that a SteamID's group changed. Fired when a SteamID's usergroup has changed.
 
 **Parameters**
 
@@ -1142,7 +1142,7 @@ end)
 ### TooltipLayout
 
 **Purpose**
- Customize tooltip sizing and layout before it appears.
+Customize tooltip sizing and layout before it appears.
 
 **Parameters**
 
@@ -1168,7 +1168,7 @@ end)
 ### TooltipPaint
 
 **Purpose**
- Draw custom visuals on the tooltip, returning true skips default painting.
+Draw custom visuals on the tooltip, returning true skips default painting.
 
 **Parameters**
 
@@ -1200,7 +1200,7 @@ end)
 ### TooltipInitialize
 
 **Purpose**
- Runs when a tooltip is opened for a panel.
+Runs when a tooltip is opened for a panel.
 
 **Parameters**
 
@@ -1229,7 +1229,7 @@ end)
 ### PlayerLoadout
 
 **Purpose**
- Runs when a player spawns and equips items. Allows modification of the default loadout.
+Runs when a player spawns and equips items. Allows modification of the default loadout.
 
 **Parameters**
 
@@ -1257,7 +1257,7 @@ end)
 ### PlayerShouldPermaKill
 
 **Purpose**
- Determines if a player's death should permanently kill their character. Return true to mark the character for deletion.
+Determines if a player's death should permanently kill their character. Return true to mark the character for deletion.
 
 **Parameters**
 
@@ -1289,7 +1289,7 @@ end)
 ### CanPlayerDropItem
 
 **Purpose**
- Checks if a player may drop an item. Return false to block dropping.
+Checks if a player may drop an item. Return false to block dropping.
 
 **Parameters**
 
@@ -1319,7 +1319,7 @@ end)
 ### CanPlayerTakeItem
 
 **Purpose**
- Determines if a player can pick up an item. Return false to prevent taking.
+Determines if a player can pick up an item. Return false to prevent taking.
 
 **Parameters**
 
@@ -1349,7 +1349,7 @@ end)
 ### CanPlayerEquipItem
 
 **Purpose**
- Queries if a player can equip an item. Returning false stops the equip action.
+Queries if a player can equip an item. Returning false stops the equip action.
 
 **Parameters**
 
@@ -1379,7 +1379,7 @@ end)
 ### CanPlayerUnequipItem
 
 **Purpose**
- Called before an item is unequipped. Return false to keep the item equipped.
+Called before an item is unequipped. Return false to keep the item equipped.
 
 **Parameters**
 
@@ -1409,7 +1409,7 @@ end)
 ### PostPlayerSay
 
 **Purpose**
- Runs after chat messages are processed. Allows reacting to player chat.
+Runs after chat messages are processed. Allows reacting to player chat.
 
 **Parameters**
 
@@ -1443,7 +1443,7 @@ end)
 ### ShouldSpawnClientRagdoll
 
 **Purpose**
- Decides if a corpse ragdoll should spawn for a player. Return false to skip ragdoll creation.
+Decides if a corpse ragdoll should spawn for a player. Return false to skip ragdoll creation.
 
 **Parameters**
 
@@ -1471,7 +1471,7 @@ end)
 ### SaveData
 
 **Purpose**
- Called when the framework saves persistent data. Modules can store custom information here.
+Called when the framework saves persistent data. Modules can store custom information here.
 
 **Parameters**
 
@@ -1497,7 +1497,7 @@ end)
 ### PersistenceSave
 
 **Purpose**
- Fires when map persistence should be written to disk. Allows adding extra persistent entities.
+Fires when map persistence should be written to disk. Allows adding extra persistent entities.
 
 **Parameters**
 
@@ -1533,7 +1533,7 @@ end)
 ### CanPersistEntity
 
 **Purpose**
- Invoked before an entity is saved as persistent. Return false to disallow persisting the entity.
+Invoked before an entity is saved as persistent. Return false to disallow persisting the entity.
 
 **Parameters**
 
@@ -1561,7 +1561,7 @@ end)
 ### LoadData
 
 **Purpose**
- Triggered when stored data should be loaded. Modules can restore custom information here.
+Triggered when stored data should be loaded. Modules can restore custom information here.
 
 **Parameters**
 
@@ -1598,7 +1598,7 @@ end)
 ### PostLoadData
 
 **Purpose**
- Called after all persistent data has loaded. Useful for post-processing.
+Called after all persistent data has loaded. Useful for post-processing.
 
 **Parameters**
 
@@ -1630,7 +1630,7 @@ end)
 ### ShouldDataBeSaved
 
 **Purpose**
- Queries if data saving should occur during shutdown. Return false to cancel saving.
+Queries if data saving should occur during shutdown. Return false to cancel saving.
 
 **Parameters**
 
@@ -1656,7 +1656,7 @@ end)
 ### OnCharDisconnect
 
 **Purpose**
- Called when a player's character disconnects. Provides a last chance to handle data.
+Called when a player's character disconnects. Provides a last chance to handle data.
 
 **Parameters**
 
@@ -1684,7 +1684,7 @@ end)
 ### SetupBotPlayer
 
 **Purpose**
- Initializes a bot's character when it first joins. Allows custom bot setup.
+Initializes a bot's character when it first joins. Allows custom bot setup.
 
 **Parameters**
 
@@ -1712,7 +1712,7 @@ end)
 ### PlayerLiliaDataLoaded
 
 **Purpose**
- Fired after a player's personal data has loaded. Useful for syncing additional info.
+Fired after a player's personal data has loaded. Useful for syncing additional info.
 
 **Parameters**
 
@@ -1742,7 +1742,7 @@ end)
 ### PostPlayerInitialSpawn
 
 **Purpose**
- Runs after the player entity has spawned and data is ready. Allows post-initialization logic.
+Runs after the player entity has spawned and data is ready. Allows post-initialization logic.
 
 **Parameters**
 
@@ -1769,7 +1769,7 @@ end)
 ### FactionOnLoadout
 
 **Purpose**
- Gives factions a chance to modify player loadouts. Runs before weapons are equipped.
+Gives factions a chance to modify player loadouts. Runs before weapons are equipped.
 
 **Parameters**
 
@@ -1797,7 +1797,7 @@ end)
 ### ClassOnLoadout
 
 **Purpose**
- Allows classes to modify the player's starting gear. Executed prior to PostPlayerLoadout.
+Allows classes to modify the player's starting gear. Executed prior to PostPlayerLoadout.
 
 **Parameters**
 
@@ -1825,7 +1825,7 @@ end)
 ### PostPlayerLoadout
 
 **Purpose**
- Called after the player has been equipped. Last chance to modify the loadout.
+Called after the player has been equipped. Last chance to modify the loadout.
 
 **Parameters**
 
@@ -1851,7 +1851,7 @@ end)
 ### FactionPostLoadout
 
 **Purpose**
- Runs after faction loadout logic completes. Allows post-loadout tweaks.
+Runs after faction loadout logic completes. Allows post-loadout tweaks.
 
 **Parameters**
 
@@ -1879,7 +1879,7 @@ end)
 ### ClassPostLoadout
 
 **Purpose**
- Runs after class loadout logic completes. Allows post-loadout tweaks for classes.
+Runs after class loadout logic completes. Allows post-loadout tweaks for classes.
 
 **Parameters**
 
@@ -1905,7 +1905,7 @@ end)
 ### GetDefaultInventoryType
 
 **Purpose**
- Returns the inventory type used for new characters. Modules can override to provide custom types.
+Returns the inventory type used for new characters. Modules can override to provide custom types.
 
 **Parameters**
 
@@ -1931,7 +1931,7 @@ end)
 ### ShouldDeleteSavedItems
 
 **Purpose**
- Decides whether saved persistent items should be deleted on load. Return true to wipe them from the database.
+Decides whether saved persistent items should be deleted on load. Return true to wipe them from the database.
 
 **Parameters**
 
@@ -1959,7 +1959,7 @@ end)
 ### OnSavedItemLoaded
 
 **Purpose**
- Called after map items have been loaded from storage. Provides the table of created items.
+Called after map items have been loaded from storage. Provides the table of created items.
 
 **Parameters**
 
@@ -1988,7 +1988,7 @@ end)
 ### ShouldDrawEntityInfo
 
 **Purpose**
- Determines if world-space info should be rendered for an entity. Return false to hide the tooltip.
+Determines if world-space info should be rendered for an entity. Return false to hide the tooltip.
 
 **Parameters**
 
@@ -2016,7 +2016,7 @@ end)
 ### DrawEntityInfo
 
 **Purpose**
- Allows custom drawing of entity information in the world. Drawn every frame while visible.
+Allows custom drawing of entity information in the world. Drawn every frame while visible.
 
 **Parameters**
 
@@ -2046,7 +2046,7 @@ end)
 ### GetInjuredText
 
 **Purpose**
- Provides the health status text and color for a player. Return a table with text and color values.
+Provides the health status text and color for a player. Return a table with text and color values.
 
 **Parameters**
 
@@ -2074,7 +2074,7 @@ end)
 ### ShouldDrawPlayerInfo
 
 **Purpose**
- Determines if character info should draw above a player. Return false to suppress drawing.
+Determines if character info should draw above a player. Return false to suppress drawing.
 
 **Parameters**
 
@@ -2102,7 +2102,7 @@ end)
 ### DrawCharInfo
 
 **Purpose**
- Allows modules to add lines to the character info display. Called when building the info table.
+Allows modules to add lines to the character info display. Called when building the info table.
 
 **Parameters**
 
@@ -2132,7 +2132,7 @@ end)
 ### ItemShowEntityMenu
 
 **Purpose**
- Opens the context menu for a world item when used. Allows replacing the default menu.
+Opens the context menu for a world item when used. Allows replacing the default menu.
 
 **Parameters**
 
@@ -2160,7 +2160,7 @@ end)
 ### PreLiliaLoaded
 
 **Purpose**
- Fired just before the client finishes loading the framework. Useful for setup tasks.
+Fired just before the client finishes loading the framework. Useful for setup tasks.
 
 **Parameters**
 
@@ -2186,7 +2186,7 @@ end)
 ### LiliaLoaded
 
 **Purpose**
- Indicates the client finished initializing the framework. Modules can start creating panels here.
+Indicates the client finished initializing the framework. Modules can start creating panels here.
 
 **Parameters**
 
@@ -2212,7 +2212,7 @@ end)
 ### InventoryDataChanged
 
 **Purpose**
- Notifies when inventory metadata changes. Provides old and new values.
+Notifies when inventory metadata changes. Provides old and new values.
 
 **Parameters**
 
@@ -2246,7 +2246,7 @@ end)
 ### ItemInitialized
 
 **Purpose**
- Called when a new item instance is created clientside. Allows additional setup for the item.
+Called when a new item instance is created clientside. Allows additional setup for the item.
 
 **Parameters**
 
@@ -2272,7 +2272,7 @@ end)
 ### InventoryInitialized
 
 **Purpose**
- Fired when an inventory instance finishes loading. Modules may modify it here.
+Fired when an inventory instance finishes loading. Modules may modify it here.
 
 **Parameters**
 
@@ -2298,7 +2298,7 @@ end)
 ### InventoryItemAdded
 
 **Purpose**
- Invoked when an item is placed into an inventory. Lets code react to the addition.
+Invoked when an item is placed into an inventory. Lets code react to the addition.
 
 **Parameters**
 
@@ -2326,7 +2326,7 @@ end)
 ### InventoryItemRemoved
 
 **Purpose**
- Called when an item is removed from an inventory. Runs after the item table is updated.
+Called when an item is removed from an inventory. Runs after the item table is updated.
 
 **Parameters**
 
@@ -2354,7 +2354,7 @@ end)
 ### InventoryDeleted
 
 **Purpose**
- Signals that an inventory was deleted clientside. Allows cleanup of references.
+Signals that an inventory was deleted clientside. Allows cleanup of references.
 
 **Parameters**
 
@@ -2380,7 +2380,7 @@ end)
 ### ItemDeleted
 
 **Purpose**
- Fired when an item is removed entirely. Modules should clear any cached data.
+Fired when an item is removed entirely. Modules should clear any cached data.
 
 **Parameters**
 
@@ -2406,7 +2406,7 @@ end)
 ### OnCharVarChanged
 
 **Purpose**
- Runs when a networked character variable changes. Gives both old and new values.
+Runs when a networked character variable changes. Gives both old and new values.
 
 **Parameters**
 
@@ -2440,7 +2440,7 @@ end)
 ### OnCharLocalVarChanged
 
 **Purpose**
- Similar to OnCharVarChanged but for local-only variables. Called after the table updates.
+Similar to OnCharVarChanged but for local-only variables. Called after the table updates.
 
 **Parameters**
 
@@ -2474,7 +2474,7 @@ end)
 ### LocalVarChanged
 
 **Purpose**
- Triggered when `setLocalVar` updates a player's local variable. Provides both the old and new values.
+Triggered when `setLocalVar` updates a player's local variable. Provides both the old and new values.
 
 **Parameters**
 
@@ -2508,7 +2508,7 @@ end)
 ### NetVarChanged
 
 **Purpose**
- Runs when `setNetVar` changes an entity's networked variable. Works for global variables when the entity argument is nil.
+Runs when `setNetVar` changes an entity's networked variable. Works for global variables when the entity argument is nil.
 
 **Parameters**
 
@@ -2542,7 +2542,7 @@ end)
 ### ItemDataChanged
 
 **Purpose**
- Called when item data values change clientside. Provides both the old and new values.
+Called when item data values change clientside. Provides both the old and new values.
 
 **Parameters**
 
@@ -2576,7 +2576,7 @@ end)
 ### ItemQuantityChanged
 
 **Purpose**
- Runs when an item's quantity value updates. Allows reacting to stack changes.
+Runs when an item's quantity value updates. Allows reacting to stack changes.
 
 **Parameters**
 
@@ -2606,7 +2606,7 @@ end)
 ### KickedFromChar
 
 **Purpose**
- Indicates that a character was forcefully removed. isCurrentChar denotes if it was the active one.
+Indicates that a character was forcefully removed. isCurrentChar denotes if it was the active one.
 
 **Parameters**
 
@@ -2634,7 +2634,7 @@ end)
 ### HandleItemTransferRequest
 
 **Purpose**
- Called when the server receives a request to move an item to another inventory. Add-ons may validate the request, change the destination or return nil to block it.
+Called when the server receives a request to move an item to another inventory. Add-ons may validate the request, change the destination or return nil to block it.
 
 **Parameters**
 
@@ -2668,7 +2668,7 @@ end)
 ### CharLoaded
 
 **Purpose**
- Fired when a character object is fully loaded. Receives the character ID.
+Fired when a character object is fully loaded. Receives the character ID.
 
 **Parameters**
 
@@ -2694,7 +2694,7 @@ end)
 ### PreCharDelete
 
 **Purpose**
- Called before a character is removed. Return false to cancel deletion.
+Called before a character is removed. Return false to cancel deletion.
 
 **Parameters**
 
@@ -2722,7 +2722,7 @@ end)
 ### OnCharDelete
 
 **Purpose**
- Fired when a character is deleted. Provides the owning player if available.
+Fired when a character is deleted. Provides the owning player if available.
 
 **Parameters**
 
@@ -2750,7 +2750,7 @@ end)
 ### OnCharCreated
 
 **Purpose**
- Invoked after a new character is created. Supplies the character table and creation data.
+Invoked after a new character is created. Supplies the character table and creation data.
 
 **Parameters**
 
@@ -2780,7 +2780,7 @@ end)
 ### OnTransferred
 
 **Purpose**
- Runs when a player transfers to another server. Useful for cleanup.
+Runs when a player transfers to another server. Useful for cleanup.
 
 **Parameters**
 
@@ -2806,7 +2806,7 @@ end)
 ### CharPreSave
 
 **Purpose**
- Executed before a character is saved to disk. Allows writing custom data.
+Executed before a character is saved to disk. Allows writing custom data.
 
 **Parameters**
 
@@ -2832,7 +2832,7 @@ end)
 ### CharListLoaded
 
 **Purpose**
- Called when the character selection list finishes loading. Provides the loaded list table.
+Called when the character selection list finishes loading. Provides the loaded list table.
 
 **Parameters**
 
@@ -2858,7 +2858,7 @@ end)
 ### CharListUpdated
 
 **Purpose**
- Fires when the character list is refreshed. Gives both old and new tables.
+Fires when the character list is refreshed. Gives both old and new tables.
 
 **Parameters**
 
@@ -2886,7 +2886,7 @@ end)
 ### getCharMaxStamina
 
 **Purpose**
- Returns the maximum stamina for a character. Override to change stamina capacity.
+Returns the maximum stamina for a character. Override to change stamina capacity.
 
 **Parameters**
 
@@ -2912,7 +2912,7 @@ end)
 ### AdjustStaminaOffset
 
 **Purpose**
- Final hook for tweaking the calculated stamina offset. Return the modified offset value to apply each tick.
+Final hook for tweaking the calculated stamina offset. Return the modified offset value to apply each tick.
 
 **Parameters**
 
@@ -2940,7 +2940,7 @@ end)
 ### PostLoadFonts
 
 **Purpose**
- Runs after all font files have loaded. Allows registering additional fonts.
+Runs after all font files have loaded. Allows registering additional fonts.
 
 **Parameters**
 
@@ -2968,7 +2968,7 @@ end)
 ### AddBarField
 
 **Purpose**
- Called when the F1 menu builds status bars so new fields can be added.
+Called when the F1 menu builds status bars so new fields can be added.
 
 **Parameters**
 
@@ -3004,7 +3004,7 @@ end)
 ### AddSection
 
 **Purpose**
- Fired when building the F1 menu so modules can insert additional sections.
+Fired when building the F1 menu so modules can insert additional sections.
 
 **Parameters**
 
@@ -3039,7 +3039,7 @@ end)
 ### CanItemBeTransfered
 
 **Purpose**
- Determines whether an item may move between inventories.
+Determines whether an item may move between inventories.
 
 **Parameters**
 
@@ -3073,7 +3073,7 @@ end)
 ### CanOpenBagPanel
 
 **Purpose**
- Called right before a bag inventory UI opens. Return false to block opening.
+Called right before a bag inventory UI opens. Return false to block opening.
 
 **Parameters**
 
@@ -3101,7 +3101,7 @@ end)
 ### CanOutfitChangeModel
 
 **Purpose**
- Checks if an outfit is allowed to change the player model.
+Checks if an outfit is allowed to change the player model.
 
 **Parameters**
 
@@ -3129,7 +3129,7 @@ end)
 ### CanPerformVendorEdit
 
 **Purpose**
- Determines if a player can modify a vendor's settings.
+Determines if a player can modify a vendor's settings.
 
 **Parameters**
 
@@ -3157,7 +3157,7 @@ end)
 ### CanPickupMoney
 
 **Purpose**
- Called when a player attempts to pick up a money entity.
+Called when a player attempts to pick up a money entity.
 
 **Parameters**
 
@@ -3187,7 +3187,7 @@ end)
 ### CanPlayerAccessDoor
 
 **Purpose**
- Determines if a player can open or lock a door entity.
+Determines if a player can open or lock a door entity.
 
 **Parameters**
 
@@ -3219,7 +3219,7 @@ end)
 ### CanPlayerAccessVendor
 
 **Purpose**
- Checks if a player is permitted to open a vendor menu.
+Checks if a player is permitted to open a vendor menu.
 
 **Parameters**
 
@@ -3249,7 +3249,7 @@ end)
 ### CanPlayerHoldObject
 
 **Purpose**
- Determines if the player can pick up an entity with the hands swep.
+Determines if the player can pick up an entity with the hands swep.
 
 **Parameters**
 
@@ -3279,7 +3279,7 @@ end)
 ### CanPlayerInteractItem
 
 **Purpose**
- Called when a player tries to use or drop an item.
+Called when a player tries to use or drop an item.
 
 **Parameters**
 
@@ -3311,7 +3311,7 @@ end)
 ### CanPlayerKnock
 
 **Purpose**
- Called when a player attempts to knock on a door.
+Called when a player attempts to knock on a door.
 
 **Parameters**
 
@@ -3341,7 +3341,7 @@ end)
 ### CanPlayerSpawnStorage
 
 **Purpose**
- Checks if the player is allowed to spawn a storage container.
+Checks if the player is allowed to spawn a storage container.
 
 **Parameters**
 
@@ -3373,7 +3373,7 @@ end)
 ### CanPlayerThrowPunch
 
 **Purpose**
- Called when the fists weapon tries to punch.
+Called when the fists weapon tries to punch.
 
 **Parameters**
 
@@ -3401,7 +3401,7 @@ end)
 ### CanPlayerTradeWithVendor
 
 **Purpose**
- Checks whether a vendor trade is allowed.
+Checks whether a vendor trade is allowed.
 
 **Parameters**
 
@@ -3435,7 +3435,7 @@ end)
 ### CanPlayerViewInventory
 
 **Purpose**
- Called before any inventory menu is shown.
+Called before any inventory menu is shown.
 
 **Parameters**
 
@@ -3461,7 +3461,7 @@ end)
 ### CanSaveData
 
 **Purpose**
- Called before persistent storage saves.
+Called before persistent storage saves.
 
 **Parameters**
 
@@ -3491,7 +3491,7 @@ end)
 ### CharHasFlags
 
 **Purpose**
- Allows custom checks for a character's permission flags.
+Allows custom checks for a character's permission flags.
 
 **Parameters**
 
@@ -3522,7 +3522,7 @@ end)
 ### CharPostSave
 
 **Purpose**
- Runs after a character's data has been saved to the database.
+Runs after a character's data has been saved to the database.
 
 **Parameters**
 
@@ -3548,7 +3548,7 @@ end)
 ### DatabaseConnected
 
 **Purpose**
- Fired after the database has been successfully connected.
+Fired after the database has been successfully connected.
 
 **Parameters**
 
@@ -3574,7 +3574,7 @@ end)
 ### DrawItemDescription
 
 **Purpose**
- Called when an item entity draws its description text.
+Called when an item entity draws its description text.
 
 **Parameters**
 
@@ -3608,7 +3608,7 @@ end)
 ### GetDefaultInventorySize
 
 **Purpose**
- Returns the default width and height for new inventories.
+Returns the default width and height for new inventories.
 
 **Parameters**
 
@@ -3636,7 +3636,7 @@ end)
 ### GetMoneyModel
 
 **Purpose**
- Allows overriding the entity model used for dropped money.
+Allows overriding the entity model used for dropped money.
 
 **Parameters**
 
@@ -3664,7 +3664,7 @@ end)
 ### GetPlayerPunchDamage
 
 **Purpose**
- Lets addons modify how much damage the fists weapon deals.
+Lets addons modify how much damage the fists weapon deals.
 
 **Parameters**
 
@@ -3694,7 +3694,7 @@ end)
 ### InterceptClickItemIcon
 
 **Purpose**
- Allows overriding default clicks on inventory icons.
+Allows overriding default clicks on inventory icons.
 
 **Parameters**
 
@@ -3726,7 +3726,7 @@ end)
 ### ItemCombine
 
 **Purpose**
- Called when the system attempts to combine one item with another in an inventory.
+Called when the system attempts to combine one item with another in an inventory.
 
 **Parameters**
 
@@ -3760,7 +3760,7 @@ end)
 ### ItemDraggedOutOfInventory
 
 **Purpose**
- Called when an item icon is dragged completely out of an inventory.
+Called when an item icon is dragged completely out of an inventory.
 
 **Parameters**
 
@@ -3788,7 +3788,7 @@ end)
 ### ItemFunctionCalled
 
 **Purpose**
- Triggered whenever an item function is executed by a player.
+Triggered whenever an item function is executed by a player.
 
 **Parameters**
 
@@ -3822,7 +3822,7 @@ end)
 ### ItemTransfered
 
 **Purpose**
- Called when an item has successfully moved between inventories. The context table provides the player, item and both inventories involved.
+Called when an item has successfully moved between inventories. The context table provides the player, item and both inventories involved.
 
 **Parameters**
 
@@ -3848,7 +3848,7 @@ end)
 ### OnCharFallover
 
 **Purpose**
- Called when a character ragdolls or is forced to fall over.
+Called when a character ragdolls or is forced to fall over.
 
 **Parameters**
 
@@ -3880,7 +3880,7 @@ end)
 ### OnCharKick
 
 **Purpose**
- Called when a character is kicked from the server.
+Called when a character is kicked from the server.
 
 **Parameters**
 
@@ -3908,7 +3908,7 @@ end)
 ### OnCharPermakilled
 
 **Purpose**
- Called when a character is permanently killed.
+Called when a character is permanently killed.
 
 **Parameters**
 
@@ -3936,7 +3936,7 @@ end)
 ### OnCharRecognized
 
 **Purpose**
- Called clientside when your character recognizes another.
+Called clientside when your character recognizes another.
 
 **Parameters**
 
@@ -3962,7 +3962,7 @@ end)
 ### OnCharTradeVendor
 
 **Purpose**
- Called after a character buys from or sells to a vendor.
+Called after a character buys from or sells to a vendor.
 
 **Parameters**
 
@@ -4000,7 +4000,7 @@ end)
 ### OnCreatePlayerRagdoll
 
 **Purpose**
- Called when a ragdoll entity is created for a player.
+Called when a ragdoll entity is created for a player.
 
 **Parameters**
 
@@ -4032,7 +4032,7 @@ end)
 ### OnCreateStoragePanel
 
 **Purpose**
- Called when both the player's inventory and storage panels are created.
+Called when both the player's inventory and storage panels are created.
 
 **Parameters**
 
@@ -4064,7 +4064,7 @@ end)
 ### OnItemAdded
 
 **Purpose**
- Called when a new item instance is placed into an inventory.
+Called when a new item instance is placed into an inventory.
 
 **Parameters**
 
@@ -4094,7 +4094,7 @@ end)
 ### OnItemCreated
 
 **Purpose**
- Called when a new item instance table is initialized.
+Called when a new item instance table is initialized.
 
 **Parameters**
 
@@ -4122,7 +4122,7 @@ end)
 ### OnItemSpawned
 
 **Purpose**
- Called when an item entity has been spawned in the world.
+Called when an item entity has been spawned in the world.
 
 **Parameters**
 
@@ -4150,7 +4150,7 @@ end)
 ### OnOpenVendorMenu
 
 **Purpose**
- Called when the vendor dialog panel is opened.
+Called when the vendor dialog panel is opened.
 
 **Parameters**
 
@@ -4178,7 +4178,7 @@ end)
 ### OnPickupMoney
 
 **Purpose**
- Called after a player picks up a money entity.
+Called after a player picks up a money entity.
 
 **Parameters**
 
@@ -4206,7 +4206,7 @@ end)
 ### OnPlayerEnterSequence
 
 **Purpose**
- Fired when a scripted animation sequence begins.
+Fired when a scripted animation sequence begins.
 
 **Parameters**
 
@@ -4242,7 +4242,7 @@ end)
 ### OnPlayerInteractItem
 
 **Purpose**
- Runs after a player has interacted with an item.
+Runs after a player has interacted with an item.
 
 **Parameters**
 
@@ -4276,7 +4276,7 @@ end)
 ### OnPlayerJoinClass
 
 **Purpose**
- Called when a player changes to a new class.
+Called when a player changes to a new class.
 
 **Parameters**
 
@@ -4308,7 +4308,7 @@ end)
 ### OnPlayerLeaveSequence
 
 **Purpose**
- Fired when a scripted animation sequence ends for a player.
+Fired when a scripted animation sequence ends for a player.
 
 **Parameters**
 
@@ -4334,7 +4334,7 @@ end)
 ### OnPlayerLostStackItem
 
 **Purpose**
- Called if a stackable item is removed unexpectedly.
+Called if a stackable item is removed unexpectedly.
 
 **Parameters**
 
@@ -4362,7 +4362,7 @@ end)
 ### OnPlayerSwitchClass
 
 **Purpose**
- Occurs right before a player's class changes.
+Occurs right before a player's class changes.
 
 **Parameters**
 
@@ -4394,7 +4394,7 @@ end)
 ### OnRequestItemTransfer
 
 **Purpose**
- Called when the UI asks to move an item between inventories.
+Called when the UI asks to move an item between inventories.
 
 **Parameters**
 
@@ -4428,7 +4428,7 @@ end)
 ### PersistenceLoad
 
 **Purpose**
- Called when map persistence data is loaded.
+Called when map persistence data is loaded.
 
 **Parameters**
 
@@ -4454,7 +4454,7 @@ end)
 ### PlayerAccessVendor
 
 **Purpose**
- Occurs when a player successfully opens a vendor.
+Occurs when a player successfully opens a vendor.
 
 **Parameters**
 
@@ -4482,7 +4482,7 @@ end)
 ### PlayerStaminaGained
 
 **Purpose**
- Called when a player regenerates stamina points.
+Called when a player regenerates stamina points.
 
 **Parameters**
 
@@ -4510,7 +4510,7 @@ end)
 ### PlayerStaminaLost
 
 **Purpose**
- Called when a player's stamina decreases.
+Called when a player's stamina decreases.
 
 **Parameters**
 
@@ -4538,7 +4538,7 @@ end)
 ### PlayerThrowPunch
 
 **Purpose**
- Fires when a player lands a punch with the fists weapon.
+Fires when a player lands a punch with the fists weapon.
 
 **Parameters**
 
@@ -4566,7 +4566,7 @@ end)
 ### PostDrawInventory
 
 **Purpose**
- Called each frame after the inventory panel draws.
+Called each frame after the inventory panel draws.
 
 **Parameters**
 
@@ -4594,7 +4594,7 @@ end)
 ### PrePlayerInteractItem
 
 **Purpose**
- Called just before a player interacts with an item.
+Called just before a player interacts with an item.
 
 **Parameters**
 
@@ -4626,7 +4626,7 @@ end)
 ### SetupBagInventoryAccessRules
 
 **Purpose**
- Allows modules to define who can access a bag inventory.
+Allows modules to define who can access a bag inventory.
 
 **Parameters**
 
@@ -4652,7 +4652,7 @@ end)
 ### SetupDatabase
 
 **Purpose**
- Runs before the gamemode initializes its database connection.
+Runs before the gamemode initializes its database connection.
 
 **Parameters**
 
@@ -4678,7 +4678,7 @@ end)
 ### StorageCanTransferItem
 
 **Purpose**
- Determines if an item can move in or out of a storage entity.
+Determines if an item can move in or out of a storage entity.
 
 **Parameters**
 
@@ -4710,7 +4710,7 @@ end)
 ### StorageEntityRemoved
 
 **Purpose**
- Fired when a storage entity is removed from the world.
+Fired when a storage entity is removed from the world.
 
 **Parameters**
 
@@ -4738,7 +4738,7 @@ end)
 ### StorageInventorySet
 
 **Purpose**
- Called when a storage entity is assigned an inventory.
+Called when a storage entity is assigned an inventory.
 
 **Parameters**
 
@@ -4770,7 +4770,7 @@ end)
 ### StorageOpen
 
 **Purpose**
- Called clientside when a storage menu is opened.
+Called clientside when a storage menu is opened.
 
 **Parameters**
 
@@ -4798,7 +4798,7 @@ end)
 ### StorageRestored
 
 **Purpose**
- Called when a storage's contents are loaded from disk.
+Called when a storage's contents are loaded from disk.
 
 **Parameters**
 
@@ -4826,7 +4826,7 @@ end)
 ### StorageUnlockPrompt
 
 **Purpose**
- Called clientside when you must enter a storage password.
+Called clientside when you must enter a storage password.
 
 **Parameters**
 
@@ -4852,7 +4852,7 @@ end)
 ### VendorClassUpdated
 
 **Purpose**
- Called when a vendor's allowed classes are updated.
+Called when a vendor's allowed classes are updated.
 
 **Parameters**
 
@@ -4878,7 +4878,7 @@ end)
 ### VendorEdited
 
 **Purpose**
- Called after a delay when a vendor's data is edited.
+Called after a delay when a vendor's data is edited.
 
 **Parameters**
 
@@ -4904,7 +4904,7 @@ end)
 ### VendorExited
 
 **Purpose**
- Called when a player exits from interacting with a vendor.
+Called when a player exits from interacting with a vendor.
 
 **Parameters**
 
@@ -4930,7 +4930,7 @@ end)
 ### VendorFactionUpdated
 
 **Purpose**
- Called when a vendor's allowed factions are updated.
+Called when a vendor's allowed factions are updated.
 
 **Parameters**
 
@@ -4956,7 +4956,7 @@ end)
 ### VendorItemMaxStockUpdated
 
 **Purpose**
- Called when a vendor's item max stock value changes.
+Called when a vendor's item max stock value changes.
 
 **Parameters**
 
@@ -4982,7 +4982,7 @@ end)
 ### VendorItemModeUpdated
 
 **Purpose**
- Called when a vendor's item mode is changed.
+Called when a vendor's item mode is changed.
 
 **Parameters**
 
@@ -5008,7 +5008,7 @@ end)
 ### VendorItemPriceUpdated
 
 **Purpose**
- Called when a vendor's item price is changed.
+Called when a vendor's item price is changed.
 
 **Parameters**
 
@@ -5034,7 +5034,7 @@ end)
 ### VendorItemStockUpdated
 
 **Purpose**
- Called when a vendor's item stock value changes.
+Called when a vendor's item stock value changes.
 
 **Parameters**
 
@@ -5060,7 +5060,7 @@ end)
 ### VendorMoneyUpdated
 
 **Purpose**
- Called when a vendor's available money changes.
+Called when a vendor's available money changes.
 
 **Parameters**
 
@@ -5086,7 +5086,7 @@ end)
 ### VendorOpened
 
 **Purpose**
- Called when a vendor menu is opened on the client.
+Called when a vendor menu is opened on the client.
 
 **Parameters**
 
@@ -5112,7 +5112,7 @@ end)
 ### VendorSynchronized
 
 **Purpose**
- Called when vendor synchronization data is received.
+Called when vendor synchronization data is received.
 
 **Parameters**
 
@@ -5138,7 +5138,7 @@ end)
 ### VendorTradeEvent
 
 **Purpose**
- Called when a player attempts to trade with a vendor.
+Called when a player attempts to trade with a vendor.
 
 **Parameters**
 
@@ -5165,7 +5165,7 @@ end)
 ### getItemDropModel
 
 **Purpose**
- Returns an alternate model path for a dropped item.
+Returns an alternate model path for a dropped item.
 
 **Parameters**
 
@@ -5193,7 +5193,7 @@ end)
 ### getPriceOverride
 
 **Purpose**
- Allows modules to override a vendor item's price dynamically.
+Allows modules to override a vendor item's price dynamically.
 
 **Parameters**
 
@@ -5225,7 +5225,7 @@ end)
 ### isCharFakeRecognized
 
 **Purpose**
- Checks if a character is fake recognized rather than truly known.
+Checks if a character is fake recognized rather than truly known.
 
 **Parameters**
 
@@ -5253,7 +5253,7 @@ end)
 ### isCharRecognized
 
 **Purpose**
- Determines whether one character recognizes another.
+Determines whether one character recognizes another.
 
 **Parameters**
 
@@ -5281,7 +5281,7 @@ end)
 ### isRecognizedChatType
 
 **Purpose**
- Determines if a chat type counts toward recognition.
+Determines if a chat type counts toward recognition.
 
 **Parameters**
 
@@ -5308,7 +5308,7 @@ end)
 ### isSuitableForTrunk
 
 **Purpose**
- Determines whether an entity can be used as trunk storage.
+Determines whether an entity can be used as trunk storage.
 
 **Parameters**
 
@@ -5334,7 +5334,7 @@ end)
 ### CanPlayerEarnSalary
 
 **Purpose**
- Determines if a player is allowed to earn salary.
+Determines if a player is allowed to earn salary.
 
 **Parameters**
 
@@ -5367,7 +5367,7 @@ end)
 ### CanPlayerJoinClass
 
 **Purpose**
- Determines whether a player can join a certain class. Return `false` to block.
+Determines whether a player can join a certain class. Return `false` to block.
 
 **Parameters**
 
@@ -5399,7 +5399,7 @@ end)
 ### CanPlayerUseCommand
 
 **Purpose**
- Determines if a player can use a specific command. Returning either
+Determines if a player can use a specific command. Returning either
 
 `true` or `false` overrides the normal permission logic; returning
 
@@ -5417,7 +5417,7 @@ end)
 **Returns**
 - boolean|nil: non-nil values override the result; return `nil` to
 
-  allow built‑in checks to decide.
+allow built‑in checks to decide.
 
 **Example**
 
@@ -5436,7 +5436,7 @@ end)
 ### CanPlayerUseDoor
 
 **Purpose**
- Determines if a player is allowed to use a door entity, such as opening, locking, or unlocking. Return `false` to prevent the action.
+Determines if a player is allowed to use a door entity, such as opening, locking, or unlocking. Return `false` to prevent the action.
 
 **Parameters**
 
@@ -5469,7 +5469,7 @@ end)
 ### CharCleanUp
 
 **Purpose**
- Used during character cleanup routines for additional steps when removing or transitioning a character.
+Used during character cleanup routines for additional steps when removing or transitioning a character.
 
 **Parameters**
 
@@ -5501,7 +5501,7 @@ end)
 ### CharRestored
 
 **Purpose**
- Called after a character has been restored from the database. Useful for post-restoration logic such as awarding default items or setting up data.
+Called after a character has been restored from the database. Useful for post-restoration logic such as awarding default items or setting up data.
 
 **Parameters**
 
@@ -5531,7 +5531,7 @@ end)
 ### CreateDefaultInventory
 
 **Purpose**
- Called when creating a default inventory for a character. Should return a [deferred](https://github.com/Be1zebub/luassert-deferred) (or similar promise) object that resolves with the new inventory.
+Called when creating a default inventory for a character. Should return a [deferred](https://github.com/Be1zebub/luassert-deferred) (or similar promise) object that resolves with the new inventory.
 
 **Parameters**
 
@@ -5567,7 +5567,7 @@ end)
 ### CreateInventoryPanel
 
 **Purpose**
- Client-side call when creating the graphical representation of an inventory.
+Client-side call when creating the graphical representation of an inventory.
 
 **Parameters**
 
@@ -5611,7 +5611,7 @@ end)
 ### CreateSalaryTimer
 
 **Purpose**
- Creates a timer to manage player salary.
+Creates a timer to manage player salary.
 
 **Parameters**
 
@@ -5645,7 +5645,7 @@ end)
 ### DoModuleIncludes
 
 **Purpose**
- Called when modules include submodules. Useful for advanced module handling or dependency management.
+Called when modules include submodules. Useful for advanced module handling or dependency management.
 
 **Parameters**
 
@@ -5675,7 +5675,7 @@ end)
 ### GetDefaultCharDesc
 
 **Purpose**
- Retrieves a default description for a character during creation. Return `(defaultDesc, overrideBool)`.
+Retrieves a default description for a character during creation. Return `(defaultDesc, overrideBool)`.
 
 **Parameters**
 
@@ -5707,7 +5707,7 @@ end)
 ### GetDefaultCharName
 
 **Purpose**
- Retrieves a default name for a character during creation. Return `(defaultName, overrideBool)`.
+Retrieves a default name for a character during creation. Return `(defaultName, overrideBool)`.
 
 If the character's faction defines a prefix it will automatically be prepended to the name.
 
@@ -5743,7 +5743,7 @@ end)
 ### GetSalaryAmount
 
 **Purpose**
- Retrieves the amount of salary a player should receive.
+Retrieves the amount of salary a player should receive.
 
 **Parameters**
 
@@ -5775,7 +5775,7 @@ end)
 ### GetSalaryLimit
 
 **Purpose**
- Retrieves the salary limit for a player.
+Retrieves the salary limit for a player.
 
 **Parameters**
 
@@ -5809,7 +5809,7 @@ end)
 ### InitializedConfig
 
 **Purpose**
- Called when `lia.config` is fully initialized.
+Called when `lia.config` is fully initialized.
 
 **Parameters**
 
@@ -5840,7 +5840,7 @@ end
 ### InitializedItems
 
 **Purpose**
- Called once all item modules have been loaded from a directory.
+Called once all item modules have been loaded from a directory.
 
 **Parameters**
 
@@ -5875,7 +5875,7 @@ end)
 ### InitializedModules
 
 **Purpose**
- Called after all modules are fully initialized.
+Called after all modules are fully initialized.
 
 **Parameters**
 
@@ -5902,7 +5902,7 @@ end)
 ### InitializedOptions
 
 **Purpose**
- Called when `lia.option` is fully initialized.
+Called when `lia.option` is fully initialized.
 
 **Parameters**
 
@@ -5928,7 +5928,7 @@ end
 ### InitializedSchema
 
 **Purpose**
- Called after the schema has finished initializing.
+Called after the schema has finished initializing.
 
 **Parameters**
 
@@ -5955,7 +5955,7 @@ end)
 ### KeyLock
 
 **Purpose**
- Called when a player attempts to lock a door.
+Called when a player attempts to lock a door.
 
 **Parameters**
 
@@ -5990,7 +5990,7 @@ end)
 ### KeyUnlock
 
 **Purpose**
- Called when a player attempts to unlock a door.
+Called when a player attempts to unlock a door.
 
 **Parameters**
 
@@ -6025,7 +6025,7 @@ end)
 ### LiliaTablesLoaded
 
 **Purpose**
- Called after all essential DB tables have been loaded.
+Called after all essential DB tables have been loaded.
 
 **Parameters**
 
@@ -6053,7 +6053,7 @@ end)
 ### OnItemRegistered
 
 **Purpose**
- Called after an item has been registered. Useful for customizing item behavior or adding properties.
+Called after an item has been registered. Useful for customizing item behavior or adding properties.
 
 **Parameters**
 
@@ -6089,7 +6089,7 @@ end)
 ### OnLoadTables
 
 **Purpose**
- Called before the faction tables are loaded. Good spot for data setup prior to factions being processed.
+Called before the faction tables are loaded. Good spot for data setup prior to factions being processed.
 
 **Parameters**
 
@@ -6117,7 +6117,7 @@ end)
 ### OnMySQLOOConnected
 
 **Purpose**
- Called when MySQLOO successfully connects to the database. Use to register prepared statements or init DB logic.
+Called when MySQLOO successfully connects to the database. Use to register prepared statements or init DB logic.
 
 **Parameters**
 
@@ -6153,7 +6153,7 @@ end)
 ### OnPlayerPurchaseDoor
 
 **Purpose**
- Called when a player purchases or sells a door.
+Called when a player purchases or sells a door.
 
 **Parameters**
 
@@ -6194,7 +6194,7 @@ end)
 ### OnServerLog
 
 **Purpose**
- Called whenever a new log message is added. Allows for custom logic or modifications to log handling.
+Called whenever a new log message is added. Allows for custom logic or modifications to log handling.
 
 **Parameters**
 
@@ -6234,7 +6234,7 @@ end)
 ### OnWipeTables
 
 **Purpose**
- Called after wiping tables in the DB, typically after major resets/cleanups.
+Called after wiping tables in the DB, typically after major resets/cleanups.
 
 **Parameters**
 
@@ -6262,7 +6262,7 @@ end)
 ### PlayerMessageSend
 
 **Purpose**
- Called before a chat message is sent. Return `false` to cancel, or modify the message if returning a string.
+Called before a chat message is sent. Return `false` to cancel, or modify the message if returning a string.
 
 **Parameters**
 
@@ -6297,7 +6297,7 @@ end)
 ### PlayerModelChanged
 
 **Purpose**
- Called when a player's model changes.
+Called when a player's model changes.
 
 **Parameters**
 
@@ -6327,7 +6327,7 @@ end)
 ### PlayerUseDoor
 
 **Purpose**
- Called when a player attempts to use a door entity.
+Called when a player attempts to use a door entity.
 
 **Parameters**
 
@@ -6359,7 +6359,7 @@ end)
 ### RegisterPreparedStatements
 
 **Purpose**
- Called for registering DB prepared statements post-MySQLOO connection.
+Called for registering DB prepared statements post-MySQLOO connection.
 
 **Parameters**
 
@@ -6385,7 +6385,7 @@ end)
 ### ShouldBarDraw
 
 **Purpose**
- Determines whether a specific HUD bar should be drawn.
+Determines whether a specific HUD bar should be drawn.
 
 **Parameters**
 
@@ -6413,7 +6413,7 @@ end)
 ### ShouldDisableThirdperson
 
 **Purpose**
- Checks if third-person view is allowed or disabled.
+Checks if third-person view is allowed or disabled.
 
 **Parameters**
 
@@ -6441,7 +6441,7 @@ end)
 ### ShouldHideBars
 
 **Purpose**
- Determines whether all HUD bars should be hidden.
+Determines whether all HUD bars should be hidden.
 
 **Parameters**
 
@@ -6469,7 +6469,7 @@ end)
 ### thirdPersonToggled
 
 **Purpose**
- Called when third-person mode is toggled on or off. Allows for custom handling of third-person mode changes.
+Called when third-person mode is toggled on or off. Allows for custom handling of third-person mode changes.
 
 **Parameters**
 
@@ -6500,7 +6500,7 @@ end)
 ### AddTextField
 
 **Purpose**
- Called when a text field is added to an F1 menu information section. Allows modules to modify or monitor the field being inserted.
+Called when a text field is added to an F1 menu information section. Allows modules to modify or monitor the field being inserted.
 
 **Parameters**
 
@@ -6534,7 +6534,7 @@ end)
 ### F1OnAddTextField
 
 **Purpose**
- Fired after AddTextField so other modules can react to new fields.
+Fired after AddTextField so other modules can react to new fields.
 
 **Parameters**
 
@@ -6566,7 +6566,7 @@ end)
 ### F1OnAddBarField
 
 **Purpose**
- Triggered after AddBarField inserts a status bar into the F1 menu.
+Triggered after AddBarField inserts a status bar into the F1 menu.
 
 **Parameters**
 
@@ -6602,7 +6602,7 @@ end)
 ### CreateInformationButtons
 
 **Purpose**
- Called while building the F1 information menu to populate navigation buttons.
+Called while building the F1 information menu to populate navigation buttons.
 
 **Parameters**
 
@@ -6628,7 +6628,7 @@ end)
 ### PopulateConfigurationButtons
 
 **Purpose**
- Invoked when the settings tab is constructed allowing new configuration pages.
+Invoked when the settings tab is constructed allowing new configuration pages.
 
 **Parameters**
 
@@ -6654,7 +6654,7 @@ end)
 ### InitializedKeybinds
 
 **Purpose**
- Called after keybinds have been loaded from disk.
+Called after keybinds have been loaded from disk.
 
 **Parameters**
 
@@ -6680,7 +6680,7 @@ end)
 ### getOOCDelay
 
 **Purpose**
- Allows modification of the cooldown delay between OOC messages.
+Allows modification of the cooldown delay between OOC messages.
 
 **Parameters**
 
@@ -6708,7 +6708,7 @@ end)
 ### OnChatReceived
 
 **Purpose**
- Runs on the client when chat text is received before display. Returning modified text will replace the message.
+Runs on the client when chat text is received before display. Returning modified text will replace the message.
 
 **Parameters**
 
@@ -6740,7 +6740,7 @@ end)
 ### getAdjustedPartData
 
 **Purpose**
- Requests PAC3 part data after adjustments have been applied.
+Requests PAC3 part data after adjustments have been applied.
 
 **Parameters**
 
@@ -6768,7 +6768,7 @@ end)
 ### AdjustPACPartData
 
 **Purpose**
- Allows modules to modify PAC3 part data before it is attached.
+Allows modules to modify PAC3 part data before it is attached.
 
 **Parameters**
 
@@ -6799,7 +6799,7 @@ end)
 ### attachPart
 
 **Purpose**
- Called when a PAC3 part should be attached to a player.
+Called when a PAC3 part should be attached to a player.
 
 **Parameters**
 
@@ -6827,7 +6827,7 @@ end)
 ### removePart
 
 **Purpose**
- Triggered when a PAC3 part is removed from a player.
+Triggered when a PAC3 part is removed from a player.
 
 **Parameters**
 
@@ -6855,7 +6855,7 @@ end)
 ### OnPAC3PartTransfered
 
 **Purpose**
- Fired when a PAC3 outfit part transfers ownership to a ragdoll.
+Fired when a PAC3 outfit part transfers ownership to a ragdoll.
 
 **Parameters**
 
@@ -6881,7 +6881,7 @@ end)
 ### DrawPlayerRagdoll
 
 **Purpose**
- Allows custom rendering of a player's ragdoll created by PAC3.
+Allows custom rendering of a player's ragdoll created by PAC3.
 
 **Parameters**
 
@@ -6907,7 +6907,7 @@ end)
 ### setupPACDataFromItems
 
 **Purpose**
- Initializes PAC3 outfits from equipped items after modules load.
+Initializes PAC3 outfits from equipped items after modules load.
 
 **Parameters**
 
@@ -6933,7 +6933,7 @@ end)
 ### TryViewModel
 
 **Purpose**
- Allows PAC3 to swap the view model entity for event checks.
+Allows PAC3 to swap the view model entity for event checks.
 
 **Parameters**
 
@@ -6959,7 +6959,7 @@ end)
 ### WeaponCycleSound
 
 **Purpose**
- Lets modules provide a custom sound when cycling weapons in the selector.
+Lets modules provide a custom sound when cycling weapons in the selector.
 
 **Parameters**
 
@@ -6987,7 +6987,7 @@ end)
 ### WeaponSelectSound
 
 **Purpose**
- Similar to WeaponCycleSound but used when confirming a weapon choice.
+Similar to WeaponCycleSound but used when confirming a weapon choice.
 
 **Parameters**
 
@@ -7015,7 +7015,7 @@ end)
 ### ShouldDrawWepSelect
 
 **Purpose**
- Determines if the weapon selection UI should be visible.
+Determines if the weapon selection UI should be visible.
 
 **Parameters**
 
@@ -7041,7 +7041,7 @@ end)
 ### CanPlayerChooseWeapon
 
 **Purpose**
- Checks whether the active weapon can be selected via the weapon wheel.
+Checks whether the active weapon can be selected via the weapon wheel.
 
 **Parameters**
 
@@ -7069,7 +7069,7 @@ end)
 ### OverrideSpawnTime
 
 **Purpose**
- Allows modules to modify the respawn delay after death.
+Allows modules to modify the respawn delay after death.
 
 **Parameters**
 
@@ -7099,7 +7099,7 @@ end)
 ### ShouldRespawnScreenAppear
 
 **Purpose**
- Lets modules suppress the respawn HUD from showing.
+Lets modules suppress the respawn HUD from showing.
 
 **Parameters**
 
@@ -7125,7 +7125,7 @@ end)
 ### VoiceToggled
 
 **Purpose**
- Fired when voice chat is enabled or disabled via config.
+Fired when voice chat is enabled or disabled via config.
 
 **Parameters**
 
@@ -7151,7 +7151,7 @@ end)
 ### DermaSkinChanged
 
 **Purpose**
- Fired when the Derma UI skin configuration value changes. Allows modules to react to the UI skin being switched.
+Fired when the Derma UI skin configuration value changes. Allows modules to react to the UI skin being switched.
 
 **Parameters**
 
@@ -7177,7 +7177,7 @@ end)
 ### RefreshFonts
 
 **Purpose**
- Requests recreation of all registered UI fonts.
+Requests recreation of all registered UI fonts.
 
 **Parameters**
 
@@ -7203,7 +7203,7 @@ end)
 ### AdjustCreationData
 
 **Purpose**
- Allows modification of character creation data before the character is saved.
+Allows modification of character creation data before the character is saved.
 
 **Parameters**
 
@@ -7237,7 +7237,7 @@ end)
 ### CanCharBeTransfered
 
 **Purpose**
- Determines if a character may switch factions.
+Determines if a character may switch factions.
 
 **Parameters**
 
@@ -7269,7 +7269,7 @@ end)
 ### CanInviteToFaction
 
 **Purpose**
- Checks if `client` can invite `target` to the same faction. Return false to deny the invitation.
+Checks if `client` can invite `target` to the same faction. Return false to deny the invitation.
 
 **Parameters**
 
@@ -7297,7 +7297,7 @@ end)
 ### CanPlayerUseChar
 
 **Purpose**
- Called when a player attempts to load one of their characters.
+Called when a player attempts to load one of their characters.
 
 **Parameters**
 
@@ -7327,7 +7327,7 @@ end)
 ### CanPlayerSwitchChar
 
 **Purpose**
- Checks if a player can switch from their current character to another.
+Checks if a player can switch from their current character to another.
 
 **Parameters**
 
@@ -7359,7 +7359,7 @@ end)
 ### CanPlayerLock
 
 **Purpose**
- Determines whether the player may lock the given door or vehicle.
+Determines whether the player may lock the given door or vehicle.
 
 **Parameters**
 
@@ -7389,7 +7389,7 @@ end)
 ### CanPlayerUnlock
 
 **Purpose**
- Determines whether the player may unlock the given door or vehicle.
+Determines whether the player may unlock the given door or vehicle.
 
 **Parameters**
 
@@ -7419,7 +7419,7 @@ end)
 ### GetMaxStartingAttributePoints
 
 **Purpose**
- Lets you change how many attribute points a new character receives. Retrieves the maximum attribute points available at character creation.
+Lets you change how many attribute points a new character receives. Retrieves the maximum attribute points available at character creation.
 
 **Parameters**
 
@@ -7447,7 +7447,7 @@ end)
 ### GetAttributeStartingMax
 
 **Purpose**
- Sets a limit for a specific attribute at character creation. Returns the starting maximum for a specific attribute.
+Sets a limit for a specific attribute at character creation. Returns the starting maximum for a specific attribute.
 
 **Parameters**
 
@@ -7477,7 +7477,7 @@ end)
 ### GetAttributeMax
 
 **Purpose**
- Returns the maximum value allowed for an attribute.
+Returns the maximum value allowed for an attribute.
 
 **Parameters**
 
@@ -7507,7 +7507,7 @@ end)
 ### OnCharAttribBoosted
 
 **Purpose**
- Fired when an attribute boost is added or removed.
+Fired when an attribute boost is added or removed.
 
 **Parameters**
 
@@ -7543,7 +7543,7 @@ end)
 ### OnCharAttribUpdated
 
 **Purpose**
- Fired when a character attribute value is changed.
+Fired when a character attribute value is changed.
 
 **Parameters**
 
@@ -7577,7 +7577,7 @@ end)
 ### CanPlayerModifyConfig
 
 **Purpose**
- Called when a player attempts to change a configuration value.
+Called when a player attempts to change a configuration value.
 
 **Parameters**
 
@@ -7605,7 +7605,7 @@ end)
 ### CharDeleted
 
 **Purpose**
- Fired after a character is permanently removed.
+Fired after a character is permanently removed.
 
 **Parameters**
 
@@ -7633,7 +7633,7 @@ end)
 ### CheckFactionLimitReached
 
 **Purpose**
- Allows custom logic for determining if a faction has reached its player limit.
+Allows custom logic for determining if a faction has reached its player limit.
 
 **Parameters**
 
@@ -7665,7 +7665,7 @@ end)
 ### F1OnAddSection
 
 **Purpose**
- Triggered after AddSection inserts a new information section.
+Triggered after AddSection inserts a new information section.
 
 **Parameters**
 
@@ -7697,7 +7697,7 @@ end)
 ### GetWeaponName
 
 **Purpose**
- Allows overriding of the displayed weapon name in the selector.
+Allows overriding of the displayed weapon name in the selector.
 
 **Parameters**
 
@@ -7723,7 +7723,7 @@ end)
 ### OnCharGetup
 
 **Purpose**
- Called when a ragdolled character finishes getting up.
+Called when a ragdolled character finishes getting up.
 
 **Parameters**
 
@@ -7751,7 +7751,7 @@ end)
 ### OnLocalizationLoaded
 
 **Purpose**
- Fired once language files finish loading.
+Fired once language files finish loading.
 
 **Parameters**
 
@@ -7777,7 +7777,7 @@ end)
 ### OnPlayerObserve
 
 **Purpose**
- Called when a player's observe mode is toggled.
+Called when a player's observe mode is toggled.
 
 **Parameters**
 
@@ -7805,7 +7805,7 @@ end)
 ### PlayerLoadedChar
 
 **Purpose**
- Called after a player finishes loading a character. The client receives the same event when the server notifies it of the character load. `previousChar` is only supplied when the player switched from another character.
+Called after a player finishes loading a character. The client receives the same event when the server notifies it of the character load. `previousChar` is only supplied when the player switched from another character.
 
 **Parameters**
 
@@ -7835,7 +7835,7 @@ end)
 ### PrePlayerLoadedChar
 
 **Purpose**
- Runs just before a new character becomes active for the player. The client side receives the same event when the server begins loading the character.
+Runs just before a new character becomes active for the player. The client side receives the same event when the server begins loading the character.
 
 **Parameters**
 
@@ -7865,7 +7865,7 @@ end)
 ### PostPlayerLoadedChar
 
 **Purpose**
- Runs after `PlayerLoadedChar` so modules can perform additional setup. The client receives the same event once the server notifies it.
+Runs after `PlayerLoadedChar` so modules can perform additional setup. The client receives the same event once the server notifies it.
 
 **Parameters**
 
@@ -7895,7 +7895,7 @@ end)
 ### PlayerSay
 
 **Purpose**
- Custom hook executed when a player sends a chat message server-side.
+Custom hook executed when a player sends a chat message server-side.
 
 **Parameters**
 
@@ -7923,7 +7923,7 @@ end)
 ### PopulateAdminStick
 
 **Purpose**
- Called after the admin stick menu is created so additional commands can be added.
+Called after the admin stick menu is created so additional commands can be added.
 
 **Parameters**
 
@@ -7953,7 +7953,7 @@ end)
 ### TicketSystemClaim
 
 **Purpose**
- Fired when a staff member claims a help ticket.
+Fired when a staff member claims a help ticket.
 
 **Parameters**
 
@@ -7981,7 +7981,7 @@ end)
 ### TicketSystemClose
 
 **Purpose**
- Fired when a staff member closes a help ticket.
+Fired when a staff member closes a help ticket.
 
 **Parameters**
 
@@ -8009,7 +8009,7 @@ end)
 ### liaOptionReceived
 
 **Purpose**
- Triggered when a shared option value is changed.
+Triggered when a shared option value is changed.
 
 **Parameters**
 
@@ -8039,7 +8039,7 @@ end)
 ### WarningIssued
 
 **Purpose**
- Fired when an administrator issues a warning to a player.
+Fired when an administrator issues a warning to a player.
 
 **Parameters**
 
@@ -8070,7 +8070,7 @@ end)
 ### WarningRemoved
 
 **Purpose**
- Fired when an administrator removes one of a player's warnings.
+Fired when an administrator removes one of a player's warnings.
 
 **Parameters**
 
