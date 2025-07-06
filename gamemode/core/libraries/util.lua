@@ -436,6 +436,153 @@ else
         end
     end
 
+    function lia.util.requestArguments(title, argTypes, onSubmit)
+        local count = table.Count(argTypes)
+        local frameW, frameH = 600, 200 + count * 75
+        local frame = vgui.Create("DFrame")
+        frame:SetTitle("")
+        frame:SetSize(frameW, frameH)
+        frame:Center()
+        frame:MakePopup()
+        frame:ShowCloseButton(false)
+        frame.Paint = function(self, w, h)
+            derma.SkinHook("Paint", "Frame", self, w, h)
+            draw.SimpleText(title or "", "liaMediumFont", w / 2, 10, color_white, TEXT_ALIGN_CENTER)
+        end
+
+        local scroll = vgui.Create("DScrollPanel", frame)
+        scroll:Dock(FILL)
+        scroll:DockMargin(10, 40, 10, 10)
+        surface.SetFont("liaSmallFont")
+        local controls, watchers = {}, {}
+        local validate
+        for name, typeInfo in pairs(argTypes) do
+            local fieldType, dataTbl = typeInfo, nil
+            if istable(typeInfo) then fieldType, dataTbl = typeInfo[1], typeInfo[2] end
+            fieldType = string.lower(tostring(fieldType))
+            local panel = vgui.Create("DPanel", scroll)
+            panel:Dock(TOP)
+            panel:DockMargin(0, 0, 0, 5)
+            panel:SetTall(70)
+            panel.Paint = nil
+            local label = vgui.Create("DLabel", panel)
+            label:SetFont("liaSmallFont")
+            label:SetText(name)
+            label:SizeToContents()
+            local textW = select(1, surface.GetTextSize(name))
+            local ctrl
+            if fieldType == "boolean" then
+                ctrl = vgui.Create("DCheckBox", panel)
+            elseif fieldType == "table" then
+                ctrl = vgui.Create("DComboBox", panel)
+                if istable(dataTbl) then
+                    for _, v in ipairs(dataTbl) do
+                        if istable(v) then
+                            ctrl:AddChoice(v[1], v[2])
+                        else
+                            ctrl:AddChoice(tostring(v))
+                        end
+                    end
+                end
+            elseif fieldType == "int" or fieldType == "number" then
+                ctrl = vgui.Create("DTextEntry", panel)
+                ctrl:SetFont("liaSmallFont")
+                if ctrl.SetNumeric then ctrl:SetNumeric(true) end
+            else
+                ctrl = vgui.Create("DTextEntry", panel)
+                ctrl:SetFont("liaSmallFont")
+            end
+
+            panel.PerformLayout = function(_, w, h)
+                local ctrlH, ctrlW = 30, w * 0.7
+                local totalW = textW + 10 + ctrlW
+                local xOff = (w - totalW) / 2
+                label:SetPos(xOff, (h - label:GetTall()) / 2)
+                ctrl:SetPos(xOff + textW + 10, (h - ctrlH) / 2)
+                ctrl:SetSize(ctrlW, ctrlH)
+            end
+
+            controls[name] = {
+                ctrl = ctrl,
+                type = fieldType
+            }
+
+            watchers[#watchers + 1] = function()
+                local function trigger()
+                    validate()
+                end
+
+                ctrl.OnValueChange, ctrl.OnTextChanged, ctrl.OnChange, ctrl.OnSelect = trigger, trigger, trigger, trigger
+            end
+        end
+
+        local btnPanel = vgui.Create("DPanel", frame)
+        btnPanel:Dock(BOTTOM)
+        btnPanel:SetTall(90)
+        btnPanel:DockPadding(15, 15, 15, 15)
+        btnPanel.Paint = nil
+        local submit = vgui.Create("DButton", btnPanel)
+        submit:Dock(LEFT)
+        submit:DockMargin(0, 0, 15, 0)
+        submit:SetWide(270)
+        submit:SetText(L("submit"))
+        submit:SetFont("liaSmallFont")
+        submit:SetIcon("icon16/tick.png")
+        submit:SetEnabled(false)
+        local cancel = vgui.Create("DButton", btnPanel)
+        cancel:Dock(RIGHT)
+        cancel:SetWide(270)
+        cancel:SetText(L("cancel"))
+        cancel:SetFont("liaSmallFont")
+        cancel:SetIcon("icon16/cross.png")
+        cancel.DoClick = function() frame:Remove() end
+        validate = function()
+            for _, data in pairs(controls) do
+                local ctl, ftype, ok = data.ctrl, data.type, true
+                if ftype == "boolean" then
+                    ok = true
+                elseif ctl.GetSelected then
+                    local txt = select(1, ctl:GetSelected())
+                    ok = txt and txt ~= ""
+                elseif ctl.GetValue then
+                    local val = ctl:GetValue()
+                    ok = val and val ~= ""
+                end
+
+                if not ok then
+                    submit:SetEnabled(false)
+                    return
+                end
+            end
+
+            submit:SetEnabled(true)
+        end
+
+        for _, fn in ipairs(watchers) do
+            fn()
+        end
+
+        validate()
+        submit.DoClick = function()
+            local result = {}
+            for k, data in pairs(controls) do
+                local ctl, ftype = data.ctrl, data.type
+                if ftype == "boolean" then
+                    result[k] = ctl:GetChecked()
+                elseif ctl.GetSelected then
+                    local txt, val = ctl:GetSelected()
+                    result[k] = val or txt
+                else
+                    local val = ctl:GetValue()
+                    result[k] = (ftype == "int" or ftype == "number") and tonumber(val) or val
+                end
+            end
+
+            if isfunction(onSubmit) then onSubmit(result) end
+            frame:Remove()
+        end
+    end
+
     function lia.util.CreateTableUI(title, columns, data, options, charID)
         local frameWidth, frameHeight = ScrH() * 0.8, ScrH() * 0.8
         local frame = vgui.Create("DFrame")
