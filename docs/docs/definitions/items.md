@@ -1081,6 +1081,10 @@ ITEM.url = "https://example.com"
 Table mapping action names to definitions. Each function entry controls
 button text, icons and behavior when the action is triggered.
 
+The `name` and `tip` fields for each action are automatically passed through
+the `L()` localization helper when an item is registered. Provide translation
+keys instead of raw strings.
+
 **Example Usage:**
 
 ```lua
