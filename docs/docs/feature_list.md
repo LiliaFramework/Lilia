@@ -24,7 +24,6 @@ Drag-and-drop container system with customizable weight and size limits.
 
 - Shift-click automatically moves items to the first open slot
 
-
 ### Recognition
 
 Players must manually recognize others to see their names.
@@ -42,7 +41,6 @@ Players must manually recognize others to see their names.
 - Friends list integration optionally grants automatic recognition
 
 - Client-side popups notify players when new characters are recognized
-
 
 ### Attributes
 
@@ -66,7 +64,6 @@ Character stats that improve through gameplay.
 
 - Hands SWEP lets players pick up, push and throw light objects
 
-
 ### F1 Menu
 
 Central hub for staff utilities and character management.
@@ -84,7 +81,6 @@ Central hub for staff utilities and character management.
 - Modular tab system allows plugins to add new pages
 
 - Search bar helps staff quickly locate commands or characters
-
 
 ### Scoreboard
 
@@ -108,7 +104,6 @@ In-game player list with faction sorting and admin actions.
 
 - Tooltips reveal full character names and SteamIDs
 
-
 ### Chatbox
 
 Enhanced chat with colors, ranges and channels.
@@ -126,7 +121,6 @@ Enhanced chat with colors, ranges and channels.
 - Supports chat classes for radio channels and emotes
 
 - Built-in commands like `/me` and `/roll`
-
 
 ### Main Menu
 
@@ -149,21 +143,6 @@ Character selection screen with background and news options.
 - Quick equip slots for grenades or utilities
 
 
-### Weapon Selector
-
-Radial menu for quick weapon switching.
-
-- Radial weapon menu with smooth fade animations
-
-- Obeys hooks to decide when it appears
-
-- Displays ammo counts and active attachments
-
-- Designed for quick weapon switching without blocking movement
-
-- Map-based spawn overrides for special events
-
-
 ### Spawns
 
 Flexible spawn point management with death penalties.
@@ -182,7 +161,6 @@ Flexible spawn point management with death penalties.
 
 - Customizable respawn messages and effects
 
-
 ### Teams
 
 Factions and classes with custom ranks and spawns.
@@ -198,7 +176,6 @@ Factions and classes with custom ranks and spawns.
 - Hooks for custom team loadouts and spawns
 
 - Supports sub-factions and dynamic rank titles
-
 
 ### Interaction Menu
 
@@ -218,7 +195,6 @@ Contextual radial menu for money, voice and recognition.
 
 - Warns staff if server FPS drops too low
 
-
 ### Administration Utilities
 
 Logging and ticket tools for server staff.
@@ -235,7 +211,6 @@ Logging and ticket tools for server staff.
 
 - Sitroom management commands let staff teleport players to holding areas
 
-
 ### Performance
 
 Libraries for monitoring tick and network load.
@@ -245,7 +220,6 @@ Libraries for monitoring tick and network load.
 - Useful for tracking tick rate and network performance
 
 - Includes debug overlays for server load and network usage
-
 
 ### Protection
 
@@ -283,7 +257,6 @@ SWEP granting teleport, freeze and noclip abilities.
 
 - Right-click opens a menu of administrative shortcuts
 
-
 ### Item Spawner
 
 GUI for spawning items with privilege checks.
@@ -300,7 +273,6 @@ GUI for spawning items with privilege checks.
 
 - Supports specifying stack sizes for bulk spawns
 
-
 ### Tickets
 
 Players submit help tickets for staff review.
@@ -315,7 +287,6 @@ Players submit help tickets for staff review.
 
 - Players receive chat alerts when a ticket is answered
 
-
 ### Warns
 
 Issue warnings with history and auto punishments.
@@ -327,7 +298,6 @@ Issue warnings with history and auto punishments.
 - Registers attachments to keep weapons consistent
 
 - Can automatically apply punishments after repeated infractions
-
 
 ### Permissions
 
@@ -343,7 +313,6 @@ CAMI-based privilege system with inheritance.
 
 - Vehicle blacklist privileges restrict certain car spawns
 - Command prompts display faction and class unique IDs for clarity
-
 
 ### Logging
 
@@ -379,7 +348,6 @@ Ownable doors with keys and dynamic pricing.
 
 - Prices adjust dynamically based on supply
 
-
 ### Third Person
 
 Toggleable camera that prevents wall peeking.
@@ -397,7 +365,6 @@ Toggleable camera that prevents wall peeking.
 - Keybind toggles shoulder view on the fly
 
 - Automatically reverts to first person when aiming weapons
-
 
 ### Storage Containers
 
@@ -459,7 +426,6 @@ Character stats that improve through gameplay with an API for modifying values.
 
 - Supports value clamping and progression formulas
 
-
 ### Bars
 
 HUD bars for health, armor and custom stats.
@@ -478,7 +444,6 @@ HUD bars for health, armor and custom stats.
 
 - Circular HUD bars can surround NPCs or players
 
-
 ### Character Library
 
 Helpers for saving and transferring characters.
@@ -492,7 +457,6 @@ Helpers for saving and transferring characters.
 - Events allow pre and post character transfer logic
 
 - Simplified APIs for retrieving online or offline characters
-
 
 ### Chatbox Library
 
@@ -508,9 +472,7 @@ Enhanced chat with ranges and colors plus utilities for custom commands.
 
 - Plugin hooks for chat preprocessing
 
-
 - Works with the recognition system for display names
-
 
 ### Classes Library
 
@@ -526,7 +488,6 @@ Manage class definitions and loadouts.
 
 - Save new class definitions at runtime via commands
 
-
 ### Color Utilities
 
 Color conversion and palette helpers.
@@ -539,9 +500,7 @@ Color conversion and palette helpers.
 
 - Provides predefined palettes for common UI elements
 
-
 - Convert hex codes to color tables
-
 
 ### Commands Library
 
@@ -559,7 +518,6 @@ Chat command registration system.
 
 - Unified `execAdminCommand` helper simplifies running kick/ban commands
 
-
 ### Config Library
 
 Register and network configuration variables.
@@ -575,7 +533,6 @@ Register and network configuration variables.
 - Schemas can define defaults and value ranges
 
 - Supports sliders, checkboxes and text entry types
-
 
 ### Currency Library
 
@@ -593,7 +550,6 @@ Money handling with support for multiple currencies.
 
 - Integrates with banking and storage addons
 
-
 ### DarkRP Compatibility
 
 Implements DarkRP-style helpers for addons.
@@ -608,7 +564,6 @@ Implements DarkRP-style helpers for addons.
 
 - Supports DarkRP shipments and custom job weapons
 
-
 ### Data Library
 
 Key/value persistence wrappers.
@@ -622,7 +577,6 @@ Key/value persistence wrappers.
 - Optional caching layers reduce disk reads
 
 - Data versioning prevents mismatched schemas
-
 
 ### Database Library
 
@@ -640,7 +594,6 @@ Asynchronous MySQL or SQLite layer.
 
 - Exposes queue length metrics for debugging
 
-
 ### Factions Library
 
 Manage faction data and chat colors.
@@ -657,7 +610,6 @@ Manage faction data and chat colors.
 
 - Faction chat automatically uses the group's color
 
-
 ### Flags Library
 
 Temporary permission flags for players.
@@ -671,7 +623,6 @@ Temporary permission flags for players.
 - Combine with commands for fine-grained access
 
 - Integrates with usergroups to restrict plugin functionality
-
 
 ### Fonts Library
 
@@ -687,7 +638,6 @@ Register fonts for user interface elements.
 
 - Fonts are cached clientside to minimize load times
 
-
 ### Inventory Library
 
 Shared inventory logic used across modules.
@@ -700,9 +650,7 @@ Shared inventory logic used across modules.
 
 - Drag-and-drop system for moving and splitting stacks
 
-
 - Containers can hold other containers if allowed
-
 
 ### Item Library
 
@@ -718,9 +666,7 @@ Framework for defining items and hooks.
 
 - Items can override rendering and interaction behaviour
 
-
 - Items may expose custom networked fields
-
 
 ### Keybind Library
 
@@ -736,7 +682,6 @@ System for adding and saving custom key binds.
 
 - Keybind contexts allow menu overrides
 
-
 ### Languages Library
 
 Multi-language phrase system for translations.
@@ -750,7 +695,6 @@ Multi-language phrase system for translations.
 - Right-to-left and accented character handling
 
 - Phrase packs can load from Workshop addons
-
 
 ### Logger Library
 
@@ -768,7 +712,6 @@ Simplified logging utilities for modules.
 
 - Colored console output improves readability
 
-
 ### Markup Library
 
 Markup rendering helpers for UI text.
@@ -782,7 +725,6 @@ Markup rendering helpers for UI text.
 - Clickable links and icon embeds supported
 
 - Preprocess templates for dynamic text
-
 
 ### Menu Helper
 
@@ -798,7 +740,6 @@ Functions that simplify building Derma menus.
 
 - Wrap panels with standardized headers
 
-
 ### Modularity
 
 Hot-load modules and manage dependencies.
@@ -813,7 +754,6 @@ Hot-load modules and manage dependencies.
 
 - Modules declare dependencies to auto-load requirements
 
-
 ### Networking
 
 Netstream wrappers for reliable data transfer.
@@ -825,7 +765,6 @@ Netstream wrappers for reliable data transfer.
 - Request/response pattern for RPC-style calls
 
 - Built-in timeouts prevent stalled network requests
-
 
 ### Notice System
 
@@ -839,7 +778,6 @@ On-screen notifications with priority handling.
 
 - Priorities let important messages override lesser ones
 
-
 ### Option Library
 
 Store client preferences on the server.
@@ -851,7 +789,6 @@ Store client preferences on the server.
 - Network options to and from the server
 
 - Preferences are saved server-side for persistence
-
 
 ### Salary System
 
@@ -867,7 +804,6 @@ Automated periodic wages for characters.
 
 - Logging tracks salary payouts for auditing
 
-
 ### Time Library
 
 Shared timers and scheduling utilities.
@@ -881,7 +817,6 @@ Shared timers and scheduling utilities.
 - Timers can fire callbacks at map start
 
 - Timers can persist across map changes if desired
-
 
 ### Util Library
 
@@ -897,7 +832,6 @@ General helper functions used throughout Lilia.
 
 - Includes entity search and distance calculations
 
-
 ### Web Image
 
 Download and cache images for the UI.
@@ -911,7 +845,6 @@ Download and cache images for the UI.
 - Save local copies to reduce bandwidth
 
 - Cache directory can be customized per server
-
 
 ### Workshop
 
