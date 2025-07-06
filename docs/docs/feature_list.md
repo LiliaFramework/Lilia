@@ -266,7 +266,8 @@ Anti-exploit features and action cooldowns.
 - Option to disable potentially dangerous console commands
 
 - Monitors unusual damage events and logs suspicious behaviour
-
+- Automatically bans known cheaters and blacklisted alt accounts
+- Filters IP addresses shared in chat to prevent advertising
 
 ### Admin Stick
 
@@ -341,6 +342,7 @@ CAMI-based privilege system with inheritance.
 - Simple API to register new permissions from plugins
 
 - Vehicle blacklist privileges restrict certain car spawns
+- Command prompts display faction and class unique IDs for clarity
 
 
 ### Logging
@@ -352,7 +354,8 @@ Categorized logs with optional webhooks.
 - Configurable retention time and line limits
 
 - Optional webhook integration for Discord or other services
-
+- Detailed logs capture physgun usage, vehicle entries, ticket actions and perma-prop events
+- Alerts staff when suspicious net messages are triggered
 
 ### Doors
 
