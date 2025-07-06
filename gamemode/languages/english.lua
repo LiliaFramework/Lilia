@@ -861,6 +861,7 @@ LANGUAGE = {
     clearChatCommandDesc = "Clears chat for all players.",
     teleportedToEntity = "Teleported to entity: %s",
     youAreDead = "You are dead!",
+    youAreRagdolled = "You are ragdolled!",
     cannotSwitchInVehicle = "You cannot switch characters while in a vehicle or sitting!",
     pressInstructions = "Press A/D to rotate | W/S to move camera vertically | Press SPACE to exit",
     entities = "Entities",
