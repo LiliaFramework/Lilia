@@ -354,30 +354,28 @@ else
             }
 
             watchers[#watchers + 1] = function()
-                if ctrl.OnValueChange then
-                    local old = ctrl.OnValueChange
-                    function ctrl:OnValueChange(...)
-                        if old then old(self, ...) end
-                        validate()
-                    end
-                elseif ctrl.OnTextChanged then
-                    local old = ctrl.OnTextChanged
-                    function ctrl:OnTextChanged(...)
-                        if old then old(self, ...) end
-                        validate()
-                    end
-                elseif ctrl.OnChange then
-                    local old = ctrl.OnChange
-                    function ctrl:OnChange(...)
-                        if old then old(self, ...) end
-                        validate()
-                    end
-                elseif ctrl.OnSelect then
-                    local old = ctrl.OnSelect
-                    function ctrl:OnSelect(...)
-                        if old then old(self, ...) end
-                        validate()
-                    end
+                local oldValue = ctrl.OnValueChange
+                function ctrl:OnValueChange(...)
+                    if oldValue then oldValue(self, ...) end
+                    validate()
+                end
+
+                local oldText = ctrl.OnTextChanged
+                function ctrl:OnTextChanged(...)
+                    if oldText then oldText(self, ...) end
+                    validate()
+                end
+
+                local oldChange = ctrl.OnChange
+                function ctrl:OnChange(...)
+                    if oldChange then oldChange(self, ...) end
+                    validate()
+                end
+
+                local oldSelect = ctrl.OnSelect
+                function ctrl:OnSelect(...)
+                    if oldSelect then oldSelect(self, ...) end
+                    validate()
                 end
             end
         end
