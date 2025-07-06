@@ -20,105 +20,84 @@ names are kept in `lia.lang.names`.
 
 ### lia.lang.loadFromDir
 
-**Description:**
+**Purpose**
 
-Loads all Lua language files (*.lua) from the specified directory,
+Loads all Lua language files from the given directory and merges their `LANGUAGE` tables.
 
-includes them as shared files, and merges any defined LANGUAGE table
+**Parameters**
 
-into the stored language data. If a language name (NAME) is provided in the file,
+* `directory` (*string*): Path to the folder containing language files.
 
-it is registered in lia.lang.names. Once all files have been processed, the `OnLocalizationLoaded` hook is triggered.
+**Realm**
 
-**Parameters:**
+`Shared`
 
-* `directory` (`string`) – The path to the directory containing language files.
+**Returns**
 
+* `nil`: Nothing.
 
-**Realm:**
-
-* Shared
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Load language files bundled with the current schema
-    lia.lang.loadFromDir(SCHEMA.folder .. "/languages")
+-- Load language files bundled with the current schema
+lia.lang.loadFromDir(SCHEMA.folder .. "/languages")
 ```
 
 ---
 
 ### lia.lang.AddTable
 
-**Description:**
+**Purpose**
 
-Adds or merges a table of language key-value pairs into the stored language table
+Adds or merges language key-value pairs into the stored table.
 
-for a specified language. If the language already exists in the storage, the new values
+**Parameters**
 
-will be merged with the existing ones.
+* `name` (*string*): Language identifier to update.
+* `tbl` (*table*): Key-value pairs to insert or merge.
 
-**Parameters:**
+**Realm**
 
-* `name` (`string`) – The name of the language to update.
+`Shared`
 
+**Returns**
 
-* `tbl` (`table`) – A table containing language key-value pairs to add.
+* `nil`: Nothing.
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Add or override phrases for English
+-- Add or override phrases for English
 lia.lang.AddTable("english", {
-        greeting = "Hello",
-        farewell = "Goodbye"
-    })
+    greeting = "Hello",
+    farewell = "Goodbye"
+})
 ```
 
 ---
 
 ### L
 
-**Description:**
+**Purpose**
 
-Looks up the phrase associated with `key` in the language selected by the `Language`
+Retrieves the translated text for the given key in the active language.
 
-configuration option. Additional arguments are inserted using `string.format`.
+**Parameters**
 
-If the key has no translation, the key itself is returned.
+* `key` (*string*): Localization key.
+* ...: Additional values inserted with `string.format`.
 
-**Parameters:**
+**Realm**
 
-* `key` (`string`) – Localization key.
+`Shared`
 
-* ... (vararg) – Values to format into the phrase.
+**Returns**
 
-**Realm:**
+* `string`: The translated phrase or the key if missing.
 
-* Shared
-
-**Returns:**
-
-* string – The translated phrase or the key when missing.
-
-**Example Usage:**
+**Example**
 
 ```lua
-    print("Show All") -- prints "Show All" in the active language
+print(L("Show All"))
 ```
+

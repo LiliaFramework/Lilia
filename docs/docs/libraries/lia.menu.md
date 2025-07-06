@@ -26,36 +26,27 @@ Each entry inside `lia.menu.list` is a table with the following fields:
 
 ### lia.menu.add
 
-**Description:**
+**Purpose**
 
-Creates a context menu from the given options table. Each key is the label shown and each value is the function run when selected.
+Creates a context menu from a table of label/callback pairs.
 
-When an entity is supplied the menu follows that entity. Otherwise the player's eye trace position is used.
+**Parameters**
 
-**Parameters:**
+* `opts` (*table*): Table of label to callback mappings.
+* `pos` (*Vector|Entity|nil*): World position or entity to attach to.
+* `onRemove` (*function|nil*): Function executed when the menu is removed.
 
-* `opts` (`table`) – Table of label/callback pairs.
+**Realm**
 
+`Client`
 
-* `pos` (`Vector|Entity|nil`) – Optional world position or entity to attach the menu to.
+**Returns**
 
-* `onRemove` (`function|nil`) – Function executed when the menu is removed.
+* `number`: Identifier for the created menu.
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* number – Identifier for the created menu entry.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
--- Attach a menu to the entity the player is looking at
 local ent = LocalPlayer():GetEyeTrace().Entity
 lia.menu.add({
     ["Greet"] = function() print("Hi") end
@@ -66,29 +57,27 @@ lia.menu.add({
 
 ### lia.menu.drawAll
 
-**Description:**
+**Purpose**
 
-Draws all active menus on the player's HUD. It should be called from HUDPaint or similar hooks.
+Draws all active menus on the player's HUD.
 
-**Parameters:**
-
-* None
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
+**Parameters**
 
 * None
 
+**Realm**
 
-**Example Usage:**
+`Client`
+
+**Returns**
+
+* `nil`: Nothing.
+
+**Example**
 
 ```lua
--- Draw menus each frame
+hook.Add("HUDPaintBackground", "DrawMenus", lia.menu.drawAll)
+```
 hook.Add("HUDPaintBackground", "DrawMenus", lia.menu.drawAll)
 ```
 
@@ -96,32 +85,26 @@ hook.Add("HUDPaintBackground", "DrawMenus", lia.menu.drawAll)
 
 ### lia.menu.getActiveMenu
 
-**Description:**
+**Purpose**
 
-Returns the ID and callback of the option currently under the cursor. Often used with PlayerBindPress to trigger selections.
+Returns the ID and callback of the option currently under the cursor.
 
-**Parameters:**
+**Parameters**
 
 * None
 
+**Realm**
 
-**Realm:**
+`Client`
 
-* Client
+**Returns**
 
+* `id` (*number|nil*): Index of the active menu.
+* `callback` (*function|nil*): Callback for the hovered item.
 
-**Returns:**
-
-* `id` (`number|nil`) – Index of the active menu.
-
-
-* `callback` (`function|nil`) – Callback for the hovered item.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
--- Check which option is under the crosshair
 local id, callback = lia.menu.getActiveMenu()
 if id then print("hovering option", id) end
 ```
@@ -130,32 +113,26 @@ if id then print("hovering option", id) end
 
 ### lia.menu.onButtonPressed
 
-**Description:**
+**Purpose**
 
-Removes the menu with the given ID and executes its callback if present.
+Removes the menu with the given ID and runs its callback if available.
 
-**Parameters:**
+**Parameters**
 
-* `id` (`number`) – Identifier returned by lia.menu.add.
+* `id` (*number*): Identifier returned by `lia.menu.add`.
+* `callback` (*function|nil*): Function executed after removal.
 
+**Realm**
 
-* `callback` (`function|nil`) – Function to execute after removal.
+`Client`
 
+**Returns**
 
-**Realm:**
+* `boolean`: True if a callback was executed.
 
-* Client
-
-
-**Returns:**
-
-* boolean – True if a callback was executed.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
--- Activate menu options when Use or Attack is pressed
 hook.Add("PlayerBindPress", "MenuClick", function(client, bind, pressed)
     if pressed and (bind:find("use") or bind:find("attack")) then
         local id, cb = lia.menu.getActiveMenu()
@@ -165,4 +142,5 @@ hook.Add("PlayerBindPress", "MenuClick", function(client, bind, pressed)
     end
 end)
 ```
+
 
