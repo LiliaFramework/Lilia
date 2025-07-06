@@ -24,55 +24,53 @@ The workshop library tracks required Workshop addon IDs and mounts them on clien
 
 ### lia.workshop.AddWorkshop
 
-**Description:**
+**Purpose**
 
-Registers a Steam Workshop addon ID so it will be downloaded by clients. The ID is stored in `lia.workshop.ids` and announced the first time it is added.
+Registers a Steam Workshop addon ID so clients will download it.
 
-**Parameters:**
+**Parameters**
 
-* `id` (`string|number`) – Workshop item ID to add.
+* `id` (*string|number*): Workshop item ID to add.
 
-**Realm:**
+**Realm**
 
-* Server
+`Server`
 
-**Returns:**
+**Returns**
 
-* None
+* `nil`: Nothing.
 
-**Example Usage:**
+**Example**
 
 ```lua
--- Add a custom model pack from the Workshop
 lia.workshop.AddWorkshop("1234567890")
+-- Add a custom model pack from the Workshop
 ```
+
+---
 
 ### lia.workshop.gather
 
-**Description:**
+**Purpose**
 
-Collects Workshop IDs added with `lia.workshop.AddWorkshop`, from installed addons, and from modules that define `WorkshopContent`.
+Collects Workshop IDs from all registered sources.
 
-**Parameters:**
+**Parameters**
 
-* None
+*None*
 
+**Realm**
 
-**Realm:**
+`Server`
 
-* Server
+**Returns**
 
+* `table`: Table of workshop IDs to download.
 
-**Returns:**
-
-* `ids` (`table`) – Table of workshop IDs to download.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.workshop.gather
-    local ids = lia.workshop.gather()
+local ids = lia.workshop.gather()
 for id in pairs(ids) do
     print("Needs addon:", id)
 end
@@ -82,29 +80,25 @@ end
 
 ### lia.workshop.send
 
-**Description:**
+**Purpose**
 
-Sends the cached list of Workshop IDs to the specified player using the "WorkshopDownloader_Start" net message.
+Sends the cached list of Workshop IDs to a player.
 
-**Parameters:**
+**Parameters**
 
-* `ply` (`Player`) – Player to send the download list to.
+* `ply` (*Player*): Target player.
 
+**Realm**
 
-**Realm:**
+`Server`
 
-* Server
+**Returns**
 
+* `nil`: Nothing.
 
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Send the cached list when a player spawns
 hook.Add("PlayerInitialSpawn", "SendWorkshopList", function(ply)
     lia.workshop.send(ply)
 end)
