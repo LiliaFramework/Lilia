@@ -12,18 +12,24 @@ Attributes may define callback functions that run when a player's attribute tabl
 
 ### OnSetup
 
-Description: Called whenever `lia.attribs.setup` initializes or refreshes this attribute for a player.
+**Purpose**
 
-Parameters:
-- `client` (Player): the player that owns the attribute
-- `value` (number): current attribute value including temporary boosts
+Called whenever `lia.attribs.setup` initializes or refreshes this attribute for a player.
 
-Realm: Server
+**Parameters**
 
-Returns:
-- `nil`: none
+* `client` (*Player*): the player that owns the attribute.
+* `value` (*number*): current attribute value including temporary boosts.
 
-Example Usage:
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `nil`: none.
+
+**Example**
 ```lua
 function ATTRIBUTE:OnSetup(client, value)
     -- Apply movement bonuses based on this attribute level.

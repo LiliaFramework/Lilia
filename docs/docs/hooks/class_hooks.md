@@ -18,17 +18,23 @@ definition files (`schema/classes/*.lua`).
 
 ### OnCanBe
 
-Description: Determines whether a player is allowed to switch to this class.
+**Purpose**
 
-Parameters:
-- `client` (Player): the player attempting to switch
+Determines whether a player is allowed to switch to this class.
 
-Realm: Server
+**Parameters**
 
-Returns:
-- `boolean?`: return `false` to deny the change
+* `client` (*Player*): the player attempting to switch.
 
-Example Usage:
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `boolean?`: return `false` to deny the change.
+
+**Example**
 ```lua
 function CLASS:OnCanBe(client)
     -- Only allow admins or players that own the "V" flag.
@@ -50,17 +56,23 @@ end
 
 ### OnLeave
 
-Description: Runs on the previous class after a player successfully changes classes.
+**Purpose**
 
-Parameters:
-- `client` (Player): the player who has left the class
+Runs on the previous class after a player successfully changes classes.
 
-Realm: Server
+**Parameters**
 
-Returns:
-- `nil`: none
+* `client` (*Player*): the player who has left the class.
 
-Example Usage:
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `nil`: none.
+
+**Example**
 ```lua
 function CLASS:OnLeave(client)
     -- Strip any class-specific weapons.
@@ -81,17 +93,23 @@ end
 
 ### OnSet
 
-Description: Executes immediately after a player joins this class.
+**Purpose**
 
-Parameters:
-- `client` (Player): the player who has joined the class
+Executes immediately after a player joins this class.
 
-Realm: Server
+**Parameters**
 
-Returns:
-- `nil`: none
+* `client` (*Player*): the player who has joined the class.
 
-Example Usage:
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `nil`: none.
+
+**Example**
 ```lua
 function CLASS:OnSet(client)
     local char = client:getChar()
@@ -116,17 +134,23 @@ end
 
 ### OnSpawn
 
-Description: Runs each time a member of this class respawns.
+**Purpose**
 
-Parameters:
-- `client` (Player): the player who has just spawned
+Runs each time a member of this class respawns.
 
-Realm: Server
+**Parameters**
 
-Returns:
-- `nil`: none
+* `client` (*Player*): the player who has just spawned.
 
-Example Usage:
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `nil`: none.
+
+**Example**
 ```lua
 function CLASS:OnSpawn(client)
     -- Apply the class loadout and stats every respawn.
@@ -149,18 +173,24 @@ end
 ---
 ### OnTransferred
 
-Description: Fires when a player is moved into this class from another.
+**Purpose**
 
-Parameters:
-- `client` (Player): the player who was transferred
-- `oldClass` (number): index of the previous class
+Fires when a player is moved into this class from another.
 
-Realm: Server
+**Parameters**
 
-Returns:
-- `nil`: none
+* `client` (*Player*): the player who was transferred.
+* `oldClass` (*number*): index of the previous class.
 
-Example Usage:
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `nil`: none.
+
+**Example**
 ```lua
 function CLASS:OnTransferred(client, oldClass)
     local char = client:getChar()
