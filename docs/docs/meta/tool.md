@@ -17,14 +17,14 @@ Creates a new tool object with default values.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- table: The newly created tool object.
+* table: The newly created tool object.
 
 **Example**
 
@@ -45,14 +45,14 @@ Creates client and server ConVars for this tool.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -70,14 +70,14 @@ Returns the server ConVar for the given property.
 
 **Parameters**
 
-- `property` (string): Property name.
+* `property` (string): Property name.
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- ConVar: The server ConVar object.
+* ConVar: The server ConVar object.
 
 **Example**
 
@@ -95,14 +95,14 @@ Returns a table of client ConVars prefixed by the tool mode.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- table: Table of convars.
+* table: Table of convars.
 
 **Example**
 
@@ -120,14 +120,14 @@ Retrieves a client ConVar value as a string.
 
 **Parameters**
 
-- `property` (string): ConVar name without mode prefix.
+* `property` (string): ConVar name without mode prefix.
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- string: The value stored in the ConVar.
+* string: The value stored in the ConVar.
 
 **Example**
 
@@ -145,15 +145,15 @@ Retrieves a numeric client ConVar value.
 
 **Parameters**
 
-- `property` (string): ConVar name without mode prefix.
-- `default` (number): Value returned if the ConVar doesn't exist.
+* `property` (string): ConVar name without mode prefix.
+* `default` (number): Value returned if the ConVar doesn't exist.
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- number: The numeric value of the ConVar.
+* number: The numeric value of the ConVar.
 
 **Example**
 
@@ -171,14 +171,14 @@ Determines whether this tool is allowed to be used.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- boolean: True if the tool is allowed.
+* boolean: True if the tool is allowed.
 
 **Example**
 
@@ -198,14 +198,14 @@ Placeholder for tool initialization.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -225,14 +225,14 @@ Gets the current tool mode string.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- string: Tool mode name.
+* string: Tool mode name.
 
 **Example**
 
@@ -250,14 +250,14 @@ Returns the SWEP associated with this tool.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- SWEP: The tool's weapon entity.
+* SWEP: The tool's weapon entity.
 
 **Example**
 
@@ -275,14 +275,14 @@ Returns the player who owns the associated weapon.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- Player: Owner of the tool.
+* Player: Owner of the tool.
 
 **Example**
 
@@ -301,14 +301,14 @@ Retrieves the weapon entity this tool is attached to.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- Weapon: The weapon object.
+* Weapon: The weapon object.
 
 **Example**
 
@@ -326,14 +326,14 @@ Handles the left-click action. Override for custom behavior.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- boolean: False by default.
+* boolean: False by default.
 
 **Example**
 
@@ -354,14 +354,14 @@ Handles the right-click action. Override for custom behavior.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- boolean: False by default.
+* boolean: False by default.
 
 **Example**
 
@@ -382,14 +382,14 @@ Clears stored objects when the tool reloads.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -409,14 +409,14 @@ Called when the tool is equipped. Releases ghost entity.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -436,14 +436,14 @@ Called when the tool is holstered. Releases ghost entity.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -463,14 +463,14 @@ Called every tick; releases ghost entities by default.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -490,14 +490,14 @@ Validates stored objects and clears them if invalid.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -515,14 +515,14 @@ Removes all stored objects from the tool.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -540,14 +540,14 @@ Removes the ghost entity used for previewing placements.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 

@@ -21,7 +21,7 @@ Hooks are automatically removed when the inventory is deleted, but you should al
 **Parameters**
 
 
-- `inventory` (Inventory): Inventory to listen for updates.
+* `inventory` (Inventory): Inventory to listen for updates.
 
 **Realm**
 `Client`
@@ -29,7 +29,7 @@ Hooks are automatically removed when the inventory is deleted, but you should al
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -56,7 +56,7 @@ Removes hooks added by `liaListenForInventoryChanges`. Supply an inventory ID to
 **Parameters**
 
 
-- `id` (number|nil): ID of the inventory to stop listening to, or nil to remove all.
+* `id` (number|nil): ID of the inventory to stop listening to, or nil to remove all.
 
 **Realm**
 `Client`
@@ -64,7 +64,7 @@ Removes hooks added by `liaListenForInventoryChanges`. Supply an inventory ID to
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -92,9 +92,9 @@ Sets the panel position using `ScreenScale(x)` and `ScreenScaleH(y)`.
 **Parameters**
 
 
-- `x` (number): Horizontal position in screen scale units.
+* `x` (number): Horizontal position in screen scale units.
 
-- `y` (number): Vertical position in screen scale units.
+* `y` (number): Vertical position in screen scale units.
 
 **Realm**
 `Client`
@@ -102,7 +102,7 @@ Sets the panel position using `ScreenScale(x)` and `ScreenScaleH(y)`.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -123,9 +123,9 @@ Sets the panel size using `ScreenScale(w)` and `ScreenScaleH(h)`.
 **Parameters**
 
 
-- `w` (number): Width in screen scale units.
+* `w` (number): Width in screen scale units.
 
-- `h` (number): Height in screen scale units.
+* `h` (number): Height in screen scale units.
 
 **Realm**
 `Client`
@@ -133,7 +133,7 @@ Sets the panel size using `ScreenScale(w)` and `ScreenScaleH(h)`.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 

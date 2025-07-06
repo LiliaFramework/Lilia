@@ -19,7 +19,7 @@ Returns the currently loaded character object for this player.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -29,7 +29,7 @@ Returns the currently loaded character object for this player.
 **Returns**
 
 
-- Character|None: The player's active character.
+* Character|None: The player's active character.
 
 
 **Example**
@@ -51,7 +51,7 @@ Returns either the character's roleplay name or the player's Steam name.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -61,7 +61,7 @@ Returns either the character's roleplay name or the player's Steam name.
 **Returns**
 
 
-- string: Display name.
+* string: Display name.
 
 
 **Example**
@@ -83,7 +83,7 @@ Wrapper for CAMI privilege checks.
 **Parameters**
 
 
-- `privilegeName` (string): Privilege identifier.
+* `privilegeName` (string): Privilege identifier.
 
 
 **Realm**
@@ -93,7 +93,7 @@ Wrapper for CAMI privilege checks.
 **Returns**
 
 
-- boolean: Result from CAMI.PlayerHasAccess.
+* boolean: Result from CAMI.PlayerHasAccess.
 
 
 **Example**
@@ -117,7 +117,7 @@ Safely returns the vehicle the player is currently using.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -127,7 +127,7 @@ Safely returns the vehicle the player is currently using.
 **Returns**
 
 
-- Entity|None: Vehicle entity or None.
+* Entity|None: Vehicle entity or None.
 
 
 **Example**
@@ -152,7 +152,7 @@ Determines if the player is currently inside a valid vehicle.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -162,7 +162,7 @@ Determines if the player is currently inside a valid vehicle.
 **Returns**
 
 
-- boolean: True if a vehicle entity is valid.
+* boolean: True if a vehicle entity is valid.
 
 
 **Example**
@@ -186,7 +186,7 @@ Returns true if the player is in noclip mode and not inside a vehicle.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -196,7 +196,7 @@ Returns true if the player is in noclip mode and not inside a vehicle.
 **Returns**
 
 
-- boolean: Whether the player is noclipping.
+* boolean: Whether the player is noclipping.
 
 
 **Example**
@@ -218,7 +218,7 @@ Checks if the player currently has an active ragdoll entity.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -228,7 +228,7 @@ Checks if the player currently has an active ragdoll entity.
 **Returns**
 
 
-- boolean: True when a ragdoll entity exists.
+* boolean: True when a ragdoll entity exists.
 
 
 **Example**
@@ -257,7 +257,7 @@ must be loaded and the player cannot be in a vehicle or ragdoll. The option
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Shared`
@@ -265,7 +265,7 @@ must be loaded and the player cannot be in a vehicle or ragdoll. The option
 **Returns**
 
 
-- boolean: True when a third person view may be used.
+* boolean: True when a third person view may be used.
 
 **Example**
 
@@ -289,7 +289,7 @@ Returns whether third person view is enabled for this player according to the
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Shared`
@@ -297,7 +297,7 @@ Returns whether third person view is enabled for this player according to the
 **Returns**
 
 
-- boolean: True if third person mode is enabled.
+* boolean: True if third person mode is enabled.
 
 **Example**
 
@@ -319,7 +319,7 @@ Safely removes the player's ragdoll entity if present.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -329,7 +329,7 @@ Safely removes the player's ragdoll entity if present.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 
 **Example**
@@ -351,7 +351,7 @@ Retrieves the ragdoll entity associated with the player.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -361,7 +361,7 @@ Retrieves the ragdoll entity associated with the player.
 **Returns**
 
 
-- Entity|None: The ragdoll entity or None.
+* Entity|None: The ragdoll entity or None.
 
 
 **Example**
@@ -382,7 +382,7 @@ Determines whether the player's position is stuck in the world.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -392,7 +392,7 @@ Determines whether the player's position is stuck in the world.
 **Returns**
 
 
-- boolean: True if the trace detects a stuck state.
+* boolean: True if the trace detects a stuck state.
 
 
 **Example**
@@ -416,9 +416,9 @@ Checks if an entity is within the given radius of the player.
 **Parameters**
 
 
-- `radius` (number): Distance in units.
+* `radius` (number): Distance in units.
 
-- `entity` (Entity): Entity to compare.
+* `entity` (Entity): Entity to compare.
 
 **Realm**
 `Shared`
@@ -426,7 +426,7 @@ Checks if an entity is within the given radius of the player.
 **Returns**
 
 
-- boolean: True if the entity is close enough.
+* boolean: True if the entity is close enough.
 
 **Example**
 
@@ -447,10 +447,10 @@ Returns a table of entities within radius of the player.
 **Parameters**
 
 
-- `radius` (number): Search distance in units.
+* `radius` (number): Search distance in units.
 
 
-- `playerOnly` (boolean|None): Only include players when true.
+* `playerOnly` (boolean|None): Only include players when true.
 
 
 **Realm**
@@ -460,7 +460,7 @@ Returns a table of entities within radius of the player.
 **Returns**
 
 
-- table: List of nearby entities.
+* table: List of nearby entities.
 
 
 **Example**
@@ -487,7 +487,7 @@ Returns the active weapon entity and associated item if equipped.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -497,9 +497,9 @@ Returns the active weapon entity and associated item if equipped.
 **Returns**
 
 
-- Entity|None: Weapon entity when matched.
+* Entity|None: Weapon entity when matched.
 
-- Item|None: Inventory item associated with the weapon.
+* Item|None: Inventory item associated with the weapon.
 
 
 **Example**
@@ -520,7 +520,7 @@ Checks whether the player is moving faster than walking speed.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -530,7 +530,7 @@ Checks whether the player is moving faster than walking speed.
 **Returns**
 
 
-- boolean: True if the player is running.
+* boolean: True if the player is running.
 
 
 **Example**
@@ -554,7 +554,7 @@ Returns true if the player's model is considered female.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Shared`
@@ -562,7 +562,7 @@ Returns true if the player's model is considered female.
 **Returns**
 
 
-- boolean: Whether a female model is detected.
+* boolean: Whether a female model is detected.
 
 **Example**
 
@@ -587,7 +587,7 @@ Finds a safe position in front of the player to drop items.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Shared`
@@ -595,7 +595,7 @@ Finds a safe position in front of the player to drop items.
 **Returns**
 
 
-- Vector: World position for dropping items.
+* Vector: World position for dropping items.
 
 **Example**
 
@@ -616,7 +616,7 @@ Returns the player's inventory item list if a character is loaded.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Shared`
@@ -624,7 +624,7 @@ Returns the player's inventory item list if a character is loaded.
 **Returns**
 
 
-- table|None: Table of items or None if absent.
+* table|None: Table of items or None if absent.
 
 **Example**
 
@@ -651,7 +651,7 @@ Performs a simple trace from the player's shoot position.
 **Parameters**
 
 
-- `distance` (number): Trace length in units.
+* `distance` (number): Trace length in units.
 
 **Realm**
 `Shared`
@@ -659,7 +659,7 @@ Performs a simple trace from the player's shoot position.
 **Returns**
 
 
-- Entity|None: The entity hit or None.
+* Entity|None: The entity hit or None.
 
 **Example**
 
@@ -682,7 +682,7 @@ Returns a hull trace in front of the player.
 **Parameters**
 
 
-- `distance` (number): Hull length in units.
+* `distance` (number): Hull length in units.
 
 **Realm**
 `Shared`
@@ -690,7 +690,7 @@ Returns a hull trace in front of the player.
 **Returns**
 
 
-- table: Trace result.
+* table: Trace result.
 
 **Example**
 
@@ -713,7 +713,7 @@ Returns the entity the player is looking at within a distance.
 **Parameters**
 
 
-- `distance` (number): Maximum distance.
+* `distance` (number): Maximum distance.
 
 **Realm**
 `Shared`
@@ -721,7 +721,7 @@ Returns the entity the player is looking at within a distance.
 **Returns**
 
 
-- Entity|None: The entity or None if too far.
+* Entity|None: The entity or None if too far.
 
 **Example**
 
@@ -750,7 +750,7 @@ Sends a plain notification message to the player.
 **Parameters**
 
 
-- `message` (string): Text to display.
+* `message` (string): Text to display.
 
 **Realm**
 `Server`
@@ -758,7 +758,7 @@ Sends a plain notification message to the player.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -783,9 +783,9 @@ Sends a localized notification to the player.
 **Parameters**
 
 
-- `message` (string): Translation key.
+* `message` (string): Translation key.
 
-- ...: Additional parameters for localization.
+* ...: Additional parameters for localization.
 
 **Realm**
 `Server`
@@ -793,7 +793,7 @@ Sends a localized notification to the player.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -818,7 +818,7 @@ Determines whether the player can edit the given vendor.
 **Parameters**
 
 
-- `vendor` (Entity): Vendor entity to check.
+* `vendor` (Entity): Vendor entity to check.
 
 **Realm**
 `Server`
@@ -826,7 +826,7 @@ Determines whether the player can edit the given vendor.
 **Returns**
 
 
-- boolean: True if allowed to edit.
+* boolean: True if allowed to edit.
 
 **Example**
 
@@ -851,7 +851,7 @@ Convenience wrapper to check if the player is in the "user" group.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Shared`
@@ -860,7 +860,7 @@ Convenience wrapper to check if the player is in the "user" group.
 **Returns**
 
 
-- boolean: Whether usergroup is "user".
+* boolean: Whether usergroup is "user".
 
 **Example**
 
@@ -883,7 +883,7 @@ Returns true if the player belongs to a staff group.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Shared`
@@ -892,7 +892,7 @@ Returns true if the player belongs to a staff group.
 **Returns**
 
 
-- boolean: Result from the privilege check.
+* boolean: Result from the privilege check.
 
 **Example**
 
@@ -915,7 +915,7 @@ Checks whether the player is in the VIP group.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Shared`
@@ -924,7 +924,7 @@ Checks whether the player is in the VIP group.
 **Returns**
 
 
-- boolean: Result from privilege check.
+* boolean: Result from privilege check.
 
 **Example**
 
@@ -947,14 +947,14 @@ Determines if the player is currently in the staff faction.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Shared`
 **Returns**
 
 
-- boolean: True if staff faction is active.
+* boolean: True if staff faction is active.
 
 **Example**
 
@@ -977,7 +977,7 @@ Checks if the player's character belongs to the given faction.
 **Parameters**
 
 
-- `faction` (number): Faction index to compare.
+* `faction` (number): Faction index to compare.
 
 **Realm**
 `Shared`
@@ -985,7 +985,7 @@ Checks if the player's character belongs to the given faction.
 **Returns**
 
 
-- boolean: True if the factions match.
+* boolean: True if the factions match.
 
 **Example**
 
@@ -1008,7 +1008,7 @@ Returns true if the player's character is of the given class.
 **Parameters**
 
 
-- `class` (number): Class index to compare.
+* `class` (number): Class index to compare.
 
 **Realm**
 `Shared`
@@ -1016,7 +1016,7 @@ Returns true if the player's character is of the given class.
 **Returns**
 
 
-- boolean: Whether the character matches the class.
+* boolean: Whether the character matches the class.
 
 **Example**
 
@@ -1039,7 +1039,7 @@ Determines if the player has whitelist access for a faction.
 **Parameters**
 
 
-- `faction` (number): Faction index.
+* `faction` (number): Faction index.
 
 **Realm**
 `Shared`
@@ -1047,7 +1047,7 @@ Determines if the player has whitelist access for a faction.
 **Returns**
 
 
-- boolean: True if whitelisted.
+* boolean: True if whitelisted.
 
 **Example**
 
@@ -1070,7 +1070,7 @@ Retrieves the class index of the player's character.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Shared`
@@ -1078,7 +1078,7 @@ Retrieves the class index of the player's character.
 **Returns**
 
 
-- number|None: Class index or None.
+* number|None: Class index or None.
 
 **Example**
 
@@ -1101,7 +1101,7 @@ Checks if the player's character is whitelisted for a class.
 **Parameters**
 
 
-- `class` (number): Class index.
+* `class` (number): Class index.
 
 **Realm**
 ``
@@ -1109,7 +1109,7 @@ Checks if the player's character is whitelisted for a class.
 **Returns**
 
 
-- boolean: True if class whitelist exists.
+* boolean: True if class whitelist exists.
 
 **Example**
 
@@ -1132,7 +1132,7 @@ Returns the class table of the player's current class.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Shared`
@@ -1140,7 +1140,7 @@ Returns the class table of the player's current class.
 **Returns**
 
 
-- table|None: Class definition table.
+* table|None: Class definition table.
 
 **Example**
 
@@ -1163,7 +1163,7 @@ Compatibility helper for retrieving money with DarkRP-style calls.
 **Parameters**
 
 
-- `var` (string): Currently only supports "money".
+* `var` (string): Currently only supports "money".
 
 **Realm**
 `Shared`
@@ -1171,7 +1171,7 @@ Compatibility helper for retrieving money with DarkRP-style calls.
 **Returns**
 
 
-- number|None: Money amount or None.
+* number|None: Money amount or None.
 
 **Example**
 
@@ -1194,7 +1194,7 @@ Convenience function to get the character's money amount.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Shared`
@@ -1202,7 +1202,7 @@ Convenience function to get the character's money amount.
 **Returns**
 
 
-- number: Current funds or 0.
+* number: Current funds or 0.
 
 **Example**
 
@@ -1225,7 +1225,7 @@ Checks if the player has enough money for a purchase.
 **Parameters**
 
 
-- `amount` (number): Cost to test.
+* `amount` (number): Cost to test.
 
 **Realm**
 `Shared`
@@ -1233,7 +1233,7 @@ Checks if the player has enough money for a purchase.
 **Returns**
 
 
-- boolean: True if funds are sufficient.
+* boolean: True if funds are sufficient.
 
 **Example**
 
@@ -1256,9 +1256,9 @@ Verifies the player's character meets an attribute level.
 **Parameters**
 
 
-- `skill` (string): Attribute ID.
+* `skill` (string): Attribute ID.
 
-- `level` (number): Required level.
+* `level` (number): Required level.
 
 **Realm**
 `Shared`
@@ -1266,7 +1266,7 @@ Verifies the player's character meets an attribute level.
 **Returns**
 
 
-- boolean: Whether the character satisfies the requirement.
+* boolean: Whether the character satisfies the requirement.
 
 **Example**
 
@@ -1289,7 +1289,7 @@ Checks a table of skill requirements against the player.
 **Parameters**
 
 
-- `requiredSkillLevels` (table): Mapping of attribute IDs to levels.
+* `requiredSkillLevels` (table): Mapping of attribute IDs to levels.
 
 **Realm**
 `Shared`
@@ -1297,7 +1297,7 @@ Checks a table of skill requirements against the player.
 **Returns**
 
 
-- boolean: True if all requirements are met.
+* boolean: True if all requirements are met.
 
 **Example**
 
@@ -1320,13 +1320,13 @@ Plays an animation sequence and optionally freezes the player.
 **Parameters**
 
 
-- `sequenceName` (string): Sequence to play.
+* `sequenceName` (string): Sequence to play.
 
-- `callback` (function|None): Called when finished.
+* `callback` (function|None): Called when finished.
 
-- `time` (number|None): Duration override.
+* `time` (number|None): Duration override.
 
-- `noFreeze` (boolean): Don't freeze movement when true.
+* `noFreeze` (boolean): Don't freeze movement when true.
 
 **Realm**
 `Shared`
@@ -1334,7 +1334,7 @@ Plays an animation sequence and optionally freezes the player.
 **Returns**
 
 
-- number|boolean: Duration or false on failure.
+* number|boolean: Duration or false on failure.
 
 **Example**
 
@@ -1357,7 +1357,7 @@ Stops any forced sequence and restores player movement.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Shared`
@@ -1365,7 +1365,7 @@ Stops any forced sequence and restores player movement.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1388,14 +1388,14 @@ Increases the player's stamina value.
 **Parameters**
 
 
-- `amount` (number): Amount to restore.
+* `amount` (number): Amount to restore.
 
 **Realm**
 `Server`
 
 * Returns:
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1418,14 +1418,14 @@ Reduces the player's stamina value.
 **Parameters**
 
 
-- `amount` (number): Amount to subtract.
+* `amount` (number): Amount to subtract.
 
 **Realm**
 `Server`
 
 * Returns:
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1448,7 +1448,7 @@ Adds funds to the player's character, clamping to limits.
 **Parameters**
 
 
-- `amount` (number): Money to add.
+* `amount` (number): Money to add.
 
 **Realm**
 `Server`
@@ -1456,7 +1456,7 @@ Adds funds to the player's character, clamping to limits.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1481,7 +1481,7 @@ Removes money from the player's character.
 **Parameters**
 
 
-- `amount` (number): Amount to subtract.
+* `amount` (number): Amount to subtract.
 
 **Realm**
 `Server`
@@ -1489,7 +1489,7 @@ Removes money from the player's character.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1512,7 +1512,7 @@ Grants whitelist access to every registered class.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Server`
@@ -1520,7 +1520,7 @@ Grants whitelist access to every registered class.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1543,7 +1543,7 @@ Whitelists the player for all factions.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Server`
@@ -1551,7 +1551,7 @@ Whitelists the player for all factions.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1572,7 +1572,7 @@ Convenience method to whitelist all factions and classes.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Server`
@@ -1580,7 +1580,7 @@ Convenience method to whitelist all factions and classes.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1603,7 +1603,7 @@ Adds a single class to the character's whitelist table.
 **Parameters**
 
 
-- `class` (number): Class index to whitelist.
+* `class` (number): Class index to whitelist.
 
 **Realm**
 `Server`
@@ -1611,7 +1611,7 @@ Adds a single class to the character's whitelist table.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1632,7 +1632,7 @@ Removes a class from the character's whitelist table.
 **Parameters**
 
 
-- `class` (number): Class index to remove.
+* `class` (number): Class index to remove.
 
 **Realm**
 `Server`
@@ -1640,7 +1640,7 @@ Removes a class from the character's whitelist table.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1661,9 +1661,9 @@ Sets or clears whitelist permission for a faction.
 **Parameters**
 
 
-- `faction` (number): Faction index.
+* `faction` (number): Faction index.
 
-- `whitelisted` (boolean|None): Enable when true, disable when false/nil.
+* `whitelisted` (boolean|None): Enable when true, disable when false/nil.
 
 **Realm**
 `Server`
@@ -1671,7 +1671,7 @@ Sets or clears whitelist permission for a faction.
 **Returns**
 
 
-- boolean: True if the faction exists.
+* boolean: True if the faction exists.
 
 **Example**
 
@@ -1692,7 +1692,7 @@ Loads persistent Lilia data for the player from the database.
 **Parameters**
 
 
-- `callback` (function|None): Invoked with the loaded table.
+* `callback` (function|None): Invoked with the loaded table.
 
 **Realm**
 `Server`
@@ -1700,7 +1700,7 @@ Loads persistent Lilia data for the player from the database.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1721,7 +1721,7 @@ Saves the player's Lilia data back to the database.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Server`
@@ -1729,7 +1729,7 @@ Saves the player's Lilia data back to the database.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1750,11 +1750,11 @@ Stores a value in the player's persistent data table.
 **Parameters**
 
 
-- `key` (string): Data key.
+* `key` (string): Data key.
 
-- `value` (any): Value to store.
+* `value` (any): Value to store.
 
-- `noNetworking` (boolean|None): Skip network update when true.
+* `noNetworking` (boolean|None): Skip network update when true.
 
 **Realm**
 `Server`
@@ -1762,7 +1762,7 @@ Stores a value in the player's persistent data table.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1783,9 +1783,9 @@ Sends a waypoint to the client at the specified position.
 **Parameters**
 
 
-- `name` (string): Display label.
+* `name` (string): Display label.
 
-- `vector` (Vector): World position.
+* `vector` (Vector): World position.
 
 **Realm**
 `Server`
@@ -1793,7 +1793,7 @@ Sends a waypoint to the client at the specified position.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1814,9 +1814,9 @@ Alias of `setWaypoint()` for backwards compatibility.
 **Parameters**
 
 
-- `name` (string): Display label.
+* `name` (string): Display label.
 
-- `vector` (Vector): World position.
+* `vector` (Vector): World position.
 
 **Realm**
 `Server`
@@ -1824,7 +1824,7 @@ Alias of `setWaypoint()` for backwards compatibility.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1845,11 +1845,11 @@ Creates a waypoint using a custom logo material.
 **Parameters**
 
 
-- `name` (string): Display label.
+* `name` (string): Display label.
 
-- `vector` (Vector): World position.
+* `vector` (Vector): World position.
 
-- `logo` (string): Material path for the icon.
+* `logo` (string): Material path for the icon.
 
 **Realm**
 `Server`
@@ -1857,7 +1857,7 @@ Creates a waypoint using a custom logo material.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1878,9 +1878,9 @@ Retrieves a stored value from the player's data table.
 **Parameters**
 
 
-- `key` (string): Data key.
+* `key` (string): Data key.
 
-- `default` (any): Returned if the key is nil.
+* `default` (any): Returned if the key is nil.
 
 **Realm**
 `Server`
@@ -1888,7 +1888,7 @@ Retrieves a stored value from the player's data table.
 **Returns**
 
 
-- any: Stored value or default.
+* any: Stored value or default.
 
 **Example**
 
@@ -1909,7 +1909,7 @@ Returns the entire table of persistent data for the player.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Server`
@@ -1917,7 +1917,7 @@ Returns the entire table of persistent data for the player.
 **Returns**
 
 
-- table: Player data table.
+* table: Player data table.
 
 **Example**
 
@@ -1938,7 +1938,7 @@ Associates a ragdoll entity with the player for later retrieval.
 **Parameters**
 
 
-- `entity` (Entity): The ragdoll entity.
+* `entity` (Entity): The ragdoll entity.
 
 **Realm**
 `Server`
@@ -1946,7 +1946,7 @@ Associates a ragdoll entity with the player for later retrieval.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -1967,9 +1967,9 @@ Broadcasts animation bone data to all clients.
 **Parameters**
 
 
-- `active` (boolean): Enable or disable manipulation.
+* `active` (boolean): Enable or disable manipulation.
 
-- `boneData` (table): Map of bone names to angles.
+* `boneData` (table): Map of bone names to angles.
 
 **Realm**
 `Server`
@@ -1977,7 +1977,7 @@ Broadcasts animation bone data to all clients.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2002,11 +2002,11 @@ Displays an action bar for a set duration and optionally runs a callback.
 **Parameters**
 
 
-- `text` (string|None): Text to display, or nil to clear.
+* `text` (string|None): Text to display, or nil to clear.
 
-- `time` (number|None): How long to show it for.
+* `time` (number|None): How long to show it for.
 
-- `callback` (function|None): Executed when time elapses.
+* `callback` (function|None): Executed when time elapses.
 
 **Realm**
 `Server`
@@ -2014,7 +2014,7 @@ Displays an action bar for a set duration and optionally runs a callback.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2035,15 +2035,15 @@ Runs an action only while the player stares at the entity.
 **Parameters**
 
 
-- `entity` (Entity): Target entity.
+* `entity` (Entity): Target entity.
 
-- `callback` (function): Called when the timer finishes.
+* `callback` (function): Called when the timer finishes.
 
-- `time` (number): Duration in seconds.
+* `time` (number): Duration in seconds.
 
-- `onCancel` (function|None): Called if gaze breaks.
+* `onCancel` (function|None): Called if gaze breaks.
 
-- `distance` (number|None): Max distance to maintain.
+* `distance` (number|None): Max distance to maintain.
 
 **Realm**
 `Server`
@@ -2051,7 +2051,7 @@ Runs an action only while the player stares at the entity.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2072,7 +2072,7 @@ Cancels any running action bar on the player.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Server`
@@ -2080,7 +2080,7 @@ Cancels any running action bar on the player.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2101,13 +2101,13 @@ Prompts the client with a dropdown selection dialog.
 **Parameters**
 
 
-- `title` (string): Window title.
+* `title` (string): Window title.
 
-- `subTitle` (string): Description text.
+* `subTitle` (string): Description text.
 
-- `options` (table): Table of options.
+* `options` (table): Table of options.
 
-- `callback` (function): Receives the chosen value.
+* `callback` (function): Receives the chosen value.
 
 **Realm**
 `Server`
@@ -2115,7 +2115,7 @@ Prompts the client with a dropdown selection dialog.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2136,15 +2136,15 @@ Asks the client to select one or more options from a list.
 **Parameters**
 
 
-- `title` (string): Window title.
+* `title` (string): Window title.
 
-- `subTitle` (string): Description text.
+* `subTitle` (string): Description text.
 
-- `options` (table): Available options.
+* `options` (table): Available options.
 
-- `limit` (number): Maximum selections allowed.
+* `limit` (number): Maximum selections allowed.
 
-- `callback` (function): Receives the chosen values.
+* `callback` (function): Receives the chosen values.
 
 **Realm**
 `Server`
@@ -2152,7 +2152,7 @@ Asks the client to select one or more options from a list.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2173,13 +2173,13 @@ Requests a string from the client.
 **Parameters**
 
 
-- `title` (string): Prompt title.
+* `title` (string): Prompt title.
 
-- `subTitle` (string): Prompt description.
+* `subTitle` (string): Prompt description.
 
-- `callback` (function|None): Called with the string.
+* `callback` (function|None): Called with the string.
 
-- `default` (string|None): Default value.
+* `default` (string|None): Default value.
 
 **Realm**
 `Server`
@@ -2187,7 +2187,7 @@ Requests a string from the client.
 **Returns**
 
 
-- deferred|None: Deferred object when no callback supplied.
+* deferred|None: Deferred object when no callback supplied.
 
 **Example**
 
@@ -2208,11 +2208,11 @@ Prompts the client for multiple typed values.
 **Parameters**
 
 
-- `title` (string): Window title.
+* `title` (string): Window title.
 
-- `argTypes` (table): Field definitions.
+* `argTypes` (table): Field definitions.
 
-- `callback` (function|None): Called with a table of values.
+* `callback` (function|None): Called with a table of values.
 
 **Realm**
 `Server`
@@ -2220,7 +2220,7 @@ Prompts the client for multiple typed values.
 **Returns**
 
 
-- deferred|None: Deferred object when no callback supplied.
+* deferred|None: Deferred object when no callback supplied.
 
 **Example**
 
@@ -2241,15 +2241,15 @@ Displays a yes/no style question to the player.
 **Parameters**
 
 
-- `question` (string): Main text.
+* `question` (string): Main text.
 
-- `option1` (string): Text for the first option.
+* `option1` (string): Text for the first option.
 
-- `option2` (string): Text for the second option.
+* `option2` (string): Text for the second option.
 
-- `manualDismiss` (boolean): Require manual closing.
+* `manualDismiss` (boolean): Require manual closing.
 
-- `callback` (function): Called with chosen value.
+* `callback` (function): Called with chosen value.
 
 **Realm**
 `Server`
@@ -2257,7 +2257,7 @@ Displays a yes/no style question to the player.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2278,7 +2278,7 @@ Calculates how long the player has been on the server.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Server`
@@ -2286,7 +2286,7 @@ Calculates how long the player has been on the server.
 **Returns**
 
 
-- number: Total seconds of playtime.
+* number: Total seconds of playtime.
 
 **Example**
 
@@ -2307,9 +2307,9 @@ Spawns a ragdoll copy of the player and optionally freezes it.
 **Parameters**
 
 
-- `freeze` (boolean|None): Disable physics when true.
+* `freeze` (boolean|None): Disable physics when true.
 
-- `isDead` (boolean|None): Mark as a death ragdoll.
+* `isDead` (boolean|None): Mark as a death ragdoll.
 
 **Realm**
 `Server`
@@ -2317,7 +2317,7 @@ Spawns a ragdoll copy of the player and optionally freezes it.
 **Returns**
 
 
-- Entity: The created ragdoll.
+* Entity: The created ragdoll.
 
 **Example**
 
@@ -2338,13 +2338,13 @@ Toggles the player's ragdoll state for a duration.
 **Parameters**
 
 
-- `state` (boolean): Enable or disable ragdoll.
+* `state` (boolean): Enable or disable ragdoll.
 
-- `time` (number|None): Duration before standing up.
+* `time` (number|None): Duration before standing up.
 
-- `getUpGrace` (number|None): Extra time to prevent early stand.
+* `getUpGrace` (number|None): Extra time to prevent early stand.
 
-- `getUpMessage` (string|None): Message while downed.
+* `getUpMessage` (string|None): Message while downed.
 
 **Realm**
 `Server`
@@ -2352,7 +2352,7 @@ Toggles the player's ragdoll state for a duration.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2373,7 +2373,7 @@ Sends all networked variables to the player.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Server`
@@ -2381,7 +2381,7 @@ Sends all networked variables to the player.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2404,9 +2404,9 @@ Triggers the **LocalVarChanged** hook on both server and client.
 **Parameters**
 
 
-- `key` (string): Variable name.
+* `key` (string): Variable name.
 
-- `value` (any): Value to set.
+* `value` (any): Value to set.
 
 **Realm**
 `Server`
@@ -2414,7 +2414,7 @@ Triggers the **LocalVarChanged** hook on both server and client.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2435,7 +2435,7 @@ Returns playtime calculated client side when called on a client.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Client`
@@ -2443,7 +2443,7 @@ Returns playtime calculated client side when called on a client.
 **Returns**
 
 
-- number: Seconds of playtime.
+* number: Seconds of playtime.
 
 **Example**
 
@@ -2464,11 +2464,11 @@ Displays a waypoint on the HUD until the player reaches it.
 **Parameters**
 
 
-- `name` (string): Display label.
+* `name` (string): Display label.
 
-- `vector` (Vector): World position.
+* `vector` (Vector): World position.
 
-- `onReach` (function|None): Called when reached.
+* `onReach` (function|None): Called when reached.
 
 **Realm**
 `Client`
@@ -2476,7 +2476,7 @@ Displays a waypoint on the HUD until the player reaches it.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2497,11 +2497,11 @@ Alias of the client version of `setWaypoint`.
 **Parameters**
 
 
-- `name` (string): Display label.
+* `name` (string): Display label.
 
-- `vector` (Vector): World position.
+* `vector` (Vector): World position.
 
-- `onReach` (function|None): Called when reached.
+* `onReach` (function|None): Called when reached.
 
 **Realm**
 `Client`
@@ -2509,7 +2509,7 @@ Alias of the client version of `setWaypoint`.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2530,13 +2530,13 @@ Places a waypoint using a logo material on the client HUD.
 **Parameters**
 
 
-- `name` (string): Display label.
+* `name` (string): Display label.
 
-- `vector` (Vector): Position to navigate to.
+* `vector` (Vector): Position to navigate to.
 
-- `logo` (string): Material path for the icon.
+* `logo` (string): Material path for the icon.
 
-- `onReach` (function|None): Called when reached.
+* `onReach` (function|None): Called when reached.
 
 **Realm**
 `Client`
@@ -2544,7 +2544,7 @@ Places a waypoint using a logo material on the client HUD.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2565,9 +2565,9 @@ Client side accessor for stored player data.
 **Parameters**
 
 
-- `key` (string): Data key.
+* `key` (string): Data key.
 
-- `default` (any): Fallback value.
+* `default` (any): Fallback value.
 
 **Realm**
 `Client`
@@ -2575,7 +2575,7 @@ Client side accessor for stored player data.
 **Returns**
 
 
-- any: Stored value or default.
+* any: Stored value or default.
 
 **Example**
 
@@ -2596,7 +2596,7 @@ Returns the entire local data table for the player.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Client`
@@ -2604,7 +2604,7 @@ Returns the entire local data table for the player.
 **Returns**
 
 
-- table: Local data table.
+* table: Local data table.
 
 **Example**
 
@@ -2625,9 +2625,9 @@ Applies or clears clientside bone angles based on animation data.
 **Parameters**
 
 
-- `active` (boolean): Enable or disable animation.
+* `active` (boolean): Enable or disable animation.
 
-- `boneData` (table): Bones and angles to apply.
+* `boneData` (table): Bones and angles to apply.
 
 **Realm**
 `Client`
@@ -2635,7 +2635,7 @@ Applies or clears clientside bone angles based on animation data.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2659,7 +2659,7 @@ Returns the table of PAC3 part IDs currently attached to the player.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Shared`
@@ -2667,7 +2667,7 @@ Returns the table of PAC3 part IDs currently attached to the player.
 **Returns**
 
 
-- table: Mapping of active part IDs.
+* table: Mapping of active part IDs.
 
 **Example**
 
@@ -2692,7 +2692,7 @@ Sends the player's PAC3 part data to their client.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Server`
@@ -2700,7 +2700,7 @@ Sends the player's PAC3 part data to their client.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2721,7 +2721,7 @@ Adds the given PAC3 part to the player and broadcasts it.
 **Parameters**
 
 
-- `partID` (string): Identifier of the part to attach.
+* `partID` (string): Identifier of the part to attach.
 
 **Realm**
 `Server`
@@ -2729,7 +2729,7 @@ Adds the given PAC3 part to the player and broadcasts it.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2750,7 +2750,7 @@ Removes a previously added PAC3 part from the player.
 **Parameters**
 
 
-- `partID` (string): Identifier of the part to remove.
+* `partID` (string): Identifier of the part to remove.
 
 **Realm**
 `Server`
@@ -2758,7 +2758,7 @@ Removes a previously added PAC3 part from the player.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2779,7 +2779,7 @@ Clears all PAC3 parts that are currently attached to the player.
 **Parameters**
 
 
-- None
+* None
 
 **Realm**
 `Server`
@@ -2787,7 +2787,7 @@ Clears all PAC3 parts that are currently attached to the player.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 
@@ -2808,7 +2808,7 @@ Wrapper that tracks when lag compensation is enabled on the player.
 **Parameters**
 
 
-- `state` (boolean): Whether to enable lag compensation.
+* `state` (boolean): Whether to enable lag compensation.
 
 **Realm**
 `Shared`
@@ -2816,7 +2816,7 @@ Wrapper that tracks when lag compensation is enabled on the player.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 **Example**
 

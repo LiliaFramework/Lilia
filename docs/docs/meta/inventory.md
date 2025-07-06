@@ -17,15 +17,15 @@ Returns a stored data value for this inventory.
 
 **Parameters**
 
-- `key` (`string`): Data field key.
-- `default` (`any`) – Value if the key does not exist.
+* `key` (`string`): Data field key.
+* `default` (`any`) – Value if the key does not exist.
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- any: Stored value or default.
+* any: Stored value or default.
 
 **Example**
 
@@ -48,14 +48,14 @@ Creates a subclass of the inventory meta table with a new class name.
 
 **Parameters**
 
-- `className` (`string`): Name of the subclass meta table.
+* `className` (`string`): Name of the subclass meta table.
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- table: The newly derived inventory table.
+* table: The newly derived inventory table.
 
 **Example**
 
@@ -87,14 +87,14 @@ Stub for inventory configuration; meant to be overridden.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- None: This function does not return a value.
+* None: This function does not return a value.
 
 **Example**
 
@@ -123,15 +123,15 @@ Adds a proxy function that is called when a data field changes.
 
 **Parameters**
 
-- `key` (`string`): Data field to watch.
-- `onChange` (`function`) – Callback receiving old and new values.
+* `key` (`string`): Data field to watch.
+* `onChange` (`function`) – Callback receiving old and new values.
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- None: This function does not return a value.
+* None: This function does not return a value.
 
 **Example**
 
@@ -157,15 +157,15 @@ Returns all items in the inventory matching the given unique ID.
 
 **Parameters**
 
-- `uniqueID` (`string`): Item unique identifier.
-- `onlyMain` (`boolean`) – Search only the main item list.
+* `uniqueID` (`string`): Item unique identifier.
+* `onlyMain` (`boolean`) – Search only the main item list.
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- table: Table of matching item objects.
+* table: Table of matching item objects.
 
 **Example**
 
@@ -190,14 +190,14 @@ Registers this inventory type with the lia.inventory system.
 
 **Parameters**
 
-- `typeID` (`string`): Unique identifier for this inventory type.
+* `typeID` (`string`): Unique identifier for this inventory type.
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- None: This function does not return a value.
+* None: This function does not return a value.
 
 **Example**
 
@@ -221,14 +221,14 @@ Creates a new inventory of this type.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- table: New inventory instance.
+* table: New inventory instance.
 
 **Example**
 
@@ -254,14 +254,14 @@ Returns a printable representation of this inventory.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- string: Formatted as "ClassName[id]".
+* string: Formatted as "ClassName[id]".
 
 **Example**
 
@@ -284,14 +284,14 @@ Retrieves the inventory type table from lia.inventory.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- table: Inventory type definition.
+* table: Inventory type definition.
 
 **Example**
 
@@ -314,16 +314,16 @@ Called when an inventory data field changes. Executes any registered proxy callb
 
 **Parameters**
 
-- `key` (`string`): Data field key.
-- `oldValue` (`any`) – Previous value.
-- `newValue` (`any`) – Updated value.
+* `key` (`string`): Data field key.
+* `oldValue` (`any`) – Previous value.
+* `newValue` (`any`) – Updated value.
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- None: This function does not return a value.
+* None: This function does not return a value.
 
 **Example**
 
@@ -348,14 +348,14 @@ Returns all items stored in this inventory.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- table: Item instance table indexed by itemID.
+* table: Item instance table indexed by itemID.
 
 **Example**
 
@@ -382,14 +382,14 @@ Collects all items that match the given unique ID.
 
 **Parameters**
 
-- `itemType` (`string`): Item unique identifier.
+* `itemType` (`string`): Item unique identifier.
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- table: Array of matching items.
+* table: Array of matching items.
 
 **Example**
 
@@ -412,14 +412,14 @@ Retrieves the first item matching the given unique ID.
 
 **Parameters**
 
-- `itemType` (`string`): Item unique identifier.
+* `itemType` (`string`): Item unique identifier.
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- Item|None: The first matching item or None.
+* Item|None: The first matching item or None.
 
 **Example**
 
@@ -442,14 +442,14 @@ Determines whether the inventory contains an item type.
 
 **Parameters**
 
-- `itemType` (`string`): Item unique identifier.
+* `itemType` (`string`): Item unique identifier.
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- boolean: True if an item is found.
+* boolean: True if an item is found.
 
 **Example**
 
@@ -474,14 +474,14 @@ Counts the total quantity of a specific item type.
 
 **Parameters**
 
-- `itemType` (`string|None`): Item unique ID to count. Counts all if nil.
+* `itemType` (`string|None`): Item unique ID to count. Counts all if nil.
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- number: Sum of quantities.
+* number: Sum of quantities.
 
 **Example**
 
@@ -505,14 +505,14 @@ Returns the unique database ID of this inventory.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- number: Inventory identifier.
+* number: Inventory identifier.
 
 **Example**
 
@@ -535,14 +535,14 @@ Compares two inventories by ID for equality.
 
 **Parameters**
 
-- `other` (`Inventory`): Other inventory to compare.
+* `other` (`Inventory`): Other inventory to compare.
 
 **Realm**
 `Shared`
 
 **Returns**
 
-- boolean: True if both inventories share the same ID.
+* boolean: True if both inventories share the same ID.
 
 **Example**
 
@@ -567,15 +567,15 @@ Inserts an item instance into this inventory and persists it.
 
 **Parameters**
 
-- `item` (`Item`): Item to add.
-- `noReplicate` (`boolean`) – Skip network replication when true.
+* `item` (`Item`): Item to add.
+* `noReplicate` (`boolean`) – Skip network replication when true.
 
 **Realm**
 `Server`
 
 **Returns**
 
-- table: The inventory instance.
+* table: The inventory instance.
 
 **Example**
 
@@ -600,14 +600,14 @@ Alias for `addItem` that inserts an item into the inventory.
 
 **Parameters**
 
-- `item` (`Item`): Item to add.
+* `item` (`Item`): Item to add.
 
 **Realm**
 `Server`
 
 **Returns**
 
-- table: The inventory instance.
+* table: The inventory instance.
 
 **Example**
 
@@ -629,14 +629,14 @@ Replicates a newly added item to all clients that can access the inventory.
 
 **Parameters**
 
-- `item` (`Item`): Item instance that was added.
+* `item` (`Item`): Item instance that was added.
 
 **Realm**
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* None: This function does not return a value.
 
 **Example**
 
@@ -658,14 +658,14 @@ Creates a persistent inventory record in the database using the supplied initial
 
 **Parameters**
 
-- `initialData` (`table`): Values to store when creating the inventory.
+* `initialData` (`table`): Values to store when creating the inventory.
 
 **Realm**
 `Server`
 
 **Returns**
 
-- Deferred: Resolves with the new inventory ID.
+* Deferred: Resolves with the new inventory ID.
 
 **Example**
 
@@ -689,14 +689,14 @@ Stub called when loading an inventory from custom storage systems.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* None: This function does not return a value.
 
 **Example**
 
@@ -717,15 +717,15 @@ Removes an item by ID and optionally deletes it.
 
 **Parameters**
 
-- `itemID` (`number`): Unique item identifier.
-- `preserveItem` (`boolean`) – Keep item in database when true.
+* `itemID` (`number`): Unique item identifier.
+* `preserveItem` (`boolean`) – Keep item in database when true.
 
 **Realm**
 `Server`
 
 **Returns**
 
-- Deferred: Resolves once the item removal completes.
+* Deferred: Resolves once the item removal completes.
 
 **Example**
 
@@ -750,14 +750,14 @@ Alias for `removeItem` that removes an item from the inventory.
 
 **Parameters**
 
-- `itemID` (`number`): Unique item identifier.
+* `itemID` (`number`): Unique item identifier.
 
 **Realm**
 `Server`
 
 **Returns**
 
-- Deferred: Resolves once the item is removed.
+* Deferred: Resolves once the item is removed.
 
 **Example**
 
@@ -781,15 +781,15 @@ Sets a data field on the inventory and replicates the change to clients.
 
 **Parameters**
 
-- `key` (`string`): Data field name.
-- `value` (`any`) – Value to store.
+* `key` (`string`): Data field name.
+* `value` (`any`) – Value to store.
 
 **Realm**
 `Server`
 
 **Returns**
 
-- table: The inventory instance.
+* table: The inventory instance.
 
 **Example**
 
@@ -811,16 +811,16 @@ Evaluates access rules to determine whether an action is permitted.
 
 **Parameters**
 
-- `action` (`string`): Action identifier.
-- `context` (`table|None`) – Additional data such as the client.
+* `action` (`string`): Action identifier.
+* `context` (`table|None`) – Additional data such as the client.
 
 **Realm**
 `Server`
 
 **Returns**
 
-- boolean|nil: True, false, or nil if undecided.
-- string|nil – Optional failure reason.
+* boolean|nil: True, false, or nil if undecided.
+* string|nil – Optional failure reason.
 
 **Example**
 
@@ -842,15 +842,15 @@ Registers a function used by `canAccess` to grant or deny actions.
 
 **Parameters**
 
-- `rule` (`function`): Access rule function.
-- `priority` (`number|None`) – Insertion position for the rule.
+* `rule` (`function`): Access rule function.
+* `priority` (`number|None`) – Insertion position for the rule.
 
 **Realm**
 `Server`
 
 **Returns**
 
-- table: The inventory instance.
+* table: The inventory instance.
 
 **Example**
 
@@ -874,14 +874,14 @@ Unregisters a previously added access rule.
 
 **Parameters**
 
-- `rule` (`function`): The rule to remove.
+* `rule` (`function`): The rule to remove.
 
 **Realm**
 `Server`
 
 **Returns**
 
-- table: The inventory instance.
+* table: The inventory instance.
 
 **Example**
 
@@ -903,14 +903,14 @@ Returns a list of players that should receive network updates for this inventory
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Server`
 
 **Returns**
 
-- table: Array of Player objects.
+* table: Array of Player objects.
 
 **Example**
 
@@ -932,14 +932,14 @@ Called after a new inventory is created in the database.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* None: This function does not return a value.
 
 **Example**
 
@@ -962,14 +962,14 @@ Called after an inventory is loaded from the database.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* None: This function does not return a value.
 
 **Example**
 
@@ -992,14 +992,14 @@ Loads all items belonging to this inventory from storage.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Server`
 
 **Returns**
 
-- Deferred: Resolves with a table of loaded items.
+* Deferred: Resolves with a table of loaded items.
 
 **Example**
 
@@ -1023,14 +1023,14 @@ Hook called after `loadItems` finishes loading all items.
 
 **Parameters**
 
-- `items` (`table`): Loaded items indexed by ID.
+* `items` (`table`): Loaded items indexed by ID.
 
 **Realm**
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* None: This function does not return a value.
 
 **Example**
 
@@ -1053,14 +1053,14 @@ Creates and stores a new inventory instance of this type.
 
 **Parameters**
 
-- `initialData` (`table|None`): Data to populate the inventory with.
+* `initialData` (`table|None`): Data to populate the inventory with.
 
 **Realm**
 `Server`
 
 **Returns**
 
-- Deferred: Resolves with the created inventory.
+* Deferred: Resolves with the created inventory.
 
 **Example**
 
@@ -1082,15 +1082,15 @@ Sends a single data field to clients.
 
 **Parameters**
 
-- `key` (`string`): Field to replicate.
-- `recipients` (`table|None`) – Player recipients.
+* `key` (`string`): Field to replicate.
+* `recipients` (`table|None`) – Player recipients.
 
 **Realm**
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* None: This function does not return a value.
 
 **Example**
 
@@ -1113,14 +1113,14 @@ Sends the entire inventory and its items to players.
 
 **Parameters**
 
-- `recipients` (`table|None`): Player recipients.
+* `recipients` (`table|None`): Player recipients.
 
 **Realm**
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* None: This function does not return a value.
 
 **Example**
 
@@ -1143,14 +1143,14 @@ Removes this inventory record from the database.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* None: This function does not return a value.
 
 **Example**
 
@@ -1174,14 +1174,14 @@ Destroys all items and removes network references.
 
 **Parameters**
 
-- None
+* None
 
 **Realm**
 `Server`
 
 **Returns**
 
-- None: This function does not return a value.
+* None: This function does not return a value.
 
 **Example**
 
@@ -1204,14 +1204,14 @@ Opens the inventory user interface on the client.
 
 **Parameters**
 
-- `parent` (`Panel|None`): Optional parent panel.
+* `parent` (`Panel|None`): Optional parent panel.
 
 **Realm**
 `Client`
 
 **Returns**
 
-- Panel: The created inventory UI panel.
+* Panel: The created inventory UI panel.
 
 **Example**
 
