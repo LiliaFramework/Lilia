@@ -12,7 +12,7 @@ The keybind library stores user-defined keyboard bindings. It is loaded **client
 
 ### lia.keybind.add
 
-**Description:**
+**Purpose**
 
 Registers a new keybind for a given action.
 
@@ -26,31 +26,31 @@ when the key is released.
 
 Also maps the key code back to the action identifier for reverse lookup.
 
-**Parameters:**
+**Parameters**
 
-* `k` (`string or number`) – The key identifier, either as a string (to be converted) or as a key code.
-
-
-* `d` (`string`) – The unique identifier for the keybind action.
+* `k` (*string or number*): The key identifier, either as a string (to be converted) or as a key code.
 
 
-* `cb` (`function`) – The callback function to be executed when the key is pressed.
+* `d` (*string*): The unique identifier for the keybind action.
 
 
-* `rcb` (`function, optional`) – The callback function to be executed when the key is released.
+* `cb` (*function*): The callback function to be executed when the key is pressed.
 
 
-**Realm:**
-
-* Client
+* `rcb` (*function, optional*): The callback function to be executed when the key is released.
 
 
-**Returns:**
+**Realm**
+
+`Client`
+
+
+**Returns**
 
 * None
 
 
-**Example Usage:**
+**Example**
 
 ```lua
 -- Bind F1 to open the inventory while held
@@ -70,7 +70,7 @@ lia.keybind.add(KEY_F1, "Open Inventory",
 
 ### lia.keybind.get
 
-**Description:**
+**Purpose**
 
 Retrieves the key code currently assigned to a keybind action.  The stored value
 
@@ -78,25 +78,25 @@ is returned if present, otherwise the default key registered with `lia.keybind.a
 
 is used.  If both are missing the optional fallback value is returned.
 
-**Parameters:**
+**Parameters**
 
-* `a` (`string`) – The unique identifier for the keybind action.
-
-
-* `df` (`number`) – An optional default key code to return if the keybind is not set.
+* `a` (*string*): The unique identifier for the keybind action.
 
 
-**Realm:**
-
-* Client
+* `df` (*number*): An optional default key code to return if the keybind is not set.
 
 
-**Returns:**
+**Realm**
+
+`Client`
+
+
+**Returns**
 
 * number – The key code associated with the keybind action, or the default/fallback value if not set.
 
 
-**Example Usage:**
+**Example**
 
 ```lua
 -- Retrieve the key currently bound to opening the inventory
@@ -108,7 +108,7 @@ print("Inventory key:", input.GetKeyName(invKey))
 
 ### lia.keybind.save
 
-**Description:**
+**Purpose**
 
 Persists all keybinds to disk. The library creates a folder under
 
@@ -118,22 +118,22 @@ the server IP address.  The file contains a JSON table mapping action identifier
 
 to key codes.
 
-**Parameters:**
+**Parameters**
 
 * None
 
 
-**Realm:**
+**Realm**
 
-* Client
+`Client`
 
 
-**Returns:**
+**Returns**
 
 * None
 
 
-**Example Usage:**
+**Example**
 
 ```lua
 -- Manually save current keybinds (normally handled automatically)
@@ -144,7 +144,7 @@ lia.keybind.save()
 
 ### lia.keybind.load
 
-**Description:**
+**Purpose**
 
 Loads keybind settings from disk.  The file is read from the same location used
 
@@ -158,22 +158,22 @@ triggered.
 
 This function is automatically called when the gamemode initializes or reloads.
 
-**Parameters:**
+**Parameters**
 
 * None
 
 
-**Realm:**
+**Realm**
 
-* Client
+`Client`
 
 
-**Returns:**
+**Returns**
 
 * None
 
 
-**Example Usage:**
+**Example**
 
 ```lua
 -- Reload keybinds and notify when done
