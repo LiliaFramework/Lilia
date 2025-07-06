@@ -18,36 +18,17 @@ definition files (`schema/classes/*.lua`).
 
 ### OnCanBe
 
-```lua
-function CLASS:OnCanBe(client) → boolean?
-```
+Description: Determines whether a player is allowed to switch to this class.
 
-**Description:**
+Parameters:
+- `client` (Player): the player attempting to switch
 
-Determines whether a player is permitted to switch to this class.  It is invoked
+Realm: Server
 
-by `lia.class.canBe` after whitelist, faction, and limit checks but before the
+Returns:
+- `boolean?`: return `false` to deny the change
 
-class change actually happens.
-
-**Parameters:**
-
-* `client` (`Player`) – The player attempting to switch to the class.
-
-
-**Returns:**
-
-* `boolean?` – Return `false` to deny. Returning `true` or no value allows the
-
-  switch.
-
-**Realm:**
-
-* Server
-
-
-**Example Usage:**
-
+Example Usage:
 ```lua
 function CLASS:OnCanBe(client)
     -- Only allow admins or players that own the "V" flag.
@@ -64,92 +45,53 @@ function CLASS:OnCanBe(client)
     return false
 end
 ```
-
 ---
+
 
 ### OnLeave
 
+Description: Runs on the previous class after a player successfully changes classes.
+
+Parameters:
+- `client` (Player): the player who has left the class
+
+Realm: Server
+
+Returns:
+- `nil`: none
+
+Example Usage:
 ```lua
 function CLASS:OnLeave(client)
-```
-
-**Description:**
-
-Called on the player's previous class after the switch has completed.  It runs
-
-after the new class has executed `OnSet` (and `OnTransferred` if applicable).
-
-Use it to clean up any class‑specific state such as reverting models, resetting
-
-values, or removing temporary items.
-
-**Parameters:**
-
-* `client` (`Player`) – The player who has left the class.
-
-
-**Realm:**
-
-* Server
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
-
-```lua
-function CLASS:OnLeave(client)
-    -- Strip any class specific weapons.
+    -- Strip any class-specific weapons.
     client:StripWeapon("weapon_pistol")
 
+    -- Restore the player's previous model before the class change.
     local char = client:getChar()
     if char and self.model then
-        -- Restore the character's previous model.
         char:setModel(char:getData("model", char:getModel()))
     end
 
-    -- Reset custom movement speeds back to defaults.
+    -- Reset movement speeds back to the config defaults.
     client:SetWalkSpeed(lia.config.get("WalkSpeed"))
     client:SetRunSpeed(lia.config.get("RunSpeed"))
 end
 ```
-
 ---
 
 ### OnSet
 
-```lua
-function CLASS:OnSet(client)
-```
+Description: Executes immediately after a player joins this class.
 
-**Description:**
+Parameters:
+- `client` (Player): the player who has joined the class
 
-Called right after a character joins this class.  Use it to equip loadout items,
+Realm: Server
 
-set the model, or perform any other initialization.  When switching from another
+Returns:
+- `nil`: none
 
-class, `OnTransferred` will run immediately afterward.  This hook runs before
-
-`OnLeave` is executed on the previous class.
-
-**Parameters:**
-
-* `client` (`Player`) – The player who has joined the class.
-
-
-**Realm:**
-
-* Server
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
-
+Example Usage:
 ```lua
 function CLASS:OnSet(client)
     local char = client:getChar()
@@ -158,10 +100,9 @@ function CLASS:OnSet(client)
     if char and self.model then
         char:setModel(self.model)
     end
-
     client:Give("weapon_pistol")
 
-    -- Optional starting health/armor values.
+    -- Initialize base stats from the class definition.
     if self.health then
         client:SetHealth(self.health)
         client:SetMaxHealth(self.health)
@@ -171,52 +112,32 @@ function CLASS:OnSet(client)
     end
 end
 ```
-
 ---
 
 ### OnSpawn
 
+Description: Runs each time a member of this class respawns.
+
+Parameters:
+- `client` (Player): the player who has just spawned
+
+Realm: Server
+
+Returns:
+- `nil`: none
+
+Example Usage:
 ```lua
 function CLASS:OnSpawn(client)
-```
-
-**Description:**
-
-Runs every time a member of the class respawns.  The hook is triggered from the
-
-`ClassOnLoadout` gamemode event, so it is ideal for giving items or tweaking
-
-stats such as health, armor, or movement speeds.
-
-**Parameters:**
-
-* `client` (`Player`) – The player who has just spawned.
-
-
-**Realm:**
-
-* Server
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
-
-```lua
-function CLASS:OnSpawn(client)
-    -- Apply base stats whenever a member spawns.
+    -- Apply the class loadout and stats every respawn.
     client:SetMaxHealth(self.health or 150)
-    client:SetHealth(self.health or 150)
+    client:SetHealth(client:GetMaxHealth())
     client:SetArmor(self.armor or 50)
 
-    -- Give the class's default weapons.
     for _, wep in ipairs(self.weapons or {}) do
         client:Give(wep)
     end
 
-    -- Apply movement settings.
     if self.runSpeed then
         client:SetRunSpeed(self.runSpeed)
     end
@@ -225,51 +146,30 @@ function CLASS:OnSpawn(client)
     end
 end
 ```
-
 ---
-
 ### OnTransferred
 
-```lua
-function CLASS:OnTransferred(client, oldClass)
-```
+Description: Fires when a player is moved into this class from another.
 
-**Description:**
+Parameters:
+- `client` (Player): the player who was transferred
+- `oldClass` (number): index of the previous class
 
-Fires when a player is transferred into this class from a different one (for
+Realm: Server
 
-example via an admin command).  It runs immediately after `OnSet`.  The previous
+Returns:
+- `nil`: none
 
-class index is provided so you can migrate data or adjust loadouts.
-
-**Parameters:**
-
-* `client` (`Player`) – The player who was transferred.
-
-* `oldClass` (`number`) – The class index the player previously belonged to.
-
-
-**Realm:**
-
-* Server
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
-
+Example Usage:
 ```lua
 function CLASS:OnTransferred(client, oldClass)
     local char = client:getChar()
-
-    -- Apply the class model when transferring from another class.
     if char and self.model then
+        -- Swap the model to match the new class.
         char:setModel(self.model)
     end
 
-    -- Keep track of the player's previous class for later use.
+    -- Record the previous class so we can switch back later if needed.
     char:setData("previousClass", oldClass)
 end
 ```
