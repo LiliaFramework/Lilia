@@ -61,19 +61,6 @@ Depends on file inclusion.
 ```lua
 lia.includeDir("lilia/gamemode/core/modules/admin", true, true, "server")
 ```
-* dir        (string) – Directory path to load files from (relative if raw is false).
-
-
-* raw        (boolean) – If true, uses dir as the literal filesystem path.
-
-
-* recursive  (boolean) – Whether to traverse subdirectories recursively.
-
-
-* `forceRealm` (`string`) – Optional override for the realm of all included files ("client", "server", or "shared").
-
-
-**Realm:**
 ### lia.includeGroupedDir
 
 **Purpose**
@@ -109,6 +96,20 @@ Prints a colored error message prefixed with "[Lilia]".
 **Parameters**
 
 * `msg` (*string*): Error text to display.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `nil`: Nothing.
+
+**Example**
+
+```lua
+lia.error("Something went wrong")
+```
 ### lia.deprecated
 
 **Purpose**
@@ -156,11 +157,6 @@ Prints an updater message in cyan with the Lilia prefix.
 
 ```lua
 lia.updater("Loading additional content...")
-```
-
-```lua
-    -- This snippet demonstrates a common usage of lia.updater
-    lia.updater("Loading additional content...")
 ```
 
 ---
@@ -211,26 +207,6 @@ Logs a bootstrap message with a colored section tag.
 
 ```lua
 lia.bootstrap("Database", "Connection established")
-```
-
-* msg     (string) – Message describing the bootstrap step.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
-
-```lua
-    -- This snippet demonstrates a common usage of lia.bootstrap
-    lia.bootstrap("Database", "Connection established")
 ```
 
 ### lia.notifyAdmin
