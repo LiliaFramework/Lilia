@@ -197,6 +197,17 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or DefaultFunctions)
     end
 
+    for funcName, funcTable in pairs(ITEM.functions) do
+        if isstring(funcTable.name) then
+            funcTable.name = L(funcTable.name)
+        else
+            funcTable.name = L(funcName)
+        end
+        if isstring(funcTable.tip) then
+            funcTable.tip = L(funcTable.tip)
+        end
+    end
+
     if not luaGenerated and path then lia.include(path, "shared") end
     ITEM:onRegistered()
     local itemType = ITEM.uniqueID
