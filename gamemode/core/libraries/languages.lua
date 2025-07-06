@@ -28,6 +28,7 @@ function lia.lang.AddTable(name, tbl)
     lia.lang.stored[lowerName] = lia.lang.stored[lowerName] or {}
     for k, v in pairs(tbl) do
         lia.lang.stored[lowerName][k] = v
+        lia.lang.stored[lowerName][k:lower()] = v
     end
 end
 
