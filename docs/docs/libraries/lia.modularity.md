@@ -14,41 +14,28 @@ See [Module Fields](../definitions/module.md) for the options and callbacks a mo
 
 ### lia.module.load
 
-**Description:**
+**Purpose**
 
-Loads a module from the given path. If the target is a single file it is included directly.
+Loads a module from the given path and processes any dependencies, permissions
+or submodules associated with it.
 
-When loading a folder, the core file is executed and CAMI privileges, dependencies and additional resources such as languages and factions are loaded. Submodules are processed unless `skipSubmodules` is true.
+**Parameters**
 
-All functions placed on `MODULE` are registered as hooks. During the extra include phase the `DoModuleIncludes` hook is fired and, when complete, `MODULE.ModuleLoaded` runs if defined. The module table also gains `setData` and `getData` helpers for persistent storage. Enabled modules are stored in `lia.module.list`.
+* `uniqueID` (*string*): Identifier for the module.
+* `path` (*string*): Location of the module on disk.
+* `isSingleFile` (*boolean*): Set to `true` to load a single file module.
+* `variable` (*string*): Temporary global table name. Defaults to `"MODULE"`.
+* `skipSubmodules` (*boolean*): Prevent loading submodules when `true`.
 
-**Parameters:**
+**Realm**
 
-* uniqueID – The unique identifier of the module.
+`Shared`
 
+**Returns**
 
-* path – The file system path where the module is located.
+* `nil`
 
-
-* isSingleFile – Boolean indicating if the module is a single file.
-
-
-* variable – Optional global variable name used to temporarily store the module. Defaults to `"MODULE"`.
-
-* skipSubmodules – When true, do not search for and load submodules. Defaults to `false`.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
 -- Hook to see when extras are included
@@ -64,26 +51,23 @@ lia.module.load("example", "lilia/modules/example", false, nil, true)
 
 ### lia.module.initialize
 
-**Description:**
+**Purpose**
 
-Initializes the module system by loading the schema and each configured module directory. After the schema finishes loading the `InitializedSchema` hook is triggered. Modules from the base folders and the schema are then processed, followed by the `InitializedModules` hook. Items from `schema/items/` load last so that all modules are already available.
+Loads the schema and all modules, firing initialization hooks when done.
 
-**Parameters:**
-
-* None
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
+**Parameters**
 
 * None
 
+**Realm**
 
-**Example Usage:**
+`Shared`
+
+**Returns**
+
+* `nil`
+
+**Example**
 
 ```lua
 -- Wait for all modules before executing setup code
@@ -98,35 +82,24 @@ lia.module.initialize()
 
 ### lia.module.loadFromDir
 
-**Description:**
+**Purpose**
 
-Loads modules from a specified directory. It iterates over all subfolders and .lua files in the directory.
+Searches a directory for modules and loads each one it finds.
 
-Each subfolder is treated as a multi-file module, and each .lua file as a single-file module.
+**Parameters**
 
-Non-Lua files are ignored.
+* `directory` (*string*): Path containing module folders and files.
+* `group` (*string*): Module group such as `"schema"` or `"module"`.
 
-**Parameters:**
+**Realm**
 
-* directory – The directory path from which to load modules.
+`Shared`
 
+**Returns**
 
-* group – A string representing the module group (e.g., "schema" or "module").
+* `nil`
 
-  This controls whether the module is loaded into `SCHEMA` or `MODULE`.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
 -- Load every module in the core directory (normally done by lia.module.initialize)
@@ -137,26 +110,23 @@ lia.module.loadFromDir("lilia/modules/core", "module")
 
 ### lia.module.get
 
-**Description:**
+**Purpose**
 
-Retrieves a module table by its identifier.
+Fetches a loaded module by its identifier.
 
-**Parameters:**
+**Parameters**
 
-* identifier – The unique identifier of the module to retrieve.
+* `identifier` (*string*): Unique identifier of the module.
 
+**Realm**
 
-**Realm:**
+`Shared`
 
-* Shared
+**Returns**
 
+* `table|nil`: The module table if present.
 
-**Returns:**
-
-* The module table if found, or nil if the module is not registered.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
 -- Retrieve the main menu module and print its display name
@@ -165,3 +135,16 @@ if main then
     print("Loaded module:", main.name)
 end
 ```
+
+---
+
+#### Library Conventions
+
+1. **Namespace**
+   When formatting libraries, make sure to only document lia.* functions of that type. For example if you are documenting workshop.lua, you'd document lia.workshop functions .
+
+2. **Shared Definitions**
+   Omit any parameters or fields already documented in `docs/definitions.lua`.
+
+3. **Internal-Only Functions**
+   If this function is not meant to be used outside the internal scope of the gamemode, such as lia.module.load, add the “Internal function” note (see above).

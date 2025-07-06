@@ -20,94 +20,83 @@ contain functions (or tables holding functions) as they cannot be serialized.
 
 ### setNetVar
 
-**Description:**
+**Purpose**
 
-Stores a value in `lia.net.globals` and sends it to every client or only the
+Stores a value in `lia.net.globals` and optionally broadcasts the change to clients.
 
-given recipients. If the value differs from what was previously stored the
+**Parameters**
 
-**NetVarChanged** hook fires once on the server and again on each client that
+* `key` (*string*): Name of the variable.
+* `value` (*any*): Value to store.
+* `receiver` (*Player|table|nil*): Optional target player(s).
 
-receives the update. When called for global variables the hook's entity argument
+**Realm**
 
-is `nil`. Any attempt to store functions results in an error.
+`Server`
 
-**Parameters:**
+**Returns**
 
-* `key` (`string`) – Name of the variable.
+* `nil`
 
-
-* `value` (`any`) – Value to store.
-
-
-* `receiver` (`Player|table|nil`) – Optional receiver(s) for the update.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Start a new round and store the winner
-    local nextRound = getNetVar("round", 0) + 1
-    setNetVar("round", nextRound)
+-- Start a new round and store the winner
+local nextRound = getNetVar("round", 0) + 1
+setNetVar("round", nextRound)
 
-    local champion = DetermineWinner()
-    -- Only the winner receives this variable
-    setNetVar("last_winner", champion, champion)
+local champion = DetermineWinner()
+-- Only the winner receives this variable
+setNetVar("last_winner", champion, champion)
 
-    hook.Run("RoundStarted", nextRound)
+hook.Run("RoundStarted", nextRound)
 ```
 
 ---
 
 ### getNetVar
 
-**Description:**
+**Purpose**
 
-Returns the value stored in `lia.net.globals` or the given default if it has not
+Retrieves a value from `lia.net.globals`, returning a default if not set.
 
-been set yet. On the client this table is kept up to date through net messages,
+**Parameters**
 
-so any values assigned with `setNetVar` will be available after `PlayerInitialSpawn`.
+* `key` (*string*): Variable name.
+* `default` (*any*): Fallback value if unset.
 
-**Parameters:**
+**Realm**
 
-* `key` (`string`) – Variable name.
+`Shared`
 
+**Returns**
 
-* `default` (`any`) – Fallback value if the variable is not set.
+* *any*: Stored value or default.
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* any – Stored value or default.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Inform new players of the current round and previous champion
-    hook.Add("PlayerInitialSpawn", "ShowRound", function(ply)
-        local round = getNetVar("round", 0)
-        ply:ChatPrint(string.format("Current round: %s", round))
+-- Inform new players of the current round and previous champion
+hook.Add("PlayerInitialSpawn", "ShowRound", function(ply)
+    local round = getNetVar("round", 0)
+    ply:ChatPrint(string.format("Current round: %s", round))
 
-        local lastWinner = getNetVar("last_winner")
-        if IsValid(lastWinner) then
-            ply:ChatPrint(string.format("Last round won by %s", lastWinner:Name()))
-        end
-    end)
+    local lastWinner = getNetVar("last_winner")
+    if IsValid(lastWinner) then
+        ply:ChatPrint(string.format("Last round won by %s", lastWinner:Name()))
+    end
+end)
 ```
+
+---
+
+#### Library Conventions
+
+1. **Namespace**
+   When formatting libraries, make sure to only document lia.* functions of that type. For example if you are documenting workshop.lua, you'd document lia.workshop functions .
+
+2. **Shared Definitions**
+   Omit any parameters or fields already documented in `docs/definitions.lua`.
+
+3. **Internal-Only Functions**
+   If this function is not meant to be used outside the internal scope of the gamemode, such as lia.module.load, add the “Internal function” note (see above).
