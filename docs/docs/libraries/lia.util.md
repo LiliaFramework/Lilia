@@ -1041,6 +1041,39 @@ Draws a blur effect at a specified rectangle on the screen.
 
 ---
 
+### lia.util.requestArguments
+
+**Purpose**
+
+Prompts the local player for typed input values and passes them to a callback.
+
+**Parameters**
+
+* `title` (*string*): Window title shown to the player.
+* `argTypes` (*table*): A table of argument definitions. Keys are labels and
+  values are either a field type string or `{type, data}` for lists.
+* `onSubmit` (*function*): Called with the resulting table once submitted.
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+* `nil`
+
+**Example**
+
+```lua
+-- Ask the player for a name and age
+lia.util.requestArguments("User Info", {Name = "text", Age = "number"},
+    function(values)
+        PrintTable(values)
+    end)
+```
+
+---
+
 ### lia.util.CreateTableUI
 
 **Purpose**
