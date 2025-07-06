@@ -244,14 +244,6 @@
         end,
         category = "Connections"
     },
-    ["dupeCrashAttempt"] = {
-        func = function(client)
-            local name = IsValid(client) and client:Name() or L("unknown")
-            local steamID = IsValid(client) and client:SteamID64() or L("na")
-            return string.format("Player '%s' [%s] attempted to duplicate oversized entities.", name, steamID)
-        end,
-        category = "Security"
-    },
     ["doorSetClass"] = {
         func = function(client, door, className) return string.format("%s set door class to %s on door %s.", client:Name(), className, door:GetClass()) end,
         category = "Doors"
@@ -741,19 +733,5 @@
             return string.format("Admin '%s' closed a ticket for %s. Total claims: %d.", client:Name(), requester, count or 0)
         end,
         category = "Tickets"
-    },
-    ["unprotectedVJNetCall"] = {
-        func = function(client, netMessage) return string.format("%s triggered unprotected net message '%s'", client:Name(), netMessage) end,
-        category = "VJ Base"
-    },
-    ["permaPropSaved"] = {
-        func = function(client, class, model, pos)
-            return string.format("%s perma-propped %s (%s) at %s", client:Name(), class, model, pos)
-        end,
-        category = "PermaProps"
-    },
-    ["permaPropOverlap"] = {
-        func = function(_, pos, other) return string.format("Perma-prop spawned at %s overlapping prop at %s.", pos, other) end,
-        category = "PermaProps"
     },
 }
