@@ -2,7 +2,7 @@
 lia.chat.register("meclose", {
     syntax = "[string Action]",
     desc = "mecloseDesc",
-    format = L("emoteFormat"),
+    format = "emoteFormat",
     onCanHear = lia.config.get("ChatRange", 280) * 0.25,
     prefix = {"/meclose", "/actionclose"},
     font = "liaChatFontItalics",
@@ -13,7 +13,7 @@ lia.chat.register("meclose", {
 lia.chat.register("actions", {
     syntax = "[string Action]",
     desc = "actionsDesc",
-    format = L("emoteFormat"),
+    format = "emoteFormat",
     color = Color(255, 150, 0),
     onCanHear = lia.config.get("ChatRange", 280),
     deadCanChat = true
@@ -22,7 +22,7 @@ lia.chat.register("actions", {
 lia.chat.register("mefar", {
     syntax = "[string Action]",
     desc = "mefarDesc",
-    format = L("emoteFormat"),
+    format = "emoteFormat",
     onCanHear = lia.config.get("ChatRange", 280) * 2,
     prefix = {"/mefar", "/actionfar"},
     font = "liaChatFontItalics",
@@ -54,7 +54,7 @@ lia.chat.register("itfar", {
 
 lia.chat.register("coinflip", {
     desc = "coinflipDesc",
-    format = L("coinflipFormat"),
+    format = "coinflipFormat",
     onCanHear = lia.config.get("ChatRange", 280),
     prefix = {"/coinflip"},
     color = Color(236, 100, 9),
@@ -66,7 +66,7 @@ lia.chat.register("coinflip", {
 lia.chat.register("ic", {
     syntax = "[string Text]",
     desc = "icDesc",
-    format = L("icFormat"),
+    format = "icFormat",
     onGetColor = function(speaker)
         local client = LocalPlayer()
         if client:getTracedEntity() == speaker then return lia.config.get("ChatListenColor") end
@@ -82,7 +82,7 @@ lia.chat.register("ic", {
 lia.chat.register("me", {
     syntax = "[string Action]",
     desc = "meDesc",
-    format = L("emoteFormat"),
+    format = "emoteFormat",
     onGetColor = lia.chat.classes.ic.onGetColor,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
@@ -98,7 +98,7 @@ lia.chat.register("me", {
 lia.chat.register("globalme", {
     syntax = "[string Action]",
     desc = "globalMeDesc",
-    format = L("emoteFormat"),
+    format = "emoteFormat",
     onGetColor = lia.chat.classes.ic.onGetColor,
     onCanHear = function() return true end,
     prefix = {"/globalme"},
@@ -125,7 +125,7 @@ lia.chat.register("it", {
 lia.chat.register("w", {
     syntax = "[string Text]",
     desc = "wDesc",
-    format = L("whisperFormat"),
+    format = "whisperFormat",
     onGetColor = function(speaker)
         local color = lia.chat.classes.ic.onGetColor(speaker)
         return Color(color.r - 35, color.g - 35, color.b - 35)
@@ -141,7 +141,7 @@ lia.chat.register("w", {
 lia.chat.register("y", {
     syntax = "[string Text]",
     desc = "yDesc",
-    format = L("yellFormat"),
+    format = "yellFormat",
     onGetColor = function(speaker)
         local color = lia.chat.classes.ic.onGetColor(speaker)
         return Color(color.r + 35, color.g + 35, color.b + 35)
@@ -198,7 +198,7 @@ lia.chat.register("adminchat", {
 
 lia.chat.register("roll", {
     desc = "rollDesc",
-    format = L("rollFormat"),
+    format = "rollFormat",
     color = Color(155, 111, 176),
     filter = "actions",
     font = "liaChatFontItalics",
@@ -213,7 +213,7 @@ lia.chat.register("roll", {
 lia.chat.register("pm", {
     syntax = "[string Player Name] [string Message]",
     desc = "pmDesc",
-    format = L("pmFormat"),
+    format = "pmFormat",
     color = Color(249, 211, 89),
     filter = "pm",
     deadCanChat = true
@@ -284,7 +284,7 @@ lia.chat.register("ooc", {
 lia.chat.register("me's", {
     syntax = "[string Action]",
     desc = "mesDesc",
-    format = L("mePossessiveFormat"),
+    format = "mePossessiveFormat",
     onCanHear = lia.config.get("ChatRange", 280),
     onChatAdd = function(speaker, text, anonymous)
         local speako = anonymous and "Someone" or hook.Run("GetDisplayedName", speaker, "ic") or IsValid(speaker) and speaker:Name() or "Console"
@@ -309,7 +309,7 @@ lia.chat.register("me's", {
 lia.chat.register("mefarfar", {
     syntax = "[string Action]",
     desc = "mefarfarDesc",
-    format = L("emoteFormat"),
+    format = "emoteFormat",
     onChatAdd = function(speaker, text, anonymous)
         local speako = anonymous and "Someone" or hook.Run("GetDisplayedName", speaker, "ic") or IsValid(speaker) and speaker:Name() or "Console"
         local texCol = lia.config.get("ChatColor")
