@@ -4,9 +4,9 @@
     syntax = "[player Player Name] [string Attribute Name] [number Level]",
     privilege = "Manage Attributes",
     AdminStick = {
-        Name = L("setAttributes"),
+        Name = "setAttributes",
         Category = "characterManagement",
-        SubCategory = L("attributes"),
+        SubCategory = "attributes",
         Icon = "icon16/wrench.png"
     },
     onRun = function(client, arguments)
@@ -39,9 +39,9 @@ lia.command.add("checkattributes", {
     syntax = "[player Player Name]",
     privilege = "Manage Attributes",
     AdminStick = {
-        Name = L("checkAttributes"),
+        Name = "checkAttributes",
         Category = "characterManagement",
-        SubCategory = L("attributes"),
+        SubCategory = "attributes",
         Icon = "icon16/zoom.png"
     },
     onRun = function(client, arguments)
@@ -101,9 +101,9 @@ lia.command.add("charaddattrib", {
     syntax = "[player Player Name] [string Attribute Name] [number Level]",
     privilege = "Manage Attributes",
     AdminStick = {
-        Name = L("addAttributes"),
+        Name = "addAttributes",
         Category = "characterManagement",
-        SubCategory = L("attributes"),
+        SubCategory = "attributes",
         Icon = "icon16/add.png"
     },
     onRun = function(client, arguments)

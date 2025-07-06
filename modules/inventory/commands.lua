@@ -4,9 +4,9 @@
     desc = L("updateInventorySizeDesc"),
     syntax = "[player Player Name]",
     AdminStick = {
-        Name = L("adminStickUpdateInvSizeName"),
+        Name = "adminStickUpdateInvSizeName",
         Category = "characterManagement",
-        SubCategory = L("items"),
+        SubCategory = "items",
         Icon = "icon16/box_add.png"
     },
     onRun = function(client, arguments)
@@ -50,9 +50,9 @@ lia.command.add("setinventorysize", {
     desc = L("setInventorySizeDesc"),
     syntax = "[player Player Name] [number Width] [number Height]",
     AdminStick = {
-        Name = L("adminStickSetInvSizeName"),
+        Name = "adminStickSetInvSizeName",
         Category = "characterManagement",
-        SubCategory = L("items"),
+        SubCategory = "items",
         Icon = "icon16/box_edit.png"
     },
     onRun = function(client, args)

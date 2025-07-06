@@ -3,7 +3,7 @@
     superAdminOnly = true,
     desc = L("restockVendorDesc"),
     AdminStick = {
-        Name = L("restockVendorStickName"),
+        Name = "restockVendorStickName",
         TargetClass = "lia_vendor"
     },
     onRun = function(client)
@@ -52,7 +52,7 @@ lia.command.add("resetallvendormoney", {
     desc = L("resetAllVendorMoneyDesc"),
     syntax = "[number Amount]",
     AdminStick = {
-        Name = L("resetAllVendorMoneyStickName"),
+        Name = "resetAllVendorMoneyStickName",
         TargetClass = "lia_vendor"
     },
     onRun = function(client, arguments)
@@ -78,7 +78,7 @@ lia.command.add("restockvendormoney", {
     desc = L("restockVendorMoneyDesc"),
     syntax = "[number Amount]",
     AdminStick = {
-        Name = L("restockVendorMoneyStickName"),
+        Name = "restockVendorMoneyStickName",
         TargetClass = "lia_vendor"
     },
     onRun = function(client, arguments)
