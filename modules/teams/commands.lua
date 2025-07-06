@@ -2,7 +2,7 @@
     adminOnly = true,
     privilege = "Manage Transfers",
     desc = L("plyTransferDesc"),
-    syntax = "[player Name] [string Faction]",
+    syntax = "[player Name] [faction Faction]",
     alias = {"charsetfaction"},
     AdminStick = {
         Name = L("adminStickTransferName"),
@@ -46,7 +46,7 @@ lia.command.add("plywhitelist", {
     adminOnly = true,
     privilege = "Manage Whitelists",
     desc = L("plyWhitelistDesc"),
-    syntax = "[player Name] [string Faction]",
+    syntax = "[player Name] [faction Faction]",
     alias = {"factionwhitelist"},
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
@@ -70,7 +70,7 @@ lia.command.add("plyunwhitelist", {
     adminOnly = true,
     privilege = "Manage Whitelists",
     desc = L("plyUnwhitelistDesc"),
-    syntax = "[player Name] [string Faction]",
+    syntax = "[player Name] [faction Faction]",
     alias = {"factionunwhitelist"},
     AdminStick = {
         Name = L("adminStickUnwhitelistName"),
@@ -99,7 +99,7 @@ lia.command.add("plyunwhitelist", {
 lia.command.add("beclass", {
     adminOnly = false,
     desc = L("beClassDesc"),
-    syntax = "[string Class]",
+    syntax = "[class Class]",
     onRun = function(client, arguments)
         local className = table.concat(arguments, " ")
         local character = client:getChar()
@@ -127,7 +127,7 @@ lia.command.add("setclass", {
     adminOnly = true,
     privilege = "Manage Classes",
     desc = L("setClassDesc"),
-    syntax = "[player Player Name] [string Class]",
+    syntax = "[player Player Name] [class Class]",
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
@@ -158,7 +158,7 @@ lia.command.add("classwhitelist", {
     adminOnly = true,
     privilege = "Manage Whitelists",
     desc = L("classWhitelistDesc"),
-    syntax = "[player Name] [string Class]",
+    syntax = "[player Name] [class Class]",
     AdminStick = {
         Name = L("adminStickClassWhitelistName"),
         Category = "characterManagement",
@@ -194,7 +194,7 @@ lia.command.add("classunwhitelist", {
     adminOnly = true,
     privilege = "Manage Classes",
     desc = L("classUnwhitelistDesc"),
-    syntax = "[player Name] [string Class]",
+    syntax = "[player Name] [class Class]",
     AdminStick = {
         Name = L("adminStickClassUnwhitelistName"),
         Category = "characterManagement",
