@@ -1,3 +1,24 @@
+if SERVER then
+    if not lia.log.types["permaPropSaved"] then
+        lia.log.addType(
+            "permaPropSaved",
+            function(client, class, model, pos)
+                return string.format("%s perma-propped %s (%s) at %s", client:Name(), class, model, pos)
+            end,
+            "PermaProps"
+        )
+    end
+    if not lia.log.types["permaPropOverlap"] then
+        lia.log.addType(
+            "permaPropOverlap",
+            function(_, pos, other)
+                return string.format("Perma-prop spawned at %s overlapping prop at %s.", pos, other)
+            end,
+            "PermaProps"
+        )
+    end
+end
+
 hook.Add("CanTool", "liaPermaProps", function(client, _, tool)
     local entity = client:getTracedEntity()
     local entClass = entity:GetClass()
