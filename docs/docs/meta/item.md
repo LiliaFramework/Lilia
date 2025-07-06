@@ -8,6 +8,7 @@ Item objects represent things found in inventories or spawned in the world. This
 
 Item meta functions cover stack counts, categories, weight calculations, and network variables. Items are objects that can exist in inventories or the world, and item instances clone the base properties defined by the item table. These helpers enable consistent interaction across trading, crafting, and interface components.
 
+---
 ### getQuantity
 
 **Purpose**
@@ -1197,3 +1198,5 @@ Processes an interaction action performed by `client` on this item.
 -- Trigger the "use" interaction from code
 item:interact("use", client, nil)
 ```
+
+---
