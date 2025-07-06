@@ -1,7 +1,7 @@
 ﻿lia.command.add("warn", {
     adminOnly = true,
     privilege = "Issue Warnings",
-    desc = L("warnDesc"),
+    desc = "warnDesc",
     syntax = "[player Target] [string Reason]",
     AdminStick = {
         Name = "warnPlayer",
@@ -37,7 +37,7 @@
 lia.command.add("viewwarns", {
     adminOnly = true,
     privilege = "View Player Warnings",
-    desc = L("viewWarnsDesc"),
+    desc = "viewWarnsDesc",
     syntax = "[player Target]",
     AdminStick = {
         Name = "viewPlayerWarnings",

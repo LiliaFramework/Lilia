@@ -1,7 +1,7 @@
 ﻿lia.command.add("restockvendor", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
-    desc = L("restockVendorDesc"),
+    desc = "restockVendorDesc",
     AdminStick = {
         Name = "restockVendorStickName",
         TargetClass = "lia_vendor"
@@ -29,7 +29,7 @@
 lia.command.add("restockallvendors", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
-    desc = L("restockAllVendorsDesc"),
+    desc = "restockAllVendorsDesc",
     onRun = function(client)
         local count = 0
         for _, vendor in ipairs(ents.FindByClass("lia_vendor")) do
@@ -49,7 +49,7 @@ lia.command.add("restockallvendors", {
 lia.command.add("resetallvendormoney", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
-    desc = L("resetAllVendorMoneyDesc"),
+    desc = "resetAllVendorMoneyDesc",
     syntax = "[number Amount]",
     AdminStick = {
         Name = "resetAllVendorMoneyStickName",
@@ -75,7 +75,7 @@ lia.command.add("resetallvendormoney", {
 lia.command.add("restockvendormoney", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
-    desc = L("restockVendorMoneyDesc"),
+    desc = "restockVendorMoneyDesc",
     syntax = "[number Amount]",
     AdminStick = {
         Name = "restockVendorMoneyStickName",
@@ -107,7 +107,7 @@ lia.command.add("restockvendormoney", {
 lia.command.add("savevendors", {
     privilege = "Manage Vendors",
     superAdminOnly = true,
-    desc = L("saveVendorsDesc"),
+    desc = "saveVendorsDesc",
     onRun = function(client)
         MODULE:SaveData()
         client:notifyLocalized("vendorDataSaved")

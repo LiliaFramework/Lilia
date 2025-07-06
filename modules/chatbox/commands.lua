@@ -3,7 +3,7 @@ MODULE.OOCBans = MODULE.OOCBans or {}
 lia.command.add("banooc", {
     adminOnly = true,
     privilege = "Ban OOC",
-    desc = L("banOOCCommandDesc"),
+    desc = "banOOCCommandDesc",
     syntax = "[player Player Name]",
     AdminStick = {
         Name = "banOOCCommandName",
@@ -27,7 +27,7 @@ lia.command.add("banooc", {
 lia.command.add("unbanooc", {
     adminOnly = true,
     privilege = "Unban OOC",
-    desc = L("unbanOOCCommandDesc"),
+    desc = "unbanOOCCommandDesc",
     syntax = "[player Player Name]",
     AdminStick = {
         Name = "unbanOOCCommandName",
@@ -51,7 +51,7 @@ lia.command.add("unbanooc", {
 lia.command.add("blockooc", {
     superAdminOnly = true,
     privilege = "Block OOC",
-    desc = L("blockOOCCommandDesc"),
+    desc = "blockOOCCommandDesc",
     onRun = function(client)
         local blocked = GetGlobalBool("oocblocked", false)
         SetGlobalBool("oocblocked", not blocked)
@@ -63,7 +63,7 @@ lia.command.add("blockooc", {
 lia.command.add("clearchat", {
     adminOnly = true,
     privilege = "Clear Chat",
-    desc = L("clearChatCommandDesc"),
+    desc = "clearChatCommandDesc",
     onRun = function(client)
         for _, ply in player.Iterator() do
             ply:ConCommand("fixchatplz")
