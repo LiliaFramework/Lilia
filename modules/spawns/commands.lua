@@ -3,7 +3,7 @@ lia.command.add("spawnadd", {
     privilege = "Manage Spawns",
     adminOnly = true,
     desc = L("spawnAddDesc"),
-    syntax = "[string Faction]",
+    syntax = "[faction Faction]",
     onRun = function(client, arguments)
         local factionName = arguments[1]
         if not factionName then return L("invalidArg") end
@@ -57,7 +57,7 @@ lia.command.add("spawnremovebyname", {
     privilege = "Manage Spawns",
     adminOnly = true,
     desc = L("spawnRemoveByNameDesc"),
-    syntax = "[string Faction]",
+    syntax = "[faction Faction]",
     onRun = function(_, arguments)
         local factionName = arguments[1]
         local factionInfo = lia.faction.indices[factionName:lower()]

@@ -306,6 +306,7 @@ LANGUAGE = {
     selectPlayerPrompt = "Select Player",
     selectItemPrompt = "Select Item",
     selectFactionPrompt = "Select Faction",
+    selectClassPrompt = "Select Class",
     typeFieldPrompt = "Type %s",
     copyRow = "Copy Row",
     copySelectedRow = "Copy Selected Row",

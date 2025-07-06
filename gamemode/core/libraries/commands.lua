@@ -125,6 +125,8 @@ function lia.command.parseSyntaxFields(syntax)
                 typ = "item"
             elseif typ == "faction" then
                 typ = "faction"
+            elseif typ == "class" then
+                typ = "class"
             else
                 valid = false
             end
@@ -341,6 +343,12 @@ else
                 for _, fac in ipairs(lia.faction.indices) do
                     ctrl:AddChoice(L(fac.name), fac.index)
                 end
+            elseif fieldType == "class" then
+                ctrl = vgui.Create("DComboBox", panel)
+                ctrl:SetValue(L("selectClassPrompt"))
+                for id, class in pairs(lia.class.list) do
+                    ctrl:AddChoice(L(class.name), id)
+                end
             elseif fieldType == "text" or fieldType == "number" then
                 ctrl = vgui.Create("DTextEntry", panel)
                 ctrl:SetFont("liaSmallFont")
@@ -416,7 +424,7 @@ else
                     local ctl = data.ctrl
                     local ftype = data.type
                     local filled = false
-                    if isfunction(ftype) or ftype == "player" or ftype == "item" or ftype == "faction" then
+                    if isfunction(ftype) or ftype == "player" or ftype == "item" or ftype == "faction" or ftype == "class" then
                         local txt, _ = ctl:GetSelected()
                         filled = txt ~= nil and txt ~= ""
                     elseif ftype == "text" or ftype == "number" then
@@ -446,7 +454,7 @@ else
                 local ctlData = controls[key]
                 local ctl = ctlData.ctrl
                 local ftype = field.type
-                if isfunction(ftype) or ftype == "player" or ftype == "item" or ftype == "faction" then
+                if isfunction(ftype) or ftype == "player" or ftype == "item" or ftype == "faction" or ftype == "class" then
                     local txt, data = ctl:GetSelected()
                     if txt and txt ~= "" then args[#args + 1] = data or txt end
                 elseif ftype == "text" or ftype == "number" then
