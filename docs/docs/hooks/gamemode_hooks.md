@@ -8,7 +8,6 @@ This document lists global hooks triggered by the gamemode. You can define them 
 
 - **hook.Add** may be used from any file.
 
-
 If multiple definitions of the same hook exist on `GM`, `MODULE`, or `SCHEMA`, the one loaded last overrides the others.
 
 ---
@@ -21,26 +20,18 @@ Gamemode hooks fire at various stages during play and let you modify global beha
 
 ### LoadCharInformation
 
-**Description:**
+Description: Called after the F1 menu panel is created so additional sections can be added. Populates the character information sections of the F1 menu.
 
-Called after the F1 menu panel is created so additional sections can be added. Populates the character information sections of the F1 menu.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Adds a custom hunger info field after the menu is ready.
@@ -63,26 +54,18 @@ end)
 
 ### CreateMenuButtons
 
-**Description:**
+Description: Executed during menu creation allowing you to define custom tabs. Allows modules to insert additional tabs into the F1 menu.
 
-Executed during menu creation allowing you to define custom tabs. Allows modules to insert additional tabs into the F1 menu.
+Parameters:
 
-**Parameters:**
+- `tabs` (`table`): Table to add menu definitions to.
 
-* `tabs` (`table`) – Table to add menu definitions to.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Inserts a custom "Help" tab listing available commands.
@@ -110,29 +93,20 @@ end)
 
 ### DrawLiliaModelView
 
-**Description:**
+Description: Runs every frame when the character model panel draws. Lets code draw over the model view used in character menus.
 
-Runs every frame when the character model panel draws. Lets code draw over the model view used in character menus.
+Parameters:
 
-**Parameters:**
+- `panel` (`Panel`): The model panel being drawn.
 
-* `panel` (`Panel`) – The model panel being drawn.
+- `entity` (`Entity`): Model entity displayed.
 
+Realm: Client
 
-* `entity` (`Entity`) – Model entity displayed.
+Returns:
+- None
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Overlays the player's name above the preview model.
@@ -159,31 +133,22 @@ end)
 
 ### ShouldAllowScoreboardOverride
 
-**Description:**
-
-Checks if a scoreboard value may be overridden by other hooks so modules can
+Description: Checks if a scoreboard value may be overridden by other hooks so modules can
 
 replace the displayed name, model or description for a player.
 
-**Parameters:**
+Parameters:
 
-* `client` (`Player`) – Player being displayed.
+- `client` (`Player`): Player being displayed.
 
+- `var` (`string`): Field identifier such as "name", "model" or "desc".
 
-* `var` (`string`) – Field identifier such as "name", "model" or "desc".
+Realm: Client
 
+Returns:
+- boolean: Return true to allow override
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* boolean – Return true to allow override
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Allows other hooks to replace player names on the scoreboard.
@@ -198,26 +163,18 @@ end)
 
 ### GetDisplayedName
 
-**Description:**
+Description: Returns the name text to display for a player in UI panels.
 
-Returns the name text to display for a player in UI panels.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player to query.
 
-* `client` (`Player`) – Player to query.
+Realm: Client
 
+Returns:
+- string or nil: Name text to display
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* string or nil – Name text to display
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Displays player names with an admin prefix.
@@ -232,23 +189,18 @@ end)
 
 ### PlayerStartVoice
 
-**Description:**
+Description: Triggered when the local HUD begins displaying a voice panel for a player.
 
-Triggered when the local HUD begins displaying a voice panel for a player.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player who started speaking.
 
-* `client` (`Player`) – Player who started speaking.
+Realm: Client
 
-**Realm:**
+Returns:
+- None
 
-* Client
-
-**Returns:**
-
-* None
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Play a sound when anyone starts talking.
@@ -261,26 +213,18 @@ end)
 
 ### PlayerEndVoice
 
-**Description:**
+Description: Fired when the voice panel for a player is removed from the HUD.
 
-Fired when the voice panel for a player is removed from the HUD.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player whose panel ended.
 
-* `client` (`Player`) – Player whose panel ended.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Announces in chat and plays a sound when someone stops using voice chat.
@@ -294,26 +238,18 @@ end)
 
 ### SpawnlistContentChanged
 
-**Description:**
+Description: Triggered when a spawn icon is removed from the extended spawn menu. Fired when content is removed from the spawn menu.
 
-Triggered when a spawn icon is removed from the extended spawn menu. Fired when content is removed from the spawn menu.
+Parameters:
 
-**Parameters:**
+- `icon` (`Panel`): Icon affected.
 
-* `icon` (`Panel`) – Icon affected.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Plays a sound and prints which model was removed from the spawn menu.
@@ -328,35 +264,24 @@ end)
 
 ### ItemPaintOver
 
-**Description:**
+Description: Gives a chance to draw additional info over item icons. Allows drawing over item icons in inventories.
 
-Gives a chance to draw additional info over item icons. Allows drawing over item icons in inventories.
+Parameters:
 
-**Parameters:**
+- `panel` (`Panel`): Icon panel.
 
-* `panel` (`Panel`) – Icon panel.
+- `itemTable` (`table`): Item data.
 
+- `width` (`number`): Panel width.
 
-* `itemTable` (`table`) – Item data.
+- `height` (`number`): Panel height.
 
+Realm: Client
 
-* `width` (`number`) – Panel width.
+Returns:
+- None
 
-
-* `height` (`number`) – Panel height.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Draws the item quantity in the bottom-right corner.
@@ -369,32 +294,22 @@ end)
 
 ### OnCreateItemInteractionMenu
 
-**Description:**
+Description: Allows extensions to populate the right-click menu for an item. Allows overriding the context menu for an item icon.
 
-Allows extensions to populate the right-click menu for an item. Allows overriding the context menu for an item icon.
+Parameters:
 
-**Parameters:**
+- `panel` (`Panel`): Icon panel.
 
-* `panel` (`Panel`) – Icon panel.
+- `menu` (`Panel`): Menu being built.
 
+- `itemTable` (`table`): Item data.
 
-* `menu` (`Panel`) – Menu being built.
+Realm: Client
 
+Returns:
+- None
 
-* `itemTable` (`table`) – Item data.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Adds an "Inspect" choice to an item's context menu.
@@ -409,29 +324,20 @@ end)
 
 ### CanRunItemAction
 
-**Description:**
+Description: Determines whether an item action should be displayed. Determines whether a specific item action is allowed.
 
-Determines whether an item action should be displayed. Determines whether a specific item action is allowed.
+Parameters:
 
-**Parameters:**
+- `itemTable` (`table`): Item data.
 
-* `itemTable` (`table`) – Item data.
+- `action` (`string`): Action key.
 
+Realm: Client
 
-* `action` (`string`) – Action key.
+Returns:
+- boolean: True if the action can run.
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* boolean – True if the action can run.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Disables the drop action for all items.
@@ -446,26 +352,18 @@ end)
 
 ### ShouldShowPlayerOnScoreboard
 
-**Description:**
+Description: Return false to omit players from the scoreboard. Determines if a player should appear on the scoreboard.
 
-Return false to omit players from the scoreboard. Determines if a player should appear on the scoreboard.
+Parameters:
 
-**Parameters:**
+- `player` (`Player`): Player to test.
 
-* `player` (`Player`) – Player to test.
+Realm: Client
 
+Returns:
+- boolean: False to hide the player
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* boolean – False to hide the player
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Stops bots from showing up on the scoreboard.
@@ -480,29 +378,20 @@ end)
 
 ### ShowPlayerOptions
 
-**Description:**
+Description: Populate the scoreboard context menu with extra options. Allows modules to add scoreboard options for a player.
 
-Populate the scoreboard context menu with extra options. Allows modules to add scoreboard options for a player.
+Parameters:
 
-**Parameters:**
+- `player` (`Player`): Target player.
 
-* `player` (`Player`) – Target player.
+- `options` (`table`): Options table to populate.
 
+Realm: Client
 
-* `options` (`table`) – Options table to populate.
+Returns:
+- None
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Adds a friendly "Wave" choice in the scoreboard menu.
@@ -521,29 +410,20 @@ end)
 
 ### GetDisplayedDescription
 
-**Description:**
+Description: Supplies the description text shown on the scoreboard. Returns the description text to display for a player.
 
-Supplies the description text shown on the scoreboard. Returns the description text to display for a player.
+Parameters:
 
-**Parameters:**
+- `player` (`Player`): Target player.
 
-* `player` (`Player`) – Target player.
+- `isHUD` (`boolean`): True when drawing overhead text rather than in menus.
 
+Realm: Client
 
-* `isHUD` (`boolean`) – True when drawing overhead text rather than in menus.
+Returns:
+- string: Description text
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* string – Description text
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Provide an out-of-character description for scoreboard panels.
@@ -558,26 +438,18 @@ end)
 
 ### ChatTextChanged
 
-**Description:**
+Description: Runs whenever the chat entry text is modified. Called whenever the chat entry text changes.
 
-Runs whenever the chat entry text is modified. Called whenever the chat entry text changes.
+Parameters:
 
-**Parameters:**
+- `text` (`string`): Current text.
 
-* `text` (`string`) – Current text.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Displays a hint when the user types "/help".
@@ -592,26 +464,18 @@ end)
 
 ### FinishChat
 
-**Description:**
+Description: Fires when the chat box closes. Fired when the chat box is closed.
 
-Fires when the chat box closes. Fired when the chat box is closed.
+Parameters:
 
-**Parameters:**
+- `chatType` (`string`): The chat command being checked.
 
-* `chatType` (`string`) – The chat command being checked.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Fade out the chat box when it closes.
@@ -628,26 +492,18 @@ end)
 
 ### StartChat
 
-**Description:**
+Description: Fires when the chat box opens. Fired when the chat box is opened.
 
-Fires when the chat box opens. Fired when the chat box is opened.
+Parameters:
 
-**Parameters:**
+- `chatType` (`string`): The chat command being checked.
 
-* `chatType` (`string`) – The chat command being checked.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Plays a sound and focuses the chat window when it opens.
@@ -663,29 +519,20 @@ end)
 
 ### ChatAddText
 
-**Description:**
+Description: Allows modification of the markup before chat messages are printed. Allows modification of markup before chat text is shown.
 
-Allows modification of the markup before chat messages are printed. Allows modification of markup before chat text is shown.
+Parameters:
 
-**Parameters:**
+- `text` (`string`): Base markup text.
 
-* `text` (`string`) – Base markup text.
+- ...: Additional segments.
 
+Realm: Client
 
-* ... – Additional segments.
+Returns:
+- string: Modified markup text.
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* string – Modified markup text.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Turns chat messages green and prefixes the time before they appear.
@@ -699,32 +546,22 @@ end)
 
 ### DisplayItemRelevantInfo
 
-**Description:**
+Description: Add extra lines to an item tooltip. Populates additional information for an item tooltip.
 
-Add extra lines to an item tooltip. Populates additional information for an item tooltip.
+Parameters:
 
-**Parameters:**
+- `extra` (`table`): Info table to fill.
 
-* `extra` (`table`) – Info table to fill.
+- `client` (`Player`): Local player.
 
+- `item` (`table`): Item being displayed.
 
-* `client` (`Player`) – Local player.
+Realm: Client
 
+Returns:
+- None
 
-* `item` (`table`) – Item being displayed.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Adds the item's weight to its tooltip.
@@ -737,26 +574,18 @@ end)
 
 ### GetMainMenuPosition
 
-**Description:**
+Description: Returns the camera position and angle for the main menu character preview. Provides the camera position and angle for the main menu model.
 
-Returns the camera position and angle for the main menu character preview. Provides the camera position and angle for the main menu model.
+Parameters:
 
-**Parameters:**
+- `character` (`Character`): Character being viewed.
 
-* `character` (`Character`) – Character being viewed.
+Realm: Client
 
+Returns:
+- Vector, Angle: Position and angle values.
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* Vector, Angle – Position and angle values.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Positions the main menu camera with a slight offset.
@@ -769,26 +598,18 @@ end)
 
 ### CanDeleteChar
 
-**Description:**
+Description: Return false here to prevent character deletion. Determines if a character can be deleted.
 
-Return false here to prevent character deletion. Determines if a character can be deleted.
+Parameters:
 
-**Parameters:**
+- `characterID` (`number`): Identifier of the character.
 
-* `characterID` (`number`) – Identifier of the character.
+Realm: Client
 
+Returns:
+- boolean: False to disallow deletion.
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* boolean – False to disallow deletion.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Blocks deletion of the first character slot.
@@ -803,29 +624,20 @@ end)
 
 ### LoadMainMenuInformation
 
-**Description:**
+Description: Lets modules insert additional information on the main menu info panel. Allows modules to populate extra information on the main menu panel.
 
-Lets modules insert additional information on the main menu info panel. Allows modules to populate extra information on the main menu panel.
+Parameters:
 
-**Parameters:**
+- `info` (`table`): Table to receive information.
 
-* `info` (`table`) – Table to receive information.
+- `character` (`Character`): Selected character.
 
+Realm: Client
 
-* `character` (`Character`) – Selected character.
+Returns:
+- None
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Adds the character's faction name to the info panel.
@@ -840,26 +652,18 @@ end)
 
 ### CanPlayerCreateChar
 
-**Description:**
+Description: Checks if the local player may start creating a character. Determines if the player may create a new character.
 
-Checks if the local player may start creating a character. Determines if the player may create a new character.
+Parameters:
 
-**Parameters:**
+- `player` (`Player`): Local player.
 
-* `player` (`Player`) – Local player.
+Realm: Client
 
+Returns:
+- boolean: False to disallow creation.
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* boolean – False to disallow creation.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Restricts character creation to admins only.
@@ -874,29 +678,20 @@ end)
 
 ### ModifyCharacterModel
 
-**Description:**
+Description: Lets you edit the clientside model used in the main menu. Allows adjustments to the character model in menus.
 
-Lets you edit the clientside model used in the main menu. Allows adjustments to the character model in menus.
+Parameters:
 
-**Parameters:**
+- `entity` (`Entity`): Model entity.
 
-* `entity` (`Entity`) – Model entity.
+- `character` (`Character|nil`): Character data if available.
 
+Realm: Client
 
-* `character` (`Character|nil`) – Character data if available.
+Returns:
+- None
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Apply appearance tweaks to the menu model.
@@ -913,26 +708,18 @@ end)
 
 ### ConfigureCharacterCreationSteps
 
-**Description:**
+Description: Add or reorder steps in the character creation flow. Lets modules alter the character creation step layout.
 
-Add or reorder steps in the character creation flow. Lets modules alter the character creation step layout.
+Parameters:
 
-**Parameters:**
+- `panel` (`Panel`): Creation panel.
 
-* `panel` (`Panel`) – Creation panel.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Adds a custom "background" step to the character creator.
@@ -946,26 +733,18 @@ end)
 
 ### GetMaxPlayerChar
 
-**Description:**
+Description: Override to change how many characters a player can have. Returns the maximum number of characters a player can have.
 
-Override to change how many characters a player can have. Returns the maximum number of characters a player can have.
+Parameters:
 
-**Parameters:**
+- `player` (`Player`): Local player.
 
-* `player` (`Player`) – Local player.
+Realm: Client
 
+Returns:
+- number: Maximum character count.
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* number – Maximum character count.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Gives admins extra character slots.
@@ -978,26 +757,18 @@ end)
 
 ### ShouldMenuButtonShow
 
-**Description:**
+Description: Return false and a reason to hide buttons on the main menu. Determines if a button should be visible on the main menu.
 
-Return false and a reason to hide buttons on the main menu. Determines if a button should be visible on the main menu.
+Parameters:
 
-**Parameters:**
+- `name` (`string`): Button identifier.
 
-* `name` (`string`) – Button identifier.
+Realm: Client
 
+Returns:
+- boolean, string: False and reason to hide.
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* boolean, string – False and reason to hide.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Hides the delete button when the feature is locked.
@@ -1012,26 +783,18 @@ end)
 
 ### ResetCharacterPanel
 
-**Description:**
+Description: Called when the character creation panel should reset. Called to reset the character creation panel.
 
-Called when the character creation panel should reset. Called to reset the character creation panel.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Notifies whenever the creation panel resets.
@@ -1044,26 +807,18 @@ end)
 
 ### EasyIconsLoaded
 
-**Description:**
+Description: Notifies when the EasyIcons font sheet has loaded. Fired when the EasyIcons library has loaded.
 
-Notifies when the EasyIcons font sheet has loaded. Fired when the EasyIcons library has loaded.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Rebuild icons using the font after it loads.
@@ -1078,29 +833,20 @@ end)
 
 ### CAMI.OnUsergroupRegistered
 
-**Description:**
+Description: Called when CAMI registers a new usergroup. CAMI notification that a usergroup was registered.
 
-Called when CAMI registers a new usergroup. CAMI notification that a usergroup was registered.
+Parameters:
 
-**Parameters:**
+- `usergroup` (`table`): Registered usergroup data.
 
-* `usergroup` (`table`) – Registered usergroup data.
+- `source` (`string`): Source identifier.
 
+Realm: Shared
 
-* `source` (`string`) – Source identifier.
+Returns:
+- None
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Logs newly registered CAMI usergroups.
@@ -1113,29 +859,20 @@ end)
 
 ### CAMI.OnUsergroupUnregistered
 
-**Description:**
+Description: Called when a usergroup is removed from CAMI. CAMI notification that a usergroup was removed.
 
-Called when a usergroup is removed from CAMI. CAMI notification that a usergroup was removed.
+Parameters:
 
-**Parameters:**
+- `usergroup` (`table`): Unregistered usergroup data.
 
-* `usergroup` (`table`) – Unregistered usergroup data.
+- `source` (`string`): Source identifier.
 
+Realm: Shared
 
-* `source` (`string`) – Source identifier.
+Returns:
+- None
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Logs whenever a usergroup is removed from CAMI.
@@ -1148,26 +885,18 @@ end)
 
 ### CAMI.OnPrivilegeRegistered
 
-**Description:**
+Description: Fired when a privilege is created in CAMI. CAMI notification that a privilege was registered.
 
-Fired when a privilege is created in CAMI. CAMI notification that a privilege was registered.
+Parameters:
 
-**Parameters:**
+- `privilege` (`table`): Privilege data.
 
-* `privilege` (`table`) – Privilege data.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Reports when a new CAMI privilege is registered.
@@ -1180,26 +909,18 @@ end)
 
 ### CAMI.OnPrivilegeUnregistered
 
-**Description:**
+Description: Fired when a privilege is removed from CAMI. CAMI notification that a privilege was unregistered.
 
-Fired when a privilege is removed from CAMI. CAMI notification that a privilege was unregistered.
+Parameters:
 
-**Parameters:**
+- `privilege` (`table`): Privilege data.
 
-* `privilege` (`table`) – Privilege data.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Reports when a CAMI privilege is removed.
@@ -1212,41 +933,28 @@ end)
 
 ### CAMI.PlayerHasAccess
 
-**Description:**
+Description: Allows an override of player privilege checks. Allows external libraries to override privilege checks.
 
-Allows an override of player privilege checks. Allows external libraries to override privilege checks.
+Parameters:
 
-**Parameters:**
+- `handler` (`function`): Default handler.
 
-* `handler` (`function`) – Default handler.
+- `actor` (`Player`): Player requesting access.
 
+- `privilegeName` (`string`): Privilege identifier.
 
-* `actor` (`Player`) – Player requesting access.
+- `callback` (`function`): Callback to receive result.
 
+- `target` (`Player`): Optional target player.
 
-* `privilegeName` (`string`) – Privilege identifier.
+- `extra` (`table`): Extra information table.
 
+Realm: Shared
 
-* `callback` (`function`) – Callback to receive result.
+Returns:
+- None
 
-
-* `target` (`Player`) – Optional target player.
-
-
-* `extra` (`table`) – Extra information table.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Lets superadmins bypass privilege checks.
@@ -1262,41 +970,28 @@ end)
 
 ### CAMI.SteamIDHasAccess
 
-**Description:**
+Description: Allows an override of SteamID-based privilege checks. Similar to PlayerHasAccess but for SteamIDs.
 
-Allows an override of SteamID-based privilege checks. Similar to PlayerHasAccess but for SteamIDs.
+Parameters:
 
-**Parameters:**
+- `handler` (`function`): Default handler.
 
-* `handler` (`function`) – Default handler.
+- `steamID` (`string`): SteamID to check.
 
+- `privilegeName` (`string`): Privilege identifier.
 
-* `steamID` (`string`) – SteamID to check.
+- `callback` (`function`): Callback to receive result.
 
+- `targetID` (`string`): Target SteamID.
 
-* `privilegeName` (`string`) – Privilege identifier.
+- `extra` (`table`): Extra information table.
 
+Realm: Shared
 
-* `callback` (`function`) – Callback to receive result.
+Returns:
+- None
 
-
-* `targetID` (`string`) – Target SteamID.
-
-
-* `extra` (`table`) – Extra information table.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Grants access for a specific SteamID.
@@ -1312,35 +1007,24 @@ end)
 
 ### CAMI.PlayerUsergroupChanged
 
-**Description:**
+Description: Notification that a player's group changed. Fired when a player's usergroup has changed.
 
-Notification that a player's group changed. Fired when a player's usergroup has changed.
+Parameters:
 
-**Parameters:**
+- `player` (`Player`): Affected player.
 
-* `player` (`Player`) – Affected player.
+- `oldGroup` (`string`): Previous group.
 
+- `newGroup` (`string`): New group.
 
-* `oldGroup` (`string`) – Previous group.
+- `source` (`string`): Source identifier.
 
+Realm: Shared
 
-* `newGroup` (`string`) – New group.
+Returns:
+- None
 
-
-* `source` (`string`) – Source identifier.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Announces when a player's usergroup changes.
@@ -1353,35 +1037,24 @@ end)
 
 ### CAMI.SteamIDUsergroupChanged
 
-**Description:**
+Description: Notification that a SteamID's group changed. Fired when a SteamID's usergroup has changed.
 
-Notification that a SteamID's group changed. Fired when a SteamID's usergroup has changed.
+Parameters:
 
-**Parameters:**
+- `steamID` (`string`): Affected SteamID.
 
-* `steamID` (`string`) – Affected SteamID.
+- `oldGroup` (`string`): Previous group.
 
+- `newGroup` (`string`): New group.
 
-* `oldGroup` (`string`) – Previous group.
+- `source` (`string`): Source identifier.
 
+Realm: Shared
 
-* `newGroup` (`string`) – New group.
+Returns:
+- None
 
-
-* `source` (`string`) – Source identifier.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Logs usergroup changes by SteamID.
@@ -1394,26 +1067,18 @@ end)
 
 ### TooltipLayout
 
-**Description:**
+Description: Customize tooltip sizing and layout before it appears.
 
-Customize tooltip sizing and layout before it appears.
+Parameters:
 
-**Parameters:**
+- `panel` (`Panel`): Tooltip panel being laid out.
 
-* `panel` (`Panel`) – Tooltip panel being laid out.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Sets a fixed width for tooltips before layout.
@@ -1426,32 +1091,22 @@ end)
 
 ### TooltipPaint
 
-**Description:**
+Description: Draw custom visuals on the tooltip, returning true skips default painting.
 
-Draw custom visuals on the tooltip, returning true skips default painting.
+Parameters:
 
-**Parameters:**
+- `panel` (`Panel`): Tooltip panel.
 
-* `panel` (`Panel`) – Tooltip panel.
+- `width` (`number`): Panel width.
 
+- `height` (`number`): Panel height.
 
-* `width` (`number`) – Panel width.
+Realm: Client
 
+Returns:
+- None
 
-* `height` (`number`) – Panel height.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Adds a dark background and skips default paint.
@@ -1466,29 +1121,20 @@ end)
 
 ### TooltipInitialize
 
-**Description:**
+Description: Runs when a tooltip is opened for a panel.
 
-Runs when a tooltip is opened for a panel.
+Parameters:
 
-**Parameters:**
+- `panel` (`Panel`): Tooltip panel.
 
-* `panel` (`Panel`) – Tooltip panel.
+- `target` (`Panel`): Target panel that opened the tooltip.
 
+Realm: Client
 
-* `target` (`Panel`) – Target panel that opened the tooltip.
+Returns:
+- None
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Fades tooltips in when they are created.
@@ -1502,26 +1148,18 @@ end)
 
 ### PlayerLoadout
 
-**Description:**
+Description: Runs when a player spawns and equips items. Allows modification of the default loadout.
 
-Runs when a player spawns and equips items. Allows modification of the default loadout.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player being loaded out.
 
-* `client` (`Player`) – Player being loaded out.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Gives players a crowbar and ammo on spawn.
@@ -1536,32 +1174,22 @@ end)
 
 ### PlayerShouldPermaKill
 
-**Description:**
+Description: Determines if a player's death should permanently kill their character. Return true to mark the character for deletion.
 
-Determines if a player's death should permanently kill their character. Return true to mark the character for deletion.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player that died.
 
-* `client` (`Player`) – Player that died.
+- `inflictor` (`Entity`): Damage inflictor.
 
+- `attacker` (`Entity`): Damage attacker.
 
-* `inflictor` (`Entity`) – Damage inflictor.
+Realm: Server
 
+Returns:
+- boolean: Return true to mark for permanent death
 
-* `attacker` (`Entity`) – Damage attacker.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – Return true to mark for permanent death
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prevent permanent death from fall damage.
@@ -1576,29 +1204,20 @@ end)
 
 ### CanPlayerDropItem
 
-**Description:**
+Description: Checks if a player may drop an item. Return false to block dropping.
 
-Checks if a player may drop an item. Return false to block dropping.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player attempting to drop.
 
-* `client` (`Player`) – Player attempting to drop.
+- `item` (`table`): Item being dropped.
 
+Realm: Server
 
-* `item` (`table`) – Item being dropped.
+Returns:
+- boolean: False to block dropping
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – False to block dropping
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Disallow dropping locked items.
@@ -1613,29 +1232,20 @@ end)
 
 ### CanPlayerTakeItem
 
-**Description:**
+Description: Determines if a player can pick up an item. Return false to prevent taking.
 
-Determines if a player can pick up an item. Return false to prevent taking.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player attempting pickup.
 
-* `client` (`Player`) – Player attempting pickup.
+- `item` (`table`): Item in question.
 
+Realm: Server
 
-* `item` (`table`) – Item in question.
+Returns:
+- boolean: False to prevent pickup
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – False to prevent pickup
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Block taking admin items.
@@ -1650,29 +1260,20 @@ end)
 
 ### CanPlayerEquipItem
 
-**Description:**
+Description: Queries if a player can equip an item. Returning false stops the equip action.
 
-Queries if a player can equip an item. Returning false stops the equip action.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player equipping.
 
-* `client` (`Player`) – Player equipping.
+- `item` (`table`): Item to equip.
 
+Realm: Server
 
-* `item` (`table`) – Item to equip.
+Returns:
+- boolean: False to block equipping
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – False to block equipping
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Allow equipping only if level requirement met.
@@ -1687,29 +1288,20 @@ end)
 
 ### CanPlayerUnequipItem
 
-**Description:**
+Description: Called before an item is unequipped. Return false to keep the item equipped.
 
-Called before an item is unequipped. Return false to keep the item equipped.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player unequipping.
 
-* `client` (`Player`) – Player unequipping.
+- `item` (`table`): Item being unequipped.
 
+Realm: Server
 
-* `item` (`table`) – Item being unequipped.
+Returns:
+- boolean: False to prevent unequipping
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – False to prevent unequipping
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prevent unequipping cursed gear.
@@ -1724,35 +1316,24 @@ end)
 
 ### PostPlayerSay
 
-**Description:**
+Description: Runs after chat messages are processed. Allows reacting to player chat.
 
-Runs after chat messages are processed. Allows reacting to player chat.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Speaking player.
 
-* `client` (`Player`) – Speaking player.
+- `message` (`string`): Chat text.
 
+- `chatType` (`string`): Chat channel.
 
-* `message` (`string`) – Chat text.
+- `anonymous` (`boolean`): Whether the message was anonymous.
 
+Realm: Server
 
-* `chatType` (`string`) – Chat channel.
+Returns:
+- None
 
-
-* `anonymous` (`boolean`) – Whether the message was anonymous.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Log all OOC chat.
@@ -1767,26 +1348,18 @@ end)
 
 ### ShouldSpawnClientRagdoll
 
-**Description:**
+Description: Decides if a corpse ragdoll should spawn for a player. Return false to skip ragdoll creation.
 
-Decides if a corpse ragdoll should spawn for a player. Return false to skip ragdoll creation.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player that died.
 
-* `client` (`Player`) – Player that died.
+Realm: Server
 
+Returns:
+- boolean: False to skip ragdoll
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – False to skip ragdoll
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Disable ragdolls for bots.
@@ -1801,26 +1374,18 @@ end)
 
 ### SaveData
 
-**Description:**
+Description: Called when the framework saves persistent data. Modules can store custom information here.
 
-Called when the framework saves persistent data. Modules can store custom information here.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Save a timestamp to file.
@@ -1833,26 +1398,18 @@ end)
 
 ### PersistenceSave
 
-**Description:**
+Description: Fires when map persistence should be written to disk. Allows adding extra persistent entities.
 
-Fires when map persistence should be written to disk. Allows adding extra persistent entities.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Backs up all persistent entities to a data file whenever saving occurs.
@@ -1875,26 +1432,18 @@ end)
 
 ### CanPersistEntity
 
-**Description:**
+Description: Invoked before an entity is saved as persistent. Return false to disallow persisting the entity.
 
-Invoked before an entity is saved as persistent. Return false to disallow persisting the entity.
+Parameters:
 
-**Parameters:**
+- `entity` (`Entity`): Entity being considered for persistence.
 
-* `entity` (`Entity`) – Entity being considered for persistence.
+Realm: Server
 
+Returns:
+- boolean: False to prevent the entity from being saved.
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – False to prevent the entity from being saved.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Skip weapons when marking props permanent.
@@ -1909,26 +1458,18 @@ end)
 
 ### LoadData
 
-**Description:**
+Description: Triggered when stored data should be loaded. Modules can restore custom information here.
 
-Triggered when stored data should be loaded. Modules can restore custom information here.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Restores map props from a saved JSON file on disk.
@@ -1952,26 +1493,18 @@ end)
 
 ### PostLoadData
 
-**Description:**
+Description: Called after all persistent data has loaded. Useful for post-processing.
 
-Called after all persistent data has loaded. Useful for post-processing.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Spawns a supply crate at a stored position once everything is loaded.
@@ -1990,26 +1523,18 @@ end)
 
 ### ShouldDataBeSaved
 
-**Description:**
+Description: Queries if data saving should occur during shutdown. Return false to cancel saving.
 
-Queries if data saving should occur during shutdown. Return false to cancel saving.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Server
 
+Returns:
+- boolean: False to cancel saving
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – False to cancel saving
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Skip saving during quick restarts.
@@ -2022,29 +1547,20 @@ end)
 
 ### OnCharDisconnect
 
-**Description:**
+Description: Called when a player's character disconnects. Provides a last chance to handle data.
 
-Called when a player's character disconnects. Provides a last chance to handle data.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Disconnecting player.
 
-* `client` (`Player`) – Disconnecting player.
+- `character` (`Character`): Their character.
 
+Realm: Server
 
-* `character` (`Character`) – Their character.
+Returns:
+- None
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Store the character's last position so it can be restored later.
@@ -2057,26 +1573,18 @@ end)
 
 ### SetupBotPlayer
 
-**Description:**
+Description: Initializes a bot's character when it first joins. Allows custom bot setup.
 
-Initializes a bot's character when it first joins. Allows custom bot setup.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Bot player.
 
-* `client` (`Player`) – Bot player.
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Give the bot a starter pistol and set up a small inventory.
@@ -2091,26 +1599,18 @@ end)
 
 ### PlayerLiliaDataLoaded
 
-**Description:**
+Description: Fired after a player's personal data has loaded. Useful for syncing additional info.
 
-Fired after a player's personal data has loaded. Useful for syncing additional info.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player that loaded data.
 
-* `client` (`Player`) – Player that loaded data.
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Cache the player's faction color from saved data for use after their character loads.
@@ -2127,26 +1627,18 @@ end)
 
 ### PostPlayerInitialSpawn
 
-**Description:**
+Description: Runs after the player entity has spawned and data is ready. Allows post-initialization logic.
 
-Runs after the player entity has spawned and data is ready. Allows post-initialization logic.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Newly spawned player.
 
-* `client` (`Player`) – Newly spawned player.
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Initialize some default variables for new players.
@@ -2160,29 +1652,21 @@ end)
 
 ### FactionOnLoadout
 
-**Description:**
+Description: Gives factions a chance to modify player loadouts. Runs before weapons are equipped.
 
-Gives factions a chance to modify player loadouts. Runs before weapons are equipped.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player being equipped.
 
-* `client` (`Player`) – Player being equipped.
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
--- Prints a message when FactionOnLoadout is triggered
+-- Give police players a radio on spawn
 hook.Add("FactionOnLoadout", "GiveRadio", function(ply)
     if ply:getChar():getFaction() == "police" then
         ply:Give("weapon_radio")
@@ -2194,29 +1678,21 @@ end)
 
 ### ClassOnLoadout
 
-**Description:**
+Description: Allows classes to modify the player's starting gear. Executed prior to PostPlayerLoadout.
 
-Allows classes to modify the player's starting gear. Executed prior to PostPlayerLoadout.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player being equipped.
 
-* `client` (`Player`) – Player being equipped.
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
--- Prints a message when ClassOnLoadout is triggered
+-- Provide medics with a medkit
 hook.Add("ClassOnLoadout", "MedicItems", function(ply)
     if ply:getChar():getClass() == "medic" then
         ply:Give("medkit")
@@ -2228,29 +1704,21 @@ end)
 
 ### PostPlayerLoadout
 
-**Description:**
+Description: Called after the player has been equipped. Last chance to modify the loadout.
 
-Called after the player has been equipped. Last chance to modify the loadout.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player loaded out.
 
-* `client` (`Player`) – Player loaded out.
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
--- Prints a message when PostPlayerLoadout is triggered
+-- Tint players green after all items are equipped
 hook.Add("PostPlayerLoadout", "SetColor", function(ply)
     ply:SetPlayerColor(Vector(0, 1, 0))
 end)
@@ -2260,29 +1728,21 @@ end)
 
 ### FactionPostLoadout
 
-**Description:**
+Description: Runs after faction loadout logic completes. Allows post-loadout tweaks.
 
-Runs after faction loadout logic completes. Allows post-loadout tweaks.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player affected.
 
-* `client` (`Player`) – Player affected.
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
--- Prints a message when FactionPostLoadout is triggered
+-- Play a sound for soldiers after loadout
 hook.Add("FactionPostLoadout", "Shout", function(ply)
     if ply:getChar():getFaction() == "soldier" then
         ply:EmitSound("npc/combine_soldier/gear6.wav")
@@ -2294,29 +1754,21 @@ end)
 
 ### ClassPostLoadout
 
-**Description:**
+Description: Runs after class loadout logic completes. Allows post-loadout tweaks for classes.
 
-Runs after class loadout logic completes. Allows post-loadout tweaks for classes.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player affected.
 
-* `client` (`Player`) – Player affected.
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
--- Prints a message when ClassPostLoadout is triggered
+-- Trigger an action emote after class items equip
 hook.Add("ClassPostLoadout", "Pose", function(ply)
     ply:ConCommand("act muscle")
 end)
@@ -2326,29 +1778,21 @@ end)
 
 ### GetDefaultInventoryType
 
-**Description:**
+Description: Returns the inventory type used for new characters. Modules can override to provide custom types.
 
-Returns the inventory type used for new characters. Modules can override to provide custom types.
+Parameters:
 
-**Parameters:**
+- `character` (`Character`): Character being created.
 
-* `character` (`Character`) – Character being created.
+Realm: Server
 
+Returns:
+- string: Inventory type
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* string – Inventory type
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
--- Prints a message when GetDefaultInventoryType is triggered
+-- Use a grid-style inventory for all characters
 hook.Add("GetDefaultInventoryType", "UseGrid", function()
     return "GridInv"
 end)
@@ -2358,26 +1802,18 @@ end)
 
 ### ShouldDeleteSavedItems
 
-**Description:**
+Description: Decides whether saved persistent items should be deleted on load. Return true to wipe them from the database.
 
-Decides whether saved persistent items should be deleted on load. Return true to wipe them from the database.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Server
 
+Returns:
+- boolean: True to delete items
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – True to delete items
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Remove stored items if too many exist on the map.
@@ -2392,26 +1828,18 @@ end)
 
 ### OnSavedItemLoaded
 
-**Description:**
+Description: Called after map items have been loaded from storage. Provides the table of created items.
 
-Called after map items have been loaded from storage. Provides the table of created items.
+Parameters:
 
-**Parameters:**
+- `items` (`table`): Loaded item entities.
 
-* `items` (`table`) – Loaded item entities.
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Adjusts item collision settings after loading from storage.
@@ -2427,29 +1855,21 @@ end)
 
 ### ShouldDrawEntityInfo
 
-**Description:**
+Description: Determines if world-space info should be rendered for an entity. Return false to hide the tooltip.
 
-Determines if world-space info should be rendered for an entity. Return false to hide the tooltip.
+Parameters:
 
-**Parameters:**
+- `entity` (`Entity`): Entity being considered.
 
-* `entity` (`Entity`) – Entity being considered.
+Realm: Client
 
+Returns:
+- boolean: False to hide info
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* boolean – False to hide info
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
--- Prints a message when ShouldDrawEntityInfo is triggered
+-- Hide info panels for NPCs
 hook.Add("ShouldDrawEntityInfo", "HideNPCs", function(ent)
     if ent:IsNPC() then
         return false
@@ -2461,35 +1881,25 @@ end)
 
 ### DrawEntityInfo
 
-**Description:**
+Description: Allows custom drawing of entity information in the world. Drawn every frame while visible.
 
-Allows custom drawing of entity information in the world. Drawn every frame while visible.
+Parameters:
 
-**Parameters:**
+- `entity` (`Entity`): Entity to draw info for.
 
-* `entity` (`Entity`) – Entity to draw info for.
+- `alpha` (`number`): Current alpha value.
 
+- `position` (`table`): Screen position table.
 
-* `alpha` (`number`) – Current alpha value.
+Realm: Client
 
+Returns:
+- None
 
-* `position` (`table`) – Screen position table.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
--- Prints a message when DrawEntityInfo is triggered
+-- Display the entity class name above props
 hook.Add("DrawEntityInfo", "LabelProps", function(ent, a, pos)
     draw.SimpleText(ent:GetClass(), "DermaDefault", pos.x, pos.y, Color(255, 255, 255, a))
 end)
@@ -2499,32 +1909,24 @@ end)
 
 ### GetInjuredText
 
-**Description:**
+Description: Provides the health status text and color for a player. Return a table with text and color values.
 
-Provides the health status text and color for a player. Return a table with text and color values.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player to check.
 
-* `client` (`Player`) – Player to check.
+Realm: Client
 
+Returns:
+- table: {text, color} info
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* table – {text, color} info
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
--- Prints a message when GetInjuredText is triggered
+-- Show a critical warning when health is low
 hook.Add("GetInjuredText", "SimpleHealth", function(ply)
     if ply:Health() <= 20 then
-        return { "Critical", Color(255, 0, 0) }
+        return {"Critical", Color(255, 0, 0)}
     end
 end)
 ```
@@ -2533,29 +1935,21 @@ end)
 
 ### ShouldDrawPlayerInfo
 
-**Description:**
+Description: Determines if character info should draw above a player. Return false to suppress drawing.
 
-Determines if character info should draw above a player. Return false to suppress drawing.
+Parameters:
 
-**Parameters:**
+- `player` (`Player`): Player being rendered.
 
-* `player` (`Player`) – Player being rendered.
+Realm: Client
 
+Returns:
+- boolean: False to hide info
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* boolean – False to hide info
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
--- Prints a message when ShouldDrawPlayerInfo is triggered
+-- Hide the info overlay for the local player
 hook.Add("ShouldDrawPlayerInfo", "HideLocal", function(ply)
     if ply == LocalPlayer() then
         return false
@@ -2567,37 +1961,27 @@ end)
 
 ### DrawCharInfo
 
-**Description:**
+Description: Allows modules to add lines to the character info display. Called when building the info table.
 
-Allows modules to add lines to the character info display. Called when building the info table.
+Parameters:
 
-**Parameters:**
+- `player` (`Player`): Player being displayed.
 
-* `player` (`Player`) – Player being displayed.
+- `character` (`Character`): Their character data.
 
+- `info` (`table`): Table to add lines to.
 
-* `character` (`Character`) – Their character data.
+Realm: Client
 
+Returns:
+- None
 
-* `info` (`table`) – Table to add lines to.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
--- Prints a message when DrawCharInfo is triggered
+-- Append the player's job title to their info lines
 hook.Add("DrawCharInfo", "JobTitle", function(ply, char, info)
-    info[#info + 1] = { "Job: " .. (char:getClass() or "None") }
+    info[#info + 1] = {"Job: " .. (char:getClass() or "None")}
 end)
 ```
 
@@ -2605,31 +1989,25 @@ end)
 
 ### ItemShowEntityMenu
 
-**Description:**
+Description: Opens the context menu for a world item when used. Allows replacing the default menu.
 
-Opens the context menu for a world item when used. Allows replacing the default menu.
+Parameters:
 
-**Parameters:**
+- `entity` (`Entity`): Item entity clicked.
 
-* `entity` (`Entity`) – Item entity clicked.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
--- Prints a message when ItemShowEntityMenu is triggered
+-- Replace the menu with a quick take option
 hook.Add("ItemShowEntityMenu", "QuickTake", function(ent)
-    print("Opening menu for", ent)
+    Derma_Query("Take this item?", ent:getName(), "Yes", function()
+        RunConsoleCommand("lia_take", ent:getID())
+    end, "No")
 end)
 ```
 
@@ -2637,31 +2015,23 @@ end)
 
 ### PreLiliaLoaded
 
-**Description:**
+Description: Fired just before the client finishes loading the framework. Useful for setup tasks.
 
-Fired just before the client finishes loading the framework. Useful for setup tasks.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
--- Prints a message when PreLiliaLoaded is triggered
+-- Create custom fonts before initialization finishes
 hook.Add("PreLiliaLoaded", "Prep", function()
-    print("About to finish loading")
+    surface.CreateFont("MyUI", {font = "Roboto", size = 18, weight = 500})
 end)
 ```
 
@@ -2669,31 +2039,23 @@ end)
 
 ### LiliaLoaded
 
-**Description:**
+Description: Indicates the client finished initializing the framework. Modules can start creating panels here.
 
-Indicates the client finished initializing the framework. Modules can start creating panels here.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
--- Prints a message when LiliaLoaded is triggered
+-- Show a welcome screen once loading completes
 hook.Add("LiliaLoaded", "Ready", function()
-    print("Lilia client ready")
+    vgui.Create("liaWelcome")
 end)
 ```
 
@@ -2701,35 +2063,24 @@ end)
 
 ### InventoryDataChanged
 
-**Description:**
+Description: Notifies when inventory metadata changes. Provides old and new values.
 
-Notifies when inventory metadata changes. Provides old and new values.
+Parameters:
 
-**Parameters:**
+- `inventory` (`table`): Inventory affected.
 
-* `inventory` (`table`) – Inventory affected.
+- `key` (`string`): Data key.
 
+- `oldValue` (`any`): Previous value.
 
-* `key` (`string`) – Data key.
+- `value` (`any`): New value.
 
+Realm: Client
 
-* `oldValue` (`any`) – Previous value.
+Returns:
+- None
 
-
-* `value` (`any`) – New value.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when InventoryDataChanged is triggered
@@ -2744,26 +2095,18 @@ end)
 
 ### ItemInitialized
 
-**Description:**
+Description: Called when a new item instance is created clientside. Allows additional setup for the item.
 
-Called when a new item instance is created clientside. Allows additional setup for the item.
+Parameters:
 
-**Parameters:**
+- `item` (`table`): Item created.
 
-* `item` (`table`) – Item created.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when ItemInitialized is triggered
@@ -2776,26 +2119,18 @@ end)
 
 ### InventoryInitialized
 
-**Description:**
+Description: Fired when an inventory instance finishes loading. Modules may modify it here.
 
-Fired when an inventory instance finishes loading. Modules may modify it here.
+Parameters:
 
-**Parameters:**
+- `inventory` (`table`): Inventory initialized.
 
-* `inventory` (`table`) – Inventory initialized.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when InventoryInitialized is triggered
@@ -2808,29 +2143,20 @@ end)
 
 ### InventoryItemAdded
 
-**Description:**
+Description: Invoked when an item is placed into an inventory. Lets code react to the addition.
 
-Invoked when an item is placed into an inventory. Lets code react to the addition.
+Parameters:
 
-**Parameters:**
+- `inventory` (`table`): Inventory receiving the item.
 
-* `inventory` (`table`) – Inventory receiving the item.
+- `item` (`table`): Item added.
 
+Realm: Client
 
-* `item` (`table`) – Item added.
+Returns:
+- None
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when InventoryItemAdded is triggered
@@ -2843,29 +2169,20 @@ end)
 
 ### InventoryItemRemoved
 
-**Description:**
+Description: Called when an item is removed from an inventory. Runs after the item table is updated.
 
-Called when an item is removed from an inventory. Runs after the item table is updated.
+Parameters:
 
-**Parameters:**
+- `inventory` (`table`): Inventory modified.
 
-* `inventory` (`table`) – Inventory modified.
+- `item` (`table`): Item removed.
 
+Realm: Client
 
-* `item` (`table`) – Item removed.
+Returns:
+- None
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when InventoryItemRemoved is triggered
@@ -2878,26 +2195,18 @@ end)
 
 ### InventoryDeleted
 
-**Description:**
+Description: Signals that an inventory was deleted clientside. Allows cleanup of references.
 
-Signals that an inventory was deleted clientside. Allows cleanup of references.
+Parameters:
 
-**Parameters:**
+- `inventory` (`table`): Deleted inventory.
 
-* `inventory` (`table`) – Deleted inventory.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when InventoryDeleted is triggered
@@ -2910,26 +2219,18 @@ end)
 
 ### ItemDeleted
 
-**Description:**
+Description: Fired when an item is removed entirely. Modules should clear any cached data.
 
-Fired when an item is removed entirely. Modules should clear any cached data.
+Parameters:
 
-**Parameters:**
+- `item` (`table`): Item that was deleted.
 
-* `item` (`table`) – Item that was deleted.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when ItemDeleted is triggered
@@ -2942,35 +2243,24 @@ end)
 
 ### OnCharVarChanged
 
-**Description:**
+Description: Runs when a networked character variable changes. Gives both old and new values.
 
-Runs when a networked character variable changes. Gives both old and new values.
+Parameters:
 
-**Parameters:**
+- `character` (`Character`): Affected character.
 
-* `character` (`Character`) – Affected character.
+- `key` (`string`): Variable name.
 
+- `oldValue` (`any`): Previous value.
 
-* `key` (`string`) – Variable name.
+- `value` (`any`): New value.
 
+Realm: Client
 
-* `oldValue` (`any`) – Previous value.
+Returns:
+- None
 
-
-* `value` (`any`) – New value.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OnCharVarChanged is triggered
@@ -2985,35 +2275,24 @@ end)
 
 ### OnCharLocalVarChanged
 
-**Description:**
+Description: Similar to OnCharVarChanged but for local-only variables. Called after the table updates.
 
-Similar to OnCharVarChanged but for local-only variables. Called after the table updates.
+Parameters:
 
-**Parameters:**
+- `character` (`Character`): Affected character.
 
-* `character` (`Character`) – Affected character.
+- `key` (`string`): Variable name.
 
+- `oldVar` (`any`): Old value.
 
-* `key` (`string`) – Variable name.
+- `value` (`any`): New value.
 
+Realm: Client
 
-* `oldVar` (`any`) – Old value.
+Returns:
+- None
 
-
-* `value` (`any`) – New value.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OnCharLocalVarChanged is triggered
@@ -3028,29 +2307,24 @@ end)
 
 ### LocalVarChanged
 
-**Description:**
+Description: Triggered when `setLocalVar` updates a player's local variable. Provides both the old and new values.
 
-Triggered when `setLocalVar` updates a player's local variable. Provides both the old and new values.
+Parameters:
 
-**Parameters:**
+- `player` (`Player`): Affected player.
 
-* `player` (`Player`) – Affected player.
+- `key` (`string`): Variable name.
 
-* `key` (`string`) – Variable name.
+- `oldValue` (`any`): Previous value.
 
-* `oldValue` (`any`) – Previous value.
+- `value` (`any`): New value.
 
-* `value` (`any`) – New value.
+Realm: Shared
 
-**Realm:**
+Returns:
+- None
 
-* Shared
-
-**Returns:**
-
-* None
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Print when a player's stamina local var changes
@@ -3065,29 +2339,24 @@ end)
 
 ### NetVarChanged
 
-**Description:**
+Description: Runs when `setNetVar` changes an entity's networked variable. Works for global variables when the entity argument is nil.
 
-Runs when `setNetVar` changes an entity's networked variable. Works for global variables when the entity argument is nil.
+Parameters:
 
-**Parameters:**
+- `entity` (`Entity|nil`): Entity with the updated variable, or nil for global vars.
 
-* `entity` (`Entity|nil`) – Entity with the updated variable, or nil for global vars.
+- `key` (`string`): Variable name.
 
-* `key` (`string`) – Variable name.
+- `oldValue` (`any`): Previous value.
 
-* `oldValue` (`any`) – Previous value.
+- `value` (`any`): New value.
 
-* `value` (`any`) – New value.
+Realm: Shared
 
-**Realm:**
+Returns:
+- None
 
-* Shared
-
-**Returns:**
-
-* None
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- React to door network vars
@@ -3102,35 +2371,24 @@ end)
 
 ### ItemDataChanged
 
-**Description:**
+Description: Called when item data values change clientside. Provides both the old and new values.
 
-Called when item data values change clientside. Provides both the old and new values.
+Parameters:
 
-**Parameters:**
+- `item` (`table`): Item modified.
 
-* `item` (`table`) – Item modified.
+- `key` (`string`): Key that changed.
 
+- `oldValue` (`any`): Previous value.
 
-* `key` (`string`) – Key that changed.
+- `value` (`any`): New value.
 
+Realm: Client
 
-* `oldValue` (`any`) – Previous value.
+Returns:
+- None
 
-
-* `value` (`any`) – New value.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when ItemDataChanged is triggered
@@ -3145,32 +2403,22 @@ end)
 
 ### ItemQuantityChanged
 
-**Description:**
+Description: Runs when an item's quantity value updates. Allows reacting to stack changes.
 
-Runs when an item's quantity value updates. Allows reacting to stack changes.
+Parameters:
 
-**Parameters:**
+- `item` (`table`): Item affected.
 
-* `item` (`table`) – Item affected.
+- `oldQuantity` (`number`): Previous quantity.
 
+- `quantity` (`number`): New quantity.
 
-* `oldQuantity` (`number`) – Previous quantity.
+Realm: Client
 
+Returns:
+- None
 
-* `quantity` (`number`) – New quantity.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when ItemQuantityChanged is triggered
@@ -3183,29 +2431,20 @@ end)
 
 ### KickedFromChar
 
-**Description:**
+Description: Indicates that a character was forcefully removed. isCurrentChar denotes if it was the active one.
 
-Indicates that a character was forcefully removed. isCurrentChar denotes if it was the active one.
+Parameters:
 
-**Parameters:**
+- `id` (`number`): Character identifier.
 
-* `id` (`number`) – Character identifier.
+- `isCurrentChar` (`boolean`): Was this the active character?
 
+Realm: Client
 
-* `isCurrentChar` (`boolean`) – Was this the active character?
+Returns:
+- None
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when KickedFromChar is triggered
@@ -3218,38 +2457,26 @@ end)
 
 ### HandleItemTransferRequest
 
-**Description:**
+Description: Called when the server receives a request to move an item to another inventory. Add-ons may validate the request, change the destination or return nil to block it.
 
-Called when the server receives a request to move an item to another inventory. Add-ons may validate the request, change the destination or return nil to block it.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Requesting player.
 
-* `client` (`Player`) – Requesting player.
+- `itemID` (`number`): Item identifier.
 
+- `x` (`number`): X grid position.
 
-* `itemID` (`number`) – Item identifier.
+- `y` (`number`): Y grid position.
 
+- `inventoryID` (`number|string`): Target inventory identifier.
 
-* `x` (`number`) – X grid position.
+Realm: Server
 
+Returns:
+- DPromise|nil: Promise for the transfer or nil to block.
 
-* `y` (`number`) – Y grid position.
-
-
-* `inventoryID` (`number|string`) – Target inventory identifier.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* DPromise|nil – Promise for the transfer or nil to block.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when HandleItemTransferRequest is triggered
@@ -3262,26 +2489,18 @@ end)
 
 ### CharLoaded
 
-**Description:**
+Description: Fired when a character object is fully loaded. Receives the character ID.
 
-Fired when a character object is fully loaded. Receives the character ID.
+Parameters:
 
-**Parameters:**
+- `id` (`number`): Character identifier.
 
-* `id` (`number`) – Character identifier.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CharLoaded is triggered
@@ -3294,26 +2513,18 @@ end)
 
 ### PreCharDelete
 
-**Description:**
+Description: Called before a character is removed. Return false to cancel deletion.
 
-Called before a character is removed. Return false to cancel deletion.
+Parameters:
 
-**Parameters:**
+- `id` (`number`): Character identifier.
 
-* `id` (`number`) – Character identifier.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when PreCharDelete is triggered
@@ -3328,29 +2539,20 @@ end)
 
 ### OnCharDelete
 
-**Description:**
+Description: Fired when a character is deleted. Provides the owning player if available.
 
-Fired when a character is deleted. Provides the owning player if available.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player who deleted.
 
-* `client` (`Player`) – Player who deleted.
+- `id` (`number`): Character identifier.
 
+Realm: Shared
 
-* `id` (`number`) – Character identifier.
+Returns:
+- None
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OnCharDelete is triggered
@@ -3363,32 +2565,22 @@ end)
 
 ### OnCharCreated
 
-**Description:**
+Description: Invoked after a new character is created. Supplies the character table and creation data.
 
-Invoked after a new character is created. Supplies the character table and creation data.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Owner player.
 
-* `client` (`Player`) – Owner player.
+- `character` (`table`): New character object.
 
+- `data` (`table`): Raw creation info.
 
-* `character` (`table`) – New character object.
+Realm: Shared
 
+Returns:
+- None
 
-* `data` (`table`) – Raw creation info.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OnCharCreated is triggered
@@ -3401,26 +2593,18 @@ end)
 
 ### OnTransferred
 
-**Description:**
+Description: Runs when a player transfers to another server. Useful for cleanup.
 
-Runs when a player transfers to another server. Useful for cleanup.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Transferring player.
 
-* `client` (`Player`) – Transferring player.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OnTransferred is triggered
@@ -3433,26 +2617,18 @@ end)
 
 ### CharPreSave
 
-**Description:**
+Description: Executed before a character is saved to disk. Allows writing custom data.
 
-Executed before a character is saved to disk. Allows writing custom data.
+Parameters:
 
-**Parameters:**
+- `character` (`Character`): Character being saved.
 
-* `character` (`Character`) – Character being saved.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CharPreSave is triggered
@@ -3465,26 +2641,18 @@ end)
 
 ### CharListLoaded
 
-**Description:**
+Description: Called when the character selection list finishes loading. Provides the loaded list table.
 
-Called when the character selection list finishes loading. Provides the loaded list table.
+Parameters:
 
-**Parameters:**
+- `newCharList` (`table`): Table of characters.
 
-* `newCharList` (`table`) – Table of characters.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CharListLoaded is triggered
@@ -3497,29 +2665,20 @@ end)
 
 ### CharListUpdated
 
-**Description:**
+Description: Fires when the character list is refreshed. Gives both old and new tables.
 
-Fires when the character list is refreshed. Gives both old and new tables.
+Parameters:
 
-**Parameters:**
+- `oldCharList` (`table`): Previous list.
 
-* `oldCharList` (`table`) – Previous list.
+- `newCharList` (`table`): Updated list.
 
+Realm: Client
 
-* `newCharList` (`table`) – Updated list.
+Returns:
+- None
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CharListUpdated is triggered
@@ -3532,26 +2691,18 @@ end)
 
 ### getCharMaxStamina
 
-**Description:**
+Description: Returns the maximum stamina for a character. Override to change stamina capacity.
 
-Returns the maximum stamina for a character. Override to change stamina capacity.
+Parameters:
 
-**Parameters:**
+- `character` (`Character`): Character queried.
 
-* `character` (`Character`) – Character queried.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when getCharMaxStamina is triggered
@@ -3560,34 +2711,24 @@ hook.Add("getCharMaxStamina", "Double", function(char)
 end)
 ```
 
-
 ---
 
 ### AdjustStaminaOffset
 
-**Description:**
+Description: Final hook for tweaking the calculated stamina offset. Return the modified offset value to apply each tick.
 
-Final hook for tweaking the calculated stamina offset. Return the modified offset value to apply each tick.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player whose stamina is updating.
 
-* `client` (`Player`) – Player whose stamina is updating.
+- `offset` (`number`): Current offset after other adjustments.
 
+Realm: Shared
 
-* `offset` (`number`) – Current offset after other adjustments.
+Returns:
+- number: New offset to apply.
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* number – New offset to apply.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when AdjustStaminaOffset is triggered
@@ -3600,29 +2741,20 @@ end)
 
 ### PostLoadFonts
 
-**Description:**
+Description: Runs after all font files have loaded. Allows registering additional fonts.
 
-Runs after all font files have loaded. Allows registering additional fonts.
+Parameters:
 
-**Parameters:**
+- `currentFont` (`string`): Name of the primary UI font.
 
-* `currentFont` (`string`) – Name of the primary UI font.
+- `genericFont` (`string`): Name of the generic fallback font.
 
+Realm: Shared
 
-* `genericFont` (`string`) – Name of the generic fallback font.
+Returns:
+- None
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when PostLoadFonts is triggered
@@ -3635,41 +2767,28 @@ end)
 
 ### AddBarField
 
-**Description:**
+Description: Called when the F1 menu builds status bars so new fields can be added.
 
-Called when the F1 menu builds status bars so new fields can be added.
+Parameters:
 
-**Parameters:**
+- `sectionName` (`string`): Section identifier.
 
-* `sectionName` (`string`) – Section identifier.
+- `fieldName` (`string`): Unique field name.
 
+- `labelText` (`string`): Display label for the bar.
 
-* `fieldName` (`string`) – Unique field name.
+- `minFunc` (`function`): Returns the minimum value.
 
+- `maxFunc` (`function`): Returns the maximum value.
 
-* `labelText` (`string`) – Display label for the bar.
+- `valueFunc` (`function`): Returns the current value.
 
+Realm: Client
 
-* `minFunc` (`function`) – Returns the minimum value.
+Returns:
+- None
 
-
-* `maxFunc` (`function`) – Returns the maximum value.
-
-
-* `valueFunc` (`function`) – Returns the current value.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Adds a custom thirst bar next to stamina.
@@ -3682,35 +2801,24 @@ end)
 
 ### AddSection
 
-**Description:**
+Description: Fired when building the F1 menu so modules can insert additional sections.
 
-Fired when building the F1 menu so modules can insert additional sections.
+Parameters:
 
-**Parameters:**
+- `sectionName` (`string`): Name of the section.
 
-* `sectionName` (`string`) – Name of the section.
+- `color` (`Color`): Display color.
 
+- `priority` (`number`): Sort order priority.
 
-* `color` (`Color`) – Display color.
+- `location` (`number`): Column/location index.
 
+Realm: Client
 
-* `priority` (`number`) – Sort order priority.
+Returns:
+- None
 
-
-* `location` (`number`) – Column/location index.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Add a custom "Settings" tab.
@@ -3726,35 +2834,24 @@ end)
 
 ### CanItemBeTransfered
 
-**Description:**
+Description: Determines whether an item may move between inventories.
 
-Determines whether an item may move between inventories.
+Parameters:
 
-**Parameters:**
+- `item` (`Item`): Item being transferred.
 
-* `item` (`Item`) – Item being transferred.
+- `oldInventory` (`Inventory`): Source inventory.
 
+- `newInventory` (`Inventory`): Destination inventory.
 
-* `oldInventory` (`Inventory`) – Source inventory.
+- `client` (`Player`): Owning player.
 
+Realm: Server
 
-* `newInventory` (`Inventory`) – Destination inventory.
+Returns:
+- boolean, string: False and reason to block
 
-
-* `client` (`Player`) – Owning player.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean, string – False and reason to block
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prevent quest items from being dropped.
@@ -3769,26 +2866,18 @@ end)
 
 ### CanOpenBagPanel
 
-**Description:**
+Description: Called right before a bag inventory UI opens. Return false to block opening.
 
-Called right before a bag inventory UI opens. Return false to block opening.
+Parameters:
 
-**Parameters:**
+- `item` (`Item`): Bag item being opened.
 
-* `item` (`Item`) – Bag item being opened.
+Realm: Client
 
+Returns:
+- boolean: False to block opening.
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* boolean – False to block opening.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Disallow bag use while fighting.
@@ -3803,26 +2892,18 @@ end)
 
 ### CanOutfitChangeModel
 
-**Description:**
+Description: Checks if an outfit is allowed to change the player model.
 
-Checks if an outfit is allowed to change the player model.
+Parameters:
 
-**Parameters:**
+- `item` (`Item`): Outfit item attempting to change the model.
 
-* `item` (`Item`) – Outfit item attempting to change the model.
+Realm: Shared
 
+Returns:
+- boolean: False to block the change.
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean – False to block the change.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Restrict model swaps for certain factions.
@@ -3837,29 +2918,20 @@ end)
 
 ### CanPerformVendorEdit
 
-**Description:**
+Description: Determines if a player can modify a vendor's settings.
 
-Determines if a player can modify a vendor's settings.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player attempting the edit.
 
-* `client` (`Player`) – Player attempting the edit.
+- `vendor` (`Entity`): Vendor entity targeted.
 
+Realm: Shared
 
-* `vendor` (`Entity`) – Vendor entity targeted.
+Returns:
+- boolean: False to disallow editing.
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean – False to disallow editing.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Allow only admins to edit vendors.
@@ -3872,29 +2944,20 @@ end)
 
 ### CanPickupMoney
 
-**Description:**
+Description: Called when a player attempts to pick up a money entity.
 
-Called when a player attempts to pick up a money entity.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player attempting to pick up the money.
 
-* `client` (`Player`) – Player attempting to pick up the money.
+- `moneyEntity` (`Entity`): The money entity.
 
+Realm: Shared
 
-* `moneyEntity` (`Entity`) – The money entity.
+Returns:
+- boolean: False to disallow pickup.
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean – False to disallow pickup.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prevent money pickup while handcuffed.
@@ -3909,32 +2972,22 @@ end)
 
 ### CanPlayerAccessDoor
 
-**Description:**
+Description: Determines if a player can open or lock a door entity.
 
-Determines if a player can open or lock a door entity.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player attempting access.
 
-* `client` (`Player`) – Player attempting access.
+- `door` (`Entity`): Door entity in question.
 
+- `access` (`number`): Desired access level.
 
-* `door` (`Entity`) – Door entity in question.
+Realm: Shared
 
+Returns:
+- boolean: False to deny access.
 
-* `access` (`number`) – Desired access level.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean – False to deny access.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Only police can unlock jail cells.
@@ -3949,29 +3002,20 @@ end)
 
 ### CanPlayerAccessVendor
 
-**Description:**
+Description: Checks if a player is permitted to open a vendor menu.
 
-Checks if a player is permitted to open a vendor menu.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player requesting access.
 
-* `client` (`Player`) – Player requesting access.
+- `vendor` (`Entity`): Vendor entity.
 
+Realm: Server
 
-* `vendor` (`Entity`) – Vendor entity.
+Returns:
+- boolean: False to deny access.
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – False to deny access.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Block access unless the vendor allows the player's faction.
@@ -3986,29 +3030,20 @@ end)
 
 ### CanPlayerHoldObject
 
-**Description:**
+Description: Determines if the player can pick up an entity with the hands swep.
 
-Determines if the player can pick up an entity with the hands swep.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player attempting to hold the entity.
 
-* `client` (`Player`) – Player attempting to hold the entity.
+- `entity` (`Entity`): Target entity.
 
+Realm: Shared
 
-* `entity` (`Entity`) – Target entity.
+Returns:
+- boolean: False to prevent holding.
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean – False to prevent holding.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prevent grabbing heavy physics objects.
@@ -4023,32 +3058,22 @@ end)
 
 ### CanPlayerInteractItem
 
-**Description:**
+Description: Called when a player tries to use or drop an item.
 
-Called when a player tries to use or drop an item.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player interacting with the item.
 
-* `client` (`Player`) – Player interacting with the item.
+- `action` (`string`): Action name such as "use" or "drop".
 
+- `item` (`Item`): Item being interacted with.
 
-* `action` (`string`) – Action name such as "use" or "drop".
+Realm: Shared
 
+Returns:
+- boolean: False to block the action.
 
-* `item` (`Item`) – Item being interacted with.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean – False to block the action.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Block medkit use inside safe zones.
@@ -4063,29 +3088,20 @@ end)
 
 ### CanPlayerKnock
 
-**Description:**
+Description: Called when a player attempts to knock on a door.
 
-Called when a player attempts to knock on a door.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player knocking.
 
-* `client` (`Player`) – Player knocking.
+- `door` (`Entity`): Door being knocked on.
 
+Realm: Shared
 
-* `door` (`Entity`) – Door being knocked on.
+Returns:
+- boolean: False to block knocking.
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean – False to block knocking.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prevent knocking while disguised.
@@ -4100,32 +3116,22 @@ end)
 
 ### CanPlayerSpawnStorage
 
-**Description:**
+Description: Checks if the player is allowed to spawn a storage container.
 
-Checks if the player is allowed to spawn a storage container.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player attempting to spawn.
 
-* `client` (`Player`) – Player attempting to spawn.
+- `entity` (`Entity`): Prop that will become storage.
 
+- `data` (`table`): Storage definition data.
 
-* `entity` (`Entity`) – Prop that will become storage.
+Realm: Server
 
+Returns:
+- boolean: False to deny spawning.
 
-* `data` (`table`) – Storage definition data.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – False to deny spawning.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Limit players to one storage crate.
@@ -4140,26 +3146,18 @@ end)
 
 ### CanPlayerThrowPunch
 
-**Description:**
+Description: Called when the fists weapon tries to punch.
 
-Called when the fists weapon tries to punch.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player performing the punch.
 
-* `client` (`Player`) – Player performing the punch.
+Realm: Shared
 
+Returns:
+- boolean: False to block punching.
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean – False to block punching.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prevent punching while restrained.
@@ -4174,35 +3172,24 @@ end)
 
 ### CanPlayerTradeWithVendor
 
-**Description:**
+Description: Checks whether a vendor trade is allowed.
 
-Checks whether a vendor trade is allowed.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player attempting the trade.
 
-* `client` (`Player`) – Player attempting the trade.
+- `vendor` (`Entity`): Vendor entity involved.
 
+- `itemType` (`string`): Item identifier.
 
-* `vendor` (`Entity`) – Vendor entity involved.
+- `selling` (`boolean`): True if the player is selling to the vendor.
 
+Realm: Server
 
-* `itemType` (`string`) – Item identifier.
+Returns:
+- boolean, string: False and reason to deny trade
 
-
-* `selling` (`boolean`) – True if the player is selling to the vendor.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean, string – False and reason to deny trade
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Block selling stolen goods.
@@ -4217,26 +3204,18 @@ end)
 
 ### CanPlayerViewInventory
 
-**Description:**
+Description: Called before any inventory menu is shown.
 
-Called before any inventory menu is shown.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- boolean: False to prevent opening
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* boolean – False to prevent opening
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prevent opening inventory while in a cutscene.
@@ -4249,29 +3228,20 @@ end)
 
 ### CanSaveData
 
-**Description:**
+Description: Called before persistent storage saves.
 
-Called before persistent storage saves.
+Parameters:
 
-**Parameters:**
+- `entity` (`Entity`): Storage entity being saved.
 
-* `entity` (`Entity`) – Storage entity being saved.
+- `inventory` (`Inventory`): Inventory associated with the entity.
 
+Realm: Server
 
-* `inventory` (`Inventory`) – Inventory associated with the entity.
+Returns:
+- boolean: False to cancel saving
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – False to cancel saving
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Disable saving during special events.
@@ -4286,29 +3256,20 @@ end)
 
 ### CharHasFlags
 
-**Description:**
+Description: Allows custom checks for a character's permission flags.
 
-Allows custom checks for a character's permission flags.
+Parameters:
 
-**Parameters:**
+- `character` (`Character`): Character to check.
 
-* `character` (`Character`) – Character to check.
+- `flags` (`string`): Flags being queried.
 
+Realm: Shared
 
-* `flags` (`string`) – Flags being queried.
+Returns:
+- None
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Grant extra access for characters owned by admins.
@@ -4324,26 +3285,18 @@ end)
 
 ### CharPostSave
 
-**Description:**
+Description: Runs after a character's data has been saved to the database.
 
-Runs after a character's data has been saved to the database.
+Parameters:
 
-**Parameters:**
+- `character` (`Character`): Character that finished saving.
 
-* `character` (`Character`) – Character that finished saving.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Log every time characters save data.
@@ -4356,26 +3309,18 @@ end)
 
 ### DatabaseConnected
 
-**Description:**
+Description: Fired after the database has been successfully connected.
 
-Fired after the database has been successfully connected.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prepare custom tables once the DB connects.
@@ -4388,38 +3333,26 @@ end)
 
 ### DrawItemDescription
 
-**Description:**
+Description: Called when an item entity draws its description text.
 
-Called when an item entity draws its description text.
+Parameters:
 
-**Parameters:**
+- `entity` (`Entity`): Item entity being drawn.
 
-* `entity` (`Entity`) – Item entity being drawn.
+- `x` (`number`): X screen position.
 
+- `y` (`number`): Y screen position.
 
-* `x` (`number`) – X screen position.
+- `color` (`Color`): Text color.
 
+- `alpha` (`number`): Current alpha value.
 
-* `y` (`number`) – Y screen position.
+Realm: Client
 
+Returns:
+- None
 
-* `color` (`Color`) – Text color.
-
-
-* `alpha` (`number`) – Current alpha value.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Display remaining uses next to item name.
@@ -4432,26 +3365,18 @@ end)
 
 ### GetDefaultInventorySize
 
-**Description:**
+Description: Returns the default width and height for new inventories.
 
-Returns the default width and height for new inventories.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player the inventory belongs to.
 
-* `client` (`Player`) – Player the inventory belongs to.
+Realm: Server
 
+Returns:
+- number, number: Width and height
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* number, number – Width and height
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Expand default bags for admins.
@@ -4466,26 +3391,18 @@ end)
 
 ### GetMoneyModel
 
-**Description:**
+Description: Allows overriding the entity model used for dropped money.
 
-Allows overriding the entity model used for dropped money.
+Parameters:
 
-**Parameters:**
+- `amount` (`number`): Money amount being dropped.
 
-* `amount` (`number`) – Money amount being dropped.
+Realm: Shared
 
+Returns:
+- string: Model path to use
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* string – Model path to use
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Use a golden model for large sums.
@@ -4500,32 +3417,22 @@ end)
 
 ### GetPlayerPunchDamage
 
-**Description:**
+Description: Lets addons modify how much damage the fists weapon deals.
 
-Lets addons modify how much damage the fists weapon deals.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Punching player.
 
-* `client` (`Player`) – Punching player.
+- `damage` (`number`): Base damage value.
 
+- `context` (`table`): Additional context table.
 
-* `damage` (`number`) – Base damage value.
+Realm: Shared
 
+Returns:
+- None
 
-* `context` (`table`) – Additional context table.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Scale punch damage by strength attribute.
@@ -4538,32 +3445,22 @@ end)
 
 ### InterceptClickItemIcon
 
-**Description:**
+Description: Allows overriding default clicks on inventory icons.
 
-Allows overriding default clicks on inventory icons.
+Parameters:
 
-**Parameters:**
+- `self` (`Panel`): Inventory panel.
 
-* `self` (`Panel`) – Inventory panel.
+- `itemIcon` (`Panel`): Icon that was clicked.
 
+- `keyCode` (`number`): Key that was pressed.
 
-* `itemIcon` (`Panel`) – Icon that was clicked.
+Realm: Client
 
+Returns:
+- None
 
-* `keyCode` (`number`) – Key that was pressed.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Shift-click to quickly move items.
@@ -4578,32 +3475,22 @@ end)
 
 ### ItemCombine
 
-**Description:**
+Description: Called when the system attempts to combine one item with another in an inventory.
 
-Called when the system attempts to combine one item with another in an inventory.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Owning player.
 
-* `client` (`Player`) – Owning player.
+- `item` (`Item`): Item being combined.
 
+- `targetItem` (`Item`): Item it is being combined with.
 
-* `item` (`Item`) – Item being combined.
+Realm: Server
 
+Returns:
+- boolean: true if combination succeeds and items are consumed, false otherwise.
 
-* `targetItem` (`Item`) – Item it is being combined with.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – true if combination succeeds and items are consumed, false otherwise.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Combine two ammo boxes into one stack.
@@ -4620,29 +3507,20 @@ end)
 
 ### ItemDraggedOutOfInventory
 
-**Description:**
+Description: Called when an item icon is dragged completely out of an inventory.
 
-Called when an item icon is dragged completely out of an inventory.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player dragging the item.
 
-* `client` (`Player`) – Player dragging the item.
+- `item` (`Item`): Item being removed.
 
+Realm: Server
 
-* `item` (`Item`) – Item being removed.
+Returns:
+- None
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Drop the item into the world when removed.
@@ -4655,38 +3533,26 @@ end)
 
 ### ItemFunctionCalled
 
-**Description:**
+Description: Triggered whenever an item function is executed by a player.
 
-Triggered whenever an item function is executed by a player.
+Parameters:
 
-**Parameters:**
+- `item` (`Item`): Item on which the function ran.
 
-* `item` (`Item`) – Item on which the function ran.
+- `action` (`string`): Action identifier.
 
+- `client` (`Player`): Player performing the action.
 
-* `action` (`string`) – Action identifier.
+- `entity` (`Entity|nil`): Target entity if any.
 
+- `result` (`any`): Result returned by the item function.
 
-* `client` (`Player`) – Player performing the action.
+Realm: Shared
 
+Returns:
+- None
 
-* `entity` (`Entity|nil`) – Target entity if any.
-
-
-* `result` (`any`) – Result returned by the item function.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Log item function usage for analytics.
@@ -4699,26 +3565,18 @@ end)
 
 ### ItemTransfered
 
-**Description:**
+Description: Called when an item has successfully moved between inventories. The context table provides the player, item and both inventories involved.
 
-Called when an item has successfully moved between inventories. The context table provides the player, item and both inventories involved.
+Parameters:
 
-**Parameters:**
+- `context` (`table`): Transfer context table containing client, item, from and to inventories.
 
-* `context` (`table`) – Transfer context table containing client, item, from and to inventories.
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Notify the player about the transfer result.
@@ -4731,32 +3589,22 @@ end)
 
 ### OnCharFallover
 
-**Description:**
+Description: Called when a character ragdolls or is forced to fall over.
 
-Called when a character ragdolls or is forced to fall over.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player being ragdolled.
 
-* `client` (`Player`) – Player being ragdolled.
+- `ragdoll` (`Entity|nil`): Created ragdoll entity if any.
 
+- `forced` (`boolean`): True when the ragdoll was forced.
 
-* `ragdoll` (`Entity|nil`) – Created ragdoll entity if any.
+Realm: Server
 
+Returns:
+- None
 
-* `forced` (`boolean`) – True when the ragdoll was forced.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Apply a stun effect when knocked down.
@@ -4771,29 +3619,20 @@ end)
 
 ### OnCharKick
 
-**Description:**
+Description: Called when a character is kicked from the server.
 
-Called when a character is kicked from the server.
+Parameters:
 
-**Parameters:**
+- `character` (`Character`): Character that was kicked.
 
-* `character` (`Character`) – Character that was kicked.
+- `client` (`Player`): Player owning the character.
 
+Realm: Shared
 
-* `client` (`Player`) – Player owning the character.
+Returns:
+- None
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Record the kick reason.
@@ -4806,29 +3645,20 @@ end)
 
 ### OnCharPermakilled
 
-**Description:**
+Description: Called when a character is permanently killed.
 
-Called when a character is permanently killed.
+Parameters:
 
-**Parameters:**
+- `character` (`Character`): Character being permanently killed.
 
-* `character` (`Character`) – Character being permanently killed.
+- `time` (`number|nil`): Ban duration or nil for permanent.
 
+Realm: Shared
 
-* `time` (`number|nil`) – Ban duration or nil for permanent.
+Returns:
+- None
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Announce permadeath in chat.
@@ -4841,26 +3671,18 @@ end)
 
 ### OnCharRecognized
 
-**Description:**
+Description: Called clientside when your character recognizes another.
 
-Called clientside when your character recognizes another.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player that initiated recognition.
 
-* `client` (`Player`) – Player that initiated recognition.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Play a sound whenever someone becomes recognized.
@@ -4873,44 +3695,30 @@ end)
 
 ### OnCharTradeVendor
 
-**Description:**
+Description: Called after a character buys from or sells to a vendor.
 
-Called after a character buys from or sells to a vendor.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player completing the trade.
 
-* `client` (`Player`) – Player completing the trade.
+- `vendor` (`Entity`): Vendor entity involved.
 
+- `item` (`Item|nil`): Item traded, if any.
 
-* `vendor` (`Entity`) – Vendor entity involved.
+- `selling` (`boolean`): True if selling to the vendor.
 
+- `character` (`Character`): Player's character.
 
-* `item` (`Item|nil`) – Item traded, if any.
+- `itemType` (`string|nil`): Item identifier when item is nil.
 
+- `failed` (`boolean|nil`): True if the trade failed.
 
-* `selling` (`boolean`) – True if selling to the vendor.
+Realm: Server
 
+Returns:
+- None
 
-* `character` (`Character`) – Player's character.
-
-
-* `itemType` (`string|nil`) – Item identifier when item is nil.
-
-
-* `failed` (`boolean|nil`) – True if the trade failed.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Log vendor transactions to the console.
@@ -4923,32 +3731,22 @@ end)
 
 ### OnCreatePlayerRagdoll
 
-**Description:**
+Description: Called when a ragdoll entity is created for a player.
 
-Called when a ragdoll entity is created for a player.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): The player the ragdoll belongs to.
 
-* `client` (`Player`) – The player the ragdoll belongs to.
+- `entity` (`Entity`): The ragdoll entity.
 
+- `dead` (`boolean`): True if the player died.
 
-* `entity` (`Entity`) – The ragdoll entity.
+Realm: Shared
 
+Returns:
+- None
 
-* `dead` (`boolean`) – True if the player died.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Tint death ragdolls red.
@@ -4963,32 +3761,22 @@ end)
 
 ### OnCreateStoragePanel
 
-**Description:**
+Description: Called when both the player's inventory and storage panels are created.
 
-Called when both the player's inventory and storage panels are created.
+Parameters:
 
-**Parameters:**
+- `localPanel` (`Panel`): The player's inventory panel.
 
-* `localPanel` (`Panel`) – The player's inventory panel.
+- `storagePanel` (`Panel`): The storage entity's panel.
 
+- `storage` (`Entity`): The storage entity.
 
-* `storagePanel` (`Panel`) – The storage entity's panel.
+Realm: Client
 
+Returns:
+- None
 
-* `storage` (`Entity`) – The storage entity.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Add a custom tab to storage windows.
@@ -5003,29 +3791,20 @@ end)
 
 ### OnItemAdded
 
-**Description:**
+Description: Called when a new item instance is placed into an inventory.
 
-Called when a new item instance is placed into an inventory.
+Parameters:
 
-**Parameters:**
+- `client` (`Player|nil`): Owner of the inventory the item was added to.
 
-* `client` (`Player|nil`) – Owner of the inventory the item was added to.
+- `item` (`Item`): Item that was inserted.
 
+Realm: Shared
 
-* `item` (`Item`) – Item that was inserted.
+Returns:
+- None
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Play a sound when ammo is picked up.
@@ -5040,29 +3819,20 @@ end)
 
 ### OnItemCreated
 
-**Description:**
+Description: Called when a new item instance table is initialized.
 
-Called when a new item instance table is initialized.
+Parameters:
 
-**Parameters:**
+- `itemTable` (`table`): Item definition table.
 
-* `itemTable` (`table`) – Item definition table.
+- `entity` (`Entity`): Spawned item entity.
 
+Realm: Shared
 
-* `entity` (`Entity`) – Spawned item entity.
+Returns:
+- None
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Set custom data on freshly made items.
@@ -5075,26 +3845,18 @@ end)
 
 ### OnItemSpawned
 
-**Description:**
+Description: Called when an item entity has been spawned in the world.
 
-Called when an item entity has been spawned in the world.
+Parameters:
 
-**Parameters:**
+- `entity` (`Entity`): Spawned item entity.
 
-* `entity` (`Entity`) – Spawned item entity.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Play a sound when rare items appear.
@@ -5109,29 +3871,20 @@ end)
 
 ### OnOpenVendorMenu
 
-**Description:**
+Description: Called when the vendor dialog panel is opened.
 
-Called when the vendor dialog panel is opened.
+Parameters:
 
-**Parameters:**
+- `panel` (`Panel`): The vendor menu panel.
 
-* `panel` (`Panel`) – The vendor menu panel.
+- `vendor` (`Entity`): The vendor entity.
 
+Realm: Client
 
-* `vendor` (`Entity`) – The vendor entity.
+Returns:
+- None
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Automatically switch to the buy tab.
@@ -5144,29 +3897,20 @@ end)
 
 ### OnPickupMoney
 
-**Description:**
+Description: Called after a player picks up a money entity.
 
-Called after a player picks up a money entity.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): The player picking up the money.
 
-* `client` (`Player`) – The player picking up the money.
+- `moneyEntity` (`Entity`): The money entity collected.
 
+Realm: Shared
 
-* `moneyEntity` (`Entity`) – The money entity collected.
+Returns:
+- None
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Reward an achievement for looting money.
@@ -5179,38 +3923,26 @@ end)
 
 ### OnPlayerEnterSequence
 
-**Description:**
+Description: Fired when a scripted animation sequence begins.
 
-Fired when a scripted animation sequence begins.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player starting the sequence.
 
-* `client` (`Player`) – Player starting the sequence.
+- `sequence` (`string`): Sequence name.
 
+- `callback` (`function`): Completion callback.
 
-* `sequence` (`string`) – Sequence name.
+- `time` (`number`): Duration in seconds.
 
+- `noFreeze` (`boolean`): True if the player should not be frozen.
 
-* `callback` (`function`) – Completion callback.
+Realm: Shared
 
+Returns:
+- None
 
-* `time` (`number`) – Duration in seconds.
-
-
-* `noFreeze` (`boolean`) – True if the player should not be frozen.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Freeze the player during the sequence.
@@ -5225,38 +3957,26 @@ end)
 
 ### OnPlayerInteractItem
 
-**Description:**
+Description: Runs after a player has interacted with an item.
 
-Runs after a player has interacted with an item.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player performing the interaction.
 
-* `client` (`Player`) – Player performing the interaction.
+- `action` (`string`): Action key used.
 
+- `item` (`Item`): Item affected.
 
-* `action` (`string`) – Action key used.
+- `result` (`any`): Result returned by the action.
 
+- `data` (`table|nil`): Additional data table.
 
-* `item` (`Item`) – Item affected.
+Realm: Shared
 
+Returns:
+- None
 
-* `result` (`any`) – Result returned by the action.
-
-
-* `data` (`table|nil`) – Additional data table.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Send analytics for item usage.
@@ -5269,32 +3989,22 @@ end)
 
 ### OnPlayerJoinClass
 
-**Description:**
+Description: Called when a player changes to a new class.
 
-Called when a player changes to a new class.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): The player switching classes.
 
-* `client` (`Player`) – The player switching classes.
+- `class` (`table|number`): New class table or index.
 
+- `oldClass` (`table|number`): Previous class table or index.
 
-* `class` (`table|number`) – New class table or index.
+Realm: Shared
 
+Returns:
+- None
 
-* `oldClass` (`table|number`) – Previous class table or index.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Give class specific weapons.
@@ -5309,26 +4019,18 @@ end)
 
 ### OnPlayerLeaveSequence
 
-**Description:**
+Description: Fired when a scripted animation sequence ends for a player.
 
-Fired when a scripted animation sequence ends for a player.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player that finished the sequence.
 
-* `client` (`Player`) – Player that finished the sequence.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Unfreeze the player after the sequence.
@@ -5341,26 +4043,18 @@ end)
 
 ### OnPlayerLostStackItem
 
-**Description:**
+Description: Called if a stackable item is removed unexpectedly.
 
-Called if a stackable item is removed unexpectedly.
+Parameters:
 
-**Parameters:**
+- `item` (`Item`): The item that disappeared.
 
-* `item` (`Item`) – The item that disappeared.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Warn players when their ammo stack disappears.
@@ -5375,32 +4069,22 @@ end)
 
 ### OnPlayerSwitchClass
 
-**Description:**
+Description: Occurs right before a player's class changes.
 
-Occurs right before a player's class changes.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player who is switching.
 
-* `client` (`Player`) – Player who is switching.
+- `class` (`table|number`): Class being joined.
 
+- `oldClass` (`table|number`): Class being left.
 
-* `class` (`table|number`) – Class being joined.
+Realm: Shared
 
+Returns:
+- None
 
-* `oldClass` (`table|number`) – Class being left.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prevent switching while in combat.
@@ -5415,38 +4099,26 @@ end)
 
 ### OnRequestItemTransfer
 
-**Description:**
+Description: Called when the UI asks to move an item between inventories.
 
-Called when the UI asks to move an item between inventories.
+Parameters:
 
-**Parameters:**
+- `panel` (`Panel`): Inventory panel requesting the move.
 
-* `panel` (`Panel`) – Inventory panel requesting the move.
+- `itemID` (`number`): Identifier of the item to move.
 
+- `inventoryID` (`number|string`): Destination inventory ID.
 
-* `itemID` (`number`) – Identifier of the item to move.
+- `x` (`number`): Destination X coordinate.
 
+- `y` (`number`): Destination Y coordinate.
 
-* `inventoryID` (`number|string`) – Destination inventory ID.
+Realm: Client
 
+Returns:
+- None
 
-* `x` (`number`) – Destination X coordinate.
-
-
-* `y` (`number`) – Destination Y coordinate.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Validate transfers before sending to the server.
@@ -5459,26 +4131,18 @@ end)
 
 ### PersistenceLoad
 
-**Description:**
+Description: Called when map persistence data is loaded.
 
-Called when map persistence data is loaded.
+Parameters:
 
-**Parameters:**
+- `name` (`string`): Name of the persistence file.
 
-* `name` (`string`) – Name of the persistence file.
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Verify entities when the map reloads.
@@ -5491,29 +4155,20 @@ end)
 
 ### PlayerAccessVendor
 
-**Description:**
+Description: Occurs when a player successfully opens a vendor.
 
-Occurs when a player successfully opens a vendor.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player accessing the vendor.
 
-* `client` (`Player`) – Player accessing the vendor.
+- `vendor` (`Entity`): Vendor entity opened.
 
+Realm: Shared
 
-* `vendor` (`Entity`) – Vendor entity opened.
+Returns:
+- None
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Track how often players browse vendors.
@@ -5526,26 +4181,18 @@ end)
 
 ### PlayerStaminaGained
 
-**Description:**
+Description: Called when a player regenerates stamina points.
 
-Called when a player regenerates stamina points.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player gaining stamina.
 
-* `client` (`Player`) – Player gaining stamina.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Print the player's stamina amount whenever it increases.
@@ -5560,26 +4207,18 @@ end)
 
 ### PlayerStaminaLost
 
-**Description:**
+Description: Called when a player's stamina decreases.
 
-Called when a player's stamina decreases.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player losing stamina.
 
-* `client` (`Player`) – Player losing stamina.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Play a sound when the player runs out of stamina.
@@ -5594,29 +4233,20 @@ end)
 
 ### PlayerThrowPunch
 
-**Description:**
+Description: Fires when a player lands a punch with the fists weapon.
 
-Fires when a player lands a punch with the fists weapon.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Punching player.
 
-* `client` (`Player`) – Punching player.
+- `trace` (`table`): Trace result of the punch.
 
+Realm: Shared
 
-* `trace` (`table`) – Trace result of the punch.
+Returns:
+- None
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Play a custom sound on punch.
@@ -5629,29 +4259,20 @@ end)
 
 ### PostDrawInventory
 
-**Description:**
+Description: Called each frame after the inventory panel draws.
 
-Called each frame after the inventory panel draws.
+Parameters:
 
-**Parameters:**
+- `panel` (`Panel`): The inventory panel being drawn.
 
-* `panel` (`Panel`) – The inventory panel being drawn.
+- `parentPanel` (`Panel|nil`): Parent panel if any.
 
+Realm: Client
 
-* `parentPanel` (`Panel|nil`) – Parent panel if any.
+Returns:
+- None
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Draw a watermark over the inventory.
@@ -5664,32 +4285,22 @@ end)
 
 ### PrePlayerInteractItem
 
-**Description:**
+Description: Called just before a player interacts with an item.
 
-Called just before a player interacts with an item.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player performing the action.
 
-* `client` (`Player`) – Player performing the action.
+- `action` (`string`): Action identifier.
 
+- `item` (`Item`): Target item.
 
-* `action` (`string`) – Action identifier.
+Realm: Shared
 
+Returns:
+- None
 
-* `item` (`Item`) – Target item.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Deny using keys on locked chests.
@@ -5704,26 +4315,18 @@ end)
 
 ### SetupBagInventoryAccessRules
 
-**Description:**
+Description: Allows modules to define who can access a bag inventory.
 
-Allows modules to define who can access a bag inventory.
+Parameters:
 
-**Parameters:**
+- `inventory` (`Inventory`): Bag inventory object.
 
-* `inventory` (`Inventory`) – Bag inventory object.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Only the bag owner may open it.
@@ -5736,26 +4339,18 @@ end)
 
 ### SetupDatabase
 
-**Description:**
+Description: Runs before the gamemode initializes its database connection.
 
-Runs before the gamemode initializes its database connection.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Register additional tables.
@@ -5768,32 +4363,22 @@ end)
 
 ### StorageCanTransferItem
 
-**Description:**
+Description: Determines if an item can move in or out of a storage entity.
 
-Determines if an item can move in or out of a storage entity.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player moving the item.
 
-* `client` (`Player`) – Player moving the item.
+- `storage` (`Entity`): Storage entity.
 
+- `item` (`Item`): Item being transferred.
 
-* `storage` (`Entity`) – Storage entity.
+Realm: Server
 
+Returns:
+- boolean: False to disallow transfer
 
-* `item` (`Item`) – Item being transferred.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean – False to disallow transfer
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prevent weapons from being stored in car trunks.
@@ -5808,29 +4393,20 @@ end)
 
 ### StorageEntityRemoved
 
-**Description:**
+Description: Fired when a storage entity is removed from the world.
 
-Fired when a storage entity is removed from the world.
+Parameters:
 
-**Parameters:**
+- `entity` (`Entity`): The storage entity being removed.
 
-* `entity` (`Entity`) – The storage entity being removed.
+- `inventory` (`Inventory`): Inventory associated with the entity.
 
+Realm: Shared
 
-* `inventory` (`Inventory`) – Inventory associated with the entity.
+Returns:
+- None
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Drop items when a crate is destroyed.
@@ -5843,32 +4419,22 @@ end)
 
 ### StorageInventorySet
 
-**Description:**
+Description: Called when a storage entity is assigned an inventory.
 
-Called when a storage entity is assigned an inventory.
+Parameters:
 
-**Parameters:**
+- `entity` (`Entity`): The storage entity.
 
-* `entity` (`Entity`) – The storage entity.
+- `inventory` (`Inventory`): Inventory assigned.
 
+- `isCar` (`boolean`): True if the entity is a vehicle trunk.
 
-* `inventory` (`Inventory`) – Inventory assigned.
+Realm: Shared
 
+Returns:
+- None
 
-* `isCar` (`boolean`) – True if the entity is a vehicle trunk.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Send a notification when storage is initialized.
@@ -5883,29 +4449,20 @@ end)
 
 ### StorageOpen
 
-**Description:**
+Description: Called clientside when a storage menu is opened.
 
-Called clientside when a storage menu is opened.
+Parameters:
 
-**Parameters:**
+- `entity` (`Entity`): Storage entity opened.
 
-* `entity` (`Entity`) – Storage entity opened.
+- `isCar` (`boolean`): True if opening a vehicle trunk.
 
+Realm: Client
 
-* `isCar` (`boolean`) – True if opening a vehicle trunk.
+Returns:
+- None
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Display storage name in the chat.
@@ -5918,29 +4475,20 @@ end)
 
 ### StorageRestored
 
-**Description:**
+Description: Called when a storage's contents are loaded from disk.
 
-Called when a storage's contents are loaded from disk.
+Parameters:
 
-**Parameters:**
+- `storage` (`Entity`): Storage entity.
 
-* `storage` (`Entity`) – Storage entity.
+- `inventory` (`Inventory`): Inventory loaded.
 
+Realm: Server
 
-* `inventory` (`Inventory`) – Inventory loaded.
+Returns:
+- None
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Log how many items were restored.
@@ -5953,26 +4501,18 @@ end)
 
 ### StorageUnlockPrompt
 
-**Description:**
+Description: Called clientside when you must enter a storage password.
 
-Called clientside when you must enter a storage password.
+Parameters:
 
-**Parameters:**
+- `entity` (`Entity`): Storage entity being opened.
 
-* `entity` (`Entity`) – Storage entity being opened.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Auto-fill a remembered password.
@@ -5985,26 +4525,18 @@ end)
 
 ### VendorClassUpdated
 
-**Description:**
+Description: Called when a vendor's allowed classes are updated.
 
-Called when a vendor's allowed classes are updated.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- React to class access changes.
@@ -6017,26 +4549,18 @@ end)
 
 ### VendorEdited
 
-**Description:**
+Description: Called after a delay when a vendor's data is edited.
 
-Called after a delay when a vendor's data is edited.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Log which key changed.
@@ -6049,26 +4573,18 @@ end)
 
 ### VendorExited
 
-**Description:**
+Description: Called when a player exits from interacting with a vendor.
 
-Called when a player exits from interacting with a vendor.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Notify the player when they leave a vendor.
@@ -6081,26 +4597,18 @@ end)
 
 ### VendorFactionUpdated
 
-**Description:**
+Description: Called when a vendor's allowed factions are updated.
 
-Called when a vendor's allowed factions are updated.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Print updated faction permissions.
@@ -6113,26 +4621,18 @@ end)
 
 ### VendorItemMaxStockUpdated
 
-**Description:**
+Description: Called when a vendor's item max stock value changes.
 
-Called when a vendor's item max stock value changes.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Log stock limit changes.
@@ -6145,26 +4645,18 @@ end)
 
 ### VendorItemModeUpdated
 
-**Description:**
+Description: Called when a vendor's item mode is changed.
 
-Called when a vendor's item mode is changed.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Print the new mode value.
@@ -6177,26 +4669,18 @@ end)
 
 ### VendorItemPriceUpdated
 
-**Description:**
+Description: Called when a vendor's item price is changed.
 
-Called when a vendor's item price is changed.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Print the new item price.
@@ -6209,26 +4693,18 @@ end)
 
 ### VendorItemStockUpdated
 
-**Description:**
+Description: Called when a vendor's item stock value changes.
 
-Called when a vendor's item stock value changes.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Log remaining stock for the item.
@@ -6241,26 +4717,18 @@ end)
 
 ### VendorMoneyUpdated
 
-**Description:**
+Description: Called when a vendor's available money changes.
 
-Called when a vendor's available money changes.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Print the vendor's new money amount.
@@ -6273,26 +4741,18 @@ end)
 
 ### VendorOpened
 
-**Description:**
+Description: Called when a vendor menu is opened on the client.
 
-Called when a vendor menu is opened on the client.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Print which vendor was opened.
@@ -6305,26 +4765,18 @@ end)
 
 ### VendorSynchronized
 
-**Description:**
+Description: Called when vendor synchronization data is received.
 
-Called when vendor synchronization data is received.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Print a message when vendor data syncs.
@@ -6337,26 +4789,18 @@ end)
 
 ### VendorTradeEvent
 
-**Description:**
+Description: Called when a player attempts to trade with a vendor.
 
-Called when a player attempts to trade with a vendor.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Log all vendor trades to the console.
@@ -6370,26 +4814,18 @@ end)
 
 ### getItemDropModel
 
-**Description:**
+Description: Returns an alternate model path for a dropped item.
 
-Returns an alternate model path for a dropped item.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Server
 
+Returns:
+- string|nil: Alternate model path or nil for default.
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* string|nil – Alternate model path or nil for default.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Replace drop model for weapons.
@@ -6404,26 +4840,18 @@ end)
 
 ### getPriceOverride
 
-**Description:**
+Description: Allows modules to override a vendor item's price dynamically.
 
-Allows modules to override a vendor item's price dynamically.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Shared
 
+Returns:
+- integer|nil: New price or nil for default.
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* integer|nil – New price or nil for default.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Increase price for rare items when buying from the vendor.
@@ -6442,26 +4870,18 @@ end)
 
 ### isCharFakeRecognized
 
-**Description:**
+Description: Checks if a character is fake recognized rather than truly known.
 
-Checks if a character is fake recognized rather than truly known.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Shared
 
+Returns:
+- boolean
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Flag suspicious characters as fake.
@@ -6476,28 +4896,20 @@ end)
 
 ### isCharRecognized
 
-**Description:**
+Description: Determines whether one character recognizes another.
 
-Determines whether one character recognizes another.
+Parameters:
 
-**Parameters:**
+- `character` (`Character`): Character performing the check.
 
-* `character` (`Character`) – Character performing the check.
+- `id` (`number`): Identifier of the other character.
 
-* `id` (`number`) – Identifier of the other character.
+Realm: Shared
 
+Returns:
+- boolean
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Only recognize characters from the same faction.
@@ -6510,26 +4922,18 @@ end)
 
 ### isRecognizedChatType
 
-**Description:**
+Description: Determines if a chat type counts toward recognition.
 
-Determines if a chat type counts toward recognition.
+Parameters:
 
-**Parameters:**
+- `chatType` (`string`): The chat command being checked.
 
-* `chatType` (`string`) – The chat command being checked.
+Realm: Shared
 
+Returns:
+- boolean
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Mark admin chat as recognized to reveal player names.
@@ -6543,26 +4947,18 @@ end)
 
 ### isSuitableForTrunk
 
-**Description:**
+Description: Determines whether an entity can be used as trunk storage.
 
-Determines whether an entity can be used as trunk storage.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Shared
 
+Returns:
+- boolean
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Only vehicles are valid trunk containers.
@@ -6575,32 +4971,22 @@ end)
 
 ### CanPlayerEarnSalary
 
-**Description:**
+Description: Determines if a player is allowed to earn salary.
 
-Determines if a player is allowed to earn salary.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player to check.
 
-* `client` (`Player`) – Player to check.
+- `faction` (`table`): Faction data for the player.
 
+- `class` (`table`): Class table for the player.
 
-* `faction` (`table`) – Faction data for the player.
+Realm: Shared
 
+Returns:
+- boolean
 
-* `class` (`table`) – Class table for the player.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CanPlayerEarnSalary is triggered
@@ -6616,32 +5002,22 @@ end)
 
 ### CanPlayerJoinClass
 
-**Description:**
+Description: Determines whether a player can join a certain class. Return `false` to block.
 
-Determines whether a player can join a certain class. Return `false` to block.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player requesting the class.
 
-* `client` (`Player`) – Player requesting the class.
+- `class` (`number`): Class index being joined.
 
+- `info` (`table`): Additional class info table.
 
-* `class` (`number`) – Class index being joined.
+Realm: Shared
 
+Returns:
+- boolean|nil: false to block, nil to allow.
 
-* `info` (`table`) – Additional class info table.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean|nil: false to block, nil to allow.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CanPlayerJoinClass is triggered
@@ -6656,35 +5032,26 @@ end)
 
 ### CanPlayerUseCommand
 
-**Description:**
-
-Determines if a player can use a specific command. Returning either
+Description: Determines if a player can use a specific command. Returning either
 
 `true` or `false` overrides the normal permission logic; returning
 
 `nil` falls back to the default checks.
 
-**Parameters:**
+Parameters:
 
-* `client` (`Player`) – Player running the command.
+- `client` (`Player`): Player running the command.
 
+- `command` (`string`): Command name.
 
-* `command` (`string`) – Command name.
+Realm: Shared
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean|nil: non-nil values override the result; return `nil` to
+Returns:
+- boolean|nil: non-nil values override the result; return `nil` to
 
   allow built‑in checks to decide.
 
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CanPlayerUseCommand is triggered
@@ -6700,32 +5067,22 @@ end)
 
 ### CanPlayerUseDoor
 
-**Description:**
+Description: Determines if a player is allowed to use a door entity, such as opening, locking, or unlocking. Return `false` to prevent the action.
 
-Determines if a player is allowed to use a door entity, such as opening, locking, or unlocking. Return `false` to prevent the action.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): The player attempting to use the door.
 
-* `client` (`Player`) – The player attempting to use the door.
+- `door` (`Entity`): The door entity being used.
 
+- `access` (`int`): Access type attempted (e.g. DOOR_LOCK).
 
-* `door` (`Entity`) – The door entity being used.
+Realm: Server
 
+Returns:
+- boolean: false to block, nil or true to allow.
 
-* `access` (`int`) – Access type attempted (e.g. DOOR_LOCK).
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean: false to block, nil or true to allow.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CanPlayerUseDoor is triggered
@@ -6741,26 +5098,18 @@ end)
 
 ### CharCleanUp
 
-**Description:**
+Description: Used during character cleanup routines for additional steps when removing or transitioning a character.
 
-Used during character cleanup routines for additional steps when removing or transitioning a character.
+Parameters:
 
-**Parameters:**
+- `character` (`Character`): The character being cleaned up.
 
-* `character` (`Character`) – The character being cleaned up.
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CharCleanUp is triggered
@@ -6779,26 +5128,18 @@ end)
 
 ### CharRestored
 
-**Description:**
+Description: Called after a character has been restored from the database. Useful for post-restoration logic such as awarding default items or setting up data.
 
-Called after a character has been restored from the database. Useful for post-restoration logic such as awarding default items or setting up data.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CharRestored is triggered
@@ -6815,26 +5156,18 @@ end)
 
 ### CreateDefaultInventory
 
-**Description:**
+Description: Called when creating a default inventory for a character. Should return a [deferred](https://github.com/Be1zebub/luassert-deferred) (or similar promise) object that resolves with the new inventory.
 
-Called when creating a default inventory for a character. Should return a [deferred](https://github.com/Be1zebub/luassert-deferred) (or similar promise) object that resolves with the new inventory.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CreateDefaultInventory is triggered
@@ -6857,29 +5190,20 @@ end)
 
 ### CreateInventoryPanel
 
-**Description:**
+Description: Client-side call when creating the graphical representation of an inventory.
 
-Client-side call when creating the graphical representation of an inventory.
+Parameters:
 
-**Parameters:**
+- `inventory` (`Inventory`): Inventory instance to draw.
 
-* `inventory` (`Inventory`) – Inventory instance to draw.
+- `parent` (`Panel`): Parent container panel.
 
+Realm: Client
 
-* `parent` (`Panel`) – Parent container panel.
+Returns:
+- None
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CreateInventoryPanel is triggered
@@ -6908,26 +5232,18 @@ end)
 
 ### CreateSalaryTimer
 
-**Description:**
+Description: Creates a timer to manage player salary.
 
-Creates a timer to manage player salary.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player receiving the salary timer.
 
-* `client` (`Player`) – Player receiving the salary timer.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CreateSalaryTimer is triggered
@@ -6948,29 +5264,20 @@ end)
 
 ### DoModuleIncludes
 
-**Description:**
+Description: Called when modules include submodules. Useful for advanced module handling or dependency management.
 
-Called when modules include submodules. Useful for advanced module handling or dependency management.
+Parameters:
 
-**Parameters:**
+- `path` (`string`): Directory path containing the submodule.
 
-* `path` (`string`) – Directory path containing the submodule.
+- `module` (`table`): Module performing the include.
 
+Realm: Shared
 
-* `module` (`table`) – Module performing the include.
+Returns:
+- None
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when DoModuleIncludes is triggered
@@ -6985,32 +5292,22 @@ end)
 
 ### GetDefaultCharDesc
 
-**Description:**
+Description: Retrieves a default description for a character during creation. Return `(defaultDesc, overrideBool)`.
 
-Retrieves a default description for a character during creation. Return `(defaultDesc, overrideBool)`.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player creating the character.
 
-* `client` (`Player`) – Player creating the character.
+- `faction` (`number`): Faction index of the new character.
 
+Realm: Server
 
-* `faction` (`number`) – Faction index of the new character.
+Returns:
+- string: The default description.
 
+- boolean: Whether to override.
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* string: The default description.
-
-
-* boolean: Whether to override.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when GetDefaultCharDesc is triggered
@@ -7025,37 +5322,26 @@ end)
 
 ### GetDefaultCharName
 
-**Description:**
-
-Retrieves a default name for a character during creation. Return `(defaultName, overrideBool)`.
+Description: Retrieves a default name for a character during creation. Return `(defaultName, overrideBool)`.
 
 If the character's faction defines a prefix it will automatically be prepended to the name.
 
-**Parameters:**
+Parameters:
 
-* `client` (`Player`) – Player creating the character.
+- `client` (`Player`): Player creating the character.
 
+- `faction` (`number`): Faction index.
 
-* `faction` (`number`) – Faction index.
+- `data` (`table`): Additional creation data.
 
+Realm: Server
 
-* `data` (`table`) – Additional creation data.
+Returns:
+- string: The default name.
 
+- boolean: Whether to override the user-provided name.
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* string: The default name.
-
-
-* boolean: Whether to override the user-provided name.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when GetDefaultCharName is triggered
@@ -7070,32 +5356,22 @@ end)
 
 ### GetSalaryAmount
 
-**Description:**
+Description: Retrieves the amount of salary a player should receive.
 
-Retrieves the amount of salary a player should receive.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player receiving salary.
 
-* `client` (`Player`) – Player receiving salary.
+- `faction` (`table`): Player's faction data.
 
+- `class` (`table`): Player's class data.
 
-* `faction` (`table`) – Player's faction data.
+Realm: Shared
 
+Returns:
+- any: The salary amount
 
-* `class` (`table`) – Player's class data.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* any: The salary amount
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when GetSalaryAmount is triggered
@@ -7110,32 +5386,22 @@ end)
 
 ### GetSalaryLimit
 
-**Description:**
+Description: Retrieves the salary limit for a player.
 
-Retrieves the salary limit for a player.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player being checked.
 
-* `client` (`Player`) – Player being checked.
+- `faction` (`table`): Player's faction data.
 
+- `class` (`table`): Player's class data.
 
-* `faction` (`table`) – Player's faction data.
+Realm: Shared
 
+Returns:
+- any: The salary limit
 
-* `class` (`table`) – Player's class data.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* any: The salary limit
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when GetSalaryLimit is triggered
@@ -7152,26 +5418,18 @@ end)
 
 ### InitializedConfig
 
-**Description:**
+Description: Called when `lia.config` is fully initialized.
 
-Called when `lia.config` is fully initialized.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when this hook is triggered
@@ -7189,26 +5447,18 @@ end
 
 ### InitializedItems
 
-**Description:**
+Description: Called once all item modules have been loaded from a directory.
 
-Called once all item modules have been loaded from a directory.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when InitializedItems is triggered
@@ -7230,26 +5480,18 @@ end)
 
 ### InitializedModules
 
-**Description:**
+Description: Called after all modules are fully initialized.
 
-Called after all modules are fully initialized.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when InitializedModules is triggered
@@ -7263,26 +5505,18 @@ end)
 
 ### InitializedOptions
 
-**Description:**
+Description: Called when `lia.option` is fully initialized.
 
-Called when `lia.option` is fully initialized.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when this hook is triggered
@@ -7295,26 +5529,18 @@ end
 
 ### InitializedSchema
 
-**Description:**
+Description: Called after the schema has finished initializing.
 
-Called after the schema has finished initializing.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when InitializedSchema is triggered
@@ -7328,32 +5554,22 @@ end)
 
 ### KeyLock
 
-**Description:**
+Description: Called when a player attempts to lock a door.
 
-Called when a player attempts to lock a door.
+Parameters:
 
-**Parameters:**
+- `owner` (`Player`): Player locking the door.
 
-* `owner` (`Player`) – Player locking the door.
+- `entity` (`Entity`): Door entity being locked.
 
+- `time` (`float`): Duration of the locking animation.
 
-* `entity` (`Entity`) – Door entity being locked.
+Realm: Server
 
+Returns:
+- None
 
-* `time` (`float`) – Duration of the locking animation.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when KeyLock is triggered
@@ -7371,32 +5587,22 @@ end)
 
 ### KeyUnlock
 
-**Description:**
+Description: Called when a player attempts to unlock a door.
 
-Called when a player attempts to unlock a door.
+Parameters:
 
-**Parameters:**
+- `owner` (`Player`): Player unlocking the door.
 
-* `owner` (`Player`) – Player unlocking the door.
+- `entity` (`Entity`): Door entity being unlocked.
 
+- `time` (`float`): How long the process took.
 
-* `entity` (`Entity`) – Door entity being unlocked.
+Realm: Server
 
+Returns:
+- None
 
-* `time` (`float`) – How long the process took.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when KeyUnlock is triggered
@@ -7414,26 +5620,18 @@ end)
 
 ### LiliaTablesLoaded
 
-**Description:**
+Description: Called after all essential DB tables have been loaded.
 
-Called after all essential DB tables have been loaded.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when LiliaTablesLoaded is triggered
@@ -7448,26 +5646,18 @@ end)
 
 ### OnItemRegistered
 
-**Description:**
+Description: Called after an item has been registered. Useful for customizing item behavior or adding properties.
 
-Called after an item has been registered. Useful for customizing item behavior or adding properties.
+Parameters:
 
-**Parameters:**
+- `item` (`Item`): Item definition being registered.
 
-* `item` (`Item`) – Item definition being registered.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OnItemRegistered is triggered
@@ -7490,26 +5680,18 @@ end)
 
 ### OnLoadTables
 
-**Description:**
+Description: Called before the faction tables are loaded. Good spot for data setup prior to factions being processed.
 
-Called before the faction tables are loaded. Good spot for data setup prior to factions being processed.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OnLoadTables is triggered
@@ -7524,26 +5706,18 @@ end)
 
 ### OnMySQLOOConnected
 
-**Description:**
+Description: Called when MySQLOO successfully connects to the database. Use to register prepared statements or init DB logic.
 
-Called when MySQLOO successfully connects to the database. Use to register prepared statements or init DB logic.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OnMySQLOOConnected is triggered
@@ -7566,35 +5740,24 @@ end)
 
 ### OnPlayerPurchaseDoor
 
-**Description:**
+Description: Called when a player purchases or sells a door.
 
-Called when a player purchases or sells a door.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player buying or selling the door.
 
-* `client` (`Player`) – Player buying or selling the door.
+- `entity` (`Entity`): Door entity affected.
 
+- `buying` (`boolean`): True if buying, false if selling.
 
-* `entity` (`Entity`) – Door entity affected.
+- `CallOnDoorChild` (`function`): Optional callback for door children.
 
+Realm: Server
 
-* `buying` (`boolean`) – True if buying, false if selling.
+Returns:
+- None
 
-
-* `CallOnDoorChild` (`function`) – Optional callback for door children.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OnPlayerPurchaseDoor is triggered
@@ -7616,38 +5779,26 @@ end)
 
 ### OnServerLog
 
-**Description:**
+Description: Called whenever a new log message is added. Allows for custom logic or modifications to log handling.
 
-Called whenever a new log message is added. Allows for custom logic or modifications to log handling.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player associated with the log or nil.
 
-* `client` (`Player`) – Player associated with the log or nil.
+- `logType` (`string`): Type identifier for the log entry.
 
+- `logString` (`string`): Formatted log text.
 
-* `logType` (`string`) – Type identifier for the log entry.
+- `category` (`string`): Category name.
 
+- `color` (`Color`): Display color.
 
-* `logString` (`string`) – Formatted log text.
+Realm: Server
 
+Returns:
+- None
 
-* `category` (`string`) – Category name.
-
-
-* `color` (`Color`) – Display color.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OnServerLog is triggered
@@ -7666,26 +5817,18 @@ end)
 
 ### OnWipeTables
 
-**Description:**
+Description: Called after wiping tables in the DB, typically after major resets/cleanups.
 
-Called after wiping tables in the DB, typically after major resets/cleanups.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OnWipeTables is triggered
@@ -7700,35 +5843,24 @@ end)
 
 ### PlayerMessageSend
 
-**Description:**
+Description: Called before a chat message is sent. Return `false` to cancel, or modify the message if returning a string.
 
-Called before a chat message is sent. Return `false` to cancel, or modify the message if returning a string.
+Parameters:
 
-**Parameters:**
+- `speaker` (`Player`): Player sending the message.
 
-* `speaker` (`Player`) – Player sending the message.
+- `chatType` (`string`): Chat type key.
 
+- `message` (`string`): Message contents.
 
-* `chatType` (`string`) – Chat type key.
+- `anonymous` (`boolean`): True if the speaker is hidden.
 
+Realm: Shared
 
-* `message` (`string`) – Message contents.
+Returns:
+- boolean|nil|modifiedString: false to cancel, or return a modified string to change the message.
 
-
-* `anonymous` (`boolean`) – True if the speaker is hidden.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean|nil|modifiedString: false to cancel, or return a modified string to change the message.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when PlayerMessageSend is triggered
@@ -7744,29 +5876,20 @@ end)
 
 ### PlayerModelChanged
 
-**Description:**
+Description: Called when a player's model changes.
 
-Called when a player's model changes.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): The player whose model changed.
 
-* `client` (`Player`) – The player whose model changed.
+- `model` (`string`): The new model path.
 
+Realm: Shared
 
-* `model` (`string`) – The new model path.
+Returns:
+- None
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when PlayerModelChanged is triggered
@@ -7781,29 +5904,20 @@ end)
 
 ### PlayerUseDoor
 
-**Description:**
+Description: Called when a player attempts to use a door entity.
 
-Called when a player attempts to use a door entity.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player using the door.
 
-* `client` (`Player`) – Player using the door.
+- `entity` (`Entity`): Door entity targeted.
 
+Realm: Server
 
-* `entity` (`Entity`) – Door entity targeted.
+Returns:
+- boolean|nil: false to disallow, true to allow, or nil to let other hooks decide.
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean|nil: false to disallow, true to allow, or nil to let other hooks decide.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when PlayerUseDoor is triggered
@@ -7820,26 +5934,18 @@ end)
 
 ### RegisterPreparedStatements
 
-**Description:**
+Description: Called for registering DB prepared statements post-MySQLOO connection.
 
-Called for registering DB prepared statements post-MySQLOO connection.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Server
 
+Returns:
+- None
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Set up a prepared SQL statement for later use.
@@ -7852,26 +5958,18 @@ end)
 
 ### ShouldBarDraw
 
-**Description:**
+Description: Determines whether a specific HUD bar should be drawn.
 
-Determines whether a specific HUD bar should be drawn.
+Parameters:
 
-**Parameters:**
+- `barName` (`string`): HUD bar identifier, e.g. "health" or "armor".
 
-* `barName` (`string`) – HUD bar identifier, e.g. "health" or "armor".
+Realm: Client
 
+Returns:
+- boolean|nil: false to hide, nil to allow.
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* boolean|nil: false to hide, nil to allow.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when ShouldBarDraw is triggered
@@ -7886,26 +5984,18 @@ end)
 
 ### ShouldDisableThirdperson
 
-**Description:**
+Description: Checks if third-person view is allowed or disabled.
 
-Checks if third-person view is allowed or disabled.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player to test.
 
-* `client` (`Player`) – Player to test.
+Realm: Client
 
+Returns:
+- `boolean` (`true if 3rd-person should be disabled`)
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* `boolean` (`true if 3rd-person should be disabled`)
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when ShouldDisableThirdperson is triggered
@@ -7920,26 +6010,18 @@ end)
 
 ### ShouldHideBars
 
-**Description:**
+Description: Determines whether all HUD bars should be hidden.
 
-Determines whether all HUD bars should be hidden.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- boolean|nil: true to hide, nil to allow rendering.
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* boolean|nil: true to hide, nil to allow rendering.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when ShouldHideBars is triggered
@@ -7954,26 +6036,18 @@ end)
 
 ### thirdPersonToggled
 
-**Description:**
+Description: Called when third-person mode is toggled on or off. Allows for custom handling of third-person mode changes.
 
-Called when third-person mode is toggled on or off. Allows for custom handling of third-person mode changes.
+Parameters:
 
-**Parameters:**
+- `state` (`boolean`): true if third-person is enabled, false if disabled.
 
-* `state` (`boolean`) – true if third-person is enabled, false if disabled.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when thirdPersonToggled is triggered
@@ -7991,35 +6065,24 @@ end)
 
 ### AddTextField
 
-**Description:**
+Description: Called when a text field is added to an F1 menu information section. Allows modules to modify or monitor the field being inserted.
 
-Called when a text field is added to an F1 menu information section. Allows modules to modify or monitor the field being inserted.
+Parameters:
 
-**Parameters:**
+- `sectionName` (`string`): Target section name.
 
-* `sectionName` (`string`) – Target section name.
+- `fieldName` (`string`): Unique field identifier.
 
+- `labelText` (`string`): Text shown for the field.
 
-* `fieldName` (`string`) – Unique field identifier.
+- `valueFunc` (`function`): Function returning the value string.
 
+Realm: Client
 
-* `labelText` (`string`) – Text shown for the field.
+Returns:
+- None
 
-
-* `valueFunc` (`function`) – Function returning the value string.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Change the money field label.
@@ -8034,35 +6097,24 @@ end)
 
 ### F1OnAddTextField
 
-**Description:**
+Description: Fired after AddTextField so other modules can react to new fields.
 
-Fired after AddTextField so other modules can react to new fields.
+Parameters:
 
-**Parameters:**
+- `sectionName` (`string`): Section name that received the field.
 
-* `sectionName` (`string`) – Section name that received the field.
+- `fieldName` (`string`): Identifier of the new field.
 
+- `labelText` (`string`): Field label.
 
-* `fieldName` (`string`) – Identifier of the new field.
+- `valueFunc` (`function`): Function returning the field value.
 
+Realm: Client
 
-* `labelText` (`string`) – Field label.
+Returns:
+- None
 
-
-* `valueFunc` (`function`) – Function returning the field value.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Log newly added fields.
@@ -8075,41 +6127,28 @@ end)
 
 ### F1OnAddBarField
 
-**Description:**
+Description: Triggered after AddBarField inserts a status bar into the F1 menu.
 
-Triggered after AddBarField inserts a status bar into the F1 menu.
+Parameters:
 
-**Parameters:**
+- `sectionName` (`string`): Section identifier.
 
-* `sectionName` (`string`) – Section identifier.
+- `fieldName` (`string`): Bar field name.
 
+- `labelText` (`string`): Bar label text.
 
-* `fieldName` (`string`) – Bar field name.
+- `minFunc` (`function`): Function returning the minimum value.
 
+- `maxFunc` (`function`): Function returning the maximum value.
 
-* `labelText` (`string`) – Bar label text.
+- `valueFunc` (`function`): Function returning the current value.
 
+Realm: Client
 
-* `minFunc` (`function`) – Function returning the minimum value.
+Returns:
+- None
 
-
-* `maxFunc` (`function`) – Function returning the maximum value.
-
-
-* `valueFunc` (`function`) – Function returning the current value.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when F1OnAddBarField is triggered
@@ -8122,26 +6161,18 @@ end)
 
 ### CreateInformationButtons
 
-**Description:**
+Description: Called while building the F1 information menu to populate navigation buttons.
 
-Called while building the F1 information menu to populate navigation buttons.
+Parameters:
 
-**Parameters:**
+- `pages` (`table`): Table to add page definitions into.
 
-* `pages` (`table`) – Table to add page definitions into.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CreateInformationButtons is triggered
@@ -8154,26 +6185,18 @@ end)
 
 ### PopulateConfigurationButtons
 
-**Description:**
+Description: Invoked when the settings tab is constructed allowing new configuration pages.
 
-Invoked when the settings tab is constructed allowing new configuration pages.
+Parameters:
 
-**Parameters:**
+- `pages` (`table`): Table to populate with config pages.
 
-* `pages` (`table`) – Table to populate with config pages.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when PopulateConfigurationButtons is triggered
@@ -8186,26 +6209,18 @@ end)
 
 ### InitializedKeybinds
 
-**Description:**
+Description: Called after keybinds have been loaded from disk.
 
-Called after keybinds have been loaded from disk.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when InitializedKeybinds is triggered
@@ -8218,26 +6233,18 @@ end)
 
 ### getOOCDelay
 
-**Description:**
+Description: Allows modification of the cooldown delay between OOC messages.
 
-Allows modification of the cooldown delay between OOC messages.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player sending OOC chat.
 
-* `client` (`Player`) – Player sending OOC chat.
+Realm: Server
 
+Returns:
+- number|nil: Custom cooldown in seconds.
 
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* number|nil – Custom cooldown in seconds.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when getOOCDelay is triggered
@@ -8252,35 +6259,24 @@ end)
 
 ### OnChatReceived
 
-**Description:**
+Description: Runs on the client when chat text is received before display. Returning modified text will replace the message.
 
-Runs on the client when chat text is received before display. Returning modified text will replace the message.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player that sent the chat.
 
-* `client` (`Player`) – Player that sent the chat.
+- `chatType` (`string`): Chat type identifier.
 
+- `text` (`string`): Message text.
 
-* `chatType` (`string`) – Chat type identifier.
+- `anonymous` (`boolean`): True if anonymous chat.
 
+Realm: Client
 
-* `text` (`string`) – Message text.
+Returns:
+- string|nil: Replacement text.
 
-
-* `anonymous` (`boolean`) – True if anonymous chat.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* string|nil – Replacement text.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OnChatReceived is triggered
@@ -8293,29 +6289,20 @@ end)
 
 ### getAdjustedPartData
 
-**Description:**
+Description: Requests PAC3 part data after adjustments have been applied.
 
-Requests PAC3 part data after adjustments have been applied.
+Parameters:
 
-**Parameters:**
+- `wearer` (`Entity`): Entity wearing the outfit.
 
-* `wearer` (`Entity`) – Entity wearing the outfit.
+- `id` (`string`): Part identifier.
 
+Realm: Client
 
-* `id` (`string`) – Part identifier.
+Returns:
+- table|nil: Adjusted part data.
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* table|nil – Adjusted part data.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when getAdjustedPartData is triggered
@@ -8328,32 +6315,22 @@ end)
 
 ### AdjustPACPartData
 
-**Description:**
+Description: Allows modules to modify PAC3 part data before it is attached.
 
-Allows modules to modify PAC3 part data before it is attached.
+Parameters:
 
-**Parameters:**
+- `wearer` (`Entity`): Entity wearing the part.
 
-* `wearer` (`Entity`) – Entity wearing the part.
+- `id` (`string`): Part identifier.
 
+- `data` (`table`): Part data table.
 
-* `id` (`string`) – Part identifier.
+Realm: Client
 
+Returns:
+- table|nil: Modified data table.
 
-* `data` (`table`) – Part data table.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* table|nil – Modified data table.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when AdjustPACPartData is triggered
@@ -8367,29 +6344,20 @@ end)
 
 ### attachPart
 
-**Description:**
+Description: Called when a PAC3 part should be attached to a player.
 
-Called when a PAC3 part should be attached to a player.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player receiving the part.
 
-* `client` (`Player`) – Player receiving the part.
+- `id` (`string`): Part identifier.
 
+Realm: Client
 
-* `id` (`string`) – Part identifier.
+Returns:
+- None
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when attachPart is triggered
@@ -8402,29 +6370,20 @@ end)
 
 ### removePart
 
-**Description:**
+Description: Triggered when a PAC3 part is removed from a player.
 
-Triggered when a PAC3 part is removed from a player.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player losing the part.
 
-* `client` (`Player`) – Player losing the part.
+- `id` (`string`): Part identifier being removed.
 
+Realm: Client
 
-* `id` (`string`) – Part identifier being removed.
+Returns:
+- None
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when removePart is triggered
@@ -8437,26 +6396,18 @@ end)
 
 ### OnPAC3PartTransfered
 
-**Description:**
+Description: Fired when a PAC3 outfit part transfers ownership to a ragdoll.
 
-Fired when a PAC3 outfit part transfers ownership to a ragdoll.
+Parameters:
 
-**Parameters:**
+- `part` (`Entity`): The outfit part being transferred.
 
-* `part` (`Entity`) – The outfit part being transferred.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OnPAC3PartTransfered is triggered
@@ -8469,26 +6420,18 @@ end)
 
 ### DrawPlayerRagdoll
 
-**Description:**
+Description: Allows custom rendering of a player's ragdoll created by PAC3.
 
-Allows custom rendering of a player's ragdoll created by PAC3.
+Parameters:
 
-**Parameters:**
+- `entity` (`Entity`): Ragdoll entity to draw.
 
-* `entity` (`Entity`) – Ragdoll entity to draw.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when DrawPlayerRagdoll is triggered
@@ -8501,26 +6444,18 @@ end)
 
 ### setupPACDataFromItems
 
-**Description:**
+Description: Initializes PAC3 outfits from equipped items after modules load.
 
-Initializes PAC3 outfits from equipped items after modules load.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when setupPACDataFromItems is triggered
@@ -8533,26 +6468,18 @@ end)
 
 ### TryViewModel
 
-**Description:**
+Description: Allows PAC3 to swap the view model entity for event checks.
 
-Allows PAC3 to swap the view model entity for event checks.
+Parameters:
 
-**Parameters:**
+- `entity` (`Entity`): The view model entity.
 
-* `entity` (`Entity`) – The view model entity.
+Realm: Client
 
+Returns:
+- Entity: Replacement entity.
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* Entity – Replacement entity.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when TryViewModel is triggered
@@ -8565,29 +6492,20 @@ end)
 
 ### WeaponCycleSound
 
-**Description:**
+Description: Lets modules provide a custom sound when cycling weapons in the selector.
 
-Lets modules provide a custom sound when cycling weapons in the selector.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- string|nil: Sound path.
 
-**Realm:**
+- number|nil: Playback pitch.
 
-* Client
-
-
-**Returns:**
-
-* string|nil – Sound path.
-
-
-* number|nil – Playback pitch.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when WeaponCycleSound is triggered
@@ -8600,29 +6518,20 @@ end)
 
 ### WeaponSelectSound
 
-**Description:**
+Description: Similar to WeaponCycleSound but used when confirming a weapon choice.
 
-Similar to WeaponCycleSound but used when confirming a weapon choice.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- string|nil: Sound path.
 
-**Realm:**
+- number|nil: Playback pitch.
 
-* Client
-
-
-**Returns:**
-
-* string|nil – Sound path.
-
-
-* number|nil – Playback pitch.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when WeaponSelectSound is triggered
@@ -8635,26 +6544,18 @@ end)
 
 ### ShouldDrawWepSelect
 
-**Description:**
+Description: Determines if the weapon selection UI should be visible.
 
-Determines if the weapon selection UI should be visible.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player whose UI is drawing.
 
-* `client` (`Player`) – Player whose UI is drawing.
+Realm: Client
 
+Returns:
+- boolean
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* boolean
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when ShouldDrawWepSelect is triggered
@@ -8667,26 +6568,18 @@ end)
 
 ### CanPlayerChooseWeapon
 
-**Description:**
+Description: Checks whether the active weapon can be selected via the weapon wheel.
 
-Checks whether the active weapon can be selected via the weapon wheel.
+Parameters:
 
-**Parameters:**
+- `weapon` (`Weapon`): Weapon to name.
 
-* `weapon` (`Weapon`) – Weapon to name.
+Realm: Client
 
+Returns:
+- boolean|nil: false to block selection.
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* boolean|nil – false to block selection.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CanPlayerChooseWeapon is triggered
@@ -8701,29 +6594,20 @@ end)
 
 ### OverrideSpawnTime
 
-**Description:**
+Description: Allows modules to modify the respawn delay after death.
 
-Allows modules to modify the respawn delay after death.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Respawning player.
 
-* `client` (`Player`) – Respawning player.
+- `baseTime` (`number`): Default respawn delay.
 
+Realm: Client
 
-* `baseTime` (`number`) – Default respawn delay.
+Returns:
+- number|nil: New respawn time.
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* number|nil – New respawn time.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OverrideSpawnTime is triggered
@@ -8738,26 +6622,18 @@ end)
 
 ### ShouldRespawnScreenAppear
 
-**Description:**
+Description: Lets modules suppress the respawn HUD from showing.
 
-Lets modules suppress the respawn HUD from showing.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- boolean|nil: false to hide.
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* boolean|nil – false to hide.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when ShouldRespawnScreenAppear is triggered
@@ -8770,26 +6646,18 @@ end)
 
 ### VoiceToggled
 
-**Description:**
+Description: Fired when voice chat is enabled or disabled via config.
 
-Fired when voice chat is enabled or disabled via config.
+Parameters:
 
-**Parameters:**
+- `enabled` (`boolean`): Current voice chat state.
 
-* `enabled` (`boolean`) – Current voice chat state.
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when VoiceToggled is triggered
@@ -8802,26 +6670,18 @@ end)
 
 ### DermaSkinChanged
 
-**Description:**
+Description: Fired when the Derma UI skin configuration value changes. Allows modules to react to the UI skin being switched.
 
-Fired when the Derma UI skin configuration value changes. Allows modules to react to the UI skin being switched.
+Parameters:
 
-**Parameters:**
+- `skin` (`string`): Name of the new Derma skin.
 
-* `skin` (`string`) – Name of the new Derma skin.
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Reload custom panels when the skin changes
@@ -8834,26 +6694,18 @@ end)
 
 ### RefreshFonts
 
-**Description:**
+Description: Requests recreation of all registered UI fonts.
 
-Requests recreation of all registered UI fonts.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Client
 
+Returns:
+- None
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when RefreshFonts is triggered
@@ -8866,35 +6718,24 @@ end)
 
 ### AdjustCreationData
 
-**Description:**
+Description: Allows modification of character creation data before the character is saved.
 
-Allows modification of character creation data before the character is saved.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player creating the character.
 
-* `client` (`Player`) – Player creating the character.
+- `data` (`table`): Sanitized creation data.
 
+- `newData` (`table`): Table to modify.
 
-* `data` (`table`) – Sanitized creation data.
+- `originalData` (`table`): Raw data before adjustments.
 
+Realm: Server
 
-* `newData` (`table`) – Table to modify.
+Returns:
+- None
 
-
-* `originalData` (`table`) – Raw data before adjustments.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when AdjustCreationData is triggered
@@ -8909,32 +6750,22 @@ end)
 
 ### CanCharBeTransfered
 
-**Description:**
+Description: Determines if a character may switch factions.
 
-Determines if a character may switch factions.
+Parameters:
 
-**Parameters:**
+- `character` (`table`): Character being transferred.
 
-* `character` (`table`) – Character being transferred.
+- `newFaction` (`table`): Faction to join.
 
+- `oldFaction` (`number`): Index of the current faction.
 
-* `newFaction` (`table`) – Faction to join.
+Realm: Server
 
+Returns:
+- boolean|nil: false to block.
 
-* `oldFaction` (`number`) – Index of the current faction.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean|nil – false to block.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CanCharBeTransfered is triggered
@@ -8949,25 +6780,20 @@ end)
 
 ### CanInviteToFaction
 
-**Description:**
+Description: Checks if `client` can invite `target` to the same faction. Return false to deny the invitation.
 
-Checks if `client` can invite `target` to the same faction. Return false to deny the invitation.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player sending the invitation.
 
-* `client` (`Player`) – Player sending the invitation.
+- `target` (`Player`): Player being invited.
 
-* `target` (`Player`) – Player being invited.
+Realm: Server
 
-**Realm:**
+Returns:
+- boolean|nil: false to block.
 
-* Server
-
-**Returns:**
-
-* boolean|nil – false to block.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prevent regular members from inviting players
@@ -8980,29 +6806,20 @@ end)
 
 ### CanPlayerUseChar
 
-**Description:**
+Description: Called when a player attempts to load one of their characters.
 
-Called when a player attempts to load one of their characters.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player loading the character.
 
-* `client` (`Player`) – Player loading the character.
+- `character` (`table`): Character being loaded.
 
+Realm: Server
 
-* `character` (`table`) – Character being loaded.
+Returns:
+- boolean|nil: false to deny.
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean|nil – false to deny.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CanPlayerUseChar is triggered
@@ -9017,32 +6834,22 @@ end)
 
 ### CanPlayerSwitchChar
 
-**Description:**
+Description: Checks if a player can switch from their current character to another.
 
-Checks if a player can switch from their current character to another.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player attempting the switch.
 
-* `client` (`Player`) – Player attempting the switch.
+- `currentChar` (`table`): Currently loaded character.
 
+- `newChar` (`table`): Character to switch to.
 
-* `currentChar` (`table`) – Currently loaded character.
+Realm: Server
 
+Returns:
+- boolean|nil: false to block the switch.
 
-* `newChar` (`table`) – Character to switch to.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean|nil – false to block the switch.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CanPlayerSwitchChar is triggered
@@ -9057,29 +6864,20 @@ end)
 
 ### CanPlayerLock
 
-**Description:**
+Description: Determines whether the player may lock the given door or vehicle.
 
-Determines whether the player may lock the given door or vehicle.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player attempting to lock.
 
-* `client` (`Player`) – Player attempting to lock.
+- `door` (`Entity`): Door or vehicle entity.
 
+Realm: Server
 
-* `door` (`Entity`) – Door or vehicle entity.
+Returns:
+- boolean|nil: false to disallow.
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean|nil – false to disallow.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CanPlayerLock is triggered
@@ -9094,29 +6892,20 @@ end)
 
 ### CanPlayerUnlock
 
-**Description:**
+Description: Determines whether the player may unlock the given door or vehicle.
 
-Determines whether the player may unlock the given door or vehicle.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player attempting to unlock.
 
-* `client` (`Player`) – Player attempting to unlock.
+- `door` (`Entity`): Door or vehicle entity.
 
+Realm: Server
 
-* `door` (`Entity`) – Door or vehicle entity.
+Returns:
+- boolean|nil: false to disallow.
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean|nil – false to disallow.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CanPlayerUnlock is triggered
@@ -9131,29 +6920,20 @@ end)
 
 ### GetMaxStartingAttributePoints
 
-**Description:**
+Description: Lets you change how many attribute points a new character receives. Retrieves the maximum attribute points available at character creation.
 
-Lets you change how many attribute points a new character receives. Retrieves the maximum attribute points available at character creation.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Viewing player.
 
-* `client` (`Player`) – Viewing player.
+- `context` (`string`): Creation context.
 
+Realm: Client
 
-* `context` (`string`) – Creation context.
+Returns:
+- number: Maximum starting points
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* number – Maximum starting points
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Gives every new character 60 starting points.
@@ -9166,29 +6946,20 @@ end)
 
 ### GetAttributeStartingMax
 
-**Description:**
+Description: Sets a limit for a specific attribute at character creation. Returns the starting maximum for a specific attribute.
 
-Sets a limit for a specific attribute at character creation. Returns the starting maximum for a specific attribute.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Viewing player.
 
-* `client` (`Player`) – Viewing player.
+- `attribute` (`string`): Attribute identifier.
 
+Realm: Client
 
-* `attribute` (`string`) – Attribute identifier.
+Returns:
+- number: Maximum starting value
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* number – Maximum starting value
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Limits the Strength attribute to a maximum of 20.
@@ -9203,29 +6974,20 @@ end)
 
 ### GetAttributeMax
 
-**Description:**
+Description: Returns the maximum value allowed for an attribute.
 
-Returns the maximum value allowed for an attribute.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player being queried.
 
-* `client` (`Player`) – Player being queried.
+- `attribute` (`string`): Attribute identifier.
 
+Realm: Shared
 
-* `attribute` (`string`) – Attribute identifier.
+Returns:
+- number: Maximum attribute value
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* number – Maximum attribute value
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Increase stamina cap for admins.
@@ -9240,38 +7002,26 @@ end)
 
 ### OnCharAttribBoosted
 
-**Description:**
+Description: Fired when an attribute boost is added or removed.
 
-Fired when an attribute boost is added or removed.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player owning the character.
 
-* `client` (`Player`) – Player owning the character.
+- `character` (`Character`): Character affected.
 
+- `key` (`string`): Attribute identifier.
 
-* `character` (`Character`) – Character affected.
+- `boostID` (`string`): Unique boost key.
 
+- `amount` (`number|boolean`): Amount added or true when removed.
 
-* `key` (`string`) – Attribute identifier.
+Realm: Shared
 
+Returns:
+- None
 
-* `boostID` (`string`) – Unique boost key.
-
-
-* `amount` (`number|boolean`) – Amount added or true when removed.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Notify the player when they gain a temporary bonus.
@@ -9286,35 +7036,24 @@ end)
 
 ### OnCharAttribUpdated
 
-**Description:**
+Description: Fired when a character attribute value is changed.
 
-Fired when a character attribute value is changed.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player owning the character.
 
-* `client` (`Player`) – Player owning the character.
+- `character` (`Character`): Character updated.
 
+- `key` (`string`): Attribute identifier.
 
-* `character` (`Character`) – Character updated.
+- `value` (`number`): New attribute value.
 
+Realm: Shared
 
-* `key` (`string`) – Attribute identifier.
+Returns:
+- None
 
-
-* `value` (`number`) – New attribute value.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Print the changed attribute on the local player's HUD.
@@ -9329,29 +7068,20 @@ end)
 
 ### CanPlayerModifyConfig
 
-**Description:**
+Description: Called when a player attempts to change a configuration value.
 
-Called when a player attempts to change a configuration value.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player attempting the change.
 
-* `client` (`Player`) – Player attempting the change.
+- `key` (`string`): Config key being modified.
 
+Realm: Server
 
-* `key` (`string`) – Config key being modified.
+Returns:
+- boolean|nil: false to deny modification.
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* boolean|nil – false to deny modification.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CanPlayerModifyConfig is triggered
@@ -9364,29 +7094,20 @@ end)
 
 ### CharDeleted
 
-**Description:**
+Description: Fired after a character is permanently removed.
 
-Fired after a character is permanently removed.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player who owned the character.
 
-* `client` (`Player`) – Player who owned the character.
+- `character` (`table`): Character that was deleted.
 
+Realm: Server
 
-* `character` (`table`) – Character that was deleted.
+Returns:
+- None
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CharDeleted is triggered
@@ -9399,32 +7120,22 @@ end)
 
 ### CheckFactionLimitReached
 
-**Description:**
+Description: Allows custom logic for determining if a faction has reached its player limit.
 
-Allows custom logic for determining if a faction has reached its player limit.
+Parameters:
 
-**Parameters:**
+- `faction` (`table`): Faction being checked.
 
-* `faction` (`table`) – Faction being checked.
+- `character` (`table`): Character requesting to join.
 
+- `client` (`Player`): Owning player.
 
-* `character` (`table`) – Character requesting to join.
+Realm: Shared
 
+Returns:
+- boolean
 
-* `client` (`Player`) – Owning player.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* boolean
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when CheckFactionLimitReached is triggered
@@ -9439,35 +7150,24 @@ end)
 
 ### F1OnAddSection
 
-**Description:**
+Description: Triggered after AddSection inserts a new information section.
 
-Triggered after AddSection inserts a new information section.
+Parameters:
 
-**Parameters:**
+- `sectionName` (`string`): Name of the inserted section.
 
-* `sectionName` (`string`) – Name of the inserted section.
+- `color` (`Color`): Display color for the section.
 
+- `priority` (`number`): Sorting priority.
 
-* `color` (`Color`) – Display color for the section.
+- `location` (`number`): Column index.
 
+Realm: Client
 
-* `priority` (`number`) – Sorting priority.
+Returns:
+- None
 
-
-* `location` (`number`) – Column index.
-
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when F1OnAddSection is triggered
@@ -9480,26 +7180,18 @@ end)
 
 ### GetWeaponName
 
-**Description:**
+Description: Allows overriding of the displayed weapon name in the selector.
 
-Allows overriding of the displayed weapon name in the selector.
+Parameters:
 
-**Parameters:**
+- `weapon` (`Weapon`): Weapon to name.
 
-* `weapon` (`Weapon`) – Weapon to name.
+Realm: Client
 
+Returns:
+- string|nil: Replacement name.
 
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* string|nil – Replacement name.
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when GetWeaponName is triggered
@@ -9512,29 +7204,20 @@ end)
 
 ### OnCharGetup
 
-**Description:**
+Description: Called when a ragdolled character finishes getting up.
 
-Called when a ragdolled character finishes getting up.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player getting up.
 
-* `client` (`Player`) – Player getting up.
+- `entity` (`Entity`): Ragdoll entity.
 
+Realm: Server
 
-* `entity` (`Entity`) – Ragdoll entity.
+Returns:
+- None
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OnCharGetup is triggered
@@ -9547,26 +7230,18 @@ end)
 
 ### OnLocalizationLoaded
 
-**Description:**
+Description: Fired once language files finish loading.
 
-Fired once language files finish loading.
+Parameters:
 
-**Parameters:**
+- None
 
-* None
+Realm: Shared
 
+Returns:
+- None
 
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OnLocalizationLoaded is triggered
@@ -9579,29 +7254,20 @@ end)
 
 ### OnPlayerObserve
 
-**Description:**
+Description: Called when a player's observe mode is toggled.
 
-Called when a player's observe mode is toggled.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player toggling observe mode.
 
-* `client` (`Player`) – Player toggling observe mode.
+- `state` (`boolean`): True to enable observing.
 
+Realm: Server
 
-* `state` (`boolean`) – True to enable observing.
+Returns:
+- None
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when OnPlayerObserve is triggered
@@ -9614,32 +7280,22 @@ end)
 
 ### PlayerLoadedChar
 
-**Description:**
+Description: Called after a player finishes loading a character. The client receives the same event when the server notifies it of the character load. `previousChar` is only supplied when the player switched from another character.
 
-Called after a player finishes loading a character. The client receives the same event when the server notifies it of the character load. `previousChar` is only supplied when the player switched from another character.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player who loaded the character.
 
-* `client` (`Player`) – Player who loaded the character.
+- `character` (`table`): New character object.
 
+- `previousChar` (`table|nil`): Previously active character.
 
-* `character` (`table`) – New character object.
+Realm: Shared
 
+Returns:
+- None
 
-* `previousChar` (`table|nil`) – Previously active character.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when PlayerLoadedChar is triggered
@@ -9652,32 +7308,22 @@ end)
 
 ### PrePlayerLoadedChar
 
-**Description:**
+Description: Runs just before a new character becomes active for the player. The client side receives the same event when the server begins loading the character.
 
-Runs just before a new character becomes active for the player. The client side receives the same event when the server begins loading the character.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player switching characters.
 
-* `client` (`Player`) – Player switching characters.
+- `newChar` (`table`): Character being loaded.
 
+- `oldChar` (`table|nil`): Character being left.
 
-* `newChar` (`table`) – Character being loaded.
+Realm: Shared
 
+Returns:
+- None
 
-* `oldChar` (`table|nil`) – Character being left.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when PrePlayerLoadedChar is triggered
@@ -9690,32 +7336,22 @@ end)
 
 ### PostPlayerLoadedChar
 
-**Description:**
+Description: Runs after `PlayerLoadedChar` so modules can perform additional setup. The client receives the same event once the server notifies it.
 
-Runs after `PlayerLoadedChar` so modules can perform additional setup. The client receives the same event once the server notifies it.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Player that finished loading.
 
-* `client` (`Player`) – Player that finished loading.
+- `character` (`table`): Active character table.
 
+- `previousChar` (`table|nil`): Previous character if any.
 
-* `character` (`table`) – Active character table.
+Realm: Shared
 
+Returns:
+- None
 
-* `previousChar` (`table|nil`) – Previous character if any.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when PostPlayerLoadedChar is triggered
@@ -9728,29 +7364,20 @@ end)
 
 ### PlayerSay
 
-**Description:**
+Description: Custom hook executed when a player sends a chat message server-side.
 
-Custom hook executed when a player sends a chat message server-side.
+Parameters:
 
-**Parameters:**
+- `client` (`Player`): Speaking player.
 
-* `client` (`Player`) – Speaking player.
+- `text` (`string`): Message content.
 
+Realm: Server
 
-* `text` (`string`) – Message content.
+Returns:
+- None
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when PlayerSay is triggered
@@ -9763,29 +7390,20 @@ end)
 
 ### PopulateAdminStick
 
-**Description:**
+Description: Called after the admin stick menu is created so additional commands can be added.
 
-Called after the admin stick menu is created so additional commands can be added.
+Parameters:
 
-**Parameters:**
+- `menu` (`DermaPanel`): Context menu panel.
 
-* `menu` (`DermaPanel`) – Context menu panel.
+- `target` (`Entity`): Target entity of the admin stick.
 
+Realm: Client
 
-* `target` (`Entity`) – Target entity of the admin stick.
+Returns:
+- None
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when PopulateAdminStick is triggered
@@ -9800,29 +7418,20 @@ end)
 
 ### TicketSystemClaim
 
-**Description:**
+Description: Fired when a staff member claims a help ticket.
 
-Fired when a staff member claims a help ticket.
+Parameters:
 
-**Parameters:**
+- `admin` (`Player`): Staff member claiming the ticket.
 
-* `admin` (`Player`) – Staff member claiming the ticket.
+- `requester` (`Player`): Player who opened the ticket.
 
+Realm: Server
 
-* `requester` (`Player`) – Player who opened the ticket.
+Returns:
+- None
 
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when TicketSystemClaim is triggered
@@ -9835,25 +7444,20 @@ end)
 
 ### TicketSystemClose
 
-**Description:**
+Description: Fired when a staff member closes a help ticket.
 
-Fired when a staff member closes a help ticket.
+Parameters:
 
-**Parameters:**
+- `admin` (`Player`): Staff member closing the ticket.
 
-* `admin` (`Player`) – Staff member closing the ticket.
+- `requester` (`Player`): Player who opened the ticket.
 
-* `requester` (`Player`) – Player who opened the ticket.
+Realm: Server
 
-**Realm:**
+Returns:
+- None
 
-* Server
-
-**Returns:**
-
-* None
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Notify the player that staff closed their ticket
@@ -9866,32 +7470,22 @@ end)
 
 ### liaOptionReceived
 
-**Description:**
+Description: Triggered when a shared option value is changed.
 
-Triggered when a shared option value is changed.
+Parameters:
 
-**Parameters:**
+- `client` (`Player|nil`): Player that changed the option or nil if server.
 
-* `client` (`Player|nil`) – Player that changed the option or nil if server.
+- `key` (`string`): Option identifier.
 
+- `value` (`any`): New value.
 
-* `key` (`string`) – Option identifier.
+Realm: Server
 
+Returns:
+- None
 
-* `value` (`any`) – New value.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Prints a message when liaOptionReceived is triggered
@@ -9904,29 +7498,24 @@ end)
 
 ### WarningIssued
 
-**Description:**
+Description: Fired when an administrator issues a warning to a player.
 
-Fired when an administrator issues a warning to a player.
+Parameters:
 
-**Parameters:**
+- `admin` (`Player`): Staff member giving the warning.
 
-* `admin` (`Player`) – Staff member giving the warning.
+- `target` (`Player`): Player receiving the warning.
 
-* `target` (`Player`) – Player receiving the warning.
+- `reason` (`string`): Text reason for the warning.
 
-* `reason` (`string`) – Text reason for the warning.
+- `index` (`number`): Current warning count on the player.
 
-* `index` (`number`) – Current warning count on the player.
+Realm: Server
 
-**Realm:**
+Returns:
+- None
 
-* Server
-
-**Returns:**
-
-* None
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 hook.Add("WarningIssued", "NotifyWarning", function(admin, ply, reason)
@@ -9938,34 +7527,28 @@ end)
 
 ### WarningRemoved
 
-**Description:**
+Description: Fired when an administrator removes one of a player's warnings.
 
-Fired when an administrator removes one of a player's warnings.
+Parameters:
 
-**Parameters:**
+- `admin` (`Player`): Staff member removing the warning.
 
-* `admin` (`Player`) – Staff member removing the warning.
+- `target` (`Player`): Player that had the warning.
 
-* `target` (`Player`) – Player that had the warning.
+- `warning` (`table`): Table containing the warning data.
 
-* `warning` (`table`) – Table containing the warning data.
+- `index` (`number`): Index of the removed warning.
 
-* `index` (`number`) – Index of the removed warning.
+Realm: Server
 
-**Realm:**
+Returns:
+- None
 
-* Server
-
-**Returns:**
-
-* None
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 hook.Add("WarningRemoved", "LogRemoval", function(admin, ply, warn, index)
     print(admin:Name() .. " removed warning #" .. index .. " from " .. ply:Name())
 end)
 ```
-
 
