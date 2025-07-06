@@ -39,10 +39,14 @@ for key, _ in pairs(lia.lang.stored) do
 end
 
 function L(key, ...)
-    local languages = lia.lang.stored or {}
-    local langKey = lia.config.get("Language", "english"):lower()
-    local info = languages[langKey]
-    return string.format(info and info[key] or key, ...)
+    if not key then lia.error("L called without a translation key", 2) end
+    local k = key:lower()
+    local langs = lia.lang.stored or {}
+    local lang = (lia.config.get("Language", "english") or "english"):lower()
+    local info = langs[lang]
+    local str = info and info[k]
+    if not str then lia.error(("Missing translation for '%s' in language '%s'"):format(k, lang), 2) end
+    return string.format(str, ...)
 end
 
 table.sort(langs)
