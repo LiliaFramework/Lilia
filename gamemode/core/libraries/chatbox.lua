@@ -30,7 +30,7 @@ function lia.chat.register(chatType, data)
     end
 
     data.color = data.color or Color(242, 230, 160)
-    data.format = L(data.format) or "%s: \"%s\""
+    data.format = data.format and L(data.format) or "%s: \"%s\""
     data.onChatAdd = data.onChatAdd or function(speaker, text, anonymous)
         local name = anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, chatType) or IsValid(speaker) and speaker:Name() or "Console"
         chat.AddText(lia.chat.timestamp(false), data.color, string.format(data.format, name, text))
