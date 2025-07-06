@@ -80,7 +80,7 @@ Registers a new chat class and sets up command aliases.
 
   - `syntax` (string) – Argument usage description shown in command help.
 
-  - `desc` (string) – Description of the command shown in menus.
+  - `desc` (string) – Description of the command shown in menus. The value is automatically localized using `L`.
 
   - `prefix` (string or table) – Command prefixes that trigger this chat type.
 
@@ -104,7 +104,7 @@ Registers a new chat class and sets up command aliases.
 
   - `color` (Color) – Default color used with the fallback `onChatAdd`.
 
-  - `format` (string) – Format string for the fallback `onChatAdd`.
+  - `format` (string) – Format string for the fallback `onChatAdd`. The value is automatically localized using `L`.
 
   - `filter` (string) – Chat filter category used by the chat UI.
 
