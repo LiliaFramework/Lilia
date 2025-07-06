@@ -14,29 +14,24 @@ Fonts are refreshed automatically whenever `RefreshFonts` is run and the `PostLo
 
 ### lia.font.register
 
-**Description:**
+**Purpose**
 
-Creates and stores a font using `surface.CreateFont`. The font is kept in the internal list so it can be recreated later. Invalid parameters raise an error.
+Creates and stores a font using `surface.CreateFont`; the font is kept in an internal list for later recreation.
 
-**Parameters:**
+**Parameters**
 
-* `fontName` (`string`) – Font identifier.
+* `fontName` (*string*): Font identifier.
+* `fontData` (*table*): Font properties table.
 
+**Realm**
 
-* `fontData` (`table`) – Font properties table.
+`Client`
 
+**Returns**
 
-**Realm:**
+* `nil`: None.
 
-* Client
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
 -- Register a new font after the default fonts have loaded
@@ -53,26 +48,23 @@ end)
 
 ### lia.font.getAvailableFonts
 
-**Description:**
+**Purpose**
 
 Returns an alphabetically sorted table of the font names that have been registered.
 
-**Parameters:**
+**Parameters**
 
 * None
 
+**Realm**
 
-**Realm:**
+`Client`
 
-* Client
+**Returns**
 
+* `table`: Array of font name strings.
 
-**Returns:**
-
-* table – Array of font name strings.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
 local fonts = lia.font.getAvailableFonts()
@@ -85,26 +77,23 @@ end
 
 ### lia.font.refresh
 
-**Description:**
+**Purpose**
 
 Recreates all stored fonts from the internal list. This runs automatically when the screen resolution changes or when the `Font` or `GenericFont` configs update. Once complete it fires `PostLoadFonts` with `currentFont` and `genericFont`.
 
-**Parameters:**
+**Parameters**
 
 * None
 
+**Realm**
 
-**Realm:**
+`Client`
 
-* Client
+**Returns**
 
+* `nil`: None.
 
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
 -- Force fonts to reload

@@ -54,8 +54,8 @@ models to improve load times and stores the result in both
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.faction.loadFromDir
     lia.faction.loadFromDir("path/to/factions")
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -84,8 +84,8 @@ Retrieves a faction by its index or unique identifier.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.faction.get
     local faction = lia.faction.get("citizen")
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -114,8 +114,8 @@ Retrieves the index of a faction by its unique identifier.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.faction.getIndex
     local index = lia.faction.getIndex("citizen")
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -146,6 +146,7 @@ Retrieves a list of classes associated with the specified faction.
 ```lua
     -- Retrieve class definitions that belong to the Citizen faction
     local classes = lia.faction.getClasses(FACTION_CITIZEN)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -176,6 +177,7 @@ Retrieves all player entities whose characters belong to the specified faction.
 ```lua
     -- Get all players currently in the Citizen faction
     local players = lia.faction.getPlayers(FACTION_CITIZEN)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -206,6 +208,7 @@ Counts the number of players whose characters belong to the specified faction.
 ```lua
     -- Count how many players are citizens
     local count = lia.faction.getPlayerCount(FACTION_CITIZEN)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -237,8 +240,8 @@ Checks if the specified faction is a member of a given category.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.faction.isFactionCategory
     local isMember = lia.faction.isFactionCategory("citizen", {"citizen", "veteran"})
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -283,8 +286,8 @@ Pre-caches the faction models.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.faction.jobGenerate
     local faction = lia.faction.jobGenerate(2, "Police", Color(0, 0, 255), false, {"models/player/police.mdl"})
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -315,8 +318,8 @@ Iterates through each faction's model data and applies formatting to ensure prop
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.faction.formatModelData
     lia.faction.formatModelData()
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -347,8 +350,8 @@ Categories are determined by keys in the faction's models table that are strings
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.faction.getCategories
     local categories = lia.faction.getCategories("citizen")
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -380,8 +383,8 @@ Retrieves models from a specified category for a given faction.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.faction.getModelsFromCategory
     local models = lia.faction.getModelsFromCategory("citizen", "special")
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -412,8 +415,8 @@ Searches through the class list for the first class that is marked as default fo
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.faction.getDefaultClass
     local defaultClass = lia.faction.getDefaultClass("citizen")
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -446,4 +449,5 @@ Checks the local whitelist data against the faction's uniqueID.
 ```lua
     -- Check whether the local player is whitelisted for the Citizen faction
     local whitelisted = lia.faction.hasWhitelist(FACTION_CITIZEN)
+    -- Advanced example of the usage of the function.
 ```
