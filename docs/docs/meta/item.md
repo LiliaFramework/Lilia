@@ -225,7 +225,7 @@ Invokes an item method with the given player and entity context.
 
 * `client` (Player): The player performing the action.
 
-* `entity` (Entity): Entity representing this item.
+* `entity` (Entity|nil): Entity representing this item or `nil` when none.
 
 * `...`: Additional arguments passed to the method.
 
