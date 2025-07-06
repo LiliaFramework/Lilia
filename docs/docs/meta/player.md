@@ -702,8 +702,6 @@ Returns a hull trace in front of the player.
 local tr = player:getTrace(48)
 
 ```
----
-
 ### getEyeEnt
 
 **Purpose**
@@ -2426,6 +2424,30 @@ player:setLocalVar("health", 75)
 ```
 ---
 
+### getLocalVar
+
+**Purpose**
+
+Retrieves a networked local variable stored on the player.
+
+**Parameters**
+
+* `key` (string): Variable name.
+* `default` (any): Value returned if not set.
+
+**Realm**
+`Shared`
+
+**Returns**
+
+* any: Stored value or default.
+
+**Example**
+
+```lua
+local stamina = player:getLocalVar("stamina", 0)
+```
+---
 ### getPlayTime
 
 **Purpose**
