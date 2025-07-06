@@ -635,7 +635,7 @@ function PANEL:Paint()
             y = y + th17
         end
     else
-        local _, th18 = DrawText(L("nonePeriod"), "AddonInfo_Small", 0, y, color_white)
+        local _, th18 = DrawText(L("none"), "AddonInfo_Small", 0, y, color_white)
         y = y + th18
     end
 
