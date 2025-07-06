@@ -12,354 +12,285 @@ The config library stores server configuration values with descriptions and defa
 
 ### lia.config.add
 
-**Description:**
+**Purpose**
 
-Registers a new config option with the given key, display name, default value, and optional callback/data.
+Registers a new config option with the given key, display name, default value and optional callback or data.
 
-**Parameters:**
+**Parameters**
 
-* `key` (`string`) — The unique key identifying the config.
+* `key` (*string*): Unique identifier for the option.
+* `name` (*string*): Display name shown in menus.
+* `value` (*any*): Default stored value.
+* `callback` (*function*): Function run when the value changes. Optional.
+* `data` (*table*): Additional fields such as `desc`, `category`, `type`, `min`, `max`, `decimals`, `options` and `noNetworking`.
 
+**Realm**
 
-* `name` (`string`) — The display name of the config option.
+`Shared`
 
+**Returns**
 
-* `value` (`any`) — The default value of this config option.
+* *nil*: Nothing.
 
-
-* `callback` (`function`) — A function called when the value changes (optional).
-
-
-* `data` (`table`) — Additional data customizing the option. Fields include:
-
-    * desc (string) – Description shown in the menu.
-
-    * category (string) – Category used to group the setting.
-
-    * type (string) – "Boolean", "Int", "Float", "Color", or "Table". If omitted it is inferred from the default value.
-
-    * min (number) – Minimum allowed value for numeric types.
-
-    * max (number) – Maximum allowed value for numeric types.
-
-    * decimals (number) – Number of decimals to display for Float types.
-
-    * options (table) – List of choices for the "Table" type.
-
-    * noNetworking (boolean) – Do not network this config to clients.
-
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Register a config option with limits and a callback
-    lia.config.add(
-        "walkSpeed",
-        "Walk Speed",
-        130,
-        function(_, newValue)
-            for _, ply in player.Iterator() do
-                ply:SetWalkSpeed(newValue)
-            end
-        end,
-        {
-            desc = "Base walking speed for all players.",
-            category = "Movement",
-            type = "Int",
-            min = 50,
-            max = 300
-        }
-    )
+-- Register a config option with limits and a callback
+lia.config.add(
+    "walkSpeed",
+    "Walk Speed",
+    130,
+    function(_, newValue)
+        for _, ply in player.Iterator() do
+            ply:SetWalkSpeed(newValue)
+        end
+    end,
+    {
+        desc = "Base walking speed for all players.",
+        category = "Movement",
+        type = "Int",
+        min = 50,
+        max = 300
+    }
+)
 ```
 
 ---
+
 
 ### lia.config.setDefault
 
-**Description:**
+**Purpose**
 
 Changes the stored default for an existing config option without affecting its current value or notifying clients.
 
-**Parameters:**
+**Parameters**
 
-* `key` (`string`) — The key identifying the config.
+* `key` (*string*): Key identifying the option.
+* `value` (*any*): New default value.
 
+**Realm**
 
-* `value` (`any`) — The new default value.
+`Shared`
 
+**Returns**
 
-**Realm:**
+* *nil*: Nothing.
 
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.config.setDefault
-    lia.config.setDefault("maxPlayers", 32)
+-- Update the default maximum players
+lia.config.setDefault("maxPlayers", 32)
 ```
-
 ---
+
 
 ### lia.config.forceSet
 
-**Description:**
+**Purpose**
 
-Sets a config value directly without running callbacks or sending network updates. The value is saved unless `noSave` is true.
+Sets a config value directly without running callbacks or networking the update. The value is saved unless `noSave` is true.
 
-**Parameters:**
+**Parameters**
 
-* `key` (`string`) — The key identifying the config.
+* `key` (*string*): Key identifying the option.
+* `value` (*any*): New value to set.
+* `noSave` (*boolean*): If true, value is not written to disk.
 
+**Realm**
 
-* `value` (`any`) — The new value to set.
+`Shared`
 
+**Returns**
 
-* `noSave` (`boolean`) — If true, does not save to disk.
+* *nil*: Nothing.
 
-
-**Realm:**
-
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.config.forceSet
-    lia.config.forceSet("someSetting", true, true)
+lia.config.forceSet("someSetting", true, true)
 ```
-
 ---
+
 
 ### lia.config.set
 
-**Description:**
+**Purpose**
 
-Sets a config value, saves it server‑side, runs the callback with the old and new values, and networks the update to clients unless the config is marked `noNetworking`.
+Sets a config value, saves it server side, triggers callbacks with the old and new values and networks the update unless the config is marked `noNetworking`.
 
-**Parameters:**
+**Parameters**
 
-* `key` (`string`) — The key identifying the config.
+* `key` (*string*): Key identifying the option.
+* `value` (*any*): New value to set.
 
+**Realm**
 
-* `value` (`any`) — The new value to set.
+`Shared`
 
+**Returns**
 
-**Realm:**
+* *nil*: Nothing.
 
-* Shared
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.config.set
-    lia.config.set("maxPlayers", 24)
+lia.config.set("maxPlayers", 24)
 ```
-
 ---
 
 ### lia.config.get
 
-**Description:**
+**Purpose**
 
-Retrieves the current value of a config. If no value is set, the stored default is returned or the supplied fallback is used. Color tables are automatically converted to `Color` objects.
+Retrieves the current value of a config entry. If unset, returns the stored default or the provided fallback.
 
-**Parameters:**
+**Parameters**
 
-* `key` (`string`) — The key identifying the config.
+* `key` (*string*): Key identifying the config option.
+* `default` (*any*): Value to return if the config is not found.
 
+**Realm**
 
-* `default` (`any`) — Fallback value if the config is not found.
+`Shared`
 
+**Returns**
 
-**Realm:**
+* *any*: The config value or the default.
 
-* Shared
-
-
-**Returns:**
-
-* (any) The config's value or the provided default.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.config.get
-    local players = lia.config.get("maxPlayers", 64)
+local players = lia.config.get("maxPlayers", 64)
 ```
-
 ---
 
 ### lia.config.load
 
-**Description:**
+**Purpose**
 
-Loads config values from the database (server side) and stores them in `lia.config`. Any missing entries are inserted with their defaults. When finished the "InitializedConfig" hook is run. Clients simply wait for the data and then fire the same hook.
+Loads config values from the database and stores them in `lia.config`. Missing entries are inserted with their defaults.
 
-**Parameters:**
+**Parameters**
 
-* None
+*None*
 
+**Realm**
 
-**Realm:**
+`Shared`
 
-* Shared
+**Returns**
 
+* *nil*: Nothing.
 
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.config.load
-    lia.config.load()
+lia.config.load()
 ```
 
 ---
 
 ### lia.config.getChangedValues
 
-**Description:**
+**Purpose**
 
-Returns a table of all config entries where the current value differs from the default.
+Returns a table of all config entries whose current value differs from the default.
 
-**Parameters:**
+**Parameters**
 
-* None
+*None*
 
+**Realm**
 
-**Realm:**
+`Server`
 
-* Server
+**Returns**
 
+* *table*: Key-value pairs of changed config entries.
 
-**Returns:**
-
-* (table) Key-value pairs of changed config entries.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.config.getChangedValues
-    local changed = lia.config.getChangedValues()
+local changed = lia.config.getChangedValues()
 ```
 
 ---
 
 ### lia.config.send
 
-**Description:**
+**Purpose**
 
-Sends all changed config values to a client. If no client is specified the values are broadcast to everyone.
+Sends all changed config values to a client. If no client is provided the values are broadcast to everyone.
 
-**Parameters:**
+**Parameters**
 
-* `client` (`player`) — The player to receive the config data.
+* `client` (*player*): Player to receive the config data.
 
+**Realm**
 
-**Realm:**
+`Server`
 
-* Server
+**Returns**
 
+* *nil*: Nothing.
 
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Broadcast changed configs to all players
-    lia.config.send()
+lia.config.send()
 ```
 
 ---
 
+```
 ### lia.config.save
 
-**Description:**
+**Purpose**
 
 Writes all changed config values to the database so they persist across restarts.
 
-**Parameters:**
+**Parameters**
 
-* None
+*None*
 
+**Realm**
 
-**Realm:**
+`Server`
 
-* Server
+**Returns**
 
+* *nil*: Nothing.
 
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.config.save
-    lia.config.save()
+lia.config.save()
 ```
 
 ---
 
 ### lia.config.convertToDatabase
 
-**Description:**
+**Purpose**
 
-Moves legacy `lia.config` data from the `data/lilia` folder into the `lia_config` database table. Players are prevented from joining while the conversion runs. If `changeMap` is true, the current map reloads when finished.
+Migrates legacy config files from `data/lilia` into the `lia_config` SQL table. Players are prevented from joining while this runs. If `changeMap` is true, the current map reloads when finished.
 
-**Parameters:**
+**Parameters**
 
-* `changeMap` (`boolean`) – Whether to reload the map after conversion completes.
+* `changeMap` (*boolean*): Whether to reload the map after conversion completes.
 
-**Realm:**
+**Realm**
 
-* Server
+`Server`
 
-**Returns:**
+**Returns**
 
-* None
+* *nil*: Nothing.
 
-**Example Usage:**
+**Example**
 
 ```lua
-    -- Force config conversion and reload the map
-    lia.config.convertToDatabase(true)
+lia.config.convertToDatabase(true)
 ```
