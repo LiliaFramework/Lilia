@@ -31,26 +31,23 @@ end)
 
 ### Center
 
-**Description:**
-
+Description: 
 Returns the midpoint between this vector and the supplied vector.
 
-**Parameters:**
+Parameters:
 
-* `vec2` (`Vector`) – The vector to average with this vector.
-
-
-**Realm:**
-
-* Shared
+- `vec2` (Vector): The vector to average with this vector.
 
 
-**Returns:**
-
-* `Vector` – The center point of the two vectors.
+Realm: Shared
 
 
-**Example Usage:**
+Returns:
+
+- `Vector`: The center point of the two vectors.
+
+
+Example Usage:
 
 ```lua
 -- Average two vectors to find the midpoint
@@ -64,26 +61,23 @@ print(result)
 
 ### Distance
 
-**Description:**
-
+Description: 
 Calculates the distance between this vector and another vector.
 
-**Parameters:**
+Parameters:
 
-* `vec2` (`Vector`) – The other vector.
-
-
-**Realm:**
-
-* Shared
+- `vec2` (Vector): The other vector.
 
 
-**Returns:**
-
-* `number` – The distance between the two vectors.
+Realm: Shared
 
 
-**Example Usage:**
+Returns:
+
+- `number`: The distance between the two vectors.
+
+
+Example Usage:
 
 ```lua
 -- Measure the distance between two points
@@ -97,29 +91,26 @@ print(result)
 
 ### RotateAroundAxis
 
-**Description:**
-
+Description: 
 Rotates the vector around an axis by the specified degrees and returns the new vector.
 
-**Parameters:**
+Parameters:
 
-* `axis` (`Vector`) – Axis to rotate around.
-
-
-* `degrees` (`number`) – Angle in degrees.
+- `axis` (Vector): Axis to rotate around.
 
 
-**Realm:**
-
-* Shared
+- `degrees` (number): Angle in degrees.
 
 
-**Returns:**
-
-* `Vector` – The rotated vector.
+Realm: Shared
 
 
-**Example Usage:**
+Returns:
+
+- `Vector`: The rotated vector.
+
+
+Example Usage:
 
 ```lua
 -- Rotate a vector 90 degrees around the Z axis
@@ -132,8 +123,7 @@ print(result)
 
 ### Right
 
-**Description:**
-
+Description: 
 Calculates the cross product of this vector and the provided up reference to
 
 derive a right-direction vector. The result is normalized and therefore
@@ -142,22 +132,20 @@ perpendicular to both input vectors. If this vector has no horizontal
 
 component it defaults to `Vector(0, -1, 0)`.
 
-**Parameters:**
+Parameters:
 
 * `vUp` (`Vector`, optional) – Up direction to compare against. Defaults to `vector_up`.
 
 
-**Realm:**
-
-* Shared
+Realm: Shared
 
 
-**Returns:**
+Returns:
 
-* `Vector` – The calculated right vector.
+- `Vector`: The calculated right vector.
 
 
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Get the right direction vector
@@ -170,8 +158,7 @@ print(result)
 
 ### Up
 
-**Description:**
-
+Description: 
 Uses two cross products to determine an up-direction vector that is
 
 perpendicular to both this vector and the given up reference. First, the right
@@ -182,22 +169,20 @@ vector is obtained via `self:Cross(vUp)`, then that right vector is crossed with
 
 component the fallback value is `Vector(-self.z, 0, 0)`.
 
-**Parameters:**
+Parameters:
 
 * `vUp` (`Vector`, optional) – Up direction to compare against. Defaults to `vector_up`.
 
 
-**Realm:**
-
-* Shared
+Realm: Shared
 
 
-**Returns:**
+Returns:
 
-* `Vector` – The calculated up vector.
+- `Vector`: The calculated up vector.
 
 
-**Example Usage:**
+Example Usage:
 
 ```lua
 -- Get the up direction vector
