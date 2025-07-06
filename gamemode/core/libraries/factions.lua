@@ -18,14 +18,17 @@ function lia.faction.loadFromDir(directory)
 
         lia.include(directory .. "/" .. v, "shared")
         if not FACTION.name then
-            FACTION.name = L("unknown")
+            FACTION.name = "unknown"
             ErrorNoHalt("Faction '" .. niceName .. "' is missing a name. You need to add a FACTION.name = \"Name\"\n")
         end
 
         if not FACTION.desc then
-            FACTION.desc = L("noDesc")
+            FACTION.desc = "noDesc"
             ErrorNoHalt("Faction '" .. niceName .. "' is missing a description. You need to add a FACTION.desc = \"Description\"\n")
         end
+
+        FACTION.name = L(FACTION.name)
+        FACTION.desc = L(FACTION.desc)
 
         if not FACTION.color then
             FACTION.color = Color(150, 150, 150)
