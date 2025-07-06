@@ -445,7 +445,7 @@ lia.command.add("doorinfo", {
 
 lia.command.add("dooraddfaction", {
     desc = L("dooraddfactionDesc"),
-    syntax = "[string Faction]",
+    syntax = "[faction Faction]",
     adminOnly = true,
     privilege = "Manage Doors",
     onRun = function(client, arguments)
@@ -495,7 +495,7 @@ lia.command.add("dooraddfaction", {
 
 lia.command.add("doorremovefaction", {
     desc = L("doorremovefactionDesc"),
-    syntax = "[string Faction]",
+    syntax = "[faction Faction]",
     adminOnly = true,
     privilege = "Manage Doors",
     onRun = function(client, arguments)

@@ -2,7 +2,7 @@
     adminOnly = true,
     privilege = "Manage Transfers",
     desc = L("plyTransferDesc"),
-    syntax = "[player Name] [string Faction]",
+    syntax = "[player Name] [faction Faction]",
     alias = {"charsetfaction"},
     AdminStick = {
         Name = L("adminStickTransferName"),
@@ -46,7 +46,7 @@ lia.command.add("plywhitelist", {
     adminOnly = true,
     privilege = "Manage Whitelists",
     desc = L("plyWhitelistDesc"),
-    syntax = "[player Name] [string Faction]",
+    syntax = "[player Name] [faction Faction]",
     alias = {"factionwhitelist"},
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
@@ -70,7 +70,7 @@ lia.command.add("plyunwhitelist", {
     adminOnly = true,
     privilege = "Manage Whitelists",
     desc = L("plyUnwhitelistDesc"),
-    syntax = "[player Name] [string Faction]",
+    syntax = "[player Name] [faction Faction]",
     alias = {"factionunwhitelist"},
     AdminStick = {
         Name = L("adminStickUnwhitelistName"),
