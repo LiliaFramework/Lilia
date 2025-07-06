@@ -341,13 +341,13 @@ else
                 ctrl = vgui.Create("DComboBox", panel)
                 ctrl:SetValue(L("selectFactionPrompt"))
                 for _, fac in ipairs(lia.faction.indices) do
-                    ctrl:AddChoice(L(fac.name), fac.index)
+                    ctrl:AddChoice(L(fac.name), string.format("\"%s\"", fac.uniqueID))
                 end
             elseif fieldType == "class" then
                 ctrl = vgui.Create("DComboBox", panel)
                 ctrl:SetValue(L("selectClassPrompt"))
-                for id, class in pairs(lia.class.list) do
-                    ctrl:AddChoice(L(class.name), id)
+                for _, class in pairs(lia.class.list) do
+                    ctrl:AddChoice(L(class.name), string.format("\"%s\"", class.uniqueID))
                 end
             elseif fieldType == "text" or fieldType == "number" then
                 ctrl = vgui.Create("DTextEntry", panel)
