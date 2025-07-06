@@ -78,8 +78,6 @@ Draws all active menus on the player's HUD.
 ```lua
 hook.Add("HUDPaintBackground", "DrawMenus", lia.menu.drawAll)
 ```
-hook.Add("HUDPaintBackground", "DrawMenus", lia.menu.drawAll)
-```
 
 ---
 

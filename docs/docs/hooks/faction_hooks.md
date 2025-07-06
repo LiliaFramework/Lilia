@@ -195,3 +195,4 @@ function FACTION:OnCheckLimitReached(character, client)
     return lia.faction.getPlayerCount(self.index) >= maxMembers
 end
 ```
+---

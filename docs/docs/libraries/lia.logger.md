@@ -27,6 +27,7 @@ registered with `lia.log.addType`.
   `lia.log.convertToDatabase` is running. The server blocks player connections
 
   during this time.
+* **lia.log.types** (table) – Registry of log types added with `lia.log.addType`.
 
 ---
 

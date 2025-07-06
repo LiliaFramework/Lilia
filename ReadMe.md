@@ -35,35 +35,50 @@
 
 <div align="center">
 
-* **Grid Inventory**  
-  Includes containers, vendors and item weight handling.
+* **Grid Inventory**
+  Container system with weight limits, stack icons and vendor support.
 
-* **Recognition System**  
-  Manage characters and factions with ease.
+* **Recognition & Names**
+  Manual name recognition with disguise and friends list integration.
 
-* **Custom Menus**  
-  Scoreboard, F1 menu and radial weapon selector.
+* **Attributes & Stamina**
+  Stats improve with use and optional stamina drains while sprinting.
 
-* **Administration Utilities**  
-  Logging, ticket management and warnings.
+* **Custom Menus**
+  Main menu, scoreboard, F1 utilities and radial weapon selector.
 
-* **Performance Libraries**  
-  Optimized database access, networking and caching.
+* **Chatbox & Commands**
+  Colored chat, radio channels and built-in emote commands.
 
-* **Door System**  
-  Ownable doors with key-lock functionality.
+* **Team & Spawn Management**
+  Faction classes, death penalties and dynamic spawn points.
 
-* **Third-Person Camera**  
-  Toggleable, with adjustable view settings.
+* **Third-Person Camera**
+  Toggleable view with anti-peeking and adjustable position.
 
-* **Team & Spawn Management**  
-  Flexible faction and class configurations.
+* **Doors & Storage**
+  Ownable doors, property groups and persistent containers.
 
-* **Interaction Menu**  
-  Quick-access common actions.
+* **NPC Vendors**
+  Buy, sell and restock items through dialogue trees.
 
-* **Modular Extensions**  
-  Hot-reloadable modules for seamless extension.
+* **Interaction Menu**
+  Contextual radial options for money, voice and recognition.
+
+* **Administration Tools**
+  Logging, tickets, warns, teleport and spectate.
+
+* **Performance & Protection**
+  Tick monitoring, network profiling and anti-exploit checks.
+
+* **Permissions & Logging**
+  CAMI-based privileges with inheritance and file logs.
+
+* **Modular Extensions**
+  Hot-loading modules with third-party addon compatibility.
+
+* **Workshop & Config**
+  Manage client downloads and tweak hundreds of in-game settings.
 
 </div>
 

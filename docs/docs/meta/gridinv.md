@@ -8,6 +8,7 @@ Grid-based inventories extend the base inventory class with slot-based item plac
 
 A `GridInv` instance stores items in a 2D grid, requiring items to fit within its width and height. It provides logic for finding free positions, transferring items, and updating ownership information.
 
+---
 ### getWidth
 
 **Purpose**

@@ -10,6 +10,12 @@ The classes library loads Lua definitions that describe player classes. Classes 
 
 See [Class Fields](../definitions/class.md) for configurable `CLASS` properties and [Class Hooks](../hooks/class_hooks.md) for customization callbacks.
 
+### Fields
+
+* **lia.class.list** (table) – Holds all loaded class tables indexed by number.
+
+---
+
 ### lia.class.loadFromDir
 
 **Description:**

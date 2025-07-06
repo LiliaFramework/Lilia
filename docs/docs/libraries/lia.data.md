@@ -8,6 +8,11 @@ This page describes persistent data storage helpers.
 
 The data library stores key/value pairs in the `lia_data` database table. Values are cached in memory inside `lia.data.stored` for quick access.
 
+### Fields
+
+* **lia.data.stored** (table) – Cached data loaded from the database.
+* **lia.data.isConverting** (boolean) – True while `lia.data.convertToDatabase` is running.
+
 ---
 
 

@@ -106,7 +106,5 @@ end)
 
 ### Console Commands
 
-`workshop_force_redownload` – clears the local queue and downloads all Workshop items again. Useful if a client
-
-needs to re-fetch content that may have been corrupted.
+`workshop_force_redownload` – clears the local queue and downloads all Workshop items again. Useful if a client needs to re-fetch content that may have been corrupted.
 
