@@ -1,96 +1,122 @@
-# Function-Level Documentation Standard
+---
 
-## 1 · Header
+# **Function-Level Documentation Standard**
+
+> **Always place each section in the exact order shown below.
+> Never omit a mandatory section, even if it is “None.”**
+
+---
+
+## 1. Header
 
 ```
 ### FunctionName
 ```
 
-*Exactly three hash symbols (`###`) followed by the function name and empty parentheses.
-Do **not** list parameters here; they belong in **Parameters**.*
+*Exactly three `#` symbols, one space, and the bare function name.
+Do **not** include parameters here
 
-## 2 · Description
+---
 
-*A single, precise sentence that states what the function does.*
+## 2. Description
 
-## 3 · Parameters
+*A single, complete sentence describing precisely **what the function does** (action, not implementation).*
 
-List each argument on its own bullet:
+---
 
-* `argName` (`Type`) – Concise explanation of the argument’s role.
+## 3. Parameters
 
-## 4 · Realm
+> **Bullet each argument on its own line.**
+> Format: `` `name` (`Type`) – concise role description ``
 
-One of:
+*Example:*
 
-* **Client**
-* **Server**
-* **Shared**
+* `clientID` (`string`) – Unique identifier for the requesting player.
+* `silent` (`boolean`) – If **true**, suppresses chat output.
 
-## 5 · Returns
+---
 
-* `ReturnType` – What the function yields.
+## 4. Realm
 
-## 6 · Examples
+*One of exactly these keywords (case-sensitive):*
 
-Provide one self-contained example of increasing complexity:
+* **Client** – Runs only on the client.
+* **Server** – Runs only on the server.
+* **Shared** – Accessible from both realms.
+
+---
+
+## 5. Returns
+
+```
+* `ReturnType` – Explanation of the yielded value, or **nil** if nothing is returned.
+```
+
+*Keep this a single bullet. Use `nil` literally when applicable.*
+
+---
+
+## 6. Example Usage
+
+Wrap in a fenced Lua block. Provide **one** self-contained snippet that demonstrates:
+
+1. **Basic usage** (minimal call).
+2. **Advanced usage** featuring extra logic or hooks.
 
 ```lua
 -- Basic usage
--- Advanced usage with extra logic
-hook.Add("functionname", "functionname.Advanced", function()
-    -- extensive involved code here
+lia.example.doThing(clientID)
+
+-- Advanced usage
+hook.Add("ExampleEvent", "lia.example.doThing.Advanced", function(ply, data)
+    if not IsValid(ply) then return end
+    lia.example.doThing(ply:SteamID64(), {silent = true})
 end)
 ```
 
 ---
 
-## Copy-Paste Template
+# **Library-Specific Rules**
 
-### FunctionName
+1. ### Namespace
 
-**Description:**
-\[One-sentence summary.]
-
-**Parameters:**
-
-* `argName` (`Type`) – Description.
-
-**Realm:**
-Client | Server | Shared
-
-**Returns:**
-`ReturnType` – Description.
-
-**Examples:**
-
-```lua
--- Example 1
--- …
-
--- Example 2
--- …
-```
-
----
-
-## Library-Specific Rules
-
-1. **Namespace**
-   Define all library functions under the `lia.*` namespace.
+   All public library functions live under `lia.`
 
    ```lua
-   function lia.abc.myUtility()
+   function lia.abc.myUtility(args)
        -- implementation
    end
    ```
 
-2. **Duplicate Fields**
-   If a field is already documented in `docs/definitions`, remove its duplicate from library documentation.
+2. ### Duplicate Fields
+
+   If a field is already documented in `docs/definitions`, **remove** its duplicate from other docs to avoid conflicts.
 
 ---
 
-### Usage Notes
+## Usage Notes
 
-* Use this standard for every entry under `/docs`.
-* Each **Examples** block should contain **both** basic and advanced scenarios that are **complex and varied**.
+* Apply this template to **every entry** under `/docs`.
+* If a function is **internal** (e.g., `lia.module.load`) and not intended for routine external use, append an extra line after §6:
+
+  ```
+  **Note:** _Internal function. External use discouraged._
+  ```
+
+---
+
+### Quick-Check List for Authors & Linters
+
+| Rule                                          | Must Follow? |
+| --------------------------------------------- | ------------ |
+| Header uses `###`                             | ✅            |
+| Description is one sentence                   | ✅            |
+| Each parameter on its own bullet              | ✅            |
+| Realm is one of **Client/Server/Shared**      | ✅            |
+| Returns section always present                | ✅            |
+| Example block shows both basic & advanced use | ✅            |
+| Internal-only note added when relevant        | ✅            |
+| Functions reside in `lia.*` namespace         | ✅            |
+| No duplicates with `docs/definitions`         | ✅            |
+
+---
