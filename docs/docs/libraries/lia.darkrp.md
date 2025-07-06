@@ -18,239 +18,191 @@ mapping each faction to its team index for compatibility.
 
 ---
 
+
 ### lia.darkrp.isEmpty
 
-**Description:**
+**Purpose**
 
-Checks whether the position is free from world geometry, players, NPCs and props. A 35 unit sphere around the position is checked to ensure spawn areas are unobstructed.
+Checks whether a position is free of world geometry, players, NPCs and props within a 35 unit sphere.
 
-**Parameters:**
+**Parameters**
 
-* `position` (`Vector`) – World position to test.
+* `position` (*Vector*): World position to test.
+* `entitiesToIgnore` (*table*): Entities ignored during the check. Optional.
 
+**Realm**
 
-* `entitiesToIgnore` (`table, optional`) – Entities ignored during the check.
+`Server`
 
+**Returns**
 
-**Realm:**
+* *boolean*: `true` if the position is clear, `false` otherwise.
 
-* Server
-
-
-**Returns:**
-
-* boolean – True if the position is clear, false otherwise.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    local ply = Entity(1) -- example player
-    if lia.darkrp.isEmpty(ply:GetPos(), {ply}) then
-        print("Spawn point is clear")
-    end
+local ply = Entity(1)
+if lia.darkrp.isEmpty(ply:GetPos(), {ply}) then
+    print("Spawn point is clear")
+end
 ```
-
----
 
 ### lia.darkrp.findEmptyPos
 
-**Description:**
+**Purpose**
 
-Searches around the given start position for a spot free of world geometry and blocking entities.
+Searches around a start position for a spot free of world geometry and blocking entities.
 
-**Parameters:**
+**Parameters**
 
-* `startPos` (`Vector`) – The initial position to search from.
+* `startPos` (*Vector*): Initial position to search from.
+* `entitiesToIgnore` (*table*): Entities ignored during the search. Optional.
+* `maxDistance` (*number*): Maximum distance to search in units.
+* `searchStep` (*number*): Step increment when expanding the search radius.
+* `checkArea` (*Vector*): Additional height offset tested for clearance.
 
+**Realm**
 
-* `entitiesToIgnore` (`table, optional`) – Entities ignored during the search.
+`Server`
 
+**Returns**
 
-* `maxDistance` (`number`) – Maximum distance to search in units.
+* *Vector*: A position considered safe for spawning.
 
-
-* `searchStep` (`number`) – Step increment when expanding the search radius.
-
-
-* `checkArea` (`Vector`) – Additional height offset tested for clearance.
-
-
-**Realm:**
-
-* Server
-
-
-**Returns:**
-
-* Vector – A position considered safe for spawning.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    local spawn = lia.darkrp.findEmptyPos(ply:GetPos(), {ply}, 128, 16, Vector(0,0,64))
-```
-
----
+local spawn = lia.darkrp.findEmptyPos(ply:GetPos(), {ply}, 128, 16, Vector(0,0,64))
 
 ### lia.darkrp.notify
 
-**Description:**
+**Purpose**
 
 Sends a notification to the specified client. The second and third parameters exist only for DarkRP compatibility and are ignored.
 
-**Parameters:**
+**Parameters**
 
-* `client` (`Player`) – The player to receive the message.
+* `client` (*Player*): Player to receive the message.
+* `message` (*string*): Text of the notification.
 
+**Realm**
 
-* `message` (`string`) – Text of the notification.
+`Server`
 
+**Returns**
 
-**Realm:**
+* *nil*: Nothing.
 
-* Server
-
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    lia.darkrp.notify(ply, nil, nil, "Purchase complete")
+lia.darkrp.notify(ply, nil, nil, "Purchase complete")
 ```
-
----
 
 ### lia.darkrp.textWrap
 
-**Description:**
+**Purpose**
 
 Clientside helper that wraps a string so it fits within a given pixel width using the provided font.
 
-**Parameters:**
+**Parameters**
 
-* `text` (`string`) – The text to wrap.
+* `text` (*string*): Text to wrap.
+* `fontName` (*string*): Font used to measure width.
+* `maxLineWidth` (*number*): Maximum pixel width before wrapping occurs.
 
+**Realm**
 
-* `fontName` (`string`) – The font used to measure width.
+`Client`
 
+**Returns**
 
-* `maxLineWidth` (`number`) – Maximum pixel width before wrapping occurs.
+* *string*: The wrapped text with newline characters inserted.
 
-
-**Realm:**
-
-* Client
-
-
-**Returns:**
-
-* string – The wrapped text with newline characters inserted.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    local wrapped = lia.darkrp.textWrap("Some very long text", "DermaDefault", 150)
-    chat.AddText(wrapped)
+local wrapped = lia.darkrp.textWrap("Some very long text", "DermaDefault", 150)
+chat.AddText(wrapped)
 ```
-
----
 
 ### lia.darkrp.formatMoney
 
-**Description:**
+**Purpose**
 
-Formats the given amount using lia.currency.get so other DarkRP addons receive familiar strings.
+Formats the given amount using `lia.currency.get` so other DarkRP addons receive familiar strings.
 
-**Parameters:**
+**Parameters**
 
-* `amount` (`number`) – The value of money to format.
+* `amount` (*number*): Value of money to format.
 
+**Realm**
 
-**Realm:**
+`Shared`
 
-* Shared
+**Returns**
 
+* *string*: The formatted currency value.
 
-**Returns:**
-
-* string – The formatted currency value.
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    print(lia.darkrp.formatMoney(2500))
+print(lia.darkrp.formatMoney(2500))
 ```
-
 ---
+
 
 ### lia.darkrp.createEntity
 
-**Description:**
+**Purpose**
 
-Registers a new DarkRP entity as an item so that it can be spawned
+Registers a new DarkRP entity as an item so that it can be spawned through lia's item system.
 
-through lia's item system.
+**Parameters**
 
-**Parameters:**
+* `name` (*string*): Display name of the entity.
+* `data` (*table*): Table containing fields such as `model`, `desc`, `category`, `ent`, `price` and optional `cmd`.
 
-* `name` (`string`) – Display name of the entity.
+**Realm**
 
-* `data` (`table`) – Table containing fields such as `model`, `desc`, `category`, `ent`, `price` and optional `cmd`.
+`Shared`
 
-**Realm:**
+**Returns**
 
-* Shared
+* *nil*: Nothing.
 
-
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    lia.darkrp.createEntity("Fuel", {
-        model = "models/props_c17/oildrum001.mdl",
-        ent = "prop_physics",
-        price = 50
-    })
+lia.darkrp.createEntity("Fuel", {
+    model = "models/props_c17/oildrum001.mdl",
+    ent = "prop_physics",
+    price = 50
+})
 ```
-
 ---
 
 ### lia.darkrp.createCategory
 
-**Description:**
+**Purpose**
 
 Stub for DarkRP category creation. Included only for compatibility.
 
-**Parameters:**
+**Parameters**
 
-* None
+*None*
 
+**Realm**
 
-**Realm:**
+`Shared`
 
-* Shared
+**Returns**
 
+* *nil*: Nothing.
 
-**Returns:**
-
-* None
-
-
-**Example Usage:**
+**Example**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.darkrp.createCategory
-    lia.darkrp.createCategory()
+lia.darkrp.createCategory()
 ```
+
