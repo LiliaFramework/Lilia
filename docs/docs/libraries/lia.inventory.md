@@ -8,6 +8,11 @@ This page documents inventory handling functions.
 
 The inventory library manages item containers and grid inventories. It supports registering new inventory types and handles item transfers between them.
 
+### Fields
+
+* **lia.inventory.types** (table) – Registered inventory classes indexed by type ID.
+* **lia.inventory.instances** (table) – Loaded inventory instances indexed by ID.
+
 ---
 
 ### lia.inventory.newType

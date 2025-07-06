@@ -8,6 +8,10 @@ This page describes functions to register custom keybinds.
 
 The keybind library stores user-defined keyboard bindings. It is loaded **client side** and automatically loads any saved bindings from `data/lilia/keybinds/`. Press and release callbacks are dispatched through the `PlayerButtonDown` and `PlayerButtonUp` hooks. The library also adds a "Keybinds" page to the configuration menu via the `PopulateConfigurationButtons` hook so players can change their binds in game.
 
+### Fields
+
+* **lia.keybind.stored** (table) – Mapping of keybind actions and their settings.
+
 ---
 
 ### lia.keybind.add
