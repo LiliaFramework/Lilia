@@ -48,12 +48,6 @@ lia.command.add("plywhitelist", {
     desc = L("plyWhitelistDesc"),
     syntax = "[player Name] [string Faction]",
     alias = {"factionwhitelist"},
-    AdminStick = {
-        Name = L("adminStickWhitelistName"),
-        Category = "characterManagement",
-        SubCategory = L("adminStickSubCategorySetInfos"),
-        Icon = "icon16/user_add.png"
-    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
@@ -134,12 +128,6 @@ lia.command.add("setclass", {
     privilege = "Manage Classes",
     desc = L("setClassDesc"),
     syntax = "[player Player Name] [string Class]",
-    AdminStick = {
-        Name = L("adminStickSetClassName"),
-        Category = "characterManagement",
-        SubCategory = L("adminStickSubCategorySetInfos"),
-        Icon = "icon16/user_suit.png"
-    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then

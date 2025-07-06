@@ -819,12 +819,6 @@ lia.command.add("charsetmodel", {
     privilege = "Manage Character Information",
     desc = L("setModelDesc"),
     syntax = "[player Player Name] [string Model]",
-    AdminStick = {
-        Name = L("adminStickSetCharModelName"),
-        Category = "characterManagement",
-        SubCategory = L("adminStickSubCategorySetInfos"),
-        Icon = "icon16/user_gray.png"
-    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
@@ -913,14 +907,7 @@ lia.command.add("charsetdesc", {
         end
 
         local desc = table.concat(arguments, " ", 2)
-        if not desc:find("%S") then
-            return client:requestString(
-                L("chgDescTitle", target:Name()),
-                L("enterNewDesc"),
-                function(text) lia.command.run(client, "charsetdesc", {arguments[1], text}) end,
-                target:getChar():getDesc()
-            )
-        end
+        if not desc:find("%S") then return client:requestString(L("chgDescTitle", target:Name()), L("enterNewDesc"), function(text) lia.command.run(client, "charsetdesc", {arguments[1], text}) end, target:getChar():getDesc()) end
         target:getChar():setDesc(desc)
         return L("descChangedTarget", client:Name(), target:Name())
     end
