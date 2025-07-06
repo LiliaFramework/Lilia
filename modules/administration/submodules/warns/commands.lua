@@ -4,9 +4,9 @@
     desc = L("warnDesc"),
     syntax = "[player Target] [string Reason]",
     AdminStick = {
-        Name = L("warnPlayer"),
+        Name = "warnPlayer",
         Category = "moderationTools",
-        SubCategory = L("warnings"),
+        SubCategory = "warnings",
         Icon = "icon16/error.png"
     },
     onRun = function(client, arguments)
@@ -40,9 +40,9 @@ lia.command.add("viewwarns", {
     desc = L("viewWarnsDesc"),
     syntax = "[player Target]",
     AdminStick = {
-        Name = L("viewPlayerWarnings"),
+        Name = "viewPlayerWarnings",
         Category = "moderationTools",
-        SubCategory = L("warnings"),
+        SubCategory = "warnings",
         Icon = "icon16/eye.png"
     },
     onRun = function(client, arguments)

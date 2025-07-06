@@ -92,9 +92,9 @@ lia.command.add("returnitems", {
     desc = L("returnItemsDesc"),
     syntax = "[player Name]",
     AdminStick = {
-        Name = L("returnItemsName"),
+        Name = "returnItemsName",
         Category = "characterManagement",
-        SubCategory = L("items"),
+        SubCategory = "items",
         Icon = "icon16/arrow_refresh.png"
     },
     onRun = function(client, arguments)

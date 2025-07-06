@@ -5,9 +5,9 @@
     syntax = "[player Name] [faction Faction]",
     alias = {"charsetfaction"},
     AdminStick = {
-        Name = L("adminStickTransferName"),
+        Name = "adminStickTransferName",
         Category = "characterManagement",
-        SubCategory = L("adminStickSubCategorySetInfos"),
+        SubCategory = "adminStickSubCategorySetInfos",
         Icon = "icon16/user_go.png"
     },
     onRun = function(client, arguments)
@@ -73,9 +73,9 @@ lia.command.add("plyunwhitelist", {
     syntax = "[player Name] [faction Faction]",
     alias = {"factionunwhitelist"},
     AdminStick = {
-        Name = L("adminStickUnwhitelistName"),
+        Name = "adminStickUnwhitelistName",
         Category = "characterManagement",
-        SubCategory = L("adminStickSubCategorySetInfos"),
+        SubCategory = "adminStickSubCategorySetInfos",
         Icon = "icon16/user_delete.png"
     },
     onRun = function(client, arguments)
@@ -160,9 +160,9 @@ lia.command.add("classwhitelist", {
     desc = L("classWhitelistDesc"),
     syntax = "[player Name] [class Class]",
     AdminStick = {
-        Name = L("adminStickClassWhitelistName"),
+        Name = "adminStickClassWhitelistName",
         Category = "characterManagement",
-        SubCategory = L("adminStickSubCategorySetInfos"),
+        SubCategory = "adminStickSubCategorySetInfos",
         Icon = "icon16/user_add.png"
     },
     onRun = function(client, arguments)
@@ -196,9 +196,9 @@ lia.command.add("classunwhitelist", {
     desc = L("classUnwhitelistDesc"),
     syntax = "[player Name] [class Class]",
     AdminStick = {
-        Name = L("adminStickClassUnwhitelistName"),
+        Name = "adminStickClassUnwhitelistName",
         Category = "characterManagement",
-        SubCategory = L("adminStickSubCategorySetInfos"),
+        SubCategory = "adminStickSubCategorySetInfos",
         Icon = "icon16/user_delete.png"
     },
     onRun = function(client, arguments)

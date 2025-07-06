@@ -4,9 +4,9 @@
     desc = L("plyViewClaimsDesc"),
     syntax = "[player Player Name]",
     AdminStick = {
-        Name = L("viewTicketClaims"),
+        Name = "viewTicketClaims",
         Category = "moderationTools",
-        SubCategory = L("misc"),
+        SubCategory = "misc",
         Icon = "icon16/page_white_text.png"
     },
     onRun = function(client, arguments)

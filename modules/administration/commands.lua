@@ -77,9 +77,9 @@ lia.command.add("sendtositroom", {
     desc = L("sendToSitRoomDesc"),
     syntax = "[player Player Name]",
     AdminStick = {
-        Name = L("sendToSitRoom"),
+        Name = "sendToSitRoom",
         Category = "moderationTools",
-        SubCategory = L("misc"),
+        SubCategory = "misc",
         Icon = "icon16/arrow_down.png"
     },
     onRun = function(client, arguments)
@@ -123,9 +123,9 @@ lia.command.add("returnsitroom", {
     desc = L("returnFromSitroomDesc"),
     syntax = "[player Player Name]",
     AdminStick = {
-        Name = L("returnFromSitroom"),
+        Name = "returnFromSitroom",
         Category = "moderationTools",
-        SubCategory = L("misc"),
+        SubCategory = "misc",
         Icon = "icon16/arrow_up.png"
     },
     onRun = function(client, arguments)
