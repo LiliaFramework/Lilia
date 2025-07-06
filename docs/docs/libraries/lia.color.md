@@ -8,10 +8,6 @@ This page lists helper functions for working with colors.
 
 The color library centralizes color utilities used throughout the UI. You can register reusable colors, adjust their channels to create variants, and fetch the main palette from the configuration. Many common color names are pre-registered and can be used with the global `Color()` function. Custom registrations are stored in `lia.color.stored`.
 
-### Fields
-
-* **lia.color.stored** (table) – Table of named colors referenced by `Color(name)`.
-
 ---
 
 ### lia.color.register

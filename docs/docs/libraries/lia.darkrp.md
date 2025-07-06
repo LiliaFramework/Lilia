@@ -16,13 +16,7 @@ global `DarkRP` table. A simplified `RPExtraTeams` table is created as well,
 
 mapping each faction to its team index for compatibility.
 
-### Fields
-
-* **DarkRP** (table) – Global table mirroring these helpers for compatibility.
-* **RPExtraTeams** (table) – List of factions indexed by team for DarkRP addons.
-
 ---
-
 
 ### lia.darkrp.isEmpty
 

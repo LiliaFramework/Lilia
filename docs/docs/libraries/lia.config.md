@@ -8,11 +8,6 @@ This page explains how to add and access configuration settings.
 
 The config library stores server configuration values with descriptions and default settings. It also provides callbacks when values change so modules can react to new options.
 
-### Fields
-
-* **lia.config.stored** (table) – Table of registered configuration entries.
-* **lia.config.isConverting** (boolean) – Set while `lia.config.convertToDatabase` runs.
-
 ---
 
 ### lia.config.add

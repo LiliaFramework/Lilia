@@ -8,13 +8,6 @@ This page covers utilities for manipulating character data.
 
 The character library handles creation and persistence of player characters. It manages character variables, interacts with the database, and offers helpers for retrieving characters by ID or SteamID. Because these functions directly modify stored data, use them carefully or you may corrupt character information.
 
-### Fields
-
-* **lia.char.loaded** (table) – Active character objects indexed by ID.
-* **lia.char.names** (table) – Map of character IDs to their names.
-* **lia.char.varHooks** (table) – Registered variable change hooks.
-* **lia.char.vars** (table) – Metadata definitions for character variables.
-
 ### lia.char.new
 
 **Description:**

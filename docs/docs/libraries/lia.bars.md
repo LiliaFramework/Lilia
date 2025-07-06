@@ -10,12 +10,6 @@ The bars library manages health, stamina, and other progress bars displayed on t
 
 Default health, armor and stamina bars are registered automatically when the client loads.
 
-### Fields
-
-* **lia.bar.list** (table) – Active bars sorted by priority.
-* **lia.bar.delta** (table) – Smoothed bar values for transitions.
-* **lia.bar.values** (table) – Last raw values returned by each bar.
-
 ### Bar Table Fields
 
 Each bar returned by `lia.bar.get` or inserted via `lia.bar.add` is a table with the following fields:

@@ -20,15 +20,6 @@ Built‑in log types reside in
 
 registered with `lia.log.addType`.
 
-### Fields
-
-* **lia.log.isConverting** (boolean) – Set to `true` while
-
-  `lia.log.convertToDatabase` is running. The server blocks player connections
-
-  during this time.
-* **lia.log.types** (table) – Registry of log types added with `lia.log.addType`.
-
 ---
 
 ### lia.log.loadTables

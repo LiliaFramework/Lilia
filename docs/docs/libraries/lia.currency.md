@@ -8,13 +8,6 @@ This page covers money and currency related helpers.
 
 The currency library formats money amounts, spawns physical money entities, and exposes the configured currency names. The symbol and name values come from the configuration options defined in `gamemode/core/libraries/config.lua`.
 
-### Fields
-
-* **lia.currency.symbol** (string) – Prefix used when displaying money amounts.
-
-* **lia.currency.singular** (string) – Singular form of the currency name.
-
-* **lia.currency.plural** (string) – Plural form of the currency name.
 ---
 ### lia.currency.get
 

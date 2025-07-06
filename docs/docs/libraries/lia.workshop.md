@@ -10,16 +10,6 @@ The workshop library tracks required Workshop addon IDs and mounts them on clien
 
 `lia.workshop.send` is automatically called 10 seconds after each player's initial spawn when this configuration is on.
 
-### Fields
-
-* **lia.workshop.ids** (table) – IDs registered through `lia.workshop.AddWorkshop`.
-
-* **lia.workshop.known** (table) – IDs that have previously been added and announced.
-
-* **lia.workshop.cache** (table) – Cached list of IDs built after the `InitializedModules` hook.
-
-* **resource.AddWorkshop** (function) – Alias of `lia.workshop.AddWorkshop` for compatibility.
-
 ---
 
 ### lia.workshop.AddWorkshop
