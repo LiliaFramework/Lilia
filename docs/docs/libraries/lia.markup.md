@@ -53,6 +53,11 @@ Constructs an empty markup object. Usually returned by `lia.markup.parse`.
 **Returns**
 
 * `MarkupObject`: Newly constructed object with zero size.
+**Example**
+
+```lua
+local obj = lia.markup.MarkupObject:create()
+```
 
 ### MarkupObject Fields
 

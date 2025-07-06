@@ -16,6 +16,12 @@ localized phrases. Loaded phrases are stored in `lia.lang.stored` while display
 
 names are kept in `lia.lang.names`.
 
+### Fields
+
+* **lia.lang.names** (table) – Maps language identifiers to display names.
+* **lia.lang.stored** (table) – Holds phrase tables for each language.
+
+
 ---
 
 ### lia.lang.loadFromDir
