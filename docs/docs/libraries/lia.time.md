@@ -12,28 +12,28 @@ The time library handles date formatting and relative time conversions. It offer
 
 ### lia.time.TimeSince
 
-**Description:**
+**Purpose**
 
 Returns a human-readable string indicating how long ago a given time occurred (e.g., "5 minutes ago").
 
-**Parameters:**
+**Parameters**
 
-* `strTime` (`string or number`) — The time in string or timestamp form.
+* `strTime` (`string or number`): The time in string or timestamp form.
 
 * Strings should follow `YYYY-MM-DD` while numbers are standard timestamps.
 
 
-**Realm:**
+**Realm**
 
-* Shared
+`Shared`
 
 
-**Returns:**
+**Returns**
 
 * (string) The time since the given date/time in a readable format.
 
 
-**Example Usage:**
+**Example**
 
 ```lua
 -- Greet players with the time since they last joined using persistence data
@@ -57,26 +57,26 @@ end)
 
 ### lia.time.toNumber
 
-**Description:**
+**Purpose**
 
 Converts a string timestamp (YYYY-MM-DD HH:MM:SS) into a table of numeric components: year, month, day, hour, min, and sec. If omitted, it returns the current time.
 
-**Parameters:**
+**Parameters**
 
-* `str` (`string`) — The time string to convert (optional).
-
-
-**Realm:**
-
-* Shared
+* `str` (`string`): The time string to convert (optional).
 
 
-**Returns:**
+**Realm**
+
+`Shared`
+
+
+**Returns**
 
 * (table) A table with numeric year, month, day, hour, min, sec.
 
 
-**Example Usage:**
+**Example**
 
 ```lua
     -- Schedule an event at a custom date and time using the parsed table
@@ -94,7 +94,7 @@ Converts a string timestamp (YYYY-MM-DD HH:MM:SS) into a table of numeric compon
 
 ### lia.time.GetDate
 
-**Description:**
+**Purpose**
 
 Returns the full current date and time formatted based on the
 
@@ -104,22 +104,22 @@ Returns the full current date and time formatted based on the
 
 • If disabled: "Weekday, DD Month YYYY, HH:MM:SS"
 
-**Parameters:**
+**Parameters**
 
 * None
 
 
-**Realm:**
+**Realm**
 
-* Shared
+`Shared`
 
 
-**Returns:**
+**Returns**
 
 * (string) Formatted date and time string.
 
 
-**Example Usage:**
+**Example**
 
 ```lua
     -- Announce the current server date and time to all players every hour
@@ -135,7 +135,7 @@ Returns the full current date and time formatted based on the
 
 ### lia.time.GetHour
 
-**Description:**
+**Purpose**
 
 Returns the current hour formatted based on the
 
@@ -145,22 +145,22 @@ Returns the current hour formatted based on the
 
 • If disabled: H (0–23, 24-hour)
 
-**Parameters:**
+**Parameters**
 
 * None
 
 
-**Realm:**
+**Realm**
 
-* Shared
+`Shared`
 
 
-**Returns:**
+**Returns**
 
 * (string|number) Current hour string with suffix when AmericanTimeStamps is enabled, otherwise numeric hour in 24-hour format.
 
 
-**Example Usage:**
+**Example**
 
 ```lua
 -- Toggle an NPC's shop based on the in-game hour
