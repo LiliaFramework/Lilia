@@ -50,6 +50,7 @@ Each flag entry stores a description and an optional callback. The callback is i
             client:StripWeapon("weapon_physgun")
         end
     end)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -88,6 +89,7 @@ after custom spawn logic.
     hook.Add("PlayerSpawn", "ApplyFlagCallbacks", function(ply)
         lia.flag.onSpawn(ply)
     end)
+    -- Advanced example of the usage of the function.
 ```
 
 ---

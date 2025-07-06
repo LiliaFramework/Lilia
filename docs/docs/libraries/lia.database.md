@@ -41,10 +41,10 @@ or re-establish one.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.db.connect
     lia.db.connect(function()
         print("Database connected")
     end)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -75,10 +75,10 @@ tables. This action is irreversible and will remove all stored data.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.db.wipeTables
     lia.db.wipeTables(function()
         print("Tables wiped")
     end)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -109,8 +109,8 @@ storing Lilia data. This ensures the schema is properly set up.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.db.loadTables
     lia.db.loadTables()
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -141,10 +141,10 @@ This allows asynchronous code to wait for table creation before proceeding.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.db.waitForTablesToLoad
     lia.db.waitForTablesToLoad():next(function()
         print("Tables loaded")
     end)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -180,8 +180,8 @@ unless noEscape is set.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.db.convertDataType
     local str = lia.db.convertDataType({name = "Lilia"})
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -218,10 +218,10 @@ The callback is invoked after the insert query is complete.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.db.insertTable
     lia.db.insertTable({name = "Test"}, function(id)
         print("Inserted", id)
     end, "characters")
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -261,10 +261,10 @@ provided condition. The callback is invoked once the update query finishes.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.db.updateTable
     lia.db.updateTable({name = "Updated"}, function()
         print("Row updated")
     end, "characters", "id = 1")
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -306,10 +306,10 @@ object that resolves with the query results.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.db.select
     lia.db.select("*", "characters", "id = 1"):next(function(rows)
         PrintTable(rows)
     end)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -345,8 +345,8 @@ Returns a deferred object that resolves when the operation completes.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.db.upsert
     lia.db.upsert({id = 1, name = "John"}, "characters")
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -380,10 +380,10 @@ If no condition is specified, all rows are deleted. Returns a deferred object.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.db.delete
     lia.db.delete("characters", "id = 1"):next(function()
         print("Row deleted")
     end)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -414,8 +414,8 @@ This is useful for debugging or database maintenance tasks.
 **Example Usage:**
 
 ```lua
-    -- This snippet demonstrates a common usage of lia.db.GetCharacterTable
 lia.db.GetCharacterTable(function(columns) PrintTable(columns) end)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -446,6 +446,7 @@ Counts rows in the given table optionally filtered by a condition.
     lia.db.count("characters", "faction = 1"):next(function(n)
         print("Character count:", n)
     end)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -476,6 +477,7 @@ Checks whether any rows satisfy the provided condition.
     lia.db.exists("characters", "id = 5"):next(function(found)
         print("Character exists:", found)
     end)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -510,6 +512,7 @@ Fetches a single row from the given table.
             print("Found character:", row._name)
         end
     end)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -541,6 +544,7 @@ Inserts multiple rows in a single query.
         { _invID = 1, _uniqueID = "pistol", _x = 0, _y = 0, _quantity = 1 },
         { _invID = 1, _uniqueID = "ammo", _x = 1, _y = 0, _quantity = 30 },
     })
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -571,6 +575,7 @@ Inserts a row but ignores it if a unique constraint fails.
     lia.db.insertOrIgnore({ id = 1, name = "Bob" }, "characters"):next(function(r)
         print("Insert ID:", r.lastID)
     end)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -602,6 +607,7 @@ Runs multiple queries inside a transaction, rolling back on error.
     }):next(function()
         print("Transaction complete")
     end)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -629,6 +635,7 @@ Escapes an identifier for use in manual SQL queries.
 ```lua
     local col = lia.db.escapeIdentifier("desc")
     print(col)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -663,6 +670,7 @@ Registers a prepared statement. Only available when using MySQLOO.
         "UPDATE lia_characters SET _name = ? WHERE _id = ?",
         { MYSQLOO_STRING, MYSQLOO_INTEGER }
     )
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -693,6 +701,7 @@ Executes a prepared statement previously registered with `lia.db.prepare`.
 
 ```lua
     lia.db.preparedCall("updateName", nil, "Alice", 1)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -725,6 +734,7 @@ supplied a deferred object is returned.
     lia.db.query("SELECT 1"):next(function(res)
         PrintTable(res.results)
     end)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -751,6 +761,7 @@ Escapes a string for safe use in manual SQL queries.
 
 ```lua
     local safe = lia.db.escape(userInput)
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -777,6 +788,7 @@ Returns the number of queued queries waiting to be executed.
 
 ```lua
     print("Queue size:", lia.db.queue())
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -803,6 +815,7 @@ Cancels all running queries on every connection in the pool.
 
 ```lua
     lia.db.abort()
+    -- Advanced example of the usage of the function.
 ```
 
 ---
@@ -829,4 +842,5 @@ Returns the least busy database object along with its index in the pool.
 
 ```lua
     local db = lia.db.getObject()
+    -- Advanced example of the usage of the function.
 ```
