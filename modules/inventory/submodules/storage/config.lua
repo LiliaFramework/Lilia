@@ -1,8 +1,8 @@
 ﻿MODULE.Vehicles = MODULE.Vehicles or {}
 MODULE.StorageDefinitions = {
     ["models/props_junk/wood_crate001a.mdl"] = {
-        name = L("storageWoodCrate"),
-        desc = L("storageWoodCrateDesc"),
+        name = "storageWoodCrate",
+        desc = "storageWoodCrateDesc",
         invType = "GridInv",
         invData = {
             w = 4,
@@ -10,8 +10,8 @@ MODULE.StorageDefinitions = {
         }
     },
     ["models/props_c17/lockers001a.mdl"] = {
-        name = L("storageLocker"),
-        desc = L("storageLockerDesc"),
+        name = "storageLocker",
+        desc = "storageLockerDesc",
         invType = "GridInv",
         invData = {
             w = 4,
@@ -19,8 +19,8 @@ MODULE.StorageDefinitions = {
         }
     },
     ["models/props_wasteland/controlroom_storagecloset001a.mdl"] = {
-        name = L("storageMetalCloset"),
-        desc = L("storageMetalClosetDesc"),
+        name = "storageMetalCloset",
+        desc = "storageMetalClosetDesc",
         invType = "GridInv",
         invData = {
             w = 5,
@@ -28,8 +28,8 @@ MODULE.StorageDefinitions = {
         }
     },
     ["models/props_wasteland/controlroom_filecabinet002a.mdl"] = {
-        name = L("storageFileCabinet"),
-        desc = L("storageFileCabinetDesc"),
+        name = "storageFileCabinet",
+        desc = "storageFileCabinetDesc",
         invType = "GridInv",
         invData = {
             w = 3,
@@ -37,8 +37,8 @@ MODULE.StorageDefinitions = {
         }
     },
     ["models/props_c17/furniturefridge001a.mdl"] = {
-        name = L("storageRefrigerator"),
-        desc = L("storageRefrigeratorDesc"),
+        name = "storageRefrigerator",
+        desc = "storageRefrigeratorDesc",
         invType = "GridInv",
         invData = {
             w = 3,
@@ -46,8 +46,8 @@ MODULE.StorageDefinitions = {
         }
     },
     ["models/props_wasteland/kitchen_fridge001a.mdl"] = {
-        name = L("storageLargeRefrigerator"),
-        desc = L("storageLargeRefrigeratorDesc"),
+        name = "storageLargeRefrigerator",
+        desc = "storageLargeRefrigeratorDesc",
         invType = "GridInv",
         invData = {
             w = 4,
@@ -55,8 +55,8 @@ MODULE.StorageDefinitions = {
         }
     },
     ["models/props_junk/trashbin01a.mdl"] = {
-        name = L("storageTrashBin"),
-        desc = L("storageTrashBinDesc"),
+        name = "storageTrashBin",
+        desc = "storageTrashBinDesc",
         invType = "GridInv",
         invData = {
             w = 1,
@@ -64,8 +64,8 @@ MODULE.StorageDefinitions = {
         }
     },
     ["models/items/ammocrate_smg1.mdl"] = {
-        name = L("storageAmmoCrate"),
-        desc = L("storageAmmoCrateDesc"),
+        name = "storageAmmoCrate",
+        desc = "storageAmmoCrateDesc",
         invType = "GridInv",
         invData = {
             w = 5,
@@ -77,8 +77,8 @@ MODULE.StorageDefinitions = {
         end
     },
     vehicle = {
-        name = L("storageVehicle"),
-        desc = L("storageVehicleDesc"),
+        name = "storageVehicle",
+        desc = "storageVehicleDesc",
         invType = "GridInv",
         invData = {
             w = 6,

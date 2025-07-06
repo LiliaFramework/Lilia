@@ -1,5 +1,5 @@
-﻿FACTION.name = L("factionStaffName")
-FACTION.desc = L("factionStaffDesc")
+﻿FACTION.name = "factionStaffName"
+FACTION.desc = "factionStaffDesc"
 FACTION.color = Color(255, 56, 252)
 FACTION.isDefault = false
 FACTION.models = {"models/Humans/Group02/male_07.mdl", "models/Humans/Group02/male_07.mdl", "models/Humans/Group02/male_07.mdl", "models/Humans/Group02/male_07.mdl", "models/Humans/Group02/male_07.mdl"}
