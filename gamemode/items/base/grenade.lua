@@ -1,5 +1,5 @@
-﻿ITEM.name = "Grenade Base"
-ITEM.desc = "Base item for grenades."
+﻿ITEM.name = "grenadeName"
+ITEM.desc = "grenadeDesc"
 ITEM.category = "Grenades"
 ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
 ITEM.class = "weapon_frag"

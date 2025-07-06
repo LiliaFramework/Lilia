@@ -1,5 +1,5 @@
-﻿ITEM.name = "Weapon"
-ITEM.desc = "A Weapon."
+﻿ITEM.name = "weaponsName"
+ITEM.desc = "weaponsDesc"
 ITEM.category = "Weapons"
 ITEM.model = "models/weapons/w_pistol.mdl"
 ITEM.class = "weapon_pistol"

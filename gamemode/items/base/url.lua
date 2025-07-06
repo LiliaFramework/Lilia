@@ -1,5 +1,5 @@
-﻿ITEM.name = "Generic Item"
-ITEM.desc = "Generic Description"
+﻿ITEM.name = "urlName"
+ITEM.desc = "urlDesc"
 ITEM.model = "models/props_interiors/pot01a.mdl"
 ITEM.url = ""
 ITEM.functions.use = {

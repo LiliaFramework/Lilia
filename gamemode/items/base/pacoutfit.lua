@@ -1,6 +1,6 @@
 ﻿if not pac then return end
-ITEM.name = "PAC Outfit"
-ITEM.desc = "A PAC Outfit Base."
+ITEM.name = "pacoutfitName"
+ITEM.desc = "pacoutfitDesc"
 ITEM.category = "Outfit"
 ITEM.model = "models/Gibs/HGIBS.mdl"
 ITEM.width = 1
