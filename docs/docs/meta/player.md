@@ -12,26 +12,23 @@ Player meta functions provide quick access to the active character, networking h
 
 ### getChar
 
-**Description:**
-
+Description: 
 Returns the currently loaded character object for this player.
 
-**Parameters:**
+Parameters:
 
-* None
-
-
-**Realm:**
-
-* Shared
+- None
 
 
-**Returns:**
-
-* Character|None – The player's active character.
+Realm: Shared
 
 
-**Example Usage:**
+Returns:
+
+- Character|None: The player's active character.
+
+
+Example Usage:
 
 ```lua
 -- Retrieve the character to modify inventory
@@ -42,26 +39,23 @@ local char = player:getChar()
 
 ### Name
 
-**Description:**
-
+Description: 
 Returns either the character's roleplay name or the player's Steam name.
 
-**Parameters:**
+Parameters:
 
-* None
-
-
-**Realm:**
-
-* Shared
+- None
 
 
-**Returns:**
-
-* string – Display name.
+Realm: Shared
 
 
-**Example Usage:**
+Returns:
+
+- string: Display name.
+
+
+Example Usage:
 
 ```lua
 -- Print the roleplay name in chat
@@ -72,26 +66,23 @@ chat.AddText(player:Name())
 
 ### hasPrivilege
 
-**Description:**
-
+Description: 
 Wrapper for CAMI privilege checks.
 
-**Parameters:**
+Parameters:
 
-* `privilegeName` (`string`) – Privilege identifier.
-
-
-**Realm:**
-
-* Shared
+- `privilegeName` (string): Privilege identifier.
 
 
-**Returns:**
-
-* boolean – Result from CAMI.PlayerHasAccess.
+Realm: Shared
 
 
-**Example Usage:**
+Returns:
+
+- boolean: Result from CAMI.PlayerHasAccess.
+
+
+Example Usage:
 
 ```lua
 -- Deny access if the player lacks a privilege
@@ -104,26 +95,23 @@ end
 
 ### getCurrentVehicle
 
-**Description:**
-
+Description: 
 Safely returns the vehicle the player is currently using.
 
-**Parameters:**
+Parameters:
 
-* None
-
-
-**Realm:**
-
-* Shared
+- None
 
 
-**Returns:**
-
-* Entity|None – Vehicle entity or None.
+Realm: Shared
 
 
-**Example Usage:**
+Returns:
+
+- Entity|None: Vehicle entity or None.
+
+
+Example Usage:
 
 ```lua
 -- Attach a camera to the vehicle the player is in
@@ -137,26 +125,23 @@ end
 
 ### hasValidVehicle
 
-**Description:**
-
+Description: 
 Determines if the player is currently inside a valid vehicle.
 
-**Parameters:**
+Parameters:
 
-* None
-
-
-**Realm:**
-
-* Shared
+- None
 
 
-**Returns:**
-
-* boolean – True if a vehicle entity is valid.
+Realm: Shared
 
 
-**Example Usage:**
+Returns:
+
+- boolean: True if a vehicle entity is valid.
+
+
+Example Usage:
 
 ```lua
 -- Allow honking only when in a valid vehicle
@@ -169,26 +154,23 @@ end
 
 ### isNoClipping
 
-**Description:**
-
+Description: 
 Returns true if the player is in noclip mode and not inside a vehicle.
 
-**Parameters:**
+Parameters:
 
-* None
-
-
-**Realm:**
-
-* Shared
+- None
 
 
-**Returns:**
-
-* boolean – Whether the player is noclipping.
+Realm: Shared
 
 
-**Example Usage:**
+Returns:
+
+- boolean: Whether the player is noclipping.
+
+
+Example Usage:
 
 ```lua
 -- Disable certain actions while noclipping
@@ -199,26 +181,23 @@ if player:isNoClipping() then return end
 
 ### hasRagdoll
 
-**Description:**
-
+Description: 
 Checks if the player currently has an active ragdoll entity.
 
-**Parameters:**
+Parameters:
 
-* None
-
-
-**Realm:**
-
-* Shared
+- None
 
 
-**Returns:**
-
-* boolean – True when a ragdoll entity exists.
+Realm: Shared
 
 
-**Example Usage:**
+Returns:
+
+- boolean: True when a ragdoll entity exists.
+
+
+Example Usage:
 
 ```lua
 if player:hasRagdoll() then
@@ -230,8 +209,7 @@ end
 
 ### CanOverrideView
 
-**Description:**
-
+Description: 
 Checks if the player is allowed to override the camera view. A valid character
 
 must be loaded and the player cannot be in a vehicle or ragdoll. The option
@@ -240,19 +218,17 @@ must be loaded and the player cannot be in a vehicle or ragdoll. The option
 
 `ShouldDisableThirdperson` hook must not return `true`.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- boolean: True when a third person view may be used.
 
-* boolean – True when a third person view may be used.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 if player:CanOverrideView() then
@@ -264,25 +240,22 @@ end
 
 ### IsInThirdPerson
 
-**Description:**
-
+Description: 
 Returns whether third person view is enabled for this player according to the
 
 `thirdPersonEnabled` option and configuration.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- boolean: True if third person mode is enabled.
 
-* boolean – True if third person mode is enabled.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 if player:IsInThirdPerson() then
@@ -294,26 +267,23 @@ end
 
 ### removeRagdoll
 
-**Description:**
-
+Description: 
 Safely removes the player's ragdoll entity if present.
 
-**Parameters:**
+Parameters:
 
-* None
-
-
-**Realm:**
-
-* Shared
+- None
 
 
-**Returns:**
-
-* None – This function does not return a value.
+Realm: Shared
 
 
-**Example Usage:**
+Returns:
+
+- `None`: This function does not return a value.
+
+
+Example Usage:
 
 ```lua
 -- Clean up any ragdoll left behind
@@ -324,26 +294,23 @@ player:removeRagdoll()
 
 ### getRagdoll
 
-**Description:**
-
+Description: 
 Retrieves the ragdoll entity associated with the player.
 
-**Parameters:**
+Parameters:
 
-* None
-
-
-**Realm:**
-
-* Shared
+- None
 
 
-**Returns:**
-
-* Entity|None – The ragdoll entity or None.
+Realm: Shared
 
 
-**Example Usage:**
+Returns:
+
+- Entity|None: The ragdoll entity or None.
+
+
+Example Usage:
 
 ```lua
 local ragdoll = player:getRagdoll()
@@ -353,26 +320,23 @@ local ragdoll = player:getRagdoll()
 
 ### isStuck
 
-**Description:**
-
+Description: 
 Determines whether the player's position is stuck in the world.
 
-**Parameters:**
+Parameters:
 
-* None
-
-
-**Realm:**
-
-* Shared
+- None
 
 
-**Returns:**
-
-* boolean – True if the trace detects a stuck state.
+Realm: Shared
 
 
-**Example Usage:**
+Returns:
+
+- boolean: True if the trace detects a stuck state.
+
+
+Example Usage:
 
 if player:isStuck() then
 
@@ -385,25 +349,22 @@ end
 
 ### isNearPlayer
 
-**Description:**
-
+Description: 
 Checks if an entity is within the given radius of the player.
 
-**Parameters:**
+Parameters:
 
-* `radius` (`number`) – Distance in units.
+- `radius` (number): Distance in units.
 
-* `entity` (`Entity`) – Entity to compare.
+- `entity` (Entity): Entity to compare.
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- boolean: True if the entity is close enough.
 
-* boolean – True if the entity is close enough.
-
-**Example Usage:**
+Example Usage:
 
 if player:isNearPlayer(128, target) then
     print("Target is nearby")
@@ -414,29 +375,26 @@ end
 
 ### entitiesNearPlayer
 
-**Description:**
-
+Description: 
 Returns a table of entities within radius of the player.
 
-**Parameters:**
+Parameters:
 
-* `radius` (`number`) – Search distance in units.
-
-
-* `playerOnly` (`boolean|None`) – Only include players when true.
+- `radius` (number): Search distance in units.
 
 
-**Realm:**
-
-* Shared
+- `playerOnly` (boolean|None): Only include players when true.
 
 
-**Returns:**
-
-* table – List of nearby entities.
+Realm: Shared
 
 
-**Example Usage:**
+Returns:
+
+- table: List of nearby entities.
+
+
+Example Usage:
 
 ```lua
 for _, ent in ipairs(player:entitiesNearPlayer(256)) do
@@ -452,28 +410,25 @@ end
 
 ### getItemWeapon
 
-**Description:**
-
+Description: 
 Returns the active weapon entity and associated item if equipped.
 
-**Parameters:**
+Parameters:
 
-* None
-
-
-**Realm:**
-
-* Shared
+- None
 
 
-**Returns:**
-
-* Entity|None – Weapon entity when matched.
-
-* Item|None – Inventory item associated with the weapon.
+Realm: Shared
 
 
-**Example Usage:**
+Returns:
+
+- Entity|None: Weapon entity when matched.
+
+- Item|None: Inventory item associated with the weapon.
+
+
+Example Usage:
 
 ```lua
 local weapon, item = player:getItemWeapon()
@@ -483,26 +438,23 @@ local weapon, item = player:getItemWeapon()
 
 ### isRunning
 
-**Description:**
-
+Description: 
 Checks whether the player is moving faster than walking speed.
 
-**Parameters:**
+Parameters:
 
-* None
-
-
-**Realm:**
-
-* Shared
+- None
 
 
-**Returns:**
-
-* boolean – True if the player is running.
+Realm: Shared
 
 
-**Example Usage:**
+Returns:
+
+- boolean: True if the player is running.
+
+
+Example Usage:
 
 if player:isRunning() then
 
@@ -515,23 +467,20 @@ end
 
 ### isFemale
 
-**Description:**
-
+Description: 
 Returns true if the player's model is considered female.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- boolean: Whether a female model is detected.
 
-* boolean – Whether a female model is detected.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -546,23 +495,20 @@ end
 
 ### getItemDropPos
 
-**Description:**
-
+Description: 
 Finds a safe position in front of the player to drop items.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- Vector: World position for dropping items.
 
-* Vector – World position for dropping items.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -573,23 +519,20 @@ local pos = player:getItemDropPos()
 
 ### getItems
 
-**Description:**
-
+Description: 
 Returns the player's inventory item list if a character is loaded.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- table|None: Table of items or None if absent.
 
-* table|None – Table of items or None if absent.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -606,23 +549,20 @@ end
 
 ### getTracedEntity
 
-**Description:**
-
+Description: 
 Performs a simple trace from the player's shoot position.
 
-**Parameters:**
+Parameters:
 
-* `distance` (`number`) – Trace length in units.
+- `distance` (number): Trace length in units.
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- Entity|None: The entity hit or None.
 
-* Entity|None – The entity hit or None.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -635,23 +575,20 @@ local entity = player:getTracedEntity(96)
 
 ### getTrace
 
-**Description:**
-
+Description: 
 Returns a hull trace in front of the player.
 
-**Parameters:**
+Parameters:
 
-* `distance` (`number`) – Hull length in units.
+- `distance` (number): Hull length in units.
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- table: Trace result.
 
-* table – Trace result.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -664,23 +601,20 @@ local tr = player:getTrace(48)
 
 ### getEyeEnt
 
-**Description:**
-
+Description: 
 Returns the entity the player is looking at within a distance.
 
-**Parameters:**
+Parameters:
 
-* `distance` (`number`) – Maximum distance.
+- `distance` (number): Maximum distance.
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- Entity|None: The entity or None if too far.
 
-* Entity|None – The entity or None if too far.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -699,23 +633,20 @@ end
 
 ### notify
 
-**Description:**
-
+Description: 
 Sends a plain notification message to the player.
 
-**Parameters:**
+Parameters:
 
-* `message` (`string`) – Text to display.
+- `message` (string): Text to display.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -730,25 +661,22 @@ file.Append("welcome.txt", player:SteamID() .. " joined\n")
 
 ### notifyLocalized
 
-**Description:**
-
+Description: 
 Sends a localized notification to the player.
 
-**Parameters:**
+Parameters:
 
-* `message` (`string`) – Translation key.
+- `message` (string): Translation key.
 
-* ... – Additional parameters for localization.
+- ...: Additional parameters for localization.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -763,23 +691,20 @@ player:notifyLocalized("greeting_key", player:Name(), score)
 
 ### CanEditVendor
 
-**Description:**
-
+Description: 
 Determines whether the player can edit the given vendor.
 
-**Parameters:**
+Parameters:
 
-* `vendor` (`Entity`) – Vendor entity to check.
+- `vendor` (Entity): Vendor entity to check.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- boolean: True if allowed to edit.
 
-* boolean – True if allowed to edit.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -794,24 +719,21 @@ end
 
 ### isUser
 
-**Description:**
-
+Description: 
 Convenience wrapper to check if the player is in the "user" group.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
-
-* Shared
+Realm: Shared
 
 
-**Returns:**
+Returns:
 
-* boolean – Whether usergroup is "user".
+- boolean: Whether usergroup is "user".
 
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -824,24 +746,21 @@ local result = player:isUser()
 
 ### isStaff
 
-**Description:**
-
+Description: 
 Returns true if the player belongs to a staff group.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
-
-* Shared
+Realm: Shared
 
 
-**Returns:**
+Returns:
 
-* boolean – Result from the privilege check.
+- boolean: Result from the privilege check.
 
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -854,24 +773,21 @@ local result = player:isStaff()
 
 ### isVIP
 
-**Description:**
-
+Description: 
 Checks whether the player is in the VIP group.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
-
-* Shared
+Realm: Shared
 
 
-**Returns:**
+Returns:
 
-* boolean – Result from privilege check.
+- boolean: Result from privilege check.
 
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -884,22 +800,19 @@ local result = player:isVIP()
 
 ### isStaffOnDuty
 
-**Description:**
-
+Description: 
 Determines if the player is currently in the staff faction.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Shared
+Returns:
 
-* Shared
-**Returns:**
+- boolean: True if staff faction is active.
 
-* boolean – True if staff faction is active.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -912,23 +825,20 @@ local result = player:isStaffOnDuty()
 
 ### isFaction
 
-**Description:**
-
+Description: 
 Checks if the player's character belongs to the given faction.
 
-**Parameters:**
+Parameters:
 
-* `faction` (`number`) – Faction index to compare.
+- `faction` (number): Faction index to compare.
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- boolean: True if the factions match.
 
-* boolean – True if the factions match.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -941,23 +851,20 @@ local result = player:isFaction(faction)
 
 ### isClass
 
-**Description:**
-
+Description: 
 Returns true if the player's character is of the given class.
 
-**Parameters:**
+Parameters:
 
-* `class` (`number`) – Class index to compare.
+- `class` (number): Class index to compare.
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- boolean: Whether the character matches the class.
 
-* boolean – Whether the character matches the class.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -970,23 +877,20 @@ local result = player:isClass(class)
 
 ### hasWhitelist
 
-**Description:**
-
+Description: 
 Determines if the player has whitelist access for a faction.
 
-**Parameters:**
+Parameters:
 
-* `faction` (`number`) – Faction index.
+- `faction` (number): Faction index.
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- boolean: True if whitelisted.
 
-* boolean – True if whitelisted.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -999,23 +903,20 @@ local result = player:hasWhitelist(faction)
 
 ### getClass
 
-**Description:**
-
+Description: 
 Retrieves the class index of the player's character.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- number|None: Class index or None.
 
-* number|None – Class index or None.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1028,21 +929,20 @@ local result = player:getClass()
 
 ### hasClassWhitelist
 
-**Description:**
-
+Description: 
 Checks if the player's character is whitelisted for a class.
 
-**Parameters:**
+Parameters:
 
-* `class` (`number`) – Class index.
+- `class` (number): Class index.
 
-**Realm:**
+Realm:
 
-**Returns:**
+Returns:
 
-* boolean – True if class whitelist exists.
+- boolean: True if class whitelist exists.
 
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1055,23 +955,20 @@ local result = player:hasClassWhitelist(class)
 
 ### getClassData
 
-**Description:**
-
+Description: 
 Returns the class table of the player's current class.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- table|None: Class definition table.
 
-* table|None – Class definition table.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1084,23 +981,20 @@ local result = player:getClassData()
 
 ### getDarkRPVar
 
-**Description:**
-
+Description: 
 Compatibility helper for retrieving money with DarkRP-style calls.
 
-**Parameters:**
+Parameters:
 
-* `var` (`string`) – Currently only supports "money".
+- `var` (string): Currently only supports "money".
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- number|None: Money amount or None.
 
-* number|None – Money amount or None.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1113,23 +1007,20 @@ local result = player:getDarkRPVar(var)
 
 ### getMoney
 
-**Description:**
-
+Description: 
 Convenience function to get the character's money amount.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- number: Current funds or 0.
 
-* number – Current funds or 0.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1142,23 +1033,20 @@ local result = player:getMoney()
 
 ### canAfford
 
-**Description:**
-
+Description: 
 Checks if the player has enough money for a purchase.
 
-**Parameters:**
+Parameters:
 
-* `amount` (`number`) – Cost to test.
+- `amount` (number): Cost to test.
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- boolean: True if funds are sufficient.
 
-* boolean – True if funds are sufficient.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1171,25 +1059,22 @@ local result = player:canAfford(amount)
 
 ### hasSkillLevel
 
-**Description:**
-
+Description: 
 Verifies the player's character meets an attribute level.
 
-**Parameters:**
+Parameters:
 
-* `skill` (`string`) – Attribute ID.
+- `skill` (string): Attribute ID.
 
-* `level` (`number`) – Required level.
+- `level` (number): Required level.
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- boolean: Whether the character satisfies the requirement.
 
-* boolean – Whether the character satisfies the requirement.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1202,23 +1087,20 @@ local result = player:hasSkillLevel(skill, level)
 
 ### meetsRequiredSkills
 
-**Description:**
-
+Description: 
 Checks a table of skill requirements against the player.
 
-**Parameters:**
+Parameters:
 
-* `requiredSkillLevels` (`table`) – Mapping of attribute IDs to levels.
+- `requiredSkillLevels` (table): Mapping of attribute IDs to levels.
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- boolean: True if all requirements are met.
 
-* boolean – True if all requirements are met.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1231,29 +1113,26 @@ local result = player:meetsRequiredSkills(requiredSkillLevels)
 
 ### forceSequence
 
-**Description:**
-
+Description: 
 Plays an animation sequence and optionally freezes the player.
 
-**Parameters:**
+Parameters:
 
-* `sequenceName` (`string`) – Sequence to play.
+- `sequenceName` (string): Sequence to play.
 
-* `callback` (`function|None`) – Called when finished.
+- `callback` (function|None): Called when finished.
 
-* `time` (`number|None`) – Duration override.
+- `time` (number|None): Duration override.
 
-* `noFreeze` (`boolean`) – Don't freeze movement when true.
+- `noFreeze` (boolean): Don't freeze movement when true.
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- number|boolean: Duration or false on failure.
 
-* number|boolean – Duration or false on failure.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1266,23 +1145,20 @@ local result = player:forceSequence(sequenceName, callback, time, noFreeze)
 
 ### leaveSequence
 
-**Description:**
-
+Description: 
 Stops any forced sequence and restores player movement.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1295,23 +1171,20 @@ local result = player:leaveSequence()
 
 ### restoreStamina
 
-**Description:**
-
+Description: 
 Increases the player's stamina value.
 
-**Parameters:**
+Parameters:
 
-* `amount` (`number`) – Amount to restore.
+- `amount` (number): Amount to restore.
 
-**Realm:**
-
-* Server
+Realm: Server
 
 * Returns:
 
-* None – This function does not return a value.
+- `None`: This function does not return a value.
 
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1324,23 +1197,20 @@ local result = player:restoreStamina(amount)
 
 ### consumeStamina
 
-**Description:**
-
+Description: 
 Reduces the player's stamina value.
 
-**Parameters:**
+Parameters:
 
-* `amount` (`number`) – Amount to subtract.
+- `amount` (number): Amount to subtract.
 
-**Realm:**
-
-* Server
+Realm: Server
 
 * Returns:
 
-* None – This function does not return a value.
+- `None`: This function does not return a value.
 
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1353,23 +1223,20 @@ local result = player:consumeStamina(amount)
 
 ### addMoney
 
-**Description:**
-
+Description: 
 Adds funds to the player's character, clamping to limits.
 
-**Parameters:**
+Parameters:
 
-* `amount` (`number`) – Money to add.
+- `amount` (number): Money to add.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1384,23 +1251,20 @@ player:notifyLocalized("questReward", lia.currency.get(100))
 
 ### takeMoney
 
-**Description:**
-
+Description: 
 Removes money from the player's character.
 
-**Parameters:**
+Parameters:
 
-* `amount` (`number`) – Amount to subtract.
+- `amount` (number): Amount to subtract.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1413,23 +1277,20 @@ local result = player:takeMoney(amount)
 
 ### WhitelistAllClasses
 
-**Description:**
-
+Description: 
 Grants whitelist access to every registered class.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1442,23 +1303,20 @@ player:WhitelistAllClasses()
 
 ### WhitelistAllFactions
 
-**Description:**
-
+Description: 
 Whitelists the player for all factions.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1469,23 +1327,20 @@ player:WhitelistAllFactions()
 
 ### WhitelistEverything
 
-**Description:**
-
+Description: 
 Convenience method to whitelist all factions and classes.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1498,23 +1353,20 @@ player:WhitelistEverything()
 
 ### classWhitelist
 
-**Description:**
-
+Description: 
 Adds a single class to the character's whitelist table.
 
-**Parameters:**
+Parameters:
 
-* `class` (`number`) – Class index to whitelist.
+- `class` (number): Class index to whitelist.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1525,23 +1377,20 @@ player:classWhitelist(CLASS_MEDIC)
 
 ### classUnWhitelist
 
-**Description:**
-
+Description: 
 Removes a class from the character's whitelist table.
 
-**Parameters:**
+Parameters:
 
-* `class` (`number`) – Class index to remove.
+- `class` (number): Class index to remove.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1552,25 +1401,22 @@ player:classUnWhitelist(CLASS_MEDIC)
 
 ### setWhitelisted
 
-**Description:**
-
+Description: 
 Sets or clears whitelist permission for a faction.
 
-**Parameters:**
+Parameters:
 
-* `faction` (`number`) – Faction index.
+- `faction` (number): Faction index.
 
-* `whitelisted` (`boolean|None`) – Enable when true, disable when false/nil.
+- `whitelisted` (boolean|None): Enable when true, disable when false/nil.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- boolean: True if the faction exists.
 
-* boolean – True if the faction exists.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1581,23 +1427,20 @@ player:setWhitelisted(FACTION_POLICE, true)
 
 ### loadLiliaData
 
-**Description:**
-
+Description: 
 Loads persistent Lilia data for the player from the database.
 
-**Parameters:**
+Parameters:
 
-* `callback` (`function|None`) – Invoked with the loaded table.
+- `callback` (function|None): Invoked with the loaded table.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1608,23 +1451,20 @@ player:loadLiliaData(function(data) print(data) end)
 
 ### saveLiliaData
 
-**Description:**
-
+Description: 
 Saves the player's Lilia data back to the database.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1635,27 +1475,24 @@ player:saveLiliaData()
 
 ### setLiliaData
 
-**Description:**
-
+Description: 
 Stores a value in the player's persistent data table.
 
-**Parameters:**
+Parameters:
 
-* `key` (`string`) – Data key.
+- `key` (string): Data key.
 
-* `value` (`any`) – Value to store.
+- `value` (any): Value to store.
 
-* `noNetworking` (`boolean|None`) – Skip network update when true.
+- `noNetworking` (boolean|None): Skip network update when true.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1666,25 +1503,22 @@ player:setLiliaData("settings", {foo = true})
 
 ### setWaypoint
 
-**Description:**
-
+Description: 
 Sends a waypoint to the client at the specified position.
 
-**Parameters:**
+Parameters:
 
-* `name` (`string`) – Display label.
+- `name` (string): Display label.
 
-* `vector` (`Vector`) – World position.
+- `vector` (Vector): World position.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1695,25 +1529,22 @@ player:setWaypoint("Objective", Vector(0, 0, 0))
 
 ### setWeighPoint
 
-**Description:**
-
+Description: 
 Alias of `setWaypoint()` for backwards compatibility.
 
-**Parameters:**
+Parameters:
 
-* `name` (`string`) – Display label.
+- `name` (string): Display label.
 
-* `vector` (`Vector`) – World position.
+- `vector` (Vector): World position.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1724,27 +1555,24 @@ player:setWeighPoint("Target", Vector(100, 100, 0))
 
 ### setWaypointWithLogo
 
-**Description:**
-
+Description: 
 Creates a waypoint using a custom logo material.
 
-**Parameters:**
+Parameters:
 
-* `name` (`string`) – Display label.
+- `name` (string): Display label.
 
-* `vector` (`Vector`) – World position.
+- `vector` (Vector): World position.
 
-* `logo` (`string`) – Material path for the icon.
+- `logo` (string): Material path for the icon.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1755,25 +1583,22 @@ player:setWaypointWithLogo("Objective", Vector(0,0,0), "path/to/icon.png")
 
 ### getLiliaData
 
-**Description:**
-
+Description: 
 Retrieves a stored value from the player's data table.
 
-**Parameters:**
+Parameters:
 
-* `key` (`string`) – Data key.
+- `key` (string): Data key.
 
-* `default` (`any`) – Returned if the key is nil.
+- `default` (any): Returned if the key is nil.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- any: Stored value or default.
 
-* any – Stored value or default.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1784,23 +1609,20 @@ local settings = player:getLiliaData("settings", {})
 
 ### getAllLiliaData
 
-**Description:**
-
+Description: 
 Returns the entire table of persistent data for the player.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- table: Player data table.
 
-* table – Player data table.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1811,23 +1633,20 @@ local data = player:getAllLiliaData()
 
 ### setRagdoll
 
-**Description:**
-
+Description: 
 Associates a ragdoll entity with the player for later retrieval.
 
-**Parameters:**
+Parameters:
 
-* `entity` (`Entity`) – The ragdoll entity.
+- `entity` (Entity): The ragdoll entity.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1838,25 +1657,22 @@ player:setRagdoll(ragdollEnt)
 
 ### NetworkAnimation
 
-**Description:**
-
+Description: 
 Broadcasts animation bone data to all clients.
 
-**Parameters:**
+Parameters:
 
-* `active` (`boolean`) – Enable or disable manipulation.
+- `active` (boolean): Enable or disable manipulation.
 
-* `boneData` (`table`) – Map of bone names to angles.
+- `boneData` (table): Map of bone names to angles.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1871,27 +1687,24 @@ player:NetworkAnimation(true, {
 
 ### setAction
 
-**Description:**
-
+Description: 
 Displays an action bar for a set duration and optionally runs a callback.
 
-**Parameters:**
+Parameters:
 
-* `text` (`string|None`) – Text to display, or nil to clear.
+- `text` (string|None): Text to display, or nil to clear.
 
-* `time` (`number|None`) – How long to show it for.
+- `time` (number|None): How long to show it for.
 
-* `callback` (`function|None`) – Executed when time elapses.
+- `callback` (function|None): Executed when time elapses.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1902,31 +1715,28 @@ player:setAction("Lockpicking", 5)
 
 ### doStaredAction
 
-**Description:**
-
+Description: 
 Runs an action only while the player stares at the entity.
 
-**Parameters:**
+Parameters:
 
-* `entity` (`Entity`) – Target entity.
+- `entity` (Entity): Target entity.
 
-* `callback` (`function`) – Called when the timer finishes.
+- `callback` (function): Called when the timer finishes.
 
-* `time` (`number`) – Duration in seconds.
+- `time` (number): Duration in seconds.
 
-* `onCancel` (`function|None`) – Called if gaze breaks.
+- `onCancel` (function|None): Called if gaze breaks.
 
-* `distance` (`number|None`) – Max distance to maintain.
+- `distance` (number|None): Max distance to maintain.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1937,23 +1747,20 @@ player:doStaredAction(door, function() door:Open() end, 3)
 
 ### stopAction
 
-**Description:**
-
+Description: 
 Cancels any running action bar on the player.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1964,29 +1771,26 @@ player:stopAction()
 
 ### requestDropdown
 
-**Description:**
-
+Description: 
 Prompts the client with a dropdown selection dialog.
 
-**Parameters:**
+Parameters:
 
-* `title` (`string`) – Window title.
+- `title` (string): Window title.
 
-* `subTitle` (`string`) – Description text.
+- `subTitle` (string): Description text.
 
-* `options` (`table`) – Table of options.
+- `options` (table): Table of options.
 
-* `callback` (`function`) – Receives the chosen value.
+- `callback` (function): Receives the chosen value.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -1997,31 +1801,28 @@ player:requestDropdown("Choose", "Pick one", {"A", "B"}, print)
 
 ### requestOptions
 
-**Description:**
-
+Description: 
 Asks the client to select one or more options from a list.
 
-**Parameters:**
+Parameters:
 
-* `title` (`string`) – Window title.
+- `title` (string): Window title.
 
-* `subTitle` (`string`) – Description text.
+- `subTitle` (string): Description text.
 
-* `options` (`table`) – Available options.
+- `options` (table): Available options.
 
-* `limit` (`number`) – Maximum selections allowed.
+- `limit` (number): Maximum selections allowed.
 
-* `callback` (`function`) – Receives the chosen values.
+- `callback` (function): Receives the chosen values.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2032,29 +1833,26 @@ player:requestOptions("Permissions", "Select", {"A", "B"}, 2, print)
 
 ### requestString
 
-**Description:**
-
+Description: 
 Requests a string from the client.
 
-**Parameters:**
+Parameters:
 
-* `title` (`string`) – Prompt title.
+- `title` (string): Prompt title.
 
-* `subTitle` (`string`) – Prompt description.
+- `subTitle` (string): Prompt description.
 
-* `callback` (`function|None`) – Called with the string.
+- `callback` (function|None): Called with the string.
 
-* `default` (`string|None`) – Default value.
+- `default` (string|None): Default value.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- deferred|None: Deferred object when no callback supplied.
 
-* deferred|None – Deferred object when no callback supplied.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2065,31 +1863,28 @@ player:requestString("Name", "Enter text", print)
 
 ### binaryQuestion
 
-**Description:**
-
+Description: 
 Displays a yes/no style question to the player.
 
-**Parameters:**
+Parameters:
 
-* `question` (`string`) – Main text.
+- `question` (string): Main text.
 
-* `option1` (`string`) – Text for the first option.
+- `option1` (string): Text for the first option.
 
-* `option2` (`string`) – Text for the second option.
+- `option2` (string): Text for the second option.
 
-* `manualDismiss` (`boolean`) – Require manual closing.
+- `manualDismiss` (boolean): Require manual closing.
 
-* `callback` (`function`) – Called with chosen value.
+- `callback` (function): Called with chosen value.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2100,23 +1895,20 @@ player:binaryQuestion("Proceed?", "Yes", "No", false, print)
 
 ### getPlayTime
 
-**Description:**
-
+Description: 
 Calculates how long the player has been on the server.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- number: Total seconds of playtime.
 
-* number – Total seconds of playtime.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2127,25 +1919,22 @@ print(player:getPlayTime())
 
 ### createRagdoll
 
-**Description:**
-
+Description: 
 Spawns a ragdoll copy of the player and optionally freezes it.
 
-**Parameters:**
+Parameters:
 
-* `freeze` (`boolean|None`) – Disable physics when true.
+- `freeze` (boolean|None): Disable physics when true.
 
-* `isDead` (`boolean|None`) – Mark as a death ragdoll.
+- `isDead` (boolean|None): Mark as a death ragdoll.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- Entity: The created ragdoll.
 
-* Entity – The created ragdoll.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2156,29 +1945,26 @@ local rag = player:createRagdoll(true)
 
 ### setRagdolled
 
-**Description:**
-
+Description: 
 Toggles the player's ragdoll state for a duration.
 
-**Parameters:**
+Parameters:
 
-* `state` (`boolean`) – Enable or disable ragdoll.
+- `state` (boolean): Enable or disable ragdoll.
 
-* `time` (`number|None`) – Duration before standing up.
+- `time` (number|None): Duration before standing up.
 
-* `getUpGrace` (`number|None`) – Extra time to prevent early stand.
+- `getUpGrace` (number|None): Extra time to prevent early stand.
 
-* `getUpMessage` (`string|None`) – Message while downed.
+- `getUpMessage` (string|None): Message while downed.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2189,23 +1975,20 @@ player:setRagdolled(true, 5)
 
 ### syncVars
 
-**Description:**
-
+Description: 
 Sends all networked variables to the player.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2216,27 +1999,24 @@ player:syncVars()
 
 ### setLocalVar
 
-**Description:**
-
+Description: 
 Sets a networked local variable on the player.
 
 Triggers the **LocalVarChanged** hook on both server and client.
 
-**Parameters:**
+Parameters:
 
-* `key` (`string`) – Variable name.
+- `key` (string): Variable name.
 
-* `value` (`any`) – Value to set.
+- `value` (any): Value to set.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2247,23 +2027,20 @@ player:setLocalVar("health", 75)
 
 ### getPlayTime
 
-**Description:**
-
+Description: 
 Returns playtime calculated client side when called on a client.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Client
 
-* Client
+Returns:
 
-**Returns:**
+- number: Seconds of playtime.
 
-* number – Seconds of playtime.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2274,27 +2051,24 @@ print(LocalPlayer():getPlayTime())
 
 ### setWaypoint
 
-**Description:**
-
+Description: 
 Displays a waypoint on the HUD until the player reaches it.
 
-**Parameters:**
+Parameters:
 
-* `name` (`string`) – Display label.
+- `name` (string): Display label.
 
-* `vector` (`Vector`) – World position.
+- `vector` (Vector): World position.
 
-* `onReach` (`function|None`) – Called when reached.
+- `onReach` (function|None): Called when reached.
 
-**Realm:**
+Realm: Client
 
-* Client
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2305,27 +2079,24 @@ LocalPlayer():setWaypoint("Home", Vector(0,0,0))
 
 ### setWeighPoint
 
-**Description:**
-
+Description: 
 Alias of the client version of `setWaypoint`.
 
-**Parameters:**
+Parameters:
 
-* `name` (`string`) – Display label.
+- `name` (string): Display label.
 
-* `vector` (`Vector`) – World position.
+- `vector` (Vector): World position.
 
-* `onReach` (`function|None`) – Called when reached.
+- `onReach` (function|None): Called when reached.
 
-**Realm:**
+Realm: Client
 
-* Client
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2336,29 +2107,26 @@ LocalPlayer():setWeighPoint("Spot", Vector(10,10,0))
 
 ### setWaypointWithLogo
 
-**Description:**
-
+Description: 
 Places a waypoint using a logo material on the client HUD.
 
-**Parameters:**
+Parameters:
 
-* `name` (`string`) – Display label.
+- `name` (string): Display label.
 
-* `vector` (`Vector`) – Position to navigate to.
+- `vector` (Vector): Position to navigate to.
 
-* `logo` (`string`) – Material path for the icon.
+- `logo` (string): Material path for the icon.
 
-* `onReach` (`function|None`) – Called when reached.
+- `onReach` (function|None): Called when reached.
 
-**Realm:**
+Realm: Client
 
-* Client
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2369,25 +2137,22 @@ LocalPlayer():setWaypointWithLogo("Loot", Vector(1,1,1), "icon.png")
 
 ### getLiliaData
 
-**Description:**
-
+Description: 
 Client side accessor for stored player data.
 
-**Parameters:**
+Parameters:
 
-* `key` (`string`) – Data key.
+- `key` (string): Data key.
 
-* `default` (`any`) – Fallback value.
+- `default` (any): Fallback value.
 
-**Realm:**
+Realm: Client
 
-* Client
+Returns:
 
-**Returns:**
+- any: Stored value or default.
 
-* any – Stored value or default.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2398,23 +2163,20 @@ local data = LocalPlayer():getLiliaData("settings")
 
 ### getAllLiliaData
 
-**Description:**
-
+Description: 
 Returns the entire local data table for the player.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Client
 
-* Client
+Returns:
 
-**Returns:**
+- table: Local data table.
 
-* table – Local data table.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2425,25 +2187,22 @@ local data = LocalPlayer():getAllLiliaData()
 
 ### NetworkAnimation
 
-**Description:**
-
+Description: 
 Applies or clears clientside bone angles based on animation data.
 
-**Parameters:**
+Parameters:
 
-* `active` (`boolean`) – Enable or disable animation.
+- `active` (boolean): Enable or disable animation.
 
-* `boneData` (`table`) – Bones and angles to apply.
+- `boneData` (table): Bones and angles to apply.
 
-**Realm:**
+Realm: Client
 
-* Client
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2457,23 +2216,20 @@ LocalPlayer():NetworkAnimation(true, {
 ---
 ### getParts
 
-**Description:**
-
+Description: 
 Returns the table of PAC3 part IDs currently attached to the player.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- table: Mapping of active part IDs.
 
-* table – Mapping of active part IDs.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2488,23 +2244,20 @@ end
 
 ### syncParts
 
-**Description:**
-
+Description: 
 Sends the player's PAC3 part data to their client.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2515,23 +2268,20 @@ player:syncParts()
 
 ### addPart
 
-**Description:**
-
+Description: 
 Adds the given PAC3 part to the player and broadcasts it.
 
-**Parameters:**
+Parameters:
 
-* `partID` (`string`) – Identifier of the part to attach.
+- `partID` (string): Identifier of the part to attach.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2542,23 +2292,20 @@ player:addPart("hat_01")
 
 ### removePart
 
-**Description:**
-
+Description: 
 Removes a previously added PAC3 part from the player.
 
-**Parameters:**
+Parameters:
 
-* `partID` (`string`) – Identifier of the part to remove.
+- `partID` (string): Identifier of the part to remove.
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2569,23 +2316,20 @@ player:removePart("hat_01")
 
 ### resetParts
 
-**Description:**
-
+Description: 
 Clears all PAC3 parts that are currently attached to the player.
 
-**Parameters:**
+Parameters:
 
-* None
+- None
 
-**Realm:**
+Realm: Server
 
-* Server
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
@@ -2596,23 +2340,20 @@ player:resetParts()
 
 ### LagCompensation
 
-**Description:**
-
+Description: 
 Wrapper that tracks when lag compensation is enabled on the player.
 
-**Parameters:**
+Parameters:
 
-* `state` (`boolean`) – Whether to enable lag compensation.
+- `state` (boolean): Whether to enable lag compensation.
 
-**Realm:**
+Realm: Shared
 
-* Shared
+Returns:
 
-**Returns:**
+- `None`: This function does not return a value.
 
-* None – This function does not return a value.
-
-**Example Usage:**
+Example Usage:
 
 ```lua
 
