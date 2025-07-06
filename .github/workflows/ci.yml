@@ -89,6 +89,7 @@ jobs:
     env:
       VERSION: ${{ needs.compute-version.outputs.version }}
       VALID_COUNT: ${{ needs.compute-version.outputs.valid_count }}
+      GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -131,14 +132,20 @@ jobs:
           git add gamemode/shared.lua
           git diff-index --quiet HEAD || git commit -m "Successfully compiled release for version $VERSION"
           git push origin HEAD:main
-        env:
-          GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
       - name: Package and zip
         run: |
           mkdir -p packaged
           cp -R lilia packaged/lilia
           cd packaged
           zip -r ../lilia.zip lilia
+      - name: Remove previous releases
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y jq
+          releases=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases" | jq -r '.[].id')
+          for id in $releases; do
+            curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases/$id"
+          done
       - id: create_release
         uses: actions/create-release@v1
         with:
