@@ -20,65 +20,66 @@ local function steamIDHasAccess(_, actorSteam, privilegeName, callback, targetSt
 end
 
 hook.Add("CAMI.SteamIDHasAccess", "liaULX", steamIDHasAccess)
-if CLIENT then return end
-local function onGroupRegistered(camiGroup, originToken)
-    if originToken == CAMI.ULX_TOKEN then return end
-    if ULib.findInTable({"superadmin", "admin", "user"}, camiGroup.Name) then return end
-    if not ULib.ucl.groups[camiGroup.Name] then ULib.ucl.addGroup(camiGroup.Name, nil, camiGroup.Inherits, true) end
-end
-
-hook.Add("CAMI.OnUsergroupRegistered", "liaULX", onGroupRegistered)
-local function onGroupRemoved(camiGroup, originToken)
-    if originToken == CAMI.ULX_TOKEN then return end
-    if ULib.findInTable({"superadmin", "admin", "user"}, camiGroup.Name) then return end
-    ULib.ucl.removeGroup(camiGroup.Name, true)
-end
-
-hook.Add("CAMI.OnUsergroupUnregistered", "liaULX", onGroupRemoved)
-local function onSteamIDUserGroupChanged(id, _, newGroup, originToken)
-    if originToken == CAMI.ULX_TOKEN then return end
-    if newGroup == ULib.ACCESS_ALL then
-        if ULib.ucl.users[id] then ULib.ucl.removeUser(id, true) end
-    else
-        if not ULib.ucl.groups[newGroup] then
-            local camiGroup = CAMI.GetUsergroup(newGroup)
-            local inherits = camiGroup and camiGroup.Inherits
-            ULib.ucl.addGroup(newGroup, nil, inherits, true)
-        end
-
-        ULib.ucl.addUser(id, nil, nil, newGroup, true)
+if SERVER then
+    local function onGroupRegistered(camiGroup, originToken)
+        if originToken == CAMI.ULX_TOKEN then return end
+        if ULib.findInTable({"superadmin", "admin", "user"}, camiGroup.Name) then return end
+        if not ULib.ucl.groups[camiGroup.Name] then ULib.ucl.addGroup(camiGroup.Name, nil, camiGroup.Inherits, true) end
     end
-end
 
-hook.Add("CAMI.SteamIDUsergroupChanged", "liaULX", onSteamIDUserGroupChanged)
-local function onPlayerUserGroupChanged(ply, oldGroup, newGroup, originToken)
-    if not ply or not ply:IsValid() then return end
-    if originToken == CAMI.ULX_TOKEN then return end
-    local id = ULib.ucl.getUserRegisteredID(ply) or ply:SteamID()
-    onSteamIDUserGroupChanged(id, oldGroup, newGroup, originToken)
-end
+    hook.Add("CAMI.OnUsergroupRegistered", "liaULX", onGroupRegistered)
+    local function onGroupRemoved(camiGroup, originToken)
+        if originToken == CAMI.ULX_TOKEN then return end
+        if ULib.findInTable({"superadmin", "admin", "user"}, camiGroup.Name) then return end
+        ULib.ucl.removeGroup(camiGroup.Name, true)
+    end
 
-hook.Add("CAMI.PlayerUsergroupChanged", "liaULX", onPlayerUserGroupChanged)
-local function onPrivilegeRegistered(camiPriv)
-    local priv = camiPriv.Name:lower()
-    ULib.ucl.registerAccess(priv, camiPriv.MinAccess, "A privilege from CAMI", "CAMI")
-end
+    hook.Add("CAMI.OnUsergroupUnregistered", "liaULX", onGroupRemoved)
+    local function onSteamIDUserGroupChanged(id, _, newGroup, originToken)
+        if originToken == CAMI.ULX_TOKEN then return end
+        if newGroup == ULib.ACCESS_ALL then
+            if ULib.ucl.users[id] then ULib.ucl.removeUser(id, true) end
+        else
+            if not ULib.ucl.groups[newGroup] then
+                local camiGroup = CAMI.GetUsergroup(newGroup)
+                local inherits = camiGroup and camiGroup.Inherits
+                ULib.ucl.addGroup(newGroup, nil, inherits, true)
+            end
 
-hook.Add("CAMI.OnPrivilegeRegistered", "liaULX", onPrivilegeRegistered)
-for _, camiPriv in pairs(CAMI.GetPrivileges()) do
-    onPrivilegeRegistered(camiPriv)
-end
+            ULib.ucl.addUser(id, nil, nil, newGroup, true)
+        end
+    end
 
-for _, camiGroup in pairs(CAMI.GetUsergroups()) do
-    onGroupRegistered(camiGroup)
-end
+    hook.Add("CAMI.SteamIDUsergroupChanged", "liaULX", onSteamIDUserGroupChanged)
+    local function onPlayerUserGroupChanged(ply, oldGroup, newGroup, originToken)
+        if not ply or not ply:IsValid() then return end
+        if originToken == CAMI.ULX_TOKEN then return end
+        local id = ULib.ucl.getUserRegisteredID(ply) or ply:SteamID()
+        onSteamIDUserGroupChanged(id, oldGroup, newGroup, originToken)
+    end
 
-for name, data in pairs(ULib.ucl.groups) do
-    if not ULib.findInTable({"superadmin", "admin", "user"}, name) then
-        CAMI.RegisterUsergroup({
-            Name = name,
-            Inherits = data.inherit_from or "user"
-        }, CAMI.ULX_TOKEN)
+    hook.Add("CAMI.PlayerUsergroupChanged", "liaULX", onPlayerUserGroupChanged)
+    local function onPrivilegeRegistered(camiPriv)
+        local priv = camiPriv.Name:lower()
+        ULib.ucl.registerAccess(priv, camiPriv.MinAccess, "A privilege from CAMI", "CAMI")
+    end
+
+    hook.Add("CAMI.OnPrivilegeRegistered", "liaULX", onPrivilegeRegistered)
+    for _, camiPriv in pairs(CAMI.GetPrivileges()) do
+        onPrivilegeRegistered(camiPriv)
+    end
+
+    for _, camiGroup in pairs(CAMI.GetUsergroups()) do
+        onGroupRegistered(camiGroup)
+    end
+
+    for name, data in pairs(ULib.ucl.groups) do
+        if not ULib.findInTable({"superadmin", "admin", "user"}, name) then
+            CAMI.RegisterUsergroup({
+                Name = name,
+                Inherits = data.inherit_from or "user"
+            }, CAMI.ULX_TOKEN)
+        end
     end
 end
 

@@ -199,19 +199,19 @@ local ConditionalFiles = {
         path = "lilia/gamemode/core/libraries/compatibility/vjbase.lua",
         global = "VJ",
         name = "VJ",
-        realm = "shared"
+        realm = "server"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/advdupe.lua",
         global = "AdvDupe",
         name = "AdvDupe",
-        realm = "shared"
+        realm = "server"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/advdupe2.lua",
         global = "AdvDupe2",
         name = "AdvDupe2",
-        realm = "shared"
+        realm = "server"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/pac.lua",
@@ -223,7 +223,7 @@ local ConditionalFiles = {
         path = "lilia/gamemode/core/libraries/compatibility/prone.lua",
         global = "prone",
         name = "Prone",
-        realm = "shared"
+        realm = "server"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/sam.lua",
@@ -247,7 +247,7 @@ local ConditionalFiles = {
         path = "lilia/gamemode/core/libraries/compatibility/sitanywhere.lua",
         global = "SitAnywhere",
         name = "SitAnywhere",
-        realm = "shared"
+        realm = "server"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/ulx.lua",
@@ -259,13 +259,13 @@ local ConditionalFiles = {
         path = "lilia/gamemode/core/libraries/compatibility/permaprops.lua",
         global = "PermaProps",
         name = "PermaProps",
-        realm = "shared"
+        realm = "server"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/lvs.lua",
         global = "LVS",
         name = "LVS",
-        realm = "shared"
+        realm = "server"
     }
 }
 

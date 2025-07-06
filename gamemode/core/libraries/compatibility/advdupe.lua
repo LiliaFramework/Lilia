@@ -1,14 +1,8 @@
-if SERVER and not lia.log.types["dupeCrashAttempt"] then
-    lia.log.addType(
-        "dupeCrashAttempt",
-        function(client)
-            local name = IsValid(client) and client:Name() or L("unknown")
-            local steamID = IsValid(client) and client:SteamID64() or L("na")
-            return string.format("Player '%s' [%s] attempted to duplicate oversized entities.", name, steamID)
-        end,
-        "Security"
-    )
-end
+lia.log.addType("dupeCrashAttempt", function(client)
+    local name = IsValid(client) and client:Name() or L("unknown")
+    local steamID = IsValid(client) and client:SteamID64() or L("na")
+    return string.format("Player '%s' [%s] attempted to duplicate oversized entities.", name, steamID)
+end, "Security")
 
 local function CheckDuplicationScale(client, entities)
     entities = entities or {}
