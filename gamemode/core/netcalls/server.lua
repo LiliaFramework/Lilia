@@ -7,6 +7,15 @@ net.Receive("StringRequest", function(_, client)
     end
 end)
 
+net.Receive("ArgumentsRequest", function(_, client)
+    local id = net.ReadUInt(32)
+    local data = net.ReadTable()
+    if client.liaArgReqs and client.liaArgReqs[id] then
+        client.liaArgReqs[id](data)
+        client.liaArgReqs[id] = nil
+    end
+end)
+
 net.Receive("RequestDropdown", function(_, client)
     local selectedOption = net.ReadString()
     if client.dropdownCallback then

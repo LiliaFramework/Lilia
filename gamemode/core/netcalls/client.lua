@@ -414,6 +414,18 @@ net.Receive("RequestDropdown", function()
     end
 end)
 
+net.Receive("ArgumentsRequest", function()
+    local id = net.ReadUInt(32)
+    local title = net.ReadString()
+    local fields = net.ReadTable()
+    lia.util.requestArguments(title, fields, function(data)
+        net.Start("ArgumentsRequest")
+        net.WriteUInt(id, 32)
+        net.WriteTable(data)
+        net.SendToServer()
+    end)
+end)
+
 net.Receive("StringRequest", function()
     local id = net.ReadUInt(32)
     local title = net.ReadString()
