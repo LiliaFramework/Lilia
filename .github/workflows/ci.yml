@@ -138,13 +138,19 @@ jobs:
           cp -R lilia packaged/lilia
           cd packaged
           zip -r ../lilia.zip lilia
-      - name: Remove previous releases
+      - name: Remove previous releases and tags
         run: |
           sudo apt-get update -y
           sudo apt-get install -y jq
           releases=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases" | jq -r '.[].id')
           for id in $releases; do
             curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases/$id"
+          done
+          tags=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/git/refs/tags" | jq -r '.[].ref' | sed 's#refs/tags/##')
+          for tag in $tags; do
+            if [ "$tag" != "$VERSION" ]; then
+              curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/git/refs/tags/$tag"
+            fi
           done
       - id: create_release
         uses: actions/create-release@v1
