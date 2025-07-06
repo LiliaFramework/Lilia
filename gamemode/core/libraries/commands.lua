@@ -2,7 +2,7 @@
 lia.command.list = lia.command.list or {}
 function lia.command.add(command, data)
     data.syntax = data.syntax or ""
-    data.desc = data.desc or ""
+    data.desc = L(data.desc) or ""
     local superAdminOnly = data.superAdminOnly
     local adminOnly = data.adminOnly
     if not data.onRun then
