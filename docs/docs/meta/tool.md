@@ -431,7 +431,6 @@ Clears stored objects when the tool reloads.
 ```lua
 function TOOL:Reload()
     self:ClearObjects()
-    self:ReleaseGhostEntity()
 end
 ```
 
@@ -460,7 +459,6 @@ Called when the tool is equipped. Releases ghost entity.
 ```lua
 function TOOL:Deploy()
     self:ReleaseGhostEntity()
-    self:CreateConVars()
 end
 ```
 
@@ -489,7 +487,6 @@ Called when the tool is holstered. Releases ghost entity.
 ```lua
 function TOOL:Holster()
     self:ReleaseGhostEntity()
-    self:ClearObjects()
 end
 ```
 
@@ -517,8 +514,7 @@ Called every tick; releases ghost entities by default.
 
 ```lua
 function TOOL:Think()
-    self:CheckObjects()
-    updateGhost(self:GetOwner(), self.GhostEntity)
+    self:ReleaseGhostEntity()
 end
 ```
 
