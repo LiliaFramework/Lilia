@@ -1081,3 +1081,16 @@ Creates and displays a table UI with given columns and data on the client side.
     lia.util.CreateTableUI("My Table", {{name="ID", field="id"}, {name="Name", field="name"}}, myData, myOptions, 1)
 ```
 
+
+---
+
+#### Library Conventions
+
+1. **Namespace**
+   When formatting libraries, make sure to only document lia.* functions of that type. For example if you are documenting workshop.lua, you'd document lia.workshop functions .
+
+2. **Shared Definitions**
+   Omit any parameters or fields already documented in `docs/definitions.lua`.
+
+3. **Internal-Only Functions**
+   If this function is not meant to be used outside the internal scope of the gamemode, such as lia.module.load, add the “Internal function” note (see above).

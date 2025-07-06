@@ -24,6 +24,7 @@ Each entry inside `lia.menu.list` is a table with the following fields:
 
 * `onRemove` (function|nil) – Executed when the menu is removed.
 
+---
 ### lia.menu.add
 
 **Purpose**
@@ -144,3 +145,15 @@ end)
 ```
 
 
+---
+
+#### Library Conventions
+
+1. **Namespace**
+   When formatting libraries, make sure to only document lia.* functions of that type. For example if you are documenting workshop.lua, you'd document lia.workshop functions .
+
+2. **Shared Definitions**
+   Omit any parameters or fields already documented in `docs/definitions.lua`.
+
+3. **Internal-Only Functions**
+   If this function is not meant to be used outside the internal scope of the gamemode, such as lia.module.load, add the “Internal function” note (see above).
