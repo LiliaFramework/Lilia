@@ -84,6 +84,36 @@
         end,
         category = "SWEP"
     },
+    ["physgunPickup"] = {
+        func = function(client, class, model)
+            return string.format("Player '%s' picked up '%s' (%s) with the physgun.", client:Name(), class, model)
+        end,
+        category = "Physgun"
+    },
+    ["physgunDrop"] = {
+        func = function(client, class, model)
+            return string.format("Player '%s' dropped '%s' (%s) with the physgun.", client:Name(), class, model)
+        end,
+        category = "Physgun"
+    },
+    ["physgunFreeze"] = {
+        func = function(client, class, model)
+            return string.format("Player '%s' froze '%s' (%s) with the physgun.", client:Name(), class, model)
+        end,
+        category = "Physgun"
+    },
+    ["vehicleEnter"] = {
+        func = function(client, class, model)
+            return string.format("Player '%s' entered vehicle '%s' (%s).", client:Name(), class, model)
+        end,
+        category = "Vehicles"
+    },
+    ["vehicleExit"] = {
+        func = function(client, class, model)
+            return string.format("Player '%s' left vehicle '%s' (%s).", client:Name(), class, model)
+        end,
+        category = "Vehicles"
+    },
     ["chat"] = {
         func = function(client, chatType, message)
             return string.format("(%s) %s said: '%s'", chatType, client:Name(), message)

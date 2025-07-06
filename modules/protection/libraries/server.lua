@@ -102,7 +102,7 @@ function MODULE:PlayerSay(client, message)
     end
 end
 
-function MODULE:PlayerLeaveVehicle(_, entity)
+function MODULE:PlayerLeaveVehicle(client, entity)
     if entity:GetClass() == "prop_vehicle_prisoner_pod" then
         local sName = "PodFix_" .. entity:EntIndex()
         hook.Add("Think", sName, function()
@@ -118,6 +118,7 @@ function MODULE:PlayerLeaveVehicle(_, entity)
             end
         end)
     end
+    lia.log.add(client, "vehicleExit", entity:GetClass(), entity:GetModel())
 end
 
 function MODULE:OnEntityCreated(entity)
@@ -165,16 +166,23 @@ function MODULE:ShouldCollide(ent1, ent2)
     return true
 end
 
-function MODULE:PlayerEnteredVehicle(_, entity)
+function MODULE:PlayerEnteredVehicle(client, entity)
     if entity:GetClass() == "prop_vehicle_prisoner_pod" then entity:RemoveEFlags(EFL_NO_THINK_FUNCTION) end
+    lia.log.add(client, "vehicleEnter", entity:GetClass(), entity:GetModel())
 end
 
-function MODULE:OnPhysgunPickup(_, entity)
+function MODULE:OnPhysgunPickup(client, entity)
     if (entity:isProp() or entity:isItem()) and entity:GetCollisionGroup() == COLLISION_GROUP_NONE then entity:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR) end
+    lia.log.add(client, "physgunPickup", entity:GetClass(), entity:GetModel())
 end
 
-function MODULE:PhysgunDrop(_, entity)
-    if entity:isProp() and entity:isItem() then timer.Simple(5, function() if IsValid(entity) and entity:GetCollisionGroup() == COLLISION_GROUP_PASSABLE_DOOR then entity:SetCollisionGroup(COLLISION_GROUP_NONE) end end) end
+function MODULE:PhysgunDrop(client, entity)
+    if entity:isProp() and entity:isItem() then
+        timer.Simple(5, function()
+            if IsValid(entity) and entity:GetCollisionGroup() == COLLISION_GROUP_PASSABLE_DOOR then entity:SetCollisionGroup(COLLISION_GROUP_NONE) end
+        end)
+    end
+    lia.log.add(client, "physgunDrop", entity:GetClass(), entity:GetModel())
 end
 
 function MODULE:OnPhysgunFreeze(_, physObj, entity, client)
@@ -200,6 +208,7 @@ function MODULE:OnPhysgunFreeze(_, physObj, entity, client)
     else
         entity:SetCollisionGroup(COLLISION_GROUP_NONE)
     end
+    lia.log.add(client, "physgunFreeze", entity:GetClass(), entity:GetModel())
     return true
 end
 
