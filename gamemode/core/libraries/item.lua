@@ -544,4 +544,4 @@ if SERVER then
 end
 
 lia.item.loadFromDir("lilia/gamemode/items")
-hook.Add("InitializedModules", "liaWeapons", function() lia.item.generateWeapons() end)
+hook.Add("InitializedModules", "liaWeapons", function() if lia.config.get("AutoWeaponItemGeneration", true) then lia.item.generateWeapons() end end)
