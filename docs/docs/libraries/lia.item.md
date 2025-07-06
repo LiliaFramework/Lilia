@@ -8,6 +8,18 @@ This page covers item definition helpers.
 
 The item library contains utilities for retrieving item definitions and creating new items. It also provides shared item methods used throughout the framework.
 
+### Fields
+
+* **lia.item.base** (table) – Base item definitions indexed by unique ID.
+* **lia.item.list** (table) – Registered item definitions indexed by unique ID.
+* **lia.item.instances** (table) – Active item instances indexed by item ID.
+* **lia.item.inventories** (table) – Alias of `lia.inventory.instances`.
+* **lia.item.inventoryTypes** (table) – Registered inventory meta classes.
+* **lia.item.WeaponOverrides** (table) – Optional weapon overrides used by `lia.item.generateWeapons`.
+* **lia.item.WeaponsBlackList** (table) – Weapon classes that should not be auto-generated.
+* **lia.item.holdTypeToWeaponCategory** (table) – Maps weapon hold types to categories.
+* **lia.item.holdTypeSizeMapping** (table) – Default inventory sizes for hold types.
+
 ---
 
 ### lia.item.get
