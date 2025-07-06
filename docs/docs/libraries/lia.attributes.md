@@ -10,21 +10,8 @@ The attributes library loads attribute definitions from Lua files, keeps track o
 
 ---
 
-### ATTRIBUTE table fields
+For details on each `ATTRIBUTE` field, see the [Attribute Fields documentation](../definitions/attribute.md).
 
-Each attribute definition may specify any of the following keys on the global `ATTRIBUTE` table:
-
-| Field          | Type    | Purpose                              |
-| -------------- | ------- | ------------------------------------ |
-| `name`         | string  | Display name shown in menus.         |
-| `desc`         | string  | Short description for tooltips.      |
-| `startingMax`  | number  | Creation-time cap before bonuses.    |
-| `noStartBonus` | boolean | Prevents allocating starting points. |
-| `maxValue`     | number  | Absolute ceiling for this attribute. |
-
-The optional function `ATTRIBUTE:OnSetup(client, value)` runs whenever `lia.attribs.setup` processes that attribute. See the [Attribute Fields documentation](../definitions/attribute.md) for detailed explanations.
-
----
 
 ### lia.attribs.loadFromDir
 

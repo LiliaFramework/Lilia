@@ -105,4 +105,3 @@ ATTRIBUTE.noStartBonus = false
 ATTRIBUTE.maxValue = 50
 ```
 
----
