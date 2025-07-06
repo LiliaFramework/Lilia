@@ -1,7 +1,7 @@
 ﻿lia.command.add("storagelock", {
     privilege = "Lock Storage",
     adminOnly = true,
-    desc = L("storagelockDesc"),
+    desc = "storagelockDesc",
     syntax = "[string Password]",
     onRun = function(client, arguments)
         local entity = client:getTracedEntity()
@@ -28,7 +28,7 @@
 
 lia.command.add("trunk", {
     adminOnly = false,
-    desc = L("trunkOpenDesc"),
+    desc = "trunkOpenDesc",
     onRun = function(client)
         local entity = client:getTracedEntity()
         local maxDistance = 110

@@ -1,5 +1,5 @@
 ﻿lia.command.add("adminmode", {
-    desc = L("adminModeDesc"),
+    desc = "adminModeDesc",
     onRun = function(client)
         if not IsValid(client) then return end
         local steamID = client:SteamID64()
@@ -37,7 +37,7 @@
 lia.command.add("managesitrooms", {
     superAdminOnly = true,
     privilege = "Manage SitRooms",
-    desc = L("manageSitroomsDesc"),
+    desc = "manageSitroomsDesc",
     onRun = function(client)
         if not client:hasPrivilege("Manage SitRooms") then return end
         local mapName = game.GetMap()
@@ -52,7 +52,7 @@ lia.command.add("managesitrooms", {
 lia.command.add("addsitroom", {
     superAdminOnly = true,
     privilege = "Manage SitRooms",
-    desc = L("setSitroomDesc"),
+    desc = "setSitroomDesc",
     onRun = function(client)
         client:requestString(L("enterNamePrompt"), L("enterSitroomPrompt"), function(name)
             if name == "" then
@@ -74,7 +74,7 @@ lia.command.add("addsitroom", {
 lia.command.add("sendtositroom", {
     adminOnly = true,
     privilege = "Manage SitRooms",
-    desc = L("sendToSitRoomDesc"),
+    desc = "sendToSitRoomDesc",
     syntax = "[player Player Name]",
     AdminStick = {
         Name = "sendToSitRoom",
@@ -120,7 +120,7 @@ lia.command.add("sendtositroom", {
 lia.command.add("returnsitroom", {
     adminOnly = true,
     privilege = "Manage SitRooms",
-    desc = L("returnFromSitroomDesc"),
+    desc = "returnFromSitroomDesc",
     syntax = "[player Player Name]",
     AdminStick = {
         Name = "returnFromSitroom",

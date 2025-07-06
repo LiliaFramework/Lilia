@@ -1,7 +1,7 @@
 ﻿lia.command.add("updateinvsize", {
     adminOnly = true,
     privilege = "Set Inventory Size",
-    desc = L("updateInventorySizeDesc"),
+    desc = "updateInventorySizeDesc",
     syntax = "[player Player Name]",
     AdminStick = {
         Name = "adminStickUpdateInvSizeName",
@@ -47,7 +47,7 @@
 lia.command.add("setinventorysize", {
     adminOnly = true,
     privilege = "Set Inventory Size",
-    desc = L("setInventorySizeDesc"),
+    desc = "setInventorySizeDesc",
     syntax = "[player Player Name] [number Width] [number Height]",
     AdminStick = {
         Name = "adminStickSetInvSizeName",

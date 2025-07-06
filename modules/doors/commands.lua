@@ -1,5 +1,5 @@
 ﻿lia.command.add("doorsell", {
-    desc = L("doorsellDesc"),
+    desc = "doorsellDesc",
     adminOnly = false,
     AdminStick = {
         Name = "adminStickDoorSellName",
@@ -26,7 +26,7 @@
 })
 
 lia.command.add("admindoorsell", {
-    desc = L("admindoorsellDesc"),
+    desc = "admindoorsellDesc",
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -56,7 +56,7 @@ lia.command.add("admindoorsell", {
 })
 
 lia.command.add("doortogglelock", {
-    desc = L("doortogglelockDesc"),
+    desc = "doortogglelockDesc",
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -95,7 +95,7 @@ lia.command.add("doortogglelock", {
 })
 
 lia.command.add("doorbuy", {
-    desc = L("doorbuyDesc"),
+    desc = "doorbuyDesc",
     adminOnly = false,
     AdminStick = {
         Name = "adminStickDoorBuyName",
@@ -132,7 +132,7 @@ lia.command.add("doorbuy", {
 })
 
 lia.command.add("doortoggleownable", {
-    desc = L("doortoggleownableDesc"),
+    desc = "doortoggleownableDesc",
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -156,7 +156,7 @@ lia.command.add("doortoggleownable", {
 })
 
 lia.command.add("doorresetdata", {
-    desc = L("doorresetdataDesc"),
+    desc = "doorresetdataDesc",
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -195,7 +195,7 @@ lia.command.add("doorresetdata", {
 })
 
 lia.command.add("doortoggleenabled", {
-    desc = L("doortoggleenabledDesc"),
+    desc = "doortoggleenabledDesc",
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -219,7 +219,7 @@ lia.command.add("doortoggleenabled", {
 })
 
 lia.command.add("doortogglehidden", {
-    desc = L("doortogglehiddenDesc"),
+    desc = "doortogglehiddenDesc",
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -247,7 +247,7 @@ lia.command.add("doortogglehidden", {
 })
 
 lia.command.add("doorsetprice", {
-    desc = L("doorsetpriceDesc"),
+    desc = "doorsetpriceDesc",
     syntax = "[number Price]",
     adminOnly = true,
     privilege = "Manage Doors",
@@ -272,7 +272,7 @@ lia.command.add("doorsetprice", {
 })
 
 lia.command.add("doorsettitle", {
-    desc = L("doorsettitleDesc"),
+    desc = "doorsettitleDesc",
     syntax = "[string Title]",
     adminOnly = true,
     privilege = "Manage Doors",
@@ -302,7 +302,7 @@ lia.command.add("doorsettitle", {
 })
 
 lia.command.add("doorsetparent", {
-    desc = L("doorsetparentDesc"),
+    desc = "doorsetparentDesc",
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -322,7 +322,7 @@ lia.command.add("doorsetparent", {
 })
 
 lia.command.add("doorsetchild", {
-    desc = L("doorsetchildDesc"),
+    desc = "doorsetchildDesc",
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -351,7 +351,7 @@ lia.command.add("doorsetchild", {
 })
 
 lia.command.add("doorremovechild", {
-    desc = L("doorremovechildDesc"),
+    desc = "doorremovechildDesc",
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -386,7 +386,7 @@ lia.command.add("doorremovechild", {
 })
 
 lia.command.add("savedoors", {
-    desc = L("savedoorsDesc"),
+    desc = "savedoorsDesc",
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -401,7 +401,7 @@ lia.command.add("savedoors", {
 })
 
 lia.command.add("doorinfo", {
-    desc = L("doorinfoDesc"),
+    desc = "doorinfoDesc",
     adminOnly = true,
     privilege = "Manage Doors",
     AdminStick = {
@@ -444,7 +444,7 @@ lia.command.add("doorinfo", {
 })
 
 lia.command.add("dooraddfaction", {
-    desc = L("dooraddfactionDesc"),
+    desc = "dooraddfactionDesc",
     syntax = "[faction Faction]",
     adminOnly = true,
     privilege = "Manage Doors",
@@ -494,7 +494,7 @@ lia.command.add("dooraddfaction", {
 })
 
 lia.command.add("doorremovefaction", {
-    desc = L("doorremovefactionDesc"),
+    desc = "doorremovefactionDesc",
     syntax = "[faction Faction]",
     adminOnly = true,
     privilege = "Manage Doors",
@@ -544,7 +544,7 @@ lia.command.add("doorremovefaction", {
 })
 
 lia.command.add("doorsetclass", {
-    desc = L("doorsetclassDesc"),
+    desc = "doorsetclassDesc",
     syntax = "[class Class]",
     adminOnly = true,
     privilege = "Manage Doors",
@@ -588,7 +588,7 @@ lia.command.add("doorsetclass", {
 })
 
 lia.command.add("togglealldoors", {
-    desc = L("togglealldoorsDesc"),
+    desc = "togglealldoorsDesc",
     adminOnly = true,
     privilege = "Manage Doors",
     onRun = function(client)

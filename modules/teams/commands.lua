@@ -1,7 +1,7 @@
 ﻿lia.command.add("plytransfer", {
     adminOnly = true,
     privilege = "Manage Transfers",
-    desc = L("plyTransferDesc"),
+    desc = "plyTransferDesc",
     syntax = "[player Name] [faction Faction]",
     alias = {"charsetfaction"},
     AdminStick = {
@@ -45,7 +45,7 @@
 lia.command.add("plywhitelist", {
     adminOnly = true,
     privilege = "Manage Whitelists",
-    desc = L("plyWhitelistDesc"),
+    desc = "plyWhitelistDesc",
     syntax = "[player Name] [faction Faction]",
     alias = {"factionwhitelist"},
     onRun = function(client, arguments)
@@ -69,7 +69,7 @@ lia.command.add("plywhitelist", {
 lia.command.add("plyunwhitelist", {
     adminOnly = true,
     privilege = "Manage Whitelists",
-    desc = L("plyUnwhitelistDesc"),
+    desc = "plyUnwhitelistDesc",
     syntax = "[player Name] [faction Faction]",
     alias = {"factionunwhitelist"},
     AdminStick = {
@@ -98,7 +98,7 @@ lia.command.add("plyunwhitelist", {
 
 lia.command.add("beclass", {
     adminOnly = false,
-    desc = L("beClassDesc"),
+    desc = "beClassDesc",
     syntax = "[class Class]",
     onRun = function(client, arguments)
         local className = table.concat(arguments, " ")
@@ -126,7 +126,7 @@ lia.command.add("beclass", {
 lia.command.add("setclass", {
     adminOnly = true,
     privilege = "Manage Classes",
-    desc = L("setClassDesc"),
+    desc = "setClassDesc",
     syntax = "[player Player Name] [class Class]",
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
@@ -157,7 +157,7 @@ lia.command.add("setclass", {
 lia.command.add("classwhitelist", {
     adminOnly = true,
     privilege = "Manage Whitelists",
-    desc = L("classWhitelistDesc"),
+    desc = "classWhitelistDesc",
     syntax = "[player Name] [class Class]",
     AdminStick = {
         Name = "adminStickClassWhitelistName",
@@ -193,7 +193,7 @@ lia.command.add("classwhitelist", {
 lia.command.add("classunwhitelist", {
     adminOnly = true,
     privilege = "Manage Classes",
-    desc = L("classUnwhitelistDesc"),
+    desc = "classUnwhitelistDesc",
     syntax = "[player Name] [class Class]",
     AdminStick = {
         Name = "adminStickClassUnwhitelistName",

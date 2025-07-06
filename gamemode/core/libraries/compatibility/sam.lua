@@ -175,7 +175,7 @@ end
 lia.command.add("cleardecals", {
     adminOnly = true,
     privilege = "Clear Decals",
-    desc = L("cleardecalsDesc"),
+    desc = "cleardecalsDesc",
     onRun = function()
         for _, v in player.Iterator() do
             v:ConCommand("r_cleardecals")
@@ -186,7 +186,7 @@ lia.command.add("cleardecals", {
 lia.command.add("playtime", {
     adminOnly = false,
     privilege = "View Own Playtime",
-    desc = L("playtimeDesc"),
+    desc = "playtimeDesc",
     onRun = function(client)
         local steamID = client:SteamID64()
         local result = sql.QueryRow("SELECT play_time FROM sam_players WHERE steamid = " .. SQLStr(steamID) .. ";")
@@ -212,7 +212,7 @@ lia.command.add("plygetplaytime", {
         SubCategory = "misc",
         Icon = "icon16/time.png"
     },
-    desc = L("plygetplaytimeDesc"),
+    desc = "plygetplaytimeDesc",
     onRun = function(client, args)
         if not args[1] then
             client:notifyLocalized("specifyPlayer")

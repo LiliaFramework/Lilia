@@ -1,7 +1,7 @@
 ﻿lia.command.add("plyviewclaims", {
     adminOnly = true,
     privilege = "View Claims",
-    desc = L("plyViewClaimsDesc"),
+    desc = "plyViewClaimsDesc",
     syntax = "[player Player Name]",
     AdminStick = {
         Name = "viewTicketClaims",
@@ -86,7 +86,7 @@
 lia.command.add("viewallclaims", {
     adminOnly = true,
     privilege = "View Claims",
-    desc = L("viewAllClaimsDesc"),
+    desc = "viewAllClaimsDesc",
     onRun = function(client)
         local caseclaims = lia.data.get("caseclaims", {}, true)
         if not next(caseclaims) then
@@ -151,7 +151,7 @@ lia.command.add("viewallclaims", {
 lia.command.add("viewclaims", {
     adminOnly = true,
     privilege = "View Claims",
-    desc = L("viewClaimsDesc"),
+    desc = "viewClaimsDesc",
     onRun = function(client)
         local caseclaims = lia.data.get("caseclaims", {}, true)
         if not next(caseclaims) then
