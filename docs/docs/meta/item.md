@@ -20,7 +20,7 @@ the base item.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -30,7 +30,7 @@ the base item.
 **Returns**
 
 
-- `number`: Quantity contained in this item instance.
+* `number`: Quantity contained in this item instance.
 
 
 **Example**
@@ -51,7 +51,7 @@ Compares this item instance to another by ID.
 **Parameters**
 
 
-- `other` (Item): The other item to compare with.
+* `other` (Item): The other item to compare with.
 
 
 **Realm**
@@ -61,7 +61,7 @@ Compares this item instance to another by ID.
 **Returns**
 
 
-- `boolean`: True if both items share the same ID.
+* `boolean`: True if both items share the same ID.
 
 
 **Example**
@@ -84,7 +84,7 @@ Returns a printable representation of this item.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -94,7 +94,7 @@ Returns a printable representation of this item.
 **Returns**
 
 
-- `string`: Identifier in the form "item[uniqueID][id]".
+* `string`: Identifier in the form "item[uniqueID][id]".
 
 
 **Example**
@@ -115,7 +115,7 @@ Retrieves the unique identifier of this item.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -125,7 +125,7 @@ Retrieves the unique identifier of this item.
 **Returns**
 
 
-- `number`: Item database ID.
+* `number`: Item database ID.
 
 
 **Example**
@@ -146,7 +146,7 @@ Returns the model path associated with this item.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -156,7 +156,7 @@ Returns the model path associated with this item.
 **Returns**
 
 
-- `string`: Model path.
+* `string`: Model path.
 
 
 **Example**
@@ -179,7 +179,7 @@ Retrieves the skin index this item uses.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -189,7 +189,7 @@ Retrieves the skin index this item uses.
 **Returns**
 
 
-- `number`: Skin ID applied to the model.
+* `number`: Skin ID applied to the model.
 
 
 **Example**
@@ -210,7 +210,7 @@ Returns the calculated purchase price for the item.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -220,7 +220,7 @@ Returns the calculated purchase price for the item.
 **Returns**
 
 
-- `number`: The price value.
+* `number`: The price value.
 
 
 **Example**
@@ -243,16 +243,16 @@ Invokes an item method with the given player and entity context.
 **Parameters**
 
 
-- `method` (string): Method name to run.
+* `method` (string): Method name to run.
 
 
-- `client` (Player): The player performing the action.
+* `client` (Player): The player performing the action.
 
 
-- `entity` (Entity): Entity representing this item.
+* `entity` (Entity): Entity representing this item.
 
 
-- ...: Additional arguments passed to the method.
+* ...: Additional arguments passed to the method.
 
 
 **Realm**
@@ -262,7 +262,7 @@ Invokes an item method with the given player and entity context.
 **Returns**
 
 
-- `any`: Results returned by the called function.
+* `any`: Results returned by the called function.
 
 
 **Example**
@@ -286,7 +286,7 @@ Attempts to find the player currently owning this item.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -296,7 +296,7 @@ Attempts to find the player currently owning this item.
 **Returns**
 
 
-- `Player|None`: The owner if available.
+* `Player|None`: The owner if available.
 
 
 **Example**
@@ -320,10 +320,10 @@ Retrieves a piece of persistent data stored on the item.
 **Parameters**
 
 
-- `key` (string): Data key to read.
+* `key` (string): Data key to read.
 
 
-- `default` (any): Value to return when the key is absent.
+* `default` (any): Value to return when the key is absent.
 
 
 **Realm**
@@ -333,7 +333,7 @@ Retrieves a piece of persistent data stored on the item.
 **Returns**
 
 
-- `any`: Stored value or default.
+* `any`: Stored value or default.
 
 
 **Example**
@@ -356,7 +356,7 @@ networked values on its entity.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -366,7 +366,7 @@ networked values on its entity.
 **Returns**
 
 
-- `table`: Key/value table of all data fields.
+* `table`: Key/value table of all data fields.
 
 
 **Example**
@@ -387,10 +387,10 @@ Registers a hook callback for this item instance.
 **Parameters**
 
 
-- `name` (string): Hook identifier.
+* `name` (string): Hook identifier.
 
 
-- `func` (function): Function to call.
+* `func` (function): Function to call.
 
 
 **Realm**
@@ -400,7 +400,7 @@ Registers a hook callback for this item instance.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 
 **Example**
@@ -421,10 +421,10 @@ Registers a post-hook callback for this item.
 **Parameters**
 
 
-- `name` (string): Hook identifier.
+* `name` (string): Hook identifier.
 
 
-- `func` (function): Function invoked after the main hook.
+* `func` (function): Function invoked after the main hook.
 
 
 **Realm**
@@ -434,7 +434,7 @@ Registers a post-hook callback for this item.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 
 **Example**
@@ -455,7 +455,7 @@ Called when the item table is first registered.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -465,7 +465,7 @@ Called when the item table is first registered.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 
 **Example**
@@ -487,7 +487,7 @@ Prints a simple representation of the item to the console.
 **Parameters**
 
 
-- `detail` (boolean): Include position details when true.
+* `detail` (boolean): Include position details when true.
 
 
 **Realm**
@@ -497,7 +497,7 @@ Prints a simple representation of the item to the console.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 
 **Example**
@@ -518,7 +518,7 @@ Debug helper that prints all stored item data.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -528,7 +528,7 @@ Debug helper that prints all stored item data.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 
 **Example**
@@ -549,23 +549,23 @@ Increases the stored quantity for this item instance.
 **Parameters**
 
 
-- `quantity` (number): Amount to add.
+* `quantity` (number): Amount to add.
 
 
-- `receivers` (Player|None): Who to network the change to.
+* `receivers` (Player|None): Who to network the change to.
 
 
-- `noCheckEntity` (boolean): Skip entity network update.
+* `noCheckEntity` (boolean): Skip entity network update.
 
 
 **Realm**
 `Server`
 
 
-- Returns:
+* Returns:
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 
 **Example**
@@ -587,23 +587,23 @@ Sets the current stack quantity and replicates the change.
 **Parameters**
 
 
-- `quantity` (number): New amount to store.
+* `quantity` (number): New amount to store.
 
 
-- `receivers` (Player|None): Recipients to send updates to.
+* `receivers` (Player|None): Recipients to send updates to.
 
 
-- `noCheckEntity` (boolean): Skip entity updates when true.
+* `noCheckEntity` (boolean): Skip entity updates when true.
 
 
 **Realm**
 `Server`
 
 
-- Returns:
+* Returns:
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 
 **Example**
@@ -624,7 +624,7 @@ Returns the display name of this item. On the client this value is localized.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -634,7 +634,7 @@ Returns the display name of this item. On the client this value is localized.
 **Returns**
 
 
-- `string`: Item name.
+* `string`: Item name.
 
 
 **Example**
@@ -655,7 +655,7 @@ Retrieves the description text for this item.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -665,7 +665,7 @@ Retrieves the description text for this item.
 **Returns**
 
 
-- `string`: Item description.
+* `string`: Item description.
 
 
 **Example**
@@ -686,7 +686,7 @@ Removes this item from its inventory without deleting it when `preserveItem` is 
 **Parameters**
 
 
-- `preserveItem` (boolean): Keep the item saved in the database.
+* `preserveItem` (boolean): Keep the item saved in the database.
 
 
 **Realm**
@@ -696,7 +696,7 @@ Removes this item from its inventory without deleting it when `preserveItem` is 
 **Returns**
 
 
-- `Deferred`: Resolves when the item has been removed.
+* `Deferred`: Resolves when the item has been removed.
 
 
 **Example**
@@ -719,7 +719,7 @@ Deletes this item from the database after destroying it.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -729,7 +729,7 @@ Deletes this item from the database after destroying it.
 **Returns**
 
 
-- `Deferred`: Resolves when deletion completes.
+* `Deferred`: Resolves when deletion completes.
 
 
 **Example**
@@ -752,7 +752,7 @@ Destroys the item's entity then removes and deletes it from its inventory.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -762,7 +762,7 @@ Destroys the item's entity then removes and deletes it from its inventory.
 **Returns**
 
 
-- `Deferred`: Resolves when the item has been removed.
+* `Deferred`: Resolves when the item has been removed.
 
 
 **Example**
@@ -785,7 +785,7 @@ Broadcasts deletion of this item and removes it from memory.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -795,7 +795,7 @@ Broadcasts deletion of this item and removes it from memory.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 
 **Example**
@@ -816,7 +816,7 @@ Callback executed after the item is destroyed.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -826,7 +826,7 @@ Callback executed after the item is destroyed.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 
 **Example**
@@ -848,7 +848,7 @@ Finds the entity spawned for this item, if any.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -858,7 +858,7 @@ Finds the entity spawned for this item, if any.
 **Returns**
 
 
-- `Entity|nil`: The world entity representing the item.
+* `Entity|nil`: The world entity representing the item.
 
 
 **Example**
@@ -884,10 +884,10 @@ provided it will spawn upright using `angle_zero`.
 **Parameters**
 
 
-- `position` (Vector|Player): Drop position or player dropping the item.
+* `position` (Vector|Player): Drop position or player dropping the item.
 
 
-- `angles` (Angle|None): Orientation for the entity.
+* `angles` (Angle|None): Orientation for the entity.
 
 
 **Realm**
@@ -897,7 +897,7 @@ provided it will spawn upright using `angle_zero`.
 **Returns**
 
 
-- `Entity|nil`: The created entity if successful.
+* `Entity|nil`: The created entity if successful.
 
 
 **Example**
@@ -921,10 +921,10 @@ Moves the item to another inventory, optionally bypassing access checks.
 **Parameters**
 
 
-- `newInventory` (Inventory): Destination inventory.
+* `newInventory` (Inventory): Destination inventory.
 
 
-- `bBypass` (boolean): Skip permission checking.
+* `bBypass` (boolean): Skip permission checking.
 
 
 **Realm**
@@ -934,7 +934,7 @@ Moves the item to another inventory, optionally bypassing access checks.
 **Returns**
 
 
-- `boolean`: True if the transfer was initiated.
+* `boolean`: True if the transfer was initiated.
 
 
 **Example**
@@ -957,13 +957,13 @@ Called when a new instance of this item is created.
 **Parameters**
 
 
-- `invID` (number): Inventory ID the item belongs to or `NULL` when not placed in one.
+* `invID` (number): Inventory ID the item belongs to or `NULL` when not placed in one.
 
-- `x` (number): Grid X coordinate where the item spawned.
+* `x` (number): Grid X coordinate where the item spawned.
 
-- `y` (number): Grid Y coordinate where the item spawned.
+* `y` (number): Grid Y coordinate where the item spawned.
 
-- `item` (Item): The newly created item instance.
+* `item` (Item): The newly created item instance.
 
 
 **Realm**
@@ -973,7 +973,7 @@ Called when a new instance of this item is created.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 
 **Example**
@@ -995,7 +995,7 @@ Runs after this item is networked to `recipient`.
 **Parameters**
 
 
-- `recipient` (Player|nil): Player who received the data, or nil when broadcast.
+* `recipient` (Player|nil): Player who received the data, or nil when broadcast.
 
 
 **Realm**
@@ -1005,7 +1005,7 @@ Runs after this item is networked to `recipient`.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 
 **Example**
@@ -1027,7 +1027,7 @@ Executed after the item is permanently removed.
 **Parameters**
 
 
-- None
+* None
 
 
 **Realm**
@@ -1037,7 +1037,7 @@ Executed after the item is permanently removed.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 
 **Example**
@@ -1059,7 +1059,7 @@ Called when the item is restored from the database.
 **Parameters**
 
 
-- `inventory` (Inventory|nil): Inventory the item belongs to when loaded, if any.
+* `inventory` (Inventory|nil): Inventory the item belongs to when loaded, if any.
 
 
 **Realm**
@@ -1069,7 +1069,7 @@ Called when the item is restored from the database.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 
 **Example**
@@ -1094,7 +1094,7 @@ Sends this item's data to a player or broadcasts to all.
 **Parameters**
 
 
-- `recipient` (Player|None): Target player or nil for broadcast.
+* `recipient` (Player|None): Target player or nil for broadcast.
 
 
 **Realm**
@@ -1104,7 +1104,7 @@ Sends this item's data to a player or broadcasts to all.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 
 **Example**
@@ -1125,19 +1125,19 @@ Sets a data field on the item and optionally networks and saves it.
 **Parameters**
 
 
-- `key` (string): Data key to modify.
+* `key` (string): Data key to modify.
 
 
-- `value` (any): New value to store.
+* `value` (any): New value to store.
 
 
-- `receivers` (Player|None): Who to send the update to.
+* `receivers` (Player|None): Who to send the update to.
 
 
-- `noSave` (boolean): Avoid saving to the database.
+* `noSave` (boolean): Avoid saving to the database.
 
 
-- `noCheckEntity` (boolean): Skip updating the world entity.
+* `noCheckEntity` (boolean): Skip updating the world entity.
 
 
 **Realm**
@@ -1147,7 +1147,7 @@ Sets a data field on the item and optionally networks and saves it.
 **Returns**
 
 
-- `None`: This function does not return a value.
+* `None`: This function does not return a value.
 
 
 **Example**
@@ -1168,16 +1168,16 @@ Processes an interaction action performed by `client` on this item.
 **Parameters**
 
 
-- `action` (string): Identifier of the interaction.
+* `action` (string): Identifier of the interaction.
 
 
-- `client` (Player): Player performing the action.
+* `client` (Player): Player performing the action.
 
 
-- `entity` (Entity|None): Entity used for the interaction.
+* `entity` (Entity|None): Entity used for the interaction.
 
 
-- `data` (table|None): Extra data passed to the hooks.
+* `data` (table|None): Extra data passed to the hooks.
 
 
 **Realm**
@@ -1187,7 +1187,7 @@ Processes an interaction action performed by `client` on this item.
 **Returns**
 
 
-- `boolean`: True if the interaction succeeded.
+* `boolean`: True if the interaction succeeded.
 
 
 **Example**
