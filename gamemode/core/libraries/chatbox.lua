@@ -6,7 +6,7 @@ end
 
 function lia.chat.register(chatType, data)
     data.syntax = data.syntax or ""
-    data.desc = L(data.desc or "")
+    data.desc = L(data.desc) or ""
     if not data.onCanHear then
         if isfunction(data.radius) then
             data.onCanHear = function(speaker, listener) return (speaker:GetPos() - listener:GetPos()):LengthSqr() <= data.radius() ^ 2 end
@@ -30,7 +30,7 @@ function lia.chat.register(chatType, data)
     end
 
     data.color = data.color or Color(242, 230, 160)
-    data.format = L(data.format or "%s: \"%s\"")
+    data.format = L(data.format) or "%s: \"%s\""
     data.onChatAdd = data.onChatAdd or function(speaker, text, anonymous)
         local name = anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, chatType) or IsValid(speaker) and speaker:Name() or "Console"
         chat.AddText(lia.chat.timestamp(false), data.color, string.format(data.format, name, text))
