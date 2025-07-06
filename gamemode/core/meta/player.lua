@@ -593,6 +593,23 @@ if SERVER then
         return d
     end
 
+    function playerMeta:requestArguments(title, argTypes, callback)
+        local d
+        if not isfunction(callback) then
+            d = deferred.new()
+            callback = function(value) d:resolve(value) end
+        end
+
+        self.liaArgReqs = self.liaArgReqs or {}
+        local id = table.insert(self.liaArgReqs, callback)
+        net.Start("ArgumentsRequest")
+        net.WriteUInt(id, 32)
+        net.WriteString(title or "")
+        net.WriteTable(argTypes)
+        net.Send(self)
+        return d
+    end
+
     function playerMeta:binaryQuestion(question, option1, option2, manualDismiss, callback)
         net.Start("BinaryQuestionRequest")
         net.WriteString(question)

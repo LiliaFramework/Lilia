@@ -1861,6 +1861,34 @@ player:requestString("Name", "Enter text", print)
 ```
 ---
 
+### requestArguments
+
+Description:
+Prompts the client for multiple typed values.
+
+Parameters:
+
+- `title` (string): Window title.
+
+- `argTypes` (table): Field definitions.
+
+- `callback` (function|None): Called with a table of values.
+
+Realm: Server
+
+Returns:
+
+- deferred|None: Deferred object when no callback supplied.
+
+Example Usage:
+
+```lua
+
+player:requestArguments("Info", {Name = "string", Age = "int"}, print)
+
+```
+---
+
 ### binaryQuestion
 
 Description: 
