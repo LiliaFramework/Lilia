@@ -10,23 +10,9 @@ The bars library manages health, stamina, and other progress bars shown on the p
 
 Default health, armor, and stamina bars are registered automatically when the client loads.
 
----
-
-### Bar table fields
-
-Each bar returned by `lia.bar.get` or inserted via `lia.bar.add` is a table with the following keys:
-
-| Field        | Type           | Purpose                                                |
-| ------------ | -------------- | ------------------------------------------------------ |
-| `getValue`   | function       | Returns the bar’s progress as a fraction.              |
-| `color`      | Color          | Bar fill colour.                                       |
-| `priority`   | number         | Draw order; lower priorities draw first.               |
-| `identifier` | string \| nil  | Unique identifier, if provided.                        |
-| `visible`    | boolean \| nil | Set to `true` to force the bar to remain visible.      |
-| `lifeTime`   | number         | Internal timer used for fading; managed automatically. |
+For a breakdown of bar fields, refer to the [Bar Fields documentation](../definitions/bars.md).
 
 ---
-
 ### lia.bar.get
 
 **Purpose**
