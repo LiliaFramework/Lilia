@@ -564,7 +564,7 @@ Performs a simple trace from the player's shoot position.
 
 **Parameters**
 
-* `distance` (`number`): Trace length in units.
+* `distance` (`number|nil`): Trace length in units. Default is `96`.
 
 **Realm**
 
@@ -591,7 +591,7 @@ Returns a hull trace in front of the player.
 
 **Parameters**
 
-* `distance` (`number`): Hull length in units.
+* `distance` (`number|nil`): Hull length in units. Default is `200`.
 
 **Realm**
 
@@ -618,7 +618,7 @@ Returns the entity the player is looking at within a distance.
 
 **Parameters**
 
-* `distance` (`number`): Maximum distance.
+* `distance` (`number|nil`): Maximum distance. Default is `150`.
 
 **Realm**
 
@@ -1822,7 +1822,7 @@ Prompts the client with a dropdown selection dialog.
 * `title` (`string`): Window title.
 * `subTitle` (`string`): Description text.
 * `options` (`table`): Table of options.
-* `callback` (`function`): Receives the chosen value.
+* `callback` (`function|nil`): Receives the chosen value.
 
 **Realm**
 
@@ -1856,7 +1856,7 @@ Asks the client to select one or more options from a list.
 
 * `limit` (`number`): Maximum selections allowed.
 
-* `callback` (`function`): Receives the chosen values.
+* `callback` (`function|nil`): Receives the chosen values.
 
 **Realm**
 
