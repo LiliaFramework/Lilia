@@ -254,9 +254,9 @@ Opens a window asking the player to fill in arguments for the given command. Mis
 
 **Parameters**
 
-* `cmd` (*string*): Command name.
+* `cmdKey` (*string*): Command name.
 
-* `args` (*table | string*): Existing arguments or server-supplied missing fields.
+* `fields` (*table | string*): Existing arguments or the server-supplied list of missing fields.
 
 * `prefix` (*table*): Legacy prefix table (optional).
 
