@@ -8,7 +8,9 @@ This page documents Workshop-addon helpers.
 
 The workshop library tracks required Workshop addon IDs and mounts them on clients to ensure players have the assets needed for the gamemode. When the **`AutoDownloadWorkshop`** configuration is enabled, connecting players automatically receive the cached list of IDs so missing content can be downloaded.
 
-`lia.workshop.send` is called \~10 seconds after each player’s initial spawn when automatic downloading is enabled.
+Workshop IDs added via `lia.workshop.AddWorkshop` are stored in `lia.workshop.ids`. After all modules are initialised, `lia.workshop.cache` holds the combined set that clients will download. For convenience, `resource.AddWorkshop` is aliased to `lia.workshop.AddWorkshop`.
+
+`lia.workshop.send` is called \~10 seconds after each player’s initial spawn when automatic downloading is enabled. Clients may run `workshop_force_redownload` in the console to forcibly re-download all configured addons.
 
 ---
 
