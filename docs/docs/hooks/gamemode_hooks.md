@@ -7296,6 +7296,33 @@ end)
 
 ---
 
+### CanInviteToClass
+
+**Purpose**
+Checks if `client` can invite `target` to their current class. Return false to deny the invitation.
+
+**Parameters**
+
+- `client` (`Player`): Player sending the invitation.
+- `target` (`Player`): Player being invited.
+
+**Realm**
+`Server`
+
+**Returns**
+- boolean|nil: false to block.
+
+**Example**
+
+```lua
+-- Only allow instructors to invite others to their class
+hook.Add("CanInviteToClass", "InstructorOnlyInvites", function(ply, target)
+    return ply:hasFlags("Z")
+end)
+```
+
+---
+
 ### CanPlayerUseChar
 
 **Purpose**

@@ -55,6 +55,43 @@ AddInteraction(L("giveMoney"), {
     end
 })
 
+AddInteraction(L("inviteToClass"), {
+    runServer = true,
+    shouldShow = function(client, target)
+        local cChar = client:getChar()
+        local tChar = target:getChar()
+        if not cChar or not tChar then return false end
+        if cChar:getFaction() ~= tChar:getFaction() then return false end
+        return hook.Run("CanInviteToClass", client, target) ~= false
+    end,
+    onRun = function(client, target)
+        if not SERVER then return end
+        local cChar = client:getChar()
+        local tChar = target:getChar()
+        if not cChar or not tChar then return end
+        local class = lia.class.list[cChar:getClass()]
+        if not class then
+            client:notifyLocalized("invalidClass")
+            return
+        end
+
+        target:binaryQuestion(L("joinClassPrompt"), L("yes"), L("no"), false, function(choice)
+            if choice ~= 0 then
+                client:notifyLocalized("inviteDeclined")
+                return
+            end
+
+            if hook.Run("CanCharBeTransfered", tChar, class, tChar:getClass()) == false then return end
+            local oldClass = tChar:getClass()
+            tChar:setClass(class.index)
+            hook.Run("OnPlayerJoinClass", target, class.index, oldClass)
+            client:notifyLocalized("transferSuccess", target:Name(), class.name)
+            if client ~= target then target:notifyLocalized("transferNotification", class.name, client:Name()) end
+        end)
+    end
+})
+
+
 AddAction(L("changeToWhisper"), {
     shouldShow = function(client) return client:getChar() and client:Alive() end,
     onRun = function(client)
