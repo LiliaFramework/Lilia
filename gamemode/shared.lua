@@ -1,5 +1,5 @@
 GM.Name = "Lilia"
-GM.version = "5.7.31"
+GM.version = "5.7.33"
 GM.Author = "Samael"
 GM.Website = "https://discord.gg/esCRH5ckbQ"
 include("core/libraries/core.lua")
