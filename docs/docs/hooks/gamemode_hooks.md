@@ -5977,7 +5977,8 @@ Called when a player attempts to lock a door.
 -- Prints a message when KeyLock is triggered
 hook.Add("KeyLock", "LogDoorLock", function(owner, entity, time)
     entity:setLocked(true)
-    lia.log.write(
+    lia.log.add(
+        owner,
         "DoorLock",
         owner:Name() .. " locked door ID: " .. entity:EntIndex() .. " for " .. time .. " seconds."
     )
@@ -6012,7 +6013,8 @@ Called when a player attempts to unlock a door.
 -- Prints a message when KeyUnlock is triggered
 hook.Add("KeyUnlock", "LogDoorUnlock", function(owner, entity, time)
     entity:setLocked(false)
-    lia.log.write(
+    lia.log.add(
+        owner,
         "DoorUnlock",
         owner:Name() .. " unlocked door ID: " .. entity:EntIndex() .. " after " .. time .. " seconds."
     )
@@ -6178,11 +6180,11 @@ Called when a player purchases or sells a door.
 hook.Add("OnPlayerPurchaseDoor", "HandleDoorPurchase", function(client, entity, buying, CallOnDoorChild)
     if buying then
         client:deductMoney(entity:getPrice())
-        lia.log.write("DoorPurchase", client:Name() .. " purchased door ID: " .. entity:EntIndex())
+        lia.log.add(client, "DoorPurchase", client:Name() .. " purchased door ID: " .. entity:EntIndex())
         print(client:Name() .. " purchased a door.")
     else
         client:addMoney(entity:getSellPrice())
-        lia.log.write("DoorSale", client:Name() .. " sold door ID: " .. entity:EntIndex())
+        lia.log.add(client, "DoorSale", client:Name() .. " sold door ID: " .. entity:EntIndex())
         print(client:Name() .. " sold a door.")
     end
     CallOnDoorChild(entity)
