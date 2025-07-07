@@ -79,11 +79,15 @@ local spawn = lia.darkrp.findEmptyPos(ply:GetPos(), { ply }, 128, 16, Vector(0, 
 
 **Purpose**
 
-Sends a notification to the specified client. The second and third parameters exist only for DarkRP compatibility and are ignored.
+Sends a notification to the specified client. The second and third parameters mirror the DarkRP API but are ignored by this implementation.
 
 **Parameters**
 
 * `client` (*Player*): Player to receive the message.
+
+* `type` (*number*): DarkRP notification type. *Ignored.*
+
+* `length` (*number*): Display time in seconds. *Ignored.*
 
 * `message` (*string*): Text of the notification.
 
