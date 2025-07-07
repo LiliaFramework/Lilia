@@ -20,7 +20,7 @@ Registers a named color for later lookup or use with `Color(name)`.
 
 * `name` (*string*): Key used to reference the color.
 
-* `color` (*Color | table*): Color object or `{ r, g, b }` table.
+* `color` (*Color | table*): Color object or `{ r, g, b }` table with the channel values in order.
 
 **Realm**
 
@@ -111,6 +111,7 @@ The global `Color()` function is overridden to accept a registered color name. P
 **Parameters**
 
 * `name` (*string*): Registered color name.
+* `alpha` (*number | nil*): Optional alpha override when creating the color. Defaults to `255` if omitted.
 
 **Realm**
 
