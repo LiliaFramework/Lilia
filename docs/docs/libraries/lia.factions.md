@@ -321,7 +321,7 @@ Finds the first class marked as default for the given faction.
 
 **Parameters**
 
-* `id` (*string*): Faction unique ID.
+* `id` (*number*): Faction index.
 
 **Realm**
 
@@ -334,7 +334,7 @@ Finds the first class marked as default for the given faction.
 **Example**
 
 ```lua
-local defaultClass = lia.faction.getDefaultClass("citizen")
+local defaultClass = lia.faction.getDefaultClass(FACTION_CITIZEN)
 ```
 
 ---
