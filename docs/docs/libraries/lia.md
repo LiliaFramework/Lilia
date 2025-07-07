@@ -18,8 +18,8 @@ Includes a Lua file on the appropriate realm, sending it to clients when require
 
 **Parameters**
 
-* `fileName` (*string*): Path to the Lua file.
-* `state` (*string*): Realm state (`"server"`, `"client"`, `"shared"`, etc.).
+* `path` (*string*): Path to the Lua file.
+* `realm` (*string*): Realm state (`"server"`, `"client"`, `"shared"`, etc.).
 
 **Realm**
 
@@ -45,9 +45,9 @@ Includes every Lua file in a directory, with optional recursion and realm overri
 
 **Parameters**
 
-* `directory` (*string*): Directory path.
-* `fromLua` (*boolean*): Treat `directory` as a raw Lua path.
-* `recursive` (*boolean*): Include sub-folders when `true`.
+* `dir` (*string*): Directory path.
+* `raw` (*boolean*): Treat `dir` as a raw Lua path.
+* `deep` (*boolean*): Include sub-folders when `true`.
 * `realm` (*string*): Realm state override.
 
 **Realm**
