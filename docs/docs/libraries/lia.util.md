@@ -318,9 +318,9 @@ Checks if a hull fits at a position without intersecting obstacles.
 
 * `pos` (*Vector*): Test position.
 
-* `mins` (*Vector*): Hull mins (default `Vector(-16, -16, 0)`).
+* `mins` (*Vector*): Hull mins (default `Vector(16, 16, 0)`).
 
-* `maxs` (*Vector*): Hull maxs (default `Vector(16, 16, 72)`).
+* `maxs` (*Vector*): Hull maxs (default same as `mins`).
 
 * `filter` (*table | Entity | function*): Trace filter.
 
