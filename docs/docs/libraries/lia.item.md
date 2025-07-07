@@ -133,9 +133,9 @@ Generates a `uniqueID` from a file path and registers the item via `lia.item.reg
 
 * `path` (*string*): Path to the Lua file.
 
-* `baseID` (*string*): Base item unique ID to inherit from.
+* `baseID` (*string*): Base item unique ID to inherit from. *Optional*.
 
-* `isBaseItem` (*boolean*): Register as a base item when `true`.
+* `isBaseItem` (*boolean*): Register as a base item. *Optional*.
 
 **Realm**
 
@@ -220,9 +220,9 @@ Registers a new item or base item. Sets up its metatable, merges data from the s
 
 * `uniqueID` (*string*): Item unique ID.
 
-* `baseID` (*string*): Base item ID.
+* `baseID` (*string*): Base item ID. *Optional*.
 
-* `isBaseItem` (*boolean*): Register as a base item.
+* `isBaseItem` (*boolean*): Register as a base item. *Optional*.
 
 * `path` (*string*): Optional file path.
 
@@ -526,7 +526,7 @@ Creates a new item in the database (optionally assigning it to an inventory) and
 
 * `uniqueID` (*string*): Item uniqueID when `index` is invID.
 
-* `itemData` (*table*): Data to store.
+* `itemData` (*table*): Data to store. *Optional*.
 
 * `x` (*number*): Grid X. *Optional*.
 
@@ -620,7 +620,7 @@ Creates a new item instance and spawns a matching entity at a position/angle in 
 
 * `angles` (*Angle*): Spawn angles. *Optional*.
 
-* `data` (*table*): Additional item data.
+* `data` (*table*): Additional item data. *Optional*.
 
 **Realm**
 
