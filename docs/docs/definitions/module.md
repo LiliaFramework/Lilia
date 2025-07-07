@@ -357,6 +357,28 @@ print(MODULE.uniqueID)
 
 ---
 
+### Default Folder Load Order
+
+When loading a module from a directory, Lilia automatically scans for common sub-folders and includes them in a specific sequence. Files in these folders run on the appropriate realm, letting you simply drop code into place. The loader processes the following paths in order:
+
+1. `languages`
+2. `factions`
+3. `classes`
+4. `attributes`
+5. `pim.lua`, `client.lua`, `server.lua`, `config.lua` and `commands.lua`
+6. `config`
+7. `dependencies`
+8. `libs`
+9. `hooks`
+10. `libraries`
+11. `commands`
+12. `netcalls`
+13. `meta`
+14. `derma`
+15. `pim`
+16. `entities`
+17. `items`
+18. `submodules` (each loaded as its own module)
 ---
 
 ### Example `module.lua`
