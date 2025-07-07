@@ -10,7 +10,7 @@ This document describes additional operations for 3D vectors.
 
 Vector meta functions provide calculations such as midpoints, distances and axis rotations to support movement, physics and placement tasks.
 
-Each helper returns a new `Vector` without modifying the originals.
+`Center`, `Distance` and `RotateAroundAxis` return new vectors without changing their inputs. `Right` and `Up` modify the vector they are called on and also return it.
 
 ### Example Hook Usage
 
@@ -123,7 +123,9 @@ print(result)
 
 Calculates the cross product of this vector and the provided up reference to derive a right-direction vector.
 
-The result is normalized and therefore perpendicular to both input vectors.
+The vector is overwritten via `self:Cross(self, vUp)` and then normalized,
+yielding a direction perpendicular to both inputs. This means the method
+modifies the calling vector and returns it.
 
 If this vector has no horizontal component it defaults to `Vector(0, -1, 0)`.
 
@@ -156,7 +158,7 @@ print(result)
 
 Uses two cross products to determine an up-direction vector that is perpendicular to both this vector and the given up reference.
 
-First, the right vector is obtained via `self:Cross(vUp)`, then that right vector is crossed with `self` to yield the final up direction.
+First, the vector is overwritten with the cross product of itself and `vUp` using `self:Cross(self, vUp)`. This intermediate value, stored in `vRet`, is crossed with the original vector via `self:Cross(vRet, self)` to produce the final up direction. The method therefore modifies the calling vector before returning it.
 
 When this vector lacks a horizontal component the fallback value is `Vector(-self.z, 0, 0)`.
 
