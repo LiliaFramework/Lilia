@@ -438,12 +438,16 @@ inv:setOwner(client, true)
 Inserts an item into the inventory at the given position.
 
 Extra quantity that cannot fit triggers the `OnPlayerLostStackItem` hook.
+Coordinates can be omitted and the first free position will be used.
+When the third argument is a table it acts as item data and the second
+argument is treated as a quantity to spawn.
 
 **Parameters**
 
 * `item` (`Item|string`): Item instance or unique ID to add.
-* `x` (`number`): X slot (optional).
-* `y` (`number`): Y slot (optional).
+* `xOrQuantity` (`number`): X slot or stack quantity (optional).
+* `yOrData` (`number|table`): Y slot or data table (optional).
+* `noReplicate` (`boolean`): Skip networking new items to clients.
 
 **Realm**
 
