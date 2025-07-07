@@ -357,6 +357,68 @@ print(MODULE.uniqueID)
 
 ---
 
+### Data Functions
+
+Modules gain small helper methods for persisting data using the
+`lia.data` library.
+
+#### `MODULE:setData`
+
+**Purpose**
+
+Persists a value associated with this module.
+
+**Parameters**
+
+* `value` (*any*): Value to store.
+* `isGlobal` (*boolean*): Save without gamemode or map restrictions.
+* `ignoreMap` (*boolean*): Omit the map name from the stored entry.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+**Example**
+
+```lua
+MODULE:setData({ enabled = true }, true)
+```
+
+---
+
+#### `MODULE:getData`
+
+**Purpose**
+
+Retrieves data stored for this module.
+
+**Parameters**
+
+* `default` (*any*): Value returned when no data exists.
+* `isGlobal` (*boolean*): Legacy flag for `lia.data.get`.
+* `ignoreMap` (*boolean*): Legacy flag for `lia.data.get`.
+* `refresh` (*boolean*): Force bypassing the cache.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* *table*: Stored data or the default.
+
+**Example**
+
+```lua
+local info = MODULE:getData({}, true)
+```
+
+---
+
 ### Example `module.lua`
 
 A complete example showing common fields in use:
