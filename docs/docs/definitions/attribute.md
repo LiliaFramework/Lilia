@@ -97,7 +97,7 @@ ATTRIBUTE.maxValue = 50
 ### Full Attribute Example
 
 ```lua
--- sh_agility.lua
+-- agility.lua
 ATTRIBUTE.name = "Agility"
 ATTRIBUTE.desc = "Improves your reflexes and overall movement speed."
 ATTRIBUTE.startingMax = 20

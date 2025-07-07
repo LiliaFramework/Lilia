@@ -32,7 +32,7 @@ Loads attribute definitions from every Lua file in the given directory and regis
 **Example**
 
 ```lua
--- schema/attributes/sh_strength.lua
+-- schema/attributes/strength.lua
 ATTRIBUTE.name = "Strength"
 ATTRIBUTE.desc = "Determines melee damage."
 ATTRIBUTE.startingMax = 20
