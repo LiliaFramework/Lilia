@@ -624,7 +624,7 @@ CLASS.commands = {
 ## Complete Example
 
 ```lua
--- schema/classes/sh_engineer.lua
+-- schema/classes/engineer.lua
 CLASS.name = "Engineer"
 CLASS.desc = "Technicians who maintain complex machinery."
 CLASS.faction = FACTION_CITIZEN
