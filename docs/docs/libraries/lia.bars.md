@@ -123,7 +123,7 @@ Draws a single horizontal bar at the specified screen coordinates, filling it pr
 
 * `y` (*number*): The y-coordinate of the bar’s top-left corner.
 
-* `w` (*number*): Total width of the bar (including padding).
+* `w` (*number*): Width of the bar's fill area (padding of 3px is added on each side).
 
 * `h` (*number*): Total height of the bar.
 
