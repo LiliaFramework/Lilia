@@ -1259,7 +1259,7 @@ Adds funds to the player's character, clamping to limits.
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* `boolean`: `true` when the money was added, `false` if the player has no character.
 
 **Example**
 
