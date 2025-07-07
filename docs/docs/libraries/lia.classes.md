@@ -43,7 +43,7 @@ lia.class.loadFromDir("schema/classes")
 
 **Purpose**
 
-Checks faction, whitelist, and limit rules. It also runs the `CanPlayerJoinClass` gamemode hook and the class’s `OnCanBe` method to determine if the client may join.
+Checks faction and limit rules. It also runs the `CanPlayerJoinClass` gamemode hook and the class’s `OnCanBe` method to determine if the client may join. This function does not automatically enforce class whitelists.
 
 **Parameters**
 
@@ -183,7 +183,7 @@ print("Class index:", id)
 
 **Purpose**
 
-Checks if the class requires a whitelist. Default classes always return `false`.
+Checks if the class requires a whitelist. Default classes and invalid class indices always return `false`.
 
 **Parameters**
 
@@ -195,7 +195,7 @@ Checks if the class requires a whitelist. Default classes always return `false`.
 
 **Returns**
 
-* *boolean*: `true` if the class is whitelisted.
+* *boolean*: `true` if the class is whitelisted; otherwise `false`.
 
 **Example**
 
