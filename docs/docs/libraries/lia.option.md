@@ -46,7 +46,7 @@ Registers a configurable option that can be networked.
 
 * `default` (*any*): Default value.
 
-* `callback` (*function*): Runs on change.
+* `callback` (*function | nil*): Runs on change. Optional.
 
 * `data` (*table*): Extra option data.
 
