@@ -359,7 +359,6 @@ if SERVER then
             character:setMoney(totalMoney)
             lia.log.add(self, "money", amount)
         end
-        return true
     end
 
     function playerMeta:takeMoney(amount)
