@@ -227,7 +227,7 @@ Destroys every inventory associated with a character.
 
 **Parameters**
 
-* `character` (*Player*): Character entity or table.
+* `character` (*table*): Character object (e.g. from `client:getChar()`).
 
 **Realm**
 
