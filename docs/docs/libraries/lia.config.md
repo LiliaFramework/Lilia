@@ -14,7 +14,7 @@ The config library stores server configuration values with descriptions and defa
 
 **Purpose**
 
-Registers a new config option with the given key, display name, default value, and optional callback or data.
+Registers a new config option with the given key, display name, default value, and optional callback. A data table describing the option is **required**.
 
 **Parameters**
 
@@ -26,7 +26,7 @@ Registers a new config option with the given key, display name, default value, a
 
 * `callback` (*function*): Function run when the value changes. *Optional*.
 
-* `data` (*table*): Additional fields such as `desc`, `category`, `type`, `min`, `max`, `decimals`, `options`, and `noNetworking`.
+* `data` (*table*): Table describing the option. Common fields include `desc`, `category`, `type`, `min`, `max`, `decimals`, `options`, and `noNetworking`.
 
 **Realm**
 
@@ -290,6 +290,7 @@ Migrates legacy config files from `data/lilia` into the `lia_config` SQL table. 
 **Parameters**
 
 * `changeMap` (*boolean*): Whether to reload the map after conversion completes.
+* `data` (*table*): Legacy config key-value pairs to import. Defaults to reading from disk. *Optional*.
 
 **Realm**
 
