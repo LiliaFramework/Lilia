@@ -140,7 +140,7 @@ Converts a Lua value into a string appropriate for SQL insertion, handling escap
 
 **Returns**
 
-* *string*: Converted representation.
+* *string | number*: SQL-ready representation.
 
 **Example**
 
@@ -587,7 +587,7 @@ lia.db.prepare(
 
 **Purpose**
 
-Executes a prepared statement registered with `lia.db.prepare`.
+Executes a prepared statement registered with `lia.db.prepare`. *(MySQLOO only)*
 
 **Parameters**
 
@@ -673,7 +673,7 @@ local safe = lia.db.escape(userInput)
 
 **Purpose**
 
-Returns the number of queued SQL queries.
+Returns the number of queued SQL queries. *(MySQLOO only)*
 
 **Parameters**
 
@@ -699,7 +699,7 @@ print("Queue size:", lia.db.queue())
 
 **Purpose**
 
-Cancels all running queries on every connection.
+Cancels all running queries on every connection. *(MySQLOO only)*
 
 **Parameters**
 
@@ -725,7 +725,7 @@ lia.db.abort()
 
 **Purpose**
 
-Returns the least busy database object and its pool index.
+Returns the least busy database object and its pool index. *(MySQLOO only)*
 
 **Parameters**
 
