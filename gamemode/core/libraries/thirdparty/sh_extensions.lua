@@ -37,6 +37,29 @@ local extraItems = {
 	}
 }
 
+local function AddEntFunctionProperty(name, label, pos, filtor, func, icon)
+	properties.Add(name, {
+		MenuLabel = label,
+		MenuIcon = icon,
+		Order = pos,
+		Filter = function(self, ent, ply)
+			if not IsValid(ent) or not gamemode.Call("CanProperty", ply, name, ent) then return false end
+			if not rb655_property_filter(filtor, ent, ply) then return false end
+			return true
+		end,
+		Action = function(self, ent)
+			self:MsgStart()
+			net.WriteEntity(ent)
+			self:MsgEnd()
+		end,
+		Receive = function(self, _, ply)
+			local ent = net.ReadEntity()
+			if not IsValid(ply) or not IsValid(ent) or not self:Filter(ent, ply) then return false end
+			func(ent, ply)
+		end
+	})
+end
+
 local allWeapons = CreateConVar("rb655_ext_properties_npcallweapons", "1", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Whether 'Change Weapon' property should list all weapons (even if they are not compatible with NPCs), or only those specifically marked as compatible with NPCs.")
 local function GiveWeapon(ply, ent, args)
 	if not ent:IsNPC() or not args or not args[1] or not isstring(args[1]) then return end
@@ -191,29 +214,6 @@ local function rb655_property_filter(filtor, ent, ply)
 	if type(filtor) == "table" and not table.HasValue(filtor, ent:GetClass()) then return false end
 	if type(filtor) == "function" and not filtor(ent, ply) then return false end
 	return true
-end
-
-function AddEntFunctionProperty(name, label, pos, filtor, func, icon)
-	properties.Add(name, {
-		MenuLabel = label,
-		MenuIcon = icon,
-		Order = pos,
-		Filter = function(self, ent, ply)
-			if not IsValid(ent) or not gamemode.Call("CanProperty", ply, name, ent) then return false end
-			if not rb655_property_filter(filtor, ent, ply) then return false end
-			return true
-		end,
-		Action = function(self, ent)
-			self:MsgStart()
-			net.WriteEntity(ent)
-			self:MsgEnd()
-		end,
-		Receive = function(self, _, ply)
-			local ent = net.ReadEntity()
-			if not IsValid(ply) or not IsValid(ent) or not self:Filter(ent, ply) then return false end
-			func(ent, ply)
-		end
-	})
 end
 
 function AddEntFireProperty(name, label, pos, class, input, icon)
