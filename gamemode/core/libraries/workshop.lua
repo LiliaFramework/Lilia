@@ -72,10 +72,6 @@ if SERVER then
 else
     local queue, panel, total, remain = {}, nil, 0, 0
     lia.workshop.serverIds = lia.workshop.serverIds or {}
-    local function gather()
-        return table.Copy(lia.workshop.serverIds)
-    end
-
     local function mounted(id)
         for _, addon in pairs(engine.GetAddons() or {}) do
             if tostring(addon.wsid or addon.workshopid) == tostring(id) and addon.mounted then return true end
