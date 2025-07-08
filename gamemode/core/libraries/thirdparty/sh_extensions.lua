@@ -68,9 +68,9 @@ local function Rbt_ProcessOtherNPC(ent)
 end
 
 local function rb655_property_filter(filtor, ent, ply)
-	if type(filtor) == "string" and filtor ~= ent:GetClass() then return false end
-	if type(filtor) == "table" and not table.HasValue(filtor, ent:GetClass()) then return false end
-	if type(filtor) == "function" and not filtor(ent, ply) then return false end
+	if isstring(filtor) and filtor ~= ent:GetClass() then return false end
+	if istable(filtor) and not table.HasValue(filtor, ent:GetClass()) then return false end
+	if isfunction(filtor) and not filtor(ent, ply) then return false end
 	return true
 end
 
