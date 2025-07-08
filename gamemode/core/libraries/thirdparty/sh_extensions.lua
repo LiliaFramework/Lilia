@@ -1,4 +1,10 @@
 AddCSLuaFile()
+local friendliedNPCs = {}
+local hostaliziedNPCs = {}
+local passive = {"npc_seagull", "npc_crow", "npc_piegon", "monster_cockroach", "npc_dog", "npc_gman", "npc_antlion_grub", "npc_turret_floor"}
+local friendly = {"npc_monk", "npc_alyx", "npc_barney", "npc_citizen", "npc_turret_floor", "npc_dog", "npc_vortigaunt", "npc_kleiner", "npc_eli", "npc_magnusson", "npc_breen", "npc_mossman", "npc_fisherman", "monster_barney", "monster_scientist", "player"}
+local hostile = {"npc_turret_ceiling", "npc_combine_s", "npc_combinegunship", "npc_combinedropship", "npc_cscanner", "npc_clawscanner", "npc_turret_floor", "npc_helicopter", "npc_hunter", "npc_manhack", "npc_stalker", "npc_rollermine", "npc_strider", "npc_metropolice", "npc_turret_ground", "npc_cscanner", "npc_clawscanner", "npc_combine_camera", "monster_human_assassin", "monster_human_grunt", "monster_turret", "monster_miniturret", "monster_sentry"}
+local monsters = {"npc_antlion", "npc_antlion_worker", "npc_antlionguard", "npc_barnacle", "npc_fastzombie", "npc_fastzombie_torso", "npc_headcrab", "npc_headcrab_fast", "npc_headcrab_black", "npc_headcrab_poison", "npc_poisonzombie", "npc_zombie", "npc_zombie_torso", "npc_zombine", "monster_alien_grunt", "monster_alien_slave", "monster_babycrab", "monster_headcrab", "monster_bigmomma", "monster_bullchicken", "monster_barnacle", "monster_alien_controller", "monster_gargantua", "monster_nihilanth", "monster_snark", "monster_zombie", "monster_tentacle", "monster_houndeye"}
 local extraItems = {
 	{
 		ClassName = "weapon_alyxgun",
@@ -36,6 +42,30 @@ local extraItems = {
 		Spawnable = true
 	}
 }
+
+local function SetRelationships(ent, tab, status)
+	for id, fnpc in pairs(tab) do
+		if not IsValid(fnpc) then
+			table.remove(tab, id)
+		else
+			fnpc:AddEntityRelationship(ent, status, 999)
+			ent:AddEntityRelationship(fnpc, status, 999)
+		end
+	end
+end
+
+local function Rbt_ProcessOtherNPC(ent)
+	if table.HasValue(friendly, ent:GetClass()) and not table.HasValue(hostaliziedNPCs, ent) then
+		SetRelationships(ent, friendliedNPCs, D_LI)
+		SetRelationships(ent, hostaliziedNPCs, D_HT)
+	elseif table.HasValue(hostile, ent:GetClass()) and not table.HasValue(friendliedNPCs, ent) then
+		SetRelationships(ent, friendliedNPCs, D_HT)
+		SetRelationships(ent, hostaliziedNPCs, D_LI)
+	elseif table.HasValue(monsters, ent:GetClass()) and not table.HasValue(friendliedNPCs, ent) and not table.HasValue(hostaliziedNPCs, ent) then
+		SetRelationships(ent, friendliedNPCs, D_HT)
+		SetRelationships(ent, hostaliziedNPCs, D_HT)
+	end
+end
 
 local function AddEntFunctionProperty(name, label, pos, filtor, func, icon)
 	properties.Add(name, {
@@ -572,10 +602,6 @@ end, function(ent, ply)
 	ent:Remove()
 end, "icon16/user_green.png")
 
-local passive = {"npc_seagull", "npc_crow", "npc_piegon", "monster_cockroach", "npc_dog", "npc_gman", "npc_antlion_grub", "npc_turret_floor"}
-local friendly = {"npc_monk", "npc_alyx", "npc_barney", "npc_citizen", "npc_turret_floor", "npc_dog", "npc_vortigaunt", "npc_kleiner", "npc_eli", "npc_magnusson", "npc_breen", "npc_mossman", "npc_fisherman", "monster_barney", "monster_scientist", "player"}
-local hostile = {"npc_turret_ceiling", "npc_combine_s", "npc_combinegunship", "npc_combinedropship", "npc_cscanner", "npc_clawscanner", "npc_turret_floor", "npc_helicopter", "npc_hunter", "npc_manhack", "npc_stalker", "npc_rollermine", "npc_strider", "npc_metropolice", "npc_turret_ground", "npc_cscanner", "npc_clawscanner", "npc_combine_camera", "monster_human_assassin", "monster_human_grunt", "monster_turret", "monster_miniturret", "monster_sentry"}
-local monsters = {"npc_antlion", "npc_antlion_worker", "npc_antlionguard", "npc_barnacle", "npc_fastzombie", "npc_fastzombie_torso", "npc_headcrab", "npc_headcrab_fast", "npc_headcrab_black", "npc_headcrab_poison", "npc_poisonzombie", "npc_zombie", "npc_zombie_torso", "npc_zombine", "monster_alien_grunt", "monster_alien_slave", "monster_babycrab", "monster_headcrab", "monster_bigmomma", "monster_bullchicken", "monster_barnacle", "monster_alien_controller", "monster_gargantua", "monster_nihilanth", "monster_snark", "monster_zombie", "monster_tentacle", "monster_houndeye"}
 local NPCsThisWorksOn = {}
 local function RecalcUsableNPCs()
 	for _, class in pairs(friendly) do
@@ -609,32 +635,6 @@ end
 function ExtProp_AddMonster(class)
 	table.insert(monsters, class)
 	RecalcUsableNPCs()
-end
-
-local friendliedNPCs = {}
-local hostaliziedNPCs = {}
-local function SetRelationships(ent, tab, status)
-	for id, fnpc in pairs(tab) do
-		if not IsValid(fnpc) then
-			table.remove(tab, id)
-		else
-			fnpc:AddEntityRelationship(ent, status, 999)
-			ent:AddEntityRelationship(fnpc, status, 999)
-		end
-	end
-end
-
-local function Rbt_ProcessOtherNPC(ent)
-	if table.HasValue(friendly, ent:GetClass()) and not table.HasValue(hostaliziedNPCs, ent) then
-		SetRelationships(ent, friendliedNPCs, D_LI)
-		SetRelationships(ent, hostaliziedNPCs, D_HT)
-	elseif table.HasValue(hostile, ent:GetClass()) and not table.HasValue(friendliedNPCs, ent) then
-		SetRelationships(ent, friendliedNPCs, D_HT)
-		SetRelationships(ent, hostaliziedNPCs, D_LI)
-	elseif table.HasValue(monsters, ent:GetClass()) and not table.HasValue(friendliedNPCs, ent) and not table.HasValue(hostaliziedNPCs, ent) then
-		SetRelationships(ent, friendliedNPCs, D_HT)
-		SetRelationships(ent, hostaliziedNPCs, D_HT)
-	end
 end
 
 AddEntFunctionProperty("rb655_make_friendly", "Make Friendly", 652, function(ent)
