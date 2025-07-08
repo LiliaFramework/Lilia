@@ -29,10 +29,11 @@ function PANEL:setItem(item)
     self:centerIcon()
 end
 
-local function drawIcon(mat, _, x, y)
+local function drawIcon(mat, _, w, h)
+    local m = isstring(mat) and Material(mat) or mat
     surface.SetDrawColor(color_white)
-    surface.SetMaterial(mat)
-    surface.DrawTexturedRect(0, 0, x, y)
+    surface.SetMaterial(m)
+    surface.DrawTexturedRect(0, 0, w, h)
 end
 
 function PANEL:setItemType(itemTypeOrID)
