@@ -1,13 +1,19 @@
-﻿lia.workshop = lia.workshop or {}
+lia.workshop = lia.workshop or {}
 if SERVER then
     lia.workshop.ids = lia.workshop.ids or {}
     lia.workshop.known = lia.workshop.known or {}
     lia.workshop.cache = lia.workshop.cache or {}
+    local origAddWorkshop = resource.AddWorkshop
     function lia.workshop.AddWorkshop(id)
         id = tostring(id)
-        if not lia.workshop.ids[id] then lia.bootstrap("Workshop Downloader", L("workshopAdded", id)) end
+        if not lia.workshop.ids[id] then
+            lia.bootstrap("Workshop Downloader", L("workshopAdded", id))
+        end
         lia.bootstrap("Workshop Downloader", L("workshopDownloading", id))
         lia.workshop.ids[id] = true
+        if isfunction(origAddWorkshop) then
+            origAddWorkshop(id)
+        end
     end
 
     local function addKnown(id)
@@ -55,35 +61,26 @@ if SERVER then
         timer.Simple(10, function() if IsValid(ply) then lia.workshop.send(ply) end end)
     end)
 
+    local origAddFile = resource.AddFile
+    function resource.AddFile(path)
+        lia.bootstrap("Resources", L("resourceFileAdded", path))
+        if isfunction(origAddFile) then
+            origAddFile(path)
+        end
+    end
+    local origAddSingleFile = resource.AddSingleFile
+    function resource.AddSingleFile(path)
+        lia.bootstrap("Resources", L("resourceFileAdded", path))
+        if isfunction(origAddSingleFile) then
+            origAddSingleFile(path)
+        end
+    end
     resource.AddWorkshop = lia.workshop.AddWorkshop
 else
     local queue, panel, total, remain = {}, nil, 0, 0
+    lia.workshop.serverIds = lia.workshop.serverIds or {}
     local function gather()
-        local ids = {
-            ["2959728255"] = true
-        }
-
-        for _, addon in pairs(engine.GetAddons() or {}) do
-            if addon.mounted and addon.wsid then ids[tostring(addon.wsid)] = true end
-        end
-
-        for _, module in pairs(lia.module.list) do
-            local wc = module.WorkshopContent
-            if wc then
-                if isstring(wc) then
-                    ids[wc] = true
-                else
-                    for _, v in ipairs(wc) do
-                        ids[tostring(v)] = true
-                    end
-                end
-            end
-        end
-
-        for id in pairs(lia.workshop.ids or {}) do
-            ids[id] = true
-        end
-        return ids
+        return table.Copy(lia.workshop.serverIds)
     end
 
     local function mounted(id)
@@ -152,14 +149,12 @@ else
 
     local function refresh(tbl)
         table.Empty(queue)
-        for id in pairs(gather()) do
-            queue[id] = true
+        if tbl then
+            lia.workshop.serverIds = tbl
         end
 
-        if tbl then
-            for id in pairs(tbl) do
-                queue[id] = true
-            end
+        for id in pairs(lia.workshop.serverIds) do
+            queue[id] = true
         end
     end
 
@@ -171,10 +166,6 @@ else
     concommand.Add("workshop_force_redownload", function()
         table.Empty(queue)
         refresh()
-        for _, addon in pairs(engine.GetAddons() or {}) do
-            if addon.mounted and addon.wsid then queue[tostring(addon.wsid)] = true end
-        end
-
         start()
         lia.bootstrap("Workshop Downloader", L("workshopForcedRedownload"))
     end)
@@ -184,7 +175,7 @@ else
         table.insert(pages, {
             name = L("workshopAddons"),
             drawFunc = function(container)
-                local ids = gather()
+                local ids = lia.workshop.serverIds or {}
                 local search = vgui.Create("DTextEntry", container)
                 search:Dock(TOP)
                 search:DockMargin(0, 0, 0, 5)
