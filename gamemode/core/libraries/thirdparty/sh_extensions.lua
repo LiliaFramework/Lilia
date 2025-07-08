@@ -67,6 +67,13 @@ local function Rbt_ProcessOtherNPC(ent)
 	end
 end
 
+local function rb655_property_filter(filtor, ent, ply)
+	if type(filtor) == "string" and filtor ~= ent:GetClass() then return false end
+	if type(filtor) == "table" and not table.HasValue(filtor, ent:GetClass()) then return false end
+	if type(filtor) == "function" and not filtor(ent, ply) then return false end
+	return true
+end
+
 local function AddEntFunctionProperty(name, label, pos, filtor, func, icon)
 	properties.Add(name, {
 		MenuLabel = label,
@@ -239,13 +246,6 @@ properties.Add("rb655_npc_weapon", {
 })
 
 AddCSLuaFile()
-local function rb655_property_filter(filtor, ent, ply)
-	if type(filtor) == "string" and filtor ~= ent:GetClass() then return false end
-	if type(filtor) == "table" and not table.HasValue(filtor, ent:GetClass()) then return false end
-	if type(filtor) == "function" and not filtor(ent, ply) then return false end
-	return true
-end
-
 function AddEntFireProperty(name, label, pos, class, input, icon)
 	AddEntFunctionProperty(name, label, pos, class, function(e) e:Fire(unpack(string.Explode(" ", input))) end, icon)
 end
