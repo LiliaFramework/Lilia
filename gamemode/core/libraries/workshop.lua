@@ -3,19 +3,14 @@ if SERVER then
     lia.workshop.ids = lia.workshop.ids or {}
     lia.workshop.known = lia.workshop.known or {}
     lia.workshop.cache = lia.workshop.cache or {}
-    local origAddWorkshop = resource.AddWorkshop
     function lia.workshop.AddWorkshop(id)
         id = tostring(id)
-        if not lia.workshop.ids[id] then
-            lia.bootstrap("Workshop Downloader", L("workshopAdded", id))
-        end
+        if not lia.workshop.ids[id] then lia.bootstrap("Workshop Downloader", L("workshopAdded", id)) end
         lia.bootstrap("Workshop Downloader", L("workshopDownloading", id))
         lia.workshop.ids[id] = true
-        if isfunction(origAddWorkshop) then
-            origAddWorkshop(id)
-        end
     end
 
+    resource.AddWorkshop = lia.workshop.AddWorkshop
     local function addKnown(id)
         id = tostring(id)
         if not lia.workshop.known[id] then
@@ -64,17 +59,15 @@ if SERVER then
     local origAddFile = resource.AddFile
     function resource.AddFile(path)
         lia.bootstrap("Resources", L("resourceFileAdded", path))
-        if isfunction(origAddFile) then
-            origAddFile(path)
-        end
+        if isfunction(origAddFile) then origAddFile(path) end
     end
+
     local origAddSingleFile = resource.AddSingleFile
     function resource.AddSingleFile(path)
         lia.bootstrap("Resources", L("resourceFileAdded", path))
-        if isfunction(origAddSingleFile) then
-            origAddSingleFile(path)
-        end
+        if isfunction(origAddSingleFile) then origAddSingleFile(path) end
     end
+
     resource.AddWorkshop = lia.workshop.AddWorkshop
 else
     local queue, panel, total, remain = {}, nil, 0, 0
@@ -149,10 +142,7 @@ else
 
     local function refresh(tbl)
         table.Empty(queue)
-        if tbl then
-            lia.workshop.serverIds = tbl
-        end
-
+        if tbl then lia.workshop.serverIds = tbl end
         for id in pairs(lia.workshop.serverIds) do
             queue[id] = true
         end
