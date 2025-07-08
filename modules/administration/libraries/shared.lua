@@ -27,3 +27,22 @@ properties.Add("TogglePropBlacklist", {
         end
     end
 })
+
+properties.Add("copytoclipboard", {
+    MenuLabel = "Copy Model to Clipboard",
+    Order = 999,
+    MenuIcon = "icon16/cup.png",
+    Filter = function(self, ent, ply)
+        if ent == nil then return false end
+        if not IsValid(ent) then return false end
+        return true
+    end,
+    Action = function(self, ent)
+        self:MsgStart()
+        local s = ent:GetModel()
+        SetClipboardText(s)
+        print(s)
+        self:MsgEnd()
+    end,
+    Receive = function(self, length, player) end
+})
