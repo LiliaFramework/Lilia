@@ -458,6 +458,6 @@ lia.option.add("descriptionWidth", "Description Width", "Adjust the description 
     decimals = 2
 })
 
-lia.option.add("invertWeaponScroll", L("invertWeaponScroll"), L("invertWeaponScrollDesc"), false, nil, {
-    category = L("weaponSelector")
+lia.option.add("invertWeaponScroll", "Invert Weapon Scroll", "Invert the weapon selection scroll direction", false, nil, {
+    category = "Weapon Selector"
 })
