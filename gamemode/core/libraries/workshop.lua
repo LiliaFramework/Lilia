@@ -10,7 +10,6 @@ if SERVER then
         lia.workshop.ids[id] = true
     end
 
-    resource.AddWorkshop = lia.workshop.AddWorkshop
     local function addKnown(id)
         id = tostring(id)
         if not lia.workshop.known[id] then
@@ -55,18 +54,6 @@ if SERVER then
         if not lia.config.get("AutoDownloadWorkshop", true) then return end
         timer.Simple(10, function() if IsValid(ply) then lia.workshop.send(ply) end end)
     end)
-
-    local origAddFile = resource.AddFile
-    function resource.AddFile(path)
-        lia.bootstrap("Resources", L("resourceFileAdded", path))
-        if isfunction(origAddFile) then origAddFile(path) end
-    end
-
-    local origAddSingleFile = resource.AddSingleFile
-    function resource.AddSingleFile(path)
-        lia.bootstrap("Resources", L("resourceFileAdded", path))
-        if isfunction(origAddSingleFile) then origAddSingleFile(path) end
-    end
 
     resource.AddWorkshop = lia.workshop.AddWorkshop
 else
