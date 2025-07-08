@@ -6,7 +6,7 @@ end
 
 function lia.chat.register(chatType, data)
     data.syntax = data.syntax or ""
-    data.desc = L(data.desc) or ""
+    data.desc = data.desc and L(data.desc) or ""
     if not data.onCanHear then
         if isfunction(data.radius) then
             data.onCanHear = function(speaker, listener) return (speaker:GetPos() - listener:GetPos()):LengthSqr() <= data.radius() ^ 2 end
