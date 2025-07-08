@@ -10,7 +10,7 @@ The web-image library downloads remote images and caches them as materials. Cach
 
 `data/lilia/<IP>/<Gamemode>/`, so each server keeps its own image collection. The library also extends
 
-`Material()` and `DImage:SetImage()` so you can pass HTTP(S) URLs directly—the image is downloaded, cached, and used automatically.
+`Material()` and `DImage:SetImage()` so you can pass HTTP(S) URLs directly—the image is downloaded, cached, and used automatically. Images retrieved later using the same URL will return the previously cached file, and you may reference the saved name anywhere an image path is expected.
 
 ---
 
@@ -91,6 +91,11 @@ local direct = Material("https://example.com/icon.png")
 
 -- Apply to a DImage
 button:SetImage("https://example.com/icon.png")
+
+-- Registered names and URLs are interchangeable
+lia.webimage.register("logo_axis.png", "https://example.com/logo.png")
+local byName = Material("logo_axis.png")
+local byURL = Material("https://example.com/logo.png")
 ```
 
 ---

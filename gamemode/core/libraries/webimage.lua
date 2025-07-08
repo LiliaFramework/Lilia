@@ -3,6 +3,7 @@ local ip = string.Replace(string.Replace(game.GetIPAddress() or "unknown", ":", 
 local gamemode = engine.ActiveGamemode() or "unknown"
 local baseDir = "lilia/" .. ip .. "/" .. gamemode .. "/"
 local cache = {}
+local urlMap = {}
 local function ensureDir(p)
     local parts = string.Explode("/", p)
     local cur = ""
@@ -17,6 +18,8 @@ local function buildMaterial(p, flags)
 end
 
 function lia.webimage.register(n, u, cb, flags)
+    if isstring(u) then urlMap[u] = n end
+
     if cache[n] then
         if cb then cb(cache[n], true) end
         return
@@ -42,24 +45,35 @@ function lia.webimage.register(n, u, cb, flags)
 end
 
 function lia.webimage.get(n, flags)
-    if cache[n] then return cache[n] end
-    local savePath = baseDir .. n
+    local key = urlMap[n] or n
+    if cache[key] then return cache[key] end
+    local savePath = baseDir .. key
     if file.Exists(savePath, "DATA") then
         local m = buildMaterial(savePath, flags)
-        cache[n] = m
+        cache[key] = m
         return m
     end
 end
 
 local origMaterial = Material
 function Material(p, ...)
-    if isstring(p) and p:find("^https?://") then
-        local ext = p:match("%.([%w]+)$") or "png"
-        local n = util.CRC(p) .. "." .. ext
-        lia.webimage.register(n, p)
-        return origMaterial("data/" .. baseDir .. n, ...)
+    local flags = select(1, ...)
+    if isstring(p) then
+        if p:find("^https?://") then
+            local n = urlMap[p]
+            if not n then
+                local ext = p:match("%.([%w]+)$") or "png"
+                n = util.CRC(p) .. "." .. ext
+                urlMap[p] = n
+            end
+            lia.webimage.register(n, p)
+            return origMaterial("data/" .. baseDir .. n, flags)
+        else
+            local mat = lia.webimage.get(p, flags)
+            if mat then return mat end
+        end
     end
-    return origMaterial(p, ...)
+    return origMaterial(p, flags)
 end
 
 local dimage = vgui.GetControlTable("DImage")
@@ -68,8 +82,12 @@ if dimage and dimage.SetImage then
     function dimage:SetImage(src, backup)
         if isstring(src) then
             if src:find("^https?://") then
-                local ext = src:match("%.([%w]+)$") or "png"
-                local n = util.CRC(src) .. "." .. ext
+                local n = urlMap[src]
+                if not n then
+                    local ext = src:match("%.([%w]+)$") or "png"
+                    n = util.CRC(src) .. "." .. ext
+                    urlMap[src] = n
+                end
                 local savePath = baseDir .. n
                 lia.webimage.register(n, src, function(m)
                     if m and not m:IsError() then
