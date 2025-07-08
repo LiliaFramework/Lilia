@@ -32,7 +32,7 @@ properties.Add("copytoclipboard", {
     MenuLabel = "Copy Model to Clipboard",
     Order = 999,
     MenuIcon = "icon16/cup.png",
-    Filter = function(self, ent, ply)
+    Filter = function(_, ent)
         if ent == nil then return false end
         if not IsValid(ent) then return false end
         return true
@@ -44,5 +44,5 @@ properties.Add("copytoclipboard", {
         print(s)
         self:MsgEnd()
     end,
-    Receive = function(self, length, player) end
+    Receive = function() end
 })
