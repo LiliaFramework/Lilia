@@ -320,7 +320,8 @@ end
 local function IncludeFlagManagement(tgt, menu, stores)
     local cl = LocalPlayer()
     if not cl:hasPrivilege("Commands - Manage Flags") then return end
-    local fm = GetOrCreateSubMenu(menu, "flagsManagement", stores)
+    local charMenu = GetOrCreateSubMenu(menu, "characterManagement", stores)
+    local fm = GetOrCreateSubMenu(charMenu, "flagsManagement", stores)
     local give = GetOrCreateSubMenu(fm, "giveFlagsMenu", stores)
     local take = GetOrCreateSubMenu(fm, "takeFlagsMenu", stores)
     local toGive, toTake = {}, {}
