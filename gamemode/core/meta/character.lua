@@ -376,6 +376,7 @@ if SERVER then
             end
 
             client:SetSkin(self:getData("skin", 0))
+            hook.Run("SetupPlayerModel", client, self)
             if not noNetworking then
                 for _, v in ipairs(self:getInv(true)) do
                     if istable(v) then v:sync(client) end
