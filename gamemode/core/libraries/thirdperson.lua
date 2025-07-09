@@ -22,6 +22,14 @@ local NotSolidMatTypes = {
     [MAT_GLASS] = true
 }
 
+--[[----------------------------------------------------------------------
+Caching table used to smooth out visibility checks for the wall peek
+system. Without this cache, players that are right on the edge of the
+visibility checks can rapidly switch between visible and hidden states,
+resulting in a distracting flicker. Each player's visibility state is
+updated at most every 0.1 seconds. --]]
+local visibilityCache = {}
+
 local view, traceData, traceData2, aimOrigin, crouchFactor, ft, trace, curAng
 local clmp = math.Clamp
 crouchFactor = 0
@@ -107,6 +115,7 @@ hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(drawnClient)
     if client:isStaffOnDuty() or not lia.config.get("WallPeek", false) or client:InVehicle() or client:hasValidVehicle() or client:isNoClipping() or not client:CanOverrideView() then
         drawnClient:DrawShadow(true)
         drawnClient.IsHidden = false
+        visibilityCache[drawnClient] = nil
         return
     end
 
@@ -125,28 +134,40 @@ hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(drawnClient)
         return true
     end
 
-    local filter = player.GetAll()
-    local visible = false
-    for _, boneName in ipairs(ImportantBones) do
-        local boneIndex = drawnClient:LookupBone(boneName)
-        if boneIndex then
-            local bonePos = drawnClient:GetBonePosition(boneIndex)
-            local trace = util.TraceLine({
-                start = clientPos,
-                endpos = bonePos,
-                filter = filter,
-                mask = MASK_SHOT_HULL
-            })
+    local cached = visibilityCache[drawnClient]
+    if not cached or cached.expire <= CurTime() then
+        local filter = player.GetAll()
+        local visible = false
+        for _, boneName in ipairs(ImportantBones) do
+            local boneIndex = drawnClient:LookupBone(boneName)
+            if boneIndex then
+                local bonePos = drawnClient:GetBonePosition(boneIndex)
+                local trace = util.TraceLine({
+                    start = clientPos,
+                    endpos = bonePos,
+                    filter = filter,
+                    mask = MASK_SHOT_HULL
+                })
 
-            local ent = trace.Entity
-            if trace.HitPos == bonePos or NotSolidMatTypes[trace.MatType] or NotSolidTextures[trace.HitTexture] or IsValid(ent) and NotSolidModels[ent:GetModel()] then
-                visible = true
-                break
+                local ent = trace.Entity
+                if trace.HitPos == bonePos or NotSolidMatTypes[trace.MatType] or NotSolidTextures[trace.HitTexture] or IsValid(ent) and NotSolidModels[ent:GetModel()] then
+                    visible = true
+                    break
+                end
             end
         end
+
+        cached = {visible = visible, expire = CurTime() + 0.1}
+        visibilityCache[drawnClient] = cached
     end
 
-    drawnClient:DrawShadow(visible)
-    drawnClient.IsHidden = not visible
-    return not visible
+    drawnClient:DrawShadow(cached.visible)
+    drawnClient.IsHidden = not cached.visible
+    return not cached.visible
 end)
+
+-- Clear cached visibility when a player leaves to avoid stale entries.
+hook.Add("EntityRemoved", "liaThirdPersonClearCache", function(ent)
+    if visibilityCache[ent] then
+        visibilityCache[ent] = nil
+    endend)
