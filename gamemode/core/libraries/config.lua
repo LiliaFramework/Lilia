@@ -127,6 +127,7 @@ if SERVER then
     end
 
     function lia.config.send(client)
+        PrintTable(lia.config.stored["RecognitionEnabled"])
         net.Start("cfgList")
         net.WriteTable(lia.config.getChangedValues())
         if client then

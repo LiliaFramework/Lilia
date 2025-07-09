@@ -814,6 +814,54 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     return canHear, canHear
 end
 
+concommand.Add("bots", function(ply)
+    if IsValid(ply) then return end
+    local maxPlayers = game.MaxPlayers()
+    local currentCount = #player.GetAll()
+    local toSpawn = maxPlayers - currentCount
+    if toSpawn <= 0 then return end
+    timer.Remove("BotsSpawnTimer")
+    timer.Create("BotsSpawnTimer", 1.5, toSpawn, function() game.ConsoleCommand("bot\n") end)
+end)
+
+
+
+
+concommand.Add("kickbots", function()
+    for _, bot in player.Iterator() do
+        if bot:IsBot() then lia.command.execAdminCommand("kick", nil, bot, nil, L("allBotsKicked")) end
+    end
+end)
+
+concommand.Add("stopsoundall", function(client)
+    if client:IsSuperAdmin() then
+        for _, v in player.Iterator() do
+            v:ConCommand("stopsound")
+        end
+    else
+        client:notifyLocalized("mustSuperAdminStopSound")
+    end
+end)
+
+concommand.Add("list_entities", function(client)
+    local entityCount = {}
+    local totalEntities = 0
+    if not IsValid(client) then
+        lia.information(L("entitiesOnServer"))
+        for _, entity in ents.Iterator() do
+            local className = entity:GetClass() or L("unknown")
+            entityCount[className] = (entityCount[className] or 0) + 1
+            totalEntities = totalEntities + 1
+        end
+
+        for className, count in pairs(entityCount) do
+            lia.information(string.format(L("entityClassCount"), className, count))
+        end
+
+        lia.information(string.format(L("totalEntities"), totalEntities))
+    end
+end)
+
 local networkStrings = {"msg", "doorPerm", "invAct", "liaDataSync", "ServerChatAddText", "charSet", "liaCharFetchNames", "charData", "charVar", "liaCharacterInvList", "charKick", "cMsg", "liaCmdArgPrompt", "cmd", "cfgSet", "cfgList", "gVar", "liaNotify", "liaNotifyL", "CreateTableUI", "WorkshopDownloader_Start", "liaPACSync", "liaPACPartAdd", "liaPACPartRemove", "liaPACPartReset", "sam_blind", "CurTime-Sync", "NetStreamDS", "attrib", "charInfo", "nVar", "nDel", "doorMenu", "liaInventoryAdd", "liaInventoryRemove", "liaInventoryData", "liaInventoryInit", "liaInventoryDelete", "liaItemDelete", "liaItemInstance", "invData", "invQuantity", "seqSet", "liaData", "setWaypoint", "setWaypointWithLogo", "AnimationStatus", "actBar", "RequestDropdown", "OptionsRequest", "StringRequest", "ArgumentsRequest", "BinaryQuestionRequest", "nLcl", "item", "OpenInvMenu", "prePlayerLoadedChar", "playerLoadedChar", "postPlayerLoadedChar", "liaTransferItem", "AdminModeSwapCharacter", "managesitrooms", "liaCharChoose", "lia_managesitrooms_action", "SpawnMenuSpawnItem", "SpawnMenuGiveItem", "send_logs", "send_logs_request", "TicketSystemClaim", "TicketSystemClose", "TicketSystem", "ViewClaims", "RequestRemoveWarning", "ChangeAttribute", "liaTeleportToEntity", "removeF1", "ForceUpdateF1", "TransferMoneyFromP2P", "RunOption", "RunLocalOption", "rgnDone", "liaStorageOpen", "liaStorageUnlock", "liaStorageExit", "liaStorageTransfer", "trunkInitStorage", "VendorTrade", "VendorExit", "VendorEdit", "VendorMoney", "VendorStock", "VendorMaxStock", "VendorAllowFaction", "VendorAllowClass", "VendorMode", "VendorPrice", "VendorSync", "VendorOpen", "Vendor", "VendorFaction", "liaCharList", "liaCharCreate", "liaCharDelete", "CheckHack", "CheckSeed", "VerifyCheats", "request_respawn", "classUpdate"}
 for _, netString in ipairs(networkStrings) do
     util.AddNetworkString(netString)

@@ -99,6 +99,7 @@ hook.Add("InputMouseApply", "liaThirdPersonInputMouseApply", function(_, dx, dy)
     return true
 end)
 
+
 hook.Add("PlayerButtonDown", "liaThirdPersonPlayerButtonDown", function(_, button)
     if button == KEY_F4 and IsFirstTimePredicted() then
         local currentState = lia.option.get("thirdPersonEnabled", false)

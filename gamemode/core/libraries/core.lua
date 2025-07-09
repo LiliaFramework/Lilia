@@ -530,7 +530,9 @@ function GM:OnReloaded()
     lia.config.load()
     lia.module.initialize()
     lia.faction.formatModelData()
-    if CLIENT then
+    if SERVER then
+        lia.config.send()
+    else
         lia.option.load()
         lia.keybind.load()
     end
@@ -545,9 +547,7 @@ for _, file in ipairs(ConditionalFiles) do
 end
 
 if #loadedCompatibility > 0 then
-    local message =
-        #loadedCompatibility == 1 and L("compatibilityLoadedSingle", loadedCompatibility[1]) or
-        L("compatibilityLoadedMultiple", table.concat(loadedCompatibility, ", "))
+    local message = #loadedCompatibility == 1 and L("compatibilityLoadedSingle", loadedCompatibility[1]) or L("compatibilityLoadedMultiple", table.concat(loadedCompatibility, ", "))
     lia.bootstrap("Compatibility", message)
 end
 

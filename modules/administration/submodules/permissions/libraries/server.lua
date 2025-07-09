@@ -261,22 +261,6 @@ function GM:CanPlayerUseChar(client)
     if GetGlobalBool("characterSwapLock", false) and not client:hasPrivilege("Staff Permissions - Can Bypass Character Lock") then return false, L("serverEventCharLock") end
 end
 
-concommand.Add("kickbots", function()
-    for _, bot in player.Iterator() do
-        if bot:IsBot() then lia.command.execAdminCommand("kick", nil, bot, nil, L("allBotsKicked")) end
-    end
-end)
-
-concommand.Add("stopsoundall", function(client)
-    if client:IsSuperAdmin() then
-        for _, v in player.Iterator() do
-            v:ConCommand("stopsound")
-        end
-    else
-        client:notifyLocalized("mustSuperAdminStopSound")
-    end
-end)
-
 local function handleDatabaseWipe(commandName)
     concommand.Add(commandName, function(client)
         if IsValid(client) then
@@ -299,7 +283,6 @@ end
 
 handleDatabaseWipe("lia_recreatedb")
 handleDatabaseWipe("lia_wipedb")
-
 concommand.Add("lia_convertconfig", function(client)
     if IsValid(client) then
         client:notifyLocalized("commandConsoleOnly")

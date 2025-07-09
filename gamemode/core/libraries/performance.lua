@@ -162,3 +162,6 @@ else
         end
     end)
 end
+
+function widgets.PlayerTick()
+end

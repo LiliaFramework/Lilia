@@ -32,25 +32,6 @@ function MODULE:InitializedModules()
     end
 end
 
-concommand.Add("list_entities", function(client)
-    local entityCount = {}
-    local totalEntities = 0
-    if not IsValid(client) then
-        lia.information(L("entitiesOnServer"))
-        for _, entity in ents.Iterator() do
-            local className = entity:GetClass() or L("unknown")
-            entityCount[className] = (entityCount[className] or 0) + 1
-            totalEntities = totalEntities + 1
-        end
-
-        for className, count in pairs(entityCount) do
-            lia.information(string.format(L("entityClassCount"), className, count))
-        end
-
-        lia.information(string.format(L("totalEntities"), totalEntities))
-    end
-end)
-
 lia.flag.add("p", "Access to the physgun.", function(client, isGiven)
     if isGiven then
         client:Give("weapon_physgun")
