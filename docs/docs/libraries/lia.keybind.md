@@ -89,7 +89,7 @@ print("Inventory key:", input.GetKeyName(invKey))
 
 **Purpose**
 
-Writes all current keybinds to `data/lilia/keybinds/<gamemode>/<server-ip>.txt` (stored as JSON).
+Writes all current keybinds to `data/lilia/keybinds/<gamemode>/<server-ip>.json` (stored as JSON).
 
 **Parameters**
 
