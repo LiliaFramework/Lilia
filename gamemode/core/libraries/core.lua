@@ -528,6 +528,9 @@ end
 
 function GM:OnReloaded()
     lia.config.load()
+    if SERVER then
+        lia.config.send()
+    end
     lia.module.initialize()
     lia.faction.formatModelData()
     if CLIENT then
@@ -550,5 +553,4 @@ if #loadedCompatibility > 0 then
         L("compatibilityLoadedMultiple", table.concat(loadedCompatibility, ", "))
     lia.bootstrap("Compatibility", message)
 end
-
 if game.IsDedicated() then concommand.Remove("gm_save") end
