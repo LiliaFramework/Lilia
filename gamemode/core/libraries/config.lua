@@ -175,6 +175,7 @@ if SERVER then
             lia.db.transaction(queries):next(function()
                 lia.config.isConverting = false
                 lia.bootstrap("Database", L("convertConfigToDatabaseDone", entryCount))
+                file.Delete("lilia/config.txt")
                 if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
             end)
         end)

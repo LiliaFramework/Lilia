@@ -110,6 +110,7 @@ if SERVER then
         lia.bootstrap("Database", L("convertLogsToDatabase"))
         local baseDir = "lilia/logs"
         local entries = {}
+        local filesToDelete = {}
         local files, dirs = file.Find(baseDir .. "/*", "DATA")
 
         local function processFile(path, gamemode, category)
@@ -135,7 +136,9 @@ if SERVER then
         for _, fileName in ipairs(files) do
             if fileName:sub(-4) == ".txt" then
                 local category = string.StripExtension(fileName)
-                processFile(baseDir .. "/" .. fileName, engine.ActiveGamemode(), category)
+                local path = baseDir .. "/" .. fileName
+                processFile(path, engine.ActiveGamemode(), category)
+                filesToDelete[#filesToDelete + 1] = path
             end
         end
 
@@ -144,7 +147,9 @@ if SERVER then
             local gmFiles = file.Find(gmPath .. "/*.txt", "DATA")
             for _, fileName in ipairs(gmFiles) do
                 local category = string.StripExtension(fileName)
-                processFile(gmPath .. "/" .. fileName, gm, category)
+                local path = gmPath .. "/" .. fileName
+                processFile(path, gm, category)
+                filesToDelete[#filesToDelete + 1] = path
             end
         end
 
@@ -159,6 +164,7 @@ if SERVER then
                         "Database",
                         L("convertLogsToDatabaseDone", entryCount)
                     )
+                    for _, path in ipairs(filesToDelete) do file.Delete(path) end
                     if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
                     return
                 end
