@@ -406,12 +406,12 @@ concommand.Add("open_derma_preview", function()
         list:SetTall(80)
         list:EnableVerticalScrollbar()
         list:SetPadding(5)
-        for i = 1, 10 do
-            local item = vgui.Create("DLabel")
-            item:SetText(string.format(L("itemLabel"), i))
-            item:SizeToContents()
-            list:AddItem(item)
-        end
+            for i = 1, 10 do
+                local item = vgui.Create("DLabel")
+                item:SetText(L("itemLabel", i))
+                item:SizeToContents()
+                list:AddItem(item)
+            end
         return list
     end)
 
@@ -438,7 +438,7 @@ concommand.Add("open_derma_preview", function()
         subScroll:SetTall(100)
         for i = 1, 20 do
             local line = subScroll:Add("DLabel")
-            line:SetText(string.format(L("lineLabel"), i))
+            line:SetText(L("lineLabel", i))
             line:Dock(TOP)
             line:DockMargin(0, 0, 0, 5)
         end
