@@ -51,31 +51,67 @@ end)
 
 net.Receive("invAct", function(_, client)
     local action = net.ReadString()
-    local item = net.ReadType()
+    local rawItem = net.ReadType()
     local data = net.ReadType()
+    print("[invAct] Received:", action, rawItem, data)
     local character = client:getChar()
-    if not character then return end
-    local entity
-    if isentity(item) then
-        if not IsValid(item) then return end
-        if item:GetPos():Distance(client:GetPos()) > 96 then return end
-        if not item.liaItemID then return end
-        entity = item
-        item = lia.item.instances[item.liaItemID]
-    else
-        item = lia.item.instances[item]
+    if not character then
+        print("[invAct] No character for client", client)
+        return
     end
 
-    if not item then return end
-    local inventory = lia.inventory.instances[item.invID]
-    local context = {
-        client = client,
-        item = item,
-        entity = entity,
-        action = action
-    }
+    local entity
+    local item
+    if isentity(rawItem) then
+        if not IsValid(rawItem) then
+            print("[invAct] Invalid entity", rawItem)
+            return
+        end
 
-    if inventory and not inventory:canAccess("item", context) then return end
+        local dist = rawItem:GetPos():Distance(client:GetPos())
+        if dist > 96 then
+            print("[invAct] Entity too far (distance):", dist)
+            return
+        end
+
+        if not rawItem.liaItemID then
+            print("[invAct] Entity missing liaItemID")
+            return
+        end
+
+        entity = rawItem
+        item = lia.item.instances[rawItem.liaItemID]
+        if item then print("[invAct] Loaded item from entity ID:", rawItem.liaItemID) end
+    else
+        item = lia.item.instances[rawItem]
+        if item then print("[invAct] Loaded item by index:", rawItem) end
+    end
+
+    if not item then
+        print("[invAct] Item not found for", rawItem)
+        return
+    end
+
+    local inventory = lia.inventory.instances[item.invID]
+    if inventory then
+        print("[invAct] Found inventory for item.invID:", item.invID)
+        local ok = inventory:canAccess("item", {
+            client = client,
+            item = item,
+            entity = entity,
+            action = action
+        })
+
+        print("[invAct] Access check result:", ok)
+        if not ok then
+            print("[invAct] Access denied")
+            return
+        end
+    else
+        print("[invAct] No inventory instance for item.invID:", item.invID)
+    end
+
+    print("[invAct] Calling item:interact")
     item:interact(action, client, entity, data)
 end)
 
