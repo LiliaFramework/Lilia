@@ -24,7 +24,6 @@ local NotSolidMatTypes = {
 
 hook.Add("CalcView", "liaThirdPersonCalcView", function(client)
     ft = FrameTime()
-    if IsValid(lia.gui.score) then return end
     if client:CanOverrideView() and client:GetViewEntity() == client then
         if client:OnGround() and (client:KeyDown(IN_DUCK) or client:Crouching()) then
             crouchFactor = Lerp(ft * 5, crouchFactor, 1)
