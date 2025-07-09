@@ -6355,6 +6355,35 @@ end)
 
 ---
 
+### SetupPlayerModel
+
+**Purpose**
+Lets modules modify player models after the base model, skin and bodygroups are applied. The hook is fired serverside when a character loads and clientside when the main menu spawns its preview model.
+
+**Parameters**
+
+- `ent` (`Entity`): Player or menu model entity being initialized.
+- `character` (`table|nil`): Active character table if available.
+
+**Realm**
+`Shared`
+
+**Returns**
+- None
+
+**Example**
+
+```lua
+-- Adds extra parts once the player's model is ready
+hook.Add("SetupPlayerModel", "ApplyParts", function(ent, char)
+    if ent.addPart then
+        ent:addPart("custom_hat")
+    end
+end)
+```
+
+---
+
 ### PlayerUseDoor
 
 **Purpose**
