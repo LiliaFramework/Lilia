@@ -434,6 +434,35 @@ end)
 
 ---
 
+### ModifyScoreboardModel
+
+**Purpose**
+Allows modules to customize the model entity displayed for scoreboard entries. This can be used to attach props or tweak bodygroups.
+
+**Parameters**
+
+- `entity` (`Entity`): Model entity being shown.
+- `player` (`Player`): Player this entry represents.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example**
+
+```lua
+-- Give everyone a cone hat on the scoreboard.
+hook.Add("ModifyScoreboardModel", "ConeHat", function(ent, ply)
+    local hat = ClientsideModel("models/props_junk/TrafficCone001a.mdl")
+    hat:SetParent(ent)
+    hat:AddEffects(EF_BONEMERGE)
+end)
+```
+
+---
+
 ### GetDisplayedDescription
 
 **Purpose**
