@@ -70,7 +70,7 @@ function lia.config.load()
     if SERVER then
         lia.db.waitForTablesToLoad():next(function()
             local schema = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-            lia.db.select({"_key", "_value"}, "lia_config", "_schema = " .. lia.db.convertDataType(schema)):next(function(res)
+            lia.db.select({"_key", "_value"}, "config", "_schema = " .. lia.db.convertDataType(schema)):next(function(res)
                 local rows = res.results or {}
                 local existing = {}
                 if #rows == 0 then
@@ -106,7 +106,7 @@ function lia.config.load()
 
                 local finalize = function() hook.Run("InitializedConfig") end
                 if #inserts > 0 then
-                    lia.db.bulkInsert("lia_config", inserts):next(finalize)
+                    lia.db.bulkInsert("config", inserts):next(finalize)
                 else
                     finalize()
                 end
@@ -127,7 +127,6 @@ if SERVER then
     end
 
     function lia.config.send(client)
-        PrintTable(lia.config.stored["RecognitionEnabled"])
         net.Start("cfgList")
         net.WriteTable(lia.config.getChangedValues())
         if client then
