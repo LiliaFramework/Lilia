@@ -27,6 +27,7 @@ LANGUAGE = {
     itfarDesc = "Displays an in-character message at far range.",
     coinflipDesc = "Flips a coin and displays the result.",
     icDesc = "Says something in-character.",
+    sbOptions = "Scoreboard Options.",
     meDesc = "Performs an emote action.",
     globalMeDesc = "Performs an globally seen emote action.",
     itDesc = "Displays an in-character descriptive message.",
@@ -1089,4 +1090,3 @@ Reload: Drop]],
     weaponsName = "Weapon",
     weaponsDesc = "A Weapon.",
 }
-

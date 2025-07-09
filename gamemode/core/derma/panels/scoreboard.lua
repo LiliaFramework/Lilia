@@ -223,7 +223,7 @@ function PANEL:addPlayer(ply, parent)
     slot.character = ply:getChar()
     ply.liaScoreSlot = slot
     local margin, iconSize = 5, height * 0.9
-    slot.model = vgui.Create("liaSpawnIcon", slot)
+    slot.model = slot:Add("liaSpawnIcon")
     slot.model:SetPos(margin, (height - iconSize) * 0.5)
     slot.model:SetSize(iconSize, iconSize)
     slot.model:SetModel(ply:GetModel(), ply:GetSkin())
@@ -234,21 +234,34 @@ function PANEL:addPlayer(ply, parent)
         slot.model:RunAnimation()
     end
 
-    for i = 0, ply:GetNumBodyGroups() - 1 do
-        slot.model.Entity:SetBodygroup(i, ply:GetBodygroup(i))
+    slot.model:setHidden(hook.Run("ShouldAllowScoreboardOverride", ply, "model"))
+    local initialOpts = {}
+    hook.Run("ShowPlayerOptions", ply, initialOpts)
+    if #initialOpts > 0 then slot.model:SetTooltip(L("sbOptions", ply:steamName())) end
+    slot.model.DoClick = function()
+        local opts = {}
+        hook.Run("ShowPlayerOptions", ply, opts)
+        if #opts > 0 then
+            local menu = DermaMenu()
+            for _, o in ipairs(opts) do
+                menu:AddOption(L(o.name), o.func):SetImage(o.image)
+            end
+
+            menu:Open()
+            RegisterDermaMenuForClose(menu)
+        end
     end
 
-    slot.model:setHidden(hook.Run("ShouldAllowScoreboardOverride", ply, "model"))
-    slot.model.DoClick = function()
-        local menu, opts = DermaMenu(), {}
-        hook.Run("ShowPlayerOptions", ply, opts)
-        for _, o in ipairs(opts) do
-            menu:AddOption(L(o.name), o.func):SetImage(o.image)
+    timer.Simple(0, function()
+        if not IsValid(slot.model) or not IsValid(slot.model.Entity) then return end
+        for _, bg in ipairs(ply:GetBodyGroups()) do
+            slot.model.Entity:SetBodygroup(bg.id, ply:GetBodygroup(bg.id))
         end
 
-        menu:Open()
-        RegisterDermaMenuForClose(menu)
-    end
+        for i in ipairs(ply:GetMaterials()) do
+            slot.model.Entity:SetSubMaterial(i - 1, ply:GetSubMaterial(i - 1))
+        end
+    end)
 
     slot.name = vgui.Create("DLabel", slot)
     slot.name:SetFont("liaMediumFont")
@@ -339,9 +352,9 @@ function PANEL:addPlayer(ply, parent)
 
         local mdl, sk = ply:GetModel(), ply:GetSkin()
         if self.lastModel ~= mdl or self.lastSkin ~= sk then
-            self.model:SetModel(mdl, sk)
-            for i = 0, ply:GetNumBodyGroups() - 1 do
-                self.model.Entity:SetBodygroup(i, ply:GetBodygroup(i))
+            slot.model:SetModel(mdl, sk)
+            for _, bg in ipairs(ply:GetBodyGroups()) do
+                slot.model.Entity:SetBodygroup(bg.id, ply:GetBodygroup(bg.id))
             end
 
             self.lastModel, self.lastSkin = mdl, sk
