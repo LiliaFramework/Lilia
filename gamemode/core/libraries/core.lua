@@ -514,11 +514,11 @@ end
 local hasInitializedModules = false
 function GM:Initialize()
     if engine.ActiveGamemode() == "lilia" then lia.error(L("noSchemaLoaded")) end
-    lia.config.load()
     if not hasInitializedModules then
         lia.module.initialize()
         hasInitializedModules = true
     end
+    lia.config.load()
 
     if CLIENT then
         lia.option.load()
@@ -527,8 +527,8 @@ function GM:Initialize()
 end
 
 function GM:OnReloaded()
-    lia.config.load()
     lia.module.initialize()
+    lia.config.load()
     lia.faction.formatModelData()
     if SERVER then
         lia.config.send()
@@ -550,5 +550,4 @@ if #loadedCompatibility > 0 then
     local message = #loadedCompatibility == 1 and L("compatibilityLoadedSingle", loadedCompatibility[1]) or L("compatibilityLoadedMultiple", table.concat(loadedCompatibility, ", "))
     lia.bootstrap("Compatibility", message)
 end
-
 if game.IsDedicated() then concommand.Remove("gm_save") end
