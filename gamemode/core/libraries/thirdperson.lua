@@ -82,14 +82,21 @@ hook.Add("CreateMove", "liaThirdPersonCreateMove", function(cmd)
     end
 end)
 
-hook.Add("InputMouseApply", "liaThirdPersonInputMouseApply", function(_, x, y)
-    local client = LocalPlayer()
-    if not client.camAng then client.camAng = angle_zero end
-    if client:CanOverrideView() and client:GetViewEntity() == client then
-        client.camAng.p = math.Clamp(math.NormalizeAngle(client.camAng.p + y / 50), -85, 85)
-        client.camAng.y = math.NormalizeAngle(client.camAng.y - x / 50)
-        return true
+hook.Add("InputMouseApply", "liaThirdPersonInputMouseApply", function(_, dx, dy)
+    if vgui.CursorVisible() or gui.IsGameUIVisible() then return end
+    local pnl = vgui.GetHoveredPanel()
+    while IsValid(pnl) do
+        local cls = pnl:GetClassName()
+        if cls:find("ModelPanel", 1, true) or cls:find("SpawnIcon", 1, true) then return end
+        pnl = pnl:GetParent()
     end
+
+    local ply = LocalPlayer()
+    if not ply:CanOverrideView() or ply:GetViewEntity() ~= ply then return end
+    ply.camAng = ply.camAng or angle_zero
+    ply.camAng.p = math.Clamp(math.NormalizeAngle(ply.camAng.p + dy / 50), -85, 85)
+    ply.camAng.y = math.NormalizeAngle(ply.camAng.y - dx / 50)
+    return true
 end)
 
 hook.Add("PlayerButtonDown", "liaThirdPersonPlayerButtonDown", function(_, button)

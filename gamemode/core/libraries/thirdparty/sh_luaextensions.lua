@@ -1,4 +1,5 @@
-﻿if glua_ext_loaded then return end
+﻿if true then return end
+if glua_ext_loaded then return end
 local ENTITY = FindMetaTable("Entity")
 local WEAPON = FindMetaTable("Weapon")
 local NPC = FindMetaTable("NPC")

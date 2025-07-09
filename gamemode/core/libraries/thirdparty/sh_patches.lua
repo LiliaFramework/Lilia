@@ -1,4 +1,5 @@
-﻿local NULL = NULL
+﻿if true then return end
+local NULL = NULL
 local math_random = math.random
 local next, pairs, rawset, istable, _ = next, pairs, rawset, istable, ipairs
 do

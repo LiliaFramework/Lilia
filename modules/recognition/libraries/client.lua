@@ -34,15 +34,31 @@ function MODULE:GetDisplayedName(client, chatType)
 end
 
 function MODULE:ShouldAllowScoreboardOverride(client, var)
-    if client == LocalPlayer() then return false end
-    if not IsValid(client) or not IsValid(LocalPlayer()) then return false end
+    print("ShouldAllowScoreboardOverride called with client:", client, "var:", var)
+    if client == LocalPlayer() then
+        print("Deny override – client is the local player")
+        return false
+    end
+
+    if not IsValid(client) or not IsValid(LocalPlayer()) then
+        print("Deny override – invalid client or invalid local player")
+        return false
+    end
+
     local character = client:getChar()
     local ourCharacter = LocalPlayer():getChar()
-    if not character or not ourCharacter then return false end
+    if not character or not ourCharacter then
+        print("Deny override – missing character or ourCharacter")
+        return false
+    end
+
     local isRecognitionEnabled = lia.config.get("RecognitionEnabled", true)
     local isVarHiddenInScoreboard = var == "name" or var == "model" or var == "desc" or var == "classlogo"
     local isNotRecognized = not (ourCharacter:doesRecognize(character:getID()) or ourCharacter:doesFakeRecognize(character:getID()))
-    return isRecognitionEnabled and isVarHiddenInScoreboard and isNotRecognized
+    print("RecognitionEnabled:", isRecognitionEnabled, "isVarHiddenInScoreboard:", isVarHiddenInScoreboard, "isNotRecognized:", isNotRecognized)
+    local result = isRecognitionEnabled and isVarHiddenInScoreboard and isNotRecognized
+    print("Allow override result:", result)
+    return result
 end
 
 net.Receive("rgnDone", function()
