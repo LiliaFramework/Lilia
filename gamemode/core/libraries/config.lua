@@ -113,7 +113,8 @@ function lia.config.load()
             end)
         end)
     else
-        hook.Run("InitializedConfig")
+        net.Start("cfgList")
+        net.SendToServer()
     end
 end
 

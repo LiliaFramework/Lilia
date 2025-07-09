@@ -1,10 +1,10 @@
 net.Receive("cfgList", function()
-    local data = net.ReadTable()
-    for k, v in pairs(data) do
-        if lia.config.stored[k] then lia.config.stored[k].value = v end
+    local changed = net.ReadTable()
+    for key, value in pairs(changed) do
+        if lia.config.stored[key] then lia.config.stored[key].value = value end
     end
 
-    hook.Run("InitializedConfig", data)
+    hook.Run("InitializedConfig")
 end)
 
 net.Receive("cfgSet", function()

@@ -518,8 +518,8 @@ function GM:Initialize()
         lia.module.initialize()
         hasInitializedModules = true
     end
-    lia.config.load()
 
+    lia.config.load()
     if CLIENT then
         lia.option.load()
         lia.keybind.load()
@@ -550,4 +550,5 @@ if #loadedCompatibility > 0 then
     local message = #loadedCompatibility == 1 and L("compatibilityLoadedSingle", loadedCompatibility[1]) or L("compatibilityLoadedMultiple", table.concat(loadedCompatibility, ", "))
     lia.bootstrap("Compatibility", message)
 end
+
 if game.IsDedicated() then concommand.Remove("gm_save") end
