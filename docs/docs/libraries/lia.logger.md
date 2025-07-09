@@ -137,7 +137,7 @@ end)
 
 **Purpose**
 
-Migrates legacy text logs into the database. Players cannot join during conversion. Optionally reloads the map afterward.
+Migrates legacy text logs into the database. Players cannot join during conversion. Optionally reloads the map afterward. The original log files are deleted after migration completes.
 
 **Parameters**
 
@@ -158,5 +158,4 @@ if not lia.log.isConverting then
     lia.log.convertToDatabase(false)
 end
 ```
-
 ---
