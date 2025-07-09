@@ -1,6 +1,14 @@
-﻿local view, traceData, traceData2, aimOrigin, ft, curAng
-local crouchFactor = 0
-local ImportantBones = {"ValveBiped.Bip01_Head1", "ValveBiped.Bip01_Neck1", "ValveBiped.Bip01_Spine4", "ValveBiped.Bip01_Spine2", "ValveBiped.Bip01_Pelvis", "ValveBiped.Bip01_L_Clavicle", "ValveBiped.Bip01_R_Clavicle", "ValveBiped.Bip01_L_UpperArm", "ValveBiped.Bip01_R_UpperArm", "ValveBiped.Bip01_L_Forearm", "ValveBiped.Bip01_R_Forearm", "ValveBiped.Bip01_L_Hand", "ValveBiped.Bip01_R_Hand", "ValveBiped.Bip01_L_Thigh", "ValveBiped.Bip01_R_Thigh", "ValveBiped.Bip01_L_Calf", "ValveBiped.Bip01_R_Calf", "ValveBiped.Bip01_L_Foot", "ValveBiped.Bip01_R_Foot"}
+﻿local ImportantBones = {"ValveBiped.Bip01_Head1", "ValveBiped.Bip01_Neck1", "ValveBiped.Bip01_Spine4", "ValveBiped.Bip01_Spine2", "ValveBiped.Bip01_Pelvis", "ValveBiped.Bip01_L_Clavicle", "ValveBiped.Bip01_R_Clavicle", "ValveBiped.Bip01_L_UpperArm", "ValveBiped.Bip01_R_UpperArm", "ValveBiped.Bip01_L_Forearm", "ValveBiped.Bip01_R_Forearm", "ValveBiped.Bip01_L_Hand", "ValveBiped.Bip01_R_Hand", "ValveBiped.Bip01_L_Thigh", "ValveBiped.Bip01_R_Thigh", "ValveBiped.Bip01_L_Calf", "ValveBiped.Bip01_R_Calf", "ValveBiped.Bip01_L_Foot", "ValveBiped.Bip01_R_Foot"}
+local view, traceData, traceData2, aimOrigin, crouchFactor, ft,  curAng
+local clmp = math.Clamp
+crouchFactor = 0
+local diff, fm, sm
+local maxValues = {
+    height = 30,
+    horizontal = 30,
+    distance = 100
+}
+
 local NotSolidTextures = {
     ["TOOLS/TOOLSNODRAW"] = true,
     ["METAL/METALBAR001C"] = true,
@@ -20,16 +28,6 @@ local NotSolidModels = {
 
 local NotSolidMatTypes = {
     [MAT_GLASS] = true
-}
-
-local view, traceData, traceData2, aimOrigin, crouchFactor, ft, trace, curAng
-local clmp = math.Clamp
-crouchFactor = 0
-local diff, fm, sm
-local maxValues = {
-    height = 30,
-    horizontal = 30,
-    distance = 100
 }
 
 hook.Add("CalcView", "liaThirdPersonCalcView", function(client)
