@@ -261,6 +261,8 @@ function PANEL:addPlayer(ply, parent)
         for i in ipairs(ply:GetMaterials()) do
             slot.model.Entity:SetSubMaterial(i - 1, ply:GetSubMaterial(i - 1))
         end
+
+        hook.Run("ModifyScoreboardModel", slot.model.Entity, ply)
     end)
 
     slot.name = vgui.Create("DLabel", slot)
@@ -357,6 +359,7 @@ function PANEL:addPlayer(ply, parent)
                 slot.model.Entity:SetBodygroup(bg.id, ply:GetBodygroup(bg.id))
             end
 
+            hook.Run("ModifyScoreboardModel", slot.model.Entity, ply)
             self.lastModel, self.lastSkin = mdl, sk
         end
 
