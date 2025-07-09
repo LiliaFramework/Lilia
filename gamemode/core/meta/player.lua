@@ -481,7 +481,10 @@ if SERVER then
 
     function playerMeta:getLiliaData(key, default)
         local data = self.liaData and self.liaData[key]
-        return data and default or data
+        if data == nil then
+            return default
+        end
+        return data
     end
 
     playerMeta.getData = playerMeta.getLiliaData
