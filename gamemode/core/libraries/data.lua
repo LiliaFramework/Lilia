@@ -12,6 +12,7 @@ if SERVER then
 
     local function scanLegacyData()
         local entries = {}
+        local paths = {}
         local base = "lilia"
         local function scan(dir)
             local files, dirs = file.Find(dir .. "/*", "DATA")
@@ -40,7 +41,8 @@ if SERVER then
                         keySegments[#keySegments] = string.StripExtension(last)
                         local key = table.concat(keySegments, "/")
 
-                        local data = file.Read(dir .. "/" .. f, "DATA")
+                        local path = dir .. "/" .. f
+                        local data = file.Read(path, "DATA")
                         local ok, decoded = pcall(pon.decode, data)
                         if ok and decoded then
                             entries[#entries + 1] = {
@@ -49,6 +51,7 @@ if SERVER then
                                 map = map,
                                 value = decoded[1]
                             }
+                            paths[#paths + 1] = path
                         end
                     end
                 end
@@ -60,7 +63,7 @@ if SERVER then
         end
 
         scan(base)
-        return entries
+        return entries, paths
     end
 
     local function countLegacyDataEntries()
@@ -125,7 +128,7 @@ if SERVER then
         if lia.data.isConverting then return end
         lia.data.isConverting = true
         lia.bootstrap("Database", L("convertDataToDatabase"))
-        local dataEntries = scanLegacyData()
+        local dataEntries, paths = scanLegacyData()
         local entryCount = #dataEntries
         local queries = {"DELETE FROM lia_data"}
         for _, entry in ipairs(dataEntries) do
@@ -140,6 +143,7 @@ if SERVER then
                     "Database",
                     L("convertDataToDatabaseDone", entryCount)
                 )
+                for _, path in ipairs(paths) do file.Delete(path) end
                 if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
             end)
         end)

@@ -285,7 +285,7 @@ lia.config.save()
 
 **Purpose**
 
-Migrates legacy config files from `data/lilia` into the `lia_config` SQL table. Players are prevented from joining while this runs. If `changeMap` is `true`, the current map reloads when finished.
+Migrates legacy config files from `data/lilia` into the `lia_config` SQL table. Players are prevented from joining while this runs. If `changeMap` is `true`, the current map reloads when finished. The source `config.txt` file is removed after conversion.
 
 **Parameters**
 
@@ -305,5 +305,4 @@ Migrates legacy config files from `data/lilia` into the `lia_config` SQL table. 
 ```lua
 lia.config.convertToDatabase(true)
 ```
-
 ---
