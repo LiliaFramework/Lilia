@@ -134,14 +134,18 @@ function lia.keybind.save()
     file.CreateDir(dp)
     local ip = string.Explode(":", game.GetIPAddress())[1]
     local f = ip:gsub("%.", "_")
-    local s = dp .. "/" .. f .. ".txt"
+    local s = dp .. "/" .. f .. ".json"
     local d = {}
     for k, v in pairs(lia.keybind.stored) do
         if istable(v) and v.value then d[k] = v.value end
     end
 
     local j = util.TableToJSON(d, true)
-    if j then file.Write(s, j) end
+    if j then
+        file.Write(s, j)
+        local legacy = dp .. "/" .. f .. ".txt"
+        if file.Exists(legacy, "DATA") then file.Delete(legacy) end
+    end
 end
 
 function lia.keybind.load()
@@ -149,8 +153,16 @@ function lia.keybind.load()
     file.CreateDir(dp)
     local ip = string.Explode(":", game.GetIPAddress())[1]
     local f = ip:gsub("%.", "_")
-    local l = dp .. "/" .. f .. ".txt"
-    local d = file.Read(l, "DATA")
+    local jsonPath = dp .. "/" .. f .. ".json"
+    local legacyPath = dp .. "/" .. f .. ".txt"
+    local d = file.Read(jsonPath, "DATA")
+    if not d and file.Exists(legacyPath, "DATA") then
+        d = file.Read(legacyPath, "DATA")
+        if d then
+            file.Write(jsonPath, d)
+            file.Delete(legacyPath)
+        end
+    end
     if d then
         local s = util.JSONToTable(d)
         for k, v in pairs(s) do
