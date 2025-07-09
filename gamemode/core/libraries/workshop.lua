@@ -55,6 +55,7 @@ if SERVER then
         timer.Simple(10, function() if IsValid(ply) then lia.workshop.send(ply) end end)
     end)
 
+    lia.workshop.AddWorkshop("2959728255")
     resource.AddWorkshop = lia.workshop.AddWorkshop
 else
     local queue, panel, total, remain = {}, nil, 0, 0
