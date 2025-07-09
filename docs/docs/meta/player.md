@@ -229,7 +229,7 @@ The `thirdPersonEnabled` option must be enabled both client and server side and 
 
 **Realm**
 
-`Shared`
+`Client`
 
 **Returns**
 
@@ -257,7 +257,7 @@ Returns whether third-person view is enabled for this player according to the `t
 
 **Realm**
 
-`Shared`
+`Client`
 
 **Returns**
 
