@@ -5,8 +5,12 @@ local radiusSqr = 16
 local lastSaver
 hook.Add("CanTool", "liaPermaProps", function(client, _, tool)
     local entity = client:getTracedEntity()
+    if not IsValid(entity) then
+        return
+    end
+
     local entClass = entity:GetClass()
-    if IsValid(entity) and tool == "permaprops" and hook.Run("CanPersistEntity", entity) ~= false and (string.StartWith(entClass, "lia_") or entity:isLiliaPersistent() or entity:CreatedByMap()) then
+    if tool == "permaprops" and hook.Run("CanPersistEntity", entity) ~= false and (string.StartWith(entClass, "lia_") or entity:isLiliaPersistent() or entity:CreatedByMap()) then
         client:notifyLocalized("toolCantUseEntity", tool)
         return false
     end
