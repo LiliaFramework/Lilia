@@ -404,6 +404,10 @@ function GM:PlayerDisconnected(client)
     end
 end
 
+function GM:InitializedConfig()
+    timer.Simple(0.2, function() lia.config.send() end)
+end
+
 function GM:PlayerInitialSpawn(client)
     if client:IsBot() then
         hook.Run("SetupBotPlayer", client)
@@ -823,9 +827,6 @@ concommand.Add("bots", function(ply)
     timer.Remove("BotsSpawnTimer")
     timer.Create("BotsSpawnTimer", 1.5, toSpawn, function() game.ConsoleCommand("bot\n") end)
 end)
-
-
-
 
 concommand.Add("kickbots", function()
     for _, bot in player.Iterator() do
