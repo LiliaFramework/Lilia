@@ -349,7 +349,7 @@ lia.command.add("flaggiveall", {
     AdminStick = {
         Name = "adminStickGiveAllFlagsName",
         Category = "characterManagement",
-        SubCategory = "adminStickSubCategorySetInfos",
+        SubCategory = "flagsManagement",
         Icon = "icon16/flag_blue.png"
     },
     onRun = function(client, arguments)
@@ -377,7 +377,7 @@ lia.command.add("flagtakeall", {
     AdminStick = {
         Name = "adminStickTakeAllFlagsName",
         Category = "characterManagement",
-        SubCategory = "adminStickSubCategorySetInfos",
+        SubCategory = "flagsManagement",
         Icon = "icon16/flag_green.png"
     },
     onRun = function(client, arguments)

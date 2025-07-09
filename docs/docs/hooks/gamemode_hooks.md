@@ -434,6 +434,35 @@ end)
 
 ---
 
+### ModifyScoreboardModel
+
+**Purpose**
+Allows modules to customize the model entity displayed for scoreboard entries. This can be used to attach props or tweak bodygroups.
+
+**Parameters**
+
+- `entity` (`Entity`): Model entity being shown.
+- `player` (`Player`): Player this entry represents.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example**
+
+```lua
+-- Give everyone a cone hat on the scoreboard.
+hook.Add("ModifyScoreboardModel", "ConeHat", function(ent, ply)
+    local hat = ClientsideModel("models/props_junk/TrafficCone001a.mdl")
+    hat:SetParent(ent)
+    hat:AddEffects(EF_BONEMERGE)
+end)
+```
+
+---
+
 ### GetDisplayedDescription
 
 **Purpose**
@@ -6321,6 +6350,35 @@ hook.Add("PlayerModelChanged", "UpdatePlayerAppearance", function(client, model)
     print(client:Name() .. " changed their model to " .. model)
     -- Update related appearance settings
     client:setBodygroup(1, 2) -- Example of setting a bodygroup based on the new model
+end)
+```
+
+---
+
+### SetupPlayerModel
+
+**Purpose**
+Lets modules modify player models after the base model, skin and bodygroups are applied. The hook is fired serverside when a character loads and clientside when the main menu spawns its preview model.
+
+**Parameters**
+
+- `ent` (`Entity`): Player or menu model entity being initialized.
+- `character` (`table|nil`): Active character table if available.
+
+**Realm**
+`Shared`
+
+**Returns**
+- None
+
+**Example**
+
+```lua
+-- Adds extra parts once the player's model is ready
+hook.Add("SetupPlayerModel", "ApplyParts", function(ent, char)
+    if ent.addPart then
+        ent:addPart("custom_hat")
+    end
 end)
 ```
 
