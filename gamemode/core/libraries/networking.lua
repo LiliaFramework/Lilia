@@ -5,7 +5,7 @@ local entityMeta = FindMetaTable("Entity")
 if SERVER then
     function checkBadType(name, object)
         if isfunction(object) then
-            ErrorNoHalt("Net var '" .. name .. "' contains a bad object type!")
+            lia.error("Net var '" .. name .. "' contains a bad object type!")
             return true
         elseif istable(object) then
             for k, v in pairs(object) do

@@ -495,7 +495,7 @@ if SERVER then
             for _, v in ipairs(results) do
                 local charId = tonumber(v._id)
                 if not charId then
-                    ErrorNoHalt("[Lilia] Attempt to load character '" .. (data._name or "nil") .. "' with invalid ID!")
+                    lia.error("[Lilia] Attempt to load character '" .. (data._name or "nil") .. "' with invalid ID!")
                     continue
                 end
 

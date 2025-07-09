@@ -123,7 +123,7 @@ do
     encode['PhysObj'] = encode['Entity']
     encode['nil'] = function() output[#output + 1] = '?' end
     encode.__index = function(key)
-        ErrorNoHalt('Type: ' .. key .. ' can not be encoded. Encoded as as pass-over value.')
+        lia.error('Type: ' .. key .. ' can not be encoded. Encoded as as pass-over value.')
         return encode['nil']
     end
 
@@ -384,7 +384,7 @@ if SERVER then
                     if bStatus then
                         netstream.stored[player.nsDataStreamName](player, unpack(value))
                     else
-                        ErrorNoHalt("NetStream: '" .. NS_DS_NAME .. "'\n" .. value .. "\n")
+                        lia.error("NetStream: '" .. NS_DS_NAME .. "'\n" .. value .. "\n")
                     end
                 end
 
@@ -417,7 +417,7 @@ else
             if bStatus then
                 netstream.stored[NS_DS_NAME](unpack(value))
             else
-                ErrorNoHalt("NetStream: '" .. NS_DS_NAME .. "'\n" .. value .. "\n")
+                lia.error("NetStream: '" .. NS_DS_NAME .. "'\n" .. value .. "\n")
             end
         end
 

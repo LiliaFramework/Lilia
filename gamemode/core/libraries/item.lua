@@ -141,7 +141,7 @@ function lia.item.load(path, baseID, isBaseItem)
         uniqueID = (isBaseItem and "base_" or "") .. uniqueID
         lia.item.register(uniqueID, baseID, isBaseItem, path)
     elseif not path:find(".txt") then
-        ErrorNoHalt("[Lilia] " .. L("invalidItemNaming", path) .. "\n")
+        lia.error("[Lilia] " .. L("invalidItemNaming", path) .. "\n")
     end
 end
 

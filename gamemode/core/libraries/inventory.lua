@@ -75,7 +75,7 @@ if SERVER then
             local typeID = results._invType
             local invType = lia.inventory.types[typeID]
             if not invType then
-                ErrorNoHalt("Inventory " .. id .. " has invalid type " .. typeID .. "\n")
+                lia.error("Inventory " .. id .. " has invalid type " .. typeID .. "\n")
                 return
             end
 

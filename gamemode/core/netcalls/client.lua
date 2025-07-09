@@ -39,7 +39,7 @@ net.Receive("liaInventoryData", function()
     local value = net.ReadType()
     local instance = lia.inventory.instances[id]
     if not instance then
-        ErrorNoHalt(L("invDataNoInstance", key, id))
+        lia.error(L("invDataNoInstance", key, id))
         return
     end
 

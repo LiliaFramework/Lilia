@@ -281,7 +281,7 @@ if SERVER then
                 local uniqueID = result._uniqueID
                 local itemTable = lia.item.list[uniqueID]
                 if not itemTable then
-                    ErrorNoHalt("Inventory " .. self.id .. " contains invalid item " .. uniqueID .. " (" .. itemID .. ")\n")
+                    lia.error("Inventory " .. self.id .. " contains invalid item " .. uniqueID .. " (" .. itemID .. ")\n")
                     continue
                 end
 

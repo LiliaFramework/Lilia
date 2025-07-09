@@ -172,7 +172,7 @@ function Promise:_handle(value)
         timer.Simple(0.1, function()
             if UNHANDLED_PROMISES[self.rejectionHandlerID] and not DEBUG_IGNOREUNHANDLED then
                 UNHANDLED_PROMISES[self.rejectionHandlerID] = nil
-                ErrorNoHalt("Unhandled rejection: " .. tostring(self.reason or "") .. "\n")
+                lia.error("Unhandled rejection: " .. tostring(self.reason or "") .. "\n")
                 print(trace)
             end
         end)

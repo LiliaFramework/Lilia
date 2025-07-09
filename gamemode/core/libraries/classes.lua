@@ -26,7 +26,7 @@ function lia.class.loadFromDir(directory)
         CLASS.limit = 0
         lia.include(directory .. "/" .. v, "shared")
         if not CLASS.faction or not team.Valid(CLASS.faction) then
-            ErrorNoHalt("Class '" .. niceName .. "' does not have a valid faction!\n")
+            lia.error("Class '" .. niceName .. "' does not have a valid faction!\n")
             CLASS = nil
             continue
         end
