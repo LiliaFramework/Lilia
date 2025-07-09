@@ -52,7 +52,7 @@ function PANEL:PaintOver(w, h)
     hook.Run("ItemPaintOver", self, itemTable, w, h)
 end
 
-local function buildActionFunc(action, actionIndex, itemTable, invID, sub)
+local function buildActionFunc(action, actionIndex, itemTable, _, sub)
     return function()
         itemTable.player = LocalPlayer()
         local send = true

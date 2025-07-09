@@ -70,7 +70,7 @@ hook.Add("CreateMove", "liaThirdPersonCreateMove", function(cmd)
     end
 end)
 
-hook.Add("InputMouseApply", "liaThirdPersonInputMouseApply", function(cmd, x, y, ang)
+hook.Add("InputMouseApply", "liaThirdPersonInputMouseApply", function(_, x, y)
     owner = LocalPlayer()
     if not owner.camAng then owner.camAng = Angle(0, 0, 0) end
     if owner:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer() then
