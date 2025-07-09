@@ -227,12 +227,10 @@ function PANEL:addPlayer(ply, parent)
     slot.model:SetPos(margin, (height - iconSize) * 0.5)
     slot.model:SetSize(iconSize, iconSize)
     slot.model:SetModel(ply:GetModel(), ply:GetSkin())
-    slot.model:SetFOV(45)
     slot.model:SetCamPos(Vector(0, 0, 55))
-    slot.model:SetLookAt(vector_origin)
-    slot.model:SetLookAng(angle_zero)
+    slot.model:SetLookAt(Vector(0, 0, 0))
     slot.model.LayoutEntity = function(_, ent)
-        ent:SetAngles(angle_zero)
+        ent:SetAngles(Angle(0, 0, 0))
         slot.model:RunAnimation()
     end
 
@@ -357,10 +355,6 @@ function PANEL:addPlayer(ply, parent)
         local mdl, sk = ply:GetModel(), ply:GetSkin()
         if self.lastModel ~= mdl or self.lastSkin ~= sk then
             slot.model:SetModel(mdl, sk)
-            slot.model:SetFOV(45)
-            slot.model:SetCamPos(Vector(0, 0, 55))
-            slot.model:SetLookAt(Vector(0, 0, 0))
-            slot.model:SetLookAng(angle_zero)
             for _, bg in ipairs(ply:GetBodyGroups()) do
                 slot.model.Entity:SetBodygroup(bg.id, ply:GetBodygroup(bg.id))
             end
