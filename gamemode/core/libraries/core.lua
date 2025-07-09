@@ -270,6 +270,12 @@ local ConditionalFiles = {
         global = "LVS",
         name = "LVS",
         realm = "server"
+    },
+    {
+        path = "lilia/gamemode/core/libraries/compatibility/arccw.lua",
+        global = "ArcCW",
+        name = "ArcCW",
+        realm = "server"
     }
 }
 
