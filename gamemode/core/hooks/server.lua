@@ -368,6 +368,7 @@ end
 function GM:PreCleanupMap()
     lia.shuttingDown = true
     hook.Run("SaveData")
+    lia.config.save()
     hook.Run("PersistenceSave")
 end
 
@@ -381,6 +382,7 @@ function GM:ShutDown()
     if hook.Run("ShouldDataBeSaved") == false then return end
     lia.shuttingDown = true
     hook.Run("SaveData")
+    lia.config.save()
     for _, v in player.Iterator() do
         v:saveLiliaData()
         if v:getChar() then v:getChar():save() end
