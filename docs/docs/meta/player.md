@@ -1559,7 +1559,7 @@ Sends a waypoint to the client at the specified position.
 **Example**
 
 ```lua
-player:setWaypoint("Objective", Vector(0, 0, 0))
+player:setWaypoint("Objective", vector_origin)
 ```
 
 ---
@@ -1614,7 +1614,7 @@ Creates a waypoint using a custom logo material.
 **Example**
 
 ```lua
-player:setWaypointWithLogo("Objective", Vector(0, 0, 0), "path/to/icon.png")
+player:setWaypointWithLogo("Objective", vector_origin, "path/to/icon.png")
 ```
 
 ---
@@ -2189,7 +2189,7 @@ Displays a waypoint on the HUD until the player reaches it.
 **Example**
 
 ```lua
-LocalPlayer():setWaypoint("Home", Vector(0, 0, 0))
+LocalPlayer():setWaypoint("Home", vector_origin)
 ```
 
 ---

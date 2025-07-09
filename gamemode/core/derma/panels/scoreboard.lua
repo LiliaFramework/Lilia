@@ -228,9 +228,10 @@ function PANEL:addPlayer(ply, parent)
     slot.model:SetSize(iconSize, iconSize)
     slot.model:SetModel(ply:GetModel(), ply:GetSkin())
     slot.model:SetCamPos(Vector(0, 0, 55))
-    slot.model:SetLookAt(Vector(0, 0, 0))
+    slot.model:SetLookAt(vector_origin)
+    slot.model:SetLookAng(angle_zero)
     slot.model.LayoutEntity = function(_, ent)
-        ent:SetAngles(Angle(0, 0, 0))
+        ent:SetAngles(angle_zero)
         slot.model:RunAnimation()
     end
 

@@ -49,7 +49,7 @@ Returns the midpoint between this vector and the supplied vector.
 
 ```lua
 -- Average two vectors to find the midpoint
-local a = Vector(0, 0, 0)
+local a = vector_origin
 local b = Vector(10, 10, 10)
 local result = a:Center(b)
 print(result)
@@ -79,7 +79,7 @@ Calculates the distance between this vector and another vector.
 
 ```lua
 -- Measure the distance between two points
-local p1 = Vector(0, 0, 0)
+local p1 = vector_origin
 local p2 = Vector(3, 4, 0)
 local result = p1:Distance(p2)
 print(result)

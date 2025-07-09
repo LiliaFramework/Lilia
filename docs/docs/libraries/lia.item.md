@@ -633,7 +633,7 @@ Creates a new item instance and spawns a matching entity at a position/angle in 
 **Example**
 
 ```lua
-lia.item.spawn("testItem", Vector(0, 0, 0), function(item, ent)
+lia.item.spawn("testItem", vector_origin, function(item, ent)
     print("Spawned", item.uniqueID, "at", ent:GetPos())
 end)
 ```

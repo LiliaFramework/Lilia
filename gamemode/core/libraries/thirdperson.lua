@@ -23,6 +23,7 @@ local NotSolidMatTypes = {
 }
 
 hook.Add("CalcView", "liaThirdPersonCalcView", function(client)
+    if IsValid(lia.gui.score) then return end
     ft = FrameTime()
     if client:CanOverrideView() and client:GetViewEntity() == client then
         if client:OnGround() and (client:KeyDown(IN_DUCK) or client:Crouching()) then

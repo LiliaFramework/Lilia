@@ -107,7 +107,7 @@ Retrieves the stored value for the specified key from the cache.
 
 ```lua
 hook.Add("PlayerSpawn", "UseSavedSpawn", function(ply)
-    local pos = lia.data.get("spawn_pos", Vector(0, 0, 0), true)
+    local pos = lia.data.get("spawn_pos", vector_origin, true)
     if pos then
         ply:SetPos(pos)
     end

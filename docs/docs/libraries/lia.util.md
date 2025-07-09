@@ -65,7 +65,7 @@ Returns players within a spherical radius from an origin.
 **Example**
 
 ```lua
-local players = lia.util.FindPlayersInSphere(Vector(0, 0, 0), 200)
+local players = lia.util.FindPlayersInSphere(vector_origin, 200)
 for _, ply in ipairs(players) do
     print(ply:Name())
 end
@@ -363,7 +363,7 @@ Returns players within a radius.
 **Example**
 
 ```lua
-local nearby = lia.util.playerInRadius(Vector(0, 0, 0), 250)
+local nearby = lia.util.playerInRadius(vector_origin, 250)
 ```
 
 ---
