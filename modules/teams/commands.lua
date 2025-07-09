@@ -4,12 +4,6 @@
     desc = "plyTransferDesc",
     syntax = "[player Name] [faction Faction]",
     alias = {"charsetfaction"},
-    AdminStick = {
-        Name = "adminStickTransferName",
-        Category = "characterManagement",
-        SubCategory = "adminStickSubCategorySetInfos",
-        Icon = "icon16/user_go.png"
-    },
     onRun = function(client, arguments)
         local targetPlayer = lia.util.findPlayer(client, arguments[1])
         if not targetPlayer or not IsValid(targetPlayer) then
@@ -72,12 +66,6 @@ lia.command.add("plyunwhitelist", {
     desc = "plyUnwhitelistDesc",
     syntax = "[player Name] [faction Faction]",
     alias = {"factionunwhitelist"},
-    AdminStick = {
-        Name = "adminStickUnwhitelistName",
-        Category = "characterManagement",
-        SubCategory = "adminStickSubCategorySetInfos",
-        Icon = "icon16/user_delete.png"
-    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then

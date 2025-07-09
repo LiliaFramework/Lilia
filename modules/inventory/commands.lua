@@ -3,12 +3,6 @@
     privilege = "Set Inventory Size",
     desc = "updateInventorySizeDesc",
     syntax = "[player Player Name]",
-    AdminStick = {
-        Name = "adminStickUpdateInvSizeName",
-        Category = "characterManagement",
-        SubCategory = "items",
-        Icon = "icon16/box_add.png"
-    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
@@ -49,12 +43,6 @@ lia.command.add("setinventorysize", {
     privilege = "Set Inventory Size",
     desc = "setInventorySizeDesc",
     syntax = "[player Player Name] [number Width] [number Height]",
-    AdminStick = {
-        Name = "adminStickSetInvSizeName",
-        Category = "characterManagement",
-        SubCategory = "items",
-        Icon = "icon16/box_edit.png"
-    },
     onRun = function(client, args)
         local target = lia.util.findPlayer(client, args[1])
         if not target or not IsValid(target) then

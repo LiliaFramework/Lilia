@@ -69,8 +69,7 @@ local function buildActionFunc(action, actionIndex, itemTable, invID, sub)
         if send ~= false then
             net.Start("invAct")
             net.WriteString(actionIndex)
-            net.WriteUInt(itemTable.id, 32)
-            net.WriteType(invID)
+            net.WriteType(itemTable.id)
             net.WriteType(sub and sub.data)
             net.SendToServer()
         end

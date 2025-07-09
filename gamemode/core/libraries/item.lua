@@ -10,6 +10,7 @@ lia.item.WeaponsBlackList = lia.item.WeaponsBlackList or {
     weapon_medkit = true,
     gmod_camera = true,
     gmod_tool = true,
+    adminstick = true,
     lia_hands = true,
     lia_keys = true
 }
@@ -203,9 +204,8 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         else
             funcTable.name = L(funcName)
         end
-        if isstring(funcTable.tip) then
-            funcTable.tip = L(funcTable.tip)
-        end
+
+        if isstring(funcTable.tip) then funcTable.tip = L(funcTable.tip) end
     end
 
     if not luaGenerated and path then lia.include(path, "shared") end
