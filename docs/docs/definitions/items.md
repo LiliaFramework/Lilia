@@ -1165,7 +1165,7 @@ end)
 Minimal definitions for each built-in item type are shown below.
 
 
-### [Weapon](../../../gamemode/items/weapons/smg1.txt)
+### [Weapon](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/weapons/smg1.txt)
 
 ```lua
 ITEM.name = "Sub Machine Gun"
@@ -1175,7 +1175,7 @@ ITEM.weaponCategory = "primary"
 ITEM.isWeapon = true
 ```
 
-### [Ammo](../../../gamemode/items/ammo/pistolammo.txt)
+### [Ammo](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/ammo/pistolammo.txt)
 
 ```lua
 ITEM.name = "Pistol Ammo"
@@ -1184,7 +1184,7 @@ ITEM.ammo = "pistol"
 ITEM.ammoAmount = 30
 ```
 
-### [Outfit](../../../gamemode/items/outfit/rebel_armor.txt)
+### [Outfit](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/outfit/rebel_armor.txt)
 
 ```lua
 ITEM.name = "Combine Armor"
@@ -1194,7 +1194,7 @@ ITEM.replacements = "models/player/combine_soldier.mdl"
 ITEM.newSkin = 1
 ```
 
-### [PAC Outfit](../../../gamemode/items/pacoutfit/skullmask.txt)
+### [PAC Outfit](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/pacoutfit/skullmask.txt)
 
 ```lua
 ITEM.name = "Skull Mask"
@@ -1202,7 +1202,7 @@ ITEM.outfitCategory = "hat"
 ITEM.pacData = { ... }
 ```
 
-### [Aid Item](../../../gamemode/items/aid/bandages.txt)
+### [Aid Item](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/aid/bandages.txt)
 
 ```lua
 ITEM.name = "Bandages"
@@ -1210,28 +1210,28 @@ ITEM.model = "models/weapons/w_package.mdl"
 ITEM.health = 50
 ```
 
-### [Book](../../../gamemode/items/books/book.txt)
+### [Book](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/books/book.txt)
 
 ```lua
 ITEM.name = "Example"
 ITEM.contents = "<h1>An Example</h1>"
 ```
 
-### [URL Item](../../../gamemode/items/url/hi_barbie.txt)
+### [URL Item](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/url/hi_barbie.txt)
 
 ```lua
 ITEM.name = "Hi Barbie"
 ITEM.url = "https://www.youtube.com/watch?v=9ezbBugUQiQ"
 ```
 
-### [Entity Spawner](../../../gamemode/items/entities/item_suit.txt)
+### [Entity Spawner](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/entities/item_suit.txt)
 
 ```lua
 ITEM.name = "Item Suit"
 ITEM.entityid = "item_suit"
 ```
 
-### [Grenade](../../../gamemode/items/grenade/weapon_frag.txt)
+### [Grenade](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/grenade/weapon_frag.txt)
 
 ```lua
 ITEM.name = "Grenade"
