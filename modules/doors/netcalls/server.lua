@@ -1,4 +1,4 @@
-net.Receive("doorPerm", function(_, client)
+﻿net.Receive("doorPerm", function(_, client)
     local door = net.ReadEntity()
     local target = net.ReadEntity()
     local access = net.ReadUInt(2)
@@ -10,6 +10,7 @@ net.Receive("doorPerm", function(_, client)
         for k, v in pairs(door.liaAccess) do
             if v > DOOR_GUEST then recipient[#recipient + 1] = k end
         end
+
         if #recipient > 0 then
             net.Start("doorPerm")
             net.WriteEntity(door)

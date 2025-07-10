@@ -43,9 +43,7 @@ local function loadExtras(path)
     end
 
     lia.includeEntities(path .. "/entities")
-    if MODULE.uniqueID ~= "schema" then
-        lia.item.loadFromDir(path .. "/items")
-    end
+    if MODULE.uniqueID ~= "schema" then lia.item.loadFromDir(path .. "/items") end
     hook.Run("DoModuleIncludes", path, MODULE)
 end
 
@@ -171,9 +169,7 @@ function lia.module.initialize()
     for id, mod in pairs(lia.module.list) do
         if id ~= "schema" then
             local ok = isfunction(mod.enabled) and mod.enabled() or mod.enabled
-            if not ok then
-                lia.module.list[id] = nil
-            end
+            if not ok then lia.module.list[id] = nil end
         end
     end
 end

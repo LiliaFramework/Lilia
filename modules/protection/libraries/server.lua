@@ -118,6 +118,7 @@ function MODULE:PlayerLeaveVehicle(client, entity)
             end
         end)
     end
+
     lia.log.add(client, "vehicleExit", entity:GetClass(), entity:GetModel())
 end
 
@@ -177,11 +178,7 @@ function MODULE:OnPhysgunPickup(client, entity)
 end
 
 function MODULE:PhysgunDrop(client, entity)
-    if entity:isProp() and entity:isItem() then
-        timer.Simple(5, function()
-            if IsValid(entity) and entity:GetCollisionGroup() == COLLISION_GROUP_PASSABLE_DOOR then entity:SetCollisionGroup(COLLISION_GROUP_NONE) end
-        end)
-    end
+    if entity:isProp() and entity:isItem() then timer.Simple(5, function() if IsValid(entity) and entity:GetCollisionGroup() == COLLISION_GROUP_PASSABLE_DOOR then entity:SetCollisionGroup(COLLISION_GROUP_NONE) end end) end
     lia.log.add(client, "physgunDrop", entity:GetClass(), entity:GetModel())
 end
 
@@ -208,6 +205,7 @@ function MODULE:OnPhysgunFreeze(_, physObj, entity, client)
     else
         entity:SetCollisionGroup(COLLISION_GROUP_NONE)
     end
+
     lia.log.add(client, "physgunFreeze", entity:GetClass(), entity:GetModel())
     return true
 end

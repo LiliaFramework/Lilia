@@ -158,6 +158,7 @@ function PANEL:openInspect()
             net.WriteType(self.ent)
             net.SendToServer()
         end
+
         if IsValid(overlay) then overlay:Remove() end
     end
 end
@@ -176,6 +177,7 @@ function PANEL:buildButtons()
                 net.WriteType(self.ent)
                 net.SendToServer()
             end
+
             self:Remove()
         end)
     end

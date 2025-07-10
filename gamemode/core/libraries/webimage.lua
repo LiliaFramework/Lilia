@@ -19,7 +19,6 @@ end
 
 function lia.webimage.register(n, u, cb, flags)
     if isstring(u) then urlMap[u] = n end
-
     if cache[n] then
         if cb then cb(cache[n], true) end
         return
@@ -66,6 +65,7 @@ function Material(p, ...)
                 n = util.CRC(p) .. "." .. ext
                 urlMap[p] = n
             end
+
             lia.webimage.register(n, p)
             return origMaterial("data/" .. baseDir .. n, flags)
         else
@@ -88,6 +88,7 @@ if dimage and dimage.SetImage then
                     n = util.CRC(src) .. "." .. ext
                     urlMap[src] = n
                 end
+
                 local savePath = baseDir .. n
                 lia.webimage.register(n, src, function(m)
                     if m and not m:IsError() then

@@ -261,7 +261,6 @@ lia.command.add("togglelockcharacters", {
     superAdminOnly = true,
     privilege = "Toggle Character Lock",
     desc = "toggleCharLockDesc",
-    
     onRun = function()
         local newVal = not GetGlobalBool("characterSwapLock", false)
         SetGlobalBool("characterSwapLock", newVal)

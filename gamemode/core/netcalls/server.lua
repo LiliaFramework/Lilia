@@ -1,4 +1,4 @@
-net.Receive("StringRequest", function(_, client)
+﻿net.Receive("StringRequest", function(_, client)
     local id = net.ReadUInt(32)
     local value = net.ReadString()
     if client.liaStrReqs and client.liaStrReqs[id] then

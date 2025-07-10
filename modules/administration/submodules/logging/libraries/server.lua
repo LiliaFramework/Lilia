@@ -6,6 +6,7 @@ function MODULE:SendLogsInChunks(client, categorizedLogs)
     for i = 1, #data, 32768 do
         chunks[#chunks + 1] = string.sub(data, i, i + 32768 - 1)
     end
+
     for i, chunk in ipairs(chunks) do
         net.Start("send_logs")
         net.WriteUInt(i, 16)
@@ -22,13 +23,7 @@ function MODULE:ReadLogEntries(category)
     local maxLines = lia.config.get("MaxLogLines", 1000)
     local cutoff = os.time() - maxDays * 86400
     local cutoffStr = os.date("%Y-%m-%d %H:%M:%S", cutoff)
-    local condition = table.concat({
-        "_gamemode = " .. lia.db.convertDataType(engine.ActiveGamemode()),
-        "_category = " .. lia.db.convertDataType(category),
-        "_timestamp >= " .. lia.db.convertDataType(cutoffStr)
-    }, " AND ") ..
-        " ORDER BY _id DESC LIMIT " .. maxLines
-
+    local condition = table.concat({"_gamemode = " .. lia.db.convertDataType(engine.ActiveGamemode()), "_category = " .. lia.db.convertDataType(category), "_timestamp >= " .. lia.db.convertDataType(cutoffStr)}, " AND ") .. " ORDER BY _id DESC LIMIT " .. maxLines
     lia.db.select({"_timestamp", "_message", "_steamID"}, "logs", condition):next(function(res)
         local rows = res.results or {}
         local logs = {}
@@ -39,6 +34,7 @@ function MODULE:ReadLogEntries(category)
                 steamID = row._steamID
             }
         end
+
         d:resolve(logs)
     end)
     return d
@@ -196,5 +192,3 @@ function MODULE:WarningRemoved(admin, target, warning, index)
     local warns = target:getLiliaData("warns") or {}
     lia.log.add(admin, "warningRemoved", target, warning, #warns, index)
 end
-
-

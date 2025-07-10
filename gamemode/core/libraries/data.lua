@@ -1,4 +1,4 @@
-file.CreateDir("lilia")
+﻿file.CreateDir("lilia")
 lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
 if SERVER then
@@ -40,7 +40,6 @@ if SERVER then
                         local last = keySegments[#keySegments]
                         keySegments[#keySegments] = string.StripExtension(last)
                         local key = table.concat(keySegments, "/")
-
                         local path = dir .. "/" .. f
                         local data = file.Read(path, "DATA")
                         local ok, decoded = pcall(pon.decode, data)
@@ -51,6 +50,7 @@ if SERVER then
                                 map = map,
                                 value = decoded[1]
                             }
+
                             paths[#paths + 1] = path
                         end
                     end
@@ -82,10 +82,12 @@ if SERVER then
                     end
                 end
             end
+
             for _, d in ipairs(dirs) do
                 scan(dir .. "/" .. d)
             end
         end
+
         scan(base)
         return ported, total
     end
@@ -139,11 +141,11 @@ if SERVER then
         lia.db.waitForTablesToLoad():next(function()
             lia.db.transaction(queries):next(function()
                 lia.data.isConverting = false
-                lia.bootstrap(
-                    "Database",
-                    L("convertDataToDatabaseDone", entryCount)
-                )
-                for _, path in ipairs(paths) do file.Delete(path) end
+                lia.bootstrap("Database", L("convertDataToDatabaseDone", entryCount))
+                for _, path in ipairs(paths) do
+                    file.Delete(path)
+                end
+
                 if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
             end)
         end)

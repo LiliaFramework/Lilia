@@ -253,6 +253,7 @@ if SERVER then
                 net.Send(self:getOwner())
             end
         end
+
         if noSave or not lia.db then return end
         if key == "x" or key == "y" then
             value = tonumber(value)
@@ -300,6 +301,7 @@ if SERVER then
                 net.Send(self:getOwner())
             end
         end
+
         if noSave or not lia.db then return end
         if MYSQLOO_PREPARED then
             lia.db.preparedCall("itemq", nil, self.quantity, self:getID())

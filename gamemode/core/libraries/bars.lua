@@ -93,11 +93,9 @@ function lia.bar.drawAll()
         local target = bar.getValue()
         local last = values[id]
         values[id] = target
-
         deltas[id] = deltas[id] or target
         deltas[id] = math.Approach(deltas[id], target, update)
         local value = deltas[id]
-
         if last ~= nil and last ~= target then
             bar.lifeTime = now + 5
         elseif value ~= target then

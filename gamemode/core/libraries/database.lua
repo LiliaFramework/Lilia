@@ -210,14 +210,7 @@ modules.mysqloo = {
 
             prepObj:start()
         else
-            MsgC(
-                Color(83, 143, 239),
-                "[Lilia] ",
-                Color(0, 255, 0),
-                "[Database]",
-                Color(255, 255, 255),
-                L("invalidPreparedStatement", key) .. "\n"
-            )
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), L("invalidPreparedStatement", key) .. "\n")
         end
     end
 }

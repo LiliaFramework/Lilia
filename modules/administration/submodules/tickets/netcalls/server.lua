@@ -47,6 +47,5 @@ net.Receive("TicketSystemClose", function(_, client)
     end
 
     hook.Run("TicketSystemClose", client, requester)
-
     requester.CaseClaimed = nil
 end)

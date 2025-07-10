@@ -73,6 +73,7 @@ local function buildActionFunc(action, actionIndex, itemTable, _, sub)
             net.WriteType(sub and sub.data)
             net.SendToServer()
         end
+
         itemTable.player = nil
     end
 end

@@ -1,4 +1,4 @@
-lia.workshop = lia.workshop or {}
+﻿lia.workshop = lia.workshop or {}
 if SERVER then
     lia.workshop.ids = lia.workshop.ids or {}
     lia.workshop.known = lia.workshop.known or {}

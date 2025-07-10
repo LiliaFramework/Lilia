@@ -502,8 +502,8 @@ function PANEL:updateModelEntity(character)
         local groups = character:getData("groups", {})
         if groups[i] then self.modelEntity:SetBodygroup(i, groups[i]) end
     end
-    hook.Run("SetupPlayerModel", self.modelEntity, character)
 
+    hook.Run("SetupPlayerModel", self.modelEntity, character)
     local pos, ang = hook.Run("GetMainMenuPosition", character)
     if not pos or not ang then
         local spawns = ents.FindByClass("info_player_start")

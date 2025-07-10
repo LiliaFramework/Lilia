@@ -37,6 +37,7 @@ if SERVER then
                 break
             end
         end
+
         if not found then
             for _, gm in ipairs(dirs) do
                 local f = file.Find(baseDir .. "/" .. gm .. "/*.txt", "DATA")
@@ -46,6 +47,7 @@ if SERVER then
                 end
             end
         end
+
         if not found then return end
         lia.db.count("logs"):next(function(n) if n == 0 then lia.log.convertToDatabase(true) end end)
     end
@@ -112,7 +114,6 @@ if SERVER then
         local entries = {}
         local filesToDelete = {}
         local files, dirs = file.Find(baseDir .. "/*", "DATA")
-
         local function processFile(path, gamemode, category)
             local data = file.Read(path, "DATA")
             if not data then return end
@@ -154,17 +155,16 @@ if SERVER then
         end
 
         local entryCount = #entries
-
         lia.db.waitForTablesToLoad():next(function()
             local function insertNext(i)
                 i = i or 1
                 if i > #entries then
                     lia.log.isConverting = false
-                    lia.bootstrap(
-                        "Database",
-                        L("convertLogsToDatabaseDone", entryCount)
-                    )
-                    for _, path in ipairs(filesToDelete) do file.Delete(path) end
+                    lia.bootstrap("Database", L("convertLogsToDatabaseDone", entryCount))
+                    for _, path in ipairs(filesToDelete) do
+                        file.Delete(path)
+                    end
+
                     if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
                     return
                 end
@@ -180,7 +180,6 @@ if SERVER then
         local baseDir = "lilia/logs"
         local total, ported = 0, 0
         local files, dirs = file.Find(baseDir .. "/*", "DATA")
-
         local function scanFile(path)
             local data = file.Read(path, "DATA")
             if not data then return end
@@ -192,9 +191,7 @@ if SERVER then
         end
 
         for _, fileName in ipairs(files) do
-            if fileName:sub(-4) == ".txt" then
-                scanFile(baseDir .. "/" .. fileName)
-            end
+            if fileName:sub(-4) == ".txt" then scanFile(baseDir .. "/" .. fileName) end
         end
 
         for _, gm in ipairs(dirs) do
@@ -203,7 +200,6 @@ if SERVER then
                 scanFile(baseDir .. "/" .. gm .. "/" .. fileName)
             end
         end
-
         return ported, total
     end
 

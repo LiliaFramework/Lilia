@@ -163,6 +163,7 @@ function lia.keybind.load()
             file.Delete(legacyPath)
         end
     end
+
     if d then
         local s = util.JSONToTable(d)
         for k, v in pairs(s) do

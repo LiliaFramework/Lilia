@@ -27,6 +27,7 @@ if SERVER then
         else
             net.Broadcast()
         end
+
         hook.Run("NetVarChanged", nil, key, oldValue, value)
     end
 

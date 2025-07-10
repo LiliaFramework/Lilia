@@ -369,7 +369,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
         table.sort(keys, function(a, b) return lia.option.stored[a].name < lia.option.stored[b].name end)
         for _, key in ipairs(keys) do
             local opt = lia.option.stored[key]
-            if not opt.visible or isfunction(opt.visible)  and opt.visible() then
+            if not opt.visible or isfunction(opt.visible) and opt.visible() then
                 local name = opt.name
                 local desc = opt.desc or ""
                 local ln, ld = name:lower(), desc:lower()

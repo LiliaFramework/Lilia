@@ -1,4 +1,4 @@
-lia.log.addType("dupeCrashAttempt", function(client)
+﻿lia.log.addType("dupeCrashAttempt", function(client)
     local name = IsValid(client) and client:Name() or L("unknown")
     local steamID = IsValid(client) and client:SteamID64() or L("na")
     return string.format("Player '%s' [%s] attempted to duplicate oversized entities.", name, steamID)

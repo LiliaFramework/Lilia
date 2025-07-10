@@ -420,22 +420,54 @@ lia.command.add("doorinfo", {
             local class = door:getNetVar("class", L("none"))
             local hidden = door:getNetVar("hidden", false)
             local locked = door:getNetVar("locked", false)
-
             local doorData = {
-                {property = L("doorInfoDisabled"), value = tostring(disabled)},
-                {property = L("name"), value = tostring(name)},
-                {property = L("price"), value = lia.currency.get(price)},
-                {property = L("doorInfoNoSell"), value = tostring(noSell)},
-                {property = L("faction"), value = tostring(faction)},
-                {property = L("doorInfoFactions"), value = tostring(factions)},
-                {property = L("class"), value = tostring(class)},
-                {property = L("doorInfoHidden"), value = tostring(hidden)},
-                {property = L("doorInfoLocked"), value = tostring(locked)}
+                {
+                    property = L("doorInfoDisabled"),
+                    value = tostring(disabled)
+                },
+                {
+                    property = L("name"),
+                    value = tostring(name)
+                },
+                {
+                    property = L("price"),
+                    value = lia.currency.get(price)
+                },
+                {
+                    property = L("doorInfoNoSell"),
+                    value = tostring(noSell)
+                },
+                {
+                    property = L("faction"),
+                    value = tostring(faction)
+                },
+                {
+                    property = L("doorInfoFactions"),
+                    value = tostring(factions)
+                },
+                {
+                    property = L("class"),
+                    value = tostring(class)
+                },
+                {
+                    property = L("doorInfoHidden"),
+                    value = tostring(hidden)
+                },
+                {
+                    property = L("doorInfoLocked"),
+                    value = tostring(locked)
+                }
             }
 
             lia.util.CreateTableUI(client, L("doorInfoTitle"), {
-                {name = L("doorInfoProperty"), field = "property"},
-                {name = L("doorInfoValue"), field = "value"}
+                {
+                    name = L("doorInfoProperty"),
+                    field = "property"
+                },
+                {
+                    name = L("doorInfoValue"),
+                    field = "value"
+                }
             }, doorData)
         else
             client:notifyLocalized("doorNotValid")

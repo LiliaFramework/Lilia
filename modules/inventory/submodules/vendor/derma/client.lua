@@ -729,6 +729,7 @@ function PANEL:updateVendor(key, value)
             net.WriteType(value)
         end
     end
+
     net.SendToServer()
 end
 

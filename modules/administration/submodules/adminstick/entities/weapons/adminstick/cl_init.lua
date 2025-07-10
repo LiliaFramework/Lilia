@@ -34,22 +34,12 @@ function SWEP:DrawHUD()
     local information = {}
     if IsValid(target) then
         if not target:IsPlayer() then
-            if target.GetCreator and IsValid(target:GetCreator()) then
-                table.Add(information, {L("entityClassESPLabel", target:GetClass()), L("entityCreatorESPLabel", tostring(target:GetCreator()))})
-            end
+            if target.GetCreator and IsValid(target:GetCreator()) then table.Add(information, {L("entityClassESPLabel", target:GetClass()), L("entityCreatorESPLabel", tostring(target:GetCreator()))}) end
             if target:IsVehicle() and IsValid(target:GetDriver()) then target = target:GetDriver() end
         end
 
         if target:IsPlayer() then
-            information = {
-                L("nicknameLabel", target:Nick()),
-                L("steamNameLabel", target.SteamName and target:SteamName() or target:Name()),
-                L("steamIDLabel", target:SteamID()),
-                L("steamID64Label", target:SteamID64()),
-                L("healthLabel", target:Health()),
-                L("armorLabel", target:Armor()),
-                L("usergroupLabel", target:GetUserGroup())
-            }
+            information = {L("nicknameLabel", target:Nick()), L("steamNameLabel", target.SteamName and target:SteamName() or target:Name()), L("steamIDLabel", target:SteamID()), L("steamID64Label", target:SteamID64()), L("healthLabel", target:Health()), L("armorLabel", target:Armor()), L("usergroupLabel", target:GetUserGroup())}
             if target:getChar() then
                 local char = target:getChar()
                 local faction = lia.faction.indices[target:Team()]

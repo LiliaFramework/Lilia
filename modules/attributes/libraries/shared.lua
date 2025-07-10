@@ -1,11 +1,9 @@
-function MODULE:CalcStaminaChange(client)
+﻿function MODULE:CalcStaminaChange(client)
     local character = client:getChar()
     if not character or client:isNoClipping() then return 1 end
-
     local walkSpeed = lia.config.get("WalkSpeed", client:GetWalkSpeed())
     local maxAttributes = lia.config.get("MaxAttributePoints", 100)
     local offset
-
     if client:KeyDown(IN_SPEED) and client:GetVelocity():LengthSqr() >= walkSpeed * walkSpeed then
         offset = -lia.config.get("StaminaDrain", 1) + math.min(character:getAttrib("endurance", 0), maxAttributes) / 100
     else
@@ -13,18 +11,12 @@ function MODULE:CalcStaminaChange(client)
     end
 
     offset = hook.Run("AdjustStaminaOffset", client, offset) or offset
-
-    if CLIENT then
-        return offset
-    end
-
+    if CLIENT then return offset end
     local max = character:getMaxStamina()
     local current = client:getLocalVar("stamina", 0)
     local value = math.Clamp(current + offset, 0, max)
-
     if current ~= value then
         client:setLocalVar("stamina", value)
-
         if value == 0 and not client:getNetVar("brth", false) then
             client:setNetVar("brth", true)
             character:updateAttrib("endurance", 0.1)
@@ -39,9 +31,7 @@ end
 
 function MODULE:SetupMove(client, cMoveData)
     if not lia.config.get("StaminaSlowdown", true) then return end
-    if client:getNetVar("brth", false) then
-        cMoveData:SetMaxClientSpeed(client:GetWalkSpeed())
-    end
+    if client:getNetVar("brth", false) then cMoveData:SetMaxClientSpeed(client:GetWalkSpeed()) end
 end
 
 function MODULE:GetAttributeMax(_, attribute)

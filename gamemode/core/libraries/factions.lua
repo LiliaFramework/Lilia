@@ -29,7 +29,6 @@ function lia.faction.loadFromDir(directory)
 
         FACTION.name = L(FACTION.name)
         FACTION.desc = L(FACTION.desc)
-
         if not FACTION.color then
             FACTION.color = Color(150, 150, 150)
             lia.error("Faction '" .. niceName .. "' is missing a color. You need to add FACTION.color = Color(1, 2, 3)\n")

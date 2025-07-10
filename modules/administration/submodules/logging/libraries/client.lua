@@ -71,9 +71,7 @@ function OpenLogsUI(panel, categorizedLogs)
         for _, log in ipairs(currentLogs) do
             local msgMatch = string.find(string.lower(log.message), query, 1, true)
             local idMatch = log.steamID and string.find(string.lower(log.steamID), query, 1, true)
-            if query == "" or msgMatch or idMatch then
-                list:AddLine(log.timestamp, log.message, log.steamID or "")
-            end
+            if query == "" or msgMatch or idMatch then list:AddLine(log.timestamp, log.message, log.steamID or "") end
         end
     end
 

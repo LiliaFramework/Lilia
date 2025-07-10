@@ -1,4 +1,4 @@
-lia.config = lia.config or {}
+﻿lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
 lia.config.isConverting = lia.config.isConverting or false
 function lia.config.add(key, name, value, callback, data)
