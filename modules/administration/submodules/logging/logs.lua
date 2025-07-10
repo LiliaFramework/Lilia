@@ -492,6 +492,10 @@
         func = function(client, faction) return string.format("Admin '%s' added a spawn for faction '%s'.", client:Name(), faction) end,
         category = "Spawns"
     },
+    ["spawnAddGlobal"] = {
+        func = function(client) return string.format("Admin '%s' added a global spawn.", client:Name()) end,
+        category = "Spawns"
+    },
     ["spawnRemoveRadius"] = {
         func = function(client, radius, count) return string.format("Admin '%s' removed %d spawns within %d units.", client:Name(), count, radius) end,
         category = "Spawns"

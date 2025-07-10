@@ -1,4 +1,5 @@
-﻿MODULE.spawns = MODULE.spawns or {}
+MODULE.spawns = MODULE.spawns or {}
+MODULE.globalSpawns = MODULE.globalSpawns or {}
 MODULE.name = "Spawns"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
