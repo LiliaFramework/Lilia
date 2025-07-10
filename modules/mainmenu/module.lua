@@ -15,6 +15,13 @@ if SERVER then
         net.Send(client)
     end
 else
+    function MODULE:PlayerButtonDown(_, button)
+        if button == KEY_ESCAPE and IsValid(lia.gui.menu) and LocalPlayer():getChar() then
+            lia.gui.menu:Remove()
+            return true
+        end
+    end
+
     function MODULE:ResetCharacterPanel()
         if IsValid(lia.gui.character) then lia.gui.character:Remove() end
         vgui.Create("liaCharacter")
