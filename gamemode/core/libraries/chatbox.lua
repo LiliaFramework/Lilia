@@ -17,7 +17,7 @@ function lia.chat.register(chatType, data)
                 lookup[prefix] = true
             end
             local noSlash = prefix:gsub("^/", "")
-            if noSlash ~= "" and not lookup[noSlash] then
+            if noSlash ~= "" and not lookup[noSlash] and noSlash:sub(1, 1) ~= "/" then
                 processed[#processed + 1] = noSlash
                 lookup[noSlash] = true
             end
