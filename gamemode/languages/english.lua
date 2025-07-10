@@ -355,6 +355,7 @@ LANGUAGE = {
     flagSpawnProps = "Gives Access to spawning props.",
     flagSpawnNpcs = "Gives Access to spawning NPCs.",
     flagInviteToYourFaction = "Gives Access to inviting to your faction.",
+    flagInviteToYourClass = "Gives Access to inviting to your class.",
     flagPhysgun = "Gives Access to Physgun.",
     flagToolgun = "Gives Access to Toolgun",
     classNoInfo = "Class information not found.",
