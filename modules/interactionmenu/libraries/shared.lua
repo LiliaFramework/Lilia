@@ -259,24 +259,3 @@ AddInteraction(L("inviteToFaction"), {
         end)
     end
 })
-
-concommand.Add("lia_print_all_recognitions", function(ply)
-    if IsValid(ply) and not ply:IsAdmin() then return end
-    for _, recognizer in ipairs(player.GetAll()) do
-        local cChar = recognizer:getChar()
-        if cChar then
-            local recogs = {}
-            for _, target in ipairs(player.GetAll()) do
-                if recognizer ~= target then
-                    local tChar = target:getChar()
-                    if tChar and hook.Run("isCharRecognized", cChar, tChar:getID()) then recogs[#recogs + 1] = target:Nick() end
-                end
-            end
-
-            local list = #recogs > 0 and table.concat(recogs, ", ") or L("none")
-            local text = string.format("%s recognizes: %s", recognizer:Nick(), list)
-            print(text)
-            if IsValid(ply) then ply:ChatPrint(text) end
-        end
-    end
-end)
