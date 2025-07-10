@@ -648,34 +648,34 @@ local versionURL = "https://raw.githubusercontent.com/LiliaFramework/LiliaFramew
 local function checkPublicModules()
     fetchURL(publicURL, function(body, code)
         if code ~= 200 then
-            lia.updater(L("publicModuleListHTTPError", code))
+            lia.updater(L("moduleListHTTPError", code))
             return
         end
 
-        local remoteModules = util.JSONToTable(body)
-        if not remoteModules then
-            lia.updater(L("publicModuleDataParseError"))
+        local remote = util.JSONToTable(body)
+        if not remote then
+            lia.updater(L("moduleDataParseError"))
             return
         end
 
-        for _, info in ipairs(lia.module.publicVersionChecks) do
+        for _, info in ipairs(lia.module.versionChecks) do
             local match
-            for _, m in ipairs(remoteModules) do
-                if m.public_uniqueID == info.public_uniqueID then
+            for _, m in ipairs(remote) do
+                if m.uniqueID == info.uniqueID then
                     match = m
                     break
                 end
             end
 
             if not match then
-                lia.updater(L("publicModuleUniqueIDNotFound", info.public_uniqueID))
+                lia.updater(L("moduleUniqueIDNotFound", info.uniqueID))
             elseif not match.version then
-                lia.updater(L("publicModuleNoRemoteVersion", info.name))
+                lia.updater(L("moduleNoRemoteVersion", info.name))
             elseif match.version ~= info.localVersion then
-                lia.updater(L("publicModuleOutdated", info.name, match.version))
+                lia.updater(L("moduleOutdated", info.name, match.version))
             end
         end
-    end, function(err) lia.updater(L("publicModuleListError", err)) end)
+    end, function(err) lia.updater(L("moduleListError", err)) end)
 end
 
 local function checkPrivateModules()
@@ -685,15 +685,15 @@ local function checkPrivateModules()
             return
         end
 
-        local remoteModules = util.JSONToTable(body)
-        if not remoteModules then
+        local remote = util.JSONToTable(body)
+        if not remote then
             lia.updater(L("privateModuleDataParseError"))
             return
         end
 
         for _, info in ipairs(lia.module.privateVersionChecks) do
-            for _, m in ipairs(remoteModules) do
-                if m.private_uniqueID == info.private_uniqueID and m.version and m.version ~= info.localVersion then
+            for _, m in ipairs(remote) do
+                if m.uniqueID == info.uniqueID and m.version and m.version ~= info.localVersion then
                     lia.updater(L("privateModuleOutdated", info.name))
                     break
                 end
