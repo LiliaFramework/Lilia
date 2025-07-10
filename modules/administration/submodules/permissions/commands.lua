@@ -708,7 +708,7 @@ lia.command.add("charban", {
             character:setData("banned", true)
             character:setData("charBanInfo", {
                 name = client.steamName and client:steamName() or client:Name(),
-                steamID = client:SteamID64(),
+                steamID = client:SteamID(),
                 rank = client:GetUserGroup()
             })
 

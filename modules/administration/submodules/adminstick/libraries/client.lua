@@ -21,7 +21,15 @@ end
 local function GetIdentifier(ent)
     if not IsValid(ent) or not ent:IsPlayer() then return "" end
     if ent:IsBot() then return ent:Name() end
-    return ent:SteamID64()
+    return ent:SteamID()
+end
+
+local function QuoteArgs(...)
+    local args = {}
+    for _, v in ipairs({...}) do
+        args[#args + 1] = string.format("'%s'", tostring(v))
+    end
+    return table.concat(args, " ")
 end
 
 local function OpenPlayerModelUI(tgt)
@@ -48,7 +56,7 @@ local function OpenPlayerModelUI(tgt)
     function bt:DoClick()
         local txt = ed:GetValue()
         local id = GetIdentifier(tgt)
-        if id ~= "" then RunConsoleCommand("say", "/charsetmodel " .. id .. " " .. txt) end
+        if id ~= "" then RunConsoleCommand("say", "/charsetmodel " .. QuoteArgs(id, txt)) end
         fr:Remove()
         AdminStickIsOpen = false
     end
@@ -108,10 +116,10 @@ local function OpenReasonUI(tgt, cmd)
         if cmd == "banid" then
             if id ~= "" then
                 local len = ts and ts:GetValue() * 60 * 24 or 0
-                RunConsoleCommand("say", "!banid " .. id .. " " .. len .. " " .. txt)
+                RunConsoleCommand("say", "!banid " .. QuoteArgs(id, len, txt))
             end
         elseif cmd == "kick" then
-            if id ~= "" then RunConsoleCommand("say", "!kick " .. id .. " " .. txt) end
+            if id ~= "" then RunConsoleCommand("say", "!kick " .. QuoteArgs(id, txt)) end
         end
 
         fr:Remove()
@@ -140,22 +148,22 @@ local function IncludeAdminMenu(tgt, menu, stores)
     local tp = {
         {
             name = "Bring",
-            cmd = "!bring " .. GetIdentifier(tgt),
+            cmd = "!bring " .. QuoteArgs(GetIdentifier(tgt)),
             icon = "icon16/arrow_down.png"
         },
         {
             name = "Goto",
-            cmd = "!goto " .. GetIdentifier(tgt),
+            cmd = "!goto " .. QuoteArgs(GetIdentifier(tgt)),
             icon = "icon16/arrow_right.png"
         },
         {
             name = "Return",
-            cmd = "!return " .. GetIdentifier(tgt),
+            cmd = "!return " .. QuoteArgs(GetIdentifier(tgt)),
             icon = "icon16/arrow_redo.png"
         },
         {
             name = "Respawn",
-            cmd = "!respawn " .. GetIdentifier(tgt),
+            cmd = "!respawn " .. QuoteArgs(GetIdentifier(tgt)),
             icon = "icon16/arrow_refresh.png"
         }
     }
@@ -164,64 +172,64 @@ local function IncludeAdminMenu(tgt, menu, stores)
         {
             action = {
                 name = "Blind",
-                cmd = "!blind " .. GetIdentifier(tgt),
+                cmd = "!blind " .. QuoteArgs(GetIdentifier(tgt)),
                 icon = "icon16/eye.png"
             },
             inverse = {
                 name = "Unblind",
-                cmd = "!unblind " .. GetIdentifier(tgt),
+                cmd = "!unblind " .. QuoteArgs(GetIdentifier(tgt)),
                 icon = "icon16/eye.png"
             }
         },
         {
             action = {
                 name = "Freeze",
-                cmd = "!freeze " .. GetIdentifier(tgt),
+                cmd = "!freeze " .. QuoteArgs(GetIdentifier(tgt)),
                 icon = "icon16/lock.png"
             },
             inverse = {
                 name = "Unfreeze",
-                cmd = "!unfreeze " .. GetIdentifier(tgt),
+                cmd = "!unfreeze " .. QuoteArgs(GetIdentifier(tgt)),
                 icon = "icon16/accept.png"
             }
         },
         {
             action = {
                 name = "Gag",
-                cmd = "!gag " .. GetIdentifier(tgt),
+                cmd = "!gag " .. QuoteArgs(GetIdentifier(tgt)),
                 icon = "icon16/sound_mute.png"
             },
             inverse = {
                 name = "Ungag",
-                cmd = "!ungag " .. GetIdentifier(tgt),
+                cmd = "!ungag " .. QuoteArgs(GetIdentifier(tgt)),
                 icon = "icon16/sound_low.png"
             }
         },
         {
             action = {
                 name = "Mute",
-                cmd = "!mute " .. GetIdentifier(tgt),
+                cmd = "!mute " .. QuoteArgs(GetIdentifier(tgt)),
                 icon = "icon16/sound_delete.png"
             },
             inverse = {
                 name = "Unmute",
-                cmd = "!unmute " .. GetIdentifier(tgt),
+                cmd = "!unmute " .. QuoteArgs(GetIdentifier(tgt)),
                 icon = "icon16/sound_add.png"
             }
         },
         {
             name = "Ignite",
-            cmd = "!ignite " .. GetIdentifier(tgt),
+            cmd = "!ignite " .. QuoteArgs(GetIdentifier(tgt)),
             icon = "icon16/fire.png"
         },
         {
             name = "Jail",
-            cmd = "!jail " .. GetIdentifier(tgt),
+            cmd = "!jail " .. QuoteArgs(GetIdentifier(tgt)),
             icon = "icon16/lock.png"
         },
         {
             name = "Slay",
-            cmd = "!slay " .. GetIdentifier(tgt),
+            cmd = "!slay " .. QuoteArgs(GetIdentifier(tgt)),
             icon = "icon16/bomb.png"
         }
     }
@@ -268,7 +276,7 @@ local function IncludeCharacterManagement(tgt, menu, stores)
                     for _, v in pairs(lia.faction.teams) do
                         table.insert(facOptions, {
                             name = v.name,
-                            cmd = 'say /plytransfer ' .. GetIdentifier(tgt) .. ' ' .. v.name
+                            cmd = 'say /plytransfer ' .. QuoteArgs(GetIdentifier(tgt), v.name)
                         })
                     end
 
@@ -293,7 +301,7 @@ local function IncludeCharacterManagement(tgt, menu, stores)
                 for _, c in ipairs(classes) do
                     table.insert(cls, {
                         name = c.name,
-                        cmd = 'say /setclass ' .. GetIdentifier(tgt) .. ' ' .. c.uniqueID
+                        cmd = 'say /setclass ' .. QuoteArgs(GetIdentifier(tgt), c.uniqueID)
                     })
                 end
 
@@ -329,13 +337,13 @@ local function IncludeFlagManagement(tgt, menu, stores)
         if not tgt:getChar():hasFlags(fl) then
             table.insert(toGive, {
                 name = L("giveFlagFormat", fl),
-                cmd = 'say /giveflag ' .. GetIdentifier(tgt) .. ' ' .. fl,
+                cmd = 'say /giveflag ' .. QuoteArgs(GetIdentifier(tgt), fl),
                 icon = "icon16/flag_blue.png"
             })
         else
             table.insert(toTake, {
                 name = L("takeFlagFormat", fl),
-                cmd = 'say /takeflag ' .. GetIdentifier(tgt) .. ' ' .. fl,
+                cmd = 'say /takeflag ' .. QuoteArgs(GetIdentifier(tgt), fl),
                 icon = "icon16/flag_red.png"
             })
         end
@@ -371,7 +379,7 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
     m:AddOption(L(name), function()
         local id = GetIdentifier(tgt)
         local cmd = "say /" .. key
-        if id ~= "" then cmd = cmd .. " " .. id end
+        if id ~= "" then cmd = cmd .. " " .. QuoteArgs(id) end
         cl:ConCommand(cmd)
         AdminStickIsOpen = false
     end):SetIcon(ic)
