@@ -428,7 +428,26 @@ lia.keybind.add(KEY_NONE, "Open Classes Menu", function()
         local mdl = parent:Add("liaModelPanel")
         mdl:SetScaledSize(sizeX, sizeY)
         mdl:SetFOV(35)
-        local path = istable(data.model) and data.model[math.random(#data.model)] or data.model or client:GetModel()
+        local function getModel(mdl)
+            if isstring(mdl) then return mdl end
+            if istable(mdl) then
+                local models = {}
+                local function gather(tbl)
+                    for _, v in pairs(tbl) do
+                        if isstring(v) then
+                            models[#models + 1] = v
+                        elseif istable(v) then
+                            gather(v)
+                        end
+                    end
+                end
+
+                gather(mdl)
+                if #models > 0 then return models[math.random(#models)] end
+            end
+        end
+
+        local path = getModel(data.model) or client:GetModel()
         mdl:SetModel(path)
         mdl.rotationAngle = 45
         local ent = mdl.Entity
