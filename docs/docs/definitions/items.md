@@ -1239,7 +1239,7 @@ ITEM.class = "weapon_frag"
 ITEM.DropOnDeath = true
 ```
 
-### [Bag](../../../modules/inventory/items/bags/small.txt)
+### [Bag](https://github.com/LiliaFramework/Lilia/tree/main/modules/inventory/items/bags/small.txt)
 
 ```lua
 ITEM.name = "Small Bag"
