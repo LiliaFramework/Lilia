@@ -2,7 +2,7 @@
     privilege = "Lock Storage",
     adminOnly = true,
     desc = "storagelockDesc",
-    syntax = "[string Password]",
+    syntax = "[string Password optional]",
     onRun = function(client, arguments)
         local entity = client:getTracedEntity()
         if entity and IsValid(entity) then

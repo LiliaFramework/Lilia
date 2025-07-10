@@ -130,6 +130,7 @@ Parses a command syntax string into an ordered list of field tables. Each field 
 **Parameters**
 
 * `syntax` (*string*): Syntax string, e.g. `[string Name] [number Time]`.
+  Include the word `optional` inside a bracket to mark that argument as optional.
 
 **Realm**
 
@@ -145,6 +146,9 @@ Parses a command syntax string into an ordered list of field tables. Each field 
 
 ```lua
 local fields, valid = lia.command.parseSyntaxFields("[string Name] [number Time]")
+
+-- mark optional arguments with the word "optional"
+local fieldsOpt = lia.command.parseSyntaxFields("[string Name] [number Time optional]")
 ```
 
 ---

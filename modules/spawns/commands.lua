@@ -33,7 +33,7 @@ lia.command.add("spawnremoveinradius", {
     privilege = "Manage Spawns",
     adminOnly = true,
     desc = "spawnRemoveInRadiusDesc",
-    syntax = "[number Radius]",
+    syntax = "[number Radius optional]",
     onRun = function(client, arguments)
         local position = client:GetPos()
         local radius = tonumber(arguments[1]) or 120
