@@ -66,7 +66,26 @@ function PANEL:createModelPanel(parent, cl)
     local panel = parent:Add("liaModelPanel")
     panel:SetScaledSize(sizeX, sizeY)
     panel:SetFOV(35)
-    local model = istable(cl.model) and cl.model[math.random(#cl.model)] or cl.model or LocalPlayer():GetModel()
+    local function getModel(mdl)
+        if isstring(mdl) then return mdl end
+        if istable(mdl) then
+            local models = {}
+            local function gather(tbl)
+                for _, v in pairs(tbl) do
+                    if isstring(v) then
+                        models[#models + 1] = v
+                    elseif istable(v) then
+                        gather(v)
+                    end
+                end
+            end
+
+            gather(mdl)
+            if #models > 0 then return models[math.random(#models)] end
+        end
+    end
+
+    local model = getModel(cl.model) or LocalPlayer():GetModel()
     panel:SetModel(model)
     panel.rotationAngle = 45
     local ent = panel.Entity
