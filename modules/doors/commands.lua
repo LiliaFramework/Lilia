@@ -1,4 +1,5 @@
-﻿lia.command.add("doorsell", {
+﻿local MODULE = MODULE
+lia.command.add("doorsell", {
     desc = "doorsellDesc",
     adminOnly = false,
     AdminStick = {
