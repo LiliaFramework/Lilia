@@ -270,6 +270,20 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
                         lia.keybind.save()
                         currentKey = newKey
                     end
+
+                    local unbindButton = row:Add("DButton")
+                    unbindButton:Dock(RIGHT)
+                    unbindButton:SetWide(100)
+                    unbindButton:SetFont("liaMediumFont")
+                    unbindButton:SetText(L("unbind"):upper())
+                    unbindButton.DoClick = function()
+                        taken[currentKey] = nil
+                        data.value = KEY_NONE
+                        lia.keybind.stored[KEY_NONE] = action
+                        lia.keybind.save()
+                        combo:SetValue(input.GetKeyName(KEY_NONE) or "NONE")
+                        currentKey = KEY_NONE
+                    end
                 else
                     local textLabel = row:Add("DLabel")
                     textLabel:Dock(FILL)
