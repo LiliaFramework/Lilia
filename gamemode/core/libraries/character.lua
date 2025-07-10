@@ -96,6 +96,7 @@ end
 
 lia.char.registerVar("name", {
     field = "_name",
+    fieldType = "string",
     default = "John Doe",
     index = 1,
     onValidate = function(value, data, client)
@@ -139,6 +140,7 @@ lia.char.registerVar("name", {
 
 lia.char.registerVar("desc", {
     field = "_desc",
+    fieldType = "text",
     default = L("descMinLen", lia.config.get("MinDescLen", 16)),
     index = 2,
     onValidate = function(value, data, client)
@@ -160,6 +162,7 @@ lia.char.registerVar("desc", {
 
 lia.char.registerVar("model", {
     field = "_model",
+    fieldType = "string",
     default = "models/error.mdl",
     onSet = function(character, value)
         local oldVar = character:getModel()
@@ -219,6 +222,7 @@ lia.char.registerVar("class", {
 
 lia.char.registerVar("faction", {
     field = "_faction",
+    fieldType = "string",
     default = "Citizen",
     onSet = function(character, value)
         local oldVar = character:getFaction()
@@ -249,6 +253,7 @@ lia.char.registerVar("faction", {
 
 lia.char.registerVar("money", {
     field = "_money",
+    fieldType = "integer",
     default = 0,
     isLocal = true,
     noDisplay = true
@@ -259,6 +264,7 @@ lia.char.registerVar("data", {
     isLocal = true,
     noDisplay = true,
     field = "_data",
+    fieldType = "text",
     onSet = function(character, key, value, noReplication, receiver)
         local data = character:getData()
         local client = character:getPlayer()
@@ -355,6 +361,7 @@ lia.char.registerVar("inv", {
 
 lia.char.registerVar("attribs", {
     field = "_attribs",
+    fieldType = "text",
     default = {},
     isLocal = true,
     index = 4,
@@ -380,6 +387,7 @@ lia.char.registerVar("attribs", {
 
 lia.char.registerVar("recognition", {
     field = "recognition",
+    fieldType = "text",
     default = "",
     isLocal = true,
     noDisplay = true
@@ -387,6 +395,7 @@ lia.char.registerVar("recognition", {
 
 lia.char.registerVar("RecognizedAs", {
     field = "recognized_as",
+    fieldType = "text",
     default = {},
     noDisplay = true
 })
