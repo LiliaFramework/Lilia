@@ -378,6 +378,13 @@ lia.char.registerVar("attribs", {
     shouldDisplay = function() return table.Count(lia.attribs.list) > 0 end
 })
 
+lia.char.registerVar("recognition", {
+    field = "recognition",
+    default = "",
+    isLocal = true,
+    noDisplay = true
+})
+
 lia.char.registerVar("RecognizedAs", {
     field = "recognized_as",
     default = {},
@@ -451,6 +458,7 @@ if SERVER then
             _steamID = data.steamID,
             _faction = data.faction or L("unknown"),
             _money = data.money,
+            recognition = data.recognition or "",
             recognized_as = "",
             _data = data.data
         }, function(_, charID)
@@ -515,6 +523,11 @@ if SERVER then
                     end
                 end
 
+                if charData.data and charData.data.rgn then
+                    charData.recognition = charData.data.rgn
+                    charData.data.rgn = nil
+                end
+
                 if not lia.faction.teams[charData.faction] then
                     local defaultFaction
                     for _, fac in pairs(lia.faction.teams) do
@@ -539,6 +552,9 @@ if SERVER then
 
                 characters[#characters + 1] = charId
                 local character = lia.char.new(charData, charId, client)
+                if charData.recognition then
+                    lia.char.setCharData(charId, "rgn", nil)
+                end
                 hook.Run("CharRestored", character)
                 character.vars.inv = {}
                 lia.inventory.loadAllFromCharID(charId):next(function(inventories)
