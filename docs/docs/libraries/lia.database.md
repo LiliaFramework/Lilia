@@ -371,7 +371,8 @@ end)
 **Purpose**
 
 Ensures every registered character variable has a matching column in the
-`lia_characters` table, adding any that are missing.
+`lia_characters` table, adding any that are missing. It can be invoked
+multiple times; existing columns will be ignored.
 
 **Parameters**
 
