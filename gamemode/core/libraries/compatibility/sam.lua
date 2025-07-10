@@ -1,4 +1,5 @@
-﻿hook.Add("InitializedModules", "liaSAM", function()
+﻿hook.Remove("PostGamemodeLoaded", "SAM.DarkRP")
+hook.Add("InitializedModules", "liaSAM", function()
     for _, commandInfo in ipairs(sam.command.get_commands()) do
         local customSyntax = ""
         for _, argInfo in ipairs(commandInfo.args) do
