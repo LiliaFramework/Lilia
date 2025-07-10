@@ -592,22 +592,28 @@ function lia.db.addDatabaseFields()
                     if columnDefs then
                         for def in columnDefs:gmatch("([^,]+)") do
                             local col = def:match("^%s*`?(%w+)`?")
-                            if col then existing[col] = true end
+                            if col then existing[col:lower()] = true end
                         end
                     end
                 else
                     for _, row in ipairs(results) do
-                        existing[row.Field] = true
+                        existing[string.lower(row.Field)] = true
                     end
                 end
             end
 
             for _, v in pairs(lia.char.vars) do
-                if v.field and not existing[v.field] and typeMap[v.fieldType] then
-                    local colDef = typeMap[v.fieldType](v)
-                    if v.default ~= nil then colDef = colDef .. " DEFAULT '" .. tostring(v.default) .. "'" end
-                    local alter = ("ALTER TABLE lia_characters ADD COLUMN %s"):format(colDef)
-                    lia.db.query(alter, function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database] ", Color(255, 255, 255), L("addedMissingColumn", v.field) .. "\n") end)
+                if v.field then
+                    local lower = string.lower(v.field)
+                    if not existing[lower] and typeMap[v.fieldType] then
+                        local colDef = typeMap[v.fieldType](v)
+                        if v.default ~= nil then colDef = colDef .. " DEFAULT '" .. tostring(v.default) .. "'" end
+                        local alter = ("ALTER TABLE lia_characters ADD COLUMN %s"):format(colDef)
+                        lia.db.query(alter, function()
+                            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database] ", Color(255, 255, 255), L("addedMissingColumn", v.field) .. "\n")
+                        end)
+                        existing[lower] = true
+                    end
                 end
             end
         end)
