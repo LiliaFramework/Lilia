@@ -92,7 +92,7 @@ Returns the translated phrase for a key in the active language, using `string.fo
 **Example**
 
 ```lua
-print(L("Show All"))
+print(L("vendorShowAll"))
 ```
 
 ---
