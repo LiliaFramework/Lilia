@@ -261,7 +261,7 @@ lia.command.add("togglelockcharacters", {
     superAdminOnly = true,
     privilege = "Toggle Character Lock",
     desc = "toggleCharLockDesc",
-    syntax = "",
+    
     onRun = function()
         local newVal = not GetGlobalBool("characterSwapLock", false)
         SetGlobalBool("characterSwapLock", newVal)
@@ -838,7 +838,7 @@ lia.command.add("chargiveitem", {
     superAdminOnly = true,
     privilege = "Manage Items",
     desc = "giveItemDesc",
-    syntax = "[player Player Name] [string Item Name or ID]",
+    syntax = "[player Player Name] [item Item Name]",
     AdminStick = {
         Name = "adminStickGiveItemName",
         Category = "characterManagement",
