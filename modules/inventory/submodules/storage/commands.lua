@@ -52,7 +52,20 @@ lia.command.add("trunk", {
 
             entity.receivers = entity.receivers or {}
             entity.receivers[client] = true
-            lia.inventory.instances[entity:getNetVar("inv")]:sync(client)
+            local invID = entity:getNetVar("inv")
+            local inv = invID and lia.inventory.instances[invID]
+            if not inv then
+                MODULE:InitializeStorage(entity)
+                invID = entity:getNetVar("inv")
+                inv = invID and lia.inventory.instances[invID]
+            end
+            if not inv then
+                client:notifyLocalized("noInventory")
+                client.liaStorageEntity = nil
+                return
+            end
+
+            inv:sync(client)
             net.Start("liaStorageOpen")
             net.WriteBool(true)
             net.WriteEntity(entity)
