@@ -234,7 +234,8 @@ function PANEL:addPlayer(ply, parent)
         slot.model:RunAnimation()
     end
 
-    slot.model:setHidden(hook.Run("ShouldAllowScoreboardOverride", ply, "model"))
+    slot.lastHidden = hook.Run("ShouldAllowScoreboardOverride", ply, "model")
+    slot.model:setHidden(slot.lastHidden)
     local initialOpts = {}
     hook.Run("ShowPlayerOptions", ply, initialOpts)
     if #initialOpts > 0 then slot.model:SetTooltip(L("sbOptions", ply:steamName())) end
@@ -324,6 +325,12 @@ function PANEL:addPlayer(ply, parent)
         if not char or char ~= self.character then
             self:Remove()
             return
+        end
+
+        local overrideModel = hook.Run("ShouldAllowScoreboardOverride", ply, "model")
+        if self.lastHidden ~= overrideModel then
+            slot.model:setHidden(overrideModel)
+            self.lastHidden = overrideModel
         end
 
         local name = hook.Run("ShouldAllowScoreboardOverride", ply, "name") and hook.Run("GetDisplayedName", ply) or char:getName()
