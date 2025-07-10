@@ -1,16 +1,24 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 function MODULE:LoadData()
-    self.spawns = self:getData() or {}
+    local data = self:getData() or {}
+    if data.factions or data.global then
+        self.spawns = data.factions or {}
+        self.globalSpawns = data.global or {}
+    else
+        self.spawns = data
+        self.globalSpawns = {}
+    end
 end
 
 function MODULE:SaveData()
-    self:setData(self.spawns)
+    self:setData({factions = self.spawns, global = self.globalSpawns})
 end
 
 function MODULE:PostPlayerLoadout(client)
     if not IsValid(client) then return end
     local character = client:getChar()
-    if not character or not self.spawns or table.Count(self.spawns) == 0 then return end
+    if not character then return end
+    if (not self.spawns or table.Count(self.spawns) == 0) and (#(self.globalSpawns or {}) == 0) then return end
     local factionInfo
     for _, v in ipairs(lia.faction.indices) do
         if v.index == client:Team() then
@@ -19,13 +27,19 @@ function MODULE:PostPlayerLoadout(client)
         end
     end
 
+    local spawnPosition
     if factionInfo then
         local spawns = self.spawns[factionInfo.uniqueID] or {}
         if #spawns > 0 then
-            local spawnPosition = table.Random(spawns)
-            client:SetPos(spawnPosition)
+            spawnPosition = table.Random(spawns)
         end
     end
+
+    if not spawnPosition and self.globalSpawns and #self.globalSpawns > 0 then
+        spawnPosition = table.Random(self.globalSpawns)
+    end
+
+    if spawnPosition then client:SetPos(spawnPosition) end
 end
 
 function MODULE:CharPreSave(character)
