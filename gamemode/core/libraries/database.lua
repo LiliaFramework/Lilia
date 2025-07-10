@@ -571,13 +571,13 @@ end
 
 function lia.db.addDatabaseFields()
     local typeMap = {
-            string = function(d) return ("%s VARCHAR(%d)"):format(d.field, d.length or 255) end,
-            integer = function(d) return ("%s INT"):format(d.field) end,
-            float = function(d) return ("%s FLOAT"):format(d.field) end,
-            boolean = function(d) return ("%s TINYINT(1)"):format(d.field) end,
-            datetime = function(d) return ("%s DATETIME"):format(d.field) end,
-            text = function(d) return ("%s TEXT"):format(d.field) end
-        }
+        string = function(d) return ("%s VARCHAR(%d)"):format(d.field, d.length or 255) end,
+        integer = function(d) return ("%s INT"):format(d.field) end,
+        float = function(d) return ("%s FLOAT"):format(d.field) end,
+        boolean = function(d) return ("%s TINYINT(1)"):format(d.field) end,
+        datetime = function(d) return ("%s DATETIME"):format(d.field) end,
+        text = function(d) return ("%s TEXT"):format(d.field) end
+    }
 
     local dbModule = lia.db.module or "sqlite"
     local getColumnsQuery = dbModule == "sqlite" and "SELECT sql FROM sqlite_master WHERE type='table' AND name='lia_characters'" or "DESCRIBE lia_characters"
