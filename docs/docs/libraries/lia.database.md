@@ -746,3 +746,60 @@ local db = lia.db.getObject()
 ```
 
 ---
+
+### lia.db.tableExists
+
+**Purpose**
+
+Checks whether a table with the provided name exists in the connected database.
+
+**Parameters**
+
+* `tbl` (*string*): Name of the table to check.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *deferred*: Resolves to `true` or `false`.
+
+**Example**
+
+```lua
+lia.db.tableExists("characters"):next(function(exists)
+    print("Characters table present:", exists)
+end)
+```
+
+---
+
+### lia.db.fieldExists
+
+**Purpose**
+
+Determines whether a specific column is present in a table.
+
+**Parameters**
+
+* `tbl` (*string*): Table name.
+* `field` (*string*): Column name to check.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *deferred*: Resolves to `true` when the field exists.
+
+**Example**
+
+```lua
+lia.db.fieldExists("characters", "name"):next(function(hasField)
+    print("Name column exists:", hasField)
+end)
+```
+
+---
