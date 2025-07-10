@@ -35,7 +35,7 @@ function MODULE:CharPreSave(character)
     if IsValid(client) then character:setData("stamina", client:getLocalVar("stamina", 0)) end
 end
 
-function MODULE:KeyRelease(client, key)
+function MODULE:KeyPress(client, key)
     if key == IN_ATTACK2 then
         local wep = client:GetActiveWeapon()
         if IsValid(wep) and wep.IsHands and wep.ReadyToPickup then wep:Pickup() end
