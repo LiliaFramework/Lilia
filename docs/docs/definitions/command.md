@@ -141,6 +141,12 @@ The in-game prompt only appears when every argument follows the `[type Name]` fo
 syntax = "[string Target Name] [number Amount]"
 ```
 
+Include the word `optional` inside the brackets to make an argument optional:
+
+```lua
+syntax = "[string Target Name] [number Amount optional]"
+```
+
 ---
 
 #### `desc`

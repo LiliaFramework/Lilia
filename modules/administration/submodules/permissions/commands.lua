@@ -106,7 +106,7 @@ lia.command.add("forcefallover", {
     adminOnly = true,
     privilege = "Force Fallover",
     desc = "forceFalloverDesc",
-    syntax = "[player Player Name] [number Time]",
+    syntax = "[player Player Name] [number Time optional]",
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
@@ -179,7 +179,7 @@ lia.command.add("forcegetup", {
 lia.command.add("chardesc", {
     adminOnly = false,
     desc = "changeCharDesc",
-    syntax = "[string Desc]",
+    syntax = "[string Desc optional]",
     onRun = function(client, arguments)
         local desc = table.concat(arguments, " ")
         if not desc:find("%S") then return client:requestString(L("chgName"), L("chgNameDesc"), function(text) lia.command.run(client, "chardesc", {text}) end, client:getChar() and client:getChar():getDesc() or "") end
@@ -215,7 +215,7 @@ lia.command.add("chargetup", {
 lia.command.add("fallover", {
     adminOnly = false,
     desc = "fallOverDesc",
-    syntax = "[number Time]",
+    syntax = "[number Time optional]",
     onRun = function(client, arguments)
         if client:getNetVar("FallOverCooldown", false) then
             client:notifyLocalized("cmdCooldown")
@@ -795,7 +795,7 @@ lia.command.add("charsetspeed", {
     adminOnly = true,
     privilege = "Manage Character Stats",
     desc = "setSpeedDesc",
-    syntax = "[player Player Name] [number Speed]",
+    syntax = "[player Player Name] [number Speed optional]",
     AdminStick = {
         Name = "adminStickSetCharSpeedName",
         Category = "characterManagement",
@@ -818,7 +818,7 @@ lia.command.add("charsetmodel", {
     adminOnly = true,
     privilege = "Manage Character Information",
     desc = "setModelDesc",
-    syntax = "[player Player Name] [string Model]",
+    syntax = "[player Player Name] [string Model optional]",
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
@@ -838,7 +838,7 @@ lia.command.add("chargiveitem", {
     superAdminOnly = true,
     privilege = "Manage Items",
     desc = "giveItemDesc",
-    syntax = "[player Player Name] [string Item Name Or ID]",
+    syntax = "[player Player Name] [item Item Name Or ID]",
     AdminStick = {
         Name = "adminStickGiveItemName",
         Category = "characterManagement",
@@ -887,7 +887,7 @@ lia.command.add("charsetdesc", {
     adminOnly = true,
     privilege = "Manage Character Information",
     desc = "setDescDesc",
-    syntax = "[player Player Name] [string Description]",
+    syntax = "[player Player Name] [string Description optional]",
     AdminStick = {
         Name = "adminStickSetCharDescName",
         Category = "characterManagement",
@@ -917,7 +917,7 @@ lia.command.add("charsetname", {
     adminOnly = true,
     privilege = "Manage Character Information",
     desc = "setNameDesc",
-    syntax = "[player Player Name] [string New Name]",
+    syntax = "[player Player Name] [string New Name optional]",
     AdminStick = {
         Name = "adminStickSetCharNameName",
         Category = "characterManagement",
@@ -942,7 +942,7 @@ lia.command.add("charsetscale", {
     adminOnly = true,
     privilege = "Manage Character Stats",
     desc = "setScaleDesc",
-    syntax = "[player Player Name] [number Scale]",
+    syntax = "[player Player Name] [number Scale optional]",
     AdminStick = {
         Name = "adminStickSetCharScaleName",
         Category = "characterManagement",
@@ -966,7 +966,7 @@ lia.command.add("charsetjump", {
     adminOnly = true,
     privilege = "Manage Character Stats",
     desc = "setJumpDesc",
-    syntax = "[player Player Name] [number Power]",
+    syntax = "[player Player Name] [number Power optional]",
     AdminStick = {
         Name = "adminStickSetCharJumpName",
         Category = "characterManagement",
