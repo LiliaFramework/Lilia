@@ -672,6 +672,39 @@ function lia.db.insertOrIgnore(value, dbTable)
     return c
 end
 
+function lia.db.tableExists(tbl)
+    local d = deferred.new()
+    local qt = "'" .. tbl:gsub("'", "''") .. "'"
+    if lia.db.module == "sqlite" then
+        lia.db.query("SELECT name FROM sqlite_master WHERE type='table' AND name=" .. qt, function(res) d:resolve(res and #res > 0) end, function(err) d:reject(err) end)
+    else
+        lia.db.query("SHOW TABLES LIKE " .. qt, function(res) d:resolve(res and #res > 0) end, function(err) d:reject(err) end)
+    end
+    return d
+end
+
+function lia.db.fieldExists(tbl, field)
+    local d = deferred.new()
+    if lia.db.module == "sqlite" then
+        lia.db.query("PRAGMA table_info(" .. tbl .. ")", function(res)
+            for _, r in ipairs(res) do
+                if r.name == field then return d:resolve(true) end
+            end
+
+            d:resolve(false)
+        end, function(err) d:reject(err) end)
+    else
+        lia.db.query("DESCRIBE " .. lia.db.escapeIdentifier(tbl), function(res)
+            for _, r in ipairs(res) do
+                if r.Field == field then return d:resolve(true) end
+            end
+
+            d:resolve(false)
+        end, function(err) d:reject(err) end)
+    end
+    return d
+end
+
 function lia.db.transaction(queries)
     local c = deferred.new()
     lia.db.query("BEGIN TRANSACTION", function()
