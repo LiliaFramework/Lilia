@@ -31,7 +31,7 @@ lia.command.add("trunk", {
     desc = "trunkOpenDesc",
     onRun = function(client)
         local entity = client:getTracedEntity()
-        local maxDistance = 110
+        local maxDistance = 128
         local openTime = 0.7
         if not hook.Run("isSuitableForTrunk", entity) then
             client:notifyLocalized("notLookingAtVehicle")
@@ -50,6 +50,7 @@ lia.command.add("trunk", {
                 return
             end
 
+            entity.receivers = entity.receivers or {}
             entity.receivers[client] = true
             lia.inventory.instances[entity:getNetVar("inv")]:sync(client)
             net.Start("liaStorageOpen")
