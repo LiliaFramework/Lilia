@@ -296,9 +296,27 @@ end
 function lia.db.loadTables()
     local function done()
         local ignore = function() end
-        lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore)
-        lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
-        lia.db.query("ALTER TABLE IF EXISTS lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
+        if lia.db.module == "sqlite" then
+            lia.db.fieldExists("lia_players", "_firstJoin"):next(function(exists)
+                if not exists then
+                    lia.db.query("ALTER TABLE lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore)
+                end
+            end)
+            lia.db.fieldExists("lia_players", "_lastJoin"):next(function(exists)
+                if not exists then
+                    lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
+                end
+            end)
+            lia.db.fieldExists("lia_items", "_quantity"):next(function(exists)
+                if not exists then
+                    lia.db.query("ALTER TABLE lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
+                end
+            end)
+        else
+            lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore)
+            lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
+            lia.db.query("ALTER TABLE IF EXISTS lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
+        end
         lia.db.addDatabaseFields()
         lia.db.tablesLoaded = true
         hook.Run("LiliaTablesLoaded")
