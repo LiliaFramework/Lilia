@@ -138,13 +138,13 @@ if SERVER then
             id = character:getID()
         end
 
-        local recognized = self:getData("rgn", "")
+        local recognized = self:getRecognition()
         local nameList = self:getRecognizedAs()
         if name ~= nil then
             nameList[id] = name
             self:setRecognizedAs(nameList)
         else
-            self:setData("rgn", recognized .. "," .. id .. ",")
+            self:setRecognition(recognized .. "," .. id .. ",")
         end
         return true
     end
