@@ -124,6 +124,7 @@ hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(drawnClient)
     end
 
     local filter = player.GetAll()
+    table.RemoveByValue(filter, drawnClient)
     local visible = false
     for _, boneName in ipairs(ImportantBones) do
         local boneIndex = drawnClient:LookupBone(boneName)
