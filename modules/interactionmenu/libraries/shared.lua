@@ -260,7 +260,7 @@ AddInteraction(L("inviteToFaction"), {
     end
 })
 
-concommand.Add("lia_print_all_recognitions", function(ply, cmd, args)
+concommand.Add("lia_print_all_recognitions", function(ply)
     if IsValid(ply) and not ply:IsAdmin() then return end
     for _, recognizer in ipairs(player.GetAll()) do
         local cChar = recognizer:getChar()
