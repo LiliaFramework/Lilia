@@ -587,9 +587,13 @@ function lia.db.addDatabaseFields()
             if results and #results > 0 then
                 if dbModule == "sqlite" then
                     local createSQL = results[1].sql or ""
-                    for def in createSQL:match("%((.+)%)"):gmatch("([^,]+)") do
-                        local col = def:match("^%s*`?(%w+)`?")
-                        if col then existing[col] = true end
+                    createSQL = createSQL:gsub("\n", " ")
+                    local columnDefs = createSQL:match("%((.+)%)")
+                    if columnDefs then
+                        for def in columnDefs:gmatch("([^,]+)") do
+                            local col = def:match("^%s*`?(%w+)`?")
+                            if col then existing[col] = true end
+                        end
                     end
                 else
                     for _, row in ipairs(results) do
