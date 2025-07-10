@@ -101,7 +101,7 @@ Registers a character variable with metadata and auto-generates accessor methods
 ```lua
 -- Register an "age" field that only accepts numbers
 lia.char.registerVar("age", {
-    field = "_age",
+    field = "age",
     default = 20,
     onValidate = isnumber
 })
