@@ -366,6 +366,34 @@ end)
 
 ---
 
+### lia.db.addDatabaseFields
+
+**Purpose**
+
+Ensures every registered character variable has a matching column in the
+`lia_characters` table, adding any that are missing.
+
+**Parameters**
+
+* *None*
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+**Example**
+
+```lua
+-- After creating custom character variables
+lia.db.addDatabaseFields()
+```
+
+---
+
 ### lia.db.exists
 
 **Purpose**
