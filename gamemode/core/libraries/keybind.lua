@@ -451,13 +451,15 @@ lia.keybind.add(KEY_NONE, "Open Classes Menu", function()
         mdl:SetModel(path)
         mdl.rotationAngle = 45
         local ent = mdl.Entity
-        ent:SetSkin(data.skin or 0)
-        for _, bg in ipairs(data.bodyGroups or {}) do
-            ent:SetBodygroup(bg.id, bg.value or 0)
-        end
+        if IsValid(ent) then
+            ent:SetSkin(data.skin or 0)
+            for _, bg in ipairs(data.bodyGroups or {}) do
+                ent:SetBodygroup(bg.id, bg.value or 0)
+            end
 
-        for i, mat in ipairs(data.subMaterials or {}) do
-            ent:SetSubMaterial(i - 1, mat)
+            for i, mat in ipairs(data.subMaterials or {}) do
+                ent:SetSubMaterial(i - 1, mat)
+            end
         end
 
         mdl.Think = function()
