@@ -19,8 +19,6 @@
         client:setLocalVar("stamina", value)
         if value == 0 and not client:getNetVar("brth", false) then
             client:setNetVar("brth", true)
-            character:updateAttrib("endurance", 0.1)
-            character:updateAttrib("stamina", 0.01)
             hook.Run("PlayerStaminaLost", client)
         elseif value >= max * 0.5 and client:getNetVar("brth", false) then
             client:setNetVar("brth", nil)
