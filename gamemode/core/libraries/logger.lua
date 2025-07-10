@@ -156,23 +156,27 @@ if SERVER then
 
         local entryCount = #entries
         lia.db.waitForTablesToLoad():next(function()
-            local function insertNext(i)
-                i = i or 1
-                if i > #entries then
-                    lia.log.isConverting = false
-                    lia.bootstrap("Database", L("convertLogsToDatabaseDone", entryCount))
-                    for _, path in ipairs(filesToDelete) do
-                        file.Delete(path)
-                    end
-
-                    if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
-                    return
+            local function finalize()
+                lia.log.isConverting = false
+                lia.bootstrap("Database", L("convertLogsToDatabaseDone", entryCount))
+                for _, path in ipairs(filesToDelete) do
+                    file.Delete(path)
                 end
 
-                lia.db.insertTable(entries[i], function() insertNext(i + 1) end, "logs")
+                if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
             end
 
-            insertNext()
+            if entryCount == 0 then
+                finalize()
+                return
+            end
+
+            lia.db.bulkInsert("logs", entries)
+                :next(finalize)
+                :catch(function(err)
+                    lia.printLog("Database", "Log conversion error: " .. tostring(err))
+                    finalize()
+                end)
         end)
     end
 
