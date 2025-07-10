@@ -40,13 +40,6 @@ function GM:PlayerLoadedChar(client, character)
     end)
 end
 
-function GM:LiliaTablesLoaded()
-    local ignore = function() end
-    lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore)
-    lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
-    lia.db.query("ALTER TABLE IF EXISTS lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
-end
-
 function GM:PlayerDeath(client, inflictor, attacker)
     local character = client:getChar()
     if not character then return end
@@ -785,6 +778,14 @@ function GM:InitializedModules()
 
     timer.Simple(5, DatabaseQuery)
     self.UpdateCheckDone = true
+end
+
+function GM:LiliaTablesLoaded()
+    local ignore = function() end
+    lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore)
+    lia.db.query("ALTER TABLE IF EXISTS lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore)
+    lia.db.query("ALTER TABLE IF EXISTS lia_items ADD COLUMN _quantity INTEGER"):catch(ignore)
+    DatabaseQuery()
 end
 
 function ClientAddText(client, ...)
