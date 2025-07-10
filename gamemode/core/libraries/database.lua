@@ -581,19 +581,13 @@ function lia.db.addDatabaseFields()
         }
 
         local dbModule = lia.db.module or "sqlite"
-        local getColumnsQuery = dbModule == "sqlite" and "SELECT sql FROM sqlite_master WHERE type='table' AND name='lia_characters'" or "DESCRIBE lia_characters"
+        local getColumnsQuery = dbModule == "sqlite" and "PRAGMA table_info(lia_characters)" or "DESCRIBE lia_characters"
         lia.db.query(getColumnsQuery, function(results)
             local existing = {}
             if results and #results > 0 then
                 if dbModule == "sqlite" then
-                    local createSQL = results[1].sql or ""
-                    createSQL = createSQL:gsub("\n", " ")
-                    local columnDefs = createSQL:match("%((.+)%)")
-                    if columnDefs then
-                        for def in columnDefs:gmatch("([^,]+)") do
-                            local col = def:match("^%s*`?(%w+)`?")
-                            if col then existing[col:lower()] = true end
-                        end
+                    for _, row in ipairs(results) do
+                        if row.name then existing[string.lower(row.name)] = true end
                     end
                 else
                     for _, row in ipairs(results) do
