@@ -1164,120 +1164,87 @@ end)
 
 Minimal definitions for each built-in item type are shown below.
 
-### Weapon
-```lua
 
+### [Weapon](#)
+
+```lua
 ITEM.name = "Sub Machine Gun"
-
 ITEM.model = "models/weapons/w_smg1.mdl"
-
 ITEM.class = "weapon_smg1"
-
 ITEM.weaponCategory = "primary"
-
 ITEM.isWeapon = true
-
 ```
 
-### Ammo
-```lua
+### [Ammo](#)
 
+```lua
 ITEM.name = "Pistol Ammo"
-
 ITEM.model = "models/items/357ammo.mdl"
-
 ITEM.ammo = "pistol"
-
 ITEM.ammoAmount = 30
-
 ```
 
-### Outfit
-```lua
+### [Outfit](#)
 
+```lua
 ITEM.name = "Combine Armor"
-
 ITEM.model = "models/props_c17/BriefCase001a.mdl"
-
 ITEM.outfitCategory = "body"
-
 ITEM.replacements = "models/player/combine_soldier.mdl"
-
 ITEM.newSkin = 1
-
 ```
 
-### PAC Outfit
-```lua
+### [PAC Outfit](#)
 
+```lua
 ITEM.name = "Skull Mask"
-
 ITEM.outfitCategory = "hat"
-
 ITEM.pacData = { ... }
-
 ```
 
-### Aid Item
-```lua
+### [Aid Item](#)
 
+```lua
 ITEM.name = "Bandages"
-
 ITEM.model = "models/weapons/w_package.mdl"
-
 ITEM.health = 50
-
 ```
 
-### Book
-```lua
+### [Book](#)
 
+```lua
 ITEM.name = "Example"
-
 ITEM.contents = "<h1>An Example</h1>"
-
 ```
 
-### URL Item
-```lua
+### [URL Item](https://www.youtube.com/watch?v=9ezbBugUQiQ)
 
+```lua
 ITEM.name = "Hi Barbie"
-
 ITEM.url = "https://www.youtube.com/watch?v=9ezbBugUQiQ"
-
 ```
 
-### Entity Spawner
-```lua
+### [Entity Spawner](#)
 
+```lua
 ITEM.name = "Item Suit"
-
 ITEM.entityid = "item_suit"
-
 ```
 
-### Grenade
-```lua
+### [Grenade](#)
 
+```lua
 ITEM.name = "Grenade"
-
 ITEM.class = "weapon_frag"
-
 ITEM.DropOnDeath = true
-
 ```
 
-### Bag
+### [Bag](#)
+
 ```lua
-
 ITEM.name = "Small Bag"
-
 ITEM.isBag = true
-
 ITEM.invWidth = 2
-
 ITEM.invHeight = 2
-
 ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
-
 ```
