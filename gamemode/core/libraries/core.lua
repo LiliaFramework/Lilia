@@ -344,31 +344,45 @@ lia.includeDir("lilia/gamemode/core/derma", true, true, "client")
 lia.include("lilia/gamemode/core/libraries/database.lua", "server")
 lia.include("lilia/gamemode/core/libraries/config.lua", "shared")
 lia.include("lilia/gamemode/core/libraries/data.lua", "shared")
+-- Safely output coloured console text even if MsgC or Color are unavailable
+local function safeMsgC(col, ...)
+    if isfunction(MsgC) and isfunction(Color) and istable(col) then
+        MsgC(col, ...)
+    else
+        -- fall back to plain print if colour output isn't available
+        local out = {}
+        for _, v in ipairs({ ... }) do
+            table.insert(out, tostring(v))
+        end
+        print(table.concat(out))
+    end
+end
+
 function lia.error(msg)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[Error] ")
-    MsgC(Color(255, 0, 0), msg, "\n")
+    safeMsgC(Color(83, 143, 239), "[Lilia] ", "[Error] ")
+    safeMsgC(Color(255, 0, 0), tostring(msg), "\n")
 end
 
 function lia.deprecated(methodName, callback)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[Deprecated] ")
-    MsgC(Color(255, 255, 0), L("deprecatedMessage", methodName), "\n")
+    safeMsgC(Color(83, 143, 239), "[Lilia] ", "[Deprecated] ")
+    safeMsgC(Color(255, 255, 0), L("deprecatedMessage", methodName), "\n")
     if callback and isfunction(callback) then callback() end
 end
 
 function lia.updater(msg)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[Updater] ")
-    MsgC(Color(0, 255, 255), msg, "\n")
+    safeMsgC(Color(83, 143, 239), "[Lilia] ", "[Updater] ")
+    safeMsgC(Color(0, 255, 255), tostring(msg), "\n")
 end
 
 function lia.information(msg)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[Information] ")
-    MsgC(Color(83, 143, 239), msg, "\n")
+    safeMsgC(Color(83, 143, 239), "[Lilia] ", "[Information] ")
+    safeMsgC(Color(83, 143, 239), tostring(msg), "\n")
 end
 
 function lia.bootstrap(section, msg)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[Bootstrap] ")
-    MsgC(Color(0, 255, 0), "[" .. section .. "] ")
-    MsgC(Color(255, 255, 255), msg, "\n")
+    safeMsgC(Color(83, 143, 239), "[Lilia] ", "[Bootstrap] ")
+    safeMsgC(Color(0, 255, 0), "[" .. section .. "] ")
+    safeMsgC(Color(255, 255, 255), tostring(msg), "\n")
 end
 
 function lia.notifyAdmin(notification)
@@ -378,9 +392,9 @@ function lia.notifyAdmin(notification)
 end
 
 function lia.printLog(category, logString)
-    MsgC(Color(83, 143, 239), "[LOG] ")
-    MsgC(Color(0, 255, 0), "[" .. tostring(category) .. "] ")
-    MsgC(Color(255, 255, 255), tostring(logString) .. "\n")
+    safeMsgC(Color(83, 143, 239), "[LOG] ")
+    safeMsgC(Color(0, 255, 0), "[" .. tostring(category) .. "] ")
+    safeMsgC(Color(255, 255, 255), tostring(logString) .. "\n")
 end
 
 function lia.applyPunishment(client, infraction, kick, ban, time, kickKey, banKey)
