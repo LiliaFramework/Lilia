@@ -733,7 +733,7 @@ function GM:InitializedModules()
         checkFrameworkVersion()
     end)
 
-    timer.Simple(5, lia.database.addDatabaseFields)
+    timer.Simple(5, lia.db.addDatabaseFields)
     self.UpdateCheckDone = true
 end
 
