@@ -37,7 +37,7 @@ function MODULE:isCharRecognized(character, id)
                     if client:isStaffOnDuty() or otherclient:isStaffOnDuty() then
                         result, reason = true, "Staff on duty"
                     else
-                        local recognized = character:getData("rgn", "")
+                        local recognized = character:getRecognition() or ""
                         if recognized:find("," .. id .. ",") then result, reason = true, "Previously recognized" end
                     end
                 end
