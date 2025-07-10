@@ -7,7 +7,6 @@ end
 function lia.chat.register(chatType, data)
     data.syntax = data.syntax or ""
     data.desc = data.desc and L(data.desc) or ""
-    -- ensure prefixes work with or without a leading slash
     if data.prefix then
         local prefixes = istable(data.prefix) and data.prefix or {data.prefix}
         local processed, lookup = {}, {}
@@ -16,14 +15,17 @@ function lia.chat.register(chatType, data)
                 processed[#processed + 1] = prefix
                 lookup[prefix] = true
             end
+
             local noSlash = prefix:gsub("^/", "")
             if noSlash ~= "" and not lookup[noSlash] and noSlash:sub(1, 1) ~= "/" then
                 processed[#processed + 1] = noSlash
                 lookup[noSlash] = true
             end
         end
+
         data.prefix = processed
     end
+
     if not data.onCanHear then
         if isfunction(data.radius) then
             data.onCanHear = function(speaker, listener) return (speaker:GetPos() - listener:GetPos()):LengthSqr() <= data.radius() ^ 2 end
