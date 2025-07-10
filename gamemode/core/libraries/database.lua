@@ -581,33 +581,29 @@ function lia.db.addDatabaseFields()
         }
 
         local dbModule = lia.db.module or "sqlite"
-        local getColumnsQuery = dbModule == "sqlite" and "PRAGMA table_info(lia_characters)" or "DESCRIBE lia_characters"
+        local getColumnsQuery = dbModule == "sqlite" and "SELECT sql FROM sqlite_master WHERE type='table' AND name='lia_characters'" or "DESCRIBE lia_characters"
         lia.db.query(getColumnsQuery, function(results)
             local existing = {}
             if results and #results > 0 then
                 if dbModule == "sqlite" then
-                    for _, row in ipairs(results) do
-                        if row.name then existing[string.lower(row.name)] = true end
+                    local createSQL = results[1].sql or ""
+                    for def in createSQL:match("%((.+)%)"):gmatch("([^,]+)") do
+                        local col = def:match("^%s*`?(%w+)`?")
+                        if col then existing[col] = true end
                     end
                 else
                     for _, row in ipairs(results) do
-                        existing[string.lower(row.Field)] = true
+                        existing[row.Field] = true
                     end
                 end
             end
 
             for _, v in pairs(lia.char.vars) do
-                if v.field then
-                    local lower = string.lower(v.field)
-                    if not existing[lower] and typeMap[v.fieldType] then
-                        local colDef = typeMap[v.fieldType](v)
-                        if v.default ~= nil then colDef = colDef .. " DEFAULT '" .. tostring(v.default) .. "'" end
-                        local alter = ("ALTER TABLE lia_characters ADD COLUMN %s"):format(colDef)
-                        lia.db.query(alter, function()
-                            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database] ", Color(255, 255, 255), L("addedMissingColumn", v.field) .. "\n")
-                        end)
-                        existing[lower] = true
-                    end
+                if v.field and not existing[v.field] and typeMap[v.fieldType] then
+                    local colDef = typeMap[v.fieldType](v)
+                    if v.default ~= nil then colDef = colDef .. " DEFAULT '" .. tostring(v.default) .. "'" end
+                    local alter = ("ALTER TABLE lia_characters ADD COLUMN %s"):format(colDef)
+                    lia.db.query(alter, function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database] ", Color(255, 255, 255), L("addedMissingColumn", v.field) .. "\n") end)
                 end
             end
         end)
