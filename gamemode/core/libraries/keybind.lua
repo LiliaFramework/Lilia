@@ -428,9 +428,9 @@ lia.keybind.add(KEY_NONE, "Open Classes Menu", function()
         local mdl = parent:Add("liaModelPanel")
         mdl:SetScaledSize(sizeX, sizeY)
         mdl:SetFOV(35)
-        local function getModel(mdl)
-            if isstring(mdl) then return mdl end
-            if istable(mdl) then
+        local function getModel(model)
+            if isstring(model) then return model end
+            if istable(model) then
                 local models = {}
                 local function gather(tbl)
                     for _, v in pairs(tbl) do
@@ -442,7 +442,7 @@ lia.keybind.add(KEY_NONE, "Open Classes Menu", function()
                     end
                 end
 
-                gather(mdl)
+                gather(model)
                 if #models > 0 then return models[math.random(#models)] end
             end
         end
