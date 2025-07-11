@@ -1,76 +1,72 @@
 ﻿CAMI.ULX_TOKEN = "ULX"
-local camiHooks = {{"CAMI.PlayerHasAccess", "ULXCamiPlayerHasAccess"}, {"CAMI.SteamIDHasAccess", "ULXCamiSteamidHasAccess"}, {"CAMI.OnUsergroupRegistered", "ULXCamiGroupRegistered"}, {"CAMI.OnUsergroupUnregistered", "ULXCamiGroupRemoved"}, {"CAMI.SteamIDUsergroupChanged", "ULXCamiSteamidUserGroupChanged"}, {"CAMI.PlayerUsergroupChanged", "ULXCamiPlayerUserGroupChanged"}, {"CAMI.OnPrivilegeRegistered", "ULXCamiPrivilegeRegistered"}}
-for _, hookInfo in ipairs(camiHooks) do
-    hook.Remove(hookInfo[1], hookInfo[2])
-end
-
-local function playerHasAccess(_, actorPly, privilegeName, callback)
-    local priv = privilegeName:lower()
-    local result = ULib.ucl.query(actorPly, priv, true)
-    callback(not not result)
+hook.Remove("CAMI.PlayerHasAccess", "ULXCamiPlayerHasAccess")
+hook.Remove("CAMI.SteamIDHasAccess", "ULXCamiSteamidHasAccess")
+hook.Remove("CAMI.OnUsergroupRegistered", "ULXCamiGroupRegistered")
+hook.Remove("CAMI.OnUsergroupUnregistered", "ULXCamiGroupRemoved")
+hook.Remove("CAMI.SteamIDUsergroupChanged", "ULXCamiSteamidUserGroupChanged")
+hook.Remove("CAMI.PlayerUsergroupChanged", "ULXCamiPlayerUserGroupChanged")
+hook.Remove("CAMI.OnPrivilegeRegistered", "ULXCamiPrivilegeRegistered")
+local function playerHasAccess(_, ply, perm, cb)
+    local ok = ULib.ucl.query(ply, perm:lower(), true)
+    cb(ok)
     return true
 end
 
-hook.Add("CAMI.PlayerHasAccess", "liaULX", playerHasAccess)
-local function steamIDHasAccess(_, actorSteam, privilegeName, callback, targetSteam, extraInfoTbl)
-    local steamid = actorSteam:upper()
-    if not ULib.isValidSteamID(steamid) then return end
-    local connectedPly = ULib.getPlyByID(steamid)
-    if connectedPly then return playerHasAccess(nil, connectedPly, privilegeName, callback, targetSteam, extraInfoTbl) end
+hook.Add("CAMI.PlayerHasAccess", "ULXCamiPlayerHasAccess", playerHasAccess)
+local function steamIDHasAccess(_, sid, perm, cb, ...)
+    sid = sid:upper()
+    if not ULib.isValidSteamID(sid) then return end
+    local ply = ULib.getPlyByID(sid)
+    if ply then return playerHasAccess(nil, ply, perm, cb, ...) end
 end
 
-hook.Add("CAMI.SteamIDHasAccess", "liaULX", steamIDHasAccess)
+hook.Add("CAMI.SteamIDHasAccess", "ULXCamiSteamidHasAccess", steamIDHasAccess)
 if SERVER then
-    local function onGroupRegistered(camiGroup, originToken)
-        if originToken == CAMI.ULX_TOKEN then return end
-        if ULib.findInTable({"superadmin", "admin", "user"}, camiGroup.Name) then return end
-        if not ULib.ucl.groups[camiGroup.Name] then ULib.ucl.addGroup(camiGroup.Name, nil, camiGroup.Inherits, true) end
+    local function onGroupRegistered(g, token)
+        if token == CAMI.ULX_TOKEN or ULib.findInTable({"superadmin", "admin", "user"}, g.Name) then return end
+        if not ULib.ucl.groups[g.Name] then ULib.ucl.addGroup(g.Name, nil, g.Inherits, true) end
     end
 
-    hook.Add("CAMI.OnUsergroupRegistered", "liaULX", onGroupRegistered)
-    local function onGroupRemoved(camiGroup, originToken)
-        if originToken == CAMI.ULX_TOKEN then return end
-        if ULib.findInTable({"superadmin", "admin", "user"}, camiGroup.Name) then return end
-        ULib.ucl.removeGroup(camiGroup.Name, true)
+    hook.Add("CAMI.OnUsergroupRegistered", CAMI.ULX_TOKEN, onGroupRegistered)
+    local function onGroupRemoved(g, token)
+        if token == CAMI.ULX_TOKEN or ULib.findInTable({"superadmin", "admin", "user"}, g.Name) then return end
+        ULib.ucl.removeGroup(g.Name, true)
     end
 
-    hook.Add("CAMI.OnUsergroupUnregistered", "liaULX", onGroupRemoved)
-    local function onSteamIDUserGroupChanged(id, _, newGroup, originToken)
-        if originToken == CAMI.ULX_TOKEN then return end
-        if newGroup == ULib.ACCESS_ALL then
+    hook.Add("CAMI.OnUsergroupUnregistered", CAMI.ULX_TOKEN, onGroupRemoved)
+    local function onSteamIDUserGroupChanged(id, _, grp, token)
+        if token == CAMI.ULX_TOKEN then return end
+        if grp == ULib.ACCESS_ALL then
             if ULib.ucl.users[id] then ULib.ucl.removeUser(id, true) end
         else
-            if not ULib.ucl.groups[newGroup] then
-                local camiGroup = CAMI.GetUsergroup(newGroup)
-                local inherits = camiGroup and camiGroup.Inherits
-                ULib.ucl.addGroup(newGroup, nil, inherits, true)
+            if not ULib.ucl.groups[grp] then
+                local cg = CAMI.GetUsergroup(grp)
+                ULib.ucl.addGroup(grp, nil, cg and cg.Inherits, true)
             end
 
-            ULib.ucl.addUser(id, nil, nil, newGroup, true)
+            ULib.ucl.addUser(id, nil, nil, grp, true)
         end
     end
 
-    hook.Add("CAMI.SteamIDUsergroupChanged", "liaULX", onSteamIDUserGroupChanged)
-    local function onPlayerUserGroupChanged(ply, oldGroup, newGroup, originToken)
-        if not ply or not ply:IsValid() then return end
-        if originToken == CAMI.ULX_TOKEN then return end
+    hook.Add("CAMI.SteamIDUsergroupChanged", CAMI.ULX_TOKEN, onSteamIDUserGroupChanged)
+    local function onPlayerUserGroupChanged(ply, _, grp, token)
+        if not IsValid(ply) or token == CAMI.ULX_TOKEN then return end
         local id = ULib.ucl.getUserRegisteredID(ply) or ply:SteamID()
-        onSteamIDUserGroupChanged(id, oldGroup, newGroup, originToken)
+        onSteamIDUserGroupChanged(id, nil, grp, token)
     end
 
-    hook.Add("CAMI.PlayerUsergroupChanged", "liaULX", onPlayerUserGroupChanged)
-    local function onPrivilegeRegistered(camiPriv)
-        local priv = camiPriv.Name:lower()
-        ULib.ucl.registerAccess(priv, camiPriv.MinAccess, "A privilege from CAMI", "CAMI")
+    hook.Add("CAMI.PlayerUsergroupChanged", CAMI.ULX_TOKEN, onPlayerUserGroupChanged)
+    local function onPrivilegeRegistered(p)
+        ULib.ucl.registerAccess(p.Name:lower(), p.MinAccess, "A privilege from CAMI", "CAMI")
     end
 
-    hook.Add("CAMI.OnPrivilegeRegistered", "liaULX", onPrivilegeRegistered)
-    for _, camiPriv in pairs(CAMI.GetPrivileges()) do
-        onPrivilegeRegistered(camiPriv)
+    hook.Add("CAMI.OnPrivilegeRegistered", CAMI.ULX_TOKEN, onPrivilegeRegistered)
+    for _, p in ipairs(CAMI.GetPrivileges()) do
+        onPrivilegeRegistered(p)
     end
 
-    for _, camiGroup in pairs(CAMI.GetUsergroups()) do
-        onGroupRegistered(camiGroup)
+    for _, g in ipairs(CAMI.GetUsergroups()) do
+        onGroupRegistered(g, CAMI.ULX_TOKEN)
     end
 
     for name, data in pairs(ULib.ucl.groups) do
@@ -83,72 +79,115 @@ if SERVER then
     end
 end
 
-hook.Add("RunAdminSystemCommand", "liaULX", function(cmd, exec, victim, dur, reason)
+hook.Add("RunAdminSystemCommand", CAMI.ULX_TOKEN, function(cmd, exec, victim, dur, reason)
+    local sid = isstring(victim) and victim or victim:SteamID()
     if cmd == "kick" then
         ULib.kick(victim, reason or "", exec)
         return true
-    elseif cmd == "ban" then
+    end
+
+    if cmd == "ban" then
         ULib.ban(victim, dur or 0, reason or "", exec)
         return true
-    elseif cmd == "unban" then
-        ULib.unban(isstring(victim) and victim or victim:SteamID())
+    end
+
+    if cmd == "unban" then
+        ULib.unban(sid)
         return true
-    elseif cmd == "mute" then
-        RunConsoleCommand("ulx", "mute", victim:SteamID())
+    end
+
+    if cmd == "mute" then
+        RunConsoleCommand("ulx", "mute", sid)
         return true
-    elseif cmd == "unmute" then
-        RunConsoleCommand("ulx", "unmute", victim:SteamID())
+    end
+
+    if cmd == "unmute" then
+        RunConsoleCommand("ulx", "unmute", sid)
         return true
-    elseif cmd == "gag" then
-        RunConsoleCommand("ulx", "gag", victim:SteamID())
+    end
+
+    if cmd == "gag" then
+        RunConsoleCommand("ulx", "gag", sid)
         return true
-    elseif cmd == "ungag" then
-        RunConsoleCommand("ulx", "ungag", victim:SteamID())
+    end
+
+    if cmd == "ungag" then
+        RunConsoleCommand("ulx", "ungag", sid)
         return true
-    elseif cmd == "freeze" then
-        RunConsoleCommand("ulx", "freeze", victim:SteamID())
+    end
+
+    if cmd == "freeze" then
+        RunConsoleCommand("ulx", "freeze", sid)
         return true
-    elseif cmd == "unfreeze" then
-        RunConsoleCommand("ulx", "unfreeze", victim:SteamID())
+    end
+
+    if cmd == "unfreeze" then
+        RunConsoleCommand("ulx", "unfreeze", sid)
         return true
-    elseif cmd == "slay" then
-        RunConsoleCommand("ulx", "slay", victim:SteamID())
+    end
+
+    if cmd == "slay" then
+        RunConsoleCommand("ulx", "slay", sid)
         return true
-    elseif cmd == "bring" then
-        RunConsoleCommand("ulx", "bring", victim:SteamID())
+    end
+
+    if cmd == "bring" then
+        RunConsoleCommand("ulx", "bring", sid)
         return true
-    elseif cmd == "goto" then
-        RunConsoleCommand("ulx", "goto", victim:SteamID())
+    end
+
+    if cmd == "goto" then
+        RunConsoleCommand("ulx", "goto", sid)
         return true
-    elseif cmd == "return" then
-        RunConsoleCommand("ulx", "return", victim:SteamID())
+    end
+
+    if cmd == "return" then
+        RunConsoleCommand("ulx", "return", sid)
         return true
-    elseif cmd == "jail" then
-        RunConsoleCommand("ulx", "jail", victim:SteamID(), tostring(dur or 0))
+    end
+
+    if cmd == "jail" then
+        RunConsoleCommand("ulx", "jail", sid, tostring(dur or 0))
         return true
-    elseif cmd == "unjail" then
-        RunConsoleCommand("ulx", "unjail", victim:SteamID())
+    end
+
+    if cmd == "unjail" then
+        RunConsoleCommand("ulx", "unjail", sid)
         return true
-    elseif cmd == "cloak" then
-        RunConsoleCommand("ulx", "cloak", victim:SteamID())
+    end
+
+    if cmd == "cloak" then
+        RunConsoleCommand("ulx", "cloak", sid)
         return true
-    elseif cmd == "uncloak" then
-        RunConsoleCommand("ulx", "uncloak", victim:SteamID())
+    end
+
+    if cmd == "uncloak" then
+        RunConsoleCommand("ulx", "uncloak", sid)
         return true
-    elseif cmd == "god" then
-        RunConsoleCommand("ulx", "god", victim:SteamID())
+    end
+
+    if cmd == "god" then
+        RunConsoleCommand("ulx", "god", sid)
         return true
-    elseif cmd == "ungod" then
-        RunConsoleCommand("ulx", "ungod", victim:SteamID())
+    end
+
+    if cmd == "ungod" then
+        RunConsoleCommand("ulx", "ungod", sid)
         return true
-    elseif cmd == "ignite" then
-        RunConsoleCommand("ulx", "ignite", victim:SteamID(), tostring(dur or 0))
+    end
+
+    if cmd == "ignite" then
+        RunConsoleCommand("ulx", "ignite", sid, tostring(dur or 0))
         return true
-    elseif cmd == "extinguish" or cmd == "unignite" then
-        RunConsoleCommand("ulx", "unignite", victim:SteamID())
+    end
+
+    if cmd == "extinguish" or cmd == "unignite" then
+        RunConsoleCommand("ulx", "unignite", sid)
         return true
-    elseif cmd == "strip" then
-        RunConsoleCommand("ulx", "strip", victim:SteamID())
+    end
+
+    if cmd == "strip" then
+        RunConsoleCommand("ulx", "strip", sid)
         return true
     end
 end)
