@@ -6,21 +6,19 @@ hook.Remove("CAMI.OnUsergroupUnregistered", "ULXCamiGroupRemoved")
 hook.Remove("CAMI.SteamIDUsergroupChanged", "ULXCamiSteamidUserGroupChanged")
 hook.Remove("CAMI.PlayerUsergroupChanged", "ULXCamiPlayerUserGroupChanged")
 hook.Remove("CAMI.OnPrivilegeRegistered", "ULXCamiPrivilegeRegistered")
-local function playerHasAccess(_, ply, perm, cb)
-    local ok = ULib.ucl.query(ply, perm:lower(), true)
-    cb(ok)
+hook.Add("CAMI.PlayerHasAccess", "ULXCamiPlayerHasAccess", function(actorPly, priv, callback)
+    local ok = ULib.ucl.query(actorPly, priv:lower(), true)
+    callback(ok)
     return true
-end
+end)
 
-hook.Add("CAMI.PlayerHasAccess", "ULXCamiPlayerHasAccess", playerHasAccess)
-local function steamIDHasAccess(_, sid, perm, cb, ...)
-    sid = sid:upper()
-    if not ULib.isValidSteamID(sid) then return end
-    local ply = ULib.getPlyByID(sid)
-    if ply then return playerHasAccess(nil, ply, perm, cb, ...) end
-end
+hook.Add("CAMI.SteamIDHasAccess", "ULXCamiSteamidHasAccess", function(steamID, priv, callback)
+    steamID = steamID:upper()
+    if not ULib.isValidSteamID(steamID) then return end
+    local ply = ULib.getPlyByID(steamID)
+    if ply then return hook.Run("CAMI.PlayerHasAccess", ply, priv, callback) end
+end)
 
-hook.Add("CAMI.SteamIDHasAccess", "ULXCamiSteamidHasAccess", steamIDHasAccess)
 if SERVER then
     local function onGroupRegistered(g, token)
         if token == CAMI.ULX_TOKEN or ULib.findInTable({"superadmin", "admin", "user"}, g.Name) then return end
