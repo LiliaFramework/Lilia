@@ -157,6 +157,7 @@ Factions:  garrysmod/gamemodes/<SchemaName>/schema/factions/
 Classes:   garrysmod/gamemodes/<SchemaName>/schema/classes/
 Items:     garrysmod/gamemodes/<SchemaName>/schema/items/
 Modules:   garrysmod/gamemodes/<SchemaName>/modules/
+Preload:   garrysmod/gamemodes/<SchemaName>/preload/
 ```
 
 ---

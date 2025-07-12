@@ -93,6 +93,7 @@ Finds and loads every module located in a directory.
 * `directory` (*string*): Path containing module folders or files.
 
 * `group` (*string*): Group identifier such as `"schema"` or `"module"` (default `"module"`).
+* `skip` (*table?, optional*): Module identifiers to skip while loading.
 
 **Realm**
 
