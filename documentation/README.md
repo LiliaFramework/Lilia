@@ -4,9 +4,9 @@ This repository contains the source files for the official Lilia Wiki documentat
 
 > **Note:**
 
-> The documentation lives in the `docs/` directory of the main Lilia repo:
+> The documentation lives in the `documentation/` directory of the main Lilia repo:
 
-> https://github.com/LiliaFramework/Lilia/tree/main/docs
+> https://github.com/LiliaFramework/Lilia/tree/main/documentation
 
 > Please do **not** open pull requests or push directly to this repo.
 
@@ -57,7 +57,7 @@ Lilia is a lightweight, modular framework for building Garry’s Mod addons in G
    mkdocs serve
 
    ```
-5. Open your browser at [http://127.0.0.1:8000](http://127.0.0.1:8000) to preview the docs.
+5. Open your browser at [http://127.0.0.1:8000](http://127.0.0.1:8000) to preview the documentation.
 
 ---
 
@@ -66,7 +66,7 @@ Lilia is a lightweight, modular framework for building Garry’s Mod addons in G
 All documentation changes live in the main Lilia repo:
 
 1. Fork & clone **LiliaFramework/Lilia**.
-2. Edit files under `docs/`.
+2. Edit files under `documentation/`.
 3. Commit, push to your fork, and open a PR against `main`.
 4. Tag your PR with **documentation**.
 
