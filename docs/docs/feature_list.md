@@ -749,6 +749,7 @@ Hot-load modules and manage dependencies.
 - Hot-reload plugins without restarting the server
 
 - Ordered search for schema-specific modules
+- Preload modules loaded before framework modules
 
 - Automatically resolves dependencies between modules
 

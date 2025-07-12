@@ -52,6 +52,17 @@ local function loadSubmodules(path)
     if #files > 0 or #folders > 0 then lia.module.loadFromDir(path .. "/submodules", "module") end
 end
 
+local function collectModuleIDs(directory)
+    local ids = {}
+    if not directory then return ids end
+    local files, folders = file.Find(directory .. "/*", "LUA")
+    for _, folderName in ipairs(folders) do ids[folderName] = true end
+    for _, fileName in ipairs(files) do
+        if fileName:sub(-4) == ".lua" then ids[string.StripExtension(fileName)] = true end
+    end
+    return ids
+end
+
 function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
     variable = variable or "MODULE"
     local lowerVar = variable:lower()
@@ -160,8 +171,10 @@ function lia.module.initialize()
     local schemaPath = engine.ActiveGamemode()
     lia.module.load("schema", schemaPath .. "/schema", false, "schema")
     hook.Run("InitializedSchema")
-    lia.module.loadFromDir("lilia/modules", "module")
-    lia.module.loadFromDir(schemaPath .. "/preload", "module")
+    local preloadPath = schemaPath .. "/preload"
+    local preloadIDs = collectModuleIDs(preloadPath)
+    lia.module.loadFromDir(preloadPath, "module")
+    lia.module.loadFromDir("lilia/modules", "module", preloadIDs)
     lia.module.loadFromDir(schemaPath .. "/modules", "module")
     lia.module.loadFromDir(schemaPath .. "/overrides", "module")
     hook.Run("InitializedModules")
@@ -174,17 +187,21 @@ function lia.module.initialize()
     end
 end
 
-function lia.module.loadFromDir(directory, group)
+function lia.module.loadFromDir(directory, group, skip)
     local locationVar = group == "schema" and "SCHEMA" or "MODULE"
     local files, folders = file.Find(directory .. "/*", "LUA")
     for _, folderName in ipairs(folders) do
-        lia.module.load(folderName, directory .. "/" .. folderName, false, locationVar)
+        if not skip or not skip[folderName] then
+            lia.module.load(folderName, directory .. "/" .. folderName, false, locationVar)
+        end
     end
 
     for _, fileName in ipairs(files) do
         if fileName:sub(-4) == ".lua" then
             local uniqueID = string.StripExtension(fileName)
-            lia.module.load(uniqueID, directory .. "/" .. fileName, true, locationVar)
+            if not skip or not skip[uniqueID] then
+                lia.module.load(uniqueID, directory .. "/" .. fileName, true, locationVar)
+            end
         end
     end
 end
