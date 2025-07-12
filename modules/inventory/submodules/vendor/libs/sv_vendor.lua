@@ -28,7 +28,9 @@ end
 
 EDITOR.welcome = function(vendor)
     local message = net.ReadString()
-    vendor:setWelcomeMessage(message)
+    if message ~= nill then
+        vendor:setWelcomeMessage(message)
+    end
 end
 
 EDITOR.stockMax = function(vendor)
