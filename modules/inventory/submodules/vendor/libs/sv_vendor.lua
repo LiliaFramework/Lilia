@@ -28,7 +28,7 @@ end
 
 EDITOR.welcome = function(vendor)
     local message = net.ReadString()
-    if message ~= nill then
+    if message ~= nil then
         vendor:setWelcomeMessage(message)
     end
 end
