@@ -8,7 +8,7 @@ This page explains the module-loading system.
 
 The modularity library loads modules contained in the **`modules`** folder, resolves dependencies, and initialises both serverside and clientside components. During the process it fires the `DoModuleIncludes`, `InitializedSchema`, and `InitializedModules` hooks. See [Module Fields](../definitions/module.md) for the callbacks and options a module may define.
 
-Modules placed in a schema's `preload` directory are loaded **before** any framework modules. When a module with the same identifier exists in both `preload` and `lilia/modules`, the version inside `preload` takes priority and the framework copy is skipped.
+Modules placed in a schema's `preload` directory are loaded **before** any framework modules. When a module with the same identifier exists in both `preload` and `lilia/modules`, the version inside `preload` takes priority and the framework copy is skipped. If a schema overrides a framework module outside of `preload`, the loader prints a notice suggesting the module be moved to `preload` for improved efficiency.
 
 ---
 
