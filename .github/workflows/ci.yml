@@ -190,7 +190,10 @@ jobs:
           token: ${{ secrets.LiliaGitSecret }}
       - name: Sync docs to site
         run: |
-          rsync -a --delete --exclude '.git*' lilia/documentation/ site/
+          rsync -a --delete --exclude '.git*' --exclude 'modules.md' lilia/documentation/ site/
+      - name: Fetch modules.json
+        run: |
+          curl -L -o site/modules.json https://raw.githubusercontent.com/LiliaFramework/Modules/refs/heads/gh-pages/modules.json
       - name: Generate version.json
         run: |
           cat > site/version.json <<EOF
