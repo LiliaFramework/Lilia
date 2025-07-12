@@ -48,7 +48,6 @@ Each faction in the game is defined by a set of fields on the global `FACTION` t
 | `isGloballyRecognized` | `boolean` | `false` | Everyone automatically recognizes this faction.
 | `ScoreboardHidden` | `boolean` | `false` | Hide members from the scoreboard. |
 | `commands` | `table` | `{}` | Command names members may always use. |
-| `inviter` | `boolean` | `false` | Allows members of this faction to invite players to it. |
 
 ---
 
@@ -658,23 +657,6 @@ FACTION.commands = {
 }
 ```
 
-#### `inviter`
-
-**Type:**
-
-`boolean`
-
-**Description:**
-
-Whether members of this faction can invite players to join the faction.
-
-**Example Usage:**
-
-```lua
-FACTION.inviter = true
-```
-
----
 
 ## Example Faction Definition
 
@@ -692,7 +674,6 @@ FACTION.models = {
 FACTION.prefix = "[CIT]"
 FACTION.weapons = {"weapon_radio"}
 FACTION.items = {"water"}
-FACTION.inviter = true
 FACTION.pay = 20
 FACTION.payTimer = 1800
 FACTION.health = 100
