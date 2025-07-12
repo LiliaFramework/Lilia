@@ -2,10 +2,9 @@
     local character = client:getChar()
     if not character or client:isNoClipping() then return 1 end
     local walkSpeed = lia.config.get("WalkSpeed", client:GetWalkSpeed())
-    local maxAttributes = lia.config.get("MaxAttributePoints", 100)
     local offset
     if client:KeyDown(IN_SPEED) and client:GetVelocity():LengthSqr() >= walkSpeed * walkSpeed then
-        offset = -lia.config.get("StaminaDrain", 1) + math.min(character:getAttrib("endurance", 0), maxAttributes) / 100
+        offset = -lia.config.get("StaminaDrain", 1)
     else
         offset = client:Crouching() and lia.config.get("StaminaCrouchRegeneration", 2) or lia.config.get("StaminaRegeneration", 1.75)
     end
