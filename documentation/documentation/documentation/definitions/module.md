@@ -248,6 +248,9 @@ MODULE.Dependencies = {
 **Description:**
 
 Controls whether the module loads. Can be a static boolean or a function returning a boolean.
+When the function form is used, it may optionally return a second string
+explaining why the module is disabled. This message is displayed through
+`lia.bootstrap` when the loader skips the module.
 
 **Example Usage:**
 
@@ -258,6 +261,11 @@ MODULE.enabled = true
 -- Or evaluate a configuration value
 MODULE.enabled = function()
     return lia.config.get("EnableMyModule", true)
+end
+
+-- Provide a custom disable reason
+MODULE.enabled = function()
+    return false, "Disabled Temporarily"
 end
 ```
 
