@@ -174,6 +174,15 @@ function lia.module.initialize()
     local preloadPath = schemaPath .. "/preload"
     local preloadIDs = collectModuleIDs(preloadPath)
     lia.module.loadFromDir(preloadPath, "module")
+    local gamemodeIDs = collectModuleIDs(schemaPath .. "/modules")
+    for id in pairs(collectModuleIDs(schemaPath .. "/overrides")) do
+        gamemodeIDs[id] = true
+    end
+    for id in pairs(collectModuleIDs("lilia/modules")) do
+        if not preloadIDs[id] and gamemodeIDs[id] then
+            lia.bootstrap("Module", L("modulePreloadSuggestion", id))
+        end
+    end
     lia.module.loadFromDir("lilia/modules", "module", preloadIDs)
     lia.module.loadFromDir(schemaPath .. "/modules", "module")
     lia.module.loadFromDir(schemaPath .. "/overrides", "module")

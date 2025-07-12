@@ -5920,8 +5920,7 @@ Called after all modules are fully initialized.
 
 ```lua
 -- Prints a message when InitializedModules is triggered
-hook.Add("InitializedModules", "FinalizeModuleSetup", function()
-    lia.modules.finalizeSetup()
+hook.Add("InitializedModules", "NotifyModulesLoaded", function()
     print("All modules have been fully initialized.")
 end)
 ```
