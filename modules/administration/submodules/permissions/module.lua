@@ -2,7 +2,7 @@
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.version = "1.0"
-MODULE.desc = "Implements CAMI Based Permissions."
+MODULE.desc = "Integrates CAMI-based permission management."
 MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can Bypass Character Lock",

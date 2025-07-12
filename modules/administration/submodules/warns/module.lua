@@ -2,4 +2,4 @@
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.version = "1.0"
-MODULE.desc = "Adds a Configuration Menu"
+MODULE.desc = "Provides a menu for managing player warnings."
