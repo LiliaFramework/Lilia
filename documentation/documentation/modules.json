@@ -500,6 +500,22 @@
     "workshop": []
   },
   {
+    "name": "Weight Inv",
+    "author": "Samael",
+    "discord": "@liliaplayer",
+    "description": "Adds a weight inventory type.",
+    "version": "1.0.3",
+    "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/inventory.zip",
+    "source": "https://liliaframework.github.io/Modules/inventory.html",
+    "public_uniqueID": "inventory",
+    "features": [
+      "Adds an inventory limited by item weight",
+      "Adds a shared weightinv library file",
+      "Adds a new inventory type"
+    ],
+    "workshop": []
+  },
+  {
     "name": "Join Leave Messages",
     "author": "Samael",
     "discord": "@liliaplayer",
