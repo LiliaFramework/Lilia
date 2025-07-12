@@ -68,9 +68,10 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
     local lowerVar = variable:lower()
     local coreFile = path .. "/" .. lowerVar .. ".lua"
     local prev = _G[variable]
+    local existing = lia.module.list[uniqueID]
     MODULE = {
         folder = path,
-        module = prev,
+        module = existing or prev,
         uniqueID = uniqueID,
         name = L("unknown"),
         desc = L("noDesc"),
@@ -83,8 +84,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
         if SCHEMA then MODULE = SCHEMA end
         variable = "SCHEMA"
         MODULE.folder = engine.ActiveGamemode()
-    elseif lia.module.list[uniqueID] then
-        MODULE = lia.module.list[uniqueID]
     end
 
     _G[variable] = MODULE
@@ -115,7 +114,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
         else
             lia.bootstrap("Module", L("moduleDisabled", MODULE.name))
         end
-        lia.module.list[uniqueID] = nil
         _G[variable] = prev
         return
     end
