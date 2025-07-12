@@ -307,7 +307,7 @@ function SWEP:SecondaryAttack()
             self:SetNextSecondaryFire(CurTime() + 0.4)
             self:SetNextPrimaryFire(CurTime() + 1)
         elseif entity:IsPlayer() and lia.config.get("AllowPush", true) then
-            local direction = self:GetOwner():GetAimVector() * (300 + self:GetOwner():getChar():getAttrib("strength", 0) * 3)
+            local direction = self:GetOwner():GetAimVector() * 300
             direction.z = 0
             entity:SetVelocity(direction)
             self:GetOwner():EmitSound("Weapon_Crossbow.BoltHitBody")
