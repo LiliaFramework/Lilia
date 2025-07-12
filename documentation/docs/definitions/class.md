@@ -44,7 +44,8 @@ The global `CLASS` table defines per-class settings such as display name, lore, 
 | `index` | `number` | `auto` | Unique team index assigned at registration. |
 | `uniqueID` | `string` | `filename` | Optional identifier; defaults to the file name when omitted. |
 | `commands` | `table` | `{}` | Command names members may always use. |
-| `inviter` | `boolean` | `false` | Allows members of this class to invite others to join it. |
+| `canInviteToFaction` | `boolean` | `false` | Allows members of this class to invite players to their faction. |
+| `canInviteToClass4` | `boolean` | `false` | Allows members of this class to invite others to their class. |
 
 ---
 
@@ -620,7 +621,25 @@ CLASS.commands = {
 }
 ```
 
-#### `inviter`
+#### `canInviteToFaction`
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+Whether members of this class can invite players to join their faction.
+
+**Example Usage:**
+
+```lua
+CLASS.canInviteToFaction = true
+```
+
+---
+
+#### `canInviteToClass4`
 
 **Type:**
 
@@ -633,7 +652,7 @@ Whether members of this class can invite players to join this class.
 **Example Usage:**
 
 ```lua
-CLASS.inviter = true
+CLASS.canInviteToClass4 = true
 ```
 
 ---
@@ -683,7 +702,8 @@ CLASS.bloodcolor = BLOOD_COLOR_RED
 CLASS.commands = {
     plytransfer = true
 }
-CLASS.inviter = true
+CLASS.canInviteToFaction = true
+CLASS.canInviteToClass4 = true
 ```
 
 
