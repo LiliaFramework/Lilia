@@ -102,15 +102,19 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
         lia.include(coreFile, "shared")
     end
 
-    local enabled
+    local enabled, disableReason
     if isfunction(MODULE.enabled) then
-        enabled = MODULE.enabled()
+        enabled, disableReason = MODULE.enabled()
     else
         enabled = MODULE.enabled
     end
 
     if uniqueID ~= "schema" and not enabled then
-        lia.bootstrap("Module", L("moduleDisabled", MODULE.name))
+        if disableReason then
+            lia.bootstrap("Module", disableReason)
+        else
+            lia.bootstrap("Module", L("moduleDisabled", MODULE.name))
+        end
         lia.module.list[uniqueID] = nil
         _G[variable] = prev
         return
