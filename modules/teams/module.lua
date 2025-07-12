@@ -2,4 +2,4 @@
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.version = "1.0"
-MODULE.desc = "Manages Factions and Classes"
+MODULE.desc = "Manages factions and character classes."

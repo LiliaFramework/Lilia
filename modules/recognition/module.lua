@@ -2,4 +2,4 @@
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.version = "1.0"
-MODULE.desc = "Adds the ability to recognize people / You can also allow auto faction recognition."
+MODULE.desc = "Adds player recognition and optional automatic faction recognition."
