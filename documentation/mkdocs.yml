@@ -3,7 +3,7 @@ site_description: Official documentation for the Lilia Framework
 site_author: Lilia Framework Team
 site_url: 'https://liliaframework.github.io/'
 repo_url: 'https://github.com/LiliaFramework/Lilia'
-edit_uri: 'edit/main/docs/docs/'
+edit_uri: 'edit/main/documentation/documentation/'
 
 theme:
   name: material

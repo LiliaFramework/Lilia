@@ -190,7 +190,7 @@ jobs:
           token: ${{ secrets.LiliaGitSecret }}
       - name: Sync docs to site
         run: |
-          rsync -a --delete --exclude '.git*' lilia/docs/ site/
+          rsync -a --delete --exclude '.git*' lilia/documentation/ site/
       - name: Generate version.json
         run: |
           cat > site/version.json <<EOF
