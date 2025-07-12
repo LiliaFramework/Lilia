@@ -251,6 +251,8 @@ Controls whether the module loads. Can be a static boolean or a function returni
 When the function form is used, it may optionally return a second string
 explaining why the module is disabled. This message is displayed through
 `lia.bootstrap` when the loader skips the module.
+When a module is disabled or skipped, you will see a console message in the format:
+`[Lilia] [Bootstrap] [Module Disabled/Skipped] <reason>`.
 
 **Example Usage:**
 
