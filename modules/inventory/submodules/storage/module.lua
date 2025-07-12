@@ -2,7 +2,7 @@
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.version = "1.0"
-MODULE.desc = "Adds Storage Options for Lilia's Inventory."
+MODULE.desc = "Adds storage options to Lilia's inventory system."
 MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can Spawn Storage",
