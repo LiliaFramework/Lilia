@@ -82,7 +82,7 @@ function lia.command.extractArgs(text)
     for i = 1, #text do
         if i <= skip then continue end
         local c = text:sub(i, i)
-        if c == "\"" then
+        if c == "\"" or c == "'" then
             local match = text:sub(i):match("%b" .. c .. c)
             if match then
                 curString = ""

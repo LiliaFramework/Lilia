@@ -98,7 +98,7 @@ end)
 
 **Purpose**
 
-Splits the provided text into arguments, respecting quotes. Quoted sections are treated as single arguments.
+Splits the provided text into arguments, respecting quotes. Sections wrapped in either single (`'`) or double (`"`) quotes are treated as single arguments.
 
 **Parameters**
 
@@ -117,6 +117,9 @@ Splits the provided text into arguments, respecting quotes. Quoted sections are 
 ```lua
 local args = lia.command.extractArgs('/mycommand "quoted arg" anotherArg')
 -- args = { "quoted arg", "anotherArg" }
+
+local args2 = lia.command.extractArgs("/mycommand 'other arg' another")
+-- args2 = { "other arg", "another" }
 ```
 
 ---
