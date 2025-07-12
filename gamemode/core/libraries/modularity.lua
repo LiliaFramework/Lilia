@@ -93,7 +93,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
         lia.include(path, "shared")
     else
         if not file.Exists(coreFile, "LUA") then
-            lia.bootstrap("Module", L("moduleSkipMissing", uniqueID, lowerVar))
+            lia.bootstrap("Module Skipped", L("moduleSkipMissing", uniqueID, lowerVar))
             _G[variable] = prev
             return
         end
@@ -110,9 +110,9 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
 
     if uniqueID ~= "schema" and not enabled then
         if disableReason then
-            lia.bootstrap("Module", disableReason)
+            lia.bootstrap("Module Disabled", disableReason)
         else
-            lia.bootstrap("Module", L("moduleDisabled", MODULE.name))
+            lia.bootstrap("Module Disabled", L("moduleDisabled", MODULE.name))
         end
         _G[variable] = prev
         return
