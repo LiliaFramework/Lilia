@@ -500,13 +500,6 @@ concommand.Add("extsm_addoninfo", function()
 end)
 
 hook.Add("AddToolMenuCategories", "liaExtendedSpawnMenuAddToolMenuCategories", function() spawnmenu.AddToolCategory("Utilities", "Robotboy655", "#Robotboy655") end)
-hook.Add("PopulateToolMenu", "liaExtendedSpawnMenuPopulateToolMenu", function()
-    spawnmenu.AddToolMenuOption("Utilities", "Robotboy655", "LegacyInfoPanel", L("addonInformation"), "", "", function(panel)
-        panel:ClearControls()
-        panel:Button(L("openAddonDataWindow"), "extsm_addoninfo")
-    end)
-end)
-
 local PANEL = {}
 function PANEL:Init()
     self.computed = false
