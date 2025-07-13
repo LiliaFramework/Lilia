@@ -386,7 +386,7 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Includes helper libraries for managing donor perks and displaying them on the scoreboard.",
-    "version": "10009",
+    "version": "10010",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/donator.zip",
     "source": "https://liliaframework.github.io/Modules/donator.html",
     "public_uniqueID": "donator",
