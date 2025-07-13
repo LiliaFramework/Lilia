@@ -33,6 +33,15 @@ net.Receive("ServerChatAddText", function()
     chat.AddText(unpack(args))
 end)
 
+net.Receive("blindTarget", function()
+    local enabled = net.ReadBool()
+    if enabled then
+        hook.Add("HUDPaint", "blindTarget", function() draw.RoundedBox(0, 0, 0, ScrW(), ScrH(), Color(0, 0, 0, 255)) end)
+    else
+        hook.Remove("HUDPaint", "blindTarget")
+    end
+end)
+
 net.Receive("liaInventoryData", function()
     local id = net.ReadType()
     local key = net.ReadString()
