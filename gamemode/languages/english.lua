@@ -357,6 +357,7 @@ LANGUAGE = {
     flagSpawnNpcs = "Gives Access to spawning NPCs.",
     flagInviteToYourFaction = "Gives Access to inviting to your faction.",
     flagInviteToYourClass = "Gives Access to inviting to your class.",
+    flagManageFaction = "Gives Access to managing your faction roster.",
     flagPhysgun = "Gives Access to Physgun.",
     flagToolgun = "Gives Access to Toolgun",
     classNoInfo = "Class information not found.",
