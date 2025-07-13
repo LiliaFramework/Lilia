@@ -22,15 +22,15 @@ if SERVER then
 end
 
 lia.flag.add("C", L("flagSpawnVehicles"))
-lia.flag.add("z", L("flagSpawnSweps"))
+lia.flag.add("Z", L("flagSpawnSweps"))
 lia.flag.add("E", L("flagSpawnSents"))
 lia.flag.add("L", L("flagSpawnEffects"))
-lia.flag.add("r", L("flagSpawnRagdolls"))
-lia.flag.add("e", L("flagSpawnProps"))
-lia.flag.add("n", L("flagSpawnNpcs"))
+lia.flag.add("R", L("flagSpawnRagdolls"))
+lia.flag.add("E", L("flagSpawnProps"))
+lia.flag.add("N", L("flagSpawnNpcs"))
 lia.flag.add("Z", L("flagInviteToYourFaction"))
 lia.flag.add("X", L("flagInviteToYourClass"))
-lia.flag.add("p", L("flagPhysgun"), function(client, isGiven)
+lia.flag.add("P", L("flagPhysgun"), function(client, isGiven)
     if isGiven then
         client:Give("weapon_physgun")
         client:SelectWeapon("weapon_physgun")
