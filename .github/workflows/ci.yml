@@ -218,3 +218,4 @@ jobs:
             git add .
             git commit -m "ci: sync docs and update version.json to ${VERSION}"
             git push origin HEAD:main
+          fi
