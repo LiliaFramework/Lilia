@@ -110,7 +110,7 @@ if SERVER then
     sam.command.new("blind"):SetPermission("blind", "superadmin"):AddArg("player"):Help("Blinds the Players"):OnExecute(function(client, targets)
         for i = 1, #targets do
             local target = targets[i]
-            net.Start("sam_blind")
+            net.Start("blindTarget")
             net.WriteBool(true)
             net.Send(target)
         end
@@ -126,7 +126,7 @@ if SERVER then
     sam.command.new("unblind"):SetPermission("blind", "superadmin"):AddArg("player"):Help("Unblinds the Players"):OnExecute(function(client, targets)
         for i = 1, #targets do
             local target = targets[i]
-            net.Start("sam_blind")
+            net.Start("blindTarget")
             net.WriteBool(false)
             net.Send(target)
         end
@@ -140,15 +140,6 @@ if SERVER then
     end):End()
 
     hook.Add("InitializedModules", "SAM_InitializedModules", function() hook.Remove("PlayerSay", "SAM.Chat.Asay") end)
-else
-    net.Receive("sam_blind", function()
-        local enabled = net.ReadBool()
-        if enabled then
-            hook.Add("HUDPaint", "sam_blind", function() draw.RoundedBox(0, 0, 0, ScrW(), ScrH(), Color(0, 0, 0, 255)) end)
-        else
-            hook.Remove("HUDPaint", "sam_blind")
-        end
-    end)
 end
 
 local function CanReadNotifications(client)
