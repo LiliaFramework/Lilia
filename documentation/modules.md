@@ -1,6 +1,6 @@
 # Optional Modules
 
-<h2 align="center">Advert 10004</h2>
+<h2 align="center">Advert 10005</h2>
 
 **Description:** Provides a paid /advert command so players can broadcast server-wide messages with a built-in cooldown.
 
