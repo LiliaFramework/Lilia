@@ -937,7 +937,6 @@ LANGUAGE = {
     makeSureLowercase = "MAKE SURE ALL FILE AND FOLDER NAMES",
     lowercaseOnlyWarning = "IN ALL ADDONS ARE LOWERCASE ONLY",
     includingAllSubfolders = "INCLUDING ALL SUB FOLDERS",
-    addonInformation = "Addon Information",
     openAddonDataWindow = "Open addon data window",
     nameCopyFormat = "Name: %s (copy)",
     charIDCopyFormat = "CharID: %s (copy)",
