@@ -41,7 +41,7 @@ function MODULE:PostLoadData()
             end
         end
 
-        lia.information(L("doorDisableAll", count))
+        lia.information(L("doorDisableAll"))
     end
 end
 
@@ -87,7 +87,7 @@ function MODULE:SaveData()
     end
 
     self:setData(data)
-    lia.information(L("doorSaveData") .. " " .. table.Count(data))
+    lia.information(L("doorSaveData", table.Count(data)))
 end
 
 function MODULE:callOnDoorChildren(entity, callback)
