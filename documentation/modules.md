@@ -11,7 +11,7 @@
 - Adds price control via AdvertPrice configuration
 - Adds notifications when players lack funds
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/advert.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/advert.zip">Download Here</a></p>
 
 <h2 align="center">Alcoholism 1.0.4</h2>
 
@@ -24,7 +24,7 @@
 - Adds configurable BAC settings like AlcoholTickTime
 - Adds multiple drink items with varying strength
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/alcoholism.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/alcoholism.zip">Download Here</a></p>
 
 <h2 align="center">Auto Restarter 1.0.4</h2>
 
@@ -37,7 +37,7 @@
 - Adds automatic changelevel when the timer expires
 - Adds network messages to sync the restart countdown
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/autorestarter.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/autorestarter.zip">Download Here</a></p>
 
 <h2 align="center">Bodygrouper 1.0.10</h2>
 
@@ -50,7 +50,7 @@
 - Adds an admin command to view another player's bodygroups
 - Adds a networked menu for editing bodygroups
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/bodygrouper.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/bodygrouper.zip">Download Here</a></p>
 
 <h2 align="center">Broadcasts 1.0.6</h2>
 
@@ -63,7 +63,7 @@
 - Adds CAMI privileges for broadcast access
 - Adds menus to select factions or classes
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/broadcasts.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/broadcasts.zip">Download Here</a></p>
 
 <h2 align="center">Captions 1.0.6</h2>
 
@@ -76,7 +76,7 @@
 - Adds commands to send captions to players
 - Adds duration control for each caption
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/captions.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/captions.zip">Download Here</a></p>
 
 <h2 align="center">Cards 1.0.3</h2>
 
@@ -89,7 +89,7 @@
 - Adds easy reshuffling of the deck
 - Adds hooks so other modules can use cards
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cards.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cards.zip">Download Here</a></p>
 
 <h2 align="center">Chat Messages 1.0.4</h2>
 
@@ -102,7 +102,7 @@
 - Adds rotating tips for new players
 - Adds toggle to disable adverts per user
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/chatmessages.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/chatmessages.zip">Download Here</a></p>
 
 <h2 align="center">Cigarettes 1.0.3</h2>
 
@@ -115,7 +115,7 @@
 - Adds configurable nicotine addiction effects
 - Adds ash particles that fade out
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cigs.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cigs.zip">Download Here</a></p>
 
 <h2 align="center">Cinematic Text 1.0.9</h2>
 
@@ -128,7 +128,7 @@
 - Adds timed fades for dramatic effect
 - Adds customizable text fonts
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cinematictext.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cinematictext.zip">Download Here</a></p>
 
 <h2 align="center">Climb 1.0.3</h2>
 
@@ -141,7 +141,7 @@
 - Adds stamina cost for repeated climbs
 - Adds sound effects for grip and landing
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/climb.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/climb.zip">Download Here</a></p>
 
 <h2 align="center">Code Utils 1.0.6</h2>
 
@@ -154,7 +154,7 @@
 - Adds utilities for networking data
 - Adds shared constants for modules
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/codeutils.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/codeutils.zip">Download Here</a></p>
 
 <h2 align="center">Community Commands 1.0.8</h2>
 
@@ -167,7 +167,7 @@
 - Adds localization for command names
 - Adds the ability to add custom URLs
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/communitycommands.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/communitycommands.zip">Download Here</a></p>
 
 <h2 align="center">Compass 1.0.3</h2>
 
@@ -180,7 +180,7 @@
 - Adds pinging of points of interest
 - Adds compass size configuration
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/compass.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/compass.zip">Download Here</a></p>
 
 <h2 align="center">Corpse ID 1.0.8</h2>
 
@@ -193,7 +193,7 @@
 - Adds configurable identification delays
 - Adds logs when corpses are identified
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/corpseid.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/corpseid.zip">Download Here</a></p>
 
 <h2 align="center">Cursor 1.0.3</h2>
 
@@ -206,7 +206,7 @@
 - Adds a hotkey to quickly show or hide the cursor
 - Adds compatibility with other menu modules
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cursor.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cursor.zip">Download Here</a></p>
 
 <h2 align="center">Simple Cutscenes 1.0.3</h2>
 
@@ -219,7 +219,7 @@
 - Adds commands to trigger cutscenes
 - Adds the ability for players to skip
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/cutscenes.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cutscenes.zip">Download Here</a></p>
 
 <h2 align="center">Damage Numbers 1.0.4</h2>
 
@@ -232,7 +232,7 @@
 - Adds scaling text based on damage amount
 - Adds client option to disable numbers
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/damagenumbers.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/damagenumbers.zip">Download Here</a></p>
 
 <h2 align="center">Development HUD 1.0.7</h2>
 
@@ -245,7 +245,7 @@
 - Adds real-time server performance metrics
 - Adds a toggle command to show or hide the HUD
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmenthud.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/developmenthud.zip">Download Here</a></p>
 
 <h2 align="center">Development Server 1.0.3</h2>
 
@@ -258,7 +258,7 @@
 - Adds an environment flag for dev commands
 - Adds logging of executed dev actions
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/developmentserver.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/developmentserver.zip">Download Here</a></p>
 
 <h2 align="center">Discord Relay 1.0.4</h2>
 
@@ -271,7 +271,7 @@
 - Adds multiple webhook URLs per log type
 - Adds filtering to control which logs are sent
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/discordrelay.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/discordrelay.zip">Download Here</a></p>
 
 <h2 align="center">Donator 1.0.9</h2>
 
@@ -284,7 +284,7 @@
 - Adds configurable perks by tier
 - Adds analytics on total donations
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/donator.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/donator.zip">Download Here</a></p>
 
 <h2 align="center">Door Kick 1.0.6</h2>
 
@@ -297,7 +297,7 @@
 - Adds physics force to fling doors open
 - Adds a cooldown to prevent spam kicking
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/doorkick.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/doorkick.zip">Download Here</a></p>
 
 <h2 align="center">Hospitals 1.0.4</h2>
 
@@ -310,7 +310,7 @@
 - Adds configurable respawn delays
 - Adds integration with death logs
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/enhanceddeath.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/enhanceddeath.zip">Download Here</a></p>
 
 <h2 align="center">Extended Descriptions 1.0.9</h2>
 
@@ -323,7 +323,7 @@
 - Adds automatic line wrapping
 - Adds fallback to short descriptions
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/extendeddescriptions.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/extendeddescriptions.zip">Download Here</a></p>
 
 <h2 align="center">First Person Effects 1.0.4</h2>
 
@@ -336,7 +336,7 @@
 - Adds adjustable intensity via config
 - Adds compatibility with vehicle seats
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/firstpersoneffects.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/firstpersoneffects.zip">Download Here</a></p>
 
 <h2 align="center">Flashlight 1.0.4</h2>
 
@@ -349,7 +349,7 @@
 - Adds battery consumption over time
 - Adds keybind toggle support
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/flashlight.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/flashlight.zip">Download Here</a></p>
 
 <h2 align="center">Free Look 1.0.5</h2>
 
@@ -362,7 +362,7 @@
 - Adds adjustable sensitivity while freelooking
 - Adds optional head tracking support
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/freelook.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/freelook.zip">Download Here</a></p>
 
 <h2 align="center">Gamemaster Teleport Points 1.0.3</h2>
 
@@ -375,7 +375,7 @@
 - Adds a command to list saved points
 - Adds sharing of points with other staff
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/gamemasterpoints.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/gamemasterpoints.zip">Download Here</a></p>
 
 <h2 align="center">Extra HUD Elements 1.0.7</h2>
 
@@ -388,7 +388,7 @@
 - Adds performance stats display
 - Adds toggles for individual HUD elements
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/hud_extras.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hud_extras.zip">Download Here</a></p>
 
 <h2 align="center">Instant Killing 1.0.3</h2>
 
@@ -401,7 +401,7 @@
 - Adds friendly fire protection options
 - Adds integration with damage numbers
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/instakill.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/instakill.zip">Download Here</a></p>
 
 <h2 align="center">Weight Inv 1.0.4</h2>
 
@@ -414,7 +414,7 @@
 - Adds a drag-and-drop weight management UI
 - Adds support for backpacks to increase capacity
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/inventory.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/inventory.zip">Download Here</a></p>
 
 <h2 align="center">Join Leave Messages 1.0.5</h2>
 
@@ -427,7 +427,7 @@
 - Adds relay of messages to Discord
 - Adds per-player toggle to hide messages
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/joinleavemessages.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/joinleavemessages.zip">Download Here</a></p>
 
 <h2 align="center">Load Messages 1.0.3</h2>
 
@@ -440,7 +440,7 @@
 - Adds color-coded formatting options
 - Adds per-faction enable toggles
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loadmessages.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loadmessages.zip">Download Here</a></p>
 
 <h2 align="center">Loyalism 1.0.7</h2>
 
@@ -453,7 +453,7 @@
 - Adds automatic tier progression
 - Adds customizable rewards per tier
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/loyalism.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loyalism.zip">Download Here</a></p>
 
 <h2 align="center">Map Cleaner 1.0.4</h2>
 
@@ -466,7 +466,7 @@
 - Adds a whitelist for protected entities
 - Adds manual cleanup commands
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/mapcleaner.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/mapcleaner.zip">Download Here</a></p>
 
 <h2 align="center">Model Pay 1.0.4</h2>
 
@@ -479,7 +479,7 @@
 - Adds config to exclude certain models
 - Adds logs of wages issued
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modelpay.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modelpay.zip">Download Here</a></p>
 
 <h2 align="center">Model Tweaker 1.0.9</h2>
 
@@ -492,7 +492,7 @@
 - Adds saving of tweaked props between restarts
 - Adds undo support for recent tweaks
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/modeltweaker.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modeltweaker.zip">Download Here</a></p>
 
 <h2 align="center">NPC Drops 1.0.3</h2>
 
@@ -505,7 +505,7 @@
 - Adds editable drop tables per NPC type
 - Adds weighted chances for rare items
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcdrop.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcdrop.zip">Download Here</a></p>
 
 <h2 align="center">NPC Spawner 1.0.5</h2>
 
@@ -518,7 +518,7 @@
 - Adds configuration for spawn intervals
 - Adds spawner entity previews
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/npcspawner.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcspawner.zip">Download Here</a></p>
 
 <h2 align="center">Perma Remove 1.0.5</h2>
 
@@ -531,7 +531,7 @@
 - Adds confirmation prompts before removal
 - Adds restore list to undo mistakes
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/permaremove.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/permaremove.zip">Download Here</a></p>
 
 <h2 align="center">Radio 1.0.10</h2>
 
@@ -544,7 +544,7 @@
 - Adds frequency channels for groups
 - Adds handheld radio items
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/radio.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/radio.zip">Download Here</a></p>
 
 <h2 align="center">Raised Weapons 1.0.4</h2>
 
@@ -557,7 +557,7 @@
 - Adds a toggle to keep weapons lowered
 - Adds compatibility with melee weapons
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/raisedweapons.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/raisedweapons.zip">Download Here</a></p>
 
 <h2 align="center">Realistic Damage 1.0.3</h2>
 
@@ -570,7 +570,7 @@
 - Adds bleeding effects on high damage
 - Adds friendly fire scaling options
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticdamage.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticdamage.zip">Download Here</a></p>
 
 <h2 align="center">Realistic View 1.0.5</h2>
 
@@ -583,7 +583,7 @@
 - Adds smooth leaning animations
 - Adds optional third-person override
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/realisticview.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticview.zip">Download Here</a></p>
 
 <h2 align="center">Rumour 1.0.4</h2>
 
@@ -596,7 +596,7 @@
 - Adds a cooldown to prevent spam
 - Adds admin logging of rumour messages
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/rumour.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/rumour.zip">Download Here</a></p>
 
 <h2 align="center">Shoot Locks 1.0.4</h2>
 
@@ -609,7 +609,7 @@
 - Adds chance-based lock destruction
 - Adds configurable noise radius
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/shootlock.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/shootlock.zip">Download Here</a></p>
 
 <h2 align="center">Lockpicking 1.0.4</h2>
 
@@ -622,7 +622,7 @@
 - Adds configurable pick time
 - Adds chance for tools to break
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/simple_lockpicking.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/simple_lockpicking.zip">Download Here</a></p>
 
 <h2 align="center">Slots 1.0.4</h2>
 
@@ -635,7 +635,7 @@
 - Adds customizable payout odds
 - Adds sound and animation effects
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slots.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slots.zip">Download Here</a></p>
 
 <h2 align="center">Heavy Weapons 1.0.3</h2>
 
@@ -648,7 +648,7 @@
 - Adds customizable weapon speed table
 - Adds automatic speed restore when switching
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/slowweapons.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slowweapons.zip">Download Here</a></p>
 
 <h2 align="center">Stun Gun 1.1.7</h2>
 
@@ -661,7 +661,7 @@
 - Adds networked stun animations
 - Adds logs when players are tased
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/stungun.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/stungun.zip">Download Here</a></p>
 
 <h2 align="center">Tying 1.0.10</h2>
 
@@ -674,7 +674,7 @@
 - Adds timed escape minigames for prisoners
 - Adds compatibility with the search submodule
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/tying.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/tying.zip">Download Here</a></p>
 
 <h2 align="center">View Bob 1.0.4</h2>
 
@@ -687,7 +687,7 @@
 - Adds toggle to disable bobbing in vehicles
 - Adds configuration for bobbing frequency
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/viewbob.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/viewbob.zip">Download Here</a></p>
 
 <h2 align="center">VManip 1.0.5</h2>
 
@@ -700,7 +700,7 @@
 - Adds API for custom gesture triggers
 - Adds fallback animations when VManip is missing
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/vmanip.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/vmanip.zip">Download Here</a></p>
 
 <h2 align="center">Warrant 1.0.10</h2>
 
@@ -713,7 +713,7 @@
 - Adds CAMI privileges for warrant management
 - Adds timed expiration for warrants
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/warrants.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/warrants.zip">Download Here</a></p>
 
 <h2 align="center">War Table 1.0.7</h2>
 
@@ -726,7 +726,7 @@
 - Adds marker placement for strategies
 - Adds support for multiple map layouts
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wartable.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wartable.zip">Download Here</a></p>
 
 <h2 align="center">Whitelist 1.0.4</h2>
 
@@ -739,7 +739,7 @@
 - Adds admin commands to manage the list
 - Adds notifications on join attempt
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/whitelist.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/whitelist.zip">Download Here</a></p>
 
 <h2 align="center">Word Filter 1.0.3</h2>
 
@@ -752,7 +752,7 @@
 - Adds regex support for advanced filters
 - Adds admin commands to modify the list
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/Downloads/wordfilter.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wordfilter.zip">Download Here</a></p>
 
 ---
 
