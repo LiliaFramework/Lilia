@@ -4,7 +4,7 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Provides a paid /advert command so players can broadcast server-wide messages with a built-in cooldown.",
-    "version": "10004",
+    "version": "10005",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/advert.zip",
     "source": "https://liliaframework.github.io/Modules/advert.html",
     "public_uniqueID": "advert",
