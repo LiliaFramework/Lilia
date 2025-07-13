@@ -130,7 +130,7 @@ lia.command.add("setclass", {
             if target:Team() == classData.faction then
                 target:getChar():joinClass(classID, true)
                 lia.log.add(client, "setClass", target:Name(), classData.name)
-                target:notifyLocalized("classSet", L(classData.name), client:GetName())
+                target:notifyLocalized("classSet", L(classData.name) .. " " .. client:GetName())
                 if client ~= target then client:notifyLocalized("classSetOther", target:GetName(), L(classData.name)) end
                 hook.Run("PlayerLoadout", target)
             else

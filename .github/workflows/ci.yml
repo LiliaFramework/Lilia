@@ -68,16 +68,15 @@ jobs:
             PATCH=$VALID_COUNT
           elif (( VALID_COUNT < 1000 )); then
             MAJOR=0
-            MINOR=$((VALID_COUNT/100))
-            PATCH=$((VALID_COUNT%100))
+            MINOR=$((VALID_COUNT / 100))
+            PATCH=$((VALID_COUNT % 100))
           else
-            MAJOR=$((VALID_COUNT/1000))
-            MINOR=$(((VALID_COUNT%1000)/100))
-            PATCH=$((VALID_COUNT%100))
+            MAJOR=$((VALID_COUNT / 1000))
+            MINOR=$(((VALID_COUNT % 1000) / 100))
+            PATCH=$((VALID_COUNT % 100))
           fi
-          printf -v PATCH_PADDED "%02d" $PATCH
-          VERSION="$MAJOR.$MINOR.$PATCH_PADDED"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          VERSION_FLOAT=$(echo "$MAJOR.$MINOR$PATCH" | sed 's/^0*//' | sed 's/\.$/.0/')
+          echo "version=$VERSION_FLOAT" >> "$GITHUB_OUTPUT"
           echo "valid_count=$VALID_COUNT" >> "$GITHUB_OUTPUT"
 
   release:
@@ -102,26 +101,35 @@ jobs:
       - name: Update GM.version in shared.lua
         run: |
           python3 - << 'PY'
-          import os,re,io,sys
-          version=os.environ["VERSION"]
-          path="lilia/gamemode/shared.lua"
-          with io.open(path,encoding="utf-8-sig") as f:
-              lines=f.readlines()
-          name_pat=re.compile(r"\s*GM\.Name\s*=")
-          out=[]
-          inserted=False
+          import os
+          import re
+          import io
+          import sys
+
+          version = os.environ["VERSION"]
+          path = "lilia/gamemode/shared.lua"
+
+          with io.open(path, encoding="utf-8-sig") as f:
+              lines = f.readlines()
+
+          name_pat = re.compile(r"\s*GM\.Name\s*=")
+          out = []
+          inserted = False
+
           for line in lines:
               if name_pat.match(line) and not inserted:
                   out.append(line)
-                  out.append(f'GM.version = "{version}"\n')
-                  inserted=True
+                  out.append(f'GM.version = {version}\n')
+                  inserted = True
               elif re.match(r"\s*GM\.version\s*=", line):
                   continue
               else:
                   out.append(line)
+
           if not inserted:
               sys.exit("GM.Name not found")
-          with io.open(path,"w",encoding="utf-8") as f:
+
+          with io.open(path, "w", encoding="utf-8") as f:
               f.writelines(out)
           PY
       - name: Commit version bump in shared.lua
