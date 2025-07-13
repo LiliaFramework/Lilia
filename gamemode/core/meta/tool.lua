@@ -28,6 +28,15 @@ function ToolGunMeta:CreateConVars()
     end
 end
 
+function ToolGunMeta:UpdateData()
+end
+
+function ToolGunMeta:FreezeMovement()
+end
+
+function ToolGunMeta:DrawHUD()
+end
+
 function ToolGunMeta:GetServerInfo(property)
     local mode = self:GetMode()
     return ConVar(mode .. "_" .. property)
