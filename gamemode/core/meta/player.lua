@@ -407,6 +407,8 @@ if SERVER then
                 self.firstJoin = data[1]._firstJoin or timeStamp
                 self.lastJoin = data[1]._lastJoin or timeStamp
                 self.liaData = util.JSONToTable(data[1]._data)
+                self.totalOnlineTime = self:getLiliaData("totalOnlineTime", 0)
+                self.lastOnline = self:getLiliaData("lastOnline", self.lastJoin)
                 if callback then callback(self.liaData) end
             else
                 lia.db.insertTable({
@@ -427,6 +429,10 @@ if SERVER then
         local name = self:steamName()
         local steamID64 = self:SteamID64()
         local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
+        local stored = self:getLiliaData("totalOnlineTime", 0)
+        local session = RealTime() - (self.liaJoinTime or RealTime())
+        self:setLiliaData("totalOnlineTime", stored + session, true)
+        self:setLiliaData("lastOnline", timeStamp, true)
         lia.db.updateTable({
             _steamName = name,
             _lastJoin = timeStamp,
@@ -608,6 +614,15 @@ if SERVER then
     function playerMeta:getPlayTime()
         local diff = os.time(lia.time.toNumber(self.lastJoin)) - os.time(lia.time.toNumber(self.firstJoin))
         return diff + RealTime() - (self.liaJoinTime or RealTime())
+    end
+
+    function playerMeta:getTotalOnlineTime()
+        local stored = self:getLiliaData("totalOnlineTime", 0)
+        return stored + RealTime() - (self.liaJoinTime or RealTime())
+    end
+
+    function playerMeta:getLastOnline()
+        return self:getLiliaData("lastOnline", self.lastJoin)
     end
 
     function playerMeta:createRagdoll(freeze, isDead)
@@ -795,6 +810,15 @@ else
     function playerMeta:getPlayTime()
         local diff = os.time(lia.time.toNumber(lia.lastJoin)) - os.time(lia.time.toNumber(lia.firstJoin))
         return diff + RealTime() - (lia.joinTime or 0)
+    end
+
+    function playerMeta:getTotalOnlineTime()
+        local stored = self:getLiliaData("totalOnlineTime", 0)
+        return stored + RealTime() - (lia.joinTime or 0)
+    end
+
+    function playerMeta:getLastOnline()
+        return self:getLiliaData("lastOnline", lia.lastJoin)
     end
 
     function playerMeta:setWaypoint(name, vector, onReach)
