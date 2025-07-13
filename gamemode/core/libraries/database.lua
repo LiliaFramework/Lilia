@@ -263,6 +263,7 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS `lia_config`;
     DROP TABLE IF EXISTS `lia_data`;
     DROP TABLE IF EXISTS `lia_logs`;
+    DROP TABLE IF EXISTS `lia_bans`;
 ]])
             local done = 0
             for i = 1, #queries do
@@ -289,6 +290,7 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS lia_config;
     DROP TABLE IF EXISTS lia_data;
     DROP TABLE IF EXISTS lia_logs;
+    DROP TABLE IF EXISTS lia_bans;
 ]], realCallback)
     end
 end
@@ -371,6 +373,13 @@ function lia.db.loadTables()
                 PRIMARY KEY (_key, _folder, _map)
             );
 
+            CREATE TABLE IF NOT EXISTS lia_bans (
+                _steamID TEXT,
+                _banStart INTEGER,
+                _banDuration INTEGER,
+                _reason TEXT
+            );
+
             CREATE TABLE IF NOT EXISTS lia_logs (
                 _id INTEGER PRIMARY KEY AUTOINCREMENT,
                 _timestamp DATETIME,
@@ -450,6 +459,14 @@ function lia.db.loadTables()
                 `_map` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
                 `_value` TEXT NULL COLLATE 'utf8mb4_general_ci',
                 PRIMARY KEY (`_key`, `_folder`, `_map`)
+            );
+
+            CREATE TABLE IF NOT EXISTS `lia_bans` (
+                `_steamID` varchar(64) NOT NULL,
+                `_banStart` int(32) NOT NULL,
+                `_banDuration` int(32) NOT NULL,
+                `_reason` varchar(512) DEFAULT '',
+                PRIMARY KEY (`_steamID`)
             );
 
             CREATE TABLE IF NOT EXISTS `lia_logs` (
