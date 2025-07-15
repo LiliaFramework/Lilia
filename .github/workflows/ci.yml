@@ -144,9 +144,7 @@ jobs:
         run: |
           mkdir -p packaged
           cp -R lilia packaged/lilia
-          cd packaged/lilia
-          rm -rf documentation Code_Of_Conduct.md License ReadMe.md
-          cd ..
+          cd packaged
           zip -r ../lilia.zip lilia
       - name: Remove previous releases and tags
         run: |
