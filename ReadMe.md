@@ -66,7 +66,7 @@
   Contextual radial options for money, voice and recognition.
 
 * **Administration Tools**
-  Logging, tickets, warns, teleport and spectate.
+  Built-in admin menu handles logging, tickets, warns, teleport and spectate. ULX is not supported due to its outdated CAMI.
 
 * **Performance & Protection**
   Tick monitoring, network profiling and anti-exploit checks.
