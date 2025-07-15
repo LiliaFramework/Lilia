@@ -54,23 +54,27 @@ lia.command.add("trunk", {
             entity.receivers[client] = true
             local invID = entity:getNetVar("inv")
             local inv = invID and lia.inventory.instances[invID]
-            if not inv then
-                MODULE:InitializeStorage(entity)
-                invID = entity:getNetVar("inv")
-                inv = invID and lia.inventory.instances[invID]
-            end
-            if not inv then
-                client:notifyLocalized("noInventory")
-                client.liaStorageEntity = nil
-                return
+
+            local function openStorage(storageInv)
+                if not storageInv then
+                    client:notifyLocalized("noInventory")
+                    client.liaStorageEntity = nil
+                    return
+                end
+
+                storageInv:sync(client)
+                net.Start("liaStorageOpen")
+                net.WriteBool(true)
+                net.WriteEntity(entity)
+                net.Send(client)
+                entity:EmitSound("items/ammocrate_open.wav")
             end
 
-            inv:sync(client)
-            net.Start("liaStorageOpen")
-            net.WriteBool(true)
-            net.WriteEntity(entity)
-            net.Send(client)
-            entity:EmitSound("items/ammocrate_open.wav")
+            if inv then
+                openStorage(inv)
+            else
+                MODULE:InitializeStorage(entity):next(openStorage)
+            end
         end)
     end
 })

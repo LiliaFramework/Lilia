@@ -78,7 +78,7 @@ lia.command.add("spawnremovebyname", {
     adminOnly = true,
     desc = "spawnRemoveByNameDesc",
     syntax = "[faction Faction]",
-    onRun = function(_, arguments)
+    onRun = function(client, arguments)
         local factionName = arguments[1]
         local factionInfo = lia.faction.indices[factionName:lower()]
         if not factionInfo then

@@ -16,6 +16,7 @@
 
     client:setLocalVar("stamina", char:getMaxStamina())
     local uniqueID = "liaStam" .. client:SteamID()
+    timer.Remove(uniqueID)
     timer.Create(uniqueID, 0.25, 0, function()
         if not IsValid(client) then
             timer.Remove(uniqueID)
@@ -28,6 +29,14 @@ end
 
 function MODULE:PlayerDisconnected(client)
     timer.Remove("liaStam" .. client:SteamID())
+end
+
+function MODULE:OnReloaded()
+    for _, client in player.Iterator() do
+        if IsValid(client) and client:getChar() then
+            self:PostPlayerLoadout(client)
+        end
+    end
 end
 
 function MODULE:KeyPress(client, key)
@@ -60,7 +69,9 @@ function MODULE:PlayerStaminaLost(client)
     if client:getNetVar("brth", false) then return end
     client:setNetVar("brth", true)
     client:EmitSound("player/breathe1.wav", 35, 100)
-    local breathThreshold = character:getMaxStamina() * 0.25
+    local character = client:getChar()
+    local maxStamina = character and character:getMaxStamina() or lia.config.get("DefaultStamina", 100)
+    local breathThreshold = maxStamina * 0.25
     timer.Create("liaStamBreathCheck" .. client:SteamID64(), 1, 0, function()
         if not IsValid(client) then
             timer.Remove("liaStamBreathCheck" .. client:SteamID64())

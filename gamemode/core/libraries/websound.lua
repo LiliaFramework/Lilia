@@ -152,3 +152,42 @@ concommand.Add("lia_saved_sounds", function()
 end)
 
 ensureDir(baseDir)
+
+hook.Add("EntityEmitSound", "liaWebSound", function(data)
+    local soundName = data.OriginalSoundName or data.SoundName
+    if not isstring(soundName) then return end
+
+    local function play(path)
+        sound.PlayFile(path, "3d", function(chan)
+            if not chan then return end
+
+            local ent = data.Entity
+            if IsValid(ent) and chan.FollowEntity then
+                chan:FollowEntity(ent)
+            elseif data.Pos then
+                chan:SetPos(data.Pos)
+            end
+
+            if data.Volume then
+                chan:SetVolume(math.Clamp(data.Volume, 0, 1))
+            end
+
+            if data.Pitch and chan.SetPlaybackRate then
+                chan:SetPlaybackRate(data.Pitch / 100)
+            end
+
+            chan:Play()
+        end)
+    end
+
+    if soundName:find("^https?://") then
+        play(soundName)
+        return true
+    end
+
+    local localPath = lia.websound.get(soundName)
+    if localPath then
+        play(localPath)
+        return true
+    end
+end)

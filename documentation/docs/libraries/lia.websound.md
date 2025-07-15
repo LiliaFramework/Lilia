@@ -10,8 +10,9 @@ The web-sound library downloads remote audio files and stores them inside
 `data/lilia/sounds/<IP>/<Gamemode>/`. Each server therefore keeps its own
 collection of downloaded sounds. The library overrides `sound.PlayFile` and
 `sound.PlayURL` so HTTP(S) URLs may be passed directly—the file is downloaded,
-cached and then played. Subsequent calls using the same URL will reuse the
-previously saved file and you may also pass the cached name to
+cached and then played. `Entity:EmitSound` is also hooked so web addresses can
+be used anywhere a sound path is expected. Subsequent calls using the same URL
+will reuse the previously saved file and you may also pass the cached name to
 `sound.PlayFile`.
 
 ---
@@ -86,6 +87,10 @@ end
 sound.PlayFile("https://example.com/alert.mp3", "", function(chan)
     if chan then chan:Play() end
 end)
+
+-- Emit a web sound from an entity
+local ply = LocalPlayer()
+ply:EmitSound("https://example.com/alert.mp3")
 ```
 
 ---

@@ -94,6 +94,7 @@ local function SpawnPlayer(client)
     end
 
     if spawnPos then
+        spawnPos = spawnPos + Vector(0, 0, 16)
         client:SetPos(spawnPos)
         print("[SpawnPlayer] final spawn position set to:", tostring(spawnPos))
     else
