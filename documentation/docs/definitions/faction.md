@@ -46,7 +46,7 @@ Each faction in the game is defined by a set of fields on the global `FACTION` t
 | `NPCRelations` | `table` | `{}` | NPC class→disposition mapping on spawn/creation. |
 | `RecognizesGlobally` | `boolean` | `false` | Global player recognition. |
 | `isGloballyRecognized` | `boolean` | `false` | Everyone automatically recognizes this faction.
-| `ScoreboardHidden` | `boolean` | `false` | Hide members from the scoreboard. |
+| `scoreboardHidden` | `boolean` | `false` | Hide members from the scoreboard. |
 | `commands` | `table` | `{}` | Command names members may always use. |
 
 ---
@@ -619,7 +619,7 @@ FACTION.bloodcolor = BLOOD_COLOR_RED
 
 ---
 
-#### `ScoreboardHidden`
+#### `scoreboardHidden`
 
 **Type:**
 
@@ -632,7 +632,7 @@ If `true`, members of this faction are hidden from the scoreboard.
 **Example Usage:**
 
 ```lua
-FACTION.ScoreboardHidden = false
+FACTION.scoreboardHidden = false
 ```
 
 ---

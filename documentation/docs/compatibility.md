@@ -2,7 +2,7 @@
 
 This page details the optional compatibility libraries bundled with Lilia. These libraries greatly expand support for a variety of popular addons used across the Garry's Mod community. Each section below is a standalone sub-section named after the addon, with its URL, key compatibility highlights, and a brief explanation.
 
-The compatibility layer covers administration suites such as ULX and SAM, vehicle frameworks like **LVS**, **Simfphys**, and **VCMod**, outfit systems including PAC3, and more. Installing these addons alongside Lilia will automatically enable the related integration.
+The compatibility layer covers administration suites such as SAM, vehicle frameworks like **LVS**, **Simfphys**, and **VCMod**, outfit systems including PAC3, and more. Installing these addons alongside Lilia will automatically enable the related integration.
 
 In recent releases the compatibility set has grown even larger. Popular community addons now work out of the box:
 
@@ -13,7 +13,7 @@ In recent releases the compatibility set has grown even larger. Popular communit
 
 - **ServerGuard** permission support
 
-- **ULX** and **SAM** admin suites
+- **SAM** admin suite
 
 - **PermaProps** management helpers
 
@@ -210,23 +210,13 @@ Drivers only take damage when the vehicle is struck near their seat and a config
 Adjusts console settings and seat interactions to prevent trolling while maintaining roleplay utility.
 
 ---
+## ULX
 
-## [ULX](https://steamcommunity.com/sharedfiles/filedetails/?id=557962280)
+> **Warning**
+> ULX is not compatible with Lilia because its version of CAMI is extremely old and breaks permission checks.
 
-**Compatibility Highlights:**
+Use Lilia's built-in admin menu or another modern admin suite like SAM or ServerGuard instead.
 
-* Routes Lilia admin commands through ULX for consistent moderation.
-* Removes obsolete hooks that conflict with recent versions of CAMI.
-
-
-* Synchronizes CAMI groups and privileges with ULX.
-
-
-**Detailed Explanation:**
-
-Keeps CAMI and ULX in sync so admin ranks and permissions behave correctly within Lilia.
-
----
 
 ## [VCMod Main](https://www.gmodstore.com/market/view/vcmod-main)
 

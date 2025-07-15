@@ -60,8 +60,6 @@ Panels provide the building blocks for Lilia's user interface. Most derive from 
 | `liaSmallButton` | `DButton` | Compact button for tight layouts. |
 | `liaMiniButton` | `DButton` | Very small button variant. |
 | `liaNoBGButton` | `DButton` | Text-only button with no background. |
-| `DAdminWorldMenu` | `DPanel` | Context panel for admin world actions. |
-| `DAdminMenu` | `DFrame` | Frame for managing admin tabs. |
 
 ---
 
@@ -633,24 +631,3 @@ Text-only button that still shows the underline animation.
 
 ---
 
-### `DAdminWorldMenu`
-
-**Base Panel:**
-
-`DPanel`
-
-**Description:**
-
-Container panel used for context-sensitive admin actions in the world.
-
----
-
-### `DAdminMenu`
-
-**Base Panel:**
-
-`DFrame`
-
-**Description:**
-
-Main window for the administrator interface. Populates its property sheet from `lia.admin.menu.tabs`.

@@ -37,6 +37,7 @@ The global `CLASS` table defines per-class settings such as display name, lore, 
 | `bloodcolor` | `number` | `0` | Blood color enumeration constant. |
 | `bodyGroups` | `table` | `{}` | List of {id, value} pairs applied on spawn. |
 | `logo` | `string` | `""` | Material path for the class logo. |
+| `scoreboardHidden` | `boolean` | `false` | Hide class headers and logos in the scoreboard. |
 | `skin` | `number` | `0` | Player model skin index. |
 | `subMaterials` | `table` | `{}` | Sub-material overrides for the model. |
 | `model` | `string` | `""` | Model path or list of paths used by this class. |
@@ -45,7 +46,7 @@ The global `CLASS` table defines per-class settings such as display name, lore, 
 | `uniqueID` | `string` | `filename` | Optional identifier; defaults to the file name when omitted. |
 | `commands` | `table` | `{}` | Command names members may always use. |
 | `canInviteToFaction` | `boolean` | `false` | Allows members of this class to invite players to their faction. |
-| `canInviteToClass4` | `boolean` | `false` | Allows members of this class to invite others to their class. |
+| `canInviteToClass` | `boolean` | `false` | Allows members of this class to invite others to their class. |
 
 ---
 
@@ -526,6 +527,24 @@ CLASS.logo = "materials/example/eng_logo.png"
 
 ---
 
+#### `scoreboardHidden`
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+If `true`, this class will not display a header or logo on the scoreboard.
+
+**Example Usage:**
+
+```lua
+CLASS.scoreboardHidden = true
+```
+
+---
+
 #### `skin`
 
 **Type:**
@@ -639,7 +658,7 @@ CLASS.canInviteToFaction = true
 
 ---
 
-#### `canInviteToClass4`
+#### `canInviteToClass`
 
 **Type:**
 
@@ -652,7 +671,7 @@ Whether members of this class can invite players to join this class.
 **Example Usage:**
 
 ```lua
-CLASS.canInviteToClass4 = true
+CLASS.canInviteToClass = true
 ```
 
 ---
@@ -681,6 +700,7 @@ CLASS.walkSpeedMultiplier = true
 CLASS.jumpPower = 200
 CLASS.jumpPowerMultiplier = false
 CLASS.logo = "materials/example/eng_logo.png"
+CLASS.scoreboardHidden = true
 CLASS.skin = 0
 CLASS.subMaterials = {
     "models/example/custom_cloth", -- sub-material 0
@@ -703,7 +723,7 @@ CLASS.commands = {
     plytransfer = true
 }
 CLASS.canInviteToFaction = true
-CLASS.canInviteToClass4 = true
+CLASS.canInviteToClass = true
 ```
 
 
