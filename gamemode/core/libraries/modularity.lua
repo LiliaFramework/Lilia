@@ -56,7 +56,9 @@ local function collectModuleIDs(directory)
     local ids = {}
     if not directory then return ids end
     local _, folders = file.Find(directory .. "/*", "LUA")
-    for _, folderName in ipairs(folders) do ids[folderName] = true end
+    for _, folderName in ipairs(folders) do
+        ids[folderName] = true
+    end
     return ids
 end
 
@@ -111,6 +113,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
         else
             lia.bootstrap("Module Disabled", L("moduleDisabled", MODULE.name))
         end
+
         _G[variable] = prev
         return
     end
@@ -177,11 +180,11 @@ function lia.module.initialize()
     for id in pairs(collectModuleIDs(schemaPath .. "/overrides")) do
         gamemodeIDs[id] = true
     end
+
     for id in pairs(collectModuleIDs("lilia/modules")) do
-        if not preloadIDs[id] and gamemodeIDs[id] then
-            lia.bootstrap("Module", L("modulePreloadSuggestion", id))
-        end
+        if not preloadIDs[id] and gamemodeIDs[id] then lia.bootstrap("Module", L("modulePreloadSuggestion", id)) end
     end
+
     lia.module.loadFromDir("lilia/modules", "module", preloadIDs)
     lia.module.loadFromDir(schemaPath .. "/modules", "module")
     lia.module.loadFromDir(schemaPath .. "/overrides", "module")
@@ -197,13 +200,10 @@ end
 
 function lia.module.loadFromDir(directory, group, skip)
     local locationVar = group == "schema" and "SCHEMA" or "MODULE"
-    local files, folders = file.Find(directory .. "/*", "LUA")
+    local _, folders = file.Find(directory .. "/*", "LUA")
     for _, folderName in ipairs(folders) do
-        if not skip or not skip[folderName] then
-            lia.module.load(folderName, directory .. "/" .. folderName, false, locationVar)
-        end
+        if not skip or not skip[folderName] then lia.module.load(folderName, directory .. "/" .. folderName, false, locationVar) end
     end
-
 end
 
 function lia.module.get(identifier)
