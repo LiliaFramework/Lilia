@@ -1,7 +1,6 @@
 ﻿MODULE.name = "Permissions"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.version = "1.0"
 MODULE.desc = "Integrates CAMI-based permission management."
 MODULE.CAMIPrivileges = {
     {

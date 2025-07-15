@@ -1,5 +1,4 @@
 ﻿MODULE.name = "Recognition"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.version = "1.0"
 MODULE.desc = "Adds player recognition and optional automatic faction recognition."

@@ -1,7 +1,6 @@
 ﻿MODULE.name = "Administration Utilities"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.version = "1.0"
 MODULE.desc = "Provides utility commands and tools for server administration."
 MODULE.CAMIPrivileges = {
     {

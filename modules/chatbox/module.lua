@@ -1,7 +1,6 @@
 ﻿MODULE.name = "Chatbox"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.version = "1.0"
 MODULE.desc = "Adds an enhanced in-game chat box with staff controls."
 MODULE.CAMIPrivileges = {
     {

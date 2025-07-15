@@ -5,7 +5,6 @@ DOOR_NONE = 0
 MODULE.name = "Doors"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.version = "1.0"
 MODULE.desc = "Adds purchasable doors with ownership options."
 ACCESS_LABELS = {
     [DOOR_NONE] = "none",

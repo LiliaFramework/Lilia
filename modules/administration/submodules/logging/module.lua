@@ -1,7 +1,6 @@
 ﻿MODULE.name = "Logger"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.version = "1.0"
 MODULE.desc = "Implements an action logger for administrative oversight."
 MODULE.CAMIPrivileges = {
     {

@@ -1,7 +1,6 @@
 ﻿MODULE.name = "F1 Menu"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.version = "1.0"
 MODULE.desc = "Adds an F1 menu offering access to various character submenus."
 MODULE.CAMIPrivileges = {
     {
