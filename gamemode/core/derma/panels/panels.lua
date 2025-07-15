@@ -122,34 +122,3 @@ function Derma_Install_Convar_Functions(PANEL)
     end
 end
 
-PANEL = {}
-function PANEL:Init()
-    self:Dock(FILL)
-end
-
-function PANEL:Paint(w, h)
-    surface.SetDrawColor(255, 0, 0)
-    surface.DrawOutlinedRect(0, 0, w, h)
-end
-
-vgui.Register("DAdminWorldMenu", PANEL, "DPanel")
-PANEL = {}
-function PANEL:Init()
-    self:SetTitle(L("adminMenuTitle"))
-    self:SetSize(ScrW() / 2, ScrH() / 1.5)
-    self:Center()
-    self:MakePopup()
-    self.menuTabs = self:Add("DPropertySheet")
-    self.menuTabs:Dock(FILL)
-    self.menuTabs.childTabs = {}
-    for _, info in next, lia.admin.menu.tabs do
-        local icon = info.icon
-        local panelClass = info.panelClass
-        local title = L(info.title)
-        local panel = self.menuTabs:Add(panelClass)
-        self.menuTabs:AddSheet(title, panel, icon)
-        self.menuTabs.childTabs[#self.menuTabs.childTabs + 1] = panel
-    end
-end
-
-vgui.Register("DAdminMenu", PANEL, "DFrame")
