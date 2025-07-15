@@ -14,7 +14,6 @@
         end
     end
 
-    -- Always start with full stamina on spawn
     client:setLocalVar("stamina", char:getMaxStamina())
     local uniqueID = "liaStam" .. client:SteamID()
     timer.Create(uniqueID, 0.25, 0, function()
@@ -31,10 +30,6 @@ function MODULE:PlayerDisconnected(client)
     timer.Remove("liaStam" .. client:SteamID())
 end
 
-function MODULE:CharPreSave(character)
-    -- Stamina is not persisted; it always resets to maximum on spawn.
-end
-
 function MODULE:KeyPress(client, key)
     if key == IN_ATTACK2 then
         local wep = client:GetActiveWeapon()
@@ -49,7 +44,6 @@ function MODULE:KeyPress(client, key)
     if key == IN_JUMP and not client:isNoClipping() and client:getChar() and not client:InVehicle() and client:Alive() then
         local cost = lia.config.get("JumpStaminaCost", 25)
         client:consumeStamina(cost)
-
         local stm = client:getLocalVar("stamina", 0)
         if stm == 0 then
             client:setNetVar("brth", true)
@@ -59,12 +53,7 @@ function MODULE:KeyPress(client, key)
 end
 
 function MODULE:PlayerLoadedChar(client, character)
-    -- Ensure players begin with maximum stamina when their character loads
-    timer.Simple(0.25, function()
-        if IsValid(client) then
-            client:setLocalVar("stamina", character:getMaxStamina())
-        end
-    end)
+    timer.Simple(0.25, function() if IsValid(client) then client:setLocalVar("stamina", character:getMaxStamina()) end end)
 end
 
 function MODULE:PlayerStaminaLost(client)
