@@ -33,7 +33,7 @@ Loads all Lua faction files from a directory, includes them **shared**, and regi
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.faction.loadFromDir("path/to/factions")
@@ -59,7 +59,7 @@ Retrieves a faction table by its index or unique identifier.
 
 * *table | nil*: The faction table, or `nil` if not found.
 
-**Example**
+**Example Usage**
 
 ```lua
 local faction = lia.faction.get("citizen")
@@ -85,7 +85,7 @@ Returns the numeric index of a faction given its unique identifier.
 
 * *number | nil*: Index if found, otherwise `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 local index = lia.faction.getIndex("citizen")
@@ -111,7 +111,7 @@ Returns a list of class tables that belong to the specified faction.
 
 * *table*: Array of class tables.
 
-**Example**
+**Example Usage**
 
 ```lua
 local classes = lia.faction.getClasses(FACTION_CITIZEN)
@@ -137,7 +137,7 @@ Retrieves all player entities whose characters are in the given faction.
 
 * *table*: Array of `Player` entities.
 
-**Example**
+**Example Usage**
 
 ```lua
 local players = lia.faction.getPlayers(FACTION_CITIZEN)
@@ -163,7 +163,7 @@ Counts how many players belong to the specified faction.
 
 * *number*: Player count.
 
-**Example**
+**Example Usage**
 
 ```lua
 local count = lia.faction.getPlayerCount(FACTION_CITIZEN)
@@ -190,7 +190,7 @@ Checks whether a faction belongs to a category defined by a list of faction IDs.
 
 * *boolean*: `true` if the faction is in the category.
 
-**Example**
+**Example Usage**
 
 ```lua
 local isMember = lia.faction.isFactionCategory("citizen", { "citizen", "veteran" })
@@ -220,7 +220,7 @@ Dynamically creates and registers a new faction (job) with the team system, prec
 
 * *table*: The generated faction table.
 
-**Example**
+**Example Usage**
 
 ```lua
 local police = lia.faction.jobGenerate(
@@ -252,7 +252,7 @@ Normalises model tables for every registered faction, ensuring grouped categorie
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.faction.formatModelData()
@@ -278,7 +278,7 @@ Returns a list of model category names for the given faction.
 
 * *table*: Array of category names.
 
-**Example**
+**Example Usage**
 
 ```lua
 local categories = lia.faction.getCategories("citizen")
@@ -305,7 +305,7 @@ Returns the models that belong to a specific category for a faction.
 
 * *table*: Array of model paths.
 
-**Example**
+**Example Usage**
 
 ```lua
 local models = lia.faction.getModelsFromCategory("citizen", "special")
@@ -331,7 +331,7 @@ Finds the first class marked as default for the given faction.
 
 * *table | nil*: Default class table, or `nil` if none.
 
-**Example**
+**Example Usage**
 
 ```lua
 local defaultClass = lia.faction.getDefaultClass(FACTION_CITIZEN)
@@ -357,7 +357,7 @@ Client-side check whether the local player is whitelisted for a faction.
 
 * *boolean*: `true` if the player is whitelisted.
 
-**Example**
+**Example Usage**
 
 ```lua
 local whitelisted = lia.faction.hasWhitelist(FACTION_CITIZEN)

@@ -28,7 +28,7 @@ Loads every Lua language file in a directory and merges their `LANGUAGE` tables 
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Load language files bundled with the current schema
@@ -57,7 +57,7 @@ Adds or merges key-value pairs into an existing language table.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Add or override phrases for English
@@ -89,7 +89,7 @@ Returns the translated phrase for a key in the active language, using `string.fo
 
 * *string*: Translated phrase, or the key itself if no translation exists.
 
-**Example**
+**Example Usage**
 
 ```lua
 print(L("vendorShowAll"))

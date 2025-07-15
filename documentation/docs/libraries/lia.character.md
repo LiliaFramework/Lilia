@@ -34,7 +34,7 @@ Creates a new character instance with default variables and metatable.
 
 * *table*: New character object.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Create a simple character for a player
@@ -65,7 +65,7 @@ Registers a hook function that runs whenever a specific character variable chang
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Print the new name whenever a character's name changes
@@ -96,7 +96,7 @@ Registers a character variable with metadata and auto-generates accessor methods
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Register an "age" field that only accepts numbers
@@ -129,7 +129,7 @@ Retrieves a character’s JSON data from the database as a Lua table (or a singl
 
 * *any*: Data value or full table if no key is provided.
 
-**Example**
+**Example Usage**
 
 ```lua
 local age = lia.char.getCharData(1, "age")
@@ -157,7 +157,7 @@ Returns the raw database row for a character or a specific column value.
 
 * *table | any*: Full row table or column value.
 
-**Example**
+**Example Usage**
 
 ```lua
 local row = lia.char.getCharDataRaw(1)
@@ -183,7 +183,7 @@ Finds the player entity that owns the character with the given ID.
 
 * *Player | nil*: Player entity or `nil` if not found.
 
-**Example**
+**Example Usage**
 
 ```lua
 local ply = lia.char.getOwnerByID(1)
@@ -209,7 +209,7 @@ Retrieves a character object by SteamID or SteamID64.
 
 * *table | nil*: Character object or `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 local char = lia.char.getBySteamID("STEAM_0:0:11101")
@@ -235,7 +235,7 @@ Returns a table mapping all players to their loaded characters.
 
 * *table*: Map of `Player → Character`.
 
-**Example**
+**Example Usage**
 
 ```lua
 for ply, char in pairs(lia.char.getAll()) do
@@ -263,7 +263,7 @@ Determines the team colour for a client based on their character class or defaul
 
 * *Color*: Team or class colour.
 
-**Example**
+**Example Usage**
 
 ```lua
 local color = lia.char.GetTeamColor(client)
@@ -291,7 +291,7 @@ Inserts a new character into the database, creates a default inventory, and fire
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.char.create({
@@ -327,7 +327,7 @@ Loads characters for a client from the database, optionally filtering by ID, and
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.char.restore(client, function(ids)
@@ -355,7 +355,7 @@ Cleans up loaded characters and inventories for a player on disconnect.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.char.cleanUpForPlayer(client)
@@ -383,7 +383,7 @@ Deletes a character by ID, cleans up, and notifies players via hooks.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.char.delete(1, client)
@@ -413,7 +413,7 @@ Updates a character’s JSON data field in the database and the loaded object. T
 
 * *boolean*: `true` on success, `false` on failure.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.char.setCharData(1, "age", 25)
@@ -441,7 +441,7 @@ Changes a character’s name in the database and the loaded object, firing appro
 
 * *boolean*: `true` on success, `false` on failure.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.char.setCharName(1, "NewName")
@@ -471,7 +471,7 @@ Updates the character’s model and bodygroups in the database and in-game, firi
 
 * *boolean*: `true` on success, `false` on failure.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.char.setCharModel(1, "models/player.mdl", {})

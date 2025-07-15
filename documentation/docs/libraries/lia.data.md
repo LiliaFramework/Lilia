@@ -34,7 +34,7 @@ Saves the provided value under the specified key in the `lia_data` table and cac
 
 * *string*: The path where the data was saved.
 
-**Example**
+**Example Usage**
 
 ```lua
 concommand.Add("save_spawn", function(ply)
@@ -68,7 +68,7 @@ Removes the stored value corresponding to the key from the `lia_data` table and 
 
 * *boolean*: Always `true`; the deletion query is queued.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.data.delete("spawn_pos")
@@ -103,7 +103,7 @@ Retrieves the stored value for the specified key from the cache.
 
 * *any*: The stored value or the default if not found.
 
-**Example**
+**Example Usage**
 
 ```lua
 hook.Add("PlayerSpawn", "UseSavedSpawn", function(ply)
@@ -134,7 +134,7 @@ Loads all entries from the `lia_data` table into `lia.data.stored`. If the table
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.data.loadTables()
@@ -160,7 +160,7 @@ Imports legacy `.txt` files from `data/lilia` into the `lia_data` SQL table. Pla
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.data.convertToDatabase(true)

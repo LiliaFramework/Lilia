@@ -30,7 +30,7 @@ Registers this panel to forward inventory events from the given inventory to mat
 
 * `None`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function PANEL:setInventory(inv)
@@ -63,7 +63,7 @@ Removes hooks previously added by `liaListenForInventoryChanges`.
 
 * `None`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function PANEL:OnRemove()
@@ -96,7 +96,7 @@ Sets the panel position using `ScreenScale( x )` and `ScreenScaleH( y )`.
 
 * `None`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 panel:SetScaledPos(10, 20)
@@ -123,7 +123,7 @@ Sets the panel size using `ScreenScale( w )` and `ScreenScaleH( h )`.
 
 * `None`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 panel:SetScaledSize(64, 32)

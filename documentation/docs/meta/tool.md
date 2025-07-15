@@ -32,7 +32,7 @@ Creates a new tool object with default values.
 
 * table: The newly created tool object.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Create a new tool instance and configure it
@@ -62,7 +62,7 @@ Creates client and server ConVars for this tool.
 
 * `None`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Ensure console variables exist for configuration
@@ -89,7 +89,7 @@ Returns the server ConVar for the given property.
 
 * ConVar: The server ConVar object.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Check if the server allows using this tool
@@ -116,7 +116,7 @@ Returns a table of client ConVars prefixed by the tool mode.
 
 * table: Table of convars.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Get a table of client ConVars for networking
@@ -143,7 +143,7 @@ Retrieves a client ConVar value as a string.
 
 * string: The value stored in the ConVar.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Get the client's chosen material from a ConVar
@@ -172,7 +172,7 @@ Retrieves a numeric client ConVar value.
 
 * number: The numeric value of the ConVar.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Read the numeric power setting with a fallback
@@ -199,7 +199,7 @@ Determines whether this tool is allowed to be used.
 
 * boolean: True if the tool is allowed.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Gate tool usage behind an admin check
@@ -228,7 +228,7 @@ Placeholder for tool initialization.
 
 * `None`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function TOOL:Init()
@@ -257,7 +257,7 @@ Gets the current tool mode string.
 
 * string: Tool mode name.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Retrieve the tool's active mode string
@@ -284,7 +284,7 @@ Returns the SWEP associated with this tool.
 
 * SWEP: The tool's weapon entity.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Obtain the weapon entity representing this tool
@@ -311,7 +311,7 @@ Returns the player who owns the associated weapon.
 
 * Player: Owner of the tool.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Reference the player who deployed the tool
@@ -339,7 +339,7 @@ Retrieves the weapon entity this tool is attached to.
 
 * Weapon: The weapon object.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Access the underlying weapon object
@@ -366,7 +366,7 @@ Handles the left-click action. Override for custom behavior.
 
 * boolean: False by default.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Example override performing a build action
@@ -396,7 +396,7 @@ Handles the right-click action. Override for custom behavior.
 
 * boolean: False by default.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Example override for an alternate action
@@ -426,7 +426,7 @@ Clears stored objects when the tool reloads.
 
 * `None`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function TOOL:Reload()
@@ -455,7 +455,7 @@ Called when the tool is equipped. Releases ghost entity.
 
 * `None`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function TOOL:Deploy()
@@ -484,7 +484,7 @@ Called when the tool is holstered. Releases ghost entity.
 
 * `None`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function TOOL:Holster()
@@ -513,7 +513,7 @@ Called every tick; releases ghost entities by default.
 
 * `None`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function TOOL:Think()
@@ -542,7 +542,7 @@ Validates stored objects and clears them if invalid.
 
 * `None`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Validate all stored objects each tick
@@ -569,7 +569,7 @@ Removes all stored objects from the tool.
 
 * `None`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Remove any objects the tool is storing
@@ -596,7 +596,7 @@ Removes the ghost entity used for previewing placements.
 
 * `None`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Remove the placement preview entity

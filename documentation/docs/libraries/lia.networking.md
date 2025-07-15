@@ -32,7 +32,7 @@ Stores a value in `lia.net.globals` and optionally broadcasts the change to clie
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Start a new round and store the winner
@@ -69,7 +69,7 @@ Retrieves a value from `lia.net.globals`, returning a default if the key is unse
 
 * *any*: Stored value or the supplied default.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Inform new players of the current round and previous champion

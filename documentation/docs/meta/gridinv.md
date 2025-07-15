@@ -34,7 +34,7 @@ If no width has been set, the value from `lia.config.invW` is used.
 
 * `number`: Grid width in slots.
 
-**Example**
+**Example Usage**
 
 ```lua
 local width = inv:getWidth()
@@ -63,7 +63,7 @@ Defaults to `lia.config.invH` when unset.
 
 * `number`: Grid height in slots.
 
-**Example**
+**Example Usage**
 
 ```lua
 local height = inv:getHeight()
@@ -90,7 +90,7 @@ Returns both grid dimensions at once.
 
 * `number`, `number`: Width and height in slots.
 
-**Example**
+**Example Usage**
 
 ```lua
 local w, h = inv:getSize()
@@ -121,7 +121,7 @@ This does **not** test collisions with other items.
 
 * `boolean`: True if the entire item lies within the grid.
 
-**Example**
+**Example Usage**
 
 ```lua
 if inv:canItemFitInInventory(item, 2, 3) then
@@ -151,7 +151,7 @@ Accepts either an `Item` object or a unique ID.
 
 * `boolean`: True when the item size fits inside the grid.
 
-**Example**
+**Example Usage**
 
 ```lua
 if inv:canAdd("pistol_ammo") then
@@ -184,7 +184,7 @@ Used internally when checking placement validity.
 
 * `boolean`: True if the two items intersect.
 
-**Example**
+**Example Usage**
 
 ```lua
 for _, existing in pairs(inv:getItems(true)) do
@@ -215,7 +215,7 @@ Checks this inventory **and all nested bags** to see if the item could be placed
 
 * `boolean`: True if a free position exists.
 
-**Example**
+**Example Usage**
 
 ```lua
 if inv:doesFitInventory(item) then
@@ -246,7 +246,7 @@ Determines if `testItem` can be placed at `(x, y)` without overlapping existing 
 * `boolean`: True when placement is valid.
 * `Item|nil`: Conflicting item if placement fails.
 
-**Example**
+**Example Usage**
 
 ```lua
 local ok, blocking = inv:doesItemFitAtPos(item, 2, 2)
@@ -275,7 +275,7 @@ Searches the grid sequentially for the **first** open space that can fit the giv
 
 * `number|nil`, `number|nil`: X and Y slot coordinates, or `nil` if none found.
 
-**Example**
+**Example Usage**
 
 ```lua
 local x, y = inv:findFreePosition(item)
@@ -306,7 +306,7 @@ On the server it adds default access rules preventing players from placing items
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function MyInv:configure()
@@ -336,7 +336,7 @@ When `noRecurse` is `false`, items inside nested bags are also returned.
 
 * `table`: Item table indexed by item ID.
 
-**Example**
+**Example Usage**
 
 ```lua
 for id, itm in pairs(inv:getItems()) do
@@ -365,7 +365,7 @@ Updates the stored grid dimensions **on the server**.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Expand the inventory to 6×4 slots
@@ -392,7 +392,7 @@ Removes **all** items from the inventory.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 inv:wipeItems()
@@ -423,7 +423,7 @@ When `fullUpdate` is `true` the inventory is synced to that owner immediately.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 inv:setOwner(client, true)
@@ -457,7 +457,7 @@ argument is treated as a quantity to spawn.
 
 * `Deferred`: Resolves with the newly added item(s).
 
-**Example**
+**Example Usage**
 
 ```lua
 inv:add("pistol_ammo", 1, 1):next(function(itm)
@@ -488,7 +488,7 @@ Quantity defaults to `1`.
 
 * `Deferred`: Resolves once removal finishes.
 
-**Example**
+**Example Usage**
 
 ```lua
 inv:remove("pistol_ammo", 2):next(function()
@@ -521,7 +521,7 @@ The server processes this call through the `HandleItemTransferRequest` hook.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Move the item into another inventory

@@ -30,7 +30,7 @@ Establishes a connection to the configured database module. If the database is n
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.connect(function()
@@ -58,7 +58,7 @@ Drops all Lilia tables from the database. **Irreversible** – all stored data i
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.wipeTables(function()
@@ -86,7 +86,7 @@ Creates required tables if they do not already exist. Ensures the schema is set 
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.loadTables()
@@ -112,7 +112,7 @@ Returns a deferred that resolves once tables are fully created. Useful for await
 
 * *deferred*: Resolves when tables are ready.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.waitForTablesToLoad():next(function()
@@ -142,7 +142,7 @@ Converts a Lua value into a string appropriate for SQL insertion, handling escap
 
 * *string | number*: SQL-ready representation.
 
-**Example**
+**Example Usage**
 
 ```lua
 local str = lia.db.convertDataType({ name = "Lilia" })
@@ -172,7 +172,7 @@ Inserts a row into a table using key-value pairs.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.insertTable({ name = "Test" }, function(id)
@@ -206,7 +206,7 @@ Updates one or more rows according to a condition.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.updateTable({ name = "Updated" }, function()
@@ -240,7 +240,7 @@ Selects rows, optionally filtered and limited, returning a deferred.
 
 * *deferred*: Resolves with results and last insert ID.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.select("*", "characters", "id = 1"):next(function(rows)
@@ -270,7 +270,7 @@ Inserts or updates a row depending on unique-key conflict. Returns a deferred.
 
 * *deferred*: Resolves when done.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.upsert({ id = 1, name = "John" }, "characters")
@@ -298,7 +298,7 @@ Deletes rows matching a condition; deletes all rows if no condition.
 
 * *deferred*: Resolves with deletion result.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.delete("characters", "id = 1"):next(function()
@@ -326,7 +326,7 @@ Fetches the column names of `lia_characters` for debugging/maintenance.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.GetCharacterTable(function(cols)
@@ -356,7 +356,7 @@ Counts rows in a table, optionally filtered.
 
 * *deferred*: Resolves to the row count.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.count("characters", "faction = 1"):next(function(n)
@@ -386,7 +386,7 @@ multiple times; existing columns will be ignored.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- After creating custom character variables
@@ -415,7 +415,7 @@ Checks if any row satisfies a condition.
 
 * *deferred*: Resolves to `true` or `false`.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.exists("characters", "id = 5"):next(function(found)
@@ -447,7 +447,7 @@ Fetches the first row that matches a condition.
 
 * *deferred*: Resolves with the row or `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.selectOne("*", "characters", "id = 1"):next(function(row)
@@ -479,7 +479,7 @@ Inserts multiple rows in a single query.
 
 * *deferred*: Resolves when done.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.bulkInsert("items", {
@@ -510,7 +510,7 @@ Attempts to insert a row; silently ignores unique-key violation.
 
 * *deferred*: Resolves with results and last insert ID.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.insertOrIgnore({ id = 1, name = "Bob" }, "characters"):next(function(r)
@@ -538,7 +538,7 @@ Runs multiple queries inside a transaction, rolling back if any fail.
 
 * *deferred*: Resolves when transaction completes.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.transaction({
@@ -569,7 +569,7 @@ Escapes an identifier (column/table name) for SQL.
 
 * *string*: Escaped identifier.
 
-**Example**
+**Example Usage**
 
 ```lua
 local col = lia.db.escapeIdentifier("desc")
@@ -600,7 +600,7 @@ Registers a prepared statement (MySQLOO only).
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.prepare(
@@ -634,7 +634,7 @@ Executes a prepared statement registered with `lia.db.prepare`. *(MySQLOO only)*
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.preparedCall("updateName", nil, "Alice", 1)
@@ -662,7 +662,7 @@ Executes a raw SQL string. If no callback is provided, returns a deferred.
 
 * *deferred | nil*: Deferred when no callback.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.query("SELECT 1"):next(function(res)
@@ -690,7 +690,7 @@ Escapes a string for safe inclusion in SQL queries.
 
 * *string*: Escaped string.
 
-**Example**
+**Example Usage**
 
 ```lua
 local safe = lia.db.escape(userInput)
@@ -716,7 +716,7 @@ Returns the number of queued SQL queries. *(MySQLOO only)*
 
 * *number*: Count of queued queries.
 
-**Example**
+**Example Usage**
 
 ```lua
 print("Queue size:", lia.db.queue())
@@ -742,7 +742,7 @@ Cancels all running queries on every connection. *(MySQLOO only)*
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.abort()
@@ -768,7 +768,7 @@ Returns the least busy database object and its pool index. *(MySQLOO only)*
 
 * *database*, *number*: Connection object and pool index.
 
-**Example**
+**Example Usage**
 
 ```lua
 local db = lia.db.getObject()
@@ -794,7 +794,7 @@ Checks whether a table with the provided name exists in the connected database.
 
 * *deferred*: Resolves to `true` or `false`.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.tableExists("characters"):next(function(exists)
@@ -823,7 +823,7 @@ Determines whether a specific column is present in a table.
 
 * *deferred*: Resolves to `true` when the field exists.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.db.fieldExists("characters", "name"):next(function(hasField)

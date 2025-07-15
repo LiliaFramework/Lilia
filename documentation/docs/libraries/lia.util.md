@@ -30,7 +30,7 @@ Finds and returns players located inside a world-space bounding box. Useful for 
 
 * *table*: Array of matching player entities.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Kick everyone hiding inside a restricted building
@@ -62,7 +62,7 @@ Returns players within a spherical radius from an origin.
 
 * *table*: Array of player entities.
 
-**Example**
+**Example Usage**
 
 ```lua
 local players = lia.util.FindPlayersInSphere(vector_origin, 200)
@@ -93,7 +93,7 @@ Attempts to find a player by SteamID, SteamID64, caret (“^” = caller), at-sy
 
 * *Player | nil*: Found player or `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 local target = lia.util.findPlayer(admin, "Bob")
@@ -122,7 +122,7 @@ Returns every item entity in the world created by the specified player.
 
 * *table*: Array of item entities.
 
-**Example**
+**Example Usage**
 
 ```lua
 local items = lia.util.findPlayerItems(LocalPlayer())
@@ -153,7 +153,7 @@ Finds player-created item entities of a specific class.
 
 * *table*: Matching item entities.
 
-**Example**
+**Example Usage**
 
 ```lua
 local items = lia.util.findPlayerItemsByClass(LocalPlayer(), "food_banana")
@@ -184,7 +184,7 @@ Finds all entities created by/associated with a player, optionally filtered by c
 
 * *table*: Matching entities.
 
-**Example**
+**Example Usage**
 
 ```lua
 local ents = lia.util.findPlayerEntities(LocalPlayer(), "prop_physics")
@@ -215,7 +215,7 @@ Case-insensitive partial-match comparison.
 
 * *boolean*: `true` if match.
 
-**Example**
+**Example Usage**
 
 ```lua
 if lia.util.stringMatches("Hello", "he") then
@@ -243,7 +243,7 @@ Returns all players that satisfy `client:isStaff()`.
 
 * *table*: Array of staff players.
 
-**Example**
+**Example Usage**
 
 ```lua
 for _, admin in ipairs(lia.util.getAdmins()) do
@@ -271,7 +271,7 @@ Finds a player by SteamID64.
 
 * *Player | nil*: Player or `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 local ply = lia.util.findPlayerBySteamID64("76561198000000000")
@@ -300,7 +300,7 @@ Alias for `findPlayerBySteamID64`.
 
 * *Player | nil*: Player or `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 local ply = lia.util.findPlayerBySteamID("76561198000000000")
@@ -332,7 +332,7 @@ Checks if a hull fits at a position without intersecting obstacles.
 
 * *boolean*: `true` if space is clear.
 
-**Example**
+**Example Usage**
 
 ```lua
 local ok = lia.util.canFit(targetPos, Vector(-16, -16, 0), Vector(16, 16, 72))
@@ -360,7 +360,7 @@ Returns players within a radius.
 
 * *table*: Player entities.
 
-**Example**
+**Example Usage**
 
 ```lua
 local nearby = lia.util.playerInRadius(vector_origin, 250)
@@ -388,7 +388,7 @@ Formats a string with named (`{key}`) or ordered placeholders.
 
 * *string*: Formatted result.
 
-**Example**
+**Example Usage**
 
 ```lua
 local res = lia.util.formatStringNamed("Hello, {name}!", { name = "Bob" })
@@ -416,7 +416,7 @@ Caches and returns a `Material` to avoid repeated creation.
 
 * *Material*: Cached material.
 
-**Example**
+**Example Usage**
 
 ```lua
 local mat = lia.util.getMaterial("path/to/material", "noclamp smooth")
@@ -446,7 +446,7 @@ Finds a faction by name or uniqueID; includes partial-match fallback.
 
 * *table | nil*: Faction table or `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 local faction = lia.util.findFaction(client, "citizen")
@@ -482,7 +482,7 @@ Sends a net message instructing the client to build a table UI.
 
 * *nil*
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.util.CreateTableUI(ply, "Inventory", cols, rows, opts, charID)
@@ -518,7 +518,7 @@ Generates empty-space positions around an entity using a grid-based search.
 
 * *table*: Sorted valid positions.
 
-**Example**
+**Example Usage**
 
 ```lua
 local spots = lia.util.findEmptySpace(ent, ent, 32, 3, 36, 5)
@@ -556,7 +556,7 @@ Draws text with a shadow offset.
 
 * *nil*
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.util.ShadowText("Hello!", "DermaDefault", 100, 100,
@@ -595,7 +595,7 @@ Draws outlined text.
 
 * *nil*
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.util.DrawTextOutlined("Outlined", "DermaLarge", 100, 200,
@@ -630,7 +630,7 @@ Draws a tooltip-style rectangle with centred text.
 
 * *nil*
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.util.DrawTip(100, 100, 200, 60, "This is a tip!",
@@ -667,7 +667,7 @@ Draws text with a subtle shadow.
 
 * *nil*
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.util.drawText("Hello World", 200, 300, color_white,
@@ -698,7 +698,7 @@ Draws a textured rectangle.
 
 * *nil*
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.util.drawTexture("path/to/material", color_white, 50, 50, 64, 64)
@@ -728,7 +728,7 @@ Invokes a skin function by name on a panel.
 
 * *any*: Whatever the skin function returns.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.util.skinFunc("PaintButton", someButton, 10, 20)
@@ -758,7 +758,7 @@ Wraps text to a maximum width.
 
 * *table*, *number*: Wrapped lines and maximum line width.
 
-**Example**
+**Example Usage**
 
 ```lua
 local lines, maxW = lia.util.wrapText("Some long string...", 200, "liaChatFont")
@@ -788,7 +788,7 @@ Draws a blur effect over a panel.
 
 * *nil*
 
-**Example**
+**Example Usage**
 
 ```lua
 somePanel.Paint = function(self, w, h)
@@ -820,7 +820,7 @@ Draws blur over a rectangle on screen.
 
 * *nil*
 
-**Example**
+**Example Usage**
 
 ```lua
 hook.Add("HUDPaint", "ExampleBlur", function()
@@ -852,7 +852,7 @@ Prompts the local player for typed input and returns the result to a callback.
 
 * *nil*
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.util.requestArguments("User Info",
@@ -890,7 +890,7 @@ Creates and displays a table UI from supplied column/row data.
 
 * *nil*
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.util.CreateTableUI("My Table",

@@ -28,7 +28,7 @@ Retrieves an item definition by its identifier, checking both `lia.item.base` an
 
 * *table | nil*: The item table if found, otherwise `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 local itemDef = lia.item.get("testItem")
@@ -54,7 +54,7 @@ Retrieves an item instance by its numeric item ID and reports whether it is in a
 
 * *table | nil*: `{ item = <item>, location = <string> }` if found, else `nil` and an error message.
 
-**Example**
+**Example Usage**
 
 ```lua
 local result = lia.item.getItemByID(42)
@@ -83,7 +83,7 @@ Returns the item instance table itself without location information.
 
 * *table | nil*: Item instance or `nil` with an error.
 
-**Example**
+**Example Usage**
 
 ```lua
 local inst = lia.item.getInstancedItemByID(42)
@@ -112,7 +112,7 @@ Retrieves the `data` table of an item instance by its ID.
 
 * *table | nil*: Data table or `nil` with an error message.
 
-**Example**
+**Example Usage**
 
 ```lua
 local data = lia.item.getItemDataByID(42)
@@ -145,7 +145,7 @@ Generates a `uniqueID` from a file path and registers the item via `lia.item.reg
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.item.load("lilia/gamemode/items/base/outfit.lua", nil, true)
@@ -171,7 +171,7 @@ Checks whether an object is recognised as an item.
 
 * *boolean*: `true` if the object is an item.
 
-**Example**
+**Example Usage**
 
 ```lua
 if lia.item.isItem(myObject) then
@@ -199,7 +199,7 @@ Returns an inventory table by its ID from `lia.inventory.instances`.
 
 * *table | nil*: Inventory or `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 local inv = lia.item.getInv(5)
@@ -236,7 +236,7 @@ Registers a new item or base item. Sets up its metatable, merges data from the s
 
 * *table*: The registered item table.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.item.register("special_item", "base_item", false, "path/to/item.lua")
@@ -262,7 +262,7 @@ Loads item Lua files from a directory. Base items load first, then sub-folders (
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.item.loadFromDir("lilia/gamemode/items")
@@ -290,7 +290,7 @@ Creates an item instance from a registered definition and stores it in `lia.item
 
 * *table*: Newly created (or existing) item instance.
 
-**Example**
+**Example Usage**
 
 ```lua
 local item = lia.item.new("testItem", 101)
@@ -321,7 +321,7 @@ Registers an inventory type with fixed width and height.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.item.registerInv("smallInv", 4, 4)
@@ -351,7 +351,7 @@ Asynchronously creates a new inventory of a given type for a character owner and
 
 * *nil*: Uses a deferred internally.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.item.newInv(10, "smallInv", function(inv)
@@ -383,7 +383,7 @@ Creates a `GridInv` instance with given size and ID, caching it in `lia.inventor
 
 * *table*: The created inventory.
 
-**Example**
+**Example Usage**
 
 ```lua
 local inv = lia.item.createInv(6, 6, 200)
@@ -412,7 +412,7 @@ Overrides properties used when automatically generating weapon items from script
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.item.addWeaponOverride("weapon_pistol", {
@@ -441,7 +441,7 @@ Prevents a weapon class from being auto-generated as an item.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.item.addWeaponToBlacklist("weapon_physgun")
@@ -467,7 +467,7 @@ Registers item definitions for all scripted weapons that are not blacklisted. Ca
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.item.generateWeapons()
@@ -503,7 +503,7 @@ Sets a key/value pair in an item’s `data` table by ID, optionally saving, noti
 
 * *boolean, string?*: `true` on success, otherwise `false` and error.
 
-**Example**
+**Example Usage**
 
 ```lua
 local ok, err = lia.item.setItemDataByID(50, "durability", 90)
@@ -542,7 +542,7 @@ Creates a new item in the database (optionally assigning it to an inventory) and
 
 * *deferred*: Resolves to the new item.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.item.instance("testItem", { quality = 1 }):next(function(item)
@@ -570,7 +570,7 @@ Deletes an item from memory and the database.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.item.deleteByID(42)
@@ -596,7 +596,7 @@ Loads one or multiple items from the database by ID and builds instances in memo
 
 * *nil*: Runs asynchronously.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.item.loadItemByID({ 10, 11, 12 })
@@ -630,7 +630,7 @@ Creates a new item instance and spawns a matching entity at a position/angle in 
 
 * *deferred | nil*: Deferred when no callback, else `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.item.spawn("testItem", vector_origin, function(item, ent)
@@ -664,7 +664,7 @@ Loads an inventory by ID, sets its dimensions, and optionally triggers a callbac
 
 * *nil*: Runs asynchronously.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.item.restoreInv(101, 5, 5, function(inv)

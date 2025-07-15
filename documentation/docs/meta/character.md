@@ -34,7 +34,7 @@ Returns a printable identifier for this character.
 
 * `string`: Format `"character[id]"`.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Print a readable identifier when saving debug logs
@@ -63,7 +63,7 @@ The argument can be a `Character` instance or any object providing a `getID` met
 
 * `boolean`: `true` if both share the same ID.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Unlock the door only for its controlling character
@@ -94,7 +94,7 @@ Returns the unique database ID for this character.
 
 * `number`: Character identifier.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Store the character ID for later reference
@@ -123,7 +123,7 @@ Returns the player entity currently controlling this character.
 
 * `Player|nil`: Owning player or `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Notify the controlling player that the character loaded
@@ -154,7 +154,7 @@ Returns the character's name as it should be shown to the given player.
 
 * `string`: Localized or recognized character name.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Announce the character's name to a viewer
@@ -181,7 +181,7 @@ Checks if the character has at least the given amount of money.
 
 * `boolean`: `true` if the character's funds are sufficient.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Verify the character can pay for an item before buying
@@ -210,7 +210,7 @@ Retrieves the string of permission flags for this character.
 
 * `string`: Concatenated flag characters.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Look for the admin flag on this character
@@ -239,7 +239,7 @@ Checks if the character possesses any of the specified flags.
 
 * `boolean`: `true` if at least one flag is present.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Allow special command if any required flag is present
@@ -270,7 +270,7 @@ The argument defaults to `true` and the method currently only checks for equippe
 
 * `boolean`: `true` if the active weapon corresponds to an item.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Check if we're using an inventory weapon
@@ -299,7 +299,7 @@ Returns the maximum stamina value for this character.
 
 * `number`: Maximum stamina points.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Calculate the proportion of stamina remaining
@@ -326,7 +326,7 @@ Retrieves the character's current stamina value.
 
 * `number`: Current stamina.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Display current stamina in the HUD
@@ -355,7 +355,7 @@ Checks if the character has whitelisted the given class.
 
 * `boolean`: `true` if the class is whitelisted.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Decide if the player may choose the medic class
@@ -384,7 +384,7 @@ Returns `true` if the character's faction matches.
 
 * `boolean`: Whether the faction matches.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Restrict access to citizens only
@@ -413,7 +413,7 @@ Returns `true` if the character's class equals the specified class.
 
 * `boolean`: Whether the classes match.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Provide a bonus if the character is currently an engineer
@@ -444,7 +444,7 @@ Retrieves the value of an attribute including boosts.
 
 * `number`: Final attribute value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Calculate damage using the strength attribute
@@ -473,7 +473,7 @@ Returns the boost table for the given attribute.
 
 * `table|nil`: Table of boosts or `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Inspect active boosts on agility
@@ -500,7 +500,7 @@ Retrieves all attribute boosts for this character.
 
 * `table`: Mapping of attribute IDs to boost tables.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Print all attribute boosts for debugging
@@ -529,7 +529,7 @@ Determines if this character recognizes another character.
 
 * `boolean`: `true` if recognized.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Reveal names in chat only if recognized
@@ -558,7 +558,7 @@ Checks if the character has a fake recognition entry for another.
 
 * `boolean`: `true` if fake recognized.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- See if recognition was forced by a disguise item
@@ -591,7 +591,7 @@ When a custom `name` is provided that alias will be shown whenever the character
 
 * `boolean`: Always `true` once processed.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Remember the rival using a codename and by ID
@@ -618,7 +618,7 @@ Grants class whitelist access for every class defined by the schema.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Allow this character to choose any class
@@ -645,7 +645,7 @@ Marks the character as whitelisted for every faction.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Grant access to all factions for testing
@@ -672,7 +672,7 @@ Convenience wrapper that whitelists the character for all factions and classes.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Unlock every faction and class
@@ -699,7 +699,7 @@ Adds the specified class to this character's whitelist.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Permit switching to the engineer class
@@ -726,7 +726,7 @@ Removes the specified class from the character's whitelist.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Revoke access to the medic class
@@ -757,7 +757,7 @@ When `isForced` is `true` the normal eligibility checks are skipped.
 
 * `boolean`: `true` on success, `false` otherwise.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Force the character into the soldier class
@@ -784,7 +784,7 @@ Removes the character from their current class, reverting to the default for the
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Reset the character's class after leaving the group
@@ -813,7 +813,7 @@ Increases an attribute by the specified value, clamped to the maximum allowed.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Award experience toward agility
@@ -842,7 +842,7 @@ Directly sets an attribute to the given value.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Reset strength after an event
@@ -873,7 +873,7 @@ Applies a temporary boost to one of the character's attributes.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Grant a strength bonus while an item is equipped
@@ -902,7 +902,7 @@ Removes a previously applied attribute boost.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Clear the item bonus when unequipped
@@ -929,7 +929,7 @@ Replaces the character's flag string with the provided value.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Reset all flags before assigning new ones
@@ -956,7 +956,7 @@ Adds the specified flag characters to the character.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Grant temporary admin powers
@@ -983,7 +983,7 @@ Removes the given flag characters from the character.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Strip special permissions when demoted
@@ -1010,7 +1010,7 @@ Persists the character's current data to the database.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Save and then notify when finished
@@ -1043,7 +1043,7 @@ When the receiver is the character's own player, only local variables intended f
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Send updates only to one player
@@ -1072,7 +1072,7 @@ Use `noNetworking` to skip network updates during initialization.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Fully prepare the character after selection
@@ -1101,7 +1101,7 @@ The player is killed silently and immediately respawns with no character loaded.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Eject the player from their character
@@ -1130,7 +1130,7 @@ This also triggers the `OnCharPermakilled` hook.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Ban the character for one hour
@@ -1157,7 +1157,7 @@ Completely removes the character from the database along with any inventories it
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Permanently remove this character
@@ -1186,7 +1186,7 @@ Useful after deleting a character or when cleaning up disconnected players.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Clean up a removed character instance
@@ -1213,7 +1213,7 @@ Adds the specified amount to the character's wallet by calling the owning player
 
 * `boolean`: `false` if the owner is missing, otherwise `true`.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Pay the character for completing a mission
@@ -1244,7 +1244,7 @@ Internally this calls `giveMoney` with a negative value and logs the deduction.
 
 * `boolean`: Always `true` when the deduction occurs.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Deduct a fine from the character
@@ -1273,7 +1273,7 @@ Returns the character's stored name or a default value.
 
 * `string`: Character name or the provided default.
 
-**Example**
+**Example Usage**
 
 ```lua
 print("Character name:", char:getName("Unknown"))
@@ -1299,7 +1299,7 @@ Updates the character's name and replicates the change to players.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 char:setName("Alyx Vance")
@@ -1325,7 +1325,7 @@ Fetches the character's description text or returns the given default.
 
 * `string`: Description or fallback value.
 
-**Example**
+**Example Usage**
 
 ```lua
 local about = char:getDesc("No bio")
@@ -1351,7 +1351,7 @@ Assigns a new description for the character.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 char:setDesc("Hardened wasteland survivor")
@@ -1377,7 +1377,7 @@ Retrieves the model path assigned to the character.
 
 * `string`: Model path or the fallback value.
 
-**Example**
+**Example Usage**
 
 ```lua
 local mdl = char:getModel("models/error.mdl")
@@ -1403,7 +1403,7 @@ Sets the character's player model and broadcasts the update.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 char:setModel("models/alyx.mdl")
@@ -1429,7 +1429,7 @@ Returns the class index currently assigned or the supplied default.
 
 * `number`: Class index.
 
-**Example**
+**Example Usage**
 
 ```lua
 if char:getClass() == CLASS_ENGINEER then
@@ -1457,7 +1457,7 @@ Stores a new class index for the character.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 char:setClass(CLASS_ENGINEER)
@@ -1483,7 +1483,7 @@ Gets the faction index of the character or a fallback value.
 
 * `number`: Faction index.
 
-**Example**
+**Example Usage**
 
 ```lua
 print("Faction:", char:getFaction())
@@ -1509,7 +1509,7 @@ Sets the character's faction team.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 char:setFaction(FACTION_CITIZEN)
@@ -1535,7 +1535,7 @@ Retrieves the amount of currency this character holds.
 
 * `number`: Amount of money or default value.
 
-**Example**
+**Example Usage**
 
 ```lua
 local cash = char:getMoney(0)
@@ -1561,7 +1561,7 @@ Overwrites the character's stored money total.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 char:setMoney(1000)
@@ -1589,7 +1589,7 @@ Returns arbitrary data previously stored on the character.
 
 * `any`: Stored value or default.
 
-**Example**
+**Example Usage**
 
 ```lua
 local rank = char:getData("rank", "rookie")
@@ -1621,7 +1621,7 @@ Writes a data entry on the character and optionally syncs it.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 char:setData("rank", "veteran")
@@ -1649,7 +1649,7 @@ Fetches a temporary variable from the character.
 
 * `any`: Variable value or default.
 
-**Example**
+**Example Usage**
 
 ```lua
 local mood = char:getVar("mood", "neutral")
@@ -1681,7 +1681,7 @@ Stores a temporary variable on the character.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Store a temporary value and send it only to the owner
@@ -1708,7 +1708,7 @@ Retrieves the character's inventory instance.
 
 * `table`: Inventory object or list of inventories.
 
-**Example**
+**Example Usage**
 
 ```lua
 local inv = char:getInv()
@@ -1734,7 +1734,7 @@ Directly sets the character's inventory table.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 char:setInv({})
@@ -1760,7 +1760,7 @@ Returns the table of raw attribute values for the character.
 
 * `table`: Attribute values table.
 
-**Example**
+**Example Usage**
 
 ```lua
 local stats = char:getAttribs()
@@ -1786,7 +1786,7 @@ Overwrites the character's attribute table.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 char:setAttribs({ strength = 10 })
@@ -1812,7 +1812,7 @@ Gets the mapping of disguised names this character uses to recognize others.
 
 * `table`: Table of ID-to-alias mappings.
 
-**Example**
+**Example Usage**
 
 ```lua
 local aliases = char:getRecognizedAs()
@@ -1838,7 +1838,7 @@ Updates the table of fake recognition names for this character.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 char:setRecognizedAs({ [123] = "Masked Stranger" })

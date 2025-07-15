@@ -33,7 +33,7 @@ Registers a Steam Workshop addon ID so clients will download it.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Add a custom model pack
@@ -60,7 +60,7 @@ Collects Workshop IDs from every registered source.
 
 * *table*: Set of Workshop IDs pending download.
 
-**Example**
+**Example Usage**
 
 ```lua
 local ids = lia.workshop.gather()
@@ -89,7 +89,7 @@ Sends the cached Workshop-ID list to a player.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 hook.Add("PlayerInitialSpawn", "SendWorkshopList", function(ply)

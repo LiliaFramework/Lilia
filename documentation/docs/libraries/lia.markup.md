@@ -30,7 +30,7 @@ Parses markup text and returns a markup object that handles wrapping and drawing
 
 * *MarkupObject*: Parsed markup object with size information.
 
-**Example**
+**Example Usage**
 
 ```lua
 local object = lia.markup.parse("<color=255,0,0>Hello world!</color>", 200)
@@ -57,7 +57,7 @@ Constructs an empty markup object (usually returned by `lia.markup.parse`).
 
 * *MarkupObject*: Newly constructed object with zero size.
 
-**Example**
+**Example Usage**
 
 ```lua
 local obj = lia.markup.MarkupObject:create()
@@ -95,7 +95,7 @@ Returns the pixel width of the parsed markup text.
 
 * *number*: Width in pixels.
 
-**Example**
+**Example Usage**
 
 ```lua
 local obj = lia.markup.parse("<font=liaBigFont>Hello</font>")
@@ -122,7 +122,7 @@ Returns the pixel height of the parsed markup text.
 
 * *number*: Height in pixels.
 
-**Example**
+**Example Usage**
 
 ```lua
 local obj = lia.markup.parse("<font=liaBigFont>Hello</font>")
@@ -149,7 +149,7 @@ Returns both width and height of the markup object.
 
 * *number*, *number*: Width and height in pixels.
 
-**Example**
+**Example Usage**
 
 ```lua
 local obj = lia.markup.parse("<font=liaBigFont>Hello</font>")
@@ -184,7 +184,7 @@ Draws the markup object at the specified screen position.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 local obj = lia.markup.parse("<color=0,255,0>Welcome</color>", 300)
@@ -222,7 +222,7 @@ Configures a `liaMarkupPanel` to display markup text with an optional custom dra
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 local panel = vgui.Create("liaMarkupPanel")

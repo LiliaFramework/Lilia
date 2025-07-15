@@ -31,7 +31,7 @@ Retrieves a bar object by its unique identifier.
 
 * *table or nil*: The bar table if found, or `nil` if not found.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Retrieve the health bar and keep it visible
@@ -70,7 +70,7 @@ If the identifier matches an existing bar, the old bar is removed first. Bars ar
 
 * *number*: The priority assigned to the added bar.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Add a custom health bar with high priority
@@ -102,7 +102,7 @@ Removes a bar from the list based on its unique identifier.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Remove the bar created in the previous example
@@ -141,7 +141,7 @@ Draws a single horizontal bar at the specified screen coordinates, filling it pr
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Draw a bar showing 75/100 progress at the top left
@@ -170,7 +170,7 @@ Displays a temporary action progress bar with accompanying text for the specifie
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Show a reload progress bar for two seconds
@@ -197,7 +197,7 @@ Iterates through all registered bars, applies smoothing to their values, and dra
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Draw all registered bars each frame

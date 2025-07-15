@@ -30,7 +30,7 @@ Registers a named color for later lookup or use with `Color(name)`.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Register a custom purple shade and fetch it later
@@ -66,7 +66,7 @@ Creates a new `Color` based on the input color with the given channel offsets.
 
 * *Color*: Adjusted color.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Darken the default red by 30 points
@@ -93,7 +93,7 @@ Builds and returns a UI palette derived from the config’s base color.
 
 * *table*: Contains `background`, `sidebar`, `accent`, `text`, `hover`, `border`, and `highlight` colors.
 
-**Example**
+**Example Usage**
 
 ```lua
 local colors = lia.color.ReturnMainAdjustedColors()

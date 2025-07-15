@@ -28,10 +28,10 @@ Initialises the logging system and converts any legacy text logs.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
-hook.Add("LiliaDatabaseInitialized", nil, function()
+hook.Add("DatabaseConnected", "LoadLogs", function()
     lia.log.loadTables()
 end)
 ```
@@ -58,7 +58,7 @@ Registers a log type by supplying a generator function and a category.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.log.addType(
@@ -94,7 +94,7 @@ Returns the formatted log string (and its category) for a given type without wri
 
 * *string*, *string*: Log text and its category, or `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 local text, cat = lia.log.getString(client, "mytype", "test")
@@ -123,7 +123,7 @@ Creates a log entry, fires `OnServerLog`, prints to console, writes to file, and
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 hook.Add("PlayerDeath", "ExampleDeathLog", function(victim, attacker)
@@ -151,7 +151,7 @@ Migrates legacy text logs into the database. Players cannot join during conversi
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 if not lia.log.isConverting then

@@ -38,7 +38,7 @@ Downloads an image from the given URL and saves it inside the web-image cache. I
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Download an image and apply it when ready
@@ -76,7 +76,7 @@ Returns the material cached with `lia.webimage.register`. If the file is missing
 
 * *Material | nil*: Cached material or `nil` if not found.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Retrieve a cached material and draw it

@@ -34,7 +34,7 @@ Registers a new keybind for an action, ensuring a default value is set and mappi
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Bind F1 to open the inventory while held
@@ -76,7 +76,7 @@ Returns the key code assigned to a keybind action, falling back to the registere
 
 * *number*: Key code associated with the action (or fallback).
 
-**Example**
+**Example Usage**
 
 ```lua
 local invKey = lia.keybind.get("Open Inventory", KEY_I)
@@ -103,7 +103,7 @@ Writes all current keybinds to `data/lilia/keybinds/<gamemode>/<server-ip>.json`
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Manually save current keybinds
@@ -130,7 +130,7 @@ Loads keybinds from disk. If none exist, defaults registered via `lia.keybind.ad
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 hook.Add("InitializedKeybinds", "NotifyKeybinds", function()

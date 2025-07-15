@@ -31,7 +31,7 @@ Returns a human-readable string describing how long ago a given time occurred (e
 
 * *string*: Readable “time since” string.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Greet joining players with the time since they last logged in
@@ -69,7 +69,7 @@ Parses a timestamp string (`YYYY-MM-DD HH:MM:SS`) into its numeric components. I
 
 * *table*: `{ year, month, day, hour, min, sec }`.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Schedule an event for 1 April 2025 12:30
@@ -107,13 +107,13 @@ Returns the full current date/time using the `AmericanTimeStamps` config:
 
 * *string*: Formatted current date/time.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Announce the current server date every hour
 timer.Create("ServerTimeAnnounce", 3600, 0, function()
     local text = lia.time.GetDate()
-    for _, ply in ipairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         ply:ChatPrint("Server time: " .. text)
     end
 end)
@@ -142,7 +142,7 @@ Returns the current hour formatted by `AmericanTimeStamps`:
 
 * *string | number*: Hour with suffix (am/pm) or 24-hour integer.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Toggle an NPC shop by hour

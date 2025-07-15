@@ -30,7 +30,7 @@ Checks whether a position is free of world geometry, players, NPCs, and props wi
 
 * *boolean*: `true` if the position is clear, `false` otherwise.
 
-**Example**
+**Example Usage**
 
 ```lua
 local ply = Entity(1)
@@ -67,7 +67,7 @@ Searches around a start position for a spot free of world geometry and blocking 
 
 * *Vector*: A position considered safe for spawning.
 
-**Example**
+**Example Usage**
 
 ```lua
 local spawn = lia.darkrp.findEmptyPos(ply:GetPos(), { ply }, 128, 16, Vector(0, 0, 64))
@@ -99,7 +99,7 @@ Sends a notification to the specified client. The second and third parameters mi
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.darkrp.notify(ply, nil, nil, "Purchase complete")
@@ -129,7 +129,7 @@ Client-side helper that wraps a string so it fits within a given pixel width usi
 
 * *string*: The wrapped text with newline characters inserted.
 
-**Example**
+**Example Usage**
 
 ```lua
 local wrapped = lia.darkrp.textWrap("Some very long text", "DermaDefault", 150)
@@ -156,7 +156,7 @@ Formats the given amount using `lia.currency.get` so other DarkRP addons receive
 
 * *string*: The formatted currency value.
 
-**Example**
+**Example Usage**
 
 ```lua
 print(lia.darkrp.formatMoney(2500))
@@ -184,7 +184,7 @@ Registers a new DarkRP entity as an item so that it can be spawned through lia's
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.darkrp.createEntity("Fuel", {
@@ -214,7 +214,7 @@ Stub for DarkRP category creation. Included only for compatibility.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.darkrp.createCategory()

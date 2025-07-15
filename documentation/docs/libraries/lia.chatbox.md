@@ -20,7 +20,7 @@ Table containing all registered chat class definitions indexed by their identifi
 
 `Shared`
 
-**Example**
+**Example Usage**
 
 ```lua
 local icClass = lia.chat.classes.ic
@@ -47,7 +47,7 @@ Returns a formatted timestamp if chat timestamps are enabled; otherwise returns 
 
 * *string*: Formatted time string or an empty string.
 
-**Example**
+**Example Usage**
 
 ```lua
 chat.AddText(lia.chat.timestamp(false), Color(255, 255, 255), "Hello!")
@@ -90,7 +90,7 @@ Registers a new chat class and sets up its command aliases.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Register a waving emote command
@@ -133,7 +133,7 @@ Parses chat text, determines the appropriate chat type, and optionally sends it.
 
 * *boolean*: Whether the speaker is anonymous.
 
-**Example**
+**Example Usage**
 
 ```lua
 hook.Add("PlayerSay", "ParseChat", function(ply, text)
@@ -172,7 +172,7 @@ Broadcasts a chat message to all eligible receivers.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 local target = player.GetByID(1)

@@ -32,7 +32,7 @@ Registers a flag in `lia.flag.list`, storing its description and an optional cal
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Give players with the "p" flag a physgun whenever they receive it.
@@ -65,7 +65,7 @@ Re-applies all flag callbacks for a player who just spawned by iterating over th
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Re-run flag callbacks whenever a player respawns.

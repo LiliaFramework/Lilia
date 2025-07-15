@@ -48,7 +48,7 @@ Creates a context menu from a table of label/callback pairs.
 
 * *number*: Identifier for the created menu.
 
-**Example**
+**Example Usage**
 
 ```lua
 local ent = LocalPlayer():GetEyeTrace().Entity
@@ -82,7 +82,7 @@ Draws every active menu on the player’s HUD.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 hook.Add("HUDPaintBackground", "DrawMenus", lia.menu.drawAll)
@@ -110,7 +110,7 @@ Returns the ID and callback of the menu item currently under the cursor.
 
 * *function | nil*: Callback for the hovered item.
 
-**Example**
+**Example Usage**
 
 ```lua
 local id, cb = lia.menu.getActiveMenu()
@@ -142,7 +142,7 @@ Removes the menu with the given ID and runs its callback (if present).
 
 * *boolean*: `true` if a callback executed.
 
-**Example**
+**Example Usage**
 
 ```lua
 hook.Add("PlayerBindPress", "MenuClick", function(client, bind, pressed)

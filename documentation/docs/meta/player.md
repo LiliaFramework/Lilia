@@ -34,7 +34,7 @@ Returns the currently loaded character object for this player.
 
 * `Character|nil`: The player's active character.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Retrieve the character to modify inventory
@@ -61,7 +61,7 @@ Returns either the character's role-play name or the player's Steam name.
 
 * `string`: Display name.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Print the role-play name in chat
@@ -88,7 +88,7 @@ Wrapper for CAMI privilege checks.
 
 * `boolean`: Result from `CAMI.PlayerHasAccess`.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Deny access if the player lacks a privilege
@@ -117,7 +117,7 @@ Safely returns the vehicle the player is currently using.
 
 * `Entity|nil`: Vehicle entity or `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Attach a camera to the vehicle the player is in
@@ -147,7 +147,7 @@ Determines if the player is currently inside a valid vehicle.
 
 * `boolean`: `true` if a vehicle entity is valid.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Allow honking only when in a valid vehicle
@@ -176,7 +176,7 @@ Returns `true` if the player is in noclip mode and not inside a vehicle.
 
 * `boolean`: Whether the player is noclipping.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Disable certain actions while noclipping
@@ -203,7 +203,7 @@ Checks if the player currently has an active ragdoll entity.
 
 * `boolean`: `true` when a ragdoll entity exists.
 
-**Example**
+**Example Usage**
 
 ```lua
 if player:hasRagdoll() then
@@ -235,7 +235,7 @@ The `thirdPersonEnabled` option must be enabled both client and server side and 
 
 * `boolean`: `true` when a third-person view may be used.
 
-**Example**
+**Example Usage**
 
 ```lua
 if player:CanOverrideView() then
@@ -263,7 +263,7 @@ Returns whether third-person view is enabled for this player according to the `t
 
 * `boolean`: `true` if third-person mode is enabled.
 
-**Example**
+**Example Usage**
 
 ```lua
 if player:IsInThirdPerson() then
@@ -291,7 +291,7 @@ Safely removes the player's ragdoll entity if present.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Clean up any ragdoll left behind
@@ -318,7 +318,7 @@ Retrieves the ragdoll entity associated with the player.
 
 * `Entity|nil`: The ragdoll entity or `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 local ragdoll = player:getRagdoll()
@@ -344,7 +344,7 @@ Determines whether the player's position is stuck in the world.
 
 * `boolean`: `true` if the trace detects a stuck state.
 
-**Example**
+**Example Usage**
 
 ```lua
 if player:isStuck() then
@@ -373,7 +373,7 @@ Checks if an entity is within the given radius of the player.
 
 * `boolean`: `true` if the entity is close enough.
 
-**Example**
+**Example Usage**
 
 ```lua
 if player:isNearPlayer(128, target) then
@@ -402,7 +402,7 @@ Returns a table of entities within radius of the player.
 
 * `table`: List of nearby entities.
 
-**Example**
+**Example Usage**
 
 ```lua
 for _, ent in ipairs(player:entitiesNearPlayer(256)) do
@@ -435,7 +435,7 @@ Returns the active weapon entity and associated item if equipped.
 * `Entity|nil`: Weapon entity when matched.
 * `Item|nil`: Inventory item associated with the weapon.
 
-**Example**
+**Example Usage**
 
 ```lua
 local weapon, item = player:getItemWeapon()
@@ -461,7 +461,7 @@ Checks whether the player is moving faster than walking speed.
 
 * `boolean`: `true` if the player is running.
 
-**Example**
+**Example Usage**
 
 ```lua
 if player:isRunning() then
@@ -489,7 +489,7 @@ Returns `true` if the player's model is considered female.
 
 * `boolean`: Whether a female model is detected.
 
-**Example**
+**Example Usage**
 
 ```lua
 if player:isFemale() then
@@ -517,7 +517,7 @@ Finds a safe position in front of the player to drop items.
 
 * `Vector`: World position for dropping items.
 
-**Example**
+**Example Usage**
 
 ```lua
 local pos = player:getItemDropPos()
@@ -543,7 +543,7 @@ Returns the player's inventory item list if a character is loaded.
 
 * `table|nil`: Table of items or `nil` if absent.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Iterate player's items to calculate total weight
@@ -574,7 +574,7 @@ Performs a simple trace from the player's shoot position.
 
 * `Entity|nil`: The entity hit or `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Grab the entity the player is pointing at
@@ -601,7 +601,7 @@ Returns a hull trace in front of the player.
 
 * `table`: Trace result.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Use a hull trace for melee attacks
@@ -628,7 +628,7 @@ Returns the entity the player is looking at within a distance.
 
 * `Entity|nil`: The entity or `nil` if too far.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Show the name of the object being looked at
@@ -659,7 +659,7 @@ Sends a plain notification message to the player.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Send a welcome notification and log the join event
@@ -688,7 +688,7 @@ Sends a localized notification to the player.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Send a localized message including the player's name and score
@@ -716,7 +716,7 @@ Determines whether the player can edit the given vendor.
 
 * `boolean`: `true` if allowed to edit.
 
-**Example**
+**Example Usage**
 
 ```lua
 if player:CanEditVendor(vendor) then
@@ -744,7 +744,7 @@ Convenience wrapper to check if the player is in the `"user"` group.
 
 * `boolean`: Whether usergroup is `"user"`.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Check if the player belongs to the default user group
@@ -771,7 +771,7 @@ Returns `true` if the player belongs to a staff group.
 
 * `boolean`: Result from the privilege check.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Verify staff permissions for administrative actions
@@ -798,7 +798,7 @@ Checks whether the player is in the VIP group.
 
 * `boolean`: Result from privilege check.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Test if the player has VIP status
@@ -825,7 +825,7 @@ Determines if the player is currently in the staff faction.
 
 * `boolean`: `true` if staff faction is active.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Confirm the player is currently in a staff role
@@ -852,7 +852,7 @@ Checks if the player's character belongs to the given faction.
 
 * `boolean`: `true` if the factions match.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Compare the player's faction to a requirement
@@ -879,7 +879,7 @@ Returns `true` if the player's character is of the given class.
 
 * `boolean`: Whether the character matches the class.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Determine if the player's class matches
@@ -906,7 +906,7 @@ Determines if the player has whitelist access for a faction.
 
 * `boolean`: True if whitelisted.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Check for whitelist permission on a faction
@@ -933,7 +933,7 @@ Retrieves the class index of the player's character.
 
 * `number|nil`: Class index or nil.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Retrieve the current class index
@@ -960,7 +960,7 @@ Checks if the player's character is whitelisted for a class.
 
 * `boolean`: True if class whitelist exists.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Verify the player is approved for a specific class
@@ -987,7 +987,7 @@ Returns the class table of the player's current class.
 
 * `table|nil`: Class definition table.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Access data table for the player's class
@@ -1014,7 +1014,7 @@ Compatibility helper for retrieving money with DarkRP-style calls.
 
 * `number|nil`: Money amount or nil.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Read money amount in a DarkRP-compatible way
@@ -1041,7 +1041,7 @@ Convenience function to get the character's money amount.
 
 * `number`: Current funds or `0`.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Fetch the character's stored funds
@@ -1068,7 +1068,7 @@ Checks if the player has enough money for a purchase.
 
 * `boolean`: True if funds are sufficient.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Check if the player has enough money to buy something
@@ -1096,7 +1096,7 @@ Verifies the player's character meets an attribute level.
 
 * `boolean`: Whether the character satisfies the requirement.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Ensure the player meets a single skill requirement
@@ -1123,7 +1123,7 @@ Checks a table of skill requirements against the player.
 
 * `boolean`: True if all requirements are met.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Validate multiple skill requirements at once
@@ -1153,7 +1153,7 @@ Plays an animation sequence and optionally freezes the player.
 
 * `number|boolean`: Duration or `false` on failure.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Play an animation while freezing the player
@@ -1180,7 +1180,7 @@ Stops any forced sequence and restores player movement.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Stop the player's forced animation sequence
@@ -1207,7 +1207,7 @@ Increases the player's stamina value.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Give the player extra stamina points
@@ -1234,7 +1234,7 @@ Reduces the player's stamina value.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Spend stamina as the player performs an action
@@ -1261,7 +1261,7 @@ Adds funds to the player's character, clamping to limits.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Reward the player and announce the payout
@@ -1289,7 +1289,7 @@ Removes money from the player's character.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Remove money from the player's character
@@ -1316,7 +1316,7 @@ Grants whitelist access to every registered class.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Unlock every class for the player
@@ -1343,7 +1343,7 @@ Whitelists the player for all factions.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:WhitelistAllFactions()
@@ -1369,7 +1369,7 @@ Convenience method to whitelist all factions and classes.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Give the player access to all content
@@ -1396,7 +1396,7 @@ Adds a single class to the character's whitelist table.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:classWhitelist(CLASS_MEDIC)
@@ -1422,7 +1422,7 @@ Removes a class from the character's whitelist table.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:classUnWhitelist(CLASS_MEDIC)
@@ -1449,7 +1449,7 @@ Sets or clears whitelist permission for a faction.
 
 * `boolean`: True if the faction exists.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:setWhitelisted(FACTION_POLICE, true)
@@ -1475,7 +1475,7 @@ Loads persistent Lilia data for the player from the database.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:loadLiliaData(function(data) print(data) end)
@@ -1501,7 +1501,7 @@ Saves the player's Lilia data back to the database.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:saveLiliaData()
@@ -1529,7 +1529,7 @@ Stores a value in the player's persistent data table.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:setLiliaData("settings", {foo = true})
@@ -1556,7 +1556,7 @@ Sends a waypoint to the client at the specified position.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:setWaypoint("Objective", vector_origin)
@@ -1583,7 +1583,7 @@ Alias of `setWaypoint()` for backwards compatibility.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:setWeighPoint("Target", Vector(100, 100, 0))
@@ -1611,7 +1611,7 @@ Creates a waypoint using a custom logo material.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:setWaypointWithLogo("Objective", vector_origin, "path/to/icon.png")
@@ -1638,7 +1638,7 @@ Retrieves a stored value from the player's data table.
 
 * `any`: Stored value or default.
 
-**Example**
+**Example Usage**
 
 ```lua
 local settings = player:getLiliaData("settings", {})
@@ -1664,7 +1664,7 @@ Returns the entire table of persistent data for the player.
 
 * `table`: Player data table.
 
-**Example**
+**Example Usage**
 
 ```lua
 local data = player:getAllLiliaData()
@@ -1690,7 +1690,7 @@ Associates a ragdoll entity with the player for later retrieval.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:setRagdoll(ragdollEnt)
@@ -1717,7 +1717,7 @@ Broadcasts animation bone data to all clients.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:NetworkAnimation(true, {
@@ -1747,7 +1747,7 @@ Displays an action bar for a set duration and optionally runs a callback.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:setAction("Lockpicking", 5)
@@ -1777,7 +1777,7 @@ Runs an action only while the player stares at the entity.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:doStaredAction(door, function() door:Open() end, 3)
@@ -1803,7 +1803,7 @@ Cancels any running action bar on the player.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:stopAction()
@@ -1832,7 +1832,7 @@ Prompts the client with a dropdown selection dialog.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:requestDropdown("Choose", "Pick one", {"A", "B"}, print)
@@ -1866,7 +1866,7 @@ Asks the client to select one or more options from a list.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:requestOptions("Permissions", "Select", {"A", "B"}, 2, print)
@@ -1898,7 +1898,7 @@ Requests a string from the client.
 
 * `Deferred|nil`: Deferred object when no callback supplied.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:requestString("Name", "Enter text", print)
@@ -1928,7 +1928,7 @@ Prompts the client for multiple typed values.
 
 * `Deferred|nil`: Deferred object when no callback supplied.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:requestArguments("Info", {Name = "string", Age = "int"}, print)
@@ -1962,7 +1962,7 @@ Displays a yes/no style question to the player.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:binaryQuestion("Proceed?", "Yes", "No", false, print)
@@ -1988,7 +1988,7 @@ Calculates how long the player has been on the server.
 
 * `number`: Total seconds of play-time.
 
-**Example**
+**Example Usage**
 
 ```lua
 print(player:getPlayTime())
@@ -2016,7 +2016,7 @@ Spawns a ragdoll copy of the player and optionally freezes it.
 
 * `Entity`: The created ragdoll.
 
-**Example**
+**Example Usage**
 
 ```lua
 local rag = player:createRagdoll(true)
@@ -2048,7 +2048,7 @@ Toggles the player's ragdoll state for a duration.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:setRagdolled(true, 5)
@@ -2074,7 +2074,7 @@ Sends all networked variables to the player.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:syncVars()
@@ -2102,7 +2102,7 @@ Sets a networked local variable on the player and triggers the **LocalVarChanged
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:setLocalVar("health", 75)
@@ -2130,7 +2130,7 @@ Retrieves a networked local variable stored on the player.
 
 * `any`: Stored value or default.
 
-**Example**
+**Example Usage**
 
 ```lua
 local stamina = player:getLocalVar("stamina", 0)
@@ -2156,7 +2156,7 @@ Returns play-time calculated client-side when called on a client.
 
 * `number`: Seconds of play-time.
 
-**Example**
+**Example Usage**
 
 ```lua
 print(LocalPlayer():getPlayTime())
@@ -2186,7 +2186,7 @@ Displays a waypoint on the HUD until the player reaches it.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 LocalPlayer():setWaypoint("Home", vector_origin)
@@ -2216,7 +2216,7 @@ Alias of the client version of `setWaypoint`.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 LocalPlayer():setWeighPoint("Spot", Vector(10, 10, 0))
@@ -2248,7 +2248,7 @@ Places a waypoint using a logo material on the client HUD.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 LocalPlayer():setWaypointWithLogo("Loot", Vector(1, 1, 1), "icon.png")
@@ -2276,7 +2276,7 @@ Client-side accessor for stored player data.
 
 * `any`: Stored value or default.
 
-**Example**
+**Example Usage**
 
 ```lua
 local data = LocalPlayer():getLiliaData("settings")
@@ -2302,7 +2302,7 @@ Returns the entire local data table for the player.
 
 * `table`: Local data table.
 
-**Example**
+**Example Usage**
 
 ```lua
 local data = LocalPlayer():getAllLiliaData()
@@ -2330,7 +2330,7 @@ Applies or clears client-side bone angles based on animation data.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 LocalPlayer():NetworkAnimation(true, {
@@ -2358,7 +2358,7 @@ Returns the table of PAC3 part IDs currently attached to the player.
 
 * `table`: Mapping of active part IDs.
 
-**Example**
+**Example Usage**
 
 ```lua
 for id in pairs(player:getParts()) do
@@ -2386,7 +2386,7 @@ Sends the player's PAC3 part data to their client.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:syncParts()
@@ -2412,7 +2412,7 @@ Adds the given PAC3 part to the player and broadcasts it.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:addPart("hat_01")
@@ -2438,7 +2438,7 @@ Removes a previously added PAC3 part from the player.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:removePart("hat_01")
@@ -2464,7 +2464,7 @@ Clears all PAC3 parts that are currently attached to the player.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 player:resetParts()

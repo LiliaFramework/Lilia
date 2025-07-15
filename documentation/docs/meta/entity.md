@@ -32,7 +32,7 @@ Returns `true` if the entity is a physics prop.
 
 * `boolean`: Whether the entity is a physics prop.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Apply physics damage only if this is a prop
@@ -61,7 +61,7 @@ Checks if the entity is an item entity.
 
 * `boolean`: `true` if the entity represents an item.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Attempt to pick up the entity as an item
@@ -90,7 +90,7 @@ Checks if the entity is a money entity.
 
 * `boolean`: `true` if the entity represents money.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Collect money dropped on the ground
@@ -119,7 +119,7 @@ Returns `true` if this entity is recognized as a simfphys or LVS vehicle.
 
 * `boolean`: `true` if this is a simfphys vehicle.
 
-**Example**
+**Example Usage**
 
 ```lua
 if ent:isSimfphysCar() then
@@ -147,7 +147,7 @@ Determines if the entity is persistent in Lilia.
 
 * `boolean`: Whether the entity should persist.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Save this entity across map resets if persistent
@@ -180,7 +180,7 @@ Defaults to `DOOR_GUEST` when no access level is provided.
 
 * `boolean`: `true` if the player has access.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Block a player from opening the door without access
@@ -209,7 +209,7 @@ Assigns vehicle ownership to the given player using CPPI and network variables.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Assign ownership when a player buys the vehicle
@@ -236,7 +236,7 @@ Triggers the `lock` input on the entity if it is a vehicle.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Lock the vehicle after the driver exits
@@ -263,7 +263,7 @@ Triggers the `unlock` input on the entity if it is a vehicle.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Unlock the vehicle when the owner presses a key
@@ -290,7 +290,7 @@ Returns the CPPI owner of this vehicle if one is assigned.
 
 * `Player|nil`: Door owner or `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Print the name of the door owner when inspecting
@@ -320,7 +320,7 @@ Reads the locked state previously set with `setLocked`.
 
 * `boolean`: Whether the door is locked.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Display a lock icon if the door is networked as locked
@@ -349,7 +349,7 @@ Checks the door's internal lock flag (`m_bLocked`).
 
 * `boolean`: `true` if the door is locked.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Play a sound when trying to open a locked door server-side
@@ -378,7 +378,7 @@ Calculates a drop position in front of the entity's eyes, using a trace to ensur
 
 * `Vector`, `Angle`: Drop position and eye angle.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Spawn an item drop in front of the entity's eyes
@@ -410,7 +410,7 @@ Optionally matches against a specific entity.
 
 * `boolean`: `true` if another entity is within radius.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Prevent building too close to another chest
@@ -439,7 +439,7 @@ Returns the entity creator player.
 
 * `Player|nil`: Creator player if stored.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Credit the creator when the entity is removed
@@ -469,7 +469,7 @@ Stores the creator player on the entity.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Record the spawner for cleanup tracking
@@ -500,7 +500,7 @@ Usually called from `setNetVar`.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 ent:sendNetVar("doorState")
@@ -526,7 +526,7 @@ Clears all network variables on this entity and tells clients to remove them.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 ent:clearNetVars(client)
@@ -552,7 +552,7 @@ Clears the door's saved access table and informs all clients.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Wipe door permissions during cleanup
@@ -579,7 +579,7 @@ Stores the locked state in a network variable so clients know if the door is sec
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Toggle the door lock and play a latch sound for everyone
@@ -607,7 +607,7 @@ Checks the entity's class for common door prefixes to determine if it is a door.
 
 * `boolean`: Whether the entity is a door.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Check if the entity behaves like a door
@@ -634,7 +634,7 @@ Returns the door entity linked as this one's partner via `liaPartner`.
 
 * `Entity|nil`: The partnered door.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Unlock both doors when opening a double-door setup
@@ -670,7 +670,7 @@ This will trigger the **NetVarChanged** hook on both server and client.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 ent:setNetVar("locked", true)
@@ -698,7 +698,7 @@ Retrieves a stored network variable or a default value.
 
 * `any`: Stored value or the provided default.
 
-**Example**
+**Example Usage**
 
 ```lua
 local locked = ent:getNetVar("locked", false)
@@ -726,7 +726,7 @@ Retrieves a network variable for this entity on the client.
 
 * `any`: Stored value or default.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Access a synced variable on the client side
@@ -753,7 +753,7 @@ Client-side door check using the class name.
 
 * `boolean`: `true` if entity class contains `"door"`.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Determine if this entity's class name contains "door"
@@ -780,7 +780,7 @@ Attempts to locate the door partnered with this one by checking its owner or lin
 
 * `Entity|nil`: The partner door entity.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Highlight the partner door of the one being looked at
@@ -810,7 +810,7 @@ Retrieves the table of PAC3 part identifiers applied to this entity.
 
 * `table`: The currently applied part IDs.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Print all equipped PAC3 parts for a player
@@ -839,7 +839,7 @@ Broadcasts the entity's PAC3 part list to synchronize with clients.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Resend parts when a player respawns
@@ -866,7 +866,7 @@ Attaches a PAC3 part to this entity and networks the change.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Give the player a custom hat part
@@ -893,7 +893,7 @@ Detaches a PAC3 part from this entity and updates clients.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Remove the previously equipped hat part
@@ -920,7 +920,7 @@ Clears all PAC3 parts from this entity and notifies clients.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Remove all PAC3 outfits from the player

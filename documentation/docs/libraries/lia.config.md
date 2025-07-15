@@ -36,7 +36,7 @@ Registers a new config option with the given key, display name, default value, a
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Register a walk-speed option with limits and a callback
@@ -81,7 +81,7 @@ Changes the stored default for an existing config option without affecting its c
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Update the default maximum players
@@ -112,7 +112,7 @@ Sets a config value directly without running callbacks or networking the update.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.config.forceSet("someSetting", true, true)
@@ -140,7 +140,7 @@ Sets a config value, saves it server-side, triggers callbacks with the old and n
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.config.set("maxPlayers", 24)
@@ -168,7 +168,7 @@ Retrieves the current value of a config entry. If unset, returns the stored defa
 
 * *any*: The config value or the default.
 
-**Example**
+**Example Usage**
 
 ```lua
 local players = lia.config.get("maxPlayers", 64)
@@ -194,7 +194,7 @@ Loads config values from the database and stores them in `lia.config`. Missing e
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.config.load()
@@ -220,7 +220,7 @@ Returns a table of all config entries whose current value differs from the defau
 
 * *table*: Key-value pairs of changed config entries.
 
-**Example**
+**Example Usage**
 
 ```lua
 local changed = lia.config.getChangedValues()
@@ -246,7 +246,7 @@ Sends all changed config values to a client. If no client is provided, the value
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Broadcast current config to every player
@@ -273,7 +273,7 @@ Writes all changed config values to the database so they persist across restarts
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.config.save()
@@ -300,7 +300,7 @@ Migrates legacy config files from `data/lilia` into the `lia_config` SQL table. 
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.config.convertToDatabase(true)

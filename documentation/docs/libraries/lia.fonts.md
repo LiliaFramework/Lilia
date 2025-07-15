@@ -32,7 +32,7 @@ Creates and stores a font via `surface.CreateFont`. The definition is kept in an
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Register a custom font after default fonts reload
@@ -65,7 +65,7 @@ Returns an alphabetically sorted list of all font identifiers that have been reg
 
 * *table*: Array of font-name strings.
 
-**Example**
+**Example Usage**
 
 ```lua
 local fonts = lia.font.getAvailableFonts()
@@ -94,7 +94,7 @@ Recreates every stored font definition. This function runs automatically when sc
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Manually trigger a font refresh

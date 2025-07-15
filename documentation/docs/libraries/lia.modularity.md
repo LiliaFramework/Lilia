@@ -38,7 +38,7 @@ Loads a module at a given path, processing dependencies, permissions, and any su
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Watch the include process
@@ -70,7 +70,7 @@ Loads the active schema and every discovered module, then fires initialisation h
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 hook.Add("InitializedModules", "SetupExampleData", function()
@@ -103,7 +103,7 @@ Finds and loads every module located in a directory.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Manually load all core modules (usually done by lia.module.initialize)
@@ -130,7 +130,7 @@ Fetches a previously loaded module by its identifier.
 
 * *table | nil*: Module table if present, otherwise `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 local main = lia.module.get("mainmenu")

@@ -28,7 +28,7 @@ Formats a numeric amount into a currency string using `lia.currency.symbol`, `li
 
 * *string*: The formatted currency string.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.currency.symbol = "$"
@@ -62,7 +62,7 @@ Creates a `lia_money` entity at the specified position with the given amount.
 
 * *Entity*: The spawned currency entity if successful; `nil` otherwise.
 
-**Example**
+**Example Usage**
 
 ```lua
 local pos = client:GetEyeTrace().HitPos

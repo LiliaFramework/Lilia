@@ -45,7 +45,7 @@ Returns the midpoint between this vector and the supplied vector.
 
 * *Vector*: The center point of the two vectors.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Average two vectors to find the midpoint
@@ -75,7 +75,7 @@ Calculates the distance between this vector and another vector.
 
 * *number*: The distance between the two vectors.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Measure the distance between two points
@@ -106,7 +106,7 @@ Rotates the vector around an axis by the specified degrees and returns the new v
 
 * *Vector*: The rotated vector.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Rotate a vector 90 degrees around the Z axis
@@ -141,7 +141,7 @@ If this vector has no horizontal component it defaults to `Vector(0, -1, 0)`.
 
 * *Vector*: The calculated right vector.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Get the right direction vector
@@ -174,7 +174,7 @@ When this vector lacks a horizontal component the fallback value is `Vector(-sel
 
 * *Vector*: The calculated up vector.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Get the up direction vector

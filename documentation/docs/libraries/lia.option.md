@@ -58,7 +58,7 @@ Registers a configurable option that can be networked.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.option.add(
@@ -95,7 +95,7 @@ Changes the value of an option, runs its callback, saves it, and networks if `sh
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Toggle third-person mode
@@ -125,7 +125,7 @@ Retrieves an option value or returns a fallback.
 
 * *any*: Current value or fallback.
 
-**Example**
+**Example Usage**
 
 ```lua
 local dist = lia.option.get("thirdPersonDistance", 50)
@@ -151,7 +151,7 @@ Writes all current option values to disk (file is keyed by server IP).
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.option.save()
@@ -177,7 +177,7 @@ Loads saved option values from disk, applies them to `lia.option.stored`, and fi
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.option.load()

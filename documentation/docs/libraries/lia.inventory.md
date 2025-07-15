@@ -30,7 +30,7 @@ Registers a new inventory type.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Register a simple “bag” type
@@ -57,7 +57,7 @@ Instantiates a new inventory instance.
 
 * *table*: The created inventory object.
 
-**Example**
+**Example Usage**
 
 ```lua
 local inv = lia.inventory.new("bag")
@@ -85,7 +85,7 @@ Loads an inventory by ID (cached or via custom loader).
 
 * *deferred*: Resolves to the inventory or `nil` if not found.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.inventory.loadByID(1):next(function(inv)
@@ -119,7 +119,7 @@ Default SQL loader used by `lia.inventory.loadByID` when no custom loader is pro
 
 * *deferred*: Resolves to the inventory or `nil`.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.inventory.loadFromDefaultStorage(1):next(function(inv)
@@ -153,7 +153,7 @@ Creates and persists a new inventory instance.
 
 * *deferred*: Resolves to the created inventory instance.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.inventory.instance("bag", { char = 1 }):next(function(inventory)
@@ -181,7 +181,7 @@ Loads every inventory that belongs to a character.
 
 * *deferred*: Resolves to a table of inventories.
 
-**Example**
+**Example Usage**
 
 ```lua
 local charID = client:getChar():getID()
@@ -211,7 +211,7 @@ Deletes an inventory from memory and persistent storage.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.inventory.deleteByID(1)
@@ -237,7 +237,7 @@ Destroys every inventory associated with a character.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.inventory.cleanUpForCharacter(client:getChar())
@@ -265,7 +265,7 @@ Displays an inventory UI panel on the client.
 
 * *Panel*: The created VGUI panel.
 
-**Example**
+**Example Usage**
 
 ```lua
 local inv = LocalPlayer():getChar():getInv()

@@ -26,7 +26,7 @@ You should be comfortable using the command line.
 
 - **Admin Menu:**
 
-We recommend [SAM](https://www.gmodstore.com/market/view/sam), although, the gamemode also has native compatibility with [ULX](https://steamcommunity.com/sharedfiles/filedetails/?id=557962280) and [ServerGuard](https://www.gmodstore.com/market/view/serverguard).
+Lilia includes a built-in admin menu for logging, tickets and teleport tools. [SAM](https://www.gmodstore.com/market/view/sam) and [ServerGuard](https://www.gmodstore.com/market/view/serverguard) are also compatible. **ULX is not supported because its CAMI library is outdated.**
 
 - **Code Editor (optional):**
 

@@ -26,7 +26,7 @@ Called whenever `lia.attribs.setup` initializes or refreshes this attribute for 
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function ATTRIBUTE:OnSetup(client, value)

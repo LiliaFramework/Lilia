@@ -26,7 +26,7 @@ Determines whether a player is allowed to switch to this class.
 
 * `boolean?`: Return `false` to deny the change.
 
-**Example**
+**Example Usage**
 
 ```lua
 function CLASS:OnCanBe(client)
@@ -65,7 +65,7 @@ Runs on the previous class after a player successfully changes classes.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function CLASS:OnLeave(client)
@@ -104,7 +104,7 @@ Executes immediately after a player joins this class.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function CLASS:OnSet(client)
@@ -147,7 +147,7 @@ Runs each time a member of this class respawns.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function CLASS:OnSpawn(client)
@@ -190,7 +190,7 @@ Fires when a player is moved into this class from another.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function CLASS:OnTransferred(client, oldClass)

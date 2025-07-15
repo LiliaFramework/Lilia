@@ -30,7 +30,7 @@ Sends a text notice to a specific player or to everyone using the `liaNotify` ne
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Broadcast a restart warning
@@ -64,7 +64,7 @@ Sends a localised notice. If `recipient` is not a `Player`, it is treated as the
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Send a localised greeting to one player
@@ -94,7 +94,7 @@ Creates a `liaNotice` panel on the local client. The notice fades after \~7.5 se
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Display a pickup notice locally
@@ -126,7 +126,7 @@ Translates a localisation key with `L` and shows the result on the local client.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Show a localised pickup message

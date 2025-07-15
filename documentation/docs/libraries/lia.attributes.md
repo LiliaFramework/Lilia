@@ -29,7 +29,7 @@ Loads attribute definitions from every Lua file in the given directory and regis
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- schema/attributes/strength.lua
@@ -66,7 +66,7 @@ Initializes and refreshes attribute data for a player's character, invoking any 
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- After modifying a character attribute, run setup again so any

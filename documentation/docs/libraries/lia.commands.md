@@ -30,7 +30,7 @@ Registers a new command with its associated data. See [Command Fields](../defini
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Register a simple warn command for administrators
@@ -76,7 +76,7 @@ Determines if a player may run the specified command. Before checking CAMI privi
 
 * *string*: Privilege checked.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Whitelist `/plytransfer` for the "Staff" faction
@@ -112,7 +112,7 @@ Splits the provided text into arguments, respecting quotes. Sections wrapped in 
 
 * *table*: List of arguments extracted from the text.
 
-**Example**
+**Example Usage**
 
 ```lua
 local args = lia.command.extractArgs('/mycommand "quoted arg" anotherArg')
@@ -145,7 +145,7 @@ Parses a command syntax string into an ordered list of field tables. Each field 
 
 * *boolean*: Whether the syntax strictly used the `[type Name]` format.
 
-**Example**
+**Example Usage**
 
 ```lua
 local fields, valid = lia.command.parseSyntaxFields("[string Name] [number Time]")
@@ -178,7 +178,7 @@ Executes a command by its name, passing the provided arguments. If the command r
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Execute the "boost" command when a player types !boost
@@ -217,7 +217,7 @@ Attempts to parse the input text as a command, optionally using `realCommand` an
 
 * *boolean*: `true` if the text was parsed as a valid command, `false` otherwise.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.command.parse(player, "/mycommand arg1 arg2")
@@ -245,7 +245,7 @@ Sends a command (and optional arguments) from the client to the server via the n
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.command.send("mycommand", "arg1", "arg2")
@@ -275,7 +275,7 @@ Opens a window asking the player to fill in arguments for the given command. Mis
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.command.openArgumentPrompt("plywhitelist")
@@ -305,7 +305,7 @@ See [lia.util.findPlayer](lia.util.md#liautilfindplayer).
 
 * *Player | nil*: The found player, if any.
 
-**Example**
+**Example Usage**
 
 ```lua
 local target = lia.command.findPlayer(admin, "Sarah")

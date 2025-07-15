@@ -30,7 +30,7 @@ Loads all Lua files within the supplied directory. Each file should define a `CL
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Load all classes for the schema
@@ -59,7 +59,7 @@ Checks faction and limit rules. It also runs the `CanPlayerJoinClass` gamemode h
 
 * *boolean*, *string?*: `false` and a reason when denied; on success, returns the class’s `isDefault` flag.
 
-**Example**
+**Example Usage**
 
 ```lua
 local canJoin, reason = lia.class.canBe(client, classID)
@@ -88,7 +88,7 @@ Retrieves the class table associated with the given numeric index.
 
 * *table | nil*: Class table if found.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Retrieve the class table for the engineer class
@@ -115,7 +115,7 @@ Returns an array of players whose characters belong to the given class.
 
 * *table*: List of player objects.
 
-**Example**
+**Example Usage**
 
 ```lua
 for _, ply in ipairs(lia.class.getPlayers(classID)) do
@@ -143,7 +143,7 @@ Counts the number of players currently in the specified class.
 
 * *number*: Player count.
 
-**Example**
+**Example Usage**
 
 ```lua
 local count = lia.class.getPlayerCount(classID)
@@ -170,7 +170,7 @@ Finds a class whose `uniqueID` or `name` matches the given text (case-insensitiv
 
 * *number | nil*: Matching class index or `nil` if not found.
 
-**Example**
+**Example Usage**
 
 ```lua
 local id = lia.class.retrieveClass("police")
@@ -197,7 +197,7 @@ Checks if the class requires a whitelist. Default classes and invalid class indi
 
 * *boolean*: `true` if the class is whitelisted; otherwise `false`.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Check whether the class is whitelisted

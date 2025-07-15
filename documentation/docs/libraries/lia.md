@@ -29,7 +29,7 @@ Depends on the file realm.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.include("lilia/gamemode/core/libraries/util.lua")
@@ -58,7 +58,7 @@ Depends on included files.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.includeDir("lilia/gamemode/core/modules/admin", true, true, "server")
@@ -87,7 +87,7 @@ Recursively includes Lua files while preserving alphabetical order.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.includeGroupedDir("core/modules", false, true)
@@ -113,7 +113,7 @@ Prints a coloured error message prefixed with “$Lilia$”.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.error("Something went wrong")
@@ -140,7 +140,7 @@ Displays a deprecation warning and optionally runs a fallback callback.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.deprecated("OldFunction", function()
@@ -168,7 +168,7 @@ Prints an updater message in cyan with the Lilia prefix.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.updater("Loading additional content…")
@@ -194,7 +194,7 @@ Prints an informational message with the Lilia prefix.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.information("Server started successfully")
@@ -221,7 +221,7 @@ Logs a bootstrap message with a coloured section tag.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.bootstrap("Database", "Connection established")
@@ -247,7 +247,7 @@ Broadcasts a chat message to all staff members permitted to view alt-account not
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.notifyAdmin("Possible alt account detected")
@@ -274,7 +274,7 @@ Prints a colour-coded log entry to the console.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.printLog("Gameplay", "Third round started")
@@ -306,7 +306,7 @@ Applies standardised kick/ban commands for a player infraction.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.applyPunishment(ply, "Cheating", true, true, 0)
@@ -332,7 +332,7 @@ Recursively loads entity-related files from a directory.
 
 * *nil*: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 lia.includeEntities("lilia/entities")

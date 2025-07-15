@@ -36,7 +36,7 @@ If the item has not yet been instanced (`id` equals `0`), this returns the `maxQ
 
 * `number`: Quantity contained in this item instance.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Give the player ammo equal to the stack quantity
@@ -63,7 +63,7 @@ Compares this item instance to another by ID.
 
 * `boolean`: True if both items share the same ID.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Check if the held item matches the inventory slot
@@ -92,7 +92,7 @@ Returns a printable representation of this item.
 
 * `string`: Identifier in the form `"item[uniqueID][id]"`.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Log the item identifier during saving
@@ -119,7 +119,7 @@ Retrieves the unique identifier of this item.
 
 * `number`: Item database ID.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Use the ID when updating the database
@@ -146,7 +146,7 @@ Returns the model path associated with this item.
 
 * `string`: Model path.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Spawn the item's model as a world prop
@@ -175,7 +175,7 @@ Retrieves the skin index this item uses.
 
 * `number`: Skin ID applied to the model.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Apply the correct skin when displaying the item
@@ -202,7 +202,7 @@ Returns the calculated purchase price for the item.
 
 * `number`: The price value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Charge the player the item's price before giving it
@@ -237,7 +237,7 @@ Invokes an item method with the given player and entity context.
 
 * `any`: Results returned by the called function.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Invoke a custom repair function and check the result
@@ -267,7 +267,7 @@ Attempts to find the player currently owning this item.
 
 * `Player|nil`: The owner if available.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Notify whoever currently owns the item
@@ -299,7 +299,7 @@ Retrieves a piece of persistent data stored on the item.
 
 * `any`: Stored value or default.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Retrieve a custom paint color stored on the item
@@ -326,7 +326,7 @@ Returns a merged table of this item's stored data and any networked values on it
 
 * `table`: Key/value table of all data fields.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Print all stored data for debugging
@@ -355,7 +355,7 @@ Registers a hook callback for this item instance.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Run code when the item is used
@@ -384,7 +384,7 @@ Registers a post-hook callback for this item.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Give a pistol after the item is picked up
@@ -411,7 +411,7 @@ Called when the item table is first registered.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function ITEM:onRegistered()
@@ -439,7 +439,7 @@ Prints a simple representation of the item to the console.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Output item info while debugging spawn issues
@@ -466,7 +466,7 @@ Debug helper that prints all stored item data.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Dump all stored data to the console
@@ -497,7 +497,7 @@ Increases the stored quantity for this item instance.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Combine stacks from a loot drop and notify the owner
@@ -529,7 +529,7 @@ Sets the current stack quantity and replicates the change.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Set quantity to 1 after splitting the stack
@@ -558,7 +558,7 @@ On the client this value is localized.
 
 * `string`: Item name.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Inform the player which item they found
@@ -585,7 +585,7 @@ Retrieves the description text for this item.
 
 * `string`: Item description.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Display a tooltip describing the item
@@ -612,7 +612,7 @@ Removes this item from its inventory without deleting it when `preserveItem` is 
 
 * `Deferred`: Resolves when the item has been removed.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Unequip and drop the item while keeping it saved
@@ -641,7 +641,7 @@ Deletes this item from the database after destroying it.
 
 * `Deferred`: Resolves when deletion completes.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Permanently remove the item from the database
@@ -670,7 +670,7 @@ Destroys the item's entity then removes and deletes it from its inventory.
 
 * `Deferred`: Resolves when the item has been removed.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Remove the item from the world and database
@@ -699,7 +699,7 @@ Broadcasts deletion of this item and removes it from memory.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Instantly delete the item across the network
@@ -726,7 +726,7 @@ Callback executed after the item is destroyed.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function ITEM:onDisposed()
@@ -754,7 +754,7 @@ Finds the entity spawned for this item, if any.
 
 * `Entity|nil`: The world entity representing the item.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Grab the world entity to modify it
@@ -788,7 +788,7 @@ If no angle is provided it will spawn upright using `angle_zero`.
 
 * `Entity|nil`: The created entity if successful.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Drop the item at the player's feet with a random yaw
@@ -820,7 +820,7 @@ Moves the item to another inventory, optionally bypassing access checks.
 
 * `boolean`: True if the transfer was initiated.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Move the item into another container
@@ -855,7 +855,7 @@ Called when a new instance of this item is created.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function ITEM:onInstanced(invID, x, y, newItem)
@@ -889,7 +889,7 @@ Runs after this item is networked to `recipient`.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function ITEM:onSync(ply)
@@ -917,7 +917,7 @@ Executed after the item is permanently removed.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function ITEM:onRemoved()
@@ -945,7 +945,7 @@ Called when the item is restored from the database.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function ITEM:onRestored(inv)
@@ -976,7 +976,7 @@ Sends this item's data to a player or broadcasts to all.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Resend the item data to a specific player
@@ -1011,7 +1011,7 @@ Sets a data field on the item and optionally networks and saves it.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Mark the item as legendary and notify the owner
@@ -1044,7 +1044,7 @@ Processes an interaction action performed by `client` on this item.
 
 * `boolean`: True if the interaction succeeded.
 
-**Example**
+**Example Usage**
 
 ```lua
 -- Trigger the "use" interaction from code

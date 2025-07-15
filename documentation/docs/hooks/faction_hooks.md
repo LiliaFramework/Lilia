@@ -36,7 +36,7 @@ Generates a custom character name before defaults are applied.
 
 * `string`, `boolean`: Generated name and whether to bypass default naming.
 
-**Example**
+**Example Usage**
 
 ```lua
 function FACTION:NameTemplate(client)
@@ -66,7 +66,7 @@ Retrieves the default character name for this faction.
 
 * `string`: The generated name.
 
-**Example**
+**Example Usage**
 
 ```lua
 function FACTION:GetDefaultName(client)
@@ -95,7 +95,7 @@ Provides the default description for a newly created character.
 
 * `string`, `boolean`: The description text and whether to override the user input.
 
-**Example**
+**Example Usage**
 
 ```lua
 function FACTION:GetDefaultDesc(client)
@@ -126,7 +126,7 @@ Executes whenever a faction member spawns during load-out.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function FACTION:OnSpawn(client)
@@ -161,7 +161,7 @@ Runs after a player is moved into this faction from another.
 
 * `nil`: This function does not return a value.
 
-**Example**
+**Example Usage**
 
 ```lua
 function FACTION:OnTransferred(client, oldFaction)
@@ -197,7 +197,7 @@ Determines if the faction has reached its player limit.
 
 * `boolean`: Whether the limit is reached.
 
-**Example**
+**Example Usage**
 
 ```lua
 function FACTION:OnCheckLimitReached(character, client)
