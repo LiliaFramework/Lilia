@@ -1,65 +1,110 @@
 local MODULE = MODULE
+local function decodeVector(tbl)
+    if istable(tbl) and tbl[1] and tbl[2] and tbl[3] then
+        return Vector(tbl[1], tbl[2], tbl[3])
+    end
+    return tbl
+end
+
+local function encodeVector(vec)
+    return {vec.x, vec.y, vec.z}
+end
+
 function MODULE:LoadData()
     local data = self:getData() or {}
-    if data.factions or data.global then
-        self.spawns = data.factions or {}
-        self.globalSpawns = data.global or {}
-    else
-        self.spawns = data
-        self.globalSpawns = {}
+    self.spawns = {}
+    self.globalSpawns = {}
+
+    local factions = data.factions or data
+    for fac, spawns in pairs(factions or {}) do
+        self.spawns[fac] = {}
+        for _, pos in ipairs(spawns) do
+            self.spawns[fac][#self.spawns[fac] + 1] = decodeVector(pos)
+        end
+    end
+
+    for _, pos in ipairs(data.global or {}) do
+        self.globalSpawns[#self.globalSpawns + 1] = decodeVector(pos)
     end
 end
 
 function MODULE:SaveData()
-    self:setData({
-        factions = self.spawns,
-        global = self.globalSpawns
-    })
+    local factions = {}
+    for fac, spawns in pairs(self.spawns or {}) do
+        factions[fac] = {}
+        for _, pos in ipairs(spawns) do
+            factions[fac][#factions[fac] + 1] = encodeVector(pos)
+        end
+    end
+
+    local global = {}
+    for _, pos in ipairs(self.globalSpawns or {}) do
+        global[#global + 1] = encodeVector(pos)
+    end
+
+    self:setData({factions = factions, global = global})
 end
 
-function MODULE:PostPlayerLoadout(client)
-    if not IsValid(client) then return end
+local function SpawnPlayer(client)
+    if not IsValid(client) then
+        print("[SpawnPlayer] invalid client")
+        return
+    end
+
     local character = client:getChar()
-    if not character then return end
-    if (not self.spawns or table.Count(self.spawns) == 0) and #(self.globalSpawns or {}) == 0 then return end
-    local factionInfo
-    for _, v in ipairs(lia.faction.indices) do
-        if v.index == client:Team() then
-            factionInfo = v
+    if character then
+        print("[SpawnPlayer] character found for client:", client)
+        local posData = character:getData("pos")
+        if posData and posData[3] and posData[3]:lower() == game.GetMap():lower() then
+            print("[SpawnPlayer] restoring saved position on map:", posData[3])
+            client:SetPos(posData[1].x and posData[1] or client:GetPos())
+            client:SetEyeAngles(posData[2].p and posData[2] or angle_zero)
+            character:setData("pos", nil)
+            return
+        end
+
+        print("[SpawnPlayer] no valid saved position found or map mismatch")
+    else
+        print("[SpawnPlayer] no character for client:", client)
+    end
+
+    local factionID
+    for _, info in ipairs(lia.faction.indices) do
+        if info.index == client:Team() then
+            factionID = info.uniqueID
+            print("[SpawnPlayer] detected factionID:", factionID)
             break
         end
     end
 
-    local spawnPosition
-    if factionInfo then
-        local spawns = self.spawns[factionInfo.uniqueID] or {}
-        if #spawns > 0 then spawnPosition = table.Random(spawns) end
+    local spawnPos
+    print("Found " .. #MODULE.spawns .. " faction spawns")
+    if factionID and MODULE.spawns then
+        local factionSpawns = MODULE.spawns[factionID]
+        if factionSpawns and #factionSpawns > 0 then
+            spawnPos = table.Random(factionSpawns)
+            print("[SpawnPlayer] selected faction spawn:", tostring(spawnPos))
+        end
     end
 
-    if not spawnPosition and self.globalSpawns and #self.globalSpawns > 0 then spawnPosition = table.Random(self.globalSpawns) end
-    if spawnPosition then client:SetPos(spawnPosition) end
+    print("Found " .. #MODULE.globalSpawns .. " faction spawns")
+    if not spawnPos and MODULE.globalSpawns and #MODULE.globalSpawns > 0 then
+        spawnPos = table.Random(MODULE.globalSpawns)
+        print("[SpawnPlayer] selected global spawn:", tostring(spawnPos))
+    end
+
+    if spawnPos then
+        client:SetPos(spawnPos)
+        print("[SpawnPlayer] final spawn position set to:", tostring(spawnPos))
+    else
+        print("[SpawnPlayer] no spawn position available")
+    end
 end
 
 function MODULE:CharPreSave(character)
     local client = character:getPlayer()
     local InVehicle = client:hasValidVehicle()
     if IsValid(client) and not InVehicle and client:Alive() then character:setData("pos", {client:GetPos(), client:EyeAngles(), game.GetMap()}) end
-end
-
-function MODULE:PlayerLoadedChar(client, character)
-    timer.Simple(0, function()
-        if IsValid(client) then
-            local position = character:getData("pos")
-            if position then
-                if position[3] and position[3]:lower() == game.GetMap():lower() then
-                    client:SetPos(position[1].x and position[1] or client:GetPos())
-                    client:SetEyeAngles(position[2].p and position[2] or angle_zero)
-                end
-
-                character:setData("pos", nil)
-            end
-        end
-    end)
 end
 
 function MODULE:PlayerDeath(client, _, attacker)
@@ -123,3 +168,6 @@ net.Receive("request_respawn", function(_, client)
     if timePassed < respawnTime then return end
     if not client:Alive() and not client:getNetVar("IsDeadRestricted", false) then client:Spawn() end
 end)
+
+hook.Add("PostPlayerLoadout", "liaSpawns", SpawnPlayer)
+hook.Add("PostPlayerLoadedChar", "liaSpawns", SpawnPlayer)

@@ -127,6 +127,13 @@ function PANEL:Init()
         if lia.config.get("ClassHeaders", true) then
             for clsID, clsData in pairs(lia.class.list) do
                 if clsData.faction ~= facID then continue end
+                if clsData.scoreboardHidden then
+                    local lst = facCont:Add("DListLayout")
+                    lst:Dock(TOP)
+                    facCont.classLists[clsID] = lst
+                    continue
+                end
+
                 local cat = facCont:Add("DCollapsibleCategory")
                 cat:SetLabel("")
                 cat:SetExpanded(true)
@@ -165,7 +172,7 @@ end
 
 function PANEL:updateStaff()
     local total, duty = 0, 0
-    for _, ply in pairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         if ply:isStaff() then total = total + 1 end
         if ply:isStaffOnDuty() then duty = duty + 1 end
     end
@@ -181,7 +188,7 @@ end
 
 function PANEL:Think()
     if (self.nextUpdate or 0) > CurTime() then return end
-    for _, ply in pairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         if hook.Run("ShouldShowPlayerOnScoreboard", ply) == false then continue end
         local char = ply:getChar()
         if not char then continue end
@@ -288,7 +295,7 @@ function PANEL:addPlayer(ply, parent)
     function slot:layout()
         self.ping:SizeToContents()
         local pingW, totalW = self.ping:GetWide(), self:GetWide()
-        local hasLogo = lia.config.get("ClassLogo", false) and self.classLogo:GetMaterial()
+        local hasLogo = lia.config.get("ClassLogo", false) and self.classLogo:GetMaterial() and not self.hideLogo
         local extra = hasLogo and logoSize + logoOffset or 0
         local availW = totalW - (iconSize + margin * 2) - extra - pingW - margin
         self.name:SetPos(iconSize + margin * 2, 2)
@@ -371,15 +378,18 @@ function PANEL:addPlayer(ply, parent)
         end
 
         local clsData = lia.class.list[char:getClass()]
-        local logoMat = lia.config.get("ClassLogo", false) and clsData and clsData.logo or nil
-        if logoMat then
+        local showLogo = lia.config.get("ClassLogo", false) and clsData and not clsData.scoreboardHidden and clsData.logo and clsData.logo ~= ""
+        if showLogo then
+            local logoMat = clsData.logo
             if self.lastClassLogo ~= logoMat then
                 self.classLogo:SetMaterial(Material(logoMat))
                 self.lastClassLogo = logoMat
             end
+            self.hideLogo = false
         else
             self.classLogo:SetMaterial(nil)
             self.lastClassLogo = nil
+            self.hideLogo = true
         end
 
         slot:layout()

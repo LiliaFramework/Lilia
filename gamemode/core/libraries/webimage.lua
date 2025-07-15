@@ -29,6 +29,9 @@ function lia.webimage.register(n, u, cb, flags)
         local m = buildMaterial(savePath, flags)
         cache[n] = m
         if cb then cb(m, fromCache) end
+        if not fromCache then
+            hook.Run("WebImageDownloaded", n, "data/" .. savePath)
+        end
     end
 
     if file.Exists(savePath, "DATA") then

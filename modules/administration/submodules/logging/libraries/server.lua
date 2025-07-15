@@ -1,4 +1,4 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 function MODULE:SendLogsInChunks(client, categorizedLogs)
     local json = util.TableToJSON(categorizedLogs)
     local data = util.Compress(json)
@@ -103,8 +103,12 @@ function MODULE:OnPlayerInteractItem(client, action, item)
     end
 end
 
+function MODULE:PlayerConnect(name, ip)
+    lia.log.add(nil, "playerConnect", name, ip)
+end
+
 function MODULE:PlayerInitialSpawn(client)
-    lia.log.add(client, "playerConnected")
+    lia.log.add(client, "playerInitialSpawn")
 end
 
 function MODULE:PlayerDisconnect(client)

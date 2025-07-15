@@ -63,7 +63,7 @@ AddInteraction(L("inviteToClass"), {
         if not cChar or not tChar then return false end
         if cChar:hasFlags("X") then return true end
         local classData = lia.class.list[cChar:getClass()]
-        if classData and classData.canInviteToClass4 then return true end
+        if classData and classData.canInviteToClass then return true end
         if cChar:getFaction() ~= tChar:getFaction() then return false end
         return hook.Run("CanInviteToClass", client, target) ~= false
     end,

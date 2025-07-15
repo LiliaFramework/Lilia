@@ -69,4 +69,5 @@
     end
 end)
 
+hook.Add("ShouldLiliaAdminLoad", "liaServerguard", function() return false end)
 serverguard.plugin:Toggle("restrictions", false)

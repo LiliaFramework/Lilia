@@ -19,11 +19,11 @@ local RealmIDs = {
 
 local FilesToLoad = {
     {
-        path = "lilia/gamemode/languages/english.lua",
+        path = "lilia/gamemode/core/libraries/languages.lua",
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/libraries/languages.lua",
+        path = "lilia/gamemode/core/libraries/admin.lua",
         realm = "shared"
     },
     {
@@ -120,6 +120,10 @@ local FilesToLoad = {
     },
     {
         path = "lilia/gamemode/core/libraries/webimage.lua",
+        realm = "client"
+    },
+    {
+        path = "lilia/gamemode/core/libraries/websound.lua",
         realm = "client"
     },
     {

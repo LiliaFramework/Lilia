@@ -658,7 +658,7 @@ end, function(ent)
 
     SetRelationships(ent, friendliedNPCs, D_LI)
     SetRelationships(ent, hostaliziedNPCs, D_HT)
-    for _, oent in pairs(ents.GetAll()) do
+    for _, oent in ents.Iterator() do
         if oent:IsNPC() and oent ~= ent then Rbt_ProcessOtherNPC(oent) end
     end
 
@@ -687,7 +687,7 @@ end, function(ent)
 
     SetRelationships(ent, friendliedNPCs, D_HT)
     SetRelationships(ent, hostaliziedNPCs, D_LI)
-    for _, oent in pairs(ents.GetAll()) do
+    for _, oent in ents.Iterator() do
         if oent:IsNPC() and oent ~= ent then Rbt_ProcessOtherNPC(oent) end
     end
 end, "icon16/user_red.png")

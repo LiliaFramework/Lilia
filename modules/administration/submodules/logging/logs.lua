@@ -142,8 +142,14 @@
         func = function(client, state) return string.format("Player '%s' toggled observe mode %s.", client:Name(), state) end,
         category = "Admin Actions"
     },
+    ["playerConnect"] = {
+        func = function(_, name, ip) return string.format("Player '%s' is connecting from %s.", name, ip) end,
+        category = "Connections",
+    },
     ["playerConnected"] = {
-        func = function(client) return string.format("Player connected: '%s'.", client:Name()) end,
+        func = function(client)
+            return string.format("Player finished loading: '%s'.", client:Name())
+        end,
         category = "Connections"
     },
     ["playerDisconnected"] = {

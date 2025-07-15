@@ -736,5 +736,7 @@ else
 
             menu:Open()
         end
+
+        return frame, listView
     end
 end

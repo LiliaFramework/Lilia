@@ -25,6 +25,46 @@ net.Receive("cfgSet", function()
     end
 end)
 
+net.Receive("blindTarget", function()
+    local enabled = net.ReadBool()
+    if enabled then
+        hook.Add("HUDPaint", "blindTarget", function() draw.RoundedBox(0, 0, 0, ScrW(), ScrH(), Color(0, 0, 0, 255)) end)
+    else
+        hook.Remove("HUDPaint", "blindTarget")
+    end
+end)
+
+net.Receive("blindFade", function()
+    local isWhite = net.ReadBool()
+    local duration = net.ReadFloat()
+    local fadeIn = net.ReadFloat()
+    local fadeOut = net.ReadFloat()
+    local startTime = CurTime()
+    local endTime = startTime + duration
+    local color = isWhite and Color(255, 255, 255) or Color(0, 0, 0)
+    local hookName = "blindFade" .. startTime
+
+    hook.Add("HUDPaint", hookName, function()
+        local ct = CurTime()
+        if ct >= endTime then
+            hook.Remove("HUDPaint", hookName)
+            return
+        end
+
+        local alpha
+        if ct < startTime + fadeIn then
+            alpha = (ct - startTime) / fadeIn
+        elseif ct > endTime - fadeOut then
+            alpha = (endTime - ct) / fadeOut
+        else
+            alpha = 1
+        end
+
+        surface.SetDrawColor(color.r, color.g, color.b, math.Clamp(alpha * 255, 0, 255))
+        surface.DrawRect(0, 0, ScrW(), ScrH())
+    end)
+end)
+
 net.Receive("AdminModeSwapCharacter", function()
     local id = net.ReadInt(32)
     assert(isnumber(id), "id must be a number")

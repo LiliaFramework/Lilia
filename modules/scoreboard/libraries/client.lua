@@ -9,6 +9,9 @@
 end
 
 function MODULE:ScoreboardShow()
+    if hook.Run("CanPlayerOpenScoreboard", LocalPlayer()) == false then
+        return false
+    end
     local pimEnabled = lia.module.list.interactionmenu:checkInteractionPossibilities()
     if IsValid(lia.gui.score) then
         lia.gui.score:SetVisible(true)
@@ -26,5 +29,5 @@ end
 
 function MODULE:ShouldShowPlayerOnScoreboard(client)
     local faction = lia.faction.indices[client:Team()]
-    if faction and faction.ScoreboardHidden then return false end
+    if faction and faction.scoreboardHidden then return false end
 end

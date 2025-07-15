@@ -36,6 +36,142 @@
     end
 })
 
+local function formatDHM(seconds)
+    seconds = math.max(seconds or 0, 0)
+    local days = math.floor(seconds / 86400)
+    seconds = seconds % 86400
+    local hours = math.floor(seconds / 3600)
+    seconds = seconds % 3600
+    local minutes = math.floor(seconds / 60)
+    return string.format("%dd %dh %dm", days, hours, minutes)
+end
+
+lia.command.add("roster", {
+    onRun = function(client)
+        local character = client:getChar()
+        if not character then
+            client:notify("Character data not found for client:", client)
+            return
+        end
+
+        local isLeader = client:IsSuperAdmin() or character:getData("factionOwner") or character:getData("factionAdmin") or character:hasFlags("V")
+        if not isLeader then return end
+
+        local fields = "lia_characters._name, lia_characters._faction, lia_characters._id, lia_characters._steamID, lia_characters._lastJoinTime, lia_players._data"
+        if not character then
+            client:notify("Character data not found for client:", client)
+            return
+        end
+
+        local factionIndex = character:getFaction()
+        if not factionIndex then
+            client:notify("Faction data not found for character:", character)
+            return
+        end
+
+        local faction = lia.faction.indices[factionIndex]
+        if not faction then
+            client:notify("Faction data not found for index:", factionIndex)
+            return
+        end
+
+        local condition = "lia_characters._schema = '" .. lia.db.escape(SCHEMA.folder) .. "' AND lia_characters._faction = " .. lia.db.convertDataType(faction.uniqueID)
+        local query = "SELECT " .. fields .. " FROM lia_characters LEFT JOIN lia_players ON lia_characters._steamID = lia_players._steamID WHERE " .. condition
+        lia.db.query(query, function(data)
+            local characters = {}
+            if data then
+                for k, v in ipairs(data) do
+                    local pdata = util.JSONToTable(v._data or "{}")
+                    local last = pdata.lastOnline
+                    if not isnumber(last) then
+                        last = os.time(lia.time.toNumber(v._lastJoinTime))
+                    end
+                    local lastDiff = os.time() - last
+                    table.insert(characters, {
+                        id = v._id,
+                        name = v._name,
+                        faction = v._faction,
+                        steamID = v._steamID,
+                        lastOnline = formatDHM(lastDiff),
+                        hoursPlayed = formatDHM(pdata.totalOnlineTime or 0)
+                    })
+                end
+            else
+                client:notify("No data found for the specified condition.")
+            end
+
+            net.Start("CharacterInfo")
+            net.WriteString(faction.uniqueID)
+            net.WriteTable(characters)
+            net.Send(client)
+        end)
+    end
+})
+
+lia.command.add("factionmanagement", {
+    superAdminOnly = true,
+    privilege = "Manage Faction Members",
+    syntax = "[faction Faction]",
+    onRun = function(client, arguments)
+        local fields = "lia_characters._name, lia_characters._faction, lia_characters._id, lia_characters._steamID, lia_characters._lastJoinTime, lia_players._data"
+        local faction
+        local arg = table.concat(arguments, " ")
+        if arg ~= "" then
+            faction = lia.util.findFaction(client, arg)
+            if not faction then return end
+        else
+            local character = client:getChar()
+            if not character then
+                client:notify("Character data not found for client:", client)
+                return
+            end
+
+            local factionIndex = character:getFaction()
+            if not factionIndex then
+                client:notify("Faction data not found for character:", character)
+                return
+            end
+
+            faction = lia.faction.indices[factionIndex]
+            if not faction then
+                client:notify("Faction data not found for index:", factionIndex)
+                return
+            end
+        end
+
+        local condition = "lia_characters._schema = '" .. lia.db.escape(SCHEMA.folder) .. "' AND lia_characters._faction = " .. lia.db.convertDataType(faction.uniqueID)
+        local query = "SELECT " .. fields .. " FROM lia_characters LEFT JOIN lia_players ON lia_characters._steamID = lia_players._steamID WHERE " .. condition
+        lia.db.query(query, function(data)
+            local characters = {}
+            if data then
+                for k, v in ipairs(data) do
+                    local pdata = util.JSONToTable(v._data or "{}")
+                    local last = pdata.lastOnline
+                    if not isnumber(last) then
+                        last = os.time(lia.time.toNumber(v._lastJoinTime))
+                    end
+                    local lastDiff = os.time() - last
+                    table.insert(characters, {
+                        id = v._id,
+                        name = v._name,
+                        faction = v._faction,
+                        steamID = v._steamID,
+                        lastOnline = formatDHM(lastDiff),
+                        hoursPlayed = formatDHM(pdata.totalOnlineTime or 0)
+                    })
+                end
+            else
+                client:notify("No data found for the specified condition.")
+            end
+
+            net.Start("CharacterInfo")
+            net.WriteString(faction.uniqueID)
+            net.WriteTable(characters)
+            net.Send(client)
+        end)
+    end
+})
+
 lia.command.add("plywhitelist", {
     adminOnly = true,
     privilege = "Manage Whitelists",
@@ -130,7 +266,7 @@ lia.command.add("setclass", {
             if target:Team() == classData.faction then
                 target:getChar():joinClass(classID, true)
                 lia.log.add(client, "setClass", target:Name(), classData.name)
-                target:notifyLocalized("classSet", L(classData.name) .. " " .. client:GetName())
+                target:notifyLocalized("classSet", L(classData.name), client:GetName())
                 if client ~= target then client:notifyLocalized("classSetOther", target:GetName(), L(classData.name)) end
                 hook.Run("PlayerLoadout", target)
             else

@@ -224,12 +224,20 @@ local logTypeMap = {
     looc = "chatLOOC"
 }
 
-function GM:CheckPassword(steamid64, _, svpass, clpass, name)
+function GM:CheckPassword(steamID64, _, serverPassword, clientPassword, playerName)
+    local banRecord = lia.admin.isBanned(steamID64)
+    local banExpired = lia.admin.hasBanExpired(steamID64)
+    if banRecord then
+        if not banExpired then return false, L("banMessage", banRecord.duration / 60, banRecord.reason) end
+        lia.admin.removeBan(steamID64)
+    end
+
     local convertingMessage = lia.config.isConverting and L("serverConvertingConfig") or lia.data.isConverting and L("serverConvertingData") or lia.log.isConverting and L("serverConvertingLogs")
     if convertingMessage then return false, convertingMessage end
-    if svpass ~= "" and svpass ~= clpass then
-        lia.log.add(nil, "failedPassword", steamid64, name, svpass, clpass)
-        lia.information(L("passwordMismatchInfo", name, steamid64, svpass, clpass))
+    if serverPassword ~= "" and serverPassword ~= clientPassword then
+        lia.log.add(nil, "failedPassword", steamID64, playerName, serverPassword, clientPassword)
+        lia.information(L("passwordMismatchInfo", playerName, steamID64, serverPassword, clientPassword))
+        return false, L("passwordMismatchInfo", playerName, steamID64, serverPassword, clientPassword)
     end
 end
 
@@ -642,6 +650,28 @@ local function fetchURL(url, onSuccess, onError)
     end
 end
 
+local function versionCompare(localVersion, remoteVersion)
+    local function toParts(v)
+        local parts = {}
+        if not v then return parts end
+        for num in tostring(v):gmatch("%d+") do
+            table.insert(parts, tonumber(num))
+        end
+        return parts
+    end
+
+    local lParts = toParts(localVersion)
+    local rParts = toParts(remoteVersion)
+    local len = math.max(#lParts, #rParts)
+    for i = 1, len do
+        local l = lParts[i] or 0
+        local r = rParts[i] or 0
+        if l < r then return -1 end
+        if l > r then return 1 end
+    end
+    return 0
+end
+
 local publicURL = "https://raw.githubusercontent.com/LiliaFramework/Modules/refs/heads/gh-pages/modules.json"
 local privateURL = "https://raw.githubusercontent.com/bleonheart/bleonheart.github.io/main/modules.json"
 local versionURL = "https://raw.githubusercontent.com/LiliaFramework/LiliaFramework.github.io/main/version.json"
@@ -671,7 +701,7 @@ local function checkPublicModules()
                 lia.updater(L("moduleUniqueIDNotFound", info.uniqueID))
             elseif not match.version then
                 lia.updater(L("moduleNoRemoteVersion", info.name))
-            elseif match.version ~= info.localVersion then
+            elseif info.localVersion and versionCompare(info.localVersion, match.version) < 0 then
                 lia.updater(L("moduleOutdated", info.name, match.version))
             end
         end
@@ -693,7 +723,7 @@ local function checkPrivateModules()
 
         for _, info in ipairs(lia.module.privateVersionChecks) do
             for _, m in ipairs(remote) do
-                if m.uniqueID == info.uniqueID and m.version and m.version ~= info.localVersion then
+                if m.uniqueID == info.uniqueID and m.version and info.localVersion and versionCompare(info.localVersion, m.version) < 0 then
                     lia.updater(L("privateModuleOutdated", info.name))
                     break
                 end
@@ -721,7 +751,7 @@ local function checkFrameworkVersion()
             return
         end
 
-        if remote.version ~= localVersion then lia.updater(L("frameworkOutdated")) end
+        if versionCompare(localVersion, remote.version) < 0 then lia.updater(L("frameworkOutdated")) end
     end, function(err) lia.updater(L("frameworkVersionError", err)) end)
 end
 
@@ -776,7 +806,7 @@ end
 concommand.Add("bots", function(ply)
     if IsValid(ply) then return end
     local maxPlayers = game.MaxPlayers()
-    local currentCount = #player.GetAll()
+    local currentCount = player.GetCount()
     local toSpawn = maxPlayers - currentCount
     if toSpawn <= 0 then return end
     timer.Remove("BotsSpawnTimer")
@@ -818,7 +848,7 @@ concommand.Add("list_entities", function(client)
     end
 end)
 
-local networkStrings = {"msg", "doorPerm", "invAct", "liaDataSync", "ServerChatAddText", "charSet", "liaCharFetchNames", "charData", "charVar", "liaCharacterInvList", "charKick", "cMsg", "liaCmdArgPrompt", "cmd", "cfgSet", "cfgList", "gVar", "liaNotify", "liaNotifyL", "CreateTableUI", "WorkshopDownloader_Start", "liaPACSync", "liaPACPartAdd", "liaPACPartRemove", "liaPACPartReset", "blindTarget", "CurTime-Sync", "NetStreamDS", "attrib", "charInfo", "nVar", "nDel", "doorMenu", "liaInventoryAdd", "liaInventoryRemove", "liaInventoryData", "liaInventoryInit", "liaInventoryDelete", "liaItemDelete", "liaItemInstance", "invData", "invQuantity", "seqSet", "liaData", "setWaypoint", "setWaypointWithLogo", "AnimationStatus", "actBar", "RequestDropdown", "OptionsRequest", "StringRequest", "ArgumentsRequest", "BinaryQuestionRequest", "nLcl", "item", "OpenInvMenu", "prePlayerLoadedChar", "playerLoadedChar", "postPlayerLoadedChar", "liaTransferItem", "AdminModeSwapCharacter", "managesitrooms", "liaCharChoose", "lia_managesitrooms_action", "SpawnMenuSpawnItem", "SpawnMenuGiveItem", "send_logs", "send_logs_request", "TicketSystemClaim", "TicketSystemClose", "TicketSystem", "ViewClaims", "RequestRemoveWarning", "ChangeAttribute", "liaTeleportToEntity", "removeF1", "ForceUpdateF1", "TransferMoneyFromP2P", "RunOption", "RunLocalOption", "rgnDone", "liaStorageOpen", "liaStorageUnlock", "liaStorageExit", "liaStorageTransfer", "trunkInitStorage", "VendorTrade", "VendorExit", "VendorEdit", "VendorMoney", "VendorStock", "VendorMaxStock", "VendorAllowFaction", "VendorAllowClass", "VendorMode", "VendorPrice", "VendorSync", "VendorOpen", "Vendor", "VendorFaction", "liaCharList", "liaCharCreate", "liaCharDelete", "CheckHack", "CheckSeed", "VerifyCheats", "request_respawn", "classUpdate", "lilia_requestAdminPermissions", "lilia_updateAdminPermissions"}
+local networkStrings = {"msg", "doorPerm", "invAct", "liaDataSync", "ServerChatAddText", "charSet", "liaCharFetchNames", "charData", "charVar", "liaCharacterInvList", "charKick", "cMsg", "liaCmdArgPrompt", "cmd", "cfgSet", "cfgList", "gVar", "liaNotify", "liaNotifyL", "CreateTableUI", "WorkshopDownloader_Start", "liaPACSync", "liaPACPartAdd", "liaPACPartRemove", "liaPACPartReset", "blindTarget", "blindFade", "CurTime-Sync", "NetStreamDS", "attrib", "charInfo", "nVar", "nDel", "doorMenu", "liaInventoryAdd", "liaInventoryRemove", "liaInventoryData", "liaInventoryInit", "liaInventoryDelete", "liaItemDelete", "liaItemInstance", "invData", "invQuantity", "seqSet", "liaData", "setWaypoint", "setWaypointWithLogo", "AnimationStatus", "actBar", "RequestDropdown", "OptionsRequest", "StringRequest", "ArgumentsRequest", "BinaryQuestionRequest", "nLcl", "item", "OpenInvMenu", "prePlayerLoadedChar", "playerLoadedChar", "postPlayerLoadedChar", "liaTransferItem", "AdminModeSwapCharacter", "managesitrooms", "liaCharChoose", "lia_managesitrooms_action", "SpawnMenuSpawnItem", "SpawnMenuGiveItem", "send_logs", "send_logs_request", "TicketSystemClaim", "TicketSystemClose", "TicketSystem", "ViewClaims", "RequestRemoveWarning", "ChangeAttribute", "liaTeleportToEntity", "removeF1", "ForceUpdateF1", "TransferMoneyFromP2P", "RunOption", "RunLocalOption", "rgnDone", "liaStorageOpen", "liaStorageUnlock", "liaStorageExit", "liaStorageTransfer", "trunkInitStorage", "VendorTrade", "VendorExit", "VendorEdit", "VendorMoney", "VendorStock", "VendorMaxStock", "VendorAllowFaction", "VendorAllowClass", "VendorMode", "VendorPrice", "VendorSync", "VendorOpen", "Vendor", "VendorFaction", "liaCharList", "liaCharCreate", "liaCharDelete", "CheckHack", "CheckSeed", "VerifyCheats", "request_respawn", "classUpdate"}
 for _, netString in ipairs(networkStrings) do
     util.AddNetworkString(netString)
 end

@@ -300,6 +300,7 @@ function lia.db.loadTables()
         local ignore = function() end
         lia.db.fieldExists("lia_players", "_firstJoin"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore) end end)
         lia.db.fieldExists("lia_players", "_lastJoin"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore) end end)
+        lia.db.fieldExists("lia_players", "_userGroup"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _userGroup VARCHAR(32)"):catch(ignore) end end)
         lia.db.fieldExists("lia_items", "_quantity"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_items ADD COLUMN _quantity INTEGER"):catch(ignore) end end)
         lia.db.addDatabaseFields()
         lia.db.tablesLoaded = true
@@ -313,6 +314,7 @@ function lia.db.loadTables()
                 _steamName varchar,
                 _firstJoin datetime,
                 _lastJoin datetime,
+                _userGroup varchar,
                 _data varchar,
                 _intro binary
             );
@@ -397,6 +399,7 @@ function lia.db.loadTables()
                 `_steamName` VARCHAR(32) NOT NULL COLLATE 'utf8mb4_general_ci',
                 `_firstJoin` DATETIME,
                 `_lastJoin` DATETIME,
+                `_userGroup` VARCHAR(32) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
                 `_data` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
                 `_intro` BINARY(1) NULL DEFAULT 0,
                 PRIMARY KEY (`_steamID`)

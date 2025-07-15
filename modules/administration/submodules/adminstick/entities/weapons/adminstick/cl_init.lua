@@ -13,8 +13,11 @@ function SWEP:SecondaryAttack()
     if not IsFirstTimePredicted() then return end
     local target = self:GetTarget()
     if IsValid(target) and target:IsPlayer() and target ~= client then
-        local cmd = target:IsFrozen() and (sam and "sam unfreeze" or ulx and "ulx unfreeze") or sam and "sam freeze" or ulx and "ulx freeze"
-        client:ConCommand(cmd .. " " .. target:SteamID())
+        local action = target:IsFrozen() and "unfreeze" or "freeze"
+        if not hook.Run("RunAdminSystemCommand", action, client, target) then
+            local cmd = sam and "sam " .. action or ulx and "ulx " .. action
+            if cmd then client:ConCommand(cmd .. " " .. target:SteamID()) end
+        end
     else
         client:notifyLocalized("cantFreezeTarget")
     end

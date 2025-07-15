@@ -57,6 +57,7 @@ lia.flag.add("L", "Access to spawn Effects.")
 lia.flag.add("r", "Access to spawn ragdolls.")
 lia.flag.add("e", "Access to spawn props.")
 lia.flag.add("n", "Access to spawn NPCs.")
+lia.flag.add("V", "Access to manage your faction roster.")
 properties.Add("ToggleCarBlacklist", {
     MenuLabel = L("ToggleCarBlacklist"),
     Order = 901,

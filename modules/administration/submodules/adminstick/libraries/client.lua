@@ -32,6 +32,13 @@ local function QuoteArgs(...)
     return table.concat(args, " ")
 end
 
+local function RunAdminCommand(cmd, tgt, dur, reason, fallback)
+    local cl = LocalPlayer()
+    if not hook.Run("RunAdminSystemCommand", cmd, cl, tgt, dur, reason) and fallback then
+        RunConsoleCommand("say", fallback)
+    end
+end
+
 local function OpenPlayerModelUI(tgt)
     AdminStickIsOpen = true
     local fr = vgui.Create("DFrame")
@@ -116,10 +123,10 @@ local function OpenReasonUI(tgt, cmd)
         if cmd == "banid" then
             if id ~= "" then
                 local len = ts and ts:GetValue() * 60 * 24 or 0
-                RunConsoleCommand("say", "!banid " .. QuoteArgs(id, len, txt))
+                RunAdminCommand("ban", tgt, len, txt, "!banid " .. QuoteArgs(id, len, txt))
             end
         elseif cmd == "kick" then
-            if id ~= "" then RunConsoleCommand("say", "!kick " .. QuoteArgs(id, txt)) end
+            if id ~= "" then RunAdminCommand("kick", tgt, nil, txt, "!kick " .. QuoteArgs(id, txt)) end
         end
 
         fr:Remove()
@@ -135,7 +142,8 @@ local function HandleModerationOption(opt, tgt)
     elseif opt.name == "Kick" then
         OpenReasonUI(tgt, "kick")
     else
-        RunConsoleCommand("say", opt.cmd)
+        local cmdName = opt.cmd:match("!([^%s]+)")
+        RunAdminCommand(cmdName, tgt, nil, nil, opt.cmd)
     end
 
     AdminStickIsOpen = false
@@ -253,7 +261,8 @@ local function IncludeAdminMenu(tgt, menu, stores)
     for _, o in ipairs(tp) do
         mod:AddOption(L(o.name), function()
             cl:ChatPrint(L("adminStickExecutedCommand", o.cmd))
-            RunConsoleCommand("say", o.cmd)
+            local cmdName = o.cmd:match("!([^%s]+)")
+            RunAdminCommand(cmdName, tgt, nil, nil, o.cmd)
             AdminStickIsOpen = false
         end):SetIcon(o.icon)
     end
