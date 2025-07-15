@@ -11,7 +11,7 @@ local function encodeVector(vec)
 end
 
 function MODULE:LoadData()
-    local data = self:getData() or {}
+    local data = self:getData(nil, true) or {}
     self.spawns = {}
     self.globalSpawns = {}
 
@@ -42,7 +42,7 @@ function MODULE:SaveData()
         global[#global + 1] = encodeVector(pos)
     end
 
-    self:setData({factions = factions, global = global})
+    self:setData({factions = factions, global = global}, true)
 end
 
 local function SpawnPlayer(client)
@@ -78,7 +78,7 @@ local function SpawnPlayer(client)
     end
 
     local spawnPos
-    print("Found " .. #MODULE.spawns .. " faction spawns")
+    print("Found " .. table.Count(MODULE.spawns or {}) .. " faction spawns")
     if factionID and MODULE.spawns then
         local factionSpawns = MODULE.spawns[factionID]
         if factionSpawns and #factionSpawns > 0 then
@@ -87,7 +87,7 @@ local function SpawnPlayer(client)
         end
     end
 
-    print("Found " .. #MODULE.globalSpawns .. " faction spawns")
+    print("Found " .. #MODULE.globalSpawns .. " global spawns")
     if not spawnPos and MODULE.globalSpawns and #MODULE.globalSpawns > 0 then
         spawnPos = table.Random(MODULE.globalSpawns)
         print("[SpawnPlayer] selected global spawn:", tostring(spawnPos))
