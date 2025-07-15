@@ -142,10 +142,8 @@ jobs:
           git push origin HEAD:main
       - name: Package and zip
         run: |
-          mkdir -p packaged
-          cp -R lilia packaged/lilia
-          cd packaged
-          zip -r ../lilia.zip lilia
+          cd lilia
+          zip -r ../lilia.zip modules gamemode lilia.txt logo.png icon24.png
       - name: Remove previous releases and tags
         run: |
           sudo apt-get update -y
