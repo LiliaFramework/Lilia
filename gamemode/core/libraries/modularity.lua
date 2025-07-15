@@ -55,11 +55,8 @@ end
 local function collectModuleIDs(directory)
     local ids = {}
     if not directory then return ids end
-    local files, folders = file.Find(directory .. "/*", "LUA")
+    local _, folders = file.Find(directory .. "/*", "LUA")
     for _, folderName in ipairs(folders) do ids[folderName] = true end
-    for _, fileName in ipairs(files) do
-        if fileName:sub(-4) == ".lua" then ids[string.StripExtension(fileName)] = true end
-    end
     return ids
 end
 
@@ -207,14 +204,6 @@ function lia.module.loadFromDir(directory, group, skip)
         end
     end
 
-    for _, fileName in ipairs(files) do
-        if fileName:sub(-4) == ".lua" then
-            local uniqueID = string.StripExtension(fileName)
-            if not skip or not skip[uniqueID] then
-                lia.module.load(uniqueID, directory .. "/" .. fileName, true, locationVar)
-            end
-        end
-    end
 end
 
 function lia.module.get(identifier)

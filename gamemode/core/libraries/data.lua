@@ -107,7 +107,9 @@ if SERVER then
                 _folder = folder,
                 _map = map,
                 _value = {value}
-            }, "data")
+            }, "data"):next(function()
+                hook.Run("OnDataSet", key, value, folder, map)
+            end)
         end)
         return "lilia/" .. (folder and folder .. "/" or "") .. (map and map .. "/" or "")
     end

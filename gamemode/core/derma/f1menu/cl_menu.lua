@@ -2,6 +2,7 @@
 function PANEL:Init()
     lia.module.list["f1menu"].CharacterInformation = {}
     lia.gui.menu = self
+    hook.Run("F1MenuOpened", self)
     self:SetSize(ScrW(), ScrH())
     self:SetAlpha(0)
     self:AlphaTo(255, 0.25, 0)
@@ -177,6 +178,10 @@ function PANEL:remove()
         self:AlphaTo(0, 0.25, 0, function() self:Remove() end)
         self.closing = true
     end
+end
+
+function PANEL:OnRemove()
+    hook.Run("F1MenuClosed")
 end
 
 function PANEL:OnKeyCodePressed(key)

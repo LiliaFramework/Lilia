@@ -53,6 +53,12 @@ local function openMenu(options, isInteraction, titleText, closeKey, netMsg)
     frame:MakePopup()
     frame:SetTitle("")
     frame:ShowCloseButton(false)
+    hook.Run("InteractionMenuOpened", frame)
+    local oldOnRemove = frame.OnRemove
+    function frame:OnRemove()
+        if oldOnRemove then oldOnRemove(self) end
+        hook.Run("InteractionMenuClosed")
+    end
     frame:SetAlpha(0)
     frame:AlphaTo(255, fadeSpeed)
     function frame:Paint(w, h)

@@ -39,6 +39,14 @@ function MODULE:OnCharCreated(_, character)
 end
 
 function MODULE:PlayerLoadedChar(client, character)
+    if character:getData("factionKickWarn") then
+        client:notify("You were kicked from your faction!")
+        hook.Run("OnTransferred", client)
+        local faction = lia.faction.indices[client:Team()]
+        if faction and faction.OnTransferred then faction:OnTransferred(client) end
+        character:setData("factionKickWarn", nil)
+    end
+
     local data = character:getData("pclass")
     local class = data and lia.class.list[data]
     if character then
@@ -202,18 +210,38 @@ net.Receive("KickCharacter", function(_, client)
     if not char then return end
     local isLeader = client:IsSuperAdmin() or char:getData("factionOwner") or char:getData("factionAdmin") or char:hasFlags("V")
     if not isLeader then return end
-    local citizen = lia.faction.teams["citizen"]
+    local defaultFaction
+    for _, fac in pairs(lia.faction.teams) do
+        if fac.isDefault then
+            defaultFaction = fac
+            break
+        end
+    end
+    if not defaultFaction then
+        local _, fac = next(lia.faction.teams)
+        defaultFaction = fac
+    end
     local characterID = net.ReadUInt(32)
     local IsOnline = false
     for _, target in player.Iterator() do
         local targetChar = target:getChar()
         if targetChar and targetChar:getID() == characterID and targetChar:getFaction() == char:getFaction() then
             IsOnline = true
+            local oldFaction = targetChar:getFaction()
             target:notify("You were kicked from your faction!")
-            targetChar.vars.faction = citizen.uniqueID
-            targetChar:setFaction(citizen.index)
+            targetChar.vars.faction = defaultFaction.uniqueID
+            targetChar:setFaction(defaultFaction.index)
+            hook.Run("OnTransferred", target)
+            if defaultFaction.OnTransferred then defaultFaction:OnTransferred(target, oldFaction) end
+            hook.Run("PlayerLoadout", target)
+            targetChar:save()
         end
     end
 
-    if not IsOnline then lia.char.setCharData(characterID, "kickedFromFaction", true) end
+    if not IsOnline then
+        lia.db.updateTable({
+            _faction = defaultFaction.uniqueID
+        }, nil, "characters", "_id = " .. characterID)
+        lia.char.setCharData(characterID, "factionKickWarn", true)
+    end
 end)

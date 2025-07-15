@@ -8,6 +8,7 @@ function PANEL:Init()
     if IsValid(lia.gui.loading) then lia.gui.loading:Remove() end
     if IsValid(lia.gui.character) then lia.gui.character:Remove() end
     lia.gui.character = self
+    hook.Run("CharacterMenuOpened", self)
     if not render.oldDrawBeam then
         render.oldDrawBeam = render.DrawBeam
         render.DrawBeam = function(startPos, endPos, width, textureStart, textureEnd, color)
@@ -666,6 +667,7 @@ function PANEL:warningSound()
 end
 
 function PANEL:OnRemove()
+    hook.Run("CharacterMenuClosed")
     hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
     hook.Remove("CalcView", "liaMainMenuCalcView")
     hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")

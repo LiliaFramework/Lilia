@@ -135,6 +135,12 @@ else
         local globalName = "inv" .. inventory.id
         if IsValid(lia.gui[globalName]) then lia.gui[globalName]:Remove() end
         local panel = hook.Run("CreateInventoryPanel", inventory, parent)
+        hook.Run("InventoryOpened", panel, inventory)
+        local oldOnRemove = panel.OnRemove
+        function panel:OnRemove()
+            if oldOnRemove then oldOnRemove(self) end
+            hook.Run("InventoryClosed", self, inventory)
+        end
         lia.gui[globalName] = panel
         return panel
     end

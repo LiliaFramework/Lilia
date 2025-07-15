@@ -61,6 +61,7 @@ function MODULE:LoadCharInformation()
     if not IsValid(client) then return end
     local char = client:getChar()
     if not char then return end
+    if table.IsEmpty(lia.attribs.list) then return end
     hook.Run("AddSection", L("attributes"), Color(0, 0, 0), 2, 1)
     local attrs = {}
     for id, attr in pairs(lia.attribs.list) do

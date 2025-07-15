@@ -14,7 +14,8 @@
         end
     end
 
-    client:setLocalVar("stamina", char:getData("stamina", char:getMaxStamina()))
+    -- Always start with full stamina on spawn
+    client:setLocalVar("stamina", char:getMaxStamina())
     local uniqueID = "liaStam" .. client:SteamID()
     timer.Create(uniqueID, 0.25, 0, function()
         if not IsValid(client) then
@@ -31,19 +32,24 @@ function MODULE:PlayerDisconnected(client)
 end
 
 function MODULE:CharPreSave(character)
-    local client = character:getPlayer()
-    if IsValid(client) then character:setData("stamina", client:getLocalVar("stamina", 0)) end
+    -- Stamina is not persisted; it always resets to maximum on spawn.
 end
 
 function MODULE:KeyPress(client, key)
     if key == IN_ATTACK2 then
         local wep = client:GetActiveWeapon()
-        if IsValid(wep) and wep.IsHands and wep.ReadyToPickup then wep:Pickup() end
+        if IsValid(wep) and wep.IsHands and wep.ReadyToPickup then
+            wep:Pickup()
+        elseif IsValid(client.Grabbed) then
+            client:DropObject(client.Grabbed)
+            client.Grabbed = NULL
+        end
     end
 
     if key == IN_JUMP and not client:isNoClipping() and client:getChar() and not client:InVehicle() and client:Alive() then
         local cost = lia.config.get("JumpStaminaCost", 25)
         client:consumeStamina(cost)
+
         local stm = client:getLocalVar("stamina", 0)
         if stm == 0 then
             client:setNetVar("brth", true)
@@ -52,15 +58,13 @@ function MODULE:KeyPress(client, key)
     end
 end
 
-function MODULE:KeyPress(client, key)
-    if key == IN_ATTACK2 and IsValid(client.Grabbed) then
-        client:DropObject(client.Grabbed)
-        client.Grabbed = NULL
-    end
-end
-
 function MODULE:PlayerLoadedChar(client, character)
-    timer.Simple(0.25, function() if IsValid(client) then client:setLocalVar("stamina", character:getData("stamina", character:getMaxStamina())) end end)
+    -- Ensure players begin with maximum stamina when their character loads
+    timer.Simple(0.25, function()
+        if IsValid(client) then
+            client:setLocalVar("stamina", character:getMaxStamina())
+        end
+    end)
 end
 
 function MODULE:PlayerStaminaLost(client)

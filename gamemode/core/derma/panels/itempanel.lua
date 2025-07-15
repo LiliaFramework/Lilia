@@ -211,6 +211,7 @@ function PANEL:SetEntity(ent)
     self.nameLabel:SizeToContentsY()
     self.header:SetTall(self.nameLabel:GetTall())
     self:buildButtons()
+    hook.Run("ItemPanelOpened", self, ent)
 end
 
 function PANEL:Think()
@@ -223,6 +224,7 @@ function PANEL:OnRemove()
         self.item.entity = nil
     end
 
+    hook.Run("ItemPanelClosed", self, self.ent)
     lia.gui.itemPanel = nil
 end
 

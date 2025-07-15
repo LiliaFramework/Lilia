@@ -573,6 +573,310 @@ end)
 
 ---
 
+### ScoreboardOpened
+
+**Purpose**
+Triggered when the scoreboard becomes visible on the client.
+
+**Parameters**
+
+- `panel` (`Panel`): Scoreboard panel instance.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("ScoreboardOpened", "PlaySound", function(pnl)
+    surface.PlaySound("buttons/button15.wav")
+end)
+```
+
+---
+
+### ScoreboardClosed
+
+**Purpose**
+Called after the scoreboard is hidden or removed.
+
+**Parameters**
+
+- `panel` (`Panel`): Scoreboard panel instance.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("ScoreboardClosed", "LogClose", function(pnl)
+    print("Closed scoreboard")
+end)
+```
+
+---
+
+### F1MenuOpened
+
+**Purpose**
+Runs when the F1 main menu panel initializes.
+
+**Parameters**
+
+- `panel` (`Panel`): Menu panel.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("F1MenuOpened", "Notify", function(menu)
+    print("F1 menu opened")
+end)
+```
+
+---
+
+### F1MenuClosed
+
+**Purpose**
+Fires when the F1 main menu panel is removed.
+
+**Parameters**
+
+- None
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("F1MenuClosed", "MenuGone", function()
+    print("F1 menu closed")
+end)
+```
+
+---
+
+### CharacterMenuOpened
+
+**Purpose**
+Called when the character selection menu is created.
+
+**Parameters**
+
+- `panel` (`Panel`): Character menu panel.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("CharacterMenuOpened", "PlayMusic", function(panel)
+    surface.PlaySound("music/hl2_song17.mp3")
+end)
+```
+
+---
+
+### CharacterMenuClosed
+
+**Purpose**
+Fired when the character menu panel is removed.
+
+**Parameters**
+
+- None
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("CharacterMenuClosed", "StopMusic", function()
+    print("Character menu closed")
+end)
+```
+
+---
+
+### ItemPanelOpened
+
+**Purpose**
+Triggered when an item detail panel is created.
+
+**Parameters**
+
+- `panel` (`Panel`): Item panel instance.
+- `entity` (`Entity`): Item entity represented.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("ItemPanelOpened", "Inspect", function(pnl, ent)
+    print("Viewing item", ent)
+end)
+```
+
+---
+
+### ItemPanelClosed
+
+**Purpose**
+Runs after an item panel is removed.
+
+**Parameters**
+
+- `panel` (`Panel`): Item panel instance.
+- `entity` (`Entity`): Item entity represented.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("ItemPanelClosed", "LogClose", function(pnl, ent)
+    print("Closed item panel for", ent)
+end)
+```
+
+---
+
+### InventoryOpened
+
+**Purpose**
+Called when an inventory panel is created.
+
+**Parameters**
+
+- `panel` (`Panel`): Inventory panel.
+- `inventory` (`table`): Inventory shown.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("InventoryOpened", "Flash", function(pnl, inv)
+    print("Opened inventory", inv:getID())
+end)
+```
+
+---
+
+### InventoryClosed
+
+**Purpose**
+Fired when an inventory panel is removed.
+
+**Parameters**
+
+- `panel` (`Panel`): Inventory panel.
+- `inventory` (`table`): Inventory shown.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("InventoryClosed", "StopFlash", function(pnl, inv)
+    print("Closed inventory", inv:getID())
+end)
+```
+
+---
+
+### InteractionMenuOpened
+
+**Purpose**
+Called when the interaction menu pops up.
+
+**Parameters**
+
+- `frame` (`Panel`): Interaction menu frame.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("InteractionMenuOpened", "Notify", function(frame)
+    print("Opened interaction menu")
+end)
+```
+
+---
+
+### InteractionMenuClosed
+
+**Purpose**
+Runs when the interaction menu frame is removed.
+
+**Parameters**
+
+- None
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("InteractionMenuClosed", "Notify", function()
+    print("Interaction menu closed")
+end)
+```
+
+---
+
 ### ChatTextChanged
 
 **Purpose**
@@ -1603,6 +1907,35 @@ end)
 
 ---
 
+### OnDataSet
+
+**Purpose**
+Triggered after `lia.data.set` successfully writes a key/value pair to the database.
+
+**Parameters**
+
+- `key` (`string`): Data key that was saved.
+- `value` (`any`): Value that was written.
+- `folder` (`string|nil`): Schema folder when not global.
+- `map` (`string|nil`): Map name when not global or ignored.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+-- Debug message whenever data is persisted.
+hook.Add("OnDataSet", "PrintPersist", function(k, v)
+    print("Persisted", k, v)
+end)
+```
+
+---
+
 ### PersistenceSave
 
 **Purpose**
@@ -1661,6 +1994,90 @@ Invoked before an entity is saved as persistent. Return false to disallow persis
 hook.Add("CanPersistEntity", "BlockWeapons", function(entity)
     if entity:IsWeapon() then
         return false
+    end
+end)
+```
+
+---
+
+### GetEntitySaveData
+
+**Purpose**
+Allows adding custom data to each persisted entity during `SaveData`.
+
+**Parameters**
+
+- `entity` (`Entity`): Entity being persisted.
+
+**Realm**
+`Server`
+
+**Returns**
+- `table|nil`: Extra data to store with the entity.
+
+**Example Usage**
+
+```lua
+-- Store door color so it can be restored later.
+hook.Add("GetEntitySaveData", "DoorTint", function(ent)
+    if ent:GetClass() == "prop_door_rotating" then
+        return { color = ent:GetColor() }
+    end
+end)
+```
+
+---
+
+### OnEntityPersisted
+
+**Purpose**
+Runs when an entity is added to the persistence table.
+
+**Parameters**
+
+- `entity` (`Entity`): Entity that was saved.
+- `data` (`table`): Persistence data for that entity.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+-- Log each entity that is persisted.
+hook.Add("OnEntityPersisted", "PrintEntity", function(ent, data)
+    print("Persisted", ent, "with", table.Count(data or {}) .. " fields")
+end)
+```
+
+---
+
+### OnEntityLoaded
+
+**Purpose**
+Called for each entity spawned from saved persistence data.
+
+**Parameters**
+
+- `entity` (`Entity`): The newly created entity.
+- `data` (`table|nil`): Extra data stored for the entity.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+-- Restore door color from saved data.
+hook.Add("OnEntityLoaded", "RestoreTint", function(ent, data)
+    if IsValid(ent) and data and data.color then
+        ent:SetColor(data.color)
     end
 end)
 ```

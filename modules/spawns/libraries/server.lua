@@ -54,12 +54,12 @@ local function SpawnPlayer(client)
     local character = client:getChar()
     if character then
         print("[SpawnPlayer] character found for client:", client)
-        local posData = character:getData("pos")
+        local posData = character:getLastPos()
         if posData and posData[3] and posData[3]:lower() == game.GetMap():lower() then
             print("[SpawnPlayer] restoring saved position on map:", posData[3])
             client:SetPos(posData[1].x and posData[1] or client:GetPos())
             client:SetEyeAngles(posData[2].p and posData[2] or angle_zero)
-            character:setData("pos", nil)
+            character:setLastPos(nil)
             return
         end
 
@@ -104,7 +104,7 @@ end
 function MODULE:CharPreSave(character)
     local client = character:getPlayer()
     local InVehicle = client:hasValidVehicle()
-    if IsValid(client) and not InVehicle and client:Alive() then character:setData("pos", {client:GetPos(), client:EyeAngles(), game.GetMap()}) end
+    if IsValid(client) and not InVehicle and client:Alive() then character:setLastPos({client:GetPos(), client:EyeAngles(), game.GetMap()}) end
 end
 
 function MODULE:PlayerDeath(client, _, attacker)
@@ -125,7 +125,7 @@ function MODULE:PlayerDeath(client, _, attacker)
     client:setNetVar("lastDeathTime", os.time())
     timer.Simple(lia.config.get("SpawnTime"), function() if IsValid(client) then client:setNetVar("IsDeadRestricted", false) end end)
     client:SetDSP(30, false)
-    char:setData("pos", nil)
+    char:setLastPos(nil)
     if not attacker:IsPlayer() and lia.config.get("LoseItemsonDeathNPC", false) or attacker:IsWorld() and lia.config.get("LoseItemsonDeathWorld", false) then self:RemovedDropOnDeathItems(client) end
     char:setData("deathPos", client:GetPos())
 end

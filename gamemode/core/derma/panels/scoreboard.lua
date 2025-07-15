@@ -35,6 +35,7 @@ end
 function PANEL:Init()
     if IsValid(lia.gui.score) then lia.gui.score:Remove() end
     lia.gui.score = self
+    hook.Run("ScoreboardOpened", self)
     local w, h = ScrW() * lia.config.get("sbWidth", 0.35), ScrH() * lia.config.get("sbHeight", 0.65)
     self:SetSize(w, h)
     self:Center()
@@ -437,6 +438,7 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:OnRemove()
+    hook.Run("ScoreboardClosed", self)
     CloseDermaMenus()
 end
 

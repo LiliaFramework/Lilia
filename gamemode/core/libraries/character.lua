@@ -400,6 +400,14 @@ lia.char.registerVar("RecognizedAs", {
     noDisplay = true
 })
 
+lia.char.registerVar("lastPos", {
+    field = "lastpos",
+    fieldType = "text",
+    default = nil,
+    isLocal = true,
+    noDisplay = true
+})
+
 function lia.char.getCharData(charID, key)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end
