@@ -1,0 +1,5 @@
+arrange:
+  - gamemode_hooks.md
+  - attribute_hooks.md
+  - faction_hooks.md
+  - class_hooks.md
