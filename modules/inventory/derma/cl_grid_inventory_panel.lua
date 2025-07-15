@@ -115,6 +115,7 @@ function PANEL:addItem(item)
     end
 
     self.icons[id] = icon
+    hook.Run("InventoryItemIconCreated", icon, item, self)
 end
 
 function PANEL:drawHeldItemRectangle()

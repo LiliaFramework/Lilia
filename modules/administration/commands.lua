@@ -6,6 +6,7 @@
         if IsValid(target) then
             target:Kick(L("kickMessage", target, arguments[2] or L("genericReason")))
             client:notifyLocalized("plyKicked")
+            lia.log.add(client, "plyKick", target:Name())
         end
     end
 })
@@ -18,6 +19,7 @@ lia.command.add("plyban", {
         if IsValid(target) then
             target:banPlayer(arguments[3] or L("genericReason"), arguments[2])
             client:notifyLocalized("plyBanned")
+            lia.log.add(client, "plyBan", target:Name())
         end
     end
 })
@@ -30,6 +32,7 @@ lia.command.add("plykill", {
         if IsValid(target) then
             target:Kill()
             client:notifyLocalized("plyKilled")
+            lia.log.add(client, "plyKill", target:Name())
         end
     end
 })
@@ -42,6 +45,7 @@ lia.command.add("plysetgroup", {
         if IsValid(target) and lia.admin.groups[arguments[2]] then
             lia.admin.setPlayerGroup(target, arguments[2])
             client:notifyLocalized("plyGroupSet")
+            lia.log.add(client, "plySetGroup", target:Name(), arguments[2])
         elseif IsValid(target) and not lia.admin.groups[arguments[2]] then
             client:notifyLocalized("groupNotExists")
         end
@@ -56,6 +60,7 @@ lia.command.add("plyunban", {
         if steamid and steamid ~= "" then
             lia.admin.removeBan(steamid)
             client:notify("Player unbanned")
+            lia.log.add(client, "plyUnban", steamid)
         end
     end
 })
@@ -69,6 +74,7 @@ lia.command.add("plyfreeze", {
             target:Freeze(true)
             local dur = tonumber(arguments[2]) or 0
             if dur > 0 then timer.Simple(dur, function() if IsValid(target) then target:Freeze(false) end end) end
+            lia.log.add(client, "plyFreeze", target:Name(), dur)
         end
     end
 })
@@ -78,7 +84,10 @@ lia.command.add("plyunfreeze", {
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then target:Freeze(false) end
+        if IsValid(target) then
+            target:Freeze(false)
+            lia.log.add(client, "plyUnfreeze", target:Name())
+        end
     end
 })
 
@@ -87,7 +96,10 @@ lia.command.add("plyslay", {
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then target:Kill() end
+        if IsValid(target) then
+            target:Kill()
+            lia.log.add(client, "plySlay", target:Name())
+        end
     end
 })
 
@@ -96,7 +108,10 @@ lia.command.add("plyrespawn", {
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then target:Spawn() end
+        if IsValid(target) then
+            target:Spawn()
+            lia.log.add(client, "plyRespawn", target:Name())
+        end
     end
 })
 
@@ -119,6 +134,7 @@ lia.command.add("plyblind", {
                     end
                 end)
             end
+            lia.log.add(client, "plyBlind", target:Name(), dur or 0)
         end
     end
 })
@@ -132,6 +148,7 @@ lia.command.add("plyunblind", {
             net.Start("blindTarget")
             net.WriteBool(false)
             net.Send(target)
+            lia.log.add(client, "plyUnblind", target:Name())
         end
     end
 })
@@ -154,6 +171,7 @@ lia.command.add("plyblindfade", {
             net.WriteFloat(fadeIn)
             net.WriteFloat(fadeOut)
             net.Send(target)
+            lia.log.add(client, "plyBlindFade", target:Name(), duration, colorName)
         end
     end
 })
@@ -177,6 +195,7 @@ lia.command.add("blindfadeall", {
                 net.Send(ply)
             end
         end
+        lia.log.add(nil, "blindFadeAll", duration, colorName)
     end
 })
 
@@ -185,7 +204,11 @@ lia.command.add("plygag", {
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then target:setNetVar("liaGagged", true) end
+        if IsValid(target) then
+            target:setNetVar("liaGagged", true)
+            lia.log.add(client, "plyGag", target:Name())
+            hook.Run("PlayerGagged", target, client)
+        end
     end
 })
 
@@ -194,7 +217,11 @@ lia.command.add("plyungag", {
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then target:setNetVar("liaGagged", false) end
+        if IsValid(target) then
+            target:setNetVar("liaGagged", false)
+            lia.log.add(client, "plyUngag", target:Name())
+            hook.Run("PlayerUngagged", target, client)
+        end
     end
 })
 
@@ -203,7 +230,11 @@ lia.command.add("plymute", {
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) and target:getChar() then target:getChar():setData("VoiceBan", true) end
+        if IsValid(target) and target:getChar() then
+            target:getChar():setData("VoiceBan", true)
+            lia.log.add(client, "plyMute", target:Name())
+            hook.Run("PlayerMuted", target, client)
+        end
     end
 })
 
@@ -212,7 +243,11 @@ lia.command.add("plyunmute", {
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) and target:getChar() then target:getChar():setData("VoiceBan", false) end
+        if IsValid(target) and target:getChar() then
+            target:getChar():setData("VoiceBan", false)
+            lia.log.add(client, "plyUnmute", target:Name())
+            hook.Run("PlayerUnmuted", target, client)
+        end
     end
 })
 
@@ -225,6 +260,7 @@ lia.command.add("plybring", {
         if IsValid(target) then
             returnPositions[target] = target:GetPos()
             target:SetPos(client:GetPos() + client:GetForward() * 50)
+            lia.log.add(client, "plyBring", target:Name())
         end
     end
 })
@@ -237,6 +273,7 @@ lia.command.add("plygoto", {
         if IsValid(target) then
             returnPositions[client] = client:GetPos()
             client:SetPos(target:GetPos() + target:GetForward() * 50)
+            lia.log.add(client, "plyGoto", target:Name())
         end
     end
 })
@@ -251,6 +288,7 @@ lia.command.add("plyreturn", {
         if pos then
             target:SetPos(pos)
             returnPositions[target] = nil
+            lia.log.add(client, "plyReturn", target:Name())
         end
     end
 })
@@ -263,6 +301,7 @@ lia.command.add("plyjail", {
         if IsValid(target) then
             target:Lock()
             target:Freeze(true)
+            lia.log.add(client, "plyJail", target:Name())
         end
     end
 })
@@ -275,6 +314,7 @@ lia.command.add("plyunjail", {
         if IsValid(target) then
             target:UnLock()
             target:Freeze(false)
+            lia.log.add(client, "plyUnjail", target:Name())
         end
     end
 })
@@ -284,7 +324,10 @@ lia.command.add("plycloak", {
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then target:SetNoDraw(true) end
+        if IsValid(target) then
+            target:SetNoDraw(true)
+            lia.log.add(client, "plyCloak", target:Name())
+        end
     end
 })
 
@@ -293,7 +336,10 @@ lia.command.add("plyuncloak", {
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then target:SetNoDraw(false) end
+        if IsValid(target) then
+            target:SetNoDraw(false)
+            lia.log.add(client, "plyUncloak", target:Name())
+        end
     end
 })
 
@@ -302,7 +348,10 @@ lia.command.add("plygod", {
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then target:GodEnable() end
+        if IsValid(target) then
+            target:GodEnable()
+            lia.log.add(client, "plyGod", target:Name())
+        end
     end
 })
 
@@ -311,7 +360,10 @@ lia.command.add("plyungod", {
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then target:GodDisable() end
+        if IsValid(target) then
+            target:GodDisable()
+            lia.log.add(client, "plyUngod", target:Name())
+        end
     end
 })
 
@@ -320,7 +372,11 @@ lia.command.add("plyignite", {
     syntax = "<string name> [number duration]",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then target:Ignite(tonumber(arguments[2]) or 5) end
+        if IsValid(target) then
+            local dur = tonumber(arguments[2]) or 5
+            target:Ignite(dur)
+            lia.log.add(client, "plyIgnite", target:Name(), dur)
+        end
     end
 })
 
@@ -329,7 +385,10 @@ lia.command.add("plyextinguish", {
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then target:Extinguish() end
+        if IsValid(target) then
+            target:Extinguish()
+            lia.log.add(client, "plyExtinguish", target:Name())
+        end
     end
 })
 
@@ -338,7 +397,10 @@ lia.command.add("plystrip", {
     syntax = "<string name>",
     onRun = function(client, arguments)
         local target = lia.command.findPlayer(client, arguments[1])
-        if IsValid(target) then target:StripWeapons() end
+        if IsValid(target) then
+            target:StripWeapons()
+            lia.log.add(client, "plyStrip", target:Name())
+        end
     end
 })
 

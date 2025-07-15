@@ -10,6 +10,7 @@ net.Receive("liaTeleportToEntity", function(_, ply)
     local pos = ent:GetPos() + Vector(0, 0, 50)
     ply:SetPos(pos)
     ply:notifyLocalized("teleportedToEntity", ent:GetClass())
+    lia.log.add(ply, "teleportToEntity", ent:GetClass())
 end)
 
 function MODULE:ShowHelp()

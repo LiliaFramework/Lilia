@@ -19,7 +19,7 @@ A `MODULE` table defines a self-contained add-on for the Lilia framework. Each f
 | `name` | `string` | `"Unknown"` | Identifies the module in logs and UI. |
 | `author` | `string` | `"Anonymous"` | Name or SteamID64 of the module’s author. |
 | `discord` | `string` | `""` | Discord tag or support channel. |
-| `version` | `string` | `""` | Version string for compatibility checks. |
+| `version` | `number` | `0` | Version number for compatibility checks. |
 | `desc` | `string` | `"No Description"` | Short description of module functionality. |
 | `CAMIPrivileges` | `table` | `nil` | CAMI privileges defined or required by the module. |
 | `WorkshopContent` | `table` | `nil` | Steam Workshop add-on IDs required. |
@@ -43,7 +43,7 @@ A `MODULE` table defines a self-contained add-on for the Lilia framework. Each f
 
 **Type:**
 
-`string`
+`number`
 
 **Description:**
 
@@ -61,7 +61,7 @@ MODULE.name = "My Module"
 
 **Type:**
 
-`string`
+`number`
 
 **Description:**
 
@@ -79,7 +79,7 @@ MODULE.author = "Samael"
 
 **Type:**
 
-`string`
+`number`
 
 **Description:**
 
@@ -117,16 +117,16 @@ MODULE.desc = "Adds a Chatbox"
 
 **Type:**
 
-`string`
+`number`
 
 **Description:**
 
-Version string used for compatibility checks.
+Version number used for compatibility checks.
 
 **Example Usage:**
 
 ```lua
-MODULE.version = "1.0"
+MODULE.version = 1.0
 ```
 
 ---
@@ -400,7 +400,7 @@ A complete example showing common fields in use:
 MODULE.name = "My Feature"
 MODULE.author = "76561198012345678"
 MODULE.discord = "@example"
-MODULE.version = "1.0"
+MODULE.version = 1.0
 MODULE.desc = "Adds an example feature"
 
 MODULE.enabled = true

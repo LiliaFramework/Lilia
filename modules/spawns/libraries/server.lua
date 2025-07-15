@@ -1,8 +1,6 @@
 local MODULE = MODULE
 local function decodeVector(tbl)
-    if istable(tbl) and tbl[1] and tbl[2] and tbl[3] then
-        return Vector(tbl[1], tbl[2], tbl[3])
-    end
+    if istable(tbl) and tbl[1] and tbl[2] and tbl[3] then return Vector(tbl[1], tbl[2], tbl[3]) end
     return tbl
 end
 
@@ -11,29 +9,31 @@ local function encodeVector(vec)
 end
 
 function MODULE:LoadData()
-    local data = self:getData(nil, true) or {}
+    local data = self:getData() or {}
+    if not next(data) then data = self:getData(nil, true) or {} end
     self.spawns = {}
     self.globalSpawns = {}
-
     local factions = data.factions or data
-    for fac, spawns in pairs(factions or {}) do
-        self.spawns[fac] = {}
-        for _, pos in ipairs(spawns) do
-            self.spawns[fac][#self.spawns[fac] + 1] = decodeVector(pos)
+    for factionID, spawnList in pairs(factions) do
+        self.spawns[factionID] = {}
+        for _, pos in ipairs(spawnList) do
+            local vec = decodeVector(pos)
+            self.spawns[factionID][#self.spawns[factionID] + 1] = vec
         end
     end
 
     for _, pos in ipairs(data.global or {}) do
-        self.globalSpawns[#self.globalSpawns + 1] = decodeVector(pos)
+        local vec = decodeVector(pos)
+        self.globalSpawns[#self.globalSpawns + 1] = vec
     end
 end
 
 function MODULE:SaveData()
     local factions = {}
-    for fac, spawns in pairs(self.spawns or {}) do
-        factions[fac] = {}
-        for _, pos in ipairs(spawns) do
-            factions[fac][#factions[fac] + 1] = encodeVector(pos)
+    for factionID, spawnList in pairs(self.spawns or {}) do
+        factions[factionID] = {}
+        for _, pos in ipairs(spawnList) do
+            factions[factionID][#factions[factionID] + 1] = encodeVector(pos)
         end
     end
 
@@ -42,70 +42,50 @@ function MODULE:SaveData()
         global[#global + 1] = encodeVector(pos)
     end
 
-    self:setData({factions = factions, global = global}, true)
+    self:setData({
+        factions = factions,
+        global = global
+    })
 end
 
 local function SpawnPlayer(client)
-    if not IsValid(client) then
-        print("[SpawnPlayer] invalid client")
-        return
-    end
-
+    if not IsValid(client) then return end
     local character = client:getChar()
     if character then
-        print("[SpawnPlayer] character found for client:", client)
         local posData = character:getLastPos()
         if posData and posData[3] and posData[3]:lower() == game.GetMap():lower() then
-            print("[SpawnPlayer] restoring saved position on map:", posData[3])
             client:SetPos(posData[1].x and posData[1] or client:GetPos())
             client:SetEyeAngles(posData[2].p and posData[2] or angle_zero)
             character:setLastPos(nil)
             return
         end
-
-        print("[SpawnPlayer] no valid saved position found or map mismatch")
-    else
-        print("[SpawnPlayer] no character for client:", client)
     end
 
     local factionID
     for _, info in ipairs(lia.faction.indices) do
         if info.index == client:Team() then
             factionID = info.uniqueID
-            print("[SpawnPlayer] detected factionID:", factionID)
             break
         end
     end
 
     local spawnPos
-    print("Found " .. table.Count(MODULE.spawns or {}) .. " faction spawns")
-    if factionID and MODULE.spawns then
+    if factionID then
         local factionSpawns = MODULE.spawns[factionID]
-        if factionSpawns and #factionSpawns > 0 then
-            spawnPos = table.Random(factionSpawns)
-            print("[SpawnPlayer] selected faction spawn:", tostring(spawnPos))
-        end
+        if factionSpawns and #factionSpawns > 0 then spawnPos = table.Random(factionSpawns) end
     end
 
-    print("Found " .. #MODULE.globalSpawns .. " global spawns")
-    if not spawnPos and MODULE.globalSpawns and #MODULE.globalSpawns > 0 then
-        spawnPos = table.Random(MODULE.globalSpawns)
-        print("[SpawnPlayer] selected global spawn:", tostring(spawnPos))
-    end
-
+    if not spawnPos and MODULE.globalSpawns and #MODULE.globalSpawns > 0 then spawnPos = table.Random(MODULE.globalSpawns) end
     if spawnPos then
         spawnPos = spawnPos + Vector(0, 0, 16)
         client:SetPos(spawnPos)
-        print("[SpawnPlayer] final spawn position set to:", tostring(spawnPos))
-    else
-        print("[SpawnPlayer] no spawn position available")
+        hook.Run("PlayerSpawnPointSelected", client, spawnPos)
     end
 end
 
 function MODULE:CharPreSave(character)
     local client = character:getPlayer()
-    local InVehicle = client:hasValidVehicle()
-    if IsValid(client) and not InVehicle and client:Alive() then character:setLastPos({client:GetPos(), client:EyeAngles(), game.GetMap()}) end
+    if IsValid(client) and not client:hasValidVehicle() and client:Alive() then character:setLastPos({client:GetPos(), client:EyeAngles(), game.GetMap()}) end
 end
 
 function MODULE:PlayerDeath(client, _, attacker)
@@ -150,8 +130,7 @@ function MODULE:RemovedDropOnDeathItems(client)
         end
     end
 
-    local lostCount = #client.LostItems
-    if lostCount > 0 then client:notifyLocalized("itemsLostOnDeath", lostCount) end
+    if #client.LostItems > 0 then client:notifyLocalized("itemsLostOnDeath", #client.LostItems) end
 end
 
 function MODULE:PlayerSpawn(client)
@@ -162,11 +141,10 @@ end
 net.Receive("request_respawn", function(_, client)
     if not IsValid(client) or not client:getChar() then return end
     local respawnTime = lia.config.get("SpawnTime", 5)
-    local spawnTimeOverride = hook.Run("OverrideSpawnTime", client, respawnTime)
-    if spawnTimeOverride then respawnTime = spawnTimeOverride end
-    local lastDeathTime = client:getNetVar("lastDeathTime", os.time())
-    local timePassed = os.time() - lastDeathTime
-    if timePassed < respawnTime then return end
+    local override = hook.Run("OverrideSpawnTime", client, respawnTime)
+    if override then respawnTime = override end
+    local lastDeath = client:getNetVar("lastDeathTime", os.time())
+    if os.time() - lastDeath < respawnTime then return end
     if not client:Alive() and not client:getNetVar("IsDeadRestricted", false) then client:Spawn() end
 end)
 

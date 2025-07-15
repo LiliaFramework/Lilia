@@ -27,5 +27,8 @@ end)
 
 net.Receive("CheckHack", function(_, client)
     lia.log.add(client, "hackAttempt")
-    lia.applyPunishment(client, L("hackingInfraction"), true, true, 0, "kickedForInfractionPeriod", "bannedForInfractionPeriod")
+    local override = hook.Run("PlayerCheatDetected", client)
+    if override ~= true then
+        lia.applyPunishment(client, L("hackingInfraction"), true, true, 0, "kickedForInfractionPeriod", "bannedForInfractionPeriod")
+    end
 end)

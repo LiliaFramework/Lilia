@@ -148,6 +148,7 @@ lia.command.add("doortoggleownable", {
             door:setNetVar("noSell", newState and true or nil)
             MODULE:callOnDoorChildren(door, function(child) child:setNetVar("noSell", newState and true or nil) end)
             lia.log.add(client, "doorToggleOwnable", door, newState)
+            hook.Run("DoorOwnableToggled", client, door, newState)
             client:notify(newState and L("doorMadeUnownable") or L("doorMadeOwnable"))
             MODULE:SaveData()
         else
@@ -211,6 +212,7 @@ lia.command.add("doortoggleenabled", {
             door:setNetVar("disabled", newState and true or nil)
             MODULE:callOnDoorChildren(door, function(child) child:setNetVar("disabled", newState and true or nil) end)
             lia.log.add(client, newState and "doorDisable" or "doorEnable", door)
+            hook.Run("DoorEnabledToggled", client, door, newState)
             client:notify(newState and L("doorSetDisabled") or L("doorSetNotDisabled"))
             MODULE:SaveData()
         else
@@ -238,6 +240,7 @@ lia.command.add("doortogglehidden", {
                 child:setNetVar("hidden", newState)
                 lia.log.add(client, "doorSetHidden", child, newState)
             end)
+            hook.Run("DoorHiddenToggled", client, entity, newState)
 
             client:notify(newState and L("doorSetHidden") or L("doorSetNotHidden"))
             MODULE:SaveData()
@@ -264,6 +267,7 @@ lia.command.add("doorsetprice", {
             door:setNetVar("price", price)
             MODULE:callOnDoorChildren(door, function(child) child:setNetVar("price", price) end)
             lia.log.add(client, "doorSetPrice", door, price)
+            hook.Run("DoorPriceSet", client, door, price)
             client:notifyLocalized("priceLabel", lia.currency.get(price))
             MODULE:SaveData()
         else
@@ -288,10 +292,12 @@ lia.command.add("doorsettitle", {
             if not name:find("%S") then return client:notifyLocalized("invalidClass") end
             if door:checkDoorAccess(client, DOOR_TENANT) then
                 door:setNetVar("title", name)
+                hook.Run("DoorTitleSet", client, door, name)
                 lia.log.add(client, "doorSetTitle", door, name)
             elseif client:isStaff() then
                 door:setNetVar("name", name)
                 MODULE:callOnDoorChildren(door, function(child) child:setNetVar("name", name) end)
+                hook.Run("DoorTitleSet", client, door, name)
                 lia.log.add(client, "doorSetTitle", door, name)
             else
                 client:notifyLocalized("doorNotOwner")
@@ -315,6 +321,7 @@ lia.command.add("doorsetparent", {
         if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
             client.liaDoorParent = door
             lia.log.add(client, "doorSetParent", door)
+            hook.Run("DoorParentSet", client, door)
             client:notifyLocalized("doorSetParentDoor")
         else
             client:notifyLocalized("doorNotValid")
@@ -339,6 +346,7 @@ lia.command.add("doorsetchild", {
                 client.liaDoorParent.liaChildren[door:MapCreationID()] = true
                 door.liaParent = client.liaDoorParent
                 lia.log.add(client, "doorAddChild", client.liaDoorParent, door)
+                hook.Run("DoorChildAdded", client, door, client.liaDoorParent)
                 client:notifyLocalized("doorAddChildDoor")
                 MODULE:SaveData()
                 MODULE:copyParentDoor(door)
@@ -366,6 +374,7 @@ lia.command.add("doorremovechild", {
                 MODULE:callOnDoorChildren(door, function(child)
                     lia.log.add(client, "doorRemoveChild", door, child)
                     child.liaParent = nil
+                    hook.Run("DoorChildRemoved", client, child, door)
                 end)
 
                 door.liaChildren = nil
@@ -374,9 +383,11 @@ lia.command.add("doorremovechild", {
             end
 
             if IsValid(door.liaParent) and door.liaParent.liaChildren then
-                door.liaParent.liaChildren[door:MapCreationID()] = nil
-                lia.log.add(client, "doorRemoveChild", door.liaParent, door)
+                local parentDoor = door.liaParent
+                parentDoor.liaChildren[door:MapCreationID()] = nil
+                lia.log.add(client, "doorRemoveChild", parentDoor, door)
                 door.liaParent = nil
+                hook.Run("DoorChildRemoved", client, door, parentDoor)
                 client:notifyLocalized("doorRemoveChildDoor")
                 MODULE:SaveData()
             end

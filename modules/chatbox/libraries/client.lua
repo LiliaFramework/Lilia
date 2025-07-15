@@ -4,6 +4,7 @@ LIA_CVAR_CHATFILTER = CreateClientConVar("lia_chatfilter", "", true, false)
 function MODULE:createChat()
     if IsValid(self.panel) then return end
     self.panel = vgui.Create("liaChatBox")
+    hook.Run("ChatboxPanelCreated", self.panel)
 end
 
 function MODULE:InitPostEntity()
@@ -28,7 +29,10 @@ end
 function chat.AddText(...)
     local show = true
     if IsValid(MODULE.panel) then show = MODULE.panel:addText(...) end
-    if show then chat.liaAddText(...) end
+    if show then
+        chat.liaAddText(...)
+        hook.Run("ChatboxTextAdded", ...)
+    end
 end
 
 function MODULE:ChatText(_, _, text, messageType)

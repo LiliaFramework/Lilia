@@ -2,6 +2,7 @@
     local panel = vgui.Create("liaGridInventory", parent)
     panel:setInventory(inventory)
     panel:Center()
+    hook.Run("InventoryPanelCreated", panel, inventory, parent)
     return panel
 end
 

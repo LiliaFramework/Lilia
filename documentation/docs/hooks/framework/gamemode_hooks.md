@@ -623,6 +623,60 @@ end)
 
 ---
 
+### ScoreboardRowCreated
+
+**Purpose**
+Runs after a player's row panel is added to the scoreboard. Use this to
+customize the panel or add additional elements.
+
+**Parameters**
+
+- `panel` (`Panel`): Row panel created for the player.
+- `player` (`Player`): Player associated with the row.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("ScoreboardRowCreated", "AddGlow", function(pnl, ply)
+    pnl:SetAlpha(200)
+end)
+```
+
+---
+
+### ScoreboardRowRemoved
+
+**Purpose**
+Runs right before a player's row panel is removed from the scoreboard.
+Use this to perform cleanup or update other UI elements.
+
+**Parameters**
+
+- `panel` (`Panel`): Row panel being removed.
+- `player` (`Player`): Player associated with the row.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("ScoreboardRowRemoved", "RowGone", function(pnl, ply)
+    print(ply:Nick(), "left the scoreboard")
+end)
+```
+
+---
+
 ### F1MenuOpened
 
 **Purpose**
@@ -988,6 +1042,56 @@ Allows modification of the markup before chat messages are printed. Allows modif
 hook.Add("ChatAddText", "GreenSystem", function(text, ...)
     local stamp = os.date("[%H:%M] ")
     return Color(0, 255, 0), stamp .. text, ...
+end)
+```
+
+---
+
+### ChatboxPanelCreated
+
+**Purpose**
+Called when the chatbox panel is instantiated.
+
+**Parameters**
+
+- `panel` (`Panel`): Newly created chat panel.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("ChatboxPanelCreated", "StyleChat", function(pnl)
+    pnl:SetFontInternal("liaChatFont")
+end)
+```
+
+---
+
+### ChatboxTextAdded
+
+**Purpose**
+Runs whenever chat.AddText successfully outputs text.
+
+**Parameters**
+
+- ...: Arguments passed to `chat.AddText`.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("ChatboxTextAdded", "Notify", function(...)
+    print("A chat message was added")
 end)
 ```
 
@@ -4339,6 +4443,60 @@ end)
 
 ---
 
+### InventoryPanelCreated
+
+**Purpose**
+Called after an inventory panel is constructed.
+
+**Parameters**
+
+- `panel` (`Panel`): The created panel.
+- `inventory` (`Inventory`): Inventory shown in the panel.
+- `parent` (`Panel|nil`): Parent panel if any.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("InventoryPanelCreated", "Style", function(pnl)
+    pnl:SetBackgroundColor(Color(0,0,0,150))
+end)
+```
+
+---
+
+### InventoryItemIconCreated
+
+**Purpose**
+Fires whenever an item icon is generated within an inventory panel.
+
+**Parameters**
+
+- `icon` (`Panel`): Newly created icon panel.
+- `item` (`Item`): Item associated with the icon.
+- `inventoryPanel` (`Panel`): Panel that contains the icon.
+
+**Realm**
+`Client`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("InventoryItemIconCreated", "OutlineRare", function(icon, item)
+    if item.isRare then icon:SetBorder(2) end
+end)
+```
+
+---
+
 ### ItemCombine
 
 **Purpose**
@@ -4570,6 +4728,32 @@ Called clientside when your character recognizes another.
 -- Play a sound whenever someone becomes recognized.
 hook.Add("OnCharRecognized", "PlayRecognizeSound", function(client)
     surface.PlaySound("buttons/button17.wav")
+end)
+```
+
+---
+
+### CharacterForceRecognized
+
+**Purpose**
+Triggered serverside when `ForceRecognizeRange` forcibly recognizes a player.
+
+**Parameters**
+
+- `client` (`Player`): Player now recognized.
+- `range` (`string`): Range identifier (e.g., `whisper`).
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("CharacterForceRecognized", "Notify", function(ply, kind)
+    print(ply:Name(), "was force recognized via", kind)
 end)
 ```
 
@@ -6639,6 +6823,248 @@ end)
 
 ---
 
+### DoorLockToggled
+
+**Purpose**
+Runs after a door's locked state changes.
+
+**Parameters**
+
+- `owner` (`Player`): Player responsible for the change.
+- `entity` (`Entity`): The door affected.
+- `state` (`boolean`): True if now locked.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("DoorLockToggled", "Announce", function(ply, door, locked)
+    print(door, locked and "locked" or "unlocked")
+end)
+```
+
+---
+
+### DoorOwnableToggled
+
+**Purpose**
+Fires after a door's ability to be owned is changed.
+
+**Parameters**
+
+- `client` (`Player`): Player toggling ownable state.
+- `door` (`Entity`): Door affected.
+- `state` (`boolean`): True if now unownable.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("DoorOwnableToggled", "Log", function(ply, door, unownable)
+    print("Door", door, unownable and "made unownable" or "can be owned")
+end)
+```
+
+---
+
+### DoorEnabledToggled
+
+**Purpose**
+Runs when a door is enabled or disabled.
+
+**Parameters**
+
+- `client` (`Player`): Player toggling enabled state.
+- `door` (`Entity`): Door affected.
+- `state` (`boolean`): True if disabled.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("DoorEnabledToggled", "Announce", function(ply, door, disabled)
+    print("Door", door, disabled and "disabled" or "enabled")
+end)
+```
+
+---
+
+### DoorHiddenToggled
+
+**Purpose**
+Triggered after a door is hidden or revealed.
+
+**Parameters**
+
+- `client` (`Player`): Player performing the action.
+- `door` (`Entity`): Door affected.
+- `state` (`boolean`): True if now hidden.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("DoorHiddenToggled", "Announce", function(ply, door, hidden)
+    print("Door", door, hidden and "hidden" or "visible")
+end)
+```
+
+---
+
+### DoorPriceSet
+
+**Purpose**
+Called after an administrator sets a door's price.
+
+**Parameters**
+
+- `client` (`Player`): Player setting the price.
+- `door` (`Entity`): Door being priced.
+- `price` (`number`): New price value.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("DoorPriceSet", "LogPrice", function(ply, door, price)
+    print("Door", door, "price set to", price)
+end)
+```
+
+---
+
+### DoorTitleSet
+
+**Purpose**
+Runs after the title or name of a door is changed.
+
+**Parameters**
+
+- `client` (`Player`): Player changing the title.
+- `door` (`Entity`): Door affected.
+- `title` (`string`): New title.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("DoorTitleSet", "AnnounceTitle", function(ply, door, text)
+    print("Door", door, "renamed to", text)
+end)
+```
+
+---
+
+### DoorParentSet
+
+**Purpose**
+Called when a door is set as the parent for upcoming child assignments.
+
+**Parameters**
+
+- `client` (`Player`): Player selecting the parent.
+- `door` (`Entity`): Door chosen as parent.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("DoorParentSet", "Notify", function(ply, door)
+    print("Parent door selected:", door)
+end)
+```
+
+---
+
+### DoorChildAdded
+
+**Purpose**
+Runs when a child door is linked to a parent door.
+
+**Parameters**
+
+- `client` (`Player`): Player performing the link.
+- `child` (`Entity`): Door being linked.
+- `parent` (`Entity`): Parent door.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("DoorChildAdded", "AnnounceChild", function(ply, child, parent)
+    print(child, "assigned to", parent)
+end)
+```
+
+---
+
+### DoorChildRemoved
+
+**Purpose**
+Triggered when a door is unlinked from its parent.
+
+**Parameters**
+
+- `client` (`Player`): Player removing the child.
+- `child` (`Entity`): Door unlinked.
+- `parent` (`Entity`): Former parent door.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("DoorChildRemoved", "LogRemoval", function(ply, child, parent)
+    print(child, "removed from", parent)
+end)
+```
+
+---
+
 ### LiliaTablesLoaded
 
 **Purpose**
@@ -7798,6 +8224,32 @@ end)
 
 ---
 
+### PlayerSpawnPointSelected
+
+**Purpose**
+Invoked once a final spawn position has been determined for a player.
+
+**Parameters**
+
+- `client` (`Player`): Player being spawned.
+- `position` (`Vector`): Chosen spawn location.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("PlayerSpawnPointSelected", "AnnounceSpawn", function(ply, pos)
+    print(ply, "will spawn at", pos)
+end)
+```
+
+---
+
 ### VoiceToggled
 
 **Purpose**
@@ -8305,6 +8757,34 @@ end)
 
 ---
 
+### ConfigChanged
+
+**Purpose**
+Runs after a configuration variable is modified.
+
+**Parameters**
+
+- `key` (`string`): Config key that changed.
+- `value` (`any`): New value.
+- `oldValue` (`any`): Previous value.
+- `client` (`Player`): Player responsible.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("ConfigChanged", "LogConfig", function(k, v, old, ply)
+    print(ply:Name(), "changed", k, "from", tostring(old), "to", tostring(v))
+end)
+```
+
+---
+
 ### CharDeleted
 
 **Purpose**
@@ -8802,6 +9282,98 @@ end)
 
 
 ---
+### PlayerGagged
+
+**Purpose**
+Called when an administrator gags a player, preventing chat.
+
+**Parameters**
+- `target` (`Player`): Player being gagged.
+- `admin` (`Player`): Admin issuing the gag.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+```lua
+hook.Add("PlayerGagged", "Announce", function(ply, admin)
+    print(admin:Name(), "gagged", ply:Name())
+end)
+```
+
+---
+### PlayerUngagged
+
+**Purpose**
+Called when a player is ungagged and allowed to speak again.
+
+**Parameters**
+- `target` (`Player`): Player being ungagged.
+- `admin` (`Player`): Admin removing the gag.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+```lua
+hook.Add("PlayerUngagged", "Announce", function(ply, admin)
+    print(admin:Name(), "ungagged", ply:Name())
+end)
+```
+
+---
+### PlayerMuted
+
+**Purpose**
+Runs when voice chat is disabled for a player.
+
+**Parameters**
+- `target` (`Player`): Player muted.
+- `admin` (`Player`): Admin muting the player.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+```lua
+hook.Add("PlayerMuted", "LogMute", function(ply, admin)
+    print(admin:Name(), "muted", ply:Name())
+end)
+```
+
+---
+### PlayerUnmuted
+
+**Purpose**
+Runs when a previously muted player can use voice chat again.
+
+**Parameters**
+- `target` (`Player`): Player unmuted.
+- `admin` (`Player`): Admin lifting the mute.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+```lua
+hook.Add("PlayerUnmuted", "LogMuteLifted", function(ply, admin)
+    print(admin:Name(), "unmuted", ply:Name())
+end)
+```
+
+---
 
 ### WebImageDownloaded
 
@@ -8848,5 +9420,31 @@ Triggered after a remote sound file finishes downloading to the data folder.
 ```lua
 hook.Add("WebSoundDownloaded", "LogSound", function(name, path)
     print("Sound downloaded:", name, path)
+end)
+```
+
+---
+
+### PlayerCheatDetected
+
+**Purpose**
+Triggered when the anti-cheat system flags a player for hacking.
+
+**Parameters**
+
+- `client` (`Player`): Player detected using cheats.
+
+**Realm**
+`Server`
+
+**Returns**
+- boolean: Return true to override default punishment.
+
+**Example Usage**
+```lua
+-- Log all cheat detections without banning
+hook.Add("PlayerCheatDetected", "LogCheaters", function(ply)
+    print(ply:Name() .. " was flagged for cheating")
+    return true -- handled, skip default ban
 end)
 ```

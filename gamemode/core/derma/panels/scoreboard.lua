@@ -325,12 +325,14 @@ function PANEL:addPlayer(ply, parent)
 
     function slot:update()
         if not IsValid(ply) then
+            hook.Run("ScoreboardRowRemoved", self, ply)
             self:Remove()
             return
         end
 
         local char = ply:getChar()
         if not char or char ~= self.character then
+            hook.Run("ScoreboardRowRemoved", self, ply)
             self:Remove()
             return
         end
@@ -412,6 +414,7 @@ function PANEL:addPlayer(ply, parent)
     end
 
     slot:update()
+    hook.Run("ScoreboardRowCreated", slot, ply)
 end
 
 function PANEL:Paint(w, h)
