@@ -33,6 +33,7 @@ function lia.option.set(key, value)
     local old = opt.value
     opt.value = value
     if opt.callback then opt.callback(old, value) end
+    hook.Run("liaOptionChanged", key, old, value)
     lia.option.save()
     if opt.shouldNetwork and SERVER then hook.Run("liaOptionReceived", nil, key, value) end
 end

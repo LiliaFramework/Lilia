@@ -54,6 +54,34 @@ end)
 
 ---
 
+### liaOptionChanged
+
+**Purpose**
+Triggered whenever `lia.option.set` modifies an option value.
+
+**Parameters**
+
+- `key` (`string`): Option identifier.
+- `oldValue` (`any`): Previous value before the change.
+- `newValue` (`any`): New assigned value.
+
+**Realm**
+`Shared`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+-- Log all option changes
+hook.Add("liaOptionChanged", "LogOptionChange", function(k, oldV, newV)
+    print(k .. " changed from " .. tostring(oldV) .. " to " .. tostring(newV))
+end)
+```
+
+---
+
 ### WebImageDownloaded
 
 **Purpose**
@@ -2900,6 +2928,60 @@ end)
 
 ---
 
+### liaCommandAdded
+
+**Purpose**
+Fired after a new command is registered via `lia.command.add`.
+
+**Parameters**
+
+- `name` (`string`): Command identifier.
+- `data` (`table`): Command data table.
+
+**Realm**
+`Shared`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("liaCommandAdded", "LogCommand", function(name, data)
+    print("Command registered:", name)
+end)
+```
+
+---
+
+### liaCommandRan
+
+**Purpose**
+Called after a command executes through `lia.command.run`.
+
+**Parameters**
+
+- `client` (`Player`|`nil`): Player who ran the command.
+- `name` (`string`): Command identifier.
+- `args` (`table`|`nil`): Arguments passed to the command.
+- `results` (`table`): Table of values returned by the command.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("liaCommandRan", "PrintCommandResult", function(ply, name, args, res)
+    print(name .. " returned", res[1])
+end)
+```
+
+---
+
 ### InventoryDataChanged
 
 **Purpose**
@@ -5449,6 +5531,58 @@ end)
 
 ---
 
+### BagInventoryReady
+
+**Purpose**
+Signals that a bag item now has a valid inventory after being created or loaded.
+
+**Parameters**
+
+- `item` (`Item`): Bag item instance.
+- `inventory` (`Inventory`): Associated inventory.
+
+**Realm**
+`Shared`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("BagInventoryReady", "SetOwnerRules", function(item, inv)
+    inv:allowAccess("transfer", item.player)
+end)
+```
+
+---
+
+### BagInventoryRemoved
+
+**Purpose**
+Fired right before a bag's inventory is deleted or destroyed.
+
+**Parameters**
+
+- `item` (`Item`): Bag item instance.
+- `inventory` (`Inventory`): The inventory being removed.
+
+**Realm**
+`Server`
+
+**Returns**
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("BagInventoryRemoved", "SaveBagItems", function(item, inv)
+    print("Bag" .. item:getID() .. " removed")
+end)
+```
+
+---
+
 ### SetupDatabase
 
 **Purpose**
@@ -7361,6 +7495,37 @@ hook.Add("PlayerMessageSend", "FilterProfanity", function(speaker, chatType, mes
     local filteredMessage = string.gsub(message, "badword", "****")
     if filteredMessage ~= message then
         return filteredMessage
+    end
+end)
+```
+
+---
+
+### ChatParsed
+
+**Purpose**
+Invoked after `lia.chat.parse` determines the chat type and sanitized message.
+
+**Parameters**
+
+- `client` (`Player`): Speaker of the message.
+- `chatType` (`string`): Parsed chat type key.
+- `message` (`string`): Parsed message text.
+- `anonymous` (`boolean`): Whether the speaker is hidden.
+
+**Realm**
+`Shared`
+
+**Returns**
+- `chatType|nil`, `message|nil`, `anonymous|nil`: Optionally return new values to override.
+
+**Example Usage**
+
+```lua
+-- Force all OOC messages to include a prefix
+hook.Add("ChatParsed", "PrefixOOC", function(ply, cType, msg, anon)
+    if cType == "ooc" then
+        return cType, "[OOC] " .. msg, anon
     end
 end)
 ```

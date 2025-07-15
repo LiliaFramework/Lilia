@@ -1,4 +1,4 @@
-# Lia Core Library
+# Core Library
 
 This page documents general utilities used throughout Lilia.
 

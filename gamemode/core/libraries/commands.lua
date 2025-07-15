@@ -48,6 +48,7 @@ function lia.command.add(command, data)
         data.realCommand = command
         lia.command.list[command:lower()] = data
     end
+    hook.Run("liaCommandAdded", command, data)
 end
 
 function lia.command.hasAccess(client, command, data)
@@ -184,6 +185,7 @@ if SERVER then
         local commandTbl = lia.command.list[command:lower()]
         if commandTbl then
             local results = {commandTbl.onRun(client, arguments or {})}
+            hook.Run("liaCommandRan", client, command, arguments or {}, results)
             local result = results[1]
             if isstring(result) then
                 if IsValid(client) then

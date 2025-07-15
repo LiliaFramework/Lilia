@@ -19,6 +19,7 @@ function ITEM:onInstanced()
         hook.Run("SetupBagInventoryAccessRules", inventory)
         inventory:sync()
         self:resolveInvAwaiters(inventory)
+        hook.Run("BagInventoryReady", self, inventory)
     end)
 end
 
@@ -28,13 +29,18 @@ function ITEM:onRestored()
         lia.inventory.loadByID(invID):next(function(inventory)
             hook.Run("SetupBagInventoryAccessRules", inventory)
             self:resolveInvAwaiters(inventory)
+            hook.Run("BagInventoryReady", self, inventory)
         end)
     end
 end
 
 function ITEM:onRemoved()
     local invID = self:getData("id")
-    if invID then lia.inventory.deleteByID(invID) end
+    if invID then
+        local inv = lia.inventory.instances[invID]
+        if inv then hook.Run("BagInventoryRemoved", self, inv) end
+        lia.inventory.deleteByID(invID)
+    end
 end
 
 function ITEM:getInv()
@@ -71,7 +77,10 @@ end
 if SERVER then
     function ITEM:onDisposed()
         local inventory = self:getInv()
-        if inventory then inventory:destroy() end
+        if inventory then
+            hook.Run("BagInventoryRemoved", self, inventory)
+            inventory:destroy()
+        end
     end
 
     function ITEM:resolveInvAwaiters(inventory)

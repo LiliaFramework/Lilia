@@ -28,6 +28,8 @@ Options are kept inside `lia.option.stored`; each entry contains:
 
 * `shouldNetwork` (*boolean | nil*) – When `true`, the server fires `liaOptionReceived` upon change.
 
+Whenever `lia.option.set` updates a value, the `liaOptionChanged` hook is fired on both realms.
+
 ---
 
 ### lia.option.add
