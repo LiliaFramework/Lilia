@@ -80,7 +80,7 @@ lia.command.add("roster", {
         lia.db.query(query, function(data)
             local characters = {}
             if data then
-                for k, v in ipairs(data) do
+                for _, v in ipairs(data) do
                     local pdata = util.JSONToTable(v._data or "{}")
                     local last = pdata.lastOnline
                     if not isnumber(last) then
@@ -144,7 +144,7 @@ lia.command.add("factionmanagement", {
         lia.db.query(query, function(data)
             local characters = {}
             if data then
-                for k, v in ipairs(data) do
+                for _, v in ipairs(data) do
                     local pdata = util.JSONToTable(v._data or "{}")
                     local last = pdata.lastOnline
                     if not isnumber(last) then

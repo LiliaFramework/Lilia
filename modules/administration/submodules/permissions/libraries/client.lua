@@ -81,7 +81,7 @@ net.Receive("DisplayCharList", function()
         table.insert(columns, {name = name, field = name})
     end
 
-    local frame, listView = lia.util.CreateTableUI("Charlist for SteamID64: " .. targetSteamIDsafe, columns, sendData)
+    local _, listView = lia.util.CreateTableUI("Charlist for SteamID64: " .. targetSteamIDsafe, columns, sendData)
 
     if IsValid(listView) then
         for _, line in ipairs(listView:GetLines()) do

@@ -163,7 +163,7 @@ hook.Add("OnDatabaseLoaded", "lia_LoadBans", function()
     end)
 end)
 
-concommand.Add("plysetgroup", function(ply, cmd, args)
+concommand.Add("plysetgroup", function(ply, _, args)
     if lia.admin.isDisabled() then return end
     if not IsValid(ply) then
         local target = lia.util.findPlayer(args[1])
