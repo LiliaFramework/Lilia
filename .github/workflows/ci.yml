@@ -48,8 +48,7 @@ jobs:
           luacheck . --no-global --no-max-line-length --no-self --no-max-code-line-length --no-max-string-line-length --no-max-comment-line-length --no-max-cyclomatic-complexity
 
   compute-version:
-    needs:
-      - linter
+    needs: linter
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.calc_version.outputs.version }}
@@ -81,8 +80,7 @@ jobs:
           echo "valid_count=$VALID_COUNT" >> "$GITHUB_OUTPUT"
 
   release:
-    needs:
-      - compute-version
+    needs: compute-version
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
@@ -93,6 +91,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: lilia
+
       - name: Update GM.version in shared.lua
         run: |
           python3 - << 'PY'
@@ -118,6 +117,7 @@ jobs:
           with io.open(path, "w", encoding="utf-8") as f:
               f.writelines(out)
           PY
+
       - name: Commit version bump in shared.lua
         run: |
           cd lilia
@@ -126,10 +126,12 @@ jobs:
           git add gamemode/shared.lua
           git diff-index --quiet HEAD || git commit -m "Successfully compiled release for version $VERSION"
           git push origin HEAD:main
+
       - name: Package and zip
         run: |
           cd lilia
           zip -r ../lilia.zip content modules gamemode lilia.txt logo.png icon24.png
+
       - name: Remove previous releases and tags
         run: |
           sudo apt-get update -y
@@ -144,6 +146,7 @@ jobs:
               curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/git/refs/tags/$tag"
             fi
           done
+
       - id: create_release
         uses: actions/create-release@v1
         with:
@@ -153,6 +156,7 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
+
       - uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -161,16 +165,7 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-      - name: Generate Steam Guard code
-        run: |
-          npm install steam-totp
-          node -e "
-            const totp = require('steam-totp')
-            console.log('::set-output name=code::' + totp.generateAuthCode(process.env.STEAM_2FASEED))
-          "
-        id: gen
-        env:
-          STEAM_2FASEED: ${{ secrets.STEAM_2FASEED }}
+
       - name: Update Steam Workshop
         uses: hmlendea/steam-workshop-update@latest
         with:
@@ -180,7 +175,7 @@ jobs:
         env:
           STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
           STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
-          STEAM_2FASEED: ${{ steps.gen.outputs.code }}
+          STEAM_2FASEED: ${{ secrets.STEAM_2FASEED }}
 
   deploy-pages:
     needs:
@@ -189,31 +184,32 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
-      VERSION: ${{ needs-compute-version.outputs.version }}
-      VALID_COUNT: ${{ needs-compute-version.outputs.valid_count }}
+      VERSION: ${{ needs.compute-version.outputs.version }}
+      VALID_COUNT: ${{ needs.compute-version.outputs.valid_count }}
     steps:
       - uses: actions/checkout@v3
         with:
           path: lilia
           persist-credentials: true
+
       - uses: actions/checkout@v3
         with:
           repository: LiliaFramework/LiliaFramework.github.io
           path: site
           token: ${{ secrets.LiliaGitSecret }}
+
       - name: Sync docs to site
         run: |
           rsync -a --delete --exclude '.git' lilia/documentation/ site/
+
       - name: Fetch modules.json
         run: |
-          curl -L -o site/modules.json https://raw.githubusercontent.com/LiliaFramework/Modules/refs/heads/gh-pages/modules.json
+          curl -L -o site/modules.json https://raw.githubusercontent.com/LiliaFramework/Modules/gh-pages/modules.json
+
       - name: Generate version.json
         run: |
-          cat > site/version.json <<EOF
-          {
-            "version": "${VERSION}"
-          }
-          EOF
+          echo "{\"version\": \"${VERSION}\"}" > site/version.json
+
       - name: Publish site content
         run: |
           cd site
@@ -223,4 +219,3 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m "ci: sync docs and update version.json to ${VERSION}"
             git push origin HEAD:main
-          fi
