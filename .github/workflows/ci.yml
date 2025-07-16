@@ -93,18 +93,10 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: lilia
-      - uses: actions/checkout@v3
-        with:
-          repository: LiliaFramework/LiliaFramework.github.io
-          path: site
-          token: ${{ secrets.LiliaGitSecret }}
       - name: Update GM.version in shared.lua
         run: |
           python3 - << 'PY'
-          import os
-          import re
-          import io
-          import sys
+          import os, re, io, sys
           version = os.environ["VERSION"]
           path = "lilia/gamemode/shared.lua"
           with io.open(path, encoding="utf-8-sig") as f:
@@ -174,6 +166,7 @@ jobs:
     needs:
       - release
       - compute-version
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.compute-version.outputs.version }}
@@ -182,7 +175,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: lilia
-          persist-credentials: true
       - uses: actions/checkout@v3
         with:
           repository: LiliaFramework/LiliaFramework.github.io
