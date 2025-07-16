@@ -167,7 +167,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
 
       - name: Update Steam Workshop
-        uses: hmlendea/steam-workshop-update@latest
+        uses: PAC3-Server/gmod-upload@master
         with:
           appid: 4000
           itemid: 2959728255
