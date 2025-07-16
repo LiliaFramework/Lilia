@@ -142,9 +142,7 @@ function lia.item.load(path, baseID, isBaseItem)
         lia.item.register(uniqueID, baseID, isBaseItem, path)
     elseif path:find("%.txt$") then
         local formatted = path:gsub("\\", "/"):lower()
-        if not formatted:find("^lilia/") then
-            lia.error("[Lilia] " .. L("textFileLuaRequired", path) .. "\n")
-        end
+        if not formatted:find("^lilia/") then lia.error("[Lilia] " .. L("textFileLuaRequired", path) .. "\n") end
     else
         lia.error("[Lilia] " .. L("invalidItemNaming", path) .. "\n")
     end

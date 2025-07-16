@@ -109,12 +109,10 @@ function lia.chat.parse(client, message, noSend)
     end
 
     if not message:find("%S") then return end
-
     local newType, newMsg, newAnon = hook.Run("ChatParsed", client, chatType, message, anonymous)
     chatType = newType or chatType
     message = newMsg or message
     anonymous = newAnon ~= nil and newAnon or anonymous
-
     if SERVER and not noSend then lia.chat.send(client, chatType, hook.Run("PlayerMessageSend", client, chatType, message, anonymous) or message, anonymous) end
     return chatType, message, anonymous
 end

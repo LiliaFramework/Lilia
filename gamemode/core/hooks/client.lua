@@ -366,6 +366,7 @@ end
 
 function GM:OnContextMenuOpen()
     self.BaseClass:OnContextMenuOpen()
+    vgui.Create("liaQuick")
 end
 
 function GM:OnContextMenuClose()
@@ -466,3 +467,28 @@ concommand.Add("dev_GetEntPos", function(client) if client:isStaff() then lia.in
 concommand.Add("dev_GetEntAngles", function(client) if client:isStaff() then lia.information(math.ceil(client:getTracedEntity():GetAngles().x) .. ", " .. math.ceil(client:getTracedEntity():GetAngles().y) .. ", " .. math.ceil(client:getTracedEntity():GetAngles().z)) end end)
 concommand.Add("dev_GetRoundEntPos", function(client) if client:isStaff() then lia.information(math.ceil(client:getTracedEntity():GetPos().x) .. ", " .. math.ceil(client:getTracedEntity():GetPos().y) .. ", " .. math.ceil(client:getTracedEntity():GetPos().z)) end end)
 concommand.Add("dev_GetPos", function(client) if client:isStaff() then lia.information(math.ceil(client:GetPos().x) .. ", " .. math.ceil(client:GetPos().y) .. ", " .. math.ceil(client:GetPos().z)) end end)
+-- Voice range visualization ----------------------------
+local VoiceRanges = {
+    Whispering = 120,
+    Talking = 300,
+    Yelling = 600,
+}
+
+hook.Add("PostDrawOpaqueRenderables", "liaVoiceRange", function()
+    if not lia.option.get("voiceRange", false) then return end
+    local client = LocalPlayer()
+    if not (IsValid(client) and client:IsSpeaking() and client:getChar()) then return end
+    local vt = client:getNetVar("VoiceType", "Talking")
+    local radius = VoiceRanges[vt] or VoiceRanges.Talking
+    local segments = 36
+    local pos = client:GetPos() + Vector(0, 0, 2)
+    local color = Color(0, 150, 255)
+    render.SetColorMaterial()
+    for i = 0, segments - 1 do
+        local startAng = math.rad(i / segments * 360)
+        local endAng = math.rad((i + 1) / segments * 360)
+        local startPos = pos + Vector(math.cos(startAng), math.sin(startAng), 0) * radius
+        local endPos = pos + Vector(math.cos(endAng), math.sin(endAng), 0) * radius
+        render.DrawLine(startPos, endPos, color, false)
+    end
+end)

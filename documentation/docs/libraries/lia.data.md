@@ -6,7 +6,7 @@ This page describes persistent data storage helpers.
 
 ## Overview
 
-The data library stores key/value pairs in the `lia_data` database table. Values are cached in memory inside `lia.data.stored` for quick access.
+The data library stores each key/value pair in its own `lia_data_<key>` database table. These tables are created on demand using `lia.db.tableExists` to avoid duplicates. Values are cached in memory inside `lia.data.stored` for quick access.
 
 ---
 
@@ -14,7 +14,7 @@ The data library stores key/value pairs in the `lia_data` database table. Values
 
 **Purpose**
 
-Saves the provided value under the specified key in the `lia_data` table and caches it in `lia.data.stored`.
+Saves the provided value under the specified key in its dedicated `lia_data_<key>` table and caches it in `lia.data.stored`.
 
 **Parameters**
 
@@ -50,7 +50,7 @@ end)
 
 **Purpose**
 
-Removes the stored value corresponding to the key from the `lia_data` table and clears the cached entry in `lia.data.stored`.
+Removes the stored value corresponding to the key from the `lia_data_<key>` table and clears the cached entry in `lia.data.stored`.
 
 **Parameters**
 
@@ -120,7 +120,7 @@ end)
 
 **Purpose**
 
-Loads all entries from the `lia_data` table into `lia.data.stored`. If the table is empty but legacy files exist, `lia.data.convertToDatabase` is automatically executed.
+Loads all entries from every `lia_data_<key>` table into `lia.data.stored`. If no tables exist but legacy files are found, `lia.data.convertToDatabase` is automatically executed.
 
 **Parameters**
 
@@ -146,7 +146,7 @@ lia.data.loadTables()
 
 **Purpose**
 
-Imports legacy `.txt` files from `data/lilia` into the `lia_data` SQL table. Players are prevented from joining while the conversion runs. If `changeMap` is `true`, the current map reloads once conversion finishes. The original text files are deleted after conversion.
+Imports legacy `.txt` files from `data/lilia` into their respective `lia_data_<key>` SQL tables. Players are prevented from joining while the conversion runs. If `changeMap` is `true`, the current map reloads once conversion finishes. The original text files are deleted after conversion.
 
 **Parameters**
 

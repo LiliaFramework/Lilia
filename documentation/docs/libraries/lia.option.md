@@ -27,6 +27,7 @@ Options are kept inside `lia.option.stored`; each entry contains:
 * `visible` (*boolean | function | nil*) – Whether the option appears in the config UI.
 
 * `shouldNetwork` (*boolean | nil*) – When `true`, the server fires `liaOptionReceived` upon change.
+* `isQuick` (*boolean | nil*) – Display this option inside the quick settings panel.
 
 Whenever `lia.option.set` updates a value, the `liaOptionChanged` hook is fired on both realms.
 
@@ -50,7 +51,7 @@ Registers a configurable option that can be networked.
 
 * `callback` (*function | nil*): Runs on change. Optional.
 
-* `data` (*table*): Extra option data.
+* `data` (*table*): Extra option data. Set `isQuick = true` to also list this option in the quick settings panel.
 
 **Realm**
 

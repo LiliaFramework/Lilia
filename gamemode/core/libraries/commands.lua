@@ -48,6 +48,7 @@ function lia.command.add(command, data)
         data.realCommand = command
         lia.command.list[command:lower()] = data
     end
+
     hook.Run("liaCommandAdded", command, data)
 end
 

@@ -388,6 +388,7 @@ function PANEL:addPlayer(ply, parent)
                 self.classLogo:SetMaterial(Material(logoMat))
                 self.lastClassLogo = logoMat
             end
+
             self.hideLogo = false
         else
             self.classLogo:SetMaterial(nil)

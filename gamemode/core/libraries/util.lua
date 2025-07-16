@@ -409,10 +409,11 @@ else
         return lines, maxW
     end
 
-    function lia.util.drawBlur(panel, amount, passes)
+    function lia.util.drawBlur(panel, amount, passes, alpha)
         amount = amount or 5
+        alpha = alpha or 255
         surface.SetMaterial(lia.util.getMaterial("pp/blurscreen"))
-        surface.SetDrawColor(255, 255, 255)
+        surface.SetDrawColor(255, 255, 255, alpha)
         local x, y = panel:LocalToScreen(0, 0)
         for i = -(passes or 0.2), 1, 0.2 do
             lia.util.getMaterial("pp/blurscreen"):SetFloat("$blur", i * amount)
@@ -422,10 +423,11 @@ else
         end
     end
 
-    function lia.util.drawBlurAt(x, y, w, h, amount, passes)
+    function lia.util.drawBlurAt(x, y, w, h, amount, passes, alpha)
         amount = amount or 5
+        alpha = alpha or 255
         surface.SetMaterial(lia.util.getMaterial("pp/blurscreen"))
-        surface.SetDrawColor(255, 255, 255)
+        surface.SetDrawColor(255, 255, 255, alpha)
         local x2, y2 = x / ScrW(), y / ScrH()
         local w2, h2 = (x + w) / ScrW(), (y + h) / ScrH()
         for i = -(passes or 0.2), 1, 0.2 do
@@ -584,7 +586,7 @@ else
     end
 
     function lia.util.CreateTableUI(title, columns, data, options, charID)
-        local frameWidth, frameHeight = ScrH() * 0.8, ScrH() * 0.8
+        local frameWidth, frameHeight = ScrW() * 0.8, ScrH() * 0.8
         local frame = vgui.Create("DFrame")
         frame:SetTitle(title or L("tableListTitle"))
         frame:SetSize(frameWidth, frameHeight)
@@ -736,7 +738,6 @@ else
 
             menu:Open()
         end
-
         return frame, listView
     end
 end

@@ -41,6 +41,16 @@ net.Receive("BinaryQuestionRequest", function(_, client)
     end
 end)
 
+net.Receive("ButtonRequest", function(_, client)
+    local id = net.ReadUInt(32)
+    local choice = net.ReadUInt(8)
+    local data = client.buttonRequests and client.buttonRequests[id]
+    if data and data[choice] then
+        data[choice](client)
+        client.buttonRequests[id] = nil
+    end
+end)
+
 net.Receive("liaTransferItem", function(_, client)
     local itemID = net.ReadUInt(32)
     local x = net.ReadUInt(32)

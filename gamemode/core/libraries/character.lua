@@ -1,4 +1,4 @@
-local characterMeta = lia.meta.character or {}
+﻿local characterMeta = lia.meta.character or {}
 lia.char = lia.char or {}
 lia.char.loaded = lia.char.loaded or {}
 lia.char.names = lia.char.names or {}
@@ -657,14 +657,12 @@ if SERVER then
         local data = lia.char.getCharData(charID)
         if not data then return false end
         data[key] = val
-
         local promise = lia.db.updateTable({
             _data = data
         }, nil, "characters", "_id = " .. charIDsafe)
+
         if deferred.isPromise(promise) then
-            promise:catch(function(err)
-                lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET _data", err))
-            end)
+            promise:catch(function(err) lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET _data", err)) end)
         elseif promise == false then
             lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET _data", sql.LastError()))
             return false
@@ -680,13 +678,13 @@ if SERVER then
         local promise = lia.db.updateTable({
             _name = name
         }, nil, "characters", "_id = " .. charIDsafe)
+
         if deferred.isPromise(promise) then
-            promise:catch(function(err)
-                lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET _name", err))
-            end)
+            promise:catch(function(err) lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET _name", err)) end)
         elseif promise == false then
             return false
         end
+
         if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setName(name) end
         return true
     end
@@ -697,13 +695,13 @@ if SERVER then
         local promise = lia.db.updateTable({
             _model = model
         }, nil, "characters", "_id = " .. charIDsafe)
+
         if deferred.isPromise(promise) then
-            promise:catch(function(err)
-                lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET _model", err))
-            end)
+            promise:catch(function(err) lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET _model", err)) end)
         elseif promise == false then
             return false
         end
+
         local groups = {}
         for _, v in pairs(bg or {}) do
             groups[v.id] = v.value

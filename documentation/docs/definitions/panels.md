@@ -60,6 +60,7 @@ Panels provide the building blocks for Lilia's user interface. Most derive from 
 | `liaSmallButton` | `DButton` | Compact button for tight layouts. |
 | `liaMiniButton` | `DButton` | Very small button variant. |
 | `liaNoBGButton` | `DButton` | Text-only button with no background. |
+| `liaQuick` | `EditablePanel` | Quick settings panel showing options flagged with `isQuick`. |
 
 ---
 
@@ -628,6 +629,24 @@ Tiny button using `liaMiniFont` for dense interfaces.
 **Description:**
 
 Text-only button that still shows the underline animation.
+
+---
+
+### `liaQuick`
+
+**Base Panel:**
+
+`EditablePanel`
+
+**Description:**
+
+Quick settings menu that lists options flagged with `isQuick`.
+
+**Example Usage:**
+
+```lua
+vgui.Create("liaQuick")
+```
 
 ---
 

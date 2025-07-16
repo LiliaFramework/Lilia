@@ -1,4 +1,4 @@
-lia.admin = lia.admin or {}
+﻿lia.admin = lia.admin or {}
 lia.admin.bans = lia.admin.bans or {}
 lia.admin.groups = lia.admin.groups or {}
 lia.admin.banList = lia.admin.banList or {}
@@ -14,11 +14,22 @@ function lia.admin.load()
         lia.admin.privileges[name] = priv
     end
 
+    local defaults = {"user", "admin", "superadmin"}
+    local created = false
     if table.Count(lia.admin.groups) == 0 then
-        lia.admin.createGroup("admin")
-        lia.admin.createGroup("superadmin")
-        lia.admin.save(true)
+        for _, grp in ipairs(defaults) do
+            lia.admin.createGroup(grp)
+        end
+        created = true
+    else
+        for _, grp in ipairs(defaults) do
+            if not lia.admin.groups[grp] then
+                lia.admin.createGroup(grp)
+                created = true
+            end
+        end
     end
+    if created then lia.admin.save(true) end
 
     lia.bootstrap("Administration", L("adminSystemLoaded"))
 end
@@ -42,6 +53,10 @@ end
 
 function lia.admin.removeGroup(groupName)
     if lia.admin.isDisabled() then return end
+    if groupName == "user" or groupName == "admin" or groupName == "superadmin" then
+        Error("[Lilia Administration] The base usergroups cannot be removed!\n")
+        return
+    end
     if not lia.admin.groups[groupName] then
         Error("[Lilia Administration] This usergroup doesn't exist!\n")
         return
@@ -142,7 +157,14 @@ end
 hook.Add("PlayerAuthed", "lia_SetUserGroup", function(ply, steamID)
     if lia.admin.isDisabled() then return end
     local steam64 = util.SteamIDTo64(steamID)
-    lia.db.query(Format("SELECT _userGroup FROM lia_players WHERE _steamID = %s", steam64), function(data) if istable(data) and data[1] then ply:SetUserGroup(data[1]._userGroup) end end)
+    lia.db.query(Format("SELECT _userGroup FROM lia_players WHERE _steamID = %s", steam64), function(data)
+        local group = istable(data) and data[1] and data[1]._userGroup
+        if not group or group == "" then
+            group = "user"
+            lia.db.query(Format("UPDATE lia_players SET _userGroup = '%s' WHERE _steamID = %s", lia.db.escape(group), steam64))
+        end
+        ply:SetUserGroup(group)
+    end)
 end)
 
 hook.Add("OnDatabaseLoaded", "lia_LoadBans", function()

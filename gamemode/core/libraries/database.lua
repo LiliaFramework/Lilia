@@ -261,7 +261,6 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS `lia_items`;
     DROP TABLE IF EXISTS `lia_invdata`;
     DROP TABLE IF EXISTS `lia_config`;
-    DROP TABLE IF EXISTS `lia_data`;
     DROP TABLE IF EXISTS `lia_logs`;
     DROP TABLE IF EXISTS `lia_bans`;
 ]])
@@ -288,7 +287,6 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS lia_items;
     DROP TABLE IF EXISTS lia_invdata;
     DROP TABLE IF EXISTS lia_config;
-    DROP TABLE IF EXISTS lia_data;
     DROP TABLE IF EXISTS lia_logs;
     DROP TABLE IF EXISTS lia_bans;
 ]], realCallback)
@@ -301,6 +299,9 @@ function lia.db.loadTables()
         lia.db.fieldExists("lia_players", "_firstJoin"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore) end end)
         lia.db.fieldExists("lia_players", "_lastJoin"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore) end end)
         lia.db.fieldExists("lia_players", "_userGroup"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _userGroup VARCHAR(32)"):catch(ignore) end end)
+        lia.db.fieldExists("lia_players", "_lastIP"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastIP VARCHAR(64)"):catch(ignore) end end)
+        lia.db.fieldExists("lia_players", "_lastOnline"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastOnline INTEGER"):catch(ignore) end end)
+        lia.db.fieldExists("lia_players", "_totalOnlineTime"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _totalOnlineTime FLOAT"):catch(ignore) end end)
         lia.db.fieldExists("lia_items", "_quantity"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_items ADD COLUMN _quantity INTEGER"):catch(ignore) end end)
         lia.db.addDatabaseFields()
         lia.db.tablesLoaded = true
@@ -316,7 +317,10 @@ function lia.db.loadTables()
                 _lastJoin datetime,
                 _userGroup varchar,
                 _data varchar,
-                _intro binary
+                _intro binary,
+                _lastIP varchar,
+                _lastOnline integer,
+                _totalOnlineTime float
             );
 
             CREATE TABLE IF NOT EXISTS lia_characters (
@@ -367,13 +371,6 @@ function lia.db.loadTables()
                 PRIMARY KEY (_schema, _key)
             );
 
-            CREATE TABLE IF NOT EXISTS lia_data (
-                _key text,
-                _folder text,
-                _map text,
-                _value text,
-                PRIMARY KEY (_key, _folder, _map)
-            );
 
             CREATE TABLE IF NOT EXISTS lia_bans (
                 _steamID TEXT,
@@ -402,6 +399,9 @@ function lia.db.loadTables()
                 `_userGroup` VARCHAR(32) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
                 `_data` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
                 `_intro` BINARY(1) NULL DEFAULT 0,
+                `_lastIP` VARCHAR(64) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+                `_lastOnline` INT(32) NULL DEFAULT 0,
+                `_totalOnlineTime` FLOAT NULL DEFAULT 0,
                 PRIMARY KEY (`_steamID`)
             );
 
@@ -456,13 +456,6 @@ function lia.db.loadTables()
                 PRIMARY KEY (`_schema`, `_key`)
             );
 
-            CREATE TABLE IF NOT EXISTS `lia_data` (
-                `_key` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_folder` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-                `_map` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-                `_value` TEXT NULL COLLATE 'utf8mb4_general_ci',
-                PRIMARY KEY (`_key`, `_folder`, `_map`)
-            );
 
             CREATE TABLE IF NOT EXISTS `lia_bans` (
                 `_steamID` varchar(64) NOT NULL,
@@ -599,13 +592,14 @@ function lia.db.addDatabaseFields()
         text = function(d) return ("%s TEXT"):format(d.field) end
     }
 
+    local ignore = function() end
     for _, v in pairs(lia.char.vars) do
         if v.field and typeMap[v.fieldType] then
             lia.db.fieldExists("lia_characters", v.field):next(function(exists)
                 if not exists then
                     local colDef = typeMap[v.fieldType](v)
                     if v.default ~= nil then colDef = colDef .. " DEFAULT '" .. tostring(v.default) .. "'" end
-                    lia.db.query("ALTER TABLE lia_characters ADD COLUMN " .. colDef)
+                    lia.db.query("ALTER TABLE lia_characters ADD COLUMN " .. colDef):catch(ignore)
                 end
             end)
         end

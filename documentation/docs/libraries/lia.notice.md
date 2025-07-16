@@ -76,7 +76,7 @@ lia.notices.notifyLocalized("questFoundItem", nil, "golden_key")
 
 ---
 
-### lia.notices.notify (client)
+### lia.notices.notify
 
 **Purpose**
 
@@ -106,7 +106,7 @@ lia.notices.notify("Welcome back!")
 
 ---
 
-### lia.notices.notifyLocalized (client)
+### lia.notices.notifyLocalized
 
 **Purpose**
 

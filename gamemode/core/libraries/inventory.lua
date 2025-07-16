@@ -141,6 +141,7 @@ else
             if oldOnRemove then oldOnRemove(self) end
             hook.Run("InventoryClosed", self, inventory)
         end
+
         lia.gui[globalName] = panel
         return panel
     end

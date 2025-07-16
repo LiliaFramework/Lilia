@@ -1,4 +1,4 @@
-## Installation Tutorial
+# Installation Tutorial
 
 Lilia is a versatile roleplay framework for Garry's Mod. This tutorial guides you through installing Lilia on your server so you can create a stable roleplaying environment.
 

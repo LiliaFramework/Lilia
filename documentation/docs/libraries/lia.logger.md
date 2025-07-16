@@ -6,7 +6,9 @@ This page documents logging utilities.
 
 ## Overview
 
-The logger library writes structured log entries to files, to the console, and to the `lia_logs` SQL table (gamemode, category, text, character ID, SteamID). Built-in log types live in `modules/administration/submodules/logging/logs.lua`; custom types can be added with `lia.log.addType`.
+The logger library writes structured log entries to the console and to the `lia_logs` SQL table (gamemode, category, text, character ID, SteamID). Built-in log types live in `modules/administration/submodules/logging/logs.lua`; custom types can be added with `lia.log.addType`.
+
+Each database row stores the timestamp, SteamID, and (if relevant) character ID so that every entry can be associated with a specific player.
 
 ---
 
@@ -48,7 +50,7 @@ Registers a log type by supplying a generator function and a category.
 
 * `logType` (*string*): Unique identifier.
 * `func` (*function*): Builds the log string (`func(client, ...) → string`).
-* `category` (*string*): Folder/category name used for log files.
+* `category` (*string*): Category name used to organise logs.
 
 **Realm**
 
@@ -107,7 +109,7 @@ print(cat .. ": " .. text)
 
 **Purpose**
 
-Creates a log entry, fires `OnServerLog`, prints to console, writes to file, and inserts into `lia_logs`.
+Creates a log entry, fires `OnServerLog`, prints to console, and inserts into `lia_logs`.
 
 **Parameters**
 

@@ -1,5 +1,3 @@
----
-
 # Player Meta
 
 Lilia extends Garry's Mod players with characters, inventories, and permission checks.
@@ -1970,6 +1968,37 @@ player:binaryQuestion("Proceed?", "Yes", "No", false, print)
 
 ---
 
+### requestButtons
+
+**Purpose**
+
+Prompts the player with multiple buttons that each trigger a server callback.
+
+**Parameters**
+
+* `title` (`string`): Window title.
+
+* `buttons` (`table`): Array where each element contains button text and a callback.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `nil`: This function does not return a value.
+
+**Example Usage**
+
+```lua
+player:requestButtons("Select one", {
+    {"A", function(client) print("Chose A") end},
+    {"B", function(client) print("Chose B") end}
+})
+```
+
+---
+
 ### getPlayTime (Server)
 
 **Purpose**
@@ -2133,7 +2162,7 @@ Retrieves a networked local variable stored on the player.
 **Example Usage**
 
 ```lua
-local stamina = player:getLocalVar("stamina", 0)
+local stamina = player:getLocalVar("stamina",  char:getMaxStamina())
 ```
 
 ---

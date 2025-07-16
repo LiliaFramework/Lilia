@@ -6,7 +6,7 @@ This page lists helper functions for working with colors.
 
 ## Overview
 
-The color library centralizes color utilities used throughout the UI. You can register reusable colors, adjust their channels to create variants, and fetch the main palette from the configuration. Many common color names are pre-registered and can be used with the global `Color()` function. Custom registrations are stored in `lia.color.stored`.
+The color library centralizes color utilities used throughout the UI. You can register reusable colors, adjust their channels to create variants, and fetch the main palette from the configuration. Many common color names are pre-registered and stored in `lia.color.stored`.
 
 ---
 
@@ -14,7 +14,7 @@ The color library centralizes color utilities used throughout the UI. You can re
 
 **Purpose**
 
-Registers a named color for later lookup or use with `Color(name)`.
+Registers a named color for later lookup by string name.
 
 **Parameters**
 
@@ -35,7 +35,7 @@ Registers a named color for later lookup or use with `Color(name)`.
 ```lua
 -- Register a custom purple shade and fetch it later
 lia.color.register("myPurple", { 128, 0, 180 })
-local c = Color("myPurple")
+local c = lia.color.stored.myPurple
 ```
 
 ---
@@ -70,7 +70,7 @@ Creates a new `Color` based on the input color with the given channel offsets.
 
 ```lua
 -- Darken the default red by 30 points
-local darkRed = lia.color.Adjust(Color("red"), -30, 0, 0)
+local darkRed = lia.color.Adjust(lia.color.stored.red, -30, 0, 0)
 ```
 
 ---
@@ -99,26 +99,3 @@ Builds and returns a UI palette derived from the config’s base color.
 local colors = lia.color.ReturnMainAdjustedColors()
 surface.SetDrawColor(colors.background)
 ```
-
----
-
-### Color(name)
-
-**Purpose**
-
-The global `Color()` function is overridden to accept a registered color name. Passing a string looks up the color in `lia.color.stored` and returns a `Color` object. Unrecognized names default to white.
-
-**Parameters**
-
-* `name` (*string*): Registered color name.
-* `alpha` (*number | nil*): Optional alpha override when creating the color. Defaults to `255` if omitted.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* *Color*: The color object matching the name.
-
----

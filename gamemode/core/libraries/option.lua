@@ -23,7 +23,8 @@ function lia.option.add(key, name, desc, default, callback, data)
         callback = callback,
         type = optionType,
         visible = data.visible,
-        shouldNetwork = data.shouldNetwork
+        shouldNetwork = data.shouldNetwork,
+        isQuick = data.isQuick
     }
 end
 
@@ -462,3 +463,12 @@ lia.option.add("descriptionWidth", "Description Width", "Adjust the description 
 lia.option.add("invertWeaponScroll", "Invert Weapon Scroll", "Invert the weapon selection scroll direction", false, nil, {
     category = "Weapon Selector"
 })
+
+function AddQuickOption(name, description, settingType, callback)
+    liaQuick[#liaQuick + 1] = {
+        name = name,
+        description = description,
+        type = settingType,
+        callback = callback
+    }
+end

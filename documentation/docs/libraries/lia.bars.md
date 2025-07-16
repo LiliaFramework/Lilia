@@ -6,7 +6,7 @@ This page describes the API for status bars displayed on the HUD.
 
 ## Overview
 
-The bars library manages health, stamina, and other progress bars shown on the player's HUD. It lets you register custom bar callbacks, draws them every frame, and provides helpers for temporary action bars. Bars automatically fade out after a few seconds unless kept visible. The `BarsAlwaysVisible` configuration option can override this behaviour, and the hooks `ShouldHideBars` and `ShouldBarDraw` allow modules to control when bars are rendered.
+The bars library manages health, stamina, and other progress bars shown on the player's HUD. It lets you register custom bar callbacks, draws them every frame, and provides helpers for temporary action bars. Bars automatically fade out after a few seconds unless kept visible. The `BarsAlwaysVisible` configuration option overrides this behaviour, keeping bars visible whenever they have a value above zero. The hooks `ShouldHideBars` and `ShouldBarDraw` allow modules to control when bars are rendered.
 
 Default health, armor, and stamina bars are registered automatically when the client loads.
 

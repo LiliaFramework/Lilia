@@ -600,6 +600,34 @@ net.Receive("BinaryQuestionRequest", function()
     end)
 end)
 
+net.Receive("ButtonRequest", function()
+    local id = net.ReadUInt(32)
+    local title = L(net.ReadString())
+    local count = net.ReadUInt(8)
+    local options = {}
+    for i = 1, count do
+        options[i] = L(net.ReadString())
+    end
+    local frame = vgui.Create("DFrame")
+    frame:SetTitle(title)
+    frame:SetSize(300, 60 + count * 30)
+    frame:Center()
+    frame:MakePopup()
+    for i, text in ipairs(options) do
+        local btn = frame:Add("DButton")
+        btn:Dock(TOP)
+        btn:DockMargin(10, 5, 10, 0)
+        btn:SetText(text)
+        btn.DoClick = function()
+            net.Start("ButtonRequest")
+            net.WriteUInt(id, 32)
+            net.WriteUInt(i, 8)
+            net.SendToServer()
+            frame:Close()
+        end
+    end
+end)
+
 net.Receive("AnimationStatus", function()
     local ply = net.ReadEntity()
     local active = net.ReadBool()

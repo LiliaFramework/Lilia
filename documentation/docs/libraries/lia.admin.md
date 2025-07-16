@@ -8,6 +8,8 @@ This page explains the built-in administration system.
 
 The admin library manages user groups, privileges, and bans. It automatically disables itself when the SAM or ServerGuard admin mods are detected.
 
+The base user groups `user`, `admin`, and `superadmin` are created automatically and cannot be removed.
+
 ---
 
 ### lia.admin.isDisabled
@@ -95,7 +97,7 @@ Registers a CAMI privilege for use with permission checks.
 
 **Purpose**
 
-Deletes a previously created user group.
+Deletes a previously created user group. The built-in groups `user`, `admin`, and `superadmin` are protected and cannot be removed.
 
 **Parameters**
 

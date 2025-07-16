@@ -1,18 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-function GM:InitPostEntity()
-    if SERVER then
-        lia.faction.formatModelData()
-        timer.Simple(2, function() lia.entityDataLoaded = true end)
-        lia.db.waitForTablesToLoad():next(function()
-            hook.Run("LoadData")
-            hook.Run("PostLoadData")
-        end)
-    else
-        lia.joinTime = RealTime() - 0.9716
-        if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
-    end
-end
-
 function GM:OnCharVarChanged(character, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
         for _, v in pairs(lia.char.varHooks[varName]) do

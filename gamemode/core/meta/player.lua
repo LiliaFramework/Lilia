@@ -303,8 +303,9 @@ end
 
 if SERVER then
     function playerMeta:restoreStamina(amount)
-        local current = self:getLocalVar("stamina", 0)
-        local maxStamina = self:getChar():getMaxStamina()
+        local char = self:getChar()
+        local current = self:getLocalVar("stamina", char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100))
+        local maxStamina = char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100)
         local value = math.Clamp(current + amount, 0, maxStamina)
         self:setLocalVar("stamina", value)
         if value >= maxStamina * 0.5 and self:getNetVar("brth", false) then
@@ -314,8 +315,9 @@ if SERVER then
     end
 
     function playerMeta:consumeStamina(amount)
-        local current = self:getLocalVar("stamina", 0)
-        local value = math.Clamp(current - amount, 0, self:getChar():getMaxStamina())
+        local char = self:getChar()
+        local current = self:getLocalVar("stamina", char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100))
+        local value = math.Clamp(current - amount, 0, char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100))
         self:setLocalVar("stamina", value)
         if value == 0 and not self:getNetVar("brth", false) then
             self:setNetVar("brth", true)
@@ -398,7 +400,7 @@ if SERVER then
         local name = self:steamName()
         local steamID64 = self:SteamID64()
         local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
-        lia.db.query("SELECT _data, _firstJoin, _lastJoin FROM lia_players WHERE _steamID = " .. steamID64, function(data)
+        lia.db.query("SELECT _data, _firstJoin, _lastJoin, _lastIP, _lastOnline, _totalOnlineTime FROM lia_players WHERE _steamID = " .. steamID64, function(data)
             if IsValid(self) and data and data[1] and data[1]._data then
                 lia.db.updateTable({
                     _lastJoin = timeStamp,
@@ -407,9 +409,10 @@ if SERVER then
                 self.firstJoin = data[1]._firstJoin or timeStamp
                 self.lastJoin = data[1]._lastJoin or timeStamp
                 self.liaData = util.JSONToTable(data[1]._data)
-                self.totalOnlineTime = self:getLiliaData("totalOnlineTime", 0)
+                self.totalOnlineTime = tonumber(data[1]._totalOnlineTime) or self:getLiliaData("totalOnlineTime", 0)
                 local default = os.time(lia.time.toNumber(self.lastJoin))
-                self.lastOnline = self:getLiliaData("lastOnline", default)
+                self.lastOnline = tonumber(data[1]._lastOnline) or self:getLiliaData("lastOnline", default)
+                self.lastIP = data[1]._lastIP or self:getLiliaData("lastIP")
                 if callback then callback(self.liaData) end
             else
                 lia.db.insertTable({
@@ -417,7 +420,11 @@ if SERVER then
                     _steamName = name,
                     _firstJoin = timeStamp,
                     _lastJoin = timeStamp,
-                    _data = {}
+                    _userGroup = "user",
+                    _data = {},
+                    _lastIP = "",
+                    _lastOnline = os.time(lia.time.toNumber(timeStamp)),
+                    _totalOnlineTime = 0
                 }, nil, "players")
 
                 if callback then callback({}) end
@@ -438,7 +445,10 @@ if SERVER then
         lia.db.updateTable({
             _steamName = name,
             _lastJoin = timeStamp,
-            _data = self.liaData
+            _data = self.liaData,
+            _lastIP = self:getLiliaData("lastIP", ""),
+            _lastOnline = currentTime,
+            _totalOnlineTime = stored + session
         }, nil, "players", "_steamID = " .. steamID64)
     end
 
@@ -616,6 +626,25 @@ if SERVER then
         net.WriteBool(manualDismiss)
         net.Send(self)
         self.binaryQuestionCallback = callback
+    end
+
+    function playerMeta:requestButtons(title, buttons)
+        self.buttonRequests = self.buttonRequests or {}
+        local labels = {}
+        local callbacks = {}
+        for i, data in ipairs(buttons) do
+            labels[i] = data.text or data[1] or ""
+            callbacks[i] = data.callback or data[2]
+        end
+        local id = table.insert(self.buttonRequests, callbacks)
+        net.Start("ButtonRequest")
+        net.WriteUInt(id, 32)
+        net.WriteString(title or "")
+        net.WriteUInt(#labels, 8)
+        for _, lbl in ipairs(labels) do
+            net.WriteString(lbl)
+        end
+        net.Send(self)
     end
 
     function playerMeta:getPlayTime()

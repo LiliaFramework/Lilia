@@ -52,7 +52,18 @@ if SERVER then
 
     hook.Add("PlayerInitialSpawn", "liaWorkshopInit", function(ply)
         if not lia.config.get("AutoDownloadWorkshop", true) then return end
-        timer.Simple(10, function() if IsValid(ply) then lia.workshop.send(ply) end end)
+        timer.Simple(2, function()
+            if IsValid(ply) then
+                net.Start("WorkshopDownloader_Info")
+                net.WriteTable(lia.workshop.cache or {})
+                net.Send(ply)
+            end
+        end)
+    end)
+
+    net.Receive("WorkshopDownloader_Request", function(_, client)
+        if not lia.config.get("AutoDownloadWorkshop", true) then return end
+        lia.workshop.send(client)
     end)
 
     lia.workshop.AddWorkshop("2959728255")
@@ -60,11 +71,104 @@ if SERVER then
 else
     local queue, panel, total, remain = {}, nil, 0, 0
     lia.workshop.serverIds = lia.workshop.serverIds or {}
+
+    lia.option.add(
+        "autoDownloadWorkshop",
+        "Auto Workshop Download",
+        "Automatically download server Workshop content",
+        nil,
+        nil,
+        {
+            category = "Workshop",
+            type = "Boolean",
+            shouldNetwork = true
+        }
+    )
+
+    local downloadFrame
+
     local function mounted(id)
         for _, addon in pairs(engine.GetAddons() or {}) do
             if tostring(addon.wsid or addon.workshopid) == tostring(id) and addon.mounted then return true end
         end
         return false
+    end
+
+    local function formatSize(bytes)
+        return string.format("%.2f", bytes / (1024 * 1024 * 1024))
+    end
+
+    local function showPrompt(total, have, size)
+        if IsValid(downloadFrame) then return end
+        local text = L("workshopDownloadPrompt", have, total, formatSize(size))
+        local frame = vgui.Create("DFrame")
+        downloadFrame = frame
+        frame:SetTitle(L("downloads"))
+        frame:SetSize(500, 150)
+        frame:Center()
+        frame:MakePopup()
+        local lbl = frame:Add("DLabel")
+        lbl:Dock(TOP)
+        lbl:SetWrap(true)
+        lbl:SetText(text)
+        lbl:DockMargin(10, 10, 10, 10)
+        lbl:SetTall(60)
+        local btnPanel = frame:Add("DPanel")
+        btnPanel:Dock(BOTTOM)
+        btnPanel:SetTall(40)
+        btnPanel.Paint = nil
+        local yes = btnPanel:Add("DButton")
+        yes:Dock(LEFT)
+        yes:SetText(L("yes"))
+        yes:DockMargin(0, 0, 5, 0)
+        yes.DoClick = function()
+            lia.option.set("autoDownloadWorkshop", true)
+            net.Start("WorkshopDownloader_Request")
+            net.SendToServer()
+            frame:Close()
+        end
+        local no = btnPanel:Add("DButton")
+        no:Dock(FILL)
+        no:SetText(L("no"))
+        no.DoClick = function()
+            lia.option.set("autoDownloadWorkshop", false)
+            frame:Close()
+        end
+    end
+
+    function lia.workshop.checkPrompt()
+        local opt = lia.option.get("autoDownloadWorkshop")
+        if opt == nil and lia.workshop.serverIds then
+            local ids = lia.workshop.serverIds
+            local total = table.Count(ids)
+            local have, missing = 0, {}
+            for id in pairs(ids) do
+                if mounted(id) then
+                    have = have + 1
+                else
+                    missing[#missing + 1] = id
+                end
+            end
+
+            local size, remaining = 0, #missing
+            if remaining == 0 then
+                showPrompt(total, have, 0)
+                return
+            end
+
+            for _, id in ipairs(missing) do
+                steamworks.FileInfo(id, function(fi)
+                    if fi and fi.file_size then size = size + fi.file_size end
+                    remaining = remaining - 1
+                    if remaining <= 0 then
+                        showPrompt(total, have, size)
+                    end
+                end)
+            end
+        elseif opt then
+            net.Start("WorkshopDownloader_Request")
+            net.SendToServer()
+        end
     end
 
     local function uiCreate()
@@ -135,6 +239,15 @@ else
     net.Receive("WorkshopDownloader_Start", function()
         refresh(net.ReadTable())
         start()
+    end)
+
+    net.Receive("WorkshopDownloader_Info", function()
+        refresh(net.ReadTable())
+        lia.workshop.checkPrompt()
+    end)
+
+    hook.Add("InitializedOptions", "liaWorkshopPromptCheck", function()
+        timer.Simple(0, function() lia.workshop.checkPrompt() end)
     end)
 
     concommand.Add("workshop_force_redownload", function()

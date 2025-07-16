@@ -36,8 +36,6 @@ theme:
     - content.tabs.link
     - content.tooltips
     - content.footnote.tooltips
-    - content.action.edit
-    - content.action.view
   font:
     text: Noto Sans
     code: Roboto Mono

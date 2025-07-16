@@ -46,7 +46,6 @@ jobs:
       - run: |
           cd lilia
           luacheck . --no-global --no-max-line-length --no-self --no-max-code-line-length --no-max-string-line-length --no-max-comment-line-length --no-max-cyclomatic-complexity
-
   compute-version:
     needs: linter
     runs-on: ubuntu-latest
@@ -78,11 +77,8 @@ jobs:
           VERSION_FLOAT=$(echo "$MAJOR.$MINOR$PATCH" | sed 's/^0*//' | sed 's/\.$/.0/')
           echo "version=$VERSION_FLOAT" >> "$GITHUB_OUTPUT"
           echo "valid_count=$VALID_COUNT" >> "$GITHUB_OUTPUT"
-
   release:
-    needs:
-      - compute-version
-      - linter
+    needs: compute-version
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
@@ -161,11 +157,10 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
   deploy-pages:
     needs:
-      - release
       - compute-version
+      - release
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
@@ -204,3 +199,26 @@ jobs:
             git commit -m "ci: sync docs and update version.json to ${VERSION}"
             git push origin HEAD:main
           fi
+  update-workshop:
+    needs:
+      - compute-version
+      - deploy-pages
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.compute-version.outputs.version }}
+      VALID_COUNT: ${{ needs.compute-version.outputs.valid_count }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: lilia
+      - name: steam-workshop-update
+        uses: hmlendea/steam-workshop-update@v1.2.0
+        with:
+          appid: 4000
+          itemid: 2959728255
+          path: lilia
+        env:
+          STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
+          STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
+          STEAM_2FASEED: ${{ secrets.STEAM_2FASEED }}

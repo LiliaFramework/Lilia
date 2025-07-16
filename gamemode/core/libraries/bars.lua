@@ -3,6 +3,7 @@ lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
 lia.bar.values = lia.bar.values or {}
 lia.bar.list = {}
+lia.bar.counter = lia.bar.counter or 0
 local function findIndexByIdentifier(identifier)
     for idx, bar in ipairs(lia.bar.list) do
         if bar.identifier == identifier then return idx end
@@ -22,12 +23,14 @@ function lia.bar.add(getValue, color, priority, identifier)
     end
 
     priority = priority or #lia.bar.list + 1
+    lia.bar.counter = lia.bar.counter + 1
     table.insert(lia.bar.list, {
         getValue = getValue,
         color = color or Color(math.random(150, 255), math.random(150, 255), math.random(150, 255)),
         priority = priority,
         lifeTime = 0,
-        identifier = identifier
+        identifier = identifier,
+        order = lia.bar.counter
     })
     return priority
 end
@@ -80,7 +83,11 @@ end
 
 function lia.bar.drawAll()
     if hook.Run("ShouldHideBars") then return end
-    table.sort(lia.bar.list, function(a, b) return a.priority < b.priority end)
+    table.sort(lia.bar.list, function(a, b)
+        if a.priority == b.priority then return (a.order or 0) < (b.order or 0) end
+        return a.priority < b.priority
+    end)
+
     local w, h = ScrW() * 0.35, 14
     local x, y = 4, 4
     local deltas = lia.bar.delta
@@ -102,7 +109,7 @@ function lia.bar.drawAll()
             bar.lifeTime = now + 5
         end
 
-        if always or bar.lifeTime >= now or bar.visible or hook.Run("ShouldBarDraw", bar) then
+        if always and value > 0 or bar.lifeTime >= now or bar.visible or hook.Run("ShouldBarDraw", bar) then
             lia.bar.drawBar(x, y, w, h, value, 1, bar.color)
             y = y + h + 2
         end

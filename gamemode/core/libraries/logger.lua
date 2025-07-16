@@ -53,7 +53,6 @@ if SERVER then
     end
 
     function lia.log.loadTables()
-        file.CreateDir("lilia/logs/" .. engine.ActiveGamemode())
         lia.db.waitForTablesToLoad():next(function()
             createLogsTable()
             checkLegacyLogs()
@@ -82,12 +81,7 @@ if SERVER then
         if not isstring(logString) then return end
         hook.Run("OnServerLog", client, logType, logString, category)
         lia.printLog(category, logString)
-        local logsDir = "lilia/logs/" .. engine.ActiveGamemode()
-        if not file.Exists(logsDir, "DATA") then file.CreateDir(logsDir) end
-        local filenameCategory = string.lower(string.gsub(category, "%s+", "_"))
-        local logFilePath = logsDir .. "/" .. filenameCategory .. ".txt"
         local timestamp = os.date("%Y-%m-%d %H:%M:%S")
-        file.Append(logFilePath, "[" .. timestamp .. "]\t" .. logString .. "\r\n")
         local charID
         local steamID
         if IsValid(client) then
@@ -171,12 +165,10 @@ if SERVER then
                 return
             end
 
-            lia.db.bulkInsert("logs", entries)
-                :next(finalize)
-                :catch(function(err)
-                    lia.printLog("Database", "Log conversion error: " .. tostring(err))
-                    finalize()
-                end)
+            lia.db.bulkInsert("logs", entries):next(finalize):catch(function(err)
+                lia.printLog("Database", "Log conversion error: " .. tostring(err))
+                finalize()
+            end)
         end)
     end
 
