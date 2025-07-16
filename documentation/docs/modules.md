@@ -12,11 +12,13 @@
   <li>Adds notifications when players lack funds</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/advert.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/advert.html">Access Here</a>
 </p>
 
@@ -40,11 +42,13 @@
   <li>Adds multiple drink items with varying strength</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/alcoholism.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/alcoholism.html">Access Here</a>
 </p>
 
@@ -68,11 +72,13 @@
   <li>Adds network messages to sync the restart countdown</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/autorestarter.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/autorestarter.html">Access Here</a>
 </p>
 
@@ -96,11 +102,13 @@
   <li>Adds a networked menu for editing bodygroups</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/bodygrouper.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/bodygrouper.html">Access Here</a>
 </p>
 
@@ -124,11 +132,13 @@
   <li>Adds menus to select factions or classes</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/broadcasts.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/broadcasts.html">Access Here</a>
 </p>
 
@@ -152,11 +162,13 @@
   <li>Adds duration control for each caption</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/captions.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/captions.html">Access Here</a>
 </p>
 
@@ -180,11 +192,13 @@
   <li>Adds hooks so other modules can use cards</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cards.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cards.html">Access Here</a>
 </p>
 
@@ -208,11 +222,13 @@
   <li>Adds toggle to disable adverts per user</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/chatmessages.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/chatmessages.html">Access Here</a>
 </p>
 
@@ -236,11 +252,13 @@
   <li>Adds ash particles that fade out</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cigs.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cigs.html">Access Here</a>
 </p>
 
@@ -264,11 +282,13 @@
   <li>Adds customizable text fonts</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cinematictext.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cinematictext.html">Access Here</a>
 </p>
 
@@ -292,11 +312,13 @@
   <li>Adds sound effects for grip and landing</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/climb.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/climb.html">Access Here</a>
 </p>
 
@@ -320,11 +342,13 @@
   <li>Adds the ability to add custom URLs</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/communitycommands.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/communitycommands.html">Access Here</a>
 </p>
 
@@ -348,11 +372,13 @@
   <li>Adds compass size configuration</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/compass.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/compass.html">Access Here</a>
 </p>
 
@@ -376,11 +402,13 @@
   <li>Adds logs when corpses are identified</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/corpseid.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/corpseid.html">Access Here</a>
 </p>
 
@@ -404,11 +432,13 @@
   <li>Adds compatibility with other menu modules</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cursor.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cursor.html">Access Here</a>
 </p>
 
@@ -432,11 +462,13 @@
   <li>Adds the ability for players to skip</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cutscenes.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cutscenes.html">Access Here</a>
 </p>
 
@@ -460,11 +492,13 @@
   <li>Adds client option to disable numbers</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/damagenumbers.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/damagenumbers.html">Access Here</a>
 </p>
 
@@ -488,11 +522,13 @@
   <li>Adds a toggle command to show or hide the HUD</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/developmenthud.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/developmenthud.html">Access Here</a>
 </p>
 
@@ -516,11 +552,13 @@
   <li>Adds logging of executed dev actions</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/developmentserver.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/developmentserver.html">Access Here</a>
 </p>
 
@@ -544,11 +582,13 @@
   <li>Adds filtering to control which logs are sent</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/discordrelay.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/discordrelay.html">Access Here</a>
 </p>
 
@@ -572,11 +612,13 @@
   <li>Adds analytics on total donations</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/donator.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/donator.html">Access Here</a>
 </p>
 
@@ -600,11 +642,13 @@
   <li>Adds a cooldown to prevent spam kicking</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/doorkick.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/doorkick.html">Access Here</a>
 </p>
 
@@ -628,11 +672,13 @@
   <li>Adds integration with death logs</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/enhanceddeath.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/enhanceddeath.html">Access Here</a>
 </p>
 
@@ -656,11 +702,13 @@
   <li>Adds fallback to short descriptions</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/extendeddescriptions.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/extendeddescriptions.html">Access Here</a>
 </p>
 
@@ -684,11 +732,13 @@
   <li>Adds compatibility with vehicle seats</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/firstpersoneffects.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/firstpersoneffects.html">Access Here</a>
 </p>
 
@@ -712,11 +762,13 @@
   <li>Adds keybind toggle support</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/flashlight.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/flashlight.html">Access Here</a>
 </p>
 
@@ -740,11 +792,13 @@
   <li>Adds optional head tracking support</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/freelook.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/freelook.html">Access Here</a>
 </p>
 
@@ -768,11 +822,13 @@
   <li>Adds sharing of points with other staff</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/gamemasterpoints.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/gamemasterpoints.html">Access Here</a>
 </p>
 
@@ -796,11 +852,13 @@
   <li>Adds toggles for individual HUD elements</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/hud_extras.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/hud_extras.html">Access Here</a>
 </p>
 
@@ -824,11 +882,13 @@
   <li>Adds integration with damage numbers</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/instakill.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/instakill.html">Access Here</a>
 </p>
 
@@ -852,11 +912,13 @@
   <li>Adds support for backpacks to increase capacity</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/inventory.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/inventory.html">Access Here</a>
 </p>
 
@@ -880,11 +942,13 @@
   <li>Adds per-player toggle to hide messages</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/joinleavemessages.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/joinleavemessages.html">Access Here</a>
 </p>
 
@@ -908,11 +972,13 @@
   <li>Adds per-faction enable toggles</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/loadmessages.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/loadmessages.html">Access Here</a>
 </p>
 
@@ -936,11 +1002,13 @@
   <li>Adds customizable rewards per tier</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/loyalism.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/loyalism.html">Access Here</a>
 </p>
 
@@ -964,11 +1032,13 @@
   <li>Adds manual cleanup commands</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/mapcleaner.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/mapcleaner.html">Access Here</a>
 </p>
 
@@ -992,11 +1062,13 @@
   <li>Adds logs of wages issued</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/modelpay.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/modelpay.html">Access Here</a>
 </p>
 
@@ -1020,11 +1092,13 @@
   <li>Adds undo support for recent tweaks</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/modeltweaker.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/modeltweaker.html">Access Here</a>
 </p>
 
@@ -1048,11 +1122,13 @@
   <li>Adds weighted chances for rare items</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/npcdrop.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/npcdrop.html">Access Here</a>
 </p>
 
@@ -1076,11 +1152,13 @@
   <li>Adds spawner entity previews</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/npcspawner.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/npcspawner.html">Access Here</a>
 </p>
 
@@ -1104,11 +1182,13 @@
   <li>Adds restore list to undo mistakes</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/permaremove.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/permaremove.html">Access Here</a>
 </p>
 
@@ -1132,11 +1212,13 @@
   <li>Adds handheld radio items</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/radio.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/radio.html">Access Here</a>
 </p>
 
@@ -1160,11 +1242,13 @@
   <li>Adds compatibility with melee weapons</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/raisedweapons.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/raisedweapons.html">Access Here</a>
 </p>
 
@@ -1188,11 +1272,13 @@
   <li>Adds friendly fire scaling options</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/realisticdamage.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/realisticdamage.html">Access Here</a>
 </p>
 
@@ -1216,11 +1302,13 @@
   <li>Adds optional third-person override</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/realisticview.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/realisticview.html">Access Here</a>
 </p>
 
@@ -1244,11 +1332,13 @@
   <li>Adds admin logging of rumour messages</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/rumour.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/rumour.html">Access Here</a>
 </p>
 
@@ -1272,11 +1362,13 @@
   <li>Adds configurable noise radius</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/shootlock.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/shootlock.html">Access Here</a>
 </p>
 
@@ -1300,11 +1392,13 @@
   <li>Adds chance for tools to break</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/simple_lockpicking.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/simple_lockpicking.html">Access Here</a>
 </p>
 
@@ -1328,11 +1422,13 @@
   <li>Adds sound and animation effects</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/slots.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/slots.html">Access Here</a>
 </p>
 
@@ -1356,11 +1452,13 @@
   <li>Adds automatic speed restore when switching</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/slowweapons.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/slowweapons.html">Access Here</a>
 </p>
 
@@ -1384,11 +1482,13 @@
   <li>Adds logs when players are tased</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/stungun.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/stungun.html">Access Here</a>
 </p>
 
@@ -1412,11 +1512,13 @@
   <li>Adds compatibility with the search submodule</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/tying.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/tying.html">Access Here</a>
 </p>
 
@@ -1440,11 +1542,13 @@
   <li>Adds shared constants for modules</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/utilities.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/utilities.html">Access Here</a>
 </p>
 
@@ -1468,11 +1572,13 @@
   <li>Adds configuration for bobbing frequency</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/viewbob.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/viewbob.html">Access Here</a>
 </p>
 
@@ -1496,11 +1602,13 @@
   <li>Adds fallback animations when VManip is missing</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/vmanip.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/vmanip.html">Access Here</a>
 </p>
 
@@ -1524,11 +1632,13 @@
   <li>Adds timed expiration for warrants</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/warrants.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/warrants.html">Access Here</a>
 </p>
 
@@ -1552,11 +1662,13 @@
   <li>Adds support for multiple map layouts</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/wartable.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/wartable.html">Access Here</a>
 </p>
 
@@ -1580,11 +1692,13 @@
   <li>Adds notifications on join attempt</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/whitelist.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/whitelist.html">Access Here</a>
 </p>
 
@@ -1608,11 +1722,13 @@
   <li>Adds admin commands to modify the list</li>
 </ul>
 
-<p><strong>Libraries:</strong> 
+<p><strong>Libraries:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/wordfilter.html">Access Here</a>
 </p>
 
-<p><strong>Hooks:</strong> 
+<br />
+
+<p><strong>Hooks:</strong>
   <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/wordfilter.html">Access Here</a>
 </p>
 
