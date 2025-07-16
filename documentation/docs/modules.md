@@ -5,6 +5,7 @@
 **Description:** Provides a paid /advert command so players can broadcast server-wide messages with a built-in cooldown.
 
 **Features:**
+
 - Adds a paid /advert command players can use
 - Adds a cooldown via AdvertCooldown to limit spam
 - Adds colored broadcast messages across the server
@@ -20,6 +21,7 @@
 **Description:** Introduces drinkable alcohol items that raise intoxication levels and temporarily blur the player's vision and movement.
 
 **Features:**
+
 - Adds alcohol items that raise BAC and gradually wear off
 - Adds screen blur and movement effects that scale with intoxication
 - Adds player notification when reaching DrunkNotifyThreshold
@@ -35,6 +37,7 @@
 **Description:** Schedules periodic server restarts and displays a countdown so players know when the restart will occur.
 
 **Features:**
+
 - Adds scheduling for automatic restarts using RestartInterval
 - Adds a countdown overlay configurable via RestartCountdownFont
 - Adds syncing of next restart time to clients
@@ -50,6 +53,7 @@
 **Description:** Adds a customizable bodygroup closet entity that lets players adjust their model bodygroups through a menu.
 
 **Features:**
+
 - Adds a spawnable closet entity for editing bodygroups
 - Adds the ability to customize its model via BodyGrouperModel
 - Adds menu access that requires proximity or privilege
@@ -65,6 +69,7 @@
 **Description:** Enables faction and class broadcast commands so staff can send messages to specific groups.
 
 **Features:**
+
 - Adds faction and class broadcast commands with CAMI checks
 - Adds logging of broadcast messages for staff review
 - Adds support for flagged players to send targeted messages
@@ -80,6 +85,7 @@
 **Description:** Provides an API for timed on-screen captions, ideal for story prompts or tutorials.
 
 **Features:**
+
 - Adds an API for timed on-screen captions
 - Adds support for both client and server use
 - Adds an easy way to deliver story prompts
@@ -95,6 +101,7 @@
 **Description:** Introduces a full deck of playing cards so players can draw random cards for minigames.
 
 **Features:**
+
 - Adds a full playing card deck
 - Adds random draws that sync to all players
 - Adds support for simple minigames
@@ -110,6 +117,7 @@
 **Description:** Periodically sends automated advert messages to chat at a configurable interval.
 
 **Features:**
+
 - Adds periodic server adverts to chat
 - Adds interval control via ChatMessagesInterval
 - Adds localized message support
@@ -125,6 +133,7 @@
 **Description:** Adds consumable cigarette items that produce smoke puffs while gradually burning down.
 
 **Features:**
+
 - Adds smokable cigarette items with workshop models
 - Adds puff effects while smoking
 - Adds cigarettes that are consumed over time
@@ -140,6 +149,7 @@
 **Description:** Displays stylish splash text with letterboxed bars for cinematic flair.
 
 **Features:**
+
 - Adds displays of cinematic splash text overlays
 - Adds screen darkening with letterbox bars
 - Adds support for scripted scenes
@@ -155,6 +165,7 @@
 **Description:** Lets players climb up ledges using movement keys with custom animations.
 
 **Features:**
+
 - Adds the ability to climb ledges using movement keys
 - Adds custom climbing animations
 - Adds integration with movement restrictions
@@ -170,6 +181,7 @@
 **Description:** Adds chat commands that open community links for quick access to resources.
 
 **Features:**
+
 - Adds chat commands to open community links
 - Adds easy sharing of workshop and docs
 - Adds configurable commands via settings
@@ -185,6 +197,7 @@
 **Description:** Displays a rotating HUD compass that can mark spotted locations or enemies.
 
 **Features:**
+
 - Adds a rotating HUD compass display
 - Adds spot markers showing enemy bearings
 - Adds support that requires workshop icons
@@ -200,6 +213,7 @@
 **Description:** Allows players to identify corpses after a short delay, displaying details above the body.
 
 **Features:**
+
 - Adds the ability to identify corpses after IdentificationTime
 - Adds use of CorpseMessageFont for 3D2D text
 - Adds info display above bodies
@@ -215,6 +229,7 @@
 **Description:** Adds a toggleable custom cursor for navigating menus more easily.
 
 **Features:**
+
 - Adds a toggleable custom cursor for the UI
 - Adds a purely client-side implementation
 - Adds improved menu navigation
@@ -230,6 +245,7 @@
 **Description:** Provides a lightweight framework for defining and playing synchronized cutscenes.
 
 **Features:**
+
 - Adds a framework for simple cutscene playback
 - Adds scenes defined through tables
 - Adds syncing of camera movement across clients
@@ -245,6 +261,7 @@
 **Description:** Shows floating damage numbers above targets and yourself whenever damage is dealt.
 
 **Features:**
+
 - Adds floating combat text when hitting targets
 - Adds different colors for damage types
 - Adds display of damage dealt and received
@@ -260,6 +277,7 @@
 **Description:** Provides a staff-only HUD overlay with additional development information.
 
 **Features:**
+
 - Adds a staff-only development HUD
 - Adds font customization via DevHudFont
 - Adds a requirement for the CAMI privilege
@@ -275,6 +293,7 @@
 **Description:** Allows running special development-only functions when the server is in testing mode.
 
 **Features:**
+
 - Adds a development server mode for testing
 - Adds the ability to run special development functions
 - Adds a toggle via configuration
@@ -290,6 +309,7 @@
 **Description:** Relays server logs to a Discord channel through configurable webhooks.
 
 **Features:**
+
 - Adds relaying of server logs to Discord
 - Adds webhook integration for connectivity
 - Adds formatting of real-time updates
@@ -305,6 +325,7 @@
 **Description:** Includes helper libraries for managing donor perks and displaying them on the scoreboard.
 
 **Features:**
+
 - Adds libraries to manage donor perks
 - Adds tracking for donor ranks and perks
 - Adds integration with the scoreboard
@@ -320,6 +341,7 @@
 **Description:** Lets players breach doors by kicking them open, with events logged for staff.
 
 **Features:**
+
 - Adds the ability to kick doors open with an animation
 - Adds logging of door kick events
 - Adds a fun breach mechanic
@@ -335,6 +357,7 @@
 **Description:** Respawns players at designated hospitals where they recover after death.
 
 **Features:**
+
 - Adds respawning of players at hospitals
 - Adds a medical recovery system
 - Adds support for multiple hospital spawns
@@ -350,6 +373,7 @@
 **Description:** Allows items to have lengthy, localized descriptions for richer roleplay.
 
 **Features:**
+
 - Adds support for long item descriptions
 - Adds localization for multiple languages
 - Adds better RP text display
@@ -365,6 +389,7 @@
 **Description:** Adds view sway and head bob to create a more immersive first-person perspective.
 
 **Features:**
+
 - Adds head bob and view sway
 - Adds camera motion synced to actions
 - Adds a realistic first-person feel
@@ -380,6 +405,7 @@
 **Description:** Reworks the flashlight with dynamic lighting and adjustable brightness settings.
 
 **Features:**
+
 - Adds a serious flashlight with dynamic light
 - Adds darkening of surroundings when turned off
 - Adds adjustable brightness
@@ -395,6 +421,7 @@
 **Description:** Lets players look around independently from their movement direction, similar to Escape from Tarkov.
 
 **Features:**
+
 - Adds the ability to look around without turning the body
 - Adds a toggle key similar to EFT
 - Adds movement direction preservation
@@ -410,6 +437,7 @@
 **Description:** Lets game masters create teleport points around the map and quickly jump between them.
 
 **Features:**
+
 - Adds teleport points for game masters
 - Adds quick navigation across large maps
 - Adds saving of locations for reuse
@@ -425,6 +453,7 @@
 **Description:** Adds optional HUD elements, such as an FPS counter, that other modules can extend.
 
 **Features:**
+
 - Adds extra HUD elements like an FPS counter
 - Adds fonts configurable with FPSHudFont
 - Adds hooks so other modules can extend
@@ -440,6 +469,7 @@
 **Description:** Makes headshots instantly lethal with configurable multipliers per weapon.
 
 **Features:**
+
 - Adds instant kill on headshots
 - Adds lethality configurable per weapon
 - Adds extra tension to combat
@@ -455,6 +485,7 @@
 **Description:** Implements a weight-based inventory that limits how much a character can carry.
 
 **Features:**
+
 - Adds an inventory limited by item weight
 - Adds a shared weightinv library file
 - Adds a new inventory type
@@ -470,6 +501,7 @@
 **Description:** Broadcasts notifications when players connect or disconnect from the server.
 
 **Features:**
+
 - Adds announcements when players join
 - Adds notifications on disconnect
 - Adds improved community awareness
@@ -485,6 +517,7 @@
 **Description:** Displays a custom message to players based on their faction the first time they load a character.
 
 **Features:**
+
 - Adds faction-based load messages
 - Adds execution when players first load a character
 - Adds customizable message text
@@ -500,6 +533,7 @@
 **Description:** Implements loyalty tiers that grant access to the /partytier command when flagged.
 
 **Features:**
+
 - Adds a loyalty tier system for players
 - Adds the /partytier command access
 - Adds permission control through flags
@@ -515,6 +549,7 @@
 **Description:** Periodically cleans the map of debris and props based on a configurable schedule.
 
 **Features:**
+
 - Adds periodic cleaning of map debris
 - Adds a configurable interval
 - Adds reduced server lag
@@ -530,6 +565,7 @@
 **Description:** Pays characters wages based on the model they use, allowing custom pay scales.
 
 **Features:**
+
 - Adds payment to characters based on model
 - Adds custom wage definitions
 - Adds integration into the economy
@@ -545,6 +581,7 @@
 **Description:** Provides an entity that lets admins adjust prop models' scale and rotation.
 
 **Features:**
+
 - Adds an entity to tweak prop models
 - Adds adjustments for scale and rotation
 - Adds easy UI controls
@@ -560,6 +597,7 @@
 **Description:** Makes certain NPCs drop specified items on death, encouraging looting.
 
 **Features:**
+
 - Adds NPCs that drop items on death
 - Adds DropTable to define probabilities
 - Adds encouragement for looting
@@ -575,6 +613,7 @@
 **Description:** Automatically spawns NPCs at designated points and lets admins force spawns.
 
 **Features:**
+
 - Adds automatic NPC spawns at points
 - Adds the ability for admins to force spawns
 - Adds logging of spawn actions
@@ -590,6 +629,7 @@
 **Description:** Lets admins permanently delete map entities and logs each removal for review.
 
 **Features:**
+
 - Adds ability to permanently delete map entities
 - Adds logging for each removed entity
 - Adds an admin-only command
@@ -605,6 +645,7 @@
 **Description:** Introduces a radio chat system with customizable fonts and models.
 
 **Features:**
+
 - Adds a radio chat channel for players
 - Adds font configuration via RadioFont
 - Adds workshop models for radios
@@ -620,6 +661,7 @@
 **Description:** Automatically lowers weapons when sprinting and raises them again after a short delay.
 
 **Features:**
+
 - Adds auto-lowering of weapons when running
 - Adds a raise delay set by WeaponRaiseSpeed
 - Adds prevention of accidental fire
@@ -635,6 +677,7 @@
 **Description:** Applies body part multipliers and other tweaks for more realistic combat damage.
 
 **Features:**
+
 - Adds damage scaling by body part
 - Adds custom multipliers for realism
 - Adds adjustments to player damage output
@@ -650,6 +693,7 @@
 **Description:** Replaces the camera with a full-body first-person view and smooth transition effects.
 
 **Features:**
+
 - Adds a first-person view that shows the full body
 - Adds immersive camera transitions
 - Adds compatibility with animations
@@ -665,6 +709,7 @@
 **Description:** Adds an anonymous rumour command so players can spread hearsay without revealing themselves.
 
 **Features:**
+
 - Adds an anonymous rumour chat command
 - Adds hiding of the sender's identity
 - Adds encouragement for roleplay intrigue
@@ -680,6 +725,7 @@
 **Description:** Allows players to shoot door locks to force them open as a loud breach option.
 
 **Features:**
+
 - Adds the ability to shoot door locks to open them
 - Adds a quick breach alternative
 - Adds a loud action that may alert others
@@ -695,6 +741,7 @@
 **Description:** Provides a basic lockpick tool for brute forcing doors with logged attempts.
 
 **Features:**
+
 - Adds a simple lockpick tool for doors
 - Adds logging of successful picks
 - Adds brute-force style gameplay
@@ -710,6 +757,7 @@
 **Description:** Adds a playable slot machine using a workshop model that pays out winnings.
 
 **Features:**
+
 - Adds a slot machine minigame
 - Adds a workshop model for the machine
 - Adds handling of payouts to winners
@@ -725,6 +773,7 @@
 **Description:** Slows player movement when wielding specified heavy weapons to encourage tactical choices.
 
 **Features:**
+
 - Adds slower movement while holding heavy weapons
 - Adds speed penalties defined per weapon
 - Adds encouragement for strategic choices
@@ -740,6 +789,7 @@
 **Description:** Adds a configurable taser weapon that stuns targets and can apply damage with post-process effects.
 
 **Features:**
+
 - Adds a taser weapon that immobilizes targets
 - Adds StunTime and MaxDist as configurable settings
 - Adds optional damage and post-process effects
@@ -755,6 +805,7 @@
 **Description:** Introduces handcuff-style tying items for arrests and logs all tie or untie actions.
 
 **Features:**
+
 - Adds handcuff items that restrain players
 - Adds logging for tie and untie events
 - Adds support for roleplay arrests
@@ -770,6 +821,7 @@
 **Description:** Provides extra helper functions for lia.util used by other modules.
 
 **Features:**
+
 - Adds extra helper functions in lia.util
 - Adds simplified utilities for common scripting tasks
 - Adds a central library used by other modules
@@ -785,6 +837,7 @@
 **Description:** Applies camera bobbing while moving with adjustable strength for immersion.
 
 **Features:**
+
 - Adds camera bobbing while moving
 - Adds adjustable intensity
 - Adds enhanced immersion
@@ -800,6 +853,7 @@
 **Description:** Adds support for VManip animations and gestures within the framework.
 
 **Features:**
+
 - Adds VManip animation support
 - Adds hand gestures for items
 - Adds functionality within Lilia
@@ -815,6 +869,7 @@
 **Description:** Allows staff to issue and remove player warrants while notifying everyone involved.
 
 **Features:**
+
 - Adds ability to issue and remove player warrants
 - Adds notifications displayed to players
 - Adds logging of all warrant actions
@@ -830,6 +885,7 @@
 **Description:** Adds an interactive 3D war table for planning operations on a shared map.
 
 **Features:**
+
 - Adds an interactive 3D war table
 - Adds the ability to plan operations on a map
 - Adds a workshop model
@@ -845,6 +901,7 @@
 **Description:** Implements a server whitelist system with optional player signup support.
 
 **Features:**
+
 - Adds a server access whitelist
 - Adds toggleable player signups
 - Adds a public module for gating entry
@@ -860,6 +917,7 @@
 **Description:** Filters unwanted words from chat using a customizable blacklist.
 
 **Features:**
+
 - Adds chat word filtering
 - Adds blocking of banned phrases
 - Adds an easy-to-extend list
