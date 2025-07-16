@@ -128,7 +128,7 @@
 
 <h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/chatmessages.zip">DOWNLOAD HERE</a></h1>
 
-<h2 align="center">Cigarettes 1.11</h2>
+<h2 align="center">Cigarettes 1.12</h2>
 
 **Description:** Adds consumable cigarette items that produce smoke puffs while gradually burning down.
 
@@ -752,7 +752,7 @@
 
 <h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/simple_lockpicking.zip">DOWNLOAD HERE</a></h1>
 
-<h2 align="center">Slots 1.10</h2>
+<h2 align="center">Slots 1.11</h2>
 
 **Description:** Adds a playable slot machine using a workshop model that pays out winnings.
 
