@@ -15,3 +15,11 @@ MODULE.Dependencies = {
         Realm = "shared"
     },
 }
+
+function MODULE:ModuleLoaded()
+    hook.Run("InventoryModuleLoaded", self)
+    hook.Run("InventoryRulesAdded", self)
+    hook.Run("InventoryPanelsBuilt", self)
+    hook.Run("InventoryNetworkingSetUp", self)
+    hook.Run("InventoryReady", self)
+end

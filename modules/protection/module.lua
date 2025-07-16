@@ -8,3 +8,11 @@ MODULE.CAMIPrivileges = {
         MinAccess = "admin"
     },
 }
+
+function MODULE:ModuleLoaded()
+    hook.Run("ProtectionModuleLoaded", self)
+    hook.Run("ProtectionConfigLoaded", self)
+    hook.Run("ProtectionHooksAdded", self)
+    hook.Run("ProtectionChecksInitialized", self)
+    hook.Run("ProtectionReady", self)
+end

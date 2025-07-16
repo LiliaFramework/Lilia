@@ -12,3 +12,11 @@ ACCESS_LABELS = {
     [DOOR_TENANT] = "tenant",
     [DOOR_OWNER] = "owner"
 }
+
+function MODULE:ModuleLoaded()
+    hook.Run("DoorsModuleLoaded", self)
+    hook.Run("DoorsDataLoaded", self)
+    hook.Run("DoorsKeysRegistered", self)
+    hook.Run("DoorsLocksInitialized", self)
+    hook.Run("DoorsReady", self)
+end

@@ -24,3 +24,11 @@ MODULE.CAMIPrivileges = {
         MinAccess = "superadmin"
     },
 }
+
+function MODULE:ModuleLoaded()
+    hook.Run("ChatboxModuleLoaded", self)
+    hook.Run("ChatboxFontsInitialized", self)
+    hook.Run("ChatboxChannelsRegistered", self)
+    hook.Run("ChatboxUIBuilt", self)
+    hook.Run("ChatboxReady", self)
+end

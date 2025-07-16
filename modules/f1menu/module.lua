@@ -43,3 +43,11 @@ function MODULE:InitializedModules()
         options = CLIENT and getMenuTabNames() or {"Status"}
     })
 end
+
+function MODULE:ModuleLoaded()
+    hook.Run("F1MenuModuleLoaded", self)
+    hook.Run("F1MenuPanelsBuilt", self)
+    hook.Run("F1MenuButtonsAdded", self)
+    hook.Run("F1MenuTabsRegistered", self)
+    hook.Run("F1MenuReady", self)
+end
