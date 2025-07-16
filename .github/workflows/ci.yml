@@ -48,7 +48,8 @@ jobs:
           luacheck . --no-global --no-max-line-length --no-self --no-max-code-line-length --no-max-string-line-length --no-max-comment-line-length --no-max-cyclomatic-complexity
 
   compute-version:
-    needs: linter
+    needs:
+      - linter
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.calc_version.outputs.version }}
@@ -80,7 +81,8 @@ jobs:
           echo "valid_count=$VALID_COUNT" >> "$GITHUB_OUTPUT"
 
   release:
-    needs: compute-version
+    needs:
+      - compute-version
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
@@ -159,16 +161,26 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
+      - name: Generate Steam Guard code
+        run: |
+          npm install steam-totp
+          node -e "
+            const totp = require('steam-totp')
+            console.log('::set-output name=code::' + totp.generateAuthCode(process.env.STEAM_2FASEED))
+          "
+        id: gen
+        env:
+          STEAM_2FASEED: ${{ secrets.STEAM_2FASEED }}
       - name: Update Steam Workshop
         uses: hmlendea/steam-workshop-update@latest
         with:
           appid: 4000
           itemid: 2959728255
-          path: 'lilia'
+          path: lilia
         env:
           STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
           STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
-          STEAM_2FASEED: ${{ secrets.STEAM_2FASEED }}
+          STEAM_2FASEED: ${{ steps.gen.outputs.code }}
 
   deploy-pages:
     needs:
@@ -177,8 +189,8 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
-      VERSION: ${{ needs.compute-version.outputs.version }}
-      VALID_COUNT: ${{ needs.compute-version.outputs.valid_count }}
+      VERSION: ${{ needs-compute-version.outputs.version }}
+      VALID_COUNT: ${{ needs-compute-version.outputs.valid_count }}
     steps:
       - uses: actions/checkout@v3
         with:
