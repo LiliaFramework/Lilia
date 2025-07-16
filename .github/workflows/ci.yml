@@ -202,23 +202,18 @@ jobs:
   update-workshop:
     needs:
       - compute-version
-      - deploy-pages
+      - release
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    env:
-      VERSION: ${{ needs.compute-version.outputs.version }}
-      VALID_COUNT: ${{ needs.compute-version.outputs.valid_count }}
     steps:
       - uses: actions/checkout@v3
         with:
           path: lilia
-      - name: steam-workshop-update
-        uses: hmlendea/steam-workshop-update@v1.2.0
+      - uses: game-ci/steam-workshop@v1
         with:
-          appid: 4000
-          itemid: 2959728255
-          path: lilia
+          appId: '4000'
+          itemId: '2959728255'
+          contentFolder: 'dist'
         env:
           STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
           STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
-          STEAM_2FASEED: ${{ secrets.STEAM_2FASEED }}
