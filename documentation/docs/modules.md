@@ -15,7 +15,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/advert.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/advert.html">Hooks</a></p>
 
-<h2 align="center">Alcoholism 1.09</h2>
+<h2 align="center">Alcoholism 1.10</h2>
 
 **Description:** Introduces drinkable alcohol items that raise intoxication levels and temporarily blur the player's vision and movement.
 
@@ -45,7 +45,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/autorestarter.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/autorestarter.html">Hooks</a></p>
 
-<h2 align="center">Bodygrouper 1.16</h2>
+<h2 align="center">Bodygrouper 1.17</h2>
 
 **Description:** Adds a customizable bodygroup closet entity that lets players adjust their model bodygroups through a menu.
 
@@ -60,7 +60,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/bodygrouper.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/bodygrouper.html">Hooks</a></p>
 
-<h2 align="center">Broadcasts 1.12</h2>
+<h2 align="center">Broadcasts 1.13</h2>
 
 **Description:** Enables faction and class broadcast commands so staff can send messages to specific groups.
 
@@ -660,7 +660,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/realisticview.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/realisticview.html">Hooks</a></p>
 
-<h2 align="center">Rumour 1.10</h2>
+<h2 align="center">Rumour 1.11</h2>
 
 **Description:** Adds an anonymous rumour command so players can spread hearsay without revealing themselves.
 
@@ -780,7 +780,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/utilities.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/utilities.html">Hooks</a></p>
 
-<h2 align="center">View Bob 1.09</h2>
+<h2 align="center">View Bob 1.10</h2>
 
 **Description:** Applies camera bobbing while moving with adjustable strength for immersion.
 
@@ -855,7 +855,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/whitelist.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/whitelist.html">Hooks</a></p>
 
-<h2 align="center">Word Filter 1.10</h2>
+<h2 align="center">Word Filter 1.11</h2>
 
 **Description:** Filters unwanted words from chat using a customizable blacklist.
 
