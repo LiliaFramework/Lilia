@@ -60,7 +60,7 @@
 
 <p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/bodygrouper.zip">Download Here</a></p>
 
-<h2 align="center">Broadcasts 1.13</h2>
+<h2 align="center">Broadcasts 1.14</h2>
 
 **Description:** Enables faction and class broadcast commands so staff can send messages to specific groups.
 
