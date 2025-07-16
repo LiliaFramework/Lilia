@@ -71,22 +71,7 @@ if SERVER then
 else
     local queue, panel, total, remain = {}, nil, 0, 0
     lia.workshop.serverIds = lia.workshop.serverIds or {}
-
-    lia.option.add(
-        "autoDownloadWorkshop",
-        "Auto Workshop Download",
-        "Automatically download server Workshop content",
-        nil,
-        nil,
-        {
-            category = "Workshop",
-            type = "Boolean",
-            shouldNetwork = true
-        }
-    )
-
     local downloadFrame
-
     local function mounted(id)
         for _, addon in pairs(engine.GetAddons() or {}) do
             if tostring(addon.wsid or addon.workshopid) == tostring(id) and addon.mounted then return true end
@@ -127,6 +112,7 @@ else
             net.SendToServer()
             frame:Close()
         end
+
         local no = btnPanel:Add("DButton")
         no:Dock(FILL)
         no:SetText(L("no"))
@@ -160,9 +146,7 @@ else
                 steamworks.FileInfo(id, function(fi)
                     if fi and fi.file_size then size = size + fi.file_size end
                     remaining = remaining - 1
-                    if remaining <= 0 then
-                        showPrompt(total, have, size)
-                    end
+                    if remaining <= 0 then showPrompt(total, have, size) end
                 end)
             end
         elseif opt then
@@ -246,10 +230,7 @@ else
         lia.workshop.checkPrompt()
     end)
 
-    hook.Add("InitializedOptions", "liaWorkshopPromptCheck", function()
-        timer.Simple(0, function() lia.workshop.checkPrompt() end)
-    end)
-
+    hook.Add("InitializedOptions", "liaWorkshopPromptCheck", function() timer.Simple(0, function() lia.workshop.checkPrompt() end) end)
     concommand.Add("workshop_force_redownload", function()
         table.Empty(queue)
         refresh()

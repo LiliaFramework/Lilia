@@ -161,7 +161,7 @@ function QuickPanel:Init()
         else
             self:MoveTo(ScrW() - 400, 30, 0.15, nil, nil, function()
                 local height = 0
-                for k, v in pairs(self.items) do
+                for _, v in pairs(self.items) do
                     if IsValid(v) then height = height + v:GetTall() + 1 end
                 end
 
@@ -245,7 +245,7 @@ function QuickPanel:addSpacer()
     panel:SetTall(1)
     panel:Dock(TOP)
     panel:DockMargin(0, 1, 0, 0)
-    panel.Paint = function(this, w, h)
+    panel.Paint = function(_, w, h)
         surface.SetDrawColor(255, 255, 255, 10)
         surface.DrawRect(0, 0, w, h)
     end
@@ -271,9 +271,9 @@ function QuickPanel:addSlider(text, callback, value, min, max, decimal)
     textEntry:SetFont("liaMediumLightFont")
     textEntry:SetTextColor(color_white)
     if callback then
-        slider.OnValueChanged = function(this, value)
-            value = math.Round(value, decimal)
-            callback(this, value)
+        slider.OnValueChanged = function(this, newValue)
+            local roundedValue = math.Round(newValue, decimal or 0)
+            callback(this, roundedValue)
         end
     end
 

@@ -464,11 +464,8 @@ lia.option.add("invertWeaponScroll", "Invert Weapon Scroll", "Invert the weapon 
     category = "Weapon Selector"
 })
 
-function AddQuickOption(name, description, settingType, callback)
-    liaQuick[#liaQuick + 1] = {
-        name = name,
-        description = description,
-        type = settingType,
-        callback = callback
-    }
-end
+lia.option.add("autoDownloadWorkshop", "Auto Workshop Download", "Automatically download server Workshop content", nil, nil, {
+    category = "Workshop",
+    type = "Boolean",
+    shouldNetwork = true
+})
