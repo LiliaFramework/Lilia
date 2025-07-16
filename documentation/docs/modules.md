@@ -14,7 +14,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/advert.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/advert.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/advert.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/advert.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Alcoholism 1.10</h2>
 
@@ -30,7 +30,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/alcoholism.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/alcoholism.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/alcoholism.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/alcoholism.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Auto Restarter 1.10</h2>
 
@@ -46,7 +46,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/autorestarter.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/autorestarter.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/autorestarter.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/autorestarter.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Bodygrouper 1.17</h2>
 
@@ -62,7 +62,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/bodygrouper.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/bodygrouper.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/bodygrouper.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/bodygrouper.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Broadcasts 1.14</h2>
 
@@ -78,7 +78,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/broadcasts.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/broadcasts.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/broadcasts.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/broadcasts.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Captions 1.13</h2>
 
@@ -94,7 +94,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/captions.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/captions.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/captions.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/captions.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Cards 1.10</h2>
 
@@ -110,7 +110,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cards.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cards.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cards.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cards.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Chat Messages 1.09</h2>
 
@@ -126,7 +126,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/chatmessages.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/chatmessages.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/chatmessages.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/chatmessages.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Cigarettes 1.11</h2>
 
@@ -142,7 +142,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cigs.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cigs.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cigs.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cigs.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Cinematic Text 1.15</h2>
 
@@ -158,7 +158,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cinematictext.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cinematictext.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cinematictext.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cinematictext.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Climb 1.09</h2>
 
@@ -174,7 +174,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/climb.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/climb.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/climb.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/climb.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Community Commands 1.14</h2>
 
@@ -190,7 +190,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/communitycommands.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/communitycommands.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/communitycommands.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/communitycommands.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Compass 1.09</h2>
 
@@ -206,7 +206,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/compass.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/compass.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/compass.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/compass.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Corpse ID 1.13</h2>
 
@@ -222,7 +222,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/corpseid.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/corpseid.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/corpseid.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/corpseid.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Cursor 1.08</h2>
 
@@ -238,7 +238,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cursor.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cursor.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cursor.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cursor.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Simple Cutscenes 1.09</h2>
 
@@ -254,7 +254,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cutscenes.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cutscenes.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cutscenes.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cutscenes.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Damage Numbers 1.10</h2>
 
@@ -270,7 +270,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/damagenumbers.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/damagenumbers.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/damagenumbers.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/damagenumbers.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Development HUD 1.13</h2>
 
@@ -286,7 +286,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/developmenthud.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/developmenthud.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/developmenthud.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/developmenthud.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Development Server 1.08</h2>
 
@@ -302,7 +302,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/developmentserver.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/developmentserver.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/developmentserver.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/developmentserver.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Discord Relay 1.09</h2>
 
@@ -318,7 +318,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/discordrelay.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/discordrelay.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/discordrelay.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/discordrelay.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Donator 1.15</h2>
 
@@ -334,7 +334,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/donator.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/donator.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/donator.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/donator.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Door Kick 1.10</h2>
 
@@ -350,7 +350,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/doorkick.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/doorkick.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/doorkick.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/doorkick.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Hospitals 1.08</h2>
 
@@ -366,7 +366,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/enhanceddeath.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/enhanceddeath.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/enhanceddeath.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/enhanceddeath.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Extended Descriptions 1.14</h2>
 
@@ -382,7 +382,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/extendeddescriptions.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/extendeddescriptions.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/extendeddescriptions.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/extendeddescriptions.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">First Person Effects 1.08</h2>
 
@@ -398,7 +398,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/firstpersoneffects.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/firstpersoneffects.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/firstpersoneffects.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/firstpersoneffects.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Flashlight 1.09</h2>
 
@@ -414,7 +414,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/flashlight.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/flashlight.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/flashlight.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/flashlight.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Free Look 1.10</h2>
 
@@ -430,7 +430,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/freelook.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/freelook.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/freelook.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/freelook.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Gamemaster Teleport Points 1.08</h2>
 
@@ -446,7 +446,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/gamemasterpoints.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/gamemasterpoints.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/gamemasterpoints.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/gamemasterpoints.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Extra HUD Elements 1.12</h2>
 
@@ -462,7 +462,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/hud_extras.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/hud_extras.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hud_extras.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hud_extras.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Instant Killing 1.08</h2>
 
@@ -478,7 +478,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/instakill.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/instakill.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/instakill.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/instakill.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Weight Inv 1.09</h2>
 
@@ -494,7 +494,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/inventory.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/inventory.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/inventory.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/inventory.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Join Leave Messages 1.10</h2>
 
@@ -510,7 +510,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/joinleavemessages.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/joinleavemessages.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/joinleavemessages.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/joinleavemessages.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Load Messages 1.08</h2>
 
@@ -526,7 +526,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/loadmessages.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/loadmessages.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loadmessages.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loadmessages.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Loyalism 1.12</h2>
 
@@ -542,7 +542,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/loyalism.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/loyalism.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loyalism.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loyalism.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Map Cleaner 1.09</h2>
 
@@ -558,7 +558,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/mapcleaner.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/mapcleaner.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/mapcleaner.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/mapcleaner.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Model Pay 1.09</h2>
 
@@ -574,7 +574,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/modelpay.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/modelpay.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modelpay.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modelpay.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Model Tweaker 1.14</h2>
 
@@ -590,7 +590,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/modeltweaker.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/modeltweaker.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modeltweaker.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modeltweaker.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">NPC Drops 1.08</h2>
 
@@ -606,7 +606,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/npcdrop.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/npcdrop.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcdrop.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcdrop.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">NPC Spawner 1.10</h2>
 
@@ -622,7 +622,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/npcspawner.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/npcspawner.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcspawner.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcspawner.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Perma Remove 1.09</h2>
 
@@ -638,7 +638,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/permaremove.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/permaremove.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/permaremove.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/permaremove.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Radio 1.15</h2>
 
@@ -654,7 +654,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/radio.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/radio.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/radio.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/radio.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Raised Weapons 1.09</h2>
 
@@ -670,7 +670,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/raisedweapons.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/raisedweapons.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/raisedweapons.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/raisedweapons.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Realistic Damage 1.07</h2>
 
@@ -686,7 +686,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/realisticdamage.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/realisticdamage.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticdamage.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticdamage.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Realistic View 1.11</h2>
 
@@ -702,7 +702,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/realisticview.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/realisticview.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticview.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticview.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Rumour 1.11</h2>
 
@@ -718,7 +718,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/rumour.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/rumour.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/rumour.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/rumour.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Shoot Locks 1.10</h2>
 
@@ -734,7 +734,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/shootlock.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/shootlock.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/shootlock.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/shootlock.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Lockpicking 1.09</h2>
 
@@ -750,7 +750,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/simple_lockpicking.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/simple_lockpicking.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/simple_lockpicking.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/simple_lockpicking.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Slots 1.10</h2>
 
@@ -766,7 +766,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/slots.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/slots.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slots.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slots.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Heavy Weapons 1.09</h2>
 
@@ -782,7 +782,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/slowweapons.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/slowweapons.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slowweapons.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slowweapons.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Stun Gun 101.13</h2>
 
@@ -798,7 +798,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/stungun.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/stungun.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/stungun.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/stungun.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Tying 1.16</h2>
 
@@ -814,7 +814,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/tying.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/tying.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/tying.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/tying.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Code Utils 1.13</h2>
 
@@ -830,7 +830,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/utilities.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/utilities.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/utilities.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/utilities.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">View Bob 1.10</h2>
 
@@ -846,7 +846,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/viewbob.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/viewbob.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/viewbob.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/viewbob.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">VManip 1.10</h2>
 
@@ -862,7 +862,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/vmanip.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/vmanip.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/vmanip.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/vmanip.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Warrant 1.16</h2>
 
@@ -878,7 +878,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/warrants.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/warrants.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/warrants.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/warrants.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">War Table 1.14</h2>
 
@@ -894,7 +894,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/wartable.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/wartable.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wartable.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wartable.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Whitelist 1.11</h2>
 
@@ -910,7 +910,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/whitelist.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/whitelist.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/whitelist.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/whitelist.zip"><strong>Download Here</strong></a></p>
 
 <h2 align="center">Word Filter 1.12</h2>
 
@@ -926,7 +926,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/wordfilter.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/wordfilter.html">Hooks</a></p>
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wordfilter.zip">Download Here</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wordfilter.zip"><strong>Download Here</strong></a></p>
 
 ---
 
