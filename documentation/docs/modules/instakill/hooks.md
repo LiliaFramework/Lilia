@@ -1,3 +1,29 @@
+### `ShouldInstantKill`
+
+**Purpose**
+`Called before processing a headshot to determine if instant kill should occur.`
+
+**Parameters**
+
+* `player` (`Player`): `Victim receiving the hit.`
+* `damageInfo` (`CTakeDamageInfo`): `Damage information object.`
+
+**Realm**
+`Server`
+
+**Returns**
+`boolean` — `return false to ignore the instant kill.`
+
+**Example**
+
+```lua
+hook.Add("ShouldInstantKill", "ProtectNPCs", function(ply, dmginfo)
+    if ply:IsNPC() then return false end
+end)
+```
+
+---
+
 ### `PlayerPreInstantKill`
 
 **Purpose**
