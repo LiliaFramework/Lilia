@@ -752,7 +752,7 @@
   </a>
 </p>
 
-<h2 align="center">Instant Killing 1.09</h2>
+<h2 align="center">Instant Killing 1.10</h2>
 
 <p><strong>Description:</strong></p>
 <p>Makes headshots instantly lethal with configurable multipliers per weapon.</p>
