@@ -1,4 +1,4 @@
-<h2 align="center">Advert 1.11</h2>
+<h2 align="center">Advert 1.12</h2>
 
 <p><strong>Description:</strong></p>
 <p>Provides a paid /advert command so players can broadcast server-wide messages with a built-in cooldown.</p>
@@ -24,7 +24,7 @@
   </a>
 </p>
 
-<h2 align="center">Alcoholism 1.10</h2>
+<h2 align="center">Alcoholism 1.11</h2>
 
 <p><strong>Description:</strong></p>
 <p>Introduces drinkable alcohol items that raise intoxication levels and temporarily blur the player's vision and movement.</p>
@@ -76,7 +76,7 @@
   </a>
 </p>
 
-<h2 align="center">Bodygrouper 1.17</h2>
+<h2 align="center">Bodygrouper 1.18</h2>
 
 <p><strong>Description:</strong></p>
 <p>Adds a customizable bodygroup closet entity that lets players adjust their model bodygroups through a menu.</p>
@@ -102,7 +102,7 @@
   </a>
 </p>
 
-<h2 align="center">Broadcasts 1.14</h2>
+<h2 align="center">Broadcasts 1.15</h2>
 
 <p><strong>Description:</strong></p>
 <p>Enables faction and class broadcast commands so staff can send messages to specific groups.</p>
@@ -128,7 +128,7 @@
   </a>
 </p>
 
-<h2 align="center">Captions 1.13</h2>
+<h2 align="center">Captions 1.14</h2>
 
 <p><strong>Description:</strong></p>
 <p>Provides an API for timed on-screen captions, ideal for story prompts or tutorials.</p>
@@ -180,7 +180,7 @@
   </a>
 </p>
 
-<h2 align="center">Chat Messages 1.09</h2>
+<h2 align="center">Chat Messages 1.10</h2>
 
 <p><strong>Description:</strong></p>
 <p>Periodically sends automated advert messages to chat at a configurable interval.</p>
@@ -336,7 +336,7 @@
   </a>
 </p>
 
-<h2 align="center">Corpse ID 1.13</h2>
+<h2 align="center">Corpse ID 1.14</h2>
 
 <p><strong>Description:</strong></p>
 <p>Allows players to identify corpses after a short delay, displaying details above the body.</p>
@@ -726,7 +726,7 @@
   </a>
 </p>
 
-<h2 align="center">Extra HUD Elements 1.12</h2>
+<h2 align="center">Extra HUD Elements 1.13</h2>
 
 <p><strong>Description:</strong></p>
 <p>Adds optional HUD elements, such as an FPS counter, that other modules can extend.</p>
@@ -752,7 +752,7 @@
   </a>
 </p>
 
-<h2 align="center">Instant Killing 1.08</h2>
+<h2 align="center">Instant Killing 1.09</h2>
 
 <p><strong>Description:</strong></p>
 <p>Makes headshots instantly lethal with configurable multipliers per weapon.</p>
@@ -778,7 +778,7 @@
   </a>
 </p>
 
-<h2 align="center">Weight Inv 1.09</h2>
+<h2 align="center">Weight Inv 1.10</h2>
 
 <p><strong>Description:</strong></p>
 <p>Implements a weight-based inventory that limits how much a character can carry.</p>
@@ -1038,7 +1038,7 @@
   </a>
 </p>
 
-<h2 align="center">Radio 1.15</h2>
+<h2 align="center">Radio 1.16</h2>
 
 <p><strong>Description:</strong></p>
 <p>Introduces a radio chat system with customizable fonts and models.</p>
@@ -1064,7 +1064,7 @@
   </a>
 </p>
 
-<h2 align="center">Raised Weapons 1.09</h2>
+<h2 align="center">Raised Weapons 1.10</h2>
 
 <p><strong>Description:</strong></p>
 <p>Automatically lowers weapons when sprinting and raises them again after a short delay.</p>
@@ -1272,7 +1272,7 @@
   </a>
 </p>
 
-<h2 align="center">Stun Gun 101.13</h2>
+<h2 align="center">Stun Gun 101.14</h2>
 
 <p><strong>Description:</strong></p>
 <p>Adds a configurable taser weapon that stuns targets and can apply damage with post-process effects.</p>
@@ -1350,7 +1350,7 @@
   </a>
 </p>
 
-<h2 align="center">View Bob 1.10</h2>
+<h2 align="center">View Bob 1.11</h2>
 
 <p><strong>Description:</strong></p>
 <p>Applies camera bobbing while moving with adjustable strength for immersion.</p>
@@ -1376,7 +1376,7 @@
   </a>
 </p>
 
-<h2 align="center">VManip 1.10</h2>
+<h2 align="center">VManip 1.11</h2>
 
 <p><strong>Description:</strong></p>
 <p>Adds support for VManip animations and gestures within the framework.</p>
@@ -1402,7 +1402,7 @@
   </a>
 </p>
 
-<h2 align="center">Warrant 1.16</h2>
+<h2 align="center">Warrant 1.17</h2>
 
 <p><strong>Description:</strong></p>
 <p>Allows staff to issue and remove player warrants while notifying everyone involved.</p>
@@ -1454,7 +1454,7 @@
   </a>
 </p>
 
-<h2 align="center">Whitelist 1.11</h2>
+<h2 align="center">Whitelist 1.12</h2>
 
 <p><strong>Description:</strong></p>
 <p>Implements a server whitelist system with optional player signup support.</p>
@@ -1480,7 +1480,7 @@
   </a>
 </p>
 
-<h2 align="center">Word Filter 1.12</h2>
+<h2 align="center">Word Filter 1.13</h2>
 
 <p><strong>Description:</strong></p>
 <p>Filters unwanted words from chat using a customizable blacklist.</p>
