@@ -175,7 +175,6 @@ jobs:
         env:
           STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
           STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
-          STEAM_2FASEED: ${{ secrets.STEAM_2FASEED }}
 
   deploy-pages:
     needs:
