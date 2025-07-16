@@ -120,7 +120,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/chatmessages.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/chatmessages.html">Hooks</a></p>
 
-<h2 align="center">Cigarettes 1.09</h2>
+<h2 align="center">Cigarettes 1.10</h2>
 
 **Description:** Adds consumable cigarette items that produce smoke puffs while gradually burning down.
 
