@@ -179,6 +179,7 @@ function QuickPanel:Init()
     self:MoveTo(self.x, 30, 0.05)
     self.items = {}
     hook.Run("SetupQuickMenu", self)
+    self:populateOptions()
 end
 
 local function paintButton(button, w, h)
@@ -316,6 +317,42 @@ function QuickPanel:Paint(w, h)
     lia.util.drawBlur(self)
     surface.SetDrawColor(lia.config.get("Color"))
     surface.DrawRect(0, 0, w, 36)
+end
+
+function QuickPanel:populateOptions()
+    local opts = {}
+    for k, v in pairs(lia.option.stored) do
+        if v.isQuick then
+            opts[#opts + 1] = {key = k, opt = v}
+        end
+    end
+
+    table.sort(opts, function(a, b)
+        return (a.opt.name or a.key) < (b.opt.name or b.key)
+    end)
+
+    for _, info in ipairs(opts) do
+        local key = info.key
+        local opt = info.opt
+        local data = opt.data or {}
+        local value = lia.option.get(key, opt.default)
+        if opt.type == "Boolean" then
+            self:addCheck(opt.name, function(_, state)
+                lia.option.set(key, state)
+            end, value)
+        elseif opt.type == "Int" or opt.type == "Float" then
+            self:addSlider(
+                opt.name,
+                function(_, val)
+                    lia.option.set(key, val)
+                end,
+                value,
+                data.min or 0,
+                data.max or 100,
+                opt.type == "Float" and (data.decimals or 2) or 0
+            )
+        end
+    end
 end
 
 vgui.Register("liaQuick", QuickPanel, "EditablePanel")

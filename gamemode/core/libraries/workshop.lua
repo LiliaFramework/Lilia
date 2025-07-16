@@ -69,7 +69,7 @@ if SERVER then
     lia.workshop.AddWorkshop("2959728255")
     resource.AddWorkshop = lia.workshop.AddWorkshop
 else
-    local queue, panel, total, remain = {}, nil, 0, 0
+    local queue, panel, totalDownloads, remainingDownloads = {}, nil, 0, 0
     lia.workshop.serverIds = lia.workshop.serverIds or {}
     local downloadFrame
     local function mounted(id)
@@ -83,9 +83,9 @@ else
         return string.format("%.2f", bytes / (1024 * 1024 * 1024))
     end
 
-    local function showPrompt(total, have, size)
+    local function showPrompt(count, have, size)
         if IsValid(downloadFrame) then return end
-        local text = L("workshopDownloadPrompt", have, total, formatSize(size))
+        local text = L("workshopDownloadPrompt", have, count, formatSize(size))
         local frame = vgui.Create("DFrame")
         downloadFrame = frame
         frame:SetTitle(L("downloads"))
@@ -126,7 +126,7 @@ else
         local opt = lia.option.get("autoDownloadWorkshop")
         if opt == nil and lia.workshop.serverIds then
             local ids = lia.workshop.serverIds
-            local total = table.Count(ids)
+            local totalIds = table.Count(ids)
             local have, missing = 0, {}
             for id in pairs(ids) do
                 if mounted(id) then
@@ -136,17 +136,17 @@ else
                 end
             end
 
-            local size, remaining = 0, #missing
-            if remaining == 0 then
-                showPrompt(total, have, 0)
+            local size, pending = 0, #missing
+            if pending == 0 then
+                showPrompt(totalIds, have, 0)
                 return
             end
 
             for _, id in ipairs(missing) do
                 steamworks.FileInfo(id, function(fi)
                     if fi and fi.file_size then size = size + fi.file_size end
-                    remaining = remaining - 1
-                    if remaining <= 0 then showPrompt(total, have, size) end
+                    pending = pending - 1
+                    if pending <= 0 then showPrompt(totalIds, have, size) end
                 end)
             end
         elseif opt then
@@ -179,8 +179,8 @@ else
 
     local function uiUpdate()
         if not (panel and panel:IsValid()) then return end
-        panel.bar:SetFraction(total > 0 and (total - remain) / total or 0)
-        panel.bar:SetText(total - remain .. "/" .. total)
+        panel.bar:SetFraction(totalDownloads > 0 and (totalDownloads - remainingDownloads) / totalDownloads or 0)
+        panel.bar:SetText(totalDownloads - remainingDownloads .. "/" .. totalDownloads)
     end
 
     local function start()
@@ -188,9 +188,9 @@ else
             if mounted(id) then queue[id] = nil end
         end
 
-        total = table.Count(queue)
-        remain = total
-        if total == 0 then
+        totalDownloads = table.Count(queue)
+        remainingDownloads = totalDownloads
+        if totalDownloads == 0 then
             lia.bootstrap("Workshop Downloader", L("workshopAllInstalled"))
             return
         end
@@ -200,11 +200,11 @@ else
         for id in pairs(queue) do
             lia.bootstrap("Workshop Downloader", L("workshopDownloading", id))
             steamworks.DownloadUGC(id, function(path)
-                remain = remain - 1
+                remainingDownloads = remainingDownloads - 1
                 lia.bootstrap("Workshop Downloader", L("workshopDownloadComplete", id))
                 if path then game.MountGMA(path) end
                 uiUpdate()
-                if remain <= 0 and panel and panel:IsValid() then
+                if remainingDownloads <= 0 and panel and panel:IsValid() then
                     panel:Remove()
                     panel = nil
                 end
@@ -230,7 +230,7 @@ else
         lia.workshop.checkPrompt()
     end)
 
-    hook.Add("InitializedOptions", "liaWorkshopPromptCheck", function() timer.Simple(0, function() lia.workshop.checkPrompt() end) end)
+    hook.Add("InitializedOptions", "liaWorkshopPromptCheck", function() timer.Simple(0, lia.workshop.checkPrompt) end)
     concommand.Add("workshop_force_redownload", function()
         table.Empty(queue)
         refresh()
