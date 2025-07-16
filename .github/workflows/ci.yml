@@ -175,6 +175,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: lilia
+          persist-credentials: true
       - uses: actions/checkout@v3
         with:
           repository: LiliaFramework/LiliaFramework.github.io
@@ -182,7 +183,7 @@ jobs:
           token: ${{ secrets.LiliaGitSecret }}
       - name: Sync docs to site
         run: |
-          rsync -a --delete --exclude '.git' --exclude 'modules.md' lilia/documentation/ site/
+          rsync -a --delete --exclude '.git' lilia/documentation/ site/
       - name: Fetch modules.json
         run: |
           curl -L -o site/modules.json https://raw.githubusercontent.com/LiliaFramework/Modules/refs/heads/gh-pages/modules.json
