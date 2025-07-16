@@ -78,3 +78,107 @@ hook.Add("PostFilterCheck", "Example_PostFilterCheck", function(ply, text, passe
 end)
 ```
 
+
+---
+
+### `FilterCheckFailed`
+
+**Purpose**
+`Called when a player's message is blocked for containing a banned word.`
+
+**Parameters**
+
+* `ply` (`Player`): `The offending player.`
+* `text` (`string`): `Original chat text.`
+* `word` (`string`): `The banned word found.`
+
+**Realm**
+`Server`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("FilterCheckFailed", "LogFailure", function(ply, text, bad)
+    print(ply:Name() .. " used disallowed word " .. bad)
+end)
+```
+
+---
+
+### `FilterCheckPassed`
+
+**Purpose**
+`Runs when a player's chat message passes the filter.`
+
+**Parameters**
+
+* `ply` (`Player`): `Player whose message was allowed.`
+* `text` (`string`): `Their original message.`
+
+**Realm**
+`Server`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("FilterCheckPassed", "LogPass", function(ply, text)
+    print("Allowed chat:", text)
+end)
+```
+
+---
+
+### `WordAddedToFilter`
+
+**Purpose**
+`Fires after a new word is added to the blacklist.`
+
+**Parameters**
+
+* `word` (`string`): `The word that was inserted.`
+
+**Realm**
+`Server`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("WordAddedToFilter", "Announce", function(word)
+    print("Added banned word:", word)
+end)
+```
+
+---
+
+### `WordRemovedFromFilter`
+
+**Purpose**
+`Called after a word is removed from the blacklist.`
+
+**Parameters**
+
+* `word` (`string`): `The word removed.`
+
+**Realm**
+`Server`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("WordRemovedFromFilter", "AnnounceRemove", function(word)
+    print("Removed banned word:", word)
+end)
+```
+

@@ -53,3 +53,60 @@ hook.Add("ViewBobStep", "InvertBob", function(client, step)
     end
 end)
 ```
+
+---
+
+### `PreViewPunch`
+
+**Purpose**
+`Called just before the view punch is applied.`
+
+**Parameters**
+
+* `client` (`Player`): `Player receiving the view punch.`
+* `angleX` (`number`): `Pitch component.`
+* `angleY` (`number`): `Yaw component.`
+* `angleZ` (`number`): `Roll component.`
+
+**Realm**
+`Client`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("PreViewPunch", "ClampPunch", function(client, x, y, z)
+    return math.Clamp(x, -5, 5), y, z
+end)
+```
+
+---
+
+### `PostViewPunch`
+
+**Purpose**
+`Runs after the view punch effect has been triggered.`
+
+**Parameters**
+
+* `client` (`Player`): `Player that was punched.`
+* `angleX` (`number`): `Pitch component.`
+* `angleY` (`number`): `Yaw component.`
+* `angleZ` (`number`): `Roll component.`
+
+**Realm**
+`Client`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("PostViewPunch", "PostEffects", function(client)
+    -- apply additional effects
+end)
+```
+

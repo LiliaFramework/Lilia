@@ -103,3 +103,162 @@ hook.Add("FactionBroadcastSent", "LogFactionBroadcast", function(client, message
     print(table.concat(factions, ", "))
 end)
 ```
+
+---
+
+### `ClassBroadcastMenuOpened`
+
+**Purpose**
+`Fires when the class broadcast selection menu is presented.`
+
+**Parameters**
+
+* `client` (`Player`): `Player opening the menu.`
+* `options` (`table`): `List of class option strings.`
+
+**Realm**
+`Server`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("ClassBroadcastMenuOpened", "ModifyOptions", function(client, opts)
+    table.sort(opts)
+end)
+```
+
+---
+
+### `ClassBroadcastMenuClosed`
+
+**Purpose**
+`Runs after the player has finished selecting classes.`
+
+**Parameters**
+
+* `client` (`Player`): `The selecting player.`
+* `selection` (`table`): `Strings chosen from the list.`
+
+**Realm**
+`Server`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("ClassBroadcastMenuClosed", "LogSelection", function(client, selection)
+    PrintTable(selection)
+end)
+```
+
+---
+
+### `ClassBroadcastLogged`
+
+**Purpose**
+`Called after a class broadcast has been logged.`
+
+**Parameters**
+
+* `client` (`Player`): `The broadcaster.`
+* `message` (`string`): `Broadcast text.`
+* `classes` (`table`): `Class names sent to.`
+
+**Realm**
+`Server`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("ClassBroadcastLogged", "NotifyAdmins", function(client, msg)
+    print("Logged class BC", msg)
+end)
+```
+
+---
+
+### `FactionBroadcastMenuOpened`
+
+**Purpose**
+`Fires when the faction broadcast selection menu appears.`
+
+**Parameters**
+
+* `client` (`Player`): `Opening player.`
+* `options` (`table`): `List of faction option strings.`
+
+**Realm**
+`Server`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("FactionBroadcastMenuOpened", "SortFactions", function(client, opts)
+    table.sort(opts)
+end)
+```
+
+---
+
+### `FactionBroadcastMenuClosed`
+
+**Purpose**
+`Runs after faction options have been chosen.`
+
+**Parameters**
+
+* `client` (`Player`): `Selecting player.`
+* `selection` (`table`): `Chosen faction strings.`
+
+**Realm**
+`Server`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("FactionBroadcastMenuClosed", "LogFactionSel", function(c, sel)
+    PrintTable(sel)
+end)
+```
+
+---
+
+### `FactionBroadcastLogged`
+
+**Purpose**
+`Called after a faction broadcast entry is logged.`
+
+**Parameters**
+
+* `client` (`Player`): `The broadcaster.`
+* `message` (`string`): `Broadcast text.`
+* `factions` (`table`): `Faction names.`
+
+**Realm**
+`Server`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("FactionBroadcastLogged", "NotifyLog", function(client, msg)
+    print("Logged faction BC", msg)
+end)
+```
+

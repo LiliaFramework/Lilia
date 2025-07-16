@@ -229,3 +229,141 @@ hook.Add("PostBodygroupApply", "AnnounceChanges", function(client, target, skin,
     print(target:Name() .. " updated appearance")
 end)
 ```
+
+---
+
+### `PreBodygrouperMenuOpen`
+
+**Purpose**
+`Runs server-side before the bodygrouper menu is opened for a player.`
+
+**Parameters**
+
+* `client` (`Player`): `Player requesting the menu.`
+* `target` (`Entity`): `Entity whose bodygroups will be edited.`
+
+**Realm**
+`Server`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("PreBodygrouperMenuOpen", "LogOpen", function(c, t)
+    print(c:Name() .. " is viewing " .. t:Name())
+end)
+```
+
+---
+
+### `BodygrouperApplyAttempt`
+
+**Purpose**
+`Called when the server receives a request to apply bodygroup changes.`
+
+**Parameters**
+
+* `client` (`Player`): `Player applying changes.`
+* `target` (`Entity`): `Target entity.`
+* `skin` (`number`): `Requested skin index.`
+* `groups` (`table`): `Requested bodygroup values.`
+
+**Realm**
+`Server`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("BodygrouperApplyAttempt", "LogAttempt", function(c, t, skn)
+    print(c:Name(), "attempting bodygroup edit on", t)
+end)
+```
+
+---
+
+### `BodygrouperInvalidSkin`
+
+**Purpose**
+`Runs when a player selects a skin index the target does not support.`
+
+**Parameters**
+
+* `client` (`Player`): `Player who made the request.`
+* `target` (`Entity`): `Target entity.`
+* `skin` (`number`): `Invalid skin index.`
+
+**Realm**
+`Server`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("BodygrouperInvalidSkin", "Warn", function(c, t, skn)
+    print("Invalid skin", skn)
+end)
+```
+
+---
+
+### `BodygrouperInvalidGroup`
+
+**Purpose**
+`Called when a bodygroup value exceeds the entity's allowed range.`
+
+**Parameters**
+
+* `client` (`Player`): `Player making the request.`
+* `target` (`Entity`): `Target entity.`
+* `index` (`number`): `Bodygroup index.`
+* `value` (`number`): `Invalid value provided.`
+
+**Realm**
+`Server`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("BodygrouperInvalidGroup", "Debug", function(c, t, idx, val)
+    print("Invalid group", idx, val)
+end)
+```
+
+---
+
+### `BodygrouperValidated`
+
+**Purpose**
+`Fires after validation passes but before changes apply.`
+
+**Parameters**
+
+* `client` (`Player`): `Player applying changes.`
+* `target` (`Entity`): `Target entity.`
+* `skin` (`number`): `Skin index to set.`
+* `groups` (`table`): `Bodygroup values.`
+
+**Realm**
+`Server`
+
+**Returns**
+`nil`
+
+**Example**
+
+```lua
+hook.Add("BodygrouperValidated", "Notify", function(c, t)
+    print("Validated bodygroup edit for", c:Name())
+end)
+```
+
