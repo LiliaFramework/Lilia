@@ -855,7 +855,7 @@
 
 <p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/whitelist.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/whitelist.html">Hooks</a></p>
 
-<h2 align="center">Word Filter 1.11</h2>
+<h2 align="center">Word Filter 1.12</h2>
 
 **Description:** Filters unwanted words from chat using a customizable blacklist.
 
