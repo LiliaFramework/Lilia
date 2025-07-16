@@ -166,12 +166,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
 
-      - name: Update Steam Workshop
+      - run: mkdir -p lua/autorun
+
+      - name: Upload to Steam Workshop
         uses: PAC3-Server/gmod-upload@master
         with:
-          appid: 4000
-          itemid: 2959728255
-          path: lilia
+          id: 2959728255
+          changelog: Lilia ${{ env.VERSION }}
+          config: lilia/addon.json
         env:
           STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
           STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
@@ -197,20 +199,13 @@ jobs:
           path: site
           token: ${{ secrets.LiliaGitSecret }}
 
-      - name: Sync docs to site
-        run: |
-          rsync -a --delete --exclude '.git' lilia/documentation/ site/
+      - run: rsync -a --delete --exclude '.git' lilia/documentation/ site/
 
-      - name: Fetch modules.json
-        run: |
-          curl -L -o site/modules.json https://raw.githubusercontent.com/LiliaFramework/Modules/gh-pages/modules.json
+      - run: curl -L -o site/modules.json https://raw.githubusercontent.com/LiliaFramework/Modules/gh-pages/modules.json
 
-      - name: Generate version.json
-        run: |
-          echo "{\"version\": \"${VERSION}\"}" > site/version.json
+      - run: echo "{\"version\": \"${VERSION}\"}" > site/version.json
 
-      - name: Publish site content
-        run: |
+      - run: |
           cd site
           git config user.name github-actions
           git config user.email github-actions@github.com
