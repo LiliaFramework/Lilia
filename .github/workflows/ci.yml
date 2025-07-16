@@ -105,17 +105,13 @@ jobs:
           import re
           import io
           import sys
-
           version = os.environ["VERSION"]
           path = "lilia/gamemode/shared.lua"
-
           with io.open(path, encoding="utf-8-sig") as f:
               lines = f.readlines()
-
           name_pat = re.compile(r"\s*GM\.Name\s*=")
           out = []
           inserted = False
-
           for line in lines:
               if name_pat.match(line) and not inserted:
                   out.append(line)
@@ -125,10 +121,8 @@ jobs:
                   continue
               else:
                   out.append(line)
-
           if not inserted:
               sys.exit("GM.Name not found")
-
           with io.open(path, "w", encoding="utf-8") as f:
               f.writelines(out)
           PY
@@ -212,8 +206,8 @@ jobs:
           cd site
           git config user.name github-actions
           git config user.email github-actions@github.com
-          if ! git diff --quiet; then
-            git add .
+          git add -A
+          if ! git diff --cached --quiet; then
             git commit -m "ci: sync docs and update version.json to ${VERSION}"
             git push origin HEAD:main
           fi
