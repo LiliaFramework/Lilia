@@ -125,7 +125,7 @@ jobs:
       - name: Package and zip
         run: |
           cd lilia
-          zip -r ../lilia.zip modules gamemode lilia.txt logo.png icon24.png
+          zip -r ../lilia.zip content modules gamemode lilia.txt logo.png icon24.png
       - name: Remove previous releases and tags
         run: |
           sudo apt-get update -y
