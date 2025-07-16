@@ -1,6 +1,6 @@
 # Lockpicking
 
-**Version:** 1.10  
+**Version:** 1.11  
 **Author:** 76561198312513285  
 **Discord:** @liliaplayer  
 

@@ -1,6 +1,6 @@
 # Instant Killing
 
-**Version:** 1.11  
+**Version:** 1.12  
 **Author:** Samael  
 **Discord:** @liliaplayer  
 

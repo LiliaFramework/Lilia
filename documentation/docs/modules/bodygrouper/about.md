@@ -1,6 +1,6 @@
 # Bodygrouper
 
-**Version:** 1.19  
+**Version:** 1.20  
 **Author:** Samael  
 **Discord:** @liliaplayer  
 

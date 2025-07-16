@@ -1,6 +1,6 @@
 # Stun Gun
 
-**Version:** 101.15  
+**Version:** 101.16  
 **Author:** Samael  
 **Discord:** @liliaplayer  
 
