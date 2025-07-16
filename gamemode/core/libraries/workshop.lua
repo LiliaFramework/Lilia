@@ -66,7 +66,7 @@ if SERVER then
         lia.workshop.send(client)
     end)
 
-    lia.workshop.AddWorkshop("2959728255")
+    lia.workshop.AddWorkshop("3527535922")
     resource.AddWorkshop = lia.workshop.AddWorkshop
 else
     local queue, panel, totalDownloads, remainingDownloads = {}, nil, 0, 0
