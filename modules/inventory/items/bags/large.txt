@@ -1,4 +1,0 @@
-ITEM.name = "bigBagName"
-ITEM.desc = "bigBagDesc"
-ITEM.invWidth = 6
-ITEM.invHeight = 4
