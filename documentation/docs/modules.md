@@ -1,932 +1,1624 @@
-# Optional Modules
-
 <h2 align="center">Advert 1.11</h2>
 
-**Description:** Provides a paid /advert command so players can broadcast server-wide messages with a built-in cooldown.
+<p><strong>Description:</strong></p>
+<p>Provides a paid /advert command so players can broadcast server-wide messages with a built-in cooldown.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds a paid /advert command players can use</li>
+  <li>Adds a cooldown via AdvertCooldown to limit spam</li>
+  <li>Adds colored broadcast messages across the server</li>
+  <li>Adds price control via AdvertPrice configuration</li>
+  <li>Adds notifications when players lack funds</li>
+</ul>
 
-- Adds a paid /advert command players can use
-- Adds a cooldown via AdvertCooldown to limit spam
-- Adds colored broadcast messages across the server
-- Adds price control via AdvertPrice configuration
-- Adds notifications when players lack funds
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/advert.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/advert.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/advert.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/advert.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/advert.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/advert.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Alcoholism 1.10</h2>
 
-**Description:** Introduces drinkable alcohol items that raise intoxication levels and temporarily blur the player's vision and movement.
+<p><strong>Description:</strong></p>
+<p>Introduces drinkable alcohol items that raise intoxication levels and temporarily blur the player's vision and movement.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds alcohol items that raise BAC and gradually wear off</li>
+  <li>Adds screen blur and movement effects that scale with intoxication</li>
+  <li>Adds player notification when reaching DrunkNotifyThreshold</li>
+  <li>Adds configurable BAC settings like AlcoholTickTime</li>
+  <li>Adds multiple drink items with varying strength</li>
+</ul>
 
-- Adds alcohol items that raise BAC and gradually wear off
-- Adds screen blur and movement effects that scale with intoxication
-- Adds player notification when reaching DrunkNotifyThreshold
-- Adds configurable BAC settings like AlcoholTickTime
-- Adds multiple drink items with varying strength
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/alcoholism.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/alcoholism.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/alcoholism.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/alcoholism.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/alcoholism.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/alcoholism.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Auto Restarter 1.10</h2>
 
-**Description:** Schedules periodic server restarts and displays a countdown so players know when the restart will occur.
+<p><strong>Description:</strong></p>
+<p>Schedules periodic server restarts and displays a countdown so players know when the restart will occur.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds scheduling for automatic restarts using RestartInterval</li>
+  <li>Adds a countdown overlay configurable via RestartCountdownFont</li>
+  <li>Adds syncing of next restart time to clients</li>
+  <li>Adds automatic changelevel when the timer expires</li>
+  <li>Adds network messages to sync the restart countdown</li>
+</ul>
 
-- Adds scheduling for automatic restarts using RestartInterval
-- Adds a countdown overlay configurable via RestartCountdownFont
-- Adds syncing of next restart time to clients
-- Adds automatic changelevel when the timer expires
-- Adds network messages to sync the restart countdown
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/autorestarter.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/autorestarter.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/autorestarter.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/autorestarter.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/autorestarter.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/autorestarter.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Bodygrouper 1.17</h2>
 
-**Description:** Adds a customizable bodygroup closet entity that lets players adjust their model bodygroups through a menu.
+<p><strong>Description:</strong></p>
+<p>Adds a customizable bodygroup closet entity that lets players adjust their model bodygroups through a menu.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds a spawnable closet entity for editing bodygroups</li>
+  <li>Adds the ability to customize its model via BodyGrouperModel</li>
+  <li>Adds menu access that requires proximity or privilege</li>
+  <li>Adds an admin command to view another player's bodygroups</li>
+  <li>Adds a networked menu for editing bodygroups</li>
+</ul>
 
-- Adds a spawnable closet entity for editing bodygroups
-- Adds the ability to customize its model via BodyGrouperModel
-- Adds menu access that requires proximity or privilege
-- Adds an admin command to view another player's bodygroups
-- Adds a networked menu for editing bodygroups
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/bodygrouper.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/bodygrouper.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/bodygrouper.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/bodygrouper.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/bodygrouper.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/bodygrouper.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Broadcasts 1.14</h2>
 
-**Description:** Enables faction and class broadcast commands so staff can send messages to specific groups.
+<p><strong>Description:</strong></p>
+<p>Enables faction and class broadcast commands so staff can send messages to specific groups.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds faction and class broadcast commands with CAMI checks</li>
+  <li>Adds logging of broadcast messages for staff review</li>
+  <li>Adds support for flagged players to send targeted messages</li>
+  <li>Adds CAMI privileges for broadcast access</li>
+  <li>Adds menus to select factions or classes</li>
+</ul>
 
-- Adds faction and class broadcast commands with CAMI checks
-- Adds logging of broadcast messages for staff review
-- Adds support for flagged players to send targeted messages
-- Adds CAMI privileges for broadcast access
-- Adds menus to select factions or classes
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/broadcasts.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/broadcasts.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/broadcasts.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/broadcasts.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/broadcasts.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/broadcasts.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Captions 1.13</h2>
 
-**Description:** Provides an API for timed on-screen captions, ideal for story prompts or tutorials.
+<p><strong>Description:</strong></p>
+<p>Provides an API for timed on-screen captions, ideal for story prompts or tutorials.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds an API for timed on-screen captions</li>
+  <li>Adds support for both client and server use</li>
+  <li>Adds an easy way to deliver story prompts</li>
+  <li>Adds commands to send captions to players</li>
+  <li>Adds duration control for each caption</li>
+</ul>
 
-- Adds an API for timed on-screen captions
-- Adds support for both client and server use
-- Adds an easy way to deliver story prompts
-- Adds commands to send captions to players
-- Adds duration control for each caption
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/captions.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/captions.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/captions.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/captions.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/captions.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/captions.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Cards 1.10</h2>
 
-**Description:** Introduces a full deck of playing cards so players can draw random cards for minigames.
+<p><strong>Description:</strong></p>
+<p>Introduces a full deck of playing cards so players can draw random cards for minigames.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds a full playing card deck</li>
+  <li>Adds random draws that sync to all players</li>
+  <li>Adds support for simple minigames</li>
+  <li>Adds easy reshuffling of the deck</li>
+  <li>Adds hooks so other modules can use cards</li>
+</ul>
 
-- Adds a full playing card deck
-- Adds random draws that sync to all players
-- Adds support for simple minigames
-- Adds easy reshuffling of the deck
-- Adds hooks so other modules can use cards
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cards.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cards.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cards.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cards.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cards.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cards.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Chat Messages 1.09</h2>
 
-**Description:** Periodically sends automated advert messages to chat at a configurable interval.
+<p><strong>Description:</strong></p>
+<p>Periodically sends automated advert messages to chat at a configurable interval.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds periodic server adverts to chat</li>
+  <li>Adds interval control via ChatMessagesInterval</li>
+  <li>Adds localized message support</li>
+  <li>Adds rotating tips for new players</li>
+  <li>Adds toggle to disable adverts per user</li>
+</ul>
 
-- Adds periodic server adverts to chat
-- Adds interval control via ChatMessagesInterval
-- Adds localized message support
-- Adds rotating tips for new players
-- Adds toggle to disable adverts per user
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/chatmessages.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/chatmessages.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/chatmessages.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/chatmessages.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/chatmessages.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/chatmessages.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Cigarettes 1.12</h2>
 
-**Description:** Adds consumable cigarette items that produce smoke puffs while gradually burning down.
+<p><strong>Description:</strong></p>
+<p>Adds consumable cigarette items that produce smoke puffs while gradually burning down.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds smokable cigarette items with workshop models</li>
+  <li>Adds puff effects while smoking</li>
+  <li>Adds cigarettes that are consumed over time</li>
+  <li>Adds configurable nicotine addiction effects</li>
+  <li>Adds ash particles that fade out</li>
+</ul>
 
-- Adds smokable cigarette items with workshop models
-- Adds puff effects while smoking
-- Adds cigarettes that are consumed over time
-- Adds configurable nicotine addiction effects
-- Adds ash particles that fade out
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cigs.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cigs.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cigs.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cigs.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cigs.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cigs.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Cinematic Text 1.15</h2>
 
-**Description:** Displays stylish splash text with letterboxed bars for cinematic flair.
+<p><strong>Description:</strong></p>
+<p>Displays stylish splash text with letterboxed bars for cinematic flair.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds displays of cinematic splash text overlays</li>
+  <li>Adds screen darkening with letterbox bars</li>
+  <li>Adds support for scripted scenes</li>
+  <li>Adds timed fades for dramatic effect</li>
+  <li>Adds customizable text fonts</li>
+</ul>
 
-- Adds displays of cinematic splash text overlays
-- Adds screen darkening with letterbox bars
-- Adds support for scripted scenes
-- Adds timed fades for dramatic effect
-- Adds customizable text fonts
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cinematictext.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cinematictext.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cinematictext.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cinematictext.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cinematictext.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cinematictext.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Climb 1.09</h2>
 
-**Description:** Lets players climb up ledges using movement keys with custom animations.
+<p><strong>Description:</strong></p>
+<p>Lets players climb up ledges using movement keys with custom animations.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds the ability to climb ledges using movement keys</li>
+  <li>Adds custom climbing animations</li>
+  <li>Adds integration with movement restrictions</li>
+  <li>Adds stamina cost for repeated climbs</li>
+  <li>Adds sound effects for grip and landing</li>
+</ul>
 
-- Adds the ability to climb ledges using movement keys
-- Adds custom climbing animations
-- Adds integration with movement restrictions
-- Adds stamina cost for repeated climbs
-- Adds sound effects for grip and landing
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/climb.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/climb.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/climb.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/climb.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/climb.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/climb.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Community Commands 1.14</h2>
 
-**Description:** Adds chat commands that open community links for quick access to resources.
+<p><strong>Description:</strong></p>
+<p>Adds chat commands that open community links for quick access to resources.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds chat commands to open community links</li>
+  <li>Adds easy sharing of workshop and docs</li>
+  <li>Adds configurable commands via settings</li>
+  <li>Adds localization for command names</li>
+  <li>Adds the ability to add custom URLs</li>
+</ul>
 
-- Adds chat commands to open community links
-- Adds easy sharing of workshop and docs
-- Adds configurable commands via settings
-- Adds localization for command names
-- Adds the ability to add custom URLs
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/communitycommands.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/communitycommands.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/communitycommands.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/communitycommands.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/communitycommands.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/communitycommands.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Compass 1.09</h2>
 
-**Description:** Displays a rotating HUD compass that can mark spotted locations or enemies.
+<p><strong>Description:</strong></p>
+<p>Displays a rotating HUD compass that can mark spotted locations or enemies.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds a rotating HUD compass display</li>
+  <li>Adds spot markers showing enemy bearings</li>
+  <li>Adds support that requires workshop icons</li>
+  <li>Adds pinging of points of interest</li>
+  <li>Adds compass size configuration</li>
+</ul>
 
-- Adds a rotating HUD compass display
-- Adds spot markers showing enemy bearings
-- Adds support that requires workshop icons
-- Adds pinging of points of interest
-- Adds compass size configuration
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/compass.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/compass.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/compass.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/compass.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/compass.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/compass.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Corpse ID 1.13</h2>
 
-**Description:** Allows players to identify corpses after a short delay, displaying details above the body.
+<p><strong>Description:</strong></p>
+<p>Allows players to identify corpses after a short delay, displaying details above the body.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds the ability to identify corpses after IdentificationTime</li>
+  <li>Adds use of CorpseMessageFont for 3D2D text</li>
+  <li>Adds info display above bodies</li>
+  <li>Adds configurable identification delays</li>
+  <li>Adds logs when corpses are identified</li>
+</ul>
 
-- Adds the ability to identify corpses after IdentificationTime
-- Adds use of CorpseMessageFont for 3D2D text
-- Adds info display above bodies
-- Adds configurable identification delays
-- Adds logs when corpses are identified
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/corpseid.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/corpseid.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/corpseid.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/corpseid.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/corpseid.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/corpseid.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Cursor 1.08</h2>
 
-**Description:** Adds a toggleable custom cursor for navigating menus more easily.
+<p><strong>Description:</strong></p>
+<p>Adds a toggleable custom cursor for navigating menus more easily.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds a toggleable custom cursor for the UI</li>
+  <li>Adds a purely client-side implementation</li>
+  <li>Adds improved menu navigation</li>
+  <li>Adds a hotkey to quickly show or hide the cursor</li>
+  <li>Adds compatibility with other menu modules</li>
+</ul>
 
-- Adds a toggleable custom cursor for the UI
-- Adds a purely client-side implementation
-- Adds improved menu navigation
-- Adds a hotkey to quickly show or hide the cursor
-- Adds compatibility with other menu modules
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cursor.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cursor.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cursor.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cursor.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cursor.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cursor.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Simple Cutscenes 1.09</h2>
 
-**Description:** Provides a lightweight framework for defining and playing synchronized cutscenes.
+<p><strong>Description:</strong></p>
+<p>Provides a lightweight framework for defining and playing synchronized cutscenes.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds a framework for simple cutscene playback</li>
+  <li>Adds scenes defined through tables</li>
+  <li>Adds syncing of camera movement across clients</li>
+  <li>Adds commands to trigger cutscenes</li>
+  <li>Adds the ability for players to skip</li>
+</ul>
 
-- Adds a framework for simple cutscene playback
-- Adds scenes defined through tables
-- Adds syncing of camera movement across clients
-- Adds commands to trigger cutscenes
-- Adds the ability for players to skip
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cutscenes.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/cutscenes.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cutscenes.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/cutscenes.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cutscenes.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cutscenes.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Damage Numbers 1.10</h2>
 
-**Description:** Shows floating damage numbers above targets and yourself whenever damage is dealt.
+<p><strong>Description:</strong></p>
+<p>Shows floating damage numbers above targets and yourself whenever damage is dealt.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds floating combat text when hitting targets</li>
+  <li>Adds different colors for damage types</li>
+  <li>Adds display of damage dealt and received</li>
+  <li>Adds scaling text based on damage amount</li>
+  <li>Adds client option to disable numbers</li>
+</ul>
 
-- Adds floating combat text when hitting targets
-- Adds different colors for damage types
-- Adds display of damage dealt and received
-- Adds scaling text based on damage amount
-- Adds client option to disable numbers
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/damagenumbers.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/damagenumbers.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/damagenumbers.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/damagenumbers.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/damagenumbers.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/damagenumbers.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Development HUD 1.13</h2>
 
-**Description:** Provides a staff-only HUD overlay with additional development information.
+<p><strong>Description:</strong></p>
+<p>Provides a staff-only HUD overlay with additional development information.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds a staff-only development HUD</li>
+  <li>Adds font customization via DevHudFont</li>
+  <li>Adds a requirement for the CAMI privilege</li>
+  <li>Adds real-time server performance metrics</li>
+  <li>Adds a toggle command to show or hide the HUD</li>
+</ul>
 
-- Adds a staff-only development HUD
-- Adds font customization via DevHudFont
-- Adds a requirement for the CAMI privilege
-- Adds real-time server performance metrics
-- Adds a toggle command to show or hide the HUD
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/developmenthud.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/developmenthud.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/developmenthud.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/developmenthud.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/developmenthud.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/developmenthud.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Development Server 1.08</h2>
 
-**Description:** Allows running special development-only functions when the server is in testing mode.
+<p><strong>Description:</strong></p>
+<p>Allows running special development-only functions when the server is in testing mode.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds a development server mode for testing</li>
+  <li>Adds the ability to run special development functions</li>
+  <li>Adds a toggle via configuration</li>
+  <li>Adds an environment flag for dev commands</li>
+  <li>Adds logging of executed dev actions</li>
+</ul>
 
-- Adds a development server mode for testing
-- Adds the ability to run special development functions
-- Adds a toggle via configuration
-- Adds an environment flag for dev commands
-- Adds logging of executed dev actions
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/developmentserver.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/developmentserver.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/developmentserver.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/developmentserver.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/developmentserver.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/developmentserver.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Discord Relay 1.09</h2>
 
-**Description:** Relays server logs to a Discord channel through configurable webhooks.
+<p><strong>Description:</strong></p>
+<p>Relays server logs to a Discord channel through configurable webhooks.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds relaying of server logs to Discord</li>
+  <li>Adds webhook integration for connectivity</li>
+  <li>Adds formatting of real-time updates</li>
+  <li>Adds multiple webhook URLs per log type</li>
+  <li>Adds filtering to control which logs are sent</li>
+</ul>
 
-- Adds relaying of server logs to Discord
-- Adds webhook integration for connectivity
-- Adds formatting of real-time updates
-- Adds multiple webhook URLs per log type
-- Adds filtering to control which logs are sent
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/discordrelay.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/discordrelay.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/discordrelay.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/discordrelay.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/discordrelay.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/discordrelay.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Donator 1.15</h2>
 
-**Description:** Includes helper libraries for managing donor perks and displaying them on the scoreboard.
+<p><strong>Description:</strong></p>
+<p>Includes helper libraries for managing donor perks and displaying them on the scoreboard.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds libraries to manage donor perks</li>
+  <li>Adds tracking for donor ranks and perks</li>
+  <li>Adds integration with the scoreboard</li>
+  <li>Adds configurable perks by tier</li>
+  <li>Adds analytics on total donations</li>
+</ul>
 
-- Adds libraries to manage donor perks
-- Adds tracking for donor ranks and perks
-- Adds integration with the scoreboard
-- Adds configurable perks by tier
-- Adds analytics on total donations
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/donator.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/donator.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/donator.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/donator.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/donator.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/donator.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Door Kick 1.10</h2>
 
-**Description:** Lets players breach doors by kicking them open, with events logged for staff.
+<p><strong>Description:</strong></p>
+<p>Lets players breach doors by kicking them open, with events logged for staff.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds the ability to kick doors open with an animation</li>
+  <li>Adds logging of door kick events</li>
+  <li>Adds a fun breach mechanic</li>
+  <li>Adds physics force to fling doors open</li>
+  <li>Adds a cooldown to prevent spam kicking</li>
+</ul>
 
-- Adds the ability to kick doors open with an animation
-- Adds logging of door kick events
-- Adds a fun breach mechanic
-- Adds physics force to fling doors open
-- Adds a cooldown to prevent spam kicking
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/doorkick.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/doorkick.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/doorkick.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/doorkick.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/doorkick.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/doorkick.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Hospitals 1.08</h2>
 
-**Description:** Respawns players at designated hospitals where they recover after death.
+<p><strong>Description:</strong></p>
+<p>Respawns players at designated hospitals where they recover after death.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds respawning of players at hospitals</li>
+  <li>Adds a medical recovery system</li>
+  <li>Adds support for multiple hospital spawns</li>
+  <li>Adds configurable respawn delays</li>
+  <li>Adds integration with death logs</li>
+</ul>
 
-- Adds respawning of players at hospitals
-- Adds a medical recovery system
-- Adds support for multiple hospital spawns
-- Adds configurable respawn delays
-- Adds integration with death logs
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/enhanceddeath.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/enhanceddeath.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/enhanceddeath.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/enhanceddeath.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/enhanceddeath.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/enhanceddeath.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Extended Descriptions 1.14</h2>
 
-**Description:** Allows items to have lengthy, localized descriptions for richer roleplay.
+<p><strong>Description:</strong></p>
+<p>Allows items to have lengthy, localized descriptions for richer roleplay.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds support for long item descriptions</li>
+  <li>Adds localization for multiple languages</li>
+  <li>Adds better RP text display</li>
+  <li>Adds automatic line wrapping</li>
+  <li>Adds fallback to short descriptions</li>
+</ul>
 
-- Adds support for long item descriptions
-- Adds localization for multiple languages
-- Adds better RP text display
-- Adds automatic line wrapping
-- Adds fallback to short descriptions
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/extendeddescriptions.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/extendeddescriptions.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/extendeddescriptions.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/extendeddescriptions.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/extendeddescriptions.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/extendeddescriptions.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">First Person Effects 1.08</h2>
 
-**Description:** Adds view sway and head bob to create a more immersive first-person perspective.
+<p><strong>Description:</strong></p>
+<p>Adds view sway and head bob to create a more immersive first-person perspective.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds head bob and view sway</li>
+  <li>Adds camera motion synced to actions</li>
+  <li>Adds a realistic first-person feel</li>
+  <li>Adds adjustable intensity via config</li>
+  <li>Adds compatibility with vehicle seats</li>
+</ul>
 
-- Adds head bob and view sway
-- Adds camera motion synced to actions
-- Adds a realistic first-person feel
-- Adds adjustable intensity via config
-- Adds compatibility with vehicle seats
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/firstpersoneffects.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/firstpersoneffects.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/firstpersoneffects.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/firstpersoneffects.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/firstpersoneffects.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/firstpersoneffects.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Flashlight 1.09</h2>
 
-**Description:** Reworks the flashlight with dynamic lighting and adjustable brightness settings.
+<p><strong>Description:</strong></p>
+<p>Reworks the flashlight with dynamic lighting and adjustable brightness settings.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds a serious flashlight with dynamic light</li>
+  <li>Adds darkening of surroundings when turned off</li>
+  <li>Adds adjustable brightness</li>
+  <li>Adds battery consumption over time</li>
+  <li>Adds keybind toggle support</li>
+</ul>
 
-- Adds a serious flashlight with dynamic light
-- Adds darkening of surroundings when turned off
-- Adds adjustable brightness
-- Adds battery consumption over time
-- Adds keybind toggle support
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/flashlight.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/flashlight.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/flashlight.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/flashlight.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/flashlight.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/flashlight.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Free Look 1.10</h2>
 
-**Description:** Lets players look around independently from their movement direction, similar to Escape from Tarkov.
+<p><strong>Description:</strong></p>
+<p>Lets players look around independently from their movement direction, similar to Escape from Tarkov.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds the ability to look around without turning the body</li>
+  <li>Adds a toggle key similar to EFT</li>
+  <li>Adds movement direction preservation</li>
+  <li>Adds adjustable sensitivity while freelooking</li>
+  <li>Adds optional head tracking support</li>
+</ul>
 
-- Adds the ability to look around without turning the body
-- Adds a toggle key similar to EFT
-- Adds movement direction preservation
-- Adds adjustable sensitivity while freelooking
-- Adds optional head tracking support
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/freelook.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/freelook.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/freelook.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/freelook.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/freelook.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/freelook.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Gamemaster Teleport Points 1.08</h2>
 
-**Description:** Lets game masters create teleport points around the map and quickly jump between them.
+<p><strong>Description:</strong></p>
+<p>Lets game masters create teleport points around the map and quickly jump between them.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds teleport points for game masters</li>
+  <li>Adds quick navigation across large maps</li>
+  <li>Adds saving of locations for reuse</li>
+  <li>Adds a command to list saved points</li>
+  <li>Adds sharing of points with other staff</li>
+</ul>
 
-- Adds teleport points for game masters
-- Adds quick navigation across large maps
-- Adds saving of locations for reuse
-- Adds a command to list saved points
-- Adds sharing of points with other staff
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/gamemasterpoints.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/gamemasterpoints.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/gamemasterpoints.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/gamemasterpoints.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/gamemasterpoints.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/gamemasterpoints.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Extra HUD Elements 1.12</h2>
 
-**Description:** Adds optional HUD elements, such as an FPS counter, that other modules can extend.
+<p><strong>Description:</strong></p>
+<p>Adds optional HUD elements, such as an FPS counter, that other modules can extend.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds extra HUD elements like an FPS counter</li>
+  <li>Adds fonts configurable with FPSHudFont</li>
+  <li>Adds hooks so other modules can extend</li>
+  <li>Adds performance stats display</li>
+  <li>Adds toggles for individual HUD elements</li>
+</ul>
 
-- Adds extra HUD elements like an FPS counter
-- Adds fonts configurable with FPSHudFont
-- Adds hooks so other modules can extend
-- Adds performance stats display
-- Adds toggles for individual HUD elements
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/hud_extras.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/hud_extras.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/hud_extras.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/hud_extras.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hud_extras.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hud_extras.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Instant Killing 1.08</h2>
 
-**Description:** Makes headshots instantly lethal with configurable multipliers per weapon.
+<p><strong>Description:</strong></p>
+<p>Makes headshots instantly lethal with configurable multipliers per weapon.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds instant kill on headshots</li>
+  <li>Adds lethality configurable per weapon</li>
+  <li>Adds extra tension to combat</li>
+  <li>Adds friendly fire protection options</li>
+  <li>Adds integration with damage numbers</li>
+</ul>
 
-- Adds instant kill on headshots
-- Adds lethality configurable per weapon
-- Adds extra tension to combat
-- Adds friendly fire protection options
-- Adds integration with damage numbers
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/instakill.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/instakill.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/instakill.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/instakill.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/instakill.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/instakill.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Weight Inv 1.09</h2>
 
-**Description:** Implements a weight-based inventory that limits how much a character can carry.
+<p><strong>Description:</strong></p>
+<p>Implements a weight-based inventory that limits how much a character can carry.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds an inventory limited by item weight</li>
+  <li>Adds a shared weightinv library file</li>
+  <li>Adds a new inventory type</li>
+  <li>Adds a drag-and-drop weight management UI</li>
+  <li>Adds support for backpacks to increase capacity</li>
+</ul>
 
-- Adds an inventory limited by item weight
-- Adds a shared weightinv library file
-- Adds a new inventory type
-- Adds a drag-and-drop weight management UI
-- Adds support for backpacks to increase capacity
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/inventory.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/inventory.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/inventory.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/inventory.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/inventory.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/inventory.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Join Leave Messages 1.10</h2>
 
-**Description:** Broadcasts notifications when players connect or disconnect from the server.
+<p><strong>Description:</strong></p>
+<p>Broadcasts notifications when players connect or disconnect from the server.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds announcements when players join</li>
+  <li>Adds notifications on disconnect</li>
+  <li>Adds improved community awareness</li>
+  <li>Adds relay of messages to Discord</li>
+  <li>Adds per-player toggle to hide messages</li>
+</ul>
 
-- Adds announcements when players join
-- Adds notifications on disconnect
-- Adds improved community awareness
-- Adds relay of messages to Discord
-- Adds per-player toggle to hide messages
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/joinleavemessages.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/joinleavemessages.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/joinleavemessages.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/joinleavemessages.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/joinleavemessages.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/joinleavemessages.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Load Messages 1.08</h2>
 
-**Description:** Displays a custom message to players based on their faction the first time they load a character.
+<p><strong>Description:</strong></p>
+<p>Displays a custom message to players based on their faction the first time they load a character.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds faction-based load messages</li>
+  <li>Adds execution when players first load a character</li>
+  <li>Adds customizable message text</li>
+  <li>Adds color-coded formatting options</li>
+  <li>Adds per-faction enable toggles</li>
+</ul>
 
-- Adds faction-based load messages
-- Adds execution when players first load a character
-- Adds customizable message text
-- Adds color-coded formatting options
-- Adds per-faction enable toggles
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/loadmessages.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/loadmessages.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/loadmessages.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/loadmessages.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loadmessages.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loadmessages.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Loyalism 1.12</h2>
 
-**Description:** Implements loyalty tiers that grant access to the /partytier command when flagged.
+<p><strong>Description:</strong></p>
+<p>Implements loyalty tiers that grant access to the /partytier command when flagged.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds a loyalty tier system for players</li>
+  <li>Adds the /partytier command access</li>
+  <li>Adds permission control through flags</li>
+  <li>Adds automatic tier progression</li>
+  <li>Adds customizable rewards per tier</li>
+</ul>
 
-- Adds a loyalty tier system for players
-- Adds the /partytier command access
-- Adds permission control through flags
-- Adds automatic tier progression
-- Adds customizable rewards per tier
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/loyalism.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/loyalism.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/loyalism.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/loyalism.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loyalism.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loyalism.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Map Cleaner 1.09</h2>
 
-**Description:** Periodically cleans the map of debris and props based on a configurable schedule.
+<p><strong>Description:</strong></p>
+<p>Periodically cleans the map of debris and props based on a configurable schedule.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds periodic cleaning of map debris</li>
+  <li>Adds a configurable interval</li>
+  <li>Adds reduced server lag</li>
+  <li>Adds a whitelist for protected entities</li>
+  <li>Adds manual cleanup commands</li>
+</ul>
 
-- Adds periodic cleaning of map debris
-- Adds a configurable interval
-- Adds reduced server lag
-- Adds a whitelist for protected entities
-- Adds manual cleanup commands
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/mapcleaner.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/mapcleaner.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/mapcleaner.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/mapcleaner.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/mapcleaner.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/mapcleaner.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Model Pay 1.09</h2>
 
-**Description:** Pays characters wages based on the model they use, allowing custom pay scales.
+<p><strong>Description:</strong></p>
+<p>Pays characters wages based on the model they use, allowing custom pay scales.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds payment to characters based on model</li>
+  <li>Adds custom wage definitions</li>
+  <li>Adds integration into the economy</li>
+  <li>Adds config to exclude certain models</li>
+  <li>Adds logs of wages issued</li>
+</ul>
 
-- Adds payment to characters based on model
-- Adds custom wage definitions
-- Adds integration into the economy
-- Adds config to exclude certain models
-- Adds logs of wages issued
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/modelpay.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/modelpay.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/modelpay.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/modelpay.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modelpay.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modelpay.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Model Tweaker 1.14</h2>
 
-**Description:** Provides an entity that lets admins adjust prop models' scale and rotation.
+<p><strong>Description:</strong></p>
+<p>Provides an entity that lets admins adjust prop models' scale and rotation.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds an entity to tweak prop models</li>
+  <li>Adds adjustments for scale and rotation</li>
+  <li>Adds easy UI controls</li>
+  <li>Adds saving of tweaked props between restarts</li>
+  <li>Adds undo support for recent tweaks</li>
+</ul>
 
-- Adds an entity to tweak prop models
-- Adds adjustments for scale and rotation
-- Adds easy UI controls
-- Adds saving of tweaked props between restarts
-- Adds undo support for recent tweaks
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/modeltweaker.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/modeltweaker.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/modeltweaker.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/modeltweaker.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modeltweaker.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modeltweaker.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">NPC Drops 1.08</h2>
 
-**Description:** Makes certain NPCs drop specified items on death, encouraging looting.
+<p><strong>Description:</strong></p>
+<p>Makes certain NPCs drop specified items on death, encouraging looting.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds NPCs that drop items on death</li>
+  <li>Adds DropTable to define probabilities</li>
+  <li>Adds encouragement for looting</li>
+  <li>Adds editable drop tables per NPC type</li>
+  <li>Adds weighted chances for rare items</li>
+</ul>
 
-- Adds NPCs that drop items on death
-- Adds DropTable to define probabilities
-- Adds encouragement for looting
-- Adds editable drop tables per NPC type
-- Adds weighted chances for rare items
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/npcdrop.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/npcdrop.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/npcdrop.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/npcdrop.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcdrop.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcdrop.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">NPC Spawner 1.10</h2>
 
-**Description:** Automatically spawns NPCs at designated points and lets admins force spawns.
+<p><strong>Description:</strong></p>
+<p>Automatically spawns NPCs at designated points and lets admins force spawns.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds automatic NPC spawns at points</li>
+  <li>Adds the ability for admins to force spawns</li>
+  <li>Adds logging of spawn actions</li>
+  <li>Adds configuration for spawn intervals</li>
+  <li>Adds spawner entity previews</li>
+</ul>
 
-- Adds automatic NPC spawns at points
-- Adds the ability for admins to force spawns
-- Adds logging of spawn actions
-- Adds configuration for spawn intervals
-- Adds spawner entity previews
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/npcspawner.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/npcspawner.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/npcspawner.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/npcspawner.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcspawner.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcspawner.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Perma Remove 1.09</h2>
 
-**Description:** Lets admins permanently delete map entities and logs each removal for review.
+<p><strong>Description:</strong></p>
+<p>Lets admins permanently delete map entities and logs each removal for review.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds ability to permanently delete map entities</li>
+  <li>Adds logging for each removed entity</li>
+  <li>Adds an admin-only command</li>
+  <li>Adds confirmation prompts before removal</li>
+  <li>Adds restore list to undo mistakes</li>
+</ul>
 
-- Adds ability to permanently delete map entities
-- Adds logging for each removed entity
-- Adds an admin-only command
-- Adds confirmation prompts before removal
-- Adds restore list to undo mistakes
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/permaremove.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/permaremove.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/permaremove.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/permaremove.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/permaremove.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/permaremove.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Radio 1.15</h2>
 
-**Description:** Introduces a radio chat system with customizable fonts and models.
+<p><strong>Description:</strong></p>
+<p>Introduces a radio chat system with customizable fonts and models.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds a radio chat channel for players</li>
+  <li>Adds font configuration via RadioFont</li>
+  <li>Adds workshop models for radios</li>
+  <li>Adds frequency channels for groups</li>
+  <li>Adds handheld radio items</li>
+</ul>
 
-- Adds a radio chat channel for players
-- Adds font configuration via RadioFont
-- Adds workshop models for radios
-- Adds frequency channels for groups
-- Adds handheld radio items
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/radio.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/radio.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/radio.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/radio.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/radio.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/radio.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Raised Weapons 1.09</h2>
 
-**Description:** Automatically lowers weapons when sprinting and raises them again after a short delay.
+<p><strong>Description:</strong></p>
+<p>Automatically lowers weapons when sprinting and raises them again after a short delay.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds auto-lowering of weapons when running</li>
+  <li>Adds a raise delay set by WeaponRaiseSpeed</li>
+  <li>Adds prevention of accidental fire</li>
+  <li>Adds a toggle to keep weapons lowered</li>
+  <li>Adds compatibility with melee weapons</li>
+</ul>
 
-- Adds auto-lowering of weapons when running
-- Adds a raise delay set by WeaponRaiseSpeed
-- Adds prevention of accidental fire
-- Adds a toggle to keep weapons lowered
-- Adds compatibility with melee weapons
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/raisedweapons.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/raisedweapons.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/raisedweapons.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/raisedweapons.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/raisedweapons.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/raisedweapons.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Realistic Damage 1.07</h2>
 
-**Description:** Applies body part multipliers and other tweaks for more realistic combat damage.
+<p><strong>Description:</strong></p>
+<p>Applies body part multipliers and other tweaks for more realistic combat damage.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds damage scaling by body part</li>
+  <li>Adds custom multipliers for realism</li>
+  <li>Adds adjustments to player damage output</li>
+  <li>Adds bleeding effects on high damage</li>
+  <li>Adds friendly fire scaling options</li>
+</ul>
 
-- Adds damage scaling by body part
-- Adds custom multipliers for realism
-- Adds adjustments to player damage output
-- Adds bleeding effects on high damage
-- Adds friendly fire scaling options
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/realisticdamage.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/realisticdamage.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/realisticdamage.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/realisticdamage.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticdamage.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticdamage.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Realistic View 1.11</h2>
 
-**Description:** Replaces the camera with a full-body first-person view and smooth transition effects.
+<p><strong>Description:</strong></p>
+<p>Replaces the camera with a full-body first-person view and smooth transition effects.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds a first-person view that shows the full body</li>
+  <li>Adds immersive camera transitions</li>
+  <li>Adds compatibility with animations</li>
+  <li>Adds smooth leaning animations</li>
+  <li>Adds optional third-person override</li>
+</ul>
 
-- Adds a first-person view that shows the full body
-- Adds immersive camera transitions
-- Adds compatibility with animations
-- Adds smooth leaning animations
-- Adds optional third-person override
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/realisticview.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/realisticview.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/realisticview.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/realisticview.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticview.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticview.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Rumour 1.11</h2>
 
-**Description:** Adds an anonymous rumour command so players can spread hearsay without revealing themselves.
+<p><strong>Description:</strong></p>
+<p>Adds an anonymous rumour command so players can spread hearsay without revealing themselves.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds an anonymous rumour chat command</li>
+  <li>Adds hiding of the sender's identity</li>
+  <li>Adds encouragement for roleplay intrigue</li>
+  <li>Adds a cooldown to prevent spam</li>
+  <li>Adds admin logging of rumour messages</li>
+</ul>
 
-- Adds an anonymous rumour chat command
-- Adds hiding of the sender's identity
-- Adds encouragement for roleplay intrigue
-- Adds a cooldown to prevent spam
-- Adds admin logging of rumour messages
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/rumour.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/rumour.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/rumour.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/rumour.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/rumour.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/rumour.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Shoot Locks 1.10</h2>
 
-**Description:** Allows players to shoot door locks to force them open as a loud breach option.
+<p><strong>Description:</strong></p>
+<p>Allows players to shoot door locks to force them open as a loud breach option.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds the ability to shoot door locks to open them</li>
+  <li>Adds a quick breach alternative</li>
+  <li>Adds a loud action that may alert others</li>
+  <li>Adds chance-based lock destruction</li>
+  <li>Adds configurable noise radius</li>
+</ul>
 
-- Adds the ability to shoot door locks to open them
-- Adds a quick breach alternative
-- Adds a loud action that may alert others
-- Adds chance-based lock destruction
-- Adds configurable noise radius
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/shootlock.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/shootlock.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/shootlock.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/shootlock.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/shootlock.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/shootlock.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Lockpicking 1.09</h2>
 
-**Description:** Provides a basic lockpick tool for brute forcing doors with logged attempts.
+<p><strong>Description:</strong></p>
+<p>Provides a basic lockpick tool for brute forcing doors with logged attempts.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds a simple lockpick tool for doors</li>
+  <li>Adds logging of successful picks</li>
+  <li>Adds brute-force style gameplay</li>
+  <li>Adds configurable pick time</li>
+  <li>Adds chance for tools to break</li>
+</ul>
 
-- Adds a simple lockpick tool for doors
-- Adds logging of successful picks
-- Adds brute-force style gameplay
-- Adds configurable pick time
-- Adds chance for tools to break
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/simple_lockpicking.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/simple_lockpicking.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/simple_lockpicking.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/simple_lockpicking.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/simple_lockpicking.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/simple_lockpicking.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Slots 1.11</h2>
 
-**Description:** Adds a playable slot machine using a workshop model that pays out winnings.
+<p><strong>Description:</strong></p>
+<p>Adds a playable slot machine using a workshop model that pays out winnings.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds a slot machine minigame</li>
+  <li>Adds a workshop model for the machine</li>
+  <li>Adds handling of payouts to winners</li>
+  <li>Adds customizable payout odds</li>
+  <li>Adds sound and animation effects</li>
+</ul>
 
-- Adds a slot machine minigame
-- Adds a workshop model for the machine
-- Adds handling of payouts to winners
-- Adds customizable payout odds
-- Adds sound and animation effects
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/slots.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/slots.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/slots.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/slots.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slots.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slots.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Heavy Weapons 1.09</h2>
 
-**Description:** Slows player movement when wielding specified heavy weapons to encourage tactical choices.
+<p><strong>Description:</strong></p>
+<p>Slows player movement when wielding specified heavy weapons to encourage tactical choices.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds slower movement while holding heavy weapons</li>
+  <li>Adds speed penalties defined per weapon</li>
+  <li>Adds encouragement for strategic choices</li>
+  <li>Adds customizable weapon speed table</li>
+  <li>Adds automatic speed restore when switching</li>
+</ul>
 
-- Adds slower movement while holding heavy weapons
-- Adds speed penalties defined per weapon
-- Adds encouragement for strategic choices
-- Adds customizable weapon speed table
-- Adds automatic speed restore when switching
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/slowweapons.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/slowweapons.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/slowweapons.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/slowweapons.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slowweapons.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slowweapons.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Stun Gun 101.13</h2>
 
-**Description:** Adds a configurable taser weapon that stuns targets and can apply damage with post-process effects.
+<p><strong>Description:</strong></p>
+<p>Adds a configurable taser weapon that stuns targets and can apply damage with post-process effects.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds a taser weapon that immobilizes targets</li>
+  <li>Adds StunTime and MaxDist as configurable settings</li>
+  <li>Adds optional damage and post-process effects</li>
+  <li>Adds networked stun animations</li>
+  <li>Adds logs when players are tased</li>
+</ul>
 
-- Adds a taser weapon that immobilizes targets
-- Adds StunTime and MaxDist as configurable settings
-- Adds optional damage and post-process effects
-- Adds networked stun animations
-- Adds logs when players are tased
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/stungun.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/stungun.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/stungun.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/stungun.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/stungun.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/stungun.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Tying 1.16</h2>
 
-**Description:** Introduces handcuff-style tying items for arrests and logs all tie or untie actions.
+<p><strong>Description:</strong></p>
+<p>Introduces handcuff-style tying items for arrests and logs all tie or untie actions.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds handcuff items that restrain players</li>
+  <li>Adds logging for tie and untie events</li>
+  <li>Adds support for roleplay arrests</li>
+  <li>Adds timed escape minigames for prisoners</li>
+  <li>Adds compatibility with the search submodule</li>
+</ul>
 
-- Adds handcuff items that restrain players
-- Adds logging for tie and untie events
-- Adds support for roleplay arrests
-- Adds timed escape minigames for prisoners
-- Adds compatibility with the search submodule
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/tying.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/tying.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/tying.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/tying.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/tying.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/tying.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Code Utils 1.13</h2>
 
-**Description:** Provides extra helper functions for lia.util used by other modules.
+<p><strong>Description:</strong></p>
+<p>Provides extra helper functions for lia.util used by other modules.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds extra helper functions in lia.util</li>
+  <li>Adds simplified utilities for common scripting tasks</li>
+  <li>Adds a central library used by other modules</li>
+  <li>Adds utilities for networking data</li>
+  <li>Adds shared constants for modules</li>
+</ul>
 
-- Adds extra helper functions in lia.util
-- Adds simplified utilities for common scripting tasks
-- Adds a central library used by other modules
-- Adds utilities for networking data
-- Adds shared constants for modules
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/utilities.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/utilities.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/utilities.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/utilities.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/utilities.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/utilities.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">View Bob 1.10</h2>
 
-**Description:** Applies camera bobbing while moving with adjustable strength for immersion.
+<p><strong>Description:</strong></p>
+<p>Applies camera bobbing while moving with adjustable strength for immersion.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds camera bobbing while moving</li>
+  <li>Adds adjustable intensity</li>
+  <li>Adds enhanced immersion</li>
+  <li>Adds toggle to disable bobbing in vehicles</li>
+  <li>Adds configuration for bobbing frequency</li>
+</ul>
 
-- Adds camera bobbing while moving
-- Adds adjustable intensity
-- Adds enhanced immersion
-- Adds toggle to disable bobbing in vehicles
-- Adds configuration for bobbing frequency
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/viewbob.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/viewbob.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/viewbob.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/viewbob.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/viewbob.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/viewbob.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">VManip 1.10</h2>
 
-**Description:** Adds support for VManip animations and gestures within the framework.
+<p><strong>Description:</strong></p>
+<p>Adds support for VManip animations and gestures within the framework.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds VManip animation support</li>
+  <li>Adds hand gestures for items</li>
+  <li>Adds functionality within Lilia</li>
+  <li>Adds API for custom gesture triggers</li>
+  <li>Adds fallback animations when VManip is missing</li>
+</ul>
 
-- Adds VManip animation support
-- Adds hand gestures for items
-- Adds functionality within Lilia
-- Adds API for custom gesture triggers
-- Adds fallback animations when VManip is missing
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/vmanip.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/vmanip.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/vmanip.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/vmanip.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/vmanip.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/vmanip.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Warrant 1.16</h2>
 
-**Description:** Allows staff to issue and remove player warrants while notifying everyone involved.
+<p><strong>Description:</strong></p>
+<p>Allows staff to issue and remove player warrants while notifying everyone involved.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds ability to issue and remove player warrants</li>
+  <li>Adds notifications displayed to players</li>
+  <li>Adds logging of all warrant actions</li>
+  <li>Adds CAMI privileges for warrant management</li>
+  <li>Adds timed expiration for warrants</li>
+</ul>
 
-- Adds ability to issue and remove player warrants
-- Adds notifications displayed to players
-- Adds logging of all warrant actions
-- Adds CAMI privileges for warrant management
-- Adds timed expiration for warrants
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/warrants.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/warrants.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/warrants.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/warrants.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/warrants.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/warrants.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">War Table 1.14</h2>
 
-**Description:** Adds an interactive 3D war table for planning operations on a shared map.
+<p><strong>Description:</strong></p>
+<p>Adds an interactive 3D war table for planning operations on a shared map.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds an interactive 3D war table</li>
+  <li>Adds the ability to plan operations on a map</li>
+  <li>Adds a workshop model</li>
+  <li>Adds marker placement for strategies</li>
+  <li>Adds support for multiple map layouts</li>
+</ul>
 
-- Adds an interactive 3D war table
-- Adds the ability to plan operations on a map
-- Adds a workshop model
-- Adds marker placement for strategies
-- Adds support for multiple map layouts
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/wartable.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/wartable.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/wartable.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/wartable.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wartable.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wartable.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Whitelist 1.11</h2>
 
-**Description:** Implements a server whitelist system with optional player signup support.
+<p><strong>Description:</strong></p>
+<p>Implements a server whitelist system with optional player signup support.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds a server access whitelist</li>
+  <li>Adds toggleable player signups</li>
+  <li>Adds a public module for gating entry</li>
+  <li>Adds admin commands to manage the list</li>
+  <li>Adds notifications on join attempt</li>
+</ul>
 
-- Adds a server access whitelist
-- Adds toggleable player signups
-- Adds a public module for gating entry
-- Adds admin commands to manage the list
-- Adds notifications on join attempt
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/whitelist.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/whitelist.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/whitelist.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/whitelist.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/whitelist.zip">DOWNLOAD HERE</a></h1>
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/whitelist.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
 <h2 align="center">Word Filter 1.12</h2>
 
-**Description:** Filters unwanted words from chat using a customizable blacklist.
+<p><strong>Description:</strong></p>
+<p>Filters unwanted words from chat using a customizable blacklist.</p>
 
-**Features:**
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Adds chat word filtering</li>
+  <li>Adds blocking of banned phrases</li>
+  <li>Adds an easy-to-extend list</li>
+  <li>Adds regex support for advanced filters</li>
+  <li>Adds admin commands to modify the list</li>
+</ul>
 
-- Adds chat word filtering
-- Adds blocking of banned phrases
-- Adds an easy-to-extend list
-- Adds regex support for advanced filters
-- Adds admin commands to modify the list
+<p><strong>Libraries:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/libraries/modules/wordfilter.html">Access Here</a>
+</p>
 
-<p align="center"><a href="https://liliaframework.github.io/Modules/docs/libraries/modules/wordfilter.html">Libraries</a> | <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/wordfilter.html">Hooks</a></p>
+<p><strong>Hooks:</strong> 
+  <a href="https://liliaframework.github.io/Modules/docs/hooks/modules/wordfilter.html">Access Here</a>
+</p>
 
-<h1 align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wordfilter.zip">DOWNLOAD HERE</a></h1>
-
----
+<p align="center">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wordfilter.zip">
+    <strong>Download Here</strong>
+  </a>
+</p>
 
