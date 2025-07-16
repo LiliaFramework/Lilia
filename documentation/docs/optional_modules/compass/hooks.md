@@ -1,3 +1,5 @@
+# Hooks
+
 ### `mCompass_loadFonts`
 
 **Purpose**

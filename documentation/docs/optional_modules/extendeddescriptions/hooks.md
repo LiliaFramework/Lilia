@@ -1,3 +1,5 @@
+# Hooks
+
 ### `ExtendedDescriptionOpened`
 
 **Purpose**

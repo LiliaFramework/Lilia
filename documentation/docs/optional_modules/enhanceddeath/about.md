@@ -1,6 +1,6 @@
 # Hospitals
 
-**Version:** 1.08  
+**Version:** 1.09  
 **Author:** Samael  
 **Discord:** @liliaplayer  
 

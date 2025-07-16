@@ -1,3 +1,5 @@
+# Hooks
+
 ### `CanSendRumour`
 
 **Purpose**

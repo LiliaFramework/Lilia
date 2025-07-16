@@ -1,3 +1,5 @@
+# Hooks
+
 ### `LockShotAttempt`
 
 **Purpose**

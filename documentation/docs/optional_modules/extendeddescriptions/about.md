@@ -1,6 +1,6 @@
 # Extended Descriptions
 
-**Version:** 1.14  
+**Version:** 1.15  
 **Author:** Samael  
 **Discord:** @liliaplayer  
 

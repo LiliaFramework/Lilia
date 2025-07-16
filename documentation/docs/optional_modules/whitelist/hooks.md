@@ -1,3 +1,5 @@
+# Hooks
+
 ### `PreWhitelistCheck`
 
 **Purpose**
