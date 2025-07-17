@@ -278,4 +278,4 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m "Moved Lilia Version to ${VERSION}"
             git push origin HEAD:main
-          fi«
+          fi
