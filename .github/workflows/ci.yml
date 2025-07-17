@@ -180,7 +180,6 @@ jobs:
             "author":"LiliaFramework",
             "type":"gamemode",
             "ignore":[".github/*","site/*","documentation/*"],
-            "whitelist":["*"]
           }
           EOF
       - run: |
