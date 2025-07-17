@@ -116,7 +116,10 @@ jobs:
           git diff-index --quiet HEAD || git commit -m "ci: bump GM.version to ${VERSION}"
           git push origin HEAD:main
       - run: |
-          zip -r lilia.zip content modules gamemode lilia.txt logo.png icon24.png
+          mkdir -p artifact/gamemodes/lilia
+          rsync -a --exclude '.git' content modules gamemode lilia.txt logo.png icon24.png artifact/gamemodes/lilia/
+          cd artifact
+          zip -r ../lilia.zip gamemodes
       - run: |
           sudo apt-get update -y
           sudo apt-get install -y jq
