@@ -181,11 +181,11 @@ function lia.module.initialize()
         gamemodeIDs[id] = true
     end
 
-    for id in pairs(collectModuleIDs("lilia/modules")) do
+    for id in pairs(collectModuleIDs("lilia/gamemode/modules")) do
         if not preloadIDs[id] and gamemodeIDs[id] then lia.bootstrap("Module", L("modulePreloadSuggestion", id)) end
     end
 
-    lia.module.loadFromDir("lilia/modules", "module", preloadIDs)
+    lia.module.loadFromDir("lilia/gamemode/modules", "module", preloadIDs)
     lia.module.loadFromDir(schemaPath .. "/modules", "module")
     lia.module.loadFromDir(schemaPath .. "/overrides", "module")
     hook.Run("InitializedModules")

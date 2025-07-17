@@ -8,7 +8,7 @@ This page explains the module-loading system.
 
 The modularity library loads modules contained in the **`modules`** folder, resolves dependencies, and initialises both serverside and clientside components. During the process it fires the `DoModuleIncludes`, `InitializedSchema`, and `InitializedModules` hooks. See [Module Fields](../definitions/module.md) for the callbacks and options a module may define.
 
-Modules placed in a schema's `preload` directory are loaded **before** any framework modules. When a module with the same identifier exists in both `preload` and `lilia/modules`, the version inside `preload` takes priority and the framework copy is skipped. If a schema overrides a framework module outside of `preload`, the loader prints a notice suggesting the module be moved to `preload` for improved efficiency.
+Modules placed in a schema's `preload` directory are loaded **before** any framework modules. When a module with the same identifier exists in both `preload` and `lilia/gamemode/modules`, the version inside `preload` takes priority and the framework copy is skipped. If a schema overrides a framework module outside of `preload`, the loader prints a notice suggesting the module be moved to `preload` for improved efficiency.
 
 ---
 
@@ -47,7 +47,7 @@ hook.Add("DoModuleIncludes", "DebugInclude", function(path, module)
 end)
 
 -- Load a folder module and skip its sub-modules
-lia.module.load("example", "lilia/modules/example", false, nil, true)
+lia.module.load("example", "lilia/gamemode/modules/example", false, nil, true)
 ```
 
 ---
@@ -107,7 +107,7 @@ Finds and loads every module located in a directory.
 
 ```lua
 -- Manually load all core modules (usually done by lia.module.initialize)
-lia.module.loadFromDir("lilia/modules/core", "module")
+lia.module.loadFromDir("lilia/gamemode/modules/core", "module")
 ```
 
 ---
