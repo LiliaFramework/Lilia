@@ -135,7 +135,13 @@ jobs:
             ls -1 "${dir}"
           done
       - run: |
-          zip -r lilia.zip addon
+          rm -rf release
+          mkdir -p release/lilia
+          cp -r modules gamemode content release/lilia/
+          cp icon24.png lilia.txt release/lilia/
+      - run: |
+          cd release
+          zip -r ../lilia.zip lilia
       - run: |
           echo "ZIP release contents:"
           unzip -l lilia.zip
