@@ -127,8 +127,8 @@ jobs:
           mkdir -p lilia/content/gamemodes
           mv lilia/gamemode lilia/content/gamemodes/lilia
       - run: |
-          echo "Contents before packaging:"
-          find lilia -type f
+          echo "Contents before .gma packaging (folders only):"
+          ls -d modules content gamemode
       - run: |
           zip -r lilia.zip lilia
       - run: |
@@ -179,10 +179,6 @@ jobs:
           sudo apt-get install -y lib32gcc-s1 lua5.3
           mkdir -p ~/Steam
           curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf - -C ~/Steam
-      - run: |
-          echo "Contents before .gma packaging:"
-          find . -maxdepth 1 -type f -name '*.lua'
-          ls -R modules content gamemode
       - run: |
           lua5.3 gmacreator.lua 3527535922.gma /tmp/addon.json
       - run: |
