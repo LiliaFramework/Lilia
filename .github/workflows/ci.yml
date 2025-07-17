@@ -95,23 +95,22 @@ jobs:
       - uses: actions/checkout@v3
       - run: |
           python3 - << 'PY'
-          import os, re, pathlib, sys
-          version = os.environ["VERSION"]
-          p = pathlib.Path("gamemode/shared.lua")
-          lines = p.read_text(encoding="utf-8-sig").splitlines(keepends=True)
-          out, done = [], False
+          import os,re,pathlib,sys
+          version=os.environ["VERSION"]
+          p=pathlib.Path("gamemode/shared.lua")
+          lines=p.read_text(encoding="utf-8-sig").splitlines(keepends=True)
+          out,done=[],False
           for line in lines:
-              if not done and re.match(r"\s*GM\.Name\s*=", line):
+              if not done and re.match(r"\s*GM\.Name\s*=",line):
                   out.append(line)
                   out.append(f"GM.version = {version}\n")
-                  done = True
-              elif re.match(r"\s*GM\.version\s*=", line):
+                  done=True
+              elif re.match(r"\s*GM\.version\s*=",line):
                   continue
               else:
                   out.append(line)
-          if not done:
-              sys.exit(1)
-          p.write_text(''.join(out), encoding='utf-8')
+          if not done: sys.exit(1)
+          p.write_text(''.join(out),encoding='utf-8')
           PY
       - run: |
           git config user.name github-actions[bot]
@@ -129,7 +128,7 @@ jobs:
           mv lilia/gamemode lilia/content/gamemodes/lilia
           zip -r lilia.zip lilia
       - run: |
-          echo "Addon contents:"
+          echo "ZIP release contents:"
           unzip -l lilia.zip
       - run: |
           sudo apt-get update -y
@@ -164,15 +163,11 @@ jobs:
       - run: |
           cat > /tmp/addon.json <<EOF
           {
-            "title": "Lilia",
-            "description": "Lilia ${VERSION}",
-            "author": "LiliaFramework",
-            "type": "gamemode",
-            "ignore": [
-              ".github/*",
-              "site/*",
-              "documentation/*"
-            ]
+            "title":"Lilia",
+            "description":"Lilia ${VERSION}",
+            "author":"LiliaFramework",
+            "type":"gamemode",
+            "ignore":[".github/*","site/*","documentation/*"]
           }
           EOF
       - run: |
@@ -183,11 +178,14 @@ jobs:
       - run: |
           lua5.3 gmacreator.lua 3527535922.gma /tmp/addon.json
       - run: |
+          echo "Workshop .gma contents:"
+          gmad inspect 3527535922.gma
+      - run: |
           cat <<"EOF" | sed 's/"/\x27/g; s/`/\\`/g; s/\$/\\$/g' > changelog.txt
           Lilia ${VERSION}
           EOF
           cat > workshop.vdf <<EOF
-          "workshopitem" {
+          "workshopitem"{
             "appid" "4000"
             "publishedfileid" "3527535922"
             "contentfolder" "`pwd`/3527535922.gma"
@@ -232,7 +230,7 @@ jobs:
       - run: |
           curl -L -o site/modules.json https://raw.githubusercontent.com/LiliaFramework/Modules/gh-pages/modules.json
       - run: |
-          echo "{\"version\": \"${VERSION}\"}" > site/version.json
+          echo "{\"version\":\"${VERSION}\"}" > site/version.json
       - run: |
           cd site
           git config user.name github-actions
