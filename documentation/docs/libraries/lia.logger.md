@@ -6,7 +6,7 @@ This page documents logging utilities.
 
 ## Overview
 
-The logger library writes structured log entries to the console and to the `lia_logs` SQL table (gamemode, category, text, character ID, SteamID). Built-in log types live in `modules/administration/submodules/logging/logs.lua`; custom types can be added with `lia.log.addType`.
+The logger library writes structured log entries to the console and to the `lia_logs` SQL table (gamemode, category, text, character ID, SteamID). Built-in log types live in `gamemode/modules/administration/submodules/logging/logs.lua`; custom types can be added with `lia.log.addType`.
 
 Each database row stores the timestamp, SteamID, and (if relevant) character ID so that every entry can be associated with a specific player.
 
