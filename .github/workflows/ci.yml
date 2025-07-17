@@ -39,7 +39,7 @@ jobs:
           cd luacheck
           luarocks make
       - run: |
-          luacheck . --exclude-files=".luarocks/**" \
+          luacheck gamemode modules \
             --no-global \
             --no-max-line-length \
             --no-self \
