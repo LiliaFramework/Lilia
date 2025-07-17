@@ -180,7 +180,8 @@ jobs:
             "description":"Lilia ${VERSION}",
             "author":"LiliaFramework",
             "type":"gamemode",
-            "ignore":[".github/*","site/*","documentation/*"]
+            "ignore":[".github/*","site/*","documentation/*"],
+            "whitelist":["*"]
           }
           EOF
       - run: |
