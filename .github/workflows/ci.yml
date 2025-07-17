@@ -196,7 +196,7 @@ jobs:
         run: mkdir -p lua/autorun
 
       - name: Upload to Steam Workshop
-        uses: bleonheart/AHAHAHA@master
+        uses: bleonheart/AHAHAHA@main
         with:
           id: "2959728255"
           changelog: "Lilia ${{ env.VERSION }}"
