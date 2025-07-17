@@ -125,15 +125,9 @@ jobs:
           mkdir -p addon/gamemodes/lilia
           cp -r modules addon/gamemodes/lilia/modules
           cp -r gamemode addon/gamemodes/lilia/gamemode
+          cp -r content/* addon/
           cp icon24.png addon/gamemodes/lilia/
           cp lilia.txt addon/gamemodes/lilia/
-          cp -r content/* addon/
-      - run: |
-          echo "Contents before .gma packaging (top-level)"
-          for dir in modules content gamemode; do
-            echo "${dir}/"
-            ls -1 "${dir}"
-          done
       - run: |
           rm -rf release
           mkdir -p release/lilia
@@ -189,12 +183,15 @@ jobs:
           }
           EOF
       - run: |
+          cp /tmp/addon.json addon/addon.json
+      - run: |
           sudo apt-get update
           sudo apt-get install -y lib32gcc-s1 lua5.3
           mkdir -p ~/Steam
           curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf - -C ~/Steam
       - run: |
-          (cd addon && lua5.3 ../gmacreator.lua ../3527535922.gma /tmp/addon.json)
+          cd addon
+          lua5.3 ../gmacreator.lua ../3527535922.gma addon.json
       - run: |
           echo "Created workshop addon: 3527535922.gma"
       - run: |
