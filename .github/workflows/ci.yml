@@ -118,7 +118,7 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
           git add gamemode/shared.lua
-          git diff-index --quiet HEAD || git commit -m "ci: bump GM.version to ${VERSION}"
+          git diff-index --quiet HEAD || git commit -m "Moved Lilia Version to ${VERSION}"
           git push origin HEAD:main
       - run: |
           rm -rf addon
@@ -137,8 +137,11 @@ jobs:
       - run: |
           rm -rf release
           mkdir -p release/lilia
-          cp -r modules gamemode content release/lilia/
-          cp icon24.png lilia.txt release/lilia/
+          cp -r modules release/lilia/modules
+          cp -r gamemode release/lilia/gamemode
+          cp -r content release/lilia/content
+          cp icon24.png release/lilia/icon24.png
+          cp lilia.txt release/lilia/lilia.txt
       - run: |
           cd release
           zip -r ../lilia.zip lilia
