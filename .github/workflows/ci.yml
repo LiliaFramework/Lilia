@@ -116,7 +116,11 @@ jobs:
           git diff-index --quiet HEAD || git commit -m "ci: bump GM.version to ${VERSION}"
           git push origin HEAD:main
       - run: |
-          find lilia -mindepth 1 -maxdepth 1 ! -name 'modules' ! -name 'gamemode' ! -name 'content' ! -name 'icon24.png' ! -name 'lilia.txt' -exec rm -rf {} +
+          rm -rf lilia
+          mkdir -p lilia
+          cp -r modules content gamemode lilia/
+          cp icon24.png lilia/
+          cp lilia.txt lilia/
           mkdir -p lilia/content/gamemodes
           mv lilia/gamemode lilia/content/gamemodes/lilia
           zip -r lilia.zip lilia
