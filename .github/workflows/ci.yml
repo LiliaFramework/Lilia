@@ -84,7 +84,6 @@ jobs:
         run: |
           cd lilia
           VALID_COUNT=$(git log --no-merges --pretty=format:'%ae' | grep -v '^github-actions@github.com$' | wc -l)
-
           if (( VALID_COUNT < 100 )); then
             MAJOR=0
             MINOR=0
@@ -98,7 +97,6 @@ jobs:
             MINOR=$(((VALID_COUNT % 1000) / 100))
             PATCH=$((VALID_COUNT % 100))
           fi
-
           VERSION_FLOAT=$(echo "$MAJOR.$MINOR$PATCH" | sed 's/^0*//' | sed 's/\.$/.0/')
           echo "version=$VERSION_FLOAT" >> "$GITHUB_OUTPUT"
           echo "valid_count=$VALID_COUNT" >> "$GITHUB_OUTPUT"
@@ -120,11 +118,10 @@ jobs:
       - name: Update GM.version in shared.lua
         run: |
           python3 - << 'PY'
-          import os, re, io, sys, pathlib
+          import os, re, pathlib, sys
           version = os.environ["VERSION"]
           path = pathlib.Path("lilia/gamemode/shared.lua")
-          with path.open(encoding="utf-8-sig") as f:
-              lines = f.readlines()
+          lines = path.read_text(encoding="utf-8-sig").splitlines(keepends=True)
           name_pat = re.compile(r"\s*GM\.Name\s*=")
           out = []
           inserted = False
@@ -192,6 +189,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
 
+      - name: Generate addon.json
+        run: |
+          cat > addon.json <<EOF
+          {
+            "title": "Lilia",
+            "description": "Lilia ${VERSION}",
+            "author": "LiliaFramework",
+            "type": "gamemode",
+            "ignore": [
+              ".github/*",
+              "site/*",
+              "documentation/*"
+            ]
+          }
+          EOF
+
       - name: Ensure autorun directory
         run: mkdir -p lua/autorun
 
@@ -199,7 +212,7 @@ jobs:
         uses: bleonheart/AHAHAHA@main
         with:
           id: "2959728255"
-          changelog: "Lilia ${{ env.VERSION }}"
+          changelog: "Lilia ${VERSION}"
         env:
           STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
           STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
