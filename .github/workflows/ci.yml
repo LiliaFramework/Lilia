@@ -116,10 +116,10 @@ jobs:
           git diff-index --quiet HEAD || git commit -m "ci: bump GM.version to ${VERSION}"
           git push origin HEAD:main
       - run: |
-          mkdir -p artifact/gamemodes/lilia
-          rsync -a --exclude '.git' content modules gamemode lilia.txt logo.png icon24.png artifact/gamemodes/lilia/
-          cd artifact
-          zip -r ../lilia.zip gamemodes
+          find lilia -mindepth 1 -maxdepth 1 ! -name 'modules' ! -name 'gamemode' ! -name 'content' ! -name 'icon24.png' ! -name 'lilia.txt' -exec rm -rf {} +
+          mkdir -p lilia/content/gamemodes
+          mv lilia/gamemode lilia/content/gamemodes/lilia
+          zip -r lilia.zip lilia
       - run: |
           sudo apt-get update -y
           sudo apt-get install -y jq
@@ -167,6 +167,7 @@ jobs:
           id: "2959728255"
           changelog: "Lilia ${VERSION}"
           config: /tmp/addon.json
+          path: lilia
         env:
           STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
           STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
