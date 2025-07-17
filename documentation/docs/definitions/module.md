@@ -396,7 +396,7 @@ When loading a module from a directory, Lilia automatically scans for common sub
 A complete example showing common fields in use:
 
 ```lua
--- example/modules/myfeature/module.lua
+-- example/gamemode/modules/myfeature/module.lua
 MODULE.name = "My Feature"
 MODULE.author = "76561198012345678"
 MODULE.discord = "@example"
