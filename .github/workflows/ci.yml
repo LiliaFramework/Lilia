@@ -122,9 +122,9 @@ jobs:
           git push origin HEAD:main
       - run: |
           rm -rf addon
-          mkdir -p addon/gamemodes/lilia
-          cp -a modules addon/gamemodes/lilia/modules
+          mkdir -p addon/gamemodes/lilia/gamemode
           cp -a gamemode addon/gamemodes/lilia/gamemode
+          cp -a modules addon/gamemodes/lilia/gamemode/modules
           mkdir -p addon/content
           cp -a content/. addon/content
           cp -a icon24.png addon/gamemodes/lilia/
