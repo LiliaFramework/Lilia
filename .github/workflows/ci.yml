@@ -2,8 +2,10 @@ name: CI
 
 on:
   push:
-    branches: [main]
-    tags-ignore: [release]
+    branches:
+      - main
+    tags-ignore:
+      - release
 
 permissions:
   actions: write
@@ -87,6 +89,8 @@ jobs:
       VERSION: ${{ needs.compute-version.outputs.version }}
       VALID_COUNT: ${{ needs.compute-version.outputs.valid_count }}
       GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
+      STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
+      STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
     steps:
       - uses: actions/checkout@v3
       - run: |
@@ -166,18 +170,45 @@ jobs:
             ]
           }
           EOF
-      - uses: bleonheart/AHAHAHA@main
-        with:
-          id: "2959728255"
-          changelog: "Lilia ${VERSION}"
-          config: /tmp/addon.json
-          path: lilia
-        env:
-          STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
-          STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y lib32gcc-s1 lua5.3
+          mkdir -p ~/Steam
+          curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf - -C ~/Steam
+      - run: |
+          lua5.3 gmacreator.lua 2959728255.gma /tmp/addon.json
+      - run: |
+          cat <<"EOF" | sed 's/"/\x27/g; s/`/\\`/g; s/\$/\\$/g' > changelog.txt
+          Lilia ${VERSION}
+          EOF
+          cat > workshop.vdf <<EOF
+          "workshopitem" {
+            "appid" "4000"
+            "publishedfileid" "2959728255"
+            "contentfolder" "`pwd`/2959728255.gma"
+            "changenote" "$(cat changelog.txt)"
+          }
+          EOF
+      - run: |
+          ~/Steam/steamcmd.sh +login $STEAM_USERNAME $STEAM_PASSWORD +workshop_build_item `pwd -P`/workshop.vdf +quit
+      - if: failure()
+        run: |
+          echo ~/Steam/logs/stderr.txt
+          cat ~/Steam/logs/stderr.txt || true
+          echo
+          echo ~/Steam/logs/workshop_log.txt
+          cat ~/Steam/logs/workshop_log.txt || true
+          echo
+          echo ~/Steam/workshopbuilds/depot_build_4000.log
+          cat ~/Steam/workshopbuilds/depot_build_4000.log || true
+          echo
+          cat workshop.vdf || true
+          exit 1
 
   deploy-pages:
-    needs: [compute-version, release]
+    needs:
+      - compute-version
+      - release
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
