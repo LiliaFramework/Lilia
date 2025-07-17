@@ -1,10 +1,12 @@
 name: CI
+
 on:
   push:
     branches:
       - main
     tags-ignore:
       - release
+
 permissions:
   actions: write
   checks: write
@@ -19,6 +21,7 @@ permissions:
   repository-projects: write
   security-events: write
   statuses: write
+
 jobs:
   linter:
     runs-on: ubuntu-latest
@@ -62,13 +65,9 @@ jobs:
         run: |
           VALID_COUNT=$(git log --no-merges --pretty=format:'%ae' | grep -v '^github-actions@github.com$' | wc -l)
           if (( VALID_COUNT < 100 )); then
-            MAJOR=0
-            MINOR=0
-            PATCH=$VALID_COUNT
+            MAJOR=0; MINOR=0; PATCH=$VALID_COUNT
           elif (( VALID_COUNT < 1000 )); then
-            MAJOR=0
-            MINOR=$((VALID_COUNT / 100))
-            PATCH=$((VALID_COUNT % 100))
+            MAJOR=0; MINOR=$((VALID_COUNT / 100)); PATCH=$((VALID_COUNT % 100))
           else
             MAJOR=$((VALID_COUNT / 1000))
             MINOR=$(((VALID_COUNT % 1000) / 100))
@@ -90,33 +89,35 @@ jobs:
       STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
     steps:
       - uses: actions/checkout@v3
+
       - run: |
           python3 - << 'PY'
-          import os,re,pathlib,sys
-          version=os.environ["VERSION"]
-          p=pathlib.Path("gamemode/shared.lua")
-          lines=p.read_text(encoding="utf-8-sig").splitlines(keepends=True)
-          out=[]
-          done=False
+          import os, re, pathlib, sys
+          version = os.environ["VERSION"]
+          p = pathlib.Path("gamemode/shared.lua")
+          lines = p.read_text(encoding="utf-8-sig").splitlines(keepends=True)
+          out = []; done = False
           for line in lines:
-              if not done and re.match(r"\s*GM\.Name\s*=",line):
+              if not done and re.match(r"\s*GM\.Name\s*=", line):
                   out.append(line)
                   out.append(f"GM.version = {version}\n")
-                  done=True
-              elif re.match(r"\s*GM\.version\s*=",line):
+                  done = True
+              elif re.match(r"\s*GM\.version\s*=", line):
                   continue
               else:
                   out.append(line)
           if not done:
               sys.exit(1)
-          p.write_text(''.join(out),encoding='utf-8')
+          p.write_text(''.join(out), encoding='utf-8')
           PY
+
       - run: |
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
           git add gamemode/shared.lua
           git diff-index --quiet HEAD || git commit -m "Moved Lilia Version to ${VERSION}"
           git push origin HEAD:main
+
       - run: |
           rm -rf addon
           mkdir -p addon/gamemodes/lilia
@@ -124,29 +125,38 @@ jobs:
           cp -a content/. addon/
           cp -a icon24.png addon/gamemodes/lilia/
           cp -a lilia.txt addon/gamemodes/lilia/
+
       - run: |
           rm -rf release
           mkdir -p release/lilia
-          cp -a gamemode release/lilia/gamemode
-          cp -a content/. release/lilia/
-          cp -a icon24.png release/lilia/icon24.png
-          cp -a lilia.txt release/lilia/lilia.txt
+          cp -a gamemode release/lilia/
+          cp icon24.png release/lilia/
+          cp lilia.txt release/lilia/
+
       - run: |
           cd release
           zip -r ../lilia.zip lilia
+
       - run: |
           sudo apt-get update -y
           sudo apt-get install -y jq
+
       - run: |
           for rid in $(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases" | jq -r '.[].id'); do
-            curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases/$rid"
+            curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
+              "https://api.github.com/repos/${{ github.repository }}/releases/$rid"
           done
+
       - run: |
-          for tag in $(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/git/refs/tags" | jq -r '.[].ref' | sed 's#refs/tags/##'); do
+          for tag in $(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/git/refs/tags" \
+            | jq -r '.[].ref' | sed 's#refs/tags/##'); do
             if [[ "$tag" != "$VERSION" ]]; then
-              curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/git/refs/tags/$tag"
+              curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
+                "https://api.github.com/repos/${{ github.repository }}/git/refs/tags/$tag"
             fi
           done
+
       - id: create_release
         uses: actions/create-release@v1
         with:
@@ -156,6 +166,7 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
+
       - uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -164,28 +175,35 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
+
       - run: |
           cat > /tmp/addon.json <<EOF
           {
-            "title":"Lilia",
-            "description":"Lilia ${VERSION}",
-            "author":"LiliaFramework",
-            "type":"gamemode",
-            "ignore":[".github/*","site/*","documentation/*"]
+            "title": "Lilia",
+            "description": "Lilia ${VERSION}",
+            "author": "LiliaFramework",
+            "type": "gamemode",
+            "ignore": [".github/*", "site/*", "documentation/*"]
           }
           EOF
+
       - run: |
           cp /tmp/addon.json addon/addon.json
+
       - run: |
           sudo apt-get update
           sudo apt-get install -y lib32gcc-s1 lua5.3
           mkdir -p ~/Steam
-          curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf - -C ~/Steam
+          curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" \
+            | tar zxvf - -C ~/Steam
+
       - run: |
           cd addon
           lua5.3 ../gmacreator.lua ../3527535922.gma addon.json
+
       - run: |
           echo "Created workshop addon: 3527535922.gma"
+
       - run: |
           cat > changelog.txt <<EOF
           Lilia ${VERSION}
@@ -198,8 +216,11 @@ jobs:
             "changenote" "$(cat changelog.txt)"
           }
           EOF
+
       - run: |
-          ~/Steam/steamcmd.sh +login $STEAM_USERNAME $STEAM_PASSWORD +workshop_build_item $(pwd -P)/workshop.vdf +quit
+          ~/Steam/steamcmd.sh +login $STEAM_USERNAME $STEAM_PASSWORD \
+            +workshop_build_item $(pwd -P)/workshop.vdf +quit
+
       - if: failure()
         run: |
           echo ~/Steam/logs/stderr.txt
@@ -234,7 +255,8 @@ jobs:
       - run: |
           rsync -a --delete --exclude '.git' documentation/ site/
       - run: |
-          curl -L -o site/modules.json https://raw.githubusercontent.com/LiliaFramework/Modules/gh-pages/modules.json
+          curl -L -o site/modules.json \
+            https://raw.githubusercontent.com/LiliaFramework/Modules/gh-pages/modules.json
       - run: |
           echo "{\"version\":\"${VERSION}\"}" > site/version.json
       - run: |
