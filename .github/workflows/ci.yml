@@ -236,3 +236,4 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m "ci: update docs for ${VERSION}"
             git push origin HEAD:main
+            
