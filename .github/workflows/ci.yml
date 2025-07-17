@@ -99,7 +99,8 @@ jobs:
           version=os.environ["VERSION"]
           p=pathlib.Path("gamemode/shared.lua")
           lines=p.read_text(encoding="utf-8-sig").splitlines(keepends=True)
-          out,done=[],False
+          out=[]
+          done=False
           for line in lines:
               if not done and re.match(r"\s*GM\.Name\s*=",line):
                   out.append(line)
@@ -109,7 +110,8 @@ jobs:
                   continue
               else:
                   out.append(line)
-          if not done: sys.exit(1)
+          if not done:
+              sys.exit(1)
           p.write_text(''.join(out),encoding='utf-8')
           PY
       - run: |
@@ -127,8 +129,11 @@ jobs:
           mkdir -p lilia/content/gamemodes
           mv lilia/gamemode lilia/content/gamemodes/lilia
       - run: |
-          echo "Contents before .gma packaging (folders only):"
-          ls -d modules content gamemode
+          echo "Contents before .gma packaging (top-level)"
+          for dir in modules content gamemode; do
+            echo "${dir}/"
+            ls -1 "${dir}"
+          done
       - run: |
           zip -r lilia.zip lilia
       - run: |
@@ -242,4 +247,3 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m "ci: update docs for ${VERSION}"
             git push origin HEAD:main
-          fi
