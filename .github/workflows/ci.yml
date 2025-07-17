@@ -2,10 +2,8 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
-    tags-ignore:
-      - release
+    branches: [main]
+    tags-ignore: [release]
 
 permissions:
   actions: write
@@ -26,38 +24,21 @@ jobs:
   linter:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-        with:
-          path: lilia
-
-      - name: Setup Lua 5.2
-        uses: leafo/gh-actions-lua@v8.0.0
-        with:
-          luaVersion: "5.2"
-
-      - name: Setup LuaRocks
-        uses: leafo/gh-actions-luarocks@v4.0.0
-
-      - name: Install linter dependencies
-        run: |
+      - uses: actions/checkout@v3
+      - uses: leafo/gh-actions-lua@v8.0.0
+        with: {luaVersion: '5.2'}
+      - uses: leafo/gh-actions-luarocks@v4.0.0
+      - run: |
           luarocks install luafilesystem
           luarocks install argparse
-
-      - name: Checkout GluaCheck
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           repository: LiliaFramework/GluaCheck
           path: luacheck
-
-      - name: Build GluaCheck
-        run: |
+      - run: |
           cd luacheck
           luarocks make
-
-      - name: Run luacheck
-        run: |
-          cd lilia
+      - run: |
           luacheck . \
             --no-global \
             --no-max-line-length \
@@ -74,15 +55,10 @@ jobs:
       version: ${{ steps.calc_version.outputs.version }}
       valid_count: ${{ steps.calc_version.outputs.valid_count }}
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-        with:
-          path: lilia
-          fetch-depth: 0
-
+      - uses: actions/checkout@v3
+        with: {fetch-depth: 0}
       - id: calc_version
         run: |
-          cd lilia
           VALID_COUNT=$(git log --no-merges --pretty=format:'%ae' | grep -v '^github-actions@github.com$' | wc -l)
           if (( VALID_COUNT < 100 )); then
             MAJOR=0
@@ -110,66 +86,46 @@ jobs:
       VALID_COUNT: ${{ needs.compute-version.outputs.valid_count }}
       GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-        with:
-          path: lilia
-
-      - name: Update GM.version in shared.lua
-        run: |
+      - uses: actions/checkout@v3
+      - run: |
           python3 - << 'PY'
           import os, re, pathlib, sys
           version = os.environ["VERSION"]
-          path = pathlib.Path("lilia/gamemode/shared.lua")
-          lines = path.read_text(encoding="utf-8-sig").splitlines(keepends=True)
-          name_pat = re.compile(r"\s*GM\.Name\s*=")
-          out = []
-          inserted = False
+          p = pathlib.Path("gamemode/shared.lua")
+          lines = p.read_text(encoding="utf-8-sig").splitlines(keepends=True)
+          out, done = [], False
           for line in lines:
-              if not inserted and name_pat.match(line):
+              if not done and re.match(r"\s*GM\.Name\s*=", line):
                   out.append(line)
                   out.append(f"GM.version = {version}\n")
-                  inserted = True
+                  done = True
               elif re.match(r"\s*GM\.version\s*=", line):
                   continue
               else:
                   out.append(line)
-          if not inserted:
-              sys.exit("GM.Name not found")
-          path.write_text("".join(out), encoding="utf-8")
+          if not done: sys.exit(1)
+          p.write_text(''.join(out), encoding='utf-8')
           PY
-
-      - name: Commit version bump
-        run: |
-          cd lilia
+      - run: |
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
           git add gamemode/shared.lua
           git diff-index --quiet HEAD || git commit -m "ci: bump GM.version to ${VERSION}"
           git push origin HEAD:main
-
-      - name: Package addon
-        run: |
-          cd lilia
-          zip -r ../lilia.zip content modules gamemode lilia.txt logo.png icon24.png
-
-      - name: Clean previous releases and tags
-        run: |
+      - run: |
+          zip -r lilia.zip content modules gamemode lilia.txt logo.png icon24.png
+      - run: |
           sudo apt-get update -y
           sudo apt-get install -y jq
-          releases=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases" | jq -r '.[].id')
-          for rid in $releases; do
+          for rid in $(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases" | jq -r '.[].id'); do
             curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases/$rid"
           done
-          tags=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/git/refs/tags" | jq -r '.[].ref' | sed 's#refs/tags/##')
-          for tag in $tags; do
+          for tag in $(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/git/refs/tags" | jq -r '.[].ref' | sed 's#refs/tags/##'); do
             if [[ "$tag" != "$VERSION" ]]; then
               curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/git/refs/tags/$tag"
             fi
           done
-
       - id: create_release
-        name: Create GitHub release
         uses: actions/create-release@v1
         with:
           tag_name: release
@@ -178,9 +134,7 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
-      - name: Upload zip to release
-        uses: actions/upload-release-asset@v1
+      - uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: lilia.zip
@@ -188,9 +142,7 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
-      - name: Generate addon.json
-        run: |
+      - run: |
           cat > addon.json <<EOF
           {
             "title": "Lilia",
@@ -204,55 +156,36 @@ jobs:
             ]
           }
           EOF
-
-      - name: Ensure autorun directory
-        run: mkdir -p lua/autorun
-
-      - name: Upload to Steam Workshop
-        uses: bleonheart/AHAHAHA@main
+      - run: mkdir -p lua/autorun
+      - uses: bleonheart/AHAHAHA@main
         with:
-          id: "2959728255"
+          id: '2959728255'
           changelog: "Lilia ${VERSION}"
         env:
           STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
           STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
 
   deploy-pages:
-    needs:
-      - compute-version
-      - release
+    needs: [compute-version, release]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.compute-version.outputs.version }}
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-        with:
-          path: lilia
-          persist-credentials: true
-
-      - name: Checkout site
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        with: {persist-credentials: true}
+      - uses: actions/checkout@v3
         with:
           repository: LiliaFramework/LiliaFramework.github.io
           path: site
           token: ${{ secrets.LiliaGitSecret }}
-
-      - name: Sync docs
-        run: |
-          rsync -a --delete --exclude '.git' lilia/documentation/ site/
-
-      - name: Fetch modules.json
-        run: |
+      - run: |
+          rsync -a --delete --exclude '.git' documentation/ site/
+      - run: |
           curl -L -o site/modules.json https://raw.githubusercontent.com/LiliaFramework/Modules/gh-pages/modules.json
-
-      - name: Generate version.json
-        run: |
+      - run: |
           echo "{\"version\": \"${VERSION}\"}" > site/version.json
-
-      - name: Publish site
-        run: |
+      - run: |
           cd site
           git config user.name github-actions
           git config user.email github-actions@github.com
