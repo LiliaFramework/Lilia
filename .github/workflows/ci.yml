@@ -123,19 +123,20 @@ jobs:
       - run: |
           rm -rf addon
           mkdir -p addon/gamemodes/lilia
-          cp -r modules addon/gamemodes/lilia/modules
-          cp -r gamemode addon/gamemodes/lilia/gamemode
-          cp -r content/* addon/
-          cp icon24.png addon/gamemodes/lilia/
-          cp lilia.txt addon/gamemodes/lilia/
+          cp -a modules addon/gamemodes/lilia/modules
+          cp -a gamemode addon/gamemodes/lilia/gamemode
+          mkdir -p addon/content
+          cp -a content/. addon/content
+          cp -a icon24.png addon/gamemodes/lilia/
+          cp -a lilia.txt addon/gamemodes/lilia/
       - run: |
           rm -rf release
           mkdir -p release/lilia
-          cp -r modules release/lilia/modules
-          cp -r gamemode release/lilia/gamemode
-          cp -r content release/lilia/content
-          cp icon24.png release/lilia/icon24.png
-          cp lilia.txt release/lilia/lilia.txt
+          cp -a modules release/lilia/modules
+          cp -a gamemode release/lilia/gamemode
+          cp -a content release/lilia/content
+          cp -a icon24.png release/lilia/icon24.png
+          cp -a lilia.txt release/lilia/lilia.txt
       - run: |
           cd release
           zip -r ../lilia.zip lilia
