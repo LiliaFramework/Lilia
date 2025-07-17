@@ -200,7 +200,6 @@ jobs:
         with:
           id: "2959728255"
           changelog: "Lilia ${{ env.VERSION }}"
-          config: lilia/addon.json
         env:
           STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
           STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
