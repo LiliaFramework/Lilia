@@ -121,13 +121,13 @@ jobs:
           git diff-index --quiet HEAD || git commit -m "ci: bump GM.version to ${VERSION}"
           git push origin HEAD:main
       - run: |
-          rm -rf lilia
-          mkdir -p lilia
-          cp -r modules content gamemode lilia/
-          cp icon24.png lilia/
-          cp lilia.txt lilia/
-          mkdir -p lilia/content/gamemodes
-          mv lilia/gamemode lilia/content/gamemodes/lilia
+          rm -rf addon
+          mkdir -p addon/gamemodes/lilia
+          cp -r modules addon/gamemodes/lilia/modules
+          cp -r content addon/gamemodes/lilia/content
+          cp -r gamemode addon/gamemodes/lilia/gamemode
+          cp icon24.png addon/gamemodes/lilia/
+          cp lilia.txt addon/gamemodes/lilia/
       - run: |
           echo "Contents before .gma packaging (top-level)"
           for dir in modules content gamemode; do
@@ -135,7 +135,7 @@ jobs:
             ls -1 "${dir}"
           done
       - run: |
-          zip -r lilia.zip lilia
+          zip -r lilia.zip addon
       - run: |
           echo "ZIP release contents:"
           unzip -l lilia.zip
@@ -185,7 +185,7 @@ jobs:
           mkdir -p ~/Steam
           curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf - -C ~/Steam
       - run: |
-          lua5.3 gmacreator.lua 3527535922.gma /tmp/addon.json
+          (cd addon && lua5.3 ../gmacreator.lua ../3527535922.gma ../tmp/addon.json)
       - run: |
           echo "Created workshop addon: 3527535922.gma"
       - run: |
