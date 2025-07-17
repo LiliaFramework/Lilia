@@ -124,10 +124,10 @@ jobs:
           rm -rf addon
           mkdir -p addon/gamemodes/lilia
           cp -r modules addon/gamemodes/lilia/modules
-          cp -r content addon/gamemodes/lilia/content
           cp -r gamemode addon/gamemodes/lilia/gamemode
           cp icon24.png addon/gamemodes/lilia/
           cp lilia.txt addon/gamemodes/lilia/
+          cp -r content/* addon/
       - run: |
           echo "Contents before .gma packaging (top-level)"
           for dir in modules content gamemode; do
