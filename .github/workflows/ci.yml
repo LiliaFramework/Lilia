@@ -2,8 +2,10 @@ name: CI
 
 on:
   push:
-    branches: [main]
-    tags-ignore: [release]
+    branches:
+      - main
+    tags-ignore:
+      - release
 
 permissions:
   actions: write
@@ -91,54 +93,46 @@ jobs:
       STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
     steps:
       - uses: actions/checkout@v3
-
-      # bump version inside shared.lua
       - run: |
           python3 - << 'PY'
-          import os, re, pathlib, sys
-          version = os.environ["VERSION"]
-          p = pathlib.Path("gamemode/shared.lua")
-          lines = p.read_text(encoding="utf-8-sig").splitlines(keepends=True)
-          out, done = [], False
+          import os,re,pathlib,sys
+          version=os.environ["VERSION"]
+          p=pathlib.Path("gamemode/shared.lua")
+          lines=p.read_text(encoding="utf-8-sig").splitlines(keepends=True)
+          out=[]
+          done=False
           for line in lines:
-              if not done and re.match(r"\s*GM\.Name\s*=", line):
+              if not done and re.match(r"\s*GM\.Name\s*=",line):
                   out.append(line)
                   out.append(f"GM.version = {version}\n")
-                  done = True
-              elif re.match(r"\s*GM\.version\s*=", line):
+                  done=True
+              elif re.match(r"\s*GM\.version\s*=",line):
                   continue
               else:
                   out.append(line)
           if not done:
               sys.exit(1)
-          p.write_text(''.join(out), encoding='utf-8')
+          p.write_text(''.join(out),encoding='utf-8')
           PY
-
-      # commit back the version bump
       - run: |
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
           git add gamemode/shared.lua
           git diff-index --quiet HEAD || git commit -m "Moved Lilia Version to ${VERSION}"
           git push origin HEAD:main
-
-      # -------- build addon folder layout ---------
       - run: |
           rm -rf addon
           mkdir -p addon/gamemodes/lilia
-          cp -a gamemode addon/gamemodes/lilia/
-          cp -a modules addon/gamemodes/lilia/
+          cp -a gamemode addon/gamemodes/lilia/gamemode
+          cp -a modules addon/gamemodes/lilia/modules
+          cp -a content/. addon/gamemodes/lilia/content
           cp -a icon24.png addon/gamemodes/lilia/
           cp -a lilia.txt addon/gamemodes/lilia/
-          mkdir -p addon/content
-          cp -a content/. addon/content
-
-      # -------- build release zip (for GitHub) ----
       - run: |
           rm -rf release
           mkdir -p release/lilia
-          cp -a gamemode release/lilia/gamemode
           cp -a modules release/lilia/modules
+          cp -a gamemode release/lilia/gamemode
           cp -a content release/lilia/content
           cp -a icon24.png release/lilia/icon24.png
           cp -a lilia.txt release/lilia/lilia.txt
@@ -148,27 +142,19 @@ jobs:
       - run: |
           echo "ZIP release contents:"
           unzip -l lilia.zip
-
-      # -------- clean old GitHub releases/tags ----
       - run: |
           sudo apt-get update -y
           sudo apt-get install -y jq
       - run: |
-          for rid in $(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-               "https://api.github.com/repos/${{ github.repository }}/releases" | jq -r '.[].id'); do
-            curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
-              "https://api.github.com/repos/${{ github.repository }}/releases/$rid"
+          for rid in $(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases" | jq -r '.[].id'); do
+            curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases/$rid"
           done
       - run: |
-          for tag in $(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-               "https://api.github.com/repos/${{ github.repository }}/git/refs/tags" | jq -r '.[].ref' | sed 's#refs/tags/##'); do
+          for tag in $(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/git/refs/tags" | jq -r '.[].ref' | sed 's#refs/tags/##'); do
             if [[ "$tag" != "$VERSION" ]]; then
-              curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
-                "https://api.github.com/repos/${{ github.repository }}/git/refs/tags/$tag"
+              curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/git/refs/tags/$tag"
             fi
           done
-
-      # -------- create GitHub release -------------
       - id: create_release
         uses: actions/create-release@v1
         with:
@@ -186,26 +172,19 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
-      # -------- generate addon.json WITHOUT whitelist -------------
       - run: |
           cat > /tmp/addon.json <<EOF
           {
-            "title": "Lilia",
-            "description": "Lilia ${VERSION}",
-            "author": "LiliaFramework",
-            "type": "gamemode",
-            "ignore": [
-              ".github/*",
-              "site/*",
-              "documentation/*"
-            ]
+            "title":"Lilia",
+            "description":"Lilia ${VERSION}",
+            "author":"LiliaFramework",
+            "type":"gamemode",
+            "ignore":[".github/*","site/*","documentation/*"],
+            "whitelist":["*"]
           }
           EOF
       - run: |
           cp /tmp/addon.json addon/addon.json
-
-      # -------- build .gma ------------------------
       - run: |
           sudo apt-get update
           sudo apt-get install -y lib32gcc-s1 lua5.3
@@ -216,24 +195,20 @@ jobs:
           lua5.3 ../gmacreator.lua ../3527535922.gma addon.json
       - run: |
           echo "Created workshop addon: 3527535922.gma"
-
-      # -------- upload to workshop ---------------
       - run: |
           cat <<"EOF" | sed 's/"/\x27/g; s/`/\\`/g; s/\$/\\$/g' > changelog.txt
           Lilia ${VERSION}
           EOF
           cat > workshop.vdf <<EOF
-          "workshopitem"
-          {
-            "appid"            "4000"
-            "publishedfileid"  "3527535922"
-            "contentfolder"    "`pwd`/3527535922.gma"
-            "changenote"       "$(cat changelog.txt)"
+          "workshopitem"{
+            "appid" "4000"
+            "publishedfileid" "3527535922"
+            "contentfolder" "`pwd`/3527535922.gma"
+            "changenote" "$(cat changelog.txt)"
           }
           EOF
       - run: |
-          ~/Steam/steamcmd.sh +login $STEAM_USERNAME $STEAM_PASSWORD \
-            +workshop_build_item `pwd -P`/workshop.vdf +quit
+          ~/Steam/steamcmd.sh +login $STEAM_USERNAME $STEAM_PASSWORD +workshop_build_item `pwd -P`/workshop.vdf +quit
       - if: failure()
         run: |
           echo ~/Steam/logs/stderr.txt
@@ -249,7 +224,9 @@ jobs:
           exit 1
 
   deploy-pages:
-    needs: [compute-version, release]
+    needs:
+      - compute-version
+      - release
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
@@ -266,8 +243,7 @@ jobs:
       - run: |
           rsync -a --delete --exclude '.git' documentation/ site/
       - run: |
-          curl -L -o site/modules.json \
-            https://raw.githubusercontent.com/LiliaFramework/Modules/gh-pages/modules.json
+          curl -L -o site/modules.json https://raw.githubusercontent.com/LiliaFramework/Modules/gh-pages/modules.json
       - run: |
           echo "{\"version\":\"${VERSION}\"}" > site/version.json
       - run: |
