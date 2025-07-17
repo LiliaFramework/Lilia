@@ -120,15 +120,13 @@ jobs:
       - run: |
           rm -rf addon
           mkdir -p addon/gamemodes/lilia
-          cp -a gamemode addon/gamemodes/lilia/gamemode
-          cp -a gamemode/modules addon/gamemodes/lilia/gamemode/modules
+          cp -a gamemode addon/gamemodes/lilia
           cp -a content/. addon/
           cp -a icon24.png addon/gamemodes/lilia/
           cp -a lilia.txt addon/gamemodes/lilia/
       - run: |
           rm -rf release
-          mkdir -p release/lilia/gamemode/modules
-          cp -a gamemode/modules release/lilia/gamemode/modules
+          mkdir -p release/lilia
           cp -a gamemode release/lilia/gamemode
           cp -a content/. release/lilia/
           cp -a icon24.png release/lilia/icon24.png
