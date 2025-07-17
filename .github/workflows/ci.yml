@@ -176,7 +176,7 @@ jobs:
           mkdir -p ~/Steam
           curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf - -C ~/Steam
       - run: |
-          lua5.3 gmacreator.lua 2959728255.gma /tmp/addon.json
+          lua5.3 gmacreator.lua 3527535922.gma /tmp/addon.json
       - run: |
           cat <<"EOF" | sed 's/"/\x27/g; s/`/\\`/g; s/\$/\\$/g' > changelog.txt
           Lilia ${VERSION}
@@ -184,8 +184,8 @@ jobs:
           cat > workshop.vdf <<EOF
           "workshopitem" {
             "appid" "4000"
-            "publishedfileid" "2959728255"
-            "contentfolder" "`pwd`/2959728255.gma"
+            "publishedfileid" "3527535922"
+            "contentfolder" "`pwd`/3527535922.gma"
             "changenote" "$(cat changelog.txt)"
           }
           EOF
