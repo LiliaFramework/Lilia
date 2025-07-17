@@ -131,7 +131,7 @@ jobs:
           for line in lines:
               if not inserted and name_pat.match(line):
                   out.append(line)
-                  out.append(f"GM.version = {version}\\n")
+                  out.append(f"GM.version = {version}\n")
                   inserted = True
               elif re.match(r"\s*GM\.version\s*=", line):
                   continue
