@@ -1,12 +1,10 @@
 name: CI
-
 on:
   push:
     branches:
       - main
     tags-ignore:
       - release
-
 permissions:
   actions: write
   checks: write
@@ -21,7 +19,6 @@ permissions:
   repository-projects: write
   security-events: write
   statuses: write
-
 jobs:
   linter:
     runs-on: ubuntu-latest
@@ -50,7 +47,6 @@ jobs:
             --no-max-string-line-length \
             --no-max-comment-line-length \
             --no-max-cyclomatic-complexity
-
   compute-version:
     needs: linter
     runs-on: ubuntu-latest
@@ -80,7 +76,6 @@ jobs:
           VERSION_FLOAT=$(echo "$MAJOR.$MINOR$PATCH" | sed 's/^0*//' | sed 's/\.$/.0/')
           echo "version=$VERSION_FLOAT" >> "$GITHUB_OUTPUT"
           echo "valid_count=$VALID_COUNT" >> "$GITHUB_OUTPUT"
-
   release:
     needs: compute-version
     if: github.ref == 'refs/heads/main'
@@ -179,7 +174,7 @@ jobs:
             "description":"Lilia ${VERSION}",
             "author":"LiliaFramework",
             "type":"gamemode",
-            "ignore":[".github/*","site/*","documentation/*"],
+            "ignore":[".github/*","site/*","documentation/*"]
           }
           EOF
       - run: |
@@ -195,19 +190,19 @@ jobs:
       - run: |
           echo "Created workshop addon: 3527535922.gma"
       - run: |
-          cat <<"EOF" | sed 's/"/\x27/g; s/`/\\`/g; s/\$/\\$/g' > changelog.txt
+          cat > changelog.txt <<EOF
           Lilia ${VERSION}
           EOF
           cat > workshop.vdf <<EOF
           "workshopitem"{
             "appid" "4000"
             "publishedfileid" "3527535922"
-            "contentfolder" "`pwd`/3527535922.gma"
+            "contentfolder" "$(pwd)/3527535922.gma"
             "changenote" "$(cat changelog.txt)"
           }
           EOF
       - run: |
-          ~/Steam/steamcmd.sh +login $STEAM_USERNAME $STEAM_PASSWORD +workshop_build_item `pwd -P`/workshop.vdf +quit
+          ~/Steam/steamcmd.sh +login $STEAM_USERNAME $STEAM_PASSWORD +workshop_build_item $(pwd -P)/workshop.vdf +quit
       - if: failure()
         run: |
           echo ~/Steam/logs/stderr.txt
@@ -221,7 +216,6 @@ jobs:
           echo
           cat workshop.vdf || true
           exit 1
-
   deploy-pages:
     needs:
       - compute-version
