@@ -127,7 +127,7 @@ jobs:
           cp -a lilia.txt addon/gamemodes/lilia/
       - run: |
           rm -rf release
-          mkdir -p release/lilia
+          mkdir -p release/lilia/gamemode/modules
           cp -a gamemode/modules release/lilia/gamemode/modules
           cp -a gamemode release/lilia/gamemode
           cp -a content/. release/lilia/
@@ -136,9 +136,6 @@ jobs:
       - run: |
           cd release
           zip -r ../lilia.zip lilia
-      - run: |
-          echo "ZIP release contents:"
-          unzip -l lilia.zip
       - run: |
           sudo apt-get update -y
           sudo apt-get install -y jq
