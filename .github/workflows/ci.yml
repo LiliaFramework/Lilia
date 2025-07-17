@@ -47,6 +47,7 @@ jobs:
             --no-max-string-line-length \
             --no-max-comment-line-length \
             --no-max-cyclomatic-complexity
+
   compute-version:
     needs: linter
     runs-on: ubuntu-latest
@@ -76,6 +77,7 @@ jobs:
           VERSION_FLOAT=$(echo "$MAJOR.$MINOR$PATCH" | sed 's/^0*//' | sed 's/\.$/.0/')
           echo "version=$VERSION_FLOAT" >> "$GITHUB_OUTPUT"
           echo "valid_count=$VALID_COUNT" >> "$GITHUB_OUTPUT"
+
   release:
     needs: compute-version
     if: github.ref == 'refs/heads/main'
@@ -120,7 +122,7 @@ jobs:
           mkdir -p addon/gamemodes/lilia
           cp -a gamemode addon/gamemodes/lilia/gamemode
           cp -a modules addon/gamemodes/lilia/modules
-          cp -a content/. addon/gamemodes/lilia/content
+          cp -a content/. addon/
           cp -a icon24.png addon/gamemodes/lilia/
           cp -a lilia.txt addon/gamemodes/lilia/
       - run: |
@@ -128,7 +130,7 @@ jobs:
           mkdir -p release/lilia
           cp -a modules release/lilia/modules
           cp -a gamemode release/lilia/gamemode
-          cp -a content release/lilia/content
+          cp -a content/. release/lilia/
           cp -a icon24.png release/lilia/icon24.png
           cp -a lilia.txt release/lilia/lilia.txt
       - run: |
@@ -216,6 +218,7 @@ jobs:
           echo
           cat workshop.vdf || true
           exit 1
+
   deploy-pages:
     needs:
       - compute-version
