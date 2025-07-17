@@ -185,7 +185,7 @@ jobs:
           mkdir -p ~/Steam
           curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf - -C ~/Steam
       - run: |
-          (cd addon && lua5.3 ../gmacreator.lua ../3527535922.gma ../tmp/addon.json)
+          (cd addon && lua5.3 ../gmacreator.lua ../3527535922.gma /tmp/addon.json)
       - run: |
           echo "Created workshop addon: 3527535922.gma"
       - run: |
