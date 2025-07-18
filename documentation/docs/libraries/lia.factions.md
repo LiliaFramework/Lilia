@@ -9,6 +9,7 @@ This page covers the faction system helpers.
 The factions library loads faction definitions and stores them for later lookup. Factions are kept in two tables:
 
 * `lia.faction.teams` — indexed by unique identifier.
+
 * `lia.faction.indices` — indexed by team number.
 
 The helpers below let you find factions and iterate over their data. See [Faction Fields](../definitions/faction.md) for the keys stored in each `FACTION` table.
@@ -180,6 +181,7 @@ Checks whether a faction belongs to a category defined by a list of faction IDs.
 **Parameters**
 
 * `faction` (*string*): Faction unique ID.
+
 * `categoryFactions` (*table*): Array of faction IDs in the category.
 
 **Realm**
@@ -207,9 +209,13 @@ Dynamically creates and registers a new faction (job) with the team system, prec
 **Parameters**
 
 * `index` (*number*): Team index.
+
 * `name` (*string*): Faction name.
+
 * `color` (*Color*): Team colour.
+
 * `default` (*boolean*): Whether this faction is default.
+
 * `models` (*table*): Array of model paths or model data.
 
 **Realm**
@@ -295,6 +301,7 @@ Returns the models that belong to a specific category for a faction.
 **Parameters**
 
 * `teamName` (*string*): Faction unique ID.
+
 * `category` (*string*): Category name.
 
 **Realm**

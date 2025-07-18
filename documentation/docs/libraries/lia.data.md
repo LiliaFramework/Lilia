@@ -93,6 +93,7 @@ Retrieves the stored value for the specified key from the cache.
 * `ignoreMap` (*boolean*): Legacy parameter, currently ignored.
 
 * `refresh` (*boolean*): When `true`, bypasses the cached value and simply
+
   returns the default. This behavior is kept for legacy compatibility.
 
 **Realm**

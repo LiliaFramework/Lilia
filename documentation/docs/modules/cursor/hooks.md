@@ -1,13 +1,10 @@
 # Hooks
-
 Module-specific events raised by the Cursor module.
 
 ---
-
 ### `PreRenderCursor`
 
 **Purpose**
-
 Called immediately before the custom cursor is drawn.
 
 **Parameters**
@@ -15,11 +12,9 @@ Called immediately before the custom cursor is drawn.
 * `material` (`string`): Material name of the cursor texture.
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `nil` — nothing.
 
 **Example**
@@ -35,7 +30,6 @@ end)
 ### `PostRenderCursor`
 
 **Purpose**
-
 Runs right after the cursor texture has been drawn.
 
 **Parameters**
@@ -43,11 +37,9 @@ Runs right after the cursor texture has been drawn.
 * `material` (`string`): Material name of the cursor texture.
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `nil` — nothing.
 
 **Example**
@@ -63,7 +55,6 @@ end)
 ### `PreCursorThink`
 
 **Purpose**
-
 Executed every frame before the hovered panel has its cursor style changed.
 
 **Parameters**
@@ -71,11 +62,9 @@ Executed every frame before the hovered panel has its cursor style changed.
 * `panel` (`Panel`): The panel currently under the mouse.
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `nil` — nothing.
 
 **Example**
@@ -91,7 +80,6 @@ end)
 ### `CursorThink`
 
 **Purpose**
-
 Called each frame after the cursor style has been set to blank.
 
 **Parameters**
@@ -99,11 +87,9 @@ Called each frame after the cursor style has been set to blank.
 * `panel` (`Panel`): The panel currently under the mouse.
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `nil` — nothing.
 
 **Example**
@@ -115,4 +101,3 @@ end)
 ```
 
 ---
-

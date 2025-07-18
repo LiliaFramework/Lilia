@@ -374,7 +374,7 @@ if not lia.admin.isDisabled() then
                 end
             end
 
-            lia.log.add(nil, "blindFadeAll", duration, colorName)
+
         end
     })
 

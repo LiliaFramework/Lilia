@@ -371,7 +371,9 @@ end)
 **Purpose**
 
 Ensures every registered character variable has a matching column in the
+
 `lia_characters` table, adding any that are missing. It can be invoked
+
 multiple times; existing columns will be ignored.
 
 **Parameters**
@@ -813,6 +815,7 @@ Determines whether a specific column is present in a table.
 **Parameters**
 
 * `tbl` (*string*): Table name.
+
 * `field` (*string*): Column name to check.
 
 **Realm**

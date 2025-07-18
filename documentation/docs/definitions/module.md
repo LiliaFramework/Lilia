@@ -248,10 +248,15 @@ MODULE.Dependencies = {
 **Description:**
 
 Controls whether the module loads. Can be a static boolean or a function returning a boolean.
+
 When the function form is used, it may optionally return a second string
+
 explaining why the module is disabled. This message is displayed through
+
 `lia.bootstrap` when the loader skips the module.
+
 When a module is disabled or skipped, you will see a console message in the format:
+
 `[Lilia] [Bootstrap] [Module Disabled/Skipped] <reason>`.
 
 **Example Usage:**
@@ -372,23 +377,41 @@ print(MODULE.uniqueID)
 When loading a module from a directory, Lilia automatically scans for common sub-folders and includes them in a specific sequence. Files in these folders run on the appropriate realm, letting you simply drop code into place. The loader processes the following paths in order:
 
 1. `languages`
+
 2. `factions`
+
 3. `classes`
+
 4. `attributes`
+
 5. `pim.lua`, `client.lua`, `server.lua`, `config.lua` and `commands.lua`
+
 6. `config`
+
 7. `dependencies`
+
 8. `libs`
+
 9. `hooks`
+
 10. `libraries`
+
 11. `commands`
+
 12. `netcalls`
+
 13. `meta`
+
 14. `derma`
+
 15. `pim`
+
 16. `entities`
+
 17. `items`
+
 18. `submodules` (each loaded as its own module)
+
 ---
 
 ### Example `module.lua`
@@ -423,6 +446,5 @@ function MODULE:ModuleLoaded()
     print("My Feature loaded!")
 end
 ```
-
 
 ---

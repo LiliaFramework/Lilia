@@ -19,6 +19,7 @@ Includes a Lua file on the appropriate realm, sending it to clients when require
 **Parameters**
 
 * `path` (*string*): Path to the Lua file.
+
 * `realm` (*string*): Realm state (`"server"`, `"client"`, `"shared"`, etc.).
 
 **Realm**
@@ -46,8 +47,11 @@ Includes every Lua file in a directory, with optional recursion and realm overri
 **Parameters**
 
 * `dir` (*string*): Directory path.
+
 * `raw` (*boolean*): Treat `dir` as a raw Lua path.
+
 * `deep` (*boolean*): Include sub-folders when `true`.
+
 * `realm` (*string*): Realm state override.
 
 **Realm**
@@ -75,8 +79,11 @@ Recursively includes Lua files while preserving alphabetical order.
 **Parameters**
 
 * `dir` (*string*): Directory path.
+
 * `raw` (*boolean*): Treat `dir` as a raw filesystem path.
+
 * `recursive` (*boolean*): Traverse sub-directories.
+
 * `forceRealm` (*string*): Realm override for all files.
 
 **Realm**
@@ -130,6 +137,7 @@ Displays a deprecation warning and optionally runs a fallback callback.
 **Parameters**
 
 * `methodName` (*string*): Name of the deprecated method.
+
 * `callback` (*function*): Fallback function. *Optional*.
 
 **Realm**
@@ -211,6 +219,7 @@ Logs a bootstrap message with a coloured section tag.
 **Parameters**
 
 * `section` (*string*): Bootstrap stage.
+
 * `msg` (*string*): Descriptive message.
 
 **Realm**
@@ -264,6 +273,7 @@ Prints a colour-coded log entry to the console.
 **Parameters**
 
 * `category` (*string*): Log category name.
+
 * `logString` (*string*): Text to log.
 
 **Realm**
@@ -291,11 +301,17 @@ Applies standardised kick/ban commands for a player infraction.
 **Parameters**
 
 * `client` (*Player*): Player to punish.
+
 * `infraction` (*string*): Reason.
+
 * `kick` (*boolean*): Kick the player.
+
 * `ban` (*boolean*): Ban the player.
+
 * `time` (*number*): Ban duration (minutes).
+
 * `kickKey` (*string*): Localisation key for kick reason.
+
 * `banKey` (*string*): Localisation key for ban reason.
 
 **Realm**

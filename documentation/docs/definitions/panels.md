@@ -174,7 +174,6 @@ Small label for quick notifications. It draws a blurred backdrop and fades away 
 
 Expanded version of `liaNotice` supporting more text and optional buttons. Often used for yes/no prompts.
 
-
 ### `liaChatBox`
 
 **Base Panel:**
@@ -649,4 +648,3 @@ vgui.Create("liaQuick")
 ```
 
 ---
-

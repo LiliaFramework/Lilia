@@ -1,27 +1,21 @@
 # Hooks
-
 Module-specific events raised by the Wordfilter module.
 
 ---
-
 ### `PreFilterCheck`
 
 **Purpose**
-
 Runs before a player's chat message is scanned for blocked words.
 
 **Parameters**
 
 * `ply` (`Player`): Player sending the message.
-
 * `text` (`string`): Raw chat text.
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `None`
 
 **Example**
@@ -37,23 +31,18 @@ end)
 ### `FilteredWordUsed`
 
 **Purpose**
-
 Called when a blocked word is detected in a chat message.
 
 **Parameters**
 
 * `ply` (`Player`): Player who sent the message.
-
 * `word` (`string`): The banned word that was found.
-
 * `text` (`string`): Original chat text.
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `None`
 
 **Example**
@@ -69,23 +58,18 @@ end)
 ### `PostFilterCheck`
 
 **Purpose**
-
 Fires after the filter check completes.
 
 **Parameters**
 
 * `ply` (`Player`): Player who sent the message.
-
 * `text` (`string`): Original chat text.
-
 * `passed` (`boolean`): Whether the message was allowed.
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `None`
 
 **Example**
@@ -104,23 +88,18 @@ end)
 ### `FilterCheckFailed`
 
 **Purpose**
-
 `Called when a player's message is blocked for containing a banned word.`
 
 **Parameters**
 
 * `ply` (`Player`): `The offending player.`
-
 * `text` (`string`): `Original chat text.`
-
 * `word` (`string`): `The banned word found.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil`
 
 **Example**
@@ -136,21 +115,17 @@ end)
 ### `FilterCheckPassed`
 
 **Purpose**
-
 `Runs when a player's chat message passes the filter.`
 
 **Parameters**
 
 * `ply` (`Player`): `Player whose message was allowed.`
-
 * `text` (`string`): `Their original message.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil`
 
 **Example**
@@ -166,7 +141,6 @@ end)
 ### `WordAddedToFilter`
 
 **Purpose**
-
 `Fires after a new word is added to the blacklist.`
 
 **Parameters**
@@ -174,11 +148,9 @@ end)
 * `word` (`string`): `The word that was inserted.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil`
 
 **Example**
@@ -194,7 +166,6 @@ end)
 ### `WordRemovedFromFilter`
 
 **Purpose**
-
 `Called after a word is removed from the blacklist.`
 
 **Parameters**
@@ -202,11 +173,9 @@ end)
 * `word` (`string`): `The word removed.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil`
 
 **Example**
@@ -218,4 +187,3 @@ end)
 ```
 
 ---
-

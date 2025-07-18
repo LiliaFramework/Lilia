@@ -228,8 +228,8 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             btn:DockMargin(100, 10, 100, 0)
             btn:SetText("")
             btn.Paint = function(_, w, h)
-                local ic = lia.option.get(key, cfg.value) and getIcon("0xe880", true) or getIcon("0xf096", true)
-                lia.util.drawText(ic, w / 2, h / 2 - 10, color_white, 1, 1, "liaIconsHugeNew")
+                local ic = lia.option.get(key, cfg.value) and "checkbox.png" or "unchecked.png"
+                lia.util.drawTexture(ic, color_white, w/2-32, h/2-32, 64, 64)
             end
 
             btn.DoClick = function() lia.option.set(key, not lia.option.get(key, cfg.value)) end

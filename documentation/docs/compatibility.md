@@ -6,7 +6,6 @@ The compatibility layer covers administration suites such as SAM, vehicle framew
 
 In recent releases the compatibility set has grown even larger. Popular community addons now work out of the box:
 
-
 - **Advanced Duplicator 2** and **Advanced Duplicator** integration
 
 - **PAC3** outfit synchronization
@@ -27,7 +26,6 @@ In recent releases the compatibility set has grown even larger. Popular communit
 
 - **VJBase** NPC base improvements
 
-
 Simply install these addons and the matching compatibility layer will load automatically.
 
 ## [Advanced Duplicator](https://steamcommunity.com/sharedfiles/filedetails/?id=163806212)
@@ -36,12 +34,9 @@ Simply install these addons and the matching compatibility layer will load autom
 
 * Prevents duplication of entities flagged as `NoDuplicate`.
 
-
 * Rejects dupes containing props scaled to excessive sizes.
 
-
 * Logs attempted exploits and notifies the offending player.
-
 
 **Detailed Explanation:**
 
@@ -55,9 +50,7 @@ Hooks into dupe placement checks to stop players from spawning unstable or restr
 
 * Performs the same safety checks as the original dupe compatibility library.
 
-
 * Respects AD2’s internal entity lists when validating dupes.
-
 
 **Detailed Explanation:**
 
@@ -73,7 +66,6 @@ Integrates with AD2’s duplication data system while still blocking problematic
 
 * Implements `formatMoney`, `createEntity`, and `createCategory` shims so other addons can function.
 
-
 **Detailed Explanation:**
 
 Recreates widely used DarkRP globals and utilities so community addons run under Lilia without modification.
@@ -85,7 +77,6 @@ Recreates widely used DarkRP globals and utilities so community addons run under
 **Compatibility Highlights:**
 
 * Filters out self-inflicted damage from the player's own vehicle.
-
 
 **Detailed Explanation:**
 
@@ -99,13 +90,11 @@ Stops collisions or weapons fired from your own LVS vehicle from injuring you. D
 
 * Networks player outfit parts reliably between server and clients.
 
-
 * Adds commands for repairing, enabling, and disabling PAC3.
 
 * Honors the `BlockPackURLoad` configuration to restrict loading outfits from URLs.
 
 * Registers the "Staff Permissions - Can Use PAC3" privilege and the `P` flag for access control.
-
 
 **Detailed Explanation:**
 
@@ -118,8 +107,8 @@ Exposes helper methods and network messages to synchronize PAC3 outfits, prevent
 **Compatibility Highlights:**
 
 * Blocks saving Lilia’s persistent entities or map-created props as permanent.
-* Warns about overlapping saves and logs who saved each PermaProp.
 
+* Warns about overlapping saves and logs who saved each PermaProp.
 
 **Detailed Explanation:**
 
@@ -132,7 +121,6 @@ Prevents PermaProps from saving entities that would conflict with Lilia’s pers
 **Compatibility Highlights:**
 
 * Forces players out of prone when they die or change character.
-
 
 **Detailed Explanation:**
 
@@ -150,7 +138,6 @@ Listens for death and character-switch events, automatically exiting prone to av
 
 * Checks staff privileges before executing sensitive commands.
 
-
 **Detailed Explanation:**
 
 Mirrors SAM commands and enforces Lilia’s permission checks so admins can use familiar tools seamlessly.
@@ -160,10 +147,10 @@ Mirrors SAM commands and enforces Lilia’s permission checks so admins can use 
 ## [ServerGuard](https://www.gmodstore.com/market/view/serverguard)
 
 **Compatibility Highlights:**
+
 * Translates Lilia admin commands to their ServerGuard equivalents.
 
 * Disables the built-in restrictions plugin so Lilia can manage permissions.
-
 
 **Detailed Explanation:**
 
@@ -177,13 +164,11 @@ Turns off ServerGuard’s restriction module to ensure a single consistent permi
 
 * Applies crash damage to drivers on vehicle collisions.
 
-
 * Blocks Sit Anywhere seating on Simfphys vehicles.
+
 * Adds configuration options for seat damage and entry delays.
 
-
 * Registers a privilege for editing vehicles.
-
 
 **Detailed Explanation:**
 
@@ -197,32 +182,32 @@ Drivers only take damage when the vehicle is struck near their seat and a config
 
 * Sets recommended console variables on load.
 
-
 * Prevents sitting on players or vehicles.
 
 * Applies anti-prop-surf and tool-abuse protections.
 
 * Enables seat damage by default.
 
-
 **Detailed Explanation:**
 
 Adjusts console settings and seat interactions to prevent trolling while maintaining roleplay utility.
 
 ---
+
 ## ULX
 
 > **Warning**
+
 > ULX is not compatible with Lilia because its version of CAMI is extremely old and breaks permission checks.
 
 Use Lilia's built-in admin menu or another modern admin suite like SAM or ServerGuard instead.
-
 
 ## [VCMod Main](https://www.gmodstore.com/market/view/vcmod-main)
 
 **Compatibility Highlights:**
 
 * Redirects VCMod money hooks to a character’s funds.
+
 * Checks vehicle purchases against the character's wallet.
 
 **Detailed Explanation:**
@@ -236,11 +221,10 @@ Forwards vehicle purchase and upgrade transactions to the roleplay money system,
 **Compatibility Highlights:**
 
 * Removes unprotected VJBase spawners and flags NPCs notarget.
+
 * Blocks dangerous network messages.
 
-
 * Applies safer default settings and removes heavy hooks.
-
 
 **Detailed Explanation:**
 

@@ -233,7 +233,16 @@ end
 function lia.data.get(key, default, _, _, refresh)
     if not refresh then
         local stored = lia.data.stored[key]
-        if stored ~= nil then return stored end
+        if stored ~= nil then
+            if isstring(stored) then
+                local decoded = util.JSONToTable(stored)
+                if istable(decoded) then
+                    stored = decoded[1] or decoded
+                    lia.data.stored[key] = stored
+                end
+            end
+            return stored
+        end
     end
     return default
 end

@@ -151,6 +151,7 @@ Runs after a player is moved into this faction from another.
 **Parameters**
 
 * `client` (`Player`): The player that was transferred.
+
 * `oldFaction` (`number`): Index of the previous faction.
 
 **Realm**
@@ -187,6 +188,7 @@ Determines if the faction has reached its player limit.
 **Parameters**
 
 * `character` (`Character`): The character attempting to join.
+
 * `client` (`Player`): The owner of that character.
 
 **Realm**

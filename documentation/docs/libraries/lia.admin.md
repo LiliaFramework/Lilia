@@ -61,6 +61,7 @@ Creates a new user group with an optional table of permissions.
 **Parameters**
 
 * `groupName` (*string*): Name of the group.
+
 * `info` (*table*): Table of permissions. Optional.
 
 **Realm**
@@ -122,6 +123,7 @@ Grants a permission flag to a specific group.
 **Parameters**
 
 * `groupName` (*string*): Target group.
+
 * `permission` (*string*): Permission identifier.
 
 **Realm**
@@ -143,6 +145,7 @@ Revokes a permission flag from a group.
 **Parameters**
 
 * `groupName` (*string*): Target group.
+
 * `permission` (*string*): Permission identifier to remove.
 
 **Realm**
@@ -184,6 +187,7 @@ Changes the user group of a player and records it in the database.
 **Parameters**
 
 * `ply` (*Player*): Player to modify.
+
 * `usergroup` (*string*): Group identifier.
 
 **Realm**
@@ -205,7 +209,9 @@ Creates a ban entry for a SteamID.
 **Parameters**
 
 * `steamid` (*string*): SteamID64 of the player.
+
 * `reason` (*string*): Ban reason. Optional.
+
 * `duration` (*number*): Ban length in minutes. Optional.
 
 **Realm**

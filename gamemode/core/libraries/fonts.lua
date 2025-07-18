@@ -377,56 +377,6 @@ if CLIENT then
         extended = true,
         weight = 800
     })
-
-    lia.font.register("liaIconsSmall", {
-        font = "fontello",
-        size = 22,
-        extended = true,
-        weight = 500
-    })
-
-    lia.font.register("liaIconsMedium", {
-        font = "fontello",
-        extended = true,
-        size = 28,
-        weight = 500
-    })
-
-    lia.font.register("liaIconsBig", {
-        font = "fontello",
-        extended = true,
-        size = 48,
-        weight = 500
-    })
-
-    lia.font.register("liaIconsSmallNew", {
-        font = "fontello",
-        size = 22,
-        extended = true,
-        weight = 500
-    })
-
-    lia.font.register("liaIconsMediumNew", {
-        font = "fontello",
-        extended = true,
-        size = 28,
-        weight = 500
-    })
-
-    lia.font.register("liaIconsBigNew", {
-        font = "fontello",
-        extended = true,
-        size = 48,
-        weight = 500
-    })
-
-    lia.font.register("liaIconsHugeNew", {
-        font = "fontello",
-        extended = true,
-        size = 78,
-        weight = 500
-    })
-
     lia.font.register("liaNoticeFont", {
         font = lia.config.get("GenericFont"),
         size = 22,

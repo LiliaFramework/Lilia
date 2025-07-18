@@ -1,15 +1,12 @@
-<h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
+# Perma Remove
 
-**Name:**
-Perma Remove
+**Version:** 1.12  
+**Author:** Boz [Base Code] & Samael [Rewrite]  
+**Discord:** bozdev  
 
-**Version:**
-1.14
-
-**Description:**
 Lets admins permanently delete map entities and logs each removal for review.
 
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
+## Features
 
 - Adds ability to permanently delete map entities
 - Adds logging for each removed entity
@@ -17,8 +14,4 @@ Lets admins permanently delete map entities and logs each removal for review.
 - Adds confirmation prompts before removal
 - Adds restore list to undo mistakes
 
-
-
-
-
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/permaremove.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:var(--md-primary-fg-color,#007acc);border-radius:4px;">DOWNLOAD HERE</a></p>
+[Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/permaremove.zip)

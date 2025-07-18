@@ -1,31 +1,23 @@
 # Hooks
-
 Module-specific events raised by the Extendeddescriptions module.
 
 ---
-
 ### `ExtendedDescriptionOpened`
 
 **Purpose**
-
 Opens the detailed description panel for a player.
 
 **Parameters**
 
 * `ply` (`Player`): Player whose description is being viewed.
-
 * `frame` (`Panel`): The panel containing the description.
-
 * `text` (`string`): The description text.
-
 * `url` (`string`): Reference image URL.
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `nil` — called for notification only
 
 **Example**
@@ -41,23 +33,18 @@ end)
 ### `ExtendedDescriptionClosed`
 
 **Purpose**
-
 Fired when the detailed description panel is closed.
 
 **Parameters**
 
 * `ply` (`Player`): Player whose description was viewed.
-
 * `text` (`string`): The description text.
-
 * `url` (`string`): Reference image URL.
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `nil`
 
 **Example**
@@ -73,21 +60,17 @@ end)
 ### `ExtendedDescriptionEditOpened`
 
 **Purpose**
-
 Fired when the admin edit window is opened.
 
 **Parameters**
 
 * `frame` (`Panel`): Panel allowing text entry.
-
 * `steamName` (`string`): Steam name of the player being edited.
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `nil`
 
 **Example**
@@ -103,7 +86,6 @@ end)
 ### `ExtendedDescriptionEditClosed`
 
 **Purpose**
-
 Fired when the edit window is closed.
 
 **Parameters**
@@ -111,11 +93,9 @@ Fired when the edit window is closed.
 * `steamName` (`string`): Steam name of the player being edited.
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `nil`
 
 **Example**
@@ -131,23 +111,18 @@ end)
 ### `ExtendedDescriptionEditSubmitted`
 
 **Purpose**
-
 Called when the admin submits new description text.
 
 **Parameters**
 
 * `steamName` (`string`): Steam name of the player being edited.
-
 * `url` (`string`): Submitted reference image URL.
-
 * `text` (`string`): Submitted description text.
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `nil`
 
 **Example**
@@ -163,23 +138,18 @@ end)
 ### `PreExtendedDescriptionUpdate`
 
 **Purpose**
-
 Runs on the server before a player's description data is changed.
 
 **Parameters**
 
 * `client` (`Player`): The player receiving the new description.
-
 * `url` (`string`): Reference image URL.
-
 * `text` (`string`): Description text.
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil`
 
 **Example**
@@ -195,23 +165,18 @@ end)
 ### `ExtendedDescriptionUpdated`
 
 **Purpose**
-
 Runs after the server stores a player's new description.
 
 **Parameters**
 
 * `client` (`Player`): Player whose description was updated.
-
 * `url` (`string`): Reference image URL.
-
 * `text` (`string`): Description text.
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil`
 
 **Example**
@@ -223,4 +188,3 @@ end)
 ```
 
 ---
-

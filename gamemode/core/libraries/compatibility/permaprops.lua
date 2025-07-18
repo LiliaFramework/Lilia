@@ -19,7 +19,7 @@ hook.Add("PermaProps.OnEntityCreated", "liaPermaPropsOverlapWarning", function(e
     for _, existing in ipairs(spawnedPositions) do
         if pos:DistToSqr(existing) <= radiusSqr then
             lia.notices.notifyLocalized("permaPropOverlapWarning")
-            lia.log.add(nil, "permaPropOverlap", tostring(pos), tostring(existing))
+            
             break
         end
     end

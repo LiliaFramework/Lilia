@@ -361,6 +361,7 @@ Checks if an entity is within the given radius of the player.
 **Parameters**
 
 * `radius` (`number`): Distance in units.
+
 * `entity` (`Entity`): Entity to compare.
 
 **Realm**
@@ -390,6 +391,7 @@ Returns a table of entities within radius of the player.
 **Parameters**
 
 * `radius` (`number`): Search distance in units.
+
 * `playerOnly` (`boolean|nil`): Only include players when `true`.
 
 **Realm**
@@ -431,6 +433,7 @@ Returns the active weapon entity and associated item if equipped.
 **Returns**
 
 * `Entity|nil`: Weapon entity when matched.
+
 * `Item|nil`: Inventory item associated with the weapon.
 
 **Example Usage**
@@ -676,6 +679,7 @@ Sends a localized notification to the player.
 **Parameters**
 
 * `message` (`string`): Translation key.
+
 * `...`: Additional parameters for localization.
 
 **Realm**
@@ -1084,6 +1088,7 @@ Verifies the player's character meets an attribute level.
 **Parameters**
 
 * `skill` (`string`): Attribute ID.
+
 * `level` (`number`): Required level.
 
 **Realm**
@@ -1139,8 +1144,11 @@ Plays an animation sequence and optionally freezes the player.
 **Parameters**
 
 * `sequenceName` (`string`): Sequence to play.
+
 * `callback` (`function|nil`): Called when finished.
+
 * `time` (`number|nil`): Duration override.
+
 * `noFreeze` (`boolean`): Don't freeze movement when true.
 
 **Realm**
@@ -1437,6 +1445,7 @@ Sets or clears whitelist permission for a faction.
 **Parameters**
 
 * `faction` (`number`): Faction index.
+
 * `whitelisted` (`boolean|nil`): Enable when true, disable when false/nil.
 
 **Realm**
@@ -1516,7 +1525,9 @@ Stores a value in the player's persistent data table.
 **Parameters**
 
 * `key` (`string`): Data key.
+
 * `value` (`any`): Value to store.
+
 * `noNetworking` (`boolean|nil`): Skip network update when true.
 
 **Realm**
@@ -1544,6 +1555,7 @@ Sends a waypoint to the client at the specified position.
 **Parameters**
 
 * `name` (`string`): Display label.
+
 * `vector` (`Vector`): World position.
 
 **Realm**
@@ -1571,6 +1583,7 @@ Alias of `setWaypoint()` for backwards compatibility.
 **Parameters**
 
 * `name` (`string`): Display label.
+
 * `vector` (`Vector`): World position.
 
 **Realm**
@@ -1598,7 +1611,9 @@ Creates a waypoint using a custom logo material.
 **Parameters**
 
 * `name` (`string`): Display label.
+
 * `vector` (`Vector`): World position.
+
 * `logo` (`string`): Material path for the icon.
 
 **Realm**
@@ -1626,6 +1641,7 @@ Retrieves a stored value from the player's data table.
 **Parameters**
 
 * `key` (`string`): Data key.
+
 * `default` (`any`): Returned if the key is nil.
 
 **Realm**
@@ -1705,6 +1721,7 @@ Broadcasts animation bone data to all clients.
 **Parameters**
 
 * `active` (`boolean`): Enable or disable manipulation.
+
 * `boneData` (`table`): Map of bone names to angles.
 
 **Realm**
@@ -1734,7 +1751,9 @@ Displays an action bar for a set duration and optionally runs a callback.
 **Parameters**
 
 * `text` (`string|nil`): Text to display, or nil to clear.
+
 * `time` (`number|nil`): How long to show it for.
+
 * `callback` (`function|nil`): Executed when time elapses.
 
 **Realm**
@@ -1762,9 +1781,13 @@ Runs an action only while the player stares at the entity.
 **Parameters**
 
 * `entity` (`Entity`): Target entity.
+
 * `callback` (`function`): Called when the timer finishes.
+
 * `time` (`number`): Duration in seconds.
+
 * `onCancel` (`function|nil`): Called if gaze breaks.
+
 * `distance` (`number|nil`): Max distance to maintain.
 
 **Realm**
@@ -1818,8 +1841,11 @@ Prompts the client with a dropdown selection dialog.
 **Parameters**
 
 * `title` (`string`): Window title.
+
 * `subTitle` (`string`): Description text.
+
 * `options` (`table`): Table of options.
+
 * `callback` (`function|nil`): Receives the chosen value.
 
 **Realm**
@@ -1999,7 +2025,7 @@ player:requestButtons("Select one", {
 
 ---
 
-### getPlayTime (Server)
+### getPlayTime
 
 **Purpose**
 
@@ -2167,7 +2193,7 @@ local stamina = player:getLocalVar("stamina",  char:getMaxStamina())
 
 ---
 
-### getPlayTime (Client)
+### getPlayTime
 
 **Purpose**
 
@@ -2193,7 +2219,7 @@ print(LocalPlayer():getPlayTime())
 
 ---
 
-### setWaypoint (Client)
+### setWaypoint
 
 **Purpose**
 
@@ -2223,7 +2249,7 @@ LocalPlayer():setWaypoint("Home", vector_origin)
 
 ---
 
-### setWeighPoint (Client)
+### setWeighPoint
 
 **Purpose**
 
@@ -2253,7 +2279,7 @@ LocalPlayer():setWeighPoint("Spot", Vector(10, 10, 0))
 
 ---
 
-### setWaypointWithLogo (Client)
+### setWaypointWithLogo
 
 **Purpose**
 
@@ -2285,7 +2311,7 @@ LocalPlayer():setWaypointWithLogo("Loot", Vector(1, 1, 1), "icon.png")
 
 ---
 
-### getLiliaData (Client)
+### getLiliaData
 
 **Purpose**
 
@@ -2313,7 +2339,7 @@ local data = LocalPlayer():getLiliaData("settings")
 
 ---
 
-### getAllLiliaData (Client)
+### getAllLiliaData
 
 **Purpose**
 
@@ -2339,7 +2365,7 @@ local data = LocalPlayer():getAllLiliaData()
 
 ---
 
-### NetworkAnimation (Client)
+### NetworkAnimation
 
 **Purpose**
 

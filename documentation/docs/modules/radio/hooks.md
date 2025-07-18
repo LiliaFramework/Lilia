@@ -1,29 +1,22 @@
 # Hooks
-
 Module-specific events raised by the Radio module.
 
 ---
-
 ### `AddSection`
 
 **Purpose**
-
 `Allows other modules to add a new section to the radio information window.`
 
 **Parameters**
 
 * `title` (`string`): `Displayed section title.`
-
 * `color` (`Color`): `Header color for the section.`
-
 * `order` (`number`): `Order value used for sorting.`
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `nil` — `No return value.`
 
 **Example**
@@ -39,25 +32,19 @@ end)
 ### `AddTextField`
 
 **Purpose**
-
 `Creates a text field inside a radio information section.`
 
 **Parameters**
 
 * `section` (`string`): `Section title to place the field in.`
-
 * `id` (`string`): `Unique identifier for the text field.`
-
 * `label` (`string`): `Text displayed before the value.`
-
 * `callback` (`function`): `Function returning the value to display.`
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `nil` — `No return value.`
 
 **Example**
@@ -73,7 +60,6 @@ end)
 ### `ShouldRadioBeep`
 
 **Purpose**
-
 `Determines whether a beep should play when radio chatter ends.`
 
 **Parameters**
@@ -81,11 +67,9 @@ end)
 * `listener` (`Player`): `Player that would hear the beep.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `boolean` — `Return false to suppress the beep sound.`
 
 **Example**
@@ -101,23 +85,18 @@ end)
 ### `PlayerFinishRadio`
 
 **Purpose**
-
 `Runs after a player's radio transmission finishes.`
 
 **Parameters**
 
 * `listener` (`Player`): `Player hearing the beep.`
-
 * `frequency` (`string`): `Frequency that was used.`
-
 * `channel` (`number`): `Channel index.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `No return value.`
 
 **Example**
@@ -133,25 +112,19 @@ end)
 ### `CanHearRadio`
 
 **Purpose**
-
 `Checks if a listener should hear a given radio message.`
 
 **Parameters**
 
 * `listener` (`Player`): `Potential recipient.`
-
 * `speaker` (`Player`): `Player sending the message.`
-
 * `frequency` (`string`): `Radio frequency.`
-
 * `channel` (`number`): `Channel index.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `boolean` — `Return false to block reception.`
 
 **Example**
@@ -167,23 +140,18 @@ end)
 ### `CanUseRadio`
 
 **Purpose**
-
 `Determines if a player can start transmitting on a radio.`
 
 **Parameters**
 
 * `speaker` (`Player`): `Player attempting to talk.`
-
 * `frequency` (`string`): `Radio frequency.`
-
 * `channel` (`number`): `Channel index.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `boolean` — `Return false to prevent talking.`
 
 **Example**
@@ -199,23 +167,18 @@ end)
 ### `PlayerStartRadio`
 
 **Purpose**
-
 `Called once a player begins transmitting over the radio.`
 
 **Parameters**
 
 * `speaker` (`Player`): `Player that started talking.`
-
 * `frequency` (`string`): `Radio frequency used.`
-
 * `channel` (`number`): `Channel index.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `No return value.`
 
 **Example**
@@ -231,21 +194,17 @@ end)
 ### `OnRadioSabotaged`
 
 **Purpose**
-
 `Triggered when a handheld radio is sabotaged and destroyed.`
 
 **Parameters**
 
 * `client` (`Player`): `Player who sabotaged the radio.`
-
 * `item` (`Item`): `Radio item that was removed.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `No return value.`
 
 **Example**
@@ -261,21 +220,17 @@ end)
 ### `OnRadioEnabled`
 
 **Purpose**
-
 `Runs when a player enables their radio item.`
 
 **Parameters**
 
 * `client` (`Player`): `Owner of the radio.`
-
 * `item` (`Item`): `Radio item being enabled.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `No return value.`
 
 **Example**
@@ -291,21 +246,17 @@ end)
 ### `OnRadioDisabled`
 
 **Purpose**
-
 `Runs when a player disables their radio item.`
 
 **Parameters**
 
 * `client` (`Player`): `Owner of the radio.`
-
 * `item` (`Item`): `Radio item being disabled.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `No return value.`
 
 **Example**
@@ -321,23 +272,18 @@ end)
 ### `OnRadioFrequencyChanged`
 
 **Purpose**
-
 `Runs when a radio's frequency is adjusted through the UI.`
 
 **Parameters**
 
 * `client` (`Player`): `Player changing the frequency.`
-
 * `item` (`Item`): `Radio item being modified.`
-
 * `frequency` (`string`): `New frequency string.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `No return value.`
 
 **Example**
@@ -353,7 +299,6 @@ end)
 ### `RefreshFonts`
 
 **Purpose**
-
 `Invoked client side after the radio font configuration changes.`
 
 **Parameters**
@@ -361,11 +306,9 @@ end)
 *None*
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `nil` — `No return value.`
 
 **Example**
@@ -377,4 +320,3 @@ end)
 ```
 
 ---
-

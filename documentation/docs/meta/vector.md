@@ -96,6 +96,7 @@ Rotates the vector around an axis by the specified degrees and returns the new v
 **Parameters**
 
 * `axis` (*Vector*): Axis to rotate around.
+
 * `degrees` (*number*): Angle in degrees.
 
 **Realm**
@@ -124,7 +125,9 @@ print(result)
 Calculates the cross product of this vector and the provided up reference to derive a right-direction vector.
 
 The vector is overwritten via `self:Cross(self, vUp)` and then normalized,
+
 yielding a direction perpendicular to both inputs. This means the method
+
 modifies the calling vector and returns it.
 
 If this vector has no horizontal component it defaults to `Vector(0, -1, 0)`.

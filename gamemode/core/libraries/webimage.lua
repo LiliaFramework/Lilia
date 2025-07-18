@@ -4,6 +4,7 @@ local gamemode = engine.ActiveGamemode() or "unknown"
 local baseDir = "lilia/" .. ip .. "/" .. gamemode .. "/"
 local cache = {}
 local urlMap = {}
+local registered = lia.webimage._registered or {}
 local function ensureDir(p)
     local parts = string.Explode("/", p)
     local cur = ""
@@ -19,6 +20,8 @@ end
 
 function lia.webimage.register(n, u, cb, flags)
     if isstring(u) then urlMap[u] = n end
+    registered[n] = {url = u, flags = flags}
+    lia.webimage._registered = registered
     if cache[n] then
         if cb then cb(cache[n], true) end
         return
@@ -134,6 +137,19 @@ concommand.Add("lia_saved_images", function()
     end
 end)
 
+concommand.Add("lia_wipewebimages", function()
+    local files = file.Find(baseDir .. "*", "DATA")
+    if files then
+        for _, fn in ipairs(files) do
+            file.Delete(baseDir .. fn)
+        end
+    end
+    cache = {}
+    urlMap = {}
+    lia.information(L("webImagesCleared"))
+    ensureDir(baseDir)
+end)
+
 concommand.Add("test_webimage_menu", function()
     local frame = vgui.Create("DFrame")
     frame:SetTitle(L("webImageTesterTitle"))
@@ -164,4 +180,37 @@ concommand.Add("test_webimage_menu", function()
     end
 end)
 
+lia.webimage.register("lilia.png", "https://github.com/LiliaFramework/liaIcons/blob/main/lilia.png?raw=true")
+lia.webimage.register("locked.png", "https://github.com/LiliaFramework/liaIcons/blob/main/locked.png?raw=true")
+lia.webimage.register("unlocked.png", "https://github.com/LiliaFramework/liaIcons/blob/main/unlocked.png?raw=true")
+lia.webimage.register("checkbox.png", "https://github.com/LiliaFramework/liaIcons/blob/main/checkbox.png?raw=true")
+lia.webimage.register("unchecked.png", "https://github.com/LiliaFramework/liaIcons/blob/main/unchecked.png?raw=true")
+lia.webimage.register("checkboxfilled.png", "https://github.com/LiliaFramework/liaIcons/blob/main/checkboxfilled.png?raw=true")
+lia.webimage.register("checkboxfilled_crossed.png", "https://github.com/LiliaFramework/liaIcons/blob/main/checkboxfilled_crossed.png?raw=true")
+lia.webimage.register("normaltalk.png", "https://github.com/LiliaFramework/liaIcons/blob/main/normaltalk.png?raw=true")
+lia.webimage.register("yelltalk.png", "https://github.com/LiliaFramework/liaIcons/blob/main/yelltalk.png?raw=true")
+lia.webimage.register("whispertalk.png", "https://github.com/LiliaFramework/liaIcons/blob/main/whispertalk.png?raw=true")
+lia.webimage.register("notalk.png", "https://github.com/LiliaFramework/liaIcons/blob/main/notalk.png?raw=true")
+lia.webimage.register("close_button.png", "https://github.com/LiliaFramework/liaIcons/blob/main/close_button.png?raw=true")
+lia.webimage.register("close_button_pressed.png", "https://github.com/LiliaFramework/liaIcons/blob/main/close_button_pressed.png?raw=true")
 ensureDir(baseDir)
+
+hook.Add("InitPostEntity", "liaWebImageReRegister", function()
+    local newIP = string.Replace(string.Replace(game.GetIPAddress() or "unknown", ":", "_"), "%.", "_")
+    local newGamemode = engine.ActiveGamemode() or "unknown"
+    local newBase = "lilia/" .. newIP .. "/" .. newGamemode .. "/"
+    if newBase ~= baseDir then
+        ip = newIP
+        gamemode = newGamemode
+        baseDir = newBase
+        cache = {}
+        urlMap = {}
+        ensureDir(baseDir)
+        for name, data in pairs(registered) do
+            if isstring(data.url) then
+                lia.webimage.register(name, data.url, nil, data.flags)
+            end
+        end
+    end
+end)
+

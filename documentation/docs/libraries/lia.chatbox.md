@@ -68,18 +68,31 @@ Registers a new chat class and sets up its command aliases.
 * `data` (*table*): Table of chat class properties.
 
   * `syntax` (string) – Argument usage description shown in command help.
+
   * `desc` (string) – Description of the command shown in menus.
+
   * `prefix` (string | table) – Command prefixes that trigger this chat type.
+
   * `radius` (number | function) – Hearing range or custom range logic.
+
   * `onCanHear` (function | number) – Determines if a listener can see the message.
+
   * `onCanSay` (function) – Called before sending to verify the speaker may talk.
+
   * `onChatAdd` (function) – Client-side handler for displaying the text.
+
   * `onGetColor` (function) – Returns a `Color` for the message.
+
   * `color` (Color) – Default colour for the fallback `onChatAdd`.
+
   * `format` (string) – Format string used by the fallback `onChatAdd`.
+
   * `filter` (string) – Chat filter category used by the chat UI.
+
   * `font` (string) – Font name used when rendering the message.
+
   * `noSpaceAfter` (boolean) – Allows prefixes without a trailing space.
+
   * `deadCanChat` (boolean) – Permits dead players to use the chat type.
 
 **Realm**

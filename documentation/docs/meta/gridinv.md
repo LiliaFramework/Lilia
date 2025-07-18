@@ -110,7 +110,9 @@ This does **not** test collisions with other items.
 **Parameters**
 
 * `item` (`Item`): Item being tested.
+
 * `x` (`number`): X slot position.
+
 * `y` (`number`): Y slot position.
 
 **Realm**
@@ -172,8 +174,11 @@ Used internally when checking placement validity.
 **Parameters**
 
 * `testItem` (`Item`): Item being placed.
+
 * `x` (`number`): Proposed X slot.
+
 * `y` (`number`): Proposed Y slot.
+
 * `item` (`Item`): Existing item inside the inventory.
 
 **Realm**
@@ -234,7 +239,9 @@ Determines if `testItem` can be placed at `(x, y)` without overlapping existing 
 **Parameters**
 
 * `testItem` (`Item`): Item to check.
+
 * `x` (`number`): X slot position.
+
 * `y` (`number`): Y slot position.
 
 **Realm**
@@ -244,6 +251,7 @@ Determines if `testItem` can be placed at `(x, y)` without overlapping existing 
 **Returns**
 
 * `boolean`: True when placement is valid.
+
 * `Item|nil`: Conflicting item if placement fails.
 
 **Example Usage**
@@ -355,6 +363,7 @@ Updates the stored grid dimensions **on the server**.
 **Parameters**
 
 * `w` (`number`): New width in slots.
+
 * `h` (`number`): New height in slots.
 
 **Realm**
@@ -413,6 +422,7 @@ When `fullUpdate` is `true` the inventory is synced to that owner immediately.
 **Parameters**
 
 * `owner` (`number|Player`): Character ID or `Player` to own the inventory.
+
 * `fullUpdate` (`boolean`): Send a full sync to the owner.
 
 **Realm**
@@ -438,15 +448,21 @@ inv:setOwner(client, true)
 Inserts an item into the inventory at the given position.
 
 Extra quantity that cannot fit triggers the `OnPlayerLostStackItem` hook.
+
 Coordinates can be omitted and the first free position will be used.
+
 When the third argument is a table it acts as item data and the second
+
 argument is treated as a quantity to spawn.
 
 **Parameters**
 
 * `item` (`Item|string`): Item instance or unique ID to add.
+
 * `xOrQuantity` (`number`): X slot or stack quantity (optional).
+
 * `yOrData` (`number|table`): Y slot or data table (optional).
+
 * `noReplicate` (`boolean`): Skip networking new items to clients.
 
 **Realm**
@@ -478,6 +494,7 @@ Quantity defaults to `1`.
 **Parameters**
 
 * `itemID` (`number|string`): Item ID or unique ID.
+
 * `quantity` (`number`): Amount to remove.
 
 **Realm**
@@ -509,8 +526,11 @@ The server processes this call through the `HandleItemTransferRequest` hook.
 **Parameters**
 
 * `itemID` (`number`): ID of the item to move.
+
 * `destID` (`number`): Destination inventory ID.
+
 * `x` (`number`): Target X slot.
+
 * `y` (`number`): Target Y slot.
 
 **Realm**

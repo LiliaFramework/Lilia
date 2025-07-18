@@ -133,6 +133,7 @@ Parses a command syntax string into an ordered list of field tables. Each field 
 **Parameters**
 
 * `syntax` (*string*): Syntax string, e.g. `[string Name] [number Time]`.
+
   Include the word `optional` inside a bracket to mark that argument as optional.
 
 **Realm**

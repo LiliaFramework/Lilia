@@ -83,9 +83,9 @@ else
         return string.format("%.2f", bytes / (1024 * 1024 * 1024))
     end
 
-    local function showPrompt(count, have, size)
+    local function showPrompt(total, have, size)
         if IsValid(downloadFrame) then return end
-        local text = L("workshopDownloadPrompt", have, count, formatSize(size))
+        local text = L("workshopDownloadPrompt", total - have, total, formatSize(size))
         local frame = vgui.Create("DFrame")
         downloadFrame = frame
         frame:SetTitle(L("downloads"))

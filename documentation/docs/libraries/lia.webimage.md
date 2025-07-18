@@ -99,3 +99,8 @@ local byURL = Material("https://example.com/logo.png")
 ```
 
 ---
+
+### Clearing the Cache
+
+Use the `lia_wipewebimages` console command on the client to delete all cached web
+images from disk. New requests will download the images again.

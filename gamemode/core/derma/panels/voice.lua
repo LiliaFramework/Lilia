@@ -1,7 +1,8 @@
-﻿VoicePanels = {}
-local ICON_CODES = {
-    Whispering = "0xe82d",
-    Yelling = "0xe82f"
+VoicePanels = {}
+local ICON_MAP = {
+    Whispering = "whispertalk.png",
+    Yelling = "yelltalk.png",
+    Talking = "normaltalk.png"
 }
 
 local PANEL = {}
@@ -10,12 +11,10 @@ function PANEL:Init()
     self:DockPadding(4, 4, 4, 4)
     self:DockMargin(2, 2, 2, 2)
     self:Dock(BOTTOM)
-    self.Icon = vgui.Create("DLabel", self)
+    self.Icon = vgui.Create("DImage", self)
     self.Icon:Dock(LEFT)
     self.Icon:DockMargin(8, 0, 8, 0)
-    self.Icon:SetFont("liaIconsMedium")
-    self.Icon:SetTextColor(color_white)
-    self.Icon:SetWide(30)
+    self.Icon:SetSize(24, 24)
     self.LabelName = vgui.Create("DLabel", self)
     self.LabelName:Dock(FILL)
     self.LabelName:SetFont("liaMediumFont")
@@ -32,9 +31,8 @@ end
 
 function PANEL:UpdateIcon()
     local vt = self.client:getNetVar("VoiceType", "Talking")
-    local code = ICON_CODES[vt] or "0xe82e"
-    local ico = getIcon(code, true)
-    if self.Icon:GetText() ~= ico then self.Icon:SetText(ico) end
+    local img = ICON_MAP[vt] or "normaltalk.png"
+    self.Icon:SetImage(img)
 end
 
 function PANEL:Paint(w, h)

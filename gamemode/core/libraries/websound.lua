@@ -126,6 +126,17 @@ concommand.Add("lia_saved_sounds", function()
     end
 end)
 
+concommand.Add("lia_wipe_sounds", function()
+    local files = file.Find(baseDir .. "*", "DATA")
+    for _, fn in ipairs(files) do
+        file.Delete(baseDir .. fn)
+    end
+
+    cache = {}
+    urlMap = {}
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[WebSound]", Color(255, 255, 255), " " .. L("webSoundCacheCleared") .. "\n")
+end)
+
 ensureDir(baseDir)
 hook.Add("EntityEmitSound", "liaWebSound", function(data)
     local soundName = data.OriginalSoundName or data.SoundName

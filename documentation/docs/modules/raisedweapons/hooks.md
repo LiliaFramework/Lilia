@@ -1,27 +1,21 @@
 # Hooks
-
 Module-specific events raised by the Raisedweapons module.
 
 ---
-
 ### `OverrideWeaponRaiseSpeed`
 
 **Purpose**
-
 `Allows modification of the delay before a weapon is raised or holstered.`
 
 **Parameters**
 
 * `player` (`Player`): `Player whose weapon is changing state.`
-
 * `speed` (`number`): `Default raise speed in seconds.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `number` — `Return a new delay to override the default.`
 
 **Example**
@@ -37,23 +31,18 @@ end)
 ### `WeaponRaiseScheduled`
 
 **Purpose**
-
 `Called when a weapon raise is scheduled after switching weapons.`
 
 **Parameters**
 
 * `player` (`Player`): `Player whose weapon will be raised.`
-
 * `weapon` (`Weapon`): `Weapon that will be raised.`
-
 * `delay` (`number`): `Time until the weapon is raised.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `No return value.`
 
 **Example**
@@ -69,7 +58,6 @@ end)
 ### `WeaponHolsterCancelled`
 
 **Purpose**
-
 `Fires when a holster action is interrupted.`
 
 **Parameters**
@@ -77,11 +65,9 @@ end)
 * `player` (`Player`): `Player who cancelled the holster.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `No return value.`
 
 **Example**
@@ -97,21 +83,17 @@ end)
 ### `WeaponHolsterScheduled`
 
 **Purpose**
-
 `Called when a player begins to holster their weapon.`
 
 **Parameters**
 
 * `player` (`Player`): `Player holstering the weapon.`
-
 * `delay` (`number`): `Time until the weapon lowers.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `No return value.`
 
 **Example**
@@ -127,21 +109,17 @@ end)
 ### `ShouldWeaponBeRaised`
 
 **Purpose**
-
 `Override check determining if the active weapon counts as raised.`
 
 **Parameters**
 
 * `player` (`Player`): `Player being queried.`
-
 * `weapon` (`Weapon`): `Active weapon instance.`
 
 **Realm**
-
 `Shared`
 
 **Returns**
-
 `boolean` — `Return true or false to override default behaviour.`
 
 **Example**
@@ -157,21 +135,17 @@ end)
 ### `PlayerWeaponRaisedChanged`
 
 **Purpose**
-
 `Runs when a player's raised state changes.`
 
 **Parameters**
 
 * `player` (`Player`): `Player whose state changed.`
-
 * `state` (`boolean`): `True if the weapon is now raised.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `No return value.`
 
 **Example**
@@ -187,21 +161,17 @@ end)
 ### `OnWeaponRaised`
 
 **Purpose**
-
 `Called when a weapon has been successfully raised.`
 
 **Parameters**
 
 * `player` (`Player`): `Player that raised the weapon.`
-
 * `weapon` (`Weapon`): `Weapon that was raised.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `No return value.`
 
 **Example**
@@ -217,21 +187,17 @@ end)
 ### `OnWeaponLowered`
 
 **Purpose**
-
 `Called when a weapon is completely lowered.`
 
 **Parameters**
 
 * `player` (`Player`): `Player that lowered the weapon.`
-
 * `weapon` (`Weapon`): `Weapon that was lowered.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `No return value.`
 
 **Example**
@@ -243,4 +209,3 @@ end)
 ```
 
 ---
-

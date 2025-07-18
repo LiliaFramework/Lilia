@@ -215,12 +215,9 @@ function MODULE:OnItemAdded(owner, item)
 end
 
 function MODULE:OnItemCreated(item)
-    lia.log.add(nil, "itemCreated", item:getName())
 end
 
 function MODULE:OnItemSpawned(entity)
-    local item = entity.getItemTable and entity:getItemTable()
-    if item then lia.log.add(nil, "itemSpawned", item:getName()) end
 end
 
 function MODULE:ItemFunctionCalled(item, action, client)

@@ -1,13 +1,10 @@
 # Hooks
-
 Module-specific events raised by the Freelook module.
 
 ---
-
 ### `ShouldUseFreelook`
 
 **Purpose**
-
 Determines if the freelook controls should be processed for a player.
 
 **Parameters**
@@ -15,11 +12,9 @@ Determines if the freelook controls should be processed for a player.
 * `player` (`Player`): Player to check.
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `boolean` — return `false` to block freelook for this frame.
 
 **Example**
@@ -35,7 +30,6 @@ end)
 ### `PreFreelookToggle`
 
 **Purpose**
-
 Called when the freelook bind is pressed before the mode is toggled. Returning `false` stops the state change.
 
 **Parameters**
@@ -43,11 +37,9 @@ Called when the freelook bind is pressed before the mode is toggled. Returning `
 * `state` (`boolean`): `true` when enabling freelook, `false` when disabling.
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `boolean` — return `false` to cancel toggling.
 
 **Example**
@@ -63,7 +55,6 @@ end)
 ### `FreelookToggled`
 
 **Purpose**
-
 Runs after freelook has been turned on or off.
 
 **Parameters**
@@ -71,11 +62,9 @@ Runs after freelook has been turned on or off.
 * `state` (`boolean`): Current freelook state after the change.
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `nil`
 
 **Example**
@@ -87,4 +76,3 @@ end)
 ```
 
 ---
-

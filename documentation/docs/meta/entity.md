@@ -678,7 +678,7 @@ ent:setNetVar("locked", true)
 
 ---
 
-### getNetVar (Server)
+### getNetVar
 
 **Purpose**
 
@@ -706,7 +706,7 @@ local locked = ent:getNetVar("locked", false)
 
 ---
 
-### getNetVar (Client)
+### getNetVar
 
 **Purpose**
 
@@ -735,7 +735,7 @@ local result = ent:getNetVar(key, default)
 
 ---
 
-### isDoor (Client)
+### isDoor
 
 **Purpose**
 
@@ -762,7 +762,7 @@ local result = ent:isDoor()
 
 ---
 
-### getDoorPartner (Client)
+### getDoorPartner
 
 **Purpose**
 

@@ -24,7 +24,6 @@ Lilia is a lightweight, modular framework for building Garry’s Mod addons in G
 
 - **Best Practices:** patterns for secure, optimized, and maintainable code
 
-
 ---
 
 ## 🚀 Local Preview
@@ -37,7 +36,6 @@ Lilia is a lightweight, modular framework for building Garry’s Mod addons in G
 2. **Create** and **activate** a Python virtual environment (recommended):
 
    ```bash
-
    python3 -m venv .venv
 
    source .venv/bin/activate
@@ -46,14 +44,12 @@ Lilia is a lightweight, modular framework for building Garry’s Mod addons in G
 3. **Install** the documentation dependencies:
 
    ```bash
-
    pip install mkdocs mkdocs-material mkdocs-awesome-pages-plugin
 
    ```
 4. **Serve** locally on `http://127.0.0.1:8000` (auto-reloads on changes):
 
    ```bash
-
    mkdocs serve
 
    ```

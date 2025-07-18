@@ -49,7 +49,9 @@ Registers a log type by supplying a generator function and a category.
 **Parameters**
 
 * `logType` (*string*): Unique identifier.
+
 * `func` (*function*): Builds the log string (`func(client, ...) → string`).
+
 * `category` (*string*): Category name used to organise logs.
 
 **Realm**
@@ -85,7 +87,9 @@ Returns the formatted log string (and its category) for a given type without wri
 **Parameters**
 
 * `client` (*Player*): Player tied to the entry.
+
 * `logType` (*string*): Log-type identifier.
+
 * …: Additional arguments forwarded to the generator.
 
 **Realm**
@@ -114,7 +118,9 @@ Creates a log entry, fires `OnServerLog`, prints to console, and inserts into `l
 **Parameters**
 
 * `client` (*Player*): Player associated with the event.
+
 * `logType` (*string*): Log-type identifier.
+
 * …: Extra values for the generator.
 
 **Realm**

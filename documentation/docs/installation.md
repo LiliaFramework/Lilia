@@ -66,19 +66,15 @@ If you haven't already, set up your Garry's Mod server and ensure it is running 
 
 1. **Locate the Downloaded ZIP File:**
 
-
     Find the `Lilia.zip` file you downloaded.
 
 2. **Extract the Contents:**
-
 
     - Right-click the ZIP file and select "Extract All."
 
     - Choose a temporary folder for extraction.
 
-
 3. **Organize the Extracted Files:**
-
 
     - After extraction, you should see a folder named `lilia`.
 
@@ -90,22 +86,22 @@ If you haven't already, set up your Garry's Mod server and ensure it is running 
 
 1. **Connect to Your Server:**
 
-
     Use an FTP or SFTP client (e.g., [FileZilla](https://filezilla-project.org/) or [WinSCP](https://winscp.net/eng/index.php)) to connect to your Garry's Mod server.
 
 2. **Navigate to the Gamemodes Directory:**
-
 
     Go to `garrysmod/gamemodes` within your server's file structure.
 
 3. **Upload the Lilia Folder:**
 
-
     Upload the `lilia` folder you extracted earlier into the `gamemodes` directory.
 
     ```plaintext
+
     Server Directory Path:
+
     garrysmod/gamemodes/lilia
+
     ```
 
 ---
@@ -169,13 +165,17 @@ Preload:   garrysmod/gamemodes/<SchemaName>/preload/
     Edit your server's startup parameters so the server boots directly into your chosen schema:
 
     ```plaintext
+
     +gamemode <SchemaName>
+
     ```
 
     Example usage:
 
     ```plaintext
+
     +gamemode scprp
+
     ```
 
 2. **Start the Server**
@@ -187,7 +187,9 @@ Preload:   garrysmod/gamemodes/<SchemaName>/preload/
     Watch the console for a line such as:
 
     ```plaintext
+
     [Lilia] [Bootstrap] Loaded successfully after X seconds.
+
     ```
 
     If no errors appear and the schema loads, you're ready to play.

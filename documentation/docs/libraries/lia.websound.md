@@ -7,12 +7,19 @@ This page explains how remote sounds are downloaded and cached.
 ## Overview
 
 The web-sound library downloads remote audio files and stores them inside
+
 `data/lilia/sounds/<IP>/<Gamemode>/`. Each server therefore keeps its own
+
 collection of downloaded sounds. The library overrides `sound.PlayFile` and
+
 `sound.PlayURL` so HTTP(S) URLs may be passed directly—the file is downloaded,
+
 cached and then played. `Entity:EmitSound` is also hooked so web addresses can
+
 be used anywhere a sound path is expected. Subsequent calls using the same URL
+
 will reuse the previously saved file and you may also pass the cached name to
+
 `sound.PlayFile`.
 
 ---
@@ -22,15 +29,21 @@ will reuse the previously saved file and you may also pass the cached name to
 **Purpose**
 
 Downloads a sound from the given URL and saves it in the web-sound cache. If the
+
 file already exists locally the callback fires immediately with the cached
+
 filename. On HTTP failure the callback receives `nil` and an error string.
 
 **Parameters**
 
 * `name` (*string*): Unique file name including extension.
+
 * `url` (*string*): HTTP address of the sound file.
+
 * `callback` (*function | nil*): Called as `callback(path, fromCache, err)` where
+
   `path` is the local file path relative to `DATA/`, `fromCache` is `true` if
+
   loaded from disk and `err` is an error string on failure.
 
 **Realm**
@@ -59,7 +72,9 @@ end)
 **Purpose**
 
 Returns the file path cached with `lia.websound.register`. If the file is
+
 missing `nil` is returned. Both `sound.PlayFile` and `sound.PlayURL` call this
+
 internally when a cached name or matching URL is supplied.
 
 **Parameters**
@@ -94,3 +109,14 @@ ply:EmitSound("https://example.com/alert.mp3")
 ```
 
 ---
+
+### Clearing the Cache
+
+To remove all downloaded web sounds on the client use the following console
+command:
+
+```
+lia_wipe_sounds
+```
+
+Any sounds played afterwards will be downloaded again as needed.

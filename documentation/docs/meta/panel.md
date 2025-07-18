@@ -86,6 +86,7 @@ Sets the panel position using `ScreenScale( x )` and `ScreenScaleH( y )`.
 **Parameters**
 
 * `x` (*number*): Horizontal position in screen-scale units.
+
 * `y` (*number*): Vertical position in screen-scale units.
 
 **Realm**
@@ -113,6 +114,7 @@ Sets the panel size using `ScreenScale( w )` and `ScreenScaleH( h )`.
 **Parameters**
 
 * `w` (*number*): Width in screen-scale units.
+
 * `h` (*number*): Height in screen-scale units.
 
 **Realm**

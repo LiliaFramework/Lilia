@@ -13,6 +13,7 @@ Default health, armor, and stamina bars are registered automatically when the cl
 For a breakdown of bar fields, refer to the [Bar Fields documentation](../definitions/bars.md).
 
 ---
+
 ### lia.bar.get
 
 **Purpose**

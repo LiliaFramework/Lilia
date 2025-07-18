@@ -1,9 +1,8 @@
-# Meta
+# Player Meta
 
 Convenience helpers for playing handcuff animations.
 
 ---
-
 ### Player:StartHandcuffAnim
 
 **Purpose**
@@ -55,4 +54,3 @@ client:EndHandcuffAnim()
 ```
 
 ---
-

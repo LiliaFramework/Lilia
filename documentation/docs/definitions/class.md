@@ -108,8 +108,6 @@ CLASS.uniqueID = "engineer"
 
 ---
 
-
-
 #### `index`
 
 **Type:**
@@ -219,7 +217,6 @@ Weapons granted to members of this class on spawn.
 ```lua
 CLASS.weapons = {"weapon_pistol", "weapon_crowbar"}
 ```
-
 
 #### `pay`
 
@@ -725,6 +722,3 @@ CLASS.commands = {
 CLASS.canInviteToFaction = true
 CLASS.canInviteToClass = true
 ```
-
-
-

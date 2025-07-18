@@ -1,13 +1,10 @@
 # Hooks
-
 Module-specific events raised by the Whitelist module.
 
 ---
-
 ### `PreWhitelistCheck`
 
 **Purpose**
-
 Runs before a player's SteamID is compared against the whitelist.
 
 **Parameters**
@@ -15,11 +12,9 @@ Runs before a player's SteamID is compared against the whitelist.
 * `steamID64` (`string`): SteamID64 of the connecting player.
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `None`
 
 **Example**
@@ -35,7 +30,6 @@ end)
 ### `PlayerBlacklisted`
 
 **Purpose**
-
 Fires when a connecting player's SteamID is listed in the blacklist.
 
 **Parameters**
@@ -43,11 +37,9 @@ Fires when a connecting player's SteamID is listed in the blacklist.
 * `steamID64` (`string`): SteamID64 of the blacklisted player.
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `None`
 
 **Example**
@@ -63,7 +55,6 @@ end)
 ### `PlayerNotWhitelisted`
 
 **Purpose**
-
 Called when whitelist mode is enabled and a player is not on the list.
 
 **Parameters**
@@ -71,11 +62,9 @@ Called when whitelist mode is enabled and a player is not on the list.
 * `steamID64` (`string`): SteamID64 of the rejected player.
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `None`
 
 **Example**
@@ -91,7 +80,6 @@ end)
 ### `PlayerWhitelisted`
 
 **Purpose**
-
 Fires when a player passes the whitelist check.
 
 **Parameters**
@@ -99,11 +87,9 @@ Fires when a player passes the whitelist check.
 * `steamID64` (`string`): SteamID64 of the approved player.
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `None`
 
 **Example**
@@ -119,21 +105,17 @@ end)
 ### `PostWhitelistCheck`
 
 **Purpose**
-
 Runs after a player's whitelist status has been determined.
 
 **Parameters**
 
 * `steamID64` (`string`): SteamID64 that was checked.
-
 * `allowed` (`boolean`): Whether the player is permitted to join.
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `None`
 
 **Example**
@@ -149,4 +131,3 @@ end)
 ```
 
 ---
-

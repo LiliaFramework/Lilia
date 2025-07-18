@@ -290,6 +290,7 @@ Migrates legacy config files from `data/lilia` into the `lia_config` SQL table. 
 **Parameters**
 
 * `changeMap` (*boolean*): Whether to reload the map after conversion completes.
+
 * `data` (*table*): Legacy config key-value pairs to import. Defaults to reading from disk. *Optional*.
 
 **Realm**

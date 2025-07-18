@@ -21,6 +21,7 @@ Returns a human-readable string describing how long ago a given time occurred (e
 * `strTime` (*string | number*): Timestamp to measure from.
 
   * Strings must use `YYYY-MM-DD` (or `YYYY-MM-DD HH:MM:SS`).
+
   * Numbers are standard UNIX timestamps.
 
 **Realm**
@@ -93,6 +94,7 @@ end
 Returns the full current date/time using the `AmericanTimeStamps` config:
 
 * **Enabled**: `"Weekday, Month DD, YYYY, HH:MM:SSam/pm"`
+
 * **Disabled**: `"Weekday, DD Month YYYY, HH:MM:SS"`
 
 **Parameters**
@@ -128,6 +130,7 @@ end)
 Returns the current hour formatted by `AmericanTimeStamps`:
 
 * **Enabled** → `"Ham"` / `"Hpm"` (12-hour clock)
+
 * **Disabled** → `H` (0 – 23, 24-hour clock)
 
 **Parameters**

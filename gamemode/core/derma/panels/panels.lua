@@ -149,7 +149,7 @@ function QuickPanel:Init()
     self.expand = self:Add("DButton")
     self.expand:SetContentAlignment(5)
     self.expand:SetText("`")
-    self.expand:SetFont("liaIconsMedium")
+    self.expand:SetFont("DermaDefaultBold")
     self.expand:SetPaintBackground(false)
     self.expand:SetTextColor(color_white)
     self.expand:SetExpensiveShadow(1, Color(0, 0, 0, 150))
@@ -300,7 +300,7 @@ function QuickPanel:addCheck(text, callback, checked)
             color = color_dark
         end
 
-        draw.SimpleText(self.icon or "F", "liaIconsSmall", x, y, color, 2, 1)
+        draw.SimpleText(self.icon or "F", "DermaDefault", x, y, color, 2, 1)
     end
 
     button.checked = checked

@@ -30,7 +30,6 @@ include:
 
 * Showing empathy towards other community members
 
-
 Examples of unacceptable behavior by participants include:
 
 * The use of sexualized language or imagery and unwelcome sexual attention or
@@ -110,3 +109,4 @@ available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.ht
 For answers to common questions about this code of conduct, see
 
 https://www.contributor-covenant.org/faq
+

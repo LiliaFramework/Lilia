@@ -577,7 +577,6 @@ If set to `true`, all players will automatically recognize members of this facti
 FACTION.isGloballyRecognized = true
 ```
 
-
 ---
 
 #### `NPCRelations`
@@ -656,7 +655,6 @@ FACTION.commands = {
     plytransfer = true,
 }
 ```
-
 
 ## Example Faction Definition
 

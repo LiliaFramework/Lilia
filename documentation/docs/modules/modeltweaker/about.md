@@ -1,15 +1,12 @@
-<h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
+# Model Tweaker
 
-**Name:**
-Model Tweaker
+**Version:** 1.17  
+**Author:** Samael  
+**Discord:** @liliaplayer  
 
-**Version:**
-1.19
-
-**Description:**
 Provides an entity that lets admins adjust prop models' scale and rotation.
 
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
+## Features
 
 - Adds an entity to tweak prop models
 - Adds adjustments for scale and rotation
@@ -17,8 +14,4 @@ Provides an entity that lets admins adjust prop models' scale and rotation.
 - Adds saving of tweaked props between restarts
 - Adds undo support for recent tweaks
 
-
-
-
-
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modeltweaker.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:var(--md-primary-fg-color,#007acc);border-radius:4px;">DOWNLOAD HERE</a></p>
+[Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modeltweaker.zip)

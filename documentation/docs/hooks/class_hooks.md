@@ -180,6 +180,7 @@ Fires when a player is moved into this class from another.
 **Parameters**
 
 * `client` (`Player`): The player who was transferred.
+
 * `oldClass` (`number`): Index of the previous class.
 
 **Realm**
