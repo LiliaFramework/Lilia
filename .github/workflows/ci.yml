@@ -89,7 +89,6 @@ jobs:
       STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
     steps:
       - uses: actions/checkout@v3
-
       - run: |
           python3 - << 'PY'
           import os, re, pathlib, sys
@@ -110,14 +109,12 @@ jobs:
               sys.exit(1)
           p.write_text(''.join(out), encoding='utf-8')
           PY
-
       - run: |
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
           git add gamemode/shared.lua
           git diff-index --quiet HEAD || git commit -m "Moved Lilia Version to ${VERSION}"
           git push origin HEAD:main
-
       - run: |
           rm -rf addon
           mkdir -p addon/gamemodes/lilia
@@ -125,34 +122,23 @@ jobs:
           cp -a content/. addon/
           cp -a icon24.png addon/gamemodes/lilia/
           cp -a lilia.txt addon/gamemodes/lilia/
-
-      - name: Clean inventory items
-        run: |
-          find addon/gamemodes/lilia/gamemode/modules/inventory/items \
-            -mindepth 1 -maxdepth 1 -type d ! -name BASE \
-            -exec rm -rf {} +
-
       - run: |
           rm -rf release
           mkdir -p release/lilia
           cp -a gamemode release/lilia/
           cp icon24.png release/lilia/
           cp lilia.txt release/lilia/
-
       - run: |
           cd release
           zip -r ../lilia.zip lilia
-
       - run: |
           sudo apt-get update -y
           sudo apt-get install -y jq
-
       - run: |
           for rid in $(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases" | jq -r '.[].id'); do
             curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
               "https://api.github.com/repos/${{ github.repository }}/releases/$rid"
           done
-
       - run: |
           for tag in $(curl -s -H "Authorization: token $GITHUB_TOKEN" \
             "https://api.github.com/repos/${{ github.repository }}/git/refs/tags" \
@@ -162,7 +148,6 @@ jobs:
                 "https://api.github.com/repos/${{ github.repository }}/git/refs/tags/$tag"
             fi
           done
-
       - id: create_release
         uses: actions/create-release@v1
         with:
@@ -172,7 +157,6 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
       - uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -181,7 +165,6 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
       - run: |
           cat > /tmp/addon.json <<EOF
           {
@@ -192,24 +175,23 @@ jobs:
             "ignore": [".github/*", "site/*", "documentation/*"]
           }
           EOF
-
       - run: |
           cp /tmp/addon.json addon/addon.json
-
       - run: |
           sudo apt-get update
           sudo apt-get install -y lib32gcc-s1 lua5.3
           mkdir -p ~/Steam
           curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" \
             | tar zxvf - -C ~/Steam
-
+      - name: Clean inventory item folders except BASE
+        run: |
+          find addon/gamemodes/lilia/gamemode/modules/inventory/items -mindepth 1 -maxdepth 1 ! -name 'BASE' -exec rm -rf {} +
+          find addon/gamemode/modules/inventory/items -mindepth 1 -maxdepth 1 ! -name 'BASE' -exec rm -rf {} +
       - run: |
           cd addon
           lua5.3 ../gmacreator.lua ../3527535922.gma addon.json
-
       - run: |
           echo "Created workshop addon: 3527535922.gma"
-
       - run: |
           cat > changelog.txt <<EOF
           Lilia ${VERSION}
@@ -222,11 +204,9 @@ jobs:
             "changenote" "$(cat changelog.txt)"
           }
           EOF
-
       - run: |
           ~/Steam/steamcmd.sh +login $STEAM_USERNAME $STEAM_PASSWORD \
             +workshop_build_item $(pwd -P)/workshop.vdf +quit
-
       - if: failure()
         run: |
           echo ~/Steam/logs/stderr.txt
