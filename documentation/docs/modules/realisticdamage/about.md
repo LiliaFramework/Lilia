@@ -1,6 +1,6 @@
 # About
 
-# Realistic Damage (1.11)
+# Realistic Damage 1.11
 
 Description:
 

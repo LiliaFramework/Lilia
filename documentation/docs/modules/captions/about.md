@@ -1,6 +1,6 @@
 # About
 
-# Captions (1.17)
+# Captions 1.17
 
 Description:
 

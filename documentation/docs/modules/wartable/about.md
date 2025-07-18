@@ -1,6 +1,6 @@
 # About
 
-# War Table (1.17)
+# War Table 1.17
 
 Description:
 

@@ -1,6 +1,6 @@
 # About
 
-# Cigarettes (1.15)
+# Cigarettes 1.15
 
 Description:
 

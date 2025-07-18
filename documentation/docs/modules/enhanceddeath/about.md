@@ -1,6 +1,6 @@
 # About
 
-# Hospitals (1.11)
+# Hospitals 1.11
 
 Description:
 

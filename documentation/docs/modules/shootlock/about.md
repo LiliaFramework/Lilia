@@ -1,6 +1,6 @@
 # About
 
-# Shoot Locks (1.14)
+# Shoot Locks 1.14
 
 Description:
 

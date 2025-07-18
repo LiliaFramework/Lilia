@@ -1,6 +1,6 @@
 # About
 
-# First Person Effects (1.12)
+# First Person Effects 1.12
 
 Description:
 

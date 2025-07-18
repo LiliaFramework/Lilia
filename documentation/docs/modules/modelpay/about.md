@@ -1,6 +1,6 @@
 # About
 
-# Model Pay (1.13)
+# Model Pay 1.13
 
 Description:
 

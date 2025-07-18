@@ -1,6 +1,6 @@
 # About
 
-# Lockpicking (1.13)
+# Lockpicking 1.13
 
 Description:
 

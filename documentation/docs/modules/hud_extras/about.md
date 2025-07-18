@@ -1,6 +1,6 @@
 # About
 
-# Extra HUD Elements (1.17)
+# Extra HUD Elements 1.17
 
 Description:
 

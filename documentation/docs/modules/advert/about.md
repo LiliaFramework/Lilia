@@ -1,6 +1,6 @@
 # About
 
-# Advert (1.15)
+# Advert 1.15
 
 Description:
 

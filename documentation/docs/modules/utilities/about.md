@@ -1,6 +1,6 @@
 # About
 
-# Code Utils (1.17)
+# Code Utils 1.17
 
 Description:
 

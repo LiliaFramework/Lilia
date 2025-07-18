@@ -1,6 +1,6 @@
 # About
 
-# Donator (1.20)
+# Donator 1.20
 
 Description:
 

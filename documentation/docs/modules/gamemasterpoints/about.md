@@ -1,6 +1,6 @@
 # About
 
-# Gamemaster Teleport Points (1.12)
+# Gamemaster Teleport Points 1.12
 
 Description:
 

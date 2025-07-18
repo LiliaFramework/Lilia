@@ -1,6 +1,6 @@
 # About
 
-# Whitelist (1.15)
+# Whitelist 1.15
 
 Description:
 

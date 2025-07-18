@@ -1,6 +1,6 @@
 # About
 
-# Climb (1.13)
+# Climb 1.13
 
 Description:
 

@@ -1,6 +1,6 @@
 # About
 
-# Warrant (1.21)
+# Warrant 1.21
 
 Description:
 

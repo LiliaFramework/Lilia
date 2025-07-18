@@ -1,6 +1,6 @@
 # About
 
-# Discord Relay (1.12)
+# Discord Relay 1.12
 
 Description:
 

@@ -1,6 +1,6 @@
 # About
 
-# Perma Remove (1.13)
+# Perma Remove 1.13
 
 Description:
 

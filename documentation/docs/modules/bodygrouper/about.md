@@ -1,6 +1,6 @@
 # About
 
-# Bodygrouper (1.21)
+# Bodygrouper 1.21
 
 Description:
 

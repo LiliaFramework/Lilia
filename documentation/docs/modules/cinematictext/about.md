@@ -1,6 +1,6 @@
 # About
 
-# Cinematic Text (1.19)
+# Cinematic Text 1.19
 
 Description:
 

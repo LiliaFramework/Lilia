@@ -1,6 +1,6 @@
 # About
 
-# Slots (1.14)
+# Slots 1.14
 
 Description:
 

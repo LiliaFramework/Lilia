@@ -1,6 +1,6 @@
 # About
 
-# Instant Killing (1.14)
+# Instant Killing 1.14
 
 Description:
 

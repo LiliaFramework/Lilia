@@ -1,6 +1,6 @@
 # About
 
-# Tying (1.20)
+# Tying 1.20
 
 Description:
 

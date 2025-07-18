@@ -1,6 +1,6 @@
 # About
 
-# Rumour (1.13)
+# Rumour 1.13
 
 Description:
 

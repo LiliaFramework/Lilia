@@ -1,6 +1,6 @@
 # About
 
-# Loyalism (1.16)
+# Loyalism 1.16
 
 Description:
 

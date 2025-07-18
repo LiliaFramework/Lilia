@@ -1,6 +1,6 @@
 # About
 
-# NPC Drops (1.12)
+# NPC Drops 1.12
 
 Description:
 

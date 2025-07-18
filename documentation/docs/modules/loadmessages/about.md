@@ -1,6 +1,6 @@
 # About
 
-# Load Messages (1.12)
+# Load Messages 1.12
 
 Description:
 

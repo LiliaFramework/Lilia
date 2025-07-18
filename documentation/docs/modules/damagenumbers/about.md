@@ -1,6 +1,6 @@
 # About
 
-# Damage Numbers (1.14)
+# Damage Numbers 1.14
 
 Description:
 

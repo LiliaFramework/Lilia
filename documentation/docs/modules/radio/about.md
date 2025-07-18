@@ -1,6 +1,6 @@
 # About
 
-# Radio (1.20)
+# Radio 1.20
 
 Description:
 

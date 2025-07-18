@@ -1,6 +1,6 @@
 # About
 
-# Free Look (1.14)
+# Free Look 1.14
 
 Description:
 

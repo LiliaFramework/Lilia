@@ -1,6 +1,6 @@
 # About
 
-# Corpse ID (1.18)
+# Corpse ID 1.18
 
 Description:
 

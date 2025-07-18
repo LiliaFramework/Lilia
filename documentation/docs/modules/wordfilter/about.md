@@ -1,6 +1,6 @@
 # About
 
-# Word Filter (1.16)
+# Word Filter 1.16
 
 Description:
 

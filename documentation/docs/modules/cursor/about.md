@@ -1,6 +1,6 @@
 # About
 
-# Cursor (1.12)
+# Cursor 1.12
 
 Description:
 

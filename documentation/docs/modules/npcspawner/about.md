@@ -1,6 +1,6 @@
 # About
 
-# NPC Spawner (1.14)
+# NPC Spawner 1.14
 
 Description:
 

@@ -1,6 +1,6 @@
 # About
 
-# Alcoholism (1.15)
+# Alcoholism 1.15
 
 Description:
 

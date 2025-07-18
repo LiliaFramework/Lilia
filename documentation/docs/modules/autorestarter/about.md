@@ -1,6 +1,6 @@
 # About
 
-# Auto Restarter (1.14)
+# Auto Restarter 1.14
 
 Description:
 

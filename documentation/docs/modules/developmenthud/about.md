@@ -1,6 +1,6 @@
 # About
 
-# Development HUD (1.17)
+# Development HUD 1.17
 
 Description:
 

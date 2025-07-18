@@ -1,6 +1,6 @@
 # About
 
-# Cards (1.13)
+# Cards 1.13
 
 Description:
 

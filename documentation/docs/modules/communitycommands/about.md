@@ -1,6 +1,6 @@
 # About
 
-# Community Commands (1.18)
+# Community Commands 1.18
 
 Description:
 

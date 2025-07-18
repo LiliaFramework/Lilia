@@ -1,6 +1,6 @@
 # About
 
-# Chat Messages (1.14)
+# Chat Messages 1.14
 
 Description:
 

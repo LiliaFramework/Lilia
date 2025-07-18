@@ -1,6 +1,6 @@
 # About
 
-# Flashlight (1.13)
+# Flashlight 1.13
 
 Description:
 
