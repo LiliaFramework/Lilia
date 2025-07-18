@@ -1,27 +1,21 @@
 # Hooks
-
 Module-specific events raised by the Tying module.
 
 ---
-
 ### `PlayerStartUnTying`
 
 **Purpose**
-
 `Called when a player begins untying another player.`
 
 **Parameters**
 
 * `actor` (`Player`): `Player attempting to untie.`
-
 * `target` (`Player`): `Player being untied.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `Return value is ignored.`
 
 **Example**
@@ -37,21 +31,17 @@ end)
 ### `PlayerFinishUnTying`
 
 **Purpose**
-
 `Runs when the untying process successfully completes.`
 
 **Parameters**
 
 * `actor` (`Player`): `Player who untied the target.`
-
 * `target` (`Player`): `Player that was untied.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `Return value is ignored.`
 
 **Example**
@@ -67,21 +57,17 @@ end)
 ### `PlayerUnTieAborted`
 
 **Purpose**
-
 `Fires if the untying action is cancelled before completion.`
 
 **Parameters**
 
 * `actor` (`Player`): `Player who attempted the untying.`
-
 * `target` (`Player`): `Player that remained tied.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `Return value is ignored.`
 
 **Example**
@@ -97,7 +83,6 @@ end)
 ### `PlayerStartHandcuff`
 
 **Purpose**
-
 `Called when a player first becomes handcuffed.`
 
 **Parameters**
@@ -105,11 +90,9 @@ end)
 * `target` (`Player`): `Player being handcuffed.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `Return value is ignored.`
 
 **Example**
@@ -125,7 +108,6 @@ end)
 ### `PlayerHandcuffed`
 
 **Purpose**
-
 `Runs after the handcuff procedure finishes.`
 
 **Parameters**
@@ -133,11 +115,9 @@ end)
 * `target` (`Player`): `Player that is now handcuffed.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `Return value is ignored.`
 
 **Example**
@@ -153,7 +133,6 @@ end)
 ### `ResetSubModuleCuffData`
 
 **Purpose**
-
 `Signals submodules to clear any cuff related data when cuffs are removed.`
 
 **Parameters**
@@ -161,11 +140,9 @@ end)
 * `target` (`Player`): `Player whose cuff data should reset.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `Return value is ignored.`
 
 **Example**
@@ -181,7 +158,6 @@ end)
 ### `PlayerUnhandcuffed`
 
 **Purpose**
-
 `Fires after a player has been fully unhandcuffed.`
 
 **Parameters**
@@ -189,11 +165,9 @@ end)
 * `target` (`Player`): `Player that is no longer restrained.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `Return value is ignored.`
 
 **Example**
@@ -205,4 +179,3 @@ end)
 ```
 
 ---
-

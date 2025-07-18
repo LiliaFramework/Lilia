@@ -1,13 +1,10 @@
 # Hooks
-
 Module-specific events raised by the Discordrelay module.
 
 ---
-
 ### `DiscordRelaySend`
 
 **Purpose**
-
 `Called just before a log line is posted to the configured Discord webhook.`
 
 **Parameters**
@@ -15,11 +12,9 @@ Module-specific events raised by the Discordrelay module.
 * `logString` (`string`): `The text that will be sent to Discord.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `void` — `Nothing.`
 
 **Example**
@@ -35,7 +30,6 @@ end)
 ### `DiscordRelayed`
 
 **Purpose**
-
 `Runs after a log line has been successfully sent through the webhook.`
 
 **Parameters**
@@ -43,11 +37,9 @@ end)
 * `logString` (`string`): `The text that was sent to Discord.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `void` — `Nothing.`
 
 **Example**
@@ -63,7 +55,6 @@ end)
 ### `DiscordRelayUnavailable`
 
 **Purpose**
-
 `Fires when the CHTTP binary module is missing and relaying cannot be performed.`
 
 **Parameters**
@@ -71,11 +62,9 @@ end)
 *(None)*
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `void` — `Nothing.`
 
 **Example**
@@ -87,4 +76,3 @@ end)
 ```
 
 ---
-

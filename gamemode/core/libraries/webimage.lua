@@ -20,7 +20,11 @@ end
 
 function lia.webimage.register(n, u, cb, flags)
     if isstring(u) then urlMap[u] = n end
-    registered[n] = {url = u, flags = flags}
+    registered[n] = {
+        url = u,
+        flags = flags
+    }
+
     lia.webimage._registered = registered
     if cache[n] then
         if cb then cb(cache[n], true) end
@@ -144,6 +148,7 @@ concommand.Add("lia_wipewebimages", function()
             file.Delete(baseDir .. fn)
         end
     end
+
     cache = {}
     urlMap = {}
     lia.information(L("webImagesCleared"))
@@ -194,23 +199,3 @@ lia.webimage.register("notalk.png", "https://github.com/LiliaFramework/liaIcons/
 lia.webimage.register("close_button.png", "https://github.com/LiliaFramework/liaIcons/blob/main/close_button.png?raw=true")
 lia.webimage.register("close_button_pressed.png", "https://github.com/LiliaFramework/liaIcons/blob/main/close_button_pressed.png?raw=true")
 ensureDir(baseDir)
-
-hook.Add("InitPostEntity", "liaWebImageReRegister", function()
-    local newIP = string.Replace(string.Replace(game.GetIPAddress() or "unknown", ":", "_"), "%.", "_")
-    local newGamemode = engine.ActiveGamemode() or "unknown"
-    local newBase = "lilia/" .. newIP .. "/" .. newGamemode .. "/"
-    if newBase ~= baseDir then
-        ip = newIP
-        gamemode = newGamemode
-        baseDir = newBase
-        cache = {}
-        urlMap = {}
-        ensureDir(baseDir)
-        for name, data in pairs(registered) do
-            if isstring(data.url) then
-                lia.webimage.register(name, data.url, nil, data.flags)
-            end
-        end
-    end
-end)
-

@@ -1,15 +1,12 @@
-<h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
+# Broadcasts
 
-**Name:**
-Broadcasts
+**Version:** 1.19  
+**Author:** Samael  
+**Discord:** @liliaplayer  
 
-**Version:**
-1.20
-
-**Description:**
 Enables faction and class broadcast commands so staff can send messages to specific groups.
 
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
+## Features
 
 - Adds faction and class broadcast commands with CAMI checks
 - Adds logging of broadcast messages for staff review
@@ -17,8 +14,4 @@ Enables faction and class broadcast commands so staff can send messages to speci
 - Adds CAMI privileges for broadcast access
 - Adds menus to select factions or classes
 
-
-
-
-
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/broadcasts.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:var(--md-primary-fg-color,#007acc);border-radius:4px;">DOWNLOAD HERE</a></p>
+[Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/broadcasts.zip)

@@ -1,13 +1,10 @@
 # Hooks
-
 Module-specific events raised by the Realisticview module.
 
 ---
-
 ### `ShouldUseRealisticView`
 
 **Purpose**
-
 `Called before the module alters the player's camera. Returning false prevents the realistic view from being used.`
 
 **Parameters**
@@ -15,11 +12,9 @@ Module-specific events raised by the Realisticview module.
 * `client` (`Player`): `The player whose view is being calculated.`
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `boolean` — `Return false to cancel the realistic view.`
 
 **Example**
@@ -37,21 +32,17 @@ end)
 ### `RealisticViewUpdated`
 
 **Purpose**
-
 `Fired after the view table has been built. Allows modification of the values.`
 
 **Parameters**
 
 * `client` (`Player`): `The player whose view is being updated.`
-
 * `view` (`table`): `Table containing origin and angles that may be changed.`
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `nil` — `Return value is ignored.`
 
 **Example**
@@ -67,21 +58,17 @@ end)
 ### `RealisticViewCalcView`
 
 **Purpose**
-
 `Final hook before the adjusted view is returned.`
 
 **Parameters**
 
 * `client` (`Player`): `The player whose view is being calculated.`
-
 * `view` (`table`): `Table that can be modified.`
 
 **Realm**
-
 `Client`
 
 **Returns**
-
 `nil` — `Return value is ignored.`
 
 **Example**
@@ -93,4 +80,3 @@ end)
 ```
 
 ---
-

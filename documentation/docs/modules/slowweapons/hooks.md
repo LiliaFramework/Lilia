@@ -1,29 +1,22 @@
 # Hooks
-
 Module-specific events raised by the Slowweapons module.
 
 ---
-
 ### `OverrideSlowWeaponSpeed`
 
 **Purpose**
-
 `Override the slow walk speed for a specific weapon before it is applied.`
 
 **Parameters**
 
 * `client` (`Player`): `The player who is moving.`
-
 * `weapon` (`Weapon`): `The weapon affecting the player's speed.`
-
 * `speed` (`number`): `The base slowdown speed configured for the weapon.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `number` — `New speed to apply. Return nil to use the base speed.`
 
 **Example**
@@ -41,25 +34,19 @@ end)
 ### `ApplyWeaponSlowdown`
 
 **Purpose**
-
 `Called right before the player's movement speed is set.`
 
 **Parameters**
 
 * `client` (`Player`): `The player being slowed.`
-
 * `weapon` (`Weapon`): `The active weapon.`
-
 * `moveData` (`CMoveData`): `The move data being modified.`
-
 * `speed` (`number`): `The slowdown speed that will be applied.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `Return value is ignored.`
 
 **Example**
@@ -77,25 +64,19 @@ end)
 ### `PostApplyWeaponSlowdown`
 
 **Purpose**
-
 `Runs after the slowdown speed has been applied to the player.`
 
 **Parameters**
 
 * `client` (`Player`): `The affected player.`
-
 * `weapon` (`Weapon`): `The active weapon.`
-
 * `moveData` (`CMoveData`): `The move data that was modified.`
-
 * `speed` (`number`): `The final speed that was applied.`
 
 **Realm**
-
 `Server`
 
 **Returns**
-
 `nil` — `Return value is ignored.`
 
 **Example**
@@ -109,4 +90,3 @@ end)
 ```
 
 ---
-

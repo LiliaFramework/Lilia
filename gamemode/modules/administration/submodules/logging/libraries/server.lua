@@ -92,6 +92,7 @@ function MODULE:OnPlayerInteractItem(client, action, item, result)
         lia.log.add(client, "itemInteractionFailed", action, name)
         return
     end
+
     if action == "use" then
         lia.log.add(client, "use", name)
     elseif action == "drop" then
@@ -212,12 +213,6 @@ end
 
 function MODULE:OnItemAdded(owner, item)
     lia.log.add(owner, "itemAdded", item:getName())
-end
-
-function MODULE:OnItemCreated(item)
-end
-
-function MODULE:OnItemSpawned(entity)
 end
 
 function MODULE:ItemFunctionCalled(item, action, client)

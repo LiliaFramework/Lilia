@@ -1,9 +1,8 @@
-# Meta
+# Character Meta
 
 Extensions for managing a character's warrant status.
 
 ---
-
 ### Character:ToggleWanted
 
 **Purpose**
@@ -11,9 +10,7 @@ Extensions for managing a character's warrant status.
 Toggles the character's wanted status and notifies relevant players.
 
 | Name        | Type   | Description                     |
-
 | ----------- | ------ | ------------------------------- |
-
 | `warranter` | Player | Player initiating the toggle. |
 
 **Realm**
@@ -103,6 +100,4 @@ Server
 **Returns**
 
 *boolean*
-
 ---
-
