@@ -1,6 +1,6 @@
 # Warrant
 
-**Version:** 1.20  
+**Version:** 1.21  
 **Author:** Samael  
 **Discord:** @liliaplayer  
 

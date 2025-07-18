@@ -1,6 +1,6 @@
 # Community Commands
 
-**Version:** 1.17  
+**Version:** 1.18  
 **Author:** Samael  
 **Discord:** @liliaplayer  
 

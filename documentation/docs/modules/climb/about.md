@@ -1,6 +1,6 @@
 # Climb
 
-**Version:** 1.12  
+**Version:** 1.13  
 **Author:** Samael  
 **Discord:** @liliaplayer  
 
