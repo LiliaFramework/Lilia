@@ -1,21 +1,27 @@
 # Hooks
+
 Module-specific events raised by the Permaremove module.
 
 ---
+
 ### `CanPermaRemoveEntity`
 
 **Purpose**
+
 `Determines if an entity can be permanently removed by an admin.`
 
 **Parameters**
 
 * `client` (`Player`): `Admin requesting the removal.`
+
 * `entity` (`Entity`): `Map entity targeted for deletion.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `boolean` — `Return false to block the removal.`
 
 **Example**
@@ -31,17 +37,21 @@ end)
 ### `OnPermaRemoveEntity`
 
 **Purpose**
+
 `Called after an entity is permanently removed with the command.`
 
 **Parameters**
 
 * `client` (`Player`): `Admin that removed the entity.`
+
 * `entity` (`Entity`): `Entity that was deleted.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `No return value.`
 
 **Example**
@@ -57,6 +67,7 @@ end)
 ### `OnPermaRemoveLoaded`
 
 **Purpose**
+
 `Runs during map loading for each stored entity that is removed.`
 
 **Parameters**
@@ -64,9 +75,11 @@ end)
 * `entity` (`Entity`): `Map entity being removed automatically.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `No return value.`
 
 **Example**
@@ -78,3 +91,4 @@ end)
 ```
 
 ---
+

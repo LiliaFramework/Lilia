@@ -1,22 +1,29 @@
 # Hooks
+
 Module-specific events raised by the Npcspawner module.
 
 ---
+
 ### `CanNPCSpawn`
 
 **Purpose**
+
 `Allows modules to disallow an NPC from spawning.`
 
 **Parameters**
 
 * `zone` (`table`): `Spawn zone information.`
+
 * `npcType` (`string`): `Class name of the NPC being spawned.`
+
 * `group` (`string`): `Identifier for the spawn group.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `boolean` — `Return false to cancel the spawn.`
 
 **Example**
@@ -32,18 +39,23 @@ end)
 ### `PreNPCSpawn`
 
 **Purpose**
+
 `Called right before an NPC entity is created.`
 
 **Parameters**
 
 * `zone` (`table`): `Spawn zone information.`
+
 * `npcType` (`string`): `Class name of the NPC.`
+
 * `group` (`string`): `Identifier for the spawn group.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `No return value.`
 
 **Example**
@@ -59,18 +71,23 @@ end)
 ### `OnNPCSpawned`
 
 **Purpose**
+
 `Runs after an NPC has spawned and been added to the zone list.`
 
 **Parameters**
 
 * `npc` (`Entity`): `The spawned NPC entity.`
+
 * `zone` (`table`): `Zone the NPC spawned in.`
+
 * `group` (`string`): `Identifier for the spawn group.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `No return value.`
 
 **Example**
@@ -86,18 +103,23 @@ end)
 ### `PostNPCSpawn`
 
 **Purpose**
+
 `Fires after all spawn logic for an individual NPC is complete.`
 
 **Parameters**
 
 * `npc` (`Entity`): `The spawned NPC entity.`
+
 * `zone` (`table`): `Zone the NPC spawned in.`
+
 * `group` (`string`): `Identifier for the spawn group.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `No return value.`
 
 **Example**
@@ -113,17 +135,21 @@ end)
 ### `PreProcessNPCZone`
 
 **Purpose**
+
 `Called before a spawn zone begins spawning NPCs.`
 
 **Parameters**
 
 * `zone` (`table`): `Zone data being processed.`
+
 * `group` (`string`): `Identifier for the spawn group.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `No return value.`
 
 **Example**
@@ -139,18 +165,23 @@ end)
 ### `OnNPCGroupSpawned`
 
 **Purpose**
+
 `Runs when one or more NPCs have been spawned for a zone.`
 
 **Parameters**
 
 * `zone` (`table`): `Zone that spawned NPCs.`
+
 * `group` (`string`): `Identifier for the spawn group.`
+
 * `count` (`number`): `Number of NPCs spawned this cycle.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `No return value.`
 
 **Example**
@@ -166,18 +197,23 @@ end)
 ### `PostProcessNPCZone`
 
 **Purpose**
+
 `Called after a spawn zone has finished spawning NPCs.`
 
 **Parameters**
 
 * `zone` (`table`): `Zone that was processed.`
+
 * `group` (`string`): `Identifier for the spawn group.`
+
 * `count` (`number`): `Number of NPCs spawned during processing.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `No return value.`
 
 **Example**
@@ -193,6 +229,7 @@ end)
 ### `PreNPCSpawnCycle`
 
 **Purpose**
+
 `Fires at the start of an automatic spawn cycle.`
 
 **Parameters**
@@ -200,9 +237,11 @@ end)
 * `zones` (`table`): `Table of all zones for the current map.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `No return value.`
 
 **Example**
@@ -218,6 +257,7 @@ end)
 ### `PostNPCSpawnCycle`
 
 **Purpose**
+
 `Runs once all zones have been processed in the spawn cycle.`
 
 **Parameters**
@@ -225,9 +265,11 @@ end)
 * `zones` (`table`): `Table of all zones for the current map.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `No return value.`
 
 **Example**
@@ -243,17 +285,21 @@ end)
 ### `OnNPCForceSpawn`
 
 **Purpose**
+
 `Triggered when an administrator manually forces a spawn.`
 
 **Parameters**
 
 * `client` (`Player`): `Player that used the command.`
+
 * `spawnerName` (`string`): `Name of the spawner that was triggered.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `No return value.`
 
 **Example**
@@ -265,3 +311,4 @@ end)
 ```
 
 ---
+

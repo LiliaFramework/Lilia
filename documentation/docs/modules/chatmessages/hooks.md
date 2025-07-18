@@ -1,10 +1,13 @@
 # Hooks
+
 Module-specific events raised by the Chatmessages module.
 
 ---
+
 ### `ChatMessagesTimerStarted`
 
 **Purpose**
+
 `Runs when the repeating chat message timer is created.`
 
 **Parameters**
@@ -12,9 +15,11 @@ Module-specific events raised by the Chatmessages module.
 * `interval` (`number`): `Number of seconds between messages.`
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -30,17 +35,21 @@ end)
 ### `ChatMessageSent`
 
 **Purpose**
+
 `Called each time an automated chat message is displayed.`
 
 **Parameters**
 
 * `index` (`number`): `Index of the message in the rotation.`
+
 * `text` (`string`): `The text that was sent.`
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -52,3 +61,4 @@ end)
 ```
 
 ---
+

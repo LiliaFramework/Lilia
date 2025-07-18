@@ -6,7 +6,7 @@ Gamemaster Teleport Points
 
 Version:
 
-1.12
+1.13
 
 Description:
 

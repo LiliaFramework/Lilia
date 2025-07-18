@@ -6,7 +6,7 @@ Stun Gun
 
 Version:
 
-101.18
+101.19
 
 Description:
 

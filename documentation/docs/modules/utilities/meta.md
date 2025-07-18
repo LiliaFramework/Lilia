@@ -3,6 +3,7 @@
 A collection of player and entity utility helpers.
 
 ---
+
 ### Player:squaredDistanceFromEnt (Shared)
 
 **Purpose**
@@ -10,7 +11,9 @@ A collection of player and entity utility helpers.
 Returns the squared distance from the player to the given entity.
 
 | Name    | Type   | Description |
+
 | ------- | ------ | ----------- |
+
 | `entity` | Entity | Target entity. |
 
 **Realm**
@@ -36,7 +39,9 @@ local dist = client:squaredDistanceFromEnt(ent)
 Returns the distance from the player to the given entity.
 
 | Name    | Type   | Description |
+
 | ------- | ------ | ----------- |
+
 | `entity` | Entity | Target entity. |
 
 **Realm**
@@ -96,7 +101,9 @@ Shared
 Opens the given URL in the player's Steam overlay.
 
 | Name | Type   | Description |
+
 | ---- | ------ | ----------- |
+
 | `url` | string | HTTP or HTTPS address. |
 
 **Realm**
@@ -116,7 +123,9 @@ Server
 Opens a named VGUI panel on the client.
 
 | Name   | Type   | Description                  |
+
 | ------ | ------ | ---------------------------- |
+
 | `panel` | string | Panel identifier registered client-side. |
 
 **Realm**
@@ -136,7 +145,9 @@ Server
 Returns the absolute angle difference between the entity's view and a world position.
 
 | Name | Type   | Description |
+
 | ---- | ------ | ----------- |
+
 | `pos` | Vector | World position to test. |
 
 **Realm**
@@ -156,8 +167,11 @@ Shared
 Checks if another entity is within this entity's field of view.
 
 | Name    | Type   | Description                         |
+
 | ------- | ------ | ----------------------------------- |
+
 | `entity` | Entity | Target to check.                    |
+
 | `fov`    | number | Field of view in degrees (default 88). |
 
 **Realm**
@@ -177,7 +191,9 @@ Shared
 Returns true if there is a direct line between this entity and the target.
 
 | Name   | Type   | Description |
+
 | ------ | ------ | ----------- |
+
 | `target` | Entity | Target entity. |
 
 **Realm**
@@ -197,9 +213,13 @@ Shared
 Checks whether an entity is visible on screen within optional distance and FOV limits.
 
 | Name    | Type   | Description                                   |
+
 | ------- | ------ | --------------------------------------------- |
+
 | `entity` | Entity | Target entity.                                |
+
 | `maxDist` | number | Maximum squared distance (default 512^2).     |
+
 | `fov`    | number | Field of view in degrees.                     |
 
 **Realm**
@@ -219,8 +239,11 @@ Shared
 Combines line-of-sight and FOV checks to determine if a target is visible.
 
 | Name    | Type   | Description |
+
 | ------- | ------ | ----------- |
+
 | `entity` | Entity | Target entity. |
+
 | `fov`    | number | Field of view in degrees. |
 
 **Realm**
@@ -230,4 +253,6 @@ Shared
 **Returns**
 
 *boolean*
+
 ---
+

@@ -6,7 +6,7 @@ Word Filter
 
 Version:
 
-1.16
+1.17
 
 Description:
 
