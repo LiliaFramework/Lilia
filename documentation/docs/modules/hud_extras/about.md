@@ -1,6 +1,12 @@
 # About
 
-# Extra HUD Elements 1.17
+Name:
+
+Extra HUD Elements
+
+Version:
+
+1.17
 
 Description:
 
@@ -18,4 +24,4 @@ Adds performance stats display
 
 Adds toggles for individual HUD elements
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hud_extras.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:#007acc;border-radius:4px;">DOWNLOAD HERE</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hud_extras.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:var(--md-primary-fg-color,#007acc);border-radius:4px;">DOWNLOAD HERE</a></p>

@@ -1,6 +1,12 @@
 # About
 
-# Corpse ID 1.18
+Name:
+
+Corpse ID
+
+Version:
+
+1.18
 
 Description:
 
@@ -18,4 +24,4 @@ Adds configurable identification delays
 
 Adds logs when corpses are identified
 
-<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/corpseid.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:#007acc;border-radius:4px;">DOWNLOAD HERE</a></p>
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/corpseid.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:var(--md-primary-fg-color,#007acc);border-radius:4px;">DOWNLOAD HERE</a></p>
