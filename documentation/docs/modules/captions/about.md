@@ -4,7 +4,7 @@
 Captions
 
 **Version:**
-1.18
+1.19
 
 **Description:**
 Provides an API for timed on-screen captions, ideal for story prompts or tutorials.

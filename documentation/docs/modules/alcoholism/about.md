@@ -4,7 +4,7 @@
 Alcoholism
 
 **Version:**
-1.17
+1.18
 
 **Description:**
 Introduces drinkable alcohol items that raise intoxication levels and temporarily blur the player's vision and movement.

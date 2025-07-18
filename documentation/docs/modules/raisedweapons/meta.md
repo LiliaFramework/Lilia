@@ -4,7 +4,7 @@ Utility methods for managing the raised state of a player's weapon.
 
 ---
 
-### Player:isWepRaised (Shared)
+### Player:isWepRaised
 
 **Purpose**
 
@@ -24,7 +24,7 @@ Shared
 
 ---
 
-### Player:setWepRaised (Server)
+### Player:setWepRaised
 
 **Purpose**
 
@@ -52,7 +52,7 @@ client:setWepRaised(true)
 
 ---
 
-### Player:toggleWepRaised (Server)
+### Player:toggleWepRaised
 
 **Purpose**
 

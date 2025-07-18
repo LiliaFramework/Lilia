@@ -4,7 +4,7 @@ Functions managing a player's extra character slots for donors.
 
 ---
 
-### Player:GetAdditionalCharSlots (Shared)
+### Player:GetAdditionalCharSlots
 
 **Purpose**
 
@@ -24,7 +24,7 @@ Shared
 
 ---
 
-### Player:SetAdditionalCharSlots (Server)
+### Player:SetAdditionalCharSlots
 
 **Purpose**
 
@@ -52,7 +52,7 @@ client:SetAdditionalCharSlots(3)
 
 ---
 
-### Player:GiveAdditionalCharSlots (Server)
+### Player:GiveAdditionalCharSlots
 
 **Purpose**
 

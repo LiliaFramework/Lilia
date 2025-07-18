@@ -1,4 +1,4 @@
-# Utilities Library
+# Libraries
 
 This page documents the helper functions defined in **`lia.utilities`** and the small core-Lua extensions shipped alongside them.
 

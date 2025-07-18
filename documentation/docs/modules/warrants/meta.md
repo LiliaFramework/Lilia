@@ -4,7 +4,7 @@ Extensions for managing a character's warrant status.
 
 ---
 
-### Character:ToggleWanted (Server)
+### Character:ToggleWanted
 
 **Purpose**
 
@@ -26,7 +26,7 @@ Server
 
 ---
 
-### Character:CanWarrantPlayers (Server)
+### Character:CanWarrantPlayers
 
 **Purpose**
 
@@ -46,7 +46,7 @@ Server
 
 ---
 
-### Character:CanSeeWarrantsIssued (Server)
+### Character:CanSeeWarrantsIssued
 
 **Purpose**
 
@@ -66,7 +66,7 @@ Server
 
 ---
 
-### Character:IsWanted (Shared)
+### Character:IsWanted
 
 **Purpose**
 
@@ -86,7 +86,7 @@ Shared
 
 ---
 
-### Character:CanSeeWarrants (Server)
+### Character:CanSeeWarrants
 
 **Purpose**
 

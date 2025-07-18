@@ -1,4 +1,4 @@
-# Caption Library
+# Libraries
 
 This page documents the functions for working with on-screen captions.
 
@@ -22,7 +22,7 @@ The net strings `StartCaption` and `EndCaption` are registered automatically whe
 
 ---
 
-### lia.caption.start (Server)
+### lia.caption.start
 
 **Purpose**
 
@@ -57,7 +57,7 @@ lia.caption.start(ply, "Access Granted", 5)
 
 ---
 
-### lia.caption.finish (Server)
+### lia.caption.finish
 
 **Purpose**
 
@@ -88,7 +88,7 @@ lia.caption.finish(ply)
 
 ---
 
-### lia.caption.start (Client)
+### lia.caption.start
 
 **Purpose**
 
@@ -121,7 +121,7 @@ lia.caption.start("Mission Complete", 3)
 
 ---
 
-### lia.caption.finish (Client)
+### lia.caption.finish
 
 **Purpose**
 

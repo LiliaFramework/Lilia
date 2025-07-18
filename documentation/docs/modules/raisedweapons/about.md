@@ -4,7 +4,7 @@
 Raised Weapons
 
 **Version:**
-1.16
+1.17
 
 **Description:**
 Automatically lowers weapons when sprinting and raises them again after a short delay.

@@ -4,7 +4,7 @@
 Donator
 
 **Version:**
-1.22
+1.23
 
 **Description:**
 Includes helper libraries for managing donor perks and displaying them on the scoreboard.

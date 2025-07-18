@@ -4,7 +4,7 @@
 Tying
 
 **Version:**
-1.22
+1.23
 
 **Description:**
 Introduces handcuff-style tying items for arrests and logs all tie or untie actions.
