@@ -134,4 +134,5 @@ hook.Add("LockShotFailed", "BreachFailed", function(client, door)
     client:notify("The lock held strong.")
 end)
 ```
+
 ---

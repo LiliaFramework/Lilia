@@ -52,4 +52,5 @@ Server
 ```lua
 client:EndHandcuffAnim()
 ```
+
 ---

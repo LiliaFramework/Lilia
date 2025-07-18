@@ -50,4 +50,5 @@ hook.Add("CardDrawn", "AnnounceCard", function(client, card)
     lia.chat.send(client, "me", "drew " .. card)
 end)
 ```
+
 ---

@@ -99,4 +99,5 @@ hook.Add("CursorThink", "Example", function(panel)
     -- custom panel hover logic here
 end)
 ```
+
 ---

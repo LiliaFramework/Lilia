@@ -97,4 +97,5 @@ hook.Add("PlayerStopSmoking", "SmokingEnd", function(player, cigID)
     print(player:Name() .. " stopped smoking")
 end)
 ```
+
 ---

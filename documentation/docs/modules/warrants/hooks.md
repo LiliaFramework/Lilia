@@ -84,4 +84,5 @@ hook.Add("PostWarrantToggle", "Cleanup", function(char, actor, warranted)
     end
 end)
 ```
+
 ---

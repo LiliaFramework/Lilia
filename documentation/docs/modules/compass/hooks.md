@@ -201,4 +201,5 @@ hook.Add("CompassSpotCommand", "HandleSpot", function(ply, tr)
     print(ply:Nick() .. " spotted at " .. tostring(tr.HitPos))
 end)
 ```
+
 ---

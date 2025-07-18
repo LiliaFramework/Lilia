@@ -207,4 +207,5 @@ hook.Add("OnWeaponLowered", "AlertLowered", function(player, weapon)
     print(player:Name(), "lowered", weapon:GetClass())
 end)
 ```
+
 ---

@@ -146,4 +146,5 @@ hook.Add("NPCDropFailed", "Failure", function(ent)
     print("No item chosen for", ent:GetClass())
 end)
 ```
+
 ---

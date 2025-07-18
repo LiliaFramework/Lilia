@@ -283,4 +283,5 @@ hook.Add("WeightInvItemRemoved", "OnRemove", function(inv, item)
     print(item.name .. " removed")
 end)
 ```
+
 ---

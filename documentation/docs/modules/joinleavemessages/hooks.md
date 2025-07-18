@@ -53,4 +53,5 @@ hook.Add("JoinLeaveMessageSent", "LogToConsole", function(ply, joined, msg)
     print(msg)
 end)
 ```
+
 ---

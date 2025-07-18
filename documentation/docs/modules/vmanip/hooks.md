@@ -53,4 +53,5 @@ hook.Add("VManipPickup", "PlaySound", function(client, item)
     client:EmitSound("items/ammo_pickup.wav")
 end)
 ```
+
 ---

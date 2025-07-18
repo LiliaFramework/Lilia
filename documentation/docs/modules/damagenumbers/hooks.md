@@ -103,4 +103,5 @@ hook.Add("DamageNumberExpired", "OnExpire", function(ent, dmg)
     print("Damage number " .. dmg .. " expired")
 end)
 ```
+
 ---

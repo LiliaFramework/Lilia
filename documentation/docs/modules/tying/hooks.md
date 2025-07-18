@@ -177,4 +177,5 @@ hook.Add("PlayerUnhandcuffed", "FreedomMsg", function(target)
     target:ChatPrint("You are free to go.")
 end)
 ```
+
 ---

@@ -210,4 +210,5 @@ hook.Add("OnPainSoundPlayed", "LogPain", function(ply, path)
     print("Played pain sound", path)
 end)
 ```
+
 ---

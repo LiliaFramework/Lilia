@@ -98,4 +98,5 @@ Shared
 ```lua
 local level = client:GetBAC()
 ```
+
 ---

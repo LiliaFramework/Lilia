@@ -80,4 +80,5 @@ hook.Add("PlayerToggleFlashlight", "Announce", function(client, state)
     print(client:Name() .. " turned their flashlight " .. word)
 end)
 ```
+
 ---

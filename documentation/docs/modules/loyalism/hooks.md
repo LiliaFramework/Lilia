@@ -121,4 +121,5 @@ hook.Add("PostUpdatePartyTiers", "Done", function()
     print("Tiers updated")
 end)
 ```
+
 ---

@@ -208,4 +208,5 @@ hook.Add("StunGunTethered", "TetherMsg", function(owner, target)
     owner:ChatPrint("Tethered to " .. target:Name())
 end)
 ```
+
 ---

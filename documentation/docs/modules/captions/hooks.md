@@ -106,4 +106,5 @@ hook.Add("CaptionFinished", "HandleCaptionEnd", function(client)
     -- cleanup logic here
 end)
 ```
+
 ---

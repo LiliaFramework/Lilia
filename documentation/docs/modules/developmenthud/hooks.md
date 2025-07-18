@@ -74,4 +74,5 @@ hook.Add("DevelopmentHUDPaint", "PostHUD", function(ply)
     -- draw additional overlays here
 end)
 ```
+
 ---

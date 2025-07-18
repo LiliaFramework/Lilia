@@ -72,4 +72,5 @@ hook.Add("UtilityEntitySpawned", "TrackEntity", function(entity, class, position
     print("Spawned entity", class)
 end)
 ```
+
 ---

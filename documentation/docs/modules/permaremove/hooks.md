@@ -76,4 +76,5 @@ hook.Add("OnPermaRemoveLoaded", "HandleLoadedRemoval", function(entity)
     print("Removed on load", entity)
 end)
 ```
+
 ---

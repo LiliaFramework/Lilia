@@ -274,4 +274,5 @@ hook.Add("HUDExtrasPostDrawWatermark", "ResetWatermarkColor", function()
     surface.SetDrawColor(255, 255, 255)
 end)
 ```
+
 ---

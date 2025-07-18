@@ -305,4 +305,5 @@ Migrates legacy config files from `data/lilia` into the `lia_config` SQL table. 
 ```lua
 lia.config.convertToDatabase(true)
 ```
+
 ---

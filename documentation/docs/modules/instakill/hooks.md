@@ -77,4 +77,5 @@ hook.Add("PlayerInstantKilled", "OnKill", function(ply, dmginfo)
     print(ply:Nick() .. " was instantly killed")
 end)
 ```
+
 ---

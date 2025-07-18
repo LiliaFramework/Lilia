@@ -186,4 +186,5 @@ hook.Add("ExtendedDescriptionUpdated", "announceUpdate", function(client, url, t
     client:ChatPrint("Your description was saved!")
 end)
 ```
+
 ---

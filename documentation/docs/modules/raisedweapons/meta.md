@@ -72,4 +72,5 @@ Server
 ```lua
 client:toggleWepRaised()
 ```
+
 ---

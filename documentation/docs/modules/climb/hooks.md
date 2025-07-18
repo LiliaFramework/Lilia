@@ -93,4 +93,5 @@ hook.Add("PlayerFailedClimb", "ClimbFail", function(player)
     player:ChatPrint("You can't climb here.")
 end)
 ```
+
 ---

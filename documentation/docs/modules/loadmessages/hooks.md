@@ -98,4 +98,5 @@ hook.Add("LoadMessageMissing", "FallbackMessage", function(client)
     client:ChatPrint("Welcome back!")
 end)
 ```
+
 ---

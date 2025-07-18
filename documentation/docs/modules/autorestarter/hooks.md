@@ -99,4 +99,5 @@ hook.Add("AutoRestartCountdown", "DisplayTimer", function(remaining)
     print(remaining .. " seconds until restart")
 end)
 ```
+
 ---

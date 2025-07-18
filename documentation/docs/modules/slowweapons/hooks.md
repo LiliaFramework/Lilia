@@ -88,4 +88,5 @@ hook.Add("PostApplyWeaponSlowdown", "NotifySlowdown", function(client, weapon, m
     end
 end)
 ```
+
 ---

@@ -125,4 +125,5 @@ hook.Add("CinematicTriggered", "OnCinematicTrigger", function(client, text, bigT
     print(client:Name() .. " started a cinematic.")
 end)
 ```
+
 ---

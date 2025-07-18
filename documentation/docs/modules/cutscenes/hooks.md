@@ -128,4 +128,5 @@ hook.Add("CutsceneSubtitleStarted", "Subtitle", function(id, sub)
     print(sub.text)
 end)
 ```
+
 ---

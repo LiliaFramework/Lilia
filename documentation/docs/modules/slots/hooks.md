@@ -107,4 +107,5 @@ hook.Add("SlotMachineEnd", "ReadyAgain", function(machine, client)
     machine.IsPlaying = true
 end)
 ```
+
 ---

@@ -103,4 +103,5 @@ hook.Add("FirstPersonEffectsUpdated", "StoreOffsets", function(pl, pos, ang)
     MyAddon.LastOffset = pos
 end)
 ```
+
 ---

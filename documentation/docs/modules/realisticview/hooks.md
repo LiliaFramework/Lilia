@@ -78,4 +78,5 @@ hook.Add("RealisticViewCalcView", "AddRoll", function(client, view)
     view.angles.r = view.angles.r + 5
 end)
 ```
+
 ---

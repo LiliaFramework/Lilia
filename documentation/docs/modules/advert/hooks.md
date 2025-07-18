@@ -25,4 +25,5 @@ hook.Add("AdvertSent", "LogAdvert", function(client, message)
     print(client:Nick() .. " advertised: " .. message)
 end)
 ```
+
 ---

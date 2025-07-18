@@ -134,4 +134,5 @@ hook.Add("LockpickInterrupted", "HandleAbort", function(client, target)
     client:notify("Lockpicking stopped")
 end)
 ```
+
 ---

@@ -320,4 +320,5 @@ hook.Add("GamemasterMoveToPoint", "NotifyMove", function(client, name, pos)
     print(client, "arrived at", name)
 end)
 ```
+
 ---

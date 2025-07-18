@@ -74,4 +74,5 @@ hook.Add("FreelookToggled", "Notify", function(state)
     print("Freelook state:", state)
 end)
 ```
+
 ---

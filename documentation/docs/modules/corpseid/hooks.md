@@ -156,4 +156,5 @@ hook.Add("CorpseCreated", "StoreCorpse", function(client, corpse)
     print("Corpse created for " .. client:Name())
 end)
 ```
+
 ---

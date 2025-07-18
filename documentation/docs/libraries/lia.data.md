@@ -165,4 +165,5 @@ Imports legacy `.txt` files from `data/lilia` into their respective `lia_data_<k
 ```lua
 lia.data.convertToDatabase(true)
 ```
+
 ---

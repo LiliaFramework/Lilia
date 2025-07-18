@@ -174,4 +174,5 @@ hook.Add("ModelPayModelIneligible", "StopSalary", function(client, model)
     -- cleanup
 end)
 ```
+
 ---

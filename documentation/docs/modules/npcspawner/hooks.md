@@ -263,4 +263,5 @@ hook.Add("OnNPCForceSpawn", "LogForce", function(client, spawnerName)
     print(client:Name(), "forced spawn", spawnerName)
 end)
 ```
+
 ---
