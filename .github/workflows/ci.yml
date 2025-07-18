@@ -77,19 +77,16 @@ jobs:
           echo "version=$VERSION_FLOAT" >> "$GITHUB_OUTPUT"
           echo "valid_count=$VALID_COUNT" >> "$GITHUB_OUTPUT"
 
-  release:
+  update-shared-version:
     needs: compute-version
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.compute-version.outputs.version }}
-      VALID_COUNT: ${{ needs.compute-version.outputs.valid_count }}
-      GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-      STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
-      STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
     steps:
       - uses: actions/checkout@v3
-
+        with:
+          fetch-depth: 0
       - run: |
           python3 - << 'PY'
           import os, re, pathlib, sys
@@ -110,13 +107,30 @@ jobs:
               sys.exit(1)
           p.write_text(''.join(out), encoding='utf-8')
           PY
-
       - run: |
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
           git add gamemode/shared.lua
           git diff-index --quiet HEAD || git commit -m "Moved Lilia Version to ${VERSION}"
           git push origin HEAD:main
+
+  release:
+    needs:
+      - compute-version
+      - update-shared-version
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.compute-version.outputs.version }}
+      VALID_COUNT: ${{ needs.compute-version.outputs.valid_count }}
+      GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
+      STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
+      STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: main
 
       - run: |
           rm -rf addon
