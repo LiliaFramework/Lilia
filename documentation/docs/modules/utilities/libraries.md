@@ -9,10 +9,15 @@ This page documents the helper functions defined in **`lia.utilities`** and the 
 The utilities library bundles a variety of quality-of-life helpers that are useful across many schemas:
 
 * **Benchmarking** – quick micro-benchmarks.
+
 * **Date & time** – parsing, formatting, arithmetic.
+
 * **Colour helpers** – RGB/HSV/HSL manipulation.
+
 * **Serialisation** – vectors, angles, colours.
+
 * **Debugging** – simple tagged printing.
+
 * **Entity helpers** – convenience spawners.
 
 In addition, several frequently-used helpers are added directly to the global **`math`**, **`string`**, and **`table`** libraries (see *Core-Lua extensions* at the end).
@@ -28,8 +33,11 @@ All functions are available in the shared realm unless explicitly marked **Serve
 Measures the average execution time (seconds) of a function over *n* runs.
 
 | Name   | Type     | Description                     |
+
 | ------ | -------- | ------------------------------- |
+
 | `func` | function | The callback to benchmark.      |
+
 | `n`    | number   | Number of times to call `func`. |
 
 **Returns**
@@ -51,13 +59,17 @@ print(lia.utilities.SpeedTest(function() return math.sqrt(2) end, 1e4))
 Returns the whole-day difference between two date/time strings.
 
 | Name       | Type   | Description                |
+
 | ---------- | ------ | -------------------------- |
+
 | `strTime1` | string | `"HH:MM:SS - DD/MM/YYYY"`. |
+
 | `strTime2` | string | Same format.               |
 
 **Returns**
 
 * *number* – Days between the dates.
+
 * *string* – Localised error on bad input.
 
 **Example**
@@ -76,11 +88,17 @@ print(lia.utilities.DaysBetween("00:00:00 - 01/01/2025",
 Interpolates between two colours in HSV space based on the position of `currentValue` inside `[minValue,maxValue]`.
 
 | Name           | Type   | Description                           |
+
 | -------------- | ------ | ------------------------------------- |
+
 | `start_color`  | Color  | Colour at `minValue` (default green). |
+
 | `end_color`    | Color  | Colour at `maxValue` (default red).   |
+
 | `maxValue`     | number | Upper bound.                          |
+
 | `currentValue` | number | Value to evaluate.                    |
+
 | `minValue`     | number | Lower bound (default 0).              |
 
 **Returns**
@@ -102,8 +120,11 @@ local col = lia.utilities.LerpHSV(nil, nil, 100, 50)
 Darkens a colour by reducing its HSL lightness.
 
 | Name     | Type   | Description                |
+
 | -------- | ------ | -------------------------- |
+
 | `color`  | Color  | Base colour.               |
+
 | `amount` | number | Lightness decrement `0‒1`. |
 
 **Returns**
@@ -119,8 +140,11 @@ Darkens a colour by reducing its HSL lightness.
 Lightens a colour by increasing its HSL lightness.
 
 | Name     | Type   | Description                |
+
 | -------- | ------ | -------------------------- |
+
 | `color`  | Color  | Base colour.               |
+
 | `amount` | number | Lightness increment `0‒1`. |
 
 **Returns**
@@ -136,9 +160,13 @@ Lightens a colour by increasing its HSL lightness.
 Linear RGBA interpolation between two colours.
 
 | Name   | Type   | Description                 |
+
 | ------ | ------ | --------------------------- |
+
 | `frac` | number | Interpolation factor `0‒1`. |
+
 | `from` | Color  | Start colour.               |
+
 | `to`   | Color  | End colour.                 |
 
 **Returns**
@@ -154,9 +182,13 @@ Linear RGBA interpolation between two colours.
 Blends two colours by ratio in RGB space.
 
 | Name     | Type   | Description                               |
+
 | -------- | ------ | ----------------------------------------- |
+
 | `color1` | Color  | First colour.                             |
+
 | `color2` | Color  | Second colour.                            |
+
 | `ratio`  | number | `0` → pure `color1`, `1` → pure `color2`. |
 
 **Returns**
@@ -172,9 +204,13 @@ Blends two colours by ratio in RGB space.
 Creates a `Color` from 0-255 integer components.
 
 | Name | Type   |
+
 | ---- | ------ |
+
 | `r`  | number |
+
 | `g`  | number |
+
 | `b`  | number |
 
 **Returns**
@@ -190,7 +226,9 @@ Creates a `Color` from 0-255 integer components.
 Returns a continuously cycling rainbow colour.
 
 | Name        | Type   | Description         |
+
 | ----------- | ------ | ------------------- |
+
 | `frequency` | number | Hue rotation speed. |
 
 **Returns**
@@ -206,9 +244,13 @@ Returns a continuously cycling rainbow colour.
 Cycles smoothly between two colours using a sine wave.
 
 | Name   | Type   |
+
 | ------ | ------ |
+
 | `col1` | Color  |
+
 | `col2` | Color  |
+
 | `freq` | number |
 
 **Returns**
@@ -224,7 +266,9 @@ Cycles smoothly between two colours using a sine wave.
 Converts a `Color` to a hexadecimal string.
 
 | Name    | Type  |
+
 | ------- | ----- |
+
 | `color` | Color |
 
 **Returns**
@@ -240,7 +284,9 @@ Converts a `Color` to a hexadecimal string.
 Serialises a `Color` as `"r,g,b,a"`.
 
 | Name    | Type  |
+
 | ------- | ----- |
+
 | `color` | Color |
 
 **Returns**
@@ -256,7 +302,9 @@ Serialises a `Color` as `"r,g,b,a"`.
 Serialises a `Vector` to a JSON array string.
 
 | Name     | Type   |
+
 | -------- | ------ |
+
 | `vector` | Vector |
 
 **Realm**
@@ -276,7 +324,9 @@ Server
 Parses a JSON array into a `Vector`.
 
 | Name   | Type   |
+
 | ------ | ------ |
+
 | `data` | string |
 
 **Realm**
@@ -296,7 +346,9 @@ Server
 Serialises an `Angle` to a JSON array string.
 
 | Name  | Type  |
+
 | ----- | ----- |
+
 | `ang` | Angle |
 
 **Realm**
@@ -316,7 +368,9 @@ Server
 Parses a JSON array into an `Angle`.
 
 | Name   | Type   |
+
 | ------ | ------ |
+
 | `data` | string |
 
 **Realm**
@@ -336,7 +390,9 @@ Server
 Tagged debug printing (`[DEBUG] ...`).
 
 | Name  | Type | Description      |
+
 | ----- | ---- | ---------------- |
+
 | `...` | any  | Values to print. |
 
 **Returns**
@@ -352,7 +408,9 @@ Tagged debug printing (`[DEBUG] ...`).
 Returns a human-readable breakdown of the time remaining until a future date-time.
 
 | Name      | Type   | Description                |
+
 | --------- | ------ | -------------------------- |
+
 | `strTime` | string | `"HH:MM:SS - DD/MM/YYYY"`. |
 
 **Returns**
@@ -380,7 +438,9 @@ Returns the current local time in the library’s standard format.
 Breaks a total second count down into days, hours, minutes, seconds.
 
 | Name      | Type   |
+
 | --------- | ------ |
+
 | `seconds` | number |
 
 **Returns**
@@ -396,9 +456,13 @@ Breaks a total second count down into days, hours, minutes, seconds.
 Converts hours, minutes, seconds into total seconds.
 
 | Name     | Type   |
+
 | -------- | ------ |
+
 | `hour`   | number |
+
 | `minute` | number |
+
 | `second` | number |
 
 **Returns**
@@ -414,7 +478,9 @@ Converts hours, minutes, seconds into total seconds.
 Formats a Unix timestamp using library conventions.
 
 | Name        | Type   |
+
 | ----------- | ------ |
+
 | `timestamp` | number |
 
 **Returns**
@@ -430,7 +496,9 @@ Formats a Unix timestamp using library conventions.
 Returns the weekday name for a formatted date-time.
 
 | Name      | Type   |
+
 | --------- | ------ |
+
 | `strTime` | string |
 
 **Returns**
@@ -446,7 +514,9 @@ Returns the weekday name for a formatted date-time.
 Day difference between a date-time and now (negative if in the past).
 
 | Name      | Type   |
+
 | --------- | ------ |
+
 | `strTime` | string |
 
 **Returns**
@@ -462,12 +532,19 @@ Day difference between a date-time and now (negative if in the past).
 Convenience helper to spawn a physics prop with optional force, lifetime, etc.
 
 | Name        | Type             | Description                                                      |
+
 | ----------- | ---------------- | ---------------------------------------------------------------- |
+
 | `model`     | string           | Model path.                                                      |
+
 | `position`  | Vector or Player | Spawn position **or** player (uses `GetItemDropPos`).            |
+
 | `force`     | Vector           | *(Optional)* Force to apply to physics object.                   |
+
 | `lifetime`  | number           | *(Optional)* Seconds before auto-remove.                         |
+
 | `angles`    | Angle            | *(Optional)* Initial angles.                                     |
+
 | `collision` | number           | *(Optional)* Collision group (default `COLLISION_GROUP_WEAPON`). |
 
 **Realm**
@@ -487,7 +564,9 @@ Server
 Batch-spawns entities from a class→position table.
 
 | Name          | Type  | Description                                      |
+
 | ------------- | ----- | ------------------------------------------------ |
+
 | `entityTable` | table | Keys = class names, values = `Vector` positions. |
 
 **Realm**
@@ -505,11 +584,16 @@ Server
 The file also extends the base libraries with lightweight helpers:
 
 | Library      | Function(s)                                                                                                                                                                             | Notes                                                      |
+
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+
 | **`math`**   | `chance`, `UnitsToInches`, `UnitsToCentimeters`, `UnitsToMeters`, `Bias`, `Gain`, `ApproachSpeed`, `ApproachVectorSpeed`, `ApproachAngleSpeed`, `InRange`, `ClampAngle`, `ClampedRemap` | Extra random/curve and unit-conversion tools.              |
+
 | **`string`** | `generateRandom`, `quote`, `FirstToUpper`, `CommaNumber`, `Clean`, `Gibberish`, `DigitToString`                                                                                         | Random IDs, safe quoting, formatting, and playful helpers. |
+
 | **`table`**  | `Sum`, `Lookupify` (alias `MakeAssociative`), `Unique`, `FullCopy`, `Filter`, `FilterCopy`                                                                                              | Recursion-safe clones, easy look-ups, functional filters.  |
 
 These helpers behave exactly like their standard-library counterparts and require no special includes.
 
 ---
+

@@ -1,21 +1,27 @@
 # Hooks
+
 Module-specific events raised by the Wartable module.
 
 ---
+
 ### `PreWarTableClear`
 
 **Purpose**
+
 Runs before the war table is cleared.
 
 **Parameters**
 
 * `client` (`Player`): Player clearing the table.
+
 * `tableEnt` (`Entity`): War table entity being cleared.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `None`
 
 **Example**
@@ -31,17 +37,21 @@ end)
 ### `WarTableCleared`
 
 **Purpose**
+
 Fires after the war table has been cleared.
 
 **Parameters**
 
 * `client` (`Player`): Player that cleared the table.
+
 * `tableEnt` (`Entity`): War table entity that was cleared.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `None`
 
 **Example**
@@ -57,17 +67,21 @@ end)
 ### `PostWarTableClear`
 
 **Purpose**
+
 Runs after `WarTableCleared` when the clear process has finished.
 
 **Parameters**
 
 * `client` (`Player`): Player that cleared the table.
+
 * `tableEnt` (`Entity`): War table entity that was cleared.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `None`
 
 **Example**
@@ -83,18 +97,23 @@ end)
 ### `PreWarTableMapChange`
 
 **Purpose**
+
 Called before a new map image is set on the war table.
 
 **Parameters**
 
 * `client` (`Player`): Player setting the map.
+
 * `tableEnt` (`Entity`): War table entity being changed.
+
 * `text` (`string`): Map image name or URL.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `None`
 
 **Example**
@@ -110,18 +129,23 @@ end)
 ### `WarTableMapChanged`
 
 **Purpose**
+
 Fires once the war table's map image is updated.
 
 **Parameters**
 
 * `client` (`Player`): Player who changed the map.
+
 * `tableEnt` (`Entity`): War table entity that was changed.
+
 * `text` (`string`): New map image name or URL.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `None`
 
 **Example**
@@ -137,18 +161,23 @@ end)
 ### `PostWarTableMapChange`
 
 **Purpose**
+
 Runs after `WarTableMapChanged` once the new map is fully set.
 
 **Parameters**
 
 * `client` (`Player`): Player who changed the map.
+
 * `tableEnt` (`Entity`): War table entity that was changed.
+
 * `text` (`string`): New map image name or URL.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `None`
 
 **Example**
@@ -164,19 +193,25 @@ end)
 ### `PreWarTableMarkerPlace`
 
 **Purpose**
+
 Triggered before a new marker entity is placed.
 
 **Parameters**
 
 * `client` (`Player`): Player placing the marker.
+
 * `pos` (`Vector`): World position of the marker.
+
 * `bodygroups` (`table`): Bodygroups for the marker model.
+
 * `tableEnt` (`Entity`): War table entity receiving the marker.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `None`
 
 **Example**
@@ -192,18 +227,23 @@ end)
 ### `WarTableMarkerPlaced`
 
 **Purpose**
+
 Fires when a marker entity has been spawned on the table.
 
 **Parameters**
 
 * `client` (`Player`): Player who placed the marker.
+
 * `marker` (`Entity`): Spawned marker entity.
+
 * `tableEnt` (`Entity`): War table that holds the marker.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `None`
 
 **Example**
@@ -219,18 +259,23 @@ end)
 ### `PostWarTableMarkerPlace`
 
 **Purpose**
+
 Runs after `WarTableMarkerPlaced` once the marker setup is done.
 
 **Parameters**
 
 * `client` (`Player`): Player who placed the marker.
+
 * `marker` (`Entity`): Spawned marker entity.
+
 * `tableEnt` (`Entity`): War table that holds the marker.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `None`
 
 **Example**
@@ -246,18 +291,23 @@ end)
 ### `PreWarTableMarkerRemove`
 
 **Purpose**
+
 Called before a marker entity is removed from the table.
 
 **Parameters**
 
 * `client` (`Player`): Player removing the marker.
+
 * `ent` (`Entity`): Marker entity to remove.
+
 * `tableEnt` (`Entity`): War table containing the marker.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `None`
 
 **Example**
@@ -273,18 +323,23 @@ end)
 ### `WarTableMarkerRemoved`
 
 **Purpose**
+
 Fires after a marker entity has been removed from the table.
 
 **Parameters**
 
 * `client` (`Player`): Player who removed the marker.
+
 * `ent` (`Entity`): Marker entity that was removed.
+
 * `tableEnt` (`Entity`): War table that contained the marker.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `None`
 
 **Example**
@@ -300,18 +355,23 @@ end)
 ### `PostWarTableMarkerRemove`
 
 **Purpose**
+
 Runs after `WarTableMarkerRemoved` once cleanup is done.
 
 **Parameters**
 
 * `client` (`Player`): Player who removed the marker.
+
 * `ent` (`Entity`): Marker entity that was removed.
+
 * `tableEnt` (`Entity`): War table that contained the marker.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `None`
 
 **Example**
@@ -327,18 +387,23 @@ end)
 ### `PreWarTableUsed`
 
 **Purpose**
+
 Called when a player begins interacting with the war table.
 
 **Parameters**
 
 * `activator` (`Player`): Player activating the table.
+
 * `tableEnt` (`Entity`): War table being used.
+
 * `sprinting` (`boolean`): Whether the player is sprinting while activating.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `None`
 
 **Example**
@@ -354,18 +419,23 @@ end)
 ### `WarTableUsed`
 
 **Purpose**
+
 Fires after the war table has been activated.
 
 **Parameters**
 
 * `activator` (`Player`): Player activating the table.
+
 * `tableEnt` (`Entity`): War table being used.
+
 * `sprinting` (`boolean`): Whether the player was sprinting.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `None`
 
 **Example**
@@ -381,18 +451,23 @@ end)
 ### `PostWarTableUsed`
 
 **Purpose**
+
 Runs after `WarTableUsed` when all usage logic has completed.
 
 **Parameters**
 
 * `activator` (`Player`): Player activating the table.
+
 * `tableEnt` (`Entity`): War table being used.
+
 * `sprinting` (`boolean`): Whether the player was sprinting.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `None`
 
 **Example**
@@ -404,3 +479,4 @@ end)
 ```
 
 ---
+

@@ -1,21 +1,27 @@
 # Hooks
+
 Module-specific events raised by the Alcoholism module.
 
 ---
+
 ### `BACChanged`
 
 **Purpose**
+
 `Called whenever a player's Blood Alcohol Content (BAC) value is updated.`
 
 **Parameters**
 
 * `client` (`Player`): `The player whose BAC changed.`
+
 * `newBac` (`number`): `The player's new BAC value.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `This hook does not return anything.`
 
 **Example**
@@ -31,6 +37,7 @@ end)
 ### `BACReset`
 
 **Purpose**
+
 `Runs when a player's BAC is reset to 0.`
 
 **Parameters**
@@ -38,9 +45,11 @@ end)
 * `client` (`Player`): `The player whose BAC was reset.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -56,18 +65,23 @@ end)
 ### `BACIncreased`
 
 **Purpose**
+
 `Fires when a player's BAC is increased through consuming alcohol.`
 
 **Parameters**
 
 * `client` (`Player`): `The affected player.`
+
 * `amount` (`number`): `Amount added to the BAC.`
+
 * `newBac` (`number`): `The resulting BAC value.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -83,17 +97,21 @@ end)
 ### `AlcoholConsumed`
 
 **Purpose**
+
 `Triggered when an alcohol item is used by a player.`
 
 **Parameters**
 
 * `client` (`Player`): `Player that consumed the item.`
+
 * `item` (`Item`): `The alcohol item that was consumed.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -109,6 +127,7 @@ end)
 ### `PreBACReset`
 
 **Purpose**
+
 `Runs right before a player's BAC value is cleared.`
 
 **Parameters**
@@ -116,9 +135,11 @@ end)
 * `client` (`Player`): `The player about to be reset.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -134,6 +155,7 @@ end)
 ### `PostBACReset`
 
 **Purpose**
+
 `Called after a player's BAC has been cleared.`
 
 **Parameters**
@@ -141,9 +163,11 @@ end)
 * `client` (`Player`): `The player that was reset.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -159,17 +183,21 @@ end)
 ### `PreBACIncrease`
 
 **Purpose**
+
 `Invoked before a player's BAC value increases.`
 
 **Parameters**
 
 * `client` (`Player`): `The affected player.`
+
 * `amount` (`number`): `Amount being added.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -185,17 +213,21 @@ end)
 ### `BACThresholdReached`
 
 **Purpose**
+
 `Fires when a player's BAC crosses the drunk threshold.`
 
 **Parameters**
 
 * `client` (`Player`): `The player who crossed the threshold.`
+
 * `newBac` (`number`): `Their new BAC value.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -211,17 +243,21 @@ end)
 ### `PreBACDecrease`
 
 **Purpose**
+
 `Runs before the server lowers a player's BAC over time.`
 
 **Parameters**
 
 * `client` (`Player`): `Player whose BAC will drop.`
+
 * `current` (`number`): `Their current BAC before drop.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -237,17 +273,21 @@ end)
 ### `PostBACDecrease`
 
 **Purpose**
+
 `Runs after a player's BAC has decayed for the tick.`
 
 **Parameters**
 
 * `client` (`Player`): `Affected player.`
+
 * `newBac` (`number`): `Their BAC after decay.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -259,3 +299,4 @@ end)
 ```
 
 ---
+

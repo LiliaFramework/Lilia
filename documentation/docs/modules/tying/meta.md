@@ -3,6 +3,7 @@
 Convenience helpers for playing handcuff animations.
 
 ---
+
 ### Player:StartHandcuffAnim (Server)
 
 **Purpose**
@@ -54,3 +55,4 @@ client:EndHandcuffAnim()
 ```
 
 ---
+

@@ -1,10 +1,13 @@
 # Hooks
+
 Module-specific events raised by the Firstpersoneffects module.
 
 ---
+
 ### `ShouldUseFirstPersonEffects`
 
 **Purpose**
+
 Determines whether first-person motion effects should run for a player.
 
 **Parameters**
@@ -12,9 +15,11 @@ Determines whether first-person motion effects should run for a player.
 * `player` (`Player`): Player whose view is being calculated.
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `boolean` — return `false` to disable the effects.
 
 **Example**
@@ -30,6 +35,7 @@ end)
 ### `PreFirstPersonEffects`
 
 **Purpose**
+
 Called right before view bobbing calculations occur.
 
 **Parameters**
@@ -37,9 +43,11 @@ Called right before view bobbing calculations occur.
 * `player` (`Player`): Player whose view is being processed.
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -55,18 +63,23 @@ end)
 ### `PostFirstPersonEffects`
 
 **Purpose**
+
 Runs after the target view offsets have been calculated.
 
 **Parameters**
 
 * `player` (`Player`): Player being processed.
+
 * `position` (`Vector`): Current position offset.
+
 * `angles` (`Angle`): Current angle offset.
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -82,18 +95,23 @@ end)
 ### `FirstPersonEffectsUpdated`
 
 **Purpose**
+
 Notifies that the first-person effect values have been applied for this frame.
 
 **Parameters**
 
 * `player` (`Player`): Player being processed.
+
 * `position` (`Vector`): Applied position offset.
+
 * `angles` (`Angle`): Applied angle offset.
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -105,3 +123,4 @@ end)
 ```
 
 ---
+

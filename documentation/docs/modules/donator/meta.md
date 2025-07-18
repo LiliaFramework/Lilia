@@ -3,6 +3,7 @@
 Functions managing a player's extra character slots for donors.
 
 ---
+
 ### Player:GetAdditionalCharSlots (Shared)
 
 **Purpose**
@@ -30,7 +31,9 @@ Shared
 Sets the player's additional character slot count.
 
 | Name | Type   | Description                 |
+
 | ---- | ------ | --------------------------- |
+
 | `val` | number | New additional slot amount. |
 
 **Realm**
@@ -56,7 +59,9 @@ client:SetAdditionalCharSlots(3)
 Adds to the player's additional character slot count.
 
 | Name       | Type   | Description                            |
+
 | ---------- | ------ | -------------------------------------- |
+
 | `amount` | number | Amount of slots to grant (default 1). |
 
 **Realm**
@@ -74,3 +79,4 @@ client:GiveAdditionalCharSlots(2)
 ```
 
 ---
+

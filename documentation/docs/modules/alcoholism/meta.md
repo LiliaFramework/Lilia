@@ -3,6 +3,7 @@
 Helper functions for tracking a player's blood alcohol content.
 
 ---
+
 ### Player:ResetBAC (Server)
 
 **Purpose**
@@ -36,7 +37,9 @@ client:ResetBAC()
 Raises the player's BAC by the specified amount.
 
 | Name    | Type   | Description        |
+
 | ------- | ------ | ------------------ |
+
 | `amount` | number | BAC points to add. |
 
 **Realm**
@@ -100,3 +103,4 @@ local level = client:GetBAC()
 ```
 
 ---
+

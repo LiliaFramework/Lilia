@@ -3,6 +3,7 @@
 Utility methods for managing the raised state of a player's weapon.
 
 ---
+
 ### Player:isWepRaised (Shared)
 
 **Purpose**
@@ -30,7 +31,9 @@ Shared
 Sets whether the player's weapon is raised and fires `PlayerWeaponRaisedChanged`.
 
 | Name   | Type    | Description          |
+
 | ------ | ------- | -------------------- |
+
 | `state` | boolean | Desired raised state |
 
 **Realm**
@@ -74,3 +77,4 @@ client:toggleWepRaised()
 ```
 
 ---
+
