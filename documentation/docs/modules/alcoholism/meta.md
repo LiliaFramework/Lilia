@@ -1,4 +1,4 @@
-# Player Meta
+# Meta
 
 Helper functions for tracking a player's blood alcohol content.
 

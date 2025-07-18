@@ -1,4 +1,4 @@
-# Utility Meta
+# Meta
 
 A collection of player and entity utility helpers.
 

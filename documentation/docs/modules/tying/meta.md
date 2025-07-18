@@ -1,4 +1,4 @@
-# Player Meta
+# Meta
 
 Convenience helpers for playing handcuff animations.
 

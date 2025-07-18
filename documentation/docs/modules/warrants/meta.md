@@ -1,4 +1,4 @@
-# Character Meta
+# Meta
 
 Extensions for managing a character's warrant status.
 

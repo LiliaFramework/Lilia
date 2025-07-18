@@ -1,4 +1,4 @@
-# Player Meta
+# Meta
 
 Functions managing a player's extra character slots for donors.
 

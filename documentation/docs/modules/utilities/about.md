@@ -4,7 +4,7 @@
 Code Utils
 
 **Version:**
-1.18
+1.19
 
 **Description:**
 Provides extra helper functions for lia.util used by other modules.

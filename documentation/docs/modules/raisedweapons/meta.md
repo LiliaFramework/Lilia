@@ -1,4 +1,4 @@
-# Player Meta
+# Meta
 
 Utility methods for managing the raised state of a player's weapon.
 
