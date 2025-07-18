@@ -1,5 +1,0 @@
-ITEM.name = "Sub Machine Gun Ammo"
-ITEM.model = "models/props_c17/SuitCase001a.mdl"
-ITEM.ammo = "smg1"
-ITEM.ammoAmount = 45
-ITEM.desc = "A Box that contains %s of SMG Ammo"

@@ -1,6 +1,0 @@
-ITEM.name = "A Rocket"
-ITEM.model = "models/weapons/w_missile_closed.mdl"
-ITEM.ammo = "rpg_round"
-ITEM.ammoAmount = 1
-ITEM.width = 2
-ITEM.desc = "A Package of %s Rockets"

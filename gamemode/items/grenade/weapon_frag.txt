@@ -1,5 +1,0 @@
-ITEM.name = "Grenade"
-ITEM.desc = "A frag grenade."
-ITEM.category = "Grenades"
-ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
-ITEM.class = "weapon_frag"

@@ -1,4 +1,0 @@
-ITEM.name = "Hi Barbie"
-ITEM.desc = "A URL Linking to Hi Barbie"
-ITEM.model = "models/props_c17/furnitureStove001a.mdl"
-ITEM.url = "https://www.youtube.com/watch?v=9ezbBugUQiQ"

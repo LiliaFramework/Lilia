@@ -131,7 +131,6 @@ jobs:
         with:
           fetch-depth: 0
           ref: main
-
       - run: |
           rm -rf addon
           mkdir -p addon/gamemodes/lilia
@@ -139,40 +138,23 @@ jobs:
           cp -a content/. addon/
           cp -a icon24.png addon/gamemodes/lilia/
           cp -a lilia.txt addon/gamemodes/lilia/
-
-      - run: |
-          INVENTORY_DIR="addon/gamemodes/lilia/gamemode/modules/inventory/items"
-          if [ -d "$INVENTORY_DIR" ]; then
-            find "$INVENTORY_DIR" -mindepth 1 -maxdepth 1 -type d ! -iname "base" -exec rm -rf {} +
-          fi
-
       - run: |
           rm -rf release
           mkdir -p release/lilia
           cp -a gamemode release/lilia/
           cp icon24.png release/lilia/
           cp lilia.txt release/lilia/
-
-      - run: |
-          INVENTORY_DIR="release/lilia/gamemode/modules/inventory/items"
-          if [ -d "$INVENTORY_DIR" ]; then
-            find "$INVENTORY_DIR" -mindepth 1 -maxdepth 1 -type d ! -iname "base" -exec rm -rf {} +
-          fi
-
       - run: |
           cd release
           zip -r ../lilia.zip lilia
-
       - run: |
           sudo apt-get update -y
           sudo apt-get install -y jq
-
       - run: |
           for rid in $(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases" | jq -r '.[].id'); do
             curl -s -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
               "https://api.github.com/repos/${{ github.repository }}/releases/$rid"
           done
-
       - run: |
           for tag in $(curl -s -H "Authorization: token $GITHUB_TOKEN" \
             "https://api.github.com/repos/${{ github.repository }}/git/refs/tags" \
@@ -182,7 +164,6 @@ jobs:
                 "https://api.github.com/repos/${{ github.repository }}/git/refs/tags/$tag"
             fi
           done
-
       - id: create_release
         uses: actions/create-release@v1
         with:
@@ -192,7 +173,6 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
       - uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -201,7 +181,6 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
-
       - run: |
           cat > /tmp/addon.json <<EOF
           {
@@ -212,24 +191,18 @@ jobs:
             "ignore": [".github/*", "site/*", "documentation/*"]
           }
           EOF
-
       - run: |
           cp /tmp/addon.json addon/addon.json
-
       - run: |
           sudo apt-get update
           sudo apt-get install -y lib32gcc-s1 lua5.3
           mkdir -p ~/Steam
-          curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" \
-            | tar zxvf - -C ~/Steam
-
+          curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf - -C ~/Steam
       - run: |
           cd addon
           lua5.3 ../gmacreator.lua ../3527535922.gma addon.json
-
       - run: |
           echo "Created workshop addon: 3527535922.gma"
-
       - run: |
           cat > changelog.txt <<EOF
           Lilia ${VERSION}
@@ -242,11 +215,8 @@ jobs:
             "changenote" "$(cat changelog.txt)"
           }
           EOF
-
       - run: |
-          ~/Steam/steamcmd.sh +login $STEAM_USERNAME $STEAM_PASSWORD \
-            +workshop_build_item $(pwd -P)/workshop.vdf +quit
-
+          ~/Steam/steamcmd.sh +login $STEAM_USERNAME $STEAM_PASSWORD +workshop_build_item $(pwd -P)/workshop.vdf +quit
       - if: failure()
         run: |
           echo ~/Steam/logs/stderr.txt
@@ -256,7 +226,7 @@ jobs:
           cat ~/Steam/logs/workshop_log.txt || true
           echo
           echo ~/Steam/workshopbuilds/depot_build_4000.log
-          cat ~/Steam/workshopbuilds/depot_build_4000.log || true
+            cat ~/Steam/workshopbuilds/depot_build_4000.log || true
           echo
           cat workshop.vdf || true
           exit 1
@@ -281,8 +251,7 @@ jobs:
       - run: |
           rsync -a --delete --exclude '.git' documentation/ site/
       - run: |
-          curl -L -o site/modules.json \
-            https://raw.githubusercontent.com/LiliaFramework/Modules/gh-pages/modules.json
+          curl -L -o site/modules.json https://raw.githubusercontent.com/LiliaFramework/Modules/gh-pages/modules.json
       - run: |
           echo "{\"version\":\"${VERSION}\"}" > site/version.json
       - run: |

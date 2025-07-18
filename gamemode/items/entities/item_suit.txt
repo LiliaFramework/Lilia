@@ -1,5 +1,0 @@
-ITEM.name = "Item Suit"
-ITEM.desc = "An HL2 Item Suit"
-ITEM.model = "models/props_c17/BriefCase001a.mdl"
-ITEM.category = "Entities"
-ITEM.entityid = "item_suit"

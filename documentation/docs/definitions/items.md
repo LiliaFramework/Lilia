@@ -1165,7 +1165,7 @@ end)
 Minimal definitions for each built-in item type are shown below.
 
 
-### [Weapon](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/weapons/smg1.txt)
+### Weapon
 
 ```lua
 
@@ -1181,7 +1181,7 @@ ITEM.isWeapon = true
 
 ```
 
-### [Ammo](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/ammo/pistolammo.txt)
+### Ammo
 
 ```lua
 
@@ -1195,7 +1195,7 @@ ITEM.ammoAmount = 30
 
 ```
 
-### [Outfit](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/outfit/rebel_armor.txt)
+### Outfit
 
 ```lua
 
@@ -1211,7 +1211,7 @@ ITEM.newSkin = 1
 
 ```
 
-### [PAC Outfit](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/pacoutfit/skullmask.txt)
+### PAC Outfit
 
 ```lua
 
@@ -1223,7 +1223,7 @@ ITEM.pacData = { ... }
 
 ```
 
-### [Aid Item](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/aid/bandages.txt)
+### Aid Item
 
 ```lua
 
@@ -1235,7 +1235,7 @@ ITEM.health = 50
 
 ```
 
-### [Book](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/books/book.txt)
+### Book
 
 ```lua
 
@@ -1245,7 +1245,7 @@ ITEM.contents = "<h1>An Example</h1>"
 
 ```
 
-### [URL Item](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/url/hi_barbie.txt)
+### URL Item
 
 ```lua
 
@@ -1255,7 +1255,7 @@ ITEM.url = "https://www.youtube.com/watch?v=9ezbBugUQiQ"
 
 ```
 
-### [Entity Spawner](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/entities/item_suit.txt)
+### Entity Spawner
 
 ```lua
 
@@ -1265,7 +1265,7 @@ ITEM.entityid = "item_suit"
 
 ```
 
-### [Grenade](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/items/grenade/weapon_frag.txt)
+### Grenade
 
 ```lua
 
@@ -1277,7 +1277,7 @@ ITEM.DropOnDeath = true
 
 ```
 
-### [Bag](https://github.com/LiliaFramework/Lilia/tree/main/gamemode/modules/inventory/items/bags/small.txt)
+### Bag
 
 ```lua
 

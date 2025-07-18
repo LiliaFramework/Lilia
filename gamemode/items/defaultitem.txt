@@ -1,3 +1,0 @@
-ITEM.name = "Example Item"
-ITEM.desc = "A example item!"
-ITEM.model = "models/props_c17/oildrum001.mdl"
