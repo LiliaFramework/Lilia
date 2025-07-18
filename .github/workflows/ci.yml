@@ -127,11 +127,11 @@ jobs:
           cp -a lilia.txt addon/gamemodes/lilia/
 
       - run: |
-          for path in addon/gamemodes/lilia/gamemode/modules/inventory/items addon/gamemode/modules/inventory/items; do
-            if [ -d "$path" ]; then
-              find "$path" -mindepth 1 -maxdepth 1 -type d ! -iname 'base' -exec rm -rf {} +
-            fi
-          done
+          INVENTORY_DIR="addon/gamemodes/lilia/gamemode/modules/inventory/items"
+          if [ -d "$INVENTORY_DIR" ]; then
+            find "$INVENTORY_DIR" -mindepth 1 -maxdepth 1 -type d ! -iname "base" -exec rm -rf {} +
+          fi
+          rm -rf addon/gamemodes/lilia/gamemode/items
 
       - run: |
           rm -rf release
@@ -139,6 +139,13 @@ jobs:
           cp -a gamemode release/lilia/
           cp icon24.png release/lilia/
           cp lilia.txt release/lilia/
+
+      - run: |
+          INVENTORY_DIR="release/lilia/gamemode/modules/inventory/items"
+          if [ -d "$INVENTORY_DIR" ]; then
+            find "$INVENTORY_DIR" -mindepth 1 -maxdepth 1 -type d ! -iname "base" -exec rm -rf {} +
+          fi
+          rm -rf release/lilia/gamemode/items
 
       - run: |
           cd release
