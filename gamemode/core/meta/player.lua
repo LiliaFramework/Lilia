@@ -636,6 +636,7 @@ if SERVER then
             labels[i] = data.text or data[1] or ""
             callbacks[i] = data.callback or data[2]
         end
+
         local id = table.insert(self.buttonRequests, callbacks)
         net.Start("ButtonRequest")
         net.WriteUInt(id, 32)
@@ -644,6 +645,7 @@ if SERVER then
         for _, lbl in ipairs(labels) do
             net.WriteString(lbl)
         end
+
         net.Send(self)
     end
 

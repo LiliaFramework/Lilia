@@ -608,6 +608,7 @@ net.Receive("ButtonRequest", function()
     for i = 1, count do
         options[i] = L(net.ReadString())
     end
+
     local frame = vgui.Create("DFrame")
     frame:SetTitle(title)
     frame:SetSize(300, 60 + count * 30)

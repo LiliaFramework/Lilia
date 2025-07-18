@@ -377,6 +377,7 @@ if CLIENT then
         extended = true,
         weight = 800
     })
+
     lia.font.register("liaNoticeFont", {
         font = lia.config.get("GenericFont"),
         size = 22,

@@ -69,16 +69,12 @@ net.Receive("liaStorageTransfer", function(_, client)
         return res
     end):catch(function(err)
         client.storageTransaction = nil
-        if IsValid(client) then
-            lia.log.add(client, "itemTransferFailed", item:getName(), fromInv:getID(), toInv:getID())
-        end
+        if IsValid(client) then lia.log.add(client, "itemTransferFailed", item:getName(), fromInv:getID(), toInv:getID()) end
         if IsValid(client) then client:notifyLocalized(err) end
         return fromInv:add(item)
     end):catch(function()
         client.storageTransaction = nil
-        if IsValid(client) then
-            lia.log.add(client, "itemTransferFailed", item:getName(), fromInv:getID(), toInv:getID())
-        end
+        if IsValid(client) then lia.log.add(client, "itemTransferFailed", item:getName(), fromInv:getID(), toInv:getID()) end
         item:spawn(failItemDropPos)
         if IsValid(client) then client:notifyLocalized("itemOnGround") end
     end)

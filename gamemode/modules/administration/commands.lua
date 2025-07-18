@@ -373,8 +373,6 @@ if not lia.admin.isDisabled() then
                     net.Send(ply)
                 end
             end
-
-
         end
     })
 

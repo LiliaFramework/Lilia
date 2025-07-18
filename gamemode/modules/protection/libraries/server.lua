@@ -7,6 +7,7 @@ function MODULE:CanPlayerSwitchChar(client, character)
             lia.log.add(client, "permissionDenied", "switch character (recent damage)")
             return false, L("tookDamageSwitchCooldown")
         end
+
         local loginTime = character:getData("loginTime", 0)
         if switchCooldown > 0 and loginTime + switchCooldown > os.time() then
             lia.log.add(client, "permissionDenied", "switch character (cooldown)")

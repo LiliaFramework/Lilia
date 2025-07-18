@@ -123,9 +123,7 @@
         category = "Items"
     },
     ["itemInteractionFailed"] = {
-        func = function(client, action, itemName)
-            return string.format("Player '%s' failed to %s item '%s'.", client:Name(), action, itemName)
-        end,
+        func = function(client, action, itemName) return string.format("Player '%s' failed to %s item '%s'.", client:Name(), action, itemName) end,
         category = "Items"
     },
     ["itemInteraction"] = {
@@ -141,27 +139,19 @@
         category = "Items"
     },
     ["itemTransfer"] = {
-        func = function(client, itemName, fromID, toID)
-            return string.format("Player '%s' moved item '%s' from inventory %s to %s.", client:Name(), itemName, tostring(fromID), tostring(toID))
-        end,
+        func = function(client, itemName, fromID, toID) return string.format("Player '%s' moved item '%s' from inventory %s to %s.", client:Name(), itemName, tostring(fromID), tostring(toID)) end,
         category = "Items"
     },
     ["itemTransferFailed"] = {
-        func = function(client, itemName, fromID, toID)
-            return string.format("Player '%s' failed to move item '%s' from inventory %s to %s.", client:Name(), itemName, tostring(fromID), tostring(toID))
-        end,
+        func = function(client, itemName, fromID, toID) return string.format("Player '%s' failed to move item '%s' from inventory %s to %s.", client:Name(), itemName, tostring(fromID), tostring(toID)) end,
         category = "Items"
     },
     ["itemCombine"] = {
-        func = function(client, itemName, targetName)
-            return string.format("Player '%s' combined item '%s' with '%s'.", client:Name(), itemName, targetName)
-        end,
+        func = function(client, itemName, targetName) return string.format("Player '%s' combined item '%s' with '%s'.", client:Name(), itemName, targetName) end,
         category = "Items"
     },
     ["itemFunction"] = {
-        func = function(client, action, itemName)
-            return string.format("Player '%s' called item function '%s' on '%s'.", client:Name(), action, itemName)
-        end,
+        func = function(client, action, itemName) return string.format("Player '%s' called item function '%s' on '%s'.", client:Name(), action, itemName) end,
         category = "Items"
     },
     ["itemAdded"] = {
@@ -180,9 +170,7 @@
         category = "Items"
     },
     ["itemDraggedOut"] = {
-        func = function(client, itemName)
-            return string.format("Player '%s' dragged item '%s' out of an inventory.", client:Name(), itemName)
-        end,
+        func = function(client, itemName) return string.format("Player '%s' dragged item '%s' out of an inventory.", client:Name(), itemName) end,
         category = "Items"
     },
     ["toolgunUse"] = {
@@ -190,21 +178,15 @@
         category = "Tools"
     },
     ["permissionDenied"] = {
-        func = function(client, action)
-            return string.format("Player '%s' was denied permission to %s.", client:Name(), action)
-        end,
+        func = function(client, action) return string.format("Player '%s' was denied permission to %s.", client:Name(), action) end,
         category = "Permissions"
     },
     ["spawnDenied"] = {
-        func = function(client, objectType, model)
-            return string.format("Player '%s' was denied from spawning %s '%s'.", client:Name(), objectType, tostring(model))
-        end,
+        func = function(client, objectType, model) return string.format("Player '%s' was denied from spawning %s '%s'.", client:Name(), objectType, tostring(model)) end,
         category = "Permissions"
     },
     ["toolDenied"] = {
-        func = function(client, tool)
-            return string.format("Player '%s' was denied tool '%s'.", client:Name(), tool)
-        end,
+        func = function(client, tool) return string.format("Player '%s' was denied tool '%s'.", client:Name(), tool) end,
         category = "Permissions"
     },
     ["observeToggle"] = {

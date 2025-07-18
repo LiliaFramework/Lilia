@@ -20,6 +20,7 @@ function lia.admin.load()
         for _, grp in ipairs(defaults) do
             lia.admin.createGroup(grp)
         end
+
         created = true
     else
         for _, grp in ipairs(defaults) do
@@ -29,8 +30,8 @@ function lia.admin.load()
             end
         end
     end
-    if created then lia.admin.save(true) end
 
+    if created then lia.admin.save(true) end
     lia.bootstrap("Administration", L("adminSystemLoaded"))
 end
 
@@ -57,6 +58,7 @@ function lia.admin.removeGroup(groupName)
         Error("[Lilia Administration] The base usergroups cannot be removed!\n")
         return
     end
+
     if not lia.admin.groups[groupName] then
         Error("[Lilia Administration] This usergroup doesn't exist!\n")
         return
@@ -163,6 +165,7 @@ hook.Add("PlayerAuthed", "lia_SetUserGroup", function(ply, steamID)
             group = "user"
             lia.db.query(Format("UPDATE lia_players SET _userGroup = '%s' WHERE _steamID = %s", lia.db.escape(group), steam64))
         end
+
         ply:SetUserGroup(group)
     end)
 end)

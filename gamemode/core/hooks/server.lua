@@ -424,7 +424,10 @@ function GM:PlayerInitialSpawn(client)
         if not IsValid(client) then return end
         local address = client:IPAddress()
         client:setLiliaData("lastIP", address)
-        lia.db.updateTable({ _lastIP = address }, nil, "players", "_steamID = " .. client:SteamID64())
+        lia.db.updateTable({
+            _lastIP = address
+        }, nil, "players", "_steamID = " .. client:SteamID64())
+
         net.Start("liaDataSync")
         net.WriteTable(data)
         net.WriteType(client.firstJoin)

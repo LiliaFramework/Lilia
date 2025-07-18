@@ -109,10 +109,7 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
             debug.Trace()
         end
 
-        if IsValid(client) then
-            lia.log.add(client, "itemTransferFailed", item:getName(), oldInventory:getID(), newInventory and newInventory:getID() or 0)
-        end
-
+        if IsValid(client) then lia.log.add(client, "itemTransferFailed", item:getName(), oldInventory:getID(), newInventory and newInventory:getID() or 0) end
         if IsValid(client) then client:notifyLocalized("itemOnGround") end
         item:spawn(dropPos)
     end
