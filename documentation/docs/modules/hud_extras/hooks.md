@@ -1,10 +1,13 @@
 # Hooks
+
 Module-specific events raised by the HudExtras module.
 
 ---
+
 ### `HUDExtrasPreDrawFPS`
 
 **Purpose**
+
 `Called before the FPS counter is drawn.`
 
 **Parameters**
@@ -12,9 +15,11 @@ Module-specific events raised by the HudExtras module.
 *None*
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -30,6 +35,7 @@ end)
 ### `HUDExtrasPostDrawFPS`
 
 **Purpose**
+
 `Runs after the FPS counter has been drawn.`
 
 **Parameters**
@@ -37,9 +43,11 @@ end)
 *None*
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -55,6 +63,7 @@ end)
 ### `HUDExtrasPreDrawVignette`
 
 **Purpose**
+
 `Called before the vignette overlay is drawn.`
 
 **Parameters**
@@ -62,9 +71,11 @@ end)
 *None*
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -80,6 +91,7 @@ end)
 ### `HUDExtrasPostDrawVignette`
 
 **Purpose**
+
 `Runs after the vignette overlay has been drawn.`
 
 **Parameters**
@@ -87,9 +99,11 @@ end)
 *None*
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -105,6 +119,7 @@ end)
 ### `HUDExtrasPreDrawBlur`
 
 **Purpose**
+
 `Called before screen blur is drawn.`
 
 **Parameters**
@@ -112,9 +127,11 @@ end)
 *None*
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -130,6 +147,7 @@ end)
 ### `HUDExtrasPostDrawBlur`
 
 **Purpose**
+
 `Runs after screen blur drawing finishes.`
 
 **Parameters**
@@ -137,9 +155,11 @@ end)
 * `amount` (`number`): `Current blur strength.`
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -155,6 +175,7 @@ end)
 ### `AdjustBlurAmount`
 
 **Purpose**
+
 `Allows modification of the blur value before drawing.`
 
 **Parameters**
@@ -162,9 +183,11 @@ end)
 * `current` (`number`): `Blur value about to be applied.`
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `number` — `Amount to add to the blur.`
 
 **Example**
@@ -180,6 +203,7 @@ end)
 ### `ShouldDrawBlur`
 
 **Purpose**
+
 `Determines if screen blur should be displayed.`
 
 **Parameters**
@@ -187,9 +211,11 @@ end)
 *None*
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `boolean|nil` — `Return false to skip drawing.`
 
 **Example**
@@ -205,6 +231,7 @@ end)
 ### `ShouldDrawWatermark`
 
 **Purpose**
+
 `Controls whether the watermark should be shown.`
 
 **Parameters**
@@ -212,9 +239,11 @@ end)
 *None*
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `boolean|nil` — `Return false to hide the watermark.`
 
 **Example**
@@ -230,6 +259,7 @@ end)
 ### `HUDExtrasPreDrawWatermark`
 
 **Purpose**
+
 `Called right before the watermark is drawn.`
 
 **Parameters**
@@ -237,9 +267,11 @@ end)
 *None*
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -255,6 +287,7 @@ end)
 ### `HUDExtrasPostDrawWatermark`
 
 **Purpose**
+
 `Runs after the watermark has been drawn.`
 
 **Parameters**
@@ -262,9 +295,11 @@ end)
 *None*
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -276,3 +311,4 @@ end)
 ```
 
 ---
+

@@ -1,21 +1,27 @@
 # Hooks
+
 Module-specific events raised by the SimpleLockpicking module.
 
 ---
+
 ### `CanPlayerLockpick`
 
 **Purpose**
+
 `Determines if a player is allowed to start picking a door or vehicle.`
 
 **Parameters**
 
 * `client` (`Player`): `The player using the lockpick.`
+
 * `target` (`Entity`): `Door or vehicle being lockpicked.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `boolean` — `Return false to disallow lockpicking.`
 
 **Example**
@@ -33,17 +39,21 @@ end)
 ### `LockpickStart`
 
 **Purpose**
+
 `Fired when a player begins a lockpick attempt.`
 
 **Parameters**
 
 * `client` (`Player`): `The player using the lockpick.`
+
 * `target` (`Entity`): `Door or vehicle being lockpicked.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `Return value is ignored.`
 
 **Example**
@@ -59,17 +69,21 @@ end)
 ### `LockpickSuccess`
 
 **Purpose**
+
 `Runs when the lockpick completes successfully.`
 
 **Parameters**
 
 * `client` (`Player`): `The player who picked the lock.`
+
 * `target` (`Entity`): `Door or vehicle that was unlocked.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `Return value is ignored.`
 
 **Example**
@@ -85,18 +99,23 @@ end)
 ### `LockpickFinished`
 
 **Purpose**
+
 `Called when lockpicking ends for any reason.`
 
 **Parameters**
 
 * `client` (`Player`): `The player who used the lockpick.`
+
 * `target` (`Entity`): `Door or vehicle that was targeted.`
+
 * `success` (`boolean`): `True if the lock was opened.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `Return value is ignored.`
 
 **Example**
@@ -114,17 +133,21 @@ end)
 ### `LockpickInterrupted`
 
 **Purpose**
+
 `Triggered when a lockpick attempt is cancelled before completion.`
 
 **Parameters**
 
 * `client` (`Player`): `The player who was lockpicking.`
+
 * `target` (`Entity`): `Door or vehicle involved.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `Return value is ignored.`
 
 **Example**
@@ -136,3 +159,4 @@ end)
 ```
 
 ---
+

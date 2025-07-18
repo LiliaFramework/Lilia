@@ -1,10 +1,13 @@
 # Hooks
+
 Module-specific events raised by the Developmenthud module.
 
 ---
+
 ### `RefreshFonts`
 
 **Purpose**
+
 Called when the Development HUD font option changes to allow custom fonts to be rebuilt.
 
 **Parameters**
@@ -12,9 +15,11 @@ Called when the Development HUD font option changes to allow custom fonts to be 
 * *(None)*
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil` — nothing.
 
 **Example**
@@ -30,6 +35,7 @@ end)
 ### `DevelopmentHUDPrePaint`
 
 **Purpose**
+
 Runs each frame before the default development HUD text is drawn.
 
 **Parameters**
@@ -37,9 +43,11 @@ Runs each frame before the default development HUD text is drawn.
 * `client` (`Player`): Local player the HUD is being drawn for.
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil` — nothing.
 
 **Example**
@@ -55,6 +63,7 @@ end)
 ### `DevelopmentHUDPaint`
 
 **Purpose**
+
 Called after the built-in development HUD drawing completes.
 
 **Parameters**
@@ -62,9 +71,11 @@ Called after the built-in development HUD drawing completes.
 * `client` (`Player`): Local player the HUD was drawn for.
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil` — nothing.
 
 **Example**
@@ -76,3 +87,4 @@ end)
 ```
 
 ---
+

@@ -1,21 +1,27 @@
 # Hooks
+
 Module-specific events raised by the Advert module.
 
 ---
+
 ### `AdvertSent`
 
 **Purpose**
+
 `Fires after a player successfully sends an advertisement message.`
 
 **Parameters**
 
 * `client` (`Player`): `Player who posted the advert.`
+
 * `message` (`string`): `Text that was advertised.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `This hook does not return anything.`
 
 **Example**
@@ -27,3 +33,4 @@ end)
 ```
 
 ---
+
