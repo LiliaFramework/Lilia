@@ -1,17 +1,19 @@
-# Lockpicking
+# Lockpicking (1.13)
 
-**Version:** 1.13  
-**Author:** 76561198312513285  
-**Discord:** @liliaplayer  
+Description:
 
 Provides a basic lockpick tool for brute forcing doors with logged attempts.
 
-## Features
+Features:
 
-- Adds a simple lockpick tool for doors
-- Adds logging of successful picks
-- Adds brute-force style gameplay
-- Adds configurable pick time
-- Adds chance for tools to break
+Adds a simple lockpick tool for doors
 
-[Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/simple_lockpicking.zip)
+Adds logging of successful picks
+
+Adds brute-force style gameplay
+
+Adds configurable pick time
+
+Adds chance for tools to break
+
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/simple_lockpicking.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:#007acc;border-radius:4px;">DOWNLOAD HERE</a></p>

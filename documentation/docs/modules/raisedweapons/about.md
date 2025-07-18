@@ -1,17 +1,19 @@
-# Raised Weapons
+# Raised Weapons (1.14)
 
-**Version:** 1.14  
-**Author:** Samael  
-**Discord:** @liliaplayer  
+Description:
 
 Automatically lowers weapons when sprinting and raises them again after a short delay.
 
-## Features
+Features:
 
-- Adds auto-lowering of weapons when running
-- Adds a raise delay set by WeaponRaiseSpeed
-- Adds prevention of accidental fire
-- Adds a toggle to keep weapons lowered
-- Adds compatibility with melee weapons
+Adds auto-lowering of weapons when running
 
-[Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/raisedweapons.zip)
+Adds a raise delay set by WeaponRaiseSpeed
+
+Adds prevention of accidental fire
+
+Adds a toggle to keep weapons lowered
+
+Adds compatibility with melee weapons
+
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/raisedweapons.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:#007acc;border-radius:4px;">DOWNLOAD HERE</a></p>

@@ -1,17 +1,19 @@
-# Gamemaster Teleport Points
+# Gamemaster Teleport Points (1.12)
 
-**Version:** 1.12  
-**Author:** Samael  
-**Discord:** @liliaplayer  
+Description:
 
 Lets game masters create teleport points around the map and quickly jump between them.
 
-## Features
+Features:
 
-- Adds teleport points for game masters
-- Adds quick navigation across large maps
-- Adds saving of locations for reuse
-- Adds a command to list saved points
-- Adds sharing of points with other staff
+Adds teleport points for game masters
 
-[Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/gamemasterpoints.zip)
+Adds quick navigation across large maps
+
+Adds saving of locations for reuse
+
+Adds a command to list saved points
+
+Adds sharing of points with other staff
+
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/gamemasterpoints.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:#007acc;border-radius:4px;">DOWNLOAD HERE</a></p>
