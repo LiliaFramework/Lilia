@@ -126,6 +126,12 @@ jobs:
           cp -a icon24.png addon/gamemodes/lilia/
           cp -a lilia.txt addon/gamemodes/lilia/
 
+      - name: Clean inventory items
+        run: |
+          find addon/gamemodes/lilia/gamemode/modules/inventory/items \
+            -mindepth 1 -maxdepth 1 -type d ! -name BASE \
+            -exec rm -rf {} +
+
       - run: |
           rm -rf release
           mkdir -p release/lilia
