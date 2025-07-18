@@ -1,10 +1,13 @@
 # Hooks
+
 Module-specific events raised by the Autorestarter module.
 
 ---
+
 ### `AutoRestartScheduled`
 
 **Purpose**
+
 `Called when the next automatic restart time is calculated.`
 
 **Parameters**
@@ -12,9 +15,11 @@ Module-specific events raised by the Autorestarter module.
 * `timestamp` (`number`): `Unix time of the upcoming restart.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -30,6 +35,7 @@ end)
 ### `AutoRestart`
 
 **Purpose**
+
 `Fires right before the map is reloaded for the automatic restart.`
 
 **Parameters**
@@ -37,9 +43,11 @@ end)
 * `timestamp` (`number`): `Time when the restart triggered.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -55,6 +63,7 @@ end)
 ### `AutoRestartStarted`
 
 **Purpose**
+
 `Runs when the restart command is issued.`
 
 **Parameters**
@@ -62,9 +71,11 @@ end)
 * `map` (`string`): `Map that will be loaded.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -80,6 +91,7 @@ end)
 ### `AutoRestartCountdown`
 
 **Purpose**
+
 `Called periodically during the final quarter of the restart interval.`
 
 **Parameters**
@@ -87,9 +99,11 @@ end)
 * `remaining` (`number`): `Seconds remaining until restart.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -101,3 +115,4 @@ end)
 ```
 
 ---
+

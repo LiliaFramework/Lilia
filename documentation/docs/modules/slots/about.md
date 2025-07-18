@@ -1,12 +1,15 @@
-# Slots
+<h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
-**Version:** 1.13  
-**Author:** Samael  
-**Discord:** @liliaplayer  
+**Name:**
+Slots
 
+**Version:**
+1.15
+
+**Description:**
 Adds a playable slot machine using a workshop model that pays out winnings.
 
-## Features
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 
 - Adds a slot machine minigame
 - Adds a workshop model for the machine
@@ -14,8 +17,13 @@ Adds a playable slot machine using a workshop model that pays out winnings.
 - Adds customizable payout odds
 - Adds sound and animation effects
 
-## Workshop Content
+
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Workshop Content</h2>
 
 - 3482441716
 
-[Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slots.zip)
+
+
+
+
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slots.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:var(--md-primary-fg-color,#007acc);border-radius:4px;">DOWNLOAD HERE</a></p>

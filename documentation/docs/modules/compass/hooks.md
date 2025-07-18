@@ -1,10 +1,13 @@
 # Hooks
+
 Module-specific events raised by the Compass module.
 
 ---
+
 ### `mCompass_loadFonts`
 
 **Purpose**
+
 Runs when the compass needs to rebuild its fonts. Allows addons to create custom font sizes.
 
 **Parameters**
@@ -12,9 +15,11 @@ Runs when the compass needs to rebuild its fonts. Allows addons to create custom
 * *(None)*
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil` — nothing.
 
 **Example**
@@ -30,22 +35,31 @@ end)
 ### `PreCompassMarkerAdded`
 
 **Purpose**
+
 Fires before a new world position marker is added to the compass.
 
 **Parameters**
 
 * `ply` (`Player`): Player that created the marker.
+
 * `pos` (`Vector`): World position for the marker.
+
 * `players` (`table|nil`): Players that should receive the marker.
+
 * `time` (`number`): Time when the marker should expire.
+
 * `color` (`Color`): Marker color.
+
 * `icon` (`string`): Material path for the marker icon.
+
 * `name` (`string`): Optional marker label.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — nothing.
 
 **Example**
@@ -61,23 +75,33 @@ end)
 ### `CompassMarkerAdded`
 
 **Purpose**
+
 Called after a marker has been successfully added.
 
 **Parameters**
 
 * `ply` (`Player`): Player that created the marker.
+
 * `pos` (`Vector`): World position for the marker.
+
 * `players` (`table|nil`): Players that received the marker.
+
 * `time` (`number`): Expiration time.
+
 * `color` (`Color`): Marker color.
+
 * `icon` (`string`): Icon material.
+
 * `name` (`string`): Marker label.
+
 * `id` (`number`): Unique marker identifier.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — nothing.
 
 **Example**
@@ -93,22 +117,31 @@ end)
 ### `PreCompassEntityMarkerAdded`
 
 **Purpose**
+
 Runs before a marker attached to an entity is added.
 
 **Parameters**
 
 * `ply` (`Player`): Player that created the marker.
+
 * `ent` (`Entity`): Entity to track.
+
 * `players` (`table|nil`): Players that should see the marker.
+
 * `time` (`number`): Expiration time.
+
 * `color` (`Color`): Marker color.
+
 * `icon` (`string`): Icon material.
+
 * `name` (`string`): Marker label.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — nothing.
 
 **Example**
@@ -124,23 +157,33 @@ end)
 ### `CompassEntityMarkerAdded`
 
 **Purpose**
+
 Called after an entity marker has been added.
 
 **Parameters**
 
 * `ply` (`Player`): Player that created the marker.
+
 * `ent` (`Entity`): Entity being tracked.
+
 * `players` (`table|nil`): Players that received the marker.
+
 * `time` (`number`): Expiration time.
+
 * `color` (`Color`): Marker color.
+
 * `icon` (`string`): Icon material.
+
 * `name` (`string`): Marker label.
+
 * `id` (`number`): Unique marker identifier.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — nothing.
 
 **Example**
@@ -156,6 +199,7 @@ end)
 ### `CompassMarkerRemoved`
 
 **Purpose**
+
 Fires when a marker is removed from the compass.
 
 **Parameters**
@@ -163,9 +207,11 @@ Fires when a marker is removed from the compass.
 * `id` (`number`): Identifier of the removed marker.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — nothing.
 
 **Example**
@@ -181,17 +227,21 @@ end)
 ### `CompassSpotCommand`
 
 **Purpose**
+
 Triggered when a player uses the `mcompass_spot` console command.
 
 **Parameters**
 
 * `ply` (`Player`): Player who ran the command.
+
 * `tr` (`TraceResult`): Trace result used to determine the spot location.
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — nothing.
 
 **Example**
@@ -203,3 +253,4 @@ end)
 ```
 
 ---
+
