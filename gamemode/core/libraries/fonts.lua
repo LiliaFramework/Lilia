@@ -378,6 +378,63 @@ if CLIENT then
         weight = 800
     })
 
+    lia.font.register("liaIconsSmall", {
+        font = "fontello",
+        size = 22,
+        extended = true,
+        weight = 500
+    })
+
+    lia.font.register("liaIconsMedium", {
+        font = "fontello",
+        extended = true,
+        size = 28,
+        weight = 500
+    })
+
+    lia.font.register("liaIconsBig", {
+        font = "fontello",
+        extended = true,
+        size = 48,
+        weight = 500
+    })
+
+    lia.font.register("liaIconsSmallNew", {
+        font = "fontello",
+        size = 22,
+        extended = true,
+        weight = 500
+    })
+
+    lia.font.register("liaIconsMediumNew", {
+        font = "fontello",
+        extended = true,
+        size = 28,
+        weight = 500
+    })
+
+    lia.font.register("liaIconsBigNew", {
+        font = "fontello",
+        extended = true,
+        size = 48,
+        weight = 500
+    })
+
+    lia.font.register("liaIconsHugeNew", {
+        font = "fontello",
+        extended = true,
+        size = 78,
+        weight = 500
+    })
+
+    lia.font.register("liaNoticeFont", {
+        font = lia.config.get("GenericFont"),
+        size = 22,
+        weight = 500,
+        extended = true,
+        antialias = true
+    })
+
     local cs = ScrH() / 1080
     lia.font.register("liaCharTitleFont", {
         font = lia.config.get("Font"),
@@ -412,6 +469,24 @@ if CLIENT then
         weight = 200,
         size = math.floor(22 * cs + 10),
         additive = true
+    })
+
+    lia.font.register("PoppinsSmall", {
+        font = "Poppins",
+        extended = true,
+        size = 16
+    })
+
+    lia.font.register("PoppinsMedium", {
+        font = "Poppins",
+        extended = true,
+        size = 32
+    })
+
+    lia.font.register("PoppinsBig", {
+        font = "Poppins",
+        extended = true,
+        size = 64
     })
 
     function lia.font.getAvailableFonts()
