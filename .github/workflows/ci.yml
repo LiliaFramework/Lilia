@@ -145,7 +145,6 @@ jobs:
           if [ -d "$INVENTORY_DIR" ]; then
             find "$INVENTORY_DIR" -mindepth 1 -maxdepth 1 -type d ! -iname "base" -exec rm -rf {} +
           fi
-          rm -rf addon/gamemodes/lilia/gamemode/items
 
       - run: |
           rm -rf release
@@ -159,7 +158,6 @@ jobs:
           if [ -d "$INVENTORY_DIR" ]; then
             find "$INVENTORY_DIR" -mindepth 1 -maxdepth 1 -type d ! -iname "base" -exec rm -rf {} +
           fi
-          rm -rf release/lilia/gamemode/items
 
       - run: |
           cd release
