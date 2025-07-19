@@ -7,7 +7,6 @@ Cards
 1.14
 
 **Description:**
-
 Introduces a full deck of playing cards so players can draw random cards for minigames.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

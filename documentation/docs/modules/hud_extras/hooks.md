@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the HUD Extras module.
+Module-specific events raised by the HudExtras module.
 
 ---
 

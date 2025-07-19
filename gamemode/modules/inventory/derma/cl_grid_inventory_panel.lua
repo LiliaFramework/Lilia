@@ -22,8 +22,8 @@ function PANEL:computeOccupied()
     for _, item in pairs(self.inventory:getItems(true)) do
         local ix, iy = item:getData("x"), item:getData("y")
         if ix and iy then
-            for offsetX = 0, (item.width or 1) - 1 do
-                for offsetY = 0, (item.height or 1) - 1 do
+            for offsetX = 0, item:getWidth() - 1 do
+                for offsetY = 0, item:getHeight() - 1 do
                     local gx = ix + offsetX - 1
                     local gy = iy + offsetY - 1
                     if not self.occupied[gy] then self.occupied[gy] = {} end
@@ -72,8 +72,8 @@ function PANEL:onItemReleased(itemIcon)
     if not item then return end
     local x, y = self:LocalCursorPos()
     local size = self.size + 2
-    local itemW = (item.width or 1) * size - 2
-    local itemH = (item.height or 1) * size - 2
+    local itemW = item:getWidth() * size - 2
+    local itemH = item:getHeight() * size - 2
     x = math.Round((x - itemW * 0.5) / size) + 1
     y = math.Round((y - itemH * 0.5) / size) + 1
     self.inventory:requestTransfer(item:getID(), self.inventory:getID(), x, y)
@@ -102,7 +102,7 @@ function PANEL:addItem(item)
     local icon = self:Add("liaGridInvItem")
     icon:setItem(item)
     icon:SetPos((x - 1) * size, (y - 1) * size)
-    icon:SetSize((item.width or 1) * size - 2, (item.height or 1) * size - 2)
+    icon:SetSize(item:getWidth() * size - 2, item:getHeight() * size - 2)
     icon:InvalidateLayout(true)
     icon.OnMousePressed = function(_, keyCode) self:onItemPressed(icon, keyCode) end
     icon.OnMouseReleased = function(_, keyCode)
@@ -123,12 +123,12 @@ function PANEL:drawHeldItemRectangle()
     if not IsValid(held) or not held.itemTable then return end
     local item = held.itemTable
     local size = self.size + 2
-    local w = (item.width or 1) * size - 2
-    local h = (item.height or 1) * size - 2
+    local w = item:getWidth() * size - 2
+    local h = item:getHeight() * size - 2
     local mx, my = self:LocalCursorPos()
     local x = math.Round((mx - w * 0.5) / size)
     local y = math.Round((my - h * 0.5) / size)
-    if x < 0 or y < 0 or x + (item.width or 1) > self.gridW or y + (item.height or 1) > self.gridH then return end
+    if x < 0 or y < 0 or x + item:getWidth() > self.gridW or y + item:getHeight() > self.gridH then return end
     surface.SetDrawColor(255, 255, 255)
     surface.SetMaterial(InvSlotMat)
     surface.DrawTexturedRect(x * size, y * size, w, h)

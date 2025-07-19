@@ -10,6 +10,17 @@ ITEM.isStackable = false
 ITEM.quantity = 1
 ITEM.maxQuantity = 1
 ITEM.canSplit = true
+function ITEM:isRotated()
+    return self:getData("rotated", false)
+end
+
+function ITEM:getWidth()
+    return self:isRotated() and (self.height or 1) or (self.width or 1)
+end
+
+function ITEM:getHeight()
+    return self:isRotated() and (self.width or 1) or (self.height or 1)
+end
 function ITEM:getQuantity()
     if self.id == 0 then return self.maxQuantity end
     return self.quantity

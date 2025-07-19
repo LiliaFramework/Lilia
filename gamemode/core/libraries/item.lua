@@ -49,7 +49,7 @@ local DefaultFunctions = {
                 d:resolve()
             end):catch(function(err)
                 if err == "noFit" then
-                    client:notifyLocalized("itemNoFit", item.width, item.height)
+                    client:notifyLocalized("itemNoFit", item:getWidth(), item:getHeight())
                 else
                     client:notifyLocalized(err)
                 end
@@ -60,6 +60,17 @@ local DefaultFunctions = {
             return d
         end,
         onCanRun = function(item) return IsValid(item.entity) end
+    },
+    rotate = {
+        tip = "rotateTip",
+        icon = "icon16/arrow_rotate_clockwise.png",
+        onRun = function(item)
+            item:setData("rotated", not item:getData("rotated", false))
+            return false
+        end,
+        onCanRun = function(item)
+            return not IsValid(item.entity) and item.width ~= item.height
+        end
     },
     giveForward = {
         tip = "giveForwardTip",

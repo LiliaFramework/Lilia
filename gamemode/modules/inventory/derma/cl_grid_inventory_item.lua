@@ -23,7 +23,7 @@ function PANEL:setIconSize(size)
 end
 
 function PANEL:setItem(item)
-    self.Icon:SetSize(self.size * (item.width or 1), self.size * (item.height or 1))
+    self.Icon:SetSize(self.size * item:getWidth(), self.size * item:getHeight())
     self.Icon:InvalidateLayout(true)
     self:setItemType(item:getID())
     self:centerIcon()

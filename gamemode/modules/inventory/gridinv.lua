@@ -34,7 +34,7 @@ end
 
 function GridInv:canItemFitInInventory(item, x, y)
     local invW, invH = self:getSize()
-    local itemW, itemH = (item.width or 1) - 1, (item.height or 1) - 1
+    local itemW, itemH = item:getWidth() - 1, item:getHeight() - 1
     return x >= 1 and y >= 1 and x + itemW <= invW and y + itemH <= invH
 end
 
@@ -44,16 +44,17 @@ function GridInv:canAdd(item)
     assert(isnumber(item.width) and item.width >= 1, "item.width must be a positive number")
     assert(isnumber(item.height) and item.height >= 1, "item.height must be a positive number")
     local invW, invH = self:getSize()
-    local itemW, itemH = item.width, item.height
+    local itemW, itemH = item:getWidth(), item:getHeight()
+    if itemW <= invW and itemH <= invH then return true end
     if itemH <= invW and itemW <= invH then return true end
     return false
 end
 
 function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
-    local testX2, testY2 = x + (testItem.width or 1), y + (testItem.height or 1)
+    local testX2, testY2 = x + testItem:getWidth(), y + testItem:getHeight()
     local itemX, itemY = item:getData("x"), item:getData("y")
     if not itemX or not itemY then return false end
-    local itemX2, itemY2 = itemX + (item.width or 1), itemY + (item.height or 1)
+    local itemX2, itemY2 = itemX + item:getWidth(), itemY + item:getHeight()
     if x >= itemX2 or itemX >= testX2 then return false end
     if y >= itemY2 or itemY >= testY2 then return false end
     return true
@@ -79,8 +80,8 @@ function GridInv:doesItemFitAtPos(testItem, x, y)
     end
 
     if self.occupied then
-        for x2 = 0, (testItem.width or 1) - 1 do
-            for y2 = 0, (testItem.height or 1) - 1 do
+        for x2 = 0, testItem:getWidth() - 1 do
+            for y2 = 0, testItem:getHeight() - 1 do
                 if self.occupied[x + x2 .. y + y2] then return false end
             end
         end
@@ -248,8 +249,8 @@ if SERVER then
         end
 
         targetInventory.occupied = targetInventory.occupied or {}
-        for x2 = 0, (item.width or 1) - 1 do
-            for y2 = 0, (item.height or 1) - 1 do
+        for x2 = 0, item:getWidth() - 1 do
+            for y2 = 0, item:getHeight() - 1 do
                 targetInventory.occupied[x + x2 .. y + y2] = true
             end
         end
@@ -262,8 +263,8 @@ if SERVER then
         local itemType = item.uniqueID
         lia.item.instance(targetInventory:getID(), itemType, data, 0, 0, function(instItem)
             if targetInventory.occupied then
-                for x2 = 0, (instItem.width or 1) - 1 do
-                    for y2 = 0, (instItem.height or 1) - 1 do
+                for x2 = 0, instItem:getWidth() - 1 do
+                    for y2 = 0, instItem:getHeight() - 1 do
                         targetInventory.occupied[x + x2 .. y + y2] = nil
                     end
                 end
@@ -319,7 +320,7 @@ else
         if not inventory then return end
         local item = inventory.items[itemID]
         if item and item:getData("x") == x and item:getData("y") == y then return end
-        if item and (x > inventory:getWidth() or y > inventory:getHeight() or x + (item.width or 1) - 1 < 1 or y + (item.height or 1) - 1 < 1) then destinationID = nil end
+        if item and (x > inventory:getWidth() or y > inventory:getHeight() or x + item:getWidth() - 1 < 1 or y + item:getHeight() - 1 < 1) then destinationID = nil end
         net.Start("liaTransferItem")
         net.WriteUInt(itemID, 32)
         net.WriteUInt(x, 32)

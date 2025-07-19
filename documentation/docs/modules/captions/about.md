@@ -7,7 +7,6 @@ Captions
 1.19
 
 **Description:**
-
 Provides an API for timed on-screen captions, ideal for story prompts or tutorials.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

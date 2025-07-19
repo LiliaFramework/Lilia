@@ -7,7 +7,6 @@ Alcoholism
 1.18
 
 **Description:**
-
 Introduces drinkable alcohol items that raise intoxication levels and temporarily blur the player's vision and movement.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

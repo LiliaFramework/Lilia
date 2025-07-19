@@ -1,7 +1,7 @@
 ﻿MODULE.name = "Scoreboard"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Adds an RP-styled scoreboard with recognition support."
+MODULE.desc = "Displays an immersive scoreboard showing recognized players, faction information, and built-in admin options for staff."
 MODULE.CAMIPrivileges = {
     {
         Name = "Staff Permissions - Can Access Scoreboard Admin Options",

@@ -101,12 +101,12 @@ MODULE.discord = "@liliaplayer"
 
 **Description:**
 
-Short description of what the module provides.
+Detailed description of what the module provides and why it exists.
 
 **Example Usage:**
 
 ```lua
-MODULE.desc = "Adds a Chatbox"
+MODULE.desc = "Adds an advanced chat system with channels and admin tools."
 ```
 
 ---
@@ -424,7 +424,7 @@ MODULE.name = "My Feature"
 MODULE.author = "76561198012345678"
 MODULE.discord = "@example"
 MODULE.version = 1.0
-MODULE.desc = "Adds an example feature"
+MODULE.desc = "Adds an example feature used to demonstrate module creation."
 
 MODULE.enabled = true
 MODULE.Public = true
