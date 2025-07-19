@@ -1,12 +1,15 @@
-# Loyalism
+<h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
-**Version:** 1.15  
-**Author:** Samael  
-**Discord:** @liliaplayer  
+**Name:**
+Loyalism
 
+**Version:**
+1.17
+
+**Description:**
 Implements loyalty tiers that grant access to the /partytier command when flagged.
 
-## Features
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 
 - Adds a loyalty tier system for players
 - Adds the /partytier command access
@@ -14,4 +17,8 @@ Implements loyalty tiers that grant access to the /partytier command when flagge
 - Adds automatic tier progression
 - Adds customizable rewards per tier
 
-[Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loyalism.zip)
+
+
+
+
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loyalism.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:var(--md-primary-fg-color,#007acc);border-radius:4px;">DOWNLOAD HERE</a></p>

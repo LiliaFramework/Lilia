@@ -1,12 +1,15 @@
-# War Table
+<h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
-**Version:** 1.17  
-**Author:** Samael  
-**Discord:** @liliaplayer  
+**Name:**
+War Table
 
+**Version:**
+1.18
+
+**Description:**
 Adds an interactive 3D war table for planning operations on a shared map.
 
-## Features
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 
 - Adds an interactive 3D war table
 - Adds the ability to plan operations on a map
@@ -14,8 +17,13 @@ Adds an interactive 3D war table for planning operations on a shared map.
 - Adds marker placement for strategies
 - Adds support for multiple map layouts
 
-## Workshop Content
+
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Workshop Content</h2>
 
 - 3431351432
 
-[Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wartable.zip)
+
+
+
+
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wartable.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:var(--md-primary-fg-color,#007acc);border-radius:4px;">DOWNLOAD HERE</a></p>

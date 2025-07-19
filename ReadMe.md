@@ -2,7 +2,7 @@
   <strong>Official repository for Lilia, an advanced roleplay framework for Garry’s Mod.</strong><br/>
   This repo hosts the full source code, built-in modules and documentation.<br/>
   The perfect foundation for your dream server.<br/><br/>
-  <img src="https://github.com/LiliaFramework/Lilia/blob/main/logo.png?raw=true" alt="Lilia Logo" width="200" />
+  <img src="https://github.com/LiliaFramework/liaIcons/blob/main/lilia.png?raw=true" alt="Lilia Logo" width="200" />
 </p>
 
 <p align="center">

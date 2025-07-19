@@ -1,12 +1,15 @@
-# Advert
+<h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
-**Version:** 1.14  
-**Author:** Samael  
-**Discord:** @liliaplayer  
+**Name:**
+Advert
 
+**Version:**
+1.16
+
+**Description:**
 Provides a paid /advert command so players can broadcast server-wide messages with a built-in cooldown.
 
-## Features
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 
 - Adds a paid /advert command players can use
 - Adds a cooldown via AdvertCooldown to limit spam
@@ -14,4 +17,8 @@ Provides a paid /advert command so players can broadcast server-wide messages wi
 - Adds price control via AdvertPrice configuration
 - Adds notifications when players lack funds
 
-[Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/advert.zip)
+
+
+
+
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/advert.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:var(--md-primary-fg-color,#007acc);border-radius:4px;">DOWNLOAD HERE</a></p>

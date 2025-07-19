@@ -1,21 +1,27 @@
 # Hooks
+
 Module-specific events raised by the Bodygrouper module.
 
 ---
+
 ### `BodygrouperClosetAddUser`
 
 **Purpose**
+
 `Fires when a player begins using a bodygrouper closet.`
 
 **Parameters**
 
 * `closet` (`Entity`): `The bodygrouper closet entity.`
+
 * `user` (`Player`): `Player entering the closet.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -31,17 +37,21 @@ end)
 ### `BodygrouperClosetRemoveUser`
 
 **Purpose**
+
 `Called when a player stops using a bodygrouper closet.`
 
 **Parameters**
 
 * `closet` (`Entity`): `The closet entity.`
+
 * `user` (`Player`): `Player leaving the closet.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -57,6 +67,7 @@ end)
 ### `BodygrouperClosetOpened`
 
 **Purpose**
+
 `Runs after a closet is opened and the open sound plays.`
 
 **Parameters**
@@ -64,9 +75,11 @@ end)
 * `closet` (`Entity`): `The closet that opened.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -82,6 +95,7 @@ end)
 ### `BodygrouperClosetClosed`
 
 **Purpose**
+
 `Runs after a closet has closed and the closing sound is played.`
 
 **Parameters**
@@ -89,9 +103,11 @@ end)
 * `closet` (`Entity`): `The closet that closed.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -107,17 +123,21 @@ end)
 ### `BodygrouperMenuOpened`
 
 **Purpose**
+
 `Called when the client opens the bodygrouper menu.`
 
 **Parameters**
 
 * `menu` (`Panel`): `The VGUI panel for the menu.`
+
 * `target` (`Entity`): `Entity whose bodygroups are being edited.`
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -133,6 +153,7 @@ end)
 ### `BodygrouperMenuClosed`
 
 **Purpose**
+
 `Called when the bodygrouper menu is closed on the client.`
 
 **Parameters**
@@ -140,9 +161,11 @@ end)
 *None*
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -158,6 +181,7 @@ end)
 ### `BodygrouperMenuClosedServer`
 
 **Purpose**
+
 `Runs server‑side when a player closes the bodygrouper menu.`
 
 **Parameters**
@@ -165,9 +189,11 @@ end)
 * `client` (`Player`): `Player that closed the menu.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -183,19 +209,25 @@ end)
 ### `PreBodygroupApply`
 
 **Purpose**
+
 `Called before new skin or bodygroup values are applied to a target.`
 
 **Parameters**
 
 * `client` (`Player`): `Player applying the changes.`
+
 * `target` (`Entity`): `Entity receiving the new appearance.`
+
 * `skin` (`number`): `Skin index that will be set.`
+
 * `groups` (`table`): `Bodygroup values keyed by group id.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -211,19 +243,25 @@ end)
 ### `PostBodygroupApply`
 
 **Purpose**
+
 `Fires after bodygroup and skin values have been applied.`
 
 **Parameters**
 
 * `client` (`Player`): `Player that made the change.`
+
 * `target` (`Entity`): `Entity that was modified.`
+
 * `skin` (`number`): `Skin index that was set.`
+
 * `groups` (`table`): `Applied bodygroup values.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -239,17 +277,21 @@ end)
 ### `PreBodygrouperMenuOpen`
 
 **Purpose**
+
 `Runs server-side before the bodygrouper menu is opened for a player.`
 
 **Parameters**
 
 * `client` (`Player`): `Player requesting the menu.`
+
 * `target` (`Entity`): `Entity whose bodygroups will be edited.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -265,19 +307,25 @@ end)
 ### `BodygrouperApplyAttempt`
 
 **Purpose**
+
 `Called when the server receives a request to apply bodygroup changes.`
 
 **Parameters**
 
 * `client` (`Player`): `Player applying changes.`
+
 * `target` (`Entity`): `Target entity.`
+
 * `skin` (`number`): `Requested skin index.`
+
 * `groups` (`table`): `Requested bodygroup values.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -293,18 +341,23 @@ end)
 ### `BodygrouperInvalidSkin`
 
 **Purpose**
+
 `Runs when a player selects a skin index the target does not support.`
 
 **Parameters**
 
 * `client` (`Player`): `Player who made the request.`
+
 * `target` (`Entity`): `Target entity.`
+
 * `skin` (`number`): `Invalid skin index.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -320,19 +373,25 @@ end)
 ### `BodygrouperInvalidGroup`
 
 **Purpose**
+
 `Called when a bodygroup value exceeds the entity's allowed range.`
 
 **Parameters**
 
 * `client` (`Player`): `Player making the request.`
+
 * `target` (`Entity`): `Target entity.`
+
 * `index` (`number`): `Bodygroup index.`
+
 * `value` (`number`): `Invalid value provided.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -348,19 +407,25 @@ end)
 ### `BodygrouperValidated`
 
 **Purpose**
+
 `Fires after validation passes but before changes apply.`
 
 **Parameters**
 
 * `client` (`Player`): `Player applying changes.`
+
 * `target` (`Entity`): `Target entity.`
+
 * `skin` (`number`): `Skin index to set.`
+
 * `groups` (`table`): `Bodygroup values.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -372,3 +437,4 @@ end)
 ```
 
 ---
+

@@ -1,22 +1,29 @@
 # Hooks
+
 Module-specific events raised by the Joinleavemessages module.
 
 ---
+
 ### `PreJoinLeaveMessageSent`
 
 **Purpose**
+
 `Called before a join or leave message is broadcast.`
 
 **Parameters**
 
 * `player` (`Player`): `Player that joined or left.`
+
 * `joined` (`boolean`): `True if joining, false if leaving.`
+
 * `message` (`string`): `The text that will be sent.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -32,18 +39,23 @@ end)
 ### `JoinLeaveMessageSent`
 
 **Purpose**
+
 `Fires after the join or leave message has been sent.`
 
 **Parameters**
 
 * `player` (`Player`): `The player in question.`
+
 * `joined` (`boolean`): `Whether they joined (true) or left (false).`
+
 * `message` (`string`): `Message that was sent.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -55,3 +67,4 @@ end)
 ```
 
 ---
+

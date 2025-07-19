@@ -1,21 +1,27 @@
 # Hooks
+
 Module-specific events raised by the Inventory module.
 
 ---
+
 ### `InventoryPrePlayerLoadedChar`
 
 **Purpose**
+
 `Runs before a character's inventory is initialised.`
 
 **Parameters**
 
 * `client` (`Player`): `The player whose character loaded.`
+
 * `character` (`Character`): `Loaded character object.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -31,6 +37,7 @@ end)
 ### `GetDefaultInventoryMaxWeight`
 
 **Purpose**
+
 `Provides a base max weight for new inventories.`
 
 **Parameters**
@@ -38,9 +45,11 @@ end)
 * `client` (`Player`): `Player owning the inventory.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `number|nil` — `Return a number to override the default weight.`
 
 **Example**
@@ -56,18 +65,23 @@ end)
 ### `InventoryPostPlayerLoadedChar`
 
 **Purpose**
+
 `Fires after a character's inventory is ready.`
 
 **Parameters**
 
 * `client` (`Player`): `The player.`
+
 * `character` (`Character`): `Loaded character.`
+
 * `inventory` (`Inventory`): `Inventory instance.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -83,6 +97,7 @@ end)
 ### `CanPlayerViewInventory`
 
 **Purpose**
+
 `Determines if the local player may open the inventory menu.`
 
 **Parameters**
@@ -90,9 +105,11 @@ end)
 *None*
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `boolean|nil` — `Return false to block the panel.`
 
 **Example**
@@ -108,6 +125,7 @@ end)
 ### `CanOpenBagPanel`
 
 **Purpose**
+
 `Called before a bag inventory panel is opened.`
 
 **Parameters**
@@ -115,9 +133,11 @@ end)
 * `item` (`Item`): `The bag item about to be opened.`
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `boolean|nil` — `Return false to prevent opening.`
 
 **Example**
@@ -133,17 +153,21 @@ end)
 ### `PostDrawInventory`
 
 **Purpose**
+
 `Allows drawing over inventory panels.`
 
 **Parameters**
 
 * `inventoryPanel` (`Panel`): `Panel being drawn.`
+
 * `parentPanel` (`Panel`): `Parent container panel.`
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -159,17 +183,21 @@ end)
 ### `WeightInvGetMaxWeight`
 
 **Purpose**
+
 `Called when calculating an inventory's maximum weight.`
 
 **Parameters**
 
 * `inventory` (`WeightInv`): `The inventory object.`
+
 * `baseMax` (`number`): `The weight before overrides.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `number|nil` — `Return a new maximum weight.`
 
 **Example**
@@ -185,17 +213,21 @@ end)
 ### `PreWeightInvItemAdded`
 
 **Purpose**
+
 `Runs before an item is inserted into a WeightInv.`
 
 **Parameters**
 
 * `inventory` (`WeightInv`): `The inventory being modified.`
+
 * `item` (`Item`): `Item about to be added.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -211,17 +243,21 @@ end)
 ### `WeightInvItemAdded`
 
 **Purpose**
+
 `Fires after an item has been added to a WeightInv.`
 
 **Parameters**
 
 * `inventory` (`WeightInv`): `The inventory modified.`
+
 * `item` (`Item`): `Item that was inserted.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -237,17 +273,21 @@ end)
 ### `PreWeightInvItemRemoved`
 
 **Purpose**
+
 `Called before an item is removed from a WeightInv.`
 
 **Parameters**
 
 * `inventory` (`WeightInv`): `Inventory being modified.`
+
 * `item` (`Item`): `Item being removed.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -263,17 +303,21 @@ end)
 ### `WeightInvItemRemoved`
 
 **Purpose**
+
 `Fires after an item is removed from a WeightInv.`
 
 **Parameters**
 
 * `inventory` (`WeightInv`): `Inventory affected.`
+
 * `item` (`Item`): `Item that was removed.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil` — `Nothing.`
 
 **Example**
@@ -285,3 +329,4 @@ end)
 ```
 
 ---
+
