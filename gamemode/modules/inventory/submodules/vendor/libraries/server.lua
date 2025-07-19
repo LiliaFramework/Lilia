@@ -1,10 +1,15 @@
-﻿function MODULE:SaveData()
+local encodeVector = lia.data.encodeVector
+local encodeAngle = lia.data.encodeAngle
+local decodeVector = lia.data.decodeVector
+local decodeAngle = lia.data.decodeAngle
+
+function MODULE:SaveData()
     local data = {}
     for _, v in ipairs(ents.FindByClass("lia_vendor")) do
         data[#data + 1] = {
             name = v:getNetVar("name"),
-            pos = v:GetPos(),
-            angles = v:GetAngles(),
+            pos = encodeVector(v:GetPos()),
+            angles = encodeAngle(v:GetAngles()),
             model = v:GetModel(),
             items = v.items,
             factions = v.factions,
@@ -23,8 +28,8 @@ end
 function MODULE:LoadData()
     for _, v in ipairs(self:getData() or {}) do
         local entity = ents.Create("lia_vendor")
-        entity:SetPos(v.pos)
-        entity:SetAngles(v.angles)
+        entity:SetPos(decodeVector(v.pos))
+        entity:SetAngles(decodeAngle(v.angles))
         entity:Spawn()
         entity:SetModel(v.model)
         entity:setNetVar("name", v.name)

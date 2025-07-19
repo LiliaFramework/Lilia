@@ -4,6 +4,7 @@ end
 
 function MODULE:RunAdminSystemCommand(cmd, _, victim, dur, reason)
     local id = IsValid(victim) and victim:SteamID() or tostring(victim)
+    if lia.admin.isDisabled() then return end
     if cmd == "kick" then
         RunConsoleCommand("say", "/plykick " .. quote(id) .. (reason and " " .. quote(reason) or ""))
         return true

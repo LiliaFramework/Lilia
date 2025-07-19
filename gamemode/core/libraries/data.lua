@@ -1,6 +1,59 @@
 ﻿file.CreateDir("lilia")
 lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
+function lia.data.encodeVector(vec)
+    return {vec.x, vec.y, vec.z}
+end
+
+function lia.data.encodeAngle(ang)
+    return {ang.p, ang.y, ang.r}
+end
+
+local function decodeVector(data)
+    if isvector(data) then return data end
+    if istable(data) then
+        if data.x then return Vector(data.x, data.y, data.z) end
+        if data[1] and data[2] and data[3] then return Vector(data[1], data[2], data[3]) end
+    elseif isstring(data) then
+        local x, y, z = data:match("%[([-%d%.]+)%s+([-%d%.]+)%s+([-%d%.]+)%]")
+        if x then return Vector(tonumber(x), tonumber(y), tonumber(z)) end
+    end
+    return data
+end
+
+local function decodeAngle(data)
+    if isangle(data) then return data end
+    if istable(data) then
+        if data.p then return Angle(data.p, data.y, data.r) end
+        if data[1] and data[2] and data[3] then return Angle(data[1], data[2], data[3]) end
+    elseif isstring(data) then
+        local p, y, r = data:match("%{([-%d%.]+)%s+([-%d%.]+)%s+([-%d%.]+)%}")
+        if p then return Angle(tonumber(p), tonumber(y), tonumber(r)) end
+    end
+    return data
+end
+
+local function deepDecode(value)
+    if istable(value) then
+        local t = {}
+        for k, v in pairs(value) do
+            t[k] = deepDecode(v)
+        end
+
+        value = t
+    end
+
+    value = decodeVector(value)
+    value = decodeAngle(value)
+    return value
+end
+
+function lia.data.decode(value)
+    return deepDecode(value)
+end
+
+lia.data.decodeVector = decodeVector
+lia.data.decodeAngle = decodeAngle
 if SERVER then
     lia.data.isConverting = lia.data.isConverting or false
     local function buildCondition(folder, map)
@@ -209,8 +262,14 @@ if SERVER then
                     lia.db.select({"_folder", "_map", "_value"}, "data_" .. key, condition):next(function(res2)
                         local rows = res2.results or {}
                         for _, row in ipairs(rows) do
-                            local decoded = util.JSONToTable(row._value or "[]")
-                            if istable(decoded) then lia.data.stored[key] = decoded[1] or decoded end
+                            local raw = row._value or "[]"
+                            local decoded = util.JSONToTable(raw)
+                            if not decoded then
+                                local ok, ponDecoded = pcall(pon.decode, raw)
+                                if ok and ponDecoded then decoded = ponDecoded end
+                            end
+
+                            if istable(decoded) then lia.data.stored[key] = lia.data.decode(decoded[1] or decoded) end
                         end
 
                         loadNext(i + 1)
@@ -228,19 +287,49 @@ if SERVER then
     end)
 end
 
-function lia.data.get(key, default, _, _, refresh)
-    if not refresh then
-        local stored = lia.data.stored[key]
-        if stored ~= nil then
-            if isstring(stored) then
-                local decoded = util.JSONToTable(stored)
-                if istable(decoded) then
-                    stored = decoded[1] or decoded
-                    lia.data.stored[key] = stored
+function lia.data.get(key, default)
+    local stored = lia.data.stored[key]
+    if istable(stored) then PrintTable(stored, 1) end
+    if stored ~= nil then
+        print("[lia.data.get] key:", key, "type(stored):", type(stored))
+        if isstring(stored) then
+            print("[lia.data.get] raw string stored:", stored)
+            local decoded = util.JSONToTable(stored)
+            if decoded then print("[lia.data.get] json decoded type:", type(decoded)) end
+            local depth = 0
+            while isstring(decoded) and depth < 5 do
+                depth = depth + 1
+                print("[lia.data.get] nested json string depth:", depth, "value:", decoded)
+                decoded = util.JSONToTable(decoded)
+                if decoded then print("[lia.data.get] nested decode type:", type(decoded)) end
+            end
+
+            if not decoded then
+                local ok, ponDecoded = pcall(pon.decode, stored)
+                if ok and ponDecoded then
+                    decoded = ponDecoded
+                    print("[lia.data.get] pon decoded type:", type(decoded))
+                else
+                    print("[lia.data.get] pon decode failed")
                 end
             end
-            return stored
+
+            if istable(decoded) then
+                stored = decoded[1] or decoded
+                print("[lia.data.get] final table stored type:", type(stored))
+            elseif decoded ~= nil then
+                stored = decoded
+                print("[lia.data.get] final non-table stored type:", type(stored))
+            end
+
+            lia.data.stored[key] = stored
         end
+
+        local final = lia.data.decode(stored)
+        print("[lia.data.get] returning type:", type(final))
+        return final
     end
+
+    print("[lia.data.get] key:", key, "using default")
     return default
 end

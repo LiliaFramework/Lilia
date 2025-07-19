@@ -20,6 +20,11 @@
     end
 }
 
+local encodeVector = lia.data.encodeVector
+local encodeAngle = lia.data.encodeAngle
+local decodeVector = lia.data.decodeVector
+local decodeAngle = lia.data.decodeAngle
+
 function MODULE:PlayerSpawnedProp(client, model, entity)
     local data = self.StorageDefinitions[model:lower()]
     if not data then return end
@@ -64,7 +69,15 @@ function MODULE:SaveData()
             continue
         end
 
-        if entity:getInv() then data[#data + 1] = {entity:GetPos(), entity:GetAngles(), entity:getNetVar("id"), entity:GetModel():lower(), entity.password} end
+        if entity:getInv() then
+            data[#data + 1] = {
+                encodeVector(entity:GetPos()),
+                encodeAngle(entity:GetAngles()),
+                entity:getNetVar("id"),
+                entity:GetModel():lower(),
+                entity.password
+            }
+        end
     end
 
     self:setData(data)
@@ -79,6 +92,8 @@ function MODULE:LoadData()
     if not data then return end
     for _, info in ipairs(data) do
         local position, angles, invID, model, password = unpack(info)
+        position = decodeVector(position)
+        angles = decodeAngle(angles)
         local storageDef = self.StorageDefinitions[model]
         if not storageDef then continue end
         local storage = ents.Create("lia_storage")

@@ -314,7 +314,9 @@ function MODULE:CreateInformationButtons(pages)
                     modulePanel.Paint = function(pnl, w, h)
                         derma.SkinHook("Paint", "Panel", pnl, w, h)
                         draw.SimpleText(moduleData.name, "liaMediumFont", 20, 10, color_white)
-                        draw.SimpleText(tostring(moduleData.version or 1.0), "liaSmallFont", w - 20, 45, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+                        if moduleData.version then
+                            draw.SimpleText(tostring(moduleData.version), "liaSmallFont", w - 20, 45, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+                        end
                         if hasDesc then draw.SimpleText(moduleData.desc, "liaSmallFont", 20, 45, color_white) end
                     end
 

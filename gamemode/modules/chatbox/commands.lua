@@ -65,10 +65,8 @@ lia.command.add("clearchat", {
     privilege = "Clear Chat",
     desc = "clearChatCommandDesc",
     onRun = function(client)
-        for _, ply in player.Iterator() do
-            ply:ConCommand("fixchatplz")
-        end
-
+        net.Start("RegenChat")
+        net.Broadcast()
         lia.log.add(client, "clearChat")
     end
 })

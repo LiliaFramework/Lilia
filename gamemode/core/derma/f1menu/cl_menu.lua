@@ -15,7 +15,7 @@ function PANEL:Init()
     topBar:Dock(TOP)
     topBar:SetTall(70)
     topBar:DockPadding(30, 10, 30, 10)
-    local iconMat = Material("https://raw.githubusercontent.com/LiliaFramework/Lilia/refs/heads/main/logo.png", "smooth")
+    local iconMat = Material("lilia.png", "smooth")
     local schemaIconMat = SCHEMA and SCHEMA.icon and Material(SCHEMA.icon, "smooth") or nil
     local schemaName = SCHEMA and SCHEMA.name or nil
     topBar.Paint = function(pnl, w, h)

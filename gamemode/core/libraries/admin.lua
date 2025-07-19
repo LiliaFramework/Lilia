@@ -9,7 +9,7 @@ end
 
 function lia.admin.load()
     if lia.admin.isDisabled() then return end
-    lia.admin.groups = lia.data.get("admin_groups", {}, true, true)
+    lia.admin.groups = lia.data.get("admin_groups", {})
     for name, priv in pairs(CAMI.GetPrivileges() or {}) do
         lia.admin.privileges[name] = priv
     end

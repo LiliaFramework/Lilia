@@ -18,7 +18,7 @@ The web-image library downloads remote images and caches them as materials. Cach
 
 **Purpose**
 
-Downloads an image from the given URL and saves it inside the web-image cache. If the file already exists locally the callback fires immediately with the cached `Material`. On HTTP failure the callback receives `nil` and an error string.
+Downloads an image from the given URL and saves it inside the web-image cache. If the file already exists it will be replaced with the new download. Should the request fail the previous cached file is used and passed to the callback.
 
 **Parameters**
 

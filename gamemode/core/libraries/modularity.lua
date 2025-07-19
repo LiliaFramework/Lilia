@@ -130,8 +130,8 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
         lia.data.set(idKey, v, g, m)
     end
 
-    function MODULE:getData(d, g, m, r)
-        return lia.data.get(idKey, d, g, m, r) or {}
+    function MODULE:getData(d)
+        return lia.data.get(idKey, d) or {}
     end
 
     for k, f in pairs(MODULE) do

@@ -26,10 +26,7 @@ function lia.webimage.register(n, u, cb, flags)
     }
 
     lia.webimage._registered = registered
-    if cache[n] then
-        if cb then cb(cache[n], true) end
-        return
-    end
+    cache[n] = nil
 
     local savePath = baseDir .. n
     local function finalize(fromCache)
@@ -39,16 +36,17 @@ function lia.webimage.register(n, u, cb, flags)
         if not fromCache then hook.Run("WebImageDownloaded", n, "data/" .. savePath) end
     end
 
-    if file.Exists(savePath, "DATA") then
-        finalize(true)
-        return
-    end
-
     http.Fetch(u, function(b)
         ensureDir(baseDir)
         file.Write(savePath, b)
         finalize(false)
-    end, function(e) if cb then cb(nil, false, e) end end)
+    end, function(e)
+        if file.Exists(savePath, "DATA") then
+            finalize(true)
+        elseif cb then
+            cb(nil, false, e)
+        end
+    end)
 end
 
 function lia.webimage.get(n, flags)
@@ -190,12 +188,8 @@ lia.webimage.register("locked.png", "https://github.com/LiliaFramework/liaIcons/
 lia.webimage.register("unlocked.png", "https://github.com/LiliaFramework/liaIcons/blob/main/unlocked.png?raw=true")
 lia.webimage.register("checkbox.png", "https://github.com/LiliaFramework/liaIcons/blob/main/checkbox.png?raw=true")
 lia.webimage.register("unchecked.png", "https://github.com/LiliaFramework/liaIcons/blob/main/unchecked.png?raw=true")
-lia.webimage.register("checkboxfilled.png", "https://github.com/LiliaFramework/liaIcons/blob/main/checkboxfilled.png?raw=true")
-lia.webimage.register("checkboxfilled_crossed.png", "https://github.com/LiliaFramework/liaIcons/blob/main/checkboxfilled_crossed.png?raw=true")
 lia.webimage.register("normaltalk.png", "https://github.com/LiliaFramework/liaIcons/blob/main/normaltalk.png?raw=true")
 lia.webimage.register("yelltalk.png", "https://github.com/LiliaFramework/liaIcons/blob/main/yelltalk.png?raw=true")
 lia.webimage.register("whispertalk.png", "https://github.com/LiliaFramework/liaIcons/blob/main/whispertalk.png?raw=true")
 lia.webimage.register("notalk.png", "https://github.com/LiliaFramework/liaIcons/blob/main/notalk.png?raw=true")
-lia.webimage.register("close_button.png", "https://github.com/LiliaFramework/liaIcons/blob/main/close_button.png?raw=true")
-lia.webimage.register("close_button_pressed.png", "https://github.com/LiliaFramework/liaIcons/blob/main/close_button_pressed.png?raw=true")
 ensureDir(baseDir)

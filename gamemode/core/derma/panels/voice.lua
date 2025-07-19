@@ -1,4 +1,4 @@
-﻿VoicePanels = {}
+VoicePanels = {}
 local ICON_MAP = {
     Whispering = "whispertalk.png",
     Yelling = "yelltalk.png",
@@ -14,7 +14,7 @@ function PANEL:Init()
     self.Icon = vgui.Create("DImage", self)
     self.Icon:Dock(LEFT)
     self.Icon:DockMargin(8, 0, 8, 0)
-    self.Icon:SetSize(24, 24)
+    self.Icon:SetSize(32, 32)
     self.LabelName = vgui.Create("DLabel", self)
     self.LabelName:Dock(FILL)
     self.LabelName:SetFont("liaMediumFont")

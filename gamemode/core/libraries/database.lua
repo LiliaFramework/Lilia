@@ -593,6 +593,8 @@ function lia.db.addDatabaseFields()
     }
 
     local ignore = function() end
+    if not istable(lia.char.vars) then return end
+
     for _, v in pairs(lia.char.vars) do
         if v.field and typeMap[v.fieldType] then
             lia.db.fieldExists("lia_characters", v.field):next(function(exists)

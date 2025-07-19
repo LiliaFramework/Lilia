@@ -36,7 +36,7 @@
 lia.command.add("charunbanoffline", {
     superAdminOnly = true,
     privilege = "Unban Offline",
-    desc = "Unban an offline character using their Char ID.",
+    desc = "charUnbanOfflineDesc",
     syntax = "[number Char ID]",
     onRun = function(client, arguments)
         local charID = tonumber(arguments[1])
@@ -53,7 +53,7 @@ lia.command.add("charunbanoffline", {
 lia.command.add("charbanoffline", {
     superAdminOnly = true,
     privilege = "Ban Offline",
-    desc = "Ban an offline character using their Char ID.",
+    desc = "charBanOfflineDesc",
     syntax = "[number Char ID]",
     onRun = function(client, arguments)
         local charID = tonumber(arguments[1])
@@ -82,11 +82,11 @@ lia.command.add("charbanoffline", {
 lia.command.add("charlist", {
     adminOnly = true,
     privilege = "List Characters",
-    desc = "List all characters for a player by name or Steam ID, or yourself if none is provided.",
+    desc = "charListDesc",
     syntax = "[string Player Or Steam ID]",
     AdminStick = {
         Name = "Open CharList",
-        Category = "characterManagement",
+        Category = "playerInformation",
         Icon = "icon16/user_gray.png"
     },
     onRun = function(client, arguments)
@@ -101,7 +101,7 @@ lia.command.add("charlist", {
 
         local steam64 = target:SteamID64()
         lia.db.query("SELECT * FROM lia_characters WHERE _steamID = " .. lia.db.convertDataType(steam64), function(data)
-            if #data == 0 then
+            if not data or #data == 0 then
                 client:notify("No characters found for this player.")
                 return
             end

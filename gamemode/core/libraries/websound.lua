@@ -19,10 +19,7 @@ end
 
 function lia.websound.register(name, url, cb)
     if isstring(url) then urlMap[url] = name end
-    if cache[name] then
-        if cb then cb(cache[name], true) end
-        return
-    end
+    cache[name] = nil
 
     local savePath = baseDir .. name
     local function finalize(fromCache)
@@ -32,16 +29,17 @@ function lia.websound.register(name, url, cb)
         if not fromCache then hook.Run("WebSoundDownloaded", name, path) end
     end
 
-    if file.Exists(savePath, "DATA") then
-        finalize(true)
-        return
-    end
-
     http.Fetch(url, function(body)
         ensureDir(baseDir)
         file.Write(savePath, body)
         finalize(false)
-    end, function(err) if cb then cb(nil, false, err) end end)
+    end, function(err)
+        if file.Exists(savePath, "DATA") then
+            finalize(true)
+        elseif cb then
+            cb(nil, false, err)
+        end
+    end)
 end
 
 function lia.websound.get(name)

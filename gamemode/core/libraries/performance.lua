@@ -1,9 +1,8 @@
 ﻿local serverCommands = {"mp_show_voice_icons 0", "net_maxfilesize 64", "sv_kickerrornum 0", "sv_allowupload 0", "sv_allowdownload 0", "sv_allowcslua 0", "gmod_physiterations 4", "sbox_noclip 0", "sv_maxrate 30000", "sv_minrate 5000", "sv_maxcmdrate 66", "sv_maxupdaterate 66", "sv_mincmdrate 30"}
 local clientCommands = {"gmod_mcore_test 1", "mem_max_heapsize_dedicated 131072", "mem_min_heapsize 131072", "threadpool_affinity 64", "mat_queue_mode 2", "mat_powersavingsmode 0", "r_queued_ropes 1", "r_threaded_particles 1", "cl_threaded_bone_setup 1", "cl_lagcompensation 1", "cl_timeout 3600", "cl_smoothtime 0.05", "cl_localnetworkbackdoor 1", "cl_cmdrate 66", "cl_updaterate 66", "cl_interp_ratio 2", "studio_queue_mode 1", "ai_expression_optimization 1", "filesystem_max_stdio_read 64", "in_usekeyboardsampletime 1", "r_radiosity 4", "rate 1048576", "mat_framebuffercopyoverlaysize 0", "mat_managedtextures 0", "fast_fogvolume 1", "filesystem_unbuffered_io 0"}
-local serverHooks = {{"OnEntityCreated", "WidgetInit"}, {"Think", "DOFThink"}, {"Think", "CheckSchedules"}, {"PlayerTick", "TickWidgets"}, {"PlayerInitialSpawn", "PlayerAuthSpawn"}, {"LoadGModSave", "LoadGModSave"}}
+local serverHooks = {{"OnEntityCreated", "WidgetInit"}, {"Think", "DOFThink"}, {"Think", "CheckSchedules"}, {"PlayerTick", "TickWidgets"}, {"PlayerInitialSpawn", "PlayerAuthSpawn"}, {"LoadGModSave", "LoadGModSave"}, {"PlayerInitialSpawn", "HintSystem_PlayerInitialSpawn"}, {"PlayerSpawn", "HintSystem_PlayerSpawn"}}
 local clientHooks = {{"HUDPaint", "DamageEffect"}, {"StartChat", "StartChatIndicator"}, {"FinishChat", "EndChatIndicator"}, {"PostDrawEffects", "RenderWidgets"}, {"PostDrawEffects", "RenderHalos"}, {"OnEntityCreated", "WidgetInit"}, {"GUIMousePressed", "SuperDOFMouseDown"}, {"GUIMouseReleased", "SuperDOFMouseUp"}, {"PreventScreenClicks", "SuperDOFPreventClicks"}, {"Think", "DOFThink"}, {"Think", "CheckSchedules"}, {"NeedsDepthPass", "NeedsDepthPass_Bokeh"}, {"RenderScene", "RenderSuperDoF"}, {"RenderScene", "RenderStereoscopy"}, {"PreRender", "PreRenderFrameBlend"}, {"PostRender", "RenderFrameBlend"}, {"RenderScreenspaceEffects", "RenderBokeh"}}
 local spawn_delay = 8
-local update_distance = 5500
 local update_rate = 1
 local update_amount = 512
 local always_send = {
@@ -114,9 +113,9 @@ else
                 return
             end
 
-            current_range = math.min(update_distance, current_range + update_amount)
+            current_range = math.min(lia.config.get("MaxViewDistance", 5000), current_range + update_amount)
             update_transmit_states(pPlayer, current_range)
-            if current_range == update_distance then
+            if current_range == lia.config.get("MaxViewDistance", 5000) then
                 timer.Remove(timer_id)
                 data.expanded = true
                 data.expanding = false
@@ -133,7 +132,7 @@ else
             if data.expanded then
                 local ply = data.player
                 if IsValid(ply) then
-                    update_transmit_states(ply, update_distance)
+                    update_transmit_states(ply, lia.config.get("MaxViewDistance", 5000))
                 else
                     players_data[idx] = nil
                 end

@@ -552,10 +552,6 @@ function GM:InitPostEntity()
     if SERVER then
         lia.faction.formatModelData()
         timer.Simple(2, function() lia.entityDataLoaded = true end)
-        lia.db.waitForTablesToLoad():next(function()
-            hook.Run("LoadData")
-            hook.Run("PostLoadData")
-        end)
     else
         lia.joinTime = RealTime() - 0.9716
         if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end

@@ -31,12 +31,6 @@ function MODULE:PlayerDisconnected(client)
     timer.Remove("liaStam" .. client:SteamID())
 end
 
-function MODULE:OnReloaded()
-    for _, client in player.Iterator() do
-        if IsValid(client) and client:getChar() then self:PostPlayerLoadout(client) end
-    end
-end
-
 function MODULE:KeyPress(client, key)
     local char = client:getChar()
     if not char then return end

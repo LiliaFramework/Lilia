@@ -181,13 +181,13 @@ function MODULE:OnPlayerObserve(client, state)
 end
 
 function MODULE:TicketSystemClaim(admin, requester)
-    local caseclaims = lia.data.get("caseclaims", {}, true)
+    local caseclaims = lia.data.get("caseclaims", {})
     local info = caseclaims[admin:SteamID64()]
     lia.log.add(admin, "ticketClaimed", requester:Name(), info and info.claims or 0)
 end
 
 function MODULE:TicketSystemClose(admin, requester)
-    local caseclaims = lia.data.get("caseclaims", {}, true)
+    local caseclaims = lia.data.get("caseclaims", {})
     local info = caseclaims[admin:SteamID64()]
     lia.log.add(admin, "ticketClosed", requester:Name(), info and info.claims or 0)
 end
@@ -216,6 +216,9 @@ function MODULE:OnItemAdded(owner, item)
 end
 
 function MODULE:ItemFunctionCalled(item, action, client)
+    if not action then return end
+    local lowered = string.lower(action)
+    if lowered == "onloadout" or lowered == "onsave" then return end
     if IsValid(client) then lia.log.add(client, "itemFunction", action, item:getName()) end
 end
 

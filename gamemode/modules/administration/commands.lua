@@ -41,7 +41,7 @@ lia.command.add("managesitrooms", {
     onRun = function(client)
         if not client:hasPrivilege("Manage SitRooms") then return end
         local mapName = game.GetMap()
-        local sitrooms = lia.data.get("sitrooms", {}, true, true)
+        local sitrooms = lia.data.get("sitrooms", {})
         local rooms = sitrooms[mapName] or {}
         net.Start("managesitrooms")
         net.WriteTable(rooms)
@@ -61,7 +61,7 @@ lia.command.add("addsitroom", {
             end
 
             local mapName = game.GetMap()
-            local sitrooms = lia.data.get("sitrooms", {}, true, true)
+            local sitrooms = lia.data.get("sitrooms", {})
             sitrooms[mapName] = sitrooms[mapName] or {}
             sitrooms[mapName][name] = client:GetPos()
             lia.data.set("sitrooms", sitrooms, true, true)
@@ -90,7 +90,7 @@ lia.command.add("sendtositroom", {
         end
 
         local mapName = game.GetMap()
-        local sitrooms = lia.data.get("sitrooms", {}, true, true)
+        local sitrooms = lia.data.get("sitrooms", {})
         local rooms = sitrooms[mapName] or {}
         local names = {}
         for name in pairs(rooms) do

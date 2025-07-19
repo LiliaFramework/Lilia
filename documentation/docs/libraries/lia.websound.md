@@ -28,11 +28,7 @@ will reuse the previously saved file and you may also pass the cached name to
 
 **Purpose**
 
-Downloads a sound from the given URL and saves it in the web-sound cache. If the
-
-file already exists locally the callback fires immediately with the cached
-
-filename. On HTTP failure the callback receives `nil` and an error string.
+Downloads a sound from the given URL and saves it in the web-sound cache. Any existing file with the same name is overwritten by the new download. If the request fails the old cached file is used and passed to the callback.
 
 **Parameters**
 

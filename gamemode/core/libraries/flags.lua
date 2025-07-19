@@ -78,8 +78,9 @@ hook.Add("CreateInformationButtons", "liaInformationFlags", function(pages)
                         local hasFlag = client:getChar():hasFlags(flagName)
                         derma.SkinHook("Paint", "Panel", pnl, w, h)
                         draw.SimpleText(L("flagLabel", flagName), "liaMediumFont", 20, 10, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-                        local icon = hasFlag and "checkboxfilled.png" or "checkboxfilled_crossed.png"
-                        lia.util.drawTexture(icon, color_white, w - 42, h * 0.5 - 16, 32, 32)
+                        local icon = hasFlag and "checkbox.png" or "unchecked.png"
+                        local iconSize = 64
+                        lia.util.drawTexture(icon, color_white, w - iconSize - 10, h * 0.5 - iconSize * 0.5, iconSize, iconSize)
                         if hasDesc then draw.SimpleText(flagData.desc, "liaSmallFont", 20, 45, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP) end
                     end
                 end

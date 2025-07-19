@@ -80,7 +80,14 @@ else
     end
 
     local function formatSize(bytes)
-        return string.format("%.2f", bytes / (1024 * 1024 * 1024))
+        if not bytes or bytes <= 0 then return "0 B" end
+        local units = {"B", "KB", "MB", "GB", "TB"}
+        local unit = 1
+        while bytes >= 1024 and unit < #units do
+            bytes = bytes / 1024
+            unit = unit + 1
+        end
+        return string.format("%.2f %s", bytes, units[unit])
     end
 
     local function showPrompt(total, have, size)
@@ -92,6 +99,8 @@ else
         frame:SetSize(500, 150)
         frame:Center()
         frame:MakePopup()
+        frame:SetZPos(10000)
+        frame:MoveToFront()
         local lbl = frame:Add("DLabel")
         lbl:Dock(TOP)
         lbl:SetWrap(true)
@@ -102,10 +111,12 @@ else
         btnPanel:Dock(BOTTOM)
         btnPanel:SetTall(40)
         btnPanel.Paint = nil
+        local btnWidth = (frame:GetWide() - 5) / 2
         local yes = btnPanel:Add("DButton")
         yes:Dock(LEFT)
         yes:SetText(L("yes"))
         yes:DockMargin(0, 0, 5, 0)
+        yes:SetWide(btnWidth)
         yes.DoClick = function()
             lia.option.set("autoDownloadWorkshop", true)
             net.Start("WorkshopDownloader_Request")
@@ -114,8 +125,9 @@ else
         end
 
         local no = btnPanel:Add("DButton")
-        no:Dock(FILL)
+        no:Dock(RIGHT)
         no:SetText(L("no"))
+        no:SetWide(btnWidth)
         no.DoClick = function()
             lia.option.set("autoDownloadWorkshop", false)
             frame:Close()
@@ -144,7 +156,7 @@ else
 
             for _, id in ipairs(missing) do
                 steamworks.FileInfo(id, function(fi)
-                    if fi and fi.file_size then size = size + fi.file_size end
+                    if fi and fi.size then size = size + fi.size end
                     pending = pending - 1
                     if pending <= 0 then showPrompt(totalIds, have, size) end
                 end)
@@ -165,6 +177,8 @@ else
         panel = vgui.Create("DPanel")
         panel:SetSize(w, h)
         panel:SetPos((ScrW() - w) / 2, ScrH() * 0.1)
+        panel:SetZPos(10000)
+        panel:MoveToFront()
         derma.SkinHook("Paint", "Panel", panel, w, h)
         local lbl = vgui.Create("DLabel", panel)
         lbl:SetFont("DermaLarge")

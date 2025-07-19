@@ -38,7 +38,7 @@ Returns a human-readable string describing how long ago a given time occurred (e
 -- Greet joining players with the time since they last logged in
 hook.Add("PlayerInitialSpawn", "welcomeLastSeen", function(ply)
     local key  = "lastLogin_" .. ply:SteamID64()
-    local last = lia.data.get(key, nil, true)
+    local last = lia.data.get(key, nil)
 
     if last then
         ply:ChatPrint(("Welcome back! You last joined %s."):format(lia.time.TimeSince(last)))

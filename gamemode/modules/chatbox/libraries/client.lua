@@ -11,8 +11,9 @@ function MODULE:InitPostEntity()
     self:createChat()
 end
 
-function MODULE:OnReloaded()
-    RunConsoleCommand("fixchatplz")
+local function RegenChat()
+    if IsValid(MODULE.panel) then MODULE.panel:Remove() end
+    MODULE:createChat()
 end
 
 function MODULE:PlayerBindPress(_, bind, pressed)
@@ -63,7 +64,5 @@ function MODULE:ChatAddText(text, ...)
     end
 end
 
-concommand.Add("fixchatplz", function()
-    if IsValid(MODULE.panel) then MODULE.panel:Remove() end
-    MODULE:createChat()
-end)
+hook.Add("OnReloaded", "OnReloadedChatbox", RegenChat)
+net.Receive("RegenChat", RegenChat)

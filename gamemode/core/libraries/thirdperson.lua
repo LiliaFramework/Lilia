@@ -99,53 +99,88 @@ hook.Add("PlayerButtonDown", "liaThirdPersonPlayerButtonDown", function(_, butto
     end
 end)
 
-hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(drawnClient)
+hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(ply)
+    local maxDist = lia.config.get("MaxViewDistance", 5000)
+    local maxDistSqr = maxDist * maxDist
+    local debounceTime = 0.15
     local client = LocalPlayer()
-    if drawnClient == client then return end
+    if ply == client then return end
     if client:isStaffOnDuty() or not lia.config.get("WallPeek", false) or client:InVehicle() or client:hasValidVehicle() or client:isNoClipping() or not client:CanOverrideView() then
-        drawnClient:DrawShadow(true)
-        drawnClient.IsHidden = false
+        if ply.IsHidden then
+            ply.IsHidden = false
+            if not ply:GetNoDraw() then ply:DrawShadow(true) end
+        end
         return
     end
 
-    local clientPos = client:GetShootPos()
-    local targetPos = drawnClient:GetShootPos()
-    if clientPos:Distance(targetPos) > lia.config.get("MaxViewDistance", 5000) then
-        drawnClient:DrawShadow(false)
-        drawnClient.IsHidden = true
+    local clientPos = client:EyePos()
+    local targetPos = ply:EyePos()
+    if clientPos:DistToSqr(targetPos) > maxDistSqr then
+        if not ply.IsHidden then
+            ply.IsHidden = true
+            ply:DrawShadow(false)
+        end
         return true
     end
 
-    local dirToTarget = (targetPos - clientPos):GetNormalized()
-    if math.deg(math.acos(client:EyeAngles():Forward():Dot(dirToTarget))) > 90 then
-        drawnClient:DrawShadow(false)
-        drawnClient.IsHidden = true
+    local forward = client:EyeAngles():Forward()
+    local dir = targetPos - clientPos
+    if forward:Dot(dir) < 0 then
+        if not ply.IsHidden then
+            ply.IsHidden = true
+            ply:DrawShadow(false)
+        end
         return true
     end
 
-    local filter = player.GetAll()
-    table.RemoveByValue(filter, drawnClient)
+    local filter = {}
+    for _, v in ipairs(player.GetAll()) do
+        if v ~= ply and v ~= client then filter[#filter + 1] = v end
+    end
+
     local visible = false
     for _, boneName in ipairs(ImportantBones) do
-        local boneIndex = drawnClient:LookupBone(boneName)
-        if boneIndex then
-            local bonePos = drawnClient:GetBonePosition(boneIndex)
-            local trace = util.TraceLine({
-                start = clientPos,
-                endpos = bonePos,
-                filter = filter,
-                mask = MASK_SHOT_HULL
-            })
+        local idx = ply:LookupBone(boneName)
+        if idx then
+            local bonePos = ply:GetBonePosition(idx)
+            if bonePos then
+                local tr = util.TraceLine({
+                    start = clientPos,
+                    endpos = bonePos,
+                    filter = filter,
+                    mask = MASK_SHOT_HULL
+                })
 
-            local ent = trace.Entity
-            if trace.HitPos == bonePos or NotSolidMatTypes[trace.MatType] or NotSolidTextures[trace.HitTexture] or IsValid(ent) and NotSolidModels[ent:GetModel()] then
-                visible = true
-                break
+                local ent = tr.Entity
+                if tr.Fraction == 1 or ent == ply or NotSolidMatTypes[tr.MatType] or NotSolidTextures[tr.HitTexture] or IsValid(ent) and NotSolidModels[ent:GetModel()] then
+                    visible = true
+                    break
+                end
             end
         end
     end
 
-    drawnClient:DrawShadow(visible)
-    drawnClient.IsHidden = not visible
-    return not visible
+    local now = CurTime()
+    if ply._visState ~= visible then
+        if not ply._visChangeTime then
+            ply._visChangeTime = now
+        elseif now - ply._visChangeTime >= debounceTime then
+            ply._visState = visible
+            ply._visChangeTime = nil
+            if visible then
+                if ply.IsHidden then
+                    ply.IsHidden = false
+                    if not ply:GetNoDraw() then ply:DrawShadow(true) end
+                end
+            else
+                if not ply.IsHidden then
+                    ply.IsHidden = true
+                    ply:DrawShadow(false)
+                end
+            end
+        end
+    else
+        ply._visChangeTime = nil
+    end
+    return not (ply._visState == true)
 end)

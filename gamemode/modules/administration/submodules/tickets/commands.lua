@@ -23,7 +23,7 @@
         end
 
         local steamID = target:SteamID64()
-        local caseclaims = lia.data.get("caseclaims", {}, true)
+        local caseclaims = lia.data.get("caseclaims", {})
         local claim = caseclaims[steamID]
         if not claim then
             client:ChatPrint(L("noClaimsFound"))
@@ -88,7 +88,7 @@ lia.command.add("viewallclaims", {
     privilege = "View Claims",
     desc = "viewAllClaimsDesc",
     onRun = function(client)
-        local caseclaims = lia.data.get("caseclaims", {}, true)
+        local caseclaims = lia.data.get("caseclaims", {})
         if not next(caseclaims) then
             client:ChatPrint(L("noClaimsRecorded"))
             return
@@ -153,7 +153,7 @@ lia.command.add("viewclaims", {
     privilege = "View Claims",
     desc = "viewClaimsDesc",
     onRun = function(client)
-        local caseclaims = lia.data.get("caseclaims", {}, true)
+        local caseclaims = lia.data.get("caseclaims", {})
         if not next(caseclaims) then
             client:ChatPrint(L("noClaimsData"))
             return

@@ -28,7 +28,7 @@ net.Receive("lia_managesitrooms_action", function(_, client)
     local action = net.ReadUInt(2)
     local name = net.ReadString()
     local mapName = game.GetMap()
-    local sitrooms = lia.data.get("sitrooms", {}, true, true)
+    local sitrooms = lia.data.get("sitrooms", {})
     sitrooms[mapName] = sitrooms[mapName] or {}
     local rooms = sitrooms[mapName]
     if action == 1 then

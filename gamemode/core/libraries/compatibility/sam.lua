@@ -20,71 +20,73 @@ hook.Add("InitializedModules", "liaSAM", function()
 end)
 
 hook.Add("RunAdminSystemCommand", "liaSam", function(cmd, _, victim, dur, reason)
+    local id = isstring(victim) and victim or (IsValid(victim) and victim:SteamID())
+    if not id then return end
     if cmd == "kick" then
-        RunConsoleCommand("sam", "kick", victim:SteamID(), reason or "")
+        RunConsoleCommand("sam", "kick", id, reason or "")
         return true
     elseif cmd == "ban" then
-        RunConsoleCommand("sam", "ban", victim:SteamID(), tostring(dur or 0), reason or "")
+        RunConsoleCommand("sam", "ban", id, tostring(dur or 0), reason or "")
         return true
     elseif cmd == "unban" then
-        RunConsoleCommand("sam", "unban", victim:SteamID())
+        RunConsoleCommand("sam", "unban", id)
         return true
     elseif cmd == "mute" then
-        RunConsoleCommand("sam", "mute", victim:SteamID(), tostring(dur or 0), reason or "")
+        RunConsoleCommand("sam", "mute", id, tostring(dur or 0), reason or "")
         return true
     elseif cmd == "unmute" then
-        RunConsoleCommand("sam", "unmute", victim:SteamID())
+        RunConsoleCommand("sam", "unmute", id)
         return true
     elseif cmd == "gag" then
-        RunConsoleCommand("sam", "gag", victim:SteamID(), tostring(dur or 0), reason or "")
+        RunConsoleCommand("sam", "gag", id, tostring(dur or 0), reason or "")
         return true
     elseif cmd == "ungag" then
-        RunConsoleCommand("sam", "ungag", victim:SteamID())
+        RunConsoleCommand("sam", "ungag", id)
         return true
     elseif cmd == "freeze" then
-        RunConsoleCommand("sam", "freeze", victim:SteamID(), tostring(dur or 0))
+        RunConsoleCommand("sam", "freeze", id, tostring(dur or 0))
         return true
     elseif cmd == "unfreeze" then
-        RunConsoleCommand("sam", "unfreeze", victim:SteamID())
+        RunConsoleCommand("sam", "unfreeze", id)
         return true
     elseif cmd == "slay" then
-        RunConsoleCommand("sam", "slay", victim:SteamID())
+        RunConsoleCommand("sam", "slay", id)
         return true
     elseif cmd == "bring" then
-        RunConsoleCommand("sam", "bring", victim:SteamID())
+        RunConsoleCommand("sam", "bring", id)
         return true
     elseif cmd == "goto" then
-        RunConsoleCommand("sam", "goto", victim:SteamID())
+        RunConsoleCommand("sam", "goto", id)
         return true
     elseif cmd == "return" then
-        RunConsoleCommand("sam", "return", victim:SteamID())
+        RunConsoleCommand("sam", "return", id)
         return true
     elseif cmd == "jail" then
-        RunConsoleCommand("sam", "jail", victim:SteamID(), tostring(dur or 0))
+        RunConsoleCommand("sam", "jail", id, tostring(dur or 0))
         return true
     elseif cmd == "unjail" then
-        RunConsoleCommand("sam", "unjail", victim:SteamID())
+        RunConsoleCommand("sam", "unjail", id)
         return true
     elseif cmd == "cloak" then
-        RunConsoleCommand("sam", "cloak", victim:SteamID())
+        RunConsoleCommand("sam", "cloak", id)
         return true
     elseif cmd == "uncloak" then
-        RunConsoleCommand("sam", "uncloak", victim:SteamID())
+        RunConsoleCommand("sam", "uncloak", id)
         return true
     elseif cmd == "god" then
-        RunConsoleCommand("sam", "god", victim:SteamID())
+        RunConsoleCommand("sam", "god", id)
         return true
     elseif cmd == "ungod" then
-        RunConsoleCommand("sam", "ungod", victim:SteamID())
+        RunConsoleCommand("sam", "ungod", id)
         return true
     elseif cmd == "ignite" then
-        RunConsoleCommand("sam", "ignite", victim:SteamID(), tostring(dur or 0))
+        RunConsoleCommand("sam", "ignite", id, tostring(dur or 0))
         return true
     elseif cmd == "extinguish" or cmd == "unignite" then
-        RunConsoleCommand("sam", "extinguish", victim:SteamID())
+        RunConsoleCommand("sam", "extinguish", id)
         return true
     elseif cmd == "strip" then
-        RunConsoleCommand("sam", "strip", victim:SteamID())
+        RunConsoleCommand("sam", "strip", id)
         return true
     end
 end)

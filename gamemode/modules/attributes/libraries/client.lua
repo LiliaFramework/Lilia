@@ -31,9 +31,7 @@ function MODULE:Think()
 end
 
 function MODULE:LocalVarChanged(client, key, _, newVar)
-    print("ran", key)
     if client ~= LocalPlayer() or key ~= "stamina" then return end
-    print("hi", predictedStamina)
     predictedStamina = newVar
 end
 

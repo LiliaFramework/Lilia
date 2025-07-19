@@ -7,7 +7,7 @@ local restrictedProperties = {
 }
 
 function GM:PlayerSpawnProp(client, model)
-    local list = lia.data.get("blacklist", {}, true, true)
+    local list = lia.data.get("blacklist", {})
     if table.HasValue(list, model) and not client:hasPrivilege("Spawn Permissions - Can Spawn Blacklisted Props") then
         lia.log.add(client, "spawnDenied", "prop", model)
         client:notifyLocalized("blacklistedProp")
@@ -92,7 +92,7 @@ end
 
 function GM:PlayerSpawnVehicle(client, model)
     if not client:hasPrivilege("Spawn Permissions - No Car Spawn Delay") then client.NextVehicleSpawn = SysTime() + lia.config.get("PlayerSpawnVehicleDelay", 30) end
-    local list = lia.data.get("carBlacklist", {}, true, true)
+    local list = lia.data.get("carBlacklist", {})
     if model and table.HasValue(list, model) and not client:hasPrivilege("Spawn Permissions - Can Spawn Blacklisted Cars") then
         lia.log.add(client, "spawnDenied", "vehicle", model)
         client:notifyLocalized("blacklistedVehicle")

@@ -71,7 +71,7 @@ properties.Add("ToggleCarBlacklist", {
     Receive = function(_, _, ply)
         if not ply:hasPrivilege("Staff Permissions - Manage Car Blacklist") then return end
         local model = net.ReadString()
-        local list = lia.data.get("carBlacklist", {}, true, true)
+        local list = lia.data.get("carBlacklist", {})
         if table.HasValue(list, model) then
             table.RemoveByValue(list, model)
             lia.data.set("carBlacklist", list, true, true)

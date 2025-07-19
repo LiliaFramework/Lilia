@@ -88,14 +88,6 @@ Retrieves the stored value for the specified key from the cache.
 
 * `default` (*any*): Default value to return if no data is found.
 
-* `global` (*boolean*): Legacy parameter, currently ignored.
-
-* `ignoreMap` (*boolean*): Legacy parameter, currently ignored.
-
-* `refresh` (*boolean*): When `true`, bypasses the cached value and simply
-
-  returns the default. This behavior is kept for legacy compatibility.
-
 **Realm**
 
 `Shared`
@@ -108,7 +100,7 @@ Retrieves the stored value for the specified key from the cache.
 
 ```lua
 hook.Add("PlayerSpawn", "UseSavedSpawn", function(ply)
-    local pos = lia.data.get("spawn_pos", vector_origin, true)
+    local pos = lia.data.get("spawn_pos", vector_origin)
     if pos then
         ply:SetPos(pos)
     end

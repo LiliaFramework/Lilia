@@ -1,6 +1,6 @@
 ﻿net.Receive("ViewClaims", function(_, client)
     local sid = net.ReadString()
-    local caseclaims = lia.data.get("caseclaims", {}, true)
+    local caseclaims = lia.data.get("caseclaims", {})
     net.Start("ViewClaims")
     net.WriteTable(caseclaims)
     net.WriteString(sid)

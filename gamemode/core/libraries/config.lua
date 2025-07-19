@@ -74,7 +74,7 @@ function lia.config.load()
                 local rows = res.results or {}
                 local existing = {}
                 if #rows == 0 then
-                    local legacy = lia.data.get("config", nil, false, true)
+                    local legacy = lia.data.get("config", nil)
                     if legacy then
                         for k, v in pairs(legacy) do
                             lia.config.stored[k] = lia.config.stored[k] or {}
@@ -162,7 +162,7 @@ if SERVER then
         if lia.config.isConverting then return end
         lia.config.isConverting = true
         lia.bootstrap("Database", L("convertConfigToDatabase"))
-        data = data or lia.data.get("config", nil, false, true) or {}
+        data = data or lia.data.get("config", nil) or {}
         local entryCount = table.Count(data)
         local schema = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local queries = {"DELETE FROM lia_config WHERE _schema = " .. lia.db.convertDataType(schema)}
@@ -184,7 +184,7 @@ if SERVER then
 end
 
 local function countLegacyConfigEntries()
-    local data = lia.data.get("config", nil, false, true) or {}
+    local data = lia.data.get("config", nil) or {}
     local total = istable(data) and table.Count(data) or 0
     return total, total
 end
@@ -693,13 +693,13 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
             description:DockMargin(0, 10, 0, 0)
             local button = panel:Add("DButton")
             button:Dock(TOP)
-            button:SetTall(100)
-            button:DockMargin(100, 10, 100, 0)
+            button:SetTall(120)
+            button:DockMargin(90, 10, 90, 10)
             button:SetText("")
             button.Paint = function(_, w, h)
                 local v = lia.config.get(key, config.value)
                 local ic = v and "checkbox.png" or "unchecked.png"
-                lia.util.drawTexture(ic, color_white, w / 2 - 32, h / 2 - 32, 64, 64)
+                lia.util.drawTexture(ic, color_white, w / 2 - 48, h / 2 - 64, 96, 96)
             end
 
             button.DoClick = function()
