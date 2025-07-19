@@ -203,7 +203,7 @@ Steam Workshop add-on IDs required by this module.
 
 ```lua
 MODULE.WorkshopContent = {
-    "2959728255", -- shared assets
+    "3527535922", -- shared assets
     "1234567890"  -- map data
 }
 ```
