@@ -1,10 +1,13 @@
 # Hooks
+
 Module-specific events raised by the Developmentserver module.
 
 ---
+
 ### `DevServerUnauthorized`
 
 **Purpose**
+
 `Fires when a player without developer access tries to join while development mode is enabled.`
 
 **Parameters**
@@ -12,9 +15,11 @@ Module-specific events raised by the Developmentserver module.
 * `steamid64` (`string`): `SteamID64 of the player that attempted to join.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `void` — `Nothing.`
 
 **Example**
@@ -30,6 +35,7 @@ end)
 ### `DevServerAuthorized`
 
 **Purpose**
+
 `Runs when an allowed developer joins the server while dev mode is active.`
 
 **Parameters**
@@ -37,9 +43,11 @@ end)
 * `steamid64` (`string`): `SteamID64 of the developer.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `void` — `Nothing.`
 
 **Example**
@@ -55,6 +63,7 @@ end)
 ### `DevServerModeActivated`
 
 **Purpose**
+
 `Called after modules initialize when development server mode is enabled.`
 
 **Parameters**
@@ -62,9 +71,11 @@ end)
 *(None)*
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `void` — `Nothing.`
 
 **Example**
@@ -80,6 +91,7 @@ end)
 ### `DevServerModeDeactivated`
 
 **Purpose**
+
 `Called after modules initialize when development server mode is disabled.`
 
 **Parameters**
@@ -87,9 +99,11 @@ end)
 *(None)*
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `void` — `Nothing.`
 
 **Example**
@@ -101,3 +115,4 @@ end)
 ```
 
 ---
+

@@ -1,22 +1,29 @@
 # Hooks
+
 Module-specific events raised by the Broadcasts module.
 
 ---
+
 ### `PreClassBroadcastSend`
 
 **Purpose**
+
 `Called right before a class broadcast is sent.`
 
 **Parameters**
 
 * `client` (`Player`): `Player issuing the command.`
+
 * `message` (`string`): `The broadcast text.`
+
 * `classes` (`table`): `List of class names selected for the broadcast.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -32,18 +39,23 @@ end)
 ### `ClassBroadcastSent`
 
 **Purpose**
+
 `Runs after a class broadcast has been delivered to players.`
 
 **Parameters**
 
 * `client` (`Player`): `The broadcaster.`
+
 * `message` (`string`): `Message that was sent.`
+
 * `classes` (`table`): `List of class names the message was sent to.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -59,18 +71,23 @@ end)
 ### `PreFactionBroadcastSend`
 
 **Purpose**
+
 `Called before a faction broadcast is sent.`
 
 **Parameters**
 
 * `client` (`Player`): `Player issuing the command.`
+
 * `message` (`string`): `Broadcast text.`
+
 * `factions` (`table`): `Names of factions selected.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -86,18 +103,23 @@ end)
 ### `FactionBroadcastSent`
 
 **Purpose**
+
 `Runs after a faction broadcast has been delivered.`
 
 **Parameters**
 
 * `client` (`Player`): `The broadcaster.`
+
 * `message` (`string`): `Message that was sent.`
+
 * `factions` (`table`): `Faction names that received the message.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -113,17 +135,21 @@ end)
 ### `ClassBroadcastMenuOpened`
 
 **Purpose**
+
 `Fires when the class broadcast selection menu is presented.`
 
 **Parameters**
 
 * `client` (`Player`): `Player opening the menu.`
+
 * `options` (`table`): `List of class option strings.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -139,17 +165,21 @@ end)
 ### `ClassBroadcastMenuClosed`
 
 **Purpose**
+
 `Runs after the player has finished selecting classes.`
 
 **Parameters**
 
 * `client` (`Player`): `The selecting player.`
+
 * `selection` (`table`): `Strings chosen from the list.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -165,18 +195,23 @@ end)
 ### `ClassBroadcastLogged`
 
 **Purpose**
+
 `Called after a class broadcast has been logged.`
 
 **Parameters**
 
 * `client` (`Player`): `The broadcaster.`
+
 * `message` (`string`): `Broadcast text.`
+
 * `classes` (`table`): `Class names sent to.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -192,17 +227,21 @@ end)
 ### `FactionBroadcastMenuOpened`
 
 **Purpose**
+
 `Fires when the faction broadcast selection menu appears.`
 
 **Parameters**
 
 * `client` (`Player`): `Opening player.`
+
 * `options` (`table`): `List of faction option strings.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -218,17 +257,21 @@ end)
 ### `FactionBroadcastMenuClosed`
 
 **Purpose**
+
 `Runs after faction options have been chosen.`
 
 **Parameters**
 
 * `client` (`Player`): `Selecting player.`
+
 * `selection` (`table`): `Chosen faction strings.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -244,18 +287,23 @@ end)
 ### `FactionBroadcastLogged`
 
 **Purpose**
+
 `Called after a faction broadcast entry is logged.`
 
 **Parameters**
 
 * `client` (`Player`): `The broadcaster.`
+
 * `message` (`string`): `Broadcast text.`
+
 * `factions` (`table`): `Faction names.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -267,3 +315,4 @@ end)
 ```
 
 ---
+

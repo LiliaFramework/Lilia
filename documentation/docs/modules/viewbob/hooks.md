@@ -1,23 +1,31 @@
 # Hooks
+
 Module-specific events raised by the Viewbob module.
 
 ---
+
 ### `ViewBobPunch`
 
 **Purpose**
+
 `Allows custom effects whenever the module applies a view punch.`
 
 **Parameters**
 
 * `client` (`Player`): `The local player receiving the view punch.`
+
 * `angleX` (`number`): `Pitch component.`
+
 * `angleY` (`number`): `Yaw component.`
+
 * `angleZ` (`number`): `Roll component.`
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil` — `Return value is ignored.`
 
 **Example**
@@ -35,17 +43,21 @@ end)
 ### `ViewBobStep`
 
 **Purpose**
+
 `Called each time the player takes a step to allow overriding the step value.`
 
 **Parameters**
 
 * `client` (`Player`): `The stepping player.`
+
 * `step` (`number`): `1 or -1 indicating step direction.`
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `number` — `New step value to use.`
 
 **Example**
@@ -63,19 +75,25 @@ end)
 ### `PreViewPunch`
 
 **Purpose**
+
 `Called just before the view punch is applied.`
 
 **Parameters**
 
 * `client` (`Player`): `Player receiving the view punch.`
+
 * `angleX` (`number`): `Pitch component.`
+
 * `angleY` (`number`): `Yaw component.`
+
 * `angleZ` (`number`): `Roll component.`
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -91,19 +109,25 @@ end)
 ### `PostViewPunch`
 
 **Purpose**
+
 `Runs after the view punch effect has been triggered.`
 
 **Parameters**
 
 * `client` (`Player`): `Player that was punched.`
+
 * `angleX` (`number`): `Pitch component.`
+
 * `angleY` (`number`): `Yaw component.`
+
 * `angleZ` (`number`): `Roll component.`
 
 **Realm**
+
 `Client`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -115,3 +139,4 @@ end)
 ```
 
 ---
+

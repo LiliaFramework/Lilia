@@ -1,12 +1,15 @@
-# Auto Restarter
+<h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
-**Version:** 1.13  
-**Author:** Samael  
-**Discord:** @liliaplayer  
+**Name:**
+Auto Restarter
 
+**Version:**
+1.15
+
+**Description:**
 Schedules periodic server restarts and displays a countdown so players know when the restart will occur.
 
-## Features
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 
 - Adds scheduling for automatic restarts using RestartInterval
 - Adds a countdown overlay configurable via RestartCountdownFont
@@ -14,4 +17,8 @@ Schedules periodic server restarts and displays a countdown so players know when
 - Adds automatic changelevel when the timer expires
 - Adds network messages to sync the restart countdown
 
-[Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/autorestarter.zip)
+
+
+
+
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/autorestarter.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:var(--md-primary-fg-color,#007acc);border-radius:4px;">DOWNLOAD HERE</a></p>

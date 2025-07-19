@@ -1,23 +1,31 @@
 # Hooks
+
 Module-specific events raised by the Captions module.
 
 ---
+
 ### `SendCaptionCommand`
 
 **Purpose**
+
 `Triggered when an administrator uses the sendCaption command.`
 
 **Parameters**
 
 * `client` (`Player`): `The admin running the command.`
+
 * `target` (`Player`): `Player who will receive the caption.`
+
 * `text` (`string`): `Caption text.`
+
 * `duration` (`number`): `How long the caption should display.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -33,18 +41,23 @@ end)
 ### `BroadcastCaptionCommand`
 
 **Purpose**
+
 `Called when an administrator broadcasts a caption to all players.`
 
 **Parameters**
 
 * `client` (`Player`): `Admin issuing the command.`
+
 * `text` (`string`): `Caption text.`
+
 * `duration` (`number`): `Display time in seconds.`
 
 **Realm**
+
 `Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -60,18 +73,23 @@ end)
 ### `CaptionStarted`
 
 **Purpose**
+
 `Fires whenever a caption begins displaying.`
 
 **Parameters**
 
 * `clientOrText` (`Player|string`): `On the server this is the target player, on the client this is the caption text.`
+
 * `textOrDuration` (`string|number`): `On the server this is the caption text, on the client this is the duration.`
+
 * `duration` (`number`, optional): `Duration when running server side.`
 
 **Realm**
+
 `Client & Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -87,6 +105,7 @@ end)
 ### `CaptionFinished`
 
 **Purpose**
+
 `Runs when an active caption ends.`
 
 **Parameters**
@@ -94,9 +113,11 @@ end)
 * `client` (`Player`, optional): `The player whose caption ended when on the server.`
 
 **Realm**
+
 `Client & Server`
 
 **Returns**
+
 `nil`
 
 **Example**
@@ -108,3 +129,4 @@ end)
 ```
 
 ---
+

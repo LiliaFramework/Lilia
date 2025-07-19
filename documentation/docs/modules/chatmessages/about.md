@@ -1,12 +1,15 @@
-# Chat Messages
+<h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
-**Version:** 1.13  
-**Author:** Samael  
-**Discord:** @liliaplayer  
+**Name:**
+Chat Messages
 
+**Version:**
+1.15
+
+**Description:**
 Periodically sends automated advert messages to chat at a configurable interval.
 
-## Features
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 
 - Adds periodic server adverts to chat
 - Adds interval control via ChatMessagesInterval
@@ -14,4 +17,8 @@ Periodically sends automated advert messages to chat at a configurable interval.
 - Adds rotating tips for new players
 - Adds toggle to disable adverts per user
 
-[Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/chatmessages.zip)
+
+
+
+
+<p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/chatmessages.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:var(--md-primary-fg-color,#007acc);border-radius:4px;">DOWNLOAD HERE</a></p>
