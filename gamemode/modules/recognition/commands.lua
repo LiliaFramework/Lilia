@@ -50,7 +50,6 @@ lia.command.add("recogyell", {
 lia.command.add("recogbots", {
     privilege = "Manage Recognition",
     superAdminOnly = true,
-    privilege = "Manage Recognition",
     syntax = "[string Range]",
     desc = "recogBotsDesc",
     AdminStick = {
