@@ -7,6 +7,7 @@ Damage Numbers
 1.15
 
 **Description:**
+
 Shows floating damage numbers above targets and yourself whenever damage is dealt.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

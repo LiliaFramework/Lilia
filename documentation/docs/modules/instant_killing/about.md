@@ -7,6 +7,7 @@ Instant Killing
 1.15
 
 **Description:**
+
 Makes headshots instantly lethal with configurable multipliers per weapon.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

@@ -7,6 +7,7 @@ Word Filter
 1.17
 
 **Description:**
+
 Filters unwanted words from chat using a customizable blacklist.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

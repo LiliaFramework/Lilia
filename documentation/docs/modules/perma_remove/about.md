@@ -7,6 +7,7 @@ Perma Remove
 1.14
 
 **Description:**
+
 Lets admins permanently delete map entities and logs each removal for review.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

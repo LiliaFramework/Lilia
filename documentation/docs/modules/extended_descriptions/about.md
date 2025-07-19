@@ -7,6 +7,7 @@ Extended Descriptions
 1.19
 
 **Description:**
+
 Allows items to have lengthy, localized descriptions for richer roleplay.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

@@ -7,6 +7,7 @@ Warrant
 1.24
 
 **Description:**
+
 Allows staff to issue and remove player warrants while notifying everyone involved.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

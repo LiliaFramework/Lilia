@@ -7,6 +7,7 @@ Heavy Weapons
 1.14
 
 **Description:**
+
 Slows player movement when wielding specified heavy weapons to encourage tactical choices.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

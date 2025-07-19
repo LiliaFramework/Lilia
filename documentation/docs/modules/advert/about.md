@@ -7,6 +7,7 @@ Advert
 1.16
 
 **Description:**
+
 Provides a paid /advert command so players can broadcast server-wide messages with a built-in cooldown.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

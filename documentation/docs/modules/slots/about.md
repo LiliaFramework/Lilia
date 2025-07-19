@@ -7,6 +7,7 @@ Slots
 1.15
 
 **Description:**
+
 Adds a playable slot machine using a workshop model that pays out winnings.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

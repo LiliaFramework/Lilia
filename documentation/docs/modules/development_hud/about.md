@@ -7,6 +7,7 @@ Development HUD
 1.18
 
 **Description:**
+
 Provides a staff-only HUD overlay with additional development information.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

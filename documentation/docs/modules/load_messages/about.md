@@ -7,6 +7,7 @@ Load Messages
 1.13
 
 **Description:**
+
 Displays a custom message to players based on their faction the first time they load a character.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

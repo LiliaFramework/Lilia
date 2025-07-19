@@ -7,6 +7,7 @@ Corpse ID
 1.19
 
 **Description:**
+
 Allows players to identify corpses after a short delay, displaying details above the body.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

@@ -7,6 +7,7 @@ Rumour
 1.14
 
 **Description:**
+
 Adds an anonymous rumour command so players can spread hearsay without revealing themselves.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

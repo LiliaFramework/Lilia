@@ -7,6 +7,7 @@ Bodygrouper
 1.22
 
 **Description:**
+
 Adds a customizable bodygroup closet entity that lets players adjust their model bodygroups through a menu.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

@@ -7,6 +7,7 @@ Gamemaster Teleport Points
 1.13
 
 **Description:**
+
 Lets game masters create teleport points around the map and quickly jump between them.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

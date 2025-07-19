@@ -7,6 +7,7 @@ Model Tweaker
 1.19
 
 **Description:**
+
 Provides an entity that lets admins adjust prop models' scale and rotation.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

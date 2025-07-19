@@ -7,6 +7,7 @@ Loyalism
 1.17
 
 **Description:**
+
 Implements loyalty tiers that grant access to the /partytier command when flagged.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

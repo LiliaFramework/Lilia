@@ -7,6 +7,7 @@ Free Look
 1.15
 
 **Description:**
+
 Lets players look around independently from their movement direction, similar to Escape from Tarkov.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

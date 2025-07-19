@@ -7,6 +7,7 @@ Whitelist
 1.16
 
 **Description:**
+
 Implements a server whitelist system with optional player signup support.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

@@ -7,6 +7,7 @@ Development Server
 1.12
 
 **Description:**
+
 Allows running special development-only functions when the server is in testing mode.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

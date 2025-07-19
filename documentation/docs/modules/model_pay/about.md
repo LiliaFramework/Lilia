@@ -7,6 +7,7 @@ Model Pay
 1.14
 
 **Description:**
+
 Pays characters wages based on the model they use, allowing custom pay scales.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

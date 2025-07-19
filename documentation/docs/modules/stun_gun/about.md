@@ -7,6 +7,7 @@ Stun Gun
 101.19
 
 **Description:**
+
 Adds a configurable taser weapon that stuns targets and can apply damage with post-process effects.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

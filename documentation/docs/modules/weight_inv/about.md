@@ -7,6 +7,7 @@ Weight Inv
 1.15
 
 **Description:**
+
 Implements a weight-based inventory that limits how much a character can carry.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

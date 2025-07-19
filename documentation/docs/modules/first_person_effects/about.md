@@ -7,6 +7,7 @@ First Person Effects
 1.13
 
 **Description:**
+
 Adds view sway and head bob to create a more immersive first-person perspective.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

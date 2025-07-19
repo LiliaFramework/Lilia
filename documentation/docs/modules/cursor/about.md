@@ -7,6 +7,7 @@ Cursor
 1.13
 
 **Description:**
+
 Adds a toggleable custom cursor for navigating menus more easily.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

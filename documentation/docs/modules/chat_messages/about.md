@@ -7,6 +7,7 @@ Chat Messages
 1.15
 
 **Description:**
+
 Periodically sends automated advert messages to chat at a configurable interval.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

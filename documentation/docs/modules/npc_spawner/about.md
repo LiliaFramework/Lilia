@@ -7,6 +7,7 @@ NPC Spawner
 1.15
 
 **Description:**
+
 Automatically spawns NPCs at designated points and lets admins force spawns.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

@@ -7,6 +7,7 @@ Shoot Locks
 1.15
 
 **Description:**
+
 Allows players to shoot door locks to force them open as a loud breach option.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

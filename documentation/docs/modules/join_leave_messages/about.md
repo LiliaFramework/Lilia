@@ -7,6 +7,7 @@ Join Leave Messages
 1.15
 
 **Description:**
+
 Broadcasts notifications when players connect or disconnect from the server.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

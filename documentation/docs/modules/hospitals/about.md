@@ -7,6 +7,7 @@ Hospitals
 1.12
 
 **Description:**
+
 Respawns players at designated hospitals where they recover after death.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

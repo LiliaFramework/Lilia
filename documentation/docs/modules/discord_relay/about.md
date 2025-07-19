@@ -7,6 +7,7 @@ Discord Relay
 1.13
 
 **Description:**
+
 Relays server logs to a Discord channel through configurable webhooks.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

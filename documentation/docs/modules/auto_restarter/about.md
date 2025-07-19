@@ -7,6 +7,7 @@ Auto Restarter
 1.15
 
 **Description:**
+
 Schedules periodic server restarts and displays a countdown so players know when the restart will occur.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

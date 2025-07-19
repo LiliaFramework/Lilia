@@ -7,6 +7,7 @@ Door Kick
 1.14
 
 **Description:**
+
 Lets players breach doors by kicking them open, with events logged for staff.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

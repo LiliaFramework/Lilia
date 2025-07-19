@@ -7,6 +7,7 @@ View Bob
 1.15
 
 **Description:**
+
 Applies camera bobbing while moving with adjustable strength for immersion.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

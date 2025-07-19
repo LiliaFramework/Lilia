@@ -7,6 +7,7 @@ VManip
 1.16
 
 **Description:**
+
 Adds support for VManip animations and gestures within the framework.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

@@ -7,6 +7,7 @@ Simple Cutscenes
 1.14
 
 **Description:**
+
 Provides a lightweight framework for defining and playing synchronized cutscenes.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

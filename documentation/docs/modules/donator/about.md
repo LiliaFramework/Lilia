@@ -7,6 +7,7 @@ Donator
 1.23
 
 **Description:**
+
 Includes helper libraries for managing donor perks and displaying them on the scoreboard.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

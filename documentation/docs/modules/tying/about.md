@@ -7,6 +7,7 @@ Tying
 1.23
 
 **Description:**
+
 Introduces handcuff-style tying items for arrests and logs all tie or untie actions.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

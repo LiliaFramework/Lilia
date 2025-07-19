@@ -7,6 +7,7 @@ Community Commands
 1.19
 
 **Description:**
+
 Adds chat commands that open community links for quick access to resources.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

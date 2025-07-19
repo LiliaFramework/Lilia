@@ -7,6 +7,7 @@ War Table
 1.18
 
 **Description:**
+
 Adds an interactive 3D war table for planning operations on a shared map.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

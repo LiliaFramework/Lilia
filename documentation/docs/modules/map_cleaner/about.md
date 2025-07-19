@@ -7,6 +7,7 @@ Map Cleaner
 1.14
 
 **Description:**
+
 Periodically cleans the map of debris and props based on a configurable schedule.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

@@ -7,6 +7,7 @@ Realistic Damage
 1.12
 
 **Description:**
+
 Applies body part multipliers and other tweaks for more realistic combat damage.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

@@ -7,6 +7,7 @@ Compass
 1.14
 
 **Description:**
+
 Displays a rotating HUD compass that can mark spotted locations or enemies.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>

@@ -7,6 +7,7 @@ NPC Drops
 1.13
 
 **Description:**
+
 Makes certain NPCs drop specified items on death, encouraging looting.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
