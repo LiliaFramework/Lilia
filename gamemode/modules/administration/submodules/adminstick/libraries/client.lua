@@ -32,7 +32,7 @@ local function QuoteArgs(...)
     return table.concat(args, " ")
 end
 
-local function RunAdminCommand(cmd, tgt, dur, reason, fallback)
+local function RunAdminCommand(cmd, tgt, dur, reason)
     local cl = LocalPlayer()
     local victim = IsValid(tgt) and tgt:IsPlayer() and (tgt:IsBot() and tgt:Name() or tgt:SteamID()) or tgt
     hook.Run("RunAdminSystemCommand", cmd, cl, victim, dur, reason)
