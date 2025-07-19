@@ -30,7 +30,7 @@ lia.config.add("DiscordURL", "The Discord of the Server", "https://discord.gg/es
     type = "Generic"
 })
 
-lia.config.add("Workshop", "The Steam Workshop of the Server", "https://steamcommunity.com/sharedfiles/filedetails/?id=2959728255", nil, {
+lia.config.add("Workshop", "The Steam Workshop of the Server", "https://steamcommunity.com/sharedfiles/filedetails/?id=3527535922", nil, {
     desc = "The URL for the Steam Workshop page",
     category = "Main Menu",
     type = "Generic"

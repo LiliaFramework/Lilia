@@ -590,9 +590,7 @@ function GM:LoadData()
     for _, ent in ipairs(entities) do
         local decodedPos = decodeVector(ent.pos)
         local decodedAng = decodeAngle(ent.angles)
-        if not decodedPos or not isvector(decodedPos) then
-        elseif not ent.class then
-        elseif not IsEntityNearby(decodedPos, ent.class) then
+        if not IsEntityNearby(decodedPos, ent.class) then
             local createdEnt = ents.Create(ent.class)
             if IsValid(createdEnt) then
                 createdEnt:SetPos(decodedPos)

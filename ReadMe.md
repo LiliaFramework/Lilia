@@ -92,7 +92,8 @@
 <h2 align="center">📦 Workshop Content</h2>
 
 <p align="center">
-  Subscribe to our essential <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2959728255">Steam Workshop collection</a> for the assets you’ll need to run Lilia optimally.
+  Subscribe to our essential <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3527535922">Steam Workshop collection</a> for the assets you’ll need to run Lilia optimally.
+  This workshop release also contains the entire gamemode so you can replace your local <code>lilia</code> folder with it for easier updates.
 </p>
 
 <h2 align="center">💬 Community Support</h2>

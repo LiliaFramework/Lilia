@@ -1,4 +1,5 @@
-﻿lia.data = lia.data or {}
+﻿file.CreateDir("lilia")
+lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
 function lia.data.encodeVector(vec)
     return {vec.x, vec.y, vec.z}
@@ -6,6 +7,23 @@ end
 
 function lia.data.encodeAngle(ang)
     return {ang.p, ang.y, ang.r}
+end
+
+local function deepEncode(value)
+    if isvector(value) then
+        return lia.data.encodeVector(value)
+    elseif isangle(value) then
+        return lia.data.encodeAngle(value)
+    elseif istable(value) then
+        local t = {}
+        for k, v in pairs(value) do
+            t[k] = deepEncode(v)
+        end
+
+        return t
+    end
+
+    return value
 end
 
 local function decodeVector(data)
@@ -51,6 +69,22 @@ function lia.data.decode(value)
     return deepDecode(value)
 end
 
+function lia.data.serialize(value)
+    return util.TableToJSON(deepEncode(value) or {})
+end
+
+function lia.data.deserialize(raw)
+    if not raw then return nil end
+    local decoded = util.JSONToTable(raw)
+    if not decoded then
+        local ok, ponDecoded = pcall(pon.decode, raw)
+        if ok then decoded = ponDecoded end
+    end
+
+    if decoded == nil then return nil end
+    return lia.data.decode(decoded)
+end
+
 lia.data.decodeVector = decodeVector
 lia.data.decodeAngle = decodeAngle
 if SERVER then
@@ -59,6 +93,7 @@ if SERVER then
         cond = cond .. " AND " .. (map and "_map = " .. lia.db.convertDataType(map) or "_map IS NULL")
         return cond
     end
+
 
     local function ensureTable(key)
         local tbl = "lia_data_" .. key
@@ -79,11 +114,12 @@ if SERVER then
         end
 
         lia.data.stored[key] = value
+        local stored = lia.data.serialize(value)
         lia.db.waitForTablesToLoad():next(function() return ensureTable(key) end):next(function()
             return lia.db.upsert({
                 _folder = folder,
                 _map = map,
-                _value = {value}
+                _value = stored
             }, "data_" .. key)
         end):next(function() hook.Run("OnDataSet", key, value, folder, map) end)
         return "lilia/" .. (folder and folder .. "/" or "") .. (map and map .. "/" or "")
@@ -102,6 +138,7 @@ if SERVER then
         lia.db.waitForTablesToLoad():next(function() return ensureTable(key) end):next(function() lia.db.delete("data_" .. key, condition) end)
         return true
     end
+
 
     function lia.data.loadTables()
         lia.db.waitForTablesToLoad():next(function()
@@ -132,14 +169,10 @@ if SERVER then
                     lia.db.select({"_folder", "_map", "_value"}, "data_" .. key, condition):next(function(res2)
                         local rows = res2.results or {}
                         for _, row in ipairs(rows) do
-                            local raw = row._value or "[]"
-                            local decoded = util.JSONToTable(raw)
-                            if not decoded then
-                                local ok, ponDecoded = pcall(pon.decode, raw)
-                                if ok and ponDecoded then decoded = ponDecoded end
+                            local value = lia.data.deserialize(row._value)
+                            if value ~= nil then
+                                lia.data.stored[key] = value
                             end
-
-                            if istable(decoded) then lia.data.stored[key] = lia.data.decode(decoded[1] or decoded) end
                         end
 
                         loadNext(i + 1)
@@ -161,27 +194,10 @@ function lia.data.get(key, default)
     local stored = lia.data.stored[key]
     if stored ~= nil then
         if isstring(stored) then
-            local decoded = util.JSONToTable(stored)
-            local depth = 0
-            while isstring(decoded) and depth < 5 do
-                depth = depth + 1
-                decoded = util.JSONToTable(decoded)
-            end
-
-            if not decoded then
-                local ok, ponDecoded = pcall(pon.decode, stored)
-                if ok and ponDecoded then decoded = ponDecoded end
-            end
-
-            if istable(decoded) then
-                stored = decoded[1] or decoded
-            elseif decoded ~= nil then
-                stored = decoded
-            end
-
+            stored = lia.data.deserialize(stored)
             lia.data.stored[key] = stored
         end
-        return lia.data.decode(stored)
+        return stored
     end
     return default
 end
