@@ -16,7 +16,7 @@ Each database row stores the timestamp, SteamID, and (if relevant) character ID 
 
 **Purpose**
 
-Initialises the logging system and converts any legacy text logs.
+Initialises the logging system.
 
 **Parameters**
 
@@ -140,31 +140,5 @@ end)
 ```
 
 ---
-
-### lia.log.convertToDatabase
-
-**Purpose**
-
-Migrates legacy text logs into the database. Players cannot join during conversion. Optionally reloads the map afterward. The original log files are deleted after migration completes.
-
-**Parameters**
-
-* `changeMap` (*boolean*): Reload the map when finished.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-if not lia.log.isConverting then
-    lia.log.convertToDatabase(false)
-end
-```
 
 ---

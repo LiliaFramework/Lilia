@@ -113,7 +113,7 @@ end)
 
 **Purpose**
 
-Loads all entries from every `lia_data_<key>` table into `lia.data.stored`. If no tables exist but legacy files are found, `lia.data.convertToDatabase` is automatically executed.
+Loads all entries from every `lia_data_<key>` table into `lia.data.stored`.
 
 **Parameters**
 
@@ -131,32 +131,7 @@ Loads all entries from every `lia_data_<key>` table into `lia.data.stored`. If n
 
 ```lua
 lia.data.loadTables()
-```
 
----
-
-### lia.data.convertToDatabase
-
-**Purpose**
-
-Imports legacy `.txt` files from `data/lilia` into their respective `lia_data_<key>` SQL tables. Players are prevented from joining while the conversion runs. If `changeMap` is `true`, the current map reloads once conversion finishes. The original text files are deleted after conversion.
-
-**Parameters**
-
-* `changeMap` (*boolean*): Whether to reload the current map when finished.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.data.convertToDatabase(true)
 ```
 
 ---

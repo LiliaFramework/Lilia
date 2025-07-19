@@ -122,10 +122,10 @@ local function OpenReasonUI(tgt, cmd)
         if cmd == "banid" then
             if id ~= "" then
                 local len = ts and ts:GetValue() * 60 * 24 or 0
-                RunAdminCommand("ban", tgt, len, txt, "!banid " .. QuoteArgs(id, len, txt))
+                RunAdminCommand("ban", tgt, len, txt)
             end
         elseif cmd == "kick" then
-            if id ~= "" then RunAdminCommand("kick", tgt, nil, txt, "!kick " .. QuoteArgs(id, txt)) end
+            if id ~= "" then RunAdminCommand("kick", tgt, nil, txt) end
         end
 
         fr:Remove()
@@ -142,7 +142,7 @@ local function HandleModerationOption(opt, tgt)
         OpenReasonUI(tgt, "kick")
     else
         local cmdName = opt.cmd:match("!([^%s]+)")
-        RunAdminCommand(cmdName, tgt, nil, nil, opt.cmd)
+        RunAdminCommand(cmdName, tgt)
     end
 
     AdminStickIsOpen = false
@@ -261,7 +261,7 @@ local function IncludeAdminMenu(tgt, menu, stores)
         mod:AddOption(L(o.name), function()
             cl:ChatPrint(L("adminStickExecutedCommand", o.cmd))
             local cmdName = o.cmd:match("!([^%s]+)")
-            RunAdminCommand(cmdName, tgt, nil, nil, o.cmd)
+            RunAdminCommand(cmdName, tgt)
             AdminStickIsOpen = false
         end):SetIcon(o.icon)
     end

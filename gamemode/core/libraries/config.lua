@@ -1,6 +1,5 @@
 ﻿lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
-lia.config.isConverting = lia.config.isConverting or false
 function lia.config.add(key, name, value, callback, data)
     assert(isstring(key), "Expected config key to be string, got " .. type(key))
     assert(istable(data), "Expected config data to be a table, got " .. type(data))
@@ -73,24 +72,11 @@ function lia.config.load()
             lia.db.select({"_key", "_value"}, "config", "_schema = " .. lia.db.convertDataType(schema)):next(function(res)
                 local rows = res.results or {}
                 local existing = {}
-                if #rows == 0 then
-                    local legacy = lia.data.get("config", nil)
-                    if legacy then
-                        for k, v in pairs(legacy) do
-                            lia.config.stored[k] = lia.config.stored[k] or {}
-                            lia.config.stored[k].value = v
-                            existing[k] = true
-                        end
-
-                        lia.config.convertToDatabase(true, legacy)
-                    end
-                else
-                    for _, row in ipairs(rows) do
-                        local decoded = util.JSONToTable(row._value)
-                        lia.config.stored[row._key] = lia.config.stored[row._key] or {}
-                        lia.config.stored[row._key].value = decoded and decoded[1]
-                        existing[row._key] = true
-                    end
+                for _, row in ipairs(rows) do
+                    local decoded = util.JSONToTable(row._value)
+                    lia.config.stored[row._key] = lia.config.stored[row._key] or {}
+                    lia.config.stored[row._key].value = decoded and decoded[1]
+                    existing[row._key] = true
                 end
 
                 local inserts = {}
@@ -157,43 +143,7 @@ if SERVER then
             lia.db.transaction(queries)
         end)
     end
-
-    function lia.config.convertToDatabase(changeMap, data)
-        if lia.config.isConverting then return end
-        lia.config.isConverting = true
-        lia.bootstrap("Database", L("convertConfigToDatabase"))
-        data = data or lia.data.get("config", nil) or {}
-        local entryCount = table.Count(data)
-        local schema = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-        local queries = {"DELETE FROM lia_config WHERE _schema = " .. lia.db.convertDataType(schema)}
-        for k, v in pairs(data) do
-            lia.config.stored[k] = lia.config.stored[k] or {}
-            lia.config.stored[k].value = v
-            queries[#queries + 1] = "INSERT INTO lia_config (_schema,_key,_value) VALUES (" .. lia.db.convertDataType(schema) .. ", " .. lia.db.convertDataType(k) .. ", " .. lia.db.convertDataType({v}) .. ")"
-        end
-
-        lia.db.waitForTablesToLoad():next(function()
-            lia.db.transaction(queries):next(function()
-                lia.config.isConverting = false
-                lia.bootstrap("Database", L("convertConfigToDatabaseDone", entryCount))
-                file.Delete("lilia/config.txt")
-                if changeMap then game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n") end
-            end)
-        end)
-    end
 end
-
-local function countLegacyConfigEntries()
-    local data = lia.data.get("config", nil) or {}
-    local total = istable(data) and table.Count(data) or 0
-    return total, total
-end
-
-concommand.Add("lia_config_legacy_count", function(ply)
-    if IsValid(ply) then return end
-    local ported, total = countLegacyConfigEntries()
-    print("[Lilia] " .. L("liaConfigLegacyCount", total, ported))
-end)
 
 lia.config.add("MoneyModel", "Money Model", "models/props_lab/box01a.mdl", nil, {
     desc = "Defines the model used for representing money in the game.",
