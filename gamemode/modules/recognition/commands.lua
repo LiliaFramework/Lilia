@@ -8,7 +8,6 @@ end
 lia.command.add("recogwhisper", {
     privilege = "Manage Recognition",
     adminOnly = true,
-    privilege = "Manage Recognition",
     syntax = "[player Name]",
     desc = "recogWhisperDesc",
     AdminStick = {
@@ -23,7 +22,6 @@ lia.command.add("recogwhisper", {
 lia.command.add("recognormal", {
     privilege = "Manage Recognition",
     adminOnly = true,
-    privilege = "Manage Recognition",
     syntax = "[player Name]",
     desc = "recogNormalDesc",
     AdminStick = {
@@ -38,7 +36,6 @@ lia.command.add("recognormal", {
 lia.command.add("recogyell", {
     privilege = "Manage Recognition",
     adminOnly = true,
-    privilege = "Manage Recognition",
     syntax = "[player Name]",
     desc = "recogYellDesc",
     AdminStick = {
