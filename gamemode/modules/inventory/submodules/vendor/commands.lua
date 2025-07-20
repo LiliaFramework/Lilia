@@ -103,14 +103,3 @@ lia.command.add("restockvendormoney", {
         end
     end
 })
-
-lia.command.add("savevendors", {
-    privilege = "Manage Vendors",
-    superAdminOnly = true,
-    desc = "saveVendorsDesc",
-    onRun = function(client)
-        MODULE:SaveData()
-        client:notifyLocalized("vendorDataSaved")
-        lia.log.add(client, "savevendors")
-    end
-})

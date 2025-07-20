@@ -18,8 +18,6 @@
                 client:notifyLocalized("storPassRmv")
                 lia.log.add(client, "storageLock", entity:GetClass(), false)
             end
-
-            MODULE:SaveData()
         else
             client:notifyLocalized("invalidEntity")
         end

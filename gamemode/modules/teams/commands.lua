@@ -81,14 +81,22 @@ lia.command.add("roster", {
             local characters = {}
             if data then
                 for _, v in ipairs(data) do
-                    local last = tonumber(v._lastOnline)
-                    if not isnumber(last) then last = os.time(lia.time.toNumber(v._lastJoinTime)) end
-                    local lastDiff = os.time() - last
-                    local timeSince = lia.time.TimeSince(last)
-                    local timeStripped = timeSince:match("^(.-)%sago$") or timeSince
-                    local lastOnlineText = string.format("%s (%s) ago", timeStripped, formatDHM(lastDiff))
+                    local charID = tonumber(v._id)
+                    local isOnline = lia.char.loaded[charID] ~= nil
+                    local lastOnlineText
+                    if isOnline then
+                        lastOnlineText = L("onlineNow")
+                    else
+                        local last = tonumber(v._lastOnline)
+                        if not isnumber(last) then last = os.time(lia.time.toNumber(v._lastJoinTime)) end
+                        local lastDiff = os.time() - last
+                        local timeSince = lia.time.TimeSince(last)
+                        local timeStripped = timeSince:match("^(.-)%sago$") or timeSince
+                        lastOnlineText = string.format("%s (%s) ago", timeStripped, formatDHM(lastDiff))
+                    end
+
                     table.insert(characters, {
-                        id = v._id,
+                        id = charID,
                         name = v._name,
                         faction = v._faction,
                         steamID = v._steamID,
@@ -146,14 +154,22 @@ lia.command.add("factionmanagement", {
             local characters = {}
             if data then
                 for _, v in ipairs(data) do
-                    local last = tonumber(v._lastOnline)
-                    if not isnumber(last) then last = os.time(lia.time.toNumber(v._lastJoinTime)) end
-                    local lastDiff = os.time() - last
-                    local timeSince = lia.time.TimeSince(last)
-                    local timeStripped = timeSince:match("^(.-)%sago$") or timeSince
-                    local lastOnlineText = string.format("%s (%s) ago", timeStripped, formatDHM(lastDiff))
+                    local charID = tonumber(v._id)
+                    local isOnline = lia.char.loaded[charID] ~= nil
+                    local lastOnlineText
+                    if isOnline then
+                        lastOnlineText = L("onlineNow")
+                    else
+                        local last = tonumber(v._lastOnline)
+                        if not isnumber(last) then last = os.time(lia.time.toNumber(v._lastJoinTime)) end
+                        local lastDiff = os.time() - last
+                        local timeSince = lia.time.TimeSince(last)
+                        local timeStripped = timeSince:match("^(.-)%sago$") or timeSince
+                        lastOnlineText = string.format("%s (%s) ago", timeStripped, formatDHM(lastDiff))
+                    end
+
                     table.insert(characters, {
-                        id = v._id,
+                        id = charID,
                         name = v._name,
                         faction = v._faction,
                         steamID = v._steamID,
@@ -252,7 +268,7 @@ lia.command.add("setclass", {
     adminOnly = true,
     privilege = "Manage Classes",
     desc = "setClassDesc",
-    syntax = "[player Player Name] [class Class]",
+    syntax = "[player Name] [class Class]",
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then

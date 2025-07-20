@@ -8,9 +8,10 @@ ENT.isVendor = true
 ENT.NoPhysgun = true
 ENT.NoRemover = true
 ENT.DrawEntityInfo = true
+ENT.IsPersistent = true
 function ENT:setupVars()
     if SERVER then
-        self:setNetVar("name", "John Doe")
+        self:setNetVar("name", "Jane Doe")
         self.receivers = {}
     end
 

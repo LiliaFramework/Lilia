@@ -24,7 +24,6 @@ local encodeVector = lia.data.encodeVector
 local encodeAngle = lia.data.encodeAngle
 local decodeVector = lia.data.decodeVector
 local decodeAngle = lia.data.decodeAngle
-
 function MODULE:PlayerSpawnedProp(client, model, entity)
     local data = self.StorageDefinitions[model:lower()]
     if not data then return end
@@ -61,68 +60,8 @@ function MODULE:CanSaveData()
     return self.SaveData
 end
 
-function MODULE:SaveData()
-    local data = {}
-    for _, entity in ipairs(ents.FindByClass("lia_storage")) do
-        if hook.Run("CanSaveData", entity, entity:getInv()) == false then
-            entity.liaForceDelete = true
-            continue
-        end
-
-        if entity:getInv() then
-            data[#data + 1] = {
-                encodeVector(entity:GetPos()),
-                encodeAngle(entity:GetAngles()),
-                entity:getNetVar("id"),
-                entity:GetModel():lower(),
-                entity.password
-            }
-        end
-    end
-
-    self:setData(data)
-end
-
 function MODULE:StorageItemRemoved()
     self:SaveData()
-end
-
-function MODULE:LoadData()
-    local data = self:getData()
-    if not data then return end
-    for _, info in ipairs(data) do
-        local position, angles, invID, model, password = unpack(info)
-        position = decodeVector(position)
-        angles = decodeAngle(angles)
-        local storageDef = self.StorageDefinitions[model]
-        if not storageDef then continue end
-        local storage = ents.Create("lia_storage")
-        storage:SetPos(position)
-        storage:SetAngles(angles)
-        storage:Spawn()
-        storage:SetModel(model)
-        storage:SetSolid(SOLID_VPHYSICS)
-        storage:PhysicsInit(SOLID_VPHYSICS)
-        if password then
-            storage.password = password
-            storage:setNetVar("locked", true)
-        end
-
-        lia.inventory.loadByID(invID):next(function(inventory)
-            if inventory and IsValid(storage) then
-                inventory.isStorage = true
-                storage:setInventory(inventory)
-                hook.Run("StorageRestored", storage, inventory)
-            elseif IsValid(storage) then
-                SafeRemoveEntityDelayed(storage, 1)
-            end
-        end)
-
-        local physObject = storage:GetPhysicsObject()
-        if physObject then physObject:EnableMotion() end
-    end
-
-    self.loadedData = true
 end
 
 local PROHIBITED_ACTIONS = {
@@ -163,5 +102,34 @@ end
 
 function MODULE:StorageInventorySet(_, inventory, isCar)
     inventory:addAccessRule(isCar and RULES.AccessIfCarStorageReceiver or RULES.AccessIfStorageReceiver)
+end
+
+function MODULE:GetEntitySaveData(ent)
+    if ent:GetClass() ~= "lia_storage" then return end
+    return {
+        id = ent:getNetVar("id"),
+        password = ent.password
+    }
+end
+
+function MODULE:OnEntityLoaded(ent, data)
+    if ent:GetClass() ~= "lia_storage" or not data then return end
+    if data.password then
+        ent.password = data.password
+        ent:setNetVar("locked", true)
+    end
+
+    local invID = data.id
+    if invID then
+        lia.inventory.loadByID(invID):next(function(inventory)
+            if inventory and IsValid(ent) then
+                inventory.isStorage = true
+                ent:setInventory(inventory)
+                hook.Run("StorageRestored", ent, inventory)
+            elseif IsValid(ent) then
+                SafeRemoveEntityDelayed(ent, 1)
+            end
+        end)
+    end
 end
 return RULES

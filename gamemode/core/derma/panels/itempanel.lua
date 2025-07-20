@@ -79,10 +79,6 @@ function PANEL:openInspect()
     local view = vgui.Create("EditablePanel", frame)
     view:Dock(TOP)
     view:SetTall(fh * 0.5)
-    view.Paint = function(_, w, h)
-        surface.SetDrawColor(color_black)
-        surface.DrawOutlinedRect(0, 0, w, h, 2)
-    end
 
     local model = vgui.Create("DModelPanel", view)
     model:Dock(FILL)
@@ -99,29 +95,8 @@ function PANEL:openInspect()
     end)
 
     model.OnMouseWheeled = function(p, d) p:SetFOV(math.Clamp(p:GetFOV() - d * 2, 20, 80)) end
-    model.OnMousePressed = function(p, btn)
-        if btn == MOUSE_LEFT then
-            p.dragging = true
-            p.lastX, p.lastY = input.GetCursorPos()
-            p:MouseCapture(true)
-        end
-    end
-
-    model.OnMouseReleased = function(p)
-        p.dragging = false
-        p:MouseCapture(false)
-    end
 
     model.Think = function(p)
-        if p.dragging then
-            local x, y = input.GetCursorPos()
-            local dx, dy = x - p.lastX, y - p.lastY
-            p.lastX, p.lastY = x, y
-            local off = Vector(-dx, dy, 0) * 0.03
-            p:SetCamPos(p:GetCamPos() + off)
-            p:SetLookAt(p:GetLookAt() + off)
-        end
-
         if input.IsKeyDown(KEY_A) or input.IsKeyDown(KEY_D) then
             local ang = p.Entity:GetAngles()
             ang.y = ang.y + FrameTime() * 150 * (input.IsKeyDown(KEY_A) and 1 or -1)
@@ -183,7 +158,9 @@ function PANEL:buildButtons()
     end
 
     self:addBtn(L("inspect"), function()
-        self:openInspect()
+        if hook.Run("CanPlayerInspectItem", LocalPlayer(), self.item) ~= false then
+            self:openInspect()
+        end
         self:Remove()
     end)
 

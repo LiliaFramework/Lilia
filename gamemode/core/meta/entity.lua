@@ -24,6 +24,10 @@ function entityMeta:isSimfphysCar()
 end
 
 function entityMeta:isLiliaPersistent()
+    if self.GetPersistent and self:GetPersistent() then
+        return true
+    end
+
     return self.IsLeonNPC or self.IsPersistent
 end
 

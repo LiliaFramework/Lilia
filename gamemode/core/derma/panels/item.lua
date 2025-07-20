@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 local renderedIcons = {}
 local function renderNewIcon(panel, itemTable)
     if itemTable.iconCam and (not renderedIcons[string.lower(itemTable.model)] or itemTable.forceRender) then
@@ -11,6 +11,7 @@ local function renderNewIcon(panel, itemTable)
 
         renderedIcons[string.lower(itemTable.model)] = true
         panel.Icon:RebuildSpawnIconEx(iconCam)
+        itemTable.forceRender = nil
     end
 end
 

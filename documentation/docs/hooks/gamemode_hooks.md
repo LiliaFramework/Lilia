@@ -2163,6 +2163,123 @@ hook.Add("CanPlayerUnequipItem", "Cursed", function(ply, item)
 end)
 ```
 
+### CanPlayerRotateItem
+
+**Purpose**
+
+Called when a player attempts to rotate an inventory item. Return false to block rotating.
+
+**Parameters**
+
+- `client` (`Player`): Player rotating.
+- `item` (`table`): Item being rotated.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- boolean: False to block rotating
+
+**Example Usage**
+
+```lua
+hook.Add("CanPlayerRotateItem", "NoRotatingArtifacts", function(ply, item)
+    if item.isArtifact then
+        return false
+    end
+end)
+```
+
+### CanPlayerInspectItem
+
+**Purpose**
+
+Checks if a player may open the item inspection panel. Return false to prevent inspection.
+
+**Parameters**
+
+- `client` (`Player`): Player inspecting.
+- `item` (`table`): Item being inspected.
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+- boolean: False to block inspection
+
+**Example Usage**
+
+```lua
+hook.Add("CanPlayerInspectItem", "BlockSecretItems", function(ply, item)
+    if item.secret then
+        return false
+    end
+end)
+```
+
+### CanPlayerRequestInspectionOnItem
+
+**Purpose**
+
+Called when a player wants to show an item to someone else. Return false to cancel the request.
+
+**Parameters**
+
+- `client` (`Player`): Player requesting inspection.
+- `target` (`Player`): Target player.
+- `item` (`table`): Item being offered.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- boolean: False to cancel the request
+
+**Example Usage**
+
+```lua
+hook.Add("CanPlayerRequestInspectionOnItem", "FriendsOnly", function(ply, target, item)
+    if not ply:isFriend(target) then
+        return false
+    end
+end)
+```
+
+### CanPlayerSeeLogCategory
+
+**Purpose**
+
+Determines if a player can view a specific log category in the admin console.
+
+**Parameters**
+
+- `client` (`Player`): Player requesting logs.
+- `category` (`string`): Category name.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- boolean: False to hide the category
+
+**Example Usage**
+
+```lua
+hook.Add("CanPlayerSeeLogCategory", "HideChatLogs", function(ply, category)
+    if category == "chatOOC" and not ply:IsAdmin() then
+        return false
+    end
+end)
+```
+
 ---
 
 ### PostPlayerSay
@@ -10675,5 +10792,34 @@ Triggered when the anti-cheat system flags a player for hacking.
 hook.Add("PlayerCheatDetected", "LogCheaters", function(ply)
     print(ply:Name() .. " was flagged for cheating")
     return true -- handled, skip default ban
+end)
+```
+
+---
+
+### OnCheaterCaught
+
+**Purpose**
+
+Called after a player is flagged for cheating. This fires once the player has
+been marked with the `cheater` network variable.
+
+**Parameters**
+
+- `client` (`Player`): Player confirmed to be cheating.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("OnCheaterCaught", "AnnounceCheater", function(ply)
+    print(ply:Name() .. " has been caught cheating!")
 end)
 ```

@@ -131,3 +131,9 @@ lia.config.add("ItemGiveEnabled", "Is Item Giving Enabled", true, nil, {
     category = "Items",
     type = "Boolean"
 })
+
+lia.config.add("DisableCheaterActions", "Disable Cheater Actions", true, nil, {
+    desc = "Prevents flagged cheaters from interacting with the game.",
+    category = "Protection",
+    type = "Boolean"
+})

@@ -211,7 +211,7 @@
     },
     ["exploitAttempt"] = {
         func = function(_, name, steamID, netMessage) return string.format("Player '%s' [%s] triggered exploit net message '%s'.", name, steamID, netMessage) end,
-        category = "Connections"
+        category = "Exploits"
     },
     ["steamIDMissing"] = {
         func = function(_, name, steamID) return string.format("SteamID missing for '%s' [%s] during CheckSeed.", name, steamID) end,
@@ -223,7 +223,7 @@
     },
     ["hackAttempt"] = {
         func = function(client) return string.format("Client %s triggered hack detection.", client:Name()) end,
-        category = "Connections"
+        category = "Cheating"
     },
     ["doorSetClass"] = {
         func = function(client, door, className) return string.format("%s set door class to %s on door %s.", client:Name(), className, door:GetClass()) end,
@@ -577,7 +577,19 @@
     },
     ["cheaterBanned"] = {
         func = function(_, name, steamID) return string.format("Cheater '%s' (%s) was automatically banned.", name, steamID) end,
-        category = "Admin"
+        category = "Cheating"
+    },
+    ["cheaterDetected"] = {
+        func = function(_, name, steamID) return string.format("Player '%s' (%s) was flagged for cheating.", name, steamID) end,
+        category = "Cheating"
+    },
+    ["cheaterToggle"] = {
+        func = function(client, targetName, state) return string.format("Admin '%s' toggled cheater status for %s: %s.", client:Name(), targetName, state) end,
+        category = "Cheating"
+    },
+    ["cheaterAction"] = {
+        func = function(client, action) return string.format("Cheater '%s' attempted to %s.", client:Name(), action) end,
+        category = "Cheaters Actions"
     },
     ["altKicked"] = {
         func = function(_, name, steamID) return string.format("Alt account '%s' (%s) was kicked.", name, steamID) end,

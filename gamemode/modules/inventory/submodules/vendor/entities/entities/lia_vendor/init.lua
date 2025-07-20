@@ -172,7 +172,6 @@ function ENT:OnRemove()
     net.Start("VendorExit")
     net.Send(self.receivers)
     if lia.shuttingDown or self.liaIsSafe then return end
-    MODULE:SaveData()
 end
 
 function ENT:setModel(model)

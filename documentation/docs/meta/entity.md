@@ -152,7 +152,7 @@ Determines if the entity is persistent in Lilia.
 ```lua
 -- Save this entity across map resets if persistent
 if ent:isLiliaPersistent() then
-    lia.persist.saveEntity(ent)
+    -- Lilia will automatically add it to persistence
 end
 ```
 

@@ -135,7 +135,24 @@ function PANEL:Init()
     end
 
     self:MakePopup()
-    self:setActiveTab(lia.config.get("DefaultMenuTab"))
+    local defaultTab = lia.config.get("DefaultMenuTab", L("status"))
+    if not self.tabList[defaultTab] then
+        local statusKey = L("status")
+        if self.tabList[statusKey] then
+            defaultTab = statusKey
+        else
+            local keys = {}
+            for k in pairs(self.tabList) do
+                keys[#keys + 1] = k
+            end
+            if #keys > 0 then
+                defaultTab = keys[math.random(#keys)]
+            end
+        end
+    end
+    if defaultTab then
+        self:setActiveTab(defaultTab)
+    end
 end
 
 function PANEL:addTab(name, callback)

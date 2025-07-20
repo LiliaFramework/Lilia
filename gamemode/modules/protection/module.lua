@@ -7,4 +7,8 @@ MODULE.CAMIPrivileges = {
         Name = "Staff Permissions - Can See Alting Notifications",
         MinAccess = "admin"
     },
+    {
+        Name = "Toggle Cheater Status",
+        MinAccess = "admin"
+    },
 }

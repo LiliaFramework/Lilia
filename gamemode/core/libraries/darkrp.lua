@@ -1,6 +1,12 @@
 ﻿DarkRP = DarkRP or {}
-RPExtraTeams = RPExtraTeams or {}
 lia.darkrp = lia.darkrp or {}
+RPExtraTeams = RPExtraTeams or {}
+local DarkRPVariables = {
+    ["DarkRPNonOwnable"] = function(entity) entity:setNetVar("noSell", true) end,
+    ["DarkRPTitle"] = function(entity, val) entity:setNetVar("name", val) end,
+    ["DarkRPCanLockpick"] = function(entity, val) entity.noPick = tobool(val) end
+}
+
 if SERVER then
     function lia.darkrp.isEmpty(position, entitiesToIgnore)
         entitiesToIgnore = entitiesToIgnore or {}
@@ -108,3 +114,4 @@ DarkRP.isEmpty = lia.darkrp.isEmpty
 DarkRP.findEmptyPos = lia.darkrp.findEmptyPos
 DarkRP.notify = lia.darkrp.notify
 DarkRP.textWrap = lia.darkrp.textWrap
+hook.Add("EntityKeyValue", "liaDarkRPEntityKeyValue", function(entity, key, value) if entity:isDoor() and DarkRPVariables[key] then DarkRPVariables[key](entity, value) end end)

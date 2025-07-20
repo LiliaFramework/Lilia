@@ -1,4 +1,4 @@
-﻿local InvSlotMat = Material("invslotfree.png", "smooth noclamp")
+local InvSlotMat = Material("invslotfree.png", "smooth noclamp")
 local PANEL = {}
 function PANEL:Init()
     self:SetPaintBackground(false)
@@ -163,7 +163,8 @@ function PANEL:InventoryItemRemoved()
     self:populateItems()
 end
 
-function PANEL:InventoryItemDataChanged()
+function PANEL:InventoryItemDataChanged(item, key)
+    if key == "rotated" then item.forceRender = true end
     self:populateItems()
 end
 

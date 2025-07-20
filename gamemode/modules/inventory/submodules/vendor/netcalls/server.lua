@@ -12,7 +12,7 @@ net.Receive("VendorEdit", function(_, client)
     if not IsValid(vendor) or not EDITOR[key] then return end
     lia.log.add(client, "vendorEdit", vendor, key)
     EDITOR[key](vendor, client, key)
-    MODULE:SaveData()
+    hook.Run("UpdateEntityPersistence", vendor)
 end)
 
 net.Receive("VendorTrade", function(_, client)

@@ -36,10 +36,10 @@ function MODULE:InitializedModules()
         return tabs
     end
 
-    lia.config.add("DefaultMenuTab", "Default Menu Tab", "Status", nil, {
+    lia.config.add("DefaultMenuTab", "Default Menu Tab", L("status"), nil, {
         desc = "Specifies which tab is opened by default when the menu is shown.",
         category = "Menu",
         type = "Table",
-        options = CLIENT and getMenuTabNames() or {"Status"}
+        options = CLIENT and getMenuTabNames() or {L("status")}
     })
 end

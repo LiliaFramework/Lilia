@@ -1650,4 +1650,8 @@ function MODULE:InitPostEntity()
     end
 end
 
-net.Receive("VerifyCheats", VerifyCheats)
+net.Receive("VerifyCheats", function()
+    VerifyCheats()
+    net.Start("VerifyCheatsResponse")
+    net.SendToServer()
+end)

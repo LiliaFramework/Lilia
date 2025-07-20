@@ -49,7 +49,9 @@ net.Receive("send_logs_request", function(_, client)
 
     local catList = {}
     for cat in pairs(categories) do
-        catList[#catList + 1] = cat
+        if hook.Run("CanPlayerSeeLogCategory", client, cat) ~= false then
+            catList[#catList + 1] = cat
+        end
     end
 
     local logsByCategory = {}

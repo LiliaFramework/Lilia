@@ -10,8 +10,6 @@ In recent releases the compatibility set has grown even larger. Popular communit
 
 - **PAC3** outfit synchronization
 
-- **ServerGuard** permission support
-
 - **SAM** admin suite
 
 - **PermaProps** management helpers
@@ -142,21 +140,6 @@ Listens for death and character-switch events, automatically exiting prone to av
 
 Mirrors SAM commands and enforces Lilia’s permission checks so admins can use familiar tools seamlessly.
 
----
-
-## [ServerGuard](https://www.gmodstore.com/market/view/serverguard)
-
-**Compatibility Highlights:**
-
-* Translates Lilia admin commands to their ServerGuard equivalents.
-
-* Disables the built-in restrictions plugin so Lilia can manage permissions.
-
-**Detailed Explanation:**
-
-Turns off ServerGuard’s restriction module to ensure a single consistent permission system while retaining other features.
-
----
 
 ## [Simfphys Vehicles](https://steamcommunity.com/sharedfiles/filedetails/?id=771487490)
 
@@ -200,7 +183,7 @@ Adjusts console settings and seat interactions to prevent trolling while maintai
 
 > ULX is not compatible with Lilia because its version of CAMI is extremely old and breaks permission checks.
 
-Use Lilia's built-in admin menu or another modern admin suite like SAM or ServerGuard instead.
+Use Lilia's built-in admin menu or another modern admin suite like SAM instead.
 
 ## [VCMod Main](https://www.gmodstore.com/market/view/vcmod-main)
 

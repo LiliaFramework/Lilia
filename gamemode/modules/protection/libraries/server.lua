@@ -1,4 +1,11 @@
 ﻿local MODULE = MODULE
+local function IsCheater(client)
+    return lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false)
+end
+
+local function LogCheaterAction(client, action)
+    lia.log.add(client, "cheaterAction", action)
+end
 function MODULE:CanPlayerSwitchChar(client, character)
     if not client:isStaffOnDuty() then
         local damageCooldown = lia.config.get("OnDamageCharacterSwitchCooldownTimer", 15)
@@ -22,6 +29,11 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
     local attacker = dmgInfo:GetAttacker()
     local isValidClient = IsValid(entity) and entity:IsPlayer()
     local attackerIsHuman = IsValid(attacker) and attacker:IsPlayer()
+    if attackerIsHuman and IsCheater(attacker) then
+        dmgInfo:SetDamage(0)
+        LogCheaterAction(attacker, "deal damage")
+        return true
+    end
     local notSameEntity = attacker ~= entity
     local isFallDamage = dmgInfo:IsFallDamage()
     local inflictorIsProp = IsValid(inflictor) and inflictor:isProp()
@@ -101,7 +113,7 @@ function MODULE:PlayerAuthed(client, steamid)
         end
     end
 
-    if lia.config.get("AltsDisabled", false) and ownerSteamID64 ~= steamID64 then
+    if lia.config.get("AltsDisabled", false) and client:IsFamilySharedAccount() then
         lia.applyPunishment(client, L("familySharingDisabled"), true, false)
         lia.notifyAdmin(L("kickedAltNotify", steamName, steamID))
     elseif lia.module.list["whitelist"] and lia.module.list["whitelist"].BlacklistedSteamID64[ownerSteamID64] then
@@ -232,6 +244,56 @@ end
 
 function MODULE:PlayerInitialSpawn(client)
     if not client:getChar() then return end
+    client.VerifyCheatsPending = true
+    local timerName = "liaVerifyCheats:" .. client:SteamID64()
+    client.VerifyCheatsTimer = timerName
     net.Start("VerifyCheats")
     net.Send(client)
+    timer.Create(timerName, 10, 1, function()
+        if IsValid(client) and client.VerifyCheatsPending then
+            lia.log.add(client, "hackAttempt")
+            local override = hook.Run("PlayerCheatDetected", client)
+            client:setNetVar("cheater", true)
+            client:setLiliaData("cheater", true)
+            client:saveLiliaData()
+            hook.Run("OnCheaterCaught", client)
+            if override ~= true then
+                lia.applyPunishment(client, L("hackingInfraction"), true, true, 0,
+                    "kickedForInfractionPeriod", "bannedForInfractionPeriod")
+            end
+        end
+    end)
+end
+
+function MODULE:PlayerDisconnected(client)
+    if client.VerifyCheatsTimer then
+        timer.Remove(client.VerifyCheatsTimer)
+        client.VerifyCheatsTimer = nil
+    end
+end
+
+hook.Add("OnCheaterCaught", "liaProtectionCheaterLog", function(client)
+    if IsValid(client) then
+        lia.log.add(client, "cheaterDetected", client:Name(), client:SteamID64())
+        client:notifyLocalized("caughtCheating")
+        for _, p in player.Iterator() do
+            if p:isStaffOnDuty() or p:IsSuperAdmin() then
+                p:notifyLocalized("cheaterDetectedStaff", client:Name(), client:SteamID64())
+            end
+        end
+    end
+end)
+
+function MODULE:PlayerUse(client, entity)
+    if IsCheater(client) then
+        LogCheaterAction(client, "use entity")
+        return false
+    end
+end
+
+function MODULE:CanPlayerInteractItem(client, action, item)
+    if IsCheater(client) then
+        LogCheaterAction(client, action .. " item")
+        return false
+    end
 end

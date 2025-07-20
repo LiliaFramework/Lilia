@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 local renderedIcons = {}
 local function renderNewIcon(panel, itemTable)
     if itemTable.iconCam and (not renderedIcons[string.lower(itemTable.model)] or itemTable.forceRender) then
@@ -11,6 +11,7 @@ local function renderNewIcon(panel, itemTable)
 
         renderedIcons[string.lower(itemTable.model)] = true
         panel.Icon:RebuildSpawnIconEx(iconCam)
+        itemTable.forceRender = nil
     end
 end
 
@@ -78,6 +79,12 @@ function PANEL:PerformLayout(w, h)
 end
 
 function PANEL:PaintBehind()
+end
+
+function PANEL:PaintOver(w, h)
+    surface.SetDrawColor(0, 0, 0)
+    surface.DrawOutlinedRect(0, 0, w, h)
+    if self.BaseClass and self.BaseClass.PaintOver then self.BaseClass.PaintOver(self, w, h) end
 end
 
 vgui.Register("liaGridInvItem", PANEL, "liaItemIcon")

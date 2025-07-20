@@ -5,6 +5,7 @@ ENT.Category = "Lilia"
 ENT.Spawnable = false
 ENT.isStorageEntity = true
 ENT.DrawEntityInfo = true
+ENT.IsPersistent = true
 function ENT:getInv()
     return lia.inventory.instances[self:getNetVar("id")]
 end

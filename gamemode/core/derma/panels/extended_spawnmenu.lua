@@ -489,16 +489,6 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
     end
 end)
 
-concommand.Add("extsm_addoninfo", function()
-    local frame = vgui.Create("DFrame")
-    frame:SetSize(ScrW() - 100, ScrH() - 100)
-    frame:Center()
-    frame:MakePopup()
-    local scroll = frame:Add("DScrollPanel")
-    scroll:Dock(FILL)
-    scroll:Add("rb655_addonInfo")
-end)
-
 hook.Add("AddToolMenuCategories", "liaExtendedSpawnMenuAddToolMenuCategories", function() spawnmenu.AddToolCategory("Utilities", "Robotboy655", "#Robotboy655") end)
 local PANEL = {}
 function PANEL:Init()
@@ -596,13 +586,15 @@ function PANEL:Paint()
     local _, th11 = DrawText(L("filesUnusedDelete"), "AddonInfo_Text", 0, y, color_white)
     y = y + th11
     local maxW2 = 0
+    local th12Height = 0
     for _, e in ipairs(self.workshopWasteFiles) do
         local tw6, th12 = DrawText(GetSize(e[2]) .. "    ", "AddonInfo_Small", 0, y, Color(220, 220, 220))
         maxW2 = math.max(maxW2, tw6)
+        th12Height = th12
         y = y + th12
     end
 
-    y = y - #self.workshopWasteFiles * th12
+    y = y - #self.workshopWasteFiles * th12Height
     for _, e in ipairs(self.workshopWasteFiles) do
         local _, th13 = DrawText(e[1], "AddonInfo_Small", maxW2, y, color_white)
         y = y + th13

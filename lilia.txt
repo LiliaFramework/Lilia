@@ -1,8 +1,9 @@
 "lilia"
 {
-	"base"		"sandbox"
-	"title"		"Lilia"
-	"author"	"Samael"
-	"category"	"rp"
-	"menusystem"	"1"
+	"base"        "sandbox"
+	"title"       "Lilia"
+	"author"      "Samael"
+	"category"    "rp"
+	"menusystem"  "1"
+	"hide"        "1"
 }

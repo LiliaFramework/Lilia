@@ -4,15 +4,6 @@
     type = "Boolean"
 })
 
-lia.option.add("espActive", "ESP Active", "Enable ESP to highlight entities", false, nil, {
-    category = "ESP",
-    visible = function()
-        local ply = LocalPlayer()
-        if not IsValid(ply) then return false end
-        return ply:isStaffOnDuty() or ply:hasPrivilege("Staff Permissions - No Clip Outside Staff Character")
-    end
-})
-
 lia.option.add("espPlayers", "ESP Players", "Enable ESP for players", false, nil, {
     category = "ESP",
     visible = function()

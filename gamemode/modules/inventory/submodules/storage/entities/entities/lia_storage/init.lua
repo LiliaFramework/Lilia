@@ -37,7 +37,6 @@ function ENT:OnRemove()
     end
 
     self:deleteInventory()
-    MODULE:SaveData()
 end
 
 function ENT:openInv(activator)

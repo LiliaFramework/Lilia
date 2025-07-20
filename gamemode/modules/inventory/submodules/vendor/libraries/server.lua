@@ -1,48 +1,3 @@
-local encodeVector = lia.data.encodeVector
-local encodeAngle = lia.data.encodeAngle
-local decodeVector = lia.data.decodeVector
-local decodeAngle = lia.data.decodeAngle
-
-function MODULE:SaveData()
-    local data = {}
-    for _, v in ipairs(ents.FindByClass("lia_vendor")) do
-        data[#data + 1] = {
-            name = v:getNetVar("name"),
-            pos = encodeVector(v:GetPos()),
-            angles = encodeAngle(v:GetAngles()),
-            model = v:GetModel(),
-            items = v.items,
-            factions = v.factions,
-            classes = v.classes,
-            money = v.money,
-            flag = v:getNetVar("flag"),
-            scale = v:getNetVar("scale"),
-            welcomeMessage = v:getNetVar("welcomeMessage"),
-        }
-    end
-
-    self:setData(data)
-    lia.information(L("vendorSaved", table.Count(data)))
-end
-
-function MODULE:LoadData()
-    for _, v in ipairs(self:getData() or {}) do
-        local entity = ents.Create("lia_vendor")
-        entity:SetPos(decodeVector(v.pos))
-        entity:SetAngles(decodeAngle(v.angles))
-        entity:Spawn()
-        entity:SetModel(v.model)
-        entity:setNetVar("name", v.name)
-        entity:setNetVar("flag", v.flag)
-        entity:setNetVar("scale", v.scale or 0.5)
-        entity:setNetVar("welcomeMessage", v.welcomeMessage)
-        entity.items = v.items or {}
-        entity.factions = v.factions or {}
-        entity.classes = v.classes or {}
-        entity.money = v.money
-    end
-end
-
 function MODULE:OnCharTradeVendor(client, vendor, item, isSellingToVendor, _, _, isFailed)
     local vendorName = vendor:getNetVar("name") or L("unknown")
     if not isSellingToVendor then
@@ -211,4 +166,30 @@ function MODULE:PlayerAccessVendor(client, vendor)
             net.Send(client)
         end
     end
+end
+
+function MODULE:GetEntitySaveData(ent)
+    if ent:GetClass() ~= "lia_vendor" then return end
+    return {
+        name = ent:getNetVar("name"),
+        items = ent.items,
+        factions = ent.factions,
+        classes = ent.classes,
+        money = ent.money,
+        flag = ent:getNetVar("flag"),
+        scale = ent:getNetVar("scale"),
+        welcomeMessage = ent:getNetVar("welcomeMessage"),
+    }
+end
+
+function MODULE:OnEntityLoaded(ent, data)
+    if ent:GetClass() ~= "lia_vendor" or not data then return end
+    ent:setNetVar("name", data.name)
+    ent:setNetVar("flag", data.flag)
+    ent:setNetVar("scale", data.scale or 0.5)
+    ent:setNetVar("welcomeMessage", data.welcomeMessage)
+    ent.items = data.items or {}
+    ent.factions = data.factions or {}
+    ent.classes = data.classes or {}
+    ent.money = data.money
 end

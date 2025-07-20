@@ -75,7 +75,7 @@ lia.command.add("sendtositroom", {
     adminOnly = true,
     privilege = "Manage SitRooms",
     desc = "sendToSitRoomDesc",
-    syntax = "[player Player Name]",
+    syntax = "[player Name]",
     AdminStick = {
         Name = "sendToSitRoom",
         Category = "moderationTools",
@@ -121,7 +121,7 @@ lia.command.add("returnsitroom", {
     adminOnly = true,
     privilege = "Manage SitRooms",
     desc = "returnFromSitroomDesc",
-    syntax = "[player Player Name]",
+    syntax = "[player Name]",
     AdminStick = {
         Name = "returnFromSitroom",
         Category = "moderationTools",
@@ -153,7 +153,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Kick Player",
         desc = "plyKickDesc",
-        syntax = "<string name> [string reason]",
+        syntax = "[player Name] [string Reason optional]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -168,7 +168,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Ban Player",
         desc = "plyBanDesc",
-        syntax = "<string name> [number duration] [string reason]",
+        syntax = "[player Name] [number Duration optional] [string Reason optional]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -183,7 +183,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Kill Player",
         desc = "plyKillDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -198,7 +198,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Set Player Group",
         desc = "plySetGroupDesc",
-        syntax = "<string name> <string group>",
+        syntax = "[player Name] [string Group]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) and lia.admin.groups[arguments[2]] then
@@ -215,7 +215,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Unban Player",
         desc = "plyUnbanDesc",
-        syntax = "<string steamid>",
+        syntax = "[string SteamID]",
         onRun = function(client, arguments)
             local steamid = arguments[1]
             if steamid and steamid ~= "" then
@@ -230,7 +230,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Freeze Player",
         desc = "plyFreezeDesc",
-        syntax = "<string name> [number duration]",
+        syntax = "[player Name] [number Duration optional]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -246,7 +246,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Unfreeze Player",
         desc = "plyUnfreezeDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -260,7 +260,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Slay Player",
         desc = "plySlayDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -274,7 +274,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Respawn Player",
         desc = "plyRespawnDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -288,7 +288,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Blind Player",
         desc = "plyBlindDesc",
-        syntax = "<string name> [number time]",
+        syntax = "[player Name] [number Time optional]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -315,7 +315,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Unblind Player",
         desc = "plyUnblindDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -331,7 +331,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Blind Fade Player",
         desc = "plyBlindFadeDesc",
-        syntax = "<string name> <number time> [string color] [number fadein] [number fadeout]",
+        syntax = "[player Name] [number Time optional] [string Color optional] [number FadeIn optional] [number FadeOut optional]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -356,7 +356,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Blind Fade All",
         desc = "blindFadeAllDesc",
-        syntax = "<number time> [string color] [number fadein] [number fadeout]",
+        syntax = "[number Time optional] [string Color optional] [number FadeIn optional] [number FadeOut optional]",
         onRun = function(_, arguments)
             local duration = tonumber(arguments[1]) or 0
             local colorName = (arguments[2] or "black"):lower()
@@ -380,7 +380,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Gag Player",
         desc = "plyGagDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -395,7 +395,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Ungag Player",
         desc = "plyUngagDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -410,7 +410,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Mute Player",
         desc = "plyMuteDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) and target:getChar() then
@@ -425,7 +425,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Unmute Player",
         desc = "plyUnmuteDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) and target:getChar() then
@@ -441,7 +441,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Bring Player",
         desc = "plyBringDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -456,7 +456,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Goto Player",
         desc = "plyGotoDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -471,7 +471,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Return Player",
         desc = "plyReturnDesc",
-        syntax = "<string name>",
+        syntax = "[player Name optional]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             target = IsValid(target) and target or client
@@ -488,7 +488,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Jail Player",
         desc = "plyJailDesc",
-        syntax = "<string name> [number duration]",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -503,7 +503,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Unjail Player",
         desc = "plyUnjailDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -518,7 +518,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Cloak Player",
         desc = "plyCloakDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -532,7 +532,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Uncloak Player",
         desc = "plyUncloakDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -546,7 +546,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "God Player",
         desc = "plyGodDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -560,7 +560,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Ungod Player",
         desc = "plyUngodDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -574,7 +574,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Ignite Player",
         desc = "plyIgniteDesc",
-        syntax = "<string name> [number duration]",
+        syntax = "[player Name] [number Duration optional]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -589,7 +589,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Extinguish Player",
         desc = "plyExtinguishDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then
@@ -603,7 +603,7 @@ if not lia.admin.isDisabled() then
         adminOnly = true,
         privilege = "Strip Player",
         desc = "plyStripDesc",
-        syntax = "<string name>",
+        syntax = "[player Name]",
         onRun = function(client, arguments)
             local target = lia.command.findPlayer(client, arguments[1])
             if IsValid(target) then

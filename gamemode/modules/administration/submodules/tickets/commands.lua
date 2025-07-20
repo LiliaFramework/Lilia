@@ -2,7 +2,7 @@
     adminOnly = true,
     privilege = "View Claims",
     desc = "plyViewClaimsDesc",
-    syntax = "[player Player Name]",
+    syntax = "[player Name]",
     AdminStick = {
         Name = "viewTicketClaims",
         Category = "moderationTools",

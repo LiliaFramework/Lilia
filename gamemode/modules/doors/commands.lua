@@ -103,9 +103,14 @@ lia.command.add("doorbuy", {
         TargetClass = "Door"
     },
     onRun = function(client)
+        if lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false) then
+            lia.log.add(client, "cheaterAction", "buy door")
+            return
+        end
         local door = client:getTracedEntity()
         if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            if door:getNetVar("noSell") or door:getNetVar("faction") or door:getNetVar("class") then return client:notifyLocalized("doorNotAllowedToOwn") end
+            local factions = door:getNetVar("factions")
+            if door:getNetVar("noSell") or (factions and factions ~= "[]") or door:getNetVar("class") then return client:notifyLocalized("doorNotAllowedToOwn") end
             if IsValid(door:GetDTEntity(0)) then
                 client:notifyLocalized("doorOwnedBy", door:GetDTEntity(0):Name())
                 return false
@@ -427,7 +432,6 @@ lia.command.add("doorinfo", {
             local name = door:getNetVar("title", door:getNetVar("name", L("doorTitle")))
             local price = door:getNetVar("price", 0)
             local noSell = door:getNetVar("noSell", false)
-            local faction = door:getNetVar("faction", L("none"))
             local factions = door:getNetVar("factions", "[]")
             local class = door:getNetVar("class", L("none"))
             local hidden = door:getNetVar("hidden", false)
@@ -448,10 +452,6 @@ lia.command.add("doorinfo", {
                 {
                     property = L("doorInfoNoSell"),
                     value = tostring(noSell)
-                },
-                {
-                    property = L("faction"),
-                    value = tostring(faction)
                 },
                 {
                     property = L("doorInfoFactions"),
@@ -507,7 +507,6 @@ lia.command.add("dooraddfaction", {
             end
 
             if faction then
-                door.liaFactionID = faction.uniqueID
                 local facs = door:getNetVar("factions", "[]")
                 facs = util.JSONToTable(facs)
                 facs[faction.index] = true
@@ -557,7 +556,6 @@ lia.command.add("doorremovefaction", {
             end
 
             if faction then
-                door.liaFactionID = nil
                 local facs = door:getNetVar("factions", "[]")
                 facs = util.JSONToTable(facs)
                 facs[faction.index] = nil

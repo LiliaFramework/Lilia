@@ -99,6 +99,13 @@ hook.Add("PlayerButtonDown", "liaThirdPersonPlayerButtonDown", function(_, butto
     end
 end)
 
+local function SetWeaponHidden(ply, state)
+    local wep = ply:GetActiveWeapon()
+    if IsValid(wep) then
+        wep:SetNoDraw(state)
+    end
+end
+
 hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(ply)
     local maxDist = lia.config.get("MaxViewDistance", 5000)
     local maxDistSqr = maxDist * maxDist
@@ -110,6 +117,7 @@ hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(ply)
             ply.IsHidden = false
             if not ply:GetNoDraw() then ply:DrawShadow(true) end
         end
+        SetWeaponHidden(ply, false)
         return
     end
 
@@ -120,6 +128,7 @@ hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(ply)
             ply.IsHidden = true
             ply:DrawShadow(false)
         end
+        SetWeaponHidden(ply, true)
         return true
     end
 
@@ -130,6 +139,7 @@ hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(ply)
             ply.IsHidden = true
             ply:DrawShadow(false)
         end
+        SetWeaponHidden(ply, true)
         return true
     end
 
@@ -172,11 +182,13 @@ hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(ply)
                     ply.IsHidden = false
                     if not ply:GetNoDraw() then ply:DrawShadow(true) end
                 end
+                SetWeaponHidden(ply, false)
             else
                 if not ply.IsHidden then
                     ply.IsHidden = true
                     ply:DrawShadow(false)
                 end
+                SetWeaponHidden(ply, true)
             end
         end
     else
