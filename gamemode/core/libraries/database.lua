@@ -322,6 +322,7 @@ function lia.db.loadTables()
         lia.db.fieldExists("lia_players", "_lastOnline"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastOnline INTEGER"):catch(ignore) end end)
         lia.db.fieldExists("lia_players", "_totalOnlineTime"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _totalOnlineTime FLOAT"):catch(ignore) end end)
         lia.db.fieldExists("lia_items", "_quantity"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_items ADD COLUMN _quantity INTEGER"):catch(ignore) end end)
+        lia.db.fieldExists("lia_data", "_data"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_data ADD COLUMN _data TEXT"):catch(ignore) end end)
         lia.db.addDatabaseFields()
         lia.db.tablesLoaded = true
         hook.Run("LiliaTablesLoaded")

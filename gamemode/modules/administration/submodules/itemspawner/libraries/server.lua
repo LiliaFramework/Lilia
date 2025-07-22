@@ -44,6 +44,7 @@ net.Receive("SpawnMenuSpawnItem", function(_, client)
         undo.SetPlayer(client)
         undo.AddEntity(ent)
         local name = lia.item.list[id] and lia.item.list[id].name or id
+        undo.SetCustomUndoText("Undone " .. name)
         undo.Finish("Item (" .. name .. ")")
         lia.log.add(client, "spawnItem", name, "SpawnMenuSpawnItem")
     end, angle_zero, {})

@@ -172,8 +172,6 @@
     ["GExtension_Net_GroupData"] = true,
     ["npctool_relman_up"] = true,
     ["cheadle_api"] = true,
-    ["npctool_spawner_clearundo"] = true,
-    ["sv_npctool_spawner_ppoint"] = true,
     ["wire_expression2_request_file"] = true,
     ["wire_adv_upload"] = true,
     ["wire_expression2_request_list"] = true,

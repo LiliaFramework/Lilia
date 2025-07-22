@@ -34,7 +34,13 @@ function lia.char.new(data, id, client, steamID)
 
     character.id = id or 0
     character.player = client
-    if IsValid(client) or steamID then character.steamID = IsValid(client) and client:SteamID64() or steamID end
+    if IsValid(client) or steamID then
+        if IsValid(client) and isfunction(client.SteamID64) then
+            character.steamID = client:SteamID64()
+        else
+            character.steamID = steamID
+        end
+    end
     return character
 end
 

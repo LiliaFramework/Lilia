@@ -955,12 +955,20 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
 end
 
 local hl2Weapons = {"weapon_crowbar", "weapon_stunstick", "weapon_pistol", "weapon_357", "weapon_smg1", "weapon_ar2", "weapon_shotgun", "weapon_crossbow", "weapon_rpg"}
+
+lia.botCounter = lia.botCounter or 0
+
+local function NextBotName()
+    lia.botCounter = lia.botCounter + 1
+    return string.format("Bot%02d", lia.botCounter)
+end
+
 local function SpawnBot()
-    player.CreateNextBot("Bot_" .. CurTime())
+    player.CreateNextBot(NextBotName())
 end
 
 local function SpawnArmedBot()
-    local bot = player.CreateNextBot("ArmedBot_" .. CurTime())
+    local bot = player.CreateNextBot(NextBotName())
     if IsValid(bot) then
         local wep = hl2Weapons[math.random(#hl2Weapons)]
         bot:Give(wep)
