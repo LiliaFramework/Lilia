@@ -188,11 +188,11 @@ jobs:
             "description": "Lilia ${VERSION}",
             "author": "LiliaFramework",
             "type": "gamemode",
-            "ignore": [".github/*", "site/*", "documentation/*", "addon.json"]
+            "ignore": [".github/*", "site/*", "documentation/*"]
           }
           EOF
       - run: |
-          cp /tmp/addon.json addon.json
+          cp /tmp/addon.json addon/addon.json
       - run: |
           sudo apt-get update
           sudo apt-get install -y lib32gcc-s1 lua5.3
@@ -200,7 +200,7 @@ jobs:
           curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf - -C ~/Steam
       - run: |
           cd addon
-          lua5.3 ../gmacreator.lua ../3527535922.gma ../addon.json
+          lua5.3 ../gmacreator.lua ../3527535922.gma addon.json
       - run: |
           echo "Created workshop addon: 3527535922.gma"
       - run: |
@@ -226,7 +226,7 @@ jobs:
           cat ~/Steam/logs/workshop_log.txt || true
           echo
           echo ~/Steam/workshopbuilds/depot_build_4000.log
-          cat ~/Steam/workshopbuilds/depot_build_4000.log || true
+            cat ~/Steam/workshopbuilds/depot_build_4000.log || true
           echo
           cat workshop.vdf || true
           exit 1
