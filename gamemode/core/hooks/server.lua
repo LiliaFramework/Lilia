@@ -912,7 +912,6 @@ end
 
 function GM:LiliaTablesLoaded()
     lia.db.addDatabaseFields()
-    lia.log.loadTables()
     lia.data.loadTables()
     lia.data.loadPersistence()
     lia.admin.load()
