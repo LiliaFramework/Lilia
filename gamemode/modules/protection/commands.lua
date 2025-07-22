@@ -1,5 +1,4 @@
-﻿local MODULE = MODULE
-lia.command.add("togglecheater", {
+﻿lia.command.add("togglecheater", {
     adminOnly = true,
     privilege = "Toggle Cheater Status",
     desc = "toggleCheaterDesc",
