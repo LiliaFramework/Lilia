@@ -8,10 +8,3 @@ MODULE.CAMIPrivileges = {
         MinAccess = "superadmin"
     }
 }
-
-MODULE.Dependencies = {
-    {
-        File = "logs.lua",
-        Realm = "server",
-    },
-}
