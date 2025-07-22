@@ -351,8 +351,7 @@ function lia.data.getPersistence()
     return lia.data.persistCache or {}
 end
 
-local dev = true
-timer.Create("liaSaveData", dev and 5 or lia.config.get("DataSaveInterval", 600), 0, function()
+timer.Create("liaSaveData", lia.config.get("DataSaveInterval", 600), 0, function()
     if lia.shuttingDown then return end
     hook.Run("SaveData")
     hook.Run("PersistenceSave")
