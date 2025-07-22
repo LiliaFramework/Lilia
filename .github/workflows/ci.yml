@@ -79,7 +79,7 @@ jobs:
 
   update-shared-version:
     needs: compute-version
-    if: github.ref == 'refs/heads/main'
+    if: ${{ github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.compute-version.outputs.version }}
