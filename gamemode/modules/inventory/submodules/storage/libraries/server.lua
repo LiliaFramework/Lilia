@@ -20,10 +20,6 @@
     end
 }
 
-local encodeVector = lia.data.encodeVector
-local encodeAngle = lia.data.encodeAngle
-local decodeVector = lia.data.decodeVector
-local decodeAngle = lia.data.decodeAngle
 function MODULE:PlayerSpawnedProp(client, model, entity)
     local data = self.StorageDefinitions[model:lower()]
     if not data then return end

@@ -129,6 +129,68 @@ function characterMeta:doesFakeRecognize(id)
     return hook.Run("isCharFakeRecognized", self, id) ~= false
 end
 
+function characterMeta:setData(k, v, noReplication, receiver)
+    if not self.dataVars then self.dataVars = {} end
+    local toNetwork = {}
+    if istable(k) then
+        for nk, nv in pairs(k) do
+            self.dataVars[nk] = nv
+            toNetwork[#toNetwork + 1] = nk
+        end
+    else
+        self.dataVars[k] = v
+        toNetwork[1] = k
+    end
+
+    if SERVER then
+        if not noReplication and #toNetwork > 0 then
+            net.Start("liaCharacterData")
+            net.WriteUInt(self:getID(), 32)
+            net.WriteUInt(#toNetwork, 32)
+            for _, nk in ipairs(toNetwork) do
+                local data = self.dataVars[nk]
+                if istable(data) then data = pon.encode(data) end
+                net.WriteString(nk)
+                net.WriteType(data)
+            end
+
+            net.Send(receiver or self:getPlayer())
+        end
+
+        if istable(k) then
+            for nk, nv in pairs(k) do
+                if nv == nil then
+                    lia.db.delete("chardata", "_charID = " .. self:getID() .. " AND _key = '" .. lia.db.escape(nk) .. "'")
+                else
+                    local encoded = pon.encode({nv})
+                    lia.db.upsert({
+                        _charID = self:getID(),
+                        _key = nk,
+                        _value = encoded
+                    }, "chardata", function(success, err) if not success then print("Failed to insert character data: " .. err) end end)
+                end
+            end
+        else
+            if v == nil then
+                lia.db.delete("chardata", "_charID = " .. self:getID() .. " AND _key = '" .. lia.db.escape(k) .. "'")
+            else
+                local encoded = pon.encode({v})
+                lia.db.upsert({
+                    _charID = self:getID(),
+                    _key = k,
+                    _value = encoded
+                }, "chardata", function(success, err) if not success then print("Failed to insert character data: " .. err) end end)
+            end
+        end
+    end
+end
+
+function characterMeta:getData(key, default)
+    if not key then return self.dataVars end
+    local value = self.dataVars and self.dataVars[key] or default
+    return value
+end
+
 if SERVER then
     function characterMeta:recognize(character, name)
         local id

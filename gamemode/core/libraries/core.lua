@@ -151,6 +151,10 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/libraries/vendor.lua",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/core/libraries/time.lua",
         realm = "shared"
     },
@@ -341,7 +345,7 @@ lia.includeDir("lilia/gamemode/core/libraries/thirdparty", true, true)
 lia.includeDir("lilia/gamemode/core/derma", true, true, "client")
 lia.include("lilia/gamemode/core/libraries/database.lua", "server")
 lia.include("lilia/gamemode/core/libraries/config.lua", "shared")
-lia.include("lilia/gamemode/core/libraries/data.lua", "shared")
+lia.include("lilia/gamemode/core/libraries/data.lua", "server")
 function lia.error(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[Error] ")
     MsgC(Color(255, 0, 0), tostring(msg), "\n")
@@ -523,7 +527,6 @@ function GM:Initialize()
         hasInitializedModules = true
     end
 
-    lia.config.load()
     if CLIENT then
         lia.option.load()
         lia.keybind.load()
@@ -539,16 +542,6 @@ function GM:OnReloaded()
     else
         lia.option.load()
         lia.keybind.load()
-    end
-end
-
-function GM:InitPostEntity()
-    if SERVER then
-        lia.faction.formatModelData()
-        timer.Simple(2, function() lia.entityDataLoaded = true end)
-    else
-        lia.joinTime = RealTime() - 0.9716
-        if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
     end
 end
 

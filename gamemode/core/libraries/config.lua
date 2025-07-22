@@ -67,46 +67,45 @@ end
 
 function lia.config.load()
     if SERVER then
-        lia.db.waitForTablesToLoad():next(function()
-            local schema = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-            lia.db.select({"_key", "_value"}, "config", "_schema = " .. lia.db.convertDataType(schema)):next(function(res)
-                local rows = res.results or {}
-                local existing = {}
-                for _, row in ipairs(rows) do
-                    local decoded = util.JSONToTable(row._value)
-                    lia.config.stored[row._key] = lia.config.stored[row._key] or {}
-                    local value = decoded and decoded[1]
-                    if value == nil or value == "" then
-                        lia.config.stored[row._key].value = lia.config.stored[row._key].default
-                    else
-                        lia.config.stored[row._key].value = value
-                        existing[row._key] = true
-                    end
-                end
-
-                local inserts = {}
-                for k, v in pairs(lia.config.stored) do
-                    if not existing[k] then
-                        lia.config.stored[k].value = v.default
-                        inserts[#inserts + 1] = {
-                            _schema = schema,
-                            _key = k,
-                            _value = {v.default}
-                        }
-                    end
-                end
-
-                local finalize = function() hook.Run("InitializedConfig") end
-                if #inserts > 0 then
-                    local ops = {}
-                    for _, row in ipairs(inserts) do
-                        ops[#ops + 1] = lia.db.upsert(row, "config")
-                    end
-                    deferred.all(ops):next(finalize, finalize)
+        local schema = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+        lia.db.select({"_key", "_value"}, "config", "_schema = " .. lia.db.convertDataType(schema)):next(function(res)
+            local rows = res.results or {}
+            local existing = {}
+            for _, row in ipairs(rows) do
+                local decoded = util.JSONToTable(row._value)
+                lia.config.stored[row._key] = lia.config.stored[row._key] or {}
+                local value = decoded and decoded[1]
+                if value == nil or value == "" then
+                    lia.config.stored[row._key].value = lia.config.stored[row._key].default
                 else
-                    finalize()
+                    lia.config.stored[row._key].value = value
+                    existing[row._key] = true
                 end
-            end)
+            end
+
+            local inserts = {}
+            for k, v in pairs(lia.config.stored) do
+                if not existing[k] then
+                    lia.config.stored[k].value = v.default
+                    inserts[#inserts + 1] = {
+                        _schema = schema,
+                        _key = k,
+                        _value = {v.default}
+                    }
+                end
+            end
+
+            local finalize = function() hook.Run("InitializedConfig") end
+            if #inserts > 0 then
+                local ops = {}
+                for _, row in ipairs(inserts) do
+                    ops[#ops + 1] = lia.db.upsert(row, "config")
+                end
+
+                deferred.all(ops):next(finalize, finalize)
+            else
+                finalize()
+            end
         end)
     else
         net.Start("cfgList")
@@ -143,15 +142,13 @@ if SERVER then
             }
         end
 
-        lia.db.waitForTablesToLoad():next(function()
-            local schema = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-            local queries = {"DELETE FROM lia_config WHERE _schema = " .. lia.db.convertDataType(schema)}
-            for _, row in ipairs(rows) do
-                queries[#queries + 1] = "INSERT INTO lia_config (_schema,_key,_value) VALUES (" .. lia.db.convertDataType(schema) .. ", " .. lia.db.convertDataType(row._key) .. ", " .. lia.db.convertDataType(row._value) .. ")"
-            end
+        local schema = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+        local queries = {"DELETE FROM lia_config WHERE _schema = " .. lia.db.convertDataType(schema)}
+        for _, row in ipairs(rows) do
+            queries[#queries + 1] = "INSERT INTO lia_config (_schema,_key,_value) VALUES (" .. lia.db.convertDataType(schema) .. ", " .. lia.db.convertDataType(row._key) .. ", " .. lia.db.convertDataType(row._value) .. ")"
+        end
 
-            lia.db.transaction(queries)
-        end)
+        lia.db.transaction(queries)
     end
 end
 

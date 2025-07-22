@@ -19,9 +19,7 @@ lia.command.add("banooc", {
         end
 
         local id = target:SteamID64()
-        if not table.HasValue(MODULE.OOCBans, id) then
-            table.insert(MODULE.OOCBans, id)
-        end
+        if not table.HasValue(MODULE.OOCBans, id) then table.insert(MODULE.OOCBans, id) end
         MODULE:SaveData()
         client:notifyLocalized("playerBannedFromOOC", target:Name())
         lia.log.add(client, "banOOC", target:Name(), target:SteamID64())

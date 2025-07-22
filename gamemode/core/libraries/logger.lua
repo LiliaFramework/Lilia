@@ -27,9 +27,7 @@ if SERVER then
     end
 
     function lia.log.loadTables()
-        lia.db.waitForTablesToLoad():next(function()
-            createLogsTable()
-        end)
+        createLogsTable()
     end
 
     function lia.log.addType(logType, func, category)
@@ -72,5 +70,4 @@ if SERVER then
             _steamID = steamID
         }, nil, "logs")
     end
-
 end

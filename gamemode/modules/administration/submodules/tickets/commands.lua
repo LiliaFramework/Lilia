@@ -31,7 +31,7 @@
         end
 
         local claimedFor = L("none")
-        if next(claim.claimedFor) then
+        if not table.IsEmpty(claim.claimedFor) then
             claimedFor = table.concat((function()
                 local t = {}
                 for sid, name in pairs(claim.claimedFor) do
@@ -89,7 +89,7 @@ lia.command.add("viewallclaims", {
     desc = "viewAllClaimsDesc",
     onRun = function(client)
         local caseclaims = lia.data.get("caseclaims", {})
-        if not next(caseclaims) then
+        if table.IsEmpty(caseclaims) then
             client:ChatPrint(L("noClaimsRecorded"))
             return
         end
@@ -97,7 +97,7 @@ lia.command.add("viewallclaims", {
         local claimsData = {}
         for steamID, claim in pairs(caseclaims) do
             local claimedFor = L("none")
-            if next(claim.claimedFor) then
+            if not table.IsEmpty(claim.claimedFor) then
                 claimedFor = table.concat((function()
                     local t = {}
                     for sid, name in pairs(claim.claimedFor) do
@@ -154,7 +154,7 @@ lia.command.add("viewclaims", {
     desc = "viewClaimsDesc",
     onRun = function(client)
         local caseclaims = lia.data.get("caseclaims", {})
-        if not next(caseclaims) then
+        if table.IsEmpty(caseclaims) then
             client:ChatPrint(L("noClaimsData"))
             return
         end
@@ -163,7 +163,7 @@ lia.command.add("viewclaims", {
         local claimsData = {}
         for steamID, claim in pairs(caseclaims) do
             local claimedFor = L("none")
-            if next(claim.claimedFor) then
+            if not table.IsEmpty(claim.claimedFor) then
                 claimedFor = table.concat((function()
                     local t = {}
                     for sid, name in pairs(claim.claimedFor) do

@@ -10,48 +10,55 @@ end
 function lia.admin.load()
     if lia.admin.isDisabled() then return end
     local camiGroups = CAMI.GetUsergroups and CAMI.GetUsergroups()
-    if camiGroups and next(camiGroups) then
-        lia.admin.groups = {}
-        for name in pairs(camiGroups) do
-            lia.admin.groups[name] = {}
-        end
-    else
-        lia.admin.groups = lia.data.get("admin_groups", {})
-    end
-
-    for name, priv in pairs(CAMI.GetPrivileges() or {}) do
-        lia.admin.privileges[name] = priv
-    end
-
-    if camiGroups and next(camiGroups) then
-        for group in pairs(lia.admin.groups) do
-            for privName, priv in pairs(lia.admin.privileges) do
-                if CAMI.UsergroupInherits(group, priv.MinAccess or "user") then lia.admin.groups[group][privName] = true end
+    local function continueLoad(data)
+        if camiGroups and not table.IsEmpty(camiGroups) then
+            lia.admin.groups = {}
+            for name in pairs(camiGroups) do
+                lia.admin.groups[name] = {}
             end
-        end
-    end
-
-    local defaults = {"user", "admin", "superadmin"}
-    local created = false
-    if not (camiGroups and next(camiGroups)) then
-        if table.Count(lia.admin.groups) == 0 then
-            for _, grp in ipairs(defaults) do
-                lia.admin.createGroup(grp)
-            end
-
-            created = true
         else
-            for _, grp in ipairs(defaults) do
-                if not lia.admin.groups[grp] then
-                    lia.admin.createGroup(grp)
-                    created = true
+            lia.admin.groups = data or {}
+        end
+
+        for name, priv in pairs(CAMI.GetPrivileges() or {}) do
+            lia.admin.privileges[name] = priv
+        end
+
+        if camiGroups and not table.IsEmpty(camiGroups) then
+            for group in pairs(lia.admin.groups) do
+                for privName, priv in pairs(lia.admin.privileges) do
+                    if CAMI.UsergroupInherits(group, priv.MinAccess or "user") then lia.admin.groups[group][privName] = true end
                 end
             end
         end
+
+        local defaults = {"user", "admin", "superadmin"}
+        local created = false
+        if not (camiGroups and not table.IsEmpty(camiGroups)) then
+            if table.Count(lia.admin.groups) == 0 then
+                for _, grp in ipairs(defaults) do
+                    lia.admin.createGroup(grp)
+                end
+
+                created = true
+            else
+                for _, grp in ipairs(defaults) do
+                    if not lia.admin.groups[grp] then
+                        lia.admin.createGroup(grp)
+                        created = true
+                    end
+                end
+            end
+        end
+
+        if created then lia.admin.save(true) end
+        lia.bootstrap("Administration", L("adminSystemLoaded"))
     end
 
-    if created then lia.admin.save(true) end
-    lia.bootstrap("Administration", L("adminSystemLoaded"))
+    lia.db.selectOne({"_data"}, "admingroups"):next(function(res)
+        local data = res and util.JSONToTable(res._data or "") or {}
+        continueLoad(data)
+    end)
 end
 
 function lia.admin.createGroup(groupName, info)
@@ -112,7 +119,10 @@ if SERVER then
 
     function lia.admin.save(network)
         if lia.admin.isDisabled() then return end
-        lia.data.set("admin_groups", lia.admin.groups, true, true)
+        lia.db.upsert({
+            _data = util.TableToJSON(lia.admin.groups)
+        }, "admingroups")
+
         if network then
             net.Start("lilia_updateAdminGroups")
             net.WriteTable(lia.admin.groups)
@@ -163,11 +173,6 @@ if SERVER then
         if ban.duration == 0 then return false end
         return ban.start + ban.duration <= os.time()
     end
-
-    hook.Add("InitPostEntity", "lia_LoadAdmin", function()
-        if lia.admin.isDisabled() then return end
-        lia.admin.load()
-    end)
 
     hook.Add("ShutDown", "lia_SaveAdmin", function()
         if lia.admin.isDisabled() then return end

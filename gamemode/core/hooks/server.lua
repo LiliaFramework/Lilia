@@ -1,8 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-local encodeVector = lia.data.encodeVector
-local encodeAngle = lia.data.encodeAngle
-local decodeVector = lia.data.decodeVector
-local decodeAngle = lia.data.decodeAngle
 function GM:CharPreSave(character)
     local client = character:getPlayer()
     if not character:getInv() then return end
@@ -41,6 +37,33 @@ function GM:PlayerLoadedChar(client, character)
         end
 
         character:setData("ammo", nil)
+    end)
+
+    local charID = character:getID()
+    lia.db.query("SELECT _key, _value FROM lia_chardata WHERE _charID = " .. charID, function(data)
+        if data then
+            if not character.dataVars then character.dataVars = {} end
+            for _, row in ipairs(data) do
+                local decodedValue = pon.decode(row._value)
+                character.dataVars[row._key] = decodedValue[1]
+                character:setData(row._key, decodedValue[1])
+            end
+
+            local characterData = character:getData()
+            local keysToNetwork = table.GetKeys(characterData)
+            net.Start("liaCharacterData")
+            net.WriteUInt(charID, 32)
+            net.WriteUInt(#keysToNetwork, 32)
+            for _, key in ipairs(keysToNetwork) do
+                local value = characterData[key]
+                net.WriteString(key)
+                net.WriteType(value)
+            end
+
+            net.Send(ply)
+        else
+            print("No data found for character ID:", charID)
+        end
     end)
 end
 
@@ -175,9 +198,7 @@ function GM:CanPlayerInteractItem(client, action, item)
         end
     end
 
-    if action == "rotate" then
-        return hook.Run("CanPlayerRotateItem", client, item) ~= false
-    end
+    if action == "rotate" then return hook.Run("CanPlayerRotateItem", client, item) ~= false end
 end
 
 function GM:CanPlayerEquipItem(client, item)
@@ -543,7 +564,7 @@ local function makeKey(ent)
     else
         class = ent.class
         if ent.pos then
-            pos = decodeVector(ent.pos)
+            pos = lia.data.decode(ent.pos)
         elseif ent.GetPos then
             pos = ent:GetPos()
         end
@@ -556,11 +577,7 @@ end
 
 function GM:SaveData()
     local seen = {}
-    local data = {
-        entities = {},
-        items = {}
-    }
-
+    local data = {}
     for _, ent in ents.Iterator() do
         if ent:isLiliaPersistent() then
             local key = makeKey(ent)
@@ -569,11 +586,12 @@ function GM:SaveData()
                 local entPos = ent:GetPos()
                 local entAng = ent:GetAngles()
                 local entData = {
-                    pos = encodeVector(entPos),
+                    pos = entPos,
                     class = ent:GetClass(),
                     model = ent:GetModel(),
-                    angles = encodeAngle(entAng)
+                    angles = entAng
                 }
+
                 local skin = ent:GetSkin()
                 if skin and skin > 0 then entData.skin = skin end
                 local bodygroups
@@ -585,47 +603,51 @@ function GM:SaveData()
                         bodygroups[i] = value
                     end
                 end
-                if bodygroups then entData.bodygroups = bodygroups end
 
+                if bodygroups then entData.bodygroups = bodygroups end
                 local extra = hook.Run("GetEntitySaveData", ent)
                 if extra ~= nil then entData.data = extra end
-                data.entities[#data.entities + 1] = entData
+                data[#data + 1] = entData
                 hook.Run("OnEntityPersisted", ent, entData)
             end
         end
     end
 
-    for _, item in ipairs(ents.FindByClass("lia_item")) do
-        if item.liaItemID and not item.temp then
-            data.items[#data.items + 1] = {
-                item.liaItemID,
-                encodeVector(item:GetPos()),
-                encodeAngle(item:GetAngles())
-            }
-        end
-    end
+    lia.data.savePersistence(data)
+    lia.information(L("dataSaved"))
+end
 
-    lia.data.savePersistence(data.entities)
-    lia.data.set("itemsave", data.items)
+local function IsEntityNearby(pos, class)
+    for _, ent in ipairs(ents.FindByClass(class)) do
+        if ent:GetPos():DistToSqr(pos) <= 2500 then return true end
+    end
+    return false
 end
 
 function GM:LoadData()
-    local function IsEntityNearby(pos, class)
-        for _, ent in ipairs(ents.FindByClass(class)) do
-            if ent:GetPos():DistToSqr(pos) <= 2500 then return true end
-        end
-        return false
-    end
-
     lia.data.loadPersistenceData(function(entities)
         for _, ent in ipairs(entities) do
-            local decodedPos = decodeVector(ent.pos)
-            local decodedAng = decodeAngle(ent.angles)
+            local decodedPos = lia.data.decode(ent.pos)
+            if not isvector(decodedPos) and istable(decodedPos) then
+                local x = tonumber(decodedPos.x or decodedPos[1])
+                local y = tonumber(decodedPos.y or decodedPos[2])
+                local z = tonumber(decodedPos.z or decodedPos[3])
+                if x and y and z then decodedPos = Vector(x, y, z) end
+            end
+
+            local decodedAng = lia.data.decode(ent.angles)
+            if not isangle(decodedAng) and istable(decodedAng) then
+                local p = tonumber(decodedAng.p or decodedAng[1])
+                local yaw = tonumber(decodedAng.y or decodedAng[2])
+                local r = tonumber(decodedAng.r or decodedAng[3])
+                if p and yaw and r then decodedAng = Angle(p, yaw, r) end
+            end
+
             if not IsEntityNearby(decodedPos, ent.class) then
                 local createdEnt = ents.Create(ent.class)
                 if IsValid(createdEnt) then
-                    createdEnt:SetPos(decodedPos)
-                    if decodedAng then createdEnt:SetAngles(decodedAng) end
+                    if isvector(decodedPos) then createdEnt:SetPos(decodedPos) end
+                    if decodedAng and isangle(decodedAng) then createdEnt:SetAngles(decodedAng) end
                     if ent.model then createdEnt:SetModel(ent.model) end
                     createdEnt:Spawn()
                     if ent.skin then createdEnt:SetSkin(ent.skin) end
@@ -634,6 +656,7 @@ function GM:LoadData()
                             createdEnt:SetBodygroup(tonumber(index), value)
                         end
                     end
+
                     createdEnt:Activate()
                     hook.Run("OnEntityLoaded", createdEnt, ent.data)
                 end
@@ -643,85 +666,91 @@ function GM:LoadData()
         end
     end)
 
-    local items = lia.data.get("itemsave", {}) or {}
-    if #items > 0 then
-        local idRange, positions, angles = {}, {}, {}
-        for _, item in ipairs(items) do
-            local id = item[1]
-            idRange[#idRange + 1] = id
-            positions[id] = decodeVector(item[2])
-            angles[id] = decodeAngle(item[3])
-        end
+    local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+    local map = game.GetMap()
+    local condition = "_schema = " .. lia.db.convertDataType(folder) .. " AND _map = " .. lia.db.convertDataType(map)
+    lia.db.select({"_itemID", "_pos", "_angles"}, "saveditems", condition):next(function(res)
+        local items = res.results or {}
+        if #items > 0 then
+            local idRange, positions, angles = {}, {}, {}
+            for _, row in ipairs(items) do
+                local id = tonumber(row._itemID)
+                idRange[#idRange + 1] = id
+                positions[id] = lia.data.decodeVector(row._pos)
+                angles[id] = lia.data.decodeAngle(row._angles)
+            end
 
-        if #idRange > 0 then
-            local range = "(" .. table.concat(idRange, ", ") .. ")"
-            if hook.Run("ShouldDeleteSavedItems") == true then
-                lia.db.query("DELETE FROM lia_items WHERE _itemID IN " .. range)
-                lia.information(L("serverDeletedItems"))
-            else
-                lia.db.query("SELECT _itemID, _uniqueID, _data FROM lia_items WHERE _itemID IN " .. range, function(data)
-                    if not data then return end
-                    local loadedItems = {}
-                    for _, row in ipairs(data) do
-                        local itemID = tonumber(row._itemID)
-                        local itemData = util.JSONToTable(row._data or "[]")
-                        local uniqueID = row._uniqueID
-                        local itemTable = lia.item.list[uniqueID]
-                        local position = positions[itemID]
-                        local ang = angles[itemID]
-                        if itemTable and itemID and position then
-                            local itemCreated = lia.item.new(uniqueID, itemID)
-                            itemCreated.data = itemData or {}
-                            itemCreated:spawn(position, ang).liaItemID = itemID
-                            itemCreated:onRestored()
-                            itemCreated.invID = 0
-                            loadedItems[#loadedItems + 1] = itemCreated
+            if #idRange > 0 then
+                local range = "(" .. table.concat(idRange, ", ") .. ")"
+                if hook.Run("ShouldDeleteSavedItems") == true then
+                    lia.db.query("DELETE FROM lia_items WHERE _itemID IN " .. range)
+                    lia.information(L("serverDeletedItems"))
+                else
+                    lia.db.query("SELECT _itemID, _uniqueID, _data FROM lia_items WHERE _itemID IN " .. range, function(data)
+                        if not data then return end
+                        local loadedItems = {}
+                        for _, row in ipairs(data) do
+                            local itemID = tonumber(row._itemID)
+                            local itemData = util.JSONToTable(row._data or "[]")
+                            local uniqueID = row._uniqueID
+                            local itemTable = lia.item.list[uniqueID]
+                            local position = positions[itemID]
+                            local ang = angles[itemID]
+                            if itemTable and itemID and position then
+                                local itemCreated = lia.item.new(uniqueID, itemID)
+                                itemCreated.data = itemData or {}
+                                itemCreated:spawn(position, ang).liaItemID = itemID
+                                itemCreated:onRestored()
+                                itemCreated.invID = 0
+                                loadedItems[#loadedItems + 1] = itemCreated
+                            end
                         end
-                    end
 
-                    hook.Run("OnSavedItemLoaded", loadedItems)
-                end)
+                        hook.Run("OnSavedItemLoaded", loadedItems)
+                    end)
+                end
             end
         end
-    end
+    end)
 end
 
 function GM:OnEntityCreated(ent)
     if not IsValid(ent) or not ent:isLiliaPersistent() then return end
+    timer.Simple(0, function()
+        if not IsValid(ent) then return end
+        local saved = lia.data.getPersistence()
+        local seen = {}
+        for _, data in ipairs(saved) do
+            seen[makeKey(data)] = true
+        end
 
-    local saved = lia.data.getPersistence()
-    local seen = {}
-    for _, data in ipairs(saved) do
-        seen[makeKey(data)] = true
-    end
+        local key = makeKey(ent)
+        if seen[key] then return end
+        local entData = {
+            pos = ent:GetPos(),
+            class = ent:GetClass(),
+            model = ent:GetModel(),
+            angles = ent:GetAngles()
+        }
 
-    local key = makeKey(ent)
-    if seen[key] then return end
-
-    local entData = {
-        pos = encodeVector(ent:GetPos()),
-        class = ent:GetClass(),
-        model = ent:GetModel(),
-        angles = encodeAngle(ent:GetAngles())
-    }
-
-    local extra = hook.Run("GetEntitySaveData", ent)
-    if extra ~= nil then entData.data = extra end
-    saved[#saved + 1] = entData
-    lia.data.savePersistence(saved)
-    hook.Run("OnEntityPersisted", ent, entData)
+        local extra = hook.Run("GetEntitySaveData", ent)
+        if extra ~= nil then entData.data = extra end
+        saved[#saved + 1] = entData
+        lia.data.savePersistence(saved)
+        hook.Run("OnEntityPersisted", ent, entData)
+    end)
 end
 
 function GM:UpdateEntityPersistence(ent)
     if not IsValid(ent) or not ent:isLiliaPersistent() then return end
     local saved = lia.data.getPersistence()
     local key = makeKey(ent)
-    for i, data in ipairs(saved) do
+    for _, data in ipairs(saved) do
         if makeKey(data) == key then
-            data.pos = encodeVector(ent:GetPos())
+            data.pos = ent:GetPos()
             data.class = ent:GetClass()
             data.model = ent:GetModel()
-            data.angles = encodeAngle(ent:GetAngles())
+            data.angles = ent:GetAngles()
             local extra = hook.Run("GetEntitySaveData", ent)
             if extra ~= nil then
                 data.data = extra
@@ -865,7 +894,16 @@ local function checkFrameworkVersion()
             return
         end
 
-        if versionCompare(localVersion, remote.version) < 0 then lia.updater(L("frameworkOutdated")) end
+        if versionCompare(localVersion, remote.version) < 0 then
+            local localNum, remoteNum = tonumber(localVersion), tonumber(remote.version)
+            if localNum and remoteNum then
+                local diff = remoteNum - localNum
+                diff = math.Round(diff, 3)
+                lia.updater(L("frameworkBehindCount", diff))
+            end
+
+            lia.updater(L("frameworkOutdated"))
+        end
     end, function(err) lia.updater(L("frameworkVersionError", err)) end)
 end
 
@@ -882,9 +920,16 @@ function GM:InitializedModules()
 end
 
 function GM:LiliaTablesLoaded()
+    lia.db.addDatabaseFields()
+    lia.log.loadTables()
+    lia.data.loadTables()
+    lia.data.loadPersistence()
+    lia.admin.load()
+    lia.config.load()
     hook.Run("LoadData")
     hook.Run("PostLoadData")
-    lia.db.addDatabaseFields()
+    lia.faction.formatModelData()
+    timer.Simple(2, function() lia.entityDataLoaded = true end)
 end
 
 function ClientAddText(client, ...)
@@ -919,18 +964,7 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     return canHear, canHear
 end
 
-local hl2Weapons = {
-    "weapon_crowbar",
-    "weapon_stunstick",
-    "weapon_pistol",
-    "weapon_357",
-    "weapon_smg1",
-    "weapon_ar2",
-    "weapon_shotgun",
-    "weapon_crossbow",
-    "weapon_rpg"
-}
-
+local hl2Weapons = {"weapon_crowbar", "weapon_stunstick", "weapon_pistol", "weapon_357", "weapon_smg1", "weapon_ar2", "weapon_shotgun", "weapon_crossbow", "weapon_rpg"}
 local function SpawnBot()
     player.CreateNextBot("Bot_" .. CurTime())
 end

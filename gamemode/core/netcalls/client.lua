@@ -698,9 +698,7 @@ net.Receive("liaItemInspect", function()
     local data = net.ReadTable()
     local item = lia.item.new(uniqueID, 0)
     item.data = data or {}
-
     if hook.Run("CanPlayerInspectItem", LocalPlayer(), item) == false then return end
-
     local overlay = vgui.Create("EditablePanel")
     overlay:SetSize(ScrW(), ScrH())
     overlay:MakePopup()
@@ -806,5 +804,18 @@ net.Receive("liaItemInspect", function()
             local v = isfunction(info.value) and info.value(LocalPlayer(), item) or tostring(info.value)
             drawLine(scroll, info.title, v)
         end
+    end
+end)
+
+net.Receive("liaCharacterData", function()
+    local charID = net.ReadUInt(32)
+    local character = lia.char.loaded[charID]
+    if not character then return end
+    if not character.dataVars then character.dataVars = {} end
+    local keyCount = net.ReadUInt(32)
+    for _ = 1, keyCount do
+        local key = net.ReadString()
+        local value = net.ReadType()
+        character.dataVars[key] = value
     end
 end)

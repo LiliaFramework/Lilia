@@ -1,17 +1,8 @@
-﻿local MODULE = MODULE
 local sw, sh = ScrW(), ScrH()
-local EDITOR = include(MODULE.folder .. "/libs/cl_vendor.lua")
 local COLS_MODE = 2
 local COLS_PRICE = 3
 local COLS_STOCK = 4
-local RarityColors = {
-    ["Common"] = Color(255, 255, 255),
-    ["Uncommon"] = Color(30, 255, 0),
-    ["Rare"] = Color(0, 112, 221),
-    ["Epic"] = Color(163, 53, 238),
-    ["Legendary"] = Color(255, 128, 0),
-}
-
+local RarityColors = lia.vendor.rarities
 local VendorClick = {"buttons/button15.wav", 30, 250}
 local PANEL = {}
 function PANEL:Init()
@@ -400,6 +391,9 @@ function PANEL:onVendorPropEdited(_, key)
         for _, v in pairs(self.items.me) do
             if IsValid(v) then v:updateLabel() end
         end
+    elseif key == "preset" then
+        local preset = liaVendorEnt:getNetVar("preset", "none")
+        if IsValid(self.preset) then self.preset:SetValue(preset == "none" and L("none") or preset) end
     end
 
     self:applyCategoryFilter()
@@ -608,7 +602,7 @@ function PANEL:Init()
     self.name:Dock(TOP)
     self.name:SetTooltip(L("name"))
     self.name:SetText(entity:getName())
-    self.name.OnEnter = function(this) if entity:getNetVar("name") ~= this:GetText() then EDITOR.name(this:GetText()) end end
+    self.name.OnEnter = function(this) if entity:getNetVar("name") ~= this:GetText() then lia.vendor.editor.name(this:GetText()) end end
     self.model = self:Add("DTextEntry")
     self.model:Dock(TOP)
     self.model:SetTooltip(L("model"))
@@ -616,7 +610,7 @@ function PANEL:Init()
     self.model:SetText(entity:GetModel())
     self.model.OnEnter = function(this)
         local modelText = this:GetText():lower()
-        if entity:GetModel():lower() ~= modelText then EDITOR.model(modelText) end
+        if entity:GetModel():lower() ~= modelText then lia.vendor.editor.model(modelText) end
     end
 
     self.flag = self:Add("DTextEntry")
@@ -626,11 +620,11 @@ function PANEL:Init()
     self.flag.OnEnter = function(this)
         local value = this:GetText()
         if value:match("^%a$") then
-            EDITOR.flag(value)
+            lia.vendor.editor.flag(value)
         else
             local correctedValue = value:sub(1, 1):match("^%a$") and value:sub(1, 1) or "F"
             this:SetText(correctedValue)
-            EDITOR.flag(correctedValue)
+            lia.vendor.editor.flag(correctedValue)
         end
     end
 
@@ -641,7 +635,7 @@ function PANEL:Init()
     self.welcome:SetTooltip(L("vendorEditorWelcomeMessage"))
     self.welcome.OnEnter = function(this)
         local msg = this:GetText()
-        if msg ~= entity:getWelcomeMessage() then EDITOR.welcome(msg) end
+        if msg ~= entity:getWelcomeMessage() then lia.vendor.editor.welcome(msg) end
     end
 
     self.money = self:Add("DTextEntry")
@@ -653,7 +647,7 @@ function PANEL:Init()
         local value = tonumber(this:GetText()) or entity:getMoney()
         value = math.Round(value)
         value = math.max(value, 0)
-        if value ~= entity:getMoney() then EDITOR.money(value) end
+        if value ~= entity:getMoney() then lia.vendor.editor.money(value) end
     end
 
     self.useMoney = self:Add("DCheckBoxLabel")
@@ -661,7 +655,7 @@ function PANEL:Init()
     self.useMoney:Dock(TOP)
     self.useMoney:SetTextColor(Color(255, 255, 255))
     self.useMoney:DockMargin(0, 4, 0, 0)
-    self.useMoney.OnChange = function(_, value) EDITOR.useMoney(value) end
+    self.useMoney.OnChange = function(_, value) lia.vendor.editor.useMoney(value) end
     self.sellScale = self:Add("DNumSlider")
     self.sellScale:Dock(TOP)
     self.sellScale:DockMargin(0, 4, 0, 0)
@@ -674,7 +668,7 @@ function PANEL:Init()
             if IsValid(self) and IsValid(self.sellScale) then
                 value = self.sellScale:GetValue()
                 local diff = math.abs(value - entity:getSellScale())
-                if diff > 0.05 then EDITOR.scale(value) end
+                if diff > 0.05 then lia.vendor.editor.scale(value) end
             end
         end)
     end
@@ -685,6 +679,24 @@ function PANEL:Init()
     self.faction:SetTextColor(color_white)
     self.faction:DockMargin(0, 4, 0, 0)
     self.faction.DoClick = function() vgui.Create("VendorFactionEditor"):MoveLeftOf(self, 4) end
+    self.preset = self:Add("DComboBox")
+    self.preset:Dock(TOP)
+    self.preset:SetSortItems(false)
+    self.preset:DockMargin(0, 4, 0, 0)
+    self.preset:AddChoice(L("none"))
+    for name in pairs(lia.vendor.presets or {}) do
+        self.preset:AddChoice(name)
+    end
+
+    local currentPreset = entity:getNetVar("preset", "none")
+    local presetLabel = currentPreset == "none" and L("none") or currentPreset
+    self.preset:SetValue(presetLabel)
+    self.preset:ChooseOption(presetLabel)
+    self.preset.OnSelect = function(_, _, value)
+        if value == L("none") then value = "none" end
+        lia.vendor.editor.preset(value)
+    end
+
     self.items = self:Add("DListView")
     self.items:Dock(FILL)
     self.items:DockMargin(0, 4, 0, 0)
@@ -803,38 +815,39 @@ end
 
 function PANEL:OnRowRightClick(line)
     local entity = liaVendorEnt
+    if entity:getNetVar("preset") ~= "none" then return end
     if IsValid(menu) then menu:Remove() end
     local uniqueID = line.item
     local itemTable = lia.item.list[uniqueID]
     menu = DermaMenu()
     local mode, modePanel = menu:AddSubMenu(L("mode"))
     modePanel:SetImage("icon16/key.png")
-    mode:AddOption(L("none"), function() EDITOR.mode(uniqueID, nil) end):SetImage("icon16/cog_error.png")
-    mode:AddOption(L("buyOnlynSell"), function() EDITOR.mode(uniqueID, VENDOR_SELLANDBUY) end):SetImage("icon16/cog.png")
-    mode:AddOption(L("buyOnly"), function() EDITOR.mode(uniqueID, VENDOR_BUYONLY) end):SetImage("icon16/cog_delete.png")
-    mode:AddOption(L("sellOnly"), function() EDITOR.mode(uniqueID, VENDOR_SELLONLY) end):SetImage("icon16/cog_add.png")
+    mode:AddOption(L("none"), function() lia.vendor.editor.mode(uniqueID, nil) end):SetImage("icon16/cog_error.png")
+    mode:AddOption(L("buyOnlynSell"), function() lia.vendor.editor.mode(uniqueID, VENDOR_SELLANDBUY) end):SetImage("icon16/cog.png")
+    mode:AddOption(L("buyOnly"), function() lia.vendor.editor.mode(uniqueID, VENDOR_BUYONLY) end):SetImage("icon16/cog_delete.png")
+    mode:AddOption(L("sellOnly"), function() lia.vendor.editor.mode(uniqueID, VENDOR_SELLONLY) end):SetImage("icon16/cog_add.png")
     menu:AddOption(L("price"), function()
         Derma_StringRequest(itemTable:getName(), L("vendorPriceReq"), entity:getPrice(uniqueID), function(text)
             text = tonumber(text)
-            EDITOR.price(uniqueID, text)
+            lia.vendor.editor.price(uniqueID, text)
         end)
     end):SetImage("icon16/coins.png")
 
     local stock, stockPanel = menu:AddSubMenu(L("stock"))
     stockPanel:SetImage("icon16/table.png")
-    stock:AddOption(L("disable"), function() EDITOR.stockDisable(uniqueID) end):SetImage("icon16/table_delete.png")
+    stock:AddOption(L("disable"), function() lia.vendor.editor.stockDisable(uniqueID) end):SetImage("icon16/table_delete.png")
     stock:AddOption(L("edit"), function()
         local _, max = entity:getStock(uniqueID)
         Derma_StringRequest(itemTable:getName(), L("vendorStockReq"), max or 1, function(text)
             text = math.max(math.Round(tonumber(text) or 1), 1)
-            EDITOR.stockMax(uniqueID, text)
+            lia.vendor.editor.stockMax(uniqueID, text)
         end)
     end):SetImage("icon16/table_edit.png")
 
     stock:AddOption(L("vendorEditCurStock"), function()
         Derma_StringRequest(itemTable:getName(), L("vendorStockCurReq"), entity:getStock(uniqueID) or 0, function(text)
             text = math.Round(tonumber(text) or 0)
-            EDITOR.stock(uniqueID, text)
+            lia.vendor.editor.stock(uniqueID, text)
         end)
     end):SetImage("icon16/table_edit.png")
 
@@ -860,11 +873,11 @@ end
 vgui.Register("VendorEditor", PANEL, "DFrame")
 PANEL = {}
 local function onFactionStateChanged(checkBox, state)
-    EDITOR.faction(checkBox.factionID, state)
+    lia.vendor.editor.faction(checkBox.factionID, state)
 end
 
 local function onClassStateChanged(checkBox, state)
-    EDITOR.class(checkBox.classID, state)
+    lia.vendor.editor.class(checkBox.classID, state)
 end
 
 function PANEL:Init()

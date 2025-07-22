@@ -1,4 +1,4 @@
-SWEP.PrintName = L("handsWeaponName")
+﻿SWEP.PrintName = L("handsWeaponName")
 SWEP.Slot = 0
 SWEP.SlotPos = 1
 SWEP.DrawAmmo = false
@@ -35,7 +35,6 @@ SWEP.maxHoldDistance = 96
 SWEP.maxHoldStress = 4000
 ACT_VM_FISTS_DRAW = 2
 ACT_VM_FISTS_HOLSTER = 1
-
 function SWEP:Initialize()
     self:SetHoldType(self.HoldType)
     self.lastHand = 0
@@ -80,7 +79,7 @@ function SWEP:Think()
         local viewModel = self:GetOwner():GetViewModel()
         if IsValid(viewModel) and self.NextAllowedPlayRateChange < CurTime() then viewModel:SetPlaybackRate(1) end
     else
-        if self.isFistHold and (CurTime() - (self.lastPunchTime or 0) > 5) then
+        if self.isFistHold and CurTime() - (self.lastPunchTime or 0) > 5 then
             self:SetHoldType("normal")
             self.isFistHold = false
         end
@@ -207,7 +206,6 @@ function SWEP:DropObject(bThrow)
     end
 
     self:SetHoldType("normal")
-
     self.heldEntity.ixHeldOwner = nil
     self.heldEntity.ixCollisionGroup = nil
     self.heldEntity = nil
@@ -237,7 +235,6 @@ end
 
 function SWEP:PrimaryAttack()
     if not IsFirstTimePredicted() then return end
-
     if SERVER and self:IsHoldingObject() then
         self:DropObject(true)
         return
@@ -249,7 +246,6 @@ function SWEP:PrimaryAttack()
     end
 
     if hook.Run("CanPlayerThrowPunch", self:GetOwner()) == false then return end
-
     local staminaUse = lia.config.get("PunchStamina")
     if staminaUse > 0 then
         local owner = self:GetOwner()
@@ -260,12 +256,7 @@ function SWEP:PrimaryAttack()
     end
 
     self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
-
-    if SERVER then
-        self:GetOwner():EmitSound("npc/vort/claw_swing" .. math.random(1, 2) .. ".wav")
-    end
-
-    -- I can't do it without timer, my bad :(
+    if SERVER then self:GetOwner():EmitSound("npc/vort/claw_swing" .. math.random(1, 2) .. ".wav") end
     timer.Simple(0.1, function()
         self:DoPunchAnimation()
         self:GetOwner():SetAnimation(PLAYER_ATTACK1)
@@ -273,10 +264,8 @@ function SWEP:PrimaryAttack()
     end)
 
     self.lastPunchTime = CurTime()
-
     timer.Simple(0.055, function()
         if not IsValid(self) or not IsValid(self:GetOwner()) then return end
-
         local damage = self.Primary.Damage
         local context = {
             damage = damage
@@ -284,7 +273,6 @@ function SWEP:PrimaryAttack()
 
         local result = hook.Run("GetPlayerPunchDamage", self:GetOwner(), damage, context)
         damage = result ~= nil and result or context.damage
-
         self:GetOwner():LagCompensation(true)
         local startPos = self:GetOwner():GetShootPos()
         local endPos = startPos + self:GetOwner():GetAimVector() * 96

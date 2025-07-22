@@ -20,7 +20,6 @@ end
 function lia.websound.register(name, url, cb)
     if isstring(url) then urlMap[url] = name end
     cache[name] = nil
-
     local savePath = baseDir .. name
     local function finalize(fromCache)
         local path = buildPath(savePath)

@@ -1,4 +1,4 @@
-function MODULE:OnCharTradeVendor(client, vendor, item, isSellingToVendor, _, _, isFailed)
+﻿function MODULE:OnCharTradeVendor(client, vendor, item, isSellingToVendor, _, _, isFailed)
     local vendorName = vendor:getNetVar("name") or L("unknown")
     if not isSellingToVendor then
         lia.log.add(client, "vendorBuy", item and (item:getName() or item.name) or "", vendorName, isFailed)
@@ -179,6 +179,7 @@ function MODULE:GetEntitySaveData(ent)
         flag = ent:getNetVar("flag"),
         scale = ent:getNetVar("scale"),
         welcomeMessage = ent:getNetVar("welcomeMessage"),
+        preset = ent:getNetVar("preset"),
     }
 end
 
@@ -188,8 +189,40 @@ function MODULE:OnEntityLoaded(ent, data)
     ent:setNetVar("flag", data.flag)
     ent:setNetVar("scale", data.scale or 0.5)
     ent:setNetVar("welcomeMessage", data.welcomeMessage)
+    ent:setNetVar("preset", data.preset or "none")
     ent.items = data.items or {}
     ent.factions = data.factions or {}
     ent.classes = data.classes or {}
     ent.money = data.money
 end
+
+net.Receive("VendorExit", function(_, client)
+    local vendor = client.liaVendor
+    if IsValid(vendor) then vendor:removeReceiver(client, true) end
+end)
+
+net.Receive("VendorEdit", function(_, client)
+    local key = net.ReadString()
+    if not client:CanEditVendor() then return end
+    local vendor = client.liaVendor
+    if not IsValid(vendor) or not lia.vendor.editor[key] then return end
+    lia.log.add(client, "vendorEdit", vendor, key)
+    lia.vendor.editor[key](vendor, client, key)
+    hook.Run("UpdateEntityPersistence", vendor)
+end)
+
+net.Receive("VendorTrade", function(_, client)
+    local uniqueID = net.ReadString()
+    local isSellingToVendor = net.ReadBool()
+    if not client:getChar() or not client:getChar():getInv() then return end
+    if (client.liaVendorTry or 0) < CurTime() then
+        client.liaVendorTry = CurTime() + 0.1
+    else
+        return
+    end
+
+    local entity = client.liaVendor
+    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 192 then return end
+    if not hook.Run("CanPlayerAccessVendor", client, entity) then return end
+    hook.Run("VendorTradeEvent", client, entity, uniqueID, isSellingToVendor)
+end)

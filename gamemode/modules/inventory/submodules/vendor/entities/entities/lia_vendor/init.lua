@@ -1,5 +1,4 @@
-﻿local MODULE = MODULE
-function ENT:SpawnFunction(client, trace)
+﻿function ENT:SpawnFunction(client, trace)
     local angles = (trace.HitPos - client:GetPos()):Angle()
     angles.r = 0
     angles.p = 0
@@ -8,7 +7,6 @@ function ENT:SpawnFunction(client, trace)
     entity:SetPos(trace.HitPos)
     entity:SetAngles(angles)
     entity:Spawn()
-    MODULE:SaveData()
     return entity
 end
 
@@ -190,6 +188,31 @@ function ENT:setSellScale(scale)
     net.Start("VendorEdit")
     net.WriteString("scale")
     net.Send(self.receivers)
+end
+
+function ENT:applyPreset(name)
+    name = string.lower(name)
+    self:setNetVar("preset", name)
+    if name == "none" then
+        self.items = {}
+        for _, client in ipairs(self.receivers) do
+            self:sync(client)
+        end
+        return
+    end
+
+    local preset = lia.vendor and lia.vendor.getPreset(name)
+    if not preset then return end
+    self.items = {}
+    for itemType, data in pairs(preset) do
+        if data.mode ~= nil then self:setTradeMode(itemType, data.mode) end
+        if data.price ~= nil then self:setItemPrice(itemType, data.price) end
+        if data.maxStock ~= nil then self:setMaxStock(itemType, data.maxStock) end
+        if data.stock ~= nil then self:setStock(itemType, data.stock) end
+    end
+    for _, client in ipairs(self.receivers) do
+        self:sync(client)
+    end
 end
 
 function ENT:sync(client)

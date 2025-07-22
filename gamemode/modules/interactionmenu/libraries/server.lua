@@ -6,11 +6,13 @@ net.Receive("TransferMoneyFromP2P", function(_, sender)
         lia.log.add(sender, "cheaterAction", "transfer money")
         return
     end
+
     if not IsValid(sender) or not sender:getChar() then return end
     if sender:IsFamilySharedAccount() and not lia.config.get("AltsDisabled", false) then
         sender:notifyLocalized("familySharedMoneyTransferDisabled")
         return
     end
+
     if not IsValid(target) or not target:IsPlayer() or not target:getChar() then return end
     if amount <= 0 or not sender:getChar():hasMoney(amount) then return end
     target:getChar():giveMoney(amount)
@@ -26,6 +28,7 @@ net.Receive("RunOption", function(_, ply)
         lia.log.add(ply, "cheaterAction", "use interaction menu")
         return
     end
+
     local name = net.ReadString()
     local opt = MODULE.Interactions[name]
     local tracedEntity = ply:getTracedEntity()
@@ -37,6 +40,7 @@ net.Receive("RunLocalOption", function(_, ply)
         lia.log.add(ply, "cheaterAction", "use interaction menu")
         return
     end
+
     local name = net.ReadString()
     local opt = MODULE.Actions[name]
     if opt and opt.runServer then opt.onRun(ply) end

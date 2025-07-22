@@ -28,10 +28,10 @@ function PANEL:Init()
         if schemaIconMat and schemaName then
             local iconSize = h * 0.5
             surface.SetMaterial(schemaIconMat)
-            surface.SetDrawColor(255, 255, 255, 255)
+            surface.SetDrawColor(255, 255, 255)
             surface.DrawTexturedRect(30, (h - iconSize) * 0.5, iconSize, iconSize)
             surface.SetFont("liaMediumFont")
-            surface.SetTextColor(255, 255, 255, 255)
+            surface.SetTextColor(255, 255, 255)
             local txt = schemaName
             local _, th = surface.GetTextSize(txt)
             surface.SetTextPos(30 + iconSize + 10, (h - th) * 0.5)
@@ -39,7 +39,7 @@ function PANEL:Init()
         end
 
         surface.SetMaterial(iconMat)
-        surface.SetDrawColor(255, 255, 255, 255)
+        surface.SetDrawColor(255, 255, 255)
         local baseSize = h - 10
         local iconSize = baseSize * 0.9
         local iconY = (h - iconSize) * 0.5
@@ -105,14 +105,14 @@ function PANEL:Init()
     self.panel = panel
     local btnDefs = {}
     hook.Run("CreateMenuButtons", btnDefs)
-    local keys = {}
+    local tabKeys = {}
     for k in pairs(btnDefs) do
-        keys[#keys + 1] = k
+        tabKeys[#tabKeys + 1] = k
     end
 
-    table.sort(keys, function(a, b) return #L(a) < #L(b) end)
+    table.sort(tabKeys, function(a, b) return #L(a) < #L(b) end)
     self.tabList = {}
-    for _, key in ipairs(keys) do
+    for _, key in ipairs(tabKeys) do
         local cb = btnDefs[key]
         if isstring(cb) then
             local body = cb
@@ -141,18 +141,16 @@ function PANEL:Init()
         if self.tabList[statusKey] then
             defaultTab = statusKey
         else
-            local keys = {}
+            local allKeys = {}
             for k in pairs(self.tabList) do
-                keys[#keys + 1] = k
+                allKeys[#allKeys + 1] = k
             end
-            if #keys > 0 then
-                defaultTab = keys[math.random(#keys)]
-            end
+
+            if #allKeys > 0 then defaultTab = allKeys[math.random(#allKeys)] end
         end
     end
-    if defaultTab then
-        self:setActiveTab(defaultTab)
-    end
+
+    if defaultTab then self:setActiveTab(defaultTab) end
 end
 
 function PANEL:addTab(name, callback)

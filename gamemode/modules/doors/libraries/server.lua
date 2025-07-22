@@ -1,31 +1,9 @@
-﻿local Variables = {
-    ["disabled"] = true,
-    ["name"] = true,
-    ["price"] = true,
-    ["noSell"] = true,
-    ["factions"] = true,
-    ["class"] = true,
-    ["hidden"] = true,
-    ["locked"] = true
-}
-
-function MODULE:copyParentDoor(child)
-    local parent = child.liaParent
-    if IsValid(parent) then
-        for var in pairs(Variables) do
-            local parentValue = parent:getNetVar(var)
-            if child:getNetVar(var) ~= parentValue then child:setNetVar(var, parentValue) end
-        end
-    end
-end
-
-function MODULE:PostLoadData()
+﻿function MODULE:PostLoadData()
     if self.DoorsAlwaysDisabled then
         local count = 0
         for _, door in ents.Iterator() do
             if IsValid(door) and door:isDoor() then
                 door:setNetVar("disabled", true)
-                self:callOnDoorChildren(door, function(child) child:setNetVar("disabled", true) end)
                 count = count + 1
             end
         end
@@ -34,64 +12,68 @@ function MODULE:PostLoadData()
     end
 end
 
+local function buildCondition(folder, map)
+    return "_folder = " .. lia.db.convertDataType(folder) .. " AND _map = " .. lia.db.convertDataType(map)
+end
+
 function MODULE:LoadData()
-    local data = self:getData()
-    if not data then return end
-    for k, v in pairs(data) do
-        local entity = ents.GetMapCreatedEntity(k)
-        if IsValid(entity) and entity:isDoor() then
-            for k2, v2 in pairs(v) do
-                if k2 == "children" then
-                    entity.liaChildren = v2
-                    for index, _ in pairs(v2) do
-                        local door = ents.GetMapCreatedEntity(index)
-                        if IsValid(door) then door.liaParent = entity end
-                    end
-                else
-                    entity:setNetVar(k2, v2)
+    local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+    local mapName = game.GetMap()
+    local condition = buildCondition(folder, mapName)
+    local query = "SELECT * FROM lia_doors WHERE " .. condition
+    lia.db.query(query):next(function(res)
+        local rows = res.results or {}
+        for _, row in ipairs(rows) do
+            local id = tonumber(row._id)
+            local ent = ents.GetMapCreatedEntity(id)
+            if IsValid(ent) and ent:isDoor() then
+                local factions = lia.data.deserialize(row._factions) or {}
+                if istable(factions) and not table.IsEmpty(factions) then
+                    ent.liaFactions = factions
+                    ent:setNetVar("factions", util.TableToJSON(factions))
                 end
+
+                local classes = lia.data.deserialize(row._classes) or {}
+                if istable(classes) and not table.IsEmpty(classes) then
+                    ent.liaClasses = classes
+                    ent:setNetVar("classes", util.TableToJSON(classes))
+                end
+
+                if row._name and row._name ~= "NULL" then ent:setNetVar("name", row._name) end
+                local price = tonumber(row._price) or 0
+                ent:setNetVar("price", price)
+                local locked = tonumber(row._locked) == 1
+                ent:setNetVar("locked", locked)
+                local disabled = tonumber(row._disabled) == 1
+                ent:setNetVar("disabled", disabled)
+                local hidden = tonumber(row._hidden) == 1
+                ent:setNetVar("hidden", hidden)
+                local noSell = tonumber(row._ownable) == 0
+                ent:setNetVar("noSell", noSell)
             end
         end
-    end
+    end)
 end
 
 function MODULE:SaveData()
-    local data = {}
-    local doors = {}
-    for _, ent in ents.Iterator() do
-        if ent:isDoor() then doors[ent:MapCreationID()] = ent end
-    end
-
-    for id, door in pairs(doors) do
-        local doorData = {}
-        for var in pairs(Variables) do
-            local value = door:getNetVar(var)
-            if value then doorData[var] = value end
-        end
-
-        if door.liaChildren then doorData.children = door.liaChildren end
-        if door.liaClassID then doorData.class = door.liaClassID end
-        if not table.IsEmpty(doorData) then data[id] = doorData end
-    end
-
-    PrintTable(data, 1)
-    self:setData(data)
-    lia.information(L("doorSaveData", table.Count(data)))
-end
-
-function MODULE:callOnDoorChildren(entity, callback)
-    local parent
-    if entity.liaChildren then
-        parent = entity
-    elseif entity.liaParent then
-        parent = entity.liaParent
-    end
-
-    if IsValid(parent) then
-        callback(parent)
-        for k, _ in pairs(parent.liaChildren) do
-            local child = ents.GetMapCreatedEntity(k)
-            if IsValid(child) then callback(child) end
+    local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+    local map = game.GetMap()
+    local rows = {}
+    for _, door in ipairs(ents.GetAll()) do
+        if door:isDoor() then
+            rows[#rows + 1] = {
+                _folder = folder,
+                _map = map,
+                _id = door:MapCreationID(),
+                _factions = lia.data.serialize(door.liaFactions or {}),
+                _classes = lia.data.serialize(door.liaClasses or {}),
+                _disabled = door:getNetVar("disabled") and 1 or 0,
+                _hidden = door:getNetVar("hidden") and 1 or 0,
+                _ownable = door:getNetVar("noSell") and 0 or 1,
+                _name = door:getNetVar("name"),
+                _price = door:getNetVar("price"),
+                _locked = door:getNetVar("locked") and 1 or 0
+            }
         end
     end
 end
@@ -134,22 +116,36 @@ end
 
 function MODULE:CanPlayerAccessDoor(client, door)
     local factions = door:getNetVar("factions")
-    if factions ~= nil then
+    if factions and factions ~= "[]" then
         local facs = util.JSONToTable(factions)
-        if facs ~= nil and facs ~= "[]" and facs[client:Team()] then return true end
+        if facs then
+            local playerFaction = client:getChar():getFaction()
+            local factionData = lia.faction.indices[playerFaction]
+            local unique = factionData and factionData.uniqueID
+            for _, id in ipairs(facs) do
+                if id == unique or lia.faction.getIndex(id) == playerFaction then return true end
+            end
+        end
     end
 
-    local class = door:getNetVar("class")
-    local classData = lia.class.list[class]
+    local classes = door:getNetVar("classes")
     local charClass = client:getChar():getClass()
-    local classData2 = lia.class.list[charClass]
-    if class and classData and classData2 then
-        if classData.team then
-            if classData.team ~= classData2.team then return false end
-        else
-            if charClass ~= class then return false end
+    local charClassData = lia.class.list[charClass]
+    if classes and classes ~= "[]" and charClassData then
+        local classTable = util.JSONToTable(classes)
+        if classTable then
+            local unique = charClassData.uniqueID
+            for _, id in ipairs(classTable) do
+                local classIndex = lia.class.retrieveClass(id)
+                local classData = lia.class.list[classIndex]
+                if id == unique or classIndex == charClass then
+                    return true
+                elseif classData and classData.team and classData.team == charClassData.team then
+                    return true
+                end
+            end
+            return false
         end
-        return true
     end
 end
 
@@ -161,13 +157,19 @@ function MODULE:ShowTeam(client)
     local entity = client:getTracedEntity()
     if IsValid(entity) and entity:isDoor() then
         local factions = entity:getNetVar("factions")
-        if (not factions or factions == "[]") and not entity:getNetVar("class") then
+        local classes = entity:getNetVar("classes")
+        if (not factions or factions == "[]") and (not classes or classes == "[]") then
             if entity:checkDoorAccess(client, DOOR_TENANT) then
                 local door = entity
-                if IsValid(door.liaParent) then door = door.liaParent end
                 net.Start("doorMenu")
                 net.WriteEntity(door)
-                net.WriteTable(door.liaAccess)
+                local access = door.liaAccess or {}
+                net.WriteUInt(table.Count(access), 8)
+                for ply, perm in pairs(access) do
+                    net.WriteEntity(ply)
+                    net.WriteUInt(perm or 0, 2)
+                end
+
                 net.WriteEntity(entity)
                 net.Send(client)
             elseif not IsValid(entity:GetDTEntity(0)) then

@@ -1,4 +1,4 @@
-lia.command.add("togglecheater", {
+﻿lia.command.add("togglecheater", {
     adminOnly = true,
     privilege = "Toggle Cheater Status",
     desc = "toggleCheaterDesc",
@@ -14,7 +14,6 @@ lia.command.add("togglecheater", {
         target:setLiliaData("cheater", not isCheater)
         target:setNetVar("cheater", not isCheater and true or nil)
         target:saveLiliaData()
-
         if isCheater then
             client:notifyLocalized("cheaterUnmarked", target:Name())
             target:notifyLocalized("cheaterUnmarkedByAdmin")
@@ -26,6 +25,7 @@ lia.command.add("togglecheater", {
                 reason = L("cheaterWarningReason"),
                 admin = client:Nick() .. " (" .. client:SteamID() .. ")"
             }
+
             local warns = target:getLiliaData("warns") or {}
             table.insert(warns, warning)
             target:setLiliaData("warns", warns)
@@ -37,4 +37,3 @@ lia.command.add("togglecheater", {
         lia.log.add(client, "cheaterToggle", target:Name(), isCheater and "Unmarked" or "Marked")
     end
 })
-

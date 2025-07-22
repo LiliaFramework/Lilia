@@ -1,4 +1,4 @@
-local InvSlotMat = Material("invslotfree.png", "smooth noclamp")
+﻿local InvSlotMat = Material("invslotfree.png", "smooth noclamp")
 local PANEL = {}
 function PANEL:Init()
     self:SetPaintBackground(false)

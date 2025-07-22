@@ -1,4 +1,4 @@
-hook.Add("CAMI.OnUsergroupRegistered", "liaSyncAdminGroupAdd", function(group)
+﻿hook.Add("CAMI.OnUsergroupRegistered", "liaSyncAdminGroupAdd", function(group)
     if lia.admin.isDisabled() then return end
     if not group or lia.admin.groups[group.Name] then return end
     lia.admin.groups[group.Name] = {}

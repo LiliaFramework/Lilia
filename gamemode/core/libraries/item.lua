@@ -68,9 +68,7 @@ local DefaultFunctions = {
             item:setData("rotated", not item:getData("rotated", false))
             return false
         end,
-        onCanRun = function(item)
-            return not IsValid(item.entity) and item.width ~= item.height
-        end
+        onCanRun = function(item) return not IsValid(item.entity) and item.width ~= item.height end
     },
     giveForward = {
         tip = "giveForwardTip",

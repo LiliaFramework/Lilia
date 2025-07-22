@@ -50,7 +50,7 @@ lia.command.add("recogyell", {
 lia.command.add("recogbots", {
     privilege = "Manage Recognition",
     superAdminOnly = true,
-    syntax = "[string Range]",
+    syntax = "[string Range optional] [string Name optional]",
     desc = "recogBotsDesc",
     AdminStick = {
         Name = "recogBotsStickName",
@@ -60,8 +60,9 @@ lia.command.add("recogbots", {
     },
     onRun = function(_, arguments)
         local range = arguments[1] or "normal"
+        local fakeName = arguments[2]
         for _, ply in player.Iterator() do
-            if ply:IsBot() then MODULE:ForceRecognizeRange(ply, range) end
+            if ply:IsBot() then MODULE:ForceRecognizeRange(ply, range, fakeName) end
         end
     end
 })

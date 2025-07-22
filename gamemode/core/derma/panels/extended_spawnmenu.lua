@@ -605,7 +605,7 @@ function PANEL:Paint()
     y = y + th14 + ScreenScaleH(8)
     local _, th15 = DrawText(L("legacyAddonsWithModels"), "AddonInfo_Text", 0, y, color_white)
     y = y + th15
-    if next(self.legacyAddons) then
+    if not table.IsEmpty(self.legacyAddons) then
         local nameW, startY = 0, y
         for p in pairs(self.legacyAddons) do
             local tw7, th16 = DrawText(p, "AddonInfo_Small", 0, y, color_white)

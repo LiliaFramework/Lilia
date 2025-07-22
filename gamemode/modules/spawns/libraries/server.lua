@@ -1,27 +1,36 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 MODULE.spawns = MODULE.spawns or {}
-local decodeVector = lia.data.decodeVector
-local encodeVector = lia.data.encodeVector
+local encodetable = lia.data.encodetable
+local TABLE = "spawns"
+local function buildCondition(folder, map)
+    return "_schema = " .. lia.db.convertDataType(folder) .. " AND _map = " .. lia.db.convertDataType(map)
+end
 
-function MODULE:LoadData(attempt)
-    attempt = attempt or 1
-    local data = self:getData()
-    local factions = data and (data.factions or data) or nil
-    if (not factions or next(factions) == nil) and attempt < 5 then
-        timer.Simple(1, function() if not self.loaded then self:LoadData(attempt + 1) end end)
-        return
-    end
-
-    self.spawns = {}
-    factions = factions or {}
-    for fac, spawns in pairs(factions) do
-        self.spawns[fac] = {}
-        for _, pos in ipairs(spawns) do
-            self.spawns[fac][#self.spawns[fac] + 1] = decodeVector(pos)
+function MODULE:LoadData(n)
+    n = n or 1
+    local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+    local map = game.GetMap()
+    local condition = buildCondition(folder, map)
+    lia.db.selectOne({"_data"}, TABLE, condition):next(function(res)
+        local data = res and lia.data.deserialize(res._data) or {}
+        local factions = data.factions or data
+        if (not istable(factions) or table.IsEmpty(factions)) and n < 5 then
+            timer.Simple(1, function() if not self.loaded then self:LoadData(n + 1) end end)
+            return
         end
-    end
 
-    self.loaded = true
+        self.spawns = {}
+        for fac, spawns in pairs(factions or {}) do
+            local t = {}
+            for i = 1, #spawns do
+                t[i] = lia.data.decode(spawns[i])
+            end
+
+            self.spawns[fac] = t
+        end
+
+        self.loaded = true
+    end)
 end
 
 function MODULE:SaveData()
@@ -29,26 +38,31 @@ function MODULE:SaveData()
     for fac, spawns in pairs(self.spawns or {}) do
         factions[fac] = {}
         for _, pos in ipairs(spawns) do
-            factions[fac][#factions[fac] + 1] = encodeVector(pos)
+            factions[fac][#factions[fac] + 1] = encodetable(pos)
         end
     end
 
-    self:setData({
-        factions = factions
-    })
+    local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+    local map = game.GetMap()
+    lia.db.upsert({
+        _schema = folder,
+        _map = map,
+        _data = lia.data.serialize({
+            factions = factions
+        })
+    }, TABLE)
 end
 
 local function SpawnPlayer(client)
     if not IsValid(client) then return end
     local character = client:getChar()
-    if character then
-        local posData = character:getLastPos()
-        if posData and posData[3] and posData[3]:lower() == game.GetMap():lower() then
-            client:SetPos(posData[1].x and posData[1] or client:GetPos())
-            client:SetEyeAngles(posData[2].p and posData[2] or angle_zero)
-            character:setLastPos(nil)
-            return
-        end
+    if not character then return end
+    local posData = character:getLastPos()
+    if posData and posData.map and posData.map:lower() == game.GetMap():lower() then
+        client:SetPos(posData.pos and posData.pos.x and posData.pos or client:GetPos())
+        client:SetEyeAngles(posData.ang and posData.ang.p and posData.ang or angle_zero)
+        character:setLastPos(nil)
+        return
     end
 
     local factionID
@@ -75,7 +89,13 @@ end
 function MODULE:CharPreSave(character)
     local client = character:getPlayer()
     local InVehicle = client:hasValidVehicle()
-    if IsValid(client) and not InVehicle and client:Alive() then character:setLastPos({client:GetPos(), client:EyeAngles(), game.GetMap()}) end
+    if IsValid(client) and not InVehicle and client:Alive() then
+        character:setLastPos({
+            pos = client:GetPos(),
+            ang = client:EyeAngles(),
+            map = game.GetMap()
+        })
+    end
 end
 
 function MODULE:PlayerDeath(client, _, attacker)

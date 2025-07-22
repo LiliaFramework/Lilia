@@ -1512,3 +1512,47 @@ lia.command.add("chargetinventory", {
         client:ChatPrint(L("charInventoryIs", table.concat(result, ", ")))
     end
 })
+
+lia.command.add("getallinfos", {
+    adminOnly = true,
+    privilege = "Get Character Info",
+    desc = "getAllInfosDesc",
+    syntax = "[player Name]",
+    AdminStick = {
+        Name = "adminStickGetAllInfosName",
+        Category = "characterManagement",
+        SubCategory = "adminStickSubCategoryGetInfos",
+        Icon = "icon16/table.png"
+    },
+    onRun = function(client, arguments)
+        local target = lia.util.findPlayer(client, arguments[1])
+        if not target or not IsValid(target) then
+            client:notifyLocalized("targetNotFound")
+            return
+        end
+
+        local char = target:getChar()
+        if not char then
+            client:notifyLocalized("noChar")
+            return
+        end
+
+        local data = lia.char.getCharDataRaw(char:getID())
+        if not data then
+            client:notifyLocalized("noChar")
+            return
+        end
+
+        print("=== All information for " .. char:getName() .. " ===")
+        for column, value in pairs(data) do
+            if istable(value) then
+                print(column .. ":")
+                PrintTable(value)
+            else
+                print(column .. " = " .. tostring(value))
+            end
+        end
+
+        client:ChatPrint(L("infoPrintedConsole"))
+    end
+})

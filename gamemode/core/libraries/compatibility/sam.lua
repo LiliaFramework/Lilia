@@ -248,5 +248,3 @@ lia.config.add("SAMEnforceStaff", "Enforce Staff Rank To SAM", true, nil, {
     category = "Staff",
     type = "Boolean"
 })
--- CAMI sync allows both admin systems to coexist, so don't disable Lilia admin.
---hook.Add("ShouldLiliaAdminLoad", "liaSam", function() return false end)

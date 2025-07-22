@@ -263,6 +263,11 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS `lia_config`;
     DROP TABLE IF EXISTS `lia_logs`;
     DROP TABLE IF EXISTS `lia_bans`;
+    DROP TABLE IF EXISTS `lia_doors`;
+    DROP TABLE IF EXISTS `lia_spawns`;
+    DROP TABLE IF EXISTS `lia_chatbox`;
+    DROP TABLE IF EXISTS `lia_admingroups`;
+    DROP TABLE IF EXISTS `lia_saveditems`;
     DROP TABLE IF EXISTS `lia_persistence`;
 ]])
             local done = 0
@@ -290,7 +295,13 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS lia_config;
     DROP TABLE IF EXISTS lia_logs;
     DROP TABLE IF EXISTS lia_bans;
+    DROP TABLE IF EXISTS lia_doors;
+    DROP TABLE IF EXISTS lia_spawns;
+    DROP TABLE IF EXISTS lia_chatbox;
+    DROP TABLE IF EXISTS lia_admingroups;
+    DROP TABLE IF EXISTS lia_saveditems;
     DROP TABLE IF EXISTS lia_persistence;
+    DROP TABLE IF EXISTS lia_chardata;
 ]], realCallback)
     end
 end
@@ -324,7 +335,12 @@ function lia.db.loadTables()
                 _lastOnline integer,
                 _totalOnlineTime float
             );
-
+    CREATE TABLE IF NOT EXISTS lia_chardata (
+        _charID INTEGER NOT NULL,
+        _key VARCHAR(255) NOT NULL,
+        _value TEXT(1024),
+        PRIMARY KEY (_charID, _key)
+    );
             CREATE TABLE IF NOT EXISTS lia_characters (
                 _id INTEGER PRIMARY KEY AUTOINCREMENT,
                 _steamID VARCHAR,
@@ -389,6 +405,49 @@ function lia.db.loadTables()
                 _message TEXT,
                 _charID INTEGER,
                 _steamID VARCHAR
+            );
+
+            CREATE TABLE IF NOT EXISTS lia_doors (
+                _folder TEXT,
+                _map TEXT,
+                _id INTEGER,
+                _factions TEXT,
+                _classes TEXT,
+                _disabled INTEGER,
+                _hidden INTEGER,
+                _ownable INTEGER,
+                _name TEXT,
+                _price INTEGER,
+                _locked INTEGER,
+                _children TEXT,
+                PRIMARY KEY (_folder, _map, _id)
+            );
+
+            CREATE TABLE IF NOT EXISTS lia_spawns (
+                _schema TEXT,
+                _map TEXT,
+                _data TEXT,
+                PRIMARY KEY (_schema, _map)
+            );
+
+            CREATE TABLE IF NOT EXISTS lia_chatbox (
+                _schema TEXT,
+                _map TEXT,
+                _data TEXT,
+                PRIMARY KEY (_schema, _map)
+            );
+
+            CREATE TABLE IF NOT EXISTS lia_saveditems (
+                _id INTEGER PRIMARY KEY AUTOINCREMENT,
+                _schema TEXT,
+                _map TEXT,
+                _itemID INTEGER,
+                _pos TEXT,
+                _angles TEXT
+            );
+
+            CREATE TABLE IF NOT EXISTS lia_admingroups (
+                _data TEXT
             );
         ]], done)
     else
@@ -477,6 +536,50 @@ function lia.db.loadTables()
                 `_steamID` VARCHAR(20) NULL COLLATE 'utf8mb4_general_ci',
                 PRIMARY KEY (`_id`)
             );
+
+            CREATE TABLE IF NOT EXISTS `lia_doors` (
+                `_folder` TEXT NULL,
+                `_map` TEXT NULL,
+                `_id` INT NOT NULL,
+                `_factions` TEXT NULL,
+                `_classes` TEXT NULL,
+                `_disabled` TINYINT(1) NULL,
+                `_hidden` TINYINT(1) NULL,
+                `_ownable` TINYINT(1) NULL,
+                `_name` TEXT NULL,
+                `_price` INT NULL,
+                `_locked` TINYINT(1) NULL,
+                `_children` TEXT NULL,
+                PRIMARY KEY (`_folder`, `_map`, `_id`)
+            );
+
+            CREATE TABLE IF NOT EXISTS `lia_spawns` (
+                `_schema` TEXT NULL,
+                `_map` TEXT NULL,
+                `_data` TEXT NULL,
+                PRIMARY KEY (`_schema`, `_map`)
+            );
+
+            CREATE TABLE IF NOT EXISTS `lia_chatbox` (
+                `_schema` TEXT NULL,
+                `_map` TEXT NULL,
+                `_data` TEXT NULL,
+                PRIMARY KEY (`_schema`, `_map`)
+            );
+
+            CREATE TABLE IF NOT EXISTS `lia_saveditems` (
+                `_id` INT(12) NOT NULL AUTO_INCREMENT,
+                `_schema` TEXT NULL,
+                `_map` TEXT NULL,
+                `_itemID` INT(12) NOT NULL,
+                `_pos` TEXT NULL,
+                `_angles` TEXT NULL,
+                PRIMARY KEY (`_id`)
+            );
+
+            CREATE TABLE IF NOT EXISTS `lia_admingroups` (
+                `_data` TEXT NULL
+            );
         ]])
         local i = 1
         local function doNextQuery()
@@ -513,7 +616,9 @@ function lia.db.waitForTablesToLoad()
 end
 
 function lia.db.convertDataType(value, noEscape)
-    if isstring(value) then
+    if value == nil then
+        return "NULL"
+    elseif isstring(value) then
         if noEscape then
             return value
         else
@@ -580,7 +685,13 @@ function lia.db.count(dbTable, condition)
     local c = deferred.new()
     local tbl = "`lia_" .. dbTable .. "`"
     local q = "SELECT COUNT(*) AS cnt FROM " .. tbl .. (condition and " WHERE " .. condition or "")
-    lia.db.query(q, function(results) c:resolve(tonumber(results[1].cnt)) end)
+    lia.db.query(q, function(results)
+        if istable(results) then
+            c:resolve(tonumber(results[1].cnt))
+        else
+            c:resolve(0)
+        end
+    end)
     return c
 end
 
@@ -620,7 +731,13 @@ function lia.db.selectOne(fields, dbTable, condition)
     local q = "SELECT " .. f .. " FROM " .. tbl
     if condition then q = q .. " WHERE " .. condition end
     q = q .. " LIMIT 1"
-    lia.db.query(q, function(results) c:resolve(results[1]) end)
+    lia.db.query(q, function(results)
+        if istable(results) then
+            c:resolve(results[1])
+        else
+            c:resolve(nil)
+        end
+    end)
     return c
 end
 
@@ -645,6 +762,42 @@ function lia.db.bulkInsert(dbTable, rows)
     end
 
     local q = "INSERT INTO " .. tbl .. " (" .. table.concat(keys, ",") .. ") VALUES " .. table.concat(vals, ",")
+    lia.db.query(q, function() c:resolve() end, function(err) c:reject(err) end)
+    return c
+end
+
+function lia.db.bulkUpsert(dbTable, rows)
+    if #rows == 0 then return deferred.new():resolve() end
+    local c = deferred.new()
+    local tbl = "`lia_" .. dbTable .. "`"
+    local keys = {}
+    for k in pairs(rows[1]) do
+        keys[#keys + 1] = lia.db.escapeIdentifier(k)
+    end
+
+    local vals = {}
+    for _, row in ipairs(rows) do
+        local items = {}
+        for _, k in ipairs(keys) do
+            local key = k:sub(2, -2)
+            items[#items + 1] = lia.db.convertDataType(row[key])
+        end
+
+        vals[#vals + 1] = "(" .. table.concat(items, ",") .. ")"
+    end
+
+    local q
+    if lia.db.object then
+        local updates = {}
+        for _, k in ipairs(keys) do
+            updates[#updates + 1] = k .. "=VALUES(" .. k .. ")"
+        end
+
+        q = "INSERT INTO " .. tbl .. " (" .. table.concat(keys, ",") .. ") VALUES " .. table.concat(vals, ",") .. " ON DUPLICATE KEY UPDATE " .. table.concat(updates, ",")
+    else
+        q = "INSERT OR REPLACE INTO " .. tbl .. " (" .. table.concat(keys, ",") .. ") VALUES " .. table.concat(vals, ",")
+    end
+
     lia.db.query(q, function() c:resolve() end, function(err) c:reject(err) end)
     return c
 end
@@ -831,11 +984,6 @@ end
 
 function GM:DatabaseConnected()
     lia.bootstrap("Database", L("databaseConnected", lia.db.module), Color(0, 255, 0))
-    if SERVER then
-        lia.log.loadTables()
-        lia.data.loadTables()
-        lia.data.loadPersistence()
-    end
 end
 
 function GM:OnMySQLOOConnected()

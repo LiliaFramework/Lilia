@@ -449,6 +449,11 @@ function GM:SpawnMenuOpen()
     return true
 end
 
+function GM:InitPostEntity()
+    lia.joinTime = RealTime() - 0.9716
+    if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
+end
+
 concommand.Add("dev_GetCameraOrigin", function(client)
     if client:isStaff() then
         lia.information(L("originLabel", math.ceil(client:GetPos().x), math.ceil(client:GetPos().y), math.ceil(client:GetPos().z)))
@@ -466,8 +471,7 @@ concommand.Add("weighpoint_stop", function() hook.Add("HUDPaint", "WeighPoint", 
 concommand.Add("dev_GetEntPos", function(client) if client:isStaff() then lia.information(client:getTracedEntity():GetPos().x, client:getTracedEntity():GetPos().y, client:getTracedEntity():GetPos().z) end end)
 concommand.Add("dev_GetEntAngles", function(client) if client:isStaff() then lia.information(math.ceil(client:getTracedEntity():GetAngles().x) .. ", " .. math.ceil(client:getTracedEntity():GetAngles().y) .. ", " .. math.ceil(client:getTracedEntity():GetAngles().z)) end end)
 concommand.Add("dev_GetRoundEntPos", function(client) if client:isStaff() then lia.information(math.ceil(client:getTracedEntity():GetPos().x) .. ", " .. math.ceil(client:getTracedEntity():GetPos().y) .. ", " .. math.ceil(client:getTracedEntity():GetPos().z)) end end)
-    concommand.Add("dev_GetPos", function(client) if client:isStaff() then lia.information(math.ceil(client:GetPos().x) .. ", " .. math.ceil(client:GetPos().y) .. ", " .. math.ceil(client:GetPos().z)) end end)
-
+concommand.Add("dev_GetPos", function(client) if client:isStaff() then lia.information(math.ceil(client:GetPos().x) .. ", " .. math.ceil(client:GetPos().y) .. ", " .. math.ceil(client:GetPos().z)) end end)
 local VoiceRanges = {
     Whispering = 120,
     Talking = 300,

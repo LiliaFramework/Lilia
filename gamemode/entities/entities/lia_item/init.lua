@@ -66,6 +66,21 @@ function ENT:setItem(itemID)
         physObj:Wake()
     end
 
+    if not itemTable.temp then
+        local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+        local map = game.GetMap()
+        local condition = "_schema = " .. lia.db.convertDataType(folder) .. " AND _map = " .. lia.db.convertDataType(map) .. " AND _itemID = " .. tonumber(itemID)
+        lia.db.delete("saveditems", condition):next(function()
+            lia.db.insertTable({
+                _schema = folder,
+                _map = map,
+                _itemID = itemID,
+                _pos = lia.data.encodetable(self:GetPos()),
+                _angles = lia.data.encodetable(self:GetAngles())
+            }, nil, "saveditems")
+        end)
+    end
+
     hook.Run("OnItemCreated", itemTable, self)
 end
 
@@ -88,6 +103,12 @@ function ENT:OnRemove()
     end
 
     if not lia.shuttingDown and not self.liaIsSafe and self.liaItemID then lia.item.deleteByID(self.liaItemID) end
+    if SERVER and not lia.shuttingDown and self.liaItemID then
+        local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+        local map = game.GetMap()
+        local condition = "_schema = " .. lia.db.convertDataType(folder) .. " AND _map = " .. lia.db.convertDataType(map) .. " AND _itemID = " .. tonumber(self.liaItemID)
+        lia.db.delete("saveditems", condition)
+    end
 end
 
 function ENT:Think()

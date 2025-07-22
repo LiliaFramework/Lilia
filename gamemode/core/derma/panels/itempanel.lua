@@ -79,7 +79,6 @@ function PANEL:openInspect()
     local view = vgui.Create("EditablePanel", frame)
     view:Dock(TOP)
     view:SetTall(fh * 0.5)
-
     local model = vgui.Create("DModelPanel", view)
     model:Dock(FILL)
     model:SetModel(self.item.model or "models/props_junk/cardboard_box002b.mdl")
@@ -95,7 +94,6 @@ function PANEL:openInspect()
     end)
 
     model.OnMouseWheeled = function(p, d) p:SetFOV(math.Clamp(p:GetFOV() - d * 2, 20, 80)) end
-
     model.Think = function(p)
         if input.IsKeyDown(KEY_A) or input.IsKeyDown(KEY_D) then
             local ang = p.Entity:GetAngles()
@@ -158,9 +156,7 @@ function PANEL:buildButtons()
     end
 
     self:addBtn(L("inspect"), function()
-        if hook.Run("CanPlayerInspectItem", LocalPlayer(), self.item) ~= false then
-            self:openInspect()
-        end
+        if hook.Run("CanPlayerInspectItem", LocalPlayer(), self.item) ~= false then self:openInspect() end
         self:Remove()
     end)
 

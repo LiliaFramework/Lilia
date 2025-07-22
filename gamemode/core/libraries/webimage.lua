@@ -27,7 +27,6 @@ function lia.webimage.register(n, u, cb, flags)
 
     lia.webimage._registered = registered
     cache[n] = nil
-
     local savePath = baseDir .. n
     local function finalize(fromCache)
         local m = buildMaterial(savePath, flags)

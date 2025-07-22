@@ -213,6 +213,13 @@
         func = function(_, name, steamID, netMessage) return string.format("Player '%s' [%s] triggered exploit net message '%s'.", name, steamID, netMessage) end,
         category = "Exploits"
     },
+    ["backdoorDetected"] = {
+        func = function(_, netMessage, file, line)
+            if file then return string.format("Detected backdoor net '%s' defined in %s:%s.", netMessage, file, tostring(line)) end
+            return string.format("Detected backdoor net '%s' during initialization.", netMessage)
+        end,
+        category = "Exploits"
+    },
     ["steamIDMissing"] = {
         func = function(_, name, steamID) return string.format("SteamID missing for '%s' [%s] during CheckSeed.", name, steamID) end,
         category = "Connections"
@@ -222,7 +229,14 @@
         category = "Connections"
     },
     ["hackAttempt"] = {
-        func = function(client) return string.format("Client %s triggered hack detection.", client:Name()) end,
+        func = function(client, netName)
+            if netName then return string.format("Client %s triggered hack detection via '%s'.", client:Name(), netName) end
+            return string.format("Client %s triggered hack detection.", client:Name())
+        end,
+        category = "Cheating"
+    },
+    ["verifyCheatsOK"] = {
+        func = function(client) return string.format("Client %s responded to VerifyCheats.", client:Name()) end,
         category = "Cheating"
     },
     ["doorSetClass"] = {
@@ -259,18 +273,6 @@
     },
     ["doorResetData"] = {
         func = function(client, door) return string.format("%s reset door data on door %s.", client:Name(), door:GetClass()) end,
-        category = "World"
-    },
-    ["doorSetParent"] = {
-        func = function(client, door) return string.format("%s set door parent for door %s.", client:Name(), door:GetClass()) end,
-        category = "World"
-    },
-    ["doorAddChild"] = {
-        func = function(client, parentDoor, childDoor) return string.format("%s added child door %s to parent door %s.", client:Name(), childDoor:GetClass(), parentDoor:GetClass()) end,
-        category = "World"
-    },
-    ["doorRemoveChild"] = {
-        func = function(client, parentDoor, childDoor) return string.format("%s removed child door %s from parent door %s.", client:Name(), childDoor:GetClass(), parentDoor:GetClass()) end,
         category = "World"
     },
     ["doorDisable"] = {

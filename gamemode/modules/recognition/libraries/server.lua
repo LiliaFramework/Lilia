@@ -5,14 +5,14 @@
     yell = "y"
 }
 
-function MODULE:ForceRecognizeRange(ply, range)
+function MODULE:ForceRecognizeRange(ply, range, fakeName)
     local char = ply:getChar()
     if not (char and ply:Alive()) then return end
     local key = rangeMap[range] or "ic"
     local cls = lia.chat.classes[key]
     if not cls then return end
     for _, v in player.Iterator() do
-        if v ~= ply and v:getChar() and cls.onCanHear(ply, v) and v:getChar():recognize(char) then lia.log.add(ply, "charRecognize", v:getChar():getID(), "FORCED") end
+        if v ~= ply and v:getChar() and cls.onCanHear(ply, v) and v:getChar():recognize(char, fakeName) then lia.log.add(ply, "charRecognize", v:getChar():getID(), "FORCED") end
     end
 
     net.Start("rgnDone")

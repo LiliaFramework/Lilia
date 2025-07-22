@@ -12,6 +12,7 @@ ENT.IsPersistent = true
 function ENT:setupVars()
     if SERVER then
         self:setNetVar("name", "Jane Doe")
+        self:setNetVar("preset", "none")
         self.receivers = {}
     end
 
@@ -111,6 +112,10 @@ end
 
 function ENT:getName()
     return self:getNetVar("name", "")
+end
+
+function ENT:getPreset()
+    return self:getNetVar("preset", "none")
 end
 
 function ENT:setAnim()
