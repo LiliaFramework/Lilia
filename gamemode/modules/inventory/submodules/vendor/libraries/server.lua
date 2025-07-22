@@ -43,7 +43,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
         money = client:getChar():getMoney()
     end
 
-    if money and money < price then return false, isSellingToVendor and L("vendorNoMoney") or L("vendorCanNotAfford") end
+    if money and money < price then return false, isSellingToVendor and L("vendorNoMoney") or L("canNotAfford") end
     if SteamIDWhitelist or FactionWhitelist or UserGroupWhitelist or VIPOnly then
         local hasWhitelist = true
         local isWhitelisted = false
@@ -176,6 +176,15 @@ function MODULE:GetEntitySaveData(ent)
         factions = ent.factions,
         classes = ent.classes,
         money = ent.money,
+        skin = ent:GetSkin(),
+        bodygroups = (function()
+            local groups = {}
+            for i = 0, ent:GetNumBodyGroups() - 1 do
+                local val = ent:GetBodygroup(i)
+                if val > 0 then groups[i] = val end
+            end
+            return groups
+        end)(),
         flag = ent:getNetVar("flag"),
         scale = ent:getNetVar("scale"),
         welcomeMessage = ent:getNetVar("welcomeMessage"),
@@ -194,6 +203,12 @@ function MODULE:OnEntityLoaded(ent, data)
     ent.factions = data.factions or {}
     ent.classes = data.classes or {}
     ent.money = data.money
+    if data.skin then ent:SetSkin(data.skin) end
+    if istable(data.bodygroups) then
+        for k, v in pairs(data.bodygroups) do
+            ent:SetBodygroup(tonumber(k), v)
+        end
+    end
 end
 
 net.Receive("VendorExit", function(_, client)

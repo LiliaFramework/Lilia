@@ -8,6 +8,15 @@ This page describes functions to register custom keybinds.
 
 The keybind library stores user-defined keyboard bindings. It is loaded **client-side** and automatically loads any saved bindings from `data/lilia/keybinds/`. Press- and release-callbacks are dispatched through the `PlayerButtonDown` and `PlayerButtonUp` hooks. The library also adds a “Keybinds” page to the config menu via the `PopulateConfigurationButtons` hook so players can change their binds in-game.
 
+Keybinds are kept inside `lia.keybind.stored`; each entry contains:
+
+* `default` (*number*) – The default key code assigned when registered.
+* `value` (*number*) – The currently bound key code.
+* `callback` (*function | nil*) – Invoked when the key is pressed.
+* `release` (*function | nil*) – Invoked when the key is released.
+
+Numeric key codes also map back to their action identifiers for quick lookup.
+
 ---
 
 ### lia.keybind.add

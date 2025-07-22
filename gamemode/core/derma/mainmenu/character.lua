@@ -53,8 +53,28 @@ function PANEL:createTitle()
     if self.tabs then self.tabs:DockMargin(64, 32, 64, 0) end
 end
 
+function PANEL:hideExternalEntities()
+    self.hiddenEntities = {}
+    for _, ent in ipairs(ents.GetAll()) do
+        if ent ~= self.modelEntity and not ent:IsWorld() and not ent:CreatedByMap() then
+            self.hiddenEntities[ent] = ent:GetNoDraw()
+            ent:SetNoDraw(true)
+        end
+    end
+end
+
+function PANEL:restoreExternalEntities()
+    if not self.hiddenEntities then return end
+    for ent, wasHidden in pairs(self.hiddenEntities) do
+        if IsValid(ent) then ent:SetNoDraw(wasHidden) end
+    end
+
+    self.hiddenEntities = nil
+end
+
 function PANEL:loadBackground()
     if self.isLoadMode then
+        self:hideExternalEntities()
         hook.Add("PrePlayerDraw", "liaMainMenuPrePlayerDraw", function() return true end)
         self:updateSelectedCharacter()
         if not IsValid(self.leftArrow) and #lia.characters > 1 then self:createArrows() end
@@ -72,6 +92,7 @@ function PANEL:loadBackground()
             }
         end)
     else
+        self:restoreExternalEntities()
         if IsValid(self.modelEntity) then self.modelEntity:Remove() end
         if IsValid(self.leftArrow) then
             self.leftArrow:Remove()
@@ -668,6 +689,7 @@ end
 
 function PANEL:OnRemove()
     hook.Run("CharacterMenuClosed")
+    self:restoreExternalEntities()
     hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
     hook.Remove("CalcView", "liaMainMenuCalcView")
     hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")

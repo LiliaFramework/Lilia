@@ -1,6 +1,4 @@
-﻿lia.log.addType("permaPropSaved", function(client, class, model, pos) return string.format("%s perma-propped %s (%s) at %s", client:Name(), class, model, pos) end, "PermaProps")
-lia.log.addType("permaPropOverlap", function(_, pos, other) return string.format("Perma-prop spawned at %s overlapping prop at %s.", pos, other) end, "PermaProps")
-local spawnedPositions = {}
+﻿local spawnedPositions = {}
 local radiusSqr = 16
 local lastSaver
 hook.Add("CanTool", "liaPermaProps", function(client, _, tool)
@@ -39,3 +37,5 @@ hook.Add("PermaProps.OnEntitySaved", "liaLogPermaPropSaved", function(ent)
 end)
 
 hook.Add("PostCleanupMap", "liaPermaPropsClearList", function() spawnedPositions = {} end)
+lia.log.addType("permaPropSaved", function(client, class, model, pos) return string.format("%s perma-propped %s (%s) at %s", client:Name(), class, model, pos) end, "PermaProps")
+lia.log.addType("permaPropOverlap", function(_, pos, other) return string.format("Perma-prop spawned at %s overlapping prop at %s.", pos, other) end, "PermaProps")

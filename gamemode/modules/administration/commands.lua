@@ -41,11 +41,18 @@ lia.command.add("managesitrooms", {
     onRun = function(client)
         if not client:hasPrivilege("Manage SitRooms") then return end
         local mapName = game.GetMap()
-        local sitrooms = lia.data.get("sitrooms", {})
-        local rooms = sitrooms[mapName] or {}
-        net.Start("managesitrooms")
-        net.WriteTable(rooms)
-        net.Send(client)
+        local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+        local condition = "_folder = " .. lia.db.convertDataType(folder) .. " AND _map = " .. lia.db.convertDataType(mapName)
+        lia.db.select({"_name", "_pos"}, "sitrooms", condition):next(function(res)
+            local rooms = {}
+            for _, row in ipairs(res.results or {}) do
+                rooms[row._name] = lia.data.decodeVector(row._pos)
+            end
+
+            net.Start("managesitrooms")
+            net.WriteTable(rooms)
+            net.Send(client)
+        end)
     end
 })
 
@@ -61,10 +68,14 @@ lia.command.add("addsitroom", {
             end
 
             local mapName = game.GetMap()
-            local sitrooms = lia.data.get("sitrooms", {})
-            sitrooms[mapName] = sitrooms[mapName] or {}
-            sitrooms[mapName][name] = client:GetPos()
-            lia.data.set("sitrooms", sitrooms, true, true)
+            local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+            lia.db.upsert({
+                _folder = folder,
+                _map = mapName,
+                _name = name,
+                _pos = lia.data.serialize(client:GetPos()),
+            }, "sitrooms")
+
             client:notifyLocalized("sitroomSet")
             lia.log.add(client, "sitRoomSet", string.format("Map: %s | Name: %s | Position: %s", mapName, name, tostring(client:GetPos())), "Set the sitroom location")
         end)
@@ -90,29 +101,34 @@ lia.command.add("sendtositroom", {
         end
 
         local mapName = game.GetMap()
-        local sitrooms = lia.data.get("sitrooms", {})
-        local rooms = sitrooms[mapName] or {}
-        local names = {}
-        for name in pairs(rooms) do
-            names[#names + 1] = name
-        end
+        local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+        local condition = "_folder = " .. lia.db.convertDataType(folder) .. " AND _map = " .. lia.db.convertDataType(mapName)
+        lia.db.select({"_name", "_pos"}, "sitrooms", condition):next(function(res)
+            local rooms = {}
+            local names = {}
+            for _, row in ipairs(res.results or {}) do
+                local pos = lia.data.decodeVector(row._pos)
+                rooms[row._name] = pos
+                names[#names + 1] = row._name
+            end
 
-        if #names == 0 then
-            client:notifyLocalized("sitroomNotSet")
-            return
-        end
-
-        client:requestDropdown(L("chooseSitroomTitle"), L("selectSitroomPrompt"), names, function(selection)
-            local pos = rooms[selection]
-            if not pos then
+            if #names == 0 then
                 client:notifyLocalized("sitroomNotSet")
                 return
             end
 
-            target:SetPos(pos)
-            client:notifyLocalized("sitroomTeleport", target:Nick())
-            target:notifyLocalized("sitroomArrive")
-            lia.log.add(client, "sendToSitRoom", target:Nick(), selection)
+            client:requestDropdown(L("chooseSitroomTitle"), L("selectSitroomPrompt"), names, function(selection)
+                local pos = rooms[selection]
+                if not pos then
+                    client:notifyLocalized("sitroomNotSet")
+                    return
+                end
+
+                target:SetPos(pos)
+                client:notifyLocalized("sitroomTeleport", target:Nick())
+                target:notifyLocalized("sitroomArrive")
+                lia.log.add(client, "sendToSitRoom", target:Nick(), selection)
+            end)
         end)
     end
 })
@@ -148,7 +164,8 @@ lia.command.add("returnsitroom", {
     end
 })
 
-if not lia.admin.isDisabled() then
+local sysDisabled, cmdsDisabled = lia.admin.isDisabled()
+if not sysDisabled and not cmdsDisabled then
     lia.command.add("plykick", {
         adminOnly = true,
         privilege = "Kick Player",

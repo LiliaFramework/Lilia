@@ -6,7 +6,14 @@ This page lists utilities for creating fonts.
 
 ## Overview
 
-The fonts library wraps `surface.CreateFont` for commonly used fonts. It registers each font once, stores the definition, and then re-creates those fonts automatically when the screen resolution or relevant config values change.
+The fonts library wraps `surface.CreateFont` for commonly used fonts. It registers each font once, stores the definition in `lia.font.stored`, and then re-creates those fonts automatically when the screen resolution or relevant config values change.
+
+Registered fonts rely on two config options:
+
+* `Font` – Core UI font family.
+* `GenericFont` – Secondary UI font family.
+
+Changing either option triggers `lia.font.refresh` to rebuild every stored font.
 
 Fonts are refreshed whenever `lia.font.refresh` runs; afterward, the `PostLoadFonts` hook fires with the current UI and generic font names. Register custom fonts inside that hook so they persist across refreshes.
 
@@ -44,6 +51,72 @@ hook.Add("PostLoadFonts", "ExampleFont", function()
     })
 end)
 ```
+
+---
+### Default fonts
+
+The base gamemode registers the following fonts for use in menus and panels:
+
+- `AddonInfo_Header`
+- `AddonInfo_Text`
+- `AddonInfo_Small`
+- `ConfigFont`
+- `MediumConfigFont`
+- `SmallConfigFont`
+- `ConfigFontBold`
+- `ConfigFontLarge`
+- `DescriptionFontLarge`
+- `ticketsystem`
+- `VendorButtonFont`
+- `VendorMediumFont`
+- `VendorSmallFont`
+- `VendorTinyFont`
+- `VendorLightFont`
+- `VendorItemNameFont`
+- `VendorItemDescFont`
+- `VendorItemStatsFont`
+- `VendorItemPriceFont`
+- `VendorActionButtonFont`
+- `liaCharLargeFont`
+- `liaCharMediumFont`
+- `liaCharSmallFont`
+- `liaCharSubTitleFont`
+- `lia3D2DFont`
+- `liaTitleFont`
+- `liaSubTitleFont`
+- `liaBigTitle`
+- `liaBigText`
+- `liaHugeText`
+- `liaBigBtn`
+- `liaMenuButtonFont`
+- `liaMenuButtonLightFont`
+- `liaToolTipText`
+- `liaDynFontSmall`
+- `liaDynFontMedium`
+- `liaDynFontBig`
+- `liaCleanTitleFont`
+- `liaHugeFont`
+- `liaBigFont`
+- `liaMediumFont`
+- `liaSmallFont`
+- `liaMiniFont`
+- `liaMediumLightFont`
+- `liaGenericFont`
+- `liaGenericLightFont`
+- `liaChatFont`
+- `liaChatFontItalics`
+- `liaChatFontBold`
+- `liaItemDescFont`
+- `liaSmallBoldFont`
+- `liaItemBoldFont`
+- `liaNoticeFont`
+- `liaCharTitleFont`
+- `liaCharDescFont`
+- `liaCharButtonFont`
+- `liaCharSmallButtonFont`
+- `PoppinsSmall`
+- `PoppinsMedium`
+- `PoppinsBig`
 
 ---
 

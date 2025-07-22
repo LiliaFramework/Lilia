@@ -16,7 +16,7 @@ The base user groups `user`, `admin`, and `superadmin` are created automatically
 
 **Purpose**
 
-Checks for third-party admin mods and returns `true` when the built-in system should be ignored.
+Checks for third-party admin mods and returns booleans indicating whether the built-in system and its commands should be ignored.
 
 **Parameters**
 
@@ -28,7 +28,7 @@ Checks for third-party admin mods and returns `true` when the built-in system sh
 
 **Returns**
 
-* `boolean`: Whether an external admin mod is loaded.
+* `boolean, boolean`: `true` when the admin system should be disabled and when admin commands should be disabled respectively.
 
 ---
 
@@ -283,5 +283,31 @@ Determines whether a given ban has expired.
 **Returns**
 
 * `boolean`: `true` if the ban is no longer active.
+
+---
+
+### lia.admin.execCommand
+
+**Purpose**
+
+Executes a basic admin action by sending the appropriate chat command.
+
+**Parameters**
+
+* `cmd` (*string*): Command identifier, e.g. `"kick"` or `"ban"`.
+
+* `victim` (*Player | string*): Target player or SteamID.
+
+* `dur` (*number | nil*): Duration in minutes for applicable commands. Optional.
+
+* `reason` (*string | nil*): Reason text. Optional.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* *boolean | nil*: `true` if a matching command executed, otherwise `nil`.
 
 ---

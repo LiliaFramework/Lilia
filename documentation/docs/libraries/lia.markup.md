@@ -60,7 +60,8 @@ Constructs an empty markup object (usually returned by `lia.markup.parse`).
 **Example Usage**
 
 ```lua
-local obj = lia.markup.MarkupObject:create()
+-- Usually markup objects are created via lia.markup.parse
+local obj = lia.markup.parse("")
 ```
 
 ---
@@ -174,7 +175,7 @@ Draws the markup object at the specified screen position.
 
 * `valign` (*number | nil*): Vertical alignment. *Optional*.
 
-* `alpha` (*number | nil*): Alpha override. *Optional*.
+* `alphaoverride` (*number | nil*): Alpha override. *Optional*.
 
 **Realm**
 

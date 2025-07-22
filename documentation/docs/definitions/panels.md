@@ -54,6 +54,7 @@ Panels provide the building blocks for Lilia's user interface. Most derive from 
 | `VendorItem` | `DPanel` | Single item entry in the vendor menu. |
 | `VendorEditor` | `DFrame` | Admin window for configuring vendors. |
 | `VendorFactionEditor` | `DFrame` | Editor for vendor faction and class access. |
+| `VendorBodygroupEditor` | `DFrame` | Editor for adjusting a vendor's bodygroups. |
 | `liaHugeButton` | `DButton` | Large button with prominent styling. |
 | `liaBigButton` | `DButton` | Button using a big font size. |
 | `liaMediumButton` | `DButton` | Standard medium button. |
@@ -550,6 +551,18 @@ Administrative window for editing a vendor's inventory and settings, including i
 **Description:**
 
 Secondary editor for selecting which factions and player classes can trade with the vendor.
+
+---
+
+### `VendorBodygroupEditor`
+
+**Base Panel:**
+
+`DFrame`
+
+**Description:**
+
+Window for adjusting a vendor's bodygroups and skin.
 
 ---
 

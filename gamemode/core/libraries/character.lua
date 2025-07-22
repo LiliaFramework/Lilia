@@ -259,42 +259,6 @@ lia.char.registerVar("money", {
     noDisplay = true
 })
 
-lia.char.registerVar("data", {
-    default = {},
-    isLocal = true,
-    noDisplay = true,
-    field = "_data",
-    fieldType = "text",
-    onSet = function(character, key, value, noReplication, receiver)
-        local data = character:getData()
-        local client = character:getPlayer()
-        data[key] = value
-        if not noReplication and IsValid(client) then
-            net.Start("charData")
-            net.WriteUInt(character:getID(), 32)
-            net.WriteString(key)
-            net.WriteType(value)
-            if receiver then
-                net.Send(receiver)
-            else
-                net.Send(client)
-            end
-        end
-
-        character.vars.data = data
-    end,
-    onGet = function(character, key, default)
-        local data = character.vars.data or {}
-        if key then
-            if not data then return default end
-            local value = data[key]
-            return value == nil and default or value
-        else
-            return default or data
-        end
-    end
-})
-
 lia.char.registerVar("var", {
     default = {},
     noDisplay = true,
@@ -411,9 +375,15 @@ lia.char.registerVar("lastPos", {
 function lia.char.getCharData(charID, key)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end
-    local findData = sql.Query("SELECT * FROM lia_characters WHERE _id=" .. charIDsafe)
-    if not findData or not findData[1] then return false end
-    local data = lia.data.deserialize(findData[1]._data) or {}
+    local results = sql.Query("SELECT _key, _value FROM lia_chardata WHERE _charID = " .. charIDsafe)
+    local data = {}
+    if istable(results) then
+        for _, row in ipairs(results) do
+            local decoded = pon.decode(row._value)
+            data[row._key] = decoded[1]
+        end
+    end
+
     if key then return data[key] end
     return data
 end
@@ -421,10 +391,22 @@ end
 function lia.char.getCharDataRaw(charID, key)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end
-    local findData = sql.Query("SELECT * FROM lia_characters WHERE _id=" .. charIDsafe)
-    if not findData or not findData[1] then return false end
-    if key then return findData[1][key] end
-    return findData[1]
+    if key then
+        local row = sql.Query("SELECT _value FROM lia_chardata WHERE _charID = " .. charIDsafe .. " AND _key = '" .. lia.db.escape(key) .. "'")
+        if not row or not row[1] then return false end
+        local decoded = pon.decode(row[1]._value)
+        return decoded[1]
+    end
+
+    local results = sql.Query("SELECT _key, _value FROM lia_chardata WHERE _charID = " .. charIDsafe)
+    local data = {}
+    if istable(results) then
+        for _, r in ipairs(results) do
+            local decoded = pon.decode(r._value)
+            data[r._key] = decoded[1]
+        end
+    end
+    return data
 end
 
 function lia.char.getOwnerByID(ID)
@@ -476,8 +458,7 @@ if SERVER then
             _faction = data.faction or L("unknown"),
             _money = data.money,
             recognition = data.recognition or "",
-            recognized_as = "",
-            _data = data.data
+            recognized_as = ""
         }, function(_, charID)
             local client
             for _, v in player.Iterator() do
@@ -492,6 +473,12 @@ if SERVER then
             hook.Run("CreateDefaultInventory", character):next(function(inventory)
                 character.vars.inv[1] = inventory
                 lia.char.loaded[charID] = character
+                if istable(data.data) then
+                    for k, v in pairs(data.data) do
+                        lia.char.setCharData(charID, k, v)
+                    end
+                end
+
                 if callback then callback(charID) end
             end)
         end)
@@ -640,6 +627,7 @@ if SERVER then
 
         lia.char.loaded[id] = nil
         lia.db.query("DELETE FROM lia_characters WHERE _id = " .. id)
+        lia.db.delete("chardata", "_charID = " .. id)
         lia.db.query("SELECT _invID FROM lia_inventories WHERE _charID = " .. id, function(data)
             if data then
                 for _, inventory in ipairs(data) do
@@ -653,19 +641,16 @@ if SERVER then
 
     function lia.char.setCharData(charID, key, val)
         local charIDsafe = tonumber(charID)
-        if not charIDsafe then return end
-        local data = lia.char.getCharData(charID)
-        if not data then return false end
-        data[key] = val
-        local promise = lia.db.updateTable({
-            _data = data
-        }, nil, "characters", "_id = " .. charIDsafe)
-
-        if deferred.isPromise(promise) then
-            promise:catch(function(err) lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET _data", err)) end)
-        elseif promise == false then
-            lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET _data", sql.LastError()))
-            return false
+        if not charIDsafe or not key then return end
+        if val == nil then
+            lia.db.delete("chardata", "_charID = " .. charIDsafe .. " AND _key = '" .. lia.db.escape(key) .. "'")
+        else
+            local encoded = pon.encode({val})
+            lia.db.upsert({
+                _charID = charIDsafe,
+                _key = key,
+                _value = encoded
+            }, "chardata")
         end
 
         if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setData(key, val) end

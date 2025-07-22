@@ -1,10 +1,4 @@
-﻿lia.log.addType("dupeCrashAttempt", function(client)
-    local name = IsValid(client) and client:Name() or L("unknown")
-    local steamID = IsValid(client) and client:SteamID64() or L("na")
-    return string.format("Player '%s' [%s] attempted to duplicate oversized entities.", name, steamID)
-end, "Security")
-
-local function CheckDuplicationScale(client, entities)
+﻿local function CheckDuplicationScale(client, entities)
     entities = entities or {}
     for _, ent in pairs(entities) do
         if ent.ModelScale and ent.ModelScale > 10 then
@@ -41,3 +35,9 @@ hook.Add("CanTool", "liaAdvDupe", function(client, _, tool)
 
     if not CheckDuplicationScale(client, toolobj.Entities) then return false end
 end)
+
+lia.log.addType("dupeCrashAttempt", function(client)
+    local name = IsValid(client) and client:Name() or L("unknown")
+    local steamID = IsValid(client) and client:SteamID64() or L("na")
+    return string.format("Player '%s' [%s] attempted to duplicate oversized entities.", name, steamID)
+end, "Security")

@@ -3328,6 +3328,38 @@ end)
 
 ---
 
+### ShouldLiliaAdminCommandsLoad
+
+**Purpose**
+
+Controls whether the built-in admin commands should be registered. This allows
+external admin systems to take over while still letting the rest of Lilia load.
+
+**Parameters**
+
+- None
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+- `boolean?`: Return `false` to prevent Lilia's admin commands from loading.
+
+**Example Usage**
+
+```lua
+-- Use commands from another admin mod instead
+hook.Add("ShouldLiliaAdminCommandsLoad", "liaSam", function()
+    return false
+end)
+```
+
+This hook automatically returns `false` when SAM is detected so that SAM's command set can take over.
+
+---
+
 ### RunAdminSystemCommand
 
 **Purpose**

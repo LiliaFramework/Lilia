@@ -10,6 +10,36 @@ The networking library synchronises data between the server and clients. It wrap
 
 ---
 
+### checkBadType
+
+**Purpose**
+
+Validates a value before it is networked, recursively ensuring no functions are present.
+
+**Parameters**
+
+* `name` (*string*): Identifier for error reporting.
+
+* `object` (*any*): Value to inspect.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `boolean`: `true` if a disallowed type was found.
+
+**Example Usage**
+
+```lua
+if checkBadType("roundData", someTable) then
+    return
+end
+```
+
+---
+
 ### setNetVar
 
 **Purpose**

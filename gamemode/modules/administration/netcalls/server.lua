@@ -28,30 +28,41 @@ net.Receive("lia_managesitrooms_action", function(_, client)
     local action = net.ReadUInt(2)
     local name = net.ReadString()
     local mapName = game.GetMap()
-    local sitrooms = lia.data.get("sitrooms", {})
-    sitrooms[mapName] = sitrooms[mapName] or {}
-    local rooms = sitrooms[mapName]
+    local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+    local baseCondition = "_folder = " .. lia.db.convertDataType(folder) .. " AND _map = " .. lia.db.convertDataType(mapName)
     if action == 1 then
-        local targetPos = rooms[name]
-        if targetPos then
-            client:SetNW2Vector("previousSitroomPos", client:GetPos())
-            client:SetPos(targetPos)
-            client:notifyLocalized("sitroomTeleport", name)
-            lia.log.add(client, "sendToSitRoom", client:Name(), name)
-        end
+        local condition = baseCondition .. " AND _name = " .. lia.db.convertDataType(name)
+        lia.db.selectOne({"_pos"}, "sitrooms", condition):next(function(row)
+            local targetPos = row and lia.data.decodeVector(row._pos)
+            if targetPos then
+                client:SetNW2Vector("previousSitroomPos", client:GetPos())
+                client:SetPos(targetPos)
+                client:notifyLocalized("sitroomTeleport", name)
+                lia.log.add(client, "sendToSitRoom", client:Name(), name)
+            end
+        end)
     elseif action == 2 then
         local newName = net.ReadString()
-        if newName ~= "" and not rooms[newName] then
-            rooms[newName] = rooms[name]
-            rooms[name] = nil
-            lia.data.set("sitrooms", sitrooms, true, true)
-            client:notifyLocalized("sitroomRenamed")
-            lia.log.add(client, "sitRoomRenamed", string.format("Map: %s | Old: %s | New: %s", mapName, name, newName), L("logRenamedSitroom"))
+        if newName ~= "" then
+            local newCondition = baseCondition .. " AND _name = " .. lia.db.convertDataType(newName)
+            lia.db.exists("sitrooms", newCondition):next(function(exists)
+                if exists then return end
+                local condition = baseCondition .. " AND _name = " .. lia.db.convertDataType(name)
+                lia.db.updateTable({
+                    _name = newName
+                }, nil, "sitrooms", condition)
+
+                client:notifyLocalized("sitroomRenamed")
+                lia.log.add(client, "sitRoomRenamed", string.format("Map: %s | Old: %s | New: %s", mapName, name, newName), L("logRenamedSitroom"))
+            end)
         end
     elseif action == 3 then
-        rooms[name] = client:GetPos()
-        lia.data.set("sitrooms", sitrooms, true, true)
+        local condition = baseCondition .. " AND _name = " .. lia.db.convertDataType(name)
+        lia.db.updateTable({
+            _pos = lia.data.serialize(client:GetPos())
+        }, nil, "sitrooms", condition)
+
         client:notifyLocalized("sitroomRepositioned")
-        lia.log.add(client, "sitRoomRepositioned", string.format("Map: %s | Name: %s | New Position: %s", mapName, name, tostring(rooms[name])), L("logRepositionedSitroom"))
+        lia.log.add(client, "sitRoomRepositioned", string.format("Map: %s | Name: %s | New Position: %s", mapName, name, tostring(client:GetPos())), L("logRepositionedSitroom"))
     end
 end)

@@ -10,6 +10,171 @@ The item library contains utilities for retrieving item definitions and creating
 
 ---
 
+### lia.item.base
+
+**Purpose**
+
+Table of all base item definitions indexed by unique ID.
+
+**Realm**
+
+`Shared`
+
+**Example Usage**
+
+```lua
+local baseOutfit = lia.item.base["base_outfit"]
+```
+
+---
+
+### lia.item.list
+
+**Purpose**
+
+Holds all registered item definitions accessible by their unique ID.
+
+**Realm**
+
+`Shared`
+
+**Example Usage**
+
+```lua
+for id, item in pairs(lia.item.list) do
+    print(id, item.name)
+end
+```
+
+---
+
+### lia.item.instances
+
+**Purpose**
+
+Stores item instances keyed by numeric ID.
+
+**Realm**
+
+`Shared`
+
+**Example Usage**
+
+```lua
+local inst = lia.item.instances[5]
+```
+
+---
+
+### lia.item.inventories
+
+**Purpose**
+
+Alias of `lia.inventory.instances` for convenience.
+
+**Realm**
+
+`Shared`
+
+**Example Usage**
+
+```lua
+local inv = lia.item.inventories[1]
+```
+
+---
+
+### lia.item.inventoryTypes
+
+**Purpose**
+
+Contains registered inventory classes by type name.
+
+**Realm**
+
+`Shared`
+
+**Example Usage**
+
+```lua
+print(lia.item.inventoryTypes["GridInv"])
+```
+
+---
+
+### lia.item.WeaponOverrides
+
+**Purpose**
+
+Maps weapon class names to property overrides used when generating weapon items.
+
+**Realm**
+
+`Shared`
+
+**Example Usage**
+
+```lua
+lia.item.WeaponOverrides["weapon_pistol"] = { name = "Old Pistol" }
+```
+
+---
+
+### lia.item.WeaponsBlackList
+
+**Purpose**
+
+Set of weapon classes excluded from automatic item generation.
+
+**Realm**
+
+`Shared`
+
+**Example Usage**
+
+```lua
+lia.item.WeaponsBlackList["weapon_physgun"] = true
+```
+
+---
+
+### lia.item.holdTypeToWeaponCategory
+
+**Purpose**
+
+Translates SWEP hold types to default weapon categories.
+
+**Realm**
+
+`Shared`
+
+**Example Usage**
+
+```lua
+local cat = lia.item.holdTypeToWeaponCategory["smg"]
+```
+
+---
+
+### lia.item.holdTypeSizeMapping
+
+**Purpose**
+
+Default width and height values for generated weapons by hold type.
+
+**Realm**
+
+`Shared`
+
+**Example Usage**
+
+```lua
+local size = lia.item.holdTypeSizeMapping["smg"]
+print(size.width, size.height)
+```
+
+---
+
 ### lia.item.get
 
 **Purpose**

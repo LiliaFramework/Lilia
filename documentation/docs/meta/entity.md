@@ -184,7 +184,7 @@ Defaults to `DOOR_GUEST` when no access level is provided.
 
 ```lua
 -- Block a player from opening the door without access
-if not door:checkDoorAccess(client, DOOR_ACCESS_OPEN) then
+if not door:checkDoorAccess(client, DOOR_GUEST) then
     client:notifyLocalized("doorLocked")
 end
 ```

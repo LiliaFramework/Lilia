@@ -248,3 +248,5 @@ lia.config.add("SAMEnforceStaff", "Enforce Staff Rank To SAM", true, nil, {
     category = "Staff",
     type = "Boolean"
 })
+
+hook.Add("ShouldLiliaAdminCommandsLoad", "liaSAM", function() return false end)

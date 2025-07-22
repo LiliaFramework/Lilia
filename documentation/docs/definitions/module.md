@@ -43,7 +43,7 @@ A `MODULE` table defines a self-contained add-on for the Lilia framework. Each f
 
 **Type:**
 
-`number`
+`string`
 
 **Description:**
 
@@ -61,7 +61,7 @@ MODULE.name = "My Module"
 
 **Type:**
 
-`number`
+`string`
 
 **Description:**
 
@@ -79,7 +79,7 @@ MODULE.author = "Samael"
 
 **Type:**
 
-`number`
+`string`
 
 **Description:**
 

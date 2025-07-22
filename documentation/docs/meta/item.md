@@ -16,6 +16,86 @@ These helpers enable consistent interaction across trading, crafting, and interf
 
 ---
 
+### isRotated
+
+**Purpose**
+
+Checks whether this item instance is rotated within the inventory grid.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `boolean`: `true` if the item is rotated.
+
+**Example Usage**
+
+```lua
+if item:isRotated() then
+    print("Rotated item")
+end
+```
+
+---
+
+### getWidth
+
+**Purpose**
+
+Returns the width of the item, accounting for rotation.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `number`: Width in grid units.
+
+**Example Usage**
+
+```lua
+local w = item:getWidth()
+```
+
+---
+
+### getHeight
+
+**Purpose**
+
+Returns the height of the item, accounting for rotation.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `number`: Height in grid units.
+
+**Example Usage**
+
+```lua
+local h = item:getHeight()
+```
+
+---
+
 ### getQuantity
 
 **Purpose**

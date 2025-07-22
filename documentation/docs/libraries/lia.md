@@ -65,7 +65,7 @@ Depends on included files.
 **Example Usage**
 
 ```lua
-lia.includeDir("lilia/gamemode/core/modules/admin", true, true, "server")
+lia.includeDir("lilia/gamemode/modules/administration", true, true, "server")
 ```
 
 ---
@@ -97,7 +97,7 @@ Recursively includes Lua files while preserving alphabetical order.
 **Example Usage**
 
 ```lua
-lia.includeGroupedDir("core/modules", false, true)
+lia.includeGroupedDir("modules", false, true)
 ```
 
 ---
@@ -351,7 +351,7 @@ Recursively loads entity-related files from a directory.
 **Example Usage**
 
 ```lua
-lia.includeEntities("lilia/entities")
+lia.includeEntities("lilia/gamemode/entities")
 ```
 
 ---

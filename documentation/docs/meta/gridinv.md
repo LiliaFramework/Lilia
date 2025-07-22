@@ -20,7 +20,7 @@ It provides logic for finding free positions, transferring items, and updating o
 
 Returns the current width of the inventory grid.
 
-If no width has been set, the value from `lia.config.invW` is used.
+If no width has been set, the value from `lia.config.get("invW")` is used.
 
 **Parameters**
 
@@ -49,7 +49,7 @@ print("Inventory width:", width)
 
 Returns the current height of the inventory grid.
 
-Defaults to `lia.config.invH` when unset.
+Defaults to `lia.config.get("invH")` when unset.
 
 **Parameters**
 
@@ -493,7 +493,7 @@ Quantity defaults to `1`.
 
 **Parameters**
 
-* `itemID` (`number|string`): Item ID or unique ID.
+* `itemTypeOrID` (`number|string`): Item ID or unique ID.
 
 * `quantity` (`number`): Amount to remove.
 
@@ -527,7 +527,7 @@ The server processes this call through the `HandleItemTransferRequest` hook.
 
 * `itemID` (`number`): ID of the item to move.
 
-* `destID` (`number`): Destination inventory ID.
+* `destinationID` (`number`): Destination inventory ID.
 
 * `x` (`number`): Target X slot.
 

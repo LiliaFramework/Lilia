@@ -206,17 +206,6 @@ net.Receive("charVar", function()
     end
 end)
 
-net.Receive("charData", function()
-    local id = net.ReadUInt(32)
-    local key = net.ReadString()
-    local value = net.ReadType()
-    local character = lia.char.loaded[id]
-    if character then
-        character.vars.data = character.vars.data or {}
-        character:getData()[key] = value
-    end
-end)
-
 net.Receive("item", function()
     local uniqueID = net.ReadString()
     local id = net.ReadUInt(32)

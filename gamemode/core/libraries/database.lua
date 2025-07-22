@@ -267,8 +267,11 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS `lia_spawns`;
     DROP TABLE IF EXISTS `lia_chatbox`;
     DROP TABLE IF EXISTS `lia_admingroups`;
+    DROP TABLE IF EXISTS `lia_sitrooms`;
     DROP TABLE IF EXISTS `lia_saveditems`;
     DROP TABLE IF EXISTS `lia_persistence`;
+    DROP TABLE IF EXISTS `lia_vendors`;
+    DROP TABLE IF EXISTS `lia_warnings`;
 ]])
             local done = 0
             for i = 1, #queries do
@@ -299,8 +302,11 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS lia_spawns;
     DROP TABLE IF EXISTS lia_chatbox;
     DROP TABLE IF EXISTS lia_admingroups;
+    DROP TABLE IF EXISTS lia_sitrooms;
     DROP TABLE IF EXISTS lia_saveditems;
     DROP TABLE IF EXISTS lia_persistence;
+    DROP TABLE IF EXISTS lia_vendors;
+    DROP TABLE IF EXISTS lia_warnings;
     DROP TABLE IF EXISTS lia_chardata;
 ]], realCallback)
     end
@@ -330,17 +336,16 @@ function lia.db.loadTables()
                 _lastJoin datetime,
                 _userGroup varchar,
                 _data varchar,
-                _intro binary,
                 _lastIP varchar,
                 _lastOnline integer,
                 _totalOnlineTime float
             );
-    CREATE TABLE IF NOT EXISTS lia_chardata (
-        _charID INTEGER NOT NULL,
-        _key VARCHAR(255) NOT NULL,
-        _value TEXT(1024),
-        PRIMARY KEY (_charID, _key)
-    );
+            CREATE TABLE IF NOT EXISTS lia_chardata (
+                _charID INTEGER NOT NULL,
+                _key VARCHAR(255) NOT NULL,
+                _value TEXT(1024),
+                PRIMARY KEY (_charID, _key)
+            );
             CREATE TABLE IF NOT EXISTS lia_characters (
                 _id INTEGER PRIMARY KEY AUTOINCREMENT,
                 _steamID VARCHAR,
@@ -351,7 +356,6 @@ function lia.db.loadTables()
                 _schema VARCHAR,
                 _createTime DATETIME,
                 _lastJoinTime DATETIME,
-                _data VARCHAR,
                 _money VARCHAR,
                 _faction VARCHAR,
                 recognition TEXT NOT NULL DEFAULT '',
@@ -407,6 +411,21 @@ function lia.db.loadTables()
                 _steamID VARCHAR
             );
 
+            CREATE TABLE IF NOT EXISTS lia_ticketclaims (
+                _request TEXT,
+                _admin TEXT,
+                _timestamp INTEGER
+            );
+
+            CREATE TABLE IF NOT EXISTS lia_warnings (
+                _id INTEGER PRIMARY KEY AUTOINCREMENT,
+                _charID INTEGER,
+                _steamID TEXT,
+                _timestamp DATETIME,
+                _reason TEXT,
+                _admin TEXT
+            );
+
             CREATE TABLE IF NOT EXISTS lia_doors (
                 _folder TEXT,
                 _map TEXT,
@@ -437,6 +456,42 @@ function lia.db.loadTables()
                 PRIMARY KEY (_schema, _map)
             );
 
+            CREATE TABLE IF NOT EXISTS lia_sitrooms (
+                _folder TEXT,
+                _map TEXT,
+                _name TEXT,
+                _pos TEXT,
+                PRIMARY KEY (_folder, _map, _name)
+            );
+
+            CREATE TABLE IF NOT EXISTS lia_data (
+                _folder TEXT,
+                _map TEXT,
+                _data TEXT,
+                PRIMARY KEY (_folder, _map)
+            );
+
+            CREATE TABLE IF NOT EXISTS lia_persistence (
+                _id INTEGER PRIMARY KEY AUTOINCREMENT,
+                _folder TEXT,
+                _map TEXT,
+                class TEXT,
+                pos TEXT,
+                angles TEXT,
+                model TEXT
+            );
+
+            CREATE TABLE IF NOT EXISTS lia_vendors (
+                _id INTEGER PRIMARY KEY AUTOINCREMENT,
+                _folder TEXT,
+                _map TEXT,
+                class TEXT,
+                pos TEXT,
+                angles TEXT,
+                model TEXT,
+                data TEXT
+            );
+
             CREATE TABLE IF NOT EXISTS lia_saveditems (
                 _id INTEGER PRIMARY KEY AUTOINCREMENT,
                 _schema TEXT,
@@ -459,7 +514,6 @@ function lia.db.loadTables()
                 `_lastJoin` DATETIME,
                 `_userGroup` VARCHAR(32) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
                 `_data` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_intro` BINARY(1) NULL DEFAULT 0,
                 `_lastIP` VARCHAR(64) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
                 `_lastOnline` INT(32) NULL DEFAULT 0,
                 `_totalOnlineTime` FLOAT NULL DEFAULT 0,
@@ -476,7 +530,6 @@ function lia.db.loadTables()
                 `_schema` VARCHAR(24) NOT NULL COLLATE 'utf8mb4_general_ci',
                 `_createTime` DATETIME NOT NULL,
                 `_lastJoinTime` DATETIME NOT NULL,
-                `_data` VARCHAR(1024) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
                 `_money` INT(10) UNSIGNED NULL DEFAULT '0',
                 `_faction` VARCHAR(255) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
                 `recognition` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
@@ -537,6 +590,22 @@ function lia.db.loadTables()
                 PRIMARY KEY (`_id`)
             );
 
+            CREATE TABLE IF NOT EXISTS `lia_ticketclaims` (
+                `_request` VARCHAR(64) NOT NULL COLLATE 'utf8mb4_general_ci',
+                `_admin` VARCHAR(64) NOT NULL COLLATE 'utf8mb4_general_ci',
+                `_timestamp` INT(32) NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS `lia_warnings` (
+                `_id` INT(12) NOT NULL AUTO_INCREMENT,
+                `_charID` INT(12) NULL DEFAULT NULL,
+                `_steamID` VARCHAR(64) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+                `_timestamp` DATETIME NOT NULL,
+                `_reason` TEXT NULL COLLATE 'utf8mb4_general_ci',
+                `_admin` TEXT NULL COLLATE 'utf8mb4_general_ci',
+                PRIMARY KEY (`_id`)
+            );
+
             CREATE TABLE IF NOT EXISTS `lia_doors` (
                 `_folder` TEXT NULL,
                 `_map` TEXT NULL,
@@ -565,6 +634,44 @@ function lia.db.loadTables()
                 `_map` TEXT NULL,
                 `_data` TEXT NULL,
                 PRIMARY KEY (`_schema`, `_map`)
+            );
+
+            CREATE TABLE IF NOT EXISTS `lia_sitrooms` (
+                `_folder` TEXT NULL,
+                `_map` TEXT NULL,
+                `_name` TEXT NULL,
+                `_pos` TEXT NULL,
+                PRIMARY KEY (`_folder`, `_map`, `_name`)
+            );
+
+            CREATE TABLE IF NOT EXISTS `lia_data` (
+                `_folder` TEXT NULL,
+                `_map` TEXT NULL,
+                `_data` TEXT NULL,
+                PRIMARY KEY (`_folder`, `_map`)
+            );
+
+            CREATE TABLE IF NOT EXISTS `lia_persistence` (
+                `_id` INT(12) NOT NULL AUTO_INCREMENT,
+                `_folder` TEXT NULL,
+                `_map` TEXT NULL,
+                `class` TEXT NULL,
+                `pos` TEXT NULL,
+                `angles` TEXT NULL,
+                `model` TEXT NULL,
+                PRIMARY KEY (`_id`)
+            );
+
+            CREATE TABLE IF NOT EXISTS `lia_vendors` (
+                `_id` INT(12) NOT NULL AUTO_INCREMENT,
+                `_folder` TEXT NULL,
+                `_map` TEXT NULL,
+                `class` TEXT NULL,
+                `pos` TEXT NULL,
+                `angles` TEXT NULL,
+                `model` TEXT NULL,
+                `data` TEXT NULL,
+                PRIMARY KEY (`_id`)
             );
 
             CREATE TABLE IF NOT EXISTS `lia_saveditems` (

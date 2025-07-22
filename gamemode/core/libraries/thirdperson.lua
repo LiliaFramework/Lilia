@@ -104,10 +104,27 @@ local function SetWeaponHidden(ply, state)
     if IsValid(wep) then wep:SetNoDraw(state) end
 end
 
+local function SetRagdollHidden(ply, state)
+    local rag = ply:getRagdoll() or ply:GetRagdollEntity()
+    if IsValid(rag) then
+        rag:SetNoDraw(state)
+        rag:DrawShadow(not state)
+    end
+end
+
+local function PlayerIsVisible(client, ply, filter)
+    local tr = util.TraceHull({
+        start = client:EyePos(),
+        endpos = ply:EyePos(),
+        mins = ply:OBBMins(),
+        maxs = ply:OBBMaxs(),
+        filter = filter,
+        mask = MASK_SHOT_HULL
+    })
+    return tr.Fraction == 1 or tr.Entity == ply
+end
+
 hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(ply)
-    local maxDist = lia.config.get("MaxViewDistance", 5000)
-    local maxDistSqr = maxDist * maxDist
-    local debounceTime = 0.15
     local client = LocalPlayer()
     if ply == client then return end
     if client:isStaffOnDuty() or not lia.config.get("WallPeek", false) or client:InVehicle() or client:hasValidVehicle() or client:isNoClipping() or not client:CanOverrideView() then
@@ -117,85 +134,53 @@ hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(ply)
         end
 
         SetWeaponHidden(ply, false)
+        SetRagdollHidden(ply, false)
         return
     end
 
-    local clientPos = client:EyePos()
-    local targetPos = ply:EyePos()
-    if clientPos:DistToSqr(targetPos) > maxDistSqr then
+    local maxDist = lia.config.get("MaxViewDistance", 5000)
+    if client:EyePos():DistToSqr(ply:EyePos()) > maxDist * maxDist then
         if not ply.IsHidden then
             ply.IsHidden = true
             ply:DrawShadow(false)
         end
 
         SetWeaponHidden(ply, true)
+        SetRagdollHidden(ply, true)
         return true
     end
 
-    local forward = client:EyeAngles():Forward()
-    local dir = targetPos - clientPos
-    if forward:Dot(dir) < 0 then
+    if client:EyeAngles():Forward():Dot(ply:EyePos() - client:EyePos()) < 0 then
         if not ply.IsHidden then
             ply.IsHidden = true
             ply:DrawShadow(false)
         end
 
+        SetRagdollHidden(ply, true)
         SetWeaponHidden(ply, true)
         return true
     end
 
-    local filter = {}
-    for _, v in ipairs(player.GetAll()) do
-        if v ~= ply and v ~= client then filter[#filter + 1] = v end
-    end
-
-    local visible = false
-    for _, boneName in ipairs(ImportantBones) do
-        local idx = ply:LookupBone(boneName)
-        if idx then
-            local bonePos = ply:GetBonePosition(idx)
-            if bonePos then
-                local tr = util.TraceLine({
-                    start = clientPos,
-                    endpos = bonePos,
-                    filter = filter,
-                    mask = MASK_SHOT_HULL
-                })
-
-                local ent = tr.Entity
-                if tr.Fraction == 1 or ent == ply or NotSolidMatTypes[tr.MatType] or NotSolidTextures[tr.HitTexture] or IsValid(ent) and NotSolidModels[ent:GetModel()] then
-                    visible = true
-                    break
-                end
-            end
+    local filter = player.GetAll()
+    table.RemoveByValue(filter, client)
+    table.RemoveByValue(filter, ply)
+    local visible = PlayerIsVisible(client, ply, filter)
+    if visible then
+        if ply.IsHidden then
+            ply.IsHidden = false
+            if not ply:GetNoDraw() then ply:DrawShadow(true) end
         end
-    end
 
-    local now = CurTime()
-    if ply._visState ~= visible then
-        if not ply._visChangeTime then
-            ply._visChangeTime = now
-        elseif now - ply._visChangeTime >= debounceTime then
-            ply._visState = visible
-            ply._visChangeTime = nil
-            if visible then
-                if ply.IsHidden then
-                    ply.IsHidden = false
-                    if not ply:GetNoDraw() then ply:DrawShadow(true) end
-                end
-
-                SetWeaponHidden(ply, false)
-            else
-                if not ply.IsHidden then
-                    ply.IsHidden = true
-                    ply:DrawShadow(false)
-                end
-
-                SetWeaponHidden(ply, true)
-            end
-        end
+        SetRagdollHidden(ply, false)
+        SetWeaponHidden(ply, false)
     else
-        ply._visChangeTime = nil
+        if not ply.IsHidden then
+            ply.IsHidden = true
+            ply:DrawShadow(false)
+            SetRagdollHidden(ply, true)
+        end
+
+        SetWeaponHidden(ply, true)
     end
-    return not (ply._visState == true)
+    return not visible
 end)

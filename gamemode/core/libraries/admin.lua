@@ -4,7 +4,9 @@ lia.admin.groups = lia.admin.groups or {}
 lia.admin.banList = lia.admin.banList or {}
 lia.admin.privileges = lia.admin.privileges or {}
 function lia.admin.isDisabled()
-    return hook.Run("ShouldLiliaAdminLoad") == false
+    local sysDisabled = hook.Run("ShouldLiliaAdminLoad") == false
+    local cmdDisabled = hook.Run("ShouldLiliaAdminCommandsLoad") == false
+    return sysDisabled, cmdDisabled
 end
 
 function lia.admin.load()

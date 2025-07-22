@@ -6,7 +6,7 @@ This page lists time- and date-utilities.
 
 ## Overview
 
-The time library formats dates and converts relative times. It relies on a bundled date module, avoiding the 1970-epoch limitation, to compute phrases like “time since” and “time until.”
+The time library formats dates and converts relative times using Lua's built‑in `os.date` and `os.time` functions. It provides helpers for phrases such as “time since.”
 
 ---
 

@@ -182,6 +182,23 @@ function ENT:setModel(model)
     net.Send(self.receivers)
 end
 
+function ENT:setSkin(skin)
+    skin = tonumber(skin) or 0
+    self:SetSkin(skin)
+    net.Start("VendorEdit")
+    net.WriteString("skin")
+    net.Send(self.receivers)
+end
+
+function ENT:setBodyGroup(id, value)
+    id = tonumber(id) or 0
+    value = tonumber(value) or 0
+    self:SetBodygroup(id, value)
+    net.Start("VendorEdit")
+    net.WriteString("bodygroup")
+    net.Send(self.receivers)
+end
+
 function ENT:setSellScale(scale)
     assert(isnumber(scale), "scale must be a number")
     self:setNetVar("scale", scale)
@@ -210,6 +227,7 @@ function ENT:applyPreset(name)
         if data.maxStock ~= nil then self:setMaxStock(itemType, data.maxStock) end
         if data.stock ~= nil then self:setStock(itemType, data.stock) end
     end
+
     for _, client in ipairs(self.receivers) do
         self:sync(client)
     end

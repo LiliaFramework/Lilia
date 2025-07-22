@@ -68,6 +68,136 @@ chat.AddText(player:Name())
 
 ---
 
+### steamName
+
+**Purpose**
+
+Returns the player's Steam name without considering character data.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `string`: Steam community display name.
+
+**Example Usage**
+
+```lua
+print(player:steamName())
+```
+
+---
+
+### SteamName
+
+**Purpose**
+
+Alias of `steamName`.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `string`: Steam community display name.
+
+**Example Usage**
+
+```lua
+print(player:SteamName())
+```
+
+---
+
+### GetCharacter
+
+**Purpose**
+
+Alias of `getChar`.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `Character|nil`: The player's active character.
+
+**Example Usage**
+
+```lua
+local character = player:GetCharacter()
+```
+
+---
+
+### Nick
+
+**Purpose**
+
+Alias of `Name`.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `string`: Display name.
+
+**Example Usage**
+
+```lua
+chat.AddText(player:Nick())
+```
+
+---
+
+### GetName
+
+**Purpose**
+
+Alias of `Name`.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `string`: Display name.
+
+**Example Usage**
+
+```lua
+local name = player:GetName()
+```
+
+---
+
 ### hasPrivilege
 
 **Purpose**
@@ -495,6 +625,34 @@ Returns `true` if the player's model is considered female.
 ```lua
 if player:isFemale() then
     print("Female model detected")
+end
+```
+
+---
+
+### IsFamilySharedAccount
+
+**Purpose**
+
+Checks if the player is using a Steam Family Share account.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `boolean`: `true` when the account is shared.
+
+**Example Usage**
+
+```lua
+if player:IsFamilySharedAccount() then
+    print("Using a shared account")
 end
 ```
 
@@ -1660,6 +1818,34 @@ local settings = player:getLiliaData("settings", {})
 
 ---
 
+### getData
+
+**Purpose**
+
+Alias of `getLiliaData`.
+
+**Parameters**
+
+* `key` (`string`): Data key.
+
+* `default` (`any`): Returned if the key is nil.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `any`: Stored value or default.
+
+**Example Usage**
+
+```lua
+local settings = player:getData("settings", {})
+```
+
+---
+
 ### getAllLiliaData
 
 **Purpose**
@@ -1738,6 +1924,34 @@ Broadcasts animation bone data to all clients.
 player:NetworkAnimation(true, {
     ["ValveBiped.Bip01_Head"] = Angle(0, 90, 0)
 })
+```
+
+---
+
+### banPlayer
+
+**Purpose**
+
+Bans the player for a given reason and duration then kicks them.
+
+**Parameters**
+
+* `reason` (`string|nil`): Message shown to the player.
+
+* `duration` (`number|nil`): Length in minutes, or `nil` for permanent.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `nil`: This function does not return a value.
+
+**Example Usage**
+
+```lua
+player:banPlayer("Breaking rules", 60)
 ```
 
 ---
@@ -2051,6 +2265,84 @@ print(player:getPlayTime())
 
 ---
 
+### getTotalOnlineTime
+
+**Purpose**
+
+Returns the player's total online time across all sessions.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `number`: Seconds spent online in total.
+
+**Example Usage**
+
+```lua
+print(player:getTotalOnlineTime())
+```
+
+---
+
+### getLastOnline
+
+**Purpose**
+
+Returns how long ago the player was last seen online.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `string`: Human readable time description.
+
+**Example Usage**
+
+```lua
+print("Last online:", player:getLastOnline())
+```
+
+---
+
+### getLastOnlineTime
+
+**Purpose**
+
+Provides the timestamp of the player's last connection.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `number`: Unix time of the last session end.
+
+**Example Usage**
+
+```lua
+local ts = player:getLastOnlineTime()
+```
+
+---
+
 ### createRagdoll
 
 **Purpose**
@@ -2219,6 +2511,84 @@ print(LocalPlayer():getPlayTime())
 
 ---
 
+### getTotalOnlineTime
+
+**Purpose**
+
+Returns the player's total online time on the client side.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+* `number`: Accumulated seconds of play-time.
+
+**Example Usage**
+
+```lua
+print(LocalPlayer():getTotalOnlineTime())
+```
+
+---
+
+### getLastOnline
+
+**Purpose**
+
+Reports how long it has been since the player was last online.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+* `string`: Friendly time string.
+
+**Example Usage**
+
+```lua
+chat.AddText(LocalPlayer():getLastOnline())
+```
+
+---
+
+### getLastOnlineTime
+
+**Purpose**
+
+Gives the Unix timestamp of the player's last session end.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+* `number`: Time value in seconds.
+
+**Example Usage**
+
+```lua
+local last = LocalPlayer():getLastOnlineTime()
+```
+
+---
+
 ### setWaypoint
 
 **Purpose**
@@ -2335,6 +2705,34 @@ Client-side accessor for stored player data.
 
 ```lua
 local data = LocalPlayer():getLiliaData("settings")
+```
+
+---
+
+### getData
+
+**Purpose**
+
+Alias of `getLiliaData`.
+
+**Parameters**
+
+* `key` (`string`): Data key.
+
+* `default` (`any`): Fallback value.
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+* `any`: Stored value or default.
+
+**Example Usage**
+
+```lua
+local data = LocalPlayer():getData("settings")
 ```
 
 ---

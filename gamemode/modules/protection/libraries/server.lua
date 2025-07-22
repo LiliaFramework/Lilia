@@ -271,7 +271,7 @@ function MODULE:PlayerDisconnected(client)
     end
 end
 
-hook.Add("OnCheaterCaught", "liaProtectionCheaterLog", function(client)
+function MODULE:OnCheaterCaught(client)
     if IsValid(client) then
         lia.log.add(client, "cheaterDetected", client:Name(), client:SteamID64())
         client:notifyLocalized("caughtCheating")
@@ -279,7 +279,7 @@ hook.Add("OnCheaterCaught", "liaProtectionCheaterLog", function(client)
             if p:isStaffOnDuty() or p:IsSuperAdmin() then p:notifyLocalized("cheaterDetectedStaff", client:Name(), client:SteamID64()) end
         end
     end
-end)
+end
 
 function MODULE:PlayerUse(client)
     if IsCheater(client) then

@@ -35,7 +35,7 @@ The global `CLASS` table defines per-class settings such as display name, lore, 
 | `jumpPower` | `number` | `0` | Default jump power. |
 | `jumpPowerMultiplier` | `boolean` | `false` | Multiply base jump power instead of replacing it. |
 | `bloodcolor` | `number` | `0` | Blood color enumeration constant. |
-| `bodyGroups` | `table` | `{}` | List of {id, value} pairs applied on spawn. |
+| `bodyGroups` | `table` | `{}` | Bodygroup name → index mapping applied on spawn. |
 | `logo` | `string` | `""` | Material path for the class logo. |
 | `scoreboardHidden` | `boolean` | `false` | Hide class headers and logos in the scoreboard. |
 | `skin` | `number` | `0` | Player model skin index. |
@@ -493,14 +493,14 @@ CLASS.bloodcolor = BLOOD_COLOR_RED
 
 **Description:**
 
-List of tables containing a bodygroup `id` and the desired `value`. Applied when the player spawns.
+Mapping of bodygroup names to index values applied when the player spawns.
 
 **Example Usage:**
 
 ```lua
 CLASS.bodyGroups = {
-    {id = 1, value = 2}, -- bodygroup index 1 uses option 2
-    {id = 3, value = 0}  -- index 3 uses its default option
+    hands = 2, -- apply option 2 to the "hands" bodygroup
+    torso = 0  -- index value 0 keeps the default option
 }
 ```
 

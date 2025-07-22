@@ -80,7 +80,7 @@ local FilesToLoad = {
     },
     {
         path = "lilia/gamemode/core/libraries/logger.lua",
-        realm = "shared"
+        realm = "server"
     },
     {
         path = "lilia/gamemode/core/libraries/modularity.lua",

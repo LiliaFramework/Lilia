@@ -24,7 +24,7 @@ local DefaultFunctions = {
             item:removeFromInventory(true):next(function() item:spawn(client) end)
             return false
         end,
-        onCanRun = function(item) return item.entity == nil and not IsValid(item.entity) and not item.noDrop end
+        onCanRun = function(item) return not IsValid(item.entity) and not IsValid(item.entity) and not item.noDrop end
     },
     take = {
         tip = "takeTip",
@@ -80,7 +80,7 @@ local DefaultFunctions = {
 
             local client = item.player
             local inv = client:getChar():getInv()
-            local target = client:GetEyeTraceNoCursor().Entity
+            local target = client:getTracedEntity()
             if not (target and target:IsValid() and target:IsPlayer() and target:Alive() and client:GetPos():DistToSqr(target:GetPos()) < 6500) then return false end
             local targetInv = target:getChar():getInv()
             if not target or not targetInv then return false end
@@ -101,8 +101,8 @@ local DefaultFunctions = {
         end,
         onCanRun = function(item)
             local client = item.player
-            local target = client:GetEyeTraceNoCursor().Entity
-            return item.entity == nil and lia.config.get("ItemGiveEnabled") and not IsValid(item.entity) and not item.noDrop and target and IsValid(target) and target:IsPlayer() and target:Alive() and client:GetPos():DistToSqr(target:GetPos()) < 6500
+            local target = client:getTracedEntity()
+            return not IsValid(item.entity) and lia.config.get("ItemGiveEnabled") and not IsValid(item.entity) and not item.noDrop and target and IsValid(target) and target:IsPlayer() and target:Alive() and client:GetPos():DistToSqr(target:GetPos()) < 6500
         end
     },
     offerInspect = {
@@ -110,7 +110,7 @@ local DefaultFunctions = {
         icon = "icon16/magnifier.png",
         onRun = function(item)
             local client = item.player
-            local target = client:GetEyeTraceNoCursor().Entity
+            local target = client:getTracedEntity()
             if not (IsValid(target) and target:IsPlayer() and target:Alive() and client:GetPos():DistToSqr(target:GetPos()) < 6500) then return false end
             if hook.Run("CanPlayerRequestInspectionOnItem", client, target, item) == false then return false end
             target:binaryQuestion(client:Name() .. " wants to show you their " .. item.name .. ".", L("yes"), L("no"), false, function(choice)
@@ -125,9 +125,24 @@ local DefaultFunctions = {
         end,
         onCanRun = function(item)
             local client = item.player
-            local target = client:GetEyeTraceNoCursor().Entity
-            return item.entity == nil and target and IsValid(target) and target:IsPlayer() and target:Alive() and client:GetPos():DistToSqr(target:GetPos()) < 6500
+            local target = client:getTracedEntity()
+            return not IsValid(item.entity) and target and IsValid(target) and target:IsPlayer() and target:Alive() and client:GetPos():DistToSqr(target:GetPos()) < 6500
         end
+    },
+    inspect = {
+        tip = "inspectTip",
+        icon = "icon16/magnifier.png",
+        onRun = function(item)
+            local client = item.player
+            if SERVER then
+                net.Start("liaItemInspect")
+                net.WriteString(item.uniqueID)
+                net.WriteTable(item:getAllData())
+                net.Send(client)
+            end
+            return false
+        end,
+        onCanRun = function(item) return not IsValid(item.entity) end
     }
 }
 

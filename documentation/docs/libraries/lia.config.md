@@ -106,7 +106,7 @@ Sets a config value directly without running callbacks or networking the update.
 
 **Realm**
 
-`Shared`
+`Server`
 
 **Returns**
 

@@ -12,7 +12,7 @@ Workshop IDs added via `lia.workshop.AddWorkshop` are stored in `lia.workshop.id
 
 Clients store the list received from the server in `lia.workshop.serverIds`, which drives the in-game display and download queue.
 
-`lia.workshop.send` is called \~10 seconds after each player’s initial spawn when automatic downloading is enabled. Clients may run `workshop_force_redownload` in the console to forcibly re-download all configured addons.
+The server sends this list a short time after each player spawns. When the client opts to download the addons—either automatically or via the prompt—it requests them and `lia.workshop.send` transmits the IDs. Clients may run `workshop_force_redownload` in the console to forcibly re-download all configured addons.
 
 ---
 
@@ -95,6 +95,34 @@ Sends the cached Workshop-ID list to a player.
 ```lua
 hook.Add("PlayerInitialSpawn", "SendWorkshopList", function(ply)
     lia.workshop.send(ply)
+end)
+```
+
+---
+
+### lia.workshop.checkPrompt
+
+**Purpose**
+
+Displays the Workshop download prompt or automatically requests the addons based on the client's `autoDownloadWorkshop` option.
+
+**Parameters**
+
+* *None*
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+**Example Usage**
+
+```lua
+hook.Add("InitializedOptions", "WorkshopCheck", function()
+    lia.workshop.checkPrompt()
 end)
 ```
 

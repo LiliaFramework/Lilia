@@ -141,13 +141,13 @@ local age = lia.char.getCharData(1, "age")
 
 **Purpose**
 
-Returns the raw database row for a character or a specific column value.
+Returns character data from `lia_chardata` as a table or a single value.
 
 **Parameters**
 
 * `charID` (*number | string*): Character ID.
 
-* `key` (*string*): Specific column name to return (optional).
+* `key` (*string*): Specific data key to return (optional).
 
 **Realm**
 
@@ -155,7 +155,7 @@ Returns the raw database row for a character or a specific column value.
 
 **Returns**
 
-* *table | any*: Full row table or column value.
+* *table | any | false*: Full data table or single value. Returns `false` if the key does not exist.
 
 **Example Usage**
 

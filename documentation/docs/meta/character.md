@@ -1845,3 +1845,107 @@ char:setRecognizedAs({ [123] = "Masked Stranger" })
 ```
 
 ---
+
+### getRecognition
+
+**Purpose**
+
+Returns the raw recognition string listing known character IDs.
+
+**Parameters**
+
+* `default` (`any`): Value returned when no recognition data exists.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `string`: Stored recognition data or the provided default.
+
+**Example Usage**
+
+```lua
+local list = char:getRecognition("")
+```
+
+---
+
+### setRecognition
+
+**Purpose**
+
+Sets the recognition list for this character.
+
+**Parameters**
+
+* `value` (`string`): Comma-delimited character IDs or empty to clear.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `nil`: This function does not return a value.
+
+**Example Usage**
+
+```lua
+char:setRecognition("1,2,3,")
+```
+
+---
+
+### getLastPos
+
+**Purpose**
+
+Gets the saved respawn position table for the character.
+
+**Parameters**
+
+* `default` (`any`): Fallback value when no position is stored.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `table`: Position data table or the provided default.
+
+**Example Usage**
+
+```lua
+local info = char:getLastPos()
+```
+
+---
+
+### setLastPos
+
+**Purpose**
+
+Stores a respawn position for the character.
+
+**Parameters**
+
+* `value` (`table`): Position table or `nil` to clear.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `nil`: This function does not return a value.
+
+**Example Usage**
+
+```lua
+char:setLastPos(nil)
+```
+
+---

@@ -25,7 +25,6 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 | `UsergroupWhitelist` | `table` | `nil` | Allowed user groups for vendor interaction. |
 | `VIPWhitelist` | `boolean` | `false` | Restricts usage to VIP players. |
 | `ammo` | `string` | `""` | Ammo type provided. |
-| `ammoAmount` | `number` | `0` | Amount of ammo contained. |
 | `armor` | `number` | `0` | Armor value granted when equipped. |
 | `attribBoosts` | `table` | `{}` | Attribute boosts applied when equipped. |
 | `base` | `string` | `""` | Base item this item derives from. |
@@ -835,28 +834,8 @@ Ammo type provided.
 ITEM.ammo = "pistol"
 
 ```
-
 ---
 
-#### `ammoAmount`
-
-**Type:**
-
-`number`
-
-**Description:**
-
-Amount of ammo contained.
-
-**Example Usage:**
-
-```lua
-
-ITEM.ammoAmount = 30
-
-```
-
----
 
 #### `weaponCategory`
 
@@ -1191,7 +1170,7 @@ ITEM.model = "models/items/357ammo.mdl"
 
 ITEM.ammo = "pistol"
 
-ITEM.ammoAmount = 30
+ITEM.maxQuantity = 30
 
 ```
 

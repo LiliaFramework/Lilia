@@ -251,15 +251,6 @@ function GM:CanPlayerDropItem(client, item)
     end
 end
 
-function GM:CanPlayerRotateItem(_, _)
-end
-
-function GM:CanPlayerInspectItem(_, _)
-end
-
-function GM:CanPlayerRequestInspectionOnItem(_, _, _)
-end
-
 local logTypeMap = {
     ooc = "chatOOC",
     looc = "chatLOOC"
@@ -834,7 +825,7 @@ local function checkPublicModules()
         for _, info in ipairs(lia.module.versionChecks) do
             local match
             for _, m in ipairs(remote) do
-                if m.uniqueID == info.uniqueID then
+                if m.public_uniqueID == info.uniqueID then
                     match = m
                     break
                 end
@@ -844,7 +835,7 @@ local function checkPublicModules()
                 lia.updater(L("moduleUniqueIDNotFound", info.uniqueID))
             elseif not match.version then
                 lia.updater(L("moduleNoRemoteVersion", info.name))
-            elseif info.localVersion and versionCompare(info.localVersion, match.version) < 0 then
+            elseif info.version and versionCompare(info.version, match.version) < 0 then
                 lia.updater(L("moduleOutdated", info.name, match.version))
             end
         end
@@ -866,7 +857,7 @@ local function checkPrivateModules()
 
         for _, info in ipairs(lia.module.privateVersionChecks) do
             for _, m in ipairs(remote) do
-                if m.uniqueID == info.uniqueID and m.version and info.localVersion and versionCompare(info.localVersion, m.version) < 0 then
+                if m.private_uniqueID == info.uniqueID and m.version and info.version and versionCompare(info.version, m.version) < 0 then
                     lia.updater(L("privateModuleOutdated", info.name))
                     break
                 end

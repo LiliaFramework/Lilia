@@ -3,7 +3,8 @@
     if not char or client:isNoClipping() then return 1 end
     local walkSpeed = lia.config.get("WalkSpeed", client:GetWalkSpeed())
     local offset
-    if client:KeyDown(IN_SPEED) and client:GetVelocity():LengthSqr() >= walkSpeed * walkSpeed then
+    local draining = client:KeyDown(IN_SPEED) and (client:GetVelocity():LengthSqr() >= walkSpeed * walkSpeed or client:InVehicle() and not client:OnGround())
+    if draining then
         offset = -lia.config.get("StaminaDrain", 1)
     else
         offset = client:Crouching() and lia.config.get("StaminaCrouchRegeneration", 2) or lia.config.get("StaminaRegeneration", 1.75)

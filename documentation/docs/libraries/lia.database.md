@@ -492,6 +492,37 @@ lia.db.bulkInsert("items", {
 
 ---
 
+### lia.db.bulkUpsert
+
+**Purpose**
+
+Inserts multiple rows and updates them if they already exist.
+
+**Parameters**
+
+* `dbTable` (*string*): Table name without `lia_`.
+
+* `rows` (*table*): Array of row tables.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *deferred*: Resolves when done.
+
+**Example Usage**
+
+```lua
+lia.db.bulkUpsert("items", {
+    { _invID = 1, _uniqueID = "pistol", _x = 0, _y = 0, _quantity = 1 },
+    { _invID = 1, _uniqueID = "ammo",   _x = 1, _y = 0, _quantity = 30 },
+})
+```
+
+---
+
 ### lia.db.insertOrIgnore
 
 **Purpose**
