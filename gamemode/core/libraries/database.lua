@@ -963,6 +963,34 @@ function lia.db.fieldExists(tbl, field)
     return d
 end
 
+function lia.db.getTables()
+    local d = deferred.new()
+    if lia.db.module == "sqlite" then
+        lia.db.query("SELECT name FROM sqlite_master WHERE type='table'", function(res)
+            local tables = {}
+            for _, row in ipairs(res or {}) do
+                if row.name and row.name:StartWith("lia_") then
+                    tables[#tables + 1] = row.name
+                end
+            end
+            d:resolve(tables)
+        end, function(err) d:reject(err) end)
+    else
+        local key = "Tables_in_" .. lia.db.database
+        lia.db.query("SHOW TABLES", function(res)
+            local tables = {}
+            for _, row in ipairs(res or {}) do
+                local name = row[key]
+                if name and string.sub(name, 1, 4) == "lia_" then
+                    tables[#tables + 1] = name
+                end
+            end
+            d:resolve(tables)
+        end, function(err) d:reject(err) end)
+    end
+    return d
+end
+
 function lia.db.transaction(queries)
     local c = deferred.new()
     lia.db.query("BEGIN TRANSACTION", function()

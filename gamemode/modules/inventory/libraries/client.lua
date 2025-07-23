@@ -39,6 +39,29 @@ function MODULE:InventoryItemRemoved(_, item)
     end
 end
 
+function MODULE:InventoryItemAdded(inventory, item)
+    if not item.isBag then return end
+    local bagInv = item:getInv()
+    if not bagInv then return end
+    local mainPanel = lia.gui["inv" .. inventory:getID()]
+    if not IsValid(mainPanel) then return end
+    if hook.Run("CanOpenBagPanel", item) == false then return end
+    if IsValid(lia.gui["inv" .. bagInv:getID()]) then return end
+    local bagPanel = bagInv:show(mainPanel)
+    bagPanel:MoveRightOf(mainPanel, 4)
+    lia.gui["inv" .. bagInv:getID()] = bagPanel
+end
+
+function MODULE:InventoryItemDataChanged(item, key, _, _, inventory)
+    if not item.isBag then return end
+    if key ~= "x" and key ~= "y" then return end
+    local bagInv = item:getInv()
+    if not bagInv then return end
+    local bagPanel = lia.gui["inv" .. bagInv:getID()]
+    local mainPanel = lia.gui["inv" .. inventory:getID()]
+    if IsValid(bagPanel) and IsValid(mainPanel) then bagPanel:MoveRightOf(mainPanel, 4) end
+end
+
 hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
     local margin = 10
     if hook.Run("CanPlayerViewInventory") == false then return end

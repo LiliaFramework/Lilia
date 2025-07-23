@@ -44,7 +44,7 @@ net.Receive("liaGroupsData", function()
     if IsValid(lia.gui.usergroups) then buildGroupsUI(lia.gui.usergroups, groups) end
 end)
 
-net.Receive("lilia_updateAdminGroups", function()
+net.Receive("updateAdminGroups", function()
     lia.admin.groups = net.ReadTable()
     if IsValid(lia.gui.usergroups) then buildGroupsUI(lia.gui.usergroups, lia.admin.groups) end
 end)

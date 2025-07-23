@@ -62,6 +62,7 @@ Panels provide the building blocks for Lilia's user interface. Most derive from 
 | `liaMiniButton` | `DButton` | Very small button variant. |
 | `liaNoBGButton` | `DButton` | Text-only button with no background. |
 | `liaQuick` | `EditablePanel` | Quick settings panel showing options flagged with `isQuick`. |
+| `liaCheckBox` | `DButton` | Checkbox that draws the config icons. |
 
 ---
 
@@ -658,6 +659,25 @@ Quick settings menu that lists options flagged with `isQuick`.
 
 ```lua
 vgui.Create("liaQuick")
+```
+
+---
+
+### `liaCheckBox`
+
+**Base Panel:**
+
+`DButton`
+
+**Description:**
+
+Checkbox that paints the same checkmark icons used in the configuration menu.
+
+**Example Usage:**
+
+```lua
+local cb = vgui.Create("liaCheckBox")
+cb:SetChecked(true)
 ```
 
 ---

@@ -38,33 +38,6 @@ function GM:PlayerLoadedChar(client, character)
 
         character:setData("ammo", nil)
     end)
-
-    local charID = character:getID()
-    lia.db.query("SELECT _key, _value FROM lia_chardata WHERE _charID = " .. charID, function(data)
-        if data then
-            if not character.dataVars then character.dataVars = {} end
-            for _, row in ipairs(data) do
-                local decodedValue = pon.decode(row._value)
-                character.dataVars[row._key] = decodedValue[1]
-                character:setData(row._key, decodedValue[1])
-            end
-
-            local characterData = character:getData()
-            local keysToNetwork = table.GetKeys(characterData)
-            net.Start("liaCharacterData")
-            net.WriteUInt(charID, 32)
-            net.WriteUInt(#keysToNetwork, 32)
-            for _, key in ipairs(keysToNetwork) do
-                local value = characterData[key]
-                net.WriteString(key)
-                net.WriteType(value)
-            end
-
-            net.Send(ply)
-        else
-            print("No data found for character ID:", charID)
-        end
-    end)
 end
 
 function GM:PlayerDeath(client, inflictor, attacker)
@@ -362,6 +335,12 @@ function GM:PostPlayerLoadout(client)
     if not character then return end
     client:Give("lia_hands")
     client:SetupHands()
+    for k, v in pairs(character:getData("groups", {})) do
+        local index = tonumber(k)
+        local value = tonumber(v) or 0
+        if index then client:SetBodygroup(index, value) end
+    end
+    client:SetSkin(character:getData("skin", 0))
     client:setNetVar("VoiceType", "Talking")
 end
 
@@ -618,42 +597,43 @@ end
 function GM:LoadData()
     lia.data.loadPersistenceData(function(entities)
         for _, ent in ipairs(entities) do
+            local cls = ent.class
+            if not isstring(cls) or cls == "" then
+                lia.error("Invalid entity class.")
+                continue
+            end
+
             local decodedPos = lia.data.decode(ent.pos)
-            if not isvector(decodedPos) and istable(decodedPos) then
-                local x = tonumber(decodedPos.x or decodedPos[1])
-                local y = tonumber(decodedPos.y or decodedPos[2])
-                local z = tonumber(decodedPos.z or decodedPos[3])
-                if x and y and z then decodedPos = Vector(x, y, z) end
-            end
-
             local decodedAng = lia.data.decode(ent.angles)
-            if not isangle(decodedAng) and istable(decodedAng) then
-                local p = tonumber(decodedAng.p or decodedAng[1])
-                local yaw = tonumber(decodedAng.y or decodedAng[2])
-                local r = tonumber(decodedAng.r or decodedAng[3])
-                if p and yaw and r then decodedAng = Angle(p, yaw, r) end
+            if not decodedPos then
+                lia.error("Invalid position for " .. cls .. ".")
+                continue
             end
 
-            if not IsEntityNearby(decodedPos, ent.class) then
-                local createdEnt = ents.Create(ent.class)
-                if IsValid(createdEnt) then
-                    if isvector(decodedPos) then createdEnt:SetPos(decodedPos) end
-                    if decodedAng and isangle(decodedAng) then createdEnt:SetAngles(decodedAng) end
-                    if ent.model then createdEnt:SetModel(ent.model) end
-                    createdEnt:Spawn()
-                    if ent.skin then createdEnt:SetSkin(ent.skin) end
-                    if ent.bodygroups then
-                        for index, value in pairs(ent.bodygroups) do
-                            createdEnt:SetBodygroup(tonumber(index), value)
-                        end
-                    end
+            if IsEntityNearby(decodedPos, cls) then
+                lia.error(L("entityCreationAborted", cls, decodedPos.x, decodedPos.y, decodedPos.z))
+                continue
+            end
 
-                    createdEnt:Activate()
-                    hook.Run("OnEntityLoaded", createdEnt, ent.data)
+            local createdEnt = ents.Create(cls)
+            if not IsValid(createdEnt) then
+                lia.error("Failed to create entity " .. cls .. ".")
+                continue
+            end
+
+            createdEnt:SetPos(decodedPos)
+            if decodedAng then createdEnt:SetAngles(decodedAng) end
+            if ent.model then createdEnt:SetModel(ent.model) end
+            createdEnt:Spawn()
+            if ent.skin then createdEnt:SetSkin(tonumber(ent.skin) or 0) end
+            if istable(ent.bodygroups) then
+                for idx, val in pairs(ent.bodygroups) do
+                    createdEnt:SetBodygroup(tonumber(idx) or 0, tonumber(val) or 0)
                 end
-            else
-                lia.error(L("entityCreationAborted", ent.class, decodedPos.x, decodedPos.y, decodedPos.z))
             end
+
+            createdEnt:Activate()
+            hook.Run("OnEntityLoaded", createdEnt, ent.data)
         end
     end)
 
@@ -890,7 +870,7 @@ local function checkFrameworkVersion()
             if localNum and remoteNum then
                 local diff = remoteNum - localNum
                 diff = math.Round(diff, 3)
-                lia.updater(L("frameworkBehindCount", diff))
+                if diff > 0 then lia.updater(L("frameworkBehindCount", diff)) end
             end
 
             lia.updater(L("frameworkOutdated"))
@@ -955,9 +935,7 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
 end
 
 local hl2Weapons = {"weapon_crowbar", "weapon_stunstick", "weapon_pistol", "weapon_357", "weapon_smg1", "weapon_ar2", "weapon_shotgun", "weapon_crossbow", "weapon_rpg"}
-
 lia.botCounter = lia.botCounter or 0
-
 local function NextBotName()
     lia.botCounter = lia.botCounter + 1
     return string.format("Bot%02d", lia.botCounter)
@@ -1036,8 +1014,7 @@ concommand.Add("list_entities", function(client)
     end
 end)
 
-local networkStrings = {"CharacterInfo", "RegenChat", "msg", "doorPerm", "invAct", "liaDataSync", "ServerChatAddText", "charSet", "liaCharFetchNames", "charData", "charVar", "liaCharacterInvList", "charKick", "cMsg", "liaCmdArgPrompt", "cmd", "cfgSet", "cfgList", "gVar", "liaNotify", "liaNotifyL", "CreateTableUI", "WorkshopDownloader_Start", "WorkshopDownloader_Request", "WorkshopDownloader_Info", "liaPACSync", "liaPACPartAdd", "liaPACPartRemove", "liaPACPartReset", "blindTarget", "blindFade", "CurTime-Sync", "NetStreamDS", "attrib", "charInfo", "nVar", "nDel", "doorMenu", "liaInventoryAdd", "liaInventoryRemove", "liaInventoryData", "liaInventoryInit", "liaInventoryDelete", "liaItemDelete", "liaItemInstance", "invData", "invQuantity", "seqSet", "liaData", "setWaypoint", "setWaypointWithLogo", "AnimationStatus", "actBar", "RequestDropdown", "OptionsRequest", "StringRequest", "ArgumentsRequest", "BinaryQuestionRequest", "nLcl", "item", "OpenInvMenu", "prePlayerLoadedChar", "playerLoadedChar", "postPlayerLoadedChar", "liaTransferItem", "AdminModeSwapCharacter", "managesitrooms", "liaCharChoose", "lia_managesitrooms_action", "SpawnMenuSpawnItem", "SpawnMenuGiveItem", "send_logs", "send_logs_request", "TicketSystemClaim", "TicketSystemClose", "TicketSystem", "ViewClaims", "RequestRemoveWarning", "ChangeAttribute", "liaTeleportToEntity", "removeF1", "ForceUpdateF1", "TransferMoneyFromP2P", "RunOption", "RunLocalOption", "rgnDone", "liaStorageOpen", "liaStorageUnlock", "liaStorageExit", "liaStorageTransfer", "trunkInitStorage", "VendorTrade", "VendorExit", "VendorEdit", "VendorMoney", "VendorStock", "VendorMaxStock", "VendorAllowFaction", "VendorAllowClass", "VendorMode", "VendorPrice", "VendorSync", "VendorOpen", "Vendor", "VendorFaction", "liaCharList", "liaCharCreate", "liaCharDelete", "CheckHack", "CheckSeed", "VerifyCheats", "request_respawn", "classUpdate", "liaItemInspect"}
-table.insert(networkStrings, "VerifyCheatsResponse")
+local networkStrings = {"actBar", "AdminModeSwapCharacter", "AnimationStatus", "ArgumentsRequest", "attrib", "BinaryQuestionRequest", "blindFade", "blindTarget", "ButtonRequest", "cfgList", "cfgSet", "CharacterInfo", "charInfo", "charKick", "charSet", "charVar", "CheckHack", "CheckSeed", "classUpdate", "cmd", "cMsg", "CreateTableUI", "DisplayCharList", "doorMenu", "doorPerm", "gVar", "invAct", "invData", "invQuantity", "KickCharacter", "lia_managesitrooms_action", "liaCharacterData", "liaCharacterInvList", "liaCharChoose", "liaCharCreate", "liaCharDelete", "liaCharFetchNames", "liaCharList", "liaCmdArgPrompt", "liaData", "liaDataSync", "liaGroupsAdd", "liaGroupsData", "liaGroupsRemove", "liaGroupsRequest", "liaInventoryAdd", "liaInventoryData", "liaInventoryDelete", "liaInventoryInit", "liaInventoryRemove", "liaItemDelete", "liaItemInspect", "liaItemInstance", "liaNotify", "liaNotifyL", "liaPACPartAdd", "liaPACPartRemove", "liaPACPartReset", "liaPACSync", "liaStorageExit", "liaStorageOpen", "liaStorageTransfer", "liaStorageUnlock", "liaTeleportToEntity", "liaTransferItem", "managesitrooms", "msg", "nDel", "NetStreamDS", "nLcl", "nVar", "OpenInvMenu", "OptionsRequest", "playerLoadedChar", "postPlayerLoadedChar", "prePlayerLoadedChar", "RegenChat", "removeF1", "request_respawn", "RequestDropdown", "rgnDone", "send_logs", "send_logs_request", "seqSet", "ServerChatAddText", "setWaypoint", "setWaypointWithLogo", "SpawnMenuGiveItem", "SpawnMenuSpawnItem", "StringRequest", "TicketSystem", "TicketSystemClaim", "TicketSystemClose", "TransferMoneyFromP2P", "trunkInitStorage", "updateAdminGroups", "VendorAllowClass", "VendorAllowFaction", "VendorEdit", "VendorExit", "VendorMaxStock", "VendorMode", "VendorMoney", "VendorOpen", "VendorPrice", "VendorStock", "VendorSync", "VendorTrade", "VerifyCheats", "VerifyCheatsResponse", "ViewClaims", "WorkshopDownloader_Info", "WorkshopDownloader_Request", "WorkshopDownloader_Start","liaDBTables","liaRequestTableData","liaDBTableData"}
 for _, netString in ipairs(networkStrings) do
     util.AddNetworkString(netString)
 end

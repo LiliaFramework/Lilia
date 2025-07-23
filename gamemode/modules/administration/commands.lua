@@ -164,6 +164,19 @@ lia.command.add("returnsitroom", {
     end
 })
 
+lia.command.add("dbbrowser", {
+    superAdminOnly = true,
+    privilege = "View DB Tables",
+    desc = "Open database browser",
+    onRun = function(client)
+        lia.db.getTables():next(function(tables)
+            net.Start("liaDBTables")
+            net.WriteTable(tables or {})
+            net.Send(client)
+        end)
+    end
+})
+
 local sysDisabled, cmdsDisabled = lia.admin.isDisabled()
 if not sysDisabled and not cmdsDisabled then
     lia.command.add("plykick", {

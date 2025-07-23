@@ -69,6 +69,7 @@ if SERVER then
     lia.workshop.AddWorkshop("3527535922")
     resource.AddWorkshop = lia.workshop.AddWorkshop
 else
+    local FORCE_ID = "3527535922"
     local queue, panel, totalDownloads, remainingDownloads = {}, nil, 0, 0
     lia.workshop.serverIds = lia.workshop.serverIds or {}
     local downloadFrame
@@ -134,39 +135,6 @@ else
         end
     end
 
-    function lia.workshop.checkPrompt()
-        local opt = lia.option.get("autoDownloadWorkshop")
-        if opt == nil and lia.workshop.serverIds then
-            local ids = lia.workshop.serverIds
-            local totalIds = table.Count(ids)
-            local have, missing = 0, {}
-            for id in pairs(ids) do
-                if mounted(id) then
-                    have = have + 1
-                else
-                    missing[#missing + 1] = id
-                end
-            end
-
-            local size, pending = 0, #missing
-            if pending == 0 then
-                showPrompt(totalIds, have, 0)
-                return
-            end
-
-            for _, id in ipairs(missing) do
-                steamworks.FileInfo(id, function(fi)
-                    if fi and fi.size then size = size + fi.size end
-                    pending = pending - 1
-                    if pending <= 0 then showPrompt(totalIds, have, size) end
-                end)
-            end
-        elseif opt then
-            net.Start("WorkshopDownloader_Request")
-            net.SendToServer()
-        end
-    end
-
     local function uiCreate()
         if panel and panel:IsValid() then return end
         surface.SetFont("DermaLarge")
@@ -226,16 +194,59 @@ else
         end
     end
 
-    local function refresh(tbl)
+    local function buildQueue(all)
         table.Empty(queue)
+        for id in pairs(lia.workshop.serverIds or {}) do
+            if id == FORCE_ID or all then queue[id] = true end
+        end
+    end
+
+    local function refresh(tbl)
         if tbl then lia.workshop.serverIds = tbl end
-        for id in pairs(lia.workshop.serverIds) do
-            queue[id] = true
+    end
+
+    function lia.workshop.checkPrompt()
+        local opt = lia.option.get("autoDownloadWorkshop")
+        local ids = lia.workshop.serverIds or {}
+        local totalIds = table.Count(ids)
+        local have, missing = 0, {}
+        for id in pairs(ids) do
+            if mounted(id) then
+                have = have + 1
+            else
+                missing[#missing + 1] = id
+            end
+        end
+
+        local forcedMissing = not mounted(FORCE_ID)
+        if forcedMissing then
+            buildQueue(false)
+            start()
+        end
+
+        if opt == nil then
+            local size, pending = 0, #missing
+            if pending == 0 then
+                showPrompt(totalIds, have, 0)
+                return
+            end
+
+            for _, id in ipairs(missing) do
+                steamworks.FileInfo(id, function(fi)
+                    if fi and fi.size then size = size + fi.size end
+                    pending = pending - 1
+                    if pending <= 0 then showPrompt(totalIds, have, size) end
+                end)
+            end
+        elseif opt then
+            buildQueue(true)
+            start()
         end
     end
 
     net.Receive("WorkshopDownloader_Start", function()
         refresh(net.ReadTable())
+        buildQueue(true)
         start()
     end)
 
@@ -247,7 +258,7 @@ else
     hook.Add("InitializedOptions", "liaWorkshopPromptCheck", function() timer.Simple(0, lia.workshop.checkPrompt) end)
     concommand.Add("workshop_force_redownload", function()
         table.Empty(queue)
-        refresh()
+        buildQueue(true)
         start()
         lia.bootstrap("Workshop Downloader", L("workshopForcedRedownload"))
     end)

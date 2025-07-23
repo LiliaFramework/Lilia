@@ -1,5 +1,4 @@
-﻿file.CreateDir("lilia")
-lia.data = lia.data or {}
+﻿lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
 function lia.data.encodetable(value)
     if isvector(value) then
@@ -79,10 +78,15 @@ end
 
 function lia.data.deserialize(raw)
     if not raw then return nil end
-    local decoded = util.JSONToTable(raw)
-    if not decoded then
-        local ok, ponDecoded = pcall(pon.decode, raw)
-        if ok then decoded = ponDecoded end
+    local decoded
+    if istable(raw) then
+        decoded = raw
+    else
+        decoded = util.JSONToTable(raw)
+        if not decoded then
+            local ok, ponDecoded = pcall(pon.decode, raw)
+            if ok then decoded = ponDecoded end
+        end
     end
 
     if decoded == nil then return nil end
@@ -91,10 +95,15 @@ end
 
 function lia.data.decodeVector(raw)
     if not raw then return nil end
-    local decoded = util.JSONToTable(raw)
-    if not decoded then
-        local ok, ponDecoded = pcall(pon.decode, raw)
-        if ok then decoded = ponDecoded end
+    local decoded
+    if istable(raw) then
+        decoded = raw
+    else
+        decoded = util.JSONToTable(raw)
+        if not decoded then
+            local ok, ponDecoded = pcall(pon.decode, raw)
+            if ok then decoded = ponDecoded end
+        end
     end
 
     if decoded == nil then return nil end
@@ -103,10 +112,15 @@ end
 
 function lia.data.decodeAngle(raw)
     if not raw then return nil end
-    local decoded = util.JSONToTable(raw)
-    if not decoded then
-        local ok, ponDecoded = pcall(pon.decode, raw)
-        if ok then decoded = ponDecoded end
+    local decoded
+    if istable(raw) then
+        decoded = raw
+    else
+        decoded = util.JSONToTable(raw)
+        if not decoded then
+            local ok, ponDecoded = pcall(pon.decode, raw)
+            if ok then decoded = ponDecoded end
+        end
     end
 
     if decoded == nil then return nil end

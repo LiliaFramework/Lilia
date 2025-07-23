@@ -148,6 +148,13 @@ lia.command.add("charlist", {
                     allVars[varName] = value
                 end
 
+                local lastUsedText
+                if stored then
+                    lastUsedText = L("onlineNow")
+                else
+                    lastUsedText = row._lastJoinTime
+                end
+
                 local entry = {
                     ID = row._id,
                     Name = row._name,
@@ -158,6 +165,7 @@ lia.command.add("charlist", {
                     BanningAdminSteamID = info.charBanInfo and info.charBanInfo.steamID or "",
                     BanningAdminRank = info.charBanInfo and info.charBanInfo.rank or "",
                     Money = row._money,
+                    LastUsed = lastUsedText,
                     allVars = allVars
                 }
 

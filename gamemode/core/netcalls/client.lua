@@ -730,30 +730,12 @@ net.Receive("liaItemInspect", function()
         model:SetFOV(math.Clamp(math.deg(2 * math.asin(r / d)), 20, 80))
     end)
 
-    model.OnMouseWheeled = function(p, d) p:SetFOV(math.Clamp(p:GetFOV() - d * 2, 20, 80)) end
-    model.OnMousePressed = function(p, btn)
-        if btn == MOUSE_LEFT then
-            p.dragging = true
-            p.lastX, p.lastY = input.GetCursorPos()
-            p:MouseCapture(true)
-        end
-    end
-
-    model.OnMouseReleased = function(p)
-        p.dragging = false
-        p:MouseCapture(false)
-    end
+    -- disable zooming and camera movement so only rotation is allowed
+    model.OnMouseWheeled = function() end
+    model.OnMousePressed = function() end
+    model.OnMouseReleased = function() end
 
     model.Think = function(p)
-        if p.dragging then
-            local x, y = input.GetCursorPos()
-            local dx, dy = x - p.lastX, y - p.lastY
-            p.lastX, p.lastY = x, y
-            local off = Vector(-dx, dy, 0) * 0.03
-            p:SetCamPos(p:GetCamPos() + off)
-            p:SetLookAt(p:GetLookAt() + off)
-        end
-
         if input.IsKeyDown(KEY_A) or input.IsKeyDown(KEY_D) then
             local ang = p.Entity:GetAngles()
             ang.y = ang.y + FrameTime() * 150 * (input.IsKeyDown(KEY_A) and 1 or -1)

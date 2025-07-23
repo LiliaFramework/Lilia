@@ -632,7 +632,15 @@ function PANEL:Init()
         end
     end
 
-    if entity:GetNumBodyGroups() > 0 then
+    local hasBodygroups = false
+    for i = 0, entity:GetNumBodyGroups() - 1 do
+        if entity:GetBodygroupCount(i) > 1 then
+            hasBodygroups = true
+            break
+        end
+    end
+
+    if hasBodygroups or entity:SkinCount() > 1 then
         self.bodygroups = self:Add("DButton")
         self.bodygroups:Dock(TOP)
         self.bodygroups:DockMargin(0, 4, 0, 0)

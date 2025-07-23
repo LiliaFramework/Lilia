@@ -32,12 +32,6 @@ function GridInv:getSize()
     return self:getWidth(), self:getHeight()
 end
 
-function GridInv:canItemFitInInventory(item, x, y)
-    local invW, invH = self:getSize()
-    local itemW, itemH = item:getWidth() - 1, item:getHeight() - 1
-    return x >= 1 and y >= 1 and x + itemW <= invW and y + itemH <= invH
-end
-
 function GridInv:canAdd(item)
     if isstring(item) then item = lia.item.list[item] end
     assert(istable(item), "item must be a table")
@@ -61,6 +55,7 @@ function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
 end
 
 function GridInv:doesFitInventory(item)
+    if isstring(item) then item = lia.item.list[item] end
     local x, y = self:findFreePosition(item)
     if x and y then return true end
     for _, bagItem in pairs(self:getItems(true)) do
@@ -73,15 +68,22 @@ function GridInv:doesFitInventory(item)
     return false
 end
 
+function GridInv:canItemFitInInventory(item, x, y)
+    local invW, invH = self:getSize()
+    local itemW, itemH = item:getWidth() - 1, item:getHeight() - 1
+    return x >= 1 and y >= 1 and x + itemW <= invW and y + itemH <= invH
+end
+
 function GridInv:doesItemFitAtPos(testItem, x, y)
     if not self:canItemFitInInventory(testItem, x, y) then return false end
-    for _, item in pairs(self.items) do
-        if self:doesItemOverlapWithOther(testItem, x, y, item) then return false, item end
+    for _, v in pairs(self.items) do
+        if self:doesItemOverlapWithOther(testItem, x, y, v) then return false, v end
     end
 
     if self.occupied then
-        for x2 = 0, testItem:getWidth() - 1 do
-            for y2 = 0, testItem:getHeight() - 1 do
+        local w, h = testItem:getWidth(), testItem:getHeight()
+        for x2 = 0, w - 1 do
+            for y2 = 0, h - 1 do
                 if self.occupied[x + x2 .. y + y2] then return false end
             end
         end
@@ -90,9 +92,9 @@ function GridInv:doesItemFitAtPos(testItem, x, y)
 end
 
 function GridInv:findFreePosition(item)
-    local width, height = self:getSize()
-    for x = 1, width do
-        for y = 1, height do
+    local w, h = self:getSize()
+    for x = 1, w do
+        for y = 1, h do
             if self:doesItemFitAtPos(item, x, y) then return x, y end
         end
     end

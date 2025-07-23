@@ -2875,6 +2875,7 @@ end)
 **Purpose**
 
 Called after the player has been equipped. Last chance to modify the loadout.
+The character's stored bodygroups and skin are also restored here.
 
 **Parameters**
 

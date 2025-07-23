@@ -1,28 +1,6 @@
 ﻿local receivedChunks = {}
 local receivedPanel
-net.Receive("send_logs", function()
-    local chunkIndex = net.ReadUInt(16)
-    local numChunks = net.ReadUInt(16)
-    local chunkLen = net.ReadUInt(16)
-    local chunkData = net.ReadData(chunkLen)
-    receivedChunks[chunkIndex] = chunkData
-    for i = 1, numChunks do
-        if not receivedChunks[i] then return end
-    end
-
-    local fullData = table.concat(receivedChunks)
-    receivedChunks = {}
-    local jsonData = util.Decompress(fullData)
-    local categorizedLogs = util.JSONToTable(jsonData)
-    if not categorizedLogs then
-        chat.AddText(Color(255, 0, 0), L("failedRetrieveLogs"))
-        return
-    end
-
-    if IsValid(receivedPanel) then OpenLogsUI(receivedPanel, categorizedLogs) end
-end)
-
-function OpenLogsUI(panel, categorizedLogs)
+local function OpenLogsUI(panel, categorizedLogs)
     panel:Clear()
     local sidebar = panel:Add("DScrollPanel")
     sidebar:Dock(RIGHT)
@@ -96,6 +74,28 @@ function OpenLogsUI(panel, categorizedLogs)
         end
     end
 end
+
+net.Receive("send_logs", function()
+    local chunkIndex = net.ReadUInt(16)
+    local numChunks = net.ReadUInt(16)
+    local chunkLen = net.ReadUInt(16)
+    local chunkData = net.ReadData(chunkLen)
+    receivedChunks[chunkIndex] = chunkData
+    for i = 1, numChunks do
+        if not receivedChunks[i] then return end
+    end
+
+    local fullData = table.concat(receivedChunks)
+    receivedChunks = {}
+    local jsonData = util.Decompress(fullData)
+    local categorizedLogs = util.JSONToTable(jsonData)
+    if not categorizedLogs then
+        chat.AddText(Color(255, 0, 0), L("failedRetrieveLogs"))
+        return
+    end
+
+    if IsValid(receivedPanel) then OpenLogsUI(receivedPanel, categorizedLogs) end
+end)
 
 function MODULE:CreateMenuButtons(tabs)
     if IsValid(LocalPlayer()) and LocalPlayer():hasPrivilege("Staff Permissions - Can See Logs") then

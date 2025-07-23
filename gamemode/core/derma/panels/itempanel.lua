@@ -93,7 +93,8 @@ function PANEL:openInspect()
         model:SetFOV(math.Clamp(math.deg(2 * math.asin(r / d)), 20, 80))
     end)
 
-    model.OnMouseWheeled = function(p, d) p:SetFOV(math.Clamp(p:GetFOV() - d * 2, 20, 80)) end
+    -- disable zooming so inspecting only allows rotation
+    model.OnMouseWheeled = function() end
     model.Think = function(p)
         if input.IsKeyDown(KEY_A) or input.IsKeyDown(KEY_D) then
             local ang = p.Entity:GetAngles()
@@ -119,21 +120,6 @@ function PANEL:openInspect()
         if IsValid(cr) then drawLine(scroll, L("spawner"), cr:Name() .. " - " .. cr:SteamID()) end
     end
 
-    local take = vgui.Create("liaMediumButton", frame)
-    take:Dock(BOTTOM)
-    take:SetTall(48)
-    take:SetFont("liaBigBtn")
-    take:SetText(L("take"))
-    take.DoClick = function()
-        if IsValid(self.ent) then
-            net.Start("invAct")
-            net.WriteString("take")
-            net.WriteType(self.ent)
-            net.SendToServer()
-        end
-
-        if IsValid(overlay) then overlay:Remove() end
-    end
 end
 
 function PANEL:buildButtons()

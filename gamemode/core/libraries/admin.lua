@@ -3,6 +3,11 @@ lia.admin.bans = lia.admin.bans or {}
 lia.admin.groups = lia.admin.groups or {}
 lia.admin.banList = lia.admin.banList or {}
 lia.admin.privileges = lia.admin.privileges or {}
+local DEFAULT_GROUPS = {
+    user = true,
+    admin = true,
+    superadmin = true,
+}
 function lia.admin.isDisabled()
     local sysDisabled = hook.Run("ShouldLiliaAdminLoad") == false
     local cmdDisabled = hook.Run("ShouldLiliaAdminCommandsLoad") == false
@@ -71,7 +76,15 @@ function lia.admin.createGroup(groupName, info)
     end
 
     lia.admin.groups[groupName] = info or {}
-    if SERVER then lia.admin.save(true) end
+    if SERVER then
+        if not CAMI.GetUsergroup(groupName) then
+            CAMI.RegisterUsergroup({
+                Name = groupName,
+                Inherits = "user",
+            })
+        end
+        lia.admin.save(true)
+    end
 end
 
 function lia.admin.registerPrivilege(privilege)
@@ -93,7 +106,10 @@ function lia.admin.removeGroup(groupName)
     end
 
     lia.admin.groups[groupName] = nil
-    if SERVER then lia.admin.save(true) end
+    if SERVER then
+        CAMI.UnregisterUsergroup(groupName)
+        lia.admin.save(true)
+    end
 end
 
 if SERVER then
@@ -104,8 +120,13 @@ if SERVER then
             return
         end
 
+        if DEFAULT_GROUPS[groupName] then return end
+
         lia.admin.groups[groupName][permission] = true
-        if SERVER then lia.admin.save(true) end
+        if SERVER then
+            lia.admin.save(true)
+            hook.Run("CAMI.OnUsergroupPermissionsChanged", groupName, lia.admin.groups[groupName])
+        end
     end
 
     function lia.admin.removePermission(groupName, permission)
@@ -115,8 +136,13 @@ if SERVER then
             return
         end
 
+        if DEFAULT_GROUPS[groupName] then return end
+
         lia.admin.groups[groupName][permission] = nil
-        if SERVER then lia.admin.save(true) end
+        if SERVER then
+            lia.admin.save(true)
+            hook.Run("CAMI.OnUsergroupPermissionsChanged", groupName, lia.admin.groups[groupName])
+        end
     end
 
     function lia.admin.save(network)
@@ -126,7 +152,7 @@ if SERVER then
         }, "admingroups")
 
         if network then
-            net.Start("lilia_updateAdminGroups")
+            net.Start("updateAdminGroups")
             net.WriteTable(lia.admin.groups)
             net.Broadcast()
         end
@@ -134,7 +160,9 @@ if SERVER then
 
     function lia.admin.setPlayerGroup(ply, usergroup)
         if lia.admin.isDisabled() then return end
+        local old = ply:GetUserGroup()
         ply:SetUserGroup(usergroup)
+        CAMI.SignalUserGroupChanged(ply, old, usergroup, "Lilia")
         lia.db.query(Format("UPDATE lia_players SET _userGroup = '%s' WHERE _steamID = %s", lia.db.escape(usergroup), ply:SteamID64()))
     end
 
@@ -317,5 +345,16 @@ concommand.Add("plysetgroup", function(ply, _, args)
         else
             MsgC(Color(200, 20, 20), "[Lilia Administration] Error: specified player not found.\n")
         end
+    end
+end)
+
+hook.Add("CAMI.PlayerHasAccess", "liaAdminPermissions", function(_, ply, priv, cb)
+    if lia.admin.isDisabled() then return end
+    if not IsValid(ply) then return end
+    local group = ply:GetUserGroup()
+    local perms = lia.admin.groups[group]
+    if perms and perms[priv] then
+        cb(true)
+        return true
     end
 end)

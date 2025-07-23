@@ -14,6 +14,7 @@ net.Receive("VendorSync", function()
     vendor.money = net.ReadInt(32)
     if vendor.money < 0 then vendor.money = nil end
     local count = net.ReadUInt(16)
+    vendor.items = {}
     for _ = 1, count do
         local itemType = net.ReadString()
         local price = net.ReadInt(32)
