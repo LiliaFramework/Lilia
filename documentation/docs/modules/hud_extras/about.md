@@ -1,13 +1,14 @@
 <h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
 **Name:**
-Extra HUD Elements
+HUD Extras
 
 **Version:**
-1.18
+1.19
 
 **Description:**
-Adds optional HUD elements, such as an FPS counter, that other modules can extend.
+
+Adds optional HUD widgets like an FPS counter and performance stats. The system is extensible so other modules can display their own info.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

@@ -7,7 +7,8 @@ Broadcasts
 1.20
 
 **Description:**
-Enables faction and class broadcast commands so staff can send messages to specific groups.
+
+Allows staff to broadcast messages to chosen factions or classes. Every broadcast is logged and controlled through CAMI privileges.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

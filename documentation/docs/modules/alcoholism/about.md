@@ -7,7 +7,8 @@ Alcoholism
 1.18
 
 **Description:**
-Introduces drinkable alcohol items that raise intoxication levels and temporarily blur the player's vision and movement.
+
+Adds drinkable alcohol that increases a player's intoxication level. High BAC blurs vision and slows movement until the effect wears off.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

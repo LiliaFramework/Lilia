@@ -7,7 +7,8 @@ Radio
 1.21
 
 **Description:**
-Introduces a radio chat system with customizable fonts and models.
+
+Adds a radio communication system with configurable fonts and models. Players can tune to different frequencies or carry handheld radios.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 
@@ -20,7 +21,7 @@ Introduces a radio chat system with customizable fonts and models.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Workshop Content</h2>
 
-- 3431349806
+- 3527548881
 
 
 

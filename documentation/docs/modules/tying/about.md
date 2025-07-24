@@ -4,10 +4,11 @@
 Tying
 
 **Version:**
-1.23
+1.24
 
 **Description:**
-Introduces handcuff-style tying items for arrests and logs all tie or untie actions.
+
+Adds handcuff items to restrain players, recording every tie and untie action. Prisoners can attempt timed escapes for added drama.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

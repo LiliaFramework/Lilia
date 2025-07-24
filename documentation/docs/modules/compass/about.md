@@ -7,7 +7,8 @@ Compass
 1.14
 
 **Description:**
-Displays a rotating HUD compass that can mark spotted locations or enemies.
+
+Shows a HUD compass that rotates with your view and can mark spotted locations. Workshop icons enhance its appearance.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 
@@ -20,7 +21,7 @@ Displays a rotating HUD compass that can mark spotted locations or enemies.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Workshop Content</h2>
 
-- 3519849524
+- 3527540414
 
 
 

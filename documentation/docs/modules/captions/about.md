@@ -7,7 +7,8 @@ Captions
 1.19
 
 **Description:**
-Provides an API for timed on-screen captions, ideal for story prompts or tutorials.
+
+Offers an API for timed on-screen captions suited for tutorials or story events. Captions can be triggered from the server or client and last for a chosen duration.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

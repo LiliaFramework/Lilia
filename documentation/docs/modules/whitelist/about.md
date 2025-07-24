@@ -7,7 +7,8 @@ Whitelist
 1.16
 
 **Description:**
-Implements a server whitelist system with optional player signup support.
+
+Controls server access through a whitelist. Players can submit signups and admins manage entries with dedicated commands.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

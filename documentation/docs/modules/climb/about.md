@@ -7,7 +7,8 @@ Climb
 1.14
 
 **Description:**
-Lets players climb up ledges using movement keys with custom animations.
+
+Enables ledge climbing with smooth animations triggered by the movement keys. Climbing drains stamina and plays sound effects for realism.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

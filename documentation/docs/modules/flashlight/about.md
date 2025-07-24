@@ -7,7 +7,8 @@ Flashlight
 1.14
 
 **Description:**
-Reworks the flashlight with dynamic lighting and adjustable brightness settings.
+
+Replaces the default flashlight with dynamic lighting and adjustable brightness. Optional battery drain provides a realistic touch.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 
