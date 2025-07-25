@@ -1,4 +1,4 @@
-﻿NAME = "Русский"
+NAME = "Русский"
 LANGUAGE = {
     mustProvideString = "Необходимо указать строку",
     use = "Использовать",
@@ -125,7 +125,7 @@ LANGUAGE = {
     selectModel = "Выберите модель",
     selectPrompt = "Выбрать %s",
     noDesc = "Описание отсутствует",
-    requiredFieldError = "Поле \"%s\" обязательно.",
+    requiredFieldError = "Поле \",
     baseArmor = "Броня по умолчанию",
     weapons = "Оружие",
     modelScale = "Масштаб модели",
@@ -158,7 +158,7 @@ LANGUAGE = {
     invalidFaction = "Неверная фракция.",
     submit = "Отправить",
     apply = "Применить",
-    cfgSet = "%s установил \"%s\" на %s.",
+    cfgSet = "%s установил \"%s\" to %s.",
     invalid = "Неверное значение %s",
     fixInventoryError = "Ошибка сервера при загрузке инвентарей. Проверьте логи.",
     unknown = "Неизвестно",
@@ -508,7 +508,7 @@ LANGUAGE = {
     changeModel = "%s изменил модель %s на %s.",
     changeName = "%s изменил имя %s на %s.",
     changeSkin = "%s изменил скин %s на %s.",
-    changeBodygroups = "%s изменил \"%s\" бодигруппу %s на %s.",
+    changeBodygroups = "%s изменил \"%s\" bodygroup to %s.",
     adminStickCheckInventoryName = "Проверить инвентарь",
     doorsellDesc = "Продать дверь и вернуть часть стоимости.",
     admindoorsellDesc = "Админ‑продажа двери с возвратом денег владельцу.",
@@ -1039,15 +1039,19 @@ LANGUAGE = {
     flagLabel = "Флаг '%s'",
     downloads = "Загрузки",
     adminStickWeaponName = "Админ‑палка",
-    adminStickPurpose = "Инструкция: R — выбрать цель\nShift+R — выбрать себя\nЛКМ меню\nПКМ заморозить.",
+    adminStickPurpose = "Инструкция: R — выбрать цель
+Shift+R — выбрать себя
+ЛКМ меню
+ПКМ заморозить.",
     keysWeaponName = "Ключи",
-    keysInstructions = "ЛКМ: Запереть\nПКМ: Открыть",
+    keysInstructions = "ЛКМ: Запереть
+ПКМ: Открыть",
     keysPurpose = "Запирание и открытие.",
     handsWeaponName = "Руки",
-    handsInstructions = [[ЛКМ: Бросок/удар
-ПКМ: Стук/поднять
-ПКМ + мышь: Повернуть
-R: Бросить]],
+    handsInstructions = [[Primary Fire: Throw/Punch
+Secondary Fire: Knock/Pickup
+Secondary Fire + Mouse: Rotate Object
+Reload: Drop]],
     handsPurpose = "Удары и стук.",
     entityVendorName = "Продавец",
     entityStorageName = "Хранилище",
