@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Wartable module.
+Module-specific events raised by the War Table module.
 
 ---
 

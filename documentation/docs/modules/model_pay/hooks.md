@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Modelpay module.
+Module-specific events raised by the Model Pay module.
 
 ---
 

@@ -4,7 +4,7 @@
 Damage Numbers
 
 **Version:**
-1.15
+1.16
 
 **Description:**
 

@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Loadmessages module.
+Module-specific events raised by the Load Messages module.
 
 ---
 

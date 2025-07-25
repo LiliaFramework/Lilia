@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Discordrelay module.
+Module-specific events raised by the Discord Relay module.
 
 ---
 

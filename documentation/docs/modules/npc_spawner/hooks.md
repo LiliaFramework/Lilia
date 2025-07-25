@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Npcspawner module.
+Module-specific events raised by the NPC Spawner module.
 
 ---
 

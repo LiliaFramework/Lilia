@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Joinleavemessages module.
+Module-specific events raised by the Join Leave Messages module.
 
 ---
 

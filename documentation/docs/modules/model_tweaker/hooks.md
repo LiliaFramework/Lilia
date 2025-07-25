@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Modeltweaker module.
+Module-specific events raised by the Model Tweaker module.
 
 ---
 

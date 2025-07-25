@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Damagenumbers module.
+Module-specific events raised by the Damage Numbers module.
 
 ---
 

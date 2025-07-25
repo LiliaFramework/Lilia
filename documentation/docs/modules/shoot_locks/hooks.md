@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Shootlock module.
+Module-specific events raised by the Shoot Locks module.
 
 ---
 

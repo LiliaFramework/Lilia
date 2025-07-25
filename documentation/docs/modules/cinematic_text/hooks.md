@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Cinematictext module.
+Module-specific events raised by the Cinematic Text module.
 
 ---
 

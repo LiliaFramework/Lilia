@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Realisticview module.
+Module-specific events raised by the Realistic View module.
 
 ---
 

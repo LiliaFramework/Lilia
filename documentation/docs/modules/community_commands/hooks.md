@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Communitycommands module.
+Module-specific events raised by the Community Commands module.
 
 ---
 

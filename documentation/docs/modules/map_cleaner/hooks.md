@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Mapcleaner module.
+Module-specific events raised by the Map Cleaner module.
 
 ---
 

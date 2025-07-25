@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Realisticdamage module.
+Module-specific events raised by the Realistic Damage module.
 
 ---
 

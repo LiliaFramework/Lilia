@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Cigs module.
+Module-specific events raised by the Cigarettes module.
 
 ---
 

@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Extendeddescriptions module.
+Module-specific events raised by the Extended Descriptions module.
 
 ---
 

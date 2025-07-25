@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Doorkick module.
+Module-specific events raised by the Door Kick module.
 
 ---
 

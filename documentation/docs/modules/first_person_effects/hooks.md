@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Firstpersoneffects module.
+Module-specific events raised by the First Person Effects module.
 
 ---
 

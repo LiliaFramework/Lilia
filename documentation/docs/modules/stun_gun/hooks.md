@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Stungun module.
+Module-specific events raised by the Stun Gun module.
 
 ---
 

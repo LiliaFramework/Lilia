@@ -36,39 +36,6 @@ end)
 
 ---
 
-### `AddTextField`
-
-**Purpose**
-
-`Creates a text field inside a radio information section.`
-
-**Parameters**
-
-* `section` (`string`): `Section title to place the field in.`
-
-* `id` (`string`): `Unique identifier for the text field.`
-
-* `label` (`string`): `Text displayed before the value.`
-
-* `callback` (`function`): `Function returning the value to display.`
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-`nil` — `No return value.`
-
-**Example**
-
-```lua
-hook.Add("AddTextField", "AddRadioFreq", function(section, id, label, callback)
-    -- Custom fields can be inserted here
-end)
-```
-
----
 
 ### `ShouldRadioBeep`
 

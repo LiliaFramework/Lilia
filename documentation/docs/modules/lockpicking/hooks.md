@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the SimpleLockpicking module.
+Module-specific events raised by the Lockpicking module.
 
 ---
 

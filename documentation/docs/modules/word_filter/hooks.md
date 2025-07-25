@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Wordfilter module.
+Module-specific events raised by the Word Filter module.
 
 ---
 

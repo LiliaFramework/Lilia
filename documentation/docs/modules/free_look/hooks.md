@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Freelook module.
+Module-specific events raised by the Free Look module.
 
 ---
 

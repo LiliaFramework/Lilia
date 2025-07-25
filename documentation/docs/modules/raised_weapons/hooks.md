@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Raisedweapons module.
+Module-specific events raised by the Raised Weapons module.
 
 ---
 

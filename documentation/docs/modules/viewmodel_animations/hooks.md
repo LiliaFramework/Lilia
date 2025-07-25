@@ -66,3 +66,61 @@ end)
 
 ---
 
+### `VManipChooseAnim`
+
+**Purpose**
+
+`Allows overriding which animation is played for a picked up item.`
+
+**Parameters**
+
+* `itemID` (`string`): `Unique ID of the item being picked up.`
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+`string|nil` — `Return the animation name or nil for the default.`
+
+**Example**
+
+```lua
+hook.Add("VManipChooseAnim", "UseFastAnim", function(itemID)
+    if itemID == "apple" then
+        return "interactfast"
+    end
+end)
+```
+
+---
+
+### `VManipAnimationPlayed`
+
+**Purpose**
+
+`Notifies that a viewmodel animation has begun playing.`
+
+**Parameters**
+
+* `itemID` (`string`): `Unique ID of the related item.`
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+`nil` — `No return value.`
+
+**Example**
+
+```lua
+hook.Add("VManipAnimationPlayed", "DebugAnim", function(itemID)
+    print("Animation started for", itemID)
+end)
+```
+
+---
+

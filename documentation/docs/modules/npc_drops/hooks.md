@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Npcdrop module.
+Module-specific events raised by the NPC Drops module.
 
 ---
 

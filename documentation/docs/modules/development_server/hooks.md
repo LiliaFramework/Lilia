@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Developmentserver module.
+Module-specific events raised by the Development Server module.
 
 ---
 

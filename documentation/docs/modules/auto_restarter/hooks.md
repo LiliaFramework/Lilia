@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Autorestarter module.
+Module-specific events raised by the Auto Restarter module.
 
 ---
 

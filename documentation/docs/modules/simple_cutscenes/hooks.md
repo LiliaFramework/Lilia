@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Cutscenes module.
+Module-specific events raised by the Simple Cutscenes module.
 
 ---
 

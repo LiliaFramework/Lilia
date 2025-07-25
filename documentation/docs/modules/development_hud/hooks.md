@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Developmenthud module.
+Module-specific events raised by the Development HUD module.
 
 ---
 

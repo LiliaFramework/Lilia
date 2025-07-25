@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Chatmessages module.
+Module-specific events raised by the Chat Messages module.
 
 ---
 
