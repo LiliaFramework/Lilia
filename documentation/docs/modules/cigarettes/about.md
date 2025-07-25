@@ -4,20 +4,11 @@
 Cigarettes
 
 **Version:**
-1.17
+1.18
 
 **Description:**
 
-Adds cigarette items that burn down over time, producing smoke and ash effects. Optional addiction mechanics add depth to roleplay.
-
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
-
-- Adds smokable cigarette items with workshop models
-- Adds puff effects while smoking
-- Adds cigarettes that are consumed over time
-- Adds configurable nicotine addiction effects
-- Adds ash particles that fade out
-
+Adds cigarette items that burn down over time, producing smoke and ash effects for added ambience.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Workshop Content</h2>
 

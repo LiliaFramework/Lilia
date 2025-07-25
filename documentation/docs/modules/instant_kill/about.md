@@ -4,20 +4,11 @@
 Instant Kill
 
 **Version:**
-1.16
+1.17
 
 **Description:**
 
 Applies high damage multipliers for headshots, making them instantly lethal. Each weapon can have its own settings.
-
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
-
-- Adds instant kill on headshots
-- Adds lethality configurable per weapon
-- Adds extra tension to combat
-- Adds friendly fire protection options
-- Adds integration with damage numbers
-
 
 
 

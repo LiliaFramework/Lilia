@@ -4,20 +4,11 @@
 Shoot Locks
 
 **Version:**
-1.15
+1.16
 
 **Description:**
 
-Lets players blast door locks open with gunfire. Success chances and noise radius are configurable, making it a risky breach option.
-
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
-
-- Adds the ability to shoot door locks to open them
-- Adds a quick breach alternative
-- Adds a loud action that may alert others
-- Adds chance-based lock destruction
-- Adds configurable noise radius
-
+Lets players blast door locks open with gunfire. Success chances are configurable, making it a risky breach option.
 
 
 

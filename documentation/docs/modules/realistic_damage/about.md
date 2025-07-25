@@ -4,20 +4,11 @@
 Realistic Damage
 
 **Version:**
-1.12
+1.13
 
 **Description:**
 
-Scales damage based on hit body parts and applies other tweaks for realistic combat. Options include bleeding and friendly-fire control.
-
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
-
-- Adds damage scaling by body part
-- Adds custom multipliers for realism
-- Adds adjustments to player damage output
-- Adds bleeding effects on high damage
-- Adds friendly fire scaling options
-
+Scales damage based on hit body parts and applies other tweaks for realistic combat.
 
 
 

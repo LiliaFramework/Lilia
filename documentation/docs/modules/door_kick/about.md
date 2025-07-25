@@ -4,20 +4,11 @@
 Door Kick
 
 **Version:**
-1.15
+1.16
 
 **Description:**
 
 Allows players to breach doors by kicking them open. The action flings the door aside and is fully logged for staff review.
-
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
-
-- Adds the ability to kick doors open with an animation
-- Adds logging of door kick events
-- Adds a fun breach mechanic
-- Adds physics force to fling doors open
-- Adds a cooldown to prevent spam kicking
-
 
 
 

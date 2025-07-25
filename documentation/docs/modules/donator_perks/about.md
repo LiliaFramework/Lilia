@@ -4,20 +4,11 @@
 Donator Perks
 
 **Version:**
-1.25
+1.26
 
 **Description:**
 
-Provides libraries to manage donor ranks and perks. Perks can be configured per tier and are displayed on the scoreboard.
-
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
-
-- Adds libraries to manage donor perks
-- Adds tracking for donor ranks and perks
-- Adds integration with the scoreboard
-- Adds configurable perks by tier
-- Adds analytics on total donations
-
+Provides libraries to manage donor ranks and perks. Perks can be configured per tier and players may receive extra character slots.
 
 
 

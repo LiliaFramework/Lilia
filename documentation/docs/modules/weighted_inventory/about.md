@@ -4,20 +4,11 @@
 Weighted Inventory
 
 **Version:**
-1.19
+1.20
 
 **Description:**
 
 Adds a weight-based inventory system that limits what a character can haul. Drag-and-drop management encourages careful packing.
-
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
-
-- Adds an inventory limited by item weight
-- Adds a shared weightinv library file
-- Adds a new inventory type
-- Adds a drag-and-drop weight management UI
-- Adds support for backpacks to increase capacity
-
 
 
 

@@ -4,20 +4,11 @@
 View Bobbing
 
 **Version:**
-1.16
+1.17
 
 **Description:**
 
-Applies subtle camera bobbing while you move to enhance immersion. Intensity and frequency are fully adjustable.
-
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
-
-- Adds camera bobbing while moving
-- Adds adjustable intensity
-- Adds enhanced immersion
-- Adds toggle to disable bobbing in vehicles
-- Adds configuration for bobbing frequency
-
+Applies subtle camera bobbing while you move to enhance immersion. Intensity and frequency are adjustable through options.
 
 
 

@@ -4,20 +4,11 @@
 Flashlight
 
 **Version:**
-1.14
+1.15
 
 **Description:**
 
-Replaces the default flashlight with dynamic lighting and adjustable brightness. Optional battery drain provides a realistic touch.
-
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
-
-- Adds a serious flashlight with dynamic light
-- Adds darkening of surroundings when turned off
-- Adds adjustable brightness
-- Adds battery consumption over time
-- Adds keybind toggle support
-
+Replaces the default flashlight with dynamic lighting and adjustable brightness.
 
 
 

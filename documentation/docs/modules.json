@@ -76,17 +76,11 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Allows staff to broadcast messages to chosen factions or classes. Every broadcast is logged and controlled through CAMI privileges.",
-    "version": "1.22",
+    "version": "1.23",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/broadcasts.zip",
     "source": "https://liliaframework.github.io/Modules/broadcasts.html",
     "public_uniqueID": "broadcasts",
-    "features": [
-      "Adds faction and class broadcast commands with CAMI checks",
-      "Adds logging of broadcast messages for staff review",
-      "Adds support for flagged players to send targeted messages",
-      "Adds CAMI privileges for broadcast access",
-      "Adds menus to select factions or classes"
-    ],
+    "features": [],
     "workshop": []
   },
   {
@@ -147,18 +141,12 @@
     "name": "Cigarettes",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Adds cigarette items that burn down over time, producing smoke and ash effects. Optional addiction mechanics add depth to roleplay.",
-    "version": "1.17",
+    "description": "Adds cigarette items that burn down over time, producing smoke and ash effects for added ambience.",
+    "version": "1.18",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cigs.zip",
     "source": "https://liliaframework.github.io/Modules/cigs.html",
     "public_uniqueID": "cigs",
-    "features": [
-      "Adds smokable cigarette items with workshop models",
-      "Adds puff effects while smoking",
-      "Adds cigarettes that are consumed over time",
-      "Adds configurable nicotine addiction effects",
-      "Adds ash particles that fade out"
-    ],
+    "features": [],
     "workshop": [
       "3527540050"
     ]
@@ -185,18 +173,12 @@
     "name": "Climb",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Enables ledge climbing with smooth animations triggered by the movement keys. Climbing drains stamina and plays sound effects for realism.",
-    "version": "1.14",
+    "description": "Enables simple ledge climbing with smooth animations triggered by the movement keys.",
+    "version": "1.15",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/climb.zip",
     "source": "https://liliaframework.github.io/Modules/climb.html",
     "public_uniqueID": "climb",
-    "features": [
-      "Adds the ability to climb ledges using movement keys",
-      "Adds custom climbing animations",
-      "Adds integration with movement restrictions",
-      "Adds stamina cost for repeated climbs",
-      "Adds sound effects for grip and landing"
-    ],
+    "features": [],
     "workshop": []
   },
   {
@@ -367,18 +349,12 @@
     "name": "Donator Perks",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Provides libraries to manage donor ranks and perks. Perks can be configured per tier and are displayed on the scoreboard.",
-    "version": "1.25",
+    "description": "Provides libraries to manage donor ranks and perks. Perks can be configured per tier and players may receive extra character slots.",
+    "version": "1.26",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/donator.zip",
     "source": "https://liliaframework.github.io/Modules/donator.html",
     "public_uniqueID": "donator",
-    "features": [
-      "Adds libraries to manage donor perks",
-      "Adds tracking for donor ranks and perks",
-      "Adds integration with the scoreboard",
-      "Adds configurable perks by tier",
-      "Adds analytics on total donations"
-    ],
+    "features": [],
     "workshop": []
   },
   {
@@ -386,17 +362,11 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Allows players to breach doors by kicking them open. The action flings the door aside and is fully logged for staff review.",
-    "version": "1.15",
+    "version": "1.16",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/doorkick.zip",
     "source": "https://liliaframework.github.io/Modules/doorkick.html",
     "public_uniqueID": "doorkick",
-    "features": [
-      "Adds the ability to kick doors open with an animation",
-      "Adds logging of door kick events",
-      "Adds a fun breach mechanic",
-      "Adds physics force to fling doors open",
-      "Adds a cooldown to prevent spam kicking"
-    ],
+    "features": [],
     "workshop": []
   },
   {
@@ -440,35 +410,23 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds subtle head bob and view sway to the camera for a more immersive first-person feel. Intensity can be tuned or disabled altogether.",
-    "version": "1.13",
+    "version": "1.14",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/firstpersoneffects.zip",
     "source": "https://liliaframework.github.io/Modules/firstpersoneffects.html",
     "public_uniqueID": "firstpersoneffects",
-    "features": [
-      "Adds head bob and view sway",
-      "Adds camera motion synced to actions",
-      "Adds a realistic first-person feel",
-      "Adds adjustable intensity via config",
-      "Adds compatibility with vehicle seats"
-    ],
+    "features": [],
     "workshop": []
   },
   {
     "name": "Flashlight",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Replaces the default flashlight with dynamic lighting and adjustable brightness. Optional battery drain provides a realistic touch.",
-    "version": "1.14",
+    "description": "Replaces the default flashlight with dynamic lighting and adjustable brightness.",
+    "version": "1.15",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/flashlight.zip",
     "source": "https://liliaframework.github.io/Modules/flashlight.html",
     "public_uniqueID": "flashlight",
-    "features": [
-      "Adds a serious flashlight with dynamic light",
-      "Adds darkening of surroundings when turned off",
-      "Adds adjustable brightness",
-      "Adds battery consumption over time",
-      "Adds keybind toggle support"
-    ],
+    "features": [],
     "workshop": []
   },
   {
@@ -476,17 +434,11 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Enables freelook so players can glance around without turning their body. A toggle key and sensitivity options offer tactical awareness.",
-    "version": "1.15",
+    "version": "1.16",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/freelook.zip",
     "source": "https://liliaframework.github.io/Modules/freelook.html",
     "public_uniqueID": "freelook",
-    "features": [
-      "Adds the ability to look around without turning the body",
-      "Adds a toggle key similar to EFT",
-      "Adds movement direction preservation",
-      "Adds adjustable sensitivity while freelooking",
-      "Adds optional head tracking support"
-    ],
+    "features": [],
     "workshop": []
   },
   {
@@ -530,17 +482,11 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Applies high damage multipliers for headshots, making them instantly lethal. Each weapon can have its own settings.",
-    "version": "1.16",
+    "version": "1.17",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/instakill.zip",
     "source": "https://liliaframework.github.io/Modules/instakill.html",
     "public_uniqueID": "instakill",
-    "features": [
-      "Adds instant kill on headshots",
-      "Adds lethality configurable per weapon",
-      "Adds extra tension to combat",
-      "Adds friendly fire protection options",
-      "Adds integration with damage numbers"
-    ],
+    "features": [],
     "workshop": []
   },
   {
@@ -548,17 +494,11 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds a weight-based inventory system that limits what a character can haul. Drag-and-drop management encourages careful packing.",
-    "version": "1.19",
+    "version": "1.20",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/inventory.zip",
     "source": "https://liliaframework.github.io/Modules/inventory.html",
     "public_uniqueID": "inventory",
-    "features": [
-      "Adds an inventory limited by item weight",
-      "Adds a shared weightinv library file",
-      "Adds a new inventory type",
-      "Adds a drag-and-drop weight management UI",
-      "Adds support for backpacks to increase capacity"
-    ],
+    "features": [],
     "workshop": []
   },
   {
@@ -692,17 +632,11 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Spawns NPCs at preset points on a schedule. Staff can force spawns manually and all actions are logged.",
-    "version": "1.17",
+    "version": "1.18",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcspawner.zip",
     "source": "https://liliaframework.github.io/Modules/npcspawner.html",
     "public_uniqueID": "npcspawner",
-    "features": [
-      "Adds automatic NPC spawns at points",
-      "Adds the ability for admins to force spawns",
-      "Adds logging of spawn actions",
-      "Adds configuration for spawn intervals",
-      "Adds spawner entity previews"
-    ],
+    "features": [],
     "workshop": []
   },
   {
@@ -765,18 +699,12 @@
     "name": "Realistic Damage",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Scales damage based on hit body parts and applies other tweaks for realistic combat. Options include bleeding and friendly-fire control.",
-    "version": "1.12",
+    "description": "Scales damage based on hit body parts and applies other tweaks for realistic combat.",
+    "version": "1.13",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticdamage.zip",
     "source": "https://liliaframework.github.io/Modules/realisticdamage.html",
     "public_uniqueID": "realisticdamage",
-    "features": [
-      "Adds damage scaling by body part",
-      "Adds custom multipliers for realism",
-      "Adds adjustments to player damage output",
-      "Adds bleeding effects on high damage",
-      "Adds friendly fire scaling options"
-    ],
+    "features": [],
     "workshop": []
   },
   {
@@ -819,18 +747,12 @@
     "name": "Shoot Locks",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Lets players blast door locks open with gunfire. Success chances and noise radius are configurable, making it a risky breach option.",
-    "version": "1.15",
+    "description": "Lets players blast door locks open with gunfire. Success chances are configurable, making it a risky breach option.",
+    "version": "1.16",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/shootlock.zip",
     "source": "https://liliaframework.github.io/Modules/shootlock.html",
     "public_uniqueID": "shootlock",
-    "features": [
-      "Adds the ability to shoot door locks to open them",
-      "Adds a quick breach alternative",
-      "Adds a loud action that may alert others",
-      "Adds chance-based lock destruction",
-      "Adds configurable noise radius"
-    ],
+    "features": [],
     "workshop": []
   },
   {
@@ -949,18 +871,12 @@
     "name": "View Bobbing",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Applies subtle camera bobbing while you move to enhance immersion. Intensity and frequency are fully adjustable.",
-    "version": "1.16",
+    "description": "Applies subtle camera bobbing while you move to enhance immersion. Intensity and frequency are adjustable through options.",
+    "version": "1.17",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/viewbob.zip",
     "source": "https://liliaframework.github.io/Modules/viewbob.html",
     "public_uniqueID": "viewbob",
-    "features": [
-      "Adds camera bobbing while moving",
-      "Adds adjustable intensity",
-      "Adds enhanced immersion",
-      "Adds toggle to disable bobbing in vehicles",
-      "Adds configuration for bobbing frequency"
-    ],
+    "features": [],
     "workshop": []
   },
   {
@@ -1041,18 +957,12 @@
     "name": "Word Filter",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Monitors chat for banned words using a customizable blacklist. Regex support and admin commands make managing filters easy.",
-    "version": "1.17",
+    "description": "Monitors chat for banned words using a customizable blacklist. Admin commands make managing filters easy.",
+    "version": "1.18",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wordfilter.zip",
     "source": "https://liliaframework.github.io/Modules/wordfilter.html",
     "public_uniqueID": "wordfilter",
-    "features": [
-      "Adds chat word filtering",
-      "Adds blocking of banned phrases",
-      "Adds an easy-to-extend list",
-      "Adds regex support for advanced filters",
-      "Adds admin commands to modify the list"
-    ],
+    "features": [],
     "workshop": []
   }
 ]

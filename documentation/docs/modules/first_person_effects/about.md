@@ -4,20 +4,11 @@
 First Person Effects
 
 **Version:**
-1.13
+1.14
 
 **Description:**
 
 Adds subtle head bob and view sway to the camera for a more immersive first-person feel. Intensity can be tuned or disabled altogether.
-
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
-
-- Adds head bob and view sway
-- Adds camera motion synced to actions
-- Adds a realistic first-person feel
-- Adds adjustable intensity via config
-- Adds compatibility with vehicle seats
-
 
 
 
