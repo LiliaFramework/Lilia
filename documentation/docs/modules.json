@@ -464,7 +464,7 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds optional HUD widgets like an FPS counter and performance stats. The system is extensible so other modules can display their own info.",
-    "version": "1.21",
+    "version": "1.22",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hud_extras.zip",
     "source": "https://liliaframework.github.io/Modules/hud_extras.html",
     "public_uniqueID": "hud_extras",
