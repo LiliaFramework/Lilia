@@ -936,24 +936,6 @@
     ]
   },
   {
-    "name": "Whitelist",
-    "author": "Samael",
-    "discord": "@liliaplayer",
-    "description": "Controls server access through a whitelist. Players can submit signups and admins manage entries with dedicated commands.",
-    "version": "1.16",
-    "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/whitelist.zip",
-    "source": "https://liliaframework.github.io/Modules/whitelist.html",
-    "public_uniqueID": "whitelist",
-    "features": [
-      "Adds a server access whitelist",
-      "Adds toggleable player signups",
-      "Adds a public module for gating entry",
-      "Adds admin commands to manage the list",
-      "Adds notifications on join attempt"
-    ],
-    "workshop": []
-  },
-  {
     "name": "Word Filter",
     "author": "Samael",
     "discord": "@liliaplayer",
