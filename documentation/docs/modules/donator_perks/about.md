@@ -4,7 +4,7 @@
 Donator Perks
 
 **Version:**
-1.26
+1.27
 
 **Description:**
 

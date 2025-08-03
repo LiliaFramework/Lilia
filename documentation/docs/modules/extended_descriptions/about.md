@@ -4,7 +4,7 @@
 Extended Descriptions
 
 **Version:**
-1.23
+1.24
 
 **Description:**
 
