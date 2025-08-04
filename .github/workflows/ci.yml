@@ -52,6 +52,7 @@ jobs:
             --no-max-cyclomatic-complexity
 
   compute-version:
+    if: github.repository == 'LiliaFramework/Lilia'
     needs: linter
     runs-on: ubuntu-latest
     outputs:
@@ -78,8 +79,8 @@ jobs:
           echo "valid_count=$VALID_COUNT" >> "$GITHUB_OUTPUT"
 
   update-shared-version:
+    if: github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main'
     needs: compute-version
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.compute-version.outputs.version }}
@@ -115,10 +116,10 @@ jobs:
           git push origin HEAD:main
 
   release:
+    if: github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main'
     needs:
       - compute-version
       - update-shared-version
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.compute-version.outputs.version }}
@@ -232,10 +233,10 @@ jobs:
           exit 1
 
   deploy-pages:
+    if: github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main'
     needs:
       - compute-version
       - release
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.compute-version.outputs.version }}
