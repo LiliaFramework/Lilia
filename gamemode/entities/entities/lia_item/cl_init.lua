@@ -17,10 +17,9 @@ function ENT:onDrawEntityInfo(alpha)
     item.entity, item.data = self, self:getNetVar("data") or oldD
     local pos = toScreen(self:LocalToWorld(self:OBBCenter()))
     local x, y = pos.x, pos.y
-    local name = L(item.getName and item:getName() or item.name)
     surface.SetFont("liaHugeText")
-    local tw, th = surface.GetTextSize(name)
-    draw.SimpleText(name, "liaHugeText", x, y, ColorAlpha(lia.config.get("Color"), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    local tw, th = surface.GetTextSize(L(item.getName and item:getName() or item.name))
+    draw.SimpleText(L(item.getName and item:getName() or item.name), "liaHugeText", x, y, ColorAlpha(lia.config.get("Color"), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     y = y + th + 80
     local desc = item:getDesc()
     self:computeDescMarkup("<font=liaMediumFont>" .. desc .. "</font>", tw)

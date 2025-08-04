@@ -55,7 +55,7 @@ end
 
 function PANEL:hideExternalEntities()
     self.hiddenEntities = {}
-    for _, ent in ipairs(ents.GetAll()) do
+    for _, ent in ents.Iterator() do
         if ent ~= self.modelEntity and not ent:IsWorld() and not ent:CreatedByMap() then
             self.hiddenEntities[ent] = ent:GetNoDraw()
             ent:SetNoDraw(true)
@@ -149,7 +149,7 @@ function PANEL:createStartButton()
     if hook.Run("CanPlayerCreateChar", client) ~= false then
         table.insert(buttonsData, {
             id = "create",
-            text = L("createCharacter"),
+            text = L("create") .. " " .. L("character"),
             doClick = function()
                 for _, b in pairs(self.buttons) do
                     if IsValid(b) then b:Remove() end
@@ -198,6 +198,22 @@ function PANEL:createStartButton()
             doClick = function()
                 self:clickSound()
                 gui.OpenURL(workshopURL)
+            end
+        })
+    end
+
+    if lia.workshop and lia.workshop.hasContentToDownload and lia.workshop.hasContentToDownload() then
+        table.insert(buttonsData, {
+            id = "mount",
+            text = L("mountContent"),
+            doClick = function()
+                self:clickSound()
+                if lia.workshop and lia.workshop.mountContent then
+                    lia.workshop.mountContent()
+                else
+                    net.Start("WorkshopDownloader_Request")
+                    net.SendToServer()
+                end
             end
         })
     end
@@ -262,11 +278,10 @@ end
 
 function PANEL:addTab(name, callback, justClick, height)
     local btn = self.tabs:Add("liaMediumButton")
-    local label = L(name):upper()
     surface.SetFont(btn:GetFont())
-    local textW, textH = surface.GetTextSize(label)
+    local textW, textH = surface.GetTextSize(L(name):upper())
     btn:SetWide(textW + 40)
-    btn:SetText(label)
+    btn:SetText(L(name):upper())
     btn:SetTall(height or textH + 20)
     if justClick then
         if isfunction(callback) then btn.DoClick = function() callback(self) end end
@@ -285,6 +300,7 @@ end
 
 function PANEL:backToMainMenu()
     self:clickSound()
+    if IsValid(lia.gui.charConfirm) then lia.gui.charConfirm:Remove() end
     if IsValid(self.infoFrame) then self.infoFrame:Remove() end
     if IsValid(self.leftArrow) then
         self.leftArrow:Remove()
@@ -387,7 +403,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         end
     end
 
-    local info = {L("name") .. ": " .. (character:getName() or ""), L("desc") .. ":", character:getDesc() or "", L("faction") .. ": " .. (team.GetName(character:getFaction()) or "")}
+    local info = {L("name") .. ": " .. (character:getName() or ""), L("description") .. ":", character:getDesc() or "", L("faction") .. ": " .. (team.GetName(character:getFaction()) or "")}
     if character:getClass() then
         local cls = lia.class.list[character:getClass()]
         if cls and cls.name then table.insert(info, L("class") .. ": " .. cls.name) end
@@ -478,35 +494,36 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     local pad = 10
     local cx = fx + (fw - bw) * 0.5
     local clientChar = LocalPlayer().getChar and LocalPlayer():getChar()
-    local selectText = L("selectCharacter")
+    local selectText = L("select") .. " " .. L("character")
     if clientChar and character:getID() == clientChar:getID() then
         selectText = L("alreadyUsingCharacter")
-    elseif character:getData("banned") then
-        selectText = L("bannedCharacter")
+    elseif character:isBanned() then
+        selectText = L("permaKilledCharacter")
     end
 
     self.selectBtn = self:Add("liaSmallButton")
     self.selectBtn:SetSize(bw, bh)
     self.selectBtn:SetPos(cx, fy + fh + pad)
     self.selectBtn:SetText(selectText)
-    if clientChar and character:getID() == clientChar:getID() or character:getData("banned") then
+    if clientChar and character:getID() == clientChar:getID() then
         self.selectBtn:SetEnabled(false)
         self.selectBtn:SetTextColor(Color(255, 255, 255))
     end
 
     self.selectBtn.DoClick = function()
-        lia.module.list["mainmenu"]:chooseCharacter(character:getID()):catch(function(err)
-            if err and err ~= "" then
-                LocalPlayer():notifyLocalized(err)
-            end
-        end)
-        self:Remove()
+        if character:isBanned() then
+            local characterName = character:getName()
+            Derma_Query("Your character: " .. characterName .. ", has been permanently killed. An administrator has approved this PK.\nPKs are a regular part of RP; you can always make a new character. Have fun!", "Permanent Kill", "I aknowledge.", function() end)
+        else
+            lia.module.list["mainmenu"]:chooseCharacter(character:getID()):catch(function(err) if err and err ~= "" then LocalPlayer():notifyLocalized(err) end end)
+            self:Remove()
+        end
     end
 
     self.deleteBtn = self:Add("liaSmallButton")
     self.deleteBtn:SetSize(bw, bh)
     self.deleteBtn:SetPos(cx, fy + fh + pad + bh + pad)
-    self.deleteBtn:SetText(L("deleteCharacter"))
+    self.deleteBtn:SetText(L("delete") .. " " .. L("character"))
     self.deleteBtn.DoClick = function()
         if hook.Run("CanDeleteChar", character:getID()) == false then
             LocalPlayer():notifyLocalized("cannotDeleteChar")
@@ -523,14 +540,12 @@ function PANEL:updateModelEntity(character)
     local model = character.getModel and character:getModel() or LocalPlayer():GetModel()
     self.modelEntity = ClientsideModel(model, RENDERGROUP_OPAQUE)
     if not IsValid(self.modelEntity) then return end
-    self.modelEntity:SetSkin(character:getData("skin", 0))
-    local groups = character:getData("groups", {})
+    self.modelEntity:SetSkin(character:getSkin())
+    local groups = character:getBodygroups()
     for i = 0, self.modelEntity:GetNumBodyGroups() - 1 do
         local value = groups[i]
         if value == nil then value = groups[tostring(i)] end
-        if value ~= nil then
-            self.modelEntity:SetBodygroup(i, tonumber(value) or 0)
-        end
+        if value ~= nil then self.modelEntity:SetBodygroup(i, tonumber(value) or 0) end
     end
 
     hook.Run("SetupPlayerModel", self.modelEntity, character)

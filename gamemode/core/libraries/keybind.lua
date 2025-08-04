@@ -203,106 +203,105 @@ end)
 hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
     local function buildKeybinds(parent)
         parent:Clear()
-        local container = parent:Add("DPanel")
-        container:Dock(FILL)
         local allowEdit = lia.config.get("AllowKeybindEditing", true)
-        local searchEntry, scroll
-        local function populateRows(filter)
-            scroll:Clear()
-            if not istable(lia.keybind.stored) then return end
-            local taken = {}
-            for action, data in pairs(lia.keybind.stored) do
-                if istable(data) and data.value then taken[data.value] = action end
-            end
+        local sheet = parent:Add("liaSheet")
+        sheet:Dock(FILL)
+        sheet:SetPlaceholderText(L("searchKeybinds"))
+        sheet:SetSpacing(4)
+        sheet:SetPadding(4)
 
-            local sortedActions = {}
-            for action, data in pairs(lia.keybind.stored) do
-                if istable(data) and (filter == "" or tostring(action):lower():find(filter, 1, true)) then sortedActions[#sortedActions + 1] = action end
-            end
+        local taken = {}
+        for action, data in pairs(lia.keybind.stored) do
+            if istable(data) and data.value then taken[data.value] = action end
+        end
 
-            table.sort(sortedActions, function(a, b)
-                local la, lb = #tostring(a), #tostring(b)
-                if la == lb then return tostring(a) < tostring(b) end
-                return la < lb
-            end)
+        local sortedActions = {}
+        for action, data in pairs(lia.keybind.stored) do
+            if istable(data) then sortedActions[#sortedActions + 1] = action end
+        end
 
-            for _, action in ipairs(sortedActions) do
-                local data = lia.keybind.stored[action]
-                local row = scroll:Add("DPanel")
-                row:Dock(TOP)
-                row:DockMargin(4, 4, 4, 4)
-                row:SetTall(50)
-                local lbl = row:Add("DLabel")
-                lbl:Dock(FILL)
-                lbl:SetFont("liaBigFont")
-                lbl:SetText(action)
-                local currentKey = lia.keybind.get(action, KEY_NONE)
-                if allowEdit then
-                    local combo = row:Add("DComboBox")
-                    combo:Dock(RIGHT)
-                    combo:SetWide(200)
-                    combo:SetFont("liaMediumFont")
-                    combo:SetValue(input.GetKeyName(currentKey) or "NONE")
-                    local choices = {}
-                    for name, code in pairs(KeybindKeys) do
-                        if not taken[code] or code == currentKey then
-                            choices[#choices + 1] = {
-                                txt = input.GetKeyName(code) or name,
-                                keycode = code
-                            }
-                        end
+        table.sort(sortedActions, function(a, b)
+            local la, lb = #tostring(a), #tostring(b)
+            if la == lb then return tostring(a) < tostring(b) end
+            return la < lb
+        end)
+
+        for _, action in ipairs(sortedActions) do
+            local data = lia.keybind.stored[action]
+            local rowPanel = vgui.Create("DPanel")
+            rowPanel:SetTall(50)
+            rowPanel:DockPadding(4, 4, 4, 4)
+            rowPanel.Paint = nil
+
+            local lbl = rowPanel:Add("DLabel")
+            lbl:Dock(FILL)
+            lbl:SetFont("liaBigFont")
+            lbl:SetText(L(action))
+
+            local currentKey = lia.keybind.get(action, KEY_NONE)
+            if allowEdit then
+                local combo = rowPanel:Add("DComboBox")
+                combo:Dock(RIGHT)
+                combo:SetWide(200)
+                combo:SetFont("liaMediumFont")
+                combo:SetValue(input.GetKeyName(currentKey) or "NONE")
+                local choices = {}
+                for name, code in pairs(KeybindKeys) do
+                    if not taken[code] or code == currentKey then
+                        choices[#choices + 1] = {txt = input.GetKeyName(code) or name, keycode = code}
                     end
-
-                    table.sort(choices, function(a, b) return a.txt < b.txt end)
-                    for _, c in ipairs(choices) do
-                        combo:AddChoice(c.txt, c.keycode)
-                    end
-
-                    combo.OnSelect = function(_, _, _, newKey)
-                        if not newKey then return end
-                        for tk, tv in pairs(taken) do
-                            if tk == newKey and tv ~= action then
-                                combo:SetValue(input.GetKeyName(currentKey) or "NONE")
-                                return
-                            end
-                        end
-
-                        taken[currentKey] = nil
-                        if lia.keybind.stored[currentKey] == action then lia.keybind.stored[currentKey] = nil end
-                        data.value = newKey
-                        lia.keybind.stored[newKey] = action
-                        taken[newKey] = action
-                        lia.keybind.save()
-                        currentKey = newKey
-                    end
-
-                    local unbindButton = row:Add("DButton")
-                    unbindButton:Dock(RIGHT)
-                    unbindButton:SetWide(100)
-                    unbindButton:SetFont("liaMediumFont")
-                    unbindButton:SetText(L("unbind"):upper())
-                    unbindButton.DoClick = function()
-                        taken[currentKey] = nil
-                        if lia.keybind.stored[currentKey] == action then lia.keybind.stored[currentKey] = nil end
-                        data.value = KEY_NONE
-                        lia.keybind.stored[KEY_NONE] = action
-                        lia.keybind.save()
-                        combo:SetValue(input.GetKeyName(KEY_NONE) or "NONE")
-                        currentKey = KEY_NONE
-                    end
-                else
-                    local textLabel = row:Add("DLabel")
-                    textLabel:Dock(FILL)
-                    textLabel:SetFont("liaBigFont")
-                    textLabel:SetText(input.GetKeyName(currentKey) or "NONE")
                 end
+
+                table.sort(choices, function(a, b) return a.txt < b.txt end)
+                for _, c in ipairs(choices) do
+                    combo:AddChoice(c.txt, c.keycode)
+                end
+
+                combo.OnSelect = function(_, _, _, newKey)
+                    if not newKey then return end
+                    for tk, tv in pairs(taken) do
+                        if tk == newKey and tv ~= action then
+                            combo:SetValue(input.GetKeyName(currentKey) or "NONE")
+                            return
+                        end
+                    end
+
+                    taken[currentKey] = nil
+                    if lia.keybind.stored[currentKey] == action then lia.keybind.stored[currentKey] = nil end
+                    data.value = newKey
+                    lia.keybind.stored[newKey] = action
+                    taken[newKey] = action
+                    lia.keybind.save()
+                    currentKey = newKey
+                end
+
+                local unbindButton = rowPanel:Add("DButton")
+                unbindButton:Dock(RIGHT)
+                unbindButton:SetWide(100)
+                unbindButton:SetFont("liaMediumFont")
+                unbindButton:SetText(L("unbind"):upper())
+                unbindButton.DoClick = function()
+                    taken[currentKey] = nil
+                    if lia.keybind.stored[currentKey] == action then lia.keybind.stored[currentKey] = nil end
+                    data.value = KEY_NONE
+                    lia.keybind.stored[KEY_NONE] = action
+                    lia.keybind.save()
+                    combo:SetValue(input.GetKeyName(KEY_NONE) or "NONE")
+                    currentKey = KEY_NONE
+                end
+            else
+                local textLabel = rowPanel:Add("DLabel")
+                textLabel:Dock(RIGHT)
+                textLabel:SetFont("liaBigFont")
+                textLabel:SetText(input.GetKeyName(currentKey) or "NONE")
             end
+
+            sheet:AddPanelRow(rowPanel, {height = 50, filterText = tostring(action):lower()})
         end
 
         if allowEdit then
-            local resetAllBtn = container:Add("DButton")
-            resetAllBtn:Dock(TOP)
-            resetAllBtn:SetTall(30)
+            local resetAllBtn = vgui.Create("liaMediumButton")
+            resetAllBtn:SetTall(40)
             resetAllBtn:SetText(L("resetAllKeybinds"))
             resetAllBtn.DoClick = function()
                 for action, data in pairs(lia.keybind.stored) do
@@ -314,18 +313,10 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
                 end
 
                 lia.keybind.save()
-                populateRows(searchEntry:GetValue():lower())
+                buildKeybinds(parent)
             end
+            sheet:AddPanelRow(resetAllBtn, {height = 40})
         end
-
-        searchEntry = container:Add("DTextEntry")
-        searchEntry:Dock(TOP)
-        searchEntry:SetTall(30)
-        searchEntry:SetPlaceholderText(L("searchKeybinds"))
-        searchEntry.OnTextChanged = function() populateRows(searchEntry:GetValue():lower()) end
-        scroll = container:Add("DScrollPanel")
-        scroll:Dock(FILL)
-        populateRows("")
     end
 
     pages[#pages + 1] = {
@@ -334,198 +325,9 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
     }
 end)
 
-lia.keybind.add(KEY_NONE, "Open Inventory", function()
+lia.keybind.add(KEY_NONE, L("Open Inventory"), function()
     local f1Menu = vgui.Create("liaMenu")
     f1Menu:setActiveTab(L("inv"))
 end)
 
-lia.keybind.add(KEY_NONE, "Admin Mode", function() lia.command.send("adminmode") end)
-lia.keybind.add(KEY_NONE, "Open Classes Menu", function()
-    local client = LocalPlayer()
-    if not client:getChar() or vgui.CursorVisible() then return end
-    if IsValid(lia.gui.classesFrame) then
-        lia.gui.classesFrame:Close()
-        return
-    end
-
-    local frame = vgui.Create("DFrame")
-    frame:SetSize(ScrW() * 0.9, ScrH() * 0.9)
-    frame:Center()
-    frame:SetTitle(L("classes"))
-    frame:MakePopup()
-    frame:SetDeleteOnClose(true)
-    frame:DockPadding(0, 24, 0, 0)
-    local sidebar = vgui.Create("DScrollPanel", frame)
-    sidebar:Dock(LEFT)
-    sidebar:SetWide(200)
-    sidebar:DockMargin(20, 20, 0, 20)
-    local mainContent = vgui.Create("DScrollPanel", frame)
-    mainContent:Dock(FILL)
-    mainContent:DockMargin(10, 10, 10, 10)
-    local tabButtons = {}
-    local function addJoinButton(parent, data, canBe)
-        local char = client:getChar()
-        local isCurrent = char and char:getClass() == data.index
-        local btn = parent:Add("liaMediumButton")
-        btn:SetText(isCurrent and L("alreadyInClass") or canBe and L("joinClass") or L("classRequirementsNotMet"))
-        btn:SetTall(40)
-        btn:SetTextColor(lia.color.ReturnMainAdjustedColors().text)
-        btn:SetFont("liaMediumFont")
-        btn:SetExpensiveShadow(1, Color(0, 0, 0, 100))
-        btn:SetContentAlignment(5)
-        btn:Dock(BOTTOM)
-        btn:DockMargin(10, 10, 10, 10)
-        btn:SetDisabled(isCurrent or not canBe)
-        btn.DoClick = function()
-            if canBe and not isCurrent then
-                lia.command.send("beclass", data.index)
-                frame:Close()
-            end
-        end
-    end
-
-    local function addClassDetails(parent, data)
-        local maxH, maxA, maxJ = client:GetMaxHealth(), client:GetMaxArmor(), client:GetJumpPower()
-        local runSpeed, walkSpeed = lia.config.get("RunSpeed"), lia.config.get("WalkSpeed")
-        local function addLine(t)
-            local lbl = parent:Add("DLabel")
-            lbl:SetFont("liaMediumFont")
-            lbl:SetText(t)
-            lbl:SetTextColor(color_white)
-            lbl:SetWrap(true)
-            lbl:Dock(TOP)
-            lbl:DockMargin(10, 10, 10, 10)
-        end
-
-        addLine(L("name") .. ": " .. (data.name or L("unnamed")))
-        addLine(L("desc") .. ": " .. (data.desc or L("noDesc")))
-        addLine(L("faction") .. ": " .. (team.GetName(data.faction) or L("none")))
-        addLine(L("isDefaultLabel") .. ": " .. (data.isDefault and L("yes") or L("no")))
-        addLine(L("baseHealth") .. ": " .. tostring(data.health or maxH))
-        addLine(L("baseArmor") .. ": " .. tostring(data.armor or maxA))
-        local weapons = data.weapons or {}
-        addLine(L("weapons") .. ": " .. (#weapons > 0 and table.concat(weapons, ", ") or L("none")))
-        addLine(L("modelScale") .. ": " .. tostring(data.scale or 1))
-        local rs = data.runSpeedMultiplier and math.Round(runSpeed * data.runSpeed) or data.runSpeed or runSpeed
-        addLine(L("runSpeed") .. ": " .. tostring(rs))
-        local ws = data.walkSpeedMultiplier and math.Round(walkSpeed * data.walkSpeed) or data.walkSpeed or walkSpeed
-        addLine(L("walkSpeed") .. ": " .. tostring(ws))
-        local jp = data.jumpPowerMultiplier and math.Round(maxJ * data.jumpPower) or data.jumpPower or maxJ
-        addLine(L("jumpPower") .. ": " .. tostring(jp))
-        local bloodMap = {
-            [-1] = L("bloodNo"),
-            [0] = L("bloodRed"),
-            [1] = L("bloodYellow"),
-            [2] = L("bloodGreenRed"),
-            [3] = L("bloodSparks"),
-            [4] = L("bloodAntlion"),
-            [5] = L("bloodZombie"),
-            [6] = L("bloodAntlionBright")
-        }
-
-        addLine(L("bloodColor") .. ": " .. (bloodMap[data.bloodcolor] or L("bloodRed")))
-        if data.requirements then
-            local req = istable(data.requirements) and table.concat(data.requirements, ", ") or tostring(data.requirements)
-            addLine(L("requirements") .. ": " .. req)
-        end
-    end
-
-    local function createModelPanel(parent, data)
-        local sizeX, sizeY = 300, 600
-        local mdl = parent:Add("liaModelPanel")
-        mdl:SetScaledSize(sizeX, sizeY)
-        mdl:SetFOV(35)
-        local function getModel(model)
-            if isstring(model) then return model end
-            if istable(model) then
-                local models = {}
-                local function gather(tbl)
-                    for _, v in pairs(tbl) do
-                        if isstring(v) then
-                            models[#models + 1] = v
-                        elseif istable(v) then
-                            gather(v)
-                        end
-                    end
-                end
-
-                gather(model)
-                if #models > 0 then return models[math.random(#models)] end
-            end
-        end
-
-        local path = getModel(data.model) or client:GetModel()
-        mdl:SetModel(path)
-        mdl.rotationAngle = 45
-        local ent = mdl.Entity
-        if IsValid(ent) then
-            ent:SetSkin(data.skin or 0)
-            for _, bg in ipairs(data.bodyGroups or {}) do
-                ent:SetBodygroup(bg.id, bg.value or 0)
-            end
-
-            for i, mat in ipairs(data.subMaterials or {}) do
-                ent:SetSubMaterial(i - 1, mat)
-            end
-        end
-
-        mdl.Think = function()
-            if IsValid(ent) then
-                mdl:SetPos(parent:GetWide() - sizeX - 10, 100)
-                if input.IsKeyDown(KEY_A) then
-                    mdl.rotationAngle = mdl.rotationAngle - 0.5
-                elseif input.IsKeyDown(KEY_D) then
-                    mdl.rotationAngle = mdl.rotationAngle + 0.5
-                end
-
-                ent:SetAngles(Angle(0, mdl.rotationAngle, 0))
-            end
-        end
-    end
-
-    local function loadClasses()
-        sidebar:Clear()
-        tabButtons = {}
-        mainContent:Clear()
-        local list = {}
-        for _, c in pairs(lia.class.list) do
-            if c.faction == client:Team() then list[#list + 1] = c end
-        end
-
-        table.sort(list, function(a, b) return a.name < b.name end)
-        for _, data in ipairs(list) do
-            local canBe = lia.class.canBe(client, data.index)
-            local btn = sidebar:Add("liaMediumButton")
-            btn:SetText(data.name or L("unnamed"))
-            btn:SetTall(50)
-            btn:Dock(TOP)
-            btn:DockMargin(0, 0, 10, 20)
-            btn.DoClick = function()
-                for _, b in ipairs(tabButtons) do
-                    b:SetSelected(b == btn)
-                end
-
-                mainContent:Clear()
-                local container = mainContent:Add("DPanel")
-                container:Dock(TOP)
-                container:DockMargin(10, 10, 10, 10)
-                container:SetTall(ScrH() * 0.8)
-                if data.logo then
-                    local img = container:Add("DImage")
-                    img:SetImage(data.logo)
-                    img:SetScaledSize(128, 128)
-                    img.Think = function() img:SetPos(container:GetWide() - img:GetWide() - 10, 10) end
-                end
-
-                createModelPanel(container, data)
-                addClassDetails(container, data)
-                addJoinButton(container, data, canBe)
-            end
-
-            tabButtons[#tabButtons + 1] = btn
-        end
-    end
-
-    lia.gui.classesFrame = frame
-    loadClasses()
-end)
+lia.keybind.add(KEY_NONE, L("Admin Mode"), function() lia.command.send("adminmode") end)

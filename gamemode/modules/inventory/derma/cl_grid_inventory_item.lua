@@ -46,7 +46,7 @@ function PANEL:setItemType(itemTypeOrID)
         self.itemType = itemTypeOrID
     end
 
-    assert(item, "invalid item type or ID " .. tostring(item))
+    assert(item, L("invalidItemTypeOrID", tostring(item)))
     self.liaToolTip = true
     self.itemTable = item
     self:SetModel(item:getModel(), item:getSkin())

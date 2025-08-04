@@ -195,7 +195,7 @@ do
             if not k then continue end
             tv = sub(str, index, index)
             index = index + 1
-            if not self[tv] then print(L('invalidNetType', tv)) end
+            if not self[tv] then lia.error("did not find type: " .. tv) end
             index, v = self[tv](self, index, str, cache)
             cur[k] = v
         end
@@ -423,44 +423,4 @@ else
 
         NS_DS_NAME, NS_DS_DATA, NS_DS_LENGTH = nil, nil, nil
     end)
-end
-
-local function NetworkStringToID(str)
-    local id = NetworkStringToIDCache[str]
-    if id then return id end
-    id = util.NetworkStringToID(str)
-    if SERVER and id == 0 then id = util.AddNetworkString(str) end
-    if id ~= 0 then
-        NetworkStringToIDCache[str] = id
-        return id
-    end
-end
-
-local NetReceiverByID = {}
-function net.Receive(name, func)
-    local id = NetworkStringToID(name)
-    if id then NetReceiverByID[id] = func end
-    net.Receivers[name:lower()] = func
-end
-
-function net.Incoming(len, client)
-    local i = net.ReadHeader()
-    local func = NetReceiverByID[i]
-    if not func then
-        local str = util.NetworkIDToString(i)
-        if not str then return end
-        func = net.Receivers[str:lower()]
-        if not func then return end
-        NetReceiverByID[i] = func
-    end
-
-    func(len - 16, client)
-end
-
-if SERVER then
-    local BaseNetStart = net.Start
-    function net.Start(messageName, unreliable)
-        NetworkStringToID(messageName)
-        return BaseNetStart(messageName, unreliable)
-    end
 end

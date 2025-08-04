@@ -39,7 +39,7 @@ function MODULE:PlayerSpawnedProp(client, model, entity)
             if isfunction(data.OnSpawn) then data.OnSpawn(storage) end
         end
     end, function(err)
-        lia.error("Unable to create storage entity for " .. client:Name() .. "\n" .. err .. "\n")
+        lia.error(L("unableCreateStorageEntity", client:Name(), err))
         if IsValid(storage) then SafeRemoveEntity(storage) end
     end)
 
@@ -48,7 +48,7 @@ end
 
 function MODULE:CanPlayerSpawnStorage(client, _, info)
     if not client then return true end
-    if not client:hasPrivilege("Staff Permissions - Can Spawn Storage") then return false end
+    if not client:hasPrivilege("Can Spawn Storage") then return false end
     if not info.invType or not lia.inventory.types[info.invType] then return false end
 end
 

@@ -1,10 +1,11 @@
-﻿MODULE.name = "Protection"
+MODULE.name = L("protection")
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Adds anti-cheat and anti-exploit protections along with monitoring tools to keep the gameplay environment fair."
-MODULE.CAMIPrivileges = {
+MODULE.desc = L("moduleProtectionDesc")
+MODULE.Privileges = {
     {
-        Name = "Staff Permissions - Can See Alting Notifications",
-        MinAccess = "admin"
+        Name = L("canSeeAltingNotifications"),
+        MinAccess = "admin",
+        Category = L("protection"),
     },
 }

@@ -1,4 +1,5 @@
-﻿net.Receive("ViewClaims", function(_, client)
+﻿local MODULE = MODULE
+net.Receive("ViewClaims", function(_, client)
     local sid = net.ReadString()
     MODULE:GetAllCaseClaims():next(function(caseclaims)
         net.Start("ViewClaims")
@@ -15,9 +16,9 @@ net.Receive("TicketSystemClaim", function(_, client)
         return
     end
 
-    if (client:hasPrivilege("Staff Permissions - Always See Tickets") or client:isStaffOnDuty()) and not requester.CaseClaimed then
+    if (client:hasPrivilege(L("alwaysSeeTickets")) or client:isStaffOnDuty()) and not requester.CaseClaimed then
         for _, v in player.Iterator() do
-            if v:hasPrivilege("Staff Permissions - Always See Tickets") or v:isStaffOnDuty() then
+            if v:hasPrivilege(L("alwaysSeeTickets")) or v:isStaffOnDuty() then
                 net.Start("TicketSystemClaim")
                 net.WriteEntity(client)
                 net.WriteEntity(requester)
@@ -27,6 +28,8 @@ net.Receive("TicketSystemClaim", function(_, client)
 
         hook.Run("TicketSystemClaim", client, requester)
         requester.CaseClaimed = client
+        local t = MODULE.ActiveTickets[requester:SteamID()]
+        if t then t.admin = client:SteamID() end
     end
 end)
 
@@ -38,9 +41,9 @@ net.Receive("TicketSystemClose", function(_, client)
     end
 
     if not requester or not IsValid(requester) or requester.CaseClaimed ~= client then return end
-    if timer.Exists("ticketsystem-" .. requester:SteamID64()) then timer.Remove("ticketsystem-" .. requester:SteamID64()) end
+    if timer.Exists("ticketsystem-" .. requester:SteamID()) then timer.Remove("ticketsystem-" .. requester:SteamID()) end
     for _, v in player.Iterator() do
-        if v:hasPrivilege("Staff Permissions - Always See Tickets") or v:isStaffOnDuty() then
+        if v:hasPrivilege(L("alwaysSeeTickets")) or v:isStaffOnDuty() then
             net.Start("TicketSystemClose")
             net.WriteEntity(requester)
             net.Send(v)
@@ -49,4 +52,23 @@ net.Receive("TicketSystemClose", function(_, client)
 
     hook.Run("TicketSystemClose", client, requester)
     requester.CaseClaimed = nil
+    MODULE.ActiveTickets[requester:SteamID()] = nil
+end)
+
+net.Receive("liaRequestActiveTickets", function(_, client)
+    if not (client:hasPrivilege(L("alwaysSeeTickets")) or client:isStaffOnDuty()) then return end
+    lia.db.select({"timestamp", "requesterSteamID", "adminSteamID", "message"}, "ticketclaims"):next(function(res)
+        local tickets = {}
+        for _, row in ipairs(res.results or {}) do
+            tickets[#tickets + 1] = {
+                requester = row.requesterSteamID,
+                timestamp = isnumber(row.timestamp) and row.timestamp or os.time(lia.time.toNumber(row.timestamp)),
+                admin = row.adminSteamID,
+                message = row.message,
+            }
+        end
+        net.Start("liaActiveTickets")
+        net.WriteTable(tickets)
+        net.Send(client)
+    end)
 end)

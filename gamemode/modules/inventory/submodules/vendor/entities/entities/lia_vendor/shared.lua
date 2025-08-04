@@ -11,7 +11,7 @@ ENT.DrawEntityInfo = true
 ENT.IsPersistent = true
 function ENT:setupVars()
     if SERVER then
-        self:setNetVar("name", "Jane Doe")
+        self:setNetVar("name", L("vendorDefaultName"))
         self:setNetVar("preset", "none")
         self.receivers = {}
     end

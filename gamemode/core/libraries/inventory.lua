@@ -42,9 +42,9 @@ function lia.inventory.new(typeID)
 end
 
 if SERVER then
-    local INV_FIELDS = {"_invID", "_invType", "_charID"}
+    local INV_FIELDS = {"invID", "_invType", "charID"}
     local INV_TABLE = "inventories"
-    local DATA_FIELDS = {"_key", "_value"}
+    local DATA_FIELDS = {"key", "value"}
     local DATA_TABLE = "invdata"
     local ITEMS_TABLE = "items"
     function lia.inventory.loadByID(id, noCache)
@@ -63,19 +63,19 @@ if SERVER then
             end
         end
 
-        assert(isnumber(id) and id >= 0, "No inventories implement loadFromStorage for ID " .. tostring(id))
+        assert(isnumber(id) and id >= 0, L("noInventoryLoader", tostring(id)))
         return lia.inventory.loadFromDefaultStorage(id, noCache)
     end
 
     function lia.inventory.loadFromDefaultStorage(id, noCache)
-        return deferred.all({lia.db.select(INV_FIELDS, INV_TABLE, "_invID = " .. id, 1), lia.db.select(DATA_FIELDS, DATA_TABLE, "_invID = " .. id)}):next(function(res)
+        return deferred.all({lia.db.select(INV_FIELDS, INV_TABLE, "invID = " .. id, 1), lia.db.select(DATA_FIELDS, DATA_TABLE, "invID = " .. id)}):next(function(res)
             if lia.inventory.instances[id] and not noCache then return lia.inventory.instances[id] end
             local results = res[1].results and res[1].results[1] or nil
             if not results then return end
             local typeID = results._invType
             local invType = lia.inventory.types[typeID]
             if not invType then
-                lia.error("Inventory " .. id .. " has invalid type " .. typeID .. "\n")
+                lia.error(L("inventoryInvalidType", id, typeID))
                 return
             end
 
@@ -83,11 +83,11 @@ if SERVER then
             instance.id = id
             instance.data = {}
             for _, row in ipairs(res[2].results or {}) do
-                local decoded = util.JSONToTable(row._value)
-                instance.data[row._key] = decoded and decoded[1] or nil
+                local decoded = util.JSONToTable(row.value)
+                instance.data[row.key] = decoded and decoded[1] or nil
             end
 
-            instance.data.char = tonumber(results._charID) or instance.data.char
+            instance.data.char = tonumber(results.charID) or instance.data.char
             lia.inventory.instances[id] = instance
             instance:onLoaded()
             return instance:loadItems():next(function() return instance end)
@@ -114,13 +114,13 @@ if SERVER then
 
     function lia.inventory.loadAllFromCharID(charID)
         assert(isnumber(charID), "charID must be a number")
-        return lia.db.select({"_invID"}, INV_TABLE, "_charID = " .. charID):next(function(res) return deferred.map(res.results or {}, function(result) return lia.inventory.loadByID(tonumber(result._invID)) end) end)
+        return lia.db.select({"invID"}, INV_TABLE, "charID = " .. charID):next(function(res) return deferred.map(res.results or {}, function(result) return lia.inventory.loadByID(tonumber(result.invID)) end) end)
     end
 
     function lia.inventory.deleteByID(id)
-        lia.db.delete(DATA_TABLE, "_invID = " .. id)
-        lia.db.delete(INV_TABLE, "_invID = " .. id)
-        lia.db.delete(ITEMS_TABLE, "_invID = " .. id)
+        lia.db.delete(DATA_TABLE, "invID = " .. id)
+        lia.db.delete(INV_TABLE, "invID = " .. id)
+        lia.db.delete(ITEMS_TABLE, "invID = " .. id)
         local instance = lia.inventory.instances[id]
         if instance then instance:destroy() end
     end

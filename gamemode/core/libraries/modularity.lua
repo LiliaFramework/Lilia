@@ -6,12 +6,11 @@ local function loadPermissions(Privileges)
     if not Privileges or not istable(Privileges) then return end
     for _, privilegeData in ipairs(Privileges) do
         local privilegeName = privilegeData.Name
-        if not CAMI.GetPrivilege(privilegeName) then
-            CAMI.RegisterPrivilege({
-                Name = privilegeName,
-                MinAccess = privilegeData.MinAccess or "admin"
-            })
-        end
+        lia.administrator.registerPrivilege({
+            Name = privilegeName,
+            MinAccess = privilegeData.MinAccess or "admin",
+            Category = privilegeData.Category or MODULE.name
+        })
     end
 end
 
@@ -98,7 +97,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
         lia.include(path, "shared")
     else
         if not file.Exists(coreFile, "LUA") then
-            lia.bootstrap("Module Skipped", L("moduleSkipMissing", uniqueID, lowerVar))
+            lia.bootstrap(L("moduleSkipped"), L("moduleSkipMissing", uniqueID, lowerVar))
             _G[variable] = prev
             return
         end
@@ -115,16 +114,16 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
 
     if uniqueID ~= "schema" and not enabled then
         if disableReason then
-            lia.bootstrap("Module Disabled", disableReason)
+            lia.bootstrap(L("moduleDisabledTitle"), disableReason)
         else
-            lia.bootstrap("Module Disabled", L("moduleDisabled", MODULE.name))
+            lia.bootstrap(L("moduleDisabledTitle"), L("moduleDisabled", MODULE.name))
         end
 
         _G[variable] = prev
         return
     end
 
-    loadPermissions(MODULE.CAMIPrivileges)
+    loadPermissions(MODULE.Privileges)
     if not isSingleFile then
         loadDependencies(MODULE.Dependencies)
         loadExtras(path)
@@ -170,7 +169,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
             })
         end
 
-        if string.StartsWith(path, engine.ActiveGamemode() .. "/modules") then lia.bootstrap("Module", L("moduleFinishedLoading", MODULE.name)) end
+        if string.StartsWith(path, engine.ActiveGamemode() .. "/modules") then lia.bootstrap(L("module"), L("moduleFinishedLoading", MODULE.name)) end
         _G[variable] = prev
     end
 end
@@ -188,7 +187,7 @@ function lia.module.initialize()
     end
 
     for id in pairs(collectModuleIDs("lilia/gamemode/modules")) do
-        if not preloadIDs[id] and gamemodeIDs[id] then lia.bootstrap("Module", L("modulePreloadSuggestion", id)) end
+        if not preloadIDs[id] and gamemodeIDs[id] then lia.bootstrap(L("module"), L("modulePreloadSuggestion", id)) end
     end
 
     lia.module.loadFromDir("lilia/gamemode/modules", "module", preloadIDs)
@@ -215,3 +214,29 @@ end
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end
+
+hook.Add("CreateInformationButtons", "liaInformationModulesUnified", function(pages)
+    table.insert(pages, {
+        name = L("modules"),
+        drawFunc = function(parent)
+            local sheet = vgui.Create("liaSheet", parent)
+            sheet:SetPlaceholderText(L("searchModules"))
+            sheet:SetPadding(5)
+            sheet:SetSpacing(4)
+            for _, moduleData in SortedPairs(lia.module.list) do
+                local title = moduleData.name or ""
+                local desc = moduleData.desc or ""
+                local right = moduleData.version and tostring(moduleData.version) or ""
+                local row = sheet:AddTextRow({
+                    title = title,
+                    desc = desc,
+                    right = right,
+                })
+
+                row.filterText = (title .. " " .. desc .. " " .. right):lower()
+            end
+
+            sheet:Refresh()
+        end
+    })
+end)

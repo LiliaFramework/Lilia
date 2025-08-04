@@ -73,7 +73,7 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
     if not oldInventory or not oldInventory.items[itemID] then return end
     local transferAllowed, transferReason = hook.Run("CanItemBeTransfered", item, oldInventory, newInventory, client)
     if transferAllowed == false then
-        client:notify(transferReason or L("notNow"))
+        client:notifyLocalized(transferReason or "notNow")
         return
     end
 
@@ -105,7 +105,7 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
     local function fail(err)
         client.invTransferTransaction = nil
         if err then
-            print(err)
+            lia.error(err)
             debug.Trace()
         end
 

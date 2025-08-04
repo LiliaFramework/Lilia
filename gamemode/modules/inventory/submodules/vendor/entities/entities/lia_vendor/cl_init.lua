@@ -21,5 +21,5 @@ end
 function ENT:onDrawEntityInfo(alpha)
     local pos = self:LocalToWorld(self:OBBCenter()) + TEXT_OFFSET
     local screenPos = toScreen(pos)
-    drawText(self:getNetVar("name", "Jane Doe"), screenPos.x, screenPos.y, ColorAlpha(configGet("Color"), alpha), 1, 1, nil, alpha * 0.65)
+    drawText(self:getNetVar("name", L("vendorDefaultName")), screenPos.x, screenPos.y, ColorAlpha(configGet("Color"), alpha), 1, 1, nil, alpha * 0.65)
 end

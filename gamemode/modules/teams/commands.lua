@@ -36,159 +36,6 @@
     end
 })
 
-local function formatDHM(seconds)
-    seconds = math.max(seconds or 0, 0)
-    local days = math.floor(seconds / 86400)
-    seconds = seconds % 86400
-    local hours = math.floor(seconds / 3600)
-    seconds = seconds % 3600
-    local minutes = math.floor(seconds / 60)
-    return string.format("%dd %dh %dm", days, hours, minutes)
-end
-
-lia.command.add("roster", {
-    desc = "rosterDesc",
-    onRun = function(client)
-        local character = client:getChar()
-        if not character then
-            client:notify("Character data not found for client:", client)
-            return
-        end
-
-        local isLeader = client:IsSuperAdmin() or character:getData("factionOwner") or character:getData("factionAdmin") or character:hasFlags("V")
-        if not isLeader then return end
-        local fields = "lia_characters._name, lia_characters._faction, lia_characters._id, lia_characters._steamID, lia_characters._lastJoinTime, lia_players._totalOnlineTime, lia_players._lastOnline"
-        if not character then
-            client:notify("Character data not found for client:", client)
-            return
-        end
-
-        local factionIndex = character:getFaction()
-        if not factionIndex then
-            client:notify("Faction data not found for character:", character)
-            return
-        end
-
-        local faction = lia.faction.indices[factionIndex]
-        if not faction then
-            client:notify("Faction data not found for index:", factionIndex)
-            return
-        end
-
-        local condition = "lia_characters._schema = '" .. lia.db.escape(SCHEMA.folder) .. "' AND lia_characters._faction = " .. lia.db.convertDataType(faction.uniqueID)
-        local query = "SELECT " .. fields .. " FROM lia_characters LEFT JOIN lia_players ON lia_characters._steamID = lia_players._steamID WHERE " .. condition
-        lia.db.query(query, function(data)
-            local characters = {}
-            if data then
-                for _, v in ipairs(data) do
-                    local charID = tonumber(v._id)
-                    local isOnline = lia.char.loaded[charID] ~= nil
-                    local lastOnlineText
-                    if isOnline then
-                        lastOnlineText = L("onlineNow")
-                    else
-                        local last = tonumber(v._lastOnline)
-                        if not isnumber(last) then last = os.time(lia.time.toNumber(v._lastJoinTime)) end
-                        local lastDiff = os.time() - last
-                        local timeSince = lia.time.TimeSince(last)
-                        local timeStripped = timeSince:match("^(.-)%sago$") or timeSince
-                        lastOnlineText = string.format("%s (%s) ago", timeStripped, formatDHM(lastDiff))
-                    end
-
-                    table.insert(characters, {
-                        id = charID,
-                        name = v._name,
-                        faction = v._faction,
-                        steamID = v._steamID,
-                        lastOnline = lastOnlineText,
-                        hoursPlayed = formatDHM(tonumber(v._totalOnlineTime) or 0)
-                    })
-                end
-            else
-                client:notify("No data found for the specified condition.")
-            end
-
-            net.Start("CharacterInfo")
-            net.WriteString(faction.uniqueID)
-            net.WriteTable(characters)
-            net.Send(client)
-        end)
-    end
-})
-
-lia.command.add("factionmanagement", {
-    superAdminOnly = true,
-    privilege = "Manage Faction Members",
-    desc = "factionManagementDesc",
-    syntax = "[faction Faction]",
-    onRun = function(client, arguments)
-        local fields = "lia_characters._name, lia_characters._faction, lia_characters._id, lia_characters._steamID, lia_characters._lastJoinTime, lia_players._totalOnlineTime, lia_players._lastOnline"
-        local faction
-        local arg = table.concat(arguments, " ")
-        if arg ~= "" then
-            faction = lia.util.findFaction(client, arg)
-            if not faction then return end
-        else
-            local character = client:getChar()
-            if not character then
-                client:notify("Character data not found for client:", client)
-                return
-            end
-
-            local factionIndex = character:getFaction()
-            if not factionIndex then
-                client:notify("Faction data not found for character:", character)
-                return
-            end
-
-            faction = lia.faction.indices[factionIndex]
-            if not faction then
-                client:notify("Faction data not found for index:", factionIndex)
-                return
-            end
-        end
-
-        local condition = "lia_characters._schema = '" .. lia.db.escape(SCHEMA.folder) .. "' AND lia_characters._faction = " .. lia.db.convertDataType(faction.uniqueID)
-        local query = "SELECT " .. fields .. " FROM lia_characters LEFT JOIN lia_players ON lia_characters._steamID = lia_players._steamID WHERE " .. condition
-        lia.db.query(query, function(data)
-            local characters = {}
-            if data then
-                for _, v in ipairs(data) do
-                    local charID = tonumber(v._id)
-                    local isOnline = lia.char.loaded[charID] ~= nil
-                    local lastOnlineText
-                    if isOnline then
-                        lastOnlineText = L("onlineNow")
-                    else
-                        local last = tonumber(v._lastOnline)
-                        if not isnumber(last) then last = os.time(lia.time.toNumber(v._lastJoinTime)) end
-                        local lastDiff = os.time() - last
-                        local timeSince = lia.time.TimeSince(last)
-                        local timeStripped = timeSince:match("^(.-)%sago$") or timeSince
-                        lastOnlineText = string.format("%s (%s) ago", timeStripped, formatDHM(lastDiff))
-                    end
-
-                    table.insert(characters, {
-                        id = charID,
-                        name = v._name,
-                        faction = v._faction,
-                        steamID = v._steamID,
-                        lastOnline = lastOnlineText,
-                        hoursPlayed = formatDHM(tonumber(v._totalOnlineTime) or 0)
-                    })
-                end
-            else
-                client:notify("No data found for the specified condition.")
-            end
-
-            net.Start("CharacterInfo")
-            net.WriteString(faction.uniqueID)
-            net.WriteTable(characters)
-            net.Send(client)
-        end)
-    end
-})
-
 lia.command.add("plywhitelist", {
     adminOnly = true,
     privilege = "Manage Whitelists",
@@ -227,12 +74,14 @@ lia.command.add("plyunwhitelist", {
         end
 
         local faction = lia.util.findFaction(client, table.concat(arguments, " ", 2))
-        if faction and target:setWhitelisted(faction.index, false) then
+        if faction and not faction.isDefault and target:setWhitelisted(faction.index, false) then
             for _, v in player.Iterator() do
                 v:notifyLocalized("unwhitelist", client:Name(), target:Name(), L(faction.name, v))
             end
 
             lia.log.add(client, "plyUnwhitelist", target:Name(), faction.name)
+        else
+            client:notifyLocalized("invalidFaction")
         end
     end
 })
@@ -300,12 +149,6 @@ lia.command.add("classwhitelist", {
     privilege = "Manage Whitelists",
     desc = "classWhitelistDesc",
     syntax = "[player Name] [class Class]",
-    AdminStick = {
-        Name = "adminStickClassWhitelistName",
-        Category = "characterManagement",
-        SubCategory = "adminStickSubCategorySetInfos",
-        Icon = "icon16/user_add.png"
-    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         local classID = lia.class.retrieveClass(table.concat(arguments, " ", 2))
@@ -336,12 +179,6 @@ lia.command.add("classunwhitelist", {
     privilege = "Manage Classes",
     desc = "classUnwhitelistDesc",
     syntax = "[player Name] [class Class]",
-    AdminStick = {
-        Name = "adminStickClassUnwhitelistName",
-        Category = "characterManagement",
-        SubCategory = "adminStickSubCategorySetInfos",
-        Icon = "icon16/user_delete.png"
-    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         local classID = lia.class.retrieveClass(table.concat(arguments, " ", 2))

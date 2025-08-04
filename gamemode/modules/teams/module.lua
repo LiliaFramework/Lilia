@@ -1,4 +1,4 @@
-﻿MODULE.name = "Teams"
+MODULE.name = L("moduleTeamsName")
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Handles the creation of factions and character classes, controlling default permissions and spawn settings for each."
+MODULE.desc = L("moduleTeamsDesc")

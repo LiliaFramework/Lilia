@@ -1,5 +1,11 @@
-﻿local InvSlotMat = Material("invslotfree.png", "smooth noclamp")
 local PANEL = {}
+local function drawSlot(x, y, w, h)
+    surface.SetDrawColor(0, 0, 0, 255)
+    surface.DrawOutlinedRect(x, y, w, h, 2)
+    surface.SetDrawColor(0, 0, 0, 150)
+    surface.DrawRect(x + 1, y + 1, w - 2, h - 2)
+end
+
 function PANEL:Init()
     self:SetPaintBackground(false)
     self.icons = {}
@@ -129,9 +135,7 @@ function PANEL:drawHeldItemRectangle()
     local x = math.Round((mx - w * 0.5) / size)
     local y = math.Round((my - h * 0.5) / size)
     if x < 0 or y < 0 or x + item:getWidth() > self.gridW or y + item:getHeight() > self.gridH then return end
-    surface.SetDrawColor(255, 255, 255)
-    surface.SetMaterial(InvSlotMat)
-    surface.DrawTexturedRect(x * size, y * size, w, h)
+    drawSlot(x * size, y * size, w, h)
 end
 
 function PANEL:computeHeldPanel()
@@ -145,9 +149,7 @@ function PANEL:Paint()
     local size = self.size
     for y = 0, self.gridH - 1 do
         for x = 0, self.gridW - 1 do
-            surface.SetDrawColor(255, 255, 255)
-            surface.SetMaterial(InvSlotMat)
-            surface.DrawTexturedRect(x * (size + 2), y * (size + 2), size, size)
+            drawSlot(x * (size + 2), y * (size + 2), size, size)
         end
     end
 

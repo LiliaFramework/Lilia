@@ -1,14 +1,12 @@
-﻿local MODULE = MODULE
-MODULE.OOCBans = MODULE.OOCBans or {}
-lia.command.add("banooc", {
+﻿lia.command.add("banooc", {
     adminOnly = true,
     privilege = "Ban OOC",
     desc = "banOOCCommandDesc",
     syntax = "[player Name]",
     AdminStick = {
-        Name = "banOOCCommandName",
+        Name = "Ban OOC",
         Category = "moderationTools",
-        SubCategory = "oocCategory",
+        SubCategory = "ooc",
         Icon = "icon16/sound_mute.png"
     },
     onRun = function(client, arguments)
@@ -18,11 +16,9 @@ lia.command.add("banooc", {
             return
         end
 
-        local id = target:SteamID64()
-        if not table.HasValue(MODULE.OOCBans, id) then table.insert(MODULE.OOCBans, id) end
-        MODULE:SaveData()
+        target:setLiliaData("oocBanned", true)
         client:notifyLocalized("playerBannedFromOOC", target:Name())
-        lia.log.add(client, "banOOC", target:Name(), target:SteamID64())
+        lia.log.add(client, "banOOC", target:Name(), target:SteamID())
     end
 })
 
@@ -32,9 +28,9 @@ lia.command.add("unbanooc", {
     desc = "unbanOOCCommandDesc",
     syntax = "[player Name]",
     AdminStick = {
-        Name = "unbanOOCCommandName",
+        Name = "Unban OOC",
         Category = "moderationTools",
-        SubCategory = "oocCategory",
+        SubCategory = "ooc",
         Icon = "icon16/sound.png"
     },
     onRun = function(client, arguments)
@@ -44,11 +40,9 @@ lia.command.add("unbanooc", {
             return
         end
 
-        local id = target:SteamID64()
-        table.RemoveByValue(MODULE.OOCBans, id)
-        MODULE:SaveData()
+        target:setLiliaData("oocBanned", nil)
         client:notifyLocalized("playerUnbannedFromOOC", target:Name())
-        lia.log.add(client, "unbanOOC", target:Name(), target:SteamID64())
+        lia.log.add(client, "unbanOOC", target:Name(), target:SteamID())
     end
 })
 
@@ -59,7 +53,7 @@ lia.command.add("blockooc", {
     onRun = function(client)
         local blocked = GetGlobalBool("oocblocked", false)
         SetGlobalBool("oocblocked", not blocked)
-        client:notify(blocked and L("unlockedOOC") or L("blockedOOC"))
+        client:notifyLocalized(blocked and "unlockedOOC" or "blockedOOC")
         lia.log.add(client, "blockOOC", not blocked)
     end
 })

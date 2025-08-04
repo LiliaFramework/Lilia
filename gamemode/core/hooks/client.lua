@@ -26,6 +26,12 @@ local hidden = {
     CHudVoiceStatus = true
 }
 
+local VoiceRanges = {
+    Whispering = 120,
+    Talking = 300,
+    Yelling = 600,
+}
+
 local lastEntity
 local nextUpdate = 0
 local healthPercent = {
@@ -162,6 +168,25 @@ local function RenderEntities()
     end
 end
 
+function GM:PostDrawOpaqueRenderables()
+    if not lia.option.get("voiceRange", false) then return end
+    local client = LocalPlayer()
+    if not (IsValid(client) and client:IsSpeaking() and client:getChar()) then return end
+    local vt = client:getNetVar("VoiceType", "Talking")
+    local radius = VoiceRanges[vt] or VoiceRanges.Talking
+    local segments = 36
+    local pos = client:GetPos() + Vector(0, 0, 2)
+    local color = Color(0, 150, 255)
+    render.SetColorMaterial()
+    for i = 0, segments - 1 do
+        local startAng = math.rad(i / segments * 360)
+        local endAng = math.rad((i + 1) / segments * 360)
+        local startPos = pos + Vector(math.cos(startAng), math.sin(startAng), 0) * radius
+        local endPos = pos + Vector(math.cos(endAng), math.sin(endAng), 0) * radius
+        render.DrawLine(startPos, endPos, color, false)
+    end
+end
+
 function GM:ShouldDrawEntityInfo(e)
     if IsValid(e) then
         if e:IsPlayer() and e:getChar() then
@@ -201,7 +226,6 @@ end
 function GM:DrawEntityInfo(e, a, pos)
     if not e:IsPlayer() or hook.Run("ShouldDrawPlayerInfo", e) == false then return end
     local ch = e:getChar()
-    if not ch then return end
     pos = pos or toScreen(e:GetPos() + (e:Crouching() and Vector(0, 0, 48) or Vector(0, 0, 80)))
     local x, y = pos.x, pos.y
     local charInfo = {}
@@ -212,7 +236,7 @@ function GM:DrawEntityInfo(e, a, pos)
         e.liaDescCache = nil
     end
 
-    local name = hook.Run("GetDisplayedName", e) or ch.getName(ch)
+    local name = hook.Run("GetDisplayedName", e) or (ch and ch.getName(ch) or e:Name())
     if name ~= e.liaNameCache then
         e.liaNameCache = name
         if #name > 250 then name = name:sub(1, 250) .. "..." end
@@ -223,7 +247,7 @@ function GM:DrawEntityInfo(e, a, pos)
         charInfo[#charInfo + 1] = {e.liaNameLines[i], color_white}
     end
 
-    local desc = hook.Run("GetDisplayedDescription", e, true) or ch.getDesc(ch)
+    local desc = hook.Run("GetDisplayedDescription", e, true) or (ch and ch.getDesc(ch) or L("noChar"))
     if desc ~= e.liaDescCache then
         e.liaDescCache = desc
         if #desc > 250 then desc = desc:sub(1, 250) .. "..." end
@@ -234,7 +258,7 @@ function GM:DrawEntityInfo(e, a, pos)
         charInfo[#charInfo + 1] = {e.liaDescLines[i]}
     end
 
-    hook.Run("DrawCharInfo", e, ch, charInfo)
+    if ch then hook.Run("DrawCharInfo", e, ch, charInfo) end
     for i = 1, #charInfo do
         local info = charInfo[i]
         local _, ty = lia.util.drawText(info[1]:gsub("#", "\226\128\139#"), x, y, ColorAlpha(info[2] or color_white, a), 1, 1, "liaSmallFont")
@@ -445,7 +469,7 @@ end
 
 function GM:SpawnMenuOpen()
     local client = LocalPlayer()
-    if lia.config.get("SpawnMenuLimit", false) and not (client:getChar():hasFlags("pet") or client:isStaffOnDuty() or client:hasPrivilege("Spawn Permissions - Can Spawn Props")) then return end
+    if lia.config.get("SpawnMenuLimit", false) and not (client:hasFlags("pet") or client:isStaffOnDuty() or client:hasPrivilege("Can Spawn Props")) then return end
     return true
 end
 
@@ -456,8 +480,8 @@ end
 
 concommand.Add("dev_GetCameraOrigin", function(client)
     if client:isStaff() then
-        lia.information(L("originLabel", math.ceil(client:GetPos().x), math.ceil(client:GetPos().y), math.ceil(client:GetPos().z)))
-        lia.information(L("anglesLabel", math.ceil(client:GetAngles().x), math.ceil(client:GetAngles().y), math.ceil(client:GetAngles().z)))
+        lia.information(L("origin") .. " = (" .. math.ceil(client:GetPos().x) .. ", " .. math.ceil(client:GetPos().y) .. ", " .. math.ceil(client:GetPos().z) .. ")")
+        lia.information(L("angles") .. " = (" .. math.ceil(client:GetAngles().x) .. ", " .. math.ceil(client:GetAngles().y) .. ", " .. math.ceil(client:GetAngles().z) .. ")")
     end
 end)
 
@@ -465,34 +489,233 @@ concommand.Add("vgui_cleanup", function()
     for _, v in pairs(vgui.GetWorldPanel():GetChildren()) do
         if not (v.Init and debug.getinfo(v.Init, "Sln").short_src:find("chatbox")) then v:Remove() end
     end
-end, nil, "Removes every panel that you have left over (like that errored DFrame filling up your screen)")
+end, nil, L("vguiCleanupCommandDesc"))
 
 concommand.Add("weighpoint_stop", function() hook.Add("HUDPaint", "WeighPoint", function() end) end)
 concommand.Add("dev_GetEntPos", function(client) if client:isStaff() then lia.information(client:getTracedEntity():GetPos().x, client:getTracedEntity():GetPos().y, client:getTracedEntity():GetPos().z) end end)
 concommand.Add("dev_GetEntAngles", function(client) if client:isStaff() then lia.information(math.ceil(client:getTracedEntity():GetAngles().x) .. ", " .. math.ceil(client:getTracedEntity():GetAngles().y) .. ", " .. math.ceil(client:getTracedEntity():GetAngles().z)) end end)
 concommand.Add("dev_GetRoundEntPos", function(client) if client:isStaff() then lia.information(math.ceil(client:getTracedEntity():GetPos().x) .. ", " .. math.ceil(client:getTracedEntity():GetPos().y) .. ", " .. math.ceil(client:getTracedEntity():GetPos().z)) end end)
 concommand.Add("dev_GetPos", function(client) if client:isStaff() then lia.information(math.ceil(client:GetPos().x) .. ", " .. math.ceil(client:GetPos().y) .. ", " .. math.ceil(client:GetPos().z)) end end)
-local VoiceRanges = {
-    Whispering = 120,
-    Talking = 300,
-    Yelling = 600,
-}
-
-hook.Add("PostDrawOpaqueRenderables", "liaVoiceRange", function()
-    if not lia.option.get("voiceRange", false) then return end
-    local client = LocalPlayer()
-    if not (IsValid(client) and client:IsSpeaking() and client:getChar()) then return end
-    local vt = client:getNetVar("VoiceType", "Talking")
-    local radius = VoiceRanges[vt] or VoiceRanges.Talking
-    local segments = 36
-    local pos = client:GetPos() + Vector(0, 0, 2)
-    local color = Color(0, 150, 255)
-    render.SetColorMaterial()
-    for i = 0, segments - 1 do
-        local startAng = math.rad(i / segments * 360)
-        local endAng = math.rad((i + 1) / segments * 360)
-        local startPos = pos + Vector(math.cos(startAng), math.sin(startAng), 0) * radius
-        local endPos = pos + Vector(math.cos(endAng), math.sin(endAng), 0) * radius
-        render.DrawLine(startPos, endPos, color, false)
+local dermaPreviewFrame
+concommand.Add("open_derma_preview", function()
+    if IsValid(dermaPreviewFrame) then dermaPreviewFrame:Remove() end
+    local frame = vgui.Create("DFrame")
+    frame:SetTitle(L("dermaPreviewTitle"))
+    frame:SetSize(ScrW() * 0.8, ScrH() * 0.8)
+    frame:Center()
+    frame:MakePopup()
+    dermaPreviewFrame = frame
+    local scroll = vgui.Create("DScrollPanel", frame)
+    scroll:Dock(FILL)
+    local function addPreview(name, creator)
+        local label = scroll:Add("DLabel")
+        label:Dock(TOP)
+        label:DockMargin(10, 10, 10, 2)
+        label:SetText(name)
+        label:SizeToContents()
+        local panel = creator()
+        if IsValid(panel) then
+            panel:Dock(TOP)
+            panel:DockMargin(10, 2, 10, 0)
+        end
     end
+
+    addPreview("DFrame", function()
+        local container = scroll:Add("DPanel")
+        container:SetTall(70)
+        container:SetPaintBackground(false)
+        local miniFrame = vgui.Create("DFrame", container)
+        miniFrame:SetTitle("DFrame")
+        miniFrame:SetSize(150, 60)
+        miniFrame:SetDraggable(false)
+        miniFrame:ShowCloseButton(true)
+        miniFrame:SetPos(0, 5)
+        return container
+    end)
+
+    addPreview("DPanel", function()
+        local panel = scroll:Add("DPanel")
+        panel:SetTall(50)
+        return panel
+    end)
+
+    addPreview("DButton", function()
+        local btn = scroll:Add("DButton")
+        btn:SetText("DButton")
+        return btn
+    end)
+
+    addPreview("DLabel", function()
+        local lbl = scroll:Add("DLabel")
+        lbl:SetText("DLabel")
+        lbl:SizeToContents()
+        return lbl
+    end)
+
+    addPreview("DTextEntry", function()
+        local txt = scroll:Add("DTextEntry")
+        txt:SetText("DTextEntry")
+        return txt
+    end)
+
+    addPreview("DCheckBox", function()
+        local cb = scroll:Add("DCheckBox")
+        cb:SetValue(true)
+        return cb
+    end)
+
+    addPreview("DComboBox", function()
+        local combo = scroll:Add("DComboBox")
+        combo:AddChoice(L("optionWithNumber", 1))
+        combo:AddChoice(L("optionWithNumber", 2))
+        combo:ChooseOption(L("optionWithNumber", 1), 1)
+        return combo
+    end)
+
+    addPreview("DListView", function()
+        local listView = scroll:Add("DListView")
+        listView:SetTall(120)
+        listView:AddColumn(L("columnWithNumber", 1))
+        listView:AddColumn(L("columnWithNumber", 2))
+        listView:AddLine(L("rowColumn", 1, 1), L("rowColumn", 1, 2))
+        listView:AddLine(L("rowColumn", 2, 1), L("rowColumn", 2, 2))
+        return listView
+    end)
+
+    addPreview("DImage", function()
+        local container = scroll:Add("DPanel")
+        container:SetTall(40)
+        container:SetPaintBackground(false)
+        local img = vgui.Create("DImage", container)
+        img:SetImage("icon16/star.png")
+        img:SetSize(32, 32)
+        img:SetPos(0, 4)
+        return container
+    end)
+
+    addPreview("DPanelList", function()
+        local list = scroll:Add("DPanelList")
+        list:SetTall(80)
+        list:EnableVerticalScrollbar()
+        list:SetPadding(5)
+        for i = 1, 10 do
+            local item = vgui.Create("DLabel")
+            item:SetText(L("item") .. " " .. i)
+            item:SizeToContents()
+            list:AddItem(item)
+        end
+        return list
+    end)
+
+    addPreview("DProgressBar", function()
+        local progress = scroll:Add("DProgress")
+        progress:SetTall(20)
+        progress:SetFraction(0.5)
+        return progress
+    end)
+
+    addPreview("DNumSlider", function()
+        local slider = scroll:Add("DNumSlider")
+        slider:SetText("DNumSlider")
+        slider:SetMin(0)
+        slider:SetMax(100)
+        slider:SetValue(50)
+        slider:SetDecimals(0)
+        slider:SetTall(35)
+        return slider
+    end)
+
+    addPreview("DScrollPanel", function()
+        local subScroll = scroll:Add("DScrollPanel")
+        subScroll:SetTall(100)
+        for i = 1, 20 do
+            local line = subScroll:Add("DLabel")
+            line:SetText(L("line") .. " " .. i)
+            line:Dock(TOP)
+            line:DockMargin(0, 0, 0, 5)
+        end
+        return subScroll
+    end)
+
+    addPreview("DTree", function()
+        local tree = scroll:Add("DTree")
+        tree:SetTall(100)
+        local node1 = tree:AddNode(L("nodeWithNumber", 1))
+        node1:AddNode(L("childWithNumber", 1))
+        node1:AddNode(L("childWithNumber", 2))
+        tree:AddNode(L("nodeWithNumber", 2))
+        return tree
+    end)
+
+    addPreview("DColorMixer", function()
+        local mixer = scroll:Add("DColorMixer")
+        mixer:SetTall(150)
+        mixer:SetPalette(true)
+        mixer:SetAlphaBar(true)
+        mixer:SetWangs(true)
+        return mixer
+    end)
+
+    addPreview("DPropertySheet", function()
+        local sheet = scroll:Add("DPropertySheet")
+        sheet:SetTall(120)
+        local tab1 = vgui.Create("DPanel")
+        tab1:Dock(FILL)
+        local lbl1 = vgui.Create("DLabel", tab1)
+        lbl1:Dock(TOP)
+        lbl1:DockMargin(0, 0, 0, 4)
+        lbl1:SetText(L("settings"))
+        lbl1:SizeToContents()
+        local btn1 = vgui.Create("DButton", tab1)
+        btn1:Dock(TOP)
+        btn1:SetText(L("apply"))
+        local tab2 = vgui.Create("DPanel")
+        tab2:Dock(FILL)
+        local entry = vgui.Create("DTextEntry", tab2)
+        entry:Dock(TOP)
+        entry:SetPlaceholderText(L("enterValue"))
+        local chkLabel = vgui.Create("DCheckBoxLabel", tab2)
+        chkLabel:Dock(TOP)
+        chkLabel:DockMargin(0, 4, 0, 0)
+        chkLabel:SetText(L("enableFeature"))
+        sheet:AddSheet(L("tabWithNumber", 1), tab1, "icon16/wrench.png")
+        sheet:AddSheet(L("tabWithNumber", 2), tab2, "icon16/cog.png")
+        return sheet
+    end)
+
+    addPreview("DCategoryList", function()
+        local catList = scroll:Add("DCategoryList")
+        catList:SetTall(100)
+        local category = catList:Add(L("categoryWithNumber", 1))
+        category:Add(L("itemWithNumber", 1))
+        category:Add(L("itemWithNumber", 2))
+        category:SetExpanded(true)
+        return catList
+    end)
+
+    addPreview("DCollapsibleCategory", function()
+        local collCat = scroll:Add("DCollapsibleCategory")
+        collCat:SetLabel("DCollapsibleCategory")
+        local content = vgui.Create("DPanel")
+        content:SetTall(40)
+        collCat:SetContents(content)
+        collCat:SetExpanded(true)
+        if collCat.GetHeaderHeight then
+            collCat:SetTall(collCat:GetHeaderHeight() + content:GetTall())
+        else
+            collCat:SetTall(60)
+        end
+        return collCat
+    end)
+
+    addPreview("DModelPanel", function()
+        local container = scroll:Add("DPanel")
+        container:SetTall(300)
+        container:SetPaintBackground(false)
+        local modelPanel = vgui.Create("DModelPanel", container)
+        modelPanel:SetModel("models/props_c17/oildrum001.mdl")
+        modelPanel:SetSize(300, 300)
+        modelPanel:SetPos(0, 0)
+        return container
+    end)
 end)

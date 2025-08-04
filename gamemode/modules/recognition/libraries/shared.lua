@@ -30,7 +30,7 @@ end
 
 function MODULE:isCharFakeRecognized(character, id)
     local other = lia.char.loaded[id]
-    local CharNameList = character:getRecognizedAs()
+    local CharNameList = character:getFakeName()
     local clientName = CharNameList[other:getID()]
     return lia.config.get("FakeNamesEnabled", false) and isFakeNameExistant(clientName, CharNameList)
 end

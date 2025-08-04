@@ -15,7 +15,7 @@ function ENT:Initialize()
 end
 
 function ENT:setInventory(inventory)
-    assert(inventory, "Storage setInventory called without an inventory!")
+    assert(inventory, L("storageInventoryMissing"))
     self:setNetVar("id", inventory:getID())
     hook.Run("StorageInventorySet", self, inventory, false)
 end

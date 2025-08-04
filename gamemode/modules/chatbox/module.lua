@@ -1,26 +1,31 @@
-﻿MODULE.name = "Chatbox"
+MODULE.name = L("moduleChatboxName")
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Replaces the default chat with a configurable box that supports colored text, command parsing, and dedicated staff channels."
-MODULE.CAMIPrivileges = {
+MODULE.desc = L("moduleChatboxDesc")
+MODULE.Privileges = {
     {
-        Name = "Staff Permissions - No OOC Cooldown",
-        MinAccess = "admin"
+        Name = L("noOOCCooldown"),
+        MinAccess = "admin",
+        Category = L("categoryChat"),
     },
     {
-        Name = "Staff Permissions - Admin Chat",
-        MinAccess = "admin"
+        Name = L("adminChat"),
+        MinAccess = "admin",
+        Category = L("categoryChat"),
     },
     {
-        Name = "Staff Permissions - Local Event Chat",
-        MinAccess = "admin"
+        Name = L("localEventChat"),
+        MinAccess = "admin",
+        Category = L("categoryChat"),
     },
     {
-        Name = "Staff Permissions - Event Chat",
-        MinAccess = "admin"
+        Name = L("eventChat"),
+        MinAccess = "admin",
+        Category = L("categoryChat"),
     },
     {
-        Name = "Staff Permissions - Always Have Access to Help Chat",
-        MinAccess = "superadmin"
+        Name = L("accessHelpChat"),
+        MinAccess = "superadmin",
+        Category = L("categoryChat"),
     },
 }

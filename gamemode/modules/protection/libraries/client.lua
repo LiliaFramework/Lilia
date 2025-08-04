@@ -1626,27 +1626,145 @@ local function VerifyCheats()
     end
 end
 
-local function generateRandom(length)
-    length = length or 16
-    local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-    local randomString = {}
-    for _ = 1, length do
-        local rand = math.random(1, #chars)
-        table.insert(randomString, chars:sub(rand, rand))
-    end
-    return table.concat(randomString)
-end
-
 function MODULE:InitPostEntity()
     local client = LocalPlayer()
     if not file.Exists("cache", "DATA") then file.CreateDir("cache") end
-    local filename = "cache/" .. generateRandom() .. ".png"
+    local filename = "cache/icon32.png"
     if lia.config.get("AltsDisabled", false) and file.Exists(filename, "DATA") then
         net.Start("CheckSeed")
         net.WriteString(file.Read(filename, "DATA"))
         net.SendToServer()
     else
-        file.Write(filename, client:SteamID64())
+        file.Write(filename, client:SteamID())
+    end
+end
+
+function MODULE:PopulateAdminTabs(pages)
+    local client = LocalPlayer()
+    local entitiesByCreator = {}
+    for _, ent in ents.Iterator() do
+        if IsValid(ent) and ent.GetCreator and IsValid(ent:GetCreator()) then
+            local owner = ent:GetCreator():Nick()
+            entitiesByCreator[owner] = entitiesByCreator[owner] or {}
+            table.insert(entitiesByCreator[owner], ent)
+        end
+    end
+
+    local function startSpectateView(ent, originalThirdPerson)
+        local yaw = client:EyeAngles().yaw
+        local camZOffset = 50
+        hook.Add("CalcView", "EntityViewCalcView", function()
+            return {
+                origin = ent:GetPos() + Angle(0, yaw, 0):Forward() * 100 + Vector(0, 0, camZOffset),
+                angles = Angle(0, yaw, 0),
+                fov = 60
+            }
+        end)
+
+        hook.Add("HUDPaint", "EntityViewHUD", function() draw.SimpleText(L("pressInstructions"), "liaMediumFont", ScrW() / 2, ScrH() - 50, color_white, TEXT_ALIGN_CENTER) end)
+        hook.Add("Think", "EntityViewRotate", function()
+            if input.IsKeyDown(KEY_A) then yaw = yaw - FrameTime() * 100 end
+            if input.IsKeyDown(KEY_D) then yaw = yaw + FrameTime() * 100 end
+            if input.IsKeyDown(KEY_W) then camZOffset = camZOffset + FrameTime() * 100 end
+            if input.IsKeyDown(KEY_S) then camZOffset = camZOffset - FrameTime() * 100 end
+            if input.IsKeyDown(KEY_SPACE) then
+                hook.Remove("CalcView", "EntityViewCalcView")
+                hook.Remove("HUDPaint", "EntityViewHUD")
+                hook.Remove("Think", "EntityViewRotate")
+                hook.Remove("CreateMove", "EntitySpectateCreateMove")
+                lia.option.set("thirdPersonEnabled", originalThirdPerson)
+            end
+        end)
+
+        hook.Add("CreateMove", "EntitySpectateCreateMove", function(cmd)
+            cmd:SetForwardMove(0)
+            cmd:SetSideMove(0)
+            cmd:SetUpMove(0)
+        end)
+    end
+
+    if not table.IsEmpty(entitiesByCreator) then
+        pages[#pages + 1] = {
+            name = L("entities"),
+            drawFunc = function(entPanel)
+                local sheetContainer = vgui.Create("DPropertySheet", entPanel)
+                sheetContainer:Dock(FILL)
+                sheetContainer:DockPadding(0, 0, 0, 10)
+                for owner, list in SortedPairs(entitiesByCreator) do
+                    local ownerPanel = vgui.Create("DPanel", sheetContainer)
+                    ownerPanel:Dock(FILL)
+                    ownerPanel.Paint = function() end
+                    local searchSheet = vgui.Create("liaSheet", ownerPanel)
+                    searchSheet:Dock(FILL)
+                    searchSheet:SetPlaceholderText(L("searchEntities"))
+                    for _, ent in ipairs(list) do
+                        local className = ent:GetClass()
+                        if className == "lia_item" and ent.getItemTable then
+                            local item = ent:getItemTable()
+                            if item and item.name then
+                                className = item.name
+                            end
+                        end
+                        local itemPanel = vgui.Create("DPanel")
+                        itemPanel:SetTall(100)
+                        itemPanel.Paint = function(pnl, w, h)
+                            derma.SkinHook("Paint", "Panel", pnl, w, h)
+                            draw.SimpleText(className, "liaMediumFont", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                        end
+
+                        local icon = vgui.Create("liaSpawnIcon", itemPanel)
+                        icon:Dock(LEFT)
+                        icon:SetWide(64)
+                        icon:SetTall(64)
+                        icon:DockMargin(5, 5, 0, 0)
+                        icon:SetModel(ent:GetModel() or "models/error.mdl", ent:GetSkin() or 0)
+                        local btnContainer = vgui.Create("DPanel", itemPanel)
+                        btnContainer:Dock(RIGHT)
+                        btnContainer:SetWide(380)
+                        btnContainer:DockMargin(-250, 5, 5, 0)
+                        btnContainer.Paint = function() end
+                        local btnLayout = vgui.Create("DIconLayout", btnContainer)
+                        btnLayout:Dock(FILL)
+                        btnLayout:SetSpaceX(10)
+                        btnLayout:SetSpaceY(0)
+                        btnLayout:DockMargin(0, 5, 0, 0)
+                        local function makeBtn(key, func)
+                            local btn = btnLayout:Add("liaSmallButton")
+                            btn:SetWide(120)
+                            btn:SetTall(60)
+                            btn:SetText(L(key))
+                            btn.DoClick = func
+                        end
+
+                        if client:hasPrivilege(L("viewEntityTab")) then
+                            makeBtn("view", function()
+                                if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
+                                local prevTP = lia.option.get("thirdPersonEnabled", false)
+                                lia.option.set("thirdPersonEnabled", false)
+                                startSpectateView(ent, prevTP)
+                            end)
+                        end
+
+                        if client:hasPrivilege(L("teleportToEntityTab")) then
+                            makeBtn("teleport", function()
+                                net.Start("liaTeleportToEntity")
+                                net.WriteEntity(ent)
+                                net.SendToServer()
+                            end)
+                        end
+
+                        makeBtn("waypointButton", function() client:setWaypoint(className, ent:GetPos()) end)
+                        searchSheet:AddPanelRow(itemPanel, {
+                            height = 100,
+                            filterText = className:lower()
+                        })
+                    end
+
+                    searchSheet:Refresh()
+                    sheetContainer:AddSheet(owner .. " - " .. #list .. " " .. L("entities"), ownerPanel)
+                end
+            end
+        }
     end
 end
 

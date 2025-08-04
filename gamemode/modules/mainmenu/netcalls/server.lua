@@ -75,7 +75,7 @@ net.Receive("liaCharCreate", function(_, client)
         if isfunction(charVar.onValidate) then
             local result = {charVar.onValidate(value, data, client)}
             if result[1] == false then
-                result[2] = result[2] or "Validation error"
+                result[2] = result[2] or "validationError"
                 return response(nil, unpack(result, 2))
             end
         end
@@ -85,7 +85,7 @@ net.Receive("liaCharCreate", function(_, client)
 
     hook.Run("AdjustCreationData", client, data, newData, originalData)
     data = table.Merge(data, newData)
-    data.steamID = client:SteamID64()
+    data.steamID = client:SteamID()
     lia.char.create(data, function(id)
         if IsValid(client) then
             lia.char.loaded[id]:sync(client)
@@ -100,7 +100,7 @@ end)
 net.Receive("liaCharDelete", function(_, client)
     local id = net.ReadUInt(32)
     local character = lia.char.loaded[id]
-    local steamID = client:SteamID64()
+    local steamID = client:SteamID()
     if character and character.steamID == steamID then
         hook.Run("CharDeleted", client, character)
         character:delete()

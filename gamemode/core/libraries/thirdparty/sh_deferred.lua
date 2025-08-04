@@ -173,7 +173,7 @@ function Promise:_handle(value)
             if UNHANDLED_PROMISES[self.rejectionHandlerID] and not DEBUG_IGNOREUNHANDLED then
                 UNHANDLED_PROMISES[self.rejectionHandlerID] = nil
                 lia.error("Unhandled rejection: " .. tostring(self.reason or "") .. "\n")
-                print(trace)
+                lia.error(trace)
             end
         end)
     end

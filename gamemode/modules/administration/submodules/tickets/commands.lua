@@ -1,4 +1,53 @@
-﻿lia.command.add("plyviewclaims", {
+local MODULE = MODULE
+
+lia.command.add("viewtickets", {
+    adminOnly = true,
+    privilege = "View Claims",
+    desc = "viewTicketsDesc",
+    syntax = "[player Name]",
+    onRun = function(client, arguments)
+        local targetName = arguments[1]
+        if not targetName then
+            client:notify(L("mustSpecifyPlayer"))
+            return
+        end
+
+        local target = lia.util.findPlayer(client, targetName)
+        local steamID, displayName
+        if IsValid(target) then
+            steamID = target:SteamID()
+            displayName = target:Nick()
+        else
+            steamID = targetName
+            displayName = targetName
+        end
+
+        MODULE:GetTicketsByRequester(steamID):next(function(tickets)
+            if #tickets == 0 then
+                client:notify(L("noTicketsFound"))
+                return
+            end
+
+            local ticketsData = {}
+            for _, ticket in ipairs(tickets) do
+                ticketsData[#ticketsData + 1] = {
+                    timestamp = os.date("%Y-%m-%d %H:%M:%S", ticket.timestamp),
+                    admin = string.format("%s (%s)", ticket.admin or L("na"), ticket.adminSteamID or L("na")),
+                    message = ticket.message or ""
+                }
+            end
+
+            lia.util.CreateTableUI(client, L("ticketsForTitle", displayName), {
+                {name = L("timestamp"), field = "timestamp"},
+                {name = L("admin"), field = "admin"},
+                {name = L("message"), field = "message"}
+            }, ticketsData)
+
+            lia.log.add(client, "viewPlayerTickets", displayName)
+        end)
+    end
+})
+lia.command.add("plyviewclaims", {
     adminOnly = true,
     privilege = "View Claims",
     desc = "plyViewClaimsDesc",
@@ -12,7 +61,7 @@
     onRun = function(client, arguments)
         local targetName = arguments[1]
         if not targetName then
-            client:ChatPrint(L("mustSpecifyPlayer"))
+            client:notify(L("mustSpecifyPlayer"))
             return
         end
 
@@ -22,23 +71,12 @@
             return
         end
 
-        local steamID = target:SteamID64()
+        local steamID = target:SteamID()
         MODULE:GetAllCaseClaims():next(function(caseclaims)
             local claim = caseclaims[steamID]
             if not claim then
-                client:ChatPrint(L("noClaimsFound"))
+                client:notify(L("noClaimsFound"))
                 return
-            end
-
-            local claimedFor = L("none")
-            if not table.IsEmpty(claim.claimedFor) then
-                claimedFor = table.concat((function()
-                    local t = {}
-                    for sid, name in pairs(claim.claimedFor) do
-                        table.insert(t, string.format("%s (%s)", name, sid))
-                    end
-                    return t
-                end)(), "\n")
             end
 
             local claimsData = {
@@ -48,7 +86,13 @@
                     claims = claim.claims,
                     lastclaim = os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim),
                     timeSinceLastClaim = lia.time.TimeSince(claim.lastclaim),
-                    claimedFor = claimedFor
+                    claimedFor = table.IsEmpty(claim.claimedFor) and L("none") or table.concat((function()
+                        local t = {}
+                        for sid, name in pairs(claim.claimedFor) do
+                            table.insert(t, string.format("%s (%s)", name, sid))
+                        end
+                        return t
+                    end)(), "\n")
                 }
             }
 
@@ -91,30 +135,25 @@ lia.command.add("viewallclaims", {
     onRun = function(client)
         MODULE:GetAllCaseClaims():next(function(caseclaims)
             if table.IsEmpty(caseclaims) then
-                client:ChatPrint(L("noClaimsRecorded"))
+                client:notify(L("noClaimsRecorded"))
                 return
             end
 
             local claimsData = {}
             for steamID, claim in pairs(caseclaims) do
-                local claimedFor = L("none")
-                if not table.IsEmpty(claim.claimedFor) then
-                    claimedFor = table.concat((function()
-                        local t = {}
-                        for sid, name in pairs(claim.claimedFor) do
-                            table.insert(t, string.format("%s (%s)", name, sid))
-                        end
-                        return t
-                    end)(), ", ")
-                end
-
                 table.insert(claimsData, {
                     steamID = steamID,
                     name = claim.name,
                     claims = claim.claims,
                     lastclaim = os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim),
                     timeSinceLastClaim = lia.time.TimeSince(claim.lastclaim),
-                    claimedFor = claimedFor
+                    claimedFor = table.IsEmpty(claim.claimedFor) and L("none") or table.concat((function()
+                        local t = {}
+                        for sid, name in pairs(claim.claimedFor) do
+                            table.insert(t, string.format("%s (%s)", name, sid))
+                        end
+                        return t
+                    end)(), ", ")
                 })
             end
 
@@ -157,31 +196,26 @@ lia.command.add("viewclaims", {
     onRun = function(client)
         MODULE:GetAllCaseClaims():next(function(caseclaims)
             if table.IsEmpty(caseclaims) then
-                client:ChatPrint(L("noClaimsData"))
+                client:notify(L("noClaimsData"))
                 return
             end
 
             lia.log.add(client, "viewAllClaims")
             local claimsData = {}
             for steamID, claim in pairs(caseclaims) do
-                local claimedFor = L("none")
-                if not table.IsEmpty(claim.claimedFor) then
-                    claimedFor = table.concat((function()
-                        local t = {}
-                        for sid, name in pairs(claim.claimedFor) do
-                            table.insert(t, string.format("%s (%s)", name, sid))
-                        end
-                        return t
-                    end)(), "\n")
-                end
-
                 table.insert(claimsData, {
                     steamID = steamID,
                     name = claim.name,
                     claims = claim.claims,
                     lastclaim = os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim),
                     timeSinceLastClaim = lia.time.TimeSince(claim.lastclaim),
-                    claimedFor = claimedFor
+                    claimedFor = table.IsEmpty(claim.claimedFor) and L("none") or table.concat((function()
+                        local t = {}
+                        for sid, name in pairs(claim.claimedFor) do
+                            table.insert(t, string.format("%s (%s)", name, sid))
+                        end
+                        return t
+                    end)(), "\n")
                 })
             end
 

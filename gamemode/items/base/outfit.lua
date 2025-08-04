@@ -1,6 +1,6 @@
-﻿ITEM.name = "outfitName"
+ITEM.name = "outfit"
 ITEM.desc = "outfitDesc"
-ITEM.category = "Outfit"
+ITEM.category = L("outfit")
 ITEM.model = "models/props_c17/BriefCase001a.mdl"
 ITEM.width = 1
 ITEM.height = 1
@@ -28,7 +28,7 @@ function ITEM:removeOutfit(client)
     if hook.Run("CanOutfitChangeModel", self) ~= false then
         character:setModel(self:getData("oldMdl", character:getModel()))
         self:setData("oldMdl", nil)
-        client:SetSkin(self:getData("oldSkin", character:getData("skin", 0)))
+        client:SetSkin(self:getData("oldSkin", character:getSkin()))
         self:setData("oldSkin", nil)
         local oldGroups = character:getData("oldGroups", {})
         for k in pairs(self.bodyGroups or {}) do
@@ -36,10 +36,10 @@ function ITEM:removeOutfit(client)
             if index > -1 then
                 client:SetBodygroup(index, oldGroups[index] or 0)
                 oldGroups[index] = nil
-                local groups = character:getData("groups", {})
+                local groups = character:getBodygroups()
                 if groups[index] then
                     groups[index] = nil
-                    character:setData("groups", groups)
+                    character:setBodygroups(groups)
                 end
             end
         end
@@ -115,7 +115,7 @@ ITEM.functions.Equip = {
 
             if isnumber(item.newSkin) then
                 item:setData("oldSkin", item.player:GetSkin())
-                character:setData("skin", item.newSkin)
+                character:setSkin(item.newSkin)
                 item.player:SetSkin(item.newSkin)
             end
 
@@ -132,13 +132,13 @@ ITEM.functions.Equip = {
 
                 character:setData("oldGroups", oldGroups)
                 item:setData("oldGroups", oldGroups)
-                local newGroups = character:getData("groups", {})
+                local newGroups = character:getBodygroups()
                 for index, value in pairs(groups) do
                     newGroups[index] = value
                     item.player:SetBodygroup(index, value)
                 end
 
-                if table.Count(newGroups) > 0 then character:setData("groups", newGroups) end
+                if table.Count(newGroups) > 0 then character:setBodygroups(newGroups) end
             end
         end
 

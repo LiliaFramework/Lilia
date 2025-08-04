@@ -1,12 +1,27 @@
 ﻿local MODULE = MODULE
 AdminStickIsOpen = false
+local playerInfoLabel = L("player") .. " " .. L("information")
+local giveFlagsLabel = L("give") .. " " .. L("flags")
+local takeFlagsLabel = L("take") .. " " .. L("flags")
 local subMenuIcons = {
     moderationTools = "icon16/wrench.png",
-    playerInformation = "icon16/information.png",
+    [playerInfoLabel] = "icon16/information.png",
     characterManagement = "icon16/user_gray.png",
     flagsManagement = "icon16/flag_blue.png",
-    giveFlagsMenu = "icon16/flag_blue.png",
-    takeFlagsMenu = "icon16/flag_red.png",
+    charFlagsTitle = "icon16/flag_green.png",
+    playerFlagsTitle = "icon16/flag_orange.png",
+    [giveFlagsLabel] = "icon16/flag_blue.png",
+    [takeFlagsLabel] = "icon16/flag_red.png",
+    doorManagement = "icon16/door.png",
+    doorActions = "icon16/arrow_switch.png",
+    doorSettings = "icon16/cog.png",
+    doorMaintenance = "icon16/hammer.png",
+    doorInformation = "icon16/information.png",
+    items = "icon16/box.png",
+    misc = "icon16/application_view_tile.png",
+    adminStickSubCategoryBans = "icon16/lock.png",
+    adminStickSubCategoryGetInfos = "icon16/magnifier.png",
+    adminStickSubCategorySetInfos = "icon16/pencil.png",
 }
 
 local function GetOrCreateSubMenu(parent, name, store)
@@ -141,8 +156,7 @@ local function HandleModerationOption(opt, tgt)
     elseif opt.name == "Kick" then
         OpenReasonUI(tgt, "kick")
     else
-        local cmdName = opt.cmd:match("!([^%s]+)")
-        RunAdminCommand(cmdName, tgt)
+        RunAdminCommand(opt.cmd, tgt)
     end
 
     AdminStickIsOpen = false
@@ -150,27 +164,27 @@ end
 
 local function IncludeAdminMenu(tgt, menu, stores)
     local cl = LocalPlayer()
-    if cl:GetUserGroup() == "user" then return end
+    if not (cl:hasPrivilege("Use Admin Stick") or cl:isStaffOnDuty()) then return end
     local mod = GetOrCreateSubMenu(menu, "moderationTools", stores)
     local tp = {
         {
-            name = "Bring",
-            cmd = "!bring " .. QuoteArgs(GetIdentifier(tgt)),
+            name = L("Bring"),
+            cmd = "bring",
             icon = "icon16/arrow_down.png"
         },
         {
-            name = "Goto",
-            cmd = "!goto " .. QuoteArgs(GetIdentifier(tgt)),
+            name = L("Goto"),
+            cmd = "goto",
             icon = "icon16/arrow_right.png"
         },
         {
-            name = "Return",
-            cmd = "!return " .. QuoteArgs(GetIdentifier(tgt)),
+            name = L("return"),
+            cmd = "return",
             icon = "icon16/arrow_redo.png"
         },
         {
-            name = "Respawn",
-            cmd = "!respawn " .. QuoteArgs(GetIdentifier(tgt)),
+            name = L("Respawn"),
+            cmd = "respawn",
             icon = "icon16/arrow_refresh.png"
         }
     }
@@ -178,65 +192,65 @@ local function IncludeAdminMenu(tgt, menu, stores)
     local mods = {
         {
             action = {
-                name = "Blind",
-                cmd = "!blind " .. QuoteArgs(GetIdentifier(tgt)),
+                name = L("Blind"),
+                cmd = "blind",
                 icon = "icon16/eye.png"
             },
             inverse = {
-                name = "Unblind",
-                cmd = "!unblind " .. QuoteArgs(GetIdentifier(tgt)),
+                name = L("Unblind"),
+                cmd = "unblind",
                 icon = "icon16/eye.png"
             }
         },
         {
             action = {
-                name = "Freeze",
-                cmd = "!freeze " .. QuoteArgs(GetIdentifier(tgt)),
+                name = L("Freeze"),
+                cmd = "freeze",
                 icon = "icon16/lock.png"
             },
             inverse = {
-                name = "Unfreeze",
-                cmd = "!unfreeze " .. QuoteArgs(GetIdentifier(tgt)),
+                name = L("Unfreeze"),
+                cmd = "unfreeze",
                 icon = "icon16/accept.png"
             }
         },
         {
             action = {
-                name = "Gag",
-                cmd = "!gag " .. QuoteArgs(GetIdentifier(tgt)),
+                name = L("Gag"),
+                cmd = "gag",
                 icon = "icon16/sound_mute.png"
             },
             inverse = {
-                name = "Ungag",
-                cmd = "!ungag " .. QuoteArgs(GetIdentifier(tgt)),
+                name = L("Ungag"),
+                cmd = "ungag",
                 icon = "icon16/sound_low.png"
             }
         },
         {
             action = {
-                name = "Mute",
-                cmd = "!mute " .. QuoteArgs(GetIdentifier(tgt)),
+                name = L("Mute"),
+                cmd = "mute",
                 icon = "icon16/sound_delete.png"
             },
             inverse = {
-                name = "Unmute",
-                cmd = "!unmute " .. QuoteArgs(GetIdentifier(tgt)),
+                name = L("Unmute"),
+                cmd = "unmute",
                 icon = "icon16/sound_add.png"
             }
         },
         {
-            name = "Ignite",
-            cmd = "!ignite " .. QuoteArgs(GetIdentifier(tgt)),
+            name = L("Ignite"),
+            cmd = "ignite",
             icon = "icon16/fire.png"
         },
         {
-            name = "Jail",
-            cmd = "!jail " .. QuoteArgs(GetIdentifier(tgt)),
+            name = L("Jail"),
+            cmd = "jail",
             icon = "icon16/lock.png"
         },
         {
-            name = "Slay",
-            cmd = "!slay " .. QuoteArgs(GetIdentifier(tgt)),
+            name = L("Slay"),
+            cmd = "slay",
             icon = "icon16/bomb.png"
         }
     }
@@ -259,9 +273,8 @@ local function IncludeAdminMenu(tgt, menu, stores)
 
     for _, o in ipairs(tp) do
         mod:AddOption(L(o.name), function()
-            cl:ChatPrint(L("adminStickExecutedCommand", o.cmd))
-            local cmdName = o.cmd:match("!([^%s]+)")
-            RunAdminCommand(cmdName, tgt)
+            cl:notify(L("adminStickExecutedCommand", o.cmd .. " " .. QuoteArgs(GetIdentifier(tgt))))
+            RunAdminCommand(o.cmd, tgt)
             AdminStickIsOpen = false
         end):SetIcon(o.icon)
     end
@@ -269,37 +282,40 @@ end
 
 local function IncludeCharacterManagement(tgt, menu, stores)
     local cl = LocalPlayer()
-    local canFaction = cl:hasPrivilege("Commands - Manage Transfers")
-    local canClass = cl:hasPrivilege("Commands - Manage Classes")
+    local canFaction = cl:hasPrivilege("Manage Transfers")
+    local canClass = cl:hasPrivilege("Manage Classes")
+    local canWhitelist = cl:hasPrivilege("Manage Whitelists")
     local charMenu = GetOrCreateSubMenu(menu, "characterManagement", stores)
     local char = tgt:getChar()
-    if char and canFaction then
+    if char then
         local facID = char:getFaction()
-        local curName = L("unknown")
-        local facOptions = {}
+        local curName
         if facID then
-            for _, f in pairs(lia.faction.teams) do
-                if f.index == facID then
-                    curName = f.name
-                    for _, v in pairs(lia.faction.teams) do
-                        table.insert(facOptions, {
-                            name = v.name,
-                            cmd = 'say /plytransfer ' .. QuoteArgs(GetIdentifier(tgt), v.name)
-                        })
+            if canFaction then
+                local facOptions = {}
+                for _, f in pairs(lia.faction.teams) do
+                    if f.index == facID then
+                        curName = f.name
+                        for _, v in pairs(lia.faction.teams) do
+                            table.insert(facOptions, {
+                                name = v.name,
+                                cmd = 'say /plytransfer ' .. QuoteArgs(GetIdentifier(tgt), v.name)
+                            })
+                        end
+
+                        break
                     end
-
-                    break
                 end
-            end
 
-            table.sort(facOptions, function(a, b) return a.name < b.name end)
-            if #facOptions > 0 then
-                local fm = GetOrCreateSubMenu(charMenu, L("setFactionTitle", curName), stores)
-                for _, o in ipairs(facOptions) do
-                    fm:AddOption(L(o.name), function()
-                        cl:ConCommand(o.cmd)
-                        AdminStickIsOpen = false
-                    end):SetIcon("icon16/group.png")
+                table.sort(facOptions, function(a, b) return a.name < b.name end)
+                if #facOptions > 0 then
+                    local fm = GetOrCreateSubMenu(charMenu, L("setFactionTitle", curName or L("unknown")), stores)
+                    for _, o in ipairs(facOptions) do
+                        fm:AddOption(L(o.name), function()
+                            cl:ConCommand(o.cmd)
+                            AdminStickIsOpen = false
+                        end):SetIcon("icon16/group.png")
+                    end
                 end
             end
 
@@ -314,7 +330,7 @@ local function IncludeCharacterManagement(tgt, menu, stores)
                 end
 
                 table.sort(cls, function(a, b) return a.name < b.name end)
-                local cm = GetOrCreateSubMenu(charMenu, "Set Class", stores)
+                local cm = GetOrCreateSubMenu(charMenu, "adminStickSetClassName", stores)
                 for _, o in ipairs(cls) do
                     cm:AddOption(L(o.name), function()
                         cl:ConCommand(o.cmd)
@@ -322,10 +338,84 @@ local function IncludeCharacterManagement(tgt, menu, stores)
                     end):SetIcon("icon16/user.png")
                 end
             end
+
+            if canWhitelist then
+                local facAdd, facRemove = {}, {}
+                for _, v in pairs(lia.faction.teams) do
+                    if not v.isDefault then
+                        if not tgt:hasWhitelist(v.index) then
+                            table.insert(facAdd, {
+                                name = v.name,
+                                cmd = 'say /plywhitelist ' .. QuoteArgs(GetIdentifier(tgt), v.name)
+                            })
+                        else
+                            table.insert(facRemove, {
+                                name = v.name,
+                                cmd = 'say /plyunwhitelist ' .. QuoteArgs(GetIdentifier(tgt), v.name)
+                            })
+                        end
+                    end
+                end
+
+                table.sort(facAdd, function(a, b) return a.name < b.name end)
+                table.sort(facRemove, function(a, b) return a.name < b.name end)
+                local fw = GetOrCreateSubMenu(charMenu, "adminStickFactionWhitelistName", stores)
+                for _, o in ipairs(facAdd) do
+                    fw:AddOption(L(o.name), function()
+                        cl:ConCommand(o.cmd)
+                        AdminStickIsOpen = false
+                    end):SetIcon("icon16/group_add.png")
+                end
+
+                local fu = GetOrCreateSubMenu(charMenu, "adminStickUnwhitelistName", stores)
+                for _, o in ipairs(facRemove) do
+                    fu:AddOption(L(o.name), function()
+                        cl:ConCommand(o.cmd)
+                        AdminStickIsOpen = false
+                    end):SetIcon("icon16/group_delete.png")
+                end
+
+                if classes and #classes > 0 then
+                    local cw, cu = {}, {}
+                    for _, c in ipairs(classes) do
+                        if lia.class.hasWhitelist(c.index) then
+                            if not tgt:hasClassWhitelist(c.index) then
+                                table.insert(cw, {
+                                    name = c.name,
+                                    cmd = 'say /classwhitelist ' .. QuoteArgs(GetIdentifier(tgt), c.uniqueID)
+                                })
+                            else
+                                table.insert(cu, {
+                                    name = c.name,
+                                    cmd = 'say /classunwhitelist ' .. QuoteArgs(GetIdentifier(tgt), c.uniqueID)
+                                })
+                            end
+                        end
+                    end
+
+                    table.sort(cw, function(a, b) return a.name < b.name end)
+                    table.sort(cu, function(a, b) return a.name < b.name end)
+                    local cwm = GetOrCreateSubMenu(charMenu, "adminStickClassWhitelistName", stores)
+                    for _, o in ipairs(cw) do
+                        cwm:AddOption(L(o.name), function()
+                            cl:ConCommand(o.cmd)
+                            AdminStickIsOpen = false
+                        end):SetIcon("icon16/user_add.png")
+                    end
+
+                    local cum = GetOrCreateSubMenu(charMenu, "adminStickClassUnwhitelistName", stores)
+                    for _, o in ipairs(cu) do
+                        cum:AddOption(L(o.name), function()
+                            cl:ConCommand(o.cmd)
+                            AdminStickIsOpen = false
+                        end):SetIcon("icon16/user_delete.png")
+                    end
+                end
+            end
         end
     end
 
-    if cl:hasPrivilege("Commands - Manage Character Information") then
+    if cl:hasPrivilege("Manage Character Information") then
         charMenu:AddOption(L("changePlayerModel"), function()
             OpenPlayerModelUI(tgt)
             AdminStickIsOpen = false
@@ -335,14 +425,18 @@ end
 
 local function IncludeFlagManagement(tgt, menu, stores)
     local cl = LocalPlayer()
-    if not cl:hasPrivilege("Commands - Manage Flags") then return end
+    if not cl:hasPrivilege("Manage Flags") then return end
     local charMenu = GetOrCreateSubMenu(menu, "characterManagement", stores)
     local fm = GetOrCreateSubMenu(charMenu, "flagsManagement", stores)
-    local give = GetOrCreateSubMenu(fm, "giveFlagsMenu", stores)
-    local take = GetOrCreateSubMenu(fm, "takeFlagsMenu", stores)
+
+    -- Character flag management
+    local cf = GetOrCreateSubMenu(fm, "charFlagsTitle", stores)
+    local cGive = GetOrCreateSubMenu(cf, giveFlagsLabel, stores)
+    local cTake = GetOrCreateSubMenu(cf, takeFlagsLabel, stores)
+    local charObj = tgt:getChar()
     local toGive, toTake = {}, {}
     for fl in pairs(lia.flag.list) do
-        if not tgt:getChar():hasFlags(fl) then
+        if not charObj or not charObj:hasFlags(fl) then
             table.insert(toGive, {
                 name = L("giveFlagFormat", fl),
                 cmd = 'say /giveflag ' .. QuoteArgs(GetIdentifier(tgt), fl),
@@ -360,18 +454,81 @@ local function IncludeFlagManagement(tgt, menu, stores)
     table.sort(toGive, function(a, b) return a.name < b.name end)
     table.sort(toTake, function(a, b) return a.name < b.name end)
     for _, f in ipairs(toGive) do
-        give:AddOption(L(f.name), function()
+        cGive:AddOption(L(f.name), function()
             cl:ConCommand(f.cmd)
             AdminStickIsOpen = false
         end):SetIcon(f.icon)
     end
 
     for _, f in ipairs(toTake) do
-        take:AddOption(L(f.name), function()
+        cTake:AddOption(L(f.name), function()
             cl:ConCommand(f.cmd)
             AdminStickIsOpen = false
         end):SetIcon(f.icon)
     end
+
+    cf:AddOption(L("modifyCharFlags"), function()
+        local currentFlags = charObj and charObj:getFlags() or ""
+        Derma_StringRequest(L("modifyCharFlags"), L("modifyFlagsDesc"), currentFlags, function(text)
+            text = string.gsub(text or "", "%s", "")
+            net.Start("liaModifyFlags")
+            net.WriteString(tgt:SteamID())
+            net.WriteString(text)
+            net.WriteBool(false)
+            net.SendToServer()
+        end)
+        AdminStickIsOpen = false
+    end):SetIcon("icon16/flag_orange.png")
+
+    -- Player flag management
+    local pf = GetOrCreateSubMenu(fm, "playerFlagsTitle", stores)
+    local pGive = GetOrCreateSubMenu(pf, giveFlagsLabel, stores)
+    local pTake = GetOrCreateSubMenu(pf, takeFlagsLabel, stores)
+    local toGiveP, toTakeP = {}, {}
+    for fl in pairs(lia.flag.list) do
+        if not tgt:hasPlayerFlags(fl) then
+            table.insert(toGiveP, {
+                name = L("giveFlagFormat", fl),
+                cmd = 'say /pflaggive ' .. QuoteArgs(GetIdentifier(tgt), fl),
+                icon = "icon16/flag_blue.png"
+            })
+        else
+            table.insert(toTakeP, {
+                name = L("takeFlagFormat", fl),
+                cmd = 'say /pflagtake ' .. QuoteArgs(GetIdentifier(tgt), fl),
+                icon = "icon16/flag_red.png"
+            })
+        end
+    end
+
+    table.sort(toGiveP, function(a, b) return a.name < b.name end)
+    table.sort(toTakeP, function(a, b) return a.name < b.name end)
+    for _, f in ipairs(toGiveP) do
+        pGive:AddOption(L(f.name), function()
+            cl:ConCommand(f.cmd)
+            AdminStickIsOpen = false
+        end):SetIcon(f.icon)
+    end
+
+    for _, f in ipairs(toTakeP) do
+        pTake:AddOption(L(f.name), function()
+            cl:ConCommand(f.cmd)
+            AdminStickIsOpen = false
+        end):SetIcon(f.icon)
+    end
+
+    pf:AddOption(L("modifyPlayerFlags"), function()
+        local currentFlags = tgt:getPlayerFlags()
+        Derma_StringRequest(L("modifyPlayerFlags"), L("modifyFlagsDesc"), currentFlags, function(text)
+            text = string.gsub(text or "", "%s", "")
+            net.Start("liaModifyFlags")
+            net.WriteString(tgt:SteamID())
+            net.WriteString(text)
+            net.WriteBool(true)
+            net.SendToServer()
+        end)
+        AdminStickIsOpen = false
+    end):SetIcon("icon16/flag_orange.png")
 end
 
 local function AddCommandToMenu(menu, data, key, tgt, name, stores)
@@ -414,7 +571,7 @@ function MODULE:OpenAdminStickUI(tgt)
                 name = L("charIDCopyFormat", tgt:getChar() and tgt:getChar():getID() or L("na")),
                 cmd = function()
                     if tgt:getChar() then
-                        cl:ChatPrint(L("copiedCharID", tgt:getChar():getID()))
+                        cl:notify(L("copiedCharID", tgt:getChar():getID()))
                         SetClipboardText(tgt:getChar():getID())
                     end
 
@@ -425,7 +582,7 @@ function MODULE:OpenAdminStickUI(tgt)
             {
                 name = L("nameCopyFormat", tgt:Name()),
                 cmd = function()
-                    cl:ChatPrint(L("copiedToClipboard", tgt:Name(), "Name"))
+                    cl:notify(L("copiedToClipboard", tgt:Name(), "Name"))
                     SetClipboardText(tgt:Name())
                     AdminStickIsOpen = false
                 end,
@@ -434,25 +591,16 @@ function MODULE:OpenAdminStickUI(tgt)
             {
                 name = L("steamIDCopyFormat", tgt:SteamID()),
                 cmd = function()
-                    cl:ChatPrint(L("copiedToClipboard", tgt:Name(), "SteamID"))
+                    cl:notify(L("copiedToClipboard", tgt:Name(), "SteamID"))
                     SetClipboardText(tgt:SteamID())
                     AdminStickIsOpen = false
                 end,
                 icon = "icon16/page_copy.png"
             },
-            {
-                name = L("steamID64CopyFormat", tgt:SteamID64()),
-                cmd = function()
-                    cl:ChatPrint(L("copiedToClipboard", tgt:Name(), "SteamID64"))
-                    SetClipboardText(tgt:SteamID64())
-                    AdminStickIsOpen = false
-                end,
-                icon = "icon16/page_copy.png"
-            }
         }
 
         table.sort(info, function(a, b) return a.name < b.name end)
-        local pi = GetOrCreateSubMenu(menu, "playerInformation", stores)
+        local pi = GetOrCreateSubMenu(menu, playerInfoLabel, stores)
         for _, o in ipairs(info) do
             pi:AddOption(L(o.name), o.cmd):SetIcon(o.icon)
         end

@@ -10,15 +10,14 @@
         local x, y = pos.x, pos.y
         local owner = entity:GetDTEntity(0)
         local classesRaw = entity:getNetVar("classes")
-        local name = entity:getNetVar("title", entity:getNetVar("name", IsValid(owner) and L("doorTitleOwned") or (not classesRaw or classesRaw == "[]") and not entity:getNetVar("factions") and L("doorTitle") or ""))
         local factions = entity:getNetVar("factions", "[]")
         local classes = classesRaw
         local price = entity:getNetVar("price", 0)
         local ownable = not entity:getNetVar("noSell", false)
-        lia.util.drawText(name, x, y, ColorAlpha(color_white, alpha), 1, 1)
+        lia.util.drawText(entity:getNetVar("title", entity:getNetVar("name", IsValid(owner) and L("doorTitleOwned") or (not classesRaw or classesRaw == "[]") and not entity:getNetVar("factions") and L("doorTitle") or "")), x, y, ColorAlpha(color_white, alpha), 1, 1)
         y = y + 20
         if ownable then
-            lia.util.drawText(L("priceLabel", lia.currency.get(price)), x, y, ColorAlpha(color_white, alpha), 1, 1)
+            lia.util.drawText(L("price") .. ": " .. lia.currency.get(price), x, y, ColorAlpha(color_white, alpha), 1, 1)
             y = y + 20
         end
 
@@ -41,7 +40,7 @@
         if factions and factions ~= "[]" then
             local facs = util.JSONToTable(factions)
             if facs then
-                lia.util.drawText(L("doorFactions"), x, y, ColorAlpha(color_white, alpha), 1, 1)
+                lia.util.drawText(L("factions") .. ":", x, y, ColorAlpha(color_white, alpha), 1, 1)
                 y = y + 20
                 for _, id in ipairs(facs) do
                     local info = lia.faction.get(id)
@@ -54,7 +53,7 @@
         end
 
         if classData and #classData > 0 then
-            lia.util.drawText(L("doorClasses"), x, y, ColorAlpha(color_white, alpha), 1, 1)
+            lia.util.drawText(L("classes") .. ":", x, y, ColorAlpha(color_white, alpha), 1, 1)
             y = y + 20
             for _, data in ipairs(classData) do
                 lia.util.drawText(data.name, x, y, data.color or color_white, 1, 1)
@@ -95,7 +94,7 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
             AdminMenu:AddOption(L("doorNoFactions")):SetEnabled(false)
         end
 
-        local setClassMenu = AdminMenu:AddSubMenu(L("doorSetDoorClass"))
+        local setClassMenu = AdminMenu:AddSubMenu(L("set") .. " " .. L("door") .. " " .. L("class"))
         for classID, classData in pairs(lia.class.list) do
             setClassMenu:AddOption(classData.name, function()
                 LocalPlayer():ConCommand('say /doorsetclass "' .. classID .. '"')
@@ -105,7 +104,7 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
 
         local existingClasses = target:getNetVar("classes")
         if existingClasses and existingClasses ~= "[]" then
-            setClassMenu:AddOption(L("doorRemoveDoorClass"), function()
+            setClassMenu:AddOption(L("remove") .. " " .. L("class"), function()
                 LocalPlayer():ConCommand('say /doorsetclass ""')
                 AdminStickIsOpen = false
             end)

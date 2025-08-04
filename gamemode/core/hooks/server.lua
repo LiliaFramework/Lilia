@@ -1,6 +1,12 @@
 ﻿local GM = GM or GAMEMODE
 function GM:CharPreSave(character)
     local client = character:getPlayer()
+    local loginTime = character:getLoginTime()
+    if loginTime and loginTime > 0 then
+        local total = character:getPlayTime()
+        character:setPlayTime(total + os.time() - loginTime)
+        character:setLoginTime(os.time())
+    end
     if not character:getInv() then return end
     for _, v in pairs(character:getInv():getItems()) do
         if v.OnSave then v:call("OnSave", client) end
@@ -15,20 +21,20 @@ function GM:CharPreSave(character)
             end
         end
 
-        character:setData("ammo", ammoTable)
+        character:setAmmo(ammoTable)
     end
 end
 
 function GM:PlayerLoadedChar(client, character)
     local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
     lia.db.updateTable({
-        _lastJoinTime = timeStamp
-    }, nil, "characters", "_id = " .. character:getID())
+        lastJoinTime = timeStamp
+    }, nil, "characters", "id = " .. character:getID())
 
     client:removeRagdoll()
-    character:setData("loginTime", os.time())
+    character:setLoginTime(os.time())
     hook.Run("PlayerLoadout", client)
-    local ammoTable = character:getData("ammo", {})
+    local ammoTable = character:getAmmo()
     if table.IsEmpty(ammoTable) then return end
     timer.Simple(0.25, function()
         if not IsValid(ammoTable) then return end
@@ -36,7 +42,7 @@ function GM:PlayerLoadedChar(client, character)
             if IsValid(ammoCount) or IsValid(ammoCount) then client:GiveAmmo(ammoCount, ammoType, true) end
         end
 
-        character:setData("ammo", nil)
+        character:setAmmo(nil)
     end)
 end
 
@@ -59,7 +65,7 @@ end
 
 function GM:PlayerShouldPermaKill(client)
     local character = client:getChar()
-    return character:getData("markedForDeath", false)
+    return character:getMarkedForDeath()
 end
 
 function GM:CharLoaded(id)
@@ -198,7 +204,7 @@ function GM:CanPlayerTakeItem(client, item)
         return false
     elseif IsValid(item.entity) then
         local character = client:getChar()
-        if item.entity.SteamID64 == client:SteamID64() and item.entity.liaCharID ~= character:getID() then
+        if item.entity.SteamID == client:SteamID() and item.entity.liaCharID ~= character:getID() then
             client:notifyLocalized("playerCharBelonging")
             return false
         end
@@ -230,17 +236,11 @@ local logTypeMap = {
 }
 
 function GM:CheckPassword(steamID64, _, serverPassword, clientPassword, playerName)
-    local banRecord = lia.admin.isBanned(steamID64)
-    local banExpired = lia.admin.hasBanExpired(steamID64)
-    if banRecord then
-        if not banExpired then return false, L("banMessage", banRecord.duration / 60, banRecord.reason) end
-        lia.admin.removeBan(steamID64)
-    end
-
+    local steamID = util.SteamIDFrom64(steamID64)
     if serverPassword ~= "" and serverPassword ~= clientPassword then
-        lia.log.add(nil, "failedPassword", steamID64, playerName, serverPassword, clientPassword)
-        lia.information(L("passwordMismatchInfo", playerName, steamID64, serverPassword, clientPassword))
-        return false, L("passwordMismatchInfo", playerName, steamID64, serverPassword, clientPassword)
+        lia.log.add(nil, "failedPassword", steamID, playerName, serverPassword, clientPassword)
+        lia.information(L("passwordMismatchInfo", playerName, steamID, serverPassword, clientPassword))
+        return false, L("passwordMismatchInfo", playerName, steamID, serverPassword, clientPassword)
     end
 end
 
@@ -255,10 +255,12 @@ function GM:PlayerSay(client, message)
 
     local logType = logTypeMap[chatType] or "chat"
     lia.chat.send(client, chatType, message, anonymous)
-    if logType == "chat" then
-        lia.log.add(client, logType, chatType and chatType:upper() or "??", message)
-    else
-        lia.log.add(client, logType, message)
+    if lia.chat.classes[chatType] then
+        if logType == "chat" then
+            lia.log.add(client, logType, chatType and chatType:upper() or "??", message)
+        else
+            lia.log.add(client, logType, message)
+        end
     end
 
     hook.Run("PostPlayerSay", client, message, chatType, anonymous)
@@ -327,7 +329,7 @@ function GM:InitializedSchema()
 end
 
 function GM:GetGameDescription()
-    return istable(SCHEMA) and tostring(SCHEMA.name) or "A Lilia Gamemode"
+    return istable(SCHEMA) and tostring(SCHEMA.name) or L("defaultGameDescription")
 end
 
 function GM:PostPlayerLoadout(client)
@@ -335,12 +337,13 @@ function GM:PostPlayerLoadout(client)
     if not character then return end
     client:Give("lia_hands")
     client:SetupHands()
-    for k, v in pairs(character:getData("groups", {})) do
+    for k, v in pairs(character:getBodygroups()) do
         local index = tonumber(k)
         local value = tonumber(v) or 0
         if index then client:SetBodygroup(index, value) end
     end
-    client:SetSkin(character:getData("skin", 0))
+
+    client:SetSkin(character:getSkin())
     client:setNetVar("VoiceType", "Talking")
 end
 
@@ -397,6 +400,26 @@ function GM:ShutDown()
         v:saveLiliaData()
         if v:getChar() then v:getChar():save() end
     end
+
+    lia.administrator.save(true)
+end
+
+function GM:PlayerAuthed(client, steamid)
+    lia.db.selectOne({"userGroup"}, "players", "steamID = " .. lia.db.convertDataType(steamid)):next(function(data)
+        if not IsValid(client) then return end
+        local group = data and data.userGroup
+        if not group or group == "" then
+            group = "user"
+            lia.db.query(Format("UPDATE lia_players SET userGroup = '%s' WHERE steamID = %s", lia.db.escape(group), lia.db.convertDataType(steamid)))
+        end
+
+        client:SetUserGroup(group)
+        lia.db.selectOne({"reason"}, "bans", "playerSteamID = " .. lia.db.convertDataType(steamid)):next(function(banData)
+            if not IsValid(client) or not banData then return end
+            local reason = banData.reason
+            client:Kick(L("banMessage", 0, reason or L("genericReason")))
+        end)
+    end)
 end
 
 function GM:PlayerDisconnected(client)
@@ -426,13 +449,14 @@ function GM:PlayerInitialSpawn(client)
 
     lia.config.send(client)
     client.liaJoinTime = RealTime()
+    lia.administrator.sync(client)
     client:loadLiliaData(function(data)
         if not IsValid(client) then return end
         local address = client:IPAddress()
         client:setLiliaData("lastIP", address)
         lia.db.updateTable({
-            _lastIP = address
-        }, nil, "players", "_steamID = " .. client:SteamID64())
+            lastIP = address
+        }, nil, "players", "steamID = " .. lia.db.convertDataType(client:SteamID()))
 
         net.Start("liaDataSync")
         net.WriteTable(data)
@@ -499,7 +523,7 @@ function GM:SetupBotPlayer(client)
         faction = faction and faction.uniqueID or "unknown",
         desc = L("botDesc", botID),
         model = "models/player/phoenix.mdl",
-    }, botID, client, client:SteamID64())
+    }, botID, client, client:SteamID())
 
     local defaultClass = lia.faction.getDefaultClass(faction.index)
     if defaultClass then character:joinClass(defaultClass.index) end
@@ -597,49 +621,51 @@ end
 function GM:LoadData()
     lia.data.loadPersistenceData(function(entities)
         for _, ent in ipairs(entities) do
-            local cls = ent.class
-            if not isstring(cls) or cls == "" then
-                lia.error("Invalid entity class.")
-                continue
-            end
-
-            local decodedPos = lia.data.decode(ent.pos)
-            local decodedAng = lia.data.decode(ent.angles)
-            if not decodedPos then
-                lia.error("Invalid position for " .. cls .. ".")
-                continue
-            end
-
-            if IsEntityNearby(decodedPos, cls) then
-                lia.error(L("entityCreationAborted", cls, decodedPos.x, decodedPos.y, decodedPos.z))
-                continue
-            end
-
-            local createdEnt = ents.Create(cls)
-            if not IsValid(createdEnt) then
-                lia.error("Failed to create entity " .. cls .. ".")
-                continue
-            end
-
-            createdEnt:SetPos(decodedPos)
-            if decodedAng then createdEnt:SetAngles(decodedAng) end
-            if ent.model then createdEnt:SetModel(ent.model) end
-            createdEnt:Spawn()
-            if ent.skin then createdEnt:SetSkin(tonumber(ent.skin) or 0) end
-            if istable(ent.bodygroups) then
-                for idx, val in pairs(ent.bodygroups) do
-                    createdEnt:SetBodygroup(tonumber(idx) or 0, tonumber(val) or 0)
+            repeat
+                local cls = ent.class
+                if not isstring(cls) or cls == "" then
+                    lia.error(L("invalidEntityClass"))
+                    break
                 end
-            end
 
-            createdEnt:Activate()
-            hook.Run("OnEntityLoaded", createdEnt, ent.data)
+                local decodedPos = lia.data.decode(ent.pos)
+                local decodedAng = lia.data.decode(ent.angles)
+                if not decodedPos then
+                    lia.error(L("invalidEntityPosition", cls))
+                    break
+                end
+
+                if IsEntityNearby(decodedPos, cls) then
+                    lia.error(L("entityCreationAborted", cls, decodedPos.x, decodedPos.y, decodedPos.z))
+                    break
+                end
+
+                local createdEnt = ents.Create(cls)
+                if not IsValid(createdEnt) then
+                    lia.error(L("failedEntityCreation", cls))
+                    break
+                end
+
+                createdEnt:SetPos(decodedPos)
+                if decodedAng then createdEnt:SetAngles(decodedAng) end
+                if ent.model then createdEnt:SetModel(ent.model) end
+                createdEnt:Spawn()
+                if ent.skin then createdEnt:SetSkin(tonumber(ent.skin) or 0) end
+                if istable(ent.bodygroups) then
+                    for idx, val in pairs(ent.bodygroups) do
+                        createdEnt:SetBodygroup(tonumber(idx) or 0, tonumber(val) or 0)
+                    end
+                end
+
+                createdEnt:Activate()
+                hook.Run("OnEntityLoaded", createdEnt, ent.data)
+            until true
         end
     end)
 
-    local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+    local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
-    local condition = "_schema = " .. lia.db.convertDataType(folder) .. " AND _map = " .. lia.db.convertDataType(map)
+    local condition = "schema = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
     lia.db.select({"_itemID", "_pos", "_angles"}, "saveditems", condition):next(function(res)
         local items = res.results or {}
         if #items > 0 then
@@ -657,13 +683,13 @@ function GM:LoadData()
                     lia.db.query("DELETE FROM lia_items WHERE _itemID IN " .. range)
                     lia.information(L("serverDeletedItems"))
                 else
-                    lia.db.query("SELECT _itemID, _uniqueID, _data FROM lia_items WHERE _itemID IN " .. range, function(data)
+                    lia.db.query("SELECT _itemID, uniqueID, data FROM lia_items WHERE _itemID IN " .. range, function(data)
                         if not data then return end
                         local loadedItems = {}
                         for _, row in ipairs(data) do
                             local itemID = tonumber(row._itemID)
-                            local itemData = util.JSONToTable(row._data or "[]")
-                            local uniqueID = row._uniqueID
+                            local itemData = util.JSONToTable(row.data or "[]")
+                            local uniqueID = row.uniqueID
                             local itemTable = lia.item.list[uniqueID]
                             local position = positions[itemID]
                             local ang = angles[itemID]
@@ -894,7 +920,7 @@ function GM:LiliaTablesLoaded()
     lia.db.addDatabaseFields()
     lia.data.loadTables()
     lia.data.loadPersistence()
-    lia.admin.load()
+    lia.administrator.load()
     lia.config.load()
     hook.Run("LoadData")
     hook.Run("PostLoadData")
@@ -920,78 +946,103 @@ local TalkRanges = {
     ["Yelling"] = 600,
 }
 
+local function IsLineOfSightClear(listener, speaker)
+    local tr = util.TraceLine{
+        start = listener:GetShootPos(),
+        endpos = speaker:GetShootPos(),
+        filter = {listener, speaker},
+        mask = MASK_BLOCKLOS
+    }
+
+    if tr.Hit then
+        local ent = tr.Entity
+        if ent == speaker then return true end
+        if ent:GetClass() == "func_door_rotating" then return false end
+        return false
+    end
+    return true
+end
+
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
-    if not IsValid(listener) and IsValid(speaker) or listener == speaker then return false, false end
+    if not IsValid(listener) or not IsValid(speaker) or listener == speaker then return false, false end
     if speaker:getNetVar("IsDeadRestricted", false) then return false, false end
     if speaker:getNetVar("liaGagged", false) then return false, false end
-    local char = speaker:getChar()
-    if not (char and not char:getData("VoiceBan", false)) then return false, false end
+    if not speaker:getChar() or speaker:getLiliaData("VoiceBan", false) then return false, false end
     if not lia.config.get("IsVoiceEnabled", true) then return false, false end
     local voiceType = speaker:getNetVar("VoiceType", "Talking")
-    local range = TalkRanges[voiceType] or TalkRanges["Talking"]
-    local distanceSqr = listener:GetPos():DistToSqr(speaker:GetPos())
-    local canHear = distanceSqr <= range * range
+    local baseRange = TalkRanges[voiceType] or TalkRanges.Talking
+    local clearLOS = IsLineOfSightClear(listener, speaker)
+    local effectiveRange = clearLOS and baseRange or baseRange * 0.16
+    local distSqr = listener:GetPos():DistToSqr(speaker:GetPos())
+    local canHear = distSqr <= effectiveRange * effectiveRange
     return canHear, canHear
 end
 
-local hl2Weapons = {"weapon_crowbar", "weapon_stunstick", "weapon_pistol", "weapon_357", "weapon_smg1", "weapon_ar2", "weapon_shotgun", "weapon_crossbow", "weapon_rpg"}
-lia.botCounter = lia.botCounter or 0
-local function NextBotName()
-    lia.botCounter = lia.botCounter + 1
-    return string.format("Bot%02d", lia.botCounter)
-end
-
-local function SpawnBot()
-    player.CreateNextBot(NextBotName())
-end
-
-local function SpawnArmedBot()
-    local bot = player.CreateNextBot(NextBotName())
-    if IsValid(bot) then
-        local wep = hl2Weapons[math.random(#hl2Weapons)]
-        bot:Give(wep)
-        bot:SelectWeapon(wep)
-    end
-end
-
-concommand.Add("bots", function(ply)
-    if IsValid(ply) then return end
-    local maxPlayers = game.MaxPlayers()
-    local currentCount = player.GetCount()
-    local toSpawn = maxPlayers - currentCount
-    if toSpawn <= 0 then return end
-    timer.Remove("BotsSpawnTimer")
-    timer.Create("BotsSpawnTimer", 1.5, toSpawn, function() SpawnBot() end)
-end)
-
-concommand.Add("armed_bot", function(ply)
-    if IsValid(ply) then return end
-    SpawnArmedBot()
-end)
-
-concommand.Add("armed_bots", function(ply)
-    if IsValid(ply) then return end
-    local maxPlayers = game.MaxPlayers()
-    local currentCount = player.GetCount()
-    local toSpawn = maxPlayers - currentCount
-    if toSpawn <= 0 then return end
-    timer.Remove("BotsSpawnTimer")
-    timer.Create("BotsSpawnTimer", 1.5, toSpawn, function() SpawnArmedBot() end)
-end)
-
 concommand.Add("kickbots", function()
     for _, bot in player.Iterator() do
-        if bot:IsBot() then lia.command.execAdminCommand("kick", bot, nil, L("allBotsKicked")) end
+        if bot:IsBot() then lia.administrator.execCommand("kick", bot, nil, L("allBotsKicked")) end
     end
 end)
 
+concommand.Add("plysetgroup", function(ply, _, args)
+    local target = lia.util.findPlayer(ply, args[1])
+    local usergroup = args[2]
+    if not IsValid(ply) then
+        if IsValid(target) then
+            if lia.administrator.groups[usergroup] then
+                target:SetUserGroup(usergroup)
+                lia.db.query(Format("UPDATE lia_players SET userGroup = '%s' WHERE steamID = %s", lia.db.escape(usergroup), lia.db.convertDataType(target:SteamID())))
+            else
+                MsgC(Color(200, 20, 20), "[" .. L("error") .. "] " .. L("consoleUsergroupNotFound") .. "\n")
+            end
+        else
+            MsgC(Color(200, 20, 20), "[" .. L("error") .. "] " .. L("consolePlayerNotFound") .. "\n")
+        end
+    end
+end)
+
+lia.administrator.registerPrivilege({
+    Name = L("stopSoundForEveryone"),
+    MinAccess = "superadmin",
+    Category = L("categoryServer")
+})
+
 concommand.Add("stopsoundall", function(client)
-    if client:IsSuperAdmin() then
+    if client:hasPrivilege(L("stopSoundForEveryone")) then
         for _, v in player.Iterator() do
             v:ConCommand("stopsound")
         end
     else
-        client:notifyLocalized("mustSuperAdminStopSound")
+        client:notifyLocalized("mustSuperAdminStopSound", L("stopSoundForEveryone"))
+    end
+end)
+
+concommand.Add("bots", function()
+    timer.Create("Bots_Add_Timer", 2, 0, function()
+        if #player.GetAll() < game.MaxPlayers() then
+            game.ConsoleCommand("bot\n")
+        else
+            timer.Remove("Bots_Add_Timer")
+        end
+    end)
+end)
+
+local resetCalled = 0
+concommand.Add("lia_wipedb", function(client)
+    if IsValid(client) then
+        client:notifyLocalized("commandConsoleOnly")
+        return
+    end
+
+    if resetCalled < RealTime() then
+        resetCalled = RealTime() + 3
+        MsgC(Color(255, 0, 0), "[Lilia] " .. L("databaseWipeConfirm") .. "\n")
+    else
+        resetCalled = 0
+        MsgC(Color(255, 0, 0), "[Lilia] " .. L("databaseWipeProgress") .. "\n")
+        hook.Run("OnWipeTables")
+        lia.db.wipeTables(lia.db.loadTables)
+        game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n")
     end
 end)
 
@@ -999,22 +1050,53 @@ concommand.Add("list_entities", function(client)
     local entityCount = {}
     local totalEntities = 0
     if not IsValid(client) then
-        lia.information(L("entitiesOnServer"))
+        lia.information(L("entitiesOnServer") .. ":")
         for _, entity in ents.Iterator() do
-            local className = entity:GetClass() or L("unknown")
-            entityCount[className] = (entityCount[className] or 0) + 1
+            local className = entity:GetClass()
+            if className then
+                entityCount[className] = (entityCount[className] or 0) + 1
+            else
+                entityCount[L("unknown")] = (entityCount[L("unknown")] or 0) + 1
+            end
             totalEntities = totalEntities + 1
         end
 
         for className, count in pairs(entityCount) do
-            lia.information(string.format(L("entityClassCount"), className, count))
+            lia.information(L("entityClassCount", className, count))
         end
 
-        lia.information(string.format(L("totalEntities"), totalEntities))
+        lia.information(L("totalEntities", totalEntities))
     end
 end)
 
-local networkStrings = {"actBar", "AdminModeSwapCharacter", "AnimationStatus", "ArgumentsRequest", "attrib", "BinaryQuestionRequest", "blindFade", "blindTarget", "ButtonRequest", "cfgList", "cfgSet", "CharacterInfo", "charInfo", "charKick", "charSet", "charVar", "CheckHack", "CheckSeed", "classUpdate", "cmd", "cMsg", "CreateTableUI", "DisplayCharList", "doorMenu", "doorPerm", "gVar", "invAct", "invData", "invQuantity", "KickCharacter", "lia_managesitrooms_action", "liaCharacterData", "liaCharacterInvList", "liaCharChoose", "liaCharCreate", "liaCharDelete", "liaCharFetchNames", "liaCharList", "liaCmdArgPrompt", "liaData", "liaDataSync", "liaGroupsAdd", "liaGroupsData", "liaGroupsRemove", "liaGroupsRequest", "liaInventoryAdd", "liaInventoryData", "liaInventoryDelete", "liaInventoryInit", "liaInventoryRemove", "liaItemDelete", "liaItemInspect", "liaItemInstance", "liaNotify", "liaNotifyL", "liaPACPartAdd", "liaPACPartRemove", "liaPACPartReset", "liaPACSync", "liaStorageExit", "liaStorageOpen", "liaStorageTransfer", "liaStorageUnlock", "liaTeleportToEntity", "liaTransferItem", "managesitrooms", "msg", "nDel", "NetStreamDS", "nLcl", "nVar", "OpenInvMenu", "OptionsRequest", "playerLoadedChar", "postPlayerLoadedChar", "prePlayerLoadedChar", "RegenChat", "removeF1", "request_respawn", "RequestDropdown", "rgnDone", "send_logs", "send_logs_request", "seqSet", "ServerChatAddText", "setWaypoint", "setWaypointWithLogo", "SpawnMenuGiveItem", "SpawnMenuSpawnItem", "StringRequest", "TicketSystem", "TicketSystemClaim", "TicketSystemClose", "TransferMoneyFromP2P", "trunkInitStorage", "updateAdminGroups", "VendorAllowClass", "VendorAllowFaction", "VendorEdit", "VendorExit", "VendorMaxStock", "VendorMode", "VendorMoney", "VendorOpen", "VendorPrice", "VendorStock", "VendorSync", "VendorTrade", "VerifyCheats", "VerifyCheatsResponse", "ViewClaims", "WorkshopDownloader_Info", "WorkshopDownloader_Request", "WorkshopDownloader_Start","liaDBTables","liaRequestTableData","liaDBTableData"}
-for _, netString in ipairs(networkStrings) do
-    util.AddNetworkString(netString)
+local oldRunConsole = RunConsoleCommand
+RunConsoleCommand = function(cmd, ...)
+    if cmd == "lia_wipedb" then return end
+    return oldRunConsole(cmd, ...)
 end
+
+local oldGameConsoleCommand = game.ConsoleCommand
+game.ConsoleCommand = function(cmd)
+    if cmd:sub(1, #"lia_wipedb") == "lia_wipedb" then return end
+    return oldGameConsoleCommand(cmd)
+end
+
+gameevent.Listen("server_addban")
+gameevent.Listen("server_removeban")
+hook.Add("server_addban", "LiliaLogServerBan", function(data)
+    lia.admin(string.format("[BAN] %s (%s) was banned for %d minute(s): %s", data.name, data.networkid, data.ban_length, data.ban_reason))
+    lia.db.insertTable({
+        player = data.name or "",
+        playerSteamID = data.networkid,
+        reason = data.ban_reason or "",
+        bannerName = "",
+        bannerSteamID = "",
+        timestamp = os.time(),
+        evidence = ""
+    }, nil, "bans")
+end)
+
+hook.Add("server_removeban", "LiliaLogServerUnban", function(data)
+    lia.admin("[UNBAN] " .. data.networkid .. " was unbanned.")
+    lia.db.query("DELETE FROM lia_bans WHERE playerSteamID = " .. lia.db.convertDataType(data.networkid))
+end)

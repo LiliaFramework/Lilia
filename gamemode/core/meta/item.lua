@@ -125,7 +125,7 @@ end
 
 function ITEM:printData()
     self:print(true)
-    lia.information(L("itemData"))
+    lia.information(L("itemData") .. ":")
     for k, v in pairs(self.data) do
         lia.information(Format(L("itemDataEntry"), k, v))
     end
@@ -225,7 +225,7 @@ if SERVER then
             entity:setItem(self.id)
             instance.entity = entity
             if IsValid(client) then
-                entity.SteamID64 = client:SteamID64()
+                entity.SteamID = client:SteamID()
                 entity.liaCharID = client:getChar():getID()
                 entity:SetCreator(client)
             end
@@ -295,7 +295,7 @@ if SERVER then
                 lia.db.preparedCall("item" .. key, nil, value, self:getID())
             else
                 lia.db.updateTable({
-                    ["_" .. key] = value
+                    [key] = value
                 }, nil, "items", "_itemID = " .. self:getID())
             end
             return
@@ -307,7 +307,7 @@ if SERVER then
             lia.db.preparedCall("itemData", nil, self.data, self:getID())
         else
             lia.db.updateTable({
-                _data = self.data
+                data = self.data
             }, nil, "items", "_itemID = " .. self:getID())
         end
 
@@ -341,7 +341,7 @@ if SERVER then
             lia.db.preparedCall("itemq", nil, self.quantity, self:getID())
         else
             lia.db.updateTable({
-                _quantity = self.quantity
+                quantity = self.quantity
             }, nil, "items", "_itemID = " .. self:getID())
         end
     end

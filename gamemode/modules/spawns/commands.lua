@@ -22,8 +22,10 @@ lia.command.add("spawnadd", {
                 spawns[factionInfo.uniqueID] = spawns[factionInfo.uniqueID] or {}
                 table.insert(spawns[factionInfo.uniqueID], {
                     pos = client:GetPos(),
-                    ang = client:EyeAngles()
+                    ang = client:EyeAngles(),
+                    map = game.GetMap()
                 })
+
                 MODULE:StoreSpawns(spawns)
                 lia.log.add(client, "spawnAdd", factionInfo.name)
                 client:notifyLocalized("spawnAdded", L(factionInfo.name))
@@ -44,17 +46,19 @@ lia.command.add("spawnremoveinradius", {
         local radius = tonumber(arguments[1]) or 120
         MODULE:FetchSpawns():next(function(spawns)
             local removedCount = 0
+            local curMap = game.GetMap():lower()
             for faction, list in pairs(spawns) do
                 for i = #list, 1, -1 do
-                    local spawn = list[i].pos or list[i]
-                    if not isvector(spawn) then
-                        spawn = lia.data.decodeVector(spawn)
-                    end
+                    local data = list[i]
+                    if data.map and data.map:lower() ~= curMap then continue end
+                    local spawn = data.pos or data
+                    if not isvector(spawn) then spawn = lia.data.decodeVector(spawn) end
                     if isvector(spawn) and spawn:Distance(position) <= radius then
                         table.remove(list, i)
                         removedCount = removedCount + 1
                     end
                 end
+
                 if #list == 0 then spawns[faction] = nil end
             end
 
@@ -84,12 +88,25 @@ lia.command.add("spawnremovebyname", {
 
         if factionInfo then
             MODULE:FetchSpawns():next(function(spawns)
-                if spawns[factionInfo.uniqueID] then
-                    local removedCount = #spawns[factionInfo.uniqueID]
-                    spawns[factionInfo.uniqueID] = nil
-                    MODULE:StoreSpawns(spawns)
-                    lia.log.add(client, "spawnRemoveByName", factionInfo.name, removedCount)
-                    client:notifyLocalized("spawnDeletedByName", L(factionInfo.name), removedCount)
+                local list = spawns[factionInfo.uniqueID]
+                if list then
+                    local curMap = game.GetMap():lower()
+                    local removedCount = 0
+                    for i = #list, 1, -1 do
+                        local data = list[i]
+                        if data.map and data.map:lower() ~= curMap then continue end
+                        table.remove(list, i)
+                        removedCount = removedCount + 1
+                    end
+
+                    if removedCount > 0 then
+                        if #list == 0 then spawns[factionInfo.uniqueID] = nil end
+                        MODULE:StoreSpawns(spawns)
+                        lia.log.add(client, "spawnRemoveByName", factionInfo.name, removedCount)
+                        client:notifyLocalized("spawnDeletedByName", L(factionInfo.name), removedCount)
+                    else
+                        client:notifyLocalized("noSpawnsForFaction")
+                    end
                 else
                     client:notifyLocalized("noSpawnsForFaction")
                 end
@@ -106,7 +123,7 @@ lia.command.add("returnitems", {
     desc = "returnItemsDesc",
     syntax = "[player Name]",
     AdminStick = {
-        Name = "returnItemsName",
+        Name = "Return Items",
         Category = "characterManagement",
         SubCategory = "items",
         Icon = "icon16/arrow_refresh.png"

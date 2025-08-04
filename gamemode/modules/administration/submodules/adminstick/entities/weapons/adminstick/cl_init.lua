@@ -35,37 +35,79 @@ function SWEP:DrawHUD()
     local information = {}
     if IsValid(target) then
         if not target:IsPlayer() then
-            if target.GetCreator and IsValid(target:GetCreator()) then table.Add(information, {L("entityClassESPLabel", target:GetClass()), L("entityCreatorESPLabel", tostring(target:GetCreator()))}) end
+            if target.GetCreator and IsValid(target:GetCreator()) then
+                table.insert(information, L("entity") .. " " .. L("class") .. ": " .. target:GetClass())
+                table.insert(information, L("creator") .. ": " .. tostring(target:GetCreator()))
+            end
+
+            if target.isItem and target:isItem() then
+                local itemTable = target.getItemTable and target:getItemTable()
+                if itemTable then
+                    table.insert(information, L("item") .. ": " .. L(itemTable.getName and itemTable:getName() or itemTable.name))
+                    table.insert(information, L("item") .. " " .. L("size") .. ": " .. itemTable:getWidth() .. "x" .. itemTable:getHeight())
+                end
+            end
+
             if target:IsVehicle() and IsValid(target:GetDriver()) then target = target:GetDriver() end
         end
 
         if target:IsPlayer() then
-            information = {L("nicknameLabel", target:Nick()), L("steamNameLabel", target.SteamName and target:SteamName() or target:Name()), L("steamIDLabel", target:SteamID()), L("steamID64Label", target:SteamID64()), L("healthLabel", target:Health()), L("armorLabel", target:Armor()), L("usergroupLabel", target:GetUserGroup())}
+            information = {
+                L("nickname") .. ": " .. target:Nick(),
+                L("steamName") .. ": " .. (target.SteamName and target:SteamName() or target:Name()),
+                L("steamID") .. ": " .. target:SteamID(),
+                L("health") .. ": " .. target:Health(),
+                L("armor") .. ": " .. target:Armor(),
+                L("usergroup") .. ": " .. target:GetUserGroup()
+            }
             if target:getChar() then
                 local char = target:getChar()
                 local faction = lia.faction.indices[target:Team()]
-                table.Add(information, {L("charNameIs", char:getName()), L("characterFactionLabel", faction.name)})
+                table.Add(information, {L("charNameIs", char:getName()), L("character") .. " " .. L("faction") .. ": " .. faction.name})
             else
                 table.insert(information, L("noLoadedCharacter"))
             end
         end
     end
 
+    hook.Run("AddToAdminStickHUD", client, target, information)
+
     local length, thickness = 20, 1
     surface.SetDrawColor(crossColor)
     surface.DrawRect(x - length / 2, y - thickness / 2, length, thickness)
     surface.DrawRect(x - thickness / 2, y - length / 2, thickness, length)
-    local startPosX, startPosY, buffer = x - 250, y + 10, 0
+
+    -- determine size of the information box
+    surface.SetFont("DebugFixed")
+    local maxWidth, totalHeight = 0, 0
     for _, v in pairs(information) do
-        surface.SetFont("DebugFixed")
-        surface.SetTextColor(color_black)
-        surface.SetTextPos(startPosX + 1, startPosY + buffer + 1)
-        surface.DrawText(v)
-        surface.SetTextColor(crossColor)
-        surface.SetTextPos(startPosX, startPosY + buffer)
-        surface.DrawText(v)
-        local _, t_h = surface.GetTextSize(v)
-        buffer = buffer + t_h + 4
+        local t_w, t_h = surface.GetTextSize(v)
+        maxWidth = math.max(maxWidth, t_w)
+        totalHeight = totalHeight + t_h + 4
+    end
+
+    if totalHeight > 0 then
+        local boxWidth = maxWidth + 20
+        local boxHeight = totalHeight + 20
+        local boxX = (ScrW() - boxWidth) / 2
+        local boxY = ScrH() - boxHeight - 20
+
+        -- draw background box
+        surface.SetDrawColor(Color(0, 0, 0, 200))
+        surface.DrawRect(boxX, boxY, boxWidth, boxHeight)
+
+        -- draw text inside box
+        local startPosX, startPosY, buffer = boxX + 10, boxY + 10, 0
+        for _, v in pairs(information) do
+            surface.SetTextColor(color_black)
+            surface.SetTextPos(startPosX + 1, startPosY + buffer + 1)
+            surface.DrawText(v)
+            surface.SetTextColor(crossColor)
+            surface.SetTextPos(startPosX, startPosY + buffer)
+            surface.DrawText(v)
+            local _, t_h = surface.GetTextSize(v)
+            buffer = buffer + t_h + 4
+        end
     end
 end
 

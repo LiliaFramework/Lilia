@@ -67,7 +67,6 @@ function PANEL:Init()
     self.left:SetDraggable(false)
     self.left.Paint = function()
         if not IsValid(liaVendorEnt) then return end
-        local name = liaVendorEnt:getNetVar("name", L("vendorDefaultName"))
         local scale = liaVendorEnt:getNetVar("scale", 0.5)
         local money = liaVendorEnt:getMoney() and lia.currency.get(liaVendorEnt:getMoney()) or "∞"
         local count = table.Count(self.items.vendor)
@@ -77,14 +76,13 @@ function PANEL:Init()
         surface.SetDrawColor(0, 0, 14, 150)
         surface.DrawRect(0, 0, sw * 0.26, sh * 0.033)
         surface.DrawOutlinedRect(0, 0, sw * 0.26, sh * 0.033)
-        draw.DrawText(name, "liaMediumFont", sw * 0.005, sh * 0.003, color_white, TEXT_ALIGN_LEFT)
+        draw.DrawText(liaVendorEnt:getNetVar("name") or L("vendorDefaultName"), "liaMediumFont", sw * 0.005, sh * 0.003, color_white, TEXT_ALIGN_LEFT)
         draw.DrawText(L("money"), "liaSmallFont", sw * 0.1, sh * 0.05, color_white, TEXT_ALIGN_LEFT)
         draw.DrawText(money, "liaSmallFont", sw * 0.2, sh * 0.05, color_white, TEXT_ALIGN_RIGHT)
         draw.DrawText(L("vendorSellScale"), "liaSmallFont", sw * 0.1, sh * 0.07, color_white, TEXT_ALIGN_LEFT)
         draw.DrawText(math.ceil(scale * 100) .. "%", "liaSmallFont", sw * 0.2, sh * 0.07, color_white, TEXT_ALIGN_RIGHT)
         draw.DrawText(L("vendorItemCount"), "liaSmallFont", sw * 0.1, sh * 0.09, color_white, TEXT_ALIGN_LEFT)
-        local txt = count == 0 and L("vendorNoItems") or count == 1 and L("vendorOneItem") or L("vendorItems", count)
-        draw.DrawText(txt, "liaSmallFont", sw * 0.2, sh * 0.09, color_white, TEXT_ALIGN_RIGHT)
+        draw.DrawText(count == 0 and L("vendorNoItems") or count == 1 and L("vendorOneItem") or L("vendorItems", count), "liaSmallFont", sw * 0.2, sh * 0.09, color_white, TEXT_ALIGN_RIGHT)
     end
 
     self.right = self:Add("DFrame")
@@ -109,19 +107,18 @@ function PANEL:Init()
         draw.DrawText(faction, "liaSmallFont", sw * 0.201, sh * 0.05, color_white, TEXT_ALIGN_RIGHT)
         local class = char:getClass()
         local invCount = char:getInv():getItemCount()
-        local disp = invCount == 0 and L("vendorNoItems") or invCount == 1 and L("vendorOneItem") or L("vendorItems", invCount)
         if lia.class.list[class] then
             draw.DrawText(L("class"), "liaSmallFont", sw * 0.085, sh * 0.07, color_white, TEXT_ALIGN_LEFT)
             draw.DrawText(lia.class.list[class].name, "liaSmallFont", sw * 0.2, sh * 0.07, color_white, TEXT_ALIGN_RIGHT)
             draw.DrawText(L("money"), "liaSmallFont", sw * 0.085, sh * 0.09, color_white, TEXT_ALIGN_LEFT)
             draw.DrawText(lia.currency.get(char:getMoney()), "liaSmallFont", sw * 0.2, sh * 0.09, color_white, TEXT_ALIGN_RIGHT)
             draw.DrawText(L("vendorItemCount"), "liaSmallFont", sw * 0.085, sh * 0.11, color_white, TEXT_ALIGN_LEFT)
-            draw.DrawText(disp, "liaSmallFont", sw * 0.2, sh * 0.11, color_white, TEXT_ALIGN_RIGHT)
+            draw.DrawText(invCount == 0 and L("vendorNoItems") or invCount == 1 and L("vendorOneItem") or L("vendorItems", invCount), "liaSmallFont", sw * 0.2, sh * 0.11, color_white, TEXT_ALIGN_RIGHT)
         else
             draw.DrawText(L("money"), "liaSmallFont", sw * 0.085, sh * 0.07, color_white, TEXT_ALIGN_LEFT)
             draw.DrawText(lia.currency.get(char:getMoney()), "liaSmallFont", sw * 0.2, sh * 0.07, color_white, TEXT_ALIGN_RIGHT)
             draw.DrawText(L("vendorItemCount"), "liaSmallFont", sw * 0.085, sh * 0.09, color_white, TEXT_ALIGN_LEFT)
-            draw.DrawText(disp, "liaSmallFont", sw * 0.2, sh * 0.09, color_white, TEXT_ALIGN_RIGHT)
+            draw.DrawText(invCount == 0 and L("vendorNoItems") or invCount == 1 and L("vendorOneItem") or L("vendorItems", invCount), "liaSmallFont", sw * 0.2, sh * 0.09, color_white, TEXT_ALIGN_RIGHT)
         end
     end
 
@@ -178,10 +175,9 @@ function PANEL:createCategoryDropdown()
             item:SetPos(0, (i - 1) * 24)
             item:SetText(text)
             item.DoClick = function()
-                local all = L("vendorShowAll")
-                if cat == all then
+                if cat == L("vendorShowAll") then
                     self.currentCategory = nil
-                    btn:SetText(all)
+                    btn:SetText(L("vendorShowAll"))
                 else
                     self.currentCategory = cat
                     btn:SetText(text)
@@ -320,8 +316,12 @@ function PANEL:GetItemCategoryList()
     for id in pairs(data) do
         local itm = lia.item.list[id]
         if itm then
-            local cat = itm.category or L("misc")
-            out[cat:sub(1, 1):upper() .. cat:sub(2)] = true
+            local cat = itm.category
+            if cat then
+                out[cat:sub(1, 1):upper() .. cat:sub(2)] = true
+            else
+                out[L("misc"):sub(1, 1):upper() .. L("misc"):sub(2)] = true
+            end
         end
     end
     return out
@@ -342,8 +342,12 @@ function PANEL:applyCategoryFilter()
     if not istable(data) then data = liaVendorEnt:getNetVar("items", {}) end
     for id in SortedPairs(data) do
         local itm = lia.item.list[id]
-        local cat = itm and itm.category or L("misc")
-        cat = cat:sub(1, 1):upper() .. cat:sub(2)
+        local cat = itm and itm.category
+        if cat then
+            cat = cat:sub(1, 1):upper() .. cat:sub(2)
+        else
+            cat = L("misc"):sub(1, 1):upper() .. L("misc"):sub(2)
+        end
         if not self.currentCategory or self.currentCategory == L("vendorShowAll") or cat == self.currentCategory then
             local mode = liaVendorEnt:getTradeMode(id)
             if mode ~= VENDOR_BUYONLY then self:updateItem(id, "vendor") end
@@ -526,8 +530,7 @@ function PANEL:updateAction()
         priceSuffix = string.format("%s %s", price, lia.currency.singular)
     end
 
-    local actionText = self.isSelling and L("vendorSellAction", priceSuffix) or L("vendorBuyAction", priceSuffix)
-    self.action:SetText(actionText)
+    self.action:SetText(self.isSelling and L("vendorSellAction", priceSuffix) or L("vendorBuyAction", priceSuffix))
     self.action.DoClick = function()
         if self.isSelling then
             self:sellItemToVendor()
@@ -555,7 +558,7 @@ end
 
 function PANEL:setItemType(itemType)
     local item = lia.item.list[itemType]
-    assert(item, tostring(itemType) .. " is not a valid item")
+    assert(item, L("invalidItemTypeOrID", tostring(itemType)))
     self.item = item
     self.icon:SetModel(item.model, item.skin or 0)
     self:updateLabel()
@@ -586,8 +589,7 @@ function PANEL:updateLabel()
         priceSuffix = string.format("%s %s", price, lia.currency.singular)
     end
 
-    local actionText = self.isSelling and L("vendorSellAction", priceSuffix) or L("vendorBuyAction", priceSuffix)
-    self.action:SetText(actionText)
+    self.action:SetText(self.isSelling and L("vendorSellAction", priceSuffix) or L("vendorBuyAction", priceSuffix))
 end
 
 vgui.Register("VendorItem", PANEL, "DPanel")
@@ -725,9 +727,8 @@ function PANEL:Init()
     end
 
     local currentPreset = entity:getNetVar("preset", "none")
-    local presetLabel = currentPreset == "none" and L("none") or currentPreset
-    self.preset:SetValue(presetLabel)
-    self.preset:ChooseOption(presetLabel)
+    self.preset:SetValue(currentPreset == "none" and L("none") or currentPreset)
+    self.preset:ChooseOption(currentPreset == "none" and L("none") or currentPreset)
     self.preset.OnSelect = function(_, _, value)
         if value == L("none") then value = "none" end
         lia.vendor.editor.preset(value)
@@ -756,8 +757,14 @@ function PANEL:Init()
     self:updateSellScale()
 end
 
+local VendorText = {
+    [VENDOR_SELLANDBUY] = "buyOnlynSell",
+    [VENDOR_BUYONLY] = "buyOnly",
+    [VENDOR_SELLONLY] = "sellOnly",
+}
+
 function PANEL:getModeText(mode)
-    return mode and L(VENDOR_TEXT[mode]) or L("none")
+    return mode and L(VendorText[mode]) or L("none")
 end
 
 function PANEL:OnRemove()
@@ -895,12 +902,11 @@ function PANEL:ReloadItemList(filter)
     self.lines = {}
     self.items:Clear()
     for k, v in SortedPairsByMemberValue(lia.item.list, "name") do
-        local itemName = v.getName and v:getName() or L(v.name)
-        if filter and not itemName:lower():find(filter:lower(), 1, true) then continue end
+        local name = v.getName and v:getName() or v.name
+        if filter and not (v.getName and name or L(name)):lower():find(filter:lower(), 1, true) then continue end
         local mode = entity.items[k] and entity.items[k][VENDOR_MODE]
         local current, max = entity:getStock(k)
-        local category = v.category or L("none")
-        local panel = self.items:AddLine(itemName, self:getModeText(mode), entity:getPrice(k), max and current .. "/" .. max or "-", category)
+        local panel = self.items:AddLine(v.getName and name or L(name), self:getModeText(mode), entity:getPrice(k), max and current .. "/" .. max or "-", v.category or L("none"))
         panel.item = k
         self.lines[k] = panel
     end

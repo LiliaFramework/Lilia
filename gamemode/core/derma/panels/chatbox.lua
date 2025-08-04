@@ -222,10 +222,9 @@ local function PaintFilterButton(btn, btnW, btnH)
 end
 
 function PANEL:addFilterButton(filter)
-    local name = L(filter)
     local tab = self.tabs:Add("DButton")
     tab:SetFont("liaChatFont")
-    tab:SetText(name:upper())
+    tab:SetText(L(filter):upper())
     tab:SizeToContents()
     tab:DockMargin(0, 0, 3, 0)
     tab:SetWide(tab:GetWide() + 32)

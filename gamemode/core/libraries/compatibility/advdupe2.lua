@@ -35,7 +35,9 @@ hook.Add("CanTool", "liaAdvDupe2", function(client, _, tool)
 end)
 
 lia.log.addType("dupeCrashAttempt", function(client)
-    local name = IsValid(client) and client:Name() or L("unknown")
-    local steamID = IsValid(client) and client:SteamID64() or L("na")
-    return string.format("Player '%s' [%s] attempted to duplicate oversized entities.", name, steamID)
+    return L(
+        "dupeCrashAttemptLog",
+        IsValid(client) and client:Name() or L("unknown"),
+        IsValid(client) and client:SteamID() or L("na")
+    )
 end, "Security")

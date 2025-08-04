@@ -296,12 +296,11 @@ net.Receive("actBar", function()
 
     local text = net.ReadString()
     local time = net.ReadFloat()
-    local display = text:sub(1, 1) == "@" and L(text:sub(2)) or text
-    lia.bar.drawAction(display, time)
+    lia.bar.drawAction(text:sub(1, 1) == "@" and L(text:sub(2)) or text, time)
 end)
 
 net.Receive("OpenInvMenu", function()
-    if not LocalPlayer():hasPrivilege("Commands - Check Inventories") then return end
+    if not LocalPlayer():hasPrivilege("Check Inventories") then return end
     local target = net.ReadEntity()
     local index = net.ReadType()
     local targetInv = lia.inventory.instances[index]
@@ -326,17 +325,17 @@ net.Receive("CreateTableUI", function()
 end)
 
 net.Receive("OptionsRequest", function()
-    local title = L(net.ReadString())
-    local subTitle = L(net.ReadString())
+    local titleKey = net.ReadString()
+    local subTitleKey = net.ReadString()
     local options = net.ReadTable()
     local limit = net.ReadUInt(32)
     local frame = vgui.Create("DFrame")
-    frame:SetTitle(title)
+    frame:SetTitle(L(titleKey))
     frame:SetSize(400, 300)
     frame:Center()
     frame:MakePopup()
     local label = vgui.Create("DLabel", frame)
-    label:SetText(subTitle)
+    label:SetText(L(subTitleKey))
     label:SetPos(10, 30)
     label:SizeToContents()
     label:SetTextColor(Color(255, 255, 255))
@@ -348,9 +347,8 @@ net.Receive("OptionsRequest", function()
     local selected = {}
     local checkboxes = {}
     for _, option in ipairs(options) do
-        local localizedOption = L(option)
         local checkbox = vgui.Create("DCheckBoxLabel")
-        checkbox:SetText(localizedOption)
+        checkbox:SetText(L(option))
         checkbox:SetValue(false)
         checkbox:SizeToContents()
         checkbox:SetTextColor(Color(255, 255, 255))
@@ -388,18 +386,18 @@ net.Receive("OptionsRequest", function()
 end)
 
 net.Receive("RequestDropdown", function()
-    local title = L(net.ReadString())
-    local subTitle = L(net.ReadString())
+    local titleKey = net.ReadString()
+    local subTitleKey = net.ReadString()
     local options = net.ReadTable()
     local frame = vgui.Create("DFrame")
-    frame:SetTitle(title)
+    frame:SetTitle(L(titleKey))
     frame:SetSize(300, 150)
     frame:Center()
     frame:MakePopup()
     local dropdown = vgui.Create("DComboBox", frame)
     dropdown:SetPos(10, 40)
     dropdown:SetSize(280, 20)
-    dropdown:SetValue(subTitle)
+    dropdown:SetValue(L(subTitleKey))
     for _, option in ipairs(options) do
         dropdown:AddChoice(L(option))
     end
@@ -499,14 +497,14 @@ local function CreateNoticePanel(length, notimer)
 end
 
 net.Receive("BinaryQuestionRequest", function()
-    local question = L(net.ReadString())
-    local option1 = L(net.ReadString(), "Yes")
-    local option2 = L(net.ReadString(), "No")
+    local questionKey = net.ReadString()
+    local option1Key = net.ReadString()
+    local option2Key = net.ReadString()
     local manualDismiss = net.ReadBool()
     local notice = CreateNoticePanel(10, manualDismiss)
     table.insert(lia.notices, notice)
     notice.isQuery = true
-    notice.text:SetText(question)
+    notice.text:SetText(L(questionKey))
     notice:SetPos(ScrW() / 2 - notice:GetWide() / 2, 4)
     notice:SetTall(36 * 2.3)
     notice:CalcWidth(120)
@@ -534,7 +532,7 @@ net.Receive("BinaryQuestionRequest", function()
         if notice.opt1 and IsValid(notice.opt1) then
             notice.opt1:SetAlpha(255)
             notice.opt1:SetSize(notice:GetWide() / 2, 25)
-            notice.opt1:SetText(option1 .. " (F8)")
+            notice.opt1:SetText(L(option1Key, "Yes") .. " (F8)")
             notice.opt1:SetPos(0, notice:GetTall() - notice.opt1:GetTall())
             notice.opt1:CenterHorizontal(0.25)
             notice.opt1:SetAlpha(0)
@@ -558,7 +556,7 @@ net.Receive("BinaryQuestionRequest", function()
         if notice.opt2 and IsValid(notice.opt2) then
             notice.opt2:SetAlpha(255)
             notice.opt2:SetSize(notice:GetWide() / 2, 25)
-            notice.opt2:SetText(option2 .. " (F9)")
+            notice.opt2:SetText(L(option2Key, "No") .. " (F9)")
             notice.opt2:SetPos(0, notice:GetTall() - notice.opt2:GetTall())
             notice.opt2:CenterHorizontal(0.75)
             notice.opt2:SetAlpha(0)
@@ -591,23 +589,23 @@ end)
 
 net.Receive("ButtonRequest", function()
     local id = net.ReadUInt(32)
-    local title = L(net.ReadString())
+    local titleKey = net.ReadString()
     local count = net.ReadUInt(8)
     local options = {}
     for i = 1, count do
-        options[i] = L(net.ReadString())
+        options[i] = net.ReadString()
     end
 
     local frame = vgui.Create("DFrame")
-    frame:SetTitle(title)
+    frame:SetTitle(L(titleKey))
     frame:SetSize(300, 60 + count * 30)
     frame:Center()
     frame:MakePopup()
-    for i, text in ipairs(options) do
+    for i, key in ipairs(options) do
         local btn = frame:Add("DButton")
         btn:Dock(TOP)
         btn:DockMargin(10, 5, 10, 0)
-        btn:SetText(text)
+        btn:SetText(L(key))
         btn.DoClick = function()
             net.Start("ButtonRequest")
             net.WriteUInt(id, 32)
@@ -730,11 +728,9 @@ net.Receive("liaItemInspect", function()
         model:SetFOV(math.Clamp(math.deg(2 * math.asin(r / d)), 20, 80))
     end)
 
-    -- disable zooming and camera movement so only rotation is allowed
     model.OnMouseWheeled = function() end
     model.OnMousePressed = function() end
     model.OnMouseReleased = function() end
-
     model.Think = function(p)
         if input.IsKeyDown(KEY_A) or input.IsKeyDown(KEY_D) then
             local ang = p.Entity:GetAngles()

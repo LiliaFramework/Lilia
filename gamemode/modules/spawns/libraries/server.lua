@@ -1,36 +1,29 @@
 ﻿local MODULE = MODULE
-local encodetable = lia.data.encodetable
-local TABLE = "spawns"
-local function buildCondition(folder, map)
-    return "_schema = " .. lia.db.convertDataType(folder) .. " AND _map = " .. lia.db.convertDataType(map)
-end
-
 function MODULE:FetchSpawns()
-    local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local map = game.GetMap()
-    local condition = buildCondition(folder, map)
-    return lia.db.selectOne({"_data"}, TABLE, condition):next(function(res)
-        local data = res and lia.data.deserialize(res._data) or {}
-        local factions = data.factions or data
-        local result = {}
-        for fac, spawns in pairs(factions or {}) do
-            local t = {}
-            for i = 1, #spawns do
-                local spawnData = lia.data.deserialize(spawns[i])
-                if isvector(spawnData) then
-                    spawnData = {
-                        pos = spawnData,
-                        ang = angle_zero
-                    }
-                end
-
-                t[i] = spawnData
+    local d = deferred.new()
+    local stored = lia.data.get("spawns", {})
+    local data = istable(stored) and stored or {}
+    local factions = data.factions or data
+    local result = {}
+    for fac, spawns in pairs(factions or {}) do
+        local t = {}
+        for i = 1, #spawns do
+            local spawnData = lia.data.deserialize(spawns[i])
+            if isvector(spawnData) then
+                spawnData = {
+                    pos = spawnData,
+                    ang = angle_zero
+                }
             end
 
-            result[fac] = t
+            t[i] = spawnData
         end
-        return result
-    end)
+
+        result[fac] = t
+    end
+
+    d:resolve(result)
+    return d
 end
 
 function MODULE:StoreSpawns(spawns)
@@ -38,37 +31,22 @@ function MODULE:StoreSpawns(spawns)
     for fac, list in pairs(spawns or {}) do
         factions[fac] = {}
         for _, data in ipairs(list) do
-            factions[fac][#factions[fac] + 1] = encodetable(data)
+            factions[fac][#factions[fac] + 1] = lia.data.encodetable(data)
         end
     end
 
-    local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local map = game.GetMap()
-    return lia.db.upsert({
-        _schema = folder,
-        _map = map,
-        _data = lia.data.serialize({
-            factions = factions
-        })
-    }, TABLE)
+    lia.data.set("spawns", {
+        factions = factions
+    })
+    return deferred.resolve(true)
 end
 
 local function SpawnPlayer(client)
-    print("[SpawnPlayer] called for", IsValid(client) and client:Name() or tostring(client))
-    if not IsValid(client) then
-        print("[SpawnPlayer] invalid client")
-        return
-    end
-
+    if not IsValid(client) then return end
     local character = client:getChar()
-    if not character then
-        print("[SpawnPlayer] no character")
-        return
-    end
-
+    if not character then return end
     local posData = character:getLastPos()
     if posData and posData.map and posData.map:lower() == game.GetMap():lower() then
-        print("[SpawnPlayer] using last position")
         client:SetPos(posData.pos and posData.pos.x and posData.pos or client:GetPos())
         client:SetEyeAngles(posData.ang and posData.ang.p and posData.ang or angle_zero)
         character:setLastPos(nil)
@@ -83,39 +61,30 @@ local function SpawnPlayer(client)
         end
     end
 
-    print("[SpawnPlayer] factionID", factionID or "nil")
     if factionID then
         MODULE:FetchSpawns():next(function(spawns)
-            print("[SpawnPlayer] spawns fetched:", spawns and "ok" or "nil")
             local factionSpawns = spawns and spawns[factionID]
-            print("[SpawnPlayer] spawn count", factionSpawns and #factionSpawns or 0)
             if factionSpawns and #factionSpawns > 0 then
-                local data = table.Random(factionSpawns)
-                local basePos = data.pos or data
-                if not isvector(basePos) then
-                    basePos = lia.data.decodeVector(basePos)
+                local valid = {}
+                local curMap = game.GetMap():lower()
+                for _, v in ipairs(factionSpawns) do
+                    if not v.map or v.map:lower() == curMap then valid[#valid + 1] = v end
                 end
 
-                if not isvector(basePos) then
-                    basePos = Vector(0, 0, 0)
+                if #valid > 0 then
+                    local data = table.Random(valid)
+                    local basePos = data.pos or data
+                    if not isvector(basePos) then basePos = lia.data.decodeVector(basePos) end
+                    if not isvector(basePos) then basePos = Vector(0, 0, 0) end
+                    local pos = basePos + Vector(0, 0, 16)
+                    local ang = data.ang
+                    if not isangle(ang) then ang = lia.data.decodeAngle(ang) or angle_zero end
+                    client:SetPos(pos)
+                    client:SetEyeAngles(ang)
+                    hook.Run("PlayerSpawnPointSelected", client, pos, ang)
                 end
-
-                local pos = basePos + Vector(0, 0, 16)
-
-                local ang = data.ang
-                if not isangle(ang) then
-                    ang = lia.data.decodeAngle(ang) or angle_zero
-                end
-                print("[SpawnPlayer] selected pos", pos, "ang", ang)
-                client:SetPos(pos)
-                client:SetEyeAngles(ang)
-                hook.Run("PlayerSpawnPointSelected", client, pos, ang)
-            else
-                print("[SpawnPlayer] no valid spawns for faction")
             end
-        end, function(err) print("[SpawnPlayer] FetchSpawns error:", err) end)
-    else
-        print("[SpawnPlayer] missing factionID")
+        end)
     end
 end
 
@@ -162,9 +131,8 @@ function MODULE:PlayerDeath(client, _, attacker)
         if lia.config.get("DeathPopupEnabled", true) then
             local dateStr = lia.time.GetDate()
             local attackerChar = attacker:getChar()
-            local charId = attackerChar and tostring(attackerChar:getID()) or L("na")
-            local steamId = tostring(attacker:SteamID64())
-            ClientAddText(client, Color(255, 0, 0), "[" .. string.upper(L("death")) .. "]: ", Color(255, 255, 255), dateStr, " - ", L("killedBy"), " ", Color(255, 215, 0), L("characterID"), ": ", Color(255, 255, 255), charId, " (", Color(0, 255, 0), steamId, Color(255, 255, 255), ")")
+            local steamId = tostring(attacker:SteamID())
+            ClientAddText(client, Color(255, 0, 0), "[" .. string.upper(L("death")) .. "]: ", Color(255, 255, 255), dateStr, " - ", L("killedBy"), " ", Color(255, 215, 0), L("characterID"), ": ", Color(255, 255, 255), attackerChar and tostring(attackerChar:getID()) or L("na"), " (", Color(0, 255, 0), steamId, Color(255, 255, 255), ")")
         end
     end
 

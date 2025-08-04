@@ -8,10 +8,10 @@ characterMeta.__index = characterMeta
 characterMeta.id = characterMeta.id or 0
 characterMeta.vars = characterMeta.vars or {}
 if SERVER and #lia.char.names < 1 then
-    lia.db.query("SELECT _id, _name FROM lia_characters", function(data)
+    lia.db.query("SELECT id, name FROM lia_characters", function(data)
         if data and #data > 0 then
             for _, v in pairs(data) do
-                lia.char.names[v._id] = v._name
+                lia.char.names[v.id] = v.name
             end
         end
     end)
@@ -35,8 +35,8 @@ function lia.char.new(data, id, client, steamID)
     character.id = id or 0
     character.player = client
     if IsValid(client) or steamID then
-        if IsValid(client) and isfunction(client.SteamID64) then
-            character.steamID = client:SteamID64()
+        if IsValid(client) and isfunction(client.SteamID) then
+            character.steamID = client:SteamID()
         else
             character.steamID = steamID
         end
@@ -101,7 +101,7 @@ function lia.char.registerVar(key, data)
 end
 
 lia.char.registerVar("name", {
-    field = "_name",
+    field = "name",
     fieldType = "string",
     default = "John Doe",
     index = 1,
@@ -118,7 +118,7 @@ lia.char.registerVar("name", {
 
         if not lia.config.get("AllowExistNames", true) then
             for _, v in pairs(lia.char.names) do
-                if v == value then return false, "A character with this name already exists." end
+                if v == value then return false, "nameAlreadyExists" end
             end
         end
         return true
@@ -145,7 +145,7 @@ lia.char.registerVar("name", {
 })
 
 lia.char.registerVar("desc", {
-    field = "_desc",
+    field = "desc",
     fieldType = "text",
     default = L("descMinLen", lia.config.get("MinDescLen", 16)),
     index = 2,
@@ -167,7 +167,7 @@ lia.char.registerVar("desc", {
 })
 
 lia.char.registerVar("model", {
-    field = "_model",
+    field = "model",
     fieldType = "string",
     default = "models/error.mdl",
     onSet = function(character, value)
@@ -201,8 +201,7 @@ lia.char.registerVar("model", {
                 newData.model = model
             elseif istable(model) then
                 newData.model = model[1]
-                newData.data = newData.data or {}
-                newData.data.skin = model[2] or 0
+                newData.skin = model[2] or 0
                 local groups = {}
                 if isstring(model[3]) then
                     local i = 0
@@ -216,24 +215,72 @@ lia.char.registerVar("model", {
                     end
                 end
 
-                newData.data.groups = groups
+                newData.bodygroups = groups
             end
         end
     end
 })
 
+lia.char.registerVar("skin", {
+    field = "skin",
+    fieldType = "integer",
+    default = 0,
+    onSet = function(character, value)
+        local oldVar = character:getSkin()
+        character.vars.skin = value
+        local client = character:getPlayer()
+        if IsValid(client) and client:getChar() == character then client:SetSkin(value) end
+        net.Start("charSet")
+        net.WriteString("skin")
+        net.WriteType(character.vars.skin)
+        net.WriteType(character:getID())
+        net.Broadcast()
+        hook.Run("OnCharVarChanged", character, "skin", oldVar, value)
+    end,
+    onGet = function(character, default) return character.vars.skin or default or 0 end,
+    noDisplay = true
+})
+
+lia.char.registerVar("bodygroups", {
+    field = "bodygroups",
+    fieldType = "text",
+    default = {},
+    onSet = function(character, value)
+        local oldVar = character:getBodygroups()
+        character.vars.bodygroups = value
+        local client = character:getPlayer()
+        if IsValid(client) and client:getChar() == character then
+            for k, v in pairs(value or {}) do
+                local index = tonumber(k)
+                if index then client:SetBodygroup(index, v or 0) end
+            end
+        end
+        net.Start("charSet")
+        net.WriteString("bodygroups")
+        net.WriteType(character.vars.bodygroups)
+        net.WriteType(character:getID())
+        net.Broadcast()
+        hook.Run("OnCharVarChanged", character, "bodygroups", oldVar, value)
+    end,
+    onGet = function(character, default) return character.vars.bodygroups or default or {} end,
+    noDisplay = true
+})
+
 lia.char.registerVar("class", {
+    field = "_class",
+    fieldType = "integer",
+    default = 0,
     noDisplay = true,
 })
 
 lia.char.registerVar("faction", {
-    field = "_faction",
+    field = "faction",
     fieldType = "string",
     default = "Citizen",
     onSet = function(character, value)
         local oldVar = character:getFaction()
         local faction = lia.faction.indices[value]
-        assert(faction, tostring(value) .. " is an invalid faction index")
+        assert(faction, L("invalidFactionIndex", tostring(value)))
         local client = character:getPlayer()
         client:SetTeam(value)
         character.vars.faction = faction.uniqueID
@@ -258,7 +305,30 @@ lia.char.registerVar("faction", {
 })
 
 lia.char.registerVar("money", {
-    field = "_money",
+    field = "money",
+    fieldType = "integer",
+    default = 0,
+    isLocal = true,
+    noDisplay = true
+})
+
+lia.char.registerVar("flags", {
+    field = "charflags",
+    fieldType = "string",
+    default = "",
+    noDisplay = true
+})
+
+lia.char.registerVar("loginTime", {
+    field = "logintime",
+    fieldType = "integer",
+    default = 0,
+    isLocal = true,
+    noDisplay = true
+})
+
+lia.char.registerVar("playTime", {
+    field = "playtime",
     fieldType = "integer",
     default = 0,
     isLocal = true,
@@ -330,7 +400,7 @@ lia.char.registerVar("inv", {
 })
 
 lia.char.registerVar("attribs", {
-    field = "_attribs",
+    field = "attribs",
     fieldType = "text",
     default = {},
     isLocal = true,
@@ -363,8 +433,8 @@ lia.char.registerVar("recognition", {
     noDisplay = true
 })
 
-lia.char.registerVar("RecognizedAs", {
-    field = "recognized_as",
+lia.char.registerVar("FakeName", {
+    field = "fakenames",
     fieldType = "text",
     default = {},
     noDisplay = true
@@ -378,15 +448,45 @@ lia.char.registerVar("lastPos", {
     noDisplay = true
 })
 
+lia.char.registerVar("ammo", {
+    field = "ammo",
+    fieldType = "text",
+    default = {},
+    isLocal = true,
+    noDisplay = true
+})
+
+lia.char.registerVar("classwhitelists", {
+    field = "classwhitelists",
+    fieldType = "text",
+    default = {},
+    noDisplay = true
+})
+
+lia.char.registerVar("markedForDeath", {
+    field = "markedfordeath",
+    fieldType = "boolean",
+    default = false,
+    noDisplay = true,
+    noNetworking = true
+})
+
+lia.char.registerVar("banned", {
+    field = "banned",
+    fieldType = "integer",
+    default = 0,
+    noDisplay = true
+})
+
 function lia.char.getCharData(charID, key)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end
-    local results = sql.Query("SELECT _key, _value FROM lia_chardata WHERE _charID = " .. charIDsafe)
+    local results = sql.Query("SELECT key, value FROM lia_chardata WHERE charID = " .. charIDsafe)
     local data = {}
     if istable(results) then
         for _, row in ipairs(results) do
-            local decoded = pon.decode(row._value)
-            data[row._key] = decoded[1]
+            local decoded = pon.decode(row.value)
+            data[row.key] = decoded[1]
         end
     end
 
@@ -398,18 +498,18 @@ function lia.char.getCharDataRaw(charID, key)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end
     if key then
-        local row = sql.Query("SELECT _value FROM lia_chardata WHERE _charID = " .. charIDsafe .. " AND _key = '" .. lia.db.escape(key) .. "'")
+        local row = sql.Query("SELECT value FROM lia_chardata WHERE charID = " .. charIDsafe .. " AND key = '" .. lia.db.escape(key) .. "'")
         if not row or not row[1] then return false end
-        local decoded = pon.decode(row[1]._value)
+        local decoded = pon.decode(row[1].value)
         return decoded[1]
     end
 
-    local results = sql.Query("SELECT _key, _value FROM lia_chardata WHERE _charID = " .. charIDsafe)
+    local results = sql.Query("SELECT key, value FROM lia_chardata WHERE charID = " .. charIDsafe)
     local data = {}
     if istable(results) then
         for _, r in ipairs(results) do
-            local decoded = pon.decode(r._value)
-            data[r._key] = decoded[1]
+            local decoded = pon.decode(r.value)
+            data[r.key] = decoded[1]
         end
     end
     return data
@@ -424,10 +524,12 @@ end
 
 function lia.char.getBySteamID(steamID)
     if not isstring(steamID) or steamID == "" then return end
+    local lookupID = steamID
+    if string.match(steamID, "^%d+$") and #steamID >= 17 then
+        lookupID = util.SteamIDFrom64(steamID) or steamID
+    end
     for _, client in player.Iterator() do
-        local sid = client:SteamID()
-        local sid64 = client:SteamID64()
-        if (sid == steamID or sid64 == steamID) and client:getChar() then return client:getChar() end
+        if client:SteamID() == lookupID and client:getChar() then return client:getChar() end
     end
 end
 
@@ -453,22 +555,23 @@ if SERVER then
     function lia.char.create(data, callback)
         local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
         data.money = data.money or lia.config.get("DefaultMoney")
+        local gamemode = SCHEMA and SCHEMA.folder or "lilia"
         lia.db.insertTable({
-            _name = data.name or "",
-            _desc = data.desc or "",
-            _model = data.model or "models/error.mdl",
-            _schema = SCHEMA and SCHEMA.folder or "lilia",
-            _createTime = timeStamp,
-            _lastJoinTime = timeStamp,
-            _steamID = data.steamID,
-            _faction = data.faction or L("unknown"),
-            _money = data.money,
+            name = data.name or "",
+            desc = data.desc or "",
+            model = data.model or "models/error.mdl",
+            schema = gamemode,
+            createTime = timeStamp,
+            lastJoinTime = timeStamp,
+            steamID = data.steamID,
+            faction = data.faction or L("unknown"),
+            money = data.money,
             recognition = data.recognition or "",
-            recognized_as = ""
+            fakenames = ""
         }, function(_, charID)
             local client
             for _, v in player.Iterator() do
-                if v:SteamID64() == data.steamID then
+                if v:SteamID() == data.steamID then
                     client = v
                     break
                 end
@@ -491,15 +594,16 @@ if SERVER then
     end
 
     function lia.char.restore(client, callback, id)
-        local steamID64 = client:SteamID64()
-        local fields = {"_id"}
+        local steamID = client:SteamID()
+        local fields = {"id"}
         for _, var in pairs(lia.char.vars) do
             if var.field then fields[#fields + 1] = var.field end
         end
 
         fields = table.concat(fields, ", ")
-        local condition = "_schema = '" .. lia.db.escape(SCHEMA.folder) .. "' AND _steamID = " .. steamID64
-        if id then condition = condition .. " AND _id = " .. id end
+        local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+        local condition = "schema = '" .. lia.db.escape(gamemode) .. "' AND steamID = " .. lia.db.convertDataType(steamID)
+        if id then condition = condition .. " AND id = " .. id end
         local query = "SELECT " .. fields .. " FROM lia_characters WHERE " .. condition
         lia.db.query(query, function(data)
             local characters = {}
@@ -511,9 +615,9 @@ if SERVER then
             end
 
             for _, v in ipairs(results) do
-                local charId = tonumber(v._id)
+                local charId = tonumber(v.id)
                 if not charId then
-                    lia.error("[Lilia] Attempt to load character '" .. (data._name or "nil") .. "' with invalid ID!")
+                    lia.error(L("invalidCharacterID", data.name or "nil"))
                     continue
                 end
 
@@ -555,8 +659,8 @@ if SERVER then
                     if defaultFaction then
                         charData.faction = defaultFaction.uniqueID
                         lia.db.updateTable({
-                            _faction = defaultFaction.uniqueID
-                        }, nil, "characters", "_id = " .. charId)
+                            faction = defaultFaction.uniqueID
+                        }, nil, "characters", "id = " .. charId)
                     end
                 end
 
@@ -632,12 +736,12 @@ if SERVER then
         end
 
         lia.char.loaded[id] = nil
-        lia.db.query("DELETE FROM lia_characters WHERE _id = " .. id)
-        lia.db.delete("chardata", "_charID = " .. id)
-        lia.db.query("SELECT _invID FROM lia_inventories WHERE _charID = " .. id, function(data)
+        lia.db.query("DELETE FROM lia_characters WHERE id = " .. id)
+        lia.db.delete("chardata", "charID = " .. id)
+        lia.db.query("SELECT invID FROM lia_inventories WHERE charID = " .. id, function(data)
             if data then
                 for _, inventory in ipairs(data) do
-                    lia.inventory.deleteByID(tonumber(inventory._invID))
+                    lia.inventory.deleteByID(tonumber(inventory.invID))
                 end
             end
         end)
@@ -649,13 +753,13 @@ if SERVER then
         local charIDsafe = tonumber(charID)
         if not charIDsafe or not key then return end
         if val == nil then
-            lia.db.delete("chardata", "_charID = " .. charIDsafe .. " AND _key = '" .. lia.db.escape(key) .. "'")
+            lia.db.delete("chardata", "charID = " .. charIDsafe .. " AND key = '" .. lia.db.escape(key) .. "'")
         else
             local encoded = pon.encode({val})
             lia.db.upsert({
-                _charID = charIDsafe,
-                _key = key,
-                _value = encoded
+                charID = charIDsafe,
+                key = key,
+                value = encoded
             }, "chardata")
         end
 
@@ -667,11 +771,11 @@ if SERVER then
         local charIDsafe = tonumber(charID)
         if not name or not charID then return end
         local promise = lia.db.updateTable({
-            _name = name
-        }, nil, "characters", "_id = " .. charIDsafe)
+            name = name
+        }, nil, "characters", "id = " .. charIDsafe)
 
         if deferred.isPromise(promise) then
-            promise:catch(function(err) lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET _name", err)) end)
+            promise:catch(function(err) lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET name", err)) end)
         elseif promise == false then
             return false
         end
@@ -684,11 +788,11 @@ if SERVER then
         local charIDsafe = tonumber(charID)
         if not model or not charID then return end
         local promise = lia.db.updateTable({
-            _model = model
-        }, nil, "characters", "_id = " .. charIDsafe)
+            model = model
+        }, nil, "characters", "id = " .. charIDsafe)
 
         if deferred.isPromise(promise) then
-            promise:catch(function(err) lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET _model", err)) end)
+            promise:catch(function(err) lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET model", err)) end)
         elseif promise == false then
             return false
         end
@@ -710,6 +814,35 @@ if SERVER then
                 client:SetupHands()
             end
         end
+        return true
+    end
+
+    function lia.char.getCharBanned(charID)
+        local charIDsafe = tonumber(charID)
+        if not charIDsafe then return end
+        local result = sql.Query("SELECT banned FROM lia_characters WHERE id = " .. charIDsafe .. " LIMIT 1")
+        if istable(result) and result[1] then
+            return tonumber(result[1].banned) or 0
+        end
+    end
+
+    function lia.char.setCharBanned(charID, value)
+        local charIDsafe = tonumber(charID)
+        if not charIDsafe then return end
+        value = tonumber(value) or 0
+        local promise = lia.db.updateTable({
+            banned = value
+        }, nil, "characters", "id = " .. charIDsafe)
+        if deferred.isPromise(promise) then
+            promise:catch(function(err) lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET banned", err)) end)
+        elseif promise == false then
+            return false
+        end
+
+        if lia.char.loaded[charIDsafe] then
+            lia.char.loaded[charIDsafe]:setBanned(value)
+        end
+
         return true
     end
 end

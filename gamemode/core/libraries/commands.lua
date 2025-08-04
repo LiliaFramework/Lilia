@@ -6,18 +6,17 @@ function lia.command.add(command, data)
     local superAdminOnly = data.superAdminOnly
     local adminOnly = data.adminOnly
     if not data.onRun then
-        lia.error("Command '" .. command .. "' does not have a callback, not adding!\n")
+        lia.error(L("commandNoCallback", command))
         return
     end
 
     if superAdminOnly or adminOnly then
-        local privilegeName = "Commands - " .. (isstring(data.privilege) and data.privilege or command)
-        if not CAMI.GetPrivilege(privilegeName) then
-            CAMI.RegisterPrivilege({
-                Name = privilegeName,
-                MinAccess = superAdminOnly and "superadmin" or "admin"
-            })
-        end
+        local privilegeName = isstring(data.privilege) and data.privilege or "Access to " .. command
+        lia.administrator.registerPrivilege({
+            Name = privilegeName,
+            MinAccess = superAdminOnly and "superadmin" or "admin",
+            Category = L("commands")
+        })
     end
 
     local onRun = data.onRun
@@ -61,7 +60,7 @@ function lia.command.hasAccess(client, command, data)
     if not privilege then privilege = accessLevels == "user" and "Global" or command end
     local hasAccess = true
     if accessLevels ~= "user" then
-        local privilegeName = "Commands - " .. privilege
+        local privilegeName = "" .. privilege
         hasAccess = client:hasPrivilege(privilegeName)
     end
 
@@ -82,23 +81,25 @@ function lia.command.extractArgs(text)
     local arguments = {}
     local curString = ""
     for i = 1, #text do
-        if i <= skip then continue end
-        local c = text:sub(i, i)
-        if c == "\"" or c == "'" then
-            local match = text:sub(i):match("%b" .. c .. c)
-            if match then
+        if i > skip then
+            local c = text:sub(i, i)
+            if c == "\"" or c == "'" then
+                local match = text:sub(i):match("%b" .. c .. c)
+                if match then
+                    curString = ""
+                    skip = i + #match
+                    arguments[#arguments + 1] = match:sub(2, -2)
+                else
+                    curString = curString .. c
+                end
+            elseif c == " " and curString ~= "" then
+                arguments[#arguments + 1] = curString
                 curString = ""
-                skip = i + #match
-                arguments[#arguments + 1] = match:sub(2, -2)
             else
-                curString = curString .. c
+                if not (c == " " and curString == "") then
+                    curString = curString .. c
+                end
             end
-        elseif c == " " and curString ~= "" then
-            arguments[#arguments + 1] = curString
-            curString = ""
-        else
-            if c == " " and curString == "" then continue end
-            curString = curString .. c
         end
     end
 
@@ -352,8 +353,7 @@ else
             panel:DockMargin(0, 0, 0, 5)
             panel:SetTall(70)
             panel.Paint = function() end
-            local labelText = L(name)
-            local textW = select(1, surface.GetTextSize(labelText))
+            local textW = select(1, surface.GetTextSize(L(name)))
             local ctrl
             if isfunction(fieldType) then
                 local options, mode = fieldType()
@@ -365,26 +365,25 @@ else
                 end
             elseif fieldType == "player" then
                 ctrl = vgui.Create("DComboBox", panel)
-                ctrl:SetValue(L("selectPlayerPrompt"))
+                ctrl:SetValue(L("select") .. " " .. L("player"))
                 for _, plyObj in player.Iterator() do
                     if IsValid(plyObj) then ctrl:AddChoice(plyObj:Name(), plyObj:SteamID()) end
                 end
             elseif fieldType == "item" then
                 ctrl = vgui.Create("DComboBox", panel)
-                ctrl:SetValue(L("selectItemPrompt"))
+                ctrl:SetValue(L("select") .. " " .. L("item"))
                 for uniqueID, item in SortedPairsByMemberValue(lia.item.list, "name") do
-                    local itemName = item.getName and item:getName() or L(item.name)
-                    ctrl:AddChoice(itemName, uniqueID)
+                    ctrl:AddChoice(item.getName and item:getName() or L(item.name), uniqueID)
                 end
             elseif fieldType == "faction" then
                 ctrl = vgui.Create("DComboBox", panel)
-                ctrl:SetValue(L("selectFactionPrompt"))
+                ctrl:SetValue(L("select") .. " " .. L("faction"))
                 for _, fac in ipairs(lia.faction.indices) do
                     ctrl:AddChoice(L(fac.name), string.format("\"%s\"", fac.uniqueID))
                 end
             elseif fieldType == "class" then
                 ctrl = vgui.Create("DComboBox", panel)
-                ctrl:SetValue(L("selectClassPrompt"))
+                ctrl:SetValue(L("select") .. " " .. L("class"))
                 for _, class in pairs(lia.class.list) do
                     ctrl:AddChoice(L(class.name), string.format("\"%s\"", class.uniqueID))
                 end
@@ -398,7 +397,7 @@ else
 
             local label = vgui.Create("DLabel", panel)
             label:SetFont("liaSmallFont")
-            label:SetText(labelText)
+            label:SetText(L(name))
             label:SizeToContents()
             panel.PerformLayout = function(_, w, h)
                 local ctrlH = 30
@@ -544,71 +543,59 @@ else
     end
 end
 
-hook.Add("CreateInformationButtons", "liaInformationCommands", function(pages)
+hook.Add("CreateInformationButtons", "liaInformationCommandsUnified", function(pages)
     local client = LocalPlayer()
     table.insert(pages, {
         name = L("commands"),
-        drawFunc = function(panel)
-            local searchEntry = vgui.Create("DTextEntry", panel)
-            searchEntry:Dock(TOP)
-            searchEntry:SetTall(30)
-            searchEntry:SetPlaceholderText(L("searchCommands"))
-            local scroll = vgui.Create("DScrollPanel", panel)
-            scroll:Dock(FILL)
-            local iconLayout = vgui.Create("DIconLayout", scroll)
-            iconLayout:Dock(FILL)
-            iconLayout:SetSpaceY(5)
-            iconLayout:SetSpaceX(5)
-            iconLayout.PerformLayout = function(self)
-                local y = 0
-                local w = self:GetWide()
-                for _, child in ipairs(self:GetChildren()) do
-                    child:SetPos((w - child:GetWide()) * 0.5, y)
-                    y = y + child:GetTall() + self:GetSpaceY()
-                end
-
-                self:SetTall(y)
-            end
-
-            local function refresh()
-                iconLayout:Clear()
-                local filter = searchEntry:GetValue():lower()
+        drawFunc = function(parent)
+            local sheet = vgui.Create("liaSheet", parent)
+            sheet:SetPlaceholderText(L("searchCommands"))
+            local useList = false
+            if useList then
+                local data = {}
                 for cmdName, cmdData in SortedPairs(lia.command.list) do
-                    if isnumber(cmdName) then continue end
-                    local nameLower = cmdName:lower()
-                    local descLower = (cmdData.desc or ""):lower()
-                    local syntaxLower = (cmdData.syntax or ""):lower()
-                    if filter ~= "" and not (nameLower:find(filter) or descLower:find(filter) or syntaxLower:find(filter)) then continue end
-                    local hasAccess, privilege = lia.command.hasAccess(client, cmdName, cmdData)
-                    if not hasAccess then continue end
-                    local hasDesc = cmdData.desc and cmdData.desc ~= ""
-                    local height = hasDesc and 80 or 40
-                    local commandPanel = vgui.Create("DPanel", iconLayout)
-                    commandPanel:SetSize(panel:GetWide(), height)
-                    commandPanel.Paint = function(self, w, h)
-                        derma.SkinHook("Paint", "Panel", self, w, h)
-                        local baseX = 20
-                        local text = "/" .. cmdName
-                        if cmdData.syntax and cmdData.syntax ~= "" then text = text .. " " .. cmdData.syntax end
-                        local privilegeText = privilege
-                        if privilegeText == "Global" then privilegeText = nil end
-                        if hasDesc then
-                            draw.SimpleText(text, "liaMediumFont", baseX, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-                            draw.SimpleText(cmdData.desc, "liaSmallFont", baseX, 45, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-                            if privilegeText then draw.SimpleText(privilegeText, "liaSmallFont", w - 20, 45, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP) end
-                        else
-                            draw.SimpleText(text, "liaMediumFont", baseX, h * 0.5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                            if privilegeText then draw.SimpleText(privilegeText, "liaSmallFont", w - 20, h * 0.5, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER) end
+                    if not isnumber(cmdName) then
+                        local hasAccess = lia.command.hasAccess(client, cmdName, cmdData)
+                        if hasAccess then
+                            local text = "/" .. cmdName
+                            if cmdData.syntax and cmdData.syntax ~= "" then text = text .. " " .. cmdData.syntax end
+                            local desc = cmdData.desc or ""
+                            local priv = cmdData.privilege and cmdData.privilege ~= "Global" and cmdData.privilege or ""
+                            data[#data + 1] = {text, desc, priv}
                         end
                     end
                 end
 
-                iconLayout:InvalidateLayout(true)
+                sheet:AddListViewRow({
+                    columns = {L("command"), L("description"), L("privilege")},
+                    data = data,
+                    height = 300
+                })
+            else
+                for cmdName, cmdData in SortedPairs(lia.command.list) do
+                    if not isnumber(cmdName) then
+                        local hasAccess, privilege = lia.command.hasAccess(client, cmdName, cmdData)
+                        if hasAccess then
+                            local text = "/" .. cmdName
+                            if cmdData.syntax and cmdData.syntax ~= "" then text = text .. " " .. cmdData.syntax end
+                            local desc = cmdData.desc or ""
+                            local right = privilege and privilege ~= "Global" and privilege or ""
+                            local row = sheet:AddTextRow({
+                                title = text,
+                                desc = desc,
+                                right = right
+                            })
+
+                            row.filterText = (cmdName .. " " .. (cmdData.syntax or "") .. " " .. desc .. " " .. right):lower()
+                        end
+                    end
+                end
             end
 
-            searchEntry.OnTextChanged = refresh
-            refresh()
-        end
+            sheet:Refresh()
+            parent.refreshSheet = function() if IsValid(sheet) then sheet:Refresh() end end
+        end,
+        onSelect = function(pnl) if pnl.refreshSheet then pnl.refreshSheet() end end
     })
 end)
 

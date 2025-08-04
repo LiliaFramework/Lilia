@@ -20,11 +20,17 @@ lia.command.add("warn", {
             return
         end
 
+        if target == client then
+            client:notifyLocalized("cannotWarnSelf")
+            return
+        end
+
         local timestamp = os.date("%Y-%m-%d %H:%M:%S")
-        local adminStr = client:Nick() .. " (" .. client:SteamID() .. ")"
-        MODULE:AddWarning(target:getChar():getID(), target:SteamID64(), timestamp, reason, adminStr)
-        lia.db.count("warnings", "_charID = " .. lia.db.convertDataType(target:getChar():getID())):next(function(count)
-            target:notifyLocalized("playerWarned", adminStr, reason)
+        local warnerName = client:Nick()
+        local warnerSteamID = client:SteamID()
+        MODULE:AddWarning(target:getChar():getID(), target:Nick(), target:SteamID(), timestamp, reason, warnerName, warnerSteamID)
+        lia.db.count("warnings", "charID = " .. lia.db.convertDataType(target:getChar():getID())):next(function(count)
+            target:notifyLocalized("playerWarned", warnerName .. " (" .. warnerSteamID .. ")", reason)
             client:notifyLocalized("warningIssued", target:Nick())
             hook.Run("WarningIssued", client, target, reason, count)
         end)
@@ -37,7 +43,7 @@ lia.command.add("viewwarns", {
     desc = "viewWarnsDesc",
     syntax = "[player Target]",
     AdminStick = {
-        Name = "viewPlayerWarnings",
+        Name = "View Player Warnings",
         Category = "moderationTools",
         SubCategory = "warnings",
         Icon = "icon16/eye.png"
@@ -59,13 +65,13 @@ lia.command.add("viewwarns", {
             for index, warn in ipairs(warns) do
                 table.insert(warningList, {
                     index = index,
-                    timestamp = warn._timestamp or L("na"),
-                    reason = warn._reason or L("na"),
-                    admin = warn._admin or L("na")
+                    timestamp = warn.timestamp or L("na"),
+                    admin = string.format("%s (%s)", warn.warner or L("na"), warn.warnerSteamID or L("na")),
+                    warningMessage = warn.message or L("na")
                 })
             end
 
-            lia.util.CreateTableUI(client, target:Nick() .. "'s " .. L("warnings"), {
+            lia.util.CreateTableUI(client, L("playerWarningsTitle", target:Nick()), {
                 {
                     name = L("id"),
                     field = "index"
@@ -75,12 +81,12 @@ lia.command.add("viewwarns", {
                     field = "timestamp"
                 },
                 {
-                    name = L("reason"),
-                    field = "reason"
-                },
-                {
                     name = L("admin"),
                     field = "admin"
+                },
+                {
+                    name = L("Warning Message"),
+                    field = "warningMessage"
                 }
             }, warningList, {
                 {

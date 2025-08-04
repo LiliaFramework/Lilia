@@ -177,9 +177,9 @@ if SERVER then
             item = lia.item.list[itemTypeOrItem]
         end
 
-        if not item then return d:reject("invalid item type") end
+        if not item then return d:reject(L("invalidItemType")) end
         local targetInventory = self
-        if not targetInventory:canAdd(itemTypeOrItem) then return d:reject("No space available for the item.") end
+        if not targetInventory:canAdd(itemTypeOrItem) then return d:reject(L("noSpaceForItem")) end
         if not x or not y then
             x, y = self:findFreePosition(item)
             if not x or not y then
@@ -301,9 +301,9 @@ if SERVER then
 
     function GridInv:remove(itemTypeOrID, quantity)
         quantity = quantity or 1
-        assert(isnumber(quantity), "quantity must be a number")
+        assert(isnumber(quantity), L("quantityMustBeNumber"))
         local d = deferred.new()
-        if quantity <= 0 then return d:reject("quantity must be positive") end
+        if quantity <= 0 then return d:reject(L("quantityMustBePositive")) end
         if isnumber(itemTypeOrID) then
             self:removeItem(itemTypeOrID)
         else

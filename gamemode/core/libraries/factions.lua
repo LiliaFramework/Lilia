@@ -1,7 +1,52 @@
-﻿lia.faction = lia.faction or {}
+lia.faction = lia.faction or {}
 lia.faction.indices = lia.faction.indices or {}
 lia.faction.teams = lia.faction.teams or {}
-local DefaultModels = {"models/player/barney.mdl", "models/player/alyx.mdl", "models/player/breen.mdl", "models/player/p2_chell.mdl"}
+local DefaultModels = {"models/player/group01/male_01.mdl", "models/player/group01/male_02.mdl", "models/player/group01/male_03.mdl", "models/player/group01/male_04.mdl", "models/player/group01/male_05.mdl", "models/player/group01/male_06.mdl", "models/player/group01/female_01.mdl", "models/player/group01/female_02.mdl", "models/player/group01/female_03.mdl", "models/player/group01/female_04.mdl", "models/player/group01/female_05.mdl", "models/player/group01/female_06.mdl"}
+function lia.faction.register(uniqueID, data)
+    assert(isstring(uniqueID), "uniqueID must be a string")
+    assert(istable(data), "data must be a table")
+    local existing = lia.faction.teams[uniqueID]
+    local constantName = "FACTION_" .. string.upper(uniqueID)
+    local providedIndex = tonumber(data.index)
+    local constantIndex = tonumber(_G[constantName])
+    local index = providedIndex or constantIndex or existing and existing.index or table.Count(lia.faction.teams) + 1
+    assert(not lia.faction.indices[index] or lia.faction.indices[index] == existing, "faction index is already in use")
+    local faction = existing or {
+        index = index,
+        isDefault = true
+    }
+
+    for k, v in pairs(data) do
+        faction[k] = v
+    end
+
+    faction.index = index
+    faction.uniqueID = uniqueID
+    faction.name = L(faction.name) or "unknown"
+    faction.desc = L(faction.desc) or "noDesc"
+    faction.color = faction.color or Color(150, 150, 150)
+    faction.models = faction.models or DefaultModels
+    local overrideName = hook.Run("OverrideFactionName", uniqueID, faction.name)
+    if overrideName then faction.name = overrideName end
+    local overrideDesc = hook.Run("OverrideFactionDesc", uniqueID, faction.desc)
+    if overrideDesc then faction.desc = overrideDesc end
+    local overrideModels = hook.Run("OverrideFactionModels", uniqueID, faction.models)
+    if overrideModels then faction.models = overrideModels end
+    team.SetUp(faction.index, faction.name or L and L("unknown") or "unknown", faction.color or Color(125, 125, 125))
+    for _, modelData in pairs(faction.models) do
+        if isstring(modelData) then
+            util.PrecacheModel(modelData)
+        elseif istable(modelData) then
+            util.PrecacheModel(modelData[1])
+        end
+    end
+
+    lia.faction.indices[faction.index] = faction
+    lia.faction.teams[uniqueID] = faction
+    _G[constantName] = faction.index
+    return faction.index, faction
+end
+
 function lia.faction.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local niceName
@@ -19,19 +64,25 @@ function lia.faction.loadFromDir(directory)
         lia.include(directory .. "/" .. v, "shared")
         if not FACTION.name then
             FACTION.name = "unknown"
-            lia.error("Faction '" .. niceName .. "' is missing a name. You need to add a FACTION.name = \"Name\"\n")
+            lia.error(L("factionMissingName", niceName))
         end
 
         if not FACTION.desc then
             FACTION.desc = "noDesc"
-            lia.error("Faction '" .. niceName .. "' is missing a description. You need to add a FACTION.desc = \"Description\"\n")
+            lia.error(L("factionMissingDesc", niceName))
         end
 
         FACTION.name = L(FACTION.name)
         FACTION.desc = L(FACTION.desc)
+        local overrideName = hook.Run("OverrideFactionName", niceName, FACTION.name)
+        if overrideName then FACTION.name = overrideName end
+        local overrideDesc = hook.Run("OverrideFactionDesc", niceName, FACTION.desc)
+        if overrideDesc then FACTION.desc = overrideDesc end
+        local overrideModels = hook.Run("OverrideFactionModels", niceName, FACTION.models)
+        if overrideModels then FACTION.models = overrideModels end
         if not FACTION.color then
             FACTION.color = Color(150, 150, 150)
-            lia.error("Faction '" .. niceName .. "' is missing a color. You need to add FACTION.color = Color(1, 2, 3)\n")
+            lia.error(L("factionMissingColor", niceName))
         end
 
         team.SetUp(FACTION.index, FACTION.name or L("unknown"), FACTION.color or Color(125, 125, 125))
@@ -203,6 +254,15 @@ function lia.faction.getDefaultClass(id)
     end
     return defaultClass
 end
+
+FACTION_STAFF = lia.faction.register("staff", {
+    name = "factionStaffName",
+    desc = "factionStaffDesc",
+    color = Color(255, 56, 252),
+    isDefault = false,
+    models = {"models/Humans/Group02/male_07.mdl", "models/Humans/Group02/male_07.mdl", "models/Humans/Group02/male_07.mdl", "models/Humans/Group02/male_07.mdl", "models/Humans/Group02/male_07.mdl",},
+    weapons = {"weapon_physgun", "gmod_tool"}
+})
 
 if CLIENT then
     function lia.faction.hasWhitelist(faction)

@@ -115,8 +115,8 @@ local DefaultFunctions = {
             if not target or not targetInv then return false end
             inv:addAccessRule(canTransferItemsFromInventoryUsingGiveForward)
             targetInv:addAccessRule(canTransferItemsFromInventoryUsingGiveForward)
-            client:setAction("Giving " .. item.name .. " to " .. target:Name(), lia.config.get("ItemGiveSpeed", 6))
-            target:setAction(client:Name() .. " is giving you a " .. item.name, lia.config.get("ItemGiveSpeed", 6))
+            client:setAction(L("givingItemTo", L(item.name), target:Name()), lia.config.get("ItemGiveSpeed", 6))
+            target:setAction(L("givingYouItem", client:Name(), L(item.name)), lia.config.get("ItemGiveSpeed", 6))
             client:doStaredAction(target, function()
                 local res = hook.Run("HandleItemTransferRequest", client, item:getID(), nil, nil, targetInv:getID())
                 if not res then return end
@@ -142,7 +142,7 @@ local DefaultFunctions = {
             local target = client:getTracedEntity()
             if not (IsValid(target) and target:IsPlayer() and target:Alive() and client:GetPos():DistToSqr(target:GetPos()) < 6500) then return false end
             if hook.Run("CanPlayerRequestInspectionOnItem", client, target, item) == false then return false end
-            target:binaryQuestion(client:Name() .. " wants to show you their " .. item.name .. ".", L("yes"), L("no"), false, function(choice)
+            target:binaryQuestion(L("inspectRequest", client:Name(), L(item.name)), L("yes"), L("no"), false, function(choice)
                 if choice == 0 then
                     net.Start("liaItemInspect")
                     net.WriteString(item.uniqueID)
@@ -182,9 +182,9 @@ function lia.item.get(identifier)
 end
 
 function lia.item.getItemByID(itemID)
-    assert(isnumber(itemID), "itemID must be a number")
+    assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
-    if not item then return nil, "Item not found" end
+    if not item then return nil, L("itemNotFound") end
     local location = "unknown"
     if item.invID then
         local inventory = lia.item.getInv(item.invID)
@@ -199,16 +199,16 @@ function lia.item.getItemByID(itemID)
 end
 
 function lia.item.getInstancedItemByID(itemID)
-    assert(isnumber(itemID), "itemID must be a number")
+    assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
-    if not item then return nil, "Item not found" end
+    if not item then return nil, L("itemNotFound") end
     return item
 end
 
 function lia.item.getItemDataByID(itemID)
-    assert(isnumber(itemID), "itemID must be a number")
+    assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
-    if not item then return nil, "Item not found" end
+    if not item then return nil, L("itemNotFound") end
     return item.data
 end
 
@@ -487,9 +487,9 @@ function lia.item.generateWeapons()
         local isGrenade = holdType == "grenade"
         local baseType = isGrenade and "base_grenade" or "base_weapons"
         local ITEM = lia.item.register(className, baseType, nil, nil, true)
-        ITEM.name = override.name or wep.PrintName or className
-        ITEM.desc = override.desc or "A Weapon"
-        ITEM.category = override.category or "Weapons"
+        ITEM.name = hook.Run("GetWeaponName", weapon) or override.name or language.GetPhrase(weapons[i]:GetPrintName()):utf8upper() or className
+        ITEM.desc = override.desc or L("weaponsDesc")
+        ITEM.category = override.category or isGrenade and L("itemCatGrenades") or L("weapons")
         ITEM.model = override.model or wep.WorldModel or wep.WM or "models/props_c17/suitcase_passenger_physics.mdl"
         ITEM.class = override.class or className
         local size = lia.item.holdTypeSizeMapping[holdType] or {
@@ -500,16 +500,15 @@ function lia.item.generateWeapons()
         ITEM.width = override.width or size.width
         ITEM.height = override.height or size.height
         ITEM.weaponCategory = override.weaponCategory or lia.item.holdTypeToWeaponCategory[holdType] or "primary"
-        ITEM.category = isGrenade and "grenade" or "weapons"
     end
 end
 
 if SERVER then
     function lia.item.setItemDataByID(itemID, key, value, receivers, noSave, noCheckEntity)
-        assert(isnumber(itemID), "itemID must be a number")
+        assert(isnumber(itemID), L("itemIDNumberRequired"))
         assert(isstring(key), "key must be a string")
         local item = lia.item.instances[itemID]
-        if not item then return false, "Item not found" end
+        if not item then return false, L("itemNotFound") end
         item:setData(key, value, receivers, noSave, noCheckEntity)
         return true
     end
@@ -557,12 +556,12 @@ if SERVER then
             lia.db.preparedCall("itemInstance", onItemCreated, index, uniqueID, itemData, x, y, itemTable.maxQuantity or 1)
         else
             lia.db.insertTable({
-                _invID = index,
-                _uniqueID = uniqueID,
-                _data = itemData,
-                _x = x,
-                _y = y,
-                _quantity = itemTable.maxQuantity or 1
+                invID = index,
+                uniqueID = uniqueID,
+                data = itemData,
+                x = x,
+                y = y,
+                quantity = itemTable.maxQuantity or 1
             }, onItemCreated, "items")
         end
         return d
@@ -586,19 +585,19 @@ if SERVER then
             return
         end
 
-        lia.db.query("SELECT _itemID, _uniqueID, _data, _x, _y, _quantity FROM lia_items WHERE _itemID IN " .. range, function(results)
+        lia.db.query("SELECT _itemID, uniqueID, data, x, y, quantity FROM lia_items WHERE _itemID IN " .. range, function(results)
             if not results then return end
             for _, row in ipairs(results) do
                 local id = tonumber(row._itemID)
-                local itemDef = lia.item.list[row._uniqueID]
+                local itemDef = lia.item.list[row.uniqueID]
                 if id and itemDef then
-                    local item = lia.item.new(row._uniqueID, id)
-                    local itemData = util.JSONToTable(row._data or "[]") or {}
+                    local item = lia.item.new(row.uniqueID, id)
+                    local itemData = util.JSONToTable(row.data or "[]") or {}
                     item.invID = 0
                     item.data = itemData
-                    item.data.x = tonumber(row._x)
-                    item.data.y = tonumber(row._y)
-                    item.quantity = tonumber(row._quantity)
+                    item.data.x = tonumber(row.x)
+                    item.data.y = tonumber(row.y)
+                    item.quantity = tonumber(row.quantity)
                     item:onRestored()
                 end
             end

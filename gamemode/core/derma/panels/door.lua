@@ -1,7 +1,7 @@
 ﻿local PANEL = {}
 function PANEL:Init()
     self:SetSize(280, 240)
-    self:SetTitle(L("doorSettings"))
+    self:SetTitle(L("door") .. " " .. L("settings"))
     self:Center()
     self:MakePopup()
     self.access = self:Add("DListView")
@@ -37,8 +37,7 @@ function PANEL:setDoor(door, accessData, fallback)
     local client = LocalPlayer()
     for _, ply in player.Iterator() do
         if ply ~= client and ply:getChar() then
-            local label = L(ACCESS_LABELS[accessData[ply] or 0])
-            local line = self.access:AddLine(ply:Name():gsub("#", "\226\128\139#"), label)
+            local line = self.access:AddLine(ply:Name():gsub("#", "\226\128\139#"), L(ACCESS_LABELS[accessData[ply] or 0]))
             line.player = ply
         end
     end

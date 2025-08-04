@@ -10,10 +10,12 @@ end
 
 if SERVER then
     function lia.flag.onSpawn(client)
-        if client:getChar() then
-            local flags = client:getChar():getFlags()
-            for i = 1, #flags do
-                local flag = flags:sub(i, i)
+        local flags = (client:getFlags() .. client:getPlayerFlags())
+        local processed = {}
+        for i = 1, #flags do
+            local flag = flags:sub(i, i)
+            if not processed[flag] then
+                processed[flag] = true
                 local info = lia.flag.list[flag]
                 if info and info.callback then info.callback(client, true) end
             end
@@ -48,49 +50,64 @@ lia.flag.add("t", L("flagToolgun"), function(client, isGiven)
     end
 end)
 
-hook.Add("CreateInformationButtons", "liaInformationFlags", function(pages)
+hook.Add("CreateInformationButtons", "liaInformationFlagsUnified", function(pages)
     local client = LocalPlayer()
     table.insert(pages, {
-        name = L("flags"),
-        drawFunc = function(panel)
-            local searchEntry = vgui.Create("DTextEntry", panel)
-            searchEntry:Dock(TOP)
-            searchEntry:SetTall(30)
-            searchEntry:SetPlaceholderText(L("searchFlags"))
-            local scroll = vgui.Create("DScrollPanel", panel)
-            scroll:Dock(FILL)
-            local canvas = scroll:GetCanvas()
-            local function refresh()
-                canvas:Clear()
-                local filter = searchEntry:GetValue():lower()
-                for flagName, flagData in SortedPairs(lia.flag.list) do
-                    if isnumber(flagName) then continue end
-                    local nameLower = flagName:lower()
-                    local descLower = (flagData.desc or ""):lower()
-                    if filter ~= "" and not (nameLower:find(filter, 1, true) or descLower:find(filter, 1, true)) then continue end
-                    local hasDesc = flagData.desc and flagData.desc ~= ""
-                    local height = hasDesc and 80 or 40
-                    local flagPanel = vgui.Create("DPanel", canvas)
-                    flagPanel:Dock(TOP)
-                    flagPanel:DockMargin(10, 5, 10, 0)
-                    flagPanel:SetTall(height)
-                    flagPanel.Paint = function(pnl, w, h)
-                        local hasFlag = client:getChar():hasFlags(flagName)
-                        derma.SkinHook("Paint", "Panel", pnl, w, h)
-                        draw.SimpleText(L("flagLabel", flagName), "liaMediumFont", 20, 10, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-                        local icon = hasFlag and "checkbox.png" or "unchecked.png"
-                        local iconSize = 64
-                        lia.util.drawTexture(icon, color_white, w - iconSize - 10, h * 0.5 - iconSize * 0.5, iconSize, iconSize)
-                        if hasDesc then draw.SimpleText(flagData.desc, "liaSmallFont", 20, 45, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP) end
-                    end
+        name = L("charFlagsTitle"),
+        drawFunc = function(parent)
+            local sheet = vgui.Create("liaSheet", parent)
+            sheet:SetPlaceholderText(L("searchFlags"))
+            for flagName, flagData in SortedPairs(lia.flag.list) do
+                if isnumber(flagName) then continue end
+                local descText = flagData.desc or ""
+                local row = sheet:AddTextRow({
+                    title = L("flag") .. " '" .. flagName .. "'",
+                    desc = descText
+                })
+
+                local pnl = row.panel
+                pnl.Paint = function(pnl2, w, h)
+                    derma.SkinHook("Paint", "Panel", pnl2, w, h)
+                    local char = client:getChar()
+                    local hasFlag = char and char:hasFlags(flagName)
+                    local icon = hasFlag and "checkbox.png" or "unchecked.png"
+                    local s = 40
+                    lia.util.drawTexture(icon, color_white, w - s - sheet.padding, h * 0.5 - s * 0.5, s, s)
                 end
 
-                canvas:InvalidateLayout(true)
-                canvas:SizeToChildren(false, true)
+                row.filterText = (flagName .. " " .. descText):lower()
             end
 
-            searchEntry.OnTextChanged = refresh
-            refresh()
+            sheet:Refresh()
+        end
+    })
+
+    table.insert(pages, {
+        name = L("playerFlagsTitle"),
+        drawFunc = function(parent)
+            local sheet = vgui.Create("liaSheet", parent)
+            sheet:SetPlaceholderText(L("searchFlags"))
+            for flagName, flagData in SortedPairs(lia.flag.list) do
+                if isnumber(flagName) then continue end
+                local descText = flagData.desc or ""
+                local row = sheet:AddTextRow({
+                    title = L("flag") .. " '" .. flagName .. "'",
+                    desc = descText
+                })
+
+                local pnl = row.panel
+                pnl.Paint = function(pnl2, w, h)
+                    derma.SkinHook("Paint", "Panel", pnl2, w, h)
+                    local hasFlag = client:getPlayerFlags():find(flagName, 1, true)
+                    local icon = hasFlag and "checkbox.png" or "unchecked.png"
+                    local s = 40
+                    lia.util.drawTexture(icon, color_white, w - s - sheet.padding, h * 0.5 - s * 0.5, s, s)
+                end
+
+                row.filterText = (flagName .. " " .. descText):lower()
+            end
+
+            sheet:Refresh()
         end
     })
 end)

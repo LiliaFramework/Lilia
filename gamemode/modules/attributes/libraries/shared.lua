@@ -49,3 +49,10 @@ end
 function MODULE:GetMaxStartingAttributePoints()
     return lia.config.get("StartingAttributePoints")
 end
+
+function MODULE:CanPlayerThrowPunch(client)
+    local required = lia.config.get("PunchPlaytime", 7200)
+    if required <= 0 then return end
+    if not IsValid(client) or client:GetUserGroup() ~= "user" then return end
+    if not client:playTimeGreaterThan(required) then return false end
+end

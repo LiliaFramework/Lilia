@@ -4,6 +4,8 @@ lia.command.add("doorsell", {
     adminOnly = false,
     AdminStick = {
         Name = "adminStickDoorSellName",
+        Category = "doorManagement",
+        SubCategory = "doorActions",
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -31,6 +33,8 @@ lia.command.add("admindoorsell", {
     privilege = "Manage Doors",
     AdminStick = {
         Name = "adminStickAdminDoorSellName",
+        Category = "doorManagement",
+        SubCategory = "doorActions",
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -60,6 +64,8 @@ lia.command.add("doortogglelock", {
     privilege = "Manage Doors",
     AdminStick = {
         Name = "adminStickToggleDoorLockName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -70,12 +76,12 @@ lia.command.add("doortogglelock", {
             if toggleState then
                 door:Fire("lock")
                 door:EmitSound("doors/door_latch3.wav")
-                client:notifyLocalized("doorToggleLocked", "locked")
+                client:notifyLocalized("doorToggleLocked", L("locked"):lower())
                 lia.log.add(client, "toggleLock", door, "locked")
             else
                 door:Fire("unlock")
                 door:EmitSound("doors/door_latch1.wav")
-                client:notifyLocalized("doorToggleLocked", "unlocked")
+                client:notifyLocalized("doorToggleLocked", L("unlocked"))
                 lia.log.add(client, "toggleLock", door, "unlocked")
             end
 
@@ -97,12 +103,14 @@ lia.command.add("doorbuy", {
     desc = "doorbuyDesc",
     adminOnly = false,
     AdminStick = {
-        Name = "adminStickDoorBuyName",
+        Name = "buyDoor",
+        Category = "doorManagement",
+        SubCategory = "doorActions",
         TargetClass = "Door"
     },
     onRun = function(client)
         if lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false) then
-            lia.log.add(client, "cheaterAction", "buy door")
+            lia.log.add(client, "cheaterAction", L("buyDoor"):lower())
             return
         end
 
@@ -142,6 +150,8 @@ lia.command.add("doortoggleownable", {
     privilege = "Manage Doors",
     AdminStick = {
         Name = "adminStickToggleDoorOwnableName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -152,7 +162,7 @@ lia.command.add("doortoggleownable", {
             door:setNetVar("noSell", newState and true or nil)
             lia.log.add(client, "doorToggleOwnable", door, newState)
             hook.Run("DoorOwnableToggled", client, door, newState)
-            client:notify(newState and L("doorMadeUnownable") or L("doorMadeOwnable"))
+            client:notifyLocalized(newState and "doorMadeUnownable" or "doorMadeOwnable")
             MODULE:SaveData()
         else
             client:notifyLocalized("doorNotValid")
@@ -166,6 +176,8 @@ lia.command.add("doorresetdata", {
     privilege = "Manage Doors",
     AdminStick = {
         Name = "adminStickResetDoorDataName",
+        Category = "doorManagement",
+        SubCategory = "doorMaintenance",
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -194,6 +206,8 @@ lia.command.add("doortoggleenabled", {
     privilege = "Manage Doors",
     AdminStick = {
         Name = "adminStickToggleDoorEnabledName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -204,7 +218,7 @@ lia.command.add("doortoggleenabled", {
             door:setNetVar("disabled", newState and true or nil)
             lia.log.add(client, newState and "doorDisable" or "doorEnable", door)
             hook.Run("DoorEnabledToggled", client, door, newState)
-            client:notify(newState and L("doorSetDisabled") or L("doorSetNotDisabled"))
+            client:notifyLocalized(newState and "doorSetDisabled" or "doorSetNotDisabled")
             MODULE:SaveData()
         else
             client:notifyLocalized("doorNotValid")
@@ -218,6 +232,8 @@ lia.command.add("doortogglehidden", {
     privilege = "Manage Doors",
     AdminStick = {
         Name = "adminStickToggleDoorHiddenName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -228,7 +244,7 @@ lia.command.add("doortogglehidden", {
             entity:setNetVar("hidden", newState)
             lia.log.add(client, "doorSetHidden", entity, newState)
             hook.Run("DoorHiddenToggled", client, entity, newState)
-            client:notify(newState and L("doorSetHidden") or L("doorSetNotHidden"))
+            client:notifyLocalized(newState and "doorSetHidden" or "doorSetNotHidden")
             MODULE:SaveData()
         else
             client:notifyLocalized("doorNotValid")
@@ -243,6 +259,8 @@ lia.command.add("doorsetprice", {
     privilege = "Manage Doors",
     AdminStick = {
         Name = "adminStickSetDoorPriceName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
         TargetClass = "Door"
     },
     onRun = function(client, arguments)
@@ -253,7 +271,7 @@ lia.command.add("doorsetprice", {
             door:setNetVar("price", price)
             lia.log.add(client, "doorSetPrice", door, price)
             hook.Run("DoorPriceSet", client, door, price)
-            client:notifyLocalized("priceLabel", lia.currency.get(price))
+            client:notify(L("price") .. ": " .. lia.currency.get(price))
             MODULE:SaveData()
         else
             client:notifyLocalized("doorNotValid")
@@ -268,6 +286,8 @@ lia.command.add("doorsettitle", {
     privilege = "Manage Doors",
     AdminStick = {
         Name = "adminStickSetDoorTitleName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
         TargetClass = "Door"
     },
     onRun = function(client, arguments)
@@ -298,6 +318,8 @@ lia.command.add("savedoors", {
     privilege = "Manage Doors",
     AdminStick = {
         Name = "adminStickSaveDoorsName",
+        Category = "doorManagement",
+        SubCategory = "doorMaintenance",
         TargetClass = "Door"
     },
     onRun = function(client)
@@ -313,13 +335,14 @@ lia.command.add("doorinfo", {
     privilege = "Manage Doors",
     AdminStick = {
         Name = "adminStickDoorInfoName",
+        Category = "doorManagement",
+        SubCategory = "doorInformation",
         TargetClass = "Door"
     },
     onRun = function(client)
         local door = client:getTracedEntity()
         if IsValid(door) and door:isDoor() then
             local disabled = door:getNetVar("disabled", false)
-            local name = door:getNetVar("title", door:getNetVar("name", L("doorTitle")))
             local price = door:getNetVar("price", 0)
             local noSell = door:getNetVar("noSell", false)
             local factionsRaw = door:getNetVar("factions", "[]")
@@ -330,7 +353,6 @@ lia.command.add("doorinfo", {
                 if info then table.insert(factionNames, info.name) end
             end
 
-            local factionsString = not table.IsEmpty(factionNames) and table.concat(factionNames, ", ") or L("none")
             local classesDataRaw = door:getNetVar("classes", "[]")
             local classesTable = util.JSONToTable(classesDataRaw) or {}
             local classNames = {}
@@ -339,8 +361,6 @@ lia.command.add("doorinfo", {
                 local info = lia.class.list[idx]
                 if info then table.insert(classNames, info.name) end
             end
-
-            local classesString = not table.IsEmpty(classNames) and table.concat(classNames, ", ") or L("none")
             local hidden = door:getNetVar("hidden", false)
             local locked = door:getNetVar("locked", false)
             local doorData = {
@@ -350,7 +370,7 @@ lia.command.add("doorinfo", {
                 },
                 {
                     property = L("name"),
-                    value = tostring(name)
+                    value = tostring(door:getNetVar("title", door:getNetVar("name", L("doorTitle"))))
                 },
                 {
                     property = L("price"),
@@ -361,24 +381,24 @@ lia.command.add("doorinfo", {
                     value = tostring(noSell)
                 },
                 {
-                    property = L("doorInfoFactions"),
-                    value = tostring(factionsString)
+                    property = L("factions"),
+                    value = tostring(not table.IsEmpty(factionNames) and table.concat(factionNames, ", ") or L("none"))
                 },
                 {
                     property = L("classes"),
-                    value = tostring(classesString)
+                    value = tostring(not table.IsEmpty(classNames) and table.concat(classNames, ", ") or L("none"))
                 },
                 {
                     property = L("doorInfoHidden"),
                     value = tostring(hidden)
                 },
                 {
-                    property = L("doorInfoLocked"),
+                    property = L("locked"),
                     value = tostring(locked)
                 }
             }
 
-            lia.util.CreateTableUI(client, L("doorInfoTitle"), {
+            lia.util.CreateTableUI(client, L("door") .. " " .. L("information"), {
                 {
                     name = L("doorInfoProperty"),
                     field = "property"

@@ -7,6 +7,17 @@
     return plyList
 end
 
+function lia.util.getBySteamID(steamID)
+    if not isstring(steamID) or steamID == "" then return end
+    local sid = steamID
+    if steamID:match("^%d+$") and #steamID >= 17 then
+        sid = util.SteamIDFrom64(steamID)
+    end
+    for _, client in player.Iterator() do
+        if client:SteamID() == sid and client:getChar() then return client end
+    end
+end
+
 function lia.util.FindPlayersInSphere(origin, radius)
     local plys = {}
     local r2 = radius ^ 2
@@ -24,7 +35,7 @@ function lia.util.findPlayer(client, identifier)
     end
 
     if string.match(identifier, "^STEAM_%d+:%d+:%d+$") then
-        local ply = player.GetBySteamID(identifier)
+        local ply = lia.util.getBySteamID(identifier)
         if IsValid(ply) then return ply end
         if isValidClient then client:notifyLocalized("plyNoExist") end
         return nil
@@ -33,7 +44,7 @@ function lia.util.findPlayer(client, identifier)
     if string.match(identifier, "^%d+$") and #identifier >= 17 then
         local sid = util.SteamIDFrom64(identifier)
         if sid then
-            local ply = player.GetBySteamID(sid)
+            local ply = lia.util.getBySteamID(sid)
             if IsValid(ply) then return ply end
         end
 
@@ -103,15 +114,14 @@ function lia.util.getAdmins()
 end
 
 function lia.util.findPlayerBySteamID64(SteamID64)
-    for _, client in player.Iterator() do
-        if client:SteamID64() == SteamID64 then return client end
-    end
-    return nil
+    local SteamID = util.SteamIDFrom64(SteamID64)
+    if not SteamID then return nil end
+    return lia.util.findPlayerBySteamID(SteamID)
 end
 
 function lia.util.findPlayerBySteamID(SteamID)
     for _, client in player.Iterator() do
-        if client:SteamID64() == SteamID then return client end
+        if client:SteamID() == SteamID then return client end
     end
     return nil
 end
@@ -307,9 +317,9 @@ else
     function lia.util.DrawTextOutlined(text, font, x, y, colour, xalign, outlinewidth, outlinecolour)
         local steps = (outlinewidth * 2) / 3
         if steps < 1 then steps = 1 end
-        for _x = -outlinewidth, outlinewidth, steps do
-            for _y = -outlinewidth, outlinewidth, steps do
-                draw.DrawText(text, font, x + _x, y + _y, outlinecolour, xalign)
+        for ox = -outlinewidth, outlinewidth, steps do
+            for oy = -outlinewidth, outlinewidth, steps do
+                draw.DrawText(text, font, x + ox, y + oy, outlinecolour, xalign)
             end
         end
         return draw.DrawText(text, font, x, y, colour, xalign)
@@ -458,10 +468,43 @@ else
         surface.SetFont("liaSmallFont")
         local controls, watchers = {}, {}
         local validate
+        local ordered = {}
+        local grouped = {
+            strings = {},
+            dropdowns = {},
+            bools = {},
+            rest = {}
+        }
+
         for name, typeInfo in pairs(argTypes) do
             local fieldType, dataTbl = typeInfo, nil
             if istable(typeInfo) then fieldType, dataTbl = typeInfo[1], typeInfo[2] end
             fieldType = string.lower(tostring(fieldType))
+            local info = {
+                name = name,
+                fieldType = fieldType,
+                dataTbl = dataTbl
+            }
+
+            if fieldType == "string" then
+                table.insert(grouped.strings, info)
+            elseif fieldType == "table" then
+                table.insert(grouped.dropdowns, info)
+            elseif fieldType == "boolean" then
+                table.insert(grouped.bools, info)
+            else
+                table.insert(grouped.rest, info)
+            end
+        end
+
+        for _, group in ipairs({grouped.strings, grouped.dropdowns, grouped.bools, grouped.rest}) do
+            for _, v in ipairs(group) do
+                table.insert(ordered, v)
+            end
+        end
+
+        for _, info in ipairs(ordered) do
+            local name, fieldType, dataTbl = info.name, info.fieldType, info.dataTbl
             local panel = vgui.Create("DPanel", scroll)
             panel:Dock(TOP)
             panel:DockMargin(0, 0, 0, 5)
@@ -473,8 +516,9 @@ else
             label:SizeToContents()
             local textW = select(1, surface.GetTextSize(name))
             local ctrl
-            if fieldType == "boolean" then
-                ctrl = vgui.Create("DCheckBox", panel)
+            local isBool = fieldType == "boolean"
+            if isBool then
+                ctrl = vgui.Create("liaCheckBox", panel)
             elseif fieldType == "table" then
                 ctrl = vgui.Create("DComboBox", panel)
                 if istable(dataTbl) then
@@ -496,7 +540,13 @@ else
             end
 
             panel.PerformLayout = function(_, w, h)
-                local ctrlH, ctrlW = 30, w * 0.7
+                local ctrlH, ctrlW
+                if isBool then
+                    ctrlH, ctrlW = 22, 22
+                else
+                    ctrlH, ctrlW = 30, w * 0.7
+                end
+
                 local totalW = textW + 10 + ctrlW
                 local xOff = (w - totalW) / 2
                 label:SetPos(xOff, (h - label:GetTall()) / 2)
@@ -594,29 +644,19 @@ else
         frame:MakePopup()
         local listView = vgui.Create("DListView", frame)
         listView:Dock(FILL)
-        local totalFixedWidth = 0
-        local dynamicColumns = 0
         for _, colInfo in ipairs(columns) do
-            if colInfo.width then
-                totalFixedWidth = totalFixedWidth + colInfo.width
-            else
-                dynamicColumns = dynamicColumns + 1
-            end
-        end
-
-        local availableWidth = frame:GetWide() - totalFixedWidth
-        local dynamicWidth = dynamicColumns > 0 and math.max(availableWidth / dynamicColumns, 50) or 0
-        for _, colInfo in ipairs(columns) do
-            local columnName = colInfo.name or L("na")
-            local columnWidth = colInfo.width or dynamicWidth
-            listView:AddColumn(columnName):SetFixedWidth(columnWidth)
+            local col = listView:AddColumn(colInfo.name or L("na"))
+            surface.SetFont(col.Header:GetFont())
+            local textW = surface.GetTextSize(colInfo.name or L("na"))
+            local minWidth = textW + 16
+            col:SetMinWidth(minWidth)
+            col:SetWidth(colInfo.width or minWidth)
         end
 
         for _, row in ipairs(data) do
             local lineData = {}
             for _, colInfo in ipairs(columns) do
-                local fieldName = colInfo.field or L("na")
-                table.insert(lineData, row[fieldName] or L("na"))
+                table.insert(lineData, row[colInfo.field] or L("na"))
             end
 
             local line = listView:AddLine(unpack(lineData))
@@ -740,4 +780,5 @@ else
         end
         return frame, listView
     end
+
 end

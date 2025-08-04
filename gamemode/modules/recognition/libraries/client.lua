@@ -24,7 +24,7 @@ function MODULE:GetDisplayedName(client, chatType)
     local character = client:getChar()
     local ourCharacter = lp:getChar()
     if not character or not ourCharacter then return L("unknown") end
-    local myReg = ourCharacter:getRecognizedAs()
+    local myReg = ourCharacter:getFakeName()
     local characterID = character:getID()
     if not ourCharacter:doesRecognize(characterID) then
         if ourCharacter:doesFakeRecognize(characterID) and myReg[characterID] then return myReg[characterID] end

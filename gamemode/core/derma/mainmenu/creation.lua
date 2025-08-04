@@ -85,11 +85,10 @@ end
 function PANEL:showError(msg, ...)
     if IsValid(self.error) then self.error:Remove() end
     if not msg or msg == "" then return end
-    local text = L(msg, ...)
-    assert(IsValid(self.content), "no step is available")
+    assert(IsValid(self.content), L("noStepAvailable"))
     local err = self.content:Add("DLabel")
     err:SetFont("liaCharSubTitleFont")
-    err:SetText(text)
+    err:SetText(L(msg, ...))
     err:SetTextColor(color_white)
     err:Dock(TOP)
     err:SetTall(32)
@@ -113,20 +112,19 @@ function PANEL:showMessage(msg, ...)
         return
     end
 
-    local text = L(msg, ...):upper()
-    if IsValid(self.message) then self.message:SetText(text) end
+    if IsValid(self.message) then self.message:SetText(L(msg, ...):upper()) end
     local lbl = self:Add("DLabel")
     lbl:SetFont("liaCharButtonFont")
     lbl:SetTextColor(lia.gui.character.color)
     lbl:Dock(FILL)
     lbl:SetContentAlignment(5)
-    lbl:SetText(text)
+    lbl:SetText(L(msg, ...):upper())
     self.message = lbl
 end
 
 function PANEL:addStep(step, priority)
-    assert(IsValid(step), "Invalid panel for step")
-    assert(step.isCharCreateStep, "Panel must inherit liaCharacterCreateStep")
+    assert(IsValid(step), L("invalidPanelForStep"))
+    assert(step.isCharCreateStep, L("panelMustInherit"))
     if isnumber(priority) then
         table.insert(self.steps, priority, step)
     else
@@ -185,7 +183,7 @@ end
 
 function PANEL:onStepChanged(oldStep, newStep)
     local finish = self.curStep == #self.steps
-    local text = L(finish and "finish" or "next"):upper()
+    local key = finish and "finish" or "next"
     if IsValid(self:getPreviousStep()) then
         self.prev:AlphaTo(255, 0.5)
     else
@@ -199,16 +197,16 @@ function PANEL:onStepChanged(oldStep, newStep)
         btn:SetWide(w + 40)
     end
 
-    if text ~= self.next:GetText() then self.next:AlphaTo(0, 0.5) end
+    if L(key):upper() ~= self.next:GetText() then self.next:AlphaTo(0, 0.5) end
     local function show()
         newStep:SetVisible(true)
         newStep:SetAlpha(0)
         newStep:onDisplay()
         newStep:InvalidateChildren(true)
         newStep:AlphaTo(255, 0.5)
-        if text ~= self.next:GetText() then
+        if L(key):upper() ~= self.next:GetText() then
             self.next:SetAlpha(0)
-            sizeButton(self.next, text)
+            sizeButton(self.next, L(key):upper())
         end
 
         self.next:AlphaTo(255, 0.5)

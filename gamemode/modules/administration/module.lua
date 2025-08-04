@@ -1,22 +1,61 @@
-﻿MODULE.name = "Administration Utilities"
+MODULE.name = L("moduleAdministrationName")
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Provides a suite of administrative commands, configuration menus, and moderation utilities so staff can effectively manage the server."
-MODULE.CAMIPrivileges = {
+MODULE.desc = L("moduleAdministrationDesc")
+MODULE.Privileges = {
     {
-        Name = "Staff Permissions - Can Remove Warns",
-        MinAccess = "superadmin"
+        Name = L("managePropBlacklist"),
+        MinAccess = "superadmin",
+        Category = L("categoryBlacklisting"),
     },
     {
-        Name = "Staff Permissions - Manage Prop Blacklist",
-        MinAccess = "superadmin"
+        Name = L("manageVehicleBlacklist"),
+        MinAccess = "superadmin",
+        Category = L("categoryBlacklisting"),
     },
     {
-        Name = "Staff Permissions - Access Configuration Menu",
-        MinAccess = "superadmin"
+        Name = L("manageEntityBlacklist"),
+        MinAccess = "superadmin",
+        Category = L("categoryBlacklisting"),
     },
     {
-        Name = "Staff Permissions - Access Edit Configuration Menu",
-        MinAccess = "superadmin"
+        Name = L("accessConfigurationMenu"),
+        MinAccess = "superadmin",
+        Category = L("categoryConfiguration"),
+    },
+    {
+        Name = L("accessEditConfigurationMenu"),
+        MinAccess = "superadmin",
+        Category = L("categoryConfiguration"),
+    },
+    {
+        Name = L("manageUsergroups"),
+        MinAccess = "superadmin",
+        Category = L("categoryUsergroups"),
+    },
+    {
+        Name = L("view") .. " " .. L("moduleStaffManagementName"),
+        MinAccess = "superadmin",
+        Category = L("categoryStaffManagement"),
+    },
+    {
+        Name = L("canAccessPlayerList"),
+        MinAccess = "admin",
+        Category = L("players")
+    },
+    {
+        Name = L("List Characters"),
+        MinAccess = "admin",
+        Category = L("character")
+    },
+    {
+        Name = L("View DB Tables"),
+        MinAccess = "superadmin",
+        Category = L("database")
+    },
+    {
+        Name = L("canAccessFlagManagement"),
+        MinAccess = "superadmin",
+        Category = L("flags"),
     },
 }

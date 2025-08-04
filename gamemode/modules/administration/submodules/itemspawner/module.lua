@@ -1,10 +1,11 @@
-﻿MODULE.name = "Item Spawner"
+MODULE.name = L("moduleItemSpawnerName")
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Offers an in-game item spawner interface so administrators can quickly create items for testing, events, or moderation purposes."
-MODULE.CAMIPrivileges = {
+MODULE.desc = L("moduleItemSpawnerDesc")
+MODULE.Privileges = {
     {
-        Name = "Staff Permissions - Can Use Item Spawner",
-        MinAccess = "admin"
+        Name = L("canUseItemSpawner"),
+        MinAccess = "admin",
+        Category = L("categoryStaffItems"),
     }
 }

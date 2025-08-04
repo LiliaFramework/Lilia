@@ -19,7 +19,7 @@ end
 
 function PANEL:validateCharVar(name)
     local var = lia.char.vars[name]
-    assert(var, "invalid character variable " .. tostring(name))
+    assert(var, L("invalidCharVar", tostring(name)))
     return isfunction(var.onValidate) and var.onValidate(self:getContext(name), self:getContext(), LocalPlayer()) or true
 end
 

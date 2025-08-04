@@ -5,7 +5,7 @@
         if info.OnSet then info:OnSet(client) end
         if oldClass ~= class and info.OnTransferred then info:OnTransferred(client, oldClass) end
     else
-        print(L("invalidClassError", tostring(class)))
+        lia.error(L("invalidClassError", tostring(class)))
     end
 
     if info2 and info2.OnLeave then info2:OnLeave(client) end
@@ -36,35 +36,42 @@ function MODULE:OnCharCreated(_, character)
     for _, item in pairs(items) do
         character:getInv():add(item, 1)
     end
+
+    local defaultClass = lia.faction.getDefaultClass(character:getFaction())
+    if defaultClass then
+        character:setClass(defaultClass.index)
+    else
+        character:setClass(0)
+    end
 end
 
 function MODULE:PlayerLoadedChar(client, character)
     if character:getData("factionKickWarn") then
-        client:notify("You were kicked from your faction!")
+        client:notifyLocalized("kickedFromFaction")
         hook.Run("OnTransferred", client)
         local faction = lia.faction.indices[client:Team()]
         if faction and faction.OnTransferred then faction:OnTransferred(client) end
         character:setData("factionKickWarn", nil)
     end
 
-    local data = character:getData("pclass")
-    local class = data and lia.class.list[data]
+    local class = lia.class.list[character:getClass()]
     if character then
-        if class and data then
+        if class and client:Team() == class.faction then
             local oldClass = character:getClass()
-            if client:Team() == class.faction then
-                timer.Simple(.3, function()
+            timer.Simple(.3, function()
+                if IsValid(client) then
                     character:setClass(class.index)
                     hook.Run("OnPlayerJoinClass", client, class.index, oldClass)
-                    return
-                end)
-            end
+                end
+            end)
         end
 
-        for _, v in pairs(lia.class.list) do
-            if v.faction == client:Team() and v.isDefault then
-                character:setClass(v.index)
-                break
+        if not lia.class.list[character:getClass()] then
+            local defClass = lia.faction.getDefaultClass(client:Team())
+            if defClass then
+                character:setClass(defClass.index)
+            else
+                character:setClass(0)
             end
         end
     end
@@ -207,9 +214,9 @@ end
 
 net.Receive("KickCharacter", function(_, client)
     local char = client:getChar()
-    if not char then return end
-    local isLeader = client:IsSuperAdmin() or char:getData("factionOwner") or char:getData("factionAdmin") or char:hasFlags("V")
-    if not isLeader then return end
+    local canManageAny = client:hasPrivilege("Can Manage Factions")
+    local canKick = char and char:hasFlags("K")
+    if not canKick and not canManageAny then return end
     local defaultFaction
     for _, fac in pairs(lia.faction.teams) do
         if fac.isDefault then
@@ -224,13 +231,15 @@ net.Receive("KickCharacter", function(_, client)
     end
 
     local characterID = net.ReadUInt(32)
-    local IsOnline = false
+    local isOnline = false
     for _, target in player.Iterator() do
         local targetChar = target:getChar()
-        if targetChar and targetChar:getID() == characterID and targetChar:getFaction() == char:getFaction() then
-            IsOnline = true
+        if targetChar and targetChar:getID() == characterID and (canManageAny or (canKick and char and targetChar:getFaction() == char:getFaction())) then
+            isOnline = true
             local oldFaction = targetChar:getFaction()
-            target:notify("You were kicked from your faction!")
+            local oldFactionData = lia.faction.indices[oldFaction]
+            if oldFactionData and oldFactionData.isDefault then return end
+            target:notifyLocalized("kickedFromFaction")
             targetChar.vars.faction = defaultFaction.uniqueID
             targetChar:setFaction(defaultFaction.index)
             hook.Run("OnTransferred", target)
@@ -240,11 +249,16 @@ net.Receive("KickCharacter", function(_, client)
         end
     end
 
-    if not IsOnline then
-        lia.db.updateTable({
-            _faction = defaultFaction.uniqueID
-        }, nil, "characters", "_id = " .. characterID)
-
-        lia.char.setCharData(characterID, "factionKickWarn", true)
+    if not isOnline then
+        lia.db.query("SELECT faction FROM lia_characters WHERE id = " .. characterID, function(data)
+            if not data or not data[1] then return end
+            local oldFactionID = data[1].faction
+            local oldFactionData = lia.faction.teams[oldFactionID]
+            if oldFactionData and oldFactionData.isDefault then return end
+            lia.db.updateTable({
+                faction = defaultFaction.uniqueID
+            }, nil, "characters", "id = " .. characterID)
+            lia.char.setCharData(characterID, "factionKickWarn", true)
+        end)
     end
 end)

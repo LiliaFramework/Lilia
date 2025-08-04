@@ -9,13 +9,13 @@ MYSQLOO_BOOL = 2
 local modules = {}
 local function ThrowQueryFault(query, fault)
     if string.find(fault, "duplicate column name:") or string.find(fault, "UNIQUE constraint failed: lia_config") then return end
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " * " .. query .. "\n")
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. fault .. "\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. L("database") .. "]", Color(255, 255, 255), " * " .. query .. "\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. L("database") .. "]", Color(255, 255, 255), " " .. fault .. "\n")
 end
 
 local function ThrowConnectionFault(fault)
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. L("dbConnectionFail") .. "\n")
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. fault .. "\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. L("database") .. "]", Color(255, 255, 255), " " .. L("dbConnectionFail") .. "\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. L("database") .. "]", Color(255, 255, 255), " " .. fault .. "\n")
     setNetVar("dbError", fault)
 end
 
@@ -124,11 +124,13 @@ modules.mysqloo = {
         return lowest, lowestIndex
     end,
     connect = function(callback)
-        if not pcall(require, "mysqloo") then return setNetVar("dbError", system.IsWindows() and "Server is missing VC++ redistributables! " or "Server is missing binaries for mysqloo! ") end
+        if not pcall(require, "mysqloo") then
+            return setNetVar("dbError", system.IsWindows() and L("missingVcRedistributables") or L("missingMysqlooBinaries"))
+        end
         if mysqloo.VERSION ~= "9" or not mysqloo.MINOR_VERSION or tonumber(mysqloo.MINOR_VERSION) < 1 then
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. L("mysqlooOutdated") .. "\n")
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. L("mysqlooDownload") .. "\n")
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. L("mysqlooDownloadURL") .. "\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. L("database") .. "]", Color(255, 255, 255), " " .. L("mysqlooOutdated") .. "\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. L("database") .. "]", Color(255, 255, 255), " " .. L("mysqlooDownload") .. "\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. L("database") .. "]", Color(255, 255, 255), " " .. L("mysqlooDownloadURL") .. "\n")
             return
         end
 
@@ -210,7 +212,7 @@ modules.mysqloo = {
 
             prepObj:start()
         else
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), L("invalidPreparedStatement", key) .. "\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. L("database") .. "]", Color(255, 255, 255), L("invalidPreparedStatement", key) .. "\n")
         end
     end
 }
@@ -235,7 +237,7 @@ function lia.db.connect(callback, reconnect)
         lia.db.escape = dbModule.escape
         lia.db.query = dbModule.query
     else
-        lia.error("[Lilia] '" .. (lia.db.module or "Unavailable") .. "' is not a valid data storage method! \n")
+        lia.error(L("invalidStorageModule", lia.db.module or "Unavailable"))
     end
 end
 
@@ -243,11 +245,11 @@ function lia.db.wipeTables(callback)
     local function realCallback()
         if lia.db.module == "mysqloo" then
             lia.db.query("SET FOREIGN_KEY_CHECKS = 1;", function()
-                MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " ALL LILIA DATA HAS BEEN WIPED\n")
+                MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. L("database") .. "]", Color(255, 255, 255), L("dataWiped") .. "\n")
                 if isfunction(callback) then callback() end
             end)
         else
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " ALL LILIA DATA HAS BEEN WIPED\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. L("database") .. "]", Color(255, 255, 255), L("dataWiped") .. "\n")
             if isfunction(callback) then callback() end
         end
     end
@@ -262,16 +264,16 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS `lia_invdata`;
     DROP TABLE IF EXISTS `lia_config`;
     DROP TABLE IF EXISTS `lia_logs`;
-    DROP TABLE IF EXISTS `lia_bans`;
+    DROP TABLE IF EXISTS `lia_ticketclaims`;
     DROP TABLE IF EXISTS `lia_doors`;
-    DROP TABLE IF EXISTS `lia_spawns`;
-    DROP TABLE IF EXISTS `lia_chatbox`;
-    DROP TABLE IF EXISTS `lia_admingroups`;
-    DROP TABLE IF EXISTS `lia_sitrooms`;
+    DROP TABLE IF EXISTS `lia_admin`;
     DROP TABLE IF EXISTS `lia_saveditems`;
     DROP TABLE IF EXISTS `lia_persistence`;
-    DROP TABLE IF EXISTS `lia_vendors`;
     DROP TABLE IF EXISTS `lia_warnings`;
+    DROP TABLE IF EXISTS `lia_permakills`;
+    DROP TABLE IF EXISTS `lia_bans`;
+    DROP TABLE IF EXISTS `lia_chardata`;
+    DROP TABLE IF EXISTS `lia_data`;
 ]])
             local done = 0
             for i = 1, #queries do
@@ -297,32 +299,22 @@ function lia.db.wipeTables(callback)
     DROP TABLE IF EXISTS lia_invdata;
     DROP TABLE IF EXISTS lia_config;
     DROP TABLE IF EXISTS lia_logs;
-    DROP TABLE IF EXISTS lia_bans;
+    DROP TABLE IF EXISTS lia_ticketclaims;
     DROP TABLE IF EXISTS lia_doors;
-    DROP TABLE IF EXISTS lia_spawns;
-    DROP TABLE IF EXISTS lia_chatbox;
-    DROP TABLE IF EXISTS lia_admingroups;
-    DROP TABLE IF EXISTS lia_sitrooms;
+    DROP TABLE IF EXISTS lia_admin;
     DROP TABLE IF EXISTS lia_saveditems;
     DROP TABLE IF EXISTS lia_persistence;
-    DROP TABLE IF EXISTS lia_vendors;
     DROP TABLE IF EXISTS lia_warnings;
+    DROP TABLE IF EXISTS lia_permakills;
+    DROP TABLE IF EXISTS lia_bans;
     DROP TABLE IF EXISTS lia_chardata;
+    DROP TABLE IF EXISTS lia_data;
 ]], realCallback)
     end
 end
 
 function lia.db.loadTables()
     local function done()
-        local ignore = function() end
-        lia.db.fieldExists("lia_players", "_firstJoin"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _firstJoin DATETIME"):catch(ignore) end end)
-        lia.db.fieldExists("lia_players", "_lastJoin"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastJoin DATETIME"):catch(ignore) end end)
-        lia.db.fieldExists("lia_players", "_userGroup"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _userGroup VARCHAR(32)"):catch(ignore) end end)
-        lia.db.fieldExists("lia_players", "_lastIP"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastIP VARCHAR(64)"):catch(ignore) end end)
-        lia.db.fieldExists("lia_players", "_lastOnline"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _lastOnline INTEGER"):catch(ignore) end end)
-        lia.db.fieldExists("lia_players", "_totalOnlineTime"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_players ADD COLUMN _totalOnlineTime FLOAT"):catch(ignore) end end)
-        lia.db.fieldExists("lia_items", "_quantity"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_items ADD COLUMN _quantity INTEGER"):catch(ignore) end end)
-        lia.db.fieldExists("lia_data", "_data"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_data ADD COLUMN _data TEXT"):catch(ignore) end end)
         lia.db.addDatabaseFields()
         lia.db.tablesLoaded = true
         hook.Run("LiliaTablesLoaded")
@@ -330,381 +322,364 @@ function lia.db.loadTables()
 
     if lia.db.module == "sqlite" then
         lia.db.query([[
-            CREATE TABLE IF NOT EXISTS lia_players (
-                _steamID varchar,
-                _steamName varchar,
-                _firstJoin datetime,
-                _lastJoin datetime,
-                _userGroup varchar,
-                _data varchar,
-                _lastIP varchar,
-                _lastOnline integer,
-                _totalOnlineTime float
-            );
-            CREATE TABLE IF NOT EXISTS lia_chardata (
-                _charID INTEGER NOT NULL,
-                _key VARCHAR(255) NOT NULL,
-                _value TEXT(1024),
-                PRIMARY KEY (_charID, _key)
-            );
-            CREATE TABLE IF NOT EXISTS lia_characters (
-                _id INTEGER PRIMARY KEY AUTOINCREMENT,
-                _steamID VARCHAR,
-                _name VARCHAR,
-                _desc VARCHAR,
-                _model VARCHAR,
-                _attribs VARCHAR,
-                _schema VARCHAR,
-                _createTime DATETIME,
-                _lastJoinTime DATETIME,
-                _money VARCHAR,
-                _faction VARCHAR,
-                recognition TEXT NOT NULL DEFAULT '',
-                recognized_as TEXT NOT NULL DEFAULT ''
-            );
-
-            CREATE TABLE IF NOT EXISTS lia_inventories (
-                _invID integer PRIMARY KEY AUTOINCREMENT,
-                _charID integer,
-                _invType varchar
-            );
-
-            CREATE TABLE IF NOT EXISTS lia_items (
-                _itemID integer PRIMARY KEY AUTOINCREMENT,
-                _invID integer,
-                _uniqueID varchar,
-                _data varchar,
-                _quantity integer,
-                _x integer,
-                _y integer
-            );
-
-            CREATE TABLE IF NOT EXISTS lia_invdata (
-                _invID integer,
-                _key text,
-                _value text,
-                FOREIGN KEY(_invID) REFERENCES lia_inventories(_invID),
-                PRIMARY KEY (_invID, _key)
-            );
-
-            CREATE TABLE IF NOT EXISTS lia_config (
-                _schema text,
-                _key text,
-                _value text,
-                PRIMARY KEY (_schema, _key)
-            );
-
-
-            CREATE TABLE IF NOT EXISTS lia_bans (
-                _steamID TEXT,
-                _banStart INTEGER,
-                _banDuration INTEGER,
-                _reason TEXT
-            );
-
-            CREATE TABLE IF NOT EXISTS lia_logs (
-                _id INTEGER PRIMARY KEY AUTOINCREMENT,
-                _timestamp DATETIME,
-                _gamemode VARCHAR,
-                _category VARCHAR,
-                _message TEXT,
-                _charID INTEGER,
-                _steamID VARCHAR
-            );
-
-            CREATE TABLE IF NOT EXISTS lia_ticketclaims (
-                _request TEXT,
-                _admin TEXT,
-                _timestamp INTEGER
-            );
-
-            CREATE TABLE IF NOT EXISTS lia_warnings (
-                _id INTEGER PRIMARY KEY AUTOINCREMENT,
-                _charID INTEGER,
-                _steamID TEXT,
-                _timestamp DATETIME,
-                _reason TEXT,
-                _admin TEXT
-            );
-
-            CREATE TABLE IF NOT EXISTS lia_doors (
-                _folder TEXT,
-                _map TEXT,
-                _id INTEGER,
-                _factions TEXT,
-                _classes TEXT,
-                _disabled INTEGER,
-                _hidden INTEGER,
-                _ownable INTEGER,
-                _name TEXT,
-                _price INTEGER,
-                _locked INTEGER,
-                _children TEXT,
-                PRIMARY KEY (_folder, _map, _id)
-            );
-
-            CREATE TABLE IF NOT EXISTS lia_spawns (
-                _schema TEXT,
-                _map TEXT,
-                _data TEXT,
-                PRIMARY KEY (_schema, _map)
-            );
-
-            CREATE TABLE IF NOT EXISTS lia_chatbox (
-                _schema TEXT,
-                _map TEXT,
-                _data TEXT,
-                PRIMARY KEY (_schema, _map)
-            );
-
-            CREATE TABLE IF NOT EXISTS lia_sitrooms (
-                _folder TEXT,
-                _map TEXT,
-                _name TEXT,
-                _pos TEXT,
-                PRIMARY KEY (_folder, _map, _name)
-            );
-
-            CREATE TABLE IF NOT EXISTS lia_data (
-                _folder TEXT,
-                _map TEXT,
-                _data TEXT,
-                PRIMARY KEY (_folder, _map)
-            );
-
-            CREATE TABLE IF NOT EXISTS lia_persistence (
-                _id INTEGER PRIMARY KEY AUTOINCREMENT,
-                _folder TEXT,
-                _map TEXT,
-                class TEXT,
-                pos TEXT,
-                angles TEXT,
-                model TEXT
-            );
-
-            CREATE TABLE IF NOT EXISTS lia_vendors (
-                _id INTEGER PRIMARY KEY AUTOINCREMENT,
-                _folder TEXT,
-                _map TEXT,
-                class TEXT,
-                pos TEXT,
-                angles TEXT,
-                model TEXT,
-                data TEXT
-            );
-
-            CREATE TABLE IF NOT EXISTS lia_saveditems (
-                _id INTEGER PRIMARY KEY AUTOINCREMENT,
-                _schema TEXT,
-                _map TEXT,
-                _itemID INTEGER,
-                _pos TEXT,
-                _angles TEXT
-            );
-
-            CREATE TABLE IF NOT EXISTS lia_admingroups (
-                _data TEXT
-            );
-        ]], done)
+CREATE TABLE IF NOT EXISTS lia_players (
+    steamID varchar,
+    steamName varchar,
+    firstJoin datetime,
+    lastJoin datetime,
+    userGroup varchar,
+    data varchar,
+    lastIP varchar,
+    lastOnline integer,
+    totalOnlineTime float
+);
+CREATE TABLE IF NOT EXISTS lia_chardata (
+    charID integer not null,
+    key varchar(255) not null,
+    value text(1024),
+    PRIMARY KEY (charID, key)
+);
+CREATE TABLE IF NOT EXISTS lia_characters (
+    id integer primary key autoincrement,
+    steamID varchar,
+    name varchar,
+    desc varchar,
+    model varchar,
+    attribs varchar,
+    schema varchar,
+    createTime datetime,
+    lastJoinTime datetime,
+    money varchar,
+    faction varchar,
+    recognition text not null default '',
+    fakenames text not null default ''
+);
+CREATE TABLE IF NOT EXISTS lia_inventories (
+    invID integer primary key autoincrement,
+    charID integer,
+    _invType varchar
+);
+CREATE TABLE IF NOT EXISTS lia_items (
+    _itemID integer primary key autoincrement,
+    invID integer,
+    uniqueID varchar,
+    data varchar,
+    quantity integer,
+    x integer,
+    y integer
+);
+CREATE TABLE IF NOT EXISTS lia_invdata (
+    invID integer,
+    key text,
+    value text,
+    FOREIGN KEY(invID) REFERENCES lia_inventories(invID),
+    PRIMARY KEY (invID, key)
+);
+CREATE TABLE IF NOT EXISTS lia_config (
+    schema text,
+    key text,
+    value text,
+    PRIMARY KEY (schema, key)
+);
+CREATE TABLE IF NOT EXISTS lia_logs (
+    id integer primary key autoincrement,
+    timestamp datetime,
+    gamemode varchar,
+    category varchar,
+    message text,
+    charID integer,
+    steamID varchar
+);
+CREATE TABLE IF NOT EXISTS lia_ticketclaims (
+    timestamp datetime,
+    requester text,
+    requesterSteamID text,
+    admin text,
+    adminSteamID text,
+    message text
+);
+CREATE TABLE IF NOT EXISTS lia_warnings (
+    id integer primary key autoincrement,
+    charID integer,
+    warned text,
+    warnedSteamID text,
+    timestamp datetime,
+    message text,
+    warner text,
+    warnerSteamID text
+);
+CREATE TABLE IF NOT EXISTS lia_permakills (
+    id integer primary key autoincrement,
+    player varchar(255) NOT NULL,
+    reason varchar(255),
+    steamID varchar(255),
+    charID integer,
+    submitterName varchar(255),
+    submitterSteamID varchar(255),
+    timestamp integer,
+    evidence varchar(255)
+);
+CREATE TABLE IF NOT EXISTS lia_bans (
+    id integer primary key autoincrement,
+    player varchar(255) NOT NULL,
+    playerSteamID varchar(255),
+    reason varchar(255),
+    bannerName varchar(255),
+    bannerSteamID varchar(255),
+    timestamp integer,
+    evidence varchar(255)
+);
+CREATE TABLE IF NOT EXISTS lia_staffactions (
+    id integer primary key autoincrement,
+    player varchar(255) NOT NULL,
+    playerSteamID varchar(255),
+    steamID varchar(255),
+    action varchar(255),
+    staffName varchar(255),
+    staffSteamID varchar(255),
+    timestamp integer
+);
+CREATE TABLE IF NOT EXISTS lia_doors (
+    gamemode text,
+    map text,
+    id integer,
+    factions text,
+    classes text,
+    disabled integer,
+    hidden integer,
+    ownable integer,
+    name text,
+    price integer,
+    locked integer,
+    children text,
+    PRIMARY KEY (gamemode, map, id)
+);
+CREATE TABLE IF NOT EXISTS lia_persistence (
+    id integer primary key autoincrement,
+    gamemode text,
+    map text,
+    class text,
+    pos text,
+    angles text,
+    model text
+);
+CREATE TABLE IF NOT EXISTS lia_saveditems (
+    id integer primary key autoincrement,
+    schema text,
+    map text,
+    _itemID integer,
+    _pos text,
+    _angles text
+);
+CREATE TABLE IF NOT EXISTS lia_admin (
+    usergroup text PRIMARY KEY,
+    privileges text,
+    inheritance text,
+    types text
+);
+CREATE TABLE IF NOT EXISTS lia_data (
+    gamemode text,
+    map text,
+    data text,
+    PRIMARY KEY (gamemode, map)
+);
+]], done)
     else
         local queries = string.Explode(";", [[
-            CREATE TABLE IF NOT EXISTS `lia_players` (
-                `_steamID` VARCHAR(20) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_steamName` VARCHAR(32) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_firstJoin` DATETIME,
-                `_lastJoin` DATETIME,
-                `_userGroup` VARCHAR(32) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-                `_data` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_lastIP` VARCHAR(64) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-                `_lastOnline` INT(32) NULL DEFAULT 0,
-                `_totalOnlineTime` FLOAT NULL DEFAULT 0,
-                PRIMARY KEY (`_steamID`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_characters` (
-                `_id` INT(12) NOT NULL AUTO_INCREMENT,
-                `_steamID` VARCHAR(20) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_name` VARCHAR(70) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_desc` VARCHAR(512) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_model` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_attribs` VARCHAR(512) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-                `_schema` VARCHAR(24) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_createTime` DATETIME NOT NULL,
-                `_lastJoinTime` DATETIME NOT NULL,
-                `_money` INT(10) UNSIGNED NULL DEFAULT '0',
-                `_faction` VARCHAR(255) DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-                `recognition` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
-                `recognized_as` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
-                PRIMARY KEY (`_id`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_inventories` (
-                `_invID` INT(12) NOT NULL AUTO_INCREMENT,
-                `_charID` INT(12) NULL DEFAULT NULL,
-                `_invType` VARCHAR(24) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-                PRIMARY KEY (`_invID`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_items` (
-                `_itemID` INT(12) NOT NULL AUTO_INCREMENT,
-                `_invID` INT(12) NULL DEFAULT NULL,
-                `_uniqueID` VARCHAR(60) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_data` VARCHAR(512) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-                `_quantity` INT(16),
-                `_x` INT(4),
-                `_y` INT(4),
-                PRIMARY KEY (`_itemID`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_invdata` (
-                `_invID` INT(12) NOT NULL,
-                `_key` VARCHAR(32) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_value` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
-                FOREIGN KEY (`_invID`) REFERENCES lia_inventories(_invID) ON DELETE CASCADE,
-                PRIMARY KEY (`_invID`, `_key`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_config` (
-                `_schema` VARCHAR(24) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_key` VARCHAR(64) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_value` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
-                PRIMARY KEY (`_schema`, `_key`)
-            );
-
-
-            CREATE TABLE IF NOT EXISTS `lia_bans` (
-                `_steamID` varchar(64) NOT NULL,
-                `_banStart` int(32) NOT NULL,
-                `_banDuration` int(32) NOT NULL,
-                `_reason` varchar(512) DEFAULT '',
-                PRIMARY KEY (`_steamID`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_logs` (
-                `_id` INT(12) NOT NULL AUTO_INCREMENT,
-                `_timestamp` DATETIME NOT NULL,
-                `_gamemode` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_category` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_message` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_charID` INT(12) NULL,
-                `_steamID` VARCHAR(20) NULL COLLATE 'utf8mb4_general_ci',
-                PRIMARY KEY (`_id`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_ticketclaims` (
-                `_request` VARCHAR(64) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_admin` VARCHAR(64) NOT NULL COLLATE 'utf8mb4_general_ci',
-                `_timestamp` INT(32) NOT NULL
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_warnings` (
-                `_id` INT(12) NOT NULL AUTO_INCREMENT,
-                `_charID` INT(12) NULL DEFAULT NULL,
-                `_steamID` VARCHAR(64) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
-                `_timestamp` DATETIME NOT NULL,
-                `_reason` TEXT NULL COLLATE 'utf8mb4_general_ci',
-                `_admin` TEXT NULL COLLATE 'utf8mb4_general_ci',
-                PRIMARY KEY (`_id`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_doors` (
-                `_folder` TEXT NULL,
-                `_map` TEXT NULL,
-                `_id` INT NOT NULL,
-                `_factions` TEXT NULL,
-                `_classes` TEXT NULL,
-                `_disabled` TINYINT(1) NULL,
-                `_hidden` TINYINT(1) NULL,
-                `_ownable` TINYINT(1) NULL,
-                `_name` TEXT NULL,
-                `_price` INT NULL,
-                `_locked` TINYINT(1) NULL,
-                `_children` TEXT NULL,
-                PRIMARY KEY (`_folder`, `_map`, `_id`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_spawns` (
-                `_schema` TEXT NULL,
-                `_map` TEXT NULL,
-                `_data` TEXT NULL,
-                PRIMARY KEY (`_schema`, `_map`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_chatbox` (
-                `_schema` TEXT NULL,
-                `_map` TEXT NULL,
-                `_data` TEXT NULL,
-                PRIMARY KEY (`_schema`, `_map`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_sitrooms` (
-                `_folder` TEXT NULL,
-                `_map` TEXT NULL,
-                `_name` TEXT NULL,
-                `_pos` TEXT NULL,
-                PRIMARY KEY (`_folder`, `_map`, `_name`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_data` (
-                `_folder` TEXT NULL,
-                `_map` TEXT NULL,
-                `_data` TEXT NULL,
-                PRIMARY KEY (`_folder`, `_map`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_persistence` (
-                `_id` INT(12) NOT NULL AUTO_INCREMENT,
-                `_folder` TEXT NULL,
-                `_map` TEXT NULL,
-                `class` TEXT NULL,
-                `pos` TEXT NULL,
-                `angles` TEXT NULL,
-                `model` TEXT NULL,
-                PRIMARY KEY (`_id`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_vendors` (
-                `_id` INT(12) NOT NULL AUTO_INCREMENT,
-                `_folder` TEXT NULL,
-                `_map` TEXT NULL,
-                `class` TEXT NULL,
-                `pos` TEXT NULL,
-                `angles` TEXT NULL,
-                `model` TEXT NULL,
-                `data` TEXT NULL,
-                PRIMARY KEY (`_id`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_saveditems` (
-                `_id` INT(12) NOT NULL AUTO_INCREMENT,
-                `_schema` TEXT NULL,
-                `_map` TEXT NULL,
-                `_itemID` INT(12) NOT NULL,
-                `_pos` TEXT NULL,
-                `_angles` TEXT NULL,
-                PRIMARY KEY (`_id`)
-            );
-
-            CREATE TABLE IF NOT EXISTS `lia_admingroups` (
-                `_data` TEXT NULL
-            );
-        ]])
-        local i = 1
-        local function doNextQuery()
-            if i > #queries then return done() end
-            local query = string.Trim(queries[i])
-            if query == "" then
-                i = i + 1
-                return doNextQuery()
+CREATE TABLE IF NOT EXISTS `lia_players` (
+    `steamID` varchar(20) not null collate 'utf8mb4_general_ci',
+    `steamName` varchar(32) not null collate 'utf8mb4_general_ci',
+    `firstJoin` datetime,
+    `lastJoin` datetime,
+    `userGroup` varchar(32) default null collate 'utf8mb4_general_ci',
+    `data` varchar(255) not null collate 'utf8mb4_general_ci',
+    `lastIP` varchar(64) default null collate 'utf8mb4_general_ci',
+    `lastOnline` int(32) default 0,
+    `totalOnlineTime` float default 0,
+    primary key (`steamID`)
+);
+CREATE TABLE IF NOT EXISTS `lia_chardata` (
+    `charID` int not null,
+    `key` varchar(255) not null collate 'utf8mb4_general_ci',
+    `value` text collate 'utf8mb4_general_ci',
+    primary key (`charID`,`key`)
+);
+CREATE TABLE IF NOT EXISTS `lia_characters` (
+    `id` int not null auto_increment,
+    `steamID` varchar(20) not null collate 'utf8mb4_general_ci',
+    `name` varchar(70) not null collate 'utf8mb4_general_ci',
+    `desc` varchar(512) not null collate 'utf8mb4_general_ci',
+    `model` varchar(255) not null collate 'utf8mb4_general_ci',
+    `attribs` varchar(512) default null collate 'utf8mb4_general_ci',
+    `schema` varchar(24) not null collate 'utf8mb4_general_ci',
+    `createTime` datetime not null,
+    `lastJoinTime` datetime not null,
+    `money` int(10) unsigned default 0,
+    `faction` varchar(255) default null collate 'utf8mb4_general_ci',
+    `recognition` text collate 'utf8mb4_general_ci',
+    `fakenames` text collate 'utf8mb4_general_ci',
+    primary key (`id`)
+);
+CREATE TABLE IF NOT EXISTS `lia_inventories` (
+    `invID` int not null auto_increment,
+    `charID` int default null,
+    `_invType` varchar(24) default null collate 'utf8mb4_general_ci',
+    primary key (`invID`)
+);
+CREATE TABLE IF NOT EXISTS `lia_items` (
+    `_itemID` int not null auto_increment,
+    `invID` int default null,
+    `uniqueID` varchar(60) not null collate 'utf8mb4_general_ci',
+    `data` varchar(512) default null collate 'utf8mb4_general_ci',
+    `quantity` int,
+    `x` int,
+    `y` int,
+    primary key (`_itemID`)
+);
+CREATE TABLE IF NOT EXISTS `lia_invdata` (
+    `invID` int not null,
+    `key` varchar(32) not null collate 'utf8mb4_general_ci',
+    `value` varchar(255) not null collate 'utf8mb4_general_ci',
+    foreign key (`invID`) references lia_inventories(invID) on delete cascade,
+    primary key (`invID`,`key`)
+);
+CREATE TABLE IF NOT EXISTS `lia_config` (
+    `schema` varchar(24) not null collate 'utf8mb4_general_ci',
+    `key` varchar(64) not null collate 'utf8mb4_general_ci',
+    `value` text not null collate 'utf8mb4_general_ci',
+    primary key (`schema`,`key`)
+);
+CREATE TABLE IF NOT EXISTS `lia_logs` (
+    `id` int not null auto_increment,
+    `timestamp` datetime not null,
+    `gamemode` varchar(50) not null collate 'utf8mb4_general_ci',
+    `category` varchar(255) not null collate 'utf8mb4_general_ci',
+    `message` text not null collate 'utf8mb4_general_ci',
+    `charID` int default null,
+    `steamID` varchar(20) collate 'utf8mb4_general_ci',
+    primary key (`id`)
+);
+CREATE TABLE IF NOT EXISTS `lia_ticketclaims` (
+    `timestamp` datetime not null,
+    `requester` varchar(64) not null collate 'utf8mb4_general_ci',
+    `requesterSteamID` varchar(64) not null collate 'utf8mb4_general_ci',
+    `admin` varchar(64) not null collate 'utf8mb4_general_ci',
+    `adminSteamID` varchar(64) not null collate 'utf8mb4_general_ci',
+    `message` text collate 'utf8mb4_general_ci'
+);
+CREATE TABLE IF NOT EXISTS `lia_warnings` (
+    `id` int not null auto_increment,
+    `charID` int default null,
+    `warned` text collate 'utf8mb4_general_ci',
+    `warnedSteamID` varchar(64) default null collate 'utf8mb4_general_ci',
+    `timestamp` datetime not null,
+    `message` text collate 'utf8mb4_general_ci',
+    `warner` text collate 'utf8mb4_general_ci',
+    `warnerSteamID` varchar(64) default null collate 'utf8mb4_general_ci',
+    primary key (`id`)
+);
+CREATE TABLE IF NOT EXISTS `lia_permakills` (
+    `id` int not null auto_increment,
+    `player` varchar(255) not null collate 'utf8mb4_general_ci',
+    `reason` varchar(255) default null collate 'utf8mb4_general_ci',
+    `steamID` varchar(255) default null collate 'utf8mb4_general_ci',
+    `charID` int default null,
+    `submitterName` varchar(255) default null collate 'utf8mb4_general_ci',
+    `submitterSteamID` varchar(255) default null collate 'utf8mb4_general_ci',
+    `timestamp` int default null,
+    `evidence` varchar(255) default null collate 'utf8mb4_general_ci',
+    primary key (`id`)
+);
+CREATE TABLE IF NOT EXISTS `lia_bans` (
+    `id` int not null auto_increment,
+    `player` varchar(255) not null collate 'utf8mb4_general_ci',
+    `playerSteamID` varchar(255) default null collate 'utf8mb4_general_ci',
+    `reason` varchar(255) default null collate 'utf8mb4_general_ci',
+    `bannerName` varchar(255) default null collate 'utf8mb4_general_ci',
+    `bannerSteamID` varchar(255) default null collate 'utf8mb4_general_ci',
+    `timestamp` int default null,
+    `evidence` varchar(255) default null collate 'utf8mb4_general_ci',
+    primary key (`id`)
+);
+CREATE TABLE IF NOT EXISTS `lia_staffactions` (
+    `id` int not null auto_increment,
+    `player` varchar(255) not null collate 'utf8mb4_general_ci',
+    `playerSteamID` varchar(255) default null collate 'utf8mb4_general_ci',
+    `steamID` varchar(255) default null collate 'utf8mb4_general_ci',
+    `action` varchar(255) default null collate 'utf8mb4_general_ci',
+    `staffName` varchar(255) default null collate 'utf8mb4_general_ci',
+    `staffSteamID` varchar(255) default null collate 'utf8mb4_general_ci',
+    `timestamp` int default null,
+    primary key (`id`)
+);
+CREATE TABLE IF NOT EXISTS `lia_doors` (
+    `gamemode` text default null,
+    `map` text default null,
+    `id` int not null,
+    `factions` text default null,
+    `classes` text default null,
+    `disabled` tinyint(1) default null,
+    `hidden` tinyint(1) default null,
+    `ownable` tinyint(1) default null,
+    `name` text default null,
+    `price` int default null,
+    `locked` tinyint(1) default null,
+    `children` text default null,
+    primary key (`gamemode`,`map`,`id`)
+);
+CREATE TABLE IF NOT EXISTS `lia_data` (
+    `gamemode` text default null,
+    `map` text default null,
+    `data` text default null,
+    primary key (`gamemode`,`map`)
+);
+CREATE TABLE IF NOT EXISTS `lia_persistence` (
+    `id` int not null auto_increment,
+    `gamemode` text default null,
+    `map` text default null,
+    `class` text default null,
+    `pos` text default null,
+    `angles` text default null,
+    `model` text default null,
+    primary key (`id`)
+);
+CREATE TABLE IF NOT EXISTS `lia_saveditems` (
+    `id` int not null auto_increment,
+    `schema` text default null,
+    `map` text default null,
+    `_itemID` int not null,
+    `_pos` text default null,
+    `_angles` text default null,
+    primary key (`id`)
+);
+CREATE TABLE IF NOT EXISTS `lia_admin` (
+    `usergroup` text not null,
+    `privileges` text default null,
+    `inheritance` text default null,
+    `types` text default null,
+    PRIMARY KEY (`usergroup`)
+);
+]])
+        local index = 1
+        local function nextQuery()
+            if index > #queries then
+                done()
+                return
             end
 
-            lia.db.query(query, function()
-                i = i + 1
-                doNextQuery()
-            end)
+            local q = string.Trim(queries[index])
+            if q == "" then
+                index = index + 1
+                nextQuery()
+            else
+                lia.db.query(q, function()
+                    index = index + 1
+                    nextQuery()
+                end)
+            end
         end
 
-        doNextQuery()
+        nextQuery()
     end
 
     hook.Run("OnLoadTables")
@@ -738,6 +713,8 @@ function lia.db.convertDataType(value, noEscape)
         else
             return "'" .. lia.db.escape(util.TableToJSON(value)) .. "'"
         end
+    elseif isbool(value) then
+        return value and 1 or 0
     elseif value == NULL then
         return "NULL"
     end
@@ -969,10 +946,9 @@ function lia.db.getTables()
         lia.db.query("SELECT name FROM sqlite_master WHERE type='table'", function(res)
             local tables = {}
             for _, row in ipairs(res or {}) do
-                if row.name and row.name:StartWith("lia_") then
-                    tables[#tables + 1] = row.name
-                end
+                if row.name and row.name:StartWith("lia_") then tables[#tables + 1] = row.name end
             end
+
             d:resolve(tables)
         end, function(err) d:reject(err) end)
     else
@@ -981,10 +957,9 @@ function lia.db.getTables()
             local tables = {}
             for _, row in ipairs(res or {}) do
                 local name = row[key]
-                if name and string.sub(name, 1, 4) == "lia_" then
-                    tables[#tables + 1] = name
-                end
+                if name and string.sub(name, 1, 4) == "lia_" then tables[#tables + 1] = name end
             end
+
             d:resolve(tables)
         end, function(err) d:reject(err) end)
     end
@@ -1075,20 +1050,20 @@ concommand.Add("database_list", function(ply)
     if IsValid(ply) then return end
     lia.db.GetCharacterTable(function(columns)
         if #columns == 0 then
-            print(L("dbColumnsNone"))
+            lia.error(L("dbColumnsNone"))
         else
-            print(L("dbColumnsList", table.concat(columns, ", ")))
+            lia.information(L("dbColumnsList", table.concat(columns, ", ")))
         end
     end)
 end)
 
 function GM:RegisterPreparedStatements()
-    lia.bootstrap("Database", L("preparedStatementsAdded"))
-    lia.db.prepare("itemData", "UPDATE lia_items SET _data = ? WHERE _itemID = ?", {MYSQLOO_STRING, MYSQLOO_INTEGER})
-    lia.db.prepare("itemx", "UPDATE lia_items SET _x = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
-    lia.db.prepare("itemy", "UPDATE lia_items SET _y = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
-    lia.db.prepare("itemq", "UPDATE lia_items SET _quantity = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
-    lia.db.prepare("itemInstance", "INSERT INTO lia_items (_invID, _uniqueID, _data, _x, _y, _quantity) VALUES (?, ?, ?, ?, ?, ?)", {MYSQLOO_INTEGER, MYSQLOO_STRING, MYSQLOO_STRING, MYSQLOO_INTEGER, MYSQLOO_INTEGER, MYSQLOO_INTEGER,})
+    lia.bootstrap(L("database"), L("preparedStatementsAdded"))
+    lia.db.prepare("itemData", "UPDATE lia_items SET data = ? WHERE _itemID = ?", {MYSQLOO_STRING, MYSQLOO_INTEGER})
+    lia.db.prepare("itemx", "UPDATE lia_items SET x = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
+    lia.db.prepare("itemy", "UPDATE lia_items SET y = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
+    lia.db.prepare("itemq", "UPDATE lia_items SET quantity = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
+    lia.db.prepare("itemInstance", "INSERT INTO lia_items (invID, uniqueID, data, x, y, quantity) VALUES (?, ?, ?, ?, ?, ?)", {MYSQLOO_INTEGER, MYSQLOO_STRING, MYSQLOO_STRING, MYSQLOO_INTEGER, MYSQLOO_INTEGER, MYSQLOO_INTEGER,})
 end
 
 function GM:SetupDatabase()
@@ -1119,7 +1094,7 @@ function GM:SetupDatabase()
 end
 
 function GM:DatabaseConnected()
-    lia.bootstrap("Database", L("databaseConnected", lia.db.module), Color(0, 255, 0))
+    lia.bootstrap(L("database"), L("databaseConnected", lia.db.module), Color(0, 255, 0))
 end
 
 function GM:OnMySQLOOConnected()

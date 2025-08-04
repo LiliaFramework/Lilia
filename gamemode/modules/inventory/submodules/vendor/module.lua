@@ -1,21 +1,14 @@
-﻿MODULE.name = "Vendors"
+MODULE.name = L("vendors")
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Provides NPC vendors who can buy and sell items with stock management and dialogue-driven transactions."
-MODULE.CAMIPrivileges = {
+MODULE.desc = L("moduleVendorDesc")
+MODULE.Privileges = {
     {
-        Name = "Staff Permissions - Can Edit Vendors",
-        MinAccess = "admin"
+        Name = L("canEditVendors"),
+        MinAccess = "superadmin",
+        Category = L("vendors"),
     },
 }
-
-lia.config.add("vendorDefaultMoney", "Default Vendor Money", 500, nil, {
-    desc = "Sets the default amount of money a vendor starts with",
-    category = "Vendors",
-    type = "Int",
-    min = 0,
-    max = 100000
-})
 
 VENDOR_WELCOME = 1
 VENDOR_LEAVE = 2
@@ -27,8 +20,3 @@ VENDOR_MAXSTOCK = 4
 VENDOR_SELLANDBUY = 1
 VENDOR_SELLONLY = 2
 VENDOR_BUYONLY = 3
-VENDOR_TEXT = {
-    [VENDOR_SELLANDBUY] = "buyOnlynSell",
-    [VENDOR_BUYONLY] = "buyOnly",
-    [VENDOR_SELLONLY] = "sellOnly",
-}

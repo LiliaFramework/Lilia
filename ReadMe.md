@@ -66,16 +66,16 @@
   Contextual radial options for money, voice and recognition.
 
 * **Administration Tools**
-  Built-in admin menu handles logging, tickets, warns, teleport and spectate. ULX is not supported due to its outdated CAMI.
+  Built-in admin menu handles logging, tickets, warns, teleport and spectate. Optional compatibility is available for ULX, ServerGuard, and SAM.
 
 * **Performance & Protection**
   Tick monitoring, network profiling and anti-exploit checks.
 
 * **Permissions & Logging**
-  CAMI-based privileges with inheritance and file logs.
+  Privileges with inheritance and file logs.
 
 * **Modular Extensions**
-  Hot-loading modules with third-party addon compatibility.
+  Hot-loading modules with third-party addon compatibility using global or custom conditions.
 
 * **Workshop & Config**
   Manage client downloads and tweak hundreds of in-game settings.

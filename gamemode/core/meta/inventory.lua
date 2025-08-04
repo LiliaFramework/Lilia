@@ -124,7 +124,7 @@ if SERVER then
         local id = self.id
         if not isnumber(id) then id = NULL end
         lia.db.updateTable({
-            _invID = id
+            invID = id
         }, nil, "items", "_itemID = " .. item:getID())
 
         self:syncItemAdded(item)
@@ -152,7 +152,7 @@ if SERVER then
         local charID = initialData.char
         lia.db.insertTable({
             _invType = self.typeID,
-            _charID = charID
+            charID = charID
         }, function(_, lastID)
             local count = 0
             local expected = table.Count(initialData)
@@ -161,9 +161,9 @@ if SERVER then
             for key, value in pairs(initialData) do
                 if key == "char" then continue end
                 lia.db.insertTable({
-                    _invID = lastID,
-                    _key = key,
-                    _value = {value}
+                    invID = lastID,
+                    key = key,
+                    value = {value}
                 }, function()
                     count = count + 1
                     if count == expected then d:resolve(lastID) end
@@ -177,7 +177,7 @@ if SERVER then
     end
 
     function Inventory:removeItem(itemID, preserveItem)
-        assert(isnumber(itemID), "itemID must be a number for remove")
+        assert(isnumber(itemID), L("itemIDNumberRequired"))
         local d = deferred.new()
         local instance = self.items[itemID]
         if instance then
@@ -192,7 +192,7 @@ if SERVER then
                 d:resolve(instance:delete())
             else
                 lia.db.updateTable({
-                    _invID = NULL
+                    invID = NULL
                 }, function() d:resolve() end, "items", "_itemID = " .. itemID)
             end
         else
@@ -211,16 +211,16 @@ if SERVER then
         local keyData = self.config.data[key]
         if key == "char" then
             lia.db.updateTable({
-                _charID = value
-            }, nil, "inventories", "_invID = " .. self:getID())
+                charID = value
+            }, nil, "inventories", "invID = " .. self:getID())
         elseif not keyData or not keyData.notPersistent then
             if value == nil then
-                lia.db.delete("invdata", "_invID = " .. self.id .. " AND _key = '" .. lia.db.escape(key) .. "'")
+                lia.db.delete("invdata", "invID = " .. self.id .. " AND key = '" .. lia.db.escape(key) .. "'")
             else
                 lia.db.upsert({
-                    _invID = self.id,
-                    _key = key,
-                    _value = {value}
+                    invID = self.id,
+                    key = key,
+                    value = {value}
                 }, "invdata")
             end
         end
@@ -272,25 +272,25 @@ if SERVER then
     end
 
     local ITEM_TABLE = "items"
-    local ITEM_FIELDS = {"_itemID", "_uniqueID", "_data", "_x", "_y", "_quantity"}
+    local ITEM_FIELDS = {"_itemID", "uniqueID", "data", "x", "y", "quantity"}
     function Inventory:loadItems()
-        return lia.db.select(ITEM_FIELDS, ITEM_TABLE, "_invID = " .. self.id):next(function(res)
+        return lia.db.select(ITEM_FIELDS, ITEM_TABLE, "invID = " .. self.id):next(function(res)
             local items = {}
             for _, result in ipairs(res.results or {}) do
                 local itemID = tonumber(result._itemID)
-                local uniqueID = result._uniqueID
+                local uniqueID = result.uniqueID
                 local itemTable = lia.item.list[uniqueID]
                 if not itemTable then
-                    lia.error("Inventory " .. self.id .. " contains invalid item " .. uniqueID .. " (" .. itemID .. ")\n")
+                    lia.error(L("inventoryInvalidItem", self.id, uniqueID, itemID))
                     continue
                 end
 
                 local item = lia.item.new(uniqueID, itemID)
                 item.invID = self.id
-                if result._data then item.data = table.Merge(item.data, util.JSONToTable(result._data) or {}) end
-                item.data.x = tonumber(result._x)
-                item.data.y = tonumber(result._y)
-                item.quantity = tonumber(result._quantity)
+                if result.data then item.data = table.Merge(item.data, util.JSONToTable(result.data) or {}) end
+                item.data.x = tonumber(result.x)
+                item.data.y = tonumber(result.y)
+                item.quantity = tonumber(result.quantity)
                 items[itemID] = item
                 item:onRestored(self)
             end

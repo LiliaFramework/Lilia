@@ -1,14 +1,16 @@
-﻿MODULE.name = "Scoreboard"
+MODULE.name = L("scoreboard")
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Displays an immersive scoreboard showing recognized players, faction information, and built-in admin options for staff."
-MODULE.CAMIPrivileges = {
+MODULE.desc = L("moduleScoreboardDesc")
+MODULE.Privileges = {
     {
-        Name = "Staff Permissions - Can Access Scoreboard Admin Options",
-        MinAccess = "admin"
+        Name = L("canAccessScoreboardAdminOptions"),
+        MinAccess = "admin",
+        Category = L("scoreboard"),
     },
     {
-        Name = "Staff Permissions - Can Access Scoreboard Info Out Of Staff",
-        MinAccess = "admin"
+        Name = L("canAccessScoreboardInfoOutOfStaff"),
+        MinAccess = "superadmin",
+        Category = L("scoreboard"),
     },
 }

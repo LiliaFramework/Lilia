@@ -1,19 +1,19 @@
 ﻿function MODULE:CanPlayerModifyConfig(client)
-    return client:hasPrivilege("Staff Permissions - Access Edit Configuration Menu")
+    return client:hasPrivilege("Access Edit Configuration Menu")
 end
 
 properties.Add("TogglePropBlacklist", {
     MenuLabel = L("TogglePropBlacklist"),
     Order = 900,
     MenuIcon = "icon16/link.png",
-    Filter = function(_, ent, ply) return IsValid(ent) and ent:GetClass() == "prop_physics" and ply:hasPrivilege("Staff Permissions - Manage Prop Blacklist") end,
+    Filter = function(_, ent, ply) return IsValid(ent) and ent:GetClass() == "prop_physics" and ply:hasPrivilege("Manage Prop Blacklist") end,
     Action = function(self, ent)
         self:MsgStart()
         net.WriteString(ent:GetModel())
         self:MsgEnd()
     end,
     Receive = function(_, _, ply)
-        if not ply:hasPrivilege("Staff Permissions - Manage Prop Blacklist") then return end
+        if not ply:hasPrivilege("Manage Prop Blacklist") then return end
         local model = net.ReadString()
         local list = lia.data.get("prop_blacklist", {})
         if table.HasValue(list, model) then
@@ -28,8 +28,34 @@ properties.Add("TogglePropBlacklist", {
     end
 })
 
+properties.Add("ToggleCarBlacklist", {
+    MenuLabel = L("ToggleCarBlacklist"),
+    Order = 901,
+    MenuIcon = "icon16/link.png",
+    Filter = function(_, ent, ply) return IsValid(ent) and (ent:IsVehicle() or ent:isSimfphysCar()) and ply:hasPrivilege("Manage Vehicle Blacklist") end,
+    Action = function(self, ent)
+        self:MsgStart()
+        net.WriteString(ent:GetModel())
+        self:MsgEnd()
+    end,
+    Receive = function(_, _, ply)
+        if not ply:hasPrivilege("Manage Vehicle Blacklist") then return end
+        local model = net.ReadString()
+        local list = lia.data.get("carBlacklist", {})
+        if table.HasValue(list, model) then
+            table.RemoveByValue(list, model)
+            lia.data.set("carBlacklist", list, true, true)
+            ply:notifyLocalized("removedFromBlacklist", model)
+        else
+            table.insert(list, model)
+            lia.data.set("carBlacklist", list, true, true)
+            ply:notifyLocalized("addedToBlacklist", model)
+        end
+    end
+})
+
 properties.Add("copytoclipboard", {
-    MenuLabel = "Copy Model to Clipboard",
+    MenuLabel = L("copyModelClipboard"),
     Order = 999,
     MenuIcon = "icon16/cup.png",
     Filter = function(_, ent)
@@ -41,7 +67,7 @@ properties.Add("copytoclipboard", {
         self:MsgStart()
         local s = ent:GetModel()
         SetClipboardText(s)
-        print(s)
+        lia.admin(s)
         self:MsgEnd()
     end,
     Receive = function() end

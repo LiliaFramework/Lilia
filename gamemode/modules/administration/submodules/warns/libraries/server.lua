@@ -1,16 +1,18 @@
 ﻿local MODULE = MODULE
 function MODULE:GetWarnings(charID)
-    local condition = "_charID = " .. lia.db.convertDataType(charID)
-    return lia.db.select({"_id", "_timestamp", "_reason", "_admin"}, "warnings", condition):next(function(res) return res.results or {} end)
+    local condition = "charID = " .. lia.db.convertDataType(charID)
+    return lia.db.select({"id", "timestamp", "message", "warner", "warnerSteamID"}, "warnings", condition):next(function(res) return res.results or {} end)
 end
 
-function MODULE:AddWarning(charID, steamID, timestamp, reason, admin)
+function MODULE:AddWarning(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID)
     lia.db.insertTable({
-        _charID = charID,
-        _steamID = steamID,
-        _timestamp = timestamp,
-        _reason = reason,
-        _admin = admin
+        charID = charID,
+        warned = warned,
+        warnedSteamID = warnedSteamID,
+        timestamp = timestamp,
+        message = message,
+        warner = warner,
+        warnerSteamID = warnerSteamID
     }, nil, "warnings")
 end
 
@@ -19,13 +21,13 @@ function MODULE:RemoveWarning(charID, index)
     self:GetWarnings(charID):next(function(rows)
         if index < 1 or index > #rows then return d:resolve(nil) end
         local row = rows[index]
-        lia.db.delete("warnings", "_id = " .. lia.db.convertDataType(row._id)):next(function() d:resolve(row) end)
+        lia.db.delete("warnings", "id = " .. lia.db.convertDataType(row.id)):next(function() d:resolve(row) end)
     end)
     return d
 end
 
 net.Receive("RequestRemoveWarning", function(_, client)
-    if not client:hasPrivilege("Staff Permissions - Can Remove Warns") then return end
+    if not client:hasPrivilege("Can Remove Warns") then return end
     local charID = net.ReadInt(32)
     local rowData = net.ReadTable()
     local warnIndex = tonumber(rowData.ID or rowData.index)
@@ -55,8 +57,17 @@ net.Receive("RequestRemoveWarning", function(_, client)
         targetClient:notifyLocalized("warningRemovedNotify", client:Nick())
         client:notifyLocalized("warningRemoved", warnIndex, targetClient:Nick())
         hook.Run("WarningRemoved", client, targetClient, {
-            reason = warn._reason,
-            admin = warn._admin
+            reason = warn.message,
+            admin = warn.warner
         }, warnIndex)
+    end)
+end)
+
+net.Receive("liaRequestAllWarnings", function(_, client)
+    if not client:hasPrivilege("View Player Warnings") then return end
+    lia.db.select({"timestamp", "warned", "warnedSteamID", "warner", "warnerSteamID", "message"}, "warnings"):next(function(res)
+        net.Start("liaAllWarnings")
+        net.WriteTable(res.results or {})
+        net.Send(client)
     end)
 end)

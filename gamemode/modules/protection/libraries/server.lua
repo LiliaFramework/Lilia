@@ -1,4 +1,10 @@
 ﻿local MODULE = MODULE
+lia.administrator.registerPrivilege({
+    Name = L("receiveCheaterNotifications"),
+    MinAccess = "admin",
+    Category = L("protection")
+})
+
 local function IsCheater(client)
     return lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false)
 end
@@ -12,13 +18,13 @@ function MODULE:CanPlayerSwitchChar(client, character)
         local damageCooldown = lia.config.get("OnDamageCharacterSwitchCooldownTimer", 15)
         local switchCooldown = lia.config.get("CharacterSwitchCooldownTimer", 5)
         if damageCooldown > 0 and client.LastDamaged and client.LastDamaged > CurTime() - damageCooldown then
-            lia.log.add(client, "permissionDenied", "switch character (recent damage)")
+            lia.log.add(client, "permissionDenied", L("logSwitchCharRecentDamage"))
             return false, L("tookDamageSwitchCooldown")
         end
 
-        local loginTime = character:getData("loginTime", 0)
+        local loginTime = character:getLoginTime()
         if switchCooldown > 0 and loginTime + switchCooldown > os.time() then
-            lia.log.add(client, "permissionDenied", "switch character (cooldown)")
+            lia.log.add(client, "permissionDenied", L("logSwitchCharCooldown"))
             return false, L("switchCooldown")
         end
     end
@@ -26,21 +32,34 @@ function MODULE:CanPlayerSwitchChar(client, character)
 end
 
 function MODULE:EntityTakeDamage(entity, dmgInfo)
+    if IsValid(entity) and entity:IsVehicle() and entity:GetClass():find("prop_vehicle") then
+        local driver = entity:GetDriver()
+        if IsValid(driver) then
+            local hitPos = dmgInfo:GetDamagePosition()
+            if hitPos:Distance(driver:GetPos()) <= 53 then
+                local newHealth = driver:Health() - dmgInfo:GetDamage() * 0.3
+                if newHealth > 0 then
+                    driver:SetHealth(newHealth)
+                else
+                    driver:Kill()
+                end
+
+                dmgInfo:SetDamage(0)
+                return true
+            end
+        end
+    end
+
     local inflictor = dmgInfo:GetInflictor()
     local attacker = dmgInfo:GetAttacker()
-    local isValidClient = IsValid(entity) and entity:IsPlayer()
-    local attackerIsHuman = IsValid(attacker) and attacker:IsPlayer()
-    if attackerIsHuman and IsCheater(attacker) then
+    if IsValid(attacker) and attacker:IsPlayer() and IsCheater(attacker) then
         dmgInfo:SetDamage(0)
-        LogCheaterAction(attacker, "deal damage")
+        LogCheaterAction(attacker, L("cheaterActionDealDamage"))
         return true
     end
 
-    local notSameEntity = attacker ~= entity
-    local isFallDamage = dmgInfo:IsFallDamage()
-    local inflictorIsProp = IsValid(inflictor) and inflictor:isProp()
-    if not isValidClient or isFallDamage then return end
-    if inflictorIsProp then
+    if not IsValid(entity) and entity:IsPlayer() or dmgInfo:IsFallDamage() then return end
+    if IsValid(inflictor) and inflictor:isProp() then
         dmgInfo:SetDamage(0)
         return
     end
@@ -48,25 +67,24 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
     if dmgInfo:IsExplosionDamage() and lia.config.get("ExplosionRagdoll", false) then
         dmgInfo:ScaleDamage(0.5)
         local dmgPos = dmgInfo:GetDamagePosition()
-        local direction = (entity:GetPos() - dmgPos):GetNormalized()
-        entity:SetVelocity(direction * 60 * dmgInfo:GetDamage())
-        local damageAmount = dmgInfo:GetDamage()
-        timer.Simple(0.05, function() if IsValid(entity) and not entity:hasRagdoll() and entity:Health() - damageAmount > 0 then entity:setRagdolled(true, 3) end end)
+        local dir = (entity:GetPos() - dmgPos):GetNormalized()
+        entity:SetVelocity(dir * 60 * dmgInfo:GetDamage())
+        local dmgAmt = dmgInfo:GetDamage()
+        timer.Simple(0.05, function() if IsValid(entity) and not entity:hasRagdoll() and entity:Health() - dmgAmt > 0 then entity:setRagdolled(true, 3) end end)
     end
 
-    if notSameEntity then
+    if attacker ~= entity then
         if entity:GetMoveType() == MOVETYPE_NOCLIP then return end
         if lia.config.get("OnDamageCharacterSwitchCooldownTimer", 15) > 0 then
-            local applyCooldown = lia.config.get("SwitchCooldownOnAllEntities", false) or attackerIsHuman
-            if applyCooldown then entity.LastDamaged = CurTime() end
+            local applyCd = lia.config.get("SwitchCooldownOnAllEntities", false) or attacker:IsPlayer()
+            if applyCd then entity.LastDamaged = CurTime() end
         end
 
         if lia.config.get("CarRagdoll", false) and IsValid(inflictor) and inflictor:isSimfphysCar() then
             local veh = entity:GetVehicle()
-            local inSimCar = IsValid(veh) and veh:isSimfphysCar()
-            if not inSimCar then
+            if not (IsValid(veh) and veh:isSimfphysCar()) then
                 dmgInfo:ScaleDamage(0)
-                if not entity:hasRagdoll() and entity:Health() - dmgInfo:GetDamage() > 0 then entity:setRagdolled(true, 5) end
+                if not entity:hasRagdoll() and entity:Health() > 0 then entity:setRagdolled(true, 5) end
             end
         end
     end
@@ -89,11 +107,32 @@ local KnownCheaters = {
     ["76561198234911980"] = true,
 }
 
+local function collectSteamIDs(hookName)
+    local collected = {}
+    hook.Run(hookName, collected)
+    local flattened = {}
+    local function merge(tbl)
+        for k, v in pairs(tbl) do
+            if istable(v) then
+                merge(v)
+            else
+                if isstring(k) then
+                    flattened[k] = v
+                else
+                    flattened[v] = true
+                end
+            end
+        end
+    end
+    merge(collected)
+    return flattened
+end
+
 function MODULE:PlayerAuthed(client, steamid)
     local steamID64 = util.SteamIDTo64(steamid)
     local ownerSteamID64 = client:OwnerSteamID64()
     local steamName = client:SteamName()
-    local steamID = client:SteamID64()
+    local steamID = steamid
     if KnownCheaters[steamID64] or KnownCheaters[ownerSteamID64] then
         lia.applyPunishment(client, L("usingThirdPartyCheats"), false, true, 0)
         lia.notifyAdmin(L("bannedCheaterNotify", steamName, steamID))
@@ -101,27 +140,35 @@ function MODULE:PlayerAuthed(client, steamid)
         return
     end
 
-    local banRecord = lia.admin.isBanned(ownerSteamID64)
-    if banRecord then
-        if lia.admin.hasBanExpired(ownerSteamID64) then
-            lia.admin.removeBan(ownerSteamID64)
-        else
-            local duration = 0
-            if banRecord.duration > 0 then duration = math.max(math.ceil((banRecord.start + banRecord.duration - os.time()) / 60), 0) end
-            lia.applyPunishment(client, L("familySharedAccountBlacklisted"), false, true, duration)
-            lia.notifyAdmin(L("bannedAltNotify", steamName, steamID))
-            lia.log.add(nil, "altBanned", steamName, steamID)
-            return
-        end
-    end
-
-    if lia.config.get("AltsDisabled", false) and client:IsFamilySharedAccount() then
-        lia.applyPunishment(client, L("familySharingDisabled"), true, false)
-        lia.notifyAdmin(L("kickedAltNotify", steamName, steamID))
-    elseif lia.module.list["whitelist"] and lia.module.list["whitelist"].BlacklistedSteamID64[ownerSteamID64] then
+    lia.db.selectOne({"reason"}, "bans", "playerSteamID = " .. ownerSteamID64):next(function(banRecord)
+        if not IsValid(client) or not banRecord then return end
         lia.applyPunishment(client, L("familySharedAccountBlacklisted"), false, true, 0)
         lia.notifyAdmin(L("bannedAltNotify", steamName, steamID))
         lia.log.add(nil, "altBanned", steamName, steamID)
+    end)
+
+    local whitelistedSteamIDs = collectSteamIDs("GetWhitelistedSteamIDs")
+    local blacklistedSteamIDs = collectSteamIDs("GetBlacklistedSteamIDs")
+
+    local function punishIfBlacklisted(id, isAlt)
+        local reason = blacklistedSteamIDs[id]
+        if reason and not whitelistedSteamIDs[id] then
+            reason = reason ~= true and reason or L("familySharedAccountBlacklisted")
+            lia.applyPunishment(client, reason, false, true, 0)
+            if isAlt then
+                lia.notifyAdmin(L("bannedAltNotify", steamName, steamID))
+                lia.log.add(nil, "altBanned", steamName, steamID)
+            end
+            return true
+        end
+    end
+
+    if punishIfBlacklisted(steamID64) then return end
+    if lia.config.get("AltsDisabled", false) and client:IsFamilySharedAccount() then
+        lia.applyPunishment(client, L("familySharingDisabled"), true, false)
+        lia.notifyAdmin(L("kickedAltNotify", steamName, steamID))
+    else
+        punishIfBlacklisted(ownerSteamID64, true)
     end
 end
 
@@ -257,7 +304,6 @@ function MODULE:PlayerInitialSpawn(client)
             local override = hook.Run("PlayerCheatDetected", client)
             client:setNetVar("cheater", true)
             client:setLiliaData("cheater", true)
-            client:saveLiliaData()
             hook.Run("OnCheaterCaught", client)
             if override ~= true then lia.applyPunishment(client, L("hackingInfraction"), true, true, 0, "kickedForInfractionPeriod", "bannedForInfractionPeriod") end
         end
@@ -273,10 +319,10 @@ end
 
 function MODULE:OnCheaterCaught(client)
     if IsValid(client) then
-        lia.log.add(client, "cheaterDetected", client:Name(), client:SteamID64())
+        lia.log.add(client, "cheaterDetected", client:Name(), client:SteamID())
         client:notifyLocalized("caughtCheating")
         for _, p in player.Iterator() do
-            if p:isStaffOnDuty() or p:IsSuperAdmin() then p:notifyLocalized("cheaterDetectedStaff", client:Name(), client:SteamID64()) end
+            if p:isStaffOnDuty() or p:hasPrivilege("Receive Cheater Notifications") then p:notifyLocalized("cheaterDetectedStaff", client:Name(), client:SteamID()) end
         end
     end
 end

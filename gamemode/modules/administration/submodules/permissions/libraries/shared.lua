@@ -4,15 +4,13 @@
 
 function MODULE:InitializedModules()
     if properties.List then
-        for name in pairs(properties.List) do
+        for name, prop in pairs(properties.List) do
             if name ~= "persist" and name ~= "drive" and name ~= "bonemanipulate" then
-                local privilege = "Staff Permissions - Access Property " .. name:gsub("^%l", string.upper)
-                if not CAMI.GetPrivilege(privilege) then
-                    CAMI.RegisterPrivilege({
-                        Name = privilege,
-                        MinAccess = "admin"
-                    })
-                end
+                lia.administrator.registerPrivilege({
+                    Name = L("accessPropertyPrivilege", prop.MenuLabel),
+                    MinAccess = "admin",
+                    Category = L("categoryStaffManagement")
+                })
             end
         end
     end
@@ -20,19 +18,17 @@ function MODULE:InitializedModules()
     for _, wep in ipairs(weapons.GetList()) do
         if wep.ClassName == "gmod_tool" and wep.Tool then
             for tool in pairs(wep.Tool) do
-                local privilege = "Staff Permissions - Access Tool " .. tool:gsub("^%l", string.upper)
-                if not CAMI.GetPrivilege(privilege) then
-                    CAMI.RegisterPrivilege({
-                        Name = privilege,
-                        MinAccess = defaultUserTools[string.lower(tool)] and "user" or "admin"
-                    })
-                end
+                lia.administrator.registerPrivilege({
+                    Name = L("accessToolPrivilege", tool:gsub("^%l", string.upper)),
+                    MinAccess = defaultUserTools[string.lower(tool)] and "user" or "admin",
+                    Category = L("categoryStaffTools")
+                })
             end
         end
     end
 end
 
-lia.flag.add("p", "Access to the physgun.", function(client, isGiven)
+lia.flag.add("p", L("flagPhysgun"), function(client, isGiven)
     if isGiven then
         client:Give("weapon_physgun")
         client:SelectWeapon("weapon_physgun")
@@ -41,7 +37,7 @@ lia.flag.add("p", "Access to the physgun.", function(client, isGiven)
     end
 end)
 
-lia.flag.add("t", "Access to the toolgun", function(client, isGiven)
+lia.flag.add("t", L("flagToolgun"), function(client, isGiven)
     if isGiven then
         client:Give("gmod_tool")
         client:SelectWeapon("gmod_tool")
@@ -50,36 +46,13 @@ lia.flag.add("t", "Access to the toolgun", function(client, isGiven)
     end
 end)
 
-lia.flag.add("C", "Access to spawn vehicles.")
-lia.flag.add("z", "Access to spawn SWEPS.")
-lia.flag.add("E", "Access to spawn SENTs.")
-lia.flag.add("L", "Access to spawn Effects.")
-lia.flag.add("r", "Access to spawn ragdolls.")
-lia.flag.add("e", "Access to spawn props.")
-lia.flag.add("n", "Access to spawn NPCs.")
-lia.flag.add("V", "Access to manage your faction roster.")
-properties.Add("ToggleCarBlacklist", {
-    MenuLabel = L("ToggleCarBlacklist"),
-    Order = 901,
-    MenuIcon = "icon16/link.png",
-    Filter = function(_, ent, ply) return IsValid(ent) and (ent:IsVehicle() or ent:isSimfphysCar()) and ply:hasPrivilege("Staff Permissions - Manage Car Blacklist") end,
-    Action = function(self, ent)
-        self:MsgStart()
-        net.WriteString(ent:GetModel())
-        self:MsgEnd()
-    end,
-    Receive = function(_, _, ply)
-        if not ply:hasPrivilege("Staff Permissions - Manage Car Blacklist") then return end
-        local model = net.ReadString()
-        local list = lia.data.get("carBlacklist", {})
-        if table.HasValue(list, model) then
-            table.RemoveByValue(list, model)
-            lia.data.set("carBlacklist", list, true, true)
-            ply:notifyLocalized("removedFromBlacklist", model)
-        else
-            table.insert(list, model)
-            lia.data.set("carBlacklist", list, true, true)
-            ply:notifyLocalized("addedToBlacklist", model)
-        end
-    end
-})
+lia.flag.add("C", L("flagSpawnVehicles"))
+lia.flag.add("z", L("flagSpawnSweps"))
+lia.flag.add("E", L("flagSpawnSents"))
+lia.flag.add("L", L("flagSpawnEffects"))
+lia.flag.add("r", L("flagSpawnRagdolls"))
+lia.flag.add("e", L("flagSpawnProps"))
+lia.flag.add("n", L("flagSpawnNpcs"))
+lia.flag.add("V", L("flagFactionRoster"))
+lia.flag.add("K", L("flagFactionKick"))
+lia.flag.add("W", L("flagClassRoster"))

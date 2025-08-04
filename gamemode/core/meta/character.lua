@@ -18,7 +18,7 @@ function characterMeta:getPlayer()
     if IsValid(self.player) then return self.player end
     for _, v in player.Iterator() do
         if self.steamID then
-            if v:SteamID64() == self.steamID then
+            if v:SteamID() == self.steamID then
                 self.player = v
                 return v
             end
@@ -41,7 +41,7 @@ function characterMeta:getDisplayedName(client)
     if self:getPlayer() == client then return self:getName() end
     local characterID = self:getID()
     if ourCharacter:doesRecognize(characterID) then return self:getName() end
-    local myReg = ourCharacter:getRecognizedAs()
+    local myReg = ourCharacter:getFakeName()
     if ourCharacter:doesFakeRecognize(characterID) and myReg[characterID] then return myReg[characterID] end
     return L("unknown")
 end
@@ -52,15 +52,12 @@ function characterMeta:hasMoney(amount)
     return self:getMoney() >= amount
 end
 
-function characterMeta:getFlags()
-    return self:getData("f", "")
-end
-
-function characterMeta:hasFlags(flags)
-    for i = 1, #flags do
-        if self:getFlags():find(flags:sub(i, i), 1, true) then return true end
+function characterMeta:hasFlags(flagStr)
+    local flags = self:getFlags()
+    for i = 1, #flagStr do
+        if flags:find(flagStr:sub(i, i), 1, true) then return true end
     end
-    return hook.Run("CharHasFlags", self, flags) or false
+    return false
 end
 
 function characterMeta:getItemWeapon(requireEquip)
@@ -87,8 +84,8 @@ function characterMeta:getStamina()
 end
 
 function characterMeta:hasClassWhitelist(class)
-    local wl = self:getData("whitelist", {})
-    return wl[class] ~= nil
+    local wl = self:getClasswhitelists() or {}
+    return wl[class] == true
 end
 
 function characterMeta:isFaction(faction)
@@ -160,35 +157,41 @@ function characterMeta:setData(k, v, noReplication, receiver)
         if istable(k) then
             for nk, nv in pairs(k) do
                 if nv == nil then
-                    lia.db.delete("chardata", "_charID = " .. self:getID() .. " AND _key = '" .. lia.db.escape(nk) .. "'")
+                    lia.db.delete("chardata", "charID = " .. self:getID() .. " AND key = '" .. lia.db.escape(nk) .. "'")
                 else
                     local encoded = pon.encode({nv})
                     lia.db.upsert({
-                        _charID = self:getID(),
-                        _key = nk,
-                        _value = encoded
-                    }, "chardata", function(success, err) if not success then print("Failed to insert character data: " .. err) end end)
+                        charID = self:getID(),
+                        key = nk,
+                        value = encoded
+                    }, "chardata", function(success, err) if not success then lia.error(L("failedInsertCharData", err)) end end)
                 end
             end
         else
             if v == nil then
-                lia.db.delete("chardata", "_charID = " .. self:getID() .. " AND _key = '" .. lia.db.escape(k) .. "'")
+                lia.db.delete("chardata", "charID = " .. self:getID() .. " AND key = '" .. lia.db.escape(k) .. "'")
             else
                 local encoded = pon.encode({v})
                 lia.db.upsert({
-                    _charID = self:getID(),
-                    _key = k,
-                    _value = encoded
-                }, "chardata", function(success, err) if not success then print("Failed to insert character data: " .. err) end end)
+                    charID = self:getID(),
+                    key = k,
+                    value = encoded
+                }, "chardata", function(success, err) if not success then lia.error(L("failedInsertCharData", err)) end end)
             end
         end
     end
 end
 
 function characterMeta:getData(key, default)
+    self.dataVars = self.dataVars or {}
     if not key then return self.dataVars end
     local value = self.dataVars and self.dataVars[key] or default
     return value
+end
+
+function characterMeta:isBanned()
+    local banned = self:getBanned()
+    return banned ~= 0 and (banned == -1 or banned > os.time())
 end
 
 if SERVER then
@@ -201,10 +204,10 @@ if SERVER then
         end
 
         local recognized = self:getRecognition()
-        local nameList = self:getRecognizedAs()
+        local nameList = self:getFakeName()
         if name ~= nil then
             nameList[id] = name
-            self:setRecognizedAs(nameList)
+            self:setFakeName(nameList)
         else
             self:setRecognition(recognized .. "," .. id .. ",")
         end
@@ -229,15 +232,15 @@ if SERVER then
     end
 
     function characterMeta:classWhitelist(class)
-        local wl = self:getData("whitelist", {})
+        local wl = self:getClasswhitelists() or {}
         wl[class] = true
-        self:setData("whitelist", wl)
+        self:setClasswhitelists(wl)
     end
 
     function characterMeta:classUnWhitelist(class)
-        local wl = self:getData("whitelist", {})
-        wl[class] = false
-        self:setData("whitelist", wl)
+        local wl = self:getClasswhitelists() or {}
+        wl[class] = nil
+        self:setClasswhitelists(wl)
     end
 
     function characterMeta:joinClass(class, isForced)
@@ -257,7 +260,6 @@ if SERVER then
         local hadOldClass = oldClass and oldClass ~= -1
         if isForced or lia.class.canBe(client, class) then
             self:setClass(class)
-            if lia.config.get("PermaClass", true) then self:setData("pclass", class) end
             if hadOldClass then
                 hook.Run("OnPlayerSwitchClass", client, class, oldClass)
             else
@@ -340,17 +342,43 @@ if SERVER then
     end
 
     function characterMeta:setFlags(flags)
-        self:setData("f", flags)
+        local oldFlags = self:getFlags()
+        self.vars.flags = flags
+        net.Start("charSet")
+        net.WriteString("flags")
+        net.WriteType(flags)
+        net.WriteType(self:getID())
+        net.Broadcast()
+        hook.Run("OnCharVarChanged", self, "flags", oldFlags, flags)
+        local ply = self:getPlayer()
+        if not IsValid(ply) then return end
+        -- handle removed flags
+        for i = 1, #oldFlags do
+            local flag = oldFlags:sub(i, i)
+            if not flags:find(flag, 1, true) and not ply:getPlayerFlags():find(flag, 1, true) then
+                local info = lia.flag.list[flag]
+                if info and info.callback then info.callback(ply, false) end
+            end
+        end
+        -- handle added flags
+        for i = 1, #flags do
+            local flag = flags:sub(i, i)
+            if not oldFlags:find(flag, 1, true) then
+                local info = lia.flag.list[flag]
+                if info and info.callback then info.callback(ply, true) end
+            end
+        end
     end
 
     function characterMeta:giveFlags(flags)
         local addedFlags = ""
+        local ply = self:getPlayer()
         for i = 1, #flags do
             local flag = flags:sub(i, i)
-            local info = lia.flag.list[flag]
-            if info then
-                if not self:hasFlags(flag) then addedFlags = addedFlags .. flag end
-                if info.callback then info.callback(self:getPlayer(), true) end
+            if not self:hasFlags(flag) then
+                addedFlags = addedFlags .. flag
+                local info = lia.flag.list[flag]
+                if info and info.callback and IsValid(ply) then info.callback(ply, true) end
             end
         end
 
@@ -360,10 +388,15 @@ if SERVER then
     function characterMeta:takeFlags(flags)
         local oldFlags = self:getFlags()
         local newFlags = oldFlags
+        local ply = self:getPlayer()
         for i = 1, #flags do
             local flag = flags:sub(i, i)
             local info = lia.flag.list[flag]
-            if info and info.callback then info.callback(self:getPlayer(), false) end
+            if info and info.callback and IsValid(ply) then
+                -- only run callback if player doesn't have this flag globally
+                local hasOther = ply:getPlayerFlags():find(flag, 1, true)
+                if not hasOther then info.callback(ply, false) end
+            end
             newFlags = newFlags:gsub(flag, "")
         end
 
@@ -382,7 +415,7 @@ if SERVER then
             lia.db.updateTable(data, function()
                 if callback then callback() end
                 hook.Run("CharPostSave", self)
-            end, nil, "_id = " .. self:getID())
+            end, nil, "id = " .. self:getID())
         end
     end
 
@@ -433,14 +466,14 @@ if SERVER then
 
             client:SetTeam(self:getFaction())
             client:setNetVar("char", self:getID())
-            PrintTable(self:getData("groups", {}), 1)
-            for k, v in pairs(self:getData("groups", {})) do
+            PrintTable(self:getBodygroups(), 1)
+            for k, v in pairs(self:getBodygroups()) do
                 local index = tonumber(k)
                 local value = tonumber(v) or 0
                 if index then client:SetBodygroup(index, value) end
             end
 
-            client:SetSkin(self:getData("skin", 0))
+            client:SetSkin(self:getSkin())
             hook.Run("SetupPlayerModel", client, self)
             if not noNetworking then
                 for _, v in ipairs(self:getInv(true)) do
@@ -458,7 +491,7 @@ if SERVER then
     function characterMeta:kick()
         local client = self:getPlayer()
         client:KillSilent()
-        local curChar, steamID = client:getChar(), client:SteamID64()
+        local curChar, steamID = client:getChar(), client:SteamID()
         local isCurChar = curChar and curChar:getID() == self:getID() or false
         if self.steamID == steamID then
             net.Start("charKick")
@@ -476,8 +509,14 @@ if SERVER then
 
     function characterMeta:ban(time)
         time = tonumber(time)
-        if time then time = os.time() + math.max(math.ceil(time), 60) end
-        self:setData("banned", time or true)
+        local value
+        if time then
+            value = os.time() + math.max(math.ceil(time), 60)
+        else
+            value = -1
+        end
+
+        self:setBanned(value)
         self:save()
         self:kick()
         hook.Run("OnCharPermakilled", self, time or nil)

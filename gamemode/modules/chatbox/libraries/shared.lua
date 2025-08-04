@@ -1,5 +1,4 @@
-﻿local MODULE = MODULE
-lia.chat.register("meclose", {
+﻿lia.chat.register("meclose", {
     syntax = "[string Action]",
     desc = "mecloseDesc",
     format = "emoteFormat",
@@ -169,7 +168,7 @@ lia.chat.register("looc", {
 
         speaker.liaLastLOOC = CurTime()
     end,
-    onChatAdd = function(speaker, text) chat.AddText(Color(255, 50, 50), L("loocPrefix") .. " ", lia.config.get("ChatColor"), speaker:Name() .. ": " .. text) end,
+    onChatAdd = function(speaker, text) chat.AddText(Color(255, 50, 50), "[" .. L("looc") .. "] ", lia.config.get("ChatColor"), speaker:Name() .. ": " .. text) end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
         if speaker:EyePos():Distance(listener:EyePos()) <= lia.config.get("ChatRange", 280) then return true end
@@ -184,15 +183,15 @@ lia.chat.register("adminchat", {
     syntax = "[string Text]",
     desc = "adminchatDesc",
     onGetColor = function() return Color(0, 196, 255) end,
-    onCanHear = function(_, listener) return listener:hasPrivilege("Staff Permissions - Admin Chat") end,
+    onCanHear = function(_, listener) return listener:hasPrivilege("Admin Chat") end,
     onCanSay = function(speaker)
-        if not speaker:hasPrivilege("Staff Permissions - Admin Chat") then
+        if not speaker:hasPrivilege("Admin Chat") then
             speaker:notifyLocalized("notAdminForTicket")
             return false
         end
         return true
     end,
-    onChatAdd = function(speaker, text) chat.AddText(Color(255, 215, 0), L("adminChatPrefix") .. " ", Color(128, 0, 255, 255), speaker:getChar():getName(), ": ", Color(255, 255, 255), text) end,
+    onChatAdd = function(speaker, text) chat.AddText(Color(255, 215, 0), "[" .. L("adminChat") .. "] ", Color(128, 0, 255, 255), speaker:getChar():getName(), ": ", Color(255, 255, 255), text) end,
     prefix = {"/adminchat", "/asay", "/admin", "/a"}
 })
 
@@ -222,7 +221,7 @@ lia.chat.register("pm", {
 lia.chat.register("eventlocal", {
     syntax = "[string Text]",
     desc = "eventlocalDesc",
-    onCanSay = function(speaker) return speaker:hasPrivilege("Staff Permissions - Local Event Chat") end,
+    onCanSay = function(speaker) return speaker:hasPrivilege("Local Event Chat") end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
         if speaker:EyePos():Distance(listener:EyePos()) <= lia.config.get("ChatRange", 280) * 6 then return true end
@@ -236,7 +235,7 @@ lia.chat.register("eventlocal", {
 lia.chat.register("event", {
     syntax = "[string Text]",
     desc = "eventDesc",
-    onCanSay = function(speaker) return speaker:hasPrivilege("Staff Permissions - Event Chat") end,
+    onCanSay = function(speaker) return speaker:hasPrivilege("Event Chat") end,
     onCanHear = function() return true end,
     onChatAdd = function(_, text) chat.AddText(Color(255, 150, 0), text) end,
     prefix = {"/event"},
@@ -252,7 +251,7 @@ lia.chat.register("ooc", {
             return false
         end
 
-        if table.HasValue(MODULE.OOCBans, speaker:SteamID64()) then
+        if speaker:getLiliaData("oocBanned", false) then
             speaker:notifyLocalized("oocBanned")
             return false
         end
@@ -264,7 +263,7 @@ lia.chat.register("ooc", {
 
         local customDelay = hook.Run("getOOCDelay", speaker)
         local oocDelay = customDelay or lia.config.get("OOCDelay", 10)
-        if not speaker:hasPrivilege("Staff Permissions - No OOC Cooldown") and oocDelay > 0 and speaker.liaLastOOC then
+        if not speaker:hasPrivilege("No OOC Cooldown") and oocDelay > 0 and speaker.liaLastOOC then
             local lastOOC = CurTime() - speaker.liaLastOOC
             if lastOOC <= oocDelay then
                 speaker:notifyLocalized("oocDelay", oocDelay - math.ceil(lastOOC))
@@ -275,7 +274,7 @@ lia.chat.register("ooc", {
         speaker.liaLastOOC = CurTime()
     end,
     onCanHear = function() return true end,
-    onChatAdd = function(speaker, text) chat.AddText(Color(255, 50, 50), " " .. L("oocPrefix") .. " ", speaker, color_white, ": " .. text) end,
+    onChatAdd = function(speaker, text) chat.AddText(Color(255, 50, 50), " [" .. L("ooc") .. "] ", speaker, color_white, ": " .. text) end,
     prefix = {"//", "/ooc"},
     noSpaceAfter = true,
     filter = "ooc"
@@ -287,7 +286,6 @@ lia.chat.register("me's", {
     format = "mePossessiveFormat",
     onCanHear = lia.config.get("ChatRange", 280),
     onChatAdd = function(speaker, text, anonymous)
-        local speako = anonymous and "Someone" or hook.Run("GetDisplayedName", speaker, "ic") or IsValid(speaker) and speaker:Name() or "Console"
         local texCol = lia.config.get("ChatColor")
         if LocalPlayer():getTracedEntity() == speaker then texCol = lia.config.get("ChatListenColor") end
         texCol = Color(texCol.r, texCol.g, texCol.b)
@@ -298,7 +296,7 @@ lia.chat.register("me's", {
             nameCol = Color(tempCol.r + 40, tempCol.b + 60, tempCol.g + 40)
         end
 
-        chat.AddText(nameCol, "**" .. speako .. "'s", texCol, " " .. text)
+        chat.AddText(nameCol, L("mePossessiveFormat", anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, "ic") or IsValid(speaker) and speaker:Name() or language.GetPhrase("#Console"), ""), texCol, text)
     end,
     prefix = {"/me's", "/action's"},
     font = "liaChatFontItalics",
@@ -311,7 +309,6 @@ lia.chat.register("mefarfar", {
     desc = "mefarfarDesc",
     format = "emoteFormat",
     onChatAdd = function(speaker, text, anonymous)
-        local speako = anonymous and "Someone" or hook.Run("GetDisplayedName", speaker, "ic") or IsValid(speaker) and speaker:Name() or "Console"
         local texCol = lia.config.get("ChatColor")
         if LocalPlayer():getTracedEntity() == speaker then texCol = lia.config.get("ChatListenColor") end
         texCol = Color(texCol.r + 45, texCol.g + 45, texCol.b + 45)
@@ -322,7 +319,7 @@ lia.chat.register("mefarfar", {
             nameCol = Color(tempCol.r + 40, tempCol.b + 60, tempCol.g + 40)
         end
 
-        chat.AddText(nameCol, "**" .. speako, texCol, " " .. text)
+        chat.AddText(nameCol, L("emoteFormat", anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, "ic") or IsValid(speaker) and speaker:Name() or language.GetPhrase("#Console"), ""), texCol, text)
     end,
     onCanHear = lia.config.get("ChatRange", 280) * 4,
     prefix = {"/mefarfar", "/actionyy", "/meyy"},
@@ -336,8 +333,8 @@ lia.chat.register("help", {
     desc = "helpDesc",
     onCanSay = function() return true end,
     onCanHear = function(speaker, listener)
-        if listener:isStaffOnDuty() or listener == speaker or listener:hasPrivilege("Staff Permissions - Always Have Access to Help Chat") then return true end
+        if listener:isStaffOnDuty() or listener == speaker or listener:hasPrivilege("Always Have Access to Help Chat") then return true end
         return false
     end,
-    onChatAdd = function(speaker, text) chat.AddText(Color(200, 50, 50), L("helpPrefix") .. " " .. speaker:GetName(), color_white, ": " .. text) end
+    onChatAdd = function(speaker, text) chat.AddText(Color(200, 50, 50), "[" .. L("help") .. "] " .. speaker:GetName(), color_white, ": " .. text) end
 })

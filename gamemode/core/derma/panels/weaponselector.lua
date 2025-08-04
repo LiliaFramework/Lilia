@@ -63,7 +63,7 @@ local function HUDPaint()
         end
 
         surface.SetFont("liaBigFont")
-        local name = hook.Run("GetWeaponName", weapon) or weapon:GetPrintName():upper()
+        local name = hook.Run("GetWeaponName", weapon) or language.GetPhrase(weapons[i]:GetPrintName()):utf8upper()
         local _, ty = surface.GetTextSize(name)
         local scale = math.max(1 - math.abs(theta * 2), 0)
         local matrix = Matrix()

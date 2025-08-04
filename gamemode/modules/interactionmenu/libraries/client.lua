@@ -96,7 +96,7 @@ local function openMenu(options, isInteraction, titleText, closeKey, netMsg)
         btn:Dock(TOP)
         btn:SetTall(entryH)
         btn:DockMargin(15, 0, 15, i == #visible and 25 or 14)
-        btn:SetText(entry.name)
+        btn:SetText(L(entry.name))
         btn:SetFont("liaSmallFont")
         btn:SetTextColor(color_white)
         function btn:Paint(w, h)
@@ -126,7 +126,7 @@ local function openMenu(options, isInteraction, titleText, closeKey, netMsg)
     MODULE.Menu = frame
 end
 
-lia.keybind.add(KEY_TAB, "Interaction Menu", function()
+lia.keybind.add(KEY_TAB, L("Interaction Menu"), function()
     local client = LocalPlayer()
     if not client:getChar() or not MODULE:checkInteractionPossibilities() then return end
     if IsValid(MODULE.Menu) then
@@ -134,14 +134,14 @@ lia.keybind.add(KEY_TAB, "Interaction Menu", function()
         MODULE.Menu = nil
     end
 
-    openMenu(MODULE.Interactions, true, L("playerInteractions"), lia.keybind.get("Interaction Menu", KEY_TAB), "RunOption")
+    openMenu(MODULE.Interactions, true, L("playerInteractions"), lia.keybind.get(L("Interaction Menu"), KEY_TAB), "RunOption")
 end)
 
-lia.keybind.add(KEY_G, "Personal Actions", function()
+lia.keybind.add(KEY_G, L("Personal Actions"), function()
     if IsValid(MODULE.Menu) then
         MODULE.Menu:Close()
         MODULE.Menu = nil
     end
 
-    openMenu(MODULE.Actions, false, L("actionsMenu"), lia.keybind.get("Personal Actions", KEY_G), "RunLocalOption")
+    openMenu(MODULE.Actions, false, L("actionsMenu"), lia.keybind.get(L("Personal Actions"), KEY_G), "RunLocalOption")
 end)

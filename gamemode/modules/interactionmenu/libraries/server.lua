@@ -3,7 +3,7 @@ net.Receive("TransferMoneyFromP2P", function(_, sender)
     local amount = net.ReadUInt(32)
     local target = net.ReadEntity()
     if lia.config.get("DisableCheaterActions", true) and sender:getNetVar("cheater", false) then
-        lia.log.add(sender, "cheaterAction", "transfer money")
+        lia.log.add(sender, "cheaterAction", L("cheaterActionTransferMoney"))
         return
     end
 
@@ -25,7 +25,7 @@ end)
 
 net.Receive("RunOption", function(_, ply)
     if lia.config.get("DisableCheaterActions", true) and ply:getNetVar("cheater", false) then
-        lia.log.add(ply, "cheaterAction", "use interaction menu")
+        lia.log.add(ply, "cheaterAction", L("cheaterActionUseInteractionMenu"))
         return
     end
 
@@ -37,7 +37,7 @@ end)
 
 net.Receive("RunLocalOption", function(_, ply)
     if lia.config.get("DisableCheaterActions", true) and ply:getNetVar("cheater", false) then
-        lia.log.add(ply, "cheaterAction", "use interaction menu")
+        lia.log.add(ply, "cheaterAction", L("cheaterActionUseInteractionMenu"))
         return
     end
 

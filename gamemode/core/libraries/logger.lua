@@ -93,7 +93,7 @@ lia.log.types = {
     },
     ["command"] = {
         func = function(client, text) return string.format("Player '%s' ran command: %s.", client:Name(), text) end,
-        category = "Chat"
+        category = "Commands"
     },
     ["money"] = {
         func = function(client, amount) return string.format("Player '%s' changed money by: %s.", client:Name(), amount) end,
@@ -157,8 +157,7 @@ lia.log.types = {
     },
     ["itemAdded"] = {
         func = function(client, itemName)
-            local ownerName = IsValid(client) and client:Name() or L("unknown")
-            return string.format("Item '%s' added to %s's inventory.", itemName, ownerName)
+            return string.format("Item '%s' added to %s's inventory.", itemName, IsValid(client) and client:Name() or L("unknown"))
         end,
         category = "Items"
     },
@@ -207,7 +206,7 @@ lia.log.types = {
         category = "Connections"
     },
     ["failedPassword"] = {
-        func = function(_, steamid64, name, svpass, clpass) return string.format("[%s] %s failed server password (Server: '%s', Client: '%s')", steamid64, name, svpass, clpass) end,
+        func = function(_, steamID, name, svpass, clpass) return string.format("[%s] %s failed server password (Server: '%s', Client: '%s')", steamID, name, svpass, clpass) end,
         category = "Connections"
     },
     ["exploitAttempt"] = {
@@ -330,47 +329,41 @@ lia.log.types = {
     },
     ["vendorAccess"] = {
         func = function(client, vendor)
-            local vendorName = vendor:getNetVar("name") or L("unknown")
-            return string.format("%s accessed vendor %s", client:Name(), vendorName)
+            return string.format("%s accessed vendor %s", client:Name(), vendor:getNetVar("name") or L("unknown"))
         end,
         category = "Items"
     },
     ["vendorExit"] = {
         func = function(client, vendor)
-            local vendorName = vendor:getNetVar("name") or L("unknown")
-            return string.format("%s exited vendor %s", client:Name(), vendorName)
+            return string.format("%s exited vendor %s", client:Name(), vendor:getNetVar("name") or L("unknown"))
         end,
         category = "Items"
     },
     ["vendorSell"] = {
         func = function(client, item, vendor)
-            local vendorName = vendor:getNetVar("name") or L("unknown")
-            return string.format("%s sold a %s to %s", client:Name(), item, vendorName)
+            return string.format("%s sold a %s to %s", client:Name(), item, vendor:getNetVar("name") or L("unknown"))
         end,
         category = "Items"
     },
     ["vendorEdit"] = {
         func = function(client, vendor, key)
-            local vendorName = vendor:getNetVar("name") or L("unknown")
-            return string.format("%s edited vendor %s with key %s", client:Name(), vendorName, key)
+            return string.format("%s edited vendor %s with key %s", client:Name(), vendor:getNetVar("name") or L("unknown"), key)
         end,
         category = "Items"
     },
     ["vendorBuy"] = {
         func = function(client, item, vendor, isFailed)
-            local vendorName = vendor:getNetVar("name") or L("unknown")
             if isFailed then
-                return string.format("%s tried to buy a %s from %s but it failed. They likely had no space!", client:Name(), item, vendorName)
+                return string.format("%s tried to buy a %s from %s but it failed. They likely had no space!", client:Name(), item, vendor:getNetVar("name") or L("unknown"))
             else
-                return string.format("%s bought a %s from %s", client:Name(), item, vendorName)
+                return string.format("%s bought a %s from %s", client:Name(), item, vendor:getNetVar("name") or L("unknown"))
             end
         end,
         category = "Items"
     },
     ["restockvendor"] = {
         func = function(client, vendor)
-            local vendorName = IsValid(vendor) and (vendor:getNetVar("name") or L("unknown")) or L("unknown")
-            return string.format("%s restocked vendor %s", client:Name(), vendorName)
+            return string.format("%s restocked vendor %s", client:Name(), IsValid(vendor) and (vendor:getNetVar("name") or L("unknown")) or L("unknown"))
         end,
         category = "Items"
     },
@@ -380,8 +373,7 @@ lia.log.types = {
     },
     ["resetvendormoney"] = {
         func = function(client, vendor, amount)
-            local vendorName = IsValid(vendor) and (vendor:getNetVar("name") or L("unknown")) or L("unknown")
-            return string.format("%s set vendor %s money to %s", client:Name(), vendorName, lia.currency.get(amount))
+            return string.format("%s set vendor %s money to %s", client:Name(), IsValid(vendor) and (vendor:getNetVar("name") or L("unknown")) or L("unknown"), lia.currency.get(amount))
         end,
         category = "Items"
     },
@@ -391,8 +383,7 @@ lia.log.types = {
     },
     ["restockvendormoney"] = {
         func = function(client, vendor, amount)
-            local vendorName = IsValid(vendor) and (vendor:getNetVar("name") or L("unknown")) or L("unknown")
-            return string.format("%s restocked vendor %s money to %s", client:Name(), vendorName, lia.currency.get(amount))
+            return string.format("%s restocked vendor %s money to %s", client:Name(), IsValid(vendor) and (vendor:getNetVar("name") or L("unknown")) or L("unknown"), lia.currency.get(amount))
         end,
         category = "Items"
     },
@@ -472,6 +463,22 @@ lia.log.types = {
         func = function(client, targetName) return string.format("Admin '%s' removed all flags from %s.", client:Name(), targetName) end,
         category = "Admin"
     },
+    ["playerFlagGive"] = {
+        func = function(client, targetName, flags) return string.format("Admin '%s' gave player flags '%s' to %s.", client:Name(), flags, targetName) end,
+        category = "Admin",
+    },
+    ["playerFlagGiveAll"] = {
+        func = function(client, targetName) return string.format("Admin '%s' gave all player flags to %s.", client:Name(), targetName) end,
+        category = "Admin",
+    },
+    ["playerFlagTake"] = {
+        func = function(client, targetName, flags) return string.format("Admin '%s' took player flags '%s' from %s.", client:Name(), flags, targetName) end,
+        category = "Admin",
+    },
+    ["playerFlagTakeAll"] = {
+        func = function(client, targetName) return string.format("Admin '%s' removed all player flags from %s.", client:Name(), targetName) end,
+        category = "Admin",
+    },
     ["voiceToggle"] = {
         func = function(client, targetName, state) return string.format("Admin '%s' toggled voice ban for %s: %s.", client:Name(), targetName, state) end,
         category = "Admin"
@@ -489,30 +496,30 @@ lia.log.types = {
         category = "Admin"
     },
     ["sitRoomSet"] = {
-        func = function(client, pos, message) return string.format("Sit room set at %s by '%s': %s. Position: %s", os.date("%Y-%m-%d %H:%M:%S"), client:Name(), message, pos) end,
-        category = "Admin"
+        func = function(client, pos, message) return L("sitroomSetLog", os.date("%Y-%m-%d %H:%M:%S"), client:Name(), message, pos) end,
+        category = "Admin",
     },
     ["sitRoomRenamed"] = {
-        func = function(client, details) return string.format("%s renamed a SitRoom: %s", client:Name(), details) end,
-        category = "Admin"
+        func = function(client, details) return L("sitroomRenamedLog", client:Name(), details) end,
+        category = "Admin",
     },
     ["sitRoomRepositioned"] = {
-        func = function(client, details) return string.format("%s repositioned a SitRoom: %s", client:Name(), details) end,
-        category = "Admin"
+        func = function(client, details) return L("sitroomRepositionedLog", client:Name(), details) end,
+        category = "Admin",
     },
     ["sendToSitRoom"] = {
         func = function(client, targetName, roomName)
-            if targetName == client:Name() then return string.format("Player '%s' teleported to SitRoom '%s'.", client:Name(), roomName) end
-            return string.format("Player '%s' sent '%s' to SitRoom '%s'.", client:Name(), targetName, roomName)
+            if targetName == client:Name() then return L("sitroomTeleportedLog", client:Name(), roomName) end
+            return L("sitroomSentLog", client:Name(), targetName, roomName)
         end,
-        category = "Admin"
+        category = "Admin",
     },
     ["sitRoomReturn"] = {
         func = function(client, targetName)
-            if targetName == client:Name() then return string.format("Player '%s' returned from a SitRoom.", client:Name()) end
-            return string.format("Player '%s' returned '%s' from a SitRoom.", client:Name(), targetName)
+            if targetName == client:Name() then return L("sitroomReturnSelfLog", client:Name()) end
+            return L("sitroomReturnOtherLog", client:Name(), targetName)
         end,
-        category = "Admin"
+        category = "Admin",
     },
     ["attribSet"] = {
         func = function(client, targetName, attrib, value) return string.format("Admin '%s' set %s's '%s' attribute to %d.", client:Name(), targetName, attrib, value) end,
@@ -622,6 +629,10 @@ lia.log.types = {
         func = function(client) return string.format("Admin '%s' viewed all ticket claims.", client:Name()) end,
         category = "Admin"
     },
+    ["viewPlayerTickets"] = {
+        func = function(client, targetName) return string.format("Admin '%s' viewed tickets for %s.", client:Name(), targetName) end,
+        category = "Admin"
+    },
     ["ticketClaimed"] = {
         func = function(client, requester, count) return string.format("Admin '%s' claimed a ticket for %s. Total claims: %d.", client:Name(), requester, count or 0) end,
         category = "Admin"
@@ -672,10 +683,6 @@ lia.log.types = {
     },
     ["plyUnfreeze"] = {
         func = function(client, targetName) return string.format("Admin '%s' unfroze player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
-    },
-    ["plySetGroup"] = {
-        func = function(client, targetName, group) return string.format("Admin '%s' set %s's group to '%s'.", client:Name(), targetName, group) end,
         category = "Admin"
     },
     ["plyBlind"] = {
@@ -766,7 +773,7 @@ end
 
 function lia.log.add(client, logType, ...)
     local logString, category = lia.log.getString(client, logType, ...)
-    if not isstring(category) then category = "Uncategorized" end
+    if not isstring(category) then category = L("uncategorized") end
     if not isstring(logString) then return end
     hook.Run("OnServerLog", client, logType, logString, category)
     lia.printLog(category, logString)
@@ -780,11 +787,11 @@ function lia.log.add(client, logType, ...)
     end
 
     lia.db.insertTable({
-        _timestamp = timestamp,
-        _gamemode = engine.ActiveGamemode(),
-        _category = category,
-        _message = logString,
-        _charID = charID,
-        _steamID = steamID
+        timestamp = timestamp,
+        gamemode = engine.ActiveGamemode(),
+        category = category,
+        message = logString,
+        charID = charID,
+        steamID = steamID
     }, nil, "logs")
 end

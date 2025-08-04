@@ -51,29 +51,30 @@ end)
 
 lia.config.add("DamageInCars", "Take Damage in Cars", true, nil, {
     desc = "Whether or not you take damage while in cars",
-    category = "Simfphys",
+    category = L("categorySimfphys"),
     type = "Boolean"
 })
 
 lia.config.add("CarEntryDelayEnabled", "Take Damage in Cars", true, nil, {
     desc = "Whether or not you take damage while in cars",
-    category = "Simfphys",
+    category = L("categorySimfphys"),
     type = "Boolean"
 })
 
 lia.config.add("TimeToEnterVehicle", "Time To Enter Vehicle", 4, nil, {
     desc = "Defines the time to enter vehicle.",
-    category = "Simfphys",
+    category = L("categorySimfphys"),
     type = "Int",
     min = 1,
     max = 20
 })
 
-CAMI.RegisterPrivilege({
-    Name = "Staff Permissions - Can Edit Simfphys Cars",
-    MinAccess = "superadmin"
+lia.administrator.registerPrivilege({
+    Name = L("canEditSimfphysCars"),
+    MinAccess = "superadmin",
+    Category = L("categorySimfphys")
 })
 
 hook.Add("simfphysPhysicsCollide", "SIMFPHYS_simfphysPhysicsCollide", function() return true end)
 hook.Add("IsSuitableForTrunk", "SIMFPHYS_IsSuitableForTrunk", function(vehicle) if IsValid(vehicle) and vehicle:isSimfphysCar() then return true end end)
-hook.Add("CanProperty", "SIMFPHYS_CanProperty", function(client, property, ent) if property == "editentity" and ent:isSimfphysCar() then return client:hasPrivilege("Staff Permissions - Can Edit Simfphys Cars") end end)
+hook.Add("CanProperty", "SIMFPHYS_CanProperty", function(client, property, ent) if property == "editentity" and ent:isSimfphysCar() then return client:hasPrivilege("Can Edit Simfphys Cars") end end)

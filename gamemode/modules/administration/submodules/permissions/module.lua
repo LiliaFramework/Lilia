@@ -1,122 +1,156 @@
-﻿MODULE.name = "Permissions"
+MODULE.name = L("modulePermissionsName")
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Integrates with the CAMI system to provide fine-grained permission management for commands and modules across the framework."
-MODULE.CAMIPrivileges = {
+MODULE.desc = L("modulePermissionsDesc")
+MODULE.Privileges = {
     {
-        Name = "Staff Permissions - Can Bypass Character Lock",
+        Name = L("canBypassCharacterLock"),
         MinAccess = "superadmin",
+        Category = L("categoryStaffManagement"),
     },
     {
-        Name = "Staff Permissions - Can Grab World Props",
+        Name = L("canGrabWorldProps"),
         MinAccess = "superadmin",
+        Category = L("categoryStaffPhysgun"),
     },
     {
-        Name = "Staff Permissions - Can Grab Players",
+        Name = L("canGrabPlayers"),
         MinAccess = "superadmin",
+        Category = L("categoryStaffPhysgun"),
     },
     {
-        Name = "Staff Permissions - Physgun Pickup",
+        Name = L("physgunPickup"),
         MinAccess = "admin",
+        Category = L("categoryStaffPhysgun"),
     },
     {
-        Name = "Staff Permissions - Can Access Item Informations",
+        Name = L("canAccessItemInformations"),
         MinAccess = "superadmin",
+        Category = L("categoryStaffItems"),
     },
     {
-        Name = "Staff Permissions - Physgun Pickup on Restricted Entities",
+        Name = L("physgunPickupRestrictedEntities"),
         MinAccess = "superadmin",
+        Category = L("categoryStaffPhysgun"),
     },
     {
-        Name = "Staff Permissions - Physgun Pickup on Vehicles",
+        Name = L("physgunPickupVehicles"),
         MinAccess = "admin",
+        Category = L("categoryStaffPhysgun"),
     },
     {
-        Name = "Staff Permissions - Can't be Grabbed with PhysGun",
+        Name = L("cantBeGrabbedPhysgun"),
         MinAccess = "superadmin",
+        Category = L("categoryStaffProtection"),
     },
     {
-        Name = "Staff Permissions - Can Physgun Reload",
+        Name = L("canPhysgunReload"),
         MinAccess = "superadmin",
+        Category = L("categoryStaffPhysgun"),
     },
     {
-        Name = "Staff Permissions - No Clip Outside Staff Character",
+        Name = L("noClipOutsideStaff"),
         MinAccess = "superadmin",
+        Category = L("categoryStaffMovement"),
     },
     {
-        Name = "Staff Permissions - No Clip ESP Outside Staff Character",
+        Name = L("noClipESPOffsetStaff"),
         MinAccess = "superadmin",
+        Category = L("categoryStaffSettings"),
     },
     {
-        Name = "Staff Permissions - Can Property World Entities",
+        Name = L("canPropertyWorldEntities"),
         MinAccess = "superadmin",
+        Category = L("categoryStaffManagement"),
     },
     {
-        Name = "Staff Permissions - Manage Car Blacklist",
+        Name = L("manageVehicleBlacklist"),
         MinAccess = "superadmin",
+        Category = L("categoryStaffBlacklisting"),
     },
     {
-        Name = "Spawn Permissions - Can Spawn Ragdolls",
+        Name = L("manageEntityBlacklist"),
+        MinAccess = "superadmin",
+        Category = L("categoryStaffBlacklisting"),
+    },
+    {
+        Name = L("canSpawnRagdolls"),
         MinAccess = "admin",
+        Category = L("categorySpawnRagdolls"),
     },
     {
-        Name = "Spawn Permissions - Can Spawn SWEPs",
+        Name = L("canSpawnSWEPs"),
         MinAccess = "superadmin",
+        Category = L("categorySpawnSWEPs"),
     },
     {
-        Name = "Spawn Permissions - Can Spawn Effects",
+        Name = L("canSpawnEffects"),
         MinAccess = "admin",
+        Category = L("categorySpawnEffects"),
     },
     {
-        Name = "Spawn Permissions - Can Spawn Props",
+        Name = L("canSpawnProps"),
         MinAccess = "admin",
+        Category = L("categorySpawnProps"),
     },
     {
-        Name = "Spawn Permissions - Can Spawn Blacklisted Props",
+        Name = L("canSpawnBlacklistedProps"),
         MinAccess = "superadmin",
+        Category = L("categorySpawnBlacklisting"),
     },
     {
-        Name = "Spawn Permissions - Can Spawn NPCs",
+        Name = L("canSpawnNPCs"),
         MinAccess = "superadmin",
+        Category = L("categorySpawnNPCs"),
     },
     {
-        Name = "Spawn Permissions - No Car Spawn Delay",
+        Name = L("noCarSpawnDelay"),
         MinAccess = "superadmin",
+        Category = L("categorySpawnVehicles"),
     },
     {
-        Name = "Spawn Permissions - No Spawn Delay",
+        Name = L("noSpawnDelay"),
         MinAccess = "admin",
+        Category = L("categorySpawnGeneral"),
     },
     {
-        Name = "Spawn Permissions - Can Spawn Cars",
+        Name = L("canSpawnCars"),
         MinAccess = "admin",
+        Category = L("categorySpawnVehicles"),
     },
     {
-        Name = "Spawn Permissions - Can Spawn Blacklisted Cars",
+        Name = L("canSpawnBlacklistedCars"),
         MinAccess = "superadmin",
+        Category = L("categorySpawnBlacklisting"),
     },
     {
-        Name = "Spawn Permissions - Can Spawn SENTs",
+        Name = L("canSpawnSENTs"),
         MinAccess = "admin",
+        Category = L("categorySpawnSENTs"),
     },
     {
-        Name = "UserGroups - Staff Group",
+        Name = L("usergroupStaff"),
         MinAccess = "admin",
+        Category = L("categoryStaffUsergroups"),
     },
     {
-        Name = "UserGroups - VIP Group",
+        Name = L("usergroupVIP"),
         MinAccess = "superadmin",
+        Category = L("categoryStaffUsergroups"),
     },
     {
-        Name = "Staff Permissions - List Entities",
+        Name = L("listEntities"),
         MinAccess = "superadmin",
+        Category = L("categoryStaffTools"),
     },
     {
-        Name = "Staff Permissions - Can Remove Blocked Entities",
+        Name = L("canRemoveBlockedEntities"),
         MinAccess = "admin",
+        Category = L("categoryStaffBlacklisting"),
     },
     {
-        Name = "Staff Permissions - Can Remove World Entities",
+        Name = L("canRemoveWorldEntities"),
         MinAccess = "superadmin",
+        Category = L("categoryStaffManagement"),
     },
 }

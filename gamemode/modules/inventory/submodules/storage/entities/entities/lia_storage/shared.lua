@@ -1,6 +1,6 @@
 ﻿local MODULE = MODULE
 ENT.Type = "anim"
-ENT.PrintName = L("entityStorageName")
+ENT.PrintName = L("storage")
 ENT.Category = "Lilia"
 ENT.Spawnable = false
 ENT.isStorageEntity = true

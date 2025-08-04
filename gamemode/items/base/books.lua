@@ -1,6 +1,6 @@
 ﻿ITEM.name = "booksName"
 ITEM.desc = "booksDesc"
-ITEM.category = "Literature"
+ITEM.category = L("itemCatLiterature")
 ITEM.model = "models/props_lab/bindergraylabel01b.mdl"
 ITEM.contents = ""
 ITEM.functions.Read = {
@@ -8,7 +8,7 @@ ITEM.functions.Read = {
     onClick = function(item)
         local frame = vgui.Create("DFrame")
         frame:SetSize(540, 680)
-        frame:SetTitle(item.name)
+        frame:SetTitle(L(item.name))
         frame:MakePopup()
         frame:Center()
         frame.html = frame:Add("DHTML")

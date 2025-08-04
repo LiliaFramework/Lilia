@@ -1,10 +1,11 @@
-﻿MODULE.name = "Admin Stick"
+MODULE.name = L("adminStick")
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Adds the Admin Stick tool, allowing staff to quickly perform common moderation actions on players and entities with a single click."
-MODULE.CAMIPrivileges = {
+MODULE.desc = L("moduleAdminStickDesc")
+MODULE.Privileges = {
     {
-        Name = "Staff Permissions - Use Admin Stick",
-        MinAccess = "superadmin"
+        Name = L("alwaysSpawnAdminStick"),
+        MinAccess = "superadmin",
+        Category = L("adminStick"),
     },
 }

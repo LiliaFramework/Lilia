@@ -67,13 +67,13 @@ function ENT:setItem(itemID)
     end
 
     if not itemTable.temp then
-        local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+        local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local map = game.GetMap()
-        local condition = "_schema = " .. lia.db.convertDataType(folder) .. " AND _map = " .. lia.db.convertDataType(map) .. " AND _itemID = " .. tonumber(itemID)
+        local condition = "schema = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map) .. " AND _itemID = " .. tonumber(itemID)
         lia.db.delete("saveditems", condition):next(function()
             lia.db.insertTable({
-                _schema = folder,
-                _map = map,
+                schema = gamemode,
+                map = map,
                 _itemID = itemID,
                 _pos = lia.data.encodetable(self:GetPos()),
                 _angles = lia.data.encodetable(self:GetAngles())
@@ -104,9 +104,9 @@ function ENT:OnRemove()
 
     if not lia.shuttingDown and not self.liaIsSafe and self.liaItemID then lia.item.deleteByID(self.liaItemID) end
     if SERVER and not lia.shuttingDown and self.liaItemID then
-        local folder = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+        local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local map = game.GetMap()
-        local condition = "_schema = " .. lia.db.convertDataType(folder) .. " AND _map = " .. lia.db.convertDataType(map) .. " AND _itemID = " .. tonumber(self.liaItemID)
+        local condition = "schema = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map) .. " AND _itemID = " .. tonumber(self.liaItemID)
         lia.db.delete("saveditems", condition)
     end
 end

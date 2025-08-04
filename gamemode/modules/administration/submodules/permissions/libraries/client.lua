@@ -1,8 +1,3 @@
-﻿local ESP_DrawnEntities = {
-    lia_bodygrouper = true,
-    lia_vendor = true,
-}
-
 function MODULE:PrePlayerDraw(client)
     if not IsValid(client) then return end
     if client:isNoClipping() then return true end
@@ -10,56 +5,74 @@ end
 
 function MODULE:HUDPaint()
     local client = LocalPlayer()
-    if not client:getChar() or not client:IsValid() or not client:IsPlayer() then return end
+    if not client:IsValid() or not client:IsPlayer() or not client:getChar() then return end
     if not client:isNoClipping() then return end
-    if not (client:hasPrivilege("Staff Permissions - No Clip ESP Outside Staff Character") or client:isStaffOnDuty()) then return end
-    local marginx, marginy = ScrW() * 0.1, ScrH() * 0.1
-    local maxDistanceSq = 4096
+    if not (client:hasPrivilege("No Clip ESP Outside Staff Character") or client:isStaffOnDuty()) then return end
+    if not lia.option.get("espEnabled", false) then return end
     for _, ent in ents.Iterator() do
-        if not IsValid(ent) or ent == client then continue end
-        local entityType, label, nameLabel
+        if not IsValid(ent) or ent == client or ent:IsWeapon() then continue end
+        local pos = ent:GetPos()
+        if not pos then continue end
+        local kind, label, subLabel, baseColor
         if ent:IsPlayer() then
-            entityType = "Players"
-            if ent:getNetVar("cheater") then
-                label = "CHEATER"
-                nameLabel = ent:Name():gsub("#", "\226\128\139#")
+            kind = "Players"
+            subLabel = ent:Name():gsub("#", "\226\128\139#")
+            if ent:getNetVar("cheater", false) then
+                label = string.upper(L("cheater"))
+                baseColor = Color(255, 0, 0)
             else
-                label = ent:Name():gsub("#", "\226\128\139#")
+                label = subLabel
+                baseColor = lia.config.get("espPlayersColor") or Color(255, 255, 255)
             end
-        elseif ent.isItem and ent:isItem() and lia.option.get("espItems") then
-            entityType = "Items"
-            local itemTable = ent.getItemTable and ent:getItemTable()
-            label = L("itemESPLabel", itemTable and itemTable.name or L("unknown"))
-        elseif ent.isProp and ent:isProp() and lia.option.get("espProps") then
-            entityType = "Props"
-            label = L("propModelESPLabel", ent:GetModel() or L("unknown"))
-        elseif ESP_DrawnEntities[ent:GetClass()] and lia.option.get("espEntities") then
-            entityType = "Entities"
-            label = L("entityClassESPLabel", ent:GetClass() or L("unknown"))
+        elseif ent.isItem and ent:isItem() and lia.option.get("espItems", false) then
+            kind = "Items"
+            label = ent.getItemTable and ent:getItemTable().name or L("unknown")
+            baseColor = lia.config.get("espItemsColor") or Color(255, 255, 255)
+        elseif lia.option.get("espEntities", false) and ent:GetClass():StartWith("lia_") then
+            kind = "Entities"
+            label = ent.PrintName or ent:GetClass()
+            baseColor = lia.config.get("espEntitiesColor") or Color(255, 255, 255)
         end
 
-        if not entityType then continue end
-        local vPos, clientPos = ent:GetPos(), client:GetPos()
-        if not vPos or not clientPos then continue end
-        local scrPos = vPos:ToScreen()
-        if not scrPos.visible then continue end
-        local distanceSq = clientPos:DistToSqr(vPos)
-        local factor = 1 - math.Clamp(distanceSq / maxDistanceSq, 0, 1)
-        local size = math.max(20, 48 * factor)
-        local alpha = math.Clamp(255 * factor, 120, 255)
-        local cheater = ent:getNetVar("cheater", false)
-        local colorToUse = ColorAlpha(lia.config.get("esp" .. entityType .. "Color") or Color(255, 255, 255), alpha)
-        if cheater then colorToUse = ColorAlpha(Color(255, 0, 0), alpha) end
-        local x, y = math.Clamp(scrPos.x, marginx, ScrW() - marginx), math.Clamp(scrPos.y, marginy, ScrH() - marginy)
-        surface.SetDrawColor(colorToUse.r, colorToUse.g, colorToUse.b, colorToUse.a)
-        surface.DrawRect(x - size / 2, y - size / 2, size, size)
+        if not kind then continue end
+        local screenPos = pos:ToScreen()
+        if not screenPos.visible then continue end
         surface.SetFont("liaMediumFont")
-        local _, lineH = surface.GetTextSize("W")
-        if nameLabel then
-            draw.SimpleTextOutlined(label, "liaMediumFont", x, y - size - lineH / 2, ColorAlpha(colorToUse, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 200))
-            draw.SimpleTextOutlined(nameLabel, "liaMediumFont", x, y - size + lineH / 2, ColorAlpha(colorToUse, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 200))
-        else
-            draw.SimpleTextOutlined(label, "liaMediumFont", x, y - size, ColorAlpha(colorToUse, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 200))
+        local _, textHeight = surface.GetTextSize("W")
+        draw.SimpleTextOutlined(label, "liaMediumFont", screenPos.x, screenPos.y, Color(baseColor.r, baseColor.g, baseColor.b, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 200))
+        if subLabel and subLabel ~= label then draw.SimpleTextOutlined(subLabel, "liaMediumFont", screenPos.x, screenPos.y + textHeight, Color(baseColor.r, baseColor.g, baseColor.b, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 200)) end
+        if kind == "Players" then
+            local barW, barH = 100, 22
+            local barX = screenPos.x - barW / 2
+            local barY = screenPos.y + textHeight + 5
+            surface.SetDrawColor(0, 0, 0, 255)
+            surface.DrawRect(barX, barY, barW, barH)
+            local hpFrac = math.Clamp(ent:Health() / ent:GetMaxHealth(), 0, 1)
+            surface.SetDrawColor(183, 8, 0, 255)
+            surface.DrawRect(barX + 2, barY + 2, (barW - 4) * hpFrac, barH - 4)
+            surface.SetFont("liaSmallFont")
+            local healthX = barX + barW / 2
+            local healthY = barY + barH / 2
+            draw.SimpleTextOutlined(ent:Health(), "liaSmallFont", healthX, healthY, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 255))
+            if ent:Armor() > 0 then
+                barY = barY + barH + 5
+                surface.SetDrawColor(0, 0, 0, 255)
+                surface.DrawRect(barX, barY, barW, barH)
+                local armorFrac = math.Clamp(ent:Armor() / 100, 0, 1)
+                surface.SetDrawColor(0, 0, 255, 255)
+                surface.DrawRect(barX + 2, barY + 2, (barW - 4) * armorFrac, barH - 4)
+                local armorX = barX + barW / 2
+                local armorY = barY + barH / 2
+                draw.SimpleTextOutlined(ent:Armor(), "liaSmallFont", armorX, armorY, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 255))
+            end
+
+            local wep = ent:GetActiveWeapon()
+            if IsValid(wep) then
+                local ammo, reserve = wep:Clip1(), ent:GetAmmoCount(wep:GetPrimaryAmmoType())
+                local wepName = wep:GetPrintName()
+                if ammo >= 0 and reserve >= 0 then wepName = wepName .. " [" .. ammo .. "/" .. reserve .. "]" end
+                draw.SimpleTextOutlined(wepName, "liaSmallFont", screenPos.x, barY + barH + 5, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, Color(0, 0, 0, 255))
+            end
         end
     end
 end
@@ -81,43 +94,39 @@ net.Receive("DisplayCharList", function()
 
     local columns = {
         {
-            name = "ID",
-            field = "ID"
-        },
-        {
-            name = "Name",
+            name = L("name"),
             field = "Name"
         },
         {
-            name = "Desc",
+            name = L("description"),
             field = "Desc"
         },
         {
-            name = "Faction",
+            name = L("faction"),
             field = "Faction"
         },
         {
-            name = "Banned",
+            name = L("banned"),
             field = "Banned"
         },
         {
-            name = "BanningAdminName",
+            name = L("banningAdminName"),
             field = "BanningAdminName"
         },
         {
-            name = "BanningAdminSteamID",
+            name = L("banningAdminSteamID"),
             field = "BanningAdminSteamID"
         },
         {
-            name = "BanningAdminRank",
+            name = L("banningAdminRank"),
             field = "BanningAdminRank"
         },
         {
-            name = "CharMoney",
+            name = L("charMoney"),
             field = "Money"
         },
         {
-            name = "LastUsed",
+            name = L("lastUsed"),
             field = "LastUsed"
         }
     }
@@ -129,12 +138,12 @@ net.Receive("DisplayCharList", function()
         })
     end
 
-    local _, listView = lia.util.CreateTableUI("Charlist for SteamID64: " .. targetSteamIDsafe, columns, sendData)
+    local _, listView = lia.util.CreateTableUI(L("charlistTitle", targetSteamIDsafe), columns, sendData)
     if IsValid(listView) then
         for _, line in ipairs(listView:GetLines()) do
             local dataIndex = line:GetID()
             local rowData = sendData[dataIndex]
-            if rowData and rowData.Banned == "Yes" then
+            if rowData and rowData.Banned == L("yes") then
                 line.DoPaint = line.Paint
                 line.Paint = function(pnl, w, h)
                     surface.SetDrawColor(200, 100, 100)
@@ -144,8 +153,9 @@ net.Receive("DisplayCharList", function()
             end
 
             line.CharID = rowData and rowData.ID
+            line.SteamID = targetSteamIDsafe
             if rowData and rowData.extraDetails then
-                local colIndex = 11
+                local colIndex = 10
                 for _, name in ipairs(extraOrder) do
                     line:SetColumnText(colIndex, tostring(rowData.extraDetails[name] or ""))
                     colIndex = colIndex + 1
@@ -154,20 +164,32 @@ net.Receive("DisplayCharList", function()
         end
 
         listView.OnRowRightClick = function(_, _, ln)
-            if ln and ln.CharID and (LocalPlayer():hasPrivilege("Commands - Unban Offline") or LocalPlayer():hasPrivilege("Commands - Ban Offline")) then
-                local dMenu = DermaMenu()
-                if LocalPlayer():hasPrivilege("Commands - Unban Offline") then
-                    local opt1 = dMenu:AddOption("Ban Character", function() LocalPlayer():ConCommand([[say "/charbanoffline ]] .. ln.CharID .. [["]]) end)
+            if not (ln and ln.CharID) then return end
+            if not (lia.command.hasAccess(LocalPlayer(), "charban") or lia.command.hasAccess(LocalPlayer(), "charunban") or lia.command.hasAccess(LocalPlayer(), "charbanoffline") or lia.command.hasAccess(LocalPlayer(), "charunbanoffline")) then return end
+            local owner = ln.SteamID and lia.util.getBySteamID(ln.SteamID)
+            local dMenu = DermaMenu()
+            if IsValid(owner) then
+                if lia.command.hasAccess(LocalPlayer(), "charban") then
+                    local opt1 = dMenu:AddOption(L("banCharacter"), function() LocalPlayer():ConCommand('say "/charban ' .. ln.CharID .. '"') end)
                     opt1:SetIcon("icon16/cancel.png")
                 end
-
-                if LocalPlayer():hasPrivilege("Commands - Ban Offline") then
-                    local opt2 = dMenu:AddOption("Unban Character", function() LocalPlayer():ConCommand([[say "/charunbanoffline ]] .. ln.CharID .. [["]]) end)
+                if lia.command.hasAccess(LocalPlayer(), "charunban") then
+                    local opt2 = dMenu:AddOption(L("unbanCharacter"), function() LocalPlayer():ConCommand('say "/charunban ' .. ln.CharID .. '"') end)
                     opt2:SetIcon("icon16/accept.png")
                 end
+            else
+                if lia.command.hasAccess(LocalPlayer(), "charbanoffline") then
+                    local opt3 = dMenu:AddOption(L("banCharacterOffline"), function() LocalPlayer():ConCommand('say "/charbanoffline ' .. ln.CharID .. '"') end)
+                    opt3:SetIcon("icon16/cancel.png")
+                end
 
-                dMenu:Open()
+                if lia.command.hasAccess(LocalPlayer(), "charunbanoffline") then
+                    local opt4 = dMenu:AddOption(L("unbanCharacterOffline"), function() LocalPlayer():ConCommand('say "/charunbanoffline ' .. ln.CharID .. '"') end)
+                    opt4:SetIcon("icon16/accept.png")
+                end
             end
+
+            dMenu:Open()
         end
     end
 end)

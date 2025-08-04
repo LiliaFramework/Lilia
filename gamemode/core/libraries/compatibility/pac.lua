@@ -232,15 +232,16 @@ lia.command.add("pacdisable", {
 
 lia.config.add("BlockPackURLoad", "Block Pack URL Load", true, nil, {
     desc = "Determines whether loading PAC3 packs from a URL should be blocked.",
-    category = "PAC3",
+    category = L("categoryPAC3"),
     noNetworking = false,
     schemaOnly = false,
     type = "Boolean"
 })
 
-CAMI.RegisterPrivilege({
-    Name = "Staff Permissions - Can Use PAC3",
-    MinAccess = "admin"
+lia.administrator.registerPrivilege({
+    Name = L("canUsePAC3"),
+    MinAccess = "admin",
+    Category = L("categoryPAC3")
 })
 
-lia.flag.add("P", "Access to PAC3.")
+lia.flag.add("P", L("flagPac3"))
