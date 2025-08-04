@@ -133,6 +133,14 @@ function ITEM:OnSave()
 end
 
 if CLIENT then
+    function ITEM:getName()
+        local weapon = weapons.GetStored(self.class)
+        if weapon and weapon.GetPrintName then
+            return language.GetPhrase(weapon:GetPrintName())
+        end
+        return L(self.name)
+    end
+
     function ITEM:paintOver(item, w, h)
         if item:getData("equip") then
             surface.SetDrawColor(110, 255, 110, 100)
