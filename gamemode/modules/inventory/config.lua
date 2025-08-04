@@ -17,7 +17,7 @@
     lia.db.query("UPDATE lia_invdata SET value = '" .. lia.db.escape(json) .. "' " .. "WHERE key = 'w' AND invID IN (SELECT invID FROM lia_inventories WHERE charID IS NOT NULL)")
 end, {
     desc = "Defines the width of the default inventory.",
-    category = "Character",
+    category = L("character"),
     type = "Int",
     min = 1,
     max = 10
@@ -42,7 +42,7 @@ lia.config.add("invH", "Inventory Height", 4, function(_, newH)
     lia.db.query("UPDATE lia_invdata SET value = '" .. lia.db.escape(json) .. "' " .. "WHERE key = 'h' AND invID IN (SELECT invID FROM lia_inventories WHERE charID IS NOT NULL)")
 end, {
     desc = "Defines the height of the default inventory.",
-    category = "Character",
+    category = L("character"),
     type = "Int",
     min = 1,
     max = 10

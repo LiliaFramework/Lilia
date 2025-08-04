@@ -77,7 +77,7 @@ net.Receive("liaRequestAllPKs", function(_, client)
 end)
 
 net.Receive("liaRequestFactionRoster", function(_, client)
-    if not IsValid(client) or not client:hasPrivilege("Can Manage Factions") then return end
+    if not IsValid(client) or not client:hasPrivilege(L("canManageFactions")) then return end
     local data = {}
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local fields = table.concat({"lia_characters.name", "lia_characters.id", "lia_characters.steamID", "lia_characters.playtime", "lia_characters.lastJoinTime", "lia_characters._class", "lia_characters.faction", "lia_players.lastOnline"}, ",")
@@ -371,7 +371,7 @@ FROM lia_players
 end)
 
 net.Receive("liaRequestPlayerCharacters", function(_, client)
-    if not (client:hasPrivilege(L("canAccessPlayerList")) or client:hasPrivilege("Can Manage Factions")) then return end
+    if not (client:hasPrivilege(L("canAccessPlayerList")) or client:hasPrivilege(L("canManageFactions"))) then return end
     local steamID = net.ReadString()
     if not steamID or steamID == "" then return end
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()

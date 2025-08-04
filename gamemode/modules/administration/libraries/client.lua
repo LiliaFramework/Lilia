@@ -1,13 +1,13 @@
 ﻿function MODULE:ShowPlayerOptions(target, options)
     local client = LocalPlayer()
     if not IsValid(client) or not IsValid(target) then return end
-    if not (client:hasPrivilege("Can Access Scoreboard Info Out Of Staff") or client:hasPrivilege("Can Access Scoreboard Admin Options") and client:isStaffOnDuty()) then return end
+    if not (client:hasPrivilege(L("canAccessScoreboardInfoOutOfStaff")) or client:hasPrivilege(L("canAccessScoreboardAdminOptions")) and client:isStaffOnDuty()) then return end
     local orderedOptions = {
         {
             name = L("nameCopyFormat", target:Name()),
             image = "icon16/page_copy.png",
             func = function()
-                client:notify(L("copiedToClipboard", target:Name(), "Name"))
+                client:notify(L("copiedToClipboard", target:Name(), L("name")))
                 SetClipboardText(target:Name())
             end
         },
@@ -25,7 +25,7 @@
             name = L("steamIDCopyFormat", target:SteamID()),
             image = "icon16/page_copy.png",
             func = function()
-                client:notify(L("copiedToClipboard", target:Name(), "SteamID"))
+                client:notify(L("copiedToClipboard", target:Name(), L("steamID")))
                 SetClipboardText(target:SteamID())
             end
         },
@@ -116,7 +116,7 @@ function MODULE:PopulateAdminTabs(pages)
     if not IsValid(client) then return end
     if client:hasPrivilege("View Staff Management") then
         table.insert(pages, {
-            name = "Staff Management",
+            name = L("moduleStaffManagementName"),
             drawFunc = function(panel)
                 panelRef = panel
                 net.Start("liaRequestStaffSummary")
@@ -168,11 +168,11 @@ function MODULE:PopulateAdminTabs(pages)
                     local columns = {
                         {
                             name = L("id"),
-                            field = "ID"
+                            field = L("id")
                         },
                         {
                             name = L("name"),
-                            field = "Name"
+                            field = L("name")
                         },
                         {
                             name = L("description"),
@@ -180,11 +180,11 @@ function MODULE:PopulateAdminTabs(pages)
                         },
                         {
                             name = L("faction"),
-                            field = "Faction"
+                            field = L("faction")
                         },
                         {
                             name = L("steamID"),
-                            field = "SteamID"
+                            field = L("steamID")
                         },
                         {
                             name = L("lastUsed"),
@@ -192,7 +192,7 @@ function MODULE:PopulateAdminTabs(pages)
                         },
                         {
                             name = L("banned"),
-                            field = "Banned",
+                            field = L("banned"),
                             format = function(val) return val and L("yes") or L("no") end
                         }
                     }
@@ -222,7 +222,7 @@ function MODULE:PopulateAdminTabs(pages)
 
                     table.insert(columns, {
                         name = L("money"),
-                        field = "Money",
+                        field = L("money"),
                         format = function(val) return lia.currency.get(tonumber(val) or 0) end
                     })
 
@@ -240,7 +240,7 @@ function MODULE:PopulateAdminTabs(pages)
                         local steamIDColumnIndex
                         for i, col in ipairs(columns) do
                             list:AddColumn(col.name)
-                            if col.field == "SteamID" then steamIDColumnIndex = i end
+                            if col.field == L("steamID") then steamIDColumnIndex = i end
                         end
 
                         local function populate(filter)
@@ -422,7 +422,7 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
-    if client:hasPrivilege("Can Manage Factions") then
+    if client:hasPrivilege(L("canManageFactions")) then
         table.insert(pages, {
             name = L("factionManagement"),
             drawFunc = function(panel)

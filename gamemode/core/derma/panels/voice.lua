@@ -30,7 +30,7 @@ function PANEL:Setup(client)
 end
 
 function PANEL:UpdateIcon()
-    local vt = self.client:getNetVar("VoiceType", "Talking")
+    local vt = self.client:getNetVar("VoiceType", L("talking"))
     local img = ICON_MAP[vt] or "normaltalk.png"
     self.Icon:SetImage(img)
 end
@@ -79,7 +79,7 @@ local function CreateVoicePanelList()
     function g_VoicePanelList:Paint(w, h)
         local pnl = VoicePanels[LocalPlayer()]
         if not IsValid(pnl) then return end
-        local vt = LocalPlayer():getNetVar("VoiceType", "Talking")
+        local vt = LocalPlayer():getNetVar("VoiceType", L("talking"))
         draw.SimpleText(L("voiceModeStatus", L(vt:lower())), "liaMediumFont", w / 2, h, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
     end
 end

@@ -97,12 +97,12 @@ local function camiBootstrapFromExisting()
         local m = tostring(pr.MinAccess or "user"):lower()
         if lia.administrator.privileges[n] == nil then
             lia.administrator.privileges[n] = m
-            lia.administrator.privMeta[n] = tostring(pr.Category or "Unassigned")
+            lia.administrator.privMeta[n] = tostring(pr.Category or L("unassigned"))
             for g in pairs(lia.administrator.groups or {}) do
                 if shouldGrant(g, m) then lia.administrator.groups[g][n] = true end
             end
         else
-            lia.administrator.privMeta[n] = lia.administrator.privMeta[n] or tostring(pr.Category or "Unassigned")
+            lia.administrator.privMeta[n] = lia.administrator.privMeta[n] or tostring(pr.Category or L("unassigned"))
         end
     end
 
@@ -135,7 +135,7 @@ function lia.administrator.registerPrivilege(priv)
     if lia.administrator.privileges[name] ~= nil then return end
     local min = tostring(priv.MinAccess or "user"):lower()
     lia.administrator.privileges[name] = min
-    lia.administrator.privMeta[name] = tostring(priv.Category or "Unassigned")
+    lia.administrator.privMeta[name] = tostring(priv.Category or L("unassigned"))
     for groupName, perms in pairs(lia.administrator.groups) do
         perms = perms or {}
         lia.administrator.groups[groupName] = perms
@@ -553,7 +553,7 @@ if SERVER then
 
     ensureStructures()
     net.Receive("liaGroupsRequest", function(_, p)
-        if not IsValid(p) or not p:hasPrivilege("Manage Usergroups") then return end
+        if not IsValid(p) or not p:hasPrivilege(L("manageUsergroups")) then return end
         lia.net.ready = lia.net.ready or setmetatable({}, {
             __mode = "k"
         })
@@ -563,7 +563,7 @@ if SERVER then
     end)
 
     net.Receive("liaGroupsAdd", function(_, p)
-        if not p:hasPrivilege("Manage Usergroups") then return end
+        if not p:hasPrivilege(L("manageUsergroups")) then return end
         local data = net.ReadTable()
         local n = string.Trim(tostring(data.name or ""))
         if n == "" then return end
@@ -583,7 +583,7 @@ if SERVER then
     end)
 
     net.Receive("liaGroupsRemove", function(_, p)
-        if not p:hasPrivilege("Manage Usergroups") then return end
+        if not p:hasPrivilege(L("manageUsergroups")) then return end
         local n = net.ReadString()
         if n == "" or lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[n] then return end
         lia.administrator.removeGroup(n)
@@ -594,7 +594,7 @@ if SERVER then
     end)
 
     net.Receive("liaGroupsRename", function(_, p)
-        if not p:hasPrivilege("Manage Usergroups") then return end
+        if not p:hasPrivilege(L("manageUsergroups")) then return end
         local old = string.Trim(net.ReadString() or "")
         local new = string.Trim(net.ReadString() or "")
         if old == "" or new == "" then return end
@@ -608,7 +608,7 @@ if SERVER then
     end)
 
     net.Receive("liaGroupsSetPerm", function(_, p)
-        if not p:hasPrivilege("Manage Usergroups") then return end
+        if not p:hasPrivilege(L("manageUsergroups")) then return end
         local group = net.ReadString()
         local privilege = net.ReadString()
         local value = net.ReadBool()
@@ -635,7 +635,7 @@ else
     local function computeCategoryMap(groups)
         local cats, labels, seen = {}, {}, {}
         for name in pairs(lia.administrator.privileges or {}) do
-            local c = tostring(lia.administrator.privMeta and lia.administrator.privMeta[name] or "Unassigned")
+            local c = tostring(lia.administrator.privMeta and lia.administrator.privMeta[name] or L("unassigned"))
             local key = c:lower()
             labels[key] = labels[key] or c
             cats[key] = cats[key] or {}
@@ -645,7 +645,7 @@ else
         for _, data in pairs(groups or {}) do
             for name in pairs(data or {}) do
                 if name ~= "_info" and not seen[name] then
-                    local c = tostring(lia.administrator.privMeta and lia.administrator.privMeta[name] or "Unassigned")
+                    local c = tostring(lia.administrator.privMeta and lia.administrator.privMeta[name] or L("unassigned"))
                     local key = c:lower()
                     labels[key] = labels[key] or c
                     cats[key] = cats[key] or {}
@@ -1003,7 +1003,7 @@ else
     end)
 
     hook.Add("PopulateAdminTabs", "liaAdmin", function(pages)
-        if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege("Manage Usergroups") then return end
+        if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege(L("manageUsergroups")) then return end
         pages[#pages + 1] = {
             name = L("userGroups"),
             drawFunc = function(parent)

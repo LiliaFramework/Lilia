@@ -2,22 +2,22 @@
 lia.log.types = {
     ["charRecognize"] = {
         func = function(client, id, name) return string.format("Player '%s' recognized character with ID %s and name '%s'.", client:Name(), id, name) end,
-        category = "Character"
+        category = L("character")
     },
     ["charCreate"] = {
         func = function(client, character) return string.format("Player '%s' created a new character named '%s'.", client:Name(), character:getName()) end,
-        category = "Character"
+        category = L("character")
     },
     ["charLoad"] = {
         func = function(client, name) return string.format("Player '%s' loaded character '%s'.", client:Name(), name) end,
-        category = "Character"
+        category = L("character")
     },
     ["charDelete"] = {
         func = function(client, id)
             local name = IsValid(client) and client:Name() or "CONSOLE"
             return string.format("%s deleted character ID %s.", name, id)
         end,
-        category = "Character"
+        category = L("character")
     },
     ["playerHurt"] = {
         func = function(client, attacker, damage, health) return string.format("Player '%s' took %s damage from '%s'. Current Health: %s", client:Name(), damage, attacker, health) end,
@@ -29,7 +29,7 @@ lia.log.types = {
     },
     ["playerSpawn"] = {
         func = function(client) return string.format("Player '%s' spawned.", client:Name()) end,
-        category = "Character"
+        category = L("character")
     },
     ["spawned_prop"] = {
         func = function(client, model) return string.format("Player '%s' spawned prop: %s.", client:Name(), model) end,
@@ -81,97 +81,97 @@ lia.log.types = {
     },
     ["chat"] = {
         func = function(client, chatType, message) return string.format("(%s) %s said: '%s'", chatType, client:Name(), message) end,
-        category = "Chat"
+        category = L("categoryChat")
     },
     ["chatOOC"] = {
         func = function(client, msg) return string.format("Player '%s' said (OOC): '%s'.", client:Name(), msg) end,
-        category = "Chat"
+        category = L("categoryChat")
     },
     ["chatLOOC"] = {
         func = function(client, msg) return string.format("Player '%s' said (LOOC): '%s'.", client:Name(), msg) end,
-        category = "Chat"
+        category = L("categoryChat")
     },
     ["command"] = {
         func = function(client, text) return string.format("Player '%s' ran command: %s.", client:Name(), text) end,
-        category = "Commands"
+        category = L("commands")
     },
     ["money"] = {
         func = function(client, amount) return string.format("Player '%s' changed money by: %s.", client:Name(), amount) end,
-        category = "Money"
+        category = L("money")
     },
     ["moneyPickedUp"] = {
         func = function(client, amount) return string.format("Player '%s' picked up %s %s.", client:Name(), lia.currency.get(amount), amount > 1 and lia.currency.plural or lia.currency.singular) end,
-        category = "Money"
+        category = L("money")
     },
     ["charSetMoney"] = {
         func = function(client, targetName, amount) return string.format("Admin '%s' set %s's money to %s.", client:Name(), targetName, lia.currency.get(amount)) end,
-        category = "Money"
+        category = L("money")
     },
     ["charAddMoney"] = {
         func = function(client, targetName, amount, total) return string.format("Admin '%s' gave %s %s (New Total: %s).", client:Name(), targetName, lia.currency.get(amount), lia.currency.get(total)) end,
-        category = "Money"
+        category = L("money")
     },
     ["itemTake"] = {
         func = function(client, item) return string.format("Player '%s' took item '%s'.", client:Name(), item) end,
-        category = "Items"
+        category = L("items")
     },
     ["use"] = {
         func = function(client, item) return string.format("Player '%s' used item '%s'.", client:Name(), item) end,
-        category = "Items"
+        category = L("items")
     },
     ["itemDrop"] = {
         func = function(client, item) return string.format("Player '%s' dropped item '%s'.", client:Name(), item) end,
-        category = "Items"
+        category = L("items")
     },
     ["itemInteractionFailed"] = {
         func = function(client, action, itemName) return string.format("Player '%s' failed to %s item '%s'.", client:Name(), action, itemName) end,
-        category = "Items"
+        category = L("items")
     },
     ["itemInteraction"] = {
         func = function(client, action, item) return string.format("Player '%s' %s item '%s'.", client:Name(), action, item.name) end,
-        category = "Items"
+        category = L("items")
     },
     ["itemEquip"] = {
         func = function(client, item) return string.format("Player '%s' equipped item '%s'.", client:Name(), item) end,
-        category = "Items"
+        category = L("items")
     },
     ["itemUnequip"] = {
         func = function(client, item) return string.format("Player '%s' unequipped item '%s'.", client:Name(), item) end,
-        category = "Items"
+        category = L("items")
     },
     ["itemTransfer"] = {
         func = function(client, itemName, fromID, toID) return string.format("Player '%s' moved item '%s' from inventory %s to %s.", client:Name(), itemName, tostring(fromID), tostring(toID)) end,
-        category = "Items"
+        category = L("items")
     },
     ["itemTransferFailed"] = {
         func = function(client, itemName, fromID, toID) return string.format("Player '%s' failed to move item '%s' from inventory %s to %s.", client:Name(), itemName, tostring(fromID), tostring(toID)) end,
-        category = "Items"
+        category = L("items")
     },
     ["itemCombine"] = {
         func = function(client, itemName, targetName) return string.format("Player '%s' combined item '%s' with '%s'.", client:Name(), itemName, targetName) end,
-        category = "Items"
+        category = L("items")
     },
     ["itemFunction"] = {
         func = function(client, action, itemName) return string.format("Player '%s' called item function '%s' on '%s'.", client:Name(), action, itemName) end,
-        category = "Items"
+        category = L("items")
     },
     ["itemAdded"] = {
         func = function(client, itemName)
             return string.format("Item '%s' added to %s's inventory.", itemName, IsValid(client) and client:Name() or L("unknown"))
         end,
-        category = "Items"
+        category = L("items")
     },
     ["itemCreated"] = {
         func = function(_, itemName) return string.format("Item '%s' instance created.", itemName) end,
-        category = "Items"
+        category = L("items")
     },
     ["itemSpawned"] = {
         func = function(_, itemName) return string.format("Item '%s' spawned in the world.", itemName) end,
-        category = "Items"
+        category = L("items")
     },
     ["itemDraggedOut"] = {
         func = function(client, itemName) return string.format("Player '%s' dragged item '%s' out of an inventory.", client:Name(), itemName) end,
-        category = "Items"
+        category = L("items")
     },
     ["toolgunUse"] = {
         func = function(client, tool) return string.format("Player '%s' used toolgun: '%s'.", client:Name(), tool) end,
@@ -179,19 +179,19 @@ lia.log.types = {
     },
     ["permissionDenied"] = {
         func = function(client, action) return string.format("Player '%s' was denied permission to %s.", client:Name(), action) end,
-        category = "Permissions"
+        category = L("modulePermissionsName")
     },
     ["spawnDenied"] = {
         func = function(client, objectType, model) return string.format("Player '%s' was denied from spawning %s '%s'.", client:Name(), objectType, tostring(model)) end,
-        category = "Permissions"
+        category = L("modulePermissionsName")
     },
     ["toolDenied"] = {
         func = function(client, tool) return string.format("Player '%s' was denied tool '%s'.", client:Name(), tool) end,
-        category = "Permissions"
+        category = L("modulePermissionsName")
     },
     ["observeToggle"] = {
         func = function(client, state) return string.format("Player '%s' toggled observe mode %s.", client:Name(), state) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["playerConnect"] = {
         func = function(_, name, ip) return string.format("Player '%s' is connecting from %s.", name, ip) end,
@@ -321,35 +321,35 @@ lia.log.types = {
     },
     ["spawnItem"] = {
         func = function(client, displayName, message) return string.format("Player '%s' spawned an item: '%s' %s.", client:Name(), displayName, message) end,
-        category = "Items"
+        category = L("items")
     },
     ["chargiveItem"] = {
         func = function(client, itemName, target, message) return string.format("Player '%s' gave item '%s' to %s. Info: %s", client:Name(), itemName, target:Name(), message) end,
-        category = "Items"
+        category = L("items")
     },
     ["vendorAccess"] = {
         func = function(client, vendor)
             return string.format("%s accessed vendor %s", client:Name(), vendor:getNetVar("name") or L("unknown"))
         end,
-        category = "Items"
+        category = L("items")
     },
     ["vendorExit"] = {
         func = function(client, vendor)
             return string.format("%s exited vendor %s", client:Name(), vendor:getNetVar("name") or L("unknown"))
         end,
-        category = "Items"
+        category = L("items")
     },
     ["vendorSell"] = {
         func = function(client, item, vendor)
             return string.format("%s sold a %s to %s", client:Name(), item, vendor:getNetVar("name") or L("unknown"))
         end,
-        category = "Items"
+        category = L("items")
     },
     ["vendorEdit"] = {
         func = function(client, vendor, key)
             return string.format("%s edited vendor %s with key %s", client:Name(), vendor:getNetVar("name") or L("unknown"), key)
         end,
-        category = "Items"
+        category = L("items")
     },
     ["vendorBuy"] = {
         func = function(client, item, vendor, isFailed)
@@ -359,199 +359,199 @@ lia.log.types = {
                 return string.format("%s bought a %s from %s", client:Name(), item, vendor:getNetVar("name") or L("unknown"))
             end
         end,
-        category = "Items"
+        category = L("items")
     },
     ["restockvendor"] = {
         func = function(client, vendor)
             return string.format("%s restocked vendor %s", client:Name(), IsValid(vendor) and (vendor:getNetVar("name") or L("unknown")) or L("unknown"))
         end,
-        category = "Items"
+        category = L("items")
     },
     ["restockallvendors"] = {
         func = function(client, count) return string.format("%s restocked all vendors (%d total)", client:Name(), count) end,
-        category = "Items"
+        category = L("items")
     },
     ["resetvendormoney"] = {
         func = function(client, vendor, amount)
             return string.format("%s set vendor %s money to %s", client:Name(), IsValid(vendor) and (vendor:getNetVar("name") or L("unknown")) or L("unknown"), lia.currency.get(amount))
         end,
-        category = "Items"
+        category = L("items")
     },
     ["resetallvendormoney"] = {
         func = function(client, amount, count) return string.format("%s reset all vendors money to %s (%d affected)", client:Name(), lia.currency.get(amount), count) end,
-        category = "Items"
+        category = L("items")
     },
     ["restockvendormoney"] = {
         func = function(client, vendor, amount)
             return string.format("%s restocked vendor %s money to %s", client:Name(), IsValid(vendor) and (vendor:getNetVar("name") or L("unknown")) or L("unknown"), lia.currency.get(amount))
         end,
-        category = "Items"
+        category = L("items")
     },
     ["savevendors"] = {
         func = function(client) return string.format("%s saved all vendor data", client:Name()) end,
-        category = "Items"
+        category = L("items")
     },
     ["configChange"] = {
         func = function(name, oldValue, value) return string.format("Configuration changed: '%s' from '%s' to '%s'.", name, tostring(oldValue), tostring(value)) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["warningIssued"] = {
         func = function(client, target, reason, count, index) return string.format("Warning issued at %s by admin '%s' to player '%s' for: '%s'. Total warnings: %d (added #%d).", os.date("%Y-%m-%d %H:%M:%S"), client:Name(), IsValid(target) and target:Name() or L("na"), reason, count or 0, index or count or 0) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["warningRemoved"] = {
         func = function(client, target, warning, count, index) return string.format("Warning removed at %s by admin '%s' for player '%s'. Reason: '%s'. Remaining warnings: %d (removed #%d).", os.date("%Y-%m-%d %H:%M:%S"), client:Name(), IsValid(target) and target:Name() or L("na"), warning.reason, count or 0, index or 0) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["viewWarns"] = {
         func = function(client, target) return string.format("Admin '%s' viewed warnings for player '%s'.", client:Name(), IsValid(target) and target:Name() or tostring(target)) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["adminMode"] = {
         func = function(client, id, message) return string.format("Admin Mode toggled at %s by '%s': %s. (ID: %s)", os.date("%Y-%m-%d %H:%M:%S"), client:Name(), message, id) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["charsetmodel"] = {
         func = function(client, targetName, newModel, oldModel) return string.format("Admin '%s' changed %s's model from %s to %s", client:Name(), targetName, oldModel, newModel) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["forceSay"] = {
         func = function(client, targetName, message) return string.format("Admin '%s' forced %s to say: %s", client:Name(), targetName, message) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyTransfer"] = {
         func = function(client, targetName, oldFaction, newFaction) return string.format("Admin '%s' transferred '%s' from faction '%s' to '%s'.", client:Name(), targetName, oldFaction, newFaction) end,
-        category = "Factions"
+        category = L("factions")
     },
     ["plyWhitelist"] = {
         func = function(client, targetName, faction) return string.format("Admin '%s' whitelisted '%s' for faction '%s'.", client:Name(), targetName, faction) end,
-        category = "Factions"
+        category = L("factions")
     },
     ["plyUnwhitelist"] = {
         func = function(client, targetName, faction) return string.format("Admin '%s' removed '%s' from faction '%s' whitelist.", client:Name(), targetName, faction) end,
-        category = "Factions"
+        category = L("factions")
     },
     ["beClass"] = {
         func = function(client, className) return string.format("Player '%s' joined class '%s'.", client:Name(), className) end,
-        category = "Factions"
+        category = L("factions")
     },
     ["setClass"] = {
         func = function(client, targetName, className) return string.format("Admin '%s' set '%s' to class '%s'.", client:Name(), targetName, className) end,
-        category = "Factions"
+        category = L("factions")
     },
     ["classWhitelist"] = {
         func = function(client, targetName, className) return string.format("Admin '%s' whitelisted '%s' for class '%s'.", client:Name(), targetName, className) end,
-        category = "Factions"
+        category = L("factions")
     },
     ["classUnwhitelist"] = {
         func = function(client, targetName, className) return string.format("Admin '%s' removed '%s' from class '%s' whitelist.", client:Name(), targetName, className) end,
-        category = "Factions"
+        category = L("factions")
     },
     ["flagGive"] = {
         func = function(client, targetName, flags) return string.format("Admin '%s' gave flags '%s' to %s.", client:Name(), flags, targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["flagGiveAll"] = {
         func = function(client, targetName) return string.format("Admin '%s' gave all flags to %s.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["flagTake"] = {
         func = function(client, targetName, flags) return string.format("Admin '%s' took flags '%s' from %s.", client:Name(), flags, targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["flagTakeAll"] = {
         func = function(client, targetName) return string.format("Admin '%s' removed all flags from %s.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["playerFlagGive"] = {
         func = function(client, targetName, flags) return string.format("Admin '%s' gave player flags '%s' to %s.", client:Name(), flags, targetName) end,
-        category = "Admin",
+        category = L("admin"),
     },
     ["playerFlagGiveAll"] = {
         func = function(client, targetName) return string.format("Admin '%s' gave all player flags to %s.", client:Name(), targetName) end,
-        category = "Admin",
+        category = L("admin"),
     },
     ["playerFlagTake"] = {
         func = function(client, targetName, flags) return string.format("Admin '%s' took player flags '%s' from %s.", client:Name(), flags, targetName) end,
-        category = "Admin",
+        category = L("admin"),
     },
     ["playerFlagTakeAll"] = {
         func = function(client, targetName) return string.format("Admin '%s' removed all player flags from %s.", client:Name(), targetName) end,
-        category = "Admin",
+        category = L("admin"),
     },
     ["voiceToggle"] = {
         func = function(client, targetName, state) return string.format("Admin '%s' toggled voice ban for %s: %s.", client:Name(), targetName, state) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["charBan"] = {
         func = function(client, targetName) return string.format("Admin '%s' banned character '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["charUnban"] = {
         func = function(client, targetName) return string.format("Admin '%s' unbanned character '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["charKick"] = {
         func = function(client, targetName) return string.format("Admin '%s' kicked character '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["sitRoomSet"] = {
         func = function(client, pos, message) return L("sitroomSetLog", os.date("%Y-%m-%d %H:%M:%S"), client:Name(), message, pos) end,
-        category = "Admin",
+        category = L("admin"),
     },
     ["sitRoomRenamed"] = {
         func = function(client, details) return L("sitroomRenamedLog", client:Name(), details) end,
-        category = "Admin",
+        category = L("admin"),
     },
     ["sitRoomRepositioned"] = {
         func = function(client, details) return L("sitroomRepositionedLog", client:Name(), details) end,
-        category = "Admin",
+        category = L("admin"),
     },
     ["sendToSitRoom"] = {
         func = function(client, targetName, roomName)
             if targetName == client:Name() then return L("sitroomTeleportedLog", client:Name(), roomName) end
             return L("sitroomSentLog", client:Name(), targetName, roomName)
         end,
-        category = "Admin",
+        category = L("admin"),
     },
     ["sitRoomReturn"] = {
         func = function(client, targetName)
             if targetName == client:Name() then return L("sitroomReturnSelfLog", client:Name()) end
             return L("sitroomReturnOtherLog", client:Name(), targetName)
         end,
-        category = "Admin",
+        category = L("admin"),
     },
     ["attribSet"] = {
         func = function(client, targetName, attrib, value) return string.format("Admin '%s' set %s's '%s' attribute to %d.", client:Name(), targetName, attrib, value) end,
-        category = "Character"
+        category = L("character")
     },
     ["attribAdd"] = {
         func = function(client, targetName, attrib, value) return string.format("Admin '%s' added %d to %s's '%s' attribute.", client:Name(), value, targetName, attrib) end,
-        category = "Character"
+        category = L("character")
     },
     ["attribCheck"] = {
         func = function(client, targetName) return string.format("Admin '%s' viewed attributes of %s.", client:Name(), targetName) end,
-        category = "Character"
+        category = L("character")
     },
     ["invUpdateSize"] = {
         func = function(client, targetName, w, h) return string.format("Admin '%s' reset %s's inventory size to %dx%d.", client:Name(), targetName, w, h) end,
-        category = "Inventory"
+        category = L("inv")
     },
     ["invSetSize"] = {
         func = function(client, targetName, w, h) return string.format("Admin '%s' set %s's inventory size to %dx%d.", client:Name(), targetName, w, h) end,
-        category = "Inventory"
+        category = L("inv")
     },
     ["storageLock"] = {
-        func = function(client, entClass, state) return string.format("Admin '%s' %s storage %s.", client:Name(), state and "locked" or "unlocked", entClass) end,
-        category = "Inventory"
+        func = function(client, entClass, state) return string.format("Admin '%s' %s storage %s.", client:Name(), state and "locked" or L("unlocked"), entClass) end,
+        category = L("inv")
     },
     ["storageUnlock"] = {
         func = function(client, entClass) return string.format("Client %s unlocked storage %s.", client:Name(), entClass) end,
-        category = "Inventory"
+        category = L("inv")
     },
     ["storageUnlockFailed"] = {
         func = function(client, entClass, password) return string.format("Client %s failed to unlock storage %s with password '%s'.", client:Name(), entClass, password) end,
-        category = "Inventory"
+        category = L("inv")
     },
     ["spawnAdd"] = {
         func = function(client, faction) return string.format("Admin '%s' added a spawn for faction '%s'.", client:Name(), faction) end,
@@ -567,23 +567,23 @@ lia.log.types = {
     },
     ["returnItems"] = {
         func = function(client, targetName) return string.format("Admin '%s' returned lost items to %s.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["banOOC"] = {
         func = function(client, targetName, steamID) return string.format("Admin '%s' banned %s (%s) from OOC chat.", client:Name(), targetName, steamID) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["unbanOOC"] = {
         func = function(client, targetName, steamID) return string.format("Admin '%s' unbanned %s (%s) from OOC chat.", client:Name(), targetName, steamID) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["blockOOC"] = {
         func = function(client, state) return string.format("Admin '%s' %s OOC chat globally.", client:Name(), state and "blocked" or "unblocked") end,
-        category = "Admin"
+        category = L("admin")
     },
     ["clearChat"] = {
         func = function(client) return string.format("Admin '%s' cleared the chat.", client:Name()) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["cheaterBanned"] = {
         func = function(_, name, steamID) return string.format("Cheater '%s' (%s) was automatically banned.", name, steamID) end,
@@ -603,155 +603,155 @@ lia.log.types = {
     },
     ["altKicked"] = {
         func = function(_, name, steamID) return string.format("Alt account '%s' (%s) was kicked.", name, steamID) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["altBanned"] = {
         func = function(_, name, steamID) return string.format("Alt account '%s' (%s) was banned due to blacklist.", name, steamID) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyKick"] = {
         func = function(client, targetName) return string.format("Admin '%s' kicked player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyBan"] = {
         func = function(client, targetName) return string.format("Admin '%s' banned player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyUnban"] = {
         func = function(client, targetIdentifier) return string.format("Admin '%s' unbanned player '%s'.", client:Name(), targetIdentifier) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["viewPlayerClaims"] = {
         func = function(client, targetName) return string.format("Admin '%s' viewed claims for %s.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["viewAllClaims"] = {
         func = function(client) return string.format("Admin '%s' viewed all ticket claims.", client:Name()) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["viewPlayerTickets"] = {
         func = function(client, targetName) return string.format("Admin '%s' viewed tickets for %s.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["ticketClaimed"] = {
         func = function(client, requester, count) return string.format("Admin '%s' claimed a ticket for %s. Total claims: %d.", client:Name(), requester, count or 0) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["ticketClosed"] = {
         func = function(client, requester, count) return string.format("Admin '%s' closed a ticket for %s. Total claims: %d.", client:Name(), requester, count or 0) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["teleportToEntity"] = {
         func = function(client, entClass) return string.format("Admin '%s' teleported to entity '%s'.", client:Name(), entClass) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyBring"] = {
         func = function(client, targetName) return string.format("Admin '%s' brought player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyGoto"] = {
         func = function(client, targetName) return string.format("Admin '%s' teleported to player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyReturn"] = {
         func = function(client, targetName) return string.format("Admin '%s' returned player '%s' to their previous position.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyJail"] = {
         func = function(client, targetName) return string.format("Admin '%s' jailed player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyUnjail"] = {
         func = function(client, targetName) return string.format("Admin '%s' unjailed player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyKill"] = {
         func = function(client, targetName) return string.format("Admin '%s' killed player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plySlay"] = {
         func = function(client, targetName) return string.format("Admin '%s' slayed player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyRespawn"] = {
         func = function(client, targetName) return string.format("Admin '%s' respawned player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyFreeze"] = {
         func = function(client, targetName, duration) return string.format("Admin '%s' froze player '%s' for %s seconds.", client:Name(), targetName, tostring(duration)) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyUnfreeze"] = {
         func = function(client, targetName) return string.format("Admin '%s' unfroze player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyBlind"] = {
         func = function(client, targetName, duration) return string.format("Admin '%s' blinded player '%s' for %s seconds.", client:Name(), targetName, tostring(duration)) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyUnblind"] = {
         func = function(client, targetName) return string.format("Admin '%s' unblinded player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyBlindFade"] = {
         func = function(client, targetName, duration, color) return string.format("Admin '%s' blind-faded player '%s' for %s seconds with color '%s'.", client:Name(), targetName, tostring(duration), color) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["blindFadeAll"] = {
         func = function(_, duration, color) return string.format("All players blind-faded for %s seconds with color '%s'.", tostring(duration), color) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyGag"] = {
         func = function(client, targetName) return string.format("Admin '%s' gagged player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyUngag"] = {
         func = function(client, targetName) return string.format("Admin '%s' ungagged player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyMute"] = {
         func = function(client, targetName) return string.format("Admin '%s' muted player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyUnmute"] = {
         func = function(client, targetName) return string.format("Admin '%s' unmuted player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyCloak"] = {
         func = function(client, targetName) return string.format("Admin '%s' cloaked player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyUncloak"] = {
         func = function(client, targetName) return string.format("Admin '%s' uncloaked player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyGod"] = {
         func = function(client, targetName) return string.format("Admin '%s' enabled god mode for '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyUngod"] = {
         func = function(client, targetName) return string.format("Admin '%s' disabled god mode for '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyIgnite"] = {
         func = function(client, targetName, duration) return string.format("Admin '%s' ignited player '%s' for %s seconds.", client:Name(), targetName, tostring(duration)) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyExtinguish"] = {
         func = function(client, targetName) return string.format("Admin '%s' extinguished player '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["plyStrip"] = {
         func = function(client, targetName) return string.format("Admin '%s' stripped weapons from '%s'.", client:Name(), targetName) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["charBanOffline"] = {
         func = function(client, charID) return string.format("Admin '%s' banned offline character ID %s.", client:Name(), tostring(charID)) end,
-        category = "Admin"
+        category = L("admin")
     },
     ["charUnbanOffline"] = {
         func = function(client, charID) return string.format("Admin '%s' unbanned offline character ID %s.", client:Name(), tostring(charID)) end,
-        category = "Admin"
+        category = L("admin")
     },
 }
 

@@ -154,13 +154,13 @@ end
 
 lia.config.add("MoneyModel", "Money Model", "models/props_lab/box01a.mdl", nil, {
     desc = "Defines the model used for representing money in the game.",
-    category = "Money",
+    category = L("money"),
     type = "Generic"
 })
 
 lia.config.add("MoneyLimit", "Money Limit", 0, nil, {
     desc = "Sets the limit of money a player can have [0 for infinite].",
-    category = "Money",
+    category = L("money"),
     type = "Int",
     min = 0,
     max = 1000000
@@ -168,47 +168,47 @@ lia.config.add("MoneyLimit", "Money Limit", 0, nil, {
 
 lia.config.add("CurrencySymbol", "Currency Symbol", "", function(newVal) lia.currency.symbol = newVal end, {
     desc = "Specifies the currency symbol used in the game.",
-    category = "Money",
+    category = L("money"),
     type = "Generic"
 })
 
 lia.config.add("PKWorld", "PK World Deaths Count", false, nil, {
     desc = "When marked for Perma Kill, does world deaths count as perma killing?",
-    category = "Character",
+    category = L("character"),
     type = "Boolean"
 })
 
 lia.config.add("CurrencySingularName", "Currency Singular Name", "Dollar", function(newVal) lia.currency.singular = newVal end, {
     desc = "Singular name of the in-game currency.",
-    category = "Money",
+    category = L("money"),
     type = "Generic"
 })
 
 lia.config.add("CurrencyPluralName", "Currency Plural Name", "Dollars", function(newVal) lia.currency.plural = newVal end, {
     desc = "Plural name of the in-game currency.",
-    category = "Money",
+    category = L("money"),
     type = "Generic"
 })
 
-lia.config.add("WalkSpeed", "Walk Speed", 130, function(_, newValue)
+lia.config.add("WalkSpeed", L("walkSpeed"), 130, function(_, newValue)
     for _, client in player.Iterator() do
         client:SetWalkSpeed(newValue)
     end
 end, {
     desc = "Controls how fast characters walk.",
-    category = "Character",
+    category = L("character"),
     type = "Int",
     min = 50,
     max = 300
 })
 
-lia.config.add("RunSpeed", "Run Speed", 275, function(_, newValue)
+lia.config.add("RunSpeed", L("runSpeed"), 275, function(_, newValue)
     for _, client in player.Iterator() do
         client:SetRunSpeed(newValue)
     end
 end, {
     desc = "Controls how fast characters run.",
-    category = "Character",
+    category = L("character"),
     type = "Int",
     min = 100,
     max = 500
@@ -216,7 +216,7 @@ end, {
 
 lia.config.add("WalkRatio", "Walk Ratio", 0.5, nil, {
     desc = "Defines the walk speed ratio when holding the Alt key.",
-    category = "Character",
+    category = L("character"),
     type = "Float",
     min = 0.1,
     max = 1.0,
@@ -225,13 +225,13 @@ lia.config.add("WalkRatio", "Walk Ratio", 0.5, nil, {
 
 lia.config.add("AllowExistNames", "Allow Duplicate Names", true, nil, {
     desc = "Determines whether duplicate character names are allowed.",
-    category = "Character",
+    category = L("character"),
     type = "Boolean"
 })
 
 lia.config.add("WhitelistEnabled", "Enable or disable the Whitelist", false, nil, {
     desc = "Determines whether the whitelist feature is enabled on the server.",
-    category = "Server",
+    category = L("categoryServer"),
     noNetworking = false,
     schemaOnly = false,
     isGlobal = false,
@@ -240,7 +240,7 @@ lia.config.add("WhitelistEnabled", "Enable or disable the Whitelist", false, nil
 
 lia.config.add("BlacklistedEnabled", "Enable or disable the Blacklist", false, nil, {
     desc = "Determines whether the blacklist feature is enabled on the server.",
-    category = "Server",
+    category = L("categoryServer"),
     noNetworking = false,
     schemaOnly = false,
     isGlobal = false,
@@ -249,7 +249,7 @@ lia.config.add("BlacklistedEnabled", "Enable or disable the Blacklist", false, n
 
 lia.config.add("MaxCharacters", "Max Characters", 5, nil, {
     desc = "Sets the maximum number of characters a player can have.",
-    category = "Character",
+    category = L("character"),
     type = "Int",
     min = 1,
     max = 10
@@ -257,13 +257,13 @@ lia.config.add("MaxCharacters", "Max Characters", 5, nil, {
 
 lia.config.add("AllowPMs", "Allow Private Messages", true, nil, {
     desc = "Determines whether private messages are allowed.",
-    category = "Chat",
+    category = L("categoryChat"),
     type = "Boolean"
 })
 
 lia.config.add("MinDescLen", "Minimum Description Length", 16, nil, {
     desc = "Minimum length required for a character's description.",
-    category = "Character",
+    category = L("character"),
     type = "Int",
     min = 10,
     max = 500
@@ -271,7 +271,7 @@ lia.config.add("MinDescLen", "Minimum Description Length", 16, nil, {
 
 lia.config.add("SaveInterval", "Save Interval", 300, nil, {
     desc = "Interval for character saves in seconds.",
-    category = "Character",
+    category = L("character"),
     type = "Int",
     min = 60,
     max = 3600
@@ -279,7 +279,7 @@ lia.config.add("SaveInterval", "Save Interval", 300, nil, {
 
 lia.config.add("DefMoney", "Default Money", 0, nil, {
     desc = "Specifies the default amount of money a player starts with.",
-    category = "Character",
+    category = L("character"),
     type = "Int",
     min = 0,
     max = 10000
@@ -303,7 +303,7 @@ lia.config.add("CharacterDataSaveInterval", "Character Data Save Interval", 300,
 
 lia.config.add("SpawnTime", "Respawn Time", 5, nil, {
     desc = "Time to respawn after death.",
-    category = "Death",
+    category = L("death"),
     type = "Float",
     min = 1,
     max = 60
@@ -311,7 +311,7 @@ lia.config.add("SpawnTime", "Respawn Time", 5, nil, {
 
 lia.config.add("TimeToEnterVehicle", "Vehicle Entry Time", 1, nil, {
     desc = "Time [in seconds] required to enter a vehicle.",
-    category = "Quality of Life",
+    category = L("categoryQualityOfLife"),
     type = "Float",
     min = 0.5,
     max = 10
@@ -333,7 +333,7 @@ lia.config.add("MaxChatLength", "Max Chat Length", 256, nil, {
 
 lia.config.add("SchemaYear", "Schema Year", 2025, nil, {
     desc = "Year of the gamemode's schema.",
-    category = "General",
+    category = L("categoryGeneral"),
     type = "Int",
     min = 0,
     max = 999999
@@ -341,13 +341,13 @@ lia.config.add("SchemaYear", "Schema Year", 2025, nil, {
 
 lia.config.add("AmericanDates", "American Dates", true, nil, {
     desc = "Determines whether to use the American date format.",
-    category = "General",
+    category = L("categoryGeneral"),
     type = "Boolean"
 })
 
 lia.config.add("AmericanTimeStamp", "American Timestamp", true, nil, {
     desc = "Determines whether to use the American timestamp format.",
-    category = "General",
+    category = L("categoryGeneral"),
     type = "Boolean"
 })
 
@@ -369,13 +369,13 @@ lia.config.add("Color", "Theme Color", {
 
 lia.config.add("CharMenuBGInputDisabled", "Character Menu BG Input Disabled", true, nil, {
     desc = "Whether background input is disabled durinag character menu use",
-    category = "Main Menu",
+    category = L("mainMenu"),
     type = "Boolean"
 })
 
 lia.config.add("AllowKeybindEditing", "Allow Keybind Editing", true, nil, {
     desc = "Whether keybind editing is allowed",
-    category = "General",
+    category = L("categoryGeneral"),
     type = "Boolean"
 })
 
@@ -393,7 +393,7 @@ lia.config.add("BarsDisabled", "Disable Bars", false, nil, {
 
 lia.config.add("AutoWeaponItemGeneration", "Auto Weapon-to-Item Generation", true, nil, {
     desc = "Enables automatic conversion of dropped weapons into inventory items",
-    category = "General",
+    category = L("categoryGeneral"),
     type = "Boolean"
 })
 
@@ -405,7 +405,7 @@ lia.config.add("AmmoDrawEnabled", "Enable Ammo Display", true, nil, {
 
 lia.config.add("IsVoiceEnabled", "Voice Chat Enabled", true, function(_, newValue) hook.Run("VoiceToggled", newValue) end, {
     desc = "Whether or not voice chat is enabled",
-    category = "General",
+    category = L("categoryGeneral"),
     type = "Boolean"
 })
 
@@ -461,7 +461,7 @@ lia.config.add("MaxThirdPersonHeight", "Maximum Third-Person Height Offset", 30,
 
 lia.config.add("MaxViewDistance", "Maximum View Distance", 32768, nil, {
     desc = "The maximum distance (in units) at which players are visible." .. " This default covers an entire Source map (~32k units).",
-    category = "Quality of Life",
+    category = L("categoryQualityOfLife"),
     type = "Int",
     min = 1000,
     max = 32768,
@@ -486,7 +486,7 @@ lia.config.add("DermaSkin", "Derma UI Skin", "Lilia Skin", function(_, newSkin) 
 
 lia.config.add("Language", "Language", "English", nil, {
     desc = "Determines the language setting for the game.",
-    category = "General",
+    category = L("categoryGeneral"),
     type = "Table",
     options = lia.lang.getLanguages()
 })
@@ -499,7 +499,7 @@ lia.config.add("SpawnMenuLimit", L("spawnMenuLimit"), false, nil, {
 
 lia.config.add("LogRetentionDays", "Log Retention Period", 7, nil, {
     desc = "Determines how many days of logs should be read",
-    category = "Logging",
+    category = L("categoryLogging"),
     type = "Int",
     min = 3,
     max = 30,
@@ -507,7 +507,7 @@ lia.config.add("LogRetentionDays", "Log Retention Period", 7, nil, {
 
 lia.config.add("MaxLogLines", "Maximum Log Lines", 1000, nil, {
     desc = "Determines the maximum number of log lines to retrieve",
-    category = "Logging",
+    category = L("categoryLogging"),
     type = "Int",
     min = 500,
     max = 1000000,
@@ -515,19 +515,19 @@ lia.config.add("MaxLogLines", "Maximum Log Lines", 1000, nil, {
 
 lia.config.add("StaminaBlur", "Stamina Blur Enabled", true, nil, {
     desc = "Is Stamina Blur Enabled?",
-    category = "Attributes",
+    category = L("attributes"),
     type = "Boolean"
 })
 
 lia.config.add("StaminaSlowdown", "Stamina Slowdown Enabled", true, nil, {
     desc = "Is Stamina Slowdown Enabled?",
-    category = "Attributes",
+    category = L("attributes"),
     type = "Boolean"
 })
 
 lia.config.add("DefaultStamina", "Default Stamina Value", 100, nil, {
     desc = "Sets Default Stamina Value",
-    category = "Attributes",
+    category = L("attributes"),
     type = "Int",
     min = 0,
     max = 1000
@@ -535,7 +535,7 @@ lia.config.add("DefaultStamina", "Default Stamina Value", 100, nil, {
 
 lia.config.add("MaxAttributePoints", "Max Attribute Points", 30, nil, {
     desc = "Maximum number of points that can be allocated across an attribute.",
-    category = "Attributes",
+    category = L("attributes"),
     isGlobal = true,
     type = "Int",
     min = 1,
@@ -544,7 +544,7 @@ lia.config.add("MaxAttributePoints", "Max Attribute Points", 30, nil, {
 
 lia.config.add("JumpStaminaCost", "Jump Stamina Cost", 10, nil, {
     desc = "Stamina cost deducted when the player jumps",
-    category = "Attributes",
+    category = L("attributes"),
     type = "Int",
     min = 0,
     max = 1000
@@ -552,7 +552,7 @@ lia.config.add("JumpStaminaCost", "Jump Stamina Cost", 10, nil, {
 
 lia.config.add("MaxStartingAttributes", "Max Starting Attributes", 30, nil, {
     desc = "Maximum value of each attribute at character creation.",
-    category = "Attributes",
+    category = L("attributes"),
     isGlobal = true,
     type = "Int",
     min = 1,
@@ -561,7 +561,7 @@ lia.config.add("MaxStartingAttributes", "Max Starting Attributes", 30, nil, {
 
 lia.config.add("StartingAttributePoints", "Starting Attribute Points", 30, nil, {
     desc = "Total number of points available for starting attribute allocation.",
-    category = "Attributes",
+    category = L("attributes"),
     isGlobal = true,
     type = "Int",
     min = 1,
@@ -570,7 +570,7 @@ lia.config.add("StartingAttributePoints", "Starting Attribute Points", 30, nil, 
 
 lia.config.add("PunchStamina", "Punch Stamina", 10, nil, {
     desc = "Stamina usage for punches.",
-    category = "Attributes",
+    category = L("attributes"),
     isGlobal = true,
     type = "Int",
     min = 0,
@@ -579,7 +579,7 @@ lia.config.add("PunchStamina", "Punch Stamina", 10, nil, {
 
 lia.config.add("MaxHoldWeight", "Maximum Hold Weight", 100, nil, {
     desc = "The maximum weight that a player can carry in their hands.",
-    category = "General",
+    category = L("categoryGeneral"),
     type = "Int",
     min = 1,
     max = 500
@@ -587,7 +587,7 @@ lia.config.add("MaxHoldWeight", "Maximum Hold Weight", 100, nil, {
 
 lia.config.add("ThrowForce", "Throw Force", 100, nil, {
     desc = "How hard a player can throw the item that they're holding.",
-    category = "General",
+    category = L("categoryGeneral"),
     type = "Int",
     min = 1,
     max = 500
@@ -595,13 +595,13 @@ lia.config.add("ThrowForce", "Throw Force", 100, nil, {
 
 lia.config.add("AllowPush", "Allow Push", true, nil, {
     desc = "Whether or not pushing with hands is allowed",
-    category = "General",
+    category = L("categoryGeneral"),
     type = "Boolean"
 })
 
 lia.config.add("PunchPlaytime", "Punch Playtime Protection", 7200, nil, {
     desc = "Minimum playtime in seconds required to punch.",
-    category = "General",
+    category = L("categoryGeneral"),
     isGlobal = true,
     type = "Int",
     min = 0,
@@ -610,7 +610,7 @@ lia.config.add("PunchPlaytime", "Punch Playtime Protection", 7200, nil, {
 
 lia.config.add("CustomChatSound", "Custom Chat Sound", "", nil, {
     desc = "Change Chat Sound on Message Send",
-    category = "Chat",
+    category = L("categoryChat"),
     type = "Generic"
 })
 
@@ -621,13 +621,13 @@ lia.config.add("ChatColor", "Chat Color", {
     a = 255
 }, nil, {
     desc = "Chat Color",
-    category = "Chat",
+    category = L("categoryChat"),
     type = "Color"
 })
 
 lia.config.add("ChatRange", "Chat Range", 280, nil, {
     desc = "Range of Chat can be heard",
-    category = "Chat",
+    category = L("categoryChat"),
     type = "Int",
     min = 0,
     max = 10000
@@ -635,7 +635,7 @@ lia.config.add("ChatRange", "Chat Range", 280, nil, {
 
 lia.config.add("OOCLimit", "OOC Character Limit", 150, nil, {
     desc = "Limit of characters on OOC",
-    category = "Chat",
+    category = L("categoryChat"),
     type = "Int",
     min = 10,
     max = 1000
@@ -648,13 +648,13 @@ lia.config.add("ChatListenColor", "Chat Listen Color", {
     a = 255
 }, nil, {
     desc = "Color of chat when directly working at someone",
-    category = "Chat",
+    category = L("categoryChat"),
     type = "Color"
 })
 
 lia.config.add("OOCDelay", "OOC Delay", 10, nil, {
     desc = "Set OOC Text Delay",
-    category = "Chat",
+    category = L("categoryChat"),
     type = "Float",
     min = 0,
     max = 60
@@ -662,7 +662,7 @@ lia.config.add("OOCDelay", "OOC Delay", 10, nil, {
 
 lia.config.add("LOOCDelay", "LOOC Delay", 6, nil, {
     desc = "Set LOOC Text Delay",
-    category = "Chat",
+    category = L("categoryChat"),
     type = "Float",
     min = 0,
     max = 60
@@ -670,13 +670,13 @@ lia.config.add("LOOCDelay", "LOOC Delay", 6, nil, {
 
 lia.config.add("LOOCDelayAdmin", "LOOC Delay for Admins", false, nil, {
     desc = "Should Admins have LOOC Delay",
-    category = "Chat",
+    category = L("categoryChat"),
     type = "Boolean"
 })
 
 lia.config.add("ChatSizeDiff", "Enable Different Chat Size", false, nil, {
     desc = "Enable Different Chat Size Diff",
-    category = "Chat",
+    category = L("categoryChat"),
     type = "Boolean"
 })
 
@@ -866,25 +866,25 @@ lia.config.add("DisableCheaterActions", L("disableCheaterActions"), true, nil, {
 
 lia.config.add("LoseItemsonDeathNPC", "Lose Items on NPC Death", false, nil, {
     desc = "Determine if items marked for loss are lost on death by NPCs",
-    category = "Death",
+    category = L("death"),
     type = "Boolean"
 })
 
 lia.config.add("LoseItemsonDeathHuman", "Lose Items on Human Death", false, nil, {
     desc = "Determine if items marked for loss are lost on death by Humans",
-    category = "Death",
+    category = L("death"),
     type = "Boolean"
 })
 
 lia.config.add("LoseItemsonDeathWorld", "Lose Items on World Death", false, nil, {
     desc = "Determine if items marked for loss are lost on death by World",
-    category = "Death",
+    category = L("death"),
     type = "Boolean"
 })
 
 lia.config.add("DeathPopupEnabled", "Enable Death Popup", true, nil, {
     desc = "Enable or disable the death information popup",
-    category = "Death",
+    category = L("death"),
     type = "Boolean"
 })
 
@@ -896,7 +896,7 @@ lia.config.add("StaffHasGodMode", "Staff God Mode", true, nil, {
 
 lia.config.add("ClassDisplay", "Display Classes on Characters", true, nil, {
     desc = "Whether or not classes are displayed on characters",
-    category = "Character",
+    category = L("character"),
     type = "Boolean"
 })
 
@@ -959,7 +959,7 @@ lia.config.add("FakeNamesEnabled", L("fakeNamesEnabled"), false, nil, {
 
 lia.config.add("vendorDefaultMoney", "Default Vendor Money", 500, nil, {
     desc = "Sets the default amount of money a vendor starts with",
-    category = "Vendors",
+    category = L("vendors"),
     type = "Int",
     min = 0,
     max = 100000
@@ -1354,7 +1354,7 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                 local d = opt.desc or ""
                 local ln, ld = n:lower(), d:lower()
                 if filter == "" or ln:find(filter, 1, true) or ld:find(filter, 1, true) then
-                    local cat = opt.category or "Miscellaneous"
+                    local cat = opt.category or L("misc")
                     categories[cat] = categories[cat] or {}
                     categories[cat][#categories[cat] + 1] = {
                         key = k,
@@ -1414,7 +1414,7 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
 
     if hook.Run("CanPlayerModifyConfig", LocalPlayer()) ~= false then
         pages[#pages + 1] = {
-            name = "Configuration",
+            name = L("categoryConfiguration"),
             drawFunc = function(parent) buildConfiguration(parent) end
         }
     end

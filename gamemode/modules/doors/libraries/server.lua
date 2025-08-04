@@ -245,5 +245,5 @@ function MODULE:ToggleLock(client, door, state)
     end
 
     hook.Run("DoorLockToggled", client, door, state)
-    lia.log.add(client, "toggleLock", door, state and "locked" or "unlocked")
+    lia.log.add(client, "toggleLock", door, state and "locked" or L("unlocked"))
 end

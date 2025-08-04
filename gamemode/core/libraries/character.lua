@@ -716,7 +716,7 @@ if SERVER then
     end
 
     function lia.char.delete(id, client)
-        assert(isnumber(id), "id must be a number")
+        assert(isnumber(id), L("idMustBeNumber"))
         if IsValid(client) then
             removePlayer(client)
         else

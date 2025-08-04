@@ -172,7 +172,7 @@ function GM:PostDrawOpaqueRenderables()
     if not lia.option.get("voiceRange", false) then return end
     local client = LocalPlayer()
     if not (IsValid(client) and client:IsSpeaking() and client:getChar()) then return end
-    local vt = client:getNetVar("VoiceType", "Talking")
+    local vt = client:getNetVar("VoiceType", L("talking"))
     local radius = VoiceRanges[vt] or VoiceRanges.Talking
     local segments = 36
     local pos = client:GetPos() + Vector(0, 0, 2)
@@ -469,7 +469,7 @@ end
 
 function GM:SpawnMenuOpen()
     local client = LocalPlayer()
-    if lia.config.get("SpawnMenuLimit", false) and not (client:hasFlags("pet") or client:isStaffOnDuty() or client:hasPrivilege("Can Spawn Props")) then return end
+    if lia.config.get("SpawnMenuLimit", false) and not (client:hasFlags("pet") or client:isStaffOnDuty() or client:hasPrivilege(L("canSpawnProps"))) then return end
     return true
 end
 

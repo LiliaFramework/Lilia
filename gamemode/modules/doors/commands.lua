@@ -6,7 +6,7 @@ lia.command.add("doorsell", {
         Name = "adminStickDoorSellName",
         Category = "doorManagement",
         SubCategory = "doorActions",
-        TargetClass = "Door"
+        TargetClass = L("door")
     },
     onRun = function(client)
         local door = client:getTracedEntity()
@@ -35,7 +35,7 @@ lia.command.add("admindoorsell", {
         Name = "adminStickAdminDoorSellName",
         Category = "doorManagement",
         SubCategory = "doorActions",
-        TargetClass = "Door"
+        TargetClass = L("door")
     },
     onRun = function(client)
         local door = client:getTracedEntity()
@@ -66,7 +66,7 @@ lia.command.add("doortogglelock", {
         Name = "adminStickToggleDoorLockName",
         Category = "doorManagement",
         SubCategory = "doorSettings",
-        TargetClass = "Door"
+        TargetClass = L("door")
     },
     onRun = function(client)
         local door = client:getTracedEntity()
@@ -82,7 +82,7 @@ lia.command.add("doortogglelock", {
                 door:Fire("unlock")
                 door:EmitSound("doors/door_latch1.wav")
                 client:notifyLocalized("doorToggleLocked", L("unlocked"))
-                lia.log.add(client, "toggleLock", door, "unlocked")
+                lia.log.add(client, "toggleLock", door, L("unlocked"))
             end
 
             local partner = door:getDoorPartner()
@@ -106,7 +106,7 @@ lia.command.add("doorbuy", {
         Name = "buyDoor",
         Category = "doorManagement",
         SubCategory = "doorActions",
-        TargetClass = "Door"
+        TargetClass = L("door")
     },
     onRun = function(client)
         if lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false) then
@@ -152,7 +152,7 @@ lia.command.add("doortoggleownable", {
         Name = "adminStickToggleDoorOwnableName",
         Category = "doorManagement",
         SubCategory = "doorSettings",
-        TargetClass = "Door"
+        TargetClass = L("door")
     },
     onRun = function(client)
         local door = client:getTracedEntity()
@@ -178,7 +178,7 @@ lia.command.add("doorresetdata", {
         Name = "adminStickResetDoorDataName",
         Category = "doorManagement",
         SubCategory = "doorMaintenance",
-        TargetClass = "Door"
+        TargetClass = L("door")
     },
     onRun = function(client)
         local door = client:getTracedEntity()
@@ -208,7 +208,7 @@ lia.command.add("doortoggleenabled", {
         Name = "adminStickToggleDoorEnabledName",
         Category = "doorManagement",
         SubCategory = "doorSettings",
-        TargetClass = "Door"
+        TargetClass = L("door")
     },
     onRun = function(client)
         local door = client:getTracedEntity()
@@ -234,7 +234,7 @@ lia.command.add("doortogglehidden", {
         Name = "adminStickToggleDoorHiddenName",
         Category = "doorManagement",
         SubCategory = "doorSettings",
-        TargetClass = "Door"
+        TargetClass = L("door")
     },
     onRun = function(client)
         local entity = client:GetEyeTrace().Entity
@@ -261,7 +261,7 @@ lia.command.add("doorsetprice", {
         Name = "adminStickSetDoorPriceName",
         Category = "doorManagement",
         SubCategory = "doorSettings",
-        TargetClass = "Door"
+        TargetClass = L("door")
     },
     onRun = function(client, arguments)
         local door = client:getTracedEntity()
@@ -288,7 +288,7 @@ lia.command.add("doorsettitle", {
         Name = "adminStickSetDoorTitleName",
         Category = "doorManagement",
         SubCategory = "doorSettings",
-        TargetClass = "Door"
+        TargetClass = L("door")
     },
     onRun = function(client, arguments)
         local door = client:getTracedEntity()
@@ -320,7 +320,7 @@ lia.command.add("savedoors", {
         Name = "adminStickSaveDoorsName",
         Category = "doorManagement",
         SubCategory = "doorMaintenance",
-        TargetClass = "Door"
+        TargetClass = L("door")
     },
     onRun = function(client)
         MODULE:SaveData()
@@ -337,7 +337,7 @@ lia.command.add("doorinfo", {
         Name = "adminStickDoorInfoName",
         Category = "doorManagement",
         SubCategory = "doorInformation",
-        TargetClass = "Door"
+        TargetClass = L("door")
     },
     onRun = function(client)
         local door = client:getTracedEntity()

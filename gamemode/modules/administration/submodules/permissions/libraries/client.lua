@@ -7,7 +7,7 @@ function MODULE:HUDPaint()
     local client = LocalPlayer()
     if not client:IsValid() or not client:IsPlayer() or not client:getChar() then return end
     if not client:isNoClipping() then return end
-    if not (client:hasPrivilege("No Clip ESP Outside Staff Character") or client:isStaffOnDuty()) then return end
+    if not (client:hasPrivilege(L("noClipESPOffsetStaff")) or client:isStaffOnDuty()) then return end
     if not lia.option.get("espEnabled", false) then return end
     for _, ent in ents.Iterator() do
         if not IsValid(ent) or ent == client or ent:IsWeapon() then continue end
@@ -15,7 +15,7 @@ function MODULE:HUDPaint()
         if not pos then continue end
         local kind, label, subLabel, baseColor
         if ent:IsPlayer() then
-            kind = "Players"
+            kind = L("players")
             subLabel = ent:Name():gsub("#", "\226\128\139#")
             if ent:getNetVar("cheater", false) then
                 label = string.upper(L("cheater"))
@@ -25,11 +25,11 @@ function MODULE:HUDPaint()
                 baseColor = lia.config.get("espPlayersColor") or Color(255, 255, 255)
             end
         elseif ent.isItem and ent:isItem() and lia.option.get("espItems", false) then
-            kind = "Items"
+            kind = L("items")
             label = ent.getItemTable and ent:getItemTable().name or L("unknown")
             baseColor = lia.config.get("espItemsColor") or Color(255, 255, 255)
         elseif lia.option.get("espEntities", false) and ent:GetClass():StartWith("lia_") then
-            kind = "Entities"
+            kind = L("entities")
             label = ent.PrintName or ent:GetClass()
             baseColor = lia.config.get("espEntitiesColor") or Color(255, 255, 255)
         end
@@ -41,7 +41,7 @@ function MODULE:HUDPaint()
         local _, textHeight = surface.GetTextSize("W")
         draw.SimpleTextOutlined(label, "liaMediumFont", screenPos.x, screenPos.y, Color(baseColor.r, baseColor.g, baseColor.b, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 200))
         if subLabel and subLabel ~= label then draw.SimpleTextOutlined(subLabel, "liaMediumFont", screenPos.x, screenPos.y + textHeight, Color(baseColor.r, baseColor.g, baseColor.b, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 200)) end
-        if kind == "Players" then
+        if kind == L("players") then
             local barW, barH = 100, 22
             local barX = screenPos.x - barW / 2
             local barY = screenPos.y + textHeight + 5
@@ -95,7 +95,7 @@ net.Receive("DisplayCharList", function()
     local columns = {
         {
             name = L("name"),
-            field = "Name"
+            field = L("name")
         },
         {
             name = L("description"),
@@ -103,11 +103,11 @@ net.Receive("DisplayCharList", function()
         },
         {
             name = L("faction"),
-            field = "Faction"
+            field = L("faction")
         },
         {
             name = L("banned"),
-            field = "Banned"
+            field = L("banned")
         },
         {
             name = L("banningAdminName"),
@@ -123,7 +123,7 @@ net.Receive("DisplayCharList", function()
         },
         {
             name = L("charMoney"),
-            field = "Money"
+            field = L("money")
         },
         {
             name = L("lastUsed"),

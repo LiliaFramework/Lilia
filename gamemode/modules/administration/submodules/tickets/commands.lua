@@ -8,7 +8,7 @@ lia.command.add("viewtickets", {
     onRun = function(client, arguments)
         local targetName = arguments[1]
         if not targetName then
-            client:notify(L("mustSpecifyPlayer"))
+            client:notifyLocalized("mustSpecifyPlayer")
             return
         end
 
@@ -24,7 +24,7 @@ lia.command.add("viewtickets", {
 
         MODULE:GetTicketsByRequester(steamID):next(function(tickets)
             if #tickets == 0 then
-                client:notify(L("noTicketsFound"))
+                client:notifyLocalized("noTicketsFound")
                 return
             end
 
@@ -61,7 +61,7 @@ lia.command.add("plyviewclaims", {
     onRun = function(client, arguments)
         local targetName = arguments[1]
         if not targetName then
-            client:notify(L("mustSpecifyPlayer"))
+            client:notifyLocalized("mustSpecifyPlayer")
             return
         end
 
@@ -75,7 +75,7 @@ lia.command.add("plyviewclaims", {
         MODULE:GetAllCaseClaims():next(function(caseclaims)
             local claim = caseclaims[steamID]
             if not claim then
-                client:notify(L("noClaimsFound"))
+                client:notifyLocalized("noClaimsFound")
                 return
             end
 
@@ -135,7 +135,7 @@ lia.command.add("viewallclaims", {
     onRun = function(client)
         MODULE:GetAllCaseClaims():next(function(caseclaims)
             if table.IsEmpty(caseclaims) then
-                client:notify(L("noClaimsRecorded"))
+                client:notifyLocalized("noClaimsRecorded")
                 return
             end
 
@@ -196,7 +196,7 @@ lia.command.add("viewclaims", {
     onRun = function(client)
         MODULE:GetAllCaseClaims():next(function(caseclaims)
             if table.IsEmpty(caseclaims) then
-                client:notify(L("noClaimsData"))
+                client:notifyLocalized("noClaimsData")
                 return
             end
 

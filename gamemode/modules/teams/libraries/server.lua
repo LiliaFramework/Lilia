@@ -214,7 +214,7 @@ end
 
 net.Receive("KickCharacter", function(_, client)
     local char = client:getChar()
-    local canManageAny = client:hasPrivilege("Can Manage Factions")
+    local canManageAny = client:hasPrivilege(L("canManageFactions"))
     local canKick = char and char:hasFlags("K")
     if not canKick and not canManageAny then return end
     local defaultFaction

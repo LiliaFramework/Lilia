@@ -66,7 +66,7 @@ function ITEM:wearOutfit(client, isForLoadout)
     self:call("onWear", client, nil, isForLoadout)
 end
 
-ITEM.functions.EquipUn = {
+ITEM.functions.Unequip = {
     name = "unequip",
     tip = "equipTip",
     icon = "icon16/cross.png",

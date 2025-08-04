@@ -1,6 +1,6 @@
 ﻿spawnmenu.AddContentType("inventoryitem", function(container, data)
     local client = LocalPlayer()
-    if not client:hasPrivilege("Can Use Item Spawner") then return end
+    if not client:hasPrivilege(L("canUseItemSpawner")) then return end
     local icon = vgui.Create("ContentIcon", container)
     icon:SetContentType("inventoryitem")
     icon:SetSpawnName(data.id)
@@ -82,8 +82,8 @@ function MODULE:PopulateInventoryItems(pnlContent, tree)
     end
 
     for category, itemList in SortedPairs(categorized) do
-        if category ~= "Unsorted" or #itemList > 0 then
-            local node = tree:AddNode(category == "Unsorted" and L("unsorted") or category, "icon16/picture.png")
+        if category ~= L("unsorted") or #itemList > 0 then
+            local node = tree:AddNode(category == L("unsorted") and L("unsorted") or category, "icon16/picture.png")
             node.DoPopulate = function(btn)
                 if btn.PropPanel then return end
                 btn.PropPanel = vgui.Create("ContentContainer", pnlContent)
@@ -107,7 +107,7 @@ end
 
 spawnmenu.AddCreationTab(L("inventoryItems"), function()
     local client = LocalPlayer()
-    if not IsValid(client) or not client.hasPrivilege or not client:hasPrivilege("Can Use Item Spawner") then
+    if not IsValid(client) or not client.hasPrivilege or not client:hasPrivilege(L("canUseItemSpawner")) then
         local pnl = vgui.Create("DPanel")
         pnl:Dock(FILL)
         pnl.Paint = function(_, w, h) draw.SimpleText(L("noItemSpawnerPermission"), "DermaDefault", w / 2, h / 2, Color(255, 0, 0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end

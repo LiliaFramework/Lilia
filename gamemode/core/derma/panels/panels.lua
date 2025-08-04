@@ -316,7 +316,7 @@ function QuickPanel:populateOptions()
     local cats = {}
     for k, v in pairs(lia.option.stored) do
         if v and (v.isQuick or v.data and v.data.isQuick) then
-            local cat = v.data and v.data.category or "General"
+            local cat = v.data and v.data.category or L("categoryGeneral")
             cats[cat] = cats[cat] or {}
             cats[cat][#cats[cat] + 1] = {
                 key = k,
@@ -336,8 +336,8 @@ function QuickPanel:populateOptions()
     end
 
     table.sort(names, function(a, b)
-        if a == "General" and b ~= "General" then return true end
-        if b == "General" and a ~= "General" then return false end
+        if a == L("categoryGeneral") and b ~= L("categoryGeneral") then return true end
+        if b == L("categoryGeneral") and a ~= L("categoryGeneral") then return false end
         return a < b
     end)
 

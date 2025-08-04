@@ -128,7 +128,7 @@ net.Receive("ChangeAttribute", function(_, client)
         return
     end
 
-    if mode == "Set" then
+    if mode == L("set") then
         if attribValue < 0 then
             client:notifyLocalized("attribNonNegative")
             return
@@ -137,7 +137,7 @@ net.Receive("ChangeAttribute", function(_, client)
         targetChar:setAttrib(attribKey, attribValue)
         client:notifyLocalized("attribSet", targetChar:getPlayer():Name(), L(lia.attribs.list[attribKey].name), attribValue)
         targetChar:getPlayer():notifyLocalized("yourAttributeSet", lia.attribs.list[attribKey].name, attribValue, client:Nick())
-    elseif mode == "Add" then
+    elseif mode == L("add") then
         if attribValue <= 0 then
             client:notifyLocalized("attribPositive")
             return

@@ -429,7 +429,7 @@ local function OpenRoster(panel, data)
             local parentList = self
             local steamID = line.rowData.steamID
             local function buildMenu(menu, ln, sID)
-                if sID and sID ~= "" and LocalPlayer():hasPrivilege("Can Manage Factions") and not isDefaultFaction then
+                if sID and sID ~= "" and LocalPlayer():hasPrivilege(L("canManageFactions")) and not isDefaultFaction then
                     menu:AddOption(L("kick"), function()
                         Derma_Query(L("kickConfirm"), L("confirm"), L("yes"), function()
                             net.Start("KickCharacter")
@@ -581,7 +581,7 @@ lia.net.readBigTable("liaStaffSummary", function(data)
         return col
     end
 
-    addSizedColumn("Player")
+    addSizedColumn(L("player"))
     addSizedColumn("Player Steam ID")
     addSizedColumn(L("usergroup"))
     addSizedColumn("Warning Count")

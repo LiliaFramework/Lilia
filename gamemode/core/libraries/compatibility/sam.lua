@@ -79,7 +79,7 @@ hook.Add("SAM.CanRunCommand", "liaSAM", function(client, _, _, cmd)
             return false
         end
 
-        if client:hasPrivilege(client, "Can Bypass Staff Faction SAM Command whitelist", nil) or client:isStaffOnDuty() then
+        if client:hasPrivilege(client, L("canBypassSAMFactionWhitelist"), nil) or client:isStaffOnDuty() then
             return true
         else
             client:notifyLocalized("staffRestrictedCommand")
@@ -177,24 +177,24 @@ lia.command.add("cleardecals", {
 lia.administrator.registerPrivilege({
     Name = L("canSeeSAMNotificationsOutsideStaff"),
     MinAccess = "superadmin",
-    Category = L("categorySAM")
+    Category = "SAM | Admin Mod"
 })
 
 lia.administrator.registerPrivilege({
     Name = L("canBypassSAMFactionWhitelist"),
     MinAccess = "superadmin",
-    Category = L("categorySAM")
+    Category = "SAM | Admin Mod"
 })
 
 lia.config.add("AdminOnlyNotification", "Admin Only Notifications", true, nil, {
     desc = "Restricts certain notifications to admins with specific permissions or those on duty.",
-    category = L("categorySAM"),
+    category = "SAM | Admin Mod",
     type = "Boolean"
 })
 
 lia.config.add("SAMEnforceStaff", "Enforce Staff Rank To SAM", true, nil, {
     desc = "Determines whether staff enforcement for SAM commands is enabled",
-    category = L("categorySAM"),
+    category = "SAM | Admin Mod",
     type = "Boolean"
 })
 

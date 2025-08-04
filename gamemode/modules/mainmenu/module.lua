@@ -27,7 +27,7 @@ else
     end
 
     function MODULE:chooseCharacter(id)
-        assert(isnumber(id), "id must be a number")
+        assert(isnumber(id), L("idMustBeNumber"))
         local d = deferred.new()
         net.Receive("liaCharChoose", function()
             local message = net.ReadString()
@@ -83,7 +83,7 @@ else
     end
 
     function MODULE:deleteCharacter(id)
-        assert(isnumber(id), "id must be a number")
+        assert(isnumber(id), L("idMustBeNumber"))
         net.Start("liaCharDelete")
         net.WriteUInt(id, 32)
         net.SendToServer()

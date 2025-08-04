@@ -254,13 +254,13 @@ local ConditionalFiles = {
     {
         path = "lilia/gamemode/core/libraries/compatibility/sam.lua",
         global = "sam",
-        name = "SAM",
+        name = "SAM | Admin Mod",
         realm = "shared"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/simfphys.lua",
         global = "simfphys",
-        name = "Simfphys",
+        name = "Simfphys Vehicles",
         realm = "shared"
     },
     {
@@ -389,7 +389,7 @@ end
 
 function lia.notifyAdmin(notification)
     for _, client in player.Iterator() do
-        if IsValid(client) and client:hasPrivilege("Can See Alting Notifications") then client:notify(notification) end
+        if IsValid(client) and client:hasPrivilege(L("canSeeAltingNotifications")) then client:notify(notification) end
     end
 end
 
@@ -579,8 +579,5 @@ for _, file in ipairs(ConditionalFiles) do
     end
 end
 
-if #loadedCompatibility > 0 then
-    lia.bootstrap(L("compatibility"), #loadedCompatibility == 1 and L("compatibilityLoadedSingle", loadedCompatibility[1]) or L("compatibilityLoadedMultiple", table.concat(loadedCompatibility, ", ")))
-end
-
+if #loadedCompatibility > 0 then lia.bootstrap(L("compatibility"), #loadedCompatibility == 1 and L("compatibilityLoadedSingle", loadedCompatibility[1]) or L("compatibilityLoadedMultiple", table.concat(loadedCompatibility, ", "))) end
 if game.IsDedicated() then concommand.Remove("gm_save") end

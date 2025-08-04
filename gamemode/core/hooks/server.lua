@@ -344,7 +344,7 @@ function GM:PostPlayerLoadout(client)
     end
 
     client:SetSkin(character:getSkin())
-    client:setNetVar("VoiceType", "Talking")
+    client:setNetVar("VoiceType", L("talking"))
 end
 
 function GM:ShouldSpawnClientRagdoll(client)
@@ -941,9 +941,9 @@ function ClientAddText(client, ...)
 end
 
 local TalkRanges = {
-    ["Whispering"] = 120,
-    ["Talking"] = 300,
-    ["Yelling"] = 600,
+    [L("whispering")] = 120,
+    [L("talking")] = 300,
+    [L("yelling")] = 600,
 }
 
 local function IsLineOfSightClear(listener, speaker)
@@ -969,7 +969,7 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     if speaker:getNetVar("liaGagged", false) then return false, false end
     if not speaker:getChar() or speaker:getLiliaData("VoiceBan", false) then return false, false end
     if not lia.config.get("IsVoiceEnabled", true) then return false, false end
-    local voiceType = speaker:getNetVar("VoiceType", "Talking")
+    local voiceType = speaker:getNetVar("VoiceType", L("talking"))
     local baseRange = TalkRanges[voiceType] or TalkRanges.Talking
     local clearLOS = IsLineOfSightClear(listener, speaker)
     local effectiveRange = clearLOS and baseRange or baseRange * 0.16

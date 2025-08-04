@@ -98,7 +98,7 @@ AddAction("changeToWhisper", {
     shouldShow = function(client) return client:getChar() and client:Alive() end,
     onRun = function(client)
         if CLIENT then return end
-        client:setNetVar("VoiceType", "Whispering")
+        client:setNetVar("VoiceType", L("whispering"))
         client:notifyLocalized("voiceModeSet", L("whispering"))
     end,
     runServer = true
@@ -108,7 +108,7 @@ AddAction("changeToTalk", {
     shouldShow = function(client) return client:getChar() and client:Alive() end,
     onRun = function(client)
         if CLIENT then return end
-        client:setNetVar("VoiceType", "Talking")
+        client:setNetVar("VoiceType", L("talking"))
         client:notifyLocalized("voiceModeSet", L("talking"))
     end,
     runServer = true
@@ -118,7 +118,7 @@ AddAction("changeToYell", {
     shouldShow = function(client) return client:getChar() and client:Alive() end,
     onRun = function(client)
         if CLIENT then return end
-        client:setNetVar("VoiceType", "Yelling")
+        client:setNetVar("VoiceType", L("yelling"))
         client:notifyLocalized("voiceModeSet", L("yelling"))
     end,
     runServer = true

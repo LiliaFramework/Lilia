@@ -27,7 +27,7 @@ function MODULE:RemoveWarning(charID, index)
 end
 
 net.Receive("RequestRemoveWarning", function(_, client)
-    if not client:hasPrivilege("Can Remove Warns") then return end
+    if not client:hasPrivilege(L("canRemoveWarns")) then return end
     local charID = net.ReadInt(32)
     local rowData = net.ReadTable()
     local warnIndex = tonumber(rowData.ID or rowData.index)

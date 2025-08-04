@@ -37,7 +37,7 @@ ITEM:hook("drop", function(item)
     end
 end)
 
-ITEM.functions.EquipUn = {
+ITEM.functions.Unequip = {
     name = "unequip",
     tip = "equipTip",
     icon = "icon16/cross.png",

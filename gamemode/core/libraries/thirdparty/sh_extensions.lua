@@ -123,7 +123,7 @@ local function GiveWeapon(ply, ent, args)
 
     if swep == nil then return end
     if IsValid(ply) then
-        local hasPrivilege = ply:hasPrivilege("Can Spawn SWEPs")
+        local hasPrivilege = ply:hasPrivilege(L("canSpawnSWEPs"))
         if (not swep.Spawnable or swep.AdminOnly) and not hasPrivilege then return end
         if not hook.Run("PlayerGiveSWEP", ply, className, swep) then return end
     end
@@ -197,7 +197,7 @@ properties.Add("lia_npc_weapon", {
             Header:SetText(CategoryName)
             PropPanel:Add(Header)
             for _, WeaponTable in SortedPairsByMemberValue(v, "PrintName") do
-                if WeaponTable.AdminOnly and not LocalPlayer():hasPrivilege("Can Spawn SWEPs") then continue end
+                if WeaponTable.AdminOnly and not LocalPlayer():hasPrivilege(L("canSpawnSWEPs")) then continue end
                 local icon = vgui.Create("ContentIcon", PropPanel)
                 icon:SetMaterial("entities/" .. WeaponTable.ClassName .. ".png")
                 icon:SetName(WeaponTable.PrintName or "#" .. WeaponTable.ClassName)
@@ -271,21 +271,21 @@ if SERVER then
 
     local SyncFuncs = {}
     SyncFuncs.prop_door_rotating = function(ent)
-        ent:SetNWBool("Locked", ent:GetInternalVariable("m_bLocked"))
+        ent:SetNWBool(L("locked"), ent:GetInternalVariable("m_bLocked"))
         local state = ent:GetInternalVariable("m_eDoorState")
         ent:SetNWBool("Closed", state == 0 or state == 3)
     end
 
-    SyncFuncs.func_door = function(ent) ent:SetNWBool("Locked", ent:GetInternalVariable("m_bLocked")) end
-    SyncFuncs.func_door_rotating = function(ent) ent:SetNWBool("Locked", ent:GetInternalVariable("m_bLocked")) end
+    SyncFuncs.func_door = function(ent) ent:SetNWBool(L("locked"), ent:GetInternalVariable("m_bLocked")) end
+    SyncFuncs.func_door_rotating = function(ent) ent:SetNWBool(L("locked"), ent:GetInternalVariable("m_bLocked")) end
     SyncFuncs.prop_vehicle_jeep = function(ent)
-        ent:SetNWBool("Locked", ent:GetInternalVariable("VehicleLocked"))
+        ent:SetNWBool(L("locked"), ent:GetInternalVariable("VehicleLocked"))
         ent:SetNWBool("HasDriver", IsValid(ent:GetDriver()))
         ent:SetNWBool("m_bRadarEnabled", ent:GetInternalVariable("m_bRadarEnabled"))
     end
 
     SyncFuncs.prop_vehicle_airboat = function(ent)
-        ent:SetNWBool("Locked", ent:GetInternalVariable("VehicleLocked"))
+        ent:SetNWBool(L("locked"), ent:GetInternalVariable("VehicleLocked"))
         ent:SetNWBool("HasDriver", IsValid(ent:GetDriver()))
     end
 
@@ -308,28 +308,28 @@ local ExplodeIcon = "icon16/bomb.png"
 local EnableIcon = "icon16/tick.png"
 local DisableIcon = "icon16/cross.png"
 local ToggleIcon = "icon16/arrow_switch.png"
-AddEntFireProperty("lia_door_open", "Open", 655, function(ent, ply)
+AddEntFireProperty("lia_door_open", L("open"), 655, function(ent, ply)
     if not ent:GetNWBool("Closed") and ent:GetClass() == "prop_door_rotating" then return false end
     return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door"}, ent, ply)
-end, "Open", "icon16/door_open.png")
+end, L("open"), "icon16/door_open.png")
 
-AddEntFireProperty("lia_door_close", "Close", 656, function(ent, ply)
+AddEntFireProperty("lia_door_close", L("close"), 656, function(ent, ply)
     if ent:GetNWBool("Closed") and ent:GetClass() == "prop_door_rotating" then return false end
     return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door"}, ent, ply)
-end, "Close", "icon16/door.png")
+end, L("close"), "icon16/door.png")
 
 AddEntFireProperty("lia_door_lock", "Lock", 657, function(ent, ply)
-    if ent:GetNWBool("Locked") and ent:GetClass() ~= "prop_vehicle_prisoner_pod" then return false end
+    if ent:GetNWBool(L("locked")) and ent:GetClass() ~= "prop_vehicle_prisoner_pod" then return false end
     return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door", "prop_vehicle_jeep", "prop_vehicle_airboat", "prop_vehicle_prisoner_pod"}, ent, ply)
 end, "Lock", "icon16/lock.png")
 
 AddEntFireProperty("lia_door_unlock", "Unlock", 658, function(ent, ply)
-    if not ent:GetNWBool("Locked") and ent:GetClass() ~= "prop_vehicle_prisoner_pod" then return false end
+    if not ent:GetNWBool(L("locked")) and ent:GetClass() ~= "prop_vehicle_prisoner_pod" then return false end
     return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door", "prop_vehicle_jeep", "prop_vehicle_airboat", "prop_vehicle_prisoner_pod"}, ent, ply)
 end, "Unlock", "icon16/lock_open.png")
 
-AddEntFireProperty("lia_func_movelinear_open", "Start", 655, "func_movelinear", "Open", "icon16/arrow_right.png")
-AddEntFireProperty("lia_func_movelinear_close", "Return", 656, "func_movelinear", "Close", "icon16/arrow_left.png")
+AddEntFireProperty("lia_func_movelinear_open", L("start"), 655, "func_movelinear", L("open"), "icon16/arrow_right.png")
+AddEntFireProperty("lia_func_movelinear_close", "Return", 656, "func_movelinear", L("close"), "icon16/arrow_left.png")
 AddEntFireProperty("lia_func_tracktrain_StartForward", "Start Forward", 655, function(ent, ply)
     if ent:GetNWInt("m_dir") == 1 then return false end
     return rb655_property_filter("func_tracktrain", ent, ply)
@@ -564,7 +564,7 @@ AddEntFireProperty("lia_func_rotating_stop", "Stop", 658, "func_rotating", "Stop
 AddEntFireProperty("lia_func_platrot_up", "Go Up", 655, "func_platrot", "GoUp", "icon16/arrow_up.png")
 AddEntFireProperty("lia_func_platrot_down", "Go Down", 656, "func_platrot", "GoDown", "icon16/arrow_down.png")
 AddEntFireProperty("lia_func_platrot_toggle", "Toggle", 657, "func_platrot", "Toggle", ToggleIcon)
-AddEntFireProperty("lia_func_train_start", "Start", 655, "func_train", "Start", "icon16/arrow_right.png")
+AddEntFireProperty("lia_func_train_start", L("start"), 655, "func_train", L("start"), "icon16/arrow_right.png")
 AddEntFireProperty("lia_func_train_stop", "Stop", 656, "func_train", "Stop", "icon16/arrow_left.png")
 AddEntFireProperty("lia_func_train_toggle", "Toggle", 657, "func_train", "Toggle", ToggleIcon)
 AddEntFunctionProperty("lia_item_suit", "Wear", 655, function(ent, ply)

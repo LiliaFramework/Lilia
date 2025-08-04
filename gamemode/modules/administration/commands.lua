@@ -5,7 +5,7 @@
     onRun = function(client)
         local secs = client:getPlayTime()
         if not secs then
-            client:notify(L("playtimeError"))
+            client:notifyLocalized("playtimeError")
             return
         end
 
@@ -61,7 +61,7 @@ lia.command.add("adminmode", {
                 client:setNetVar("OldCharID", nil)
                 lia.log.add(client, "adminMode", oldCharID, L("adminModeLogBack"))
             else
-                client:notify(L("noPrevChar"))
+                client:notifyLocalized("noPrevChar")
             end
         else
             lia.db.query(string.format("SELECT * FROM lia_characters WHERE steamID = \"%s\"", lia.db.escape(steamID)), function(data)
@@ -77,7 +77,7 @@ lia.command.add("adminmode", {
                     end
                 end
 
-                client:notify(L("noStaffChar"))
+                client:notifyLocalized("noStaffChar")
             end)
         end
     end
@@ -1896,7 +1896,7 @@ lia.command.add("chargiveitem", {
         if succ then
             target:notifyLocalized("itemCreated")
             if target ~= client then client:notifyLocalized("itemCreated") end
-            lia.log.add(client, "chargiveItem", lia.item.list[uniqueID] and lia.item.list[uniqueID].name or uniqueID, target, "Command")
+            lia.log.add(client, "chargiveItem", lia.item.list[uniqueID] and lia.item.list[uniqueID].name or uniqueID, target, L("command"))
         else
             target:notifyLocalized(err or "unknownError")
         end

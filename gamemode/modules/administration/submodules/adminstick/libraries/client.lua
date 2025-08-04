@@ -153,7 +153,7 @@ end
 local function HandleModerationOption(opt, tgt)
     if opt.name == "Ban" then
         OpenReasonUI(tgt, "banid")
-    elseif opt.name == "Kick" then
+    elseif opt.name == L("kick") then
         OpenReasonUI(tgt, "kick")
     else
         RunAdminCommand(opt.cmd, tgt)
@@ -582,7 +582,7 @@ function MODULE:OpenAdminStickUI(tgt)
             {
                 name = L("nameCopyFormat", tgt:Name()),
                 cmd = function()
-                    cl:notify(L("copiedToClipboard", tgt:Name(), "Name"))
+                    cl:notify(L("copiedToClipboard", tgt:Name(), L("name")))
                     SetClipboardText(tgt:Name())
                     AdminStickIsOpen = false
                 end,
@@ -591,7 +591,7 @@ function MODULE:OpenAdminStickUI(tgt)
             {
                 name = L("steamIDCopyFormat", tgt:SteamID()),
                 cmd = function()
-                    cl:notify(L("copiedToClipboard", tgt:Name(), "SteamID"))
+                    cl:notify(L("copiedToClipboard", tgt:Name(), L("steamID")))
                     SetClipboardText(tgt:SteamID())
                     AdminStickIsOpen = false
                 end,
@@ -616,7 +616,7 @@ function MODULE:OpenAdminStickUI(tgt)
         if v.AdminStick and istable(v.AdminStick) then
             local tc = v.AdminStick.TargetClass
             if tc then
-                if tc == "Door" and tgt:isDoor() or tc == tgtClass then
+                if tc == L("door") and tgt:isDoor() or tc == tgtClass then
                     table.insert(cmds, {
                         name = v.AdminStick.Name or k,
                         data = v,

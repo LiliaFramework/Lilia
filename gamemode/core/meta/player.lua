@@ -167,7 +167,7 @@ end
 function playerMeta:CanEditVendor(vendor)
     local hookResult = hook.Run("CanPerformVendorEdit", self, vendor)
     if hookResult ~= nil then return hookResult end
-    return self:hasPrivilege("Can Edit Vendors")
+    return self:hasPrivilege(L("canEditVendors"))
 end
 
 local function groupHasType(groupName, t)
