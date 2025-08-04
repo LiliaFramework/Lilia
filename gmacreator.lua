@@ -91,7 +91,7 @@ do
             if normalized:match(allow_pattern) then
                 for _, block_pattern in ipairs(blocklist) do
                     if normalized:match(block_pattern) then
-                        lia.error(L("gmaFileBlocked") .. " " .. normalized)
+                        print("Blocked ", normalized)
                         goto cont
                     end
                 end
@@ -105,7 +105,7 @@ do
             end
         end
 
-        lia.error(L("gmaFileNotWhitelisted", normalized))
+        print("Warning: File " .. normalized .. " not whitelisted. Skipping..")
         ::cont::
     end
 
