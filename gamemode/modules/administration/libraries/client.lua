@@ -416,8 +416,13 @@ function MODULE:PopulateAdminTabs(pages)
             name = L("flagsManagement"),
             drawFunc = function(panel)
                 flagsPanel = panel
-                net.Start("liaRequestAllFlags")
-                net.SendToServer()
+                if flagsData then
+                    OpenFlagsPanel(panel, flagsData)
+                    flagsData = nil
+                else
+                    net.Start("liaRequestAllFlags")
+                    net.SendToServer()
+                end
             end
         })
     end

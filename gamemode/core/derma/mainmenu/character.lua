@@ -513,7 +513,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     self.selectBtn.DoClick = function()
         if character:isBanned() then
             local characterName = character:getName()
-            Derma_Query("Your character: " .. characterName .. ", has been permanently killed. An administrator has approved this PK.\nPKs are a regular part of RP; you can always make a new character. Have fun!", "Permanent Kill", "I aknowledge.", function() end)
+            Derma_Query(L("pkDialogMessage", characterName), L("permaKillTitle"), L("iAcknowledge"), function() end)
         else
             lia.module.list["mainmenu"]:chooseCharacter(character:getID()):catch(function(err) if err and err ~= "" then LocalPlayer():notifyLocalized(err) end end)
             self:Remove()

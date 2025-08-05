@@ -22,16 +22,17 @@ function MODULE:HUDPaint()
                 baseColor = Color(255, 0, 0)
             else
                 label = subLabel
-                baseColor = lia.config.get("espPlayersColor") or Color(255, 255, 255)
+                baseColor = lia.option.get("espPlayersColor")
             end
         elseif ent.isItem and ent:isItem() and lia.option.get("espItems", false) then
             kind = L("items")
-            label = ent.getItemTable and ent:getItemTable().name or L("unknown")
-            baseColor = lia.config.get("espItemsColor") or Color(255, 255, 255)
+            local item = ent.getItemTable and ent:getItemTable()
+            label = item and item.getName and item:getName() or L("unknown")
+            baseColor = lia.option.get("espItemsColor")
         elseif lia.option.get("espEntities", false) and ent:GetClass():StartWith("lia_") then
             kind = L("entities")
             label = ent.PrintName or ent:GetClass()
-            baseColor = lia.config.get("espEntitiesColor") or Color(255, 255, 255)
+            baseColor = lia.option.get("espEntitiesColor")
         end
 
         if not kind then continue end
@@ -173,6 +174,7 @@ net.Receive("DisplayCharList", function()
                     local opt1 = dMenu:AddOption(L("banCharacter"), function() LocalPlayer():ConCommand('say "/charban ' .. ln.CharID .. '"') end)
                     opt1:SetIcon("icon16/cancel.png")
                 end
+
                 if lia.command.hasAccess(LocalPlayer(), "charunban") then
                     local opt2 = dMenu:AddOption(L("unbanCharacter"), function() LocalPlayer():ConCommand('say "/charunban ' .. ln.CharID .. '"') end)
                     opt2:SetIcon("icon16/accept.png")

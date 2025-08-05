@@ -475,14 +475,13 @@ local function OpenRoster(panel, data)
     end
 end
 
-lia.net.readBigTable("liaAllFlags", function(data)
-    if not IsValid(flagsPanel) then return end
-    flagsPanel:Clear()
-    local search = flagsPanel:Add("DTextEntry")
+function OpenFlagsPanel(panel, data)
+    panel:Clear()
+    local search = panel:Add("DTextEntry")
     search:Dock(TOP)
     search:SetPlaceholderText(L("search"))
     search:SetTextColor(Color(255, 255, 255))
-    local list = flagsPanel:Add("DListView")
+    local list = panel:Add("DListView")
     list:Dock(FILL)
     local function addSizedColumn(text)
         local col = list:AddColumn(text)
@@ -554,6 +553,14 @@ lia.net.readBigTable("liaAllFlags", function(data)
         end):SetIcon("icon16/flag_green.png")
 
         menu:Open()
+    end
+end
+
+lia.net.readBigTable("liaAllFlags", function(data)
+    flagsData = data or {}
+    if IsValid(flagsPanel) then
+        OpenFlagsPanel(flagsPanel, flagsData)
+        flagsData = nil
     end
 end)
 

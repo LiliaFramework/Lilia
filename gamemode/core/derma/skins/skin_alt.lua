@@ -350,5 +350,5 @@ function SKIN:PaintMenuBar(_, w, h)
     basePaint(w, h)
 end
 
-derma.DefineSkin("Lilia Alt Skin", "The alt skin for the Lilia framework.", SKIN)
+derma.DefineSkin("Lilia Alt Skin", L("liliaAltSkinDesc"), SKIN)
 derma.RefreshSkins()

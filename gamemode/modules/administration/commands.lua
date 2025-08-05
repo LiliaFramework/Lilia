@@ -221,7 +221,7 @@ lia.command.add("charkill", {
             local reason = data[reasonKey]
             local evidence = data[evidenceKey]
             if not (isstring(evidence) and evidence:match("^https?://")) then
-                client:notify("Evidence must be a valid URL.")
+                client:notifyLocalized("evidenceInvalidURL")
                 return
             end
 
