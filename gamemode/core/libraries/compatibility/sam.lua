@@ -165,8 +165,8 @@ end)
 
 lia.command.add("cleardecals", {
     adminOnly = true,
-    privilege = "Clear Decals",
-    desc = "cleardecalsDesc",
+    privilege = L("clearDecals"),
+    desc = L("cleardecalsDesc"),
     onRun = function()
         for _, v in player.Iterator() do
             v:ConCommand("r_cleardecals")
@@ -177,24 +177,24 @@ lia.command.add("cleardecals", {
 lia.administrator.registerPrivilege({
     Name = L("canSeeSAMNotificationsOutsideStaff"),
     MinAccess = "superadmin",
-    Category = "SAM | Admin Mod"
+    Category = L("categorySAM")
 })
 
 lia.administrator.registerPrivilege({
     Name = L("canBypassSAMFactionWhitelist"),
     MinAccess = "superadmin",
-    Category = "SAM | Admin Mod"
+    Category = L("categorySAM")
 })
 
-lia.config.add("AdminOnlyNotification", "Admin Only Notifications", true, nil, {
-    desc = "Restricts certain notifications to admins with specific permissions or those on duty.",
-    category = "SAM | Admin Mod",
+lia.config.add("AdminOnlyNotification", L("adminOnlyNotifications"), true, nil, {
+    desc = L("adminOnlyNotificationsDesc"),
+    category = L("categorySAM"),
     type = "Boolean"
 })
 
-lia.config.add("SAMEnforceStaff", "Enforce Staff Rank To SAM", true, nil, {
-    desc = "Determines whether staff enforcement for SAM commands is enabled",
-    category = "SAM | Admin Mod",
+lia.config.add("SAMEnforceStaff", L("samEnforceStaff"), true, nil, {
+    desc = L("samEnforceStaffDesc"),
+    category = L("categorySAM"),
     type = "Boolean"
 })
 

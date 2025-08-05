@@ -200,7 +200,7 @@ properties.Add("lia_npc_weapon", {
                 if WeaponTable.AdminOnly and not LocalPlayer():hasPrivilege(L("canSpawnSWEPs")) then continue end
                 local icon = vgui.Create("ContentIcon", PropPanel)
                 icon:SetMaterial("entities/" .. WeaponTable.ClassName .. ".png")
-                icon:SetName(WeaponTable.PrintName or "#" .. WeaponTable.ClassName)
+                icon:SetName(WeaponTable.PrintName and language.GetPhrase(WeaponTable.PrintName) or "#" .. WeaponTable.ClassName)
                 icon:SetAdminOnly(WeaponTable.AdminOnly or false)
                 icon.DoClick = function()
                     changeWep(self, ent, WeaponTable.ClassName)

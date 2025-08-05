@@ -31,13 +31,14 @@ function MODULE:CreateInformationButtons(pages)
         table.insert(pages, {
             name = L("factionRoster"),
             drawFunc = function(parent)
-                local sheet = vgui.Create("liaSheet", parent)
-                sheet:SetPlaceholderText(L("search"))
-                lia.gui.rosterSheet = sheet
+                local roster = vgui.Create("liaRoster", parent)
+                roster:SetRosterType("faction")
+                lia.gui.roster = roster
                 lia.gui.currentRosterType = "faction"
             end,
             onSelect = function()
-                if IsValid(lia.gui.rosterSheet) then
+                if IsValid(lia.gui.roster) then
+                    lia.gui.roster:SetRosterType("faction")
                     lia.gui.currentRosterType = "faction"
                     net.Start("RequestFactionRoster")
                     net.SendToServer()
@@ -49,13 +50,14 @@ function MODULE:CreateInformationButtons(pages)
         table.insert(pages, {
             name = L("classRoster"),
             drawFunc = function(parent)
-                local sheet = vgui.Create("liaSheet", parent)
-                sheet:SetPlaceholderText(L("search"))
-                lia.gui.rosterSheet = sheet
+                local roster = vgui.Create("liaRoster", parent)
+                roster:SetRosterType("class")
+                lia.gui.roster = roster
                 lia.gui.currentRosterType = "class"
             end,
             onSelect = function()
-                if IsValid(lia.gui.rosterSheet) then
+                if IsValid(lia.gui.roster) then
+                    lia.gui.roster:SetRosterType("class")
                     lia.gui.currentRosterType = "class"
                     net.Start("RequestClassRoster")
                     net.SendToServer()
@@ -65,7 +67,7 @@ function MODULE:CreateInformationButtons(pages)
     end
 end
 
-hook.Add("F1MenuClosed", "liaRosterSheetCleanup", function()
-    lia.gui.rosterSheet = nil
+hook.Add("F1MenuClosed", "liaRosterCleanup", function()
+    lia.gui.roster = nil
     lia.gui.currentRosterType = nil
 end)

@@ -1,4 +1,4 @@
-﻿lia.config.add("invW", "Inventory Width", 6, function(_, newW)
+﻿lia.config.add("invW", L("invWidth"), 6, function(_, newW)
     if not SERVER then return end
     for _, client in player.Iterator() do
         if not IsValid(client) then continue end
@@ -16,14 +16,14 @@
     local json = util.TableToJSON({newW})
     lia.db.query("UPDATE lia_invdata SET value = '" .. lia.db.escape(json) .. "' " .. "WHERE key = 'w' AND invID IN (SELECT invID FROM lia_inventories WHERE charID IS NOT NULL)")
 end, {
-    desc = "Defines the width of the default inventory.",
+    desc = L("invWidthDesc"),
     category = L("character"),
     type = "Int",
     min = 1,
     max = 10
 })
 
-lia.config.add("invH", "Inventory Height", 4, function(_, newH)
+lia.config.add("invH", L("invHeight"), 4, function(_, newH)
     if not SERVER then return end
     for _, client in player.Iterator() do
         if not IsValid(client) then continue end
@@ -41,7 +41,7 @@ lia.config.add("invH", "Inventory Height", 4, function(_, newH)
     local json = util.TableToJSON({newH})
     lia.db.query("UPDATE lia_invdata SET value = '" .. lia.db.escape(json) .. "' " .. "WHERE key = 'h' AND invID IN (SELECT invID FROM lia_inventories WHERE charID IS NOT NULL)")
 end, {
-    desc = "Defines the height of the default inventory.",
+    desc = L("invHeightDesc"),
     category = L("character"),
     type = "Int",
     min = 1,

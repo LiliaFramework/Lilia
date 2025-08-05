@@ -253,7 +253,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
         node.PropPanel:Add(header)
         for _, ent in SortedPairsByMemberValue(ents, "PrintName") do
             local t = {
-                nicename = ent.PrintName or ent.ClassName,
+                nicename = ent.PrintName and language.GetPhrase(ent.PrintName) or ent.ClassName,
                 spawnname = ent.ClassName,
                 material = "entities/" .. ent.ClassName .. ".png",
                 admin = ent.AdminOnly
@@ -364,7 +364,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
         node.PropPanel:Add(header)
         for _, ent in SortedPairsByMemberValue(vs, "PrintName") do
             local t = {
-                nicename = ent.PrintName or ent.ClassName,
+                nicename = ent.PrintName and language.GetPhrase(ent.PrintName) or ent.ClassName,
                 spawnname = ent.ClassName,
                 material = "entities/" .. ent.ClassName .. ".png",
                 admin = ent.AdminOnly
@@ -401,7 +401,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
         node.PropPanel:Add(header)
         for _, ent in SortedPairsByMemberValue(ws, "PrintName") do
             local t = {
-                nicename = ent.PrintName or ent.ClassName,
+                nicename = ent.PrintName and language.GetPhrase(ent.PrintName) or ent.ClassName,
                 spawnname = ent.ClassName,
                 material = "entities/" .. ent.ClassName .. ".png",
                 admin = ent.AdminOnly

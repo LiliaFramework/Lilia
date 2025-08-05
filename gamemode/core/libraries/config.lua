@@ -152,40 +152,40 @@ if SERVER then
     end
 end
 
-lia.config.add("MoneyModel", "Money Model", "models/props_lab/box01a.mdl", nil, {
-    desc = "Defines the model used for representing money in the game.",
+lia.config.add("MoneyModel", L("moneyModel"), "models/props_lab/box01a.mdl", nil, {
+    desc = L("moneyModelDesc"),
     category = L("money"),
     type = "Generic"
 })
 
-lia.config.add("MoneyLimit", "Money Limit", 0, nil, {
-    desc = "Sets the limit of money a player can have [0 for infinite].",
+lia.config.add("MoneyLimit", L("moneyLimit"), 0, nil, {
+    desc = L("moneyLimitDesc"),
     category = L("money"),
     type = "Int",
     min = 0,
     max = 1000000
 })
 
-lia.config.add("CurrencySymbol", "Currency Symbol", "", function(newVal) lia.currency.symbol = newVal end, {
-    desc = "Specifies the currency symbol used in the game.",
+lia.config.add("CurrencySymbol", L("currencySymbol"), "", function(newVal) lia.currency.symbol = newVal end, {
+    desc = L("currencySymbolDesc"),
     category = L("money"),
     type = "Generic"
 })
 
-lia.config.add("PKWorld", "PK World Deaths Count", false, nil, {
-    desc = "When marked for Perma Kill, does world deaths count as perma killing?",
+lia.config.add("PKWorld", L("pkWorld"), false, nil, {
+    desc = L("pkWorldDesc"),
     category = L("character"),
     type = "Boolean"
 })
 
-lia.config.add("CurrencySingularName", "Currency Singular Name", "Dollar", function(newVal) lia.currency.singular = newVal end, {
-    desc = "Singular name of the in-game currency.",
+lia.config.add("CurrencySingularName", L("currencySingularName"), "Dollar", function(newVal) lia.currency.singular = newVal end, {
+    desc = L("currencySingularNameDesc"),
     category = L("money"),
     type = "Generic"
 })
 
-lia.config.add("CurrencyPluralName", "Currency Plural Name", "Dollars", function(newVal) lia.currency.plural = newVal end, {
-    desc = "Plural name of the in-game currency.",
+lia.config.add("CurrencyPluralName", L("currencyPluralName"), "Dollars", function(newVal) lia.currency.plural = newVal end, {
+    desc = L("currencyPluralNameDesc"),
     category = L("money"),
     type = "Generic"
 })
@@ -195,7 +195,7 @@ lia.config.add("WalkSpeed", L("walkSpeed"), 130, function(_, newValue)
         client:SetWalkSpeed(newValue)
     end
 end, {
-    desc = "Controls how fast characters walk.",
+    desc = L("walkSpeedDesc"),
     category = L("character"),
     type = "Int",
     min = 50,
@@ -207,15 +207,15 @@ lia.config.add("RunSpeed", L("runSpeed"), 275, function(_, newValue)
         client:SetRunSpeed(newValue)
     end
 end, {
-    desc = "Controls how fast characters run.",
+    desc = L("runSpeedDesc"),
     category = L("character"),
     type = "Int",
     min = 100,
     max = 500
 })
 
-lia.config.add("WalkRatio", "Walk Ratio", 0.5, nil, {
-    desc = "Defines the walk speed ratio when holding the Alt key.",
+lia.config.add("WalkRatio", L("walkRatio"), 0.5, nil, {
+    desc = L("walkRatioDesc"),
     category = L("character"),
     type = "Float",
     min = 0.1,
@@ -223,14 +223,14 @@ lia.config.add("WalkRatio", "Walk Ratio", 0.5, nil, {
     decimals = 2
 })
 
-lia.config.add("AllowExistNames", "Allow Duplicate Names", true, nil, {
-    desc = "Determines whether duplicate character names are allowed.",
+lia.config.add("AllowExistNames", L("allowDuplicateNames"), true, nil, {
+    desc = L("allowDuplicateNamesDesc"),
     category = L("character"),
     type = "Boolean"
 })
 
-lia.config.add("WhitelistEnabled", "Enable or disable the Whitelist", false, nil, {
-    desc = "Determines whether the whitelist feature is enabled on the server.",
+lia.config.add("WhitelistEnabled", L("whitelistEnabled"), false, nil, {
+    desc = L("whitelistEnabledDesc"),
     category = L("categoryServer"),
     noNetworking = false,
     schemaOnly = false,
@@ -238,8 +238,8 @@ lia.config.add("WhitelistEnabled", "Enable or disable the Whitelist", false, nil
     type = "Boolean"
 })
 
-lia.config.add("BlacklistedEnabled", "Enable or disable the Blacklist", false, nil, {
-    desc = "Determines whether the blacklist feature is enabled on the server.",
+lia.config.add("BlacklistedEnabled", L("blacklistEnabled"), false, nil, {
+    desc = L("blacklistEnabledDesc"),
     category = L("categoryServer"),
     noNetworking = false,
     schemaOnly = false,
@@ -247,134 +247,134 @@ lia.config.add("BlacklistedEnabled", "Enable or disable the Blacklist", false, n
     type = "Boolean"
 })
 
-lia.config.add("MaxCharacters", "Max Characters", 5, nil, {
-    desc = "Sets the maximum number of characters a player can have.",
+lia.config.add("MaxCharacters", L("maxCharacters"), 5, nil, {
+    desc = L("maxCharactersDesc"),
     category = L("character"),
     type = "Int",
     min = 1,
     max = 10
 })
 
-lia.config.add("AllowPMs", "Allow Private Messages", true, nil, {
-    desc = "Determines whether private messages are allowed.",
+lia.config.add("AllowPMs", L("allowPMs"), true, nil, {
+    desc = L("allowPMsDesc"),
     category = L("categoryChat"),
     type = "Boolean"
 })
 
-lia.config.add("MinDescLen", "Minimum Description Length", 16, nil, {
-    desc = "Minimum length required for a character's description.",
+lia.config.add("MinDescLen", L("minDescriptionLength"), 16, nil, {
+    desc = L("minDescriptionLengthDesc"),
     category = L("character"),
     type = "Int",
     min = 10,
     max = 500
 })
 
-lia.config.add("SaveInterval", "Save Interval", 300, nil, {
-    desc = "Interval for character saves in seconds.",
+lia.config.add("SaveInterval", L("saveInterval"), 300, nil, {
+    desc = L("saveIntervalDesc"),
     category = L("character"),
     type = "Int",
     min = 60,
     max = 3600
 })
 
-lia.config.add("DefMoney", "Default Money", 0, nil, {
-    desc = "Specifies the default amount of money a player starts with.",
+lia.config.add("DefMoney", L("defaultMoney"), 0, nil, {
+    desc = L("defaultMoneyDesc"),
     category = L("character"),
     type = "Int",
     min = 0,
     max = 10000
 })
 
-lia.config.add("DataSaveInterval", "Data Save Interval", 600, nil, {
-    desc = "Time interval between data saves.",
-    category = "Data",
+lia.config.add("DataSaveInterval", L("dataSaveInterval"), 600, nil, {
+    desc = L("dataSaveIntervalDesc"),
+    category = L("categoryData"),
     type = "Int",
     min = 60,
     max = 3600
 })
 
-lia.config.add("CharacterDataSaveInterval", "Character Data Save Interval", 300, nil, {
-    desc = "Time interval between character data saves.",
-    category = "Data",
+lia.config.add("CharacterDataSaveInterval", L("characterDataSaveInterval"), 300, nil, {
+    desc = L("characterDataSaveIntervalDesc"),
+    category = L("categoryData"),
     type = "Int",
     min = 60,
     max = 3600
 })
 
-lia.config.add("SpawnTime", "Respawn Time", 5, nil, {
-    desc = "Time to respawn after death.",
+lia.config.add("SpawnTime", L("respawnTime"), 5, nil, {
+    desc = L("respawnTimeDesc"),
     category = L("death"),
     type = "Float",
     min = 1,
     max = 60
 })
 
-lia.config.add("TimeToEnterVehicle", "Vehicle Entry Time", 1, nil, {
-    desc = "Time [in seconds] required to enter a vehicle.",
+lia.config.add("TimeToEnterVehicle", L("timeToEnterVehicle"), 1, nil, {
+    desc = L("timeToEnterVehicleDesc"),
     category = L("categoryQualityOfLife"),
     type = "Float",
     min = 0.5,
     max = 10
 })
 
-lia.config.add("CarEntryDelayEnabled", "Car Entry Delay Enabled", true, nil, {
-    desc = "Determines if the car entry delay is applicable.",
-    category = "Timers",
+lia.config.add("CarEntryDelayEnabled", L("carEntryDelayEnabled"), true, nil, {
+    desc = L("carEntryDelayEnabledDesc"),
+    category = L("categoryTimers"),
     type = "Boolean"
 })
 
-lia.config.add("MaxChatLength", "Max Chat Length", 256, nil, {
-    desc = "Sets the maximum length of chat messages.",
-    category = "Visuals",
+lia.config.add("MaxChatLength", L("maxChatLength"), 256, nil, {
+    desc = L("maxChatLengthDesc"),
+    category = L("categoryVisuals"),
     type = "Int",
     min = 50,
     max = 1024
 })
 
-lia.config.add("SchemaYear", "Schema Year", 2025, nil, {
-    desc = "Year of the gamemode's schema.",
+lia.config.add("SchemaYear", L("schemaYear"), 2025, nil, {
+    desc = L("schemaYearDesc"),
     category = L("categoryGeneral"),
     type = "Int",
     min = 0,
     max = 999999
 })
 
-lia.config.add("AmericanDates", "American Dates", true, nil, {
-    desc = "Determines whether to use the American date format.",
+lia.config.add("AmericanDates", L("americanDates"), true, nil, {
+    desc = L("americanDatesDesc"),
     category = L("categoryGeneral"),
     type = "Boolean"
 })
 
-lia.config.add("AmericanTimeStamp", "American Timestamp", true, nil, {
-    desc = "Determines whether to use the American timestamp format.",
+lia.config.add("AmericanTimeStamp", L("americanTimeStamp"), true, nil, {
+    desc = L("americanTimeStampDesc"),
     category = L("categoryGeneral"),
     type = "Boolean"
 })
 
-lia.config.add("AdminConsoleNetworkLogs", "Admin Console Network Logs", true, nil, {
-    desc = "Specifies if the logging system should replicate to super admins' consoles.",
+lia.config.add("AdminConsoleNetworkLogs", L("adminConsoleNetworkLogs"), true, nil, {
+    desc = L("adminConsoleNetworkLogsDesc"),
     category = L("categoryLogging"),
     type = "Boolean"
 })
 
-lia.config.add("Color", "Theme Color", {
+lia.config.add("Color", L("themeColor"), {
     r = 37,
     g = 116,
     b = 108
 }, nil, {
-    desc = "Sets the theme color used throughout the gamemode.",
-    category = "Visuals",
+    desc = L("themeColorDesc"),
+    category = L("categoryVisuals"),
     type = "Color"
 })
 
-lia.config.add("CharMenuBGInputDisabled", "Character Menu BG Input Disabled", true, nil, {
-    desc = "Whether background input is disabled durinag character menu use",
+lia.config.add("CharMenuBGInputDisabled", L("charMenuBGInputDisabled"), true, nil, {
+    desc = L("charMenuBGInputDisabledDesc"),
     category = L("mainMenu"),
     type = "Boolean"
 })
 
-lia.config.add("AllowKeybindEditing", "Allow Keybind Editing", true, nil, {
-    desc = "Whether keybind editing is allowed",
+lia.config.add("AllowKeybindEditing", L("allowKeybindEditing"), true, nil, {
+    desc = L("allowKeybindEditingDesc"),
     category = L("categoryGeneral"),
     type = "Boolean"
 })

@@ -49,21 +49,21 @@ hook.Add("CheckValidSit", "liaSimfphys", function(client)
     if IsValid(vehicle) and vehicle:isSimfphysCar() then return false end
 end)
 
-lia.config.add("DamageInCars", "Take Damage in Cars", true, nil, {
-    desc = "Whether or not you take damage while in cars",
-    category = "Simfphys Vehicles",
+lia.config.add("DamageInCars", L("takeDamageInCars"), true, nil, {
+    desc = L("takeDamageInCarsDesc"),
+    category = L("simfphysVehicles"),
     type = "Boolean"
 })
 
-lia.config.add("CarEntryDelayEnabled", "Take Damage in Cars", true, nil, {
-    desc = "Whether or not you take damage while in cars",
-    category = "Simfphys Vehicles",
+lia.config.add("CarEntryDelayEnabled", L("carEntryDelayEnabled"), true, nil, {
+    desc = L("carEntryDelayEnabledDesc"),
+    category = L("simfphysVehicles"),
     type = "Boolean"
 })
 
-lia.config.add("TimeToEnterVehicle", "Time To Enter Vehicle", 4, nil, {
-    desc = "Defines the time to enter vehicle.",
-    category = "Simfphys Vehicles",
+lia.config.add("TimeToEnterVehicle", L("timeToEnterVehicle"), 4, nil, {
+    desc = L("timeToEnterVehicleDesc"),
+    category = L("simfphysVehicles"),
     type = "Int",
     min = 1,
     max = 20
@@ -72,7 +72,7 @@ lia.config.add("TimeToEnterVehicle", "Time To Enter Vehicle", 4, nil, {
 lia.administrator.registerPrivilege({
     Name = L("canEditSimfphysCars"),
     MinAccess = "superadmin",
-    Category = "Simfphys Vehicles"
+    Category = L("simfphysVehicles")
 })
 
 hook.Add("simfphysPhysicsCollide", "SIMFPHYS_simfphysPhysicsCollide", function() return true end)

@@ -70,7 +70,7 @@ function MODULE:HUDPaint()
             local wep = ent:GetActiveWeapon()
             if IsValid(wep) then
                 local ammo, reserve = wep:Clip1(), ent:GetAmmoCount(wep:GetPrimaryAmmoType())
-                local wepName = wep:GetPrintName()
+                local wepName = language.GetPhrase(wep:GetPrintName())
                 if ammo >= 0 and reserve >= 0 then wepName = wepName .. " [" .. ammo .. "/" .. reserve .. "]" end
                 draw.SimpleTextOutlined(wepName, "liaSmallFont", screenPos.x, barY + barH + 5, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, Color(0, 0, 0, 255))
             end
