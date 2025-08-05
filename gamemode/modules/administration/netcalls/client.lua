@@ -26,7 +26,6 @@ local function tableToString(tbl)
     return table.concat(out, ", ")
 end
 
--- Exposed globally so other modules can reuse the row info UI
 function openRowInfo(row)
     local columns = {
         {
@@ -64,7 +63,6 @@ function openRowInfo(row)
     lia.util.CreateTableUI(L("rowDetailsTitle"), columns, rows)
 end
 
--- Exposed globally so other modules can reuse the decoded table UI
 function openDecodedTable(tableName, columns, data)
     local columnInfo = {}
     for _, col in ipairs(columns or {}) do
@@ -353,19 +351,11 @@ net.Receive("liaAllPKs", function()
         if line.charID then
             local owner = line.steamID and lia.util.getBySteamID(line.steamID)
             if IsValid(owner) then
-                if lia.command.hasAccess(LocalPlayer(), "charban") then
-                    menu:AddOption(L("banCharacter"), function() LocalPlayer():ConCommand('say "/charban ' .. line.charID .. '"') end):SetIcon("icon16/cancel.png")
-                end
-                if lia.command.hasAccess(LocalPlayer(), "charunban") then
-                    menu:AddOption(L("unbanCharacter"), function() LocalPlayer():ConCommand('say "/charunban ' .. line.charID .. '"') end):SetIcon("icon16/accept.png")
-                end
+                if lia.command.hasAccess(LocalPlayer(), "charban") then menu:AddOption(L("banCharacter"), function() LocalPlayer():ConCommand('say "/charban ' .. line.charID .. '"') end):SetIcon("icon16/cancel.png") end
+                if lia.command.hasAccess(LocalPlayer(), "charunban") then menu:AddOption(L("unbanCharacter"), function() LocalPlayer():ConCommand('say "/charunban ' .. line.charID .. '"') end):SetIcon("icon16/accept.png") end
             else
-                if lia.command.hasAccess(LocalPlayer(), "charbanoffline") then
-                    menu:AddOption(L("banCharacterOffline"), function() LocalPlayer():ConCommand('say "/charbanoffline ' .. line.charID .. '"') end):SetIcon("icon16/cancel.png")
-                end
-                if lia.command.hasAccess(LocalPlayer(), "charunbanoffline") then
-                    menu:AddOption(L("unbanCharacterOffline"), function() LocalPlayer():ConCommand('say "/charunbanoffline ' .. line.charID .. '"') end):SetIcon("icon16/accept.png")
-                end
+                if lia.command.hasAccess(LocalPlayer(), "charbanoffline") then menu:AddOption(L("banCharacterOffline"), function() LocalPlayer():ConCommand('say "/charbanoffline ' .. line.charID .. '"') end):SetIcon("icon16/cancel.png") end
+                if lia.command.hasAccess(LocalPlayer(), "charunbanoffline") then menu:AddOption(L("unbanCharacterOffline"), function() LocalPlayer():ConCommand('say "/charunbanoffline ' .. line.charID .. '"') end):SetIcon("icon16/accept.png") end
             end
         end
 
@@ -438,9 +428,7 @@ local function OpenRoster(panel, data)
                         end, L("no"))
                     end):SetIcon("icon16/user_delete.png")
 
-                    if lia.command.hasAccess(LocalPlayer(), "charlist") then
-                        menu:AddOption(L("viewCharacterList"), function() LocalPlayer():ConCommand("say /charlist " .. sID) end):SetIcon("icon16/page_copy.png")
-                    end
+                    if lia.command.hasAccess(LocalPlayer(), "charlist") then menu:AddOption(L("viewCharacterList"), function() LocalPlayer():ConCommand("say /charlist " .. sID) end):SetIcon("icon16/page_copy.png") end
                 end
 
                 menu:AddOption(L("copyRow"), function()
@@ -589,17 +577,17 @@ lia.net.readBigTable("liaStaffSummary", function(data)
     end
 
     addSizedColumn(L("player"))
-    addSizedColumn("Player Steam ID")
+    addSizedColumn(L("playerSteamID"))
     addSizedColumn(L("usergroup"))
-    addSizedColumn("Warning Count")
-    addSizedColumn("Ticket Count")
-    addSizedColumn("Kick Count")
-    addSizedColumn("Kill Count")
-    addSizedColumn("Respawn Count")
-    addSizedColumn("Blind Count")
-    addSizedColumn("Mute Count")
-    addSizedColumn("Jail Count")
-    addSizedColumn("Strip Count")
+    addSizedColumn(L("warningCount"))
+    addSizedColumn(L("ticketCount"))
+    addSizedColumn(L("kickCount"))
+    addSizedColumn(L("killCount"))
+    addSizedColumn(L("respawnCount"))
+    addSizedColumn(L("blindCount"))
+    addSizedColumn(L("muteCount"))
+    addSizedColumn(L("jailCount"))
+    addSizedColumn(L("stripCount"))
     local function populate(filter)
         list:Clear()
         filter = string.lower(filter or "")
@@ -628,13 +616,9 @@ lia.net.readBigTable("liaStaffSummary", function(data)
         local menu = DermaMenu()
         local steamID = line:GetColumnText(2)
         local warningCount = tonumber(line:GetColumnText(4)) or 0
-        if warningCount > 0 and lia.command.hasAccess(LocalPlayer(), "viewwarnsissued") then
-            menu:AddOption(L("viewWarningsIssued"), function() LocalPlayer():ConCommand("say /viewwarnsissued " .. steamID) end):SetIcon("icon16/error.png")
-        end
+        if warningCount > 0 and lia.command.hasAccess(LocalPlayer(), "viewwarnsissued") then menu:AddOption(L("viewWarningsIssued"), function() LocalPlayer():ConCommand("say /viewwarnsissued " .. steamID) end):SetIcon("icon16/error.png") end
         local ticketCount = tonumber(line:GetColumnText(5)) or 0
-        if ticketCount > 0 and lia.command.hasAccess(LocalPlayer(), "plyviewclaims") then
-            menu:AddOption(L("viewTicketClaims"), function() LocalPlayer():ConCommand("say /plyviewclaims " .. steamID) end):SetIcon("icon16/page_white_text.png")
-        end
+        if ticketCount > 0 and lia.command.hasAccess(LocalPlayer(), "plyviewclaims") then menu:AddOption(L("viewTicketClaims"), function() LocalPlayer():ConCommand("say /plyviewclaims " .. steamID) end):SetIcon("icon16/page_white_text.png") end
         menu:AddOption(L("copyRow"), function()
             local rowString = ""
             for i, column in ipairs(self.Columns or {}) do
@@ -738,9 +722,7 @@ lia.net.readBigTable("liaAllPlayers", function(players)
         if not IsValid(line) or not line.steamID then return end
         local parentList = self
         requestPlayerCharacters(line.steamID, line, function(menu, ln, steamID)
-            if lia.command.hasAccess(LocalPlayer(), "charlist") then
-                menu:AddOption(L("viewCharacterList"), function() LocalPlayer():ConCommand("say /charlist " .. steamID) end):SetIcon("icon16/page_copy.png")
-            end
+            if lia.command.hasAccess(LocalPlayer(), "charlist") then menu:AddOption(L("viewCharacterList"), function() LocalPlayer():ConCommand("say /charlist " .. steamID) end):SetIcon("icon16/page_copy.png") end
             menu:AddOption(L("copyRow"), function()
                 local rowString = ""
                 for i, column in ipairs(parentList.Columns or {}) do
@@ -754,12 +736,8 @@ lia.net.readBigTable("liaAllPlayers", function(players)
 
             menu:AddOption(L("copySteamID"), function() SetClipboardText(steamID) end):SetIcon("icon16/page_copy.png")
             menu:AddOption(L("openSteamProfile"), function() gui.OpenURL("https://steamcommunity.com/profiles/" .. util.SteamIDTo64(steamID)) end):SetIcon("icon16/world.png")
-            if lia.command.hasAccess(LocalPlayer(), "viewwarns") then
-                menu:AddOption(L("viewWarnings"), function() LocalPlayer():ConCommand("say /viewwarns " .. steamID) end):SetIcon("icon16/error.png")
-            end
-            if lia.command.hasAccess(LocalPlayer(), "viewtickets") then
-                menu:AddOption(L("viewTicketRequests"), function() LocalPlayer():ConCommand("say /viewtickets " .. steamID) end):SetIcon("icon16/help.png")
-            end
+            if lia.command.hasAccess(LocalPlayer(), "viewwarns") then menu:AddOption(L("viewWarnings"), function() LocalPlayer():ConCommand("say /viewwarns " .. steamID) end):SetIcon("icon16/error.png") end
+            if lia.command.hasAccess(LocalPlayer(), "viewtickets") then menu:AddOption(L("viewTicketRequests"), function() LocalPlayer():ConCommand("say /viewtickets " .. steamID) end):SetIcon("icon16/help.png") end
         end)
     end
 end)

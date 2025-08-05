@@ -24,7 +24,7 @@
 end)
 
 net.Receive("liaRequestTableData", function(_, client)
-    if not client:hasPrivilege("View DB Tables") then return end
+    if not client:hasPrivilege(L("View DB Tables")) then return end
     local tbl = net.ReadString()
     if not tbl or tbl == "" then return end
     lia.db.query("SELECT * FROM " .. lia.db.escapeIdentifier(tbl), function(res)
@@ -36,7 +36,7 @@ net.Receive("liaRequestTableData", function(_, client)
 end)
 
 net.Receive("lia_managesitrooms_action", function(_, client)
-    if not client:hasPrivilege("Manage SitRooms") then return end
+    if not client:hasPrivilege(L("Manage SitRooms")) then return end
     local action = net.ReadUInt(2)
     local name = net.ReadString()
     local rooms = lia.data.get("sitrooms", {})
@@ -68,7 +68,7 @@ net.Receive("lia_managesitrooms_action", function(_, client)
 end)
 
 net.Receive("liaRequestAllPKs", function(_, client)
-    if not client:hasPrivilege("Manage Characters") then return end
+    if not client:hasPrivilege(L("Manage Characters")) then return end
     lia.db.query("SELECT * FROM lia_permakills", function(data)
         net.Start("liaAllPKs")
         net.WriteTable(data or {})
@@ -131,7 +131,7 @@ net.Receive("liaRequestFactionRoster", function(_, client)
 end)
 
 net.Receive("liaRequestFullCharList", function(_, client)
-    if not IsValid(client) or not client:hasPrivilege("List Characters") then return end
+    if not IsValid(client) or not client:hasPrivilege(L("List Characters")) then return end
     lia.db.query([[SELECT c.id, c.name, c.`desc`, c.faction, c.steamID, c.lastJoinTime, c.banned, c.playtime, c.money, d.value AS charBanInfo
 FROM lia_characters AS c
 LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo']], function(data)
@@ -157,7 +157,7 @@ LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo']], func
                 Desc = row.desc,
                 Faction = row.faction,
                 SteamID = steamID,
-                LastUsed = stored and "Online" or row.lastJoinTime,
+                LastUsed = stored and L("onlineNow") or row.lastJoinTime,
                 Banned = isBanned,
                 PlayTime = playTime,
                 Money = tonumber(row.money) or 0
@@ -225,7 +225,7 @@ net.Receive("liaModifyFlags", function(_, client)
 end)
 
 net.Receive("liaRequestDatabaseView", function(_, client)
-    if not IsValid(client) or not client:hasPrivilege("View DB Tables") then return end
+    if not IsValid(client) or not client:hasPrivilege(L("View DB Tables")) then return end
     lia.db.getTables():next(function(tables)
         tables = tables or {}
         local data = {}
@@ -343,7 +343,7 @@ local function buildSummary()
 end
 
 net.Receive("liaRequestStaffSummary", function(_, client)
-    if not client:hasPrivilege("View Staff Management") then return end
+    if not client:hasPrivilege(L("View Staff Management")) then return end
     buildSummary():next(function(data) lia.net.writeBigTable(client, "liaStaffSummary", data) end)
 end)
 

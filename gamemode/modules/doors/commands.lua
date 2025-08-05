@@ -77,7 +77,7 @@ lia.command.add("doortogglelock", {
                 door:Fire("lock")
                 door:EmitSound("doors/door_latch3.wav")
                 client:notifyLocalized("doorToggleLocked", L("locked"):lower())
-                lia.log.add(client, "toggleLock", door, "locked")
+                lia.log.add(client, "toggleLock", door, L("locked"))
             else
                 door:Fire("unlock")
                 door:EmitSound("doors/door_latch1.wav")

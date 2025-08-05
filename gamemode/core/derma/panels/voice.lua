@@ -1,8 +1,8 @@
 ﻿VoicePanels = {}
 local ICON_MAP = {
-    Whispering = "whispertalk.png",
-    Yelling = "yelltalk.png",
-    Talking = "normaltalk.png"
+    [L("whispering")] = "whispertalk.png",
+    [L("yelling")] = "yelltalk.png",
+    [L("talking")] = "normaltalk.png"
 }
 
 local PANEL = {}
@@ -80,7 +80,7 @@ local function CreateVoicePanelList()
         local pnl = VoicePanels[LocalPlayer()]
         if not IsValid(pnl) then return end
         local vt = LocalPlayer():getNetVar("VoiceType", L("talking"))
-        draw.SimpleText(L("voiceModeStatus", L(vt:lower())), "liaMediumFont", w / 2, h, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+        draw.SimpleText(L("voiceModeStatus", vt), "liaMediumFont", w / 2, h, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
     end
 end
 

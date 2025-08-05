@@ -9,7 +9,7 @@ lia.command.add("recogwhisper", {
     privilege = "Manage Recognition",
     adminOnly = true,
     syntax = "[player Name]",
-    desc = L("recogWhisperDesc"),
+    desc = "recogWhisperDesc",
     AdminStick = {
         Name = "recogWhisperStickName",
         Category = "moderationTools",
@@ -23,7 +23,7 @@ lia.command.add("recognormal", {
     privilege = "Manage Recognition",
     adminOnly = true,
     syntax = "[player Name]",
-    desc = L("recogNormalDesc"),
+    desc = "recogNormalDesc",
     AdminStick = {
         Name = "recogNormalStickName",
         Category = "moderationTools",
@@ -37,7 +37,7 @@ lia.command.add("recogyell", {
     privilege = "Manage Recognition",
     adminOnly = true,
     syntax = "[player Name]",
-    desc = L("recogYellDesc"),
+    desc = "recogYellDesc",
     AdminStick = {
         Name = "recogYellStickName",
         Category = "moderationTools",
@@ -51,7 +51,7 @@ lia.command.add("recogbots", {
     privilege = "Manage Recognition",
     superAdminOnly = true,
     syntax = "[string Range optional] [string Name optional]",
-    desc = L("recogBotsDesc"),
+    desc = "recogBotsDesc",
     AdminStick = {
         Name = "recogBotsStickName",
         Category = "moderationTools",

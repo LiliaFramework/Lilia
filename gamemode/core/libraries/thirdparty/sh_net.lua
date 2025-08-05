@@ -1,4 +1,4 @@
-﻿local NetworkStringToIDCache = {}
+local NetworkStringToIDCache = {}
 local pon = {}
 _G.pon = pon
 local type, count = type, table.Count
@@ -123,7 +123,7 @@ do
     encode['PhysObj'] = encode['Entity']
     encode['nil'] = function() output[#output + 1] = '?' end
     encode.__index = function(key)
-        lia.error('Type: ' .. key .. ' can not be encoded. Encoded as as pass-over value.')
+        lia.error(L('netTypeCannotEncode', key))
         return encode['nil']
     end
 
@@ -195,7 +195,7 @@ do
             if not k then continue end
             tv = sub(str, index, index)
             index = index + 1
-            if not self[tv] then lia.error("did not find type: " .. tv) end
+            if not self[tv] then lia.error(L("netDidNotFindType", tv)) end
             index, v = self[tv](self, index, str, cache)
             cur[k] = v
         end
@@ -384,7 +384,7 @@ if SERVER then
                     if bStatus then
                         netstream.stored[player.nsDataStreamName](player, unpack(value))
                     else
-                        lia.error("NetStream: '" .. NS_DS_NAME .. "'\n" .. value .. "\n")
+                        lia.error(L("netstreamError", NS_DS_NAME, value))
                     end
                 end
 
@@ -417,7 +417,7 @@ else
             if bStatus then
                 netstream.stored[NS_DS_NAME](unpack(value))
             else
-                lia.error("NetStream: '" .. NS_DS_NAME .. "'\n" .. value .. "\n")
+                lia.error(L("netstreamError", NS_DS_NAME, value))
             end
         end
 

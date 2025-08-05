@@ -1,8 +1,8 @@
 lia.class = lia.class or {}
 lia.class.list = lia.class.list or {}
 function lia.class.register(uniqueID, data)
-    assert(isstring(uniqueID), "uniqueID must be a string")
-    assert(istable(data), "data must be a table")
+    assert(isstring(uniqueID), L("classUniqueIDString"))
+    assert(istable(data), L("classDataTable"))
 
     local index = #lia.class.list + 1
     local existing

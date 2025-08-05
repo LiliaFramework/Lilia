@@ -1084,7 +1084,7 @@ end
 gameevent.Listen("server_addban")
 gameevent.Listen("server_removeban")
 hook.Add("server_addban", "LiliaLogServerBan", function(data)
-    lia.admin(string.format("[BAN] %s (%s) was banned for %d minute(s): %s", data.name, data.networkid, data.ban_length, data.ban_reason))
+    lia.admin(L("banLogFormat", data.name, data.networkid, data.ban_length, data.ban_reason))
     lia.db.insertTable({
         player = data.name or "",
         playerSteamID = data.networkid,
@@ -1097,6 +1097,6 @@ hook.Add("server_addban", "LiliaLogServerBan", function(data)
 end)
 
 hook.Add("server_removeban", "LiliaLogServerUnban", function(data)
-    lia.admin("[UNBAN] " .. data.networkid .. " was unbanned.")
+    lia.admin(L("unbanLogFormat", data.networkid))
     lia.db.query("DELETE FROM lia_bans WHERE playerSteamID = " .. lia.db.convertDataType(data.networkid))
 end)

@@ -5,14 +5,14 @@ ITEM.height = 1
 ITEM.ammo = "pistol"
 ITEM.category = L("itemCatAmmunition")
 ITEM.functions.use = {
-    name = "load",
-    tip = "useTip",
+    name = L("load"),
+    tip = L("useTip"),
     icon = "icon16/add.png",
     isMulti = true,
     multiOptions = function(item)
         local options = {}
         table.insert(options, {
-            name = "ammoLoadAll",
+            name = L("ammoLoadAll"),
             data = 0,
         })
 
@@ -26,7 +26,7 @@ ITEM.functions.use = {
         end
 
         table.insert(options, {
-            name = "ammoLoadCustom",
+            name = L("ammoLoadCustom"),
             data = -1,
         })
         return options

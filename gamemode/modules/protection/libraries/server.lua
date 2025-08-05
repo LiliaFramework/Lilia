@@ -329,14 +329,14 @@ end
 
 function MODULE:PlayerUse(client)
     if IsCheater(client) then
-        LogCheaterAction(client, "use entity")
+        LogCheaterAction(client, L("use") .. " " .. L("entity"))
         return false
     end
 end
 
 function MODULE:CanPlayerInteractItem(client, action)
     if IsCheater(client) then
-        LogCheaterAction(client, action .. " item")
+        LogCheaterAction(client, action .. " " .. L("item"))
         return false
     end
 end

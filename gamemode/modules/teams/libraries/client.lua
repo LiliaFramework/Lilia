@@ -20,7 +20,7 @@ end
 
 function MODULE:CreateMenuButtons(tabs)
     local joinable = lia.class.retrieveJoinable(LocalPlayer())
-    if #joinable > 1 then tabs["classes"] = function(panel) panel:Add("liaClasses") end end
+    if #joinable > 1 then tabs[L("classes")] = function(panel) panel:Add("liaClasses") end end
 end
 
 function MODULE:CreateInformationButtons(pages)

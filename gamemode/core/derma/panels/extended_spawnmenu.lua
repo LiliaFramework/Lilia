@@ -74,7 +74,7 @@ registerContentType("sound", function(icon) icon:SetMaterial("icon16/sound.png")
         action = function(p) SetClipboardText(p) end
     },
     {
-        text = "Stop all sounds",
+        text = L("stopAllSounds"),
         icon = "icon16/sound_mute.png",
         action = function() RunConsoleCommand("stopsound") end
     },
@@ -109,7 +109,9 @@ end, {
         action = function(p) SetClipboardText(p) end
     },
     {
-        text = function(p) return isMaterialUsable(p) and "Use with Material Tool" or "Try with Material Tool (may not work)" end,
+        text = function(p)
+            return isMaterialUsable(p) and L("useWithMaterialTool") or L("tryWithMaterialTool")
+        end,
         icon = "icon16/pencil.png",
         action = function(p)
             RunConsoleCommand("material_override", p)
@@ -239,7 +241,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
     node.DoClick = function() pnlContent:SwitchPanel(node.PropPanel) end
     local categorized = {}
     for _, ent in pairs(list.Get("SpawnableEntities") or {}) do
-        local cat = ent.Category or "Other"
+        local cat = ent.Category or L("other")
         categorized[cat] = categorized[cat] or {}
         table.insert(categorized[cat], ent)
     end
@@ -274,7 +276,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
     node.DoClick = function() pnlContent:SwitchPanel(node.PropPanel) end
     local categorized = {}
     for name, pp in pairs(list.Get("PostProcess") or {}) do
-        pp.category = pp.category or "Other"
+        pp.category = pp.category or L("other")
         pp.name = name
         categorized[pp.category] = categorized[pp.category] or {}
         table.insert(categorized[pp.category], pp)
@@ -313,7 +315,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
     node.DoClick = function() pnlContent:SwitchPanel(node.PropPanel) end
     local cats = {}
     for className, ent in pairs(list.Get("NPC") or {}) do
-        local cat = ent.Category or "Other"
+        local cat = ent.Category or L("other")
         cats[cat] = cats[cat] or {}
         cats[cat][className] = ent
     end
@@ -349,7 +351,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
     node.DoClick = function() pnlContent:SwitchPanel(node.PropPanel) end
     local cats = {}
     for className, v in pairs(list.Get("Vehicles") or {}) do
-        v.Category = v.Category or "Other"
+        v.Category = v.Category or L("other")
         v.ClassName, v.PrintName, v.ScriptedEntityType = className, v.Name, "vehicle"
         cats[v.Category] = cats[v.Category] or {}
         table.insert(cats[v.Category], v)
@@ -386,7 +388,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
     local cats = {}
     for _, w in pairs(list.Get("Weapon") or {}) do
         if w.Spawnable or w.AdminSpawnable then
-            local cat = w.Category or "Other"
+            local cat = w.Category or L("other")
             cats[cat] = cats[cat] or {}
             table.insert(cats[cat], w)
         end

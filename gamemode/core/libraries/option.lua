@@ -1,9 +1,9 @@
 ﻿lia.option = lia.option or {}
 lia.option.stored = lia.option.stored or {}
 function lia.option.add(key, name, desc, default, callback, data)
-    assert(isstring(key), "Expected option key to be a string, got " .. type(key))
-    assert(isstring(name), "Expected option name to be a string, got " .. type(name))
-    assert(istable(data), "Expected option data to be a table, got " .. type(data))
+    assert(isstring(key), L("optionKeyString", type(key)))
+    assert(isstring(name), L("optionNameString", type(name)))
+    assert(istable(data), L("optionDataTable", type(data)))
     local t = type(default)
     local optionType = t == "boolean" and "Boolean" or t == "number" and (math.floor(default) == default and "Int" or "Float") or t == "table" and default.r and default.g and default.b and "Color" or "Generic"
     if optionType == "Int" or optionType == "Float" then
@@ -457,20 +457,20 @@ lia.option.add("descriptionWidth", L("descriptionWidth"), L("descriptionWidthDes
     decimals = 2
 })
 
-lia.option.add("invertWeaponScroll", "Invert Weapon Scroll", "Invert the weapon selection scroll direction", false, nil, {
-    category = "Weapon Selector",
+lia.option.add("invertWeaponScroll", L("invertWeaponScroll"), L("invertWeaponScrollDesc"), false, nil, {
+    category = L("categoryWeaponSelector"),
     isQuick = true,
 })
 
-lia.option.add("autoDownloadWorkshop", "Auto Workshop Download", "Automatically download server Workshop content", nil, nil, {
-    category = "Workshop",
+lia.option.add("autoDownloadWorkshop", L("autoDownloadWorkshop"), L("autoDownloadWorkshopDesc"), nil, nil, {
+    category = L("categoryWorkshop"),
     type = "Boolean",
     isQuick = true,
     shouldNetwork = true
 })
 
-lia.option.add("espEnabled", "ESP Enabled", "Toggle ESP features", false, nil, {
-    category = "ESP",
+lia.option.add("espEnabled", L("espEnabled"), L("espEnabledDesc"), false, nil, {
+    category = L("categoryESP"),
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -479,8 +479,8 @@ lia.option.add("espEnabled", "ESP Enabled", "Toggle ESP features", false, nil, {
     end
 })
 
-lia.option.add("espPlayers", "ESP Players", "Enable ESP for players", false, nil, {
-    category = "ESP",
+lia.option.add("espPlayers", L("espPlayers"), L("espPlayersDesc"), false, nil, {
+    category = L("categoryESP"),
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -489,8 +489,8 @@ lia.option.add("espPlayers", "ESP Players", "Enable ESP for players", false, nil
     end
 })
 
-lia.option.add("espItems", "ESP Items", "Enable ESP for items", false, nil, {
-    category = "ESP",
+lia.option.add("espItems", L("espItems"), L("espItemsDesc"), false, nil, {
+    category = L("categoryESP"),
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -499,8 +499,8 @@ lia.option.add("espItems", "ESP Items", "Enable ESP for items", false, nil, {
     end
 })
 
-lia.option.add("espEntities", "ESP Entities", "Enable ESP for entities", false, nil, {
-    category = "ESP",
+lia.option.add("espEntities", L("espEntities"), L("espEntitiesDesc"), false, nil, {
+    category = L("categoryESP"),
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -509,8 +509,8 @@ lia.option.add("espEntities", "ESP Entities", "Enable ESP for entities", false, 
     end
 })
 
-lia.option.add("espUnconfiguredDoors", "ESP Unconfigured Doors", "Enable ESP for doors without configuration", false, nil, {
-    category = "ESP",
+lia.option.add("espUnconfiguredDoors", L("espUnconfiguredDoors"), L("espUnconfiguredDoorsDesc"), false, nil, {
+    category = L("categoryESP"),
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -519,13 +519,13 @@ lia.option.add("espUnconfiguredDoors", "ESP Unconfigured Doors", "Enable ESP for
     end
 })
 
-lia.option.add("espItemsColor", "ESP Items Color", "Sets the ESP color for items", {
+lia.option.add("espItemsColor", L("espItemsColor"), L("espItemsColorDesc"), {
     r = 0,
     g = 255,
     b = 0,
     a = 255
 }, nil, {
-    category = "ESP",
+    category = L("categoryESP"),
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -533,13 +533,13 @@ lia.option.add("espItemsColor", "ESP Items Color", "Sets the ESP color for items
     end
 })
 
-lia.option.add("espEntitiesColor", "ESP Entities Color", "Sets the ESP color for entities", {
+lia.option.add("espEntitiesColor", L("espEntitiesColor"), L("espEntitiesColorDesc"), {
     r = 255,
     g = 255,
     b = 0,
     a = 255
 }, nil, {
-    category = "ESP",
+    category = L("categoryESP"),
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -547,13 +547,13 @@ lia.option.add("espEntitiesColor", "ESP Entities Color", "Sets the ESP color for
     end
 })
 
-lia.option.add("espUnconfiguredDoorsColor", "ESP Unconfigured Doors Color", "Sets the ESP color for unconfigured doors", {
+lia.option.add("espUnconfiguredDoorsColor", L("espUnconfiguredDoorsColor"), L("espUnconfiguredDoorsColorDesc"), {
     r = 255,
     g = 0,
     b = 255,
     a = 255
 }, nil, {
-    category = "ESP",
+    category = L("categoryESP"),
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -561,13 +561,13 @@ lia.option.add("espUnconfiguredDoorsColor", "ESP Unconfigured Doors Color", "Set
     end
 })
 
-lia.option.add("espPlayersColor", "ESP Players Color", "Sets the ESP color for players", {
+lia.option.add("espPlayersColor", L("espPlayersColor"), L("espPlayersColorDesc"), {
     r = 0,
     g = 0,
     b = 255,
     a = 255
 }, nil, {
-    category = "ESP",
+    category = L("categoryESP"),
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -587,32 +587,32 @@ lia.option.add("descriptionWidth", L("descriptionWidth"), L("descriptionWidthDes
     decimals = 2
 })
 
-lia.option.add("thirdPersonEnabled", "Enabled", "Toggle third-person view.", false, function(_, newValue) hook.Run("thirdPersonToggled", newValue) end, {
-    category = "Third Person",
+lia.option.add("thirdPersonEnabled", L("thirdPersonEnabled"), L("thirdPersonEnabledDesc"), false, function(_, newValue) hook.Run("thirdPersonToggled", newValue) end, {
+    category = L("categoryThirdPerson"),
     isQuick = true,
 })
 
-lia.option.add("thirdPersonClassicMode", "Classic Mode", "Enable classic third-person view mode.", false, nil, {
-    category = "Third Person",
+lia.option.add("thirdPersonClassicMode", L("thirdPersonClassicMode"), L("thirdPersonClassicModeDesc"), false, nil, {
+    category = L("categoryThirdPerson"),
     isQuick = true,
 })
 
-lia.option.add("thirdPersonHeight", "Height", "Adjust the vertical height of the third-person camera.", 10, nil, {
-    category = "Third Person",
+lia.option.add("thirdPersonHeight", L("thirdPersonHeight"), L("thirdPersonHeightDesc"), 10, nil, {
+    category = L("categoryThirdPerson"),
     min = 0,
     isQuick = true,
     max = lia.config.get("MaxThirdPersonHeight", 30),
 })
 
-lia.option.add("thirdPersonHorizontal", "Horizontal", "Adjust the horizontal offset of the third-person camera.", 10, nil, {
-    category = "Third Person",
+lia.option.add("thirdPersonHorizontal", L("thirdPersonHorizontal"), L("thirdPersonHorizontalDesc"), 10, nil, {
+    category = L("categoryThirdPerson"),
     min = 0,
     isQuick = true,
     max = lia.config.get("MaxThirdPersonHorizontal", 30),
 })
 
-lia.option.add("thirdPersonDistance", "Distance", "Adjust the camera distance in third-person view.", 50, nil, {
-    category = "Third Person",
+lia.option.add("thirdPersonDistance", L("thirdPersonDistance"), L("thirdPersonDistanceDesc"), 50, nil, {
+    category = L("categoryThirdPerson"),
     min = 0,
     isQuick = true,
     max = lia.config.get("MaxThirdPersonDistance", 100),

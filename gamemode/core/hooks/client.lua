@@ -27,9 +27,9 @@ local hidden = {
 }
 
 local VoiceRanges = {
-    Whispering = 120,
-    Talking = 300,
-    Yelling = 600,
+    [L("whispering")] = 120,
+    [L("talking")] = 300,
+    [L("yelling")] = 600,
 }
 
 local lastEntity
@@ -173,7 +173,7 @@ function GM:PostDrawOpaqueRenderables()
     local client = LocalPlayer()
     if not (IsValid(client) and client:IsSpeaking() and client:getChar()) then return end
     local vt = client:getNetVar("VoiceType", L("talking"))
-    local radius = VoiceRanges[vt] or VoiceRanges.Talking
+    local radius = VoiceRanges[vt] or VoiceRanges[L("talking")]
     local segments = 36
     local pos = client:GetPos() + Vector(0, 0, 2)
     local color = Color(0, 150, 255)
@@ -409,7 +409,7 @@ function GM:CharListLoaded()
 end
 
 function GM:ForceDermaSkin()
-    return lia.config.get("DermaSkin", "Lilia Skin")
+    return lia.config.get("DermaSkin", L("liliaSkin"))
 end
 
 function GM:DermaSkinChanged()

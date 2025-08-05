@@ -112,7 +112,7 @@ function PANEL:setActive(state)
                 for cmdName, cmdInfo in SortedPairs(self.commands) do
                     if not tobool(string.find(cmdName, input:sub(2), 1, true)) then continue end
                     local btn = self.commandList:Add("DButton")
-                    btn:SetText("/" .. cmdName .. " - " .. (cmdInfo.desc or L("noDesc")))
+                    btn:SetText("/" .. cmdName .. " - " .. (cmdInfo.desc ~= "" and L(cmdInfo.desc) or L("noDesc")))
                     btn:Dock(TOP)
                     btn:DockMargin(0, 0, 0, 2)
                     btn:SetTall(20)

@@ -1,6 +1,6 @@
 ﻿ENT.Type = "anim"
 ENT.PrintName = L("money")
-ENT.Category = "Lilia"
+ENT.Category = L("lilia")
 ENT.Spawnable = false
 ENT.DrawEntityInfo = true
 ENT.isMoney = true

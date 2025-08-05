@@ -34,9 +34,9 @@ end
 
 function GridInv:canAdd(item)
     if isstring(item) then item = lia.item.list[item] end
-    assert(istable(item), "item must be a table")
-    assert(isnumber(item.width) and item.width >= 1, "item.width must be a positive number")
-    assert(isnumber(item.height) and item.height >= 1, "item.height must be a positive number")
+    assert(istable(item), L("itemMustBeTable"))
+    assert(isnumber(item.width) and item.width >= 1, L("itemWidthPositiveNumber"))
+    assert(isnumber(item.height) and item.height >= 1, L("itemHeightPositiveNumber"))
     local invW, invH = self:getSize()
     local itemW, itemH = item:getWidth(), item:getHeight()
     if itemW <= invW and itemH <= invH then return true end

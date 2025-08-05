@@ -67,8 +67,8 @@ function ITEM:wearOutfit(client, isForLoadout)
 end
 
 ITEM.functions.Unequip = {
-    name = "unequip",
-    tip = "equipTip",
+    name = L("unequip"),
+    tip = L("equipTip"),
     icon = "icon16/cross.png",
     onRun = function(item)
         item:removeOutfit(item.player)
@@ -78,8 +78,8 @@ ITEM.functions.Unequip = {
 }
 
 ITEM.functions.Equip = {
-    name = "equip",
-    tip = "equipTip",
+    name = L("equip"),
+    tip = L("equipTip"),
     icon = "icon16/tick.png",
     onRun = function(item)
         local character = item.player:getChar()

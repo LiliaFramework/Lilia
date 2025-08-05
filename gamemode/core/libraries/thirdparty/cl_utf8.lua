@@ -1,52 +1,52 @@
-﻿local function utf8charbytes(s, i)
+local function utf8charbytes(s, i)
     i = i or 1
-    if not isstring(s) then error("bad argument #1 to 'utf8charbytes' (string expected, got " .. type(s) .. ")") end
-    if not isnumber(i) then error("bad argument #2 to 'utf8charbytes' (number expected, got " .. type(i) .. ")") end
+    if not isstring(s) then error(L("utf8CharbytesStringExpected", type(s))) end
+    if not isnumber(i) then error(L("utf8CharbytesNumberExpected", type(i))) end
     local c = s:byte(i)
     if c > 0 and c <= 127 then
         return 1
     elseif c >= 194 and c <= 223 then
         local c2 = s:byte(i + 1)
-        if not c2 then error("UTF-8 string terminated early") end
-        if c2 < 128 or c2 > 191 then error("Invalid UTF-8 character") end
+        if not c2 then error(L("utf8StringTerminatedEarly")) end
+        if c2 < 128 or c2 > 191 then error(L("utf8InvalidCharacter")) end
         return 2
     elseif c >= 224 and c <= 239 then
         local c2 = s:byte(i + 1)
         local c3 = s:byte(i + 2)
-        if not c2 or not c3 then error("UTF-8 string terminated early") end
+        if not c2 or not c3 then error(L("utf8StringTerminatedEarly")) end
         if c == 224 and (c2 < 160 or c2 > 191) then
-            error("Invalid UTF-8 character")
+            error(L("utf8InvalidCharacter"))
         elseif c == 237 and (c2 < 128 or c2 > 159) then
-            error("Invalid UTF-8 character")
+            error(L("utf8InvalidCharacter"))
         elseif c2 < 128 or c2 > 191 then
-            error("Invalid UTF-8 character")
+            error(L("utf8InvalidCharacter"))
         end
 
-        if c3 < 128 or c3 > 191 then error("Invalid UTF-8 character") end
+        if c3 < 128 or c3 > 191 then error(L("utf8InvalidCharacter")) end
         return 3
     elseif c >= 240 and c <= 244 then
         local c2 = s:byte(i + 1)
         local c3 = s:byte(i + 2)
         local c4 = s:byte(i + 3)
-        if not c2 or not c3 or not c4 then error("UTF-8 string terminated early") end
+        if not c2 or not c3 or not c4 then error(L("utf8StringTerminatedEarly")) end
         if c == 240 and (c2 < 144 or c2 > 191) then
-            error("Invalid UTF-8 character")
+            error(L("utf8InvalidCharacter"))
         elseif c == 244 and (c2 < 128 or c2 > 143) then
-            error("Invalid UTF-8 character")
+            error(L("utf8InvalidCharacter"))
         elseif c2 < 128 or c2 > 191 then
-            error("Invalid UTF-8 character")
+            error(L("utf8InvalidCharacter"))
         end
 
-        if c3 < 128 or c3 > 191 then error("Invalid UTF-8 character") end
-        if c4 < 128 or c4 > 191 then error("Invalid UTF-8 character") end
+        if c3 < 128 or c3 > 191 then error(L("utf8InvalidCharacter")) end
+        if c4 < 128 or c4 > 191 then error(L("utf8InvalidCharacter")) end
         return 4
     else
-        error("Invalid UTF-8 character")
+        error(L("utf8InvalidCharacter"))
     end
 end
 
 local function utf8len(s)
-    if not isstring(s) then error("bad argument #1 to 'utf8len' (string expected, got " .. type(s) .. ")") end
+    if not isstring(s) then error(L("utf8LenStringExpected", type(s))) end
     local pos = 1
     local bytes = s:len()
     local len = 0
@@ -61,9 +61,9 @@ if not string.utf8bytes then string.utf8bytes = utf8charbytes end
 if not string.utf8len then string.utf8len = utf8len end
 local function utf8sub(s, i, j)
     j = j or -1
-    if not isstring(s) then error("bad argument #1 to 'utf8sub' (string expected, got " .. type(s) .. ")") end
-    if not isnumber(i) then error("bad argument #2 to 'utf8sub' (number expected, got " .. type(i) .. ")") end
-    if not isnumber(j) then error("bad argument #3 to 'utf8sub' (number expected, got " .. type(j) .. ")") end
+    if not isstring(s) then error(L("utf8SubStringExpected", type(s))) end
+    if not isnumber(i) then error(L("utf8SubNumber1Expected", type(i))) end
+    if not isnumber(j) then error(L("utf8SubNumber2Expected", type(j))) end
     local pos = 1
     local bytes = s:len()
     local len = 0
@@ -86,8 +86,8 @@ end
 
 if not string.utf8sub then string.utf8sub = utf8sub end
 local function utf8replace(s, mapping)
-    if not isstring(s) then error("bad argument #1 to 'utf8replace' (string expected, got " .. type(s) .. ")") end
-    if not istable(mapping) then error("bad argument #2 to 'utf8replace' (table expected, got " .. type(mapping) .. ")") end
+    if not isstring(s) then error(L("utf8ReplaceStringExpected", type(s))) end
+    if not istable(mapping) then error(L("utf8ReplaceTableExpected", type(mapping))) end
     local pos = 1
     local bytes = s:len()
     local charbytes
@@ -112,7 +112,7 @@ end
 
 if not string.utf8lower and utf8_uc_lc then string.utf8lower = utf8lower end
 local function utf8reverse(s)
-    if not isstring(s) then error("bad argument #1 to 'utf8reverse' (string expected, got " .. type(s) .. ")") end
+    if not isstring(s) then error(L("utf8ReverseStringExpected", type(s))) end
     local bytes = s:len()
     local pos = bytes
     local charbytes

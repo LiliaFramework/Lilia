@@ -203,7 +203,6 @@ if SERVER then
         net.WriteTable(lia.char.names)
         net.Send(client)
     end)
-
 else
     function getNetVar(key, default)
         local value = lia.net.globals[key]
@@ -211,16 +210,4 @@ else
     end
 
     FindMetaTable("Player").getLocalVar = FindMetaTable("Entity").getNetVar
-end
-
-local netStart = net.Start
-local netReceive = net.Receive
-function net.Start(msg, unreliable)
-    if util.NetworkStringToID(msg) == 0 and SERVER then util.AddNetworkString(msg) end
-    return netStart(msg, unreliable)
-end
-
-function net.Receive(msg, ...)
-    if util.NetworkStringToID(msg) == 0 and SERVER then util.AddNetworkString(msg) end
-    return netReceive(msg, ...)
 end

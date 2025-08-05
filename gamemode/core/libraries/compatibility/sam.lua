@@ -89,7 +89,7 @@ hook.Add("SAM.CanRunCommand", "liaSAM", function(client, _, _, cmd)
 end)
 
 if SERVER then
-    sam.command.new("blind"):SetPermission("blind", "superadmin"):AddArg("player"):Help("Blinds the Players"):OnExecute(function(client, targets)
+    sam.command.new("blind"):SetPermission("blind", "superadmin"):AddArg("player"):Help(L("blindCommandHelp")):OnExecute(function(client, targets)
         for i = 1, #targets do
             local target = targets[i]
             net.Start("blindTarget")
@@ -98,14 +98,14 @@ if SERVER then
         end
 
         if not sam.is_command_silent then
-            client:sam_send_message("{A} Blinded {T}", {
+            client:sam_send_message(L("samBlindedTargets"), {
                 A = client,
                 T = targets
             })
         end
     end):End()
 
-    sam.command.new("unblind"):SetPermission("blind", "superadmin"):AddArg("player"):Help("Unblinds the Players"):OnExecute(function(client, targets)
+    sam.command.new("unblind"):SetPermission("blind", "superadmin"):AddArg("player"):Help(L("unblindCommandHelp")):OnExecute(function(client, targets)
         for i = 1, #targets do
             local target = targets[i]
             net.Start("blindTarget")
@@ -114,7 +114,7 @@ if SERVER then
         end
 
         if not sam.is_command_silent then
-            client:sam_send_message("{A} Un-Blinded {T}", {
+            client:sam_send_message(L("samUnblindedTargets"), {
                 A = client,
                 T = targets
             })
@@ -126,7 +126,7 @@ end
 
 local function CanReadNotifications(client)
     if not lia.config.get("AdminOnlyNotification", true) then return true end
-    return client:hasPrivilege("Can See SAM Notifications") or client:isStaffOnDuty()
+    return client:hasPrivilege(L("canSeeSAMNotificationsOutsideStaff")) or client:isStaffOnDuty()
 end
 
 function sam.player.send_message(client, msg, tbl)
@@ -165,8 +165,8 @@ end)
 
 lia.command.add("cleardecals", {
     adminOnly = true,
-    privilege = L("clearDecals"),
-    desc = L("cleardecalsDesc"),
+    privilege = "clearDecals",
+    desc = "cleardecalsDesc",
     onRun = function()
         for _, v in player.Iterator() do
             v:ConCommand("r_cleardecals")

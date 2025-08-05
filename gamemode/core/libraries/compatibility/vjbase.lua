@@ -31,4 +31,4 @@ end)
 
 lia.log.addType("unprotectedVJNetCall", function(client, netMessage)
     return L("unprotectedVJNetCallLog", client:Name(), netMessage)
-end, "VJ Base")
+end, L("categoryVJBase"))

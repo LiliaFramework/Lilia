@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     self:SetTall(20)
     self.add = self:Add("DImageButton")
@@ -206,7 +206,7 @@ function PANEL:setAttribute(k, v)
     self.key = k
     local nm = hook.Run("GetAttributeStartingMax", LocalPlayer(), k)
     self.name:SetText(L(v.name))
-    self:SetTooltip(L(v.desc or "noDesc") .. (nm and " Max: " .. nm or ""))
+    self:SetTooltip(L(v.desc or "noDesc") .. (nm and " " .. L("max", nm) or ""))
 end
 
 function PANEL:delta(d)

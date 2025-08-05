@@ -77,7 +77,7 @@ if CLIENT then
     end)
 
     function MODULE:PopulateAdminTabs(pages)
-        if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege("View Player Warnings") then return end
+        if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege(L("viewPlayerWarnings")) then return end
         table.insert(pages, {
             name = L("warnings"),
             drawFunc = function(panel)

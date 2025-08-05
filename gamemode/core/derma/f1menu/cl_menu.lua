@@ -33,7 +33,7 @@ function PANEL:Init()
             surface.DrawTexturedRect(30, (h - iconSize) * 0.5, iconSize, iconSize)
             surface.SetFont("liaMediumFont")
             surface.SetTextColor(255, 255, 255)
-            local txt = schemaName
+            local txt = L(schemaName)
             local _, th = surface.GetTextSize(txt)
             surface.SetTextPos(30 + iconSize + 10, (h - th) * 0.5)
             surface.DrawText(txt)

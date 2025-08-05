@@ -36,7 +36,7 @@
                 local ply = character:getPlayer()
                 if IsValid(ply) then
                     local steamID = ply:SteamID() or ""
-                    combo:AddChoice(string.format("[%s] [%s]", character:getName() or L("unknown"), steamID), steamID)
+                    combo:AddChoice(L("characterSteamIDFormat", character:getName() or L("unknown"), steamID), steamID)
                 end
             end
 

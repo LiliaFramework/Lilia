@@ -3,14 +3,14 @@ lia.faction.indices = lia.faction.indices or {}
 lia.faction.teams = lia.faction.teams or {}
 local DefaultModels = {"models/player/group01/male_01.mdl", "models/player/group01/male_02.mdl", "models/player/group01/male_03.mdl", "models/player/group01/male_04.mdl", "models/player/group01/male_05.mdl", "models/player/group01/male_06.mdl", "models/player/group01/female_01.mdl", "models/player/group01/female_02.mdl", "models/player/group01/female_03.mdl", "models/player/group01/female_04.mdl", "models/player/group01/female_05.mdl", "models/player/group01/female_06.mdl"}
 function lia.faction.register(uniqueID, data)
-    assert(isstring(uniqueID), "uniqueID must be a string")
-    assert(istable(data), "data must be a table")
+    assert(isstring(uniqueID), L("factionUniqueIDString"))
+    assert(istable(data), L("factionDataTable"))
     local existing = lia.faction.teams[uniqueID]
     local constantName = "FACTION_" .. string.upper(uniqueID)
     local providedIndex = tonumber(data.index)
     local constantIndex = tonumber(_G[constantName])
     local index = providedIndex or constantIndex or existing and existing.index or table.Count(lia.faction.teams) + 1
-    assert(not lia.faction.indices[index] or lia.faction.indices[index] == existing, "faction index is already in use")
+    assert(not lia.faction.indices[index] or lia.faction.indices[index] == existing, L("factionIndexInUse"))
     local faction = existing or {
         index = index,
         isDefault = true

@@ -176,14 +176,14 @@ else
 end
 
 function lia.vendor.addRarities(name, color)
-    assert(isstring(name), "rarity name must be a string")
-    assert(IsColor(color), "color must be a Color")
+    assert(isstring(name), L("vendorRarityNameString"))
+    assert(IsColor(color), L("vendorColorMustBeColor"))
     lia.vendor.rarities[name] = color
 end
 
 function lia.vendor.addPreset(name, items)
-    assert(isstring(name), "preset name must be a string")
-    assert(istable(items), "preset items must be a table")
+    assert(isstring(name), L("vendorPresetNameString"))
+    assert(istable(items), L("vendorPresetItemsTable"))
     lia.vendor.presets[string.lower(name)] = items
 end
 

@@ -64,7 +64,7 @@ net.Receive("RequestRemoveWarning", function(_, client)
 end)
 
 net.Receive("liaRequestAllWarnings", function(_, client)
-    if not client:hasPrivilege("View Player Warnings") then return end
+    if not client:hasPrivilege(L("viewPlayerWarnings")) then return end
     lia.db.select({"timestamp", "warned", "warnedSteamID", "warner", "warnerSteamID", "message"}, "warnings"):next(function(res)
         net.Start("liaAllWarnings")
         net.WriteTable(res.results or {})

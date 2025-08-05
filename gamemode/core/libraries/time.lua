@@ -48,7 +48,7 @@ function lia.time.GetDate()
     local weekdayKeys = {"weekdaySunday", "weekdayMonday", "weekdayTuesday", "weekdayWednesday", "weekdayThursday", "weekdayFriday", "weekdaySaturday"}
     local monthKeys = {"monthJanuary", "monthFebruary", "monthMarch", "monthApril", "monthMay", "monthJune", "monthJuly", "monthAugust", "monthSeptember", "monthOctober", "monthNovember", "monthDecember"}
     if american then
-        local suffix = ct.hour < 12 and "am" or "pm"
+        local suffix = ct.hour < 12 and L("am") or L("pm")
         local hour12 = ct.hour % 12
         if hour12 == 0 then hour12 = 12 end
         return string.format("%s, %s %02d, %04d, %02d:%02d:%02d%s", L(weekdayKeys[ct.wday]), L(monthKeys[ct.month]), ct.day, ct.year, hour12, ct.min, ct.sec, suffix)
@@ -70,7 +70,7 @@ function lia.time.GetHour()
     local ct = os.date("*t")
     local american = lia.config.get("AmericanTimeStamps", false)
     if american then
-        local suffix = ct.hour < 12 and "am" or "pm"
+        local suffix = ct.hour < 12 and L("am") or L("pm")
         local hour12 = ct.hour % 12
         if hour12 == 0 then hour12 = 12 end
         return string.format("%d%s", hour12, suffix)

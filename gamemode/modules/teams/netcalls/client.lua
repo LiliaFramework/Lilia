@@ -89,7 +89,16 @@ net.Receive("CharacterInfo", function()
                 local rowString = ""
                 for key, value in pairs(rowData) do
                     value = tostring(value or L("na"))
-                    rowString = rowString .. key:gsub("^%l", string.upper) .. ": " .. value .. " | "
+                    local columnName
+                    for _, col in ipairs(columns) do
+                        if col.field == key then
+                            columnName = col.name
+                            break
+                        end
+                    end
+
+                    columnName = columnName or key:gsub("^%l", string.upper)
+                    rowString = rowString .. columnName .. ": " .. value .. " | "
                 end
 
                 rowString = rowString:sub(1, -4)

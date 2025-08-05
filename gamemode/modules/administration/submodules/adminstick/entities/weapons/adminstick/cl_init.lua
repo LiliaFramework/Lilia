@@ -52,14 +52,7 @@ function SWEP:DrawHUD()
         end
 
         if target:IsPlayer() then
-            information = {
-                L("nickname") .. ": " .. target:Nick(),
-                L("steamName") .. ": " .. (target.SteamName and target:SteamName() or target:Name()),
-                L("steamID") .. ": " .. target:SteamID(),
-                L("health") .. ": " .. target:Health(),
-                L("armor") .. ": " .. target:Armor(),
-                L("usergroup") .. ": " .. target:GetUserGroup()
-            }
+            information = {L("nickname") .. ": " .. target:Nick(), L("steamName") .. ": " .. (target.SteamName and target:SteamName() or target:Name()), L("steamID") .. ": " .. target:SteamID(), L("health") .. ": " .. target:Health(), L("armor") .. ": " .. target:Armor(), L("usergroup") .. ": " .. target:GetUserGroup()}
             if target:getChar() then
                 local char = target:getChar()
                 local faction = lia.faction.indices[target:Team()]
@@ -71,13 +64,10 @@ function SWEP:DrawHUD()
     end
 
     hook.Run("AddToAdminStickHUD", client, target, information)
-
     local length, thickness = 20, 1
     surface.SetDrawColor(crossColor)
     surface.DrawRect(x - length / 2, y - thickness / 2, length, thickness)
     surface.DrawRect(x - thickness / 2, y - length / 2, thickness, length)
-
-    -- determine size of the information box
     surface.SetFont("DebugFixed")
     local maxWidth, totalHeight = 0, 0
     for _, v in pairs(information) do
@@ -91,12 +81,8 @@ function SWEP:DrawHUD()
         local boxHeight = totalHeight + 20
         local boxX = (ScrW() - boxWidth) / 2
         local boxY = ScrH() - boxHeight - 20
-
-        -- draw background box
         surface.SetDrawColor(Color(0, 0, 0, 200))
         surface.DrawRect(boxX, boxY, boxWidth, boxHeight)
-
-        -- draw text inside box
         local startPosX, startPosY, buffer = boxX + 10, boxY + 10, 0
         for _, v in pairs(information) do
             surface.SetTextColor(color_black)

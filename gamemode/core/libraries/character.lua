@@ -103,7 +103,7 @@ end
 lia.char.registerVar("name", {
     field = "name",
     fieldType = "string",
-    default = "John Doe",
+    default = L("defaultCharName"),
     index = 1,
     onValidate = function(value, data, client)
         local name, override = hook.Run("GetDefaultCharName", client, data.faction, data)
@@ -411,7 +411,7 @@ lia.char.registerVar("attribs", {
                 local count = 0
                 for k, v in pairs(value) do
                     local max = hook.Run("GetAttributeStartingMax", client, k)
-                    if max and v > max then return false, lia.attribs.list[k].name .. " too high" end
+                    if max and v > max then return false, L("attribTooHigh", lia.attribs.list[k].name) end
                     count = count + v
                 end
 
@@ -672,9 +672,9 @@ if SERVER then
                 lia.inventory.loadAllFromCharID(charId):next(function(inventories)
                     if #inventories == 0 then
                         local promise = hook.Run("CreateDefaultInventory", character)
-                        assert(promise ~= nil, "No default inventory available")
+                        assert(promise ~= nil, L("noDefaultInventory"))
                         return promise:next(function(inventory)
-                            assert(inventory ~= nil, "No default inventory available")
+                            assert(inventory ~= nil, L("noDefaultInventory"))
                             return {inventory}
                         end)
                     end

@@ -40,4 +40,4 @@ lia.log.addType("dupeCrashAttempt", function(client)
         IsValid(client) and client:Name() or L("unknown"),
         IsValid(client) and client:SteamID() or L("na")
     )
-end, "Security")
+end, L("categorySecurity"))

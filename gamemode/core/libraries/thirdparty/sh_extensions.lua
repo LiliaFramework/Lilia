@@ -1,4 +1,4 @@
-﻿local friendliedNPCs = {}
+local friendliedNPCs = {}
 local hostaliziedNPCs = {}
 local passive = {"npc_seagull", "npc_crow", "npc_piegon", "monster_cockroach", "npc_dog", "npc_gman", "npc_antlion_grub", "npc_turret_floor"}
 local friendly = {"npc_monk", "npc_alyx", "npc_barney", "npc_citizen", "npc_turret_floor", "npc_dog", "npc_vortigaunt", "npc_kleiner", "npc_eli", "npc_magnusson", "npc_breen", "npc_mossman", "npc_fisherman", "monster_barney", "monster_scientist", "player"}
@@ -96,7 +96,7 @@ local function AddEntFunctionProperty(name, label, pos, filtor, func, icon)
     })
 end
 
-local allWeapons = CreateConVar("lia_ext_properties_npcallweapons", "1", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Whether 'Change Weapon' property should list all weapons (even if they are not compatible with NPCs), or only those specifically marked as compatible with NPCs.")
+local allWeapons = CreateConVar("lia_ext_properties_npcallweapons", "1", FCVAR_ARCHIVE + FCVAR_REPLICATED, L("changeWeaponPropertyDesc"))
 local function GiveWeapon(ply, ent, args)
     if not ent:IsNPC() or not args or not args[1] or not isstring(args[1]) then return end
     local className = args[1]
@@ -141,7 +141,7 @@ local function changeWep(it, ent, wep)
 end
 
 local nowep = {"cycler", "npc_furniture", "monster_generic", "npc_seagull", "npc_crow", "npc_piegon", "npc_rollermine", "npc_turret_floor", "npc_stalker", "npc_turret_ground", "npc_combine_camera", "npc_turret_ceiling", "npc_cscanner", "npc_clawscanner", "npc_manhack", "npc_sniper", "npc_combinegunship", "npc_combinedropship", "npc_helicopter", "npc_antlion_worker", "npc_headcrab_black", "npc_hunter", "npc_vortigaunt", "npc_antlion", "npc_antlionguard", "npc_barnacle", "npc_headcrab", "npc_dog", "npc_gman", "npc_antlion_grub", "npc_strider", "npc_fastzombie", "npc_fastzombie_torso", "npc_headcrab_poison", "npc_headcrab_fast", "npc_poisonzombie", "npc_zombie", "npc_zombie_torso", "npc_zombine", "monster_scientist", "monster_zombie", "monster_headcrab", "class C_AI_BaseNPC", "monster_tentacle", "monster_alien_grunt", "monster_alien_slave", "monster_human_assassin", "monster_babycrab", "monster_bullchicken", "monster_cockroach", "monster_alien_controller", "monster_gargantua", "monster_bigmomma", "monster_human_grunt", "monster_houndeye", "monster_nihilanth", "monster_barney", "monster_snark", "monster_turret", "monster_miniturret", "monster_sentry"}
-AddEntFunctionProperty("lia_npc_weapon_strip", "Strip Weapon", 651, function(ent)
+AddEntFunctionProperty("lia_npc_weapon_strip", L("stripWeapon"), 651, function(ent)
     if ent:IsNPC() and IsValid(ent:GetActiveWeapon()) and not table.HasValue(nowep, ent:GetClass()) then return true end
     return false
 end, function(ent) ent:GetActiveWeapon():Remove() end, "icon16/gun.png")
@@ -186,7 +186,7 @@ properties.Add("lia_npc_weapon", {
             end
 
             if not NpcUsable or not weapon.Spawnable and not weapon.AdminSpawnable then continue end
-            local cat = weapon.Category or "Other"
+            local cat = weapon.Category or L("other")
             if not isstring(cat) then cat = tostring(cat) end
             Categorised[cat] = Categorised[cat] or {}
             table.insert(Categorised[cat], weapon)
@@ -311,59 +311,59 @@ local ToggleIcon = "icon16/arrow_switch.png"
 AddEntFireProperty("lia_door_open", L("open"), 655, function(ent, ply)
     if not ent:GetNWBool("Closed") and ent:GetClass() == "prop_door_rotating" then return false end
     return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door"}, ent, ply)
-end, L("open"), "icon16/door_open.png")
+end, "Open", "icon16/door_open.png")
 
 AddEntFireProperty("lia_door_close", L("close"), 656, function(ent, ply)
     if ent:GetNWBool("Closed") and ent:GetClass() == "prop_door_rotating" then return false end
     return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door"}, ent, ply)
-end, L("close"), "icon16/door.png")
+end, "Close", "icon16/door.png")
 
-AddEntFireProperty("lia_door_lock", "Lock", 657, function(ent, ply)
+AddEntFireProperty("lia_door_lock", L("lock"), 657, function(ent, ply)
     if ent:GetNWBool(L("locked")) and ent:GetClass() ~= "prop_vehicle_prisoner_pod" then return false end
     return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door", "prop_vehicle_jeep", "prop_vehicle_airboat", "prop_vehicle_prisoner_pod"}, ent, ply)
 end, "Lock", "icon16/lock.png")
 
-AddEntFireProperty("lia_door_unlock", "Unlock", 658, function(ent, ply)
+AddEntFireProperty("lia_door_unlock", L("unlock"), 658, function(ent, ply)
     if not ent:GetNWBool(L("locked")) and ent:GetClass() ~= "prop_vehicle_prisoner_pod" then return false end
     return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door", "prop_vehicle_jeep", "prop_vehicle_airboat", "prop_vehicle_prisoner_pod"}, ent, ply)
 end, "Unlock", "icon16/lock_open.png")
 
-AddEntFireProperty("lia_func_movelinear_open", L("start"), 655, "func_movelinear", L("open"), "icon16/arrow_right.png")
-AddEntFireProperty("lia_func_movelinear_close", "Return", 656, "func_movelinear", L("close"), "icon16/arrow_left.png")
-AddEntFireProperty("lia_func_tracktrain_StartForward", "Start Forward", 655, function(ent, ply)
+AddEntFireProperty("lia_func_movelinear_open", L("start"), 655, "func_movelinear", "Open", "icon16/arrow_right.png")
+AddEntFireProperty("lia_func_movelinear_close", L("return"), 656, "func_movelinear", "Close", "icon16/arrow_left.png")
+AddEntFireProperty("lia_func_tracktrain_StartForward", L("startForward"), 655, function(ent, ply)
     if ent:GetNWInt("m_dir") == 1 then return false end
     return rb655_property_filter("func_tracktrain", ent, ply)
 end, "StartForward", "icon16/arrow_right.png")
 
-AddEntFireProperty("lia_func_tracktrain_StartBackward", "Start Backward", 656, function(ent, ply)
+AddEntFireProperty("lia_func_tracktrain_StartBackward", L("startBackward"), 656, function(ent, ply)
     if ent:GetNWInt("m_dir") == -1 then return false end
     return rb655_property_filter("func_tracktrain", ent, ply)
 end, "StartBackward", "icon16/arrow_left.png")
 
-AddEntFireProperty("lia_func_tracktrain_Stop", "Stop", 658, function(ent, ply)
+AddEntFireProperty("lia_func_tracktrain_Stop", L("stop"), 658, function(ent, ply)
     if not ent:GetNWBool("m_moving") then return false end
     return rb655_property_filter("func_tracktrain", ent, ply)
 end, "Stop", "icon16/shape_square.png")
 
-AddEntFireProperty("lia_func_tracktrain_Resume", "Resume", 659, function(ent, ply)
+AddEntFireProperty("lia_func_tracktrain_Resume", L("resume"), 659, function(ent, ply)
     if ent:GetNWInt("m_moving") then return false end
     return rb655_property_filter("func_tracktrain", ent, ply)
 end, "Resume", "icon16/resultset_next.png")
 
-AddEntFireProperty("lia_breakable_break", "Break", 655, function(ent, ply)
+AddEntFireProperty("lia_breakable_break", L("break"), 655, function(ent, ply)
     if ent:Health() < 1 then return false end
     return rb655_property_filter({"func_breakable", "func_physbox", "prop_physics", "func_pushable"}, ent, ply)
 end, "Break", ExplodeIcon)
 
-AddEntFunctionProperty("lia_dissolve", "Disintegrate", 657, function(ent)
+AddEntFunctionProperty("lia_dissolve", L("disintegrate"), 657, function(ent)
     if ent:GetModel() and ent:GetModel():StartWith("*") then return false end
     if ent:IsPlayer() then return false end
     return true
 end, function(ent) ent:Dissolve(0, 100) end, "icon16/wand.png")
 
-AddEntFireProperty("lia_turret_toggle", "Toggle", 655, {"npc_combine_camera", "npc_turret_ceiling", "npc_turret_floor"}, "Toggle", ToggleIcon)
-AddEntFireProperty("lia_self_destruct", "Self Destruct", 656, {"npc_turret_floor", "npc_helicopter"}, "SelfDestruct", ExplodeIcon)
-AddEntFunctionProperty("lia_turret_ammo_remove", "Deplete Ammo", 657, function(ent)
+AddEntFireProperty("lia_turret_toggle", L("toggle"), 655, {"npc_combine_camera", "npc_turret_ceiling", "npc_turret_floor"}, "Toggle", ToggleIcon)
+AddEntFireProperty("lia_self_destruct", L("selfDestruct"), 656, {"npc_turret_floor", "npc_helicopter"}, "SelfDestruct", ExplodeIcon)
+AddEntFunctionProperty("lia_turret_ammo_remove", L("depleteAmmo"), 657, function(ent)
     if bit.band(ent:GetSpawnFlags(), 256) == 256 then return false end
     if ent:GetClass() == "npc_turret_floor" or ent:GetClass() == "npc_turret_ceiling" then return true end
     return false
@@ -372,7 +372,7 @@ end, function(ent)
     ent:Activate()
 end, "icon16/delete.png")
 
-AddEntFunctionProperty("lia_turret_ammo_restore", "Restore Ammo", 658, function(ent)
+AddEntFunctionProperty("lia_turret_ammo_restore", L("restoreAmmo"), 658, function(ent)
     if bit.band(ent:GetSpawnFlags(), 256) == 0 then return false end
     if ent:GetClass() == "npc_turret_floor" or ent:GetClass() == "npc_turret_ceiling" then return true end
     return false
@@ -381,7 +381,7 @@ end, function(ent)
     ent:Activate()
 end, "icon16/add.png")
 
-AddEntFunctionProperty("lia_turret_make_friendly", "Make Friendly", 659, function(ent)
+AddEntFunctionProperty("lia_turret_make_friendly", L("makeFriendly"), 659, function(ent)
     if bit.band(ent:GetSpawnFlags(), 512) == 512 then return false end
     if ent:GetClass() == "npc_turret_floor" then return true end
     return false
@@ -390,7 +390,7 @@ end, function(ent)
     ent:Activate()
 end, "icon16/user_green.png")
 
-AddEntFunctionProperty("lia_turret_make_hostile", "Make Hostile", 660, function(ent)
+AddEntFunctionProperty("lia_turret_make_hostile", L("makeHostile"), 660, function(ent)
     if bit.band(ent:GetSpawnFlags(), 512) == 0 then return false end
     if ent:GetClass() == "npc_turret_floor" then return true end
     return false
@@ -399,72 +399,72 @@ end, function(ent)
     ent:Activate()
 end, "icon16/user_red.png")
 
-AddEntFireProperty("lia_suitcharger_recharge", "Recharge", 655, "item_suitcharger", "Recharge", "icon16/arrow_refresh.png")
-AddEntFireProperty("lia_manhack_jam", "Jam", 655, "npc_manhack", "InteractivePowerDown", ExplodeIcon)
-AddEntFireProperty("lia_scanner_mineadd", "Equip Mine", 655, "npc_clawscanner", "EquipMine", "icon16/add.png")
-AddEntFireProperty("lia_scanner_minedeploy", "Deploy Mine", 656, "npc_clawscanner", "DeployMine", "icon16/arrow_down.png")
-AddEntFireProperty("lia_scanner_disable_spotlight", "Disable Spotlight", 658, {"npc_clawscanner", "npc_cscanner"}, "DisableSpotlight", DisableIcon)
-AddEntFireProperty("lia_rollermine_selfdestruct", "Self Destruct", 655, "npc_rollermine", "InteractivePowerDown", ExplodeIcon)
-AddEntFireProperty("lia_rollermine_turnoff", "Turn Off", 656, "npc_rollermine", "TurnOff", DisableIcon)
-AddEntFireProperty("lia_rollermine_turnon", "Turn On", 657, "npc_rollermine", "TurnOn", EnableIcon)
-AddEntFireProperty("lia_helicopter_gun_on", "Enable Turret", 655, "npc_helicopter", "GunOn", EnableIcon)
-AddEntFireProperty("lia_helicopter_gun_off", "Disable Turret", 656, "npc_helicopter", "GunOff", DisableIcon)
-AddEntFireProperty("lia_helicopter_dropbomb", "Drop Bomb", 657, "npc_helicopter", "DropBomb", "icon16/arrow_down.png")
-AddEntFireProperty("lia_helicopter_norm_shoot", "Start Normal Shooting", 660, "npc_helicopter", "StartNormalShooting", "icon16/clock.png")
-AddEntFireProperty("lia_helicopter_long_shoot", "Start Long Cycle Shooting", 661, "npc_helicopter", "StartLongCycleShooting", "icon16/clock_red.png")
-AddEntFireProperty("lia_helicopter_deadly_on", "Enable Deadly Shooting", 662, "npc_helicopter", "EnableDeadlyShooting", EnableIcon)
-AddEntFireProperty("lia_helicopter_deadly_off", "Disable Deadly Shooting", 663, "npc_helicopter", "DisableDeadlyShooting", DisableIcon)
-AddEntFireProperty("lia_gunship_OmniscientOn", "Enable Omniscient", 655, "npc_combinegunship", "OmniscientOn", EnableIcon)
-AddEntFireProperty("lia_gunship_OmniscientOff", "Disable Omniscient", 656, "npc_combinegunship", "OmniscientOff", DisableIcon)
-AddEntFireProperty("lia_gunship_BlindfireOn", "Enable Blindfire", 657, "npc_combinegunship", "BlindfireOn", EnableIcon)
-AddEntFireProperty("lia_gunship_BlindfireOff", "Disable Blindfire", 658, "npc_combinegunship", "BlindfireOff", DisableIcon)
-AddEntFireProperty("lia_alyx_HolsterWeapon", "Holster Weapon", 655, function(ent)
+AddEntFireProperty("lia_suitcharger_recharge", L("recharge"), 655, "item_suitcharger", "Recharge", "icon16/arrow_refresh.png")
+AddEntFireProperty("lia_manhack_jam", L("jam"), 655, "npc_manhack", "InteractivePowerDown", ExplodeIcon)
+AddEntFireProperty("lia_scanner_mineadd", L("equipMine"), 655, "npc_clawscanner", "EquipMine", "icon16/add.png")
+AddEntFireProperty("lia_scanner_minedeploy", L("deployMine"), 656, "npc_clawscanner", "DeployMine", "icon16/arrow_down.png")
+AddEntFireProperty("lia_scanner_disable_spotlight", L("disableSpotlight"), 658, {"npc_clawscanner", "npc_cscanner"}, "DisableSpotlight", DisableIcon)
+AddEntFireProperty("lia_rollermine_selfdestruct", L("selfDestruct"), 655, "npc_rollermine", "InteractivePowerDown", ExplodeIcon)
+AddEntFireProperty("lia_rollermine_turnoff", L("turnOff"), 656, "npc_rollermine", "TurnOff", DisableIcon)
+AddEntFireProperty("lia_rollermine_turnon", L("turnOn"), 657, "npc_rollermine", "TurnOn", EnableIcon)
+AddEntFireProperty("lia_helicopter_gun_on", L("enableTurret"), 655, "npc_helicopter", "GunOn", EnableIcon)
+AddEntFireProperty("lia_helicopter_gun_off", L("disableTurret"), 656, "npc_helicopter", "GunOff", DisableIcon)
+AddEntFireProperty("lia_helicopter_dropbomb", L("dropBomb"), 657, "npc_helicopter", "DropBomb", "icon16/arrow_down.png")
+AddEntFireProperty("lia_helicopter_norm_shoot", L("startNormalShooting"), 660, "npc_helicopter", "StartNormalShooting", "icon16/clock.png")
+AddEntFireProperty("lia_helicopter_long_shoot", L("startLongCycleShooting"), 661, "npc_helicopter", "StartLongCycleShooting", "icon16/clock_red.png")
+AddEntFireProperty("lia_helicopter_deadly_on", L("enableDeadlyShooting"), 662, "npc_helicopter", "EnableDeadlyShooting", EnableIcon)
+AddEntFireProperty("lia_helicopter_deadly_off", L("disableDeadlyShooting"), 663, "npc_helicopter", "DisableDeadlyShooting", DisableIcon)
+AddEntFireProperty("lia_gunship_OmniscientOn", L("enableOmniscient"), 655, "npc_combinegunship", "OmniscientOn", EnableIcon)
+AddEntFireProperty("lia_gunship_OmniscientOff", L("disableOmniscient"), 656, "npc_combinegunship", "OmniscientOff", DisableIcon)
+AddEntFireProperty("lia_gunship_BlindfireOn", L("enableBlindfire"), 657, "npc_combinegunship", "BlindfireOn", EnableIcon)
+AddEntFireProperty("lia_gunship_BlindfireOff", L("disableBlindfire"), 658, "npc_combinegunship", "BlindfireOff", DisableIcon)
+AddEntFireProperty("lia_alyx_HolsterWeapon", L("holsterWeapon"), 655, function(ent)
     if not ent:IsNPC() or ent:GetClass() ~= "npc_alyx" or not IsValid(ent:GetActiveWeapon()) then return false end
     return true
 end, "HolsterWeapon", "icon16/gun.png")
 
-AddEntFireProperty("lia_alyx_UnholsterWeapon", "Unholster Weapon", 656, "npc_alyx", "UnholsterWeapon", "icon16/gun.png")
-AddEntFireProperty("lia_alyx_HolsterAndDestroyWeapon", "Holster And Destroy Weapon", 657, function(ent)
+AddEntFireProperty("lia_alyx_UnholsterWeapon", L("unholsterWeapon"), 656, "npc_alyx", "UnholsterWeapon", "icon16/gun.png")
+AddEntFireProperty("lia_alyx_HolsterAndDestroyWeapon", L("holsterAndDestroyWeapon"), 657, function(ent)
     if not ent:IsNPC() or ent:GetClass() ~= "npc_alyx" or not IsValid(ent:GetActiveWeapon()) then return false end
     return true
 end, "HolsterAndDestroyWeapon", "icon16/gun.png")
 
-AddEntFireProperty("lia_antlion_burrow", "Burrow", 655, {"npc_antlion", "npc_antlion_worker"}, "BurrowAway", "icon16/arrow_down.png")
-AddEntFireProperty("lia_barnacle_free", "Free Target", 655, "npc_barnacle", "LetGo", "icon16/heart.png")
-AddEntFireProperty("lia_zombine_suicide", "Suicide", 655, "npc_zombine", "PullGrenade", ExplodeIcon)
-AddEntFireProperty("lia_zombine_sprint", "Sprint", 656, "npc_zombine", "StartSprint", "icon16/flag_blue.png")
-AddEntFireProperty("lia_thumper_enable", "Enable", 655, "prop_thumper", "Enable", EnableIcon)
-AddEntFireProperty("lia_thumper_disable", "Disable", 656, "prop_thumper", "Disable", DisableIcon)
-AddEntFireProperty("lia_dog_fetch_on", "Start Playing Fetch", 655, "npc_dog", "StartCatchThrowBehavior", "icon16/accept.png")
-AddEntFireProperty("lia_dog_fetch_off", "Stop Playing Fetch", 656, "npc_dog", "StopCatchThrowBehavior", "icon16/cancel.png")
-AddEntFireProperty("lia_soldier_look_off", "Enable Blindness", 655, "npc_combine_s", "LookOff", "icon16/user_green.png")
-AddEntFireProperty("lia_soldier_look_on", "Disable Blindness", 656, "npc_combine_s", "LookOn", "icon16/user_gray.png")
-AddEntFireProperty("lia_citizen_wep_pick_on", "Permit Weapon Upgrade Pickup", 655, "npc_citizen", "EnableWeaponPickup", EnableIcon)
-AddEntFireProperty("lia_citizen_wep_pick_off", "Restrict Weapon Upgrade Pickup", 656, "npc_citizen", "DisableWeaponPickup", DisableIcon)
-AddEntFireProperty("lia_citizen_panic", "Start Panicking", 658, {"npc_citizen", "npc_alyx", "npc_barney"}, "SetReadinessPanic", "icon16/flag_red.png")
-AddEntFireProperty("lia_citizen_panic_off", "Stop Panicking", 659, {"npc_citizen", "npc_alyx", "npc_barney"}, "SetReadinessHigh", "icon16/flag_green.png")
-AddEntFireProperty("lia_camera_angry", "Make Angry", 656, "npc_combine_camera", "SetAngry", "icon16/flag_red.png")
-AddEntFireProperty("lia_combine_mine_disarm", "Disarm", 655, "combine_mine", "Disarm", "icon16/wrench.png")
-AddEntFireProperty("lia_hunter_enable", "Enable Shooting", 655, "npc_hunter", "EnableShooting", EnableIcon)
-AddEntFireProperty("lia_hunter_disable", "Disable Shooting", 656, "npc_hunter", "DisableShooting", DisableIcon)
-AddEntFireProperty("lia_vortigaunt_enable", "Enable Armor Recharge", 655, "npc_vortigaunt", "EnableArmorRecharge", EnableIcon)
-AddEntFireProperty("lia_vortigaunt_disable", "Disable Armor Recharge", 656, "npc_vortigaunt", "DisableArmorRecharge", DisableIcon)
-AddEntFireProperty("lia_antlion_enable", "Enable Jump", 655, {"npc_antlion", "npc_antlion_worker"}, "EnableJump", EnableIcon)
-AddEntFireProperty("lia_antlion_disable", "Disable Jump", 656, {"npc_antlion", "npc_antlion_worker"}, "DisableJump", DisableIcon)
-AddEntFireProperty("lia_antlion_hear", "Hear Bugbait", 657, {"npc_antlion", "npc_antlion_worker"}, "HearBugbait", EnableIcon)
-AddEntFireProperty("lia_antlion_ignore", "Ignore Bugbait", 658, {"npc_antlion", "npc_antlion_worker"}, "IgnoreBugbait", DisableIcon)
-AddEntFireProperty("lia_antlion_grub_squash", "Squash", 655, "npc_antlion_grub", "Squash", "icon16/bug.png")
-AddEntFireProperty("lia_antlionguard_bark_on", "Enable Antlion Summon", 655, "npc_antlionguard", "EnableBark", EnableIcon)
-AddEntFireProperty("lia_antlionguard_bark_off", "Disable Antlion Summon", 656, "npc_antlionguard", "DisableBark", DisableIcon)
-AddEntFireProperty("lia_headcrab_burrow", "Burrow", 655, "npc_headcrab", "BurrowImmediate", "icon16/arrow_down.png")
-AddEntFireProperty("lia_strider_stand", "Force Stand", 655, "npc_strider", "Stand", "icon16/arrow_up.png")
-AddEntFireProperty("lia_strider_crouch", "Force Crouch", 656, "npc_strider", "Crouch", "icon16/arrow_down.png")
-AddEntFireProperty("lia_strider_break", "Destroy", 657, {"npc_strider", "npc_clawscanner", "npc_cscanner"}, "Break", ExplodeIcon)
-AddEntFireProperty("lia_patrol_on", "Start Patrolling", 660, {"npc_citizen", "npc_combine_s"}, "StartPatrolling", "icon16/flag_green.png")
-AddEntFireProperty("lia_patrol_off", "Stop Patrolling", 661, {"npc_citizen", "npc_combine_s"}, "StopPatrolling", "icon16/flag_red.png")
-AddEntFireProperty("lia_strider_aggressive_e", "Make More Aggressive", 658, "npc_strider", "EnableAggressiveBehavior", EnableIcon)
-AddEntFireProperty("lia_strider_aggressive_d", "Make Less Aggressive", 659, "npc_strider", "DisableAggressiveBehavior", DisableIcon)
-AddEntFunctionProperty("lia_healthcharger_recharge", "Recharge", 655, "item_healthcharger", function(ent)
+AddEntFireProperty("lia_antlion_burrow", L("burrow"), 655, {"npc_antlion", "npc_antlion_worker"}, "BurrowAway", "icon16/arrow_down.png")
+AddEntFireProperty("lia_barnacle_free", L("freeTarget"), 655, "npc_barnacle", "LetGo", "icon16/heart.png")
+AddEntFireProperty("lia_zombine_suicide", L("suicide"), 655, "npc_zombine", "PullGrenade", ExplodeIcon)
+AddEntFireProperty("lia_zombine_sprint", L("sprint"), 656, "npc_zombine", "StartSprint", "icon16/flag_blue.png")
+AddEntFireProperty("lia_thumper_enable", L("enable"), 655, "prop_thumper", "Enable", EnableIcon)
+AddEntFireProperty("lia_thumper_disable", L("disable"), 656, "prop_thumper", "Disable", DisableIcon)
+AddEntFireProperty("lia_dog_fetch_on", L("startPlayingFetch"), 655, "npc_dog", "StartCatchThrowBehavior", "icon16/accept.png")
+AddEntFireProperty("lia_dog_fetch_off", L("stopPlayingFetch"), 656, "npc_dog", "StopCatchThrowBehavior", "icon16/cancel.png")
+AddEntFireProperty("lia_soldier_look_off", L("enableBlindness"), 655, "npc_combine_s", "LookOff", "icon16/user_green.png")
+AddEntFireProperty("lia_soldier_look_on", L("disableBlindness"), 656, "npc_combine_s", "LookOn", "icon16/user_gray.png")
+AddEntFireProperty("lia_citizen_wep_pick_on", L("permitWeaponUpgradePickup"), 655, "npc_citizen", "EnableWeaponPickup", EnableIcon)
+AddEntFireProperty("lia_citizen_wep_pick_off", L("restrictWeaponUpgradePickup"), 656, "npc_citizen", "DisableWeaponPickup", DisableIcon)
+AddEntFireProperty("lia_citizen_panic", L("startPanicking"), 658, {"npc_citizen", "npc_alyx", "npc_barney"}, "SetReadinessPanic", "icon16/flag_red.png")
+AddEntFireProperty("lia_citizen_panic_off", L("stopPanicking"), 659, {"npc_citizen", "npc_alyx", "npc_barney"}, "SetReadinessHigh", "icon16/flag_green.png")
+AddEntFireProperty("lia_camera_angry", L("makeAngry"), 656, "npc_combine_camera", "SetAngry", "icon16/flag_red.png")
+AddEntFireProperty("lia_combine_mine_disarm", L("disarm"), 655, "combine_mine", "Disarm", "icon16/wrench.png")
+AddEntFireProperty("lia_hunter_enable", L("enableShooting"), 655, "npc_hunter", "EnableShooting", EnableIcon)
+AddEntFireProperty("lia_hunter_disable", L("disableShooting"), 656, "npc_hunter", "DisableShooting", DisableIcon)
+AddEntFireProperty("lia_vortigaunt_enable", L("enableArmorRecharge"), 655, "npc_vortigaunt", "EnableArmorRecharge", EnableIcon)
+AddEntFireProperty("lia_vortigaunt_disable", L("disableArmorRecharge"), 656, "npc_vortigaunt", "DisableArmorRecharge", DisableIcon)
+AddEntFireProperty("lia_antlion_enable", L("enableJump"), 655, {"npc_antlion", "npc_antlion_worker"}, "EnableJump", EnableIcon)
+AddEntFireProperty("lia_antlion_disable", L("disableJump"), 656, {"npc_antlion", "npc_antlion_worker"}, "DisableJump", DisableIcon)
+AddEntFireProperty("lia_antlion_hear", L("hearBugbait"), 657, {"npc_antlion", "npc_antlion_worker"}, "HearBugbait", EnableIcon)
+AddEntFireProperty("lia_antlion_ignore", L("ignoreBugbait"), 658, {"npc_antlion", "npc_antlion_worker"}, "IgnoreBugbait", DisableIcon)
+AddEntFireProperty("lia_antlion_grub_squash", L("squash"), 655, "npc_antlion_grub", "Squash", "icon16/bug.png")
+AddEntFireProperty("lia_antlionguard_bark_on", L("enableAntlionSummon"), 655, "npc_antlionguard", "EnableBark", EnableIcon)
+AddEntFireProperty("lia_antlionguard_bark_off", L("disableAntlionSummon"), 656, "npc_antlionguard", "DisableBark", DisableIcon)
+AddEntFireProperty("lia_headcrab_burrow", L("burrow"), 655, "npc_headcrab", "BurrowImmediate", "icon16/arrow_down.png")
+AddEntFireProperty("lia_strider_stand", L("forceStand"), 655, "npc_strider", "Stand", "icon16/arrow_up.png")
+AddEntFireProperty("lia_strider_crouch", L("forceCrouch"), 656, "npc_strider", "Crouch", "icon16/arrow_down.png")
+AddEntFireProperty("lia_strider_break", L("destroy"), 657, {"npc_strider", "npc_clawscanner", "npc_cscanner"}, "Break", ExplodeIcon)
+AddEntFireProperty("lia_patrol_on", L("startPatrolling"), 660, {"npc_citizen", "npc_combine_s"}, "StartPatrolling", "icon16/flag_green.png")
+AddEntFireProperty("lia_patrol_off", L("stopPatrolling"), 661, {"npc_citizen", "npc_combine_s"}, "StopPatrolling", "icon16/flag_red.png")
+AddEntFireProperty("lia_strider_aggressive_e", L("makeMoreAggressive"), 658, "npc_strider", "EnableAggressiveBehavior", EnableIcon)
+AddEntFireProperty("lia_strider_aggressive_d", L("makeLessAggressive"), 659, "npc_strider", "DisableAggressiveBehavior", DisableIcon)
+AddEntFunctionProperty("lia_healthcharger_recharge", L("recharge"), 655, "item_healthcharger", function(ent)
     local n = ents.Create("item_healthcharger")
     n:SetPos(ent:GetPos())
     n:SetAngles(ent:GetAngles())
@@ -476,7 +476,7 @@ AddEntFunctionProperty("lia_healthcharger_recharge", "Recharge", 655, "item_heal
     ent:Remove()
 end, "icon16/arrow_refresh.png")
 
-AddEntFunctionProperty("lia_vehicle_exit", "Kick Driver", 655, function(ent)
+AddEntFunctionProperty("lia_vehicle_exit", L("kickDriver"), 655, function(ent)
     if ent:IsVehicle() and ent:GetNWBool("HasDriver") then return true end
     return false
 end, function(ent)
@@ -484,7 +484,7 @@ end, function(ent)
     ent:GetDriver():ExitVehicle()
 end, "icon16/car.png")
 
-AddEntFireProperty("lia_vehicle_radar", "Enable Radar", 655, function(ent)
+AddEntFireProperty("lia_vehicle_radar", L("enableRadar"), 655, function(ent)
     if not ent:IsVehicle() or ent:GetClass() ~= "prop_vehicle_jeep" then return false end
     if ent:LookupAttachment("controlpanel0_ll") == 0 then return false end
     if ent:LookupAttachment("controlpanel0_ur") == 0 then return false end
@@ -492,13 +492,13 @@ AddEntFireProperty("lia_vehicle_radar", "Enable Radar", 655, function(ent)
     return true
 end, "EnableRadar", "icon16/application_add.png")
 
-AddEntFireProperty("lia_vehicle_radar_off", "Disable Radar", 655, function(ent)
+AddEntFireProperty("lia_vehicle_radar_off", L("disableRadar"), 655, function(ent)
     if not ent:IsVehicle() or ent:GetClass() ~= "prop_vehicle_jeep" then return false end
     if not ent:GetNWBool("m_bRadarEnabled", false) then return false end
     return true
 end, "DisableRadar", "icon16/application_delete.png")
 
-AddEntFunctionProperty("lia_vehicle_enter", "Enter Vehicle", 656, function(ent)
+AddEntFunctionProperty("lia_vehicle_enter", L("enterVehicle"), 656, function(ent)
     if ent:IsVehicle() and not ent:GetNWBool("HasDriver") then return true end
     return false
 end, function(ent, ply)
@@ -506,7 +506,7 @@ end, function(ent, ply)
     ply:EnterVehicle(ent)
 end, "icon16/car.png")
 
-AddEntFunctionProperty("lia_vehicle_add_gun", "Mount Gun", 657, function(ent)
+AddEntFunctionProperty("lia_vehicle_add_gun", L("mountGun"), 657, function(ent)
     if not ent:IsVehicle() then return false end
     if ent:GetNWBool("EnableGun", false) then return false end
     if ent:GetBodygroup(1) == 1 then return false end
@@ -520,54 +520,54 @@ end, function(ent)
     ent:SetNWBool("EnableGun", true)
 end, "icon16/gun.png")
 
-AddEntFunctionProperty("lia_baloon_break", "Pop", 655, "gmod_balloon", function(ent, ply)
+AddEntFunctionProperty("lia_baloon_break", L("pop"), 655, "gmod_balloon", function(ent, ply)
     local dmginfo = DamageInfo()
     dmginfo:SetAttacker(ply)
     ent:OnTakeDamage(dmginfo)
 end, ExplodeIcon)
 
-AddEntFunctionProperty("lia_dynamite_activate", "Explode", 655, "gmod_dynamite", function(ent, ply) ent:Explode(0, ply) end, ExplodeIcon)
-AddEntFunctionProperty("lia_emitter_on", "Start Emitting", 655, function(ent)
+AddEntFunctionProperty("lia_dynamite_activate", L("explode"), 655, "gmod_dynamite", function(ent, ply) ent:Explode(0, ply) end, ExplodeIcon)
+AddEntFunctionProperty("lia_emitter_on", L("startEmitting"), 655, function(ent)
     if ent:GetClass() == "gmod_emitter" and not ent:GetOn() then return true end
     return false
 end, function(ent) ent:SetOn(true) end, EnableIcon)
 
-AddEntFunctionProperty("lia_emitter_off", "Stop Emitting", 656, function(ent)
+AddEntFunctionProperty("lia_emitter_off", L("stopEmitting"), 656, function(ent)
     if ent:GetClass() == "gmod_emitter" and ent:GetOn() then return true end
     return false
 end, function(ent) ent:SetOn(false) end, DisableIcon)
 
-AddEntFunctionProperty("lia_lamp_on", "Enable", 655, function(ent)
+AddEntFunctionProperty("lia_lamp_on", L("enable"), 655, function(ent)
     if ent:GetClass() == "gmod_lamp" and not ent:GetOn() then return true end
     return false
 end, function(ent) ent:Switch(true) end, EnableIcon)
 
-AddEntFunctionProperty("lia_lamp_off", "Disable", 656, function(ent)
+AddEntFunctionProperty("lia_lamp_off", L("disable"), 656, function(ent)
     if ent:GetClass() == "gmod_lamp" and ent:GetOn() then return true end
     return false
 end, function(ent) ent:Switch(false) end, DisableIcon)
 
-AddEntFunctionProperty("lia_light_on", "Enable", 655, function(ent)
+AddEntFunctionProperty("lia_light_on", L("enable"), 655, function(ent)
     if ent:GetClass() == "gmod_light" and not ent:GetOn() then return true end
     return false
 end, function(ent) ent:SetOn(true) end, EnableIcon)
 
-AddEntFunctionProperty("lia_light_off", "Disable", 656, function(ent)
+AddEntFunctionProperty("lia_light_off", L("disable"), 656, function(ent)
     if ent:GetClass() == "gmod_light" and ent:GetOn() then return true end
     return false
 end, function(ent) ent:SetOn(false) end, DisableIcon)
 
-AddEntFireProperty("lia_func_rotating_forward", "Start Forward", 655, "func_rotating", "StartForward", "icon16/arrow_right.png")
-AddEntFireProperty("lia_func_rotating_backward", "Start Backward", 656, "func_rotating", "StartBackward", "icon16/arrow_left.png")
-AddEntFireProperty("lia_func_rotating_reverse", "Reverse", 657, "func_rotating", "Reverse", "icon16/arrow_undo.png")
-AddEntFireProperty("lia_func_rotating_stop", "Stop", 658, "func_rotating", "Stop", "icon16/shape_square.png")
-AddEntFireProperty("lia_func_platrot_up", "Go Up", 655, "func_platrot", "GoUp", "icon16/arrow_up.png")
-AddEntFireProperty("lia_func_platrot_down", "Go Down", 656, "func_platrot", "GoDown", "icon16/arrow_down.png")
-AddEntFireProperty("lia_func_platrot_toggle", "Toggle", 657, "func_platrot", "Toggle", ToggleIcon)
+AddEntFireProperty("lia_func_rotating_forward", L("startForward"), 655, "func_rotating", "StartForward", "icon16/arrow_right.png")
+AddEntFireProperty("lia_func_rotating_backward", L("startBackward"), 656, "func_rotating", "StartBackward", "icon16/arrow_left.png")
+AddEntFireProperty("lia_func_rotating_reverse", L("reverse"), 657, "func_rotating", "Reverse", "icon16/arrow_undo.png")
+AddEntFireProperty("lia_func_rotating_stop", L("stop"), 658, "func_rotating", "Stop", "icon16/shape_square.png")
+AddEntFireProperty("lia_func_platrot_up", L("goUp"), 655, "func_platrot", "GoUp", "icon16/arrow_up.png")
+AddEntFireProperty("lia_func_platrot_down", L("goDown"), 656, "func_platrot", "GoDown", "icon16/arrow_down.png")
+AddEntFireProperty("lia_func_platrot_toggle", L("toggle"), 657, "func_platrot", "Toggle", ToggleIcon)
 AddEntFireProperty("lia_func_train_start", L("start"), 655, "func_train", L("start"), "icon16/arrow_right.png")
-AddEntFireProperty("lia_func_train_stop", "Stop", 656, "func_train", "Stop", "icon16/arrow_left.png")
-AddEntFireProperty("lia_func_train_toggle", "Toggle", 657, "func_train", "Toggle", ToggleIcon)
-AddEntFunctionProperty("lia_item_suit", "Wear", 655, function(ent, ply)
+AddEntFireProperty("lia_func_train_stop", L("stop"), 656, "func_train", "Stop", "icon16/arrow_left.png")
+AddEntFireProperty("lia_func_train_toggle", L("toggle"), 657, "func_train", "Toggle", ToggleIcon)
+AddEntFunctionProperty("lia_item_suit", L("wear"), 655, function(ent, ply)
     if ent:GetClass() ~= "item_suit" then return false end
     if not ply:IsSuitEquipped() then return true end
     return false
@@ -594,7 +594,7 @@ CheckFuncs["item_battery"] = function(ply) return ply:Armor() < 100 end
 CheckFuncs["item_healthvial"] = function(ply) return ply:Health() < 100 end
 CheckFuncs["item_healthkit"] = function(ply) return ply:Health() < 100 end
 CheckFuncs["item_grubnugget"] = function(ply) return ply:Health() < 100 end
-AddEntFunctionProperty("lia_pickupitem", "Pick up", 655, function(ent, ply)
+AddEntFunctionProperty("lia_pickupitem", L("pickUp"), 655, function(ent, ply)
     if not table.HasValue(table.GetKeys(CheckFuncs), ent:GetClass()) then return false end
     if CheckFuncs[ent:GetClass()](ply) then return true end
     return false
@@ -638,7 +638,7 @@ function ExtProp_AddMonster(class)
     RecalcUsableNPCs()
 end
 
-AddEntFunctionProperty("lia_make_friendly", "Make Friendly", 652, function(ent)
+AddEntFunctionProperty("lia_make_friendly", L("makeFriendly"), 652, function(ent)
     if ent:IsNPC() and not table.HasValue(passive, ent:GetClass()) and NPCsThisWorksOn[ent:GetClass()] then return true end
     return false
 end, function(ent)
@@ -667,7 +667,7 @@ end, function(ent)
     ent:Activate()
 end, "icon16/user_green.png")
 
-AddEntFunctionProperty("lia_make_hostile", "Make Hostile", 653, function(ent)
+AddEntFunctionProperty("lia_make_hostile", L("makeHostile"), 653, function(ent)
     if ent:IsNPC() and not table.HasValue(passive, ent:GetClass()) and NPCsThisWorksOn[ent:GetClass()] then return true end
     return false
 end, function(ent)

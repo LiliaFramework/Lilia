@@ -94,7 +94,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     local claimButton
     claimButton = createButton("claimCase", mat_case, 100, function()
         if not shouldClose then
-            if frm.lblTitle:GetText():lower():find("claimed") then
+            if frm.lblTitle:GetText():lower():find(L("claimedBy"):lower()) then
                 chat.AddText(Color(255, 150, 0), "[" .. L("error") .. "] " .. L("caseAlreadyClaimed"))
                 surface.PlaySound("common/wpn_denyselect.wav")
             else

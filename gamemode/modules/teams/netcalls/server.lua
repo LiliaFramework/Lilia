@@ -1,3 +1,10 @@
+local function stripAgo(timeSince)
+    local agoStr = L("ago")
+    local suffix = " " .. agoStr
+    if timeSince:sub(-#suffix) == suffix then return timeSince:sub(1, -#suffix - 1) end
+    return timeSince
+end
+
 net.Receive("RequestFactionRoster", function(_, client)
     local character = client:getChar()
     if not character or not character:hasFlags("V") then return end
@@ -23,7 +30,7 @@ net.Receive("RequestFactionRoster", function(_, client)
                     if not isnumber(last) then last = os.time(lia.time.toNumber(v.lastJoinTime)) end
                     local lastDiff = os.time() - last
                     local timeSince = lia.time.TimeSince(last)
-                    local timeStripped = timeSince:match("^(.-)%sago$") or timeSince
+                    local timeStripped = stripAgo(timeSince)
                     lastOnlineText = L("agoFormat", timeStripped, lia.time.formatDHM(lastDiff))
                 end
 
@@ -83,7 +90,7 @@ net.Receive("RequestClassRoster", function(_, client)
                     if not isnumber(last) then last = os.time(lia.time.toNumber(v.lastJoinTime)) end
                     local lastDiff = os.time() - last
                     local timeSince = lia.time.TimeSince(last)
-                    local timeStripped = timeSince:match("^(.-)%sago$") or timeSince
+                    local timeStripped = stripAgo(timeSince)
                     lastOnlineText = L("agoFormat", timeStripped, lia.time.formatDHM(lastDiff))
                 end
 

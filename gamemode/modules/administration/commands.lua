@@ -88,7 +88,7 @@ lia.command.add("managesitrooms", {
     privilege = "Manage SitRooms",
     desc = "manageSitroomsDesc",
     onRun = function(client)
-        if not client:hasPrivilege("Manage SitRooms") then return end
+        if not client:hasPrivilege(L("Manage SitRooms")) then return end
         local rooms = lia.data.get("sitrooms", {})
         net.Start("managesitrooms")
         net.WriteTable(rooms)
@@ -194,6 +194,7 @@ lia.command.add("returnsitroom", {
 lia.command.add("charkill", {
     superAdminOnly = true,
     privilege = "Manage Characters",
+    desc = "charkillDesc",
     onRun = function(client)
         local choices = {}
         for _, ply in player.Iterator() do
@@ -1495,7 +1496,7 @@ lia.command.add("charvoicetoggle", {
                 target:notifyLocalized("voiceMutedByAdmin")
             end
 
-            lia.log.add(client, "voiceToggle", target:Name(), isBanned and "Unmuted" or "Muted")
+            lia.log.add(client, "voiceToggle", target:Name(), isBanned and L("unmuted") or L("muted"))
         else
             client:notifyLocalized("noValidCharacter")
         end

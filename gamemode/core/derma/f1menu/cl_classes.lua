@@ -21,13 +21,13 @@ function PANEL:loadClasses()
         if cl.faction == client:Team() then list[#list + 1] = cl end
     end
 
-    table.sort(list, function(a, b) return a.name < b.name end)
+    table.sort(list, function(a, b) return L(a.name or "") < L(b.name or "") end)
     self.sidebar:Clear()
     self.tabList = {}
     for _, cl in ipairs(list) do
         local canBe = lia.class.canBe(LocalPlayer(), cl.index)
         local btn = self.sidebar:Add("liaMediumButton")
-        btn:SetText(cl.name or L("unnamed"))
+        btn:SetText(cl.name and L(cl.name) or L("unnamed"))
         btn:SetTall(50)
         btn:Dock(TOP)
         btn:DockMargin(0, 0, 10, 20)
@@ -126,9 +126,10 @@ function PANEL:addClassDetails(parent, cl)
         lbl:DockMargin(10, 5, 10, 0)
     end
 
-    add(L("name") .. ": " .. (cl.name or L("unnamed")))
-    add(L("description") .. ": " .. (cl.desc or L("noDesc")))
-    add(L("faction") .. ": " .. (team.GetName(cl.faction) or L("none")))
+    add(L("name") .. ": " .. (cl.name and L(cl.name) or L("unnamed")))
+    add(L("description") .. ": " .. (cl.desc and L(cl.desc) or L("noDesc")))
+    local facName = team.GetName(cl.faction)
+    add(L("faction") .. ": " .. (facName and L(facName) or L("none")))
     add(L("isDefault") .. ": " .. (cl.isDefault and L("yes") or L("no")))
     add(L("baseHealth") .. ": " .. tostring(cl.health or maxH))
     add(L("baseArmor") .. ": " .. tostring(cl.armor or maxA))
@@ -154,7 +155,16 @@ function PANEL:addClassDetails(parent, cl)
 
     add(L("bloodColor") .. ": " .. (bloodMap[cl.bloodcolor] or L("bloodRed")))
     if cl.requirements then
-        local req = istable(cl.requirements) and table.concat(cl.requirements, ", ") or tostring(cl.requirements)
+        local req
+        if istable(cl.requirements) then
+            local reqs = {}
+            for _, v in ipairs(cl.requirements) do
+                reqs[#reqs + 1] = L(v)
+            end
+            req = table.concat(reqs, ", ")
+        else
+            req = L(tostring(cl.requirements))
+        end
         add(L("requirements") .. ": " .. req)
     end
 end

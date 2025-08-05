@@ -1,7 +1,7 @@
 ﻿local MODULE = MODULE
 lia.command.add("warn", {
     adminOnly = true,
-    privilege = "Issue Warnings",
+    privilege = "issueWarnings",
     desc = "warnDesc",
     syntax = "[player Target] [string Reason]",
     AdminStick = {
@@ -39,11 +39,11 @@ lia.command.add("warn", {
 
 lia.command.add("viewwarns", {
     adminOnly = true,
-    privilege = "View Player Warnings",
+    privilege = "viewPlayerWarnings",
     desc = "viewWarnsDesc",
     syntax = "[player Target]",
     AdminStick = {
-        Name = "View Player Warnings",
+        Name = "viewPlayerWarnings",
         Category = "moderationTools",
         SubCategory = "warnings",
         Icon = "icon16/eye.png"

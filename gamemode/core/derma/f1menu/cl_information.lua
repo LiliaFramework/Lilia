@@ -82,7 +82,7 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, 
         local val = isfunction(valueFunc) and valueFunc() or tonumber(valueFunc) or 0
         local frac = mx > mn and math.Clamp((val - mn) / (mx - mn), 0, 1) or 0
         bar:SetFraction(frac)
-        bar:SetText(string.format("%d / %d", math.Round(val), math.Round(mx)))
+        bar:SetText(L("barProgress", math.Round(val), math.Round(mx)))
     end
 
     function bar:Think()
@@ -116,9 +116,9 @@ function PANEL:GenerateSections()
         local fields = isfunction(sec.data.fields) and sec.data.fields() or sec.data.fields
         for _, f in ipairs(fields) do
             if f.type == "text" then
-                self:CreateTextEntryWithBackgroundAndLabel(container, f.name, f.label, 5, f.value)
+                self:CreateTextEntryWithBackgroundAndLabel(container, f.name, L(f.label or ""), 5, f.value)
             elseif f.type == "bar" then
-                self:CreateFillableBarWithBackgroundAndLabel(container, f.name, f.label, f.min, f.max, 5, f.value)
+                self:CreateFillableBarWithBackgroundAndLabel(container, f.name, L(f.label or ""), f.min, f.max, 5, f.value)
             end
 
             self:AddSpacer(container, 5)
@@ -136,7 +136,7 @@ function PANEL:CreateSection(parent, title)
     cat.Paint = function() end
     cat.Header.Paint = function(p, w, h)
         derma.SkinHook("Paint", "Panel", p, w, h)
-        draw.SimpleText(title, "liaSmallFont", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(L(title), "liaSmallFont", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
     local contents = vgui.Create("DPanel", cat)

@@ -1,6 +1,6 @@
 ﻿local MODULE = MODULE
 lia.command.add("spawnadd", {
-    privilege = "Manage Spawns",
+    privilege = "manageSpawns",
     adminOnly = true,
     desc = "spawnAddDesc",
     syntax = "[faction Faction]",
@@ -37,7 +37,7 @@ lia.command.add("spawnadd", {
 })
 
 lia.command.add("spawnremoveinradius", {
-    privilege = "Manage Spawns",
+    privilege = "manageSpawns",
     adminOnly = true,
     desc = "spawnRemoveInRadiusDesc",
     syntax = "[number Radius optional]",
@@ -70,7 +70,7 @@ lia.command.add("spawnremoveinradius", {
 })
 
 lia.command.add("spawnremovebyname", {
-    privilege = "Manage Spawns",
+    privilege = "manageSpawns",
     adminOnly = true,
     desc = "spawnRemoveByNameDesc",
     syntax = "[faction Faction]",
@@ -119,11 +119,11 @@ lia.command.add("spawnremovebyname", {
 
 lia.command.add("returnitems", {
     superAdminOnly = true,
-    privilege = "Return Items",
+    privilege = "returnItems",
     desc = "returnItemsDesc",
     syntax = "[player Name]",
     AdminStick = {
-        Name = "Return Items",
+        Name = "returnItems",
         Category = "characterManagement",
         SubCategory = "items",
         Icon = "icon16/arrow_refresh.png"

@@ -177,7 +177,7 @@ function ENT:OnRemove()
 end
 
 function ENT:setModel(model)
-    assert(isstring(model), "model must be a string")
+    assert(isstring(model), L("vendorModelString"))
     model = model:lower()
     self:SetModel(model)
     self:setAnim()
@@ -204,7 +204,7 @@ function ENT:setBodyGroup(id, value)
 end
 
 function ENT:setSellScale(scale)
-    assert(isnumber(scale), "scale must be a number")
+    assert(isnumber(scale), L("vendorScaleNumber"))
     self:setNetVar("scale", scale)
     net.Start("VendorEdit")
     net.WriteString("scale")

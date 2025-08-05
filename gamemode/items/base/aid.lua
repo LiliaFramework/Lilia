@@ -5,7 +5,7 @@ ITEM.width = 1
 ITEM.height = 1
 ITEM.health = 0
 ITEM.functions.use = {
-    name = "use",
+    name = L("use"),
     sound = "items/medshot4.wav",
     onRun = function(item)
         local client = item.player
@@ -17,7 +17,7 @@ ITEM.functions.use = {
 }
 
 ITEM.functions.target = {
-    name = "itemUseOnTarget",
+    name = L("itemUseOnTarget"),
     sound = "items/medshot4.wav",
     onRun = function(item)
         local client = item.player

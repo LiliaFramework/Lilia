@@ -234,9 +234,9 @@ function lia.item.getInv(invID)
 end
 
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
-    assert(isstring(uniqueID), "uniqueID must be a string")
+    assert(isstring(uniqueID), L("itemUniqueIDString"))
     local baseTable = lia.item.base[baseID] or lia.meta.item
-    if baseID then assert(baseTable, "Item " .. uniqueID .. " has a non-existent base " .. baseID) end
+    if baseID then assert(baseTable, L("itemBaseNotFound", uniqueID, baseID)) end
     local targetTable = isBaseItem and lia.item.base or lia.item.list
     if luaGenerated then
         ITEM = setmetatable({
@@ -321,7 +321,7 @@ end
 
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id
-    assert(isnumber(id), "non-number ID given to lia.item.new")
+    assert(isnumber(id), L("itemNonNumberID"))
     if lia.item.instances[id] and lia.item.instances[id].uniqueID == uniqueID then return lia.item.instances[id] end
     local stockItem = lia.item.list[uniqueID]
     if stockItem then
@@ -343,7 +343,7 @@ end
 
 function lia.item.registerInv(invType, w, h)
     local GridInv = FindMetaTable("GridInv")
-    assert(GridInv, "GridInv not found")
+    assert(GridInv, L("gridInvNotFound"))
     local inventory = GridInv:extend("GridInv" .. invType)
     inventory.invType = invType
     function inventory:getWidth()
@@ -377,7 +377,7 @@ end
 
 function lia.item.createInv(w, h, id)
     local GridInv = FindMetaTable("GridInv")
-    assert(GridInv, "GridInv not found")
+    assert(GridInv, L("gridInvNotFound"))
     local instance = GridInv:new()
     instance.id = id
     instance.data = {
@@ -506,7 +506,7 @@ end
 if SERVER then
     function lia.item.setItemDataByID(itemID, key, value, receivers, noSave, noCheckEntity)
         assert(isnumber(itemID), L("itemIDNumberRequired"))
-        assert(isstring(key), "key must be a string")
+        assert(isstring(key), L("itemKeyString"))
         local item = lia.item.instances[itemID]
         if not item then return false, L("itemNotFound") end
         item:setData(key, value, receivers, noSave, noCheckEntity)

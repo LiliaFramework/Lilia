@@ -1,4 +1,4 @@
-﻿local math = math
+local math = math
 local HUGE = math.huge
 local floor = math.floor
 local internal_type = type
@@ -80,8 +80,7 @@ do
     local get_encoder = function(buf, t)
         local encoder = encoders[type(t)]
         if encoder == nil then
-            write(buf, "Unsupported type: ")
-            write(buf, type(t))
+            write(buf, L("sfsUnsupportedType", type(t)))
             return nil
         end
         return encoder
@@ -138,12 +137,10 @@ do
     function encoders.array(buf, arr, len, start_index)
         start_index = (start_index == nil or start_index ~= 0 and start_index ~= 1) and 1 or start_index
         if len < 0 then
-            write(buf, "Array size cannot be negative: ")
-            write(buf, len)
+            write(buf, L("sfsArrayNegativeSize", len))
             return true
         elseif len > 0xFFFFFFFF then
-            write(buf, "Array size too large to encode: ")
-            write(buf, len)
+            write(buf, L("sfsArrayTooLarge", len))
             return true
         end
 
@@ -202,8 +199,7 @@ do
             write(buf, chars[TABLE_FIXED + table_count])
         else
             if table_count > 0xFFFFFFFF then
-                write(buf, "Table size too large to encode: ")
-                write(buf, table_count)
+                write(buf, L("sfsTableTooLarge", table_count))
                 return true
             end
 
@@ -216,8 +212,7 @@ do
     function encoders.string(buf, str)
         local str_len = #str
         if str_len > 0xFFFFFFFF then
-            write(buf, "String too large to encode: ")
-            write(buf, str_len)
+            write(buf, L("sfsStringTooLarge", str_len))
             return true
         end
 
@@ -232,8 +227,7 @@ do
 
     function encoders.number(buf, num)
         if num > MAX_NUMBER and num ~= HUGE or num < MIN_NUMBER and num ~= -HUGE then
-            write(buf, "Number too large to encode: ")
-            write(buf, num)
+            write(buf, L("sfsNumberTooLarge", num))
             return true
         end
 
@@ -329,8 +323,7 @@ do
             exponent = -1023
             fraction = abs_value / 2 ^ exponent
         elseif abs_value ~= HUGE and exponent > 1024 then
-            write(buf, "Exponent out of range: ")
-            write(buf, value)
+            write(buf, L("sfsExponentOutOfRange", value))
             return true
         end
 
@@ -375,9 +368,9 @@ do
     local byte = function(ctx, size)
         local index = ctx[1]
         if index + size - 1 > ctx[3] then
-            return nil, "Attemped to read beyond buffer size"
+            return nil, L("sfsReadBeyondBuffer")
         elseif index + size - 1 > ctx[4] then
-            return nil, "Max decode size exceeded"
+            return nil, L("sfsMaxDecodeSizeExceeded")
         end
 
         ctx[1] = index + size
@@ -388,14 +381,14 @@ do
     local get_decoder = function(ctx)
         local t = read_type(ctx)
         local decoder = decoders[t]
-        if decoder == nil then return nil, "Unsupported type: ", t end
+        if decoder == nil then return nil, L("sfsUnsupportedType", t), t end
         return decoder
     end
 
     Decoder.get_decoder = get_decoder
     local context = {1, "", 0, HUGE,}
     local decode = function()
-        if context[3] < 1 then return nil, "Buffer is empty" end
+        if context[3] < 1 then return nil, L("sfsBufferEmpty") end
         local err, err_2
         local decoder
         local val
@@ -415,8 +408,8 @@ do
     end
 
     function Decoder.decode_with_max_size(str, max_size)
-        if type(max_size) ~= "number" then return nil, "max_size is not a number", max_size end
-        if max_size < 0 then return nil, "max_size can either be a positive number or math.huge for unlimited", max_size end
+        if type(max_size) ~= "number" then return nil, L("sfsMaxSizeNotNumber"), max_size end
+        if max_size < 0 then return nil, L("sfsMaxSizeInvalid"), max_size end
         context[1] = 1
         context[2] = str
         context[3] = #str
@@ -749,9 +742,9 @@ do
     function decode_string(ctx, len)
         local index = ctx[1]
         if index + len - 1 > ctx[3] then
-            return nil, "Attemped to read beyond buffer size"
+            return nil, L("sfsReadBeyondBuffer")
         elseif index + len - 1 > ctx[4] then
-            return nil, "Max decode size exceeded"
+            return nil, L("sfsMaxDecodeSizeExceeded")
         end
 
         ctx[1] = index + len
@@ -817,7 +810,7 @@ return {
     set_type_function = function(t_fn) type = t_fn end,
     add_encoder = function(typ, encoder)
         encoders[typ] = encoder
-        if FREE_FOR_CUSTOM == FREE_FOR_CUSTOM_END then return nil, "No more free slots for custom encoders" end
+        if FREE_FOR_CUSTOM == FREE_FOR_CUSTOM_END then return nil, L("sfsNoMoreCustomEncoders") end
         FREE_FOR_CUSTOM = FREE_FOR_CUSTOM + 1
         return FREE_FOR_CUSTOM - 1
     end,

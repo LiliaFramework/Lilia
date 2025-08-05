@@ -2,7 +2,8 @@
 lia.command.list = lia.command.list or {}
 function lia.command.add(command, data)
     data.syntax = data.syntax or ""
-    data.desc = data.desc and L(data.desc) or ""
+    data.desc = data.desc or ""
+    data.privilege = data.privilege or nil
     local superAdminOnly = data.superAdminOnly
     local adminOnly = data.adminOnly
     if not data.onRun then
@@ -11,7 +12,7 @@ function lia.command.add(command, data)
     end
 
     if superAdminOnly or adminOnly then
-        local privilegeName = isstring(data.privilege) and data.privilege or "Access to " .. command
+        local privilegeName = data.privilege and L(data.privilege) or L("accessTo", command)
         lia.administrator.registerPrivilege({
             Name = privilegeName,
             MinAccess = superAdminOnly and "superadmin" or "admin",
@@ -53,27 +54,24 @@ end
 
 function lia.command.hasAccess(client, command, data)
     if not data then data = lia.command.list[command] end
-    local privilege = data.privilege
+    local privilegeKey = data.privilege
     local superAdminOnly = data.superAdminOnly
     local adminOnly = data.adminOnly
     local accessLevels = superAdminOnly and "superadmin" or adminOnly and "admin" or "user"
-    if not privilege then privilege = accessLevels == "user" and "Global" or command end
+    local privilegeName = privilegeKey and L(privilegeKey) or (accessLevels == "user" and L("globalAccess") or L("accessTo", command))
     local hasAccess = true
-    if accessLevels ~= "user" then
-        local privilegeName = "" .. privilege
-        hasAccess = client:hasPrivilege(privilegeName)
-    end
+    if accessLevels ~= "user" then hasAccess = client:hasPrivilege(privilegeName) end
 
     local hookResult = hook.Run("CanPlayerUseCommand", client, command)
-    if hookResult ~= nil then return hookResult, privilege end
+    if hookResult ~= nil then return hookResult, privilegeName end
     local char = IsValid(client) and client.getChar and client:getChar()
     if char then
         local faction = lia.faction.indices[char:getFaction()]
-        if faction and faction.commands and faction.commands[command] then return true, privilege end
+        if faction and faction.commands and faction.commands[command] then return true, privilegeName end
         local classData = lia.class.list[char:getClass()]
-        if classData and classData.commands and classData.commands[command] then return true, privilege end
+        if classData and classData.commands and classData.commands[command] then return true, privilegeName end
     end
-    return hasAccess, privilege
+    return hasAccess, privilegeName
 end
 
 function lia.command.extractArgs(text)
@@ -559,8 +557,8 @@ hook.Add("CreateInformationButtons", "liaInformationCommandsUnified", function(p
                         if hasAccess then
                             local text = "/" .. cmdName
                             if cmdData.syntax and cmdData.syntax ~= "" then text = text .. " " .. cmdData.syntax end
-                            local desc = cmdData.desc or ""
-                            local priv = cmdData.privilege and cmdData.privilege ~= "Global" and cmdData.privilege or ""
+                            local desc = cmdData.desc ~= "" and L(cmdData.desc) or ""
+                            local priv = cmdData.privilege and L(cmdData.privilege) or ""
                             data[#data + 1] = {text, desc, priv}
                         end
                     end
@@ -578,8 +576,8 @@ hook.Add("CreateInformationButtons", "liaInformationCommandsUnified", function(p
                         if hasAccess then
                             local text = "/" .. cmdName
                             if cmdData.syntax and cmdData.syntax ~= "" then text = text .. " " .. cmdData.syntax end
-                            local desc = cmdData.desc or ""
-                            local right = privilege and privilege ~= "Global" and privilege or ""
+                            local desc = cmdData.desc ~= "" and L(cmdData.desc) or ""
+                            local right = privilege and privilege ~= L("globalAccess") and privilege or ""
                             local row = sheet:AddTextRow({
                                 title = text,
                                 desc = desc,

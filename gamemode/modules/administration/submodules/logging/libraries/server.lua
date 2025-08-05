@@ -163,7 +163,7 @@ function MODULE:PlayerSpawn(client)
 end
 
 function MODULE:OnPlayerObserve(client, state)
-    lia.log.add(client, "observeToggle", state and "enabled" or "disabled")
+    lia.log.add(client, "observeToggle", state and L("enabled") or L("disabled"))
 end
 
 function MODULE:TicketSystemClaim(admin, requester)

@@ -114,7 +114,7 @@ end
 function MODULE:PopulateAdminTabs(pages)
     local client = LocalPlayer()
     if not IsValid(client) then return end
-    if client:hasPrivilege("View Staff Management") then
+    if client:hasPrivilege(L("View Staff Management")) then
         table.insert(pages, {
             name = L("moduleStaffManagementName"),
             drawFunc = function(panel)
@@ -136,7 +136,7 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
-    if client:hasPrivilege("List Characters") then
+    if client:hasPrivilege(L("List Characters")) then
         table.insert(pages, {
             name = L("characterList"),
             drawFunc = function(panel)
@@ -341,7 +341,7 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
-    if client:hasPrivilege("View DB Tables") then
+    if client:hasPrivilege(L("View DB Tables")) then
         table.insert(pages, {
             name = L("databaseView"),
             drawFunc = function(panel)
@@ -438,7 +438,7 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
-    if client:hasPrivilege("Manage Characters") then
+    if client:hasPrivilege(L("Manage Characters")) then
         table.insert(pages, {
             name = L("pkManager"),
             drawFunc = function(panel)

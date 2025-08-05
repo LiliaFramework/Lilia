@@ -86,8 +86,8 @@ lia.command.add("checkattributes", {
             {
                 name = L("changeAttribute"),
                 ExtraFields = {
-                    ["Amount"] = "text",
-                    ["Mode"] = {L("add"), L("set")}
+                    [L("attribAmount")] = "text",
+                    [L("attribMode")] = {L("add"), L("set")}
                 },
                 net = "ChangeAttribute"
             }

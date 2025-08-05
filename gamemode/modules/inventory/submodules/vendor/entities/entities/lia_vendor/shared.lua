@@ -72,7 +72,7 @@ end
 
 function ENT:isItemInStock(itemType, amount)
     amount = amount or 1
-    assert(isnumber(amount), "amount must be a number")
+    assert(isnumber(amount), L("vendorAmountNumber"))
     local info = self.items[itemType]
     if not info then return false end
     if not info[VENDOR_MAXSTOCK] then return true end

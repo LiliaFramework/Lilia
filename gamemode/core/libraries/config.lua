@@ -1,8 +1,8 @@
 ﻿lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
 function lia.config.add(key, name, value, callback, data)
-    assert(isstring(key), "Expected config key to be string, got " .. type(key))
-    assert(istable(data), "Expected config data to be a table, got " .. type(data))
+    assert(isstring(key), L("configKeyString", type(key)))
+    assert(istable(data), L("configDataTable", type(data)))
     local t = type(value)
     local configType = t == "boolean" and "Boolean" or t == "number" and (math.floor(value) == value and "Int" or "Float") or t == "table" and value.r and value.g and value.b and "Color" or "Generic"
     data.type = data.type or configType
@@ -178,13 +178,13 @@ lia.config.add("PKWorld", L("pkWorld"), false, nil, {
     type = "Boolean"
 })
 
-lia.config.add("CurrencySingularName", L("currencySingularName"), "Dollar", function(newVal) lia.currency.singular = newVal end, {
+lia.config.add("CurrencySingularName", L("currencySingularName"), L("currencySingular"), function(newVal) lia.currency.singular = newVal end, {
     desc = L("currencySingularNameDesc"),
     category = L("money"),
     type = "Generic"
 })
 
-lia.config.add("CurrencyPluralName", L("currencyPluralName"), "Dollars", function(newVal) lia.currency.plural = newVal end, {
+lia.config.add("CurrencyPluralName", L("currencyPluralName"), L("currencyPlural"), function(newVal) lia.currency.plural = newVal end, {
     desc = L("currencyPluralNameDesc"),
     category = L("money"),
     type = "Generic"
@@ -379,88 +379,88 @@ lia.config.add("AllowKeybindEditing", L("allowKeybindEditing"), true, nil, {
     type = "Boolean"
 })
 
-lia.config.add("CrosshairEnabled", "Enable Crosshair", false, nil, {
-    desc = "Enables the crosshair",
-    category = "Visuals",
-    type = "Boolean"
+lia.config.add("CrosshairEnabled", L("enableCrosshair"), false, nil, {
+    desc = L("enableCrosshairDesc"),
+    category = L("categoryVisuals"),
+    type = "Boolean",
 })
 
-lia.config.add("BarsDisabled", "Disable Bars", false, nil, {
-    desc = "Disables bars",
-    category = "Visuals",
-    type = "Boolean"
+lia.config.add("BarsDisabled", L("disableBars"), false, nil, {
+    desc = L("disableBarsDesc"),
+    category = L("categoryVisuals"),
+    type = "Boolean",
 })
 
-lia.config.add("AutoWeaponItemGeneration", "Auto Weapon-to-Item Generation", true, nil, {
-    desc = "Enables automatic conversion of dropped weapons into inventory items",
+lia.config.add("AutoWeaponItemGeneration", L("autoWeaponItemGeneration"), true, nil, {
+    desc = L("autoWeaponItemGenerationDesc"),
     category = L("categoryGeneral"),
-    type = "Boolean"
+    type = "Boolean",
 })
 
-lia.config.add("AmmoDrawEnabled", "Enable Ammo Display", true, nil, {
-    desc = "Enables ammo display",
-    category = "Visuals",
-    type = "Boolean"
+lia.config.add("AmmoDrawEnabled", L("enableAmmoDisplay"), true, nil, {
+    desc = L("enableAmmoDisplayDesc"),
+    category = L("categoryVisuals"),
+    type = "Boolean",
 })
 
-lia.config.add("IsVoiceEnabled", "Voice Chat Enabled", true, function(_, newValue) hook.Run("VoiceToggled", newValue) end, {
-    desc = "Whether or not voice chat is enabled",
+lia.config.add("IsVoiceEnabled", L("voiceChatEnabled"), true, function(_, newValue) hook.Run("VoiceToggled", newValue) end, {
+    desc = L("voiceChatEnabledDesc"),
     category = L("categoryGeneral"),
-    type = "Boolean"
+    type = "Boolean",
 })
 
-lia.config.add("SalaryInterval", "Salary Interval", 300, function()
+lia.config.add("SalaryInterval", L("salaryInterval"), 300, function()
     for _, client in player.Iterator() do
         hook.Run("CreateSalaryTimer", client)
     end
 end, {
-    desc = "Interval in seconds between salary payouts.",
-    category = "Salary",
+    desc = L("salaryIntervalDesc"),
+    category = L("categorySalary"),
     type = "Float",
     min = 60,
     max = 3600
 })
 
-lia.config.add("SalaryThreshold", "Salary Threshold", 0, nil, {
-    desc = "Money threshold above which salaries will not be given.",
-    category = "Salary",
+lia.config.add("SalaryThreshold", L("salaryThreshold"), 0, nil, {
+    desc = L("salaryThresholdDesc"),
+    category = L("categorySalary"),
     type = "Int",
     min = 0,
     max = 100000
 })
 
-lia.config.add("ThirdPersonEnabled", "Enable Third-Person View", true, nil, {
-    desc = "Allows players to toggle third-person view on or off.",
-    category = "Third Person",
+lia.config.add("ThirdPersonEnabled", L("thirdPersonEnabled"), true, nil, {
+    desc = L("thirdPersonEnabledDesc"),
+    category = L("categoryThirdPerson"),
     type = "Boolean"
 })
 
-lia.config.add("MaxThirdPersonDistance", "Maximum Third-Person Distance", 100, nil, {
-    desc = "The maximum allowable camera distance in third-person view.",
-    category = "Third Person",
+lia.config.add("MaxThirdPersonDistance", L("maxThirdPersonDistance"), 100, nil, {
+    desc = L("maxThirdPersonDistanceDesc"),
+    category = L("categoryThirdPerson"),
     type = "Int"
 })
 
-lia.config.add("WallPeek", "Wall Peek", true, nil, {
-    desc = "Limits third‑person wall peeking by hiding players outside view or obstructed.",
-    category = "Rendering",
-    type = "Boolean"
+lia.config.add("WallPeek", L("wallPeek"), true, nil, {
+    desc = L("wallPeekDesc"),
+    category = L("categoryRendering"),
+    type = "Boolean",
 })
 
-lia.config.add("MaxThirdPersonHorizontal", "Maximum Third-Person Horizontal Offset", 30, nil, {
-    desc = "The maximum allowable horizontal offset for third-person view.",
-    category = "Third Person",
+lia.config.add("MaxThirdPersonHorizontal", L("maxThirdPersonHorizontal"), 30, nil, {
+    desc = L("maxThirdPersonHorizontalDesc"),
+    category = L("categoryThirdPerson"),
     type = "Int"
 })
 
-lia.config.add("MaxThirdPersonHeight", "Maximum Third-Person Height Offset", 30, nil, {
-    desc = "The maximum allowable vertical offset for third-person view.",
-    category = "Third Person",
+lia.config.add("MaxThirdPersonHeight", L("maxThirdPersonHeight"), 30, nil, {
+    desc = L("maxThirdPersonHeightDesc"),
+    category = L("categoryThirdPerson"),
     type = "Int"
 })
 
-lia.config.add("MaxViewDistance", "Maximum View Distance", 32768, nil, {
-    desc = "The maximum distance (in units) at which players are visible." .. " This default covers an entire Source map (~32k units).",
+lia.config.add("MaxViewDistance", L("maxViewDistance"), 32768, nil, {
+    desc = L("maxViewDistanceDesc"),
     category = L("categoryQualityOfLife"),
     type = "Int",
     min = 1000,
@@ -477,15 +477,15 @@ local function getDermaSkins()
     return skins
 end
 
-lia.config.add("DermaSkin", "Derma UI Skin", "Lilia Skin", function(_, newSkin) hook.Run("DermaSkinChanged", newSkin) end, {
-    desc = "Select the Derma UI skin to use",
-    category = "Visuals",
+lia.config.add("DermaSkin", L("dermaSkin"), "Lilia Skin", function(_, newSkin) hook.Run("DermaSkinChanged", newSkin) end, {
+    desc = L("dermaSkinDesc"),
+    category = L("categoryVisuals"),
     type = "Table",
-    options = CLIENT and getDermaSkins() or {"Lilia Skin"}
+    options = CLIENT and getDermaSkins() or {L("liliaSkin")}
 })
 
-lia.config.add("Language", "Language", "English", nil, {
-    desc = "Determines the language setting for the game.",
+lia.config.add("Language", L("language"), "English", nil, {
+    desc = L("languageDesc"),
     category = L("categoryGeneral"),
     type = "Table",
     options = lia.lang.getLanguages()
@@ -497,61 +497,44 @@ lia.config.add("SpawnMenuLimit", L("spawnMenuLimit"), false, nil, {
     type = "Boolean"
 })
 
-lia.config.add("LogRetentionDays", "Log Retention Period", 7, nil, {
-    desc = "Determines how many days of logs should be read",
+lia.config.add("LogRetentionDays", L("logRetentionPeriod"), 7, nil, {
+    desc = L("logRetentionPeriodDesc"),
     category = L("categoryLogging"),
     type = "Int",
     min = 3,
     max = 30,
 })
 
-lia.config.add("MaxLogLines", "Maximum Log Lines", 1000, nil, {
-    desc = "Determines the maximum number of log lines to retrieve",
+lia.config.add("MaxLogLines", L("maximumLogLines"), 1000, nil, {
+    desc = L("maximumLogLinesDesc"),
     category = L("categoryLogging"),
     type = "Int",
     min = 500,
     max = 1000000,
 })
 
-lia.config.add("StaminaBlur", "Stamina Blur Enabled", true, nil, {
-    desc = "Is Stamina Blur Enabled?",
+lia.config.add("StaminaBlur", L("staminaBlurEnabled"), true, nil, {
+    desc = L("staminaBlurEnabledDesc"),
     category = L("attributes"),
-    type = "Boolean"
+    type = "Boolean",
 })
 
-lia.config.add("StaminaSlowdown", "Stamina Slowdown Enabled", true, nil, {
-    desc = "Is Stamina Slowdown Enabled?",
+lia.config.add("StaminaSlowdown", L("staminaSlowdownEnabled"), true, nil, {
+    desc = L("staminaSlowdownEnabledDesc"),
     category = L("attributes"),
-    type = "Boolean"
+    type = "Boolean",
 })
 
-lia.config.add("DefaultStamina", "Default Stamina Value", 100, nil, {
-    desc = "Sets Default Stamina Value",
-    category = L("attributes"),
-    type = "Int",
-    min = 0,
-    max = 1000
-})
-
-lia.config.add("MaxAttributePoints", "Max Attribute Points", 30, nil, {
-    desc = "Maximum number of points that can be allocated across an attribute.",
-    category = L("attributes"),
-    isGlobal = true,
-    type = "Int",
-    min = 1,
-    max = 100
-})
-
-lia.config.add("JumpStaminaCost", "Jump Stamina Cost", 10, nil, {
-    desc = "Stamina cost deducted when the player jumps",
+lia.config.add("DefaultStamina", L("defaultStaminaValue"), 100, nil, {
+    desc = L("defaultStaminaValueDesc"),
     category = L("attributes"),
     type = "Int",
     min = 0,
     max = 1000
 })
 
-lia.config.add("MaxStartingAttributes", "Max Starting Attributes", 30, nil, {
-    desc = "Maximum value of each attribute at character creation.",
+lia.config.add("MaxAttributePoints", L("maxAttributePoints"), 30, nil, {
+    desc = L("maxAttributePointsDesc"),
     category = L("attributes"),
     isGlobal = true,
     type = "Int",
@@ -559,8 +542,16 @@ lia.config.add("MaxStartingAttributes", "Max Starting Attributes", 30, nil, {
     max = 100
 })
 
-lia.config.add("StartingAttributePoints", "Starting Attribute Points", 30, nil, {
-    desc = "Total number of points available for starting attribute allocation.",
+lia.config.add("JumpStaminaCost", L("jumpStaminaCost"), 10, nil, {
+    desc = L("jumpStaminaCostDesc"),
+    category = L("attributes"),
+    type = "Int",
+    min = 0,
+    max = 1000
+})
+
+lia.config.add("MaxStartingAttributes", L("maxStartingAttributes"), 30, nil, {
+    desc = L("maxStartingAttributesDesc"),
     category = L("attributes"),
     isGlobal = true,
     type = "Int",
@@ -568,8 +559,17 @@ lia.config.add("StartingAttributePoints", "Starting Attribute Points", 30, nil, 
     max = 100
 })
 
-lia.config.add("PunchStamina", "Punch Stamina", 10, nil, {
-    desc = "Stamina usage for punches.",
+lia.config.add("StartingAttributePoints", L("startingAttributePoints"), 30, nil, {
+    desc = L("startingAttributePointsDesc"),
+    category = L("attributes"),
+    isGlobal = true,
+    type = "Int",
+    min = 1,
+    max = 100
+})
+
+lia.config.add("PunchStamina", L("punchStamina"), 10, nil, {
+    desc = L("punchStaminaDesc"),
     category = L("attributes"),
     isGlobal = true,
     type = "Int",
@@ -577,30 +577,30 @@ lia.config.add("PunchStamina", "Punch Stamina", 10, nil, {
     max = 100
 })
 
-lia.config.add("MaxHoldWeight", "Maximum Hold Weight", 100, nil, {
-    desc = "The maximum weight that a player can carry in their hands.",
+lia.config.add("MaxHoldWeight", L("maximumHoldWeight"), 100, nil, {
+    desc = L("maximumHoldWeightDesc"),
     category = L("categoryGeneral"),
     type = "Int",
     min = 1,
     max = 500
 })
 
-lia.config.add("ThrowForce", "Throw Force", 100, nil, {
-    desc = "How hard a player can throw the item that they're holding.",
+lia.config.add("ThrowForce", L("throwForce"), 100, nil, {
+    desc = L("throwForceDesc"),
     category = L("categoryGeneral"),
     type = "Int",
     min = 1,
     max = 500
 })
 
-lia.config.add("AllowPush", "Allow Push", true, nil, {
-    desc = "Whether or not pushing with hands is allowed",
+lia.config.add("AllowPush", L("allowPush"), true, nil, {
+    desc = L("allowPushDesc"),
     category = L("categoryGeneral"),
-    type = "Boolean"
+    type = "Boolean",
 })
 
-lia.config.add("PunchPlaytime", "Punch Playtime Protection", 7200, nil, {
-    desc = "Minimum playtime in seconds required to punch.",
+lia.config.add("PunchPlaytime", L("punchPlaytimeProtection"), 7200, nil, {
+    desc = L("punchPlaytimeProtectionDesc"),
     category = L("categoryGeneral"),
     isGlobal = true,
     type = "Int",
@@ -608,76 +608,76 @@ lia.config.add("PunchPlaytime", "Punch Playtime Protection", 7200, nil, {
     max = 86400
 })
 
-lia.config.add("CustomChatSound", "Custom Chat Sound", "", nil, {
-    desc = "Change Chat Sound on Message Send",
+lia.config.add("CustomChatSound", L("customChatSound"), "", nil, {
+    desc = L("customChatSoundDesc"),
     category = L("categoryChat"),
-    type = "Generic"
+    type = "Generic",
 })
 
-lia.config.add("ChatColor", "Chat Color", {
+lia.config.add("ChatColor", L("chatColor"), {
     r = 255,
     g = 239,
     b = 150,
     a = 255
 }, nil, {
-    desc = "Chat Color",
+    desc = L("chatColorDesc"),
     category = L("categoryChat"),
-    type = "Color"
+    type = "Color",
 })
 
-lia.config.add("ChatRange", "Chat Range", 280, nil, {
-    desc = "Range of Chat can be heard",
+lia.config.add("ChatRange", L("chatRange"), 280, nil, {
+    desc = L("chatRangeDesc"),
     category = L("categoryChat"),
     type = "Int",
     min = 0,
     max = 10000
 })
 
-lia.config.add("OOCLimit", "OOC Character Limit", 150, nil, {
-    desc = "Limit of characters on OOC",
+lia.config.add("OOCLimit", L("oocCharacterLimit"), 150, nil, {
+    desc = L("oocCharacterLimitDesc"),
     category = L("categoryChat"),
     type = "Int",
     min = 10,
     max = 1000
 })
 
-lia.config.add("ChatListenColor", "Chat Listen Color", {
+lia.config.add("ChatListenColor", L("chatListenColor"), {
     r = 168,
     g = 240,
     b = 170,
     a = 255
 }, nil, {
-    desc = "Color of chat when directly working at someone",
+    desc = L("chatListenColorDesc"),
     category = L("categoryChat"),
-    type = "Color"
+    type = "Color",
 })
 
-lia.config.add("OOCDelay", "OOC Delay", 10, nil, {
-    desc = "Set OOC Text Delay",
+lia.config.add("OOCDelay", L("oocDelay"), 10, nil, {
+    desc = L("oocDelayDesc"),
     category = L("categoryChat"),
     type = "Float",
     min = 0,
     max = 60
 })
 
-lia.config.add("LOOCDelay", "LOOC Delay", 6, nil, {
-    desc = "Set LOOC Text Delay",
+lia.config.add("LOOCDelay", L("loocDelay"), 6, nil, {
+    desc = L("loocDelayDesc"),
     category = L("categoryChat"),
     type = "Float",
     min = 0,
     max = 60
 })
 
-lia.config.add("LOOCDelayAdmin", "LOOC Delay for Admins", false, nil, {
-    desc = "Should Admins have LOOC Delay",
+lia.config.add("LOOCDelayAdmin", L("loocDelayAdmin"), false, nil, {
+    desc = L("loocDelayAdminDesc"),
     category = L("categoryChat"),
-    type = "Boolean"
+    type = "Boolean",
 })
 
-lia.config.add("ChatSizeDiff", "Enable Different Chat Size", false, nil, {
-    desc = "Enable Different Chat Size Diff",
+lia.config.add("ChatSizeDiff", L("enableDifferentChatSize"), false, nil, {
+    desc = L("enableDifferentChatSizeDesc"),
     category = L("categoryChat"),
-    type = "Boolean"
+    type = "Boolean",
 })
 
 lia.config.add("MusicVolume", L("mainMenuMusicVolume"), 0.25, nil, {
@@ -864,38 +864,38 @@ lia.config.add("DisableCheaterActions", L("disableCheaterActions"), true, nil, {
     type = "Boolean",
 })
 
-lia.config.add("LoseItemsonDeathNPC", "Lose Items on NPC Death", false, nil, {
-    desc = "Determine if items marked for loss are lost on death by NPCs",
+lia.config.add("LoseItemsonDeathNPC", L("loseItemsOnNPCDeath"), false, nil, {
+    desc = L("loseItemsOnNPCDeathDesc"),
     category = L("death"),
     type = "Boolean"
 })
 
-lia.config.add("LoseItemsonDeathHuman", "Lose Items on Human Death", false, nil, {
-    desc = "Determine if items marked for loss are lost on death by Humans",
+lia.config.add("LoseItemsonDeathHuman", L("loseItemsOnHumanDeath"), false, nil, {
+    desc = L("loseItemsOnHumanDeathDesc"),
     category = L("death"),
     type = "Boolean"
 })
 
-lia.config.add("LoseItemsonDeathWorld", "Lose Items on World Death", false, nil, {
-    desc = "Determine if items marked for loss are lost on death by World",
+lia.config.add("LoseItemsonDeathWorld", L("loseItemsOnWorldDeath"), false, nil, {
+    desc = L("loseItemsOnWorldDeathDesc"),
     category = L("death"),
     type = "Boolean"
 })
 
-lia.config.add("DeathPopupEnabled", "Enable Death Popup", true, nil, {
-    desc = "Enable or disable the death information popup",
+lia.config.add("DeathPopupEnabled", L("enableDeathPopup"), true, nil, {
+    desc = L("enableDeathPopupDesc"),
     category = L("death"),
     type = "Boolean"
 })
 
-lia.config.add("StaffHasGodMode", "Staff God Mode", true, nil, {
-    desc = "Whether or not Staff On Duty has God Mode",
+lia.config.add("StaffHasGodMode", L("staffGodMode"), true, nil, {
+    desc = L("staffGodModeDesc"),
     category = L("categoryStaffSettings"),
     type = "Boolean"
 })
 
-lia.config.add("ClassDisplay", "Display Classes on Characters", true, nil, {
-    desc = "Whether or not classes are displayed on characters",
+lia.config.add("ClassDisplay", L("displayClassesOnCharacters"), true, nil, {
+    desc = L("displayClassesOnCharactersDesc"),
     category = L("character"),
     type = "Boolean"
 })
@@ -957,12 +957,10 @@ lia.config.add("FakeNamesEnabled", L("fakeNamesEnabled"), false, nil, {
     type = "Boolean"
 })
 
-lia.config.add("vendorDefaultMoney", "Default Vendor Money", 500, nil, {
-    desc = "Sets the default amount of money a vendor starts with",
-    category = L("vendors"),
-    type = "Int",
-    min = 0,
-    max = 100000
+lia.config.add("vendorDefaultMoney", L("vendorDefaultMoney"), 500, nil, {
+    desc = L("vendorDefaultMoneyDesc"),
+    category = L("vendor"),
+    type = "Int"
 })
 
 local function getMenuTabNames()

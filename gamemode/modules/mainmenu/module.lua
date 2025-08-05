@@ -47,7 +47,7 @@ else
 
     function MODULE:createCharacter(data)
         local client = LocalPlayer()
-        assert(istable(data), "data must be a table")
+        assert(istable(data), L("dataMustBeTable"))
         local d = deferred.new()
         local payload = {}
         for key, charVar in pairs(lia.char.vars) do

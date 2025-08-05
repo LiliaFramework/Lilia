@@ -71,8 +71,9 @@ end
 function playerMeta:entitiesNearPlayer(radius, playerOnly)
     local nearbyEntities = {}
     for _, v in ipairs(ents.FindInSphere(self:GetPos(), radius)) do
-        if playerOnly and not v:IsPlayer() then continue end
-        table.insert(nearbyEntities, v)
+        if not playerOnly or v:IsPlayer() then
+            table.insert(nearbyEntities, v)
+        end
     end
     return nearbyEntities
 end
@@ -1011,7 +1012,7 @@ else
             if spos.visible then
                 render.SuppressEngineLighting(true)
                 surface.SetFont("liaBigFont")
-                draw.DrawText(name .. "\n" .. howclose .. " Meters\n", "liaBigFont", spos.x, spos.y, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+                draw.DrawText(name .. "\n" .. L("meters", howclose) .. "\n", "liaBigFont", spos.x, spos.y, Color(255, 255, 255), TEXT_ALIGN_CENTER)
                 render.SuppressEngineLighting(false)
             end
 
@@ -1055,7 +1056,7 @@ else
                     surface.DrawTexturedRect(spos.x - logoSize / 2, spos.y - logoSize / 2 - 40, logoSize, logoSize)
                 end
 
-                draw.DrawText(name .. "\n" .. howClose .. " Meters", "liaBigFont", spos.x, spos.y - 10, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+                draw.DrawText(name .. "\n" .. L("meters", howClose), "liaBigFont", spos.x, spos.y - 10, Color(255, 255, 255), TEXT_ALIGN_CENTER)
             end
 
             if howClose <= 3 then RunConsoleCommand("waypoint_withlogo_stop_" .. waypointID) end

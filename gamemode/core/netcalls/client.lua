@@ -300,7 +300,7 @@ net.Receive("actBar", function()
 end)
 
 net.Receive("OpenInvMenu", function()
-    if not LocalPlayer():hasPrivilege("Check Inventories") then return end
+    if not LocalPlayer():hasPrivilege(L("Check Inventories")) then return end
     local target = net.ReadEntity()
     local index = net.ReadType()
     local targetInv = lia.inventory.instances[index]
@@ -532,7 +532,7 @@ net.Receive("BinaryQuestionRequest", function()
         if notice.opt1 and IsValid(notice.opt1) then
             notice.opt1:SetAlpha(255)
             notice.opt1:SetSize(notice:GetWide() / 2, 25)
-            notice.opt1:SetText(L(option1Key, L("yes")) .. " (F8)")
+            notice.opt1:SetText(L(option1Key, L("yes")) .. L("keyBind", "F8"))
             notice.opt1:SetPos(0, notice:GetTall() - notice.opt1:GetTall())
             notice.opt1:CenterHorizontal(0.25)
             notice.opt1:SetAlpha(0)
@@ -556,7 +556,7 @@ net.Receive("BinaryQuestionRequest", function()
         if notice.opt2 and IsValid(notice.opt2) then
             notice.opt2:SetAlpha(255)
             notice.opt2:SetSize(notice:GetWide() / 2, 25)
-            notice.opt2:SetText(L(option2Key, L("no")) .. " (F9)")
+            notice.opt2:SetText(L(option2Key, L("no")) .. L("keyBind", "F9"))
             notice.opt2:SetPos(0, notice:GetTall() - notice.opt2:GetTall())
             notice.opt2:CenterHorizontal(0.75)
             notice.opt2:SetAlpha(0)

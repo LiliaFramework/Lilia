@@ -1,4 +1,4 @@
-﻿local sw, sh = ScrW(), ScrH()
+local sw, sh = ScrW(), ScrH()
 local COLS_MODE = 2
 local COLS_PRICE = 3
 local COLS_STOCK = 4
@@ -548,7 +548,7 @@ function PANEL:setQuantity(quantity)
             return
         end
 
-        self.suffix = tostring(quantity) .. "x "
+        self.suffix = L("vendorItemQuantity", quantity)
     else
         self.suffix = ""
     end

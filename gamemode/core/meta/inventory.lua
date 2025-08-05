@@ -37,7 +37,7 @@ function Inventory:getItemsByUniqueID(uniqueID, onlyMain)
 end
 
 function Inventory:register(typeID)
-    assert(isstring(typeID), "Expected argument #1 of " .. self.className .. ".register to be a string")
+    assert(isstring(typeID), L("registerTypeString", self.className))
     self.typeID = typeID
     self.config = {
         data = {}
@@ -60,7 +60,7 @@ function Inventory:new()
 end
 
 function Inventory:tostring()
-    return self.className .. "[" .. tostring(self.id) .. "]"
+    return L(self.className) .. "[" .. tostring(self.id) .. "]"
 end
 
 function Inventory:getType()
@@ -137,8 +137,8 @@ if SERVER then
     end
 
     function Inventory:syncItemAdded(item)
-        assert(istable(item) and item.getID, "cannot sync non-item")
-        assert(self.items[item:getID()], "Item " .. item:getID() .. " does not belong to " .. self.id)
+        assert(istable(item) and item.getID, L("cannotSyncNonItem"))
+        assert(self.items[item:getID()], L("itemDoesNotBelong", item:getID(), self.id))
         local recipients = self:getRecipients()
         item:sync(recipients)
         net.Start("liaInventoryAdd")

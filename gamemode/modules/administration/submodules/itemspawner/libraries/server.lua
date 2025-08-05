@@ -46,7 +46,7 @@ net.Receive("SpawnMenuSpawnItem", function(_, client)
             if char then ent.liaCharID = char:getID() end
             ent:SetCreator(client)
         end
-        undo.Create("item")
+        undo.Create(L("item"))
         undo.SetPlayer(client)
         undo.AddEntity(ent)
         local name = lia.item.list[id] and lia.item.list[id].name or id
