@@ -1,16 +1,16 @@
-MODULE.name = L("scoreboard")
+﻿MODULE.name = "scoreboard"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = L("moduleScoreboardDesc")
+MODULE.desc = "moduleScoreboardDesc"
 MODULE.Privileges = {
     {
-        Name = L("canAccessScoreboardAdminOptions"),
+        Name = "canAccessScoreboardAdminOptions",
         MinAccess = "admin",
-        Category = L("scoreboard"),
+        Category = "scoreboard",
     },
     {
-        Name = L("canAccessScoreboardInfoOutOfStaff"),
+        Name = "canAccessScoreboardInfoOutOfStaff",
         MinAccess = "superadmin",
-        Category = L("scoreboard"),
+        Category = "scoreboard",
     },
 }

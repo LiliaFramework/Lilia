@@ -1,11 +1,11 @@
-MODULE.name = L("moduleItemSpawnerName")
+﻿MODULE.name = "moduleItemSpawnerName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = L("moduleItemSpawnerDesc")
+MODULE.desc = "moduleItemSpawnerDesc"
 MODULE.Privileges = {
     {
-        Name = L("canUseItemSpawner"),
+        Name = "canUseItemSpawner",
         MinAccess = "admin",
-        Category = L("categoryStaffItems"),
+        Category = "categoryStaffItems",
     }
 }

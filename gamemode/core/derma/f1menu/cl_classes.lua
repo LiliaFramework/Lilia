@@ -161,10 +161,12 @@ function PANEL:addClassDetails(parent, cl)
             for _, v in ipairs(cl.requirements) do
                 reqs[#reqs + 1] = L(v)
             end
+
             req = table.concat(reqs, ", ")
         else
             req = L(tostring(cl.requirements))
         end
+
         add(L("requirements") .. ": " .. req)
     end
 end

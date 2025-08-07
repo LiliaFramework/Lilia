@@ -7,7 +7,7 @@
             name = L("nameCopyFormat", target:Name()),
             image = "icon16/page_copy.png",
             func = function()
-                client:notify(L("copiedToClipboard", target:Name(), L("name")))
+                client:notifyLocalized("copiedToClipboard", target:Name(), L("name"))
                 SetClipboardText(target:Name())
             end
         },
@@ -16,7 +16,7 @@
             image = "icon16/page_copy.png",
             func = function()
                 if target:getChar() then
-                    client:notify(L("copiedCharID", target:getChar():getID()))
+                    client:notifyLocalized("copiedCharID", target:getChar():getID())
                     SetClipboardText(target:getChar():getID())
                 end
             end
@@ -25,82 +25,82 @@
             name = L("steamIDCopyFormat", target:SteamID()),
             image = "icon16/page_copy.png",
             func = function()
-                client:notify(L("copiedToClipboard", target:Name(), L("steamID")))
+                client:notifyLocalized("copiedToClipboard", target:Name(), L("steamID"))
                 SetClipboardText(target:SteamID())
             end
         },
         {
-            name = L("Blind"),
+            name = L("blind"),
             image = "icon16/eye.png",
             func = function() RunConsoleCommand("say", "!blind " .. target:SteamID()) end
         },
         {
-            name = L("Freeze"),
+            name = L("freeze"),
             image = "icon16/lock.png",
             func = function() RunConsoleCommand("say", "!freeze " .. target:SteamID()) end
         },
         {
-            name = L("Gag"),
+            name = L("gag"),
             image = "icon16/sound_mute.png",
             func = function() RunConsoleCommand("say", "!gag " .. target:SteamID()) end
         },
         {
-            name = L("Ignite"),
+            name = L("ignite"),
             image = "icon16/fire.png",
             func = function() RunConsoleCommand("say", "!ignite " .. target:SteamID()) end
         },
         {
-            name = L("Jail"),
+            name = L("jail"),
             image = "icon16/lock.png",
             func = function() RunConsoleCommand("say", "!jail " .. target:SteamID()) end
         },
         {
-            name = L("Mute"),
+            name = L("mute"),
             image = "icon16/sound_delete.png",
             func = function() RunConsoleCommand("say", "!mute " .. target:SteamID()) end
         },
         {
-            name = L("Slay"),
+            name = L("slay"),
             image = "icon16/bomb.png",
             func = function() RunConsoleCommand("say", "!slay " .. target:SteamID()) end
         },
         {
-            name = L("Unblind"),
+            name = L("unblind"),
             image = "icon16/eye.png",
             func = function() RunConsoleCommand("say", "!unblind " .. target:SteamID()) end
         },
         {
-            name = L("Ungag"),
+            name = L("ungag"),
             image = "icon16/sound_low.png",
             func = function() RunConsoleCommand("say", "!ungag " .. target:SteamID()) end
         },
         {
-            name = L("Unfreeze"),
+            name = L("unfreeze"),
             image = "icon16/accept.png",
             func = function() RunConsoleCommand("say", "!unfreeze " .. target:SteamID()) end
         },
         {
-            name = L("Unmute"),
+            name = L("unmute"),
             image = "icon16/sound_add.png",
             func = function() RunConsoleCommand("say", "!unmute " .. target:SteamID()) end
         },
         {
-            name = L("Bring"),
+            name = L("bring"),
             image = "icon16/arrow_down.png",
             func = function() RunConsoleCommand("say", "!bring " .. target:SteamID()) end
         },
         {
-            name = L("Goto"),
+            name = L("goTo"),
             image = "icon16/arrow_right.png",
             func = function() RunConsoleCommand("say", "!goto " .. target:SteamID()) end
         },
         {
-            name = L("Respawn"),
+            name = L("respawn"),
             image = "icon16/arrow_refresh.png",
             func = function() RunConsoleCommand("say", "!respawn " .. target:SteamID()) end
         },
         {
-            name = L("return"),
+            name = L("returnText"),
             image = "icon16/arrow_redo.png",
             func = function() RunConsoleCommand("say", "!return " .. target:SteamID()) end
         }
@@ -114,9 +114,10 @@ end
 function MODULE:PopulateAdminTabs(pages)
     local client = LocalPlayer()
     if not IsValid(client) then return end
-    if client:hasPrivilege(L("View Staff Management")) then
+    if client:hasPrivilege(L("viewStaffManagement")) then
         table.insert(pages, {
             name = L("moduleStaffManagementName"),
+            icon = "icon16/shield.png",
             drawFunc = function(panel)
                 panelRef = panel
                 net.Start("liaRequestStaffSummary")
@@ -128,6 +129,7 @@ function MODULE:PopulateAdminTabs(pages)
     if client:hasPrivilege(L("canAccessPlayerList")) then
         table.insert(pages, {
             name = L("players"),
+            icon = "icon16/user.png",
             drawFunc = function(panel)
                 panelRef = panel
                 net.Start("liaRequestPlayers")
@@ -136,9 +138,10 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
-    if client:hasPrivilege(L("List Characters")) then
+    if client:hasPrivilege(L("listCharacters")) then
         table.insert(pages, {
             name = L("characterList"),
+            icon = "icon16/book.png",
             drawFunc = function(panel)
                 panelRef = panel
                 panel:Clear()
@@ -296,21 +299,13 @@ function MODULE:PopulateAdminTabs(pages)
                                 local owner = line.SteamID and lia.util.getBySteamID(line.SteamID)
                                 if IsValid(owner) then
                                     if line.Banned then
-                                        if lia.command.hasAccess(LocalPlayer(), "charunban") then
-                                            menu:AddOption(L("unbanCharacter"), function() LocalPlayer():ConCommand('say "/charunban ' .. line.CharID .. '"') end):SetIcon("icon16/accept.png")
-                                        end
+                                        if lia.command.hasAccess(LocalPlayer(), "charunban") then menu:AddOption(L("unbanCharacter"), function() LocalPlayer():ConCommand('say "/charunban ' .. line.CharID .. '"') end):SetIcon("icon16/accept.png") end
                                     else
-                                        if lia.command.hasAccess(LocalPlayer(), "charban") then
-                                            menu:AddOption(L("banCharacter"), function() LocalPlayer():ConCommand('say "/charban ' .. line.CharID .. '"') end):SetIcon("icon16/cancel.png")
-                                        end
+                                        if lia.command.hasAccess(LocalPlayer(), "charban") then menu:AddOption(L("banCharacter"), function() LocalPlayer():ConCommand('say "/charban ' .. line.CharID .. '"') end):SetIcon("icon16/cancel.png") end
                                     end
                                 else
-                                    if not line.Banned and lia.command.hasAccess(LocalPlayer(), "charbanoffline") then
-                                        menu:AddOption(L("banCharacterOffline"), function() LocalPlayer():ConCommand('say "/charbanoffline ' .. line.CharID .. '"') end):SetIcon("icon16/cancel.png")
-                                    end
-                                    if line.Banned and lia.command.hasAccess(LocalPlayer(), "charunbanoffline") then
-                                        menu:AddOption(L("unbanCharacterOffline"), function() LocalPlayer():ConCommand('say "/charunbanoffline ' .. line.CharID .. '"') end):SetIcon("icon16/accept.png")
-                                    end
+                                    if not line.Banned and lia.command.hasAccess(LocalPlayer(), "charbanoffline") then menu:AddOption(L("banCharacterOffline"), function() LocalPlayer():ConCommand('say "/charbanoffline ' .. line.CharID .. '"') end):SetIcon("icon16/cancel.png") end
+                                    if line.Banned and lia.command.hasAccess(LocalPlayer(), "charunbanoffline") then menu:AddOption(L("unbanCharacterOffline"), function() LocalPlayer():ConCommand('say "/charunbanoffline ' .. line.CharID .. '"') end):SetIcon("icon16/accept.png") end
                                 end
                             end
 
@@ -341,9 +336,10 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
-    if client:hasPrivilege(L("View DB Tables")) then
+    if client:hasPrivilege(L("viewDBTables")) then
         table.insert(pages, {
             name = L("databaseView"),
+            icon = "icon16/database.png",
             drawFunc = function(panel)
                 panelRef = panel
                 panel:Clear()
@@ -414,6 +410,7 @@ function MODULE:PopulateAdminTabs(pages)
     if client:hasPrivilege(L("canAccessFlagManagement")) then
         table.insert(pages, {
             name = L("flagsManagement"),
+            icon = "icon16/flag_red.png",
             drawFunc = function(panel)
                 flagsPanel = panel
                 if flagsData then
@@ -430,6 +427,7 @@ function MODULE:PopulateAdminTabs(pages)
     if client:hasPrivilege(L("canManageFactions")) then
         table.insert(pages, {
             name = L("factionManagement"),
+            icon = "icon16/chart_organisation.png",
             drawFunc = function(panel)
                 rosterPanel = panel
                 net.Start("liaRequestFactionRoster")
@@ -438,14 +436,32 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
-    if client:hasPrivilege(L("Manage Characters")) then
-        table.insert(pages, {
-            name = L("pkManager"),
-            drawFunc = function(panel)
-                panelRef = panel
-                net.Start("liaRequestAllPKs")
-                net.SendToServer()
-            end
-        })
+    if client:hasPrivilege(L("manageCharacters")) then
+        -- Request the count first to determine if we should add the tab
+        net.Start("liaRequestPKsCount")
+        net.SendToServer()
     end
 end
+
+-- Add net message handler for PKs count
+local pksTabAdded = false
+net.Receive("liaPKsCount", function()
+    local count = net.ReadInt(32)
+    if count > 0 and not pksTabAdded then
+        pksTabAdded = true
+        -- Only add the tab if there are PKs
+        hook.Add("PopulateAdminTabs", "liaPKsTab", function(pages)
+            local client = LocalPlayer()
+            if not IsValid(client) or not client:hasPrivilege(L("manageCharacters")) then return end
+            table.insert(pages, {
+                name = L("pkManager"),
+                icon = "icon16/lightning.png",
+                drawFunc = function(panel)
+                    panelRef = panel
+                    net.Start("liaRequestAllPKs")
+                    net.SendToServer()
+                end
+            })
+        end)
+    end
+end)

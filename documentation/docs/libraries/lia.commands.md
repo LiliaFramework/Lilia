@@ -36,7 +36,10 @@ Registers a new command with its associated data. See [Command Fields](../defini
 -- Register a simple warn command for administrators
 lia.command.add("warn", {
     adminOnly = true,
-    syntax = "[player Target] [string Reason]",
+    arguments = {
+        {name = "target", type = "player"},
+        {name = "reason", type = "string"}
+    },
     desc = "Send a warning message to the target player.",
     onRun = function(client, args)
         local target = lia.util.findPlayer(client, args[1])
@@ -120,39 +123,6 @@ local args = lia.command.extractArgs('/mycommand "quoted arg" anotherArg')
 
 local args2 = lia.command.extractArgs("/mycommand 'other arg' another")
 -- args2 = { "other arg", "another" }
-```
-
----
-
-### lia.command.parseSyntaxFields
-
-**Purpose**
-
-Parses a command syntax string into an ordered list of field tables. Each field contains a `name`, a `type`, and an `optional` flag derived from the syntax.
-
-**Parameters**
-
-* `syntax` (*string*): Syntax string, e.g. `[string Name] [number Time]`.
-
-  Include the word `optional` inside a bracket to mark that argument as optional.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* *table*: Ordered list of field tables.
-
-* *boolean*: Whether the syntax strictly used the `[type Name]` format.
-
-**Example Usage**
-
-```lua
-local fields, valid = lia.command.parseSyntaxFields("[string Name] [number Time]")
-
--- mark optional arguments with the word "optional"
-local fieldsOpt = lia.command.parseSyntaxFields("[string Name] [number Time optional]")
 ```
 
 ---
@@ -258,15 +228,15 @@ lia.command.send("mycommand", "arg1", "arg2")
 
 **Purpose**
 
-Opens a window asking the player to fill in arguments for the given command. Missing fields defined as `optional` may be left blank; all others must be filled before **Submit** is enabled.
+Opens a window asking the player to fill in missing arguments for the given command. Arguments marked `optional` may be left blank; all others must be filled before **Submit** is enabled.
 
 **Parameters**
 
 * `cmdKey` (*string*): Command name.
 
-* `fields` (*table | string*): Existing arguments or the server-supplied list of missing fields.
+* `missing` (*table*): Array of argument names that still need values.
 
-* `prefix` (*table*): Legacy prefix table (optional).
+* `prefix` (*table*): Arguments already supplied (optional).
 
 **Realm**
 
@@ -279,7 +249,7 @@ Opens a window asking the player to fill in arguments for the given command. Mis
 **Example Usage**
 
 ```lua
-lia.command.openArgumentPrompt("plywhitelist")
+lia.command.openArgumentPrompt("ban", {"target", "duration"})
 ```
 
 ---

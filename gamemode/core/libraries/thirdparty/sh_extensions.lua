@@ -1,4 +1,4 @@
-local friendliedNPCs = {}
+﻿local friendliedNPCs = {}
 local hostaliziedNPCs = {}
 local passive = {"npc_seagull", "npc_crow", "npc_piegon", "monster_cockroach", "npc_dog", "npc_gman", "npc_antlion_grub", "npc_turret_floor"}
 local friendly = {"npc_monk", "npc_alyx", "npc_barney", "npc_citizen", "npc_turret_floor", "npc_dog", "npc_vortigaunt", "npc_kleiner", "npc_eli", "npc_magnusson", "npc_breen", "npc_mossman", "npc_fisherman", "monster_barney", "monster_scientist", "player"}
@@ -227,7 +227,6 @@ properties.Add("lia_npc_weapon", {
             WarningText:SetTextColor(color_white)
             WarningText:SetFont("DermaLarge")
             WarningText:SetText(L("npcWeaponWarning1"))
-
             local WarningText2 = vgui.Create("DLabel", WarningThing)
             WarningText2:Dock(TOP)
             WarningText2:SetHeight(35)
@@ -329,7 +328,7 @@ AddEntFireProperty("lia_door_unlock", L("unlock"), 658, function(ent, ply)
 end, "Unlock", "icon16/lock_open.png")
 
 AddEntFireProperty("lia_func_movelinear_open", L("start"), 655, "func_movelinear", "Open", "icon16/arrow_right.png")
-AddEntFireProperty("lia_func_movelinear_close", L("return"), 656, "func_movelinear", "Close", "icon16/arrow_left.png")
+AddEntFireProperty("lia_func_movelinear_close", L("returnText"), 656, "func_movelinear", "Close", "icon16/arrow_left.png")
 AddEntFireProperty("lia_func_tracktrain_StartForward", L("startForward"), 655, function(ent, ply)
     if ent:GetNWInt("m_dir") == 1 then return false end
     return rb655_property_filter("func_tracktrain", ent, ply)
@@ -350,7 +349,7 @@ AddEntFireProperty("lia_func_tracktrain_Resume", L("resume"), 659, function(ent,
     return rb655_property_filter("func_tracktrain", ent, ply)
 end, "Resume", "icon16/resultset_next.png")
 
-AddEntFireProperty("lia_breakable_break", L("break"), 655, function(ent, ply)
+AddEntFireProperty("lia_breakable_break", L("breakAction"), 655, function(ent, ply)
     if ent:Health() < 1 then return false end
     return rb655_property_filter({"func_breakable", "func_physbox", "prop_physics", "func_pushable"}, ent, ply)
 end, "Break", ExplodeIcon)

@@ -1,11 +1,76 @@
-﻿lia.chat = lia.chat or {}
+﻿--[[
+# Chatbox Library
+
+This page documents the functions for working with chat systems and communication.
+
+---
+
+## Overview
+
+The chatbox library provides a comprehensive chat system for managing different types of communication within the Lilia framework. It handles chat type registration, message formatting, radius-based communication, and provides utilities for creating custom chat channels. The library supports both in-character and out-of-character communication with proper role-playing mechanics.
+]]
+lia.chat = lia.chat or {}
 lia.chat.classes = lia.char.classes or {}
+--[[
+    lia.chat.timestamp
+
+    Purpose:
+        Returns a formatted timestamp string for chat messages, optionally including a space for OOC (out-of-character) messages.
+        The timestamp is only shown if the ChatShowTime option is enabled.
+
+    Parameters:
+        ooc (boolean) - Whether the message is OOC (affects spacing).
+
+    Returns:
+        timestamp (string) - The formatted timestamp string, or an empty string if disabled.
+
+    Realm:
+        Shared.
+
+    Example Usage:
+        -- Get a timestamp for an IC message
+        local ts = lia.chat.timestamp(false)
+        -- Get a timestamp for an OOC message
+        local tsOOC = lia.chat.timestamp(true)
+]]
 function lia.chat.timestamp(ooc)
     return lia.option.ChatShowTime and (ooc and " " or "") .. "(" .. lia.time.GetHour() .. ")" .. (ooc and "" or " ") or ""
 end
 
+--[[
+    lia.chat.register
+
+    Purpose:
+        Registers a new chat type with the chat system, defining its behavior, appearance, and command aliases.
+        Handles prefix processing, hearing/speaking logic, and client-side command registration.
+
+    Parameters:
+        chatType (string) - The unique identifier for the chat type (e.g., "ic", "ooc").
+        data (table)      - Table describing the chat type's properties (prefix, color, radius, etc).
+
+    Returns:
+        None.
+
+    Realm:
+        Shared (client and server).
+
+    Example Usage:
+        -- Register a new /me chat type for roleplay actions
+        lia.chat.register("me", {
+            prefix = {"/me", "/action"},
+            color = Color(200, 150, 255),
+            format = "chatMeFormat",
+            radius = 150,
+            desc = "Performs an action.",
+            arguments = {{name = "action", type = "string"}},
+            onChatAdd = function(speaker, text)
+                chat.AddText(lia.chat.timestamp(false), Color(200, 150, 255), speaker:Name() .. " " .. text)
+            end
+        })
+]]
 function lia.chat.register(chatType, data)
-    data.syntax = data.syntax or ""
+    data.arguments = data.arguments or {}
+    data.syntax = L(lia.command.buildSyntaxFromArguments(data.arguments))
     data.desc = data.desc or ""
     if data.prefix then
         local prefixes = istable(data.prefix) and data.prefix or {data.prefix}
@@ -50,18 +115,7 @@ function lia.chat.register(chatType, data)
 
     data.color = data.color or Color(242, 230, 160)
     data.format = data.format or "chatFormat"
-    data.onChatAdd = data.onChatAdd or function(speaker, text, anonymous)
-        chat.AddText(
-            lia.chat.timestamp(false),
-            data.color,
-            L(
-                data.format,
-                anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, chatType) or IsValid(speaker) and speaker:Name() or L("console"),
-                text
-            )
-        )
-    end
-
+    data.onChatAdd = data.onChatAdd or function(speaker, text, anonymous) chat.AddText(lia.chat.timestamp(false), data.color, L(data.format, anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, chatType) or IsValid(speaker) and speaker:Name() or L("console"), text)) end
     if CLIENT and data.prefix then
         local rawPrefixes = istable(data.prefix) and data.prefix or {data.prefix}
         local aliases, lookup = {}, {}
@@ -75,7 +129,7 @@ function lia.chat.register(chatType, data)
 
         if #aliases > 0 then
             lia.command.add(chatType, {
-                syntax = data.syntax,
+                arguments = data.arguments,
                 desc = data.desc,
                 alias = aliases,
                 onRun = function(_, args) lia.chat.parse(LocalPlayer(), table.concat(args, " ")) end
@@ -87,6 +141,32 @@ function lia.chat.register(chatType, data)
     lia.chat.classes[chatType] = data
 end
 
+--[[
+    lia.chat.parse
+
+    Purpose:
+        Parses a chat message to determine its chat type, stripping any recognized prefix and handling anonymous flags.
+        Optionally sends the message to the server if not suppressed.
+
+    Parameters:
+        client (Player)   - The player sending the message.
+        message (string)  - The raw chat message to parse.
+        noSend (boolean)  - If true, prevents sending the message to the server (optional).
+
+    Returns:
+        chatType (string)   - The determined chat type (e.g., "ic", "ooc").
+        message (string)    - The message with the prefix removed.
+        anonymous (boolean) - Whether the message is anonymous.
+
+    Realm:
+        Shared.
+
+    Example Usage:
+        -- Parse a message from a player
+        local chatType, msg, anon = lia.chat.parse(ply, "/me waves hello")
+        -- Parse a message without sending to server
+        local chatType, msg, anon = lia.chat.parse(ply, "/ooc Hello world!", true)
+]]
 function lia.chat.parse(client, message, noSend)
     local anonymous = false
     local chatType = "ic"
@@ -125,6 +205,35 @@ function lia.chat.parse(client, message, noSend)
 end
 
 if SERVER then
+    --[[
+        lia.chat.send
+
+        Purpose:
+            Sends a chat message to all appropriate receivers based on the chat type's rules.
+            Handles message formatting, receiver filtering, and network transmission.
+
+        Parameters:
+            speaker (Player)      - The player sending the message.
+            chatType (string)     - The chat type identifier (e.g., "ic", "ooc").
+            text (string)         - The message text to send.
+            anonymous (boolean)   - Whether the message is anonymous.
+            receivers (table)     - (Optional) Table of players to receive the message. If nil, will be determined by onCanHear.
+
+        Returns:
+            None.
+
+        Realm:
+            Server.
+
+        Example Usage:
+            -- Send a message to all players in range
+            lia.chat.send(ply, "ic", "Hello, world!", false)
+            -- Send an anonymous OOC message to all players
+            lia.chat.send(ply, "ooc", "This is a secret.", true)
+            -- Send a message to a specific set of receivers
+            local targets = {player1, player2}
+            lia.chat.send(ply, "ic", "Private message", false, targets)
+    ]]
     function lia.chat.send(speaker, chatType, text, anonymous, receivers)
         local class = lia.chat.classes[chatType]
         if class and class.onCanSay(speaker, text) ~= false then

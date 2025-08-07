@@ -1,5 +1,67 @@
-﻿lia.config = lia.config or {}
+﻿--[[
+# Configuration Library
+
+This page documents the functions for working with configuration variables and settings.
+
+---
+
+## Overview
+
+The configuration library provides a centralized system for managing configuration variables throughout the Lilia framework. It handles the registration, storage, and retrieval of config values with support for different data types, validation, and change callbacks. The system supports networking configuration changes to clients and provides a robust foundation for customizable server settings.
+
+The library features include:
+- **Type-Safe Configuration**: Support for various data types including strings, numbers, booleans, colors, and complex objects
+- **Validation System**: Built-in validation with custom validation rules and error handling
+- **Change Callbacks**: Automatic notification when configuration values change with custom callback support
+- **Client-Server Synchronization**: Automatic networking of configuration changes to connected clients
+- **Category Organization**: Hierarchical organization of configurations by category for better management
+- **Default Value Management**: Automatic handling of default values with fallback mechanisms
+- **Database Persistence**: Automatic saving and loading of configuration values to/from database
+- **Access Control**: Permission-based access to configuration modification and viewing
+- **Validation Rules**: Custom validation rules with min/max values, pattern matching, and custom validators
+- **Change History**: Optional tracking of configuration changes for audit purposes
+- **Hot Reloading**: Support for runtime configuration changes without server restart
+- **Import/Export**: Configuration backup and restore functionality
+- **UI Integration**: Built-in support for configuration management interfaces
+- **Performance Optimization**: Efficient caching and lookup mechanisms for configuration values
+- **Cross-Module Support**: Configuration sharing between different modules and addons
+
+The configuration system provides a flexible and powerful foundation for managing server settings, player preferences, and module configurations. It ensures consistency across the framework and provides an intuitive interface for both developers and administrators.
+]]
+lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
+--[[
+    lia.config.add
+
+    Purpose:
+        Registers a new configuration variable with the Lilia config system. This function sets up the config's name, default value,
+        type, description, category, and optional callback for when the value changes. The config is stored in lia.config.stored.
+
+    Parameters:
+        key (string)        - The unique key for the config variable.
+        name (string)       - The display name for the config variable.
+        value (any)         - The default value for the config variable.
+        callback (function) - (Optional) Function to call when the config value changes.
+        data (table)        - Table containing additional config properties (type, desc, category, etc).
+
+    Returns:
+        None.
+
+    Realm:
+        Shared.
+
+    Example Usage:
+        -- Add a new integer config variable for maximum players
+        lia.config.add("MaxPlayers", "Maximum Players", 32, function(old, new)
+            print("Max players changed from", old, "to", new)
+        end, {
+            desc = "The maximum number of players allowed on the server.",
+            category = "server",
+            type = "Int",
+            min = 1,
+            max = 128
+        })
+]]
 function lia.config.add(key, name, value, callback, data)
     assert(isstring(key), L("configKeyString", type(key)))
     assert(istable(data), L("configDataTable", type(data)))
@@ -22,17 +84,78 @@ function lia.config.add(key, name, value, callback, data)
     }
 end
 
+--[[
+    lia.config.setDefault
+
+    Purpose:
+        Sets the default value for a given config variable. This does not change the current value, only the default.
+
+    Parameters:
+        key (string)   - The config variable key.
+        value (any)    - The new default value.
+
+    Returns:
+        None.
+
+    Realm:
+        Shared.
+
+    Example Usage:
+        -- Change the default walk speed to 150
+        lia.config.setDefault("WalkSpeed", 150)
+]]
 function lia.config.setDefault(key, value)
     local config = lia.config.stored[key]
     if config then config.default = value end
 end
 
+--[[
+    lia.config.forceSet
+
+    Purpose:
+        Sets the value of a config variable, bypassing any callbacks or networking, and optionally skips saving to the database.
+
+    Parameters:
+        key (string)     - The config variable key.
+        value (any)      - The value to set.
+        noSave (boolean) - If true, does not save the config to the database.
+
+    Returns:
+        None.
+
+    Realm:
+        Shared.
+
+    Example Usage:
+        -- Force the money limit to 10000 without saving to the database
+        lia.config.forceSet("MoneyLimit", 10000, true)
+]]
 function lia.config.forceSet(key, value, noSave)
     local config = lia.config.stored[key]
     if config then config.value = value end
     if not noSave then lia.config.save() end
 end
 
+--[[
+    lia.config.set
+
+    Purpose:
+        Sets the value of a config variable, triggers networking to clients (if applicable), calls the callback, and saves the config.
+
+    Parameters:
+        key (string)   - The config variable key.
+        value (any)    - The value to set.
+
+    Returns:
+        None.
+
+    Realm:
+        Shared (server triggers networking).
+
+    Example Usage:
+        -- Set the walk speed to 140 and notify all clients
+        lia.config.set("WalkSpeed", 140)
+]]
 function lia.config.set(key, value)
     local config = lia.config.stored[key]
     if config then
@@ -52,6 +175,26 @@ function lia.config.set(key, value)
     end
 end
 
+--[[
+    lia.config.get
+
+    Purpose:
+        Retrieves the value of a config variable. If the value is not set, returns the default or a provided fallback.
+
+    Parameters:
+        key (string)     - The config variable key.
+        default (any)    - (Optional) Value to return if the config is not found.
+
+    Returns:
+        any - The current value, the default, or the provided fallback.
+
+    Realm:
+        Shared.
+
+    Example Usage:
+        -- Get the current money limit, or 5000 if not set
+        local limit = lia.config.get("MoneyLimit", 5000)
+]]
 function lia.config.get(key, default)
     local config = lia.config.stored[key]
     if config then
@@ -65,6 +208,26 @@ function lia.config.get(key, default)
     return default
 end
 
+--[[
+    lia.config.load
+
+    Purpose:
+        Loads all config variables from the database for the current schema/gamemode. If a config is missing, it is inserted with its default value.
+        On the client, requests the config list from the server.
+
+    Parameters:
+        None.
+
+    Returns:
+        None.
+
+    Realm:
+        Server (loads from DB), Client (requests from server).
+
+    Example Usage:
+        -- Load all config variables at server startup
+        lia.config.load()
+]]
 function lia.config.load()
     if SERVER then
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
@@ -114,6 +277,25 @@ function lia.config.load()
 end
 
 if SERVER then
+    --[[
+        lia.config.getChangedValues
+
+        Purpose:
+            Returns a table of all config variables whose value differs from their default.
+
+        Parameters:
+            None.
+
+        Returns:
+            table - A table of changed config key-value pairs.
+
+        Realm:
+            Server.
+
+        Example Usage:
+            -- Get all changed config values for saving
+            local changed = lia.config.getChangedValues()
+    ]]
     function lia.config.getChangedValues()
         local data = {}
         for k, v in pairs(lia.config.stored) do
@@ -122,6 +304,28 @@ if SERVER then
         return data
     end
 
+    --[[
+        lia.config.send
+
+        Purpose:
+            Sends the current changed config values to a specific client or broadcasts to all clients.
+
+        Parameters:
+            client (Player) - (Optional) The client to send to. If nil, broadcasts to all.
+
+        Returns:
+            None.
+
+        Realm:
+            Server.
+
+        Example Usage:
+            -- Send config to a specific client
+            lia.config.send(somePlayer)
+
+            -- Broadcast config to all clients
+            lia.config.send()
+    ]]
     function lia.config.send(client)
         net.Start("cfgList")
         net.WriteTable(lia.config.getChangedValues())
@@ -132,6 +336,25 @@ if SERVER then
         end
     end
 
+    --[[
+        lia.config.save
+
+        Purpose:
+            Saves all changed config values to the database for the current schema/gamemode.
+
+        Parameters:
+            None.
+
+        Returns:
+            None.
+
+        Realm:
+            Server.
+
+        Example Usage:
+            -- Save all config changes to the database
+            lia.config.save()
+    ]]
     function lia.config.save()
         local changed = lia.config.getChangedValues()
         local rows = {}
@@ -164,6 +387,14 @@ lia.config.add("MoneyLimit", L("moneyLimit"), 0, nil, {
     type = "Int",
     min = 0,
     max = 1000000
+})
+
+lia.config.add("MaxMoneyEntities", L("maxMoneyEntities"), 3, nil, {
+    desc = L("maxMoneyEntitiesDesc"),
+    category = L("money"),
+    type = "Int",
+    min = 1,
+    max = 50
 })
 
 lia.config.add("CurrencySymbol", L("currencySymbol"), "", function(newVal) lia.currency.symbol = newVal end, {
@@ -652,7 +883,7 @@ lia.config.add("ChatListenColor", L("chatListenColor"), {
     type = "Color",
 })
 
-lia.config.add("OOCDelay", L("oocDelay"), 10, nil, {
+lia.config.add("OOCDelay", L("oocDelayTitle"), 10, nil, {
     desc = L("oocDelayDesc"),
     category = L("categoryChat"),
     type = "Float",
@@ -660,7 +891,7 @@ lia.config.add("OOCDelay", L("oocDelay"), 10, nil, {
     max = 60
 })
 
-lia.config.add("LOOCDelay", L("loocDelay"), 6, nil, {
+lia.config.add("LOOCDelay", L("loocDelayTitle"), 6, nil, {
     desc = L("loocDelayDesc"),
     category = L("categoryChat"),
     type = "Float",

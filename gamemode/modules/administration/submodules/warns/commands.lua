@@ -3,7 +3,16 @@ lia.command.add("warn", {
     adminOnly = true,
     privilege = "issueWarnings",
     desc = "warnDesc",
-    syntax = "[player Target] [string Reason]",
+    arguments = {
+        {
+            name = "target",
+            type = "player"
+        },
+        {
+            name = "reason",
+            type = "string"
+        },
+    },
     AdminStick = {
         Name = "warnPlayer",
         Category = "moderationTools",
@@ -41,7 +50,12 @@ lia.command.add("viewwarns", {
     adminOnly = true,
     privilege = "viewPlayerWarnings",
     desc = "viewWarnsDesc",
-    syntax = "[player Target]",
+    arguments = {
+        {
+            name = "target",
+            type = "player"
+        },
+    },
     AdminStick = {
         Name = "viewPlayerWarnings",
         Category = "moderationTools",
@@ -85,7 +99,7 @@ lia.command.add("viewwarns", {
                     field = "admin"
                 },
                 {
-                    name = L("Warning Message"),
+                    name = L("warningMessage"),
                     field = "warningMessage"
                 }
             }, warningList, {

@@ -236,7 +236,7 @@ function GM:DrawEntityInfo(e, a, pos)
         e.liaDescCache = nil
     end
 
-    local name = hook.Run("GetDisplayedName", e) or (ch and ch.getName(ch) or e:Name())
+    local name = hook.Run("GetDisplayedName", e) or ch and ch.getName(ch) or e:Name()
     if name ~= e.liaNameCache then
         e.liaNameCache = name
         if #name > 250 then name = name:sub(1, 250) .. "..." end
@@ -247,7 +247,7 @@ function GM:DrawEntityInfo(e, a, pos)
         charInfo[#charInfo + 1] = {e.liaNameLines[i], color_white}
     end
 
-    local desc = hook.Run("GetDisplayedDescription", e, true) or (ch and ch.getDesc(ch) or L("noChar"))
+    local desc = hook.Run("GetDisplayedDescription", e, true) or ch and ch.getDesc(ch) or L("noChar")
     if desc ~= e.liaDescCache then
         e.liaDescCache = desc
         if #desc > 250 then desc = desc:sub(1, 250) .. "..." end

@@ -1,7 +1,7 @@
-MODULE.name = L("moduleInventoryName")
+﻿MODULE.name = "moduleInventoryName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = L("moduleInventoryDesc")
+MODULE.desc = "moduleInventoryDesc"
 MODULE.Dependencies = {
     {
         File = "gridinv.lua",

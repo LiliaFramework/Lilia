@@ -1,7 +1,80 @@
-﻿lia.command = lia.command or {}
+﻿--[[
+# Attributes Library
+
+This page documents the functions for working with console commands and command registration.
+
+---
+
+## Overview
+
+The commands library provides a system for registering and managing console commands within the Lilia framework. It handles command registration, privilege checking, aliases, and provides a unified interface for command execution. The library supports both client and server-side commands with proper access control and privilege management.
+]]
+lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
+function lia.command.buildSyntaxFromArguments(args)
+    local tokens = {}
+    for _, arg in ipairs(args) do
+        local typ = arg.type or "string"
+        if typ == "bool" or typ == "boolean" then
+            typ = "bool"
+        elseif typ == "player" then
+            typ = "player"
+        elseif typ == "table" then
+            typ = "table"
+        else
+            typ = "string"
+        end
+
+        local name = arg.name or typ
+        local optional = arg.optional and " optional" or ""
+        tokens[#tokens + 1] = string.format("[%s %s%s]", typ, name, optional)
+    end
+    return table.concat(tokens, " ")
+end
+
+--[[
+    lia.command.add
+
+    Purpose:
+        Registers a new command with the Lilia command system. This function sets up the command's argument definitions,
+        description, privilege requirements, and access control. It also handles command aliases and ensures the command is
+        accessible via the appropriate privilege level.
+
+    Parameters:
+        command (string) - The name of the command to register.
+        data (table) - A table containing command properties:
+            - arguments (table): Ordered argument definitions for the command (optional).
+            - desc (string): The description of the command (optional).
+            - privilege (string): The privilege required to use the command (optional).
+            - superAdminOnly (boolean): If true, only superadmins can use the command (optional).
+            - adminOnly (boolean): If true, only admins can use the command (optional).
+            - alias (string/table): Aliases for the command (optional).
+            - onRun (function): The function to execute when the command is run (required).
+
+    Returns:
+        None.
+
+    Realm:
+        Shared.
+
+    Example Usage:
+        lia.command.add("kick", {
+            arguments = {
+                {name = "target", type = "player"},
+                {name = "reason", type = "string", optional = true}
+            },
+            desc = "Kicks a player from the server.",
+            privilege = "Kick Players",
+            adminOnly = true,
+            onRun = function(client, arguments)
+                -- Implementation here
+            end
+        })
+]]
 function lia.command.add(command, data)
-    data.syntax = data.syntax or ""
+    data.arguments = data.arguments or {}
+    data.syntax = lia.command.buildSyntaxFromArguments(data.arguments)
+    data.syntax = L(data.syntax or "")
     data.desc = data.desc or ""
     data.privilege = data.privilege or nil
     local superAdminOnly = data.superAdminOnly
@@ -16,8 +89,18 @@ function lia.command.add(command, data)
         lia.administrator.registerPrivilege({
             Name = privilegeName,
             MinAccess = superAdminOnly and "superadmin" or "admin",
-            Category = L("commands")
+            Category = "commands"
         })
+    end
+
+    for _, arg in ipairs(data.arguments) do
+        if arg.type == "boolean" then
+            arg.type = "bool"
+        elseif arg.type ~= "player" and arg.type ~= "table" and arg.type ~= "bool" then
+            arg.type = "string"
+        end
+
+        arg.optional = arg.optional or false
     end
 
     local onRun = data.onRun
@@ -52,16 +135,41 @@ function lia.command.add(command, data)
     hook.Run("liaCommandAdded", command, data)
 end
 
+--[[
+    lia.command.hasAccess
+
+    Purpose:
+        Determines whether a client has access to a specific command, based on privilege, admin level,
+        faction/class command whitelists, and hooks.
+
+    Parameters:
+        client (Player) - The player to check access for.
+        command (string) - The command name.
+        data (table) - (Optional) The command data table. If not provided, it will be looked up.
+
+    Returns:
+        hasAccess (boolean) - Whether the client has access to the command.
+        privilegeName (string) - The privilege name or access description.
+
+    Realm:
+        Shared.
+
+    Example Usage:
+        local canUse, privilege = lia.command.hasAccess(ply, "kick")
+        if canUse then
+            print("Player can use /kick with privilege:", privilege)
+        end
+]]
 function lia.command.hasAccess(client, command, data)
     if not data then data = lia.command.list[command] end
+    if not data then return false, "unknown" end
     local privilegeKey = data.privilege
     local superAdminOnly = data.superAdminOnly
     local adminOnly = data.adminOnly
     local accessLevels = superAdminOnly and "superadmin" or adminOnly and "admin" or "user"
-    local privilegeName = privilegeKey and L(privilegeKey) or (accessLevels == "user" and L("globalAccess") or L("accessTo", command))
+    local privilegeName = privilegeKey and L(privilegeKey) or accessLevels == "user" and L("globalAccess") or L("accessTo", command)
     local hasAccess = true
     if accessLevels ~= "user" then hasAccess = client:hasPrivilege(privilegeName) end
-
     local hookResult = hook.Run("CanPlayerUseCommand", client, command)
     if hookResult ~= nil then return hookResult, privilegeName end
     local char = IsValid(client) and client.getChar and client:getChar()
@@ -74,6 +182,25 @@ function lia.command.hasAccess(client, command, data)
     return hasAccess, privilegeName
 end
 
+--[[
+    lia.command.extractArgs
+
+    Purpose:
+        Parses a command argument string into a table of arguments, handling quoted strings as single arguments.
+
+    Parameters:
+        text (string) - The raw argument string to parse.
+
+    Returns:
+        arguments (table) - A table of parsed arguments.
+
+    Realm:
+        Shared.
+
+    Example Usage:
+        local args = lia.command.extractArgs('John "This is a reason" 123')
+        -- args = {"John", "This is a reason", "123"}
+]]
 function lia.command.extractArgs(text)
     local skip = 0
     local arguments = {}
@@ -94,63 +221,13 @@ function lia.command.extractArgs(text)
                 arguments[#arguments + 1] = curString
                 curString = ""
             else
-                if not (c == " " and curString == "") then
-                    curString = curString .. c
-                end
+                if not (c == " " and curString == "") then curString = curString .. c end
             end
         end
     end
 
     if curString ~= "" then arguments[#arguments + 1] = curString end
     return arguments
-end
-
-function lia.command.parseSyntaxFields(syntax)
-    local fields = {}
-    local valid = true
-    if not syntax or syntax == "" then return fields, true end
-    for token in syntax:gmatch("%b[]") do
-        local inner = token:sub(2, -2)
-        local typ, name = inner:match("^(%S+)%s+(.+)$")
-        local optional = inner:lower():find("optional", 1, true) ~= nil
-        if name then
-            typ = typ:lower()
-            if typ == "string" then
-                typ = "text"
-            elseif typ == "number" then
-                typ = "number"
-            elseif typ == "bool" or typ == "boolean" then
-                typ = "boolean"
-            elseif typ == "player" or typ == "ply" then
-                typ = "player"
-            elseif typ == "item" then
-                typ = "item"
-            elseif typ == "faction" then
-                typ = "faction"
-            elseif typ == "class" then
-                typ = "class"
-            else
-                valid = false
-            end
-        else
-            name = inner
-            typ = "text"
-            valid = false
-        end
-
-        if optional then name = name:gsub("%s+[Oo][Pp][Tt][Ii][Oo][Nn][Aa][Ll]%s*$", "") end
-        fields[#fields + 1] = {
-            name = name,
-            type = typ,
-            optional = optional
-        }
-    end
-
-    local open = select(2, syntax:gsub("%[", ""))
-    local close = select(2, syntax:gsub("%]", ""))
-    if open ~= close then valid = false end
-    if syntax:gsub("%b[]", ""):find("%S") then valid = false end
-    return fields, valid
 end
 
 local function combineBracketArgs(args)
@@ -183,6 +260,27 @@ local function isPlaceholder(arg)
 end
 
 if SERVER then
+    --[[
+        lia.command.run
+
+        Purpose:
+            Executes a registered command for a given client with the provided arguments. Handles notification of results
+            and logs the command execution.
+
+        Parameters:
+            client (Player) - The player executing the command.
+            command (string) - The command name.
+            arguments (table) - (Optional) Table of arguments to pass to the command.
+
+        Returns:
+            None.
+
+        Realm:
+            Server.
+
+        Example Usage:
+            lia.command.run(ply, "kick", {"STEAM_0:1:12345", "Spamming"})
+    ]]
     function lia.command.run(client, command, arguments)
         local commandTbl = lia.command.list[command:lower()]
         if commandTbl then
@@ -203,6 +301,28 @@ if SERVER then
         end
     end
 
+    --[[
+        lia.command.parse
+
+        Purpose:
+            Parses a chat message or command string, determines the command and its arguments, and executes it.
+            Handles argument prompting for missing required arguments.
+
+        Parameters:
+            client (Player) - The player who sent the command.
+            text (string) - The raw chat or command string.
+            realCommand (string) - (Optional) The command name if already extracted.
+            arguments (table) - (Optional) Arguments if already parsed.
+
+        Returns:
+            (boolean) - True if a command was found and processed, false otherwise.
+
+        Realm:
+            Server.
+
+        Example Usage:
+            lia.command.parse(ply, "/kick John Spamming")
+    ]]
     function lia.command.parse(client, text, realCommand, arguments)
         if realCommand or utf8.sub(text, 1, 1) == "/" then
             local match = realCommand or text:lower():match("/" .. "([_%w]+)")
@@ -216,21 +336,21 @@ if SERVER then
             local command = lia.command.list[match]
             if command then
                 if not arguments then arguments = lia.command.extractArgs(text:sub(#match + 3)) end
-                local fields, valid = lia.command.parseSyntaxFields(command.syntax)
-                if IsValid(client) and client:IsPlayer() and valid and #fields > 0 then
+                local fields = command.arguments or {}
+                if IsValid(client) and client:IsPlayer() and #fields > 0 then
                     local tokens = combineBracketArgs(arguments)
                     local missing = {}
                     local prefix = {}
                     for i, field in ipairs(fields) do
                         local arg = tokens[i]
                         if not arg or isPlaceholder(arg) then
-                            if not field.optional then missing[field.name] = field.type end
+                            if not field.optional then missing[#missing + 1] = field.name end
                         else
                             prefix[#prefix + 1] = arg
                         end
                     end
 
-                    if table.Count(missing) > 0 then
+                    if #missing > 0 then
                         net.Start("liaCmdArgPrompt")
                         net.WriteString(match)
                         net.WriteTable(missing)
@@ -254,75 +374,42 @@ if SERVER then
         return false
     end
 else
-    function lia.command.openArgumentPrompt(cmdKey, fields, prefix)
-        local ply = LocalPlayer()
+    --[[
+        lia.command.openArgumentPrompt
+
+        Purpose:
+            Opens a GUI prompt for the player to fill in missing command arguments, based on the command's syntax.
+            Used when a command is invoked without all required arguments.
+
+        Parameters:
+            cmdKey (string) - The command name.
+            fields (table/string) - Table of missing fields or argument string.
+            prefix (table) - (Optional) Arguments already provided.
+
+        Returns:
+            None.
+
+        Realm:
+            Client.
+
+        Example Usage:
+            -- Opens a prompt for the "ban" command, requiring a player and duration
+            lia.command.openArgumentPrompt("ban", {player = "player", duration = "number"})
+    ]]
+    function lia.command.openArgumentPrompt(cmdKey, missing, prefix)
         local command = lia.command.list[cmdKey]
         if not command then return end
-        local firstKey = istable(fields) and next(fields)
-        if not fields or isstring(fields) or firstKey and isnumber(firstKey) then
-            local args = fields
-            if isstring(args) then args = lia.command.extractArgs(args) end
-            local parsed, valid = lia.command.parseSyntaxFields(command.syntax)
-            if not valid then return end
-            fields = {}
-            prefix = {}
-            local tokens = args and combineBracketArgs(args) or {}
-            for i, field in ipairs(parsed) do
-                local arg = tokens[i]
-                if arg then
-                    prefix[#prefix + 1] = arg
-                else
-                    fields[field.name] = {
-                        type = field.type,
-                        optional = field.optional
-                    }
-                end
-            end
-        else
-            for k, v in pairs(fields) do
-                if not istable(v) then
-                    fields[k] = {
-                        type = v,
-                        optional = false
-                    }
-                end
-            end
-
-            local parsed, valid = lia.command.parseSyntaxFields(command.syntax)
-            if valid then
-                local tokens = prefix or {}
-                local index = 1
-                local newFields = {}
-                for _, field in ipairs(parsed) do
-                    local arg = tokens[index]
-                    if arg then
-                        index = index + 1
-                    else
-                        local info = fields[field.name]
-                        if not info then
-                            newFields[field.name] = {
-                                type = field.type,
-                                optional = field.optional
-                            }
-                        else
-                            if not istable(info) then
-                                info = {
-                                    type = info
-                                }
-                            end
-
-                            newFields[field.name] = {
-                                type = info.type,
-                                optional = field.optional
-                            }
-                        end
-                    end
-                end
-
-                fields = newFields
-            end
+        local fields = {}
+        local lookup = {}
+        for _, name in ipairs(missing or {}) do
+            lookup[name] = true
         end
 
+        for _, arg in ipairs(command.arguments or {}) do
+            if lookup[arg.name] then fields[arg.name] = arg end
+        end
+
+        prefix = prefix or {}
         local numFields = table.Count(fields)
         local frameW, frameH = 600, 200 + numFields * 75
         local frame = vgui.Create("DFrame")
@@ -346,56 +433,59 @@ else
         for name, data in pairs(fields) do
             local fieldType = data.type
             local optional = data.optional
+            local options = data.options
+            local filter = data.filter
             local panel = vgui.Create("DPanel", scroll)
             panel:Dock(TOP)
             panel:DockMargin(0, 0, 0, 5)
             panel:SetTall(70)
             panel.Paint = function() end
-            local textW = select(1, surface.GetTextSize(L(name)))
+            local textW = select(1, surface.GetTextSize(L(data.description or name)))
             local ctrl
-            if isfunction(fieldType) then
-                local options, mode = fieldType()
-                if mode == "combo" then
-                    ctrl = vgui.Create("DComboBox", panel)
-                    for _, opt in ipairs(options) do
-                        ctrl:AddChoice(opt)
-                    end
-                end
-            elseif fieldType == "player" then
+            if fieldType == "player" then
                 ctrl = vgui.Create("DComboBox", panel)
                 ctrl:SetValue(L("select") .. " " .. L("player"))
+                local players = {}
                 for _, plyObj in player.Iterator() do
-                    if IsValid(plyObj) then ctrl:AddChoice(plyObj:Name(), plyObj:SteamID()) end
+                    if IsValid(plyObj) then players[#players + 1] = plyObj end
                 end
-            elseif fieldType == "item" then
+
+                if isfunction(filter) then
+                    local ok, res = pcall(filter, LocalPlayer(), players)
+                    if ok and istable(res) then players = res end
+                end
+
+                for _, plyObj in ipairs(players) do
+                    ctrl:AddChoice(plyObj:Name(), plyObj:SteamID())
+                end
+            elseif fieldType == "table" then
                 ctrl = vgui.Create("DComboBox", panel)
-                ctrl:SetValue(L("select") .. " " .. L("item"))
-                for uniqueID, item in SortedPairsByMemberValue(lia.item.list, "name") do
-                    ctrl:AddChoice(item.getName and item:getName() or L(item.name), uniqueID)
+                ctrl:SetValue(L("select") .. " " .. L(name))
+                local opts = options
+                if isfunction(opts) then
+                    local ok, res = pcall(opts)
+                    if ok then opts = res end
                 end
-            elseif fieldType == "faction" then
-                ctrl = vgui.Create("DComboBox", panel)
-                ctrl:SetValue(L("select") .. " " .. L("faction"))
-                for _, fac in ipairs(lia.faction.indices) do
-                    ctrl:AddChoice(L(fac.name), string.format("\"%s\"", fac.uniqueID))
+
+                if istable(opts) then
+                    for k, v in pairs(opts) do
+                        if isnumber(k) then
+                            ctrl:AddChoice(tostring(v), v)
+                        else
+                            ctrl:AddChoice(tostring(k), v)
+                        end
+                    end
                 end
-            elseif fieldType == "class" then
-                ctrl = vgui.Create("DComboBox", panel)
-                ctrl:SetValue(L("select") .. " " .. L("class"))
-                for _, class in pairs(lia.class.list) do
-                    ctrl:AddChoice(L(class.name), string.format("\"%s\"", class.uniqueID))
-                end
-            elseif fieldType == "text" or fieldType == "number" then
+            elseif fieldType == "bool" then
+                ctrl = vgui.Create("DCheckBox", panel)
+            else
                 ctrl = vgui.Create("DTextEntry", panel)
                 ctrl:SetFont("liaSmallFont")
-                if fieldType == "number" and ctrl.SetNumeric then ctrl:SetNumeric(true) end
-            elseif fieldType == "boolean" then
-                ctrl = vgui.Create("DCheckBox", panel)
             end
 
             local label = vgui.Create("DLabel", panel)
             label:SetFont("liaSmallFont")
-            label:SetText(L(name))
+            label:SetText(L(data.description or name))
             label:SizeToContents()
             panel.PerformLayout = function(_, w, h)
                 local ctrlH = 30
@@ -460,13 +550,13 @@ else
                     local ctl = data.ctrl
                     local ftype = data.type
                     local filled = false
-                    if isfunction(ftype) or ftype == "player" or ftype == "item" or ftype == "faction" or ftype == "class" then
+                    if ftype == "player" or ftype == "table" then
                         local txt, _ = ctl:GetSelected()
                         filled = txt ~= nil and txt ~= ""
-                    elseif ftype == "text" or ftype == "number" then
-                        filled = ctl:GetValue() ~= nil and ctl:GetValue() ~= ""
-                    elseif ftype == "boolean" then
+                    elseif ftype == "bool" then
                         filled = true
+                    else
+                        filled = ctl:GetValue() ~= nil and ctl:GetValue() ~= ""
                     end
 
                     if not filled then
@@ -484,55 +574,56 @@ else
         end
 
         validate()
-        submit.DoClick = function()
-            local args = {}
-            for key, field in pairs(fields) do
-                local ctlData = controls[key]
-                local ctl = ctlData.ctrl
-                local ftype = field.type
-                if isfunction(ftype) or ftype == "player" or ftype == "item" or ftype == "faction" or ftype == "class" then
-                    local txt, data = ctl:GetSelected()
-                    if txt and txt ~= "" then args[#args + 1] = data or txt end
-                elseif ftype == "text" or ftype == "number" then
-                    local val = ctl:GetValue()
-                    if val ~= "" or not field.optional then args[#args + 1] = val end
-                elseif ftype == "boolean" then
-                    args[#args + 1] = ctl:GetChecked() and "1" or "0"
-                end
-            end
-
-            if prefix then
-                if istable(prefix) then
-                    for i = #prefix, 1, -1 do
-                        table.insert(args, 1, prefix[i])
-                    end
-                else
-                    table.insert(args, 1, prefix)
-                end
-            end
-
-            local cmd = "/" .. cmdKey
-            for _, v in ipairs(args) do
-                cmd = cmd .. " " .. tostring(v)
-            end
-
-            ply:ConCommand("say " .. cmd)
-            frame:Remove()
-            AdminStickIsOpen = false
-        end
-
         local cancel = vgui.Create("DButton", buttons)
         cancel:Dock(RIGHT)
         cancel:SetWide(270)
         cancel:SetText(L("cancel"))
         cancel:SetFont("liaSmallFont")
         cancel:SetIcon("icon16/cross.png")
-        cancel.DoClick = function()
+        cancel.DoClick = function() frame:Remove() end
+        submit.DoClick = function()
+            local args = {}
+            if prefix then table.Add(args, prefix) end
+            for name, info in pairs(controls) do
+                local ctl = info.ctrl
+                local typ = info.type
+                local val
+                if typ == "player" or typ == "table" then
+                    local _, dataVal = ctl:GetSelected()
+                    val = dataVal or ctl:GetValue()
+                elseif typ == "bool" then
+                    val = ctl:GetChecked()
+                else
+                    val = ctl:GetValue()
+                end
+
+                args[#args + 1] = val ~= "" and val or nil
+            end
+
+            RunConsoleCommand("say", "/" .. cmdKey .. " " .. table.concat(args, " "))
             frame:Remove()
-            AdminStickIsOpen = false
         end
     end
 
+    --[[
+        lia.command.send
+
+        Purpose:
+            Sends a command and its arguments to the server via net message, for execution as if the player had typed it.
+
+        Parameters:
+            command (string) - The command name.
+            ... (vararg) - Arguments to send with the command.
+
+        Returns:
+            None.
+
+        Realm:
+            Client.
+
+        Example Usage:
+            lia.command.send("kick", "STEAM_0:1:12345", "Spamming")
+    ]]
     function lia.command.send(command, ...)
         net.Start("cmd")
         net.WriteString(command)
@@ -556,7 +647,7 @@ hook.Add("CreateInformationButtons", "liaInformationCommandsUnified", function(p
                         local hasAccess = lia.command.hasAccess(client, cmdName, cmdData)
                         if hasAccess then
                             local text = "/" .. cmdName
-                            if cmdData.syntax and cmdData.syntax ~= "" then text = text .. " " .. cmdData.syntax end
+                            if cmdData.syntax and cmdData.syntax ~= "" then text = text .. " " .. L(cmdData.syntax) end
                             local desc = cmdData.desc ~= "" and L(cmdData.desc) or ""
                             local priv = cmdData.privilege and L(cmdData.privilege) or ""
                             data[#data + 1] = {text, desc, priv}
@@ -575,7 +666,7 @@ hook.Add("CreateInformationButtons", "liaInformationCommandsUnified", function(p
                         local hasAccess, privilege = lia.command.hasAccess(client, cmdName, cmdData)
                         if hasAccess then
                             local text = "/" .. cmdName
-                            if cmdData.syntax and cmdData.syntax ~= "" then text = text .. " " .. cmdData.syntax end
+                            if cmdData.syntax and cmdData.syntax ~= "" then text = text .. " " .. L(cmdData.syntax) end
                             local desc = cmdData.desc ~= "" and L(cmdData.desc) or ""
                             local right = privilege and privilege ~= L("globalAccess") and privilege or ""
                             local row = sheet:AddTextRow({
@@ -584,7 +675,7 @@ hook.Add("CreateInformationButtons", "liaInformationCommandsUnified", function(p
                                 right = right
                             })
 
-                            row.filterText = (cmdName .. " " .. (cmdData.syntax or "") .. " " .. desc .. " " .. right):lower()
+                            row.filterText = (cmdName .. " " .. L(cmdData.syntax or "") .. " " .. desc .. " " .. right):lower()
                         end
                     end
                 end

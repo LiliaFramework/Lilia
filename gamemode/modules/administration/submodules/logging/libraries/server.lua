@@ -154,8 +154,22 @@ function MODULE:PlayerSpawnSWEP(client, swep)
     lia.log.add(client, "swep_spawning", swep)
 end
 
-function MODULE:CanTool(client, _, tool)
-    lia.log.add(client, "toolgunUse", tool)
+function MODULE:CanTool(client, trace, tool)
+    local entity = trace.Entity
+    local entityInfo = "none"
+    if IsValid(entity) then
+        if entity:IsPlayer() then
+            entityInfo = "player:" .. entity:Name()
+        elseif entity:IsNPC() then
+            entityInfo = "npc:" .. entity:GetClass()
+        elseif entity:IsVehicle() then
+            entityInfo = "vehicle:" .. entity:GetClass()
+        else
+            entityInfo = "entity:" .. entity:GetClass()
+        end
+    end
+
+    lia.log.add(client, "toolgunUse", tool, entityInfo)
 end
 
 function MODULE:PlayerSpawn(client)

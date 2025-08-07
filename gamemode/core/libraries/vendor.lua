@@ -3,125 +3,76 @@ lia.vendor.editor = lia.vendor.editor or {}
 lia.vendor.presets = lia.vendor.presets or {}
 lia.vendor.rarities = lia.vendor.rarities or {}
 if SERVER then
-    lia.vendor.editor.name = function(vendor)
-        local name = net.ReadString()
-        vendor:setName(name)
+    local function addEditor(name, reader, applier)
+        lia.vendor.editor[name] = function(vendor)
+            local args = {reader()}
+            applier(vendor, unpack(args))
+        end
     end
 
-    lia.vendor.editor.mode = function(vendor)
+    addEditor("name", function() return net.ReadString() end, function(vendor, name) vendor:setName(name) end)
+    addEditor("mode", function() return net.ReadString(), net.ReadInt(8) end, function(vendor, itemType, mode)
         if vendor:getNetVar("preset") ~= "none" then return end
-        local itemType = net.ReadString()
-        local mode = net.ReadInt(8)
         vendor:setTradeMode(itemType, mode)
-    end
+    end)
 
-    lia.vendor.editor.price = function(vendor)
+    addEditor("price", function() return net.ReadString(), net.ReadInt(32) end, function(vendor, itemType, price)
         if vendor:getNetVar("preset") ~= "none" then return end
-        local itemType = net.ReadString()
-        local price = net.ReadInt(32)
         vendor:setItemPrice(itemType, price)
-    end
+    end)
 
-    lia.vendor.editor.flag = function(vendor)
-        local flag = net.ReadString()
-        vendor:setNetVar("flag", flag)
-    end
-
-    lia.vendor.editor.stockDisable = function(vendor)
+    addEditor("stockDisable", function() return net.ReadString() end, function(vendor, itemType)
         if vendor:getNetVar("preset") ~= "none" then return end
-        local itemType = net.ReadString()
         vendor:setMaxStock(itemType, nil)
-    end
+    end)
 
-    lia.vendor.editor.welcome = function(vendor)
-        local message = net.ReadString()
-        vendor:setWelcomeMessage(message)
-    end
-
-    lia.vendor.editor.stockMax = function(vendor)
+    addEditor("stockMax", function() return net.ReadString(), net.ReadUInt(32) end, function(vendor, itemType, value)
         if vendor:getNetVar("preset") ~= "none" then return end
-        local itemType = net.ReadString()
-        local value = net.ReadUInt(32)
         vendor:setMaxStock(itemType, value)
-    end
+    end)
 
-    lia.vendor.editor.stock = function(vendor)
+    addEditor("stock", function() return net.ReadString(), net.ReadUInt(32) end, function(vendor, itemType, value)
         if vendor:getNetVar("preset") ~= "none" then return end
-        local itemType = net.ReadString()
-        local value = net.ReadUInt(32)
         vendor:setStock(itemType, value)
-    end
+    end)
 
-    lia.vendor.editor.faction = function(vendor)
-        local factionID = net.ReadUInt(8)
-        local allowed = net.ReadBool()
-        vendor:setFactionAllowed(factionID, allowed)
-    end
-
-    lia.vendor.editor.class = function(vendor)
-        local classID = net.ReadUInt(8)
-        local allowed = net.ReadBool()
-        vendor:setClassAllowed(classID, allowed)
-    end
-
-    lia.vendor.editor.model = function(vendor)
-        local model = net.ReadString()
-        vendor:setModel(model)
-    end
-
-    lia.vendor.editor.skin = function(vendor)
-        local skin = net.ReadUInt(8)
-        vendor:setSkin(skin)
-    end
-
-    lia.vendor.editor.bodygroup = function(vendor)
-        local index = net.ReadUInt(8)
-        local value = net.ReadUInt(8)
-        vendor:setBodyGroup(index, value)
-    end
-
-    lia.vendor.editor.useMoney = function(vendor)
-        local useMoney = net.ReadBool()
+    addEditor("flag", function() return net.ReadString() end, function(vendor, flag) vendor:setNetVar("flag", flag) end)
+    addEditor("welcome", function() return net.ReadString() end, function(vendor, message) vendor:setWelcomeMessage(message) end)
+    addEditor("faction", function() return net.ReadUInt(8), net.ReadBool() end, function(vendor, factionID, allowed) vendor:setFactionAllowed(factionID, allowed) end)
+    addEditor("class", function() return net.ReadUInt(8), net.ReadBool() end, function(vendor, classID, allowed) vendor:setClassAllowed(classID, allowed) end)
+    addEditor("model", function() return net.ReadString() end, function(vendor, model) vendor:setModel(model) end)
+    addEditor("skin", function() return net.ReadUInt(8) end, function(vendor, skin) vendor:setSkin(skin) end)
+    addEditor("bodygroup", function() return net.ReadUInt(8), net.ReadUInt(8) end, function(vendor, index, value) vendor:setBodyGroup(index, value) end)
+    addEditor("useMoney", function() return net.ReadBool() end, function(vendor, useMoney)
         if useMoney then
             vendor:setMoney(lia.config.get("vendorDefaultMoney", 500))
         else
             vendor:setMoney(nil)
         end
-    end
+    end)
 
-    lia.vendor.editor.money = function(vendor)
-        local money = net.ReadUInt(32)
-        vendor:setMoney(money)
-    end
-
-    lia.vendor.editor.scale = function(vendor)
-        local scale = net.ReadFloat()
-        vendor:setSellScale(scale)
-    end
-
-    lia.vendor.editor.preset = function(vendor)
-        local preset = net.ReadString()
-        vendor:applyPreset(preset)
-    end
+    addEditor("money", function() return net.ReadUInt(32) end, function(vendor, money) vendor:setMoney(money) end)
+    addEditor("scale", function() return net.ReadFloat() end, function(vendor, scale) vendor:setSellScale(scale) end)
+    addEditor("preset", function() return net.ReadString() end, function(vendor, preset) vendor:applyPreset(preset) end)
 else
-    local function addEditor(name, callback)
+    local function addEditor(name, writer)
         lia.vendor.editor[name] = function(...)
             net.Start("VendorEdit")
             net.WriteString(name)
-            if isfunction(callback) then callback(...) end
+            writer(...)
             net.SendToServer()
         end
     end
 
+    addEditor("name", function(name) net.WriteString(name) end)
     addEditor("mode", function(itemType, mode)
-        if not isnumber(mode) then mode = nil end
         net.WriteString(itemType)
-        net.WriteInt(mode or -1, 8)
+        net.WriteInt(isnumber(mode) and mode or -1, 8)
     end)
 
     addEditor("price", function(itemType, price)
         net.WriteString(itemType)
-        net.WriteInt(price or -1, 32)
+        net.WriteInt(isnumber(price) and price or -1, 32)
     end)
 
     addEditor("stockDisable", function(itemType)
@@ -130,9 +81,8 @@ else
     end)
 
     addEditor("stockMax", function(itemType, value)
-        if not isnumber(value) then return end
         net.WriteString(itemType)
-        net.WriteUInt(math.max(value, 1), 32)
+        net.WriteUInt(math.max(value or 1, 1), 32)
     end)
 
     addEditor("stock", function(itemType, value)
@@ -140,6 +90,8 @@ else
         net.WriteUInt(value, 32)
     end)
 
+    addEditor("flag", function(flag) net.WriteString(flag) end)
+    addEditor("welcome", function(message) net.WriteString(message) end)
     addEditor("faction", function(factionID, allowed)
         net.WriteUInt(factionID, 8)
         net.WriteBool(allowed)
@@ -150,17 +102,6 @@ else
         net.WriteBool(allowed)
     end)
 
-    addEditor("money", function(value)
-        if isnumber(value) then
-            value = math.max(math.Round(value), 0)
-        else
-            value = nil
-        end
-
-        net.WriteInt(value or -1, 32)
-    end)
-
-    addEditor("flag", function(flag) net.WriteString(flag) end)
     addEditor("model", function(model) net.WriteString(model) end)
     addEditor("skin", function(skin) net.WriteUInt(math.Clamp(skin or 0, 0, 255), 8) end)
     addEditor("bodygroup", function(index, value)
@@ -169,24 +110,94 @@ else
     end)
 
     addEditor("useMoney", function(useMoney) net.WriteBool(useMoney) end)
+    addEditor("money", function(value)
+        local amt = isnumber(value) and math.max(math.Round(value), 0) or -1
+        net.WriteInt(amt, 32)
+    end)
+
     addEditor("scale", function(scale) net.WriteFloat(scale) end)
-    addEditor("name", function(name) net.WriteString(name) end)
-    addEditor("welcome", function(message) net.WriteString(message) end)
-    addEditor("preset", function(name) net.WriteString(name) end)
+    addEditor("preset", function(preset) net.WriteString(preset) end)
 end
 
+--[[
+    lia.vendor.addRarities
+
+    Purpose:
+        Registers a new rarity for vendor items, associating a name with a color.
+        This can be used to visually distinguish items of different rarities in vendor menus.
+
+    Parameters:
+        name (string) - The name of the rarity (e.g., "Legendary", "Common").
+        color (Color) - The color to associate with this rarity.
+
+    Returns:
+        None.
+
+    Realm:
+        Shared.
+
+    Example Usage:
+        -- Add a new rarity called "Epic" with a purple color
+        lia.vendor.addRarities("Epic", Color(128, 0, 128))
+]]
 function lia.vendor.addRarities(name, color)
     assert(isstring(name), L("vendorRarityNameString"))
     assert(IsColor(color), L("vendorColorMustBeColor"))
     lia.vendor.rarities[name] = color
 end
 
+--[[
+    lia.vendor.addPreset
+
+    Purpose:
+        Registers a new vendor preset, which is a predefined set of items and their properties.
+        Presets can be applied to vendors to quickly configure their inventory and settings.
+
+    Parameters:
+        name (string) - The name of the preset (e.g., "General Store").
+        items (table) - A table describing the items and their properties for this preset.
+
+    Returns:
+        None.
+
+    Realm:
+        Shared.
+
+    Example Usage:
+        -- Add a preset for a "Medical Vendor" with specific items
+        lia.vendor.addPreset("Medical Vendor", {
+            ["medkit"] = {price = 100, stock = 10},
+            ["bandage"] = {price = 25, stock = 50}
+        })
+]]
 function lia.vendor.addPreset(name, items)
     assert(isstring(name), L("vendorPresetNameString"))
     assert(istable(items), L("vendorPresetItemsTable"))
     lia.vendor.presets[string.lower(name)] = items
 end
 
+--[[
+    lia.vendor.getPreset
+
+    Purpose:
+        Retrieves a vendor preset by name, returning the table of items and properties associated with it.
+
+    Parameters:
+        name (string) - The name of the preset to retrieve.
+
+    Returns:
+        table or nil - The preset table if found, or nil if not found.
+
+    Realm:
+        Shared.
+
+    Example Usage:
+        -- Get the "Medical Vendor" preset and print its items
+        local preset = lia.vendor.getPreset("Medical Vendor")
+        if preset then
+            PrintTable(preset)
+        end
+]]
 function lia.vendor.getPreset(name)
     return lia.vendor.presets[string.lower(name)]
 end

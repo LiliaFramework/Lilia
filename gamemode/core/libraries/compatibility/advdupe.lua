@@ -36,10 +36,4 @@ hook.Add("CanTool", "liaAdvDupe", function(client, _, tool)
     if not CheckDuplicationScale(client, toolobj.Entities) then return false end
 end)
 
-lia.log.addType("dupeCrashAttempt", function(client)
-    return L(
-        "dupeCrashAttemptLog",
-        IsValid(client) and client:Name() or L("unknown"),
-        IsValid(client) and client:SteamID() or L("na")
-    )
-end, L("categorySecurity"))
+lia.log.addType("dupeCrashAttempt", function(client) return L("dupeCrashAttemptLog", IsValid(client) and client:Name() or L("unknown"), IsValid(client) and client:SteamID() or L("na")) end, L("categorySecurity"))

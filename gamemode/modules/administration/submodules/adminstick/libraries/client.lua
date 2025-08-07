@@ -151,7 +151,7 @@ local function OpenReasonUI(tgt, cmd)
 end
 
 local function HandleModerationOption(opt, tgt)
-    if opt.name == L("Ban") then
+    if opt.name == L("ban") then
         OpenReasonUI(tgt, "banid")
     elseif opt.name == L("kick") then
         OpenReasonUI(tgt, "kick")
@@ -164,26 +164,26 @@ end
 
 local function IncludeAdminMenu(tgt, menu, stores)
     local cl = LocalPlayer()
-    if not (cl:hasPrivilege(L("Use Admin Stick")) or cl:isStaffOnDuty()) then return end
+    if not (cl:hasPrivilege(L("useAdminStick")) or cl:isStaffOnDuty()) then return end
     local mod = GetOrCreateSubMenu(menu, "moderationTools", stores)
     local tp = {
         {
-            name = L("Bring"),
+            name = L("bring"),
             cmd = "bring",
             icon = "icon16/arrow_down.png"
         },
         {
-            name = L("Goto"),
+            name = L("goTo"),
             cmd = "goto",
             icon = "icon16/arrow_right.png"
         },
         {
-            name = L("return"),
+            name = L("returnText"),
             cmd = "return",
             icon = "icon16/arrow_redo.png"
         },
         {
-            name = L("Respawn"),
+            name = L("respawn"),
             cmd = "respawn",
             icon = "icon16/arrow_refresh.png"
         }
@@ -192,64 +192,64 @@ local function IncludeAdminMenu(tgt, menu, stores)
     local mods = {
         {
             action = {
-                name = L("Blind"),
+                name = L("blind"),
                 cmd = "blind",
                 icon = "icon16/eye.png"
             },
             inverse = {
-                name = L("Unblind"),
+                name = L("unblind"),
                 cmd = "unblind",
                 icon = "icon16/eye.png"
             }
         },
         {
             action = {
-                name = L("Freeze"),
+                name = L("freeze"),
                 cmd = "freeze",
                 icon = "icon16/lock.png"
             },
             inverse = {
-                name = L("Unfreeze"),
+                name = L("unfreeze"),
                 cmd = "unfreeze",
                 icon = "icon16/accept.png"
             }
         },
         {
             action = {
-                name = L("Gag"),
+                name = L("gag"),
                 cmd = "gag",
                 icon = "icon16/sound_mute.png"
             },
             inverse = {
-                name = L("Ungag"),
+                name = L("ungag"),
                 cmd = "ungag",
                 icon = "icon16/sound_low.png"
             }
         },
         {
             action = {
-                name = L("Mute"),
+                name = L("mute"),
                 cmd = "mute",
                 icon = "icon16/sound_delete.png"
             },
             inverse = {
-                name = L("Unmute"),
+                name = L("unmute"),
                 cmd = "unmute",
                 icon = "icon16/sound_add.png"
             }
         },
         {
-            name = L("Ignite"),
+            name = L("ignite"),
             cmd = "ignite",
             icon = "icon16/fire.png"
         },
         {
-            name = L("Jail"),
+            name = L("jail"),
             cmd = "jail",
             icon = "icon16/lock.png"
         },
         {
-            name = L("Slay"),
+            name = L("slay"),
             cmd = "slay",
             icon = "icon16/bomb.png"
         }
@@ -273,7 +273,7 @@ local function IncludeAdminMenu(tgt, menu, stores)
 
     for _, o in ipairs(tp) do
         mod:AddOption(L(o.name), function()
-            cl:notify(L("adminStickExecutedCommand", o.cmd .. " " .. QuoteArgs(GetIdentifier(tgt))))
+            cl:notifyLocalized("adminStickExecutedCommand", o.cmd .. " " .. QuoteArgs(GetIdentifier(tgt)))
             RunAdminCommand(o.cmd, tgt)
             AdminStickIsOpen = false
         end):SetIcon(o.icon)
@@ -282,9 +282,9 @@ end
 
 local function IncludeCharacterManagement(tgt, menu, stores)
     local cl = LocalPlayer()
-    local canFaction = cl:hasPrivilege(L("Manage Transfers"))
-    local canClass = cl:hasPrivilege(L("Manage Classes"))
-    local canWhitelist = cl:hasPrivilege(L("Manage Whitelists"))
+    local canFaction = cl:hasPrivilege(L("manageTransfers"))
+    local canClass = cl:hasPrivilege(L("manageClasses"))
+    local canWhitelist = cl:hasPrivilege(L("manageWhitelists"))
     local charMenu = GetOrCreateSubMenu(menu, "characterManagement", stores)
     local char = tgt:getChar()
     if char then
@@ -415,7 +415,7 @@ local function IncludeCharacterManagement(tgt, menu, stores)
         end
     end
 
-    if cl:hasPrivilege(L("Manage Character Information")) then
+    if cl:hasPrivilege(L("manageCharacterInformation")) then
         charMenu:AddOption(L("changePlayerModel"), function()
             OpenPlayerModelUI(tgt)
             AdminStickIsOpen = false
@@ -425,7 +425,7 @@ end
 
 local function IncludeFlagManagement(tgt, menu, stores)
     local cl = LocalPlayer()
-    if not cl:hasPrivilege(L("Manage Flags")) then return end
+    if not cl:hasPrivilege(L("manageFlags")) then return end
     local charMenu = GetOrCreateSubMenu(menu, "characterManagement", stores)
     local fm = GetOrCreateSubMenu(charMenu, "flagsManagement", stores)
     local cf = GetOrCreateSubMenu(fm, "charFlagsTitle", stores)
@@ -570,7 +570,7 @@ function MODULE:OpenAdminStickUI(tgt)
                 name = L("charIDCopyFormat", tgt:getChar() and tgt:getChar():getID() or L("na")),
                 cmd = function()
                     if tgt:getChar() then
-                        cl:notify(L("copiedCharID", tgt:getChar():getID()))
+                        cl:notifyLocalized("copiedCharID", tgt:getChar():getID())
                         SetClipboardText(tgt:getChar():getID())
                     end
 
@@ -581,7 +581,7 @@ function MODULE:OpenAdminStickUI(tgt)
             {
                 name = L("nameCopyFormat", tgt:Name()),
                 cmd = function()
-                    cl:notify(L("copiedToClipboard", tgt:Name(), L("name")))
+                    cl:notifyLocalized("copiedToClipboard", tgt:Name(), L("name"))
                     SetClipboardText(tgt:Name())
                     AdminStickIsOpen = false
                 end,
@@ -590,7 +590,7 @@ function MODULE:OpenAdminStickUI(tgt)
             {
                 name = L("steamIDCopyFormat", tgt:SteamID()),
                 cmd = function()
-                    cl:notify(L("copiedToClipboard", tgt:Name(), L("steamID")))
+                    cl:notifyLocalized("copiedToClipboard", tgt:Name(), L("steamID"))
                     SetClipboardText(tgt:SteamID())
                     AdminStickIsOpen = false
                 end,

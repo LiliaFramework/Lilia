@@ -67,7 +67,7 @@ Registers a new chat class and sets up its command aliases.
 
 * `data` (*table*): Table of chat class properties.
 
-  * `syntax` (string) – Argument usage description shown in command help.
+  * `arguments` (table) – Ordered argument definitions for the associated command.
 
   * `desc` (string) – Description of the command shown in menus.
 
@@ -109,7 +109,7 @@ Registers a new chat class and sets up its command aliases.
 -- Register a waving emote command
 lia.chat.register("wave", {
     desc = "Wave at those nearby",
-    syntax = "",
+    arguments = {{name = "text", type = "string", optional = true}},
     format = "* %s waves",
     prefix = {"/wave", "/greet"},
     font = "liaChatFontItalics",

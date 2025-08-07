@@ -19,7 +19,7 @@
         if hook.Run("CanPlayerEarnSalary", client, faction, class) and pay > 0 then
             local money = char:getMoney()
             if limit > 0 and money + pay > limit then
-                client:notifyLocalized("SalaryLimitReached")
+                client:notifyLocalized("salaryLimitReached")
                 char:setMoney(limit)
             else
                 char:giveMoney(pay)

@@ -70,9 +70,9 @@ lia.config.add("TimeToEnterVehicle", L("timeToEnterVehicle"), 4, nil, {
 })
 
 lia.administrator.registerPrivilege({
-    Name = L("canEditSimfphysCars"),
+    Name = "canEditSimfphysCars",
     MinAccess = "superadmin",
-    Category = L("simfphysVehicles")
+    Category = "simfphysVehicles"
 })
 
 hook.Add("simfphysPhysicsCollide", "SIMFPHYS_simfphysPhysicsCollide", function() return true end)

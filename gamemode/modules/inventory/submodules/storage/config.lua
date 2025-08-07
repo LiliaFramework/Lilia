@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 MODULE.Vehicles = MODULE.Vehicles or {}
 MODULE.StorageDefinitions = {
     ["models/props_junk/wood_crate001a.mdl"] = {

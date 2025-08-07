@@ -1,61 +1,61 @@
-MODULE.name = L("moduleAdministrationName")
+﻿MODULE.name = "moduleAdministrationName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = L("moduleAdministrationDesc")
+MODULE.desc = "moduleAdministrationDesc"
 MODULE.Privileges = {
     {
-        Name = L("managePropBlacklist"),
+        Name = "managePropBlacklist",
         MinAccess = "superadmin",
-        Category = L("categoryBlacklisting"),
+        Category = "categoryBlacklisting",
     },
     {
-        Name = L("manageVehicleBlacklist"),
+        Name = "manageVehicleBlacklist",
         MinAccess = "superadmin",
-        Category = L("categoryBlacklisting"),
+        Category = "categoryBlacklisting",
     },
     {
-        Name = L("manageEntityBlacklist"),
+        Name = "manageEntityBlacklist",
         MinAccess = "superadmin",
-        Category = L("categoryBlacklisting"),
+        Category = "categoryBlacklisting",
     },
     {
-        Name = L("accessConfigurationMenu"),
+        Name = "accessConfigurationMenu",
         MinAccess = "superadmin",
-        Category = L("categoryConfiguration"),
+        Category = "categoryConfiguration",
     },
     {
-        Name = L("accessEditConfigurationMenu"),
+        Name = "accessEditConfigurationMenu",
         MinAccess = "superadmin",
-        Category = L("categoryConfiguration"),
+        Category = "categoryConfiguration",
     },
     {
-        Name = L("manageUsergroups"),
+        Name = "manageUsergroups",
         MinAccess = "superadmin",
-        Category = L("categoryUsergroups"),
+        Category = "categoryUsergroups",
     },
     {
-        Name = L("view") .. " " .. L("moduleStaffManagementName"),
+        Name = "viewStaffManagement",
         MinAccess = "superadmin",
-        Category = L("categoryStaffManagement"),
+        Category = "categoryStaffManagement",
     },
     {
-        Name = L("canAccessPlayerList"),
+        Name = "canAccessPlayerList",
         MinAccess = "admin",
-        Category = L("players")
+        Category = "players"
     },
     {
-        Name = L("List Characters"),
+        Name = "listCharacters",
         MinAccess = "admin",
-        Category = L("character")
+        Category = "character"
     },
     {
-        Name = L("View DB Tables"),
+        Name = "viewDBTables",
         MinAccess = "superadmin",
-        Category = L("database")
+        Category = "database"
     },
     {
-        Name = L("canAccessFlagManagement"),
+        Name = "canAccessFlagManagement",
         MinAccess = "superadmin",
-        Category = L("flags"),
+        Category = "flags",
     },
 }

@@ -90,19 +90,7 @@ local function onIndexChanged()
         local textParts = {}
         local activeColor = lia.config.get("Color")
         for _, key in ipairs({"Author", "Contact", "Purpose", "Instructions"}) do
-            if weapon[key] and weapon[key]:find("%S") then
-                table.insert(
-                    textParts,
-                    string.format(
-                        "<font=liaItemBoldFont><color=%d,%d,%d>%s</font></color>\n%s\n",
-                        activeColor.r,
-                        activeColor.g,
-                        activeColor.b,
-                        L(key:lower()),
-                        weapon[key]
-                    )
-                )
-            end
+            if weapon[key] and weapon[key]:find("%S") then table.insert(textParts, string.format("<font=liaItemBoldFont><color=%d,%d,%d>%s</font></color>\n%s\n", activeColor.r, activeColor.g, activeColor.b, L(key:lower()), weapon[key])) end
         end
 
         if #textParts > 0 then

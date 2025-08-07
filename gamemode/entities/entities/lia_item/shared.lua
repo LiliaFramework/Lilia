@@ -1,7 +1,7 @@
 ﻿ENT.Base = "base_entity"
 ENT.Type = "anim"
 ENT.PrintName = L("item")
-ENT.Category = L("lilia")
+ENT.Category = "Lilia"
 ENT.Spawnable = false
 ENT.RenderGroup = RENDERGROUP_BOTH
 ENT.DrawEntityInfo = true

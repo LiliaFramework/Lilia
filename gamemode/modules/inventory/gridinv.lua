@@ -177,7 +177,7 @@ if SERVER then
             item = lia.item.list[itemTypeOrItem]
         end
 
-        if not item then return d:reject(L("invalidItemType")) end
+        if not item then return d:reject(L("invalidItemTypeOrID", item and item.name or tostring(itemTypeOrItem))) end
         local targetInventory = self
         if not targetInventory:canAdd(itemTypeOrItem) then return d:reject(L("noSpaceForItem")) end
         if not x or not y then

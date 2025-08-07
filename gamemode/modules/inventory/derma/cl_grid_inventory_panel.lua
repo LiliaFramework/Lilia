@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 local function drawSlot(x, y, w, h)
     surface.SetDrawColor(0, 0, 0, 255)
     surface.DrawOutlinedRect(x, y, w, h, 2)

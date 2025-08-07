@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 local function isWithinRange(client, entity)
     if not IsValid(client) or not IsValid(entity) then return false end
     return entity:GetPos():DistToSqr(client:GetPos()) < 250 * 250

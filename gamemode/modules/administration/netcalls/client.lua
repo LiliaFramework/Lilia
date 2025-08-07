@@ -236,7 +236,7 @@ end)
 net.Receive("managesitrooms", function()
     local rooms = net.ReadTable()
     local frame = vgui.Create("DFrame")
-    frame:SetTitle(L("Manage SitRooms"))
+    frame:SetTitle(L("manageSitrooms"))
     frame:SetSize(600, 400)
     frame:Center()
     frame:MakePopup()
@@ -616,7 +616,7 @@ lia.net.readBigTable("liaStaffSummary", function(data)
         local menu = DermaMenu()
         local steamID = line:GetColumnText(2)
         local warningCount = tonumber(line:GetColumnText(4)) or 0
-        if warningCount > 0 and lia.command.hasAccess(LocalPlayer(), "viewwarnsissued") then menu:AddOption(L("viewWarningsIssued"), function() LocalPlayer():ConCommand("say /viewwarnsissued " .. steamID) end):SetIcon("icon16/error.png") end
+        if warningCount > 0 and lia.command.hasAccess(LocalPlayer(), "viewwarns") then menu:AddOption(L("viewWarningsIssued"), function() LocalPlayer():ConCommand("say /viewwarns " .. steamID) end):SetIcon("icon16/error.png") end
         local ticketCount = tonumber(line:GetColumnText(5)) or 0
         if ticketCount > 0 and lia.command.hasAccess(LocalPlayer(), "plyviewclaims") then menu:AddOption(L("viewTicketClaims"), function() LocalPlayer():ConCommand("say /plyviewclaims " .. steamID) end):SetIcon("icon16/page_white_text.png") end
         menu:AddOption(L("copyRow"), function()

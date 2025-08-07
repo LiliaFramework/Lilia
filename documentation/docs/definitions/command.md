@@ -30,7 +30,7 @@ The command name itself is the first argument to `lia.command.add` and is stored
 | `adminOnly` | `boolean` | `false` | Restrict to admins (registers a CAMI privilege). |
 | `superAdminOnly` | `boolean` | `false` | Restrict to superadmins (registers a CAMI privilege). |
 | `privilege` | `string` | `nil` | Custom CAMI privilege name (defaults to command name). |
-| `syntax` | `string` | `""` | Human-readable argument format shown in help. |
+| `arguments` | `table` | `{}` | Ordered argument definitions used to build help text. |
 | `desc` | `string` | `""` | Short description shown in command lists and menus. |
 | `AdminStick` | `table` | `nil` | Defines how the command appears in admin utilities. |
 | `onRun(client, args)` | `function(client, table)` | **required** | Function executed when the command is invoked. |
@@ -119,32 +119,34 @@ privilege = "Manage Doors"
 
 ---
 
-### Syntax & Description
+### Arguments & Description
 
-#### `syntax`
+#### `arguments`
 
 **Type:**
 
-`string`
+`table`
 
 **Description:**
 
-Human-readable syntax string shown in help menus. Does not affect argument parsing.
+Ordered list defining each command argument. Every entry may contain:
 
-You can use spaces in argument names for better readability.
+* `name` – Argument name shown to the user.
+* `type` – One of `player`, `bool`, `table`, or `string`.
+* `optional` – Set to `true` if the argument is optional.
+* `description` – Optional human-readable help text.
+* `options` – Table or function returning options for `table` type.
+* `filter` – Function to filter players for `player` type.
 
-The in-game prompt only appears when every argument follows the `[type Name]` format.
+The displayed syntax string is generated automatically from these definitions.
 
 **Example Usage:**
 
 ```lua
-syntax = "[string Target Name] [number Amount]"
-```
-
-Include the word `optional` inside the brackets to make an argument optional:
-
-```lua
-syntax = "[string Target Name] [number Amount optional]"
+arguments = {
+    {name = "target", type = "player"},
+    {name = "reason", type = "string", optional = true}
+}
 ```
 
 ---
@@ -239,7 +241,7 @@ lia.command.add("restockvendor", {
     superAdminOnly = true,                -- restrict to super administrators
     privilege = "Manage Vendors",        -- custom privilege checked before run
     desc = "Restock the vendor you are looking at.", -- shown in command lists
-    syntax = "[player Target]",          -- help text describing the argument
+    arguments = {{name = "target", type = "player"}}, -- argument definition
     alias = {"vendorrestock"},           -- other names that trigger the command
     AdminStick = {
         Name        = "Restock Vendor",  -- text on the Admin Stick button
@@ -271,7 +273,7 @@ lia.command.add("restockvendor", {
 ```lua
 lia.command.add("goto", {
     adminOnly = true,                    -- only admins may run this command
-    syntax = "[player Target]",         -- how the argument appears in help menus
+    arguments = {{name = "target", type = "player"}}, -- argument definition
     desc = "Teleport to the specified player.", -- short description
     onRun = function(client, args)
         -- look up the target player from the first argument

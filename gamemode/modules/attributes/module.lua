@@ -1,4 +1,4 @@
-MODULE.name = L("moduleAttributesName")
+﻿MODULE.name = "moduleAttributesName"
 MODULE.author = "76561198312513285"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = L("moduleAttributesDesc")
+MODULE.desc = "moduleAttributesDesc"

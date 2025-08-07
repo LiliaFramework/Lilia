@@ -3,7 +3,7 @@
 end
 
 properties.Add("TogglePropBlacklist", {
-    MenuLabel = L("TogglePropBlacklist"),
+    MenuLabel = L("togglePropBlacklist"),
     Order = 900,
     MenuIcon = "icon16/link.png",
     Filter = function(_, ent, ply) return IsValid(ent) and ent:GetClass() == "prop_physics" and ply:hasPrivilege(L("managePropBlacklist")) end,
@@ -29,7 +29,7 @@ properties.Add("TogglePropBlacklist", {
 })
 
 properties.Add("ToggleCarBlacklist", {
-    MenuLabel = L("ToggleCarBlacklist"),
+    MenuLabel = L("toggleCarBlacklist"),
     Order = 901,
     MenuIcon = "icon16/link.png",
     Filter = function(_, ent, ply) return IsValid(ent) and (ent:IsVehicle() or ent:isSimfphysCar()) and ply:hasPrivilege(L("manageVehicleBlacklist")) end,

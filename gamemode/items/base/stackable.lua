@@ -1,4 +1,4 @@
-ITEM.name = "stackableName"
+﻿ITEM.name = "stackableName"
 ITEM.desc = "stackableDesc"
 ITEM.model = "models/props_junk/cardboard_box001a.mdl"
 ITEM.width = 1
@@ -6,7 +6,6 @@ ITEM.height = 1
 ITEM.isStackable = true
 ITEM.maxQuantity = 10
 ITEM.canSplit = true
-
 function ITEM:getDesc()
     return L("stackableDesc", self:getQuantity())
 end

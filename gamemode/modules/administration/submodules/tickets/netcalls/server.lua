@@ -67,8 +67,18 @@ net.Receive("liaRequestActiveTickets", function(_, client)
                 message = row.message,
             }
         end
+
         net.Start("liaActiveTickets")
         net.WriteTable(tickets)
+        net.Send(client)
+    end)
+end)
+
+net.Receive("liaRequestTicketsCount", function(_, client)
+    if not (client:hasPrivilege(L("alwaysSeeTickets")) or client:isStaffOnDuty()) then return end
+    lia.db.count("ticketclaims"):next(function(count)
+        net.Start("liaTicketsCount")
+        net.WriteInt(count or 0, 32)
         net.Send(client)
     end)
 end)

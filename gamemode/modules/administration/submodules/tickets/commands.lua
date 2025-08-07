@@ -1,10 +1,14 @@
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 lia.command.add("viewtickets", {
     adminOnly = true,
-    privilege = "View Claims",
+    privilege = "viewClaims",
     desc = "viewTicketsDesc",
-    syntax = "[player Name]",
+    arguments = {
+        {
+            name = "name",
+            type = "player"
+        },
+    },
     onRun = function(client, arguments)
         local targetName = arguments[1]
         if not targetName then
@@ -38,20 +42,35 @@ lia.command.add("viewtickets", {
             end
 
             lia.util.CreateTableUI(client, L("ticketsForTitle", displayName), {
-                {name = L("timestamp"), field = "timestamp"},
-                {name = L("admin"), field = "admin"},
-                {name = L("message"), field = "message"}
+                {
+                    name = L("timestamp"),
+                    field = "timestamp"
+                },
+                {
+                    name = L("admin"),
+                    field = "admin"
+                },
+                {
+                    name = L("message"),
+                    field = "message"
+                }
             }, ticketsData)
 
             lia.log.add(client, "viewPlayerTickets", displayName)
         end)
     end
 })
+
 lia.command.add("plyviewclaims", {
     adminOnly = true,
-    privilege = "View Claims",
+    privilege = "viewClaims",
     desc = "plyViewClaimsDesc",
-    syntax = "[player Name]",
+    arguments = {
+        {
+            name = "name",
+            type = "player"
+        },
+    },
     AdminStick = {
         Name = "viewTicketClaims",
         Category = "moderationTools",
@@ -130,7 +149,7 @@ lia.command.add("plyviewclaims", {
 
 lia.command.add("viewallclaims", {
     adminOnly = true,
-    privilege = "View Claims",
+    privilege = "viewClaims",
     desc = "viewAllClaimsDesc",
     onRun = function(client)
         MODULE:GetAllCaseClaims():next(function(caseclaims)
@@ -191,7 +210,7 @@ lia.command.add("viewallclaims", {
 
 lia.command.add("viewclaims", {
     adminOnly = true,
-    privilege = "View Claims",
+    privilege = "viewClaims",
     desc = "viewClaimsDesc",
     onRun = function(client)
         MODULE:GetAllCaseClaims():next(function(caseclaims)

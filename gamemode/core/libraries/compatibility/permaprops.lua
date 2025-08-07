@@ -1,12 +1,14 @@
 ﻿local spawnedPositions = {}
 local radiusSqr = 16
 local lastSaver
-hook.Add("CanTool", "liaPermaProps", function(client, _, tool)
-    local entity = client:getTracedEntity()
+hook.Add("CanTool", "liaPermaProps", function(ply, trace, tool)
+    local entity = trace.Entity
     if not IsValid(entity) then return end
+    if tool ~= "permaprops" then return end
     local entClass = entity:GetClass()
-    if tool == "permaprops" and hook.Run("CanPersistEntity", entity) ~= false and (string.StartWith(entClass, "lia_") or entity:isLiliaPersistent() or entity:CreatedByMap()) then
-        client:notifyLocalized("toolCantUseEntity", tool)
+    local canPersist = hook.Run("CanPersistEntity", entity)
+    if canPersist ~= false and (string.StartWith(entClass, "lia_") or entity:isLiliaPersistent() or entity:CreatedByMap()) then
+        ply:notifyLocalized("toolCantUseEntity", tool)
         return false
     end
 end)
@@ -37,9 +39,5 @@ hook.Add("PermaProps.OnEntitySaved", "liaLogPermaPropSaved", function(ent)
 end)
 
 hook.Add("PostCleanupMap", "liaPermaPropsClearList", function() spawnedPositions = {} end)
-lia.log.addType("permaPropSaved", function(client, class, model, pos)
-    return L("permaPropSavedLog", client:Name(), class, model, pos)
-end, L("categoryPermaProps"))
-lia.log.addType("permaPropOverlap", function(_, pos, other)
-    return L("permaPropOverlapLog", pos, other)
-end, L("categoryPermaProps"))
+lia.log.addType("permaPropSaved", function(client, class, model, pos) return L("permaPropSavedLog", client:Name(), class, model, pos) end, L("categoryPermaProps"))
+lia.log.addType("permaPropOverlap", function(_, pos, other) return L("permaPropOverlapLog", pos, other) end, L("categoryPermaProps"))

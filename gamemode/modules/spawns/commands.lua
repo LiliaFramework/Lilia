@@ -3,20 +3,27 @@ lia.command.add("spawnadd", {
     privilege = "manageSpawns",
     adminOnly = true,
     desc = "spawnAddDesc",
-    syntax = "[faction Faction]",
+    arguments = {
+        {
+            name = "faction",
+            type = "table",
+            options = function()
+                local options = {}
+                for k, v in pairs(lia.faction.teams) do
+                    options[L(v.name)] = k
+                end
+                return options
+            end
+        }
+    },
     onRun = function(client, arguments)
         local factionName = arguments[1]
-        if not factionName then return L("invalidArg") end
-        local factionInfo = lia.faction.indices[factionName:lower()]
-        if not factionInfo then
-            for _, v in ipairs(lia.faction.indices) do
-                if lia.util.stringMatches(v.uniqueID, factionName) or lia.util.stringMatches(L(v.name), factionName) then
-                    factionInfo = v
-                    break
-                end
-            end
+        if not factionName then
+            client:notifyLocalized("invalidArg")
+            return
         end
 
+        local factionInfo = lia.faction.teams[factionName] or lia.util.findFaction(client, factionName)
         if factionInfo then
             MODULE:FetchSpawns():next(function(spawns)
                 spawns[factionInfo.uniqueID] = spawns[factionInfo.uniqueID] or {}
@@ -40,7 +47,13 @@ lia.command.add("spawnremoveinradius", {
     privilege = "manageSpawns",
     adminOnly = true,
     desc = "spawnRemoveInRadiusDesc",
-    syntax = "[number Radius optional]",
+    arguments = {
+        {
+            name = "radius",
+            type = "string",
+            optional = true
+        },
+    },
     onRun = function(client, arguments)
         local position = client:GetPos()
         local radius = tonumber(arguments[1]) or 120
@@ -50,12 +63,13 @@ lia.command.add("spawnremoveinradius", {
             for faction, list in pairs(spawns) do
                 for i = #list, 1, -1 do
                     local data = list[i]
-                    if data.map and data.map:lower() ~= curMap then continue end
-                    local spawn = data.pos or data
-                    if not isvector(spawn) then spawn = lia.data.decodeVector(spawn) end
-                    if isvector(spawn) and spawn:Distance(position) <= radius then
-                        table.remove(list, i)
-                        removedCount = removedCount + 1
+                    if not (data.map and data.map:lower() ~= curMap) then
+                        local spawn = data.pos or data
+                        if not isvector(spawn) then spawn = lia.data.decodeVector(spawn) end
+                        if isvector(spawn) and spawn:Distance(position) <= radius then
+                            table.remove(list, i)
+                            removedCount = removedCount + 1
+                        end
                     end
                 end
 
@@ -73,19 +87,22 @@ lia.command.add("spawnremovebyname", {
     privilege = "manageSpawns",
     adminOnly = true,
     desc = "spawnRemoveByNameDesc",
-    syntax = "[faction Faction]",
+    arguments = {
+        {
+            name = "faction",
+            type = "table",
+            options = function()
+                local options = {}
+                for k, v in pairs(lia.faction.teams) do
+                    options[L(v.name)] = k
+                end
+                return options
+            end
+        }
+    },
     onRun = function(client, arguments)
         local factionName = arguments[1]
-        local factionInfo = lia.faction.indices[factionName:lower()]
-        if not factionInfo then
-            for _, v in ipairs(lia.faction.indices) do
-                if lia.util.stringMatches(v.uniqueID, factionName) or lia.util.stringMatches(L(v.name), factionName) then
-                    factionInfo = v
-                    break
-                end
-            end
-        end
-
+        local factionInfo = factionName and (lia.faction.teams[factionName] or lia.util.findFaction(client, factionName))
         if factionInfo then
             MODULE:FetchSpawns():next(function(spawns)
                 local list = spawns[factionInfo.uniqueID]
@@ -94,9 +111,10 @@ lia.command.add("spawnremovebyname", {
                     local removedCount = 0
                     for i = #list, 1, -1 do
                         local data = list[i]
-                        if data.map and data.map:lower() ~= curMap then continue end
-                        table.remove(list, i)
-                        removedCount = removedCount + 1
+                        if not (data.map and data.map:lower() ~= curMap) then
+                            table.remove(list, i)
+                            removedCount = removedCount + 1
+                        end
                     end
 
                     if removedCount > 0 then
@@ -121,7 +139,12 @@ lia.command.add("returnitems", {
     superAdminOnly = true,
     privilege = "returnItems",
     desc = "returnItemsDesc",
-    syntax = "[player Name]",
+    arguments = {
+        {
+            name = "name",
+            type = "player"
+        },
+    },
     AdminStick = {
         Name = "returnItems",
         Category = "characterManagement",

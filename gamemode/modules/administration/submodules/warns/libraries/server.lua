@@ -71,3 +71,12 @@ net.Receive("liaRequestAllWarnings", function(_, client)
         net.Send(client)
     end)
 end)
+
+net.Receive("liaRequestWarningsCount", function(_, client)
+    if not client:hasPrivilege(L("viewPlayerWarnings")) then return end
+    lia.db.count("warnings"):next(function(count)
+        net.Start("liaWarningsCount")
+        net.WriteInt(count or 0, 32)
+        net.Send(client)
+    end)
+end)

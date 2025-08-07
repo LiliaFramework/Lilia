@@ -1,12 +1,12 @@
-MODULE.name = L("vendors")
+﻿MODULE.name = "vendors"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = L("moduleVendorDesc")
+MODULE.desc = "moduleVendorDesc"
 MODULE.Privileges = {
     {
-        Name = L("canEditVendors"),
+        Name = "canEditVendors",
         MinAccess = "superadmin",
-        Category = L("vendors"),
+        Category = "vendors",
     },
 }
 

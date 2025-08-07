@@ -1,8 +1,13 @@
 ﻿lia.command.add("togglecheater", {
     adminOnly = true,
-    privilege = "Toggle Cheater Status",
+    privilege = "toggleCheaterStatus",
     desc = "toggleCheaterDesc",
-    syntax = "[player Target]",
+    arguments = {
+        {
+            name = "target",
+            type = "player"
+        },
+    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then

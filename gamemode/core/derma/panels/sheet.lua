@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     self:Dock(FILL)
     self:DockMargin(10, 10, 10, 10)
@@ -17,6 +17,11 @@ end
 
 function PANEL:SetPlaceholderText(t)
     self.search:SetPlaceholderText(t or "")
+end
+
+function PANEL:PerformLayout()
+    self:SizeToChildren(false, true)
+    if self.scroll then self.scroll:InvalidateLayout(true) end
 end
 
 function PANEL:SetSpacing(y)
@@ -115,6 +120,7 @@ function PANEL:AddTextRow(data)
 
         row.filterText = (title .. " " .. desc .. " " .. right):lower()
     end)
+
     row.panel:InvalidateLayout(true)
     return row
 end
@@ -207,6 +213,7 @@ function PANEL:AddPreviewRow(data)
 
         row.filterText = (title .. " " .. desc .. " " .. right):lower()
     end)
+
     row.panel:InvalidateLayout(true)
     return row
 end
@@ -250,6 +257,7 @@ function PANEL:AddListViewRow(cfg)
             return any
         end
     end)
+
     row.panel:InvalidateLayout(true)
     return row
 end
@@ -280,6 +288,7 @@ function PANEL:AddIconLayoutRow(cfg)
             return any
         end
     end)
+
     row.panel:InvalidateLayout(true)
     return row
 end

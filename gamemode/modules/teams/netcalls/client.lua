@@ -1,4 +1,4 @@
-local characterPanel
+﻿local characterPanel
 net.Receive("classUpdate", function()
     local joinedClient = net.ReadEntity()
     if lia.gui.classes and lia.gui.classes:IsVisible() then
@@ -23,6 +23,7 @@ net.Receive("CharacterInfo", function()
         canKick = character:hasFlags("K")
         if factionData and factionData.isDefault then canKick = false end
     end
+
     if IsValid(lia.gui.roster) then
         lia.gui.roster:Populate(characterData, canKick)
         return

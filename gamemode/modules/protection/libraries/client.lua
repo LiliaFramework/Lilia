@@ -1686,6 +1686,7 @@ function MODULE:PopulateAdminTabs(pages)
     if not table.IsEmpty(entitiesByCreator) then
         pages[#pages + 1] = {
             name = L("entities"),
+            icon = "icon16/bricks.png",
             drawFunc = function(entPanel)
                 local sheetContainer = vgui.Create("DPropertySheet", entPanel)
                 sheetContainer:Dock(FILL)
@@ -1701,10 +1702,9 @@ function MODULE:PopulateAdminTabs(pages)
                         local className = ent:GetClass()
                         if className == "lia_item" and ent.getItemTable then
                             local item = ent:getItemTable()
-                            if item and item.name then
-                                className = item.name
-                            end
+                            if item and item.name then className = item.name end
                         end
+
                         local itemPanel = vgui.Create("DPanel")
                         itemPanel:SetTall(100)
                         itemPanel.Paint = function(pnl, w, h)

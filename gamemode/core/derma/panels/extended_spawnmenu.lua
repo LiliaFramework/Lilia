@@ -109,9 +109,7 @@ end, {
         action = function(p) SetClipboardText(p) end
     },
     {
-        text = function(p)
-            return isMaterialUsable(p) and L("useWithMaterialTool") or L("tryWithMaterialTool")
-        end,
+        text = function(p) return isMaterialUsable(p) and L("useWithMaterialTool") or L("tryWithMaterialTool") end,
         icon = "icon16/pencil.png",
         action = function(p)
             RunConsoleCommand("material_override", p)

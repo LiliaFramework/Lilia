@@ -1,3 +1,9 @@
+﻿local function shouldGrant(group, min)
+    local levels = lia.administrator.DefaultGroups or {}
+    local m = tostring(min or "user"):lower()
+    return getGroupLevel(group) >= (levels[m] or 1)
+end
+
 local function defaultAccessHandler(actor, privilege, callback, _, extra)
     local grp = "user"
     if IsValid(actor) then
@@ -66,7 +72,7 @@ hook.Add("CAMI.OnPrivilegeRegistered", "liaAdminPrivAdded", function(priv)
     if lia.administrator.privileges[name] ~= nil then return end
     local min = tostring(priv.MinAccess or "user"):lower()
     lia.administrator.privileges[name] = min
-    lia.administrator.privMeta[name] = tostring(priv.Category or L("unassigned"))
+    lia.administrator.privMeta[name] = L(priv.Category or "unassigned")
     for groupName in pairs(lia.administrator.groups or {}) do
         if shouldGrant(groupName, min) then lia.administrator.groups[groupName][name] = true end
     end

@@ -1,6 +1,16 @@
-﻿local menu = lia.menu or {}
-lia.menu = menu
-menu.list = menu.list or {}
+﻿--[[
+# Menu Library
+
+This page documents the functions for working with context menus and interactive UI elements.
+
+---
+
+## Overview
+
+The menu library provides a system for creating and managing context menus and interactive UI elements within the Lilia framework. It handles menu positioning, rendering, and user interaction, supporting both world-space and screen-space menus. The library provides utilities for building dynamic menus with customizable options and callbacks.
+]]
+lia.menu = lia.menu or {}
+lia.menu.list = lia.menu.list or {}
 local surface_SetFont = surface.SetFont
 local surface_GetTextSize = surface.GetTextSize
 local surface_SetDrawColor = surface.SetDrawColor
@@ -41,7 +51,7 @@ local function buildItems(opts)
     return list, w
 end
 
-function menu.add(opts, pos, onRemove)
+function lia.menu.add(opts, pos, onRemove)
     local client = LocalPlayer()
     local items, txtW = buildItems(opts)
     local ent
@@ -49,7 +59,7 @@ function menu.add(opts, pos, onRemove)
         ent = pos
         pos = ent:WorldToLocal(client:GetEyeTrace().HitPos)
     end
-    return table_insert(menu.list, {
+    return table_insert(lia.menu.list, {
         position = pos or client:GetEyeTrace().HitPos,
         entity = ent,
         items = items,
@@ -80,17 +90,17 @@ local function drawBackground(x, y, w, h, a)
     surface_DrawOutlinedRect(x - 4, y - 4, w + 8, h + 8)
 end
 
-function menu.drawAll()
+function lia.menu.drawAll()
     local client = LocalPlayer()
     local sw, sh = ScrW(), ScrH()
     local mx, my = sw * 0.5, sh * 0.5
     local pPos = client:GetPos()
     local ft = FrameTime() * 30
-    for i = #menu.list, 1, -1 do
-        local d = menu.list[i]
+    for i = #lia.menu.list, 1, -1 do
+        local d = lia.menu.list[i]
         local sp = getScreenPos(d, ft)
         if not sp then
-            table_remove(menu.list, i)
+            table_remove(lia.menu.list, i)
             if d.onRemove then d:onRemove() end
             continue
         end
@@ -107,7 +117,7 @@ function menu.drawAll()
         else
             d.alpha = approach(a, 0, inRange and ft or ft * 45)
             if d.alpha == 0 then
-                table_remove(menu.list, i)
+                table_remove(lia.menu.list, i)
                 if d.onRemove then d:onRemove() end
                 continue
             end
@@ -128,16 +138,16 @@ function menu.drawAll()
     end
 end
 
-function menu.getActiveMenu()
+function lia.menu.getActiveMenu()
     local client = LocalPlayer()
     local sw, sh = ScrW(), ScrH()
     local mx, my = sw * 0.5, sh * 0.5
     local pPos = client:GetPos()
-    for i = #menu.list, 1, -1 do
-        local d = menu.list[i]
+    for i = #lia.menu.list, 1, -1 do
+        local d = lia.menu.list[i]
         local sp = getScreenPos(d, 0)
         if not sp then
-            table_remove(menu.list, i)
+            table_remove(lia.menu.list, i)
             continue
         end
 
@@ -152,8 +162,8 @@ function menu.getActiveMenu()
     end
 end
 
-function menu.onButtonPressed(id, cb)
-    table_remove(menu.list, id)
+function lia.menu.onButtonPressed(id, cb)
+    table_remove(lia.menu.list, id)
     if cb then
         cb()
         return true

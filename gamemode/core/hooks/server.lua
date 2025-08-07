@@ -7,6 +7,7 @@ function GM:CharPreSave(character)
         character:setPlayTime(total + os.time() - loginTime)
         character:setLoginTime(os.time())
     end
+
     if not character:getInv() then return end
     for _, v in pairs(character:getInv():getItems()) do
         if v.OnSave then v:call("OnSave", client) end
@@ -1002,9 +1003,9 @@ concommand.Add("plysetgroup", function(ply, _, args)
 end)
 
 lia.administrator.registerPrivilege({
-    Name = L("stopSoundForEveryone"),
+    Name = "stopSoundForEveryone",
     MinAccess = "superadmin",
-    Category = L("categoryServer")
+    Category = "categoryServer"
 })
 
 concommand.Add("stopsoundall", function(client)
@@ -1036,7 +1037,7 @@ concommand.Add("lia_wipedb", function(client)
 
     if resetCalled < RealTime() then
         resetCalled = RealTime() + 3
-        MsgC(Color(255, 0, 0), "[Lilia] " .. L("databaseWipeConfirm") .. "\n")
+        MsgC(Color(255, 0, 0), "[Lilia] " .. L("databaseWipeConfirm", "lia_wipedb") .. "\n")
     else
         resetCalled = 0
         MsgC(Color(255, 0, 0), "[Lilia] " .. L("databaseWipeProgress") .. "\n")
@@ -1058,6 +1059,7 @@ concommand.Add("list_entities", function(client)
             else
                 entityCount[L("unknown")] = (entityCount[L("unknown")] or 0) + 1
             end
+
             totalEntities = totalEntities + 1
         end
 

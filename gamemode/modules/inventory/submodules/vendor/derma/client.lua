@@ -1,4 +1,4 @@
-local sw, sh = ScrW(), ScrH()
+﻿local sw, sh = ScrW(), ScrH()
 local COLS_MODE = 2
 local COLS_PRICE = 3
 local COLS_STOCK = 4
@@ -348,6 +348,7 @@ function PANEL:applyCategoryFilter()
         else
             cat = L("misc"):sub(1, 1):upper() .. L("misc"):sub(2)
         end
+
         if not self.currentCategory or self.currentCategory == L("vendorShowAll") or cat == self.currentCategory then
             local mode = liaVendorEnt:getTradeMode(id)
             if mode ~= VENDOR_BUYONLY then self:updateItem(id, "vendor") end

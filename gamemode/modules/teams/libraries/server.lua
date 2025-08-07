@@ -234,7 +234,7 @@ net.Receive("KickCharacter", function(_, client)
     local isOnline = false
     for _, target in player.Iterator() do
         local targetChar = target:getChar()
-        if targetChar and targetChar:getID() == characterID and (canManageAny or (canKick and char and targetChar:getFaction() == char:getFaction())) then
+        if targetChar and targetChar:getID() == characterID and (canManageAny or canKick and char and targetChar:getFaction() == char:getFaction()) then
             isOnline = true
             local oldFaction = targetChar:getFaction()
             local oldFactionData = lia.faction.indices[oldFaction]
@@ -258,6 +258,7 @@ net.Receive("KickCharacter", function(_, client)
             lia.db.updateTable({
                 faction = defaultFaction.uniqueID
             }, nil, "characters", "id = " .. characterID)
+
             lia.char.setCharData(characterID, "factionKickWarn", true)
         end)
     end

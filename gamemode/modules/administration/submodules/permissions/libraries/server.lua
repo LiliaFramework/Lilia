@@ -1,9 +1,10 @@
 ﻿local GM = GM or GAMEMODE
 lia.administrator.registerPrivilege({
-    Name = L("useDisallowedTools"),
+    Name = "useDisallowedTools",
     MinAccess = "superadmin",
-    Category = L("categoryStaffTools")
+    Category = "categoryStaffTools"
 })
+
 local restrictedProperties = {
     persist = true,
     drive = true,
@@ -197,7 +198,7 @@ local DisallowedTools = {
     stacker = true
 }
 
-function GM:CanTool(client, _, tool)
+function GM:CanTool(client, trace, tool)
     local function CheckDuplicationScale(ply, entities)
         entities = entities or {}
         for _, v in pairs(entities) do
@@ -230,20 +231,20 @@ function GM:CanTool(client, _, tool)
         return false
     end
 
-    local entity = client:getTracedEntity()
+    local entity = trace.Entity
     if IsValid(entity) then
         local entClass = entity:GetClass()
         if tool == "remover" then
             if entity.NoRemover then
                 if not client:hasPrivilege(L("canRemoveBlockedEntities")) then
-                      lia.log.add(client, "permissionDenied", L("removeBlockedEntity"))
+                    lia.log.add(client, "permissionDenied", L("removeBlockedEntity"))
                     client:notifyLocalized("noRemoveBlockedEntities")
                     return false
                 end
                 return true
             elseif entity:IsWorld() then
                 if not client:hasPrivilege(L("canRemoveWorldEntities")) then
-                      lia.log.add(client, "permissionDenied", L("removeWorldEntity"))
+                    lia.log.add(client, "permissionDenied", L("removeWorldEntity"))
                     client:notifyLocalized("noRemoveWorldEntities")
                     return false
                 end

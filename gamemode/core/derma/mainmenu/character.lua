@@ -230,7 +230,7 @@ function PANEL:createStartButton()
     if clientChar then
         table.insert(buttonsData, {
             id = "return",
-            text = L("return"),
+            text = L("returnText"),
             doClick = function() self:Remove() end
         })
     end
@@ -295,7 +295,7 @@ end
 
 function PANEL:createTabs()
     self.tabs:Clear()
-    self:addTab(L("return"), function() self:backToMainMenu() end, true)
+    self:addTab(L("returnText"), function() self:backToMainMenu() end, true)
 end
 
 function PANEL:backToMainMenu()

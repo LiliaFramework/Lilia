@@ -246,7 +246,7 @@ function PANEL:addPlayer(ply, parent)
     slot.model:setHidden(slot.lastHidden)
     local initialOpts = {}
     hook.Run("ShowPlayerOptions", ply, initialOpts)
-    if #initialOpts > 0 then slot.model:SetTooltip(L("sbOptions", ply:steamName())) end
+    if #initialOpts > 0 then slot.model:SetTooltip(L("sbOptions")) end
     slot.model.DoClick = function()
         local opts = {}
         hook.Run("ShowPlayerOptions", ply, opts)

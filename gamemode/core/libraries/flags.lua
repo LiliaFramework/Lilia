@@ -1,16 +1,77 @@
-﻿lia.flag = lia.flag or {}
+﻿--[[
+# Flags Library
+
+This page documents the functions for working with permission flags and player abilities.
+
+---
+
+## Overview
+
+The flags library provides a system for managing permission flags and player abilities within the Lilia framework. It handles flag registration, assignment, and provides utilities for granting and revoking special permissions to players. The library supports flag callbacks, descriptions, and provides a foundation for role-based permission systems.
+]]
+lia.flag = lia.flag or {}
 lia.flag.list = lia.flag.list or {}
+--[[
+    lia.flag.add
+
+    Purpose:
+        Registers a new flag with an optional description and callback function. Flags are used to grant special abilities or permissions to players.
+        The callback, if provided, is called when the flag is given or removed from a player.
+
+    Parameters:
+        flag (string)      - The unique character representing the flag.
+        desc (string)      - (Optional) The description of the flag, will be localized if possible.
+        callback (function)- (Optional) Function to call when the flag is given or removed. Receives (client, isGiven).
+
+    Returns:
+        None.
+
+    Realm:
+        Shared.
+
+    Example Usage:
+        -- Add a flag "F" that allows spawning furniture, with a description and a callback
+        lia.flag.add("F", "flagSpawnFurniture", function(client, isGiven)
+            if isGiven then
+                client:Give("spawn_furniture_tool")
+            else
+                client:StripWeapon("spawn_furniture_tool")
+            end
+        end)
+]]
 function lia.flag.add(flag, desc, callback)
     if lia.flag.list[flag] then return end
     lia.flag.list[flag] = {
-        desc = desc,
+        desc = desc and L(desc) or desc,
         callback = callback
     }
 end
 
 if SERVER then
+    --[[
+        lia.flag.onSpawn
+
+        Purpose:
+            Called when a player spawns. Iterates through all of the player's flags and executes any associated callbacks for each flag.
+            Ensures each flag's callback is only called once per spawn.
+
+        Parameters:
+            client (Player) - The player entity who has spawned.
+
+        Returns:
+            None.
+
+        Realm:
+            Server.
+
+        Example Usage:
+            -- Call onSpawn for a player after they have spawned
+            hook.Add("PlayerSpawn", "liaFlagOnSpawn", function(client)
+                lia.flag.onSpawn(client)
+            end)
+    ]]
     function lia.flag.onSpawn(client)
-        local flags = (client:getFlags() .. client:getPlayerFlags())
+        local flags = client:getFlags() .. client:getPlayerFlags()
         local processed = {}
         for i = 1, #flags do
             local flag = flags:sub(i, i)
@@ -23,16 +84,16 @@ if SERVER then
     end
 end
 
-lia.flag.add("C", L("flagSpawnVehicles"))
-lia.flag.add("z", L("flagSpawnSweps"))
-lia.flag.add("E", L("flagSpawnSents"))
-lia.flag.add("L", L("flagSpawnEffects"))
-lia.flag.add("r", L("flagSpawnRagdolls"))
-lia.flag.add("e", L("flagSpawnProps"))
-lia.flag.add("n", L("flagSpawnNpcs"))
-lia.flag.add("Z", L("flagInviteToYourFaction"))
-lia.flag.add("X", L("flagInviteToYourClass"))
-lia.flag.add("p", L("flagPhysgun"), function(client, isGiven)
+lia.flag.add("C", "flagSpawnVehicles")
+lia.flag.add("z", "flagSpawnSweps")
+lia.flag.add("E", "flagSpawnSents")
+lia.flag.add("L", "flagSpawnEffects")
+lia.flag.add("r", "flagSpawnRagdolls")
+lia.flag.add("e", "flagSpawnProps")
+lia.flag.add("n", "flagSpawnNpcs")
+lia.flag.add("Z", "flagInviteToYourFaction")
+lia.flag.add("X", "flagInviteToYourClass")
+lia.flag.add("p", "flagPhysgun", function(client, isGiven)
     if isGiven then
         client:Give("weapon_physgun")
         client:SelectWeapon("weapon_physgun")
@@ -41,7 +102,7 @@ lia.flag.add("p", L("flagPhysgun"), function(client, isGiven)
     end
 end)
 
-lia.flag.add("t", L("flagToolgun"), function(client, isGiven)
+lia.flag.add("t", "flagToolgun", function(client, isGiven)
     if isGiven then
         client:Give("gmod_tool")
         client:SelectWeapon("gmod_tool")
