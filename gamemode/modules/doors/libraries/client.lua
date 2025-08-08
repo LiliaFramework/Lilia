@@ -69,37 +69,40 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
     if IsValid(target) and target:isDoor() then
         local factionsAssignedRaw = target:getNetVar("factions", "[]")
         local factionsAssigned = util.JSONToTable(factionsAssignedRaw) or {}
-        local addFactionMenu = AdminMenu:AddSubMenu(L("doorAddFaction"))
+        local addFactionMenu, addFactionPanel = AdminMenu:AddSubMenu(L("doorAddFaction"))
+        addFactionPanel:SetIcon("icon16/group_add.png")
         for _, faction in pairs(lia.faction.teams) do
             if not table.HasValue(factionsAssigned, faction.uniqueID) then
                 addFactionMenu:AddOption(faction.name, function()
                     LocalPlayer():ConCommand('say /dooraddfaction "' .. faction.uniqueID .. '"')
                     AdminStickIsOpen = false
-                end)
+                end):SetIcon("icon16/group_add.png")
             end
         end
 
         if #factionsAssigned > 0 then
-            local removeFactionMenu = AdminMenu:AddSubMenu(L("doorRemoveFactionAdmin"))
+            local removeFactionMenu, removeFactionPanel = AdminMenu:AddSubMenu(L("doorRemoveFactionAdmin"))
+            removeFactionPanel:SetIcon("icon16/group_delete.png")
             for _, id in ipairs(factionsAssigned) do
                 local faction = lia.faction.get(id)
                 if faction then
                     removeFactionMenu:AddOption(faction.name, function()
                         LocalPlayer():ConCommand('say /doorremovefaction "' .. faction.uniqueID .. '"')
                         AdminStickIsOpen = false
-                    end)
+                    end):SetIcon("icon16/group_delete.png")
                 end
             end
         else
             AdminMenu:AddOption(L("doorNoFactions")):SetEnabled(false)
         end
 
-        local setClassMenu = AdminMenu:AddSubMenu(L("set") .. " " .. L("door") .. " " .. L("class"))
+        local setClassMenu, setClassPanel = AdminMenu:AddSubMenu(L("set") .. " " .. L("door") .. " " .. L("class"))
+        setClassPanel:SetIcon("icon16/tag_blue.png")
         for classID, classData in pairs(lia.class.list) do
             setClassMenu:AddOption(classData.name, function()
                 LocalPlayer():ConCommand('say /doorsetclass "' .. classID .. '"')
                 AdminStickIsOpen = false
-            end)
+            end):SetIcon("icon16/tag_blue.png")
         end
 
         local existingClasses = target:getNetVar("classes")
@@ -107,7 +110,7 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
             setClassMenu:AddOption(L("remove") .. " " .. L("class"), function()
                 LocalPlayer():ConCommand('say /doorsetclass ""')
                 AdminStickIsOpen = false
-            end)
+            end):SetIcon("icon16/delete.png")
         end
     end
 end

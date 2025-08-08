@@ -157,7 +157,7 @@ lia.command.add("doortoggleownable", {
         Category = "doorManagement",
         SubCategory = "doorSettings",
         TargetClass = L("door"),
-        Icon = "icon16/application_edit.png"
+        Icon = "icon16/pencil.png"
     },
     onRun = function(client)
         local door = client:getTracedEntity()
@@ -215,7 +215,7 @@ lia.command.add("doortoggleenabled", {
         Category = "doorManagement",
         SubCategory = "doorSettings",
         TargetClass = L("door"),
-        Icon = "icon16/application_x.png"
+        Icon = "icon16/stop.png"
     },
     onRun = function(client)
         local door = client:getTracedEntity()

@@ -34,8 +34,17 @@ function MODULE:HUDPaint()
             label = ent.PrintName or ent:GetClass()
             baseColor = lia.option.get("espEntitiesColor")
         elseif lia.option.get("espUnconfiguredDoors", false) and ent:isDoor() then
-            local vars = lia.net and lia.net[ent:EntIndex()]
-            if not vars or next(vars) == nil then
+            local factions = ent:getNetVar("factions", "[]")
+            local classes = ent:getNetVar("classes", "[]")
+            local name = ent:getNetVar("name")
+            local title = ent:getNetVar("title")
+            local price = ent:getNetVar("price", 0)
+            local locked = ent:getNetVar("locked", false)
+            local disabled = ent:getNetVar("disabled", false)
+            local hidden = ent:getNetVar("hidden", false)
+            local noSell = ent:getNetVar("noSell", false)
+            local isUnconfigured = (not factions or factions == "[]") and (not classes or classes == "[]") and (not name or name == "") and (not title or title == "") and price == 0 and not locked and not disabled and not hidden and not noSell
+            if isUnconfigured then
                 kind = L("doorUnconfigured")
                 label = L("doorUnconfigured")
                 baseColor = lia.option.get("espUnconfiguredDoorsColor")
