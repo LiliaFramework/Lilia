@@ -39,10 +39,11 @@ lia.config.stored = lia.config.stored or {}
 
     Parameters:
         key (string)        - The unique key for the config variable.
-        name (string)       - The display name for the config variable.
+        name (string)       - The display name for the config variable (localized automatically).
         value (any)         - The default value for the config variable.
         callback (function) - (Optional) Function to call when the config value changes.
-        data (table)        - Table containing additional config properties (type, desc, category, etc).
+        data (table)        - Table containing additional config properties (type, desc, category, etc). String values such as
+                              `desc`, `category`, and entries in an `options` table are localized automatically.
 
     Returns:
         None.
@@ -70,15 +71,25 @@ function lia.config.add(key, name, value, callback, data)
     data.type = data.type or configType
     local oldConfig = lia.config.stored[key]
     local savedValue = oldConfig and oldConfig.value or value
-    local category = data.category
-    local desc = data.desc
+
+    if istable(data.options) then
+        for k, v in pairs(data.options) do
+            if isstring(v) then
+                data.options[k] = L(v)
+            end
+        end
+    end
+
+    data.desc = isstring(data.desc) and L(data.desc) or data.desc
+    data.category = isstring(data.category) and L(data.category) or data.category
+
     lia.config.stored[key] = {
-        name = name or key,
+        name = isstring(name) and L(name) or name or key,
         data = data,
         value = savedValue,
         default = value,
-        desc = desc,
-        category = category or L("character"),
+        desc = data.desc,
+        category = data.category or L("character"),
         noNetworking = data.noNetworking or false,
         callback = callback
     }
@@ -375,324 +386,324 @@ if SERVER then
     end
 end
 
-lia.config.add("MoneyModel", L("moneyModel"), "models/props_lab/box01a.mdl", nil, {
-    desc = L("moneyModelDesc"),
-    category = L("money"),
+lia.config.add("MoneyModel", "moneyModel", "models/props_lab/box01a.mdl", nil, {
+    desc = "moneyModelDesc",
+    category = "money",
     type = "Generic"
 })
 
-lia.config.add("MoneyLimit", L("moneyLimit"), 0, nil, {
-    desc = L("moneyLimitDesc"),
-    category = L("money"),
+lia.config.add("MoneyLimit", "moneyLimit", 0, nil, {
+    desc = "moneyLimitDesc",
+    category = "money",
     type = "Int",
     min = 0,
     max = 1000000
 })
 
-lia.config.add("MaxMoneyEntities", L("maxMoneyEntities"), 3, nil, {
-    desc = L("maxMoneyEntitiesDesc"),
-    category = L("money"),
+lia.config.add("MaxMoneyEntities", "maxMoneyEntities", 3, nil, {
+    desc = "maxMoneyEntitiesDesc",
+    category = "money",
     type = "Int",
     min = 1,
     max = 50
 })
 
-lia.config.add("CurrencySymbol", L("currencySymbol"), "", function(newVal) lia.currency.symbol = newVal end, {
-    desc = L("currencySymbolDesc"),
-    category = L("money"),
+lia.config.add("CurrencySymbol", "currencySymbol", "", function(newVal) lia.currency.symbol = newVal end, {
+    desc = "currencySymbolDesc",
+    category = "money",
     type = "Generic"
 })
 
-lia.config.add("PKWorld", L("pkWorld"), false, nil, {
-    desc = L("pkWorldDesc"),
-    category = L("character"),
+lia.config.add("PKWorld", "pkWorld", false, nil, {
+    desc = "pkWorldDesc",
+    category = "character",
     type = "Boolean"
 })
 
-lia.config.add("CurrencySingularName", L("currencySingularName"), L("currencySingular"), function(newVal) lia.currency.singular = newVal end, {
-    desc = L("currencySingularNameDesc"),
-    category = L("money"),
+lia.config.add("CurrencySingularName", "currencySingularName", "currencySingular", function(newVal) lia.currency.singular = L(newVal) end, {
+    desc = "currencySingularNameDesc",
+    category = "money",
     type = "Generic"
 })
 
-lia.config.add("CurrencyPluralName", L("currencyPluralName"), L("currencyPlural"), function(newVal) lia.currency.plural = newVal end, {
-    desc = L("currencyPluralNameDesc"),
-    category = L("money"),
+lia.config.add("CurrencyPluralName", "currencyPluralName", "currencyPlural", function(newVal) lia.currency.plural = L(newVal) end, {
+    desc = "currencyPluralNameDesc",
+    category = "money",
     type = "Generic"
 })
 
-lia.config.add("WalkSpeed", L("walkSpeed"), 130, function(_, newValue)
+lia.config.add("WalkSpeed", "walkSpeed", 130, function(_, newValue)
     for _, client in player.Iterator() do
         client:SetWalkSpeed(newValue)
     end
 end, {
-    desc = L("walkSpeedDesc"),
-    category = L("character"),
+    desc = "walkSpeedDesc",
+    category = "character",
     type = "Int",
     min = 50,
     max = 300
 })
 
-lia.config.add("RunSpeed", L("runSpeed"), 275, function(_, newValue)
+lia.config.add("RunSpeed", "runSpeed", 275, function(_, newValue)
     for _, client in player.Iterator() do
         client:SetRunSpeed(newValue)
     end
 end, {
-    desc = L("runSpeedDesc"),
-    category = L("character"),
+    desc = "runSpeedDesc",
+    category = "character",
     type = "Int",
     min = 100,
     max = 500
 })
 
-lia.config.add("WalkRatio", L("walkRatio"), 0.5, nil, {
-    desc = L("walkRatioDesc"),
-    category = L("character"),
+lia.config.add("WalkRatio", "walkRatio", 0.5, nil, {
+    desc = "walkRatioDesc",
+    category = "character",
     type = "Float",
     min = 0.1,
     max = 1.0,
     decimals = 2
 })
 
-lia.config.add("AllowExistNames", L("allowDuplicateNames"), true, nil, {
-    desc = L("allowDuplicateNamesDesc"),
-    category = L("character"),
+lia.config.add("AllowExistNames", "allowDuplicateNames", true, nil, {
+    desc = "allowDuplicateNamesDesc",
+    category = "character",
     type = "Boolean"
 })
 
-lia.config.add("WhitelistEnabled", L("whitelistEnabled"), false, nil, {
-    desc = L("whitelistEnabledDesc"),
-    category = L("categoryServer"),
+lia.config.add("WhitelistEnabled", "whitelistEnabled", false, nil, {
+    desc = "whitelistEnabledDesc",
+    category = "categoryServer",
     noNetworking = false,
     schemaOnly = false,
     isGlobal = false,
     type = "Boolean"
 })
 
-lia.config.add("BlacklistedEnabled", L("blacklistEnabled"), false, nil, {
-    desc = L("blacklistEnabledDesc"),
-    category = L("categoryServer"),
+lia.config.add("BlacklistedEnabled", "blacklistEnabled", false, nil, {
+    desc = "blacklistEnabledDesc",
+    category = "categoryServer",
     noNetworking = false,
     schemaOnly = false,
     isGlobal = false,
     type = "Boolean"
 })
 
-lia.config.add("MaxCharacters", L("maxCharacters"), 5, nil, {
-    desc = L("maxCharactersDesc"),
-    category = L("character"),
+lia.config.add("MaxCharacters", "maxCharacters", 5, nil, {
+    desc = "maxCharactersDesc",
+    category = "character",
     type = "Int",
     min = 1,
     max = 10
 })
 
-lia.config.add("AllowPMs", L("allowPMs"), true, nil, {
-    desc = L("allowPMsDesc"),
-    category = L("categoryChat"),
+lia.config.add("AllowPMs", "allowPMs", true, nil, {
+    desc = "allowPMsDesc",
+    category = "categoryChat",
     type = "Boolean"
 })
 
-lia.config.add("MinDescLen", L("minDescriptionLength"), 16, nil, {
-    desc = L("minDescriptionLengthDesc"),
-    category = L("character"),
+lia.config.add("MinDescLen", "minDescriptionLength", 16, nil, {
+    desc = "minDescriptionLengthDesc",
+    category = "character",
     type = "Int",
     min = 10,
     max = 500
 })
 
-lia.config.add("SaveInterval", L("saveInterval"), 300, nil, {
-    desc = L("saveIntervalDesc"),
-    category = L("character"),
+lia.config.add("SaveInterval", "saveInterval", 300, nil, {
+    desc = "saveIntervalDesc",
+    category = "character",
     type = "Int",
     min = 60,
     max = 3600
 })
 
-lia.config.add("DefMoney", L("defaultMoney"), 0, nil, {
-    desc = L("defaultMoneyDesc"),
-    category = L("character"),
+lia.config.add("DefMoney", "defaultMoney", 0, nil, {
+    desc = "defaultMoneyDesc",
+    category = "character",
     type = "Int",
     min = 0,
     max = 10000
 })
 
-lia.config.add("DataSaveInterval", L("dataSaveInterval"), 600, nil, {
-    desc = L("dataSaveIntervalDesc"),
-    category = L("categoryData"),
+lia.config.add("DataSaveInterval", "dataSaveInterval", 600, nil, {
+    desc = "dataSaveIntervalDesc",
+    category = "categoryData",
     type = "Int",
     min = 60,
     max = 3600
 })
 
-lia.config.add("CharacterDataSaveInterval", L("characterDataSaveInterval"), 300, nil, {
-    desc = L("characterDataSaveIntervalDesc"),
-    category = L("categoryData"),
+lia.config.add("CharacterDataSaveInterval", "characterDataSaveInterval", 300, nil, {
+    desc = "characterDataSaveIntervalDesc",
+    category = "categoryData",
     type = "Int",
     min = 60,
     max = 3600
 })
 
-lia.config.add("SpawnTime", L("respawnTime"), 5, nil, {
-    desc = L("respawnTimeDesc"),
-    category = L("death"),
+lia.config.add("SpawnTime", "respawnTime", 5, nil, {
+    desc = "respawnTimeDesc",
+    category = "death",
     type = "Float",
     min = 1,
     max = 60
 })
 
-lia.config.add("TimeToEnterVehicle", L("timeToEnterVehicle"), 1, nil, {
-    desc = L("timeToEnterVehicleDesc"),
-    category = L("categoryQualityOfLife"),
+lia.config.add("TimeToEnterVehicle", "timeToEnterVehicle", 1, nil, {
+    desc = "timeToEnterVehicleDesc",
+    category = "categoryQualityOfLife",
     type = "Float",
     min = 0.5,
     max = 10
 })
 
-lia.config.add("CarEntryDelayEnabled", L("carEntryDelayEnabled"), true, nil, {
-    desc = L("carEntryDelayEnabledDesc"),
-    category = L("categoryTimers"),
+lia.config.add("CarEntryDelayEnabled", "carEntryDelayEnabled", true, nil, {
+    desc = "carEntryDelayEnabledDesc",
+    category = "categoryTimers",
     type = "Boolean"
 })
 
-lia.config.add("MaxChatLength", L("maxChatLength"), 256, nil, {
-    desc = L("maxChatLengthDesc"),
-    category = L("categoryVisuals"),
+lia.config.add("MaxChatLength", "maxChatLength", 256, nil, {
+    desc = "maxChatLengthDesc",
+    category = "categoryVisuals",
     type = "Int",
     min = 50,
     max = 1024
 })
 
-lia.config.add("SchemaYear", L("schemaYear"), 2025, nil, {
-    desc = L("schemaYearDesc"),
-    category = L("categoryGeneral"),
+lia.config.add("SchemaYear", "schemaYear", 2025, nil, {
+    desc = "schemaYearDesc",
+    category = "categoryGeneral",
     type = "Int",
     min = 0,
     max = 999999
 })
 
-lia.config.add("AmericanDates", L("americanDates"), true, nil, {
-    desc = L("americanDatesDesc"),
-    category = L("categoryGeneral"),
+lia.config.add("AmericanDates", "americanDates", true, nil, {
+    desc = "americanDatesDesc",
+    category = "categoryGeneral",
     type = "Boolean"
 })
 
-lia.config.add("AmericanTimeStamp", L("americanTimeStamp"), true, nil, {
-    desc = L("americanTimeStampDesc"),
-    category = L("categoryGeneral"),
+lia.config.add("AmericanTimeStamp", "americanTimeStamp", true, nil, {
+    desc = "americanTimeStampDesc",
+    category = "categoryGeneral",
     type = "Boolean"
 })
 
-lia.config.add("AdminConsoleNetworkLogs", L("adminConsoleNetworkLogs"), true, nil, {
-    desc = L("adminConsoleNetworkLogsDesc"),
-    category = L("categoryLogging"),
+lia.config.add("AdminConsoleNetworkLogs", "adminConsoleNetworkLogs", true, nil, {
+    desc = "adminConsoleNetworkLogsDesc",
+    category = "categoryLogging",
     type = "Boolean"
 })
 
-lia.config.add("Color", L("themeColor"), {
+lia.config.add("Color", "themeColor", {
     r = 37,
     g = 116,
     b = 108
 }, nil, {
-    desc = L("themeColorDesc"),
-    category = L("categoryVisuals"),
+    desc = "themeColorDesc",
+    category = "categoryVisuals",
     type = "Color"
 })
 
-lia.config.add("CharMenuBGInputDisabled", L("charMenuBGInputDisabled"), true, nil, {
-    desc = L("charMenuBGInputDisabledDesc"),
-    category = L("mainMenu"),
+lia.config.add("CharMenuBGInputDisabled", "charMenuBGInputDisabled", true, nil, {
+    desc = "charMenuBGInputDisabledDesc",
+    category = "mainMenu",
     type = "Boolean"
 })
 
-lia.config.add("AllowKeybindEditing", L("allowKeybindEditing"), true, nil, {
-    desc = L("allowKeybindEditingDesc"),
-    category = L("categoryGeneral"),
+lia.config.add("AllowKeybindEditing", "allowKeybindEditing", true, nil, {
+    desc = "allowKeybindEditingDesc",
+    category = "categoryGeneral",
     type = "Boolean"
 })
 
-lia.config.add("CrosshairEnabled", L("enableCrosshair"), false, nil, {
-    desc = L("enableCrosshairDesc"),
-    category = L("categoryVisuals"),
+lia.config.add("CrosshairEnabled", "enableCrosshair", false, nil, {
+    desc = "enableCrosshairDesc",
+    category = "categoryVisuals",
     type = "Boolean",
 })
 
-lia.config.add("BarsDisabled", L("disableBars"), false, nil, {
-    desc = L("disableBarsDesc"),
-    category = L("categoryVisuals"),
+lia.config.add("BarsDisabled", "disableBars", false, nil, {
+    desc = "disableBarsDesc",
+    category = "categoryVisuals",
     type = "Boolean",
 })
 
-lia.config.add("AutoWeaponItemGeneration", L("autoWeaponItemGeneration"), true, nil, {
-    desc = L("autoWeaponItemGenerationDesc"),
-    category = L("categoryGeneral"),
+lia.config.add("AutoWeaponItemGeneration", "autoWeaponItemGeneration", true, nil, {
+    desc = "autoWeaponItemGenerationDesc",
+    category = "categoryGeneral",
     type = "Boolean",
 })
 
-lia.config.add("AmmoDrawEnabled", L("enableAmmoDisplay"), true, nil, {
-    desc = L("enableAmmoDisplayDesc"),
-    category = L("categoryVisuals"),
+lia.config.add("AmmoDrawEnabled", "enableAmmoDisplay", true, nil, {
+    desc = "enableAmmoDisplayDesc",
+    category = "categoryVisuals",
     type = "Boolean",
 })
 
-lia.config.add("IsVoiceEnabled", L("voiceChatEnabled"), true, function(_, newValue) hook.Run("VoiceToggled", newValue) end, {
-    desc = L("voiceChatEnabledDesc"),
-    category = L("categoryGeneral"),
+lia.config.add("IsVoiceEnabled", "voiceChatEnabled", true, function(_, newValue) hook.Run("VoiceToggled", newValue) end, {
+    desc = "voiceChatEnabledDesc",
+    category = "categoryGeneral",
     type = "Boolean",
 })
 
-lia.config.add("SalaryInterval", L("salaryInterval"), 300, function()
+lia.config.add("SalaryInterval", "salaryInterval", 300, function()
     for _, client in player.Iterator() do
         hook.Run("CreateSalaryTimer", client)
     end
 end, {
-    desc = L("salaryIntervalDesc"),
-    category = L("categorySalary"),
+    desc = "salaryIntervalDesc",
+    category = "categorySalary",
     type = "Float",
     min = 60,
     max = 3600
 })
 
-lia.config.add("SalaryThreshold", L("salaryThreshold"), 0, nil, {
-    desc = L("salaryThresholdDesc"),
-    category = L("categorySalary"),
+lia.config.add("SalaryThreshold", "salaryThreshold", 0, nil, {
+    desc = "salaryThresholdDesc",
+    category = "categorySalary",
     type = "Int",
     min = 0,
     max = 100000
 })
 
-lia.config.add("ThirdPersonEnabled", L("thirdPersonEnabled"), true, nil, {
-    desc = L("thirdPersonEnabledDesc"),
-    category = L("categoryThirdPerson"),
+lia.config.add("ThirdPersonEnabled", "thirdPersonEnabled", true, nil, {
+    desc = "thirdPersonEnabledDesc",
+    category = "categoryThirdPerson",
     type = "Boolean"
 })
 
-lia.config.add("MaxThirdPersonDistance", L("maxThirdPersonDistance"), 100, nil, {
-    desc = L("maxThirdPersonDistanceDesc"),
-    category = L("categoryThirdPerson"),
+lia.config.add("MaxThirdPersonDistance", "maxThirdPersonDistance", 100, nil, {
+    desc = "maxThirdPersonDistanceDesc",
+    category = "categoryThirdPerson",
     type = "Int"
 })
 
-lia.config.add("WallPeek", L("wallPeek"), true, nil, {
-    desc = L("wallPeekDesc"),
-    category = L("categoryRendering"),
+lia.config.add("WallPeek", "wallPeek", true, nil, {
+    desc = "wallPeekDesc",
+    category = "categoryRendering",
     type = "Boolean",
 })
 
-lia.config.add("MaxThirdPersonHorizontal", L("maxThirdPersonHorizontal"), 30, nil, {
-    desc = L("maxThirdPersonHorizontalDesc"),
-    category = L("categoryThirdPerson"),
+lia.config.add("MaxThirdPersonHorizontal", "maxThirdPersonHorizontal", 30, nil, {
+    desc = "maxThirdPersonHorizontalDesc",
+    category = "categoryThirdPerson",
     type = "Int"
 })
 
-lia.config.add("MaxThirdPersonHeight", L("maxThirdPersonHeight"), 30, nil, {
-    desc = L("maxThirdPersonHeightDesc"),
-    category = L("categoryThirdPerson"),
+lia.config.add("MaxThirdPersonHeight", "maxThirdPersonHeight", 30, nil, {
+    desc = "maxThirdPersonHeightDesc",
+    category = "categoryThirdPerson",
     type = "Int"
 })
 
-lia.config.add("MaxViewDistance", L("maxViewDistance"), 32768, nil, {
-    desc = L("maxViewDistanceDesc"),
-    category = L("categoryQualityOfLife"),
+lia.config.add("MaxViewDistance", "maxViewDistance", 32768, nil, {
+    desc = "maxViewDistanceDesc",
+    category = "categoryQualityOfLife",
     type = "Int",
     min = 1000,
     max = 32768,
@@ -708,489 +719,489 @@ local function getDermaSkins()
     return skins
 end
 
-lia.config.add("DermaSkin", L("dermaSkin"), "Lilia Skin", function(_, newSkin) hook.Run("DermaSkinChanged", newSkin) end, {
-    desc = L("dermaSkinDesc"),
-    category = L("categoryVisuals"),
+lia.config.add("DermaSkin", "dermaSkin", "Lilia Skin", function(_, newSkin) hook.Run("DermaSkinChanged", newSkin) end, {
+    desc = "dermaSkinDesc",
+    category = "categoryVisuals",
     type = "Table",
-    options = CLIENT and getDermaSkins() or {L("liliaSkin")}
+    options = CLIENT and getDermaSkins() or {"liliaSkin"}
 })
 
-lia.config.add("Language", L("language"), "English", nil, {
-    desc = L("languageDesc"),
-    category = L("categoryGeneral"),
+lia.config.add("Language", "language", "English", nil, {
+    desc = "languageDesc",
+    category = "categoryGeneral",
     type = "Table",
     options = lia.lang.getLanguages()
 })
 
-lia.config.add("SpawnMenuLimit", L("spawnMenuLimit"), false, nil, {
-    desc = L("spawnMenuLimitDesc"),
-    category = L("categorySpawnGeneral"),
+lia.config.add("SpawnMenuLimit", "spawnMenuLimit", false, nil, {
+    desc = "spawnMenuLimitDesc",
+    category = "categorySpawnGeneral",
     type = "Boolean"
 })
 
-lia.config.add("LogRetentionDays", L("logRetentionPeriod"), 7, nil, {
-    desc = L("logRetentionPeriodDesc"),
-    category = L("categoryLogging"),
+lia.config.add("LogRetentionDays", "logRetentionPeriod", 7, nil, {
+    desc = "logRetentionPeriodDesc",
+    category = "categoryLogging",
     type = "Int",
     min = 3,
     max = 30,
 })
 
-lia.config.add("MaxLogLines", L("maximumLogLines"), 1000, nil, {
-    desc = L("maximumLogLinesDesc"),
-    category = L("categoryLogging"),
+lia.config.add("MaxLogLines", "maximumLogLines", 1000, nil, {
+    desc = "maximumLogLinesDesc",
+    category = "categoryLogging",
     type = "Int",
     min = 500,
     max = 1000000,
 })
 
-lia.config.add("StaminaBlur", L("staminaBlurEnabled"), true, nil, {
-    desc = L("staminaBlurEnabledDesc"),
-    category = L("attributes"),
+lia.config.add("StaminaBlur", "staminaBlurEnabled", true, nil, {
+    desc = "staminaBlurEnabledDesc",
+    category = "attributes",
     type = "Boolean",
 })
 
-lia.config.add("StaminaSlowdown", L("staminaSlowdownEnabled"), true, nil, {
-    desc = L("staminaSlowdownEnabledDesc"),
-    category = L("attributes"),
+lia.config.add("StaminaSlowdown", "staminaSlowdownEnabled", true, nil, {
+    desc = "staminaSlowdownEnabledDesc",
+    category = "attributes",
     type = "Boolean",
 })
 
-lia.config.add("DefaultStamina", L("defaultStaminaValue"), 100, nil, {
-    desc = L("defaultStaminaValueDesc"),
-    category = L("attributes"),
+lia.config.add("DefaultStamina", "defaultStaminaValue", 100, nil, {
+    desc = "defaultStaminaValueDesc",
+    category = "attributes",
     type = "Int",
     min = 0,
     max = 1000
 })
 
-lia.config.add("MaxAttributePoints", L("maxAttributePoints"), 30, nil, {
-    desc = L("maxAttributePointsDesc"),
-    category = L("attributes"),
+lia.config.add("MaxAttributePoints", "maxAttributePoints", 30, nil, {
+    desc = "maxAttributePointsDesc",
+    category = "attributes",
     isGlobal = true,
     type = "Int",
     min = 1,
     max = 100
 })
 
-lia.config.add("JumpStaminaCost", L("jumpStaminaCost"), 10, nil, {
-    desc = L("jumpStaminaCostDesc"),
-    category = L("attributes"),
+lia.config.add("JumpStaminaCost", "jumpStaminaCost", 10, nil, {
+    desc = "jumpStaminaCostDesc",
+    category = "attributes",
     type = "Int",
     min = 0,
     max = 1000
 })
 
-lia.config.add("MaxStartingAttributes", L("maxStartingAttributes"), 30, nil, {
-    desc = L("maxStartingAttributesDesc"),
-    category = L("attributes"),
+lia.config.add("MaxStartingAttributes", "maxStartingAttributes", 30, nil, {
+    desc = "maxStartingAttributesDesc",
+    category = "attributes",
     isGlobal = true,
     type = "Int",
     min = 1,
     max = 100
 })
 
-lia.config.add("StartingAttributePoints", L("startingAttributePoints"), 30, nil, {
-    desc = L("startingAttributePointsDesc"),
-    category = L("attributes"),
+lia.config.add("StartingAttributePoints", "startingAttributePoints", 30, nil, {
+    desc = "startingAttributePointsDesc",
+    category = "attributes",
     isGlobal = true,
     type = "Int",
     min = 1,
     max = 100
 })
 
-lia.config.add("PunchStamina", L("punchStamina"), 10, nil, {
-    desc = L("punchStaminaDesc"),
-    category = L("attributes"),
+lia.config.add("PunchStamina", "punchStamina", 10, nil, {
+    desc = "punchStaminaDesc",
+    category = "attributes",
     isGlobal = true,
     type = "Int",
     min = 0,
     max = 100
 })
 
-lia.config.add("MaxHoldWeight", L("maximumHoldWeight"), 100, nil, {
-    desc = L("maximumHoldWeightDesc"),
-    category = L("categoryGeneral"),
+lia.config.add("MaxHoldWeight", "maximumHoldWeight", 100, nil, {
+    desc = "maximumHoldWeightDesc",
+    category = "categoryGeneral",
     type = "Int",
     min = 1,
     max = 500
 })
 
-lia.config.add("ThrowForce", L("throwForce"), 100, nil, {
-    desc = L("throwForceDesc"),
-    category = L("categoryGeneral"),
+lia.config.add("ThrowForce", "throwForce", 100, nil, {
+    desc = "throwForceDesc",
+    category = "categoryGeneral",
     type = "Int",
     min = 1,
     max = 500
 })
 
-lia.config.add("AllowPush", L("allowPush"), true, nil, {
-    desc = L("allowPushDesc"),
-    category = L("categoryGeneral"),
+lia.config.add("AllowPush", "allowPush", true, nil, {
+    desc = "allowPushDesc",
+    category = "categoryGeneral",
     type = "Boolean",
 })
 
-lia.config.add("PunchPlaytime", L("punchPlaytimeProtection"), 7200, nil, {
-    desc = L("punchPlaytimeProtectionDesc"),
-    category = L("categoryGeneral"),
+lia.config.add("PunchPlaytime", "punchPlaytimeProtection", 7200, nil, {
+    desc = "punchPlaytimeProtectionDesc",
+    category = "categoryGeneral",
     isGlobal = true,
     type = "Int",
     min = 0,
     max = 86400
 })
 
-lia.config.add("CustomChatSound", L("customChatSound"), "", nil, {
-    desc = L("customChatSoundDesc"),
-    category = L("categoryChat"),
+lia.config.add("CustomChatSound", "customChatSound", "", nil, {
+    desc = "customChatSoundDesc",
+    category = "categoryChat",
     type = "Generic",
 })
 
-lia.config.add("ChatColor", L("chatColor"), {
+lia.config.add("ChatColor", "chatColor", {
     r = 255,
     g = 239,
     b = 150,
     a = 255
 }, nil, {
-    desc = L("chatColorDesc"),
-    category = L("categoryChat"),
+    desc = "chatColorDesc",
+    category = "categoryChat",
     type = "Color",
 })
 
-lia.config.add("ChatRange", L("chatRange"), 280, nil, {
-    desc = L("chatRangeDesc"),
-    category = L("categoryChat"),
+lia.config.add("ChatRange", "chatRange", 280, nil, {
+    desc = "chatRangeDesc",
+    category = "categoryChat",
     type = "Int",
     min = 0,
     max = 10000
 })
 
-lia.config.add("OOCLimit", L("oocCharacterLimit"), 150, nil, {
-    desc = L("oocCharacterLimitDesc"),
-    category = L("categoryChat"),
+lia.config.add("OOCLimit", "oocCharacterLimit", 150, nil, {
+    desc = "oocCharacterLimitDesc",
+    category = "categoryChat",
     type = "Int",
     min = 10,
     max = 1000
 })
 
-lia.config.add("ChatListenColor", L("chatListenColor"), {
+lia.config.add("ChatListenColor", "chatListenColor", {
     r = 168,
     g = 240,
     b = 170,
     a = 255
 }, nil, {
-    desc = L("chatListenColorDesc"),
-    category = L("categoryChat"),
+    desc = "chatListenColorDesc",
+    category = "categoryChat",
     type = "Color",
 })
 
-lia.config.add("OOCDelay", L("oocDelayTitle"), 10, nil, {
-    desc = L("oocDelayDesc"),
-    category = L("categoryChat"),
+lia.config.add("OOCDelay", "oocDelayTitle", 10, nil, {
+    desc = "oocDelayDesc",
+    category = "categoryChat",
     type = "Float",
     min = 0,
     max = 60
 })
 
-lia.config.add("LOOCDelay", L("loocDelayTitle"), 6, nil, {
-    desc = L("loocDelayDesc"),
-    category = L("categoryChat"),
+lia.config.add("LOOCDelay", "loocDelayTitle", 6, nil, {
+    desc = "loocDelayDesc",
+    category = "categoryChat",
     type = "Float",
     min = 0,
     max = 60
 })
 
-lia.config.add("LOOCDelayAdmin", L("loocDelayAdmin"), false, nil, {
-    desc = L("loocDelayAdminDesc"),
-    category = L("categoryChat"),
+lia.config.add("LOOCDelayAdmin", "loocDelayAdmin", false, nil, {
+    desc = "loocDelayAdminDesc",
+    category = "categoryChat",
     type = "Boolean",
 })
 
-lia.config.add("ChatSizeDiff", L("enableDifferentChatSize"), false, nil, {
-    desc = L("enableDifferentChatSizeDesc"),
-    category = L("categoryChat"),
+lia.config.add("ChatSizeDiff", "enableDifferentChatSize", false, nil, {
+    desc = "enableDifferentChatSizeDesc",
+    category = "categoryChat",
     type = "Boolean",
 })
 
-lia.config.add("MusicVolume", L("mainMenuMusicVolume"), 0.25, nil, {
-    desc = L("mainMenuMusicVolumeDesc"),
-    category = L("mainMenu"),
+lia.config.add("MusicVolume", "mainMenuMusicVolume", 0.25, nil, {
+    desc = "mainMenuMusicVolumeDesc",
+    category = "mainMenu",
     type = "Float",
     min = 0.0,
     max = 1.0
 })
 
-lia.config.add("Music", L("mainMenuMusic"), "", nil, {
-    desc = L("mainMenuMusicDesc"),
-    category = L("mainMenu"),
+lia.config.add("Music", "mainMenuMusic", "", nil, {
+    desc = "mainMenuMusicDesc",
+    category = "mainMenu",
     type = "Generic"
 })
 
-lia.config.add("BackgroundURL", L("mainMenuBackgroundURL"), "", nil, {
-    desc = L("mainMenuBackgroundURLDesc"),
-    category = L("mainMenu"),
+lia.config.add("BackgroundURL", "mainMenuBackgroundURL", "", nil, {
+    desc = "mainMenuBackgroundURLDesc",
+    category = "mainMenu",
     type = "Generic"
 })
 
-lia.config.add("CenterLogo", L("mainMenuCenterLogo"), "", nil, {
-    desc = L("mainMenuCenterLogoDesc"),
-    category = L("mainMenu"),
+lia.config.add("CenterLogo", "mainMenuCenterLogo", "", nil, {
+    desc = "mainMenuCenterLogoDesc",
+    category = "mainMenu",
     type = "Generic"
 })
 
-lia.config.add("DiscordURL", L("mainMenuDiscordURL"), "https://discord.gg/esCRH5ckbQ", nil, {
-    desc = L("mainMenuDiscordURLDesc"),
-    category = L("mainMenu"),
+lia.config.add("DiscordURL", "mainMenuDiscordURL", "https://discord.gg/esCRH5ckbQ", nil, {
+    desc = "mainMenuDiscordURLDesc",
+    category = "mainMenu",
     type = "Generic"
 })
 
-lia.config.add("Workshop", L("mainMenuWorkshopURL"), "https://steamcommunity.com/sharedfiles/filedetails/?id=3527535922", nil, {
-    desc = L("mainMenuWorkshopURLDesc"),
-    category = L("mainMenu"),
+lia.config.add("Workshop", "mainMenuWorkshopURL", "https://steamcommunity.com/sharedfiles/filedetails/?id=3527535922", nil, {
+    desc = "mainMenuWorkshopURLDesc",
+    category = "mainMenu",
     type = "Generic"
 })
 
-lia.config.add("CharMenuBGInputDisabled", L("mainMenuCharBGInputDisabled"), true, nil, {
-    desc = L("mainMenuCharBGInputDisabledDesc"),
-    category = L("mainMenu"),
+lia.config.add("CharMenuBGInputDisabled", "mainMenuCharBGInputDisabled", true, nil, {
+    desc = "mainMenuCharBGInputDisabledDesc",
+    category = "mainMenu",
     type = "Boolean"
 })
 
-lia.config.add("SwitchCooldownOnAllEntities", L("switchCooldownOnAllEntities"), false, nil, {
-    desc = L("switchCooldownOnAllEntitiesDesc"),
-    category = L("character"),
+lia.config.add("SwitchCooldownOnAllEntities", "switchCooldownOnAllEntities", false, nil, {
+    desc = "switchCooldownOnAllEntitiesDesc",
+    category = "character",
     type = "Boolean",
 })
 
-lia.config.add("OnDamageCharacterSwitchCooldownTimer", L("onDamageCharacterSwitchCooldownTimer"), 15, nil, {
-    desc = L("onDamageCharacterSwitchCooldownTimerDesc"),
-    category = L("character"),
+lia.config.add("OnDamageCharacterSwitchCooldownTimer", "onDamageCharacterSwitchCooldownTimer", 15, nil, {
+    desc = "onDamageCharacterSwitchCooldownTimerDesc",
+    category = "character",
     type = "Float",
     min = 0,
     max = 120
 })
 
-lia.config.add("CharacterSwitchCooldownTimer", L("characterSwitchCooldownTimer"), 5, nil, {
-    desc = L("characterSwitchCooldownTimerDesc"),
-    category = L("character"),
+lia.config.add("CharacterSwitchCooldownTimer", "characterSwitchCooldownTimer", 5, nil, {
+    desc = "characterSwitchCooldownTimerDesc",
+    category = "character",
     type = "Float",
     min = 0,
     max = 120
 })
 
-lia.config.add("ExplosionRagdoll", L("explosionRagdoll"), false, nil, {
-    desc = L("explosionRagdollDesc"),
-    category = L("categoryQualityOfLife"),
+lia.config.add("ExplosionRagdoll", "explosionRagdoll", false, nil, {
+    desc = "explosionRagdollDesc",
+    category = "categoryQualityOfLife",
     type = "Boolean",
 })
 
-lia.config.add("CarRagdoll", L("carRagdoll"), false, nil, {
-    desc = L("carRagdollDesc"),
-    category = L("categoryQualityOfLife"),
+lia.config.add("CarRagdoll", "carRagdoll", false, nil, {
+    desc = "carRagdollDesc",
+    category = "categoryQualityOfLife",
     type = "Boolean",
 })
 
-lia.config.add("NPCsDropWeapons", L("npcsDropWeapons"), false, nil, {
-    desc = L("npcsDropWeaponsDesc"),
-    category = L("categoryQualityOfLife"),
+lia.config.add("NPCsDropWeapons", "npcsDropWeapons", false, nil, {
+    desc = "npcsDropWeaponsDesc",
+    category = "categoryQualityOfLife",
     type = "Boolean",
 })
 
-lia.config.add("TimeUntilDroppedSWEPRemoved", L("timeUntilDroppedSWEPRemoved"), 15, nil, {
-    desc = L("timeUntilDroppedSWEPRemovedDesc"),
-    category = L("protection"),
+lia.config.add("TimeUntilDroppedSWEPRemoved", "timeUntilDroppedSWEPRemoved", 15, nil, {
+    desc = "timeUntilDroppedSWEPRemovedDesc",
+    category = "protection",
     type = "Float",
     min = 0,
     max = 300
 })
 
-lia.config.add("AltsDisabled", L("altsDisabled"), false, nil, {
-    desc = L("altsDisabledDesc"),
-    category = L("protection"),
+lia.config.add("AltsDisabled", "altsDisabled", false, nil, {
+    desc = "altsDisabledDesc",
+    category = "protection",
     type = "Boolean",
 })
 
-lia.config.add("ActsActive", L("actsActive"), false, nil, {
-    desc = L("actsActiveDesc"),
-    category = L("protection"),
+lia.config.add("ActsActive", "actsActive", false, nil, {
+    desc = "actsActiveDesc",
+    category = "protection",
     type = "Boolean",
 })
 
-lia.config.add("PassableOnFreeze", L("passableOnFreeze"), false, nil, {
-    desc = L("passableOnFreezeDesc"),
-    category = L("protection"),
+lia.config.add("PassableOnFreeze", "passableOnFreeze", false, nil, {
+    desc = "passableOnFreezeDesc",
+    category = "protection",
     type = "Boolean",
 })
 
-lia.config.add("PlayerSpawnVehicleDelay", L("playerSpawnVehicleDelay"), 30, nil, {
-    desc = L("playerSpawnVehicleDelayDesc"),
-    category = L("protection"),
+lia.config.add("PlayerSpawnVehicleDelay", "playerSpawnVehicleDelay", 30, nil, {
+    desc = "playerSpawnVehicleDelayDesc",
+    category = "protection",
     type = "Float",
     min = 0,
     max = 300
 })
 
-lia.config.add("ToolInterval", L("toolInterval"), 0, nil, {
-    desc = L("toolInterval"),
-    category = L("protection"),
+lia.config.add("ToolInterval", "toolInterval", 0, nil, {
+    desc = "toolInterval",
+    category = "protection",
     type = "Float",
     min = 0,
     max = 60
 })
 
-lia.config.add("DisableLuaRun", L("disableLuaRun"), false, nil, {
-    desc = L("disableLuaRunDesc"),
-    category = L("protection"),
+lia.config.add("DisableLuaRun", "disableLuaRun", false, nil, {
+    desc = "disableLuaRunDesc",
+    category = "protection",
     type = "Boolean",
 })
 
-lia.config.add("EquipDelay", L("equipDelay"), 0, nil, {
-    desc = L("equipDelayDesc"),
-    category = L("items"),
+lia.config.add("EquipDelay", "equipDelay", 0, nil, {
+    desc = "equipDelayDesc",
+    category = "items",
     type = "Float",
     min = 0,
     max = 10
 })
 
-lia.config.add("UnequipDelay", L("unequipDelay"), 0, nil, {
-    desc = L("unequipDelayDesc"),
-    category = L("items"),
+lia.config.add("UnequipDelay", "unequipDelay", 0, nil, {
+    desc = "unequipDelayDesc",
+    category = "items",
     type = "Float",
     min = 0,
     max = 10
 })
 
-lia.config.add("DropDelay", L("dropDelay"), 0, nil, {
-    desc = L("dropDelayDesc"),
-    category = L("items"),
+lia.config.add("DropDelay", "dropDelay", 0, nil, {
+    desc = "dropDelayDesc",
+    category = "items",
     type = "Float",
     min = 0,
     max = 10
 })
 
-lia.config.add("TakeDelay", L("takeDelay"), 0, nil, {
-    desc = L("takeDelayDesc"),
-    category = L("items"),
+lia.config.add("TakeDelay", "takeDelay", 0, nil, {
+    desc = "takeDelayDesc",
+    category = "items",
     type = "Float",
     min = 0,
     max = 10
 })
 
-lia.config.add("ItemGiveSpeed", L("itemGiveSpeed"), 6, nil, {
-    desc = L("itemGiveSpeedDesc"),
-    category = L("items"),
+lia.config.add("ItemGiveSpeed", "itemGiveSpeed", 6, nil, {
+    desc = "itemGiveSpeedDesc",
+    category = "items",
     type = "Int",
     min = 1,
     max = 60
 })
 
-lia.config.add("ItemGiveEnabled", L("itemGiveEnabled"), true, nil, {
-    desc = L("itemGiveEnabledDesc"),
-    category = L("items"),
+lia.config.add("ItemGiveEnabled", "itemGiveEnabled", true, nil, {
+    desc = "itemGiveEnabledDesc",
+    category = "items",
     type = "Boolean",
 })
 
-lia.config.add("DisableCheaterActions", L("disableCheaterActions"), true, nil, {
-    desc = L("disableCheaterActionsDesc"),
-    category = L("protection"),
+lia.config.add("DisableCheaterActions", "disableCheaterActions", true, nil, {
+    desc = "disableCheaterActionsDesc",
+    category = "protection",
     type = "Boolean",
 })
 
-lia.config.add("LoseItemsonDeathNPC", L("loseItemsOnNPCDeath"), false, nil, {
-    desc = L("loseItemsOnNPCDeathDesc"),
-    category = L("death"),
+lia.config.add("LoseItemsonDeathNPC", "loseItemsOnNPCDeath", false, nil, {
+    desc = "loseItemsOnNPCDeathDesc",
+    category = "death",
     type = "Boolean"
 })
 
-lia.config.add("LoseItemsonDeathHuman", L("loseItemsOnHumanDeath"), false, nil, {
-    desc = L("loseItemsOnHumanDeathDesc"),
-    category = L("death"),
+lia.config.add("LoseItemsonDeathHuman", "loseItemsOnHumanDeath", false, nil, {
+    desc = "loseItemsOnHumanDeathDesc",
+    category = "death",
     type = "Boolean"
 })
 
-lia.config.add("LoseItemsonDeathWorld", L("loseItemsOnWorldDeath"), false, nil, {
-    desc = L("loseItemsOnWorldDeathDesc"),
-    category = L("death"),
+lia.config.add("LoseItemsonDeathWorld", "loseItemsOnWorldDeath", false, nil, {
+    desc = "loseItemsOnWorldDeathDesc",
+    category = "death",
     type = "Boolean"
 })
 
-lia.config.add("DeathPopupEnabled", L("enableDeathPopup"), true, nil, {
-    desc = L("enableDeathPopupDesc"),
-    category = L("death"),
+lia.config.add("DeathPopupEnabled", "enableDeathPopup", true, nil, {
+    desc = "enableDeathPopupDesc",
+    category = "death",
     type = "Boolean"
 })
 
-lia.config.add("StaffHasGodMode", L("staffGodMode"), true, nil, {
-    desc = L("staffGodModeDesc"),
-    category = L("categoryStaffSettings"),
+lia.config.add("StaffHasGodMode", "staffGodMode", true, nil, {
+    desc = "staffGodModeDesc",
+    category = "categoryStaffSettings",
     type = "Boolean"
 })
 
-lia.config.add("ClassDisplay", L("displayClassesOnCharacters"), true, nil, {
-    desc = L("displayClassesOnCharactersDesc"),
-    category = L("character"),
+lia.config.add("ClassDisplay", "displayClassesOnCharacters", true, nil, {
+    desc = "displayClassesOnCharactersDesc",
+    category = "character",
     type = "Boolean"
 })
 
-lia.config.add("sbWidth", L("sbWidth"), 0.35, nil, {
-    desc = L("sbWidthDesc"),
-    category = L("scoreboard"),
+lia.config.add("sbWidth", "sbWidth", 0.35, nil, {
+    desc = "sbWidthDesc",
+    category = "scoreboard",
     type = "Float",
     min = 0.1,
     max = 1.0
 })
 
-lia.config.add("sbHeight", L("sbHeight"), 0.65, nil, {
-    desc = L("sbHeightDesc"),
-    category = L("scoreboard"),
+lia.config.add("sbHeight", "sbHeight", 0.65, nil, {
+    desc = "sbHeightDesc",
+    category = "scoreboard",
     type = "Float",
     min = 0.1,
     max = 1.0
 })
 
-lia.config.add("ClassHeaders", L("classHeaders"), true, nil, {
-    desc = L("classHeadersDesc"),
-    category = L("scoreboard"),
+lia.config.add("ClassHeaders", "classHeaders", true, nil, {
+    desc = "classHeadersDesc",
+    category = "scoreboard",
     type = "Boolean"
 })
 
-lia.config.add("UseSolidBackground", L("useSolidBackground"), false, nil, {
-    desc = L("useSolidBackgroundDesc"),
-    category = L("scoreboard"),
+lia.config.add("UseSolidBackground", "useSolidBackground", false, nil, {
+    desc = "useSolidBackgroundDesc",
+    category = "scoreboard",
     type = "Boolean"
 })
 
-lia.config.add("ClassLogo", L("classLogo"), false, nil, {
-    desc = L("classLogoDesc"),
-    category = L("scoreboard"),
+lia.config.add("ClassLogo", "classLogo", false, nil, {
+    desc = "classLogoDesc",
+    category = "scoreboard",
     type = "Boolean"
 })
 
-lia.config.add("ScoreboardBackgroundColor", L("scoreboardBackgroundColor"), {
+lia.config.add("ScoreboardBackgroundColor", "scoreboardBackgroundColor", {
     r = 255,
     g = 100,
     b = 100,
     a = 255
 }, nil, {
-    desc = L("scoreboardBackgroundColorDesc"),
-    category = L("scoreboard"),
+    desc = "scoreboardBackgroundColorDesc",
+    category = "scoreboard",
     type = "Color"
 })
 
-lia.config.add("RecognitionEnabled", L("recognitionEnabled"), true, nil, {
-    desc = L("recognitionEnabledDesc"),
-    category = L("recognition"),
+lia.config.add("RecognitionEnabled", "recognitionEnabled", true, nil, {
+    desc = "recognitionEnabledDesc",
+    category = "recognition",
     type = "Boolean"
 })
 
-lia.config.add("FakeNamesEnabled", L("fakeNamesEnabled"), false, nil, {
-    desc = L("fakeNamesEnabledDesc"),
-    category = L("recognition"),
+lia.config.add("FakeNamesEnabled", "fakeNamesEnabled", false, nil, {
+    desc = "fakeNamesEnabledDesc",
+    category = "recognition",
     type = "Boolean"
 })
 
-lia.config.add("vendorDefaultMoney", L("vendorDefaultMoney"), 500, nil, {
-    desc = L("vendorDefaultMoneyDesc"),
-    category = L("vendor"),
+lia.config.add("vendorDefaultMoney", "vendorDefaultMoney", 500, nil, {
+    desc = "vendorDefaultMoneyDesc",
+    category = "vendor",
     type = "Int"
 })
 
@@ -1204,24 +1215,24 @@ local function getMenuTabNames()
     return tabs
 end
 
-lia.config.add("DefaultMenuTab", L("defaultMenuTab"), L("you"), nil, {
-    desc = L("defaultMenuTabDesc"),
-    category = L("categoryMenu"),
+lia.config.add("DefaultMenuTab", "defaultMenuTab", "you", nil, {
+    desc = "defaultMenuTabDesc",
+    category = "categoryMenu",
     type = "Table",
-    options = CLIENT and getMenuTabNames() or {L("you")}
+    options = CLIENT and getMenuTabNames() or {"you"}
 })
 
-lia.config.add("DoorLockTime", L("doorLockTime"), 0.5, nil, {
-    desc = L("doorLockTimeDesc"),
-    category = L("moduleDoorsName"),
+lia.config.add("DoorLockTime", "doorLockTime", 0.5, nil, {
+    desc = "doorLockTimeDesc",
+    category = "moduleDoorsName",
     type = "Float",
     min = 0.1,
     max = 10.0
 })
 
-lia.config.add("DoorSellRatio", L("doorSellRatio"), 0.5, nil, {
-    desc = L("doorSellRatioDesc"),
-    category = L("moduleDoorsName"),
+lia.config.add("DoorSellRatio", "doorSellRatio", 0.5, nil, {
+    desc = "doorSellRatioDesc",
+    category = "moduleDoorsName",
     type = "Float",
     min = 0.0,
     max = 1.0

@@ -25,6 +25,7 @@ local validClasses = {
         end
 ]]
 function entityMeta:isProp()
+    if not IsValid(self) then return false end
     return self:GetClass() == "prop_physics"
 end
 
@@ -46,6 +47,7 @@ end
         end
 ]]
 function entityMeta:isItem()
+    if not IsValid(self) then return false end
     return self:GetClass() == "lia_item"
 end
 
@@ -67,6 +69,7 @@ end
         end
 ]]
 function entityMeta:isMoney()
+    if not IsValid(self) then return false end
     return self:GetClass() == "lia_money"
 end
 
@@ -88,6 +91,7 @@ end
         end
 ]]
 function entityMeta:isSimfphysCar()
+    if not IsValid(self) then return false end
     return validClasses[self:GetClass()] or self.IsSimfphyscar or self.LVS or validClasses[self.Base]
 end
 
@@ -109,6 +113,7 @@ end
         end
 ]]
 function entityMeta:isLiliaPersistent()
+    if not IsValid(self) then return false end
     if self.GetPersistent and self:GetPersistent() then return true end
     return self.IsLeonNPC or self.IsPersistent
 end
@@ -135,6 +140,7 @@ end
         end
 ]]
 function entityMeta:checkDoorAccess(client, access)
+    if not IsValid(self) then return false end
     if not self:isDoor() then return false end
     access = access or DOOR_GUEST
     if hook.Run("CanPlayerAccessDoor", client, self, access) then return true end
@@ -158,6 +164,7 @@ end
         vehicle:keysOwn(client)
 ]]
 function entityMeta:keysOwn(client)
+    if not IsValid(self) then return end
     if self:IsVehicle() then
         self:CPPISetOwner(client)
         self:setNetVar("owner", client:getChar():getID())
@@ -179,6 +186,7 @@ end
         vehicle:keysLock()
 ]]
 function entityMeta:keysLock()
+    if not IsValid(self) then return end
     if self:IsVehicle() then self:Fire("lock") end
 end
 
@@ -195,6 +203,7 @@ end
         vehicle:keysUnLock()
 ]]
 function entityMeta:keysUnLock()
+    if not IsValid(self) then return end
     if self:IsVehicle() then self:Fire("unlock") end
 end
 
@@ -215,6 +224,7 @@ end
         if owner then print("Owner found!") end
 ]]
 function entityMeta:getDoorOwner()
+    if not IsValid(self) then return nil end
     if self:IsVehicle() and self.CPPIGetOwner then return self:CPPIGetOwner() end
 end
 
@@ -236,6 +246,7 @@ end
         end
 ]]
 function entityMeta:isLocked()
+    if not IsValid(self) then return false end
     return self:getNetVar("locked", false)
 end
 
@@ -257,6 +268,7 @@ end
         end
 ]]
 function entityMeta:isDoorLocked()
+    if not IsValid(self) then return false end
     return self:GetInternalVariable("m_bLocked") or self.locked or false
 end
 
@@ -279,6 +291,7 @@ end
         local pos, ang = entity:getEntItemDropPos(128)
 ]]
 function entityMeta:getEntItemDropPos(offset)
+    if not IsValid(self) then return Vector(0, 0, 0), Angle(0, 0, 0) end
     if not offset then offset = 64 end
     local trResult = util.TraceLine({
         start = self:EyePos(),
@@ -311,6 +324,7 @@ end
         end
 ]]
 function entityMeta:isNearEntity(radius, otherEntity)
+    if not IsValid(self) then return false end
     if otherEntity == self then return true end
     if not radius then radius = 96 end
     for _, v in ipairs(ents.FindInSphere(self:GetPos(), radius)) do
@@ -337,6 +351,7 @@ end
         if creator then print("Creator found!") end
 ]]
 function entityMeta:GetCreator()
+    if not IsValid(self) then return nil end
     return self:getNetVar("creator", nil)
 end
 
@@ -357,6 +372,7 @@ if SERVER then
             entity:SetCreator(client)
     ]]
     function entityMeta:SetCreator(client)
+        if not IsValid(self) then return end
         self:setNetVar("creator", client)
     end
 
@@ -377,6 +393,7 @@ if SERVER then
             entity:sendNetVar("locked", client)
     ]]
     function entityMeta:sendNetVar(key, receiver)
+        if not IsValid(self) then return end
         net.Start("nVar")
         net.WriteUInt(self:EntIndex(), 16)
         net.WriteString(key)
@@ -404,6 +421,7 @@ if SERVER then
             entity:clearNetVars(client)
     ]]
     function entityMeta:clearNetVars(receiver)
+        if not IsValid(self) then return end
         lia.net[self] = nil
         net.Start("nDel")
         net.WriteUInt(self:EntIndex(), 16)
@@ -454,6 +472,7 @@ if SERVER then
             entity:setLocked(true)
     ]]
     function entityMeta:setLocked(state)
+        if not IsValid(self) then return end
         self:setNetVar("locked", state)
     end
 
@@ -473,6 +492,7 @@ if SERVER then
             entity:setKeysNonOwnable(true)
     ]]
     function entityMeta:setKeysNonOwnable(state)
+        if not IsValid(self) then return end
         self:setNetVar("noSell", state)
     end
 
@@ -494,7 +514,7 @@ if SERVER then
             end
     ]]
     function entityMeta:isDoor()
-        if not IsValid(self) then return end
+        if not IsValid(self) then return false end
         local class = self:GetClass():lower()
         local doorPrefixes = {"prop_door", "func_door", "func_door_rotating", "door_"}
         for _, prefix in ipairs(doorPrefixes) do
@@ -541,6 +561,7 @@ if SERVER then
             entity:setNetVar("locked", true)
     ]]
     function entityMeta:setNetVar(key, value, receiver)
+        if not IsValid(self) then return end
         if checkBadType(key, value) then return end
         lia.net[self] = lia.net[self] or {}
         local oldValue = lia.net[self][key]
@@ -569,6 +590,7 @@ if SERVER then
             local locked = entity:getNetVar("locked", false)
     ]]
     function entityMeta:getNetVar(key, default)
+        if not IsValid(self) then return default end
         if lia.net[self] and lia.net[self][key] ~= nil then return lia.net[self][key] end
         return default
     end
@@ -593,6 +615,7 @@ else
             end
     ]]
     function entityMeta:isDoor()
+        if not IsValid(self) then return false end
         return self:GetClass():find("door")
     end
 
@@ -613,6 +636,7 @@ else
             if partner then print("Partner door found!") end
     ]]
     function entityMeta:getDoorPartner()
+        if not IsValid(self) then return nil end
         local owner = self:GetOwner() or self.liaDoorOwner
         if IsValid(owner) and owner:isDoor() then return owner end
         for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
@@ -643,6 +667,7 @@ else
             local locked = entity:getNetVar("locked", false)
     ]]
     function entityMeta:getNetVar(key, default)
+        if not IsValid(self) then return default end
         local index = self:EntIndex()
         if lia.net[index] and lia.net[index][key] ~= nil then return lia.net[index][key] end
         return default

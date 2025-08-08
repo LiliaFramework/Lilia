@@ -4,27 +4,32 @@ MODULE.discord = "@liliaplayer"
 MODULE.desc = "moduleChatboxDesc"
 MODULE.Privileges = {
     {
-        Name = "noOOCCooldown",
+        Name = L("noOOCCooldown"),
+        ID = "noOOCCooldown",
         MinAccess = "admin",
         Category = "categoryChat",
     },
     {
-        Name = "adminChat",
+        Name = L("adminChat"),
+        ID = "adminChat",
         MinAccess = "admin",
         Category = "categoryChat",
     },
     {
-        Name = "localEventChat",
+        Name = L("localEventChat"),
+        ID = "localEventChat",
         MinAccess = "admin",
         Category = "categoryChat",
     },
     {
-        Name = "eventChat",
+        Name = L("eventChat"),
+        ID = "eventChat",
         MinAccess = "admin",
         Category = "categoryChat",
     },
     {
-        Name = "accessHelpChat",
+        Name = L("accessHelpChat"),
+        ID = "accessHelpChat",
         MinAccess = "superadmin",
         Category = "categoryChat",
     },

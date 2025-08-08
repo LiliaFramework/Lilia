@@ -79,7 +79,7 @@ hook.Add("SAM.CanRunCommand", "liaSAM", function(client, _, _, cmd)
             return false
         end
 
-        if client:hasPrivilege(client, L("canBypassSAMFactionWhitelist"), nil) or client:isStaffOnDuty() then
+        if client:hasPrivilege("canBypassSAMFactionWhitelist") or client:isStaffOnDuty() then
             return true
         else
             client:notifyLocalized("staffRestrictedCommand")
@@ -126,7 +126,7 @@ end
 
 local function CanReadNotifications(client)
     if not lia.config.get("AdminOnlyNotification", true) then return true end
-    return client:hasPrivilege(L("canSeeSAMNotificationsOutsideStaff")) or client:isStaffOnDuty()
+    return client:hasPrivilege("canSeeSAMNotificationsOutsideStaff") or client:isStaffOnDuty()
 end
 
 function sam.player.send_message(client, msg, tbl)
@@ -175,26 +175,28 @@ lia.command.add("cleardecals", {
 })
 
 lia.administrator.registerPrivilege({
-    Name = "canSeeSAMNotificationsOutsideStaff",
+    Name = L("canSeeSAMNotificationsOutsideStaff"),
+    ID = "canSeeSAMNotificationsOutsideStaff",
     MinAccess = "superadmin",
     Category = "categorySAM"
 })
 
 lia.administrator.registerPrivilege({
-    Name = "canBypassSAMFactionWhitelist",
+    Name = L("canBypassSAMFactionWhitelist"),
+    ID = "canBypassSAMFactionWhitelist",
     MinAccess = "superadmin",
     Category = "categorySAM"
 })
 
-lia.config.add("AdminOnlyNotification", L("adminOnlyNotifications"), true, nil, {
-    desc = L("adminOnlyNotificationsDesc"),
-    category = L("categorySAM"),
+lia.config.add("AdminOnlyNotification", "adminOnlyNotifications", true, nil, {
+    desc = "adminOnlyNotificationsDesc",
+    category = "categorySAM",
     type = "Boolean"
 })
 
-lia.config.add("SAMEnforceStaff", L("samEnforceStaff"), true, nil, {
-    desc = L("samEnforceStaffDesc"),
-    category = L("categorySAM"),
+lia.config.add("SAMEnforceStaff", "samEnforceStaff", true, nil, {
+    desc = "samEnforceStaffDesc",
+    category = "categorySAM",
     type = "Boolean"
 })
 

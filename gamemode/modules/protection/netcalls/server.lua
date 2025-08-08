@@ -502,7 +502,6 @@ local KnownExploits = {
     ["VoteKickNO"] = true,
     ["shopguild_buyitem"] = true,
     ["MG2.Request.GangRankings"] = true,
-    ["RequestMAPSize"] = true,
     ["gMining.sellMineral"] = true,
     ["ItemStoreDrop"] = true,
     ["optarrest"] = true,
@@ -529,7 +528,7 @@ function MODULE:InitializedModules()
             lia.log.add(client, "exploitAttempt", client:Name(), client:SteamID(), tostring(name))
             client:notifyLocalized("caughtExploiting")
             for _, p in player.Iterator() do
-                if p:isStaffOnDuty() or p:hasPrivilege(L("receiveCheaterNotifications")) then p:notifyLocalized("exploitAttempt", client:Name(), client:SteamID(), tostring(name)) end
+                if p:isStaffOnDuty() or p:hasPrivilege("receiveCheaterNotifications") then p:notifyLocalized("exploitAttempt", client:Name(), client:SteamID(), tostring(name)) end
             end
         end)
     end
@@ -548,7 +547,7 @@ function MODULE:InitializedModules()
             net.Receive(netName, function(_, client)
                 lia.log.add(client, "exploitAttempt", client:Name(), client:SteamID(), tostring(netName))
                 for _, p in player.Iterator() do
-                    if p:isStaffOnDuty() or p:hasPrivilege(L("receiveCheaterNotifications")) then p:notifyLocalized("exploitAttempt", client:Name(), client:SteamID(), tostring(netName)) end
+                    if p:isStaffOnDuty() or p:hasPrivilege("receiveCheaterNotifications") then p:notifyLocalized("exploitAttempt", client:Name(), client:SteamID(), tostring(netName)) end
                 end
             end)
         end

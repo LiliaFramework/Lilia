@@ -31,6 +31,7 @@ function serverguard.permission:Add(identifier, priv)
                 if lia.administrator and lia.administrator.registerPrivilege then
                     lia.administrator.registerPrivilege({
                         Name = identifier,
+                        ID = identifier,
                         MinAccess = "admin",
                         Category = "categoryServerGuard"
                     })

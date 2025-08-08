@@ -1,6 +1,7 @@
 ﻿local GM = GM or GAMEMODE
 lia.administrator.registerPrivilege({
-    Name = "useDisallowedTools",
+    Name = L("useDisallowedTools"),
+    ID = "useDisallowedTools",
     MinAccess = "superadmin",
     Category = "categoryStaffTools"
 })
@@ -42,7 +43,7 @@ function GM:CanProperty(client, property, entity)
     end
 
     if entity:GetCreator() == client and (property == "remover" or property == "collision") then return true end
-    if client:hasPrivilege(L("accessPropertyPrivilege", property:gsub("^%l", string.upper))) and client:isStaffOnDuty() then return true end
+    if client:hasPrivilege("property_" .. property) and client:isStaffOnDuty() then return true end
     lia.log.add(client, "permissionDenied", L("modifyProperty", property))
     client:notifyLocalized("noModifyProperty")
     return false
@@ -213,7 +214,7 @@ function GM:CanTool(client, trace, tool)
         return true
     end
 
-    if DisallowedTools[tool] and not client:hasPrivilege(L("useDisallowedTools")) then
+    if DisallowedTools[tool] and not client:hasPrivilege("useDisallowedTools") then
         lia.log.add(client, "toolDenied", tool)
         client:notifyLocalized("toolNotAllowed", tool)
         return false
@@ -221,7 +222,7 @@ function GM:CanTool(client, trace, tool)
 
     local formattedTool = tool:gsub("^%l", string.upper)
     local isStaffOrFlagged = client:isStaffOnDuty() or client:hasFlags("t")
-    local hasPriv = client:hasPrivilege(L("accessToolPrivilege", formattedTool))
+    local hasPriv = client:hasPrivilege("tool_" .. tool)
     if not (isStaffOrFlagged and hasPriv) then
         local reasons = {}
         if not isStaffOrFlagged then table.insert(reasons, L("onDutyStaffOrFlagT")) end

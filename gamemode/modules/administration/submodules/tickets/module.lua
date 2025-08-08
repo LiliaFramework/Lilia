@@ -5,7 +5,8 @@ MODULE.discord = "@liliaplayer"
 MODULE.desc = "moduleTicketsDesc"
 MODULE.Privileges = {
     {
-        Name = "alwaysSeeTickets",
+        Name = L("alwaysSeeTickets"),
+        ID = "alwaysSeeTickets",
         MinAccess = "superadmin",
         Category = "tickets",
     },

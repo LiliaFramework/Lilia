@@ -1306,7 +1306,7 @@ if SERVER then
 ]]
     function playerMeta:WhitelistAllClasses()
         for class, _ in pairs(lia.class.list) do
-            if lia.class.hasWhitelist(class) then self:classWhitelist(class) end
+            self:classWhitelist(class)
         end
     end
 

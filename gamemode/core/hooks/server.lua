@@ -1003,13 +1003,14 @@ concommand.Add("plysetgroup", function(ply, _, args)
 end)
 
 lia.administrator.registerPrivilege({
-    Name = "stopSoundForEveryone",
+    Name = L("stopSoundForEveryone"),
+    ID = "stopSoundForEveryone",
     MinAccess = "superadmin",
     Category = "categoryServer"
 })
 
 concommand.Add("stopsoundall", function(client)
-    if client:hasPrivilege(L("stopSoundForEveryone")) then
+    if client:hasPrivilege("stopSoundForEveryone") then
         for _, v in player.Iterator() do
             v:ConCommand("stopsound")
         end
@@ -1102,3 +1103,8 @@ hook.Add("server_removeban", "LiliaLogServerUnban", function(data)
     lia.admin(L("unbanLogFormat", data.networkid))
     lia.db.query("DELETE FROM lia_bans WHERE playerSteamID = " .. lia.db.convertDataType(data.networkid))
 end)
+
+local networkStrings = {"AdminModeSwapCharacter", "AnimationStatus", "ArgumentsRequest", "BinaryQuestionRequest", "ButtonRequest", "ChangeAttribute", "CharacterInfo", "CheckHack", "CheckSeed", "CreateTableUI", "CurTime-Sync", "CurTimeSync", "DisplayCharList", "ForceUpdateF1", "KickCharacter", "LIA_BigTable_Ack", "MyBigTableNetString", "NetStreamDS", "OpenInvMenu", "OptionsRequest", "RegenChat", "RequestDropdown", "RequestFactionRoster", "RequestRemoveWarning", "RunLocalOption", "RunOption", "ServerChatAddText", "SpawnMenuGiveItem", "SpawnMenuSpawnItem", "StringRequest", "TicketSystem", "TicketSystemClaim", "TicketSystemClose", "TransferMoneyFromP2P", "VendorAllowClass", "VendorAllowFaction", "VendorEdit", "VendorExit", "VendorFaction", "VendorMaxStock", "VendorMode", "VendorMoney", "VendorOpen", "VendorPrice", "VendorStock", "VendorSync", "VendorTrade", "VerifyCheats", "VerifyCheatsResponse", "ViewClaims", "WorkshopDownloader_Info", "WorkshopDownloader_Request", "WorkshopDownloader_Start", "actBar", "attrib", "blindFade", "blindTarget", "cMsg", "cfgList", "cfgSet", "charInfo", "charKick", "charSet", "charVar", "classUpdate", "cmd", "doorMenu", "doorPerm", "gVar", "invAct", "invData", "invQuantity", "item", "liaActiveTickets", "liaAllFlags", "liaAllPKs", "liaAllPlayers", "liaAllWarnings", "liaCharChoose", "liaCharCreate", "liaCharDelete", "liaCharFetchNames", "liaCharList", "liaCharacterData", "liaCharacterInvList", "liaCmdArgPrompt", "liaDBTableData", "liaDBTables", "liaData", "liaDataSync", "liaDatabaseViewData", "liaFactionRosterData", "liaFullCharList", "liaGroupPermChanged", "liaGroupsAdd", "liaGroupsRemove", "liaGroupsRename", "liaGroupsRequest", "liaGroupsSetPerm", "liaInventoryAdd", "liaInventoryData", "liaInventoryDelete", "liaInventoryInit", "liaInventoryRemove", "liaItemDelete", "liaItemInspect", "liaItemInstance", "liaModifyFlags", "liaNotify", "liaNotifyL", "liaPACPartAdd", "liaPACPartRemove", "liaPACPartReset", "liaPACSync", "liaPKsCount", "liaPlayerCharacters", "liaRequestActiveTickets", "liaRequestAllFlags", "liaRequestAllPKs", "liaRequestAllWarnings", "liaRequestDatabaseView", "liaRequestFactionRoster", "liaRequestFullCharList", "liaRequestPKsCount", "liaRequestPlayerCharacters", "liaRequestPlayers", "liaRequestStaffSummary", "liaRequestTableData", "liaRequestTicketsCount", "liaRequestWarningsCount", "liaStaffSummary", "liaStorageExit", "liaStorageOpen", "liaStorageTransfer", "liaStorageUnlock", "liaTeleportToEntity", "liaTicketsCount", "liaTransferItem", "liaWarningsCount", "lia_managesitrooms_action", "managesitrooms", "msg", "nDel", "nLcl", "nVar", "playerLoadedChar", "postPlayerLoadedChar", "prePlayerLoadedChar", "removeF1", "request_respawn", "rgnDone", "send_logs", "send_logs_request", "seqSet", "setWaypoint", "setWaypointWithLogo", "trunkInitStorage", "updateAdminGroups", "updateAdminPrivilegeIDs", "updateAdminPrivilegeMeta", "updateAdminPrivileges"}
+for _, netString in ipairs(networkStrings) do
+    util.AddNetworkString(netString)
+end

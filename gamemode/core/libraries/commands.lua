@@ -86,8 +86,10 @@ function lia.command.add(command, data)
 
     if superAdminOnly or adminOnly then
         local privilegeName = data.privilege and L(data.privilege) or L("accessTo", command)
+        local privilegeID = data.privilege or command
         lia.administrator.registerPrivilege({
             Name = privilegeName,
+            ID = privilegeID,
             MinAccess = superAdminOnly and "superadmin" or "admin",
             Category = "commands"
         })
@@ -163,13 +165,13 @@ end
 function lia.command.hasAccess(client, command, data)
     if not data then data = lia.command.list[command] end
     if not data then return false, "unknown" end
-    local privilegeKey = data.privilege
+    local privilegeID = data.privilege or command
     local superAdminOnly = data.superAdminOnly
     local adminOnly = data.adminOnly
     local accessLevels = superAdminOnly and "superadmin" or adminOnly and "admin" or "user"
-    local privilegeName = privilegeKey and L(privilegeKey) or accessLevels == "user" and L("globalAccess") or L("accessTo", command)
+    local privilegeName = data.privilege and L(data.privilege) or accessLevels == "user" and L("globalAccess") or L("accessTo", command)
     local hasAccess = true
-    if accessLevels ~= "user" then hasAccess = client:hasPrivilege(privilegeName) end
+    if accessLevels ~= "user" then hasAccess = client:hasPrivilege(privilegeID) end
     local hookResult = hook.Run("CanPlayerUseCommand", client, command)
     if hookResult ~= nil then return hookResult, privilegeName end
     local char = IsValid(client) and client.getChar and client:getChar()

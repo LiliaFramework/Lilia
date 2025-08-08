@@ -76,12 +76,6 @@ local function CreateVoicePanelList()
     g_VoicePanelList:SetSize(270, ScrH() - 200)
     g_VoicePanelList:SetPos(ScrW() - 320, 100)
     g_VoicePanelList:SetPaintBackground(false)
-    function g_VoicePanelList:Paint(w, h)
-        local pnl = VoicePanels[LocalPlayer()]
-        if not IsValid(pnl) then return end
-        local vt = LocalPlayer():getNetVar("VoiceType", L("talking"))
-        draw.SimpleText(L("voiceModeStatus", vt), "liaMediumFont", w / 2, h, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
-    end
 end
 
 timer.Create("VoiceClean", 1, 0, function()

@@ -25,12 +25,32 @@ local subMenuIcons = {
     adminStickSubCategoryBans = "icon16/lock.png",
     adminStickSubCategoryGetInfos = "icon16/magnifier.png",
     adminStickSubCategorySetInfos = "icon16/pencil.png",
+    setFactionTitle = "icon16/group.png",
+    adminStickSetClassName = "icon16/user.png",
+    adminStickFactionWhitelistName = "icon16/group_add.png",
+    adminStickUnwhitelistName = "icon16/group_delete.png",
+    adminStickClassWhitelistName = "icon16/user_add.png",
+    adminStickClassUnwhitelistName = "icon16/user_delete.png",
 }
+
+local function GetSubMenuIcon(name)
+    if subMenuIcons[name] then return subMenuIcons[name] end
+    local baseKey = name:match("^([^%(]+)") or name
+    baseKey = baseKey:gsub("^%s*(.-)%s*$", "%1")
+    if subMenuIcons[baseKey] then return subMenuIcons[baseKey] end
+    if subMenuIcons[L(name)] then return subMenuIcons[L(name)] end
+    local setFactionLocalized = L("setFactionTitle"):match("^([^%(]+)") or L("setFactionTitle")
+    setFactionLocalized = setFactionLocalized:gsub("^%s*(.-)%s*$", "%1") -- Trim whitespace
+    if name:find(setFactionLocalized, 1, true) == 1 then return subMenuIcons["setFactionTitle"] end
+    if name:find("Set Faction", 1, true) == 1 then return subMenuIcons["setFactionTitle"] end
+    return nil
+end
 
 local function GetOrCreateSubMenu(parent, name, store)
     if not store[name] then
         local menu, panel = parent:AddSubMenu(L(name))
-        if subMenuIcons[name] then panel:SetIcon(subMenuIcons[name]) end
+        local icon = GetSubMenuIcon(name)
+        if icon then panel:SetIcon(icon) end
         store[name] = menu
     end
     return store[name]
@@ -381,18 +401,16 @@ local function IncludeCharacterManagement(tgt, menu, stores)
                 if classes and #classes > 0 then
                     local cw, cu = {}, {}
                     for _, c in ipairs(classes) do
-                        if lia.class.hasWhitelist(c.index) then
-                            if not tgt:hasClassWhitelist(c.index) then
-                                table.insert(cw, {
-                                    name = c.name,
-                                    cmd = 'say /classwhitelist ' .. QuoteArgs(GetIdentifier(tgt), c.uniqueID)
-                                })
-                            else
-                                table.insert(cu, {
-                                    name = c.name,
-                                    cmd = 'say /classunwhitelist ' .. QuoteArgs(GetIdentifier(tgt), c.uniqueID)
-                                })
-                            end
+                        if not tgt:hasClassWhitelist(c.index) then
+                            table.insert(cw, {
+                                name = c.name,
+                                cmd = 'say /classwhitelist ' .. QuoteArgs(GetIdentifier(tgt), c.uniqueID)
+                            })
+                        else
+                            table.insert(cu, {
+                                name = c.name,
+                                cmd = 'say /classunwhitelist ' .. QuoteArgs(GetIdentifier(tgt), c.uniqueID)
+                            })
                         end
                     end
 

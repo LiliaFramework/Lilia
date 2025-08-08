@@ -559,22 +559,22 @@ if CLIENT then
     hook.Add("RefreshFonts", "liaFontsRefresh", lia.font.refresh)
 end
 
-lia.config.add("Font", L("font"), "PoppinsMedium", function()
+lia.config.add("Font", "font", "PoppinsMedium", function()
     if not CLIENT then return end
     hook.Run("RefreshFonts")
 end, {
-    desc = L("fontDesc"),
-    category = L("categoryFonts"),
+    desc = "fontDesc",
+    category = "categoryFonts",
     type = "Table",
     options = CLIENT and lia.font.getAvailableFonts() or {"PoppinsMedium"}
 })
 
-lia.config.add("GenericFont", L("genericFont"), "PoppinsMedium", function()
+lia.config.add("GenericFont", "genericFont", "PoppinsMedium", function()
     if not CLIENT then return end
     hook.Run("RefreshFonts")
 end, {
-    desc = L("genericFontDesc"),
-    category = L("categoryFonts"),
+    desc = "genericFontDesc",
+    category = "categoryFonts",
     type = "Table",
     options = CLIENT and lia.font.getAvailableFonts() or {"PoppinsMedium"}
 })

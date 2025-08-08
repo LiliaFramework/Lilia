@@ -27,6 +27,8 @@ lia.administrator = lia.administrator or {}
 lia.administrator.groups = lia.administrator.groups or {}
 lia.administrator.privileges = lia.administrator.privileges or {}
 lia.administrator.privMeta = lia.administrator.privMeta or {}
+lia.administrator.privIDs = lia.administrator.privIDs or {}
+lia.administrator.missingGroups = lia.administrator.missingGroups or {}
 lia.administrator.DefaultGroups = {
     user = 1,
     admin = 2,
@@ -171,10 +173,17 @@ function lia.administrator.hasAccess(ply, privilege)
         end
     end
 
+    local name = lia.administrator.privIDs and lia.administrator.privIDs[privilege] or privilege
+    if not (lia.administrator.privileges and lia.administrator.privileges[name]) then
+        lia.information(L("privilegeNotExist", name))
+        if IsValid(ply) and ply.notifyLocalized then ply:notifyLocalized("privilegeNotExist", name) end
+        return getGroupLevel(grp) >= (lia.administrator.DefaultGroups.superadmin or 3)
+    end
+
     if getGroupLevel(grp) >= (lia.administrator.DefaultGroups.superadmin or 3) then return true end
     local g = lia.administrator.groups and lia.administrator.groups[grp] or nil
-    if g and g[privilege] == true then return true end
-    local min = lia.administrator.privileges and lia.administrator.privileges[privilege] or "user"
+    if g and g[name] == true then return true end
+    local min = lia.administrator.privileges[name]
     return shouldGrant(grp, min)
 end
 
@@ -186,7 +195,8 @@ end
 
     Parameters:
         priv (table) - A table describing the privilege. Should contain:
-            Name (string) - The name of the privilege.
+            Name (string) - Localized name shown in privilege lists.
+            ID (string) - Unique identifier used when checking permissions.
             MinAccess (string) - (Optional) The minimum usergroup required to have this privilege (default: "user").
             Category (string) - (Optional) The category for the privilege.
 
@@ -199,29 +209,37 @@ end
     Example Usage:
         -- Register a new privilege "canFly" for admins and above
         lia.administrator.registerPrivilege({
-            Name = "canFly",
+            Name = L("canFly"),
+            ID = "canFly",
             MinAccess = "admin",
             Category = "Fun"
         })
 ]]
 function lia.administrator.registerPrivilege(priv)
     if not priv or not priv.Name then return end
-    local name = L(priv.Name)
+    if not priv.ID then
+        lia.error("Privilege '" .. tostring(priv.Name) .. "' is missing an ID")
+        return
+    end
+
+    local name = tostring(priv.Name)
     if name == "" then return end
     if lia.administrator.privileges[name] ~= nil then return end
     local min = tostring(priv.MinAccess or "user"):lower()
     lia.administrator.privileges[name] = min
     local category = L(priv.Category or "unassigned")
     lia.administrator.privMeta[name] = category
+    lia.administrator.privIDs[priv.ID] = name
     for groupName, perms in pairs(lia.administrator.groups) do
         perms = perms or {}
         lia.administrator.groups[groupName] = perms
         if shouldGrant(groupName, min) then perms[name] = true end
     end
 
-    if CAMI then camiRegisterPrivilege(name, min) end
+    if CAMI then camiRegisterPrivilege(priv.ID, min) end
     hook.Run("OnPrivilegeRegistered", {
         Name = name,
+        ID = priv.ID,
         MinAccess = min,
         Category = category
     })
@@ -248,18 +266,32 @@ end
         -- Remove the "canFly" privilege from all groups
         lia.administrator.unregisterPrivilege("canFly")
 ]]
-function lia.administrator.unregisterPrivilege(name)
-    name = tostring(name or "")
+function lia.administrator.unregisterPrivilege(id)
+    id = tostring(id or "")
+    local name = lia.administrator.privIDs and lia.administrator.privIDs[id] or id
     if name == "" or lia.administrator.privileges[name] == nil then return end
     lia.administrator.privileges[name] = nil
     lia.administrator.privMeta[name] = nil
+    if lia.administrator.privIDs[id] then
+        lia.administrator.privIDs[id] = nil
+    else
+        for k, v in pairs(lia.administrator.privIDs) do
+            if v == name then
+                lia.administrator.privIDs[k] = nil
+                id = k
+                break
+            end
+        end
+    end
+
     for _, perms in pairs(lia.administrator.groups or {}) do
         perms[name] = nil
     end
 
-    if CAMI then CAMI.UnregisterPrivilege(name) end
+    if CAMI then CAMI.UnregisterPrivilege(id) end
     hook.Run("OnPrivilegeUnregistered", {
-        Name = name
+        Name = name,
+        ID = id
     })
 
     if SERVER then lia.administrator.save() end
@@ -462,6 +494,7 @@ function lia.administrator.createGroup(groupName, info)
     }
 
     lia.administrator.groups[groupName] = info
+    lia.administrator.missingGroups[groupName] = nil
     lia.administrator.applyInheritance(groupName)
     camiRegisterUsergroup(groupName, info._info.inheritance or "user")
     hook.Run("OnUsergroupCreated", groupName, lia.administrator.groups[groupName])
@@ -494,7 +527,7 @@ function lia.administrator.removeGroup(groupName)
     end
 
     if not lia.administrator.groups[groupName] then
-        lia.error(L("usergroupDoesntExist"))
+        lia.error(L("usergroupDoesntExist", groupName))
         return
     end
 
@@ -531,7 +564,7 @@ function lia.administrator.renameGroup(oldName, newName)
     end
 
     if not lia.administrator.groups[oldName] then
-        lia.error(L("usergroupDoesntExist"))
+        lia.error(L("usergroupDoesntExist", oldName))
         return
     end
 
@@ -542,6 +575,8 @@ function lia.administrator.renameGroup(oldName, newName)
 
     lia.administrator.groups[newName] = lia.administrator.groups[oldName]
     lia.administrator.groups[oldName] = nil
+    lia.administrator.missingGroups[oldName] = nil
+    lia.administrator.missingGroups[newName] = nil
     lia.administrator.applyInheritance(newName)
     camiUnregisterUsergroup(oldName)
     local inh = lia.administrator.groups[newName]._info and lia.administrator.groups[newName]._info.inheritance or "user"
@@ -575,7 +610,10 @@ if SERVER then
     function lia.administrator.addPermission(groupName, permission, silent)
         if not lia.administrator.groups[groupName] then
             if lia.administrator._loading then return end
-            lia.error(L("usergroupDoesntExist"))
+            if not lia.administrator.missingGroups[groupName] then
+                lia.administrator.missingGroups[groupName] = true
+                lia.error(L("usergroupDoesntExist", groupName))
+            end
             return
         end
 
@@ -609,7 +647,10 @@ if SERVER then
     function lia.administrator.removePermission(groupName, permission, silent)
         if not lia.administrator.groups[groupName] then
             if lia.administrator._loading then return end
-            lia.error(L("usergroupDoesntExist"))
+            if not lia.administrator.missingGroups[groupName] then
+                lia.administrator.missingGroups[groupName] = true
+                lia.error(L("usergroupDoesntExist", groupName))
+            end
             return
         end
 
@@ -651,6 +692,7 @@ if SERVER then
             if not lia.net.ready[ply] then return end
             lia.net.writeBigTable(ply, "updateAdminPrivileges", lia.administrator.privileges or {})
             timer.Simple(0.05, function() if IsValid(ply) and lia.net.ready[ply] then lia.net.writeBigTable(ply, "updateAdminPrivilegeMeta", lia.administrator.privMeta or {}) end end)
+            timer.Simple(0.1, function() if IsValid(ply) and lia.net.ready[ply] then lia.net.writeBigTable(ply, "updateAdminPrivilegeIDs", lia.administrator.privIDs or {}) end end)
             timer.Simple(0.15, function() if IsValid(ply) and lia.net.ready[ply] then lia.net.writeBigTable(ply, "updateAdminGroups", lia.administrator.groups or {}) end end)
         end
 
@@ -1337,6 +1379,7 @@ else
         lia.administrator.privMeta = tbl or {}
         if IsValid(lia.gui.usergroups) and lia.administrator.groups then buildGroupsUI(lia.gui.usergroups, lia.administrator.groups) end
     end)
+    lia.net.readBigTable("updateAdminPrivilegeIDs", function(tbl) lia.administrator.privIDs = tbl end)
 
     net.Receive("liaGroupPermChanged", function()
         local group = net.ReadString()

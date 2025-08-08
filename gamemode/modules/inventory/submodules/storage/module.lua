@@ -4,7 +4,8 @@ MODULE.discord = "@liliaplayer"
 MODULE.desc = "moduleStorageDesc"
 MODULE.Privileges = {
     {
-        Name = "canSpawnStorage",
+        Name = L("canSpawnStorage"),
+        ID = "canSpawnStorage",
         MinAccess = "superadmin",
         Category = "categorySpawnStorage",
     }

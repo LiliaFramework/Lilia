@@ -247,7 +247,7 @@ lia.command.add("classwhitelist", {
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
-        elseif not classID or not lia.class.hasWhitelist(classID) then
+        elseif not classID then
             client:notifyLocalized("invalidClass")
             return
         end
@@ -293,7 +293,7 @@ lia.command.add("classunwhitelist", {
         if not target or not IsValid(target) then
             client:notifyLocalized("targetNotFound")
             return
-        elseif not classID or not lia.class.hasWhitelist(classID) then
+        elseif not classID then
             client:notifyLocalized("invalidClass")
             return
         end
