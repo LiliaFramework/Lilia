@@ -166,13 +166,13 @@ end
     hasFlags
 
     Purpose:
-        Checks if the character has any of the specified flags.
+        Checks if the character has any of the specified flags. This function checks both character flags and player flags, returning true if the flag is found in either.
 
     Parameters:
         flagStr (string) - A string of flag characters to check.
 
     Returns:
-        boolean - True if the character has any of the specified flags, false otherwise.
+        boolean - True if the character or player has at least one of the specified flags, false otherwise.
 
     Realm:
         Shared.
@@ -184,8 +184,11 @@ end
 ]]
 function characterMeta:hasFlags(flagStr)
     local flags = self:getFlags()
+    local ply = self:getPlayer()
+    local playerFlags = ply and ply:getPlayerFlags() or ""
     for i = 1, #flagStr do
-        if flags:find(flagStr:sub(i, i), 1, true) then return true end
+        local flag = flagStr:sub(i, i)
+        if flags:find(flag, 1, true) or playerFlags:find(flag, 1, true) then return true end
     end
     return false
 end

@@ -36,8 +36,8 @@ function MODULE:HUDPaint()
         elseif lia.option.get("espUnconfiguredDoors", false) and ent:isDoor() then
             local vars = lia.net and lia.net[ent:EntIndex()]
             if not vars or next(vars) == nil then
-                kind = L("door")
-                label = L("door")
+                kind = L("doorUnconfigured")
+                label = L("doorUnconfigured")
                 baseColor = lia.option.get("espUnconfiguredDoorsColor")
             end
         end

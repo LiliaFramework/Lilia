@@ -68,7 +68,6 @@ net.Receive("liaWarningsCount", function()
     local count = net.ReadInt(32)
     if count > 0 and not warningsTabAdded then
         warningsTabAdded = true
-        -- Only add the tab if there are warnings
         hook.Add("PopulateAdminTabs", "liaWarningsTab", function(pages)
             if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege(L("viewPlayerWarnings")) then return end
             table.insert(pages, {
@@ -84,9 +83,8 @@ net.Receive("liaWarningsCount", function()
     end
 end)
 
-function MODULE:PopulateAdminTabs(pages)
+function MODULE:PopulateAdminTabs()
     if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege(L("viewPlayerWarnings")) then return end
-    -- Request the count first to determine if we should add the tab
     net.Start("liaRequestWarningsCount")
     net.SendToServer()
 end

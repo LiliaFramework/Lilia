@@ -1071,36 +1071,7 @@ end)
 
 ---
 
-### ChatTextChanged
 
-**Purpose**
-
-Runs whenever the chat entry text is modified. Called whenever the chat entry text changes.
-
-**Parameters**
-
-- `text` (`string`): Current text.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Displays a hint when the user types "/help".
-hook.Add("ChatTextChanged", "CommandHint", function(text)
-    if text == "/help" then
-        chat.AddText("Type /commands for commands list")
-    end
-end)
-```
-
----
 
 ### FinishChat
 
@@ -10393,36 +10364,7 @@ end)
 
 ---
 
-### PlayerSay
 
-**Purpose**
-
-Custom hook executed when a player sends a chat message server-side.
-
-**Parameters**
-
-- `client` (`Player`): Speaking player.
-
-- `text` (`string`): Message content.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Prints a message when PlayerSay is triggered
-hook.Add("PlayerSay", "LogChat", function(ply, msg)
-    print(ply:Name() .. ": " .. msg)
-end)
-```
-
----
 
 ### PopulateAdminStick
 

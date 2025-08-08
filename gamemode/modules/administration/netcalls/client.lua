@@ -389,76 +389,118 @@ local function OpenRoster(panel, data)
         local page = sheet:Add("DPanel")
         page:Dock(FILL)
         page:DockPadding(10, 10, 10, 10)
-        local search = page:Add("DTextEntry")
-        search:Dock(TOP)
-        search:SetPlaceholderText(L("search"))
-        search:SetTextColor(Color(255, 255, 255))
-        local list = page:Add("DListView")
-        list:Dock(FILL)
-        list:SetMultiSelect(false)
-        list:AddColumn(L("name"))
-        list:AddColumn(L("steamID"))
-        list:AddColumn(L("class"))
-        list:AddColumn(L("characterPlaytime"))
-        list:AddColumn(L("lastOnline"))
-        local function populate(filter)
-            list:Clear()
-            filter = string.lower(filter or "")
+        local rosterSheet = page:Add("liaSheet")
+        rosterSheet:Dock(FILL)
+        rosterSheet:SetPlaceholderText(L("search"))
+        local function populate()
+            rosterSheet:Clear()
             for _, member in ipairs(membersData) do
-                if filter == "" or string.lower(member.name):find(filter, 1, true) then
-                    local line = list:AddLine(member.name, member.steamID or "", member.class or L("none"), member.playTime or "", member.lastOnline or "")
-                    line.rowData = member
+                local title = member.name or L("unnamed")
+                local desc = string.format("%s | %s | %s", member.steamID or L("na"), member.class or L("none"), member.playTime or L("na"))
+                local right = member.lastOnline or L("na")
+                local classData = member.classID and lia.class.list[member.classID]
+                local hasLogo = classData and classData.logo and classData.logo ~= ""
+                local row
+                if hasLogo then
+                    row = rosterSheet:AddRow(function(p, rowPanel)
+                        local logoSize = 64
+                        local margin = 8
+                        local rowHeight = logoSize + rosterSheet.padding * 2
+                        local logo = vgui.Create("DImage", p)
+                        logo:SetSize(logoSize, logoSize)
+                        logo:SetMaterial(Material(classData.logo))
+                        logo:SetPos(margin, margin)
+                        local t = vgui.Create("DLabel", p)
+                        t:SetFont("liaMediumFont")
+                        t:SetText(title)
+                        t:SizeToContents()
+                        t:SetPos(margin + logoSize + margin, margin)
+                        local d = vgui.Create("DLabel", p)
+                        d:SetFont("liaSmallFont")
+                        d:SetWrap(true)
+                        d:SetAutoStretchVertical(true)
+                        d:SetText(desc)
+                        d:SetPos(margin + logoSize + margin, margin + t:GetTall() + 5)
+                        local r = vgui.Create("DLabel", p)
+                        r:SetFont("liaSmallFont")
+                        r:SetText(right)
+                        r:SizeToContents()
+                        p.PerformLayout = function()
+                            local pad = rosterSheet.padding
+                            local spacing = 5
+                            logo:SetPos(pad, pad)
+                            t:SetPos(pad + logoSize + pad, pad)
+                            d:SetPos(pad + logoSize + pad, pad + t:GetTall() + spacing)
+                            d:SetWide(p:GetWide() - (pad + logoSize + pad) - pad - (r:GetWide() + 10))
+                            d:SizeToContentsY()
+                            if r then
+                                local y = d and pad + t:GetTall() + spacing + d:GetTall() - r:GetTall() or p:GetTall() * 0.5 - r:GetTall() * 0.5
+                                r:SetPos(p:GetWide() - r:GetWide() - pad, math.max(pad, y))
+                            end
+
+                            local textH = pad + t:GetTall() + spacing + d:GetTall() + pad
+                            p:SetTall(math.max(rowHeight, textH))
+                        end
+
+                        rowPanel.filterText = (title .. " " .. desc .. " " .. right):lower()
+                    end)
+                else
+                    row = rosterSheet:AddTextRow({
+                        title = title,
+                        desc = desc,
+                        right = right,
+                        minHeight = rosterSheet.padding * 2 + 64
+                    })
                 end
-            end
-        end
 
-        search.OnChange = function() populate(search:GetValue()) end
-        populate("")
-        function list:OnRowRightClick(_, line)
-            if not IsValid(line) or not line.rowData then return end
-            local parentList = self
-            local steamID = line.rowData.steamID
-            local function buildMenu(menu, ln, sID)
-                if sID and sID ~= "" and LocalPlayer():hasPrivilege(L("canManageFactions")) and not isDefaultFaction then
-                    menu:AddOption(L("kick"), function()
-                        Derma_Query(L("kickConfirm"), L("confirm"), L("yes"), function()
-                            net.Start("KickCharacter")
-                            net.WriteInt(ln.rowData.id, 32)
-                            net.SendToServer()
-                        end, L("no"))
-                    end):SetIcon("icon16/user_delete.png")
+                row.rowData = member
+                row.filterText = (title .. " " .. desc .. " " .. right):lower()
+                row.OnRightClick = function()
+                    if not IsValid(row) or not row.rowData then return end
+                    local rowData = row.rowData
+                    local steamID = rowData.steamID
+                    local menu = DermaMenu()
+                    if steamID and steamID ~= "" and LocalPlayer():hasPrivilege(L("canManageFactions")) and not isDefaultFaction then
+                        menu:AddOption(L("kick"), function()
+                            Derma_Query(L("kickConfirm"), L("confirm"), L("yes"), function()
+                                net.Start("KickCharacter")
+                                net.WriteInt(rowData.id, 32)
+                                net.SendToServer()
+                            end, L("no"))
+                        end):SetIcon("icon16/user_delete.png")
 
-                    if lia.command.hasAccess(LocalPlayer(), "charlist") then menu:AddOption(L("viewCharacterList"), function() LocalPlayer():ConCommand("say /charlist " .. sID) end):SetIcon("icon16/page_copy.png") end
-                end
-
-                menu:AddOption(L("copyRow"), function()
-                    local rowString = ""
-                    for i, column in ipairs(parentList.Columns or {}) do
-                        local header = column.Header and column.Header:GetText() or L("columnWithNumber", i)
-                        local value = ln:GetColumnText(i) or ""
-                        rowString = rowString .. header .. " " .. value .. " | "
+                        if lia.command.hasAccess(LocalPlayer(), "charlist") then menu:AddOption(L("viewCharacterList"), function() LocalPlayer():ConCommand("say /charlist " .. steamID) end):SetIcon("icon16/page_copy.png") end
                     end
 
-                    SetClipboardText(string.sub(rowString, 1, -4))
-                end):SetIcon("icon16/page_copy.png")
+                    menu:AddOption(L("copyRow"), function()
+                        local rowString = ""
+                        for key, value in pairs(rowData) do
+                            value = tostring(value or L("na"))
+                            rowString = rowString .. key:gsub("^%l", string.upper) .. ": " .. value .. " | "
+                        end
 
-                menu:AddOption(L("copyName"), function()
-                    local name = ln.rowData and ln.rowData.name or ln:GetColumnText(1) or ""
-                    SetClipboardText(name)
-                end):SetIcon("icon16/page_copy.png")
+                        rowString = rowString:sub(1, -4)
+                        SetClipboardText(rowString)
+                    end):SetIcon("icon16/page_copy.png")
 
-                if sID and sID ~= "" then
-                    menu:AddOption(L("copySteamID"), function() SetClipboardText(sID) end):SetIcon("icon16/page_copy.png")
-                    menu:AddOption(L("openSteamProfile"), function() gui.OpenURL("https://steamcommunity.com/profiles/" .. util.SteamIDTo64(sID)) end):SetIcon("icon16/world.png")
+                    menu:AddOption(L("copyName"), function()
+                        local name = rowData.name or ""
+                        SetClipboardText(name)
+                    end):SetIcon("icon16/page_copy.png")
+
+                    if steamID and steamID ~= "" then
+                        menu:AddOption(L("copySteamID"), function() SetClipboardText(steamID) end):SetIcon("icon16/page_copy.png")
+                        menu:AddOption(L("openSteamProfile"), function() gui.OpenURL("https://steamcommunity.com/profiles/" .. util.SteamIDTo64(steamID)) end):SetIcon("icon16/world.png")
+                    end
+
+                    menu:Open()
                 end
             end
 
-            local menu = DermaMenu()
-            buildMenu(menu, line, steamID or "")
-            local x, y = gui.MousePos()
-            menu:Open(x, y)
+            rosterSheet:Refresh()
         end
 
+        populate()
         sheet:AddSheet(factionName, page)
     end
 end

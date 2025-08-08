@@ -89,7 +89,7 @@ net.Receive("liaRequestFactionRoster", function(_, client)
     if not IsValid(client) or not client:hasPrivilege(L("canManageFactions")) then return end
     local data = {}
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local fields = table.concat({"lia_characters.name", "lia_characters.id", "lia_characters.steamID", "lia_characters.playtime", "lia_characters.lastJoinTime", "lia_characters._class", "lia_characters.faction", "lia_players.lastOnline"}, ",")
+    local fields = table.concat({"lia_characters.name", "lia_characters.id", "lia_characters.steamID", "lia_characters.playtime", "lia_characters.lastJoinTime", "lia_characters.class", "lia_characters.faction", "lia_players.lastOnline"}, ",")
     local condition = "lia_characters.schema = '" .. lia.db.escape(gamemode) .. "'"
     local query = "SELECT " .. fields .. " FROM lia_characters LEFT JOIN lia_players ON lia_characters.steamID = lia_players.steamID WHERE " .. condition
     lia.db.query(query, function(result)
@@ -109,7 +109,7 @@ net.Receive("liaRequestFactionRoster", function(_, client)
                     lastOnlineText = L("agoFormat", timeStripped, lia.time.formatDHM(lastDiff))
                 end
 
-                local classID = tonumber(v._class) or 0
+                local classID = tonumber(v.class) or 0
                 local classData = lia.class.list[classID]
                 local playTime = tonumber(v.playtime) or 0
                 if isOnline then
@@ -128,6 +128,7 @@ net.Receive("liaRequestFactionRoster", function(_, client)
                         id = charID,
                         steamID = v.steamID,
                         class = classData and classData.name or L("none"),
+                        classID = classID,
                         playTime = lia.time.formatDHM(playTime),
                         lastOnline = lastOnlineText
                     })

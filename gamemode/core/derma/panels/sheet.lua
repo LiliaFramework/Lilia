@@ -73,6 +73,7 @@ function PANEL:AddTextRow(data)
     local desc = data.desc or ""
     local right = data.right or ""
     local compact = data.compact
+    local minHeight = data.minHeight or compact and 30 or 40
     local row = self:AddRow(function(p, row)
         local titleFont = compact and "liaSmallFont" or "liaMediumFont"
         local descFont = compact and "liaMiniFont" or "liaSmallFont"
@@ -113,9 +114,8 @@ function PANEL:AddTextRow(data)
                 r:SetPos(p:GetWide() - r:GetWide() - pad, math.max(pad, y))
             end
 
-            local baseMin = compact and 30 or 40
-            local h = d and pad + t:GetTall() + spacing + d:GetTall() + pad or math.max(baseMin, pad + t:GetTall() + pad)
-            p:SetTall(h)
+            local textH = pad + t:GetTall() + (d and spacing + d:GetTall() or 0) + pad
+            p:SetTall(math.max(minHeight, textH))
         end
 
         row.filterText = (title .. " " .. desc .. " " .. right):lower()

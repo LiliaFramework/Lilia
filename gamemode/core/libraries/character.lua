@@ -374,7 +374,7 @@ lia.char.registerVar("bodygroups", {
 })
 
 lia.char.registerVar("class", {
-    field = "_class",
+    field = "class",
     fieldType = "integer",
     default = 0,
     noDisplay = true,

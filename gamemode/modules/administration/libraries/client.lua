@@ -437,19 +437,16 @@ function MODULE:PopulateAdminTabs(pages)
     end
 
     if client:hasPrivilege(L("manageCharacters")) then
-        -- Request the count first to determine if we should add the tab
         net.Start("liaRequestPKsCount")
         net.SendToServer()
     end
 end
 
--- Add net message handler for PKs count
 local pksTabAdded = false
 net.Receive("liaPKsCount", function()
     local count = net.ReadInt(32)
     if count > 0 and not pksTabAdded then
         pksTabAdded = true
-        -- Only add the tab if there are PKs
         hook.Add("PopulateAdminTabs", "liaPKsTab", function(pages)
             local client = LocalPlayer()
             if not IsValid(client) or not client:hasPrivilege(L("manageCharacters")) then return end

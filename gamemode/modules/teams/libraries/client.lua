@@ -36,7 +36,6 @@ function MODULE:CreateInformationButtons(pages)
                 roster:Dock(FILL)
                 lia.gui.roster = roster
                 lia.gui.currentRosterType = "faction"
-                -- Ensure proper sizing after creation
                 timer.Simple(0.1, function()
                     if IsValid(roster) and IsValid(parent) then
                         roster:InvalidateLayout(true)
@@ -51,36 +50,6 @@ function MODULE:CreateInformationButtons(pages)
                     lia.gui.roster:SetRosterType("faction")
                     lia.gui.currentRosterType = "faction"
                     net.Start("RequestFactionRoster")
-                    net.SendToServer()
-                end
-            end
-        })
-    end
-
-    if character:hasFlags("W") then
-        table.insert(pages, {
-            name = L("classRoster"),
-            drawFunc = function(parent)
-                local roster = vgui.Create("liaRoster", parent)
-                roster:SetRosterType("class")
-                roster:Dock(FILL)
-                lia.gui.roster = roster
-                lia.gui.currentRosterType = "class"
-                -- Ensure proper sizing after creation
-                timer.Simple(0.1, function()
-                    if IsValid(roster) and IsValid(parent) then
-                        roster:InvalidateLayout(true)
-                        parent:InvalidateLayout(true)
-                        roster:SizeToChildren(false, true)
-                        parent:SizeToChildren(false, true)
-                    end
-                end)
-            end,
-            onSelect = function()
-                if IsValid(lia.gui.roster) then
-                    lia.gui.roster:SetRosterType("class")
-                    lia.gui.currentRosterType = "class"
-                    net.Start("RequestClassRoster")
                     net.SendToServer()
                 end
             end

@@ -4,7 +4,8 @@
     desc = "restockVendorDesc",
     AdminStick = {
         Name = "restockVendorStickName",
-        TargetClass = "lia_vendor"
+        TargetClass = "lia_vendor",
+        Icon = "icon16/box.png"
     },
     onRun = function(client)
         local target = client:getTracedEntity()
@@ -58,7 +59,8 @@ lia.command.add("resetallvendormoney", {
     },
     AdminStick = {
         Name = "resetAllVendorMoneyStickName",
-        TargetClass = "lia_vendor"
+        TargetClass = "lia_vendor",
+        Icon = "icon16/money_delete.png"
     },
     onRun = function(client, arguments)
         local amount = tonumber(arguments[1])
@@ -89,7 +91,8 @@ lia.command.add("restockvendormoney", {
     },
     AdminStick = {
         Name = "restockVendorMoneyStickName",
-        TargetClass = "lia_vendor"
+        TargetClass = "lia_vendor",
+        Icon = "icon16/money_add.png"
     },
     onRun = function(client, arguments)
         local target = client:getTracedEntity()

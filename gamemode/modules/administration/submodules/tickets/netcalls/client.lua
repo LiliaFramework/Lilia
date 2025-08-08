@@ -87,7 +87,6 @@ net.Receive("liaTicketsCount", function()
     local count = net.ReadInt(32)
     if count > 0 and not ticketsTabAdded then
         ticketsTabAdded = true
-        -- Only add the tab if there are tickets
         hook.Add("PopulateAdminTabs", "liaTicketsTab", function(pages)
             if not IsValid(LocalPlayer()) or not (LocalPlayer():hasPrivilege(L("alwaysSeeTickets")) or LocalPlayer():isStaffOnDuty()) then return end
             table.insert(pages, {
@@ -103,9 +102,8 @@ net.Receive("liaTicketsCount", function()
     end
 end)
 
-function MODULE:PopulateAdminTabs(pages)
+function MODULE:PopulateAdminTabs()
     if not IsValid(LocalPlayer()) or not (LocalPlayer():hasPrivilege(L("alwaysSeeTickets")) or LocalPlayer():isStaffOnDuty()) then return end
-    -- Request the count first to determine if we should add the tab
     net.Start("liaRequestTicketsCount")
     net.SendToServer()
 end

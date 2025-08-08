@@ -549,7 +549,7 @@ else
                 if not data.optional then
                     local ctl = data.ctrl
                     local ftype = data.type
-                    local filled = false
+                    local filled
                     if ftype == "player" or ftype == "table" then
                         local txt, _ = ctl:GetSelected()
                         filled = txt ~= nil and txt ~= ""
@@ -584,7 +584,7 @@ else
         submit.DoClick = function()
             local args = {}
             if prefix then table.Add(args, prefix) end
-            for name, info in pairs(controls) do
+            for _, info in pairs(controls) do
                 local ctl = info.ctrl
                 local typ = info.type
                 local val
