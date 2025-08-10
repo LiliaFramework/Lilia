@@ -48,14 +48,15 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 | `isBag` | `boolean` | `false` | Marks the item as a bag providing extra inventory. |
 | `isBase` | `boolean` | `false` | Indicates the table is a base item. |
 | `isOutfit` | `boolean` | `false` | Marks the item as an outfit. |
-| `isStackable` | `boolean` | `false` | Allows stacking multiple quantities. |
+| `isStackable` | `boolean` | `false` | Enables stacking and merging of item quantities. |
 | `isWeapon` | `boolean` | `false` | Marks the item as a weapon. |
-| `maxQuantity` | `number` | `1` | Maximum stack size. |
+| `maxQuantity` | `number` | `1` | Maximum stack size for stackable items. |
 | `model` | `string` | `""` | 3D model path for the item. |
 | `name` | `string` | `"INVALID NAME"` | Displayed name of the item. |
 | `newSkin` | `number` | `0` | Skin index applied to the player model. |
 | `outfitCategory` | `string` | `""` | Slot or category for the outfit. |
 | `pacData` | `table` | `{}` | PAC3 customization information. |
+| `visualData` | `table` | `{}` | Model, skin, and bodygroup overrides for outfits. |
 | `bodyGroups` | `table` | `nil` | Bodygroup values applied when equipped. |
 | `hooks` | `table` | `{}` | Table of hook callbacks. |
 | `postHooks` | `table` | `{}` | Table of post-hook callbacks. |
@@ -393,12 +394,12 @@ ITEM.canSplit = true
 
 **Description:**
 
-Allows stacking multiple quantities.
+Enables stacking of the item. Combine with `maxQuantity` to cap the stack size and `canSplit` to allow dividing stacks.
 
 **Example Usage:**
 
 ```lua
-ITEM.isStackable = false
+ITEM.isStackable = true
 ```
 
 ---
@@ -411,7 +412,7 @@ ITEM.isStackable = false
 
 **Description:**
 
-Maximum stack size.
+Maximum stack size for stackable items.
 
 **Example Usage:**
 
@@ -429,7 +430,7 @@ ITEM.maxQuantity = 10
 
 **Description:**
 
-Current amount in the item stack.
+Current amount in the item stack; managed with `item:getQuantity()` and `item:setQuantity()`.
 
 **Example Usage:**
 
@@ -730,6 +731,28 @@ ITEM.pacData = {
 	},
 }
 ```
+
+#### `visualData`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Model, skin, and bodygroup overrides applied when an outfit is equipped. The table is populated automatically and normally does not need manual editing.
+
+**Example Usage:**
+
+```lua
+ITEM.visualData = {
+    model = {},
+    skin = {},
+    bodygroups = {}
+}
+```
+
+---
 
 #### `bodyGroups`
 
@@ -1139,6 +1162,154 @@ end)
 ```
 
 ---
+## Base Item Functions
+
+### Aid
+
+- `ITEM.functions.use.onRun(item)`
+  - Heals the item owner up to their maximum health using `ITEM.health`.
+- `ITEM.functions.target.onRun(item)`
+  - Heals the player's traced entity when it is a living player; otherwise notifies of an invalid target.
+  - `ITEM.functions.target.onCanRun(item)`
+    - Shows the option only when the player is looking at a valid entity.
+
+### Ammo
+
+- `ITEM.functions.use.onRun(item)`
+  - Loads ammunition into the player and plays `ITEM.useSound`.
+  - Provides multi-options to load all or fixed amounts (5, 10, or 30 rounds) when enough quantity is available.
+  - Returns `true` when the stack is depleted.
+- `ITEM:getDesc()` → `string`
+  - Returns a localized description including the current stack quantity.
+- `ITEM:paintOver(item)`
+  - Draws the remaining quantity on the item icon.
+
+### Bag
+
+- `ITEM:onInstanced()`
+  - Creates the bag's internal inventory and applies access rules.
+- `ITEM:onRestored()`
+  - Reloads the bag's internal inventory after server restarts.
+- `ITEM:onRemoved()`
+  - Deletes the bag's inventory when the item is removed.
+- `ITEM:getInv()`
+  - Returns the bag's internal inventory instance.
+- `ITEM:onSync(recipient)`
+  - Sends the internal inventory to the given player.
+- `ITEM.postHooks:drop()`
+  - Clears the bag inventory data when dropped.
+- `ITEM:onCombine(other)`
+  - Attempts to transfer the other item into the bag's inventory.
+
+### Stackable
+
+Items that track quantity and can merge with other stacks of the same type. Setting `isStackable` to `true` enables this behavior and allows stacks to combine or split as needed.
+
+- `ITEM:getDesc()` → `string`
+  - Returns a localized description including the current stack quantity.
+- `ITEM:paintOver(item)`
+  - Displays the stack quantity on the item icon.
+- `ITEM:onCombine(other)` → `boolean`
+  - Merges another stack of the same item. Removes the other stack if fully combined and returns `true`.
+
+### Weapons
+
+- `ITEM:hook("drop", function(item))`
+  - When dropped, saves ammo, strips the weapon, and clears equipped data if necessary.
+- `ITEM.functions.Unequip.onRun(item)`
+  - Strips the weapon, stores remaining ammo, plays `ITEM.unequipSound`, and clears the equip state.
+  - `ITEM.functions.Unequip.onCanRun(item)`
+    - Available only when the weapon is equipped and not placed in the world.
+- `ITEM.functions.Equip.onRun(item)`
+  - Gives the weapon to the player if the slot is free, restores saved ammo, marks it equipped, and plays `ITEM.equipSound`.
+  - `ITEM.functions.Equip.onCanRun(item)`
+    - Blocks equipping if already equipped, the slot is occupied, or the player is ragdolled.
+- `ITEM.postHooks:drop()`
+  - Strips the weapon from the player if they still carry it after dropping the item.
+- `ITEM:OnCanBeTransfered(_, newInventory)` → `boolean`
+  - Blocks transferring the item while it is equipped.
+- `ITEM:onLoadout()`
+  - Gives the weapon and restores its ammo when the player spawns with the item equipped.
+- `ITEM:OnSave()`
+  - Stores the weapon's current clip in the item data.
+- `ITEM:getName()` *(client)* → `string`
+  - Uses the weapon's `PrintName` if available.
+- `ITEM:paintOver(item, w, h)` *(client)*
+  - Marks the item as equipped.
+
+### Outfit
+
+- `ITEM:hook("drop", function(item))`
+  - Automatically calls `removeOutfit` if the item is dropped while equipped.
+- `ITEM.functions.Unequip.onRun(item)`
+  - Calls `removeOutfit` to revert model, skin, armor, PAC parts, and boosts.
+  - `ITEM.functions.Unequip.onCanRun(item)`
+    - Available only when the outfit is equipped and not in the world.
+- `ITEM.functions.Equip.onRun(item)`
+  - Equips the outfit after ensuring the category slot is free and applies model, skin, bodygroups, armor, PAC parts, and boosts.
+  - `ITEM.functions.Equip.onCanRun(item)`
+    - Disabled when already equipped or the item exists as an entity.
+- `ITEM:removeOutfit(client)`
+  - Reverts the player's model, skin, bodygroups, armor, PAC parts, and attribute boosts. Triggers `onTakeOff`.
+- `ITEM:wearOutfit(client, isForLoadout)`
+  - Applies armor, PAC parts, and attribute boosts. Triggers `onWear`.
+- `ITEM:OnCanBeTransfered(_, newInventory)` → `boolean`
+  - Blocks transferring the item while it is equipped.
+- `ITEM:onLoadout()`
+  - Reapplies the outfit on spawn if equipped.
+- `ITEM:onRemoved()`
+  - Automatically unequips the outfit when the item is removed.
+- `ITEM:paintOver(item, w, h)` *(client)*
+  - Shows an equipped indicator.
+
+### PAC Outfit
+
+- `ITEM:hook("drop", function(item))`
+  - Removes the PAC part if the item is dropped while equipped.
+- `ITEM.functions.Unequip.onRun(item)`
+  - Calls `removePart` to detach the PAC part and remove boosts.
+  - `ITEM.functions.Unequip.onCanRun(item)`
+    - Available only when the item is equipped and not placed in the world.
+- `ITEM.functions.Equip.onRun(item)`
+  - Attaches the PAC part after verifying no conflicting outfit is equipped and applies attribute boosts.
+  - `ITEM.functions.Equip.onCanRun(item)`
+    - Blocks equipping when already equipped or the item exists in the world.
+- `ITEM:removePart(client)`
+  - Removes the PAC part and any attribute boosts.
+- `ITEM:onCanBeTransfered(_, newInventory)` → `boolean`
+  - Blocks transferring the item while it is equipped.
+- `ITEM:onLoadout()`
+  - Reapplies the PAC part on spawn if equipped.
+- `ITEM:onRemoved()`
+  - Automatically unequips the part when the item is removed.
+- `ITEM:paintOver(item, w, h)` *(client)*
+  - Shows an equipped indicator.
+
+### Book
+
+- `ITEM.functions.Read.onClick(item)`
+  - Opens a window displaying `ITEM.contents`.
+- `ITEM.functions.Read.onRun()` → `boolean`
+  - Always returns `false` to prevent the item from being consumed.
+
+### Entity Spawner
+
+- `ITEM.functions.Place.onRun(item)` → `boolean`
+  - Spawns `ITEM.entityid` at the player's aim position and returns `true` on success.
+- `ITEM.functions.Place.onCanRun(item)` → `boolean`
+  - Only allows placement when the item is not already spawned into the world.
+
+### Grenade
+
+- `ITEM.functions.Use.onRun(item)` → `boolean`
+  - Gives the grenade weapon specified by `ITEM.class` if the player doesn't already have it. Returns `true` when granted.
+
+### URL Item
+
+- `ITEM.functions.use.onRun()` → `boolean`
+  - Opens `ITEM.url` in the player's browser on the client and returns `false`.
+
+---
 ## Item Type Examples
 
 Minimal definitions for each built-in item type are shown below.
@@ -1172,6 +1343,35 @@ ITEM.ammo = "pistol"
 
 ITEM.maxQuantity = 30
 
+```
+
+### Stackable
+
+A minimal definition for an item that can be stacked and split.
+
+```lua
+
+ITEM.name = "Stack of Metal"
+
+ITEM.model = "models/props_junk/cardboard_box001a.mdl"
+
+ITEM.isStackable = true
+
+ITEM.maxQuantity = 10
+
+ITEM.canSplit = true
+
+```
+
+### Bag
+
+```lua
+ITEM.name = "Suitcase"
+ITEM.model = "models/props_c17/suitcase001a.mdl"
+ITEM.isBag = true
+ITEM.invWidth = 2
+ITEM.invHeight = 2
+ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
 ```
 
 ### Outfit
@@ -1253,21 +1453,5 @@ ITEM.name = "Grenade"
 ITEM.class = "weapon_frag"
 
 ITEM.DropOnDeath = true
-
-```
-
-### Bag
-
-```lua
-
-ITEM.name = "Small Bag"
-
-ITEM.isBag = true
-
-ITEM.invWidth = 2
-
-ITEM.invHeight = 2
-
-ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
 
 ```

@@ -10,6 +10,117 @@ The character library handles creation and persistence of player characters. It 
 
 ---
 
+### lia.char.getCharacter
+
+**Purpose**
+
+Retrieves a character object by ID. If the character is not loaded, it is loaded and the callback is invoked.
+
+**Parameters**
+
+* `charID` (*number*): Character identifier.
+* `client` (*Player*): Owning player (server only, optional).
+* `callback` (*function*): Function executed once the character is available (optional).
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* *table | nil*: The loaded character or `nil` if not currently loaded.
+
+**Example Usage**
+
+```lua
+lia.char.getCharacter(1, client, function(char)
+    print("Loaded", char:getName())
+end)
+```
+
+---
+
+### lia.char.isLoaded
+
+**Purpose**
+
+Checks whether a character with the given ID is currently loaded.
+
+**Parameters**
+
+* `charID` (*number*): Character identifier.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* *boolean*: `true` if loaded, otherwise `false`.
+
+**Example Usage**
+
+```lua
+if lia.char.isLoaded(1) then
+    print("Character 1 is loaded")
+end
+```
+
+---
+
+### lia.char.addCharacter
+
+**Purpose**
+
+Registers a character object as loaded and resolves pending callbacks for that ID.
+
+**Parameters**
+
+* `id` (*number*): Character ID.
+* `character` (*table*): Character object.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+**Example Usage**
+
+```lua
+lia.char.addCharacter(char:getID(), char)
+```
+
+---
+
+### lia.char.removeCharacter
+
+**Purpose**
+
+Removes a character from the loaded cache.
+
+**Parameters**
+
+* `id` (*number*): Character ID.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+**Example Usage**
+
+```lua
+lia.char.removeCharacter(1)
+```
+
+---
+
 ### lia.char.new
 
 **Purpose**
@@ -127,7 +238,7 @@ Retrieves a character’s JSON data from the database as a Lua table (or a singl
 
 **Returns**
 
-* *any*: Data value or full table if no key is provided.
+* *table | any | nil*: Full data table or a single value. Returns `nil` if the ID is invalid.
 
 **Example Usage**
 
@@ -155,7 +266,7 @@ Returns character data from `lia_chardata` as a table or a single value.
 
 **Returns**
 
-* *table | any | false*: Full data table or single value. Returns `false` if the key does not exist.
+* *table | any | false | nil*: Full data table or single value. Returns `false` if the key does not exist, `nil` if the ID is invalid.
 
 **Example Usage**
 
@@ -195,7 +306,7 @@ local ply = lia.char.getOwnerByID(1)
 
 **Purpose**
 
-Retrieves a character object by SteamID or SteamID64.
+Retrieves a character object by SteamID or SteamID64 from currently connected players.
 
 **Parameters**
 
@@ -279,9 +390,9 @@ Inserts a new character into the database, creates a default inventory, and fire
 
 **Parameters**
 
-* `data` (*table*): Character creation data.
+* `data` (*table*): Character creation data. Requires `name`, `model`, and `steamID`. `money` defaults to `lia.config.get("DefaultMoney")`, and `faction` defaults to `L("unknown")` when omitted.
 
-* `callback` (*function*): Callback receiving the new character ID.
+* `callback` (*function*): Optional function receiving the new character ID.
 
 **Realm**
 
@@ -367,13 +478,13 @@ lia.char.cleanUpForPlayer(client)
 
 **Purpose**
 
-Deletes a character by ID, cleans up, and notifies players via hooks.
+Deletes a character by ID, cleans up, and notifies players via hooks. If no `client` is provided, any player using the character is removed from it.
 
 **Parameters**
 
 * `id` (*number*): Character ID to delete.
 
-* `client` (*Player*): Player entity reference.
+* `client` (*Player*): Player entity to remove from the character (optional).
 
 **Realm**
 
@@ -411,7 +522,7 @@ Updates a character’s JSON data field in the database and the loaded object. T
 
 **Returns**
 
-* *boolean*: `true` on success, `false` on failure.
+* *boolean | nil*: `true` on success. Returns `nil` if the ID or key is invalid.
 
 **Example Usage**
 
@@ -439,7 +550,7 @@ Changes a character’s name in the database and the loaded object, firing appro
 
 **Returns**
 
-* *boolean*: `true` on success, `false` on failure.
+* *boolean | nil*: `true` on success, `false` if the database update fails, `nil` if inputs are invalid.
 
 **Example Usage**
 
@@ -469,7 +580,7 @@ Updates the character’s model and bodygroups in the database and in-game, firi
 
 **Returns**
 
-* *boolean*: `true` on success, `false` on failure.
+* *boolean | nil*: `true` on success, `false` if the database update fails, `nil` if inputs are invalid.
 
 **Example Usage**
 
@@ -478,3 +589,142 @@ lia.char.setCharModel(1, "models/player.mdl", {})
 ```
 
 ---
+
+### lia.char.getCharBanned
+
+**Purpose**
+
+Fetches a character's banned status from the database.
+
+**Parameters**
+
+* `charID` (*number | string*): Character ID.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *number | nil*: Ban value. Returns `0` if not banned or `nil` if the ID is invalid.
+
+**Example Usage**
+
+```lua
+local banned = lia.char.getCharBanned(1)
+``` 
+
+---
+
+### lia.char.setCharBanned
+
+**Purpose**
+
+Sets or clears a character's banned status.
+
+**Parameters**
+
+* `charID` (*number | string*): Character ID.
+* `value` (*number | string*): Ban value (`0` to unban).
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *boolean | nil*: `true` on success, `false` if the database update fails, `nil` if the ID is invalid.
+
+**Example Usage**
+
+```lua
+lia.char.setCharBanned(1, 1)
+```
+
+---
+
+### lia.char.unloadCharacter
+
+**Purpose**
+
+Saves and removes a character from memory, cleaning up associated data.
+
+**Parameters**
+
+* `charID` (*number*): Character ID.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *boolean*: `true` if unloaded, `false` if the character was not loaded.
+
+**Example Usage**
+
+```lua
+lia.char.unloadCharacter(1)
+```
+
+---
+
+### lia.char.unloadUnusedCharacters
+
+**Purpose**
+
+Unloads all characters for a player except the active one.
+
+**Parameters**
+
+* `client` (*Player*): Player entity.
+* `activeCharID` (*number*): Character ID to keep loaded.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *number*: Count of characters unloaded.
+
+**Example Usage**
+
+```lua
+local count = lia.char.unloadUnusedCharacters(client, activeID)
+```
+
+---
+
+### lia.char.loadSingleCharacter
+
+**Purpose**
+
+Loads a single character by ID for a client if it is not already loaded.
+
+**Parameters**
+
+* `charID` (*number*): Character ID.
+* `client` (*Player*): Owning player.
+* `callback` (*function*): Function executed once loading completes.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+**Example Usage**
+
+```lua
+lia.char.loadSingleCharacter(1, client, function(char)
+    if char then
+        print("Loaded", char:getName())
+    end
+end)
+```
+
+---
+

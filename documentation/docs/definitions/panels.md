@@ -37,7 +37,9 @@ Panels provide the building blocks for Lilia's user interface. Most derive from 
 | `SemiTransparentDFrame` | `DFrame` | Frame drawn with partial transparency. |
 | `SemiTransparentDPanel` | `DPanel` | Panel drawn with partial transparency. |
 | `liaDoorMenu` | `DFrame` | Door permissions and ownership menu. |
+| `liaRoster` | `EditablePanel` | Lists members of a faction or class. |
 | `liaScoreboard` | `EditablePanel` | Replacement scoreboard. |
+| `liaSheet` | `DPanel` | Filterable sheet used for building lists. |
 | `liaCharacter` | `EditablePanel` | Main screen for character management. |
 | `liaCharBGMusic` | `DPanel` | Handles menu background music playback. |
 | `liaCharacterCreation` | `EditablePanel` | Multi-step character creation window. |
@@ -152,6 +154,13 @@ Variant of `liaModelPanel` that locks the camera to the model's head bone, ideal
 
 Simple progress bar panel. Update its fraction each frame to visually represent timed actions.
 
+**Functions:**
+
+- `SetFraction(fraction)` – sets the current progress fraction between `0` and `1`.
+- `SetProgress(startTime, endTime)` – defines the progress window; defaults to a five second duration when no values are provided.
+- `SetText(text)` – text displayed in the centre of the bar.
+- `SetBarColor(color)` – overrides the default bar colour.
+
 ---
 
 ### `liaNotice`
@@ -163,6 +172,10 @@ Simple progress bar panel. Update its fraction each frame to visually represent 
 **Description:**
 
 Small label for quick notifications. It draws a blurred backdrop and fades away after a short delay.
+
+**Behaviour:**
+
+- When `start` and `endTime` fields are populated, a colour bar fills from left to right to indicate progress.
 
 ---
 
@@ -176,6 +189,10 @@ Small label for quick notifications. It draws a blurred backdrop and fades away 
 
 Expanded version of `liaNotice` supporting more text and optional buttons. Often used for yes/no prompts.
 
+**Functions:**
+
+- `CalcWidth(padding)` – recalculates the panel width based on the inner label and supplied padding.
+
 ### `liaChatBox`
 
 **Base Panel:**
@@ -185,6 +202,13 @@ Expanded version of `liaNotice` supporting more text and optional buttons. Often
 **Description:**
 
 In-game chat window supporting multiple tabs, command prefix detection and color-coded messages.
+
+**Functions:**
+
+- `setActive(state)` – opens or closes the chat entry box.
+- `addFilterButton(filter)` – inserts a filter toggle for a chat class.
+- `addText(...)` – appends one or more strings or colours to the chat history.
+- `setFilter(filter, state)` – enables or disables visibility for a chat class.
 
 ---
 
@@ -198,6 +222,11 @@ In-game chat window supporting multiple tabs, command prefix detection and color
 
 Improved spawn icon built on `DModelPanel`. It centers models and applies good lighting for use in inventories or lists.
 
+**Functions:**
+
+- `setHidden(hidden)` – toggles lighting and colour to hide or reveal the model.
+- `OnMousePressed()` – forwards clicks to `DoClick` when defined.
+
 ---
 
 ### `VoicePanel`
@@ -209,6 +238,12 @@ Improved spawn icon built on `DModelPanel`. It centers models and applies good l
 **Description:**
 
 HUD element that lists players using voice chat. Each entry fades out after a player stops talking.
+
+**Functions:**
+
+- `Setup(client)` – initialises the entry with the speaking player.
+- `UpdateIcon()` – refreshes the icon based on voice type.
+- `FadeOut(anim, delta)` – animation callback used to fade the panel when speech ends.
 
 ---
 
@@ -222,6 +257,13 @@ HUD element that lists players using voice chat. Each entry fades out after a pl
 
 Container that arranges child panels in a single row. Often paired with a custom scrollbar when content overflows.
 
+**Functions:**
+
+- `AddItem(panel)` – parents `panel` to the internal canvas.
+- `ScrollToChild(child)` – animates the scrollbar so `child` becomes centred.
+- `GetHBar()` – returns the companion horizontal scrollbar panel.
+- `Clear()` – removes all child panels from the canvas.
+
 ---
 
 ### `liaHorizontalScrollBar`
@@ -234,6 +276,10 @@ Container that arranges child panels in a single row. Often paired with a custom
 
 Custom scrollbar paired with `liaHorizontalScroll`. It moves the canvas horizontally when items overflow.
 
+**Functions:**
+
+- `SetScroll(offset)` – manually adjusts the scroll position.
+
 ---
 
 ### `liaItemMenu`
@@ -245,6 +291,14 @@ Custom scrollbar paired with `liaHorizontalScroll`. It moves the canvas horizont
 **Description:**
 
 Panel shown when you interact with an item entity. Displays item info and action buttons.
+
+**Functions:**
+
+- `addBtn(text, cb)` – helper to append a button that calls `cb` when pressed.
+- `openInspect()` – opens a 3D model viewer for the item.
+- `buildButtons()` – populates action buttons based on the item's functions table.
+- `SetEntity(ent)` – assigns the world entity and refreshes the panel contents.
+- `Think()` – closes the menu if the entity becomes invalid or too far away.
 
 ```lua
 -- called from GM:ItemShowEntityMenu
@@ -265,6 +319,15 @@ liaItemMenuInstance:SetEntity(entity)
 
 Interactive bar used during character creation to assign starting attribute points.
 
+**Functions:**
+
+- `getValue()` – returns the current value.
+- `setValue(v)` – sets the bar to `v`.
+- `setBoost(v)` – displays a temporary boost amount.
+- `setMax(m)` – changes the maximum allowed value (default `10`).
+- `SetText(text)` – sets the label text.
+- `setReadOnly()` – removes the increment and decrement buttons.
+
 ---
 
 ### `liaCharacterAttribs`
@@ -276,6 +339,13 @@ Interactive bar used during character creation to assign starting attribute poin
 **Description:**
 
 Character creation step panel for distributing attribute points across stats.
+
+**Functions:**
+
+- `updatePointsLeft()` – refreshes the remaining points label.
+- `onDisplay()` – loads saved attribute values into the rows.
+- `addAttribute(key, info)` – creates a `liaCharacterAttribsRow` for the attribute.
+- `onPointChange(key, delta)` – validates and applies a point change request.
 
 ---
 
@@ -289,6 +359,13 @@ Character creation step panel for distributing attribute points across stats.
 
 Represents a single attribute with its description and current points, including buttons for adjustment.
 
+**Functions:**
+
+- `setAttribute(key, info)` – sets which attribute the row represents and updates its tooltip.
+- `delta(amount)` – requests a point change of `amount` from the parent panel.
+- `addButton(symbol, delta)` – internal helper that creates the increment/decrement buttons.
+- `updateQuantity()` – refreshes the displayed point total.
+
 ---
 
 ### `liaItemIcon`
@@ -300,6 +377,14 @@ Represents a single attribute with its description and current points, including
 **Description:**
 
 Spawn icon specialised for Lilia item tables. Displays custom tooltips and supports right-click menus.
+
+**Functions:**
+
+- `getItem()` – returns the associated item table if available.
+- `setItemType(itemTypeOrID)` – assigns an item by unique ID or type string and updates the model and tooltip.
+- `openActionMenu()` – builds and shows the context menu for the item.
+- `updateTooltip()` – refreshes the tooltip text using the current item data.
+- `ItemDataChanged()` – hook that re-runs `updateTooltip` when the item data changes.
 
 ---
 
@@ -349,6 +434,30 @@ Basic panel that paints itself with partial transparency. Often used inside `Sem
 
 Interface for property doors showing ownership and faction access. Owners can lock, sell or share the door through this menu.
 
+**Functions:**
+
+- `setDoor(door, accessData, fallback)` – populates the list of players with their access levels for `door`.
+- `CheckAccess(minimum)` – returns `true` if the local player meets the required access level.
+- `Think()` – automatically closes the menu when the door becomes invalid or inaccessible.
+
+---
+
+### `liaRoster`
+
+**Base Panel:**
+
+`EditablePanel`
+
+**Description:**
+
+Lists players in a faction or class roster and supports context actions such as kicking members.
+
+**Functions:**
+
+- `SetRosterType(type)` – chooses which roster to display. Passing `"faction"` requests faction data from the server.
+- `Populate(data, canKick)` – fills the sheet with `data` rows and enables kick options when `canKick` is true.
+- `PerformLayout()` – sizes the panel to its children and refreshes the internal sheet layout.
+
 ---
 
 ### `liaScoreboard`
@@ -360,6 +469,40 @@ Interface for property doors showing ownership and faction access. Owners can lo
 **Description:**
 
 Replacement scoreboard that groups players by team or faction and displays additional stats like ping and play time.
+
+**Functions:**
+
+- `ApplyConfig()` – applies skin and colour configuration before showing the board.
+- `updateStaff()` – refreshes the staff list portion based on current players.
+- `addPlayer(player, parent)` – inserts a player row into the given category panel.
+
+---
+
+### `liaSheet`
+
+**Base Panel:**
+
+`DPanel`
+
+**Description:**
+
+Scrollable sheet used to build filterable lists with rows of arbitrary content.
+
+**Functions:**
+
+- `SetPlaceholderText(text)` – sets the search box placeholder.
+- `SetSpacing(y)` – vertical spacing between rows (default `8`).
+- `SetPadding(p)` – padding around row contents (default `10`).
+- `Clear()` – removes all rows.
+- `AddRow(builder)` – adds a custom row using `builder(panel, row)`; returns the row table.
+- `AddPanelRow(widget, opts)` – inserts an existing panel as a row.
+- `AddTextRow(data)` – creates a text row from `title`, `desc`, and `right` fields.
+- `AddSubsheetRow(cfg)` – adds a collapsible subsheet for grouped entries.
+- `AddPreviewRow(data)` – displays an HTML preview thumbnail.
+- `AddListViewRow(cfg)` – embeds a `DListView` into a row.
+- `AddIconLayoutRow(cfg)` – embeds a `DIconLayout` into a row.
+- `RegisterCustomFilter(row, fn)` – registers an extra filter function for `Refresh`.
+- `Refresh()` – re-applies the search filter to all rows.
 
 ---
 
@@ -655,6 +798,16 @@ Text-only button that still shows the underline animation.
 
 Quick settings menu that lists options flagged with `isQuick`.
 
+**Functions:**
+
+- `addCategory(text)` – inserts a non-interactive section label.
+- `addButton(text, cb)` – adds a clickable button that triggers `cb` when pressed.
+- `addSpacer()` – draws a thin divider line.
+- `addSlider(text, cb, val, min, max, dec)` – slider control that calls `cb(panel, value)`; default range `0–100`.
+- `addCheck(text, cb, checked)` – checkbox row; invokes `cb(panel, state)` when toggled.
+- `setIcon(char)` – sets the icon character displayed on the expand button.
+- `populateOptions()` – fills the panel using registered quick options.
+
 **Example Usage:**
 
 ```lua
@@ -672,6 +825,12 @@ vgui.Create("liaQuick")
 **Description:**
 
 Checkbox that paints the same checkmark icons used in the configuration menu.
+
+**Functions:**
+
+- `SetChecked(state)` – toggles the checkmark and fires `OnChange`.
+- `GetChecked()` – returns whether the box is checked.
+- `DoClick()` – default click handler that flips the checked state.
 
 **Example Usage:**
 

@@ -569,6 +569,92 @@ end
 
 ---
 
+### setData
+
+**Purpose**
+
+Sets custom data on this character, optionally syncing it to clients and saving it in the database.
+
+**Parameters**
+
+* `k` (`string|table`): Key to set or table of key-value pairs.
+* `v` (`any`): Value to store when `k` is a string.
+* `noReplication` (`boolean`): If `true`, do not network the change.
+* `receiver` (`Player|nil`): Specific player to receive the update.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `nil`: This function does not return a value.
+
+**Example Usage**
+
+```lua
+-- Store character-specific state and sync it to the owner
+char:setData("mission", {step = 2}, false)
+```
+
+---
+
+### getData
+
+**Purpose**
+
+Fetches custom data stored on the character.
+
+**Parameters**
+
+* `key` (`string|nil`): Data key to retrieve. Omitting returns all entries.
+* `default` (`any`): Fallback value when the key is missing.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `any`: Stored value, entire data table, or the provided default.
+
+**Example Usage**
+
+```lua
+-- Read a saved mission step
+local mission = char:getData("mission", {})
+```
+
+---
+
+### isBanned
+
+**Purpose**
+
+Checks whether this character is currently banned.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `boolean`: `true` if the character is banned or permanently banned.
+
+**Example Usage**
+
+```lua
+if char:isBanned() then
+    print("Access denied")
+end
+```
+
+---
+
 ### recognize
 
 **Purpose**
@@ -1411,6 +1497,110 @@ char:setModel("models/alyx.mdl")
 
 ---
 
+### getSkin
+
+**Purpose**
+
+Gets the current skin index applied to the character's model.
+
+**Parameters**
+
+* `default` (`any`): Fallback value when no skin is stored.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `number`: Skin index or the provided default.
+
+**Example Usage**
+
+```lua
+local skin = char:getSkin(0)
+```
+
+---
+
+### setSkin
+
+**Purpose**
+
+Updates the character's skin and applies it to the player.
+
+**Parameters**
+
+* `value` (`number`): Skin index.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `nil`: This function does not return a value.
+
+**Example Usage**
+
+```lua
+char:setSkin(1)
+```
+
+---
+
+### getBodygroups
+
+**Purpose**
+
+Returns the bodygroup settings applied to the character's model.
+
+**Parameters**
+
+* `default` (`any`): Value returned when no bodygroups are stored.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `table`: Table of bodygroup indices to values.
+
+**Example Usage**
+
+```lua
+local groups = char:getBodygroups({})
+```
+
+---
+
+### setBodygroups
+
+**Purpose**
+
+Sets bodygroup values for the character's model and applies them.
+
+**Parameters**
+
+* `value` (`table`): Table mapping indices to bodygroup values.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `nil`: This function does not return a value.
+
+**Example Usage**
+
+```lua
+char:setBodygroups({ [1] = 2 })
+```
+
+---
+
 ### getClass
 
 **Purpose**
@@ -1569,17 +1759,16 @@ char:setMoney(1000)
 
 ---
 
-### getData
+### getLoginTime
 
 **Purpose**
 
-Returns arbitrary data previously stored on the character.
+Retrieves the timestamp of when the player logged into this character.
+This value is local to the character's owner and is not broadcast to other players.
 
 **Parameters**
 
-* `key` (`string`): Data key.
-
-* `default` (`any`): Value to return if the entry is missing.
+* `default` (`number`): Value returned if no time is stored. Defaults to `0`.
 
 **Realm**
 
@@ -1587,31 +1776,26 @@ Returns arbitrary data previously stored on the character.
 
 **Returns**
 
-* `any`: Stored value or default.
+* `number`: Unix timestamp or the provided fallback.
 
 **Example Usage**
 
 ```lua
-local rank = char:getData("rank", "rookie")
+local logged = char:getLoginTime(0)
 ```
 
 ---
 
-### setData
+### setLoginTime
 
 **Purpose**
 
-Writes a data entry on the character and optionally syncs it.
+Stores the timestamp for when the player logged into this character.
+The stored time is kept local to the owner and not sent to other players.
 
 **Parameters**
 
-* `key` (`string`): Data key to modify.
-
-* `value` (`any`): New value to store.
-
-* `noReplication` (`boolean`): Suppress network updates.
-
-* `receiver` (`Player`): Optional specific client to send the update to.
+* `value` (`number`): Unix timestamp to store. Defaults to `0`.
 
 **Realm**
 
@@ -1624,7 +1808,61 @@ Writes a data entry on the character and optionally syncs it.
 **Example Usage**
 
 ```lua
-char:setData("rank", "veteran")
+char:setLoginTime(os.time())
+```
+
+---
+
+### getPlayTime
+
+**Purpose**
+
+Gets the total accumulated playtime in seconds for this character.
+This value is maintained locally for the owning player only.
+
+**Parameters**
+
+* `default` (`number`): Value returned when no playtime is recorded. Defaults to `0`.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `number`: Seconds of playtime or the provided default.
+
+**Example Usage**
+
+```lua
+local seconds = char:getPlayTime(0)
+```
+
+---
+
+### setPlayTime
+
+**Purpose**
+
+Sets the total accumulated playtime for this character.
+The updated value remains local to the owning player.
+
+**Parameters**
+
+* `value` (`number`): Time in seconds.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `nil`: This function does not return a value.
+
+**Example Usage**
+
+```lua
+char:setPlayTime(3600)
 ```
 
 ---
@@ -1794,15 +2032,15 @@ char:setAttribs({ strength = 10 })
 
 ---
 
-### getRecognizedAs
+### getFakeName
 
 **Purpose**
 
-Gets the mapping of disguised names this character uses to recognize others.
+Retrieves the table of fake names this character assigns to other characters.
 
 **Parameters**
 
-* `default` (`any`): Value to return when no data is stored.
+* `default` (`any`): Value returned when no data exists.
 
 **Realm**
 
@@ -1810,25 +2048,25 @@ Gets the mapping of disguised names this character uses to recognize others.
 
 **Returns**
 
-* `table`: Table of ID-to-alias mappings.
+* `table`: Mapping of character IDs to fake names.
 
 **Example Usage**
 
 ```lua
-local aliases = char:getRecognizedAs()
+local aliases = char:getFakeName()
 ```
 
 ---
 
-### setRecognizedAs
+### setFakeName
 
 **Purpose**
 
-Updates the table of fake recognition names for this character.
+Assigns a table of fake names used when this character recognizes others.
 
 **Parameters**
 
-* `value` (`table`): Table of ID-to-alias mappings.
+* `value` (`table`): Table mapping character IDs to fake names.
 
 **Realm**
 
@@ -1841,7 +2079,7 @@ Updates the table of fake recognition names for this character.
 **Example Usage**
 
 ```lua
-char:setRecognizedAs({ [123] = "Masked Stranger" })
+char:setFakeName({ [123] = "Masked Stranger" })
 ```
 
 ---
@@ -1946,6 +2184,216 @@ Stores a respawn position for the character.
 
 ```lua
 char:setLastPos(nil)
+```
+
+---
+
+### getAmmo
+
+**Purpose**
+
+Retrieves the stored ammunition counts for this character.
+
+**Parameters**
+
+* `default` (`any`): Value returned when no ammo data exists.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `table`: Mapping of ammo types to quantities.
+
+**Example Usage**
+
+```lua
+local ammo = char:getAmmo({})
+```
+
+---
+
+### setAmmo
+
+**Purpose**
+
+Stores ammunition counts for the character.
+
+**Parameters**
+
+* `value` (`table`): Table mapping ammo types to amounts.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `nil`: This function does not return a value.
+
+**Example Usage**
+
+```lua
+char:setAmmo({ pistol = 24 })
+```
+
+---
+
+### getClasswhitelists
+
+**Purpose**
+
+Returns the list of class whitelists granted to this character.
+
+**Parameters**
+
+* `default` (`any`): Value returned when no whitelist data exists.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `table`: Table of class identifiers set to `true`.
+
+**Example Usage**
+
+```lua
+local classes = char:getClasswhitelists({})
+```
+
+---
+
+### setClasswhitelists
+
+**Purpose**
+
+Overwrites the character's class whitelist table.
+
+**Parameters**
+
+* `value` (`table`): Table of class identifiers to enable.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `nil`: This function does not return a value.
+
+**Example Usage**
+
+```lua
+char:setClasswhitelists({ medic = true })
+```
+
+---
+
+### getMarkedForDeath
+
+**Purpose**
+
+Checks whether this character is flagged for permadeath.
+
+**Parameters**
+
+* `default` (`any`): Value returned if the flag is unset.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `boolean`: `true` if marked for death, otherwise the default.
+
+**Example Usage**
+
+```lua
+if char:getMarkedForDeath(false) then
+    print("Character will be removed on death")
+end
+```
+
+---
+
+### setMarkedForDeath
+
+**Purpose**
+
+Marks or unmarks the character for permadeath.
+
+**Parameters**
+
+* `value` (`boolean`): `true` to mark, `false` to clear.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `nil`: This function does not return a value.
+
+**Example Usage**
+
+```lua
+char:setMarkedForDeath(true)
+```
+
+---
+
+### getBanned
+
+**Purpose**
+
+Retrieves the ban status timestamp for this character.
+
+**Parameters**
+
+* `default` (`any`): Value returned when no ban data exists.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `number`: `-1` for permanent ban, a Unix timestamp, or the default.
+
+**Example Usage**
+
+```lua
+local bannedUntil = char:getBanned(0)
+```
+
+---
+
+### setBanned
+
+**Purpose**
+
+Sets the ban status for this character.
+
+**Parameters**
+
+* `value` (`number`): `-1` for permanent ban or future Unix timestamp.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* `nil`: This function does not return a value.
+
+**Example Usage**
+
+```lua
+char:setBanned(-1)
 ```
 
 ---

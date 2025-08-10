@@ -1,30 +1,28 @@
 # Data Library
 
-This page describes persistent data storage helpers.
+Helpers for serializing Lua data and storing persistent values.
 
 ---
 
 ## Overview
 
-The data library keeps persistent values inside a single `lia_data` database table. Each row is keyed by the current gamemode folder and map using the `_folder` and `_map` columns. All saved key/value pairs are stored together inside the `_data` column as JSON. Values are cached in memory inside `lia.data.stored` for quick access. Entity persistence loaded via `lia.data.loadPersistenceData` is kept in `lia.data.persistCache`.
+The data library stores arbitrary key/value pairs in the `lia_data` SQL table. Each entry is
+scoped by the gamemode folder and map and cached in `lia.data.stored`. Serialization helpers
+encode vectors, angles and colour tables into simple tables so they can be stored in JSON
+and later restored.
 
 ---
 
-### lia.data.set
+### lia.data.encodetable
 
 **Purpose**
 
-Saves the provided value under the specified key in the single `lia_data` table and caches it in `lia.data.stored`.
+Recursively converts values (including `Vector`, `Angle` and colour tables) into
+serialisable tables.
 
 **Parameters**
 
-* `key` (*string*): Key under which the data is stored.
-
-* `value` (*any*): Value to store.
-
-* `global` (*boolean*): Store without gamemode or map restrictions.
-
-* `ignoreMap` (*boolean*): Omit the map name from the stored entry.
+* `value` (*any*): Data to encode.
 
 **Realm**
 
@@ -32,16 +30,185 @@ Saves the provided value under the specified key in the single `lia_data` table 
 
 **Returns**
 
-* *string*: The path where the data was saved.
+* *any*: Encoded representation.
 
 **Example Usage**
 
 ```lua
-concommand.Add("save_spawn", function(ply)
-    if ply:IsAdmin() then
-        lia.data.set("spawn_pos", ply:GetPos(), true)
-    end
-end)
+local encoded = lia.data.encodetable({pos = Vector(1, 2, 3)})
+-- encoded.pos == {1, 2, 3}
+```
+
+---
+
+### lia.data.decode
+
+**Purpose**
+
+Recursively restores values encoded by `lia.data.encodetable`, turning
+tables or strings representing vectors or angles back into their original types.
+
+**Parameters**
+
+* `value` (*any*): Data to decode.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *any*: Decoded value.
+
+**Example Usage**
+
+```lua
+local vec = lia.data.decode({1, 2, 3})
+-- vec == Vector(1, 2, 3)
+```
+
+---
+
+### lia.data.serialize
+
+**Purpose**
+
+Encodes a value with `lia.data.encodetable` and converts it to a JSON string.
+
+**Parameters**
+
+* `value` (*any*): Value to serialise.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *string*: JSON representation.
+
+**Example Usage**
+
+```lua
+local json = lia.data.serialize({pos = Vector(1, 2, 3)})
+```
+
+---
+
+### lia.data.deserialize
+
+**Purpose**
+
+Attempts to parse JSON or PON strings (or tables) and decodes any vectors or
+angles contained within. Non-string/table values are returned as-is.
+
+**Parameters**
+
+* `raw` (*any*): Serialised data to decode.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *any | nil*: Decoded value, or `nil` if the input is `nil` or cannot be
+  parsed.
+
+**Example Usage**
+
+```lua
+local data = lia.data.deserialize(json)
+```
+
+---
+
+### lia.data.decodeVector
+
+**Purpose**
+
+Converts a `Vector`, table or string in common vector formats (including JSON,
+PON and pattern-based representations like `[x y z]` or `Vector(x, y, z)`) into
+a `Vector`.
+
+**Parameters**
+
+* `raw` (*any*): Data to decode.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *Vector | nil*: Resulting vector, or `nil` if `raw` is `nil` or cannot be
+  converted.
+
+**Example Usage**
+
+```lua
+local pos = lia.data.decodeVector("[1, 2, 3]")
+```
+
+---
+
+### lia.data.decodeAngle
+
+**Purpose**
+
+Converts an `Angle`, table or string in common angle formats (including JSON,
+PON and pattern-based representations like `{p y r}` or `Angle(p, y, r)`) into
+an `Angle`.
+
+**Parameters**
+
+* `raw` (*any*): Data to decode.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *Angle | nil*: Resulting angle, or `nil` if `raw` is `nil` or cannot be
+  converted.
+
+**Example Usage**
+
+```lua
+local ang = lia.data.decodeAngle("{0, 90, 0}")
+```
+
+---
+
+### lia.data.set
+
+**Purpose**
+
+Stores a value under the given key and writes the entire cache to the `lia_data`
+table. Data can be scoped to a specific gamemode and map.
+
+**Parameters**
+
+* `key` (*string*): Storage key.
+* `value` (*any*): Value to store.
+* `global` (*boolean*, default = `false`): If `true`, ignore gamemode and map.
+* `ignoreMap` (*boolean*, default = `false`): Ignore the map but still use the
+  gamemode.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *string*: Path such as `lilia/<gamemode>/<map>/` indicating where the data was
+  saved.
+
+**Example Usage**
+
+```lua
+lia.data.set("spawnPos", Vector(0, 0, 0))
 ```
 
 ---
@@ -50,15 +217,14 @@ end)
 
 **Purpose**
 
-Removes the stored value corresponding to the key from the `lia_data` table and clears the cached entry in `lia.data.stored`.
+Removes a key from the cache and updates the `lia_data` table.
 
 **Parameters**
 
-* `key` (*string*): Key corresponding to the data to delete.
-
-* `global` (*boolean*): Store without gamemode or map restrictions.
-
-* `ignoreMap` (*boolean*): Omit the map name from the stored entry.
+* `key` (*string*): Key to remove.
+* `global` (*boolean*, default = `false`): If `true`, ignore gamemode and map.
+* `ignoreMap` (*boolean*, default = `false`): Ignore the map but still use the
+  gamemode.
 
 **Realm**
 
@@ -66,12 +232,12 @@ Removes the stored value corresponding to the key from the `lia_data` table and 
 
 **Returns**
 
-* *boolean*: Always `true`; the deletion query is queued.
+* *boolean*: Always `true`; the deletion is queued asynchronously.
 
 **Example Usage**
 
 ```lua
-lia.data.delete("spawn_pos")
+lia.data.delete("spawnPos")
 ```
 
 ---
@@ -80,13 +246,12 @@ lia.data.delete("spawn_pos")
 
 **Purpose**
 
-Retrieves the stored value for the specified key from the cache.
+Retrieves a stored value, deserialising it if required.
 
 **Parameters**
 
-* `key` (*string*): Key corresponding to the data.
-
-* `default` (*any*): Default value to return if no data is found.
+* `key` (*string*): Key to fetch.
+* `default` (*any*, optional): Value returned when the key does not exist.
 
 **Realm**
 
@@ -94,17 +259,12 @@ Retrieves the stored value for the specified key from the cache.
 
 **Returns**
 
-* *any*: The stored value or the default if not found.
+* *any*: Stored value or the provided default (which defaults to `nil`).
 
 **Example Usage**
 
 ```lua
-hook.Add("PlayerSpawn", "UseSavedSpawn", function(ply)
-    local pos = lia.data.get("spawn_pos", vector_origin)
-    if pos then
-        ply:SetPos(pos)
-    end
-end)
+local pos = lia.data.get("spawnPos", Vector(0, 0, 0))
 ```
 
 ---
@@ -113,7 +273,8 @@ end)
 
 **Purpose**
 
-Loads the appropriate entry from the `lia_data` table into `lia.data.stored`.
+Loads global, gamemode and map‑specific entries from the `lia_data` table
+into `lia.data.stored`.
 
 **Parameters**
 
@@ -131,162 +292,6 @@ Loads the appropriate entry from the `lia_data` table into `lia.data.stored`.
 
 ```lua
 lia.data.loadTables()
-
-```
-
----
-### lia.data.encodetable
-
-**Purpose**
-
-Recursively converts vectors, angles, and colours into plain tables so they can be serialised.
-
-**Parameters**
-
-* `value` (*any*): Data to encode.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *any*: The encoded representation.
-
-**Example Usage**
-
-```lua
-local tbl = lia.data.encodetable(Vector(0, 0, 0))
-```
-
----
-
-### lia.data.decode
-
-**Purpose**
-
-Restores vectors, angles and colours from data processed by `lia.data.encodetable`.
-
-**Parameters**
-
-* `value` (*any*): Data to decode.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *any*: The decoded value.
-
-**Example Usage**
-
-```lua
-local vec = lia.data.decode({0, 0, 0})
-```
-
----
-
-### lia.data.serialize
-
-**Purpose**
-
-Encodes a value and converts it into a JSON string.
-
-**Parameters**
-
-* `value` (*any*): Value to serialize.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *string*: JSON representation of the value.
-
-**Example Usage**
-
-```lua
-local json = lia.data.serialize({pos = Vector(1, 2, 3)})
-```
-
----
-
-### lia.data.deserialize
-
-**Purpose**
-
-Parses a stored string and decodes any vectors, angles or colours.
-
-**Parameters**
-
-* `raw` (*string*): Serialized data.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *any | nil*: Decoded value or `nil` on failure.
-
-**Example Usage**
-
-```lua
-local val = lia.data.deserialize(jsonData)
-```
-
----
-
-### lia.data.decodeVector
-
-**Purpose**
-
-Converts a stored string back into a `Vector`.
-
-**Parameters**
-
-* `raw` (*string*): Serialized vector.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *Vector | any*: Decoded vector or the original value.
-
-**Example Usage**
-
-```lua
-local pos = lia.data.decodeVector("[1, 2, 3]")
-```
-
----
-
-### lia.data.decodeAngle
-
-**Purpose**
-
-Converts a stored string back into an `Angle`.
-
-**Parameters**
-
-* `raw` (*string*): Serialized angle.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *Angle | any*: Decoded angle or the original value.
-
-**Example Usage**
-
-```lua
-local ang = lia.data.decodeAngle("{0, 90, 0}")
 ```
 
 ---
@@ -295,7 +300,7 @@ local ang = lia.data.decodeAngle("{0, 90, 0}")
 
 **Purpose**
 
-Ensures the persistence database tables contain all required columns.
+Ensures all default columns exist in the `lia_persistence` table.
 
 **Parameters**
 
@@ -307,13 +312,13 @@ Ensures the persistence database tables contain all required columns.
 
 **Returns**
 
-* *deferred*: Resolves once the columns exist.
+* *Promise*: Resolves once the columns are present.
 
 **Example Usage**
 
 ```lua
 lia.data.loadPersistence():next(function()
-    print("Persistence columns ready")
+    print("Ready")
 end)
 ```
 
@@ -323,7 +328,9 @@ end)
 
 **Purpose**
 
-Writes a list of entity tables to the database so they persist across restarts.
+Writes a list of entity tables to `lia_persistence`. Extra fields on entities
+are stored in dynamically created columns. The cache `lia.data.persistCache`
+is updated.
 
 **Parameters**
 
@@ -340,7 +347,9 @@ Writes a list of entity tables to the database so they persist across restarts.
 **Example Usage**
 
 ```lua
-lia.data.savePersistence(myEntities)
+lia.data.savePersistence({
+    {class = "prop_physics", pos = Vector(1,2,3), angles = Angle(0,0,0), model = "models/props_c17/oildrum001.mdl"}
+})
 ```
 
 ---
@@ -349,11 +358,14 @@ lia.data.savePersistence(myEntities)
 
 **Purpose**
 
-Loads persisted entity data into `lia.data.persistCache`.
+Fetches persisted entities for the current gamemode and map, decodes all fields
+and stores the result in `lia.data.persistCache`. The optional callback is
+invoked with the decoded entities once loading completes.
 
 **Parameters**
 
-* `callback` (*function*): Called with the loaded entities.
+* `callback` (*function*, optional): Receives the loaded entities once loading
+  completes.
 
 **Realm**
 
@@ -366,8 +378,8 @@ Loads persisted entity data into `lia.data.persistCache`.
 **Example Usage**
 
 ```lua
-lia.data.loadPersistenceData(function(ents)
-    print("Loaded", #ents, "entities")
+lia.data.loadPersistenceData(function(entities)
+    print(#entities, "entities loaded")
 end)
 ```
 
@@ -377,7 +389,7 @@ end)
 
 **Purpose**
 
-Returns the cached entity table populated by `lia.data.loadPersistenceData`.
+Returns the cached entities loaded by `lia.data.loadPersistenceData`.
 
 **Parameters**
 
@@ -389,12 +401,12 @@ Returns the cached entity table populated by `lia.data.loadPersistenceData`.
 
 **Returns**
 
-* *table*: Cached persistence data.
+* *table*: Cached entity data.
 
 **Example Usage**
 
 ```lua
-local saved = lia.data.getPersistence()
+local entities = lia.data.getPersistence()
 ```
 
 ---

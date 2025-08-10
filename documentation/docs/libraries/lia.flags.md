@@ -14,15 +14,15 @@ The flags library assigns text-based permission strings to characters. All regis
 
 **Purpose**
 
-Registers a flag in `lia.flag.list`, storing its description and an optional callback. The callback runs whenever the flag is granted or removed and on every spawn if the character already has the flag.
+Registers a flag in `lia.flag.list`, storing its description and an optional callback. The callback runs whenever the flag is granted or removed and on every spawn if the character already has the flag. If the flag identifier is already taken, the call does nothing.
 
 **Parameters**
 
 * `flag` (*string*): Unique single-character identifier.
 
-* `desc` (*string*): Human-readable description of the flag’s effect.
+* `desc` (*string*, default `nil`): Human-readable description of the flag’s effect. If it matches a localization phrase, the translated text is stored.
 
-* `callback` (*function*): Called as `callback(client, isGiven)` where `isGiven` is `true` when granting or re-applying on spawn, and `false` on removal. *Optional*.
+* `callback` (*function*, default `nil`): Called as `callback(client, isGiven)` where `isGiven` is `true` when granting or re-applying on spawn, and `false` on removal. Also run with `isGiven = true` on spawn if the player already has the flag.
 
 **Realm**
 
@@ -39,6 +39,7 @@ Registers a flag in `lia.flag.list`, storing its description and an optional cal
 lia.flag.add("p", "Access to the physgun", function(client, isGiven)
     if isGiven then
         client:Give("weapon_physgun")
+        client:SelectWeapon("weapon_physgun")
     else
         client:StripWeapon("weapon_physgun")
     end
@@ -51,7 +52,7 @@ end)
 
 **Purpose**
 
-Re-applies all flag callbacks for a player who just spawned by iterating over their character’s flags and calling each callback with `(client, true)`. The base gamemode already invokes this from its `PlayerSpawn` hook, but modules can call it manually after custom spawn logic.
+Re-applies all flag callbacks for a player who just spawned. Combines character and player flags, ensures each flag's callback runs only once per spawn, and calls each associated callback with `(client, true)`. The base gamemode already invokes this from its `PlayerSpawn` hook, but modules can call it manually after custom spawn logic.
 
 **Parameters**
 
@@ -74,6 +75,10 @@ hook.Add("PlayerSpawn", "ApplyFlagCallbacks", function(ply)
 end)
 ```
 
+### Information menu integration
+
+The library populates the information menu via the `CreateInformationButtons` hook, adding pages that list character flags and player flags with their descriptions and whether the local player possesses each flag.
+
 ---
 
 ### Default flags
@@ -94,6 +99,7 @@ The base gamemode registers the following permission flags. Additional flags can
 | `Z`  | Invite players to your faction |
 | `X`  | Invite players to your class   |
 | `V`  | Manage faction roster          |
+| `K`  | Kick members from your faction |
 | `P`  | Use PAC3 features              |
 
 ---

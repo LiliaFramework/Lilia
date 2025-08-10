@@ -6,7 +6,82 @@ This page documents network-variable and message helpers.
 
 ## Overview
 
-The networking library synchronises data between the server and clients. It wraps a few Garry’s Mod helpers so global variables can be stored in `lia.net.globals` and automatically replicated. Any value sent through this system is re-sent to players on spawn via `PlayerInitialSpawn` and **must not** contain functions (or tables that contain functions), as they cannot be serialised.
+The networking library synchronises data between the server and clients. It wraps helpers so global variables can be stored in `lia.net.globals` and automatically replicated. It also supports chunked transfer of large tables between server and clients. Any value sent through this system is re-sent to players on spawn via `PlayerInitialSpawn` and **must not** contain functions (or tables that contain functions), as they cannot be serialised.
+
+---
+
+### lia.net.readBigTable
+
+**Purpose**
+
+Registers a handler that rebuilds large tables sent over the network in multiple compressed chunks. Clients acknowledge each chunk so the sender can throttle transmission.
+
+**Parameters**
+
+* `netStr` (*string*): Network message identifier to listen for.
+
+* `callback` (*function*): Function invoked when the table is fully received. On the server the signature is `callback(ply, tbl)`, on the client it is `callback(tbl)`.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+**Example Usage**
+
+```lua
+-- Both server and client: install receiver
+lia.net.readBigTable("MyData", function(a, b)
+    if SERVER then
+        local ply, data = a, b
+        print("Server received table from", ply, data)
+    else
+        local data = a
+        PrintTable(data)
+    end
+end)
+```
+
+---
+
+### lia.net.writeBigTable
+
+**Purpose**
+
+Splits a table into compressed chunks and streams it to one or more players. Used in conjunction with `lia.net.readBigTable`. Aborts if the table is not serialisable or cannot be compressed.
+
+**Parameters**
+
+* `targets` (*Player | Player[] | nil*): Recipient(s); `nil` streams to all human players.
+
+* `netStr` (*string*): Network message identifier.
+
+* `tbl` (*table*): Data to send. Must be JSON-serialisable (no functions).
+
+* `chunkSize` (*number | nil*): Optional bytes per chunk (default `2048`, clamped to the range `256`–`4096`).
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+**Example Usage**
+
+```lua
+local data = {foo = "bar", numbers = {1, 2, 3}}
+
+-- Broadcast to everyone
+lia.net.writeBigTable(nil, "MyData", data)
+
+-- Send to one player with smaller chunks
+lia.net.writeBigTable(player, "MyData", data, 1024)
+```
 
 ---
 
@@ -14,7 +89,7 @@ The networking library synchronises data between the server and clients. It wrap
 
 **Purpose**
 
-Validates a value before it is networked, recursively ensuring no functions are present.
+Recursively validates a value before it is networked, ensuring neither it nor any nested key or value is a function. Any disallowed value triggers `lia.error` with a translated message.
 
 **Parameters**
 
@@ -28,7 +103,7 @@ Validates a value before it is networked, recursively ensuring no functions are 
 
 **Returns**
 
-* `boolean`: `true` if a disallowed type was found.
+* `boolean | nil`: `true` if a disallowed type was found; otherwise `nil`.
 
 **Example Usage**
 
@@ -44,7 +119,7 @@ end
 
 **Purpose**
 
-Stores a value in `lia.net.globals` and optionally broadcasts the change to clients.
+Stores a value in `lia.net.globals` and broadcasts the change, optionally restricting it to a receiver. Disallowed types are rejected, and no network message is sent if the value has not changed. The `NetVarChanged` hook is fired after successful updates.
 
 **Parameters**
 
@@ -52,7 +127,7 @@ Stores a value in `lia.net.globals` and optionally broadcasts the change to clie
 
 * `value` (*any*): Value to store.
 
-* `receiver` (*Player | table | nil*): Target player or list of players. `nil` broadcasts to everyone.
+* `receiver` (*Player | Player[] | nil*): Target player(s). `nil` broadcasts to everyone.
 
 **Realm**
 

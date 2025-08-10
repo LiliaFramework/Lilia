@@ -6,7 +6,14 @@ This page explains how to add and access configuration settings.
 
 ## Overview
 
-The config library stores server configuration values with descriptions and default settings. It also provides callbacks when values change, so modules can react to new options.
+The configuration library provides a centralized system for managing settings across the framework. It supports:
+
+* **Type-safe values** with automatic detection for strings, numbers, booleans, colors and tables.
+* **Validation rules** such as minimum/maximum ranges and selectable options.
+* **Change callbacks** for reacting to updates at runtime.
+* **Client-server synchronization** so changes propagate to connected players.
+* **Category organization** and description text for use in UI.
+* **Default value management** with persistence to the database.
 
 ---
 
@@ -14,19 +21,19 @@ The config library stores server configuration values with descriptions and defa
 
 **Purpose**
 
-Registers a new config option with the given key, display name, default value, and optional callback. A data table describing the option is **required**.
+Registers a new config option with the given key, display name, default value, and optional callback. A data table describing the option is **required**. If an option with the same key already exists, its current value is kept.
 
 **Parameters**
 
 * `key` (*string*): Unique identifier for the option.
 
-* `name` (*string*): Display name shown in menus.
+* `name` (*string*): Display name shown in menus. Localized automatically with `L`.
 
 * `value` (*any*): Default stored value.
 
-* `callback` (*function*): Function run when the value changes. *Optional*.
+* `callback` (*function*): Function run when the value changes. Receives `(oldValue, newValue)`. *Optional*.
 
-* `data` (*table*): Table describing the option. Common fields include `desc`, `category`, `type`, `min`, `max`, `decimals`, `options`, and `noNetworking`.
+* `data` (*table*): Table describing the option. Common fields include `desc`, `category`, `type`, `min`, `max`, `decimals`, `options`, and `noNetworking`. `category` defaults to `L("character")` and `noNetworking` defaults to `false`. Additional fields are accepted and stored. Any string values for `desc`, `category`, or within `options` are localized automatically. If `type` is omitted, it is inferred from `value`.
 
 **Realm**
 
@@ -42,7 +49,7 @@ Registers a new config option with the given key, display name, default value, a
 -- Register a walk-speed option with limits and a callback
 lia.config.add(
     "walkSpeed",
-    "Walk Speed",
+    "walkSpeed",
     130,
     function(_, newValue)
         for _, ply in player.Iterator() do
@@ -50,8 +57,8 @@ lia.config.add(
         end
     end,
     {
-        desc = "Base walking speed for all players.",
-        category = "Movement",
+        desc = "walkSpeedDesc",
+        category = "movement",
         type = "Int",
         min = 50,
         max = 300
@@ -65,7 +72,7 @@ lia.config.add(
 
 **Purpose**
 
-Changes the stored default for an existing config option without affecting its current value or notifying clients.
+Changes the stored default for an existing config option without affecting its current value or notifying clients. This does not automatically persist the new default; call `lia.config.save()` to commit it.
 
 **Parameters**
 
@@ -94,7 +101,7 @@ lia.config.setDefault("maxPlayers", 32)
 
 **Purpose**
 
-Sets a config value directly without running callbacks or networking the update. The value is saved unless `noSave` is `true`.
+Sets a config value directly without running callbacks or networking the update. The value is saved unless `noSave` is `true`. If the key does not exist, the call has no effect.
 
 **Parameters**
 
@@ -102,11 +109,11 @@ Sets a config value directly without running callbacks or networking the update.
 
 * `value` (*any*): New value to set.
 
-* `noSave` (*boolean*): If `true`, value is not written to disk.
+* `noSave` (*boolean*): If `true`, value is not written to disk. *Default*: `false`.
 
 **Realm**
 
-`Server`
+`Shared`
 
 **Returns**
 
@@ -124,7 +131,7 @@ lia.config.forceSet("someSetting", true, true)
 
 **Purpose**
 
-Sets a config value, saves it server-side, triggers callbacks with the old and new values, and networks the update unless the config is marked `noNetworking`.
+Sets a config value and updates `lia.config.stored`. On the server it broadcasts a `cfgSet` net message to clients (unless the option is marked `noNetworking`), runs the change callback with `(oldValue, newValue)`, and saves the result. On the client it only updates the local value. If the key does not exist, nothing happens.
 
 **Parameters**
 
@@ -152,7 +159,7 @@ lia.config.set("maxPlayers", 24)
 
 **Purpose**
 
-Retrieves the current value of a config entry. If unset, returns the stored default or the provided fallback.
+Retrieves the current value of a config entry. If unset, returns the stored default or the provided fallback. Color tables are converted to `Color` objects automatically.
 
 **Parameters**
 
@@ -180,7 +187,7 @@ local players = lia.config.get("maxPlayers", 64)
 
 **Purpose**
 
-Loads config values from the database and stores them in `lia.config`. Missing entries are inserted with their defaults.
+On the server, loads config values from the database for the current schema and inserts any missing entries with their defaults. After loading, the `InitializedConfig` hook is fired. On the client, `lia.config.load` requests the config list from the server.
 
 **Parameters**
 
@@ -188,7 +195,7 @@ Loads config values from the database and stores them in `lia.config`. Missing e
 
 **Realm**
 
-`Shared`
+`Server` and `Client`
 
 **Returns**
 
@@ -236,7 +243,7 @@ Sends all changed config values to a client. If no client is provided, the value
 
 **Parameters**
 
-* `client` (*Player*): Player to receive the config data.
+* `client` (*Player | nil*): Player to receive the config data. If omitted, all clients receive it.
 
 **Realm**
 
@@ -259,7 +266,7 @@ lia.config.send()
 
 **Purpose**
 
-Writes all changed config values to the database so they persist across restarts.
+Writes all changed config values to the database so they persist across restarts. Existing rows for the current schema are replaced.
 
 **Parameters**
 
@@ -278,7 +285,5 @@ Writes all changed config values to the database so they persist across restarts
 ```lua
 lia.config.save()
 ```
-
----
 
 ---

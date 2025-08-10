@@ -1,3 +1,4 @@
+
 # Modularity Library
 
 This page explains the module-loading system.
@@ -6,7 +7,7 @@ This page explains the module-loading system.
 
 ## Overview
 
-The modularity library loads modules contained in the **`modules`** folder, resolves dependencies, and initialises both serverside and clientside components. During the process it fires the `DoModuleIncludes`, `InitializedSchema`, and `InitializedModules` hooks. See [Module Fields](../definitions/module.md) for the callbacks and options a module may define.
+The modularity library loads modules contained in the **`modules`** folder, resolves dependencies, and initialises both server-side and client-side components. During the process it fires the `DoModuleIncludes`, `InitializedSchema`, and `InitializedModules` hooks. See [Module Fields](../definitions/module.md) for the callbacks and options a module may define. Loaded modules are stored in `lia.module.list`, indexed by their unique identifier.
 
 Modules placed in a schema's `preload` directory are loaded **before** any framework modules. When a module with the same identifier exists in both `preload` and `lilia/gamemode/modules`, the version inside `preload` takes priority and the framework copy is skipped. If a schema overrides a framework module outside of `preload`, the loader prints a notice suggesting the module be moved to `preload` for improved efficiency.
 
@@ -16,7 +17,7 @@ Modules placed in a schema's `preload` directory are loaded **before** any frame
 
 **Purpose**
 
-Loads a module at a given path, processing dependencies, permissions, and any sub-modules.
+Loads a module at a given path, setting up its environment and processing permissions, dependencies, extras, and optional sub-modules. Existing hooks are removed when reloading a module. If the core file is missing or the module reports itself as disabled, the loader prints a message and aborts.
 
 **Parameters**
 
@@ -24,11 +25,11 @@ Loads a module at a given path, processing dependencies, permissions, and any su
 
 * `path` (*string*): Filesystem path of the module.
 
-* `isSingleFile` (*boolean*): `true` to load a single-file module.
+* `isSingleFile` (*boolean?*): Set to `true` to load a single-file module (default `false`).
 
-* `variable` (*string*): Temporary global table name (default `"MODULE"`).
+* `variable` (*string?*): Temporary global table name (default `"MODULE"`; `"SCHEMA"` when `uniqueID` is `"schema"`).
 
-* `skipSubmodules` (*boolean*): When `true`, sub-modules are not loaded.
+* `skipSubmodules` (*boolean?*): When `true`, sub-modules inside a `submodules` folder are not loaded (default `false`).
 
 **Realm**
 
@@ -56,7 +57,7 @@ lia.module.load("example", "lilia/gamemode/modules/example", false, nil, true)
 
 **Purpose**
 
-Loads the active schema and every discovered module, then fires initialisation hooks.
+Loads the active schema and every discovered module, then fires initialisation hooks. Modules in the `preload` directory are loaded before core and schema modules. Overrides trigger a suggestion to move them into `preload` for efficiency. After loading, modules that report `enabled = false` are removed from `lia.module.list`.
 
 **Parameters**
 
@@ -86,15 +87,15 @@ lia.module.initialize()
 
 **Purpose**
 
-Finds and loads every module located in a directory.
+Finds and loads every module folder located in a directory.
 
 **Parameters**
 
-* `directory` (*string*): Path containing module folders or files.
+* `directory` (*string*): Path containing module folders.
 
-* `group` (*string*): Group identifier such as `"schema"` or `"module"` (default `"module"`).
+* `group` (*string?*): Group identifier such as `"schema"` or `"module"` (default `"module"`). Determines the temporary global name (`SCHEMA` or `MODULE`).
 
-* `skip` (*table?, optional*): Module identifiers to skip while loading.
+* `skip` (*table?*): Set of module identifiers to skip while loading.
 
 **Realm**
 
@@ -107,8 +108,8 @@ Finds and loads every module located in a directory.
 **Example Usage**
 
 ```lua
--- Manually load all core modules (usually done by lia.module.initialize)
-lia.module.loadFromDir("lilia/gamemode/modules/core", "module")
+-- Manually load all core modules except those in the skip table
+lia.module.loadFromDir("lilia/gamemode/modules", "module", {test = true})
 ```
 
 ---
@@ -141,4 +142,4 @@ if main then
 end
 ```
 
----
+

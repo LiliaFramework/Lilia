@@ -20,6 +20,19 @@ They ensure consistent behavior across custom tools in Lilia.
 
 Creates a new tool object with default values.
 
+The returned table includes:
+
+* `Mode`: `nil`
+* `SWEP`: `nil`
+* `Owner`: `nil`
+* `ClientConVar`: `{}`
+* `ServerConVar`: `{}`
+* `Objects`: `{}`
+* `Stage`: `0`
+* `Message`: `L("start")`
+* `LastMessage`: `0`
+* `AllowedCVar`: `0`
+
 **Parameters**
 
 * None
@@ -50,6 +63,12 @@ tool.Owner = client -- client that spawned the tool
 
 Creates client and server ConVars for this tool.
 
+Client-side, every entry in `ClientConVar` becomes a persistent
+convar named `<mode>_<cvar>` with its default value.
+
+Server-side, a convar named `toolmode_allow_<mode>` is created with a
+default value of `1` and stored in `self.AllowedCVar`.
+
 **Parameters**
 
 * None
@@ -67,6 +86,91 @@ Creates client and server ConVars for this tool.
 ```lua
 -- Ensure console variables exist for configuration
 tool:CreateConVars()
+```
+
+
+---
+
+### UpdateData
+
+**Purpose**
+
+Placeholder for updating tool data. Override in specific tools.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `None`: This function does not return a value.
+
+**Example Usage**
+
+```lua
+function TOOL:UpdateData()
+    self.Stage = 1
+end
+```
+
+---
+
+### FreezeMovement
+
+**Purpose**
+
+Placeholder to freeze player movement while using the tool.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* `None`: This function does not return a value.
+
+**Example Usage**
+
+```lua
+function TOOL:FreezeMovement()
+    return true -- stop movement
+end
+```
+
+---
+
+### DrawHUD
+
+**Purpose**
+
+Draws custom HUD information for the tool.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+* `None`: This function does not return a value.
+
+**Example Usage**
+
+```lua
+function TOOL:DrawHUD()
+    draw.SimpleText("Using tool", "DermaDefault", 8, 8, color_white)
+end
 ```
 
 ---
@@ -162,7 +266,7 @@ Retrieves a numeric client ConVar value.
 
 * `property` (*string*): ConVar name without mode prefix.
 
-* `default` (*number*): Value returned if the ConVar doesn't exist.
+* `default` (*number*): Value returned if the ConVar doesn't exist. Converted to a number and falling back to `0` if not provided or non-numeric.
 
 **Realm**
 
@@ -170,7 +274,7 @@ Retrieves a numeric client ConVar value.
 
 **Returns**
 
-* number: The numeric value of the ConVar.
+* number: The numeric value of the ConVar or the provided default.
 
 **Example Usage**
 
@@ -197,13 +301,14 @@ Determines whether this tool is allowed to be used.
 
 **Returns**
 
-* boolean: True if the tool is allowed.
+* boolean: `true` on the client. On the server, the value of `self.AllowedCVar`.
 
 **Example Usage**
 
 ```lua
 -- Gate tool usage behind an admin check
 function TOOL:Allowed()
+    if CLIENT then return true end
     return self.AllowedCVar:GetBool() and self:GetOwner():IsAdmin()
 end
 ```
@@ -299,6 +404,9 @@ local result = tool:GetSWEP()
 
 Returns the player who owns the associated weapon.
 
+Internally it retrieves `self:GetSWEP().Owner` and falls back to
+`self:GetOwner()` if that is unavailable.
+
 **Parameters**
 
 * None
@@ -309,7 +417,7 @@ Returns the player who owns the associated weapon.
 
 **Returns**
 
-* Player: Owner of the tool.
+* Player: Owner of the tool or `nil` if unavailable.
 
 **Example Usage**
 
@@ -348,182 +456,6 @@ local result = tool:GetWeapon()
 
 ---
 
-### LeftClick
-
-**Purpose**
-
-Handles the left-click action. Override for custom behavior.
-
-**Parameters**
-
-* None
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* boolean: False by default.
-
-**Example Usage**
-
-```lua
--- Example override performing a build action
-function TOOL:LeftClick(trace)
-    self:AddPoint(trace.HitPos)
-    return true
-end
-```
-
----
-
-### RightClick
-
-**Purpose**
-
-Handles the right-click action. Override for custom behavior.
-
-**Parameters**
-
-* None
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* boolean: False by default.
-
-**Example Usage**
-
-```lua
--- Example override for an alternate action
-function TOOL:RightClick(trace)
-    openContextMenu(trace.Entity)
-    return true
-end
-```
-
----
-
-### Reload
-
-**Purpose**
-
-Clears stored objects when the tool reloads.
-
-**Parameters**
-
-* None
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `None`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-function TOOL:Reload()
-    self:ClearObjects()
-    self:ReleaseGhostEntity()
-end
-```
-
----
-
-### Deploy
-
-**Purpose**
-
-Called when the tool is equipped. Releases ghost entity.
-
-**Parameters**
-
-* None
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `None`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-function TOOL:Deploy()
-    self:ReleaseGhostEntity()
-    self:CreateConVars()
-end
-```
-
----
-
-### Holster
-
-**Purpose**
-
-Called when the tool is holstered. Releases ghost entity.
-
-**Parameters**
-
-* None
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `None`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-function TOOL:Holster()
-    self:ReleaseGhostEntity()
-    self:ClearObjects()
-end
-```
-
----
-
-### Think
-
-**Purpose**
-
-Called every tick; releases ghost entities by default.
-
-**Parameters**
-
-* None
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `None`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-function TOOL:Think()
-    self:CheckObjects()
-    updateGhost(self:GetOwner(), self.GhostEntity)
-end
-```
-
----
-
 ### CheckObjects
 
 **Purpose**
@@ -546,7 +478,7 @@ Validates stored objects and clears them if invalid.
 
 ```lua
 -- Validate all stored objects each tick
-local result = tool:CheckObjects()
+tool:CheckObjects()
 ```
 
 ---
@@ -573,7 +505,7 @@ Removes all stored objects from the tool.
 
 ```lua
 -- Remove any objects the tool is storing
-local result = tool:ClearObjects()
+tool:ClearObjects()
 ```
 
 ---
@@ -600,7 +532,7 @@ Removes the ghost entity used for previewing placements.
 
 ```lua
 -- Remove the placement preview entity
-local result = tool:ReleaseGhostEntity()
+tool:ReleaseGhostEntity()
 ```
 
 ---

@@ -7004,7 +7004,8 @@ Determines whether one character recognizes another.
 ```lua
 -- Only recognize characters from the same faction.
 hook.Add("isCharRecognized", "ValidateCharacterRecognition", function(character, id)
-    return character:getFaction() == lia.char.loaded[id]:getFaction()
+    local other = lia.char.getCharacter(id)
+    return other and character:getFaction() == other:getFaction()
 end)
 ```
 

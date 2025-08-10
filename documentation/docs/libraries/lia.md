@@ -1,6 +1,7 @@
 # Core Library
 
-This page documents general utilities used throughout Lilia.
+This page documents general utilities used throughout Lilia. All functions on
+this page live in `gamemode/core/libraries/loader.lua`.
 
 ---
 
@@ -14,17 +15,20 @@ The core library exposes shared helper functions used across multiple modules. I
 
 **Purpose**
 
-Includes a Lua file on the appropriate realm, sending it to clients when required.
+Includes a Lua file in the appropriate realm. When run on the server, any
+client or shared files are automatically sent to players. Throws a Lua error if
+`path` is missing.
 
 **Parameters**
 
-* `path` (*string*): Path to the Lua file.
-
-* `realm` (*string*): Realm state (`"server"`, `"client"`, `"shared"`, etc.).
+* `path` (*string*): Path to the Lua file. *Required.*
+* `realm` (*string*): Override for the inclusion realm (`"server"`,
+  `"client"`, or `"shared"`). When omitted, the realm is inferred from the
+  filename prefix (`sv_`, `sh_`, `cl_`) or defaults to `"shared"`.
 
 **Realm**
 
-Depends on the file realm.
+`Shared`
 
 **Returns**
 
@@ -33,7 +37,8 @@ Depends on the file realm.
 **Example Usage**
 
 ```lua
-lia.include("lilia/gamemode/core/libraries/util.lua")
+-- Force include as client
+lia.include("lilia/gamemode/core/libraries/keybind.lua", "client")
 ```
 
 ---
@@ -42,21 +47,22 @@ lia.include("lilia/gamemode/core/libraries/util.lua")
 
 **Purpose**
 
-Includes every Lua file in a directory, with optional recursion and realm override.
+Includes all Lua files in a directory. Can automatically prepend the active
+schema or gamemode path, walk subfolders, and force a realm for every file.
 
 **Parameters**
 
 * `dir` (*string*): Directory path.
-
-* `raw` (*boolean*): Treat `dir` as a raw Lua path.
-
-* `deep` (*boolean*): Include sub-folders when `true`.
-
-* `realm` (*string*): Realm state override.
+* `raw` (*boolean*): If `true`, uses `dir` as-is. Otherwise, the path is
+  relative to the active schema or to `lilia/gamemode`. *Optional.* Defaults to
+  `false`.
+* `deep` (*boolean*): Recursively include subfolders when `true`. *Optional.*
+  Defaults to `false`.
+* `realm` (*string*): Realm override applied to every included file. *Optional.*
 
 **Realm**
 
-Depends on included files.
+`Shared`
 
 **Returns**
 
@@ -65,6 +71,7 @@ Depends on included files.
 **Example Usage**
 
 ```lua
+-- Load all server files in a folder and its subfolders
 lia.includeDir("lilia/gamemode/modules/administration", true, true, "server")
 ```
 
@@ -74,17 +81,18 @@ lia.includeDir("lilia/gamemode/modules/administration", true, true, "server")
 
 **Purpose**
 
-Recursively includes Lua files while preserving alphabetical order.
+Includes Lua files grouped by folder. The function can walk subdirectories and
+determine the realm of each file from its prefix (`sh_`, `sv_`, `cl_`) unless a
+realm is forced.
 
 **Parameters**
 
 * `dir` (*string*): Directory path.
-
-* `raw` (*boolean*): Treat `dir` as a raw filesystem path.
-
-* `recursive` (*boolean*): Traverse sub-directories.
-
-* `forceRealm` (*string*): Realm override for all files.
+* `raw` (*boolean*): Use `dir` as a literal path. Otherwise, it is relative to
+  the active schema or gamemode. *Optional.* Defaults to `false`.
+* `recursive` (*boolean*): Recurse into subdirectories when `true`. *Optional.*
+  Defaults to `false`.
+* `forceRealm` (*string*): Force all files to load in this realm. *Optional.*
 
 **Realm**
 
@@ -106,7 +114,8 @@ lia.includeGroupedDir("modules", false, true)
 
 **Purpose**
 
-Prints a coloured error message prefixed with “$Lilia$”.
+Prints a coloured console message prefixed with "[Lilia] [Error]". This does
+not halt script execution; it is purely for logging.
 
 **Parameters**
 
@@ -132,13 +141,14 @@ lia.error("Something went wrong")
 
 **Purpose**
 
-Displays a deprecation warning and optionally runs a fallback callback.
+Displays a colour-coded deprecation warning and optionally runs a fallback
+function.
 
 **Parameters**
 
 * `methodName` (*string*): Name of the deprecated method.
-
-* `callback` (*function*): Fallback function. *Optional*.
+* `callback` (*function*): Function to run after printing the warning. Executed
+  only when supplied. *Optional.*
 
 **Realm**
 
@@ -162,7 +172,7 @@ end)
 
 **Purpose**
 
-Prints an updater message in cyan with the Lilia prefix.
+Prints a console message prefixed with "[Lilia] [Updater]" in cyan.
 
 **Parameters**
 
@@ -188,7 +198,7 @@ lia.updater("Loading additional content…")
 
 **Purpose**
 
-Prints an informational message with the Lilia prefix.
+Prints an informational console message prefixed with "[Lilia] [Information]".
 
 **Parameters**
 
@@ -210,11 +220,38 @@ lia.information("Server started successfully")
 
 ---
 
+### lia.admin
+
+**Purpose**
+
+Prints an admin-level console message prefixed with "[Lilia] [Admin]".
+
+**Parameters**
+
+* `msg` (*string*): Text to display.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+**Example Usage**
+
+```lua
+lia.admin("Player JohnDoe has been promoted to admin.")
+```
+
+---
+
 ### lia.bootstrap
 
 **Purpose**
 
-Logs a bootstrap message with a coloured section tag.
+Logs a bootstrap message with a coloured section tag. Messages are prefixed
+with "[Lilia] [Bootstrap]" followed by the section in brackets.
 
 **Parameters**
 
@@ -242,7 +279,8 @@ lia.bootstrap("Database", "Connection established")
 
 **Purpose**
 
-Broadcasts a chat message to all staff members permitted to view alt-account notifications.
+Broadcasts a chat notification to every valid player who has the
+`canSeeAltingNotifications` privilege.
 
 **Parameters**
 
@@ -250,7 +288,7 @@ Broadcasts a chat message to all staff members permitted to view alt-account not
 
 **Realm**
 
-`Shared`
+`Server`
 
 **Returns**
 
@@ -268,12 +306,12 @@ lia.notifyAdmin("Possible alt account detected")
 
 **Purpose**
 
-Prints a colour-coded log entry to the console.
+Prints a colour-coded log entry to the console prefixed with "[LOG]" and the
+log category.
 
 **Parameters**
 
 * `category` (*string*): Log category name.
-
 * `logString` (*string*): Text to log.
 
 **Realm**
@@ -296,27 +334,25 @@ lia.printLog("Gameplay", "Third round started")
 
 **Purpose**
 
-Applies standardised kick/ban commands for a player infraction.
+Applies standardised kick and/or ban commands for a player infraction using
+`lia.administrator.execCommand`.
 
 **Parameters**
 
 * `client` (*Player*): Player to punish.
-
-* `infraction` (*string*): Reason.
-
-* `kick` (*boolean*): Kick the player.
-
-* `ban` (*boolean*): Ban the player.
-
-* `time` (*number*): Ban duration (minutes).
-
-* `kickKey` (*string*): Localisation key for kick reason.
-
-* `banKey` (*string*): Localisation key for ban reason.
+* `infraction` (*string*): Reason for the punishment.
+* `kick` (*boolean*): Whether to kick the player.
+* `ban` (*boolean*): Whether to ban the player.
+* `time` (*number*): Ban duration in minutes. *Optional.* Defaults to `0`
+  (permanent).
+* `kickKey` (*string*): Localisation key for the kick reason. *Optional.*
+  Defaults to `"kickedForInfraction"`.
+* `banKey` (*string*): Localisation key for the ban reason. *Optional.* Defaults
+  to `"bannedForInfraction"`.
 
 **Realm**
 
-`Shared`
+`Server`
 
 **Returns**
 
@@ -334,11 +370,16 @@ lia.applyPunishment(ply, "Cheating", true, true, 0)
 
 **Purpose**
 
-Recursively loads entity-related files from a directory.
+Loads and registers entities, weapons, tools, and effects from a base
+directory. Handles both folder- and file-based definitions, automatically
+including `init.lua`, `shared.lua`, and `cl_init.lua` files, stripping realm
+prefixes (`sh_`, `sv_`, `cl_`), and registering with the appropriate GMod
+systems.
 
 **Parameters**
 
-* `path` (*string*): Directory path containing entity files.
+* `path` (*string*): Base directory containing `entities`, `weapons`, `tools`,
+  and/or `effects` subfolders.
 
 **Realm**
 

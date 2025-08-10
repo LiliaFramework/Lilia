@@ -4,7 +4,7 @@ Lilia is a versatile roleplay framework for Garry's Mod. This tutorial guides yo
 
 > **Note**
 
-> Lilia runs beneath a roleplay schema. After installing Lilia, you must also install a schema and start your server using that schema's gamemode (for example, `+gamemode scprp`).
+> Lilia runs beneath a roleplay schema. After installing Lilia, you must also install a schema and start your server using that schema's gamemode (for example, `+gamemode skeleton`).
 
 ---
 
@@ -120,11 +120,7 @@ Select a schema that fits your server theme:
 
     - [Direct Download](https://github.com/LiliaFramework/Skeleton/releases/download/release/skeleton.zip)
 
-- **SCPRP Schema**
 
-    - [GitHub Repository](https://github.com/LiliaFramework/SCPRP)
-
-    - [Direct Download](https://github.com/LiliaFramework/SCPRP/releases/download/release/scprp.zip)
 
 ---
 
@@ -174,7 +170,7 @@ Preload:   garrysmod/gamemodes/<SchemaName>/preload/
 
     ```plaintext
 
-    +gamemode scprp
+    +gamemode skeleton
 
     ```
 

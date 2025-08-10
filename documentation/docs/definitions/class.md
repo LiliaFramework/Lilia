@@ -18,35 +18,36 @@ The global `CLASS` table defines per-class settings such as display name, lore, 
 | `desc` | `string` | `"No Description"` | Description or lore of the class. |
 | `isDefault` | `boolean` | `false` | Whether the class is available by default. |
 | `isWhitelisted` | `boolean` | `false` | Whether the class requires whitelist to join. |
-| `faction` | `number` | `0` | Linked faction index (e.g., `FACTION_CITIZEN`). |
-| `color` | `Color` | `Color(255,255,255)` | UI color associated with the class. |
-| `weapons` | `table` | `{}` | Weapons granted to members of this class. |
+| `faction` | `number` | `required` | Linked faction index (e.g., `FACTION_CITIZEN`). |
+| `color` | `Color` | `nil` | UI color associated with the class; falls back to faction color when unset. |
+| `weapons` | `string` or `table` | `nil` | Weapons granted to members of this class. |
 | `pay` | `number` | `0` | Payment amount per interval. |
 | `payLimit` | `number` | `0` | Maximum accumulated pay. |
 | `payTimer` | `number` | `3600` | Seconds between paychecks when not overridden. |
 | `limit` | `number` | `0` | Maximum number of players in this class. |
-| `health` | `number` | `0` | Default starting health. |
-| `armor` | `number` | `0` | Default starting armor. |
+| `health` | `number` | `nil` | Starting health override. |
+| `armor` | `number` | `nil` | Starting armor override. |
 | `scale` | `number` | `1` | Player model scale multiplier. |
-| `runSpeed` | `number` | `0` | Default running speed. |
+| `runSpeed` | `number` | `nil` | Running speed or multiplier value. |
 | `runSpeedMultiplier` | `boolean` | `false` | Multiply base speed instead of replacing it. |
-| `walkSpeed` | `number` | `0` | Default walking speed. |
+| `walkSpeed` | `number` | `nil` | Walking speed or multiplier value. |
 | `walkSpeedMultiplier` | `boolean` | `false` | Multiply base walk speed instead of replacing it. |
-| `jumpPower` | `number` | `0` | Default jump power. |
+| `jumpPower` | `number` | `nil` | Jump power or multiplier value. |
 | `jumpPowerMultiplier` | `boolean` | `false` | Multiply base jump power instead of replacing it. |
 | `bloodcolor` | `number` | `0` | Blood color enumeration constant. |
-| `bodyGroups` | `table` | `{}` | Bodygroup name → index mapping applied on spawn. |
-| `logo` | `string` | `""` | Material path for the class logo. |
+| `bodyGroups` | `table` | `nil` | Bodygroup name → index mapping applied on spawn. |
+| `logo` | `string` | `nil` | Material path for the class logo. |
 | `scoreboardHidden` | `boolean` | `false` | Hide class headers and logos in the scoreboard. |
 | `skin` | `number` | `0` | Player model skin index. |
-| `subMaterials` | `table` | `{}` | Sub-material overrides for the model. |
-| `model` | `string` | `""` | Model path or list of paths used by this class. |
-| `requirements` | `string` | `""` | Informational requirements text shown to players. |
+| `subMaterials` | `table` | `nil` | Sub-material overrides for the model. |
+| `model` | `string` or `table` | `nil` | Model path or list of paths used by this class. |
+| `requirements` | `string` or `table` | `nil` | Informational requirements text shown to players. |
 | `index` | `number` | `auto` | Unique team index assigned at registration. |
 | `uniqueID` | `string` | `filename` | Optional identifier; defaults to the file name when omitted. |
-| `commands` | `table` | `{}` | Command names members may always use. |
+| `commands` | `table` | `nil` | Command names members may always use. |
 | `canInviteToFaction` | `boolean` | `false` | Allows members of this class to invite players to their faction. |
 | `canInviteToClass` | `boolean` | `false` | Allows members of this class to invite others to their class. |
+| `OnCanBe(client)` | `function` | `function(self, client) return true end` | Custom join check; return `false` to deny the client. |
 
 ---
 
@@ -172,7 +173,7 @@ CLASS.isWhitelisted = false
 
 **Description:**
 
-Links this class to a specific faction index.
+Links this class to a specific faction index. This field is required; registration fails if the faction is missing or invalid.
 
 **Example Usage:**
 
@@ -190,7 +191,7 @@ CLASS.faction = FACTION_CITIZEN
 
 **Description:**
 
-UI color representing the class. Defaults to `Color(255, 255, 255)` if not specified.
+UI color representing the class. When omitted, the faction’s color is used.
 
 **Example Usage:**
 
@@ -206,16 +207,19 @@ CLASS.color = Color(255, 0, 0)
 
 **Type:**
 
-`table`
+`string` or `table`
 
 **Description:**
 
-Weapons granted to members of this class on spawn.
+Weapons granted to members of this class on spawn. Supply a single weapon class or a table of weapon class strings.
 
 **Example Usage:**
 
 ```lua
+-- give two weapons
 CLASS.weapons = {"weapon_pistol", "weapon_crowbar"}
+-- or grant one weapon
+CLASS.weapons = "weapon_pistol"
 ```
 
 #### `pay`
@@ -304,7 +308,7 @@ CLASS.limit = 10
 
 **Description:**
 
-Default starting health for class members.
+Overrides the player’s starting health when they spawn as this class. If omitted, health is unchanged.
 
 **Example Usage:**
 
@@ -322,7 +326,7 @@ CLASS.health = 150
 
 **Description:**
 
-Default starting armor.
+Overrides the player’s starting armor. If omitted, armor remains unchanged.
 
 **Example Usage:**
 
@@ -358,9 +362,7 @@ CLASS.scale = 1.2
 
 **Description:**
 
-Default running speed. Set a number to override or a multiplier in
-
-conjunction with `runSpeedMultiplier`.
+Overrides or multiplies the player's running speed. Set a number to replace the speed or a multiplier when used with `runSpeedMultiplier`. If unset, the run speed is unchanged.
 
 **Example Usage:**
 
@@ -401,7 +403,7 @@ CLASS.runSpeedMultiplier = true
 
 **Description:**
 
-Default walking speed.
+Overrides or multiplies the player's walking speed. If unset, the walk speed is unchanged.
 
 **Example Usage:**
 
@@ -437,7 +439,7 @@ CLASS.walkSpeedMultiplier = false
 
 **Description:**
 
-Default jump power.
+Overrides or multiplies the player's jump power. If unset, the jump power is unchanged.
 
 **Example Usage:**
 
@@ -493,7 +495,7 @@ CLASS.bloodcolor = BLOOD_COLOR_RED
 
 **Description:**
 
-Mapping of bodygroup names to index values applied when the player spawns.
+Mapping of bodygroup names to index values applied when the player spawns. If omitted, bodygroups are not modified.
 
 **Example Usage:**
 
@@ -514,7 +516,7 @@ CLASS.bodyGroups = {
 
 **Description:**
 
-Path to the material used as this class's logo. Displayed in the scoreboard and F1 menu.
+Path to the material used as this class's logo. When `nil`, no logo is displayed in the scoreboard or F1 menu.
 
 **Example Usage:**
 
@@ -568,7 +570,7 @@ CLASS.skin = 2
 
 **Description:**
 
-List of material paths that replace the model's sub-materials. The first entry applies to sub-material `0`, the second to `1`, and so on.
+List of material paths that replace the model's sub-materials. The first entry applies to sub-material `0`, the second to `1`, and so on. Leave `nil` for no overrides.
 
 **Example Usage:**
 
@@ -589,7 +591,7 @@ CLASS.subMaterials = {
 
 **Description:**
 
-Model path (or list of paths) assigned to this class.
+Model path (or list of paths) assigned to this class. When omitted, the character's existing model is used.
 
 **Example Usage:**
 
@@ -603,16 +605,19 @@ CLASS.model = "models/player/alyx.mdl"
 
 **Type:**
 
-`string`
+`string` or `table`
 
 **Description:**
 
-Text displayed to the player describing what is needed to join this class. This field does not restrict access on its own.
+Text displayed to the player describing what is needed to join this class. Accepts a string or list of strings. This field does not restrict access on its own.
 
 **Example Usage:**
 
 ```lua
-CLASS.requirements = "Flag V and Engineering 25+"
+-- single requirement string
+CLASS.requirements = "Flag V"
+-- or list multiple requirements
+CLASS.requirements = {"Flag V", "Engineering 25+"}
 ```
 
 ---
@@ -627,7 +632,7 @@ CLASS.requirements = "Flag V and Engineering 25+"
 
 Table of command names that members of this class may always use,
 
-overriding standard command permissions.
+overriding standard command permissions. If omitted, no extra commands are granted.
 
 **Example Usage:**
 
@@ -669,6 +674,26 @@ Whether members of this class can invite players to join this class.
 
 ```lua
 CLASS.canInviteToClass = true
+```
+
+---
+
+#### `OnCanBe(client)`
+
+**Type:**
+
+`function`
+
+**Description:**
+
+Optional callback executed when a player attempts to join the class. `self` is the class table. Return `false` to block the player from joining.
+
+**Example Usage:**
+
+```lua
+function CLASS:OnCanBe(client)
+    return client:IsAdmin()
+end
 ```
 
 ---
@@ -721,4 +746,7 @@ CLASS.commands = {
 }
 CLASS.canInviteToFaction = true
 CLASS.canInviteToClass = true
+function CLASS:OnCanBe(client)
+    return client:IsAdmin()
+end
 ```

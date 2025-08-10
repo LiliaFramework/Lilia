@@ -205,7 +205,7 @@ local itemDef = lia.item.get("testItem")
 
 **Purpose**
 
-Retrieves an item instance by its numeric item ID and reports whether it is in an inventory or in the world.
+Retrieves an item instance by its numeric item ID and reports whether it is in an inventory, the world, or unknown.
 
 **Parameters**
 
@@ -217,14 +217,17 @@ Retrieves an item instance by its numeric item ID and reports whether it is in a
 
 **Returns**
 
-* *table | nil*: `{ item = <item>, location = <string> }` if found, else `nil` and an error message.
+* `table | nil`: `{ item = <item>, location = <string> }` when found.
+* `string | nil`: error message when not found.
 
 **Example Usage**
 
 ```lua
-local result = lia.item.getItemByID(42)
+local result, err = lia.item.getItemByID(42)
 if result then
     print("Item location:", result.location)
+else
+    print("Error:", err)
 end
 ```
 
@@ -246,14 +249,17 @@ Returns the item instance table itself without location information.
 
 **Returns**
 
-* *table | nil*: Item instance or `nil` with an error.
+* `table | nil`: Item instance when found.
+* `string | nil`: error message when not found.
 
 **Example Usage**
 
 ```lua
-local inst = lia.item.getInstancedItemByID(42)
+local inst, err = lia.item.getInstancedItemByID(42)
 if inst then
     print("Got item:", inst.name)
+else
+    print("Error:", err)
 end
 ```
 
@@ -275,14 +281,17 @@ Retrieves the `data` table of an item instance by its ID.
 
 **Returns**
 
-* *table | nil*: Data table or `nil` with an error message.
+* `table | nil`: Data table when found.
+* `string | nil`: error message when not found.
 
 **Example Usage**
 
 ```lua
-local data = lia.item.getItemDataByID(42)
+local data, err = lia.item.getItemDataByID(42)
 if data then
     print("Item data found.")
+else
+    print("Error:", err)
 end
 ```
 
@@ -354,7 +363,7 @@ Returns an inventory table by its ID from `lia.inventory.instances`.
 
 **Parameters**
 
-* `id` (*number*): Inventory ID.
+* `invID` (*number*): Inventory ID.
 
 **Realm**
 
@@ -510,7 +519,7 @@ Asynchronously creates a new inventory of a given type for a character owner and
 
 **Realm**
 
-`Shared`
+`Server`
 
 **Returns**
 
@@ -666,7 +675,8 @@ Sets a key/value pair in an item’s `data` table by ID, optionally saving, noti
 
 **Returns**
 
-* *boolean, string?*: `true` on success, otherwise `false` and error.
+* *boolean*: `true` on success, `false` otherwise.
+* `string | nil`: Error message when unsuccessful.
 
 **Example Usage**
 
@@ -781,7 +791,7 @@ Creates a new item instance and spawns a matching entity at a position/angle in 
 
 * `position` (*Vector*): World position.
 
-* `callback` (*function*): Receives `(item, ent)`. *Optional*.
+* `callback` (*function*): Receives the spawned item. *Optional*.
 
 * `angles` (*Angle*): Spawn angles. *Optional*.
 
@@ -798,8 +808,8 @@ Creates a new item instance and spawns a matching entity at a position/angle in 
 **Example Usage**
 
 ```lua
-lia.item.spawn("testItem", vector_origin, function(item, ent)
-    print("Spawned", item.uniqueID, "at", ent:GetPos())
+lia.item.spawn("testItem", vector_origin, function(item)
+    print("Spawned", item.uniqueID, "at", item.entity:GetPos())
 end)
 ```
 

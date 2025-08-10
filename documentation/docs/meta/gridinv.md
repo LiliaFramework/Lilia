@@ -103,17 +103,17 @@ print(string.format("Size: %dx%d", w, h))
 
 **Purpose**
 
-Checks if an item would fit inside the grid bounds when placed at the given coordinates.
-
-This does **not** test collisions with other items.
+Checks if an item would fit inside the grid bounds when placed at the given
+coordinates. Coordinates start at `1` and the item must remain entirely within
+the inventory. This does **not** test collisions with other items.
 
 **Parameters**
 
 * `item` (`Item`): Item being tested.
 
-* `x` (`number`): X slot position.
+* `x` (`number`): X slot position (1-indexed).
 
-* `y` (`number`): Y slot position.
+* `y` (`number`): Y slot position (1-indexed).
 
 **Realm**
 
@@ -138,8 +138,9 @@ end
 **Purpose**
 
 Determines if the inventory is large enough to hold the item's dimensions.
-
-Accepts either an `Item` object or a unique ID.
+It accepts either an `Item` instance or a unique ID string. Width and height
+values on the item must be positive numbers. The check also allows the item to
+fit when rotated.
 
 **Parameters**
 
@@ -167,9 +168,9 @@ end
 
 **Purpose**
 
-Returns whether `testItem` placed at `(x, y)` would overlap the given existing item.
-
-Used internally when checking placement validity.
+Returns whether `testItem` placed at `(x, y)` would overlap the given existing
+item. Items without stored `x`/`y` positions are ignored. Used internally when
+checking placement validity.
 
 **Parameters**
 
@@ -210,7 +211,7 @@ Checks this inventory **and all nested bags** to see if the item could be placed
 
 **Parameters**
 
-* `item` (`Item`): Item to test.
+* `item` (`Item|string`): Item instance or unique ID to test.
 
 **Realm**
 
@@ -252,7 +253,8 @@ Determines if `testItem` can be placed at `(x, y)` without overlapping existing 
 
 * `boolean`: True when placement is valid.
 
-* `Item|nil`: Conflicting item if placement fails.
+* `Item|nil`: Conflicting item if placement fails, or `nil` when a reserved
+  slot blocks placement.
 
 **Example Usage**
 
@@ -300,7 +302,9 @@ end
 
 Called when the inventory type registers.
 
-On the server it adds default access rules preventing players from placing items that do not fit and restricting access to the owner.
+On the server it adds the `CanNotAddItemIfNoSpace` and
+`CanAccessInventoryIfCharacterIsOwner` access rules to prevent placement of
+items that do not fit and to restrict access to the owner.
 
 **Parameters**
 
@@ -330,11 +334,12 @@ end
 
 Returns a table of items contained in this inventory.
 
-When `noRecurse` is `false`, items inside nested bags are also returned.
+When `noRecurse` is `false` (default), items inside nested bags are also
+returned.
 
 **Parameters**
 
-* `noRecurse` (`boolean`): Skip nested bag contents when true.
+* `noRecurse` (`boolean`): Skip nested bag contents when true (defaults to `false`).
 
 **Realm**
 
@@ -417,13 +422,14 @@ Sets the owning character of this inventory.
 
 A `Player` value is automatically converted to their character ID.
 
-When `fullUpdate` is `true` the inventory is synced to that owner immediately.
+Non-number values that are not players with characters are ignored. When
+`fullUpdate` is `true` the inventory is synced to that owner immediately.
 
 **Parameters**
 
 * `owner` (`number|Player`): Character ID or `Player` to own the inventory.
 
-* `fullUpdate` (`boolean`): Send a full sync to the owner.
+* `fullUpdate` (`boolean`): Send a full sync to the owner (defaults to `false`).
 
 **Realm**
 
@@ -451,19 +457,20 @@ Extra quantity that cannot fit triggers the `OnPlayerLostStackItem` hook.
 
 Coordinates can be omitted and the first free position will be used.
 
-When the third argument is a table it acts as item data and the second
-
-argument is treated as a quantity to spawn.
+When the third argument is a table it acts as item data and the second argument
+is treated as a quantity to spawn. If no coordinates are supplied the first free
+slot (possibly inside a nested bag) is used. Passing a quantity for a
+non-stackable item simply spawns one instance.
 
 **Parameters**
 
-* `item` (`Item|string`): Item instance or unique ID to add.
+* `itemTypeOrItem` (`Item|string`): Item instance or unique ID to add.
 
-* `xOrQuantity` (`number`): X slot or stack quantity (optional).
+* `xOrQuantity` (`number`): X slot or stack quantity. When used as a quantity this defaults to `1` (optional).
 
-* `yOrData` (`number|table`): Y slot or data table (optional).
+* `yOrData` (`number|table`): Y slot or data table. Supplying a table treats the second argument as a quantity.
 
-* `noReplicate` (`boolean`): Skip networking new items to clients.
+* `noReplicate` (`boolean`): Skip networking new items to clients (defaults to `false`).
 
 **Realm**
 
@@ -471,7 +478,8 @@ argument is treated as a quantity to spawn.
 
 **Returns**
 
-* `Deferred`: Resolves with the newly added item(s).
+* `Deferred`: Resolves with the created item or a table of items when multiple
+  are spawned or merged into existing stacks.
 
 **Example Usage**
 
@@ -489,13 +497,13 @@ end)
 
 Removes an item by ID **or type**.
 
-Quantity defaults to `1`.
+Quantity defaults to `1` and must be a positive number.
 
 **Parameters**
 
 * `itemTypeOrID` (`number|string`): Item ID or unique ID.
 
-* `quantity` (`number`): Amount to remove.
+* `quantity` (`number`): Amount to remove (defaults to `1`).
 
 **Realm**
 
@@ -520,8 +528,10 @@ end)
 **Purpose**
 
 Sends a `liaTransferItem` request telling the server to move an item.
-
-The server processes this call through the `HandleItemTransferRequest` hook.
+The call is ignored if the destination inventory is missing or the item already
+occupies the given coordinates. When the target position falls outside the
+destination's bounds, `destinationID` is sent as `nil`. The server processes
+this call through the `HandleItemTransferRequest` hook.
 
 **Parameters**
 

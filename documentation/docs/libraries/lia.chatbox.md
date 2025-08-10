@@ -29,11 +29,11 @@ print(icClass.format)
 
 ---
 
-### lia.chat.timestamp
+### lia.chat.timestamp(ooc)
 
 **Purpose**
 
-Returns a formatted timestamp if chat timestamps are enabled; otherwise returns an empty string.
+Returns a `"(hour)"` timestamp from `lia.time.GetHour()` when `lia.option.ChatShowTime` is enabled. For OOC messages a leading space is added and no trailing space is used; IC messages get a trailing space. When timestamps are disabled an empty string is returned.
 
 **Parameters**
 
@@ -55,7 +55,7 @@ chat.AddText(lia.chat.timestamp(false), Color(255, 255, 255), "Hello!")
 
 ---
 
-### lia.chat.register
+### lia.chat.register(chatType, data)
 
 **Purpose**
 
@@ -67,33 +67,33 @@ Registers a new chat class and sets up its command aliases.
 
 * `data` (*table*): Table of chat class properties.
 
-  * `arguments` (table) – Ordered argument definitions for the associated command.
+  * `arguments` (table) – Ordered argument definitions for the associated command. Defaults to an empty table.
 
-  * `desc` (string) – Description of the command shown in menus.
+  * `desc` (string) – Description of the command shown in menus. Defaults to an empty string.
 
-  * `prefix` (string | table) – Command prefixes that trigger this chat type.
+  * `prefix` (string | table) – Command prefixes that trigger this chat type. Duplicate prefixes are ignored and slashless variants are automatically added.
 
-  * `radius` (number | function) – Hearing range or custom range logic.
+  * `radius` (number | function) – Hearing range or custom range logic. Used to generate `onCanHear` when that callback is not supplied. If omitted, everyone can hear.
 
-  * `onCanHear` (function | number) – Determines if a listener can see the message.
+  * `onCanHear` (function | number) – `onCanHear(speaker, listener)` determines if a listener can see the message. Supplying a number is treated as a radius in units.
 
-  * `onCanSay` (function) – Called before sending to verify the speaker may talk.
+  * `onCanSay` (function) – `onCanSay(speaker, text)` runs before sending to verify the speaker may talk. The default blocks dead players, calling `speaker:notifyLocalized("noPerm")`, unless `deadCanChat` is `true`.
 
-  * `onChatAdd` (function) – Client-side handler for displaying the text.
+  * `onChatAdd` (function) – `onChatAdd(speaker, text, anonymous)` runs on the client to display text. The default uses `chat.AddText` with `lia.chat.timestamp(false)`, the chat color, and `L(data.format, anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, chatType) or IsValid(speaker) and speaker:Name() or L("console"), text)`.
 
-  * `onGetColor` (function) – Returns a `Color` for the message.
+  * `color` (Color) – Default colour for the fallback `onChatAdd`. Defaults to `Color(242, 230, 160)`.
 
-  * `color` (Color) – Default colour for the fallback `onChatAdd`.
+  * `format` (string) – Format string used by the fallback `onChatAdd`. Defaults to `"chatFormat"`.
 
-  * `format` (string) – Format string used by the fallback `onChatAdd`.
+  * `filter` (string) – Chat filter category used by the chat UI. Defaults to `"ic"`.
 
-  * `filter` (string) – Chat filter category used by the chat UI.
+  * `noSpaceAfter` (boolean) – Allows prefixes without a trailing space. Defaults to `false`.
 
-  * `font` (string) – Font name used when rendering the message.
+  * `deadCanChat` (boolean) – Permits dead players to use the chat type. Defaults to `false`.
 
-  * `noSpaceAfter` (boolean) – Allows prefixes without a trailing space.
+  * `syntax` (string) – Automatically generated from `arguments` using `lia.command.buildSyntaxFromArguments` and localised with `L`.
 
-  * `deadCanChat` (boolean) – Permits dead players to use the chat type.
+On the client, any defined prefixes are registered as command aliases via `lia.command.add` so they can be typed directly into chat.
 
 **Realm**
 
@@ -112,7 +112,6 @@ lia.chat.register("wave", {
     arguments = {{name = "text", type = "string", optional = true}},
     format = "* %s waves",
     prefix = {"/wave", "/greet"},
-    font = "liaChatFontItalics",
     filter = "actions",
     radius = lia.config.get("ChatRange", 280)
 })
@@ -120,11 +119,11 @@ lia.chat.register("wave", {
 
 ---
 
-### lia.chat.parse
+### lia.chat.parse(client, message, noSend)
 
 **Purpose**
 
-Parses chat text, determines the appropriate chat type, and optionally sends it.
+Parses chat text, determines the appropriate chat type, and optionally sends it. The function starts with the default chat type `"ic"` and searches registered prefixes case-insensitively. If the chosen class has `noSpaceAfter` and the remaining message begins with whitespace, that whitespace is trimmed. Results are passed through the `ChatParsed` hook, allowing modification of the chat type, text, or anonymity. When run on the server and `noSend` is `false`, the message is forwarded to `lia.chat.send` with the text filtered through the `PlayerMessageSend` hook.
 
 **Parameters**
 
@@ -146,6 +145,8 @@ Parses chat text, determines the appropriate chat type, and optionally sends it.
 
 * *boolean*: Whether the speaker is anonymous.
 
+Returns `nil` if the message contains only whitespace.
+
 **Example Usage**
 
 ```lua
@@ -159,11 +160,11 @@ end)
 
 ---
 
-### lia.chat.send
+### lia.chat.send(speaker, chatType, text, anonymous, receivers)
 
 **Purpose**
 
-Broadcasts a chat message to all eligible receivers.
+Broadcasts a chat message to all eligible receivers. It respects the chat class's `onCanSay` and `onCanHear` logic and passes text through the `PlayerMessageSend` hook before networking. If `receivers` is not provided and `onCanHear` exists, a recipient list is built from players with characters that satisfy `onCanHear`. If that list ends up empty, the message is discarded. When a receiver list is provided, it is sent only to those players; otherwise it is broadcast to everyone.
 
 **Parameters**
 
@@ -190,6 +191,6 @@ Broadcasts a chat message to all eligible receivers.
 ```lua
 local target = player.GetByID(1)
 if IsValid(target) then
-    lia.chat.send(client, "ic", "Hello", false, { target })
+    lia.chat.send(client, "ic", "Hello", false, {target})
 end
 ```

@@ -98,7 +98,7 @@ lia.db.loadTables()
 
 **Purpose**
 
-Returns a deferred that resolves once tables are fully created. Useful for awaiting setup in async code.
+Returns a deferred that resolves once tables are fully created. If tables have already loaded, the deferred resolves immediately. Useful for awaiting setup in async code.
 
 **Parameters**
 
@@ -126,13 +126,13 @@ end)
 
 **Purpose**
 
-Converts a Lua value into a string appropriate for SQL insertion, handling escaping unless `noEscape` is `true`.
+Converts a Lua value into a SQL-safe representation. `nil` and `NULL` become `NULL`, booleans become `1` or `0`, tables are encoded as JSON, and strings are escaped unless `noEscape` is `true`.
 
 **Parameters**
 
 * `value` (*any*): Value to convert.
 
-* `noEscape` (*boolean*): Skip escaping when `true`.
+* `noEscape` (*boolean*): Skip escaping the value when `true`.
 
 **Realm**
 
@@ -162,7 +162,7 @@ Inserts a row into a table using key-value pairs.
 
 * `callback` (*function*): Function called after the insert.
 
-* `dbTable` (*string*): Table name **without** the `lia_` prefix.
+* `dbTable` (*string*): Table name **without** the `lia_` prefix. Defaults to `"characters"`.
 
 **Realm**
 
@@ -175,8 +175,8 @@ Inserts a row into a table using key-value pairs.
 **Example Usage**
 
 ```lua
-lia.db.insertTable({ name = "Test" }, function(id)
-    print("Inserted", id)
+lia.db.insertTable({ name = "Test" }, function(_, lastID)
+    print("Inserted", lastID)
 end, "characters")
 ```
 
@@ -194,7 +194,7 @@ Updates one or more rows according to a condition.
 
 * `callback` (*function*): Function called after update.
 
-* `dbTable` (*string*): Table name **without** `lia_`.
+* `dbTable` (*string*): Table name **without** `lia_`. Defaults to `"characters"`.
 
 * `condition` (*string*): SQL `WHERE` clause.
 
@@ -226,7 +226,7 @@ Selects rows, optionally filtered and limited, returning a deferred.
 
 * `fields` (*table | string*): Columns to select.
 
-* `dbTable` (*string*): Table name without `lia_`.
+* `dbTable` (*string*): Table name without `lia_`. Defaults to `"characters"`.
 
 * `condition` (*string*): SQL condition (`WHERE`).
 
@@ -238,13 +238,13 @@ Selects rows, optionally filtered and limited, returning a deferred.
 
 **Returns**
 
-* *deferred*: Resolves with results and last insert ID.
+* *deferred*: Resolves with a table containing `results` and `lastID`.
 
 **Example Usage**
 
 ```lua
-lia.db.select("*", "characters", "id = 1"):next(function(rows)
-    PrintTable(rows)
+lia.db.select("*", "characters", "id = 1"):next(function(data)
+    PrintTable(data.results)
 end)
 ```
 
@@ -254,13 +254,13 @@ end)
 
 **Purpose**
 
-Inserts or updates a row depending on unique-key conflict. Returns a deferred.
+Inserts or updates a row depending on unique-key conflict.
 
 **Parameters**
 
 * `value` (*table*): Columns and values.
 
-* `dbTable` (*string*): Table name without `lia_`.
+* `dbTable` (*string*): Table name without `lia_`. Defaults to `"characters"`.
 
 **Realm**
 
@@ -268,12 +268,14 @@ Inserts or updates a row depending on unique-key conflict. Returns a deferred.
 
 **Returns**
 
-* *deferred*: Resolves when done.
+* *deferred*: Resolves with a table containing `results` and `lastID`.
 
 **Example Usage**
 
 ```lua
-lia.db.upsert({ id = 1, name = "John" }, "characters")
+lia.db.upsert({ id = 1, name = "John" }, "characters"):next(function(res)
+    print("Last ID:", res.lastID)
+end)
 ```
 
 ---
@@ -286,7 +288,7 @@ Deletes rows matching a condition; deletes all rows if no condition.
 
 **Parameters**
 
-* `dbTable` (*string*): Table name without `lia_`.
+* `dbTable` (*string*): Table name without `lia_`. Defaults to `"character"`.
 
 * `condition` (*string*): SQL condition.
 
@@ -479,7 +481,7 @@ Inserts multiple rows in a single query.
 
 **Returns**
 
-* *deferred*: Resolves when done.
+* *deferred*: Resolves when done. Resolves immediately if `rows` is empty.
 
 **Example Usage**
 
@@ -487,7 +489,9 @@ Inserts multiple rows in a single query.
 lia.db.bulkInsert("items", {
     { _invID = 1, _uniqueID = "pistol", _x = 0, _y = 0, _quantity = 1 },
     { _invID = 1, _uniqueID = "ammo",   _x = 1, _y = 0, _quantity = 30 },
-})
+}):next(function()
+    print("Rows inserted")
+end)
 ```
 
 ---
@@ -510,7 +514,7 @@ Inserts multiple rows and updates them if they already exist.
 
 **Returns**
 
-* *deferred*: Resolves when done.
+* *deferred*: Resolves when done. Resolves immediately if `rows` is empty.
 
 **Example Usage**
 
@@ -518,7 +522,9 @@ Inserts multiple rows and updates them if they already exist.
 lia.db.bulkUpsert("items", {
     { _invID = 1, _uniqueID = "pistol", _x = 0, _y = 0, _quantity = 1 },
     { _invID = 1, _uniqueID = "ammo",   _x = 1, _y = 0, _quantity = 30 },
-})
+}):next(function()
+    print("Upsert complete")
+end)
 ```
 
 ---
@@ -533,7 +539,7 @@ Attempts to insert a row; silently ignores unique-key violation.
 
 * `value` (*table*): Row data.
 
-* `dbTable` (*string*): Table name without `lia_`.
+* `dbTable` (*string*): Table name without `lia_`. Defaults to `"characters"`.
 
 **Realm**
 
@@ -548,6 +554,34 @@ Attempts to insert a row; silently ignores unique-key violation.
 ```lua
 lia.db.insertOrIgnore({ id = 1, name = "Bob" }, "characters"):next(function(r)
     print("Insert ID:", r.lastID)
+end)
+```
+
+---
+
+### lia.db.getTables
+
+**Purpose**
+
+Lists all tables in the database that start with `lia_`.
+
+**Parameters**
+
+* *None*
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *deferred*: Resolves with an array of table names.
+
+**Example Usage**
+
+```lua
+lia.db.getTables():next(function(tables)
+    PrintTable(tables)
 end)
 ```
 
@@ -621,9 +655,9 @@ Registers a prepared statement (MySQLOO only).
 
 * `key` (*string*): Statement identifier.
 
-* `query` (*string*): SQL with placeholders.
+* `str` (*string*): SQL with placeholders.
 
-* `types` (*table*): Array of MySQLOO type constants.
+* `values` (*table*): Array of MySQLOO type constants.
 
 **Realm**
 
@@ -638,7 +672,7 @@ Registers a prepared statement (MySQLOO only).
 ```lua
 lia.db.prepare(
     "updateName",
-    "UPDATE lia_characters SET _name = ? WHERE _id = ?",
+    "UPDATE lia_characters SET name = ? WHERE id = ?",
     { MYSQLOO_STRING, MYSQLOO_INTEGER }
 )
 ```
@@ -804,7 +838,7 @@ Returns the least busy database object and its pool index. *(MySQLOO only)*
 **Example Usage**
 
 ```lua
-local db = lia.db.getObject()
+local db, index = lia.db.getObject()
 ```
 
 ---
@@ -817,7 +851,7 @@ Checks whether a table with the provided name exists in the connected database.
 
 **Parameters**
 
-* `tbl` (*string*): Name of the table to check.
+* `tbl` (*string*): Full table name to check (e.g., `"lia_characters"`).
 
 **Realm**
 
@@ -830,7 +864,7 @@ Checks whether a table with the provided name exists in the connected database.
 **Example Usage**
 
 ```lua
-lia.db.tableExists("characters"):next(function(exists)
+lia.db.tableExists("lia_characters"):next(function(exists)
     print("Characters table present:", exists)
 end)
 ```
@@ -845,7 +879,7 @@ Determines whether a specific column is present in a table.
 
 **Parameters**
 
-* `tbl` (*string*): Table name.
+* `tbl` (*string*): Full table name (e.g., `"lia_characters"`).
 
 * `field` (*string*): Column name to check.
 
@@ -860,7 +894,7 @@ Determines whether a specific column is present in a table.
 **Example Usage**
 
 ```lua
-lia.db.fieldExists("characters", "name"):next(function(hasField)
+lia.db.fieldExists("lia_characters", "name"):next(function(hasField)
     print("Name column exists:", hasField)
 end)
 ```

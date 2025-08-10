@@ -6,7 +6,7 @@ This page describes how popup notices are displayed.
 
 ## Overview
 
-The notice library displays temporary popup notifications at the top of the player’s screen. Server functions send network messages to clients, which create `liaNotice` panels client-side. These panels are stored in `lia.notices` and automatically expire about 7.5 seconds after creation.
+The notice library displays temporary popup notifications at the top‑right of the player’s screen. Server functions send network messages to clients, which create `liaNotice` panels client-side. These panels are stored in `lia.notices`, repositioned to stack, play `garrysmod/content_downloaded.wav` 0.15 seconds after appearing and automatically expire roughly 7.75 seconds after creation.
 
 ---
 
@@ -46,7 +46,7 @@ lia.notices.notify("Your quest failed.", player)
 
 **Purpose**
 
-Sends a localised notice. If `recipient` is not a `Player`, it is treated as the first formatting argument and the notice is broadcast.
+Sends a localised notice using the `liaNotifyL` net message. If `recipient` is not a `Player`, it is treated as the first formatting argument and the notice is broadcast.
 
 **Parameters**
 
@@ -54,7 +54,7 @@ Sends a localised notice. If `recipient` is not a `Player`, it is treated as the
 
 * `recipient` (*Player | nil*): Target player, or first format argument if not a `Player`.
 
-* … (*any*): Additional `string.format` values.
+* … (*any*): Additional `string.format` values, converted to strings for transmission. Up to 255 are supported.
 
 **Realm**
 
@@ -80,7 +80,7 @@ lia.notices.notifyLocalized("questFoundItem", nil, "golden_key")
 
 **Purpose**
 
-Creates a `liaNotice` panel on the local client. The notice fades after \~7.5 seconds.
+Creates a `liaNotice` panel on the local client, prints the message to console, plays `garrysmod/content_downloaded.wav` 0.15 seconds later at volume 50 and pitch 250, stacks it with existing notices and removes it about 7.75 seconds after creation.
 
 **Parameters**
 
@@ -110,7 +110,7 @@ lia.notices.notify("Welcome back!")
 
 **Purpose**
 
-Translates a localisation key with `L` and shows the result on the local client.
+Translates `key` with `L(key, …)` and displays the result on the local client using `lia.notices.notify`.
 
 **Parameters**
 

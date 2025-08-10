@@ -42,6 +42,35 @@ end
 
 ---
 
+### lia.util.getBySteamID
+
+**Purpose**
+
+Finds a player by their SteamID or SteamID64, returning only those who currently have a character loaded.
+
+**Parameters**
+
+* `steamID` (*string*): SteamID or SteamID64.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* *Player | nil*: Matching player or `nil`.
+
+**Example Usage**
+
+```lua
+local ply = lia.util.getBySteamID("STEAM_0:1:123456")
+if ply then
+    print("Found:", ply:Name())
+end
+```
+
+---
+
 ### lia.util.FindPlayersInSphere
 
 **Purpose**
@@ -77,13 +106,12 @@ end
 
 **Purpose**
 
-Attempts to find a player by SteamID, SteamID64, caret (“^” = caller), at-symbol (“@” = caller’s target), or partial name.
+Attempts to find a player by SteamID, SteamID64, caret (`"^"` = requester), at‑symbol (`"@"` = the requester's traced target), or a partial name match. Identifiers are compared case-insensitively using `lia.util.stringMatches`. If the identifier is missing or no player is found, the requester is notified via `notifyLocalized`.
 
 **Parameters**
 
-* `client` (*Player*): Requesting player.
-
-* `identifier` (*string*): Search string.
+* `client` (*Player | nil*): Player performing the search for notification purposes. May be `nil`.
+* `identifier` (*string*): Identifier to search for.
 
 **Realm**
 
@@ -91,14 +119,14 @@ Attempts to find a player by SteamID, SteamID64, caret (“^” = caller), at-sy
 
 **Returns**
 
-* *Player | nil*: Found player or `nil`.
+* *Player | nil*: Matching player entity, or `nil` if not found.
 
 **Example Usage**
 
 ```lua
-local target = lia.util.findPlayer(admin, "Bob")
+local target = lia.util.findPlayer(admin, "@")
 if target then
-    admin:ChatPrint("Found: " .. target:Name())
+    admin:ChatPrint("Looking at " .. target:Name())
 end
 ```
 
@@ -168,13 +196,12 @@ end
 
 **Purpose**
 
-Finds all entities created by/associated with a player, optionally filtered by class.
+Finds every entity the player spawned or owns (entities whose `GetCreator()` or `.client` matches the player), optionally filtered by class.
 
 **Parameters**
 
-* `client` (*Player*): Player to check.
-
-* `class` (*string | nil*): Class filter.
+* `client` (*Player*): Player whose entities to gather.
+* `class` (*string | nil*): Optional class name to filter.
 
 **Realm**
 
@@ -257,7 +284,7 @@ end
 
 **Purpose**
 
-Finds a player by SteamID64.
+Converts a SteamID64 string to a SteamID and finds the matching player.
 
 **Parameters**
 
@@ -286,11 +313,11 @@ end
 
 **Purpose**
 
-Alias for `findPlayerBySteamID64`.
+Finds a player by SteamID.
 
 **Parameters**
 
-* `steamID64` (*string*): SteamID64.
+* `SteamID` (*string*): SteamID string (e.g., `"STEAM_0:1:123456"`).
 
 **Realm**
 
@@ -303,7 +330,10 @@ Alias for `findPlayerBySteamID64`.
 **Example Usage**
 
 ```lua
-local ply = lia.util.findPlayerBySteamID("76561198000000000")
+local ply = lia.util.findPlayerBySteamID("STEAM_0:1:123456")
+if ply then
+    print("Found player:", ply:Name())
+end
 ```
 
 ---
@@ -410,7 +440,7 @@ Caches and returns a `Material` to avoid repeated creation.
 
 **Realm**
 
-`Shared`
+`Client`
 
 **Returns**
 
@@ -430,13 +460,12 @@ surface.DrawTexturedRect(0, 0, 100, 100)
 
 **Purpose**
 
-Finds a faction by name or uniqueID; includes partial-match fallback.
+Finds a faction by name or uniqueID with a partial-match fallback. If no faction is found, the player is notified with `invalidFaction`.
 
 **Parameters**
 
-* `client` (*Player*): Requesting player.
-
-* `name` (*string*): Faction identifier.
+* `client` (*Player*): Player to notify on failure.
+* `name` (*string*): Faction name or uniqueID.
 
 **Realm**
 
@@ -450,15 +479,18 @@ Finds a faction by name or uniqueID; includes partial-match fallback.
 
 ```lua
 local faction = lia.util.findFaction(client, "citizen")
+if faction then
+    print("Faction found:", faction.name)
+end
 ```
 
 ---
 
-### lia.util.CreateTableUI
+### lia.util.SendTableUI
 
 **Purpose**
 
-Sends a net message instructing the client to build a table UI.
+Sends a table UI to a client for display using the big table transfer system.
 
 **Parameters**
 
@@ -485,7 +517,7 @@ Sends a net message instructing the client to build a table UI.
 **Example Usage**
 
 ```lua
-lia.util.CreateTableUI(ply, "Inventory", cols, rows, opts, charID)
+lia.util.SendTableUI(ply, "Inventory", cols, rows, opts, charID)
 ```
 
 ---
@@ -500,7 +532,7 @@ Generates empty-space positions around an entity using a grid-based search.
 
 * `entity` (*Entity*): Centre entity.
 
-* `filter` (*table | function | Entity*): Trace filter.
+* `filter` (*Entity | table | function*): Trace filter (default `entity`).
 
 * `spacing` (*number*): Grid spacing (default 32).
 
@@ -521,7 +553,10 @@ Generates empty-space positions around an entity using a grid-based search.
 **Example Usage**
 
 ```lua
-local spots = lia.util.findEmptySpace(ent, ent, 32, 3, 36, 5)
+local spots = lia.util.findEmptySpace(ent)
+for _, pos in ipairs(spots) do
+    print(pos)
+end
 ```
 
 ---
@@ -554,7 +589,7 @@ Draws text with a shadow offset.
 
 **Returns**
 
-* *nil*
+ * *nil*
 
 **Example Usage**
 
@@ -593,7 +628,7 @@ Draws outlined text.
 
 **Returns**
 
-* *nil*
+* *number*: Width of the drawn text.
 
 **Example Usage**
 
@@ -651,13 +686,13 @@ Draws text with a subtle shadow.
 
 * `x`, `y` (*number*): Position.
 
-* `color` (*Color*): Text colour.
+* `color` (*Color*): Text colour (default `color_white`).
 
 * `alignX`, `alignY` (*number*): Align constants.
 
 * `font` (*string*): Font (default `"liaGenericFont"`).
 
-* `alpha` (*number*): Shadow alpha multiplier.
+* `alpha` (*number*): Shadow alpha multiplier (default `color.a * 0.575`).
 
 **Realm**
 
@@ -665,7 +700,7 @@ Draws text with a subtle shadow.
 
 **Returns**
 
-* *nil*
+* *number*: Width of the drawn text.
 
 **Example Usage**
 
@@ -684,9 +719,9 @@ Draws a textured rectangle.
 
 **Parameters**
 
-* `material` (*string | IMaterial*): Path or material object.
+* `material` (*string*): Material path.
 
-* `color` (*Color*): Draw colour.
+* `color` (*Color*): Draw colour (default `color_white`).
 
 * `x`, `y`, `w`, `h` (*number*): Rectangle geometry.
 
@@ -745,10 +780,8 @@ Wraps text to a maximum width.
 **Parameters**
 
 * `text` (*string*): Text.
-
 * `width` (*number*): Max width.
-
-* `font` (*string*): Font used for measurement.
+* `font` (*string*): Font used for measurement (default `"liaChatFont"`).
 
 **Realm**
 
@@ -810,9 +843,9 @@ Draws blur over a rectangle on screen.
 
 * `x`, `y`, `w`, `h` (*number*): Rectangle.
 
-* `amount` (*number*): Blur strength.
+* `amount` (*number*): Blur strength (default 5).
 
-* `passes` (*number*): Iteration multiplier.
+* `passes` (*number*): Iteration multiplier (default 0.2).
 
 * `alpha` (*number*): Optional alpha transparency (default 255).
 
@@ -838,14 +871,12 @@ end)
 
 **Purpose**
 
-Prompts the local player for typed input and returns the result to a callback.
+Prompts the local player for typed input and returns the result to a callback. Supported field types include `"string"`, `"number"`/`"int"`, `"boolean"`, and `"table"` (dropdown choices).
 
 **Parameters**
 
 * `title` (*string*): Window title.
-
-* `argTypes` (*table*): Definition table (label → field type or `{ type, data }`).
-
+* `argTypes` (*table*): Table of field definitions where each key is the label and the value is either a field type or `{ type, data }` for dropdown options.
 * `onSubmit` (*function*): Called with the collected values.
 
 **Realm**
@@ -868,7 +899,7 @@ lia.util.requestArguments("User Info",
 
 ---
 
-### lia.util.CreateTableUI - client implementation
+### lia.util.CreateTableUI
 
 **Purpose**
 
@@ -892,7 +923,7 @@ Creates and displays a table UI from supplied column/row data.
 
 **Returns**
 
-* *nil*
+* *Panel*, *DListView*: Created frame and list view.
 
 **Example Usage**
 

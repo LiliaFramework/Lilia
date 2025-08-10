@@ -157,7 +157,7 @@ Returns all items in the inventory matching the given unique ID.
 
 * `uniqueID` (`string`): Item unique identifier.
 
-* `onlyMain` (`boolean`): Search only the main item list.
+* `onlyMain` (`boolean|nil`): Currently unused; retained for compatibility.
 
 **Realm**
 
@@ -182,7 +182,7 @@ end
 
 **Purpose**
 
-Registers this inventory type with the `lia.inventory` system.
+Registers this inventory type with the `lia.inventory` system and prepares its configuration. The table's `configure` method is invoked, and on the server `persistent` storage and an empty `accessRules` list are set up.
 
 **Parameters**
 
@@ -210,7 +210,7 @@ local chestInv = WeaponInv:new()
 
 **Purpose**
 
-Creates a new inventory of this type.
+Creates a new unsaved inventory of this type. The returned instance has an ID of `-1` until it is persisted with `instance` or `initializeStorage`.
 
 **Parameters**
 
@@ -471,7 +471,7 @@ print("Ammo remaining:", ammoTotal)
 
 **Purpose**
 
-Returns the unique database ID of this inventory.
+Returns the unique database ID of this inventory. Unsaved inventories use `-1`.
 
 **Parameters**
 
@@ -483,7 +483,7 @@ Returns the unique database ID of this inventory.
 
 **Returns**
 
-* `number`: Inventory identifier.
+* `number`: Inventory identifier, or `-1` if the inventory has not been stored yet.
 
 **Example Usage**
 
@@ -533,7 +533,7 @@ Inserts an item instance into this inventory and persists it.
 
 * `item` (`Item`): Item to add.
 
-* `noReplicate` (`boolean`): Skip network replication when true.
+* `noReplicate` (`boolean`): Suppresses the `OnItemAdded` hook when true; network updates still occur.
 
 **Realm**
 
@@ -614,7 +614,7 @@ Creates a persistent inventory record in the database using supplied initial dat
 
 **Parameters**
 
-* `initialData` (`table`): Values to store when creating the inventory.
+* `initialData` (`table`): Values to store when creating the inventory. If `initialData.char` is provided, it sets the owning character ID and is not saved as regular data.
 
 **Realm**
 
@@ -680,6 +680,8 @@ Removes an item by ID and optionally deletes it.
 
 * `Deferred`: Resolves once the item removal completes.
 
+If the item does not exist in this inventory the deferred resolves immediately.
+
 **Example Usage**
 
 ```lua
@@ -723,13 +725,13 @@ end)
 
 **Purpose**
 
-Sets a data field on the inventory and replicates the change to clients.
+Sets a data field on the inventory and replicates the change to clients. After updating, `onDataChanged` and any registered data proxies are triggered.
 
 **Parameters**
 
 * `key` (`string`): Data field name.
 
-* `value` (`any`): Value to store.
+* `value` (`any`): Value to store. Use `nil` to remove the key.
 
 **Realm**
 
@@ -738,6 +740,8 @@ Sets a data field on the inventory and replicates the change to clients.
 **Returns**
 
 * `table`: The inventory instance.
+
+Keys marked as non-persistent in the inventory configuration are not written to the database.
 
 **Example Usage**
 
@@ -837,7 +841,7 @@ inv:removeAccessRule(myRule)
 
 **Purpose**
 
-Returns a list of players that should receive network updates for this inventory.
+Returns a list of players that should receive network updates for this inventory. Each connected player is checked with `canAccess("repl")`.
 
 **Parameters**
 
@@ -919,7 +923,7 @@ end
 
 **Purpose**
 
-Loads all items belonging to this inventory from storage.
+Loads all items belonging to this inventory from storage and merges each record's saved data into a new item instance.
 
 **Parameters**
 
@@ -951,7 +955,7 @@ Hook called after `loadItems` finishes loading all items.
 
 **Parameters**
 
-* `items` (`table`): Loaded items indexed by ID.
+* None
 
 **Realm**
 
@@ -964,8 +968,9 @@ Hook called after `loadItems` finishes loading all items.
 **Example Usage**
 
 ```lua
-function WeaponInv:onItemsLoaded(items)
-    print("Ready with", #items, "items")
+function WeaponInv:onItemsLoaded()
+    local items = self:getItems()
+    print("Ready with", table.Count(items), "items")
 end
 ```
 
@@ -979,7 +984,7 @@ Creates and stores a new inventory instance of this type.
 
 **Parameters**
 
-* `initialData` (`table|nil`): Data to populate the inventory with.
+* `initialData` (`table|nil`): Data to populate the inventory with. Defaults to an empty table.
 
 **Realm**
 
@@ -1007,7 +1012,7 @@ Sends a single data field to clients.
 
 **Parameters**
 
-* `key` (`string`): Field to replicate.
+* `key` (`string`): Field to replicate. Keys flagged with `noReplication` in the inventory configuration are ignored.
 
 * `recipients` (`table|nil`): Player recipients.
 

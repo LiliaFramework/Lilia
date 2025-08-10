@@ -1,28 +1,26 @@
 # Menu Library
 
-This page describes small menu-creation helpers.
+Client-side helpers for simple world-space context menus.
 
 ---
 
 ## Overview
 
-The menu library offers convenience functions for building simple context menus. Menus are defined by label/callback pairs and automatically appear at the player’s cross-hair or attached to a specified entity. Active menus are stored in `lia.menu.list` on the client.
+The menu library offers convenience functions for building simple context menus. Menus are defined by label/callback pairs and automatically appear at the player's crosshair or follow a specified entity. Active menus are stored in `lia.menu.list` on the client. Menus fade when the player looks away and are removed if the player moves more than **96 units** away or the attached entity becomes invalid.
 
 ### Menu-entry fields
 
 Each entry in `lia.menu.list` is a table containing:
 
 * `position` (*Vector*) – World position where the menu is drawn.
-
 * `entity` (*Entity | nil*) – Entity the menu follows, if attached.
-
 * `items` (*table*) – Sorted array of `{ label, callback }` pairs.
-
-* `width` (*number*) – Pixel width used for rendering.
-
-* `height` (*number*) – Combined pixel height of all rows.
-
+* `width` (*number*) – Pixel width based on the longest label plus 24px padding.
+* `height` (*number*) – Total height of all rows (each row is 28px).
 * `onRemove` (*function | nil*) – Executed when the menu is removed.
+* `alpha` (*number*) – Internal fade alpha used while drawing.
+* `displayed` (*boolean | nil*) – Internal flag used for fade-in logic.
+* `entPos` (*Vector | nil*) – Internal cached position for attached entities.
 
 ---
 
@@ -34,11 +32,9 @@ Creates a context menu from a table of label/callback pairs.
 
 **Parameters**
 
-* `opts` (*table*): Map of label → callback.
-
-* `pos` (*Vector | Entity | nil*): World position or entity to attach to.
-
-* `onRemove` (*function | nil*): Function executed when the menu is removed.
+* `opts` (*table*): Map of label → callback. Labels are converted to strings and sorted alphabetically.
+* `pos` (*Vector | Entity | nil*): World position for the menu or entity to attach to. When an entity is supplied, the menu tracks that entity at the point under the player's crosshair. Defaults to the player's eye-trace hit position.
+* `onRemove` (*function | nil*): Function executed when the menu is removed for any reason (player moves away, entity becomes invalid, manual removal, etc.).
 
 **Realm**
 
@@ -68,7 +64,7 @@ end)
 
 **Purpose**
 
-Draws every active menu on the player’s HUD.
+Draws each active menu and handles fade-in/fade-out. Menus fade when the player looks away and are removed if the player moves too far or the attached entity becomes invalid.
 
 **Parameters**
 
@@ -94,7 +90,7 @@ hook.Add("HUDPaintBackground", "DrawMenus", lia.menu.drawAll)
 
 **Purpose**
 
-Returns the ID and callback of the menu item currently under the cursor.
+Returns the ID and callback of the menu item currently under the player's crosshair.
 
 **Parameters**
 
@@ -107,8 +103,11 @@ Returns the ID and callback of the menu item currently under the cursor.
 **Returns**
 
 * *number | nil*: ID of the active menu.
-
 * *function | nil*: Callback for the hovered item.
+
+**Notes**
+
+Only menus within 96 units and under the player's crosshair are considered.
 
 **Example Usage**
 
@@ -131,8 +130,7 @@ Removes the menu with the given ID and runs its callback (if present).
 **Parameters**
 
 * `id` (*number*): Identifier returned by `lia.menu.add`.
-
-* `callback` (*function | nil*): Function executed after removal.
+* `cb` (*function | nil*): Function executed after removal.
 
 **Realm**
 
@@ -140,7 +138,7 @@ Removes the menu with the given ID and runs its callback (if present).
 
 **Returns**
 
-* *boolean*: `true` if a callback executed.
+* *boolean*: `true` if `cb` executed, otherwise `false`.
 
 **Example Usage**
 

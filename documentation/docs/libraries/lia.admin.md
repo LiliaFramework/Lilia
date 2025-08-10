@@ -1,26 +1,27 @@
-# Admin Library
+# Administrator Library
 
-This page explains the built-in administration system.
+This page documents the built-in administrator system.
 
 ---
 
 ## Overview
 
-The admin library manages user groups, privileges, and bans. It automatically disables itself when the SAM admin mod is detected.
+The administrator library manages user groups, privileges, and access levels with support for CAMI integration and hierarchical inheritance.
 
-The base user groups `user`, `admin`, and `superadmin` are created automatically and cannot be removed.
+The base user groups `user`, `admin`, and `superadmin` exist by default and cannot be removed.
 
 ---
 
-### lia.admin.isDisabled
+### lia.administrator.hasAccess
 
 **Purpose**
 
-Checks for third-party admin mods and returns booleans indicating whether the built-in system and its commands should be ignored.
+Checks if a player or usergroup has access to a specific privilege. Unregistered privileges log a warning and only superadmins pass the check. Members of the `superadmin` group automatically have all privileges.
 
 **Parameters**
 
-*None*
+* `ply` (*Player|string*): Player entity or usergroup name.
+* `privilege` (*string*): Privilege identifier.
 
 **Realm**
 
@@ -28,17 +29,124 @@ Checks for third-party admin mods and returns booleans indicating whether the bu
 
 **Returns**
 
-* `boolean, boolean`: `true` when the admin system should be disabled and when admin commands should be disabled respectively.
+* `boolean`: `true` if access is granted, `false` otherwise.
+
+**Example Usage**
+
+```lua
+if lia.administrator.hasAccess(ply, "manageUsergroups") then
+    print(ply:Nick() .. " can manage usergroups")
+end
+```
 
 ---
 
-### lia.admin.load
+### lia.administrator.save
 
 **Purpose**
 
-Loads stored admin groups and privileges from disk. If CAMI usergroups are
-available, they will be used instead and the current CAMI permissions will be
-imported.
+Rebuilds privilege data, saves all usergroups and privileges to the database, and optionally synchronizes them to clients.
+
+**Parameters**
+
+* `noNetwork` (*boolean*, optional): When `true`, skips the client synchronization step. Defaults to `false`.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+**Example Usage**
+
+```lua
+lia.administrator.save() -- Save and sync
+lia.administrator.save(true) -- Save without syncing
+```
+
+---
+
+### lia.administrator.registerPrivilege
+
+**Purpose**
+
+Registers a new privilege and assigns it to all usergroups that meet the minimum access level.
+
+**Parameters**
+
+* `priv` (*table*):
+  * `ID` (*string*): Unique identifier used in permission checks.
+  * `Name` (*string*, optional): Localized name shown in lists. Defaults to `ID`.
+  * `MinAccess` (*string*, optional): Minimum usergroup that should have the privilege. Defaults to `"user"`.
+  * `Category` (*string*, optional): Category label.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+**Example Usage**
+
+```lua
+lia.administrator.registerPrivilege({
+    ID = "canFly",
+    MinAccess = "admin",
+    Category = "Fun",
+})
+```
+
+---
+
+### lia.administrator.unregisterPrivilege
+
+**Purpose**
+
+Removes a previously registered privilege from all usergroups.
+
+**Parameters**
+
+* `id` (*string*): Identifier of the privilege to remove.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+---
+
+### lia.administrator.applyInheritance
+
+**Purpose**
+
+Applies inheritance for a usergroup, copying privileges from parent groups and granting those that meet minimum requirements.
+
+**Parameters**
+
+* `groupName` (*string*): Target usergroup.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+---
+
+### lia.administrator.load
+
+**Purpose**
+
+Loads usergroups and privileges from the database, ensures default groups exist, applies inheritance, and synchronizes with CAMI if available. Triggers `OnAdminSystemLoaded` after initialization.
 
 **Parameters**
 
@@ -54,37 +162,44 @@ imported.
 
 ---
 
-### lia.admin.createGroup
+### lia.administrator.createGroup
 
 **Purpose**
 
-Creates a new user group with an optional table of permissions.
+Creates a new usergroup with optional information and registers it with CAMI. Fails if the group already exists.
 
 **Parameters**
 
 * `groupName` (*string*): Name of the group.
-
-* `info` (*table*): Table of permissions. Optional.
+* `info` (*table*, optional): Table containing `_info` field with `inheritance` and `types`. Defaults to `{_info = {inheritance = "user", types = {}}}`.
 
 **Realm**
 
-`Server`
+`Shared`
 
 **Returns**
 
 * *nil*: This function does not return a value.
 
+**Example Usage**
+
+```lua
+lia.administrator.createGroup("moderator", {
+    _info = {inheritance = "user", types = {"Staff"}}
+})
+```
+
 ---
 
-### lia.admin.registerPrivilege
+### lia.administrator.removeGroup
 
 **Purpose**
 
-Registers a CAMI privilege for use with permission checks.
+Deletes a usergroup and unregisters it from CAMI. The groups `user`, `admin`, and `superadmin` cannot be removed.
 
 **Parameters**
 
-* `privilege` (*table*): Table containing the privilege definition.
+* `groupName` (*string*): Group to remove. Must exist.
 
 **Realm**
 
@@ -96,165 +211,16 @@ Registers a CAMI privilege for use with permission checks.
 
 ---
 
-### lia.admin.removeGroup
+### lia.administrator.renameGroup
 
 **Purpose**
 
-Deletes a previously created user group. The built-in groups `user`, `admin`, and `superadmin` are protected and cannot be removed.
+Renames an existing usergroup and updates CAMI information. The groups `user`, `admin`, and `superadmin` cannot be renamed.
 
 **Parameters**
 
-* `groupName` (*string*): Name of the group to remove.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
----
-
-### lia.admin.addPermission
-
-**Purpose**
-
-Grants a permission flag to a specific group.
-
-**Parameters**
-
-* `groupName` (*string*): Target group.
-
-* `permission` (*string*): Permission identifier.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
----
-
-### lia.admin.removePermission
-
-**Purpose**
-
-Revokes a permission flag from a group.
-
-**Parameters**
-
-* `groupName` (*string*): Target group.
-
-* `permission` (*string*): Permission identifier to remove.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
----
-
-### lia.admin.save
-
-**Purpose**
-
-Writes the current group table to disk and optionally networks it to clients.
-
-**Parameters**
-
-* `network` (*boolean*): When `true`, broadcasts the updated groups to clients.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
----
-
-### lia.admin.setPlayerGroup
-
-**Purpose**
-
-Changes the user group of a player and records it in the database.
-
-**Parameters**
-
-* `ply` (*Player*): Player to modify.
-
-* `usergroup` (*string*): Group identifier.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
----
-
-### lia.admin.addBan
-
-**Purpose**
-
-Creates a ban entry for a SteamID.
-
-**Parameters**
-
-* `steamid` (*string*): SteamID64 of the player.
-
-* `reason` (*string*): Ban reason. Optional.
-
-* `duration` (*number*): Ban length in minutes. Optional.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
----
-
-### lia.admin.removeBan
-
-**Purpose**
-
-Removes an existing ban.
-
-**Parameters**
-
-* `steamid` (*string*): SteamID64 of the ban to lift.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
----
-
-### lia.admin.isBanned
-
-**Purpose**
-
-Retrieves the ban entry for a SteamID if present.
-
-**Parameters**
-
-* `steamid` (*string*): SteamID64 to check.
+* `oldName` (*string*): Current name of the group.
+* `newName` (*string*): New name for the group. Must not already exist.
 
 **Realm**
 
@@ -262,52 +228,147 @@ Retrieves the ban entry for a SteamID if present.
 
 **Returns**
 
-* `table | false`: Ban data or `false` when not banned.
+* *nil*: This function does not return a value.
 
 ---
 
-### lia.admin.hasBanExpired
+### lia.administrator.addPermission
 
 **Purpose**
 
-Determines whether a given ban has expired.
+Grants a privilege to a usergroup. Default groups (`user`, `admin`, `superadmin`) cannot be modified.
 
 **Parameters**
 
-* `steamid` (*string*): SteamID64 to check.
+* `groupName` (*string*): Target usergroup. Must exist and not be a default group.
+* `permission` (*string*): Privilege identifier.
+* `silent` (*boolean*, optional): When `true`, suppresses network updates. Defaults to `false`.
 
 **Realm**
 
-`Shared`
+`Server`
 
 **Returns**
 
-* `boolean`: `true` if the ban is no longer active.
+* *nil*: This function does not return a value.
 
 ---
 
-### lia.admin.execCommand
+### lia.administrator.removePermission
 
 **Purpose**
 
-Executes a basic admin action by sending the appropriate chat command.
+Revokes a privilege from a usergroup. Default groups (`user`, `admin`, `superadmin`) cannot be modified.
 
 **Parameters**
 
-* `cmd` (*string*): Command identifier, e.g. `"kick"` or `"ban"`.
-
-* `victim` (*Player | string*): Target player or SteamID.
-
-* `dur` (*number | nil*): Duration in minutes for applicable commands. Optional.
-
-* `reason` (*string | nil*): Reason text. Optional.
+* `groupName` (*string*): Target usergroup. Must exist and not be a default group.
+* `permission` (*string*): Privilege to remove.
+* `silent` (*boolean*, optional): When `true`, suppresses network updates. Defaults to `false`.
 
 **Realm**
 
-`Shared`
+`Server`
 
 **Returns**
 
-* *boolean | nil*: `true` if a matching command executed, otherwise `nil`.
+* *nil*: This function does not return a value.
+
+---
+
+### lia.administrator.sync
+
+**Purpose**
+
+Synchronizes admin privileges and groups to a specific client or all clients. Only players marked as ready receive the data.
+
+**Parameters**
+
+* `c` (*Player*, optional): Player to sync to. When omitted, all players are synced.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+---
+
+### lia.administrator.setPlayerUsergroup
+
+**Purpose**
+
+Sets a player's usergroup and notifies CAMI of the change. Does nothing if the player already has the target group.
+
+**Parameters**
+
+* `ply` (*Player*): Player whose usergroup to set.
+* `newGroup` (*string*): New usergroup name.
+* `source` (*string*, optional): Source identifier for CAMI. Defaults to `"Lilia"`.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+---
+
+### lia.administrator.setSteamIDUsergroup
+
+**Purpose**
+
+Assigns a usergroup to a player by SteamID and notifies CAMI. Updates the player in-game if they are online.
+
+**Parameters**
+
+* `steamId` (*string*): Player's SteamID. Must not be empty.
+* `newGroup` (*string*): New usergroup name.
+* `source` (*string*, optional): Source identifier for CAMI. Defaults to `"Lilia"`.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+---
+
+### lia.administrator.execCommand
+
+**Purpose**
+
+Executes an administrative chat command such as kick or ban. Supported commands include kick, ban, unban, mute, unmute, gag, ungag, freeze, unfreeze, slay, bring, goto, return, jail, unjail, cloak, uncloak, god, ungod, ignite, extinguish, strip, respawn, blind, and unblind.
+
+**Parameters**
+
+* `cmd` (*string*): Command name (e.g., `"kick"`, `"ban"`, `"goto"`).
+* `victim` (*Player|string*): Target player entity or SteamID.
+* `dur` (*number*, optional): Duration for timed commands. Defaults to `0`.
+* `reason` (*string*, optional): Reason text.
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+* `boolean|nil`: `true` if a command was issued, otherwise `nil`.
+
+**Example Usage**
+
+```lua
+-- Kick a player for being AFK
+lia.administrator.execCommand("kick", targetPlayer, nil, "AFK")
+
+-- Ban a SteamID for 60 minutes
+lia.administrator.execCommand("ban", "STEAM_0:1:123456", 60, "Cheating")
+```
 
 ---
