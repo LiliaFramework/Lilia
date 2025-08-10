@@ -48,7 +48,7 @@ end
 
 function MODULE:CanPlayerSpawnStorage(client, _, info)
     if not client then return true end
-    if not client:hasPrivilege(L("canSpawnStorage")) then return false end
+    if not client:hasPrivilege("canSpawnStorage") then return false end
     if not info.invType or not lia.inventory.types[info.invType] then return false end
 end
 

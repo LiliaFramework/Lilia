@@ -1,4 +1,4 @@
-﻿local function stripAgo(timeSince)
+local function stripAgo(timeSince)
     local agoStr = L("ago")
     local suffix = " " .. agoStr
     if timeSince:sub(-#suffix) == suffix then return timeSince:sub(1, -#suffix - 1) end
@@ -21,7 +21,7 @@ net.Receive("RequestFactionRoster", function(_, client)
         if data then
             for _, v in ipairs(data) do
                 local charID = tonumber(v.id)
-                local isOnline = lia.char.loaded[charID] ~= nil
+                local isOnline = lia.char.isLoaded(charID)
                 local lastOnlineText
                 if isOnline then
                     lastOnlineText = L("onlineNow")
@@ -38,7 +38,7 @@ net.Receive("RequestFactionRoster", function(_, client)
                 local classData = lia.class.list[classID]
                 local playTime = tonumber(v.playtime) or 0
                 if isOnline then
-                    local char = lia.char.loaded[charID]
+                    local char = lia.char.getCharacter(charID)
                     if char then
                         local loginTime = char:getLoginTime() or os.time()
                         playTime = char:getPlayTime() + os.time() - loginTime

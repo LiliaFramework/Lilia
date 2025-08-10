@@ -1,4 +1,4 @@
-﻿local characterMeta = lia.meta.character or {}
+local characterMeta = lia.meta.character or {}
 characterMeta.__index = characterMeta
 characterMeta.id = characterMeta.id or 0
 characterMeta.vars = characterMeta.vars or {}
@@ -1311,7 +1311,7 @@ if SERVER then
     ]]
     function characterMeta:destroy()
         local id = self:getID()
-        lia.char.loaded[id] = nil
+        lia.char.removeCharacter(id)
     end
 
     --[[

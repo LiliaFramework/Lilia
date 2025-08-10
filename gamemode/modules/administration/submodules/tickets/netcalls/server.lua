@@ -16,9 +16,9 @@ net.Receive("TicketSystemClaim", function(_, client)
         return
     end
 
-    if (client:hasPrivilege(L("alwaysSeeTickets")) or client:isStaffOnDuty()) and not requester.CaseClaimed then
+    if (client:hasPrivilege("alwaysSeeTickets") or client:isStaffOnDuty()) and not requester.CaseClaimed then
         for _, v in player.Iterator() do
-            if v:hasPrivilege(L("alwaysSeeTickets")) or v:isStaffOnDuty() then
+            if v:hasPrivilege("alwaysSeeTickets") or v:isStaffOnDuty() then
                 net.Start("TicketSystemClaim")
                 net.WriteEntity(client)
                 net.WriteEntity(requester)
@@ -43,7 +43,7 @@ net.Receive("TicketSystemClose", function(_, client)
     if not requester or not IsValid(requester) or requester.CaseClaimed ~= client then return end
     if timer.Exists("ticketsystem-" .. requester:SteamID()) then timer.Remove("ticketsystem-" .. requester:SteamID()) end
     for _, v in player.Iterator() do
-        if v:hasPrivilege(L("alwaysSeeTickets")) or v:isStaffOnDuty() then
+        if v:hasPrivilege("alwaysSeeTickets") or v:isStaffOnDuty() then
             net.Start("TicketSystemClose")
             net.WriteEntity(requester)
             net.Send(v)
@@ -56,7 +56,7 @@ net.Receive("TicketSystemClose", function(_, client)
 end)
 
 net.Receive("liaRequestActiveTickets", function(_, client)
-    if not (client:hasPrivilege(L("alwaysSeeTickets")) or client:isStaffOnDuty()) then return end
+    if not (client:hasPrivilege("alwaysSeeTickets") or client:isStaffOnDuty()) then return end
     lia.db.select({"timestamp", "requesterSteamID", "adminSteamID", "message"}, "ticketclaims"):next(function(res)
         local tickets = {}
         for _, row in ipairs(res.results or {}) do
@@ -75,7 +75,7 @@ net.Receive("liaRequestActiveTickets", function(_, client)
 end)
 
 net.Receive("liaRequestTicketsCount", function(_, client)
-    if not (client:hasPrivilege(L("alwaysSeeTickets")) or client:isStaffOnDuty()) then return end
+    if not (client:hasPrivilege("alwaysSeeTickets") or client:isStaffOnDuty()) then return end
     lia.db.count("ticketclaims"):next(function(count)
         net.Start("liaTicketsCount")
         net.WriteInt(count or 0, 32)

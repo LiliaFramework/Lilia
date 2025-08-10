@@ -1685,7 +1685,7 @@ function MODULE:PopulateAdminTabs(pages)
 
     if not table.IsEmpty(entitiesByCreator) then
         pages[#pages + 1] = {
-            name = L("entities"),
+            name = "entities",
             icon = "icon16/bricks.png",
             drawFunc = function(entPanel)
                 local sheetContainer = vgui.Create("DPropertySheet", entPanel)
@@ -1736,7 +1736,7 @@ function MODULE:PopulateAdminTabs(pages)
                             btn.DoClick = func
                         end
 
-                        if client:hasPrivilege(L("viewEntityTab")) then
+                        if client:hasPrivilege("viewEntityTab") then
                             makeBtn("view", function()
                                 if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
                                 local prevTP = lia.option.get("thirdPersonEnabled", false)
@@ -1745,7 +1745,7 @@ function MODULE:PopulateAdminTabs(pages)
                             end)
                         end
 
-                        if client:hasPrivilege(L("teleportToEntityTab")) then
+                        if client:hasPrivilege("teleportToEntityTab") then
                             makeBtn("teleport", function()
                                 net.Start("liaTeleportToEntity")
                                 net.WriteEntity(ent)

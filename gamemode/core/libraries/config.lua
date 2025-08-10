@@ -1,33 +1,3 @@
-﻿--[[
-# Configuration Library
-
-This page documents the functions for working with configuration variables and settings.
-
----
-
-## Overview
-
-The configuration library provides a centralized system for managing configuration variables throughout the Lilia framework. It handles the registration, storage, and retrieval of config values with support for different data types, validation, and change callbacks. The system supports networking configuration changes to clients and provides a robust foundation for customizable server settings.
-
-The library features include:
-- **Type-Safe Configuration**: Support for various data types including strings, numbers, booleans, colors, and complex objects
-- **Validation System**: Built-in validation with custom validation rules and error handling
-- **Change Callbacks**: Automatic notification when configuration values change with custom callback support
-- **Client-Server Synchronization**: Automatic networking of configuration changes to connected clients
-- **Category Organization**: Hierarchical organization of configurations by category for better management
-- **Default Value Management**: Automatic handling of default values with fallback mechanisms
-- **Database Persistence**: Automatic saving and loading of configuration values to/from database
-- **Access Control**: Permission-based access to configuration modification and viewing
-- **Validation Rules**: Custom validation rules with min/max values, pattern matching, and custom validators
-- **Change History**: Optional tracking of configuration changes for audit purposes
-- **Hot Reloading**: Support for runtime configuration changes without server restart
-- **Import/Export**: Configuration backup and restore functionality
-- **UI Integration**: Built-in support for configuration management interfaces
-- **Performance Optimization**: Efficient caching and lookup mechanisms for configuration values
-- **Cross-Module Support**: Configuration sharing between different modules and addons
-
-The configuration system provides a flexible and powerful foundation for managing server settings, player preferences, and module configurations. It ensures consistency across the framework and provides an intuitive interface for both developers and administrators.
-]]
 lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
 --[[
@@ -1139,10 +1109,16 @@ lia.config.add("StaffHasGodMode", "staffGodMode", true, nil, {
 lia.config.add("ClassDisplay", "displayClassesOnCharacters", true, nil, {
     desc = "displayClassesOnCharactersDesc",
     category = "character",
-    type = "Boolean"
+    type = "Boolean",
 })
 
-lia.config.add("sbWidth", "sbWidth", 0.35, nil, {
+local function refreshScoreboard()
+    if CLIENT and lia.gui and IsValid(lia.gui.score) and lia.gui.score.ApplyConfig then
+        lia.gui.score:ApplyConfig()
+    end
+end
+
+lia.config.add("sbWidth", "sbWidth", 0.35, refreshScoreboard, {
     desc = "sbWidthDesc",
     category = "scoreboard",
     type = "Float",
@@ -1150,12 +1126,19 @@ lia.config.add("sbWidth", "sbWidth", 0.35, nil, {
     max = 1.0
 })
 
-lia.config.add("sbHeight", "sbHeight", 0.65, nil, {
+lia.config.add("sbHeight", "sbHeight", 0.65, refreshScoreboard, {
     desc = "sbHeightDesc",
     category = "scoreboard",
     type = "Float",
     min = 0.1,
     max = 1.0
+})
+
+lia.config.add("sbDock", "sbDock", "center", refreshScoreboard, {
+    desc = "sbDockDesc",
+    category = "scoreboard",
+    type = "String",
+    options = {"left", "center", "right"}
 })
 
 lia.config.add("ClassHeaders", "classHeaders", true, nil, {
@@ -1654,7 +1637,7 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
 
     if hook.Run("CanPlayerModifyConfig", LocalPlayer()) ~= false then
         pages[#pages + 1] = {
-            name = L("categoryConfiguration"),
+            name = "categoryConfiguration",
             drawFunc = function(parent) buildConfiguration(parent) end
         }
     end

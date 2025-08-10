@@ -1,32 +1,3 @@
-﻿--[[
-# Database Library
-
-This page documents the functions for working with database operations and connections.
-
----
-
-## Overview
-
-The database library provides a unified interface for database operations across different database systems (SQLite and MySQL). It handles connection management, query execution, prepared statements, and provides a promise-based API for asynchronous database operations. The library supports both callback and promise patterns for database queries.
-
-The library features include:
-- **Multi-Database Support**: Seamless support for both SQLite and MySQL with automatic fallback
-- **Promise-Based API**: Modern promise-based interface for asynchronous database operations
-- **Prepared Statements**: Secure and efficient prepared statement support with parameter binding
-- **Connection Pooling**: Optimized connection management with automatic reconnection handling
-- **Query Queue System**: Automatic queuing of queries during connection issues with retry logic
-- **Error Handling**: Comprehensive error handling with detailed logging and recovery mechanisms
-- **Transaction Support**: Full transaction support with rollback capabilities
-- **Query Optimization**: Built-in query optimization and caching for improved performance
-- **Migration System**: Automatic database schema migration and version management
-- **Data Validation**: Input validation and sanitization for database security
-- **Performance Monitoring**: Query performance tracking and optimization suggestions
-- **Cross-Platform Compatibility**: Works across different server configurations and database setups
-- **Backup Integration**: Automatic backup system integration for data safety
-- **Schema Management**: Dynamic schema creation and modification capabilities
-
-The database library serves as the backbone for all persistent data storage in Lilia, providing a robust and efficient interface for managing character data, configurations, logs, and other persistent information. It ensures data integrity and provides the foundation for the framework's data persistence layer.
-]]
 lia.db = lia.db or {}
 lia.db.queryQueue = lia.db.queue or {}
 lia.db.prepared = lia.db.prepared or {}
@@ -246,30 +217,6 @@ modules.mysqloo = {
 
 lia.db.escape = lia.db.escape or modules.sqlite.escape
 lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueue + 1] = {...} end
---[[
-    lia.db.connect
-
-    Purpose:
-        Establishes a connection to the configured database module (either SQLite or MySQL).
-        If not already connected or if a reconnect is requested, it initializes the connection,
-        processes any queued queries, and sets up the query and escape functions for the selected module.
-
-    Parameters:
-        callback (function) - Optional. Function to call once the connection is established.
-        reconnect (boolean) - Optional. If true, forces a reconnection even if already connected.
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Connect to the database and print a message when done
-        lia.db.connect(function()
-            print("Database connected!")
-        end)
-]]
 function lia.db.connect(callback, reconnect)
     local dbModule = modules[lia.db.module]
     if dbModule then
@@ -292,28 +239,6 @@ function lia.db.connect(callback, reconnect)
     end
 end
 
---[[
-    lia.db.wipeTables
-
-    Purpose:
-        Removes all tables used by Lilia from the database, effectively wiping all stored data.
-        Handles both MySQL and SQLite backends, and ensures foreign key checks are properly managed.
-
-    Parameters:
-        callback (function) - Optional. Function to call once all tables have been wiped.
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Wipe all Lilia tables and print a message when done
-        lia.db.wipeTables(function()
-            print("All Lilia tables have been wiped!")
-        end)
-]]
 function lia.db.wipeTables(callback)
     local function realCallback()
         if lia.db.module == "mysqloo" then
@@ -368,27 +293,6 @@ function lia.db.wipeTables(callback)
     end
 end
 
---[[
-    lia.db.loadTables
-
-    Purpose:
-        Creates all required Lilia tables in the database if they do not already exist.
-        Handles both SQLite and MySQL schemas, and ensures all tables are created before
-        signaling that tables are loaded.
-
-    Parameters:
-        None.
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Load all Lilia tables (usually called during server startup)
-        lia.db.loadTables()
-]]
 function lia.db.loadTables()
     local function done()
         lia.db.addDatabaseFields()
@@ -761,28 +665,6 @@ CREATE TABLE IF NOT EXISTS `lia_admin` (
     hook.Run("OnLoadTables")
 end
 
---[[
-    lia.db.waitForTablesToLoad
-
-    Purpose:
-        Returns a deferred object that resolves when all Lilia database tables have finished loading.
-        Useful for ensuring that database operations are not performed before tables are ready.
-
-    Parameters:
-        None.
-
-    Returns:
-        deferred - A deferred object that resolves when tables are loaded.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Wait for tables to load before running a function
-        lia.db.waitForTablesToLoad():next(function()
-            print("Tables are loaded, safe to query!")
-        end)
-]]
 function lia.db.waitForTablesToLoad()
     TABLE_WAIT_ID = TABLE_WAIT_ID or 0
     local d = deferred.new()
@@ -815,29 +697,6 @@ local function genUpdateList(value)
     return table.concat(changes, ", ")
 end
 
---[[
-    lia.db.convertDataType
-
-    Purpose:
-        Converts a Lua value into a SQL-safe string for use in queries, handling escaping and type conversion.
-        Supports strings, tables (as JSON), booleans, and nil/NULL values.
-
-    Parameters:
-        value (any)      - The value to convert.
-        noEscape (bool)  - Optional. If true, disables SQL escaping for strings/tables.
-
-    Returns:
-        string - The SQL-safe representation of the value.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Convert a string for SQL
-        local sqlValue = lia.db.convertDataType("hello")
-        -- Convert a table for SQL
-        local sqlTable = lia.db.convertDataType({a = 1, b = 2})
-]]
 function lia.db.convertDataType(value, noEscape)
     if value == nil then
         return "NULL"
@@ -861,93 +720,16 @@ function lia.db.convertDataType(value, noEscape)
     return value
 end
 
---[[
-    lia.db.insertTable
-
-    Purpose:
-        Inserts a new row into the specified Lilia database table using the provided value table.
-        Automatically converts values to SQL-safe representations.
-
-    Parameters:
-        value (table)      - Table of key-value pairs to insert.
-        callback (function)- Optional. Function to call after insertion.
-        dbTable (string)   - Optional. Table name (without "lia_" prefix). Defaults to "characters".
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Insert a new character row
-        lia.db.insertTable({
-            steamID = "STEAM_0:1:123456",
-            name = "John Doe",
-            model = "models/player.mdl"
-        }, function()
-            print("Character inserted!")
-        end, "characters")
-]]
 function lia.db.insertTable(value, callback, dbTable)
     local query = "INSERT INTO " .. genInsertValues(value, dbTable)
     lia.db.query(query, callback)
 end
 
---[[
-    lia.db.updateTable
-
-    Purpose:
-        Updates rows in the specified Lilia database table with the provided values, optionally filtered by a condition.
-
-    Parameters:
-        value (table)      - Table of key-value pairs to update.
-        callback (function)- Optional. Function to call after update.
-        dbTable (string)   - Optional. Table name (without "lia_" prefix). Defaults to "characters".
-        condition (string) - Optional. SQL WHERE condition to filter which rows to update.
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Update a character's name where id = 1
-        lia.db.updateTable({name = "Jane Doe"}, function()
-            print("Character updated!")
-        end, "characters", "id = 1")
-]]
 function lia.db.updateTable(value, callback, dbTable, condition)
     local query = "UPDATE " .. "lia_" .. (dbTable or "characters") .. " SET " .. genUpdateList(value) .. (condition and " WHERE " .. condition or "")
     lia.db.query(query, callback)
 end
 
---[[
-    lia.db.select
-
-    Purpose:
-        Selects rows from a Lilia database table, optionally filtered by a condition and limited in number.
-        Returns a deferred object that resolves with the results and last insert ID.
-
-    Parameters:
-        fields (table|string) - Fields to select (array or string).
-        dbTable (string)      - Optional. Table name (without "lia_" prefix). Defaults to "characters".
-        condition (string)    - Optional. SQL WHERE condition.
-        limit (number)        - Optional. Maximum number of rows to return.
-
-    Returns:
-        deferred - Resolves with {results = table, lastID = number}.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Select all character names
-        lia.db.select({"name"}, "characters"):next(function(data)
-            PrintTable(data.results)
-        end)
-]]
 function lia.db.select(fields, dbTable, condition, limit)
     local d = deferred.new()
     local from = istable(fields) and table.concat(fields, ", ") or tostring(fields)
@@ -964,29 +746,6 @@ function lia.db.select(fields, dbTable, condition, limit)
     return d
 end
 
---[[
-    lia.db.count
-
-    Purpose:
-        Counts the number of rows in a Lilia database table, optionally filtered by a condition.
-        Returns a deferred object that resolves with the count.
-
-    Parameters:
-        dbTable (string)   - Table name (without "lia_" prefix).
-        condition (string) - Optional. SQL WHERE condition.
-
-    Returns:
-        deferred - Resolves with the row count (number).
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Count the number of characters
-        lia.db.count("characters"):next(function(count)
-            print("There are " .. count .. " characters.")
-        end)
-]]
 function lia.db.count(dbTable, condition)
     local c = deferred.new()
     local tbl = "`lia_" .. dbTable .. "`"
@@ -1001,26 +760,6 @@ function lia.db.count(dbTable, condition)
     return c
 end
 
---[[
-    lia.db.addDatabaseFields
-
-    Purpose:
-        Ensures that all custom character variables defined in lia.char.vars have corresponding columns in the database.
-        Adds missing columns to the lia_characters table as needed.
-
-    Parameters:
-        None.
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Add any missing custom character fields to the database
-        lia.db.addDatabaseFields()
-]]
 function lia.db.addDatabaseFields()
     local typeMap = {
         string = function(d) return ("%s VARCHAR(%d)"):format(d.field, d.length or 255) end,
@@ -1046,61 +785,10 @@ function lia.db.addDatabaseFields()
     end
 end
 
---[[
-    lia.db.exists
-
-    Purpose:
-        Checks if any rows exist in a Lilia database table matching the given condition.
-        Returns a deferred object that resolves to true if at least one row exists, false otherwise.
-
-    Parameters:
-        dbTable (string)   - Table name (without "lia_" prefix).
-        condition (string) - SQL WHERE condition.
-
-    Returns:
-        deferred - Resolves with boolean (true if exists, false otherwise).
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Check if a character with id 1 exists
-        lia.db.exists("characters", "id = 1"):next(function(exists)
-            print("Character exists:", exists)
-        end)
-]]
 function lia.db.exists(dbTable, condition)
     return lia.db.count(dbTable, condition):next(function(n) return n > 0 end)
 end
 
---[[
-    lia.db.selectOne
-
-    Purpose:
-        Selects a single row from a Lilia database table matching the given condition.
-        Returns a deferred object that resolves with the row data or nil if not found.
-
-    Parameters:
-        fields (table|string) - Fields to select (array or string).
-        dbTable (string)      - Table name (without "lia_" prefix).
-        condition (string)    - SQL WHERE condition.
-
-    Returns:
-        deferred - Resolves with the row table or none.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Get the first character with the name "John Doe"
-        lia.db.selectOne({"id", "steamID"}, "characters", "name = 'John Doe'"):next(function(row)
-            if row then
-                print("Found character with id:", row.id)
-            else
-                print("No character found.")
-            end
-        end)
-]]
 function lia.db.selectOne(fields, dbTable, condition)
     local c = deferred.new()
     local tbl = "`lia_" .. dbTable .. "`"
@@ -1118,32 +806,6 @@ function lia.db.selectOne(fields, dbTable, condition)
     return c
 end
 
---[[
-    lia.db.bulkInsert
-
-    Purpose:
-        Inserts multiple rows into a Lilia database table in a single query.
-        Returns a deferred object that resolves when the operation is complete.
-
-    Parameters:
-        dbTable (string) - Table name (without "lia_" prefix).
-        rows (table)     - Array of tables, each representing a row to insert.
-
-    Returns:
-        deferred - Resolves when all rows are inserted.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Bulk insert two new characters
-        lia.db.bulkInsert("characters", {
-            {steamID = "STEAM_0:1:111", name = "Alice"},
-            {steamID = "STEAM_0:1:222", name = "Bob"}
-        }):next(function()
-            print("Bulk insert complete!")
-        end)
-]]
 function lia.db.bulkInsert(dbTable, rows)
     if #rows == 0 then return deferred.new():resolve() end
     local c = deferred.new()
@@ -1169,33 +831,6 @@ function lia.db.bulkInsert(dbTable, rows)
     return c
 end
 
---[[
-    lia.db.bulkUpsert
-
-    Purpose:
-        Inserts or updates multiple rows in a Lilia database table in a single query.
-        Uses "ON DUPLICATE KEY UPDATE" for MySQL or "INSERT OR REPLACE" for SQLite.
-        Returns a deferred object that resolves when the operation is complete.
-
-    Parameters:
-        dbTable (string) - Table name (without "lia_" prefix).
-        rows (table)     - Array of tables, each representing a row to upsert.
-
-    Returns:
-        deferred - Resolves when all rows are upserted.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Bulk upsert two characters
-        lia.db.bulkUpsert("characters", {
-            {id = 1, name = "Alice"},
-            {id = 2, name = "Bob"}
-        }):next(function()
-            print("Bulk upsert complete!")
-        end)
-]]
 function lia.db.bulkUpsert(dbTable, rows)
     if #rows == 0 then return deferred.new():resolve() end
     local c = deferred.new()
@@ -1232,29 +867,6 @@ function lia.db.bulkUpsert(dbTable, rows)
     return c
 end
 
---[[
-    lia.db.insertOrIgnore
-
-    Purpose:
-        Inserts a new row into the specified Lilia database table, ignoring the insert if a duplicate key exists.
-        Returns a deferred object that resolves with the results and last insert ID.
-
-    Parameters:
-        value (table)    - Table of key-value pairs to insert.
-        dbTable (string) - Optional. Table name (without "lia_" prefix). Defaults to "characters".
-
-    Returns:
-        deferred - Resolves with {results = table, lastID = number}.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Insert a character only if it doesn't already exist
-        lia.db.insertOrIgnore({id = 1, name = "Unique"}, "characters"):next(function(data)
-            print("Insert or ignore complete, lastID:", data.lastID)
-        end)
-]]
 function lia.db.insertOrIgnore(value, dbTable)
     local c = deferred.new()
     local tbl = "`lia_" .. (dbTable or "characters") .. "`"
@@ -1275,28 +887,6 @@ function lia.db.insertOrIgnore(value, dbTable)
     return c
 end
 
---[[
-    lia.db.tableExists
-
-    Purpose:
-        Checks if a table exists in the database.
-        Returns a deferred object that resolves to true if the table exists, false otherwise.
-
-    Parameters:
-        tbl (string) - Table name (with or without "lia_" prefix).
-
-    Returns:
-        deferred - Resolves with boolean (true if exists, false otherwise).
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Check if the "lia_characters" table exists
-        lia.db.tableExists("lia_characters"):next(function(exists)
-            print("Table exists:", exists)
-        end)
-]]
 function lia.db.tableExists(tbl)
     local d = deferred.new()
     local qt = "'" .. tbl:gsub("'", "''") .. "'"
@@ -1308,29 +898,6 @@ function lia.db.tableExists(tbl)
     return d
 end
 
---[[
-    lia.db.fieldExists
-
-    Purpose:
-        Checks if a field (column) exists in a given table.
-        Returns a deferred object that resolves to true if the field exists, false otherwise.
-
-    Parameters:
-        tbl (string)   - Table name.
-        field (string) - Field (column) name.
-
-    Returns:
-        deferred - Resolves with boolean (true if exists, false otherwise).
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Check if the "name" field exists in "lia_characters"
-        lia.db.fieldExists("lia_characters", "name"):next(function(exists)
-            print("Field exists:", exists)
-        end)
-]]
 function lia.db.fieldExists(tbl, field)
     local d = deferred.new()
     if lia.db.module == "sqlite" then
@@ -1353,28 +920,6 @@ function lia.db.fieldExists(tbl, field)
     return d
 end
 
---[[
-    lia.db.getTables
-
-    Purpose:
-        Retrieves a list of all Lilia tables in the database (tables starting with "lia_").
-        Returns a deferred object that resolves with an array of table names.
-
-    Parameters:
-        None.
-
-    Returns:
-        deferred - Resolves with a table of table names.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Get all Lilia tables
-        lia.db.getTables():next(function(tables)
-            PrintTable(tables)
-        end)
-]]
 function lia.db.getTables()
     local d = deferred.new()
     if lia.db.module == "sqlite" then
@@ -1401,33 +946,6 @@ function lia.db.getTables()
     return d
 end
 
---[[
-    lia.db.transaction
-
-    Purpose:
-        Executes a series of queries as a single transaction. If any query fails, the transaction is rolled back.
-        Returns a deferred object that resolves when the transaction is committed or rejects if rolled back.
-
-    Parameters:
-        queries (table) - Array of SQL query strings to execute in order.
-
-    Returns:
-        deferred - Resolves when transaction is committed, rejects if rolled back.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Run two queries in a transaction
-        lia.db.transaction({
-            "UPDATE lia_characters SET name = 'A' WHERE id = 1",
-            "UPDATE lia_characters SET name = 'B' WHERE id = 2"
-        }):next(function()
-            print("Transaction committed!")
-        end):catch(function(err)
-            print("Transaction failed:", err)
-        end)
-]]
 function lia.db.transaction(queries)
     local c = deferred.new()
     lia.db.query("BEGIN TRANSACTION", function()
@@ -1448,54 +966,10 @@ function lia.db.transaction(queries)
     return c
 end
 
---[[
-    lia.db.escapeIdentifier
-
-    Purpose:
-        Escapes a SQL identifier (such as a table or column name) to prevent SQL injection and syntax errors.
-
-    Parameters:
-        id (string) - The identifier to escape.
-
-    Returns:
-        string - The escaped identifier, wrapped in backticks.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Escape a column name for use in a query
-        local safeColumn = lia.db.escapeIdentifier("name")
-        -- Result: "`name`"
-]]
 function lia.db.escapeIdentifier(id)
     return "`" .. tostring(id):gsub("`", "``") .. "`"
 end
 
---[[
-    lia.db.upsert
-
-    Purpose:
-        Inserts a new row or updates an existing row in the specified Lilia database table.
-        Uses "ON DUPLICATE KEY UPDATE" for MySQL or "INSERT OR REPLACE" for SQLite.
-        Returns a deferred object that resolves with the results and last insert ID.
-
-    Parameters:
-        value (table)    - Table of key-value pairs to insert or update.
-        dbTable (string) - Optional. Table name (without "lia_" prefix). Defaults to "characters".
-
-    Returns:
-        deferred - Resolves with {results = table, lastID = number}.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Upsert a character row
-        lia.db.upsert({id = 1, name = "Upserted"}, "characters"):next(function(data)
-            print("Upsert complete, lastID:", data.lastID)
-        end)
-]]
 function lia.db.upsert(value, dbTable)
     local query
     if lia.db.object then
@@ -1514,29 +988,6 @@ function lia.db.upsert(value, dbTable)
     return d
 end
 
---[[
-    lia.db.delete
-
-    Purpose:
-        Deletes rows from a Lilia database table, optionally filtered by a condition.
-        Returns a deferred object that resolves with the results and last insert ID.
-
-    Parameters:
-        dbTable (string)   - Optional. Table name (without "lia_" prefix). Defaults to "character".
-        condition (string) - Optional. SQL WHERE condition to filter which rows to delete.
-
-    Returns:
-        deferred - Resolves with {results = table, lastID = number}.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Delete all characters with the name "Test"
-        lia.db.delete("characters", "name = 'Test'"):next(function(data)
-            print("Delete complete!")
-        end)
-]]
 function lia.db.delete(dbTable, condition)
     local query
     dbTable = "lia_" .. (dbTable or "character")
@@ -1556,28 +1007,6 @@ function lia.db.delete(dbTable, condition)
     return d
 end
 
---[[
-    lia.db.GetCharacterTable
-
-    Purpose:
-        Retrieves the list of columns in the "lia_characters" table and passes them to the provided callback.
-        Handles both SQLite and MySQL backends.
-
-    Parameters:
-        callback (function) - Function to call with the array of column names.
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Print all columns in the character table
-        lia.db.GetCharacterTable(function(columns)
-            PrintTable(columns)
-        end)
-]]
 function lia.db.GetCharacterTable(callback)
     local query = lia.db.module == "sqlite" and "PRAGMA table_info(lia_characters)" or "DESCRIBE lia_characters"
     lia.db.query(query, function(results)

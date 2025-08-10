@@ -1,49 +1,5 @@
-﻿--[[
-# Option Library
-
-This page documents the functions for working with user options and configuration settings.
-
----
-
-## Overview
-
-The option library provides a system for managing user-configurable options and settings within the Lilia framework. It handles option registration, storage, retrieval, and provides utilities for creating user interfaces for option management. The library supports various data types, validation, and networking of option changes between client and server.
-]]
-lia.option = lia.option or {}
+﻿lia.option = lia.option or {}
 lia.option.stored = lia.option.stored or {}
---[[
-    lia.option.add
-
-    Purpose:
-        Registers a new configurable option in the lia.option system. Options can be used for user or server configuration,
-        and can be of various types (Boolean, Int, Float, Color, etc). Options are stored in lia.option.stored and can be
-        retrieved, set, and displayed in configuration menus.
-
-    Parameters:
-        key (string)         - Unique identifier for the option.
-        name (string)        - Display name for the option (localized automatically).
-        desc (string)        - Description for the option (localized automatically).
-        default (any)        - Default value for the option.
-        callback (function)  - (Optional) Function to call when the option value changes. Receives (oldValue, newValue).
-        data (table)         - Table containing additional option data (category, min, max, decimals, type, visible, etc). String
-                              fields such as `category` and entries in an `options` table are localized automatically.
-
-    Returns:
-        None.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        -- Add a boolean option for enabling a HUD element
-        lia.option.add("showHUD", "showHUD", "showHUDDesc", true, function(old, new)
-            print("HUD option changed from", old, "to", new)
-        end, {
-            category = "categoryHUD",
-            isQuick = true,
-            shouldNetwork = true
-        })
-]]
 function lia.option.add(key, name, desc, default, callback, data)
     assert(isstring(key), L("optionKeyString", type(key)))
     assert(isstring(name), L("optionNameString", type(name)))
@@ -83,27 +39,6 @@ function lia.option.add(key, name, desc, default, callback, data)
     }
 end
 
---[[
-    lia.option.set
-
-    Purpose:
-        Sets the value of a registered option. Triggers the option's callback (if any), runs the "liaOptionChanged" hook,
-        saves the options to disk, and optionally networks the change if shouldNetwork is true and on the server.
-
-    Parameters:
-        key (string)   - The unique identifier of the option to set.
-        value (any)    - The new value to assign to the option.
-
-    Returns:
-        None.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        -- Set the "showHUD" option to false
-        lia.option.set("showHUD", false)
-]]
 function lia.option.set(key, value)
     local opt = lia.option.stored[key]
     if not opt then return end
@@ -115,27 +50,6 @@ function lia.option.set(key, value)
     if opt.shouldNetwork and SERVER then hook.Run("liaOptionReceived", nil, key, value) end
 end
 
---[[
-    lia.option.get
-
-    Purpose:
-        Retrieves the value of a registered option. If the option is not set, returns its default value.
-        If the option does not exist, returns the provided default argument.
-
-    Parameters:
-        key (string)      - The unique identifier of the option to retrieve.
-        default (any)     - (Optional) Value to return if the option is not found.
-
-    Returns:
-        value (any)       - The current value of the option, its default, or the provided default.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        -- Get the value of the "showHUD" option, defaulting to true if not set
-        local showHUD = lia.option.get("showHUD", true)
-]]
 function lia.option.get(key, default)
     local opt = lia.option.stored[key]
     if opt then
@@ -145,26 +59,6 @@ function lia.option.get(key, default)
     return default
 end
 
---[[
-    lia.option.save
-
-    Purpose:
-        Saves all current option values to disk in JSON format. The save file is stored per-gamemode and per-server IP,
-        allowing for server-specific option persistence.
-
-    Parameters:
-        None.
-
-    Returns:
-        None.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        -- Save all current options to disk
-        lia.option.save()
-]]
 function lia.option.save()
     local dir = "lilia/options/" .. engine.ActiveGamemode()
     file.CreateDir(dir)
@@ -180,26 +74,6 @@ function lia.option.save()
     if json then file.Write(path, json) end
 end
 
---[[
-    lia.option.load
-
-    Purpose:
-        Loads option values from disk for the current gamemode and server IP, restoring previously saved option states.
-        After loading, runs the "InitializedOptions" hook.
-
-    Parameters:
-        None.
-
-    Returns:
-        None.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        -- Load all saved options for this server
-        lia.option.load()
-]]
 function lia.option.load()
     local dir = "lilia/options/" .. engine.ActiveGamemode()
     file.CreateDir(dir)
@@ -569,7 +443,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
     end
 
     pages[#pages + 1] = {
-        name = L("options"),
+        name = "options",
         drawFunc = function(parent)
             parent:Clear()
             local sheet = parent:Add("liaSheet")
@@ -612,7 +486,7 @@ lia.option.add("espEnabled", "espEnabled", "espEnabledDesc", false, nil, {
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
-        return ply:isStaffOnDuty() or ply:hasPrivilege(L("noClipOutsideStaff"))
+        return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
 
@@ -622,7 +496,7 @@ lia.option.add("espPlayers", "espPlayers", "espPlayersDesc", false, nil, {
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
-        return ply:isStaffOnDuty() or ply:hasPrivilege(L("noClipOutsideStaff"))
+        return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
 
@@ -632,7 +506,7 @@ lia.option.add("espItems", "espItems", "espItemsDesc", false, nil, {
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
-        return ply:isStaffOnDuty() or ply:hasPrivilege(L("noClipOutsideStaff"))
+        return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
 
@@ -642,7 +516,7 @@ lia.option.add("espEntities", "espEntities", "espEntitiesDesc", false, nil, {
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
-        return ply:isStaffOnDuty() or ply:hasPrivilege(L("noClipOutsideStaff"))
+        return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
 
@@ -652,7 +526,7 @@ lia.option.add("espUnconfiguredDoors", "espUnconfiguredDoors", "espUnconfiguredD
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
-        return ply:isStaffOnDuty() or ply:hasPrivilege(L("noClipOutsideStaff"))
+        return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
 
@@ -666,7 +540,7 @@ lia.option.add("espItemsColor", "espItemsColor", "espItemsColorDesc", {
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
-        return ply:isStaffOnDuty() or ply:hasPrivilege(L("noClipOutsideStaff"))
+        return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
 
@@ -680,7 +554,7 @@ lia.option.add("espEntitiesColor", "espEntitiesColor", "espEntitiesColorDesc", {
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
-        return ply:isStaffOnDuty() or ply:hasPrivilege(L("noClipOutsideStaff"))
+        return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
 
@@ -694,7 +568,7 @@ lia.option.add("espUnconfiguredDoorsColor", "espUnconfiguredDoorsColor", "espUnc
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
-        return ply:isStaffOnDuty() or ply:hasPrivilege(L("noClipOutsideStaff"))
+        return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
 
@@ -708,7 +582,7 @@ lia.option.add("espPlayersColor", "espPlayersColor", "espPlayersColorDesc", {
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
-        return ply:isStaffOnDuty() or ply:hasPrivilege(L("noClipOutsideStaff"))
+        return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
 

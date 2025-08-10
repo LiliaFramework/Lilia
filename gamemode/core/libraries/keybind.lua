@@ -1,14 +1,3 @@
-﻿--[[
-# Keybind Library
-
-This page documents the functions for working with keybind management and input handling.
-
----
-
-## Overview
-
-The keybind library provides a system for managing keyboard bindings and input handling within the Lilia framework. It handles keybind registration, storage, and provides utilities for creating customizable keybind systems. The library supports various key types, keybind persistence, and provides a foundation for user-configurable input systems.
-]]
 lia.keybind = lia.keybind or {}
 lia.keybind.stored = lia.keybind.stored or {}
 local KeybindKeys = {
@@ -123,33 +112,6 @@ local KeybindKeys = {
     ["last"] = KEY_LAST
 }
 
---[[
-    lia.keybind.add
-
-    Purpose:
-        Registers a new keybind action with the system, associating a key, an action name, and optional callback functions
-        for when the key is pressed or released. This allows custom actions to be triggered by user-defined keybinds.
-
-    Parameters:
-        k (string|number)      - The key to bind (as a string name or key code).
-        d (string)             - The unique action name for this keybind.
-        cb (function|none)      - The callback function to call when the key is pressed (optional).
-        rcb (function|none)     - The callback function to call when the key is released (optional).
-
-    Returns:
-        None.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        -- Register a keybind for opening a custom menu with F4
-        lia.keybind.add("f4", "openCustomMenu", function(ply)
-            if IsValid(ply) then
-                MyCustomMenu:Open()
-            end
-        end)
-]]
 function lia.keybind.add(k, d, cb, rcb)
     local c = isstring(k) and KeybindKeys[string.lower(k)] or k
     if not c then return end
@@ -161,52 +123,12 @@ function lia.keybind.add(k, d, cb, rcb)
     lia.keybind.stored[c] = d
 end
 
---[[
-    lia.keybind.get
-
-    Purpose:
-        Retrieves the key code currently bound to a given action. If the action is not found, returns the provided default value.
-
-    Parameters:
-        a (string)         - The action name to look up.
-        df (number|none)    - The default key code to return if the action is not found (optional).
-
-    Returns:
-        keyCode (number|none) - The key code bound to the action, or the default value if not found.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        -- Get the key code for the "openCustomMenu" action, defaulting to KEY_F4 if not set
-        local key = lia.keybind.get("openCustomMenu", KEY_F4)
-]]
 function lia.keybind.get(a, df)
     local act = lia.keybind.stored[a]
     if act then return act.value or act.default or df end
     return df
 end
 
---[[
-    lia.keybind.save
-
-    Purpose:
-        Saves all current keybinds to a JSON file specific to the current gamemode and server IP.
-        This persists user keybind preferences across sessions.
-
-    Parameters:
-        None.
-
-    Returns:
-        None.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        -- Save the current keybind configuration after the user changes a keybind
-        lia.keybind.save()
-]]
 function lia.keybind.save()
     local dp = "lilia/keybinds/" .. engine.ActiveGamemode()
     file.CreateDir(dp)
@@ -226,27 +148,6 @@ function lia.keybind.save()
     end
 end
 
---[[
-    lia.keybind.load
-
-    Purpose:
-        Loads keybinds from the saved JSON file for the current gamemode and server IP.
-        If a legacy text file exists, it migrates the data to JSON. If no saved keybinds are found,
-        it resets all keybinds to their default values and saves them.
-
-    Parameters:
-        None.
-
-    Returns:
-        None.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        -- Load keybinds when the client joins the server or when initializing the UI
-        lia.keybind.load()
-]]
 function lia.keybind.load()
     local dp = "lilia/keybinds/" .. engine.ActiveGamemode()
     file.CreateDir(dp)
@@ -425,7 +326,7 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
     end
 
     pages[#pages + 1] = {
-        name = L("keybinds"),
+        name = "keybinds",
         drawFunc = buildKeybinds
     }
 end)

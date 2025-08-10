@@ -88,9 +88,9 @@ net.Receive("liaTicketsCount", function()
     if count > 0 and not ticketsTabAdded then
         ticketsTabAdded = true
         hook.Add("PopulateAdminTabs", "liaTicketsTab", function(pages)
-            if not IsValid(LocalPlayer()) or not (LocalPlayer():hasPrivilege(L("alwaysSeeTickets")) or LocalPlayer():isStaffOnDuty()) then return end
+            if not IsValid(LocalPlayer()) or not (LocalPlayer():hasPrivilege("alwaysSeeTickets") or LocalPlayer():isStaffOnDuty()) then return end
             table.insert(pages, {
-                name = L("tickets"),
+                name = "tickets",
                 icon = "icon16/report.png",
                 drawFunc = function(panel)
                     ticketPanel = panel
@@ -103,7 +103,7 @@ net.Receive("liaTicketsCount", function()
 end)
 
 function MODULE:PopulateAdminTabs()
-    if not IsValid(LocalPlayer()) or not (LocalPlayer():hasPrivilege(L("alwaysSeeTickets")) or LocalPlayer():isStaffOnDuty()) then return end
+    if not IsValid(LocalPlayer()) or not (LocalPlayer():hasPrivilege("alwaysSeeTickets") or LocalPlayer():isStaffOnDuty()) then return end
     net.Start("liaRequestTicketsCount")
     net.SendToServer()
 end
@@ -125,7 +125,7 @@ net.Receive("TicketSystem", function()
     local pl = net.ReadEntity()
     local msg = net.ReadString()
     local claimed = net.ReadEntity()
-    if LocalPlayer():isStaffOnDuty() or LocalPlayer():hasPrivilege(L("alwaysSeeTickets")) then MODULE:TicketFrame(pl, msg, claimed) end
+    if LocalPlayer():isStaffOnDuty() or LocalPlayer():hasPrivilege("alwaysSeeTickets") then MODULE:TicketFrame(pl, msg, claimed) end
 end)
 
 net.Receive("TicketSystemClaim", function()

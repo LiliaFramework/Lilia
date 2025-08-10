@@ -239,7 +239,7 @@ lia.config.add("BlockPackURLoad", "blockPackUrlLoad", true, nil, {
 })
 
 lia.administrator.registerPrivilege({
-    Name = L("canUsePAC3"),
+    Name = "canUsePAC3",
     ID = "canUsePAC3",
     MinAccess = "admin",
     Category = "categoryPAC3"

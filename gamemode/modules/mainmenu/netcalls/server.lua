@@ -1,4 +1,4 @@
-﻿net.Receive("liaCharChoose", function(_, client)
+net.Receive("liaCharChoose", function(_, client)
     local function response(message)
         net.Start("liaCharChoose")
         net.WriteString(L(message or "", client))
@@ -6,15 +6,82 @@
     end
 
     local id = net.ReadUInt(32)
-    local character = lia.char.loaded[id]
-    if not character or character:getPlayer() ~= client then return response(false, "invalidChar") end
+    local currentChar = client:getChar()
+
+    
+    if not lia.char.isLoaded(id) then
+        
+        if not table.HasValue(client.liaCharList or {}, id) then
+            return response(false, "invalidChar")
+        end
+
+        
+        lia.char.loadSingleCharacter(id, client, function(character)
+            if not character then
+                return response(false, "invalidChar")
+            end
+
+            
+            local status, result = hook.Run("CanPlayerUseChar", client, character)
+            if status == false then
+                if result[1] == "@" then result = result:sub(2) end
+                return response(result)
+            end
+
+            if currentChar then
+                status, result = hook.Run("CanPlayerSwitchChar", client, currentChar, character)
+                if status == false then
+                    if result[1] == "@" then result = result:sub(2) end
+                    return response(result)
+                end
+
+                currentChar:save()
+            end
+
+            
+            local unloadedCount = lia.char.unloadUnusedCharacters(client, id)
+            if unloadedCount > 0 then
+                lia.information("Unloaded " .. unloadedCount .. " unused characters for " .. client:Name())
+            end
+
+            
+            hook.Run("PrePlayerLoadedChar", client, character, currentChar)
+            net.Start("prePlayerLoadedChar")
+            net.WriteUInt(character:getID(), 32)
+            net.WriteType(currentChar and currentChar:getID() or nil)
+            net.Send(client)
+
+            character:setup()
+
+            hook.Run("PlayerLoadedChar", client, character, currentChar)
+            net.Start("playerLoadedChar")
+            net.WriteUInt(character:getID(), 32)
+            net.WriteType(currentChar and currentChar:getID() or nil)
+            net.Send(client)
+
+            response()
+
+            hook.Run("PostPlayerLoadedChar", client, character, currentChar)
+            net.Start("postPlayerLoadedChar")
+            net.WriteUInt(character:getID(), 32)
+            net.WriteType(currentChar and currentChar:getID() or nil)
+            net.Send(client)
+        end)
+        return
+    end
+
+    
+    local character = lia.char.getCharacter(id, client)
+    if not character or character:getPlayer() ~= client then
+        return response(false, "invalidChar")
+    end
+
     local status, result = hook.Run("CanPlayerUseChar", client, character)
     if status == false then
         if result[1] == "@" then result = result:sub(2) end
         return response(result)
     end
 
-    local currentChar = client:getChar()
     if currentChar then
         status, result = hook.Run("CanPlayerSwitchChar", client, currentChar, character)
         if status == false then
@@ -25,18 +92,28 @@
         currentChar:save()
     end
 
+    
+    local unloadedCount = lia.char.unloadUnusedCharacters(client, id)
+    if unloadedCount > 0 then
+        lia.information("Unloaded " .. unloadedCount .. " unused characters for " .. client:Name())
+    end
+
     hook.Run("PrePlayerLoadedChar", client, character, currentChar)
     net.Start("prePlayerLoadedChar")
     net.WriteUInt(character:getID(), 32)
     net.WriteType(currentChar and currentChar:getID() or nil)
     net.Send(client)
+
     character:setup()
+
     hook.Run("PlayerLoadedChar", client, character, currentChar)
     net.Start("playerLoadedChar")
     net.WriteUInt(character:getID(), 32)
     net.WriteType(currentChar and currentChar:getID() or nil)
     net.Send(client)
+
     response()
+
     hook.Run("PostPlayerLoadedChar", client, character, currentChar)
     net.Start("postPlayerLoadedChar")
     net.WriteUInt(character:getID(), 32)
@@ -88,22 +165,54 @@ net.Receive("liaCharCreate", function(_, client)
     data.steamID = client:SteamID()
     lia.char.create(data, function(id)
         if IsValid(client) then
-            lia.char.loaded[id]:sync(client)
-            table.insert(client.liaCharList, id)
-            lia.module.list["mainmenu"]:syncCharList(client)
-            hook.Run("OnCharCreated", client, lia.char.loaded[id], originalData)
-            response(id)
+            lia.char.getCharacter(id, client, function(character)
+                if not character then return end
+                character:sync(client)
+                table.insert(client.liaCharList, id)
+                lia.module.list["mainmenu"]:syncCharList(client)
+                hook.Run("OnCharCreated", client, character, originalData)
+                response(id)
+            end)
         end
     end)
 end)
 
 net.Receive("liaCharDelete", function(_, client)
     local id = net.ReadUInt(32)
-    local character = lia.char.loaded[id]
+    local character = lia.char.getCharacter(id)
     local steamID = client:SteamID()
     if character and character.steamID == steamID then
         hook.Run("CharDeleted", client, character)
         character:delete()
         timer.Simple(.5, function() lia.module.list["mainmenu"]:syncCharList(client) end)
     end
+end)
+
+
+
+
+hook.Add("PlayerLoadedChar", "StaffCharacterDiscordPrompt", function(client, character)
+    if character:getFaction() == FACTION_STAFF and (character:getDesc() == "" or character:getDesc():find("^A Staff Character")) then
+        
+        timer.Simple(2, function() 
+            if IsValid(client) and client:getChar() == character then
+                net.Start("liaStaffDiscordPrompt")
+                net.Send(client)
+            end
+        end)
+    end
+end)
+
+net.Receive("liaStaffDiscordResponse", function(_, client)
+    local discord = net.ReadString()
+    local character = client:getChar()
+
+    if not character or character:getFaction() ~= FACTION_STAFF then return end
+
+    
+    local steamID = client:SteamID()
+    local description = "A Staff Character, Discord: " .. discord .. ", SteamID: " .. steamID
+
+    character:setDesc(description)
+    client:notifyLocalized("Staff character description updated!")
 end)

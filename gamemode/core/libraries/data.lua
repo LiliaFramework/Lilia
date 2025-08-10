@@ -1,45 +1,5 @@
-﻿--[[
-# Data Library
-
-This page documents the functions for working with data serialization and storage.
-
----
-
-## Overview
-
-The data library provides utilities for encoding, decoding, and managing data structures within the Lilia framework. It handles serialization of complex data types like Vectors, Angles, and Colors, and provides functions for data persistence and retrieval. The library supports various data formats and provides utilities for working with stored data.
-]]
 lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
---[[
-    lia.data.encodetable
-
-    Purpose:
-        Recursively encodes tables, vectors, angles, and color tables into a serializable format suitable for storage (e.g., JSON).
-        Converts Vectors to {x, y, z}, Angles to {p, y, r}, and color tables to {r, g, b, a}.
-
-    Parameters:
-        value (any) - The value to encode. Can be a table, Vector, Angle, or color table.
-
-    Returns:
-        Encoded value (table or primitive).
-
-    Realm:
-        Server.
-
-    Example Usage:
-        local vec = Vector(1, 2, 3)
-        local encodedVec = lia.data.encodetable(vec)
-        -- encodedVec is {1, 2, 3}
-
-        local ang = Angle(10, 20, 30)
-        local encodedAng = lia.data.encodetable(ang)
-        -- encodedAng is {10, 20, 30}
-
-        local color = {r = 255, g = 128, b = 64, a = 200}
-        local encodedColor = lia.data.encodetable(color)
-        -- encodedColor is {255, 128, 64, 200}
-]]
 function lia.data.encodetable(value)
     if isvector(value) then
         return {value.x, value.y, value.z}
@@ -108,82 +68,14 @@ local function deepDecode(value)
     return value
 end
 
---[[
-    lia.data.decode
-
-    Purpose:
-        Recursively decodes a value, converting tables or strings that represent Angles or Vectors back into their respective types.
-        Useful for restoring data that was previously encoded and serialized.
-
-    Parameters:
-        value (any) - The value to decode. Can be a table, string, or primitive.
-
-    Returns:
-        Decoded value (table, Vector, Angle, or primitive).
-
-    Realm:
-        Server.
-
-    Example Usage:
-        local encoded = {1, 2, 3}
-        local vec = lia.data.decode(encoded)
-        -- vec is Vector(1, 2, 3)
-
-        local encodedAng = {10, 20, 30}
-        local ang = lia.data.decode(encodedAng)
-        -- ang is Angle(10, 20, 30)
-]]
 function lia.data.decode(value)
     return deepDecode(value)
 end
 
---[[
-    lia.data.serialize
-
-    Purpose:
-        Serializes a value (table, Vector, Angle, etc.) into a JSON string for storage.
-        Uses lia.data.encodetable to ensure all data is in a serializable format.
-
-    Parameters:
-        value (any) - The value to serialize.
-
-    Returns:
-        (string) - JSON-encoded string.
-
-    Realm:
-        Server.
-
-    Example Usage:
-        local data = {pos = Vector(1, 2, 3), ang = Angle(10, 20, 30)}
-        local json = lia.data.serialize(data)
-        -- json is a string like '{"pos":[1,2,3],"ang":[10,20,30]}'
-]]
 function lia.data.serialize(value)
     return util.TableToJSON(lia.data.encodetable(value) or {})
 end
 
---[[
-    lia.data.deserialize
-
-    Purpose:
-        Deserializes a JSON string or table into a Lua table, and decodes any encoded Vectors or Angles.
-        Supports both JSON and PON formats.
-
-    Parameters:
-        raw (string|table) - The raw data to deserialize.
-
-    Returns:
-        (table|any) - The deserialized and decoded value, or nil if input is invalid.
-
-    Realm:
-        Server.
-
-    Example Usage:
-        local json = '{"pos":[1,2,3],"ang":[10,20,30]}'
-        local data = lia.data.deserialize(json)
-        -- data.pos is Vector(1, 2, 3)
-        -- data.ang is Angle(10, 20, 30)
-]]
 function lia.data.deserialize(raw)
     if not raw then return nil end
     local decoded
@@ -203,31 +95,6 @@ function lia.data.deserialize(raw)
     return lia.data.decode(decoded)
 end
 
---[[
-    lia.data.decodeVector
-
-    Purpose:
-        Decodes a value into a Vector, supporting tables, JSON strings, and PON strings.
-        Returns nil if the input is invalid or cannot be converted.
-
-    Parameters:
-        raw (any) - The value to decode as a Vector.
-
-    Returns:
-        (Vector|any) - The decoded Vector, or the original value if not convertible.
-
-    Realm:
-        Server.
-
-    Example Usage:
-        local json = '[1,2,3]'
-        local vec = lia.data.decodeVector(json)
-        -- vec is Vector(1, 2, 3)
-
-        local tbl = {1, 2, 3}
-        local vec2 = lia.data.decodeVector(tbl)
-        -- vec2 is Vector(1, 2, 3)
-]]
 function lia.data.decodeVector(raw)
     if not raw then return nil end
     local decoded
@@ -247,31 +114,6 @@ function lia.data.decodeVector(raw)
     return _decodeVector(decoded)
 end
 
---[[
-    lia.data.decodeAngle
-
-    Purpose:
-        Decodes a value into an Angle, supporting tables, JSON strings, and PON strings.
-        Returns nil if the input is invalid or cannot be converted.
-
-    Parameters:
-        raw (any) - The value to decode as an Angle.
-
-    Returns:
-        (Angle|any) - The decoded Angle, or the original value if not convertible.
-
-    Realm:
-        Server.
-
-    Example Usage:
-        local json = '[10,20,30]'
-        local ang = lia.data.decodeAngle(json)
-        -- ang is Angle(10, 20, 30)
-
-        local tbl = {10, 20, 30}
-        local ang2 = lia.data.decodeAngle(tbl)
-        -- ang2 is Angle(10, 20, 30)
-]]
 function lia.data.decodeAngle(raw)
     if not raw then return nil end
     local decoded
@@ -297,32 +139,6 @@ local function buildCondition(gamemode, map)
     return cond
 end
 
---[[
-    lia.data.set
-
-    Purpose:
-        Sets a key-value pair in the persistent data store, optionally scoped to a gamemode and map.
-        Updates both the in-memory cache and the database asynchronously.
-
-    Parameters:
-        key (string)      - The key to set.
-        value (any)       - The value to store.
-        global (boolean)  - If true, stores globally (ignores gamemode and map).
-        ignoreMap (bool)  - If true, ignores the map when scoping.
-
-    Returns:
-        (string) - The path used for storage.
-
-    Realm:
-        Server.
-
-    Example Usage:
-        lia.data.set("spawnPos", Vector(100, 200, 300))
-        -- Stores the spawn position for the current gamemode and map.
-
-        lia.data.set("globalSetting", true, true)
-        -- Stores a global setting, not tied to any gamemode or map.
-]]
 function lia.data.set(key, value, global, ignoreMap)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = ignoreMap and NULL or game.GetMap()
@@ -350,31 +166,6 @@ function lia.data.set(key, value, global, ignoreMap)
     return path
 end
 
---[[
-    lia.data.delete
-
-    Purpose:
-        Deletes a key from the persistent data store, optionally scoped to a gamemode and map.
-        Updates both the in-memory cache and the database asynchronously.
-
-    Parameters:
-        key (string)      - The key to delete.
-        global (boolean)  - If true, deletes globally (ignores gamemode and map).
-        ignoreMap (bool)  - If true, ignores the map when scoping.
-
-    Returns:
-        (boolean) - Always true.
-
-    Realm:
-        Server.
-
-    Example Usage:
-        lia.data.delete("spawnPos")
-        -- Removes the spawn position for the current gamemode and map.
-
-        lia.data.delete("globalSetting", true)
-        -- Removes a global setting, not tied to any gamemode or map.
-]]
 function lia.data.delete(key, global, ignoreMap)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = ignoreMap and nil or game.GetMap()
@@ -400,27 +191,6 @@ function lia.data.delete(key, global, ignoreMap)
     return true
 end
 
---[[
-    lia.data.loadTables
-
-    Purpose:
-        Loads persistent data from the database for the current gamemode and map, as well as global and gamemode-only data.
-        Populates lia.data.stored with the loaded data.
-
-    Parameters:
-        None.
-
-    Returns:
-        None.
-
-    Realm:
-        Server.
-
-    Example Usage:
-        -- Typically called automatically on server start, but can be called manually:
-        lia.data.loadTables()
-        -- Loads all relevant persistent data into lia.data.stored.
-]]
 function lia.data.loadTables()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
@@ -472,55 +242,10 @@ local function ensurePersistenceColumns(cols)
     return d
 end
 
---[[
-    lia.data.loadPersistence
-
-    Purpose:
-        Ensures that all required columns exist in the persistence table for entity saving/loading.
-        Adds any missing columns for default entity fields.
-
-    Parameters:
-        None.
-
-    Returns:
-        (Promise) - Resolves when all columns are ensured.
-
-    Realm:
-        Server.
-
-    Example Usage:
-        lia.data.loadPersistence():next(function()
-            print("Persistence columns are ready!")
-        end)
-]]
 function lia.data.loadPersistence()
     return ensurePersistenceColumns(baseCols)
 end
 
---[[
-    lia.data.savePersistence
-
-    Purpose:
-        Saves a list of entities to the persistence table in the database, including dynamic fields.
-        Ensures all necessary columns exist before saving.
-
-    Parameters:
-        entities (table) - A list of entity tables to persist.
-
-    Returns:
-        None.
-
-    Realm:
-        Server.
-
-    Example Usage:
-        local entities = {
-            {class = "prop_physics", pos = Vector(1,2,3), angles = Angle(0,0,0), model = "models/props_c17/oildrum001.mdl"},
-            {class = "npc_citizen", pos = Vector(4,5,6), angles = Angle(0,90,0), model = "models/Humans/Group01/male_01.mdl"}
-        }
-        lia.data.savePersistence(entities)
-        -- Saves the provided entities to the database for the current gamemode and map.
-]]
 function lia.data.savePersistence(entities)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
@@ -569,29 +294,6 @@ function lia.data.savePersistence(entities)
     end)
 end
 
---[[
-    lia.data.loadPersistenceData
-
-    Purpose:
-        Loads all persisted entities for the current gamemode and map from the database.
-        Decodes all fields and passes the result to the provided callback.
-
-    Parameters:
-        callback (function) - Function to call with the loaded entities table.
-
-    Returns:
-        None.
-
-    Realm:
-        Server.
-
-    Example Usage:
-        lia.data.loadPersistenceData(function(entities)
-            for _, ent in ipairs(entities) do
-                print("Loaded entity:", ent.class, ent.pos, ent.angles)
-            end
-        end)
-]]
 function lia.data.loadPersistenceData(callback)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
@@ -617,27 +319,6 @@ function lia.data.loadPersistenceData(callback)
     end)
 end
 
---[[
-    lia.data.get
-
-    Purpose:
-        Retrieves a value from the persistent data store by key, decoding it if necessary.
-        If the value is not found, returns the provided default.
-
-    Parameters:
-        key (string)      - The key to retrieve.
-        default (any)     - The default value to return if the key is not found.
-
-    Returns:
-        (any) - The stored value, or the default if not found.
-
-    Realm:
-        Server.
-
-    Example Usage:
-        local spawnPos = lia.data.get("spawnPos", Vector(0,0,0))
-        -- Returns the stored spawn position, or Vector(0,0,0) if not set.
-]]
 function lia.data.get(key, default)
     local stored = lia.data.stored[key]
     if stored ~= nil then
@@ -650,27 +331,6 @@ function lia.data.get(key, default)
     return default
 end
 
---[[
-    lia.data.getPersistence
-
-    Purpose:
-        Retrieves the current cache of persisted entities loaded from the database.
-
-    Parameters:
-        None.
-
-    Returns:
-        (table) - The list of persisted entities, or an empty table if none are loaded.
-
-    Realm:
-        Server.
-
-    Example Usage:
-        local entities = lia.data.getPersistence()
-        for _, ent in ipairs(entities) do
-            print(ent.class, ent.pos)
-        end
-]]
 function lia.data.getPersistence()
     return lia.data.persistCache or {}
 end

@@ -975,7 +975,26 @@ if SERVER then
         hook.Run("PrePlayerInteractItem", client, action, self)
         local result
         if isfunction(self.hooks[action]) then result = self.hooks[action](self, data) end
-        if result == nil and isfunction(callback.onRun) then result = callback.onRun(self, data) end
+
+        if result == nil then
+            local isMulti = callback.isMulti or (callback.multiOptions and istable(callback.multiOptions))
+            if isMulti and isstring(data) and callback.multiOptions then
+                local optionFunc = callback.multiOptions[data]
+                if optionFunc then
+                    if isfunction(optionFunc) then
+                        result = optionFunc(self)
+                    elseif istable(optionFunc) then
+                        local runFunc = optionFunc[1] or optionFunc.onRun
+                        if isfunction(runFunc) then
+                            result = runFunc(self)
+                        end
+                    end
+                end
+            elseif isfunction(callback.onRun) then
+                result = callback.onRun(self, data)
+            end
+        end
+
         if self.postHooks[action] then self.postHooks[action](self, result, data) end
         hook.Run("OnPlayerInteractItem", client, action, self, result, data)
         if result ~= false and not deferred.isPromise(result) then
@@ -1028,6 +1047,25 @@ else
     function ITEM:getDesc()
         return self.desc
     end
+end
+
+--[[
+    getCategory
+
+    Purpose:
+        Returns the category of the item with automatic localization.
+
+    Returns:
+        string - The localized category of the item.
+
+    Realm:
+        Shared.
+
+    Example Usage:
+        print("Item category: " .. item:getCategory())
+]]
+function ITEM:getCategory()
+    return self.category and L(self.category) or L("misc")
 end
 
 lia.meta.item = ITEM

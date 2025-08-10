@@ -4,7 +4,7 @@ local function SendLogs(client, categorizedLogs)
 end
 
 local function CanPlayerSeeLog(client)
-    return lia.config.get("AdminConsoleNetworkLogs", true) and client:hasPrivilege(L("canSeeLogs"))
+    return lia.config.get("AdminConsoleNetworkLogs", true) and client:hasPrivilege("canSeeLogs")
 end
 
 local function ReadLogEntries(category)

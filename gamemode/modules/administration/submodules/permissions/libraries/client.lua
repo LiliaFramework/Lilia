@@ -7,7 +7,7 @@ function MODULE:HUDPaint()
     local client = LocalPlayer()
     if not client:IsValid() or not client:IsPlayer() or not client:getChar() then return end
     if not client:isNoClipping() then return end
-    if not (client:hasPrivilege(L("noClipESPOffsetStaff")) or client:isStaffOnDuty()) then return end
+    if not (client:hasPrivilege("noClipESPOffsetStaff") or client:isStaffOnDuty()) then return end
     if not lia.option.get("espEnabled", false) then return end
     for _, ent in ents.Iterator() do
         if not IsValid(ent) or ent == client or ent:IsWeapon() then continue end
@@ -111,39 +111,39 @@ net.Receive("DisplayCharList", function()
 
     local columns = {
         {
-            name = L("name"),
+            name = "name",
             field = L("name")
         },
         {
-            name = L("description"),
+            name = "description",
             field = "Desc"
         },
         {
-            name = L("faction"),
+            name = "faction",
             field = L("faction")
         },
         {
-            name = L("banned"),
+            name = "banned",
             field = L("banned")
         },
         {
-            name = L("banningAdminName"),
+            name = "banningAdminName",
             field = "BanningAdminName"
         },
         {
-            name = L("banningAdminSteamID"),
+            name = "banningAdminSteamID",
             field = "BanningAdminSteamID"
         },
         {
-            name = L("banningAdminRank"),
+            name = "banningAdminRank",
             field = "BanningAdminRank"
         },
         {
-            name = L("charMoney"),
+            name = "charMoney",
             field = L("money")
         },
         {
-            name = L("lastUsed"),
+            name = "lastUsed",
             field = "LastUsed"
         }
     }

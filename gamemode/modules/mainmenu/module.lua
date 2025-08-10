@@ -1,4 +1,4 @@
-﻿MODULE.name = "mainMenu"
+MODULE.name = "mainMenu"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "moduleMainMenuDesc"
@@ -33,7 +33,9 @@ else
             local message = net.ReadString()
             if message == "" then
                 d:resolve()
-                hook.Run("CharLoaded", lia.char.loaded[id])
+                lia.char.getCharacter(id, nil, function(character)
+                    hook.Run("CharLoaded", character)
+                end)
             else
                 d:reject(message)
             end
@@ -109,6 +111,30 @@ else
             vgui.Create("liaCharacter")
         end
     end
+
+    
+    net.Receive("liaStaffDiscordPrompt", function()
+        Derma_StringRequest(
+            "Staff Character Setup",
+            "Please enter your Discord username for your staff character description:",
+            "",
+            function(discord)
+                if discord and discord:Trim() ~= "" then
+                    net.Start("liaStaffDiscordResponse")
+                    net.WriteString(discord:Trim())
+                    net.SendToServer()
+                else
+                    LocalPlayer():notify("Discord username cannot be empty!")
+                end
+            end,
+            function()
+                
+                net.Start("liaStaffDiscordResponse")
+                net.WriteString("not provided")
+                net.SendToServer()
+            end
+        )
+    end)
 end
 
 function MODULE:CanPlayerCreateChar(client)
@@ -121,5 +147,32 @@ function MODULE:CanPlayerCreateChar(client)
         local count = #lia.characters or 0
         local maxChars = hook.Run("GetMaxPlayerChar", client) or lia.config.get("MaxCharacters")
         if (count or 0) >= maxChars then return false end
+    end
+end
+
+
+function MODULE:GetMaxPlayerChar(client)
+    local maxChars = lia.config.get("MaxCharacters")
+    if SERVER then
+        
+        local staffCount = 0
+        for _, charID in pairs(client.liaCharList or {}) do
+            local character = lia.char.getCharacter(charID)
+            if character and character:getFaction() == FACTION_STAFF then
+                staffCount = staffCount + 1
+            end
+        end
+        
+        return maxChars + staffCount
+    else
+        
+        local staffCount = 0
+        for _, charID in pairs(lia.characters or {}) do
+            local character = lia.char.getCharacter(charID)
+            if character and character:getFaction() == FACTION_STAFF then
+                staffCount = staffCount + 1
+            end
+        end
+        return maxChars + staffCount
     end
 end

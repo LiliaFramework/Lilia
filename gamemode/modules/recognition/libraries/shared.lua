@@ -8,7 +8,7 @@ end
 function MODULE:isCharRecognized(character, id)
     if not lia.config.get("RecognitionEnabled", true) then return true end
     local client = character:getPlayer()
-    local other = lia.char.loaded[id]
+    local other = lia.char.getCharacter(id, client)
     local otherClient = other and other:getPlayer()
     if not IsValid(otherClient) then return false end
     if character.id == id then return true end
@@ -29,7 +29,8 @@ function MODULE:isCharRecognized(character, id)
 end
 
 function MODULE:isCharFakeRecognized(character, id)
-    local other = lia.char.loaded[id]
+    local other = lia.char.getCharacter(id, character:getPlayer())
+    if not other then return false end
     local CharNameList = character:getFakeName()
     local clientName = CharNameList[other:getID()]
     return lia.config.get("FakeNamesEnabled", false) and isFakeNameExistant(clientName, CharNameList)

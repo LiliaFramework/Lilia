@@ -429,7 +429,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         ITEM.uniqueID = uniqueID
         ITEM.base = baseID
         ITEM.isBase = isBaseItem
-        ITEM.category = ITEM.category or L("misc")
+        ITEM.category = ITEM.category or "misc"
         ITEM.functions = table.Copy(baseTable.functions or DefaultFunctions)
     else
         ITEM = targetTable[uniqueID] or setmetatable({
@@ -448,7 +448,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         ITEM.uniqueID = uniqueID
         ITEM.base = baseID
         ITEM.isBase = isBaseItem
-        ITEM.category = ITEM.category or L("misc")
+        ITEM.category = ITEM.category or "misc"
         ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or DefaultFunctions)
     end
 

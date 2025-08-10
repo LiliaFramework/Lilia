@@ -3,49 +3,48 @@ ITEM.model = "models/props_c17/SuitCase001a.mdl"
 ITEM.width = 1
 ITEM.height = 1
 ITEM.ammo = "pistol"
-ITEM.category = L("itemCatAmmunition")
+ITEM.category = "itemCatAmmunition"
 ITEM.functions.use = {
     name = "load",
     tip = "useTip",
     icon = "icon16/add.png",
-    isMulti = true,
-    multiOptions = function(item)
-        local options = {}
-        table.insert(options, {
-            name = "ammoLoadAll",
-            data = 0,
-        })
-
-        for _, amount in pairs({5, 10, 30, 45, 90, 150, 300}) do
-            if amount <= item:getQuantity() then
-                table.insert(options, {
-                    name = L("ammoLoadAmount", amount),
-                    data = amount,
-                })
-            end
-        end
-
-        table.insert(options, {
-            name = "ammoLoadCustom",
-            data = -1,
-        })
-        return options
-    end,
-    onClick = function(_, data) if data == -1 then return false end end,
-    onRun = function(item, data)
-        data = data or 0
-        if data > 0 then
-            local num = tonumber(data)
-            item:addQuantity(-num)
-            item.player:GiveAmmo(num, item.ammo)
-            item.player:EmitSound(item.useSound or "items/ammo_pickup.wav", 110)
-        elseif data == 0 then
-            item.player:GiveAmmo(item:getQuantity(), item.ammo)
-            item.player:EmitSound(item.useSound or "items/ammo_pickup.wav", 110)
-            return true
-        end
-        return item:getQuantity() <= 0
-    end,
+    multiOptions = {
+        [L("ammoLoadAll")] = {
+            function(item)
+                item.player:GiveAmmo(item:getQuantity(), item.ammo)
+                item.player:EmitSound(item.useSound or "items/ammo_pickup.wav", 110)
+                return true
+            end,
+            function() return true end
+        },
+        [L("ammoLoadAmount", 5)] = {
+            function(item)
+                item:addQuantity(-5)
+                item.player:GiveAmmo(5, item.ammo)
+                item.player:EmitSound(item.useSound or "items/ammo_pickup.wav", 110)
+                return item:getQuantity() <= 0
+            end,
+            function(item) return item:getQuantity() >= 5 end
+        },
+        [L("ammoLoadAmount", 10)] = {
+            function(item)
+                item:addQuantity(-10)
+                item.player:GiveAmmo(10, item.ammo)
+                item.player:EmitSound(item.useSound or "items/ammo_pickup.wav", 110)
+                return item:getQuantity() <= 0
+            end,
+            function(item) return item:getQuantity() >= 10 end
+        },
+        [L("ammoLoadAmount", 30)] = {
+            function(item)
+                item:addQuantity(-30)
+                item.player:GiveAmmo(30, item.ammo)
+                item.player:EmitSound(item.useSound or "items/ammo_pickup.wav", 110)
+                return item:getQuantity() <= 0
+            end,
+            function(item) return item:getQuantity() >= 30 end
+        }
+    }
 }
 
 function ITEM:getDesc()

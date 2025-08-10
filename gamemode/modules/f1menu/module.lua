@@ -4,25 +4,25 @@ MODULE.discord = "@liliaplayer"
 MODULE.desc = "moduleF1MenuDesc"
 MODULE.Privileges = {
     {
-        Name = L("accessEntityList"),
+        Name = "accessEntityList",
         ID = "accessEntityList",
         MinAccess = "admin",
         Category = "categoryMenu",
     },
     {
-        Name = L("teleportToEntity"),
+        Name = "teleportToEntity",
         ID = "teleportToEntity",
         MinAccess = "admin",
         Category = "categoryMenu",
     },
     {
-        Name = L("teleportToEntityTab"),
+        Name = "teleportToEntityTab",
         ID = "teleportToEntityTab",
         MinAccess = "admin",
         Category = "categoryMenu",
     },
     {
-        Name = L("viewEntityTab"),
+        Name = "viewEntityTab",
         ID = "viewEntityTab",
         MinAccess = "admin",
         Category = "categoryMenu",

@@ -1,6 +1,6 @@
 ﻿ITEM.name = "grenadeName"
 ITEM.desc = "grenadeDesc"
-ITEM.category = L("itemCatGrenades")
+ITEM.category = "itemCatGrenades"
 ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
 ITEM.class = "weapon_frag"
 ITEM.width = 1

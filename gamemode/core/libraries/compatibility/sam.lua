@@ -175,14 +175,14 @@ lia.command.add("cleardecals", {
 })
 
 lia.administrator.registerPrivilege({
-    Name = L("canSeeSAMNotificationsOutsideStaff"),
+    Name = "canSeeSAMNotificationsOutsideStaff",
     ID = "canSeeSAMNotificationsOutsideStaff",
     MinAccess = "superadmin",
     Category = "categorySAM"
 })
 
 lia.administrator.registerPrivilege({
-    Name = L("canBypassSAMFactionWhitelist"),
+    Name = "canBypassSAMFactionWhitelist",
     ID = "canBypassSAMFactionWhitelist",
     MinAccess = "superadmin",
     Category = "categorySAM"

@@ -1,7 +1,7 @@
 ﻿ITEM.name = "bagName"
 ITEM.desc = "bagDesc"
 ITEM.model = "models/props_c17/suitcase001a.mdl"
-ITEM.category = L("storage")
+ITEM.category = "storage"
 ITEM.isBag = true
 ITEM.invWidth = 2
 ITEM.invHeight = 2

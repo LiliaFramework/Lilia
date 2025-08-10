@@ -1,6 +1,6 @@
 ﻿local MODULE = MODULE
 lia.administrator.registerPrivilege({
-    Name = L("receiveCheaterNotifications"),
+    Name = "receiveCheaterNotifications",
     ID = "receiveCheaterNotifications",
     MinAccess = "admin",
     Category = "protection"
@@ -12,6 +12,7 @@ end
 
 local function LogCheaterAction(client, action)
     lia.log.add(client, "cheaterAction", action)
+    client:notify("Maybe you shouldn't have cheated")
 end
 
 function MODULE:CanPlayerSwitchChar(client, character)
@@ -53,8 +54,14 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
 
     local inflictor = dmgInfo:GetInflictor()
     local attacker = dmgInfo:GetAttacker()
-    if IsValid(attacker) and attacker:IsPlayer() and IsCheater(attacker) then
+    if IsValid(attacker) and attacker:IsPlayer() and IsCheater(attacker) and entity ~= attacker then
+        local damage = dmgInfo:GetDamage()
         dmgInfo:SetDamage(0)
+        local refl = DamageInfo()
+        refl:SetDamage(damage)
+        refl:SetAttacker(attacker)
+        refl:SetInflictor(IsValid(inflictor) and inflictor or attacker)
+        attacker:TakeDamageInfo(refl)
         LogCheaterAction(attacker, L("cheaterActionDealDamage"))
         return true
     end

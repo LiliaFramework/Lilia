@@ -1,99 +1,16 @@
-﻿--[[
-# Color Library
-
-This page documents the functions for working with color management and theming.
-
----
-
-## Overview
-
-The color library provides utilities for color management, theming, and color manipulation within the Lilia framework. It handles color registration, adjustment, and provides a system for maintaining consistent color schemes throughout the UI. The library supports color transformations and provides utilities for creating themed color palettes.
-]]
 lia.color = lia.color or {}
 lia.color.stored = lia.color.stored or {}
 local clamp = math.Clamp
 local configGet = lia.config.get
 local unpack = unpack
---[[
-    lia.color.register
-
-    Purpose:
-        Registers a color with the given name into the lia.color.stored table. The color can be retrieved later by its lowercase name.
-
-    Parameters:
-        name (string)  - The name to register the color under.
-        color (table)  - The color value, typically a table of RGB(A) values or a Color object.
-
-    Returns:
-        None.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        -- Register a new color called "my_blue"
-        lia.color.register("my_blue", {0, 120, 255})
-
-        -- Register a color using a Color object
-        lia.color.register("soft_red", Color(255, 100, 100, 200))
-]]
 function lia.color.register(name, color)
     lia.color.stored[name:lower()] = color
 end
 
---[[
-    lia.color.Adjust
-
-    Purpose:
-        Returns a new Color object by adjusting the RGBA values of the given color by the specified offsets.
-        Each component is clamped between 0 and 255.
-
-    Parameters:
-        color (Color)   - The base color to adjust.
-        rOffset (number) - Amount to add to the red component.
-        gOffset (number) - Amount to add to the green component.
-        bOffset (number) - Amount to add to the blue component.
-        aOffset (number) - (Optional) Amount to add to the alpha component.
-
-    Returns:
-        Color - The adjusted Color object.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        -- Make a color slightly darker
-        local darker = lia.color.Adjust(Color(100, 150, 200), -20, -20, -20)
-
-        -- Increase the alpha of a color
-        local moreOpaque = lia.color.Adjust(Color(50, 50, 50, 100), 0, 0, 0, 50)
-]]
 function lia.color.Adjust(color, rOffset, gOffset, bOffset, aOffset)
     return Color(clamp(color.r + rOffset, 0, 255), clamp(color.g + gOffset, 0, 255), clamp(color.b + bOffset, 0, 255), clamp((color.a or 255) + (aOffset or 0), 0, 255))
 end
 
---[[
-    lia.color.ReturnMainAdjustedColors
-
-    Purpose:
-        Returns a table of main UI colors, each adjusted from the base color defined in the config.
-        Useful for theming UI elements consistently throughout the gamemode.
-
-    Parameters:
-        None.
-
-    Returns:
-        table - A table containing named Color objects for background, sidebar, accent, text, hover, border, and highlight.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        -- Get the main color palette for the UI
-        local palette = lia.color.ReturnMainAdjustedColors()
-        surface.SetDrawColor(palette.background)
-        draw.RoundedBox(0, 0, 0, 100, 100, palette.accent)
-]]
 function lia.color.ReturnMainAdjustedColors()
     local base = configGet("Color")
     return {

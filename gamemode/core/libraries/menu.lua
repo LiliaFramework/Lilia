@@ -1,14 +1,3 @@
-﻿--[[
-# Menu Library
-
-This page documents the functions for working with context menus and interactive UI elements.
-
----
-
-## Overview
-
-The menu library provides a system for creating and managing context menus and interactive UI elements within the Lilia framework. It handles menu positioning, rendering, and user interaction, supporting both world-space and screen-space menus. The library provides utilities for building dynamic menus with customizable options and callbacks.
-]]
 lia.menu = lia.menu or {}
 lia.menu.list = lia.menu.list or {}
 local surface_SetFont = surface.SetFont

@@ -1,6 +1,6 @@
 ﻿ITEM.name = "booksName"
 ITEM.desc = "booksDesc"
-ITEM.category = L("itemCatLiterature")
+ITEM.category = "itemCatLiterature"
 ITEM.model = "models/props_lab/bindergraylabel01b.mdl"
 ITEM.contents = ""
 ITEM.functions.Read = {

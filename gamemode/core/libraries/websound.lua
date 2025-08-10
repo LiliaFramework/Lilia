@@ -1,14 +1,3 @@
-﻿--[[
-# Web Sound Library
-
-This page documents the functions for working with web sound downloading and caching.
-
----
-
-## Overview
-
-The web sound library provides utilities for downloading, caching, and managing sound files from the web within the Lilia framework. It handles sound downloading, local storage, and provides functions for converting web sounds into playable audio files. The library supports sound caching, error handling, and provides utilities for managing web-based audio content.
-]]
 lia.websound = lia.websound or {}
 local ip = string.Replace(string.Replace(game.GetIPAddress() or "unknown", ":", "_"), "%.", "_")
 local gamemode = engine.ActiveGamemode() or "unknown"
@@ -28,38 +17,6 @@ local function buildPath(p)
     return "data/" .. p
 end
 
---[[
-    lia.websound.register
-
-    Purpose:
-        Downloads a sound file from a given URL and saves it locally for later playback.
-        If the sound is already cached or saved, it will be reused. Optionally, a callback can be provided
-        to be notified when the sound is ready or if an error occurs.
-
-    Parameters:
-        name (string)         - The local name to register the sound as (used as the filename).
-        url (string)          - The URL to download the sound from.
-        cb (function, optional) - Callback function called with (localPath, fromCache) on success,
-                                 or (nil, false, error) on failure.
-
-    Returns:
-        None.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        -- Register a sound from a URL and play it when ready
-        lia.websound.register("test.mp3", "https://example.com/sound.mp3", function(localPath, fromCache)
-            if localPath then
-                sound.PlayFile(localPath, "", function(chan)
-                    if chan then chan:Play() end
-                end)
-            else
-                print("Failed to download sound!")
-            end
-        end)
-]]
 function lia.websound.register(name, url, cb)
     if isstring(url) then urlMap[url] = name end
     cache[name] = nil
@@ -84,31 +41,6 @@ function lia.websound.register(name, url, cb)
     end)
 end
 
---[[
-    lia.websound.get
-
-    Purpose:
-        Retrieves the local file path for a previously registered or downloaded web sound.
-        If the sound is not cached but exists on disk, it will be cached and returned.
-
-    Parameters:
-        name (string) - The name or URL of the sound to retrieve.
-
-    Returns:
-        string or nil - The local file path to the sound (for use with sound.PlayFile), or nil if not found.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        -- Get the local path for a registered sound and play it
-        local path = lia.websound.get("test.mp3")
-        if path then
-            sound.PlayFile(path, "", function(chan)
-                if chan then chan:Play() end
-            end)
-        end
-]]
 function lia.websound.get(name)
     local key = urlMap[name] or name
     if cache[key] then return cache[key] end

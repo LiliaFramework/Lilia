@@ -53,7 +53,7 @@ function PANEL:PaintOver(w, h)
     hook.Run("ItemPaintOver", self, itemTable, w, h)
 end
 
-local function buildActionFunc(action, actionIndex, itemTable, _, sub)
+local function buildActionFunc(action, actionIndex, itemTable, sub, optionKey)
     return function()
         itemTable.player = LocalPlayer()
         local send = true
@@ -71,7 +71,7 @@ local function buildActionFunc(action, actionIndex, itemTable, _, sub)
             net.Start("invAct")
             net.WriteString(actionIndex)
             net.WriteType(itemTable.id)
-            net.WriteType(sub and sub.data)
+            net.WriteType(optionKey or sub and sub.data)
             net.SendToServer()
         end
 
@@ -91,16 +91,36 @@ function PANEL:openActionMenu()
 
     for k, v in SortedPairs(itemTable.functions) do
         if hook.Run("CanRunItemAction", itemTable, k) == false or isfunction(v.onCanRun) and not v.onCanRun(itemTable) then continue end
-        if v.isMulti then
-            local subMenu, subMenuOption = menu:AddSubMenu(L(v.name or k), buildActionFunc(v, k, itemTable, self.invID))
+        local isMulti = v.isMulti or v.multiOptions and istable(v.multiOptions)
+        if isMulti then
+            local subMenu, subMenuOption = menu:AddSubMenu(L(v.name or k), buildActionFunc(v, k, itemTable))
             subMenuOption:SetImage(v.icon or "icon16/brick.png")
-            local options = isfunction(v.multiOptions) and v.multiOptions(itemTable, LocalPlayer()) or v.multiOptions
+            local options = v.multiOptions
+            if isfunction(options) then options = options(itemTable, LocalPlayer()) end
             if not options then return end
-            for _, sub in pairs(options) do
-                subMenu:AddOption(L(sub.name or "subOption"), buildActionFunc(v, k, itemTable, self.invID, sub)):SetImage(sub.icon or "icon16/brick.png")
+            for optionKey, optionFunc in pairs(options) do
+                if isfunction(optionFunc) then
+                    local subOption = {
+                        name = optionKey,
+                        onRun = optionFunc
+                    }
+
+                    subMenu:AddOption(L(optionKey), buildActionFunc(v, k, itemTable, subOption, optionKey)):SetImage("icon16/brick.png")
+                elseif istable(optionFunc) then
+                    if isfunction(optionFunc[2]) and not optionFunc[2](itemTable, LocalPlayer()) then continue end
+                    local subOption = {
+                        name = optionFunc.name or optionKey,
+                        onRun = optionFunc[1] or optionFunc.onRun,
+                        icon = optionFunc.icon
+                    }
+
+                    subMenu:AddOption(L(subOption.name), buildActionFunc(v, k, itemTable, subOption, optionKey)):SetImage(subOption.icon or "icon16/brick.png")
+                else
+                    subMenu:AddOption(L(optionFunc.name or "subOption"), buildActionFunc(v, k, itemTable, optionFunc)):SetImage(optionFunc.icon or "icon16/brick.png")
+                end
             end
         else
-            menu:AddOption(L(v.name or k), buildActionFunc(v, k, itemTable, self.invID)):SetImage(v.icon or "icon16/brick.png")
+            menu:AddOption(L(v.name or k), buildActionFunc(v, k, itemTable)):SetImage(v.icon or "icon16/brick.png")
         end
     end
 

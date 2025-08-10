@@ -4,67 +4,67 @@ MODULE.discord = "@liliaplayer"
 MODULE.desc = "moduleAdministrationDesc"
 MODULE.Privileges = {
     {
-        Name = L("managePropBlacklist"),
+        Name = "managePropBlacklist",
         ID = "managePropBlacklist",
         MinAccess = "superadmin",
         Category = "categoryBlacklisting",
     },
     {
-        Name = L("manageVehicleBlacklist"),
+        Name = "manageVehicleBlacklist",
         ID = "manageVehicleBlacklist",
         MinAccess = "superadmin",
         Category = "categoryBlacklisting",
     },
     {
-        Name = L("manageEntityBlacklist"),
+        Name = "manageEntityBlacklist",
         ID = "manageEntityBlacklist",
         MinAccess = "superadmin",
         Category = "categoryBlacklisting",
     },
     {
-        Name = L("accessConfigurationMenu"),
+        Name = "accessConfigurationMenu",
         ID = "accessConfigurationMenu",
         MinAccess = "superadmin",
         Category = "categoryConfiguration",
     },
     {
-        Name = L("accessEditConfigurationMenu"),
+        Name = "accessEditConfigurationMenu",
         ID = "accessEditConfigurationMenu",
         MinAccess = "superadmin",
         Category = "categoryConfiguration",
     },
     {
-        Name = L("manageUsergroups"),
+        Name = "manageUsergroups",
         ID = "manageUsergroups",
         MinAccess = "superadmin",
         Category = "categoryUsergroups",
     },
     {
-        Name = L("viewStaffManagement"),
+        Name = "viewStaffManagement",
         ID = "viewStaffManagement",
         MinAccess = "superadmin",
         Category = "categoryStaffManagement",
     },
     {
-        Name = L("canAccessPlayerList"),
+        Name = "canAccessPlayerList",
         ID = "canAccessPlayerList",
         MinAccess = "admin",
         Category = "players"
     },
     {
-        Name = L("listCharacters"),
+        Name = "listCharacters",
         ID = "listCharacters",
         MinAccess = "admin",
         Category = "character"
     },
     {
-        Name = L("viewDBTables"),
+        Name = "viewDBTables",
         ID = "viewDBTables",
         MinAccess = "superadmin",
         Category = "database"
     },
     {
-        Name = L("canAccessFlagManagement"),
+        Name = "canAccessFlagManagement",
         ID = "canAccessFlagManagement",
         MinAccess = "superadmin",
         Category = "flags",

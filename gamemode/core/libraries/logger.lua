@@ -1,14 +1,3 @@
-﻿--[[
-# Logger Library
-
-This page documents the functions for working with logging and audit systems.
-
----
-
-## Overview
-
-The logger library provides a comprehensive logging system for tracking player actions, server events, and administrative activities within the Lilia framework. It supports categorized logging, localized messages, and provides utilities for recording various types of events such as character actions, combat events, world interactions, and administrative operations.
-]]
 lia.log = lia.log or {}
 lia.log.types = {
     ["charRecognize"] = {
@@ -752,35 +741,9 @@ lia.log.types = {
         func = function(client, charID) return L("logCharUnbanOffline", client:Name(), tostring(charID)) end,
         category = L("admin")
     },
+
 }
 
---[[
-    lia.log.addType
-
-    Purpose:
-        Registers a new log type with a custom formatting function and category.
-        This allows you to extend the logging system with your own log events.
-
-    Parameters:
-        logType (string)   - The unique identifier for the log type.
-        func (function)    - A function that returns the formatted log string. Receives (client, ...).
-        category (string)  - The category name for this log type (used for filtering and display).
-
-    Returns:
-        None.
-
-    Realm:
-        Server.
-
-    Example Usage:
-        -- Register a new log type for a custom event
-        lia.log.addType("myCustomEvent", function(client, data)
-            return string.format("%s performed a custom event: %s", client:Name(), data)
-        end, "customCategory")
-
-        -- Later, you can log this event:
-        lia.log.add(somePlayer, "myCustomEvent", "opened the secret door")
-]]
 function lia.log.addType(logType, func, category)
     lia.log.types[logType] = {
         func = func,
@@ -788,31 +751,6 @@ function lia.log.addType(logType, func, category)
     }
 end
 
---[[
-    lia.log.getString
-
-    Purpose:
-        Retrieves the formatted log string and category for a given log type and arguments.
-        This is used internally to generate the final log message before output or storage.
-
-    Parameters:
-        client (Player)    - The player associated with the log event (can be nil for server events).
-        logType (string)   - The log type identifier (must be registered in lia.log.types).
-        ...                - Additional arguments passed to the log formatting function.
-
-    Returns:
-        logString (string) - The formatted log message, or nil if the log type is invalid.
-        category (string)  - The category of the log message, or nil if not found.
-
-    Realm:
-        Server.
-
-    Example Usage:
-        -- Get the log string for a player spawning a prop
-        local logString, category = lia.log.getString(player, "spawned_prop", "models/props_c17/oildrum001.mdl")
-        print(logString) -- e.g., "PlayerName spawned prop: models/props_c17/oildrum001.mdl"
-        print(category)  -- e.g., "World"
-]]
 function lia.log.getString(client, logType, ...)
     local logData = lia.log.types[logType]
     if not logData then return end
@@ -822,34 +760,6 @@ function lia.log.getString(client, logType, ...)
     end
 end
 
---[[
-    lia.log.add
-
-    Purpose:
-        Adds a new log entry to the server log, prints it, and stores it in the database.
-        This is the main function to use when you want to log an event in the system.
-
-    Parameters:
-        client (Player)    - The player associated with the log event (can be nil for server events).
-        logType (string)   - The log type identifier (must be registered in lia.log.types).
-        ...                - Additional arguments passed to the log formatting function.
-
-    Returns:
-        None.
-
-    Realm:
-        Server.
-
-    Example Usage:
-        -- Log a player picking up money
-        lia.log.add(player, "moneyPickedUp", 100)
-
-        -- Log a player using a command
-        lia.log.add(player, "command", "/roll 100")
-
-        -- Log a server-side event (no player)
-        lia.log.add(nil, "configChange", "maxPlayers", 32, 64)
-]]
 function lia.log.add(client, logType, ...)
     local logString, category = lia.log.getString(client, logType, ...)
     if not isstring(category) then category = L("uncategorized") end

@@ -32,13 +32,25 @@ local function wrap(text, maxWidth, font)
     return lines
 end
 
+function PANEL:ApplyConfig()
+    local screenW, screenH = ScrW(), ScrH()
+    local w, h = screenW * lia.config.get("sbWidth", 0.35), screenH * lia.config.get("sbHeight", 0.65)
+    self:SetSize(w, h)
+    local dock = string.lower(lia.config.get("sbDock", "center"))
+    if dock == "left" then
+        self:SetPos(0, (screenH - h) * 0.5)
+    elseif dock == "right" then
+        self:SetPos(screenW - w, (screenH - h) * 0.5)
+    else
+        self:Center()
+    end
+end
+
 function PANEL:Init()
     if IsValid(lia.gui.score) then lia.gui.score:Remove() end
     lia.gui.score = self
     hook.Run("ScoreboardOpened", self)
-    local w, h = ScrW() * lia.config.get("sbWidth", 0.35), ScrH() * lia.config.get("sbHeight", 0.65)
-    self:SetSize(w, h)
-    self:Center()
+    self:ApplyConfig()
     local header = self:Add("DPanel")
     header:Dock(TOP)
     header:SetTall(80)

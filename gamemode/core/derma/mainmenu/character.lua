@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     local client = LocalPlayer()
     local clientChar = client.getChar and client:getChar()
@@ -36,7 +36,7 @@ function PANEL:Init()
     self:loadBackground()
     if clientChar and lia.characters and #lia.characters > 0 then
         for i, charID in ipairs(lia.characters) do
-            local charObj = isnumber(charID) and lia.char.loaded[charID] or charID
+            local charObj = isnumber(charID) and lia.char.getCharacter(charID) or charID
             if charObj and charObj.getID and charObj:getID() == clientChar:getID() then
                 self.currentIndex = i
                 break
@@ -146,10 +146,21 @@ function PANEL:createStartButton()
     local discordURL = lia.config.get("DiscordURL")
     local workshopURL = lia.config.get("Workshop")
     local buttonsData = {}
+    local hasStaffChar = false
+    if lia.characters and #lia.characters > 0 then
+        for _, charID in pairs(lia.characters) do
+            local character = lia.char.getCharacter(charID)
+            if character and character:getFaction() == FACTION_STAFF then
+                hasStaffChar = true
+                break
+            end
+        end
+    end
+
     if hook.Run("CanPlayerCreateChar", client) ~= false then
         table.insert(buttonsData, {
             id = "create",
-            text = L("create") .. " " .. L("character"),
+            text = "Create Character",
             doClick = function()
                 for _, b in pairs(self.buttons) do
                     if IsValid(b) then b:Remove() end
@@ -166,7 +177,7 @@ function PANEL:createStartButton()
     if lia.characters and #lia.characters > 0 then
         table.insert(buttonsData, {
             id = "load",
-            text = L("loadCharacter"),
+            text = "Load Character",
             doClick = function()
                 for _, b in pairs(self.buttons) do
                     if IsValid(b) then b:Remove() end
@@ -180,10 +191,39 @@ function PANEL:createStartButton()
         })
     end
 
+    if client:hasPrivilege("createStaffCharacter") and not client:isStaffOnDuty() then
+        table.insert(buttonsData, {
+            id = "staff",
+            text = hasStaffChar and "Load Staff Character" or "Create Staff Character",
+            doClick = function()
+                for _, b in pairs(self.buttons) do
+                    if IsValid(b) then b:Remove() end
+                end
+
+                self:clickSound()
+                if hasStaffChar then
+                    for _, charID in pairs(lia.characters) do
+                        local character = lia.char.getCharacter(charID)
+                        if character and character:getFaction() == FACTION_STAFF then
+                            lia.module.list["mainmenu"]:chooseCharacter(character:getID()):next(function()
+                                if IsValid(lia.gui.character) then
+                                    lia.gui.character:Remove()
+                                end
+                            end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyLocalized(err) end end)
+                            break
+                        end
+                    end
+                else
+                    self:createStaffCharacter()
+                end
+            end
+        })
+    end
+
     if discordURL ~= "" then
         table.insert(buttonsData, {
             id = "discord",
-            text = L("discord"),
+            text = "Discord",
             doClick = function()
                 self:clickSound()
                 gui.OpenURL(discordURL)
@@ -194,7 +234,7 @@ function PANEL:createStartButton()
     if workshopURL ~= "" then
         table.insert(buttonsData, {
             id = "workshop",
-            text = L("steamWorkshop"),
+            text = "Workshop",
             doClick = function()
                 self:clickSound()
                 gui.OpenURL(workshopURL)
@@ -202,10 +242,11 @@ function PANEL:createStartButton()
         })
     end
 
+    -- 6. Mount Content
     if lia.workshop and lia.workshop.hasContentToDownload and lia.workshop.hasContentToDownload() then
         table.insert(buttonsData, {
             id = "mount",
-            text = L("mountContent"),
+            text = "Mount Content",
             doClick = function()
                 self:clickSound()
                 if lia.workshop and lia.workshop.mountContent then
@@ -218,19 +259,21 @@ function PANEL:createStartButton()
         })
     end
 
+    -- 7. Disconnect
     table.insert(buttonsData, {
         id = "disconnect",
-        text = L("disconnect"),
+        text = "Disconnect",
         doClick = function()
             self:clickSound()
             RunConsoleCommand("disconnect")
         end
     })
 
+    -- 8. Return
     if clientChar then
         table.insert(buttonsData, {
             id = "return",
-            text = L("returnText"),
+            text = "Return",
             doClick = function() self:Remove() end
         })
     end
@@ -376,13 +419,34 @@ function PANEL:createCharacterCreation()
     self.content:Add("liaCharacterCreation")
 end
 
+function PANEL:createStaffCharacter()
+    local client = LocalPlayer()
+    local steamName = client:Nick()
+    local staffData = {
+        name = steamName,
+        faction = FACTION_STAFF,
+        model = 1,
+        desc = "",
+        skin = 0,
+        groups = {}
+    }
+
+    lia.module.list["mainmenu"]:createCharacter(staffData):next(function(charID)
+        lia.module.list["mainmenu"]:chooseCharacter(charID):next(function()
+            if IsValid(lia.gui.character) then
+                lia.gui.character:Remove()
+            end
+        end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyLocalized(err) end end)
+    end):catch(function(err) LocalPlayer():notifyLocalized(err or "Failed to create staff character") end)
+end
+
 function PANEL:updateSelectedCharacter()
     if not self.isLoadMode then return end
     local chars = lia.characters or {}
     if #chars == 0 then return end
     self.currentIndex = self.currentIndex or 1
     local sel = chars[self.currentIndex] or chars[1]
-    local character = lia.char.loaded[sel]
+    local character = lia.char.getCharacter(sel)
     if IsValid(self.infoFrame) then self.infoFrame:Remove() end
     if IsValid(self.selectBtn) then self.selectBtn:Remove() end
     if IsValid(self.deleteBtn) then self.deleteBtn:Remove() end
@@ -396,7 +460,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     local total = #chars
     local index = 1
     for i, cID in ipairs(chars) do
-        local cObj = isnumber(cID) and lia.char.loaded[cID] or cID
+        local cObj = isnumber(cID) and lia.char.getCharacter(cID) or cID
         if cObj and cObj.getID and cObj:getID() == character:getID() then
             index = i
             break
@@ -711,6 +775,9 @@ function PANEL:warningSound()
 end
 
 function PANEL:OnRemove()
+    if lia.gui.character == self then
+        lia.gui.character = nil
+    end
     hook.Run("CharacterMenuClosed")
     self:restoreExternalEntities()
     hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")

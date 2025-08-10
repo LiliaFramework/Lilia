@@ -26,14 +26,92 @@ The library serves as the foundation for all administrative functionality within
 lia.administrator = lia.administrator or {}
 lia.administrator.groups = lia.administrator.groups or {}
 lia.administrator.privileges = lia.administrator.privileges or {}
-lia.administrator.privMeta = lia.administrator.privMeta or {}
-lia.administrator.privIDs = lia.administrator.privIDs or {}
+lia.administrator.privilegeCategories = lia.administrator.privilegeCategories or {}
 lia.administrator.missingGroups = lia.administrator.missingGroups or {}
 lia.administrator.DefaultGroups = {
     user = 1,
     admin = 2,
     superadmin = 3
 }
+
+--[[
+    getPrivilegeCategory
+    
+    Purpose:
+        Computes the category for a privilege on-demand by checking various sources
+        instead of storing it persistently.
+    
+    Parameters:
+        privilegeName (string) - The name/ID of the privilege
+    
+    Returns:
+        string - The category name for the privilege
+]]
+local function getPrivilegeCategory(privilegeName)
+    local categoryChecks = {
+        {
+            match = function(name) return string.match(name, "^tool_") end,
+            category = "categoryStaffTools"
+        },
+        {
+            match = function(name) return string.match(name, "^property_") end,
+            category = "categoryStaffManagement"
+        },
+        {
+            match = function(name) return name == "stopSoundForEveryone" end,
+            category = "categoryServer"
+        },
+        {
+            match = function(name) return string.match(name, "simfphys") end,
+            category = "simfphysVehicles"
+        },
+        {
+            match = function(name) return string.match(name, "SAM") end,
+            category = "categorySAM"
+        },
+        {
+            match = function(name) return string.match(name, "PAC") end,
+            category = "categoryPAC3"
+        },
+        {
+            match = function(name) return string.match(name, "ServerGuard") end,
+            category = "categoryServerGuard"
+        },
+        {
+            match = function(name) return name == "receiveCheaterNotifications" end,
+            category = "protection"
+        },
+        {
+            match = function(name) return name == "useDisallowedTools" end,
+            category = "categoryStaffTools"
+        }
+    }
+
+    if not privilegeName then return L("unassigned") end
+    if lia.administrator and lia.administrator.privilegeCategories and lia.administrator.privilegeCategories[privilegeName] then
+        return L(lia.administrator.privilegeCategories[privilegeName])
+    end
+    if lia.command and lia.command.list and lia.command.list[privilegeName] then return L("commands") end
+    if lia.module and lia.module.list then
+        for _, module in pairs(lia.module.list) do
+            if module.Privileges and istable(module.Privileges) then
+                for _, priv in ipairs(module.Privileges) do
+                    if priv.ID == privilegeName then return L(priv.Category or module.name or "unassigned") end
+                end
+            end
+        end
+    end
+
+    if CAMI then
+        local camiPriv = CAMI.GetPrivilege(privilegeName)
+        if camiPriv and camiPriv.Category then return L(camiPriv.Category) end
+    end
+
+    for _, check in ipairs(categoryChecks) do
+        if check.match(privilegeName) then return L(check.category) end
+    end
+    return L("unassigned")
+end
 
 local function getGroupLevel(group)
     local levels = lia.administrator.DefaultGroups or {}
@@ -122,12 +200,9 @@ local function camiBootstrapFromExisting()
         local m = tostring(pr.MinAccess or "user"):lower()
         if lia.administrator.privileges[n] == nil then
             lia.administrator.privileges[n] = m
-            lia.administrator.privMeta[n] = L(pr.Category or "unassigned")
             for g in pairs(lia.administrator.groups or {}) do
                 if shouldGrant(g, m) then lia.administrator.groups[g][n] = true end
             end
-        else
-            lia.administrator.privMeta[n] = lia.administrator.privMeta[n] or L(pr.Category or "unassigned")
         end
     end
 
@@ -173,18 +248,73 @@ function lia.administrator.hasAccess(ply, privilege)
         end
     end
 
-    local name = lia.administrator.privIDs and lia.administrator.privIDs[privilege] or privilege
-    if not (lia.administrator.privileges and lia.administrator.privileges[name]) then
-        lia.information(L("privilegeNotExist", name))
-        if IsValid(ply) and ply.notifyLocalized then ply:notifyLocalized("privilegeNotExist", name) end
+    if not (lia.administrator.privileges and lia.administrator.privileges[privilege]) then
+        lia.information(L("privilegeNotExist", privilege))
+        if IsValid(ply) and ply.notifyLocalized then ply:notifyLocalized("privilegeNotExist", privilege) end
         return getGroupLevel(grp) >= (lia.administrator.DefaultGroups.superadmin or 3)
     end
 
     if getGroupLevel(grp) >= (lia.administrator.DefaultGroups.superadmin or 3) then return true end
     local g = lia.administrator.groups and lia.administrator.groups[grp] or nil
-    if g and g[name] == true then return true end
-    local min = lia.administrator.privileges[name]
+    if g and g[privilege] == true then return true end
+    local min = lia.administrator.privileges[privilege]
     return shouldGrant(grp, min)
+end
+
+--[[
+        lia.administrator.save
+
+        Purpose:
+            Saves all usergroups and privileges to the database and optionally synchronizes with clients.
+
+        Parameters:
+            noNetwork (boolean) - (Optional) If true, does not sync to clients after saving.
+
+        Returns:
+            None.
+
+        Realm:
+            Server.
+
+        Example Usage:
+            -- Save admin data and sync to clients
+            lia.administrator.save()
+
+            -- Save admin data without syncing to clients
+            lia.administrator.save(true)
+    ]]
+function lia.administrator.save(noNetwork)
+    rebuildPrivileges()
+    local rows = {}
+    for name, data in pairs(lia.administrator.groups) do
+        local info = istable(data._info) and data._info or {}
+        local privs = table.Copy(data)
+        privs._info = nil
+        rows[#rows + 1] = {
+            usergroup = name,
+            privileges = util.TableToJSON(privs),
+            inheritance = info.inheritance or "user",
+            types = util.TableToJSON(info.types or {})
+        }
+    end
+
+    lia.db.query("DELETE FROM lia_admin")
+    lia.db.bulkInsert("admin", rows)
+    if noNetwork or lia.administrator._loading then return end
+    lia.net.ready = lia.net.ready or setmetatable({}, {
+        __mode = "k"
+    })
+
+    local hasReady = false
+    for ply in pairs(lia.net.ready) do
+        if IsValid(ply) and lia.net.ready[ply] then
+            hasReady = true
+            break
+        end
+    end
+
+    if not hasReady then return end
+    lia.administrator.sync()
 end
 
 --[[
@@ -195,8 +325,8 @@ end
 
     Parameters:
         priv (table) - A table describing the privilege. Should contain:
-            Name (string) - Localized name shown in privilege lists.
             ID (string) - Unique identifier used when checking permissions.
+            Name (string) - (Optional) Localized name shown in privilege lists. If not provided, ID will be used.
             MinAccess (string) - (Optional) The minimum usergroup required to have this privilege (default: "user").
             Category (string) - (Optional) The category for the privilege.
 
@@ -209,34 +339,34 @@ end
     Example Usage:
         -- Register a new privilege "canFly" for admins and above
         lia.administrator.registerPrivilege({
-            Name = L("canFly"),
             ID = "canFly",
             MinAccess = "admin",
             Category = "Fun"
         })
 ]]
 function lia.administrator.registerPrivilege(priv)
-    if not priv or not priv.Name then return end
-    if not priv.ID then
-        lia.error("Privilege '" .. tostring(priv.Name) .. "' is missing an ID")
+    if not priv or not priv.ID then
+        lia.error("Privilege registration requires an ID field")
         return
     end
 
-    local name = tostring(priv.Name)
-    if name == "" then return end
-    if lia.administrator.privileges[name] ~= nil then return end
+    local id = tostring(priv.ID)
+    if id == "" then return end
+    if lia.administrator.privileges[id] ~= nil then return end
     local min = tostring(priv.MinAccess or "user"):lower()
-    lia.administrator.privileges[name] = min
-    local category = L(priv.Category or "unassigned")
-    lia.administrator.privMeta[name] = category
-    lia.administrator.privIDs[priv.ID] = name
+    lia.administrator.privileges[id] = min
+    if priv.Category then
+        lia.administrator.privilegeCategories[id] = priv.Category
+    end
     for groupName, perms in pairs(lia.administrator.groups) do
         perms = perms or {}
         lia.administrator.groups[groupName] = perms
-        if shouldGrant(groupName, min) then perms[name] = true end
+        if shouldGrant(groupName, min) then perms[id] = true end
     end
 
+    local name = L(priv.Name or priv.ID)
     if CAMI then camiRegisterPrivilege(priv.ID, min) end
+    local category = getPrivilegeCategory(id)
     hook.Run("OnPrivilegeRegistered", {
         Name = name,
         ID = priv.ID,
@@ -268,29 +398,16 @@ end
 ]]
 function lia.administrator.unregisterPrivilege(id)
     id = tostring(id or "")
-    local name = lia.administrator.privIDs and lia.administrator.privIDs[id] or id
-    if name == "" or lia.administrator.privileges[name] == nil then return end
-    lia.administrator.privileges[name] = nil
-    lia.administrator.privMeta[name] = nil
-    if lia.administrator.privIDs[id] then
-        lia.administrator.privIDs[id] = nil
-    else
-        for k, v in pairs(lia.administrator.privIDs) do
-            if v == name then
-                lia.administrator.privIDs[k] = nil
-                id = k
-                break
-            end
-        end
-    end
-
+    if id == "" or lia.administrator.privileges[id] == nil then return end
+    lia.administrator.privileges[id] = nil
+    lia.administrator.privilegeCategories[id] = nil
     for _, perms in pairs(lia.administrator.groups or {}) do
-        perms[name] = nil
+        perms[id] = nil
     end
 
     if CAMI then CAMI.UnregisterPrivilege(id) end
     hook.Run("OnPrivilegeUnregistered", {
-        Name = name,
+        Name = id,
         ID = id
     })
 
@@ -585,6 +702,13 @@ function lia.administrator.renameGroup(oldName, newName)
     if SERVER then lia.administrator.save() end
 end
 
+lia.administrator.registerPrivilege({
+    ID = "createStaffCharacter",
+    Name = "createStaffCharacter",
+    MinAccess = "admin",
+    Category = "categoryStaffManagement"
+})
+
 if SERVER then
     --[[
         lia.administrator.addPermission
@@ -691,9 +815,7 @@ if SERVER then
             if not IsValid(ply) then return end
             if not lia.net.ready[ply] then return end
             lia.net.writeBigTable(ply, "updateAdminPrivileges", lia.administrator.privileges or {})
-            timer.Simple(0.05, function() if IsValid(ply) and lia.net.ready[ply] then lia.net.writeBigTable(ply, "updateAdminPrivilegeMeta", lia.administrator.privMeta or {}) end end)
-            timer.Simple(0.1, function() if IsValid(ply) and lia.net.ready[ply] then lia.net.writeBigTable(ply, "updateAdminPrivilegeIDs", lia.administrator.privIDs or {}) end end)
-            timer.Simple(0.15, function() if IsValid(ply) and lia.net.ready[ply] then lia.net.writeBigTable(ply, "updateAdminGroups", lia.administrator.groups or {}) end end)
+            timer.Simple(0.05, function() if IsValid(ply) and lia.net.ready[ply] then lia.net.writeBigTable(ply, "updateAdminGroups", lia.administrator.groups or {}) end end)
         end
 
         if c and IsValid(c) then
@@ -705,62 +827,6 @@ if SERVER then
         for _, p in ipairs(t) do
             push(p)
         end
-    end
-
-    --[[
-        lia.administrator.save
-
-        Purpose:
-            Saves all usergroups and privileges to the database and optionally synchronizes with clients.
-
-        Parameters:
-            noNetwork (boolean) - (Optional) If true, does not sync to clients after saving.
-
-        Returns:
-            None.
-
-        Realm:
-            Server.
-
-        Example Usage:
-            -- Save admin data and sync to clients
-            lia.administrator.save()
-
-            -- Save admin data without syncing to clients
-            lia.administrator.save(true)
-    ]]
-    function lia.administrator.save(noNetwork)
-        rebuildPrivileges()
-        local rows = {}
-        for name, data in pairs(lia.administrator.groups) do
-            local info = istable(data._info) and data._info or {}
-            local privs = table.Copy(data)
-            privs._info = nil
-            rows[#rows + 1] = {
-                usergroup = name,
-                privileges = util.TableToJSON(privs),
-                inheritance = info.inheritance or "user",
-                types = util.TableToJSON(info.types or {})
-            }
-        end
-
-        lia.db.query("DELETE FROM lia_admin")
-        lia.db.bulkInsert("admin", rows)
-        if noNetwork or lia.administrator._loading then return end
-        lia.net.ready = lia.net.ready or setmetatable({}, {
-            __mode = "k"
-        })
-
-        local hasReady = false
-        for ply in pairs(lia.net.ready) do
-            if IsValid(ply) and lia.net.ready[ply] then
-                hasReady = true
-                break
-            end
-        end
-
-        if not hasReady then return end
-        lia.administrator.sync()
     end
 
     --[[
@@ -952,7 +1018,7 @@ if SERVER then
 
     ensureStructures()
     net.Receive("liaGroupsRequest", function(_, p)
-        if not IsValid(p) or not p:hasPrivilege(L("manageUsergroups")) then return end
+        if not IsValid(p) or not p:hasPrivilege("manageUsergroups") then return end
         lia.net.ready = lia.net.ready or setmetatable({}, {
             __mode = "k"
         })
@@ -962,7 +1028,7 @@ if SERVER then
     end)
 
     net.Receive("liaGroupsAdd", function(_, p)
-        if not p:hasPrivilege(L("manageUsergroups")) then return end
+        if not p:hasPrivilege("manageUsergroups") then return end
         local data = net.ReadTable()
         local n = string.Trim(tostring(data.name or ""))
         if n == "" then return end
@@ -982,7 +1048,7 @@ if SERVER then
     end)
 
     net.Receive("liaGroupsRemove", function(_, p)
-        if not p:hasPrivilege(L("manageUsergroups")) then return end
+        if not p:hasPrivilege("manageUsergroups") then return end
         local n = net.ReadString()
         if n == "" or lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[n] then return end
         lia.administrator.removeGroup(n)
@@ -993,7 +1059,7 @@ if SERVER then
     end)
 
     net.Receive("liaGroupsRename", function(_, p)
-        if not p:hasPrivilege(L("manageUsergroups")) then return end
+        if not p:hasPrivilege("manageUsergroups") then return end
         local old = string.Trim(net.ReadString() or "")
         local new = string.Trim(net.ReadString() or "")
         if old == "" or new == "" then return end
@@ -1007,7 +1073,7 @@ if SERVER then
     end)
 
     net.Receive("liaGroupsSetPerm", function(_, p)
-        if not p:hasPrivilege(L("manageUsergroups")) then return end
+        if not p:hasPrivilege("manageUsergroups") then return end
         local group = net.ReadString()
         local privilege = net.ReadString()
         local value = net.ReadBool()
@@ -1034,7 +1100,7 @@ else
     local function computeCategoryMap(groups)
         local cats, labels, seen = {}, {}, {}
         for name in pairs(lia.administrator.privileges or {}) do
-            local c = tostring(lia.administrator.privMeta and lia.administrator.privMeta[name] or L("unassigned"))
+            local c = tostring(getPrivilegeCategory(name))
             local key = c:lower()
             labels[key] = labels[key] or c
             cats[key] = cats[key] or {}
@@ -1044,7 +1110,7 @@ else
         for _, data in pairs(groups or {}) do
             for name in pairs(data or {}) do
                 if name ~= "_info" and not seen[name] then
-                    local c = tostring(lia.administrator.privMeta and lia.administrator.privMeta[name] or L("unassigned"))
+                    local c = tostring(getPrivilegeCategory(name))
                     local key = c:lower()
                     labels[key] = labels[key] or c
                     cats[key] = cats[key] or {}
@@ -1375,12 +1441,6 @@ else
     end)
 
     lia.net.readBigTable("updateAdminPrivileges", function(tbl) lia.administrator.privileges = tbl end)
-    lia.net.readBigTable("updateAdminPrivilegeMeta", function(tbl)
-        lia.administrator.privMeta = tbl or {}
-        if IsValid(lia.gui.usergroups) and lia.administrator.groups then buildGroupsUI(lia.gui.usergroups, lia.administrator.groups) end
-    end)
-    lia.net.readBigTable("updateAdminPrivilegeIDs", function(tbl) lia.administrator.privIDs = tbl end)
-
     net.Receive("liaGroupPermChanged", function()
         local group = net.ReadString()
         local privilege = net.ReadString()
@@ -1403,9 +1463,9 @@ else
     end)
 
     hook.Add("PopulateAdminTabs", "liaAdmin", function(pages)
-        if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege(L("manageUsergroups")) then return end
+        if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege("manageUsergroups") then return end
         pages[#pages + 1] = {
-            name = L("userGroups"),
+            name = "userGroups",
             icon = "icon16/group.png",
             drawFunc = function(parent)
                 lia.gui.usergroups = parent

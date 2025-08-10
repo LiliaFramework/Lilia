@@ -117,87 +117,20 @@ else
 
     addEditor("scale", function(scale) net.WriteFloat(scale) end)
     addEditor("preset", function(preset) net.WriteString(preset) end)
-end
+  end
 
---[[
-    lia.vendor.addRarities
-
-    Purpose:
-        Registers a new rarity for vendor items, associating a name with a color.
-        This can be used to visually distinguish items of different rarities in vendor menus.
-
-    Parameters:
-        name (string) - The name of the rarity (e.g., "Legendary", "Common").
-        color (Color) - The color to associate with this rarity.
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Add a new rarity called "Epic" with a purple color
-        lia.vendor.addRarities("Epic", Color(128, 0, 128))
-]]
 function lia.vendor.addRarities(name, color)
     assert(isstring(name), L("vendorRarityNameString"))
     assert(IsColor(color), L("vendorColorMustBeColor"))
     lia.vendor.rarities[name] = color
 end
 
---[[
-    lia.vendor.addPreset
-
-    Purpose:
-        Registers a new vendor preset, which is a predefined set of items and their properties.
-        Presets can be applied to vendors to quickly configure their inventory and settings.
-
-    Parameters:
-        name (string) - The name of the preset (e.g., "General Store").
-        items (table) - A table describing the items and their properties for this preset.
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Add a preset for a "Medical Vendor" with specific items
-        lia.vendor.addPreset("Medical Vendor", {
-            ["medkit"] = {price = 100, stock = 10},
-            ["bandage"] = {price = 25, stock = 50}
-        })
-]]
 function lia.vendor.addPreset(name, items)
     assert(isstring(name), L("vendorPresetNameString"))
     assert(istable(items), L("vendorPresetItemsTable"))
     lia.vendor.presets[string.lower(name)] = items
 end
 
---[[
-    lia.vendor.getPreset
-
-    Purpose:
-        Retrieves a vendor preset by name, returning the table of items and properties associated with it.
-
-    Parameters:
-        name (string) - The name of the preset to retrieve.
-
-    Returns:
-        table or nil - The preset table if found, or nil if not found.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Get the "Medical Vendor" preset and print its items
-        local preset = lia.vendor.getPreset("Medical Vendor")
-        if preset then
-            PrintTable(preset)
-        end
-]]
 function lia.vendor.getPreset(name)
     return lia.vendor.presets[string.lower(name)]
 end

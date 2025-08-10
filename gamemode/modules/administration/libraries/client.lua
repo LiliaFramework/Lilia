@@ -1,7 +1,7 @@
 ﻿function MODULE:ShowPlayerOptions(target, options)
     local client = LocalPlayer()
     if not IsValid(client) or not IsValid(target) then return end
-    if not (client:hasPrivilege(L("canAccessScoreboardInfoOutOfStaff")) or client:hasPrivilege(L("canAccessScoreboardAdminOptions")) and client:isStaffOnDuty()) then return end
+    if not (client:hasPrivilege("canAccessScoreboardInfoOutOfStaff") or client:hasPrivilege("canAccessScoreboardAdminOptions") and client:isStaffOnDuty()) then return end
     local orderedOptions = {
         {
             name = L("nameCopyFormat", target:Name()),
@@ -114,9 +114,9 @@ end
 function MODULE:PopulateAdminTabs(pages)
     local client = LocalPlayer()
     if not IsValid(client) then return end
-    if client:hasPrivilege(L("viewStaffManagement")) then
+    if client:hasPrivilege("viewStaffManagement") then
         table.insert(pages, {
-            name = L("moduleStaffManagementName"),
+            name = "moduleStaffManagementName",
             icon = "icon16/shield.png",
             drawFunc = function(panel)
                 panelRef = panel
@@ -126,9 +126,9 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
-    if client:hasPrivilege(L("canAccessPlayerList")) then
+    if client:hasPrivilege("canAccessPlayerList") then
         table.insert(pages, {
-            name = L("players"),
+            name = "players",
             icon = "icon16/user.png",
             drawFunc = function(panel)
                 panelRef = panel
@@ -138,9 +138,9 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
-    if client:hasPrivilege(L("listCharacters")) then
+    if client:hasPrivilege("listCharacters") then
         table.insert(pages, {
-            name = L("characterList"),
+            name = "characterList",
             icon = "icon16/book.png",
             drawFunc = function(panel)
                 panelRef = panel
@@ -170,31 +170,31 @@ function MODULE:PopulateAdminTabs(pages)
 
                     local columns = {
                         {
-                            name = L("id"),
+                            name = "id",
                             field = L("id")
                         },
                         {
-                            name = L("name"),
+                            name = "name",
                             field = L("name")
                         },
                         {
-                            name = L("description"),
+                            name = "description",
                             field = "Desc"
                         },
                         {
-                            name = L("faction"),
+                            name = "faction",
                             field = L("faction")
                         },
                         {
-                            name = L("steamID"),
+                            name = "steamID",
                             field = L("steamID")
                         },
                         {
-                            name = L("lastUsed"),
+                            name = "lastUsed",
                             field = "LastUsed"
                         },
                         {
-                            name = L("banned"),
+                            name = "banned",
                             field = L("banned"),
                             format = function(val) return val and L("yes") or L("no") end
                         }
@@ -202,29 +202,29 @@ function MODULE:PopulateAdminTabs(pages)
 
                     if hasBanInfo then
                         table.insert(columns, {
-                            name = L("banningAdminName"),
+                            name = "banningAdminName",
                             field = "BanningAdminName"
                         })
 
                         table.insert(columns, {
-                            name = L("banningAdminSteamID"),
+                            name = "banningAdminSteamID",
                             field = "BanningAdminSteamID"
                         })
 
                         table.insert(columns, {
-                            name = L("banningAdminRank"),
+                            name = "banningAdminRank",
                             field = "BanningAdminRank"
                         })
                     end
 
                     table.insert(columns, {
-                        name = L("playtime"),
+                        name = "playtime",
                         field = "PlayTime",
                         format = function(val) return formatPlayTime(val or 0) end
                     })
 
                     table.insert(columns, {
-                        name = L("money"),
+                        name = "money",
                         field = L("money"),
                         format = function(val) return lia.currency.get(tonumber(val) or 0) end
                     })
@@ -336,7 +336,7 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
-    if client:hasPrivilege(L("viewDBTables")) then
+    if client:hasPrivilege("viewDBTables") then
         table.insert(pages, {
             name = L("databaseView"),
             icon = "icon16/database.png",
@@ -407,7 +407,7 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
-    if client:hasPrivilege(L("canAccessFlagManagement")) then
+    if client:hasPrivilege("canAccessFlagManagement") then
         table.insert(pages, {
             name = L("flagsManagement"),
             icon = "icon16/flag_red.png",
@@ -424,7 +424,7 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
-    if client:hasPrivilege(L("canManageFactions")) then
+    if client:hasPrivilege("canManageFactions") then
         table.insert(pages, {
             name = L("factionManagement"),
             icon = "icon16/chart_organisation.png",
@@ -436,7 +436,7 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
-    if client:hasPrivilege(L("manageCharacters")) then
+    if client:hasPrivilege("manageCharacters") then
         net.Start("liaRequestPKsCount")
         net.SendToServer()
     end
@@ -449,9 +449,9 @@ net.Receive("liaPKsCount", function()
         pksTabAdded = true
         hook.Add("PopulateAdminTabs", "liaPKsTab", function(pages)
             local client = LocalPlayer()
-            if not IsValid(client) or not client:hasPrivilege(L("manageCharacters")) then return end
+            if not IsValid(client) or not client:hasPrivilege("manageCharacters") then return end
             table.insert(pages, {
-                name = L("pkManager"),
+                name = "pkManager",
                 icon = "icon16/lightning.png",
                 drawFunc = function(panel)
                     panelRef = panel

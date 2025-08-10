@@ -1,24 +1,5 @@
-﻿local panelMeta = FindMetaTable("Panel")
---[[
-    liaListenForInventoryChanges
+local panelMeta = FindMetaTable("Panel")
 
-    Purpose:
-        Sets up hooks to listen for changes in the given inventory and calls corresponding panel methods when changes occur.
-        Automatically removes hooks when the inventory is deleted or when requested.
-
-    Parameters:
-        inventory (Inventory) - The inventory object to listen for changes on.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Listen for changes on an inventory and update the panel accordingly
-        panel:liaListenForInventoryChanges(inventory)
-]]
 function panelMeta:liaListenForInventoryChanges(inventory)
     assert(inventory, L("noInventorySet"))
     local id = inventory:getID()
@@ -57,29 +38,6 @@ function panelMeta:liaListenForInventoryChanges(inventory)
     table.insert(self.liaToRemoveHooks[id], "ItemDataChanged")
 end
 
---[[
-    liaDeleteInventoryHooks
-
-    Purpose:
-        Removes all hooks associated with inventory changes for the given inventory ID.
-        If no ID is provided, removes all inventory hooks associated with this panel.
-
-    Parameters:
-        id (number, optional) - The inventory ID to remove hooks for. If nil, removes all hooks.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Remove hooks for a specific inventory
-        panel:liaDeleteInventoryHooks(inventoryID)
-
-        -- Remove all inventory hooks for this panel
-        panel:liaDeleteInventoryHooks()
-]]
 function panelMeta:liaDeleteInventoryHooks(id)
     if not self.liaHookID then return end
     if id == nil then
@@ -101,50 +59,11 @@ function panelMeta:liaDeleteInventoryHooks(id)
     self.liaToRemoveHooks[id] = nil
 end
 
---[[
-    SetScaledPos
-
-    Purpose:
-        Sets the position of the panel using scaled screen coordinates for resolution independence.
-
-    Parameters:
-        x (number) - The X position (unscaled).
-        y (number) - The Y position (unscaled).
-
-    Returns:
-        nil
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Set the panel's position to (10, 20) in scaled screen units
-        panel:SetScaledPos(10, 20)
-]]
 function panelMeta:SetScaledPos(x, y)
     self:SetPos(ScreenScale(x), ScreenScaleH(y))
 end
 
---[[
-    SetScaledSize
-
-    Purpose:
-        Sets the size of the panel using scaled screen dimensions for resolution independence.
-
-    Parameters:
-        w (number) - The width (unscaled).
-        h (number) - The height (unscaled).
-
-    Returns:
-        nil
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Set the panel's size to 100x50 in scaled screen units
-        panel:SetScaledSize(100, 50)
-]]
 function panelMeta:SetScaledSize(w, h)
     self:SetSize(ScreenScale(w), ScreenScaleH(h))
 end
+

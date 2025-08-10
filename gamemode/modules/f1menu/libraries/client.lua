@@ -72,7 +72,7 @@ function MODULE:PlayerBindPress(client, bind, pressed)
 end
 
 function MODULE:CreateMenuButtons(tabs)
-    tabs[L("you")] = function(statusPanel)
+    tabs["you"] = function(statusPanel)
         statusPanel.info = vgui.Create("liaCharInfo", statusPanel)
         statusPanel.info:Dock(FILL)
         statusPanel.info:setup()
@@ -80,7 +80,7 @@ function MODULE:CreateMenuButtons(tabs)
         statusPanel.info:AlphaTo(255, 0.5)
     end
 
-    tabs[L("information")] = function(infoTabPanel)
+    tabs["information"] = function(infoTabPanel)
         local sheet = infoTabPanel:Add("DPropertySheet")
         sheet:Dock(FILL)
         sheet:DockMargin(10, 10, 10, 10)
@@ -99,7 +99,7 @@ function MODULE:CreateMenuButtons(tabs)
             panel.Paint = function() end
             panel:DockPadding(10, 10, 10, 10)
             page.drawFunc(panel)
-            local sheetData = sheet:AddSheet(page.name, panel)
+            local sheetData = sheet:AddSheet(L(page.name), panel)
             if page.onSelect then
                 sheetData.Tab.liaPagePanel = panel
                 sheetData.Tab.liaOnSelect = page.onSelect
@@ -111,7 +111,7 @@ function MODULE:CreateMenuButtons(tabs)
         end
     end
 
-    tabs[L("settings")] = function(settingsPanel)
+    tabs["settings"] = function(settingsPanel)
         local sheet = settingsPanel:Add("DPropertySheet")
         sheet:Dock(FILL)
         sheet:DockMargin(10, 10, 10, 10)
@@ -124,19 +124,19 @@ function MODULE:CreateMenuButtons(tabs)
             return an < bn
         end)
 
-        for _, page in ipairs(pages) do
-            local panel = sheet:Add("DPanel")
-            panel:Dock(FILL)
-            panel.Paint = function() end
-            page.drawFunc(panel)
-            sheet:AddSheet(page.name, panel)
+                    for _, page in ipairs(pages) do
+                local panel = sheet:Add("DPanel")
+                panel:Dock(FILL)
+                panel.Paint = function() end
+                page.drawFunc(panel)
+                sheet:AddSheet(L(page.name), panel)
         end
     end
 
     local adminPages = {}
     hook.Run("PopulateAdminTabs", adminPages)
     if not table.IsEmpty(adminPages) then
-        tabs[L("admin")] = function(adminPanel)
+        tabs["admin"] = function(adminPanel)
             local sheet = adminPanel:Add("DPropertySheet")
             sheet:Dock(FILL)
             sheet:DockMargin(10, 10, 10, 10)
@@ -153,7 +153,7 @@ function MODULE:CreateMenuButtons(tabs)
                 local panel = sheet:Add("DPanel")
                 panel:Dock(FILL)
                 panel.Paint = function() end
-                local sheetData = sheet:AddSheet(page.name, panel, page.icon)
+                local sheetData = sheet:AddSheet(L(page.name), panel, page.icon)
                 if page.drawFunc then
                     sheetData.Tab.liaPagePanel = panel
                     sheetData.Tab.liaOnSelect = page.drawFunc

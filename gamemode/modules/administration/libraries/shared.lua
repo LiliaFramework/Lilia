@@ -1,19 +1,19 @@
 ﻿function MODULE:CanPlayerModifyConfig(client)
-    return client:hasPrivilege(L("accessEditConfigurationMenu"))
+    return client:hasPrivilege("accessEditConfigurationMenu")
 end
 
 properties.Add("TogglePropBlacklist", {
     MenuLabel = L("togglePropBlacklist"),
     Order = 900,
     MenuIcon = "icon16/link.png",
-    Filter = function(_, ent, ply) return IsValid(ent) and ent:GetClass() == "prop_physics" and ply:hasPrivilege(L("managePropBlacklist")) end,
+    Filter = function(_, ent, ply) return IsValid(ent) and ent:GetClass() == "prop_physics" and ply:hasPrivilege("managePropBlacklist") end,
     Action = function(self, ent)
         self:MsgStart()
         net.WriteString(ent:GetModel())
         self:MsgEnd()
     end,
     Receive = function(_, _, ply)
-        if not ply:hasPrivilege(L("managePropBlacklist")) then return end
+        if not ply:hasPrivilege("managePropBlacklist") then return end
         local model = net.ReadString()
         local list = lia.data.get("prop_blacklist", {})
         if table.HasValue(list, model) then
@@ -32,14 +32,14 @@ properties.Add("ToggleCarBlacklist", {
     MenuLabel = L("toggleCarBlacklist"),
     Order = 901,
     MenuIcon = "icon16/link.png",
-    Filter = function(_, ent, ply) return IsValid(ent) and (ent:IsVehicle() or ent:isSimfphysCar()) and ply:hasPrivilege(L("manageVehicleBlacklist")) end,
+    Filter = function(_, ent, ply) return IsValid(ent) and (ent:IsVehicle() or ent:isSimfphysCar()) and ply:hasPrivilege("manageVehicleBlacklist") end,
     Action = function(self, ent)
         self:MsgStart()
         net.WriteString(ent:GetModel())
         self:MsgEnd()
     end,
     Receive = function(_, _, ply)
-        if not ply:hasPrivilege(L("manageVehicleBlacklist")) then return end
+        if not ply:hasPrivilege("manageVehicleBlacklist") then return end
         local model = net.ReadString()
         local list = lia.data.get("carBlacklist", {})
         if table.HasValue(list, model) then

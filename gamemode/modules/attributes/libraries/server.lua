@@ -90,7 +90,7 @@ function MODULE:PlayerStaminaLost(client)
 end
 
 net.Receive("ChangeAttribute", function(_, client)
-    if not client:hasPrivilege(L("manageAttributes")) then return end
+    if not client:hasPrivilege("manageAttributes") then return end
     local charID = net.ReadInt(32)
     local _ = net.ReadTable()
     local attribKey = net.ReadString()

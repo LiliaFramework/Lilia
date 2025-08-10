@@ -85,26 +85,26 @@ lia.command.add("viewwarns", {
                 })
             end
 
-            lia.util.CreateTableUI(client, L("playerWarningsTitle", target:Nick()), {
+            lia.util.SendTableUI(client, L("playerWarningsTitle", target:Nick()), {
                 {
-                    name = L("id"),
+                    name = "id",
                     field = "index"
                 },
                 {
-                    name = L("timestamp"),
+                    name = "timestamp",
                     field = "timestamp"
                 },
                 {
-                    name = L("admin"),
+                    name = "admin",
                     field = "admin"
                 },
                 {
-                    name = L("warningMessage"),
+                    name = "warningMessage",
                     field = "warningMessage"
                 }
             }, warningList, {
                 {
-                    name = L("removeWarning"),
+                    name = "removeWarning",
                     net = "RequestRemoveWarning"
                 }
             }, target:getChar():getID())

@@ -1,14 +1,3 @@
-﻿--[[
-# Utility Library
-
-This page documents the utility functions for common operations in Lilia.
-
----
-
-## Overview
-
-The utility library provides a collection of helper functions for common operations such as finding players, working with SteamIDs, and other utility functions that are used throughout the Lilia framework. These functions are designed to be shared between client and server realms where appropriate.
-]]
 --[[
     lia.util.FindPlayersInBox
 
@@ -609,10 +598,10 @@ end
 
 if SERVER then
     --[[
-        lia.util.CreateTableUI
+        lia.util.SendTableUI
 
         Purpose:
-            Sends a compressed table UI to a client for display, including title, columns, data, and options.
+            Sends a table UI to a client for display, including title, columns, data, and options using the big table transfer system.
 
         Parameters:
             client (Player)      - The player to send the UI to.
@@ -629,23 +618,26 @@ if SERVER then
             Server.
 
         Example Usage:
-            lia.util.CreateTableUI(client, "Player List", columns, data, options, charID)
+            lia.util.SendTableUI(client, "Player List", columns, data, options, charID)
     ]]
-    function lia.util.CreateTableUI(client, title, columns, data, options, characterID)
+    function lia.util.SendTableUI(client, title, columns, data, options, characterID)
         if not IsValid(client) or not client:IsPlayer() then return end
-        local tableData = util.Compress(util.TableToJSON({
-            title = title or L("tableListTitle"),
-            columns = columns,
+        local localizedColumns = {}
+        for i, colInfo in ipairs(columns or {}) do
+            local localizedColInfo = table.Copy(colInfo)
+            if localizedColInfo.name then localizedColInfo.name = L(localizedColInfo.name) end
+            localizedColumns[i] = localizedColInfo
+        end
+
+        local tableUIData = {
+            title = title and L(title) or L("tableListTitle"),
+            columns = localizedColumns,
             data = data,
             options = options or {},
             characterID = characterID
-        }))
+        }
 
-        if not tableData then return end
-        net.Start("CreateTableUI")
-        net.WriteUInt(#tableData, 32)
-        net.WriteData(tableData, #tableData)
-        net.Send(client)
+        lia.net.writeBigTable(client, "SendTableUI", tableUIData)
     end
 
     --[[
@@ -1294,16 +1286,17 @@ else
     function lia.util.CreateTableUI(title, columns, data, options, charID)
         local frameWidth, frameHeight = ScrW() * 0.8, ScrH() * 0.8
         local frame = vgui.Create("DFrame")
-        frame:SetTitle(title or L("tableListTitle"))
+        frame:SetTitle(title and L(title) or L("tableListTitle"))
         frame:SetSize(frameWidth, frameHeight)
         frame:Center()
         frame:MakePopup()
         local listView = vgui.Create("DListView", frame)
         listView:Dock(FILL)
-        for _, colInfo in ipairs(columns) do
-            local col = listView:AddColumn(colInfo.name or L("na"))
+        for _, colInfo in ipairs(columns or {}) do
+            local localizedName = colInfo.name and L(colInfo.name) or L("na")
+            local col = listView:AddColumn(localizedName)
             surface.SetFont(col.Header:GetFont())
-            local textW = surface.GetTextSize(colInfo.name or L("na"))
+            local textW = surface.GetTextSize(localizedName)
             local minWidth = textW + 16
             col:SetMinWidth(minWidth)
             col:SetWidth(colInfo.width or minWidth)
@@ -1335,7 +1328,7 @@ else
             end)
 
             for _, option in ipairs(istable(options) and options or {}) do
-                menu:AddOption(option.name, function()
+                menu:AddOption(option.name and L(option.name) or option.name, function()
                     if not option.net then return end
                     if option.ExtraFields then
                         local inputPanel = vgui.Create("DFrame")

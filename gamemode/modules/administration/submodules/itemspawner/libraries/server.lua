@@ -27,7 +27,7 @@ end
 
 net.Receive("SpawnMenuSpawnItem", function(_, client)
     local id = net.ReadString()
-    if not IsValid(client) or not id or not client:hasPrivilege(L("canUseItemSpawner")) then return end
+    if not IsValid(client) or not id or not client:hasPrivilege("canUseItemSpawner") then return end
     local startPos, dir = client:EyePos(), client:GetAimVector()
     local tr = util.TraceLine({
         start = startPos,
@@ -61,7 +61,7 @@ net.Receive("SpawnMenuGiveItem", function(_, client)
     local id, targetID = net.ReadString(), net.ReadString()
     if not IsValid(client) then return end
     if not id then return end
-    if not client:hasPrivilege(L("canUseItemSpawner")) then return end
+    if not client:hasPrivilege("canUseItemSpawner") then return end
     local targetChar = lia.char.getBySteamID(targetID)
     local target = targetChar:getPlayer()
     if not targetChar then return end

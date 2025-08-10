@@ -1,4 +1,4 @@
-﻿lia.command.add("playtime", {
+lia.command.add("playtime", {
     adminOnly = false,
     privilege = "viewOwnPlaytime",
     desc = "playtimeDesc",
@@ -82,7 +82,28 @@ lia.command.add("adminmode", {
                     end
                 end
 
-                client:notifyLocalized("noStaffChar")
+                if client:hasPrivilege("createStaffCharacter") then
+                    local staffCharData = {
+                        steamID = steamID,
+                        name = client:steamName(), 
+                        desc = "", 
+                        faction = "staff",
+                        model = lia.faction.indices["staff"] and lia.faction.indices["staff"].models[1] or "models/Humans/Group02/male_07.mdl"
+                    }
+
+                    lia.char.create(staffCharData, function(charID)
+                        if IsValid(client) and charID then
+                            client:setNetVar("OldCharID", client:getChar():getID())
+                            net.Start("AdminModeSwapCharacter")
+                            net.WriteInt(charID, 32)
+                            net.Send(client)
+                            lia.log.add(client, "adminMode", charID, L("adminModeLogStaff"))
+                            client:notifyLocalized("staffCharCreated")
+                        end
+                    end)
+                else
+                    client:notifyLocalized("noStaffChar")
+                end
             end)
         end
     end
@@ -93,7 +114,7 @@ lia.command.add("managesitrooms", {
     privilege = "manageSitRooms",
     desc = "manageSitroomsDesc",
     onRun = function(client)
-        if not client:hasPrivilege(L("manageSitRooms")) then return end
+        if not client:hasPrivilege("manageSitRooms") then return end
         local rooms = lia.data.get("sitrooms", {})
         net.Start("managesitrooms")
         net.WriteTable(rooms)
@@ -319,7 +340,7 @@ lia.command.add("charlist", {
             local sendData = {}
             for _, row in ipairs(data) do
                 local charID = tonumber(row.id) or row.id
-                local stored = lia.char.loaded[charID]
+                local stored = lia.char.getCharacter(charID)
                 local info = stored and stored:getData() or {}
                 local allVars = {}
                 if stored then
@@ -1912,14 +1933,14 @@ lia.command.add("charunban", {
         local charFound
         local id = tonumber(queryArg)
         if id then
-            for _, v in pairs(lia.char.loaded) do
+            for _, v in pairs(lia.char.getAll()) do
                 if v:getID() == id then
                     charFound = v
                     break
                 end
             end
         else
-            for _, v in pairs(lia.char.loaded) do
+            for _, v in pairs(lia.char.getAll()) do
                 if lia.util.stringMatches(v:getName(), queryArg) then
                     charFound = v
                     break
@@ -2171,17 +2192,17 @@ lia.command.add("listbodygroups", {
         end
 
         if #bodygroups > 0 then
-            lia.util.CreateTableUI(client, L("uiBodygroupsFor", target:Nick()), {
+            lia.util.SendTableUI(client, L("uiBodygroupsFor", target:Nick()), {
                 {
-                    name = L("groupID"),
+                    name = "groupID",
                     field = "group"
                 },
                 {
-                    name = L("name"),
+                    name = "name",
                     field = "name"
                 },
                 {
-                    name = L("range"),
+                    name = "range",
                     field = "range"
                 }
             }, bodygroups)

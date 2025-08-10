@@ -90,26 +90,26 @@ lia.command.add("checkattributes", {
             })
         end
 
-        lia.util.CreateTableUI(client, L("characterAttributes"), {
+        lia.util.SendTableUI(client, "characterAttributes", {
             {
-                name = L("attributeName"),
+                name = "attributeName",
                 field = "name"
             },
             {
-                name = L("currentValue"),
+                name = "currentValue",
                 field = "current"
             },
             {
-                name = L("maxValue"),
+                name = "maxValue",
                 field = "max"
             },
             {
-                name = L("progress"),
+                name = "progress",
                 field = "progress"
             }
         }, attributesData, {
             {
-                name = L("changeAttribute"),
+                name = "changeAttribute",
                 ExtraFields = {
                     [L("attribAmount")] = "text",
                     [L("attribMode")] = {L("add"), L("set")}

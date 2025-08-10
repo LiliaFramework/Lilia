@@ -1,7 +1,7 @@
 ﻿if not pac then return end
 ITEM.name = "pacoutfitName"
 ITEM.desc = "pacoutfitDesc"
-ITEM.category = L("outfit")
+ITEM.category = "outfit"
 ITEM.model = "models/Gibs/HGIBS.mdl"
 ITEM.width = 1
 ITEM.height = 1

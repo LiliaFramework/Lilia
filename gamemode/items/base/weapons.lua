@@ -1,6 +1,6 @@
 ﻿ITEM.name = "weaponsName"
 ITEM.desc = "weaponsDesc"
-ITEM.category = L("weapons")
+ITEM.category = "weapons"
 ITEM.model = "models/weapons/w_pistol.mdl"
 ITEM.class = "weapon_pistol"
 ITEM.width = 2

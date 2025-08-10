@@ -37,23 +37,23 @@ net.Receive("CharacterInfo", function()
 
     local columns = {
         {
-            name = L("name"),
+            name = "name",
             field = "name"
         },
         {
-            name = L("steamID"),
+            name = "steamID",
             field = "steamID"
         },
         {
-            name = L("class"),
+            name = "class",
             field = "class"
         },
         {
-            name = L("playtime"),
+            name = "playtime",
             field = "playTime"
         },
         {
-            name = L("lastOnline"),
+            name = "lastOnline",
             field = "lastOnline"
         }
     }
@@ -61,7 +61,7 @@ net.Receive("CharacterInfo", function()
     local actions = {}
     if canKick then
         actions[#actions + 1] = {
-            name = L("kick"),
+            name = "kick",
             net = "KickCharacter"
         }
     end

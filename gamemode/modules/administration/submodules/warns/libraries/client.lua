@@ -69,9 +69,9 @@ net.Receive("liaWarningsCount", function()
     if count > 0 and not warningsTabAdded then
         warningsTabAdded = true
         hook.Add("PopulateAdminTabs", "liaWarningsTab", function(pages)
-            if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege(L("viewPlayerWarnings")) then return end
+            if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege("viewPlayerWarnings") then return end
             table.insert(pages, {
-                name = L("warnings"),
+                name = "warnings",
                 icon = "icon16/error.png",
                 drawFunc = function(panel)
                     panelRef = panel
@@ -84,7 +84,7 @@ net.Receive("liaWarningsCount", function()
 end)
 
 function MODULE:PopulateAdminTabs()
-    if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege(L("viewPlayerWarnings")) then return end
+    if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege("viewPlayerWarnings") then return end
     net.Start("liaRequestWarningsCount")
     net.SendToServer()
 end

@@ -7,6 +7,11 @@
     end
 end)
 
+net.Receive("liaCharRequest", function(_, client)
+    local charID = net.ReadUInt(32)
+    lia.char.getCharacter(charID, client, function(character) if character then character:sync(client) end end)
+end)
+
 net.Receive("ArgumentsRequest", function(_, client)
     local id = net.ReadUInt(32)
     local data = net.ReadTable()

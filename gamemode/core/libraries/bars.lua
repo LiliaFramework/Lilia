@@ -1,14 +1,4 @@
-﻿--[[
-# Bars Library
-
-This page documents the functions for working with HUD bars and progress indicators.
-
----
-
-## Overview
-
-The bars library provides a system for creating and managing HUD bars and progress indicators within the Lilia framework. It handles bar registration, rendering, and provides utilities for displaying various types of progress bars such as health, stamina, and other character statistics. The library supports customizable colors, priorities, and dynamic value updates.
-]]
+-- Bars Library
 local surfaceSetDrawColor, surfaceDrawRect, surfaceDrawOutlinedRect = surface.SetDrawColor, surface.DrawRect, surface.DrawOutlinedRect
 lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
@@ -20,64 +10,12 @@ local function findIndexByIdentifier(identifier)
         if bar.identifier == identifier then return idx end
     end
 end
-
---[[
-    lia.bar.get
-
-    Purpose:
-        Retrieves a bar object from the bar list by its identifier.
-
-    Parameters:
-        identifier (string) - The unique identifier of the bar to retrieve.
-
-    Returns:
-        bar (table or nil) - The bar object if found, or nil if not found.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        local healthBar = lia.bar.get("health")
-        if healthBar then
-            print("Health bar color:", healthBar.color)
-        end
-]]
 function lia.bar.get(identifier)
     for _, bar in ipairs(lia.bar.list) do
         if bar.identifier == identifier then return bar end
     end
 end
 
---[[
-    lia.bar.add
-
-    Purpose:
-        Adds a new bar to the HUD bar list, or replaces an existing bar with the same identifier.
-        Bars are sorted by priority and order for display.
-
-    Parameters:
-        getValue (function) - Function that returns the current value of the bar (should return a number between 0 and 1).
-        color (Color) - The color of the bar. If nil, a random color is chosen.
-        priority (number) - The display priority (lower numbers are drawn first). Optional.
-        identifier (string) - Unique identifier for the bar. Optional.
-
-    Returns:
-        priority (number) - The priority assigned to the bar.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        lia.bar.add(
-            function()
-                local client = LocalPlayer()
-                return client:Health() / client:GetMaxHealth()
-            end,
-            Color(255, 0, 0),
-            1,
-            "health"
-        )
-]]
 function lia.bar.add(getValue, color, priority, identifier)
     if identifier then
         local existingIdx = findIndexByIdentifier(identifier)
@@ -96,25 +34,6 @@ function lia.bar.add(getValue, color, priority, identifier)
     })
     return priority
 end
-
---[[
-    lia.bar.remove
-
-    Purpose:
-        Removes a bar from the HUD bar list by its identifier.
-
-    Parameters:
-        identifier (string) - The unique identifier of the bar to remove.
-
-    Returns:
-        None.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        lia.bar.remove("armor")
-]]
 function lia.bar.remove(identifier)
     local idx = findIndexByIdentifier(identifier)
     if idx then table.remove(lia.bar.list, idx) end
@@ -126,31 +45,6 @@ local function PaintPanel(x, y, w, h)
     surfaceSetDrawColor(0, 0, 0, 150)
     surfaceDrawRect(x + 1, y + 1, w - 2, h - 2)
 end
-
---[[
-    lia.bar.drawBar
-
-    Purpose:
-        Draws a single bar at the specified position and size, with the given value and color.
-
-    Parameters:
-        x (number) - The x-coordinate of the bar.
-        y (number) - The y-coordinate of the bar.
-        w (number) - The width of the bar.
-        h (number) - The height of the bar.
-        pos (number) - The current value of the bar (should be between 0 and max).
-        max (number) - The maximum value of the bar.
-        color (Color) - The color to draw the bar.
-
-    Returns:
-        None.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        lia.bar.drawBar(10, 10, 200, 16, 0.5, 1, Color(0, 255, 0))
-]]
 function lia.bar.drawBar(x, y, w, h, pos, max, color)
     pos = math.min(pos, max)
     local usable = math.max(w - 6, 0)
@@ -160,25 +54,6 @@ function lia.bar.drawBar(x, y, w, h, pos, max, color)
     surfaceDrawRect(x + 3, y + 3, fill, h - 6)
 end
 
---[[
-    lia.bar.drawAction
-
-    Purpose:
-        Displays an action bar with a progress animation and text for a specified duration.
-
-    Parameters:
-        text (string) - The text to display above the action bar.
-        duration (number) - The duration in seconds for which the action bar should be displayed.
-
-    Returns:
-        None.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        lia.bar.drawAction("Lockpicking...", 3)
-]]
 function lia.bar.drawAction(text, duration)
     local startTime, endTime = CurTime(), CurTime() + duration
     hook.Remove("HUDPaint", "liaBarDrawAction")
@@ -203,26 +78,6 @@ function lia.bar.drawAction(text, duration)
         draw.SimpleText(text, "liaMediumFont", x, y - 24, Color(240, 240, 240))
     end)
 end
-
---[[
-    lia.bar.drawAll
-
-    Purpose:
-        Draws all registered bars on the HUD, handling their animation, visibility, and order.
-
-    Parameters:
-        None.
-
-    Returns:
-        None.
-
-    Realm:
-        Client.
-
-    Example Usage:
-        -- This is automatically called via the HUDPaintBackground hook, but can be called manually:
-        lia.bar.drawAll()
-]]
 function lia.bar.drawAll()
     if hook.Run("ShouldHideBars") then return end
     table.sort(lia.bar.list, function(a, b)

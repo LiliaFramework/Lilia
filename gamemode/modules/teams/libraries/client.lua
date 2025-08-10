@@ -29,7 +29,7 @@ function MODULE:CreateInformationButtons(pages)
     if not character or client:isStaffOnDuty() then return end
     if character:hasFlags("V") then
         table.insert(pages, {
-            name = L("factionRoster"),
+            name = "factionRoster",
             drawFunc = function(parent)
                 local roster = vgui.Create("liaRoster", parent)
                 roster:SetRosterType("faction")

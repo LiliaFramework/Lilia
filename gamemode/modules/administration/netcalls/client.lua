@@ -1,4 +1,4 @@
-﻿net.Receive("cfgList", function()
+net.Receive("cfgList", function()
     local changed = net.ReadTable()
     for key, value in pairs(changed) do
         if lia.config.stored[key] then lia.config.stored[key].value = value end
@@ -29,19 +29,19 @@ end
 function openRowInfo(row)
     local columns = {
         {
-            name = L("field"),
+            name = "field",
             field = "field"
         },
         {
-            name = L("type"),
+            name = "type",
             field = "type"
         },
         {
-            name = L("coded"),
+            name = "coded",
             field = "coded"
         },
         {
-            name = L("decoded"),
+            name = "decoded",
             field = "decoded"
         }
     }
@@ -60,7 +60,7 @@ function openRowInfo(row)
         }
     end
 
-    lia.util.CreateTableUI(L("rowDetailsTitle"), columns, rows)
+    lia.util.CreateTableUI("rowDetailsTitle", columns, rows)
 end
 
 function openDecodedTable(tableName, columns, data)
@@ -221,7 +221,9 @@ net.Receive("AdminModeSwapCharacter", function()
         local message = net.ReadString()
         if message == "" then
             d:resolve()
-            hook.Run("CharLoaded", lia.char.loaded[id])
+            lia.char.getCharacter(id, nil, function(character)
+                hook.Run("CharLoaded", character)
+            end)
         else
             d:reject(message)
         end
@@ -460,7 +462,7 @@ local function OpenRoster(panel, data)
                     local rowData = row.rowData
                     local steamID = rowData.steamID
                     local menu = DermaMenu()
-                    if steamID and steamID ~= "" and LocalPlayer():hasPrivilege(L("canManageFactions")) and not isDefaultFaction then
+                    if steamID and steamID ~= "" and LocalPlayer():hasPrivilege("canManageFactions") and not isDefaultFaction then
                         menu:AddOption(L("kick"), function()
                             Derma_Query(L("kickConfirm"), L("confirm"), L("yes"), function()
                                 net.Start("KickCharacter")

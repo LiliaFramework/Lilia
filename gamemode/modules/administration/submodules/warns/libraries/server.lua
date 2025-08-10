@@ -27,7 +27,7 @@ function MODULE:RemoveWarning(charID, index)
 end
 
 net.Receive("RequestRemoveWarning", function(_, client)
-    if not client:hasPrivilege(L("canRemoveWarns")) then return end
+    if not client:hasPrivilege("canRemoveWarns") then return end
     local charID = net.ReadInt(32)
     local rowData = net.ReadTable()
     local warnIndex = tonumber(rowData.ID or rowData.index)
@@ -36,35 +36,36 @@ net.Receive("RequestRemoveWarning", function(_, client)
         return
     end
 
-    local targetChar = lia.char.loaded[charID]
-    if not targetChar then
-        client:notifyLocalized("characterNotFound")
-        return
-    end
-
-    local targetClient = targetChar:getPlayer()
-    if not IsValid(targetClient) then
-        client:notifyLocalized("playerNotFound")
-        return
-    end
-
-    MODULE:RemoveWarning(charID, warnIndex):next(function(warn)
-        if not warn then
-            client:notifyLocalized("invalidWarningIndex")
+    lia.char.getCharacter(charID, client, function(targetChar)
+        if not targetChar then
+            client:notifyLocalized("characterNotFound")
             return
         end
 
-        targetClient:notifyLocalized("warningRemovedNotify", client:Nick())
-        client:notifyLocalized("warningRemoved", warnIndex, targetClient:Nick())
-        hook.Run("WarningRemoved", client, targetClient, {
-            reason = warn.message,
-            admin = warn.warner
-        }, warnIndex)
+        local targetClient = targetChar:getPlayer()
+        if not IsValid(targetClient) then
+            client:notifyLocalized("playerNotFound")
+            return
+        end
+
+        MODULE:RemoveWarning(charID, warnIndex):next(function(warn)
+            if not warn then
+                client:notifyLocalized("invalidWarningIndex")
+                return
+            end
+
+            targetClient:notifyLocalized("warningRemovedNotify", client:Nick())
+            client:notifyLocalized("warningRemoved", warnIndex, targetClient:Nick())
+            hook.Run("WarningRemoved", client, targetClient, {
+                reason = warn.message,
+                admin = warn.warner
+            }, warnIndex)
+        end)
     end)
 end)
 
 net.Receive("liaRequestAllWarnings", function(_, client)
-    if not client:hasPrivilege(L("viewPlayerWarnings")) then return end
+    if not client:hasPrivilege("viewPlayerWarnings") then return end
     lia.db.select({"timestamp", "warned", "warnedSteamID", "warner", "warnerSteamID", "message"}, "warnings"):next(function(res)
         net.Start("liaAllWarnings")
         net.WriteTable(res.results or {})
@@ -73,7 +74,7 @@ net.Receive("liaRequestAllWarnings", function(_, client)
 end)
 
 net.Receive("liaRequestWarningsCount", function(_, client)
-    if not client:hasPrivilege(L("viewPlayerWarnings")) then return end
+    if not client:hasPrivilege("viewPlayerWarnings") then return end
     lia.db.count("warnings"):next(function(count)
         net.Start("liaWarningsCount")
         net.WriteInt(count or 0, 32)

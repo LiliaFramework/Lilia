@@ -1,51 +1,8 @@
-﻿--[[
-# Networking Library
-
-This page documents the functions for working with network communication and data transfer.
-
----
-
-## Overview
-
-The networking library provides utilities for handling network communication between client and server within the Lilia framework. It supports large data transfers, table serialization, and provides a robust system for sending and receiving complex data structures. The library handles chunked data transfer, compression, and provides utilities for managing network state and buffers.
-]]
 lia.net = lia.net or {}
 lia.net._sendq = lia.net._sendq or {}
 lia.net.globals = lia.net.globals or {}
 lia.net._buffers = lia.net._buffers or {}
---[[
-    lia.net.readBigTable
 
-    Purpose:
-        Sets up a network receiver for a given net message string to receive large tables in multiple chunks.
-        Handles chunk reassembly, decompression, and conversion back to a Lua table. Calls the provided callback
-        with the reconstructed table once all chunks are received.
-
-    Parameters:
-        netStr (string)      - The network string to listen for.
-        callback (function)  - The function to call when the table is fully received.
-                               On the server: function(ply, tbl)
-                               On the client: function(tbl)
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- On both client and server, set up a handler for a big table transfer
-        lia.net.readBigTable("MyBigTableNetString", function(plyOrTbl, tblMaybeNil)
-            if SERVER then
-                local ply = plyOrTbl
-                local tbl = tblMaybeNil
-                print("Received table from", ply, tbl)
-            else
-                local tbl = plyOrTbl
-                print("Received table on client:", tbl)
-            end
-        end)
-]]
 function lia.net.readBigTable(netStr, callback)
     lia.net._buffers[netStr] = lia.net._buffers[netStr] or {}
     net.Receive(netStr, function(_, ply)
@@ -94,6 +51,7 @@ end
 
 if SERVER then
     local chunkTime = 0.05
+
     local function sendChunk(ply, s, sid, idx)
         if not IsValid(ply) then
             if lia.net._sendq[ply] then lia.net._sendq[ply][sid] = nil end
@@ -161,37 +119,6 @@ if SERVER then
         end)
     end
 
-    --[[
-        lia.net.writeBigTable
-
-        Purpose:
-            Sends a large table to one or more players over the network by splitting it into compressed chunks.
-            Handles chunking, compression, and scheduling of chunk delivery. Used for transmitting large tables
-            that exceed the normal net message size limits.
-
-        Parameters:
-            targets (Player or table or nil) - The player(s) to send the table to. If nil, sends to all players.
-            netStr (string)                  - The network string to use for sending.
-            tbl (table)                      - The table to send.
-            chunkSize (number, optional)     - The size of each chunk in bytes (default: 2048, min: 256, max: 4096).
-
-        Returns:
-            None.
-
-        Realm:
-            Server.
-
-        Example Usage:
-            -- Send a big table to all players
-            local myBigTable = {foo = "bar", data = {...}}
-            lia.net.writeBigTable(nil, "MyBigTableNetString", myBigTable)
-
-            -- Send a big table to a specific player
-            lia.net.writeBigTable(somePlayer, "MyBigTableNetString", myBigTable, 1024)
-
-            -- Send a big table to a group of players
-            lia.net.writeBigTable({player1, player2}, "MyBigTableNetString", myBigTable)
-    ]]
     function lia.net.writeBigTable(targets, netStr, tbl, chunkSize)
         if not istable(tbl) then return end
         local json = util.TableToJSON(tbl)
@@ -230,28 +157,6 @@ if SERVER then
 end
 
 if SERVER then
-    --[[
-        checkBadType
-
-        Purpose:
-            Recursively checks if a value or any of its sub-values is a function, which is not allowed for networked variables.
-            If a function is found, logs an error and returns true.
-
-        Parameters:
-            name (string)   - The name of the variable being checked (for error reporting).
-            object (any)    - The value to check.
-
-        Returns:
-            true if a bad type (function) is found, otherwise none.
-
-        Realm:
-            Server.
-
-        Example Usage:
-            if checkBadType("myVar", someTable) then
-                print("Cannot network this table!")
-            end
-    ]]
     function checkBadType(name, object)
         if isfunction(object) then
             lia.error(L("netVarBadType", name))
@@ -263,31 +168,6 @@ if SERVER then
         end
     end
 
-    --[[
-        setNetVar
-
-        Purpose:
-            Sets a global networked variable, sending its value to all clients or a specific receiver.
-            Checks for invalid types before sending. Triggers the "NetVarChanged" hook on change.
-
-        Parameters:
-            key (string)         - The variable name.
-            value (any)          - The value to set (must not contain functions).
-            receiver (player|none)- Optional. If provided, only sends to this player.
-
-        Returns:
-            None.
-
-        Realm:
-            Server.
-
-        Example Usage:
-            -- Set a global variable for all clients
-            setNetVar("weather", "rainy")
-
-            -- Set a variable only for a specific player
-            setNetVar("privateData", {foo = 1}, somePlayer)
-    ]]
     function setNetVar(key, value, receiver)
         if checkBadType(key, value) then return end
         local oldValue = getNetVar(key)
@@ -305,26 +185,6 @@ if SERVER then
         hook.Run("NetVarChanged", nil, key, oldValue, value)
     end
 
-    --[[
-        getNetVar
-
-        Purpose:
-            Retrieves a global networked variable's value, or returns a default if not set.
-
-        Parameters:
-            key (string)      - The variable name.
-            default (any)     - The value to return if the variable is not set.
-
-        Returns:
-            The value of the variable, or the default if not set.
-
-        Realm:
-            Server.
-
-        Example Usage:
-            local weather = getNetVar("weather", "clear")
-            print("Current weather:", weather)
-    ]]
     function getNetVar(key, default)
         local value = lia.net.globals[key]
         return value ~= nil and value or default
@@ -338,7 +198,6 @@ if SERVER then
         net.WriteTable(lia.char.names)
         net.Send(client)
     end)
-
     hook.Add("OnCharCreated", "liaNetworkingCharCreated", function(client, character, data)
         lia.char.names[character:getID()] = data.name
         net.Start("liaCharFetchNames")
@@ -346,26 +205,6 @@ if SERVER then
         net.Send(client)
     end)
 else
-    --[[
-        getNetVar
-
-        Purpose:
-            Retrieves a global networked variable's value on the client, or returns a default if not set.
-
-        Parameters:
-            key (string)      - The variable name.
-            default (any)     - The value to return if the variable is not set.
-
-        Returns:
-            The value of the variable, or the default if not set.
-
-        Realm:
-            Client.
-
-        Example Usage:
-            local weather = getNetVar("weather", "clear")
-            print("Current weather (client):", weather)
-    ]]
     function getNetVar(key, default)
         local value = lia.net.globals[key]
         return value ~= nil and value or default

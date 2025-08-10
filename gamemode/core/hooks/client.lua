@@ -469,7 +469,7 @@ end
 
 function GM:SpawnMenuOpen()
     local client = LocalPlayer()
-    if lia.config.get("SpawnMenuLimit", false) and not (client:hasFlags("pet") or client:isStaffOnDuty() or client:hasPrivilege(L("canSpawnProps"))) then return end
+    if lia.config.get("SpawnMenuLimit", false) and not (client:hasFlags("pet") or client:isStaffOnDuty() or client:hasPrivilege("canSpawnProps")) then return end
     return true
 end
 

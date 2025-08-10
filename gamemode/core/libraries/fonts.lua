@@ -1,51 +1,6 @@
-﻿--[[
-# Attributes Library
-
-This page documents the functions for working with character attributes.
-
----
-
-## Overview
-
-The attributes library loads attribute definitions from Lua files, keeps track of character values, and provides helper methods for modifying them. Each attribute is defined on a global `ATTRIBUTE` table inside its own file. When `lia.attribs.loadFromDir` is called the file is included **shared**, default values are filled in, and the definition is stored in `lia.attribs.list` using the file name (without extension or the `sh_` prefix) as the key. The loader is invoked automatically when a module is initialized, so most schemas simply place their attribute files in `schema/attributes/`.
-
-For details on each `ATTRIBUTE` field, see the [Attribute Fields documentation](../definitions/attribute.md).
-]]
 lia.font = lia.font or {}
 lia.font.stored = lia.font.stored or {}
 if CLIENT then
-    --[[
-        lia.font.register
-
-        Purpose:
-            Registers a new font with the specified name and font data. This function wraps surface.CreateFont and ensures
-            the font is created and available for use in the UI. It validates the input and will error if the arguments are invalid.
-
-        Parameters:
-            fontName (string) - The unique name to register the font under.
-            fontData (table)  - A table containing font properties (such as font, size, weight, antialias, etc).
-
-        Returns:
-            None.
-
-        Realm:
-            Client.
-
-        Example Usage:
-            -- Register a custom font for a title
-            lia.font.register("MyTitleFont", {
-                font = "Arial",
-                size = 32,
-                weight = 700,
-                antialias = true
-            })
-
-            -- Later, use the font in a draw operation
-            surface.SetFont("MyTitleFont")
-            surface.SetTextColor(255, 255, 255)
-            surface.SetTextPos(100, 100)
-            surface.DrawText("Welcome to the Server!")
-    ]]
     function lia.font.register(fontName, fontData)
         if not (isstring(fontName) and istable(fontData)) then return lia.error(L("invalidFont")) end
         surface.CreateFont(fontName, fontData)
@@ -485,32 +440,6 @@ if CLIENT then
         size = 64
     })
 
-    --[[
-        lia.font.getAvailableFonts
-
-        Purpose:
-            Retrieves a sorted list of all font names that have been registered and stored in lia.font.stored.
-            This is useful for populating font selection menus or debugging available fonts.
-
-        Parameters:
-            None.
-
-        Returns:
-            list (table) - A sorted table of font name strings.
-
-        Realm:
-            Client.
-
-        Example Usage:
-            -- Print all available font names to the console
-            for _, fontName in ipairs(lia.font.getAvailableFonts()) do
-                print("Available font:", fontName)
-            end
-
-            -- Use in a font selection dropdown
-            local fontOptions = lia.font.getAvailableFonts()
-            myDropdown:SetOptions(fontOptions)
-    ]]
     function lia.font.getAvailableFonts()
         local list = {}
         for name in pairs(lia.font.stored) do
@@ -521,30 +450,6 @@ if CLIENT then
         return list
     end
 
-    --[[
-        lia.font.refresh
-
-        Purpose:
-            Recreates all fonts currently stored in lia.font.stored by calling surface.CreateFont for each.
-            This is typically used when the screen resolution changes or when font configuration is updated,
-            ensuring that all fonts are refreshed and up-to-date. Also triggers the "PostLoadFonts" hook.
-
-        Parameters:
-            None.
-
-        Returns:
-            None.
-
-        Realm:
-            Client.
-
-        Example Usage:
-            -- Refresh all fonts after changing the main font in config
-            lia.font.refresh()
-
-            -- Automatically refresh fonts when the screen size changes
-            hook.Add("OnScreenSizeChanged", "liaFontsRefreshFonts", lia.font.refresh)
-    ]]
     function lia.font.refresh()
         local storedFonts = lia.font.stored
         lia.font.stored = {}

@@ -1,6 +1,6 @@
 ﻿ITEM.name = "outfit"
 ITEM.desc = "outfitDesc"
-ITEM.category = L("outfit")
+ITEM.category = "outfit"
 ITEM.model = "models/props_c17/BriefCase001a.mdl"
 ITEM.width = 1
 ITEM.height = 1
