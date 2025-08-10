@@ -14,17 +14,13 @@ function lia.option.add(key, name, desc, default, callback, data)
     if data.type then optionType = data.type end
     local old = lia.option.stored[key]
     local value = old and old.value or default
-
     if istable(data.options) then
         for k, v in pairs(data.options) do
-            if isstring(v) then
-                data.options[k] = L(v)
-            end
+            if isstring(v) then data.options[k] = L(v) end
         end
     end
 
     data.category = isstring(data.category) and L(data.category) or data.category
-
     lia.option.stored[key] = {
         name = isstring(name) and L(name) or name,
         desc = isstring(desc) and L(desc) or desc,

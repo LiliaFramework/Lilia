@@ -1,5 +1,4 @@
 local vectorMeta = FindMetaTable("Vector")
-
 function vectorMeta:Center(vec2)
     return (self + vec2) / 2
 end
@@ -14,15 +13,10 @@ function vectorMeta:RotateAroundAxis(axis, degrees)
     local rad = math.rad(degrees)
     local cosTheta = math.cos(rad)
     local sinTheta = math.sin(rad)
-    return Vector(
-        cosTheta * self.x + sinTheta * (axis.y * self.z - axis.z * self.y),
-        cosTheta * self.y + sinTheta * (axis.z * self.x - axis.x * self.z),
-        cosTheta * self.z + sinTheta * (axis.x * self.y - axis.y * self.x)
-    )
+    return Vector(cosTheta * self.x + sinTheta * (axis.y * self.z - axis.z * self.y), cosTheta * self.y + sinTheta * (axis.z * self.x - axis.x * self.z), cosTheta * self.z + sinTheta * (axis.x * self.y - axis.y * self.x))
 end
 
 local right = Vector(0, -1, 0)
-
 function vectorMeta:Right(vUp)
     if self[1] == 0 and self[2] == 0 then return right end
     if not vUp then vUp = vector_up end
@@ -39,4 +33,3 @@ function vectorMeta:Up(vUp)
     vRet:Normalize()
     return vRet
 end
-

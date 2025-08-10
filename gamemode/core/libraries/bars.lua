@@ -10,6 +10,7 @@ local function findIndexByIdentifier(identifier)
         if bar.identifier == identifier then return idx end
     end
 end
+
 function lia.bar.get(identifier)
     for _, bar in ipairs(lia.bar.list) do
         if bar.identifier == identifier then return bar end
@@ -34,6 +35,7 @@ function lia.bar.add(getValue, color, priority, identifier)
     })
     return priority
 end
+
 function lia.bar.remove(identifier)
     local idx = findIndexByIdentifier(identifier)
     if idx then table.remove(lia.bar.list, idx) end
@@ -45,6 +47,7 @@ local function PaintPanel(x, y, w, h)
     surfaceSetDrawColor(0, 0, 0, 150)
     surfaceDrawRect(x + 1, y + 1, w - 2, h - 2)
 end
+
 function lia.bar.drawBar(x, y, w, h, pos, max, color)
     pos = math.min(pos, max)
     local usable = math.max(w - 6, 0)
@@ -78,6 +81,7 @@ function lia.bar.drawAction(text, duration)
         draw.SimpleText(text, "liaMediumFont", x, y - 24, Color(240, 240, 240))
     end)
 end
+
 function lia.bar.drawAll()
     if hook.Run("ShouldHideBars") then return end
     table.sort(lia.bar.list, function(a, b)

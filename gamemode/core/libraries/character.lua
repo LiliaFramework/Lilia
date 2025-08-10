@@ -24,11 +24,11 @@ if SERVER then
             if callback then callback(character) end
             return character
         end
+
         lia.char.loadSingleCharacter(charID, client, callback)
     end
 else
     lia.char.pendingRequests = lia.char.pendingRequests or {}
-
     function lia.char.getCharacter(charID, _, callback)
         if not charID then return end
         local character = lia.char.loaded[charID]
@@ -37,10 +37,7 @@ else
             return character
         end
 
-        if callback then
-            lia.char.pendingRequests[charID] = callback
-        end
-
+        if callback then lia.char.pendingRequests[charID] = callback end
         net.Start("liaCharRequest")
         net.WriteUInt(charID, 32)
         net.SendToServer()
@@ -66,7 +63,6 @@ end
 function lia.char.removeCharacter(id)
     lia.char.loaded[id] = nil
 end
-
 
 function lia.char.new(data, id, client, steamID)
     local character = setmetatable({
@@ -240,10 +236,7 @@ lia.char.registerVar("model", {
         local faction = lia.faction.indices[data.faction]
         if faction then
             if not data.model or not faction.models[data.model] then
-                
-                if data.faction == FACTION_STAFF and client and client:hasPrivilege("createStaffCharacter") then
-                    return true
-                end
+                if data.faction == FACTION_STAFF and client and client:hasPrivilege("createStaffCharacter") then return true end
                 return false, "needModel"
             end
         else
@@ -356,7 +349,6 @@ lia.char.registerVar("faction", {
     end,
     onValidate = function(value, _, client)
         if not lia.faction.indices[value] then return false, "invalid", "faction" end
-        
         if value == FACTION_STAFF and client:hasPrivilege("createStaffCharacter") then return true end
         if not client:hasWhitelist(value) then return false, "illegalAccess" end
         return true
@@ -466,10 +458,7 @@ lia.char.registerVar("attribs", {
     isLocal = true,
     index = 4,
     onValidate = function(value, data, client)
-        
-        if data and data.faction == FACTION_STAFF and client and client:hasPrivilege("createStaffCharacter") then
-            return true
-        end
+        if data and data.faction == FACTION_STAFF and client and client:hasPrivilege("createStaffCharacter") then return true end
         if value ~= nil then
             if istable(value) then
                 local count = 0
@@ -614,7 +603,7 @@ function lia.char.GetTeamColor(client)
 end
 
 if SERVER then
-        function lia.char.create(data, callback)
+    function lia.char.create(data, callback)
         local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
         data.money = data.money or lia.config.get("DefaultMoney")
         local gamemode = SCHEMA and SCHEMA.folder or "lilia"
@@ -655,7 +644,7 @@ if SERVER then
         end)
     end
 
-        function lia.char.restore(client, callback, id)
+    function lia.char.restore(client, callback, id)
         local steamID = client:SteamID()
         local fields = {"id"}
         for _, var in pairs(lia.char.vars) do
@@ -755,11 +744,9 @@ if SERVER then
         end)
     end
 
-        function lia.char.cleanUpForPlayer(client)
+    function lia.char.cleanUpForPlayer(client)
         for _, charID in pairs(client.liaCharList or {}) do
-            if lia.char.loaded[charID] then
-                lia.char.unloadCharacter(charID)
-            end
+            if lia.char.loaded[charID] then lia.char.unloadCharacter(charID) end
         end
     end
 
@@ -775,7 +762,7 @@ if SERVER then
         end
     end
 
-        function lia.char.delete(id, client)
+    function lia.char.delete(id, client)
         assert(isnumber(id), L("idMustBeNumber"))
         if IsValid(client) then
             removePlayer(client)
@@ -809,7 +796,7 @@ if SERVER then
         hook.Run("OnCharDelete", client, id)
     end
 
-        function lia.char.setCharData(charID, key, val)
+    function lia.char.setCharData(charID, key, val)
         local charIDsafe = tonumber(charID)
         if not charIDsafe or not key then return end
         if val == nil then
@@ -827,7 +814,7 @@ if SERVER then
         return true
     end
 
-        function lia.char.setCharName(charID, name)
+    function lia.char.setCharName(charID, name)
         local charIDsafe = tonumber(charID)
         if not name or not charID then return end
         local promise = lia.db.updateTable({
@@ -844,7 +831,7 @@ if SERVER then
         return true
     end
 
-        function lia.char.setCharModel(charID, model, bg)
+    function lia.char.setCharModel(charID, model, bg)
         local charIDsafe = tonumber(charID)
         if not model or not charID then return end
         local promise = lia.db.updateTable({
@@ -877,14 +864,14 @@ if SERVER then
         return true
     end
 
-        function lia.char.getCharBanned(charID)
+    function lia.char.getCharBanned(charID)
         local charIDsafe = tonumber(charID)
         if not charIDsafe then return end
         local result = sql.Query("SELECT banned FROM lia_characters WHERE id = " .. charIDsafe .. " LIMIT 1")
         if istable(result) and result[1] then return tonumber(result[1].banned) or 0 end
     end
 
-        function lia.char.setCharBanned(charID, value)
+    function lia.char.setCharBanned(charID, value)
         local charIDsafe = tonumber(charID)
         if not charIDsafe then return end
         value = tonumber(value) or 0
@@ -902,14 +889,10 @@ if SERVER then
         return true
     end
 
-        function lia.char.unloadCharacter(charID)
+    function lia.char.unloadCharacter(charID)
         local character = lia.char.loaded[charID]
         if not character then return false end
-
-
         character:save()
-
-
         if character.dataVars then
             local client = character:getPlayer()
             local keys = table.GetKeys(character.dataVars)
@@ -921,48 +904,38 @@ if SERVER then
                     net.WriteString(key)
                     net.WriteType(nil)
                 end
+
                 net.Send(client)
             end
+
             character.dataVars = nil
         end
 
         lia.inventory.cleanUpForCharacter(character)
-
-
         lia.char.loaded[charID] = nil
-
-
         hook.Run("CharCleanUp", character)
-
         return true
     end
-    
-        function lia.char.unloadUnusedCharacters(client, activeCharID)
+
+    function lia.char.unloadUnusedCharacters(client, activeCharID)
         local unloadedCount = 0
-
         for _, charID in pairs(client.liaCharList or {}) do
-            if charID ~= activeCharID and lia.char.loaded[charID] and lia.char.unloadCharacter(charID) then
-                unloadedCount = unloadedCount + 1
-            end
+            if charID ~= activeCharID and lia.char.loaded[charID] and lia.char.unloadCharacter(charID) then unloadedCount = unloadedCount + 1 end
         end
-
         return unloadedCount
     end
 
-        function lia.char.loadSingleCharacter(charID, client, callback)
-        
+    function lia.char.loadSingleCharacter(charID, client, callback)
         if lia.char.loaded[charID] then
             if callback then callback(lia.char.loaded[charID]) end
             return
         end
 
-        
         if client and not table.HasValue(client.liaCharList or {}, charID) then
             if callback then callback(nil) end
             return
         end
 
-        
         lia.db.selectOne("*", "characters", "id = " .. charID):next(function(result)
             if not result then
                 if callback then callback(nil) end
@@ -980,15 +953,13 @@ if SERVER then
                     elseif istable(v.default) then
                         value = util.JSONToTable(value)
                     end
+
                     charData[k] = value
                 end
             end
 
-            
             local character = lia.char.new(charData, charID, client)
             hook.Run("CharRestored", character)
-
-            
             character.vars.inv = {}
             lia.inventory.loadAllFromCharID(charID):next(function(inventories)
                 if #inventories == 0 then

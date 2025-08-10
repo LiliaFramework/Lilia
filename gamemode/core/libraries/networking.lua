@@ -2,7 +2,6 @@ lia.net = lia.net or {}
 lia.net._sendq = lia.net._sendq or {}
 lia.net.globals = lia.net.globals or {}
 lia.net._buffers = lia.net._buffers or {}
-
 function lia.net.readBigTable(netStr, callback)
     lia.net._buffers[netStr] = lia.net._buffers[netStr] or {}
     net.Receive(netStr, function(_, ply)
@@ -51,7 +50,6 @@ end
 
 if SERVER then
     local chunkTime = 0.05
-
     local function sendChunk(ply, s, sid, idx)
         if not IsValid(ply) then
             if lia.net._sendq[ply] then lia.net._sendq[ply][sid] = nil end
@@ -198,6 +196,7 @@ if SERVER then
         net.WriteTable(lia.char.names)
         net.Send(client)
     end)
+
     hook.Add("OnCharCreated", "liaNetworkingCharCreated", function(client, character, data)
         lia.char.names[character:getID()] = data.name
         net.Start("liaCharFetchNames")

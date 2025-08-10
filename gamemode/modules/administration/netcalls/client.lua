@@ -221,9 +221,7 @@ net.Receive("AdminModeSwapCharacter", function()
         local message = net.ReadString()
         if message == "" then
             d:resolve()
-            lia.char.getCharacter(id, nil, function(character)
-                hook.Run("CharLoaded", character)
-            end)
+            lia.char.getCharacter(id, nil, function(character) hook.Run("CharLoaded", character) end)
         else
             d:reject(message)
         end

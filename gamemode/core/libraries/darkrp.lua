@@ -6,11 +6,7 @@ if SERVER then
     function lia.darkrp.isEmpty(position, entitiesToIgnore)
         entitiesToIgnore = entitiesToIgnore or {}
         local contents = util.PointContents(position)
-        local isClear = contents ~= CONTENTS_SOLID
-            and contents ~= CONTENTS_MOVEABLE
-            and contents ~= CONTENTS_LADDER
-            and contents ~= CONTENTS_PLAYERCLIP
-            and contents ~= CONTENTS_MONSTERCLIP
+        local isClear = contents ~= CONTENTS_SOLID and contents ~= CONTENTS_MOVEABLE and contents ~= CONTENTS_LADDER and contents ~= CONTENTS_PLAYERCLIP and contents ~= CONTENTS_MONSTERCLIP
         if not isClear then return false end
         local isEmpty = true
         for _, entity in ipairs(ents.FindInSphere(position, 35)) do
@@ -27,26 +23,9 @@ if SERVER then
         for distance = searchStep, maxDistance, searchStep do
             for direction = -1, 1, 2 do
                 local offset = distance * direction
-                if
-                    lia.darkrp.isEmpty(startPos + Vector(offset, 0, 0), entitiesToIgnore)
-                    and lia.darkrp.isEmpty(startPos + Vector(offset, 0, 0) + checkArea, entitiesToIgnore)
-                then
-                    return startPos + Vector(offset, 0, 0)
-                end
-
-                if
-                    lia.darkrp.isEmpty(startPos + Vector(0, offset, 0), entitiesToIgnore)
-                    and lia.darkrp.isEmpty(startPos + Vector(0, offset, 0) + checkArea, entitiesToIgnore)
-                then
-                    return startPos + Vector(0, offset, 0)
-                end
-
-                if
-                    lia.darkrp.isEmpty(startPos + Vector(0, 0, offset), entitiesToIgnore)
-                    and lia.darkrp.isEmpty(startPos + Vector(0, 0, offset) + checkArea, entitiesToIgnore)
-                then
-                    return startPos + Vector(0, 0, offset)
-                end
+                if lia.darkrp.isEmpty(startPos + Vector(offset, 0, 0), entitiesToIgnore) and lia.darkrp.isEmpty(startPos + Vector(offset, 0, 0) + checkArea, entitiesToIgnore) then return startPos + Vector(offset, 0, 0) end
+                if lia.darkrp.isEmpty(startPos + Vector(0, offset, 0), entitiesToIgnore) and lia.darkrp.isEmpty(startPos + Vector(0, offset, 0) + checkArea, entitiesToIgnore) then return startPos + Vector(0, offset, 0) end
+                if lia.darkrp.isEmpty(startPos + Vector(0, 0, offset), entitiesToIgnore) and lia.darkrp.isEmpty(startPos + Vector(0, 0, offset) + checkArea, entitiesToIgnore) then return startPos + Vector(0, 0, offset) end
             end
         end
         return startPos
@@ -80,11 +59,7 @@ else
             local wordWidth = surface.GetTextSize(word)
             accumulatedWidth = accumulatedWidth + wordWidth
             if wordWidth >= maxLineWidth then
-                local wrappedWord, finalWidth = wrapCharacters(
-                    word,
-                    maxLineWidth - (accumulatedWidth - wordWidth),
-                    maxLineWidth
-                )
+                local wrappedWord, finalWidth = wrapCharacters(word, maxLineWidth - (accumulatedWidth - wordWidth), maxLineWidth)
                 accumulatedWidth = finalWidth
                 return wrappedWord
             elseif accumulatedWidth < maxLineWidth then
@@ -140,8 +115,4 @@ DarkRP.isEmpty = lia.darkrp.isEmpty
 DarkRP.findEmptyPos = lia.darkrp.findEmptyPos
 DarkRP.notify = lia.darkrp.notify
 DarkRP.textWrap = lia.darkrp.textWrap
-hook.Add("EntityKeyValue", "liaDarkRPEntityKeyValue", function(entity, key, value)
-    if entity:isDoor() and DarkRPVariables[key] then
-        DarkRPVariables[key](entity, value)
-    end
-end)
+hook.Add("EntityKeyValue", "liaDarkRPEntityKeyValue", function(entity, key, value) if entity:isDoor() and DarkRPVariables[key] then DarkRPVariables[key](entity, value) end end)

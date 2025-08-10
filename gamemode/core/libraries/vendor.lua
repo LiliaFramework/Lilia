@@ -117,7 +117,7 @@ else
 
     addEditor("scale", function(scale) net.WriteFloat(scale) end)
     addEditor("preset", function(preset) net.WriteString(preset) end)
-  end
+end
 
 function lia.vendor.addRarities(name, color)
     assert(isstring(name), L("vendorRarityNameString"))

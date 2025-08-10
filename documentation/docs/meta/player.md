@@ -18,25 +18,27 @@ Players are entity objects that hold at most one `Character` instance, so these 
 
 **Purpose**
 
-Returns the currently loaded character object for this player.
+Returns the current character of the player.
 
 **Parameters**
 
 * None
 
+**Returns**
+
+* `Character|nil`: The player's current character, or `nil` if no character is loaded.
+
 **Realm**
 
 `Shared`
 
-**Returns**
-
-* `Character|nil`: The player's active character.
-
 **Example Usage**
 
 ```lua
--- Retrieve the character to modify inventory
 local char = player:getChar()
+if char then
+    print("Character name: " .. char:getName())
+end
 ```
 
 ---
@@ -45,25 +47,25 @@ local char = player:getChar()
 
 **Purpose**
 
-Returns either the character's role-play name or the player's Steam name.
+Returns the display name of the player, either their character name or Steam name.
 
 **Parameters**
 
 * None
 
+**Returns**
+
+* `string`: The player's display name.
+
 **Realm**
 
 `Shared`
 
-**Returns**
-
-* `string`: Display name.
-
 **Example Usage**
 
 ```lua
--- Print the role-play name in chat
-chat.AddText(player:Name())
+local name = player:Name()
+print("Player name: " .. name)
 ```
 
 ---
@@ -124,26 +126,25 @@ print(player:SteamName())
 
 **Purpose**
 
-Wrapper for CAMI privilege checks.
+Checks if the player has the specified privilege.
 
 **Parameters**
 
-* `privilegeName` (`string`): Privilege identifier.
+* `privilegeName` (`string`): The name of the privilege to check.
+
+**Returns**
+
+* `boolean`: True if the player has the privilege, false otherwise.
 
 **Realm**
 
 `Shared`
 
-**Returns**
-
-* `boolean`: Result from `CAMI.PlayerHasAccess`.
-
 **Example Usage**
 
 ```lua
--- Deny access if the player lacks a privilege
-if not player:hasPrivilege("Manage") then
-    return false
+if player:hasPrivilege("admin") then
+    print("Player has admin privileges")
 end
 ```
 
@@ -153,27 +154,26 @@ end
 
 **Purpose**
 
-Safely returns the vehicle the player is currently using.
+Returns the player's currently occupied vehicle entity.
 
 **Parameters**
 
 * None
 
+**Returns**
+
+* `Entity|nil`: The vehicle entity the player is in, or `nil` if not in a vehicle.
+
 **Realm**
 
 `Shared`
 
-**Returns**
-
-* `Entity|nil`: Vehicle entity or `nil`.
-
 **Example Usage**
 
 ```lua
--- Attach a camera to the vehicle the player is in
-local veh = player:getCurrentVehicle()
-if IsValid(veh) then
-    AttachCamera(veh)
+local vehicle = player:getCurrentVehicle()
+if vehicle then
+    print("Player is in vehicle: " .. vehicle:GetClass())
 end
 ```
 
@@ -183,26 +183,25 @@ end
 
 **Purpose**
 
-Determines if the player is currently inside a valid vehicle.
+Checks if the player has a valid vehicle.
 
 **Parameters**
 
 * None
 
+**Returns**
+
+* `boolean`: True if the player has a valid vehicle, false otherwise.
+
 **Realm**
 
 `Shared`
 
-**Returns**
-
-* `boolean`: `true` if a vehicle entity is valid.
-
 **Example Usage**
 
 ```lua
--- Allow honking only when in a valid vehicle
 if player:hasValidVehicle() then
-    player:GetVehicle():EmitSound("Horn")
+    print("Player is in a vehicle")
 end
 ```
 
@@ -212,25 +211,26 @@ end
 
 **Purpose**
 
-Returns `true` if the player is in noclip mode and not inside a vehicle.
+Checks if the player is currently nocliping.
 
 **Parameters**
 
 * None
 
+**Returns**
+
+* `boolean`: True if the player is nocliping, false otherwise.
+
 **Realm**
 
 `Shared`
 
-**Returns**
-
-* `boolean`: Whether the player is noclipping.
-
 **Example Usage**
 
 ```lua
--- Disable certain actions while noclipping
-if player:isNoClipping() then return end
+if player:isNoClipping() then
+    print("Player is nocliping")
+end
 ```
 
 ---
@@ -239,25 +239,25 @@ if player:isNoClipping() then return end
 
 **Purpose**
 
-Checks if the player currently has an active ragdoll entity.
+Checks if the player has a ragdoll.
 
 **Parameters**
 
 * None
 
+**Returns**
+
+* `boolean`: True if the player has a ragdoll, false otherwise.
+
 **Realm**
 
 `Shared`
-
-**Returns**
-
-* `boolean`: `true` when a ragdoll entity exists.
 
 **Example Usage**
 
 ```lua
 if player:hasRagdoll() then
-    print("Player is ragdolled")
+    print("Player has a ragdoll")
 end
 ```
 
@@ -327,24 +327,23 @@ end
 
 **Purpose**
 
-Safely removes the player's ragdoll entity if present.
+Removes the player's ragdoll if one exists.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil`: This function does not return a value.
 
+**Realm**
+
+`Shared`
+
 **Example Usage**
 
 ```lua
--- Clean up any ragdoll left behind
 player:removeRagdoll()
 ```
 
@@ -354,24 +353,27 @@ player:removeRagdoll()
 
 **Purpose**
 
-Retrieves the ragdoll entity associated with the player.
+Returns the player's ragdoll entity if one exists.
 
 **Parameters**
 
 * None
 
+**Returns**
+
+* `Entity|nil`: The ragdoll entity, or `nil` if no ragdoll exists.
+
 **Realm**
 
 `Shared`
-
-**Returns**
-
-* `Entity|nil`: The ragdoll entity or `nil`.
 
 **Example Usage**
 
 ```lua
 local ragdoll = player:getRagdoll()
+if ragdoll then
+    print("Player has a ragdoll")
+end
 ```
 
 ---

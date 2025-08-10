@@ -1159,7 +1159,6 @@ LANGUAGE = {
     viewOwnPlaytime = "View Own Playtime",
     viewPlaytime = "View Playtime",
     viewStaffManagement = "View Staff Management",
-    alwaysSpawnAdminStick = "Use Admin Stick",
     information = "Information",
     returnFromSitroomDesc = "Returns you or the specified player to their previous position before teleporting to an administration room.",
     returnFromSitroom = "Return From Administration Room",

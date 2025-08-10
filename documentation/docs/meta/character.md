@@ -1,18 +1,6 @@
 # Character Meta
 
-Character objects returned by `player:getChar()` persist inventory, stats, and money.
-
-This reference outlines helper functions for managing those records.
-
----
-
-## Overview
-
-The character-meta library contains information about a player's current game state.
-
-It provides shortcuts for fetching stored values, verifying permissions, and linking a character back to its player.
-
-Characters are separate from players and hold names, models, money, and other data that persists across sessions.
+Documentation extracted from code comments.
 
 ---
 
@@ -20,25 +8,24 @@ Characters are separate from players and hold names, models, money, and other da
 
 **Purpose**
 
-Returns a printable identifier for this character.
+Returns a string representation of the character, including its ID.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
-* `string`: Format `"character[id]"`.
+* string - The string representation of the character.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Print a readable identifier when saving debug logs
-print("Active char: " .. char:tostring())
+print(character:tostring()) -- Output: "Character[1]"
 ```
 
 ---
@@ -47,30 +34,25 @@ print("Active char: " .. char:tostring())
 
 **Purpose**
 
-Compares this character's ID with another object's ID.
-
-The argument can be a `Character` instance or any object providing a `getID` method.
+Checks if this character is equal to another character by comparing their IDs.
 
 **Parameters**
 
-* `other` (`Character`): Character or object to compare.
-
-**Realm**
-
-`Shared`
+* other (Character) - The character to compare with.
 
 **Returns**
 
-* `boolean`: `true` if both share the same ID.
+* boolean - True if the characters have the same ID, false otherwise.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Unlock the door only for its controlling character
-local owner = door:getNetVar("ownChar")
-
-if owner and char:eq(owner) then
-    door:Fire("unlock", "", 0)
+if character:eq(otherCharacter) then
+print("Characters are the same.")
 end
 ```
 
@@ -80,27 +62,25 @@ end
 
 **Purpose**
 
-Returns the unique database ID for this character.
+Returns the unique ID of this character.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
-* `number`: Character identifier.
+* number - The character's ID.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Store the character ID for later reference
-local id = char:getID()
-
-session.lastCharID = id
+local id = character:getID()
+print("Character ID:", id)
 ```
 
 ---
@@ -109,29 +89,25 @@ session.lastCharID = id
 
 **Purpose**
 
-Returns the player entity currently controlling this character.
+Returns the player entity associated with this character.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
-* `Player|nil`: Owning player or `nil`.
+* Player or nil - The player entity, or nil if not found.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Notify the controlling player that the character loaded
-local ply = char:getPlayer()
-
-if IsValid(ply) then
-    ply:ChatPrint("Character ready")
-end
+local ply = character:getPlayer()
+if ply then print("Player found!") end
 ```
 
 ---
@@ -140,25 +116,29 @@ end
 
 **Purpose**
 
-Returns the character's name as it should be shown to the given player.
+Returns the name to display for this character to the given client, taking into account recognition and fake names.
+If character recognition is enabled, the function checks if the client recognizes this character, and returns the appropriate name.
+If not recognized, it may return a fake name if one is set and recognized, otherwise returns "unknown".
+If recognition is disabled, always returns the character's real name.
 
 **Parameters**
 
-* `client` (`Player`): Player requesting the name.
-
-**Realm**
-
-`Shared`
+* client (Player) - The player to check recognition against.
 
 **Returns**
 
-* `string`: Localized or recognized character name.
+* string - The name to display for this character to the given client.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Announce the character's name to a viewer
-client:ChatPrint(string.format("You see %s", char:getDisplayedName(client)))
+-- Get the display name for a character as seen by a client
+local displayName = character:getDisplayedName(client)
+print("You see this character as: " .. displayName)
 ```
 
 ---
@@ -167,55 +147,25 @@ client:ChatPrint(string.format("You see %s", char:getDisplayedName(client)))
 
 **Purpose**
 
-Checks if the character has at least the given amount of money.
+Checks if the character has at least the specified amount of money.
 
 **Parameters**
 
-* `amount` (`number`): Amount to check for.
-
-**Realm**
-
-`Shared`
+* amount (number) - The amount to check.
 
 **Returns**
 
-* `boolean`: `true` if the character's funds are sufficient.
+* boolean - True if the character has at least the specified amount, false otherwise.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Verify the character can pay for an item before buying
-if char:hasMoney(item.price) then
-    char:takeMoney(item.price)
-end
-```
-
----
-
-### getFlags
-
-**Purpose**
-
-Retrieves the string of permission flags for this character.
-
-**Parameters**
-
-* None
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `string`: Concatenated flag characters.
-
-**Example Usage**
-
-```lua
--- Look for the admin flag on this character
-if char:getFlags():find("A") then
-    print("Admin privileges detected")
+if character:hasMoney(100) then
+print("Character has enough money.")
 end
 ```
 
@@ -225,26 +175,25 @@ end
 
 **Purpose**
 
-Checks if the character possesses any of the specified flags.
+Checks if the character has any of the specified flags. This function checks both character flags and player flags, returning true if the flag is found in either.
 
 **Parameters**
 
-* `flags` (`string`): String of flag characters to check.
-
-**Realm**
-
-`Shared`
+* flagStr (string) - A string of flag characters to check.
 
 **Returns**
 
-* `boolean`: `true` if at least one flag is present.
+* boolean - True if the character or player has at least one of the specified flags, false otherwise.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Allow special command if any required flag is present
-if char:hasFlags("abc") then
-    performSpecialAction()
+if character:hasFlags("a") then
+print("Character has flag 'a'.")
 end
 ```
 
@@ -254,28 +203,25 @@ end
 
 **Purpose**
 
-Returns **true** only when the player's active weapon matches an item in their inventory and that item is equipped.
-
-The argument defaults to `true` and the method currently only checks for equipped items.
+Checks if the character's currently equipped weapon matches an item in their inventory.
 
 **Parameters**
 
-* `requireEquip` (`boolean`): Only match equipped items if `true`.
-
-**Realm**
-
-`Shared`
+* requireEquip (boolean) - Whether the item must be equipped (default: true).
 
 **Returns**
 
-* `boolean`: `true` if the active weapon corresponds to an item.
+* boolean - True if the weapon is found and equipped (if required), false otherwise.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Check if we're using an inventory weapon
-if char:getItemWeapon(true) then
-    print("Item weapon equipped")
+if character:getItemWeapon() then
+print("Character's weapon matches an inventory item.")
 end
 ```
 
@@ -285,25 +231,25 @@ end
 
 **Purpose**
 
-Returns the maximum stamina value for this character.
+Returns the maximum stamina value for this character, possibly modified by hooks.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
-* `number`: Maximum stamina points.
+* number - The maximum stamina value.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Calculate the proportion of stamina remaining
-local pct = char:getStamina() / char:getMaxStamina()
+local maxStamina = character:getMaxStamina()
+print("Max stamina:", maxStamina)
 ```
 
 ---
@@ -312,27 +258,25 @@ local pct = char:getStamina() / char:getMaxStamina()
 
 **Purpose**
 
-Retrieves the character's current stamina value.
+Returns the current stamina value for this character.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
-* `number`: Current stamina.
+* number - The current stamina value.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Display current stamina in the HUD
-local stamina = char:getStamina()
-
-drawStaminaBar(stamina)
+local stamina = character:getStamina()
+print("Current stamina:", stamina)
 ```
 
 ---
@@ -341,26 +285,25 @@ drawStaminaBar(stamina)
 
 **Purpose**
 
-Checks if the character has whitelisted the given class.
+Checks if the character has a whitelist for the specified class.
 
 **Parameters**
 
-* `class` (`number`): Class index.
-
-**Realm**
-
-`Shared`
+* class (string or number) - The class to check.
 
 **Returns**
 
-* `boolean`: `true` if the class is whitelisted.
+* boolean - True if the character is whitelisted for the class, false otherwise.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Decide if the player may choose the medic class
-if char:hasClassWhitelist(CLASS_MEDIC) then
-    print("You may become a medic")
+if character:hasClassWhitelist("medic") then
+print("Character is whitelisted for medic class.")
 end
 ```
 
@@ -370,26 +313,25 @@ end
 
 **Purpose**
 
-Returns `true` if the character's faction matches.
+Checks if the character belongs to the specified faction.
 
 **Parameters**
 
-* `faction` (`number`): Faction index.
-
-**Realm**
-
-`Shared`
+* faction (number) - The faction index to check.
 
 **Returns**
 
-* `boolean`: Whether the faction matches.
+* boolean - True if the character is in the faction, false otherwise.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Restrict access to citizens only
-if char:isFaction(FACTION_CITIZEN) then
-    door:keysOwn(char:getPlayer())
+if character:isFaction(2) then
+print("Character is in faction 2.")
 end
 ```
 
@@ -399,26 +341,25 @@ end
 
 **Purpose**
 
-Returns `true` if the character's class equals the specified class.
+Checks if the character is in the specified class.
 
 **Parameters**
 
-* `class` (`number`): Class index.
-
-**Realm**
-
-`Shared`
+* class (number) - The class index to check.
 
 **Returns**
 
-* `boolean`: Whether the classes match.
+* boolean - True if the character is in the class, false otherwise.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Provide a bonus if the character is currently an engineer
-if char:isClass(CLASS_ENGINEER) then
-    char:restoreStamina(10)
+if character:isClass(1) then
+print("Character is in class 1.")
 end
 ```
 
@@ -428,29 +369,26 @@ end
 
 **Purpose**
 
-Retrieves the value of an attribute including boosts.
+Returns the value of the specified attribute for this character, including any boosts.
 
 **Parameters**
 
-* `key` (`string`): Attribute identifier.
-
-* `default` (`number`): Default value when attribute is missing.
-
-**Realm**
-
-`Shared`
+* key (string) - The attribute key.
+* default (number) - The default value if the attribute is not set.
 
 **Returns**
 
-* `number`: Final attribute value.
+* number - The attribute value including boosts.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Calculate damage using the strength attribute
-local strength = char:getAttrib("str", 0)
-
-local dmg = baseDamage + strength * 0.5
+local strength = character:getAttrib("str", 0)
+print("Strength:", strength)
 ```
 
 ---
@@ -459,25 +397,25 @@ local dmg = baseDamage + strength * 0.5
 
 **Purpose**
 
-Returns the boost table for the given attribute.
+Returns the boost table for the specified attribute.
 
 **Parameters**
 
-* `attribID` (`string`): Attribute identifier.
-
-**Realm**
-
-`Shared`
+* attribID (string) - The attribute key.
 
 **Returns**
 
-* `table|nil`: Table of boosts or `nil`.
+* table or nil - The boost table for the attribute, or nil if none.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Inspect active boosts on agility
-PrintTable(char:getBoost("agi"))
+local boost = character:getBoost("str")
+if boost then print("Strength is boosted!") end
 ```
 
 ---
@@ -486,27 +424,25 @@ PrintTable(char:getBoost("agi"))
 
 **Purpose**
 
-Retrieves all attribute boosts for this character.
+Returns the table of all attribute boosts for this character.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
-* `table`: Mapping of attribute IDs to boost tables.
+* table - The boosts table.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Print all attribute boosts for debugging
-for id, data in pairs(char:getBoosts()) do
-    print(id, data)
-end
+local boosts = character:getBoosts()
+PrintTable(boosts)
 ```
 
 ---
@@ -515,26 +451,25 @@ end
 
 **Purpose**
 
-Determines if this character recognizes another character.
+Checks if this character recognizes another character by ID.
 
 **Parameters**
 
-* `id` (`number|Character`): Character ID or object to check.
-
-**Realm**
-
-`Shared`
+* id (number or Character) - The character ID or character object.
 
 **Returns**
 
-* `boolean`: `true` if recognized.
+* boolean - True if recognized, false otherwise.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Reveal names in chat only if recognized
-if char:doesRecognize(targetChar) then
-    print("Known: " .. targetChar:getName())
+if character:doesRecognize(otherChar) then
+print("Character recognizes the other character.")
 end
 ```
 
@@ -544,26 +479,25 @@ end
 
 **Purpose**
 
-Checks if the character has a fake recognition entry for another.
+Checks if this character fake-recognizes another character by ID.
 
 **Parameters**
 
-* `id` (`number|Character`): Character identifier.
-
-**Realm**
-
-`Shared`
+* id (number or Character) - The character ID or character object.
 
 **Returns**
 
-* `boolean`: `true` if fake recognized.
+* boolean - True if fake-recognized, false otherwise.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- See if recognition was forced by a disguise item
-if char:doesFakeRecognize(targetChar) then
-    print("Recognition is fake")
+if character:doesFakeRecognize(otherChar) then
+print("Character fake-recognizes the other character.")
 end
 ```
 
@@ -573,28 +507,28 @@ end
 
 **Purpose**
 
-Sets custom data on this character, optionally syncing it to clients and saving it in the database.
+Sets custom data for this character, optionally replicating to clients and saving to the database.
 
 **Parameters**
 
-* `k` (`string|table`): Key to set or table of key-value pairs.
-* `v` (`any`): Value to store when `k` is a string.
-* `noReplication` (`boolean`): If `true`, do not network the change.
-* `receiver` (`Player|nil`): Specific player to receive the update.
-
-**Realm**
-
-`Shared`
+* k (string or table) - The key or table of key-value pairs to set.
+* v (any) - The value to set (if k is a string).
+* noReplication (boolean) - If true, do not replicate to clients.
+* receiver (Player) - The player to send the data to (optional).
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Shared (writes to database on server).
 
 **Example Usage**
 
 ```lua
--- Store character-specific state and sync it to the owner
-char:setData("mission", {step = 2}, false)
+character:setData("customKey", 123)
+character:setData({foo = "bar", baz = 42})
 ```
 
 ---
@@ -603,26 +537,26 @@ char:setData("mission", {step = 2}, false)
 
 **Purpose**
 
-Fetches custom data stored on the character.
+Gets custom data for this character.
 
 **Parameters**
 
-* `key` (`string|nil`): Data key to retrieve. Omitting returns all entries.
-* `default` (`any`): Fallback value when the key is missing.
-
-**Realm**
-
-`Shared`
+* key (string) - The key to retrieve (optional).
+* default (any) - The default value if the key is not set.
 
 **Returns**
 
-* `any`: Stored value, entire data table, or the provided default.
+* any - The value for the key, or the entire dataVars table if no key is given.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Read a saved mission step
-local mission = char:getData("mission", {})
+local value = character:getData("customKey", 0)
+local allData = character:getData()
 ```
 
 ---
@@ -631,25 +565,25 @@ local mission = char:getData("mission", {})
 
 **Purpose**
 
-Checks whether this character is currently banned.
+Checks if the character is currently banned.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
-* `boolean`: `true` if the character is banned or permanently banned.
+* boolean - True if banned, false otherwise.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
-if char:isBanned() then
-    print("Access denied")
+if character:isBanned() then
+print("Character is banned.")
 end
 ```
 
@@ -659,29 +593,26 @@ end
 
 **Purpose**
 
-Adds another character to this one's recognition list.
-
-When a custom `name` is provided that alias will be shown whenever the character is recognized.
+Adds a character to this character's recognition list, or sets a fake name for them.
 
 **Parameters**
 
-* `character` (`number|Character`): Character to recognize or its ID.
-
-* `name` (`string|nil`): Optional fake name to store.
-
-**Realm**
-
-`Server`
+* character (number or Character) - The character or character ID to recognize.
+* name (string or nil) - The fake name to assign, or nil to just recognize.
 
 **Returns**
 
-* `boolean`: Always `true` once processed.
+* boolean - Always true.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Remember the rival using a codename and by ID
-char:recognize(rivalChar:getID(), "Mysterious Stranger")
+character:recognize(otherChar)
+character:recognize(otherChar, "Alias Name")
 ```
 
 ---
@@ -690,25 +621,24 @@ char:recognize(rivalChar:getID(), "Mysterious Stranger")
 
 **Purpose**
 
-Grants class whitelist access for every class defined by the schema.
+Whitelists this character for all available classes.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Server`
-
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Allow this character to choose any class
-char:WhitelistAllClasses()
+character:WhitelistAllClasses()
 ```
 
 ---
@@ -717,25 +647,24 @@ char:WhitelistAllClasses()
 
 **Purpose**
 
-Marks the character as whitelisted for every faction.
+Whitelists this character for all available factions.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Server`
-
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Grant access to all factions for testing
-char:WhitelistAllFactions()
+character:WhitelistAllFactions()
 ```
 
 ---
@@ -744,25 +673,24 @@ char:WhitelistAllFactions()
 
 **Purpose**
 
-Convenience wrapper that whitelists the character for all factions and classes.
+Whitelists this character for all factions and classes.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Server`
-
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Unlock every faction and class
-char:WhitelistEverything()
+character:WhitelistEverything()
 ```
 
 ---
@@ -771,25 +699,24 @@ char:WhitelistEverything()
 
 **Purpose**
 
-Adds the specified class to this character's whitelist.
+Adds a class to this character's whitelist.
 
 **Parameters**
 
-* `class` (`number`): Class index to whitelist.
-
-**Realm**
-
-`Server`
+* class (string or number) - The class to whitelist.
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Permit switching to the engineer class
-char:classWhitelist(CLASS_ENGINEER)
+character:classWhitelist("medic")
 ```
 
 ---
@@ -798,25 +725,24 @@ char:classWhitelist(CLASS_ENGINEER)
 
 **Purpose**
 
-Removes the specified class from the character's whitelist.
+Removes a class from this character's whitelist.
 
 **Parameters**
 
-* `class` (`number`): Class index to remove.
-
-**Realm**
-
-`Server`
+* class (string or number) - The class to remove from the whitelist.
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Revoke access to the medic class
-char:classUnWhitelist(CLASS_MEDIC)
+character:classUnWhitelist("medic")
 ```
 
 ---
@@ -825,29 +751,25 @@ char:classUnWhitelist(CLASS_MEDIC)
 
 **Purpose**
 
-Attempts to set the character's current class.
-
-When `isForced` is `true` the normal eligibility checks are skipped.
+Attempts to set the character's class to the specified class.
 
 **Parameters**
 
-* `class` (`number`): Class index to join.
-
-* `isForced` (`boolean`): Bypass restrictions when `true`.
-
-**Realm**
-
-`Server`
+* class (number) - The class index to join.
+* isForced (boolean) - If true, force the join regardless of requirements.
 
 **Returns**
 
-* `boolean`: `true` on success, `false` otherwise.
+* boolean - True if the class was joined, false otherwise.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Force the character into the soldier class
-char:joinClass(CLASS_SOLDIER, true)
+character:joinClass(2)
 ```
 
 ---
@@ -856,25 +778,24 @@ char:joinClass(CLASS_SOLDIER, true)
 
 **Purpose**
 
-Removes the character from their current class, reverting to the default for their faction.
+Removes the character from their current class and assigns a default class if available.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Server`
-
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Reset the character's class after leaving the group
-char:kickClass()
+character:kickClass()
 ```
 
 ---
@@ -883,27 +804,25 @@ char:kickClass()
 
 **Purpose**
 
-Increases an attribute by the specified value, clamped to the maximum allowed.
+Increases the value of the specified attribute for this character, up to the maximum allowed.
 
 **Parameters**
 
-* `key` (`string`): Attribute identifier.
-
-* `value` (`number`): Amount to add.
-
-**Realm**
-
-`Server`
+* key (string) - The attribute key.
+* value (number) - The amount to add.
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Award experience toward agility
-char:updateAttrib("agi", 5)
+character:updateAttrib("str", 1)
 ```
 
 ---
@@ -912,27 +831,25 @@ char:updateAttrib("agi", 5)
 
 **Purpose**
 
-Directly sets an attribute to the given value.
+Sets the value of the specified attribute for this character.
 
 **Parameters**
 
-* `key` (`string`): Attribute identifier.
-
-* `value` (`number`): New level for the attribute.
-
-**Realm**
-
-`Server`
+* key (string) - The attribute key.
+* value (number) - The value to set.
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Reset strength after an event
-char:setAttrib("str", 10)
+character:setAttrib("str", 10)
 ```
 
 ---
@@ -941,29 +858,26 @@ char:setAttrib("str", 10)
 
 **Purpose**
 
-Applies a temporary boost to one of the character's attributes.
+Adds a boost to the specified attribute for this character.
 
 **Parameters**
 
-* `boostID` (`string`): Unique identifier for the boost.
-
-* `attribID` (`string`): Attribute to modify.
-
-* `boostAmount` (`number`): Amount of the boost.
-
-**Realm**
-
-`Server`
+* boostID (string) - The unique ID for the boost.
+* attribID (string) - The attribute key.
+* boostAmount (number) - The amount of the boost.
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Grant a strength bonus while an item is equipped
-char:addBoost("powerGloves", "str", 2)
+character:addBoost("buff1", "str", 5)
 ```
 
 ---
@@ -972,27 +886,25 @@ char:addBoost("powerGloves", "str", 2)
 
 **Purpose**
 
-Removes a previously applied attribute boost.
+Removes a boost from the specified attribute for this character.
 
 **Parameters**
 
-* `boostID` (`string`): Identifier used when the boost was added.
-
-* `attribID` (`string`): Attribute affected by the boost.
-
-**Realm**
-
-`Server`
+* boostID (string) - The unique ID for the boost.
+* attribID (string) - The attribute key.
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Clear the item bonus when unequipped
-char:removeBoost("powerGloves", "str")
+character:removeBoost("buff1", "str")
 ```
 
 ---
@@ -1001,25 +913,24 @@ char:removeBoost("powerGloves", "str")
 
 **Purpose**
 
-Replaces the character's flag string with the provided value.
+Sets the character's flags to the specified string, updating callbacks as needed.
 
 **Parameters**
 
-* `flags` (`string`): New flag characters to assign.
-
-**Realm**
-
-`Server`
+* flags (string) - The new flags string.
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Reset all flags before assigning new ones
-char:setFlags("")
+character:setFlags("ab")
 ```
 
 ---
@@ -1028,25 +939,24 @@ char:setFlags("")
 
 **Purpose**
 
-Adds the specified flag characters to the character.
+Adds the specified flags to the character, calling any associated callbacks.
 
 **Parameters**
 
-* `flags` (`string`): Flags to grant.
-
-**Realm**
-
-`Server`
+* flags (string) - The flags to add.
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Grant temporary admin powers
-char:giveFlags("A")
+character:giveFlags("c")
 ```
 
 ---
@@ -1055,25 +965,24 @@ char:giveFlags("A")
 
 **Purpose**
 
-Removes the given flag characters from the character.
+Removes the specified flags from the character, calling any associated callbacks.
 
 **Parameters**
 
-* `flags` (`string`): Flags to revoke.
-
-**Realm**
-
-`Server`
+* flags (string) - The flags to remove.
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Strip special permissions when demoted
-char:takeFlags("A")
+character:takeFlags("a")
 ```
 
 ---
@@ -1082,27 +991,24 @@ char:takeFlags("A")
 
 **Purpose**
 
-Persists the character's current data to the database.
+Saves the character's data to the database.
 
 **Parameters**
 
-* `callback` (`function|nil`): Optional function run after saving completes.
-
-**Realm**
-
-`Server`
+* callback (function) - Optional callback to call after saving.
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Save and then notify when finished
-char:save(function()
-    print("character saved")
-end)
+character:save(function() print("Character saved!") end)
 ```
 
 ---
@@ -1111,29 +1017,25 @@ end)
 
 **Purpose**
 
-Sends the character's networkable variables to a specific player.
-
-Passing `nil` broadcasts the data to everyone.
-
-When the receiver is the character's own player, only local variables intended for them are included.
+Synchronizes the character's data with the specified receiver, or all players if none specified.
 
 **Parameters**
 
-* `receiver` (`Player|nil`): Player to receive the data or `nil` for broadcast.
-
-**Realm**
-
-`Server`
+* receiver (Player) - The player to sync to (optional).
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Send updates only to one player
-char:sync(targetPlayer)
+character:sync()
+character:sync(specificPlayer)
 ```
 
 ---
@@ -1142,27 +1044,24 @@ char:sync(targetPlayer)
 
 **Purpose**
 
-Sets up the player entity to use this character's model, faction, and inventory data.
-
-Use `noNetworking` to skip network updates during initialization.
+Sets up the player entity to match this character's data (model, team, bodygroups, etc).
 
 **Parameters**
 
-* `noNetworking` (`boolean`): Skip networking inventories and vars when `true`.
-
-**Realm**
-
-`Server`
+* noNetworking (boolean) - If true, do not sync inventory and character data to clients.
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Fully prepare the character after selection
-char:setup()
+character:setup()
 ```
 
 ---
@@ -1171,27 +1070,24 @@ char:setup()
 
 **Purpose**
 
-Forcibly disconnects the player from their character.
-
-The player is killed silently and immediately respawns with no character loaded.
+Kicks the player from their character, killing them silently and notifying the client.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Server`
-
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Eject the player from their character
-char:kick() -- they will respawn without a character
+character:kick()
 ```
 
 ---
@@ -1200,27 +1096,25 @@ char:kick() -- they will respawn without a character
 
 **Purpose**
 
-Marks the character as banned for the given duration, saves the state, and immediately kicks the controlling player.
-
-This also triggers the `OnCharPermakilled` hook.
+Bans the character for a specified time or permanently.
 
 **Parameters**
 
-* `time` (`number|nil`): Ban length in seconds or `nil` for permanent.
-
-**Realm**
-
-`Server`
+* time (number or nil) - The ban duration in seconds, or nil for permanent ban.
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Ban the character for one hour
-char:ban(3600)
+character:ban(3600) -- Ban for 1 hour
+character:ban()     -- Permanent ban
 ```
 
 ---
@@ -1229,25 +1123,24 @@ char:ban(3600)
 
 **Purpose**
 
-Completely removes the character from the database along with any inventories it owns.
+Deletes this character from the database and notifies the player.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Server`
-
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Permanently remove this character
-char:delete()
+character:delete()
 ```
 
 ---
@@ -1256,27 +1149,24 @@ char:delete()
 
 **Purpose**
 
-Removes the character from the server's loaded cache without touching any saved data.
-
-Useful after deleting a character or when cleaning up disconnected players.
+Removes this character from the loaded character table.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Server`
-
 **Returns**
 
-* `nil`: This function does not return a value.
+* nil
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Clean up a removed character instance
-char:destroy()
+character:destroy()
 ```
 
 ---
@@ -1285,27 +1175,24 @@ char:destroy()
 
 **Purpose**
 
-Adds the specified amount to the character's wallet by calling the owning player's `addMoney` method.
+Gives the specified amount of money to the character's player.
 
 **Parameters**
 
-* `amount` (`number`): Amount to add to the wallet.
-
-**Realm**
-
-`Server`
+* amount (number) - The amount to give.
 
 **Returns**
 
-* `boolean`: `false` if the owner is missing, otherwise `true`.
+* boolean - True if successful, false otherwise.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Pay the character for completing a mission
-local reward = 250
-
-char:giveMoney(reward)
+character:giveMoney(100)
 ```
 
 ---
@@ -1314,1086 +1201,24 @@ char:giveMoney(reward)
 
 **Purpose**
 
-Subtracts the specified amount of money from the character.
-
-Internally this calls `giveMoney` with a negative value and logs the deduction.
+Takes the specified amount of money from the character's player.
 
 **Parameters**
 
-* `amount` (`number`): Amount to remove.
-
-**Realm**
-
-`Server`
+* amount (number) - The amount to take.
 
 **Returns**
 
-* `boolean`: Always `true` when the deduction occurs.
+* boolean - Always true.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Deduct a fine from the character
-local fine = 50
-
-char:takeMoney(fine)
-```
-
----
-
-### getName
-
-**Purpose**
-
-Returns the character's stored name or a default value.
-
-**Parameters**
-
-* `default` (`any`): Value to return if the name is unset.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `string`: Character name or the provided default.
-
-**Example Usage**
-
-```lua
-print("Character name:", char:getName("Unknown"))
-```
-
----
-
-### setName
-
-**Purpose**
-
-Updates the character's name and replicates the change to players.
-
-**Parameters**
-
-* `value` (`string`): New name for the character.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setName("Alyx Vance")
-```
-
----
-
-### getDesc
-
-**Purpose**
-
-Fetches the character's description text or returns the given default.
-
-**Parameters**
-
-* `default` (`any`): Value to return if no description exists.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `string`: Description or fallback value.
-
-**Example Usage**
-
-```lua
-local about = char:getDesc("No bio")
-```
-
----
-
-### setDesc
-
-**Purpose**
-
-Assigns a new description for the character.
-
-**Parameters**
-
-* `value` (`string`): Description text.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setDesc("Hardened wasteland survivor")
-```
-
----
-
-### getModel
-
-**Purpose**
-
-Retrieves the model path assigned to the character.
-
-**Parameters**
-
-* `default` (`any`): Value returned when no model is stored.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `string`: Model path or the fallback value.
-
-**Example Usage**
-
-```lua
-local mdl = char:getModel("models/error.mdl")
-```
-
----
-
-### setModel
-
-**Purpose**
-
-Sets the character's player model and broadcasts the update.
-
-**Parameters**
-
-* `value` (`string`): Model file path.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setModel("models/alyx.mdl")
-```
-
----
-
-### getSkin
-
-**Purpose**
-
-Gets the current skin index applied to the character's model.
-
-**Parameters**
-
-* `default` (`any`): Fallback value when no skin is stored.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `number`: Skin index or the provided default.
-
-**Example Usage**
-
-```lua
-local skin = char:getSkin(0)
-```
-
----
-
-### setSkin
-
-**Purpose**
-
-Updates the character's skin and applies it to the player.
-
-**Parameters**
-
-* `value` (`number`): Skin index.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setSkin(1)
-```
-
----
-
-### getBodygroups
-
-**Purpose**
-
-Returns the bodygroup settings applied to the character's model.
-
-**Parameters**
-
-* `default` (`any`): Value returned when no bodygroups are stored.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `table`: Table of bodygroup indices to values.
-
-**Example Usage**
-
-```lua
-local groups = char:getBodygroups({})
-```
-
----
-
-### setBodygroups
-
-**Purpose**
-
-Sets bodygroup values for the character's model and applies them.
-
-**Parameters**
-
-* `value` (`table`): Table mapping indices to bodygroup values.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setBodygroups({ [1] = 2 })
-```
-
----
-
-### getClass
-
-**Purpose**
-
-Returns the class index currently assigned or the supplied default.
-
-**Parameters**
-
-* `default` (`any`): Value used when the class is unset.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `number`: Class index.
-
-**Example Usage**
-
-```lua
-if char:getClass() == CLASS_ENGINEER then
-    print("Engineer present")
-end
-```
-
----
-
-### setClass
-
-**Purpose**
-
-Stores a new class index for the character.
-
-**Parameters**
-
-* `value` (`number`): Class identifier.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setClass(CLASS_ENGINEER)
-```
-
----
-
-### getFaction
-
-**Purpose**
-
-Gets the faction index of the character or a fallback value.
-
-**Parameters**
-
-* `default` (`any`): Value to return when unset.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `number`: Faction index.
-
-**Example Usage**
-
-```lua
-print("Faction:", char:getFaction())
-```
-
----
-
-### setFaction
-
-**Purpose**
-
-Sets the character's faction team.
-
-**Parameters**
-
-* `value` (`number`): Faction identifier.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setFaction(FACTION_CITIZEN)
-```
-
----
-
-### getMoney
-
-**Purpose**
-
-Retrieves the amount of currency this character holds.
-
-**Parameters**
-
-* `default` (`any`): Value to return when no money value is stored.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `number`: Amount of money or default value.
-
-**Example Usage**
-
-```lua
-local cash = char:getMoney(0)
-```
-
----
-
-### setMoney
-
-**Purpose**
-
-Overwrites the character's stored money total.
-
-**Parameters**
-
-* `value` (`number`): Amount of currency.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setMoney(1000)
-```
-
----
-
-### getLoginTime
-
-**Purpose**
-
-Retrieves the timestamp of when the player logged into this character.
-This value is local to the character's owner and is not broadcast to other players.
-
-**Parameters**
-
-* `default` (`number`): Value returned if no time is stored. Defaults to `0`.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `number`: Unix timestamp or the provided fallback.
-
-**Example Usage**
-
-```lua
-local logged = char:getLoginTime(0)
-```
-
----
-
-### setLoginTime
-
-**Purpose**
-
-Stores the timestamp for when the player logged into this character.
-The stored time is kept local to the owner and not sent to other players.
-
-**Parameters**
-
-* `value` (`number`): Unix timestamp to store. Defaults to `0`.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setLoginTime(os.time())
-```
-
----
-
-### getPlayTime
-
-**Purpose**
-
-Gets the total accumulated playtime in seconds for this character.
-This value is maintained locally for the owning player only.
-
-**Parameters**
-
-* `default` (`number`): Value returned when no playtime is recorded. Defaults to `0`.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `number`: Seconds of playtime or the provided default.
-
-**Example Usage**
-
-```lua
-local seconds = char:getPlayTime(0)
-```
-
----
-
-### setPlayTime
-
-**Purpose**
-
-Sets the total accumulated playtime for this character.
-The updated value remains local to the owning player.
-
-**Parameters**
-
-* `value` (`number`): Time in seconds.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setPlayTime(3600)
-```
-
----
-
-### getVar
-
-**Purpose**
-
-Fetches a temporary variable from the character.
-
-**Parameters**
-
-* `key` (`string`): Variable key.
-
-* `default` (`any`): Value returned if the variable is absent.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `any`: Variable value or default.
-
-**Example Usage**
-
-```lua
-local mood = char:getVar("mood", "neutral")
-```
-
----
-
-### setVar
-
-**Purpose**
-
-Stores a temporary variable on the character.
-
-**Parameters**
-
-* `key` (`string`): Variable name.
-
-* `value` (`any`): Data to store.
-
-* `noReplication` (`boolean`): If `true`, skip networking the change.
-
-* `receiver` (`Player`): Specific target for the update.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
--- Store a temporary value and send it only to the owner
-char:setVar("mood", "happy", nil, char:getPlayer())
-```
-
----
-
-### getInv
-
-**Purpose**
-
-Retrieves the character's inventory instance.
-
-**Parameters**
-
-* `index` (`number`): Optional inventory slot index.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `table`: Inventory object or list of inventories.
-
-**Example Usage**
-
-```lua
-local inv = char:getInv()
-```
-
----
-
-### setInv
-
-**Purpose**
-
-Directly sets the character's inventory table.
-
-**Parameters**
-
-* `value` (`table`): Inventory data.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setInv({})
-```
-
----
-
-### getAttribs
-
-**Purpose**
-
-Returns the table of raw attribute values for the character.
-
-**Parameters**
-
-* `default` (`any`): Fallback value when no attributes are stored.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `table`: Attribute values table.
-
-**Example Usage**
-
-```lua
-local stats = char:getAttribs()
-```
-
----
-
-### setAttribs
-
-**Purpose**
-
-Overwrites the character's attribute table.
-
-**Parameters**
-
-* `value` (`table`): Table of attribute levels.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setAttribs({ strength = 10 })
-```
-
----
-
-### getFakeName
-
-**Purpose**
-
-Retrieves the table of fake names this character assigns to other characters.
-
-**Parameters**
-
-* `default` (`any`): Value returned when no data exists.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `table`: Mapping of character IDs to fake names.
-
-**Example Usage**
-
-```lua
-local aliases = char:getFakeName()
-```
-
----
-
-### setFakeName
-
-**Purpose**
-
-Assigns a table of fake names used when this character recognizes others.
-
-**Parameters**
-
-* `value` (`table`): Table mapping character IDs to fake names.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setFakeName({ [123] = "Masked Stranger" })
-```
-
----
-
-### getRecognition
-
-**Purpose**
-
-Returns the raw recognition string listing known character IDs.
-
-**Parameters**
-
-* `default` (`any`): Value returned when no recognition data exists.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `string`: Stored recognition data or the provided default.
-
-**Example Usage**
-
-```lua
-local list = char:getRecognition("")
-```
-
----
-
-### setRecognition
-
-**Purpose**
-
-Sets the recognition list for this character.
-
-**Parameters**
-
-* `value` (`string`): Comma-delimited character IDs or empty to clear.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setRecognition("1,2,3,")
-```
-
----
-
-### getLastPos
-
-**Purpose**
-
-Gets the saved respawn position table for the character.
-
-**Parameters**
-
-* `default` (`any`): Fallback value when no position is stored.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `table`: Position data table or the provided default.
-
-**Example Usage**
-
-```lua
-local info = char:getLastPos()
-```
-
----
-
-### setLastPos
-
-**Purpose**
-
-Stores a respawn position for the character.
-
-**Parameters**
-
-* `value` (`table`): Position table or `nil` to clear.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setLastPos(nil)
-```
-
----
-
-### getAmmo
-
-**Purpose**
-
-Retrieves the stored ammunition counts for this character.
-
-**Parameters**
-
-* `default` (`any`): Value returned when no ammo data exists.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `table`: Mapping of ammo types to quantities.
-
-**Example Usage**
-
-```lua
-local ammo = char:getAmmo({})
-```
-
----
-
-### setAmmo
-
-**Purpose**
-
-Stores ammunition counts for the character.
-
-**Parameters**
-
-* `value` (`table`): Table mapping ammo types to amounts.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setAmmo({ pistol = 24 })
-```
-
----
-
-### getClasswhitelists
-
-**Purpose**
-
-Returns the list of class whitelists granted to this character.
-
-**Parameters**
-
-* `default` (`any`): Value returned when no whitelist data exists.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `table`: Table of class identifiers set to `true`.
-
-**Example Usage**
-
-```lua
-local classes = char:getClasswhitelists({})
-```
-
----
-
-### setClasswhitelists
-
-**Purpose**
-
-Overwrites the character's class whitelist table.
-
-**Parameters**
-
-* `value` (`table`): Table of class identifiers to enable.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setClasswhitelists({ medic = true })
-```
-
----
-
-### getMarkedForDeath
-
-**Purpose**
-
-Checks whether this character is flagged for permadeath.
-
-**Parameters**
-
-* `default` (`any`): Value returned if the flag is unset.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `boolean`: `true` if marked for death, otherwise the default.
-
-**Example Usage**
-
-```lua
-if char:getMarkedForDeath(false) then
-    print("Character will be removed on death")
-end
-```
-
----
-
-### setMarkedForDeath
-
-**Purpose**
-
-Marks or unmarks the character for permadeath.
-
-**Parameters**
-
-* `value` (`boolean`): `true` to mark, `false` to clear.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setMarkedForDeath(true)
-```
-
----
-
-### getBanned
-
-**Purpose**
-
-Retrieves the ban status timestamp for this character.
-
-**Parameters**
-
-* `default` (`any`): Value returned when no ban data exists.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `number`: `-1` for permanent ban, a Unix timestamp, or the default.
-
-**Example Usage**
-
-```lua
-local bannedUntil = char:getBanned(0)
-```
-
----
-
-### setBanned
-
-**Purpose**
-
-Sets the ban status for this character.
-
-**Parameters**
-
-* `value` (`number`): `-1` for permanent ban or future Unix timestamp.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* `nil`: This function does not return a value.
-
-**Example Usage**
-
-```lua
-char:setBanned(-1)
+character:takeMoney(50)
 ```
 
 ---

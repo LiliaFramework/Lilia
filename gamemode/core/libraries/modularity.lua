@@ -134,7 +134,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
     end
 
     MODULE.loading = false
-
     for k, f in pairs(MODULE) do
         if isfunction(f) then hook.Add(k, MODULE, f) end
     end

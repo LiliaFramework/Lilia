@@ -114,16 +114,12 @@ if SERVER then
     end
 
     function lia.inventory.loadAllFromCharID(charID)
-
         local originalCharID = charID
-
-        
         charID = tonumber(charID)
         if not charID then
             lia.error(L("charIDMustBeNumber") .. " (received: " .. tostring(originalCharID) .. ", type: " .. type(originalCharID) .. ")")
             return deferred.reject(L("charIDMustBeNumber"))
         end
-
         return lia.db.select({"invID"}, INV_TABLE, "charID = " .. charID):next(function(res) return deferred.map(res.results or {}, function(result) return lia.inventory.loadByID(tonumber(result.invID)) end) end)
     end
 

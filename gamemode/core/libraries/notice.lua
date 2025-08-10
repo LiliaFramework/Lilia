@@ -74,4 +74,3 @@ else
         lia.notices.notify(tostring(text))
     end
 end
-

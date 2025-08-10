@@ -14,11 +14,7 @@ function MODULE:GetDefaultCharName(client, faction, data)
         if name then return name, override ~= false end
     end
 
-    
-    if faction == FACTION_STAFF then
-        return "Staff - " .. client:SteamName(), true
-    end
-
+    if faction == FACTION_STAFF then return "Staff - " .. client:SteamName(), true end
     local baseName = data and data.name or nil
     if info and info.GetDefaultName then baseName = info:GetDefaultName(client) or baseName end
     baseName = baseName or client:SteamName()
@@ -28,9 +24,5 @@ end
 function MODULE:GetDefaultCharDesc(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.GetDefaultDesc then return info:GetDefaultDesc(client) end
-
-    
-    if faction == FACTION_STAFF then
-        return "A Staff Character, Discord: not provided, SteamID: " .. client:SteamID(), true
-    end
+    if faction == FACTION_STAFF then return "A Staff Character, Discord: not provided, SteamID: " .. client:SteamID(), true end
 end

@@ -741,7 +741,6 @@ lia.log.types = {
         func = function(client, charID) return L("logCharUnbanOffline", client:Name(), tostring(charID)) end,
         category = L("admin")
     },
-
 }
 
 function lia.log.addType(logType, func, category)

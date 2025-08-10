@@ -168,8 +168,6 @@ local function isPlaceholder(arg)
 end
 
 if SERVER then
-    
-
     function lia.command.run(client, command, arguments)
         local commandTbl = lia.command.list[command:lower()]
         if commandTbl then
@@ -189,8 +187,6 @@ if SERVER then
             end
         end
     end
-
-    
 
     function lia.command.parse(client, text, realCommand, arguments)
         if realCommand or utf8.sub(text, 1, 1) == "/" then
@@ -243,8 +239,6 @@ if SERVER then
         return false
     end
 else
-    
-
     function lia.command.openArgumentPrompt(cmdKey, missing, prefix)
         local command = lia.command.list[cmdKey]
         if not command then return end
@@ -453,8 +447,6 @@ else
             frame:Remove()
         end
     end
-
-    
 
     function lia.command.send(command, ...)
         net.Start("cmd")

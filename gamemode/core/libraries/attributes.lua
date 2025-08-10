@@ -1,6 +1,5 @@
 lia.attribs = lia.attribs or {}
 lia.attribs.list = lia.attribs.list or {}
-
 function lia.attribs.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local niceName = v:sub(1, 3) == "sh_" and v:sub(4, -5):lower() or v:sub(1, -5)
@@ -23,4 +22,3 @@ if SERVER then
         end
     end
 end
-

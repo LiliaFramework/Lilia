@@ -1,4 +1,4 @@
-﻿lia.item = lia.item or {}
+lia.item = lia.item or {}
 lia.item.base = lia.item.base or {}
 lia.item.list = lia.item.list or {}
 lia.item.instances = lia.item.instances or {}
@@ -177,54 +177,10 @@ local DefaultFunctions = {
 
 lia.meta.item.width = 1
 lia.meta.item.height = 1
---[[
-    lia.item.get
-
-    Purpose:
-        Retrieves an item definition table by its identifier, searching both base and regular item lists.
-
-    Parameters:
-        identifier (string) - The unique identifier of the item.
-
-    Returns:
-        table or nil - The item definition table if found, otherwise none.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        local itemDef = lia.item.get("weapon_ak47")
-        if itemDef then
-            print("AK47 item found:", itemDef.name)
-        end
-]]
 function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
 
---[[
-    lia.item.getItemByID
-
-    Purpose:
-        Retrieves an instanced item by its unique item ID, along with its location (inventory or world).
-
-    Parameters:
-        itemID (number) - The unique ID of the item instance.
-
-    Returns:
-        table or nil, string - Table containing the item and its location, or nil and an error message.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        local result, err = lia.item.getItemByID(1234)
-        if result then
-            print("Item found in location:", result.location)
-        else
-            print("Error:", err)
-        end
-]]
 function lia.item.getItemByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
@@ -242,29 +198,6 @@ function lia.item.getItemByID(itemID)
     }
 end
 
---[[
-    lia.item.getInstancedItemByID
-
-    Purpose:
-        Retrieves an instanced item object by its unique item ID.
-
-    Parameters:
-        itemID (number) - The unique ID of the item instance.
-
-    Returns:
-        table or nil, string - The item instance table if found, or nil and an error message.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        local item, err = lia.item.getInstancedItemByID(5678)
-        if item then
-            print("Item name:", item.name)
-        else
-            print("Error:", err)
-        end
-]]
 function lia.item.getInstancedItemByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
@@ -272,29 +205,6 @@ function lia.item.getInstancedItemByID(itemID)
     return item
 end
 
---[[
-    lia.item.getItemDataByID
-
-    Purpose:
-        Retrieves the data table of an instanced item by its unique item ID.
-
-    Parameters:
-        itemID (number) - The unique ID of the item instance.
-
-    Returns:
-        table or nil, string - The data table of the item if found, or nil and an error message.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        local data, err = lia.item.getItemDataByID(4321)
-        if data then
-            PrintTable(data)
-        else
-            print("Error:", err)
-        end
-]]
 function lia.item.getItemDataByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
@@ -302,26 +212,6 @@ function lia.item.getItemDataByID(itemID)
     return item.data
 end
 
---[[
-    lia.item.load
-
-    Purpose:
-        Loads an item definition file and registers it as a base or regular item, depending on parameters.
-
-    Parameters:
-        path (string)      - The file path to the item definition.
-        baseID (string)    - The base item ID to inherit from (optional).
-        isBaseItem (bool)  - Whether this is a base item definition (optional).
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        lia.item.load("lilia/gamemode/items/weapons/sh_ak47.lua", "base_weapons")
-]]
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua") or path:match("([_%w]+)%.lua")
     if uniqueID then
@@ -335,78 +225,14 @@ function lia.item.load(path, baseID, isBaseItem)
     end
 end
 
---[[
-    lia.item.isItem
-
-    Purpose:
-        Checks if the given object is an item instance.
-
-    Parameters:
-        object (any) - The object to check.
-
-    Returns:
-        boolean - True if the object is an item, false otherwise.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        if lia.item.isItem(myItem) then
-            print("This is a valid item instance.")
-        end
-]]
 function lia.item.isItem(object)
     return istable(object) and object.isItem
 end
 
---[[
-    lia.item.getInv
-
-    Purpose:
-        Retrieves an inventory instance by its ID.
-
-    Parameters:
-        invID (number) - The unique ID of the inventory.
-
-    Returns:
-        table or nil - The inventory instance if found, otherwise none.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        local inv = lia.item.getInv(1001)
-        if inv then
-            print("Inventory found with size:", inv:getSize())
-        end
-]]
 function lia.item.getInv(invID)
     return lia.inventory.instances[invID]
 end
 
---[[
-    lia.item.register
-
-    Purpose:
-        Registers a new item definition, either as a base or regular item, and sets up its metatable and properties.
-
-    Parameters:
-        uniqueID (string)     - The unique identifier for the item.
-        baseID (string)       - The base item ID to inherit from (optional).
-        isBaseItem (bool)     - Whether this is a base item (optional).
-        path (string)         - The file path to the item definition (optional).
-        luaGenerated (bool)   - If true, the item is generated in Lua and not loaded from file (optional).
-
-    Returns:
-        table - The registered item definition.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        local myItem = lia.item.register("custom_pistol", "base_weapons", false, "lilia/gamemode/items/weapons/sh_custom_pistol.lua")
-        print("Registered item:", myItem.uniqueID)
-]]
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     assert(isstring(uniqueID), L("itemUniqueIDString"))
     local baseTable = lia.item.base[baseID] or lia.meta.item
@@ -473,26 +299,6 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     return targetTable[itemType]
 end
 
---[[
-    lia.item.loadFromDir
-
-    Purpose:
-        Loads all item definition files from the specified directory, including base items and category folders.
-        Registers each item using lia.item.load and triggers the "InitializedItems" hook after loading.
-
-    Parameters:
-        directory (string) - The directory path to search for item files (should be relative to the gamemode).
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Load all items from the "lilia/gamemode/items" directory
-        lia.item.loadFromDir("lilia/gamemode/items")
-]]
 function lia.item.loadFromDir(directory)
     local files, folders
     files = file.Find(directory .. "/base/*.lua", "LUA")
@@ -515,26 +321,6 @@ function lia.item.loadFromDir(directory)
     hook.Run("InitializedItems")
 end
 
---[[
-    lia.item.new
-
-    Purpose:
-        Creates a new instanced item from a registered item definition and assigns it a unique ID.
-
-    Parameters:
-        uniqueID (string) - The unique identifier of the item definition.
-        id (number)       - The unique instance ID for the item.
-
-    Returns:
-        table - The new item instance.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        local item = lia.item.new("weapon_ak47", 1234)
-        print("Created item instance with ID:", item.id)
-]]
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id
     assert(isnumber(id), L("itemNonNumberID"))
@@ -557,26 +343,6 @@ function lia.item.new(uniqueID, id)
     end
 end
 
---[[
-    lia.item.registerInv
-
-    Purpose:
-        Registers a new inventory type with specified width and height, extending the GridInv metatable.
-
-    Parameters:
-        invType (string) - The unique identifier for the inventory type.
-        w (number)       - The width of the inventory grid.
-        h (number)       - The height of the inventory grid.
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        lia.item.registerInv("backpack", 4, 4)
-]]
 function lia.item.registerInv(invType, w, h)
     local GridInv = FindMetaTable("GridInv")
     assert(GridInv, L("gridInvNotFound"))
@@ -593,28 +359,6 @@ function lia.item.registerInv(invType, w, h)
     inventory:register(invType)
 end
 
---[[
-    lia.item.newInv
-
-    Purpose:
-        Creates a new inventory instance of a given type for a specified owner, and calls a callback when ready.
-
-    Parameters:
-        owner (number)         - The character ID of the owner.
-        invType (string)       - The inventory type identifier.
-        callback (function)    - Function to call with the created inventory (optional).
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        lia.item.newInv(1, "backpack", function(inv)
-            print("New backpack inventory created for char 1:", inv.id)
-        end)
-]]
 function lia.item.newInv(owner, invType, callback)
     lia.inventory.instance(invType, {
         char = owner
@@ -633,27 +377,6 @@ function lia.item.newInv(owner, invType, callback)
     end)
 end
 
---[[
-    lia.item.createInv
-
-    Purpose:
-        Creates a new inventory instance with specified width, height, and ID, and registers it globally.
-
-    Parameters:
-        w (number)   - The width of the inventory grid.
-        h (number)   - The height of the inventory grid.
-        id (number)  - The unique ID for the inventory instance.
-
-    Returns:
-        table - The created inventory instance.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        local inv = lia.item.createInv(3, 3, 2001)
-        print("Created inventory with ID:", inv.id)
-]]
 function lia.item.createInv(w, h, id)
     local GridInv = FindMetaTable("GridInv")
     assert(GridInv, L("gridInvNotFound"))
@@ -749,75 +472,14 @@ lia.item.holdTypeSizeMapping = {
     }
 }
 
---[[
-    lia.item.addWeaponOverride
-
-    Purpose:
-        Adds or updates a weapon override for a specific weapon class, customizing its item properties.
-
-    Parameters:
-        className (string) - The weapon class name.
-        data (table)       - Table of override properties (e.g., name, desc, model, etc).
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        lia.item.addWeaponOverride("weapon_custom", {
-            name = "Custom Blaster",
-            desc = "A unique blaster weapon.",
-            model = "models/weapons/w_blaster.mdl"
-        })
-]]
 function lia.item.addWeaponOverride(className, data)
     lia.item.WeaponOverrides[className] = data
 end
 
---[[
-    lia.item.addWeaponToBlacklist
-
-    Purpose:
-        Adds a weapon class to the blacklist, preventing it from being auto-generated as an item.
-
-    Parameters:
-        className (string) - The weapon class name to blacklist.
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        lia.item.addWeaponToBlacklist("weapon_physcannon")
-]]
 function lia.item.addWeaponToBlacklist(className)
     lia.item.WeaponsBlackList[className] = true
 end
 
---[[
-    lia.item.generateWeapons
-
-    Purpose:
-        Automatically generates item definitions for all weapons found in the game's weapon list,
-        except those blacklisted or with "_base" in their class name. Applies any registered overrides.
-
-    Parameters:
-        None.
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        -- Generate all weapon items (usually called automatically)
-        lia.item.generateWeapons()
-]]
 function lia.item.generateWeapons()
     for _, wep in ipairs(weapons.GetList()) do
         local className = wep.ClassName
@@ -844,34 +506,6 @@ function lia.item.generateWeapons()
 end
 
 if SERVER then
-    --[[
-        lia.item.setItemDataByID
-
-        Purpose:
-            Sets a specific data key-value pair for an instanced item by its ID, optionally syncing to receivers.
-
-        Parameters:
-            itemID (number)      - The unique ID of the item instance.
-            key (string)         - The data key to set.
-            value (any)          - The value to assign.
-            receivers (table)    - List of players to sync to (optional).
-            noSave (bool)        - If true, do not save to database (optional).
-            noCheckEntity (bool) - If true, skip entity checks (optional).
-
-        Returns:
-            boolean, string - True on success, or false and an error message.
-
-        Realm:
-            Server.
-
-        Example Usage:
-            local success, err = lia.item.setItemDataByID(1234, "durability", 80)
-            if success then
-                print("Durability updated!")
-            else
-                print("Error:", err)
-            end
-    ]]
     function lia.item.setItemDataByID(itemID, key, value, receivers, noSave, noCheckEntity)
         assert(isnumber(itemID), L("itemIDNumberRequired"))
         assert(isstring(key), L("itemKeyString"))
@@ -881,31 +515,6 @@ if SERVER then
         return true
     end
 
-    --[[
-        lia.item.instance
-
-        Purpose:
-            Creates a new item instance in the database and in memory, optionally calling a callback when ready.
-
-        Parameters:
-            index (number|string)   - Inventory ID or uniqueID (see usage).
-            uniqueID (string)       - The unique identifier of the item definition.
-            itemData (table)        - Table of item data (optional).
-            x (number)              - X position in inventory (optional).
-            y (number)              - Y position in inventory (optional).
-            callback (function)     - Function to call with the created item (optional).
-
-        Returns:
-            deferred - A deferred object that resolves to the created item.
-
-        Realm:
-            Server.
-
-        Example Usage:
-            lia.item.instance(0, "weapon_ak47", {durability = 100}, 1, 1, function(item)
-                print("Spawned AK47 item with ID:", item.id)
-            end)
-    ]]
     function lia.item.instance(index, uniqueID, itemData, x, y, callback)
         if isstring(index) and (istable(uniqueID) or itemData == nil and x == nil) then
             itemData = uniqueID
@@ -960,24 +569,6 @@ if SERVER then
         return d
     end
 
-    --[[
-        lia.item.deleteByID
-
-        Purpose:
-            Deletes an item instance by its ID, removing it from memory and the database.
-
-        Parameters:
-            id (number) - The unique ID of the item instance.
-
-        Returns:
-            None.
-
-        Realm:
-            Server.
-
-        Example Usage:
-            lia.item.deleteByID(1234)
-    ]]
     function lia.item.deleteByID(id)
         if lia.item.instances[id] then
             lia.item.instances[id]:delete()
@@ -986,24 +577,6 @@ if SERVER then
         end
     end
 
-    --[[
-        lia.item.loadItemByID
-
-        Purpose:
-            Loads one or more item instances from the database by their IDs and restores them in memory.
-
-        Parameters:
-            itemIndex (number|table) - A single item ID or a table of item IDs.
-
-        Returns:
-            None.
-
-        Realm:
-            Server.
-
-        Example Usage:
-            lia.item.loadItemByID({1001, 1002, 1003})
-    ]]
     function lia.item.loadItemByID(itemIndex)
         local range
         if istable(itemIndex) then
@@ -1033,30 +606,6 @@ if SERVER then
         end)
     end
 
-    --[[
-        lia.item.spawn
-
-        Purpose:
-            Spawns a new item instance in the world at a given position and angle, optionally calling a callback.
-
-        Parameters:
-            uniqueID (string)      - The unique identifier of the item definition.
-            position (Vector)      - The world position to spawn the item at.
-            callback (function)    - Function to call with the spawned item (optional).
-            angles (Angle)         - The angles to spawn the item with (optional).
-            data (table)           - Table of item data (optional).
-
-        Returns:
-            deferred - A deferred object that resolves to the spawned item.
-
-        Realm:
-            Server.
-
-        Example Usage:
-            lia.item.spawn("weapon_ak47", Vector(0,0,0), function(item)
-                print("Spawned AK47 at origin with ID:", item.id)
-            end)
-    ]]
     function lia.item.spawn(uniqueID, position, callback, angles, data)
         local d
         if not isfunction(callback) then
@@ -1076,29 +625,6 @@ if SERVER then
         return d
     end
 
-    --[[
-        lia.item.restoreInv
-
-        Purpose:
-            Restores an inventory by its ID, setting its width and height, and calls a callback when ready.
-
-        Parameters:
-            invID (number)      - The unique ID of the inventory.
-            w (number)          - The width to set.
-            h (number)          - The height to set.
-            callback (function) - Function to call with the restored inventory (optional).
-
-        Returns:
-            None.
-
-        Realm:
-            Server.
-
-        Example Usage:
-            lia.item.restoreInv(1001, 4, 4, function(inv)
-                print("Restored inventory with size:", inv:getSize())
-            end)
-    ]]
     function lia.item.restoreInv(invID, w, h, callback)
         lia.inventory.loadByID(invID):next(function(inventory)
             if not inventory then return end

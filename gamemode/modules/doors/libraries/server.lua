@@ -197,6 +197,7 @@ function MODULE:KeyLock(client, door, time)
         lia.log.add(client, "cheaterAction", L("cheaterActionLockDoor"))
         return
     end
+
     if hook.Run("CanPlayerLock", client, door) == false then return end
     local distance = client:GetPos():Distance(door:GetPos())
     local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
@@ -213,6 +214,7 @@ function MODULE:KeyUnlock(client, door, time)
         lia.log.add(client, "cheaterAction", L("cheaterActionUnlockDoor"))
         return
     end
+
     if hook.Run("CanPlayerUnlock", client, door) == false then return end
     local distance = client:GetPos():Distance(door:GetPos())
     local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
@@ -229,6 +231,7 @@ function MODULE:ToggleLock(client, door, state)
         lia.log.add(client, "cheaterAction", state and L("cheaterActionLockDoor") or L("cheaterActionUnlockDoor"))
         return
     end
+
     if door:isDoor() then
         local partner = door:getDoorPartner()
         if state then

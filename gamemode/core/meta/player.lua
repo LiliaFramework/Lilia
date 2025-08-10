@@ -3,44 +3,10 @@ local vectorMeta = FindMetaTable("Vector")
 do
     playerMeta.steamName = playerMeta.steamName or playerMeta.Name
     playerMeta.SteamName = playerMeta.steamName
-    --[[
-    getChar
-
-    Purpose:
-        Returns the current character of the player.
-
-    Returns:
-        Character or nil - The player's current character, or nil if no character is loaded.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        local char = player:getChar()
-        if char then
-            print("Character name: " .. char:getName())
-        end
-]]
     function playerMeta:getChar()
         return lia.char.getCharacter(self.getNetVar(self, "char"), self)
     end
 
-    --[[
-    Name
-
-    Purpose:
-        Returns the display name of the player, either their character name or Steam name.
-
-    Returns:
-        string - The player's display name.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        local name = player:Name()
-        print("Player name: " .. name)
-]]
     function playerMeta:Name()
         local character = self.getChar(self)
         return character and character.getName(character) or self.steamName(self)
@@ -51,134 +17,30 @@ do
     playerMeta.GetName = playerMeta.Name
 end
 
---[[
-    hasPrivilege
-
-    Purpose:
-        Checks if the player has the specified privilege.
-
-    Parameters:
-        privilegeName (string) - The name of the privilege to check.
-
-    Returns:
-        boolean - True if the player has the privilege, false otherwise.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        if player:hasPrivilege("admin") then
-            print("Player has admin privileges")
-        end
-]]
 function playerMeta:hasPrivilege(privilegeName)
     local override = hook.Run("PlayerHasPrivilege", self, privilegeName)
     if override ~= nil then return override end
     return lia.administrator.hasAccess(self, privilegeName)
 end
 
---[[
-    getCurrentVehicle
-
-    Purpose:
-        Returns the player's currently occupied vehicle entity.
-
-    Returns:
-        Entity or nil - The vehicle entity the player is in, or nil if not in a vehicle.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        local vehicle = player:getCurrentVehicle()
-        if vehicle then
-            print("Player is in vehicle: " .. vehicle:GetClass())
-        end
-]]
 function playerMeta:getCurrentVehicle()
     local vehicle = self:GetVehicle()
     if vehicle and IsValid(vehicle) then return vehicle end
     return nil
 end
 
---[[
-    hasValidVehicle
-
-    Purpose:
-        Checks if the player has a valid vehicle.
-
-    Returns:
-        boolean - True if the player has a valid vehicle, false otherwise.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        if player:hasValidVehicle() then
-            print("Player is in a vehicle")
-        end
-]]
 function playerMeta:hasValidVehicle()
     return IsValid(self:getCurrentVehicle())
 end
 
---[[
-    isNoClipping
-
-    Purpose:
-        Checks if the player is currently nocliping.
-
-    Returns:
-        boolean - True if the player is nocliping, false otherwise.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        if player:isNoClipping() then
-            print("Player is nocliping")
-        end
-]]
 function playerMeta:isNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP and not self:hasValidVehicle()
 end
 
---[[
-    hasRagdoll
-
-    Purpose:
-        Checks if the player has a ragdoll.
-
-    Returns:
-        boolean - True if the player has a ragdoll, false otherwise.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        if player:hasRagdoll() then
-            print("Player has a ragdoll")
-        end
-]]
 function playerMeta:hasRagdoll()
     return IsValid(self.liaRagdoll)
 end
 
---[[
-    removeRagdoll
-
-    Purpose:
-        Removes the player's ragdoll if one exists.
-
-    Returns:
-        None.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        player:removeRagdoll()
-]]
 function playerMeta:removeRagdoll()
     if not self:hasRagdoll() then return end
     local ragdoll = self:getRagdoll()
@@ -187,24 +49,6 @@ function playerMeta:removeRagdoll()
     self:setLocalVar("blur", nil)
 end
 
---[[
-    getRagdoll
-
-    Purpose:
-        Returns the player's ragdoll entity if one exists.
-
-    Returns:
-        Entity or nil - The ragdoll entity, or nil if no ragdoll exists.
-
-    Realm:
-        Shared.
-
-    Example Usage:
-        local ragdoll = player:getRagdoll()
-        if ragdoll then
-            print("Player has a ragdoll")
-        end
-]]
 function playerMeta:getRagdoll()
     if not self:hasRagdoll() then return end
     return self.liaRagdoll

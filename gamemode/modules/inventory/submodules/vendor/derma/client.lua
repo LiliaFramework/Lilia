@@ -339,10 +339,7 @@ function PANEL:applyCategoryFilter()
     for id in SortedPairs(data) do
         local itm = lia.item.list[id]
         local cat = itm and itm:getCategory()
-        if cat then
-            cat = cat:sub(1, 1):upper() .. cat:sub(2)
-        end
-
+        if cat then cat = cat:sub(1, 1):upper() .. cat:sub(2) end
         if not self.currentCategory or self.currentCategory == L("vendorShowAll") or cat == self.currentCategory then
             local mode = liaVendorEnt:getTradeMode(id)
             if mode ~= VENDOR_BUYONLY then self:updateItem(id, "vendor") end

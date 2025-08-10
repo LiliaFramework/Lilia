@@ -124,12 +124,12 @@ function MODULE:CreateMenuButtons(tabs)
             return an < bn
         end)
 
-                    for _, page in ipairs(pages) do
-                local panel = sheet:Add("DPanel")
-                panel:Dock(FILL)
-                panel.Paint = function() end
-                page.drawFunc(panel)
-                sheet:AddSheet(L(page.name), panel)
+        for _, page in ipairs(pages) do
+            local panel = sheet:Add("DPanel")
+            panel:Dock(FILL)
+            panel.Paint = function() end
+            page.drawFunc(panel)
+            sheet:AddSheet(L(page.name), panel)
         end
     end
 

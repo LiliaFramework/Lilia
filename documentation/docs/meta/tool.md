@@ -2,57 +2,30 @@
 
 The ToolGun interacts with the world through specialized meta functions.
 
-This guide lists utilities for object manipulation and ghost entity management.
-
----
-
-## Overview
-
-Tool meta functions track hovered entities, create ghost previews, and wrap common building operations.
-
-They ensure consistent behavior across custom tools in Lilia.
-
 ---
 
 ### Create
 
 **Purpose**
 
-Creates a new tool object with default values.
-
-The returned table includes:
-
-* `Mode`: `nil`
-* `SWEP`: `nil`
-* `Owner`: `nil`
-* `ClientConVar`: `{}`
-* `ServerConVar`: `{}`
-* `Objects`: `{}`
-* `Stage`: `0`
-* `Message`: `L("start")`
-* `LastMessage`: `0`
-* `AllowedCVar`: `0`
+Creates a new tool object with default properties and metatable.
 
 **Parameters**
 
 * None
 
+**Returns**
+
+* table - The new tool object.
+
 **Realm**
 
 `Shared`
 
-**Returns**
-
-* table: The newly created tool object.
-
 **Example Usage**
 
 ```lua
--- Create a new tool instance and configure it
-local tool = ToolGunMeta:Create()
-tool.Mode = "lia_dooredit"
-tool.SWEP = weapon -- weapon variable from your SWEP
-tool.Owner = client -- client that spawned the tool
+local tool = toolGunMeta:Create()
 ```
 
 ---
@@ -61,33 +34,25 @@ tool.Owner = client -- client that spawned the tool
 
 **Purpose**
 
-Creates client and server ConVars for this tool.
-
-Client-side, every entry in `ClientConVar` becomes a persistent
-convar named `<mode>_<cvar>` with its default value.
-
-Server-side, a convar named `toolmode_allow_<mode>` is created with a
-default value of `1` and stored in `self.AllowedCVar`.
+Creates client and server console variables for the tool mode.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `None`: This function does not return a value.
 
+**Realm**
+
+`Shared`
+
 **Example Usage**
 
 ```lua
--- Ensure console variables exist for configuration
 tool:CreateConVars()
 ```
-
 
 ---
 
@@ -95,26 +60,24 @@ tool:CreateConVars()
 
 **Purpose**
 
-Placeholder for updating tool data. Override in specific tools.
+Updates tool data. Intended to be overridden by specific tool implementations.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `None`: This function does not return a value.
 
+**Realm**
+
+`Shared`
+
 **Example Usage**
 
 ```lua
-function TOOL:UpdateData()
-    self.Stage = 1
-end
+tool:UpdateData()
 ```
 
 ---
@@ -123,26 +86,24 @@ end
 
 **Purpose**
 
-Placeholder to freeze player movement while using the tool.
+Freezes movement for the tool. Intended to be overridden by specific tool implementations.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `None`: This function does not return a value.
 
+**Realm**
+
+`Shared`
+
 **Example Usage**
 
 ```lua
-function TOOL:FreezeMovement()
-    return true -- stop movement
-end
+tool:FreezeMovement()
 ```
 
 ---
@@ -151,26 +112,24 @@ end
 
 **Purpose**
 
-Draws custom HUD information for the tool.
+Draws the tool's HUD. Intended to be overridden by specific tool implementations.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `None`: This function does not return a value.
 
+**Realm**
+
+`Client`
+
 **Example Usage**
 
 ```lua
-function TOOL:DrawHUD()
-    draw.SimpleText("Using tool", "DermaDefault", 8, 8, color_white)
-end
+tool:DrawHUD()
 ```
 
 ---
@@ -179,25 +138,24 @@ end
 
 **Purpose**
 
-Returns the server ConVar for the given property.
+Retrieves the server convar for the given property and current tool mode.
 
 **Parameters**
 
-* `property` (*string*): Property name.
+* property (string) - The property name.
+
+**Returns**
+
+* ConVar - The server convar object.
 
 **Realm**
 
 `Shared`
 
-**Returns**
-
-* ConVar: The server ConVar object.
-
 **Example Usage**
 
 ```lua
--- Check if the server allows using this tool
-local allow = tool:GetServerInfo("allow_use"):GetBool()
+local cvar = tool:GetServerInfo("allow")
 ```
 
 ---
@@ -206,25 +164,24 @@ local allow = tool:GetServerInfo("allow_use"):GetBool()
 
 **Purpose**
 
-Returns a table of client ConVars prefixed by the tool mode.
+Builds a table of client convars for the current tool mode.
 
 **Parameters**
 
 * None
 
+**Returns**
+
+* table - Table of convar names and their default values.
+
 **Realm**
 
 `Shared`
 
-**Returns**
-
-* table: Table of convars.
-
 **Example Usage**
 
 ```lua
--- Get a table of client ConVars for networking
-local cvars = tool:BuildConVarList()
+local convars = tool:BuildConVarList()
 ```
 
 ---
@@ -233,25 +190,24 @@ local cvars = tool:BuildConVarList()
 
 **Purpose**
 
-Retrieves a client ConVar value as a string.
+Gets the value of a client convar for the tool's owner.
 
 **Parameters**
 
-* `property` (*string*): ConVar name without mode prefix.
+* property (string) - The property name.
+
+**Returns**
+
+* string - The value of the client convar.
 
 **Realm**
 
 `Shared`
 
-**Returns**
-
-* string: The value stored in the ConVar.
-
 **Example Usage**
 
 ```lua
--- Get the client's chosen material from a ConVar
-local mat = tool:GetClientInfo("material")
+local value = tool:GetClientInfo("someproperty")
 ```
 
 ---
@@ -260,27 +216,25 @@ local mat = tool:GetClientInfo("material")
 
 **Purpose**
 
-Retrieves a numeric client ConVar value.
+Gets the numeric value of a client convar for the tool's owner.
 
 **Parameters**
 
-* `property` (*string*): ConVar name without mode prefix.
+* property (string) - The property name.
+* default (number) - The default value if the convar is not set.
 
-* `default` (*number*): Value returned if the ConVar doesn't exist. Converted to a number and falling back to `0` if not provided or non-numeric.
+**Returns**
+
+* number - The numeric value of the client convar.
 
 **Realm**
 
 `Shared`
 
-**Returns**
-
-* number: The numeric value of the ConVar or the provided default.
-
 **Example Usage**
 
 ```lua
--- Read the numeric power setting with a fallback
-local power = tool:GetClientNumber("power", 10)
+local num = tool:GetClientNumber("someproperty", 1)
 ```
 
 ---
@@ -289,28 +243,24 @@ local power = tool:GetClientNumber("power", 10)
 
 **Purpose**
 
-Determines whether this tool is allowed to be used.
+Checks if the tool mode is allowed on the server.
 
 **Parameters**
 
 * None
 
+**Returns**
+
+* boolean - True if allowed, false otherwise.
+
 **Realm**
 
 `Shared`
 
-**Returns**
-
-* boolean: `true` on the client. On the server, the value of `self.AllowedCVar`.
-
 **Example Usage**
 
 ```lua
--- Gate tool usage behind an admin check
-function TOOL:Allowed()
-    if CLIENT then return true end
-    return self.AllowedCVar:GetBool() and self:GetOwner():IsAdmin()
-end
+if tool:Allowed() then ... end
 ```
 
 ---
@@ -319,27 +269,24 @@ end
 
 **Purpose**
 
-Placeholder for tool initialization.
+Initializes the tool. Intended to be overridden by specific tool implementations.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `None`: This function does not return a value.
 
+**Realm**
+
+`Shared`
+
 **Example Usage**
 
 ```lua
-function TOOL:Init()
-    self.Stage = 1
-    self:CreateConVars()
-end
+tool:Init()
 ```
 
 ---
@@ -348,25 +295,24 @@ end
 
 **Purpose**
 
-Gets the current tool mode string.
+Returns the current tool mode.
 
 **Parameters**
 
 * None
 
+**Returns**
+
+* string - The tool mode.
+
 **Realm**
 
 `Shared`
 
-**Returns**
-
-* string: Tool mode name.
-
 **Example Usage**
 
 ```lua
--- Retrieve the tool's active mode string
-local result = tool:GetMode()
+local mode = tool:GetMode()
 ```
 
 ---
@@ -375,25 +321,24 @@ local result = tool:GetMode()
 
 **Purpose**
 
-Returns the SWEP associated with this tool.
+Returns the SWEP (Scripted Weapon) associated with the tool.
 
 **Parameters**
 
 * None
 
+**Returns**
+
+* SWEP - The SWEP object.
+
 **Realm**
 
 `Shared`
 
-**Returns**
-
-* SWEP: The tool's weapon entity.
-
 **Example Usage**
 
 ```lua
--- Obtain the weapon entity representing this tool
-local result = tool:GetSWEP()
+local swep = tool:GetSWEP()
 ```
 
 ---
@@ -402,29 +347,24 @@ local result = tool:GetSWEP()
 
 **Purpose**
 
-Returns the player who owns the associated weapon.
-
-Internally it retrieves `self:GetSWEP().Owner` and falls back to
-`self:GetOwner()` if that is unavailable.
+Returns the owner of the tool.
 
 **Parameters**
 
 * None
 
+**Returns**
+
+* Player - The owner of the tool.
+
 **Realm**
 
 `Shared`
 
-**Returns**
-
-* Player: Owner of the tool or `nil` if unavailable.
-
 **Example Usage**
 
 ```lua
--- Reference the player who deployed the tool
 local owner = tool:GetOwner()
-print(owner:Name())
 ```
 
 ---
@@ -433,25 +373,180 @@ print(owner:Name())
 
 **Purpose**
 
-Retrieves the weapon entity this tool is attached to.
+Returns the weapon associated with the tool.
 
 **Parameters**
 
 * None
 
+**Returns**
+
+* Weapon - The weapon object.
+
 **Realm**
 
 `Shared`
 
+**Example Usage**
+
+```lua
+local weapon = tool:GetWeapon()
+```
+
+---
+
+### LeftClick
+
+**Purpose**
+
+Handles the left click action for the tool. Intended to be overridden.
+
+**Parameters**
+
+* None
+
 **Returns**
 
-* Weapon: The weapon object.
+* boolean - Whether the action was successful.
+
+**Realm**
+
+`Shared`
 
 **Example Usage**
 
 ```lua
--- Access the underlying weapon object
-local result = tool:GetWeapon()
+tool:LeftClick()
+```
+
+---
+
+### RightClick
+
+**Purpose**
+
+Handles the right click action for the tool. Intended to be overridden.
+
+**Parameters**
+
+* None
+
+**Returns**
+
+* boolean - Whether the action was successful.
+
+**Realm**
+
+`Shared`
+
+**Example Usage**
+
+```lua
+tool:RightClick()
+```
+
+---
+
+### Reload
+
+**Purpose**
+
+Handles the reload action for the tool, clearing all objects.
+
+**Parameters**
+
+* None
+
+**Returns**
+
+* `None`: This function does not return a value.
+
+**Realm**
+
+`Shared`
+
+**Example Usage**
+
+```lua
+tool:Reload()
+```
+
+---
+
+### Deploy
+
+**Purpose**
+
+Handles the deploy action for the tool, releasing the ghost entity.
+
+**Parameters**
+
+* None
+
+**Returns**
+
+* `None`: This function does not return a value.
+
+**Realm**
+
+`Shared`
+
+**Example Usage**
+
+```lua
+tool:Deploy()
+```
+
+---
+
+### Holster
+
+**Purpose**
+
+Handles the holster action for the tool, releasing the ghost entity.
+
+**Parameters**
+
+* None
+
+**Returns**
+
+* `None`: This function does not return a value.
+
+**Realm**
+
+`Shared`
+
+**Example Usage**
+
+```lua
+tool:Holster()
+```
+
+---
+
+### Think
+
+**Purpose**
+
+Called every frame, releases the ghost entity.
+
+**Parameters**
+
+* None
+
+**Returns**
+
+* `None`: This function does not return a value.
+
+**Realm**
+
+`Shared`
+
+**Example Usage**
+
+```lua
+tool:Think()
 ```
 
 ---
@@ -460,24 +555,23 @@ local result = tool:GetWeapon()
 
 **Purpose**
 
-Validates stored objects and clears them if invalid.
+Checks the validity of objects in the tool's object list and clears them if invalid.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `None`: This function does not return a value.
 
+**Realm**
+
+`Shared`
+
 **Example Usage**
 
 ```lua
--- Validate all stored objects each tick
 tool:CheckObjects()
 ```
 
@@ -487,24 +581,23 @@ tool:CheckObjects()
 
 **Purpose**
 
-Removes all stored objects from the tool.
+Clears the tool's object list.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `None`: This function does not return a value.
 
+**Realm**
+
+`Shared`
+
 **Example Usage**
 
 ```lua
--- Remove any objects the tool is storing
 tool:ClearObjects()
 ```
 
@@ -514,25 +607,23 @@ tool:ClearObjects()
 
 **Purpose**
 
-Removes the ghost entity used for previewing placements.
+Removes the ghost entity if it exists.
 
 **Parameters**
 
 * None
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `None`: This function does not return a value.
 
+**Realm**
+
+`Shared`
+
 **Example Usage**
 
 ```lua
--- Remove the placement preview entity
 tool:ReleaseGhostEntity()
 ```
 
----

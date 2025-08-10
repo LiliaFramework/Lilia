@@ -33,9 +33,7 @@ else
             local message = net.ReadString()
             if message == "" then
                 d:resolve()
-                lia.char.getCharacter(id, nil, function(character)
-                    hook.Run("CharLoaded", character)
-                end)
+                lia.char.getCharacter(id, nil, function(character) hook.Run("CharLoaded", character) end)
             else
                 d:reject(message)
             end
@@ -112,28 +110,20 @@ else
         end
     end
 
-    
     net.Receive("liaStaffDiscordPrompt", function()
-        Derma_StringRequest(
-            "Staff Character Setup",
-            "Please enter your Discord username for your staff character description:",
-            "",
-            function(discord)
-                if discord and discord:Trim() ~= "" then
-                    net.Start("liaStaffDiscordResponse")
-                    net.WriteString(discord:Trim())
-                    net.SendToServer()
-                else
-                    LocalPlayer():notify("Discord username cannot be empty!")
-                end
-            end,
-            function()
-                
+        Derma_StringRequest("Staff Character Setup", "Please enter your Discord username for your staff character description:", "", function(discord)
+            if discord and discord:Trim() ~= "" then
                 net.Start("liaStaffDiscordResponse")
-                net.WriteString("not provided")
+                net.WriteString(discord:Trim())
                 net.SendToServer()
+            else
+                LocalPlayer():notify("Discord username cannot be empty!")
             end
-        )
+        end, function()
+            net.Start("liaStaffDiscordResponse")
+            net.WriteString("not provided")
+            net.SendToServer()
+        end)
     end)
 end
 
@@ -150,28 +140,20 @@ function MODULE:CanPlayerCreateChar(client)
     end
 end
 
-
 function MODULE:GetMaxPlayerChar(client)
     local maxChars = lia.config.get("MaxCharacters")
     if SERVER then
-        
         local staffCount = 0
         for _, charID in pairs(client.liaCharList or {}) do
             local character = lia.char.getCharacter(charID)
-            if character and character:getFaction() == FACTION_STAFF then
-                staffCount = staffCount + 1
-            end
+            if character and character:getFaction() == FACTION_STAFF then staffCount = staffCount + 1 end
         end
-        
         return maxChars + staffCount
     else
-        
         local staffCount = 0
         for _, charID in pairs(lia.characters or {}) do
             local character = lia.char.getCharacter(charID)
-            if character and character:getFaction() == FACTION_STAFF then
-                staffCount = staffCount + 1
-            end
+            if character and character:getFaction() == FACTION_STAFF then staffCount = staffCount + 1 end
         end
         return maxChars + staffCount
     end

@@ -161,9 +161,7 @@ net.Receive("liaCharacterInvList", function()
         inventories[i] = lia.inventory.instances[net.ReadType()]
     end
 
-    lia.char.getCharacter(charID, nil, function(character)
-        if character then character.vars.inv = inventories end
-    end)
+    lia.char.getCharacter(charID, nil, function(character) if character then character.vars.inv = inventories end end)
 end)
 
 net.Receive("liaItemDelete", function()
@@ -265,9 +263,7 @@ net.Receive("attrib", function()
     local id = net.ReadUInt(32)
     local key = net.ReadString()
     local value = net.ReadType()
-    lia.char.getCharacter(id, nil, function(character)
-        if character then character:getAttribs()[key] = value end
-    end)
+    lia.char.getCharacter(id, nil, function(character) if character then character:getAttribs()[key] = value end end)
 end)
 
 net.Receive("nVar", function()
@@ -320,10 +316,7 @@ net.Receive("OpenInvMenu", function()
     myInventoryDerma:MoveLeftOf(inventoryDerma, 4)
 end)
 
-lia.net.readBigTable("SendTableUI", function(data)
-    lia.util.CreateTableUI(data.title, data.columns, data.data, data.options, data.characterID)
-end)
-
+lia.net.readBigTable("SendTableUI", function(data) lia.util.CreateTableUI(data.title, data.columns, data.data, data.options, data.characterID) end)
 net.Receive("OptionsRequest", function()
     local titleKey = net.ReadString()
     local subTitleKey = net.ReadString()

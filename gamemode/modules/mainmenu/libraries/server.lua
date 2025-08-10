@@ -3,9 +3,7 @@ function MODULE:PlayerLiliaDataLoaded(client)
         if not IsValid(client) then return end
         lia.information(L("loadedCharacters", table.concat(charList, ", "), client:Name()))
         for _, v in ipairs(charList) do
-            lia.char.getCharacter(v, client, function(character)
-                if character then character:sync(client) end
-            end)
+            lia.char.getCharacter(v, client, function(character) if character then character:sync(client) end end)
         end
 
         for _, v in player.Iterator() do

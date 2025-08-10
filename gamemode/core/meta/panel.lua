@@ -1,5 +1,4 @@
 local panelMeta = FindMetaTable("Panel")
-
 function panelMeta:liaListenForInventoryChanges(inventory)
     assert(inventory, L("noInventorySet"))
     local id = inventory:getID()
@@ -66,4 +65,3 @@ end
 function panelMeta:SetScaledSize(w, h)
     self:SetSize(ScreenScale(w), ScreenScaleH(h))
 end
-
