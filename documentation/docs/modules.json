@@ -1,10 +1,10 @@
 [
   {
-    "name": "moduleName",
+    "name": "advertModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.19",
+    "description": "advertModuleDesc",
+    "version": "1.20",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/advert.zip",
     "source": "https://liliaframework.github.io/Modules/advert.html",
     "public_uniqueID": "advert",
@@ -18,11 +18,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "alcoholismModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.21",
+    "description": "alcoholismModuleDesc",
+    "version": "1.22",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/alcoholism.zip",
     "source": "https://liliaframework.github.io/Modules/alcoholism.html",
     "public_uniqueID": "alcoholism",
@@ -36,11 +36,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "autorestarterModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.17",
+    "description": "autorestarterModuleDesc",
+    "version": "1.18",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/autorestarter.zip",
     "source": "https://liliaframework.github.io/Modules/autorestarter.html",
     "public_uniqueID": "autorestarter",
@@ -54,11 +54,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "bodygrouperModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.28",
+    "description": "bodygrouperModuleDesc",
+    "version": "1.29",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/bodygrouper.zip",
     "source": "https://liliaframework.github.io/Modules/bodygrouper.html",
     "public_uniqueID": "bodygrouper",
@@ -72,11 +72,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "broadcastsModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.25",
+    "description": "broadcastsModuleDesc",
+    "version": "1.26",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/broadcasts.zip",
     "source": "https://liliaframework.github.io/Modules/broadcasts.html",
     "public_uniqueID": "broadcasts",
@@ -84,11 +84,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "captionsModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.20",
+    "description": "captionsModuleDesc",
+    "version": "1.21",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/captions.zip",
     "source": "https://liliaframework.github.io/Modules/captions.html",
     "public_uniqueID": "captions",
@@ -102,11 +102,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "cardsModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.15",
+    "description": "cardsModuleDesc",
+    "version": "1.16",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cards.zip",
     "source": "https://liliaframework.github.io/Modules/cards.html",
     "public_uniqueID": "cards",
@@ -120,11 +120,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "chatmessagesModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.17",
+    "description": "chatmessagesModuleDesc",
+    "version": "1.18",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/chatmessages.zip",
     "source": "https://liliaframework.github.io/Modules/chatmessages.html",
     "public_uniqueID": "chatmessages",
@@ -170,11 +170,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "climbModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.16",
+    "description": "climbModuleDesc",
+    "version": "1.17",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/climb.zip",
     "source": "https://liliaframework.github.io/Modules/climb.html",
     "public_uniqueID": "climb",
@@ -238,11 +238,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "cursorModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.15",
+    "description": "cursorModuleDesc",
+    "version": "1.16",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cursor.zip",
     "source": "https://liliaframework.github.io/Modules/cursor.html",
     "public_uniqueID": "cursor",
@@ -274,11 +274,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "damagenumbersModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.17",
+    "description": "damagenumbersModuleDesc",
+    "version": "1.18",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/damagenumbers.zip",
     "source": "https://liliaframework.github.io/Modules/damagenumbers.html",
     "public_uniqueID": "damagenumbers",
@@ -292,11 +292,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "developmenthudModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.22",
+    "description": "developmenthudModuleDesc",
+    "version": "1.23",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/developmenthud.zip",
     "source": "https://liliaframework.github.io/Modules/developmenthud.html",
     "public_uniqueID": "developmenthud",
@@ -406,11 +406,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "firstpersoneffectsModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.16",
+    "description": "firstpersoneffectsModuleDesc",
+    "version": "1.17",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/firstpersoneffects.zip",
     "source": "https://liliaframework.github.io/Modules/firstpersoneffects.html",
     "public_uniqueID": "firstpersoneffects",
@@ -418,11 +418,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "flashlightModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.16",
+    "description": "flashlightModuleDesc",
+    "version": "1.17",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/flashlight.zip",
     "source": "https://liliaframework.github.io/Modules/flashlight.html",
     "public_uniqueID": "flashlight",
@@ -478,11 +478,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "instakillModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.18",
+    "description": "instakillModuleDesc",
+    "version": "1.19",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/instakill.zip",
     "source": "https://liliaframework.github.io/Modules/instakill.html",
     "public_uniqueID": "instakill",
@@ -520,11 +520,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "loadmessagesModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.15",
+    "description": "loadmessagesModuleDesc",
+    "version": "1.16",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loadmessages.zip",
     "source": "https://liliaframework.github.io/Modules/loadmessages.html",
     "public_uniqueID": "loadmessages",
@@ -574,11 +574,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "modelpayModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.16",
+    "description": "modelpayModuleDesc",
+    "version": "1.17",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modelpay.zip",
     "source": "https://liliaframework.github.io/Modules/modelpay.html",
     "public_uniqueID": "modelpay",
@@ -610,11 +610,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "npcdropModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.15",
+    "description": "npcdropModuleDesc",
+    "version": "1.16",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcdrop.zip",
     "source": "https://liliaframework.github.io/Modules/npcdrop.html",
     "public_uniqueID": "npcdrop",
@@ -696,11 +696,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "realisticdamageModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.15",
+    "description": "realisticdamageModuleDesc",
+    "version": "1.16",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticdamage.zip",
     "source": "https://liliaframework.github.io/Modules/realisticdamage.html",
     "public_uniqueID": "realisticdamage",
@@ -708,11 +708,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "realisticviewModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.18",
+    "description": "realisticviewModuleDesc",
+    "version": "1.19",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticview.zip",
     "source": "https://liliaframework.github.io/Modules/realisticview.html",
     "public_uniqueID": "realisticview",
@@ -730,7 +730,7 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "moduleAnonymousRumorsDesc",
-    "version": "1.16",
+    "version": "1.17",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/rumour.zip",
     "source": "https://liliaframework.github.io/Modules/rumour.html",
     "public_uniqueID": "rumour",
@@ -744,11 +744,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "shootlockModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.18",
+    "description": "shootlockModuleDesc",
+    "version": "1.19",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/shootlock.zip",
     "source": "https://liliaframework.github.io/Modules/shootlock.html",
     "public_uniqueID": "shootlock",
@@ -794,11 +794,11 @@
     ]
   },
   {
-    "name": "moduleName",
+    "name": "slowweaponsModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.16",
+    "description": "slowweaponsModuleDesc",
+    "version": "1.17",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slowweapons.zip",
     "source": "https://liliaframework.github.io/Modules/slowweapons.html",
     "public_uniqueID": "slowweapons",
@@ -812,11 +812,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "stungunModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "101.21",
+    "description": "stungunModuleDesc",
+    "version": "101.22",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/stungun.zip",
     "source": "https://liliaframework.github.io/Modules/stungun.html",
     "public_uniqueID": "stungun",
@@ -868,11 +868,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "viewbobModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.18",
+    "description": "viewbobModuleDesc",
+    "version": "1.19",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/viewbob.zip",
     "source": "https://liliaframework.github.io/Modules/viewbob.html",
     "public_uniqueID": "viewbob",
@@ -880,11 +880,11 @@
     "workshop": []
   },
   {
-    "name": "moduleName",
+    "name": "vmanipModuleName",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "moduleDesc",
-    "version": "1.19",
+    "description": "vmanipModuleDesc",
+    "version": "1.20",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/vmanip.zip",
     "source": "https://liliaframework.github.io/Modules/vmanip.html",
     "public_uniqueID": "vmanip",

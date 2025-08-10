@@ -1,14 +1,14 @@
 <h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
 **Name:**
-moduleName
+vmanipModuleName
 
 **Version:**
-1.19
+1.20
 
 **Description:**
 
-moduleDesc
+vmanipModuleDesc
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 
