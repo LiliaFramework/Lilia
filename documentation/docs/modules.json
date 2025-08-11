@@ -1,9 +1,9 @@
 [
   {
-    "name": "advertModuleName",
+    "name": "Advertisements",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "advertModuleDesc",
+    "description": "Implements a paid /advert command for server-wide announcements. Messages are colored, logged, and throttled by a cooldown to curb spam.",
     "version": "1.20",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/advert.zip",
     "source": "https://liliaframework.github.io/Modules/advert.html",
@@ -18,10 +18,10 @@
     "workshop": []
   },
   {
-    "name": "alcoholismModuleName",
+    "name": "Alcoholism",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "alcoholismModuleDesc",
+    "description": "Adds drinkable alcohol that increases a player's intoxication level. High BAC blurs vision and slows movement until the effect wears off.",
     "version": "1.22",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/alcoholism.zip",
     "source": "https://liliaframework.github.io/Modules/alcoholism.html",
@@ -36,10 +36,10 @@
     "workshop": []
   },
   {
-    "name": "autorestarterModuleName",
+    "name": "Auto Restarter",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "autorestarterModuleDesc",
+    "description": "Schedules automatic server restarts at set intervals. Players see a countdown so they can prepare before the map changes.",
     "version": "1.18",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/autorestarter.zip",
     "source": "https://liliaframework.github.io/Modules/autorestarter.html",
@@ -54,10 +54,10 @@
     "workshop": []
   },
   {
-    "name": "bodygrouperModuleName",
+    "name": "Bodygroup Editor",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "bodygrouperModuleDesc",
+    "description": "Spawns a bodygroup closet where players can edit their model's bodygroups. Admins may inspect others and configure the closet's model.",
     "version": "1.29",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/bodygrouper.zip",
     "source": "https://liliaframework.github.io/Modules/bodygrouper.html",
@@ -72,10 +72,10 @@
     "workshop": []
   },
   {
-    "name": "broadcastsModuleName",
+    "name": "Broadcasts",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "broadcastsModuleDesc",
+    "description": "Allows staff to broadcast messages to chosen factions or classes. Every broadcast is logged and controlled through CAMI privileges.",
     "version": "1.26",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/broadcasts.zip",
     "source": "https://liliaframework.github.io/Modules/broadcasts.html",
@@ -84,10 +84,10 @@
     "workshop": []
   },
   {
-    "name": "captionsModuleName",
+    "name": "Captions",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "captionsModuleDesc",
+    "description": "Offers an API for timed on-screen captions suited for tutorials or story events. Captions can be triggered from the server or client and last for a chosen duration.",
     "version": "1.21",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/captions.zip",
     "source": "https://liliaframework.github.io/Modules/captions.html",
@@ -102,10 +102,10 @@
     "workshop": []
   },
   {
-    "name": "cardsModuleName",
+    "name": "Cards",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "cardsModuleDesc",
+    "description": "Adds a full deck of playing cards that can be shuffled and drawn. Card draws sync to all players for simple in-game minigames.",
     "version": "1.16",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cards.zip",
     "source": "https://liliaframework.github.io/Modules/cards.html",
@@ -120,10 +120,10 @@
     "workshop": []
   },
   {
-    "name": "chatmessagesModuleName",
+    "name": "Chat Messages",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "chatmessagesModuleDesc",
+    "description": "Periodically posts automated advert messages in chat on a timer. Keeps players informed with rotating tips even when staff are offline.",
     "version": "1.18",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/chatmessages.zip",
     "source": "https://liliaframework.github.io/Modules/chatmessages.html",
@@ -170,10 +170,10 @@
     "workshop": []
   },
   {
-    "name": "climbModuleName",
+    "name": "Climb",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "climbModuleDesc",
+    "description": "Enables simple ledge climbing with smooth animations triggered by the movement keys.",
     "version": "1.17",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/climb.zip",
     "source": "https://liliaframework.github.io/Modules/climb.html",
@@ -238,10 +238,10 @@
     "workshop": []
   },
   {
-    "name": "cursorModuleName",
+    "name": "Custom Cursor",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "cursorModuleDesc",
+    "description": "Replaces the default mouse cursor with a custom design that matches the gamemode's aesthetic.",
     "version": "1.16",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cursor.zip",
     "source": "https://liliaframework.github.io/Modules/cursor.html",
@@ -274,10 +274,10 @@
     "workshop": []
   },
   {
-    "name": "damagenumbersModuleName",
+    "name": "Damage Numbers",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "damagenumbersModuleDesc",
+    "description": "Displays floating numbers whenever you deal or receive damage. Colors and scale vary by damage type to clearly show impact.",
     "version": "1.18",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/damagenumbers.zip",
     "source": "https://liliaframework.github.io/Modules/damagenumbers.html",
@@ -292,10 +292,10 @@
     "workshop": []
   },
   {
-    "name": "developmenthudModuleName",
+    "name": "Development HUD",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "developmenthudModuleDesc",
+    "description": "Shows a staff-only HUD with live performance metrics and other development data. Access requires a CAMI privilege and can be toggled as needed.",
     "version": "1.23",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/developmenthud.zip",
     "source": "https://liliaframework.github.io/Modules/developmenthud.html",
@@ -406,10 +406,10 @@
     "workshop": []
   },
   {
-    "name": "firstpersoneffectsModuleName",
+    "name": "First Person Effects",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "firstpersoneffectsModuleDesc",
+    "description": "Adds subtle head bob and view sway to the camera for a more immersive first-person feel. Intensity can be tuned or disabled altogether.",
     "version": "1.17",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/firstpersoneffects.zip",
     "source": "https://liliaframework.github.io/Modules/firstpersoneffects.html",
@@ -418,10 +418,10 @@
     "workshop": []
   },
   {
-    "name": "flashlightModuleName",
+    "name": "Flashlight",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "flashlightModuleDesc",
+    "description": "Replaces the default flashlight with dynamic lighting and adjustable brightness.",
     "version": "1.17",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/flashlight.zip",
     "source": "https://liliaframework.github.io/Modules/flashlight.html",
@@ -478,10 +478,10 @@
     "workshop": []
   },
   {
-    "name": "instakillModuleName",
+    "name": "Instant Kill",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "instakillModuleDesc",
+    "description": "Applies high damage multipliers for headshots, making them instantly lethal. Each weapon can have its own settings.",
     "version": "1.19",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/instakill.zip",
     "source": "https://liliaframework.github.io/Modules/instakill.html",
@@ -520,10 +520,10 @@
     "workshop": []
   },
   {
-    "name": "loadmessagesModuleName",
+    "name": "Load Messages",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "loadmessagesModuleDesc",
+    "description": "Shows a faction-specific message the first time a character is loaded. Useful for welcoming players or outlining faction rules.",
     "version": "1.16",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loadmessages.zip",
     "source": "https://liliaframework.github.io/Modules/loadmessages.html",
@@ -574,10 +574,10 @@
     "workshop": []
   },
   {
-    "name": "modelpayModuleName",
+    "name": "Model Pay",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "modelpayModuleDesc",
+    "description": "Pays characters wages determined by their player model. Different models can have unique salaries and exclusions are configurable.",
     "version": "1.17",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modelpay.zip",
     "source": "https://liliaframework.github.io/Modules/modelpay.html",
@@ -610,10 +610,10 @@
     "workshop": []
   },
   {
-    "name": "npcdropModuleName",
+    "name": "NPC Drops",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "npcdropModuleDesc",
+    "description": "Sets up loot tables so specific NPCs drop items when killed. Weighted chances encourage players to search bodies after combat.",
     "version": "1.16",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcdrop.zip",
     "source": "https://liliaframework.github.io/Modules/npcdrop.html",
@@ -696,10 +696,10 @@
     "workshop": []
   },
   {
-    "name": "realisticdamageModuleName",
+    "name": "Realistic Damage",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "realisticdamageModuleDesc",
+    "description": "Scales damage based on hit body parts and applies other tweaks for realistic combat.",
     "version": "1.16",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticdamage.zip",
     "source": "https://liliaframework.github.io/Modules/realisticdamage.html",
@@ -708,10 +708,10 @@
     "workshop": []
   },
   {
-    "name": "realisticviewModuleName",
+    "name": "Realistic View",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "realisticviewModuleDesc",
+    "description": "Switches to a full-body first-person camera with smooth transition effects. Works with animations and can fall back to third-person.",
     "version": "1.19",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticview.zip",
     "source": "https://liliaframework.github.io/Modules/realisticview.html",
@@ -744,10 +744,10 @@
     "workshop": []
   },
   {
-    "name": "shootlockModuleName",
+    "name": "Shoot Locks",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "shootlockModuleDesc",
+    "description": "Lets players blast door locks open with gunfire. Success chances are configurable, making it a risky breach option.",
     "version": "1.19",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/shootlock.zip",
     "source": "https://liliaframework.github.io/Modules/shootlock.html",
@@ -794,10 +794,10 @@
     ]
   },
   {
-    "name": "slowweaponsModuleName",
+    "name": "Heavy Weapon Slowdown",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "slowweaponsModuleDesc",
+    "description": "Reduces movement speed while carrying heavy weapons. Penalties are customizable per weapon and revert once the weapon is holstered.",
     "version": "1.17",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slowweapons.zip",
     "source": "https://liliaframework.github.io/Modules/slowweapons.html",
@@ -812,10 +812,10 @@
     "workshop": []
   },
   {
-    "name": "stungunModuleName",
+    "name": "Stun Gun",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "stungunModuleDesc",
+    "description": "Introduces a taser weapon that temporarily incapacitates targets. Stun time, range, and optional damage effects are fully configurable.",
     "version": "101.22",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/stungun.zip",
     "source": "https://liliaframework.github.io/Modules/stungun.html",
@@ -868,10 +868,10 @@
     "workshop": []
   },
   {
-    "name": "viewbobModuleName",
+    "name": "View Bobbing",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "viewbobModuleDesc",
+    "description": "Applies subtle camera bobbing while you move to enhance immersion. Intensity and frequency are adjustable through options.",
     "version": "1.19",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/viewbob.zip",
     "source": "https://liliaframework.github.io/Modules/viewbob.html",
@@ -880,10 +880,10 @@
     "workshop": []
   },
   {
-    "name": "vmanipModuleName",
+    "name": "Viewmodel Animations",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "vmanipModuleDesc",
+    "description": "Enables VManip animations and gestures across the framework. Items can trigger custom hand movements with fallbacks if VManip isn't installed.",
     "version": "1.20",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/vmanip.zip",
     "source": "https://liliaframework.github.io/Modules/vmanip.html",
