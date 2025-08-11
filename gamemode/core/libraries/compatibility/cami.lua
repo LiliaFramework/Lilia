@@ -1,4 +1,19 @@
-﻿local function shouldGrant(group, min)
+﻿local function getGroupLevel(group)
+    local levels = lia.administrator.DefaultGroups or {}
+    if levels[group] then return levels[group] end
+    local visited, current = {}, group
+    for _ = 1, 16 do
+        if visited[current] then break end
+        visited[current] = true
+        local g = lia.administrator.groups and lia.administrator.groups[current]
+        local inh = g and g._info and g._info.inheritance or "user"
+        if levels[inh] then return levels[inh] end
+        current = inh
+    end
+    return levels.user or 1
+end
+
+local function shouldGrant(group, min)
     local levels = lia.administrator.DefaultGroups or {}
     local m = tostring(min or "user"):lower()
     return getGroupLevel(group) >= (levels[m] or 1)
