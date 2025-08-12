@@ -4,7 +4,7 @@
 Model Pay
 
 **Version:**
-1.18
+1.19
 
 **Description:**
 

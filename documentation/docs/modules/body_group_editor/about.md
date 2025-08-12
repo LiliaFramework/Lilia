@@ -4,7 +4,7 @@
 Body Group Editor
 
 **Version:**
-1.31
+1.32
 
 **Description:**
 
