@@ -771,7 +771,7 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds an anonymous rumour chat command, hiding of the sender's identity, encouragement for roleplay intrigue, a cooldown to prevent spam, and admin logging of rumour messages.",
-    "version": "1.21",
+    "version": "1.22",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/rumour.zip",
     "source": "https://liliaframework.github.io/Modules/rumour.html",
     "public_uniqueID": "rumour",
