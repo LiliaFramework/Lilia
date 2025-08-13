@@ -8,7 +8,7 @@ A collection of player and entity utility helpers.
 
 **Purpose**
 
-Returns the squared distance from the player to the given entity.
+Returns the squared distance between the player and an entity.
 
 | Name    | Type   | Description |
 
@@ -22,12 +22,12 @@ Shared
 
 **Returns**
 
-*number*
+*number* — Squared distance in Hammer units.
 
 **Example**
 
 ```lua
-local dist = client:squaredDistanceFromEnt(ent)
+local dSqr = client:squaredDistanceFromEnt(ent)
 ```
 
 ---
@@ -36,7 +36,7 @@ local dist = client:squaredDistanceFromEnt(ent)
 
 **Purpose**
 
-Returns the distance from the player to the given entity.
+Returns the distance between the player and an entity.
 
 | Name    | Type   | Description |
 
@@ -50,7 +50,13 @@ Shared
 
 **Returns**
 
-*number*
+*number* — Distance in Hammer units.
+
+**Example**
+
+```lua
+local dist = client:distanceFromEnt(ent)
+```
 
 ---
 
@@ -58,7 +64,7 @@ Shared
 
 **Purpose**
 
-Checks whether the player is currently walking or running.
+Determines whether the player is currently walking or running.
 
 **Parameters**
 
@@ -70,7 +76,13 @@ Shared
 
 **Returns**
 
-*boolean*
+*boolean* — True if the player is moving on the ground.
+
+**Example**
+
+```lua
+if client:isMoving() then print("Player is moving") end
+```
 
 ---
 
@@ -78,7 +90,7 @@ Shared
 
 **Purpose**
 
-Determines whether the player has an unobstructed line to the sky.
+Checks whether the player has a clear line to the sky.
 
 **Parameters**
 
@@ -90,7 +102,13 @@ Shared
 
 **Returns**
 
-*boolean*
+*boolean* — True if the player is outside.
+
+**Example**
+
+```lua
+if client:isOutside() then print("It's open air above") end
+```
 
 ---
 
@@ -98,7 +116,7 @@ Shared
 
 **Purpose**
 
-Opens the given URL in the player's Steam overlay.
+Sends the player a request to open a webpage in the Steam overlay.
 
 | Name | Type   | Description |
 
@@ -113,6 +131,12 @@ Server
 **Returns**
 
 `nil`
+
+**Example**
+
+```lua
+client:openPage("https://example.com")
+```
 
 ---
 
@@ -136,13 +160,19 @@ Server
 
 `nil`
 
+**Example**
+
+```lua
+client:openUI("SomePanel")
+```
+
 ---
 
 ### Entity:getViewAngle
 
 **Purpose**
 
-Returns the absolute angle difference between the entity's view and a world position.
+Calculates the angle difference between the entity's view and a position.
 
 | Name | Type   | Description |
 
@@ -156,7 +186,13 @@ Shared
 
 **Returns**
 
-*number*
+*number* — Absolute angle difference in degrees.
+
+**Example**
+
+```lua
+local angDiff = ent:getViewAngle(Vector(0,0,0))
+```
 
 ---
 
@@ -164,7 +200,7 @@ Shared
 
 **Purpose**
 
-Checks if another entity is within this entity's field of view.
+Determines whether another entity is within this entity's field of view.
 
 | Name    | Type   | Description                         |
 
@@ -180,7 +216,13 @@ Shared
 
 **Returns**
 
-*boolean*
+*boolean* — True if the target is within the FOV.
+
+**Example**
+
+```lua
+if ent:inFov(target, 60) then ... end
+```
 
 ---
 
@@ -188,7 +230,7 @@ Shared
 
 **Purpose**
 
-Returns true if there is a direct line between this entity and the target.
+Checks if there is a direct line between this entity and the target.
 
 | Name   | Type   | Description |
 
@@ -202,7 +244,13 @@ Shared
 
 **Returns**
 
-*boolean*
+*boolean* — True if no world geometry blocks the trace.
+
+**Example**
+
+```lua
+if ent:isInRoom(other) then ... end
+```
 
 ---
 
@@ -210,7 +258,7 @@ Shared
 
 **Purpose**
 
-Checks whether an entity is visible on screen within optional distance and FOV limits.
+Checks if an entity is visible on screen within distance and FOV limits.
 
 | Name    | Type   | Description                                   |
 
@@ -228,7 +276,13 @@ Shared
 
 **Returns**
 
-*boolean*
+*boolean* — True if visible.
+
+**Example**
+
+```lua
+if ent:isScreenVisible(target, 1024^2, 70) then ... end
+```
 
 ---
 
@@ -236,7 +290,7 @@ Shared
 
 **Purpose**
 
-Combines line-of-sight and FOV checks to determine if a target is visible.
+Determines if this entity can see another using line-of-sight and FOV.
 
 | Name    | Type   | Description |
 
@@ -252,7 +306,13 @@ Shared
 
 **Returns**
 
-*boolean*
+*boolean* — True if the target is visible.
+
+**Example**
+
+```lua
+if ent:canSeeEntity(target) then ... end
+```
 
 ---
 

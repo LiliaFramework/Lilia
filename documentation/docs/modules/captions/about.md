@@ -4,7 +4,7 @@
 Captions
 
 **Version:**
-1.19
+1.24
 
 **Description:**
 

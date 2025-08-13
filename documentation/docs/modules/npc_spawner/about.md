@@ -4,11 +4,19 @@
 NPC Spawner
 
 **Version:**
-1.20
+1.28
 
 **Description:**
 
-Spawns NPCs at preset points on a schedule. Staff can force spawns manually and all actions are logged.
+Adds automatic NPC spawns at points, the ability for admins to force spawns, logging of spawn actions, and configuration for spawn intervals.
+
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
+
+- Adds automatic NPC spawns at points
+- Adds the ability for admins to force spawns
+- Adds logging of spawn actions
+- Adds configuration for spawn intervals
+
 
 
 

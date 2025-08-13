@@ -4,11 +4,11 @@
 Gamemaster Points
 
 **Version:**
-1.17
+1.23
 
 **Description:**
 
-Allows game masters to save, share, and teleport to named points around the map. Useful for fast navigation during events and administration.
+Adds teleport points for game masters, quick navigation across large maps, saving of locations for reuse, a command to list saved points, and sharing of points with other staff.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

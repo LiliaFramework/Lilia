@@ -4,11 +4,11 @@
 Development Server
 
 **Version:**
-1.13
+1.19
 
 **Description:**
 
-Enables a special development mode for testing new features. When active, dev-only functions can be executed and all actions are logged.
+Adds a development server mode for testing, the ability to run special development functions, a toggle via configuration, an environment flag for dev commands, and logging of executed dev actions.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

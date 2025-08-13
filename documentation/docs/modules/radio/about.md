@@ -4,11 +4,11 @@
 Radio
 
 **Version:**
-1.22
+1.28
 
 **Description:**
 
-Adds a radio communication system with configurable fonts and models. Players can tune to different frequencies or carry handheld radios.
+Adds a radio chat channel for players, font configuration via RadioFont, workshop models for radios, frequency channels for groups, and handheld radio items.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

@@ -4,11 +4,11 @@
 Model Pay
 
 **Version:**
-1.15
+1.20
 
 **Description:**
 
-Pays characters wages determined by their player model. Different models can have unique salaries and exclusions are configurable.
+Adds payment to characters based on model, custom wage definitions, integration into the economy, config to exclude certain models, and logs of wages issued.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

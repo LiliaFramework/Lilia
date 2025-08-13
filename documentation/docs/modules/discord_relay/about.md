@@ -4,11 +4,11 @@
 Discord Relay
 
 **Version:**
-1.14
+1.18
 
 **Description:**
 
-Relays selected server logs to Discord using configurable webhook URLs. Supports multiple channels and filters for organized updates.
+Adds relaying of server logs to Discord, webhook integration for connectivity, formatting of real-time updates, multiple webhook URLs per log type, and filtering to control which logs are sent.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

@@ -4,11 +4,19 @@
 Cigarettes
 
 **Version:**
-1.19
+1.23
 
 **Description:**
 
-Adds cigarette items that burn down over time, producing smoke and ash effects for added ambience.
+Adds smokable cigarette items with workshop models, puff effects while smoking, and cigarettes that are consumed over time with ash particles.
+
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
+
+- Adds smokable cigarette items with workshop models
+- Adds puff effects while smoking
+- Adds cigarettes that are consumed over time
+- Adds ash particles that fade out
+
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Workshop Content</h2>
 

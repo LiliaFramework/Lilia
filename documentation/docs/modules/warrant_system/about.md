@@ -4,11 +4,11 @@
 Warrant System
 
 **Version:**
-1.30
+1.37
 
 **Description:**
 
-Implements a warrant system so staff can issue, view, and revoke warrants. Players are notified and all actions are logged with optional expirations.
+Adds ability to issue and remove player warrants, notifications displayed to players, logging of all warrant actions, CAMI privileges for warrant management, and timed expiration for warrants.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 
