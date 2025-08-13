@@ -4,7 +4,7 @@
 Chat Messages
 
 **Version:**
-1.21
+1.22
 
 **Description:**
 

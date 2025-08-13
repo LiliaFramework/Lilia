@@ -4,7 +4,7 @@
 NPC Spawner
 
 **Version:**
-1.25
+1.26
 
 **Description:**
 

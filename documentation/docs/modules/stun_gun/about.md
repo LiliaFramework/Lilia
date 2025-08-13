@@ -4,7 +4,7 @@
 Stun Gun
 
 **Version:**
-101.24
+101.25
 
 **Description:**
 
