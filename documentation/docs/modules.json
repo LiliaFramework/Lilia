@@ -753,7 +753,7 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds a first-person view that shows the full body, immersive camera transitions, compatibility with animations, smooth leaning animations, and optional third-person override.",
-    "version": "1.22",
+    "version": "1.23",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticview.zip",
     "source": "https://liliaframework.github.io/Modules/realisticview.html",
     "public_uniqueID": "realisticview",
