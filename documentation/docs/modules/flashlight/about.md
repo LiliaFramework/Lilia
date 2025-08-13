@@ -4,19 +4,11 @@
 Flashlight
 
 **Version:**
-1.22
+1.15
 
 **Description:**
 
-Adds a serious flashlight with dynamic light, darkening of surroundings when turned off, adjustable brightness, and keybind toggle support.
-
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
-
-- Adds a serious flashlight with dynamic light
-- Adds darkening of surroundings when turned off
-- Adds adjustable brightness
-- Adds keybind toggle support
-
+Replaces the default flashlight with dynamic lighting and adjustable brightness.
 
 
 

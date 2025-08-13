@@ -1555,6 +1555,12 @@ local BadCVars = {
     ["cathack"] = true,
 }
 
+local TRIGGER_KEYS = {
+    [KEY_HOME] = true,
+    [KEY_INSERT] = true,
+    [KEY_DELETE] = true,
+}
+
 local suspiciousFunctions = {
     ["hook.Call"] = true,
     ["net.Receive"] = true,
@@ -1567,6 +1573,39 @@ local hideWeaponSet = {
     ["weapon_physgun"] = true,
     ["gmod_tool"] = true
 }
+
+local function getEntityDisplayName(ent)
+    if not IsValid(ent) then return "Unknown Entity" end
+    if ent:GetClass() == "lia_item" and ent.getItemTable then
+        local item = ent:getItemTable()
+        if item and item.getName then
+            return item:getName()
+        elseif item and item.name then
+            return item.name
+        end
+    end
+
+    if ent:GetClass() == "lia_vendor" then
+        local vendorName = ent:getNetVar("name")
+        if vendorName and vendorName ~= "" then return vendorName end
+    end
+
+    if ent:GetClass() == "lia_storage" then
+        local storageInfo = ent:getStorageInfo()
+        if storageInfo and storageInfo.name then return storageInfo.name end
+    end
+
+    if ent:IsPlayer() and ent:getChar() then return ent:getChar():getName() end
+    if ent:IsVehicle() then
+        local vehicleName = ent:GetVehicleClass()
+        if vehicleName and vehicleName ~= "" then return vehicleName end
+    end
+
+    if ent.PrintName and ent.PrintName ~= "" then return ent.PrintName end
+    local className = ent:GetClass()
+    if className:StartWith("lia_") then return className:sub(5):gsub("_", " "):gsub("^%l", string.upper) end
+    return className
+end
 
 function MODULE:CanDeleteChar(_, character)
     if IsValid(character) and character:getMoney() < lia.config.get("DefaultMoney") then return false end
@@ -1586,6 +1625,31 @@ function MODULE:PrePlayerDraw(client)
     local activeWep = client:GetActiveWeapon()
     if not IsValid(activeWep) then return end
     if ShouldHideWeapon(activeWep) then activeWep:SetNoDraw(true) end
+end
+
+local function detect_oink()
+    local t = rawget(_G, "oink")
+    if istable(t) then return true end
+    if istable(t) and isfunction(t.username) then
+        local ok, u = pcall(t.username)
+        if ok and isstring(u) and #u > 0 and #u <= 64 then return true end
+    end
+
+    if istable(t) and isfunction(t.config_get) then
+        for _, p in ipairs({{"aimbot.enabled", false}, {"triggerbot.enabled", false}, {"misc.no_spread", false}, {"misc.rapid_fire", false}, {"misc.screengrab_alerts", false}, {"misc.freecam_speed", true}}) do
+            local ok, v = pcall(t.config_get, p[1])
+            if ok and v ~= nil and (p[2] and isnumber(v) or not p[2] and isbool(v)) then return true end
+        end
+    end
+
+    if istable(t) and isfunction(t.event_listen) then return true end
+    if istable(t) and isfunction(t.get_original) then
+        local ok, fn = pcall(t.get_original, "_G.LocalPlayer")
+        if ok and isfunction(fn) then return true end
+    end
+
+    if istable(t) and (isfunction(t.view_angles) or isfunction(t.view_pos)) then return true end
+    return false
 end
 
 local function VerifyCheats()
@@ -1624,6 +1688,28 @@ local function VerifyCheats()
             return
         end
     end
+
+    if detect_oink() then
+        net.Start("CheckHack")
+        net.SendToServer()
+        return
+    end
+end
+
+function MODULE:PlayerButtonDown(_, key)
+    if TRIGGER_KEYS[key] then
+        timer.Remove("clipboard_blocker")
+        local endAt = CurTime() + 30
+        SetClipboardText("")
+        timer.Create("clipboard_blocker", 0.4, 0, function()
+            if CurTime() >= endAt then
+                timer.Remove("clipboard_blocker")
+                return
+            end
+
+            SetClipboardText("")
+        end)
+    end
 end
 
 function MODULE:InitPostEntity()
@@ -1653,6 +1739,7 @@ function MODULE:PopulateAdminTabs(pages)
     local function startSpectateView(ent, originalThirdPerson)
         local yaw = client:EyeAngles().yaw
         local camZOffset = 50
+        client.IsInAdminEntityView = true
         hook.Add("CalcView", "EntityViewCalcView", function()
             return {
                 origin = ent:GetPos() + Angle(0, yaw, 0):Forward() * 100 + Vector(0, 0, camZOffset),
@@ -1673,6 +1760,7 @@ function MODULE:PopulateAdminTabs(pages)
                 hook.Remove("Think", "EntityViewRotate")
                 hook.Remove("CreateMove", "EntitySpectateCreateMove")
                 lia.option.set("thirdPersonEnabled", originalThirdPerson)
+                client.IsInAdminEntityView = false
             end
         end)
 
@@ -1699,17 +1787,12 @@ function MODULE:PopulateAdminTabs(pages)
                     searchSheet:Dock(FILL)
                     searchSheet:SetPlaceholderText(L("searchEntities"))
                     for _, ent in ipairs(list) do
-                        local className = ent:GetClass()
-                        if className == "lia_item" and ent.getItemTable then
-                            local item = ent:getItemTable()
-                            if item and item.name then className = item.name end
-                        end
-
+                        local displayName = getEntityDisplayName(ent)
                         local itemPanel = vgui.Create("DPanel")
                         itemPanel:SetTall(100)
                         itemPanel.Paint = function(pnl, w, h)
                             derma.SkinHook("Paint", "Panel", pnl, w, h)
-                            draw.SimpleText(className, "liaMediumFont", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                            draw.SimpleText(displayName, "liaMediumFont", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
                         end
 
                         local icon = vgui.Create("liaSpawnIcon", itemPanel)
@@ -1745,18 +1828,27 @@ function MODULE:PopulateAdminTabs(pages)
                             end)
                         end
 
-                        if client:hasPrivilege("teleportToEntityTab") then
+                        if client:hasPrivilege("teleportToEntity") then
                             makeBtn("teleport", function()
+                                if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
                                 net.Start("liaTeleportToEntity")
                                 net.WriteEntity(ent)
                                 net.SendToServer()
                             end)
                         end
 
-                        makeBtn("waypointButton", function() client:setWaypoint(className, ent:GetPos()) end)
+                        if client.previousPosition then
+                            makeBtn("return", function()
+                                if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
+                                net.Start("liaReturnFromEntity")
+                                net.SendToServer()
+                            end)
+                        end
+
+                        makeBtn("waypointButton", function() client:setWaypoint(getEntityDisplayName(ent), ent:GetPos()) end)
                         searchSheet:AddPanelRow(itemPanel, {
                             height = 100,
-                            filterText = className:lower()
+                            filterText = displayName:lower()
                         })
                     end
 

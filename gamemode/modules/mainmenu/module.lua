@@ -1,7 +1,7 @@
-MODULE.name = "mainMenu"
+MODULE.name = "MainMenu"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "moduleMainMenuDesc"
+MODULE.desc = "Creates the in-game main menu used for selecting, creating, and managing player characters before entering the world."
 if SERVER then
     function MODULE:syncCharList(client)
         if not client.liaCharList then return end
@@ -127,7 +127,9 @@ else
     end)
 end
 
-function MODULE:CanPlayerCreateChar(client)
+function MODULE:CanPlayerCreateChar(client, data)
+    local isStaffCharacter = istable(data) and data.faction == FACTION_STAFF
+    if isStaffCharacter then return true end
     if SERVER then
         local count = #client.liaCharList or 0
         local maxChars = hook.Run("GetMaxPlayerChar", client) or lia.config.get("MaxCharacters")

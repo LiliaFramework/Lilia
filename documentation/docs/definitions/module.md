@@ -27,11 +27,9 @@ A `MODULE` table defines a self-contained add-on for the Lilia framework. Each f
 | `Dependencies` | `table` | `nil` | Files or directories included before the module loads. |
 | `folder` | `string` | `""` | Filesystem path where the module resides. |
 | `path` | `string` | `""` | Absolute path to the module’s root directory. |
-| `uniqueID` | `string` | `""` | Internal identifier for the module list. |
+| `uniqueID` | `string` | `""` | Internal identifier for the module list. Prefix with `public_` or `private_` to opt into version checks. |
 | `loading` | `boolean` | `false` | True while the module is in the process of loading. |
 | `ModuleLoaded` | `function` | `nil` | Callback run after module finishes loading. |
-| `Public` | `boolean` | `false` | Participates in public version checks. |
-| `Private` | `boolean` | `false` | Uses private version checking. |
 
 ---
 
@@ -127,42 +125,6 @@ Version number used for compatibility checks.
 
 ```lua
 MODULE.version = 1.0
-```
-
----
-
-#### `Public`
-
-**Type:**
-
-`boolean`
-
-**Description:**
-
-When true, the module participates in public version checks.
-
-**Example Usage:**
-
-```lua
-MODULE.Public = true
-```
-
----
-
-#### `Private`
-
-**Type:**
-
-`boolean`
-
-**Description:**
-
-When true, the module uses private version checking.
-
-**Example Usage:**
-
-```lua
-MODULE.Private = true
 ```
 
 ---
@@ -362,7 +324,7 @@ print(MODULE.path)
 
 **Description:**
 
-Identifier used internally for the module list.
+Identifier used internally for the module list. Prefix with `public_` or `private_` to enable public or private version checks.
 
 **Example Usage:**
 
@@ -419,7 +381,7 @@ When loading a module from a directory, Lilia automatically scans for common sub
 A complete example showing common fields in use:
 
 ```lua
--- example/gamemode/modules/myfeature/module.lua
+-- example/gamemode/modules/public_myfeature/module.lua
 MODULE.name = "My Feature"
 MODULE.author = "76561198012345678"
 MODULE.discord = "@example"
@@ -427,7 +389,6 @@ MODULE.version = 1.0
 MODULE.desc = "Adds an example feature used to demonstrate module creation."
 
 MODULE.enabled = true
-MODULE.Public = true
 
 MODULE.WorkshopContent = {
     "1234567890"

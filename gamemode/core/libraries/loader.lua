@@ -224,7 +224,7 @@ local ConditionalFiles = {
     {
         path = "lilia/gamemode/core/libraries/compatibility/pac.lua",
         global = "pac",
-        name = "PAC",
+        name = "PAC3",
         realm = "shared"
     },
     {

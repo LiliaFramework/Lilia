@@ -1356,15 +1356,16 @@ end)
 
 **Purpose**
 
-Checks if the local player may start creating a character. Determines if the player may create a new character.
+Checks if a player may start creating a character. Determines if the player may create a new character.
 
 **Parameters**
 
-- `player` (`Player`): Local player.
+- `player` (`Player`): The player attempting to create a character.
+- `data` (`table`|nil): Optional character data being created. Only supplied on the server.
 
 **Realm**
 
-`Client`
+`Shared`
 
 **Returns**
 
@@ -1456,7 +1457,8 @@ Override to change how many characters a player can have. Returns the maximum nu
 
 **Parameters**
 
-- `player` (`Player`): Local player.
+- `player` (`Player`): The player attempting to create a character.
+- `data` (`table`|nil): Optional character data being created. Only supplied on the server.
 
 **Realm**
 

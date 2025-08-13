@@ -22,7 +22,6 @@
             type = "number"
         }
     },
-    privilege = "manageAttributes",
     AdminStick = {
         Name = "setAttributes",
         Category = "characterManagement",
@@ -62,7 +61,6 @@ lia.command.add("checkattributes", {
             type = "player"
         },
     },
-    privilege = "manageAttributes",
     AdminStick = {
         Name = "checkAttributes",
         Category = "characterManagement",
@@ -144,7 +142,6 @@ lia.command.add("charaddattrib", {
             type = "number"
         }
     },
-    privilege = "manageAttributes",
     AdminStick = {
         Name = "addAttributes",
         Category = "characterManagement",

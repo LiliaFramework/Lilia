@@ -1,6 +1,5 @@
 ﻿local MODULE = MODULE
 lia.command.add("spawnadd", {
-    privilege = "manageSpawns",
     adminOnly = true,
     desc = "spawnAddDesc",
     arguments = {
@@ -44,7 +43,6 @@ lia.command.add("spawnadd", {
 })
 
 lia.command.add("spawnremoveinradius", {
-    privilege = "manageSpawns",
     adminOnly = true,
     desc = "spawnRemoveInRadiusDesc",
     arguments = {
@@ -84,7 +82,6 @@ lia.command.add("spawnremoveinradius", {
 })
 
 lia.command.add("spawnremovebyname", {
-    privilege = "manageSpawns",
     adminOnly = true,
     desc = "spawnRemoveByNameDesc",
     arguments = {
@@ -137,7 +134,6 @@ lia.command.add("spawnremovebyname", {
 
 lia.command.add("returnitems", {
     superAdminOnly = true,
-    privilege = "returnItems",
     desc = "returnItemsDesc",
     arguments = {
         {

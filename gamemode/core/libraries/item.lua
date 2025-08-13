@@ -618,9 +618,19 @@ if SERVER then
             callback = function(item) d:resolve(item) end
         end
 
-        lia.item.instance(0, uniqueID, data or {}, 1, 1, function(item)
+        local promise = lia.item.instance(0, uniqueID, data or {}, 1, 1, function(item)
             item:spawn(position, angles)
             if callback then callback(item) end
+        end)
+
+        promise:next(function(item) if callback then callback(item) end end, function(reason)
+            if reason and reason:find("An inventory has a missing item") then
+                lia.error(reason)
+            else
+                lia.error("Failed to spawn item: " .. tostring(reason or "Unknown error"))
+            end
+
+            if callback then callback(nil) end
         end)
         return d
     end

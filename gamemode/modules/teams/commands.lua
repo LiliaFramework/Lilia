@@ -1,6 +1,5 @@
 ﻿lia.command.add("plytransfer", {
     adminOnly = true,
-    privilege = "manageTransfers",
     desc = "plyTransferDesc",
     alias = {"charsetfaction"},
     arguments = {
@@ -54,7 +53,6 @@
 
 lia.command.add("plywhitelist", {
     adminOnly = true,
-    privilege = "manageWhitelists",
     desc = "plyWhitelistDesc",
     alias = {"factionwhitelist"},
     arguments = {
@@ -94,7 +92,6 @@ lia.command.add("plywhitelist", {
 
 lia.command.add("plyunwhitelist", {
     adminOnly = true,
-    privilege = "manageWhitelists",
     desc = "plyUnwhitelistDesc",
     alias = {"factionunwhitelist"},
     arguments = {
@@ -175,7 +172,6 @@ lia.command.add("beclass", {
 
 lia.command.add("setclass", {
     adminOnly = true,
-    privilege = "manageClasses",
     desc = "setClassDesc",
     arguments = {
         {
@@ -222,7 +218,6 @@ lia.command.add("setclass", {
 
 lia.command.add("classwhitelist", {
     adminOnly = true,
-    privilege = "manageWhitelists",
     desc = "classWhitelistDesc",
     arguments = {
         {
@@ -268,7 +263,6 @@ lia.command.add("classwhitelist", {
 
 lia.command.add("classunwhitelist", {
     adminOnly = true,
-    privilege = "manageClasses",
     desc = "classUnwhitelistDesc",
     arguments = {
         {

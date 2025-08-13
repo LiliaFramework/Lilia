@@ -1,11 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-lia.administrator.registerPrivilege({
-    Name = "useDisallowedTools",
-    ID = "useDisallowedTools",
-    MinAccess = "superadmin",
-    Category = "categoryStaffTools"
-})
-
 local restrictedProperties = {
     persist = true,
     drive = true,

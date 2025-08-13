@@ -6,7 +6,7 @@ lia.command.add("doorsell", {
         Name = "adminStickDoorSellName",
         Category = "doorManagement",
         SubCategory = "doorActions",
-        TargetClass = L("door"),
+        TargetClass = "door",
         Icon = "icon16/money.png"
     },
     onRun = function(client)
@@ -31,12 +31,11 @@ lia.command.add("doorsell", {
 lia.command.add("admindoorsell", {
     desc = "admindoorsellDesc",
     adminOnly = true,
-    privilege = "manageDoors",
     AdminStick = {
         Name = "adminStickAdminDoorSellName",
         Category = "doorManagement",
         SubCategory = "doorActions",
-        TargetClass = L("door"),
+        TargetClass = "door",
         Icon = "icon16/money_delete.png"
     },
     onRun = function(client)
@@ -63,12 +62,11 @@ lia.command.add("admindoorsell", {
 lia.command.add("doortogglelock", {
     desc = "doortogglelockDesc",
     adminOnly = true,
-    privilege = "manageDoors",
     AdminStick = {
         Name = "adminStickToggleDoorLockName",
         Category = "doorManagement",
         SubCategory = "doorSettings",
-        TargetClass = L("door"),
+        TargetClass = "door",
         Icon = "icon16/lock.png"
     },
     onRun = function(client)
@@ -109,7 +107,7 @@ lia.command.add("doorbuy", {
         Name = "buyDoor",
         Category = "doorManagement",
         SubCategory = "doorActions",
-        TargetClass = L("door"),
+        TargetClass = "door",
         Icon = "icon16/money_add.png"
     },
     onRun = function(client)
@@ -152,12 +150,11 @@ lia.command.add("doorbuy", {
 lia.command.add("doortoggleownable", {
     desc = "doortoggleownableDesc",
     adminOnly = true,
-    privilege = "manageDoors",
     AdminStick = {
         Name = "adminStickToggleDoorOwnableName",
         Category = "doorManagement",
         SubCategory = "doorSettings",
-        TargetClass = L("door"),
+        TargetClass = "door",
         Icon = "icon16/pencil.png"
     },
     onRun = function(client)
@@ -179,12 +176,11 @@ lia.command.add("doortoggleownable", {
 lia.command.add("doorresetdata", {
     desc = "doorresetdataDesc",
     adminOnly = true,
-    privilege = "manageDoors",
     AdminStick = {
         Name = "adminStickResetDoorDataName",
         Category = "doorManagement",
         SubCategory = "doorMaintenance",
-        TargetClass = L("door"),
+        TargetClass = "door",
         Icon = "icon16/arrow_refresh.png"
     },
     onRun = function(client)
@@ -210,12 +206,11 @@ lia.command.add("doorresetdata", {
 lia.command.add("doortoggleenabled", {
     desc = "doortoggleenabledDesc",
     adminOnly = true,
-    privilege = "manageDoors",
     AdminStick = {
         Name = "adminStickToggleDoorEnabledName",
         Category = "doorManagement",
         SubCategory = "doorSettings",
-        TargetClass = L("door"),
+        TargetClass = "door",
         Icon = "icon16/stop.png"
     },
     onRun = function(client)
@@ -237,12 +232,11 @@ lia.command.add("doortoggleenabled", {
 lia.command.add("doortogglehidden", {
     desc = "doortogglehiddenDesc",
     adminOnly = true,
-    privilege = "manageDoors",
     AdminStick = {
         Name = "adminStickToggleDoorHiddenName",
         Category = "doorManagement",
         SubCategory = "doorSettings",
-        TargetClass = L("door"),
+        TargetClass = "door",
         Icon = "icon16/eye.png"
     },
     onRun = function(client)
@@ -270,12 +264,11 @@ lia.command.add("doorsetprice", {
         },
     },
     adminOnly = true,
-    privilege = "manageDoors",
     AdminStick = {
         Name = "adminStickSetDoorPriceName",
         Category = "doorManagement",
         SubCategory = "doorSettings",
-        TargetClass = L("door"),
+        TargetClass = "door",
         Icon = "icon16/money.png"
     },
     onRun = function(client, arguments)
@@ -303,12 +296,11 @@ lia.command.add("doorsettitle", {
         },
     },
     adminOnly = true,
-    privilege = "manageDoors",
     AdminStick = {
         Name = "adminStickSetDoorTitleName",
         Category = "doorManagement",
         SubCategory = "doorSettings",
-        TargetClass = L("door"),
+        TargetClass = "door",
         Icon = "icon16/textfield.png"
     },
     onRun = function(client, arguments)
@@ -336,12 +328,11 @@ lia.command.add("doorsettitle", {
 lia.command.add("savedoors", {
     desc = "savedoorsDesc",
     adminOnly = true,
-    privilege = "manageDoors",
     AdminStick = {
         Name = "adminStickSaveDoorsName",
         Category = "doorManagement",
         SubCategory = "doorMaintenance",
-        TargetClass = L("door"),
+        TargetClass = "door",
         Icon = "icon16/disk.png"
     },
     onRun = function(client)
@@ -354,12 +345,11 @@ lia.command.add("savedoors", {
 lia.command.add("doorinfo", {
     desc = "doorinfoDesc",
     adminOnly = true,
-    privilege = "manageDoors",
     AdminStick = {
         Name = "adminStickDoorInfoName",
         Category = "doorManagement",
         SubCategory = "doorInformation",
-        TargetClass = L("door"),
+        TargetClass = "door",
         Icon = "icon16/information.png"
     },
     onRun = function(client)
@@ -454,7 +444,6 @@ lia.command.add("dooraddfaction", {
         }
     },
     adminOnly = true,
-    privilege = "manageDoors",
     onRun = function(client, arguments)
         local door = client:getTracedEntity()
         if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
@@ -506,7 +495,6 @@ lia.command.add("doorremovefaction", {
         }
     },
     adminOnly = true,
-    privilege = "manageDoors",
     onRun = function(client, arguments)
         local door = client:getTracedEntity()
         if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
@@ -558,7 +546,6 @@ lia.command.add("doorsetclass", {
         }
     },
     adminOnly = true,
-    privilege = "manageDoors",
     onRun = function(client, arguments)
         local door = client:getTracedEntity()
         if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
@@ -603,7 +590,6 @@ lia.command.add("doorsetclass", {
 lia.command.add("togglealldoors", {
     desc = "togglealldoorsDesc",
     adminOnly = true,
-    privilege = "manageDoors",
     onRun = function(client)
         local toggleToDisable = false
         for _, door in ents.Iterator() do

@@ -165,27 +165,12 @@ end)
 
 lia.command.add("cleardecals", {
     adminOnly = true,
-    privilege = "clearDecals",
     desc = "cleardecalsDesc",
     onRun = function()
         for _, v in player.Iterator() do
             v:ConCommand("r_cleardecals")
         end
     end
-})
-
-lia.administrator.registerPrivilege({
-    Name = "canSeeSAMNotificationsOutsideStaff",
-    ID = "canSeeSAMNotificationsOutsideStaff",
-    MinAccess = "superadmin",
-    Category = "categorySAM"
-})
-
-lia.administrator.registerPrivilege({
-    Name = "canBypassSAMFactionWhitelist",
-    ID = "canBypassSAMFactionWhitelist",
-    MinAccess = "superadmin",
-    Category = "categorySAM"
 })
 
 lia.config.add("AdminOnlyNotification", "adminOnlyNotifications", true, nil, {

@@ -585,3 +585,79 @@ net.Receive("VerifyCheatsResponse", function(_, client)
         client.VerifyCheatsTimer = nil
     end
 end)
+
+local function getEntityDisplayName(ent)
+    if not IsValid(ent) then return "Unknown Entity" end
+    if ent:GetClass() == "lia_item" and ent.getItemTable then
+        local item = ent:getItemTable()
+        if item and item.getName then
+            return item:getName()
+        elseif item and item.name then
+            return item.name
+        end
+    end
+
+    if ent:GetClass() == "lia_vendor" then
+        local vendorName = ent:getNetVar("name")
+        if vendorName and vendorName ~= "" then return vendorName end
+    end
+
+    if ent:GetClass() == "lia_storage" then
+        local storageInfo = ent:getStorageInfo()
+        if storageInfo and storageInfo.name then return storageInfo.name end
+    end
+
+    if ent:IsPlayer() and ent:getChar() then return ent:getChar():getName() end
+    if ent:IsVehicle() then
+        local vehicleName = ent:GetVehicleClass()
+        if vehicleName and vehicleName ~= "" then return vehicleName end
+    end
+
+    if ent.PrintName and ent.PrintName ~= "" then return ent.PrintName end
+    local className = ent:GetClass()
+    if className:StartWith("lia_") then return className:sub(5):gsub("_", " "):gsub("^%l", string.upper) end
+    return className
+end
+
+net.Receive("liaTeleportToEntity", function(_, client)
+    if not client:hasPrivilege("teleportToEntity") then
+        client:notifyLocalized("noPrivilege")
+        return
+    end
+
+    local entity = net.ReadEntity()
+    if not IsValid(entity) then
+        client:notifyLocalized("invalidEntity")
+        return
+    end
+
+    client.previousPosition = client:GetPos()
+    local entityPos = entity:GetPos()
+    local trace = util.TraceLine({
+        start = entityPos,
+        endpos = entityPos + Vector(0, 0, 100),
+        mask = MASK_SOLID
+    })
+
+    if trace.Hit then
+        client:SetPos(trace.HitPos + Vector(0, 0, 10))
+    else
+        client:SetPos(entityPos + Vector(0, 0, 50))
+    end
+
+    client:notifyLocalized("teleportedToEntity", getEntityDisplayName(entity))
+    lia.log.add(client, "entityTeleport", client:Name(), getEntityDisplayName(entity), tostring(entity:GetPos()))
+end)
+
+net.Receive("liaReturnFromEntity", function(_, client)
+    if not client.previousPosition then
+        client:notifyLocalized("noPreviousPosition")
+        return
+    end
+
+    local returnPos = client.previousPosition
+    client:SetPos(returnPos)
+    client.previousPosition = nil
+    client:notifyLocalized("returnedFromEntity")
+    lia.log.add(client, "entityReturn", client:Name(), tostring(returnPos))
+end)

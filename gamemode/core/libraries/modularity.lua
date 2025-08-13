@@ -107,8 +107,6 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
         lia.include(coreFile, "shared")
     end
 
-    MODULE.name = L(MODULE.name)
-    MODULE.desc = L(MODULE.desc)
     local enabled, disableReason
     if isfunction(MODULE.enabled) then
         enabled, disableReason = MODULE.enabled()
@@ -120,7 +118,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
         if disableReason then
             lia.bootstrap(L("moduleDisabledTitle"), disableReason)
         else
-            lia.bootstrap(L("moduleDisabledTitle"), L("moduleDisabled", MODULE.name))
+            lia.bootstrap(L("moduleDisabledTitle"), MODULE.name)
         end
 
         _G[variable] = prev
@@ -143,27 +141,17 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
             return true
         end
     else
+        function MODULE:setData(value, global, ignoreMap)
+            lia.data.set(uniqueID, value, global, ignoreMap)
+        end
+
+        function MODULE:getData(default)
+            return lia.data.get(uniqueID, default) or {}
+        end
+
         lia.module.list[uniqueID] = MODULE
         if not skipSubmodules then loadSubmodules(path) end
         if MODULE.ModuleLoaded then MODULE:ModuleLoaded() end
-        if MODULE.Public then
-            lia.module.versionChecks = lia.module.versionChecks or {}
-            table.insert(lia.module.versionChecks, {
-                uniqueID = MODULE.uniqueID,
-                name = MODULE.name,
-                localVersion = MODULE.version,
-            })
-        end
-
-        if MODULE.Private then
-            lia.module.privateVersionChecks = lia.module.privateVersionChecks or {}
-            table.insert(lia.module.privateVersionChecks, {
-                uniqueID = MODULE.uniqueID,
-                name = MODULE.name,
-                localVersion = MODULE.version,
-            })
-        end
-
         if string.StartsWith(path, engine.ActiveGamemode() .. "/modules") then lia.bootstrap(L("module"), L("moduleFinishedLoading", MODULE.name)) end
         _G[variable] = prev
     end

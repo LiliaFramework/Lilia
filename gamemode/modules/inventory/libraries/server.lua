@@ -48,21 +48,65 @@ function MODULE:ItemDraggedOutOfInventory(client, item)
     item:interact("drop", client)
 end
 
-function MODULE:PlayerLoadedChar(client, character)
-    local inv = character:getInv()
-    if inv then
-        local w, h = inv:getSize()
-        local baseW, baseH = lia.config.get("invW"), lia.config.get("invH")
-        if w ~= baseW or h ~= baseH then return w, h end
-        local dw, dh = hook.Run("GetDefaultInventorySize", client)
-        dw = dw or baseW
-        dh = dh or baseH
-        w, h = inv:getSize()
-        if w ~= dw or h ~= dh then
-            inv:setSize(dw, dh)
-            inv:sync(client)
+local function storeOverflowItems(inv, character, oldW, oldH)
+    local overflow, toRemove = {}, {}
+    for _, item in pairs(inv:getItems()) do
+        local x, y = item:getData("x"), item:getData("y")
+        if x and y and not inv:canItemFitInInventory(item, x, y) then
+            local data = item:getAllData()
+            data.x, data.y = nil, nil
+            overflow[#overflow + 1] = {
+                uniqueID = item.uniqueID,
+                quantity = item:getQuantity(),
+                data = data
+            }
+
+            toRemove[#toRemove + 1] = item
         end
     end
+
+    for _, item in ipairs(toRemove) do
+        item:remove()
+    end
+
+    if #overflow > 0 then
+        character:setData("overflowItems", {
+            size = {oldW, oldH},
+            items = overflow
+        })
+        return true
+    end
+end
+
+function lia.inventory.checkOverflow(inv, character, oldW, oldH)
+    return storeOverflowItems(inv, character, oldW, oldH) and true or false
+end
+
+local function applyInventorySize(client, character)
+    local inv = character:getInv()
+    if not inv then return end
+    local override = character:getData("invSizeOverride")
+    local dw, dh
+    if istable(override) then
+        dw, dh = override[1], override[2]
+    else
+        dw, dh = hook.Run("GetDefaultInventorySize", client, character)
+        dw = dw or lia.config.get("invW")
+        dh = dh or lia.config.get("invH")
+    end
+
+    local w, h = inv:getSize()
+    if w ~= dw or h ~= dh then inv:setSize(dw, dh) end
+    local removed = lia.inventory.checkOverflow(inv, character, w, h)
+    if w ~= dw or h ~= dh or removed then inv:sync(client) end
+end
+
+function MODULE:PlayerLoadedChar(client, character)
+    applyInventorySize(client, character)
+end
+
+function MODULE:OnCharCreated(client, character)
+    applyInventorySize(client, character)
 end
 
 function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
@@ -134,3 +178,20 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
         return originalAddResult
     end):catch(fail)
 end
+
+net.Receive("liaRestoreOverflowItems", function(_, client)
+    local char = client:getChar()
+    if not char then return end
+    local data = char:getData("overflowItems")
+    if not data or not data.items then return end
+    local inv = char:getInv()
+    if not inv then return end
+    local dropPos = client:getItemDropPos()
+    for _, itemInfo in ipairs(data.items) do
+        local itemData = table.Copy(itemInfo.data or {})
+        itemData.x, itemData.y = nil, nil
+        inv:add(itemInfo.uniqueID, 1, itemData):next(function(item) if itemInfo.quantity and itemInfo.quantity > 1 then item:setQuantity(itemInfo.quantity) end end):catch(function() lia.item.spawn(itemInfo.uniqueID, dropPos, function(spawned) if spawned and itemInfo.quantity and itemInfo.quantity > 1 then spawned:setQuantity(itemInfo.quantity) end end, nil, itemInfo.data or {}) end)
+    end
+
+    char:setData("overflowItems", nil)
+end)

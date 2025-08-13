@@ -4,6 +4,11 @@ function MODULE:GetWarnings(charID)
     return lia.db.select({"id", "timestamp", "message", "warner", "warnerSteamID"}, "warnings", condition):next(function(res) return res.results or {} end)
 end
 
+function MODULE:GetWarningsByIssuer(steamID)
+    local condition = "warnerSteamID = " .. lia.db.convertDataType(steamID)
+    return lia.db.select({"id", "timestamp", "message", "warned", "warnedSteamID", "warner", "warnerSteamID"}, "warnings", condition):next(function(res) return res.results or {} end)
+end
+
 function MODULE:AddWarning(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID)
     lia.db.insertTable({
         charID = charID,

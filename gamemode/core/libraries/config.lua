@@ -4,8 +4,26 @@ function lia.config.add(key, name, value, callback, data)
     assert(isstring(key), L("configKeyString", type(key)))
     assert(istable(data), L("configDataTable", type(data)))
     local t = type(value)
-    local configType = t == "boolean" and "Boolean" or t == "number" and (math.floor(value) == value and "Int" or "Float") or t == "table" and value.r and value.g and value.b and "Color" or "Generic"
-    data.type = data.type or configType
+    local configType = t == "boolean" and "Boolean" or t == "number" and (math.floor(value) == value and "Int" or "Float") or t == "table" and (value.r and value.g and value.b and "Color" or "Table") or "Generic"
+    local validTypes = {
+        Boolean = true,
+        Int = true,
+        Float = true,
+        Color = true,
+        Table = true,
+        Generic = true
+    }
+
+    if not data.type or not validTypes[data.type] then
+        print(L("configMissingType", key, configType))
+        data.type = configType
+    end
+
+    if (data.type == "Int" or data.type == "Float") and (data.min == nil or data.max == nil) then
+        local missing = data.min == nil and data.max == nil and "min and max" or data.min == nil and "min" or "max"
+        print(L("configNeedsMinMax", key, data.type, missing))
+    end
+
     local oldConfig = lia.config.stored[key]
     local savedValue = oldConfig and oldConfig.value or value
     if istable(data.options) then
@@ -144,7 +162,7 @@ if SERVER then
         for k, v in pairs(changed) do
             rows[#rows + 1] = {
                 key = k,
-                value = {v}
+                value = {v},
             }
         end
 
@@ -155,6 +173,19 @@ if SERVER then
         end
 
         lia.db.transaction(queries)
+    end
+
+    function lia.config.reset()
+        for _, cfg in pairs(lia.config.stored) do
+            local oldValue = cfg.value
+            cfg.value = cfg.default
+            if cfg.callback then
+                cfg.callback(oldValue, cfg.default)
+            end
+        end
+
+        lia.config.save()
+        lia.config.send()
     end
 end
 
@@ -452,7 +483,9 @@ lia.config.add("ThirdPersonEnabled", "thirdPersonEnabled", true, nil, {
 lia.config.add("MaxThirdPersonDistance", "maxThirdPersonDistance", 100, nil, {
     desc = "maxThirdPersonDistanceDesc",
     category = "categoryThirdPerson",
-    type = "Int"
+    type = "Int",
+    min = 50,
+    max = 200
 })
 
 lia.config.add("WallPeek", "wallPeek", true, nil, {
@@ -464,13 +497,17 @@ lia.config.add("WallPeek", "wallPeek", true, nil, {
 lia.config.add("MaxThirdPersonHorizontal", "maxThirdPersonHorizontal", 30, nil, {
     desc = "maxThirdPersonHorizontalDesc",
     category = "categoryThirdPerson",
-    type = "Int"
+    type = "Int",
+    min = 10,
+    max = 100
 })
 
 lia.config.add("MaxThirdPersonHeight", "maxThirdPersonHeight", 30, nil, {
     desc = "maxThirdPersonHeightDesc",
     category = "categoryThirdPerson",
-    type = "Int"
+    type = "Int",
+    min = 10,
+    max = 100
 })
 
 lia.config.add("MaxViewDistance", "maxViewDistance", 32768, nil, {
@@ -937,7 +974,7 @@ lia.config.add("sbHeight", "sbHeight", 0.65, refreshScoreboard, {
 lia.config.add("sbDock", "sbDock", "center", refreshScoreboard, {
     desc = "sbDockDesc",
     category = "scoreboard",
-    type = "String",
+    type = "Table",
     options = {"left", "center", "right"}
 })
 
@@ -985,7 +1022,9 @@ lia.config.add("FakeNamesEnabled", "fakeNamesEnabled", false, nil, {
 lia.config.add("vendorDefaultMoney", "vendorDefaultMoney", 500, nil, {
     desc = "vendorDefaultMoneyDesc",
     category = "vendor",
-    type = "Int"
+    type = "Int",
+    min = 100,
+    max = 10000
 })
 
 local function getMenuTabNames()
@@ -1375,9 +1414,10 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                 local opt = lia.config.stored[k]
                 local n = opt.name or ""
                 local d = opt.desc or ""
+                local cat = opt.category or L("misc")
                 local ln, ld = n:lower(), d:lower()
-                if filter == "" or ln:find(filter, 1, true) or ld:find(filter, 1, true) then
-                    local cat = opt.category or L("misc")
+                local lk, lc = k:lower(), cat:lower()
+                if filter == "" or ln:find(filter, 1, true) or ld:find(filter, 1, true) or lk:find(filter, 1, true) or lc:find(filter, 1, true) then
                     categories[cat] = categories[cat] or {}
                     categories[cat][#categories[cat] + 1] = {
                         key = k,

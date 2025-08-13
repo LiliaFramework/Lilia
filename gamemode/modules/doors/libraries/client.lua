@@ -16,7 +16,7 @@
         local ownable = not entity:getNetVar("noSell", false)
         lia.util.drawText(entity:getNetVar("title", entity:getNetVar("name", IsValid(owner) and L("doorTitleOwned") or (not classesRaw or classesRaw == "[]") and not entity:getNetVar("factions") and L("doorTitle") or "")), x, y, ColorAlpha(color_white, alpha), 1, 1)
         y = y + 20
-        if ownable then
+        if ownable and price > 0 then
             lia.util.drawText(L("price") .. ": " .. lia.currency.get(price), x, y, ColorAlpha(color_white, alpha), 1, 1)
             y = y + 20
         end

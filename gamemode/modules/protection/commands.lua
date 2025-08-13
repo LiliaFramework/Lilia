@@ -1,6 +1,5 @@
 ﻿lia.command.add("togglecheater", {
     adminOnly = true,
-    privilege = "toggleCheaterStatus",
     desc = "toggleCheaterDesc",
     arguments = {
         {

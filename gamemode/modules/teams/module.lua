@@ -1,7 +1,7 @@
-﻿MODULE.name = "Teams and Factions"
+﻿MODULE.name = "Teams"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Provides faction and team management systems"
+MODULE.desc = "Manages teams and factions with whitelist support and admin controls."
 MODULE.Privileges = {
     {
         Name = "canManageFactions",
@@ -12,12 +12,6 @@ MODULE.Privileges = {
     {
         Name = "manageWhitelists",
         ID = "manageWhitelists",
-        MinAccess = "admin",
-        Category = "categoryFactionManagement",
-    },
-    {
-        Name = "manageFactionRoster",
-        ID = "manageFactionRoster",
         MinAccess = "admin",
         Category = "categoryFactionManagement",
     },

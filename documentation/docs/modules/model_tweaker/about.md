@@ -4,11 +4,11 @@
 Model Tweaker
 
 **Version:**
-1.26
+1.20
 
 **Description:**
 
-Adds an entity to tweak prop models, adjustments for scale and rotation, easy UI controls, saving of tweaked props between restarts, and undo support for recent tweaks.
+Spawns an admin-only entity for scaling and rotating props. Changes persist across restarts and can be undone if needed.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

@@ -4,11 +4,11 @@
 Development HUD
 
 **Version:**
-1.30
+1.21
 
 **Description:**
 
-Adds a staff-only development HUD, font customization via DevHudFont, a requirement for the CAMI privilege, real-time server performance metrics, and a toggle command to show or hide the HUD.
+Shows a staff-only HUD with live performance metrics and other development data. Access requires a CAMI privilege and can be toggled as needed.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

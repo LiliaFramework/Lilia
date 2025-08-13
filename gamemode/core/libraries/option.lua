@@ -381,9 +381,10 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             if not opt.visible or isfunction(opt.visible) and opt.visible() then
                 local name = opt.name
                 local desc = opt.desc or ""
+                local catName = opt.data and opt.data.category or L("misc")
                 local ln, ld = name:lower(), desc:lower()
-                if filter == "" or ln:find(filter, 1, true) or ld:find(filter, 1, true) then
-                    local catName = opt.data and opt.data.category or L("misc")
+                local lk, lc = key:lower(), catName:lower()
+                if filter == "" or ln:find(filter, 1, true) or ld:find(filter, 1, true) or lk:find(filter, 1, true) or lc:find(filter, 1, true) then
                     categories[catName] = categories[catName] or {}
                     categories[catName][#categories[catName] + 1] = {
                         key = key,

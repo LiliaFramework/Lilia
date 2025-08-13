@@ -90,8 +90,9 @@ end
 
 function MODULE:CharPreSave(character)
     local client = character:getPlayer()
+    if not IsValid(client) then return end
     local InVehicle = client:hasValidVehicle()
-    if IsValid(client) and not InVehicle and client:Alive() then
+    if not InVehicle and client:Alive() then
         character:setLastPos({
             pos = client:GetPos(),
             ang = client:EyeAngles(),

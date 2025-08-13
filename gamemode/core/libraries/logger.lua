@@ -395,6 +395,10 @@ lia.log.types = {
         func = function(client, target) return L("logViewWarns", client:Name(), IsValid(target) and target:Name() or tostring(target)) end,
         category = L("admin")
     },
+    ["viewWarnsIssued"] = {
+        func = function(client, target) return L("logViewWarnsIssued", client:Name(), IsValid(target) and target:Name() or tostring(target)) end,
+        category = L("admin")
+    },
     ["adminMode"] = {
         func = function(client, id, message) return L("logAdminMode", os.date("%Y-%m-%d %H:%M:%S"), client:Name(), message, id) end,
         category = L("admin")
@@ -627,10 +631,6 @@ lia.log.types = {
     },
     ["ticketClosed"] = {
         func = function(client, requester, count) return L("logTicketClosed", client:Name(), requester, count or 0) end,
-        category = L("admin")
-    },
-    ["teleportToEntity"] = {
-        func = function(client, entClass) return L("logTeleportToEntity", client:Name(), entClass) end,
         category = L("admin")
     },
     ["plyBring"] = {

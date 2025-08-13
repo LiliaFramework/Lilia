@@ -77,7 +77,7 @@ function PANEL:loadBackground()
         self:hideExternalEntities()
         hook.Add("PrePlayerDraw", "liaMainMenuPrePlayerDraw", function() return true end)
         self:updateSelectedCharacter()
-        if not IsValid(self.leftArrow) and #lia.characters > 1 then self:createArrows() end
+        if not IsValid(self.leftArrow) and self.availableCharacters and #self.availableCharacters > 1 then self:createArrows() end
         hook.Add("CalcView", "liaMainMenuCalcView", function(_, _, _, fov)
             local ent = self.modelEntity
             if not IsValid(ent) then return end
@@ -146,13 +146,16 @@ function PANEL:createStartButton()
     local discordURL = lia.config.get("DiscordURL")
     local workshopURL = lia.config.get("Workshop")
     local buttonsData = {}
-    local hasStaffChar = false
+    local hasStaffChar, hasNonStaffChar = false, false
     if lia.characters and #lia.characters > 0 then
         for _, charID in pairs(lia.characters) do
             local character = lia.char.getCharacter(charID)
-            if character and character:getFaction() == FACTION_STAFF then
-                hasStaffChar = true
-                break
+            if character then
+                if character:getFaction() == FACTION_STAFF then
+                    hasStaffChar = true
+                else
+                    hasNonStaffChar = true
+                end
             end
         end
     end
@@ -174,7 +177,7 @@ function PANEL:createStartButton()
         })
     end
 
-    if lia.characters and #lia.characters > 0 then
+    if hasNonStaffChar then
         table.insert(buttonsData, {
             id = "load",
             text = "Load Character",
@@ -184,6 +187,15 @@ function PANEL:createStartButton()
                 end
 
                 self:clickSound()
+                self.availableCharacters = {}
+                for _, charID in pairs(lia.characters or {}) do
+                    local character = lia.char.getCharacter(charID)
+                    if character and character:getFaction() ~= FACTION_STAFF then
+                        table.insert(self.availableCharacters, charID)
+                    end
+                end
+
+                self.currentIndex = 1
                 self.isLoadMode = true
                 self:showContent(true)
                 self:createCharacterSelection()
@@ -238,7 +250,6 @@ function PANEL:createStartButton()
         })
     end
 
-    -- 6. Mount Content
     if lia.workshop and lia.workshop.hasContentToDownload and lia.workshop.hasContentToDownload() then
         table.insert(buttonsData, {
             id = "mount",
@@ -255,7 +266,6 @@ function PANEL:createStartButton()
         })
     end
 
-    -- 7. Disconnect
     table.insert(buttonsData, {
         id = "disconnect",
         text = "Disconnect",
@@ -265,7 +275,6 @@ function PANEL:createStartButton()
         end
     })
 
-    -- 8. Return
     if clientChar then
         table.insert(buttonsData, {
             id = "return",
@@ -393,7 +402,7 @@ function PANEL:createCharacterSelection()
     self.content:Clear()
     self.content:InvalidateLayout(true)
     self:updateSelectedCharacter()
-    if #lia.characters > 1 then self:createArrows() end
+    if self.availableCharacters and #self.availableCharacters > 1 then self:createArrows() end
 end
 
 function PANEL:createCharacterCreation()
@@ -432,7 +441,7 @@ end
 
 function PANEL:updateSelectedCharacter()
     if not self.isLoadMode then return end
-    local chars = lia.characters or {}
+    local chars = self.availableCharacters or {}
     if #chars == 0 then return end
     self.currentIndex = self.currentIndex or 1
     local sel = chars[self.currentIndex] or chars[1]
@@ -446,7 +455,7 @@ end
 
 function PANEL:createSelectedCharacterInfoPanel(character)
     if not character then return end
-    local chars = lia.characters or {}
+    local chars = self.availableCharacters or {}
     local total = #chars
     local index = 1
     for i, cID in ipairs(chars) do
@@ -568,10 +577,10 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         if character:isBanned() then
             local characterName = character:getName()
             Derma_Query(L("pkDialogMessage", characterName), L("permaKillTitle"), L("iAcknowledge"), function() end)
-        else
-            lia.module.list["mainmenu"]:chooseCharacter(character:getID()):catch(function(err) if err and err ~= "" then LocalPlayer():notifyLocalized(err) end end)
-            self:Remove()
+            return
         end
+
+        lia.module.list["mainmenu"]:chooseCharacter(character:getID()):next(function() if IsValid(self) then self:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyLocalized(err) end end)
     end
 
     self.deleteBtn = self:Add("liaSmallButton")
@@ -639,10 +648,11 @@ function PANEL:createArrows()
         btn:SetFont("liaHugeFont")
         btn:SetText(sign)
         btn.DoClick = function()
-            if not self.isLoadMode or not lia.characters or #lia.characters == 0 then return end
+            local chars = self.availableCharacters or {}
+            if not self.isLoadMode or #chars == 0 then return end
             self.currentIndex = self.currentIndex + (sign == "<" and -1 or 1)
-            if self.currentIndex < 1 then self.currentIndex = #lia.characters end
-            if self.currentIndex > #lia.characters then self.currentIndex = 1 end
+            if self.currentIndex < 1 then self.currentIndex = #chars end
+            if self.currentIndex > #chars then self.currentIndex = 1 end
             self:clickSound()
             self:updateSelectedCharacter()
         end
@@ -785,6 +795,17 @@ function PANEL:Think()
         self.logo:SetZPos(9999)
         self.logo:MoveToFront()
         self:UpdateLogoPosition()
+    end
+
+    if self.isLoadMode and IsValid(self.modelEntity) then
+        local ang = self.modelEntity:GetAngles()
+        local rotate = 0
+        if input.IsKeyDown(KEY_A) then rotate = rotate + FrameTime() * 120 end
+        if input.IsKeyDown(KEY_D) then rotate = rotate - FrameTime() * 120 end
+        if rotate ~= 0 then
+            ang.y = ang.y + rotate
+            self.modelEntity:SetAngles(ang)
+        end
     end
 end
 

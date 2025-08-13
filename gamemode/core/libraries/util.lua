@@ -638,13 +638,17 @@ else
 
     function lia.util.CreateTableUI(title, columns, data, options, charID)
         local frameWidth, frameHeight = ScrW() * 0.8, ScrH() * 0.8
-        local frame = vgui.Create("DFrame")
-        frame:SetTitle(title and L(title) or L("tableListTitle"))
+        local frame = vgui.Create("liaDListView")
+        frame:SetWindowTitle(title and L(title) or L("tableListTitle"))
         frame:SetSize(frameWidth, frameHeight)
         frame:Center()
         frame:MakePopup()
-        local listView = vgui.Create("DListView", frame)
+        if IsValid(frame.topBar) then frame.topBar:Remove() end
+        if IsValid(frame.statusBar) then frame.statusBar:Remove() end
+        local listView = frame.listView
         listView:Dock(FILL)
+        listView:Clear()
+        if listView.ClearColumns then listView:ClearColumns() end
         for _, colInfo in ipairs(columns or {}) do
             local localizedName = colInfo.name and L(colInfo.name) or L("na")
             local col = listView:AddColumn(localizedName)

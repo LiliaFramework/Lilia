@@ -118,6 +118,7 @@ local function openMenu(options, isInteraction, titleText, closeKey, netMsg)
             if entry.opt.runServer then
                 net.Start(netMsg)
                 net.WriteString(entry.name)
+                if isInteraction then net.WriteEntity(ent) end
                 net.SendToServer()
             end
         end

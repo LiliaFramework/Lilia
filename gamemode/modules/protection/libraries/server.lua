@@ -1,11 +1,4 @@
-﻿local MODULE = MODULE
-lia.administrator.registerPrivilege({
-    Name = "receiveCheaterNotifications",
-    ID = "receiveCheaterNotifications",
-    MinAccess = "admin",
-    Category = "protection"
-})
-
+local MODULE = MODULE
 local function IsCheater(client)
     return lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false)
 end
@@ -15,19 +8,23 @@ local function LogCheaterAction(client, action)
     client:notify("Maybe you shouldn't have cheated")
 end
 
-function MODULE:CanPlayerSwitchChar(client, character)
+function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
     if not client:isStaffOnDuty() then
-        local damageCooldown = lia.config.get("OnDamageCharacterSwitchCooldownTimer", 15)
-        local switchCooldown = lia.config.get("CharacterSwitchCooldownTimer", 5)
-        if damageCooldown > 0 and client.LastDamaged and client.LastDamaged > CurTime() - damageCooldown then
-            lia.log.add(client, "permissionDenied", L("logSwitchCharRecentDamage"))
-            return false, L("tookDamageSwitchCooldown")
-        end
+        local switchingToStaff = newCharacter and newCharacter:getFaction() == FACTION_STAFF
+        local switchingFromStaff = character and character:getFaction() == FACTION_STAFF
+        if not switchingToStaff and not switchingFromStaff then
+            local damageCooldown = lia.config.get("OnDamageCharacterSwitchCooldownTimer", 15)
+            local switchCooldown = lia.config.get("CharacterSwitchCooldownTimer", 5)
+            if damageCooldown > 0 and client.LastDamaged and client.LastDamaged > CurTime() - damageCooldown then
+                lia.log.add(client, "permissionDenied", L("logSwitchCharRecentDamage"))
+                return false, L("tookDamageSwitchCooldown")
+            end
 
-        local loginTime = character:getLoginTime()
-        if switchCooldown > 0 and loginTime + switchCooldown > os.time() then
-            lia.log.add(client, "permissionDenied", L("logSwitchCharCooldown"))
-            return false, L("switchCooldown")
+            local loginTime = character:getLoginTime()
+            if switchCooldown > 0 and loginTime + switchCooldown > os.time() then
+                lia.log.add(client, "permissionDenied", L("logSwitchCharCooldown"))
+                return false, L("switchCooldown")
+            end
         end
     end
     return true

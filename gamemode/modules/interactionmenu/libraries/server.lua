@@ -24,6 +24,11 @@ net.Receive("TransferMoneyFromP2P", function(_, sender)
     target:notifyLocalized("moneyTransferReceived", lia.currency.get(amount), senderName)
 end)
 
+local function isWithinRange(client, entity)
+    if not IsValid(client) or not IsValid(entity) then return false end
+    return entity:GetPos():DistToSqr(client:GetPos()) < 250 * 250
+end
+
 net.Receive("RunOption", function(_, ply)
     if lia.config.get("DisableCheaterActions", true) and ply:getNetVar("cheater", false) then
         lia.log.add(ply, "cheaterAction", L("cheaterActionUseInteractionMenu"))
@@ -33,8 +38,8 @@ net.Receive("RunOption", function(_, ply)
 
     local name = net.ReadString()
     local opt = MODULE.Interactions[name]
-    local tracedEntity = ply:getTracedEntity()
-    if opt and opt.runServer and IsValid(tracedEntity) then opt.onRun(ply, tracedEntity) end
+    local tracedEntity = net.ReadEntity()
+    if opt and opt.runServer and IsValid(tracedEntity) and tracedEntity:IsPlayer() and isWithinRange(ply, tracedEntity) then opt.onRun(ply, tracedEntity) end
 end)
 
 net.Receive("RunLocalOption", function(_, ply)

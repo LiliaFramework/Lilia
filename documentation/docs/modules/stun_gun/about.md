@@ -4,11 +4,11 @@
 Stun Gun
 
 **Version:**
-101.26
+101.20
 
 **Description:**
 
-Adds a taser weapon that immobilizes targets, StunTime and MaxDist as configurable settings, optional damage and post-process effects, networked stun animations, and logs when players are tased.
+Introduces a taser weapon that temporarily incapacitates targets. Stun time, range, and optional damage effects are fully configurable.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

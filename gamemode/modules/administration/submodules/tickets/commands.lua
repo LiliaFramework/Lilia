@@ -1,7 +1,6 @@
 ﻿local MODULE = MODULE
 lia.command.add("viewtickets", {
     adminOnly = true,
-    privilege = "viewClaims",
     desc = "viewTicketsDesc",
     arguments = {
         {
@@ -63,7 +62,6 @@ lia.command.add("viewtickets", {
 
 lia.command.add("plyviewclaims", {
     adminOnly = true,
-    privilege = "viewClaims",
     desc = "plyViewClaimsDesc",
     arguments = {
         {
@@ -73,7 +71,7 @@ lia.command.add("plyviewclaims", {
     },
     AdminStick = {
         Name = "viewTicketClaims",
-        Category = "moderationTools",
+        Category = "moderation",
         SubCategory = "misc",
         Icon = "icon16/page_white_text.png"
     },
@@ -149,7 +147,6 @@ lia.command.add("plyviewclaims", {
 
 lia.command.add("viewallclaims", {
     adminOnly = true,
-    privilege = "viewClaims",
     desc = "viewAllClaimsDesc",
     onRun = function(client)
         MODULE:GetAllCaseClaims():next(function(caseclaims)
@@ -210,7 +207,6 @@ lia.command.add("viewallclaims", {
 
 lia.command.add("viewclaims", {
     adminOnly = true,
-    privilege = "viewClaims",
     desc = "viewClaimsDesc",
     onRun = function(client)
         MODULE:GetAllCaseClaims():next(function(caseclaims)

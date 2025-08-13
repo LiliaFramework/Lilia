@@ -193,6 +193,16 @@ function PANEL:createCategoryDropdown()
     end
 end
 
+function PANEL:updateVendorModel()
+    if not (IsValid(self.vendorModel) and IsValid(liaVendorEnt)) then return end
+    local ent = self.vendorModel.Entity
+    if not IsValid(ent) then return end
+    ent:SetSkin(liaVendorEnt:GetSkin())
+    for i = 0, liaVendorEnt:GetNumBodyGroups() - 1 do
+        ent:SetBodygroup(i, liaVendorEnt:GetBodygroup(i))
+    end
+end
+
 function PANEL:DrawModels()
     self.vendorModel = self:Add("DModelPanel")
     self.vendorModel:SetSize(ScreenScale(160), ScreenScaleH(170))
@@ -200,6 +210,7 @@ function PANEL:DrawModels()
     local model = liaVendorEnt and liaVendorEnt.GetModel and liaVendorEnt:GetModel() or ""
     if util.IsValidModel(model) then
         self.vendorModel:SetModel(model)
+        self:updateVendorModel()
     else
         self.vendorModel:SetModel("")
     end
@@ -376,6 +387,7 @@ function PANEL:onVendorPropEdited(_, key)
         local m = liaVendorEnt:GetModel() or ""
         if util.IsValidModel(m) then
             self.vendorModel:SetModel(m)
+            self:updateVendorModel()
         else
             self.vendorModel:SetModel("")
         end
@@ -390,10 +402,12 @@ function PANEL:onVendorPropEdited(_, key)
     elseif key == "preset" then
         local preset = liaVendorEnt:getNetVar("preset", "none")
         if IsValid(self.preset) then self.preset:SetValue(preset == "none" and L("none") or preset) end
-    elseif key == "skin" and IsValid(self.skin) then
-        self.skin:SetValue(liaVendorEnt:GetSkin())
-    elseif key == "bodygroup" and IsValid(lia.gui.vendorBodygroupEditor) then
-        lia.gui.vendorBodygroupEditor:onVendorEdited(nil, key)
+    elseif key == "skin" then
+        if IsValid(self.skin) then self.skin:SetValue(liaVendorEnt:GetSkin()) end
+        self:updateVendorModel()
+    elseif key == "bodygroup" then
+        if IsValid(lia.gui.vendorBodygroupEditor) then lia.gui.vendorBodygroupEditor:onVendorEdited(nil, key) end
+        self:updateVendorModel()
     end
 
     self:applyCategoryFilter()

@@ -4,11 +4,11 @@
 Load Messages
 
 **Version:**
-1.19
+1.14
 
 **Description:**
 
-Adds faction-based load messages, execution when players first load a character, customizable message text, color-coded formatting options, and per-faction enable toggles.
+Shows a faction-specific message the first time a character is loaded. Useful for welcoming players or outlining faction rules.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

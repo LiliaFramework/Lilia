@@ -63,6 +63,8 @@ alias = "chargiveflag"
 alias = {"chargiveflag", "giveflag"}
 ```
 
+**Note:** When using aliases with `adminOnly` or `superAdminOnly`, privileges are automatically registered for each alias. For example, if a command has `adminOnly = true` and alias `"testcmd"`, the privilege `command_testcmd` will be registered and required to use that alias.
+
 ---
 
 #### `adminOnly`
@@ -192,6 +194,9 @@ All keys are optional; if omitted the command simply will not appear in the Admi
 * `Icon` (string) – 16×16 icon path.
 
 * `TargetClass` (string) – Limit the command to a specific entity class when using the Admin Stick.
+
+Custom categories and subcategories can be added through the Administration module using
+`addAdminStickCategory(key, data)` and `addAdminStickSubCategory(category, key, data)`.
 
 **Example Usage:**
 

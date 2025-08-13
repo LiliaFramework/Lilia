@@ -154,7 +154,10 @@ function characterMeta:setData(k, v, noReplication, receiver)
                 net.WriteType(data)
             end
 
-            net.Send(receiver or self:getPlayer())
+            local target = receiver or self:getPlayer()
+            if IsValid(target) then
+                net.Send(target)
+            end
         end
 
         if istable(k) then

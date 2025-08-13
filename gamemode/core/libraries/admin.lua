@@ -2,6 +2,7 @@ lia.administrator = lia.administrator or {}
 lia.administrator.groups = lia.administrator.groups or {}
 lia.administrator.privileges = lia.administrator.privileges or {}
 lia.administrator.privilegeCategories = lia.administrator.privilegeCategories or {}
+lia.administrator.privilegeNames = lia.administrator.privilegeNames or {}
 lia.administrator.missingGroups = lia.administrator.missingGroups or {}
 lia.administrator.DefaultGroups = {
     user = 1,
@@ -9,6 +10,52 @@ lia.administrator.DefaultGroups = {
     superadmin = 3
 }
 
+local function ensureDefaults(groups)
+    local created = false
+    for _, grp in ipairs({"user", "admin", "superadmin"}) do
+        local data = groups[grp]
+        if not data then
+            data = {
+                _info = {
+                    inheritance = grp,
+                    types = {},
+                }
+            }
+
+            groups[grp] = data
+            created = true
+        end
+
+        data._info = data._info or {
+            inheritance = grp,
+            types = {},
+        }
+
+        if data._info.inheritance ~= grp then
+            data._info.inheritance = grp
+            created = true
+        end
+
+        data._info.types = data._info.types or {}
+        if grp == "admin" or grp == "superadmin" then
+            local hasStaff = false
+            for _, typ in ipairs(data._info.types) do
+                if tostring(typ):lower() == "staff" then
+                    hasStaff = true
+                    break
+                end
+            end
+
+            if not hasStaff then
+                table.insert(data._info.types, "Staff")
+                created = true
+            end
+        end
+    end
+    return created
+end
+
+ensureDefaults(lia.administrator.groups)
 local function getPrivilegeCategory(privilegeName)
     local categoryChecks = {
         {
@@ -170,6 +217,11 @@ local function camiBootstrapFromExisting()
 end
 
 function lia.administrator.hasAccess(ply, privilege)
+    if not isstring(privilege) then
+        lia.error("hasAccess expected a string privilege, got " .. tostring(privilege))
+        return false
+    end
+
     local grp = "user"
     if isstring(ply) then
         grp = ply
@@ -181,9 +233,9 @@ function lia.administrator.hasAccess(ply, privilege)
         end
     end
 
-    if not (lia.administrator.privileges and lia.administrator.privileges[privilege]) then
+    if not lia.administrator.privileges[privilege] then
         lia.information(L("privilegeNotExist", privilege))
-        if IsValid(ply) and ply.notifyLocalized then ply:notifyLocalized("privilegeNotExist", privilege) end
+        if IsValid(ply) then ply:notifyLocalized("privilegeNotExist", privilege) end
         return getGroupLevel(grp) >= (lia.administrator.DefaultGroups.superadmin or 3)
     end
 
@@ -239,6 +291,7 @@ function lia.administrator.registerPrivilege(priv)
     if lia.administrator.privileges[id] ~= nil then return end
     local min = tostring(priv.MinAccess or "user"):lower()
     lia.administrator.privileges[id] = min
+    lia.administrator.privilegeNames[id] = priv.Name or priv.ID
     if priv.Category then lia.administrator.privilegeCategories[id] = priv.Category end
     for groupName, perms in pairs(lia.administrator.groups) do
         perms = perms or {}
@@ -264,6 +317,7 @@ function lia.administrator.unregisterPrivilege(id)
     if id == "" or lia.administrator.privileges[id] == nil then return end
     lia.administrator.privileges[id] = nil
     lia.administrator.privilegeCategories[id] = nil
+    lia.administrator.privilegeNames[id] = nil
     for _, perms in pairs(lia.administrator.groups or {}) do
         perms[id] = nil
     end
@@ -305,51 +359,6 @@ function lia.administrator.applyInheritance(groupName)
 end
 
 function lia.administrator.load()
-    local function ensureDefaults(groups)
-        local created = false
-        for _, grp in ipairs({"user", "admin", "superadmin"}) do
-            local data = groups[grp]
-            if not data then
-                data = {
-                    _info = {
-                        inheritance = grp,
-                        types = {},
-                    }
-                }
-
-                groups[grp] = data
-                created = true
-            end
-
-            data._info = data._info or {
-                inheritance = grp,
-                types = {}
-            }
-
-            if data._info.inheritance ~= grp then
-                data._info.inheritance = grp
-                created = true
-            end
-
-            data._info.types = data._info.types or {}
-            if grp == "admin" or grp == "superadmin" then
-                local hasStaff = false
-                for _, typ in ipairs(data._info.types) do
-                    if tostring(typ):lower() == "staff" then
-                        hasStaff = true
-                        break
-                    end
-                end
-
-                if not hasStaff then
-                    table.insert(data._info.types, "Staff")
-                    created = true
-                end
-            end
-        end
-        return created
-    end
-
     local function continueLoad(groups)
         lia.administrator.groups = groups or {}
         if CAMI then
@@ -463,13 +472,6 @@ function lia.administrator.renameGroup(oldName, newName)
     if SERVER then lia.administrator.save() end
 end
 
-lia.administrator.registerPrivilege({
-    ID = "createStaffCharacter",
-    Name = "createStaffCharacter",
-    MinAccess = "admin",
-    Category = "categoryStaffManagement"
-})
-
 if SERVER then
     function lia.administrator.addPermission(groupName, permission, silent)
         if not lia.administrator.groups[groupName] then
@@ -511,7 +513,11 @@ if SERVER then
         local function push(ply)
             if not IsValid(ply) then return end
             if not lia.net.ready[ply] then return end
-            lia.net.writeBigTable(ply, "updateAdminPrivileges", lia.administrator.privileges or {})
+            lia.net.writeBigTable(ply, "updateAdminPrivileges", {
+                privileges = lia.administrator.privileges or {},
+                names = lia.administrator.privilegeNames or {}
+            })
+
             timer.Simple(0.05, function() if IsValid(ply) and lia.net.ready[ply] then lia.net.writeBigTable(ply, "updateAdminGroups", lia.administrator.groups or {}) end end)
         end
 
@@ -806,7 +812,8 @@ else
             local row = list:Add("DPanel")
             row:Dock(TOP)
             row:DockMargin(0, 0, 0, 8)
-            local isUsergroup = name == L("usergroupStaff") or name == L("usergroupVIP")
+            local displayKey = lia.administrator.privilegeNames[name] or name
+            local isUsergroup = false
             local font = isUsergroup and "liaBigFont" or "liaMediumFont"
             local boxSize = 56
             local rightOffset = isUsergroup and 16 or 12
@@ -818,7 +825,7 @@ else
             local lbl = row:Add("DLabel")
             lbl:Dock(FILL)
             lbl:DockMargin(8, 0, isUsergroup and 16 or 0, 0)
-            lbl:SetText(name)
+            lbl:SetText(L(displayKey))
             lbl:SetFont(font)
             lbl:SetContentAlignment(4)
             local chk = row:Add("liaCheckBox")
@@ -1070,7 +1077,15 @@ else
         if IsValid(lia.gui.usergroups) then buildGroupsUI(lia.gui.usergroups, tbl) end
     end)
 
-    lia.net.readBigTable("updateAdminPrivileges", function(tbl) lia.administrator.privileges = tbl end)
+    lia.net.readBigTable("updateAdminPrivileges", function(tbl)
+        if tbl and tbl.privileges then
+            lia.administrator.privileges = tbl.privileges
+            lia.administrator.privilegeNames = tbl.names or {}
+        else
+            lia.administrator.privileges = tbl
+        end
+    end)
+
     net.Receive("liaGroupPermChanged", function()
         local group = net.ReadString()
         local privilege = net.ReadString()
