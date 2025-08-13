@@ -4,7 +4,7 @@
 Cinematic Text
 
 **Version:**
-1.31
+1.32
 
 **Description:**
 

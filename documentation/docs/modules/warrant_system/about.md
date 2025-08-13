@@ -4,7 +4,7 @@
 Warrant System
 
 **Version:**
-1.35
+1.36
 
 **Description:**
 
