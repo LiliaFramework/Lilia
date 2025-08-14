@@ -22,21 +22,38 @@ function GM:PlayerSpawnProp(client, model)
 end
 
 function GM:CanProperty(client, property, entity)
+    print("[TEST] CanProperty called with client:", client, "property:", property, "entity:", entity)
     if restrictedProperties[property] then
+        print("[TEST] Property is restricted:", property)
         lia.log.add(client, "permissionDenied", L("useProperty", property))
         client:notifyLocalized("disabledFeature")
         return false
     end
 
     if entity:IsWorld() and IsValid(entity) then
-        if client:hasPrivilege("canPropertyWorldEntities") then return true end
+        print("[TEST] Entity is world and valid.")
+        if client:hasPrivilege("canPropertyWorldEntities") then
+            print("[TEST] Client has canPropertyWorldEntities privilege.")
+            return true
+        end
+
+        print("[TEST] Client does NOT have canPropertyWorldEntities privilege.")
         lia.log.add(client, "permissionDenied", L("modifyWorldProperty", property))
         client:notifyLocalized("noModifyWorldEntities")
         return false
     end
 
-    if entity:GetCreator() == client and (property == "remover" or property == "collision") then return true end
-    if client:hasPrivilege("property_" .. property) and client:isStaffOnDuty() then return true end
+    if entity:GetCreator() == client and (property == "remover" or property == "collision") then
+        print("[TEST] Client is creator and property is remover or collision.")
+        return true
+    end
+
+    if client:hasPrivilege("property_" .. property) and client:isStaffOnDuty() then
+        print("[TEST] Client has property privilege and is staff on duty.")
+        return true
+    end
+
+    print("[TEST] Client does NOT have permission to modify property:", property)
     lia.log.add(client, "permissionDenied", L("modifyProperty", property))
     client:notifyLocalized("noModifyProperty")
     return false
