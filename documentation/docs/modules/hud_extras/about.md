@@ -4,11 +4,11 @@
 HUD Extras
 
 **Version:**
-1.22
+1.28
 
 **Description:**
 
-Adds optional HUD widgets like an FPS counter and performance stats. The system is extensible so other modules can display their own info.
+Adds extra HUD elements like an FPS counter, fonts configurable with FPSHudFont, hooks so other modules can extend, performance stats display, and toggles for individual HUD elements.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

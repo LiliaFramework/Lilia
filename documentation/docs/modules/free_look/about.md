@@ -4,11 +4,19 @@
 Free Look
 
 **Version:**
-1.17
+1.21
 
 **Description:**
 
-Enables freelook so players can glance around without turning their body. A toggle key and sensitivity options offer tactical awareness.
+Adds the ability to look around without turning the body, a toggle key similar to EFT, movement direction preservation, and adjustable sensitivity while freelooking.
+
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
+
+- Adds the ability to look around without turning the body
+- Adds a toggle key similar to EFT
+- Adds movement direction preservation
+- Adds adjustable sensitivity while freelooking
+
 
 
 

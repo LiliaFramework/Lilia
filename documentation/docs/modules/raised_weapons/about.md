@@ -4,11 +4,11 @@
 Raised Weapons
 
 **Version:**
-1.18
+1.24
 
 **Description:**
 
-Lowers your weapon while sprinting to prevent accidental fire, then raises it again after a delay. Works with both guns and melee weapons.
+Adds auto-lowering of weapons when running, a raise delay set by WeaponRaiseSpeed, prevention of accidental fire, a toggle to keep weapons lowered, and compatibility with melee weapons.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

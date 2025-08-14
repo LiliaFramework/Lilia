@@ -1,14 +1,14 @@
 <h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
 **Name:**
-Corpse Identification
+Corpse ID
 
 **Version:**
-1.22
+1.28
 
 **Description:**
 
-Lets players inspect corpses after a brief delay to see who they were. The victim's name appears above the body and the action is logged.
+Adds the ability to identify corpses after IdentificationTime, use of CorpseMessageFont for 3D2D text, info display above bodies, configurable identification delays, and logs when corpses are identified.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

@@ -4,11 +4,11 @@
 Join Leave Messages
 
 **Version:**
-1.16
+1.20
 
 **Description:**
 
-Announces when players join or leave the server and can relay these messages to Discord. Individuals may disable the notifications.
+Adds announcements when players join, notifications on disconnect, improved community awareness, relay of messages to Discord, and per-player toggle to hide messages.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

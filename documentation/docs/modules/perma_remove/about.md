@@ -4,11 +4,11 @@
 Perma Remove
 
 **Version:**
-1.18
+1.25
 
 **Description:**
 
-Allows admins to permanently delete unwanted map entities. Each removal is confirmed and recorded for later review.
+Adds ability to permanently delete map entities, logging for each removed entity, an admin-only command, confirmation prompts before removal, and restore list to undo mistakes.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

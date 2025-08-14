@@ -4,7 +4,7 @@
 Auto Restarter
 
 **Version:**
-1.16
+1.23
 
 **Description:**
 
