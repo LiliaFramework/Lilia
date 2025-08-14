@@ -882,7 +882,7 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds handcuff items that restrain players, logging for tie and untie events, support for roleplay arrests, timed escape minigames for prisoners, and compatibility with the search submodule.",
-    "version": "1.31",
+    "version": "1.32",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/tying.zip",
     "source": "https://liliaframework.github.io/Modules/tying.html",
     "public_uniqueID": "tying",
