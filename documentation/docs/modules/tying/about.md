@@ -4,11 +4,11 @@
 Tying
 
 **Version:**
-1.26
+1.31
 
 **Description:**
 
-Adds handcuff items to restrain players, recording every tie and untie action. Prisoners can attempt timed escapes for added drama.
+Adds handcuff items that restrain players, logging for tie and untie events, support for roleplay arrests, timed escape minigames for prisoners, and compatibility with the search submodule.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

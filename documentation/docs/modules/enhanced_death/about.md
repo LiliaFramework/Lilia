@@ -1,14 +1,14 @@
 <h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
 **Name:**
-Hospital Respawn
+Enhanced Death
 
 **Version:**
-1.13
+1.19
 
 **Description:**
 
-Respawns players at hospital locations where they must recover for a short time after death. Creates a more immersive medical system.
+Adds respawning of players at hospitals, a medical recovery system, support for multiple hospital spawns, configurable respawn delays, and integration with death logs.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

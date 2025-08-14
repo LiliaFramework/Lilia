@@ -1,14 +1,14 @@
 <h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
 **Name:**
-NPC Drops
+NPC Drop
 
 **Version:**
-1.14
+1.19
 
 **Description:**
 
-Sets up loot tables so specific NPCs drop items when killed. Weighted chances encourage players to search bodies after combat.
+Adds NPCs that drop items on death, DropTable to define probabilities, encouragement for looting, editable drop tables per NPC type, and weighted chances for rare items.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

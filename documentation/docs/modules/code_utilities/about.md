@@ -4,11 +4,11 @@
 Code Utilities
 
 **Version:**
-1.22
+1.27
 
 **Description:**
 
-Supplies additional helper functions under lia.util for use by other modules. Simplifies networking and other common scripting tasks.
+Adds extra helper functions in lia.util, simplified utilities for common scripting tasks, a central library used by other modules, utilities for networking data, and shared constants for modules.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

@@ -1,10 +1,10 @@
 <h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
 **Name:**
-Bodygroup Editor
+Body Group Editor
 
 **Version:**
-1.27
+1.36
 
 **Description:**
 

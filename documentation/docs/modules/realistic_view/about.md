@@ -4,11 +4,11 @@
 Realistic View
 
 **Version:**
-1.17
+1.23
 
 **Description:**
 
-Switches to a full-body first-person camera with smooth transition effects. Works with animations and can fall back to third-person.
+Adds a first-person view that shows the full body, immersive camera transitions, compatibility with animations, smooth leaning animations, and optional third-person override.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

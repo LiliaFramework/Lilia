@@ -1,14 +1,14 @@
 <h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
 **Name:**
-Viewmodel Animations
+View Manipulation
 
 **Version:**
-1.18
+1.23
 
 **Description:**
 
-Enables VManip animations and gestures across the framework. Items can trigger custom hand movements with fallbacks if VManip isn't installed.
+Adds VManip animation support, hand gestures for items, functionality within Lilia, API for custom gesture triggers, and fallback animations when VManip is missing.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 
