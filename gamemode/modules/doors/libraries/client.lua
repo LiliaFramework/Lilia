@@ -74,7 +74,7 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
         for _, faction in pairs(lia.faction.teams) do
             if not table.HasValue(factionsAssigned, faction.uniqueID) then
                 addFactionMenu:AddOption(faction.name, function()
-                    LocalPlayer():ConCommand('say /dooraddfaction "' .. faction.uniqueID .. '"')
+                    LocalPlayer():ConCommand("say /dooraddfaction '" .. faction.uniqueID .. "'")
                     AdminStickIsOpen = false
                 end):SetIcon("icon16/group_add.png")
             end
@@ -87,7 +87,7 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
                 local faction = lia.faction.get(id)
                 if faction then
                     removeFactionMenu:AddOption(faction.name, function()
-                        LocalPlayer():ConCommand('say /doorremovefaction "' .. faction.uniqueID .. '"')
+                        LocalPlayer():ConCommand("say /doorremovefaction '" .. faction.uniqueID .. "'")
                         AdminStickIsOpen = false
                     end):SetIcon("icon16/group_delete.png")
                 end
@@ -100,7 +100,7 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
         setClassPanel:SetIcon("icon16/tag_blue.png")
         for classID, classData in pairs(lia.class.list) do
             setClassMenu:AddOption(classData.name, function()
-                LocalPlayer():ConCommand('say /doorsetclass "' .. classID .. '"')
+                LocalPlayer():ConCommand("say /doorsetclass '" .. faction.uniqueID .. "'")
                 AdminStickIsOpen = false
             end):SetIcon("icon16/tag_blue.png")
         end
@@ -108,7 +108,7 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
         local existingClasses = target:getNetVar("classes")
         if existingClasses and existingClasses ~= "[]" then
             setClassMenu:AddOption(L("remove") .. " " .. L("class"), function()
-                LocalPlayer():ConCommand('say /doorsetclass ""')
+                LocalPlayer():ConCommand("say /doorsetclass ''")
                 AdminStickIsOpen = false
             end):SetIcon("icon16/delete.png")
         end
