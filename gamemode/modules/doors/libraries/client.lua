@@ -100,7 +100,7 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
         setClassPanel:SetIcon("icon16/tag_blue.png")
         for classID, classData in pairs(lia.class.list) do
             setClassMenu:AddOption(classData.name, function()
-                LocalPlayer():ConCommand("say /doorsetclass '" .. faction.uniqueID .. "'")
+                LocalPlayer():ConCommand("say /doorsetclass '" .. classID .. "'")
                 AdminStickIsOpen = false
             end):SetIcon("icon16/tag_blue.png")
         end
