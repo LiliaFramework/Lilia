@@ -3,16 +3,14 @@
 }
 
 function MODULE:InitializedModules()
-    if properties.List then
-        for name, prop in pairs(properties.List) do
-            if name ~= "persist" and name ~= "drive" and name ~= "bonemanipulate" then
-                lia.administrator.registerPrivilege({
-                    Name = L("accessPropertyPrivilege", prop.MenuLabel),
-                    ID = "property_" .. tostring(name),
-                    MinAccess = "admin",
-                    Category = "categoryStaffManagement"
-                })
-            end
+    for name, prop in pairs(properties.List) do
+        if name ~= "persist" and name ~= "drive" and name ~= "bonemanipulate" then
+            lia.administrator.registerPrivilege({
+                Name = L("accessPropertyPrivilege", prop.MenuLabel),
+                ID = "property_" .. tostring(name),
+                MinAccess = "admin",
+                Category = "properties"
+            })
         end
     end
 
@@ -23,7 +21,7 @@ function MODULE:InitializedModules()
                     Name = L("accessToolPrivilege", tool:gsub("^%l", string.upper)),
                     ID = "tool_" .. tostring(tool),
                     MinAccess = defaultUserTools[string.lower(tool)] and "user" or "admin",
-                    Category = "categoryStaffTools"
+                    Category = "tools"
                 })
             end
         end

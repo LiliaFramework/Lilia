@@ -4,11 +4,11 @@
 War Table
 
 **Version:**
-1.26
+1.20
 
 **Description:**
 
-Adds an interactive 3D war table, the ability to plan operations on a map, a workshop model, marker placement for strategies, and support for multiple map layouts.
+Creates an interactive 3D war table for coordinating operations. Staff can place markers and switch between different map layouts.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

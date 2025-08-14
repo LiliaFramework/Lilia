@@ -833,6 +833,12 @@ lia.config.add("ActsActive", "actsActive", false, nil, {
     type = "Boolean",
 })
 
+lia.config.add("PropProtection", "propProtection", true, nil, {
+    desc = "propProtectionDesc",
+    category = "protection",
+    type = "Boolean",
+})
+
 lia.config.add("PassableOnFreeze", "passableOnFreeze", false, nil, {
     desc = "passableOnFreezeDesc",
     category = "protection",

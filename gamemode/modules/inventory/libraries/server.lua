@@ -96,9 +96,11 @@ local function applyInventorySize(client, character)
     end
 
     local w, h = inv:getSize()
-    if w ~= dw or h ~= dh then inv:setSize(dw, dh) end
+    local sizeChanged = w ~= dw or h ~= dh
+    if sizeChanged then inv:sync(client) end
+    if sizeChanged then inv:setSize(dw, dh) end
     local removed = lia.inventory.checkOverflow(inv, character, w, h)
-    if w ~= dw or h ~= dh or removed then inv:sync(client) end
+    if sizeChanged or removed then inv:sync(client) end
 end
 
 function MODULE:PlayerLoadedChar(client, character)

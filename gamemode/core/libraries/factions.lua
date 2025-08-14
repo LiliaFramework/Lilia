@@ -1,4 +1,4 @@
-﻿lia.faction = lia.faction or {}
+lia.faction = lia.faction or {}
 lia.faction.indices = lia.faction.indices or {}
 lia.faction.teams = lia.faction.teams or {}
 local DefaultModels = {"models/player/group01/male_01.mdl", "models/player/group01/male_02.mdl", "models/player/group01/male_03.mdl", "models/player/group01/male_04.mdl", "models/player/group01/male_05.mdl", "models/player/group01/male_06.mdl", "models/player/group01/female_01.mdl", "models/player/group01/female_02.mdl", "models/player/group01/female_03.mdl", "models/player/group01/female_04.mdl", "models/player/group01/female_05.mdl", "models/player/group01/female_06.mdl"}
@@ -214,13 +214,11 @@ function lia.faction.formatModelData()
         if faction.models then
             for modelIndex, modelData in pairs(faction.models) do
                 if isstring(modelIndex) then
-                    -- Check if modelData is actually a table that can be iterated
                     if istable(modelData) then
                         for subIndex, subData in pairs(modelData) do
                             formatModelDataEntry(name, faction, subIndex, subData, modelIndex)
                         end
                     else
-                        -- If modelData is not a table (e.g., it's a string), skip it
                         continue
                     end
                 else

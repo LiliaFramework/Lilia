@@ -1,21 +1,14 @@
 <h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
 **Name:**
-Climbing
+Climb
 
 **Version:**
-1.20
+1.15
 
 **Description:**
 
-Adds the ability to climb ledges using movement keys, custom climbing animations, and hooks for climb attempts.
-
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
-
-- Adds the ability to climb ledges using movement keys
-- Adds custom climbing animations
-- Adds hooks for climb attempts
-
+Enables simple ledge climbing with smooth animations triggered by the movement keys.
 
 
 

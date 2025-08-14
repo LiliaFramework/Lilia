@@ -592,7 +592,7 @@ local function IncludeCharacterManagement(tgt, menu, stores)
                         for _, v in pairs(lia.faction.teams) do
                             table.insert(facOptions, {
                                 name = v.name,
-                                cmd = 'say /plytransfer ' .. QuoteArgs(GetIdentifier(tgt), v.name)
+                                cmd = 'say /plytransfer ' .. QuoteArgs(GetIdentifier(tgt), v.uniqueID)
                             })
                         end
 
@@ -641,12 +641,12 @@ local function IncludeCharacterManagement(tgt, menu, stores)
                         if not tgt:hasWhitelist(v.index) then
                             table.insert(facAdd, {
                                 name = v.name,
-                                cmd = 'say /plywhitelist ' .. QuoteArgs(GetIdentifier(tgt), v.name)
+                                cmd = 'say /plywhitelist ' .. QuoteArgs(GetIdentifier(tgt), v.uniqueID)
                             })
                         else
                             table.insert(facRemove, {
                                 name = v.name,
-                                cmd = 'say /plyunwhitelist ' .. QuoteArgs(GetIdentifier(tgt), v.name)
+                                cmd = 'say /plyunwhitelist ' .. QuoteArgs(GetIdentifier(tgt), v.uniqueID)
                             })
                         end
                     end
@@ -808,7 +808,7 @@ local function IncludeFlagManagement(tgt, menu, stores)
                 flagList = flagList .. flag .. " "
             end
 
-            flagList = flagList:trim()
+            flagList = string.Trim(flagList)
         end
 
         Derma_Message(L("currentCharFlags") .. ": " .. (flagList ~= "" and flagList or L("none")), L("charFlags"), L("ok"))
@@ -900,7 +900,7 @@ local function IncludeFlagManagement(tgt, menu, stores)
                 flagList = flagList .. flag .. " "
             end
 
-            flagList = flagList:trim()
+            flagList = string.Trim(flagList)
         end
 
         Derma_Message(L("currentPlayerFlags") .. ": " .. (flagList ~= "" and flagList or L("none")), L("playerFlagsTitle"), L("ok"))

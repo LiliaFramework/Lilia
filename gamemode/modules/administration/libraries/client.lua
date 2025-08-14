@@ -135,76 +135,66 @@ function MODULE:PopulateAdminTabs(pages)
                 panel:Clear()
                 panel:DockPadding(10, 10, 10, 10)
                 panel.Paint = function() end
-                local function describe(id)
-                    if string.find(id, "command_", 1, true) then return "Command access privilege" end
-                    if string.find(id, "tool_", 1, true) then return "Tool access privilege" end
-                    if string.find(id, "property_", 1, true) then return "Property access privilege" end
-                    if string.find(id, "privilege_viewer", 1, true) then return "Access to view all privileges" end
-                    return "General privilege"
-                end
-
-                function panel:buildSheets()
+                function panel:buildSheet()
                     if IsValid(self.sheet) then self.sheet:Remove() end
-                    self.sheet = self:Add("DPropertySheet")
+                    self.sheet = self:Add("DPanel")
                     self.sheet:Dock(FILL)
+                    self.sheet.Paint = function() end
                     local privileges = lia.administrator.privileges or {}
                     local names = lia.administrator.privilegeNames or {}
                     local cats = lia.administrator.privilegeCategories or {}
-                    local categories = {}
-                    for id, minAccess in pairs(privileges) do
-                        local name = names[id] or id
-                        local category = cats[id] or "Unassigned"
-                        categories[category] = categories[category] or {}
-                        categories[category][#categories[category] + 1] = {id, name, minAccess, describe(id)}
+                    local headers = {"ID", "Name", "Min Access", "Category"}
+                    local listView = self.sheet:Add("DListView")
+                    listView:Dock(FILL)
+                    listView:SetMultiSelect(false)
+                    for _, header in ipairs(headers) do
+                        listView:AddColumn(header)
                     end
 
-                    for category, rows in SortedPairs(categories) do
-                        table.sort(rows, function(a, b) return a[1] < b[1] end)
-                        local pnl = self.sheet:Add("DPanel")
-                        pnl:Dock(FILL)
-                        pnl.Paint = function() end
-                        local headers = {"ID", "Name", "Min Access", "Description"}
-                        local listView = pnl:Add("DListView")
-                        listView:Dock(FILL)
-                        listView:SetMultiSelect(false)
-                        for _, header in ipairs(headers) do
-                            listView:AddColumn(header)
+                    local rows = {}
+                    for id, minAccess in pairs(privileges) do
+                        local name = names[id] or id
+                        local categoryKey = cats[id] or "unassigned"
+                        local category = L(categoryKey)
+                        rows[#rows + 1] = {category, id, name, tostring(minAccess or "user")}
+                    end
+
+                    table.sort(rows, function(a, b)
+                        if a[1] == b[1] then return a[2] < b[2] end
+                        return a[1] < b[1]
+                    end)
+
+                    for _, r in ipairs(rows) do
+                        listView:AddLine(r[2], r[3], r[4], r[1])
+                    end
+
+                    listView:SortByColumn(4, false)
+                    listView.OnRowRightClick = function(_, _, line)
+                        local m = DermaMenu()
+                        for i, header in ipairs(headers) do
+                            m:AddOption("Copy " .. header, function()
+                                SetClipboardText(line:GetColumnText(i) or "")
+                                notification.AddLegacy(L and L("copied") or "Copied", NOTIFY_GENERIC, 2)
+                            end)
                         end
 
-                        for _, row in ipairs(rows) do
-                            listView:AddLine(unpack(row))
-                        end
-
-                        listView:SortByColumn(1, false)
-                        listView.OnRowRightClick = function(_, _, line)
-                            local m = DermaMenu()
+                        m:AddSpacer()
+                        m:AddOption("Copy All", function()
+                            local t = {}
                             for i, header in ipairs(headers) do
-                                m:AddOption("Copy " .. header, function()
-                                    SetClipboardText(line:GetColumnText(i) or "")
-                                    notification.AddLegacy(L and L("copied") or "Copied", NOTIFY_GENERIC, 2)
-                                end)
+                                t[#t + 1] = header .. ": " .. (line:GetColumnText(i) or "")
                             end
 
-                            m:AddSpacer()
-                            m:AddOption("Copy All", function()
-                                local t = {}
-                                for i, header in ipairs(headers) do
-                                    t[#t + 1] = header .. ": " .. (line:GetColumnText(i) or "")
-                                end
+                            SetClipboardText(table.concat(t, "\n"))
+                            notification.AddLegacy(L and L("allPrivilegeInfo") or "All info copied", NOTIFY_GENERIC, 2)
+                        end)
 
-                                SetClipboardText(table.concat(t, "\n"))
-                                notification.AddLegacy(L and L("allPrivilegeInfo") or "All info copied", NOTIFY_GENERIC, 2)
-                            end)
+                        m:Open()
+                    end
 
-                            m:Open()
-                        end
-
-                        listView.OnRowDoubleClick = function(_, _, line)
-                            SetClipboardText(line:GetColumnText(1) or "")
-                            notification.AddLegacy(L and L("privilegeIdCopied") or "ID copied", NOTIFY_GENERIC, 2)
-                        end
-
-                        self.sheet:AddSheet(L(category), pnl)
+                    listView.OnRowDoubleClick = function(_, _, line)
+                        SetClipboardText(line:GetColumnText(1) or "")
+                        notification.AddLegacy(L and L("privilegeIdCopied") or "ID copied", NOTIFY_GENERIC, 2)
                     end
                 end
 
@@ -213,8 +203,8 @@ function MODULE:PopulateAdminTabs(pages)
                 refreshButton:DockMargin(0, 0, 0, 10)
                 refreshButton:SetText(L("refresh"))
                 refreshButton:SetTall(30)
-                refreshButton.DoClick = function() panel:buildSheets() end
-                panel:buildSheets()
+                refreshButton.DoClick = function() panel:buildSheet() end
+                panel:buildSheet()
             end
         })
     end

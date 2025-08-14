@@ -4,11 +4,11 @@
 Anonymous Rumors
 
 **Version:**
-1.23
+1.15
 
 **Description:**
 
-Adds an anonymous rumour chat command, hiding of the sender's identity, encouragement for roleplay intrigue, a cooldown to prevent spam, and admin logging of rumour messages.
+Introduces an anonymous /rumour command so players can spread gossip without giving away their identity. All messages are logged and rate limited.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

@@ -190,9 +190,7 @@ function PANEL:createStartButton()
                 self.availableCharacters = {}
                 for _, charID in pairs(lia.characters or {}) do
                     local character = lia.char.getCharacter(charID)
-                    if character and character:getFaction() ~= FACTION_STAFF then
-                        table.insert(self.availableCharacters, charID)
-                    end
+                    if character and character:getFaction() ~= FACTION_STAFF then table.insert(self.availableCharacters, charID) end
                 end
 
                 self.currentIndex = 1

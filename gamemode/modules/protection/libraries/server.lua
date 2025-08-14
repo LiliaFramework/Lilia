@@ -259,11 +259,13 @@ function MODULE:PlayerEnteredVehicle(client, entity)
 end
 
 function MODULE:OnPhysgunPickup(client, entity)
+    if not lia.config.get("PropProtection", true) then return end
     if (entity:isProp() or entity:isItem()) and entity:GetCollisionGroup() == COLLISION_GROUP_NONE then entity:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR) end
     lia.log.add(client, "physgunPickup", entity:GetClass(), entity:GetModel())
 end
 
 function MODULE:PhysgunDrop(client, entity)
+    if not lia.config.get("PropProtection", true) then return end
     if entity:isProp() and entity:isItem() then timer.Simple(5, function() if IsValid(entity) and entity:GetCollisionGroup() == COLLISION_GROUP_PASSABLE_DOOR then entity:SetCollisionGroup(COLLISION_GROUP_NONE) end end) end
     lia.log.add(client, "physgunDrop", entity:GetClass(), entity:GetModel())
 end
@@ -286,7 +288,7 @@ function MODULE:OnPhysgunFreeze(_, physObj, entity, client)
         client:SuppressHint("PhysgunFreeze")
     end
 
-    if lia.config.get("PassableOnFreeze", false) then
+    if lia.config.get("PropProtection", true) and lia.config.get("PassableOnFreeze", false) then
         entity:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
     else
         entity:SetCollisionGroup(COLLISION_GROUP_NONE)

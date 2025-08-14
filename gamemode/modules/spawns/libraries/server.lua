@@ -74,11 +74,19 @@ local function SpawnPlayer(client)
                 if #valid > 0 then
                     local data = table.Random(valid)
                     local basePos = data.pos or data
-                    if not isvector(basePos) then basePos = lia.data.decodeVector(basePos) end
+                    if not isvector(basePos) then
+                        local parsedPos = lia.data.decodeVector(basePos)
+                        basePos = parsedPos
+                    end
+
                     if not isvector(basePos) then basePos = Vector(0, 0, 0) end
                     local pos = basePos + Vector(0, 0, 16)
                     local ang = data.ang
-                    if not isangle(ang) then ang = lia.data.decodeAngle(ang) or angle_zero end
+                    if not isangle(ang) then
+                        local parsedAng = lia.data.decodeAngle(ang) or angle_zero
+                        ang = parsedAng
+                    end
+
                     client:SetPos(pos)
                     client:SetEyeAngles(ang)
                     hook.Run("PlayerSpawnPointSelected", client, pos, ang)
@@ -149,6 +157,8 @@ end
 function MODULE:PlayerSpawn(client)
     client:setNetVar("IsDeadRestricted", false)
     client:SetDSP(0, false)
+    local char = client:getChar()
+    if char then char:setLastPos(nil) end
 end
 
 net.Receive("request_respawn", function(_, client)

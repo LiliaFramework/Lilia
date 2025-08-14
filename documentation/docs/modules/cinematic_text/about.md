@@ -4,11 +4,11 @@
 Cinematic Text
 
 **Version:**
-1.33
+1.25
 
 **Description:**
 
-Adds displays of cinematic splash text overlays, screen darkening with letterbox bars, support for scripted scenes, timed fades for dramatic effect, and customizable text fonts.
+Shows dramatic splash text with optional letterbox bars. Text smoothly fades in and out to enhance cutscenes or announcements.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

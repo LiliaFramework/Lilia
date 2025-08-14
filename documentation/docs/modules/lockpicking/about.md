@@ -1,14 +1,14 @@
 <h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
 **Name:**
-Simple Lockpicking
+Lockpicking
 
 **Version:**
-1.20
+1.16
 
 **Description:**
 
-Adds a simple lockpick tool for doors, logging of successful picks, brute-force style gameplay, configurable pick time, and chance for tools to break.
+Offers a basic lockpick tool for brute-forcing doors. Attempts are logged, and pick time and break chance are configurable.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

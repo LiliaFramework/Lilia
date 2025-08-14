@@ -4,11 +4,11 @@
 Damage Numbers
 
 **Version:**
-1.23
+1.16
 
 **Description:**
 
-Adds floating combat text when hitting targets, different colors for damage types, display of damage dealt and received, scaling text based on damage amount, and client option to disable numbers.
+Displays floating numbers whenever you deal or receive damage. Colors and scale vary by damage type to clearly show impact.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

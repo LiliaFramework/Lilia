@@ -4,11 +4,11 @@
 Slot Machine
 
 **Version:**
-1.20
+1.16
 
 **Description:**
 
-Adds a slot machine minigame, a workshop model for the machine, handling of payouts to winners, customizable payout odds, and sound and animation effects.
+Introduces a slot machine minigame using a workshop model. Players can gamble for configurable payouts with sounds and animations.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

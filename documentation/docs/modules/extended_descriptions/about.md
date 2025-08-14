@@ -4,11 +4,11 @@
 Extended Descriptions
 
 **Version:**
-1.31
+1.24
 
 **Description:**
 
-Adds support for long item descriptions, localization for multiple languages, better RP text display, automatic line wrapping, and fallback to short descriptions.
+Lets items include lengthy descriptions that are localized for different languages. Text wraps automatically to present detailed lore.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

@@ -27,9 +27,39 @@ local function _decodeVector(data)
         local x, y, z = data:match("%[([-%d%.]+)%s+([-%d%.]+)%s+([-%d%.]+)%]")
         if not x then x, y, z = data:match("%[([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%]") end
         if not x then x, y, z = data:match("Vector%(([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%)") end
+        if not x then x, y, z = data:match("^%s*([-%d%.]+)%s+([-%d%.]+)%s+([-%d%.]+)%s*$") end
+        if not x then
+            local nums = {}
+            for num in string.gmatch(data, "[-%d%.]+") do
+                nums[#nums + 1] = num
+                if #nums >= 3 then break end
+            end
+
+            if #nums >= 3 then x, y, z = nums[1], nums[2], nums[3] end
+        end
+
         if x then return Vector(tonumber(x), tonumber(y), tonumber(z)) end
         local tbl = util.JSONToTable(data)
         if istable(tbl) and tbl[1] and tbl[2] and tbl[3] then return Vector(tonumber(tbl[1]), tonumber(tbl[2]), tonumber(tbl[3])) end
+    else
+        local s = tostring(data)
+        if s and s ~= "" then
+            local x, y, z = s:match("%[([-%d%.]+)%s+([-%d%.]+)%s+([-%d%.]+)%]")
+            if not x then x, y, z = s:match("%[([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%]") end
+            if not x then x, y, z = s:match("Vector%(([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%)") end
+            if not x then x, y, z = s:match("^%s*([-%d%.]+)%s+([-%d%.]+)%s+([-%d%.]+)%s*$") end
+            if not x then
+                local nums = {}
+                for num in string.gmatch(s, "[-%d%.]+") do
+                    nums[#nums + 1] = num
+                    if #nums >= 3 then break end
+                end
+
+                if #nums >= 3 then x, y, z = nums[1], nums[2], nums[3] end
+            end
+
+            if x then return Vector(tonumber(x), tonumber(y), tonumber(z)) end
+        end
     end
     return data
 end
@@ -43,12 +73,42 @@ local function _decodeAngle(data)
         local p, y, r = data:match("%{([-%d%.]+)%s+([-%d%.]+)%s+([-%d%.]+)%}")
         if not p then p, y, r = data:match("%{([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%}") end
         if not p then p, y, r = data:match("Angle%(([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%)") end
+        if not p then p, y, r = data:match("^%s*([-%d%.]+)%s+([-%d%.]+)%s+([-%d%.]+)%s*$") end
+        if not p then
+            local nums = {}
+            for num in string.gmatch(data, "[-%d%.]+") do
+                nums[#nums + 1] = num
+                if #nums >= 3 then break end
+            end
+
+            if #nums >= 3 then p, y, r = nums[1], nums[2], nums[3] end
+        end
+
         if not p then
             local tbl = util.JSONToTable(data)
             if istable(tbl) and tbl[1] and tbl[2] and tbl[3] then p, y, r = tbl[1], tbl[2], tbl[3] end
         end
 
         if p then return Angle(tonumber(p), tonumber(y), tonumber(r)) end
+    else
+        local s = tostring(data)
+        if s and s ~= "" then
+            local p, y, r = s:match("%{([-%d%.]+)%s+([-%d%.]+)%s+([-%d%.]+)%}")
+            if not p then p, y, r = s:match("%{([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%}") end
+            if not p then p, y, r = s:match("Angle%(([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%)") end
+            if not p then p, y, r = s:match("^%s*([-%d%.]+)%s+([-%d%.]+)%s+([-%d%.]+)%s*$") end
+            if not p then
+                local nums = {}
+                for num in string.gmatch(s, "[-%d%.]+") do
+                    nums[#nums + 1] = num
+                    if #nums >= 3 then break end
+                end
+
+                if #nums >= 3 then p, y, r = nums[1], nums[2], nums[3] end
+            end
+
+            if p then return Angle(tonumber(p), tonumber(y), tonumber(r)) end
+        end
     end
     return data
 end
@@ -97,10 +157,10 @@ end
 
 function lia.data.decodeVector(raw)
     if not raw then return nil end
+    local direct = _decodeVector(raw)
+    if isvector(direct) then return direct end
     local decoded
-    if istable(raw) then
-        decoded = raw
-    elseif isstring(raw) then
+    if isstring(raw) then
         decoded = util.JSONToTable(raw)
         if not decoded then
             local ok, ponDecoded = pcall(pon.decode, raw)
@@ -110,16 +170,16 @@ function lia.data.decodeVector(raw)
         decoded = raw
     end
 
-    if decoded == nil then return nil end
+    if decoded == nil then decoded = raw end
     return _decodeVector(decoded)
 end
 
 function lia.data.decodeAngle(raw)
     if not raw then return nil end
+    local direct = _decodeAngle(raw)
+    if isangle(direct) then return direct end
     local decoded
-    if istable(raw) then
-        decoded = raw
-    elseif isstring(raw) then
+    if isstring(raw) then
         decoded = util.JSONToTable(raw)
         if not decoded then
             local ok, ponDecoded = pcall(pon.decode, raw)
@@ -129,7 +189,7 @@ function lia.data.decodeAngle(raw)
         decoded = raw
     end
 
-    if decoded == nil then return nil end
+    if decoded == nil then decoded = raw end
     return _decodeAngle(decoded)
 end
 

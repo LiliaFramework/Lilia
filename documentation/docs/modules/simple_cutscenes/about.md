@@ -1,14 +1,14 @@
 <h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
 **Name:**
-Cutscenes
+Simple Cutscenes
 
 **Version:**
-1.24
+1.18
 
 **Description:**
 
-Adds a framework for simple cutscene playback, scenes defined through tables, syncing of camera movement across clients, commands to trigger cutscenes, and the ability for players to skip.
+Offers a simple framework for scripted cutscenes with synced camera movement. Scenes can be triggered by command and skipped if allowed.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

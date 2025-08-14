@@ -1,4 +1,4 @@
-﻿local exploitable_nets = {"VJSay", "vj_fireplace_turnon1", "vj_npcmover_sv_create", "vj_npcmover_sv_startmove", "vj_npcmover_removesingle", "vj_npcmover_removeall", "vj_npcspawner_sv_create", "vj_npcrelationship_sr_leftclick", "vj_testentity_runtextsd", "vj_fireplace_turnon2",}
+﻿local exploitable_nets = {"VJSay", "vj_fireplace_turnon1", "vj_npcmover_sv_create", "vj_npcmover_sv_startmove", "vj_npcmover_removesingle", "vj_npcmover_removeall", "vj_npcspawner_sv_create", "vj_npcrelationship_sr_leftclick", "vj_testentity_runtextsd", "vj_fireplace_turnon2"}
 local function handle_exploitable_net(client, name)
     if not IsValid(client) or not client:IsPlayer() then return end
     client:notifyLocalized("unauthorizedNetMessage", name)
@@ -28,5 +28,12 @@ timer.Simple(10, function()
     hook.Remove("PlayerInitialSpawn", "drvrejplayerInitialSpawn")
     concommand.Remove("vj_cleanup")
 end)
+
+lia.administrator.registerPrivilege({
+    Name = "vjNpcProperties",
+    ID = "property_vj_npc_properties",
+    MinAccess = "superadmin",
+    Category = "categoryVJBase"
+})
 
 lia.log.addType("unprotectedVJNetCall", function(client, netMessage) return L("unprotectedVJNetCallLog", client:Name(), netMessage) end, L("categoryVJBase"))

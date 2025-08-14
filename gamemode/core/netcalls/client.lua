@@ -33,6 +33,13 @@ net.Receive("ServerChatAddText", function()
     chat.AddText(unpack(args))
 end)
 
+net.Receive("liaProvideServerPassword", function()
+    local pw = net.ReadString()
+    if not isstring(pw) or pw == "" then return end
+    SetClipboardText(pw)
+    chat.AddText(Color(0, 200, 0), "Server password copied to clipboard.")
+end)
+
 net.Receive("blindTarget", function()
     local enabled = net.ReadBool()
     if enabled then
