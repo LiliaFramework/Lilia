@@ -33,18 +33,21 @@ function lia.faction.register(uniqueID, data)
     local overrideModels = hook.Run("OverrideFactionModels", uniqueID, faction.models)
     if overrideModels then faction.models = overrideModels end
     team.SetUp(faction.index, faction.name or L and L("unknown") or "unknown", faction.color or Color(125, 125, 125))
-    for _, modelData in pairs(faction.models) do
+    lia.faction.cacheModels(faction.models)
+    lia.faction.indices[faction.index] = faction
+    lia.faction.teams[uniqueID] = faction
+    _G[constantName] = faction.index
+    return faction.index, faction
+end
+
+function lia.faction.cacheModels(models)
+    for _, modelData in pairs(models or {}) do
         if isstring(modelData) then
             util.PrecacheModel(modelData)
         elseif istable(modelData) then
             util.PrecacheModel(modelData[1])
         end
     end
-
-    lia.faction.indices[faction.index] = faction
-    lia.faction.teams[uniqueID] = faction
-    _G[constantName] = faction.index
-    return faction.index, faction
 end
 
 function lia.faction.loadFromDir(directory)
@@ -211,8 +214,14 @@ function lia.faction.formatModelData()
         if faction.models then
             for modelIndex, modelData in pairs(faction.models) do
                 if isstring(modelIndex) then
-                    for subIndex, subData in pairs(modelData) do
-                        formatModelDataEntry(name, faction, subIndex, subData, modelIndex)
+                    -- Check if modelData is actually a table that can be iterated
+                    if istable(modelData) then
+                        for subIndex, subData in pairs(modelData) do
+                            formatModelDataEntry(name, faction, subIndex, subData, modelIndex)
+                        end
+                    else
+                        -- If modelData is not a table (e.g., it's a string), skip it
+                        continue
                     end
                 else
                     formatModelDataEntry(name, faction, modelIndex, modelData)
@@ -260,8 +269,8 @@ FACTION_STAFF = lia.faction.register("staff", {
     desc = "factionStaffDesc",
     color = Color(255, 56, 252),
     isDefault = false,
-    models = {"models/Humans/Group02/male_07.mdl", "models/Humans/Group02/male_07.mdl", "models/Humans/Group02/male_07.mdl", "models/Humans/Group02/male_07.mdl", "models/Humans/Group02/male_07.mdl"},
-    weapons = {"weapon_physgun", "gmod_tool"}
+    models = {"models/player/police.mdl",},
+    weapons = {"weapon_physgun", "gmod_tool", "weapon_physcannon"}
 })
 
 if CLIENT then

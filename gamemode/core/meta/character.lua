@@ -144,18 +144,18 @@ function characterMeta:setData(k, v, noReplication, receiver)
 
     if SERVER then
         if not noReplication and #toNetwork > 0 then
-            net.Start("liaCharacterData")
-            net.WriteUInt(self:getID(), 32)
-            net.WriteUInt(#toNetwork, 32)
-            for _, nk in ipairs(toNetwork) do
-                local data = self.dataVars[nk]
-                if istable(data) then data = pon.encode(data) end
-                net.WriteString(nk)
-                net.WriteType(data)
-            end
-
             local target = receiver or self:getPlayer()
             if IsValid(target) then
+                net.Start("liaCharacterData")
+                net.WriteUInt(self:getID(), 32)
+                net.WriteUInt(#toNetwork, 32)
+                for _, nk in ipairs(toNetwork) do
+                    local data = self.dataVars[nk]
+                    if istable(data) then data = pon.encode(data) end
+                    net.WriteString(nk)
+                    net.WriteType(data)
+                end
+
                 net.Send(target)
             end
         end

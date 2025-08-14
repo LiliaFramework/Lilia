@@ -137,7 +137,7 @@ function PANEL:Init()
         facCont.noClass = facCont:Add("DListLayout")
         facCont.noClass:Dock(TOP)
         facCont.classLists = {}
-        if lia.config.get("ClassHeaders", true) then
+        if lia.config.get("ClassHeaders", true) and lia.class and lia.class.list then
             for clsID, clsData in pairs(lia.class.list) do
                 if clsData.faction ~= facID then continue end
                 if clsData.scoreboardHidden then

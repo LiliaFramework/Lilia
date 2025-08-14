@@ -115,6 +115,7 @@ end
 
 function GM:CanPlayerInteractItem(client, action, item)
     action = string.lower(action)
+    if client:hasPrivilege("noItemCooldown") then return true end
     if not client:Alive() then return false, L("forbiddenActionStorage") end
     if client:getLocalVar("ragdoll", false) then return false, L("forbiddenActionStorage") end
     if action == "drop" then

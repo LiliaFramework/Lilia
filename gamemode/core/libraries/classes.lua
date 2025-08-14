@@ -73,6 +73,7 @@ function lia.class.loadFromDir(directory)
 end
 
 function lia.class.canBe(client, class)
+    if not lia.class.list then return false, L("classNoInfo") end
     local info = lia.class.list[class]
     if not info then return false, L("classNoInfo") end
     if client:Team() ~= info.faction then return false, L("classWrongTeam") end
@@ -84,10 +85,12 @@ function lia.class.canBe(client, class)
 end
 
 function lia.class.get(identifier)
+    if not lia.class.list then return nil end
     return lia.class.list[identifier]
 end
 
 function lia.class.getPlayers(class)
+    if not lia.class.list then return {} end
     local players = {}
     for _, v in player.Iterator() do
         local character = v:getChar()
@@ -97,6 +100,7 @@ function lia.class.getPlayers(class)
 end
 
 function lia.class.getPlayerCount(class)
+    if not lia.class.list then return 0 end
     local count = 0
     for _, v in player.Iterator() do
         local character = v:getChar()
@@ -106,6 +110,7 @@ function lia.class.getPlayerCount(class)
 end
 
 function lia.class.retrieveClass(class)
+    if not lia.class.list then return nil end
     for key, classTable in pairs(lia.class.list) do
         if lia.util.stringMatches(classTable.uniqueID, class) or lia.util.stringMatches(classTable.name, class) then return key end
     end
@@ -113,6 +118,7 @@ function lia.class.retrieveClass(class)
 end
 
 function lia.class.hasWhitelist(class)
+    if not lia.class.list then return false end
     local info = lia.class.list[class]
     if not info then return false end
     if info.isDefault then return false end
@@ -122,6 +128,7 @@ end
 function lia.class.retrieveJoinable(client)
     client = client or CLIENT and LocalPlayer() or nil
     if not IsValid(client) then return {} end
+    if not lia.class.list then return {} end
     local classes = {}
     for _, class in pairs(lia.class.list) do
         if lia.class.canBe(client, class.index) then classes[#classes + 1] = class end

@@ -168,8 +168,8 @@ local subMenuIcons = {
     attributes = "icon16/chart_line.png",
     charFlagsTitle = "icon16/flag_green.png",
     playerFlagsTitle = "icon16/flag_orange.png",
-    [giveFlagsLabel] = "icon16/flag_blue.png",
-    [takeFlagsLabel] = "icon16/flag_red.png",
+    giveFlagsLabel = "icon16/flag_blue.png",
+    takeFlagsLabel = "icon16/flag_red.png",
     doorManagement = "icon16/door.png",
     doorActions = "icon16/arrow_switch.png",
     doorSettings = "icon16/cog.png",
@@ -824,13 +824,13 @@ local function IncludeFlagManagement(tgt, menu, stores)
             table.insert(toGiveP, {
                 name = L("giveFlagFormat", fl),
                 cmd = 'say /pflaggive ' .. QuoteArgs(GetIdentifier(tgt), fl),
-                icon = "icon16/flag_blue.png"
+                icon = "icon16/flag_blue.png",
             })
         else
             table.insert(toTakeP, {
                 name = L("takeFlagFormat", fl),
                 cmd = 'say /pflagtake ' .. QuoteArgs(GetIdentifier(tgt), fl),
-                icon = "icon16/flag_red.png"
+                icon = "icon16/flag_red.png",
             })
         end
     end
@@ -892,7 +892,7 @@ local function IncludeFlagManagement(tgt, menu, stores)
     end):SetIcon("icon16/flag_red.png")
 
     pf:AddOption(L("listPlayerFlags"), function()
-        local currentFlags = tgt:getPlayerFlags()
+        local currentFlags = tgt:getPlayerFlags() or ""
         local flagList = ""
         if currentFlags ~= "" then
             for i = 1, #currentFlags do
@@ -903,7 +903,7 @@ local function IncludeFlagManagement(tgt, menu, stores)
             flagList = flagList:trim()
         end
 
-        Derma_Message(L("currentPlayerFlags") .. ": " .. (flagList ~= "" and flagList or L("none")), L("playerFlags"), L("ok"))
+        Derma_Message(L("currentPlayerFlags") .. ": " .. (flagList ~= "" and flagList or L("none")), L("playerFlagsTitle"), L("ok"))
         AdminStickIsOpen = false
     end):SetIcon("icon16/information.png")
 end

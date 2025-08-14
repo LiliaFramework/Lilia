@@ -668,6 +668,7 @@ LANGUAGE = {
     adminStickGiveAllFlagsName = "Dar Todas as Flags",
     adminStickCheckMoneyName = "Ver Dinheiro",
     adminStickGetCharFlagsName = "Obter Flags do Personagem",
+    adminStickGetPlayerFlagsName = "Obter Flags do Jogador",
     adminStickFactionWhitelistName = "Whitelist de Facção",
     adminStickUnwhitelistName = "Remover Whitelist do Jogador",
     adminStickClassWhitelistName = "Whitelist de Classe",

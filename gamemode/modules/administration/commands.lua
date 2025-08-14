@@ -1684,6 +1684,12 @@ lia.command.add("pflaggiveall", {
             type = "player"
         },
     },
+    AdminStick = {
+        Name = "adminStickGiveAllFlagsName",
+        Category = "flagManagement",
+        SubCategory = "playerFlags",
+        Icon = "icon16/flag_blue.png"
+    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
@@ -1708,6 +1714,12 @@ lia.command.add("pflagtakeall", {
             name = "name",
             type = "player"
         },
+    },
+    AdminStick = {
+        Name = "adminStickTakeAllFlagsName",
+        Category = "flagManagement",
+        SubCategory = "playerFlags",
+        Icon = "icon16/flag_green.png"
     },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
@@ -2758,6 +2770,41 @@ lia.command.add("checkflags", {
             client:notifyLocalized("noFlags", target:Name())
         end
     end
+})
+
+lia.command.add("pcheckflags", {
+    adminOnly = true,
+    desc = "checkFlagsDesc",
+    arguments = {
+        {
+            name = "name",
+            type = "player"
+        },
+    },
+    AdminStick = {
+        Name = "adminStickGetPlayerFlagsName",
+        Category = "characterManagement",
+        SubCategory = "adminStickSubCategoryGetInfos",
+        Icon = "icon16/flag_orange.png"
+    },
+    onRun = function(client, arguments)
+        local target = lia.util.findPlayer(client, arguments[1])
+        if not target or not IsValid(target) then
+            client:notifyLocalized("targetNotFound")
+            return
+        end
+
+        local flags = target:getPlayerFlags()
+        if flags and #flags > 0 then
+            local flagTable = {}
+            for i = 1, #flags do
+                flagTable[#flagTable + 1] = flags:sub(i, i)
+            end
+            client:ChatPrint(L("playerFlags", target:Name(), table.concat(flagTable, ", ")))
+        else
+            client:notifyLocalized("noFlags", target:Name())
+        end
+    end,
 })
 
 lia.command.add("chargetname", {

@@ -41,6 +41,47 @@ local index, faction = lia.faction.register("citizen", {
 })
 ```
 
+### lia.faction.cacheModels
+
+**Purpose**
+
+Precaches all models for a faction to ensure they are loaded and ready for use. This function is automatically called during faction registration to optimize model loading performance and prevent model-related errors.
+
+**Parameters**
+
+* `models` (*table*) - A table containing model data. Each entry can be either a string (model path) or a table where the first element is the model path.
+
+**Returns**
+
+* *nil*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Cache models for a faction
+local factionModels = {
+    "models/player/group01/male_01.mdl",
+    "models/player/group01/female_01.mdl",
+    {"models/player/group01/male_02.mdl", bodygroups = {...}},
+    {"models/player/group01/female_02.mdl", bodygroups = {...}}
+}
+lia.faction.cacheModels(factionModels)
+
+-- Or use it directly with faction data
+lia.faction.cacheModels(faction.models)
+```
+
+**Notes**
+
+* This function automatically handles both string and table model formats
+* For table format models, only the first element (model path) is precached
+* Called automatically during `lia.faction.register()` and `lia.faction.loadFromDir()`
+* Helps prevent model loading delays and errors during gameplay
+
 ### lia.faction.loadFromDir
 
 **Purpose**

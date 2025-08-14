@@ -98,7 +98,7 @@ else
     end
 
     function MODULE:CreateMenuButtons(tabs)
-        tabs[L("characters")] = function()
+        tabs["characters"] = function()
             local client = LocalPlayer()
             if client:IsInThirdPerson() then
                 lia.option.set("thirdPersonEnabled", false)

@@ -1,14 +1,14 @@
 <h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
 **Name:**
-Slow Weapons
+Heavy Weapon Slowdown
 
 **Version:**
-1.20
+1.15
 
 **Description:**
 
-Adds slower movement while holding heavy weapons, speed penalties defined per weapon, encouragement for strategic choices, customizable weapon speed table, and automatic speed restore when switching.
+Reduces movement speed while carrying heavy weapons. Penalties are customizable per weapon and revert once the weapon is holstered.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

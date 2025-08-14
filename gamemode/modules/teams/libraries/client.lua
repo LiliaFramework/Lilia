@@ -5,6 +5,7 @@
     if not character then return end
     hook.Run("AddTextField", L("generalInfo"), "faction", L("faction"), function() return team.GetName(client:Team()) end)
     local classID = character:getClass()
+    if not lia.class or not lia.class.list then return end
     local classData = lia.class.list[classID]
     if classID and classData and classData.name then hook.Run("AddTextField", L("generalInfo"), "class", L("class"), function() return classData.name end) end
 end
@@ -19,8 +20,9 @@ function MODULE:DrawCharInfo(client, _, info)
 end
 
 function MODULE:CreateMenuButtons(tabs)
+    if not lia.class or not lia.class.list then return end
     local joinable = lia.class.retrieveJoinable(LocalPlayer())
-    if #joinable > 1 then tabs[L("classes")] = function(panel) panel:Add("liaClasses") end end
+    if #joinable > 1 then tabs["classes"] = function(panel) panel:Add("liaClasses") end end
 end
 
 function MODULE:CreateInformationButtons(pages)

@@ -815,7 +815,7 @@ else
             local displayKey = lia.administrator.privilegeNames[name] or name
             local isUsergroup = false
             local font = isUsergroup and "liaBigFont" or "liaMediumFont"
-            local boxSize = 56
+            local boxSize = 72
             local rightOffset = isUsergroup and 16 or 12
             surface.SetFont(font)
             local _, textHeight = surface.GetTextSize("W")
@@ -908,80 +908,6 @@ else
         details:Dock(TOP)
         details:DockMargin(20, 20, 20, 10)
         details.Paint = function() end
-        local nameLbl = details:Add("DLabel")
-        nameLbl:Dock(TOP)
-        nameLbl:SetText(L("name") .. ":")
-        nameLbl:SetFont("liaBigFont")
-        nameLbl:SetContentAlignment(5)
-        nameLbl:SizeToContents()
-        local nameVal = details:Add("DLabel")
-        nameVal:Dock(TOP)
-        nameVal:DockMargin(0, 8, 0, 14)
-        nameVal:SetText(g)
-        nameVal:SetFont("liaMediumFont")
-        nameVal:SetContentAlignment(5)
-        nameVal:SizeToContents()
-        if not isDefault then
-            local inhLbl = details:Add("DLabel")
-            inhLbl:Dock(TOP)
-            inhLbl:DockMargin(0, 14, 0, 0)
-            inhLbl:SetText(L("inheritsFrom") .. ":")
-            inhLbl:SetFont("liaBigFont")
-            inhLbl:SetContentAlignment(5)
-            inhLbl:SizeToContents()
-            local inhVal = details:Add("DLabel")
-            inhVal:Dock(TOP)
-            inhVal:DockMargin(0, 8, 0, 14)
-            local info = groups[g] and groups[g]._info or {}
-            inhVal:SetText(info.inheritance or "user")
-            inhVal:SetFont("liaMediumFont")
-            inhVal:SetContentAlignment(5)
-            inhVal:SizeToContents()
-        end
-
-        local function hasType(t)
-            for _, v in ipairs((groups[g]._info or {}).types or {}) do
-                if v:lower() == t:lower() then return true end
-            end
-            return false
-        end
-
-        local staffLbl = details:Add("DLabel")
-        staffLbl:Dock(TOP)
-        staffLbl:DockMargin(0, 14, 0, 0)
-        staffLbl:SetText(L("isStaff"))
-        staffLbl:SetFont("liaBigFont")
-        staffLbl:SetContentAlignment(5)
-        staffLbl:SizeToContents()
-        local staffPanel = details:Add("DPanel")
-        staffPanel:Dock(TOP)
-        staffPanel:DockMargin(0, 8, 0, 14)
-        staffPanel:SetTall(56)
-        staffPanel.Paint = nil
-        local staffChk = staffPanel:Add("liaCheckBox")
-        staffChk:SetSize(56, 56)
-        staffPanel.PerformLayout = function(_, w, h) staffChk:SetPos((w - 56) / 2, h - 56) end
-        staffChk:SetChecked(hasType("Staff"))
-        staffChk:SetMouseInputEnabled(false)
-        staffChk:SetCursor("arrow")
-        local vipLbl = details:Add("DLabel")
-        vipLbl:Dock(TOP)
-        vipLbl:DockMargin(0, 14, 0, 0)
-        vipLbl:SetText(L("isVIP"))
-        vipLbl:SetFont("liaBigFont")
-        vipLbl:SetContentAlignment(5)
-        vipLbl:SizeToContents()
-        local vipPanel = details:Add("DPanel")
-        vipPanel:Dock(TOP)
-        vipPanel:DockMargin(0, 8, 0, 0)
-        vipPanel:SetTall(56)
-        vipPanel.Paint = nil
-        local vipChk = vipPanel:Add("liaCheckBox")
-        vipChk:SetSize(56, 56)
-        vipPanel.PerformLayout = function(_, w, h) vipChk:SetPos((w - 56) / 2, h - 56) end
-        vipChk:SetChecked(hasType("VIP"))
-        vipChk:SetMouseInputEnabled(false)
-        vipChk:SetCursor("arrow")
         details:InvalidateLayout(true)
         details:SizeToChildren(true, true)
         local privContainer = content:Add("DPanel")

@@ -4,7 +4,7 @@
 Alcoholism
 
 **Version:**
-1.27
+1.20
 
 **Description:**
 

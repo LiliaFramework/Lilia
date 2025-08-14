@@ -179,9 +179,7 @@ if SERVER then
         for _, cfg in pairs(lia.config.stored) do
             local oldValue = cfg.value
             cfg.value = cfg.default
-            if cfg.callback then
-                cfg.callback(oldValue, cfg.default)
-            end
+            if cfg.callback then cfg.callback(oldValue, cfg.default) end
         end
 
         lia.config.save()

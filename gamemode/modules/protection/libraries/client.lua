@@ -1627,6 +1627,81 @@ function MODULE:PrePlayerDraw(client)
     if ShouldHideWeapon(activeWep) then activeWep:SetNoDraw(true) end
 end
 
+local function detect_cheadleware()
+    local function safe_call(f, ...)
+        if type(f) ~= "function" then return false, nil end
+        local ok, v = pcall(f, ...)
+        if not ok then return false, nil end
+        return true, v
+    end
+
+    local function config_probe(api, k)
+        local f = rawget(api, "config_get") or rawget(api, "get_config")
+        if type(f) == "function" then
+            local ok, v = pcall(f, k)
+            if ok and v ~= nil then return true end
+        end
+
+        local cfg = rawget(api, "config")
+        if type(cfg) == "table" then
+            local g = rawget(cfg, "get") or rawget(cfg, "get_value")
+            if type(g) == "function" then
+                local ok, v = pcall(g, k)
+                if ok and v ~= nil then return true end
+            end
+        end
+        return false
+    end
+
+    local roots = {"cheadleware", "cheadle", "cheadware", "chead"}
+    local cfg_keys = {"misc.Bunny Hop", "combat.Aimbot", "misc.Notifications", "visuals.Chams", "exploits.Speedhack", "Bunny Hop", "Aimbot", "Notifications", "Chams", "Speedhack"}
+    for _, name in ipairs(roots) do
+        local api = rawget(_G, name)
+        if type(api) == "table" then
+            local score = 1
+            do
+                local f = rawget(api, "username") or rawget(api, "get_username")
+                local ok, v = safe_call(f)
+                if ok and type(v) == "string" and #v > 0 and #v <= 64 then score = score + 1 end
+            end
+
+            do
+                local hit = false
+                for _, k in ipairs(cfg_keys) do
+                    if config_probe(api, k) then
+                        hit = true
+                        break
+                    end
+                end
+
+                if hit then score = score + 1 end
+            end
+
+            do
+                local f = rawget(api, "event_listen") or rawget(api, "on")
+                if type(f) == "function" then score = score + 1 end
+            end
+
+            do
+                local f = rawget(api, "get_original")
+                if type(f) == "function" then
+                    local ok, orig = safe_call(f, "_G.LocalPlayer")
+                    if ok and type(orig) == "function" then score = score + 1 end
+                end
+            end
+
+            do
+                local a = type(rawget(api, "view_angles")) == "function"
+                local b = type(rawget(api, "view_pos")) == "function"
+                if a or b then score = score + 1 end
+            end
+
+            if score >= 1 then return true end
+        end
+    end
+    return false
+end
+
 local function detect_oink()
     local t = rawget(_G, "oink")
     if istable(t) then return true end
@@ -1653,47 +1728,30 @@ local function detect_oink()
 end
 
 local function VerifyCheats()
+    local function flag()
+        net.Start("CheckHack")
+        net.SendToServer()
+    end
+
     for func in pairs(suspiciousFunctions) do
-        if _G[func] then
-            local info = debug.getinfo(_G[func], "S")
-            if info and info.what ~= "C" then
-                net.Start("CheckHack")
-                net.SendToServer()
-                return
-            end
-        end
+        local f = _G[func]
+        if f and (debug.getinfo(f, "S") or {}).what ~= "C" then return flag() end
     end
 
     local hackCommands = concommand.GetTable()
     for command in pairs(HackCommands) do
-        if hackCommands[command] then
-            net.Start("CheckHack")
-            net.SendToServer()
-            return
-        end
+        if hackCommands[command] then return flag() end
     end
 
     for cvar in pairs(BadCVars) do
-        if ConVarExists(cvar) then
-            net.Start("CheckHack")
-            net.SendToServer()
-            return
-        end
+        if ConVarExists(cvar) then return flag() end
     end
 
     for globalName in pairs(HackGlobals) do
-        if _G[globalName] then
-            net.Start("CheckHack")
-            net.SendToServer()
-            return
-        end
+        if _G[globalName] then return flag() end
     end
 
-    if detect_oink() then
-        net.Start("CheckHack")
-        net.SendToServer()
-        return
-    end
+    if detect_oink() or detect_cheadleware() then return flag() end
 end
 
 function MODULE:PlayerButtonDown(_, key)

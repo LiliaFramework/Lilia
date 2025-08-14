@@ -825,6 +825,35 @@ lia.util.drawBlurAt(100, 100, 200, 100, 5, 1, 200)
 
 ---
 
+### lia.util.drawBlackBlur
+
+**Purpose**
+
+Draws a blur effect over the specified panel and overlays it with a black tint.
+
+**Parameters**
+
+* `panel` (*Panel*) - The panel to blur.
+* `amount` (*number*) - The blur amount (optional, default 5).
+* `passes` (*number*) - The number of passes (optional, default 0.2).
+* `alpha` (*number*) - The alpha value for the black overlay (optional, default 255).
+
+**Returns**
+
+* None.
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+lia.util.drawBlackBlur(panel, 5, 1, 200)
+```
+
+---
+
 ### lia.util.requestArguments
 
 **Purpose**

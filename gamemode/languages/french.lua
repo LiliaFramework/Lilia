@@ -668,6 +668,7 @@ LANGUAGE = {
     adminStickGiveAllFlagsName = "Donner tous les drapeaux",
     adminStickCheckMoneyName = "Vérifier l'argent",
     adminStickGetCharFlagsName = "Obtenir drapeaux personnage",
+    adminStickGetPlayerFlagsName = "Obtenir drapeaux joueur",
     adminStickFactionWhitelistName = "Liste blanche de faction",
     adminStickUnwhitelistName = "Retirer de la liste blanche",
     adminStickClassWhitelistName = "Liste blanche de classe",

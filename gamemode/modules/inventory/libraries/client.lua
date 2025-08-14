@@ -65,7 +65,7 @@ end
 hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
     local margin = 10
     if hook.Run("CanPlayerViewInventory") == false then return end
-    tabs[L("inv")] = function(parentPanel)
+    tabs["inv"] = function(parentPanel)
         local inventory = LocalPlayer():getChar():getInv()
         if not inventory then return end
         local mainPanel = inventory:show(parentPanel)

@@ -237,7 +237,7 @@ function PANEL:Think()
 end
 
 function PANEL:Paint()
-    lia.util.drawBlur(self)
+    lia.util.drawBlackBlur(self, 1, 4, 255, 220)
 end
 
 vgui.Register("liaMenu", PANEL, "EditablePanel")

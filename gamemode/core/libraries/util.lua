@@ -434,6 +434,31 @@ else
         end
     end
 
+    function lia.util.drawBlackBlur(panel, amount, passes, alpha, darkAlpha)
+        if not IsValid(panel) then return end
+        amount = amount or 6
+        passes = math.max(1, passes or 5)
+        alpha = alpha or 255
+        darkAlpha = darkAlpha or 220
+        local mat = lia.util.getMaterial("pp/blurscreen")
+        local x, y = panel:LocalToScreen(0, 0)
+        x = math.floor(x)
+        y = math.floor(y)
+        local sw, sh = ScrW(), ScrH()
+        local expand = 4
+        render.UpdateScreenEffectTexture()
+        surface.SetMaterial(mat)
+        surface.SetDrawColor(255, 255, 255, alpha)
+        for i = 1, passes do
+            mat:SetFloat("$blur", i / passes * amount)
+            mat:Recompute()
+            surface.DrawTexturedRectUV(-x - expand, -y - expand, sw + expand * 2, sh + expand * 2, 0, 0, 1, 1)
+        end
+
+        surface.SetDrawColor(0, 0, 0, darkAlpha)
+        surface.DrawRect(x, y, panel:GetWide(), panel:GetTall())
+    end
+
     function lia.util.drawBlurAt(x, y, w, h, amount, passes, alpha)
         amount = amount or 5
         alpha = alpha or 255

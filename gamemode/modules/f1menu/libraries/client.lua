@@ -173,6 +173,7 @@ end
 function MODULE:CanDisplayCharInfo(name)
     local client = LocalPlayer()
     local character = client:getChar()
+    if not lia.class or not lia.class.list then return true end
     local class = lia.class.list[character:getClass()]
     if name == "class" and not class then return false end
     return true

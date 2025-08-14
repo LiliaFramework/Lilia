@@ -4,11 +4,11 @@
 Community Commands
 
 **Version:**
-1.24
+1.20
 
 **Description:**
 
-Adds chat commands to open community links, easy sharing of workshop and docs, configurable commands via settings, localization for command names, and the ability to add custom URLs.
+Provides chat commands that open links to community resources such as the website or Discord. Command names and URLs are fully configurable.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 

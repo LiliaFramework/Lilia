@@ -1,14 +1,14 @@
 <h1 style="text-align:center; font-size:2rem; font-weight:bold;">About</h1>
 
 **Name:**
-Cursor
+Custom Cursor
 
 **Version:**
-1.19
+1.14
 
 **Description:**
 
-Adds a toggleable custom cursor for the UI, a purely client-side implementation, improved menu navigation, a hotkey to quickly show or hide the cursor, and compatibility with other menu modules.
+Adds a client-side custom cursor that can be toggled with a key. It improves menu navigation and plays nicely with other UI modules.
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
 
