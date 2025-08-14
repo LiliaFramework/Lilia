@@ -1,5 +1,5 @@
 ﻿local min, clamp = math.min, math.Clamp
-local inputGetCursorPos, hookRun, isValid = input.GetCursorPos, hook.Run, IsValid
+local inputGetCursorPos, isValid = input.GetCursorPos, IsValid
 local timerSimple = timer.Simple
 local surfaceSetDrawColor, surfaceDrawRect = surface.SetDrawColor, surface.DrawRect
 local TooltipPanel = {}
@@ -24,7 +24,7 @@ function TooltipPanel:SetContents(panel, bDelete)
 end
 
 function TooltipPanel:PerformLayout()
-    if hookRun("TooltipLayout", self) then return end
+    if hook.Run("TooltipLayout", self) then return end
     if self.Contents then
         local w, h = self.Contents:GetWide(), self.Contents:GetTall()
         self:SetSize(w + 8, h + 8)
@@ -53,14 +53,14 @@ end
 
 function TooltipPanel:Paint(w, h)
     self:PositionTooltip()
-    if hookRun("TooltipPaint", self, w, h) then return end
+    if hook.Run("TooltipPaint", self, w, h) then return end
     derma.SkinHook("Paint", "Tooltip", self, w, h)
 end
 
 function TooltipPanel:OpenForPanel(panel)
     self.TargetPanel = panel
     self:PositionTooltip()
-    hookRun("TooltipInitialize", self, panel)
+    hook.Run("TooltipInitialize", self, panel)
     self:SetVisible(false)
     timerSimple(0.01, function()
         if not isValid(self) or not isValid(panel) then return end

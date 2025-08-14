@@ -811,7 +811,7 @@ local function IncludeFlagManagement(tgt, menu, stores)
             flagList = string.Trim(flagList)
         end
 
-        Derma_Message(L("currentCharFlags") .. ": " .. (flagList ~= "" and flagList or L("none")), L("charFlags"), L("ok"))
+        Derma_Message(L("currentCharFlags") .. ": " .. (flagList ~= "" and flagList or L("none")), L("charFlagsTitle"), L("ok"))
         AdminStickIsOpen = false
     end):SetIcon("icon16/information.png")
 

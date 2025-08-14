@@ -127,7 +127,7 @@ local function openMenu(options, isInteraction, titleText, closeKey, netMsg)
     MODULE.Menu = frame
 end
 
-lia.keybind.add(KEY_TAB, L("interactionMenu"), function()
+lia.keybind.add(KEY_TAB, "interactionMenu", function()
     local client = LocalPlayer()
     if not client:getChar() or not MODULE:checkInteractionPossibilities() then return end
     if IsValid(MODULE.Menu) then
@@ -135,14 +135,14 @@ lia.keybind.add(KEY_TAB, L("interactionMenu"), function()
         MODULE.Menu = nil
     end
 
-    openMenu(MODULE.Interactions, true, L("playerInteractions"), lia.keybind.get(L("interactionMenu"), KEY_TAB), "RunOption")
+    openMenu(MODULE.Interactions, true, "playerInteractions", lia.keybind.get(L("interactionMenu"), KEY_TAB), "RunOption")
 end)
 
-lia.keybind.add(KEY_G, L("personalActions"), function()
+lia.keybind.add(KEY_G, "personalActions", function()
     if IsValid(MODULE.Menu) then
         MODULE.Menu:Close()
         MODULE.Menu = nil
     end
 
-    openMenu(MODULE.Actions, false, L("actionsMenu"), lia.keybind.get(L("personalActions"), KEY_G), "RunLocalOption")
+    openMenu(MODULE.Actions, false, "actionsMenu", lia.keybind.get(L("personalActions"), KEY_G), "RunLocalOption")
 end)

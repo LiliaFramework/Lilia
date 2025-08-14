@@ -39,3 +39,5 @@ function MODULE:ShouldShowPlayerOnScoreboard(client)
     local faction = lia.faction.indices[client:Team()]
     if faction and faction.scoreboardHidden then return false end
 end
+
+lia.keybind.add(KEY_NONE, "scoreboard", function() MODULE:ScoreboardShow() end, function() MODULE:ScoreboardHide() end)

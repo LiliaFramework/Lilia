@@ -3130,3 +3130,29 @@ lia.command.add("exportprivileges", {
         end
     end
 })
+
+lia.command.add("serverpassword", {
+    superAdminOnly = true,
+    desc = "Get the current server password and copy it to your clipboard.",
+    alias = {"svpassword", "getserverpassword"},
+    onRun = function(client)
+        if not IsValid(client) then
+            local cvar = GetConVar("sv_password")
+            local pw = cvar and cvar:GetString() or ""
+            if pw == "" then
+                print("[Lilia] Server password is not set.")
+            else
+                print("[Lilia] Server password: " .. pw)
+            end
+            return
+        end
+
+        local cvar = GetConVar("sv_password")
+        local pw = cvar and cvar:GetString() or ""
+        if not isstring(pw) or pw == "" then return "Server password is not set." end
+        net.Start("liaProvideServerPassword")
+        net.WriteString(pw)
+        net.Send(client)
+        return "Server password sent to you."
+    end
+})

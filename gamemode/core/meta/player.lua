@@ -836,10 +836,11 @@ if SERVER then
         return entity
     end
 
-    function playerMeta:setRagdolled(state, time, getUpGrace, getUpMessage)
+    function playerMeta:setRagdolled(state, baseTime, getUpGrace, getUpMessage)
         getUpMessage = getUpMessage or L("wakingUp")
         local hasRagdoll = self:hasRagdoll()
         local ragdoll = self:getRagdoll()
+        local time = hook.Run("GetRagdollTime", self, time) or baseTime or 10
         if state then
             if hasRagdoll then SafeRemoveEntity(ragdoll) end
             local entity = self:createRagdoll()

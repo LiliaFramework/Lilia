@@ -1,5 +1,6 @@
 local PANEL = {}
 function PANEL:Init()
+    local client = LocalPlayer()
     self:SetTitle("")
     self:SetSize(1024, 820)
     self:Center()
@@ -32,10 +33,10 @@ function PANEL:Init()
     self.refreshButton = vgui.Create("DButton", self.topBar)
     self.refreshButton:Dock(RIGHT)
     self.refreshButton:SetWide(100)
-    self.refreshButton:SetText(L and L("refresh") or "Refresh")
+    self.refreshButton:SetText(L("refresh") or "Refresh")
     self.refreshButton.DoClick = function()
         self:Populate()
-        notification.AddLegacy(L and L("privilegeListRefreshed") or "List refreshed", NOTIFY_GENERIC, 2)
+        client:notifyLocalized("privilegeListRefreshed")
     end
 
     self.listView = vgui.Create("DListView", self)
@@ -46,7 +47,7 @@ function PANEL:Init()
         for i, header in ipairs(self.columns) do
             m:AddOption("Copy " .. header, function()
                 SetClipboardText(line:GetColumnText(i) or "")
-                notification.AddLegacy(L and L("copied") or "Copied", NOTIFY_GENERIC, 2)
+                client:notifyLocalized("copied")
             end)
         end
 
@@ -58,7 +59,7 @@ function PANEL:Init()
             end
 
             SetClipboardText(table.concat(t, "\n"))
-            notification.AddLegacy(L and L("allPrivilegeInfo") or "All info copied", NOTIFY_GENERIC, 2)
+            client:notifyLocalized("allPrivilegeInfo")
         end)
 
         m:Open()
@@ -66,7 +67,7 @@ function PANEL:Init()
 
     self.listView.OnRowDoubleClick = function(_, _, line)
         SetClipboardText(line:GetColumnText(1) or "")
-        notification.AddLegacy(L and L("privilegeIdCopied") or "ID copied", NOTIFY_GENERIC, 2)
+        client:notifyLocalizedL("privilegeIdCopied")
     end
 
     self.statusBar = vgui.Create("DPanel", self)

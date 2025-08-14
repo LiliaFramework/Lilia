@@ -814,8 +814,8 @@ local function versionCompare(localVersion, remoteVersion)
     return 0
 end
 
-local publicURL = "https://raw.githubusercontent.com/LiliaFramework/Modules/refs/heads/gh-pages/modules.json"
-local privateURL = "https://raw.githubusercontent.com/bleonheart/bleonheart.github.io/main/modules.json"
+local publicURL = "https://raw.githubusercontent.com/LiliaFramework/Modules/refs/heads/gh-pages/version.json"
+local privateURL = "https://raw.githubusercontent.com/bleonheart/bleonheart.github.io/main/version.json"
 local versionURL = "https://raw.githubusercontent.com/LiliaFramework/LiliaFramework.github.io/main/version.json"
 local function checkPublicModules()
     local hasPublic = false

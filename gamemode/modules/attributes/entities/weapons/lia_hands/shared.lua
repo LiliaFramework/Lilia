@@ -255,7 +255,9 @@ function SWEP:PrimaryAttack()
         if SERVER then owner:consumeStamina(staminaUse) end
     end
 
-    self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
+    local defaultDelay = self.Primary.Delay
+    local scaledDelay = hook.Run("GetHandsAttackSpeed", self:GetOwner(), defaultDelay)
+    self:SetNextPrimaryFire(CurTime() + (isnumber(scaledDelay) and scaledDelay or defaultDelay))
     if SERVER then self:GetOwner():EmitSound("npc/vort/claw_swing" .. math.random(1, 2) .. ".wav") end
     timer.Simple(0.1, function()
         self:DoPunchAnimation()

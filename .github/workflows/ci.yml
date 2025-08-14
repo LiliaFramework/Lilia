@@ -109,9 +109,12 @@ jobs:
           p.write_text(''.join(out), encoding='utf-8')
           PY
       - run: |
+          mkdir -p documentation/docs/versioning
+          echo "{\"version\":\"${VERSION}\"}" > documentation/docs/versioning/lilia.json
+      - run: |
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
-          git add gamemode/shared.lua
+          git add gamemode/shared.lua documentation/docs/versioning/lilia.json
           git diff-index --quiet HEAD || git commit -m "Successfully updated workshop Lilia to ${VERSION}"
           git push origin HEAD:main
 

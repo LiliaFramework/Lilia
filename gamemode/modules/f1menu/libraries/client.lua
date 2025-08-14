@@ -9,15 +9,16 @@ end
 
 function MODULE:AddSection(sectionName, color, priority, location)
     hook.Run("F1OnAddSection", sectionName, color, priority, location)
-    if not self.CharacterInformation[sectionName] then
-        self.CharacterInformation[sectionName] = {
+    local localizedSectionName = isstring(sectionName) and L(sectionName) or sectionName
+    if not self.CharacterInformation[localizedSectionName] then
+        self.CharacterInformation[localizedSectionName] = {
             fields = {},
             color = color or Color(255, 255, 255),
             priority = priority or 999,
             location = location or 1
         }
     else
-        local info = self.CharacterInformation[sectionName]
+        local info = self.CharacterInformation[localizedSectionName]
         info.color = color or info.color
         info.priority = priority or info.priority
         info.location = location or info.location
@@ -26,7 +27,9 @@ end
 
 function MODULE:AddTextField(sectionName, fieldName, labelText, valueFunc)
     hook.Run("F1OnAddTextField", sectionName, fieldName, labelText, valueFunc)
-    local section = self.CharacterInformation[sectionName]
+    local localizedSectionName = isstring(sectionName) and L(sectionName) or sectionName
+    local localizedLabel = isstring(labelText) and L(labelText) or labelText
+    local section = self.CharacterInformation[localizedSectionName]
     if section then
         for _, field in ipairs(section.fields) do
             if field.name == fieldName then return end
@@ -35,7 +38,7 @@ function MODULE:AddTextField(sectionName, fieldName, labelText, valueFunc)
         table.insert(section.fields, {
             type = "text",
             name = fieldName,
-            label = labelText,
+            label = localizedLabel,
             value = valueFunc or function() return "" end
         })
     end
@@ -43,7 +46,9 @@ end
 
 function MODULE:AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
     hook.Run("F1OnAddBarField", sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
-    local section = self.CharacterInformation[sectionName]
+    local localizedSectionName = isstring(sectionName) and L(sectionName) or sectionName
+    local localizedLabel = isstring(labelText) and L(labelText) or labelText
+    local section = self.CharacterInformation[localizedSectionName]
     if section then
         for _, field in ipairs(section.fields) do
             if field.name == fieldName then return end
@@ -52,7 +57,7 @@ function MODULE:AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc,
         table.insert(section.fields, {
             type = "bar",
             name = fieldName,
-            label = labelText,
+            label = localizedLabel,
             min = minFunc or function() return 0 end,
             max = maxFunc or function() return 100 end,
             value = valueFunc or function() return 0 end

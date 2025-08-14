@@ -12,6 +12,565 @@ If multiple definitions of the same hook exist on `GM`, `MODULE`, or `SCHEMA`, t
 
 ---
 
+### AddToAdminStickHUD
+
+**Purpose**
+
+Extend the Admin Stick HUD with extra information. Mutate the provided `information` table to add lines that will be rendered.
+
+**Parameters**
+
+- `client` (`Player`): Local player.
+- `target` (`Entity`): Entity under the crosshair or selected by the admin stick.
+- `information` (`table`): Array of strings. Append additional lines in-place.
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("AddToAdminStickHUD", "ShowTargetModel", function(client, target, information)
+    if IsValid(target) and target.GetModel then
+        information[#information + 1] = L("model") .. ": " .. tostring(target:GetModel())
+    end
+end)
+```
+
+---
+
+### CharListColumns
+
+**Purpose**
+
+Customize columns shown in the Admin Character List. Mutate the `columns` array to add or adjust column definitions.
+
+**Parameters**
+
+- `columns` (`table`): Array of column descriptors. Each entry supports:
+  - `name` (`string`): Column header text.
+  - `field` (`string`): Key in the row to display.
+  - `format` (`function` | optional): `(value, row) -> any` to transform display.
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("CharListColumns", "AddHoursPlayedColumn", function(columns)
+    table.insert(columns, {
+        name = "hoursPlayed",
+        field = "PlayTime",
+        format = function(seconds)
+            return string.format("%0.1f h", (tonumber(seconds) or 0) / 3600)
+        end
+    })
+end)
+```
+
+---
+
+### CharListEntry
+
+**Purpose**
+
+Adjust each character list entry as it is built server-side before sending to clients.
+
+**Parameters**
+
+- `entry` (`table`): Mutable payload row (keys like `ID`, `Name`, `SteamID`, etc.).
+- `row` (`table`): Original database row for reference.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("CharListEntry", "AttachKarmaField", function(entry, row)
+    entry.Karma = tonumber(row.karma or 0)
+end)
+```
+
+---
+
+### ChatTextChanged
+
+**Purpose**
+
+Fires whenever the chat input text changes in the chat box.
+
+**Parameters**
+
+- `text` (`string`): Current input text.
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("ChatTextChanged", "SlashHint", function(text)
+    if text:StartWith("/") then
+        -- Show your own autocomplete UI here
+    end
+end)
+```
+
+---
+
+### OnAdminSystemLoaded
+
+**Purpose**
+
+Called after admin usergroups and privileges are loaded and synchronized.
+
+**Parameters**
+
+- `groups` (`table`): Map of usergroup -> permissions table.
+- `privileges` (`table`): Map of privilege ID -> minimum access group.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("OnAdminSystemLoaded", "AuditPrivileges", function(groups, privileges)
+    PrintTable(privileges)
+end)
+```
+
+---
+
+### OnEntityPersistUpdated
+
+**Purpose**
+
+Notifies that a persistent entity's stored data has been updated and saved.
+
+**Parameters**
+
+- `ent` (`Entity`): The persistent entity.
+- `data` (`table`): The saved persistence payload for this entity.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("OnEntityPersistUpdated", "LogVendorSave", function(ent, data)
+    if IsValid(ent) and ent:GetClass() == "lia_vendor" then
+        print("Vendor persistence updated:", data.name or "")
+    end
+end)
+```
+
+---
+
+### OnPrivilegeRegistered
+
+**Purpose**
+
+Triggered when a new admin privilege is registered.
+
+**Parameters**
+
+- `info` (`table`): Contains `Name`, `ID`, `MinAccess`, `Category`.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("OnPrivilegeRegistered", "AnnouncePrivilege", function(info)
+    print("Registered privilege:", info.ID, "(min:", info.MinAccess .. ")")
+end)
+```
+
+---
+
+### OnPrivilegeUnregistered
+
+**Purpose**
+
+Triggered when a privilege is unregistered.
+
+**Parameters**
+
+- `info` (`table`): Contains `Name`, `ID`.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("OnPrivilegeUnregistered", "LogPrivRemoval", function(info)
+    print("Removed privilege:", info.ID)
+end)
+```
+
+---
+
+### OnUsergroupCreated
+
+**Purpose**
+
+Fires after a new usergroup is created.
+
+**Parameters**
+
+- `groupName` (`string`): Name of the new group.
+- `groupData` (`table`): Permissions and metadata for the group.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+---
+
+### OnUsergroupPermissionsChanged
+
+**Purpose**
+
+Fires when a usergroup's permissions are modified.
+
+**Parameters**
+
+- `groupName` (`string`)
+- `groupData` (`table`): Updated permissions/metadata.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+---
+
+### OnUsergroupRemoved
+
+**Purpose**
+
+Fires after a usergroup is removed.
+
+**Parameters**
+
+- `groupName` (`string`)
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+---
+
+### OnUsergroupRenamed
+
+**Purpose**
+
+Fires after a usergroup is renamed.
+
+**Parameters**
+
+- `oldName` (`string`)
+- `newName` (`string`)
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+---
+
+### OverrideFactionName
+
+**Purpose**
+
+Override a faction's display name during registration/loading.
+
+**Parameters**
+
+- `uniqueID` (`string`): Faction unique ID.
+- `currentName` (`string`): Current localized name.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+- `string` | `nil`: New name to use, or `nil` to keep existing.
+
+---
+
+### OverrideFactionDesc
+
+**Purpose**
+
+Override a faction's description during registration/loading.
+
+**Parameters**
+
+- `uniqueID` (`string`)
+- `currentDesc` (`string`)
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+- `string` | `nil`
+
+---
+
+### OverrideFactionModels
+
+**Purpose**
+
+Override a faction's models table during registration/loading.
+
+**Parameters**
+
+- `uniqueID` (`string`)
+- `currentModels` (`table`): Models table.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+- `table` | `nil`: Replacement models table, or `nil`.
+
+---
+
+### PlayerGiveSWEP
+
+**Purpose**
+
+Gate giving a SWEP to an entity (e.g., via context menu tools). Return `true` to allow; any falsy value denies.
+
+**Parameters**
+
+- `ply` (`Player`): Initiator.
+- `class` (`string`): Weapon class name.
+- `swep` (`table`): SWEP data table (from `list.Get("Weapon")`).
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- `boolean`: `true` to allow, `false`/`nil` to deny.
+
+**Example Usage**
+
+```lua
+hook.Add("PlayerGiveSWEP", "RestrictNPCWeapons", function(ply, class, swep)
+    return ply:hasPrivilege("canSpawnSWEPs")
+end)
+```
+
+---
+
+### PlayerSay
+
+**Purpose**
+
+Invoked when a client sends chat text through the chatbox network path. Note: in this context the return value is ignored; use it for side effects.
+
+**Parameters**
+
+- `client` (`Player`)
+- `text` (`string`)
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None (ignored in this invocation path)
+
+---
+
+### PopulateAdminTabs
+
+**Purpose**
+
+Populate the Admin tab in the F1 menu. Mutate the provided `pages` array and insert page descriptors.
+
+**Parameters**
+
+- `pages` (`table`): Insert items like `{ name = string, icon = string, drawFunc = function(panel) end }`.
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("PopulateAdminTabs", "AddOnlineList", function(pages)
+    pages[#pages + 1] = {
+        name = "onlinePlayers",
+        icon = "icon16/user.png",
+        drawFunc = function(panel)
+            -- build UI here
+        end
+    }
+end)
+```
+
+---
+
+### SetupQuickMenu
+
+**Purpose**
+
+Fill the Quick Settings panel with options using the provided panel helpers.
+
+**Parameters**
+
+- `panel` (`Panel`): The `liaQuick` panel. Use `addCategory`, `addButton`, `addSlider`, `addCheck`.
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("SetupQuickMenu", "QuickToggles", function(panel)
+    panel:addCategory(L("categoryGeneral"))
+    panel:addCheck(L("thirdPerson"), function(_, v) lia.option.set("thirdPersonEnabled", v) end, lia.option.get("thirdPersonEnabled", false))
+end)
+```
+
+---
+
+### UpdateEntityPersistence
+
+**Purpose**
+
+Request that the gamemode re-save a persistent entity's data to disk.
+
+**Parameters**
+
+- `ent` (`Entity`): The persistent entity to update.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+-- After editing a vendor entity, persist changes immediately
+hook.Run("UpdateEntityPersistence", vendor)
+```
+
+---
+
+### getPlayTime
+
+**Purpose**
+
+Override a player's computed playtime. Return seconds to use your value; return `nil` to fall back to default logic.
+
+**Parameters**
+
+- `client` (`Player`)
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+- `number` | `nil`: Playtime in seconds, or `nil` to use default.
+
+**Example Usage**
+
+```lua
+hook.Add("getPlayTime", "UseExternalTracker", function(ply)
+    return ply:GetNWInt("ExternalPlaySeconds", 0)
+end)
+```
+
+---
+
 ## Overview
 
 Gamemode hooks fire at various stages during play and let you modify global behavior. They can be called from your schema with `SCHEMA:HookName`, from modules using `MODULE:HookName`, or via `hook.Add`. When the same hook is defined in more than one place, whichever version loads last takes effect. All hooks are optional; if no handler is present, the default logic runs.
@@ -305,32 +864,7 @@ end)
 
 ---
 
-### PlayerStartVoice
-
-**Purpose**
-
-Triggered when the local HUD begins displaying a voice panel for a player.
-
-**Parameters**
-
-- `client` (`Player`): Player who started speaking.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Play a sound when anyone starts talking.
-hook.Add("PlayerStartVoice", "VoiceNotify", function(ply)
-    surface.PlaySound("buttons/button15.wav")
-end)
-```
+ 
 
 ---
 
@@ -1539,310 +2073,7 @@ end)
 
 ---
 
-### EasyIconsLoaded
-
-**Purpose**
-
-Notifies when the EasyIcons font sheet has loaded. Fired when the EasyIcons library has loaded.
-
-**Parameters**
-
-- None
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Rebuild icons using the font after it loads.
-hook.Add("EasyIconsLoaded", "Notify", function()
-    surface.SetFont("liaEasyIcons")
-    chat.AddText(Color(0, 255, 200), "EasyIcons font loaded!")
-    hook.Run("RefreshFonts")
-end)
-```
-
----
-
-### CAMI.OnUsergroupRegistered
-
-**Purpose**
-
-Called when CAMI registers a new usergroup. CAMI notification that a usergroup was registered.
-
-**Parameters**
-
-- `usergroup` (`table`): Registered usergroup data.
-
-- `source` (`string`): Source identifier.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Logs newly registered CAMI usergroups.
-hook.Add("CAMI.OnUsergroupRegistered", "LogGroup", function(group)
-    print("Registered group:", group.Name)
-end)
-```
-
----
-
-### CAMI.OnUsergroupUnregistered
-
-**Purpose**
-
-Called when a usergroup is removed from CAMI. CAMI notification that a usergroup was removed.
-
-**Parameters**
-
-- `usergroup` (`table`): Unregistered usergroup data.
-
-- `source` (`string`): Source identifier.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Logs whenever a usergroup is removed from CAMI.
-hook.Add("CAMI.OnUsergroupUnregistered", "LogRemoval", function(group)
-    print("Removed group:", group.Name)
-end)
-```
-
----
-
-### CAMI.OnPrivilegeRegistered
-
-**Purpose**
-
-Fired when a privilege is created in CAMI. CAMI notification that a privilege was registered.
-
-**Parameters**
-
-- `privilege` (`table`): Privilege data.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Reports when a new CAMI privilege is registered.
-hook.Add("CAMI.OnPrivilegeRegistered", "LogPrivilege", function(priv)
-    print("Registered privilege:", priv.Name)
-end)
-```
-
----
-
-### CAMI.OnPrivilegeUnregistered
-
-**Purpose**
-
-Fired when a privilege is removed from CAMI. CAMI notification that a privilege was unregistered.
-
-**Parameters**
-
-- `privilege` (`table`): Privilege data.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Reports when a CAMI privilege is removed.
-hook.Add("CAMI.OnPrivilegeUnregistered", "LogPrivRemoval", function(priv)
-    print("Removed privilege:", priv.Name)
-end)
-```
-
----
-
-### CAMI.PlayerHasAccess
-
-**Purpose**
-
-Allows an override of player privilege checks. Allows external libraries to override privilege checks.
-
-**Parameters**
-
-- `handler` (`function`): Default handler.
-
-- `actor` (`Player`): Player requesting access.
-
-- `privilegeName` (`string`): Privilege identifier.
-
-- `callback` (`function`): Callback to receive result.
-
-- `target` (`Player`): Optional target player.
-
-- `extra` (`table`): Extra information table.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Lets superadmins bypass privilege checks.
-hook.Add("CAMI.PlayerHasAccess", "AllowSuperadmins", function(_, actor, priv, cb)
-    if actor:IsSuperAdmin() then
-        cb(true)
-        return true
-    end
-end)
-```
-
----
-
-### CAMI.SteamIDHasAccess
-
-**Purpose**
-
-Allows an override of SteamID-based privilege checks. Similar to PlayerHasAccess but for SteamIDs.
-
-**Parameters**
-
-- `handler` (`function`): Default handler.
-
-- `steamID` (`string`): SteamID to check.
-
-- `privilegeName` (`string`): Privilege identifier.
-
-- `callback` (`function`): Callback to receive result.
-
-- `targetID` (`string`): Target SteamID.
-
-- `extra` (`table`): Extra information table.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Grants access for a specific SteamID.
-hook.Add("CAMI.SteamIDHasAccess", "AllowSteamID", function(_, steamID, priv, cb)
-    if steamID == "STEAM_0:1:1" then
-        cb(true)
-        return true
-    end
-end)
-```
-
----
-
-### CAMI.PlayerUsergroupChanged
-
-**Purpose**
-
-Notification that a player's group changed. Fired when a player's usergroup has changed.
-
-**Parameters**
-
-- `player` (`Player`): Affected player.
-
-- `oldGroup` (`string`): Previous group.
-
-- `newGroup` (`string`): New group.
-
-- `source` (`string`): Source identifier.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Announces when a player's usergroup changes.
-hook.Add("CAMI.PlayerUsergroupChanged", "AnnounceChange", function(ply, old, new)
-    print(ply:Nick() .. " moved from " .. old .. " to " .. new)
-end)
-```
-
----
-
-### CAMI.SteamIDUsergroupChanged
-
-**Purpose**
-
-Notification that a SteamID's group changed. Fired when a SteamID's usergroup has changed.
-
-**Parameters**
-
-- `steamID` (`string`): Affected SteamID.
-
-- `oldGroup` (`string`): Previous group.
-
-- `newGroup` (`string`): New group.
-
-- `source` (`string`): Source identifier.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Logs usergroup changes by SteamID.
-hook.Add("CAMI.SteamIDUsergroupChanged", "LogSIDChange", function(sid, old, new)
-    print(sid .. " changed from " .. old .. " to " .. new)
-end)
-```
-
----
+### TooltipLayout
 
 ### TooltipLayout
 
@@ -3270,67 +3501,6 @@ hook.Add("LiliaLoaded", "Ready", function()
     vgui.Create("liaWelcome")
 end)
 ```
-
----
-
-### ShouldLiliaAdminLoad
-
-**Purpose**
-
-Determines whether Lilia's built-in administration system should initialize. Compatibility modules can return `false` to prevent the default admin library from loading.
-
-**Parameters**
-
-- None
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-- `boolean`|`nil`: Return `false` to stop the admin system from loading.
-
-**Example Usage**
-
-```lua
--- Disable Lilia admin when SAM is installed
-hook.Add("ShouldLiliaAdminLoad", "liaSam", function()
-    return false
-end)
-```
-
----
-
-### ShouldLiliaAdminCommandsLoad
-
-**Purpose**
-
-Controls whether the built-in admin commands should be registered. This allows
-external admin systems to take over while still letting the rest of Lilia load.
-
-**Parameters**
-
-- None
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-- `boolean?`: Return `false` to prevent Lilia's admin commands from loading.
-
-**Example Usage**
-
-```lua
--- Use commands from another admin mod instead
-hook.Add("ShouldLiliaAdminCommandsLoad", "liaSam", function()
-    return false
-end)
-```
-
-This hook automatically returns `false` when SAM is detected so that SAM's command set can take over.
 
 ---
 
@@ -5565,6 +5735,65 @@ Called when a ragdoll entity is created for a player.
 hook.Add("OnCreatePlayerRagdoll", "RedRagdoll", function(client, ent, dead)
     if dead then
         ent:SetColor(Color(255, 0, 0))
+    end
+end)
+```
+
+---
+
+### GetRagdollTime
+
+**Purpose**
+
+Determines how long a player remains ragdolled when ragdolling starts. Return a duration in seconds to override the default/base value.
+
+**Parameters**
+
+- `client` (`Player`): The player being ragdolled.
+
+- `baseTime` (`number|nil`): Suggested/base duration in seconds. May be nil; the gamemode defaults to 10 seconds if not overridden.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- `number|nil`: Duration in seconds. Return nil to keep the base/default time.
+
+**Example Usage**
+
+```lua
+-- Make low-health players stay ragdolled longer
+hook.Add("GetRagdollTime", "ScaleByHealth", function(client, baseTime)
+    if client:Health() <= 20 then
+        return math.max(15, baseTime or 10)
+    end
+end)
+```
+
+### GetHandsAttackSpeed
+
+**Purpose**
+
+Allow modules to modify the primary attack delay of the hands SWEP (`lia_hands`). Returning a number replaces the default delay used when setting next primary fire.
+
+**Parameters**
+
+- `client` (Player): The attacking player
+- `defaultDelay` (number): The base primary delay from the SWEP
+
+**Return**
+
+- `number?`: If returned, this value will be used as the attack delay; if nil, the default is used.
+
+**Example**
+
+```lua
+-- Increase melee speed by 40% (reduce delay)
+hook.Add("GetHandsAttackSpeed", "Example_MeleeSpeed", function(client, defaultDelay)
+    if client:IsValid() and client:IsPlayer() then
+        return defaultDelay / 1.4
     end
 end)
 ```
@@ -8014,100 +8243,6 @@ Runs after the title or name of a door is changed.
 ```lua
 hook.Add("DoorTitleSet", "AnnounceTitle", function(ply, door, text)
     print("Door", door, "renamed to", text)
-end)
-```
-
----
-
-### DoorParentSet
-
-**Purpose**
-
-Called when a door is set as the parent for upcoming child assignments.
-
-**Parameters**
-
-- `client` (`Player`): Player selecting the parent.
-
-- `door` (`Entity`): Door chosen as parent.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
-hook.Add("DoorParentSet", "Notify", function(ply, door)
-    print("Parent door selected:", door)
-end)
-```
-
----
-
-### DoorChildAdded
-
-**Purpose**
-
-Runs when a child door is linked to a parent door.
-
-**Parameters**
-
-- `client` (`Player`): Player performing the link.
-
-- `child` (`Entity`): Door being linked.
-
-- `parent` (`Entity`): Parent door.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
-hook.Add("DoorChildAdded", "AnnounceChild", function(ply, child, parent)
-    print(child, "assigned to", parent)
-end)
-```
-
----
-
-### DoorChildRemoved
-
-**Purpose**
-
-Triggered when a door is unlinked from its parent.
-
-**Parameters**
-
-- `client` (`Player`): Player removing the child.
-
-- `child` (`Entity`): Door unlinked.
-
-- `parent` (`Entity`): Former parent door.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
-hook.Add("DoorChildRemoved", "LogRemoval", function(ply, child, parent)
-    print(child, "removed from", parent)
 end)
 ```
 

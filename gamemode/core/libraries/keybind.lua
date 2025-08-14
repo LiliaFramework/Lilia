@@ -114,6 +114,7 @@ local KeybindKeys = {
 
 function lia.keybind.add(k, d, cb, rcb)
     local c = isstring(k) and KeybindKeys[string.lower(k)] or k
+    local d = isstring(d) and L(d) or d
     if not c then return end
     lia.keybind.stored[d] = lia.keybind.stored[d] or {}
     if not lia.keybind.stored[d].value then lia.keybind.stored[d].value = c end
@@ -331,9 +332,9 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
     }
 end)
 
-lia.keybind.add(KEY_NONE, L("openInventory"), function()
+lia.keybind.add(KEY_NONE, "openInventory", function()
     local f1Menu = vgui.Create("liaMenu")
     f1Menu:setActiveTab(L("inv"))
 end)
 
-lia.keybind.add(KEY_NONE, L("adminMode"), function() lia.command.send("adminmode") end)
+lia.keybind.add(KEY_NONE, "adminMode", function() lia.command.send("adminmode") end)

@@ -174,7 +174,7 @@ function MODULE:PopulateAdminTabs(pages)
                         for i, header in ipairs(headers) do
                             m:AddOption("Copy " .. header, function()
                                 SetClipboardText(line:GetColumnText(i) or "")
-                                notification.AddLegacy(L and L("copied") or "Copied", NOTIFY_GENERIC, 2)
+                                client:notifyLocalized("copied")
                             end)
                         end
 
@@ -186,7 +186,7 @@ function MODULE:PopulateAdminTabs(pages)
                             end
 
                             SetClipboardText(table.concat(t, "\n"))
-                            notification.AddLegacy(L and L("allPrivilegeInfo") or "All info copied", NOTIFY_GENERIC, 2)
+                            client:notifyLocalized("allPrivilegeInfo")
                         end)
 
                         m:Open()
@@ -194,7 +194,7 @@ function MODULE:PopulateAdminTabs(pages)
 
                     listView.OnRowDoubleClick = function(_, _, line)
                         SetClipboardText(line:GetColumnText(1) or "")
-                        notification.AddLegacy(L and L("privilegeIdCopied") or "ID copied", NOTIFY_GENERIC, 2)
+                        client:notifyLocalized("privilegeIdCopied")
                     end
                 end
 
