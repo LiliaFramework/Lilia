@@ -114,7 +114,7 @@ local KeybindKeys = {
 
 function lia.keybind.add(k, d, cb, rcb)
     local c = isstring(k) and KeybindKeys[string.lower(k)] or k
-    local d = isstring(d) and L(d) or d
+    d = isstring(d) and L(d) or d
     if not c then return end
     lia.keybind.stored[d] = lia.keybind.stored[d] or {}
     if not lia.keybind.stored[d].value then lia.keybind.stored[d].value = c end
