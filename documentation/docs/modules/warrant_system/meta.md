@@ -10,11 +10,13 @@ Extensions for managing a character's warrant status.
 
 Toggles the character's wanted status and notifies relevant players.
 
+**Parameters**
+
 | Name        | Type   | Description                     |
 
 | ----------- | ------ | ------------------------------- |
 
-| `warranter` | Player | Player initiating the toggle. |
+| `warranter` | Player | *(Optional)* Player initiating the toggle. |
 
 **Realm**
 
@@ -78,7 +80,7 @@ Returns whether the character currently has a warrant.
 
 **Realm**
 
-Shared
+Server
 
 **Returns**
 

@@ -29,7 +29,7 @@ Module-specific events raised by the Warrant System module.
 **Example**
 
 ```lua
-hook.Add("PreWarrantToggle", "LogAttempt", function(char, actor, warranted)
+hook.Add("PreWarrantToggle", "LogAttempt", function(char, warranter, warranted)
     print("Warrant change for " .. char:getName())
 end)
 ```
@@ -61,7 +61,7 @@ end)
 **Example**
 
 ```lua
-hook.Add("WarrantStatusChanged", "NotifyAdmins", function(char, actor, warranted)
+hook.Add("WarrantStatusChanged", "NotifyAdmins", function(char, warranter, warranted)
     if warranted then
         PrintMessage(HUD_PRINTTALK, char:getName() .. " is now warranted")
     end
@@ -95,7 +95,7 @@ end)
 **Example**
 
 ```lua
-hook.Add("PostWarrantToggle", "Cleanup", function(char, actor, warranted)
+hook.Add("PostWarrantToggle", "Cleanup", function(char, warranter, warranted)
     if not warranted then
         -- custom cleanup here
     end

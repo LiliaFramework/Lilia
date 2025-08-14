@@ -72,7 +72,7 @@ end)
 
 * `client` (`Player`): `The affected player.`
 
-* `amount` (`number`): `Amount added to the BAC.`
+* `amt` (`number`): `Amount added to the BAC.`
 
 * `newBac` (`number`): `The resulting BAC value.`
 
@@ -87,8 +87,8 @@ end)
 **Example**
 
 ```lua
-hook.Add("BACIncreased", "NotifyBACIncrease", function(client, amount, newBac)
-    client:ChatPrint("BAC increased by " .. amount .. " to " .. newBac .. "%")
+hook.Add("BACIncreased", "NotifyBACIncrease", function(client, amt, newBac)
+    client:ChatPrint("BAC increased by " .. amt .. " to " .. newBac .. "%")
 end)
 ```
 
@@ -190,7 +190,7 @@ end)
 
 * `client` (`Player`): `The affected player.`
 
-* `amount` (`number`): `Amount being added.`
+* `amt` (`number`): `Amount being added.`
 
 **Realm**
 
@@ -203,8 +203,8 @@ end)
 **Example**
 
 ```lua
-hook.Add("PreBACIncrease", "CheckIncrease", function(client, amount)
-    if amount > 50 then return false end
+hook.Add("PreBACIncrease", "CheckIncrease", function(client, amt)
+    print("BAC will increase by", amt)
 end)
 ```
 
@@ -250,7 +250,7 @@ end)
 
 * `client` (`Player`): `Player whose BAC will drop.`
 
-* `current` (`number`): `Their current BAC before drop.`
+* `bac` (`number`): `Their current BAC before drop.`
 
 **Realm**
 
@@ -263,7 +263,7 @@ end)
 **Example**
 
 ```lua
-hook.Add("PreBACDecrease", "CheckDrop", function(client, current)
+hook.Add("PreBACDecrease", "CheckDrop", function(client, bac)
     -- You could modify decay here
 end)
 ```

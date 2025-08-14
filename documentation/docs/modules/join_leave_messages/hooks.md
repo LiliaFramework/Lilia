@@ -8,7 +8,7 @@ Module-specific events raised by the Join Leave Messages module.
 
 **Purpose**
 
-`Called before a join or leave message is broadcast.`
+`Called before a join or leave message is broadcast. This hook cannot prevent the message from being sent.`
 
 **Parameters**
 
@@ -29,8 +29,8 @@ Module-specific events raised by the Join Leave Messages module.
 **Example**
 
 ```lua
-hook.Add("PreJoinLeaveMessageSent", "FilterMessages", function(ply, joined, msg)
-    if ply:IsBot() then return false end
+hook.Add("PreJoinLeaveMessageSent", "LogJoinLeave", function(ply, joined, msg)
+    print(ply:Nick(), joined and "joined" or "left")
 end)
 ```
 

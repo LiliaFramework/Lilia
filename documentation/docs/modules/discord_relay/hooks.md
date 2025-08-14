@@ -9,6 +9,7 @@ Module-specific events raised by the Discord Relay module.
 **Purpose**
 
 `Called just before a log line is posted to the configured Discord webhook.`
+Return values are ignored; the log string cannot be modified from this hook.
 
 **Parameters**
 
@@ -25,8 +26,8 @@ Module-specific events raised by the Discord Relay module.
 **Example**
 
 ```lua
-hook.Add("DiscordRelaySend", "ModifyLog", function(logString)
-    return "[Relay] " .. logString
+hook.Add("DiscordRelaySend", "PrintLog", function(logString)
+    print("Sending to Discord:", logString)
 end)
 ```
 

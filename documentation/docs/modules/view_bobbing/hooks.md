@@ -94,13 +94,13 @@ end)
 
 **Returns**
 
-`nil`
+`nil` — `Return value is ignored.`
 
 **Example**
 
 ```lua
-hook.Add("PreViewPunch", "ClampPunch", function(client, x, y, z)
-    return math.Clamp(x, -5, 5), y, z
+hook.Add("PreViewPunch", "LogPunch", function(client, x, y, z)
+    print("Upcoming punch:", x, y, z)
 end)
 ```
 
@@ -128,7 +128,7 @@ end)
 
 **Returns**
 
-`nil`
+`nil` — `Return value is ignored.`
 
 **Example**
 

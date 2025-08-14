@@ -20,7 +20,7 @@ Module-specific events raised by the NPC Drops module.
 
 **Returns**
 
-`void` — `None`
+`nil` — `This hook does not return anything.`
 
 **Example**
 
@@ -48,7 +48,7 @@ end)
 
 **Returns**
 
-`void` — `None`
+`nil` — `This hook does not return anything.`
 
 **Example**
 
@@ -76,7 +76,7 @@ end)
 
 **Returns**
 
-`void` — `None`
+`nil` — `This hook does not return anything.`
 
 **Example**
 
@@ -100,7 +100,7 @@ end)
 
 * `choice` (`number`): `Random number selected.`
 
-* `total` (`number`): `Total weight of all items.`
+* `totalWeight` (`number`): `Total weight of all items.`
 
 **Realm**
 
@@ -108,13 +108,13 @@ end)
 
 **Returns**
 
-`void` — `None`
+`nil` — `This hook does not return anything.`
 
 **Example**
 
 ```lua
-hook.Add("NPCDropRoll", "Debug", function(ent, choice, total)
-    print("Rolled", choice, "out of", total)
+hook.Add("NPCDropRoll", "Debug", function(ent, choice, totalWeight)
+    print("Rolled", choice, "out of", totalWeight)
 end)
 ```
 
@@ -138,7 +138,7 @@ end)
 
 **Returns**
 
-`void` — `None`
+`nil` — `This hook does not return anything.`
 
 **Example**
 
@@ -166,7 +166,7 @@ end)
 
 **Returns**
 
-`void` — `None`
+`nil` — `This hook does not return anything.`
 
 **Example**
 

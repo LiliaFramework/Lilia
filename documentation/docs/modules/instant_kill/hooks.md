@@ -12,9 +12,9 @@ Module-specific events raised by the Instant Kill module.
 
 **Parameters**
 
-* `player` (`Player`): `Victim receiving the hit.`
+* `client` (`Player`): `Victim receiving the hit.`
 
-* `damageInfo` (`CTakeDamageInfo`): `Damage information object.`
+* `dmgInfo` (`CTakeDamageInfo`): `Damage information object.`
 
 **Realm**
 
@@ -27,8 +27,8 @@ Module-specific events raised by the Instant Kill module.
 **Example**
 
 ```lua
-hook.Add("ShouldInstantKill", "ProtectNPCs", function(ply, dmginfo)
-    if ply:IsNPC() then return false end
+hook.Add("ShouldInstantKill", "ProtectNPCs", function(client, dmgInfo)
+    if client:IsNPC() then return false end
 end)
 ```
 
@@ -42,9 +42,9 @@ end)
 
 **Parameters**
 
-* `player` (`Player`): `Victim receiving the hit.`
+* `client` (`Player`): `Victim receiving the hit.`
 
-* `damageInfo` (`CTakeDamageInfo`): `Damage information object.`
+* `dmgInfo` (`CTakeDamageInfo`): `Damage information object.`
 
 **Realm**
 
@@ -57,8 +57,8 @@ end)
 **Example**
 
 ```lua
-hook.Add("PlayerPreInstantKill", "PrepareKill", function(ply, dmginfo)
-    -- modify damageInfo here
+hook.Add("PlayerPreInstantKill", "PrepareKill", function(client, dmgInfo)
+    -- modify dmgInfo here
 end)
 ```
 
@@ -72,9 +72,9 @@ end)
 
 **Parameters**
 
-* `player` (`Player`): `Victim that will die.`
+* `client` (`Player`): `Victim that will die.`
 
-* `damageInfo` (`CTakeDamageInfo`): `Modified damage information.`
+* `dmgInfo` (`CTakeDamageInfo`): `Modified damage information.`
 
 **Realm**
 
@@ -87,8 +87,8 @@ end)
 **Example**
 
 ```lua
-hook.Add("PlayerInstantKilled", "OnKill", function(ply, dmginfo)
-    print(ply:Nick() .. " was instantly killed")
+hook.Add("PlayerInstantKilled", "OnKill", function(client, dmgInfo)
+    print(client:Nick() .. " was instantly killed")
 end)
 ```
 

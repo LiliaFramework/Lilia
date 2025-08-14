@@ -114,5 +114,3 @@ hook.Add("AutoRestartCountdown", "DisplayTimer", function(remaining)
 end)
 ```
 
----
-

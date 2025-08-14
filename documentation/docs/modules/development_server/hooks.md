@@ -36,7 +36,7 @@ end)
 
 **Purpose**
 
-`Runs when an allowed developer joins the server while dev mode is active.`
+`Fires when a player passes the development server check (either dev mode is disabled or their SteamID64 is authorized).`
 
 **Parameters**
 

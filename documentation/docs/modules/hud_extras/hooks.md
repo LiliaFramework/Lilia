@@ -12,7 +12,7 @@ Module-specific events raised by the HUD Extras module.
 
 **Parameters**
 
-* *(None)*
+*None*
 
 **Realm**
 
@@ -26,7 +26,7 @@ Module-specific events raised by the HUD Extras module.
 
 ```lua
 hook.Add("RefreshFonts", "HUDExtrasFonts", function()
-    surface.CreateFont("HUDFont", {font = lia.config.get("HUDExtrasFont"), size = 24})
+    surface.CreateFont("HUDFont", {font = lia.config.get("FPSHudFont"), size = 24})
 end)
 ```
 

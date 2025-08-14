@@ -8,7 +8,8 @@ Utility methods for managing the raised state of a player's weapon.
 
 **Purpose**
 
-Returns `true` if the player's active weapon is considered raised.
+Checks the `ShouldWeaponBeRaised` hook and weapon flags before returning the
+player's `raised` networked state.
 
 **Parameters**
 
@@ -28,7 +29,8 @@ Shared
 
 **Purpose**
 
-Sets whether the player's weapon is raised and fires `PlayerWeaponRaisedChanged`.
+Sets whether the player's weapon is raised, fires `PlayerWeaponRaisedChanged`,
+and temporarily blocks firing for one second.
 
 | Name   | Type    | Description          |
 
@@ -56,7 +58,8 @@ client:setWepRaised(true)
 
 **Purpose**
 
-Toggles the weapon's raised state and runs any weapon callbacks.
+After a one second delay, toggles the weapon's raised state and runs any weapon
+callbacks.
 
 **Parameters**
 

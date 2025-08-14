@@ -40,7 +40,7 @@ Raises the player's BAC by the specified amount.
 
 | ------- | ------ | ------------------ |
 
-| `amount` | number | BAC points to add. |
+| `amt` | number | BAC points to add. |
 
 **Realm**
 

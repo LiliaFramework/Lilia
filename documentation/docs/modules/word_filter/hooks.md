@@ -105,23 +105,23 @@ end)
 
 **Purpose**
 
-`Called when a player's message is blocked for containing a banned word.`
+Called when a player's message is blocked for containing a banned word.
 
 **Parameters**
 
-* `ply` (`Player`): `The offending player.`
+* `ply` (`Player`): The offending player.
 
-* `text` (`string`): `Original chat text.`
+* `text` (`string`): Original chat text.
 
-* `word` (`string`): `The banned word found.`
+* `word` (`string`): The banned word found.
 
 **Realm**
 
-`Server`
+Server
 
 **Returns**
 
-`nil`
+`None`
 
 **Example**
 
@@ -137,21 +137,21 @@ end)
 
 **Purpose**
 
-`Runs when a player's chat message passes the filter.`
+Runs when a player's chat message passes the filter.
 
 **Parameters**
 
-* `ply` (`Player`): `Player whose message was allowed.`
+* `ply` (`Player`): Player whose message was allowed.
 
-* `text` (`string`): `Their original message.`
+* `text` (`string`): Their original message.
 
 **Realm**
 
-`Server`
+Server
 
 **Returns**
 
-`nil`
+`None`
 
 **Example**
 
@@ -167,19 +167,19 @@ end)
 
 **Purpose**
 
-`Fires after a new word is added to the blacklist.`
+Fires after a new word is added to the blacklist.
 
 **Parameters**
 
-* `word` (`string`): `The word that was inserted.`
+* `word` (`string`): The word that was inserted.
 
 **Realm**
 
-`Server`
+Server
 
 **Returns**
 
-`nil`
+`None`
 
 **Example**
 
@@ -195,19 +195,19 @@ end)
 
 **Purpose**
 
-`Called after a word is removed from the blacklist.`
+Called after a word is removed from the blacklist.
 
 **Parameters**
 
-* `word` (`string`): `The word removed.`
+* `word` (`string`): The word removed.
 
 **Realm**
 
-`Server`
+Server
 
 **Returns**
 
-`nil`
+`None`
 
 **Example**
 

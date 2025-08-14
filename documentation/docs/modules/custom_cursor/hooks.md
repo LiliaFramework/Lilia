@@ -53,7 +53,7 @@ Runs right after the cursor texture has been drawn.
 **Example**
 
 ```lua
-hook.Add("PostRenderCursor", "ResetColor", function()
+hook.Add("PostRenderCursor", "ResetColor", function(mat)
     surface.SetDrawColor(255, 255, 255)
 end)
 ```
@@ -82,7 +82,7 @@ Executed every frame before the hovered panel has its cursor style changed.
 
 ```lua
 hook.Add("PreCursorThink", "BlockCursor", function(panel)
-    if panel.NoCursor then return false end
+    if panel.NoCursor then return end
 end)
 ```
 

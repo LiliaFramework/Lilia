@@ -29,7 +29,7 @@ Module-specific events raised by the Slot Machine module.
 ```lua
 hook.Add("SlotMachineUse", "CheckVIP", function(machine, client)
     if not client:isVIP() then
-        return false
+        print("Only VIPs can play.")
     end
 end)
 ```

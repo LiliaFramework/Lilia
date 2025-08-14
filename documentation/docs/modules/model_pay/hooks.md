@@ -22,7 +22,7 @@ Module-specific events raised by the Model Pay module.
 
 **Returns**
 
-`void` — `None`
+`nil` — `This hook does not return anything.`
 
 **Example**
 
@@ -54,7 +54,7 @@ end)
 
 **Returns**
 
-`void` — `None`
+`nil` — `This hook does not return anything.`
 
 **Example**
 
@@ -84,7 +84,7 @@ end)
 
 **Returns**
 
-`void` — `None`
+`nil` — `This hook does not return anything.`
 
 **Example**
 
@@ -114,7 +114,7 @@ end)
 
 **Returns**
 
-`void` — `None`
+`nil` — `This hook does not return anything.`
 
 **Example**
 
@@ -142,7 +142,7 @@ end)
 
 **Returns**
 
-`void` — `None`
+`nil` — `This hook does not return anything.`
 
 **Example**
 
@@ -172,7 +172,7 @@ end)
 
 **Returns**
 
-`void` — `None`
+`nil` — `This hook does not return anything.`
 
 **Example**
 
@@ -202,7 +202,7 @@ end)
 
 **Returns**
 
-`void` — `None`
+`nil` — `This hook does not return anything.`
 
 **Example**
 

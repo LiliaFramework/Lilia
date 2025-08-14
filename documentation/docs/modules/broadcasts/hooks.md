@@ -136,7 +136,7 @@ end)
 
 **Purpose**
 
-`Fires when the class broadcast selection menu is presented.`
+`Runs before the class broadcast selection menu is presented.`
 
 **Parameters**
 
@@ -228,7 +228,7 @@ end)
 
 **Purpose**
 
-`Fires when the faction broadcast selection menu appears.`
+`Runs before the faction broadcast selection menu appears.`
 
 **Parameters**
 

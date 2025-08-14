@@ -27,10 +27,8 @@ Module-specific events raised by the Viewmodel Animations module.
 **Example**
 
 ```lua
-hook.Add("PreVManipPickup", "BlockCertainItems", function(client, item)
-    if item.uniqueID == "restricted" then
-        return false
-    end
+hook.Add("PreVManipPickup", "NotifyPickup", function(client, item)
+    print(client:Name() .. " is picking up " .. item.uniqueID)
 end)
 ```
 

@@ -8,13 +8,13 @@ Module-specific events raised by the Perma Remove module.
 
 **Purpose**
 
-`Determines if an entity can be permanently removed by an admin.`
+Determines if an entity can be permanently removed by an admin.
 
 **Parameters**
 
-* `client` (`Player`): `Admin requesting the removal.`
+* `client` (`Player`): Admin requesting the removal.
 
-* `entity` (`Entity`): `Map entity targeted for deletion.`
+* `entity` (`Entity`): Map entity targeted for deletion.
 
 **Realm**
 
@@ -22,7 +22,7 @@ Module-specific events raised by the Perma Remove module.
 
 **Returns**
 
-`boolean` — `Return false to block the removal.`
+`boolean` — Return false to block the removal.
 
 **Example**
 
@@ -38,13 +38,13 @@ end)
 
 **Purpose**
 
-`Called after an entity is permanently removed with the command.`
+Called after an entity is permanently removed with the command.
 
 **Parameters**
 
-* `client` (`Player`): `Admin that removed the entity.`
+* `client` (`Player`): Admin that removed the entity.
 
-* `entity` (`Entity`): `Entity that was deleted.`
+* `entity` (`Entity`): Entity that was deleted.
 
 **Realm**
 
@@ -52,7 +52,7 @@ end)
 
 **Returns**
 
-`nil` — `No return value.`
+`nil` — No return value.
 
 **Example**
 
@@ -68,11 +68,11 @@ end)
 
 **Purpose**
 
-`Runs during map loading for each stored entity that is removed.`
+Runs during map loading for each stored entity that is removed.
 
 **Parameters**
 
-* `entity` (`Entity`): `Map entity being removed automatically.`
+* `entity` (`Entity`): Map entity being removed automatically.
 
 **Realm**
 
@@ -80,7 +80,7 @@ end)
 
 **Returns**
 
-`nil` — `No return value.`
+`nil` — No return value.
 
 **Example**
 
