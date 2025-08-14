@@ -814,9 +814,9 @@ local function versionCompare(localVersion, remoteVersion)
     return 0
 end
 
-local publicURL = "https://raw.githubusercontent.com/LiliaFramework/Modules/refs/heads/gh-pages/version.json"
+local publicURL = "https://raw.githubusercontent.com/LiliaFramework/LiliaFramework.github.io/main/docs/versioning/modules.json"
 local privateURL = "https://raw.githubusercontent.com/bleonheart/bleonheart.github.io/main/version.json"
-local versionURL = "https://raw.githubusercontent.com/LiliaFramework/LiliaFramework.github.io/main/version.json"
+local versionURL = "https://raw.githubusercontent.com/LiliaFramework/LiliaFramework.github.io/main/docs/versioning/lilia.json"
 local function checkPublicModules()
     local hasPublic = false
     for uniqueID in pairs(lia.module.list) do
@@ -843,7 +843,7 @@ local function checkPublicModules()
             if string.StartsWith(uniqueID, "public_") then
                 local match
                 for _, m in ipairs(remote) do
-                    if m.public_uniqueID == uniqueID then
+                    if m.uniqueID == uniqueID then
                         match = m
                         break
                     end
@@ -886,7 +886,7 @@ local function checkPrivateModules()
         for uniqueID, mod in pairs(lia.module.list) do
             if string.StartsWith(uniqueID, "private_") then
                 for _, m in ipairs(remote) do
-                    if m.private_uniqueID == uniqueID and m.version and mod.version and versionCompare(mod.version, m.version) < 0 then
+                    if m.uniqueID == uniqueID and m.version and mod.version and versionCompare(mod.version, m.version) < 0 then
                         lia.updater(L("privateModuleOutdated", mod.name))
                         break
                     end
