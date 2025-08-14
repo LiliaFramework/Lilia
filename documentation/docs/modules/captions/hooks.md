@@ -78,11 +78,16 @@ end)
 
 **Parameters**
 
-* `clientOrText` (`Player|string`): `On the server this is the target player, on the client this is the caption text.`
+**Server**
 
-* `textOrDuration` (`string|number`): `On the server this is the caption text, on the client this is the duration.`
+* `client` (`Player`): `The player receiving the caption.`
+* `text` (`string`): `Caption text.`
+* `duration` (`number`): `How long the caption should display.`
 
-* `duration` (`number`, optional): `Duration when running server side.`
+**Client**
+
+* `text` (`string`): `Caption text.`
+* `duration` (`number`): `How long the caption should display.`
 
 **Realm**
 
@@ -110,7 +115,13 @@ end)
 
 **Parameters**
 
-* `client` (`Player`, optional): `The player whose caption ended when on the server.`
+**Server**
+
+* `client` (`Player`): `The player whose caption ended.`
+
+**Client**
+
+* *(None)*
 
 **Realm**
 

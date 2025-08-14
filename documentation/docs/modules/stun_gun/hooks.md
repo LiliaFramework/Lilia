@@ -57,7 +57,7 @@ end)
 **Example**
 
 ```lua
-hook.Add("PlayerStunCleared", "OnStunEnd", function(target)
+hook.Add("PlayerStunCleared", "OnStunEnd", function(target, weapon)
     target:ChatPrint("You can move again.")
 end)
 ```
@@ -87,7 +87,7 @@ end)
 **Example**
 
 ```lua
-hook.Add("PlayerOverStunned", "AlertOverStun", function(target)
+hook.Add("PlayerOverStunned", "AlertOverStun", function(target, weapon)
     target:EmitSound("npc/roller/blade_in.wav")
 end)
 ```
@@ -117,7 +117,7 @@ end)
 **Example**
 
 ```lua
-hook.Add("PlayerOverStunCleared", "OverStunEnd", function(target)
+hook.Add("PlayerOverStunCleared", "OverStunEnd", function(target, weapon)
     target:ChatPrint("Over-stun ended.")
 end)
 ```
@@ -147,7 +147,7 @@ end)
 **Example**
 
 ```lua
-hook.Add("StunGunReloaded", "RechargeNotice", function(owner)
+hook.Add("StunGunReloaded", "RechargeNotice", function(owner, weapon)
     owner:ChatPrint("Taser reloaded")
 end)
 ```
@@ -179,7 +179,7 @@ end)
 **Example**
 
 ```lua
-hook.Add("StunGunLaserToggled", "LaserSound", function(owner, enabled)
+hook.Add("StunGunLaserToggled", "LaserSound", function(owner, enabled, weapon)
     owner:EmitSound(enabled and "buttons/button17.wav" or "buttons/button18.wav")
 end)
 ```

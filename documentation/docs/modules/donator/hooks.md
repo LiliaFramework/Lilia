@@ -44,7 +44,7 @@ end)
 
 * `client` (`Player`): `The spawning player.`
 
-* `slots` (`number`): `Number of override character slots.`
+* `currentSlots` (`number`): `Number of override character slots.`
 
 **Realm**
 
@@ -57,8 +57,8 @@ end)
 **Example**
 
 ```lua
-hook.Add("DonatorSpawn", "AnnounceSlots", function(client, slots)
-    print(client:Nick() .. " has " .. slots .. " character slots")
+hook.Add("DonatorSpawn", "AnnounceSlots", function(client, currentSlots)
+    print(client:Nick() .. " has " .. currentSlots .. " character slots")
 end)
 ```
 
@@ -72,9 +72,9 @@ end)
 
 **Parameters**
 
-* `player` (`Player`): `The affected player.`
+* `ply` (`Player`): `The affected player.`
 
-* `count` (`number`): `Their new total slot count.`
+* `current` (`number`): `Their new total slot count.`
 
 **Realm**
 
@@ -87,8 +87,8 @@ end)
 **Example**
 
 ```lua
-hook.Add("DonatorSlotsAdded", "LogSlotsAdded", function(player, count)
-    print(player:Nick() .. " now has " .. count .. " slots")
+hook.Add("DonatorSlotsAdded", "LogSlotsAdded", function(ply, current)
+    print(ply:Nick() .. " now has " .. current .. " slots")
 end)
 ```
 
@@ -102,9 +102,9 @@ end)
 
 **Parameters**
 
-* `player` (`Player`): `The affected player.`
+* `ply` (`Player`): `The affected player.`
 
-* `count` (`number`): `Their new total slot count.`
+* `current` (`number`): `Their new total slot count.`
 
 **Realm**
 
@@ -117,8 +117,8 @@ end)
 **Example**
 
 ```lua
-hook.Add("DonatorSlotsSubtracted", "LogSlotsSub", function(player, count)
-    print(player:Nick() .. " now has " .. count .. " slots")
+hook.Add("DonatorSlotsSubtracted", "LogSlotsSub", function(ply, current)
+    print(ply:Nick() .. " now has " .. current .. " slots")
 end)
 ```
 
@@ -254,7 +254,7 @@ end)
 
 * `player` (`Player`): `The player being modified.`
 
-* `value` (`number`): `New additional slot amount.`
+* `val` (`number`): `New additional slot amount.`
 
 **Realm**
 
@@ -267,8 +267,8 @@ end)
 **Example**
 
 ```lua
-hook.Add("DonatorAdditionalSlotsSet", "TrackAddSlotsSet", function(player, value)
-    print(player:Nick() .. " additional slots set to " .. value)
+hook.Add("DonatorAdditionalSlotsSet", "TrackAddSlotsSet", function(player, val)
+    print(player:Nick() .. " additional slots set to " .. val)
 end)
 ```
 
@@ -284,7 +284,7 @@ end)
 
 * `player` (`Player`): `The player receiving slots.`
 
-* `amount` (`number`): `Number of additional slots given.`
+* `AddValue` (`number`): `Number of additional slots given.`
 
 **Realm**
 
@@ -297,8 +297,8 @@ end)
 **Example**
 
 ```lua
-hook.Add("DonatorAdditionalSlotsGiven", "TrackAddSlots", function(player, amount)
-    print(player:Nick() .. " gained " .. amount .. " additional slots")
+hook.Add("DonatorAdditionalSlotsGiven", "TrackAddSlots", function(player, AddValue)
+    print(player:Nick() .. " gained " .. AddValue .. " additional slots")
 end)
 ```
 

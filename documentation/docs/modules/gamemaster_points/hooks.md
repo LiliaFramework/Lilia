@@ -16,7 +16,7 @@ Module-specific events raised by the Gamemaster Points module.
 
 * `name` (`string`): `Name chosen for the point.`
 
-* `position` (`Vector`): `World position to save.`
+* `pos` (`Vector`): `World position to save.`
 
 **Realm**
 
@@ -48,7 +48,7 @@ end)
 
 * `name` (`string`): `Point name.`
 
-* `position` (`Vector`): `Saved position.`
+* `pos` (`Vector`): `Saved position.`
 
 **Realm**
 
@@ -138,7 +138,7 @@ end)
 
 * `client` (`Player`): `Admin renaming the point.`
 
-* `oldName` (`string`): `Current name.`
+* `name` (`string`): `Current name.`
 
 * `newName` (`string`): `Desired new name.`
 
@@ -153,8 +153,8 @@ end)
 **Example**
 
 ```lua
-hook.Add("GamemasterPreRenamePoint", "LogPreRename", function(client, oldName, newName)
-    print(client, "renaming", oldName, "to", newName)
+hook.Add("GamemasterPreRenamePoint", "LogPreRename", function(client, name, newName)
+    print(client, "renaming", name, "to", newName)
 end)
 ```
 
@@ -204,7 +204,7 @@ end)
 
 * `name` (`string`): `Point being updated.`
 
-* `soundPath` (`string`): `New sound path.`
+* `newSound` (`string`): `New sound path.`
 
 **Realm**
 
@@ -217,8 +217,8 @@ end)
 **Example**
 
 ```lua
-hook.Add("GamemasterPreUpdateSound", "CheckSound", function(client, name, soundPath)
-    if soundPath == "" then return end
+hook.Add("GamemasterPreUpdateSound", "CheckSound", function(client, name, newSound)
+    if newSound == "" then return end
 end)
 ```
 
@@ -236,7 +236,7 @@ end)
 
 * `name` (`string`): `Point name.`
 
-* `soundPath` (`string`): `New sound path.`
+* `newSound` (`string`): `New sound path.`
 
 **Realm**
 
@@ -249,8 +249,8 @@ end)
 **Example**
 
 ```lua
-hook.Add("GamemasterUpdateSound", "NotifySound", function(client, name, soundPath)
-    print(name .. " now plays " .. soundPath)
+hook.Add("GamemasterUpdateSound", "NotifySound", function(client, name, newSound)
+    print(name .. " now plays " .. newSound)
 end)
 ```
 
@@ -268,7 +268,7 @@ end)
 
 * `name` (`string`): `Point being updated.`
 
-* `effect` (`string`): `New particle effect name.`
+* `newEffect` (`string`): `New particle effect name.`
 
 **Realm**
 
@@ -281,7 +281,7 @@ end)
 **Example**
 
 ```lua
-hook.Add("GamemasterPreUpdateEffect", "CheckEffect", function(client, name, effect)
+hook.Add("GamemasterPreUpdateEffect", "CheckEffect", function(client, name, newEffect)
     print("Changing effect for", name)
 end)
 ```
@@ -300,7 +300,7 @@ end)
 
 * `name` (`string`): `Point name.`
 
-* `effect` (`string`): `New particle effect.`
+* `newEffect` (`string`): `New particle effect.`
 
 **Realm**
 
@@ -313,8 +313,8 @@ end)
 **Example**
 
 ```lua
-hook.Add("GamemasterUpdateEffect", "NotifyEffect", function(client, name, effect)
-    print(name .. " now uses effect " .. effect)
+hook.Add("GamemasterUpdateEffect", "NotifyEffect", function(client, name, newEffect)
+    print(name .. " now uses effect " .. newEffect)
 end)
 ```
 
@@ -362,7 +362,7 @@ end)
 
 * `name` (`string`): `Point name used.`
 
-* `position` (`Vector`): `Destination position.`
+* `pos` (`Vector`): `Destination position.`
 
 **Realm**
 

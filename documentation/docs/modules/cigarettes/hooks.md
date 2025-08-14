@@ -78,7 +78,7 @@ Occurs when a player releases smoke after holding a cigarette.
 
 * `cigID` (`number`): Identifier of the cigarette item.
 
-* `puffs` (`number`): How many puffs were taken.
+* `puffs` (`number`): Total puffs taken so far.
 
 **Realm**
 

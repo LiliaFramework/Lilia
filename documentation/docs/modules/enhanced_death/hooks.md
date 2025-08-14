@@ -1,6 +1,6 @@
 # Hooks
 
-Module-specific events raised by the Hospital Respawn module.
+Module-specific events raised by the Enhanced Death module.
 
 ---
 

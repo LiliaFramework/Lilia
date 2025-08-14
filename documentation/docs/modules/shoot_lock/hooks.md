@@ -29,7 +29,7 @@ Module-specific events raised by the Shoot Locks module.
 **Example**
 
 ```lua
-hook.Add("LockShotAttempt", "AlertSecurity", function(client, door)
+hook.Add("LockShotAttempt", "AlertSecurity", function(client, door, dmgInfo)
     print(client:Name() .. " fired at " .. tostring(door))
 end)
 ```
@@ -154,7 +154,7 @@ end)
 **Example**
 
 ```lua
-hook.Add("LockShotFailed", "BreachFailed", function(client, door)
+hook.Add("LockShotFailed", "BreachFailed", function(client, door, dmgInfo)
     client:notify("The lock held strong.")
 end)
 ```

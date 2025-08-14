@@ -20,7 +20,7 @@ Called when a cinematic display begins on the client.
 
 * `blackBars` (`boolean`): Whether letterbox bars are drawn.
 
-* `playMusic` (`boolean`): Whether background music should play.
+* `music` (`boolean`): Whether background music should play.
 
 * `color` (`Color`): Color applied to the text.
 
@@ -35,7 +35,7 @@ Called when a cinematic display begins on the client.
 **Example**
 
 ```lua
-hook.Add("CinematicDisplayStart", "ExampleStart", function(text, bigText, duration, blackBars, playMusic, color)
+hook.Add("CinematicDisplayStart", "ExampleStart", function(text, bigText, duration, blackBars, music, color)
     print("Cinematic started:", text)
 end)
 ```
@@ -144,7 +144,7 @@ Called server-side when a player requests to trigger a cinematic display.
 
 * `blackBars` (`boolean`): Whether to include black bars.
 
-* `playMusic` (`boolean`): Whether to play music.
+* `music` (`boolean`): Whether to play music.
 
 * `color` (`Color`): Text color.
 
@@ -159,7 +159,7 @@ Called server-side when a player requests to trigger a cinematic display.
 **Example**
 
 ```lua
-hook.Add("CinematicTriggered", "OnCinematicTrigger", function(client, text, bigText, duration, blackBars, playMusic, color)
+hook.Add("CinematicTriggered", "OnCinematicTrigger", function(client, text, bigText, duration, blackBars, music, color)
     print(client:Name() .. " started a cinematic.")
 end)
 ```

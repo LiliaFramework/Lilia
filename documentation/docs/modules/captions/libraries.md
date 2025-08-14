@@ -22,7 +22,7 @@ The net strings `StartCaption` and `EndCaption` are registered automatically whe
 
 ---
 
-### lia.caption.start
+### lia.caption.start (Server)
 
 **Purpose**
 
@@ -57,7 +57,7 @@ lia.caption.start(ply, "Access Granted", 5)
 
 ---
 
-### lia.caption.finish
+### lia.caption.finish (Server)
 
 **Purpose**
 
@@ -88,7 +88,7 @@ lia.caption.finish(ply)
 
 ---
 
-### lia.caption.start
+### lia.caption.start (Client)
 
 **Purpose**
 
@@ -121,7 +121,7 @@ lia.caption.start("Mission Complete", 3)
 
 ---
 
-### lia.caption.finish
+### lia.caption.finish (Client)
 
 **Purpose**
 

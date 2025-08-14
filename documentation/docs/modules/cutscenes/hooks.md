@@ -12,9 +12,9 @@ Fired when a cutscene begins running. On the server it is called for every playe
 
 **Parameters**
 
-* `player` (`Player`|nil): Player who started viewing the cutscene (server only).
+* `player` (`Player`): Player who started viewing the cutscene. *(Server only)*
 
-* `id` (`string`): Identifier of the cutscene.
+* `id` (`string`): Identifier of the cutscene. On the client this is the sole parameter.
 
 **Realm**
 

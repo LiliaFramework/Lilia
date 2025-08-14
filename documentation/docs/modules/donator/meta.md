@@ -30,10 +30,10 @@ Shared
 
 Sets the player's additional character slot count.
 
+**Parameters**
+
 | Name | Type   | Description                 |
-
 | ---- | ------ | --------------------------- |
-
 | `val` | number | New additional slot amount. |
 
 **Realm**
@@ -58,11 +58,11 @@ client:SetAdditionalCharSlots(3)
 
 Adds to the player's additional character slot count.
 
-| Name       | Type   | Description                            |
+**Parameters**
 
-| ---------- | ------ | -------------------------------------- |
-
-| `amount` | number | Amount of slots to grant (default 1). |
+| Name      | Type   | Description                            |
+| --------- | ------ | -------------------------------------- |
+| `AddValue` | number | Amount of slots to grant (default 1). |
 
 **Realm**
 
@@ -79,4 +79,3 @@ client:GiveAdditionalCharSlots(2)
 ```
 
 ---
-
