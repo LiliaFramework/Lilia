@@ -1,6 +1,7 @@
 [
   {
     "name": "Advertisements",
+    "uniqueID": "public_advert",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Implements a paid /advert command for server-wide announcements. Messages are colored, logged, and throttled by a cooldown to curb spam.",
@@ -19,6 +20,7 @@
   },
   {
     "name": "Alcoholism",
+    "uniqueID": "public_alcoholism",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds drinkable alcohol that increases a player's intoxication level. High BAC blurs vision and slows movement until the effect wears off.",
@@ -37,6 +39,7 @@
   },
   {
     "name": "Auto Restarter",
+    "uniqueID": "public_autorestarter",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Schedules automatic server restarts at set intervals. Players see a countdown so they can prepare before the map changes.",
@@ -55,6 +58,7 @@
   },
   {
     "name": "Body Group Editor",
+    "uniqueID": "public_bodygrouper",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Spawns a bodygroup closet where players can edit their model's bodygroups. Admins may inspect others and configure the closet's model.",
@@ -73,6 +77,7 @@
   },
   {
     "name": "Broadcasts",
+    "uniqueID": "public_broadcasts",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Allows staff to broadcast messages to chosen factions or classes. Every broadcast is logged and controlled through CAMI privileges.",
@@ -90,6 +95,7 @@
   },
   {
     "name": "Captions",
+    "uniqueID": "public_captions",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Offers an API for timed on-screen captions suited for tutorials or story events. Captions can be triggered from the server or client and last for a chosen duration.",
@@ -108,6 +114,7 @@
   },
   {
     "name": "Cards",
+    "uniqueID": "public_cards",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds a full deck of playing cards that can be shuffled and drawn. Card draws sync to all players for simple in-game minigames.",
@@ -126,6 +133,7 @@
   },
   {
     "name": "Chat Messages",
+    "uniqueID": "public_chatmessages",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Periodically posts automated advert messages in chat on a timer. Keeps players informed with rotating tips even when staff are offline.",
@@ -144,6 +152,7 @@
   },
   {
     "name": "Cigarettes",
+    "uniqueID": "public_cigs",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds smokable cigarette items with workshop models, puff effects while smoking, and cigarettes that are consumed over time with ash particles.",
@@ -163,6 +172,7 @@
   },
   {
     "name": "Cinematic Text",
+    "uniqueID": "public_cinematictext",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds displays of cinematic splash text overlays, screen darkening with letterbox bars, support for scripted scenes, timed fades for dramatic effect, and customizable text fonts.",
@@ -181,6 +191,7 @@
   },
   {
     "name": "Climbing",
+    "uniqueID": "public_climb",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds the ability to climb ledges using movement keys, custom climbing animations, and hooks for climb attempts.",
@@ -197,6 +208,7 @@
   },
   {
     "name": "Community Commands",
+    "uniqueID": "public_communitycommands",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds chat commands to open community links, easy sharing of workshop and docs, configurable commands via settings, localization for command names, and the ability to add custom URLs.",
@@ -215,6 +227,7 @@
   },
   {
     "name": "Compass",
+    "uniqueID": "public_compass",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds a rotating HUD compass display, spot markers showing enemy bearings, support that requires workshop icons, pinging of points of interest, and compass size configuration.",
@@ -235,6 +248,7 @@
   },
   {
     "name": "Corpse ID",
+    "uniqueID": "public_corpseid",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds the ability to identify corpses after IdentificationTime, use of CorpseMessageFont for 3D2D text, info display above bodies, configurable identification delays, and logs when corpses are identified.",
@@ -253,6 +267,7 @@
   },
   {
     "name": "Cursor",
+    "uniqueID": "public_cursor",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds a toggleable custom cursor for the UI, a purely client-side implementation, improved menu navigation, a hotkey to quickly show or hide the cursor, and compatibility with other menu modules.",
@@ -271,6 +286,7 @@
   },
   {
     "name": "Cutscenes",
+    "uniqueID": "public_cutscenes",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds a framework for simple cutscene playback, scenes defined through tables, syncing of camera movement across clients, commands to trigger cutscenes, and the ability for players to skip.",
@@ -289,6 +305,7 @@
   },
   {
     "name": "Damage Numbers",
+    "uniqueID": "public_damagenumbers",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds floating combat text when hitting targets, different colors for damage types, display of damage dealt and received, scaling text based on damage amount, and client option to disable numbers.",
@@ -307,6 +324,7 @@
   },
   {
     "name": "Development HUD",
+    "uniqueID": "public_developmenthud",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds a staff-only development HUD, font customization via DevHudFont, a requirement for the CAMI privilege, real-time server performance metrics, and a toggle command to show or hide the HUD.",
@@ -325,6 +343,7 @@
   },
   {
     "name": "Development Server",
+    "uniqueID": "public_developmentserver",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds a development server mode for testing, the ability to run special development functions, a toggle via configuration, an environment flag for dev commands, and logging of executed dev actions.",
@@ -343,6 +362,7 @@
   },
   {
     "name": "Discord Relay",
+    "uniqueID": "public_discordrelay",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds relaying of server logs to Discord, webhook integration for connectivity, formatting of real-time updates, multiple webhook URLs per log type, and filtering to control which logs are sent.",
@@ -361,6 +381,7 @@
   },
   {
     "name": "Donator",
+    "uniqueID": "public_donator",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds libraries to manage donor perks, tracking for donor ranks and perks, configurable perks by tier, and commands to adjust character slots.",
@@ -378,6 +399,7 @@
   },
   {
     "name": "Door Kick",
+    "uniqueID": "public_doorkick",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds the ability to kick doors open with an animation, logging of door kick events, and a fun breach mechanic with physics force to fling doors open.",
@@ -395,6 +417,7 @@
   },
   {
     "name": "Enhanced Death",
+    "uniqueID": "public_enhanceddeath",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds respawning of players at hospitals, a medical recovery system, support for multiple hospital spawns, configurable respawn delays, and integration with death logs.",
@@ -413,6 +436,7 @@
   },
   {
     "name": "Extended Descriptions",
+    "uniqueID": "public_extendeddescriptions",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds support for long item descriptions, localization for multiple languages, better RP text display, automatic line wrapping, and fallback to short descriptions.",
@@ -431,6 +455,7 @@
   },
   {
     "name": "First Person Effects",
+    "uniqueID": "public_firstpersoneffects",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds head bob and view sway, camera motion synced to actions, a realistic first-person feel, and adjustable intensity via config.",
@@ -448,6 +473,7 @@
   },
   {
     "name": "Flashlight",
+    "uniqueID": "public_flashlight",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds a serious flashlight with dynamic light, darkening of surroundings when turned off, adjustable brightness, and keybind toggle support.",
@@ -465,6 +491,7 @@
   },
   {
     "name": "Free Look",
+    "uniqueID": "public_freelook",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds the ability to look around without turning the body, a toggle key similar to EFT, movement direction preservation, and adjustable sensitivity while freelooking.",
@@ -482,6 +509,7 @@
   },
   {
     "name": "Gamemaster Points",
+    "uniqueID": "public_gamemasterpoints",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds teleport points for game masters, quick navigation across large maps, saving of locations for reuse, a command to list saved points, and sharing of points with other staff.",
@@ -500,6 +528,7 @@
   },
   {
     "name": "HUD Extras",
+    "uniqueID": "public_hud_extras",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds extra HUD elements like an FPS counter, fonts configurable with FPSHudFont, hooks so other modules can extend, performance stats display, and toggles for individual HUD elements.",
@@ -518,6 +547,7 @@
   },
   {
     "name": "Instakill",
+    "uniqueID": "public_instakill",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds instant kill on headshots, lethality configurable per weapon, extra tension to combat, and integration with damage numbers.",
@@ -535,6 +565,7 @@
   },
   {
     "name": "Join Leave Messages",
+    "uniqueID": "public_joinleavemessages",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds announcements when players join, notifications on disconnect, improved community awareness, relay of messages to Discord, and per-player toggle to hide messages.",
@@ -553,6 +584,7 @@
   },
   {
     "name": "Load Messages",
+    "uniqueID": "public_loadmessages",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds faction-based load messages, execution when players first load a character, customizable message text, color-coded formatting options, and per-faction enable toggles.",
@@ -571,6 +603,7 @@
   },
   {
     "name": "Loyalism",
+    "uniqueID": "public_loyalism",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds a loyalty tier system for players, the /partytier command access, permission control through flags, automatic tier progression, and customizable rewards per tier.",
@@ -589,6 +622,7 @@
   },
   {
     "name": "Map Cleaner",
+    "uniqueID": "public_mapcleaner",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds periodic cleaning of map debris, a configurable interval, reduced server lag, a whitelist for protected entities, and manual cleanup commands.",
@@ -607,6 +641,7 @@
   },
   {
     "name": "Model Pay",
+    "uniqueID": "public_modelpay",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds payment to characters based on model, custom wage definitions, integration into the economy, config to exclude certain models, and logs of wages issued.",
@@ -625,6 +660,7 @@
   },
   {
     "name": "Model Tweaker",
+    "uniqueID": "public_modeltweaker",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds an entity to tweak prop models, adjustments for scale and rotation, easy UI controls, saving of tweaked props between restarts, and undo support for recent tweaks.",
@@ -643,6 +679,7 @@
   },
   {
     "name": "NPC Drop",
+    "uniqueID": "public_npcdrop",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds NPCs that drop items on death, DropTable to define probabilities, encouragement for looting, editable drop tables per NPC type, and weighted chances for rare items.",
@@ -661,6 +698,7 @@
   },
   {
     "name": "NPC Spawner",
+    "uniqueID": "public_npcspawner",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds automatic NPC spawns at points, the ability for admins to force spawns, logging of spawn actions, and configuration for spawn intervals.",
@@ -678,6 +716,7 @@
   },
   {
     "name": "Perma Remove",
+    "uniqueID": "public_permaremove",
     "author": "Boz [Base Code] & Samael [Rewrite]",
     "discord": "bozdev",
     "description": "Adds ability to permanently delete map entities, logging for each removed entity, an admin-only command, confirmation prompts before removal, and restore list to undo mistakes.",
@@ -696,6 +735,7 @@
   },
   {
     "name": "Radio",
+    "uniqueID": "public_radio",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds a radio chat channel for players, font configuration via RadioFont, workshop models for radios, frequency channels for groups, and handheld radio items.",
@@ -716,6 +756,7 @@
   },
   {
     "name": "Raised Weapons",
+    "uniqueID": "public_raisedweapons",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds auto-lowering of weapons when running, a raise delay set by WeaponRaiseSpeed, prevention of accidental fire, a toggle to keep weapons lowered, and compatibility with melee weapons.",
@@ -734,6 +775,7 @@
   },
   {
     "name": "Realistic Damage",
+    "uniqueID": "public_realisticdamage",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds damage scaling by body part, custom multipliers for realism, and adjustments to player damage output.",
@@ -750,6 +792,7 @@
   },
   {
     "name": "Realistic View",
+    "uniqueID": "public_realisticview",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds a first-person view that shows the full body, immersive camera transitions, compatibility with animations, smooth leaning animations, and optional third-person override.",
@@ -768,6 +811,7 @@
   },
   {
     "name": "Anonymous Rumors",
+    "uniqueID": "public_rumour",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds an anonymous rumour chat command, hiding of the sender's identity, encouragement for roleplay intrigue, a cooldown to prevent spam, and admin logging of rumour messages.",
@@ -786,6 +830,7 @@
   },
   {
     "name": "Shoot Lock",
+    "uniqueID": "public_shootlock",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds the ability to shoot door locks to open them, a quick breach alternative, a loud action that may alert others, and chance-based lock destruction.",
@@ -803,6 +848,7 @@
   },
   {
     "name": "Simple Lockpicking",
+    "uniqueID": "public_simple_lockpicking",
     "author": "76561198312513285",
     "discord": "@liliaplayer",
     "description": "Adds a simple lockpick tool for doors, logging of successful picks, brute-force style gameplay, configurable pick time, and chance for tools to break.",
@@ -821,6 +867,7 @@
   },
   {
     "name": "Slot Machine",
+    "uniqueID": "public_slots",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds a slot machine minigame, a workshop model for the machine, handling of payouts to winners, customizable payout odds, and sound and animation effects.",
@@ -841,6 +888,7 @@
   },
   {
     "name": "Slow Weapons",
+    "uniqueID": "public_slowweapons",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds slower movement while holding heavy weapons, speed penalties defined per weapon, encouragement for strategic choices, customizable weapon speed table, and automatic speed restore when switching.",
@@ -859,6 +907,7 @@
   },
   {
     "name": "Stun Gun",
+    "uniqueID": "public_stungun",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds a taser weapon that immobilizes targets, StunTime and MaxDist as configurable settings, optional damage and post-process effects, networked stun animations, and logs when players are tased.",
@@ -879,6 +928,7 @@
   },
   {
     "name": "Tying",
+    "uniqueID": "public_tying",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds handcuff items that restrain players, logging for tie and untie events, support for roleplay arrests, timed escape minigames for prisoners, and compatibility with the search submodule.",
@@ -897,6 +947,7 @@
   },
   {
     "name": "Code Utilities",
+    "uniqueID": "public_utilities",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds extra helper functions in lia.util, simplified utilities for common scripting tasks, a central library used by other modules, utilities for networking data, and shared constants for modules.",
@@ -915,6 +966,7 @@
   },
   {
     "name": "View Bob",
+    "uniqueID": "public_viewbob",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds camera bobbing while moving, adjustable intensity, hooks to modify view punch, and configuration for bobbing frequency.",
@@ -932,6 +984,7 @@
   },
   {
     "name": "View Manipulation",
+    "uniqueID": "public_vmanip",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds VManip animation support, hand gestures for items, functionality within Lilia, API for custom gesture triggers, and fallback animations when VManip is missing.",
@@ -950,6 +1003,7 @@
   },
   {
     "name": "Warrant System",
+    "uniqueID": "public_warrants",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds ability to issue and remove player warrants, notifications displayed to players, logging of all warrant actions, CAMI privileges for warrant management, and timed expiration for warrants.",
@@ -968,6 +1022,7 @@
   },
   {
     "name": "War Table",
+    "uniqueID": "public_wartable",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds an interactive 3D war table, the ability to plan operations on a map, a workshop model, marker placement for strategies, and support for multiple map layouts.",
@@ -988,6 +1043,7 @@
   },
   {
     "name": "Word Filter",
+    "uniqueID": "public_wordfilter",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds chat word filtering, blocking of banned phrases, an easy-to-extend list, and admin commands to modify the list.",
