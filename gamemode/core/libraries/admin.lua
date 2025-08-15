@@ -10,6 +10,10 @@ lia.administrator.DefaultGroups = {
     superadmin = 3
 }
 
+local defaultUserTools = {
+    remover = true,
+}
+
 local function ensureDefaults(groups)
     local created = false
     for _, grp in ipairs({"user", "admin", "superadmin"}) do
@@ -230,6 +234,35 @@ function lia.administrator.hasAccess(ply, privilege)
             grp = tostring(ply:getUserGroup() or "user")
         elseif ply.GetUserGroup then
             grp = tostring(ply:GetUserGroup() or "user")
+        end
+    end
+
+    if not lia.administrator.privileges[privilege] then
+        if privilege:find("^property_") and properties and properties.List then
+            local propName = privilege:sub(10)
+            local prop = properties.List[propName]
+            if prop then
+                lia.administrator.registerPrivilege({
+                    Name = L("accessPropertyPrivilege", prop.MenuLabel or propName),
+                    ID = privilege,
+                    MinAccess = "admin",
+                    Category = "properties",
+                })
+            end
+        elseif privilege:find("^tool_") then
+            local toolName = privilege:sub(6)
+            for _, wep in ipairs(weapons.GetList()) do
+                if wep.ClassName == "gmod_tool" and wep.Tool and wep.Tool[toolName] then
+                    lia.administrator.registerPrivilege({
+                        Name = L("accessToolPrivilege", toolName:gsub("^%l", string.upper)),
+                        ID = privilege,
+                        MinAccess = defaultUserTools[string.lower(toolName)] and "user" or "admin",
+                        Category = "categoryStaffTools",
+                    })
+
+                    break
+                end
+            end
         end
     end
 
@@ -629,6 +662,34 @@ else
         elseif cmd == "unblind" then
             RunConsoleCommand("say", "/plyunblind " .. string.format("'%s'", tostring(id)))
             return true
+        end
+    end
+end
+
+if properties and properties.List then
+    for name, prop in pairs(properties.List) do
+        if name ~= "persist" and name ~= "drive" and name ~= "bonemanipulate" then
+            local id = "property_" .. tostring(name)
+            lia.administrator.registerPrivilege({
+                Name = L("accessPropertyPrivilege", prop.MenuLabel or name),
+                ID = id,
+                MinAccess = "admin",
+                Category = "properties"
+            })
+        end
+    end
+end
+
+for _, wep in ipairs(weapons.GetList()) do
+    if wep.ClassName == "gmod_tool" and wep.Tool then
+        for tool in pairs(wep.Tool) do
+            local id = "tool_" .. tostring(tool)
+            lia.administrator.registerPrivilege({
+                Name = L("accessToolPrivilege", tool:gsub("^%l", string.upper)),
+                ID = id,
+                MinAccess = defaultUserTools[string.lower(tool)] and "user" or "admin",
+                Category = "categoryStaffTools"
+            })
         end
     end
 end

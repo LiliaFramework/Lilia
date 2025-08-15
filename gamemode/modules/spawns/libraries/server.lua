@@ -7,6 +7,7 @@ function MODULE:FetchSpawns()
     local result = {}
     for fac, spawns in pairs(factions or {}) do
         local t = {}
+        spawns = istable(spawns) and spawns or {spawns}
         for i = 1, #spawns do
             local spawnData = lia.data.deserialize(spawns[i])
             if isvector(spawnData) then
@@ -83,8 +84,12 @@ local function SpawnPlayer(client)
                     local pos = basePos + Vector(0, 0, 16)
                     local ang = data.ang
                     if not isangle(ang) then
-                        local parsedAng = lia.data.decodeAngle(ang) or angle_zero
-                        ang = parsedAng
+                        local parsedAng = lia.data.decodeAngle(ang)
+                        if isangle(parsedAng) then
+                            ang = parsedAng
+                        else
+                            ang = angle_zero
+                        end
                     end
 
                     client:SetPos(pos)

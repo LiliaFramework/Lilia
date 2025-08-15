@@ -21,44 +21,47 @@ function GM:PlayerSpawnProp(client, model)
     return canSpawn
 end
 
+local propertyPrivilegeEquivalents = {
+    bodygroups = "property_bodygroups",
+    bonemanipulate = "property_bonemanipulate",
+    collision = "property_collision",
+    drive = "property_drive",
+    editentity = "canEditSimfphysCars",
+    gravity = "property_gravity",
+    ignite = "property_ignite",
+    extinguish = "property_extinguish",
+    keepupright = "property_keepupright",
+    motioncontrol_ragdoll = "property_motioncontrol_ragdoll",
+    npc_bigger = "property_npc_bigger",
+    npc_smaller = "property_npc_smaller",
+    persist = "property_persist",
+    remover = "property_remove",
+    skin = "property_skin",
+    statue = "property_statue",
+    unstatue = "property_unstatue",
+    color = "property_color",
+    material = "property_material"
+}
+
 function GM:CanProperty(client, property, entity)
-    print(string.format("[CanProperty] Called by client: %s (%s), property: '%s', entity: %s [%s]", tostring(client), client and client.SteamID and client:SteamID() or "N/A", tostring(property), tostring(entity), entity and entity.GetClass and entity:GetClass() or "N/A"))
     if restrictedProperties[property] then
-        print(string.format("[CanProperty] Denied: Property '%s' is restricted for client %s (%s)", tostring(property), tostring(client), client and client.SteamID and client:SteamID() or "N/A"))
         lia.log.add(client, "permissionDenied", L("useProperty", property))
         client:notifyLocalized("disabledFeature")
-        print(string.format("[CanProperty] Failure Reason: Restricted property '%s'", tostring(property)))
         return false
     end
 
     if IsValid(entity) and entity:IsWorld() then
-        print(string.format("[CanProperty] Entity is world and valid. Client: %s (%s), property: '%s'", tostring(client), client and client.SteamID and client:SteamID() or "N/A", tostring(property)))
-        if client:hasPrivilege("canPropertyWorldEntities") then
-            print(string.format("[CanProperty] Allowed: Client %s (%s) has 'canPropertyWorldEntities' privilege.", tostring(client), client and client.SteamID and client:SteamID() or "N/A"))
-            return true
-        end
-
-        print(string.format("[CanProperty] Denied: Client %s (%s) lacks 'canPropertyWorldEntities' privilege for property '%s'.", tostring(client), client and client.SteamID and client:SteamID() or "N/A", tostring(property)))
+        if client:hasPrivilege("canPropertyWorldEntities") then return true end
         lia.log.add(client, "permissionDenied", L("modifyWorldProperty", property))
         client:notifyLocalized("noModifyWorldEntities")
-        print(string.format("[CanProperty] Failure Reason: No privilege to modify world entities for property '%s'", tostring(property)))
         return false
     end
 
-    if IsValid(entity) and entity.GetCreator and entity:GetCreator() == client and (property == "remover" or property == "collision") then
-        print(string.format("[CanProperty] Allowed: Client %s (%s) is creator of entity and property is '%s'.", tostring(client), client and client.SteamID and client:SteamID() or "N/A", tostring(property)))
-        return true
-    end
-
-    if client:hasPrivilege("property_" .. property) and client:isStaffOnDuty() then
-        print(string.format("[CanProperty] Allowed: Client %s (%s) has 'property_%s' privilege and is staff on duty.", tostring(client), client and client.SteamID and client:SteamID() or "N/A", tostring(property)))
-        return true
-    end
-
-    print(string.format("[CanProperty] Denied: Client %s (%s) does NOT have permission to modify property '%s' on entity %s [%s].", tostring(client), client and client.SteamID and client:SteamID() or "N/A", tostring(property), tostring(entity), entity and entity.GetClass and entity:GetClass() or "N/A"))
+    if IsValid(entity) and entity:GetCreator() == client and (property == "remove" or property == "collision") then return true end
+    local privilegeName = propertyPrivilegeEquivalents[property] or "property_" .. property
+    if client:hasPrivilege(privilegeName) or client:isStaffOnDuty() then return true end
     lia.log.add(client, "permissionDenied", L("modifyProperty", property))
     client:notifyLocalized("noModifyProperty")
-    print(string.format("[CanProperty] Failure Reason: No permission to modify property '%s'", tostring(property)))
     return false
 end
 

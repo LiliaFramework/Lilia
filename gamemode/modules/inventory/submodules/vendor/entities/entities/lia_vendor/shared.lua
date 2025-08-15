@@ -13,9 +13,9 @@ function ENT:setupVars()
     if SERVER then
         self:setNetVar("name", L("vendorDefaultName"))
         self:setNetVar("preset", "none")
-        self.receivers = {}
     end
 
+    self.receivers = self.receivers or {}
     self.items = {}
     self.factions = {}
     self.messages = {}
@@ -36,6 +36,7 @@ function ENT:Initialize()
         return
     end
 
+    self.receivers = self.receivers or {}
     self:SetModel("models/mossman.mdl")
     self:SetUseType(SIMPLE_USE)
     self:SetMoveType(MOVETYPE_NONE)
