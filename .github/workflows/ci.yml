@@ -18,7 +18,7 @@ permissions:
   packages: write
   pages: write
   pull-requests: write
-  repository-projects: write
+  projects: write
   security-events: write
   statuses: write
 
@@ -84,7 +84,7 @@ jobs:
           fi
 
   compute-version:
-    if: ${{ github.repository == 'LiliaFramework/Lilia' }}
+    if: github.repository == 'LiliaFramework/Lilia'
     needs: linter
     runs-on: ubuntu-latest
     outputs:
@@ -111,7 +111,7 @@ jobs:
           echo "valid_count=$VALID_COUNT" >> "$GITHUB_OUTPUT"
 
   update-shared-version:
-    if: ${{ github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main' }}
+    if: github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main'
     needs: compute-version
     runs-on: ubuntu-latest
     env:
@@ -151,7 +151,7 @@ jobs:
           git push origin HEAD:main
 
   release:
-    if: ${{ github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main' }}
+    if: github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main'
     needs:
       - compute-version
       - update-shared-version
@@ -200,7 +200,7 @@ jobs:
         uses: actions/create-release@v1
         with:
           tag_name: release
-          release_name: Lilia ${{ env.VERSION }}
+          release_name: "Lilia ${{ env.VERSION }}"
           draft: false
           prerelease: false
         env:
@@ -248,7 +248,7 @@ jobs:
           EOF
       - run: |
           ~/Steam/steamcmd.sh +login "$STEAM_USERNAME" "$STEAM_PASSWORD" +workshop_build_item "$(pwd -P)/workshop.vdf" +quit
-      - if: ${{ failure() }}
+      - if: failure()
         run: |
           echo ~/Steam/logs/stderr.txt
           cat ~/Steam/logs/stderr.txt || true
@@ -263,7 +263,7 @@ jobs:
           exit 1
 
   deploy-pages:
-    if: ${{ github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main' }}
+    if: github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main'
     needs:
       - compute-version
       - release
