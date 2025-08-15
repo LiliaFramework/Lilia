@@ -57,7 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: |
-          curl -sSfL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/refs/heads/main/files/remove_lua_comments.py -o remove_lua_comments.py || curl -sSfL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/main/files/remove_lua_comments.py -o remove_lua_comments.py
+          curl -sSfL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/main/files/remove_lua_comments.py -o remove_lua_comments.py
           python3 remove_lua_comments.py gamemode
 
   format-glua:
@@ -84,7 +84,7 @@ jobs:
           fi
 
   compute-version:
-    if: github.repository == 'LiliaFramework/Lilia'
+    if: ${{ github.repository == 'LiliaFramework/Lilia' }}
     needs: linter
     runs-on: ubuntu-latest
     outputs:
@@ -96,7 +96,7 @@ jobs:
           fetch-depth: 0
       - id: calc_version
         run: |
-          VALID_COUNT=$(git log --no-merges --pretty=format:'%ae' | grep -v '^github-actions@github.com$' | wc -l)
+          VALID_COUNT=$(git log --no-merges --pretty=format:'%ae' | grep -v '^41898282+github-actions\[bot\]@users\.noreply\.github\.com$' | wc -l)
           if (( VALID_COUNT < 100 )); then
             MAJOR=0; MINOR=0; PATCH=$VALID_COUNT
           elif (( VALID_COUNT < 1000 )); then
@@ -106,12 +106,12 @@ jobs:
             MINOR=$(((VALID_COUNT % 1000) / 100))
             PATCH=$((VALID_COUNT % 100))
           fi
-          VERSION_FLOAT=$(echo "$MAJOR.$MINOR$PATCH" | sed 's/^0*//' | sed 's/\.$/.0/')
+          VERSION_FLOAT=$(printf "%d.%d%02d" "$MAJOR" "$MINOR" "$PATCH")
           echo "version=$VERSION_FLOAT" >> "$GITHUB_OUTPUT"
           echo "valid_count=$VALID_COUNT" >> "$GITHUB_OUTPUT"
 
   update-shared-version:
-    if: github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main'
+    if: ${{ github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main' }}
     needs: compute-version
     runs-on: ubuntu-latest
     env:
@@ -151,7 +151,7 @@ jobs:
           git push origin HEAD:main
 
   release:
-    if: github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main'
+    if: ${{ github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main' }}
     needs:
       - compute-version
       - update-shared-version
@@ -214,7 +214,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
       - run: |
-          cat > /tmp/addon.json <<EOF
+          cat > /tmp/addon.json <<'EOF'
           {
             "title": "Lilia",
             "description": "Lilia ${VERSION}",
@@ -247,8 +247,8 @@ jobs:
           }
           EOF
       - run: |
-          ~/Steam/steamcmd.sh +login $STEAM_USERNAME $STEAM_PASSWORD +workshop_build_item $(pwd -P)/workshop.vdf +quit
-      - if: failure()
+          ~/Steam/steamcmd.sh +login "$STEAM_USERNAME" "$STEAM_PASSWORD" +workshop_build_item "$(pwd -P)/workshop.vdf" +quit
+      - if: ${{ failure() }}
         run: |
           echo ~/Steam/logs/stderr.txt
           cat ~/Steam/logs/stderr.txt || true
@@ -263,7 +263,7 @@ jobs:
           exit 1
 
   deploy-pages:
-    if: github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main'
+    if: ${{ github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main' }}
     needs:
       - compute-version
       - release
