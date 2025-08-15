@@ -267,9 +267,11 @@ function lia.administrator.hasAccess(ply, privilege)
     end
 
     if not lia.administrator.privileges[privilege] then
-        lia.information(L("privilegeNotExist", privilege))
-        if IsValid(ply) then ply:notifyLocalized("privilegeNotExist", privilege) end
-        return getGroupLevel(grp) >= (lia.administrator.DefaultGroups.superadmin or 3)
+        if SERVER then
+            local playerInfo = IsValid(ply) and ply:Nick() .. " (" .. ply:SteamID() .. ")" or "Unknown"
+            lia.log.add(ply, "missingPrivilege", privilege, playerInfo, grp)
+        end
+        return getGroupLevel(grp) >= (lia.administrator.DefaultGroups.admin or 3)
     end
 
     if getGroupLevel(grp) >= (lia.administrator.DefaultGroups.superadmin or 3) then return true end

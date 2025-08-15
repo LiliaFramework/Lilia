@@ -1,11 +1,10 @@
-﻿lia.vendor.addPreset("utility_vendor", {
+﻿lia.vendor.addPreset("Sample Preset 1", {
     manhack_welder = {
-        mode = VENDOR_SELLANDBUY
+        mode = VENDOR_SELLANDBUY,
+        price = 50,
     },
-    item_suit = {
-        mode = VENDOR_SELLANDBUY
-    },
-    universalammo3 = {
-        mode = VENDOR_SELLANDBUY
+    weapon_flechettegun = {
+        mode = VENDOR_SELLANDBUY,
+        price = 0,
     },
 })

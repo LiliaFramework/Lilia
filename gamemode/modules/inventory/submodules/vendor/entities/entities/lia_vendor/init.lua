@@ -1,4 +1,4 @@
-﻿local function safeSendToReceivers(entity, netName)
+﻿local function safeSendToReceivers(entity)
     if entity.receivers and #entity.receivers > 0 then net.Send(entity.receivers) end
 end
 
@@ -49,6 +49,11 @@ function ENT:setWelcomeMessage(value)
 end
 
 function ENT:setStock(itemType, value)
+    if not lia.item.list[itemType] then
+        print("[Vendor] Warning: Cannot set stock for non-existent item '" .. itemType .. "'")
+        return
+    end
+
     self.items[itemType] = self.items[itemType] or {}
     if not self.items[itemType][VENDOR_MAXSTOCK] then self:setMaxStock(itemType, value) end
     self.items[itemType][VENDOR_STOCK] = math.Clamp(value, 0, self.items[itemType][VENDOR_MAXSTOCK])
@@ -59,12 +64,22 @@ function ENT:setStock(itemType, value)
 end
 
 function ENT:addStock(itemType, value)
+    if not lia.item.list[itemType] then
+        print("[Vendor] Warning: Cannot add stock for non-existent item '" .. itemType .. "'")
+        return
+    end
+
     local current = self:getStock(itemType)
     if not current then return end
     self:setStock(itemType, self:getStock(itemType) + (value or 1))
 end
 
 function ENT:takeStock(itemType, value)
+    if not lia.item.list[itemType] then
+        print("[Vendor] Warning: Cannot take stock for non-existent item '" .. itemType .. "'")
+        return
+    end
+
     if not self.items[itemType] or not self.items[itemType][VENDOR_MAXSTOCK] then return end
     self:addStock(itemType, -(value or 1))
 end
@@ -133,6 +148,11 @@ function ENT:setName(name)
 end
 
 function ENT:setTradeMode(itemType, mode)
+    if not lia.item.list[itemType] then
+        print("[Vendor] Warning: Cannot set trade mode for non-existent item '" .. itemType .. "'")
+        return
+    end
+
     if not ALLOWED_MODES[mode] then mode = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_MODE] = mode
@@ -143,6 +163,11 @@ function ENT:setTradeMode(itemType, mode)
 end
 
 function ENT:setItemPrice(itemType, value)
+    if not lia.item.list[itemType] then
+        print("[Vendor] Warning: Cannot set price for non-existent item '" .. itemType .. "'")
+        return
+    end
+
     if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_PRICE] = value
@@ -153,6 +178,11 @@ function ENT:setItemPrice(itemType, value)
 end
 
 function ENT:setItemStock(itemType, value)
+    if not lia.item.list[itemType] then
+        print("[Vendor] Warning: Cannot set stock for non-existent item '" .. itemType .. "'")
+        return
+    end
+
     if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_STOCK] = value
@@ -163,6 +193,11 @@ function ENT:setItemStock(itemType, value)
 end
 
 function ENT:setItemMaxStock(itemType, value)
+    if not lia.item.list[itemType] then
+        print("[Vendor] Warning: Cannot set max stock for non-existent item '" .. itemType .. "'")
+        return
+    end
+
     if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_MAXSTOCK] = value
@@ -235,10 +270,14 @@ function ENT:applyPreset(name)
     if not preset then return end
     self.items = {}
     for itemType, data in pairs(preset) do
-        if data.mode ~= nil then self:setTradeMode(itemType, data.mode) end
-        if data.price ~= nil then self:setItemPrice(itemType, data.price) end
-        if data.maxStock ~= nil then self:setMaxStock(itemType, data.maxStock) end
-        if data.stock ~= nil then self:setStock(itemType, data.stock) end
+        if lia.item.list[itemType] then
+            if data.mode ~= nil then self:setTradeMode(itemType, data.mode) end
+            if data.price ~= nil then self:setItemPrice(itemType, data.price) end
+            if data.maxStock ~= nil then self:setMaxStock(itemType, data.maxStock) end
+            if data.stock ~= nil then self:setStock(itemType, data.stock) end
+        else
+            print("[Vendor] Warning: Skipping invalid item '" .. itemType .. "' when applying preset '" .. name .. "' to vendor.")
+        end
     end
 
     if self.receivers then

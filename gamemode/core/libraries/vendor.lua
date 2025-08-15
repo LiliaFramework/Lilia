@@ -128,7 +128,18 @@ end
 function lia.vendor.addPreset(name, items)
     assert(isstring(name), L("vendorPresetNameString"))
     assert(istable(items), L("vendorPresetItemsTable"))
-    lia.vendor.presets[string.lower(name)] = items
+    
+    -- Filter out items that don't exist
+    local validItems = {}
+    for itemType, itemData in pairs(items) do
+        if lia.item.list[itemType] then
+            validItems[itemType] = itemData
+        else
+            print("[Vendor] Warning: Item '" .. itemType .. "' in preset '" .. name .. "' does not exist and will be skipped.")
+        end
+    end
+    
+    lia.vendor.presets[string.lower(name)] = validItems
 end
 
 function lia.vendor.getPreset(name)

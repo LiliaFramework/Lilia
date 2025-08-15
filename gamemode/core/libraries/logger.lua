@@ -741,6 +741,16 @@ lia.log.types = {
         func = function(client, charID) return L("logCharUnbanOffline", client:Name(), tostring(charID)) end,
         category = L("admin")
     },
+    ["missingPrivilege"] = {
+        func = function(client, privilege, playerInfo, groupInfo) 
+            if client then
+                return L("logMissingPrivilege", client:Name(), privilege, playerInfo or "Unknown", groupInfo or "Unknown")
+            else
+                return L("logMissingPrivilegeNoClient", privilege, playerInfo or "Unknown", groupInfo or "Unknown")
+            end
+        end,
+        category = L("admin")
+    },
 }
 
 function lia.log.addType(logType, func, category)
