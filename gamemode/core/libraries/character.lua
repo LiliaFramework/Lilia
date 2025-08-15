@@ -1,4 +1,4 @@
-local characterMeta = lia.meta.character or {}
+﻿local characterMeta = lia.meta.character or {}
 lia.char = lia.char or {}
 lia.char.loaded = lia.char.loaded or {}
 lia.char.names = lia.char.names or {}

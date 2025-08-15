@@ -1,4 +1,4 @@
-lia.command.add("playtime", {
+﻿lia.command.add("playtime", {
     adminOnly = false,
     desc = "playtimeDesc",
     onRun = function(client)

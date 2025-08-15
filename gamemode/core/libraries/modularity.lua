@@ -1,4 +1,4 @@
-lia.module = lia.module or {}
+﻿lia.module = lia.module or {}
 lia.module.list = lia.module.list or {}
 local ModuleFolders = {"config", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim"}
 local ModuleFiles = {"pim.lua", "client.lua", "server.lua", "config.lua", "commands.lua"}

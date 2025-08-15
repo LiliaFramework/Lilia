@@ -1,4 +1,4 @@
-lia.config = lia.config or {}
+﻿lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
 function lia.config.add(key, name, value, callback, data)
     assert(isstring(key), L("configKeyString", type(key)))
