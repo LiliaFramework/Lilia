@@ -27,7 +27,11 @@ function ENT:Initialize()
     if CLIENT then
         timer.Simple(1, function()
             if not IsValid(self) then return end
-            self:setAnim()
+            if self:isReadyForAnim() then
+                self:setAnim()
+            else
+                timer.Simple(2, function() if IsValid(self) and self:isReadyForAnim() then self:setAnim() end end)
+            end
         end)
         return
     end
@@ -118,10 +122,20 @@ function ENT:getPreset()
     return self:getNetVar("preset", "none")
 end
 
-function ENT:setAnim()
-    for k, v in ipairs(self:GetSequenceList()) do
-        if v:lower():find("idle") and v ~= "idlenoise" then return self:ResetSequence(k) end
-    end
+function ENT:isReadyForAnim()
+    return self:GetModel() and self:GetModel() ~= "" and self:GetSequenceList() and self:GetSequenceCount() > 0
+end
 
-    if self:GetSequenceCount() > 1 then self:ResetSequence(4) end
+function ENT:setAnim()
+    if not self:isReadyForAnim() then return end
+    local success, err = pcall(function()
+        local sequenceList = self:GetSequenceList()
+        for k, v in ipairs(sequenceList) do
+            if v:lower():find("idle") and v ~= "idlenoise" then return self:ResetSequence(k) end
+        end
+
+        if self:GetSequenceCount() > 1 then self:ResetSequence(4) end
+    end)
+
+    if not success then print("[Lilia Vendor] Error in setAnim: " .. tostring(err)) end
 end

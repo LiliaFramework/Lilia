@@ -10,7 +10,7 @@ function ENT:Think()
     if not self.hasSetupVars then self:setupVars() end
     local curTime = CurTime()
     if (self.nextAnimCheck or 0) < curTime then
-        self:setAnim()
+        if self:isReadyForAnim() then self:setAnim() end
         self.nextAnimCheck = curTime + 60
     end
 

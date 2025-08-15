@@ -176,7 +176,7 @@ function ENT:setModel(model)
     assert(isstring(model), L("vendorModelString"))
     model = model:lower()
     self:SetModel(model)
-    self:setAnim()
+    if self:isReadyForAnim() then self:setAnim() end
     net.Start("VendorEdit")
     net.WriteString("model")
     net.Send(self.receivers)
