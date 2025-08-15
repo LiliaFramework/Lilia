@@ -606,7 +606,6 @@ LANGUAGE = {
     categoryServer = "Server",
     mustSuperAdminStopSound = "You need the '%s' privilege to run stopsound globally.",
     commandConsoleOnly = "This command can only be run from the server console.",
-
     resetInv = "You have cleared %s's inventory!",
     searchingChar = "Searching for character...",
     noAvailableFlags = "No available flags to give.",

@@ -742,7 +742,7 @@ lia.log.types = {
         category = L("admin")
     },
     ["missingPrivilege"] = {
-        func = function(client, privilege, playerInfo, groupInfo) 
+        func = function(client, privilege, playerInfo, groupInfo)
             if client then
                 return L("logMissingPrivilege", client:Name(), privilege, playerInfo or "Unknown", groupInfo or "Unknown")
             else
