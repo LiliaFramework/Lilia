@@ -51,6 +51,34 @@ jobs:
             --no-max-comment-line-length \
             --no-max-cyclomatic-complexity
 
+  strip-comments:
+    needs: linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          curl -sSfL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/refs/heads/main/files/remove_lua_comments.py -o remove_lua_comments.py || curl -sSfL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/main/files/remove_lua_comments.py -o remove_lua_comments.py
+          python3 remove_lua_comments.py gamemode
+
+  format-glua:
+    needs: strip-comments
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          curl -L https://github.com/FPtje/GLuaFixer/releases/latest/download/glualint-linux -o glualint
+          chmod +x glualint
+      - run: |
+          ./glualint --pretty-print-files gamemode
+      - run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .
+            git commit -m "chore: auto-format GLua files"
+            git push
+          fi
+
   compute-version:
     if: github.repository == 'LiliaFramework/Lilia'
     needs: linter
@@ -230,7 +258,7 @@ jobs:
           cat ~/Steam/logs/workshop_log.txt || true
           echo
           echo ~/Steam/workshopbuilds/depot_build_4000.log
-            cat ~/Steam/workshopbuilds/depot_build_4000.log || true
+          cat ~/Steam/workshopbuilds/depot_build_4000.log || true
           echo
           cat workshop.vdf || true
           exit 1
