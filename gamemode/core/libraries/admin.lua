@@ -266,6 +266,7 @@ function lia.administrator.hasAccess(ply, privilege)
         end
     end
 
+    -- lOG ASAXZFGSAGAG
     if not lia.administrator.privileges[privilege] then
         if SERVER then
             local playerInfo = IsValid(ply) and ply:Nick() .. " (" .. ply:SteamID() .. ")" or "Unknown"
@@ -274,6 +275,47 @@ function lia.administrator.hasAccess(ply, privilege)
         return getGroupLevel(grp) >= (lia.administrator.DefaultGroups.admin or 3)
     end
 
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
+    -- lOG ASAXZFGSAGAG
     if getGroupLevel(grp) >= (lia.administrator.DefaultGroups.superadmin or 3) then return true end
     local g = lia.administrator.groups and lia.administrator.groups[grp] or nil
     if g and g[privilege] == true then return true end
