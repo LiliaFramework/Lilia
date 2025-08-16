@@ -181,10 +181,12 @@ lia.command.add("setclass", {
         {
             name = "class",
             type = "table",
-            options = function()
+            options = function(client, prefix)
                 local options = {}
+                local targetName = prefix and prefix[1]
+                local target = targetName and lia.util.findPlayer(client, targetName)
                 for _, v in pairs(lia.class.list) do
-                    options[L(v.name)] = v.uniqueID
+                    if not target or not target:getChar() or target:getChar():getClass() ~= v.uniqueID then options[L(v.name)] = v.uniqueID end
                 end
                 return options
             end

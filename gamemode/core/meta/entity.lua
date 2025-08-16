@@ -127,6 +127,10 @@ if SERVER then
     function entityMeta:clearNetVars(receiver)
         if not IsValid(self) then return end
         lia.net[self] = nil
+        
+        
+        if lia.shuttingDown then return end
+        
         net.Start("nDel")
         net.WriteUInt(self:EntIndex(), 16)
         if receiver then

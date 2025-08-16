@@ -129,9 +129,13 @@ function ENT:removeReceiver(client, requestedByPlayer)
     if self.receivers then table.RemoveByValue(self.receivers, client) end
     if client.liaVendor == self then client.liaVendor = nil end
     if requestedByPlayer then return end
-    net.Start("VendorExit")
-    net.Send(client)
-    lia.log.add(client, "vendorExit", self:getNetVar("name"))
+    
+    
+    if not lia.shuttingDown then
+        net.Start("VendorExit")
+        net.Send(client)
+        lia.log.add(client, "vendorExit", self:getNetVar("name"))
+    end
 end
 
 local ALLOWED_MODES = {
@@ -209,8 +213,13 @@ end
 
 function ENT:OnRemove()
     LiliaVendors[self:EntIndex()] = nil
-    net.Start("VendorExit")
-    if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
+    
+    
+    if not lia.shuttingDown then
+        net.Start("VendorExit")
+        if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
+    end
+    
     if lia.shuttingDown or self.liaIsSafe then return end
 end
 

@@ -336,7 +336,7 @@ else
                 ctrl:SetValue(L("select") .. " " .. L(name))
                 local opts = options
                 if isfunction(opts) then
-                    local ok, res = pcall(opts)
+                    local ok, res = pcall(opts, LocalPlayer(), prefix)
                     if ok then opts = res end
                 end
 

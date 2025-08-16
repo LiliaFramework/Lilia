@@ -171,13 +171,15 @@ if SERVER then
         local oldValue = getNetVar(key)
         if oldValue == value then return end
         lia.net.globals[key] = value
-        net.Start("gVar")
-        net.WriteString(key)
-        net.WriteType(value)
-        if receiver then
-            net.Send(receiver)
-        else
-            net.Broadcast()
+        if not lia.shuttingDown then
+            net.Start("gVar")
+            net.WriteString(key)
+            net.WriteType(value)
+            if receiver then
+                net.Send(receiver)
+            else
+                net.Broadcast()
+            end
         end
 
         hook.Run("NetVarChanged", nil, key, oldValue, value)
@@ -192,16 +194,20 @@ if SERVER then
     hook.Add("PlayerInitialSpawn", "liaNetworkingSync", function(client) client:syncVars() end)
     hook.Add("CharDeleted", "liaNetworkingCharDeleted", function(client, character)
         lia.char.names[character:getID()] = nil
-        net.Start("liaCharFetchNames")
-        net.WriteTable(lia.char.names)
-        net.Send(client)
+        if not lia.shuttingDown then
+            net.Start("liaCharFetchNames")
+            net.WriteTable(lia.char.names)
+            net.Send(client)
+        end
     end)
 
     hook.Add("OnCharCreated", "liaNetworkingCharCreated", function(client, character, data)
         lia.char.names[character:getID()] = data.name
-        net.Start("liaCharFetchNames")
-        net.WriteTable(lia.char.names)
-        net.Send(client)
+        if not lia.shuttingDown then
+            net.Start("liaCharFetchNames")
+            net.WriteTable(lia.char.names)
+            net.Send(client)
+        end
     end)
 else
     function getNetVar(key, default)

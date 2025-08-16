@@ -9,7 +9,7 @@ lia.command.add("spawnadd", {
             options = function()
                 local options = {}
                 for k, v in pairs(lia.faction.teams) do
-                    options[L(v.name)] = k
+                    options[k] = L(v.name)
                 end
                 return options
             end
@@ -91,7 +91,7 @@ lia.command.add("spawnremovebyname", {
             options = function()
                 local options = {}
                 for k, v in pairs(lia.faction.teams) do
-                    options[L(v.name)] = k
+                    options[k] = L(v.name)
                 end
                 return options
             end

@@ -1,21 +1,3 @@
-# Hooks
-
-Module-specific events raised by the Advertisements module.
-
----
-
-### `AdvertSent`
-
-**Purpose**
-
-`Fires after a player successfully sends an advertisement message.`
-
-**Parameters**
-
-* `client` (`Player`): `Player who posted the advert.`
-
-* `message` (`string`): `Text that was advertised.`
-
 **Realm**
 
 `Server`
@@ -28,9 +10,3 @@ Module-specific events raised by the Advertisements module.
 
 ```lua
 hook.Add("AdvertSent", "LogAdvert", function(client, message)
-    print(client:Nick() .. " advertised: " .. message)
-end)
-```
-
----
-
