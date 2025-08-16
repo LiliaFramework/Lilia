@@ -4,7 +4,7 @@
 Tying
 
 **Version:**
-1.33
+1.34
 
 **Description:**
 
