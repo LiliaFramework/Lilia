@@ -23,10 +23,75 @@ permissions:
   statuses: write
 
 jobs:
-  linter:
+  strip-comments:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - run: |
+          curl -sSfL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/refs/heads/main/files/remove_lua_comments.py -o remove_lua_comments.py || curl -sSfL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/main/files/remove_lua_comments.py -o remove_lua_comments.py
+          python3 remove_lua_comments.py gamemode
+          tar --exclude=.git -cf workspace.tar .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: workspace
+          path: workspace.tar
+          overwrite: true
+          retention-days: 1
+
+  format-glua:
+    needs: strip-comments
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v4
+        with:
+          name: workspace
+          path: .
+      - run: |
+          tar -xf workspace.tar
+          rm -f workspace.tar
+      - name: Download glualint binary
+        env:
+          GLUALINT_VERSION: "1.29.0"
+        run: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y unzip file
+          arch="$(uname -m)"
+          case "$arch" in
+            x86_64) asset="glualint-${GLUALINT_VERSION}-x86_64-linux.zip" ;;
+            aarch64|arm64) asset="glualint-${GLUALINT_VERSION}-aarch64-linux.zip" ;;
+            *) echo "Unsupported architecture: $arch" >&2; exit 1 ;;
+          esac
+          url="https://github.com/FPtje/GLuaFixer/releases/download/${GLUALINT_VERSION}/${asset}"
+          curl -fLsS "$url" -o glualint.zip
+          unzip -o glualint.zip
+          chmod +x glualint
+          file glualint | grep -q ELF
+          ./glualint --version
+      - name: Pretty-print all Lua files
+        run: |
+          find . -type f -name "*.lua" -print0 | xargs -0 ./glualint --pretty-print-files
+          tar --exclude=.git -cf workspace.tar .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: workspace
+          path: workspace.tar
+          overwrite: true
+          retention-days: 1
+
+  linter:
+    needs: format-glua
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v4
+        with:
+          name: workspace
+          path: .
+      - run: |
+          tar -xf workspace.tar
+          rm -f workspace.tar
       - uses: leafo/gh-actions-lua@v8.0.0
         with:
           luaVersion: "5.2"
@@ -50,52 +115,15 @@ jobs:
             --no-max-string-line-length \
             --no-max-comment-line-length \
             --no-max-cyclomatic-complexity
-
-  strip-comments:
-    needs: linter
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
       - run: |
-          curl -sSfL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/refs/heads/main/files/remove_lua_comments.py -o remove_lua_comments.py || curl -sSfL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/main/files/remove_lua_comments.py -o remove_lua_comments.py
-          python3 remove_lua_comments.py gamemode
-
-  format-glua:
-    needs: strip-comments
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download glualint binary
-        env:
-          GLUALINT_VERSION: "1.29.0"
-        run: |
-          set -euo pipefail
-          sudo apt-get update -y
-          sudo apt-get install -y unzip file
-          arch="$(uname -m)"
-          case "$arch" in
-            x86_64) asset="glualint-${GLUALINT_VERSION}-x86_64-linux.zip" ;;
-            aarch64|arm64) asset="glualint-${GLUALINT_VERSION}-aarch64-linux.zip" ;;
-            *) echo "Unsupported architecture: $arch" >&2; exit 1 ;;
-          esac
-          url="https://github.com/FPtje/GLuaFixer/releases/download/${GLUALINT_VERSION}/${asset}"
-          curl -fLsS "$url" -o glualint.zip
-          unzip -o glualint.zip
-          chmod +x glualint
-          file glualint | grep -q ELF
-          ./glualint --version
-      - name: Pretty-print all Lua files
-        run: |
-          find . -type f -name "*.lua" -print0 | xargs -0 ./glualint --pretty-print-files
-      - name: Commit changes
-        run: |
-          if [ -n "$(git status --porcelain)" ]; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add .
-            git commit -m "chore: auto-format all GLua files"
-            git push
-          fi
+          cd "${GITHUB_WORKSPACE}"
+          tar --exclude=.git -cf workspace.tar .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: workspace
+          path: workspace.tar
+          overwrite: true
+          retention-days: 1
 
   compute-version:
     if: github.repository == 'LiliaFramework/Lilia'
@@ -134,6 +162,13 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: workspace
+          path: .
+      - run: |
+          tar -xf workspace.tar
+          rm -f workspace.tar
       - run: |
           python3 - << 'PY'
           import os, re, pathlib, sys
@@ -158,17 +193,17 @@ jobs:
           mkdir -p documentation/docs/versioning
           echo "{\"version\":\"${VERSION}\"}" > documentation/docs/versioning/lilia.json
       - run: |
-          git config user.name github-actions[bot]
-          git config user.email github-actions[bot]@users.noreply.github.com
-          git add gamemode/shared.lua documentation/docs/versioning/lilia.json
-          git diff-index --quiet HEAD || git commit -m "Successfully updated workshop Lilia to ${VERSION}"
-          git push origin HEAD:main
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: Successfully updated workshop Lilia to ${VERSION}"
+            git push origin HEAD:main
+          fi
 
   release:
     if: github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main'
-    needs:
-      - compute-version
-      - update-shared-version
+    needs: update-shared-version
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.compute-version.outputs.version }}
@@ -283,9 +318,7 @@ jobs:
 
   deploy-pages:
     if: github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main'
-    needs:
-      - compute-version
-      - release
+    needs: release
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.compute-version.outputs.version }}
