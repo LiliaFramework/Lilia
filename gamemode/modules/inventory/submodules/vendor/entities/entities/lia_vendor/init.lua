@@ -129,8 +129,6 @@ function ENT:removeReceiver(client, requestedByPlayer)
     if self.receivers then table.RemoveByValue(self.receivers, client) end
     if client.liaVendor == self then client.liaVendor = nil end
     if requestedByPlayer then return end
-    
-    
     if not lia.shuttingDown then
         net.Start("VendorExit")
         net.Send(client)
@@ -213,13 +211,11 @@ end
 
 function ENT:OnRemove()
     LiliaVendors[self:EntIndex()] = nil
-    
-    
     if not lia.shuttingDown then
         net.Start("VendorExit")
         if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
     end
-    
+
     if lia.shuttingDown or self.liaIsSafe then return end
 end
 
