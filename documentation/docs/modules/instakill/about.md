@@ -4,19 +4,11 @@
 Instakill
 
 **Version:**
-1.24
+1.25
 
 **Description:**
 
 Adds instant kill on headshots, lethality configurable per weapon, extra tension to combat, and integration with damage numbers.
-
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
-
-- Adds instant kill on headshots
-- Adds lethality configurable per weapon
-- Adds extra tension to combat
-- Adds integration with damage numbers
-
 
 
 

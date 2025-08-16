@@ -4,19 +4,11 @@
 First Person Effects
 
 **Version:**
-1.20
+1.21
 
 **Description:**
 
 Adds head bob and view sway, camera motion synced to actions, a realistic first-person feel, and adjustable intensity via config.
-
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
-
-- Adds head bob and view sway
-- Adds camera motion synced to actions
-- Adds a realistic first-person feel
-- Adds adjustable intensity via config
-
 
 
 
