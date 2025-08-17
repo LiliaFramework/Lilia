@@ -36,7 +36,7 @@ if SERVER then
         vendor:setStock(itemType, value)
     end)
 
-    addEditor("flag", function() return net.ReadString() end, function(vendor, flag) vendor:setNetVar("flag", flag) end)
+    addEditor("flag", function() return net.ReadString() end, function(vendor, flag) vendor:setFlag(flag) end)
     addEditor("welcome", function() return net.ReadString() end, function(vendor, message) vendor:setWelcomeMessage(message) end)
     addEditor("faction", function() return net.ReadUInt(8), net.ReadBool() end, function(vendor, factionID, allowed) vendor:setFactionAllowed(factionID, allowed) end)
     addEditor("class", function() return net.ReadUInt(8), net.ReadBool() end, function(vendor, classID, allowed) vendor:setClassAllowed(classID, allowed) end)

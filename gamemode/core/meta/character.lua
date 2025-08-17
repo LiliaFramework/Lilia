@@ -390,7 +390,10 @@ if SERVER then
             end
         end
 
-        if addedFlags ~= "" then self:setFlags(self:getFlags() .. addedFlags) end
+        if addedFlags ~= "" then
+            self:setFlags(self:getFlags() .. addedFlags)
+            hook.Run("OnCharFlagsGiven", ply, self, addedFlags)
+        end
     end
 
     function characterMeta:takeFlags(flags)
@@ -399,6 +402,7 @@ if SERVER then
         local ply = self:getPlayer()
         local plyFlags = ""
         if IsValid(ply) and ply.getPlayerFlags then plyFlags = ply:getPlayerFlags() end
+        local removedFlags = ""
         for i = 1, #flags do
             local flag = flags:sub(i, i)
             local info = lia.flag.list[flag]
@@ -408,9 +412,13 @@ if SERVER then
             end
 
             newFlags = newFlags:gsub(flag, "")
+            if not removedFlags:find(flag, 1, true) then removedFlags = removedFlags .. flag end
         end
 
-        if newFlags ~= oldFlags then self:setFlags(newFlags) end
+        if newFlags ~= oldFlags then
+            self:setFlags(newFlags)
+            if removedFlags ~= "" then hook.Run("OnCharFlagsTaken", ply, self, removedFlags) end
+        end
     end
 
     function characterMeta:save(callback)

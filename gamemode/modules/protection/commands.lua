@@ -17,6 +17,7 @@
         local isCheater = target:getLiliaData("cheater", false)
         target:setLiliaData("cheater", not isCheater)
         target:setNetVar("cheater", not isCheater and true or nil)
+        hook.Run("OnCheaterStatusChanged", client, target, not isCheater)
         if isCheater then
             client:notifyLocalized("cheaterUnmarked", target:Name())
             target:notifyLocalized("cheaterUnmarkedByAdmin")
@@ -30,7 +31,7 @@
                 lia.db.count("warnings", "charID = " .. lia.db.convertDataType(target:getChar():getID())):next(function(count)
                     target:notifyLocalized("playerWarned", client:Nick() .. " (" .. client:SteamID() .. ")", L("cheaterWarningReason"))
                     client:notifyLocalized("warningIssued", target:Nick())
-                    hook.Run("WarningIssued", client, target, L("cheaterWarningReason"), count)
+                    hook.Run("WarningIssued", client, target, L("cheaterWarningReason"), count, client:SteamID(), target:SteamID())
                 end)
             end
         end

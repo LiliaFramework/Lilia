@@ -286,4 +286,14 @@ if CLIENT then
         end
         return false
     end
+else
+    function lia.faction.hasWhitelist(faction)
+        local data = lia.faction.indices[faction]
+        if data then
+            if data.isDefault then return true end
+            if faction == FACTION_STAFF then return false end
+            return false
+        end
+        return false
+    end
 end

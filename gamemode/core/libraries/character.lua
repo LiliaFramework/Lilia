@@ -349,7 +349,11 @@ lia.char.registerVar("faction", {
     end,
     onValidate = function(value, _, client)
         if not lia.faction.indices[value] then return false, "invalid", "faction" end
-        if value == FACTION_STAFF and client:hasPrivilege("createStaffCharacter") then return true end
+        if value == FACTION_STAFF then
+            if not client or not client:hasPrivilege("createStaffCharacter") then return false, "staffFactionRestricted" end
+            return true
+        end
+
         if not client:hasWhitelist(value) then return false, "illegalAccess" end
         return true
     end,

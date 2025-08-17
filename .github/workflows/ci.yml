@@ -30,7 +30,13 @@ jobs:
       - run: |
           curl -sSfL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/refs/heads/main/files/remove_lua_comments.py -o remove_lua_comments.py || curl -sSfL https://raw.githubusercontent.com/bleonheart/Useful-Python-Scripts/main/files/remove_lua_comments.py -o remove_lua_comments.py
           python3 remove_lua_comments.py gamemode
-          tar --exclude=.git -cf workspace.tar .
+          tar \
+            --exclude=.git \
+            --exclude=.install \
+            --exclude=.lua \
+            --exclude=.luarocks \
+            --exclude=luacheck \
+            -cf workspace.tar .
       - uses: actions/upload-artifact@v4
         with:
           name: workspace
@@ -72,7 +78,13 @@ jobs:
       - name: Pretty-print all Lua files
         run: |
           find . -type f -name "*.lua" -print0 | xargs -0 ./glualint --pretty-print-files
-          tar --exclude=.git -cf workspace.tar .
+          tar \
+            --exclude=.git \
+            --exclude=.install \
+            --exclude=.lua \
+            --exclude=.luarocks \
+            --exclude=luacheck \
+            -cf workspace.tar .
       - uses: actions/upload-artifact@v4
         with:
           name: workspace
@@ -117,7 +129,13 @@ jobs:
             --no-max-cyclomatic-complexity
       - run: |
           cd "${GITHUB_WORKSPACE}"
-          tar --exclude=.git -cf workspace.tar .
+          tar \
+            --exclude=.git \
+            --exclude=.install \
+            --exclude=.lua \
+            --exclude=.luarocks \
+            --exclude=luacheck \
+            -cf workspace.tar .
       - uses: actions/upload-artifact@v4
         with:
           name: workspace
@@ -167,8 +185,18 @@ jobs:
           name: workspace
           path: .
       - run: |
-          tar -xf workspace.tar
+          sudo apt-get update -y
+          sudo apt-get install -y rsync
+      - run: |
+          mkdir -p .artifact
+          tar -xf workspace.tar -C .artifact
           rm -f workspace.tar
+          rsync -a --delete .artifact/gamemode/ gamemode/
+          if [ -d .artifact/documentation ]; then
+            mkdir -p documentation
+            rsync -a --delete .artifact/documentation/ documentation/
+          fi
+          rm -rf .artifact
       - run: |
           python3 - << 'PY'
           import os, re, pathlib, sys
@@ -195,7 +223,7 @@ jobs:
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
+          git add gamemode documentation
           if ! git diff --cached --quiet; then
             git commit -m "chore: Successfully updated workshop Lilia to ${VERSION}"
             git push origin HEAD:main

@@ -3085,8 +3085,8 @@ lia.command.add("exportprivileges", {
             if lia.permissions then table.insert(srcs, lia.permissions) end
             if lia.privileges then table.insert(srcs, lia.privileges) end
             if lia.command then table.insert(srcs, lia.command.stored or lia.command.list) end
-            if lia.plugin and lia.plugin.list then
-                for _, p in pairs(lia.plugin.list) do
+            if lia.module.list then
+                for _, p in pairs(lia.module.list) do
                     if type(p) == "table" then
                         table.insert(srcs, p.Privileges or p.privileges)
                         collect(p)

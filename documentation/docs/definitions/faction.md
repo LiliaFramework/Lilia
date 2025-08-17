@@ -670,7 +670,7 @@ FACTION.models = {
     "models/Humans/Group01/female_01.mdl"
 }
 FACTION.prefix = "[CIT]"
-FACTION.weapons = {"weapon_radio"}
+FACTION.weapons = {"radio"}
 FACTION.items = {"water"}
 FACTION.pay = 20
 FACTION.payTimer = 1800

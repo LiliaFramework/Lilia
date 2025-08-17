@@ -587,6 +587,75 @@ lia.command.add("doorsetclass", {
     alias = {"jobdoor"}
 })
 
+lia.command.add("doorremoveclass", {
+    desc = "doorremoveclassDesc",
+    arguments = {
+        {
+            name = "class",
+            type = "table",
+            options = function()
+                local options = {}
+                for _, v in pairs(lia.class.list) do
+                    options[L(v.name)] = v.uniqueID
+                end
+                return options
+            end
+        }
+    },
+    adminOnly = true,
+    AdminStick = {
+        Name = "adminStickDoorRemoveClassName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
+        TargetClass = "door",
+        Icon = "icon16/delete.png"
+    },
+    onRun = function(client, arguments)
+        local door = client:getTracedEntity()
+        if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
+            local input = arguments[1]
+            local class, classData
+            if input then
+                local id = tonumber(input) or lia.class.retrieveClass(input)
+                if id then
+                    class, classData = id, lia.class.list[id]
+                else
+                    for k, v in pairs(lia.class.list) do
+                        if lia.util.stringMatches(v.name, input) or lia.util.stringMatches(v.uniqueID, input) then
+                            class, classData = k, v
+                            break
+                        end
+                    end
+                end
+            end
+
+            if class then
+                local classes = util.JSONToTable(door:getNetVar("classes", "[]")) or {}
+                if table.HasValue(classes, classData.uniqueID) then
+                    table.RemoveByValue(classes, classData.uniqueID)
+                    door.liaClasses = classes
+                    door:setNetVar("classes", util.TableToJSON(classes))
+                    lia.log.add(client, "doorRemoveClassSpecific", door, classData.name)
+                    client:notifyLocalized("doorRemoveClassSpecific", classData.name)
+                else
+                    client:notifyLocalized("doorClassNotAssigned", classData.name)
+                end
+            elseif arguments[1] then
+                client:notifyLocalized("invalidClass")
+            else
+                door.liaClasses = nil
+                door:setNetVar("classes", nil)
+                lia.log.add(client, "doorRemoveClass", door)
+                client:notifyLocalized("doorRemoveClass")
+            end
+
+            MODULE:SaveData()
+        else
+            client:notifyLocalized("doorNotValid")
+        end
+    end
+})
+
 lia.command.add("togglealldoors", {
     desc = "togglealldoorsDesc",
     adminOnly = true,

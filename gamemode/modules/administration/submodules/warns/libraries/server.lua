@@ -63,7 +63,9 @@ net.Receive("RequestRemoveWarning", function(_, client)
             client:notifyLocalized("warningRemoved", warnIndex, targetClient:Nick())
             hook.Run("WarningRemoved", client, targetClient, {
                 reason = warn.message,
-                admin = warn.warner
+                admin = warn.warner,
+                adminSteamID = warn.warnerSteamID,
+                targetSteamID = targetClient:SteamID()
             }, warnIndex)
         end)
     end)

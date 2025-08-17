@@ -42,7 +42,7 @@ end
 function ENT:openInv(activator)
     local inventory = self:getInv()
     local storage = self:getStorageInfo()
-    if isfunction(storage.onOpen) then storage.onOpen(self, activator) end
+    if storage and isfunction(storage.onOpen) then storage.onOpen(self, activator) end
     if activator:GetPos():Distance(self:GetPos()) > 96 then
         activator.liaStorageEntity = nil
         return
@@ -66,17 +66,18 @@ function ENT:Use(activator)
     if not inventory then return end
     activator.liaStorageEntity = self
     if self:getNetVar("locked") then
-        local lockSound = self:getStorageInfo().lockSound
+        local info = self:getStorageInfo() or {}
+        local lockSound = info.lockSound
         self:EmitSound(lockSound or "doors/default_locked.wav")
         if self.keypad then
-            client.liaStorageEntity = nil
+            activator.liaStorageEntity = nil
         else
             net.Start("liaStorageUnlock")
             net.WriteEntity(self)
             net.Send(activator)
         end
     else
-        self:openInv(activator)
+        if inventory and storage then self:openInv(activator) end
     end
 
     activator.liaNextOpen = CurTime() + 0.7 * 1.5

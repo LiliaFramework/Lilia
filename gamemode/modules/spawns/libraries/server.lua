@@ -48,8 +48,8 @@ local function SpawnPlayer(client)
     if not character then return end
     local posData = character:getLastPos()
     if posData and posData.map and posData.map:lower() == game.GetMap():lower() then
-        client:SetPos(posData.pos and posData.pos.x and posData.pos or client:GetPos())
-        client:SetEyeAngles(posData.ang and posData.ang.p and posData.ang or angle_zero)
+        if posData.pos and isvector(posData.pos) then client:SetPos(posData.pos) end
+        if posData.ang and isangle(posData.ang) then client:SetEyeAngles(posData.ang) end
         character:setLastPos(nil)
         return
     end
@@ -106,11 +106,13 @@ function MODULE:CharPreSave(character)
     if not IsValid(client) then return end
     local InVehicle = client:hasValidVehicle()
     if not InVehicle and client:Alive() then
-        character:setLastPos({
+        local lastPosData = {
             pos = client:GetPos(),
             ang = client:EyeAngles(),
             map = game.GetMap()
-        })
+        }
+
+        character:setLastPos(lastPosData)
     end
 end
 
@@ -162,8 +164,6 @@ end
 function MODULE:PlayerSpawn(client)
     client:setNetVar("IsDeadRestricted", false)
     client:SetDSP(0, false)
-    local char = client:getChar()
-    if char then char:setLastPos(nil) end
 end
 
 net.Receive("request_respawn", function(_, client)
@@ -177,5 +177,4 @@ net.Receive("request_respawn", function(_, client)
     if not client:Alive() and not client:getNetVar("IsDeadRestricted", false) then client:Spawn() end
 end)
 
-hook.Add("PostPlayerLoadout", "liaSpawns", SpawnPlayer)
 hook.Add("PostPlayerLoadedChar", "liaSpawns", SpawnPlayer)

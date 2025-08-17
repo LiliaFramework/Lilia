@@ -5,7 +5,7 @@ if SERVER then
     lia.workshop.cache = lia.workshop.cache or {}
     function lia.workshop.AddWorkshop(id)
         id = tostring(id)
-        if not lia.workshop.ids[id] then lia.bootstrap(L("workshopDownloader"), L("workshopAdded", id)) end
+                    if not lia.workshop.ids[id] then lia.bootstrap(L("workshopDownloader"), L("workshopAdded", id)) end
         lia.bootstrap(L("workshopDownloader"), L("workshopDownloading", id))
         lia.workshop.ids[id] = true
     end

@@ -184,16 +184,107 @@ function MODULE:TicketSystemClaim(admin, requester)
     lia.db.count("ticketclaims", "adminSteamID = " .. lia.db.convertDataType(admin:SteamID())):next(function(count) lia.log.add(admin, "ticketClaimed", requester:Name(), count) end)
 end
 
+local function GetPlayerInfo(ply)
+    if not IsValid(ply) then return "Unknown Player" end
+    return string.format("%s (%s)", ply:Nick(), ply:SteamID64())
+end
+
+local function GetAdminInfo(admin)
+    if not IsValid(admin) then return "Console" end
+    return string.format("%s (%s)", admin:Nick(), admin:SteamID64())
+end
+
 function MODULE:TicketSystemClose(admin, requester)
     lia.db.count("ticketclaims", "adminSteamID = " .. lia.db.convertDataType(admin:SteamID())):next(function(count) lia.log.add(admin, "ticketClosed", requester:Name(), count) end)
+    lia.discord.relayMessage({
+        title = L("discordTicketSystemTitle"),
+        description = L("discordTicketSystemClosedDescription"),
+        color = 3447003,
+        fields = {
+            {
+                name = L("discordTicketSystemStaffMember"),
+                value = GetAdminInfo(admin),
+                inline = true
+            },
+            {
+                name = L("discordTicketSystemRequester"),
+                value = GetPlayerInfo(requester),
+                inline = true
+            },
+            {
+                name = L("discordTicketSystemOriginalMessage"),
+                value = message or L("discordTicketSystemNoMessageProvided"),
+                inline = false
+            }
+        }
+    })
 end
 
 function MODULE:WarningIssued(admin, target, reason, index)
     lia.db.count("warnings", "charID = " .. lia.db.convertDataType(target:getChar():getID())):next(function(count) lia.log.add(admin, "warningIssued", target, reason, count, index) end)
+    lia.discord.relayMessage({
+        title = L("discordWarningSystemTitle"),
+        description = L("discordWarningSystemIssuedDescription"),
+        color = 16776960,
+        fields = {
+            {
+                name = L("discordWarningSystemAdmin"),
+                value = GetAdminInfo(admin),
+                inline = true
+            },
+            {
+                name = L("discordWarningSystemTargetPlayer"),
+                value = GetPlayerInfo(target),
+                inline = true
+            },
+            {
+                name = L("discordWarningSystemReason"),
+                value = reason or L("discordWarningSystemNoReasonSpecified"),
+                inline = false
+            },
+            {
+                name = L("discordWarningSystemWarningCount"),
+                value = tostring(count or 1),
+                inline = true
+            }
+        }
+    })
 end
 
 function MODULE:WarningRemoved(admin, target, warning, index)
     lia.db.count("warnings", "charID = " .. lia.db.convertDataType(target:getChar():getID())):next(function(count) lia.log.add(admin, "warningRemoved", target, warning, count, index) end)
+    lia.discord.relayMessage({
+        title = L("discordWarningSystemTitle"),
+        description = L("discordWarningSystemRemovedDescription"),
+        color = 16776960,
+        fields = {
+            {
+                name = L("discordWarningSystemAdmin"),
+                value = GetAdminInfo(admin),
+                inline = true
+            },
+            {
+                name = L("discordWarningSystemTargetPlayer"),
+                value = GetPlayerInfo(target),
+                inline = true
+            },
+            {
+                name = L("discordWarningSystemRemovedWarningReason"),
+                value = warning and warning.reason or L("discordWarningSystemNoReasonSpecified"),
+                inline = false
+            },
+            {
+                name = L("discordWarningSystemWarningIndex"),
+                value = tostring(index or L("discordWarningSystemUnknown")),
+                inline = true
+            },
+            {
+                name = L("discordWarningSystemOriginalWarner"),
+                value = warning and warning.admin or L("discordWarningSystemUnknown"),
+                inline = true
+            }
+        }
+    })
 end
 
 function MODULE:ItemTransfered(context)

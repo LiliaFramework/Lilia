@@ -419,6 +419,7 @@ if SERVER then
         if not whitelisted then whitelisted = nil end
         local data = lia.faction.indices[faction]
         if data then
+            if data.uniqueID == "staff" then return false end
             local whitelists = self:getLiliaData("whitelists", {})
             whitelists[SCHEMA.folder] = whitelists[SCHEMA.folder] or {}
             whitelists[SCHEMA.folder][data.uniqueID] = whitelisted and true or nil

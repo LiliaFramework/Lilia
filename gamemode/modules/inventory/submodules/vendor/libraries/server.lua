@@ -176,6 +176,7 @@ function MODULE:GetEntitySaveData(ent)
         factions = ent.factions,
         classes = ent.classes,
         money = ent.money,
+        model = ent:GetModel(),
         skin = ent:GetSkin(),
         bodygroups = (function()
             local groups = {}
@@ -203,13 +204,106 @@ function MODULE:OnEntityLoaded(ent, data)
     ent.factions = data.factions or {}
     ent.classes = data.classes or {}
     ent.money = data.money
-    if data.skin then ent:SetSkin(data.skin) end
-    if istable(data.bodygroups) then
-        for k, v in pairs(data.bodygroups) do
-            ent:SetBodygroup(tonumber(k), v)
+    if data.model and data.model ~= "" and data.model ~= ent:GetModel() then
+        ent:SetModel(data.model)
+        timer.Simple(0.1, function()
+            if IsValid(ent) then
+                if data.skin then ent:SetSkin(data.skin) end
+                if istable(data.bodygroups) then
+                    for k, v in pairs(data.bodygroups) do
+                        ent:SetBodygroup(tonumber(k), v)
+                    end
+                end
+            end
+        end)
+    else
+        if data.skin then ent:SetSkin(data.skin) end
+        if istable(data.bodygroups) then
+            for k, v in pairs(data.bodygroups) do
+                ent:SetBodygroup(tonumber(k), v)
+            end
         end
     end
 end
+
+concommand.Add("lia_save_vendors", function(ply, cmd, args)
+    if ply and IsValid(ply) and not ply:IsSuperAdmin() then
+        ply:notify("You don't have permission to use this command.")
+        return
+    end
+
+    local count = 0
+    for _, vendor in ipairs(ents.FindByClass("lia_vendor")) do
+        if IsValid(vendor) then
+            hook.Run("UpdateEntityPersistence", vendor)
+            count = count + 1
+        end
+    end
+
+    if ply and IsValid(ply) then
+        ply:notify("Forced save of " .. count .. " vendors")
+    else
+        print("Forced save of " .. count .. " vendors")
+    end
+end, function(cmd, args)
+    local help = "Usage: " .. cmd .. "\n"
+    help = help .. "Forces all vendors to save their data to the persistence system.\n"
+    help = help .. "This command requires super admin privileges."
+    return help
+end, FCVAR_SERVER_CAN_EXECUTE)
+
+concommand.Add("lia_debug_vendor", function(ply, cmd, args)
+    if ply and IsValid(ply) and not ply:IsSuperAdmin() then
+        ply:notify("You don't have permission to use this command.")
+        return
+    end
+
+    local vendorID = tonumber(args[1])
+    if not vendorID then
+        if ply and IsValid(ply) then
+            ply:notify("Usage: " .. cmd .. " <vendor_entity_id>")
+        else
+            print("Usage: " .. cmd .. " <vendor_entity_id>")
+        end
+        return
+    end
+
+    local vendor = ents.GetByIndex(vendorID)
+    if not IsValid(vendor) or vendor:GetClass() ~= "lia_vendor" then
+        if ply and IsValid(ply) then
+            ply:notify("Invalid vendor entity ID: " .. vendorID)
+        else
+            print("Invalid vendor entity ID: " .. vendorID)
+        end
+        return
+    end
+
+    local saveData = MODULE:GetEntitySaveData(vendor)
+    if saveData then
+        if ply and IsValid(ply) then
+            ply:notify("Vendor " .. vendorID .. " data:")
+            ply:notify("Model: " .. tostring(saveData.model))
+            ply:notify("Skin: " .. tostring(saveData.skin))
+            ply:notify("Items: " .. table.Count(saveData.items or {}))
+        else
+            print("Vendor " .. vendorID .. " data:")
+            print("Model: " .. tostring(saveData.model))
+            print("Skin: " .. tostring(saveData.skin))
+            print("Items: " .. table.Count(saveData.items or {}))
+        end
+    else
+        if ply and IsValid(ply) then
+            ply:notify("Failed to get vendor save data")
+        else
+            print("Failed to get vendor save data")
+        end
+    end
+end, function(cmd, args)
+    local help = "Usage: " .. cmd .. " <vendor_entity_id>\n"
+    help = help .. "Debugs vendor persistence data for the specified vendor.\n"
+    help = help .. "This command requires super admin privileges."
+    return help
+end, FCVAR_SERVER_CAN_EXECUTE)
 
 net.Receive("VendorExit", function(_, client)
     local vendor = client.liaVendor
@@ -222,6 +316,7 @@ net.Receive("VendorEdit", function(_, client)
     local vendor = client.liaVendor
     if not IsValid(vendor) or not lia.vendor.editor[key] then return end
     lia.log.add(client, "vendorEdit", vendor, key)
+    hook.Run("OnVendorEdited", client, vendor, key)
     lia.vendor.editor[key](vendor, client, key)
     hook.Run("UpdateEntityPersistence", vendor)
 end)

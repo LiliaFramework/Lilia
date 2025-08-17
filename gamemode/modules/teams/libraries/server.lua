@@ -219,9 +219,18 @@ net.Receive("KickCharacter", function(_, client)
     if not canKick and not canManageAny then return end
     local defaultFaction
     for _, fac in pairs(lia.faction.teams) do
-        if fac.isDefault then
+        if fac.isDefault and fac.uniqueID ~= "staff" then
             defaultFaction = fac
             break
+        end
+    end
+
+    if not defaultFaction then
+        for _, fac in pairs(lia.faction.teams) do
+            if fac.uniqueID ~= "staff" then
+                defaultFaction = fac
+                break
+            end
         end
     end
 

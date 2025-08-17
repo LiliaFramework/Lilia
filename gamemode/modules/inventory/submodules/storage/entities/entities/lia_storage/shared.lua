@@ -11,6 +11,7 @@ function ENT:getInv()
 end
 
 function ENT:getStorageInfo()
-    self.lowerModel = self.lowerModel or self:GetModel()
-    return MODULE.StorageDefinitions[self.lowerModel]
+    local model = self:GetModel()
+    if not model then return end
+    return MODULE.StorageDefinitions[model:lower()]
 end

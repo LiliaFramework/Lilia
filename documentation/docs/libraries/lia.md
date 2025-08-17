@@ -137,6 +137,34 @@ lia.error("Something went wrong")
 
 ---
 
+### lia.warning
+
+**Purpose**
+
+Prints a coloured console message prefixed with "[Lilia] [Warning]". This does
+not halt script execution; it is purely for logging warnings that are not
+critical errors.
+
+**Parameters**
+
+* `msg` (*string*): Warning text.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+**Example Usage**
+
+```lua
+lia.warning("Failed to deserialize factions for door 123: invalid data")
+```
+
+---
+
 ### lia.deprecated
 
 **Purpose**

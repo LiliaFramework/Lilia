@@ -170,7 +170,6 @@
     ["GM_LIB_FASTOPERATION"] = true,
     ["Keypad"] = true,
     ["GExtension_Net_GroupData"] = true,
-    ["npctool_relman_up"] = true,
     ["cheadle_api"] = true,
     ["wire_expression2_request_file"] = true,
     ["wire_adv_upload"] = true,

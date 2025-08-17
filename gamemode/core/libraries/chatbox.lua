@@ -56,10 +56,13 @@ function lia.chat.register(chatType, data)
         local rawPrefixes = istable(data.prefix) and data.prefix or {data.prefix}
         local aliases, lookup = {}, {}
         for _, prefix in ipairs(rawPrefixes) do
-            local cmd = prefix:gsub("^/", ""):lower()
-            if cmd ~= "" and not lookup[cmd] then
-                table.insert(aliases, cmd)
-                lookup[cmd] = true
+            if prefix:sub(1, 1) == "/" then
+                local cmd = prefix:gsub("^/", ""):lower()
+                local isCommonWord = cmd == "it" or cmd == "me" or cmd == "w" or cmd == "y" or cmd == "a"
+                if cmd ~= "" and not lookup[cmd] and not isCommonWord then
+                    table.insert(aliases, cmd)
+                    lookup[cmd] = true
+                end
             end
         end
 
@@ -110,7 +113,10 @@ function lia.chat.parse(client, message, noSend)
     chatType = newType or chatType
     message = newMsg or message
     anonymous = newAnon ~= nil and newAnon or anonymous
-    if SERVER and not noSend then lia.chat.send(client, chatType, hook.Run("PlayerMessageSend", client, chatType, message, anonymous) or message, anonymous) end
+    if SERVER and not noSend then
+        if chatType == "ooc" then hook.Run("OnOOCMessageSent", client, message) end
+        lia.chat.send(client, chatType, hook.Run("PlayerMessageSend", client, chatType, message, anonymous) or message, anonymous)
+    end
     return chatType, message, anonymous
 end
 

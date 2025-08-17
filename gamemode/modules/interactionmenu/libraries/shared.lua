@@ -246,6 +246,11 @@ AddInteraction("inviteToFaction", {
             return
         end
 
+        if faction.uniqueID == "staff" then
+            client:notifyLocalized("staffInviteBlocked")
+            return
+        end
+
         target:binaryQuestion(L("joinFactionPrompt"), L("yes"), L("no"), false, function(choice)
             if choice ~= 0 then
                 client:notifyLocalized("inviteDeclined")

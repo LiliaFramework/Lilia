@@ -39,7 +39,10 @@ net.Receive("RunOption", function(_, ply)
     local name = net.ReadString()
     local opt = MODULE.Interactions[name]
     local tracedEntity = net.ReadEntity()
-    if opt and opt.runServer and IsValid(tracedEntity) and tracedEntity:IsPlayer() and isWithinRange(ply, tracedEntity) then opt.onRun(ply, tracedEntity) end
+    if opt and opt.runServer and IsValid(tracedEntity) and tracedEntity:IsPlayer() and isWithinRange(ply, tracedEntity) then
+        local target = tracedEntity:IsBot() and ply or tracedEntity
+        opt.onRun(ply, target)
+    end
 end)
 
 net.Receive("RunLocalOption", function(_, ply)

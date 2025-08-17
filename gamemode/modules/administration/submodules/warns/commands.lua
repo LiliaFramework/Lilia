@@ -40,7 +40,7 @@ lia.command.add("warn", {
         lia.db.count("warnings", "charID = " .. lia.db.convertDataType(target:getChar():getID())):next(function(count)
             target:notifyLocalized("playerWarned", warnerName .. " (" .. warnerSteamID .. ")", reason)
             client:notifyLocalized("warningIssued", target:Nick())
-            hook.Run("WarningIssued", client, target, reason, count)
+            hook.Run("WarningIssued", client, target, reason, count, warnerSteamID, target:SteamID())
         end)
     end
 })

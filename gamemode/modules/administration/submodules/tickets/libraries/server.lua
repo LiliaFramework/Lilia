@@ -48,6 +48,16 @@ function MODULE:GetTicketsByRequester(steamID)
     end)
 end
 
+local function GetPlayerInfo(ply)
+    if not IsValid(ply) then return "Unknown Player" end
+    return string.format("%s (%s)", ply:Nick(), ply:SteamID64())
+end
+
+local function GetAdminInfo(admin)
+    if not IsValid(admin) then return "Console" end
+    return string.format("%s (%s)", admin:Nick(), admin:SteamID64())
+end
+
 function MODULE:TicketSystemClaim(admin, requester)
     local ticket = MODULE.ActiveTickets[requester:SteamID()]
     lia.db.insertTable({
@@ -58,6 +68,49 @@ function MODULE:TicketSystemClaim(admin, requester)
         adminSteamID = admin:SteamID(),
         message = ticket and ticket.message or ""
     }, nil, "ticketclaims")
+
+    lia.discord.relayMessage({
+        title = L("discordTicketSystemTitle"),
+        description = L("discordTicketSystemClaimedDescription"),
+        color = 3447003,
+        fields = {
+            {
+                name = L("discordTicketSystemStaffMember"),
+                value = GetAdminInfo(admin),
+                inline = true
+            },
+            {
+                name = L("discordTicketSystemRequester"),
+                value = GetPlayerInfo(requester),
+                inline = true
+            },
+            {
+                name = L("discordTicketSystemOriginalMessage"),
+                value = message or L("discordTicketSystemNoMessageProvided"),
+                inline = false
+            }
+        }
+    })
+end
+
+function MODULE:TicketSystemCreated(requester, message)
+    lia.discord.relayMessage({
+        title = L("discordTicketSystemTitle"),
+        description = L("discordTicketSystemCreatedDescription"),
+        color = 3447003,
+        fields = {
+            {
+                name = L("discordTicketSystemRequester"),
+                value = GetPlayerInfo(requester),
+                inline = true
+            },
+            {
+                name = L("discordTicketSystemMessage"),
+                value = message or L("discordTicketSystemNoMessageProvided"),
+                inline = false
+            }
+        }
+    })
 end
 
 function MODULE:PlayerSay(client, text)
@@ -101,6 +154,8 @@ function MODULE:SendPopup(noob, message)
             message = message
         }
 
+        hook.Run("TicketSystemCreated", noob, message)
+        hook.Run("OnTicketCreated", noob, message)
         timer.Remove("ticketsystem-" .. requesterSteamID)
         timer.Create("ticketsystem-" .. requesterSteamID, 60, 1, function()
             if IsValid(noob) and noob:IsPlayer() then noob.CaseClaimed = nil end

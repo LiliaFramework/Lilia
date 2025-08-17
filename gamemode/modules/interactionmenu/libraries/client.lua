@@ -110,7 +110,8 @@ local function openMenu(options, isInteraction, titleText, closeKey, netMsg)
         btn.DoClick = function()
             frame:AlphaTo(0, fadeSpeed, 0, function() if IsValid(frame) then frame:Close() end end)
             if isInteraction then
-                entry.opt.onRun(client, ent)
+                local target = ent:IsBot() and client or ent
+                entry.opt.onRun(client, target)
             else
                 entry.opt.onRun(client)
             end

@@ -13,7 +13,7 @@
             options = function()
                 local options = {}
                 for k, v in pairs(lia.faction.teams) do
-                    options[L(v.name)] = k
+                    if k ~= "staff" then options[L(v.name)] = k end
                 end
                 return options
             end
@@ -30,6 +30,11 @@
         local faction = lia.faction.teams[factionName] or lia.util.findFaction(client, factionName)
         if not faction then
             client:notifyLocalized("invalidFaction")
+            return
+        end
+
+        if faction.uniqueID == "staff" then
+            client:notifyLocalized("staffTransferBlocked")
             return
         end
 
@@ -66,7 +71,7 @@ lia.command.add("plywhitelist", {
             options = function()
                 local options = {}
                 for k, v in pairs(lia.faction.teams) do
-                    options[L(v.name)] = k
+                    if k ~= "staff" then options[L(v.name)] = k end
                 end
                 return options
             end
@@ -80,7 +85,17 @@ lia.command.add("plywhitelist", {
         end
 
         local faction = lia.util.findFaction(client, arguments[2])
-        if faction and target:setWhitelisted(faction.index, true) then
+        if not faction then
+            client:notifyLocalized("invalidFaction")
+            return
+        end
+
+        if faction.uniqueID == "staff" then
+            client:notifyLocalized("staffWhitelistBlocked")
+            return
+        end
+
+        if target:setWhitelisted(faction.index, true) then
             for _, v in player.Iterator() do
                 v:notifyLocalized("whitelist", client:Name(), target:Name(), L(faction.name, v))
             end
@@ -105,7 +120,7 @@ lia.command.add("plyunwhitelist", {
             options = function()
                 local options = {}
                 for k, v in pairs(lia.faction.teams) do
-                    options[L(v.name)] = k
+                    if k ~= "staff" then options[L(v.name)] = k end
                 end
                 return options
             end
@@ -119,6 +134,16 @@ lia.command.add("plyunwhitelist", {
         end
 
         local faction = lia.util.findFaction(client, arguments[2])
+        if not faction then
+            client:notifyLocalized("invalidFaction")
+            return
+        end
+
+        if faction.uniqueID == "staff" then
+            client:notifyLocalized("staffUnwhitelistBlocked")
+            return
+        end
+
         if faction and not faction.isDefault and target:setWhitelisted(faction.index, false) then
             for _, v in player.Iterator() do
                 v:notifyLocalized("unwhitelist", client:Name(), target:Name(), L(faction.name, v))

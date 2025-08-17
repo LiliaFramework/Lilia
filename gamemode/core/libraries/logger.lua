@@ -27,6 +27,10 @@ lia.log.types = {
         func = function(client, attacker) return L("logPlayerKilled", client:Name(), attacker) end,
         category = L("categoryCombat")
     },
+    ["playerDowned"] = {
+        func = function(client, attacker) return L("playerDowned", client:Name(), attacker) end,
+        category = L("categoryCombat")
+    },
     ["playerSpawn"] = {
         func = function(client) return L("logPlayerSpawned", client:Name()) end,
         category = L("character")
@@ -247,6 +251,10 @@ lia.log.types = {
     },
     ["doorRemoveClass"] = {
         func = function(client, door) return L("logDoorRemoveClass", client:Name(), door:GetClass()) end,
+        category = L("categoryWorld")
+    },
+    ["doorRemoveClassSpecific"] = {
+        func = function(client, door, className) return L("logDoorRemoveClassSpecific", client:Name(), className, door:GetClass()) end,
         category = L("categoryWorld")
     },
     ["doorSaveData"] = {

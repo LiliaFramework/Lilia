@@ -44,6 +44,10 @@ function ENT:takeMoney(value)
     if self.money then self:giveMoney(-value) end
 end
 
+function ENT:setFlag(flag)
+    self:setNetVar("flag", flag)
+end
+
 function ENT:setWelcomeMessage(value)
     self:setNetVar("welcomeMessage", value)
 end
@@ -54,6 +58,7 @@ function ENT:setStock(itemType, value)
         return
     end
 
+    if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
     if not self.items[itemType][VENDOR_MAXSTOCK] then self:setMaxStock(itemType, value) end
     self.items[itemType][VENDOR_STOCK] = math.Clamp(value, 0, self.items[itemType][VENDOR_MAXSTOCK])
@@ -224,6 +229,7 @@ function ENT:setModel(model)
     model = model:lower()
     self:SetModel(model)
     if self:isReadyForAnim() then self:setAnim() end
+    hook.Run("UpdateEntityPersistence", self)
     net.Start("VendorEdit")
     net.WriteString("model")
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
@@ -232,6 +238,7 @@ end
 function ENT:setSkin(skin)
     skin = tonumber(skin) or 0
     self:SetSkin(skin)
+    hook.Run("UpdateEntityPersistence", self)
     net.Start("VendorEdit")
     net.WriteString("skin")
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
@@ -241,6 +248,7 @@ function ENT:setBodyGroup(id, value)
     id = tonumber(id) or 0
     value = tonumber(value) or 0
     self:SetBodygroup(id, value)
+    hook.Run("UpdateEntityPersistence", self)
     net.Start("VendorEdit")
     net.WriteString("bodygroup")
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
