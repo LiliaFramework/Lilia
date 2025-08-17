@@ -42,7 +42,7 @@ function MODULE:LoadData()
                 continue
             end
 
-            local factions = {}
+            local factions
             if row.factions and row.factions ~= "NULL" and row.factions ~= "" then
                 if tostring(row.factions):match("^[%d%.%-%s]+$") and not tostring(row.factions):match("[{}%[%]]") then
                     lia.warning("Door " .. id .. " has coordinate-like data in factions column: " .. tostring(row.factions))
@@ -51,7 +51,7 @@ function MODULE:LoadData()
                 else
                     local success, result = pcall(lia.data.deserialize, row.factions)
                     if success and istable(result) then
-                        local isEmpty = false
+                        local isEmpty
                         if table.IsEmpty then
                             isEmpty = table.IsEmpty(result)
                         else
@@ -74,7 +74,7 @@ function MODULE:LoadData()
                 end
             end
 
-            local classes = {}
+            local classes
             if row.classes and row.classes ~= "NULL" and row.classes ~= "" then
                 if tostring(row.classes):match("^[%d%.%-%s]+$") and not tostring(row.classes):match("[{}%[%]]") then
                     lia.warning("Door " .. id .. " has coordinate-like data in classes column: " .. tostring(row.classes))
@@ -83,7 +83,7 @@ function MODULE:LoadData()
                 else
                     local success, result = pcall(lia.data.deserialize, row.classes)
                     if success and istable(result) then
-                        local isEmpty = false
+                        local isEmpty
                         if table.IsEmpty then
                             isEmpty = table.IsEmpty(result)
                         else
@@ -133,7 +133,6 @@ end
 function MODULE:SaveData()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
-    local condition = buildCondition(gamemode, map)
     local rows = {}
     local doorCount = 0
     for _, door in ents.Iterator() do
@@ -223,13 +222,10 @@ function MODULE:SaveData()
             lia.error("Failed to save door data: " .. tostring(err))
             lia.error("This may indicate a database connection issue or schema problem")
         end)
-    else
     end
 end
 
 function MODULE:VerifyDatabaseSchema()
-    local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local map = game.GetMap()
     if lia.db.module == "sqlite" then
         lia.db.query("PRAGMA table_info(lia_doors)"):next(function(res)
             if not res or not res.results then
@@ -340,9 +336,7 @@ function MODULE:CleanupCorruptedData()
             end
         end
 
-        if corruptedCount > 0 then
-            lia.information("Found and fixed " .. corruptedCount .. " corrupted door records")
-        end
+        if corruptedCount > 0 then lia.information("Found and fixed " .. corruptedCount .. " corrupted door records") end
     end):catch(function(err) lia.error("Failed to check for corrupted door data: " .. tostring(err)) end)
 end
 
