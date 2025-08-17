@@ -1,3 +1,0 @@
-#!/bin/sh
-
-LUAROCKS_SYSCONFDIR='/home/runner/work/Lilia/Lilia/.luarocks/etc/luarocks' exec '/home/runner/work/Lilia/Lilia/.lua/bin/lua' -e 'package.path="/home/runner/work/Lilia/Lilia/.luarocks/share/lua/5.2/?.lua;/home/runner/work/Lilia/Lilia/.luarocks/share/lua/5.2/?/init.lua;"..package.path;package.cpath="/home/runner/work/Lilia/Lilia/.luarocks/lib/lua/5.2/?.so;"..package.cpath;local k,l,_=pcall(require,"luarocks.loader") _=k and l.add_context("luacheck","dev-1")' '/home/runner/work/Lilia/Lilia/.luarocks/lib/luarocks/rocks-5.2/luacheck/dev-1/bin/luacheck' "$@"

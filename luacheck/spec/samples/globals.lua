@@ -1,1 +1,0 @@
-print(setfenv(rawlen(tostring)))

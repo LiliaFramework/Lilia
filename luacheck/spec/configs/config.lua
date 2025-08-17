@@ -1,3 +1,0 @@
-return {
-   std = "lua52"
-}

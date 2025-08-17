@@ -1,1 +1,0 @@
-globals = {"print", "setfenv", "rawlen"}
