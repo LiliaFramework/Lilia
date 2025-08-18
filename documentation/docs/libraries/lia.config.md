@@ -29,6 +29,34 @@ end, {
 })
 ```
 
+## lia.config.getOptions
+
+**Purpose:** Retrieves the available options for a configuration variable. This function returns either the static options defined in the config data or dynamically generated options from a function.
+
+**Parameters:**
+- `key` (string) - The config variable key.
+
+**Returns:** table - An array of available options for the config variable. If no options are defined or the config doesn't exist, returns an empty table.
+
+**Realm:** Shared.
+
+**Example Usage:**
+```lua
+-- Get options for a dropdown config
+local options = lia.config.getOptions("PlayerModel")
+-- Returns: {"models/player/group01/male_01.mdl", "models/player/group01/male_02.mdl", ...}
+
+-- Get options from a dynamic function
+local timeOptions = lia.config.getOptions("TimeScale")
+-- Returns: {"1x", "2x", "4x", "8x"} (if defined by optionsFunc)
+```
+
+**Notes:**
+- If the config has an `optionsFunc`, it calls that function to generate options dynamically
+- If the config has static `options` defined, it returns those directly
+- String values in the options are automatically localized
+- Returns an empty table if the config doesn't exist or has no options
+
 ## lia.config.setDefault
 
 **Purpose:** Sets the default value for a given config variable. This does not change the current value, only the default.
