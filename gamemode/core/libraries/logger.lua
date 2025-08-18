@@ -27,10 +27,6 @@ lia.log.types = {
         func = function(client, attacker) return L("logPlayerKilled", client:Name(), attacker) end,
         category = L("categoryCombat")
     },
-    ["playerDowned"] = {
-        func = function(client, attacker) return L("playerDowned", client:Name(), attacker) end,
-        category = L("categoryCombat")
-    },
     ["playerSpawn"] = {
         func = function(client) return L("logPlayerSpawned", client:Name()) end,
         category = L("character")

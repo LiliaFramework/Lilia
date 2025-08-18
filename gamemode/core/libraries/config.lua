@@ -26,10 +26,14 @@ function lia.config.add(key, name, value, callback, data)
 
     local oldConfig = lia.config.stored[key]
     local savedValue = oldConfig and oldConfig.value or value
+    
     if istable(data.options) then
         for k, v in pairs(data.options) do
             if isstring(v) then data.options[k] = L(v) end
         end
+    elseif isfunction(data.options) then
+        data.optionsFunc = data.options
+        data.options = nil
     end
 
     data.desc = isstring(data.desc) and L(data.desc) or data.desc
@@ -44,6 +48,28 @@ function lia.config.add(key, name, value, callback, data)
         noNetworking = data.noNetworking or false,
         callback = callback
     }
+end
+
+function lia.config.getOptions(key)
+    local config = lia.config.stored[key]
+    if not config then return {} end
+    
+    if config.data.optionsFunc then
+        local success, result = pcall(config.data.optionsFunc)
+        if success and istable(result) then
+            for k, v in pairs(result) do
+                if isstring(v) then result[k] = L(v) end
+            end
+            return result
+        else
+            print("Warning: Config options function for '" .. key .. "' failed or returned invalid result")
+            return {}
+        end
+    elseif istable(config.data.options) then
+        return config.data.options
+    end
+    
+    return {}
 end
 
 function lia.config.setDefault(key, value)
@@ -1382,9 +1408,9 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                 self:DrawTextEntryText(Color(255, 255, 255), Color(255, 255, 255), Color(255, 255, 255))
             end
 
-            for _, o in ipairs(config.data and config.data.options or {}) do
-                combo:AddChoice(o)
-            end
+                    for _, o in ipairs(lia.config.getOptions(key)) do
+            combo:AddChoice(o)
+        end
 
             combo.OnSelect = function(_, _, v)
                 local t = "ConfigChange_" .. key .. "_" .. os.time()

@@ -14,10 +14,14 @@ function lia.option.add(key, name, desc, default, callback, data)
     if data.type then optionType = data.type end
     local old = lia.option.stored[key]
     local value = old and old.value or default
+    
     if istable(data.options) then
         for k, v in pairs(data.options) do
             if isstring(v) then data.options[k] = L(v) end
         end
+    elseif isfunction(data.options) then
+        data.optionsFunc = data.options
+        data.options = nil
     end
 
     data.category = isstring(data.category) and L(data.category) or data.category
@@ -33,6 +37,28 @@ function lia.option.add(key, name, desc, default, callback, data)
         shouldNetwork = data.shouldNetwork,
         isQuick = data.isQuick
     }
+end
+
+function lia.option.getOptions(key)
+    local option = lia.option.stored[key]
+    if not option then return {} end
+    
+    if option.data.optionsFunc then
+        local success, result = pcall(option.data.optionsFunc)
+        if success and istable(result) then
+            for k, v in pairs(result) do
+                if isstring(v) then result[k] = L(v) end
+            end
+            return result
+        else
+            print("Warning: Option options function for '" .. key .. "' failed or returned invalid result")
+            return {}
+        end
+    elseif istable(option.data.options) then
+        return option.data.options
+    end
+    
+    return {}
 end
 
 function lia.option.set(key, value)
@@ -351,7 +377,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             combo:DockMargin(300, 10, 300, 0)
             combo:SetFont("ConfigFontLarge")
             combo:SetTextColor(Color(255, 255, 255))
-            local opts = cfg.data and cfg.data.options or {}
+            local opts = lia.option.getOptions(key)
             local cur = lia.option.get(key, cfg.value)
             combo:SetValue(tostring(cur))
             combo.Paint = function(self, w, h)

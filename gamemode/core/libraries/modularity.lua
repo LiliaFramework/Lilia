@@ -116,9 +116,9 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
 
     if uniqueID ~= "schema" and not enabled then
         if disableReason then
-            lia.bootstrap(L("moduleDisabledTitle"), L("moduleDisabledTitle", disableReason))
+            lia.bootstrap(L("moduleDisabledTitle"), disableReason)
         else
-            lia.bootstrap(L("moduleDisabledTitle"), L("moduleDisabledTitle", MODULE.name))
+            lia.bootstrap(L("moduleDisabledTitle"), MODULE.name)
         end
 
         _G[variable] = prev

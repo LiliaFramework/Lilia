@@ -171,11 +171,6 @@
     ["Keypad"] = true,
     ["GExtension_Net_GroupData"] = true,
     ["cheadle_api"] = true,
-    ["wire_expression2_request_file"] = true,
-    ["wire_adv_upload"] = true,
-    ["wire_expression2_request_list"] = true,
-    ["wire_adv_unwire"] = true,
-    ["wire_expression2_client_request_set_extension_status"] = true
 }
 
 local KnownExploits = {
