@@ -22,7 +22,7 @@ end, {
     category = "character",
     type = "Int",
     min = 1,
-    max = 10
+    max = 20
 })
 
 lia.config.add("invH", "invHeight", 4, function(_, newH)
@@ -49,5 +49,5 @@ end, {
     category = "character",
     type = "Int",
     min = 1,
-    max = 10
+    max = 20
 })

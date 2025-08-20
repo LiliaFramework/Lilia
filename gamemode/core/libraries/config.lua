@@ -287,7 +287,7 @@ lia.config.add("WalkRatio", "walkRatio", 0.5, nil, {
     desc = "walkRatioDesc",
     category = "character",
     type = "Float",
-    min = 0.1,
+    min = 0.2,
     max = 1.0,
     decimals = 2
 })
@@ -321,7 +321,7 @@ lia.config.add("MaxCharacters", "maxCharacters", 5, nil, {
     category = "character",
     type = "Int",
     min = 1,
-    max = 10
+    max = 20
 })
 
 lia.config.add("AllowPMs", "allowPMs", true, nil, {
@@ -374,7 +374,7 @@ lia.config.add("SpawnTime", "respawnTime", 5, nil, {
     desc = "respawnTimeDesc",
     category = "death",
     type = "Float",
-    min = 1,
+    min = 0.5,
     max = 60
 })
 
@@ -382,8 +382,8 @@ lia.config.add("TimeToEnterVehicle", "timeToEnterVehicle", 1, nil, {
     desc = "timeToEnterVehicleDesc",
     category = "categoryQualityOfLife",
     type = "Float",
-    min = 0.5,
-    max = 10
+    min = 0.1,
+    max = 30
 })
 
 lia.config.add("CarEntryDelayEnabled", "carEntryDelayEnabled", true, nil, {
@@ -508,7 +508,7 @@ lia.config.add("MaxThirdPersonDistance", "maxThirdPersonDistance", 100, nil, {
     desc = "maxThirdPersonDistanceDesc",
     category = "categoryThirdPerson",
     type = "Int",
-    min = 50,
+    min = 25,
     max = 200
 })
 
@@ -522,7 +522,7 @@ lia.config.add("MaxThirdPersonHorizontal", "maxThirdPersonHorizontal", 30, nil, 
     desc = "maxThirdPersonHorizontalDesc",
     category = "categoryThirdPerson",
     type = "Int",
-    min = 10,
+    min = 5,
     max = 100
 })
 
@@ -530,7 +530,7 @@ lia.config.add("MaxThirdPersonHeight", "maxThirdPersonHeight", 30, nil, {
     desc = "maxThirdPersonHeightDesc",
     category = "categoryThirdPerson",
     type = "Int",
-    min = 10,
+    min = 5,
     max = 100
 })
 
@@ -538,7 +538,7 @@ lia.config.add("MaxViewDistance", "maxViewDistance", 32768, nil, {
     desc = "maxViewDistanceDesc",
     category = "categoryQualityOfLife",
     type = "Int",
-    min = 1000,
+    min = 500,
     max = 32768,
 })
 
@@ -576,7 +576,7 @@ lia.config.add("LogRetentionDays", "logRetentionPeriod", 7, nil, {
     desc = "logRetentionPeriodDesc",
     category = "categoryLogging",
     type = "Int",
-    min = 3,
+    min = 1,
     max = 30,
 })
 
@@ -584,7 +584,7 @@ lia.config.add("MaxLogLines", "maximumLogLines", 1000, nil, {
     desc = "maximumLogLinesDesc",
     category = "categoryLogging",
     type = "Int",
-    min = 500,
+    min = 100,
     max = 1000000,
 })
 
@@ -604,7 +604,7 @@ lia.config.add("DefaultStamina", "defaultStaminaValue", 100, nil, {
     desc = "defaultStaminaValueDesc",
     category = "attributes",
     type = "Int",
-    min = 0,
+    min = 10,
     max = 1000
 })
 
@@ -621,7 +621,7 @@ lia.config.add("JumpStaminaCost", "jumpStaminaCost", 10, nil, {
     desc = "jumpStaminaCostDesc",
     category = "attributes",
     type = "Int",
-    min = 0,
+    min = 1,
     max = 1000
 })
 
@@ -648,7 +648,7 @@ lia.config.add("PunchStamina", "punchStamina", 10, nil, {
     category = "attributes",
     isGlobal = true,
     type = "Int",
-    min = 0,
+    min = 1,
     max = 100
 })
 
@@ -656,7 +656,7 @@ lia.config.add("MaxHoldWeight", "maximumHoldWeight", 100, nil, {
     desc = "maximumHoldWeightDesc",
     category = "categoryGeneral",
     type = "Int",
-    min = 1,
+    min = 10,
     max = 500
 })
 
@@ -664,7 +664,7 @@ lia.config.add("ThrowForce", "throwForce", 100, nil, {
     desc = "throwForceDesc",
     category = "categoryGeneral",
     type = "Int",
-    min = 1,
+    min = 10,
     max = 500
 })
 
@@ -704,7 +704,7 @@ lia.config.add("ChatRange", "chatRange", 280, nil, {
     desc = "chatRangeDesc",
     category = "categoryChat",
     type = "Int",
-    min = 0,
+    min = 50,
     max = 10000
 })
 
@@ -712,7 +712,7 @@ lia.config.add("OOCLimit", "oocCharacterLimit", 150, nil, {
     desc = "oocCharacterLimitDesc",
     category = "categoryChat",
     type = "Int",
-    min = 10,
+    min = 25,
     max = 1000
 })
 
@@ -731,7 +731,7 @@ lia.config.add("OOCDelay", "oocDelayTitle", 10, nil, {
     desc = "oocDelayDesc",
     category = "categoryChat",
     type = "Float",
-    min = 0,
+    min = 1,
     max = 60
 })
 
@@ -739,7 +739,7 @@ lia.config.add("LOOCDelay", "loocDelayTitle", 6, nil, {
     desc = "loocDelayDesc",
     category = "categoryChat",
     type = "Float",
-    min = 0,
+    min = 1,
     max = 60
 })
 
@@ -759,7 +759,7 @@ lia.config.add("MusicVolume", "mainMenuMusicVolume", 0.25, nil, {
     desc = "mainMenuMusicVolumeDesc",
     category = "mainMenu",
     type = "Float",
-    min = 0.0,
+    min = 0.01,
     max = 1.0
 })
 
@@ -809,7 +809,7 @@ lia.config.add("OnDamageCharacterSwitchCooldownTimer", "onDamageCharacterSwitchC
     desc = "onDamageCharacterSwitchCooldownTimerDesc",
     category = "character",
     type = "Float",
-    min = 0,
+    min = 1,
     max = 120
 })
 
@@ -817,7 +817,7 @@ lia.config.add("CharacterSwitchCooldownTimer", "characterSwitchCooldownTimer", 5
     desc = "characterSwitchCooldownTimerDesc",
     category = "character",
     type = "Float",
-    min = 0,
+    min = 1,
     max = 120
 })
 
@@ -843,7 +843,7 @@ lia.config.add("TimeUntilDroppedSWEPRemoved", "timeUntilDroppedSWEPRemoved", 15,
     desc = "timeUntilDroppedSWEPRemovedDesc",
     category = "protection",
     type = "Float",
-    min = 0,
+    min = 1,
     max = 300
 })
 
@@ -898,7 +898,7 @@ lia.config.add("EquipDelay", "equipDelay", 0, nil, {
     category = "items",
     type = "Float",
     min = 0,
-    max = 10
+    max = 30
 })
 
 lia.config.add("UnequipDelay", "unequipDelay", 0, nil, {
@@ -906,7 +906,7 @@ lia.config.add("UnequipDelay", "unequipDelay", 0, nil, {
     category = "items",
     type = "Float",
     min = 0,
-    max = 10
+    max = 30
 })
 
 lia.config.add("DropDelay", "dropDelay", 0, nil, {
@@ -914,7 +914,7 @@ lia.config.add("DropDelay", "dropDelay", 0, nil, {
     category = "items",
     type = "Float",
     min = 0,
-    max = 10
+    max = 30
 })
 
 lia.config.add("TakeDelay", "takeDelay", 0, nil, {
@@ -922,7 +922,7 @@ lia.config.add("TakeDelay", "takeDelay", 0, nil, {
     category = "items",
     type = "Float",
     min = 0,
-    max = 10
+    max = 30
 })
 
 lia.config.add("ItemGiveSpeed", "itemGiveSpeed", 6, nil, {
@@ -985,11 +985,11 @@ local function refreshScoreboard()
     if CLIENT and lia.gui and IsValid(lia.gui.score) and lia.gui.score.ApplyConfig then lia.gui.score:ApplyConfig() end
 end
 
-lia.config.add("sbWidth", "sbWidth", 0.35, refreshScoreboard, {
+lia.config.add("sbWidth", "sbWidth", 0.65, refreshScoreboard, {
     desc = "sbWidthDesc",
     category = "scoreboard",
     type = "Float",
-    min = 0.1,
+    min = 0.2,
     max = 1.0
 })
 
@@ -997,7 +997,7 @@ lia.config.add("sbHeight", "sbHeight", 0.65, refreshScoreboard, {
     desc = "sbHeightDesc",
     category = "scoreboard",
     type = "Float",
-    min = 0.1,
+    min = 0.2,
     max = 1.0
 })
 
@@ -1078,15 +1078,15 @@ lia.config.add("DoorLockTime", "doorLockTime", 0.5, nil, {
     desc = "doorLockTimeDesc",
     category = "moduleDoorsName",
     type = "Float",
-    min = 0.1,
-    max = 10.0
+    min = 0.05,
+    max = 30.0
 })
 
 lia.config.add("DoorSellRatio", "doorSellRatio", 0.5, nil, {
     desc = "doorSellRatioDesc",
     category = "moduleDoorsName",
     type = "Float",
-    min = 0.0,
+    min = 0.1,
     max = 1.0
 })
 

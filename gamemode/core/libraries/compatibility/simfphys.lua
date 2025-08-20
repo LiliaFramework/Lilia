@@ -66,7 +66,7 @@ lia.config.add("TimeToEnterVehicle", "timeToEnterVehicle", 4, nil, {
     category = "simfphysVehicles",
     type = "Int",
     min = 1,
-    max = 20
+    max = 30
 })
 
 hook.Add("simfphysPhysicsCollide", "SIMFPHYS_simfphysPhysicsCollide", function() return true end)
