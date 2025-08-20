@@ -1146,6 +1146,7 @@ LANGUAGE = {
     actionsMenu = "Menú de acciones",
     interactionMenu = "Menú de interacción",
     personalActions = "Acciones personales",
+    quickTakeItem = "Tomar objeto rápidamente",
     inventoryTitle = "Inventario de %s",
     searchKeybinds = "Buscar atajos...",
     openInventory = "Abrir inventario",

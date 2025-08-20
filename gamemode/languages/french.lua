@@ -1151,6 +1151,7 @@ LANGUAGE = {
     actionsMenu = "Menu d'actions",
     interactionMenu = "Menu d'interaction",
     personalActions = "Actions personnelles",
+    quickTakeItem = "Prendre l'objet rapidement",
     inventoryTitle = "Inventaire de %s",
     searchKeybinds = "Rechercher des raccourcis...",
     openInventory = "Ouvrir l'inventaire",

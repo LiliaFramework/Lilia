@@ -1159,6 +1159,7 @@ LANGUAGE = {
     actionsMenu = "Actions Menu",
     interactionMenu = "Interaction Menu",
     personalActions = "Personal Actions",
+    quickTakeItem = "Quick Take Item",
     inventoryTitle = "%s's Inventory",
     searchKeybinds = "Search keybinds...",
     openInventory = "Open Inventory",

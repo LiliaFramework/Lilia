@@ -147,3 +147,19 @@ lia.keybind.add(KEY_G, "personalActions", function()
 
     openMenu(MODULE.Actions, false, "actionsMenu", lia.keybind.get(L("personalActions"), KEY_G), "RunLocalOption")
 end)
+
+lia.keybind.add(KEY_F, "quickTakeItem", function()
+    local client = LocalPlayer()
+    if not client:getChar() then return end
+    local entity = client:getTracedEntity()
+    if IsValid(entity) and entity:isItem() then
+        if entity:GetPos():Distance(client:GetPos()) > 96 then return end
+        local itemTable = entity:getItemTable()
+        if itemTable and itemTable.functions and itemTable.functions.take and itemTable.functions.take.onCanRun and itemTable.functions.take.onCanRun(itemTable) then
+            net.Start("invAct")
+            net.WriteString("take")
+            net.WriteType(entity)
+            net.SendToServer()
+        end
+    end
+end)

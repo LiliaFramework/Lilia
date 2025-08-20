@@ -1146,6 +1146,7 @@ LANGUAGE = {
     actionsMenu = "Меню действий",
     interactionMenu = "Меню взаимодействия",
     personalActions = "Личные действия",
+    quickTakeItem = "Быстро взять предмет",
     inventoryTitle = "Инвентарь %s",
     searchKeybinds = "Поиск биндов...",
     openInventory = "Открыть инвентарь",
