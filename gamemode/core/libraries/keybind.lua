@@ -203,13 +203,11 @@ hook.Add("PlayerButtonDown", "liaKeybindPress", function(p, b)
         local data = lia.keybind.stored[action]
         if not data.shouldRun or data.shouldRun(p) then
             if data.serverOnly then
-                -- Server-side execution - network the call
                 net.Start("liaKeybindServer")
                 net.WriteString(action)
                 net.WriteEntity(p)
                 net.SendToServer()
             else
-                -- Client-side execution
                 data.callback(p)
             end
         end
@@ -223,13 +221,11 @@ hook.Add("PlayerButtonUp", "liaKeybindRelease", function(p, b)
         local data = lia.keybind.stored[action]
         if not data.shouldRun or data.shouldRun(p) then
             if data.serverOnly then
-                -- Server-side execution - network the release call
                 net.Start("liaKeybindServer")
                 net.WriteString(action .. "_release")
                 net.WriteEntity(p)
                 net.SendToServer()
             else
-                -- Client-side execution
                 data.release(p)
             end
         end
@@ -383,13 +379,12 @@ lia.keybind.add(KEY_NONE, "adminMode", {
         if client:isStaffOnDuty() then
             local oldCharID = client:getNetVar("OldCharID", 0)
             if oldCharID > 0 then
-                -- Restore original position when switching back to non-staff character
                 local originalPos = client:getNetVar("OriginalPosition")
                 if originalPos then
                     client:SetPos(originalPos)
                     client:setNetVar("OriginalPosition", nil)
                 end
-                
+
                 net.Start("AdminModeSwapCharacter")
                 net.WriteInt(oldCharID, 32)
                 net.Send(client)
@@ -399,12 +394,8 @@ lia.keybind.add(KEY_NONE, "adminMode", {
                 client:notifyLocalized("noPrevChar")
             end
         else
-            -- Save original position when switching to staff mode
             local currentChar = client:getChar()
-            if currentChar and currentChar:getFaction() ~= "staff" then
-                client:setNetVar("OriginalPosition", client:GetPos())
-            end
-            
+            if currentChar and currentChar:getFaction() ~= "staff" then client:setNetVar("OriginalPosition", client:GetPos()) end
             lia.db.query(string.format("SELECT * FROM lia_characters WHERE steamID = \"%s\"", lia.db.escape(steamID)), function(data)
                 for _, row in ipairs(data) do
                     local id = tonumber(row.id)
