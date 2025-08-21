@@ -45,7 +45,7 @@ net.Receive("RunOption", function(_, ply)
     end
 end)
 
-net.Receive("RunLocalOption", function(_, ply)
+net.Receive("RunAction", function(_, ply)
     if lia.config.get("DisableCheaterActions", true) and ply:getNetVar("cheater", false) then
         lia.log.add(ply, "cheaterAction", L("cheaterActionUseInteractionMenu"))
         ply:notify("Maybe you shouldn't have cheated")

@@ -112,15 +112,22 @@ local KeybindKeys = {
     ["last"] = KEY_LAST
 }
 
-function lia.keybind.add(k, d, cb, rcb)
+function lia.keybind.add(k, d, cb)
     local c = isstring(k) and KeybindKeys[string.lower(k)] or k
     d = isstring(d) and L(d) or d
     if not c then return end
+    if not istable(cb) or not cb.onPress then
+        ErrorNoHalt("lia.keybind.add: Invalid callback format. Must use table with 'onPress' function.")
+        return
+    end
+
     lia.keybind.stored[d] = lia.keybind.stored[d] or {}
     if not lia.keybind.stored[d].value then lia.keybind.stored[d].value = c end
     lia.keybind.stored[d].default = c
-    lia.keybind.stored[d].callback = cb
-    lia.keybind.stored[d].release = rcb
+    lia.keybind.stored[d].callback = cb.onPress
+    lia.keybind.stored[d].release = cb.onRelease
+    lia.keybind.stored[d].shouldRun = cb.shouldRun
+    lia.keybind.stored[d].serverOnly = cb.serverOnly
     lia.keybind.stored[c] = d
 end
 
@@ -192,13 +199,41 @@ end
 hook.Add("PlayerButtonDown", "liaKeybindPress", function(p, b)
     local action = lia.keybind.stored[b]
     if not IsFirstTimePredicted() then return end
-    if action and lia.keybind.stored[action] and lia.keybind.stored[action].callback then lia.keybind.stored[action].callback(p) end
+    if action and lia.keybind.stored[action] and lia.keybind.stored[action].callback then
+        local data = lia.keybind.stored[action]
+        if not data.shouldRun or data.shouldRun(p) then
+            if data.serverOnly then
+                -- Server-side execution - network the call
+                net.Start("liaKeybindServer")
+                net.WriteString(action)
+                net.WriteEntity(p)
+                net.SendToServer()
+            else
+                -- Client-side execution
+                data.callback(p)
+            end
+        end
+    end
 end)
 
 hook.Add("PlayerButtonUp", "liaKeybindRelease", function(p, b)
     local action = lia.keybind.stored[b]
     if not IsFirstTimePredicted() then return end
-    if action and lia.keybind.stored[action] and lia.keybind.stored[action].release then lia.keybind.stored[action].release(p) end
+    if action and lia.keybind.stored[action] and lia.keybind.stored[action].release then
+        local data = lia.keybind.stored[action]
+        if not data.shouldRun or data.shouldRun(p) then
+            if data.serverOnly then
+                -- Server-side execution - network the release call
+                net.Start("liaKeybindServer")
+                net.WriteString(action .. "_release")
+                net.WriteEntity(p)
+                net.SendToServer()
+            else
+                -- Client-side execution
+                data.release(p)
+            end
+        end
+    end
 end)
 
 hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
@@ -229,7 +264,7 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
         for _, action in ipairs(sortedActions) do
             local data = lia.keybind.stored[action]
             local rowPanel = vgui.Create("DPanel")
-            rowPanel:SetTall(50)
+            rowPanel:SetTall(70)
             rowPanel:DockPadding(4, 4, 4, 4)
             rowPanel.Paint = nil
             local lbl = rowPanel:Add("DLabel")
@@ -298,7 +333,7 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
             end
 
             sheet:AddPanelRow(rowPanel, {
-                height = 50,
+                height = 70,
                 filterText = tostring(action):lower()
             })
         end
@@ -332,9 +367,80 @@ hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
     }
 end)
 
-lia.keybind.add(KEY_NONE, "openInventory", function()
-    local f1Menu = vgui.Create("liaMenu")
-    f1Menu:setActiveTab(L("inv"))
-end)
+lia.keybind.add(KEY_NONE, "openInventory", {
+    onPress = function()
+        local f1Menu = vgui.Create("liaMenu")
+        f1Menu:setActiveTab(L("inv"))
+    end
+})
 
-lia.keybind.add(KEY_NONE, "adminMode", function() lia.command.send("adminmode") end)
+lia.keybind.add(KEY_NONE, "adminMode", {
+    serverOnly = true,
+    onPress = function(client)
+        if not IsValid(client) then return end
+        local steamID = client:SteamID()
+        client:ChatPrint("hi")
+        if client:isStaffOnDuty() then
+            local oldCharID = client:getNetVar("OldCharID", 0)
+            if oldCharID > 0 then
+                -- Restore original position when switching back to non-staff character
+                local originalPos = client:getNetVar("OriginalPosition")
+                if originalPos then
+                    client:SetPos(originalPos)
+                    client:setNetVar("OriginalPosition", nil)
+                end
+                
+                net.Start("AdminModeSwapCharacter")
+                net.WriteInt(oldCharID, 32)
+                net.Send(client)
+                client:setNetVar("OldCharID", nil)
+                lia.log.add(client, "adminMode", oldCharID, L("adminModeLogBack"))
+            else
+                client:notifyLocalized("noPrevChar")
+            end
+        else
+            -- Save original position when switching to staff mode
+            local currentChar = client:getChar()
+            if currentChar and currentChar:getFaction() ~= "staff" then
+                client:setNetVar("OriginalPosition", client:GetPos())
+            end
+            
+            lia.db.query(string.format("SELECT * FROM lia_characters WHERE steamID = \"%s\"", lia.db.escape(steamID)), function(data)
+                for _, row in ipairs(data) do
+                    local id = tonumber(row.id)
+                    if row.faction == "staff" then
+                        client:setNetVar("OldCharID", client:getChar():getID())
+                        net.Start("AdminModeSwapCharacter")
+                        net.WriteInt(id, 32)
+                        net.Send(client)
+                        lia.log.add(client, "adminMode", id, L("adminModeLogStaff"))
+                        return
+                    end
+                end
+
+                if client:hasPrivilege("createStaffCharacter") then
+                    local staffCharData = {
+                        steamID = steamID,
+                        name = client:steamName(),
+                        desc = "",
+                        faction = "staff",
+                        model = lia.faction.indices["staff"] and lia.faction.indices["staff"].models[1] or "models/Humans/Group02/male_07.mdl"
+                    }
+
+                    lia.char.create(staffCharData, function(charID)
+                        if IsValid(client) and charID then
+                            client:setNetVar("OldCharID", client:getChar():getID())
+                            net.Start("AdminModeSwapCharacter")
+                            net.WriteInt(charID, 32)
+                            net.Send(client)
+                            lia.log.add(client, "adminMode", charID, L("adminModeLogStaff"))
+                            client:notifyLocalized("staffCharCreated")
+                        end
+                    end)
+                else
+                    client:notifyLocalized("noStaffChar")
+                end
+            end)
+        end
+    end
+})

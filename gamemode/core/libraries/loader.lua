@@ -14,6 +14,7 @@ local RealmIDs = {
     schema = "shared",
     permissions = "shared",
     commands = "shared",
+    networking = "shared",
     pim = "shared"
 }
 
@@ -36,7 +37,7 @@ local FilesToLoad = {
     },
     {
         path = "lilia/gamemode/core/libraries/keybind.lua",
-        realm = "client"
+        realm = "shared"
     },
     {
         path = "lilia/gamemode/core/libraries/option.lua",

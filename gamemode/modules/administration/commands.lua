@@ -50,63 +50,6 @@ lia.command.add("plygetplaytime", {
     end
 })
 
-lia.command.add("adminmode", {
-    desc = "adminModeDesc",
-    onRun = function(client)
-        if not IsValid(client) then return end
-        local steamID = client:SteamID()
-        if client:isStaffOnDuty() then
-            local oldCharID = client:getNetVar("OldCharID", 0)
-            if oldCharID > 0 then
-                net.Start("AdminModeSwapCharacter")
-                net.WriteInt(oldCharID, 32)
-                net.Send(client)
-                client:setNetVar("OldCharID", nil)
-                lia.log.add(client, "adminMode", oldCharID, L("adminModeLogBack"))
-            else
-                client:notifyLocalized("noPrevChar")
-            end
-        else
-            lia.db.query(string.format("SELECT * FROM lia_characters WHERE steamID = \"%s\"", lia.db.escape(steamID)), function(data)
-                for _, row in ipairs(data) do
-                    local id = tonumber(row.id)
-                    if row.faction == "staff" then
-                        client:setNetVar("OldCharID", client:getChar():getID())
-                        net.Start("AdminModeSwapCharacter")
-                        net.WriteInt(id, 32)
-                        net.Send(client)
-                        lia.log.add(client, "adminMode", id, L("adminModeLogStaff"))
-                        return
-                    end
-                end
-
-                if client:hasPrivilege("createStaffCharacter") then
-                    local staffCharData = {
-                        steamID = steamID,
-                        name = client:steamName(),
-                        desc = "",
-                        faction = "staff",
-                        model = lia.faction.indices["staff"] and lia.faction.indices["staff"].models[1] or "models/Humans/Group02/male_07.mdl"
-                    }
-
-                    lia.char.create(staffCharData, function(charID)
-                        if IsValid(client) and charID then
-                            client:setNetVar("OldCharID", client:getChar():getID())
-                            net.Start("AdminModeSwapCharacter")
-                            net.WriteInt(charID, 32)
-                            net.Send(client)
-                            lia.log.add(client, "adminMode", charID, L("adminModeLogStaff"))
-                            client:notifyLocalized("staffCharCreated")
-                        end
-                    end)
-                else
-                    client:notifyLocalized("noStaffChar")
-                end
-            end)
-        end
-    end
-})
-
 lia.command.add("managesitrooms", {
     superAdminOnly = true,
     desc = "manageSitroomsDesc",

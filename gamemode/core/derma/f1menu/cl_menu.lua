@@ -197,6 +197,15 @@ function PANEL:setActiveTab(key)
     if IsValid(tab) then
         tab:DoClick()
         tab:SetSelected(true)
+        return
+    end
+
+    for _, tabPanel in pairs(self.tabList) do
+        if IsValid(tabPanel) and tabPanel:GetText() == key then
+            tabPanel:DoClick()
+            tabPanel:SetSelected(true)
+            return
+        end
     end
 end
 

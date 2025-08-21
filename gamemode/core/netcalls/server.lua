@@ -21,6 +21,38 @@ net.Receive("ArgumentsRequest", function(_, client)
     end
 end)
 
+net.Receive("liaKeybindServer", function(len, ply)
+    if not IsValid(ply) then return end
+    local action = net.ReadString()
+    local player = net.ReadEntity()
+    -- Verify the player is valid and the action exists
+    if not IsValid(player) or player ~= ply then return end
+    if not lia.keybind.stored[action] then return end
+    local data = lia.keybind.stored[action]
+    -- Check if this is a release action
+    local isRelease = action:find("_release$")
+    local baseAction = action:gsub("_release$", "")
+    if isRelease then
+        -- Handle release action
+        if data.release and data.serverOnly then
+            local success, err = pcall(data.release, player)
+            if not success then
+                -- Log error on server
+                print("Keybind release error for " .. tostring(player) .. ": " .. tostring(err))
+            end
+        end
+    else
+        -- Handle press action
+        if data.callback and data.serverOnly then
+            local success, err = pcall(data.callback, player)
+            if not success then
+                -- Log error on server
+                print("Keybind press error for " .. tostring(player) .. ": " .. tostring(err))
+            end
+        end
+    end
+end)
+
 net.Receive("RequestDropdown", function(_, client)
     local selectedOption = net.ReadString()
     if client.dropdownCallback then

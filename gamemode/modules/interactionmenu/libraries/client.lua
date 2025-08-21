@@ -128,38 +128,42 @@ local function openMenu(options, isInteraction, titleText, closeKey, netMsg)
     MODULE.Menu = frame
 end
 
-lia.keybind.add(KEY_TAB, "interactionMenu", function()
-    local client = LocalPlayer()
-    if not client:getChar() or not MODULE:checkInteractionPossibilities() then return end
-    if IsValid(MODULE.Menu) then
-        MODULE.Menu:Close()
-        MODULE.Menu = nil
+lia.keybind.add(KEY_TAB, "interactionMenu", {
+    onPress = function(client)
+        if not client:getChar() or not MODULE:checkInteractionPossibilities() then return end
+        if IsValid(MODULE.Menu) then
+            MODULE.Menu:Close()
+            MODULE.Menu = nil
+        end
+
+        openMenu(MODULE.Interactions, true, "playerInteractions", lia.keybind.get(L("interactionMenu"), KEY_TAB), "RunOption")
     end
+})
 
-    openMenu(MODULE.Interactions, true, "playerInteractions", lia.keybind.get(L("interactionMenu"), KEY_TAB), "RunOption")
-end)
+lia.keybind.add(KEY_G, "personalActions", {
+    onPress = function(client)
+        if IsValid(MODULE.Menu) then
+            MODULE.Menu:Close()
+            MODULE.Menu = nil
+        end
 
-lia.keybind.add(KEY_G, "personalActions", function()
-    if IsValid(MODULE.Menu) then
-        MODULE.Menu:Close()
-        MODULE.Menu = nil
+        openMenu(MODULE.Actions, false, "actionsMenu", lia.keybind.get(L("personalActions"), KEY_G), "RunAction")
     end
+})
 
-    openMenu(MODULE.Actions, false, "actionsMenu", lia.keybind.get(L("personalActions"), KEY_G), "RunLocalOption")
-end)
-
-lia.keybind.add(KEY_V, "quickTakeItem", function()
-    local client = LocalPlayer()
-    if not client:getChar() then return end
-    local entity = client:getTracedEntity()
-    if IsValid(entity) and entity:isItem() then
-        if entity:GetPos():Distance(client:GetPos()) > 96 then return end
-        local itemTable = entity:getItemTable()
-        if itemTable and itemTable.functions and itemTable.functions.take and itemTable.functions.take.onCanRun and itemTable.functions.take.onCanRun(itemTable) then
-            net.Start("invAct")
-            net.WriteString("take")
-            net.WriteType(entity)
-            net.SendToServer()
+lia.keybind.add(KEY_NONE, "quickTakeItem", {
+    onPress = function(client)
+        if not client:getChar() then return end
+        local entity = client:getTracedEntity()
+        if IsValid(entity) and entity:isItem() then
+            if entity:GetPos():Distance(client:GetPos()) > 96 then return end
+            local itemTable = entity:getItemTable()
+            if itemTable and itemTable.functions and itemTable.functions.take and itemTable.functions.take.onCanRun and itemTable.functions.take.onCanRun(itemTable) then
+                -- Trigger the take function directly
+                if itemTable.functions.take.onRun then
+                    itemTable.functions.take.onRun(itemTable, client, entity)
+                end
+            end
         end
     end
-end)
+})

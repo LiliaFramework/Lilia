@@ -1,4 +1,13 @@
 ﻿local MODULE = MODULE
+function MODULE:OnReloaded()
+    if IsValid(lia.gui.score) then lia.gui.score:Remove() end
+end
+
+function MODULE:ShouldShowPlayerOnScoreboard(client)
+    local faction = lia.faction.indices[client:Team()]
+    if faction and faction.scoreboardHidden then return false end
+end
+
 function MODULE:ScoreboardHide()
     if IsValid(lia.gui.score) and lia.gui.score:IsVisible() then
         lia.gui.score:SetVisible(false)
@@ -31,14 +40,3 @@ end
 function MODULE:InteractionMenuOpened()
     self:ScoreboardHide()
 end
-
-function MODULE:OnReloaded()
-    if IsValid(lia.gui.score) then lia.gui.score:Remove() end
-end
-
-function MODULE:ShouldShowPlayerOnScoreboard(client)
-    local faction = lia.faction.indices[client:Team()]
-    if faction and faction.scoreboardHidden then return false end
-end
-
-lia.keybind.add(KEY_NONE, "scoreboard", function() MODULE:ScoreboardShow() end, function() MODULE:ScoreboardHide() end)

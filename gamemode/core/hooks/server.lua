@@ -371,9 +371,6 @@ function GM:DoPlayerDeath(client, attacker)
 end
 
 function GM:PlayerSpawn(client)
-    client:SetNoDraw(false)
-    client:UnLock()
-    client:SetNotSolid(false)
     client:stopAction()
     client:SetDSP(1, false)
     client:removeRagdoll()
@@ -482,7 +479,6 @@ function GM:PlayerLoadout(client)
         return
     end
 
-    client:SetNoDraw(character and true or false)
     if not character then return end
     client:SetWeaponColor(Vector(0.30, 0.80, 0.10))
     client:StripWeapons()
