@@ -270,27 +270,27 @@ if SERVER then
 
     local SyncFuncs = {}
     SyncFuncs.prop_door_rotating = function(ent)
-        ent:SetNWBool(L("locked"), ent:GetInternalVariable("m_bLocked"))
+        ent:setNetVar(L("locked"), ent:GetInternalVariable("m_bLocked"))
         local state = ent:GetInternalVariable("m_eDoorState")
-        ent:SetNWBool("Closed", state == 0 or state == 3)
+        ent:setNetVar("Closed", state == 0 or state == 3)
     end
 
-    SyncFuncs.func_door = function(ent) ent:SetNWBool(L("locked"), ent:GetInternalVariable("m_bLocked")) end
-    SyncFuncs.func_door_rotating = function(ent) ent:SetNWBool(L("locked"), ent:GetInternalVariable("m_bLocked")) end
+    SyncFuncs.func_door = function(ent) ent:setNetVar(L("locked"), ent:GetInternalVariable("m_bLocked")) end
+    SyncFuncs.func_door_rotating = function(ent) ent:setNetVar(L("locked"), ent:GetInternalVariable("m_bLocked")) end
     SyncFuncs.prop_vehicle_jeep = function(ent)
-        ent:SetNWBool(L("locked"), ent:GetInternalVariable("VehicleLocked"))
-        ent:SetNWBool("HasDriver", IsValid(ent:GetDriver()))
-        ent:SetNWBool("m_bRadarEnabled", ent:GetInternalVariable("m_bRadarEnabled"))
+        ent:setNetVar(L("locked"), ent:GetInternalVariable("VehicleLocked"))
+        ent:setNetVar("HasDriver", IsValid(ent:GetDriver()))
+        ent:setNetVar("m_bRadarEnabled", ent:GetInternalVariable("m_bRadarEnabled"))
     end
 
     SyncFuncs.prop_vehicle_airboat = function(ent)
-        ent:SetNWBool(L("locked"), ent:GetInternalVariable("VehicleLocked"))
-        ent:SetNWBool("HasDriver", IsValid(ent:GetDriver()))
+        ent:setNetVar(L("locked"), ent:GetInternalVariable("VehicleLocked"))
+        ent:setNetVar("HasDriver", IsValid(ent:GetDriver()))
     end
 
     SyncFuncs.func_tracktrain = function(ent)
-        ent:SetNWInt("m_dir", ent:GetInternalVariable("m_dir"))
-        ent:SetNWBool("m_moving", ent:GetInternalVariable("speed") ~= 0)
+        ent:setNetVar("m_dir", ent:GetInternalVariable("m_dir"))
+        ent:setNetVar("m_moving", ent:GetInternalVariable("speed") ~= 0)
     end
 
     local nextSync = 0
@@ -308,44 +308,44 @@ local EnableIcon = "icon16/tick.png"
 local DisableIcon = "icon16/cross.png"
 local ToggleIcon = "icon16/arrow_switch.png"
 AddEntFireProperty("door_open", L("open"), 655, function(ent, ply)
-    if not ent:GetNWBool("Closed") and ent:GetClass() == "prop_door_rotating" then return false end
+    if not ent:getNetVar("Closed") and ent:GetClass() == "prop_door_rotating" then return false end
     return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door"}, ent, ply)
 end, "Open", "icon16/door_open.png")
 
 AddEntFireProperty("door_close", L("close"), 656, function(ent, ply)
-    if ent:GetNWBool("Closed") and ent:GetClass() == "prop_door_rotating" then return false end
+    if ent:getNetVar("Closed") and ent:GetClass() == "prop_door_rotating" then return false end
     return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door"}, ent, ply)
 end, "Close", "icon16/door.png")
 
 AddEntFireProperty("door_lock", L("lock"), 657, function(ent, ply)
-    if ent:GetNWBool(L("locked")) and ent:GetClass() ~= "prop_vehicle_prisoner_pod" then return false end
+    if ent:getNetVar(L("locked")) and ent:GetClass() ~= "prop_vehicle_prisoner_pod" then return false end
     return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door", "prop_vehicle_jeep", "prop_vehicle_airboat", "prop_vehicle_prisoner_pod"}, ent, ply)
 end, "Lock", "icon16/lock.png")
 
 AddEntFireProperty("door_unlock", L("unlock"), 658, function(ent, ply)
-    if not ent:GetNWBool(L("locked")) and ent:GetClass() ~= "prop_vehicle_prisoner_pod" then return false end
+    if not ent:getNetVar(L("locked")) and ent:GetClass() ~= "prop_vehicle_prisoner_pod" then return false end
     return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door", "prop_vehicle_jeep", "prop_vehicle_airboat", "prop_vehicle_prisoner_pod"}, ent, ply)
 end, "Unlock", "icon16/lock_open.png")
 
 AddEntFireProperty("func_movelinear_open", L("start"), 655, "func_movelinear", "Open", "icon16/arrow_right.png")
 AddEntFireProperty("func_movelinear_close", L("returnText"), 656, "func_movelinear", "Close", "icon16/arrow_left.png")
 AddEntFireProperty("func_tracktrain_StartForward", L("startForward"), 655, function(ent, ply)
-    if ent:GetNWInt("m_dir") == 1 then return false end
+    if ent:getNetVar("m_dir") == 1 then return false end
     return rb655_property_filter("func_tracktrain", ent, ply)
 end, "StartForward", "icon16/arrow_right.png")
 
 AddEntFireProperty("func_tracktrain_StartBackward", L("startBackward"), 656, function(ent, ply)
-    if ent:GetNWInt("m_dir") == -1 then return false end
+    if ent:getNetVar("m_dir") == -1 then return false end
     return rb655_property_filter("func_tracktrain", ent, ply)
 end, "StartBackward", "icon16/arrow_left.png")
 
 AddEntFireProperty("func_tracktrain_Stop", L("stop"), 658, function(ent, ply)
-    if not ent:GetNWBool("m_moving") then return false end
+    if not ent:getNetVar("m_moving") then return false end
     return rb655_property_filter("func_tracktrain", ent, ply)
 end, "Stop", "icon16/shape_square.png")
 
 AddEntFireProperty("func_tracktrain_Resume", L("resume"), 659, function(ent, ply)
-    if ent:GetNWInt("m_moving") then return false end
+    if ent:getNetVar("m_moving") then return false end
     return rb655_property_filter("func_tracktrain", ent, ply)
 end, "Resume", "icon16/resultset_next.png")
 
@@ -476,7 +476,7 @@ AddEntFunctionProperty("healthcharger_recharge", L("recharge"), 655, "item_healt
 end, "icon16/arrow_refresh.png")
 
 AddEntFunctionProperty("vehicle_exit", L("kickDriver"), 655, function(ent)
-    if ent:IsVehicle() and ent:GetNWBool("HasDriver") then return true end
+    if ent:IsVehicle() and ent:getNetVar("HasDriver") then return true end
     return false
 end, function(ent)
     if not IsValid(ent:GetDriver()) or not ent:GetDriver().ExitVehicle then return end
@@ -487,18 +487,18 @@ AddEntFireProperty("vehicle_radar", L("enableRadar"), 655, function(ent)
     if not ent:IsVehicle() or ent:GetClass() ~= "prop_vehicle_jeep" then return false end
     if ent:LookupAttachment("controlpanel0_ll") == 0 then return false end
     if ent:LookupAttachment("controlpanel0_ur") == 0 then return false end
-    if ent:GetNWBool("m_bRadarEnabled", false) then return false end
+    if ent:getNetVar("m_bRadarEnabled", false) then return false end
     return true
 end, "EnableRadar", "icon16/application_add.png")
 
 AddEntFireProperty("vehicle_radar_off", L("disableRadar"), 655, function(ent)
     if not ent:IsVehicle() or ent:GetClass() ~= "prop_vehicle_jeep" then return false end
-    if not ent:GetNWBool("m_bRadarEnabled", false) then return false end
+    if not ent:getNetVar("m_bRadarEnabled", false) then return false end
     return true
 end, "DisableRadar", "icon16/application_delete.png")
 
 AddEntFunctionProperty("vehicle_enter", L("enterVehicle"), 656, function(ent)
-    if ent:IsVehicle() and not ent:GetNWBool("HasDriver") then return true end
+    if ent:IsVehicle() and not ent:getNetVar("HasDriver") then return true end
     return false
 end, function(ent, ply)
     ply:ExitVehicle()
@@ -507,7 +507,7 @@ end, "icon16/car.png")
 
 AddEntFunctionProperty("vehicle_add_gun", L("mountGun"), 657, function(ent)
     if not ent:IsVehicle() then return false end
-    if ent:GetNWBool("EnableGun", false) then return false end
+    if ent:getNetVar("EnableGun", false) then return false end
     if ent:GetBodygroup(1) == 1 then return false end
     if ent:LookupSequence("aim_all") > 0 then return true end
     if ent:LookupSequence("weapon_yaw") > 0 and ent:LookupSequence("weapon_pitch") > 0 then return true end
@@ -516,7 +516,7 @@ end, function(ent)
     ent:SetKeyValue("EnableGun", "1")
     ent:Activate()
     ent:SetBodygroup(1, 1)
-    ent:SetNWBool("EnableGun", true)
+    ent:setNetVar("EnableGun", true)
 end, "icon16/gun.png")
 
 AddEntFunctionProperty("baloon_break", L("pop"), 655, "gmod_balloon", function(ent, ply)

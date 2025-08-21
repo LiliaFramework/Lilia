@@ -208,7 +208,7 @@ lia.command.add("returnsitroom", {
             return
         end
 
-        local prev = target:GetNWVector("previousSitroomPos")
+        local prev = target:getNetVar("previousSitroomPos")
         if not prev then
             client:notifyLocalized("noPreviousSitroomPos")
             return

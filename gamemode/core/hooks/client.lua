@@ -190,7 +190,7 @@ end
 function GM:ShouldDrawEntityInfo(e)
     if IsValid(e) then
         if e:IsPlayer() and e:getChar() then
-            if e:isNoClipping() or e:GetNoDraw() then return false end
+            if e:IsBot() or e:isNoClipping() or e:GetNoDraw() then return false end
             return true
         end
 

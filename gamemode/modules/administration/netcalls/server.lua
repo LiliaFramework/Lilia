@@ -43,7 +43,7 @@ net.Receive("lia_managesitrooms_action", function(_, client)
     if action == 1 then
         local targetPos = rooms[name]
         if targetPos then
-            client:SetNW2Vector("previousSitroomPos", client:GetPos())
+            client:setNetVar("previousSitroomPos", client:GetPos())
             client:SetPos(targetPos)
             client:notifyLocalized("sitroomTeleport", name)
             lia.log.add(client, "sendToSitRoom", client:Name(), name)

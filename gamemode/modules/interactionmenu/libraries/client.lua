@@ -148,7 +148,7 @@ lia.keybind.add(KEY_G, "personalActions", function()
     openMenu(MODULE.Actions, false, "actionsMenu", lia.keybind.get(L("personalActions"), KEY_G), "RunLocalOption")
 end)
 
-lia.keybind.add(KEY_F, "quickTakeItem", function()
+lia.keybind.add(KEY_V, "quickTakeItem", function()
     local client = LocalPlayer()
     if not client:getChar() then return end
     local entity = client:getTracedEntity()
