@@ -482,13 +482,8 @@ function GM:PlayerLoadout(client)
         return
     end
 
-    if not character then
-        client:SetNoDraw(true)
-        client:Lock()
-        client:SetNotSolid(true)
-        return
-    end
-
+    client:SetNoDraw(character and true or false)
+    if not character then return end
     client:SetWeaponColor(Vector(0.30, 0.80, 0.10))
     client:StripWeapons()
     client:setLocalVar("blur", nil)

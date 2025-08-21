@@ -14,6 +14,7 @@ function lia.option.add(key, name, desc, default, callback, data)
     if data.type then optionType = data.type end
     local old = lia.option.stored[key]
     local value = old and old.value or default
+    
     if istable(data.options) then
         for k, v in pairs(data.options) do
             if isstring(v) then data.options[k] = L(v) end
@@ -41,6 +42,7 @@ end
 function lia.option.getOptions(key)
     local option = lia.option.stored[key]
     if not option then return {} end
+    
     if option.data.optionsFunc then
         local success, result = pcall(option.data.optionsFunc)
         if success and istable(result) then
@@ -55,6 +57,7 @@ function lia.option.getOptions(key)
     elseif istable(option.data.options) then
         return option.data.options
     end
+    
     return {}
 end
 
