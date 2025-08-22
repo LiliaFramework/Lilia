@@ -797,29 +797,3 @@ net.Receive("liaNetMessage", function()
         lia.error("Received unregistered net message: " .. name)
     end
 end)
-
-net.Receive("OpenInteractionMenu", function()
-    local client = LocalPlayer()
-    if not client:getChar() then return end
-    if IsValid(lia.gui.InteractionMenu) then
-        lia.gui.InteractionMenu:Close()
-        lia.gui.InteractionMenu = nil
-    end
-
-    local interactions = lia.playerinteract.getInteractions(client)
-    if table.IsEmpty(interactions) then return end
-    lia.playerinteract.openMenu(interactions, true, "playerInteractions", lia.keybind.get(L("interactionMenu"), KEY_TAB), "RunInteraction")
-end)
-
-net.Receive("OpenActionsMenu", function()
-    local client = LocalPlayer()
-    if not client:getChar() then return end
-    if IsValid(lia.gui.InteractionMenu) then
-        lia.gui.InteractionMenu:Close()
-        lia.gui.InteractionMenu = nil
-    end
-
-    local actions = lia.playerinteract.getActions(client)
-    if table.IsEmpty(actions) then return end
-    lia.playerinteract.openMenu(actions, false, "actionsMenu", lia.keybind.get(L("personalActions"), KEY_G), "RunInteraction")
-end)
