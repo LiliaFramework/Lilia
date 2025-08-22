@@ -127,9 +127,45 @@ function lia.keybind.add(k, d, cb)
     lia.keybind.stored[d].callback = cb.onPress
     lia.keybind.stored[d].release = cb.onRelease
     lia.keybind.stored[d].shouldRun = cb.shouldRun
-    lia.keybind.stored[d].serverOnly = cb.serverOnly
+    lia.keybind.stored[d].serverOnly = cb.serverOnly or false
     lia.keybind.stored[c] = d
 end
+
+hook.Add("PlayerButtonDown", "liaKeybindPress", function(p, b)
+    local action = lia.keybind.stored[b]
+    if not IsFirstTimePredicted() then return end
+    if action and lia.keybind.stored[action] and lia.keybind.stored[action].callback then
+        local data = lia.keybind.stored[action]
+        if not data.shouldRun or data.shouldRun(p) then
+            if data.serverOnly then
+                net.Start("liaKeybindServer")
+                net.WriteString(action)
+                net.WriteEntity(p)
+                net.SendToServer()
+            elseif CLIENT then
+                data.callback(p)
+            end
+        end
+    end
+end)
+
+hook.Add("PlayerButtonUp", "liaKeybindRelease", function(p, b)
+    local action = lia.keybind.stored[b]
+    if not IsFirstTimePredicted() then return end
+    if action and lia.keybind.stored[action] and lia.keybind.stored[action].release then
+        local data = lia.keybind.stored[action]
+        if not data.shouldRun or data.shouldRun(p) then
+            if data.serverOnly then
+                net.Start("liaKeybindServer")
+                net.WriteString(action .. "_release")
+                net.WriteEntity(p)
+                net.SendToServer()
+            elseif CLIENT then
+                data.release(p)
+            end
+        end
+    end
+end)
 
 function lia.keybind.get(a, df)
     local act = lia.keybind.stored[a]
@@ -149,11 +185,7 @@ function lia.keybind.save()
     end
 
     local j = util.TableToJSON(d, true)
-    if j then
-        file.Write(s, j)
-        local legacy = dp .. "/" .. f .. ".txt"
-        if file.Exists(legacy, "DATA") then file.Delete(legacy) end
-    end
+    if j then file.Write(s, j) end
 end
 
 function lia.keybind.load()
@@ -162,16 +194,7 @@ function lia.keybind.load()
     local ip = string.Explode(":", game.GetIPAddress())[1]
     local f = ip:gsub("%.", "_")
     local jsonPath = dp .. "/" .. f .. ".json"
-    local legacyPath = dp .. "/" .. f .. ".txt"
     local d = file.Read(jsonPath, "DATA")
-    if not d and file.Exists(legacyPath, "DATA") then
-        d = file.Read(legacyPath, "DATA")
-        if d then
-            file.Write(jsonPath, d)
-            file.Delete(legacyPath)
-        end
-    end
-
     if d then
         local s = util.JSONToTable(d)
         for k, v in pairs(s) do
@@ -195,42 +218,6 @@ function lia.keybind.load()
 
     hook.Run("InitializedKeybinds")
 end
-
-hook.Add("PlayerButtonDown", "liaKeybindPress", function(p, b)
-    local action = lia.keybind.stored[b]
-    if not IsFirstTimePredicted() then return end
-    if action and lia.keybind.stored[action] and lia.keybind.stored[action].callback then
-        local data = lia.keybind.stored[action]
-        if not data.shouldRun or data.shouldRun(p) then
-            if data.serverOnly then
-                net.Start("liaKeybindServer")
-                net.WriteString(action)
-                net.WriteEntity(p)
-                net.SendToServer()
-            else
-                data.callback(p)
-            end
-        end
-    end
-end)
-
-hook.Add("PlayerButtonUp", "liaKeybindRelease", function(p, b)
-    local action = lia.keybind.stored[b]
-    if not IsFirstTimePredicted() then return end
-    if action and lia.keybind.stored[action] and lia.keybind.stored[action].release then
-        local data = lia.keybind.stored[action]
-        if not data.shouldRun or data.shouldRun(p) then
-            if data.serverOnly then
-                net.Start("liaKeybindServer")
-                net.WriteString(action .. "_release")
-                net.WriteEntity(p)
-                net.SendToServer()
-            else
-                data.release(p)
-            end
-        end
-    end
-end)
 
 hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
     local function buildKeybinds(parent)
@@ -432,6 +419,19 @@ lia.keybind.add(KEY_NONE, "adminMode", {
                     client:notifyLocalized("noStaffChar")
                 end
             end)
+        end
+    end
+})
+
+lia.keybind.add(KEY_NONE, "quickTakeItem", {
+    serverOnly = true,
+    onPress = function(client)
+        if not client:getChar() then return end
+        local entity = client:getTracedEntity()
+        if IsValid(entity) and entity:isItem() then
+            if entity:GetPos():Distance(client:GetPos()) > 96 then return end
+            local itemTable = entity:getItemTable()
+            if itemTable and itemTable.functions and itemTable.functions.take and itemTable.functions.take.onCanRun and itemTable.functions.take.onCanRun(itemTable) then if itemTable.functions.take.onRun then itemTable.functions.take.onRun(itemTable, client, entity) end end
         end
     end
 })

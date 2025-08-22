@@ -737,6 +737,39 @@ lia.item.generateWeapons()
 
 ---
 
+### lia.item.generateAmmo
+
+**Purpose**
+
+Automatically generates item definitions for ammo entities found in the game's scripted entities list,
+specifically targeting ARC9 and ARCCW ammo types. Creates item definitions with appropriate names,
+descriptions, categories, and models for ammo pickups.
+
+
+**Parameters**
+
+* None.
+
+
+**Returns**
+
+* None.
+
+
+**Realm**
+
+`Shared.`
+
+
+**Example Usage**
+
+```lua
+-- Generate all ammo items (usually called automatically)
+lia.item.generateAmmo()
+```
+
+---
+
 ### lia.item.setItemDataByID
 
 **Purpose**
@@ -784,15 +817,16 @@ end
 **Purpose**
 
 Creates a new item instance in the database and in memory, optionally calling a callback when ready.
+Supports flexible parameter ordering for convenience.
 
 
 **Parameters**
 
-* `index` (*number|string*): Inventory ID or uniqueID (see usage).
-* `uniqueID` (*string*): The unique identifier of the item definition.
+* `index` (*number|string*): Inventory ID, or if first parameter is a string, this becomes the uniqueID.
+* `uniqueID` (*string*): The unique identifier of the item definition (can be first parameter if index is string).
 * `itemData` (*table*): Table of item data (optional).
-* `x` (*number*): X position in inventory (optional).
-* `y` (*number*): Y position in inventory (optional).
+* `x` (*number*): X position in inventory (optional, can be passed in itemData.x).
+* `y` (*number*): Y position in inventory (optional, can be passed in itemData.y).
 * `callback` (*function*): Function to call with the created item (optional).
 
 
@@ -811,8 +845,19 @@ Creates a new item instance in the database and in memory, optionally calling a 
 **Example Usage**
 
 ```lua
+-- Standard usage with all parameters
 lia.item.instance(0, "weapon_ak47", {durability = 100}, 1, 1, function(item)
-print("Spawned AK47 item with ID:", item.id)
+    print("Spawned AK47 item with ID:", item.id)
+end)
+
+-- Flexible usage - uniqueID can be first parameter
+lia.item.instance("weapon_ak47", {durability = 100}, function(item)
+    print("Spawned AK47 item with ID:", item.id)
+end)
+
+-- Position can be passed in itemData
+lia.item.instance(0, "weapon_ak47", {durability = 100, x = 1, y = 1}, function(item)
+    print("Spawned AK47 item with ID:", item.id)
 end)
 ```
 
@@ -887,15 +932,16 @@ lia.item.loadItemByID({1001, 1002, 1003})
 **Purpose**
 
 Spawns a new item instance in the world at a given position and angle, optionally calling a callback.
+Supports flexible parameter ordering for convenience.
 
 
 **Parameters**
 
 * `uniqueID` (*string*): The unique identifier of the item definition.
 * `position` (*Vector*): The world position to spawn the item at.
-* `callback` (*function*): Function to call with the spawned item (optional).
-* `angles` (*Angle*): The angles to spawn the item with (optional).
-* `data` (*table*): Table of item data (optional).
+* `callback` (*function*): Function to call with the spawned item (optional). If not a function, can be angles or data.
+* `angles` (*Angle*): The angles to spawn the item with (optional). Can be passed as third parameter.
+* `data` (*table*): Table of item data (optional). Can be passed as third or fourth parameter.
 
 
 
@@ -913,8 +959,24 @@ Spawns a new item instance in the world at a given position and angle, optionall
 **Example Usage**
 
 ```lua
+-- Standard usage with callback
 lia.item.spawn("weapon_ak47", Vector(0,0,0), function(item)
-print("Spawned AK47 at origin with ID:", item.id)
+    print("Spawned AK47 at origin with ID:", item.id)
+end)
+
+-- With angles and data
+lia.item.spawn("weapon_ak47", Vector(0,0,0), Angle(0,0,0), {durability = 100}, function(item)
+    print("Spawned AK47 at origin with ID:", item.id)
+end)
+
+-- Flexible usage - angles as third parameter
+lia.item.spawn("weapon_ak47", Vector(0,0,0), Angle(0,0,0), function(item)
+    print("Spawned AK47 at origin with ID:", item.id)
+end)
+
+-- Data as third parameter
+lia.item.spawn("weapon_ak47", Vector(0,0,0), {durability = 100}, function(item)
+    print("Spawned AK47 at origin with ID:", item.id)
 end)
 ```
 

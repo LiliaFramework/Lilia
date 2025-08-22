@@ -1,5 +1,4 @@
-﻿local MODULE = MODULE
-ENT.Type = "anim"
+﻿ENT.Type = "anim"
 ENT.PrintName = L("storage")
 ENT.Category = "Lilia"
 ENT.Spawnable = false
@@ -13,5 +12,5 @@ end
 function ENT:getStorageInfo()
     local model = self:GetModel()
     if not model then return end
-    return MODULE.StorageDefinitions[model:lower()]
+    return lia.inventory.getStorage(model:lower())
 end

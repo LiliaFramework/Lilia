@@ -21,7 +21,7 @@
 }
 
 function MODULE:PlayerSpawnedProp(client, model, entity)
-    local data = self.StorageDefinitions[model:lower()]
+    local data = lia.inventory.getStorage(model:lower())
     if not data then return end
     if hook.Run("CanPlayerSpawnStorage", client, entity, data) == false then return end
     local storage = ents.Create("lia_storage")
@@ -67,7 +67,6 @@ function MODULE:CanPlayerInteractItem(_, action, itemObject)
 end
 
 function MODULE:EntityRemoved(entity)
-    self.Vehicles[entity] = nil
     if not self:isSuitableForTrunk(entity) then return end
     local storageInv = lia.inventory.instances[entity:getNetVar("inv")]
     if storageInv then storageInv:delete() end
@@ -75,21 +74,7 @@ end
 
 function MODULE:OnEntityCreated(entity)
     if not self:isSuitableForTrunk(entity) then return end
-    if entity:isSimfphysCar() then
-        net.Start("trunkInitStorage")
-        net.WriteBool(false)
-        net.WriteEntity(entity)
-        net.Broadcast()
-    end
-
     self:InitializeStorage(entity)
-end
-
-function MODULE:PlayerInitialSpawn(client)
-    net.Start("trunkInitStorage")
-    net.WriteBool(true)
-    net.WriteTable(self.Vehicles)
-    net.Send(client)
 end
 
 function MODULE:StorageInventorySet(_, inventory, isCar)

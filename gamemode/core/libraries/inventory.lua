@@ -1,5 +1,6 @@
 ﻿lia.inventory = lia.inventory or {}
 lia.inventory.types = lia.inventory.types or {}
+lia.inventory.storage = lia.inventory.storage or {}
 lia.inventory.instances = lia.inventory.instances or {}
 local function serverOnly(value)
     return SERVER and value or nil
@@ -134,6 +135,69 @@ if SERVER then
     function lia.inventory.cleanUpForCharacter(character)
         for _, inventory in pairs(character:getInv(true)) do
             inventory:destroy()
+        end
+    end
+
+    function lia.inventory.registerStorage(model, data)
+        assert(isstring(model), "Model must be a string")
+        assert(istable(data), "Data must be a table")
+        assert(isstring(data.name), "Storage name is required")
+        assert(isstring(data.invType), "Inventory type is required")
+        assert(istable(data.invData), "Inventory data is required")
+        lia.inventory.storage[model:lower()] = data
+        return data
+    end
+
+    function lia.inventory.getStorage(model)
+        if not model then return end
+        return lia.inventory.storage[model:lower()]
+    end
+
+    function lia.inventory.registerTrunk(vehicleClass, data)
+        assert(isstring(vehicleClass), "Vehicle class must be a string")
+        assert(istable(data), "Data must be a table")
+        assert(isstring(data.name), "Trunk name is required")
+        assert(isstring(data.invType), "Inventory type is required")
+        assert(istable(data.invData), "Inventory data is required")
+
+        -- Use trunkInvW and trunkInvH config values as defaults if not specified
+        if not data.invData.w then
+            data.invData.w = lia.config.get("trunkInvW", 10)
+        end
+        if not data.invData.h then
+            data.invData.h = lia.config.get("trunkInvH", 2)
+        end
+
+        -- Add trunk identifier and merge into storage table
+        data.isTrunk = true
+        data.trunkKey = vehicleClass:lower()
+        lia.inventory.storage[vehicleClass:lower()] = data
+        return data
+    end
+
+    function lia.inventory.getTrunk(vehicleClass)
+        if not vehicleClass then return end
+        local trunkData = lia.inventory.storage[vehicleClass:lower()]
+        return trunkData and trunkData.isTrunk and trunkData or nil
+    end
+
+    function lia.inventory.getAllTrunks()
+        local trunks = {}
+        for key, data in pairs(lia.inventory.storage) do
+            if data.isTrunk then trunks[key] = data end
+        end
+        return trunks
+    end
+
+    function lia.inventory.getAllStorage(includeTrunks)
+        if includeTrunks ~= false then
+            return lia.inventory.storage
+        else
+            local storageOnly = {}
+            for key, data in pairs(lia.inventory.storage) do
+                if not data.isTrunk then storageOnly[key] = data end
+            end
+            return storageOnly
         end
     end
 else

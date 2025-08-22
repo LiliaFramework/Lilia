@@ -178,7 +178,7 @@ local dist = lia.option.get("thirdPersonDistance", 50)
 
 **Purpose**
 
-Writes all current option values to `data/lilia/options/<gamemode>/<serverip>.txt` in JSON format. Only options with non-`nil` values are written.
+Writes all current option values to `data/lilia/options/<gamemode>/<serverip>.json` in JSON format. Only options with non-`nil` values are written.
 
 **Parameters**
 

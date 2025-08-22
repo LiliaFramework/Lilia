@@ -6,7 +6,7 @@ This page describes functions for registering and managing custom keybinds in th
 
 ## Overview
 
-The keybind library runs **client-side** and stores user-defined key bindings in `lia.keybind.stored`. Bindings are saved to `data/lilia/keybinds/<gamemode>/<server-ip>.json` (using the server IP with dots replaced by underscores) and loaded automatically on start. If a legacy `.txt` file exists it is migrated to the new JSON format.
+The keybind library runs **client-side** and stores user-defined key bindings in `lia.keybind.stored`. Bindings are saved to `data/lilia/keybinds/<gamemode>/<server-ip>.json` (using the server IP with dots replaced by underscores) and loaded automatically on start.
 
 Keybinds are triggered through `PlayerButtonDown` and `PlayerButtonUp` hooks, and a "Keybinds" page is added to the configuration menu via `PopulateConfigurationButtons`. Editing in this menu can be disabled with the `AllowKeybindEditing` configuration option.
 
@@ -127,7 +127,7 @@ print("Inventory key:", input.GetKeyName(invKey or KEY_NONE))
 
 **Purpose**
 
-Persist all current keybinds to `data/lilia/keybinds/<gamemode>/<server-ip>.json`. Only entries with a `value` field are written and legacy `.txt` files are cleaned up.
+Persist all current keybinds to `data/lilia/keybinds/<gamemode>/<server-ip>.json`. Only entries with a `value` field are written.
 
 **Parameters**
 
@@ -154,7 +154,7 @@ lia.keybind.save()
 
 **Purpose**
 
-Load keybinds from disk. Legacy `.txt` files are automatically converted to `.json`. If no keybind file exists, defaults registered via `lia.keybind.add` are applied and saved. After loading, numeric indexes are cleared, reverse lookup mappings are rebuilt, and the `InitializedKeybinds` hook fires.
+Load keybinds from disk. If no keybind file exists, defaults registered via `lia.keybind.add` are applied and saved. After loading, numeric indexes are cleared, reverse lookup mappings are rebuilt, and the `InitializedKeybinds` hook fires.
 
 **Parameters**
 
@@ -204,6 +204,8 @@ When `serverOnly` is set to true in a keybind callback, the action is executed s
 2. The server receives the message and executes the callback function
 3. The same process occurs for release actions with `_release` suffix
 
+The server-side execution includes improved error handling with `pcall` to prevent crashes from invalid callbacks.
+
 This allows server-side validation and execution while maintaining the responsive feel of client-side keybinds.
 
 ---
@@ -226,10 +228,13 @@ The editing functionality can be disabled by setting `lia.config.get("AllowKeybi
 
 The library registers several default keybinds:
 
-* `openInventory` - Opens the F1 menu with inventory tab active
-* `adminMode` - Switches to/from staff character mode (server-side only)
+* `openInventory` - Opens the F1 menu with inventory tab active (initially unbound)
+* `adminMode` - Switches to/from staff character mode (server-side only, initially unbound)
+* `quickTakeItem` - Quickly takes items from the ground (server-side only, initially unbound)
+* `interactionMenu` - Opens the player interaction menu (bound to TAB by default)
+* `personalActions` - Opens the personal actions menu (bound to G by default)
 
-These default keybinds are initially unbound (`KEY_NONE`) and must be assigned by the user.
+These default keybinds are initially unbound (`KEY_NONE`) and must be assigned by the user, except for the interaction menu keybinds which have default assignments.
 
 ---
 
@@ -248,4 +253,24 @@ data/lilia/keybinds/<gamemode>/<server-ip>.json
 
 Where `<server-ip>` has dots replaced with underscores (e.g., `192_168_1_1.json`).
 
-Legacy `.txt` files are automatically migrated to the new JSON format and then deleted.
+---
+
+## Implementation Details
+
+### Data Structure
+
+The library uses a dual-indexing system:
+- Action names as keys pointing to data tables
+- Key codes as keys pointing to action names for reverse lookup
+
+### Validation
+
+The `shouldRun` function is called before executing any keybind callback, allowing for conditional execution based on player state, permissions, or other game logic.
+
+### Error Handling
+
+Server-side keybinds use `pcall` to prevent crashes from invalid callbacks, with error messages printed to the console.
+
+### Performance
+
+The library rebuilds reverse lookup mappings after loading to ensure efficient key-to-action resolution during gameplay.

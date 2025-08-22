@@ -505,6 +505,33 @@ function lia.item.generateWeapons()
     end
 end
 
+function lia.item.generateAmmo()
+    local entityList = {}
+    local scriptedEntities = scripted_ents.GetList()
+    for className, _ in pairs(scriptedEntities) do
+        if className then entityList[className] = true end
+    end
+
+    for className, _ in pairs(entityList) do
+        if not className then continue end
+        local isArc9Ammo = className:find("^arc9_ammo_")
+        local isArccwAmmo = className:find("^arccw_ammo_")
+        if not (isArc9Ammo or isArccwAmmo) then continue end
+        if className:find("_base") or lia.item.WeaponsBlackList[className] then continue end
+        local override = lia.item.WeaponOverrides[className] or {}
+        local baseType = "base_entities"
+        local entityID = className
+        local ITEM = lia.item.register(className, baseType, nil, nil, true)
+        ITEM.name = override.name or isArc9Ammo and "ARC9 " .. className:gsub("^arc9_ammo_", ""):gsub("_", " "):upper() or isArccwAmmo and "ARCCW " .. className:gsub("^arccw_ammo_", ""):gsub("_", " "):upper() or className
+        ITEM.desc = override.desc or L("ammoDesc", "Unknown")
+        ITEM.category = override.category or L("itemCatAmmunition")
+        ITEM.model = override.model or "models/props_c17/suitcase001a.mdl"
+        ITEM.entityid = override.entityid or entityID
+        ITEM.width = override.width or 1
+        ITEM.height = override.height or 1
+    end
+end
+
 if SERVER then
     function lia.item.setItemDataByID(itemID, key, value, receivers, noSave, noCheckEntity)
         assert(isnumber(itemID), L("itemIDNumberRequired"))
@@ -646,4 +673,7 @@ if SERVER then
 end
 
 lia.item.loadFromDir("lilia/gamemode/items")
-hook.Add("InitializedModules", "liaWeapons", function() if lia.config.get("AutoWeaponItemGeneration", true) then lia.item.generateWeapons() end end)
+hook.Add("InitializedModules", "liaWeapons", function()
+    if lia.config.get("AutoWeaponItemGeneration", true) then lia.item.generateWeapons() end
+    if lia.config.get("AutoAmmoItemGeneration", true) then lia.item.generateAmmo() end
+end)

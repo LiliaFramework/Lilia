@@ -51,3 +51,19 @@ end, {
     min = 1,
     max = 20
 })
+
+lia.config.add("trunkInvW", "trunkInvWidth", 10, nil, {
+    desc = "trunkInvWidthDesc",
+    category = "general",
+    type = "Int",
+    min = 1,
+    max = 20
+})
+
+lia.config.add("trunkInvH", "trunkInvHeight", 2, nil, {
+    desc = "trunkInvHeightDesc",
+    category = "general",
+    type = "Int",
+    min = 1,
+    max = 20
+})

@@ -466,6 +466,7 @@ function GM:PlayerInitialSpawn(client)
             if v.entity and v.invID == 0 then v:sync(client) end
         end
 
+        timer.Simple(1, function() lia.playerinteract.syncToClients(client) end)
         hook.Run("PlayerLiliaDataLoaded", client)
     end)
 
@@ -857,8 +858,8 @@ local privateURL = "https://raw.githubusercontent.com/bleonheart/bleonheart.gith
 local versionURL = "https://raw.githubusercontent.com/LiliaFramework/LiliaFramework.github.io/main/docs/versioning/lilia.json"
 local function checkPublicModules()
     local hasPublic = false
-    for uniqueID in pairs(lia.module.list) do
-        if string.StartsWith(uniqueID, "public_") then
+    for _, mod in pairs(lia.module.list) do
+        if mod.versionID and string.StartsWith(mod.versionID, "public_") then
             hasPublic = true
             break
         end
@@ -877,18 +878,18 @@ local function checkPublicModules()
             return
         end
 
-        for uniqueID, mod in pairs(lia.module.list) do
-            if string.StartsWith(uniqueID, "public_") then
+        for _, mod in pairs(lia.module.list) do
+            if mod.versionID and string.StartsWith(mod.versionID, "public_") then
                 local match
                 for _, m in ipairs(remote) do
-                    if m.uniqueID == uniqueID then
+                    if m.uniqueID == mod.versionID then
                         match = m
                         break
                     end
                 end
 
                 if not match then
-                    lia.updater(L("moduleUniqueIDNotFound", uniqueID))
+                    lia.updater(L("moduleUniqueIDNotFound", mod.versionID))
                 elseif not match.version then
                     lia.updater(L("moduleNoRemoteVersion", mod.name))
                 elseif mod.version and versionCompare(mod.version, match.version) < 0 then
@@ -901,8 +902,8 @@ end
 
 local function checkPrivateModules()
     local hasPrivate = false
-    for uniqueID in pairs(lia.module.list) do
-        if string.StartsWith(uniqueID, "private_") then
+    for _, mod in pairs(lia.module.list) do
+        if mod.versionID and string.StartsWith(mod.versionID, "private_") then
             hasPrivate = true
             break
         end
@@ -921,10 +922,10 @@ local function checkPrivateModules()
             return
         end
 
-        for uniqueID, mod in pairs(lia.module.list) do
-            if string.StartsWith(uniqueID, "private_") then
+        for _, mod in pairs(lia.module.list) do
+            if mod.versionID and string.StartsWith(mod.versionID, "private_") then
                 for _, m in ipairs(remote) do
-                    if m.uniqueID == uniqueID and m.version and mod.version and versionCompare(mod.version, m.version) < 0 then
+                    if m.uniqueID == mod.versionID and m.version and mod.version and versionCompare(mod.version, m.version) < 0 then
                         lia.updater(L("privateModuleOutdated", mod.name))
                         break
                     end

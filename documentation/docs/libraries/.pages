@@ -27,6 +27,7 @@ arrange:
   - lia.networking.md
   - lia.notice.md
   - lia.option.md
+  - lia.playerinteract.md
   - lia.time.md
   - lia.util.md
   - lia.workshop.md

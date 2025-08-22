@@ -1,7 +1,5 @@
 ﻿lia.module = lia.module or {}
 lia.module.list = lia.module.list or {}
-local ModuleFolders = {"config", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma", "pim"}
-local ModuleFiles = {"pim.lua", "client.lua", "server.lua", "config.lua", "commands.lua", "networking.lua"}
 local function loadPermissions(Privileges)
     if not Privileges or not istable(Privileges) then return end
     for _, privilegeData in ipairs(Privileges) do
@@ -28,26 +26,6 @@ local function loadDependencies(dependencies)
     end
 end
 
-local function loadExtras(path)
-    lia.lang.loadFromDir(path .. "/languages")
-    lia.faction.loadFromDir(path .. "/factions")
-    lia.class.loadFromDir(path .. "/classes")
-    lia.attribs.loadFromDir(path .. "/attributes")
-    for _, fileName in ipairs(ModuleFiles) do
-        local filePath = path .. "/" .. fileName
-        if file.Exists(filePath, "LUA") then lia.include(filePath) end
-    end
-
-    for _, folder in ipairs(ModuleFolders) do
-        local subPath = path .. "/" .. folder
-        if file.Exists(subPath, "LUA") then lia.includeDir(subPath, true, true) end
-    end
-
-    lia.includeEntities(path .. "/entities")
-    if MODULE.uniqueID ~= "schema" then lia.item.loadFromDir(path .. "/items") end
-    hook.Run("DoModuleIncludes", path, MODULE)
-end
-
 local function loadSubmodules(path)
     local files, folders = file.Find(path .. "/submodules/*", "LUA")
     if #files > 0 or #folders > 0 then lia.module.loadFromDir(path .. "/submodules", "module") end
@@ -61,6 +39,34 @@ local function collectModuleIDs(directory)
         ids[folderName] = true
     end
     return ids
+end
+
+local function loadExtras(path)
+    local ModuleFiles = {
+        pim = "server",
+        config = "shared",
+        commands = "shared",
+        networking = "server",
+    }
+
+    local ModuleFolders = {"config", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma"}
+    lia.lang.loadFromDir(path .. "/languages")
+    lia.faction.loadFromDir(path .. "/factions")
+    lia.class.loadFromDir(path .. "/classes")
+    lia.attribs.loadFromDir(path .. "/attributes")
+    for fileName, realm in pairs(ModuleFiles) do
+        local filePath = path .. "/" .. fileName .. ".lua"
+        if file.Exists(filePath, "LUA") then lia.include(filePath, realm) end
+    end
+
+    for _, folder in ipairs(ModuleFolders) do
+        local subPath = path .. "/" .. folder
+        if file.Exists(subPath, "LUA") then lia.includeDir(subPath, true, true) end
+    end
+
+    lia.includeEntities(path .. "/entities")
+    if MODULE.uniqueID ~= "schema" then lia.item.loadFromDir(path .. "/items") end
+    hook.Run("DoModuleIncludes", path, MODULE)
 end
 
 function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)

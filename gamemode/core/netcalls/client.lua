@@ -786,3 +786,40 @@ net.Receive("liaCharacterData", function()
         character.dataVars[key] = value
     end
 end)
+
+net.Receive("liaNetMessage", function()
+    local name = net.ReadString()
+    local args = net.ReadTable()
+    if lia.net.registry[name] then
+        local success, err = pcall(lia.net.registry[name], LocalPlayer(), unpack(args))
+        if not success then lia.error("Error in net message callback '" .. name .. "': " .. tostring(err)) end
+    else
+        lia.error("Received unregistered net message: " .. name)
+    end
+end)
+
+net.Receive("OpenInteractionMenu", function()
+    local client = LocalPlayer()
+    if not client:getChar() then return end
+    if IsValid(lia.gui.InteractionMenu) then
+        lia.gui.InteractionMenu:Close()
+        lia.gui.InteractionMenu = nil
+    end
+
+    local interactions = lia.playerinteract.getInteractions(client)
+    if table.IsEmpty(interactions) then return end
+    lia.playerinteract.openMenu(interactions, true, "playerInteractions", lia.keybind.get(L("interactionMenu"), KEY_TAB), "RunInteraction")
+end)
+
+net.Receive("OpenActionsMenu", function()
+    local client = LocalPlayer()
+    if not client:getChar() then return end
+    if IsValid(lia.gui.InteractionMenu) then
+        lia.gui.InteractionMenu:Close()
+        lia.gui.InteractionMenu = nil
+    end
+
+    local actions = lia.playerinteract.getActions(client)
+    if table.IsEmpty(actions) then return end
+    lia.playerinteract.openMenu(actions, false, "actionsMenu", lia.keybind.get(L("personalActions"), KEY_G), "RunInteraction")
+end)

@@ -325,7 +325,7 @@ function QuickPanel:populateOptions()
         end
     end
 
-    if not next(cats) then
+    if table.IsEmpty(cats) then
         self:Remove()
         return
     end

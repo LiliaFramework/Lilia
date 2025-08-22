@@ -86,7 +86,7 @@ function lia.option.save()
     file.CreateDir(dir)
     local ip = string.Explode(":", game.GetIPAddress())[1]
     local name = ip:gsub("%.", "_")
-    local path = dir .. "/" .. name .. ".txt"
+    local path = dir .. "/" .. name .. ".json"
     local out = {}
     for k, v in pairs(lia.option.stored) do
         if v.value ~= nil then out[k] = v.value end
@@ -101,7 +101,7 @@ function lia.option.load()
     file.CreateDir(dir)
     local ip = string.Explode(":", game.GetIPAddress())[1]
     local name = ip:gsub("%.", "_")
-    local path = dir .. "/" .. name .. ".txt"
+    local path = dir .. "/" .. name .. ".json"
     local data = file.Read(path, "DATA")
     if data then
         local saved = util.JSONToTable(data)

@@ -237,7 +237,7 @@ function lia.data.delete(key, global, ignoreMap)
     lia.data.stored[key] = nil
     local condition = buildCondition(gamemode, map)
     lia.db.waitForTablesToLoad():next(function()
-        if not next(lia.data.stored) then
+        if table.IsEmpty(lia.data.stored) then
             return lia.db.delete("data", condition)
         else
             local row = {

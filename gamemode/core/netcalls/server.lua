@@ -119,6 +119,30 @@ net.Receive("invAct", function(_, client)
     item:interact(action, client, entity, data)
 end)
 
+net.Receive("RunInteraction", function(_, ply)
+    if lia.config.get("DisableCheaterActions", true) and ply:getNetVar("cheater", false) then
+        lia.log.add(ply, "cheaterAction", L("cheaterActionUseInteractionMenu"))
+        ply:notifyLocalized("maybeYouShouldntHaveCheated")
+        return
+    end
+
+    local name = net.ReadString()
+    local hasEntity = net.ReadBool()
+    local tracedEntity = hasEntity and net.ReadEntity() or nil
+    local opt = lia.playerinteract.stored[name]
+    if opt and opt.type == "interaction" and opt.serverOnly and IsValid(tracedEntity) and lia.playerinteract.isWithinRange(ply, tracedEntity, opt.range) then
+        if tracedEntity:IsPlayer() then
+            local target = tracedEntity:IsBot() and ply or tracedEntity
+            opt.onRun(ply, target)
+        else
+            opt.onRun(ply, tracedEntity)
+        end
+        return
+    end
+
+    if opt and opt.type == "action" and opt.serverOnly then opt.onRun(ply) end
+end)
+
 net.Receive("cmd", function(_, client)
     local command = net.ReadString()
     local arguments = net.ReadTable()
@@ -137,4 +161,15 @@ net.Receive("liaCharFetchNames", function(_, client)
     net.Start("liaCharFetchNames")
     net.WriteTable(lia.char.names)
     net.Send(client)
+end)
+
+net.Receive("liaNetMessage", function(_, client)
+    local name = net.ReadString()
+    local args = net.ReadTable()
+    if lia.net.registry[name] then
+        local success, err = pcall(lia.net.registry[name], client, unpack(args))
+        if not success then lia.error("Error in net message callback '" .. name .. "': " .. tostring(err)) end
+    else
+        lia.error("Received unregistered net message: " .. name)
+    end
 end)

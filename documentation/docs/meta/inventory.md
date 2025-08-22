@@ -48,7 +48,8 @@ Example Usage:
 
 
 Purpose:
-    Configures the inventory type. Intended to be overridden by subclasses.
+    Configures the inventory type.
+    This is a hook method intended to be overridden by subclasses to implement custom configuration logic.
 
 Parameters:
     None.
@@ -436,7 +437,7 @@ Example Usage:
 
 Purpose:
     Restores the inventory from persistent storage.
-    (To be implemented by subclasses if needed.)
+    This is a hook method intended to be overridden by subclasses to implement custom restoration logic.
 
 Parameters:
     None.
@@ -497,7 +498,8 @@ Example Usage:
 
 
 Purpose:
-    Sets a data key to a value, updates the database, and synchronizes the change.
+    Sets a data key to a value, updates the database (if persistent), synchronizes the change to clients, and triggers any registered data proxies.
+    Special handling for the "char" key updates the character's inventory association.
 
 Parameters:
     key (string) - The data key to set.
@@ -600,7 +602,8 @@ Example Usage:
 
 
 Purpose:
-    Called when the inventory is instanced. Intended to be overridden.
+    Called when the inventory is instanced.
+    This is a hook method intended to be overridden by subclasses to implement custom initialization logic.
 
 Parameters:
     None.
@@ -620,7 +623,8 @@ Example Usage:
 
 
 Purpose:
-    Called when the inventory is loaded. Intended to be overridden.
+    Called when the inventory is loaded.
+    This is a hook method intended to be overridden by subclasses to implement custom loading logic.
 
 Parameters:
     None.
@@ -660,7 +664,8 @@ Example Usage:
 
 
 Purpose:
-    Called after items are loaded from the database. Intended to be overridden.
+    Called after items are loaded from the database.
+    This is a hook method intended to be overridden by subclasses to implement custom item loading logic.
 
 Parameters:
     items (table) - The loaded items.

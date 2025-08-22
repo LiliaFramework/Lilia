@@ -5,7 +5,7 @@ end
 
 local function LogCheaterAction(client, action)
     lia.log.add(client, "cheaterAction", action)
-    client:notify("Maybe you shouldn't have cheated")
+    client:notifyLocalized("maybeYouShouldntHaveCheated")
 end
 
 function MODULE:CanPlayerSwitchChar(client, character, newCharacter)

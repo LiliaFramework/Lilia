@@ -14,13 +14,11 @@ The inventory library manages item containers and grid inventories. It maintains
 
 **Purpose**
 
-Registers a new inventory type and validates that the structure matches
-`InvTypeStructType` before storing it for later use.
+Registers a new inventory type with comprehensive validation. The function checks that the structure matches `InvTypeStructType`, validates all nested table structures, and ensures no duplicate types are registered.
 
 **Parameters**
 
 * `typeID` (*string*): Unique identifier. Must not already be registered.
-
 * `invTypeStruct` (*table*): Definition matching `InvTypeStructType`. Must include `__index`, `typeID`, and `className`; server-side definitions may also provide `add`, `remove`, and `sync` functions.
 
 **Realm**
@@ -30,6 +28,12 @@ Registers a new inventory type and validates that the structure matches
 **Returns**
 
 * *nil*: This function does not return a value.
+
+**Throws**
+
+* Error if `typeID` is already registered
+* Error if `invTypeStruct` is not a table
+* Error if structure validation fails
 
 **Example Usage**
 
@@ -145,13 +149,11 @@ end)
 
 **Purpose**
 
-Creates and persists a new inventory instance, allocating storage and caching
-the result.
+Creates and persists a new inventory instance with validation, allocating storage and caching the result.
 
 **Parameters**
 
 * `typeID` (*string*): Inventory type identifier. Must refer to a registered type.
-
 * `initialData` (*table*): Optional initial data. Defaults to an empty table and must be a table if provided.
 
 **Realm**
@@ -161,6 +163,11 @@ the result.
 **Returns**
 
 * *deferred*: Resolves to the created inventory instance.
+
+**Throws**
+
+* Error if `typeID` is invalid or not registered
+* Error if `initialData` is provided but not a table
 
 **Example Usage**
 
@@ -176,11 +183,11 @@ end)
 
 **Purpose**
 
-Loads every inventory that belongs to a character. If `charID` cannot be converted to a number the returned deferred is rejected and an error is logged.
+Loads every inventory that belongs to a character with comprehensive error handling. If `charID` cannot be converted to a number, the returned deferred is rejected with a detailed error message.
 
 **Parameters**
 
-* `charID` (*number*): Character ID. Must be numeric.
+* `charID` (*number* or convertible): Character ID. Must be numeric or convertible to a number.
 
 **Realm**
 
@@ -188,7 +195,11 @@ Loads every inventory that belongs to a character. If `charID` cannot be convert
 
 **Returns**
 
-* *deferred*: Resolves to a table of inventories.
+* *deferred*: Resolves to a table of inventories or rejects with an error message if `charID` is invalid.
+
+**Throws**
+
+* Error if `charID` cannot be converted to a number (includes original value and type in error message)
 
 **Example Usage**
 
@@ -285,6 +296,195 @@ local inv = LocalPlayer():getChar():getInv()
 
 if inv then
     local panel = lia.inventory.show(inv)
+end
+```
+
+---
+
+### lia.inventory.registerStorage
+
+**Purpose**
+
+Registers a storage model with associated inventory data for use in the game world. This allows entities with specific models to have inventory functionality.
+
+**Parameters**
+
+* `model` (*string*): The model path of the entity. Must be a string.
+* `data` (*table*): Storage configuration table containing:
+  - `name` (*string*): Display name for the storage
+  - `invType` (*string*): Inventory type identifier
+  - `invData` (*table*): Initial inventory data/configuration
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *table*: The registered storage data
+
+**Example Usage**
+
+```lua
+lia.inventory.registerStorage("models/props_c17/lockers001a.mdl", {
+    name = "Locker",
+    invType = "grid",
+    invData = {w = 5, h = 5}
+})
+```
+
+---
+
+### lia.inventory.getStorage
+
+**Purpose**
+
+Retrieves storage configuration data for a specific model.
+
+**Parameters**
+
+* `model` (*string*): The model path to look up. Optional, returns nil if not provided.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *table* or *nil*: Storage configuration data if found, nil otherwise
+
+**Example Usage**
+
+```lua
+local storageData = lia.inventory.getStorage("models/props_c17/lockers001a.mdl")
+if storageData then
+    print("Storage name:", storageData.name)
+end
+```
+
+---
+
+### lia.inventory.registerTrunk
+
+**Purpose**
+
+Registers a vehicle trunk with inventory functionality. Automatically sets default dimensions from config values if not specified and marks the storage as a trunk.
+
+**Parameters**
+
+* `vehicleClass` (*string*): The vehicle class name. Must be a string.
+* `data` (*table*): Trunk configuration table containing:
+  - `name` (*string*): Display name for the trunk
+  - `invType` (*string*): Inventory type identifier
+  - `invData` (*table*): Initial inventory data/configuration (w and h default to config values)
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *table*: The registered trunk data
+
+**Example Usage**
+
+```lua
+lia.inventory.registerTrunk("prop_vehicle_jeep", {
+    name = "Jeep Trunk",
+    invType = "grid",
+    invData = {w = 8, h = 4}
+})
+```
+
+---
+
+### lia.inventory.getTrunk
+
+**Purpose**
+
+Retrieves trunk configuration data for a specific vehicle class.
+
+**Parameters**
+
+* `vehicleClass` (*string*): The vehicle class to look up. Optional, returns nil if not provided.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *table* or *nil*: Trunk configuration data if found and it's marked as a trunk, nil otherwise
+
+**Example Usage**
+
+```lua
+local trunkData = lia.inventory.getTrunk("prop_vehicle_jeep")
+if trunkData then
+    print("Trunk name:", trunkData.name)
+end
+```
+
+---
+
+### lia.inventory.getAllTrunks
+
+**Purpose**
+
+Retrieves all registered trunk configurations.
+
+**Parameters**
+
+* None
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *table*: Table of all trunk configurations keyed by vehicle class
+
+**Example Usage**
+
+```lua
+local allTrunks = lia.inventory.getAllTrunks()
+for vehicleClass, trunkData in pairs(allTrunks) do
+    print(vehicleClass .. " has trunk: " .. trunkData.name)
+end
+```
+
+---
+
+### lia.inventory.getAllStorage
+
+**Purpose**
+
+Retrieves all registered storage configurations, with optional filtering to exclude trunks.
+
+**Parameters**
+
+* `includeTrunks` (*boolean*): Optional. When `false`, excludes trunks from the result. Defaults to `true`.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+* *table*: Table of all storage configurations (optionally excluding trunks) keyed by model/vehicle class
+
+**Example Usage**
+
+```lua
+-- Get all storage including trunks
+local allStorage = lia.inventory.getAllStorage()
+
+-- Get only non-trunk storage
+local storageOnly = lia.inventory.getAllStorage(false)
+
+for key, data in pairs(storageOnly) do
+    print("Storage: " .. data.name)
 end
 ```
 
