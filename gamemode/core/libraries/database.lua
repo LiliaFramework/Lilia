@@ -1044,7 +1044,7 @@ concommand.Add("database_list", function(ply)
 end)
 
 function GM:RegisterPreparedStatements()
-            lia.bootstrap(L("database"), L("preparedStatementsAdded"))
+    lia.bootstrap(L("database"), L("preparedStatementsAdded"))
     lia.db.prepare("itemData", "UPDATE lia_items SET data = ? WHERE _itemID = ?", {MYSQLOO_STRING, MYSQLOO_INTEGER})
     lia.db.prepare("itemx", "UPDATE lia_items SET x = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
     lia.db.prepare("itemy", "UPDATE lia_items SET y = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
@@ -1080,7 +1080,7 @@ function GM:SetupDatabase()
 end
 
 function GM:DatabaseConnected()
-            lia.bootstrap(L("database"), L("databaseConnected", lia.db.module))
+    lia.bootstrap(L("database"), L("databaseConnected", lia.db.module))
 end
 
 function GM:OnMySQLOOConnected()

@@ -159,16 +159,8 @@ if SERVER then
         assert(isstring(data.name), "Trunk name is required")
         assert(isstring(data.invType), "Inventory type is required")
         assert(istable(data.invData), "Inventory data is required")
-
-        
-        if not data.invData.w then
-            data.invData.w = lia.config.get("trunkInvW", 10)
-        end
-        if not data.invData.h then
-            data.invData.h = lia.config.get("trunkInvH", 2)
-        end
-
-        
+        if not data.invData.w then data.invData.w = lia.config.get("trunkInvW", 10) end
+        if not data.invData.h then data.invData.h = lia.config.get("trunkInvH", 2) end
         data.isTrunk = true
         data.trunkKey = vehicleClass:lower()
         lia.inventory.storage[vehicleClass:lower()] = data
