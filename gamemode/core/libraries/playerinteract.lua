@@ -50,7 +50,7 @@ if SERVER then
         data.range = data.range or 250
         data.category = data.category or L("categoryUnsorted")
         lia.playerinteract.stored[name] = data
-        -- Auto-generate category if it doesn't exist
+        
         if not lia.playerinteract.categories[data.category] then
             lia.playerinteract.categories[data.category] = {
                 name = data.category,
@@ -64,7 +64,7 @@ if SERVER then
         data.range = data.range or 250
         data.category = data.category or L("categoryUnsorted")
         lia.playerinteract.stored[name] = data
-        -- Auto-generate category if it doesn't exist
+        
         if not lia.playerinteract.categories[data.category] then
             lia.playerinteract.categories[data.category] = {
                 name = data.category,
@@ -184,7 +184,7 @@ else
         end
 
         if #visible == 0 then return end
-        -- Categorize the visible options
+        
         local categorized = lia.playerinteract.getCategorizedOptions(visible)
         local categoryCount = table.Count(categorized)
         local fadeSpeed = 0.05
@@ -243,9 +243,9 @@ else
         local layout = scroll:Add("DIconLayout")
         layout:Dock(FILL)
         layout:SetSpaceY(8)
-        -- Create categorized sections
+        
         for categoryName, categoryOptions in pairs(categorized) do
-            -- Category header
+            
             local categoryHeader = layout:Add("DPanel")
             categoryHeader:Dock(TOP)
             categoryHeader:SetTall(categoryH)
@@ -253,7 +253,7 @@ else
             function categoryHeader:Paint(w, h)
                 draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 180))
                 draw.RoundedBox(4, 2, 2, w - 4, h - 4, Color(60, 60, 60, 120))
-                -- Category name
+                
                 surface.SetFont("liaSmallFont")
                 local textW, textH = surface.GetTextSize(categoryName)
                 local x = (w - textW) / 2
@@ -261,7 +261,7 @@ else
                 draw.SimpleText(categoryName, "liaSmallFont", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             end
 
-            -- Add collapse button
+            
             local collapseBtn = categoryHeader:Add("DButton")
             collapseBtn:SetSize(20, 20)
             collapseBtn:SetPos(10, (categoryH - 20) / 2)
@@ -287,8 +287,8 @@ else
                 layout:InvalidateLayout()
             end
 
-            -- Add options for this category
-            for name, _ in pairs(categoryOptions) do
+            
+            for _, entry in pairs(categoryOptions) do
                 local btn = layout:Add("DButton")
                 btn:Dock(TOP)
                 btn:SetTall(entryH)
@@ -296,8 +296,8 @@ else
                 btn:SetText(L(entry.name))
                 btn:SetFont("liaSmallFont")
                 btn:SetTextColor(color_white)
-                btn:SetContentAlignment(5) -- Center text
-                -- Store reference for collapse functionality
+                btn:SetContentAlignment(5) 
+                
                 table.insert(categoryContent, btn)
                 function btn:Paint(w, h)
                     if self:IsHovered() then

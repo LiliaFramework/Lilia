@@ -160,7 +160,7 @@ if SERVER then
         assert(isstring(data.invType), "Inventory type is required")
         assert(istable(data.invData), "Inventory data is required")
 
-        -- Use trunkInvW and trunkInvH config values as defaults if not specified
+        
         if not data.invData.w then
             data.invData.w = lia.config.get("trunkInvW", 10)
         end
@@ -168,7 +168,7 @@ if SERVER then
             data.invData.h = lia.config.get("trunkInvH", 2)
         end
 
-        -- Add trunk identifier and merge into storage table
+        
         data.isTrunk = true
         data.trunkKey = vehicleClass:lower()
         lia.inventory.storage[vehicleClass:lower()] = data
