@@ -48,7 +48,7 @@ if SERVER then
         data.type = "interaction"
         data.range = data.range or 250
         data.category = data.category or L("categoryUnsorted")
-        data.target = data.target or "player" -- default interactions target players
+        data.target = data.target or "player"
         data.timeToComplete = data.timeToComplete or nil
         data.actionText = data.actionText or nil
         data.targetActionText = data.targetActionText or nil

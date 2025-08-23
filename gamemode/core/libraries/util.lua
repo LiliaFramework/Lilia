@@ -817,17 +817,19 @@ else
         local entries = {}
         if options[1] then
             for _, opt in ipairs(options) do
-                if isstring(opt.name) and isfunction(opt.callback) then
-                    entries[#entries + 1] = opt
-                end
+                if isstring(opt.name) and isfunction(opt.callback) then entries[#entries + 1] = opt end
             end
         else
             for name, callback in pairs(options) do
                 if isfunction(callback) then
-                    entries[#entries + 1] = {name = name, callback = callback}
+                    entries[#entries + 1] = {
+                        name = name,
+                        callback = callback
+                    }
                 end
             end
         end
+
         if #entries == 0 then return end
         local frameW, entryH = 300, 30
         local frameH = entryH * #entries + 50
@@ -841,6 +843,7 @@ else
             lia.util.drawBlur(self, 4)
             draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 120))
         end
+
         local titleLabel = frame:Add("DLabel")
         titleLabel:SetPos(0, 8)
         titleLabel:SetSize(frameW, 20)
@@ -867,6 +870,7 @@ else
                     draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 30, 100))
                 end
             end
+
             btn.DoClick = function()
                 frame:Close()
                 opt.callback()
