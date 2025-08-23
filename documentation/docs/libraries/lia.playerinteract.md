@@ -145,7 +145,7 @@ lia.playerinteract.addInteraction("healPlayer", {
 
 ### `lia.playerinteract.addAction(name, data)`
 
-Registers a new personal action that players can perform on themselves.
+Registers a new personal action that players can perform. Actions can now work with traced entities just like interactions.
 
 **Parameters:**
 - `name` (string): Unique identifier for the action
@@ -158,8 +158,8 @@ Registers a new personal action that players can perform on themselves.
     range = 250, -- Range (default: 250)
     category = "General", -- Category name (default: "Unsorted")
     categoryColor = Color(255, 255, 255, 255), -- Category color
-    shouldShow = function(client) return true end, -- Visibility condition
-    onRun = function(client) end, -- Action execution
+    shouldShow = function(client, target) return true end, -- Visibility condition
+    onRun = function(client, target) end, -- Action execution
     serverOnly = false, -- Whether action runs server-side only
     timeToComplete = nil, -- Time in seconds to complete the action (optional)
     actionText = nil -- Text to display during the action (optional)
@@ -170,15 +170,17 @@ Registers a new personal action that players can perform on themselves.
 - **`timeToComplete`**: When provided along with `actionText`, automatically wraps the `onRun` function with `client:setAction()` to show a progress bar
 - **`actionText`**: Text displayed during the action execution when `timeToComplete` is set
 
+**Note:** Both `shouldShow` and `onRun` functions now receive `client` and `target` parameters, where `target` is the traced entity (can be nil if no entity is being looked at).
+
 **Example:**
 ```lua
 lia.playerinteract.addAction("changeVoiceMode", {
     category = "Voice",
     categoryColor = Color(255, 255, 0, 255),
-    shouldShow = function(client)
+    shouldShow = function(client, target)
         return client:getChar() and client:Alive()
     end,
-    onRun = function(client)
+    onRun = function(client, target)
         client:setNetVar("VoiceType", "whispering")
     end
 })
@@ -191,10 +193,10 @@ lia.playerinteract.addAction("meditate", {
     categoryColor = Color(100, 100, 255, 255),
     timeToComplete = 10,
     actionText = "Meditating...",
-    shouldShow = function(client)
+    shouldShow = function(client, target)
         return client:getChar() and client:Alive() and not client:InVehicle()
     end,
-    onRun = function(client)
+    onRun = function(client, target)
         client:notify("You feel refreshed after meditation")
         -- Add any meditation effects here
     end
@@ -326,10 +328,10 @@ lia.playerinteract.addAction("meditate", {
     categoryColor = Color(100, 100, 255, 255),
     timeToComplete = 10,
     actionText = "Meditating...",
-    shouldShow = function(client)
+    shouldShow = function(client, target)
         return client:getChar() and client:Alive() and not client:InVehicle()
     end,
-    onRun = function(client)
+    onRun = function(client, target)
         client:notify("You feel refreshed after meditation")
         -- Add any meditation effects here
     end

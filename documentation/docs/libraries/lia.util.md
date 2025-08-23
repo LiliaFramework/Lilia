@@ -911,3 +911,33 @@ local frame, listView = lia.util.CreateTableUI("Player List", columns, data, opt
 ```
 
 ---
+
+### lia.util.openOptionsMenu
+
+**Purpose**
+
+Opens a simple menu listing options that run their callback when selected.
+
+**Parameters**
+
+* `title` (*string*) - Title for the menu.
+* `options` (*table*) - Options to display. Can be an array of `{name = string, callback = function}` tables or a table mapping option names to callback functions.
+
+**Returns**
+
+* `Panel` - The created menu frame.
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+lia.util.openOptionsMenu("Example Menu", {
+    ["Say Hello"] = function() print("Hello") end,
+    ["Say Bye"] = function() print("Bye") end
+})
+```
+
+---

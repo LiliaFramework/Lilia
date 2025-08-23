@@ -811,4 +811,67 @@ else
         end
         return frame, listView
     end
+
+    function lia.util.openOptionsMenu(title, options)
+        if not istable(options) then return end
+        local entries = {}
+        if options[1] then
+            for _, opt in ipairs(options) do
+                if isstring(opt.name) and isfunction(opt.callback) then
+                    entries[#entries + 1] = opt
+                end
+            end
+        else
+            for name, callback in pairs(options) do
+                if isfunction(callback) then
+                    entries[#entries + 1] = {name = name, callback = callback}
+                end
+            end
+        end
+        if #entries == 0 then return end
+        local frameW, entryH = 300, 30
+        local frameH = entryH * #entries + 50
+        local frame = vgui.Create("DFrame")
+        frame:SetSize(frameW, frameH)
+        frame:Center()
+        frame:MakePopup()
+        frame:SetTitle("")
+        frame:ShowCloseButton(true)
+        frame.Paint = function(self, w, h)
+            lia.util.drawBlur(self, 4)
+            draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 120))
+        end
+        local titleLabel = frame:Add("DLabel")
+        titleLabel:SetPos(0, 8)
+        titleLabel:SetSize(frameW, 20)
+        titleLabel:SetText(L(title or "options"))
+        titleLabel:SetFont("liaSmallFont")
+        titleLabel:SetColor(color_white)
+        titleLabel:SetContentAlignment(5)
+        local layout = frame:Add("DListLayout")
+        layout:Dock(FILL)
+        layout:DockMargin(10, 32, 10, 10)
+        for _, opt in ipairs(entries) do
+            local btn = layout:Add("DButton")
+            btn:SetTall(entryH)
+            btn:Dock(TOP)
+            btn:DockMargin(0, 0, 0, 5)
+            btn:SetText(L(opt.name))
+            btn:SetFont("liaSmallFont")
+            btn:SetTextColor(color_white)
+            btn:SetContentAlignment(5)
+            btn.Paint = function(self, w, h)
+                if self:IsHovered() then
+                    draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 30, 160))
+                else
+                    draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 30, 100))
+                end
+            end
+            btn.DoClick = function()
+                frame:Close()
+                opt.callback()
+            end
+        end
+        return frame
+    end
 end

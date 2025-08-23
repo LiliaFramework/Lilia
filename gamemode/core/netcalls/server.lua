@@ -131,7 +131,11 @@ net.Receive("RunInteraction", function(_, ply)
     local tracedEntity = hasEntity and net.ReadEntity() or nil
     local opt = lia.playerinteract.stored[name]
     if opt and opt.type == "interaction" and opt.serverOnly and IsValid(tracedEntity) and lia.playerinteract.isWithinRange(ply, tracedEntity, opt.range) then
-        if tracedEntity:IsPlayer() then
+        local targetType = opt.target or "player"
+        local isPlayerTarget = tracedEntity:IsPlayer()
+        local targetMatches = (targetType == "any") or (targetType == "player" and isPlayerTarget) or (targetType == "entity" and not isPlayerTarget)
+        if not targetMatches then return end
+        if isPlayerTarget then
             local target = tracedEntity:IsBot() and ply or tracedEntity
             opt.onRun(ply, target)
         else
@@ -140,7 +144,13 @@ net.Receive("RunInteraction", function(_, ply)
         return
     end
 
-    if opt and opt.type == "action" and opt.serverOnly then opt.onRun(ply) end
+    if opt and opt.type == "action" and opt.serverOnly then
+        if hasEntity and IsValid(tracedEntity) then
+            opt.onRun(ply, tracedEntity)
+        else
+            opt.onRun(ply)
+        end
+    end
 end)
 
 net.Receive("cmd", function(_, client)

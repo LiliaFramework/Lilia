@@ -63,7 +63,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
         return true
     end
 
-    if not IsValid(entity) and entity:IsPlayer() or dmgInfo:IsFallDamage() then return end
+    if not IsValid(entity) or (entity:IsPlayer() and dmgInfo:IsFallDamage()) then return end
     if IsValid(inflictor) and inflictor:isProp() then
         dmgInfo:SetDamage(0)
         return
@@ -86,7 +86,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
         end
 
         if lia.config.get("CarRagdoll", false) and IsValid(inflictor) and inflictor:isSimfphysCar() then
-            local veh = entity:GetVehicle()
+            local veh = entity.GetVehicle and entity:GetVehicle() or nil
             if not (IsValid(veh) and veh:isSimfphysCar()) then
                 dmgInfo:ScaleDamage(0)
                 if entity:IsPlayer() and not entity:hasRagdoll() and entity:Health() > 0 then entity:setRagdolled(true, 5) end
