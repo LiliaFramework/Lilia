@@ -882,7 +882,7 @@ local function checkPublicModules()
             if mod.versionID and string.StartsWith(mod.versionID, "public_") then
                 local match
                 for _, m in ipairs(remote) do
-                    if m.uniqueID == mod.versionID then
+                    if m.versionID == mod.versionID then
                         match = m
                         break
                     end
@@ -925,7 +925,7 @@ local function checkPrivateModules()
         for _, mod in pairs(lia.module.list) do
             if mod.versionID and string.StartsWith(mod.versionID, "private_") then
                 for _, m in ipairs(remote) do
-                    if m.uniqueID == mod.versionID and m.version and mod.version and versionCompare(mod.version, m.version) < 0 then
+                    if m.versionID == mod.versionID and m.version and mod.version and versionCompare(mod.version, m.version) < 0 then
                         lia.updater(L("privateModuleOutdated", mod.name))
                         break
                     end
