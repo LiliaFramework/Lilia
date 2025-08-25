@@ -165,12 +165,12 @@ function MODULE:SaveData()
                 classesTable = door.liaClasses
             end
 
-            if not istable(factionsTable) or type(factionsTable) ~= "table" then
+            if not istable(factionsTable) then
                 lia.warning("Door " .. mapID .. " has invalid factions data type: " .. type(factionsTable) .. ", resetting to empty table")
                 factionsTable = {}
             end
 
-            if not istable(classesTable) or type(classesTable) ~= "table" then
+            if not istable(classesTable) then
                 lia.warning("Door " .. mapID .. " has invalid classes data type: " .. type(classesTable) .. ", resetting to empty table")
                 classesTable = {}
             end

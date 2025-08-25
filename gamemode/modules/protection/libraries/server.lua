@@ -63,7 +63,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
         return true
     end
 
-    if not IsValid(entity) or (entity:IsPlayer() and dmgInfo:IsFallDamage()) then return end
+    if not IsValid(entity) or entity:IsPlayer() and dmgInfo:IsFallDamage() then return end
     if IsValid(inflictor) and inflictor:isProp() then
         dmgInfo:SetDamage(0)
         return

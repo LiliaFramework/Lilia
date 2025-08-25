@@ -193,7 +193,7 @@ local function colourMatch(c)
     return colourmap[c]
 end
 
-local function ExtractParams(p1, p2, p3)
+local function ExtractParams(p1, p2)
     if string.utf8sub(p1, 1, 1) == "/" then
         local tag = string.utf8sub(p1, 2)
         if tag == "color" or tag == "colour" then
@@ -220,13 +220,13 @@ local function ExtractParams(p1, p2, p3)
         elseif p1 == "img" and p2 then
             local exploded = string.Explode(",", p2)
             local material = exploded[1] or p2
-            local p3 = exploded[2]
+            local sizeData = exploded[2]
             local found = file.Find("materials/" .. material .. ".*", "GAME")
             if found[1] and found[1]:find("%.png") then material = material .. ".png" end
             local texture = Material(material)
-            local sizeData = string.Explode("x", p3 or "16x16")
-            w = tonumber(sizeData[1]) or 16
-            h = tonumber(sizeData[2]) or 16
+            local sizeDataExploded = string.Explode("x", sizeData or "16x16")
+            w = tonumber(sizeDataExploded[1]) or 16
+            h = tonumber(sizeDataExploded[2]) or 16
             if texture then
                 table.insert(blocks, {
                     texture = texture,
@@ -421,11 +421,9 @@ function parse(ml, maxwidth)
 
                         if lastSpacePos == string.utf8len(curString) then
                             ch = string.utf8sub(curString, lastSpacePos, lastSpacePos) .. ch
-                            j = lastSpacePos
                             curString = string.utf8sub(curString, 1, lastSpacePos - 1)
                         else
                             ch = string.utf8sub(curString, lastSpacePos + 1) .. ch
-                            j = lastSpacePos + 1
                             curString = string.utf8sub(curString, 1, lastSpacePos)
                         end
 
@@ -458,7 +456,6 @@ function parse(ml, maxwidth)
                         xSize = 0
                         x, y = surface.GetTextSize(ch)
                         yOffset = yOffset + thisMaxY
-                        thisY = 0
                         curString = ""
                         thisMaxY = 0
                     end

@@ -4,6 +4,17 @@ local function CanAccessInventoryIfCharacterIsOwner(inventory, action, context)
     local ownerID = inventory:getData("char")
     local client = context.client
     if table.HasValue(client.liaCharList or {}, ownerID) then return true end
+    if IsValid(client.liaSearchTarget) then
+        local target = client.liaSearchTarget
+        if IsValid(target) and target:getChar() then
+            local targetCharID = target:getChar():getID()
+            if targetCharID == ownerID then return true end
+            if not ownerID then
+                local targetInv = target:getChar():getInv()
+                if targetInv and targetInv:getID() == inventory:getID() then return true end
+            end
+        end
+    end
 end
 
 local function CanNotAddItemIfNoSpace(inventory, action, context)

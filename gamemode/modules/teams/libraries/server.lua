@@ -268,7 +268,7 @@ net.Receive("KickCharacter", function(_, client)
                 faction = defaultFaction.uniqueID
             }, nil, "characters", "id = " .. characterID)
 
-            lia.char.setCharData(characterID, "factionKickWarn", true)
+            lia.char.setCharDatabase(characterID, "factionKickWarn", true)
         end)
     end
 end)

@@ -639,7 +639,7 @@ if SERVER then
                 lia.char.loaded[charID] = character
                 if istable(data.data) then
                     for k, v in pairs(data.data) do
-                        lia.char.setCharData(charID, k, v)
+                        lia.char.setCharDatabase(charID, k, v)
                     end
                 end
 
@@ -721,7 +721,7 @@ if SERVER then
 
                 characters[#characters + 1] = charId
                 local character = lia.char.new(charData, charId, client)
-                if charData.recognition then lia.char.setCharData(charId, "rgn", nil) end
+                if charData.recognition then lia.char.setCharDatabase(charId, "rgn", nil) end
                 hook.Run("CharRestored", character)
                 character.vars.inv = {}
                 lia.inventory.loadAllFromCharID(charId):next(function(inventories)
@@ -800,74 +800,6 @@ if SERVER then
         hook.Run("OnCharDelete", client, id)
     end
 
-    function lia.char.setCharData(charID, key, val)
-        local charIDsafe = tonumber(charID)
-        if not charIDsafe or not key then return end
-        if val == nil then
-            lia.db.delete("chardata", "charID = " .. charIDsafe .. " AND key = '" .. lia.db.escape(key) .. "'")
-        else
-            local encoded = pon.encode({val})
-            lia.db.upsert({
-                charID = charIDsafe,
-                key = key,
-                value = encoded
-            }, "chardata")
-        end
-
-        if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setData(key, val) end
-        return true
-    end
-
-    function lia.char.setCharName(charID, name)
-        local charIDsafe = tonumber(charID)
-        if not name or not charID then return end
-        local promise = lia.db.updateTable({
-            name = name
-        }, nil, "characters", "id = " .. charIDsafe)
-
-        if deferred.isPromise(promise) then
-            promise:catch(function(err) lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET name", err)) end)
-        elseif promise == false then
-            return false
-        end
-
-        if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setName(name) end
-        return true
-    end
-
-    function lia.char.setCharModel(charID, model, bg)
-        local charIDsafe = tonumber(charID)
-        if not model or not charID then return end
-        local promise = lia.db.updateTable({
-            model = model
-        }, nil, "characters", "id = " .. charIDsafe)
-
-        if deferred.isPromise(promise) then
-            promise:catch(function(err) lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET model", err)) end)
-        elseif promise == false then
-            return false
-        end
-
-        local groups = {}
-        for _, v in pairs(bg or {}) do
-            groups[v.id] = v.value
-        end
-
-        lia.char.setCharData(charID, "groups", groups)
-        if lia.char.loaded[charIDsafe] then
-            lia.char.loaded[charIDsafe]:setModel(model)
-            local client = lia.char.loaded[charIDsafe]:getPlayer()
-            if IsValid(client) and client:getChar() == lia.char.loaded[charIDsafe] then
-                for _, v in pairs(bg or {}) do
-                    client:SetBodygroup(v.id, v.value)
-                end
-
-                client:SetupHands()
-            end
-        end
-        return true
-    end
-
     function lia.char.getCharBanned(charID)
         local charIDsafe = tonumber(charID)
         if not charIDsafe then return end
@@ -875,22 +807,115 @@ if SERVER then
         if istable(result) and result[1] then return tonumber(result[1].banned) or 0 end
     end
 
-    function lia.char.setCharBanned(charID, value)
+    function lia.char.setCharDatabase(charID, field, value)
         local charIDsafe = tonumber(charID)
-        if not charIDsafe then return end
-        value = tonumber(value) or 0
-        local promise = lia.db.updateTable({
-            banned = value
-        }, nil, "characters", "id = " .. charIDsafe)
+        if not charIDsafe or not field then return false end
+        -- Check if this field is registered in our character variables
+        local varData = lia.char.vars[field]
+        if varData then
+            -- This is a registered character field
+            if varData.field then
+                -- Field maps to a database column in characters table
+                local updateData = {}
+                local fieldName = varData.field
+                -- Handle different field types
+                if varData.fieldType == "text" then
+                    if istable(value) then
+                        updateData[fieldName] = util.TableToJSON(value)
+                    else
+                        updateData[fieldName] = tostring(value)
+                    end
+                elseif varData.fieldType == "string" then
+                    updateData[fieldName] = tostring(value)
+                elseif varData.fieldType == "integer" then
+                    updateData[fieldName] = tonumber(value) or varData.default or 0
+                elseif varData.fieldType == "boolean" then
+                    updateData[fieldName] = value and 1 or 0
+                else
+                    -- Default to text encoding for complex types
+                    if istable(value) then
+                        updateData[fieldName] = util.TableToJSON(value)
+                    else
+                        updateData[fieldName] = tostring(value)
+                    end
+                end
 
-        if deferred.isPromise(promise) then
-            promise:catch(function(err) lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET banned", err)) end)
-        elseif promise == false then
-            return false
+                local promise = lia.db.updateTable(updateData, nil, "characters", "id = " .. charIDsafe)
+                if deferred.isPromise(promise) then
+                    promise:catch(function(err) lia.information(L("charSetDataSQLError", "UPDATE lia_characters SET " .. fieldName, err)) end)
+                elseif promise == false then
+                    return false
+                end
+
+                -- Update loaded character if it exists
+                if lia.char.loaded[charIDsafe] then
+                    local character = lia.char.loaded[charIDsafe]
+                    -- Special handling for model field (includes bodygroups)
+                    if field == "model" then
+                        character:setModel(value)
+                        local client = character:getPlayer()
+                        if IsValid(client) and client:getChar() == character then
+                            client:SetModel(value)
+                            client:SetupHands()
+                        end
+                    elseif field == "skin" then
+                        character:setSkin(value)
+                        local client = character:getPlayer()
+                        if IsValid(client) and client:getChar() == character then client:SetSkin(value) end
+                    elseif field == "bodygroups" then
+                        character:setBodygroups(value)
+                        local client = character:getPlayer()
+                        if IsValid(client) and client:getChar() == character then
+                            for k, v in pairs(value or {}) do
+                                local index = tonumber(k)
+                                if index then client:SetBodygroup(index, v or 0) end
+                            end
+                        end
+                    elseif field == "faction" then
+                        character:setFaction(value)
+                    elseif field == "banned" then
+                        character:setBanned(value)
+                    elseif character["set" .. field:sub(1, 1):upper() .. field:sub(2)] then
+                        -- Use the registered setter if it exists
+                        character["set" .. field:sub(1, 1):upper() .. field:sub(2)](character, value)
+                    else
+                        -- Direct variable assignment
+                        character.vars[field] = value
+                    end
+                end
+                return true
+            else
+                -- Field doesn't have a database column, use character data system directly
+                if val == nil then
+                    lia.db.delete("chardata", "charID = " .. charIDsafe .. " AND key = '" .. lia.db.escape(field) .. "'")
+                else
+                    local encoded = pon.encode({value})
+                    lia.db.upsert({
+                        charID = charIDsafe,
+                        key = field,
+                        value = encoded
+                    }, "chardata")
+                end
+
+                if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setData(field, value) end
+                return true
+            end
+        else
+            -- This is a custom field, use character data system directly
+            if val == nil then
+                lia.db.delete("chardata", "charID = " .. charIDsafe .. " AND key = '" .. lia.db.escape(field) .. "'")
+            else
+                local encoded = pon.encode({value})
+                lia.db.upsert({
+                    charID = charIDsafe,
+                    key = field,
+                    value = encoded
+                }, "chardata")
+            end
+
+            if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setData(field, value) end
+            return true
         end
-
-        if lia.char.loaded[charIDsafe] then lia.char.loaded[charIDsafe]:setBanned(value) end
-        return true
     end
 
     function lia.char.unloadCharacter(charID)

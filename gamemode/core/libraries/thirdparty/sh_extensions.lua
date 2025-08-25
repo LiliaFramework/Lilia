@@ -78,7 +78,7 @@ local function AddEntFunctionProperty(name, label, pos, filtor, func, icon)
         MenuLabel = label,
         MenuIcon = icon,
         Order = pos,
-        Filter = function(self, ent, ply)
+        Filter = function(_, ent, ply)
             if not IsValid(ent) or not gamemode.Call("CanProperty", ply, name, ent) then return false end
             if not rb655_property_filter(filtor, ent, ply) then return false end
             return true
@@ -155,7 +155,7 @@ properties.Add("npc_weapon", {
         if ent:IsNPC() and not table.HasValue(nowep, ent:GetClass()) then return true end
         return false
     end,
-    Action = function(self, ent)
+    Action = function(_, ent)
         if not IsValid(ent) then return false end
         local frame = vgui.Create("DFrame")
         frame:SetSize(ScrW() / 1.2, ScrH() / 1.1)
@@ -164,7 +164,7 @@ properties.Add("npc_weapon", {
         frame:MakePopup()
         frame:SetDraggable(false)
         function frame:Paint(w, h)
-            Derma_DrawBackgroundBlur(self, self.m_fCreateTime)
+            Derma_DrawBackgroundBlur(frame, frame.m_fCreateTime)
             draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200))
         end
 
@@ -203,7 +203,7 @@ properties.Add("npc_weapon", {
                 icon:SetName(WeaponTable.PrintName and language.GetPhrase(WeaponTable.PrintName) or "#" .. WeaponTable.ClassName)
                 icon:SetAdminOnly(WeaponTable.AdminOnly or false)
                 icon.DoClick = function()
-                    changeWep(self, ent, WeaponTable.ClassName)
+                    changeWep(_, ent, WeaponTable.ClassName)
                     frame:Close()
                 end
 

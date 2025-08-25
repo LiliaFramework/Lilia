@@ -133,10 +133,11 @@ net.Receive("RunInteraction", function(_, ply)
     if opt and opt.type == "interaction" and opt.serverOnly and IsValid(tracedEntity) and lia.playerinteract.isWithinRange(ply, tracedEntity, opt.range) then
         local targetType = opt.target or "player"
         local isPlayerTarget = tracedEntity:IsPlayer()
-        local targetMatches = (targetType == "any") or (targetType == "player" and isPlayerTarget) or (targetType == "entity" and not isPlayerTarget)
+        local targetMatches = targetType == "any" or targetType == "player" and isPlayerTarget or targetType == "entity" and not isPlayerTarget
         if not targetMatches then return end
         if isPlayerTarget then
-            local target = tracedEntity:IsBot() and ply or tracedEntity
+            local target = tracedEntity
+            if tracedEntity:IsBot() and ply:Team() == FACTION_STAFF then target = ply end
             opt.onRun(ply, target)
         else
             opt.onRun(ply, tracedEntity)
@@ -151,6 +152,107 @@ net.Receive("RunInteraction", function(_, ply)
             opt.onRun(ply)
         end
     end
+end)
+
+net.Receive("liaRequestInteractOptions", function(_, ply)
+    if not IsValid(ply) then return end
+    local requestType = net.ReadString()
+    local options = {}
+    if requestType == "interaction" then
+        local ent = ply:getTracedEntity()
+        if not IsValid(ent) then
+            net.Start("liaProvideInteractOptions")
+            net.WriteString(requestType)
+            net.WriteUInt(0, 16)
+            net.Send(ply)
+            return
+        end
+
+        for name, opt in pairs(lia.playerinteract.stored or {}) do
+            if opt.type == "interaction" and lia.playerinteract.isWithinRange(ply, ent, opt.range) then
+                local targetType = opt.target or "player"
+                local isPlayerTarget = ent:IsPlayer()
+                local targetMatches = targetType == "any" or targetType == "player" and isPlayerTarget or targetType == "entity" and not isPlayerTarget
+                if targetMatches then
+                    local canShow = true
+                    if opt.shouldShow then
+                        local ok, res = pcall(opt.shouldShow, ply, ent)
+                        canShow = ok and res ~= false
+                    end
+
+                    if canShow then
+                        options[#options + 1] = {
+                            name = name,
+                            opt = {
+                                type = opt.type,
+                                serverOnly = opt.serverOnly and true or false,
+                                range = opt.range,
+                                category = opt.category or "",
+                                target = opt.target,
+                                timeToComplete = opt.timeToComplete,
+                                actionText = opt.actionText,
+                                targetActionText = opt.targetActionText
+                            }
+                        }
+                    end
+                end
+            end
+        end
+    else
+        if not ply:getChar() then
+            net.Start("liaProvideInteractOptions")
+            net.WriteString("action")
+            net.WriteUInt(0, 16)
+            net.Send(ply)
+            return
+        end
+
+        for name, opt in pairs(lia.playerinteract.stored or {}) do
+            if opt.type == "action" then
+                local canShow = true
+                if opt.shouldShow then
+                    local ok, res = pcall(opt.shouldShow, ply)
+                    canShow = ok and res ~= false
+                end
+
+                if canShow then
+                    options[#options + 1] = {
+                        name = name,
+                        opt = {
+                            type = opt.type,
+                            serverOnly = opt.serverOnly and true or false,
+                            range = opt.range,
+                            category = opt.category or "",
+                            timeToComplete = opt.timeToComplete,
+                            actionText = opt.actionText,
+                            targetActionText = opt.targetActionText
+                        }
+                    }
+                end
+            end
+        end
+    end
+
+    net.Start("liaProvideInteractOptions")
+    net.WriteString(requestType == "interaction" and "interaction" or "action")
+    net.WriteUInt(#options, 16)
+    for _, entry in ipairs(options) do
+        net.WriteString(entry.name)
+        net.WriteString(entry.opt.type)
+        net.WriteBool(entry.opt.serverOnly)
+        net.WriteUInt(entry.opt.range or 0, 16)
+        net.WriteString(entry.opt.category or "")
+        net.WriteBool(entry.opt.target ~= nil)
+        if entry.opt.target ~= nil then net.WriteString(entry.opt.target) end
+        net.WriteBool(entry.opt.timeToComplete ~= nil)
+        if entry.opt.timeToComplete ~= nil then net.WriteFloat(entry.opt.timeToComplete) end
+        net.WriteBool(entry.opt.actionText ~= nil)
+        if entry.opt.actionText ~= nil then net.WriteString(entry.opt.actionText) end
+        net.WriteBool(entry.opt.targetActionText ~= nil)
+        if entry.opt.targetActionText ~= nil then net.WriteString(entry.opt.targetActionText) end
+    end
+
+    net.Send(ply)
 end)
 
 net.Receive("cmd", function(_, client)

@@ -385,6 +385,48 @@ net.Receive("OptionsRequest", function()
     end
 end)
 
+net.Receive("liaProvideInteractOptions", function()
+    local kind = net.ReadString()
+    local count = net.ReadUInt(16)
+    local temp = {}
+    for _ = 1, count do
+        local name = net.ReadString()
+        local typ = net.ReadString()
+        local serverOnly = net.ReadBool()
+        local range = net.ReadUInt(16)
+        local category = net.ReadString()
+        local hasTarget = net.ReadBool()
+        local target = hasTarget and net.ReadString() or nil
+        local hasTime = net.ReadBool()
+        local timeToComplete = hasTime and net.ReadFloat() or nil
+        local hasActionText = net.ReadBool()
+        local actionText = hasActionText and net.ReadString() or nil
+        local hasTargetActionText = net.ReadBool()
+        local targetActionText = hasTargetActionText and net.ReadString() or nil
+        temp[name] = {
+            type = typ,
+            serverOnly = serverOnly,
+            range = range,
+            category = category,
+            target = target,
+            timeToComplete = timeToComplete,
+            actionText = actionText,
+            targetActionText = targetActionText
+        }
+    end
+
+    local optionsMap = {}
+    local optionCount = 0
+    for name, opt in pairs(temp) do
+        optionsMap[name] = opt
+        optionCount = optionCount + 1
+    end
+
+    local isInteraction = kind == "interaction"
+    if optionCount == 0 then return end
+    lia.playerinteract.openMenu(optionsMap, isInteraction, isInteraction and "playerInteractions" or "actionsMenu", isInteraction and lia.keybind.get(L("interactionMenu"), KEY_TAB) or lia.keybind.get(L("personalActions"), KEY_G), "RunInteraction", true)
+end)
+
 net.Receive("RequestDropdown", function()
     local titleKey = net.ReadString()
     local subTitleKey = net.ReadString()

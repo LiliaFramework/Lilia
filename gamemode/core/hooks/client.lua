@@ -127,7 +127,7 @@ end
 
 local function RenderEntities()
     local client = LocalPlayer()
-    if client.getChar and client:getChar() then
+    if client:getChar() then
         local ft = FrameTime()
         local rt = RealTime()
         if nextUpdate < rt then
@@ -139,7 +139,10 @@ local function RenderEntities()
             lastTrace.maxs = Vector(4, 4, 4)
             lastTrace.mask = MASK_SHOT_HULL
             lastEntity = util.TraceHull(lastTrace).Entity
-            if IsValid(lastEntity) and hook.Run("ShouldDrawEntityInfo", lastEntity) then paintedEntitiesCache[lastEntity] = true end
+            if IsValid(lastEntity) then
+                local shouldDraw = hook.Run("ShouldDrawEntityInfo", lastEntity)
+                if shouldDraw then paintedEntitiesCache[lastEntity] = true end
+            end
         end
 
         for ent, drawing in pairs(paintedEntitiesCache) do
@@ -190,7 +193,7 @@ end
 function GM:ShouldDrawEntityInfo(e)
     if IsValid(e) then
         if e:IsPlayer() and e:getChar() then
-            if e:IsBot() or e:isNoClipping() or e:GetNoDraw() then return false end
+            if e:isNoClipping() or e:GetNoDraw() then return false end
             return true
         end
 

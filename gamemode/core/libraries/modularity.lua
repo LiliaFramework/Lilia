@@ -66,6 +66,18 @@ local function loadExtras(path)
 
     lia.includeEntities(path .. "/entities")
     if MODULE.uniqueID ~= "schema" then lia.item.loadFromDir(path .. "/items") end
+    if CLIENT and MODULE.WebIcons and istable(MODULE.WebIcons) then
+        for name, url in pairs(MODULE.WebIcons) do
+            if isstring(name) and isstring(url) then lia.webimage.register(name, url) end
+        end
+    end
+
+    if SERVER and MODULE.NetworkStrings and istable(MODULE.NetworkStrings) then
+        for _, netString in ipairs(MODULE.NetworkStrings) do
+            if isstring(netString) then util.AddNetworkString(netString) end
+        end
+    end
+
     hook.Run("DoModuleIncludes", path, MODULE)
 end
 

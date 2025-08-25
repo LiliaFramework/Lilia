@@ -220,13 +220,12 @@ lia.command.add("charkill", {
 })
 
 local function sanitizeForNet(tbl)
-    if type(tbl) ~= "table" then return tbl end
+    if istable(tbl) then return tbl end
     local result = {}
     for k, v in pairs(tbl) do
-        local tv = type(v)
-        if tv == "table" then
+        if istable(c) then
             result[k] = sanitizeForNet(v)
-        elseif tv ~= "function" then
+        elseif not isfunction(v) then
             result[k] = v
         end
     end
@@ -1082,8 +1081,8 @@ lia.command.add("charunbanoffline", {
         if not charID then return client:notifyLocalized("invalidCharID") end
         local banned = lia.char.getCharBanned(charID)
         if banned == nil then return client:notifyLocalized("characterNotFound") end
-        lia.char.setCharBanned(charID, 0)
-        lia.char.setCharData(charID, "charBanInfo", nil)
+        lia.char.setCharDatabase(charID, "banned", 0)
+        lia.char.setCharDatabase(charID, "charBanInfo", nil)
         client:notifyLocalized("offlineCharUnbanned", charID)
         lia.log.add(client, "charUnbanOffline", charID)
     end
@@ -1103,8 +1102,8 @@ lia.command.add("charbanoffline", {
         if not charID then return client:notifyLocalized("invalidCharID") end
         local banned = lia.char.getCharBanned(charID)
         if banned == nil then return client:notifyLocalized("characterNotFound") end
-        lia.char.setCharBanned(charID, -1)
-        lia.char.setCharData(charID, "charBanInfo", {
+        lia.char.setCharDatabase(charID, "banned", -1)
+        lia.char.setCharDatabase(charID, "charBanInfo", {
             name = client:Nick(),
             steamID = client:SteamID(),
             rank = client:GetUserGroup()
@@ -1857,8 +1856,8 @@ lia.command.add("charunban", {
                     return
                 end
 
-                lia.char.setCharBanned(charID, 0)
-                lia.char.setCharData(charID, "charBanInfo", nil)
+                lia.char.setCharDatabase(charID, "banned", 0)
+                lia.char.setCharDatabase(charID, "charBanInfo", nil)
                 client:notifyLocalized("charUnBan", client:Name(), data[1].name)
                 lia.log.add(client, "charUnban", data[1].name, charID)
             end
@@ -2958,7 +2957,7 @@ lia.command.add("exportprivileges", {
         local seen = {}
         local list = {}
         local function add(id, name)
-            if type(id) ~= "string" and type(id) ~= "number" then return end
+            if isstring(id) or isnumber(id) then return end
             id = tostring(id)
             if id == "" then return end
             if seen[id] then return end
@@ -2970,40 +2969,40 @@ lia.command.add("exportprivileges", {
         end
 
         local function walk(v)
-            if type(v) ~= "table" then return end
+            if istable(v) then return end
             for k, val in pairs(v) do
-                if type(k) == "string" and (type(val) == "boolean" or type(val) == "table") then if k ~= "" and k ~= "None" then add(k) end end
-                if type(val) == "table" then
+                if isstring(k) and (isboolean(val) or istable(val)) then if k ~= "" and k ~= "None" then add(k) end end
+                if istable(val) then
                     local id = val.id or val.ID or val.Id or val.uniqueID or val.UniqueID
                     local name = val.name or val.Name or val.title or val.Title
                     if id then add(id, name) end
                     if val.privilege or val.Privilege then add(val.privilege or val.Privilege, name) end
                     if val.privileges or val.Privileges then
                         for _, p in pairs(val.privileges or val.Privileges) do
-                            if type(p) == "table" then
+                            if istable(p) then
                                 add(p.id or p.ID or p, p.name or p.Name)
-                            elseif type(p) == "string" or type(p) == "number" then
+                            elseif isstring(p) or isnumber(p) then
                                 add(p)
                             end
                         end
                     end
 
                     walk(val)
-                elseif type(val) == "string" or type(val) == "number" then
-                    if type(k) == "string" and k:lower() == "id" then add(val) end
+                elseif isstring(val) or isnumber(val) then
+                    if isstring(k) and k:lower() == "id" then add(val) end
                 end
             end
         end
 
         local function collect(t)
-            if type(t) == "table" then walk(t) end
+            if istable(t) == "table" then walk(t) end
         end
 
         local srcs = {}
         if lia then
             if lia.administrator then
                 table.insert(srcs, lia.administrator.privileges)
-                if type(lia.administrator.getPrivileges) == "function" then
+                if isfunction(lia.administrator.getPrivileges) == "function" then
                     local ok, r = pcall(lia.administrator.getPrivileges, lia.administrator)
                     if ok then table.insert(srcs, r) end
                 end
@@ -3011,7 +3010,7 @@ lia.command.add("exportprivileges", {
 
             if lia.administrator then
                 table.insert(srcs, lia.administrator.privileges)
-                if type(lia.administrator.getPrivileges) == "function" then
+                if isfunction(lia.administrator.getPrivileges) then
                     local ok, r = pcall(lia.administrator.getPrivileges, lia.administrator)
                     if ok then table.insert(srcs, r) end
                 end
@@ -3019,7 +3018,7 @@ lia.command.add("exportprivileges", {
 
             if lia.permission then
                 table.insert(srcs, lia.permission.list)
-                if type(lia.permission.getAll) == "function" then
+                if isfunction(lia.permission.getAll) then
                     local ok, r = pcall(lia.permission.getAll, lia.permission)
                     if ok then table.insert(srcs, r) end
                 end
@@ -3030,7 +3029,7 @@ lia.command.add("exportprivileges", {
             if lia.command then table.insert(srcs, lia.command.stored or lia.command.list) end
             if lia.module.list then
                 for _, p in pairs(lia.module.list) do
-                    if type(p) == "table" then
+                    if istable(p) == "table" then
                         table.insert(srcs, p.Privileges or p.privileges)
                         collect(p)
                     end

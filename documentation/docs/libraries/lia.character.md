@@ -502,19 +502,17 @@ lia.char.delete(1, client)
 
 ---
 
-### lia.char.setCharData
+### lia.char.setCharDatabase
 
 **Purpose**
 
-Updates a character’s JSON data field in the database and the loaded object. Triggers `OnCharVarChanged` if loaded.
+Generic function for setting any character field. Automatically handles both registered character variables (stored in the main characters table) and custom data fields (stored in the chardata table). This function replaces the need for separate functions like setCharData, setCharName, setCharModel, and setCharBanned.
 
 **Parameters**
 
 * `charID` (*number | string*): Character ID.
-
-* `key` (*string*): Data key.
-
-* `val` (*any*): New value.
+* `field` (*string*): Field name to update (e.g., "name", "model", "banned", "age", etc.).
+* `value` (*any*): New value for the field.
 
 **Realm**
 
@@ -522,73 +520,32 @@ Updates a character’s JSON data field in the database and the loaded object. T
 
 **Returns**
 
-* *boolean | nil*: `true` on success. Returns `nil` if the ID or key is invalid.
+* *boolean | nil*: `true` on success. Returns `nil` if the ID or field is invalid.
 
 **Example Usage**
 
 ```lua
-lia.char.setCharData(1, "age", 25)
+-- Set character name
+lia.char.setCharDatabase(1, "name", "John Doe")
+
+-- Set character model
+lia.char.setCharDatabase(1, "model", "models/player.mdl")
+
+-- Set character banned status
+lia.char.setCharDatabase(1, "banned", 1)
+
+-- Set custom data field
+lia.char.setCharDatabase(1, "age", 25)
+
+-- Set character money
+lia.char.setCharDatabase(1, "money", 5000)
 ```
 
 ---
 
-### lia.char.setCharName
 
-**Purpose**
 
-Changes a character’s name in the database and the loaded object, firing appropriate hooks.
 
-**Parameters**
-
-* `charID` (*number | string*): Character ID.
-
-* `name` (*string*): New character name.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *boolean | nil*: `true` on success, `false` if the database update fails, `nil` if inputs are invalid.
-
-**Example Usage**
-
-```lua
-lia.char.setCharName(1, "NewName")
-```
-
----
-
-### lia.char.setCharModel
-
-**Purpose**
-
-Updates the character’s model and bodygroups in the database and in-game, firing hooks.
-
-**Parameters**
-
-* `charID` (*number | string*): Character ID.
-
-* `model` (*string*): Model path.
-
-* `bg` (*table*): Bodygroup list.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *boolean | nil*: `true` on success, `false` if the database update fails, `nil` if inputs are invalid.
-
-**Example Usage**
-
-```lua
-lia.char.setCharModel(1, "models/player.mdl", {})
-```
-
----
 
 ### lia.char.getCharBanned
 
@@ -616,32 +573,7 @@ local banned = lia.char.getCharBanned(1)
 
 ---
 
-### lia.char.setCharBanned
 
-**Purpose**
-
-Sets or clears a character's banned status.
-
-**Parameters**
-
-* `charID` (*number | string*): Character ID.
-* `value` (*number | string*): Ban value (`0` to unban).
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *boolean | nil*: `true` on success, `false` if the database update fails, `nil` if the ID is invalid.
-
-**Example Usage**
-
-```lua
-lia.char.setCharBanned(1, 1)
-```
-
----
 
 ### lia.char.unloadCharacter
 

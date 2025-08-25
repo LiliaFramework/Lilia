@@ -1629,7 +1629,7 @@ end
 
 local function detect_cheadleware()
     local function safe_call(f, ...)
-        if type(f) ~= "function" then return false, nil end
+        if isfunction(f) ~= "function" then return false, nil end
         local ok, v = pcall(f, ...)
         if not ok then return false, nil end
         return true, v
@@ -1637,15 +1637,15 @@ local function detect_cheadleware()
 
     local function config_probe(api, k)
         local f = rawget(api, "config_get") or rawget(api, "get_config")
-        if type(f) == "function" then
+        if isfunction(f) then
             local ok, v = pcall(f, k)
             if ok and v ~= nil then return true end
         end
 
         local cfg = rawget(api, "config")
-        if type(cfg) == "table" then
+        if istable(cfg) then
             local g = rawget(cfg, "get") or rawget(cfg, "get_value")
-            if type(g) == "function" then
+            if isfunction(g) then
                 local ok, v = pcall(g, k)
                 if ok and v ~= nil then return true end
             end
@@ -1657,12 +1657,12 @@ local function detect_cheadleware()
     local cfg_keys = {"misc.Bunny Hop", "combat.Aimbot", "misc.Notifications", "visuals.Chams", "exploits.Speedhack", "Bunny Hop", "Aimbot", "Notifications", "Chams", "Speedhack"}
     for _, name in ipairs(roots) do
         local api = rawget(_G, name)
-        if type(api) == "table" then
+        if istable(api) == "table" then
             local score = 1
             do
                 local f = rawget(api, "username") or rawget(api, "get_username")
                 local ok, v = safe_call(f)
-                if ok and type(v) == "string" and #v > 0 and #v <= 64 then score = score + 1 end
+                if ok and isstring(v) == "string" and #v > 0 and #v <= 64 then score = score + 1 end
             end
 
             do
@@ -1679,20 +1679,20 @@ local function detect_cheadleware()
 
             do
                 local f = rawget(api, "event_listen") or rawget(api, "on")
-                if type(f) == "function" then score = score + 1 end
+                if isfunction(f) then score = score + 1 end
             end
 
             do
                 local f = rawget(api, "get_original")
-                if type(f) == "function" then
+                if isfunction(f) then
                     local ok, orig = safe_call(f, "_G.LocalPlayer")
-                    if ok and type(orig) == "function" then score = score + 1 end
+                    if ok and isfunction(orig) then score = score + 1 end
                 end
             end
 
             do
-                local a = type(rawget(api, "view_angles")) == "function"
-                local b = type(rawget(api, "view_pos")) == "function"
+                local a = isfunction(rawget(api, "view_angles"))
+                local b = isfunction(rawget(api, "view_pos"))
                 if a or b then score = score + 1 end
             end
 
