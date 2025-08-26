@@ -665,7 +665,7 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Adds chat word filtering, blocking of banned phrases, an easy-to-extend list, and admin commands to modify the list.",
-    "version": "1.26",
+    "version": "1.27",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wordfilter.zip",
     "source": "https://liliaframework.github.io/Modules/wordfilter.html",
     "features": [],
