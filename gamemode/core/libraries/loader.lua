@@ -119,6 +119,10 @@ local FilesToLoad = {
         realm = "client"
     },
     {
+        path = "lilia/gamemode/core/libraries/websound.lua",
+        realm = "client"
+    },
+    {
         path = "lilia/gamemode/core/libraries/attributes.lua",
         realm = "shared"
     },
@@ -561,7 +565,7 @@ function GM:Initialize()
 end
 
 function GM:OnReloaded()
-    lia.module.initialize()
+    lia.module.reloadEdited()
     lia.config.load()
     lia.faction.formatModelData()
     if SERVER then

@@ -157,6 +157,40 @@ lia.module.loadFromDir("schema/modules", "module", {test = true, debug = true})
 
 ---
 
+### lia.module.reloadEdited
+
+**Purpose**
+
+Reloads modules that have been edited since they were last loaded, skipping unchanged modules.
+
+**Parameters**
+
+* *None*
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+* *nil*: This function does not return a value.
+
+**What It Does**
+
+1. Checks the schema and module directories for files changed since last load.
+2. Reloads modules with newer modification timestamps and updates cached times.
+3. Fires `InitializedSchema` and `InitializedModules` hooks when necessary.
+4. Reloads schema items to apply changes.
+
+**Example Usage**
+
+```lua
+-- Reload only modules whose files have changed
+lia.module.reloadEdited()
+```
+
+---
+
 ### lia.module.get
 
 **Purpose**

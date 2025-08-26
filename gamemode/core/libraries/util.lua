@@ -474,7 +474,8 @@ else
         end
     end
 
-    function lia.util.requestArguments(title, argTypes, onSubmit)
+    function lia.util.requestArguments(title, argTypes, onSubmit, defaults)
+        defaults = defaults or {}
         local count = table.Count(argTypes)
         local frameW, frameH = 600, 200 + count * 75
         local frame = vgui.Create("DFrame")
@@ -503,13 +504,19 @@ else
         }
 
         for name, typeInfo in pairs(argTypes) do
-            local fieldType, dataTbl = typeInfo, nil
-            if istable(typeInfo) then fieldType, dataTbl = typeInfo[1], typeInfo[2] end
+            local fieldType, dataTbl, defaultVal = typeInfo, nil, nil
+            if istable(typeInfo) then
+                fieldType, dataTbl = typeInfo[1], typeInfo[2]
+                if typeInfo[3] ~= nil then defaultVal = typeInfo[3] end
+            end
+
             fieldType = string.lower(tostring(fieldType))
+            if defaultVal == nil and defaults[name] ~= nil then defaultVal = defaults[name] end
             local info = {
                 name = name,
                 fieldType = fieldType,
-                dataTbl = dataTbl
+                dataTbl = dataTbl,
+                defaultVal = defaultVal
             }
 
             if fieldType == "string" then
@@ -530,7 +537,7 @@ else
         end
 
         for _, info in ipairs(ordered) do
-            local name, fieldType, dataTbl = info.name, info.fieldType, info.dataTbl
+            local name, fieldType, dataTbl, defaultVal = info.name, info.fieldType, info.dataTbl, info.defaultVal
             local panel = vgui.Create("DPanel", scroll)
             panel:Dock(TOP)
             panel:DockMargin(0, 0, 0, 5)
@@ -545,24 +552,32 @@ else
             local isBool = fieldType == "boolean"
             if isBool then
                 ctrl = vgui.Create("liaCheckBox", panel)
+                if defaultVal ~= nil then ctrl:SetChecked(tobool(defaultVal)) end
             elseif fieldType == "table" then
                 ctrl = vgui.Create("DComboBox", panel)
+                local defaultChoiceIndex
                 if istable(dataTbl) then
-                    for _, v in ipairs(dataTbl) do
+                    for idx, v in ipairs(dataTbl) do
                         if istable(v) then
                             ctrl:AddChoice(v[1], v[2])
+                            if defaultVal ~= nil and (v[2] == defaultVal or v[1] == defaultVal) then defaultChoiceIndex = idx end
                         else
                             ctrl:AddChoice(tostring(v))
+                            if defaultVal ~= nil and v == defaultVal then defaultChoiceIndex = idx end
                         end
                     end
                 end
+
+                if defaultChoiceIndex then ctrl:ChooseOptionID(defaultChoiceIndex) end
             elseif fieldType == "int" or fieldType == "number" then
                 ctrl = vgui.Create("DTextEntry", panel)
                 ctrl:SetFont("liaSmallFont")
                 if ctrl.SetNumeric then ctrl:SetNumeric(true) end
+                if defaultVal ~= nil then ctrl:SetValue(tostring(defaultVal)) end
             else
                 ctrl = vgui.Create("DTextEntry", panel)
                 ctrl:SetFont("liaSmallFont")
+                if defaultVal ~= nil then ctrl:SetValue(tostring(defaultVal)) end
             end
 
             panel.PerformLayout = function(_, w, h)

@@ -527,7 +527,23 @@ function GM:SetupBotPlayer(client)
     character.vars.inv[1] = inventory
     lia.inventory.instances[inventory.id] = inventory
     lia.char.addCharacter(botID, character)
+    client:setNetVar("char", botID)
     character:setup()
+    local randomMoney = math.random(1000, 10000)
+    character:setMoney(randomMoney)
+    local itemCount = math.random(1, 2)
+    local itemKeys = {}
+    for k, _ in pairs(lia.item.list) do
+        table.insert(itemKeys, k)
+    end
+
+    for _ = 1, math.min(itemCount, #itemKeys) do
+        local randomIndex = math.random(1, #itemKeys)
+        local randomItemID = itemKeys[randomIndex]
+        inventory:add(randomItemID)
+        table.remove(itemKeys, randomIndex)
+    end
+
     client:Spawn()
 end
 

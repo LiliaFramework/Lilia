@@ -328,7 +328,7 @@ Registers a storage model with associated inventory data for use in the game wor
 ```lua
 lia.inventory.registerStorage("models/props_c17/lockers001a.mdl", {
     name = "Locker",
-    invType = "grid",
+    invType = "GridInv",
     invData = {w = 5, h = 5}
 })
 ```
@@ -391,7 +391,7 @@ Registers a vehicle trunk with inventory functionality. Automatically sets defau
 ```lua
 lia.inventory.registerTrunk("prop_vehicle_jeep", {
     name = "Jeep Trunk",
-    invType = "grid",
+    invType = "GridInv",
     invData = {w = 8, h = 4}
 })
 ```

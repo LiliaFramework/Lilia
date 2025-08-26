@@ -1022,8 +1022,8 @@ else
             local howclose = math.Round(dist / 40)
             if spos.visible then
                 render.SuppressEngineLighting(true)
-                surface.SetFont("liaBigFont")
-                draw.DrawText(name .. "\n" .. L("meters", howclose) .. "\n", "liaBigFont", spos.x, spos.y, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+                surface.SetFont("liaMediumFont")
+                draw.DrawText(name .. "\n" .. L("meters", howclose) .. "\n", "liaMediumFont", spos.x, spos.y, Color(255, 255, 255), TEXT_ALIGN_CENTER)
                 render.SuppressEngineLighting(false)
             end
 

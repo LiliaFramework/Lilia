@@ -143,8 +143,8 @@ function PANEL:createStartButton()
     local clientChar = client.getChar and client:getChar()
     local w, h, s = ScrW() * 0.2, ScrH() * 0.04, ScrH() * 0.01
     local logoPath = lia.config.get("CenterLogo")
-    local discordURL = lia.config.get("DiscordURL")
-    local workshopURL = lia.config.get("Workshop")
+    local discordURL = lia.config.get("DiscordURL", "")
+    local workshopURL = lia.config.get("Workshop", "")
     local buttonsData = {}
     local hasStaffChar, hasNonStaffChar = false, false
     if lia.characters and #lia.characters > 0 then
@@ -248,7 +248,7 @@ function PANEL:createStartButton()
         })
     end
 
-    if lia.workshop and lia.workshop.hasContentToDownload and lia.workshop.hasContentToDownload() then
+    if lia.workshop.hasContentToDownload and lia.workshop.hasContentToDownload() then
         table.insert(buttonsData, {
             id = "mount",
             text = "Mount Content",

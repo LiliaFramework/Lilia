@@ -810,11 +810,15 @@ if SERVER then
     function lia.char.setCharDatabase(charID, field, value)
         local charIDsafe = tonumber(charID)
         if not charIDsafe or not field then return false end
+        -- Check if this field is registered in our character variables
         local varData = lia.char.vars[field]
         if varData then
+            -- This is a registered character field
             if varData.field then
+                -- Field maps to a database column in characters table
                 local updateData = {}
                 local fieldName = varData.field
+                -- Handle different field types
                 if varData.fieldType == "text" then
                     if istable(value) then
                         updateData[fieldName] = util.TableToJSON(value)
@@ -828,6 +832,7 @@ if SERVER then
                 elseif varData.fieldType == "boolean" then
                     updateData[fieldName] = value and 1 or 0
                 else
+                    -- Default to text encoding for complex types
                     if istable(value) then
                         updateData[fieldName] = util.TableToJSON(value)
                     else
@@ -842,8 +847,10 @@ if SERVER then
                     return false
                 end
 
+                -- Update loaded character if it exists
                 if lia.char.loaded[charIDsafe] then
                     local character = lia.char.loaded[charIDsafe]
+                    -- Special handling for model field (includes bodygroups)
                     if field == "model" then
                         character:setModel(value)
                         local client = character:getPlayer()
@@ -869,13 +876,16 @@ if SERVER then
                     elseif field == "banned" then
                         character:setBanned(value)
                     elseif character["set" .. field:sub(1, 1):upper() .. field:sub(2)] then
+                        -- Use the registered setter if it exists
                         character["set" .. field:sub(1, 1):upper() .. field:sub(2)](character, value)
                     else
+                        -- Direct variable assignment
                         character.vars[field] = value
                     end
                 end
                 return true
             else
+                -- Field doesn't have a database column, use character data system directly
                 if val == nil then
                     lia.db.delete("chardata", "charID = " .. charIDsafe .. " AND key = '" .. lia.db.escape(field) .. "'")
                 else
@@ -891,6 +901,7 @@ if SERVER then
                 return true
             end
         else
+            -- This is a custom field, use character data system directly
             if val == nil then
                 lia.db.delete("chardata", "charID = " .. charIDsafe .. " AND key = '" .. lia.db.escape(field) .. "'")
             else

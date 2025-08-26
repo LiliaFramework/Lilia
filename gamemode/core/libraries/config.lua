@@ -784,13 +784,13 @@ lia.config.add("CenterLogo", "mainMenuCenterLogo", "", nil, {
     type = "Generic"
 })
 
-lia.config.add("DiscordURL", "mainMenuDiscordURL", "https://discord.gg/esCRH5ckbQ", nil, {
+lia.config.add("DiscordURL", "mainMenuDiscordURL", "", nil, {
     desc = "mainMenuDiscordURLDesc",
     category = "mainMenu",
     type = "Generic"
 })
 
-lia.config.add("Workshop", "mainMenuWorkshopURL", "https://steamcommunity.com/sharedfiles/filedetails/?id=3527535922", nil, {
+lia.config.add("Workshop", "mainMenuWorkshopURL", "", nil, {
     desc = "mainMenuWorkshopURLDesc",
     category = "mainMenu",
     type = "Generic"

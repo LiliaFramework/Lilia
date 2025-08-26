@@ -2158,17 +2158,20 @@ Server.
 
 **Purpose**
 
-Requests multiple arguments from the player.
+Requests multiple arguments from the player with support for various input types including strings, numbers, booleans, and dropdown selections.
 
 **Parameters**
 
-* title (string) - The title of the request.
-* argTypes (table) - The types of arguments to request.
-* callback (function) - Function to call when arguments are entered.
+* title (string) - The title of the request dialog.
+* argTypes (table) - A table describing the argument types and names. Each key represents the field name, and the value can be:
+  - A string type: `"string"`, `"number"`, `"int"`, `"boolean"`
+  - A table for dropdowns: `{"table", {"Option1", "Option2", "Option3"}}`
+  - A table with default value: `{type, dataTable, defaultValue}`
+* callback (function) - Optional function to call when arguments are submitted. If not provided, returns a deferred object.
 
 **Returns**
 
-Deferred object or nil.
+Deferred object if no callback is provided, otherwise nil.
 
 **Realm**
 
@@ -2177,7 +2180,25 @@ Server.
 **Example Usage**
 
 ```lua
-    local deferred = player:requestArguments("Input", {"string", "number"}, callback)
+-- Simple string and number inputs
+local deferred = player:requestArguments("Enter Info", {Name="string", Age="number"}, function(result)
+    print("Name: " .. result.Name .. ", Age: " .. result.Age)
+end)
+
+-- With dropdown options
+player:requestArguments("Character Creation", {
+    Name = "string",
+    Class = {"table", {"Warrior", "Mage", "Rogue"}},
+    Level = {"number", nil, 1} -- number type with default value of 1
+}, function(result)
+    -- Handle result
+end)
+
+-- Using deferred pattern
+local promise = player:requestArguments("Settings", {Volume="number", Music="boolean"})
+promise:next(function(result)
+    -- Handle result
+end)
 ```
 
 ---

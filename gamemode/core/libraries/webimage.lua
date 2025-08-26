@@ -36,7 +36,7 @@ function lia.webimage.register(n, u, cb, flags)
     end
 
     http.Fetch(u, function(b)
-        ensureDir(baseDir)
+        ensureDir(savePath:match("(.+)/[^/]+$") or baseDir)
         file.Write(savePath, b)
         finalize(false)
     end, function(e)
