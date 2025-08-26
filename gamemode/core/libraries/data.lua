@@ -133,7 +133,13 @@ function lia.data.decode(value)
 end
 
 function lia.data.serialize(value)
-    return util.TableToJSON(lia.data.encodetable(value) or {})
+    local encoded = lia.data.encodetable(value) or {}
+    if not istable(encoded) then
+        encoded = {
+            value = encoded
+        }
+    end
+    return util.TableToJSON(encoded)
 end
 
 function lia.data.deserialize(raw)
@@ -152,6 +158,7 @@ function lia.data.deserialize(raw)
     end
 
     if decoded == nil then return nil end
+    if istable(decoded) and decoded.value ~= nil and table.Count(decoded) == 1 then return lia.data.decode(decoded.value) end
     return lia.data.decode(decoded)
 end
 
