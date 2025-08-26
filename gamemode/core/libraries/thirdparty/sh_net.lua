@@ -1,7 +1,6 @@
 ﻿local pon = {}
 _G.pon = pon
 do
-
     local type = type
     local tonumber = tonumber
     local format = string.format
@@ -394,7 +393,6 @@ if SERVER then
                 player.nsDataStreamData = nil
             end
         end
-
     end)
 else
     function netstream.Start(name, ...)
@@ -421,6 +419,5 @@ else
                 lia.error(L("netstreamError", NS_DS_NAME, value))
             end
         end
-
     end)
 end

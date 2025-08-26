@@ -1,7 +1,6 @@
 ﻿lia.module = lia.module or {}
 lia.module.list = lia.module.list or {}
 lia.module.fileTimes = lia.module.fileTimes or {}
-
 local function getLastModified(path)
     local latest = 0
     if file.IsDir(path, "LUA") then
@@ -18,9 +17,9 @@ local function getLastModified(path)
     else
         latest = file.Time(path, "LUA") or 0
     end
-
     return latest
 end
+
 local function loadPermissions(Privileges)
     if not Privileges or not istable(Privileges) then return end
     for _, privilegeData in ipairs(Privileges) do
@@ -237,12 +236,8 @@ function lia.module.loadFromDir(directory, group, skip)
     end
 end
 
--- Reloads modules that were edited since the last load.
--- Uses cached file modification times to detect changes and only reloads the affected modules.
--- Reruns schema/module initialization hooks and reloads schema items afterwards.
 function lia.module.reloadEdited()
     local schemaPath = engine.ActiveGamemode()
-
     local function reloadModule(id, path, isSingleFile, variable)
         local newTime = getLastModified(path)
         local oldTime = lia.module.fileTimes[id] or 0
@@ -255,14 +250,7 @@ function lia.module.reloadEdited()
 
     local schemaChanged = reloadModule("schema", schemaPath .. "/schema", false, "schema")
     if schemaChanged then hook.Run("InitializedSchema") end
-
-    local directories = {
-        schemaPath .. "/preload",
-        "lilia/gamemode/modules",
-        schemaPath .. "/modules",
-        schemaPath .. "/overrides"
-    }
-
+    local directories = {schemaPath .. "/preload", "lilia/gamemode/modules", schemaPath .. "/modules", schemaPath .. "/overrides"}
     for _, dir in ipairs(directories) do
         local _, folders = file.Find(dir .. "/*", "LUA")
         for _, folder in ipairs(folders) do
