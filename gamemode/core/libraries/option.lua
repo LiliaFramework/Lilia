@@ -258,7 +258,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             btn:DockMargin(90, 10, 90, 10)
             btn:SetText("")
             btn.Paint = function(_, w, h)
-                local ic = lia.option.get(key, cfg.value) and "checkbox.png" or "unchecked.png"
+                local ic = lia.option.get(key, cfg.value) and "lilia/checkbox.png" or "lilia/unchecked.png"
                 lia.util.drawTexture(ic, color_white, w / 2 - 48, h / 2 - 64, 96, 96)
             end
 

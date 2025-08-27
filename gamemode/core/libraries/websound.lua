@@ -1,7 +1,5 @@
 ﻿lia.websound = lia.websound or {}
-local ip = string.Replace(string.Replace(game.GetIPAddress() or "unknown", ":", "_"), "%.", "_")
-local gamemode = engine.ActiveGamemode() or "unknown"
-local baseDir = "lilia/sounds/" .. ip .. "/" .. gamemode .. "/"
+local baseDir = "lilia/websounds/"
 local cache = {}
 local urlMap = {}
 local function ensureDir(p)

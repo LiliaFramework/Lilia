@@ -1,7 +1,5 @@
 ﻿lia.webimage = lia.webimage or {}
-local ip = string.Replace(string.Replace(game.GetIPAddress() or "unknown", ":", "_"), "%.", "_")
-local gamemode = engine.ActiveGamemode() or "unknown"
-local baseDir = "lilia/" .. ip .. "/" .. gamemode .. "/"
+local baseDir = "lilia/webimages/"
 local cache = {}
 local urlMap = {}
 local registered = lia.webimage._registered or {}
@@ -184,17 +182,17 @@ concommand.Add("test_webimage_menu", function()
 end)
 
 lia.webimage.register("lilia.png", "https://github.com/LiliaFramework/liaIcons/blob/main/lilia.png?raw=true")
-lia.webimage.register("locked.png", "https://github.com/LiliaFramework/liaIcons/blob/main/locked.png?raw=true")
-lia.webimage.register("unlocked.png", "https://github.com/LiliaFramework/liaIcons/blob/main/unlocked.png?raw=true")
-lia.webimage.register("checkbox.png", "https://github.com/LiliaFramework/liaIcons/blob/main/checkbox.png?raw=true")
-lia.webimage.register("unchecked.png", "https://github.com/LiliaFramework/liaIcons/blob/main/unchecked.png?raw=true")
-lia.webimage.register("normaltalk.png", "https://github.com/LiliaFramework/liaIcons/blob/main/normaltalk.png?raw=true")
-lia.webimage.register("yelltalk.png", "https://github.com/LiliaFramework/liaIcons/blob/main/yelltalk.png?raw=true")
-lia.webimage.register("whispertalk.png", "https://github.com/LiliaFramework/liaIcons/blob/main/whispertalk.png?raw=true")
-lia.webimage.register("notalk.png", "https://github.com/LiliaFramework/liaIcons/blob/main/notalk.png?raw=true")
-lia.webimage.register("invslotfree.png", "https://github.com/LiliaFramework/liaIcons/blob/main/invslotfree.png?raw=true")
-lia.webimage.register("vignette.png", "https://github.com/LiliaFramework/liaIcons/blob/main/vignette.png?raw=true")
-lia.webimage.register("dark_vignette.png", "https://github.com/LiliaFramework/liaIcons/blob/main/dark_vignette.png?raw=true")
-lia.webimage.register("invslotblocked.png", "https://github.com/LiliaFramework/liaIcons/blob/main/invslotblocked.png?raw=true")
-lia.webimage.register("settings.png", "https://github.com/LiliaFramework/liaIcons/blob/main/settings.png?raw=true")
+lia.webimage.register("lilia/locked.png", "https://github.com/LiliaFramework/liaIcons/blob/main/locked.png?raw=true")
+lia.webimage.register("lilia/unlocked.png", "https://github.com/LiliaFramework/liaIcons/blob/main/unlocked.png?raw=true")
+lia.webimage.register("lilia/checkbox.png", "https://github.com/LiliaFramework/liaIcons/blob/main/checkbox.png?raw=true")
+lia.webimage.register("lilia/unchecked.png", "https://github.com/LiliaFramework/liaIcons/blob/main/unchecked.png?raw=true")
+lia.webimage.register("lilia/normaltalk.png", "https://github.com/LiliaFramework/liaIcons/blob/main/normaltalk.png?raw=true")
+lia.webimage.register("lilia/yelltalk.png", "https://github.com/LiliaFramework/liaIcons/blob/main/yelltalk.png?raw=true")
+lia.webimage.register("lilia/whispertalk.png", "https://github.com/LiliaFramework/liaIcons/blob/main/whispertalk.png?raw=true")
+lia.webimage.register("lilia/notalk.png", "https://github.com/LiliaFramework/liaIcons/blob/main/notalk.png?raw=true")
+lia.webimage.register("lilia/invslotfree.png", "https://github.com/LiliaFramework/liaIcons/blob/main/invslotfree.png?raw=true")
+lia.webimage.register("lilia/vignette.png", "https://github.com/LiliaFramework/liaIcons/blob/main/vignette.png?raw=true")
+lia.webimage.register("lilia/dark_vignette.png", "https://github.com/LiliaFramework/liaIcons/blob/main/dark_vignette.png?raw=true")
+lia.webimage.register("lilia/invslotblocked.png", "https://github.com/LiliaFramework/liaIcons/blob/main/invslotblocked.png?raw=true")
+lia.webimage.register("lilia/settings.png", "https://github.com/LiliaFramework/liaIcons/blob/main/settings.png?raw=true")
 ensureDir(baseDir)

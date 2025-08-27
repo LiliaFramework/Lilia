@@ -5,7 +5,7 @@ function ENT:onDrawEntityInfo(alpha)
     local position = toScreen(self.LocalToWorld(self, self.OBBCenter(self)))
     local x, y = position.x, position.y
     y = y - 20
-    local mat = locked and "locked.png" or "unlocked.png"
+    local mat = locked and "lilia/locked.png" or "lilia/unlocked.png"
     local ty = 32
     lia.util.drawTexture(mat, ColorAlpha(color_white, alpha), x - 16, y - 16, 32, 32)
     y = y + ty * .9

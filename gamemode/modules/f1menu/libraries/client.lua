@@ -2,9 +2,20 @@
 MODULE.CharacterInformation = {}
 function MODULE:LoadCharInformation()
     hook.Run("AddSection", L("generalInfo"), Color(0, 0, 0), 1, 1)
-    hook.Run("AddTextField", L("generalInfo"), "name", L("name"), function() return LocalPlayer():getChar():getName() end)
-    hook.Run("AddTextField", L("generalInfo"), "desc", L("description"), function() return LocalPlayer():getChar():getDesc() end)
-    hook.Run("AddTextField", L("generalInfo"), "money", L("money"), function() return LocalPlayer():getMoney() end)
+    hook.Run("AddTextField", L("generalInfo"), "name", L("name"), function()
+        local client = LocalPlayer()
+        local char = client:getChar()
+        return char and char:getName() or L("unknown")
+    end)
+    hook.Run("AddTextField", L("generalInfo"), "desc", L("description"), function()
+        local client = LocalPlayer()
+        local char = client:getChar()
+        return char and char:getDesc() or ""
+    end)
+    hook.Run("AddTextField", L("generalInfo"), "money", L("money"), function()
+        local client = LocalPlayer()
+        return client and client:getMoney() or 0
+    end)
 end
 
 function MODULE:AddSection(sectionName, color, priority, location)
@@ -177,7 +188,9 @@ end
 
 function MODULE:CanDisplayCharInfo(name)
     local client = LocalPlayer()
+    if not client then return true end
     local character = client:getChar()
+    if not character then return true end
     if not lia.class or not lia.class.list then return true end
     local class = lia.class.list[character:getClass()]
     if name == "class" and not class then return false end

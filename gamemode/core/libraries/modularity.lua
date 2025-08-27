@@ -92,6 +92,12 @@ local function loadExtras(path)
         end
     end
 
+    if CLIENT and MODULE.WebSounds and istable(MODULE.WebSounds) then
+        for name, url in pairs(MODULE.WebSounds) do
+            if isstring(name) and isstring(url) then lia.websound.register(name, url) end
+        end
+    end
+
     if SERVER and MODULE.NetworkStrings and istable(MODULE.NetworkStrings) then
         for _, netString in ipairs(MODULE.NetworkStrings) do
             if isstring(netString) then util.AddNetworkString(netString) end

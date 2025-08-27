@@ -1276,7 +1276,7 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
             button:SetText("")
             button.Paint = function(_, w, h)
                 local v = lia.config.get(key, config.value)
-                local ic = v and "checkbox.png" or "unchecked.png"
+                local ic = v and "lilia/checkbox.png" or "lilia/unchecked.png"
                 lia.util.drawTexture(ic, color_white, w / 2 - 48, h / 2 - 64, 96, 96)
             end
 
