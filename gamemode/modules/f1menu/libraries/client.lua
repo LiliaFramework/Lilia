@@ -7,11 +7,13 @@ function MODULE:LoadCharInformation()
         local char = client:getChar()
         return char and char:getName() or L("unknown")
     end)
+
     hook.Run("AddTextField", L("generalInfo"), "desc", L("description"), function()
         local client = LocalPlayer()
         local char = client:getChar()
         return char and char:getDesc() or ""
     end)
+
     hook.Run("AddTextField", L("generalInfo"), "money", L("money"), function()
         local client = LocalPlayer()
         return client and client:getMoney() or 0
