@@ -679,6 +679,7 @@ if SERVER then
 
     function playerMeta:stopAction()
         timer.Remove("liaAct" .. self:SteamID64())
+        timer.Remove("liaStare" .. self:SteamID64())
         net.Start("actBar")
         net.Send(self)
     end

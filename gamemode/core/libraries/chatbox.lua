@@ -1,5 +1,5 @@
 ﻿lia.chat = lia.chat or {}
-lia.chat.classes = lia.char.classes or {}
+lia.chat.classes = lia.chat.classes or {}
 function lia.chat.timestamp(ooc)
     return lia.option.ChatShowTime and (ooc and " " or "") .. "(" .. lia.time.GetHour() .. ")" .. (ooc and "" or " ") or ""
 end

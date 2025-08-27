@@ -33,6 +33,7 @@ function GM:PlayerLoadedChar(client, character)
     }, nil, "characters", "id = " .. character:getID())
 
     client:removeRagdoll()
+    client:stopAction()
     character:setLoginTime(os.time())
     hook.Run("PlayerLoadout", client)
     local ammoTable = character:getAmmo()

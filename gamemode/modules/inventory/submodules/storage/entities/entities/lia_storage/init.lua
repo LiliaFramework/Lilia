@@ -43,7 +43,7 @@ function ENT:openInv(activator)
     local inventory = self:getInv()
     local storage = self:getStorageInfo()
     if storage and isfunction(storage.onOpen) then storage.onOpen(self, activator) end
-    if activator:GetPos():Distance(self:GetPos()) > 96 then
+    if activator:GetPos():Distance(self:GetPos()) > 128 then
         activator.liaStorageEntity = nil
         return
     end
@@ -77,7 +77,7 @@ function ENT:Use(activator)
             net.Send(activator)
         end
     else
-        if inventory and storage then self:openInv(activator) end
+        if inventory then self:openInv(activator) end
     end
 
     activator.liaNextOpen = CurTime() + 0.7 * 1.5
