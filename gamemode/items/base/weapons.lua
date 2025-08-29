@@ -11,6 +11,8 @@ ITEM.RequiredSkillLevels = {}
 ITEM.DropOnDeath = true
 function ITEM.postHooks:drop()
     local client = self.player
+    if not client or not IsValid(client) then return end
+    
     if client:HasWeapon(self.class) then
         client:notifyLocalized("invalidWeapon")
         client:StripWeapon(self.class)
@@ -19,6 +21,8 @@ end
 
 ITEM:hook("drop", function(item)
     local client = item.player
+    if not client or not IsValid(client) then return false end
+    
     if client:hasRagdoll() then
         client:notifyLocalized("noRagdollAction")
         return false
@@ -32,7 +36,7 @@ ITEM:hook("drop", function(item)
             item:setData("ammo", weapon:Clip1())
             client:StripWeapon(item.class)
             client.carryWeapons[item.weaponCategory] = nil
-            client:EmitSound(item.unequipSound or "items/ammo_pickup.wav", 80)
+            client:EmitSound(item.unequipSound or "items.unequipSound", 80)
         end
     end
 end)
@@ -43,6 +47,8 @@ ITEM.functions.Unequip = {
     icon = "icon16/cross.png",
     onRun = function(item)
         local client = item.player
+        if not client or not IsValid(client) then return false end
+        
         if client:hasRagdoll() then
             client:notifyLocalized("noRagdollAction")
             return false
@@ -73,6 +79,8 @@ ITEM.functions.Equip = {
     icon = "icon16/tick.png",
     onRun = function(item)
         local client = item.player
+        if not client or not IsValid(client) then return false end
+        
         if client:hasRagdoll() then
             client:notifyLocalized("noRagdollAction")
             return false
@@ -114,6 +122,8 @@ end
 function ITEM:onLoadout()
     if self:getData("equip") then
         local client = self.player
+        if not client or not IsValid(client) then return end
+        
         client.carryWeapons = client.carryWeapons or {}
         local weapon = client:Give(self.class, true)
         if IsValid(weapon) then
@@ -128,6 +138,8 @@ end
 
 function ITEM:OnSave()
     local client = self.player
+    if not client or not IsValid(client) then return end
+    
     local weapon = client:GetWeapon(self.class)
     if IsValid(weapon) then self:setData("ammo", weapon:Clip1()) end
 end
