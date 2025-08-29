@@ -9,7 +9,7 @@ function MODULE:FetchSpawns()
         local t = {}
         spawns = istable(spawns) and spawns or {spawns}
         for i = 1, #spawns do
-            local spawnData = lia.data.deserialize(spawns[i])
+            local spawnData = spawns[i]
             if isvector(spawnData) then
                 spawnData = {
                     pos = spawnData,
@@ -28,16 +28,8 @@ function MODULE:FetchSpawns()
 end
 
 function MODULE:StoreSpawns(spawns)
-    local factions = {}
-    for fac, list in pairs(spawns or {}) do
-        factions[fac] = {}
-        for _, data in ipairs(list) do
-            factions[fac][#factions[fac] + 1] = lia.data.encodetable(data)
-        end
-    end
-
     lia.data.set("spawns", {
-        factions = factions
+        factions = spawns
     })
     return deferred.resolve(true)
 end
@@ -48,7 +40,6 @@ local function SpawnPlayer(client)
     if not character then return end
     local posData = character:getLastPos()
     if posData and posData.map and posData.map:lower() == game.GetMap():lower() then
-        print("[SpawnPlayer] Used last position spawn")
         if posData.pos and isvector(posData.pos) then client:SetPos(posData.pos) end
         if posData.ang and isangle(posData.ang) then client:SetEyeAngles(posData.ang) end
         character:setLastPos(nil)
@@ -74,7 +65,6 @@ local function SpawnPlayer(client)
                 end
 
                 if #valid > 0 then
-                    print("[SpawnPlayer] Used faction spawn")
                     local data = table.Random(valid)
                     local basePos = data.pos or data
                     if not isvector(basePos) then
@@ -97,15 +87,9 @@ local function SpawnPlayer(client)
                     client:SetPos(pos)
                     client:SetEyeAngles(ang)
                     hook.Run("PlayerSpawnPointSelected", client, pos, ang)
-                else
-                    print("[SpawnPlayer] Used default spawn")
                 end
-            else
-                print("[SpawnPlayer] Used default spawn")
             end
         end)
-    else
-        print("[SpawnPlayer] Used default spawn")
     end
 end
 
@@ -186,3 +170,4 @@ net.Receive("request_respawn", function(_, client)
 end)
 
 hook.Add("PostPlayerLoadedChar", "liaSpawns", SpawnPlayer)
+hook.Add("PostPlayerLoadout", "liaSpawns", SpawnPlayer)

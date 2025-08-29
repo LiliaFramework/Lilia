@@ -433,27 +433,29 @@ lia.command.add("dooraddfaction", {
     arguments = {
         {
             name = "faction",
-            type = "table",
-            options = function()
-                local options = {}
-                for k, v in pairs(lia.faction.teams) do
-                    options[L(v.name)] = k
-                end
-                return options
-            end
+            type = "string"
         }
     },
     adminOnly = true,
     onRun = function(client, arguments)
         local door = client:getTracedEntity()
         if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            local name = arguments[1]
+            local input = arguments[1]
             local faction
-            if name then
-                for k, v in pairs(lia.faction.teams) do
-                    if lia.util.stringMatches(k, name) or lia.util.stringMatches(v.name, name) then
-                        faction = v
-                        break
+            if input then
+                local factionIndex = tonumber(input)
+                if factionIndex then
+                    faction = lia.faction.indices[factionIndex]
+                    if not faction then
+                        client:notifyLocalized("invalidFaction")
+                        return
+                    end
+                else
+                    for k, v in pairs(lia.faction.teams) do
+                        if lia.util.stringMatches(k, input) or lia.util.stringMatches(v.name, input) then
+                            faction = v
+                            break
+                        end
                     end
                 end
             end
@@ -475,6 +477,8 @@ lia.command.add("dooraddfaction", {
             end
 
             MODULE:SaveData()
+        else
+            client:notifyLocalized("doorNotValid")
         end
     end
 })
@@ -484,27 +488,29 @@ lia.command.add("doorremovefaction", {
     arguments = {
         {
             name = "faction",
-            type = "table",
-            options = function()
-                local options = {}
-                for k, v in pairs(lia.faction.teams) do
-                    options[L(v.name)] = k
-                end
-                return options
-            end
+            type = "string"
         }
     },
     adminOnly = true,
     onRun = function(client, arguments)
         local door = client:getTracedEntity()
         if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            local name = arguments[1]
+            local input = arguments[1]
             local faction
-            if name then
-                for k, v in pairs(lia.faction.teams) do
-                    if lia.util.stringMatches(k, name) or lia.util.stringMatches(v.name, name) then
-                        faction = v
-                        break
+            if input then
+                local factionIndex = tonumber(input)
+                if factionIndex then
+                    faction = lia.faction.indices[factionIndex]
+                    if not faction then
+                        client:notifyLocalized("invalidFaction")
+                        return
+                    end
+                else
+                    for k, v in pairs(lia.faction.teams) do
+                        if lia.util.stringMatches(k, input) or lia.util.stringMatches(v.name, input) then
+                            faction = v
+                            break
+                        end
                     end
                 end
             end
@@ -526,6 +532,8 @@ lia.command.add("doorremovefaction", {
             end
 
             MODULE:SaveData()
+        else
+            client:notifyLocalized("doorNotValid")
         end
     end
 })
@@ -535,14 +543,7 @@ lia.command.add("doorsetclass", {
     arguments = {
         {
             name = "class",
-            type = "table",
-            options = function()
-                local options = {}
-                for _, v in pairs(lia.class.list) do
-                    options[L(v.name)] = v.uniqueID
-                end
-                return options
-            end
+            type = "string"
         }
     },
     adminOnly = true,
@@ -552,14 +553,25 @@ lia.command.add("doorsetclass", {
             local input = arguments[1]
             local class, classData
             if input then
-                local id = tonumber(input) or lia.class.retrieveClass(input)
-                if id then
-                    class, classData = id, lia.class.list[id]
+                local classIndex = tonumber(input)
+                if classIndex then
+                    classData = lia.class.list[classIndex]
+                    if classData then
+                        class = classIndex
+                    else
+                        client:notifyLocalized("invalidClass")
+                        return
+                    end
                 else
-                    for k, v in pairs(lia.class.list) do
-                        if lia.util.stringMatches(v.name, input) or lia.util.stringMatches(v.uniqueID, input) then
-                            class, classData = k, v
-                            break
+                    local id = lia.class.retrieveClass(input)
+                    if id then
+                        class, classData = id, lia.class.list[id]
+                    else
+                        for k, v in pairs(lia.class.list) do
+                            if lia.util.stringMatches(v.name, input) or lia.util.stringMatches(v.uniqueID, input) then
+                                class, classData = k, v
+                                break
+                            end
                         end
                     end
                 end
@@ -582,6 +594,8 @@ lia.command.add("doorsetclass", {
             end
 
             MODULE:SaveData()
+        else
+            client:notifyLocalized("doorNotValid")
         end
     end,
     alias = {"jobdoor"}
@@ -592,14 +606,7 @@ lia.command.add("doorremoveclass", {
     arguments = {
         {
             name = "class",
-            type = "table",
-            options = function()
-                local options = {}
-                for _, v in pairs(lia.class.list) do
-                    options[L(v.name)] = v.uniqueID
-                end
-                return options
-            end
+            type = "string"
         }
     },
     adminOnly = true,
@@ -616,14 +623,25 @@ lia.command.add("doorremoveclass", {
             local input = arguments[1]
             local class, classData
             if input then
-                local id = tonumber(input) or lia.class.retrieveClass(input)
-                if id then
-                    class, classData = id, lia.class.list[id]
+                local classIndex = tonumber(input)
+                if classIndex then
+                    classData = lia.class.list[classIndex]
+                    if classData then
+                        class = classIndex
+                    else
+                        client:notifyLocalized("invalidClass")
+                        return
+                    end
                 else
-                    for k, v in pairs(lia.class.list) do
-                        if lia.util.stringMatches(v.name, input) or lia.util.stringMatches(v.uniqueID, input) then
-                            class, classData = k, v
-                            break
+                    local id = lia.class.retrieveClass(input)
+                    if id then
+                        class, classData = id, lia.class.list[id]
+                    else
+                        for k, v in pairs(lia.class.list) do
+                            if lia.util.stringMatches(v.name, input) or lia.util.stringMatches(v.uniqueID, input) then
+                                class, classData = k, v
+                                break
+                            end
                         end
                     end
                 end
@@ -680,5 +698,73 @@ lia.command.add("togglealldoors", {
         client:notifyLocalized(toggleToDisable and "doorDisableAll" or "doorEnableAll", count)
         lia.log.add(client, toggleToDisable and "doorDisableAll" or "doorEnableAll", count)
         MODULE:SaveData()
+    end
+})
+
+lia.command.add("doorid", {
+    desc = "Shows the door ID of the door you're looking at",
+    adminOnly = true,
+    onRun = function(client)
+        local door = client:getTracedEntity()
+        if IsValid(door) and door:isDoor() then
+            local mapID = door:MapCreationID()
+            if mapID and mapID > 0 then
+                local pos = door:GetPos()
+                client:notifyLocalized("Door ID: " .. mapID .. " | Position: " .. string.format("%.0f, %.0f, %.0f", pos.x, pos.y, pos.z))
+                lia.log.add(client, "doorID", door, mapID)
+            else
+                client:notifyLocalized("This door doesn't have a valid map ID")
+            end
+        else
+            client:notifyLocalized("You must be looking at a door")
+        end
+    end
+})
+
+lia.command.add("listdoorids", {
+    desc = "Lists all door IDs on the map for preset creation",
+    adminOnly = true,
+    onRun = function(client)
+        local doorData = {}
+        for _, door in ents.Iterator() do
+            if IsValid(door) and door:isDoor() then
+                local mapID = door:MapCreationID()
+                if mapID and mapID > 0 then
+                    local pos = door:GetPos()
+                    table.insert(doorData, {
+                        id = mapID,
+                        position = string.format("%.0f, %.0f, %.0f", pos.x, pos.y, pos.z),
+                        model = door:GetModel() or "unknown"
+                    })
+                end
+            end
+        end
+
+        if #doorData == 0 then
+            client:notifyLocalized("No doors found on this map")
+            return
+        end
+
+        table.sort(doorData, function(a, b) return a.id < b.id end)
+        local doorList = {}
+        for _, data in ipairs(doorData) do
+            table.insert(doorList, {
+                property = "Door ID: " .. data.id,
+                value = "Pos: " .. data.position .. " | Model: " .. data.model
+            })
+        end
+
+        lia.util.SendTableUI(client, "Door IDs on " .. game.GetMap(), {
+            {
+                name = "Door ID",
+                field = "property"
+            },
+            {
+                name = "Details",
+                field = "value"
+            }
+        }, doorList)
+
+        client:notifyLocalized("Found " .. #doorData .. " doors. Check your UI for details.")
     end
 })

@@ -26,15 +26,17 @@ lia.command.add("spawnadd", {
         if factionInfo then
             MODULE:FetchSpawns():next(function(spawns)
                 spawns[factionInfo.uniqueID] = spawns[factionInfo.uniqueID] or {}
-                table.insert(spawns[factionInfo.uniqueID], {
+                local newSpawn = {
                     pos = client:GetPos(),
                     ang = client:EyeAngles(),
                     map = game.GetMap()
-                })
+                }
 
-                MODULE:StoreSpawns(spawns)
-                lia.log.add(client, "spawnAdd", factionInfo.name)
-                client:notifyLocalized("spawnAdded", L(factionInfo.name))
+                table.insert(spawns[factionInfo.uniqueID], newSpawn)
+                MODULE:StoreSpawns(spawns):next(function()
+                    lia.log.add(client, "spawnAdd", factionInfo.name)
+                    client:notifyLocalized("spawnAdded", L(factionInfo.name))
+                end)
             end)
         else
             client:notifyLocalized("invalidFaction")
@@ -74,9 +76,15 @@ lia.command.add("spawnremoveinradius", {
                 if #list == 0 then spawns[faction] = nil end
             end
 
-            if removedCount > 0 then MODULE:StoreSpawns(spawns) end
-            lia.log.add(client, "spawnRemoveRadius", radius, removedCount)
-            client:notifyLocalized("spawnDeleted", removedCount)
+            if removedCount > 0 then
+                MODULE:StoreSpawns(spawns):next(function()
+                    lia.log.add(client, "spawnRemoveRadius", radius, removedCount)
+                    client:notifyLocalized("spawnDeleted", removedCount)
+                end)
+            else
+                lia.log.add(client, "spawnRemoveRadius", radius, removedCount)
+                client:notifyLocalized("spawnDeleted", removedCount)
+            end
         end)
     end
 })
@@ -116,9 +124,10 @@ lia.command.add("spawnremovebyname", {
 
                     if removedCount > 0 then
                         if #list == 0 then spawns[factionInfo.uniqueID] = nil end
-                        MODULE:StoreSpawns(spawns)
-                        lia.log.add(client, "spawnRemoveByName", factionInfo.name, removedCount)
-                        client:notifyLocalized("spawnDeletedByName", L(factionInfo.name), removedCount)
+                        MODULE:StoreSpawns(spawns):next(function()
+                            lia.log.add(client, "spawnRemoveByName", factionInfo.name, removedCount)
+                            client:notifyLocalized("spawnDeletedByName", L(factionInfo.name), removedCount)
+                        end)
                     else
                         client:notifyLocalized("noSpawnsForFaction")
                     end

@@ -83,11 +83,7 @@ function lia.faction.loadFromDir(directory)
         if overrideDesc then FACTION.desc = overrideDesc end
         local overrideModels = hook.Run("OverrideFactionModels", niceName, FACTION.models)
         if overrideModels then FACTION.models = overrideModels end
-        if not FACTION.color then
-            FACTION.color = Color(150, 150, 150)
-            lia.error(L("factionMissingColor", niceName))
-        end
-
+        if not FACTION.color then FACTION.color = Color(150, 150, 150) end
         team.SetUp(FACTION.index, FACTION.name or L("unknown"), FACTION.color or Color(125, 125, 125))
         FACTION.models = FACTION.models or DefaultModels
         FACTION.uniqueID = FACTION.uniqueID or niceName
@@ -267,7 +263,7 @@ FACTION_STAFF = lia.faction.register("staff", {
     desc = "factionStaffDesc",
     color = Color(255, 56, 252),
     isDefault = false,
-    models = {"models/player/police.mdl",},
+    models = {"models/player/police.mdl"},
     weapons = {"weapon_physgun", "gmod_tool", "weapon_physcannon"}
 })
 

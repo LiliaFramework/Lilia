@@ -1,5 +1,5 @@
 ﻿function MODULE:PostLoadData()
-    if self.DoorsAlwaysDisabled then
+    if lia.config.get("DoorsAlwaysDisabled", false) then
         local count = 0
         for _, door in ents.Iterator() do
             if IsValid(door) and door:isDoor() then
@@ -24,6 +24,13 @@ function MODULE:LoadData()
     lia.db.query(query):next(function(res)
         local rows = res.results or {}
         local loadedCount = 0
+        local presetData = lia.doors.GetPreset(mapName)
+        local doorsWithData = {}
+        for _, row in ipairs(rows) do
+            local id = tonumber(row.id)
+            if id then doorsWithData[id] = true end
+        end
+
         for _, row in ipairs(rows) do
             local id = tonumber(row.id)
             if not id then
@@ -123,6 +130,44 @@ function MODULE:LoadData()
             local noSell = tonumber(row.ownable) == 0
             ent:setNetVar("noSell", noSell)
             loadedCount = loadedCount + 1
+        end
+
+        if presetData then
+            for doorID, doorVars in pairs(presetData) do
+                if not doorsWithData[doorID] then
+                    local ent = ents.GetMapCreatedEntity(doorID)
+                    if IsValid(ent) and ent:isDoor() then
+                        if doorVars.name then ent:setNetVar("name", tostring(doorVars.name)) end
+                        if doorVars.price and doorVars.price >= 0 then
+                            ent:setNetVar("price", doorVars.price)
+                        else
+                            ent:setNetVar("price", 0)
+                        end
+
+                        if doorVars.locked ~= nil then ent:setNetVar("locked", doorVars.locked and true or false) end
+                        if doorVars.disabled ~= nil then ent:setNetVar("disabled", doorVars.disabled and true or nil) end
+                        if doorVars.hidden ~= nil then ent:setNetVar("hidden", doorVars.hidden and true or nil) end
+                        if doorVars.noSell ~= nil then ent:setNetVar("noSell", doorVars.noSell and true or nil) end
+                        if doorVars.factions and istable(doorVars.factions) then
+                            local factionsJson = util.TableToJSON(doorVars.factions)
+                            ent.liaFactions = doorVars.factions
+                            ent:setNetVar("factions", factionsJson)
+                        end
+
+                        -- Handle classes
+                        if doorVars.classes and istable(doorVars.classes) then
+                            local classesJson = util.TableToJSON(doorVars.classes)
+                            ent.liaClasses = doorVars.classes
+                            ent:setNetVar("classes", classesJson)
+                        end
+
+                        lia.information("Applied preset to door ID " .. doorID)
+                        loadedCount = loadedCount + 1
+                    else
+                        lia.warning("Door entity " .. doorID .. " not found for preset application")
+                    end
+                end
+            end
         end
     end):catch(function(err)
         lia.error("Failed to load door data: " .. tostring(err))
@@ -225,7 +270,21 @@ function MODULE:SaveData()
     end
 end
 
-function MODULE:VerifyDatabaseSchema()
+function lia.doors.AddPreset(mapName, presetData)
+    if not mapName or not presetData then
+        error("lia.doors.AddPreset: Missing required parameters (mapName, presetData)")
+        return
+    end
+
+    lia.doors.presets[mapName] = presetData
+    lia.information("Added door preset for map: " .. mapName)
+end
+
+function lia.doors.GetPreset(mapName)
+    return lia.doors.presets[mapName]
+end
+
+function lia.doors.VerifyDatabaseSchema()
     if lia.db.module == "sqlite" then
         lia.db.query("PRAGMA table_info(lia_doors)"):next(function(res)
             if not res or not res.results then
@@ -298,7 +357,7 @@ function MODULE:VerifyDatabaseSchema()
     end
 end
 
-function MODULE:CleanupCorruptedData()
+function lia.doors.CleanupCorruptedData()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
     local condition = buildCondition(gamemode, map)
@@ -312,22 +371,18 @@ function MODULE:CleanupCorruptedData()
             local needsUpdate = false
             local newFactions = row.factions
             local newClasses = row.classes
-            if row.factions and row.factions ~= "NULL" and row.factions ~= "" then
-                if tostring(row.factions):match("^[%d%.%-%s]+$") and not tostring(row.factions):match("[{}%[%]]") then
-                    lia.warning("Found corrupted factions data for door " .. id .. ": " .. tostring(row.factions))
-                    newFactions = ""
-                    needsUpdate = true
-                    corruptedCount = corruptedCount + 1
-                end
+            if row.factions and row.factions ~= "NULL" and row.factions ~= "" and tostring(row.factions):match("^[%d%.%-%s]+$") and not tostring(row.factions):match("[{}%[%]]") then
+                lia.warning("Found corrupted factions data for door " .. id .. ": " .. tostring(row.factions))
+                newFactions = ""
+                needsUpdate = true
+                corruptedCount = corruptedCount + 1
             end
 
-            if row.classes and row.classes ~= "NULL" and row.classes ~= "" then
-                if tostring(row.classes):match("^[%d%.%-%s]+$") and not tostring(row.classes):match("[{}%[%]]") then
-                    lia.warning("Found corrupted classes data for door " .. id .. ": " .. tostring(row.classes))
-                    newClasses = ""
-                    needsUpdate = true
-                    corruptedCount = corruptedCount + 1
-                end
+            if row.classes and row.classes ~= "NULL" and row.classes ~= "" and tostring(row.classes):match("^[%d%.%-%s]+$") and not tostring(row.classes):match("[{}%[%]]") then
+                lia.warning("Found corrupted classes data for door " .. id .. ": " .. tostring(row.classes))
+                newClasses = ""
+                needsUpdate = true
+                corruptedCount = corruptedCount + 1
             end
 
             if needsUpdate then
@@ -358,8 +413,8 @@ function MODULE:InitPostEntity()
         end
     end
 
-    timer.Simple(1, function() self:CleanupCorruptedData() end)
-    timer.Simple(3, function() self:VerifyDatabaseSchema() end)
+    timer.Simple(1, function() lia.doors.CleanupCorruptedData() end)
+    timer.Simple(3, function() lia.doors.VerifyDatabaseSchema() end)
 end
 
 function MODULE:PlayerUse(client, door)

@@ -112,11 +112,14 @@ function lia.char.registerVar(key, data)
                 if curChar and curChar == self then sendID = false end
                 local oldVar = self.vars[key]
                 self.vars[key] = value
-                net.Start("charSet")
-                net.WriteString(key)
-                net.WriteType(value)
-                net.WriteType(sendID and self:getID() or nil)
-                net.Send(self.player)
+                local player = self:getPlayer()
+                if player and IsValid(player) and player:IsPlayer() then
+                    net.Start("charSet")
+                    net.WriteString(key)
+                    net.WriteType(value)
+                    net.WriteType(sendID and self:getID() or nil)
+                    net.Send(player)
+                end
                 hook.Run("OnCharVarChanged", self, key, oldVar, value)
             end
         else
@@ -387,7 +390,6 @@ lia.char.registerVar("playTime", {
     field = "playtime",
     fieldType = "integer",
     default = 0,
-    isLocal = true,
     noDisplay = true
 })
 
@@ -479,14 +481,18 @@ lia.char.registerVar("attribs", {
             end
         end
     end,
-    shouldDisplay = function() return table.Count(lia.attribs.list) > 0 end
+    shouldDisplay = function()
+        for _, attrib in pairs(lia.attribs.list) do
+            if not attrib.noStartBonus then return true end
+        end
+        return false
+    end
 })
 
 lia.char.registerVar("recognition", {
     field = "recognition",
     fieldType = "text",
     default = "",
-    isLocal = true,
     noDisplay = true
 })
 
@@ -501,7 +507,6 @@ lia.char.registerVar("lastPos", {
     field = "lastpos",
     fieldType = "text",
     default = {},
-    isLocal = true,
     noDisplay = true
 })
 
@@ -509,7 +514,6 @@ lia.char.registerVar("ammo", {
     field = "ammo",
     fieldType = "text",
     default = {},
-    isLocal = true,
     noDisplay = true
 })
 

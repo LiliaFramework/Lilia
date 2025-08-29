@@ -16,6 +16,48 @@ The `lia.module` library is the core system responsible for loading, managing, a
 - **Submodule Support**: Recursively loads submodules from `submodules/` folders
 - **File Organization**: Automatically includes various module components (commands, hooks, libraries, etc.)
 - **Schema Integration**: Special handling for schema modules and preload directories
+- **Selective Hotreload**: Only reloads edited modules during development, preserving performance
+
+---
+
+## Hotreload Behavior
+
+The module system implements an optimized hotreload mechanism that distinguishes between core framework components and modules:
+
+### What Gets Reloaded Always
+
+**Core Framework Components** are always loaded during hotreload, regardless of whether they've been modified:
+- Core libraries (`gamemode/core/libraries/`)
+- Global hooks (`gamemode/core/hooks/`)
+- Meta tables (`gamemode/core/meta/`)
+- Derma components (`gamemode/core/derma/`)
+- Entities (`gamemode/entities/`)
+- Schema configuration and items
+- All shared/client/server realm files
+
+### What Gets Reloaded Selectively
+
+**Modules** are only reloaded if their files have been modified since the last load:
+- Individual modules in `modules/` folders
+- Schema modules in `schema/modules/`
+- Preload modules in `schema/preload/`
+- Module-specific items, hooks, libraries, and other components
+
+### Hotreload Flow
+
+```
+Hotreload Triggered
+        ↓
+   Load Core Framework (Always)
+        ↓
+  Check Module Timestamps
+        ↓
+Reload Only Edited Modules
+        ↓
+  Fire Initialization Hooks
+```
+
+This approach ensures fast development iteration by avoiding unnecessary reloading of unchanged modules while maintaining consistency of core framework components.
 
 ---
 
@@ -161,7 +203,7 @@ lia.module.loadFromDir("schema/modules", "module", {test = true, debug = true})
 
 **Purpose**
 
-Reloads modules that have been edited since they were last loaded, skipping unchanged modules.
+Reloads modules that have been edited since they were last loaded, skipping unchanged modules. This function is called automatically during hotreload operations and only affects modules, not core framework components.
 
 **Parameters**
 
@@ -177,16 +219,36 @@ Reloads modules that have been edited since they were last loaded, skipping unch
 
 **What It Does**
 
-1. Checks the schema and module directories for files changed since last load.
-2. Reloads modules with newer modification timestamps and updates cached times.
-3. Fires `InitializedSchema` and `InitializedModules` hooks when necessary.
-4. Reloads schema items to apply changes.
+1. **Selective Module Reloading**: Only reloads modules whose files have been modified since last load
+2. **Schema Handling**: Checks and reloads the schema if it has been edited
+3. **Timestamp Tracking**: Updates cached modification times for reloaded modules
+4. **Hook Execution**: Fires `InitializedSchema` and `InitializedModules` hooks when necessary
+5. **Item Reloading**: Reloads schema items to apply changes
+
+**Important Notes**
+
+- **Module-Only Operation**: This function only reloads modules. Core framework components (libraries, hooks, entities, etc.) are always loaded regardless of file modification status
+- **Hotreload Behavior**: When hotreloading the gamemode, everything except modules is loaded, and only the specific edited module is refreshed
+- **Performance Optimized**: Skips reloading unchanged modules to improve hotreload performance
 
 **Example Usage**
 
 ```lua
 -- Reload only modules whose files have changed
 lia.module.reloadEdited()
+```
+
+**Hotreload Flow**
+
+```
+Hotreload Triggered → Load Core Framework → Check Module Timestamps → Reload Only Edited Modules
+                      ↓                           ↓                          ↓
+              Always loaded:            Only modules with            Only affected modules
+              - Libraries              newer timestamps             get refreshed
+              - Hooks                  get checked                  - Schema (if edited)
+              - Entities                                      - Specific modules
+              - Meta tables                                    - Module items
+              - Derma components
 ```
 
 ---

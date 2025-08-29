@@ -19,10 +19,22 @@ end
 
 local function _decodeVector(data)
     if isvector(data) then return data end
+    if isstring(data) and data:lower():match("^models/") then return data end
     if istable(data) then
-        if data.x then return Vector(data.x, data.y, data.z) end
-        if data.p and data.y and data.r then return Vector(data.p, data.y, data.r) end
-        if data[1] and data[2] and data[3] then return Vector(data[1], data[2], data[3]) end
+        if data.x then
+            local x, y, z = tonumber(data.x), tonumber(data.y), tonumber(data.z)
+            if x and y and z then return Vector(x, y, z) end
+        end
+
+        if data.p and data.y and data.r then
+            local x, y, z = tonumber(data.p), tonumber(data.y), tonumber(data.r)
+            if x and y and z then return Vector(x, y, z) end
+        end
+
+        if data[1] and data[2] and data[3] then
+            local x, y, z = tonumber(data[1]), tonumber(data[2]), tonumber(data[3])
+            if x and y and z then return Vector(x, y, z) end
+        end
     elseif isstring(data) then
         local x, y, z = data:match("%[([-%d%.]+)%s+([-%d%.]+)%s+([-%d%.]+)%]")
         if not x then x, y, z = data:match("%[([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%]") end
@@ -40,7 +52,10 @@ local function _decodeVector(data)
 
         if x then return Vector(tonumber(x), tonumber(y), tonumber(z)) end
         local tbl = util.JSONToTable(data)
-        if istable(tbl) and tbl[1] and tbl[2] and tbl[3] then return Vector(tonumber(tbl[1]), tonumber(tbl[2]), tonumber(tbl[3])) end
+        if istable(tbl) and tbl[1] and tbl[2] and tbl[3] then
+            local tx, ty, tz = tonumber(tbl[1]), tonumber(tbl[2]), tonumber(tbl[3])
+            if tx and ty and tz then return Vector(tx, ty, tz) end
+        end
     else
         local s = tostring(data)
         if s and s ~= "" then
@@ -66,9 +81,17 @@ end
 
 local function _decodeAngle(data)
     if isangle(data) then return data end
+    if isstring(data) and data:lower():match("^models/") then return data end
     if istable(data) then
-        if data.p or data.y or data.r then return Angle(data.p or 0, data.y or 0, data.r or 0) end
-        if data[1] and data[2] and data[3] then return Angle(data[1], data[2], data[3]) end
+        if data.p or data.y or data.r then
+            local p, y, r = tonumber(data.p or 0), tonumber(data.y or 0), tonumber(data.r or 0)
+            if p and y and r then return Angle(p, y, r) end
+        end
+
+        if data[1] and data[2] and data[3] then
+            local p, y, r = tonumber(data[1]), tonumber(data[2]), tonumber(data[3])
+            if p and y and r then return Angle(p, y, r) end
+        end
     elseif isstring(data) then
         local p, y, r = data:match("%{([-%d%.]+)%s+([-%d%.]+)%s+([-%d%.]+)%}")
         if not p then p, y, r = data:match("%{([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%}") end
@@ -86,7 +109,10 @@ local function _decodeAngle(data)
 
         if not p then
             local tbl = util.JSONToTable(data)
-            if istable(tbl) and tbl[1] and tbl[2] and tbl[3] then p, y, r = tbl[1], tbl[2], tbl[3] end
+            if istable(tbl) and tbl[1] and tbl[2] and tbl[3] then
+                local p_num, y_num, r_num = tonumber(tbl[1]), tonumber(tbl[2]), tonumber(tbl[3])
+                if p_num and y_num and r_num then p, y, r = p_num, y_num, r_num end
+            end
         end
 
         if p then return Angle(tonumber(p), tonumber(y), tonumber(r)) end

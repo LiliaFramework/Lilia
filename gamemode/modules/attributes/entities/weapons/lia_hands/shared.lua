@@ -245,16 +245,14 @@ function SWEP:PrimaryAttack()
         self.isFistHold = true
     end
 
-    if hook.Run("CanPlayerThrowPunch", self:GetOwner()) == false then return end
-    local staminaUse = lia.config.get("PunchStamina")
-    if staminaUse > 0 then
-        local owner = self:GetOwner()
-        local character = owner:getChar()
-        local currentStamina = owner:getLocalVar("stamina", character and character:getMaxStamina() or lia.config.get("DefaultStamina", 100))
-        if currentStamina < staminaUse then return end
-        if SERVER then owner:consumeStamina(staminaUse) end
+    local canPunch, reason = hook.Run("CanPlayerThrowPunch", self:GetOwner())
+    if canPunch == false then
+        if SERVER and reason and isstring(reason) then self:GetOwner():Notify(reason) end
+        return
     end
 
+    local staminaUse = lia.config.get("PunchStamina", 0)
+    if staminaUse > 0 and SERVER then self:GetOwner():consumeStamina(staminaUse) end
     local defaultDelay = self.Primary.Delay
     local scaledDelay = hook.Run("GetHandsAttackSpeed", self:GetOwner(), defaultDelay)
     self:SetNextPrimaryFire(CurTime() + (isnumber(scaledDelay) and scaledDelay or defaultDelay))

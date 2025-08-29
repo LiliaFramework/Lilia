@@ -685,30 +685,6 @@ net.Receive("charKick", function()
     hook.Run("KickedFromChar", id, isCurrentChar)
 end)
 
-net.Receive("prePlayerLoadedChar", function()
-    local charID = net.ReadUInt(32)
-    local currentID = net.ReadType()
-    local char = lia.char.getCharacter(charID)
-    local current = currentID and lia.char.getCharacter(currentID) or nil
-    hook.Run("PrePlayerLoadedChar", LocalPlayer(), char, current)
-end)
-
-net.Receive("playerLoadedChar", function()
-    local charID = net.ReadUInt(32)
-    local currentID = net.ReadType()
-    local char = lia.char.getCharacter(charID)
-    local current = currentID and lia.char.getCharacter(currentID) or nil
-    hook.Run("PlayerLoadedChar", LocalPlayer(), char, current)
-end)
-
-net.Receive("postPlayerLoadedChar", function()
-    local charID = net.ReadUInt(32)
-    local currentID = net.ReadType()
-    local char = lia.char.getCharacter(charID)
-    local current = currentID and lia.char.getCharacter(currentID) or nil
-    hook.Run("PostPlayerLoadedChar", LocalPlayer(), char, current)
-end)
-
 net.Receive("gVar", function()
     local key = net.ReadString()
     local value = net.ReadType()
@@ -827,6 +803,18 @@ net.Receive("liaCharacterData", function()
         local value = net.ReadType()
         character.dataVars[key] = value
     end
+end)
+
+net.Receive("EmitURLSound", function()
+    local ent = net.ReadEntity()
+    local url = net.ReadString()
+    local volume = net.ReadFloat()
+    local soundLevel = net.ReadFloat()
+    local hasDelay = net.ReadBool()
+    local startDelay = hasDelay and net.ReadFloat() or nil
+    if not IsValid(ent) then return end
+    local maxDistance = soundLevel * 13.33
+    ent:PlayFollowingSound(url, volume, true, maxDistance, startDelay)
 end)
 
 net.Receive("liaNetMessage", function()

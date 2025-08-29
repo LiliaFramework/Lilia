@@ -348,6 +348,7 @@ LANGUAGE = {
     invalidClass = "The specified class is not valid.",
     doorDisabled = "This door is disabled.",
     doorDisableAll = "All doors have been disabled.",
+    doorsAlwaysDisabledDesc = "When enabled, all doors will be disabled by default when the server loads.",
     doorSetClass = "This door now belongs to the '%s' class.",
     doorRemoveClass = "This door no longer belongs to any class.",
     doorRemoveClassSpecific = "The '%s' class has been removed from this door.",

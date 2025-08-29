@@ -443,17 +443,20 @@ if SERVER then
                 self:sync(v)
             end
         elseif receiver == self.player then
-            local data = {}
-            for k, v in pairs(self.vars) do
-                if lia.char.vars[k] ~= nil and not lia.char.vars[k].noNetworking then data[k] = v end
-            end
+            local player = self:getPlayer()
+            if IsValid(player) then
+                local data = {}
+                for k, v in pairs(self.vars) do
+                    if lia.char.vars[k] ~= nil and not lia.char.vars[k].noNetworking then data[k] = v end
+                end
 
-            net.Start("charInfo")
-            net.WriteTable(data)
-            net.WriteUInt(self:getID(), 32)
-            net.Send(self.player)
-            for _, v in pairs(lia.char.vars) do
-                if isfunction(v.onSync) then v.onSync(self, self.player) end
+                net.Start("charInfo")
+                net.WriteTable(data)
+                net.WriteUInt(self:getID(), 32)
+                net.Send(player)
+                for _, v in pairs(lia.char.vars) do
+                    if isfunction(v.onSync) then v.onSync(self, player) end
+                end
             end
         else
             local data = {}
@@ -464,7 +467,7 @@ if SERVER then
             net.Start("charInfo")
             net.WriteTable(data)
             net.WriteUInt(self:getID(), 32)
-            net.WriteEntity(self.player)
+            net.WriteEntity(self:getPlayer())
             net.Send(receiver)
             for _, v in pairs(lia.char.vars) do
                 if isfunction(v.onSync) then v.onSync(self, receiver) end

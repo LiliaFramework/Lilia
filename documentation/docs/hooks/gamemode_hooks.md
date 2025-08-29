@@ -10491,7 +10491,7 @@ end)
 
 **Purpose**
 
-Called after a player finishes loading a character. The client receives the same event when the server notifies it of the character load. `previousChar` is only supplied when the player switched from another character.
+Called after a player finishes loading a character. `previousChar` is only supplied when the player switched from another character.
 
 **Parameters**
 
@@ -10503,7 +10503,7 @@ Called after a player finishes loading a character. The client receives the same
 
 **Realm**
 
-`Shared`
+`Server`
 
 **Returns**
 
@@ -10524,7 +10524,7 @@ end)
 
 **Purpose**
 
-Runs just before a new character becomes active for the player. The client side receives the same event when the server begins loading the character.
+Runs just before a new character becomes active for the player.
 
 **Parameters**
 
@@ -10536,7 +10536,7 @@ Runs just before a new character becomes active for the player. The client side 
 
 **Realm**
 
-`Shared`
+`Server`
 
 **Returns**
 
@@ -10557,7 +10557,7 @@ end)
 
 **Purpose**
 
-Runs after `PlayerLoadedChar` so modules can perform additional setup. The client receives the same event once the server notifies it.
+Runs after `PlayerLoadedChar` so modules can perform additional setup.
 
 **Parameters**
 
@@ -10569,7 +10569,7 @@ Runs after `PlayerLoadedChar` so modules can perform additional setup. The clien
 
 **Realm**
 
-`Shared`
+`Server`
 
 **Returns**
 

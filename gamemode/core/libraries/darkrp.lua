@@ -102,6 +102,42 @@ end
 function lia.darkrp.createCategory()
 end
 
+function DarkRP.removeChatCommand()
+end
+
+function DarkRP.defineChatCommand(cmd, callback)
+    cmd = string.lower(cmd)
+    lia.command.add(cmd, {
+        onRun = function(client, args)
+            local success, result = pcall(callback, client, unpack(args))
+            if not success then
+                ErrorNoHalt("Error in DarkRP chat command '" .. cmd .. "': " .. result)
+                return
+            end
+
+            if isstring(result) and result ~= "" then client:notify(result) end
+            return result
+        end
+    })
+end
+
+function DarkRP.definePrivilegedChatCommand(cmd, priv, callback)
+    cmd = string.lower(cmd)
+    lia.command.add(cmd, {
+        privilege = priv,
+        onRun = function(client, args)
+            local success, result = pcall(callback, client, unpack(args))
+            if not success then
+                ErrorNoHalt("Error in DarkRP privileged chat command '" .. cmd .. "': " .. result)
+                return
+            end
+
+            if isstring(result) and result ~= "" then client:notify(result) end
+            return result
+        end
+    })
+end
+
 local DarkRPVariables = {
     ["DarkRPNonOwnable"] = function(entity) entity:setNetVar("noSell", true) end,
     ["DarkRPTitle"] = function(entity, val) entity:setNetVar("name", val) end,

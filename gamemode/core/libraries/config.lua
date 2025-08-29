@@ -405,6 +405,12 @@ lia.config.add("SchemaYear", "schemaYear", 2025, nil, {
     max = 999999
 })
 
+lia.config.add("DoorsAlwaysDisabled", "doorsAlwaysDisabled", false, nil, {
+    desc = "doorsAlwaysDisabledDesc",
+    category = "Doors",
+    type = "Boolean"
+})
+
 lia.config.add("AmericanDates", "americanDates", true, nil, {
     desc = "americanDatesDesc",
     category = "categoryGeneral",

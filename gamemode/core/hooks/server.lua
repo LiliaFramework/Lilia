@@ -447,6 +447,7 @@ function GM:PlayerInitialSpawn(client)
         return
     end
 
+    client:SetNoDraw(true)
     lia.config.send(client)
     client.liaJoinTime = RealTime()
     lia.administrator.sync(client)
@@ -482,6 +483,7 @@ function GM:PlayerLoadout(client)
     end
 
     if not character then return end
+    client:SetNoDraw(false)
     client:SetWeaponColor(Vector(0.30, 0.80, 0.10))
     client:StripWeapons()
     client:setLocalVar("blur", nil)
