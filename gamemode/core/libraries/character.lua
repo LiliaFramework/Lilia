@@ -120,6 +120,7 @@ function lia.char.registerVar(key, data)
                     net.WriteType(sendID and self:getID() or nil)
                     net.Send(player)
                 end
+
                 hook.Run("OnCharVarChanged", self, key, oldVar, value)
             end
         else
