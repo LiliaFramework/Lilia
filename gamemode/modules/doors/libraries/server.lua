@@ -154,7 +154,6 @@ function MODULE:LoadData()
                             ent:setNetVar("factions", factionsJson)
                         end
 
-                        -- Handle classes
                         if doorVars.classes and istable(doorVars.classes) then
                             local classesJson = util.TableToJSON(doorVars.classes)
                             ent.liaClasses = doorVars.classes
