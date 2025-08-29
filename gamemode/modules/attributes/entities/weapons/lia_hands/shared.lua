@@ -247,7 +247,7 @@ function SWEP:PrimaryAttack()
 
     local canPunch, reason = hook.Run("CanPlayerThrowPunch", self:GetOwner())
     if canPunch == false then
-        if SERVER and reason and isstring(reason) then self:GetOwner():Notify(reason) end
+        if SERVER and reason and isstring(reason) then self:GetOwner():notify(reason) end
         return
     end
 
