@@ -96,20 +96,6 @@
     "workshop": []
   },
   {
-    "name": "Cigarettes",
-    "uniqueID": "",
-    "author": "Samael",
-    "discord": "@liliaplayer",
-    "description": "Adds smokable cigarette items with workshop models, puff effects while smoking, and cigarettes that are consumed over time with ash particles.",
-    "version": "1.25",
-    "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cigs.zip",
-    "source": "https://liliaframework.github.io/Modules/cigs.html",
-    "features": [],
-    "workshop": [
-      "3527540050"
-    ]
-  },
-  {
     "name": "Cinematic Text",
     "uniqueID": "",
     "author": "Samael",
