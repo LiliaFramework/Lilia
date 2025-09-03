@@ -1,4 +1,5 @@
-﻿local staminaPlayers = {}
+﻿local MODULE = MODULE
+local staminaPlayers = {}
 function MODULE:PostPlayerLoadout(client)
     local char = client:getChar()
     if not char then return end
@@ -42,9 +43,7 @@ function MODULE:KeyPress(client, key)
         local maxStamina = char:getMaxStamina() or lia.config.get("DefaultStamina", 100)
         client:consumeStamina(cost)
         local newStamina = client:getLocalVar("stamina", maxStamina)
-        if newStamina <= 0 then
-            client:ConCommand("-speed")
-        end
+        if newStamina <= 0 then client:ConCommand("-speed") end
     end
 end
 
@@ -56,7 +55,6 @@ end
 function MODULE:PostPlayerLoadedChar(client, character)
     if IsValid(client) and character then client:setLocalVar("stamina", character:getMaxStamina()) end
 end
-
 
 net.Receive("ChangeAttribute", function(_, client)
     if not client:hasPrivilege("manageAttributes") then return end
@@ -127,7 +125,7 @@ net.Receive("ChangeAttribute", function(_, client)
     end
 end)
 
-if SERVER and not timer.Exists("liaGlobalStamina") then
+if not timer.Exists("liaGlobalStamina") then
     timer.Create("liaGlobalStamina", 0.25, 0, function()
         for client, _ in pairs(staminaPlayers) do
             if IsValid(client) then
