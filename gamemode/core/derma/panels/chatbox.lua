@@ -41,15 +41,18 @@ end
 function PANEL:Paint(panelW, panelH)
     if self.active then
         lia.util.drawBlur(self, 10)
-        surface.SetDrawColor(250, 250, 250, 2)
-        surface.DrawRect(0, 0, panelW, panelH)
-        surface.SetDrawColor(0, 0, 0, 240)
+        surface.SetDrawColor(0, 0, 0, 255)
+        surface.DrawOutlinedRect(0, 0, panelW, panelH)
+        surface.SetDrawColor(0, 0, 0, 150)
+        surface.DrawRect(1, 1, panelW - 2, panelH - 2)
+        surface.SetDrawColor(0, 0, 0, 200)
         surface.DrawOutlinedRect(0, 0, panelW, panelH)
     end
 end
 
 function PANEL:setActive(state)
     self.active = state
+    self.tabs:SetVisible(state)
     if state then
         self.entry = self:Add("EditablePanel")
         self.entry:SetPos(self.x + 4, self.y + self:GetTall() - 32)
@@ -278,7 +281,15 @@ function PANEL:addText(...)
     panel:setMarkup(markup, OnDrawText)
     panel.start = CurTime() + 15
     panel.finish = panel.start + 20
-    panel.Think = function(p) p:SetAlpha(self.active and 255 or (1 - math.TimeFraction(p.start, p.finish, CurTime())) * 255) end
+    panel.Think = function(p)
+        if self.active then
+            p:SetAlpha(255)
+        else
+            local alpha = (1 - math.TimeFraction(p.start, p.finish, CurTime())) * 255
+            p:SetAlpha(math.max(alpha, 150))
+        end
+    end
+
     self.list[#self.list + 1] = panel
     local cls = CHAT_CLASS and CHAT_CLASS.filter and CHAT_CLASS.filter:lower() or "ic"
     panel.filter = cls
@@ -330,6 +341,7 @@ function PANEL:Think()
         if IsValid(self.entry) then self.entry:Remove() end
     end
 
+    if not self.active then self.tabs:SetVisible(false) end
     if self.active and IsValid(self.text) and not self.text:HasFocus() and IsValid(self.commandList) then
         self.commandList:Remove()
         self.commandList = nil

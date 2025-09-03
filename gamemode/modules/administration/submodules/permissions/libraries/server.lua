@@ -135,6 +135,13 @@ function GM:PlayerNoClip(ply, enabled)
         return false
     end
 
+
+    if not ply:Alive() then
+        lia.log.add(ply, "permissionDenied", L("noclipWhileDead"))
+        ply:notifyLocalized("noNoclipWhileDead")
+        return false
+    end
+
     ply:DrawShadow(not enabled)
     ply:SetNoTarget(enabled)
     ply:AddFlags(FL_NOTARGET)

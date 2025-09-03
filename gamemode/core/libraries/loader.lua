@@ -1,8 +1,11 @@
-﻿lia = lia or {
+﻿local hasInitializedModules = false
+lia = lia or {
     util = {},
     gui = {},
     meta = {},
-    notices = {}
+    notices = {},
+    lastReloadTime = 0,
+    reloadCooldown = 5
 }
 
 local FilesToLoad = {
@@ -168,10 +171,6 @@ local FilesToLoad = {
     },
     {
         path = "lilia/gamemode/core/libraries/darkrp.lua",
-        realm = "shared"
-    },
-    {
-        path = "lilia/gamemode/core/libraries/salary.lua",
         realm = "shared"
     },
     {
@@ -550,21 +549,19 @@ else
     timer.Remove("HintSystem_Annoy2")
 end
 
-local hasInitializedModules = false
 function GM:Initialize()
     if engine.ActiveGamemode() == "lilia" then lia.error(L("noSchemaLoaded")) end
     if not hasInitializedModules then
         lia.module.initialize()
         hasInitializedModules = true
     end
-
-    if CLIENT then
-        lia.option.load()
-        lia.keybind.load()
-    end
 end
 
 function GM:OnReloaded()
+    local currentTime = CurTime()
+    local timeSinceLastReload = currentTime - lia.lastReloadTime
+    if timeSinceLastReload < lia.reloadCooldown then return end
+    lia.lastReloadTime = currentTime
     lia.module.initialize()
     lia.config.load()
     lia.faction.formatModelData()
@@ -572,9 +569,9 @@ function GM:OnReloaded()
         lia.config.send()
         lia.administrator.sync()
         lia.playerinteract.syncToClients()
+        lia.bootstrap("HotReload", "Gamemode hotreloaded successfully!")
     else
-        lia.option.load()
-        lia.keybind.load()
+        chat.AddText(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Gamemode hotreloaded successfully!")
     end
 end
 

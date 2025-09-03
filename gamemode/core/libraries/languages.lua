@@ -53,6 +53,7 @@ function L(key, ...)
     local template = langTable and langTable[key]
     if not template then return tostring(key) end
     if template:find("%%d") then lia.error("String formatting with %d is not allowed in localization strings: " .. tostring(key)) end
+    if template:find("%%[^%%sdfg]") then lia.error("Invalid format specifier in localization string: " .. tostring(key) .. " - " .. template) end
     local count = select("#", ...)
     local args = {}
     for i = 1, count do
@@ -68,7 +69,12 @@ function L(key, ...)
     for i = count + 1, needed do
         args[i] = ""
     end
-    return string.format(template, unpack(args))
+    local success, result = pcall(string.format, template, unpack(args))
+    if not success then
+        lia.error("Format error in localization string '" .. tostring(key) .. "': " .. result)
+        return tostring(key)
+    end
+    return result
 end
 
 lia.lang.loadFromDir("lilia/gamemode/languages")

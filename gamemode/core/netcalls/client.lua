@@ -325,6 +325,7 @@ end)
 
 lia.net.readBigTable("SendTableUI", function(data) lia.util.CreateTableUI(data.title, data.columns, data.data, data.options, data.characterID) end)
 net.Receive("OptionsRequest", function()
+    local id = net.ReadUInt(32)
     local titleKey = net.ReadString()
     local subTitleKey = net.ReadString()
     local options = net.ReadTable()
@@ -334,6 +335,12 @@ net.Receive("OptionsRequest", function()
     frame:SetSize(400, 300)
     frame:Center()
     frame:MakePopup()
+    frame.OnClose = function()
+        net.Start("OptionsRequestCancel")
+        net.WriteUInt(id, 32)
+        net.SendToServer()
+    end
+
     local label = vgui.Create("DLabel", frame)
     label:SetText(L(subTitleKey))
     label:SetPos(10, 30)
@@ -373,13 +380,33 @@ net.Receive("OptionsRequest", function()
         table.insert(checkboxes, checkbox)
     end
 
-    local button = vgui.Create("DButton", frame)
-    button:SetText(L("submit"))
-    button:SetPos(10, 260)
-    button:SetSize(380, 30)
-    button.DoClick = function()
+    local submitBtn = vgui.Create("DButton", frame)
+    submitBtn:SetText(L("submit"))
+    submitBtn:SetPos(10, 260)
+    submitBtn:SetSize(185, 30)
+    submitBtn.DoClick = function()
+        if #selected == 0 then
+            net.Start("OptionsRequestCancel")
+            net.WriteUInt(id, 32)
+            net.SendToServer()
+            frame:Close()
+            return
+        end
+
         net.Start("OptionsRequest")
+        net.WriteUInt(id, 32)
         net.WriteTable(selected)
+        net.SendToServer()
+        frame:Close()
+    end
+
+    local cancelBtn = vgui.Create("DButton", frame)
+    cancelBtn:SetText(L("cancel"))
+    cancelBtn:SetPos(205, 260)
+    cancelBtn:SetSize(185, 30)
+    cancelBtn.DoClick = function()
+        net.Start("OptionsRequestCancel")
+        net.WriteUInt(id, 32)
         net.SendToServer()
         frame:Close()
     end
@@ -428,17 +455,24 @@ net.Receive("liaProvideInteractOptions", function()
 end)
 
 net.Receive("RequestDropdown", function()
+    local id = net.ReadUInt(32)
     local titleKey = net.ReadString()
     local subTitleKey = net.ReadString()
     local options = net.ReadTable()
     local frame = vgui.Create("DFrame")
     frame:SetTitle(L(titleKey))
-    frame:SetSize(300, 150)
+    frame:SetSize(500, 250)
     frame:Center()
     frame:MakePopup()
+    frame.OnClose = function()
+        net.Start("RequestDropdownCancel")
+        net.WriteUInt(id, 32)
+        net.SendToServer()
+    end
+
     local dropdown = vgui.Create("DComboBox", frame)
-    dropdown:SetPos(10, 40)
-    dropdown:SetSize(280, 20)
+    dropdown:SetPos(15, 50)
+    dropdown:SetSize(470, 30)
     dropdown:SetValue(L(subTitleKey))
     for _, option in ipairs(options) do
         dropdown:AddChoice(L(option))
@@ -446,7 +480,19 @@ net.Receive("RequestDropdown", function()
 
     dropdown.OnSelect = function(_, _, value)
         net.Start("RequestDropdown")
+        net.WriteUInt(id, 32)
         net.WriteString(value)
+        net.SendToServer()
+        frame:Close()
+    end
+
+    local cancelBtn = vgui.Create("DButton", frame)
+    cancelBtn:SetText(L("cancel"))
+    cancelBtn:SetPos(15, 200)
+    cancelBtn:SetSize(470, 35)
+    cancelBtn.DoClick = function()
+        net.Start("RequestDropdownCancel")
+        net.WriteUInt(id, 32)
         net.SendToServer()
         frame:Close()
     end
@@ -456,11 +502,17 @@ net.Receive("ArgumentsRequest", function()
     local id = net.ReadUInt(32)
     local title = net.ReadString()
     local fields = net.ReadTable()
-    lia.util.requestArguments(title, fields, function(data)
-        net.Start("ArgumentsRequest")
-        net.WriteUInt(id, 32)
-        net.WriteTable(data)
-        net.SendToServer()
+    lia.util.requestArguments(title, fields, function(success, data)
+        if success then
+            net.Start("ArgumentsRequest")
+            net.WriteUInt(id, 32)
+            net.WriteTable(data)
+            net.SendToServer()
+        else
+            net.Start("ArgumentsRequestCancel")
+            net.WriteUInt(id, 32)
+            net.SendToServer()
+        end
     end)
 end)
 
@@ -471,12 +523,61 @@ net.Receive("StringRequest", function()
     local default = net.ReadString()
     if title:sub(1, 1) == "@" then title = L(title:sub(2)) end
     if subTitle:sub(1, 1) == "@" then subTitle = L(subTitle:sub(2)) end
-    Derma_StringRequest(title, subTitle, default, function(text)
+    local frame = vgui.Create("DFrame")
+    frame:SetTitle(title)
+    frame:SetSize(500, 250)
+    frame:Center()
+    frame:MakePopup()
+    frame:SetKeyboardInputEnabled(true)
+    local label = vgui.Create("DLabel", frame)
+    label:SetText(subTitle)
+    label:Dock(TOP)
+    label:DockMargin(10, 30, 10, 5)
+    local entry = vgui.Create("DTextEntry", frame)
+    entry:Dock(FILL)
+    entry:DockMargin(10, 5, 10, 40)
+    entry:SetValue(default)
+    entry:SelectAll()
+    entry.OnEnter = function()
         net.Start("StringRequest")
         net.WriteUInt(id, 32)
-        net.WriteString(text)
+        net.WriteString(entry:GetValue())
         net.SendToServer()
-    end)
+        frame:Remove()
+    end
+
+    local buttonPanel = vgui.Create("DPanel", frame)
+    buttonPanel:Dock(BOTTOM)
+    buttonPanel:SetTall(35)
+    buttonPanel:DockMargin(10, 5, 10, 5)
+    local submit = vgui.Create("DButton", buttonPanel)
+    submit:Dock(LEFT)
+    submit:SetWide((frame:GetWide() - 20) * 0.50)
+    submit:SetText(L("submit"))
+    submit.DoClick = function()
+        net.Start("StringRequest")
+        net.WriteUInt(id, 32)
+        net.WriteString(entry:GetValue())
+        net.SendToServer()
+        frame:Remove()
+    end
+
+    local cancel = vgui.Create("DButton", buttonPanel)
+    cancel:Dock(RIGHT)
+    cancel:SetWide((frame:GetWide() - 20) * 0.50)
+    cancel:SetText(L("cancel"))
+    cancel.DoClick = function()
+        net.Start("StringRequestCancel")
+        net.WriteUInt(id, 32)
+        net.SendToServer()
+        frame:Remove()
+    end
+
+    frame.OnClose = function()
+        net.Start("StringRequestCancel")
+        net.WriteUInt(id, 32)
+        net.SendToServer()
+    end
 end)
 
 local function OrganizeNotices()
@@ -539,6 +640,7 @@ local function CreateNoticePanel(length, notimer)
 end
 
 net.Receive("BinaryQuestionRequest", function()
+    local id = net.ReadUInt(32)
     local questionKey = net.ReadString()
     local option1Key = net.ReadString()
     local option2Key = net.ReadString()
@@ -555,6 +657,8 @@ net.Receive("BinaryQuestionRequest", function()
     notice.opt1:SetAlpha(0)
     notice.opt2 = notice:Add("DButton")
     notice.opt2:SetAlpha(0)
+    notice.cancelBtn = notice:Add("DButton")
+    notice.cancelBtn:SetAlpha(0)
     notice.oh = notice:GetTall()
     notice:SetTall(0)
     notice:SizeTo(notice:GetWide(), 36 * 2.3, 0.2, 0, -1, function()
@@ -565,28 +669,31 @@ net.Receive("BinaryQuestionRequest", function()
             function o:Paint(w, h)
                 if self.left then
                     draw.RoundedBoxEx(4, 0, 0, w + 2, h, self.color, false, false, true, false)
-                else
+                elseif self.right then
                     draw.RoundedBoxEx(4, 0, 0, w + 2, h, self.color, false, false, false, true)
+                else
+                    draw.RoundedBox(4, 0, 0, w, h, self.color)
                 end
             end
         end
 
         if notice.opt1 and IsValid(notice.opt1) then
             notice.opt1:SetAlpha(255)
-            notice.opt1:SetSize(notice:GetWide() / 2, 25)
-            notice.opt1:SetText(L(option1Key, L("yes")) .. L("keyBind", "F8"))
+            notice.opt1:SetSize(notice:GetWide() / 3 - 5, 25)
+            notice.opt1:SetText(L(option1Key, L("yes")) .. L("keyBind", "F7"))
             notice.opt1:SetPos(0, notice:GetTall() - notice.opt1:GetTall())
-            notice.opt1:CenterHorizontal(0.25)
+            notice.opt1:CenterHorizontal(0.166)
             notice.opt1:SetAlpha(0)
             notice.opt1:AlphaTo(255, 0.2)
             notice.opt1:SetTextColor(color_white)
             notice.opt1.left = true
             styleOpt(notice.opt1)
             function notice.opt1:keyThink()
-                if input.IsKeyDown(KEY_F8) and CurTime() - notice.lastKey >= 0.5 then
+                if input.IsKeyDown(KEY_F7) and CurTime() - notice.lastKey >= 0.5 then
                     self:ColorTo(Color(24, 215, 37), 0.2, 0)
                     notice.respondToKeys = false
                     net.Start("BinaryQuestionRequest")
+                    net.WriteUInt(id, 32)
                     net.WriteUInt(0, 1)
                     net.SendToServer()
                     timer.Simple(1, function() if notice and IsValid(notice) then RemoveNotices(notice) end end)
@@ -597,20 +704,45 @@ net.Receive("BinaryQuestionRequest", function()
 
         if notice.opt2 and IsValid(notice.opt2) then
             notice.opt2:SetAlpha(255)
-            notice.opt2:SetSize(notice:GetWide() / 2, 25)
-            notice.opt2:SetText(L(option2Key, L("no")) .. L("keyBind", "F9"))
+            notice.opt2:SetSize(notice:GetWide() / 3 - 5, 25)
+            notice.opt2:SetText(L(option2Key, L("no")) .. L("keyBind", "F8"))
             notice.opt2:SetPos(0, notice:GetTall() - notice.opt2:GetTall())
-            notice.opt2:CenterHorizontal(0.75)
+            notice.opt2:CenterHorizontal(0.5)
             notice.opt2:SetAlpha(0)
             notice.opt2:AlphaTo(255, 0.2)
             notice.opt2:SetTextColor(color_white)
             styleOpt(notice.opt2)
             function notice.opt2:keyThink()
-                if input.IsKeyDown(KEY_F9) and CurTime() - notice.lastKey >= 0.5 then
+                if input.IsKeyDown(KEY_F8) and CurTime() - notice.lastKey >= 0.5 then
                     self:ColorTo(Color(24, 215, 37), 0.2, 0)
                     notice.respondToKeys = false
                     net.Start("BinaryQuestionRequest")
+                    net.WriteUInt(id, 32)
                     net.WriteUInt(1, 1)
+                    net.SendToServer()
+                    timer.Simple(1, function() if notice and IsValid(notice) then RemoveNotices(notice) end end)
+                    notice.lastKey = CurTime()
+                end
+            end
+        end
+
+        if notice.cancelBtn and IsValid(notice.cancelBtn) then
+            notice.cancelBtn:SetAlpha(255)
+            notice.cancelBtn:SetSize(notice:GetWide() / 3 - 5, 25)
+            notice.cancelBtn:SetText(L("cancel") .. L("keyBind", "F9"))
+            notice.cancelBtn:SetPos(0, notice:GetTall() - notice.cancelBtn:GetTall())
+            notice.cancelBtn:CenterHorizontal(0.833)
+            notice.cancelBtn:SetAlpha(0)
+            notice.cancelBtn:AlphaTo(255, 0.2)
+            notice.cancelBtn:SetTextColor(color_white)
+            notice.cancelBtn.right = true
+            styleOpt(notice.cancelBtn)
+            function notice.cancelBtn:keyThink()
+                if input.IsKeyDown(KEY_F9) and CurTime() - notice.lastKey >= 0.5 then
+                    self:ColorTo(Color(215, 24, 37), 0.2, 0)
+                    notice.respondToKeys = false
+                    net.Start("BinaryQuestionRequestCancel")
+                    net.WriteUInt(id, 32)
                     net.SendToServer()
                     timer.Simple(1, function() if notice and IsValid(notice) then RemoveNotices(notice) end end)
                     notice.lastKey = CurTime()
@@ -625,6 +757,7 @@ net.Receive("BinaryQuestionRequest", function()
             if not self.respondToKeys then return end
             if self.opt1 and IsValid(self.opt1) then self.opt1:keyThink() end
             if self.opt2 and IsValid(self.opt2) then self.opt2:keyThink() end
+            if self.cancelBtn and IsValid(self.cancelBtn) then self.cancelBtn:keyThink() end
         end
     end)
 end)
@@ -640,13 +773,13 @@ net.Receive("ButtonRequest", function()
 
     local frame = vgui.Create("DFrame")
     frame:SetTitle(L(titleKey))
-    frame:SetSize(300, 60 + count * 30)
+    frame:SetSize(500, 80 + count * 40)
     frame:Center()
     frame:MakePopup()
     for i, key in ipairs(options) do
         local btn = frame:Add("DButton")
         btn:Dock(TOP)
-        btn:DockMargin(10, 5, 10, 0)
+        btn:DockMargin(15, 10, 15, 5)
         btn:SetText(L(key))
         btn.DoClick = function()
             net.Start("ButtonRequest")
@@ -734,10 +867,23 @@ net.Receive("liaItemInspect", function()
 
     local model = vgui.Create("DModelPanel", view)
     model:Dock(FILL)
-    model:SetModel(item.model or "models/props_junk/cardboard_box002b.mdl")
+    if item.icon then
+        model:SetVisible(false)
+        view.ExtraPaint = function(_, w, h)
+            local mat = isstring(item.icon) and Material(item.icon) or item.icon
+            surface.SetDrawColor(color_white)
+            surface.SetMaterial(mat)
+            surface.DrawTexturedRect(0, 0, w, h)
+        end
+    else
+        model:SetVisible(true)
+        model:SetModel(item.model or "models/props_junk/cardboard_box002b.mdl")
+        view.ExtraPaint = function() end
+    end
+
     model.LayoutEntity = function() end
     timer.Simple(0, function()
-        if not IsValid(model) then return end
+        if not IsValid(model) or not model.Entity then return end
         local mn, mx = model.Entity:GetRenderBounds()
         local c = (mn + mx) * 0.5
         local r = (mx - mn):Length() * 0.5 + 4
@@ -807,14 +953,28 @@ end)
 
 net.Receive("EmitURLSound", function()
     local ent = net.ReadEntity()
-    local url = net.ReadString()
+    local soundPath = net.ReadString()
     local volume = net.ReadFloat()
     local soundLevel = net.ReadFloat()
     local hasDelay = net.ReadBool()
     local startDelay = hasDelay and net.ReadFloat() or nil
     if not IsValid(ent) then return end
-    local maxDistance = soundLevel * 13.33
-    ent:PlayFollowingSound(url, volume, true, maxDistance, startDelay)
+    if soundPath:find("^https?://") then
+        local maxDistance = soundLevel * 13.33
+        local ext = soundPath:match("%.([%w]+)$") or "mp3"
+        local name = util.CRC(soundPath) .. "." .. ext
+        local cachedPath = lia.websound.get(name)
+        if cachedPath then
+            ent:PlayFollowingSound(cachedPath, volume, true, maxDistance, startDelay)
+        else
+            lia.websound.register(name, soundPath, function(localPath) if localPath then ent:PlayFollowingSound(localPath, volume, true, maxDistance, startDelay) end end)
+        end
+    elseif soundPath:find("^lilia/websounds/") or soundPath:find("^websounds/") then
+        local maxDistance = soundLevel * 13.33
+        ent:PlayFollowingSound(soundPath, volume, true, maxDistance, startDelay)
+    else
+        ent:EmitSound(soundPath, soundLevel, nil, volume, nil, nil, nil)
+    end
 end)
 
 net.Receive("liaNetMessage", function()
@@ -826,4 +986,104 @@ net.Receive("liaNetMessage", function()
     else
         lia.error("Received unregistered net message: " .. name)
     end
+end)
+
+net.Receive("liaAssureClientSideAssets", function()
+    lia.webimage.allowDownloads = true
+    local webimages = lia.webimage.stored
+    local websounds = lia.websound.stored
+    print("=== STARTING CLIENT-SIDE ASSET DOWNLOAD ===")
+    print("WebImages to download:", table.Count(webimages))
+    print("WebSounds to download:", table.Count(websounds))
+    print("===========================================")
+    local downloadQueue = {}
+    local activeDownloads = 0
+    local maxConcurrent = 5
+    local totalImages = table.Count(webimages)
+    local totalSounds = table.Count(websounds)
+    local completedImages = 0
+    local completedSounds = 0
+    local failedImages = 0
+    local failedSounds = 0
+    for name, data in pairs(webimages) do
+        table.insert(downloadQueue, {
+            type = "image",
+            name = name,
+            url = data.url,
+            flags = data.flags
+        })
+    end
+
+    for name, url in pairs(websounds) do
+        table.insert(downloadQueue, {
+            type = "sound",
+            name = name,
+            url = url
+        })
+    end
+
+    print("Download queue size:", #downloadQueue)
+    print("Processing with max concurrent downloads:", maxConcurrent)
+    local function processNextDownload()
+        if #downloadQueue == 0 then return end
+        local download = table.remove(downloadQueue, 1)
+        activeDownloads = activeDownloads + 1
+        if download.type == "image" then
+            lia.webimage.download(download.name, download.url, function(material, fromCache, errorMsg)
+                activeDownloads = activeDownloads - 1
+                if material then
+                    completedImages = completedImages + 1
+                    if not fromCache then print(string.format("[✓] Image downloaded: %s", download.name)) end
+                else
+                    failedImages = failedImages + 1
+                    print(string.format("[✗] Image failed: %s - %s", download.name, errorMsg or "Unknown error"))
+                end
+
+                processNextDownload()
+            end, download.flags)
+        elseif download.type == "sound" then
+            lia.websound.download(download.name, download.url, function(path, fromCache, errorMsg)
+                activeDownloads = activeDownloads - 1
+                if path then
+                    completedSounds = completedSounds + 1
+                    if not fromCache then print(string.format("[✓] Sound downloaded: %s", download.name)) end
+                else
+                    failedSounds = failedSounds + 1
+                    print(string.format("[✗] Sound failed: %s - %s", download.name, errorMsg or "Unknown error"))
+                end
+
+                processNextDownload()
+            end)
+        end
+    end
+
+    for _ = 1, math.min(maxConcurrent, #downloadQueue) do
+        processNextDownload()
+    end
+
+    timer.Create("AssetDownloadProgress", 2, 0, function()
+        if activeDownloads == 0 and #downloadQueue == 0 then
+            timer.Remove("AssetDownloadProgress")
+            lia.option.load()
+            lia.keybind.load()
+            lia.webimage.allowDownloads = false
+            timer.Simple(1.0, function()
+                local imageStats = lia.webimage.getStats()
+                local soundStats = lia.websound.getStats()
+                print("===========================================")
+                print("=== CLIENT-SIDE ASSETS DOWNLOAD COMPLETE ===")
+                print("Download Summary")
+                print(string.format("Images: %d/%d completed (%d failed)", completedImages, totalImages, failedImages))
+                print(string.format("Sounds: %d/%d completed (%d failed)", completedSounds, totalSounds, failedSounds))
+                print("Current Statistics")
+                print(string.format("Images: %d downloaded | %d stored", imageStats.downloaded, imageStats.stored))
+                print(string.format("Sounds: %d downloaded | %d stored", soundStats.downloaded, soundStats.stored))
+                print(string.format("Combined: %d downloaded | %d stored", imageStats.downloaded + soundStats.downloaded, imageStats.stored + soundStats.stored))
+                print("===========================================")
+                if failedImages > 0 or failedSounds > 0 then print("WARNING: Some assets failed to download. Check console output above for details.") end
+            end)
+        else
+            print(string.format("Download progress: %d active, %d queued, %d/%d images, %d/%d sounds", activeDownloads, #downloadQueue, completedImages, totalImages, completedSounds, totalSounds))
+        end
+    end)
 end)

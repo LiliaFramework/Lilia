@@ -167,6 +167,12 @@ lia.command.add("returnsitroom", {
 lia.command.add("charkill", {
     superAdminOnly = true,
     desc = "charkillDesc",
+    AdminStick = {
+        Name = "adminStickCharKillName",
+        Category = "characterManagement",
+        SubCategory = "adminStickSubCategoryBans",
+        Icon = "icon16/user_delete.png"
+    },
     onRun = function(client)
         local choices = {}
         for _, ply in player.Iterator() do
@@ -1000,7 +1006,7 @@ lia.command.add("forcefallover", {
         end
 
         target:setNetVar("FallOverCooldown", true)
-        if not target:hasRagdoll() then
+        if not IsValid(target:getRagdoll()) then
             target:setRagdolled(true, time)
             timer.Simple(10, function() if IsValid(target) then target:setNetVar("FallOverCooldown", false) end end)
         end
@@ -1023,7 +1029,7 @@ lia.command.add("forcegetup", {
             return
         end
 
-        if not target:hasRagdoll() then
+        if not IsValid(target:getRagdoll()) then
             target:notifyLocalized("noRagdoll")
             return
         end
@@ -1064,7 +1070,7 @@ lia.command.add("chargetup", {
     adminOnly = false,
     desc = "forceSelfGetUpDesc",
     onRun = function(client)
-        if not client:hasRagdoll() then
+        if not IsValid(client:getRagdoll()) then
             client:notifyLocalized("noRagdoll")
             return
         end
@@ -1127,7 +1133,7 @@ lia.command.add("fallover", {
         end
 
         client:setNetVar("FallOverCooldown", true)
-        if not client:hasRagdoll() then
+        if not IsValid(client:getRagdoll()) then
             client:setRagdolled(true, t)
             timer.Simple(10, function() if IsValid(client) then client:setNetVar("FallOverCooldown", false) end end)
         end
@@ -1764,6 +1770,90 @@ lia.command.add("charban", {
         else
             client:notifyLocalized("noChar")
         end
+    end
+})
+
+lia.command.add("charwipe", {
+    superAdminOnly = true,
+    desc = "charWipeDesc",
+    arguments = {
+        {
+            name = "nameOrNumberId",
+            type = "string"
+        },
+    },
+    AdminStick = {
+        Name = "wipeCharacter",
+        Category = "characterManagement",
+        SubCategory = "adminStickSubCategoryBans",
+        Icon = "icon16/user_delete.png"
+    },
+    onRun = function(client, arguments)
+        local queryArg = table.concat(arguments, " ")
+        local target
+        local id = tonumber(queryArg)
+        if id then
+            for _, ply in player.Iterator() do
+                if IsValid(ply) and ply:getChar() and ply:getChar():getID() == id then
+                    target = ply
+                    break
+                end
+            end
+        else
+            target = lia.util.findPlayer(client, arguments[1])
+        end
+
+        if not target or not IsValid(target) then
+            client:notifyLocalized("targetNotFound")
+            return
+        end
+
+        local character = target:getChar()
+        if character then
+            local charID = character:getID()
+            local charName = character:getName()
+
+            character:kick()
+
+            lia.char.delete(charID, target)
+            client:notifyLocalized("charWipe", client:Name(), charName)
+            lia.log.add(client, "charWipe", charName, charID)
+        else
+            client:notifyLocalized("noChar")
+        end
+    end
+})
+
+lia.command.add("charwipeoffline", {
+    superAdminOnly = true,
+    desc = "charWipeOfflineDesc",
+    arguments = {
+        {
+            name = "charId",
+            type = "string"
+        },
+    },
+    onRun = function(client, arguments)
+        local charID = tonumber(arguments[1])
+        if not charID then return client:notifyLocalized("invalidCharID") end
+        lia.db.query("SELECT name FROM lia_characters WHERE id = " .. charID, function(data)
+            if not data or #data == 0 then
+                client:notifyLocalized("characterNotFound")
+                return
+            end
+
+            local charName = data[1].name
+            for _, ply in player.Iterator() do
+                if ply:getChar() and ply:getChar():getID() == charID then
+                    ply:Kick(L("youHaveBeenWiped"))
+                    break
+                end
+            end
+
+            lia.char.delete(charID)
+            client:notifyLocalized("offlineCharWiped", charID)
+            lia.log.add(client, "charWipeOffline", charName, charID)
+        end)
     end
 })
 

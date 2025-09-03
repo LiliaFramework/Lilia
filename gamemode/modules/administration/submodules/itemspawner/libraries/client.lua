@@ -6,9 +6,14 @@
     icon:SetSpawnName(data.id)
     icon:SetName(data.name)
     local itemData = lia.item.list[data.id]
-    local model = itemData.model or "default.mdl"
-    local matName = string.Replace(model, ".mdl", "")
-    icon.Image:SetMaterial(Material("spawnicons/" .. matName .. ".png"))
+    if itemData.icon then
+        icon.Image:SetMaterial(itemData.icon)
+    else
+        local model = itemData.model or "default.mdl"
+        local matName = string.Replace(model, ".mdl", "")
+        icon.Image:SetMaterial(Material("spawnicons/" .. matName .. ".png"))
+    end
+
     icon:SetColor(Color(205, 92, 92, 255))
     icon:SetTooltip(lia.darkrp.textWrap(itemData.desc or "", "DermaDefault", 560))
     icon.DoClick = function()

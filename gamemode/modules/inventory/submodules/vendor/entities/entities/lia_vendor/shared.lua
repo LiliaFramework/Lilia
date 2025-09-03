@@ -43,6 +43,7 @@ function ENT:Initialize()
     self:DrawShadow(true)
     self:SetSolid(SOLID_BBOX)
     self:PhysicsInit(SOLID_BBOX)
+    self:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
     self:setupVars()
     local physObj = self:GetPhysicsObject()
     if IsValid(physObj) then
@@ -129,14 +130,12 @@ end
 
 function ENT:setAnim()
     if not self:isReadyForAnim() then return end
-    local success, err = pcall(function()
-        local sequenceList = self:GetSequenceList()
-        for k, v in ipairs(sequenceList) do
-            if v:lower():find("idle") and v ~= "idlenoise" then return self:ResetSequence(k) end
-        end
+    local sequenceList = self:GetSequenceList()
+    for k, v in ipairs(sequenceList) do
+        if v:lower():find("idle") and v ~= "idlenoise" then return self:ResetSequence(k) end
+    end
 
-        if self:GetSequenceCount() > 1 then self:ResetSequence(4) end
-    end)
-
-    if not success then print("[Lilia Vendor] Error in setAnim: " .. tostring(err)) end
+    if self:GetSequenceCount() > 1 then 
+        self:ResetSequence(4) 
+    end
 end

@@ -174,27 +174,19 @@ function lia.keybind.get(a, df)
 end
 
 function lia.keybind.save()
-    local dp = "lilia/keybinds/" .. engine.ActiveGamemode()
-    file.CreateDir(dp)
-    local ip = string.Explode(":", game.GetIPAddress())[1]
-    local f = ip:gsub("%.", "_")
-    local s = dp .. "/" .. f .. ".json"
+    local path = "lilia/keybinds.json"
     local d = {}
     for k, v in pairs(lia.keybind.stored) do
         if istable(v) and v.value then d[k] = v.value end
     end
 
     local j = util.TableToJSON(d, true)
-    if j then file.Write(s, j) end
+    if j then file.Write(path, j) end
 end
 
 function lia.keybind.load()
-    local dp = "lilia/keybinds/" .. engine.ActiveGamemode()
-    file.CreateDir(dp)
-    local ip = string.Explode(":", game.GetIPAddress())[1]
-    local f = ip:gsub("%.", "_")
-    local jsonPath = dp .. "/" .. f .. ".json"
-    local d = file.Read(jsonPath, "DATA")
+    local path = "lilia/keybinds.json"
+    local d = file.Read(path, "DATA")
     if d then
         local s = util.JSONToTable(d)
         for k, v in pairs(s) do
@@ -205,7 +197,13 @@ function lia.keybind.load()
             if istable(v) and v.default then v.value = v.default end
         end
 
-        lia.keybind.save()
+        local out = {}
+        for k, v in pairs(lia.keybind.stored) do
+            if istable(v) and v.value then out[k] = v.value end
+        end
+
+        local json = util.TableToJSON(out, true)
+        if json then file.Write(path, json) end
     end
 
     for k in pairs(lia.keybind.stored) do
@@ -434,4 +432,84 @@ lia.keybind.add(KEY_NONE, "quickTakeItem", {
             if itemTable and itemTable.functions and itemTable.functions.take and itemTable.functions.take.onCanRun and itemTable.functions.take.onCanRun(itemTable) then if itemTable.functions.take.onRun then itemTable.functions.take.onRun(itemTable, client, entity) end end
         end
     end
+})
+
+lia.keybind.add(KEY_NONE, "convertEntity", {
+    onPress = function(client)
+        if not IsValid(client) or not client:getChar() then return end
+
+        local trace = client:GetEyeTrace()
+        local targetEntity = trace.Entity
+
+        if not IsValid(targetEntity) or targetEntity == client then return end
+
+        if trace.HitPos:Distance(client:GetPos()) > 200 then
+            client:notifyLocalized("entityTooFar")
+            return
+        end
+
+
+        if targetEntity:IsPlayer() or targetEntity:isItem() or targetEntity:GetClass() == "lia_money" then
+            client:notifyLocalized("cannotConvertEntity")
+            return
+        end
+
+
+        local hasItemDefinition = false
+        local itemUniqueID = ""
+        local targetEntityID = targetEntity:GetClass()
+
+        for uniqueID, entityData in pairs(lia.item.itemEntities or {}) do
+            if entityData[1] == targetEntityID then
+                hasItemDefinition = true
+                itemUniqueID = uniqueID
+                break
+            end
+        end
+
+
+        if not hasItemDefinition then
+            client:notifyLocalized("entityNotConvertible")
+            return
+        end
+
+
+        local entityData = extractEntityData(targetEntity)
+
+        lia.item.instance(0, itemUniqueID, {}, 1, 1, function(item)
+            if not item then return end
+
+            if SERVER then
+                item:getEntity():setNetVar("entityData", entityData)
+                item:setData("entityClass", targetEntity:GetClass())
+                item:setData("entityModel", targetEntity:GetModel())
+            end
+
+
+            local inventory = client:getChar():getInv()
+            if inventory then
+                inventory:add(item):next(function()
+
+                    if IsValid(targetEntity) then SafeRemoveEntity(targetEntity) end
+                    client:notifyLocalized("entityConverted", item:getName())
+                end):catch(function(err)
+                    if err == "noFit" then
+
+                        item:spawn(client:getItemDropPos())
+                        if IsValid(targetEntity) then SafeRemoveEntity(targetEntity) end
+                        client:notifyLocalized("entityConvertedGround", item:getName())
+                    else
+                        client:notifyLocalized("inventoryError")
+                    end
+                end)
+            else
+
+                item:spawn(client:getItemDropPos())
+                if IsValid(targetEntity) then SafeRemoveEntity(targetEntity) end
+                client:notifyLocalized("entityConvertedGround", item:getName())
+            end
+        end)
+    end,
+    shouldRun = function(client) return client:getChar() ~= nil end,
+    serverOnly = true
 })

@@ -76,9 +76,7 @@ else
     end
 
     local function gmaDir()
-        local ip = game.GetIPAddress() or "0.0.0.0"
-        ip = string.gsub(ip, ":", "_")
-        local dir = "lilia/" .. engine.ActiveGamemode() .. "_" .. ip
+        local dir = "lilia/workshop"
         if not file.IsDir(dir, "DATA") then file.CreateDir(dir) end
         return dir
     end

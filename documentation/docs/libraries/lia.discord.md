@@ -143,6 +143,6 @@ Enable debug logging by adding this to your configuration:
 
 ```lua
 hook.Add("DiscordRelayed", "DebugLogging", function(embed)
-    print("[Discord Debug] Message sent successfully")
+    -- Debug logging enabled
 end)
 ```

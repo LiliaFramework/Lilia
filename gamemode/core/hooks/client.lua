@@ -101,7 +101,7 @@ end
 
 local function canDrawCrosshair()
     local client = LocalPlayer()
-    local rag = Entity(client:getLocalVar("ragdoll", 0))
+    local rag = client:getRagdoll()
     local wpn = client:GetActiveWeapon()
     if not client:getChar() then return false end
     if IsValid(wpn) then
@@ -324,7 +324,7 @@ end
 
 function GM:CalcView(client, origin, angles, fov)
     local view = self.BaseClass:CalcView(client, origin, angles, fov)
-    local ragEntity = Entity(client:getLocalVar("ragdoll", 0))
+    local ragEntity = client:getRagdoll()
     local ragdoll = client:GetRagdollEntity()
     local ent
     if not client:hasValidVehicle() and client:GetViewEntity() == client and not client:ShouldDrawLocalPlayer() then
@@ -351,7 +351,7 @@ end
 
 function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
-    if bind:find("jump") and client:hasRagdoll() then lia.command.send("chargetup") end
+    if bind:find("jump") and IsValid(client:getRagdoll()) then lia.command.send("chargetup") end
     if (bind:find("use") or bind:find("attack")) and pressed then
         local menu, callback = lia.menu.getActiveMenu()
         if menu and lia.menu.onButtonPressed(menu, callback) then return true end
@@ -460,14 +460,6 @@ function GM:VoiceToggled(enabled)
             VoicePanels[client] = nil
         end
     end
-end
-
-function GM:MouthMoveAnimation()
-    return nil
-end
-
-function GM:GrabEarAnimation()
-    return nil
 end
 
 function GM:SpawnMenuOpen()

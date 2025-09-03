@@ -11,7 +11,7 @@ ITEM.functions.Use = {
     icon = "icon16/tick.png",
     onRun = function(item)
         local client = item.player
-        if client:hasRagdoll() then
+        if IsValid(client:getRagdoll()) then
             client:notifyLocalized("noRagdollAction")
             return false
         end

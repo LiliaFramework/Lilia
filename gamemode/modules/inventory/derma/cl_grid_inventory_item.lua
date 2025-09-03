@@ -50,6 +50,24 @@ function PANEL:setItemType(itemTypeOrID)
     self.liaToolTip = true
     self.itemTable = item
     self:SetModel(item:getModel(), item:getSkin())
+    local paintMat = hook.Run("PaintItem", item)
+    local entity
+    if self.Icon and self.Icon.GetEntity then
+        entity = self.Icon:GetEntity()
+    elseif self.GetEntity then
+        entity = self:GetEntity()
+    end
+
+    if IsValid(entity) then
+        if isstring(paintMat) and paintMat ~= "" then
+            entity:SetMaterial(paintMat)
+        elseif isstring(item.material) and item.material ~= "" then
+            entity:SetMaterial(item.material)
+        else
+            entity:SetMaterial("")
+        end
+    end
+
     self:updateTooltip()
     if item.icon then
         self.Icon:SetVisible(false)

@@ -628,7 +628,11 @@ else
         cancel:SetText(L("cancel"))
         cancel:SetFont("liaSmallFont")
         cancel:SetIcon("icon16/cross.png")
-        cancel.DoClick = function() frame:Remove() end
+        cancel.DoClick = function()
+            if isfunction(onSubmit) then onSubmit(false) end
+            frame:Remove()
+        end
+
         validate = function()
             for _, data in pairs(controls) do
                 local ctl, ftype, ok = data.ctrl, data.type, true
@@ -671,9 +675,11 @@ else
                 end
             end
 
-            if isfunction(onSubmit) then onSubmit(result) end
+            if isfunction(onSubmit) then onSubmit(true, result) end
             frame:Remove()
         end
+
+        frame.OnClose = function() if isfunction(onSubmit) then onSubmit(false) end end
     end
 
     function lia.util.CreateTableUI(title, columns, data, options, charID)

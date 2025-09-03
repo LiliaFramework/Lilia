@@ -184,6 +184,13 @@ end
 function PANEL:onStepChanged(oldStep, newStep)
     local finish = self.curStep == #self.steps
     local key = finish and "finish" or "next"
+
+    if IsValid(newStep) then
+        local panelName = newStep:GetName()
+        local shouldShowModel = panelName == "liaCharacterBiography" or panelName == "liaCharacterModel"
+        self.model:SetVisible(shouldShowModel)
+    end
+
     if IsValid(self:getPreviousStep()) then
         self.prev:AlphaTo(255, 0.5)
     else
@@ -239,6 +246,7 @@ function PANEL:Init()
     self.model:Dock(LEFT)
     self.model:SetModel("models/error.mdl")
     self.model:fitFOV()
+    self.model:SetVisible(false)
     self.buttons = self:Add("DPanel")
     self.buttons:Dock(BOTTOM)
     self.buttons:SetTall(48)

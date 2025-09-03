@@ -37,10 +37,21 @@ local function HUDPaint()
         alphaDelta = Lerp(frameTime * 10, alphaDelta, alpha)
     end
 
-    local shiftX = ScrW() * 0.02
     local client = LocalPlayer()
     local weapons = client:GetWeapons()
-    local x, y = ScrW() * 0.05, ScrH() * 0.5
+    local position = lia.option.get("weaponSelectorPosition", "Left")
+    local x, y, shiftX
+    if position == "Left" then
+        shiftX = ScrW() * 0.02
+        x, y = ScrW() * 0.05, ScrH() * 0.5
+    elseif position == "Right" then
+        shiftX = -ScrW() * 0.02
+        x, y = ScrW() * 0.95, ScrH() * 0.5
+    else
+        shiftX = 0
+        x, y = ScrW() * 0.5, ScrH() * 0.5
+    end
+
     local spacing = pi * 0.85
     local radius = 240 * alphaDelta
     deltaIndex = Lerp(frameTime * 12, deltaIndex, index)
@@ -56,7 +67,14 @@ local function HUDPaint()
             lastY = h * fraction
             if realIndex == index - 1 or realIndex == 1 then
                 infoAlpha = Lerp(frameTime * 5, infoAlpha, 255)
-                infoMarkup:Draw(x + 6 + shiftX, y + 30, 0, 0, infoAlpha * fraction)
+                local infoX = x + 6 + shiftX
+                if position == "Right" then
+                    infoX = x + 6 + shiftX
+                elseif position == "Center" then
+                    infoX = x + 6 + shiftX
+                end
+
+                infoMarkup:Draw(infoX, y + 30, 0, 0, infoAlpha * fraction)
             end
 
             if index == 1 then lastY = 0 end
@@ -67,7 +85,16 @@ local function HUDPaint()
         local _, ty = surface.GetTextSize(name)
         local scale = math.max(1 - math.abs(theta * 2), 0)
         local matrix = Matrix()
-        matrix:Translate(Vector(shiftX + x + math.cos(theta * spacing + pi) * radius + radius, y + lastY + math.sin(theta * spacing + pi) * radius - ty / 2, 1))
+        local textX, textY
+        if position == "Right" then
+            textX = shiftX + x + math.cos(theta * spacing + pi) * radius - radius
+            textY = y + lastY + math.sin(theta * spacing + pi) * radius - ty / 2
+        else
+            textX = shiftX + x + math.cos(theta * spacing + pi) * radius + radius
+            textY = y + lastY + math.sin(theta * spacing + pi) * radius - ty / 2
+        end
+
+        matrix:Translate(Vector(textX, textY, 1))
         matrix:Scale(Vector(scale, scale, 1))
         cam.PushModelMatrix(matrix)
         lia.util.drawText(name, 2, ty / 2, col, 0, 1, "liaBigFont")

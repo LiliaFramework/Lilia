@@ -39,12 +39,8 @@ function playerMeta:isNoClipping()
     return self:GetMoveType() == MOVETYPE_NOCLIP and not self:hasValidVehicle()
 end
 
-function playerMeta:hasRagdoll()
-    return IsValid(self.liaRagdoll)
-end
-
 function playerMeta:removeRagdoll()
-    if not self:hasRagdoll() then return end
+    if not IsValid(self:getRagdoll()) then return end
     local ragdoll = self:getRagdoll()
     ragdoll.liaIgnoreDelete = true
     SafeRemoveEntity(ragdoll)
@@ -52,8 +48,8 @@ function playerMeta:removeRagdoll()
 end
 
 function playerMeta:getRagdoll()
-    if not self:hasRagdoll() then return end
-    return self.liaRagdoll
+    if not IsValid(self:getNetVar("ragdoll")) then return end
+    return self:getNetVar("ragdoll")
 end
 
 function playerMeta:isStuck()
@@ -100,8 +96,7 @@ function playerMeta:isRunning()
 end
 
 function playerMeta:isFemale()
-    local model = self:GetModel():lower()
-    return model:find("female") or model:find("alyx") or model:find("mossman")
+    return hook.Run("GetPlayerGender", self, self:GetModel()) == "female"
 end
 
 function playerMeta:IsFamilySharedAccount()
@@ -604,10 +599,6 @@ if SERVER then
         return hook.Run("CharHasFlags", self, flags) or false
     end
 
-    function playerMeta:setRagdoll(entity)
-        self.liaRagdoll = entity
-    end
-
     function playerMeta:NetworkAnimation(active, boneData)
         net.Start("AnimationStatus")
         net.WriteEntity(self)
@@ -685,22 +676,35 @@ if SERVER then
     end
 
     function playerMeta:requestDropdown(title, subTitle, options, callback)
+        self.liaDropdownReqs = self.liaDropdownReqs or {}
+        local id = table.insert(self.liaDropdownReqs, {
+            callback = callback,
+            allowed = options or {}
+        })
+
         net.Start("RequestDropdown")
+        net.WriteUInt(id, 32)
         net.WriteString(title)
         net.WriteString(subTitle)
-        net.WriteTable(options)
+        net.WriteTable(options or {})
         net.Send(self)
-        self.dropdownCallback = callback
     end
 
     function playerMeta:requestOptions(title, subTitle, options, limit, callback)
+        self.liaOptionsReqs = self.liaOptionsReqs or {}
+        local id = table.insert(self.liaOptionsReqs, {
+            callback = callback,
+            allowed = options or {},
+            limit = tonumber(limit) or 1
+        })
+
         net.Start("OptionsRequest")
+        net.WriteUInt(id, 32)
         net.WriteString(title)
         net.WriteString(subTitle)
-        net.WriteTable(options)
-        net.WriteUInt(limit, 32)
+        net.WriteTable(options or {})
+        net.WriteUInt(tonumber(limit) or 1, 32)
         net.Send(self)
-        self.optionsCallback = callback
     end
 
     function playerMeta:requestString(title, subTitle, callback, default)
@@ -730,23 +734,29 @@ if SERVER then
         end
 
         self.liaArgReqs = self.liaArgReqs or {}
-        local id = table.insert(self.liaArgReqs, callback)
+        local id = table.insert(self.liaArgReqs, {
+            callback = callback,
+            spec = argTypes or {}
+        })
+
         net.Start("ArgumentsRequest")
         net.WriteUInt(id, 32)
         net.WriteString(title or "")
-        net.WriteTable(argTypes)
+        net.WriteTable(argTypes or {})
         net.Send(self)
         return d
     end
 
     function playerMeta:binaryQuestion(question, option1, option2, manualDismiss, callback)
+        self.liaBinaryReqs = self.liaBinaryReqs or {}
+        local id = table.insert(self.liaBinaryReqs, callback)
         net.Start("BinaryQuestionRequest")
+        net.WriteUInt(id, 32)
         net.WriteString(question)
         net.WriteString(option1)
         net.WriteString(option2)
         net.WriteBool(manualDismiss)
         net.Send(self)
-        self.binaryQuestionCallback = callback
     end
 
     function playerMeta:requestButtons(title, buttons)
@@ -815,7 +825,8 @@ if SERVER then
 
         entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
         entity:Activate()
-        if isDead then self.liaRagdoll = entity end
+        if self:IsOnFire() then entity:Ignite(8) end
+        if isDead then self:setNetVar("ragdoll", entity) end
         hook.Run("OnCreatePlayerRagdoll", self, entity, isDead)
         local velocity = self:GetVelocity()
         for i = 0, entity:GetPhysicsObjectCount() - 1 do
@@ -840,17 +851,15 @@ if SERVER then
 
     function playerMeta:setRagdolled(state, baseTime, getUpGrace, getUpMessage)
         getUpMessage = getUpMessage or L("wakingUp")
-        local hasRagdoll = self:hasRagdoll()
         local ragdoll = self:getRagdoll()
         local time = hook.Run("GetRagdollTime", self, time) or baseTime or 10
         if state then
-            if hasRagdoll then SafeRemoveEntity(ragdoll) end
+            if IsValid(ragdoll) then SafeRemoveEntity(ragdoll) end
             local entity = self:createRagdoll()
             entity:setNetVar("player", self)
             entity:CallOnRemove("fixer", function()
                 if IsValid(self) then
                     self:setLocalVar("blur", nil)
-                    self:setLocalVar("ragdoll", nil)
                     if not entity.liaNoReset then self:SetPos(entity:GetPos()) end
                     self:SetNoDraw(false)
                     self:SetNotSolid(false)
@@ -884,7 +893,7 @@ if SERVER then
             end)
 
             self:setLocalVar("blur", 25)
-            self:setRagdoll(entity)
+            self:setNetVar("ragdoll", entity)
             entity.liaWeapons = {}
             entity.liaAmmo = {}
             entity.liaPlayer = self
@@ -925,13 +934,12 @@ if SERVER then
                 end)
             end
 
-            self:setLocalVar("ragdoll", entity:EntIndex())
             if IsValid(entity) then
                 entity:SetCollisionGroup(COLLISION_GROUP_NONE)
                 entity:SetCustomCollisionCheck(false)
             end
-        elseif hasRagdoll then
-            SafeRemoveEntity(self.liaRagdoll)
+        elseif IsValid(self:getRagdoll()) then
+            SafeRemoveEntity(self:getNetVar("ragdoll"))
             hook.Run("OnCharFallover", self, nil, false)
         end
     end
@@ -970,7 +978,7 @@ if SERVER then
     end
 else
     function playerMeta:CanOverrideView()
-        local ragdoll = Entity(self:getLocalVar("ragdoll", 0))
+        local ragdoll = self:getRagdoll()
         local isInVehicle = self:hasValidVehicle()
         if IsValid(lia.gui.char) then return false end
         if isInVehicle then return false end

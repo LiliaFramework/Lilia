@@ -1,5 +1,7 @@
 ﻿if SERVER then
     hook.Add("EntityTakeDamage", "liaSimfphys", function(seat, dmgInfo)
+        local damageInCars = lia.config.get("DamageInCars", true)
+        if not damageInCars then return end
         if seat:IsVehicle() and seat:GetClass() == "gmod_sent_vehicle_fphysics_base" then
             local player = seat:GetDriver()
             if IsValid(player) then
@@ -19,6 +21,8 @@
     end)
 
     hook.Add("simfphysUse", "liaSimfphys", function(entity, client)
+        local enabled = lia.config.get("CarEntryDelayEnabled", true)
+        if not enabled then return end
         if entity.IsBeingEntered then
             client:notifyLocalized("carOccupiedNotice")
             return true

@@ -38,6 +38,13 @@ if CLIENT then
         antialias = true
     })
 
+    lia.font.register("CursiveFont", {
+        font = "Segoe Script",
+        size = 35,
+        weight = 800,
+        antialias = true,
+    })
+
     lia.font.register("MediumConfigFont", {
         font = lia.config.get("Font"),
         size = 30,

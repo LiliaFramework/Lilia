@@ -1,4 +1,25 @@
 ﻿local PANEL = {}
+
+function PANEL:filterCharacterModels(faction)
+    if not faction or not faction.models then return {} end
+    local filteredModels = {}
+
+    for idx, data in pairs(faction.models) do
+
+        if isstring(idx) and istable(data) then
+
+            filteredModels[idx] = data
+        else
+
+            local shouldInclude = hook.Run("FilterCharacterModels", LocalPlayer(), faction, data, idx)
+            if shouldInclude ~= false then
+                filteredModels[idx] = data
+            end
+        end
+    end
+    return filteredModels
+end
+
 function PANEL:Init()
     self.title = self:addLabel(L("selectModel"))
     self.models = self:Add("DIconLayout")
@@ -12,8 +33,10 @@ function PANEL:onDisplay()
     self.models:Clear()
     local faction = lia.faction.indices[self:getContext("faction")]
     if not faction then return end
+
+    local modelsToDisplay = self:filterCharacterModels(faction)
     local paintOver = function(icon, w, h) self:paintIcon(icon, w, h) end
-    for idx, data in SortedPairs(faction.models) do
+    for idx, data in SortedPairs(modelsToDisplay) do
         local icon = self.models:Add("SpawnIcon")
         icon:SetSize(64, 128)
         icon.index = idx

@@ -178,7 +178,20 @@ local dist = lia.option.get("thirdPersonDistance", 50)
 
 **Purpose**
 
-Writes all current option values to `data/lilia/options/<gamemode>/<serverip>.json` in JSON format. Only options with non-`nil` values are written.
+Writes all current option values to `data/lilia/options.json` in JSON format, organized by gamemode. Only options with non-`nil` values are written. The file format is:
+
+```json
+{
+  "gamemode1": {
+    "option1": "value1",
+    "option2": "value2"
+  },
+  "gamemode2": {
+    "option1": "value1",
+    "option2": "value2"
+  }
+}
+```
 
 **Parameters**
 
@@ -204,7 +217,7 @@ lia.option.save()
 
 **Purpose**
 
-Loads saved option values from `data/lilia/options/<gamemode>/<serverip>.txt`, applies them to `lia.option.stored`, and fires `InitializedOptions`.
+Loads saved option values from `data/lilia/options.json` for the current gamemode, applies them to `lia.option.stored`, and fires `InitializedOptions`. The function looks for the current gamemode's options within the unified options file.
 
 **Parameters**
 

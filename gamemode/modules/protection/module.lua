@@ -21,4 +21,10 @@ MODULE.Privileges = {
         MinAccess = "admin",
         Category = "protection",
     },
+    {
+        Name = "Bypass Noclip Shooting Restriction",
+        ID = "bypassNoclipShooting",
+        MinAccess = "admin",
+        Category = "protection",
+    },
 }

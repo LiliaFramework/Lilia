@@ -21,7 +21,7 @@ function PANEL:DoClick()
 end
 
 function PANEL:Paint(w, h)
-    local icon = self.checked and "lilia/checkbox.png" or "lilia/unchecked.png"
+    local icon = self.checked and "checkbox.png" or "unchecked.png"
     lia.util.drawTexture(icon, color_white, 0, 0, w, h)
     return true
 end

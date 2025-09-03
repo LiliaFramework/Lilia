@@ -75,7 +75,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
         local dir = (entity:GetPos() - dmgPos):GetNormalized()
         entity:SetVelocity(dir * 60 * dmgInfo:GetDamage())
         local dmgAmt = dmgInfo:GetDamage()
-        timer.Simple(0.05, function() if IsValid(entity) and entity:IsPlayer() and not entity:hasRagdoll() and entity:Health() - dmgAmt > 0 then entity:setRagdolled(true, 3) end end)
+        timer.Simple(0.05, function() if IsValid(entity) and entity:IsPlayer() and not IsValid(entity:getRagdoll()) and entity:Health() - dmgAmt > 0 then entity:setRagdolled(true, 3) end end)
     end
 
     if attacker ~= entity then
@@ -89,7 +89,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
             local veh = entity.GetVehicle and entity:GetVehicle() or nil
             if not (IsValid(veh) and veh:isSimfphysCar()) then
                 dmgInfo:ScaleDamage(0)
-                if entity:IsPlayer() and not entity:hasRagdoll() and entity:Health() > 0 then entity:setRagdolled(true, 5) end
+                if entity:IsPlayer() and not IsValid(entity:getRagdoll()) and entity:Health() > 0 then entity:setRagdolled(true, 5) end
             end
         end
     end
@@ -364,4 +364,19 @@ function MODULE:CanPlayerInteractItem(client, action)
         LogCheaterAction(client, action .. " " .. L("item"))
         return false
     end
+end
+
+local function shouldBlock(ply)
+    if not IsValid(ply) or not ply:IsPlayer() then return false end
+    if ply:isNoClipping() and not ply:hasPrivilege("bypassNoclipShooting") then return true end
+    if ply:getLiliaData("cheater", false) then return true end
+    return false
+end
+
+function MODULE:StartCommand(ply, cmd)
+    if not shouldBlock(ply) then return end
+    local buttons = cmd:GetButtons()
+    buttons = bit.band(buttons, bit.bnot(IN_ATTACK))
+    buttons = bit.band(buttons, bit.bnot(IN_ATTACK2))
+    cmd:SetButtons(buttons)
 end

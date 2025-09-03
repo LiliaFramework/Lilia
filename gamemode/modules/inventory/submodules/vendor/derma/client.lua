@@ -566,7 +566,20 @@ function PANEL:setItemType(itemType)
     local item = lia.item.list[itemType]
     assert(item, L("invalidItemTypeOrID", tostring(itemType)))
     self.item = item
-    self.icon:SetModel(item.model, item.skin or 0)
+    if item.icon then
+        self.icon:SetVisible(false)
+        self.ExtraPaint = function(_, w, h)
+            local mat = isstring(item.icon) and Material(item.icon) or item.icon
+            surface.SetDrawColor(color_white)
+            surface.SetMaterial(mat)
+            surface.DrawTexturedRect(0, 0, w, h)
+        end
+    else
+        self.icon:SetVisible(true)
+        self.icon:SetModel(item.model, item.skin or 0)
+        self.ExtraPaint = function() end
+    end
+
     self:updateLabel()
     self:updateAction()
     local rarity = item.rarity or "Common"

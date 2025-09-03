@@ -7,6 +7,11 @@
     end
 end)
 
+net.Receive("StringRequestCancel", function(_, client)
+    local id = net.ReadUInt(32)
+    if client.liaStrReqs and client.liaStrReqs[id] then client.liaStrReqs[id] = nil end
+end)
+
 net.Receive("liaCharRequest", function(_, client)
     local charID = net.ReadUInt(32)
     lia.char.getCharacter(charID, client, function(character) if character then character:sync(client) end end)
@@ -15,10 +20,38 @@ end)
 net.Receive("ArgumentsRequest", function(_, client)
     local id = net.ReadUInt(32)
     local data = net.ReadTable()
-    if client.liaArgReqs and client.liaArgReqs[id] then
-        client.liaArgReqs[id](data)
-        client.liaArgReqs[id] = nil
+    local req = client.liaArgReqs and client.liaArgReqs[id]
+    if not req then return end
+    local spec = req.spec or {}
+    for name, typeInfo in pairs(spec) do
+        local expectedType = typeInfo
+        if istable(typeInfo) then expectedType = typeInfo[1] end
+        local val = data and data[name]
+        if expectedType == "boolean" then
+            if val == nil then
+                client.liaArgReqs[id] = nil
+                return
+            end
+        elseif expectedType == "table" then
+            if val == nil then
+                client.liaArgReqs[id] = nil
+                return
+            end
+        else
+            if val == nil or val == "" then
+                client.liaArgReqs[id] = nil
+                return
+            end
+        end
     end
+
+    if isfunction(req.callback) then req.callback(data) end
+    client.liaArgReqs[id] = nil
+end)
+
+net.Receive("ArgumentsRequestCancel", function(_, client)
+    local id = net.ReadUInt(32)
+    if client.liaArgReqs and client.liaArgReqs[id] then client.liaArgReqs[id] = nil end
 end)
 
 net.Receive("liaKeybindServer", function(_, ply)
@@ -43,28 +76,80 @@ net.Receive("liaKeybindServer", function(_, ply)
 end)
 
 net.Receive("RequestDropdown", function(_, client)
+    local id = net.ReadUInt(32)
     local selectedOption = net.ReadString()
-    if client.dropdownCallback then
-        client.dropdownCallback(selectedOption)
-        client.dropdownCallback = nil
+    local req = client.liaDropdownReqs and client.liaDropdownReqs[id]
+    if not req then return end
+    local allowed = req.allowed or {}
+    local isValid = false
+    for _, opt in ipairs(allowed) do
+        if tostring(opt) == tostring(selectedOption) then
+            isValid = true
+            break
+        end
     end
+
+    if not isValid then
+        client.liaDropdownReqs[id] = nil
+        return
+    end
+
+    if isfunction(req.callback) then req.callback(selectedOption) end
+    client.liaDropdownReqs[id] = nil
+end)
+
+net.Receive("RequestDropdownCancel", function(_, client)
+    local id = net.ReadUInt(32)
+    if client.liaDropdownReqs then client.liaDropdownReqs[id] = nil end
 end)
 
 net.Receive("OptionsRequest", function(_, client)
+    local id = net.ReadUInt(32)
     local selectedOptions = net.ReadTable()
-    if client.optionsCallback then
-        client.optionsCallback(selectedOptions)
-        client.optionsCallback = nil
+    local req = client.liaOptionsReqs and client.liaOptionsReqs[id]
+    if not req then return end
+    local allowed, limit = req.allowed or {}, tonumber(req.limit) or 1
+    if not istable(selectedOptions) or #selectedOptions == 0 or #selectedOptions > limit then
+        client.liaOptionsReqs[id] = nil
+        return
     end
+
+    for _, opt in ipairs(selectedOptions) do
+        local ok = false
+        for _, a in ipairs(allowed) do
+            if tostring(a) == tostring(opt) then
+                ok = true
+                break
+            end
+        end
+
+        if not ok then
+            client.liaOptionsReqs[id] = nil
+            return
+        end
+    end
+
+    if isfunction(req.callback) then req.callback(selectedOptions) end
+    client.liaOptionsReqs[id] = nil
+end)
+
+net.Receive("OptionsRequestCancel", function(_, client)
+    local id = net.ReadUInt(32)
+    if client.liaOptionsReqs then client.liaOptionsReqs[id] = nil end
 end)
 
 net.Receive("BinaryQuestionRequest", function(_, client)
+    local id = net.ReadUInt(32)
     local choice = net.ReadUInt(1)
-    if client.binaryQuestionCallback then
-        local callback = client.binaryQuestionCallback
-        callback(choice)
-        client.binaryQuestionCallback = nil
-    end
+    local cb = client.liaBinaryReqs and client.liaBinaryReqs[id]
+    if not cb then return end
+    if isfunction(cb) then cb(choice) end
+    client.liaBinaryReqs[id] = nil
+end)
+
+net.Receive("BinaryQuestionRequestCancel", function(_, client)
+    local id = net.ReadUInt(32)
+    if client.liaBinaryReqs then client.liaBinaryReqs[id] = nil end
 end)
 
 net.Receive("ButtonRequest", function(_, client)
@@ -75,6 +160,11 @@ net.Receive("ButtonRequest", function(_, client)
         data[choice](client)
         client.buttonRequests[id] = nil
     end
+end)
+
+net.Receive("ButtonRequestCancel", function(_, client)
+    local id = net.ReadUInt(32)
+    if client.buttonRequests and client.buttonRequests[id] then client.buttonRequests[id] = nil end
 end)
 
 net.Receive("liaTransferItem", function(_, client)
@@ -137,7 +227,6 @@ net.Receive("RunInteraction", function(_, ply)
         if not targetMatches then return end
         if isPlayerTarget then
             local target = tracedEntity
-            if tracedEntity:IsBot() and ply:Team() == FACTION_STAFF then target = ply end
             opt.onRun(ply, target)
         else
             opt.onRun(ply, tracedEntity)

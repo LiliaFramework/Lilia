@@ -16,7 +16,7 @@ function MODULE:LoadCharInformation()
 
     hook.Run("AddTextField", L("generalInfo"), "money", L("money"), function()
         local client = LocalPlayer()
-        return client and client:getMoney() or 0
+        return client and lia.currency.get(client:getChar():getMoney()) or lia.currency.get(0)
     end)
 end
 

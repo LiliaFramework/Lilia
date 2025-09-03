@@ -21,7 +21,7 @@ end
 ITEM:hook("drop", function(item)
     local client = item.player
     if not client or not IsValid(client) then return false end
-    if client:hasRagdoll() then
+    if IsValid(client:getRagdoll()) then
         client:notifyLocalized("noRagdollAction")
         return false
     end
@@ -46,7 +46,7 @@ ITEM.functions.Unequip = {
     onRun = function(item)
         local client = item.player
         if not client or not IsValid(client) then return false end
-        if client:hasRagdoll() then
+        if IsValid(client:getRagdoll()) then
             client:notifyLocalized("noRagdollAction")
             return false
         end
@@ -77,7 +77,7 @@ ITEM.functions.Equip = {
     onRun = function(item)
         local client = item.player
         if not client or not IsValid(client) then return false end
-        if client:hasRagdoll() then
+        if IsValid(client:getRagdoll()) then
             client:notifyLocalized("noRagdollAction")
             return false
         end

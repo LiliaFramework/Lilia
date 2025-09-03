@@ -535,7 +535,6 @@ local function IncludeTeleportation(tgt, menu, stores)
     table.sort(tp, function(a, b) return a.name < b.name end)
     for _, o in ipairs(tp) do
         tpCategory:AddOption(L(o.name), function()
-            cl:notifyLocalized("adminStickExecutedCommand", o.cmd .. " " .. QuoteArgs(GetIdentifier(tgt)))
             RunAdminCommand(o.cmd, tgt)
             AdminStickIsOpen = false
         end):SetIcon(o.icon)
@@ -543,7 +542,6 @@ local function IncludeTeleportation(tgt, menu, stores)
 end
 
 local function IncludeUtility(tgt, menu, stores)
-    local cl = LocalPlayer()
     local utilityCategory = GetOrCreateCategoryMenu(menu, "utility", stores)
     local commandsSubCategory = GetOrCreateSubCategoryMenu(utilityCategory, "utility", "commands", stores)
     local utilityCommands = {
@@ -566,7 +564,6 @@ local function IncludeUtility(tgt, menu, stores)
 
     for _, cmd in ipairs(utilityCommands) do
         commandsSubCategory:AddOption(L(cmd.name), function()
-            cl:notifyLocalized("adminStickExecutedCommand", cmd.cmd)
             RunAdminCommand(cmd.cmd, tgt)
             AdminStickIsOpen = false
         end):SetIcon(cmd.icon)

@@ -487,7 +487,6 @@ if SERVER then
 
             client:SetTeam(self:getFaction())
             client:setNetVar("char", self:getID())
-            PrintTable(self:getBodygroups(), 1)
             for k, v in pairs(self:getBodygroups()) do
                 local index = tonumber(k)
                 local value = tonumber(v) or 0
@@ -515,6 +514,12 @@ if SERVER then
         local curChar, steamID = client:getChar(), client:SteamID()
         local isCurChar = curChar and curChar:getID() == self:getID() or false
         if self.steamID == steamID then
+
+            if isCurChar then
+                net.Start("removeF1")
+                net.Send(client)
+            end
+
             net.Start("charKick")
             net.WriteUInt(self:getID(), 32)
             net.WriteBool(isCurChar)

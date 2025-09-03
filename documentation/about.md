@@ -1,7 +1,7 @@
 <p align="center">
   <strong>Official modules repository for Lilia, an advanced roleplay framework for Garry’s Mod.</strong><br/>
   Expand your server with optional features.<br/><br/>
-  <img src="https://github.com/LiliaFramework/liaIcons/blob/main/lilia.png?raw=true" alt="Lilia Logo" width="200" />
+  <img src="https://bleonheart.github.io/Samael-Assets/lilia.png?raw=true " alt="Lilia Logo" width="200" />
 </p>
 
 <p align="center">

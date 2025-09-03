@@ -44,7 +44,7 @@ function MODULE:KeyPress(client, key)
         end
     end
 
-    if key == IN_JUMP and not client:isNoClipping() and not client:InVehicle() and client:Alive() then
+    if key == IN_JUMP and not client:isNoClipping() and not client:InVehicle() and client:Alive() and client:OnGround() then
         if (client.liaNextJump or 0) <= CurTime() then
             client.liaNextJump = CurTime() + 0.1
             local cost = lia.config.get("JumpStaminaCost", 25)

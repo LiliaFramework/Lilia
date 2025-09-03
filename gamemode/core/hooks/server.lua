@@ -37,20 +37,22 @@ function GM:PlayerLoadedChar(client, character)
     character:setLoginTime(os.time())
     hook.Run("PlayerLoadout", client)
     local ammoTable = character:getAmmo()
-    if table.IsEmpty(ammoTable) then return end
-    timer.Simple(0.25, function()
-        if not IsValid(ammoTable) then return end
-        for ammoType, ammoCount in pairs(ammoTable) do
-            if IsValid(ammoCount) or IsValid(ammoCount) then client:GiveAmmo(ammoCount, ammoType, true) end
-        end
+    if not table.IsEmpty(ammoTable) then
+        timer.Simple(0.25, function()
+            if not IsValid(ammoTable) then return end
+            for ammoType, ammoCount in pairs(ammoTable) do
+                if IsValid(ammoCount) or IsValid(ammoCount) then client:GiveAmmo(ammoCount, ammoType, true) end
+            end
 
-        character:setAmmo(nil)
-    end)
+            character:setAmmo(nil)
+        end)
+    end
 end
 
 function GM:PlayerDeath(client, inflictor, attacker)
     local character = client:getChar()
     if not character then return end
+    if IsValid(client:GetRagdollEntity()) then client:GetRagdollEntity():Remove() end
     local inventory = character:getInv()
     if inventory then
         for _, item in pairs(inventory:getItems()) do
@@ -118,7 +120,7 @@ function GM:CanPlayerInteractItem(client, action, item)
     action = string.lower(action)
     if client:hasPrivilege("noItemCooldown") then return true end
     if not client:Alive() then return false, L("forbiddenActionStorage") end
-    if client:getLocalVar("ragdoll", false) then return false, L("forbiddenActionStorage") end
+    if IsValid(client:getRagdoll()) then return false, L("forbiddenActionStorage") end
     if action == "drop" then
         if hook.Run("CanPlayerDropItem", client, item) ~= false then
             if not client.dropDelay then
@@ -205,8 +207,7 @@ function GM:CanPlayerTakeItem(client, item)
         client:notifyLocalized("familySharedPickupDisabled")
         return false
     elseif IsValid(item.entity) then
-        local character = client:getChar()
-        if item.entity.SteamID == client:SteamID() and item.entity.liaCharID ~= character:getID() then
+        if item.entity.SteamID == client:SteamID() then
             client:notifyLocalized("playerCharBelonging")
             return false
         end
@@ -437,10 +438,6 @@ function GM:PlayerDisconnected(client)
     end
 end
 
-function GM:InitializedConfig()
-    timer.Simple(0.2, function() lia.config.send() end)
-end
-
 function GM:PlayerInitialSpawn(client)
     if client:IsBot() then
         hook.Run("SetupBotPlayer", client)
@@ -470,6 +467,8 @@ function GM:PlayerInitialSpawn(client)
 
         timer.Simple(1, function() lia.playerinteract.syncToClients(client) end)
         hook.Run("PlayerLiliaDataLoaded", client)
+        net.Start("liaAssureClientSideAssets")
+        net.Send(client)
     end)
 
     hook.Run("PostPlayerInitialSpawn", client)
@@ -987,7 +986,7 @@ local function checkFrameworkVersion()
 end
 
 function GM:InitializedModules()
-    if self.UpdateCheckDone then return end
+    if lia.UpdateCheckDone then return end
     timer.Simple(0, function()
         checkPublicModules()
         checkPrivateModules()
@@ -995,7 +994,7 @@ function GM:InitializedModules()
     end)
 
     timer.Simple(5, lia.db.addDatabaseFields)
-    self.UpdateCheckDone = true
+    lia.UpdateCheckDone = true
 end
 
 function GM:LiliaTablesLoaded()
@@ -1132,6 +1131,114 @@ concommand.Add("lia_resetconfig", function(client)
     MsgC(Color(255, 0, 0), "[Lilia] " .. L("configReset") .. "\n")
 end)
 
+concommand.Add("lia_wipecharacters", function(client)
+    if IsValid(client) then
+        client:notifyLocalized("commandConsoleOnly")
+        return
+    end
+
+    if resetCalled < RealTime() then
+        resetCalled = RealTime() + 3
+        MsgC(Color(255, 0, 0), "[Lilia] " .. "Are you sure you want to wipe ALL characters? Run this command again within 3 seconds to confirm.\n")
+    else
+        resetCalled = 0
+        MsgC(Color(255, 0, 0), "[Lilia] Wiping all characters...\n")
+        for _, ply in ipairs(player.GetAll()) do
+            if IsValid(ply) then ply:Kick("Server is wiping character data. Please reconnect after the wipe is complete.") end
+        end
+
+        lia.db.query("DELETE FROM lia_chardata", function()
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Character data wiped...\n")
+            lia.db.query("SELECT invID FROM lia_inventories WHERE charID IS NOT NULL", function(invData)
+                if invData and #invData > 0 then
+                    local invIDs = {}
+                    for _, row in ipairs(invData) do
+                        table.insert(invIDs, tostring(row.invID))
+                    end
+
+                    if #invIDs > 0 then
+                        local invIDList = table.concat(invIDs, ",")
+                        lia.db.query("DELETE FROM lia_invdata WHERE invID IN (" .. invIDList .. ")", function()
+                            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Inventory data wiped...\n")
+                            lia.db.query("DELETE FROM lia_items WHERE invID IN (" .. invIDList .. ")", function()
+                                MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Character items wiped...\n")
+                                lia.db.query("DELETE FROM lia_inventories WHERE charID IS NOT NULL", function()
+                                    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Character inventories wiped...\n")
+                                    lia.db.query("DELETE FROM lia_characters", function()
+                                        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " All characters and related data have been wiped!\n")
+                                        game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n")
+                                    end)
+                                end)
+                            end)
+                        end)
+                    else
+                        lia.db.query("DELETE FROM lia_characters", function()
+                            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " All characters and related data have been wiped!\n")
+                            game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n")
+                        end)
+                    end
+                else
+                    lia.db.query("DELETE FROM lia_characters", function()
+                        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " All characters and related data have been wiped!\n")
+                        game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n")
+                    end)
+                end
+            end)
+        end)
+    end
+end)
+
+concommand.Add("lia_wipelogs", function(client)
+    if IsValid(client) then
+        client:notifyLocalized("commandConsoleOnly")
+        return
+    end
+
+    if resetCalled < RealTime() then
+        resetCalled = RealTime() + 3
+        MsgC(Color(255, 0, 0), "[Lilia] " .. "Are you sure you want to wipe ALL logs? This cannot be undone.\n")
+    else
+        resetCalled = 0
+        MsgC(Color(255, 0, 0), "[Lilia] Wiping all logs...\n")
+        lia.db.query("DELETE FROM lia_logs", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " All logs have been wiped!\n") end)
+    end
+end)
+
+concommand.Add("lia_wipebans", function(client)
+    if IsValid(client) then
+        client:notifyLocalized("commandConsoleOnly")
+        return
+    end
+
+    if resetCalled < RealTime() then
+        resetCalled = RealTime() + 3
+        MsgC(Color(255, 0, 0), "[Lilia] " .. "Are you sure you want to wipe ALL bans? This cannot be undone.\n")
+    else
+        resetCalled = 0
+        MsgC(Color(255, 0, 0), "[Lilia] Wiping all bans...\n")
+        lia.db.query("DELETE FROM lia_bans", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " All bans have been wiped!\n") end)
+    end
+end)
+
+concommand.Add("lia_wipepersistence", function(client)
+    if IsValid(client) then
+        client:notifyLocalized("commandConsoleOnly")
+        return
+    end
+
+    if resetCalled < RealTime() then
+        resetCalled = RealTime() + 3
+        MsgC(Color(255, 0, 0), "[Lilia] " .. "Are you sure you want to wipe ALL persistence data? This will remove all saved entities.\n")
+    else
+        resetCalled = 0
+        MsgC(Color(255, 0, 0), "[Lilia] Wiping all persistence data...\n")
+        lia.db.query("DELETE FROM lia_persistence", function()
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " All persistence data has been wiped!\n")
+            game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n")
+        end)
+    end
+end)
+
 concommand.Add("list_entities", function(client)
     local entityCount = {}
     local totalEntities = 0
@@ -1156,15 +1263,51 @@ concommand.Add("list_entities", function(client)
     end
 end)
 
+function GM:CreateSalaryTimers()
+    local salaryInterval = lia.config.get("SalaryInterval", 300)
+    local salaryTimer = function()
+        for _, client in player.Iterator() do
+            if IsValid(client) and client:getChar() and hook.Run("CanPlayerEarnSalary", client) ~= false then
+                local char = client:getChar()
+                local faction = lia.faction.indices[char:getFaction()]
+                local class = lia.class.list[char:getClass()]
+                local pay = hook.Run("GetSalaryAmount", client, faction, class)
+                pay = isnumber(pay) and pay or class and class.pay or faction and faction.pay or 0
+                local limit = hook.Run("GetSalaryLimit", client, faction, class)
+                limit = isnumber(limit) and limit or class and class.payLimit or faction and faction.payLimit or lia.config.get("SalaryThreshold", 0)
+                if pay > 0 then
+                    local money = char:getMoney()
+                    if limit > 0 and money + pay > limit then
+                        client:notifyLocalized("salaryLimitReached")
+                        char:setMoney(limit)
+                    else
+                        local handled = hook.Run("OnSalaryGive", client, char, pay, faction, class)
+                        if handled ~= true then
+                            char:giveMoney(pay)
+                            client:notifyLocalized("salary", lia.currency.get(pay))
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    if timer.Exists("liaSalaryGlobal") then
+        timer.Adjust("liaSalaryGlobal", salaryInterval, 0, salaryTimer)
+    else
+        timer.Create("liaSalaryGlobal", salaryInterval, 0, salaryTimer)
+    end
+end
+
 local oldRunConsole = RunConsoleCommand
 RunConsoleCommand = function(cmd, ...)
-    if cmd == "lia_wipedb" or cmd == "lia_resetconfig" then return end
+    if cmd == "lia_wipedb" or cmd == "lia_resetconfig" or cmd == "lia_wipe_sounds" or cmd == "lia_wipewebimages" or cmd == "lia_wipecharacters" or cmd == "lia_wipelogs" or cmd == "lia_wipebans" or cmd == "lia_wipepersistence" then return end
     return oldRunConsole(cmd, ...)
 end
 
 local oldGameConsoleCommand = game.ConsoleCommand
 game.ConsoleCommand = function(cmd)
-    if cmd:sub(1, #"lia_wipedb") == "lia_wipedb" or cmd:sub(1, #"lia_resetconfig") == "lia_resetconfig" then return end
+    if cmd:sub(1, #"lia_wipedb") == "lia_wipedb" or cmd:sub(1, #"lia_resetconfig") == "lia_resetconfig" or cmd:sub(1, #"lia_wipe_sounds") == "lia_wipe_sounds" or cmd:sub(1, #"lia_wipewebimages") == "lia_wipewebimages" or cmd:sub(1, #"lia_wipecharacters") == "lia_wipecharacters" or cmd:sub(1, #"lia_wipelogs") == "lia_wipelogs" or cmd:sub(1, #"lia_wipebans") == "lia_wipebans" or cmd:sub(1, #"lia_wipepersistence") == "lia_wipepersistence" then return end
     return oldGameConsoleCommand(cmd)
 end
 
@@ -1186,4 +1329,15 @@ end)
 hook.Add("server_removeban", "LiliaLogServerUnban", function(data)
     lia.admin(L("unbanLogFormat", data.networkid))
     lia.db.query("DELETE FROM lia_bans WHERE playerSteamID = " .. lia.db.convertDataType(data.networkid))
+end)
+
+concommand.Add("database_list", function(ply)
+    if IsValid(ply) then return end
+    lia.db.GetCharacterTable(function(columns)
+        if #columns == 0 then
+            lia.error(L("dbColumnsNone"))
+        else
+            lia.information(L("dbColumnsList", table.concat(columns, ", ")))
+        end
+    end)
 end)

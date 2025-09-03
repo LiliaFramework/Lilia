@@ -33,7 +33,13 @@ function ENT:setItem(itemID)
     if not model or model == "" then model = "models/props_junk/cardboard_box002b.mdl" end
     self:SetModel(model)
     self:SetSkin(itemTable.skin or 0)
-    self:SetMaterial(itemTable.material or "")
+    local paintMat = hook.Run("PaintItem", itemTable)
+    if isstring(paintMat) and paintMat ~= "" then
+        self:SetMaterial(paintMat)
+    else
+        self:SetMaterial(itemTable.material or "")
+    end
+
     self:SetColor(itemTable.color or color_white)
     if itemTable.bodygroups and istable(itemTable.bodygroups) then
         for k, v in pairs(itemTable.bodygroups) do

@@ -1013,6 +1013,175 @@ function lia.db.delete(dbTable, condition)
     return d
 end
 
+function lia.db.createTable(dbName, primaryKey, schema)
+    local d = deferred.new()
+    local tableName = "lia_" .. dbName
+    local columns = {}
+    for _, column in ipairs(schema) do
+        local colDef = lia.db.escapeIdentifier(column.name)
+        if lia.db.module == "sqlite" then
+            colDef = colDef .. " " .. column.type:upper()
+        else
+            if column.type == "integer" then
+                colDef = colDef .. " INT"
+            elseif column.type == "string" then
+                colDef = colDef .. " VARCHAR(255)"
+            elseif column.type == "text" then
+                colDef = colDef .. " TEXT"
+            elseif column.type == "boolean" then
+                colDef = colDef .. " TINYINT(1)"
+            elseif column.type == "float" then
+                colDef = colDef .. " FLOAT"
+            else
+                colDef = colDef .. " " .. column.type:upper()
+            end
+        end
+
+        if column.not_null then colDef = colDef .. " NOT NULL" end
+        if column.default ~= nil then
+            if column.type == "string" or column.type == "text" then
+                colDef = colDef .. " DEFAULT '" .. lia.db.escape(tostring(column.default)) .. "'"
+            elseif column.type == "boolean" then
+                colDef = colDef .. " DEFAULT " .. (column.default and "1" or "0")
+            else
+                colDef = colDef .. " DEFAULT " .. tostring(column.default)
+            end
+        end
+
+        table.insert(columns, colDef)
+    end
+
+    if primaryKey then
+        if lia.db.module == "sqlite" then
+            table.insert(columns, "PRIMARY KEY (" .. lia.db.escapeIdentifier(primaryKey) .. ")")
+        else
+            for i, colDef in ipairs(columns) do
+                if colDef:find(lia.db.escapeIdentifier(primaryKey)) then
+                    columns[i] = colDef .. " PRIMARY KEY"
+                    break
+                end
+            end
+        end
+    end
+
+    local query = "CREATE TABLE IF NOT EXISTS " .. tableName .. " (" .. table.concat(columns, ", ") .. ")"
+    lia.db.query(query, function() d:resolve(true) end, function(err) d:reject(err) end)
+    return d
+end
+
+function lia.db.createColumn(tableName, columnName, columnType, defaultValue)
+    local d = deferred.new()
+    local fullTableName = "lia_" .. tableName
+    lia.db.fieldExists(fullTableName, columnName):next(function(exists)
+        if exists then
+            d:resolve(false)
+            return
+        end
+
+        local colDef = lia.db.escapeIdentifier(columnName)
+        if lia.db.module == "sqlite" then
+            colDef = colDef .. " " .. columnType:upper()
+        else
+            if columnType == "integer" then
+                colDef = colDef .. " INT"
+            elseif columnType == "string" then
+                colDef = colDef .. " VARCHAR(255)"
+            elseif columnType == "text" then
+                colDef = colDef .. " TEXT"
+            elseif columnType == "boolean" then
+                colDef = colDef .. " TINYINT(1)"
+            elseif columnType == "float" then
+                colDef = colDef .. " FLOAT"
+            else
+                colDef = colDef .. " " .. columnType:upper()
+            end
+        end
+
+        if defaultValue ~= nil then
+            if columnType == "string" or columnType == "text" then
+                colDef = colDef .. " DEFAULT '" .. lia.db.escape(tostring(defaultValue)) .. "'"
+            elseif columnType == "boolean" then
+                colDef = colDef .. " DEFAULT " .. (defaultValue and "1" or "0")
+            else
+                colDef = colDef .. " DEFAULT " .. tostring(defaultValue)
+            end
+        end
+
+        local query = "ALTER TABLE " .. fullTableName .. " ADD COLUMN " .. colDef
+        lia.db.query(query, function() d:resolve(true) end, function(err) d:reject(err) end)
+    end):catch(function(err) d:reject(err) end)
+    return d
+end
+
+function lia.db.removeTable(tableName)
+    local d = deferred.new()
+    local fullTableName = "lia_" .. tableName
+    lia.db.tableExists(fullTableName):next(function(exists)
+        if not exists then
+            d:resolve(false)
+            return
+        end
+
+        local query = "DROP TABLE " .. fullTableName
+        lia.db.query(query, function() d:resolve(true) end, function(err) d:reject(err) end)
+    end):catch(function(err) d:reject(err) end)
+    return d
+end
+
+function lia.db.removeColumn(tableName, columnName)
+    local d = deferred.new()
+    local fullTableName = "lia_" .. tableName
+    lia.db.tableExists(fullTableName):next(function(tableExists)
+        if not tableExists then
+            d:resolve(false)
+            return
+        end
+
+        lia.db.fieldExists(fullTableName, columnName):next(function(columnExists)
+            if not columnExists then
+                d:resolve(false)
+                return
+            end
+
+            if lia.db.module == "sqlite" then
+                lia.db.query("PRAGMA table_info(" .. fullTableName .. ")", function(columns)
+                    if not columns then
+                        d:reject("Failed to get table info")
+                        return
+                    end
+
+                    local newColumns = {}
+                    for _, col in ipairs(columns) do
+                        if col.name ~= columnName then
+                            local colDef = col.name .. " " .. col.type
+                            if col.notnull == 1 then colDef = colDef .. " NOT NULL" end
+                            if col.dflt_value then colDef = colDef .. " DEFAULT " .. col.dflt_value end
+                            if col.pk == 1 then colDef = colDef .. " PRIMARY KEY" end
+                            table.insert(newColumns, colDef)
+                        end
+                    end
+
+                    if #newColumns == 0 then
+                        d:reject("Cannot remove the last column from table")
+                        return
+                    end
+
+                    local tempTableName = fullTableName .. "_temp_" .. os.time()
+                    local createTempQuery = "CREATE TABLE " .. tempTableName .. " (" .. table.concat(newColumns, ", ") .. ")"
+                    local insertQuery = "INSERT INTO " .. tempTableName .. " SELECT " .. table.concat(newColumns, ", ") .. " FROM " .. fullTableName
+                    local dropOldQuery = "DROP TABLE " .. fullTableName
+                    local renameQuery = "ALTER TABLE " .. tempTableName .. " RENAME TO " .. fullTableName
+                    lia.db.transaction({createTempQuery, insertQuery, dropOldQuery, renameQuery}):next(function() d:resolve(true) end):catch(function(err) d:reject(err) end)
+                end, function(err) d:reject(err) end)
+            else
+                local query = "ALTER TABLE " .. fullTableName .. " DROP COLUMN " .. lia.db.escapeIdentifier(columnName)
+                lia.db.query(query, function() d:resolve(true) end, function(err) d:reject(err) end)
+            end
+        end):catch(function(err) d:reject(err) end)
+    end):catch(function(err) d:reject(err) end)
+    return d
+end
+
 function lia.db.GetCharacterTable(callback)
     local query = lia.db.module == "sqlite" and "PRAGMA table_info(lia_characters)" or "DESCRIBE lia_characters"
     lia.db.query(query, function(results)
@@ -1032,24 +1201,13 @@ function lia.db.GetCharacterTable(callback)
     end)
 end
 
-concommand.Add("database_list", function(ply)
-    if IsValid(ply) then return end
-    lia.db.GetCharacterTable(function(columns)
-        if #columns == 0 then
-            lia.error(L("dbColumnsNone"))
-        else
-            lia.information(L("dbColumnsList", table.concat(columns, ", ")))
-        end
-    end)
-end)
-
 function GM:RegisterPreparedStatements()
     lia.bootstrap(L("database"), L("preparedStatementsAdded"))
     lia.db.prepare("itemData", "UPDATE lia_items SET data = ? WHERE _itemID = ?", {MYSQLOO_STRING, MYSQLOO_INTEGER})
     lia.db.prepare("itemx", "UPDATE lia_items SET x = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
     lia.db.prepare("itemy", "UPDATE lia_items SET y = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
     lia.db.prepare("itemq", "UPDATE lia_items SET quantity = ? WHERE _itemID = ?", {MYSQLOO_INTEGER, MYSQLOO_INTEGER})
-    lia.db.prepare("itemInstance", "INSERT INTO lia_items (invID, uniqueID, data, x, y, quantity) VALUES (?, ?, ?, ?, ?, ?)", {MYSQLOO_INTEGER, MYSQLOO_STRING, MYSQLOO_STRING, MYSQLOO_INTEGER, MYSQLOO_INTEGER, MYSQLOO_INTEGER,})
+    lia.db.prepare("itemInstance", "INSERT INTO lia_items (invID, uniqueID, data, x, y, quantity) VALUES (?, ?, ?, ?, ?, ?)", {MYSQLOO_INTEGER, MYSQLOO_STRING, MYSQLOO_STRING, MYSQLOO_INTEGER, MYSQLOO_INTEGER, MYSQLOO_INTEGER})
 end
 
 function GM:SetupDatabase()

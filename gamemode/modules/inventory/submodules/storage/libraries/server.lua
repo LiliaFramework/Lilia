@@ -67,13 +67,13 @@ function MODULE:CanPlayerInteractItem(_, action, itemObject)
 end
 
 function MODULE:EntityRemoved(entity)
-    if not self:isSuitableForTrunk(entity) then return end
+    if not self:IsSuitableForTrunk(entity) then return end
     local storageInv = lia.inventory.instances[entity:getNetVar("inv")]
     if storageInv then storageInv:delete() end
 end
 
 function MODULE:OnEntityCreated(entity)
-    if not self:isSuitableForTrunk(entity) then return end
+    if not self:IsSuitableForTrunk(entity) then return end
     self:InitializeStorage(entity)
 end
 

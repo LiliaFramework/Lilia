@@ -256,7 +256,7 @@ Checks if the player has a ragdoll.
 **Example Usage**
 
 ```lua
-if player:hasRagdoll() then
+if IsValid(player:getRagdoll()) then
     print("Player has a ragdoll")
 end
 ```
@@ -1905,31 +1905,7 @@ Shared.
 
 ---
 
-### setRagdoll
 
-**Purpose**
-
-Sets the player's ragdoll entity.
-
-**Parameters**
-
-* entity (Entity) - The ragdoll entity to set.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:setRagdoll(ragdollEntity)
-```
-
----
 
 ### NetworkAnimation
 

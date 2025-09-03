@@ -2,7 +2,12 @@
 local stmBlurAmount = 0
 local stmBlurAlpha = 0
 function MODULE:ConfigureCharacterCreationSteps(panel)
-    if table.Count(lia.attribs.list) > 0 then panel:addStep(vgui.Create("liaCharacterAttribs"), 98) end
+    for _, attrib in pairs(lia.attribs.list) do
+        if not attrib.noStartBonus then
+            panel:addStep(vgui.Create("liaCharacterAttribs"), 98)
+            break
+        end
+    end
 end
 
 function MODULE:PlayerBindPress(client, bind, pressed)
@@ -73,7 +78,7 @@ function MODULE:LoadCharInformation()
     for _, entry in ipairs(attrs) do
         local id, attr = entry.id, entry.attr
         local minVal = attr.min or 0
-        local maxVal = attr.max or 100
+        local maxVal = hook.Run("GetAttributeMax", client, id) or attr.max or 100
         hook.Run("AddBarField", L("attributes"), id, attr.name, function() return minVal end, function() return maxVal end, function() return char:getAttrib(id) end)
     end
 end

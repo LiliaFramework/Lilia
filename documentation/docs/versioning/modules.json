@@ -12,18 +12,6 @@
     "workshop": []
   },
   {
-    "name": "Advertisements",
-    "uniqueID": "",
-    "author": "Samael",
-    "discord": "liliaplayer",
-    "description": "Implements a paid /advert command for server-wide announcements. Messages are colored, logged, and throttled by a cooldown to curb spam.",
-    "version": "1.01",
-    "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/afk.zip",
-    "source": "https://liliaframework.github.io/Modules/afk.html",
-    "features": [],
-    "workshop": []
-  },
-  {
     "name": "Alcoholism",
     "uniqueID": "",
     "author": "Samael",
@@ -106,6 +94,20 @@
     "source": "https://liliaframework.github.io/Modules/chatmessages.html",
     "features": [],
     "workshop": []
+  },
+  {
+    "name": "Cigarettes",
+    "uniqueID": "",
+    "author": "Samael",
+    "discord": "@liliaplayer",
+    "description": "Adds smokable cigarette items with workshop models, puff effects while smoking, and cigarettes that are consumed over time with ash particles.",
+    "version": "1.25",
+    "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cigs.zip",
+    "source": "https://liliaframework.github.io/Modules/cigs.html",
+    "features": [],
+    "workshop": [
+      "3527540050"
+    ]
   },
   {
     "name": "Cinematic Text",

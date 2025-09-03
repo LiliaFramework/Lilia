@@ -37,7 +37,7 @@ lia.command.add("trunk", {
         local entity = client:getTracedEntity()
         local maxDistance = 128
         local openTime = 0.7
-        if not hook.Run("isSuitableForTrunk", entity) then
+        if not hook.Run("IsSuitableForTrunk", entity) then
             client:notifyLocalized("notLookingAtVehicle")
             return
         end

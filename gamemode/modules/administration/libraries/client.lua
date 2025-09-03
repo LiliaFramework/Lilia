@@ -386,8 +386,11 @@ function MODULE:PopulateAdminTabs(pages)
                                     else
                                         if lia.command.hasAccess(LocalPlayer(), "charban") then menu:AddOption(L("banCharacter"), function() LocalPlayer():ConCommand('say "/charban ' .. line.CharID .. '"') end):SetIcon("icon16/cancel.png") end
                                     end
+
+                                    if lia.command.hasAccess(LocalPlayer(), "charwipe") then menu:AddOption(L("wipeCharacter"), function() LocalPlayer():ConCommand('say "/charwipe ' .. line.CharID .. '"') end):SetIcon("icon16/user_delete.png") end
                                 else
                                     if not line.Banned and lia.command.hasAccess(LocalPlayer(), "charbanoffline") then menu:AddOption(L("banCharacterOffline"), function() LocalPlayer():ConCommand('say "/charbanoffline ' .. line.CharID .. '"') end):SetIcon("icon16/cancel.png") end
+                                    if lia.command.hasAccess(LocalPlayer(), "charwipeoffline") then menu:AddOption(L("wipeCharacterOffline"), function() LocalPlayer():ConCommand('say "/charwipeoffline ' .. line.CharID .. '"') end):SetIcon("icon16/user_delete.png") end
                                     if line.Banned and lia.command.hasAccess(LocalPlayer(), "charunbanoffline") then menu:AddOption(L("unbanCharacterOffline"), function() LocalPlayer():ConCommand('say "/charunbanoffline ' .. line.CharID .. '"') end):SetIcon("icon16/accept.png") end
                                 end
                             end
@@ -403,13 +406,12 @@ function MODULE:PopulateAdminTabs(pages)
                     self.sheet:AddSheet(L("allCharacters"), allPanel)
                     for steamID, chars in pairs(data.players or {}) do
                         local ply = lia.util.getBySteamID(tostring(steamID))
-                        if IsValid(ply) then
-                            local pnl = self.sheet:Add("DPanel")
-                            pnl:Dock(FILL)
-                            pnl.Paint = function() end
-                            createList(pnl, chars)
-                            self.sheet:AddSheet(ply:Nick(), pnl)
-                        end
+                        local pnl = self.sheet:Add("DPanel")
+                        pnl:Dock(FILL)
+                        pnl.Paint = function() end
+                        createList(pnl, chars)
+                        local tabName = IsValid(ply) and ply:Nick() or steamID
+                        self.sheet:AddSheet(tabName, pnl)
                     end
                 end
 

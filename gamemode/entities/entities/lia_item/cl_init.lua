@@ -33,6 +33,8 @@ function ENT:DrawTranslucent()
     if itemTable and itemTable.drawEntity then
         itemTable:drawEntity(self)
     else
+        local paintMat = itemTable and hook.Run("PaintItem", itemTable)
+        if isstring(paintMat) and paintMat ~= "" then self:SetMaterial(paintMat) end
         self:DrawModel()
     end
 end

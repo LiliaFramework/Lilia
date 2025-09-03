@@ -28,7 +28,6 @@ Each faction in the game is defined by a set of fields on the global `FACTION` t
 | `index` | `number` | `auto` | Numeric ID assigned at registration time. |
 | `pay` | `number` | `0` | Payment amount per interval. |
 | `payLimit` | `number` | `0` | Maximum accumulated pay. |
-| `payTimer` | `number` | `300` | Interval (in seconds) between paychecks. |
 | `limit` | `number` | `0` | Maximum number of players in the faction. |
 | `oneCharOnly` | `boolean` | `false` | Restrict players to one character only. |
 | `health` | `number` | `0` | Starting health. |
@@ -303,24 +302,6 @@ Maximum pay a member can accumulate.
 
 ```lua
 FACTION.payLimit = 1000
-```
-
----
-
-#### `payTimer`
-
-**Type:**
-
-`number`
-
-**Description:**
-
-Interval in seconds between salary payouts.
-
-**Example Usage:**
-
-```lua
-FACTION.payTimer = 3600
 ```
 
 ---
@@ -673,7 +654,6 @@ FACTION.prefix = "[CIT]"
 FACTION.weapons = {"radio"}
 FACTION.items = {"water"}
 FACTION.pay = 20
-FACTION.payTimer = 1800
 FACTION.health = 100
 FACTION.armor = 0
 FACTION.runSpeed = 200

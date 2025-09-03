@@ -85,10 +85,6 @@ local function applyAttributes(client, attr)
         client:SetViewOffset(offset * attr.scale)
         client:SetViewOffsetDucked(offsetDuck * attr.scale)
         client:SetModelScale(attr.scale)
-    else
-        client:SetViewOffset(Vector(0, 0, 64))
-        client:SetViewOffsetDucked(Vector(0, 0, 28))
-        client:SetModelScale(1)
     end
 
     if attr.runSpeed then

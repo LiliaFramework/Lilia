@@ -741,6 +741,14 @@ lia.log.types = {
         func = function(client, charID) return L("logCharBanOffline", client:Name(), tostring(charID)) end,
         category = L("admin")
     },
+    ["charWipe"] = {
+        func = function(client, targetName, charID) return L("logCharWipe", client:Name(), targetName, charID) end,
+        category = L("admin")
+    },
+    ["charWipeOffline"] = {
+        func = function(client, targetName, charID) return L("logCharWipeOffline", client:Name(), targetName, charID) end,
+        category = L("admin")
+    },
     ["charUnbanOffline"] = {
         func = function(client, charID) return L("logCharUnbanOffline", client:Name(), tostring(charID)) end,
         category = L("admin")

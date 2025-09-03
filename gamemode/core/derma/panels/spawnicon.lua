@@ -30,6 +30,17 @@ function PANEL:Init()
         oldSetModel(panel, model)
         local entity = panel.Entity
         if skin then entity:SetSkin(skin) end
+        if panel.ItemTable then
+            local paintMat = hook.Run("PaintItem", panel.ItemTable)
+            if isstring(paintMat) and paintMat ~= "" then
+                entity:SetMaterial(paintMat)
+            elseif isstring(panel.ItemTable.material) and panel.ItemTable.material ~= "" then
+                entity:SetMaterial(panel.ItemTable.material)
+            else
+                entity:SetMaterial("")
+            end
+        end
+
         setSequence(entity)
         local data = PositionSpawnIcon(entity, entity:GetPos())
         if data then

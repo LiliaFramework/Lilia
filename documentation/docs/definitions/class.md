@@ -23,7 +23,6 @@ The global `CLASS` table defines per-class settings such as display name, lore, 
 | `weapons` | `string` or `table` | `nil` | Weapons granted to members of this class. |
 | `pay` | `number` | `0` | Payment amount per interval. |
 | `payLimit` | `number` | `0` | Maximum accumulated pay. |
-| `payTimer` | `number` | `3600` | Seconds between paychecks when not overridden. |
 | `limit` | `number` | `0` | Maximum number of players in this class. |
 | `health` | `number` | `nil` | Starting health override. |
 | `armor` | `number` | `nil` | Starting armor override. |
@@ -257,26 +256,6 @@ CLASS.payLimit = 1000
 ```
 
 ---
-
-#### `payTimer`
-
-**Type:**
-
-`number`
-
-**Description:**
-
-How often salaries are paid to members of this class.
-
-If omitted, the timer falls back to the faction's `payTimer` or
-
-the global `SalaryInterval` configuration value (default `3600`).
-
-**Example Usage:**
-
-```lua
-CLASS.payTimer = 3600
-```
 
 ---
 
@@ -710,7 +689,6 @@ CLASS.color = Color(150, 150, 255)
 CLASS.weapons = {"weapon_pistol", "weapon_crowbar"}
 CLASS.pay = 25
 CLASS.payLimit = 250
-CLASS.payTimer = 1800
 CLASS.limit = 5
 CLASS.health = 120
 CLASS.armor = 25

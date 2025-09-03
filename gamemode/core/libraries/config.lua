@@ -76,7 +76,12 @@ end
 
 function lia.config.forceSet(key, value, noSave)
     local config = lia.config.stored[key]
-    if config then config.value = value end
+    if config then
+        local oldValue = config.value
+        config.value = value
+        hook.Run("OnConfigUpdated", key, oldValue, value)
+    end
+
     if not noSave then lia.config.save() end
 end
 
@@ -85,6 +90,7 @@ function lia.config.set(key, value)
     if config then
         local oldValue = config.value
         config.value = value
+        hook.Run("OnConfigUpdated", key, oldValue, value)
         if SERVER then
             if not config.noNetworking then
                 net.Start("cfgSet")
@@ -488,15 +494,14 @@ lia.config.add("IsVoiceEnabled", "voiceChatEnabled", true, function(_, newValue)
 })
 
 lia.config.add("SalaryInterval", "salaryInterval", 300, function()
-    for _, client in player.Iterator() do
-        hook.Run("CreateSalaryTimer", client)
-    end
+    local GM = GM or GAMEMODE
+    timer.Simple(0.1, function() GM:CreateSalaryTimers() end)
 end, {
     desc = "salaryIntervalDesc",
     category = "categorySalary",
     type = "Float",
-    min = 60,
-    max = 3600
+    min = 5,
+    max = 36000
 })
 
 lia.config.add("SalaryThreshold", "salaryThreshold", 0, nil, {
@@ -1282,7 +1287,7 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
             button:SetText("")
             button.Paint = function(_, w, h)
                 local v = lia.config.get(key, config.value)
-                local ic = v and "lilia/checkbox.png" or "lilia/unchecked.png"
+                local ic = v and "checkbox.png" or "unchecked.png"
                 lia.util.drawTexture(ic, color_white, w / 2 - 48, h / 2 - 64, 96, 96)
             end
 

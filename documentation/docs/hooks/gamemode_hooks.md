@@ -7707,9 +7707,12 @@ Creates a timer to manage player salary.
 **Example Usage**
 
 ```lua
--- Prints a message when CreateSalaryTimer is triggered
+-- Example of using SalaryInterval for custom salary logic
+-- Note: Lilia now uses a global salary timer based on SalaryInterval configuration
+-- Custom salary implementations should use lia.config.get("SalaryInterval", 300)
 hook.Add("CreateSalaryTimer", "SetupSalaryTimer", function(client)
-    timer.Create("SalaryTimer_" .. client:SteamID(), 60, 0, function()
+    local salaryInterval = lia.config.get("SalaryInterval", 300)
+    timer.Create("SalaryTimer_" .. client:SteamID(), salaryInterval, 0, function()
         if IsValid(client) and MODULE:CanPlayerEarnSalary(client, client:getFaction(), client:getClass()) then
             local salary = MODULE:GetSalaryAmount(client, client:getFaction(), client:getClass())
             client:addMoney(salary)

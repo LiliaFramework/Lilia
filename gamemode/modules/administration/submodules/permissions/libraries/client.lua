@@ -182,13 +182,18 @@ net.Receive("DisplayCharList", function()
 
         listView.OnRowRightClick = function(_, _, ln)
             if not (ln and ln.CharID) then return end
-            if not (lia.command.hasAccess(LocalPlayer(), "charban") or lia.command.hasAccess(LocalPlayer(), "charunban") or lia.command.hasAccess(LocalPlayer(), "charbanoffline") or lia.command.hasAccess(LocalPlayer(), "charunbanoffline")) then return end
+            if not (lia.command.hasAccess(LocalPlayer(), "charban") or lia.command.hasAccess(LocalPlayer(), "charwipe") or lia.command.hasAccess(LocalPlayer(), "charunban") or lia.command.hasAccess(LocalPlayer(), "charbanoffline") or lia.command.hasAccess(LocalPlayer(), "charwipeoffline") or lia.command.hasAccess(LocalPlayer(), "charunbanoffline")) then return end
             local owner = ln.SteamID and lia.util.getBySteamID(ln.SteamID)
             local dMenu = DermaMenu()
             if IsValid(owner) then
                 if lia.command.hasAccess(LocalPlayer(), "charban") then
                     local opt1 = dMenu:AddOption(L("banCharacter"), function() LocalPlayer():ConCommand('say "/charban ' .. ln.CharID .. '"') end)
                     opt1:SetIcon("icon16/cancel.png")
+                end
+
+                if lia.command.hasAccess(LocalPlayer(), "charwipe") then
+                    local opt1_5 = dMenu:AddOption(L("wipeCharacter"), function() LocalPlayer():ConCommand('say "/charwipe ' .. ln.CharID .. '"') end)
+                    opt1_5:SetIcon("icon16/user_delete.png")
                 end
 
                 if lia.command.hasAccess(LocalPlayer(), "charunban") then
@@ -199,6 +204,11 @@ net.Receive("DisplayCharList", function()
                 if lia.command.hasAccess(LocalPlayer(), "charbanoffline") then
                     local opt3 = dMenu:AddOption(L("banCharacterOffline"), function() LocalPlayer():ConCommand('say "/charbanoffline ' .. ln.CharID .. '"') end)
                     opt3:SetIcon("icon16/cancel.png")
+                end
+
+                if lia.command.hasAccess(LocalPlayer(), "charwipeoffline") then
+                    local opt3_5 = dMenu:AddOption(L("wipeCharacterOffline"), function() LocalPlayer():ConCommand('say "/charwipeoffline ' .. ln.CharID .. '"') end)
+                    opt3_5:SetIcon("icon16/user_delete.png")
                 end
 
                 if lia.command.hasAccess(LocalPlayer(), "charunbanoffline") then
