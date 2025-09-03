@@ -43,6 +43,7 @@ function ENT:setItem(itemID)
     end
 
     self:SetColor(itemTable.color or color_white)
+    if itemTable.scale and itemTable.scale ~= 1 then self:SetModelScale(itemTable.scale) end
     if itemTable.bodygroups and istable(itemTable.bodygroups) then
         for k, v in pairs(itemTable.bodygroups) do
             local bodygroupID

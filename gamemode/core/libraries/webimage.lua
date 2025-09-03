@@ -364,11 +364,3 @@ lia.webimage.register("dark_vignette.png", "https://bleonheart.github.io/Samael-
 lia.webimage.register("invslotblocked.png", "https://bleonheart.github.io/Samael-Assets/misc/invslotblocked.png")
 lia.webimage.register("settings.png", "https://bleonheart.github.io/Samael-Assets/misc/settings.png")
 ensureDir(baseDir)
-concommand.Add("abc", function()
-    local ply = LocalPlayer()
-    if not IsValid(ply) then return end
-    local tr = ply:GetEyeTrace()
-    local ent = IsValid(tr.Entity) and tr.Entity or nil
-    if not IsValid(ent) then return end
-    ent:SetMaterial("https://bleonheart.github.io/Samael-Assets/music/metallica/kill_them_all/cover.png", 0, "cover")
-end)

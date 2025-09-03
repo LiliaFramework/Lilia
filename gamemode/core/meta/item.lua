@@ -10,6 +10,7 @@ ITEM.isStackable = false
 ITEM.quantity = 1
 ITEM.maxQuantity = 1
 ITEM.canSplit = true
+ITEM.scale = 1
 function ITEM:isRotated()
     return self:getData("rotated", false)
 end
@@ -224,6 +225,7 @@ if SERVER then
             entity:SetAngles(angles or angle_zero)
             entity:setItem(self.id)
             instance.entity = entity
+            if self.scale and self.scale ~= 1 then entity:SetModelScale(self.scale) end
             if IsValid(client) then
                 entity.SteamID = client:SteamID()
                 entity.liaCharID = client:getChar():getID()
