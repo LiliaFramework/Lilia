@@ -131,223 +131,6 @@ function lia.keybind.add(k, d, cb)
     lia.keybind.stored[c] = d
 end
 
-hook.Add("PlayerButtonDown", "liaKeybindPress", function(p, b)
-    local action = lia.keybind.stored[b]
-    if not IsFirstTimePredicted() then return end
-    if action and lia.keybind.stored[action] and lia.keybind.stored[action].callback then
-        local data = lia.keybind.stored[action]
-        if not data.shouldRun or data.shouldRun(p) then
-            if data.serverOnly then
-                net.Start("liaKeybindServer")
-                net.WriteString(action)
-                net.WriteEntity(p)
-                net.SendToServer()
-            elseif CLIENT then
-                data.callback(p)
-            end
-        end
-    end
-end)
-
-hook.Add("PlayerButtonUp", "liaKeybindRelease", function(p, b)
-    local action = lia.keybind.stored[b]
-    if not IsFirstTimePredicted() then return end
-    if action and lia.keybind.stored[action] and lia.keybind.stored[action].release then
-        local data = lia.keybind.stored[action]
-        if not data.shouldRun or data.shouldRun(p) then
-            if data.serverOnly then
-                net.Start("liaKeybindServer")
-                net.WriteString(action .. "_release")
-                net.WriteEntity(p)
-                net.SendToServer()
-            elseif CLIENT then
-                data.release(p)
-            end
-        end
-    end
-end)
-
-function lia.keybind.get(a, df)
-    local act = lia.keybind.stored[a]
-    if act then return act.value or act.default or df end
-    return df
-end
-
-function lia.keybind.save()
-    local path = "lilia/keybinds.json"
-    local d = {}
-    for k, v in pairs(lia.keybind.stored) do
-        if istable(v) and v.value then d[k] = v.value end
-    end
-
-    local j = util.TableToJSON(d, true)
-    if j then file.Write(path, j) end
-end
-
-function lia.keybind.load()
-    local path = "lilia/keybinds.json"
-    local d = file.Read(path, "DATA")
-    if d then
-        local s = util.JSONToTable(d)
-        for k, v in pairs(s) do
-            if lia.keybind.stored[k] then lia.keybind.stored[k].value = v end
-        end
-    else
-        for _, v in pairs(lia.keybind.stored) do
-            if istable(v) and v.default then v.value = v.default end
-        end
-
-        local out = {}
-        for k, v in pairs(lia.keybind.stored) do
-            if istable(v) and v.value then out[k] = v.value end
-        end
-
-        local json = util.TableToJSON(out, true)
-        if json then file.Write(path, json) end
-    end
-
-    for k in pairs(lia.keybind.stored) do
-        if isnumber(k) then lia.keybind.stored[k] = nil end
-    end
-
-    for action, data in pairs(lia.keybind.stored) do
-        if istable(data) and data.value then lia.keybind.stored[data.value] = action end
-    end
-
-    hook.Run("InitializedKeybinds")
-end
-
-hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
-    local function buildKeybinds(parent)
-        parent:Clear()
-        local allowEdit = lia.config.get("AllowKeybindEditing", true)
-        local sheet = parent:Add("liaSheet")
-        sheet:Dock(FILL)
-        sheet:SetPlaceholderText(L("searchKeybinds"))
-        sheet:SetSpacing(4)
-        sheet:SetPadding(4)
-        local taken = {}
-        for action, data in pairs(lia.keybind.stored) do
-            if istable(data) and data.value then taken[data.value] = action end
-        end
-
-        local sortedActions = {}
-        for action, data in pairs(lia.keybind.stored) do
-            if istable(data) then sortedActions[#sortedActions + 1] = action end
-        end
-
-        table.sort(sortedActions, function(a, b)
-            local la, lb = #tostring(a), #tostring(b)
-            if la == lb then return tostring(a) < tostring(b) end
-            return la < lb
-        end)
-
-        for _, action in ipairs(sortedActions) do
-            local data = lia.keybind.stored[action]
-            local rowPanel = vgui.Create("DPanel")
-            rowPanel:SetTall(70)
-            rowPanel:DockPadding(4, 4, 4, 4)
-            rowPanel.Paint = nil
-            local lbl = rowPanel:Add("DLabel")
-            lbl:Dock(FILL)
-            lbl:SetFont("liaBigFont")
-            lbl:SetText(L(action))
-            local currentKey = lia.keybind.get(action, KEY_NONE)
-            if allowEdit then
-                local combo = rowPanel:Add("DComboBox")
-                combo:Dock(RIGHT)
-                combo:SetWide(200)
-                combo:SetFont("liaMediumFont")
-                combo:SetValue(input.GetKeyName(currentKey) or "NONE")
-                local choices = {}
-                for name, code in pairs(KeybindKeys) do
-                    if not taken[code] or code == currentKey then
-                        choices[#choices + 1] = {
-                            txt = input.GetKeyName(code) or name,
-                            keycode = code
-                        }
-                    end
-                end
-
-                table.sort(choices, function(a, b) return a.txt < b.txt end)
-                for _, c in ipairs(choices) do
-                    combo:AddChoice(c.txt, c.keycode)
-                end
-
-                combo.OnSelect = function(_, _, _, newKey)
-                    if not newKey then return end
-                    for tk, tv in pairs(taken) do
-                        if tk == newKey and tv ~= action then
-                            combo:SetValue(input.GetKeyName(currentKey) or "NONE")
-                            return
-                        end
-                    end
-
-                    taken[currentKey] = nil
-                    if lia.keybind.stored[currentKey] == action then lia.keybind.stored[currentKey] = nil end
-                    data.value = newKey
-                    lia.keybind.stored[newKey] = action
-                    taken[newKey] = action
-                    lia.keybind.save()
-                    currentKey = newKey
-                end
-
-                local unbindButton = rowPanel:Add("DButton")
-                unbindButton:Dock(RIGHT)
-                unbindButton:SetWide(100)
-                unbindButton:SetFont("liaMediumFont")
-                unbindButton:SetText(L("unbind"):upper())
-                unbindButton.DoClick = function()
-                    taken[currentKey] = nil
-                    if lia.keybind.stored[currentKey] == action then lia.keybind.stored[currentKey] = nil end
-                    data.value = KEY_NONE
-                    lia.keybind.stored[KEY_NONE] = action
-                    lia.keybind.save()
-                    combo:SetValue(input.GetKeyName(KEY_NONE) or "NONE")
-                    currentKey = KEY_NONE
-                end
-            else
-                local textLabel = rowPanel:Add("DLabel")
-                textLabel:Dock(RIGHT)
-                textLabel:SetFont("liaBigFont")
-                textLabel:SetText(input.GetKeyName(currentKey) or "NONE")
-            end
-
-            sheet:AddPanelRow(rowPanel, {
-                height = 70,
-                filterText = tostring(action):lower()
-            })
-        end
-
-        if allowEdit then
-            local resetAllBtn = vgui.Create("liaMediumButton")
-            resetAllBtn:SetTall(40)
-            resetAllBtn:SetText(L("resetAllKeybinds"))
-            resetAllBtn.DoClick = function()
-                for action, data in pairs(lia.keybind.stored) do
-                    if istable(data) and data.default then
-                        if data.value and lia.keybind.stored[data.value] == action then lia.keybind.stored[data.value] = nil end
-                        data.value = data.default
-                        lia.keybind.stored[data.default] = action
-                    end
-                end
-
-                lia.keybind.save()
-                buildKeybinds(parent)
-            end
-
-            sheet:AddPanelRow(resetAllBtn, {
-                height = 40
-            })
-        end
-    end
-
-    pages[#pages + 1] = {
-        name = "keybinds",
-        drawFunc = buildKeybinds
-    }
-end)
-
 lia.keybind.add(KEY_NONE, "openInventory", {
     onPress = function()
         local f1Menu = vgui.Create("liaMenu")
@@ -499,3 +282,222 @@ lia.keybind.add(KEY_NONE, "convertEntity", {
     shouldRun = function(client) return client:getChar() ~= nil end,
     serverOnly = true
 })
+
+if CLIENT then
+    hook.Add("PlayerButtonDown", "liaKeybindPress", function(p, b)
+        local action = lia.keybind.stored[b]
+        if not IsFirstTimePredicted() then return end
+        if action and lia.keybind.stored[action] and lia.keybind.stored[action].callback then
+            local data = lia.keybind.stored[action]
+            if not data.shouldRun or data.shouldRun(p) then
+                if data.serverOnly then
+                    net.Start("liaKeybindServer")
+                    net.WriteString(action)
+                    net.WriteEntity(p)
+                    net.SendToServer()
+                else
+                    data.callback(p)
+                end
+            end
+        end
+    end)
+
+    hook.Add("PlayerButtonUp", "liaKeybindRelease", function(p, b)
+        local action = lia.keybind.stored[b]
+        if not IsFirstTimePredicted() then return end
+        if action and lia.keybind.stored[action] and lia.keybind.stored[action].release then
+            local data = lia.keybind.stored[action]
+            if not data.shouldRun or data.shouldRun(p) then
+                if data.serverOnly then
+                    net.Start("liaKeybindServer")
+                    net.WriteString(action .. "_release")
+                    net.WriteEntity(p)
+                    net.SendToServer()
+                else
+                    data.release(p)
+                end
+            end
+        end
+    end)
+
+    function lia.keybind.get(a, df)
+        local act = lia.keybind.stored[a]
+        if act then return act.value or act.default or df end
+        return df
+    end
+
+    function lia.keybind.save()
+        local path = "lilia/keybinds.json"
+        local d = {}
+        for k, v in pairs(lia.keybind.stored) do
+            if istable(v) and v.value then d[k] = v.value end
+        end
+
+        local j = util.TableToJSON(d, true)
+        if j then file.Write(path, j) end
+    end
+
+    function lia.keybind.load()
+        local path = "lilia/keybinds.json"
+        local d = file.Read(path, "DATA")
+        if d then
+            local s = util.JSONToTable(d)
+            for k, v in pairs(s) do
+                if lia.keybind.stored[k] then lia.keybind.stored[k].value = v end
+            end
+        else
+            for _, v in pairs(lia.keybind.stored) do
+                if istable(v) and v.default then v.value = v.default end
+            end
+
+            local out = {}
+            for k, v in pairs(lia.keybind.stored) do
+                if istable(v) and v.value then out[k] = v.value end
+            end
+
+            local json = util.TableToJSON(out, true)
+            if json then file.Write(path, json) end
+        end
+
+        for k in pairs(lia.keybind.stored) do
+            if isnumber(k) then lia.keybind.stored[k] = nil end
+        end
+
+        for action, data in pairs(lia.keybind.stored) do
+            if istable(data) and data.value then lia.keybind.stored[data.value] = action end
+        end
+
+        hook.Run("InitializedKeybinds")
+    end
+
+    hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
+        local function buildKeybinds(parent)
+            parent:Clear()
+            local allowEdit = lia.config.get("AllowKeybindEditing", true)
+            local sheet = parent:Add("liaSheet")
+            sheet:Dock(FILL)
+            sheet:SetPlaceholderText(L("searchKeybinds"))
+            sheet:SetSpacing(4)
+            sheet:SetPadding(4)
+            local taken = {}
+            for action, data in pairs(lia.keybind.stored) do
+                if istable(data) and data.value then taken[data.value] = action end
+            end
+
+            local sortedActions = {}
+            for action, data in pairs(lia.keybind.stored) do
+                if istable(data) then sortedActions[#sortedActions + 1] = action end
+            end
+
+            table.sort(sortedActions, function(a, b)
+                local la, lb = #tostring(a), #tostring(b)
+                if la == lb then return tostring(a) < tostring(b) end
+                return la < lb
+            end)
+
+            for _, action in ipairs(sortedActions) do
+                local data = lia.keybind.stored[action]
+                local rowPanel = vgui.Create("DPanel")
+                rowPanel:SetTall(70)
+                rowPanel:DockPadding(4, 4, 4, 4)
+                rowPanel.Paint = nil
+                local lbl = rowPanel:Add("DLabel")
+                lbl:Dock(FILL)
+                lbl:SetFont("liaBigFont")
+                lbl:SetText(L(action))
+                local currentKey = lia.keybind.get(action, KEY_NONE)
+                if allowEdit then
+                    local combo = rowPanel:Add("DComboBox")
+                    combo:Dock(RIGHT)
+                    combo:SetWide(200)
+                    combo:SetFont("liaMediumFont")
+                    combo:SetValue(input.GetKeyName(currentKey) or "NONE")
+                    local choices = {}
+                    for name, code in pairs(KeybindKeys) do
+                        if not taken[code] or code == currentKey then
+                            choices[#choices + 1] = {
+                                txt = input.GetKeyName(code) or name,
+                                keycode = code
+                            }
+                        end
+                    end
+
+                    table.sort(choices, function(a, b) return a.txt < b.txt end)
+                    for _, c in ipairs(choices) do
+                        combo:AddChoice(c.txt, c.keycode)
+                    end
+
+                    combo.OnSelect = function(_, _, _, newKey)
+                        if not newKey then return end
+                        for tk, tv in pairs(taken) do
+                            if tk == newKey and tv ~= action then
+                                combo:SetValue(input.GetKeyName(currentKey) or "NONE")
+                                return
+                            end
+                        end
+
+                        taken[currentKey] = nil
+                        if lia.keybind.stored[currentKey] == action then lia.keybind.stored[currentKey] = nil end
+                        data.value = newKey
+                        lia.keybind.stored[newKey] = action
+                        taken[newKey] = action
+                        lia.keybind.save()
+                        currentKey = newKey
+                    end
+
+                    local unbindButton = rowPanel:Add("DButton")
+                    unbindButton:Dock(RIGHT)
+                    unbindButton:SetWide(100)
+                    unbindButton:SetFont("liaMediumFont")
+                    unbindButton:SetText(L("unbind"):upper())
+                    unbindButton.DoClick = function()
+                        taken[currentKey] = nil
+                        if lia.keybind.stored[currentKey] == action then lia.keybind.stored[currentKey] = nil end
+                        data.value = KEY_NONE
+                        lia.keybind.stored[KEY_NONE] = action
+                        lia.keybind.save()
+                        combo:SetValue(input.GetKeyName(KEY_NONE) or "NONE")
+                        currentKey = KEY_NONE
+                    end
+                else
+                    local textLabel = rowPanel:Add("DLabel")
+                    textLabel:Dock(RIGHT)
+                    textLabel:SetFont("liaBigFont")
+                    textLabel:SetText(input.GetKeyName(currentKey) or "NONE")
+                end
+
+                sheet:AddPanelRow(rowPanel, {
+                    height = 70,
+                    filterText = tostring(action):lower()
+                })
+            end
+
+            if allowEdit then
+                local resetAllBtn = vgui.Create("liaMediumButton")
+                resetAllBtn:SetTall(40)
+                resetAllBtn:SetText(L("resetAllKeybinds"))
+                resetAllBtn.DoClick = function()
+                    for action, data in pairs(lia.keybind.stored) do
+                        if istable(data) and data.default then
+                            if data.value and lia.keybind.stored[data.value] == action then lia.keybind.stored[data.value] = nil end
+                            data.value = data.default
+                            lia.keybind.stored[data.default] = action
+                        end
+                    end
+
+                    lia.keybind.save()
+                    buildKeybinds(parent)
+                end
+
+                sheet:AddPanelRow(resetAllBtn, {
+                    height = 40
+                })
+            end
+        end
+
+        pages[#pages + 1] = {
+            name = "keybinds",
+            drawFunc = buildKeybinds
+        }
+    end)
+end
