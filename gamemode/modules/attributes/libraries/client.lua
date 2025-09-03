@@ -91,10 +91,6 @@ lia.bar.add(function()
     return predictedStamina / max
 end, Color(200, 200, 40), nil, "stamina")
 
-function MODULE:PlayerLoadedChar(client, character)
-    if client == LocalPlayer() and character then predictedStamina = character:getMaxStamina() end
-end
-
 function MODULE:OnReloaded()
     local client = LocalPlayer()
     if not IsValid(client) then return end
