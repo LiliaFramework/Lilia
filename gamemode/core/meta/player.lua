@@ -896,7 +896,6 @@ if SERVER then
             self:setNetVar("ragdoll", entity)
             entity.liaWeapons = {}
             entity.liaAmmo = {}
-            entity.liaPlayer = self
             if getUpGrace then entity.liaGrace = CurTime() + getUpGrace end
             if time and time > 0 then
                 entity.liaStart = CurTime()

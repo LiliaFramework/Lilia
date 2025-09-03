@@ -279,14 +279,14 @@ function PANEL:addText(...)
     local panel = self.scroll:Add("liaMarkupPanel")
     panel:SetWide(self:GetWide() - 8)
     panel:setMarkup(markup, OnDrawText)
-    panel.start = CurTime() + 15
-    panel.finish = panel.start + 20
+    panel.start = CurTime() + 5
+    panel.finish = panel.start + 5
     panel.Think = function(p)
         if self.active then
             p:SetAlpha(255)
         else
             local alpha = (1 - math.TimeFraction(p.start, p.finish, CurTime())) * 255
-            p:SetAlpha(math.max(alpha, 150))
+            p:SetAlpha(math.max(alpha, 0))
         end
     end
 

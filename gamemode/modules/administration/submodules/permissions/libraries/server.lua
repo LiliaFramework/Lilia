@@ -135,6 +135,7 @@ function GM:PlayerNoClip(ply, enabled)
         return false
     end
 
+
     if not ply:Alive() then
         lia.log.add(ply, "permissionDenied", L("noclipWhileDead"))
         ply:notifyLocalized("noNoclipWhileDead")

@@ -286,7 +286,7 @@ function GM:EntityTakeDamage(entity, dmgInfo)
     if not entity:IsPlayer() then return end
     if entity:isStaffOnDuty() and lia.config.get("StaffHasGodMode", true) then return true end
     if entity:isNoClipping() then return true end
-    if IsValid(entity.liaPlayer) then
+    if IsValid(entity:getNetVar("player")) then
         if dmgInfo:IsDamageType(DMG_CRUSH) then
             if (entity.liaFallGrace or 0) < CurTime() then
                 if dmgInfo:GetDamage() <= 10 then dmgInfo:SetDamage(0) end
@@ -296,7 +296,7 @@ function GM:EntityTakeDamage(entity, dmgInfo)
             end
         end
 
-        entity.liaPlayer:TakeDamageInfo(dmgInfo)
+        entity:getNetVar("player"):TakeDamageInfo(dmgInfo)
     end
 end
 
@@ -1143,7 +1143,7 @@ concommand.Add("lia_wipecharacters", function(client)
     else
         resetCalled = 0
         MsgC(Color(255, 0, 0), "[Lilia] Wiping all characters...\n")
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if IsValid(ply) then ply:Kick("Server is wiping character data. Please reconnect after the wipe is complete.") end
         end
 

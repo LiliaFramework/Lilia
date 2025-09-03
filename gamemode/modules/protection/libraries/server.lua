@@ -75,7 +75,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
         local dir = (entity:GetPos() - dmgPos):GetNormalized()
         entity:SetVelocity(dir * 60 * dmgInfo:GetDamage())
         local dmgAmt = dmgInfo:GetDamage()
-        timer.Simple(0.05, function() if IsValid(entity) and entity:IsPlayer() and not IsValid(entity:getRagdoll()) and entity:Health() - dmgAmt > 0 then entity:setRagdolled(true, 3) end end)
+        timer.Simple(0.05, function() if IsValid(entity) and entity:IsPlayer() and not IsValid(entity:getRagdoll()) and entity:Health() - dmgAmt > 0 and not entity:InVehicle() then entity:setRagdolled(true, 3) end end)
     end
 
     if attacker ~= entity then
