@@ -437,28 +437,22 @@ lia.keybind.add(KEY_NONE, "quickTakeItem", {
 lia.keybind.add(KEY_NONE, "convertEntity", {
     onPress = function(client)
         if not IsValid(client) or not client:getChar() then return end
-
         local trace = client:GetEyeTrace()
         local targetEntity = trace.Entity
-
         if not IsValid(targetEntity) or targetEntity == client then return end
-
         if trace.HitPos:Distance(client:GetPos()) > 200 then
             client:notifyLocalized("entityTooFar")
             return
         end
-
 
         if targetEntity:IsPlayer() or targetEntity:isItem() or targetEntity:GetClass() == "lia_money" then
             client:notifyLocalized("cannotConvertEntity")
             return
         end
 
-
         local hasItemDefinition = false
         local itemUniqueID = ""
         local targetEntityID = targetEntity:GetClass()
-
         for uniqueID, entityData in pairs(lia.item.itemEntities or {}) do
             if entityData[1] == targetEntityID then
                 hasItemDefinition = true
@@ -467,34 +461,27 @@ lia.keybind.add(KEY_NONE, "convertEntity", {
             end
         end
 
-
         if not hasItemDefinition then
             client:notifyLocalized("entityNotConvertible")
             return
         end
 
-
         local entityData = extractEntityData(targetEntity)
-
         lia.item.instance(0, itemUniqueID, {}, 1, 1, function(item)
             if not item then return end
-
             if SERVER then
                 item:getEntity():setNetVar("entityData", entityData)
                 item:setData("entityClass", targetEntity:GetClass())
                 item:setData("entityModel", targetEntity:GetModel())
             end
 
-
             local inventory = client:getChar():getInv()
             if inventory then
                 inventory:add(item):next(function()
-
                     if IsValid(targetEntity) then SafeRemoveEntity(targetEntity) end
                     client:notifyLocalized("entityConverted", item:getName())
                 end):catch(function(err)
                     if err == "noFit" then
-
                         item:spawn(client:getItemDropPos())
                         if IsValid(targetEntity) then SafeRemoveEntity(targetEntity) end
                         client:notifyLocalized("entityConvertedGround", item:getName())
@@ -503,7 +490,6 @@ lia.keybind.add(KEY_NONE, "convertEntity", {
                     end
                 end)
             else
-
                 item:spawn(client:getItemDropPos())
                 if IsValid(targetEntity) then SafeRemoveEntity(targetEntity) end
                 client:notifyLocalized("entityConvertedGround", item:getName())
