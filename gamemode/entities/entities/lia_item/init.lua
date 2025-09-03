@@ -17,6 +17,8 @@
 end
 
 function ENT:OnTakeDamage(dmginfo)
+    local itemTable = self:getItemTable()
+    if not itemTable or not itemTable.CanBeDestroyed then return end
     local damage = dmginfo:GetDamage()
     self.health = self.health - damage
     if self.health <= 0 and not self.breaking then

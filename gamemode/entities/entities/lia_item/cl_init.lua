@@ -20,9 +20,12 @@ function ENT:onDrawEntityInfo(alpha)
     surface.SetFont("liaHugeText")
     local tw, th = surface.GetTextSize(L(item.getName and item:getName() or item.name))
     draw.SimpleText(L(item.getName and item:getName() or item.name), "liaHugeText", x, y, ColorAlpha(lia.config.get("Color"), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    y = y + th + 80
     local desc = item:getDesc()
     self:computeDescMarkup("<font=liaMediumFont>" .. desc .. "</font>", tw)
+    local markupHeight = 0
+    if self.markup then markupHeight = self.markup:getHeight() end
+    local spacing = math.max(80, markupHeight + 20)
+    y = y + th + spacing
     if self.markup then self.markup:draw(x - tw / 2, y, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, alpha) end
     hook.Run("DrawItemDescription", self, x, y, ColorAlpha(color_white, alpha), alpha)
     item.data, item.entity = oldD, oldE
