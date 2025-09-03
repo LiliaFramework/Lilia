@@ -60,9 +60,49 @@ function PANEL:removeIcon(icon)
     self.content:RemoveItem(icon)
 end
 
+local tempAlreadyTherePos = {}
+
+local function GetTargetPanel(invOrigin)
+    for _, panel in ipairs(vgui.GetAll()) do
+        local panelName = panel:GetName()
+        if panelName == "liaGridInventoryPanel" then
+            local inv = panel.inventory
+            if inv ~= invOrigin then return inv end
+        end
+    end
+    return nil
+end
+
+local function CustomFindFreePos(inv, item)
+    local width, height = inv:getSize()
+    for x = 1, width do
+        for y = 1, height do
+            if inv:doesItemFitAtPos(item, x, y) then
+                local posKey = x .. "-" .. y
+                if not tempAlreadyTherePos[posKey] then return x, y end
+            end
+        end
+    end
+end
+
 function PANEL:onItemPressed(itemIcon, keyCode)
     if hook.Run("InterceptClickItemIcon", self, itemIcon, keyCode) ~= true then
-        if keyCode == MOUSE_RIGHT then
+        if keyCode == MOUSE_LEFT and input.IsShiftDown() then
+            if not itemIcon or not itemIcon.itemTable then return end
+            local item = itemIcon.itemTable
+            local targetInv = GetTargetPanel(self.inventory)
+            if not targetInv then return end
+            local x, y = CustomFindFreePos(targetInv, item)
+            if not x or not y then return end
+            for i = 0, item.width - 1 do
+                for j = 0, item.height - 1 do
+                    local posKey = (x + i) .. "-" .. (y + j)
+                    tempAlreadyTherePos[posKey] = true
+                    timer.Simple(2, function() tempAlreadyTherePos[posKey] = nil end)
+                end
+            end
+            targetInv:requestTransfer(item:getID(), targetInv:getID(), x, y)
+        elseif keyCode == MOUSE_RIGHT then
             itemIcon:openActionMenu()
         elseif keyCode == MOUSE_LEFT then
             itemIcon:DragMousePress(keyCode)

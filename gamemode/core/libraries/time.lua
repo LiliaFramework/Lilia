@@ -77,25 +77,3 @@ function lia.time.GetHour()
     end
     return ct.hour
 end
-
-if SERVER then
-    timer.Create("CurTimeSync", 30, -1, function()
-        net.Start("CurTimeSync", true)
-        net.WriteFloat(CurTime())
-        net.Broadcast()
-    end)
-else
-    hook.Add("InitPostEntity", "CurTimeSync", function()
-        local SyncTime = 0
-        net.Receive("CurTime-Sync", function()
-            local ServerCurTime = net.ReadFloat()
-            if not ServerCurTime then return end
-            SyncTime = OldCurTime() - ServerCurTime
-        end)
-
-        OldCurTime = OldCurTime or CurTime
-        function CurTime()
-            return OldCurTime() - SyncTime
-        end
-    end)
-end

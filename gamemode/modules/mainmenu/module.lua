@@ -94,7 +94,10 @@ else
     end
 
     function MODULE:KickedFromChar(_, isCurrentChar)
-        if isCurrentChar then vgui.Create("liaCharacter") end
+        if isCurrentChar then
+            local charPanel = vgui.Create("liaCharacter")
+            charPanel.isKickedFromChar = true
+        end
     end
 
     function MODULE:CreateMenuButtons(tabs)

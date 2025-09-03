@@ -1453,22 +1453,43 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                 keys[#keys + 1] = k
             end
 
-            table.sort(keys, function(a, b) return lia.config.stored[a].name < lia.config.stored[b].name end)
+            table.sort(keys, function(a, b) 
+                local configA = lia.config.stored[a]
+                local configB = lia.config.stored[b]
+                
+                if not configA then
+                    lia.error("Config with key '" .. tostring(a) .. "' not found in stored configs")
+                    return false
+                end
+                if not configB then
+                    lia.error("Config with key '" .. tostring(b) .. "' not found in stored configs")
+                    return true
+                end
+                
+                local nameA = tostring(configA.name or a)
+                local nameB = tostring(configB.name or b)
+                
+                return nameA < nameB
+            end)
             for _, k in ipairs(keys) do
                 local opt = lia.config.stored[k]
-                local n = opt.name or ""
-                local d = opt.desc or ""
-                local cat = opt.category or L("misc")
-                local ln, ld = n:lower(), d:lower()
-                local lk, lc = k:lower(), cat:lower()
-                if filter == "" or ln:find(filter, 1, true) or ld:find(filter, 1, true) or lk:find(filter, 1, true) or lc:find(filter, 1, true) then
-                    categories[cat] = categories[cat] or {}
-                    categories[cat][#categories[cat] + 1] = {
-                        key = k,
-                        name = n,
-                        config = opt,
-                        elemType = opt.data and opt.data.type or "Generic"
-                    }
+                if not opt then
+                    lia.error("Config with key '" .. tostring(k) .. "' is missing from stored configs")
+                else
+                    local n = opt.name or ""
+                    local d = opt.desc or ""
+                    local cat = opt.category or L("misc")
+                    local ln, ld = n:lower(), d:lower()
+                    local lk, lc = k:lower(), cat:lower()
+                    if filter == "" or ln:find(filter, 1, true) or ld:find(filter, 1, true) or lk:find(filter, 1, true) or lc:find(filter, 1, true) then
+                        categories[cat] = categories[cat] or {}
+                        categories[cat][#categories[cat] + 1] = {
+                            key = k,
+                            name = n,
+                            config = opt,
+                            elemType = opt.data and opt.data.type or "Generic"
+                        }
+                    end
                 end
             end
 

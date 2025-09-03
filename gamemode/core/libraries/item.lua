@@ -135,45 +135,6 @@ local DefaultFunctions = {
             return not IsValid(item.entity) and lia.config.get("ItemGiveEnabled") and not IsValid(item.entity) and not item.noDrop and target and IsValid(target) and target:IsPlayer() and target:Alive() and client:GetPos():DistToSqr(target:GetPos()) < 6500
         end
     },
-    offerInspect = {
-        tip = "inspectOfferTip",
-        icon = "icon16/magnifier.png",
-        onRun = function(item)
-            local client = item.player
-            local target = client:getTracedEntity()
-            if not (IsValid(target) and target:IsPlayer() and target:Alive() and client:GetPos():DistToSqr(target:GetPos()) < 6500) then return false end
-            if hook.Run("CanPlayerRequestInspectionOnItem", client, target, item) == false then return false end
-            target:binaryQuestion(L("inspectRequest", client:Name(), L(item.name)), L("yes"), L("no"), false, function(choice)
-                if choice == 0 then
-                    net.Start("liaItemInspect")
-                    net.WriteString(item.uniqueID)
-                    net.WriteTable(item:getAllData())
-                    net.Send(target)
-                end
-            end)
-            return false
-        end,
-        onCanRun = function(item)
-            local client = item.player
-            local target = client:getTracedEntity()
-            return not IsValid(item.entity) and target and IsValid(target) and target:IsPlayer() and target:Alive() and client:GetPos():DistToSqr(target:GetPos()) < 6500
-        end
-    },
-    inspect = {
-        tip = "inspectTip",
-        icon = "icon16/magnifier.png",
-        onRun = function(item)
-            local client = item.player
-            if SERVER then
-                net.Start("liaItemInspect")
-                net.WriteString(item.uniqueID)
-                net.WriteTable(item:getAllData())
-                net.Send(client)
-            end
-            return false
-        end,
-        onCanRun = function(item) return not IsValid(item.entity) end
-    }
 }
 
 lia.meta.item.width = 1

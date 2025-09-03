@@ -1,4 +1,5 @@
-﻿function MODULE:PostPlayerLoadout(client)
+﻿local staminaPlayers = {}
+function MODULE:PostPlayerLoadout(client)
     local char = client:getChar()
     if not char then return end
     lia.attribs.setup(client)
@@ -15,20 +16,11 @@
     end
 
     client:setLocalVar("stamina", char:getMaxStamina())
-    local uniqueID = "liaStam" .. client:SteamID()
-    timer.Remove(uniqueID)
-    timer.Create(uniqueID, 0.25, 0, function()
-        if not IsValid(client) then
-            timer.Remove(uniqueID)
-            return
-        end
-
-        self:CalcStaminaChange(client)
-    end)
+    staminaPlayers[client] = true
 end
 
 function MODULE:PlayerDisconnected(client)
-    timer.Remove("liaStam" .. client:SteamID())
+    staminaPlayers[client] = nil
 end
 
 function MODULE:KeyPress(client, key)
@@ -44,17 +36,15 @@ function MODULE:KeyPress(client, key)
         end
     end
 
-    if key == IN_JUMP and not client:isNoClipping() and not client:InVehicle() and client:Alive() and client:OnGround() then
-        if (client.liaNextJump or 0) <= CurTime() then
-            client.liaNextJump = CurTime() + 0.1
-            local cost = lia.config.get("JumpStaminaCost", 25)
-            local maxStamina = char:getMaxStamina() or lia.config.get("DefaultStamina", 100)
-            client:consumeStamina(cost)
-            local newStamina = client:getLocalVar("stamina", maxStamina)
-            if newStamina <= 0 then
-                client:setNetVar("brth", true)
-                client:ConCommand("-speed")
-            end
+    if key == IN_JUMP and not client:isNoClipping() and not client:InVehicle() and client:Alive() and client:OnGround() and (client.liaNextJump or 0) <= CurTime() then
+        client.liaNextJump = CurTime() + 0.1
+        local cost = lia.config.get("JumpStaminaCost", 25)
+        local maxStamina = char:getMaxStamina() or lia.config.get("DefaultStamina", 100)
+        client:consumeStamina(cost)
+        local newStamina = client:getLocalVar("stamina", maxStamina)
+        if newStamina <= 0 then
+            client:setNetVar("brth", true)
+            client:ConCommand("-speed")
         end
     end
 end
@@ -157,3 +147,15 @@ net.Receive("ChangeAttribute", function(_, client)
         client:notifyLocalized("invalidMode")
     end
 end)
+
+if SERVER and not timer.Exists("liaGlobalStamina") then
+    timer.Create("liaGlobalStamina", 0.25, 0, function()
+        for client, _ in pairs(staminaPlayers) do
+            if IsValid(client) then
+                MODULE:CalcStaminaChange(client)
+            else
+                staminaPlayers[client] = nil
+            end
+        end
+    end)
+end

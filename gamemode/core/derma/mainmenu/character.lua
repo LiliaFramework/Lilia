@@ -341,7 +341,9 @@ end
 
 function PANEL:createTabs()
     self.tabs:Clear()
-    self:addTab(L("returnText"), function() self:backToMainMenu() end, true)
+    if not self.isKickedFromChar then
+        self:addTab(L("returnText"), function() self:backToMainMenu() end, true)
+    end
 end
 
 function PANEL:backToMainMenu()
