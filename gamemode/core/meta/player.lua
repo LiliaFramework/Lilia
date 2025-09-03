@@ -332,8 +332,7 @@ if SERVER then
         local maxStamina = char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100)
         local value = math.Clamp(current + amount, 0, maxStamina)
         self:setLocalVar("stamina", value)
-        if value >= maxStamina * 0.5 and self:getNetVar("brth", false) then
-            self:setNetVar("brth", nil)
+        if value >= maxStamina * 0.5 then
             hook.Run("PlayerStaminaGained", self)
         end
     end
@@ -343,8 +342,7 @@ if SERVER then
         local current = self:getLocalVar("stamina", char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100))
         local value = math.Clamp(current - amount, 0, char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100))
         self:setLocalVar("stamina", value)
-        if value == 0 and not self:getNetVar("brth", false) then
-            self:setNetVar("brth", true)
+        if value == 0 then
             hook.Run("PlayerStaminaLost", self)
         end
     end

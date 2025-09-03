@@ -43,41 +43,20 @@ function MODULE:KeyPress(client, key)
         client:consumeStamina(cost)
         local newStamina = client:getLocalVar("stamina", maxStamina)
         if newStamina <= 0 then
-            client:setNetVar("brth", true)
             client:ConCommand("-speed")
         end
     end
 end
 
 function MODULE:PlayerLoadedChar(client, character)
-    timer.Simple(0.25, function() if IsValid(client) then client:setLocalVar("stamina", character:getMaxStamina()) end end)
+    client:setLocalVar("stamina", character:getMaxStamina())
+    timer.Simple(0.25, function() if IsValid(client) and client:getChar() == character then client:setLocalVar("stamina", character:getMaxStamina()) end end)
 end
 
-function MODULE:PlayerStaminaLost(client)
-    if client:getNetVar("brth", false) then return end
-    client:setNetVar("brth", true)
-    client:EmitSound("player/breathe1.wav", 35, 100)
-    local character = client:getChar()
-    local maxStamina = character and character:getMaxStamina() or lia.config.get("DefaultStamina", 100)
-    local breathThreshold = maxStamina * 0.25
-    timer.Create("liaStamBreathCheck" .. client:SteamID64(), 1, 0, function()
-        if not IsValid(client) then
-            timer.Remove("liaStamBreathCheck" .. client:SteamID64())
-            return
-        end
-
-        local char = client:getChar()
-        local currentStamina = client:getLocalVar("stamina", char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100))
-        if currentStamina <= breathThreshold then
-            client:EmitSound("player/breathe1.wav", 35, 100)
-            return
-        end
-
-        client:StopSound("player/breathe1.wav")
-        client:setNetVar("brth", nil)
-        timer.Remove("liaStamBreathCheck" .. client:SteamID64())
-    end)
+function MODULE:PostPlayerLoadedChar(client, character)
+    if IsValid(client) and character then client:setLocalVar("stamina", character:getMaxStamina()) end
 end
+
 
 net.Receive("ChangeAttribute", function(_, client)
     if not client:hasPrivilege("manageAttributes") then return end
