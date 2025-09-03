@@ -831,7 +831,6 @@ net.Receive("nDel", function()
     lia.net[index] = nil
 end)
 
-
 net.Receive("liaCharacterData", function()
     local charID = net.ReadUInt(32)
     local character = lia.char.getCharacter(charID)

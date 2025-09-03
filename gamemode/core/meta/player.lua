@@ -332,9 +332,7 @@ if SERVER then
         local maxStamina = char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100)
         local value = math.Clamp(current + amount, 0, maxStamina)
         self:setLocalVar("stamina", value)
-        if value >= maxStamina * 0.5 then
-            hook.Run("PlayerStaminaGained", self)
-        end
+        if value >= maxStamina * 0.5 then hook.Run("PlayerStaminaGained", self) end
     end
 
     function playerMeta:consumeStamina(amount)
@@ -342,9 +340,7 @@ if SERVER then
         local current = self:getLocalVar("stamina", char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100))
         local value = math.Clamp(current - amount, 0, char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100))
         self:setLocalVar("stamina", value)
-        if value == 0 then
-            hook.Run("PlayerStaminaLost", self)
-        end
+        if value == 0 then hook.Run("PlayerStaminaLost", self) end
     end
 
     function playerMeta:addMoney(amount)

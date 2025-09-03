@@ -1453,24 +1453,24 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                 keys[#keys + 1] = k
             end
 
-            table.sort(keys, function(a, b) 
+            table.sort(keys, function(a, b)
                 local configA = lia.config.stored[a]
                 local configB = lia.config.stored[b]
-                
                 if not configA then
                     lia.error("Config with key '" .. tostring(a) .. "' not found in stored configs")
                     return false
                 end
+
                 if not configB then
                     lia.error("Config with key '" .. tostring(b) .. "' not found in stored configs")
                     return true
                 end
-                
+
                 local nameA = tostring(configA.name or a)
                 local nameB = tostring(configB.name or b)
-                
                 return nameA < nameB
             end)
+
             for _, k in ipairs(keys) do
                 local opt = lia.config.stored[k]
                 if not opt then
