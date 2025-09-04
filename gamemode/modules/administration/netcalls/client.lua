@@ -793,10 +793,8 @@ lia.net.readBigTable("liaFullCharList", function(data)
     panelRef:buildSheets(data)
 end)
 
-
 net.Receive("liaCharDeleted", function()
     if IsValid(panelRef) and isfunction(panelRef.buildSheets) then
-
         net.Start("liaRequestFullCharList")
         net.SendToServer()
     end

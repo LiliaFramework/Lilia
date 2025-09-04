@@ -20,7 +20,6 @@ function PANEL:Init()
     self.btnArea:SetWide(self:GetWide() * 0.4)
 end
 
-
 function PANEL:addBtn(text, cb)
     local btn = vgui.Create("liaMediumButton", self.btnArea)
     btn:SetFont("liaBigBtn")
@@ -30,7 +29,6 @@ function PANEL:addBtn(text, cb)
     btn:DockMargin(0, 0, 0, 8)
     btn.DoClick = cb
 end
-
 
 function PANEL:buildButtons()
     self.btnArea:Clear()
@@ -50,7 +48,6 @@ function PANEL:buildButtons()
             self:Remove()
         end)
     end
-
 
     self:addBtn(L("exit"), function() self:Remove() end)
     local h = 0

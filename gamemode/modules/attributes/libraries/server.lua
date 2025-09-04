@@ -42,9 +42,7 @@ function MODULE:KeyPress(client, key)
         local maxStamina = char:getMaxStamina() or lia.config.get("DefaultStamina", 100)
         client:consumeStamina(cost)
         local newStamina = client:getLocalVar("stamina", maxStamina)
-        if newStamina <= 0 then
-            client:ConCommand("-speed")
-        end
+        if newStamina <= 0 then client:ConCommand("-speed") end
     end
 end
 
@@ -56,7 +54,6 @@ end
 function MODULE:PostPlayerLoadedChar(client, character)
     if IsValid(client) and character then client:setLocalVar("stamina", character:getMaxStamina()) end
 end
-
 
 net.Receive("ChangeAttribute", function(_, client)
     if not client:hasPrivilege("manageAttributes") then return end

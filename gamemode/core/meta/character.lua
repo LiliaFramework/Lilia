@@ -514,7 +514,6 @@ if SERVER then
         local curChar, steamID = client:getChar(), client:SteamID()
         local isCurChar = curChar and curChar:getID() == self:getID() or false
         if self.steamID == steamID then
-
             if isCurChar then
                 net.Start("removeF1")
                 net.Send(client)
