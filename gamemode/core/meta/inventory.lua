@@ -1,4 +1,4 @@
-﻿local Inventory = lia.Inventory or {}
+local Inventory = lia.Inventory or {}
 Inventory.__index = Inventory
 lia.Inventory = Inventory
 Inventory.data = {}
@@ -125,7 +125,7 @@ if SERVER then
         if not isnumber(id) then id = NULL end
         lia.db.updateTable({
             invID = id
-        }, nil, "items", "_itemID = " .. item:getID())
+        }, nil, "items", "itemID = " .. item:getID())
 
         self:syncItemAdded(item)
         if not noReplicate then hook.Run("OnItemAdded", item:getOwner(), item) end
@@ -151,7 +151,7 @@ if SERVER then
         local d = deferred.new()
         local charID = initialData.char
         lia.db.insertTable({
-            _invType = self.typeID,
+            invType = self.typeID,
             charID = charID
         }, function(_, lastID)
             local count = 0
@@ -193,7 +193,7 @@ if SERVER then
             else
                 lia.db.updateTable({
                     invID = NULL
-                }, function() d:resolve() end, "items", "_itemID = " .. itemID)
+                }, function() d:resolve() end, "items", "itemID = " .. itemID)
             end
         else
             d:resolve()
@@ -272,12 +272,12 @@ if SERVER then
     end
 
     local ITEM_TABLE = "items"
-    local ITEM_FIELDS = {"_itemID", "uniqueID", "data", "x", "y", "quantity"}
+    local ITEM_FIELDS = {"itemID", "uniqueID", "data", "x", "y", "quantity"}
     function Inventory:loadItems()
         return lia.db.select(ITEM_FIELDS, ITEM_TABLE, "invID = " .. self.id):next(function(res)
             local items = {}
             for _, result in ipairs(res.results or {}) do
-                local itemID = tonumber(result._itemID)
+                local itemID = tonumber(result.itemID)
                 local uniqueID = result.uniqueID
                 local itemTable = lia.item.list[uniqueID]
                 if not itemTable then

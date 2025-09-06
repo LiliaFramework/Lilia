@@ -1,4 +1,4 @@
-﻿local MaliciousNet = {
+local MaliciousNet = {
     ["Sbox_gm_attackofnullday_key"] = true,
     ["c"] = true,
     ["enablevac"] = true,
@@ -31,7 +31,7 @@
     ["Ulogs_Infos"] = true,
     ["nocheat"] = true,
     ["adsp_door_length"] = true,
-    ["Î¾psilon"] = true,
+    ["ξpsilon"] = true,
     ["JQerystrip.disable"] = true,
     ["Sandbox_GayParty"] = true,
     ["DarkRP_UTF8"] = true,
@@ -163,7 +163,7 @@
     ["m9k_addons"] = true,
     ["fix"] = true,
     ["zilnix"] = true,
-    ["ÃžÃ ?D)â—˜"] = true,
+    ["Þ ?D)◘"] = true,
     ["oldNetReadData"] = true,
     ["ZimbaBackDoor"] = true,
     ["0x13"] = true,

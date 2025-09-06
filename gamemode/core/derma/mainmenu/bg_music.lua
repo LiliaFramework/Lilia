@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     if lia.menuMusic then
         lia.menuMusic:Stop()

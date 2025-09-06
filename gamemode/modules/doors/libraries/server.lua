@@ -1,9 +1,11 @@
-﻿function MODULE:PostLoadData()
+function MODULE:PostLoadData()
     if lia.config.get("DoorsAlwaysDisabled", false) then
         local count = 0
         for _, door in ents.Iterator() do
             if IsValid(door) and door:isDoor() then
-                door:setNetVar("disabled", true)
+                local doorData = door:getNetVar("doorData", {})
+                doorData.disabled = true
+                door:setNetVar("doorData", doorData)
                 count = count + 1
             end
         end
@@ -113,22 +115,18 @@ function MODULE:LoadData()
                 end
             end
 
-            if row.name and row.name ~= "NULL" and row.name ~= "" then ent:setNetVar("name", tostring(row.name)) end
-            local price = tonumber(row.price)
-            if price and price >= 0 then
-                ent:setNetVar("price", price)
-            else
-                ent:setNetVar("price", 0)
-            end
+            local doorData = {
+                name = row.name and row.name ~= "NULL" and row.name ~= "" and tostring(row.name) or nil,
+                price = tonumber(row.price) and tonumber(row.price) >= 0 and tonumber(row.price) or 0,
+                locked = tonumber(row.locked) == 1,
+                disabled = tonumber(row.disabled) == 1,
+                hidden = tonumber(row.hidden) == 1,
+                noSell = tonumber(row.ownable) == 0,
+                factions = factions,
+                classes = classes
+            }
 
-            local locked = tonumber(row.locked) == 1
-            ent:setNetVar("locked", locked)
-            local disabled = tonumber(row.disabled) == 1
-            ent:setNetVar("disabled", disabled)
-            local hidden = tonumber(row.hidden) == 1
-            ent:setNetVar("hidden", hidden)
-            local noSell = tonumber(row.ownable) == 0
-            ent:setNetVar("noSell", noSell)
+            ent:setNetVar("doorData", doorData)
             loadedCount = loadedCount + 1
         end
 
@@ -137,29 +135,20 @@ function MODULE:LoadData()
                 if not doorsWithData[doorID] then
                     local ent = ents.GetMapCreatedEntity(doorID)
                     if IsValid(ent) and ent:isDoor() then
-                        if doorVars.name then ent:setNetVar("name", tostring(doorVars.name)) end
-                        if doorVars.price and doorVars.price >= 0 then
-                            ent:setNetVar("price", doorVars.price)
-                        else
-                            ent:setNetVar("price", 0)
-                        end
+                        local doorData = {
+                            name = doorVars.name and tostring(doorVars.name) or nil,
+                            price = doorVars.price and doorVars.price >= 0 and doorVars.price or 0,
+                            locked = doorVars.locked and true or false,
+                            disabled = doorVars.disabled and true or nil,
+                            hidden = doorVars.hidden and true or nil,
+                            noSell = doorVars.noSell and true or nil,
+                            factions = doorVars.factions and istable(doorVars.factions) and doorVars.factions or nil,
+                            classes = doorVars.classes and istable(doorVars.classes) and doorVars.classes or nil
+                        }
 
-                        if doorVars.locked ~= nil then ent:setNetVar("locked", doorVars.locked and true or false) end
-                        if doorVars.disabled ~= nil then ent:setNetVar("disabled", doorVars.disabled and true or nil) end
-                        if doorVars.hidden ~= nil then ent:setNetVar("hidden", doorVars.hidden and true or nil) end
-                        if doorVars.noSell ~= nil then ent:setNetVar("noSell", doorVars.noSell and true or nil) end
-                        if doorVars.factions and istable(doorVars.factions) then
-                            local factionsJson = util.TableToJSON(doorVars.factions)
-                            ent.liaFactions = doorVars.factions
-                            ent:setNetVar("factions", factionsJson)
-                        end
-
-                        if doorVars.classes and istable(doorVars.classes) then
-                            local classesJson = util.TableToJSON(doorVars.classes)
-                            ent.liaClasses = doorVars.classes
-                            ent:setNetVar("classes", classesJson)
-                        end
-
+                        ent:setNetVar("doorData", doorData)
+                        if doorVars.factions and istable(doorVars.factions) then ent.liaFactions = doorVars.factions end
+                        if doorVars.classes and istable(doorVars.classes) then ent.liaClasses = doorVars.classes end
                         lia.information("Applied preset to door ID " .. doorID)
                         loadedCount = loadedCount + 1
                     else
@@ -183,30 +172,35 @@ function MODULE:SaveData()
         if door:isDoor() then
             local mapID = door:MapCreationID()
             if not mapID or mapID <= 0 then continue end
-            local factions = door:getNetVar("factions")
-            local classes = door:getNetVar("classes")
-            local factionsTable = {}
-            local classesTable = {}
-            if factions and factions ~= "[]" then
-                local success, result = pcall(util.JSONToTable, factions)
-                if success and istable(result) then
-                    factionsTable = result
-                else
-                    lia.warning("Failed to parse factions JSON for door " .. mapID .. ", using empty table")
+            local doorData = door:getNetVar("doorData", {})
+            local factionsTable = doorData.factions or {}
+            local classesTable = doorData.classes or {}
+            if not doorData.factions then
+                local factions = door:getNetVar("factions")
+                if factions and factions ~= "[]" then
+                    local success, result = pcall(util.JSONToTable, factions)
+                    if success and istable(result) then
+                        factionsTable = result
+                    else
+                        lia.warning("Failed to parse factions JSON for door " .. mapID .. ", using empty table")
+                    end
+                elseif door.liaFactions then
+                    factionsTable = door.liaFactions
                 end
-            elseif door.liaFactions then
-                factionsTable = door.liaFactions
             end
 
-            if classes and classes ~= "[]" then
-                local success, result = pcall(util.JSONToTable, classes)
-                if success and istable(result) then
-                    classesTable = result
-                else
-                    lia.warning("Failed to parse classes JSON for door " .. mapID .. ", using empty table")
+            if not doorData.classes then
+                local classes = door:getNetVar("classes")
+                if classes and classes ~= "[]" then
+                    local success, result = pcall(util.JSONToTable, classes)
+                    if success and istable(result) then
+                        classesTable = result
+                    else
+                        lia.warning("Failed to parse classes JSON for door " .. mapID .. ", using empty table")
+                    end
+                elseif door.liaClasses then
+                    classesTable = door.liaClasses
                 end
-            elseif door.liaClasses then
-                classesTable = door.liaClasses
             end
 
             if not istable(factionsTable) then
@@ -233,14 +227,14 @@ function MODULE:SaveData()
                 classesSerialized = lia.data.serialize(classesTable)
             end
 
-            local name = door:getNetVar("name")
+            local name = doorData.name or ""
             if name and name ~= "" then
                 name = tostring(name):sub(1, 255)
             else
                 name = ""
             end
 
-            local price = tonumber(door:getNetVar("price")) or 0
+            local price = tonumber(doorData.price) or 0
             if price < 0 then price = 0 end
             if price > 999999999 then price = 999999999 end
             rows[#rows + 1] = {
@@ -249,12 +243,12 @@ function MODULE:SaveData()
                 id = mapID,
                 factions = factionsSerialized,
                 classes = classesSerialized,
-                disabled = door:getNetVar("disabled") and 1 or 0,
-                hidden = door:getNetVar("hidden") and 1 or 0,
-                ownable = door:getNetVar("noSell") and 0 or 1,
+                disabled = doorData.disabled and 1 or 0,
+                hidden = doorData.hidden and 1 or 0,
+                ownable = doorData.noSell and 0 or 1,
                 name = name,
                 price = price,
-                locked = door:getNetVar("locked") and 1 or 0
+                locked = doorData.locked and 1 or 0
             }
 
             doorCount = doorCount + 1
@@ -430,41 +424,37 @@ function MODULE:PlayerUse(client, door)
 end
 
 function MODULE:CanPlayerUseDoor(_, door)
-    if door:getNetVar("disabled", false) then return false end
+    local doorData = door:getNetVar("doorData", {})
+    if doorData.disabled then return false end
 end
 
 function MODULE:CanPlayerAccessDoor(client, door)
-    local factions = door:getNetVar("factions")
-    if factions and factions ~= "[]" then
-        local facs = util.JSONToTable(factions)
-        if facs then
-            local playerFaction = client:getChar():getFaction()
-            local factionData = lia.faction.indices[playerFaction]
-            local unique = factionData and factionData.uniqueID
-            for _, id in ipairs(facs) do
-                if id == unique or lia.faction.getIndex(id) == playerFaction then return true end
-            end
+    local doorData = door:getNetVar("doorData", {})
+    local factions = doorData.factions
+    if factions and #factions > 0 then
+        local playerFaction = client:getChar():getFaction()
+        local factionData = lia.faction.indices[playerFaction]
+        local unique = factionData and factionData.uniqueID
+        for _, id in ipairs(factions) do
+            if id == unique or lia.faction.getIndex(id) == playerFaction then return true end
         end
     end
 
-    local classes = door:getNetVar("classes")
+    local classes = doorData.classes
     local charClass = client:getChar():getClass()
     local charClassData = lia.class.list[charClass]
-    if classes and classes ~= "[]" and charClassData then
-        local classTable = util.JSONToTable(classes)
-        if classTable then
-            local unique = charClassData.uniqueID
-            for _, id in ipairs(classTable) do
-                local classIndex = lia.class.retrieveClass(id)
-                local classData = lia.class.list[classIndex]
-                if id == unique or classIndex == charClass then
-                    return true
-                elseif classData and classData.team and classData.team == charClassData.team then
-                    return true
-                end
+    if classes and #classes > 0 and charClassData then
+        local unique = charClassData.uniqueID
+        for _, id in ipairs(classes) do
+            local classIndex = lia.class.retrieveClass(id)
+            local classData = lia.class.list[classIndex]
+            if id == unique or classIndex == charClass then
+                return true
+            elseif classData and classData.team and classData.team == charClassData.team then
+                return true
             end
-            return false
         end
+        return false
     end
 end
 
@@ -475,9 +465,10 @@ end
 function MODULE:ShowTeam(client)
     local entity = client:getTracedEntity()
     if IsValid(entity) and entity:isDoor() then
-        local factions = entity:getNetVar("factions")
-        local classes = entity:getNetVar("classes")
-        if (not factions or factions == "[]") and (not classes or classes == "[]") then
+        local doorData = entity:getNetVar("doorData", {})
+        local factions = doorData.factions
+        local classes = doorData.classes
+        if (not factions or #factions == 0) and (not classes or #classes == 0) then
             if entity:checkDoorAccess(client, DOOR_TENANT) then
                 local door = entity
                 net.Start("doorMenu")

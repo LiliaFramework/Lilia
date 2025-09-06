@@ -1,4 +1,4 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 AdminStickIsOpen = false
 local playerInfoLabel = L("player") .. " " .. L("information")
 local giveFlagsLabel = L("give") .. " " .. L("flags")
@@ -817,7 +817,7 @@ local function IncludeFlagManagement(tgt, menu, stores)
     local pTake = GetOrCreateSubMenu(pf, takeFlagsLabel, stores, "flagManagement", "playerFlags")
     local toGiveP, toTakeP = {}, {}
     for fl in pairs(lia.flag.list) do
-        if not tgt:hasPlayerFlags(fl) then
+        if not tgt:hasFlags(fl, "player") then
             table.insert(toGiveP, {
                 name = L("giveFlagFormat", fl),
                 cmd = 'say /pflaggive ' .. QuoteArgs(GetIdentifier(tgt), fl),
@@ -849,7 +849,7 @@ local function IncludeFlagManagement(tgt, menu, stores)
     end
 
     pf:AddOption(L("modifyPlayerFlags"), function()
-        local currentFlags = tgt:getPlayerFlags()
+        local currentFlags = tgt:getFlags("player")
         Derma_StringRequest(L("modifyPlayerFlags"), L("modifyFlagsDesc"), currentFlags, function(text)
             text = string.gsub(text or "", "%s", "")
             net.Start("liaModifyFlags")
@@ -889,7 +889,7 @@ local function IncludeFlagManagement(tgt, menu, stores)
     end):SetIcon("icon16/flag_red.png")
 
     pf:AddOption(L("listPlayerFlags"), function()
-        local currentFlags = tgt:getPlayerFlags() or ""
+        local currentFlags = tgt:getFlags("player") or ""
         local flagList = ""
         if currentFlags ~= "" then
             for i = 1, #currentFlags do

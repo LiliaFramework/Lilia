@@ -1,4 +1,4 @@
-﻿local playerMeta = FindMetaTable("Player")
+local playerMeta = FindMetaTable("Player")
 local entityMeta = FindMetaTable("Entity")
 local baseEmitSound = entityMeta.EmitSound
 local validClasses = {
@@ -118,11 +118,7 @@ end
 
 function entityMeta:isFemale()
     if not IsValid(self) then return false end
-    if self:IsPlayer() then
-        return hook.Run("GetPlayerGender", self, self:GetModel()) == "female"
-    else
-        return hook.Run("GetModelGender", self, self:GetModel()) == "female"
-    end
+    return hook.Run("GetModelGender", self:GetModel()) == "female"
 end
 
 function entityMeta:isNearEntity(radius, otherEntity)

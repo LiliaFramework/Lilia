@@ -1,4 +1,4 @@
-﻿local GM = GM or GAMEMODE
+local GM = GM or GAMEMODE
 function GM:OnCharVarChanged(character, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
         for _, v in pairs(lia.char.varHooks[varName]) do
@@ -7,14 +7,9 @@ function GM:OnCharVarChanged(character, varName, oldVar, newVar)
     end
 end
 
-function GM:GetModelGender(client, model)
-    model = model and model or client:GetModel():lower()
+function GM:GetModelGender(model)
     local isFemale = model:find("alyx") or model:find("mossman") or model:find("female")
     return isFemale and "female" or "male"
-end
-
-function GM:GetPlayerGender(client, model)
-    return self:GetModelGender(client, model)
 end
 
 local GamemodeFunctions = {

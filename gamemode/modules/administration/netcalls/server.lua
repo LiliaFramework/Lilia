@@ -1,4 +1,4 @@
-﻿net.Receive("cfgSet", function(_, client)
+net.Receive("cfgSet", function(_, client)
     local key = net.ReadString()
     local name = net.ReadString()
     local value = net.ReadType()
@@ -208,7 +208,7 @@ net.Receive("liaRequestAllFlags", function(_, client)
             name = ply:Name(),
             steamID = ply:SteamID(),
             flags = char and char:getFlags() or "",
-            playerFlags = ply:getPlayerFlags(),
+            playerFlags = ply:getFlags("player"),
         }
     end
 
@@ -224,7 +224,7 @@ net.Receive("liaModifyFlags", function(_, client)
     if not IsValid(target) then return end
     flags = string.gsub(flags or "", "%s", "")
     if isPlayer then
-        target:setPlayerFlags(flags)
+        target:setFlags(flags, "player")
         client:notifyLocalized("playerFlagSet", client:Name(), target:Name(), flags)
     else
         local char = target:getChar()

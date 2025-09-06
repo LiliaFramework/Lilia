@@ -1,4 +1,4 @@
-﻿lia.command.add("playtime", {
+lia.command.add("playtime", {
     adminOnly = false,
     desc = "playtimeDesc",
     onRun = function(client)
@@ -1352,7 +1352,7 @@ lia.command.add("pflaggive", {
         if not flags then
             local available = ""
             for k in SortedPairs(lia.flag.list) do
-                if not target:hasPlayerFlags(k) then available = available .. k .. " " end
+                if not target:hasFlags(k, "player") then available = available .. k .. " " end
             end
 
             available = available:Trim()
@@ -1363,7 +1363,7 @@ lia.command.add("pflaggive", {
             return client:requestString(L("give") .. " " .. L("flags"), L("playerFlagGiveDesc"), function(text) lia.command.run(client, "pflaggive", {target:Name(), text}) end, available)
         end
 
-        target:givePlayerFlags(flags)
+        target:giveFlags(flags, "player")
         client:notifyLocalized("playerFlagGive", client:Name(), flags, target:Name())
         lia.log.add(client, "playerFlagGive", target:Name(), flags)
     end,
@@ -1387,7 +1387,7 @@ lia.command.add("pflaggiveall", {
         end
 
         for k, _ in SortedPairs(lia.flag.list) do
-            if not target:hasPlayerFlags(k) then target:givePlayerFlags(k) end
+            if not target:hasFlags(k, "player") then target:giveFlags(k, "player") end
         end
 
         client:notifyLocalized("gaveAllFlags")
@@ -1418,7 +1418,7 @@ lia.command.add("pflagtakeall", {
         end
 
         for k, _ in SortedPairs(lia.flag.list) do
-            if target:hasPlayerFlags(k) then target:takePlayerFlags(k) end
+            if target:hasFlags(k, "player") then target:takeFlags(k, "player") end
         end
 
         client:notifyLocalized("tookAllFlags")
@@ -1448,11 +1448,11 @@ lia.command.add("pflagtake", {
 
         local flags = arguments[2]
         if not flags then
-            local currentFlags = target:getPlayerFlags()
+            local currentFlags = target:getFlags("player")
             return client:requestString(L("take") .. " " .. L("flags"), L("playerFlagTakeDesc"), function(text) lia.command.run(client, "pflagtake", {target:Name(), text}) end, currentFlags)
         end
 
-        target:takePlayerFlags(flags)
+        target:takeFlags(flags, "player")
         client:notifyLocalized("playerFlagTake", client:Name(), flags, target:Name())
         lia.log.add(client, "playerFlagTake", target:Name(), flags)
     end,
@@ -1812,7 +1812,9 @@ lia.command.add("charwipe", {
         if character then
             local charID = character:getID()
             local charName = character:getName()
+
             character:kick()
+
             lia.char.delete(charID, target)
             client:notifyLocalized("charWipe", client:Name(), charName)
             lia.log.add(client, "charWipe", charName, charID)
@@ -2565,7 +2567,7 @@ lia.command.add("pcheckflags", {
             return
         end
 
-        local flags = target:getPlayerFlags()
+        local flags = target:getFlags("player")
         if flags and #flags > 0 then
             local flagTable = {}
             for i = 1, #flags do

@@ -1,4 +1,4 @@
-﻿lia.module = lia.module or {}
+lia.module = lia.module or {}
 lia.module.list = lia.module.list or {}
 local function loadPermissions(Privileges)
     if not Privileges or not istable(Privileges) then return end

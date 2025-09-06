@@ -1,4 +1,4 @@
-﻿RunConsoleCommand("arccw_override_hud_off", "1")
+RunConsoleCommand("arccw_override_hud_off", "1")
 RunConsoleCommand("arccw_override_crosshair_off", 1)
 RunConsoleCommand("arccw_mult_defaultammo", 0)
 RunConsoleCommand("arccw_enable_dropping", 0)

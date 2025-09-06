@@ -1,4 +1,4 @@
-﻿lia.item = lia.item or {}
+lia.item = lia.item or {}
 lia.item.base = lia.item.base or {}
 lia.item.list = lia.item.list or {}
 lia.item.instances = lia.item.instances or {}
@@ -219,6 +219,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         ITEM.isBase = isBaseItem
         ITEM.category = ITEM.category or "misc"
         ITEM.functions = table.Copy(baseTable.functions or DefaultFunctions)
+        hook.Run("ItemDefaultFunctions", ITEM.functions)
     else
         ITEM = targetTable[uniqueID] or setmetatable({
             hooks = table.Copy(baseTable.hooks or {}),
@@ -238,6 +239,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         ITEM.isBase = isBaseItem
         ITEM.category = ITEM.category or "misc"
         ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or DefaultFunctions)
+        hook.Run("ItemDefaultFunctions", ITEM.functions)
     end
 
     if not luaGenerated and path then lia.include(path, "shared") end
@@ -543,18 +545,14 @@ if SERVER then
         end
 
         if not isnumber(index) then index = NULL end
-        if MYSQLOO_PREPARED and isnumber(index) then
-            lia.db.preparedCall("itemInstance", onItemCreated, index, uniqueID, itemData, x, y, itemTable.maxQuantity or 1)
-        else
-            lia.db.insertTable({
-                invID = index,
-                uniqueID = uniqueID,
-                data = itemData,
-                x = x,
-                y = y,
-                quantity = itemTable.maxQuantity or 1
-            }, onItemCreated, "items")
-        end
+        lia.db.insertTable({
+            invID = index,
+            uniqueID = uniqueID,
+            data = itemData,
+            x = x,
+            y = y,
+            quantity = itemTable.maxQuantity or 1
+        }, onItemCreated, "items")
         return d
     end
 
@@ -562,7 +560,7 @@ if SERVER then
         if lia.item.instances[id] then
             lia.item.instances[id]:delete()
         else
-            lia.db.delete("items", "_itemID = " .. id)
+            lia.db.delete("items", "itemID = " .. id)
         end
     end
 
@@ -576,10 +574,10 @@ if SERVER then
             return
         end
 
-        lia.db.query("SELECT _itemID, uniqueID, data, x, y, quantity FROM lia_items WHERE _itemID IN " .. range, function(results)
+        lia.db.query("SELECT itemID, uniqueID, data, x, y, quantity FROM lia_items WHERE itemID IN " .. range, function(results)
             if not results then return end
             for _, row in ipairs(results) do
-                local id = tonumber(row._itemID)
+                local id = tonumber(row.itemID)
                 local itemDef = lia.item.list[row.uniqueID]
                 if id and itemDef then
                     local item = lia.item.new(row.uniqueID, id)

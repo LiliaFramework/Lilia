@@ -1,4 +1,4 @@
-﻿lia.websound = lia.websound or {}
+lia.websound = lia.websound or {}
 lia.websound.stored = lia.websound.stored or {}
 local baseDir = "lilia/websounds/"
 local cache = {}
@@ -354,12 +354,12 @@ concommand.Add("lia_validate_sounds", function()
             else
                 invalidCount = invalidCount + 1
                 table.insert(corruptedFiles, fileName)
-                print(string.format("[WebSound] ✗ Invalid: %s - %s", fileName, errorMsg))
+                print(string.format("[WebSound] ? Invalid: %s - %s", fileName, errorMsg))
             end
         else
             invalidCount = invalidCount + 1
             table.insert(corruptedFiles, fileName)
-            print(string.format("[WebSound] ✗ Could not read: %s", fileName))
+            print(string.format("[WebSound] ? Could not read: %s", fileName))
         end
     end
 

@@ -1643,11 +1643,18 @@ Shared.
 
 **Purpose**
 
-Returns the flags associated with the player's character.
+Returns the flags associated with the player. Can return character flags, player flags, or combined flags.
+
+**Parameters**
+
+* flagType (string, optional) - The type of flags to return:
+  - "character" - Returns only character flags
+  - "player" - Returns only player flags  
+  - nil or omitted - Returns combined character and player flags (default)
 
 **Returns**
 
-string - The character's flags, or empty string if no character exists.
+string - The requested flags, or empty string if none exist.
 
 **Realm**
 
@@ -1656,8 +1663,16 @@ Shared.
 **Example Usage**
 
 ```lua
-    local flags = player:getFlags()
-    if flags:find("a") then
+    -- Get combined flags (default)
+    local allFlags = player:getFlags()
+    
+    -- Get only character flags
+    local charFlags = player:getFlags("character")
+    
+    -- Get only player flags
+    local playerFlags = player:getFlags("player")
+    
+    if allFlags:find("a") then
         print("Player has admin flag")
     end
 ```
@@ -1668,11 +1683,15 @@ Shared.
 
 **Purpose**
 
-Sets the flags for the player's character.
+Sets the flags for the player. Can set character flags, player flags, or both.
 
 **Parameters**
 
-* flags (string) - The flags to set for the character.
+* flags (string) - The flags to set.
+* flagType (string, optional) - The type of flags to set:
+  - "character" - Sets character flags (default)
+  - "player" - Sets player flags
+  - nil or omitted - Sets character flags (default)
 
 **Returns**
 
@@ -1685,8 +1704,14 @@ Shared.
 **Example Usage**
 
 ```lua
+    -- Set character flags (default)
     player:setFlags("a")
-    print("Player now has admin flag")
+    
+    -- Set player flags
+    player:setFlags("v", "player")
+    
+    -- Set character flags explicitly
+    player:setFlags("abc", "character")
 ```
 
 ---
@@ -1695,11 +1720,15 @@ Shared.
 
 **Purpose**
 
-Gives flags to the player's character.
+Gives flags to the player. Can give character flags, player flags, or both.
 
 **Parameters**
 
-* flags (string) - The flags to give to the character.
+* flags (string) - The flags to give.
+* flagType (string, optional) - The type of flags to give:
+  - "character" - Gives character flags (default)
+  - "player" - Gives player flags
+  - nil or omitted - Gives character flags (default)
 
 **Returns**
 
@@ -1712,8 +1741,14 @@ Shared.
 **Example Usage**
 
 ```lua
+    -- Give character flags (default)
     player:giveFlags("a")
-    print("Player now has admin flag")
+    
+    -- Give player flags
+    player:giveFlags("v", "player")
+    
+    -- Give character flags explicitly
+    player:giveFlags("abc", "character")
 ```
 
 ---
@@ -1722,143 +1757,15 @@ Shared.
 
 **Purpose**
 
-Removes flags from the player's character.
-
-**Parameters**
-
-* flags (string) - The flags to remove from the character.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    player:takeFlags("a")
-    print("Player no longer has admin flag")
-```
-
----
-
-### getPlayerFlags
-
-**Purpose**
-
-Returns the player's personal flags.
-
-**Returns**
-
-string - The player's personal flags.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    local flags = player:getPlayerFlags()
-    print("Player flags: " .. flags)
-```
-
----
-
-### setPlayerFlags
-
-**Purpose**
-
-Sets the player's personal flags.
-
-**Parameters**
-
-* flags (string) - The flags to set.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    player:setPlayerFlags("v")
-    print("Player now has VIP flag")
-```
-
----
-
-### hasPlayerFlags
-
-**Purpose**
-
-Checks if the player has specific personal flags.
-
-**Parameters**
-
-* flags (string) - the flags to check for.
-
-**Returns**
-
-boolean - True if the player has any of the specified flags.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    if player:hasPlayerFlags("v") then
-        print("Player has VIP flag")
-    end
-```
-
----
-
-### givePlayerFlags
-
-**Purpose**
-
-Gives personal flags to the player.
-
-**Parameters**
-
-* flags (string) - The flags to give.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    player:givePlayerFlags("v")
-    print("Player now has VIP flag")
-```
-
----
-
-### takePlayerFlags
-
-**Purpose**
-
-Removes personal flags from the player.
+Removes flags from the player. Can remove character flags, player flags, or both.
 
 **Parameters**
 
 * flags (string) - The flags to remove.
+* flagType (string, optional) - The type of flags to remove:
+  - "character" - Removes character flags (default)
+  - "player" - Removes player flags
+  - nil or omitted - Removes character flags (default)
 
 **Returns**
 
@@ -1871,21 +1778,36 @@ Shared.
 **Example Usage**
 
 ```lua
-    player:takePlayerFlags("v")
-    print("Player no longer has VIP flag")
+    -- Remove character flags (default)
+    player:takeFlags("a")
+    
+    -- Remove player flags
+    player:takeFlags("v", "player")
+    
+    -- Remove character flags explicitly
+    player:takeFlags("abc", "character")
 ```
 
 ---
+
+
+
+
+
 
 ### hasFlags
 
 **Purpose**
 
-Checks if the player has specific flags (character or personal).
+Checks if the player has specific flags. Can check character flags, player flags, or combined flags.
 
 **Parameters**
 
 * flags (string) - The flags to check for.
+* flagType (string, optional) - The type of flags to check:
+  - "character" - Checks only character flags
+  - "player" - Checks only player flags
+  - nil or omitted - Checks combined character and player flags (default)
 
 **Returns**
 
@@ -1898,8 +1820,19 @@ Shared.
 **Example Usage**
 
 ```lua
+    -- Check combined flags (default)
     if player:hasFlags("a") then
         print("Player has admin flag")
+    end
+    
+    -- Check only character flags
+    if player:hasFlags("a", "character") then
+        print("Player has character admin flag")
+    end
+    
+    -- Check only player flags
+    if player:hasFlags("v", "player") then
+        print("Player has VIP flag")
     end
 ```
 
@@ -2901,146 +2834,6 @@ Shared.
 
 ---
 
-### getPlayerFlags
-
-**Purpose**
-
-Gets the player-specific flags stored in Lilia data.
-    Returns flags that are specific to the player, not the character.
-
-**Parameters**
-
-* None.
-
-**Returns**
-
-string - The player flags or empty string if none set.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    local playerFlags = player:getPlayerFlags()
-    print("Player flags: " .. playerFlags)
-```
-
----
-
-### setPlayerFlags
-
-**Purpose**
-
-Sets the player-specific flags in Lilia data.
-    Stores flags that are specific to the player, not the character.
-
-**Parameters**
-
-* flags (string) - The player flags to set.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    -- Set player-specific flags
-    player:setPlayerFlags("xyz")
-```
-
----
-
-### hasPlayerFlags
-
-**Purpose**
-
-Checks if the player has any of the specified player flags.
-    Checks player-specific flags stored in Lilia data.
-
-**Parameters**
-
-* flags (string) - A string of flag characters to check.
-
-**Returns**
-
-boolean - True if the player has at least one of the specified flags, false otherwise.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    if player:hasPlayerFlags("x") then
-        print("Player has flag 'x'")
-    end
-```
-
----
-
-### givePlayerFlags
-
-**Purpose**
-
-Adds player-specific flags to this player.
-    Adds new flags that the player doesn't already have and runs callbacks.
-
-**Parameters**
-
-* flags (string) - The player flags to add.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    -- Give additional player flags
-    player:givePlayerFlags("xyz")
-```
-
----
-
-### takePlayerFlags
-
-**Purpose**
-
-Removes player-specific flags from this player.
-    Removes specified flags and runs callbacks for removed flags.
-
-**Parameters**
-
-* flags (string) - The player flags to remove.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    -- Remove player flags
-    player:takePlayerFlags("x")
-```
-
----
 
 ### hasFlags
 

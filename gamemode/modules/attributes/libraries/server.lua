@@ -1,4 +1,4 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 local staminaPlayers = {}
 function MODULE:PostPlayerLoadout(client)
     local char = client:getChar()
@@ -43,17 +43,41 @@ function MODULE:KeyPress(client, key)
         local maxStamina = char:getMaxStamina() or lia.config.get("DefaultStamina", 100)
         client:consumeStamina(cost)
         local newStamina = client:getLocalVar("stamina", maxStamina)
-        if newStamina <= 0 then client:ConCommand("-speed") end
+        if newStamina <= 0 then
+            client:setNetVar("brth", true)
+            client:ConCommand("-speed")
+        end
     end
 end
 
 function MODULE:PlayerLoadedChar(client, character)
-    client:setLocalVar("stamina", character:getMaxStamina())
-    timer.Simple(0.25, function() if IsValid(client) and client:getChar() == character then client:setLocalVar("stamina", character:getMaxStamina()) end end)
+    timer.Simple(0.25, function() if IsValid(client) then client:setLocalVar("stamina", character:getMaxStamina()) end end)
 end
 
-function MODULE:PostPlayerLoadedChar(client, character)
-    if IsValid(client) and character then client:setLocalVar("stamina", character:getMaxStamina()) end
+function MODULE:PlayerStaminaLost(client)
+    if client:getNetVar("brth", false) then return end
+    client:setNetVar("brth", true)
+    client:EmitSound("player/breathe1.wav", 35, 100)
+    local character = client:getChar()
+    local maxStamina = character and character:getMaxStamina() or lia.config.get("DefaultStamina", 100)
+    local breathThreshold = maxStamina * 0.25
+    timer.Create("liaStamBreathCheck" .. client:SteamID64(), 1, 0, function()
+        if not IsValid(client) then
+            timer.Remove("liaStamBreathCheck" .. client:SteamID64())
+            return
+        end
+
+        local char = client:getChar()
+        local currentStamina = client:getLocalVar("stamina", char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100))
+        if currentStamina <= breathThreshold then
+            client:EmitSound("player/breathe1.wav", 35, 100)
+            return
+        end
+
+        client:StopSound("player/breathe1.wav")
+        client:setNetVar("brth", nil)
+        timer.Remove("liaStamBreathCheck" .. client:SteamID64())
+    end)
 end
 
 net.Receive("ChangeAttribute", function(_, client)
@@ -125,7 +149,7 @@ net.Receive("ChangeAttribute", function(_, client)
     end
 end)
 
-if not timer.Exists("liaGlobalStamina") then
+if SERVER and not timer.Exists("liaGlobalStamina") then
     timer.Create("liaGlobalStamina", 0.25, 0, function()
         for client, _ in pairs(staminaPlayers) do
             if IsValid(client) then

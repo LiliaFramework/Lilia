@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     self:SetTall(20)
     self.add = self:Add("DImageButton")
@@ -187,8 +187,8 @@ function PANEL:Init()
     self.buttons:Dock(RIGHT)
     self.buttons:SetWide(128)
     self.buttons:SetPaintBackground(false)
-    self.sub = self:addButton("⯇", -1):Dock(LEFT)
-    self.add = self:addButton("⯈", 1):Dock(RIGHT)
+    self.sub = self:addButton("?", -1):Dock(LEFT)
+    self.add = self:addButton("?", 1):Dock(RIGHT)
     self.quantity = self.buttons:Add("DLabel")
     self.quantity:SetFont("liaCharSubTitleFont")
     self.quantity:SetTextColor(color_white)

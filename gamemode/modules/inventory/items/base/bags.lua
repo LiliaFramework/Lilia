@@ -1,4 +1,4 @@
-﻿ITEM.name = "bagName"
+ITEM.name = "bagName"
 ITEM.desc = "bagDesc"
 ITEM.model = "models/props_c17/suitcase001a.mdl"
 ITEM.category = "storage"
@@ -34,6 +34,12 @@ function ITEM:onRestored()
     end
 end
 
+function ITEM:onRegistered()
+    if not self.functions.Open then
+        self.functions.Open = ITEM.functions.Open
+    end
+end
+
 function ITEM:onRemoved()
     local invID = self:getData("id")
     if invID then
@@ -51,6 +57,48 @@ function ITEM:onSync(recipient)
     local inventory = self:getInv()
     if inventory then inventory:sync(recipient) end
 end
+
+ITEM.functions.Open = {
+    tip = "openTip",
+    icon = "icon16/briefcase.png",
+    onRun = function(item)
+        local client = item.player
+        local inventory = item:getInv()
+        if not inventory then
+            if SERVER then
+                lia.log.add(client, "itemInteractionFailed", "open", item:getName())
+                client:notifyLocalized("bagNoInventory")
+            end
+            return false
+        end
+
+        if SERVER then
+            inventory:sync(client)
+        else
+            local panel = inventory:show()
+            if IsValid(panel) then
+                panel:Center()
+                panel:MakePopup()
+            end
+        end
+        return false
+    end,
+    onCanRun = function(item)
+        local client = item.player
+        if SERVER and client:getNetVar("cheater", false) then
+            client:notifyLocalized("cheaterActionUseInteractionMenu")
+            return false
+        end
+
+        local canRun = not IsValid(item.entity) and item:getInv() ~= nil
+        if SERVER and not canRun then
+            local reason = IsValid(item.entity) and "bagOnGround" or "bagNoInventory"
+            client:notifyLocalized(reason)
+            lia.log.add(client, "itemInteractionFailed", "open", item:getName())
+        end
+        return canRun
+    end
+}
 
 function ITEM.postHooks:drop()
     local invID = self:getData("id")

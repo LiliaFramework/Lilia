@@ -1,4 +1,4 @@
-﻿local xpos = xpos or 20
+local xpos = xpos or 20
 local ypos = ypos or 20
 function MODULE:TicketFrame(requester, message, claimed)
     local mat_lightning = Material("icon16/lightning_go.png")
@@ -112,7 +112,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     end, isLocalPlayer)
 
     local closeButton = vgui.Create("DButton", frm)
-    closeButton:SetText("×")
+    closeButton:SetText("")
     closeButton:SetTooltip(L("close"))
     closeButton:SetColor(Color(255, 255, 255))
     closeButton:SetPos(frameWidth - 18, 2)

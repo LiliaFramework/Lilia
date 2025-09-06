@@ -1,4 +1,4 @@
-﻿local function CheckDuplicationScale(client, entities)
+local function CheckDuplicationScale(client, entities)
     entities = entities or {}
     for _, ent in pairs(entities) do
         if ent.ModelScale and ent.ModelScale > 10 then

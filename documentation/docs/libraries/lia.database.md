@@ -645,70 +645,6 @@ print(col)
 
 ---
 
-### lia.db.prepare
-
-**Purpose**
-
-Registers a prepared statement (MySQLOO only).
-
-**Parameters**
-
-* `key` (*string*): Statement identifier.
-
-* `str` (*string*): SQL with placeholders.
-
-* `values` (*table*): Array of MySQLOO type constants.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.db.prepare(
-    "updateName",
-    "UPDATE lia_characters SET name = ? WHERE id = ?",
-    { MYSQLOO_STRING, MYSQLOO_INTEGER }
-)
-```
-
----
-
-### lia.db.preparedCall
-
-**Purpose**
-
-Executes a prepared statement registered with `lia.db.prepare`. *(MySQLOO only)*
-
-**Parameters**
-
-* `key` (*string*): Statement identifier.
-
-* `callback` (*function*): Receives results and last insert ID.
-
-* … (*variant*): Placeholder arguments.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.db.preparedCall("updateName", nil, "Alice", 1)
-```
-
----
-
 ### lia.db.query
 
 **Purpose**
@@ -769,7 +705,7 @@ local safe = lia.db.escape(userInput)
 
 **Purpose**
 
-Returns the number of queued SQL queries. *(MySQLOO only)*
+Returns the number of queued SQL queries.
 
 **Parameters**
 
@@ -795,7 +731,7 @@ print("Queue size:", lia.db.queue())
 
 **Purpose**
 
-Cancels all running queries on every connection. *(MySQLOO only)*
+Cancels all running queries on every connection.
 
 **Parameters**
 
@@ -821,7 +757,7 @@ lia.db.abort()
 
 **Purpose**
 
-Returns the least busy database object and its pool index. *(MySQLOO only)*
+Returns the least busy database object and its pool index.
 
 **Parameters**
 

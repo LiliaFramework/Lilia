@@ -1,4 +1,4 @@
-﻿lia.command.add("plytransfer", {
+lia.command.add("plytransfer", {
     adminOnly = true,
     desc = "plyTransferDesc",
     alias = {"charsetfaction"},

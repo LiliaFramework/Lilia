@@ -1,4 +1,5 @@
-﻿lia.config = lia.config or {}
+local GM = GM or GAMEMODE
+lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
 function lia.config.add(key, name, value, callback, data)
     assert(isstring(key), L("configKeyString", type(key)))
@@ -494,7 +495,7 @@ lia.config.add("IsVoiceEnabled", "voiceChatEnabled", true, function(_, newValue)
 })
 
 lia.config.add("SalaryInterval", "salaryInterval", 300, function()
-    local GM = GM or GAMEMODE
+    if not SERVER then return end
     timer.Simple(0.1, function() GM:CreateSalaryTimers() end)
 end, {
     desc = "salaryIntervalDesc",
@@ -1476,9 +1477,9 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                 if not opt then
                     lia.error("Config with key '" .. tostring(k) .. "' is missing from stored configs")
                 else
-                    local n = opt.name or ""
-                    local d = opt.desc or ""
-                    local cat = opt.category or L("misc")
+                    local n = tostring(opt.name or "")
+                    local d = tostring(opt.desc or "")
+                    local cat = tostring(opt.category or L("misc"))
                     local ln, ld = n:lower(), d:lower()
                     local lk, lc = k:lower(), cat:lower()
                     if filter == "" or ln:find(filter, 1, true) or ld:find(filter, 1, true) or lk:find(filter, 1, true) or lc:find(filter, 1, true) then

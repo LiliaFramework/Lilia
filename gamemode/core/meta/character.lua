@@ -1,4 +1,4 @@
-﻿local characterMeta = lia.meta.character or {}
+local characterMeta = lia.meta.character or {}
 characterMeta.__index = characterMeta
 characterMeta.id = characterMeta.id or 0
 characterMeta.vars = characterMeta.vars or {}
@@ -56,7 +56,7 @@ function characterMeta:hasFlags(flagStr)
     local flags = self:getFlags()
     local ply = self:getPlayer()
     local playerFlags = ""
-    if IsValid(ply) and ply.getPlayerFlags then playerFlags = ply:getPlayerFlags() end
+    if IsValid(ply) then playerFlags = ply:getFlags("player") end
     for i = 1, #flagStr do
         local flag = flagStr:sub(i, i)
         if flags:find(flag, 1, true) or playerFlags:find(flag, 1, true) then return true end
@@ -359,8 +359,7 @@ if SERVER then
         hook.Run("OnCharVarChanged", self, "flags", oldFlags, flags)
         local ply = self:getPlayer()
         if not IsValid(ply) then return end
-        local plyFlags = ""
-        if ply.getPlayerFlags then plyFlags = ply:getPlayerFlags() end
+        local plyFlags = ply:getFlags("player")
         for i = 1, #oldFlags do
             local flag = oldFlags:sub(i, i)
             if not flags:find(flag, 1, true) and not plyFlags:find(flag, 1, true) then
@@ -401,7 +400,7 @@ if SERVER then
         local newFlags = oldFlags
         local ply = self:getPlayer()
         local plyFlags = ""
-        if IsValid(ply) and ply.getPlayerFlags then plyFlags = ply:getPlayerFlags() end
+        if IsValid(ply) then plyFlags = ply:getFlags("player") end
         local removedFlags = ""
         for i = 1, #flags do
             local flag = flags:sub(i, i)
@@ -514,6 +513,7 @@ if SERVER then
         local curChar, steamID = client:getChar(), client:SteamID()
         local isCurChar = curChar and curChar:getID() == self:getID() or false
         if self.steamID == steamID then
+
             if isCurChar then
                 net.Start("removeF1")
                 net.Send(client)

@@ -1,4 +1,4 @@
-﻿lia.inventory = lia.inventory or {}
+lia.inventory = lia.inventory or {}
 lia.inventory.types = lia.inventory.types or {}
 lia.inventory.storage = lia.inventory.storage or {}
 lia.inventory.instances = lia.inventory.instances or {}
@@ -44,7 +44,7 @@ function lia.inventory.new(typeID)
 end
 
 if SERVER then
-    local INV_FIELDS = {"invID", "_invType", "charID"}
+    local INV_FIELDS = {"invID", "invType", "charID"}
     local INV_TABLE = "inventories"
     local DATA_FIELDS = {"key", "value"}
     local DATA_TABLE = "invdata"
@@ -74,7 +74,7 @@ if SERVER then
             if lia.inventory.instances[id] and not noCache then return lia.inventory.instances[id] end
             local results = res[1].results and res[1].results[1] or nil
             if not results then return end
-            local typeID = results._invType
+            local typeID = results.invType
             local invType = lia.inventory.types[typeID]
             if not invType then
                 lia.error(L("inventoryInvalidType", id, typeID))

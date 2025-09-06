@@ -1,4 +1,4 @@
-﻿lia.flag = lia.flag or {}
+lia.flag = lia.flag or {}
 lia.flag.list = lia.flag.list or {}
 function lia.flag.add(flag, desc, callback)
     if lia.flag.list[flag] then return end
@@ -10,7 +10,7 @@ end
 
 if SERVER then
     function lia.flag.onSpawn(client)
-        local flags = client:getFlags() .. client:getPlayerFlags()
+        local flags = client:getFlags() .. client:getFlags("player")
         local processed = {}
         for i = 1, #flags do
             local flag = flags:sub(i, i)
@@ -99,7 +99,7 @@ hook.Add("CreateInformationButtons", "liaInformationFlagsUnified", function(page
                     local pnl = row.panel
                     pnl.Paint = function(pnl2, w, h)
                         derma.SkinHook("Paint", "Panel", pnl2, w, h)
-                        local hasFlag = client:getPlayerFlags():find(flagName, 1, true)
+                        local hasFlag = client:getFlags("player"):find(flagName, 1, true)
                         local icon = hasFlag and "checkbox.png" or "unchecked.png"
                         local s = 40
                         lia.util.drawTexture(icon, color_white, w - s - sheet.padding, h * 0.5 - s * 0.5, s, s)

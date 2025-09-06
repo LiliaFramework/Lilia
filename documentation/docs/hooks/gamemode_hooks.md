@@ -8436,11 +8436,11 @@ end)
 
 ---
 
-### OnMySQLOOConnected
+### OnDatabaseConnected
 
 **Purpose**
 
-Called when MySQLOO successfully connects to the database. Use to register prepared statements or init DB logic.
+Called when the database successfully connects. Use to register prepared statements or init DB logic.
 
 **Parameters**
 
@@ -8457,19 +8457,9 @@ Called when MySQLOO successfully connects to the database. Use to register prepa
 **Example Usage**
 
 ```lua
--- Prints a message when OnMySQLOOConnected is triggered
-hook.Add("OnMySQLOOConnected", "PrepareDatabaseStatements", function()
-    lia.db.prepare(
-        "insertPlayer",
-        "INSERT INTO lia_players (_steamID, _steamName) VALUES (?, ?)",
-        { MYSQLOO_STRING, MYSQLOO_STRING }
-    )
-    lia.db.prepare(
-        "updatePlayerStats",
-        "UPDATE lia_players SET kills = ?, deaths = ? WHERE _steamID = ?",
-        { MYSQLOO_NUMBER, MYSQLOO_NUMBER, MYSQLOO_STRING }
-    )
-    print("Prepared MySQLOO statements.")
+-- Prints a message when OnDatabaseConnected is triggered
+hook.Add("OnDatabaseConnected", "PrepareDatabaseStatements", function()
+    print("Database connected successfully.")
 end)
 ```
 
@@ -8803,7 +8793,7 @@ end)
 
 **Purpose**
 
-Called for registering DB prepared statements post-MySQLOO connection.
+Called for registering DB prepared statements post-database connection.
 
 **Parameters**
 
@@ -8820,9 +8810,9 @@ Called for registering DB prepared statements post-MySQLOO connection.
 **Example Usage**
 
 ```lua
--- Set up a prepared SQL statement for later use.
-hook.Add("RegisterPreparedStatements", "InitLogStatement", function()
-    lia.db.prepare("insert_log", "INSERT INTO logs(text) VALUES(?)")
+-- Example of database initialization
+hook.Add("RegisterPreparedStatements", "InitDatabase", function()
+    print("Database prepared statements registered")
 end)
 ```
 

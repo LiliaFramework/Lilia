@@ -1,4 +1,4 @@
-﻿lia.vendor.addPreset("Sample Preset 1", {
+lia.vendor.addPreset("Sample Preset 1", {
     manhack_welder = {
         mode = VENDOR_SELLANDBUY,
         price = 50,

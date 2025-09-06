@@ -1,4 +1,4 @@
-﻿lia.playerinteract = lia.playerinteract or {}
+lia.playerinteract = lia.playerinteract or {}
 lia.playerinteract.stored = lia.playerinteract.stored or {}
 lia.playerinteract.categories = lia.playerinteract.categories or {}
 function lia.playerinteract.isWithinRange(client, entity, customRange)
@@ -313,7 +313,7 @@ else
             local isCollapsed = false
             local categoryContent = {}
             function collapseBtn:Paint(w, h)
-                local icon = isCollapsed and "▼" or "▲"
+                local icon = isCollapsed and "?" or "?"
                 surface.SetFont("liaSmallFont")
                 local textW, textH = surface.GetTextSize(icon)
                 local x = (w - textW) / 2

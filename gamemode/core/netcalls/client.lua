@@ -1,4 +1,4 @@
-﻿net.Receive("liaNotifyL", function()
+net.Receive("liaNotifyL", function()
     local message = net.ReadString()
     local length = net.ReadUInt(8)
     if length == 0 then return lia.notices.notifyLocalized(message) end
@@ -926,10 +926,12 @@ net.Receive("liaAssureClientSideAssets", function()
                 activeDownloads = activeDownloads - 1
                 if material then
                     completedImages = completedImages + 1
-                    if not fromCache then print(string.format("[✓] Image downloaded: %s", download.name)) end
+                    if not fromCache then print(string.format("[?] Image downloaded: %s", download.name)) end
                 else
                     failedImages = failedImages + 1
-                    print(string.format("[✗] Image failed: %s - %s", download.name, errorMsg or "Unknown error"))
+                    local errorMessage = errorMsg or "Unknown error"
+                    print(string.format("[?] Image failed: %s - %s", download.name, errorMessage))
+                    chat.AddText(Color(255, 100, 100), "[Image Download] ", Color(255, 255, 255), string.format("Failed to download: %s (%s)", download.name, errorMessage))
                 end
 
                 processNextDownload()
@@ -939,10 +941,12 @@ net.Receive("liaAssureClientSideAssets", function()
                 activeDownloads = activeDownloads - 1
                 if path then
                     completedSounds = completedSounds + 1
-                    if not fromCache then print(string.format("[✓] Sound downloaded: %s", download.name)) end
+                    if not fromCache then print(string.format("[?] Sound downloaded: %s", download.name)) end
                 else
                     failedSounds = failedSounds + 1
-                    print(string.format("[✗] Sound failed: %s - %s", download.name, errorMsg or "Unknown error"))
+                    local errorMessage = errorMsg or "Unknown error"
+                    print(string.format("[?] Sound failed: %s - %s", download.name, errorMessage))
+                    chat.AddText(Color(255, 100, 100), "[Sound Download] ", Color(255, 255, 255), string.format("Failed to download: %s (%s)", download.name, errorMessage))
                 end
 
                 processNextDownload()
@@ -973,7 +977,13 @@ net.Receive("liaAssureClientSideAssets", function()
                 print(string.format("Sounds: %d downloaded | %d stored", soundStats.downloaded, soundStats.stored))
                 print(string.format("Combined: %d downloaded | %d stored", imageStats.downloaded + soundStats.downloaded, imageStats.stored + soundStats.stored))
                 print("===========================================")
-                if failedImages > 0 or failedSounds > 0 then print("WARNING: Some assets failed to download. Check console output above for details.") end
+                if failedImages > 0 or failedSounds > 0 then
+                    print("WARNING: Some assets failed to download. Check console output above for details.")
+                    if failedImages > 0 then chat.AddText(Color(255, 150, 100), "[Asset Download] ", Color(255, 255, 255), string.format("Warning: %d image(s) failed to download. Check console for details.", failedImages)) end
+                    if failedSounds > 0 then chat.AddText(Color(255, 150, 100), "[Asset Download] ", Color(255, 255, 255), string.format("Warning: %d sound(s) failed to download. Check console for details.", failedSounds)) end
+                else
+                    chat.AddText(Color(100, 255, 100), "[Asset Download] ", Color(255, 255, 255), "All assets downloaded successfully!")
+                end
             end)
         else
             print(string.format("Download progress: %d active, %d queued, %d/%d images, %d/%d sounds", activeDownloads, #downloadQueue, completedImages, totalImages, completedSounds, totalSounds))

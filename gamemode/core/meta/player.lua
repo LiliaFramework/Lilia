@@ -1,4 +1,4 @@
-﻿local playerMeta = FindMetaTable("Player")
+local playerMeta = FindMetaTable("Player")
 local vectorMeta = FindMetaTable("Vector")
 do
     playerMeta.steamName = playerMeta.steamName or playerMeta.Name
@@ -93,10 +93,6 @@ end
 
 function playerMeta:isRunning()
     return vectorMeta.Length2D(self:GetVelocity()) > self:GetWalkSpeed() + 10
-end
-
-function playerMeta:isFemale()
-    return hook.Run("GetPlayerGender", self, self:GetModel()) == "female"
 end
 
 function playerMeta:IsFamilySharedAccount()
@@ -332,7 +328,10 @@ if SERVER then
         local maxStamina = char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100)
         local value = math.Clamp(current + amount, 0, maxStamina)
         self:setLocalVar("stamina", value)
-        if value >= maxStamina * 0.5 then hook.Run("PlayerStaminaGained", self) end
+        if value >= maxStamina * 0.5 and self:getNetVar("brth", false) then
+            self:setNetVar("brth", nil)
+            hook.Run("PlayerStaminaGained", self)
+        end
     end
 
     function playerMeta:consumeStamina(amount)
@@ -340,7 +339,10 @@ if SERVER then
         local current = self:getLocalVar("stamina", char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100))
         local value = math.Clamp(current - amount, 0, char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100))
         self:setLocalVar("stamina", value)
-        if value == 0 then hook.Run("PlayerStaminaLost", self) end
+        if value == 0 and not self:getNetVar("brth", false) then
+            self:setNetVar("brth", true)
+            hook.Run("PlayerStaminaLost", self)
+        end
     end
 
     function playerMeta:addMoney(amount)
@@ -540,55 +542,10 @@ if SERVER then
         if char then char:takeFlags(flags) end
     end
 
-    function playerMeta:getPlayerFlags()
-        return self:getLiliaData("playerFlags", "")
-    end
-
-    function playerMeta:setPlayerFlags(flags)
-        self:setLiliaData("playerFlags", flags)
-    end
-
-    function playerMeta:hasPlayerFlags(flags)
-        local pFlags = self:getPlayerFlags()
-        for i = 1, #flags do
-            if pFlags:find(flags:sub(i, i), 1, true) then return true end
-        end
-        return false
-    end
-
-    function playerMeta:givePlayerFlags(flags)
-        local addedFlags = ""
-        for i = 1, #flags do
-            local flag = flags:sub(i, i)
-            if not self:hasPlayerFlags(flag) then
-                local info = lia.flag.list[flag]
-                if info and info.callback and not self:hasFlags(flag) then info.callback(self, true) end
-                addedFlags = addedFlags .. flag
-            end
-        end
-
-        if addedFlags ~= "" then self:setPlayerFlags(self:getPlayerFlags() .. addedFlags) end
-    end
-
-    function playerMeta:takePlayerFlags(flags)
-        local oldFlags = self:getPlayerFlags()
-        local newFlags = oldFlags
-        local char = self:getChar()
-        for i = 1, #flags do
-            local flag = flags:sub(i, i)
-            local info = lia.flag.list[flag]
-            newFlags = newFlags:gsub(flag, "")
-            local hasChar = char and char:hasFlags(flag)
-            if info and info.callback and not hasChar then info.callback(self, false) end
-        end
-
-        if newFlags ~= oldFlags then self:setPlayerFlags(newFlags) end
-    end
-
     function playerMeta:hasFlags(flags)
         for i = 1, #flags do
             local flag = flags:sub(i, i)
-            if self:getFlags():find(flag, 1, true) or self:getPlayerFlags():find(flag, 1, true) then return true end
+            if self:getFlags():find(flag, 1, true) or self:getFlags("player"):find(flag, 1, true) then return true end
         end
         return hook.Run("CharHasFlags", self, flags) or false
     end
@@ -1117,55 +1074,10 @@ else
         if char then char:takeFlags(flags) end
     end
 
-    function playerMeta:getPlayerFlags()
-        return self:getLiliaData("playerFlags", "")
-    end
-
-    function playerMeta:setPlayerFlags(flags)
-        self:setLiliaData("playerFlags", flags)
-    end
-
-    function playerMeta:hasPlayerFlags(flags)
-        local pFlags = self:getPlayerFlags()
-        for i = 1, #flags do
-            if pFlags:find(flags:sub(i, i), 1, true) then return true end
-        end
-        return false
-    end
-
-    function playerMeta:givePlayerFlags(flags)
-        local addedFlags = ""
-        for i = 1, #flags do
-            local flag = flags:sub(i, i)
-            if not self:hasPlayerFlags(flag) then
-                local info = lia.flag.list[flag]
-                if info and info.callback and not self:hasFlags(flag) then info.callback(self, true) end
-                addedFlags = addedFlags .. flag
-            end
-        end
-
-        if addedFlags ~= "" then self:setPlayerFlags(self:getPlayerFlags() .. addedFlags) end
-    end
-
-    function playerMeta:takePlayerFlags(flags)
-        local oldFlags = self:getPlayerFlags()
-        local newFlags = oldFlags
-        local char = self:getChar()
-        for i = 1, #flags do
-            local flag = flags:sub(i, i)
-            local info = lia.flag.list[flag]
-            newFlags = newFlags:gsub(flag, "")
-            local hasChar = char and char:hasFlags(flag)
-            if info and info.callback and not hasChar then info.callback(self, false) end
-        end
-
-        if newFlags ~= oldFlags then self:setPlayerFlags(newFlags) end
-    end
-
     function playerMeta:hasFlags(flags)
         for i = 1, #flags do
             local flag = flags:sub(i, i)
-            if self:getFlags():find(flag, 1, true) or self:getPlayerFlags():find(flag, 1, true) then return true end
+            if self:getFlags():find(flag, 1, true) or self:getFlags("player"):find(flag, 1, true) then return true end
         end
         return hook.Run("CharHasFlags", self, flags) or false
     end

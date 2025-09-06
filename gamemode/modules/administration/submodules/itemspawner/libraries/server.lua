@@ -1,4 +1,4 @@
-﻿local function fixupProp(client, ent, mins, maxs)
+local function fixupProp(client, ent, mins, maxs)
     local pos = ent:GetPos()
     local down, up = ent:LocalToWorld(mins), ent:LocalToWorld(maxs)
     local trD = util.TraceLine({

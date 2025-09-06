@@ -1,4 +1,4 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 lia.command.add("doorsell", {
     desc = "doorsellDesc",
     adminOnly = false,
@@ -11,16 +11,21 @@ lia.command.add("doorsell", {
     },
     onRun = function(client)
         local door = client:getTracedEntity()
-        if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            if client == door:GetDTEntity(0) then
-                local price = math.Round(door:getNetVar("price", 0) * lia.config.get("DoorSellRatio", 0.5))
-                door:removeDoorAccessData()
-                client:getChar():giveMoney(price)
-                client:notifyLocalized("doorSold", lia.currency.get(price))
-                hook.Run("OnPlayerPurchaseDoor", client, door, false)
-                lia.log.add(client, "doorsell", price)
+        if IsValid(door) and door:isDoor() then
+            local doorData = door:getNetVar("doorData", {})
+            if not doorData.disabled then
+                if client == door:GetDTEntity(0) then
+                    local price = math.Round((doorData.price or 0) * lia.config.get("DoorSellRatio", 0.5))
+                    door:removeDoorAccessData()
+                    client:getChar():giveMoney(price)
+                    client:notifyLocalized("doorSold", lia.currency.get(price))
+                    hook.Run("OnPlayerPurchaseDoor", client, door, false)
+                    lia.log.add(client, "doorsell", price)
+                else
+                    client:notifyLocalized("doorNotOwner")
+                end
             else
-                client:notifyLocalized("doorNotOwner")
+                client:notifyLocalized("doorNotValid")
             end
         else
             client:notifyLocalized("doorNotValid")
@@ -40,18 +45,23 @@ lia.command.add("admindoorsell", {
     },
     onRun = function(client)
         local door = client:getTracedEntity()
-        if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            local owner = door:GetDTEntity(0)
-            if IsValid(owner) and owner:IsPlayer() then
-                local price = math.Round(door:getNetVar("price", 0) * lia.config.get("DoorSellRatio", 0.5))
-                door:removeDoorAccessData()
-                owner:getChar():giveMoney(price)
-                owner:notifyLocalized("doorSold", lia.currency.get(price))
-                client:notifyLocalized("doorSold", lia.currency.get(price))
-                hook.Run("OnPlayerPurchaseDoor", owner, door, false)
-                lia.log.add(client, "admindoorsell", owner:Name(), price)
+        if IsValid(door) and door:isDoor() then
+            local doorData = door:getNetVar("doorData", {})
+            if not doorData.disabled then
+                local owner = door:GetDTEntity(0)
+                if IsValid(owner) and owner:IsPlayer() then
+                    local price = math.Round((doorData.price or 0) * lia.config.get("DoorSellRatio", 0.5))
+                    door:removeDoorAccessData()
+                    owner:getChar():giveMoney(price)
+                    owner:notifyLocalized("doorSold", lia.currency.get(price))
+                    client:notifyLocalized("doorSold", lia.currency.get(price))
+                    hook.Run("OnPlayerPurchaseDoor", owner, door, false)
+                    lia.log.add(client, "admindoorsell", owner:Name(), price)
+                else
+                    client:notifyLocalized("doorNotOwner")
+                end
             else
-                client:notifyLocalized("doorNotOwner")
+                client:notifyLocalized("doorNotValid")
             end
         else
             client:notifyLocalized("doorNotValid")
@@ -71,28 +81,33 @@ lia.command.add("doortogglelock", {
     },
     onRun = function(client)
         local door = client:getTracedEntity()
-        if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            local currentLockState = door:GetInternalVariable("m_bLocked")
-            local toggleState = not currentLockState
-            if toggleState then
-                door:Fire("lock")
-                door:EmitSound("doors/door_latch3.wav")
-                client:notifyLocalized("doorToggleLocked", L("locked"):lower())
-                lia.log.add(client, "toggleLock", door, L("locked"))
-            else
-                door:Fire("unlock")
-                door:EmitSound("doors/door_latch1.wav")
-                client:notifyLocalized("doorToggleLocked", L("unlocked"))
-                lia.log.add(client, "toggleLock", door, L("unlocked"))
-            end
-
-            local partner = door:getDoorPartner()
-            if IsValid(partner) then
+        if IsValid(door) and door:isDoor() then
+            local doorData = door:getNetVar("doorData", {})
+            if not doorData.disabled then
+                local currentLockState = door:GetInternalVariable("m_bLocked")
+                local toggleState = not currentLockState
                 if toggleState then
-                    partner:Fire("lock")
+                    door:Fire("lock")
+                    door:EmitSound("doors/door_latch3.wav")
+                    client:notifyLocalized("doorToggleLocked", L("locked"):lower())
+                    lia.log.add(client, "toggleLock", door, L("locked"))
                 else
-                    partner:Fire("unlock")
+                    door:Fire("unlock")
+                    door:EmitSound("doors/door_latch1.wav")
+                    client:notifyLocalized("doorToggleLocked", L("unlocked"))
+                    lia.log.add(client, "toggleLock", door, L("unlocked"))
                 end
+
+                local partner = door:getDoorPartner()
+                if IsValid(partner) then
+                    if toggleState then
+                        partner:Fire("lock")
+                    else
+                        partner:Fire("unlock")
+                    end
+                end
+            else
+                client:notifyLocalized("doorNotValid")
             end
         else
             client:notifyLocalized("doorNotValid")
@@ -118,28 +133,33 @@ lia.command.add("doorbuy", {
         end
 
         local door = client:getTracedEntity()
-        if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            local factions = door:getNetVar("factions")
-            local classes = door:getNetVar("classes")
-            if door:getNetVar("noSell") or factions and factions ~= "[]" or classes and classes ~= "[]" then return client:notifyLocalized("doorNotAllowedToOwn") end
-            if IsValid(door:GetDTEntity(0)) then
-                client:notifyLocalized("doorOwnedBy", door:GetDTEntity(0):Name())
-                return false
-            end
+        if IsValid(door) and door:isDoor() then
+            local doorData = door:getNetVar("doorData", {})
+            if not doorData.disabled then
+                local factions = doorData.factions
+                local classes = doorData.classes
+                if doorData.noSell or (factions and #factions > 0) or (classes and #classes > 0) then return client:notifyLocalized("doorNotAllowedToOwn") end
+                if IsValid(door:GetDTEntity(0)) then
+                    client:notifyLocalized("doorOwnedBy", door:GetDTEntity(0):Name())
+                    return false
+                end
 
-            local price = door:getNetVar("price", 0)
-            if client:getChar():hasMoney(price) then
-                door:SetDTEntity(0, client)
-                door.liaAccess = {
-                    [client] = DOOR_OWNER
-                }
+                local price = doorData.price or 0
+                if client:getChar():hasMoney(price) then
+                    door:SetDTEntity(0, client)
+                    door.liaAccess = {
+                        [client] = DOOR_OWNER
+                    }
 
-                client:getChar():takeMoney(price)
-                client:notifyLocalized("doorPurchased", lia.currency.get(price))
-                hook.Run("OnPlayerPurchaseDoor", client, door, true)
-                lia.log.add(client, "buydoor", price)
+                    client:getChar():takeMoney(price)
+                    client:notifyLocalized("doorPurchased", lia.currency.get(price))
+                    hook.Run("OnPlayerPurchaseDoor", client, door, true)
+                    lia.log.add(client, "buydoor", price)
+                else
+                    client:notifyLocalized("doorCanNotAfford")
+                end
             else
-                client:notifyLocalized("doorCanNotAfford")
+                client:notifyLocalized("doorNotValid")
             end
         else
             client:notifyLocalized("doorNotValid")
@@ -159,14 +179,20 @@ lia.command.add("doortoggleownable", {
     },
     onRun = function(client)
         local door = client:getTracedEntity()
-        if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            local isUnownable = door:getNetVar("noSell", false)
-            local newState = not isUnownable
-            door:setNetVar("noSell", newState and true or nil)
-            lia.log.add(client, "doorToggleOwnable", door, newState)
-            hook.Run("DoorOwnableToggled", client, door, newState)
-            client:notifyLocalized(newState and "doorMadeUnownable" or "doorMadeOwnable")
-            MODULE:SaveData()
+        if IsValid(door) and door:isDoor() then
+            local doorData = door:getNetVar("doorData", {})
+            if not doorData.disabled then
+                local isUnownable = doorData.noSell or false
+                local newState = not isUnownable
+                doorData.noSell = newState and true or nil
+                door:setNetVar("doorData", doorData)
+                lia.log.add(client, "doorToggleOwnable", door, newState)
+                hook.Run("DoorOwnableToggled", client, door, newState)
+                client:notifyLocalized(newState and "doorMadeUnownable" or "doorMadeOwnable")
+                MODULE:SaveData()
+            else
+                client:notifyLocalized("doorNotValid")
+            end
         else
             client:notifyLocalized("doorNotValid")
         end
@@ -187,14 +213,18 @@ lia.command.add("doorresetdata", {
         local door = client:getTracedEntity()
         if IsValid(door) and door:isDoor() then
             lia.log.add(client, "doorResetData", door)
-            door:setNetVar("disabled", nil)
-            door:setNetVar("noSell", nil)
-            door:setNetVar("hidden", nil)
-            door:setNetVar("classes", nil)
-            door:setNetVar("factions", "[]")
-            door:setNetVar("title", nil)
-            door:setNetVar("price", 0)
-            door:setNetVar("locked", false)
+            local doorData = {
+                disabled = nil,
+                noSell = nil,
+                hidden = nil,
+                classes = nil,
+                factions = {},
+                name = nil,
+                price = 0,
+                locked = false
+            }
+
+            door:setNetVar("doorData", doorData)
             client:notifyLocalized("doorResetData")
             MODULE:SaveData()
         else
@@ -216,9 +246,11 @@ lia.command.add("doortoggleenabled", {
     onRun = function(client)
         local door = client:getTracedEntity()
         if IsValid(door) and door:isDoor() then
-            local isDisabled = door:getNetVar("disabled", false)
+            local doorData = door:getNetVar("doorData", {})
+            local isDisabled = doorData.disabled or false
             local newState = not isDisabled
-            door:setNetVar("disabled", newState and true or nil)
+            doorData.disabled = newState and true or nil
+            door:setNetVar("doorData", doorData)
             lia.log.add(client, newState and "doorDisable" or "doorEnable", door)
             hook.Run("DoorEnabledToggled", client, door, newState)
             client:notifyLocalized(newState and "doorSetDisabled" or "doorSetNotDisabled")
@@ -242,9 +274,11 @@ lia.command.add("doortogglehidden", {
     onRun = function(client)
         local entity = client:GetEyeTrace().Entity
         if IsValid(entity) and entity:isDoor() then
-            local currentState = entity:getNetVar("hidden", false)
+            local doorData = entity:getNetVar("doorData", {})
+            local currentState = doorData.hidden or false
             local newState = not currentState
-            entity:setNetVar("hidden", newState)
+            doorData.hidden = newState
+            entity:setNetVar("doorData", doorData)
             lia.log.add(client, "doorSetHidden", entity, newState)
             hook.Run("DoorHiddenToggled", client, entity, newState)
             client:notifyLocalized(newState and "doorSetHidden" or "doorSetNotHidden")
@@ -273,14 +307,20 @@ lia.command.add("doorsetprice", {
     },
     onRun = function(client, arguments)
         local door = client:getTracedEntity()
-        if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            if not arguments[1] or not tonumber(arguments[1]) then return client:notifyLocalized("invalidClass") end
-            local price = math.Clamp(math.floor(tonumber(arguments[1])), 0, 1000000)
-            door:setNetVar("price", price)
-            lia.log.add(client, "doorSetPrice", door, price)
-            hook.Run("DoorPriceSet", client, door, price)
-            client:notifyLocalized("doorSetPrice", lia.currency.get(price))
-            MODULE:SaveData()
+        if IsValid(door) and door:isDoor() then
+            local doorData = door:getNetVar("doorData", {})
+            if not doorData.disabled then
+                if not arguments[1] or not tonumber(arguments[1]) then return client:notifyLocalized("invalidClass") end
+                local price = math.Clamp(math.floor(tonumber(arguments[1])), 0, 1000000)
+                doorData.price = price
+                door:setNetVar("doorData", doorData)
+                lia.log.add(client, "doorSetPrice", door, price)
+                hook.Run("DoorPriceSet", client, door, price)
+                client:notifyLocalized("doorSetPrice", lia.currency.get(price))
+                MODULE:SaveData()
+            else
+                client:notifyLocalized("doorNotValid")
+            end
         else
             client:notifyLocalized("doorNotValid")
         end
@@ -305,19 +345,26 @@ lia.command.add("doorsettitle", {
     },
     onRun = function(client, arguments)
         local door = client:getTracedEntity()
-        if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            local name = table.concat(arguments, " ")
-            if not name:find("%S") then return client:notifyLocalized("invalidClass") end
-            if door:checkDoorAccess(client, DOOR_TENANT) then
-                door:setNetVar("title", name)
-                hook.Run("DoorTitleSet", client, door, name)
-                lia.log.add(client, "doorSetTitle", door, name)
-            elseif client:isStaff() then
-                door:setNetVar("name", name)
-                hook.Run("DoorTitleSet", client, door, name)
-                lia.log.add(client, "doorSetTitle", door, name)
+        if IsValid(door) and door:isDoor() then
+            local doorData = door:getNetVar("doorData", {})
+            if not doorData.disabled then
+                local name = table.concat(arguments, " ")
+                if not name:find("%S") then return client:notifyLocalized("invalidClass") end
+                if door:checkDoorAccess(client, DOOR_TENANT) then
+                    doorData.title = name
+                    door:setNetVar("doorData", doorData)
+                    hook.Run("DoorTitleSet", client, door, name)
+                    lia.log.add(client, "doorSetTitle", door, name)
+                elseif client:isStaff() then
+                    doorData.name = name
+                    door:setNetVar("doorData", doorData)
+                    hook.Run("DoorTitleSet", client, door, name)
+                    lia.log.add(client, "doorSetTitle", door, name)
+                else
+                    client:notifyLocalized("doorNotOwner")
+                end
             else
-                client:notifyLocalized("doorNotOwner")
+                client:notifyLocalized("doorNotValid")
             end
         else
             client:notifyLocalized("doorNotValid")
@@ -355,36 +402,35 @@ lia.command.add("doorinfo", {
     onRun = function(client)
         local door = client:getTracedEntity()
         if IsValid(door) and door:isDoor() then
-            local disabled = door:getNetVar("disabled", false)
-            local price = door:getNetVar("price", 0)
-            local noSell = door:getNetVar("noSell", false)
-            local factionsRaw = door:getNetVar("factions", "[]")
+            local doorData = door:getNetVar("doorData", {})
+            local disabled = doorData.disabled or false
+            local price = doorData.price or 0
+            local noSell = doorData.noSell or false
+            local factions = doorData.factions or {}
             local factionNames = {}
-            local factionTable = util.JSONToTable(factionsRaw) or {}
-            for _, id in ipairs(factionTable) do
+            for _, id in ipairs(factions) do
                 local info = lia.faction.get(id)
                 if info then table.insert(factionNames, info.name) end
             end
 
-            local classesDataRaw = door:getNetVar("classes", "[]")
-            local classesTable = util.JSONToTable(classesDataRaw) or {}
+            local classes = doorData.classes or {}
             local classNames = {}
-            for _, uid in ipairs(classesTable) do
+            for _, uid in ipairs(classes) do
                 local idx = lia.class.retrieveClass(uid)
                 local info = lia.class.list[idx]
                 if info then table.insert(classNames, info.name) end
             end
 
-            local hidden = door:getNetVar("hidden", false)
-            local locked = door:getNetVar("locked", false)
-            local doorData = {
+            local hidden = doorData.hidden or false
+            local locked = doorData.locked or false
+            local infoData = {
                 {
                     property = L("doorInfoDisabled"),
                     value = tostring(disabled)
                 },
                 {
                     property = L("name"),
-                    value = tostring(door:getNetVar("title", door:getNetVar("name", L("doorTitle"))))
+                    value = tostring(doorData.title or doorData.name or L("doorTitle"))
                 },
                 {
                     property = L("price"),
@@ -421,7 +467,7 @@ lia.command.add("doorinfo", {
                     name = "doorInfoValue",
                     field = "value"
                 }
-            }, doorData)
+            }, infoData)
         else
             client:notifyLocalized("doorNotValid")
         end
@@ -439,44 +485,51 @@ lia.command.add("dooraddfaction", {
     adminOnly = true,
     onRun = function(client, arguments)
         local door = client:getTracedEntity()
-        if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            local input = arguments[1]
-            local faction
-            if input then
-                local factionIndex = tonumber(input)
-                if factionIndex then
-                    faction = lia.faction.indices[factionIndex]
-                    if not faction then
-                        client:notifyLocalized("invalidFaction")
-                        return
-                    end
-                else
-                    for k, v in pairs(lia.faction.teams) do
-                        if lia.util.stringMatches(k, input) or lia.util.stringMatches(v.name, input) then
-                            faction = v
-                            break
+        if IsValid(door) and door:isDoor() then
+            local doorData = door:getNetVar("doorData", {})
+            if not doorData.disabled then
+                local input = arguments[1]
+                local faction
+                if input then
+                    local factionIndex = tonumber(input)
+                    if factionIndex then
+                        faction = lia.faction.indices[factionIndex]
+                        if not faction then
+                            client:notifyLocalized("invalidFaction")
+                            return
+                        end
+                    else
+                        for k, v in pairs(lia.faction.teams) do
+                            if lia.util.stringMatches(k, input) or lia.util.stringMatches(v.name, input) then
+                                faction = v
+                                break
+                            end
                         end
                     end
                 end
-            end
 
-            if faction then
-                local facs = util.JSONToTable(door:getNetVar("factions", "[]")) or {}
-                if not table.HasValue(facs, faction.uniqueID) then facs[#facs + 1] = faction.uniqueID end
-                door.liaFactions = facs
-                door:setNetVar("factions", util.TableToJSON(facs))
-                lia.log.add(client, "doorSetFaction", door, faction.name)
-                client:notifyLocalized("doorSetFaction", faction.name)
-            elseif arguments[1] then
-                client:notifyLocalized("invalidFaction")
+                if faction then
+                    local facs = doorData.factions or {}
+                    if not table.HasValue(facs, faction.uniqueID) then facs[#facs + 1] = faction.uniqueID end
+                    doorData.factions = facs
+                    door.liaFactions = facs
+                    door:setNetVar("doorData", doorData)
+                    lia.log.add(client, "doorSetFaction", door, faction.name)
+                    client:notifyLocalized("doorSetFaction", faction.name)
+                elseif arguments[1] then
+                    client:notifyLocalized("invalidFaction")
+                else
+                    doorData.factions = {}
+                    door.liaFactions = nil
+                    door:setNetVar("doorData", doorData)
+                    lia.log.add(client, "doorRemoveFaction", door, "all")
+                    client:notifyLocalized("doorRemoveFaction")
+                end
+
+                MODULE:SaveData()
             else
-                door.liaFactions = nil
-                door:setNetVar("factions", "[]")
-                lia.log.add(client, "doorRemoveFaction", door, "all")
-                client:notifyLocalized("doorRemoveFaction")
+                client:notifyLocalized("doorNotValid")
             end
-
-            MODULE:SaveData()
         else
             client:notifyLocalized("doorNotValid")
         end
@@ -494,44 +547,51 @@ lia.command.add("doorremovefaction", {
     adminOnly = true,
     onRun = function(client, arguments)
         local door = client:getTracedEntity()
-        if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            local input = arguments[1]
-            local faction
-            if input then
-                local factionIndex = tonumber(input)
-                if factionIndex then
-                    faction = lia.faction.indices[factionIndex]
-                    if not faction then
-                        client:notifyLocalized("invalidFaction")
-                        return
-                    end
-                else
-                    for k, v in pairs(lia.faction.teams) do
-                        if lia.util.stringMatches(k, input) or lia.util.stringMatches(v.name, input) then
-                            faction = v
-                            break
+        if IsValid(door) and door:isDoor() then
+            local doorData = door:getNetVar("doorData", {})
+            if not doorData.disabled then
+                local input = arguments[1]
+                local faction
+                if input then
+                    local factionIndex = tonumber(input)
+                    if factionIndex then
+                        faction = lia.faction.indices[factionIndex]
+                        if not faction then
+                            client:notifyLocalized("invalidFaction")
+                            return
+                        end
+                    else
+                        for k, v in pairs(lia.faction.teams) do
+                            if lia.util.stringMatches(k, input) or lia.util.stringMatches(v.name, input) then
+                                faction = v
+                                break
+                            end
                         end
                     end
                 end
-            end
 
-            if faction then
-                local facs = util.JSONToTable(door:getNetVar("factions", "[]")) or {}
-                table.RemoveByValue(facs, faction.uniqueID)
-                door.liaFactions = facs
-                door:setNetVar("factions", util.TableToJSON(facs))
-                lia.log.add(client, "doorRemoveFaction", door, faction.name)
-                client:notifyLocalized("doorRemoveFactionSpecific", faction.name)
-            elseif arguments[1] then
-                client:notifyLocalized("invalidFaction")
+                if faction then
+                    local facs = doorData.factions or {}
+                    table.RemoveByValue(facs, faction.uniqueID)
+                    doorData.factions = facs
+                    door.liaFactions = facs
+                    door:setNetVar("doorData", doorData)
+                    lia.log.add(client, "doorRemoveFaction", door, faction.name)
+                    client:notifyLocalized("doorRemoveFactionSpecific", faction.name)
+                elseif arguments[1] then
+                    client:notifyLocalized("invalidFaction")
+                else
+                    doorData.factions = {}
+                    door.liaFactions = nil
+                    door:setNetVar("doorData", doorData)
+                    lia.log.add(client, "doorRemoveFaction", door, "all")
+                    client:notifyLocalized("doorRemoveFaction")
+                end
+
+                MODULE:SaveData()
             else
-                door.liaFactions = nil
-                door:setNetVar("factions", "[]")
-                lia.log.add(client, "doorRemoveFaction", door, "all")
-                client:notifyLocalized("doorRemoveFaction")
+                client:notifyLocalized("doorNotValid")
             end
-
-            MODULE:SaveData()
         else
             client:notifyLocalized("doorNotValid")
         end
@@ -549,51 +609,58 @@ lia.command.add("doorsetclass", {
     adminOnly = true,
     onRun = function(client, arguments)
         local door = client:getTracedEntity()
-        if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            local input = arguments[1]
-            local class, classData
-            if input then
-                local classIndex = tonumber(input)
-                if classIndex then
-                    classData = lia.class.list[classIndex]
-                    if classData then
-                        class = classIndex
+        if IsValid(door) and door:isDoor() then
+            local doorData = door:getNetVar("doorData", {})
+            if not doorData.disabled then
+                local input = arguments[1]
+                local class, classData
+                if input then
+                    local classIndex = tonumber(input)
+                    if classIndex then
+                        classData = lia.class.list[classIndex]
+                        if classData then
+                            class = classIndex
+                        else
+                            client:notifyLocalized("invalidClass")
+                            return
+                        end
                     else
-                        client:notifyLocalized("invalidClass")
-                        return
-                    end
-                else
-                    local id = lia.class.retrieveClass(input)
-                    if id then
-                        class, classData = id, lia.class.list[id]
-                    else
-                        for k, v in pairs(lia.class.list) do
-                            if lia.util.stringMatches(v.name, input) or lia.util.stringMatches(v.uniqueID, input) then
-                                class, classData = k, v
-                                break
+                        local id = lia.class.retrieveClass(input)
+                        if id then
+                            class, classData = id, lia.class.list[id]
+                        else
+                            for k, v in pairs(lia.class.list) do
+                                if lia.util.stringMatches(v.name, input) or lia.util.stringMatches(v.uniqueID, input) then
+                                    class, classData = k, v
+                                    break
+                                end
                             end
                         end
                     end
                 end
-            end
 
-            if class then
-                local classes = util.JSONToTable(door:getNetVar("classes", "[]")) or {}
-                if not table.HasValue(classes, classData.uniqueID) then classes[#classes + 1] = classData.uniqueID end
-                door.liaClasses = classes
-                door:setNetVar("classes", util.TableToJSON(classes))
-                lia.log.add(client, "doorSetClass", door, classData.name)
-                client:notifyLocalized("doorSetClass", classData.name)
-            elseif arguments[1] then
-                client:notifyLocalized("invalidClass")
+                if class then
+                    local classes = doorData.classes or {}
+                    if not table.HasValue(classes, classData.uniqueID) then classes[#classes + 1] = classData.uniqueID end
+                    doorData.classes = classes
+                    door.liaClasses = classes
+                    door:setNetVar("doorData", doorData)
+                    lia.log.add(client, "doorSetClass", door, classData.name)
+                    client:notifyLocalized("doorSetClass", classData.name)
+                elseif arguments[1] then
+                    client:notifyLocalized("invalidClass")
+                else
+                    doorData.classes = {}
+                    door.liaClasses = nil
+                    door:setNetVar("doorData", doorData)
+                    lia.log.add(client, "doorRemoveClass", door)
+                    client:notifyLocalized("doorRemoveClass")
+                end
+
+                MODULE:SaveData()
             else
-                door.liaClasses = nil
-                door:setNetVar("classes", nil)
-                lia.log.add(client, "doorRemoveClass", door)
-                client:notifyLocalized("doorRemoveClass")
+                client:notifyLocalized("doorNotValid")
             end
-
-            MODULE:SaveData()
         else
             client:notifyLocalized("doorNotValid")
         end
@@ -619,55 +686,62 @@ lia.command.add("doorremoveclass", {
     },
     onRun = function(client, arguments)
         local door = client:getTracedEntity()
-        if IsValid(door) and door:isDoor() and not door:getNetVar("disabled", false) then
-            local input = arguments[1]
-            local class, classData
-            if input then
-                local classIndex = tonumber(input)
-                if classIndex then
-                    classData = lia.class.list[classIndex]
-                    if classData then
-                        class = classIndex
+        if IsValid(door) and door:isDoor() then
+            local doorData = door:getNetVar("doorData", {})
+            if not doorData.disabled then
+                local input = arguments[1]
+                local class, classData
+                if input then
+                    local classIndex = tonumber(input)
+                    if classIndex then
+                        classData = lia.class.list[classIndex]
+                        if classData then
+                            class = classIndex
+                        else
+                            client:notifyLocalized("invalidClass")
+                            return
+                        end
                     else
-                        client:notifyLocalized("invalidClass")
-                        return
-                    end
-                else
-                    local id = lia.class.retrieveClass(input)
-                    if id then
-                        class, classData = id, lia.class.list[id]
-                    else
-                        for k, v in pairs(lia.class.list) do
-                            if lia.util.stringMatches(v.name, input) or lia.util.stringMatches(v.uniqueID, input) then
-                                class, classData = k, v
-                                break
+                        local id = lia.class.retrieveClass(input)
+                        if id then
+                            class, classData = id, lia.class.list[id]
+                        else
+                            for k, v in pairs(lia.class.list) do
+                                if lia.util.stringMatches(v.name, input) or lia.util.stringMatches(v.uniqueID, input) then
+                                    class, classData = k, v
+                                    break
+                                end
                             end
                         end
                     end
                 end
-            end
 
-            if class then
-                local classes = util.JSONToTable(door:getNetVar("classes", "[]")) or {}
-                if table.HasValue(classes, classData.uniqueID) then
-                    table.RemoveByValue(classes, classData.uniqueID)
-                    door.liaClasses = classes
-                    door:setNetVar("classes", util.TableToJSON(classes))
-                    lia.log.add(client, "doorRemoveClassSpecific", door, classData.name)
-                    client:notifyLocalized("doorRemoveClassSpecific", classData.name)
+                if class then
+                    local classes = doorData.classes or {}
+                    if table.HasValue(classes, classData.uniqueID) then
+                        table.RemoveByValue(classes, classData.uniqueID)
+                        doorData.classes = classes
+                        door.liaClasses = classes
+                        door:setNetVar("doorData", doorData)
+                        lia.log.add(client, "doorRemoveClassSpecific", door, classData.name)
+                        client:notifyLocalized("doorRemoveClassSpecific", classData.name)
+                    else
+                        client:notifyLocalized("doorClassNotAssigned", classData.name)
+                    end
+                elseif arguments[1] then
+                    client:notifyLocalized("invalidClass")
                 else
-                    client:notifyLocalized("doorClassNotAssigned", classData.name)
+                    doorData.classes = {}
+                    door.liaClasses = nil
+                    door:setNetVar("doorData", doorData)
+                    lia.log.add(client, "doorRemoveClass", door)
+                    client:notifyLocalized("doorRemoveClass")
                 end
-            elseif arguments[1] then
-                client:notifyLocalized("invalidClass")
-            else
-                door.liaClasses = nil
-                door:setNetVar("classes", nil)
-                lia.log.add(client, "doorRemoveClass", door)
-                client:notifyLocalized("doorRemoveClass")
-            end
 
-            MODULE:SaveData()
+                MODULE:SaveData()
+            else
+                client:notifyLocalized("doorNotValid")
+            end
         else
             client:notifyLocalized("doorNotValid")
         end
@@ -681,17 +755,22 @@ lia.command.add("togglealldoors", {
         local toggleToDisable = false
         for _, door in ents.Iterator() do
             if IsValid(door) and door:isDoor() then
-                toggleToDisable = not door:getNetVar("disabled", false)
+                local doorData = door:getNetVar("doorData", {})
+                toggleToDisable = not (doorData.disabled or false)
                 break
             end
         end
 
         local count = 0
         for _, door in ents.Iterator() do
-            if IsValid(door) and door:isDoor() and door:getNetVar("disabled", false) ~= toggleToDisable then
-                door:setNetVar("disabled", toggleToDisable and true or nil)
-                lia.log.add(client, toggleToDisable and "doorDisable" or "doorEnable", door)
-                count = count + 1
+            if IsValid(door) and door:isDoor() then
+                local doorData = door:getNetVar("doorData", {})
+                if (doorData.disabled or false) ~= toggleToDisable then
+                    doorData.disabled = toggleToDisable and true or nil
+                    door:setNetVar("doorData", doorData)
+                    lia.log.add(client, toggleToDisable and "doorDisable" or "doorEnable", door)
+                    count = count + 1
+                end
             end
         end
 

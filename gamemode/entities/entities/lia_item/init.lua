@@ -1,4 +1,4 @@
-﻿function ENT:Initialize()
+function ENT:Initialize()
     self:SetModel("models/props_junk/cardboard_box002b.mdl")
     self:SetSolid(SOLID_VPHYSICS)
     self:PhysicsInit(SOLID_VPHYSICS)
@@ -78,14 +78,14 @@ function ENT:setItem(itemID)
     if not itemTable.temp then
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local map = game.GetMap()
-        local condition = "schema = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map) .. " AND _itemID = " .. tonumber(itemID)
+        local condition = "schema = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map) .. " AND itemID = " .. tonumber(itemID)
         lia.db.delete("saveditems", condition):next(function()
             lia.db.insertTable({
                 schema = gamemode,
                 map = map,
-                _itemID = itemID,
-                _pos = lia.data.encodetable(self:GetPos()),
-                _angles = lia.data.encodetable(self:GetAngles())
+                itemID = itemID,
+                pos = lia.data.encodetable(self:GetPos()),
+                angles = lia.data.encodetable(self:GetAngles())
             }, nil, "saveditems")
         end)
     end
@@ -115,7 +115,7 @@ function ENT:OnRemove()
     if SERVER and not lia.shuttingDown and self.liaItemID then
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local map = game.GetMap()
-        local condition = "schema = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map) .. " AND _itemID = " .. tonumber(self.liaItemID)
+        local condition = "schema = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map) .. " AND itemID = " .. tonumber(self.liaItemID)
         lia.db.delete("saveditems", condition)
     end
 end

@@ -1,4 +1,5 @@
-﻿SWEP.Author = "Samael"
+SWEP.Author = "Samael"
+SWEP.Contact = "@liliaplayer"
 SWEP.Instructions = L("keysInstructions")
 SWEP.Purpose = L("keysPurpose")
 SWEP.Drop = false
