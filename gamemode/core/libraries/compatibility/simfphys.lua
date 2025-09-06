@@ -1,4 +1,4 @@
-if SERVER then
+﻿if SERVER then
     hook.Add("EntityTakeDamage", "liaSimfphys", function(seat, dmgInfo)
         local damageInCars = lia.config.get("DamageInCars", true)
         if not damageInCars then return end

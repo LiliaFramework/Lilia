@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 function ENT:Initialize()
     self:SetModel("models/props_junk/cardboard_box002b.mdl")
     self:SetSolid(SOLID_VPHYSICS)

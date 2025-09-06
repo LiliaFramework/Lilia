@@ -1,4 +1,4 @@
-ENT.Type = "anim"
+﻿ENT.Type = "anim"
 ENT.PrintName = L("storage")
 ENT.Author = "Samael"
 ENT.Contact = "@liliaplayer"

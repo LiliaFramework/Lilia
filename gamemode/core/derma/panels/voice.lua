@@ -1,4 +1,4 @@
-VoicePanels = {}
+﻿VoicePanels = {}
 local ICON_MAP = {
     [L("whispering")] = "whispertalk.png",
     [L("yelling")] = "yelltalk.png",

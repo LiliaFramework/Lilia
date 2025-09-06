@@ -1,4 +1,4 @@
-function MODULE:LoadCharInformation()
+﻿function MODULE:LoadCharInformation()
     local client = LocalPlayer()
     if not IsValid(client) then return end
     local character = client:getChar()

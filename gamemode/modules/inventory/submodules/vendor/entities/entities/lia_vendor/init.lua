@@ -1,4 +1,4 @@
-local function safeSendToReceivers(entity)
+﻿local function safeSendToReceivers(entity)
     if entity.receivers and #entity.receivers > 0 then net.Send(entity.receivers) end
 end
 

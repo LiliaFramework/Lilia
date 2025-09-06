@@ -1,4 +1,4 @@
-local baseW, baseH = 1920, 1080
+﻿local baseW, baseH = 1920, 1080
 local scaleW, scaleH
 local cache = {
     width = {},

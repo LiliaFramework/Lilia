@@ -1,4 +1,4 @@
-SWEP.Author = "Samael"
+﻿SWEP.Author = "Samael"
 SWEP.Contact = "@liliaplayer"
 SWEP.PrintName = L("adminStick")
 SWEP.Purpose = L("adminStickPurpose")

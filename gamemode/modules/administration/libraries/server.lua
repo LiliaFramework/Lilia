@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 function MODULE:PlayerSay(client)
     if client:getNetVar("liaGagged") then return "" end
 end

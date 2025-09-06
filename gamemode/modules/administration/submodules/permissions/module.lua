@@ -1,4 +1,4 @@
-MODULE.name = "Permissions"
+﻿MODULE.name = "Permissions"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "Provides fine-grained permission management for commands and modules across the framework."

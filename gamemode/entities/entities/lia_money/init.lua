@@ -1,4 +1,4 @@
-function ENT:Initialize()
+﻿function ENT:Initialize()
     self:SetModel(hook.Run("GetMoneyModel", self:getAmount()) or lia.config.get("MoneyModel"))
     self:SetSolid(SOLID_VPHYSICS)
     self:PhysicsInit(SOLID_VPHYSICS)

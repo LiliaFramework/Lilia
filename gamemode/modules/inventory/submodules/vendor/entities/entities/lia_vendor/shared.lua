@@ -1,4 +1,4 @@
-LiliaVendors = LiliaVendors or {}
+﻿LiliaVendors = LiliaVendors or {}
 ENT.Type = "anim"
 ENT.PrintName = L("entityVendorName")
 ENT.Author = "Samael"
@@ -137,7 +137,5 @@ function ENT:setAnim()
         if v:lower():find("idle") and v ~= "idlenoise" then return self:ResetSequence(k) end
     end
 
-    if self:GetSequenceCount() > 1 then 
-        self:ResetSequence(4) 
-    end
+    if self:GetSequenceCount() > 1 then self:ResetSequence(4) end
 end

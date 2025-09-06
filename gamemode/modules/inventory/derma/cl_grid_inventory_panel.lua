@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 local function drawSlot(x, y, w, h)
     surface.SetDrawColor(0, 0, 0, 255)
     surface.DrawOutlinedRect(x, y, w, h, 2)
@@ -61,7 +61,6 @@ function PANEL:removeIcon(icon)
 end
 
 local tempAlreadyTherePos = {}
-
 local function GetTargetPanel(invOrigin)
     for _, panel in ipairs(vgui.GetAll()) do
         local panelName = panel:GetName()
@@ -101,6 +100,7 @@ function PANEL:onItemPressed(itemIcon, keyCode)
                     timer.Simple(2, function() tempAlreadyTherePos[posKey] = nil end)
                 end
             end
+
             targetInv:requestTransfer(item:getID(), targetInv:getID(), x, y)
         elseif keyCode == MOUSE_RIGHT then
             itemIcon:openActionMenu()

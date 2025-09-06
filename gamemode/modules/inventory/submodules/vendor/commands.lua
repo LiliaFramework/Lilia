@@ -1,4 +1,4 @@
-lia.command.add("restockvendor", {
+﻿lia.command.add("restockvendor", {
     superAdminOnly = true,
     desc = "restockVendorDesc",
     AdminStick = {

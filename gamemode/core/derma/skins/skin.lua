@@ -1,4 +1,4 @@
-local surface = surface
+﻿local surface = surface
 local Color = Color
 local function drawAltBg(panel, w, h)
     lia.util.drawBlur(panel, 10)

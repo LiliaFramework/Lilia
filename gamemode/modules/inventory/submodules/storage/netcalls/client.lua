@@ -1,4 +1,4 @@
-net.Receive("liaStorageUnlock", function()
+﻿net.Receive("liaStorageUnlock", function()
     local entity = net.ReadEntity()
     hook.Run("StorageUnlockPrompt", entity)
 end)

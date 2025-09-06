@@ -1,4 +1,4 @@
-lia.db = lia.db or {}
+﻿lia.db = lia.db or {}
 lia.db.queryQueue = lia.db.queue or {}
 lia.db.prepared = lia.db.prepared or {}
 PREPARE_CACHE = {}
@@ -8,7 +8,6 @@ local function ThrowQueryFault(query, fault)
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. L("database") .. "]", Color(255, 255, 255), " * " .. query .. "\n")
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. L("database") .. "]", Color(255, 255, 255), " " .. fault .. "\n")
 end
-
 
 local function promisifyIfNoCallback(queryHandler)
     return function(query, callback)
@@ -364,40 +363,30 @@ function lia.db.selectWithCondition(fields, dbTable, conditions, limit, orderBy)
     local from = istable(fields) and table.concat(fields, ", ") or tostring(fields)
     local tableName = "lia_" .. (dbTable or "characters")
     local query = "SELECT " .. from .. " FROM " .. tableName
-    
     if conditions and istable(conditions) and next(conditions) then
         local whereParts = {}
         for field, value in pairs(conditions) do
             if value ~= nil then
                 local operator = "="
                 local conditionValue = value
-                
                 if istable(value) and value.operator and value.value ~= nil then
                     operator = value.operator
                     conditionValue = value.value
                 end
-                
+
                 local escapedField = lia.db.escapeIdentifier(field)
                 local convertedValue = lia.db.convertDataType(conditionValue)
                 table.insert(whereParts, escapedField .. " " .. operator .. " " .. convertedValue)
             end
         end
-        
-        if #whereParts > 0 then
-            query = query .. " WHERE " .. table.concat(whereParts, " AND ")
-        end
+
+        if #whereParts > 0 then query = query .. " WHERE " .. table.concat(whereParts, " AND ") end
     elseif isstring(conditions) then
         query = query .. " WHERE " .. tostring(conditions)
     end
-    
-    if orderBy then
-        query = query .. " ORDER BY " .. tostring(orderBy)
-    end
-    
-    if limit then
-        query = query .. " LIMIT " .. tostring(limit)
-    end
-    
+
+    if orderBy then query = query .. " ORDER BY " .. tostring(orderBy) end
+    if limit then query = query .. " LIMIT " .. tostring(limit) end
     lia.db.query(query, function(results, lastID)
         d:resolve({
             results = results,

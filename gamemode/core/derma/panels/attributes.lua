@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     self:SetTall(20)
     self.add = self:Add("DImageButton")

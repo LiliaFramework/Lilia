@@ -1,4 +1,4 @@
-local HackCommands = {
+﻿local HackCommands = {
     ["aimkey"] = true,
     ["+hera_aim"] = true,
     ["boom"] = true,
