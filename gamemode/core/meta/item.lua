@@ -228,8 +228,18 @@ if SERVER then
             if self.scale and self.scale ~= 1 then entity:SetModelScale(self.scale) end
             if IsValid(client) then
                 entity.SteamID = client:SteamID()
+                entity.liaSteamID = client:SteamID()
                 entity.liaCharID = client:getChar():getID()
                 entity:SetCreator(client)
+            else
+                local storedSteamID = self:getData("steamID")
+                local storedCharID = self:getData("charID")
+                if storedSteamID then
+                    entity.liaSteamID = storedSteamID
+                    entity.SteamID = storedSteamID
+                end
+
+                if storedCharID then entity.liaCharID = storedCharID end
             end
             return entity
         end

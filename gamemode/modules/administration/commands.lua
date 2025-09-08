@@ -271,15 +271,14 @@ lia.command.add("charlist", {
             steamID = client:SteamID()
         end
 
-        local query = [[SELECT c.*, d.value AS charBanInfo FROM lia_characters AS c LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo' WHERE c.steamID = ]] .. lia.db.convertDataType(steamID)
-        lia.db.query(query, function(data)
-            if not data or #data == 0 then
+        lia.db.selectWithCondition({"c.*", "d.value AS charBanInfo"}, "characters", "AS c LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo' WHERE c.steamID = " .. lia.db.convertDataType(steamID)):next(function(data)
+            if not data or not data.results or #data.results == 0 then
                 client:notifyLocalized("noCharactersForPlayer")
                 return
             end
 
             local sendData = {}
-            for _, row in ipairs(data) do
+            for _, row in ipairs(data.results) do
                 local charID = tonumber(row.id) or row.id
                 local stored = lia.char.getCharacter(charID)
                 local info = stored and stored:getData() or {}
@@ -407,7 +406,7 @@ lia.command.add("plyunban", {
     onRun = function(client, arguments)
         local steamid = arguments[1]
         if steamid and steamid ~= "" then
-            lia.db.query("DELETE FROM lia_bans WHERE playerSteamID = " .. steamid)
+            lia.db.delete("bans", "playerSteamID = " .. steamid)
             client:notifyLocalized("playerUnbanned")
             lia.log.add(client, "plyUnban", steamid)
         end
@@ -1604,10 +1603,10 @@ lia.command.add("charunban", {
         end
 
         client.liaNextSearch = CurTime() + 15
-        local sqlCondition = id and "id = " .. id or "name LIKE \"%" .. lia.db.escape(queryArg) .. "%\""
-        lia.db.query("SELECT id, name FROM lia_characters WHERE " .. sqlCondition .. " LIMIT 1", function(data)
-            if data and data[1] then
-                local charID = tonumber(data[1].id)
+        local sqlCondition = id and ("id = " .. id) or ("name LIKE " .. lia.db.convertDataType("%" .. queryArg .. "%"))
+        lia.db.selectOne({"id", "name"}, "characters", sqlCondition):next(function(data)
+            if data then
+                local charID = tonumber(data.id)
                 local banned = lia.char.getCharBanned(charID)
                 client.liaNextSearch = 0
                 if not banned or banned == 0 then
@@ -1617,8 +1616,8 @@ lia.command.add("charunban", {
 
                 lia.char.setCharDatabase(charID, "banned", 0)
                 lia.char.setCharDatabase(charID, "charBanInfo", nil)
-                client:notifyLocalized("charUnBan", client:Name(), data[1].name)
-                lia.log.add(client, "charUnban", data[1].name, charID)
+                client:notifyLocalized("charUnBan", client:Name(), data.name)
+                lia.log.add(client, "charUnban", data.name, charID)
             end
         end)
     end
@@ -1834,13 +1833,13 @@ lia.command.add("charwipeoffline", {
     onRun = function(client, arguments)
         local charID = tonumber(arguments[1])
         if not charID then return client:notifyLocalized("invalidCharID") end
-        lia.db.query("SELECT name FROM lia_characters WHERE id = " .. charID, function(data)
-            if not data or #data == 0 then
+        lia.db.selectOne({"name"}, "characters", "id = " .. charID):next(function(data)
+            if not data then
                 client:notifyLocalized("characterNotFound")
                 return
             end
 
-            local charName = data[1].name
+            local charName = data.name
             for _, ply in player.Iterator() do
                 if ply:getChar() and ply:getChar():getID() == charID then
                     ply:Kick(L("youHaveBeenWiped"))
@@ -2937,5 +2936,123 @@ lia.command.add("serverpassword", {
         net.WriteString(pw)
         net.Send(client)
         return "Server password sent to you."
+    end
+})
+
+lia.command.add("definefactiongroup", {
+    superAdminOnly = true,
+    desc = "definefactiongroupDesc",
+    arguments = {
+        {
+            name = "groupName",
+            type = "string"
+        }
+    },
+    onRun = function(client, arguments)
+        local groupName = arguments[1]
+        if not groupName or groupName == "" then
+            client:notifyLocalized("invalidArgument")
+            return
+        end
+
+        if lia.faction.groups[groupName] then
+            client:notifyLocalized("factionGroupExists", groupName)
+            return
+        end
+
+        local factionOptions = {}
+        for uniqueID, faction in pairs(lia.faction.teams) do
+            table.insert(factionOptions, {
+                text = faction.name .. " (" .. uniqueID .. ")",
+                value = uniqueID,
+                icon = "icon16/group.png"
+            })
+        end
+
+        if #factionOptions == 0 then
+            client:notifyLocalized("noFactionsAvailable")
+            return
+        end
+
+        table.sort(factionOptions, function(a, b) return a.text < b.text end)
+        client:requestOptions(L("selectFactionsForGroup", groupName), L("selectFactionsDesc"), factionOptions, 0, function(selections)
+            if not selections or #selections == 0 then
+                client:notifyLocalized("noFactionsSelected")
+                return
+            end
+
+            lia.faction.registerGroup(groupName, selections)
+            lia.log.add(client, "defineFactionGroup", groupName, #selections)
+            client:notifyLocalized("factionGroupCreated", groupName, #selections)
+            local factionNames = {}
+            for _, uniqueID in ipairs(selections) do
+                local faction = lia.faction.teams[uniqueID]
+                if faction then table.insert(factionNames, faction.name) end
+            end
+
+            if #factionNames > 0 then client:notifyLocalized("factionGroupMembers", table.concat(factionNames, ", ")) end
+        end)
+    end
+})
+
+lia.command.add("listfactiongroups", {
+    adminOnly = true,
+    desc = "listfactiongroupsDesc",
+    onRun = function(client)
+        local groups = lia.faction.groups
+        local groupCount = table.Count(groups)
+        if groupCount == 0 then
+            client:notifyLocalized("noFactionGroups")
+            return
+        end
+
+        client:notifyLocalized("factionGroupsHeader", groupCount)
+        local sortedGroups = {}
+        for groupName in pairs(groups) do
+            table.insert(sortedGroups, groupName)
+        end
+
+        table.sort(sortedGroups)
+        for _, groupName in ipairs(sortedGroups) do
+            local factionIDs = groups[groupName]
+            local factionNames = {}
+            for _, factionID in ipairs(factionIDs) do
+                local faction = lia.faction.teams[factionID]
+                if faction then
+                    table.insert(factionNames, faction.name)
+                else
+                    table.insert(factionNames, factionID .. " (invalid)")
+                end
+            end
+
+            client:notifyLocalized("factionGroupInfo", groupName, #factionIDs, table.concat(factionNames, ", "))
+        end
+    end
+})
+
+lia.command.add("removefactiongroup", {
+    superAdminOnly = true,
+    desc = "removefactiongroupDesc",
+    arguments = {
+        {
+            name = "groupName",
+            type = "string"
+        }
+    },
+    onRun = function(client, arguments)
+        local groupName = arguments[1]
+        if not groupName or groupName == "" then
+            client:notifyLocalized("invalidArgument")
+            return
+        end
+
+        if not lia.faction.groups[groupName] then
+            client:notifyLocalized("factionGroupNotFound", groupName)
+            return
+        end
+
+        lia.faction.groups[groupName] = nil
+        lia.log.add(client, "removeFactionGroup", groupName)
+        client:notifyLocalized("factionGroupRemoved", groupName)
     end
 })

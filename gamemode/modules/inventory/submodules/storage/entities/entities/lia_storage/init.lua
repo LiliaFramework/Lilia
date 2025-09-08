@@ -4,7 +4,6 @@ function ENT:Initialize()
     self:SetSolid(SOLID_VPHYSICS)
     self:SetUseType(SIMPLE_USE)
     self.receivers = {}
-    self:getNetVar("locked", false)
     if isfunction(self.PostInitialize) then self:PostInitialize() end
     self:PhysicsInit(SOLID_VPHYSICS)
     local physObj = self:GetPhysicsObject()

@@ -574,7 +574,8 @@ if SERVER then
             return
         end
 
-        lia.db.query("SELECT itemID, uniqueID, data, x, y, quantity FROM lia_items WHERE itemID IN " .. range, function(results)
+        lia.db.select({"itemID", "uniqueID", "data", "x", "y", "quantity"}, "items", "itemID IN " .. range):next(function(data)
+            local results = data.results or {}
             if not results then return end
             for _, row in ipairs(results) do
                 local id = tonumber(row.itemID)

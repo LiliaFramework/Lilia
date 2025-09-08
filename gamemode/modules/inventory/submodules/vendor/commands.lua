@@ -45,70 +45,104 @@ lia.command.add("restockallvendors", {
     end
 })
 
-lia.command.add("resetallvendormoney", {
-    superAdminOnly = true,
-    desc = "resetAllVendorMoneyDesc",
+lia.command.add("createvendorpreset", {
+    adminOnly = true,
+    desc = "createVendorPresetDesc",
     arguments = {
         {
-            name = "amount",
+            name = "presetName",
             type = "string"
         },
     },
-    AdminStick = {
-        Name = "resetAllVendorMoneyStickName",
-        TargetClass = "lia_vendor",
-        Icon = "icon16/money_delete.png"
-    },
     onRun = function(client, arguments)
-        local amount = tonumber(arguments[1])
-        if not amount or amount < 0 then return client:notifyLocalized("invalidAmount") end
-        local count = 0
-        for _, vendor in ipairs(ents.FindByClass("lia_vendor")) do
-            if vendor.money ~= nil then
-                vendor.money = amount
-                count = count + 1
-                lia.log.add(client, "resetvendormoney", vendor, amount)
-            end
-        end
-
-        client:notifyLocalized("vendorAllMoneyReset", lia.currency.get(amount), count)
-        lia.log.add(client, "resetallvendormoney", amount, count)
-    end
-})
-
-lia.command.add("restockvendormoney", {
-    superAdminOnly = true,
-    desc = "restockVendorMoneyDesc",
-    arguments = {
-        {
-            name = "amount",
-            type = "string"
-        },
-    },
-    AdminStick = {
-        Name = "restockVendorMoneyStickName",
-        TargetClass = "lia_vendor",
-        Icon = "icon16/money_add.png"
-    },
-    onRun = function(client, arguments)
-        local target = client:getTracedEntity()
-        local amount = tonumber(arguments[1])
-        if not amount or amount < 0 then return client:notifyLocalized("invalidAmount") end
-        if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
+        if not client:hasPrivilege("canCreateVendorPresets") then
+            client:notifyLocalized("noPermission")
             return
         end
 
-        if target:GetClass() == "lia_vendor" then
-            if target.money ~= nil then
-                target.money = amount
-                client:notifyLocalized("vendorMoneyRestocked", lia.currency.get(amount))
-                lia.log.add(client, "restockvendormoney", target, amount)
-            else
-                client:notifyLocalized("vendorNoMoneyVariable")
-            end
-        else
+        local presetName = arguments[1]
+        if not presetName or presetName:Trim() == "" then
+            client:notifyLocalized("vendorPresetNameRequired")
+            return
+        end
+
+        local target = client:getTracedEntity()
+        if not target or not IsValid(target) or target:GetClass() ~= "lia_vendor" then
             client:notifyLocalized("notLookingAtValidVendor")
+            return
+        end
+
+        local presetData = {}
+        for itemType, itemData in pairs(target.items or {}) do
+            if lia.item.list[itemType] then
+                presetData[itemType] = {
+                    mode = itemData[VENDOR_MODE],
+                    price = itemData[VENDOR_PRICE],
+                    stock = itemData[VENDOR_STOCK],
+                    maxStock = itemData[VENDOR_MAXSTOCK]
+                }
+            end
+        end
+
+        lia.vendor.addPreset(presetName, presetData)
+        client:notifyLocalized("vendorPresetSaved", presetName)
+        lia.log.add(client, "createvendorpreset", presetName)
+    end
+})
+
+lia.command.add("deletevendorpreset", {
+    adminOnly = true,
+    desc = "deleteVendorPresetDesc",
+    arguments = {
+        {
+            name = "presetName",
+            type = "string"
+        },
+    },
+    onRun = function(client, arguments)
+        if not client:hasPrivilege("canCreateVendorPresets") then
+            client:notifyLocalized("noPermission")
+            return
+        end
+
+        local presetName = arguments[1]
+        if not presetName or presetName:Trim() == "" then
+            client:notifyLocalized("vendorPresetNameRequired")
+            return
+        end
+
+        presetName = presetName:Trim():lower()
+        if not lia.vendor.presets[presetName] then
+            client:notifyLocalized("vendorPresetNotFound", presetName)
+            return
+        end
+
+        lia.vendor.presets[presetName] = nil
+        if SERVER then lia.db.delete("vendor_presets", "name = " .. lia.db.convertDataType(presetName)) end
+        client:notifyLocalized("vendorPresetDeleted", presetName)
+        lia.log.add(client, "deletevendorpreset", presetName)
+    end
+})
+
+lia.command.add("listvendorpresets", {
+    adminOnly = true,
+    desc = "listVendorPresetsDesc",
+    onRun = function(client)
+        if not client:hasPrivilege("canCreateVendorPresets") then
+            client:notifyLocalized("noPermission")
+            return
+        end
+
+        local presets = {}
+        for name in pairs(lia.vendor.presets or {}) do
+            presets[#presets + 1] = name
+        end
+
+        if #presets == 0 then
+            client:notifyLocalized("vendorNoPresets")
+        else
+            table.sort(presets)
+            client:notifyLocalized("vendorPresetList", table.concat(presets, ", "))
         end
     end
 })

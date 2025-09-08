@@ -1845,6 +1845,7 @@ function MODULE:PopulateAdminTabs(pages)
                     searchSheet:Dock(FILL)
                     searchSheet:SetPlaceholderText(L("searchEntities"))
                     for _, ent in ipairs(list) do
+                        if not IsValid(ent) then continue end
                         local displayName = getEntityDisplayName(ent)
                         local itemPanel = vgui.Create("DPanel")
                         itemPanel:SetTall(100)

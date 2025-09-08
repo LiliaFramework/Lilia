@@ -8,9 +8,10 @@ characterMeta.__index = characterMeta
 characterMeta.id = characterMeta.id or 0
 characterMeta.vars = characterMeta.vars or {}
 if SERVER and #lia.char.names < 1 then
-    lia.db.query("SELECT id, name FROM lia_characters", function(data)
-        if data and #data > 0 then
-            for _, v in pairs(data) do
+    lia.db.select({"id", "name"}, "characters"):next(function(data)
+        local results = data.results or {}
+        if #results > 0 then
+            for _, v in pairs(results) do
                 lia.char.names[v.id] = v.name
             end
         end
@@ -541,38 +542,40 @@ lia.char.registerVar("banned", {
 function lia.char.getCharData(charID, key)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end
-    local results = sql.Query("SELECT key, value FROM lia_chardata WHERE charID = " .. charIDsafe)
-    local data = {}
-    if istable(results) then
-        for _, row in ipairs(results) do
-            local decoded = pon.decode(row.value)
-            data[row.key] = decoded[1]
+    return lia.db.select({"key", "value"}, "chardata", "charID = " .. charIDsafe):next(function(result)
+        local data = {}
+        if result and result.results then
+            for _, row in ipairs(result.results) do
+                local decoded = pon.decode(row.value)
+                data[row.key] = decoded[1]
+            end
         end
-    end
 
-    if key then return data[key] end
-    return data
+        if key then return data[key] end
+        return data
+    end)
 end
 
 function lia.char.getCharDataRaw(charID, key)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end
     if key then
-        local row = sql.Query("SELECT value FROM lia_chardata WHERE charID = " .. charIDsafe .. " AND key = '" .. lia.db.escape(key) .. "'")
-        if not row or not row[1] then return false end
-        local decoded = pon.decode(row[1].value)
-        return decoded[1]
+        return lia.db.selectOne("value", "chardata", "charID = " .. charIDsafe .. " AND key = " .. lia.db.convertDataType(key)):next(function(result)
+            if not result then return false end
+            local decoded = pon.decode(result.value)
+            return decoded[1]
+        end)
     end
-
-    local results = sql.Query("SELECT key, value FROM lia_chardata WHERE charID = " .. charIDsafe)
-    local data = {}
-    if istable(results) then
-        for _, r in ipairs(results) do
-            local decoded = pon.decode(r.value)
-            data[r.key] = decoded[1]
+    return lia.db.select({"key", "value"}, "chardata", "charID = " .. charIDsafe):next(function(result)
+        local data = {}
+        if result and result.results then
+            for _, r in ipairs(result.results) do
+                local decoded = pon.decode(r.value)
+                data[r.key] = decoded[1]
+            end
         end
-    end
-    return data
+        return data
+    end)
 end
 
 function lia.char.getOwnerByID(ID)
@@ -660,12 +663,11 @@ if SERVER then
 
         fields = table.concat(fields, ", ")
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-        local condition = "schema = '" .. lia.db.escape(gamemode) .. "' AND steamID = " .. lia.db.convertDataType(steamID)
+        local condition = "schema = " .. lia.db.convertDataType(gamemode) .. " AND steamID = " .. lia.db.convertDataType(steamID)
         if id then condition = condition .. " AND id = " .. id end
-        local query = "SELECT " .. fields .. " FROM lia_characters WHERE " .. condition
-        lia.db.query(query, function(data)
+        lia.db.select(fields, "characters", condition):next(function(data)
             local characters = {}
-            local results = data or {}
+            local results = data.results or {}
             local done = 0
             if #results == 0 then
                 if callback then callback(characters) end
@@ -790,11 +792,12 @@ if SERVER then
         end
 
         lia.char.loaded[id] = nil
-        lia.db.query("DELETE FROM lia_characters WHERE id = " .. id)
+        lia.db.delete("characters", "id = " .. id)
         lia.db.delete("chardata", "charID = " .. id)
-        lia.db.query("SELECT invID FROM lia_inventories WHERE charID = " .. id, function(data)
-            if data then
-                for _, inventory in ipairs(data) do
+        lia.db.select({"invID"}, "inventories", "charID = " .. id):next(function(data)
+            local results = data.results or {}
+            if results then
+                for _, inventory in ipairs(results) do
                     lia.inventory.deleteByID(tonumber(inventory.invID))
                 end
             end
@@ -823,8 +826,10 @@ if SERVER then
     function lia.char.getCharBanned(charID)
         local charIDsafe = tonumber(charID)
         if not charIDsafe then return end
-        local result = sql.Query("SELECT banned FROM lia_characters WHERE id = " .. charIDsafe .. " LIMIT 1")
-        if istable(result) and result[1] then return tonumber(result[1].banned) or 0 end
+        return lia.db.selectOne("banned", "characters", "id = " .. charIDsafe):next(function(result)
+            if result then return tonumber(result.banned) or 0 end
+            return 0
+        end)
     end
 
     function lia.char.setCharDatabase(charID, field, value)
@@ -897,7 +902,7 @@ if SERVER then
                 return true
             else
                 if val == nil then
-                    lia.db.delete("chardata", "charID = " .. charIDsafe .. " AND key = '" .. lia.db.escape(field) .. "'")
+                    lia.db.delete("chardata", "charID = " .. charIDsafe .. " AND key = " .. lia.db.convertDataType(field))
                 else
                     local encoded = pon.encode({value})
                     lia.db.upsert({
@@ -912,7 +917,7 @@ if SERVER then
             end
         else
             if val == nil then
-                lia.db.delete("chardata", "charID = " .. charIDsafe .. " AND key = '" .. lia.db.escape(field) .. "'")
+                lia.db.delete("chardata", "charID = " .. charIDsafe .. " AND key = " .. lia.db.convertDataType(field))
             else
                 local encoded = pon.encode({value})
                 lia.db.upsert({

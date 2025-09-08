@@ -15,6 +15,7 @@ function ENT:setupVars()
     if SERVER then
         self:setNetVar("name", L("vendorDefaultName"))
         self:setNetVar("preset", "none")
+        self:setNetVar("animation", "")
     end
 
     self.receivers = self.receivers or {}
@@ -56,18 +57,8 @@ function ENT:Initialize()
     LiliaVendors[self:EntIndex()] = self
 end
 
-function ENT:getMoney()
-    return self.money
-end
-
 function ENT:getWelcomeMessage()
     return self:getNetVar("welcomeMessage", L("vendorWelcomeMessage"))
-end
-
-function ENT:hasMoney(amount)
-    local money = self:getMoney()
-    if not money then return true end
-    return money >= amount
 end
 
 function ENT:getStock(uniqueID)
@@ -115,7 +106,15 @@ function ENT:isFactionAllowed(factionID)
 end
 
 function ENT:getSellScale()
-    return self:getNetVar("scale", 0.5)
+    local scale = lia.config.get("vendorSaleScale", 0.5)
+    local hookScale = hook.Run("GetVendorSaleScale", self)
+    if hookScale ~= nil and hookScale ~= false then
+        local numHookScale = tonumber(hookScale)
+        if numHookScale then return math.Clamp(numHookScale, 0.1, 2.0) end
+    end
+
+    local finalScale = tonumber(scale) or 0.5
+    return math.Clamp(finalScale, 0.1, 2.0)
 end
 
 function ENT:getName()
@@ -132,10 +131,32 @@ end
 
 function ENT:setAnim()
     if not self:isReadyForAnim() then return end
-    local sequenceList = self:GetSequenceList()
-    for k, v in ipairs(sequenceList) do
-        if v:lower():find("idle") and v ~= "idlenoise" then return self:ResetSequence(k) end
+    local customAnim = self:getNetVar("animation", "")
+    if customAnim and customAnim ~= "" then
+        local sequenceList = self:GetSequenceList()
+        for k, v in ipairs(sequenceList) do
+            if v:lower() == customAnim:lower() then
+                self:ResetSequence(k)
+                self:SetCycle(1)
+                self:SetPlaybackRate(0)
+                return
+            end
+        end
     end
 
-    if self:GetSequenceCount() > 1 then self:ResetSequence(4) end
+    local sequenceList = self:GetSequenceList()
+    for k, v in ipairs(sequenceList) do
+        if v:lower():find("idle") and v ~= "idlenoise" then
+            self:ResetSequence(k)
+            self:SetCycle(1)
+            self:SetPlaybackRate(0)
+            return
+        end
+    end
+
+    if self:GetSequenceCount() > 1 then
+        self:ResetSequence(4)
+        self:SetCycle(1)
+        self:SetPlaybackRate(0)
+    end
 end

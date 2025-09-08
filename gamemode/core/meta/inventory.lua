@@ -127,6 +127,20 @@ if SERVER then
             invID = id
         }, nil, "items", "itemID = " .. item:getID())
 
+        local charID = self:getData("char")
+        if charID then
+            local client = self:getRecipients()[1]
+            if IsValid(client) then
+                item:setData("charID", charID, nil, true, true)
+                item:setData("steamID", client:SteamID(), nil, true, true)
+                if IsValid(item.entity) then
+                    item.entity.liaCharID = charID
+                    item.entity.liaSteamID = client:SteamID()
+                    item.entity.SteamID = client:SteamID()
+                end
+            end
+        end
+
         self:syncItemAdded(item)
         if not noReplicate then hook.Run("OnItemAdded", item:getOwner(), item) end
         return self
@@ -215,7 +229,7 @@ if SERVER then
             }, nil, "inventories", "invID = " .. self:getID())
         elseif not keyData or not keyData.notPersistent then
             if value == nil then
-                lia.db.delete("invdata", "invID = " .. self.id .. " AND key = '" .. lia.db.escape(key) .. "'")
+                lia.db.delete("invdata", "invID = " .. self.id .. " AND key = " .. lia.db.convertDataType(key))
             else
                 lia.db.upsert({
                     invID = self.id,

@@ -473,26 +473,15 @@ function GM:InitPostEntity()
     if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
 end
 
-concommand.Add("dev_GetCameraOrigin", function(client)
-    if client:isStaff() then
-        lia.information(L("origin") .. " = (" .. math.ceil(client:GetPos().x) .. ", " .. math.ceil(client:GetPos().y) .. ", " .. math.ceil(client:GetPos().z) .. ")")
-        lia.information(L("angles") .. " = (" .. math.ceil(client:GetAngles().x) .. ", " .. math.ceil(client:GetAngles().y) .. ", " .. math.ceil(client:GetAngles().z) .. ")")
-    end
-end)
-
-concommand.Add("vgui_cleanup", function()
+concommand.Add("lia_vgui_cleanup", function()
     for _, v in pairs(vgui.GetWorldPanel():GetChildren()) do
         if not (v.Init and debug.getinfo(v.Init, "Sln").short_src:find("chatbox")) then v:Remove() end
     end
 end, nil, L("vguiCleanupCommandDesc"))
 
 concommand.Add("weighpoint_stop", function() hook.Add("HUDPaint", "WeighPoint", function() end) end)
-concommand.Add("dev_GetEntPos", function(client) if client:isStaff() then lia.information(client:getTracedEntity():GetPos().x, client:getTracedEntity():GetPos().y, client:getTracedEntity():GetPos().z) end end)
-concommand.Add("dev_GetEntAngles", function(client) if client:isStaff() then lia.information(math.ceil(client:getTracedEntity():GetAngles().x) .. ", " .. math.ceil(client:getTracedEntity():GetAngles().y) .. ", " .. math.ceil(client:getTracedEntity():GetAngles().z)) end end)
-concommand.Add("dev_GetRoundEntPos", function(client) if client:isStaff() then lia.information(math.ceil(client:getTracedEntity():GetPos().x) .. ", " .. math.ceil(client:getTracedEntity():GetPos().y) .. ", " .. math.ceil(client:getTracedEntity():GetPos().z)) end end)
-concommand.Add("dev_GetPos", function(client) if client:isStaff() then lia.information(math.ceil(client:GetPos().x) .. ", " .. math.ceil(client:GetPos().y) .. ", " .. math.ceil(client:GetPos().z)) end end)
 local dermaPreviewFrame
-concommand.Add("open_derma_preview", function()
+concommand.Add("lia_open_derma_preview", function()
     if IsValid(dermaPreviewFrame) then dermaPreviewFrame:Remove() end
     local frame = vgui.Create("DFrame")
     frame:SetTitle(L("dermaPreviewTitle"))

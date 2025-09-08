@@ -430,19 +430,19 @@ if CLIENT then
     })
 
     lia.font.register("PoppinsSmall", {
-        font = "Poppins",
+        font = "Poppins Regular",
         extended = true,
         size = 16
     })
 
     lia.font.register("PoppinsMedium", {
-        font = "Poppins",
+        font = "Poppins Medium",
         extended = true,
         size = 32
     })
 
     lia.font.register("PoppinsBig", {
-        font = "Poppins",
+        font = "Poppins Bold",
         extended = true,
         size = 64
     })

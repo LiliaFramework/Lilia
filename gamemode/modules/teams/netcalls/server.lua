@@ -14,9 +14,8 @@ net.Receive("RequestFactionRoster", function(_, client)
     if not faction then return end
     local fields = "lia_characters.name, lia_characters.faction, lia_characters.id, lia_characters.steamID, lia_characters.lastJoinTime, lia_players.lastOnline, lia_characters.class, lia_characters.playtime"
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local condition = "lia_characters.schema = '" .. lia.db.escape(gamemode) .. "' AND lia_characters.faction = " .. lia.db.convertDataType(faction.uniqueID)
-    local query = "SELECT " .. fields .. " FROM lia_characters LEFT JOIN lia_players ON lia_characters.steamID = lia_players.steamID WHERE " .. condition
-    lia.db.query(query, function(data)
+    local condition = "lia_characters.schema = " .. lia.db.convertDataType(gamemode) .. " AND lia_characters.faction = " .. lia.db.convertDataType(faction.uniqueID)
+    lia.db.selectWithJoin("SELECT " .. fields .. " FROM lia_characters LEFT JOIN lia_players ON lia_characters.steamID = lia_players.steamID WHERE " .. condition):next(function(data)
         local characters = {}
         if data then
             for _, v in ipairs(data) do

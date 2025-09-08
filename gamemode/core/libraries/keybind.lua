@@ -164,8 +164,9 @@ lia.keybind.add(KEY_NONE, "adminMode", {
         else
             local currentChar = client:getChar()
             if currentChar and currentChar:getFaction() ~= "staff" then client:setNetVar("OriginalPosition", client:GetPos()) end
-            lia.db.query(string.format("SELECT * FROM lia_characters WHERE steamID = \"%s\"", lia.db.escape(steamID)), function(data)
-                for _, row in ipairs(data) do
+            lia.db.select("*", "characters", "steamID = " .. lia.db.convertDataType(steamID)):next(function(data)
+                local results = data.results or {}
+                for _, row in ipairs(results) do
                     local id = tonumber(row.id)
                     if row.faction == "staff" then
                         client:setNetVar("OldCharID", client:getChar():getID())

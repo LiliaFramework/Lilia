@@ -164,7 +164,7 @@ function characterMeta:setData(k, v, noReplication, receiver)
         if istable(k) then
             for nk, nv in pairs(k) do
                 if nv == nil then
-                    lia.db.delete("chardata", "charID = " .. self:getID() .. " AND key = '" .. lia.db.escape(nk) .. "'")
+                    lia.db.delete("chardata", "charID = " .. self:getID() .. " AND key = " .. lia.db.convertDataType(nk))
                 else
                     local encoded = pon.encode({nv})
                     lia.db.upsert({
@@ -176,7 +176,7 @@ function characterMeta:setData(k, v, noReplication, receiver)
             end
         else
             if v == nil then
-                lia.db.delete("chardata", "charID = " .. self:getID() .. " AND key = '" .. lia.db.escape(k) .. "'")
+                lia.db.delete("chardata", "charID = " .. self:getID() .. " AND key = " .. lia.db.convertDataType(k))
             else
                 local encoded = pon.encode({v})
                 lia.db.upsert({

@@ -9,11 +9,9 @@ end
 
 function MODULE:CanPlayerAccessVendor(client, vendor)
     local character = client:getChar()
-    local flag = vendor:getNetVar("flag")
     if client:CanEditVendor(vendor) then return true end
     if vendor:isClassAllowed(character:getClass()) then return true end
     if vendor:isFactionAllowed(client:Team()) then return true end
-    if flag and string.len(flag) == 1 and client:hasFlags(flag) then return true end
 end
 
 function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)
@@ -23,7 +21,6 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     local FactionWhitelist = item.FactionWhitelist
     local UserGroupWhitelist = item.UsergroupWhitelist
     local VIPOnly = item.VIPWhitelist
-    local flag = item.flag
     if not vendor.items[itemType] then return false, L("vendorDoesNotHaveItem") end
     local state = vendor:getTradeMode(itemType)
     if isSellingToVendor and state == VENDOR_SELLONLY then return false, L("sellOnly") end
@@ -36,14 +33,8 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     end
 
     local price = vendor:getPrice(itemType, isSellingToVendor)
-    local money
-    if isSellingToVendor then
-        money = vendor:getMoney()
-    else
-        money = client:getChar():getMoney()
-    end
-
-    if money and money < price then return false, isSellingToVendor and L("vendorNoMoney") or L("canNotAfford") end
+    local money = client:getChar():getMoney()
+    if money < price then return false, L("canNotAfford") end
     if SteamIDWhitelist or FactionWhitelist or UserGroupWhitelist or VIPOnly then
         local hasWhitelist = true
         local isWhitelisted = false
@@ -67,8 +58,6 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
             return false, errorMessage
         end
     end
-
-    if flag and not client:hasFlags(flag) then return false, L("vendorTradeRestrictedFlag") end
     return true, nil, isWhitelisted
 end
 
@@ -120,7 +109,6 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
                 return
             end
 
-            vendor:takeMoney(price)
             character:giveMoney(price)
             item:remove():next(function() client.vendorTransaction = nil end):catch(function() client.vendorTransaction = nil end)
             vendor:addStock(itemType)
@@ -135,7 +123,6 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
             return
         end
 
-        vendor:giveMoney(price)
         character:takeMoney(price)
         vendor:takeStock(itemType)
         character:getInv():add(itemType):next(function(item)
@@ -175,7 +162,6 @@ function MODULE:GetEntitySaveData(ent)
         items = ent.items,
         factions = ent.factions,
         classes = ent.classes,
-        money = ent.money,
         model = ent:GetModel(),
         skin = ent:GetSkin(),
         bodygroups = (function()
@@ -186,24 +172,21 @@ function MODULE:GetEntitySaveData(ent)
             end
             return groups
         end)(),
-        flag = ent:getNetVar("flag"),
-        scale = ent:getNetVar("scale"),
         welcomeMessage = ent:getNetVar("welcomeMessage"),
         preset = ent:getNetVar("preset"),
+        animation = ent:getNetVar("animation"),
     }
 end
 
 function MODULE:OnEntityLoaded(ent, data)
     if ent:GetClass() ~= "lia_vendor" or not data then return end
     ent:setNetVar("name", data.name)
-    ent:setNetVar("flag", data.flag)
-    ent:setNetVar("scale", data.scale or 0.5)
     ent:setNetVar("welcomeMessage", data.welcomeMessage)
     ent:setNetVar("preset", data.preset or "none")
+    ent:setNetVar("animation", data.animation or "")
     ent.items = data.items or {}
     ent.factions = data.factions or {}
     ent.classes = data.classes or {}
-    ent.money = data.money
     if data.model and data.model ~= "" and data.model ~= ent:GetModel() then
         ent:SetModel(data.model)
         timer.Simple(0.1, function()

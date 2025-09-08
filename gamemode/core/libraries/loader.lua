@@ -517,6 +517,9 @@ if SERVER then
         hook.Run("SetupDatabase")
         lia.db.connect(function()
             lia.db.loadTables()
+            local dbLabel = L("database") or "Database"
+            local connMsg = L("databaseConnected", "SQLite") or "Database connected to SQLite"
+            lia.bootstrap(dbLabel, connMsg)
             hook.Run("DatabaseConnected")
         end)
     end
@@ -569,29 +572,27 @@ function GM:OnReloaded()
         lia.config.send()
         lia.administrator.sync()
         lia.playerinteract.syncToClients()
-        lia.bootstrap("HotReload", "Gamemode hotreloaded successfully!")
-    else
-        chat.AddText(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Gamemode hotreloaded successfully!")
+        lia.db.connect(nil, true)
     end
 end
 
 local loadedCompatibility = {}
-for _, file in ipairs(ConditionalFiles) do
+for _, compatFile in ipairs(ConditionalFiles) do
     local shouldLoad = false
-    if isfunction(file.condition) then
-        local ok, result = pcall(file.condition)
+    if isfunction(compatFile.condition) then
+        local ok, result = pcall(compatFile.condition)
         if ok then
             shouldLoad = result
         else
             lia.error(L("compatibilityConditionError", tostring(result)))
         end
-    elseif file.global then
-        shouldLoad = _G[file.global] ~= nil
+    elseif compatFile.global then
+        shouldLoad = _G[compatFile.global] ~= nil
     end
 
     if shouldLoad then
-        lia.include(file.path, file.realm or "shared")
-        loadedCompatibility[#loadedCompatibility + 1] = file.name
+        lia.include(compatFile.path, compatFile.realm or "shared")
+        loadedCompatibility[#loadedCompatibility + 1] = compatFile.name
     end
 end
 

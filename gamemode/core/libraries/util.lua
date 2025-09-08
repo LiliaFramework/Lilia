@@ -551,7 +551,7 @@ else
             local ctrl
             local isBool = fieldType == "boolean"
             if isBool then
-                ctrl = vgui.Create("liaCheckBox", panel)
+                ctrl = vgui.Create("liaCheckbox", panel)
                 if defaultVal ~= nil then ctrl:SetChecked(tobool(defaultVal)) end
             elseif fieldType == "table" then
                 ctrl = vgui.Create("DComboBox", panel)

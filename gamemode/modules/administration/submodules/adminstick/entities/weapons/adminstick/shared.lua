@@ -19,7 +19,13 @@ SWEP.Secondary.Ammo = ""
 SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = false
 function SWEP:DrawWorldModel()
-    if self:GetOwner():isNoClipping() then return end
+    local owner = self:GetOwner()
+    if not IsValid(owner) then
+        self:DrawModel()
+        return
+    end
+
+    if owner:isNoClipping() then return end
     self:DrawModel()
 end
 

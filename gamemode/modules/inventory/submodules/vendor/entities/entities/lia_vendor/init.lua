@@ -28,26 +28,6 @@ function ENT:Use(activator)
     hook.Run("PlayerAccessVendor", activator, self)
 end
 
-function ENT:setMoney(value)
-    if not isnumber(value) or value < 0 then value = nil end
-    self.money = value
-    net.Start("VendorMoney")
-    net.WriteInt(value or -1, 32)
-    if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
-end
-
-function ENT:giveMoney(value)
-    if self.money then self:setMoney(self:getMoney() + value) end
-end
-
-function ENT:takeMoney(value)
-    if self.money then self:giveMoney(-value) end
-end
-
-function ENT:setFlag(flag)
-    self:setNetVar("flag", flag)
-end
-
 function ENT:setWelcomeMessage(value)
     self:setNetVar("welcomeMessage", value)
 end
@@ -218,7 +198,11 @@ function ENT:OnRemove()
     LiliaVendors[self:EntIndex()] = nil
     if not lia.shuttingDown then
         net.Start("VendorExit")
-        if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
+        if self.receivers and #self.receivers > 0 then
+            net.Send(self.receivers)
+        else
+            net.Broadcast()
+        end
     end
 
     if lia.shuttingDown or self.liaIsSafe then return end
@@ -254,11 +238,12 @@ function ENT:setBodyGroup(id, value)
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
 end
 
-function ENT:setSellScale(scale)
-    assert(isnumber(scale), L("vendorScaleNumber"))
-    self:setNetVar("scale", scale)
+function ENT:setAnimation(animation)
+    self:setNetVar("animation", animation or "")
+    if self:isReadyForAnim() then self:setAnim() end
+    hook.Run("UpdateEntityPersistence", self)
     net.Start("VendorEdit")
-    net.WriteString("scale")
+    net.WriteString("animation")
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
 end
 
@@ -307,7 +292,6 @@ end
 function ENT:sync(client)
     net.Start("VendorSync")
     net.WriteEntity(self)
-    net.WriteInt(self:getMoney() or -1, 32)
     net.WriteUInt(table.Count(self.items), 16)
     for itemType, item in pairs(self.items) do
         net.WriteString(itemType)

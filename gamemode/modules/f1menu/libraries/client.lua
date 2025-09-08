@@ -1,23 +1,14 @@
 ﻿local MODULE = MODULE
 MODULE.CharacterInformation = {}
 function MODULE:LoadCharInformation()
+    local client = LocalPlayer()
+    if not IsValid(client) then return end
+    local char = client:getChar()
+    if not char then return end
     hook.Run("AddSection", L("generalInfo"), Color(0, 0, 0), 1, 1)
-    hook.Run("AddTextField", L("generalInfo"), "name", L("name"), function()
-        local client = LocalPlayer()
-        local char = client:getChar()
-        return char and char:getName() or L("unknown")
-    end)
-
-    hook.Run("AddTextField", L("generalInfo"), "desc", L("description"), function()
-        local client = LocalPlayer()
-        local char = client:getChar()
-        return char and char:getDesc() or ""
-    end)
-
-    hook.Run("AddTextField", L("generalInfo"), "money", L("money"), function()
-        local client = LocalPlayer()
-        return client and lia.currency.get(client:getChar():getMoney()) or lia.currency.get(0)
-    end)
+    hook.Run("AddTextField", L("generalInfo"), "name", L("name"), function() return char and char:getName() or L("unknown") end)
+    hook.Run("AddTextField", L("generalInfo"), "desc", L("description"), function() return char and char:getDesc() or "" end)
+    hook.Run("AddTextField", L("generalInfo"), "money", L("money"), function() return char and lia.currency.get(char:getMoney()) or lia.currency.get(0) end)
 end
 
 function MODULE:AddSection(sectionName, color, priority, location)

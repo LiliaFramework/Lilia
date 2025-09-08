@@ -27,10 +27,10 @@ net.Receive("liaRequestTableData", function(_, client)
     if not client:hasPrivilege("viewDBTables") then return end
     local tbl = net.ReadString()
     if not tbl or tbl == "" then return end
-    lia.db.query("SELECT * FROM " .. lia.db.escapeIdentifier(tbl), function(res)
+    lia.db.select("*", tbl:gsub("lia_", "")):next(function(data)
         net.Start("liaDBTableData")
         net.WriteString(tbl)
-        net.WriteTable(res or {})
+        net.WriteTable(data.results or {})
         net.Send(client)
     end)
 end)
@@ -69,9 +69,9 @@ end)
 
 net.Receive("liaRequestAllPKs", function(_, client)
     if not client:hasPrivilege("manageCharacters") then return end
-    lia.db.query("SELECT * FROM lia_permakills", function(data)
+    lia.db.select("*", "permakills"):next(function(data)
         net.Start("liaAllPKs")
-        net.WriteTable(data or {})
+        net.WriteTable(data.results or {})
         net.Send(client)
     end)
 end)
@@ -89,12 +89,11 @@ net.Receive("liaRequestFactionRoster", function(_, client)
     if not IsValid(client) or not client:hasPrivilege("canManageFactions") then return end
     local data = {}
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local fields = table.concat({"lia_characters.name", "lia_characters.id", "lia_characters.steamID", "lia_characters.playtime", "lia_characters.lastJoinTime", "lia_characters.class", "lia_characters.faction", "lia_players.lastOnline"}, ",")
-    local condition = "lia_characters.schema = '" .. lia.db.escape(gamemode) .. "'"
-    local query = "SELECT " .. fields .. " FROM lia_characters LEFT JOIN lia_players ON lia_characters.steamID = lia_players.steamID WHERE " .. condition
-    lia.db.query(query, function(result)
-        if result then
-            for _, v in ipairs(result) do
+    local fields = "lia_characters.name, lia_characters.id, lia_characters.steamID, lia_characters.playtime, lia_characters.lastJoinTime, lia_characters.class, lia_characters.faction, lia_players.lastOnline"
+    local condition = "lia_characters.schema = " .. lia.db.convertDataType(gamemode)
+    lia.db.selectWithJoin("SELECT " .. fields .. " FROM lia_characters LEFT JOIN lia_players ON lia_characters.steamID = lia_players.steamID WHERE " .. condition):next(function(result)
+        if result and result.results then
+            for _, v in ipairs(result.results) do
                 local charID = tonumber(v.id)
                 local isOnline = lia.char.isLoaded(charID)
                 local lastOnlineText
@@ -142,15 +141,13 @@ end)
 
 net.Receive("liaRequestFullCharList", function(_, client)
     if not IsValid(client) or not client:hasPrivilege("listCharacters") then return end
-    lia.db.query([[SELECT c.id, c.name, c.`desc`, c.faction, c.steamID, c.lastJoinTime, c.banned, c.playtime, c.money, d.value AS charBanInfo
-FROM lia_characters AS c
-LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo']], function(data)
+    lia.db.selectWithJoin("SELECT c.id, c.name, c.`desc`, c.faction, c.steamID, c.lastJoinTime, c.banned, c.playtime, c.money, d.value AS charBanInfo FROM lia_characters AS c LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo'"):next(function(data)
         local payload = {
             all = {},
             players = {}
         }
 
-        for _, row in ipairs(data or {}) do
+        for _, row in ipairs(data and data.results or data or {}) do
             local stored = lia.char.getCharacter(row.id)
             local bannedVal = tonumber(row.banned) or 0
             local isBanned = bannedVal ~= 0 and (bannedVal == -1 or bannedVal > os.time())
@@ -246,8 +243,8 @@ net.Receive("liaRequestDatabaseView", function(_, client)
         end
 
         for _, tbl in ipairs(tables) do
-            lia.db.query("SELECT * FROM " .. lia.db.escapeIdentifier(tbl), function(res)
-                data[tbl] = res or {}
+            lia.db.select("*", tbl:gsub("lia_", "")):next(function(res)
+                data[tbl] = res.results or {}
                 remaining = remaining - 1
                 if remaining == 0 then lia.net.writeBigTable(client, "liaDatabaseViewData", data) end
             end)
@@ -278,8 +275,9 @@ local function buildSummary()
         return summary[id]
     end
 
-    lia.db.query([[SELECT warner AS name, warnerSteamID AS steamID, COUNT(*) AS count FROM lia_warnings GROUP BY warnerSteamID]], function(warnRows)
-        for _, row in ipairs(warnRows or {}) do
+    lia.db.select("warner AS name, warnerSteamID AS steamID, COUNT(*) AS count", "warnings", "1=1 GROUP BY warnerSteamID"):next(function(result)
+        local warnRows = result.results or {}
+        for _, row in ipairs(warnRows) do
             local steamID = row.steamID or row.warnerSteamID
             if steamID and steamID ~= "" then
                 local entry = ensureEntry(steamID, row.name)
@@ -287,8 +285,9 @@ local function buildSummary()
             end
         end
 
-        lia.db.query([[SELECT admin AS name, adminSteamID AS steamID, COUNT(*) AS count FROM lia_ticketclaims GROUP BY adminSteamID]], function(ticketRows)
-            for _, row in ipairs(ticketRows or {}) do
+        lia.db.select("admin AS name, adminSteamID AS steamID, COUNT(*) AS count", "ticketclaims", "1=1 GROUP BY adminSteamID"):next(function(ticketResult)
+            local ticketRows = ticketResult.results or {}
+            for _, row in ipairs(ticketRows) do
                 local steamID = row.steamID or row.adminSteamID
                 if steamID and steamID ~= "" then
                     local entry = ensureEntry(steamID, row.name)
@@ -296,8 +295,9 @@ local function buildSummary()
                 end
             end
 
-            lia.db.query([[SELECT staffName AS name, staffSteamID AS steamID, action, COUNT(*) AS count FROM lia_staffactions GROUP BY staffSteamID, action]], function(actionRows)
-                for _, row in ipairs(actionRows or {}) do
+            lia.db.select("staffName AS name, staffSteamID AS steamID, action, COUNT(*) AS count", "staffactions", "1=1 GROUP BY staffSteamID, action"):next(function(actionResult)
+                local actionRows = actionResult.results or {}
+                for _, row in ipairs(actionRows) do
                     local steamID = row.steamID or row.staffSteamID
                     if steamID and steamID ~= "" then
                         local entry = ensureEntry(steamID, row.name)
@@ -320,8 +320,9 @@ local function buildSummary()
                     end
                 end
 
-                lia.db.query([[SELECT steamName AS name, steamID, userGroup FROM lia_players]], function(playerRows)
-                    for _, row in ipairs(playerRows or {}) do
+                lia.db.select({"steamName AS name", "steamID", "userGroup"}, "players"):next(function(data)
+                    local playerRows = data.results or {}
+                    for _, row in ipairs(playerRows) do
                         local steamID = row.steamID
                         if steamID and steamID ~= "" then
                             local entry = ensureEntry(steamID, row.name)
@@ -360,17 +361,8 @@ end)
 net.Receive("liaRequestPlayers", function(_, client)
     if not client:hasPrivilege("canAccessPlayerList") then return end
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local query = [[
-SELECT steamName, steamID, userGroup, firstJoin, lastOnline, totalOnlineTime,
-    (SELECT COUNT(*) FROM lia_characters WHERE steamID = lia_players.steamID AND schema = %s) AS characterCount,
-    (SELECT COUNT(*) FROM lia_warnings WHERE warnedSteamID = lia_players.steamID) AS warnings,
-    (SELECT COUNT(*) FROM lia_ticketclaims WHERE requesterSteamID = lia_players.steamID) AS ticketsRequested,
-    (SELECT COUNT(*) FROM lia_ticketclaims WHERE adminSteamID = lia_players.steamID) AS ticketsClaimed
-FROM lia_players
-]]
-    query = string.format(query, lia.db.convertDataType(gamemode))
-    lia.db.query(query, function(data)
-        data = data or {}
+    lia.db.select(string.format("steamName, steamID, userGroup, firstJoin, lastOnline, totalOnlineTime, (SELECT COUNT(*) FROM lia_characters WHERE steamID = lia_players.steamID AND schema = %s) AS characterCount, (SELECT COUNT(*) FROM lia_warnings WHERE warnedSteamID = lia_players.steamID) AS warnings, (SELECT COUNT(*) FROM lia_ticketclaims WHERE requesterSteamID = lia_players.steamID) AS ticketsRequested, (SELECT COUNT(*) FROM lia_ticketclaims WHERE adminSteamID = lia_players.steamID) AS ticketsClaimed", lia.db.convertDataType(gamemode)), "players"):next(function(data)
+        data = data and data.results or {}
         for _, row in ipairs(data) do
             local ply = player.GetBySteamID(tostring(row.steamID))
             if IsValid(ply) then row.totalOnlineTime = ply:getPlayTime() end
@@ -385,13 +377,11 @@ net.Receive("liaRequestPlayerCharacters", function(_, client)
     local steamID = net.ReadString()
     if not steamID or steamID == "" then return end
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local query = string.format("SELECT name FROM lia_characters WHERE steamID = %s AND schema = '%s'", lia.db.convertDataType(steamID), lia.db.escape(gamemode))
-    lia.db.query(query, function(data)
+    lia.db.select({"name"}, "characters", "steamID = " .. lia.db.convertDataType(steamID) .. " AND schema = " .. lia.db.convertDataType(gamemode)):next(function(data)
         local chars = {}
-        if data then
-            for _, v in ipairs(data) do
-                chars[#chars + 1] = v.name
-            end
+        local results = data.results or {}
+        for _, v in ipairs(results) do
+            chars[#chars + 1] = v.name
         end
 
         lia.net.writeBigTable(client, "liaPlayerCharacters", {

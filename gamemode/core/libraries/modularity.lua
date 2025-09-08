@@ -1,5 +1,8 @@
 ﻿lia.module = lia.module or {}
 lia.module.list = lia.module.list or {}
+lia.module.disabledModules = lia.module.disabledModules or {}
+lia.module.loadedModules = 0
+lia.module.loadedSubmodules = 0
 local function loadPermissions(Privileges)
     if not Privileges or not istable(Privileges) then return end
     for _, privilegeData in ipairs(Privileges) do
@@ -65,7 +68,7 @@ local function loadExtras(path)
     end
 
     lia.includeEntities(path .. "/entities")
-    if MODULE.uniqueID ~= "schema" then lia.item.loadFromDir(path .. "/items") end
+    if MODULE.versionID ~= "schema" then lia.item.loadFromDir(path .. "/items") end
     if SERVER then
         if MODULE.NetworkStrings and istable(MODULE.NetworkStrings) then
             for _, netString in ipairs(MODULE.NetworkStrings) do
@@ -143,12 +146,8 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
     end
 
     if uniqueID ~= "schema" and not enabled then
-        if disableReason then
-            lia.bootstrap(L("moduleDisabledTitle"), disableReason)
-        else
-            lia.bootstrap(L("moduleDisabledTitle"), MODULE.name)
-        end
-
+        local disabledName = disableReason or MODULE.name
+        table.insert(lia.module.disabledModules, disabledName)
         _G[variable] = prev
         return
     end
@@ -180,7 +179,14 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
         lia.module.list[uniqueID] = MODULE
         if not skipSubmodules then loadSubmodules(path) end
         if MODULE.ModuleLoaded then MODULE:ModuleLoaded() end
-        if string.StartsWith(path, engine.ActiveGamemode() .. "/modules") then lia.bootstrap(L("module"), L("moduleFinishedLoading", MODULE.name)) end
+        if string.StartsWith(path, engine.ActiveGamemode() .. "/modules") then
+            if string.find(path, "/submodules/") then
+                lia.module.loadedSubmodules = lia.module.loadedSubmodules + 1
+            else
+                lia.module.loadedModules = lia.module.loadedModules + 1
+            end
+        end
+
         _G[variable] = prev
     end
 end
@@ -212,6 +218,9 @@ function lia.module.initialize()
             if not ok then lia.module.list[id] = nil end
         end
     end
+
+    lia.bootstrap(L("module"), L("moduleLoadingSummary", tostring(lia.module.loadedModules), tostring(lia.module.loadedSubmodules)))
+    lia.module.printDisabledModules()
 end
 
 function lia.module.loadFromDir(directory, group, skip)
@@ -224,6 +233,14 @@ end
 
 function lia.module.get(identifier)
     return lia.module.list[identifier]
+end
+
+function lia.module.printDisabledModules()
+    if #lia.module.disabledModules > 0 then
+        local disabledList = table.concat(lia.module.disabledModules, ", ")
+        lia.bootstrap(L("moduleDisabledTitle"), L("modulesDisabledList", disabledList))
+        lia.module.disabledModules = {}
+    end
 end
 
 hook.Add("CreateInformationButtons", "liaInformationModulesUnified", function(pages)

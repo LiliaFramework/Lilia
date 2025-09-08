@@ -52,7 +52,7 @@ function L(key, ...)
     local langTable = lia.lang.stored and lia.lang.stored[lang:lower()]
     local template = langTable and langTable[key]
     if not template then return tostring(key) end
-    if template:find("%%d") then lia.error("String formatting with %d is not allowed in localization strings: " .. tostring(key)) end
+    template = template:gsub("%%d", "%%s")
     if template:find("%%[^%%sdfg]") then lia.error("Invalid format specifier in localization string: " .. tostring(key) .. " - " .. template) end
     local count = select("#", ...)
     local args = {}

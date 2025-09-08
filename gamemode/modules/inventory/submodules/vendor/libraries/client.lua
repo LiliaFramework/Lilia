@@ -11,8 +11,6 @@ end
 net.Receive("VendorSync", function()
     local vendor = net.ReadEntity()
     if not IsValid(vendor) then return end
-    vendor.money = net.ReadInt(32)
-    if vendor.money < 0 then vendor.money = nil end
     local count = net.ReadUInt(16)
     vendor.items = {}
     for _ = 1, count do
@@ -60,16 +58,6 @@ end)
 net.Receive("VendorFaction", function()
     local factionID = net.ReadUInt(8)
     if IsValid(liaVendorEnt) then liaVendorEnt.factions[factionID] = true end
-end)
-
-net.Receive("VendorMoney", function()
-    if not IsValid(liaVendorEnt) then return end
-    local vendor = liaVendorEnt
-    local money = net.ReadInt(32)
-    if money < 0 then money = nil end
-    local old = vendor.money
-    vendor.money = money
-    hook.Run("VendorMoneyUpdated", vendor, money, old)
 end)
 
 net.Receive("VendorPrice", function()

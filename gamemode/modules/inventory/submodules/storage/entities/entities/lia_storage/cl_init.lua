@@ -1,7 +1,7 @@
 ﻿local vectorMeta = FindMetaTable("Vector")
 local toScreen = vectorMeta.ToScreen
 function ENT:onDrawEntityInfo(alpha)
-    local locked = self.getNetVar(self, "locked", false)
+    local locked = self:getNetVar("locked", false)
     local position = toScreen(self.LocalToWorld(self, self.OBBCenter(self)))
     local x, y = position.x, position.y
     y = y - 20

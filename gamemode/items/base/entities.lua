@@ -32,7 +32,17 @@ ITEM.functions.Place = {
         data.start = client:GetShootPos()
         data.endpos = data.start + client:GetAimVector() * 96
         data.filter = client
+        if not item.entityid or item.entityid == "" then
+            client:notifyLocalized("itemEntityInvalid")
+            return false
+        end
+
         local entity = ents.Create(item.entityid)
+        if not IsValid(entity) then
+            client:notifyLocalized("itemEntityInvalid")
+            return false
+        end
+
         entity:SetPos(data.endpos)
         entity:Spawn()
         local entityData

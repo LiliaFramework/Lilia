@@ -57,7 +57,7 @@ end
 function entityMeta:isLiliaPersistent()
     if not IsValid(self) then return false end
     if self.GetPersistent and self:GetPersistent() then return true end
-    return self.IsLeonNPC or self.IsPersistent
+    return self.IsPersistent or self.IsPersistent
 end
 
 function entityMeta:checkDoorAccess(client, access)
@@ -160,13 +160,16 @@ if SERVER then
         if not IsValid(self) then return end
         lia.net[self] = nil
         if lia.shuttingDown then return end
-        net.Start("nDel")
-        net.WriteUInt(self:EntIndex(), 16)
-        if receiver then
-            net.Send(receiver)
-        else
-            net.Broadcast()
-        end
+        timer.Simple(0, function()
+            if not IsValid(self) then return end
+            net.Start("nDel")
+            net.WriteUInt(self:EntIndex(), 16)
+            if receiver then
+                net.Send(receiver)
+            else
+                net.Broadcast()
+            end
+        end)
     end
 
     function entityMeta:removeDoorAccessData()

@@ -22,8 +22,7 @@ function MODULE:LoadData()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local mapName = game.GetMap()
     local condition = buildCondition(gamemode, mapName)
-    local query = "SELECT * FROM lia_doors WHERE " .. condition
-    lia.db.query(query):next(function(res)
+    lia.db.select("*", "doors", condition):next(function(res)
         local rows = res.results or {}
         local loadedCount = 0
         local presetData = lia.doors.GetPreset(mapName)
@@ -123,7 +122,8 @@ function MODULE:LoadData()
                 hidden = tonumber(row.hidden) == 1,
                 noSell = tonumber(row.ownable) == 0,
                 factions = factions,
-                classes = classes
+                classes = classes,
+                group = row.door_group and row.door_group ~= "NULL" and row.door_group ~= "" and tostring(row.door_group) or nil
             }
 
             ent:setNetVar("doorData", doorData)
@@ -143,7 +143,8 @@ function MODULE:LoadData()
                             hidden = doorVars.hidden and true or nil,
                             noSell = doorVars.noSell and true or nil,
                             factions = doorVars.factions and istable(doorVars.factions) and doorVars.factions or nil,
-                            classes = doorVars.classes and istable(doorVars.classes) and doorVars.classes or nil
+                            classes = doorVars.classes and istable(doorVars.classes) and doorVars.classes or nil,
+                            group = doorVars.group and tostring(doorVars.group) or nil
                         }
 
                         ent:setNetVar("doorData", doorData)
@@ -171,7 +172,11 @@ function MODULE:SaveData()
     for _, door in ents.Iterator() do
         if door:isDoor() then
             local mapID = door:MapCreationID()
-            if not mapID or mapID <= 0 then continue end
+            if not mapID or mapID <= 0 then
+                lia.warning("Skipping door with invalid mapID: " .. tostring(mapID))
+                continue
+            end
+
             local doorData = door:getNetVar("doorData", {})
             local factionsTable = doorData.factions or {}
             local classesTable = doorData.classes or {}
@@ -227,11 +232,18 @@ function MODULE:SaveData()
                 classesSerialized = lia.data.serialize(classesTable)
             end
 
-            local name = doorData.name or ""
+            local name = doorData.title or doorData.name or ""
             if name and name ~= "" then
                 name = tostring(name):sub(1, 255)
             else
                 name = ""
+            end
+
+            local group = doorData.group or ""
+            if group and group ~= "" then
+                group = tostring(group):sub(1, 255)
+            else
+                group = ""
             end
 
             local price = tonumber(doorData.price) or 0
@@ -248,7 +260,8 @@ function MODULE:SaveData()
                 ownable = doorData.noSell and 0 or 1,
                 name = name,
                 price = price,
-                locked = doorData.locked and 1 or 0
+                locked = doorData.locked and 1 or 0,
+                door_group = group
             }
 
             doorCount = doorCount + 1
@@ -278,84 +291,42 @@ function lia.doors.GetPreset(mapName)
 end
 
 function lia.doors.VerifyDatabaseSchema()
-    if lia.db.module == "sqlite" then
-        lia.db.query("PRAGMA table_info(lia_doors)"):next(function(res)
-            if not res or not res.results then
-                lia.error("Failed to get table info for lia_doors")
-                return
-            end
+    lia.db.getTableColumns("lia_doors"):next(function(columns)
+        if not columns then
+            lia.error("Failed to get table info for lia_doors")
+            return
+        end
 
-            local columns = {}
-            for _, row in ipairs(res.results) do
-                columns[row.name] = row.type
-            end
+        local expectedColumns = {
+            gamemode = "text",
+            map = "text",
+            id = "integer",
+            factions = "text",
+            classes = "text",
+            disabled = "integer",
+            hidden = "integer",
+            ownable = "integer",
+            name = "text",
+            price = "integer",
+            locked = "integer",
+            door_group = "text"
+        }
 
-            local expectedColumns = {
-                gamemode = "text",
-                map = "text",
-                id = "integer",
-                factions = "text",
-                classes = "text",
-                disabled = "integer",
-                hidden = "integer",
-                ownable = "integer",
-                name = "text",
-                price = "integer",
-                locked = "integer"
-            }
-
-            for colName, expectedType in pairs(expectedColumns) do
-                if not columns[colName] then
-                    lia.error("Missing expected column: " .. colName)
-                elseif columns[colName] ~= expectedType then
-                    lia.warning("Column " .. colName .. " has type " .. columns[colName] .. ", expected " .. expectedType)
-                end
+        for colName, expectedType in pairs(expectedColumns) do
+            if not columns[colName] then
+                lia.error("Missing expected column: " .. colName)
+            elseif columns[colName] ~= expectedType then
+                lia.warning("Column " .. colName .. " has type " .. columns[colName] .. ", expected " .. expectedType)
             end
-        end):catch(function(err) lia.error("Failed to verify database schema: " .. tostring(err)) end)
-    else
-        lia.db.query("DESCRIBE lia_doors"):next(function(res)
-            if not res or not res.results then
-                lia.error("Failed to get table info for lia_doors")
-                return
-            end
-
-            local columns = {}
-            for _, row in ipairs(res.results) do
-                columns[row.Field] = row.Type
-            end
-
-            lia.information("lia_doors table columns: " .. table.concat(table.GetKeys(columns), ", "))
-            local expectedColumns = {
-                gamemode = "text",
-                map = "text",
-                id = "int",
-                factions = "text",
-                classes = "text",
-                disabled = "tinyint",
-                hidden = "tinyint",
-                ownable = "tinyint",
-                name = "text",
-                price = "int",
-                locked = "tinyint"
-            }
-
-            for colName, expectedType in pairs(expectedColumns) do
-                if not columns[colName] then
-                    lia.error("Missing expected column: " .. colName)
-                elseif not columns[colName]:match(expectedType) then
-                    lia.warning("Column " .. colName .. " has type " .. columns[colName] .. ", expected " .. expectedType)
-                end
-            end
-        end):catch(function(err) lia.error("Failed to verify database schema: " .. tostring(err)) end)
-    end
+        end
+    end):catch(function(err) lia.error("Failed to verify database schema: " .. tostring(err)) end)
 end
 
 function lia.doors.CleanupCorruptedData()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
     local condition = buildCondition(gamemode, map)
-    local query = "SELECT id, factions, classes FROM lia_doors WHERE " .. condition
-    lia.db.query(query):next(function(res)
+    lia.db.select({"id", "factions", "classes"}, "doors", condition):next(function(res)
         local rows = res.results or {}
         local corruptedCount = 0
         for _, row in ipairs(rows) do
@@ -379,13 +350,43 @@ function lia.doors.CleanupCorruptedData()
             end
 
             if needsUpdate then
-                local updateQuery = "UPDATE lia_doors SET factions = " .. lia.db.convertDataType(newFactions) .. ", classes = " .. lia.db.convertDataType(newClasses) .. " WHERE " .. condition .. " AND id = " .. id
-                lia.db.query(updateQuery):next(function() lia.information("Fixed corrupted data for door " .. id) end):catch(function(err) lia.error("Failed to fix corrupted data for door " .. id .. ": " .. tostring(err)) end)
+                lia.db.updateTable({
+                    factions = newFactions,
+                    classes = newClasses
+                }, function() lia.information("Fixed corrupted data for door " .. id) end, "doors", condition .. " AND id = " .. id):catch(function(err) lia.error("Failed to fix corrupted data for door " .. id .. ": " .. tostring(err)) end)
             end
         end
 
         if corruptedCount > 0 then lia.information("Found and fixed " .. corruptedCount .. " corrupted door records") end
     end):catch(function(err) lia.error("Failed to check for corrupted door data: " .. tostring(err)) end)
+end
+
+function lia.doors.AddDoorGroupColumn()
+    lia.db.getTableColumns("lia_doors"):next(function(columns)
+        if not columns then
+            lia.error("Failed to get table info for lia_doors during column addition")
+            return
+        end
+
+        local hasDoorGroupColumn = false
+        for columnName, _ in pairs(columns) do
+            if columnName == "door_group" then
+                hasDoorGroupColumn = true
+                break
+            end
+        end
+
+        if not hasDoorGroupColumn then
+            lia.information("Adding door_group column to lia_doors table...")
+            lia.db.createColumn("doors", "door_group", "text"):next(function(result)
+                if result.success then
+                    lia.information("Successfully added door_group column to lia_doors table")
+                else
+                    lia.information("door_group column already exists or could not be added")
+                end
+            end):catch(function(err) lia.error("Failed to add door_group column: " .. tostring(err)) end)
+        end
+    end):catch(function(err) lia.error("Failed to check for door_group column: " .. tostring(err)) end)
 end
 
 function MODULE:InitPostEntity()
@@ -408,6 +409,7 @@ function MODULE:InitPostEntity()
 
     timer.Simple(1, function() lia.doors.CleanupCorruptedData() end)
     timer.Simple(3, function() lia.doors.VerifyDatabaseSchema() end)
+    timer.Simple(4, function() lia.doors.AddDoorGroupColumn() end)
 end
 
 function MODULE:PlayerUse(client, door)
@@ -438,6 +440,21 @@ function MODULE:CanPlayerAccessDoor(client, door)
         for _, id in ipairs(factions) do
             if id == unique or lia.faction.getIndex(id) == playerFaction then return true end
         end
+    end
+
+    local group = doorData.group
+    if group then
+        local playerFaction = client:getChar():getFaction()
+        local factionData = lia.faction.indices[playerFaction]
+        local unique = factionData and factionData.uniqueID
+        if unique then
+            local groupFactions = lia.faction.getFactionsInGroup(group)
+            for _, factionID in ipairs(groupFactions) do
+                if factionID == unique or lia.faction.getIndex(factionID) == playerFaction then return true end
+            end
+        end
+
+        if factions and #factions == 0 then return false end
     end
 
     local classes = doorData.classes

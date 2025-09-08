@@ -291,7 +291,7 @@ end
 
 function QuickPanel:addCheck(text, cb, checked)
     local btn = self:addButton(text)
-    local chk = btn:Add("liaCheckBox")
+    local chk = btn:Add("liaCheckbox")
     chk:SetChecked(checked)
     chk:SetSize(22, 22)
     chk.OnChange = function(_, v) if cb then cb(btn, v) end end
